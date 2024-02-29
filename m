@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0FB57318
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 00:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C58535B4
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 00:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709165773; cv=none; b=MHOLN5HsRH/ilbhLPEh++8fQWFPBJmWQWzWEsKlJQ0rnAAyIc8UeffBu8HvtX6uhH+a/lnKgqOGAjC0xiYn/8ahyJ4RZubMMIge2eKHlCydd3M9yI5Up3GIh2LUQPJtr7BN/2GK8D5/epdqGr4D6KabSK9Aa/apXLPAh9eRSWlc=
+	t=1709165775; cv=none; b=pucHcym3uitzxC2cCgxubVsMiVkb4o3XwmZcrztxwKBXADmOCFFCs2YKE/CuTSqBd/yomOgd1qeCwLVJwWKcPlhHHWa2/I2AD5fGetEmX+VcKkV5HYIRv+UvMO05tgPOHp3oKxmLxbaBS5samK4JHgfy+Ls8cF54J8MkA5jHVsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709165773; c=relaxed/simple;
-	bh=UwkjYK+U+f8LwVeVeyTQSJU60/nxqzY/uXtXOkioAuY=;
+	s=arc-20240116; t=1709165775; c=relaxed/simple;
+	bh=Ws6o7/tvtsGwdgLcPgbopHYfQtUw+y5EJAHJUjeoJ3s=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=k3h9OYmYGTaORV9cxg9PINf3tSRPzzozgS5WN9f1JmFFhoa1cHWx5pxwqs/NxJ2F/STO2NACpsE/A9RWqK586J4h3UP2Wza0KMFdYi8QYe7U5u0Ez8yTYLUbMvEBqg9nVWupfP5WGtHvOj+tRAc2Q4f2sC2/YUfd+5j4M2Rcqxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SgHzwcdz; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=UepjpZEZ92XPMSiu3WkiCISziQOg3XquYp5xlJ12fGnpLFJIkkQHquX9tiq6IqlRheyHi5t+rr9V9U7seKZ1MqPlCD0ZiehMX2RYxWQlwyv5JBw4Aw2mhYRWSoN5JvMuuojQ2F8xZCNo0G2/QGb4DQLm5b/+zbsBu5Nw9j8nOu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CP2Sa1r7; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SgHzwcdz"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ad239f8fso6033977b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 16:16:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CP2Sa1r7"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60957e0b914so6069717b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 16:16:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709165771; x=1709770571; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709165773; x=1709770573; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rDmb+1G4FeL2VOjrPNtrbYg/sNUzgE2lO0wYF9ntEME=;
-        b=SgHzwcdzxtbE3LV6tT49xoXoF0G1I3qHqCSHLstVUpKDA+rPt4ij6Co35vmgEqJ3Es
-         pWuAv0zcTZza77OUKteWVcOhmzba/T2EquJ5uwWJZYVt+oZWmPBGWYQW8YnNAqMfS55M
-         a5+xtLy1f5yT5wBXbPFcqbL7/N5o4KfyOpfQ7fcpvDoG207nZvptqPD8ByhfMcGtcdX5
-         nizVyuRg8Bo+lhNRTo8s1H7AeWjDEomblTGatvnhM8yJoQqh2hgBtZJTgLXeflXkN3ch
-         GsUX2JoBM/7CupIf/ua8sTt4tenamFTHQwHKPlEhxYPsqhaNGyFUofIeBF/JJGFdqWnf
-         wcPg==
+        bh=1AfLiGExWQ7LJtXjB9I1zr2EY79Wd3x7GNxPRkAZ0FM=;
+        b=CP2Sa1r7lcFvXFJMyTk5Kw9+CFf19L0mh/gqK6+9aMM1xmTrj0cUXPR5Baz0d5Jmhc
+         wVC+2LSYJZLKrdGehyKMhEaJnrFd3LmMIAZxRo+PGysxq+qR65nZsb8EpVsMnYwyCVTE
+         YRy8fw79PWP8mfNzHNU1ispsc4mUFvw37ZWr+txh8GEbqX5uZBGSCMhuUa+3rmNu00bZ
+         qyU8tvGNI8PlxhrQ2WDQ+1BKubH8wC0HGzizyO0Qg1fFucvF+sCulRNFwApewE0jl6wP
+         +fFfWnFj706TPbidsdVEI4MT13CW+snNPT+eWocu2qkCTAm4VeqSQnS+ryEbpTwk7Ax9
+         l0DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709165771; x=1709770571;
+        d=1e100.net; s=20230601; t=1709165773; x=1709770573;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rDmb+1G4FeL2VOjrPNtrbYg/sNUzgE2lO0wYF9ntEME=;
-        b=TDRX78ACJsJCwF+E+Bg1D8ttOwCO0OicH3X3Bn1i2GTTngub9lbv78xnCZxPt4UvcG
-         d+K5u2MOtyBPnLWhHjMRm0lMDGDTqrHPOXKlaAtn5rz1jx7Nvn58Uup+FYH5eCEFrGBM
-         MNiM7ghqGnioP1aoYxURRRAVEHzl7idudJ7V/m3V2tbstBLYUOsJ7D4jIJtjDy+wLmeD
-         Sm60SrTUhV6TMiJSfGTiwq5xgcE4iRVp9V6nqsCQwcZTaeQjMRF14Hy7Zpj0QAaXoIWl
-         sy1mZ+XiSVU9opkQCwBRHLPLIiVVqXt3evh5pZ5DJuFmg9qBQVYH2XdHvCcO4z2Qodjf
-         flEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlEt0XHr/Y8ZPp0fMjt83Yz582Sdb1q0BD8McqhcqSiE7T6pOR0ls41G4SKZjuW7XILbETjIQfpdFTAqdpPxC+S4FEsZXfsNuivAd3vrKVKw==
-X-Gm-Message-State: AOJu0YwRSD7YA1/36k6r944BXdNBfAvblQwW462e6iWnKRFYIYigrNWD
-	N+TP7e1u6xIUQISKbTvWZQZb/Sp8xOw8SBdDXeN44UnXWftj2F773YzVoH8YFJWcRdwseSE8PD5
-	3BpSDgg==
-X-Google-Smtp-Source: AGHT+IGHWKOWL4OTjiWorXSVdTqwsIiYn6BygBXX3AaiqhhWij1L0lxN0gttlZUyocCiEKABbwM6vqaaXu0A
+        bh=1AfLiGExWQ7LJtXjB9I1zr2EY79Wd3x7GNxPRkAZ0FM=;
+        b=DwhKQYq3GqZD/YVgGjI4Pv6UMVrcg1X2kmSb0pH/C4FAUOX+Sl14Yh7HGZ6pgD2iIg
+         +UMldKZ7weBbzvLW3rw2qVkOMqzhrwP1y47cCKiMCDrvdDvgJmKJvFsRfygTyO2rhrko
+         mBgX4Z2AiCs2dHTU8SlT8qEz6Rq+8sdUWICJsglm3zV7xv8l12x1K1np/iwXJZVQEL3w
+         WiMKFkTN6xiwfVGOnX2oGM9Jp+rNv09VXq99BfBvr4BxoFh2BlFgY2jfyjVioqGTqTsD
+         PS/3RC/1lye978A9mcYukqX1ZQtWgqjEo/O5vje02PZFchryEMebXSVwn1ioQvBn/2I4
+         9fKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSpHR2Vf+E63falI/SZzO/MA9cEznI0FvKKzWLnk48bDM7M9ZQ/BaO7NFgxGKSn2WXmGKVRiGx4pSIheVS/1ixVusEacEiTZiU02KvhsLo6w==
+X-Gm-Message-State: AOJu0YyR6whNatHvVWGe8tGnaEDrNRFlrh6oEkAl+aXeB9kEJNS45svy
+	J5/2gcXTe2R+Pdy5pZiaGK+by23nu0lyJOgARzk4JTcBcSktFQ6kxbjbVC0csZrKM3mD731V18p
+	ICA/TXw==
+X-Google-Smtp-Source: AGHT+IFfl2ppkZ2NhKizORHQsmVurAIjOtkG220jnLfGtZvLkBHAnml1/LtUoThBMUVwguYx9HgxzWvpv3UR
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:77dc:144c:334e:e2dd])
- (user=irogers job=sendgmr) by 2002:a05:6902:1c9:b0:dc6:cafd:dce5 with SMTP id
- u9-20020a05690201c900b00dc6cafddce5mr209364ybh.12.1709165770873; Wed, 28 Feb
- 2024 16:16:10 -0800 (PST)
-Date: Wed, 28 Feb 2024 16:15:36 -0800
+ (user=irogers job=sendgmr) by 2002:a81:9acc:0:b0:608:398c:33bf with SMTP id
+ r195-20020a819acc000000b00608398c33bfmr135323ywg.8.1709165773285; Wed, 28 Feb
+ 2024 16:16:13 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:15:37 -0800
 In-Reply-To: <20240229001537.4158049-1-irogers@google.com>
-Message-Id: <20240229001537.4158049-13-irogers@google.com>
+Message-Id: <20240229001537.4158049-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240229001537.4158049-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 12/13] perf jevents: Add context switch metrics for AMD
+Subject: [PATCH v1 13/13] perf jevents: Add cycles breakdown metric for AMD
 From: Ian Rogers <irogers@google.com>
 To: Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -74,64 +74,50 @@ To: Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
 	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Metrics break down context switches for different kinds of
-instruction.
+Breakdown cycles to user, kernel and guest.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 32 ++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ tools/perf/pmu-events/amd_metrics.py | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 91f323c1a149..377ce413d051 100755
+index 377ce413d051..2def2adf232e 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -125,6 +125,37 @@ def AmdBr():
-                      description="breakdown of retired branch instructions")
+@@ -572,6 +572,24 @@ def AmdUpc() -> Metric:
+   return Metric("upc", "Micro-ops retired per core cycle (higher is better)",
+                 upc, "uops/cycle")
  
- 
-+def AmdCtxSw() -> MetricGroup:
-+  cs = Event("context\-switches")
-+  metrics = [
-+      Metric("cs_rate", "Context switches per second", d_ratio(cs, interval_sec), "ctxsw/s")
-+  ]
 +
-+  ev = Event("instructions")
-+  metrics.append(Metric("cs_instr", "Instructions per context switch",
-+                        d_ratio(ev, cs), "instr/cs"))
++def Cycles() -> MetricGroup:
++  cyc_k = Event("cycles:kHh")
++  cyc_g = Event("cycles:G")
++  cyc_u = Event("cycles:uH")
++  cyc = cyc_k + cyc_g + cyc_u
 +
-+  ev = Event("cycles")
-+  metrics.append(Metric("cs_cycles", "Cycles per context switch",
-+                        d_ratio(ev, cs), "cycles/cs"))
-+
-+  ev = Event("ls_dispatch.ld_dispatch")
-+  metrics.append(Metric("cs_loads", "Loads per context switch",
-+                          d_ratio(ev, cs), "loads/cs"))
-+
-+  ev = Event("ls_dispatch.store_dispatch")
-+  metrics.append(Metric("cs_stores", "Stores per context switch",
-+                        d_ratio(ev, cs), "stores/cs"))
-+
-+  ev = Event("ex_ret_brn_tkn")
-+  metrics.append(Metric("cs_br_taken", "Branches taken per context switch",
-+                        d_ratio(ev, cs), "br_taken/cs"))
-+
-+  return MetricGroup("cs", metrics,
-+                     description = ("Number of context switches per second, instructions "
-+                                    "retired & core cycles between context switches"))
++  return MetricGroup("cycles", [
++      Metric("cycles_total", "Total number of cycles", cyc, "cycles"),
++      Metric("cycles_user", "User cycles as a percentage of all cycles",
++             d_ratio(cyc_u, cyc), "100%"),
++      Metric("cycles_kernel", "Kernel cycles as a percentage of all cycles",
++             d_ratio(cyc_k, cyc), "100%"),
++      Metric("cycles_guest", "Hypervisor guest cycles as a percentage of all cycles",
++             d_ratio(cyc_g, cyc), "100%"),
++  ], description = "cycles breakdown per privilege level (users, kernel, guest)")
 +
 +
- def AmdIlp() -> MetricGroup:
-     tsc = Event("msr/tsc/")
-     c0 = Event("msr/mperf/")
-@@ -589,6 +620,7 @@ def UncoreL3():
- 
- all_metrics = MetricGroup("", [
-     AmdBr(),
-+    AmdCtxSw(),
-     AmdIlp(),
-     AmdDtlb(),
-     AmdItlb(),
+ def Idle() -> Metric:
+   cyc = Event("msr/mperf/")
+   tsc = Event("msr/tsc/")
+@@ -628,6 +646,7 @@ all_metrics = MetricGroup("", [
+     AmdHwpf(),
+     AmdSwpf(),
+     AmdUpc(),
++    Cycles(),
+     Idle(),
+     Rapl(),
+     UncoreL3(),
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
