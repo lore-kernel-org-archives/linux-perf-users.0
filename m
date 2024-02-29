@@ -1,180 +1,488 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1863A23
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 00:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F8F2C85D
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 01:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709166711; cv=none; b=N0+jGRPTocLPtvhrfOWDL6vu7GLx+CvQy6aX45VWlJRIND1zqESssf+1y5sOZAYXk8gfElsgZPsYf8MNtn1e6Eh7/yQr/poWisUz0mlwJiy90a2LqoWHK0azMBzIq1DvV64ls+VwB37zmw3TatIQcwJH0lCxjTiZEnOa1RnB/K4=
+	t=1709169943; cv=none; b=uPDKxrn1K7XQstTRRYKTnB79MzfIoWa9kCLcPqgmK5lKKWYeI3Aqc7XrN4NluSaW9ALgeF4lUHvr4spCMpwn/91Wyu3UbRR1R42mrWCBzDOrkSgjNNOeoho6s8dpwW/bJzo8xYAbhQe23lDNO1sNuVksIlqgoQrRK6YAf4o8qq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709166711; c=relaxed/simple;
-	bh=Qs9gzZdD6kIR4+pjbjQ1x7dn/jESOCEv1sBJEvFeoeQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lq+wv8UlMsNHx6c87iW69gPkF7VewAA+VeOlpYi3iLGztKd9wI/OUrp4LSbCPNLBdvJb5YrT/lp8pEQ2DUX5K7g4RpLGNV42xb6NsTTBG37Et4cImLO3FI19ahohXvxaVKGN2XotqfVDWDp7PnypQ6tMoab20arLAC6yZaWP7Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xw4YBchw; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709169943; c=relaxed/simple;
+	bh=qIGnVqZ/Kay7J7/4DkGf5cjQtbvjlFkLUW8VJT2xv+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MXaOQoGrlkB2YMAVHV/40i3qBaBJ63A2SmipnXR3fMnHVrnAXNY8RJvuOhaePDlgmET0uvgUIgYkGgfeOYD7kKlSkyy9pahdk2KOUBwAAa0gFctapa4Mqf8FPI1N43ulyoCmcFD9BEI4vVUJENPid62GRjrsUhwAEeUhV9GVbfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PRNTWzWZ; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xw4YBchw"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dc744f54d0so92175ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 16:31:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PRNTWzWZ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e55bb75c9eso315457b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Feb 2024 17:25:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709166709; x=1709771509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oWAW1LP6E25hygXHWcS7ZVejXqpVXuIN70MzR/qe/Fo=;
-        b=xw4YBchwxKuv/z61dGLLVq2Nmh6zumRE2ZtGEHE/64fA4Yqh84pu5alvzgQQHqAIpc
-         nc3dN64rh498HMyadMkiiWpItPmFPKJFhDXQ0nyl6cSN9TrXNJOVk9HRWRxptybgjo7S
-         NRyys5PxCYBkPff1v3ZU3scSWzzonsMyX7tHRvmMniL4fGyebTIusY3sAJpAr1tbU+zY
-         3U+fNU4PyxTL2HMjkRR0ygSF9V4HE0Rk9iBJqKOkcOWDMFAGi2K16D0brsK/dklMM2G+
-         gJeTgrMDgEpNLO0rm2TaAex8BfdtWmN3NKLlYiuadRJk4rW32ojziZzl5tU1LQbGKqna
-         h+vw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709169939; x=1709774739; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q7x7uA7NSQkePcQ/Dz95qzCoBbFkkFThRf0k4ROWmH0=;
+        b=PRNTWzWZ7sR5TXKazS85KzxxsaggSU8yytwdD3JP0Rfatw4nL6ekoofZinQ5rFWn0R
+         Nx/6Ayl+yyoWAizqq3hh6rmipyt7dLRYYOBrvn+qI0ZqANwXsvdaMVqCTxPbTQRhRAWU
+         IINUUGazqGcf218VwZ1/4JTiIjYgKdeOW60YSX5ftYtXxPLxjEf9nYPQFkwFpJKUYxHZ
+         GN4tAmKp8ClC4V4Y9SUV90li6TXuEU9dqGa+aZ3sUrY3qZ4vJ4F6WJJxGoa5oxKSFYRN
+         TZHIZEB3ecQkk8+1+3Tnh4QFoXHIazVpez+PPB7oz0erI8lHAXH7ld22C9kkTzR+FJ/6
+         01bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709166709; x=1709771509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oWAW1LP6E25hygXHWcS7ZVejXqpVXuIN70MzR/qe/Fo=;
-        b=CGktpHOL8+2VUcluNu6ymGyJgoZxrC59ol8sjgrnED49jZ4a+VHo1REujCsIbNHCXv
-         qst1c4dJYsPOJAfwRrSO8lzL4gKmmqGWGW7c/uHYn2zq9UMPjelxEez7fIcdGVcWTWio
-         DS5hP+B1Ig3eAg2tiPmSnPl574uHvmGQCSR9/f2rIfC9p5mvjVUL+UUj0hYtth/tC1T6
-         B/WoyD5CLL0t2PZI/PYIK1N1qnszhKsGOXl+PBstFvhjs2aPEA/RcQFUeYGDw6dQdnOy
-         d7QgAbPf2TDzuYGQq6PWPtLKFI90hng6lvQIx5R4wu1tSQdliw2/Q6SoMUbWfPsLeDza
-         8Mcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ6e5Rva8yY79K9DENl3Hov68nlsLKSpPGEZBEeS1au+CaYYBmP9cy5JCMjLyudnW5PhDnH6jtxHx0X+JHQtGJimHNo8U1o5WHUdqlXhOZ1A==
-X-Gm-Message-State: AOJu0Yz52gcb27wVMLoZ92J02lBjfc51VovWXukD/k1MYHQgM7FKnJQS
-	V6pTx7fQitW7Of/94qT5DuGktjak4SmHBRAOVpZyxl1pnic4q0HQttNqFbZOK9JpnRew/BWYW0q
-	Fm6/JiWEUXXI1ORh1qviJ0nuvbi3WRcN+x5V2
-X-Google-Smtp-Source: AGHT+IFsm09XMMy3/eHazsWO9AJ89KR2h/Hcnu5odXTcjlP0n5Av8J51HesIMPUDaMAfe2UCw9ccRqZtFsv1GxPz3wE=
-X-Received: by 2002:a17:903:244b:b0:1db:e78f:4ce9 with SMTP id
- l11-20020a170903244b00b001dbe78f4ce9mr50558pls.24.1709166708693; Wed, 28 Feb
- 2024 16:31:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709169939; x=1709774739;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7x7uA7NSQkePcQ/Dz95qzCoBbFkkFThRf0k4ROWmH0=;
+        b=V3aDiRczZ3hkwx/r62Qox3hFa7Qm0jmWEnPJ5u4wepbbY/ObSenf0/UVnsSRkqF3t+
+         455mr/ZsGket/tt5/Qui1W0WrpNWxWH0Ib0A/5oNHcc8o473VmCtvCeDvTymaYvtmwZw
+         z4n+Gtk/0uLLhdQ8wPLCDSG5TVa1MkCn71gMEnGunyDe+Qlxwy4eKDGmf4qU5FYzVBiv
+         0VWRUYpdupEkkpLiUMGgo9nEpcG2JVYnUWwdU6FgzOv4I6Jtm5gcNL1CxnYTf0ZclcNK
+         /aL6lGGrQKqFFkA3fsch9mUCb0TrOyNpQBN6MqiCkVOVi0P+qnC/hIn3wXMTr/DAobQd
+         CQuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXch5k/MTJ7v9WdIN9MpR2/bkkYvz4M/1+MSg2D4pIM1+QpxNPAb7D0LNjUZ/ADAW0T0zIetxk1LmvCILsAEfHGPfLUtNl6PmX2V7LzAembjA==
+X-Gm-Message-State: AOJu0Yze4SuGzrO5qNxud/R2KtTWxKTHK+Me4QTMgW+cAb+RYKlTWuGx
+	LVRAF5XD5e+rXiz2AQ9UFkw8LU8O9lfXlgOSOWsMqV1YzIupDEFLFOsDIx/Z47A=
+X-Google-Smtp-Source: AGHT+IGVNq0GdLLoZO6gsHV0enVh/g1iccgeAPyi28DWJ/hAb4TwrAvEc8ANrsMQqAciXHOFf/KYzQ==
+X-Received: by 2002:a05:6a00:3d0c:b0:6e4:bb45:49f3 with SMTP id lo12-20020a056a003d0c00b006e4bb4549f3mr1315237pfb.34.1709169939235;
+        Wed, 28 Feb 2024 17:25:39 -0800 (PST)
+Received: from [172.16.0.23] (c-67-188-2-18.hsd1.ca.comcast.net. [67.188.2.18])
+        by smtp.gmail.com with ESMTPSA id y37-20020a056a00182500b006e56b0f274fsm84872pfa.134.2024.02.28.17.25.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 17:25:38 -0800 (PST)
+Message-ID: <63d73f09-84e5-49e1-99f5-60f414b22d70@rivosinc.com>
+Date: Wed, 28 Feb 2024 17:25:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
- <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
- <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com>
- <CAM9d7chXtmfaC73ykiwn+RqJmy5jZFWFaV_QNs10c_Td+zmLBQ@mail.gmail.com>
- <Zd41Nltnoen0cPYX@x1> <CAP-5=fWv25WgY82ZY3V1erUvCb+jdhLd_d91p4akjqFgynvAgg@mail.gmail.com>
- <CAM9d7cjJTf_yed9nwXZkBPr6u6NH5n+V+u0m6Zgsc1JBy_LdyA@mail.gmail.com>
- <CAP-5=fWKdp7rf+v7t_T_0tU0OxQO9R2g+ZH7Ag7HgyBbGT3-nQ@mail.gmail.com> <CAM9d7cj-kxaQc18QG_cd6EzsDbk7vmhYqg-XzCV+g5oi9Giwww@mail.gmail.com>
-In-Reply-To: <CAM9d7cj-kxaQc18QG_cd6EzsDbk7vmhYqg-XzCV+g5oi9Giwww@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 Feb 2024 16:31:34 -0800
-Message-ID: <CAP-5=fUHbjC60L0GwFWaM15LZLDsC-pWwyWZNjE3B67zvpKGmQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 00/20] Add Counter delegation ISA extension support
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Atish Patra <atishp@atishpatra.org>, Christian Brauner <brauner@kernel.org>,
+ =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
+ Evan Green <evan@rivosinc.com>, Guo Ren <guoren@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Ingo Molnar <mingo@redhat.com>,
+ James Clark <james.clark@arm.com>, Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+ John Garry <john.g.garry@oracle.com>, Jonathan Corbet <corbet@lwn.net>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ kvm-riscv@lists.infradead.org, kvm@vger.kernel.org,
+ Ley Foon Tan <leyfoon.tan@starfivetech.com>, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Peter Zijlstra <peterz@infradead.org>,
+ Rob Herring <robh+dt@kernel.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Weilin Wang <weilin.wang@intel.com>,
+ Will Deacon <will@kernel.org>, kaiwenxue1@gmail.com,
+ Yang Jihong <yangjihong1@huawei.com>
+References: <20240217005738.3744121-1-atishp@rivosinc.com>
+ <CAP-5=fXh79aeHZ-M4CqP_GkfOHw0-7Cc1YLLGEyW5pT7t8eGHw@mail.gmail.com>
+From: Atish Patra <atishp@rivosinc.com>
+In-Reply-To: <CAP-5=fXh79aeHZ-M4CqP_GkfOHw0-7Cc1YLLGEyW5pT7t8eGHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 3:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Feb 27, 2024 at 11:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > On Tue, Feb 27, 2024 at 10:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Tue, Feb 27, 2024 at 1:42=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > On Tue, Feb 27, 2024 at 11:17=E2=80=AFAM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Feb 27, 2024 at 09:31:33AM -0800, Namhyung Kim wrote:
-> > > > > > I can see some other differences like machine__findnew_thread()
-> > > > > > which I think is due to the locking change.  Maybe we can fix t=
-he
-> > > > > > problem before moving the code and let the code move simple.
-> > > > >
-> > > > > I was going to suggest that, agreed.
-> > > > >
-> > > > > We may start doing a refactoring, then find a bug, at that point =
-we
-> > > > > first fix the problem them go back to refactoring.
-> > > >
-> > > > Sure I do this all the time. Your typical complaint on the v+1 patc=
-h
-> > > > set is to move the bug fixes to the front of the changes. On the v+=
-2
-> > > > patch set the bug fixes get applied but not the rest of the patch
-> > > > series, etc.
-> > > >
-> > > > Here we are refactoring code for an rb-tree implementation of threa=
-ds
-> > > > and worrying about its correctness. There's no indication it's not
-> > > > correct, it is largely copy and paste, there is also good evidence =
-in
-> > > > the locking disciple it is more correct. The next patch deletes tha=
-t
-> > > > implementation, replacing it with a hash table. Were I not trying t=
-o
-> > > > break things apart I could squash those 2 patches together, but I'v=
-e
-> > > > tried to do the right thing. Now we're trying to micro correct, bre=
-ak
-> > > > apart, etc. a state that gets deleted. A reviewer could equally
-> > > > criticise this being 2 changes rather than 1, and the cognitive loa=
-d
-> > > > of having to look at code that gets deleted. At some point it is a
-> > > > judgement call, and I think this patch is actually the right size. =
-I
-> > > > think what is missing here is some motivation in the commit message=
- to
-> > > > the findnew refactoring and so I'll add that.
-> > >
-> > > I'm not against your approach and actually appreciate your effort
-> > > to split rb-tree refactoring and hash table introduction.  What I'm
-> > > asking is just to separate out the code moving.  I think you can do
-> > > whatever you want in the current file.  Once you have the final code
-> > > you can move it to its own file exactly the same.  When I look at thi=
-s
-> > > commit, say a few years later, I won't expect a commit that says
-> > > moving something to a new file has other changes.
-> >
-> > The problem is that the code in machine treats the threads lock as if
-> > it is a lock in machine. So there is __machine__findnew_thread which
-> > implies the thread lock is held. This change is making threads its own
-> > separate concept/collection and the lock belongs with that collection.
-> > Most of the implementation of threads__findnew matches
-> > __machine__findnew_thread, so we may be able to engineer a smaller
-> > line diff by moving "__machine__findnew_thread" code into threads.c,
-> > then renaming it to build the collection, etc. We could also build the
-> > threads collection inside of machine and then in a separate change
-> > move it to threads.[ch].  In the commit history this seems muddier
-> > than just splitting out threads as a collection. Also, some of the API
-> > design choices are motivated more by the hash table implementation of
-> > the next patch than trying to have a good rbtree abstracted collection
-> > of threads. Essentially it'd be engineering a collection of threads
-> > but only with a view to delete it in the next patch. I don't think it
-> > would be for the best and the commit history for deleted code is
-> > unlikely to be looked upon.
->
-> I think the conversation is repeating. :)  Why not do this?
->
-> 1. refactor threads code in machine.c and fix the locking
-> 2. move threads code to its own file
-> 3. use hash table in threads
+On 2/17/24 12:28, Ian Rogers wrote:
+> On Fri, Feb 16, 2024 at 4:58 PM Atish Patra <atishp@rivosinc.com> wrote:
+>>
+>> This series adds the counter delegation extension support. It is based on
+>> very early PoC work done by Kevin Xue and mostly rewritten after that.
+>> The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+>> on multiple ISA extensions.
+>>
+>> 1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+>>     5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+>>     RISC-V CSR address space.
+>> 2. Smstateen: The stateen bit[60] controls the access to the registers
+>>     indirectly via the above indirect registers.
+>> 3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
+>>
+>> The counter delegation extension allows Supervisor mode to program the
+>> hpmevent and hpmcounters directly without needing the assistance from the
+>> M-mode via SBI calls. This results in a faster perf profiling and very
+>> few traps. This extension also introduces a scountinhibit CSR which allows
+>> to stop/start any counter directly from the S-mode. As the counter
+>> delegation extension potentially can have more than 100 CSRs, the specification
+>> leverages the indirect CSR extension to save the precious CSR address range.
+>>
+>> Due to the dependency of these extensions, the following extensions must be
+>> enabled in qemu to use the counter delegation feature in S-mode.
+>>
+>> "smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+>>
+>> When we access the counters directly in S-mode, we also need to solve the
+>> following problems.
+>>
+>> 1. Event to counter mapping
+>> 2. Event encoding discovery
+>>
+>> The RISC-V ISA doesn't define any standard either for event encoding or the
+>> event to counter mapping rules.
+>>
+>> Until now, the SBI PMU implementation relies on device tree binding[3] to
+>> discover the event to counter mapping in RISC-V platform in the firmware. The
+>> SBI PMU specification[4] defines event encoding for standard perf events as well.
+>> Thus, the kernel can query the appropriate counter for an given event from the
+>> firmware.
+>>
+>> However, the kernel doesn't need any firmware interaction for hardware
+>> counters if counter delegation is available in the hardware. Thus, the driver
+>> needs to discover the above mappings/encodings by itself without any assistance
+>> from firmware. One of the options considered was to extend the PMU DT parsing
+>> support to kernel as well. However, that requires additional support in ACPI
+>> based system. It also needs more infrastructure in the virtualization as well.
+>>
+>> This patch series solves the above problem #1 by extending the perf tool in a
+>> way so that event json file can specify the counter constraints of each event
+>> and that can be passed to the driver to choose the best counter for a given
+>> event. The perf stat metric series[5] from Weilin already extend the perf tool
+>> to parse "Counter" property to specify the hardware counter restriction.
+>> I have included the patch from Weilin in this series for verification purposes
+>> only. I will rebase as that series evolves.
+>>
+>> This series extends that support by converting comma separated string to a
+>> bitmap. The counter constraint bitmap is passed to the perf driver via
+>> newly introduced "counterid_mask" property set in "config2". Even though, this
+>> is a generic perf tool change, this should not affect any other architecture
+>> if "counterid_mask" is not mapped.
+>>
+>> @Weilin: Please let me know if there is a better way to solve the problem I
+>> described.
+>>
+>> The problem #2 is solved by defining a architecture specific override function
+>> that will replace the perf standard event encoding with an encoding specified
+>> in the json file with the same event name. The alternate solution considered
+>> was to specify the encodings in the driver. However, these encodings are vendor
+>> specific in absence of an ISA guidelines and will become unmanageable with
+>> so many RISC-V vendors touching the driver for their encoding.
+>>
+>> The override is only required when counter delegation is available in the
+>> platform which is detected at the runtime. The SBI PMU (current implementation)
+>> doesn't require any override as it defines the standard event encoding. The
+>> hwprobe syscall defined for RISC-V is used for this detection in this series.
+>> A sysfs based property can be explored to do the same but we may require
+>> hwprobe in future given the churn of extensions in RISC-V. That's why, I went
+>> with hwprobe. Let me know if anybody thinks that's a bad idea.
+>>
+>> The perf tool also hook allows RISC-V ISA platform vendors to define their
+>> encoding for any standard perf or ISA event. I have tried to cover all the use
+>> cases that I am aware of (stat, record, top). Please let me know if I have
+>> missed any particular use case where architecture hook must be invoked. I am
+>> also open to any other idea to solve the above said problem.
+> 
+> Hi Atish,
+> 
+> Thank you for the work! I know how the perf tool discovers events is
+> somewhat assumed knowledge, I thought I'd just go through it here and
+> explain a difference that is landing in Linux 6.8, as well as recent
+> heterogeneous/hybrid/big.little support changes, just so those who
+> aren't up to speed can catch up for the sake of discussion on this
+> approach - sorry for turning this into a longer email than it perhaps
+> needs to be, and the historical take may lack accuracy that I
+> apologize in advance for.
+> 
+> The job of discovering events is to map a name like "cycles" into a
+> set up for the perf_event_attr passed to perf_event_open. This sounds
+> simple but "cycles" may be encoded differently for different PMUs on a
+> heterogeneous system, it may also be an event on an accelerator like a
+> GPU. So the first thing to recognize is that a name like "cycles" may
+> map onto multiple struct perf_event_attr values. The behavior of how
+> the perf tool does this lacks consistency, for example are all or just
+> core PMUs considered, but this is deliberate for the sake of somewhat
+> consistency by the tool over time. Perhaps in the future we'll
+> change/fix this as things like accelerators dominate performance
+> concerns.
+> 
+> The next thing is that what "cycles" means has been evolving over
+> Linux releases. Originally "cycles" was assumed to be a CPU event and
+> there were other events like "page-faults" which were software events.
+> In perf_event.h there are enums for the "type" of event (hardware,
+> software, cache, etc.) and for the actual event itself - cycles is
+> "config" value 0. In the code we tend to refer to this kind of
+> encoding as legacy. An ability was added (maybe it was always there)
+> to dynamically add PMUs and PMUs advertise the value for the struct
+> perf_event_attr through sysfs in  "/sys/devices/<pmu name>/type". On
+> x86 the performance core typically has a type matching the legacy
+> hardware number, but on ARM this isn't the case. So that legacy events
+> can work on heterogeneous/hybrid/big.little systems where there should
+> be multiple PMUs (looking at most Android devices for misconfiguring
+> this), there is an extended type field in the top 32-bits of the
+> struct perf_event_attr config. The extended type means I want this
+> legacy event type on the extended type PMU.
+> 
+> For non-legacy events there is a problem of how to map a name to a
+> config value (I'll say singular config value but overtime it has
+> actually become 4 64-bit values). The sysfs format directory
+> "/sys/devices/<pmu name>/format" does this. The files in the format
+> directory say that on x86 the event is encoded in the first byte of
+> the config and the umask in the second byte. If there is an event like
+> "assists.any" that has an event of 0xc1 and a umask of 7, then the
+> perf tool knows to create a config value of 0x7c1 using the format
+> encoding.
+> 
+> To go from an event name like "cycles" to a format encoding there are
+> two places to look, the first is "/sys/devices/<pmu name>/events/". In
+> the events directory on x86 there is a "cpu-cycles" that contains
+> "event=0x3c", i.e. a format style encoding. The second are the json
+> files that are mapped to format style encodings for a specific cpuid
+> by jevents.py. The easiest way to see the 2nd kind is to run "perf
+> list --details":
+> ```
+> ...
+>    assists.any
+>        [Number of occurrences where a microcode assist is invoked by hardware]
+>         default_core/event=0xc1,period=0x186a3,umask=0x7/
+> ...
+> ```
+> We can see there is a format style encoding that has been built into
+> the perf tool.
+> 
+> A place where ambiguity creeps in and is changing in Linux 6.8 is what
+> to do when we have the same event in places like the legacy name,
+> sysfs and the json? The behavior we have is:
+> 1) "perf stat -e cycles ..." - the event was specified without PMUs,
+> it is assumed a legacy encoding on all core PMUs is preferred (note
+> non-core PMUs that have a cycles event are ignored, but this wouldn't
+> be the case if the event weren't a legacy event name)
+> 2) "perf stat -e cpu/cycles/" - the event was specified with a core
+> PMU, prior to 6.8 (ie any current perf tool), a legacy encoding will
+> be used. In 6.8 and after the json and sysfs encoding will have
+> priority: https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> 3) "perf stat -e pmu/cycles/" - event was specified with a non-core
+> PMU so a legacy encoding won't be considered, only json and sysfs.
+> 
+> As I understand the problem you are trying to fix in the perf tool it
+> is for behavior 1 above, this is because the PMU driver wants the
+> legacy event encodings to be in json so it needn't discover them.
+> Behaviors 2 and 3 already prefer json encodings that are built into
+> the perf tool.
+> 
+> So given behavior 1 is kind of weird, it considers different PMUs
+> dependent on whether the event is legacy or not, it doesn't override
+> with a sysfs/json event if one is present, why don't we look to change
+> behavior 1 so that it is more like behaviors 2 and 3? I believe this
+> gives you the ability to override legacy events you want. At the same
+> time I'd like to also remove the "only core PMUs" assumption.
+> 
 
-Step 3 is patch 5 in this series. I can split this patch into steps 1
-and 2 as you say in v3. I'm not sure why step 2 is going to be of any
-use as the code will match that of step 1, code that the next patch
-then deletes. Anyway, it's a plan for v3.
+Absolutely. Thanks for the detailed context and walking through the 
+different cases for each event type.
 
-Thanks,
-Ian
+> What would this look like? Well in the current code we take a legacy
+> event and then create a perf_event_attr for each core PMU:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1348
+> We'd need to change this so that we wild card all the PMUs and
+> consider the sysfs/json events first, which is what we already do
+> here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.y?h=perf-tools-next#n305
+> with the sysfs/json fix up being here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1016
+> 
+> As with the 6.8 change to prioritize sysfs/json over legacy the
+> largest part of this change will be updating all the test
+> expectations. Wdyt?
+> 
 
-> Thanks,
-> Namhyung
+That's awesome. That's exactly what I want. Let me know if you are going 
+to push that change or want me to work on it while revising this series.
+
+I am happy to test those changes either way.
+
+> Things this patch series does that I don't like:
+>   - hardcoding the expected CPU's PMU to "cpu", this should almost
+> certainly be an iterator over all core PMU types. This allows core
+
+Agreed. I did not like this approach either and not sure if this is the 
+best method to fix the problem we have. I should have clarified well 
+that in the cover letter.
+
+> PMUs not to be called "cpu" and for heterogeneous configurations to
+> work.
+>   - doing things in an arch specific way. Test coverage is really hard
+
+
+We do have an additional architecture specific issue at hand here.
+As described, we need the event mapping with platforms with newer ISA 
+extensions but doesn't need it for older platforms without ISA 
+extensions. In addition to that, the new ISA extension doesn't cover 
+virtualization. Thus, kvm guests continue to rely on the old way of 
+discovering the events through SBI (ecall) interface.
+
+Thus, a platform (e.g Qemu) can have both options present depending on
+how it is configured.
+
+To cover both cases, I introduced a RISC-V specific mechanism to detect 
+the presence of the ISA extension in the perf tool.
+
+"PATCH 18-20 adds hwprobe mechanism to enable perf to detect if platform 
+supports delegation extensions."
+
+If we don't want to keep any architecture specific hooks in this path, 
+can we use a sysfs way to enable/disable mapping ?
+
+I believe the pmu driver can update the sysfs for the perf tool to 
+decide in that case ?
+
+> and when something lives in arch directory we lose coverage unless we
+> run on that machine type. Ugh, I'm just reminded that ARM
+> heterogeneous is broken because of an arch override that doesn't
+> consider >1 core PMU. Testing an ARM heterogenous PMU set up is hard
+> but not doing so breaks people running Linux on M1 macs. Really we
+> should just have PMU specific behaviors and the arch directory should
+> disappear. This would also greatly help cross architecture work where
+> you may record from perf on one architecture, but analyze the data on
+> another.
+>   - we've been moving to have perf and the json have less special
+> architecture knowledge. Weilin's patches aside, we've added things
+> like  "/sys/devices/<pmu name>/caps/slots" so that metrics can use
+> "#slots" rather than hard coding the pipeline width in each metric. My
+> hope for Weilin's patches is that we can make it less Intel specific
+> and ultimately we may be able to advertise the specific features like
+> number of fixed and generic counters via something like sysfs.
+
+While that's ideal for x86/ARM64 where number of platform vendors are 
+less (x86) or ISA has defined all-to-all event to counter mapping.
+
+In RISC-V, we tried to push for all-to-all mapping which was not 
+accepted withing RISC-V working groups. Every platform vendor will most 
+likely end up in a different mapping of event to counters.
+
+Thus, event to counter mapping via "Counter" field in json solve this
+problem quite well. The only downside is that there is no common way 
+across the architecture to pass that information to the pmu driver.
+
+Hence a RISC-V specific solution via config2
+https://lore.kernel.org/lkml/20240217005738.3744121-17-atishp@rivosinc.com/
+
+Please let me know if this can be solved in an eficient way as well.
+
+> However, the counters an event can go on is a property of the event so
+> I see a need for the sysfs/json to add this.
+> 
+> Congratulations if you got this far, sorry this email was so long. Thanks,
+> Ian
+> 
+
+Apologies for the delayed reply and Thanks again!
+
+>> PATCH organization:
+>> PATCH 1 is from the perf metric series[5]
+>> PATCH 2-5 defines and implements the indirect CSR extension.
+>> PATCH 6-10 defines the other required ISA extensions.
+>> PATCH 11 just an overall restructure of the RISC-V PMU driver.
+>> PATCH 12-14 implements the counter delegation extension and new perf tool
+>> plumbings to solve #1 and #2.
+>> PATCH 15-16 improves the perf tool support to solve #1 and #2.
+>> PATCH 17 adds a perf json file for qemu virt machine.
+>> PATCH 18-20 adds hwprobe mechanism to enable perf to detect if platform supports
+>> delegation extensions.
+>>
+>> There is no change in process to run perf stat/record and will continue to work
+>> as it is as long as the relevant extensions have been enabled in Qemu.
+>>
+>> However, the perf tool needs to be recompiled with as it requires new kenrel
+>> headers.
+>>
+>> The Qemu patches can be found here:
+>> https://github.com/atishp04/qemu/tree/counter_delegation_rfc
+>>
+>> The opensbi patch can be found here:
+>> https://github.com/atishp04/opensbi/tree/counter_delegation_v1
+>>
+>> The Linux kernel patches can be found here:
+>> https://github.com/atishp04/linux/tree/counter_delegation_rfc
+>>
+>> [1] https://github.com/riscv/riscv-indirect-csr-access
+>> [2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+>> [3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+>> [4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+>> [5] https://lore.kernel.org/all/20240209031441.943012-4-weilin.wang@intel.com/
+>>
+>> Atish Patra (17):
+>> RISC-V: Add Sxcsrind ISA extension definition and parsing
+>> dt-bindings: riscv: add Sxcsrind ISA extension description
+>> RISC-V: Define indirect CSR access helpers
+>> RISC-V: Add Ssccfg ISA extension definition and parsing
+>> dt-bindings: riscv: add Ssccfg ISA extension description
+>> RISC-V: Add Smcntrpmf extension parsing
+>> dt-bindings: riscv: add Smcntrpmf ISA extension description
+>> RISC-V: perf: Restructure the SBI PMU code
+>> RISC-V: perf: Modify the counter discovery mechanism
+>> RISC-V: perf: Implement supervisor counter delegation support
+>> RISC-V: perf: Use config2 for event to counter mapping
+>> tools/perf: Add arch hooks to override perf standard events
+>> tools/perf: Pass the Counter constraint values in the pmu events
+>> perf: Add json file for virt machine supported events
+>> tools arch uapi: Sync the uinstd.h header file for RISC-V
+>> RISC-V: Add hwprobe support for Counter delegation extensions
+>> tools/perf: Detect if platform supports counter delegation
+>>
+>> Kaiwen Xue (2):
+>> RISC-V: Add Sxcsrind ISA extension CSR definitions
+>> RISC-V: Add Sscfg extension CSR definition
+>>
+>> Weilin Wang (1):
+>> perf pmu-events: Add functions in jevent.py to parse counter and event
+>> info for hardware aware grouping
+>>
+>> Documentation/arch/riscv/hwprobe.rst          |  10 +
+>> .../devicetree/bindings/riscv/extensions.yaml |  34 +
+>> MAINTAINERS                                   |   4 +-
+>> arch/riscv/include/asm/csr.h                  |  47 ++
+>> arch/riscv/include/asm/csr_ind.h              |  42 ++
+>> arch/riscv/include/asm/hwcap.h                |   5 +
+>> arch/riscv/include/asm/sbi.h                  |   2 +-
+>> arch/riscv/include/uapi/asm/hwprobe.h         |   4 +
+>> arch/riscv/kernel/cpufeature.c                |   5 +
+>> arch/riscv/kernel/sys_hwprobe.c               |   3 +
+>> arch/riscv/kvm/vcpu_pmu.c                     |   2 +-
+>> drivers/perf/Kconfig                          |  16 +-
+>> drivers/perf/Makefile                         |   4 +-
+>> .../perf/{riscv_pmu.c => riscv_pmu_common.c}  |   0
+>> .../perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} | 654 ++++++++++++++----
+>> include/linux/perf/riscv_pmu.h                |  13 +-
+>> tools/arch/riscv/include/uapi/asm/unistd.h    |  14 +-
+>> tools/perf/arch/riscv/util/Build              |   2 +
+>> tools/perf/arch/riscv/util/evlist.c           |  60 ++
+>> tools/perf/arch/riscv/util/pmu.c              |  41 ++
+>> tools/perf/arch/riscv/util/pmu.h              |  11 +
+>> tools/perf/builtin-record.c                   |   3 +
+>> tools/perf/builtin-stat.c                     |   2 +
+>> tools/perf/builtin-top.c                      |   3 +
+>> .../pmu-events/arch/riscv/arch-standard.json  |  10 +
+>> tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+>> .../pmu-events/arch/riscv/qemu/virt/cpu.json  |  30 +
+>> .../arch/riscv/qemu/virt/firmware.json        |  68 ++
+>> tools/perf/pmu-events/jevents.py              | 186 ++++-
+>> tools/perf/pmu-events/pmu-events.h            |  25 +-
+>> tools/perf/util/evlist.c                      |   6 +
+>> tools/perf/util/evlist.h                      |   6 +
+>> 32 files changed, 1167 insertions(+), 146 deletions(-)
+>> create mode 100644 arch/riscv/include/asm/csr_ind.h
+>> rename drivers/perf/{riscv_pmu.c => riscv_pmu_common.c} (100%)
+>> rename drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} (61%)
+>> create mode 100644 tools/perf/arch/riscv/util/evlist.c
+>> create mode 100644 tools/perf/arch/riscv/util/pmu.c
+>> create mode 100644 tools/perf/arch/riscv/util/pmu.h
+>> create mode 100644 tools/perf/pmu-events/arch/riscv/arch-standard.json
+>> create mode 100644 tools/perf/pmu-events/arch/riscv/qemu/virt/cpu.json
+>> create mode 100644 tools/perf/pmu-events/arch/riscv/qemu/virt/firmware.json
+>>
+>> --
+>> 2.34.1
+>>
+
