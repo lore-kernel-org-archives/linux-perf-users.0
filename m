@@ -1,186 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139707828D;
-	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754EE6D538;
+	Thu, 29 Feb 2024 20:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709232059; cv=none; b=l/y5ovLxuLvAhI14G6C5M0zUTvKgrHpEaeKMpCJiq3eDJBExvfMAFwUZqAOsTMgKlwyAaJaCl/tSiAYJbeRYgjW9BCZFqlWzEXO1qtgwzHz+aGZHFjaJlMygQUc6/AzVdXo4mquxZkTlUb+IBuDRJMb/TNTilpSJR1Y8QnIfqHE=
+	t=1709240379; cv=none; b=UAh9cEvY0SYZD+MHZb0nh5/dSd2D2jK04lOi6Miw0nMTVZNg3evd/RlAiL/uOA+JIcPINQPjsu8T/Z6euCR2p4e4K9mBY8ntyBiKQ7OzZmIqZGr+lB7bpUieEI0DWFnpGpQMk4/HZRdVNrIZDi3//B5qEUVWbjZRiemrteGdQ5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709232059; c=relaxed/simple;
-	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S7uQqUJVScrQzx2qfpkpen3z3OFduL19my/oxwL80+9yt13pUXTA9AqvrYWr0zYQp+2K81ShkjG9xszAJGYLBqQ6m6zYBfOITkhzXo7hJvx91Uz5XwBDvw19BtNkPdF8Ozr1J5XV9Gc9ThVpu4ew+R/BCgGXnnpiJOD4c34ejI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4C0qKd/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709240379; c=relaxed/simple;
+	bh=pzB9IxRRq+Rx+vVaEO+uogdqRWJOs+QMWQ8UmzsWilA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=l9a6+RNpXXFm1xnW5Rbt30vC/omwEdyvXvbN05Id7X9hYjSJRRUpzeFSrZVFfvWCvyM1+tyYyFB89YqRGCc8UaS0++tnVKRDT9sRVbGnffQoN4sCwFrCk4gOVY/3U1JFPHYmpozdQG08pPWP0bmDadFSAdXJGMcF4DsP8tiA2jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvZ3BZPm; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4C0qKd/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B3F5C433C7;
-	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709232058;
-	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Z4C0qKd/Rb41/Yaf+xCj37agyrwn3r1ddkExRoiOTQQ1rOv6K0esta8w4jH7PujD+
-	 kD7/qP8No/C/78+0smVm9IZtu4d/jrk7LEqvuhyFtMxBc3j0LJtbp0URAThI+keGei
-	 qks/8U5YbqWJsiittU3E6aFngNaeGWrH/DmfvXcvuQjZSKoYhQxx9U49A0Gkb/15KR
-	 j9sQH34m8e6nV3/YFkW66ccdvDbTCUuikr9q5EpBgPuov6ncnUJDohVrx0fTvIKk01
-	 sVVwxjS5r90wPV2vfn4N5Gn1d3uC8zTkPgkNbpWl1EoFhHIEm+KMpBrfUVqBbnH6QE
-	 aw4KV5QlkVDCA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rflKx-0088Cq-QW;
-	Thu, 29 Feb 2024 18:40:56 +0000
-Date: Thu, 29 Feb 2024 18:40:54 +0000
-Message-ID: <8634tb2jwp.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
-In-Reply-To: <20240125094119.2542332-6-anshuman.khandual@arm.com>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
-	<20240125094119.2542332-6-anshuman.khandual@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvZ3BZPm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709240378; x=1740776378;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=pzB9IxRRq+Rx+vVaEO+uogdqRWJOs+QMWQ8UmzsWilA=;
+  b=QvZ3BZPm0yTY4iudeF+ocBYn+MKChn+B6p3EJxrhc/kSfEIJvLQzgKsA
+   3FAoB04vz9m9OaBeP0/Vtq1apqNwKDgtbJCwwHNpHEhr03k3yQ6CSDh2x
+   5N9T5ohTX6LhKA3EYeF3m5m8XhGxv8DgITSEZ2ZZl9M7NHuz5yonR10Zh
+   WCXdRBckkiYHLM2a5cWp7T6TStT3FO6n9SaJEdre8lg38bdKcj+h5NN9+
+   5IbEM8LAfq6Tiwa0nQvXdVyfXWZ9husfoVl1TFYue4oU6U+XlCSVPXDXO
+   ckAMjoDeVmcKKxWDdSr7BY/72schtBJKGUswpMm+Td/739YFZ3Z5gNp7z
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="15186328"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="15186328"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:59:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="8007119"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:59:37 -0800
+Received: from [10.212.85.217] (kliang2-mobl1.ccr.corp.intel.com [10.212.85.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4AB3B580D37;
+	Thu, 29 Feb 2024 12:59:33 -0800 (PST)
+Message-ID: <28bc7ea0-ff3e-48a5-a8b3-20cc52728a5f@linux.intel.com>
+Date: Thu, 29 Feb 2024 15:59:31 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/20] perf jevents: Add RAPL metrics for all Intel
+ models
+To: Ian Rogers <irogers@google.com>, Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang
+ <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ John Garry <john.g.garry@oracle.com>, Jing Zhang
+ <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+References: <20240229001806.4158429-1-irogers@google.com>
+ <20240229001806.4158429-2-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240229001806.4158429-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jan 2024 09:41:16 +0000,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+
+
+On 2024-02-28 7:17 p.m., Ian Rogers wrote:
+> Add a 'cpu_power' metric group that computes the power consumption
+> from RAPL events if they are present.
 > 
-> Disable the BRBE before we enter the guest, saving the status and enable it
-> back once we get out of the guest. This avoids capturing branch records in
-> the guest kernel or userspace, which would be confusing the host samples.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> Changes in V16:
+>  tools/perf/pmu-events/intel_metrics.py | 45 ++++++++++++++++++++++++--
+>  1 file changed, 42 insertions(+), 3 deletions(-)
 > 
-> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
-> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
->   element, and dropped the previous dependency on Jame's coresight series
-> 
->  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
->  arch/arm64/kvm/debug.c             |  5 +++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->  3 files changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 21c57b812569..bce8792092af 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
->  	u8 cflags;
+> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+> index 4fbb31c9eccd..5827f555005f 100755
+> --- a/tools/perf/pmu-events/intel_metrics.py
+> +++ b/tools/perf/pmu-events/intel_metrics.py
+> @@ -1,9 +1,10 @@
+>  #!/usr/bin/env python3
+>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+> -                    MetricGroup)
+> +from metric import (d_ratio, has_event, Event, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
+> +                    LoadEvents, Metric, MetricGroup, Select)
+>  import argparse
+>  import json
+> +import math
+>  import os
 >  
->  	/* Input flags to the hypervisor code, potentially cleared after use */
-> -	u8 iflags;
-> +	u16 iflags;
+>  parser = argparse.ArgumentParser(description="Intel perf json generator")
+> @@ -14,7 +15,45 @@ args = parser.parse_args()
+>  directory = f"{os.path.dirname(os.path.realpath(__file__))}/arch/x86/{args.model}/"
+>  LoadEvents(directory)
 >  
->  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
->  	u8 sflags;
-> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
->  		u64 pmscr_el1;
->  		/* Self-hosted trace */
->  		u64 trfcr_el1;
-> +		u64 brbcr_el1;
->  	} host_debug_state;
->  
->  	/* VGIC state */
-> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
->  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
->  /* vcpu running in HYP context */
->  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
-> +/* Save BRBE context if active  */
-> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
->  
->  /* SVE enabled for host EL0 */
->  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 8725291cb00a..99f85d8acbf3 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> -all_metrics = MetricGroup("",[])
+> +interval_sec = Event("duration_time")
 > +
-> +	/* Check if we have BRBE implemented and available at the host */
-> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
-> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
->  
->  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->  {
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 4558c02eb352..79bcf0fb1326 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
->  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
->  }
->  
-> +static void __debug_save_brbe(u64 *brbcr_el1)
-> +{
-> +	*brbcr_el1 = 0;
+> +def Rapl() -> MetricGroup:
+> +  """Processor socket power consumption estimate.
 > +
-> +	/* Check if the BRBE is enabled */
-> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> +		return;
+> +  Use events from the running average power limit (RAPL) driver.
+> +  """
+> +  # Watts = joules/second
+> +  pkg = Event("power/energy\-pkg/")
+> +  cond_pkg = Select(pkg, has_event(pkg), math.nan)
+> +  cores = Event("power/energy\-cores/")
+> +  cond_cores = Select(cores, has_event(cores), math.nan)
+> +  ram = Event("power/energy\-ram/")
+> +  cond_ram = Select(ram, has_event(ram), math.nan)
+> +  gpu = Event("power/energy\-gpu/")
+> +  cond_gpu = Select(gpu, has_event(gpu), math.nan)
+> +  psys = Event("power/energy\-psys/")
+> +  cond_psys = Select(psys, has_event(psys), math.nan)
+> +  scale = 2.3283064365386962890625e-10
+> +  metrics = [
+> +      Metric("cpu_power_pkg", "",
+> +             d_ratio(cond_pkg * scale, interval_sec), "Watts"),
+> +      Metric("cpu_power_cores", "",
+> +             d_ratio(cond_cores * scale, interval_sec), "Watts"),
+> +      Metric("cpu_power_ram", "",
+> +             d_ratio(cond_ram * scale, interval_sec), "Watts"),
+> +      Metric("cpu_power_gpu", "",
+> +             d_ratio(cond_gpu * scale, interval_sec), "Watts"),
+> +      Metric("cpu_power_psys", "",
+> +             d_ratio(cond_psys * scale, interval_sec), "Watts"),
+> +  ]
 > +
-> +	/*
-> +	 * Prohibit branch record generation while we are in guest.
-> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
-> +	 * modify the filtering set by the host.
-> +	 */
-> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
-> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+> +  return MetricGroup("cpu_power", metrics,
+> +                     description="Processor socket power consumption estimates")
 
-As for TRFCR and PMSCR, this is broken on hVHE.
+As far as I know, the RAPL counters are to monitor energy consumption
+across different domains. The scope may not always be a socket. I think
+the description may brings confusions.
+Maybe we just call it "RAPL power consumption estimates", or "Running
+Average Power Limit (RAPL) power consumption estimates".
 
-Please see [1]
-
-	M.
-
-[1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
-
--- 
-Without deviation from the norm, progress is not possible.
+Thanks,
+Kan
+> +
+> +
+> +all_metrics = MetricGroup("", [
+> +    Rapl(),
+> +])
+>  
+>  if args.metricgroups:
+>    print(JsonEncodeMetricGroupDescriptions(all_metrics))
