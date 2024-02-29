@@ -1,183 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61974AEEA
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 16:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2346CBE3;
+	Thu, 29 Feb 2024 17:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709223516; cv=none; b=qA49gJLMCWXaCY5ALHDtSckUGGpOqKuF7h0OMKUM6ThLknjNMdC8eMYX/oGVl94cd0CpH6jo3eHPuzXD2yFqPHhZKdvx33thgIpIWfsDWGG2dDD4wxxM1PpBV075Dc2QvM+YZhmjUhkbfSpfJsxWnof/UT8kosJHMZTNcKN498E=
+	t=1709227414; cv=none; b=iNuRKnT3UMwr+ok7g2Eohd9MdoOBurkC8BPpJlP4KiWbhZC8qQ912x5QgjEk0doZk+2UrpRYlJsFlKNGFBfJiQKd/vHq4JkBTcUKR9+pVyjPwHhwyfQTeJyMNOOL52eDxH9a2hy9EUD7VQm0vAxQC7AHtmk0hfnrleUqPQYRRHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709223516; c=relaxed/simple;
-	bh=uzhky99Nzh8wR1VdYTvNU7ITI/6WYSUIglrF7+xQoZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oDppZ3W5+d/fjfkvgRciI+ASsv6Gw8Z49UwC2QzBkd1tRmTd+dw8sqHvB2JT79iloqzDFxDBhDKV9c6FzHodMtZ6TseeS3P3r7an0UdF5GuHhPQj8p4mFVVGV7pSXCeh0H5C3dLCEhGvage91hpkGnp5uEZtqQkC1JNiJO+kX+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pf5j+3qQ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709227414; c=relaxed/simple;
+	bh=Oa4oT6c0wAHeOFyXLWOIs7ozD28bcI/Oq64bMT9EcJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TG5cYO5CM3NG3YBdGKwn10eay458B6+92wDCoATpbC1W4iCdM01YKKPNZLq9yU3utJ3vlPf/1NaVMg06r5Bs3iW0h6sGz+76UXuYyig1oQ00o0n5eE0rtZbZaPx+31UNbUE8HGjQ1TWqaRInfTAsNd4RfSuiIDyRLHJ5Sb3zP+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=athSDJtJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pf5j+3qQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709223514; x=1740759514;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uzhky99Nzh8wR1VdYTvNU7ITI/6WYSUIglrF7+xQoZA=;
-  b=Pf5j+3qQa1M9Sgweh1CMvEWXJlIEleZvWct7oDH0aG3fcj6RTLRh7mwt
-   5wQb3YHB5FV7s/coAyfLg7xPVNT0AaaHQIE2cmvIJ82LyBBE7UNOO/Dpp
-   fdYc6G+vAGAY0m2DG2ayHDm235VKGN8NQ5sy9FUJyob4/KyhkAcpAXg+8
-   WoB4pJwqDe4zEWBTq2LZAEvXsE0SHQ20gC/gxQHQ+WSW/dsoss54MnmRF
-   isDmvNYs79R3UxFX9x/5e5GdE6RAAHNrQPr/zH2473JQ1DZlkhuBq1h6i
-   SSYvys2khUkWdZvAv+810em6TjLt9DieL6TO82WRmJgEzRDjcw+dy8uOa
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="4283688"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="4283688"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 08:18:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7806193"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 08:18:33 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: adrian.hunter@intel.com,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2] perf, script: Minimize "not reaching sample" for brstackinsn
-Date: Thu, 29 Feb 2024 08:18:28 -0800
-Message-ID: <20240229161828.386397-1-ak@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="athSDJtJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4454EC433F1;
+	Thu, 29 Feb 2024 17:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709227413;
+	bh=Oa4oT6c0wAHeOFyXLWOIs7ozD28bcI/Oq64bMT9EcJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=athSDJtJ8RuUu8fWSuuZtAHY+/s0ZdAujGSirhTSKDm+/GWp0C+aiudrumr6R8IRH
+	 tJN50ftZC/WUuPg26zLc3h6Pc+G6RYFagSlXWAK3lAzeZJD+qagCSAXYkMyz+q9Vvj
+	 Uqga1oiRlU9mhAsyCUVN9P5l8tuDd3u8fEKwYzO3OiM2bNStw1X+dW2lHQUPmRL3SR
+	 FkshneKh+/a1QToNkyGGsMo1Lsnr3hwR9zo2Top0LbKDRo8WMPow+45nOIJa5vdcLE
+	 4JKLfW96OOZpjYISfpxvrs7evO4dizAdNswCQiWnSRpOAAu20olEl7tIWDXWkgYJFw
+	 baswQ2+HSwgZQ==
+Date: Thu, 29 Feb 2024 14:23:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
+Message-ID: <ZeC9ki-4SGa-iU0C@x1>
+References: <20240228053335.312776-1-namhyung@kernel.org>
+ <Zd8lkcb5irCOY4-m@x1>
+ <CAM9d7cicRtxCvMWu4pk6kdZAqT2pt3erpzL4_Jdt1pKLLYoFgQ@mail.gmail.com>
+ <Zd-UmcqV0mbrKnd0@x1>
+ <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
 
-In some situations perf script -F +brstackinsn sees a lot of
-"not reaching sample" messages. This happens when the last LBR block
-before the sample contains a branch that is not in the LBR,
-and the instruction dumping stops.
+On Wed, Feb 28, 2024 at 01:19:12PM -0800, Namhyung Kim wrote:
+> On Wed, Feb 28, 2024 at 12:16 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Wed, Feb 28, 2024 at 12:01:55PM -0800, Namhyung Kim wrote:
+> > > On Wed, Feb 28, 2024 at 4:22 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > On Tue, Feb 27, 2024 at 09:33:35PM -0800, Namhyung Kim wrote:
+> > > > > Currently it accounts the contention using delta between timestamps in
+> > > > > lock:contention_begin and lock:contention_end tracepoints.  But it means
+> > > > > the lock should see the both events during the monitoring period.
 
-$ perf record -b  emacs -Q --batch '()'
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.396 MB perf.data (443 samples) ]
-$ perf script -F +brstackinsn
-...
-        00007f0ab2d171a4        insn: 41 0f 94 c0
-        00007f0ab2d171a8        insn: 83 fa 01
-        00007f0ab2d171ab        insn: 74 d3                     # PRED 6 cycles [313] 1.00 IPC
-        00007f0ab2d17180        insn: 45 84 c0
-        00007f0ab2d17183        insn: 74 28
-        ... not reaching sample ...
+> > > > > Actually there are 4 cases that happen with the monitoring:
 
-$ perf script -F +brstackinsn | grep -c reach
-136
+> > > > >                 monitoring period
+> > > > >             /                       \
+> > > > >             |                       |
+> > > > >  1:  B------+-----------------------+--------E
+> > > > >  2:    B----+-------------E         |
+> > > > >  3:         |           B-----------+----E
+> > > > >  4:         |     B-------------E   |
+> > > > >             |                       |
+> > > > >             t0                      t1
 
-This is a problem for further analysis that wants to see the full
-code upto the sample.
+> > > > > where B and E mean contention BEGIN and END, respectively.  So it only
+> > > > > accounts the case 4 for now.  It seems there's no way to handle the case
+> > > > > 1.  The case 2 might be handled if it saved the timestamp (t0), but it
+> > > > > lacks the information from the B notably the flags which shows the lock
+> > > > > types.  Also it could be a nested lock which it currently ignores.  So
+> > > > > I think we should ignore the case 2.
 
-There are two common cases where the message is bogus:
-- The LBR only logs taken branches, but the branch might be a
-conditional branch that is not taken (that is the most common
-case actually)
-- The LBR sampling uses a filter ignoring some branches,
-but the perf script check checks for all branches.
+> > > > Perhaps have a separate output listing locks that were found to be with
+> > > > at least tE - t0 time, with perhaps a backtrace at that END time?
 
-This patch fixes these two conditions, by only checking
-for conditional branches, as well as checking the perf_event_attr's
-branch filter attributes.
+> > > Do you mean long contentions in case 3?  I'm not sure what do
+> > > you mean by tE, but they started after t0 so cannot be greater
 
-For the test case above it fixes all the messages:
+> > case 2
 
-$ ./perf script -F +brstackinsn | grep -c reach
-0
+> >                 monitoring period
+> >             /                       \
+> >             |                       |
+> >  2:    B----+-------------E         |
+> >             |             |         |
+> >             t0            tE        t1
+> >
+> > We get a notification for event E, right? We don´t have one for B,
+> > because it happened before we were monitoring.
+> 
+> Ah, ok.  But there should be too many events in case 2 and
+> I don't think users want to see them all.  And they don't have
 
-Note that there are still conditions when the message is hit --
-sometimes there can be a unconditional branch that misses the LBR
-update before the sample -- but they are much more rare now.
+So maybe a summary, something like:
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+  N locks that were locked before this session started have been
+  released, no further info besides this histogram of in-session
+  durations:
 
---
+    0-N units of time: ++
+  N+1-M units of time: ++++
+    ...
 
-v2: Adjust comment (Adrian Hunter)
----
- tools/perf/builtin-script.c                              | 6 ++++--
- tools/perf/util/dump-insn.c                              | 2 +-
- tools/perf/util/dump-insn.h                              | 2 +-
- tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c | 5 +++--
- 4 files changed, 9 insertions(+), 6 deletions(-)
+> flags.  But maybe we can update the flag when it sees exactly
+> the same callstack later.
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37088cc0ff1b..b97f810ad00e 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1343,7 +1343,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	 * Due to pipeline delays the LBRs might be missing a branch
- 	 * or two, which can result in very large or negative blocks
- 	 * between final branch and sample. When this happens just
--	 * continue walking after the last TO until we hit a branch.
-+	 * continue walking after the last TO.
- 	 */
- 	start = entries[0].to;
- 	end = sample->ip;
-@@ -1378,7 +1378,9 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		printed += fprintf(fp, "\n");
- 		if (ilen == 0)
- 			break;
--		if (arch_is_branch(buffer + off, len - off, x.is64bit) && start + off != sample->ip) {
-+		if ((attr->branch_sample_type == 0 || attr->branch_sample_type & PERF_SAMPLE_BRANCH_ANY)
-+				&& arch_is_uncond_branch(buffer + off, len - off, x.is64bit)
-+				&& start + off != sample->ip) {
- 			/*
- 			 * Hit a missing branch. Just stop.
- 			 */
-diff --git a/tools/perf/util/dump-insn.c b/tools/perf/util/dump-insn.c
-index 2bd8585db93c..c1cc0ade48d0 100644
---- a/tools/perf/util/dump-insn.c
-+++ b/tools/perf/util/dump-insn.c
-@@ -15,7 +15,7 @@ const char *dump_insn(struct perf_insn *x __maybe_unused,
- }
- 
- __weak
--int arch_is_branch(const unsigned char *buf __maybe_unused,
-+int arch_is_uncond_branch(const unsigned char *buf __maybe_unused,
- 		   size_t len __maybe_unused,
- 		   int x86_64 __maybe_unused)
- {
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..a5de239679d7 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -20,6 +20,6 @@ struct perf_insn {
- 
- const char *dump_insn(struct perf_insn *x, u64 ip,
- 		      u8 *inbuf, int inlen, int *lenp);
--int arch_is_branch(const unsigned char *buf, size_t len, int x86_64);
-+int arch_is_uncond_branch(const unsigned char *buf, size_t len, int x86_64);
- 
- #endif
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-index c5d57027ec23..292027a984a9 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-@@ -200,12 +200,13 @@ int intel_pt_get_insn(const unsigned char *buf, size_t len, int x86_64,
- 	return 0;
- }
- 
--int arch_is_branch(const unsigned char *buf, size_t len, int x86_64)
-+int arch_is_uncond_branch(const unsigned char *buf, size_t len, int x86_64)
- {
- 	struct intel_pt_insn in;
- 	if (intel_pt_get_insn(buf, len, x86_64, &in) < 0)
- 		return -1;
--	return in.branch != INTEL_PT_BR_NO_BRANCH;
-+	return in.branch == INTEL_PT_BR_UNCONDITIONAL ||
-+	       in.branch == INTEL_PT_BR_INDIRECT;
- }
- 
- const char *dump_insn(struct perf_insn *x, uint64_t ip __maybe_unused,
--- 
-2.43.0
+  The callstack, if going all the way to userspace may have the workload
+targeted in the command line ( some pid, tid, CPU, etc) and thus would
+point for things the user probably is interested than some other lock
+that may affect it but indirectly.
 
+- Arnaldo
