@@ -1,159 +1,149 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EFF365
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 00:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F633207
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 00:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709252368; cv=none; b=ukfMjKZHnRjcstAfsjc9lMP/7VSc43bKo5riflcZNDpNDMsIikZoRcmIV382icfW3N3DzOojMt9gz9Ga4oQp0gIp7ruNC18+SqSMUjrkuagwjIOExGggHXVosskQ2z4W4bQyzuFY3qvdypFb8D2wIyEU50eOXkPVoDQ7KeE0wo8=
+	t=1709254114; cv=none; b=DTF1xenjJ7JQEz+ckoj4VOnX3Q9GqMku5HlAxJK1nIDpD6CBm8cqKJQgzORK2Guk3arjoJW+dPkaQiyKdErqGy4eR8N33PHvT2cQa2hE8KIntTwVZUkh5pz5pxg1qOeeqQZ0DQy34u9SBYcyaua0kN2mtatk3FMksfhWfFGCQxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709252368; c=relaxed/simple;
-	bh=7oaRx7txOLY5lh/ghksCzjvbdA7i/vJfUT0jQTEBt2E=;
+	s=arc-20240116; t=1709254114; c=relaxed/simple;
+	bh=SBRUs1L7SWjgoe78TnGDqNJlwRB1w1wl2d4Ujn1Z/hE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I5KDdr3PX7wwUV1ysDKpImXsVYGp7whdjnSfjUxZwWr9m4x//GmcIIVni5Au7zeS06N9yfKuSn2bk+2izcf9Q+01aSsh8z/Kv/fAG8t/1nkXfOHgax5pvv+hiuWINY7BRzZtqEeTjNCaiZ2quEvFJRIPYZ9MTGR3F8onfNqE3+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NEAjVP/3; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=mEvP8ag0CX+OVjF4ojjR0Cb7+T4qEOy12xBhOKPfguUH7HSQX036PtsH3r5nM0K5mfCgzV3RxsFpEfqyUrygzYhx6DV7v4ME7h9FbI356QBY7hY1KtAtsfNKeNy5joSVQ36uz05ZmzGF0iln2aypvNEQ3Nqtqab3YTM9msFRPyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aop4EUGo; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NEAjVP/3"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc744f54d0so82515ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 16:19:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aop4EUGo"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc744f54d0so86965ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 16:48:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709252367; x=1709857167; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709254109; x=1709858909; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0UWpBAgUjQGEcDfT6+E949LPPMhHm1UHzIqySFkY11k=;
-        b=NEAjVP/3lxBxNeGI51nhHxu7G41cEIy8va/gHYs61xSjqwHrWSxhthvcLYrWniZrqc
-         ATRet53Ni8hZ/O8CZKXaM6yfYFFV+ungVLGxVXn4vRo43uynlS59P+bmQxcxCt86llvl
-         kAmQq9OdEyMIS2+++6X7aWvljiWKuOj9bRI+3FPuLcsaN0TSKOrUs90OFU6m09OgqSe/
-         wipTBNL6vfrm2iAyYNSt34I4cMPOLxf1Fi7YAyPHXatC7Ibaomtv1daJun9odZSRIpas
-         wmj9QXKQCW/ypOiHyKPaROgPbdYiP3uVsZmrhP/MiR2lEHGSS8y0MGfwJzn/4XnqI/7e
-         2njg==
+        bh=QO8hdlL58lho+cQ23ggVJcM5manEQk2nVKwT7YU6wv4=;
+        b=aop4EUGoBUup4rblaRolTFgeXEYQVcPBzJX8dtP81PRWpwn87EgWdgNPU6hYRYniiF
+         lfSc40LfT/1FjqgpAwURskBL6/TXv1OLo4YAWu915HX+B9g5kHOfHKOAOhkY9l2UsSex
+         ppejEXlp/Pk/ZyirEjG84iaxaVZgYqsmtUtRV4O7MqsLxbqY7klMlrbiKSqL1hsbu8FD
+         MiGUx9mwDmSq02YeTmlq1GUkZUuLLoBGjX+0CeTo+MOogyQG7lY/eSpL/26pvZ4SlgzL
+         KsbLUthQQZtp56j10INHUHEQrQ4M3OCymlLR3hDqE6CVDIJs1q3yAD7Tbs6QAmghAoNc
+         o2XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709252367; x=1709857167;
+        d=1e100.net; s=20230601; t=1709254109; x=1709858909;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0UWpBAgUjQGEcDfT6+E949LPPMhHm1UHzIqySFkY11k=;
-        b=B4fy3h/sO5+z3xguD4jLRinlW/QsYTa0nAEuCjUQmyHzIlWMivBV5cgu9Hb/i8rwgA
-         pzunSndyk+ef7Uolo1nQHCsd+K/2bXrPrr+wK9w1EY0+cSm7WnJDLIOVR7WD4winZ+xN
-         9qAJZF4nRcbVs4WnTD1SzPsLD+918+/5l2ynrj8pL/2Nrnn/AUJATZkGohIPVtfzmLHM
-         Yie9thtFc4FWsoEv9enq9/61zGxv4+hv0625tYSnjEDo30rhp1JV2/fTuIqfUsmERiNA
-         uFwMUbjMzGBsxi4qOE25L8qwPTzewO+miwLfQNdNCCeCNLeO+JiRn01qx8cJAKio7RfB
-         nLnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVupidipUIB4NMbWZkIEhpdO6RqrSKTEbAnOzr+zOgrgAZ0mpyiGUL9hVFFP0cq190QXu34suNELNBjja2r01sH0Mu2h+5wV3Er1AxcQ62/3w==
-X-Gm-Message-State: AOJu0YwTdF2t222KpEZ+OOkEtiRmIiU/jpTGzQG4Fs7wpUsCvs1ZGqR2
-	T5DWZuUbcHFEdkWAIX2j1C6+2Euc9nX3mkXS22i/q50/jkJuQ+W8pdW7iuO7t82nTZSC2MrpRbt
-	aK1dAFjD50CfSWWRBrL6DxWZNKqZiC4QrjRXm
-X-Google-Smtp-Source: AGHT+IG+krEZg1W4lxxNiq3BuiCY53h8CWBR5bxCp6JLwaMIKWJDGBm2DvjENztc4Nf5wogg1bUBirKz0SR/4ekNyeo=
-X-Received: by 2002:a17:902:db0d:b0:1dc:6cf4:5908 with SMTP id
- m13-20020a170902db0d00b001dc6cf45908mr80892plx.6.1709252366428; Thu, 29 Feb
- 2024 16:19:26 -0800 (PST)
+        bh=QO8hdlL58lho+cQ23ggVJcM5manEQk2nVKwT7YU6wv4=;
+        b=pyFBwz57uels5NzmGs6wwGcpl5s7WyAqs/wIVgaq5U3OmrsOw80oYRAYxEeNqCmKd6
+         hnCIZV92hUGR6yHMjquwmNBCe9DhOaN9XE2KJoEiUF2ajuxxLf3M1Xvndi5/kR+AWoLH
+         nqFdQBuFI/HnzM13Xh0WWFkbzMUcF43io6LDd8tp/cl8mptzZfVgGN5T0RLiYvRskwYa
+         ABKuEmbHe8g4ZFxv5GgnpMslvqbby5dNdgCzYVGaIKHHdEtM/eIWvhplFojUUSnah1EZ
+         5PsKiu4vgc6H7u9TaAnoocV8UfVeP9Alppc9icKi17riK+lSMKNmllW5DBlKudFJgeFF
+         7w4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9KP1uCW+IvfNDIpA1zTe35ma9x1LcyRyxU3a/y9VJJeG97FHDOlvG3NsJWHgNs6BQmyuWK1HrinYkBD05J1NSYtVmpMSI7H0ZUanH+VihyA==
+X-Gm-Message-State: AOJu0YyiY75J5wbhkgFiHcD36WfeMW+brjWeasKUG67+M3Qqo1FuMEQN
+	x+zK31+hysaeSUKYVlRQ5bfAaDK7p3dU9NCjXD9Q+UkOlknnvCOc0Ohk6UjdgaVZCa3spQqHhe7
+	AJOtIzXg7X79y5kXoqypb+UWuOHK2NwAnt91G
+X-Google-Smtp-Source: AGHT+IFFxmOc6k9DBxoJkuk5vhJt6IT+2D7y4mJDPfThzu5EGp+7Q6h6dIcUN8jbDoO6uDvJHzfh91pSkyjFtw56Ilw=
+X-Received: by 2002:a17:903:244b:b0:1db:e78f:4ce9 with SMTP id
+ l11-20020a170903244b00b001dbe78f4ce9mr83835pls.24.1709254108425; Thu, 29 Feb
+ 2024 16:48:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-5-irogers@google.com>
- <CAM9d7cjuv2VAVfGM6qQEMYO--WvgPvAvmnF73QrS_PzGzCF32w@mail.gmail.com>
- <CAP-5=fUUSpHUUAc3jvJkPAUuuJAiSAO4mjCxa9qUppnqk76wWg@mail.gmail.com> <b60c7731b8a84e01a77fea55c31a77b9@AcuMS.aculab.com>
-In-Reply-To: <b60c7731b8a84e01a77fea55c31a77b9@AcuMS.aculab.com>
+References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-14-irogers@google.com>
+ <b1ec1953-2df8-4987-a7d0-4758835b5392@linux.intel.com>
+In-Reply-To: <b1ec1953-2df8-4987-a7d0-4758835b5392@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Feb 2024 16:19:11 -0800
-Message-ID: <CAP-5=fUGTZXQv28+v-t1mhFyWb9BuxRzCD+N4WTU0=hTqv+xLA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] perf threads: Move threads to its own files
-To: David Laight <David.Laight@aculab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Thu, 29 Feb 2024 16:48:17 -0800
+Message-ID: <CAP-5=fWHQthKat7SZx6P8CeMpjfsgYgp8=+nxvHBMmMVZF9_vw@mail.gmail.com>
+Subject: Re: [PATCH v1 13/20] perf jevents: Add cycles breakdown metric for Intel
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 1:59=E2=80=AFPM David Laight <David.Laight@aculab.c=
+On Thu, Feb 29, 2024 at 1:30=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
 om> wrote:
 >
-> From: Ian Rogers
-> > Sent: 27 February 2024 07:24
-> >
-> > On Mon, Feb 26, 2024 at 11:07=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > >
-> > > > Move threads out of machine and move thread_rb_node into the C
-> > > > file. This hides the implementation of threads from the rest of the
-> > > > code allowing for it to be refactored.
-> > > >
-> > > > Locking discipline is tightened up in this change.
-> > >
-> > > Doesn't look like a simple code move.  Can we split the locking
-> > > change from the move to make the reviewer's life a bit easier? :)
-> >
-> > Not sure I follow. Take threads_nr as an example.
-> >
-> > The old code is in machine.c, so:
-> > -static size_t machine__threads_nr(const struct machine *machine)
-> > -{
-> > -       size_t nr =3D 0;
-> > -
-> > -       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++)
-> > -               nr +=3D machine->threads[i].nr;
-> > -
-> > -       return nr;
-> > -}
-> >
-> > The new code is in threads.c:
-> > +size_t threads__nr(struct threads *threads)
-> > +{
-> > +       size_t nr =3D 0;
-> > +
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +
-> > +               down_read(&table->lock);
-> > +               nr +=3D table->nr;
-> > +               up_read(&table->lock);
-> > +       }
-> > +       return nr;
-> > +}
-> >
-> > So it is a copy paste from one file to the other. The only difference
-> > is that the old code failed to take a lock when reading "nr" so the
-> > locking is added. I wanted to make sure all the functions in threads.c
-> > were properly correct wrt locking, semaphore creation and destruction,
-> > etc.  We could have a broken threads.c and fix it in the next change,
-> > but given that's a bug it could make bisection more difficult.
-> > Ultimately I thought the locking changes were small enough to not
-> > warrant being on their own compared to the advantages of having a sane
-> > threads abstraction.
 >
-> The lock is pretty much entirely pointless.
-> All it really does is slow the code down.
-> The most you could want is:
->         nr +=3D READ_ONCE(table->nr);
-> to avoid any hypothetical data tearing.
+>
+> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
+> > Breakdown cycles to user, kernel and guest.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/pmu-events/intel_metrics.py | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
+ents/intel_metrics.py
+> > index dae44d296861..fef40969a4b8 100755
+> > --- a/tools/perf/pmu-events/intel_metrics.py
+> > +++ b/tools/perf/pmu-events/intel_metrics.py
+> > @@ -26,6 +26,23 @@ core_cycles =3D Event("CPU_CLK_UNHALTED.THREAD_P_ANY=
+",
+> >  smt_cycles =3D Select(core_cycles / 2, Literal("#smt_on"), core_cycles=
+)
+> >
+> >
+> > +def Cycles() -> MetricGroup:
+> > +  cyc_k =3D Event("cycles:kHh")
+> > +  cyc_g =3D Event("cycles:G")
+> > +  cyc_u =3D Event("cycles:uH")
+> > +  cyc =3D cyc_k + cyc_g + cyc_u
+> > +
+> > +  return MetricGroup("cycles", [
+> > +      Metric("cycles_total", "Total number of cycles", cyc, "cycles"),
+> > +      Metric("cycles_user", "User cycles as a percentage of all cycles=
+",
+> > +             d_ratio(cyc_u, cyc), "100%"),
+> > +      Metric("cycles_kernel", "Kernel cycles as a percentage of all cy=
+cles",
+> > +             d_ratio(cyc_k, cyc), "100%"),
+> > +      Metric("cycles_guest", "Hypervisor guest cycles as a percentage =
+of all cycles",
+> > +             d_ratio(cyc_g, cyc), "100%"),
+> > +  ], description =3D "cycles breakdown per privilege level (users, ker=
+nel, guest)")
+> > +
+> > +
+> >  def Idle() -> Metric:
+> >    cyc =3D Event("msr/mperf/")
+> >    tsc =3D Event("msr/tsc/")
+> > @@ -770,6 +787,7 @@ def IntelLdSt() -> Optional[MetricGroup]:
+> >
+> >
+> >  all_metrics =3D MetricGroup("", [
+> > +    Cycles(),
+>
+> The metric group seem exactly the same on AMD and ARM. Maybe we can have
+> tools/perf/pmu-events/common_metrics.py for all the common metrics.
 
-Completely agreed, but as this is user space code I'm unclear on
-thread sanitizer support for READ_ONCE. The code is also only called
-in debug statements. The migration to a hashmap in the later patches
-means the complexity of taking the lock is more justified, although
-we're using libbpf's hashmap that has a size variable.
+Agreed. I think we can drop cycles in the three sets and then once
+then do the common_metrics.py as a follow up.
 
 Thanks,
 Ian
 
->         David
+> Thanks,
+> Kan
 >
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+> >      Idle(),
+> >      Rapl(),
+> >      Smi(),
