@@ -1,49 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1847F24B23;
-	Fri,  1 Mar 2024 19:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20C83C699;
+	Fri,  1 Mar 2024 19:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709321402; cv=none; b=fo6mwAvqyO5qhEqJAJeMU20PXaQxKQcwqH1zTnCaxhuSPPlHOvCPmc7l6fYZ+yDSAUhLeSGunmZkcv1h55MDOWCIdXms1+8G//FMTxJdC04xhP7vYEBgtBgss1FdVcHbOTeMdQMkOCiPR1d8y9nQD9tmU1FKMFBOAt95ZP+e7Yo=
+	t=1709321424; cv=none; b=Y64LIRerJofzw4jHebVz7QXkShGHjBVigTN/s/4dBQ5j20N6mYVunSZLsosPLMs6qp6bOHcRJeYKxjIcJIEC78U89d9BhKbRXMRHC05JQmKkDc71GUztelV4gYfxONTnlGNYh4ySQEMEagubAaxpJsIMgGmo5XwCCTZSgGyXsU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709321402; c=relaxed/simple;
-	bh=Nz/QJoLkzoB8iob4rLnHiOlC6nJlTAcZG95r3IJ/SQg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XES+PH1VTKT5wz1kyrGhSM6Ts/u5S8ZOtVWXk50lmFKlA0Hd8UCGTkA/WdDUkWvDfKFg9YCPK4LX9ODHrv0oro37y7k9szbXujwt9X/o4p/5pYCbNsNxZJfrodXeScxThAOW9TdeQpnBJ3OB7FTmHJaajzof35jc8989pHh7wkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkwHzMHW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709321424; c=relaxed/simple;
+	bh=nDzXcSLGBW1qmjkBvu5szXANnZ49BI0gVSIKl7PQxWM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nsVH4FSm0laUpGkIByStWMLBnyL7nxf2gurMKtKsjvvHJ86B4IofLV2phAoQt9zlNiFrb2Y+Zd9CXaj4b6hnPGAuqXmCJKreCa3YkJoJ8y7JhLDpPWPS6zjvUBiDQ51MUzLpgFDSZo34AT9Gj24lR7bwTFHpLJm/GTMaD9O1rns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WB+yftRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkwHzMHW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9AEC43390;
-	Fri,  1 Mar 2024 19:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WB+yftRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 166F5C433F1;
+	Fri,  1 Mar 2024 19:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709321401;
-	bh=Nz/QJoLkzoB8iob4rLnHiOlC6nJlTAcZG95r3IJ/SQg=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=LkwHzMHW7J5ryZEQ6R/I2NywAst5D0BK3bTWlg1/FFURtJzFvI1MOvIszWXqtYLJc
-	 ZvxGGvY2ngbuAkEO/qmenBtGMgefko9ngZwrYZEcShZd2meakPFhYMEBKa6eQ2irII
-	 JfpOusSREUIwlgJs4+sJAKcKcK5L5dTrsYU+E9DyoejTgwJ2J6heV7kfR87MzH/bnc
-	 eSGzikvSBUURFmHBlvQcY8AnLTHApQH0GzGCGal+Vw+GRPZf/z3xnJ2pRRwfoET3Ib
-	 KBqhDAjKcwtDEzJueRFzG2wlT8OTxwOXYpm5B/B4TumAqbLEidpP0lUG4Jc18f0mO0
-	 xRVVHlch9NJtA==
+	s=k20201202; t=1709321423;
+	bh=nDzXcSLGBW1qmjkBvu5szXANnZ49BI0gVSIKl7PQxWM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WB+yftRDMXoV2Al5kHkT0CPaxuwR9ur+sq8PD6c6+GVselijgUAcUrxwTFIHndXnE
+	 S99Wng1YV4UGymSW0hdp8oUmCqPzbVM+rhbwxbTFiKVixHsERpPgdENyhknj6MFLUN
+	 pEqLHhgcLHJp/Y3OgkJkNLdKLA6Ld6aA87weFwquGO0O0fiftDzJr/P538K5GeLNYD
+	 tD19QIcLeSGjsWM+kHyrzrRAUVjSVGdm6sgOh/mwnkKiocgre526GFt5AsjqBUf2NK
+	 9LdURW3t/JX8ybx18vCNurvU228joARozDSOnxofsM65D34uJRs68BsAf4nPCmHz1r
+	 sgqmSF8LRnbbg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	bpf@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v1 1/2] perf metrics: Fix metric matching
-Date: Fri,  1 Mar 2024 11:29:58 -0800
-Message-ID: <170932136986.3731358.13745527193899618886.b4-ty@kernel.org>
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
+Date: Fri,  1 Mar 2024 11:30:21 -0800
+Message-ID: <170932136988.3731358.12075871779065575043.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <20240224011420.3066322-1-irogers@google.com>
-References: <20240224011420.3066322-1-irogers@google.com>
+In-Reply-To: <20240228053335.312776-1-namhyung@kernel.org>
+References: <20240228053335.312776-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,13 +53,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 23 Feb 2024 17:14:19 -0800, Ian Rogers wrote:
-> The metric match function fails for cases like looking for "metric" in
-> the string "all;foo_metric;metric" as the "metric" in "foo_metric"
-> matches but isn't preceeded by a ';'. Fix this by matching the first
-> list item and recursively matching on failure the next item after a
-> semicolon.
+On Tue, 27 Feb 2024 21:33:35 -0800, Namhyung Kim wrote:
+> Currently it accounts the contention using delta between timestamps in
+> lock:contention_begin and lock:contention_end tracepoints.  But it means
+> the lock should see the both events during the monitoring period.
 > 
+> Actually there are 4 cases that happen with the monitoring:
+> 
+>                 monitoring period
+>             /                       \
+>             |                       |
+>  1:  B------+-----------------------+--------E
+>  2:    B----+-------------E         |
+>  3:         |           B-----------+----E
+>  4:         |     B-------------E   |
+>             |                       |
+>             t0                      t1
 > 
 > [...]
 
