@@ -1,293 +1,219 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AECA2B9A1
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 01:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DBB101EB
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 01:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709254961; cv=none; b=srs/2ZYurT7jWtiSo+Z9RaBDqxNRNUcVek+TWN4OvV6AS9dFStZnl4TVqZ60WoSwTeid4TxW1JRw1/tR7LFWyncJfOihZhz0TAKOuXwcRGV+KU4IlUQ0zcGLhgNzOMxRxn4kIKALs1iH0WZqs+D4Mr3lFbIsEIgqEGSQy1cZrDo=
+	t=1709255177; cv=none; b=H5ww7rmH1O0gCAapFIhaHCPJz/uakr1tyCDoC3HEh9PYMCuC+BE6zQsbYJp2qQDw9O8W+dZOu8Lf+yWRK7UZsR5kBJOQY4NjPSxhoXjNhvgEv9AhdzNZPFEPvdP3ynyE2dDRVyJv+NoWEf7q0BYWkyHQvQW76iRXqpP1n7oL/nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709254961; c=relaxed/simple;
-	bh=U+jHS2PunKxlRK3QdGi/HqmwOX6E5pGajTxpk2flEbE=;
+	s=arc-20240116; t=1709255177; c=relaxed/simple;
+	bh=QwEN1k/cHLzvMaWPFjpg1irL60P6i8tNmytsV7QkE1c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X0I4lsRQ0E6RESMGW2t+pUZJAZc7bLQh2nxPWXcR8rfzmPVEVLS3lqDZddbtXEiOCqOZqaLa5kQpSlEYnRM5AiU/fmpoqcBKZIydK3DNCkrvNTAXLD/ABHrfbedEOvktF83AelPp8luOSGN5AozqFY0Z2IfxaolH/Q/qxqC4EwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O+ubgZUp; arc=none smtp.client-ip=209.85.160.172
+	 To:Cc:Content-Type; b=OAfsCA2i41nGIpEvBLuJN+NV7gAOAWW5L2vq0JbnwTPnF2d1SRlINmv0iObJN8gvEzvYuUgXbNWAu1l9oeXwH/je9L9xtBD9juu8eOunVaPGktmXBnUHk9NknXjBS7L3hDjsElF+t4lmaHGau/dWVP7tofFQVj/ZM+16dD6Joc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AxA9zho0; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O+ubgZUp"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-42e6939d34fso185581cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 17:02:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AxA9zho0"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc9f4d1106so78755ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 17:06:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709254958; x=1709859758; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709255175; x=1709859975; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eVZpDDjOG9tFqVs0tYA5gDweMLPCuh+jIrg2FxoiREs=;
-        b=O+ubgZUphldv2/j8e3jEBR0mEipFtSQoZx4MVMcg9ZHhfj06xhMhG2sN8ZQRokXtfJ
-         DMxQUEhypIiwz058p2l1Y8uvlNGqkuCB4f2GEacw/i9DadlLy8DAaDsuq5XGQys4Md/9
-         UpvXkhXRu8ipay+Q3j+KIJfxV8ggaQpt6zG/iNSFjSFWi5bpfFQwirbgohhjQ6t3Ud/1
-         +26gLWlMueUqx768Sh0/IUifsMZnwnMsfiVhZBp/aoroMlyZ0NtC8K08lWNZICBWOqCF
-         mf2w5mCJ7m7jAIp4iFk0odv8JtJkhjh3q5X8IVZ+ID4RcfS9+eD+kyxEcvHlu32RPU4i
-         V7KA==
+        bh=vChUkylk47jCtb99U8qi4uunBO8k+CjLWplXiyL0CXU=;
+        b=AxA9zho0TGcy9WaPbfLWAUkOXFjnDfrUqoloMlHzSR28+Efe3mFw+11jbGZdLxWHo4
+         z40s1HyT/CLqc+ttgvgqTL6kgmoYYZvmGUQMVnVQ8F8wB4iUARf0khmtSWwsnUR6XpKP
+         hVSwmnNjoi9BDDVurZeFcesWa+AzSgDBF/+SJrsaeHOJDVF+SyHFr2y9EJaJhH11QJuZ
+         G7O1FJFCrYRYCzrS4AHi3ZokD9BD7qIKYm7eu8cTCjHk6sAWN8CciBZBxOrjJk5bgpAO
+         c+X3FOzFhKM+DaDsVyzjz70lQFj2Ody6sTzPRQwfKIfC0g8UJfdvC/KmfP8TFh2FYMfp
+         eE3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709254958; x=1709859758;
+        d=1e100.net; s=20230601; t=1709255175; x=1709859975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eVZpDDjOG9tFqVs0tYA5gDweMLPCuh+jIrg2FxoiREs=;
-        b=EjEDLipZ+7jRPWc9Gv3G/AlrYxPD2hVPrGEV3V6+IPoFxoLscirRlFvDYe7Jo+3gqQ
-         6vCiAHpg61Z28qcmD+uaRfrA0MNzFpt2hb0yoq9PQI1oTUulQ5mIKyJbKK+6Nw5Nlan0
-         P46cTYcc6Qe8//nXofo8Xbc1UOvGj4FXYjRXK1sE/wuQuO/OrmxEjp9UOv5rq+d0zbW+
-         C0LBheQrfNBMKIoZ6BLj0MJAt9ttH54EqpZTrfZFdf+dOkYVyYB1e4ErZK9RpHxQdH7d
-         axarxWLsWrLtEcWwP6k9IIl4ePTYDON5+fxTz3d0afpK/OLsiRfZ8waQfYeIPOb7M9TJ
-         6L4A==
-X-Forwarded-Encrypted: i=1; AJvYcCX6uRhoS3r3HMYpMNmCUyTU2IsHYk/7M3Q9Y2jpt06VgO2YRHnDBNwD4JLT4+jO22LLhAe0LTPqoxtg9lrj9iJWQNtYfG9pQP7XQRMg56jLWg==
-X-Gm-Message-State: AOJu0YydT+gNg4gSliiBCCWCklW+AI7xRfJYGHky1JzTXgtEPaqD4yOQ
-	YRpDNT65PgROztb9VBVF5DudcW3XnIFv7dMA59lFDEZgRfyEATC3q3QwKYciaNI8BpcqCQF10uH
-	nJVksuuio2MLC2cVV/mCCpFWZfbYF3wzfY7hW
-X-Google-Smtp-Source: AGHT+IE3XkMWqqoTOW6Jc3RaKgMJptjXxizztP17HV/YrsbXEqzRk25HPLUOzt2ueRdFN28Vel/WakZGmDw1IDKQCeA=
-X-Received: by 2002:a05:622a:130b:b0:42e:2931:13df with SMTP id
- v11-20020a05622a130b00b0042e293113dfmr57740qtk.11.1709254957924; Thu, 29 Feb
- 2024 17:02:37 -0800 (PST)
+        bh=vChUkylk47jCtb99U8qi4uunBO8k+CjLWplXiyL0CXU=;
+        b=BUm1Kwqu7VpmZQoxJyD2+m4g/j006HjuRK7doQOaFbEzbzEWfCG89Zj8kluGlpLXZt
+         znn1eNsjnQFJGXQf+0Dv0lVwiDe4+xhAZbpD6JbgGEQTCmjB/7vn8JrpiHn3sBVExIpK
+         GtWqZQK3oq+bcfIz2a39TshL3Hw96OvIELF8ULP3i+T31y9gWwqZQBSkrrAKxAqfKHgI
+         kIJtARwNFuLMAZ4UMkeMKvO5EYHtfpuF+Jf/VnCEPLvg+pzMGGRZ84lMF+0TgaHMuzg9
+         vvC93KfI6776Ra0jsxtuTAXRfaqxGIXtXp1rb9lmTFKYmj6A2FHckD2gcUZQgjhckHCv
+         oROA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS9wnclrd/2B28PJbfNv+GKvzBV4bb027aSPvaxCrM8T1q7vXI2cwek2Kl30WTxtx4YSvhmU7JfB2X9nZtWZf8UH+LBceOtxTdDodK52rpmg==
+X-Gm-Message-State: AOJu0YzVrUVBzXgPDkisTW/Cwx7Dl8IovpsuRNgjSfEMb+jnzykRU4N6
+	Tbhh+WZw/8vAE3hUY33xMaW1cbpYe2M26Khx1xy9DQK+Cx7qG/Vuk0GM4vv/qd0E6zb8bka34LA
+	PfzLPZUO2eCWAa/0F4i2+KEczVGzfkTxe+HlY
+X-Google-Smtp-Source: AGHT+IF6ZLpaSGpEgRZjTs852OfdqF7Oqx/Q69br0DHWr2ELtuG/uOgbhtiPHQK0QiwgtskzsqynH7v2AYDqcsKFhws=
+X-Received: by 2002:a17:902:fb06:b0:1db:a356:b954 with SMTP id
+ le6-20020a170902fb0600b001dba356b954mr88822plb.28.1709255175255; Thu, 29 Feb
+ 2024 17:06:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-6-irogers@google.com>
- <7ec53a59-10d7-4a85-90b7-1337a0a42815@linux.intel.com>
-In-Reply-To: <7ec53a59-10d7-4a85-90b7-1337a0a42815@linux.intel.com>
+References: <20240229070757.796244-1-irogers@google.com> <CAM9d7chNekmdJyPbOOzZVhR+cBWajscSg3pVFKN4A4evKwFXjg@mail.gmail.com>
+In-Reply-To: <CAM9d7chNekmdJyPbOOzZVhR+cBWajscSg3pVFKN4A4evKwFXjg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Feb 2024 17:02:26 -0800
-Message-ID: <CAP-5=fUHUUSyah-fc+iigy0XPvnuZZKW59MhOZcXcfwx7Ecrew@mail.gmail.com>
-Subject: Re: [PATCH v1 05/20] perf jevents: Add br metric group for branch
- statistics on Intel
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Thu, 29 Feb 2024 17:06:04 -0800
+Message-ID: <CAP-5=fVWC+MeeUcNmofkQi766se4P0ERGz_+L+7uTFUXocwVvQ@mail.gmail.com>
+Subject: Re: [PATCH v1] libperf evlist: Avoid out-of-bounds access
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 1:17=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
+On Thu, Feb 29, 2024 at 1:46=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
->
->
-> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
-> > The br metric group for branches itself comprises metric groups for
-> > total, taken, conditional, fused and far metric groups using json
-> > events. Condtional taken and not taken metrics are specific to Icelake
-> > and later generations, so a model to generation look up is added.
+> On Wed, Feb 28, 2024 at 11:08=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > Parallel testing appears to show a race between allocating and setting
+> > evsel ids. As there is a bounds check on the xyarray it yields a segv
+> > like:
+> >
+> > ```
+> > AddressSanitizer:DEADLYSIGNAL
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > =3D=3D484408=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x00=
+0000000010
+> >
+> > =3D=3D484408=3D=3DThe signal is caused by a WRITE memory access.
+> >
+> > =3D=3D484408=3D=3DHint: address points to the zero page.
+> >
+> >     #0 0x55cef5d4eff4 in perf_evlist__id_hash tools/lib/perf/evlist.c:2=
+56
+> >     #1 0x55cef5d4f132 in perf_evlist__id_add tools/lib/perf/evlist.c:27=
+4
+> >     #2 0x55cef5d4f545 in perf_evlist__id_add_fd tools/lib/perf/evlist.c=
+:315
+> >     #3 0x55cef5a1923f in store_evsel_ids util/evsel.c:3130
+> >     #4 0x55cef5a19400 in evsel__store_ids util/evsel.c:3147
+> >     #5 0x55cef5888204 in __run_perf_stat tools/perf/builtin-stat.c:832
+> >     #6 0x55cef5888c06 in run_perf_stat tools/perf/builtin-stat.c:960
+> >     #7 0x55cef58932db in cmd_stat tools/perf/builtin-stat.c:2878
+> > ...
+> > ```
+> >
+> > Avoid this crash by early exiting the perf_evlist__id_add_fd and
+> > perf_evlist__id_add is the access is out-of-bounds.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/pmu-events/intel_metrics.py | 139 +++++++++++++++++++++++++
-> >  1 file changed, 139 insertions(+)
-> >
-> > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
-ents/intel_metrics.py
-> > index 1096accea2aa..bee5da19d19d 100755
-> > --- a/tools/perf/pmu-events/intel_metrics.py
-> > +++ b/tools/perf/pmu-events/intel_metrics.py
-> > @@ -19,6 +19,7 @@ LoadEvents(directory)
-> >
-> >  interval_sec =3D Event("duration_time")
-> >
-> > +
 >
-> Unnecessary empty line.
+> While I'm ok with this change, the real fix would be changing
+> evsel_store__ids() to use xyarray__max_{x,y} for fd instead
+> of cpu and thread map numbers.
 
-Ack. Will fix in v2.
+So I'm not sure on how to code that fix. Could you take over looking
+at this? It reproduces for me with "perf test -v -p" when built with
+"-fsanitize=3Daddress".
 
 Thanks,
 Ian
 
 > Thanks,
-> Kan
+> Namhyung
 >
-> >  def Idle() -> Metric:
-> >    cyc =3D Event("msr/mperf/")
-> >    tsc =3D Event("msr/tsc/")
-> > @@ -127,11 +128,149 @@ def Tsx() -> Optional[MetricGroup]:
-> >      return MetricGroup('transaction', metrics)
+> > ---
+> >  tools/lib/perf/evlist.c                  | 18 ++++++++++++------
+> >  tools/lib/perf/include/internal/evlist.h |  4 ++--
+> >  2 files changed, 14 insertions(+), 8 deletions(-)
 > >
+> > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> > index 058e3ff10f9b..c6d67fc9e57e 100644
+> > --- a/tools/lib/perf/evlist.c
+> > +++ b/tools/lib/perf/evlist.c
+> > @@ -248,10 +248,10 @@ u64 perf_evlist__read_format(struct perf_evlist *=
+evlist)
 > >
-> > +def IntelBr():
-> > +  ins =3D Event("instructions")
-> > +
-> > +  def Total() -> MetricGroup:
-> > +    br_all =3D Event ("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED=
-.ANY")
-> > +    br_m_all =3D Event("BR_MISP_RETIRED.ALL_BRANCHES",
-> > +                     "BR_INST_RETIRED.MISPRED",
-> > +                     "BR_MISP_EXEC.ANY")
-> > +    br_clr =3D None
-> > +    try:
-> > +      br_clr =3D Event("BACLEARS.ANY", "BACLEARS.ALL")
-> > +    except:
-> > +      pass
-> > +
-> > +    br_r =3D d_ratio(br_all, interval_sec)
-> > +    ins_r =3D d_ratio(ins, br_all)
-> > +    misp_r =3D d_ratio(br_m_all, br_all)
-> > +    clr_r =3D d_ratio(br_clr, interval_sec) if br_clr else None
-> > +
-> > +    return MetricGroup("br_total", [
-> > +        Metric("br_total_retired",
-> > +               "The number of branch instructions retired per second."=
-, br_r,
-> > +               "insn/s"),
-> > +        Metric(
-> > +            "br_total_mispred",
-> > +            "The number of branch instructions retired, of any type, t=
-hat were "
-> > +            "not correctly predicted as a percentage of all branch ins=
-trucions.",
-> > +            misp_r, "100%"),
-> > +        Metric("br_total_insn_between_branches",
-> > +               "The number of instructions divided by the number of br=
-anches.",
-> > +               ins_r, "insn"),
-> > +        Metric("br_total_insn_fe_resteers",
-> > +               "The number of resync branches per second.", clr_r, "re=
-q/s"
-> > +               ) if clr_r else None
-> > +    ])
-> > +
-> > +  def Taken() -> MetricGroup:
-> > +    br_all =3D Event("BR_INST_RETIRED.ALL_BRANCHES", "BR_INST_RETIRED.=
-ANY")
-> > +    br_m_tk =3D None
-> > +    try:
-> > +      br_m_tk =3D Event("BR_MISP_RETIRED.NEAR_TAKEN",
-> > +                      "BR_MISP_RETIRED.TAKEN_JCC",
-> > +                      "BR_INST_RETIRED.MISPRED_TAKEN")
-> > +    except:
-> > +      pass
-> > +    br_r =3D d_ratio(br_all, interval_sec)
-> > +    ins_r =3D d_ratio(ins, br_all)
-> > +    misp_r =3D d_ratio(br_m_tk, br_all) if br_m_tk else None
-> > +    return MetricGroup("br_taken", [
-> > +        Metric("br_taken_retired",
-> > +               "The number of taken branches that were retired per sec=
-ond.",
-> > +               br_r, "insn/s"),
-> > +        Metric(
-> > +            "br_taken_mispred",
-> > +            "The number of retired taken branch instructions that were=
- "
-> > +            "mispredicted as a percentage of all taken branches.", mis=
-p_r,
-> > +            "100%") if misp_r else None,
-> > +        Metric(
-> > +            "br_taken_insn_between_branches",
-> > +            "The number of instructions divided by the number of taken=
- branches.",
-> > +            ins_r, "insn"),
-> > +    ])
-> > +
-> > +  def Conditional() -> Optional[MetricGroup]:
-> > +    try:
-> > +      br_cond =3D Event("BR_INST_RETIRED.COND",
-> > +                      "BR_INST_RETIRED.CONDITIONAL",
-> > +                      "BR_INST_RETIRED.TAKEN_JCC")
-> > +      br_m_cond =3D Event("BR_MISP_RETIRED.COND",
-> > +                        "BR_MISP_RETIRED.CONDITIONAL",
-> > +                        "BR_MISP_RETIRED.TAKEN_JCC")
-> > +    except:
-> > +      return None
-> > +
-> > +    br_cond_nt =3D None
-> > +    br_m_cond_nt =3D None
-> > +    try:
-> > +      br_cond_nt =3D Event("BR_INST_RETIRED.COND_NTAKEN")
-> > +      br_m_cond_nt =3D Event("BR_MISP_RETIRED.COND_NTAKEN")
-> > +    except:
-> > +      pass
-> > +    br_r =3D d_ratio(br_cond, interval_sec)
-> > +    ins_r =3D d_ratio(ins, br_cond)
-> > +    misp_r =3D d_ratio(br_m_cond, br_cond)
-> > +    taken_metrics =3D [
-> > +        Metric("br_cond_retired", "Retired conditional branch instruct=
-ions.",
-> > +               br_r, "insn/s"),
-> > +        Metric("br_cond_insn_between_branches",
-> > +               "The number of instructions divided by the number of co=
-nditional "
-> > +               "branches.", ins_r, "insn"),
-> > +        Metric("br_cond_mispred",
-> > +               "Retired conditional branch instructions mispredicted a=
-s a "
-> > +               "percentage of all conditional branches.", misp_r, "100=
-%"),
-> > +    ]
-> > +    if not br_m_cond_nt:
-> > +      return MetricGroup("br_cond", taken_metrics)
-> > +
-> > +    br_r =3D d_ratio(br_cond_nt, interval_sec)
-> > +    ins_r =3D d_ratio(ins, br_cond_nt)
-> > +    misp_r =3D d_ratio(br_m_cond_nt, br_cond_nt)
-> > +
-> > +    not_taken_metrics =3D [
-> > +        Metric("br_cond_retired", "Retired conditional not taken branc=
-h instructions.",
-> > +               br_r, "insn/s"),
-> > +        Metric("br_cond_insn_between_branches",
-> > +               "The number of instructions divided by the number of no=
-t taken conditional "
-> > +               "branches.", ins_r, "insn"),
-> > +        Metric("br_cond_mispred",
-> > +               "Retired not taken conditional branch instructions misp=
-redicted as a "
-> > +               "percentage of all not taken conditional branches.", mi=
-sp_r, "100%"),
-> > +    ]
-> > +    return MetricGroup("br_cond", [
-> > +        MetricGroup("br_cond_nt", not_taken_metrics),
-> > +        MetricGroup("br_cond_tkn", taken_metrics),
-> > +    ])
-> > +
-> > +  def Far() -> Optional[MetricGroup]:
-> > +    try:
-> > +      br_far =3D Event("BR_INST_RETIRED.FAR_BRANCH")
-> > +    except:
-> > +      return None
-> > +
-> > +    br_r =3D d_ratio(br_far, interval_sec)
-> > +    ins_r =3D d_ratio(ins, br_far)
-> > +    return MetricGroup("br_far", [
-> > +        Metric("br_far_retired", "Retired far control transfers per se=
-cond.",
-> > +               br_r, "insn/s"),
-> > +        Metric(
-> > +            "br_far_insn_between_branches",
-> > +            "The number of instructions divided by the number of far b=
-ranches.",
-> > +            ins_r, "insn"),
-> > +    ])
-> > +
-> > +  return MetricGroup("br", [Total(), Taken(), Conditional(), Far()],
-> > +                     description=3D"breakdown of retired branch instru=
-ctions")
-> > +
-> > +
-> >  all_metrics =3D MetricGroup("", [
-> >      Idle(),
-> >      Rapl(),
-> >      Smi(),
-> >      Tsx(),
-> > +    IntelBr(),
-> >  ])
+> >  static void perf_evlist__id_hash(struct perf_evlist *evlist,
+> >                                  struct perf_evsel *evsel,
+> > -                                int cpu, int thread, u64 id)
+> > +                                int cpu_map_idx, int thread, u64 id)
+> >  {
+> >         int hash;
+> > -       struct perf_sample_id *sid =3D SID(evsel, cpu, thread);
+> > +       struct perf_sample_id *sid =3D SID(evsel, cpu_map_idx, thread);
 > >
-> >  if args.metricgroups:
+> >         sid->id =3D id;
+> >         sid->evsel =3D evsel;
+> > @@ -269,21 +269,27 @@ void perf_evlist__reset_id_hash(struct perf_evlis=
+t *evlist)
+> >
+> >  void perf_evlist__id_add(struct perf_evlist *evlist,
+> >                          struct perf_evsel *evsel,
+> > -                        int cpu, int thread, u64 id)
+> > +                        int cpu_map_idx, int thread, u64 id)
+> >  {
+> > -       perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
+> > +       if (!SID(evsel, cpu_map_idx, thread))
+> > +               return;
+> > +
+> > +       perf_evlist__id_hash(evlist, evsel, cpu_map_idx, thread, id);
+> >         evsel->id[evsel->ids++] =3D id;
+> >  }
+> >
+> >  int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+> >                            struct perf_evsel *evsel,
+> > -                          int cpu, int thread, int fd)
+> > +                          int cpu_map_idx, int thread, int fd)
+> >  {
+> >         u64 read_data[4] =3D { 0, };
+> >         int id_idx =3D 1; /* The first entry is the counter value */
+> >         u64 id;
+> >         int ret;
+> >
+> > +       if (!SID(evsel, cpu_map_idx, thread))
+> > +               return -1;
+> > +
+> >         ret =3D ioctl(fd, PERF_EVENT_IOC_ID, &id);
+> >         if (!ret)
+> >                 goto add;
+> > @@ -312,7 +318,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evli=
+st,
+> >         id =3D read_data[id_idx];
+> >
+> >  add:
+> > -       perf_evlist__id_add(evlist, evsel, cpu, thread, id);
+> > +       perf_evlist__id_add(evlist, evsel, cpu_map_idx, thread, id);
+> >         return 0;
+> >  }
+> >
+> > diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/=
+include/internal/evlist.h
+> > index d86ffe8ed483..f43bdb9b6227 100644
+> > --- a/tools/lib/perf/include/internal/evlist.h
+> > +++ b/tools/lib/perf/include/internal/evlist.h
+> > @@ -126,11 +126,11 @@ u64 perf_evlist__read_format(struct perf_evlist *=
+evlist);
+> >
+> >  void perf_evlist__id_add(struct perf_evlist *evlist,
+> >                          struct perf_evsel *evsel,
+> > -                        int cpu, int thread, u64 id);
+> > +                        int cpu_map_idx, int thread, u64 id);
+> >
+> >  int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+> >                            struct perf_evsel *evsel,
+> > -                          int cpu, int thread, int fd);
+> > +                          int cpu_map_idx, int thread, int fd);
+> >
+> >  void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
+> >
+> > --
+> > 2.44.0.278.ge034bb2e1d-goog
+> >
+>
