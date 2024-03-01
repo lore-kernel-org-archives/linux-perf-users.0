@@ -1,68 +1,68 @@
 Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C20C13F
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 00:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E99B29409
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 01:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709254460; cv=none; b=pdFsrpq062y91wZ7Dvr3y1vD11nWIVWUPBwnQGlvEtZKkFgsSLn0eiRn4wRUBLYH5y0XlhQUewn8zXUtMDSQvxLK/KdU95Ph1DmlLRgfoKQiPXpeFH43Bm9X35jDmwTtmIl9NRKFObhIYWXCpd5zgWk4Z0gNpjS2XWGmRQM3gkg=
+	t=1709254907; cv=none; b=UHGyvfMXVdj2mdpQowXtBSvgSF380BVvWc3qvbNUyg9b8nx1jd/i24mMLvC8v1pqKipCpQtLZmwNS/dsphRM7wH7sfSmqVhBLDn/shoDhNhLCzodyoNM5TJlGx9DntFqG2WAvp4+BNoZKKql+c7tn+g1fnFYncoPJ/5gN7QM7Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709254460; c=relaxed/simple;
-	bh=+upbwOwPoo8Bow3xcmEk27AbSn6dIIFXUaLfgqKiY/4=;
+	s=arc-20240116; t=1709254907; c=relaxed/simple;
+	bh=h6CIhB4J9OkofWTtNse/4xKrB3Lc5Lud0M5YwGBjoJY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mJoatFvgMpVT7hyKql8d9KJd1iI7kH/gF87zZyMjIYNIr1ugIWLIacOOo0bLMxXy2UXRaJ+RQ/SVhU4D2g/A6kEKQyCDWzv8Ct38aALPzf3QgRo/IKNdXbu2GNyU5J5Yhg4+H5pDgL5AWH04uagh78OGT4/fw/qJ8a8Qokk0uDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VgBYQMSY; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=tfcDoDm9YvsgzKDCvxiI5s0EaY15MvpkgZ4vTarNO89MOwWsRHnjTi41uNGNn6rR5cmlauPtI7XDDjpFOFryP7hhoY61XweD3bxaJN+yDlHAhYgwVfhXiWBBh+DHjgExFsoYyxU8p04zl87xOaQP7AyL8k0pKrNgSPcdqNWGdP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GEeQCGDz; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VgBYQMSY"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dcd07252d9so30145ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 16:54:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GEeQCGDz"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc744f54d0so89285ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 17:01:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709254459; x=1709859259; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709254905; x=1709859705; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tftcmnntcbV6/bHuFB1XAMaQpSPTXIzs4LXNnedmduY=;
-        b=VgBYQMSY5Iy0x/UJxcFmOIayQwdMGQlkDwa3jW4S+USEWN4VPpWwfK9hja0HifFyza
-         S9sguXdTMVubsynec15nZTUEMpW6IdLBx+nfeh90QN2O1KAQ9BPTLlKTKq5qjQi1ukDw
-         MKd+hzSGM2jcMZTX69jCqui8Zrp3leUrM2u4K54ZgEyYiJPL7eShnRL1knrHklddQRLR
-         V9CjqzFQN1swu9PDMn0BQp01JbtIzDoPwmBsiXNJqZFjovKkM4pdPCRwJ9LksB2ENDhT
-         ErMPRzfmLmBxSvqP0KZNcpbN/US87jDIoOd9cwIjqNu16I3WycZ6FryvxmAAeplWlW/o
-         mS3Q==
+        bh=GAvWq2MgCPw1OiVm8yWhLOauOZunwMIWrFFzUSM0h+g=;
+        b=GEeQCGDzEZ/6f7oQC4NvdFlF+1GOAjLgoAXxUoE3gYcyexGGDthLIQgtPWEc+qIeBS
+         qTbKkrR8aEZiiuRmjA0/35PT9Cirz4qut0t7+0nwJOn9rutkVgvnz9SewDE6vP8jch8i
+         3qsemuoO/qJ1hEn3g0PINzcwVYs89Ifuzz2DUZfOh3gjfi3X9mQpPwQpfn5ToOm+PUtD
+         v1osHgWt0yYdZeW3Qc9L1jln5kxFsrt8K+1v6+j4ijMiETeXBnOgQk+DLXhqsenTmY6Q
+         EZU6KBozbHNcZfCXcbYoUSyngn6/UOwb2FDpOoDplq5lEDxPionalwhGKS9DLhG0w6Xo
+         OpAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709254459; x=1709859259;
+        d=1e100.net; s=20230601; t=1709254905; x=1709859705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tftcmnntcbV6/bHuFB1XAMaQpSPTXIzs4LXNnedmduY=;
-        b=HMBNgevlYPnSMi1nuZKftuflEfoPrsIHk+OuUeQW+uQXqjtmfuasfUOHuOwEQFYDmk
-         d6pG8BmS24z7HuY5X2cNT54kEfRYPzPMBHGK+p+GlIOj3/AdKxwEQkNy0ei4XIsduA8d
-         h9te/xRnIGK25UA2GT1FAGXATU7siLPPVPT8giHgrgEX9u9D5mSlBvod996kI5BoFSL+
-         uZJ8AMWmKgJ3AFKL9Xh/RIYpIYb975oqoC57m/PuBexmrCAy/bGXL5oKnTLUI3chbIDb
-         2dAlJDFGui+UrZoqCvS0LQOCvY0var9rJ+P3Gbqb8v9PbO6qtFTttPVMetkknElfPq2I
-         QMog==
-X-Forwarded-Encrypted: i=1; AJvYcCXxeWhWMm1M5u8kkai+kUgj+ky7nKsP8k8GpGnxdkQ4ehRmXI7PtPu4t6wCrDBooQOYHN7Lly1u0ehAJOtCOkrT2b+wbJNhg3fSuFkTlE3MCg==
-X-Gm-Message-State: AOJu0YxiwBIYrGqljPq/1BSFKx4jhtj8/g0tNus2wna2RjiD43HlsKS7
-	188TJtcI1xAWOP2lGUnBiiUGCLc7vM+xgqx/xvuH8MInjkZrHGZcHxu7t9v8fnoTjhQZwKgSbxR
-	AtNQsdPs5zew78A0QPX9vOG1Hw3i/i8Mog37s
-X-Google-Smtp-Source: AGHT+IECU1x2BlbA5ofq5tnUe2Wmr0p7lJq3QWNqZvPo8O/3HTA97WarwKjKD2N0k3teyJKqYgROeT781/NiT3MJLiY=
-X-Received: by 2002:a17:902:e74a:b0:1dc:2f51:b120 with SMTP id
- p10-20020a170902e74a00b001dc2f51b120mr87629plf.14.1709254458494; Thu, 29 Feb
- 2024 16:54:18 -0800 (PST)
+        bh=GAvWq2MgCPw1OiVm8yWhLOauOZunwMIWrFFzUSM0h+g=;
+        b=mlWvbJFn9SJ8YmnSu7/8sx0kYpPY3PAWt5LvEjYEqkFxfKlQuGPcesnjNvsnjWTk9M
+         +WOiKvJLlffSygbHPyCQ0BW3SaLCqYfjuUSxURHn/70/3XhzeXPV2XVTvIHezIVo7L3C
+         ARneI5JMAq/+D4+OiX9HrZ4Qt05vWGlX/8n/uCODycyl2rjPie0Eb2H3OVIYTjhMer76
+         qaio3ix2bIfPT14IhMRSpmbigPiPH3paWMQJjryadyu9Nos8QDxOK9puFsKjbho9y/Xl
+         4FBSFalq2nywknzEmFgRtK2D7W+RxKFFGcJMsd+G9JRud8koYZiXUXNDBY5301uOeGuE
+         robg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoa9uwW5d8C4njQ2OsiaEugNgKQQR2raTA60tJav+pDu/OkznM+gzBeoxvsvUZ70HgqjDd0Uk7rTLpJ+W2+6e3qVxHtl5QvGbbNcyl4ssh9Q==
+X-Gm-Message-State: AOJu0Yz/u9ELnnXvjn40HacPJrBnW7ntEKl39OjaiYrQ17oPLKBk/o9w
+	m8R455VnAK6+rJuIcUA+p/vR8Zky6F/jfnqMRaQksIeCFvXh0UqRpuPYUPIxdfMNX7aPGIyQgCs
+	O4CDfMNWpNfa/vVgvAcOQPYde15QdzMc8+5zO
+X-Google-Smtp-Source: AGHT+IFuovX+mPlo8GuYumhX5KhN8lmMUKMildylEVjPA9GQCg+diuk0IrgLOJCnPmSt0jj8WcLgKXB1VMpgtF4Vdcc=
+X-Received: by 2002:a17:903:22c4:b0:1dc:a82e:23b4 with SMTP id
+ y4-20020a17090322c400b001dca82e23b4mr89703plg.8.1709254905137; Thu, 29 Feb
+ 2024 17:01:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-4-irogers@google.com>
- <f2e34072-542a-4055-b8fd-20171e6783a1@linux.intel.com>
-In-Reply-To: <f2e34072-542a-4055-b8fd-20171e6783a1@linux.intel.com>
+References: <20240229001806.4158429-1-irogers@google.com> <20240229001806.4158429-5-irogers@google.com>
+ <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com>
+In-Reply-To: <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Feb 2024 16:54:07 -0800
-Message-ID: <CAP-5=fVzb4rnS1Ckx96wE=K-69_cosxqsbU2BBX0AXShs1iqYA@mail.gmail.com>
-Subject: Re: [PATCH v1 03/20] perf jevents: Add smi metric group for Intel models
+Date: Thu, 29 Feb 2024 17:01:34 -0800
+Message-ID: <CAP-5=fWSidi1zjwn8Zr93dAQvRBtngKrkVwDxorTMmVSVc9FWg@mail.gmail.com>
+Subject: Re: [PATCH v1 04/20] perf jevents: Add tsx metric group for Intel models
 To: "Liang, Kan" <kan.liang@linux.intel.com>
 Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
 	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
@@ -78,7 +78,7 @@ Cc: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 1:09=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
+On Thu, Feb 29, 2024 at 1:15=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
 om> wrote:
 >
 >
@@ -88,39 +88,94 @@ om> wrote:
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/pmu-events/intel_metrics.py | 18 +++++++++++++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
+> >  tools/perf/pmu-events/intel_metrics.py | 51 ++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
 > >
 > > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
 ents/intel_metrics.py
-> > index 46866a25b166..20c25d142f24 100755
+> > index 20c25d142f24..1096accea2aa 100755
 > > --- a/tools/perf/pmu-events/intel_metrics.py
 > > +++ b/tools/perf/pmu-events/intel_metrics.py
-> > @@ -2,7 +2,7 @@
-> >  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> >  from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-> >                      JsonEncodeMetricGroupDescriptions, LoadEvents, Met=
-ric,
-> > -                    MetricGroup, Select)
-> > +                    MetricGroup, MetricRef, Select)
-> >  import argparse
+> > @@ -7,6 +7,7 @@ import argparse
 > >  import json
 > >  import math
-> > @@ -62,9 +62,25 @@ def Rapl() -> MetricGroup:
-> >                       description=3D"Processor socket power consumption=
- estimates")
+> >  import os
+> > +from typing import Optional
+> >
+> >  parser =3D argparse.ArgumentParser(description=3D"Intel perf json gene=
+rator")
+> >  parser.add_argument("-metricgroups", help=3D"Generate metricgroups dat=
+a", action=3D'store_true')
+> > @@ -77,10 +78,60 @@ def Smi() -> MetricGroup:
+> >      ])
 > >
 > >
-> > +def Smi() -> MetricGroup:
-> > +    aperf =3D Event('msr/aperf/')
+> > +def Tsx() -> Optional[MetricGroup]:
+> > +    if args.model not in [
+> > +        'alderlake',
+> > +        'cascadelakex',
+> > +        'icelake',
+> > +        'icelakex',
+> > +        'rocketlake',
+> > +        'sapphirerapids',
+> > +        'skylake',
+> > +        'skylakex',
+> > +        'tigerlake',> +    ]:
 >
-> There are CPUID enumeration for the aperf and mperf. I believe they
-> should be always available for a newer bare metal. But they may not be
-> enumerated in an virtualization env. Should we add a has_event() check
-> before using it?
+> Can we get ride of the model list? Otherwise, we have to keep updating
+> the list.
 
-It would make sense to have the has_event so that the metric doesn't
-fail in perf test. I'll add it.
+Do we expect the list to update? :-) The issue is the events are in
+sysfs and not the json. If we added the tsx events to json then this
+list wouldn't be necessary, but it also would mean the events would be
+present in "perf list" even when TSX is disabled.
+
+> > +        return None
+> > +> +    pmu =3D "cpu_core" if args.model =3D=3D "alderlake" else "cpu"
+>
+> Is it possible to change the check to the existence of the "cpu" PMU
+> here? has_pmu("cpu") ? "cpu" : "cpu_core"
+
+The "Unit" on "cpu" events in json always just blank. On hybrid it is
+either "cpu_core" or "cpu_atom", so I can make this something like:
+
+pmu =3D "cpu_core" if metrics.HasPmu("cpu_core") else "cpu"
+
+which would be a build time test.
+
+
+> > +    cycles =3D Event('cycles')
+> > +    cycles_in_tx =3D Event(f'{pmu}/cycles\-t/')
+> > +    transaction_start =3D Event(f'{pmu}/tx\-start/')
+> > +    cycles_in_tx_cp =3D Event(f'{pmu}/cycles\-ct/')
+> > +    metrics =3D [
+> > +        Metric('tsx_transactional_cycles',
+> > +                      'Percentage of cycles within a transaction regio=
+n.',
+> > +                      Select(cycles_in_tx / cycles, has_event(cycles_i=
+n_tx), 0),
+> > +                      '100%'),
+> > +        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted =
+transactions.',
+> > +                      Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / =
+cycles,
+> > +                                    has_event(cycles_in_tx),
+> > +                                    0),
+> > +                      '100%'),
+> > +        Metric('tsx_cycles_per_transaction',
+> > +                      'Number of cycles within a transaction divided b=
+y the number of transactions.',
+> > +                      Select(cycles_in_tx / transaction_start,
+> > +                                    has_event(cycles_in_tx),
+> > +                                    0),
+> > +                      "cycles / transaction"),
+> > +    ]
+> > +    if args.model !=3D 'sapphirerapids':
+>
+> Add the "tsx_cycles_per_elision" metric only if
+> has_event(f'{pmu}/el\-start/')?
+
+It's a sysfs event, so this wouldn't work :-(
 
 Thanks,
 Ian
@@ -128,26 +183,24 @@ Ian
 > Thanks,
 > Kan
 >
-> > +    cycles =3D Event('cycles')
-> > +    smi_num =3D Event('msr/smi/')
-> > +    smi_cycles =3D Select((aperf - cycles) / aperf, smi_num > 0, 0)
-> > +    return MetricGroup('smi', [
-> > +        Metric('smi_num', 'Number of SMI interrupts.',
-> > +               smi_num, 'SMI#'),
-> > +        # Note, the smi_cycles "Event" is really a reference to the me=
-tric.
-> > +        Metric('smi_cycles',
-> > +               'Percentage of cycles spent in System Management Interr=
-upts.',
-> > +               smi_cycles, '100%', threshold=3D(MetricRef('smi_cycles'=
-) > 0.10))
-> > +    ])
+> > +        elision_start =3D Event(f'{pmu}/el\-start/')
+> > +        metrics +=3D [
+> > +            Metric('tsx_cycles_per_elision',
+> > +                          'Number of cycles within a transaction divid=
+ed by the number of elisions.',
+> > +                          Select(cycles_in_tx / elision_start,
+> > +                                        has_event(elision_start),
+> > +                                        0),
+> > +                          "cycles / elision"),
+> > +        ]
+> > +    return MetricGroup('transaction', metrics)
 > > +
 > > +
 > >  all_metrics =3D MetricGroup("", [
 > >      Idle(),
 > >      Rapl(),
-> > +    Smi(),
+> >      Smi(),
+> > +    Tsx(),
 > >  ])
 > >
 > >  if args.metricgroups:
