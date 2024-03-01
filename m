@@ -1,167 +1,115 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FCE28F4
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 05:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC34A26ADB
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 05:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709269382; cv=none; b=t/xs9J7EsMCii8korB3Js6rYT56/LOsZL8vUCz8Hyo8z2TXpMNhYGKIbopk6ah1ksYIc8ZdOCPa3hezkpb7M6aYUPo8vF7ukF4DBI2DIhXtL7Ha0hiXGPhmxjmtvNDbXgtHjjn9b+GLec3w+MWMjdMFPhjvdXvlDjta5JUQ2OA0=
+	t=1709271413; cv=none; b=Nu5bXWrgkXZSJPPweHbhkYdYwMrRWFt1x5FmWaQ7HGpG9L42ooHq6tKABLRkUSckt3F1F+mhTJE66bLMXUuGLx3WYhKyKuO3NW25/tCQ7aoabcvSvUt6Unhqe1mFUn1Ee9nv8t8VAsZNtASuSmkZbsGGwYcJkUw9WK8yoJxKW5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709269382; c=relaxed/simple;
-	bh=yUvFzWM+HJXyLOAC7y66wSXyf4xTtJ7HUVaTx3YpCFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h62zgL2pZpbfgqimtSE8P8jRkfHo15N6pwT6xCtgyYyWa73Sgoaa+SbBThKO9AuDN1i5QY9xm0poSaLN3C7b1vyX2XkRZzQpTYSds17WCMG4huJ6wv0w9xfb8NIcyU019QBdjv9MQcdUN5xrc1t/1/9DvnqhGEDNeypUydyErEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jvJqmOA+; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1709271413; c=relaxed/simple;
+	bh=HgQFSvlCrQADFz3kGSpi6YyQyXREUPyNAOV62rIkpi8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=FHFNSNhtt//Bj8u9BfZFdBP3v4MyI9uKcbl+2hNhiwdgD9uZ3wDQNJaKsN6mP4qtCywW5eRo2tS5VI44+gehfQmAIriJmTRmPd5zxCk70KSNc26qxl3Qo1UO7lFJjc52wjNfAAxrPrvUkLpWJTGOTGHkje/egVag75jb6MOZIuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3UXrONnm; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvJqmOA+"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dc9f4d1106so102845ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 21:03:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3UXrONnm"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60966f363c1so24298947b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 21:36:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709269380; x=1709874180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KJCI+26zIfGoqoxPqGF/3KXwVzFCjuGI+FsZrZUdpyE=;
-        b=jvJqmOA+NjvShZqj4OFXPcoaR4NljMuAzZRJI4qU1skcDbPuJasJEM6dNfUb5qVFu5
-         kBGkiFEGgN2DW3Odc9EkoQ5VzhWnWRLZZ8BatjqzBFA7kSnf2VN8SzJ7PJTvn7hbZDuI
-         pnXBDTVUH0Tvh4CaY0LlfMPJwasvLl0O9fk1LTxgfXNBm2wguZwx0I1O8NtERe90Blk+
-         v7Lc+8yx0I2zP/hBEEpsORkHVdEVMRO2/LGmtb0JlorgZlpD8gQf/omxDSszEM5Q918k
-         nwFUrCOMdRKoNeXSu2Y0hm+PCVCuQMFsb+uG3LWWtx8rgXUFQvDOgvCjR98CrfRBjbx/
-         O+5w==
+        d=google.com; s=20230601; t=1709271411; x=1709876211; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lzDqYvXErE70KiqRsWc/Sm3PCB8or2RKw3JobeAHpbU=;
+        b=3UXrONnm57dTiYjWLHke4q/85a0b5kFR0fNMFgs3Gu/2Fgu7eUfNwCaAZDy1Uq77B7
+         6AAgaVCs1VBlHolioHuXUHiE0luVrmC+jbX0nE+RxnjOVZ1OYRdNJ94BmPTkq0Zy9o3Y
+         tBTYw3C7aA64W9JBzg4irQ1NJM2sZGJB3HaZtFbqGoBooABSp51XaBFhCnNxK0cp+K0U
+         Bf1t/M9UYejKKT9i3AjiFMhlVCQ0fWn3DyCV78CHa6E9QG/badnTTvtL25nT5Mhw44b4
+         rl9/CKkihGvLYSdN5qml5iLHBbn3H/u24e1VbWbfu7FRb+/HlzufWjpLvyqaASy8qXQw
+         xwHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709269380; x=1709874180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KJCI+26zIfGoqoxPqGF/3KXwVzFCjuGI+FsZrZUdpyE=;
-        b=NCa2Qpd8ttGJyfMlL2AJfq78mhWdEDm1VYryWURj1wej0O4U9WM2DB6G2KYDUo7a8d
-         qrS+RRSN2XSPXQWhBz4h1tlkSKjMYZ1jRY/IjKfiwkj5n3yOs/XoVRA/dKTkzW7rbu6v
-         apjs3u37GxnY5L7uvGoBVRCv3Hf9127sJfVuz+SSifuZ74uuISb+gr+3o4beJwm/QTWv
-         RK0vxMVy9F8JlnnjNtZfRmA6XKVtc84cNJc7+tWME7LAKW9ari7eG+DPOb8wmSjCxLnP
-         sIs1gz0yawfsyRF9udaCkj89trNcx70S1JwJPdtlz1P6lEWvgvm3l/Dw6rqIG+V6eAk9
-         u81Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXnVq6COgT42jZbTgpAf2JJfTtYhHjTVQyBSPv4xgFSNqHHXqCsIZjPASTxGWfo3YDHEZ5NCDOH3+NsqZ2q0XK8u2coQtv9zzm/x3UihjJgTw==
-X-Gm-Message-State: AOJu0YzjupgpE/nOeB7KL7p5ps/DyTx5PXmtgwOMw6YoXS2oW+hItbYZ
-	8F/mdLp+evtK1Q7kzWrQ8/kjLLs53Pf22211zXCbHU4mJrlP0HZM3soYdJ5epU9UgfwGKvBi3IC
-	sciQUTfvyyF+6oNopWJK0Y9WEsaYhjvQ+VYWf
-X-Google-Smtp-Source: AGHT+IGFzadOowQIy/Sa/Ec/9HPST0VW1lGI8Jdl7GpPOSJ1uOTsiucmWmZG0Hnnb7JHLQowSSUfftsvaCzY+Bw+fQc=
-X-Received: by 2002:a17:902:ced0:b0:1dc:c779:5537 with SMTP id
- d16-20020a170902ced000b001dcc7795537mr122788plg.4.1709269380271; Thu, 29 Feb
- 2024 21:03:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709271411; x=1709876211;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lzDqYvXErE70KiqRsWc/Sm3PCB8or2RKw3JobeAHpbU=;
+        b=aS3bDpszDB0Y2LrGSXHWvpuZuRalzJy0DFTy4pPYDrEqViUS/hzvmKpAvTBHFyLn2d
+         Av4NT27qwR7MG4XbimQN2A4/cgfRmBvOUf7N63uregH+cGjWPvzGPe3C6jf+D/WYdWQO
+         bSLXQhnPzyncqejG2OlBQzuHV7UrI8qAU6zaGZTQ3OgjdCsjhA5r7/yUVoUTjNBcdwab
+         uT1vNTadCXLEOMKAmrpi+9V/0G8N2HI1JbW1fV/Up9B/oOQcp9H/faIpaLq9xOB5HL1w
+         hIh31+1O4pxM6K/8hsffetuuYbtliS3LiQEFbKBN33OGn60DVad1CLhKKnYm7N24r2Nl
+         aorw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkqfAF5GcMfD8qDDd8923PHoDRJngytjEv17sr87a8a/dwzXsFt5Gp4FUZshn9VFpPsVvSpmZM9JYACI+EUfIU0wRjSdfc/ib+A0D4kZriCQ==
+X-Gm-Message-State: AOJu0YxruVWOIXw2DSCxE+mF5FUIR46aBgMbnxoBZLdHYnsWow7nTayJ
+	N0Zjxw6b2h1j5t3PKUbsQV29MklHK4TVN9Eg57BNis37nez8dm0sYJH8raA72a0XWzDGH4BdVv7
+	/JYHk8g==
+X-Google-Smtp-Source: AGHT+IHOU5Sza8dEsNHRDsES+qJxRSg8TaryNa7FDJ10j4a0TwQ24VECLaH1u+MByIz4Kb5VnwSLhBYwyhh8
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1741:b0:dc7:5c0d:f177 with SMTP
+ id bz1-20020a056902174100b00dc75c0df177mr134040ybb.6.1709271410883; Thu, 29
+ Feb 2024 21:36:50 -0800 (PST)
+Date: Thu, 29 Feb 2024 21:36:38 -0800
+Message-Id: <20240301053646.1449657-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240229063253.561838-1-irogers@google.com> <20240229063253.561838-5-irogers@google.com>
- <CAM9d7cj9CgxmvSMLvDa=RM8zPRJpRbKqMkU7_B68HwEX7qo=hg@mail.gmail.com>
-In-Reply-To: <CAM9d7cj9CgxmvSMLvDa=RM8zPRJpRbKqMkU7_B68HwEX7qo=hg@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v4 0/7] Thread memory improvements and fixes
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Feb 2024 21:02:45 -0800
-Message-ID: <CAP-5=fWpnrLAo3yB6SAxDHjzWNMYcAPdq0RHgs_C11Y5dY6ZeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] perf machine: Move machine's threads into its own abstraction
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 5:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Feb 28, 2024 at 10:33=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > Move thread_rb_node into the machine.c file. This hides the
-> > implementation of threads from the rest of the code allowing for it to
-> > be refactored.
-> >
-> > Locking discipline is tightened up in this change. As the lock is now
-> > encapsulated in threads, the findnew function requires holding it (as
-> > it already did in machine). Rather than do conditionals with locks
-> > based on whether the thread should be created (which could potentially
-> > be error prone with a read lock match with a write unlock), have a
-> > separate threads__find that won't create the thread and only holds the
-> > read lock. This effectively duplicates the findnew logic, with the
-> > existing findnew logic only operating under a write lock assuming
-> > creation is necessary as a previous find failed. The creation may
-> > still fail with the write lock due to another thread. The duplication
-> > is removed in a later next patch that delegates the implementation to
-> > hashtable.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Thanks for doing this!  A nit below..
->
-> > ---
-> [SNIP]
-> > @@ -3228,27 +3258,31 @@ int thread__resolve_callchain(struct thread *th=
-read,
-> >         return ret;
-> >  }
-> >
-> > -int machine__for_each_thread(struct machine *machine,
-> > -                            int (*fn)(struct thread *thread, void *p),
-> > -                            void *priv)
-> > +int threads__for_each_thread(struct threads *threads,
-> > +                            int (*fn)(struct thread *thread, void *dat=
-a),
-> > +                            void *data)
-> >  {
-> > -       struct threads *threads;
-> > -       struct rb_node *nd;
-> > -       int rc =3D 0;
-> > -       int i;
-> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > +               struct threads_table_entry *table =3D &threads->table[i=
-];
-> > +               struct rb_node *nd;
-> >
-> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
-> > -               threads =3D &machine->threads[i];
-> > -               for (nd =3D rb_first_cached(&threads->entries); nd;
-> > -                    nd =3D rb_next(nd)) {
-> > +               for (nd =3D rb_first_cached(&table->entries); nd; nd =
-=3D rb_next(nd)) {
-> >                         struct thread_rb_node *trb =3D rb_entry(nd, str=
-uct thread_rb_node, rb_node);
-> > +                       int rc =3D fn(trb->thread, data);
-> >
-> > -                       rc =3D fn(trb->thread, priv);
-> >                         if (rc !=3D 0)
-> >                                 return rc;
-> >                 }
-> >         }
-> > -       return rc;
-> > +       return 0;
->
-> Don't we need locking in this function?
+The next 6 patches (now 7) from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+now the initial maps fixes have landed:
+https://lore.kernel.org/all/20240210031746.4057262-1-irogers@google.com/
 
-I thought there was a deadlock, but I was either mistaken or now it is
-resolved. I'll add in the read lock as you say.
+Separate out and reimplement threads to use a hashmap for lower memory
+consumption and faster look up. The fixes a regression in memory usage
+where reference count checking switched to using non-invasive tree
+nodes.  Reduce threads default size by 32 times and improve locking
+discipline. Also, fix regressions where tids had become unordered to
+make `perf report --tasks` and `perf trace --summary` output easier to
+read.
 
-Thanks,
-Ian
+v4. Add read lock to threads__for_each_thread, Namhyung.
+v3. Factor threads out of machine in 1 patch, then move threads
+    functions in a second.
+v2: improve comments and a commit message.
 
+Ian Rogers (7):
+  perf report: Sort child tasks by tid
+  perf trace: Ignore thread hashing in summary
+  perf machine: Move fprintf to for_each loop and a callback
+  perf machine: Move machine's threads into its own abstraction
+  perf threads: Move threads to its own files
+  perf threads: Switch from rbtree to hashmap
+  perf threads: Reduce table size from 256 to 8
 
-> Thanks,
-> Namhyung
->
->
-> > +
-> > +}
-> > +
-> > +int machine__for_each_thread(struct machine *machine,
-> > +                            int (*fn)(struct thread *thread, void *p),
-> > +                            void *priv)
-> > +{
-> > +       return threads__for_each_thread(&machine->threads, fn, priv);
-> >  }
-> >
+ tools/perf/builtin-report.c           | 217 +++++++++-------
+ tools/perf/builtin-trace.c            |  41 ++--
+ tools/perf/util/Build                 |   1 +
+ tools/perf/util/bpf_lock_contention.c |   4 +-
+ tools/perf/util/machine.c             | 341 +++++++-------------------
+ tools/perf/util/machine.h             |  30 +--
+ tools/perf/util/rb_resort.h           |   5 -
+ tools/perf/util/thread.c              |   2 +-
+ tools/perf/util/thread.h              |   6 -
+ tools/perf/util/threads.c             | 190 ++++++++++++++
+ tools/perf/util/threads.h             |  35 +++
+ 11 files changed, 478 insertions(+), 394 deletions(-)
+ create mode 100644 tools/perf/util/threads.c
+ create mode 100644 tools/perf/util/threads.h
+
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
