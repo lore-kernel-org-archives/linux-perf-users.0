@@ -1,106 +1,115 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CE23D3A0
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 16:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A204EF9FD
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 16:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311131; cv=none; b=DShzem4JR/YU0XJpghQrkJhTdgCflx0lFcq2AWCL+Gt9G4edoxTN2LaNNvBGSLAgz6qn6d3VsJHNuFJ4XGZLt1MNnTuv0w9z8GO+Ck7MslMiTdu3BC2m0lFGE8bOaSAqOlSDIAgKgu7PZM7g/v5T6x+VAcE3egkDAYEwBfTxqVA=
+	t=1709311206; cv=none; b=mXUwlbviv/WsgiLMEAfww+sYCT8EHYeOVCkV3NVN8GsJRk6qWLju22vtywWtLOFVVtfBn2LmYt2ur0kGTm0wDGRRVERwNN4i5sPVp+sdsD1+XPm2LNC/ls3b+1XrX9o1NukDMPPppFnvdH6zuQ7R1+hcnlhkWAPDDQcQCe8qE0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311131; c=relaxed/simple;
-	bh=v3fasrZ049SzsiSU8Wv5RWlUno1kfBoq0xOnRmY2Kzc=;
+	s=arc-20240116; t=1709311206; c=relaxed/simple;
+	bh=gZv9ZVm2Y/YJWkqC68fwBWPcxyg0G+3yV6nrkCH4dtM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cmfTDvfT8Wr3IALRv2kAi8OotSW4W7TEt3E94G8/4jBdgMS1+pyTlQyWMXZn1vzaoccs1YP4c0bJFw3qLtFH5h8uuHzXhPgWwgsphDNXGmpOsnNtJlSKne8Yh3+EJZVuEuvOofhcDhxnIERJ2AE8gU81Anif74ijOzUXB3HqNQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ToFWaj+y; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=ZDcofdKR5lcJsbglQoWvvgzG8PrNHWNFzFL7ozQYPZlQWkWNfHNdC5lRhKrvPTB5TzqacmMOEJQG8gCgJMyi/OgaD03uGI5PrB8T7otf939Idb/MclhtquZ0YA7Rpl9utyN6Oys4Vfiuh/oUP83qalqjxQD8hrqQRpE1DEuv5Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tbx0afDH; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ToFWaj+y"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3650be5157fso172225ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Mar 2024 08:38:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbx0afDH"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3650be5157fso172535ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Mar 2024 08:40:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709311129; x=1709915929; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709311204; x=1709916004; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SPAqnWxjgworqniOSJ8PsC+uXqBSSqBSNTzJb0e70h4=;
-        b=ToFWaj+yy1xHk0HWU7bAiRlZgJjJ7P5W9nrD2mHEo1Z2vSEf4hFZa2od4BFlXjoJsN
-         9UqnA0lX4krcJq5282hSHI6pBKgPaS7G/PV+FvycvgRTzI2k6k2TEI9GmRemRMD+sKBo
-         Qg5PDM3cnPc/uFuOcHzNxQbA4mtNm6k7Fb1STIJ94hIMQIQr0ESvT/fPwEX6GEIKIZ4w
-         5GWUpmQljBtlHIz4Fm6yiKMy2jfGSFVeOfFQdi0SVC7vqo+CWXx10XRygMcDNRR0Ioz3
-         UJqnv7ewtZegAvtnJ9GO7P4nr5pPZD8U3lP9rm3U93G7rAx9vwpL5UkqpBZOzx0VqFN5
-         wa5Q==
+        bh=1Iz8VtV+mrAqmT+Yd+rcCtPv1t4xoF3O9HUxQFtiwYg=;
+        b=tbx0afDHqNU7Atji/Hk4INNkkJ6qAxU3Bg6UINSILPRvNDwZyVL7vWwjWfI3YbuMnS
+         QFkZvtL5qRK6kBEbOSbALAbc1o+y16POptDhmgRfO8hCkKlIKouwgTMaHuUjOdf3r8mS
+         ZaOO6kM676gORaBomJs6JOPsAknOnvVJUKn86WBQ41ua+mD1ACXq4VW2VSWtf5O9c9yO
+         lwt801wmPbAiEVByugI1f+ZLdYTEOe4v9EdI8a6H5qQ3E8cDQ/Pm0uF0ODfy0Mimo/FG
+         l8xQBvUOLRtSbgYdzls7VALTOBgLVA50OIT4Yr/jt8b6it5XmQFDf0Ecj3u5oFvisd+K
+         gyQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709311129; x=1709915929;
+        d=1e100.net; s=20230601; t=1709311204; x=1709916004;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SPAqnWxjgworqniOSJ8PsC+uXqBSSqBSNTzJb0e70h4=;
-        b=snZg5XyXzWlvStS8yO2D7jLnFqfq9IaQ0j/8Uc8x5hqcLTNy6POlngYD8HOKgMVPJx
-         U0ai8OfqnlbImLlPmatUyDmVIIw2tcLXkX28bO7+eqYfISCKoxqu1jErUDhfbILrY5ES
-         qoaNUa6+aenxUB2jiKL7rH/FBnCmv3JrzWkDKnrJwQBhWoaZi9FD2iO9ffLIfH6+89Zf
-         380kQIx7AC+1TPhLJB9FRxwk45M+iQGGuE1iAiXuG7s/VDcJDNsJX5/2X5TKUiAl0+tX
-         sW2597Zl36Q6/OYWkptOYnhVODk568i5AAZpF/uM6yhptQz7BVIA5PkUs0LvS+DV0gmJ
-         OPlA==
-X-Gm-Message-State: AOJu0Ywic8yp5GiPVqXyh31bF65SewdMIyBAwL/5/ofInQ/dIDx7DZ5V
-	Sni1lfWoIJ25epRYseZcbNis9grSeaDkIwXZGhfM6s5HO0NkifS9DrJiBtPuhMrtp8oXg+MP4e3
-	E5Lv9wWbqWRcXae9Dr3vMplw+juI5T0nYvBUa
-X-Google-Smtp-Source: AGHT+IGzUaWRlQBaB12S4PDv8Qi4wWxiH8WVAoDZQqsKYneLkWDQW4ooAJch4Bg6DQQcBZP9232lw/TkfOFRlBunGp8=
-X-Received: by 2002:a05:6e02:1aaf:b0:363:c5ec:9fe6 with SMTP id
- l15-20020a056e021aaf00b00363c5ec9fe6mr191804ilv.29.1709311128800; Fri, 01 Mar
- 2024 08:38:48 -0800 (PST)
+        bh=1Iz8VtV+mrAqmT+Yd+rcCtPv1t4xoF3O9HUxQFtiwYg=;
+        b=EXmc9rO0AcZ6XOrJBzhnWmHBXEI38nEwaOLdB0Xx4LSfWrpvIqMARDbp9w8CH0CQU8
+         pKc8odlK8WwUrVKoJEeTTn366F0gzF90QX90BKEWasXzchE9asTNXbbKD7/VB4cSFYcV
+         CKn/1/TvlU2ehby0Q7qxARA6zF1FE7qLfTTsMxB0AL4P4v4m6S4Ynpeqrp7K1R3nQUpP
+         NhH59f8g/O1H64xiUPV2sGIsjw9k3g7rDr5oqulyyCRU2iTlrcSPTAgeNtyBK9l7v4Z6
+         nda30FApLqexUbwX4jx/RJEhZaCysIqtcrNsk5OKrp87Mg5O7fuLTp48FW+Y19hkVoj5
+         sZMg==
+X-Gm-Message-State: AOJu0YxvoC2aK8+ctwBYMH6Amk3WyPxULRrbtGyclcnpaGo78RGHOWbb
+	VKTTpCUv04IyXisM6YQYeUpl6ReueWyoR9cTv32c8cq95g0ydQIV0cSE1WyAZFQjFoQksY3X3ku
+	NmAfOEvFhKPY7Wk53BidiBWgnjl0m9XbCPoTX
+X-Google-Smtp-Source: AGHT+IFhKuMkCMVygmw7wOWmjh+fqlQG1IchTKTj3q1zr5rHxYjNFVMGcW4VP+Ggz34Rx1p4O+y00HjkGptVTU/gOiM=
+X-Received: by 2002:a05:6e02:1a8d:b0:365:16d5:4b11 with SMTP id
+ k13-20020a056e021a8d00b0036516d54b11mr191985ilv.3.1709311203702; Fri, 01 Mar
+ 2024 08:40:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301133829.346286-1-james.clark@arm.com>
-In-Reply-To: <20240301133829.346286-1-james.clark@arm.com>
+References: <20240301084431.646221-1-sandipan.das@amd.com>
+In-Reply-To: <20240301084431.646221-1-sandipan.das@amd.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 1 Mar 2024 08:38:37 -0800
-Message-ID: <CAP-5=fUWL56Hi716DPa6Q_VXQoGh6Ed1WoNfSHow3+9qzSaMbw@mail.gmail.com>
-Subject: Re: [PATCH] perf version: Display availability of OpenCSD support
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, al.grant@arm.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org
+Date: Fri, 1 Mar 2024 08:39:52 -0800
+Message-ID: <CAP-5=fV49j-fMSF5PcAXP7hoD4guqy8DnQs_uJWcgVM7fKxLhQ@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events amd: Fix Zen 4 cache latency events
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	eranian@google.com, adrian.hunter@intel.com, ravi.bangoria@amd.com, 
+	ananth.narayan@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 1, 2024 at 5:39=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
+On Fri, Mar 1, 2024 at 12:44=E2=80=AFAM Sandipan Das <sandipan.das@amd.com>=
+ wrote:
 >
-> This is useful for scripts that work with Perf and ETM trace. Rather
-> than them trying to parse Perf's error output at runtime to see if it
-> was linked or not.
+> L3PMCx0AC and L3PMCx0AD, used in l3_xi_sampled_latency* events, have a
+> quirk that requires them to be programmed with SliceId set to 0x3.
+> Without this, the events do not count at all and affects dependent
+> metrics such as l3_read_miss_latency.
 >
-> Signed-off-by: James Clark <james.clark@arm.com>
+> If ThreadMask is not specified, the amd-uncore driver internally sets
+> ThreadMask to 0x3, EnAllCores to 0x1 and EnAllSlices to 0x1 but does
+> not set SliceId. Since SliceId must also be set to 0x3 in this case,
+> specify all the other fields explicitly.
+>
+> E.g.
+>
+>   $ sudo perf stat -e l3_xi_sampled_latency.all,l3_xi_sampled_latency_req=
+uests.all -a sleep 1
+>
+> Before:
+>
+>    Performance counter stats for 'system wide':
+>
+>                    0      l3_xi_sampled_latency.all
+>                    0      l3_xi_sampled_latency_requests.all
+>
+>          1.005155399 seconds time elapsed
+>
+> After:
+>
+>    Performance counter stats for 'system wide':
+>
+>              921,446      l3_xi_sampled_latency.all
+>               54,210      l3_xi_sampled_latency_requests.all
+>
+>          1.005664472 seconds time elapsed
+>
+> Fixes: 5b2ca349c313 ("perf vendor events amd: Add Zen 4 uncore events")
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
-
-> ---
->  tools/perf/builtin-version.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-> index 1bafe5855ae7..398aa53e9e2e 100644
-> --- a/tools/perf/builtin-version.c
-> +++ b/tools/perf/builtin-version.c
-> @@ -84,6 +84,7 @@ static void library_status(void)
->         STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
->         STATUS(HAVE_BPF_SKEL, bpf_skeletons);
->         STATUS(HAVE_DWARF_UNWIND_SUPPORT, dwarf-unwind-support);
-> +       STATUS(HAVE_CSTRACE_SUPPORT, libopencsd);
->  }
->
->  int cmd_version(int argc, const char **argv)
-> --
-> 2.34.1
->
