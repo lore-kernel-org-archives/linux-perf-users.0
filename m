@@ -1,122 +1,124 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B42437170;
-	Fri,  1 Mar 2024 01:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826B839AC9;
+	Fri,  1 Mar 2024 02:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709258303; cv=none; b=fyvsDEMwpeMs8PTdqhsy2oI/zpBzfe4xiOd6iUKxRkcZQNNIWk9RL62He/8BOlunigYM8KfxbT4Itaa6JxG4imKdgeYES++FF3ZJY0baba/S+Hi7qB0ztYk/ZUkPA/WVsD1wz++idyB+rUp2RMrIuSALav93GiQQ6dH1qgsg3A0=
+	t=1709258652; cv=none; b=POK981BhqEnF49C5nPkpio4gg7wH/Tukd+uyl19SYuGkkD92RB9rzvOtxaq+FnLq7PQcbuxsprY0lJ7OJkhPEgS+N6G/5iMFCZ+k+P5yCfzrDoUoocZTIU1xenWoxHnvrXaWFDtt4oEq3IjYvfH4NFU/rnwMfVUbufgD3/Zppe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709258303; c=relaxed/simple;
-	bh=eZfBHYPQbzyr6htmGPo+G4dWIZmVpiVWcBLyYoqFi+k=;
+	s=arc-20240116; t=1709258652; c=relaxed/simple;
+	bh=/d9AG0yAYaKw80HGazSSs3yzEkw5b6BjdLgT2pIrXDE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dn5ChBa1RbL8Q4nWl3BKpdOUUAGgft+EN3fbZ8/CGLBF7pWAZonc0C+fClUa8jtIrIjP5qrGFOWSRJT+cAysmnx01IeLhS6e90qyDkjaOiE5LjQcpZ85ZvWqoscgLpa8PxwobcQAkiTEUVXCwX9WbxTyKeAtCJS/KowWxdeFTBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
+	 To:Cc:Content-Type; b=n5T/UkpjDIbnIy2zyOeBV+oLPgpKaNEib783aSDcmepOqjmuDkw6WCqiIjSFaHyo2/Jr63zko3DpoiOiZD2UR6qnZnTV97OkottCs3fnBOcY0thnq6lhVwTpykGPxXEHhhzSVcrMantY2TJ0dbeMo/fkJzPFz8B28k8ixAUKtrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e59bbdd8c7so1069019b3a.3;
-        Thu, 29 Feb 2024 17:58:21 -0800 (PST)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29a6dcfdd30so1253187a91.0;
+        Thu, 29 Feb 2024 18:04:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709258301; x=1709863101;
+        d=1e100.net; s=20230601; t=1709258651; x=1709863451;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MCciYHd42E4g6ZjxWDiBUw82i6fON/6oZmSRriGXxDI=;
-        b=dwivpVfkltt6npLevvmMxXL/5UgTsC4UZI6BJFx79xnAo7dNH4IDo6eSY4kM62Zs6B
-         8YBIXCDbmoVz1kCPVUBlDVeblOnRb3ZtwqSSRIjfxm91pA2J7K6ohrztUNF2cFL2howA
-         u0q1bwTQlPtp418g/UYD6hjoAmVRh3sXeWrI6NiX5eaVnky0o6nkT9Sv6+VlTX0zMMJ6
-         nisJJQSNWQpdJdnyt9Uf+motxryR8m6MdSlc6/TyyHAYP9fr5YMAmkD/RXNSpB44pvGT
-         dqI+18yaaUgOB2WeHgG/450fTLRBC3qRKeiFHkZezRnlI5RPuvdzjoiaawjC3hoD14ZW
-         4xtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4t0kDSCBLjrtnGs1T2gtjjHsgkup0fYZ2v9XPGCd9QpDsmmozVAi3yAKUQhJ4OLIvJVpBdo3bVojJYxrTPpb7CppMtdBZ8S6kUx7gvQ1OZ8/5cN4PpZg/C8B+4prY8R6lfFRXXtUCi/wArWMZtw==
-X-Gm-Message-State: AOJu0YzEp+qek2EpLcCIiWxiBL78wTJLo9Umg3Qlam1Qx9IFVy9pUIqH
-	zGlxjUnbGDK43XeA7zL8Qy5/S29+79fOffFVHientLY6HM3hx+QPaKJXjinjXXpUel9QoKVtS0E
-	bMvYJ3G/Ms5hgoPtYfzYgDrXpNLw=
-X-Google-Smtp-Source: AGHT+IGhpni+tcpLva4QkWqGpffSbO9Peq7uPGxoTeoQ4Q5KyOCV/QplsTat5Z/hSqlF1u3fLUTrpbcxqMsfKoUXSuk=
-X-Received: by 2002:a05:6a20:5483:b0:1a0:9117:5892 with SMTP id
- i3-20020a056a20548300b001a091175892mr252723pzk.15.1709258300815; Thu, 29 Feb
- 2024 17:58:20 -0800 (PST)
+        bh=suOSlNRm11HwW5KZFh7zQNpV0hqocGQ1PpQrvLWCrew=;
+        b=jxw8oA0c/53Uimm81rXTM8UYOL5UZIXWXgPhDnKa1HYxVI+7JjToInBZBCx6Ib5DPr
+         +GKKUMV486IiAW4t5/5+LV21KeBppoaoFTgIFLf1mEtQQY8e8Elr6x6769MGlbvjpz7+
+         pjyesWodil2nY+x6kHmd2zkTsXcNEyWLqdm4dxPJKenu1F8y3E4pV8PNScRCT1s9fenh
+         ZtZhCbQEllWnpa9JRLmYLMMa4CwNuV7mldxIiyVK/UBRIHNWjEk08UJBPhsaiYSxboBz
+         2DisNgaT6rzMR36RacE1E4va4Smp2y/GRGsoch5/bdZBnIlp94znKXJBIhgzV/GWma3V
+         e3jw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzH7rf+OxAuYTY9hQMgDIDiTz2v4J+R/qbi+9ITLdGEiT8vLoo0E4OehrLKqYJGwTA+gpjRWLD45JbJ134B/Q7jd9WKylf7wBL0ciedQIT+APimNPlC1Qb0wXwweLUXVxYdi/2iy/NBKUAI0BhKQ==
+X-Gm-Message-State: AOJu0YyMsKBrSyc0rbmjw1Cm2rUyNczuLs2yhAywAswsQV/0OnCzG4+Y
+	y9j3VbAd9CsqGwARgnzPlGLvytZK+2yKTx+BWoTAaQtuac/oYjQxc8T5JqOF/HhVsHbCNBhYlcm
+	RTTMzsnBwCQQOgCOOoMMUKhprYjY=
+X-Google-Smtp-Source: AGHT+IGpkrbJcWmIpOQ994xbrP0TgrArhB16iqTpTpOaTB7y93OuV1723dzmhSta1S643y/4jxhRWmp4u+0btWfB/9Q=
+X-Received: by 2002:a17:90a:d184:b0:29b:1e0a:10c8 with SMTP id
+ fu4-20020a17090ad18400b0029b1e0a10c8mr396759pjb.4.1709258650888; Thu, 29 Feb
+ 2024 18:04:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229070757.796244-1-irogers@google.com> <CAM9d7chNekmdJyPbOOzZVhR+cBWajscSg3pVFKN4A4evKwFXjg@mail.gmail.com>
- <CAP-5=fVWC+MeeUcNmofkQi766se4P0ERGz_+L+7uTFUXocwVvQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVWC+MeeUcNmofkQi766se4P0ERGz_+L+7uTFUXocwVvQ@mail.gmail.com>
+References: <20240229062048.558799-1-irogers@google.com>
+In-Reply-To: <20240229062048.558799-1-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 29 Feb 2024 17:58:09 -0800
-Message-ID: <CAM9d7civC_xYw11pJc-4T2R1D=Enf0mvjLtdU5qXxfS+zB2qJQ@mail.gmail.com>
-Subject: Re: [PATCH v1] libperf evlist: Avoid out-of-bounds access
+Date: Thu, 29 Feb 2024 18:04:00 -0800
+Message-ID: <CAM9d7cjCn-GFtjejw+DtK_Y6kNRGLQTAZNn6zarQfNDjvWHUXw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf map: Fix map reference count issues
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 5:06=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Feb 28, 2024 at 10:21=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> On Thu, Feb 29, 2024 at 1:46=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Wed, Feb 28, 2024 at 11:08=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > Parallel testing appears to show a race between allocating and settin=
-g
-> > > evsel ids. As there is a bounds check on the xyarray it yields a segv
-> > > like:
-> > >
-> > > ```
-> > > AddressSanitizer:DEADLYSIGNAL
-> > >
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > =3D=3D484408=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x=
-000000000010
-> > >
-> > > =3D=3D484408=3D=3DThe signal is caused by a WRITE memory access.
-> > >
-> > > =3D=3D484408=3D=3DHint: address points to the zero page.
-> > >
-> > >     #0 0x55cef5d4eff4 in perf_evlist__id_hash tools/lib/perf/evlist.c=
-:256
-> > >     #1 0x55cef5d4f132 in perf_evlist__id_add tools/lib/perf/evlist.c:=
-274
-> > >     #2 0x55cef5d4f545 in perf_evlist__id_add_fd tools/lib/perf/evlist=
-.c:315
-> > >     #3 0x55cef5a1923f in store_evsel_ids util/evsel.c:3130
-> > >     #4 0x55cef5a19400 in evsel__store_ids util/evsel.c:3147
-> > >     #5 0x55cef5888204 in __run_perf_stat tools/perf/builtin-stat.c:83=
-2
-> > >     #6 0x55cef5888c06 in run_perf_stat tools/perf/builtin-stat.c:960
-> > >     #7 0x55cef58932db in cmd_stat tools/perf/builtin-stat.c:2878
-> > > ...
-> > > ```
-> > >
-> > > Avoid this crash by early exiting the perf_evlist__id_add_fd and
-> > > perf_evlist__id_add is the access is out-of-bounds.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > While I'm ok with this change, the real fix would be changing
-> > evsel_store__ids() to use xyarray__max_{x,y} for fd instead
-> > of cpu and thread map numbers.
+> The find will get the map, ensure puts are done on all paths.
 >
-> So I'm not sure on how to code that fix. Could you take over looking
-> at this? It reproduces for me with "perf test -v -p" when built with
-> "-fsanitize=3Daddress".
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Ok, but now I think that the fd array should have the same dimension
-with the id array.  I'm not sure where it can change but I'll take a look
-later.  Let's apply this one first.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+
+> ---
+>  tools/perf/util/maps.c        | 14 +++++++-------
+>  tools/perf/util/probe-event.c |  4 +---
+>  2 files changed, 8 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+> index 53aea6d2ef93..ce13145a9f8e 100644
+> --- a/tools/perf/util/maps.c
+> +++ b/tools/perf/util/maps.c
+> @@ -611,14 +611,14 @@ struct symbol *maps__find_symbol(struct maps *maps,=
+ u64 addr, struct map **mapp)
+>         struct symbol *result =3D NULL;
+>
+>         /* Ensure map is loaded before using map->map_ip */
+> -       if (map !=3D NULL && map__load(map) >=3D 0) {
+> -               if (mapp)
+> -                       *mapp =3D map;
+> -
+> +       if (map !=3D NULL && map__load(map) >=3D 0)
+>                 result =3D map__find_symbol(map, map__map_ip(map, addr));
+> -               if (!mapp)
+> -                       map__put(map);
+> -       }
+> +
+> +       if (mapp)
+> +               *mapp =3D map;
+> +       else
+> +               map__put(map);
+> +
+>         return result;
+>  }
+>
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.=
+c
+> index be71abe8b9b0..2a0ad9ecf0a2 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -2274,9 +2274,7 @@ static int find_perf_probe_point_from_map(struct pr=
+obe_trace_point *tp,
+>         ret =3D pp->function ? 0 : -ENOMEM;
+>
+>  out:
+> -       if (map && !is_kprobe) {
+> -               map__put(map);
+> -       }
+> +       map__put(map);
+>
+>         return ret;
+>  }
+> --
+> 2.44.0.278.ge034bb2e1d-goog
+>
