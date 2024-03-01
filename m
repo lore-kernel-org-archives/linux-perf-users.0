@@ -1,124 +1,167 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826B839AC9;
-	Fri,  1 Mar 2024 02:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACE13A8DE;
+	Fri,  1 Mar 2024 02:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709258652; cv=none; b=POK981BhqEnF49C5nPkpio4gg7wH/Tukd+uyl19SYuGkkD92RB9rzvOtxaq+FnLq7PQcbuxsprY0lJ7OJkhPEgS+N6G/5iMFCZ+k+P5yCfzrDoUoocZTIU1xenWoxHnvrXaWFDtt4oEq3IjYvfH4NFU/rnwMfVUbufgD3/Zppe0=
+	t=1709259666; cv=none; b=WaPrmfJMZbqgoCNayRFbDtghB6+VFWAeEYI3Mt5wQT2RMSQblRLrn8EjbX3G7qrjZm9/l/mI+ie76Ey12vYuOEOL91FqdFNfvNi+znvWUjg3eIRUg/AXZRlsw8Z+UbNvglmJN4WHAOCgLKhzab+I2Me8IDW+CjS6XQDagbAUivc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709258652; c=relaxed/simple;
-	bh=/d9AG0yAYaKw80HGazSSs3yzEkw5b6BjdLgT2pIrXDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n5T/UkpjDIbnIy2zyOeBV+oLPgpKaNEib783aSDcmepOqjmuDkw6WCqiIjSFaHyo2/Jr63zko3DpoiOiZD2UR6qnZnTV97OkottCs3fnBOcY0thnq6lhVwTpykGPxXEHhhzSVcrMantY2TJ0dbeMo/fkJzPFz8B28k8ixAUKtrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29a6dcfdd30so1253187a91.0;
-        Thu, 29 Feb 2024 18:04:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709258651; x=1709863451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=suOSlNRm11HwW5KZFh7zQNpV0hqocGQ1PpQrvLWCrew=;
-        b=jxw8oA0c/53Uimm81rXTM8UYOL5UZIXWXgPhDnKa1HYxVI+7JjToInBZBCx6Ib5DPr
-         +GKKUMV486IiAW4t5/5+LV21KeBppoaoFTgIFLf1mEtQQY8e8Elr6x6769MGlbvjpz7+
-         pjyesWodil2nY+x6kHmd2zkTsXcNEyWLqdm4dxPJKenu1F8y3E4pV8PNScRCT1s9fenh
-         ZtZhCbQEllWnpa9JRLmYLMMa4CwNuV7mldxIiyVK/UBRIHNWjEk08UJBPhsaiYSxboBz
-         2DisNgaT6rzMR36RacE1E4va4Smp2y/GRGsoch5/bdZBnIlp94znKXJBIhgzV/GWma3V
-         e3jw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzH7rf+OxAuYTY9hQMgDIDiTz2v4J+R/qbi+9ITLdGEiT8vLoo0E4OehrLKqYJGwTA+gpjRWLD45JbJ134B/Q7jd9WKylf7wBL0ciedQIT+APimNPlC1Qb0wXwweLUXVxYdi/2iy/NBKUAI0BhKQ==
-X-Gm-Message-State: AOJu0YyMsKBrSyc0rbmjw1Cm2rUyNczuLs2yhAywAswsQV/0OnCzG4+Y
-	y9j3VbAd9CsqGwARgnzPlGLvytZK+2yKTx+BWoTAaQtuac/oYjQxc8T5JqOF/HhVsHbCNBhYlcm
-	RTTMzsnBwCQQOgCOOoMMUKhprYjY=
-X-Google-Smtp-Source: AGHT+IGpkrbJcWmIpOQ994xbrP0TgrArhB16iqTpTpOaTB7y93OuV1723dzmhSta1S643y/4jxhRWmp4u+0btWfB/9Q=
-X-Received: by 2002:a17:90a:d184:b0:29b:1e0a:10c8 with SMTP id
- fu4-20020a17090ad18400b0029b1e0a10c8mr396759pjb.4.1709258650888; Thu, 29 Feb
- 2024 18:04:10 -0800 (PST)
+	s=arc-20240116; t=1709259666; c=relaxed/simple;
+	bh=lDcV+UIK2UmQdtVQx2J9DB22Eek2v9YcVzkNvM9HlEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qv88LqYx2esdpqgBxqCn7gYky2mMQgaS2taMDFzTZM7U6+AHfmTnxScgwkyRPLRp/SwFGpuiat8Tw54FdrC0kv1OU8mXn5dMBuhDR4GR5AJ5f825h/Pr7gU3F5lqhp9o+iMtySXDMy/xwO8tUgkAH13DymbpbD0VZNfTmFnR8U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 262C51FB;
+	Thu, 29 Feb 2024 18:21:34 -0800 (PST)
+Received: from [10.162.42.8] (a077893.blr.arm.com [10.162.42.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5CB43F762;
+	Thu, 29 Feb 2024 18:20:50 -0800 (PST)
+Message-ID: <2adf726f-5a94-4e4f-85de-db30e1586584@arm.com>
+Date: Fri, 1 Mar 2024 07:50:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229062048.558799-1-irogers@google.com>
-In-Reply-To: <20240229062048.558799-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 29 Feb 2024 18:04:00 -0800
-Message-ID: <CAM9d7cjCn-GFtjejw+DtK_Y6kNRGLQTAZNn6zarQfNDjvWHUXw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf map: Fix map reference count issues
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 28, 2024 at 10:21=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> The find will get the map, ensure puts are done on all paths.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+ Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+ Rob Herring <robh@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-6-anshuman.khandual@arm.com>
+ <8634tb2jwp.wl-maz@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <8634tb2jwp.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> ---
->  tools/perf/util/maps.c        | 14 +++++++-------
->  tools/perf/util/probe-event.c |  4 +---
->  2 files changed, 8 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 53aea6d2ef93..ce13145a9f8e 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -611,14 +611,14 @@ struct symbol *maps__find_symbol(struct maps *maps,=
- u64 addr, struct map **mapp)
->         struct symbol *result =3D NULL;
->
->         /* Ensure map is loaded before using map->map_ip */
-> -       if (map !=3D NULL && map__load(map) >=3D 0) {
-> -               if (mapp)
-> -                       *mapp =3D map;
-> -
-> +       if (map !=3D NULL && map__load(map) >=3D 0)
->                 result =3D map__find_symbol(map, map__map_ip(map, addr));
-> -               if (!mapp)
-> -                       map__put(map);
-> -       }
-> +
-> +       if (mapp)
-> +               *mapp =3D map;
-> +       else
-> +               map__put(map);
-> +
->         return result;
->  }
->
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.=
-c
-> index be71abe8b9b0..2a0ad9ecf0a2 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -2274,9 +2274,7 @@ static int find_perf_probe_point_from_map(struct pr=
-obe_trace_point *tp,
->         ret =3D pp->function ? 0 : -ENOMEM;
->
->  out:
-> -       if (map && !is_kprobe) {
-> -               map__put(map);
-> -       }
-> +       map__put(map);
->
->         return ret;
->  }
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
+
+On 3/1/24 00:10, Marc Zyngier wrote:
+> On Thu, 25 Jan 2024 09:41:16 +0000,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>> Disable the BRBE before we enter the guest, saving the status and enable it
+>> back once we get out of the guest. This avoids capturing branch records in
+>> the guest kernel or userspace, which would be confusing the host samples.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: kvmarm@lists.linux.dev
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> CC: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Changes in V16:
+>>
+>> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
+>> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
+>>   element, and dropped the previous dependency on Jame's coresight series
+>>
+>>  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
+>>  arch/arm64/kvm/debug.c             |  5 +++++
+>>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
+>>  3 files changed, 42 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 21c57b812569..bce8792092af 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
+>>  	u8 cflags;
+>>  
+>>  	/* Input flags to the hypervisor code, potentially cleared after use */
+>> -	u8 iflags;
+>> +	u16 iflags;
+>>  
+>>  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
+>>  	u8 sflags;
+>> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
+>>  		u64 pmscr_el1;
+>>  		/* Self-hosted trace */
+>>  		u64 trfcr_el1;
+>> +		u64 brbcr_el1;
+>>  	} host_debug_state;
+>>  
+>>  	/* VGIC state */
+>> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
+>>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+>>  /* vcpu running in HYP context */
+>>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+>> +/* Save BRBE context if active  */
+>> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
+>>  
+>>  /* SVE enabled for host EL0 */
+>>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+>> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> index 8725291cb00a..99f85d8acbf3 100644
+>> --- a/arch/arm64/kvm/debug.c
+>> +++ b/arch/arm64/kvm/debug.c
+>> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>> +
+>> +	/* Check if we have BRBE implemented and available at the host */
+>> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+>> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>  }
+>>  
+>>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>>  {
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+>> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>>  }
+>> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> index 4558c02eb352..79bcf0fb1326 100644
+>> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+>> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>>  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
+>>  }
+>>  
+>> +static void __debug_save_brbe(u64 *brbcr_el1)
+>> +{
+>> +	*brbcr_el1 = 0;
+>> +
+>> +	/* Check if the BRBE is enabled */
+>> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+>> +		return;
+>> +
+>> +	/*
+>> +	 * Prohibit branch record generation while we are in guest.
+>> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+>> +	 * modify the filtering set by the host.
+>> +	 */
+>> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
+>> +	write_sysreg_s(0, SYS_BRBCR_EL1);
+> 
+> As for TRFCR and PMSCR, this is broken on hVHE.
+> 
+> Please see [1]
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
+> 
+
+Ahh I see, so the unified accessors read_sysreg_el1()/write_sysreg_el1()
+need to be used here - which will choose between BRBCR_EL1 & BRBCR_EL12
+as required. Will do the changes, thanks for pointing out.
