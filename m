@@ -1,167 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACE13A8DE;
-	Fri,  1 Mar 2024 02:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FCE28F4
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 05:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709259666; cv=none; b=WaPrmfJMZbqgoCNayRFbDtghB6+VFWAeEYI3Mt5wQT2RMSQblRLrn8EjbX3G7qrjZm9/l/mI+ie76Ey12vYuOEOL91FqdFNfvNi+znvWUjg3eIRUg/AXZRlsw8Z+UbNvglmJN4WHAOCgLKhzab+I2Me8IDW+CjS6XQDagbAUivc=
+	t=1709269382; cv=none; b=t/xs9J7EsMCii8korB3Js6rYT56/LOsZL8vUCz8Hyo8z2TXpMNhYGKIbopk6ah1ksYIc8ZdOCPa3hezkpb7M6aYUPo8vF7ukF4DBI2DIhXtL7Ha0hiXGPhmxjmtvNDbXgtHjjn9b+GLec3w+MWMjdMFPhjvdXvlDjta5JUQ2OA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709259666; c=relaxed/simple;
-	bh=lDcV+UIK2UmQdtVQx2J9DB22Eek2v9YcVzkNvM9HlEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qv88LqYx2esdpqgBxqCn7gYky2mMQgaS2taMDFzTZM7U6+AHfmTnxScgwkyRPLRp/SwFGpuiat8Tw54FdrC0kv1OU8mXn5dMBuhDR4GR5AJ5f825h/Pr7gU3F5lqhp9o+iMtySXDMy/xwO8tUgkAH13DymbpbD0VZNfTmFnR8U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 262C51FB;
-	Thu, 29 Feb 2024 18:21:34 -0800 (PST)
-Received: from [10.162.42.8] (a077893.blr.arm.com [10.162.42.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5CB43F762;
-	Thu, 29 Feb 2024 18:20:50 -0800 (PST)
-Message-ID: <2adf726f-5a94-4e4f-85de-db30e1586584@arm.com>
-Date: Fri, 1 Mar 2024 07:50:47 +0530
+	s=arc-20240116; t=1709269382; c=relaxed/simple;
+	bh=yUvFzWM+HJXyLOAC7y66wSXyf4xTtJ7HUVaTx3YpCFU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h62zgL2pZpbfgqimtSE8P8jRkfHo15N6pwT6xCtgyYyWa73Sgoaa+SbBThKO9AuDN1i5QY9xm0poSaLN3C7b1vyX2XkRZzQpTYSds17WCMG4huJ6wv0w9xfb8NIcyU019QBdjv9MQcdUN5xrc1t/1/9DvnqhGEDNeypUydyErEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jvJqmOA+; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvJqmOA+"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dc9f4d1106so102845ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Feb 2024 21:03:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709269380; x=1709874180; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KJCI+26zIfGoqoxPqGF/3KXwVzFCjuGI+FsZrZUdpyE=;
+        b=jvJqmOA+NjvShZqj4OFXPcoaR4NljMuAzZRJI4qU1skcDbPuJasJEM6dNfUb5qVFu5
+         kBGkiFEGgN2DW3Odc9EkoQ5VzhWnWRLZZ8BatjqzBFA7kSnf2VN8SzJ7PJTvn7hbZDuI
+         pnXBDTVUH0Tvh4CaY0LlfMPJwasvLl0O9fk1LTxgfXNBm2wguZwx0I1O8NtERe90Blk+
+         v7Lc+8yx0I2zP/hBEEpsORkHVdEVMRO2/LGmtb0JlorgZlpD8gQf/omxDSszEM5Q918k
+         nwFUrCOMdRKoNeXSu2Y0hm+PCVCuQMFsb+uG3LWWtx8rgXUFQvDOgvCjR98CrfRBjbx/
+         O+5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709269380; x=1709874180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJCI+26zIfGoqoxPqGF/3KXwVzFCjuGI+FsZrZUdpyE=;
+        b=NCa2Qpd8ttGJyfMlL2AJfq78mhWdEDm1VYryWURj1wej0O4U9WM2DB6G2KYDUo7a8d
+         qrS+RRSN2XSPXQWhBz4h1tlkSKjMYZ1jRY/IjKfiwkj5n3yOs/XoVRA/dKTkzW7rbu6v
+         apjs3u37GxnY5L7uvGoBVRCv3Hf9127sJfVuz+SSifuZ74uuISb+gr+3o4beJwm/QTWv
+         RK0vxMVy9F8JlnnjNtZfRmA6XKVtc84cNJc7+tWME7LAKW9ari7eG+DPOb8wmSjCxLnP
+         sIs1gz0yawfsyRF9udaCkj89trNcx70S1JwJPdtlz1P6lEWvgvm3l/Dw6rqIG+V6eAk9
+         u81Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXnVq6COgT42jZbTgpAf2JJfTtYhHjTVQyBSPv4xgFSNqHHXqCsIZjPASTxGWfo3YDHEZ5NCDOH3+NsqZ2q0XK8u2coQtv9zzm/x3UihjJgTw==
+X-Gm-Message-State: AOJu0YzjupgpE/nOeB7KL7p5ps/DyTx5PXmtgwOMw6YoXS2oW+hItbYZ
+	8F/mdLp+evtK1Q7kzWrQ8/kjLLs53Pf22211zXCbHU4mJrlP0HZM3soYdJ5epU9UgfwGKvBi3IC
+	sciQUTfvyyF+6oNopWJK0Y9WEsaYhjvQ+VYWf
+X-Google-Smtp-Source: AGHT+IGFzadOowQIy/Sa/Ec/9HPST0VW1lGI8Jdl7GpPOSJ1uOTsiucmWmZG0Hnnb7JHLQowSSUfftsvaCzY+Bw+fQc=
+X-Received: by 2002:a17:902:ced0:b0:1dc:c779:5537 with SMTP id
+ d16-20020a170902ced000b001dcc7795537mr122788plg.4.1709269380271; Thu, 29 Feb
+ 2024 21:03:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Content-Language: en-US
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
- Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
- Rob Herring <robh@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-6-anshuman.khandual@arm.com>
- <8634tb2jwp.wl-maz@kernel.org>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <8634tb2jwp.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240229063253.561838-1-irogers@google.com> <20240229063253.561838-5-irogers@google.com>
+ <CAM9d7cj9CgxmvSMLvDa=RM8zPRJpRbKqMkU7_B68HwEX7qo=hg@mail.gmail.com>
+In-Reply-To: <CAM9d7cj9CgxmvSMLvDa=RM8zPRJpRbKqMkU7_B68HwEX7qo=hg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 29 Feb 2024 21:02:45 -0800
+Message-ID: <CAP-5=fWpnrLAo3yB6SAxDHjzWNMYcAPdq0RHgs_C11Y5dY6ZeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] perf machine: Move machine's threads into its own abstraction
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 29, 2024 at 5:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Feb 28, 2024 at 10:33=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > Move thread_rb_node into the machine.c file. This hides the
+> > implementation of threads from the rest of the code allowing for it to
+> > be refactored.
+> >
+> > Locking discipline is tightened up in this change. As the lock is now
+> > encapsulated in threads, the findnew function requires holding it (as
+> > it already did in machine). Rather than do conditionals with locks
+> > based on whether the thread should be created (which could potentially
+> > be error prone with a read lock match with a write unlock), have a
+> > separate threads__find that won't create the thread and only holds the
+> > read lock. This effectively duplicates the findnew logic, with the
+> > existing findnew logic only operating under a write lock assuming
+> > creation is necessary as a previous find failed. The creation may
+> > still fail with the write lock due to another thread. The duplication
+> > is removed in a later next patch that delegates the implementation to
+> > hashtable.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Thanks for doing this!  A nit below..
+>
+> > ---
+> [SNIP]
+> > @@ -3228,27 +3258,31 @@ int thread__resolve_callchain(struct thread *th=
+read,
+> >         return ret;
+> >  }
+> >
+> > -int machine__for_each_thread(struct machine *machine,
+> > -                            int (*fn)(struct thread *thread, void *p),
+> > -                            void *priv)
+> > +int threads__for_each_thread(struct threads *threads,
+> > +                            int (*fn)(struct thread *thread, void *dat=
+a),
+> > +                            void *data)
+> >  {
+> > -       struct threads *threads;
+> > -       struct rb_node *nd;
+> > -       int rc =3D 0;
+> > -       int i;
+> > +       for (int i =3D 0; i < THREADS__TABLE_SIZE; i++) {
+> > +               struct threads_table_entry *table =3D &threads->table[i=
+];
+> > +               struct rb_node *nd;
+> >
+> > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
+> > -               threads =3D &machine->threads[i];
+> > -               for (nd =3D rb_first_cached(&threads->entries); nd;
+> > -                    nd =3D rb_next(nd)) {
+> > +               for (nd =3D rb_first_cached(&table->entries); nd; nd =
+=3D rb_next(nd)) {
+> >                         struct thread_rb_node *trb =3D rb_entry(nd, str=
+uct thread_rb_node, rb_node);
+> > +                       int rc =3D fn(trb->thread, data);
+> >
+> > -                       rc =3D fn(trb->thread, priv);
+> >                         if (rc !=3D 0)
+> >                                 return rc;
+> >                 }
+> >         }
+> > -       return rc;
+> > +       return 0;
+>
+> Don't we need locking in this function?
+
+I thought there was a deadlock, but I was either mistaken or now it is
+resolved. I'll add in the read lock as you say.
+
+Thanks,
+Ian
 
 
-
-On 3/1/24 00:10, Marc Zyngier wrote:
-> On Thu, 25 Jan 2024 09:41:16 +0000,
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>
->> Disable the BRBE before we enter the guest, saving the status and enable it
->> back once we get out of the guest. This avoids capturing branch records in
->> the guest kernel or userspace, which would be confusing the host samples.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Oliver Upton <oliver.upton@linux.dev>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: kvmarm@lists.linux.dev
->> Cc: linux-arm-kernel@lists.infradead.org
->> CC: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> Changes in V16:
->>
->> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
->> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
->>   element, and dropped the previous dependency on Jame's coresight series
->>
->>  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
->>  arch/arm64/kvm/debug.c             |  5 +++++
->>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->>  3 files changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 21c57b812569..bce8792092af 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
->>  	u8 cflags;
->>  
->>  	/* Input flags to the hypervisor code, potentially cleared after use */
->> -	u8 iflags;
->> +	u16 iflags;
->>  
->>  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
->>  	u8 sflags;
->> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
->>  		u64 pmscr_el1;
->>  		/* Self-hosted trace */
->>  		u64 trfcr_el1;
->> +		u64 brbcr_el1;
->>  	} host_debug_state;
->>  
->>  	/* VGIC state */
->> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
->>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
->>  /* vcpu running in HYP context */
->>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
->> +/* Save BRBE context if active  */
->> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
->>  
->>  /* SVE enabled for host EL0 */
->>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
->> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
->> index 8725291cb00a..99f85d8acbf3 100644
->> --- a/arch/arm64/kvm/debug.c
->> +++ b/arch/arm64/kvm/debug.c
->> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->> +
->> +	/* Check if we have BRBE implemented and available at the host */
->> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
->> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->>  }
->>  
->>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->>  {
->>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->>  }
->> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> index 4558c02eb352..79bcf0fb1326 100644
->> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
->> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
->>  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
->>  }
->>  
->> +static void __debug_save_brbe(u64 *brbcr_el1)
->> +{
->> +	*brbcr_el1 = 0;
->> +
->> +	/* Check if the BRBE is enabled */
->> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
->> +		return;
->> +
->> +	/*
->> +	 * Prohibit branch record generation while we are in guest.
->> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
->> +	 * modify the filtering set by the host.
->> +	 */
->> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
->> +	write_sysreg_s(0, SYS_BRBCR_EL1);
-> 
-> As for TRFCR and PMSCR, this is broken on hVHE.
-> 
-> Please see [1]
-> 
-> 	M.
-> 
-> [1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
-> 
-
-Ahh I see, so the unified accessors read_sysreg_el1()/write_sysreg_el1()
-need to be used here - which will choose between BRBCR_EL1 & BRBCR_EL12
-as required. Will do the changes, thanks for pointing out.
+> Thanks,
+> Namhyung
+>
+>
+> > +
+> > +}
+> > +
+> > +int machine__for_each_thread(struct machine *machine,
+> > +                            int (*fn)(struct thread *thread, void *p),
+> > +                            void *priv)
+> > +{
+> > +       return threads__for_each_thread(&machine->threads, fn, priv);
+> >  }
+> >
