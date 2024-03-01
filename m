@@ -1,121 +1,117 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08033C46E
-	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 20:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589BC5810A;
+	Fri,  1 Mar 2024 21:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324003; cv=none; b=NVpXMOJba+jFeIWZw3wXgwvh/M3Pu4mvr8g4BdhopuMAWvxbl9XGpJX6cJ1Mer7XlPm4PnqIkar3UvK6UsFCl5rUA8Lmr0vcD+gM42VDW/qHF1cS44bF6NzTNJlmxw7r9U7WlIRmgz6DznnPTeamyj3cxkvvRuugC/4qTmhsS0k=
+	t=1709328845; cv=none; b=iEJT9BTIxGNPLMojCFuM7764u/4GjbNxdiH0PEZIcNePPeak1bBgFllty8kofxMNnLh362f6DtEH2nNG3GvGS1GNRdSkPleVwV1t42C30Y/bd1I/yOaLhL5hjkiDR2+3N1v4JG6Xger0A6b+0KaZl+KZ6TDdt7hcuOldqX8ZPJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324003; c=relaxed/simple;
-	bh=+kXeHXthEWZD7iWx2K1wgOR5WC1VJeE1+Ab0otEfR+s=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Q0Zwn4Q9Sxochww1gwpGJ9x2duabU2SvV32fh2HtmoYEtIFTbbWCct9kAm4FKjVnAWo4Whhu4ECscx4EdvBtK//tsgjvIBdbaoZAdYXnIOGwm7MhmUcf975qI1naNFoGCcbZDLMWQJ4rLhZJtnIkqxY2yXfLXdgNYS1ywT98kWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4uuUvcJP; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709328845; c=relaxed/simple;
+	bh=fmzH+mIOkDmds9+eATlKSe8d+juA8+VlJyocy1nJWyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=krkW/kPsAxBJlZ2/IwMioC48aqDiL384vNRZ+dIMC7lbAyH16ErRijjx+dzbz/8tzy+7LrwzIDStfb2vqdR4dFcBLRk1XjtSwTDGU8MhHfY27TMdvpNf0wKfq/qClbn8nMoO9wKDeO0F5S7566uY7BVvvlELlFczTigqWcVqp74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MADJW/jh; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4uuUvcJP"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so3523053276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 01 Mar 2024 12:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709324001; x=1709928801; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=leHy2ZuaaIVqOoEaFIcU0dOPh3TtFIVXPy4dpXtCtQQ=;
-        b=4uuUvcJP4diR1DgxCzpfQ0oXzCEZRYp7YbVphmRn3/ubpFdYpJqYn1W031AhxHbpU9
-         HgFOCH1qHJDvMyrosnPmJKgZsrgZvAq6FPVcREKlLKFUJzb0a/iOVpskNZ8ZpK2xnFVd
-         /bU6HPEQXgeyA0C6zMMP3mFlVqvmzhm5EgmTuXjPS977SvRKtiSu/fO2B+YXCJe/6WHM
-         f7MNR+5LpRoGXjJgupuo+vIrzEukBZVmK/r2wTw4kd9KXr3jPlmkqUQNQEyifLrJ0ZG3
-         WL7LUzU3TnWNEl8qiYlkdn+qDSKz8dwtCtuerR/aIeul1vkW/Dfnbdgqvz2EBjU21sem
-         F80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709324001; x=1709928801;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=leHy2ZuaaIVqOoEaFIcU0dOPh3TtFIVXPy4dpXtCtQQ=;
-        b=idjV4V+gCodTHphsAOWLBAIrDvO1biK9qjnviwKanUAhNejd/ibCrqkyfiCwPxvy0O
-         cZALE8rb6UKRr564D5BSAtmNgpEMnzzYsEp5YCjrpcliRbH/dR2QW5Gtxx3yMN/NE2S+
-         EeX1Y+t/O87LsooqKrdqpMewqaUMgAwIliKgJG9uf2vgq2qx+hr54dUA+vSXdxP/g8Se
-         3jDAiAK0L2qOuVLkBq2VDYReIqWpnyMDqDpmYfkf+h4z6O4XwhzVhEgEMnfA6f1jKlgm
-         q3uEyqUZQy6qHxIQreQH2Oe9LyAbyeAAXr8awdvG4QbIMbcOe2NTHcol8+i1IevvV7ne
-         GE3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUEbQzarJM5660DsrmealRXm7TPSLE5ZWtMhWYmK2DazJo3cZQfttz7wwirsq5oD7hO9F7QH75uQb2XGar9DXk7ebnZH+7B9tf+CjCsz2nc/Q==
-X-Gm-Message-State: AOJu0Yx4kJ0lqOwHhWjy4mGD5z6wHvZCoEki3UlqXNX5Uvwqnx+/e0hW
-	9wuZ/Yo1sceuB5ZfnYKPvXSwhIgbJWZa8rTWBkgl2hgxJmqZ+KCG0P80g5FH77o39Lg6sMHwYZ3
-	LEdF8Gg==
-X-Google-Smtp-Source: AGHT+IEUiEJgQKhFhf5xIrWptGoM/WUTdtVbrogONGApTvzoFpWCMS1CeyeugDGls8ujT2Nb1x5Zs7wqJnl4
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a25:ce8a:0:b0:dcc:8927:7496 with SMTP id
- x132-20020a25ce8a000000b00dcc89277496mr102198ybe.5.1709324000837; Fri, 01 Mar
- 2024 12:13:20 -0800 (PST)
-Date: Fri,  1 Mar 2024 12:13:06 -0800
-In-Reply-To: <20240301201306.2680986-1-irogers@google.com>
-Message-Id: <20240301201306.2680986-2-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MADJW/jh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709328843; x=1740864843;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fmzH+mIOkDmds9+eATlKSe8d+juA8+VlJyocy1nJWyA=;
+  b=MADJW/jh6Sgjh7ljNQvFzvS5VY8hu4p1WAZUGE4TLTZApHC3859P17Gz
+   PWrIGV89EjAqk9QP9B1RqdxRS2zQp7qY6FPqjTTxPymPqrIcyMmO5Q2Rt
+   Q2AalUTE/QqCJ891ogLZZ1XSCtmdRSNrKI6sIJnTvf8HR2heX1b3Pi3qE
+   zvzR8BvTI/bzMDXvV45273wYd8nQsiIB0FP6PXTWbAHA6rY1DZTqaGFEd
+   ydTVqJDI6cQ5hqpzUhahNCjojp1k7qQAL+2Ajf0/ZqG/GgabE+g7K1ARc
+   3sSncHITGifd6ggHCPgWypeXtPFwJNeusNgT207E/DMq6GnOww6kNMYUz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="3751066"
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="3751066"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 13:34:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
+   d="scan'208";a="8459173"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 13:34:02 -0800
+Date: Fri, 1 Mar 2024 13:34:00 -0800
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Edward Baker <edward.baker@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 02/20] perf jevents: Add idle metric for Intel models
+Message-ID: <ZeJJyCmXO9GxpDiF@tassilo>
+References: <20240229001806.4158429-1-irogers@google.com>
+ <20240229001806.4158429-3-irogers@google.com>
+ <ZeIVQhfDMP7_bSJ8@tassilo>
+ <CAP-5=fWpXHXd8Dd39o_KEcVaBkQKk=aXjYSVTWCitaY6Xm-T4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301201306.2680986-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 2/2] perf help: Lower levenshtein penality for deleting character
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWpXHXd8Dd39o_KEcVaBkQKk=aXjYSVTWCitaY6Xm-T4A@mail.gmail.com>
 
-The levenshtein penalty for deleting a character was far higher than
-subsituting or inserting a character. Lower the penalty to match that
-of inserting a character.
+> 
+> I see some of the gains as:
+>  - metrics that are human intelligible,
+>  - metrics for models that are no longer being updated,
+>  - removing copy-paste of metrics like tsx and smi across each model's
+> metric json (less lines-of-code),
+>  - validation of events in a metric expression being in the event json
+> for a model,
+>  - removal of forward porting metrics to a new model if the event
+> names of the new model line up with those of previous,
+>  - in this patch kit there are metrics added that don't currently
+> exist (more metrics should be better for users - yes there can always
+> be bugs).
 
-Before:
-```
-$ perf recccord
-perf: 'recccord' is not a perf-command. See 'perf --help'.
-```
+But then we have two ways to do things, and we already have a lot 
+of problems with regressions from complexity and a growing
+bug backlog that nobody fixes. 
 
-After:
-```
-$ perf recccord
-perf: 'recccord' is not a perf-command. See 'perf --help'.
+Multiple ways to do basic operations seems just a recipe for
+more and more fragmentation and similar problems.
 
-Did you mean this?
-        record
-```
+The JSON format is certainly not perfect and has its share 
+of issues, but at least it's a standard now that is supported
+by many vendors and creating new standards just because
+you don't like some minor aspects doesn't seem like 
+a good approach. I'm sure the next person will come around
+why wants Ruby metrics and the third would prefer to write
+them in Rust. Who knows where it will stop.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/help-unknown-cmd.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Also in my experience this python stuff is unreliable because
+half the people who build perf forget to install the python
+libraries. Json at least works always.
 
-diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
-index 2ba3369f1620..a0a46e34f8d1 100644
---- a/tools/perf/util/help-unknown-cmd.c
-+++ b/tools/perf/util/help-unknown-cmd.c
-@@ -73,10 +73,14 @@ const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
- 
- 	if (main_cmds->cnt) {
- 		/* This reuses cmdname->len for similarity index */
--		for (i = 0; i < main_cmds->cnt; ++i)
-+		for (i = 0; i < main_cmds->cnt; ++i) {
- 			main_cmds->names[i]->len =
--				levenshtein(cmd, main_cmds->names[i]->name, 0, 2, 1, 4);
--
-+				levenshtein(cmd, main_cmds->names[i]->name,
-+					/*swap_penalty=*/0,
-+					/*substition_penality=*/2,
-+					/*insertion_penality=*/1,
-+					/*deletion_penalty=*/1);
-+		}
- 		qsort(main_cmds->names, main_cmds->cnt,
- 		      sizeof(*main_cmds->names), levenshtein_compare);
- 
--- 
-2.44.0.278.ge034bb2e1d-goog
+Incrementional improvements are usually the way to do these
+things.
 
+-Andi
