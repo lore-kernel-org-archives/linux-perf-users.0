@@ -1,390 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9F72900;
-	Fri,  1 Mar 2024 17:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314022; cv=none; b=WF13Ov5ovdfAacvEhjh0XePxUszOC9rqMDutJU9v0QENIQwke/rpnIM/fVtaXA1XWa+eJaO+oeRaGljo2D8yI+cj4uTQpJwapw26OtjurmlktXlswyB4BjraLAzqMVmJhRjxh06rX8XTkcBWj3okmzno2VijQ8njsV7H+Mlvjf8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314022; c=relaxed/simple;
-	bh=YogIhGDbuAhFHlQeObalXFcZiiNQi2MV9J4WEdFmGf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BPlEUiYZBIPgevMIKmfJmbQ1d/yuwQ7Xkf/il8zJXC8JAcv9g6pPd2CBalbx+UZ6OwGskbjV12wrXqFHacBNRSk0i6F/JqHbYM9CcnYYynXtRMrySK9ZOzERjSEiOzzPUsfuSuhzga/hQUCMaQzIaWboGUmvLtXklyaJ4QJyF6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OWAF8pBu; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OWAF8pBu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709314020; x=1740850020;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YogIhGDbuAhFHlQeObalXFcZiiNQi2MV9J4WEdFmGf0=;
-  b=OWAF8pBu8LorewQwGDJIhyEY5dUY68A8B/HPIai0gBi365xJjAKli+JG
-   qLju2Om/vUm92J7QWpnKOPv1D6GYiNY4yb/5dVFduuoCxPQyH7ZHYnSDq
-   kvre81ehwcwG+xuODekQMCAYMDOD0yZDkE9i1Gm9bS5M29VRzbeKs+QL7
-   7DVkICnYJ9njfIQiqKl0jTxY7InhLt70o3DoDOKIZn28HXC6i67RYmf0V
-   LeSp9vVx+mzQsWZcn2vDpQayGHsC/+UgZN02lX3YhoiQ177gwxVWNxtCZ
-   Rcvvk3TL4ov140MLL3Q9eWkZCPBGc/B4v2tdFhifhPNRQvPJ2Vc/XRcez
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15273367"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="15273367"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:26:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="12958512"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:26:59 -0800
-Received: from [10.209.156.90] (kliang2-mobl1.ccr.corp.intel.com [10.209.156.90])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 86B54580DA4;
-	Fri,  1 Mar 2024 09:26:56 -0800 (PST)
-Message-ID: <f9248ff6-6138-46b6-9cb7-a40442882195@linux.intel.com>
-Date: Fri, 1 Mar 2024 12:26:55 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13B339FD6
+	for <linux-perf-users@vger.kernel.org>; Fri,  1 Mar 2024 17:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709315281; cv=none; b=ry3a07LY0TYroSb6p3gpvDMJJJhlCaBL3Y2khBdidPq/fS3oG6B6BIkE0OvQMCADHJ12dq2oC2GMlAkBKHn//G9XipONjbSVeXZ/jW7syHChn69CzEqG1x6X7HYVaYMQUV4R5pc9XicqbJfsXoP7wOO9WENSa4BCsPuDHKU+sX4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709315281; c=relaxed/simple;
+	bh=Vq9zT+y6gZ9b4h7EmmS4QVHvVta5/MOikqgIaakqi+g=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=WdQMzhxkB1unGVx+opDZY//U33CCi2OsQ6oCklXq+KmVLK230AvB7TSV/4OjdsV2JWzaxR05Ot5Gc1aFrXboqd/RHa2Ef1XF1oo1rEwBGPSertkCGrLVHtQapb2RVmUrglI9Q9rO8x2w9f6PP3yTAD9Cv6T1xC7H/WIuvVkDqi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x3FWfZBX; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3FWfZBX"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6087ffdac8cso37023167b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 01 Mar 2024 09:47:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709315277; x=1709920077; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U18PnMNDf0UkaDQ9M9UQ3swVgmnuLROuEHdrzUL6kPk=;
+        b=x3FWfZBX14rOAQf4pGkaNjtg6HtLrybEcRlsLchlBuU3S76W96VkAlKh0EYCo8yxuS
+         +EBm5r5CUFm5cLZdkJh7H5XmrPbsUm14aMYtl2hnh2Yfd3ErEgrxhWszZ9XJEnhdsOpE
+         NSQR4hIGq51Dnz0kw3dctr5Tjfm52eAaPh++M8RtsouBsfTlLH+23+UIfqtRQDEVIaIb
+         G6UIC4o0cpM/icAwlmLG8w2m4/xBjnbpbLATEZEuRBkK6n4LWl5bPElOMHmuHlY2FqFs
+         aYKeJ4IwgxUAzqCCPXLgozBwcyExY2h2HMppapweADC3ZpD9GCNPIwuF7fqq0EEPRqfg
+         D6Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709315277; x=1709920077;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U18PnMNDf0UkaDQ9M9UQ3swVgmnuLROuEHdrzUL6kPk=;
+        b=xOR4IbUZFiHVtO3sY6GMH81g9elBSkE/yFMZiKtI5LbVJcuLxuSBMseQYbx4lZRmF5
+         gGjnIYDiS2CZdNC8v/vBkH1Akgs65+vn5buyf8TGzFAWtrfArF91ZESe41BtnXijFZtY
+         fGyobzSy1bBU97BKEEtgoqIE7Nn2rWcSvIVvuU8UHLOyvpHtWaFNu8f6emvx+9E3tYg8
+         5r1cyF+Dvprp98P5Y25FtI+r/SM883Ag8gBvTIa7XCtn8SKH3XVqbhFblcz49JZH4TlS
+         II8fYr9kn9i3sSJzrEtTj0L91NkB8THupYZbshj7WtrMRTmBJHfARCYcuVMbIr2gFO1H
+         UWoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXomw0WHJC5jeFJ6iJOb/smm/fDCQLwvA2qq4g+WoC4F4zg00kiYYPpJbeNLJztFDMa7HFknzutAK9/HozS0YFpL2dx6i9mSVchbQEYJfSxog==
+X-Gm-Message-State: AOJu0Yy2XP5+Xc3CjrLBmycz/qsm1S7DG7DJvsWLowxmvlVtO2caTirn
+	HUCu7LXofALEdbXajRzm94nmsqZLAhJKKHwwfayq1euPJmjEqzDwksfRkjH7CM2IlKrNq/Sw7Ao
+	YgLWBUg==
+X-Google-Smtp-Source: AGHT+IHkPZ/lSgcbKn3LOFPALPDm9hx/ZwX+m9eVD+LNZCkHv9byjCXPezI+bD7tBghw8c5JmhLGtWB/wfGb
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
+ (user=irogers job=sendgmr) by 2002:a05:690c:fce:b0:608:c5b5:3d37 with SMTP id
+ dg14-20020a05690c0fce00b00608c5b53d37mr565342ywb.2.1709315277703; Fri, 01 Mar
+ 2024 09:47:57 -0800 (PST)
+Date: Fri,  1 Mar 2024 09:47:11 -0800
+Message-Id: <20240301174711.2646944-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/20] perf jevents: Add tsx metric group for Intel
- models
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: Perry Taylor <perry.taylor@intel.com>,
- Samantha Alt <samantha.alt@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang
- <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>,
- Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- John Garry <john.g.garry@oracle.com>, Jing Zhang
- <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>,
- James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
-References: <20240229001806.4158429-1-irogers@google.com>
- <20240229001806.4158429-5-irogers@google.com>
- <7aa2d2a2-b8f9-478f-9699-7b717d38a8ab@linux.intel.com>
- <CAP-5=fWSidi1zjwn8Zr93dAQvRBtngKrkVwDxorTMmVSVc9FWg@mail.gmail.com>
- <e1e04f03-5d99-466d-a2d1-ce7fb15e8b8e@linux.intel.com>
- <CAP-5=fVBPT9itsyruLeChu=90xnvuxT7PSBtBkWi5LiDNAm2iw@mail.gmail.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fVBPT9itsyruLeChu=90xnvuxT7PSBtBkWi5LiDNAm2iw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v1] perf tests: Run tests in parallel by default
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Switch from running tests sequentially to running in parallel by
+default. Change the opt-in '-p' or '--parallel' flag to '-S' or
+'--sequential'.
 
+On an 8 core tigerlake an address sanitizer run time changes from:
+326.54user 622.73system 6:59.91elapsed 226%CPU
+to:
+973.02user 583.98system 3:01.17elapsed 859%CPU
 
-On 2024-03-01 11:37 a.m., Ian Rogers wrote:
-> On Fri, Mar 1, 2024 at 6:52 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-02-29 8:01 p.m., Ian Rogers wrote:
->>> On Thu, Feb 29, 2024 at 1:15 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2024-02-28 7:17 p.m., Ian Rogers wrote:
->>>>> Allow duplicated metric to be dropped from json files.
->>>>>
->>>>> Signed-off-by: Ian Rogers <irogers@google.com>
->>>>> ---
->>>>>  tools/perf/pmu-events/intel_metrics.py | 51 ++++++++++++++++++++++++++
->>>>>  1 file changed, 51 insertions(+)
->>>>>
->>>>> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
->>>>> index 20c25d142f24..1096accea2aa 100755
->>>>> --- a/tools/perf/pmu-events/intel_metrics.py
->>>>> +++ b/tools/perf/pmu-events/intel_metrics.py
->>>>> @@ -7,6 +7,7 @@ import argparse
->>>>>  import json
->>>>>  import math
->>>>>  import os
->>>>> +from typing import Optional
->>>>>
->>>>>  parser = argparse.ArgumentParser(description="Intel perf json generator")
->>>>>  parser.add_argument("-metricgroups", help="Generate metricgroups data", action='store_true')
->>>>> @@ -77,10 +78,60 @@ def Smi() -> MetricGroup:
->>>>>      ])
->>>>>
->>>>>
->>>>> +def Tsx() -> Optional[MetricGroup]:
->>>>> +    if args.model not in [
->>>>> +        'alderlake',
->>>>> +        'cascadelakex',
->>>>> +        'icelake',
->>>>> +        'icelakex',
->>>>> +        'rocketlake',
->>>>> +        'sapphirerapids',
->>>>> +        'skylake',
->>>>> +        'skylakex',
->>>>> +        'tigerlake',> +    ]:
->>>>
->>>> Can we get ride of the model list? Otherwise, we have to keep updating
->>>> the list.
->>>
->>> Do we expect the list to update? :-)
->>
->> Yes, at least for the meteorlake and graniterapids. They should be the
->> same as alderlake and sapphirerapids. I'm not sure about the future
->> platforms.
->>
->> Maybe we can have a if args.model in list here to include all the
->> non-hybrid models which doesn't support TSX. I think the list should not
->> be changed shortly.
->>
->>> The issue is the events are in
->>> sysfs and not the json. If we added the tsx events to json then this
->>> list wouldn't be necessary, but it also would mean the events would be
->>> present in "perf list" even when TSX is disabled.
->>
->> I think there may an alternative way, to check the RTM events, e.g.,
->> RTM_RETIRED.START event. We only need to generate the metrics for the
->> platform which supports the RTM_RETIRED.START event.
->>
->>
->>>
->>>>> +        return None
->>>>> +> +    pmu = "cpu_core" if args.model == "alderlake" else "cpu"
->>>>
->>>> Is it possible to change the check to the existence of the "cpu" PMU
->>>> here? has_pmu("cpu") ? "cpu" : "cpu_core"
->>>
->>> The "Unit" on "cpu" events in json always just blank. On hybrid it is
->>> either "cpu_core" or "cpu_atom", so I can make this something like:
->>>
->>> pmu = "cpu_core" if metrics.HasPmu("cpu_core") else "cpu"
->>>
->>> which would be a build time test.
->>
->> Yes, I think using the "Unit" is good enough.
->>
->>>
->>>
->>>>> +    cycles = Event('cycles')
->>>>> +    cycles_in_tx = Event(f'{pmu}/cycles\-t/')
->>>>> +    transaction_start = Event(f'{pmu}/tx\-start/')
->>>>> +    cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
->>>>> +    metrics = [
->>>>> +        Metric('tsx_transactional_cycles',
->>>>> +                      'Percentage of cycles within a transaction region.',
->>>>> +                      Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
->>>>> +                      '100%'),
->>>>> +        Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted transactions.',
->>>>> +                      Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
->>>>> +                                    has_event(cycles_in_tx),
->>>>> +                                    0),
->>>>> +                      '100%'),
->>>>> +        Metric('tsx_cycles_per_transaction',
->>>>> +                      'Number of cycles within a transaction divided by the number of transactions.',
->>>>> +                      Select(cycles_in_tx / transaction_start,
->>>>> +                                    has_event(cycles_in_tx),
->>>>> +                                    0),
->>>>> +                      "cycles / transaction"),
->>>>> +    ]
->>>>> +    if args.model != 'sapphirerapids':
->>>>
->>>> Add the "tsx_cycles_per_elision" metric only if
->>>> has_event(f'{pmu}/el\-start/')?
->>>
->>> It's a sysfs event, so this wouldn't work :-(
->>
->> The below is the definition of el-start in the kernel.
->> EVENT_ATTR_STR(el-start,        el_start,       "event=0xc8,umask=0x1");
->>
->> The corresponding event in the event list should be HLE_RETIRED.START
->>       "EventCode": "0xC8",
->>       "UMask": "0x01",
->>       "EventName": "HLE_RETIRED.START",
->>
->> I think we may check the HLE_RETIRED.START instead. If the
->> HLE_RETIRED.START doesn't exist, I don't see a reason why the
->> tsx_cycles_per_elision should be supported.
->>
->> Again, in the virtualization world, it's possible that the
->> HLE_RETIRED.START exists in the event list but el_start isn't available
->> in the sysfs. I think it has to be specially handle in the test as well.
-> 
-> So we keep the has_event test on the sysfs event to handle the
-> virtualization and disabled case. We use  HLE_RETIRED.START to detect
-> whether the model supports TSX.
+So over twice as fast, saving 4 minutes.
 
-Yes. I think the JSON event always keeps the latest status of an event.
-If an event is deprecated someday, I don't think there is a reason to
-keep any metrics including the event. So we should use it to check
-whether to generate a metrics.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+This change is on top of the test fixes in:
+https://lore.kernel.org/lkml/20240301074639.2260708-1-irogers@google.com/
+---
+ tools/perf/tests/builtin-test.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-The sysfs event tells if the current kernel support the event. It should
-be used to check whether a metrics should be used/enabled.
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index ddb2f4e38ea5..73f53b02f733 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -39,8 +39,8 @@
+  * making them easier to debug.
+  */
+ static bool dont_fork;
+-/* Fork the tests in parallel and then wait for their completion. */
+-static bool parallel;
++/* Don't fork the tests in parallel and wait for their completion. */
++static bool sequential;
+ const char *dso_to_test;
+ const char *test_objdump_path = "objdump";
+ 
+@@ -374,7 +374,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
+ 	}
+ 	(*child)->process.no_exec_cmd = run_test_child;
+ 	err = start_command(&(*child)->process);
+-	if (err || parallel)
++	if (err || !sequential)
+ 		return  err;
+ 	return finish_test(*child, width);
+ }
+@@ -440,7 +440,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 			int err = start_test(t, curr, -1, &child_tests[child_test_num++], width);
+ 
+ 			if (err) {
+-				/* TODO: if parallel waitpid the already forked children. */
++				/* TODO: if !sequential waitpid the already forked children. */
+ 				free(child_tests);
+ 				return err;
+ 			}
+@@ -460,7 +460,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 		}
+ 	}
+ 	for (i = 0; i < child_test_num; i++) {
+-		if (parallel) {
++		if (!sequential) {
+ 			int ret  = finish_test(child_tests[i], width);
+ 
+ 			if (ret)
+@@ -536,8 +536,8 @@ int cmd_test(int argc, const char **argv)
+ 		    "be more verbose (show symbol address, etc)"),
+ 	OPT_BOOLEAN('F', "dont-fork", &dont_fork,
+ 		    "Do not fork for testcase"),
+-	OPT_BOOLEAN('p', "parallel", &parallel,
+-		    "Run the tests altogether in parallel"),
++	OPT_BOOLEAN('S', "sequential", &sequential,
++		    "Run the tests one after another rather than in parallel"),
+ 	OPT_STRING('w', "workload", &workload, "work", "workload to run for testing"),
+ 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+ 	OPT_STRING(0, "objdump", &test_objdump_path, "path",
+@@ -564,6 +564,9 @@ int cmd_test(int argc, const char **argv)
+ 	if (workload)
+ 		return run_workload(workload, argc, argv);
+ 
++	if (dont_fork)
++		sequential = true;
++
+ 	symbol_conf.priv_size = sizeof(int);
+ 	symbol_conf.try_vmlinux_path = true;
+ 
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
-> Should the event be the sysfs or json
-> version? i.e.
-> 
->         "MetricExpr": "(cycles\\-t / el\\-start if
-> has_event(el\\-start) else 0)",
-> 
-> or
-> 
->         "MetricExpr": "(cycles\\-t / HLE_RETIRED.START if
-> has_event(el\\-start) else 0)",
-> 
-> I think I favor the former for some consistency with the has_event.
->
-
-Agree, the former looks good to me too.
-
-
-> Using HLE_RETIRED.START means the set of TSX models goes from:
->         'alderlake',
->         'cascadelakex',
->         'icelake',
->         'icelakex',
->         'rocketlake',
->         'sapphirerapids',
->         'skylake',
->         'skylakex',
->         'tigerlake',
-> 
-> To:
->    broadwell
->    broadwellde
->    broadwellx
->    cascadelakex
->    haswell
->    haswellx
->    icelake
->    rocketlake
->    skylake
->    skylakex
-> 
-> Using RTM_RETIRED.START it goes to:
->    broadwell
->    broadwellde
->    broadwellx
->    cascadelakex
->    emeraldrapids
->    graniterapids
->    haswell
->    haswellx
->    icelake
->    icelakex
->    rocketlake
->    sapphirerapids
->    skylake
->    skylakex
->    tigerlake
-> 
-> So I'm not sure it is working equivalently to what we have today,
-> which may be good or bad. Here is what I think the code should look
-> like:
-
-Yes, there should be some changes. But I think the changes should be good.
-
-For icelakex, the HLE_RETIRED.START has been deprecated. I don't see a
-reason why should perf keep the tsx_cycles_per_elision metric.
-
-For alderlake, TSX is deprecated. The perf should drop the related
-metrics as well.
-https://edc.intel.com/content/www/us/en/design/ipla/software-development-platforms/client/platforms/alder-lake-desktop/12th-generation-intel-core-processors-datasheet-volume-1-of-2/001/deprecated-technologies/
-
-> 
-> def Tsx() -> Optional[MetricGroup]:
->   pmu = "cpu_core" if CheckPmu("cpu_core") else "cpu"
->   cycles = Event('cycles')
->   cycles_in_tx = Event(f'{pmu}/cycles\-t/')
->   cycles_in_tx_cp = Event(f'{pmu}/cycles\-ct/')
->   try:
->     # Test if the tsx event is present in the json, prefer the
->     # sysfs version so that we can detect its presence at runtime.
->     transaction_start = Event("RTM_RETIRED.START")
->     transaction_start = Event(f'{pmu}/tx\-start/')
->   except:
->     return None
-> 
->   elision_start = None
->   try:
->     # Elision start isn't supported by all models, but we'll not
->     # generate the tsx_cycles_per_elision metric in that
->     # case. Again, prefer the sysfs encoding of the event.
->     elision_start = Event("HLE_RETIRED.START")
->     elision_start = Event(f'{pmu}/el\-start/')
->   except:
->     pass
-> 
->   return MetricGroup('transaction', [
->       Metric('tsx_transactional_cycles',
->              'Percentage of cycles within a transaction region.',
->              Select(cycles_in_tx / cycles, has_event(cycles_in_tx), 0),
->              '100%'),
->       Metric('tsx_aborted_cycles', 'Percentage of cycles in aborted
-> transactions.',
->              Select(max(cycles_in_tx - cycles_in_tx_cp, 0) / cycles,
->                     has_event(cycles_in_tx),
->                     0),
->              '100%'),
->       Metric('tsx_cycles_per_transaction',
->              'Number of cycles within a transaction divided by the
-> number of transactions.',
->              Select(cycles_in_tx / transaction_start,
->                     has_event(cycles_in_tx),
->                     0),
->              "cycles / transaction"),
->       Metric('tsx_cycles_per_elision',
->              'Number of cycles within a transaction divided by the
-> number of elisions.',
->              Select(cycles_in_tx / elision_start,
->                     has_event(elision_start),
->                     0),
->              "cycles / elision") if elision_start else None,
->   ], description="Breakdown of transactional memory statistics")
-> 
-> Wdyt?
-
-Looks good to me.
-
-Thanks,
-Kan
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Kan
->>
->>>
->>> Thanks,
->>> Ian
->>>
->>>> Thanks,
->>>> Kan
->>>>
->>>>> +        elision_start = Event(f'{pmu}/el\-start/')
->>>>> +        metrics += [
->>>>> +            Metric('tsx_cycles_per_elision',
->>>>> +                          'Number of cycles within a transaction divided by the number of elisions.',
->>>>> +                          Select(cycles_in_tx / elision_start,
->>>>> +                                        has_event(elision_start),
->>>>> +                                        0),
->>>>> +                          "cycles / elision"),
->>>>> +        ]
->>>>> +    return MetricGroup('transaction', metrics)
->>>>> +
->>>>> +
->>>>>  all_metrics = MetricGroup("", [
->>>>>      Idle(),
->>>>>      Rapl(),
->>>>>      Smi(),
->>>>> +    Tsx(),
->>>>>  ])
->>>>>
->>>>>  if args.metricgroups:
->>>
