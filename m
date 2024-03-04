@@ -1,116 +1,119 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9AA11C80;
-	Mon,  4 Mar 2024 06:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCA93EA72;
+	Mon,  4 Mar 2024 13:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709534733; cv=none; b=OOz1lo3mRQi5tAjNBSTbE/AFgK7VQCCfL4+KWJITjX0C1igVeTtVcO1xN5l1UdshveLDhAVLPQXpjRfmv7cnIyKbFzyqF2DVYv2Eu6PEB2Ck6OBpLuZw9tZnqfUKWXoKtRrivm+czTUd0lZxXSmVxHJb04qkrNsEu6iWEizBpuI=
+	t=1709560732; cv=none; b=rUxUnTY/KGyWSqW7QEcRo9HBqD4QMJpbcGzC3qGi8F7uAQPGIDGjX0AVBcDQZuwourIHQTTZMNKZuBostqH86suNjV1mRferWPfnGiTtsyxavrCKIlt97iixjjPEhePicezjg5mJbQ55VZ8NUiWCbMJUyAdEvv7Z8wiH3o+FkUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709534733; c=relaxed/simple;
-	bh=6Uu8xa55c8DULF3ppbXOa4fSBPHyOdf3aLeFqGDK5so=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XhHoacU3liREfJgYb5mQejHw9QikVhHd0xV+G0m+RASvvkCYpMN6khjnqvdJvtdLnXDDRfrtpo8E/zPrpCpvYRmm+hG7BbHvL1sbDjPCQJnRpCHoVBvJGyKwZcCmZS38V26J69+fJ08N4VX7vo9ptQjouHpZFpkG0fEGr0UCnhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-299b818d63aso2975639a91.0;
-        Sun, 03 Mar 2024 22:45:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709534732; x=1710139532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZdBfdlVEHddJCDG9FaCI+sxFZG9z0a/9PfXhMIaBlrQ=;
-        b=NP+LD4kY3lNVIESNjLLsQPH803JuIfFLeViLmvAbMb/ngs7MpdpwaHzY2G9bJzzRkw
-         VFPyNOVGn2F51HlVC+3nQs75O843nTAp1TTVWkBS3VGJXCmqJPK95K+24Xm1d5HXt1Nz
-         dAtJSzOWeZ4mDx39HQX8G5zT9cbvbPUrc++MF7Tb7nnJsR7UBSF2mLCWiwa2q5hTOmrd
-         7I2KgZnsWVV6OpTKNkk8b7xWYCQFNsUAEkOhlGn5X1a7HUtI1U+k5rmmQWZgTzLoFo09
-         ubazoJpDdP41jozeVv7TUZGG6p+WL5k0hV56sz/3Ruu8MirpEFJ7mGVTZjgKJWBnv11b
-         apiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmJ9+zIOFAILSjuddULNw95+LSqnJ4aQP0w4q2zIJq5/g8UBtgzOKOLmAe2pN+sj1PUQll/o+MVSmJR00lMaoDEesNz9Zx+MDFi1GByDTRTnl+zs2826NUu0kd8cLgm4drsu7cfSgDGtXLd77byg==
-X-Gm-Message-State: AOJu0YyzcLMJCnHQFoYyzSWFQ0Mm2wQ4kUL9gbcACsMUSt9fmmvXxQqT
-	FJWvkszIYqiXE02E6It60D/LtwlGLqK1eRaoISEYOZG75KtM8cfzKmri8TNyzI4lPhn9Z5EqG7R
-	ybaP2E9UvwcK7+s7sRjMRRXGmv8c=
-X-Google-Smtp-Source: AGHT+IEYKJjljiCsnptZUihoUc5d0E9Rrm0JqwX8DUwWiZ6Hegxtw1yFb9aMsFwJnAks5/YFPnWWUYjDmVqHSZf5QJs=
-X-Received: by 2002:a17:90a:6286:b0:29b:1ab3:ed77 with SMTP id
- d6-20020a17090a628600b0029b1ab3ed77mr10648400pjj.21.1709534731664; Sun, 03
- Mar 2024 22:45:31 -0800 (PST)
+	s=arc-20240116; t=1709560732; c=relaxed/simple;
+	bh=rQWP12B+ZOT796DFSjZOMLwUXkzwZeaMzqg82VZNbY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0qbtr1gF0uNFDJyAmzZFtmZXvpt5yJdJra1ATfERayuEbOnB++mEkRws+hNsKwQIS7pka7cwRQ8ctBNeAhhfBy0Ts3YWa/mgIIarTtW/D+PQU3Zclf18xOp7Nfu12P0WbtORbJb3g2E6M/pcEvWF+6owHdKcgw3JoWnLi84mmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToVwlgxB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToVwlgxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08703C43390;
+	Mon,  4 Mar 2024 13:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709560732;
+	bh=rQWP12B+ZOT796DFSjZOMLwUXkzwZeaMzqg82VZNbY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ToVwlgxB6pd5r8A0uqzEe+rb9BkwmIOD17N8MR5OYURX12JuYAE3wgPmjTD9zNoNR
+	 QAhTYYgfwZ7VMYidZRO6kz74w9RvRLcXDZUrTan9XU6FKhAw4KsMHw8PVSDNjx2fwg
+	 1Seay5sLfD/PRijZMBwi3elk5glcDPDkcSiDebB+B1tkiPWicSWg16XWeLRsGr1llJ
+	 Cl4IgSiwDK/V2XUfOaR1zEFfFg4SBxvWU+Nexn/XDRtOBkceRRIHBxlcVNwQatVBim
+	 qDc54lB00pARuwtLE8DQ5WCYM6errmAT4loB+74fhVDyuZBUP9kwSffSGtnyhkOv4j
+	 PNs3EMg4Twdpg==
+Date: Mon, 4 Mar 2024 10:58:49 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 0/4] perf annotate: Improve memory usage for symbol
+ histogram
+Message-ID: <ZeXTmdhu3Y_gC9ma@x1>
+References: <20240228005230.287113-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301053646.1449657-1-irogers@google.com>
-In-Reply-To: <20240301053646.1449657-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sun, 3 Mar 2024 22:45:20 -0800
-Message-ID: <CAM9d7cikTKZiW8dquh7VaFnBo0h2f7UGz+KUrvDs54Bwv=PB2Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Thread memory improvements and fixes
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240228005230.287113-1-namhyung@kernel.org>
 
-Hi Ian,
+On Tue, Feb 27, 2024 at 04:52:26PM -0800, Namhyung Kim wrote:
+> This is another series of memory optimization in perf annotate.
+ 
+> When perf annotate (or perf report/top with TUI) processes samples, it
+> needs to save the sample period (overhead) at instruction level.  For
+> now, it allocates an array to do that for the whole symbol when it
+> hits any new symbol.  This comes with a lot of waste since samples can
+> be very few and instructions span to multiple bytes.
+ 
+> For example, when a sample hits symbol 'foo' that has size of 100 and
+> that's the only sample falls into the symbol.  Then it needs to
+> allocate a symbol histogram (sym_hist) and the its size would be
+ 
+>   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) = 1616
+ 
+> But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
+> get worse if the symbol size is bigger (and it doesn't have many
+> samples in different places).  Also note that it needs separate
+> histogram for each event.
+ 
+> Let's split the sym_hist_entry and have it in a hash table so that it
+> can allocate only necessary entries.
+ 
+> No functional change intended.
 
-On Thu, Feb 29, 2024 at 9:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> The next 6 patches (now 7) from:
-> https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
-> now the initial maps fixes have landed:
-> https://lore.kernel.org/all/20240210031746.4057262-1-irogers@google.com/
->
-> Separate out and reimplement threads to use a hashmap for lower memory
-> consumption and faster look up. The fixes a regression in memory usage
-> where reference count checking switched to using non-invasive tree
-> nodes.  Reduce threads default size by 32 times and improve locking
-> discipline. Also, fix regressions where tids had become unordered to
-> make `perf report --tasks` and `perf trace --summary` output easier to
-> read.
->
-> v4. Add read lock to threads__for_each_thread, Namhyung.
-> v3. Factor threads out of machine in 1 patch, then move threads
->     functions in a second.
-> v2: improve comments and a commit message.
->
-> Ian Rogers (7):
->   perf report: Sort child tasks by tid
->   perf trace: Ignore thread hashing in summary
->   perf machine: Move fprintf to for_each loop and a callback
->   perf machine: Move machine's threads into its own abstraction
->   perf threads: Move threads to its own files
->   perf threads: Switch from rbtree to hashmap
->   perf threads: Reduce table size from 256 to 8
+I tried this before/after this series:
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+  $ time perf annotate --stdio2 -i perf.data.annotate
 
-Thanks,
-Namhyung
+For:
 
->
->  tools/perf/builtin-report.c           | 217 +++++++++-------
->  tools/perf/builtin-trace.c            |  41 ++--
->  tools/perf/util/Build                 |   1 +
->  tools/perf/util/bpf_lock_contention.c |   4 +-
->  tools/perf/util/machine.c             | 341 +++++++-------------------
->  tools/perf/util/machine.h             |  30 +--
->  tools/perf/util/rb_resort.h           |   5 -
->  tools/perf/util/thread.c              |   2 +-
->  tools/perf/util/thread.h              |   6 -
->  tools/perf/util/threads.c             | 190 ++++++++++++++
->  tools/perf/util/threads.h             |  35 +++
->  11 files changed, 478 insertions(+), 394 deletions(-)
->  create mode 100644 tools/perf/util/threads.c
->  create mode 100644 tools/perf/util/threads.h
->
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
+  perf record -e '{cycles,instructions,cache-misses}' make -k CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+
+And found these odd cases:
+
+  $ diff -u before after
+  --- before	2024-02-28 15:38:25.086062812 -0300
+  +++ after	2024-02-29 14:12:05.606652725 -0300
+  @@ -2450826,7 +2450826,7 @@
+                                ↓ je       1c62                  
+                                → call     operator delete(void*)@plt
+                                { return _M_dataplus._M_p; }
+  -                       1c62:   mov      0x13c0(%rsp),%rdi     
+  +  0.00   0.00 100.00   1c62:   mov      0x13c0(%rsp),%rdi     
+                                if (_M_data() == _M_local_data())
+                                  lea      0x13d0(%rsp),%rax     
+                                  cmp      %rax,%rdi             
+  @@ -2470648,7 +2470648,7 @@
+                                  mov      %rbx,%rdi             
+                                → call     operator delete(void*)@plt
+                                using reference = T &;     
+  -  0.00   0.00 100.00  11c65:   mov      0x8(%r12),%rax        
+  +                      11c65:   mov      0x8(%r12),%rax        
+                                size_t size() const { return Size; }
+                                  mov      0x10(%r12),%ecx       
+                                  mov      %rax,%rbp             
+  $
+
+
+This is a large function:
+
+Samples: 574K of events 'anon group { cpu_core/cycles/u, cpu_core/instructions/u, cpu_core/cache-misses/u }', 4000 Hz, Event count (approx.): 614695751751, [percent: local period]$
+clang::CompilerInvocation::ParseCodeGenArgs(clang::CodeGenOptions&, llvm::opt::ArgList&, clang::InputKind, clang::DiagnosticsEngine&, llvm::Triple const&, std::__cxx11::basic_string<char, std
+Percent 
+
+Probably when building the BPF skels in tools/perf/
+
+- Arnaldo
