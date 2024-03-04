@@ -1,162 +1,142 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CEE1C6AB;
-	Mon,  4 Mar 2024 21:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DE47B3FA;
+	Mon,  4 Mar 2024 22:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587077; cv=none; b=uvsKxkMJVIFVSNQHV5NCivHJXGQ5BKWH/exbBr4YUrjSCvHp9bUdWYFN3GP+eFepnFSGSdh+kJFAP/n4LF371ml6/9Hoo/O0y5pG2D/LlLQVLADIQcNKwjsyNRtlJqcF1x9pjqcxlSpIzSHgVViXRqXGFloR7GQ6rHvSoOaIjyU=
+	t=1709592854; cv=none; b=QGhBm8gDgxuM1FjcDsSjR6j6ck6Iw9d0nxPdEHTOXXm8ORiCXMBfLceAQRN9jOFBHXDUaV8GXIykOEb4IJGF3o1EQHbhMRkWcrph6p56mNDEs5ckX5Wa2fyvXM/FpY2BH+iG72MsZN4wT6wGhDTm5bxKUSwUvmcZLbyK+NZIoh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587077; c=relaxed/simple;
-	bh=7jAuGE/+EaVPBsvrPZcGHJ81GktKOSGz6Xxy5/x1hDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJdNN+s9kKX0A8CuFlf2x3Egb5Vs5MnLP/PDn3X607N6gHXdSD1EY4Nt0ZagOi5+xPHqs1u9EPbZ1bBNiyILI1aONXakZZiFf6FVFpZoNb8yAgokuyEBI5kkvPs1mNf0CZM0LXrf56xHSR3MFeE17qaa28DVSXK2ZXLyL/SVGSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQdawf3+; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1709592854; c=relaxed/simple;
+	bh=gO9mH5Z0JvT/SaaCXTzhnv1+STJClW88KiE2NUjLdXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W4gG2/DJmBJ/W6oDBKdNutf8HSYZe8DnlDkcZTq2j3V2GTVT1jURuCfBPvGaQVDoCwJmbO0BrEs3/Z5eQ2nURsNQTczfY583sneyC6HRCVNeamtGpPv2SYyYCtigyoEBOUnHeUGAlOif17g6VSndrZ13d96UcFs6bgk+gmnjOxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQdawf3+"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e5dddd3b95so1974974b3a.1;
-        Mon, 04 Mar 2024 13:17:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709587076; x=1710191876; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6PbsndqMhdr+kbSZx/pY3EeqpGXxBttOp8IgjnIP68=;
-        b=gQdawf3+o91teR3/LHin8dgKzYCM/xMWcFujeciWwxWZxfODGwcUvVOwG/RdV01fP9
-         PWCP7DD5+zKG70CFQyNC3h7ornU7HtxlK4zAbBRRVBm0ljyFNkNStlCzWehfd6uh5rto
-         qdUZQF6H0YwBVNgKArGvTz827Bwm0qsufo7zJ571XVwkd1jADl976IyBA1+/v6Tq7Qif
-         F7cRUbeiXyWrhoegOpNQQwGnwvNS5G9Upy1FExzVALq1zuV5Zk+/sHqcM5LGb731gpMx
-         wLa35EbiHFp2ev4CR3A2vWqXK8L+BftUv+f+lJ0CoaR75vatYTQDy9BzRBdlFEimHv9w
-         WwAA==
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29a940614easo3284091a91.3;
+        Mon, 04 Mar 2024 14:54:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709587076; x=1710191876;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n6PbsndqMhdr+kbSZx/pY3EeqpGXxBttOp8IgjnIP68=;
-        b=W4jkfrSJ9lY4joCkP4xA5HZAvOmqsVhPYgIEnY2AvU9pB6RmJ0bQdEmdKJoxoKStz5
-         InVmPRMt8hFxLE+O1mFdq7/qnOiX+NxcXd2Glql/PGFlqQARrts/8AJfOlsYZtVJwreK
-         J9Qhx009QpXWM2qEut3L6rlTNVxOtoYkSZFwFxCSxkzTY16zWOWxVeg1G0Amnlvz53zR
-         W0cNNIvn5OTdgTSstWwVxlwNqlgqAb13HZPrrw9rIBd9N8/KLouwZ620rWOGJbbG14jU
-         ifZLgi47cW8YrR1bN9WVDISJDhikJQkXiaFHeuas6Uw/H834EjKtDj2RSOrVi659Hx+O
-         qFoA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMdvBMleAFz06diLDC5ZjzDWcuBjVW92OEq1T/x71r7YHQFdkQ26vwGEcbpvYvEgCqiUamCzbVPWT6iN27enbzma+2Qx9L0NrtlCCKqKzLA2PwE0K/LrVo/EBhbI2nhe15AdciFXBko47DY8hBHQ==
-X-Gm-Message-State: AOJu0Yw5/op1+KQuQ13fCAw7NEkZOFd5wKVyBOEdZEzXD0TcHaVkw8C0
-	O4AAaRSyHaEs4yKFbG/RR2McPxqj/JwzhPiL3dpxO20Coh9/KHhb
-X-Google-Smtp-Source: AGHT+IF8a7LBF373kUwtCQ1s3ZQJTVDXWxr8/j/Osz4tLEJRYVY6/73hpr0TEI4A6kWp/JXMtteG2w==
-X-Received: by 2002:a05:6a00:2d17:b0:6e4:74d9:6f0f with SMTP id fa23-20020a056a002d1700b006e474d96f0fmr828710pfb.0.1709587075187;
-        Mon, 04 Mar 2024 13:17:55 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x53-20020a056a000bf500b006e3b868b8b8sm7686102pfu.130.2024.03.04.13.17.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 13:17:54 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a937b183-32bd-4a92-bc20-57319205b4eb@roeck-us.net>
-Date: Mon, 4 Mar 2024 13:17:52 -0800
+        d=1e100.net; s=20230601; t=1709592852; x=1710197652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G5CES4TSoLXwloLCxuKSrwc7XyMKCyLWgf+m5vrjXfw=;
+        b=teLbTeWsMExBei0+e602Hx2HK8oLducFHLGz/wEv8LIE1M2QtYpIsqZhn9FI8Qqxk4
+         BB3uhC8yqRwhCJuUoTaxBlwVNzOwo1jPY0jq2jH8A7jYvtuYr6R/QvXZzfDb0xLaIoNy
+         NNCF1yOyk46wl4zlYYekJ6gUiHy63jEw7s2EDWhTKpwjJwsnoVVFvZBZnCvpssSH8DLn
+         nYgayWTBd+3jAuj90XrIWpzi9K05PeEIgu5JHveIMJdHvvtz/TrjLYXsy/5D1Rj/pypq
+         S2sNquCWmnK4VwFCmRWmfF47/dZPJjkySg3Ro9vjPekJc5eh588OAz/vVLUqFJ4LHzUd
+         IjZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTtffb4v1Lc2PT9L65lVf8/n2H2gJRLVPEtTk2nKdgfE0qUxMB3FQrxJhf+z7FTmHAZwWVX0I8cVh1oTeGFAN0h0n6IaUeOjXWB4DxgFIk7m1WSfi5iBy8ukMhfB0J088F4h3eWrXQG4Y+qRhIZw==
+X-Gm-Message-State: AOJu0YxIOiCgOUg0UFU6D0jeSWyuKcJ/qaR28RJ8woZmYba5d7ylazso
+	b289h7W5xmZxEiwFlBIt1ox452iUgRqu/A1jUIOnjSdVyEdWpLH5kjnSs6DKBZEvSycWkxvqhKk
+	IxbyrB3uVyoLYw/01RSeKkbyAbMo=
+X-Google-Smtp-Source: AGHT+IH4eheqVGCCO+jxB3lin0rOkXq5DEPtLhniSrhGJcJ7W8Z2YPWgT39tCqKLjrV0RE5VKdSrWqqSGi7ocq0y3DI=
+X-Received: by 2002:a17:90a:d58a:b0:29a:2860:28b9 with SMTP id
+ v10-20020a17090ad58a00b0029a286028b9mr7312356pju.48.1709592851935; Mon, 04
+ Mar 2024 14:54:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: hw_breakpoint unit test failures with various
- architectures/platforms in qemu
-Content-Language: en-US
-To: Marco Elver <elver@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Dmitry Vyukov
- <dvyukov@google.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev
-References: <f477329e-4ecf-4c6c-82b1-1e9b84443902@roeck-us.net>
- <CANpmjNMZD7-HY9FNGKnWTzHJ+Kibf2++rHj=j+3UTFKZ+Hr+EQ@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CANpmjNMZD7-HY9FNGKnWTzHJ+Kibf2++rHj=j+3UTFKZ+Hr+EQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240228005230.287113-1-namhyung@kernel.org> <ZeXTmdhu3Y_gC9ma@x1>
+ <CAM9d7chEoab71v8=th7NAWcsPPZV+oGiJPGfiCcjdS3L+u13dA@mail.gmail.com>
+In-Reply-To: <CAM9d7chEoab71v8=th7NAWcsPPZV+oGiJPGfiCcjdS3L+u13dA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 4 Mar 2024 14:53:59 -0800
+Message-ID: <CAM9d7cggEAm3qyaBYVhpAXbGJ8LjJjK67WPds9dAFd_F5NJbhA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf annotate: Improve memory usage for symbol histogram
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/4/24 12:34, Marco Elver wrote:
-> On Mon, 4 Mar 2024 at 19:12, Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> Hi,
->>
->> I see a number of failures and tracebacks when running the hw_breakpoint
->> unit tests on various architectures in qemu. Some examples are below.
->>
->> Is this a potential problem with the unit tests, with the hardware,
->> or with the qemu emulation of that hardware ?
-> 
-> The test is testing the accounting logic (allocating/deallocating HW
-> breakpoints), not actually using the breakpoints. That requires that
-> the architecture reports the correct number of HW breakpoints
-> available. It looks like it's not doing that.
-> 
->> In other words, is it worthwhile to look into this further, or would
->> it make more sense to just disable those tests if they fail on a
->> given hardware/platform ?
-> 
-> It's an arch bug:
-> https://lore.kernel.org/lkml/Ytl9L0Zn1PVuL1cB@FVFF77S0Q05N.cambridge.arm.com/
-> 
-> Back then we decided to leave the test as-is, given it's reporting an
-> actual issue. However, since then nothing has changed and the test
-> continues to exist as a reminder the arch code needs fixing. I suspect
-> none of us have the time to get to that soon, so we can either leave
-> things as is, or skip the test on all the broken architectures.
-> 
+On Mon, Mar 4, 2024 at 8:36=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hi Arnaldo,
+>
+> On Mon, Mar 4, 2024 at 5:58=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ker=
+nel.org> wrote:
+> >
+> > On Tue, Feb 27, 2024 at 04:52:26PM -0800, Namhyung Kim wrote:
+> > > This is another series of memory optimization in perf annotate.
+> >
+> > > When perf annotate (or perf report/top with TUI) processes samples, i=
+t
+> > > needs to save the sample period (overhead) at instruction level.  For
+> > > now, it allocates an array to do that for the whole symbol when it
+> > > hits any new symbol.  This comes with a lot of waste since samples ca=
+n
+> > > be very few and instructions span to multiple bytes.
+> >
+> > > For example, when a sample hits symbol 'foo' that has size of 100 and
+> > > that's the only sample falls into the symbol.  Then it needs to
+> > > allocate a symbol histogram (sym_hist) and the its size would be
+> >
+> > >   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
+> >
+> > > But actually it just needs 32 (header + sym_hist_entry) bytes.  Thing=
+s
+> > > get worse if the symbol size is bigger (and it doesn't have many
+> > > samples in different places).  Also note that it needs separate
+> > > histogram for each event.
+> >
+> > > Let's split the sym_hist_entry and have it in a hash table so that it
+> > > can allocate only necessary entries.
+> >
+> > > No functional change intended.
+> >
+> > I tried this before/after this series:
+> >
+> >   $ time perf annotate --stdio2 -i perf.data.annotate
+> >
+> > For:
+> >
+> >   perf record -e '{cycles,instructions,cache-misses}' make -k CORESIGHT=
+=3D1 O=3D/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+> >
+> > And found these odd cases:
+> >
+> >   $ diff -u before after
+> >   --- before    2024-02-28 15:38:25.086062812 -0300
+> >   +++ after     2024-02-29 14:12:05.606652725 -0300
+> >   @@ -2450826,7 +2450826,7 @@
+> >                                 =E2=86=93 je       1c62
+> >                                 =E2=86=92 call     operator delete(void=
+*)@plt
+> >                                 { return _M_dataplus._M_p; }
+> >   -                       1c62:   mov      0x13c0(%rsp),%rdi
+> >   +  0.00   0.00 100.00   1c62:   mov      0x13c0(%rsp),%rdi
+> >                                 if (_M_data() =3D=3D _M_local_data())
+> >                                   lea      0x13d0(%rsp),%rax
+> >                                   cmp      %rax,%rdi
+> >   @@ -2470648,7 +2470648,7 @@
+> >                                   mov      %rbx,%rdi
+> >                                 =E2=86=92 call     operator delete(void=
+*)@plt
+> >                                 using reference =3D T &;
+> >   -  0.00   0.00 100.00  11c65:   mov      0x8(%r12),%rax
+> >   +                      11c65:   mov      0x8(%r12),%rax
+> >                                 size_t size() const { return Size; }
+> >                                   mov      0x10(%r12),%ecx
+> >                                   mov      %rax,%rbp
+> >   $
+> >
+> >
+> > This is a large function:
+>
+> Thanks for the test!  I think it missed the cast to 64-bit somewhere.
+> I'll check and send v2 soon.
 
-Thanks a lot for the update and reference. I'll just skip the tests
-for now and maybe check once in a while if something changed.
+Yep, the offset variable in __symbol__inc_addr_samples()
+should be u64.
 
 Thanks,
-Guenter
-
+Namhyung
