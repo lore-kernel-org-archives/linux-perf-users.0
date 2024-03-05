@@ -1,47 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E717D41C;
-	Mon,  4 Mar 2024 23:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D9D7E568
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Mar 2024 06:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709593699; cv=none; b=B/VZaaeApY/+/hEDyuXaCDhk1Mml6euiH4Jf8dDgcXB0LEVyTb6cmn7VuAr0XtArhNSmtvhR9v/uAymudm0uZWR1826UF2UXBZvpvnr5+hPHh8h5nlenLuN/6sxRqGXuF+lP59E1RC9qjrDPH1KWFD6G3pqMWGIqsneLThcsHzI=
+	t=1709618930; cv=none; b=oCS9v24Oaqi5b+yYRTiyj8jbU76QUcXDIfzgEaNzRpPcpD3Nu7AUXuF0z8DFWEwHDzt5FXfff9ktGcdZdmg2ZDkzfcdAvgQdZeHAbbweC36NSPpsnJL0YJ7JpAmQZuZUqbjW6V3k6LoTDJkXsA8PJ6ixf9xisaFKV9hdIv9kZ5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709593699; c=relaxed/simple;
-	bh=6Aw5acCv4CoQWjErFC5MywXHMebtv9mViX2GVgBXuqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hdIJDBcMEMQU41E4GJXWfaEgva8qYgcv8JXMM9tcWXEpa2HF9mA/EoFnNabmd12rteL54idKMh/RDMKwE2b751xtgFxOOzvU0JuV7NQ/3h60ozZIuPJRGwtm5USKzS/pzJ21KfTM3AfsmXzjSxy62qE2+GIlKLcflbaWXDoKHyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uCklBLKT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709618930; c=relaxed/simple;
+	bh=rI+UFBLzHgh5osY1C+DB3EoIdb5NuomFAo9d4P0bbRs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cfnyckmbt2JW/rIJcFUjOyZOUt1G60b/+jmqizT01eUIlixqQb3CofeMNP2hlA1elRn6Mtwcrhq0QXiQ73HoOCLak2AcFgaswosFqt1+UyBS5XtDhJSen3x95uNcHtswBXP2v9JZSRWM5PEkHaz0nUq7kfwkeQ3NEJyCQQFUgWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=K/KSsDs3; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uCklBLKT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B7CC43330;
-	Mon,  4 Mar 2024 23:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709593699;
-	bh=6Aw5acCv4CoQWjErFC5MywXHMebtv9mViX2GVgBXuqY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uCklBLKTP0WjF2EXAYwVXuoMjg1Bk+RX2LKu1r/l+/S1wEcjHX4IvPpCKna84QoQP
-	 l4GNnYbOgLXM3VSyoenGhefXdqTHdBIDJbKc6SxYgmwZNGMgXK+BnlVIzwwWKWn1Lx
-	 1LTIRznVPlT+weVohsCf2KPDleQqdoxsgwcmqp1+D0xW6I56Ynid5zz92uCUcU6Yye
-	 y68hyuCZ5Us5oZ6cPy+skChwrT8ogC8C89w3gWJ+D6N3eKd6neZ714Ukr+D7GrqUq5
-	 3+8kNm4Q3t7Kx/VrStwmcs2GxUTkf+L0qg6ak6uDwcG1nD4e8pj8oeZ5rNxrcDofnB
-	 2tUs9y+Ias2/A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="K/KSsDs3"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-299b818d63aso3867104a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 04 Mar 2024 22:08:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1709618926; x=1710223726; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5V8y3dySFl8kdmMCLan3vQixGPkJBiAZiaFJHDPmSXw=;
+        b=K/KSsDs3cZvhHTgSRLVUU81HWOMLNTgsNjsv92bB1zIiKKdJQGqLpSTmZT8I9vmJw4
+         CVxYDliWh0MJgeHACZJSVkXbok2QtfX2Dk0hnQzVMk1WC4Z6RWWAMaT5gbK2+mrcKuFR
+         mgXonqUZIrIy8/XTA7sPTFxzlzf5XbnoOotdKX1F0kW3PSKSCdjjFhmYqzOvUex60LBn
+         efiJTOeGDaul+QlfczCOKYb6hRUKZZBk6I/FpCIo1UQ8FDv3bMJCbBBSVux3AfTLb7Q0
+         fZi4uEFuGbOgZE2I4eO2WkP7mdg9MzMAuiXUYPTbyChZ9VlNnBYxftpXiT1K0w/pyq7e
+         v6TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709618926; x=1710223726;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5V8y3dySFl8kdmMCLan3vQixGPkJBiAZiaFJHDPmSXw=;
+        b=jCLOAcVYZ9wL356LhGUkf8clwkLs0NS2aZLqXD3eysoGk8I4IXVPHuzOsGahLQDwGi
+         UQ9l6AClkM6MCAKH6jrYhDTIirCOdtBbBZNtnIMa/rokHfbNsc4yuGOhXcJ3zr+NII1O
+         P8PccF1QkXf33pzHb4ZTaNPTdkgxK45fGh8Tp2tOAvlpWz2OfjT+rjvBHLf7vvhpde0L
+         KrpXa5JWPr7RPSVB1M/MophXpPUDhSZyETZGxrPpBITisoB0va7wtY4v1lSgDb4dd6UR
+         6hawUGxQw2Wg0olT/HoDKKBGdCQMMv89IpNwO7+/EW6GzkKsIZYNvQGagxgcgW/LmJP2
+         yNqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNuOvsxRkC16cSV91C1iLu5pQ32msAyvG73WSt40crUvgEmp3dLkFkmso1PczKKF4ZSNxnMLJQnWdwBlZF6Lg0cIKRKJBGAaImfzZpWC/Yzg==
+X-Gm-Message-State: AOJu0Yw12L3O08nYJgrasqexjhZrHZz+YGgUehp6t2DQEuVyzTwKYXyn
+	gxH66UJs6PtByX3o92RF4LtXzQiICpASbqDOziC5ibO9EEyR9azU3OwM/yN3Aw==
+X-Google-Smtp-Source: AGHT+IGOEpXZTnOK5iI6B5DC1+LZXkbdTDnSB+eSncz2xsnVcoJBCg72j+iep0MPpUIqYZuf2r80xA==
+X-Received: by 2002:a17:90a:a89:b0:29b:2c47:37d5 with SMTP id 9-20020a17090a0a8900b0029b2c4737d5mr2169834pjw.13.1709618926532;
+        Mon, 04 Mar 2024 22:08:46 -0800 (PST)
+Received: from zhadum.home.kylehuey.com (c-76-126-33-191.hsd1.ca.comcast.net. [76.126.33.191])
+        by smtp.gmail.com with ESMTPSA id s5-20020a170902ea0500b001d7057c2fbasm9601708plg.100.2024.03.04.22.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 22:08:45 -0800 (PST)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	Robert O'Callahan <robert@ocallahan.org>,
+	linux-kernel@vger.kernel.org,
+	Ian Rodgers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 4/4] perf annotate: Add comments in the data structures
-Date: Mon,  4 Mar 2024 15:08:15 -0800
-Message-ID: <20240304230815.1440583-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <20240304230815.1440583-1-namhyung@kernel.org>
-References: <20240304230815.1440583-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 1/2] perf/ring_buffer: Trigger IO signals for watermark wakeups
+Date: Mon,  4 Mar 2024 22:08:42 -0800
+Message-Id: <20240305060844.9499-1-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,116 +77,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate.h | 69 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 62 insertions(+), 7 deletions(-)
+perf_output_wakeup() already marks the perf event fd available for polling.
+Add code to trigger IO signals with FASYNC too.
 
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 4bdc70a9d376..13cc659e508c 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -239,11 +239,42 @@ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool r
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
- void symbol__calc_percent(struct symbol *sym, struct evsel *evsel);
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+---
+ include/linux/perf_event.h  | 8 ++++++++
+ kernel/events/core.c        | 8 --------
+ kernel/events/ring_buffer.c | 3 +++
+ 3 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index c8bd5bb6610c..c077968d7e52 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1914,4 +1914,12 @@ static inline void perf_lopwr_cb(bool mode)
+ }
+ #endif
  
-+/**
-+ * struct sym_hist - symbol histogram information for an event
-+ *
-+ * @nr_samples: Total number of samples.
-+ * @period: Sum of sample periods.
-+ */
- struct sym_hist {
- 	u64		      nr_samples;
- 	u64		      period;
- };
++static inline struct fasync_struct **perf_event_fasync(struct perf_event *event)
++{
++	/* only the parent has fasync state */
++	if (event->parent)
++		event = event->parent;
++	return &event->fasync;
++}
++
+ #endif /* _LINUX_PERF_EVENT_H */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a329bec42c4d..36b5fbdf8e6e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6684,14 +6684,6 @@ static const struct file_operations perf_fops = {
+  * to user-space before waking everybody up.
+  */
  
-+/**
-+ * struct cyc_hist - (CPU) cycle histogram for a basic block
-+ *
-+ * @start: Start address of current block (if known).
-+ * @cycles: Sum of cycles for the longest basic block.
-+ * @cycles_aggr: Total cycles for this address.
-+ * @cycles_max: Max cycles for this address.
-+ * @cycles_min: Min cycles for this address.
-+ * @cycles_spark: History of cycles for the longest basic block.
-+ * @num: Number of samples for the longest basic block.
-+ * @num_aggr: Total number of samples for this address.
-+ * @have_start: Whether the current branch info has a start address.
-+ * @reset: Number of resets due to a different start address.
-+ *
-+ * If sample has branch_stack and cycles info, it can construct basic blocks
-+ * between two adjacent branches.  It'd have start and end addresses but
-+ * sometimes the start address may not be available.  So the cycles are
-+ * accounted at the end address.  If multiple basic blocks end at the same
-+ * address, it will take the longest one.
-+ *
-+ * The @start, @cycles, @cycles_spark and @num fields are used for the longest
-+ * block only.  Other fields are used for all cases.
-+ *
-+ * See __symbol__account_cycles().
-+ */
- struct cyc_hist {
- 	u64	start;
- 	u64	cycles;
-@@ -258,18 +289,24 @@ struct cyc_hist {
- 	u16	reset;
- };
+-static inline struct fasync_struct **perf_event_fasync(struct perf_event *event)
+-{
+-	/* only the parent has fasync state */
+-	if (event->parent)
+-		event = event->parent;
+-	return &event->fasync;
+-}
+-
+ void perf_event_wakeup(struct perf_event *event)
+ {
+ 	ring_buffer_wakeup(event);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 60ed43d1c29e..033e54bb5c62 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -22,6 +22,9 @@ static void perf_output_wakeup(struct perf_output_handle *handle)
+ 	atomic_set(&handle->rb->poll, EPOLLIN);
  
--/** struct annotated_source - symbols with hits have this attached as in sannotation
-+/**
-+ * struct annotated_source - symbols with hits have this attached as in annotation
-  *
-- * @histograms: Array of addr hit histograms per event being monitored
-- * nr_histograms: This may not be the same as evsel->evlist->core.nr_entries if
-+ * @source: List head for annotated_line (embeded in disasm_line).
-+ * @histograms: Array of symbol histograms per event to maintain the total number
-+ * 		of samples and period.
-+ * @nr_histograms: This may not be the same as evsel->evlist->core.nr_entries if
-  * 		  we have more than a group in a evlist, where we will want
-  * 		  to see each group separately, that is why symbol__annotate2()
-  * 		  sets src->nr_histograms to evsel->nr_members.
-- * @lines: If 'print_lines' is specified, per source code line percentages
-- * @source: source parsed from a disassembler like objdump -dS
-- * @cyc_hist: Average cycles per basic block
-+ * @offsets: Array of annotation_line to be accessed by offset.
-+ * @samples: Hash map of sym_hist_entry.  Keyed by event index and offset in symbol.
-+ * @nr_entries: Number of annotated_line in the source list.
-+ * @nr_asm_entries: Number of annotated_line with actual asm instruction in the
-+ * 		    source list.
-+ * @max_line_len: Maximum length of objdump output in an annotated_line.
-  *
-- * lines is allocated, percentages calculated and all sorted by percentage
-+ * disasm_lines are allocated, percentages calculated and all sorted by percentage
-  * when the annotation is about to be presented, so the percentages are for
-  * one of the entries in the histogram array, i.e. for the event/counter being
-  * presented. It is deallocated right after symbol__{tui,tty,etc}_annotate
-@@ -286,6 +323,24 @@ struct annotated_source {
- 	u16			max_line_len;
- };
+ 	handle->event->pending_wakeup = 1;
++	if (*perf_event_fasync(handle->event) && !handle->event->pending_kill)
++		handle->event->pending_kill = POLL_IN;
++
+ 	irq_work_queue(&handle->event->pending_irq);
+ }
  
-+/**
-+ * struct annotated_branch - basic block and IPC information for a symbol.
-+ *
-+ * @hit_cycles: Total executed cycles.
-+ * @hit_insn: Total number of instructions executed.
-+ * @total_insn: Number of instructions in the function.
-+ * @cover_insn: Number of distinct, actually executed instructions.
-+ * @cycles_hist: Array of cyc_hist for each instruction.
-+ * @max_coverage: Maximum number of covered basic block (used for block-range).
-+ *
-+ * This struct is used by two different codes when the sample has branch stack
-+ * and cycles information.  annotation__compute_ipc() calculates average IPC
-+ * using @hit_insn / @hit_cycles.  The actual coverage can be calculated using
-+ * @cover_insn / @total_insn.  The @cycles_hist can give IPC for each (longest)
-+ * basic block ends at the given address.
-+ * process_basic_block() calculates coverage of instructions (or basic blocks)
-+ * in the function.
-+ */
- struct annotated_branch {
- 	u64			hit_cycles;
- 	u64			hit_insn;
 -- 
-2.44.0.rc1.240.g4c46232300-goog
+2.34.1
 
