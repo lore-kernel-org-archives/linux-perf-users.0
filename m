@@ -1,364 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2BB12D74B
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Mar 2024 21:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DBE12B17E
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Mar 2024 23:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709675726; cv=none; b=ExtkNxI0NPSPuhEcwnbKvjCcz3bQ5iEik8avTodj0b1m7ZcZv0w+QCZbth6oAx0056Mk6qbN+WuVxZFZA6JVFu72IvAMRQ8SkEJmP1sd5PEJUXYoFl93tQ9q/4iSwodskyUoh5sF/Qw1TquTQawr0VztYryGYkEVX+AOsuAG4fA=
+	t=1709680926; cv=none; b=EiWs6HbG/OT6kQ9UZzHBNipEKFxE4pYccJNtRlpOZxfGp8HfZAzCg0n1hGzp5TP0DuoAiHvBZU0aiB5k04R9aw+Zh1/YYs6Hy2YDYGHkrdUiXzxLrqEZft6DW197WokN93nPNkqnHyGZ+Q5ujMFDb9sPaaCBWrkgj4h4f9jyClU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709675726; c=relaxed/simple;
-	bh=Ipky4/3VrHGNMTVHox1zgk42qj/BUN53TTdNDDpSsjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r8T/y3gGC5zhGJY5Wz/+CwNVd03Q70FbTDtiuwUgyeUO1bCWBoBPEFwGqhgL0BvfFBE9nRTdxjadGcJCGW090c5H4vrXkjF0fwWsXwp4EeOJ1Ux4WaxrO2DUfDmZ0ZzFUK+uiM3c1tqA6sJ42OiafV7uk8pN45i2DGKQdJ2AGa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LwnTcUOF; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709680926; c=relaxed/simple;
+	bh=0QqKaja2wGQkp5VdpnZGiCLHufW+2W9QfUG8dJPnUnI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oIAOTP1g59PSeqqtn0BljODU6LXdYYlnOWp5yq7TxTedBbrgosJQ1CP+ZTbR9Z6jyL4Algjpk0cLhGuyjW71zCBjanGCsqwIsW2hw+9RZOgH3CK1Amt+D3esqJSgeZdX3mnGMPCzLnnGSNEbboQfs+6BQht8exImp7uLwfmcBho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=moNdxZVo; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LwnTcUOF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709675724; x=1741211724;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ipky4/3VrHGNMTVHox1zgk42qj/BUN53TTdNDDpSsjA=;
-  b=LwnTcUOFEJ3MqFcjU+s7/3ltk6EUUiAy8/wxSZ7FFWo8NfAuJzrgSaNY
-   sPJNMx1YJOUmNUMz/vHmLG/hSPg2ls7/l+a2QarxHaooKYM6bcDohH7WZ
-   e/Wm6QO2DuW5i9BxKDtgycIWWuYd4JsGkHNqbuJ4/o8XqNSiA8F8QODn1
-   J/70293eR96iQ43Aeq8Oycv1RXT0DhXO48wPHr3HSF7vgbV5nz+7UiDF/
-   +OrByxBQyrZZ90VdAOOBb+rfu2WmccrSQAuFCcW83TRRDOl3RKBnTZUT4
-   yYsoYKfUj8ch/CETVWUuoYpUhJ6woDvBiwlWo4yGshCRvqfFczOot7HiI
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4838843"
-X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="4838843"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 13:55:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
-   d="scan'208";a="9942495"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 13:55:22 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: changbin.du@huawei.com,
-	adrian.hunter@intel.com,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v3 2/2] perf, script, capstone: Add support for -F +brstackdisasm
-Date: Tue,  5 Mar 2024 13:55:16 -0800
-Message-ID: <20240305215517.695988-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240305215517.695988-1-ak@linux.intel.com>
-References: <20240305215517.695988-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="moNdxZVo"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b269686aso9278385276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Mar 2024 15:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709680923; x=1710285723; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+T4/DXA8g5wsjCQOI4d9Me0cBz3l8e073w7d7R7vr8=;
+        b=moNdxZVo4RbNyCXRVz8nWLHm+neZUz3XQTPnd4mLkOAojODdufKDs7z1svMZ+whtZm
+         3NmJtkoIh8U+KR7hzgx3F8Y8UdOU7ytESzTdmzVGNWQvN+hLWcp+/Lgn+cOsCzxGeDMd
+         N15c0qTURgsTnCnGytft+aw1S6gZcLXs5g8wG3P8RS7eQPiIoG/PCf2M5bpK6WlWwsjh
+         apC6xjUy5VuONutMiEfDH5pIBKd7wQ+fv4I5/5fDkT+F/jOptwa9eURR34GuVDmAJW4+
+         7Fwhw1qSiVEpUroF7Ommk5ic7nNEdwBytmlyihdcxPVvg71cYO7NPfsyFVzx/rY0kPsc
+         1HNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709680924; x=1710285724;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+T4/DXA8g5wsjCQOI4d9Me0cBz3l8e073w7d7R7vr8=;
+        b=IJIDc+6KhKT+w8ZC2F23SG7uqtXE9C3LLKHXG3+UNUiAF3cG1M+R2QBHYdsbWOLaYp
+         XcOUTx9dTN+Z8Thv+eQK3948y1CTzyG7usrAC8uy4dWFgufTIgaubI3bqotdgPcwf/LS
+         RQKQfDVBwg2VYzHNZQXnEZjJq05sn1wblUA9FWsoKLEGNI4+NMij3w8lOJxUJ1E+/2P/
+         4cxGKnWn3oStt4Zu1c5ixG1HzhmOagvPI8Wu8iDdq3/h6cNEsK9GZAWZfYWfr3p/z3x7
+         5SyYD76zCXfB+bNyKdIjloq8dyoeh8SEZPUmK3qTafn+mSMazed8bxmwPSmOTXy44T6n
+         3ISA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjlYy/laWRlzgQjcQvNDfhiaZwEMO4LkHq8r/Ati+h+111tTvmulFE4mTnxe0UCCdr38rnn8nQIJAaFJWTBWmFin1U0ltxQC1OsYmesKT3ug==
+X-Gm-Message-State: AOJu0YxS9jsfkzZV+VL+j7NjqFFUBQfAyJjVqFbSjTSkWYNgubbKzPu0
+	zF+qgB/EG1DFhkpKX0h9YsRBLXnZPc4zibaWmadhcPJ+DbBovuF2QwpZ5E5qBdSQSGsb/pu1rQR
+	FTQ==
+X-Google-Smtp-Source: AGHT+IFkDwAHYCS99l3GSkk1EFfxwdOwqpDghQVC1M8Qt99OMUPaJBjB6sPk7lALPOP6nKY9i00G4WHXgm4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1821:b0:dc7:9218:df3b with SMTP id
+ cf33-20020a056902182100b00dc79218df3bmr585948ybb.10.1709680923726; Tue, 05
+ Mar 2024 15:22:03 -0800 (PST)
+Date: Tue, 5 Mar 2024 15:22:02 -0800
+In-Reply-To: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
+Message-ID: <ZeepGjHCeSfadANM@google.com>
+Subject: Re: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Like Xu <likexu@tencent.com>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Zhang Xiong <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>, Mingwei Zhang <mizhang@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Support capstone output for the -F +brstackinsn branch dump.
-The new output is enabled with the new field brstackdisasm
-This was possible before with --xed, but now also allow
-it for users that don't have xed using the builtin capstone support.
++Mingwei
 
-Before:
+On Thu, Aug 24, 2023, Dapeng Mi wrote:
+ diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> index 7d9ba301c090..ffda2ecc3a22 100644
+> --- a/arch/x86/kvm/pmu.h
+> +++ b/arch/x86/kvm/pmu.h
+> @@ -12,7 +12,8 @@
+>  					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+>  
+>  /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
+> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
+> +#define fixed_ctrl_field(ctrl_reg, idx) \
+> +	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
+>  
+>  #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
+>  #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
+> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>  
+>  	if (pmc_is_fixed(pmc))
+>  		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+> -					pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+> +					pmc->idx - INTEL_PMC_IDX_FIXED) &
+> +					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
+>  
+>  	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>  }
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index f2efa0bf7ae8..b0ac55891cb7 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>  		setup_fixed_pmc_eventsel(pmu);
+>  	}
+>  
+> -	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+> -		pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
+> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+> +		pmu->fixed_ctr_ctrl_mask &=
+> +			 ~intel_fixed_bits_by_idx(i,
+> +						  INTEL_FIXED_0_KERNEL |
+> +						  INTEL_FIXED_0_USER |
+> +						  INTEL_FIXED_0_ENABLE_PMI);
+> +	}
+>  	counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
+>  		(((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
+>  	pmu->global_ctrl_mask = counter_mask;
+> @@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>  			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
+>  			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+>  				pmu->fixed_ctr_ctrl_mask &=
+> -					~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
 
-perf record -b emacs -Q --batch '()'
-perf script -F +brstackinsn
-...
-          emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
-        00007f0ab2d17105        insn: 73 51
-        00007f0ab2d17107        insn: 48 89 c1
-        00007f0ab2d1710a        insn: 48 39 ca
-        00007f0ab2d1710d        insn: 73 96
-        00007f0ab2d1710f        insn: 48 8d 04 11
-        00007f0ab2d17113        insn: 48 d1 e8
-        00007f0ab2d17116        insn: 49 8d 34 c1
-        00007f0ab2d1711a        insn: 44 3a 06
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        insn: 48 8d 50 01
-        00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        insn: 48 39 ca
-        00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
+OMG, this might just win the award for most obfuscated PMU code in KVM, which is
+saying something.  The fact that INTEL_PMC_IDX_FIXED happens to be 32, the same
+bit number as ICL_FIXED_0_ADAPTIVE, is 100% coincidence.  Good riddance.
 
-After (perf must be compiled with capstone):
+Argh, and this goofy code helped introduce a real bug.  reprogram_fixed_counters()
+doesn't account for the upper 32 bits of IA32_FIXED_CTR_CTRL.
 
-perf script -F +brstackdisasm
+Wait, WTF?  Nothing in KVM accounts for the upper bits.  This can't possibly work.
 
-...
-           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
-        00007f0ab2d17107        movq %rax, %rcx
-        00007f0ab2d1710a        cmpq %rcx, %rdx
-        00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
-        00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
-        00007f0ab2d17113        shrq $1, %rax
-        00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
-        00007f0ab2d1711a        cmpb (%rsi), %r8b
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        leaq 1(%rax), %rdx
-        00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        cmpq %rcx, %rdx
-        00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
+IIUC, because KVM _always_ sets precise_ip to a non-zero bit for PEBS events,
+perf will _always_ generate an adaptive record, even if the guest requested a
+basic record.  Ugh, and KVM will always generate adaptive records even if the
+guest doesn't support them.  This is all completely broken.  It probably kinda
+sorta works because the Basic info is always stored in the record, and generating
+more info requires a non-zero MSR_PEBS_DATA_CFG, but ugh.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Oh great, and it gets worse.  intel_pmu_disable_fixed() doesn't clear the upper
+bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set.  Unless I'm misreading the code,
+intel_pmu_enable_fixed() effectively doesn't clear ICL_FIXED_0_ADAPTIVE either,
+as it only modifies the bit when it wants to set ICL_FIXED_0_ADAPTIVE.
 
----
+*sigh*
 
-v2: Use brstackdisasm instead of keying of disasm
----
- tools/perf/Documentation/perf-script.txt |  7 +++-
- tools/perf/builtin-script.c              | 32 +++++++++++----
- tools/perf/util/dump-insn.h              |  1 +
- tools/perf/util/print_insn.c             | 52 ++++++++++++++++++++++++
- tools/perf/util/print_insn.h             |  3 ++
- 5 files changed, 86 insertions(+), 9 deletions(-)
+I'm _very_ tempted to disable KVM PEBS support for the current PMU, and make it
+available only when the so-called passthrough PMU is available[*].  Because I
+don't see how this is can possibly be functionally correct, nor do I see a way
+to make it functionally correct without a rather large and invasive series.
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 005e51df855e..ff086ef05a0c 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,9 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
-         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
--        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
+Ouch.  And after chatting with Mingwei, who asked the very good question of
+"can this leak host state?", I am pretty sure that yes, this can leak host state.
+
+When PERF_CAP_PEBS_BASELINE is enabled for the guest, i.e. when the guest has
+access to adaptive records, KVM gives the guest full access to MSR_PEBS_DATA_CFG
+
+	pmu->pebs_data_cfg_mask = ~0xff00000full;
+
+which makes sense in a vacuum, because AFAICT the architecture doesn't allow
+exposing a subset of the four adaptive controls.
+
+GPRs and XMMs are always context switched and thus benign, but IIUC, Memory Info
+provides data that might now otherwise be available to the guest, e.g. if host
+userspace has disallowed equivalent events via KVM_SET_PMU_EVENT_FILTER.
+
+And unless I'm missing something, LBRs are a full leak of host state.  Nothing
+in the SDM suggests that PEBS records honor MSR intercepts, so unless KVM is
+also passing through LBRs, i.e. is context switching all LBR MSRs, the guest can
+use PEBS to read host LBRs at will.
+
+Unless someone chimes in to point out how PEBS virtualization isn't a broken mess,
+I will post a patch to effectively disable PEBS virtualization.
+
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 41a4533f9989..a2f827fa0ca1 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -392,7 +392,7 @@ static inline bool vmx_pt_mode_is_host_guest(void)
  
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-@@ -257,6 +257,9 @@ OPTIONS
- 	can’t know the next sequential instruction after an unconditional branch unless
- 	you calculate that based on its length.
- 
-+	brstackdisasm acts like brstackinsn, but will print disassembled instructions if
-+	perf is built with the capstone library.
-+
- 	The brstackoff field will print an offset into a specific dso/binary.
- 
- 	With the metric option perf script can compute metrics for
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 0299b1ed8744..db18d2c54c59 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -136,6 +136,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- 	PERF_OUTPUT_DISASM          = 1ULL << 42,
-+	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
- };
- 
- struct perf_script {
-@@ -210,6 +211,7 @@ struct output_option {
- 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
- 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
-+	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
- };
- 
- enum {
-@@ -510,7 +512,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
-+	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
-+	    && !allow_user_set &&
- 	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
- 		       "Hint: run 'perf record -b ...'\n");
-@@ -1162,6 +1165,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 	return ret;
+ static inline bool vmx_pebs_supported(void)
+ {
+-       return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
++       return false;
  }
  
-+static const char *any_dump_insn(struct perf_event_attr *attr,
-+			struct perf_insn *x, uint64_t ip,
-+			u8 *inbuf, int inlen, int *lenp)
-+{
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+	if (PRINT_FIELD(BRSTACKDISASM)) {
-+		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-+		if (p)
-+			return p;
-+	}
-+#endif
-+	return dump_insn(x, ip, inbuf, inlen, lenp);
-+}
-+
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
-@@ -1170,7 +1187,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
--			      dump_insn(x, ip, inbuf, len, &ilen));
-+			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
- 
- 	if (PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += fprintf(fp, "ilen: %d\t", ilen);
-@@ -1262,6 +1279,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		nr = max_blocks + 1;
- 
- 	x.thread = thread;
-+	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
- 	printed += fprintf(fp, "%c", '\n');
-@@ -1313,7 +1331,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			} else {
- 				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
--						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
- 				if (PRINT_FIELD(BRSTACKINSNLEN))
- 					printed += fprintf(fp, "\tilen: %d", ilen);
- 				printed += fprintf(fp, "\n");
-@@ -1361,7 +1379,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			goto out;
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1372,7 +1390,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	for (off = 0; off <= end - start; off += ilen) {
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
--				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1534,7 +1552,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, "\t\t");
- 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-+	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
- 	return printed;
-@@ -3940,7 +3958,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-+		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..4a7797dd6d09 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -11,6 +11,7 @@ struct thread;
- struct perf_insn {
- 	/* Initialized by callers: */
- 	struct thread *thread;
-+	struct machine *machine;
- 	u8	      cpumode;
- 	bool	      is64bit;
- 	int	      cpu;
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index 8e3e2bc23811..591a31c25bf5 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -12,6 +12,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "print_insn.h"
-+#include "dump-insn.h"
- #include "map.h"
- #include "dso.h"
- 
-@@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
- 	return 0;
- }
- 
-+static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-+{
-+	struct addr_location al;
-+	bool printed = false;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-+		    al.sym &&
-+		    al.addr < al.sym->end) {
-+			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-+					al.sym->name, al.addr - al.sym->start, op->imm);
-+			printed = true;
-+		}
-+		addr_location__exit(&al);
-+	}
-+
-+	if (!printed)
-+		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-+}
-+
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+			 u8 *inbuf, int inlen, int *lenp)
-+{
-+	int ret;
-+	int count;
-+	cs_insn *insn;
-+	csh cs_handle;
-+
-+	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-+	if (ret < 0)
-+		return NULL;
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(x->machine, "x86"))
-+			dump_insn_x86(x->thread, &insn[0], x);
-+		else
-+			snprintf(x->out, sizeof(x->out), "%s %s",
-+					insn[0].mnemonic, insn[0].op_str);
-+		*lenp = insn->size;
-+		cs_free(insn, count);
-+	} else {
-+		return NULL;
-+	}
-+	return x->out;
-+}
-+
- static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
- 			     cs_insn *insn, FILE *fp)
- {
-diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-index 6447dd41b543..c2a6391a45ce 100644
---- a/tools/perf/util/print_insn.h
-+++ b/tools/perf/util/print_insn.h
-@@ -8,9 +8,12 @@
- struct perf_sample;
- struct thread;
- struct machine;
-+struct perf_insn;
- 
- size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
- 				struct machine *machine, FILE *fp, struct addr_location *al);
- size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+                         u8 *inbuf, int inlen, int *lenp);
- 
- #endif /* PERF_PRINT_INSN_H */
--- 
-2.43.0
-
+ static inline bool cpu_has_notify_vmexit(void)
