@@ -1,102 +1,122 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE6D2CA7;
-	Wed,  6 Mar 2024 01:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD075C8FB;
+	Wed,  6 Mar 2024 07:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709689298; cv=none; b=cln8Uqu1qNi5ho72ozk4JjI1aHOiMxn9kgb6C1iGaTttDVf9RgrTemTRYr0qrV8Q8ALMifaWU0pPLUJi+64IApRZpaFb4zNqIr3P+jfwNNWlAiDMyYPaWxqOR5/Y8LLPhqtgye6nekBE2re4v99JxhAMxA3TfjT6huouc3f2MuI=
+	t=1709709658; cv=none; b=MVthmyQ0Up3liCWOImwQR6FzvIu21k6NBLJYTueMjJkFMduNw5kzSR6BqNXO7HzevB+I1n/gUVeKJRnaABsh4yulozzTZeoPajA/Skt7CROm2EO7407hfNeGfpDtc51ZuIcV8qv+4gPKNgo0iiWHmQkYLaYKlPH0UC3YL/PraB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709689298; c=relaxed/simple;
-	bh=hUZhXekL3czb/m0SA5YEhBv9lBYNkRRC/zAjd6jzNaI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mHXddueyI07Lr3vD0fcMiCRnVvEhZiVOklxQKF0yliinn96KHcJG8qmEy9sjaGPwUx95XgIxXVwJxsYEhNUiSgkm4DtMZyhycIor1gmwIu02B/qYTr9RVYOMILrkJ0kp+LXS5gNjYcCU6GLme580edFL3D9Cl/szthVxOuYlJp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=friY4roL; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="friY4roL"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 425KrIRj008049;
-	Wed, 6 Mar 2024 00:19:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=egK10wqwXb2fu+g1i/MZi3vjpY9NQX6hwN6M7fWN5jE=;
- b=friY4roL0pv2sKy7l3IPJco9M3jBCHV5aCL9c1I8XBZDzepoyoSoW69o1Z8cz4G0Vva6
- 1ddxuiXBdPJWm+3gynugKUcxgAOsn5rSZrmQikiyGftJ3WXMGDYHACKh3KNXEsx6tOnj
- AaXgrR/iPoKqJ/eUO3voG56AVWmnc+OqvLRkbTa1BxJFE2K2T7Jf8eiVdPYHosVQaxgu
- aITNxtU4gV1YgvMv4MsDkFpt89t9kxWO5ZOUnsiSS3G4v6vP5BWIGbfqqGtPa+b5Kyta
- 4eKptBIhHrz3qF41tcdil9fOig2LpA4r5Dr3T69IFSjFRO1QkVRTZxHzeH5yZAeTUFEA 2w== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkuqvfgtr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Mar 2024 00:19:07 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 425NSNgu013814;
-	Wed, 6 Mar 2024 00:18:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wktj8f5w2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Mar 2024 00:18:58 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4260Iv2A021727;
-	Wed, 6 Mar 2024 00:18:57 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wktj8f5v6-1;
-	Wed, 06 Mar 2024 00:18:57 +0000
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org
-Cc: samasth.norway.ananda@oracle.com, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH ] perf test pmu: Fix file Leak in test_format_dir_get
-Date: Tue,  5 Mar 2024 16:18:55 -0800
-Message-ID: <20240306001855.4070582-1-samasth.norway.ananda@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709709658; c=relaxed/simple;
+	bh=L5mJ15rIwi4rFnSttjgMuyaksPH2SXNe2fdObsvQezc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lyEvd4Onu92Mr/wiZf/6JIVNmc/aPe4J4GswSVJbCnp3VRfLBWCLj5hJpTib+wgLFoQj8NGKaVpFu6X2QqM6yls+voqcnAZAOf7icPLpPXguUMT1+XhP7lSYMC2EPWe3wFHKOQiTKwNaKq0fudhwPVndct5aQAXqUgKupG5xP9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c1e6c32a55so2141047b6e.2;
+        Tue, 05 Mar 2024 23:20:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709709656; x=1710314456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tQuWM38UhwK25qNu10dyRUtuaAMUFqlAh3c+JZ+R14g=;
+        b=suhcAnIDXoZR8kRqFKLz2CqYpRKuP1td9+nQBDhhNsAUda3e5yCxoFnNu6X6ZvJgnA
+         Mcn5ErsoYP833Orxs4shxao6zZ6XfjQ9qxnapE5ZIbyjit5zkRXmTB5VvMCD/RRRZcId
+         fav8IqqD6EzSrT0b62nfKOYgl2wOJRqpJ5jnGvSuaJj0Ne78Z9V8FuoJmUWBSwUB1x0k
+         RBmgO9FEtqQuVEAHsrbPq3nbyoohQW4XeCcMjFyJLwDbI188aWDNNJn6fTzxS9HQKqQa
+         WXRx4Osjrfp+8q+Vn5tAWa277pn3n8wVEhKmFs6QZEHZpz5aqbieRIBwMumdS7LtFZLE
+         /Mdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAVvH2/1oAc33bXJtgdXYDowV2Tb/RUxgZCr8OLsoBM4AP6t7r7SYW+I1bcJGEZsdOwV9ngY8TqfQypJppD7+FoXBrLFOmR42DaIPUSJhMF2sr3Ey6Nq6VkPn2J2njVC887/spyaa4aYR9sQj3Iw==
+X-Gm-Message-State: AOJu0Yx6DIbsUsFIusCGWsKK0SbLmJ2RJYYlkIFhCuneEHuu5PGIFfb0
+	Bvma0dx4xfnGPq/r7nC0bav9NWp16l8dsaZz8LeXPhHPb0PjsWgrr9Q+Z6U3n3rsJSG9D1q0fcb
+	NMUuP57tQ5sAuyIf59N1Yz+EnOeY=
+X-Google-Smtp-Source: AGHT+IEQu81YATsoQvFr1ILkfjqyKIrNCHr3xlQen+zHHAtM0aU+9He5ISMOWb2a4SUuaI0u49syb3WlnXCmwhWwrvk=
+X-Received: by 2002:a05:6808:2817:b0:3c2:1944:e39b with SMTP id
+ et23-20020a056808281700b003c21944e39bmr1579254oib.17.1709709656039; Tue, 05
+ Mar 2024 23:20:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_19,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 phishscore=0 suspectscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403060001
-X-Proofpoint-GUID: JVqj9h-YQouvnBbo0wV38Xr9sL4foS_D
-X-Proofpoint-ORIG-GUID: JVqj9h-YQouvnBbo0wV38Xr9sL4foS_D
+References: <20240302005950.2847058-1-irogers@google.com> <20240302005950.2847058-6-irogers@google.com>
+In-Reply-To: <20240302005950.2847058-6-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 5 Mar 2024 23:20:44 -0800
+Message-ID: <CAM9d7cjVE=gH8A4zzsUFwLibgHy=3C71UnFe5SEu-RDFTOWkDw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/12] perf jevents: Support parsing negative exponents
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, James Clark <james.clark@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-File is opened inside the for loop. But if the 'if' condition is
-successful then 'break' statement will be reached, exiting the
-'for' loop prior to reaching 'fclose'.
+On Fri, Mar 1, 2024 at 5:00=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Support negative exponents when parsing from a json metric string by
+> making the numbers after the 'e' optional in the 'Event' insertion fix
+> up.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/metric.py      | 2 +-
+>  tools/perf/pmu-events/metric_test.py | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metr=
+ic.py
+> index 847b614d40d5..31eea2f45152 100644
+> --- a/tools/perf/pmu-events/metric.py
+> +++ b/tools/perf/pmu-events/metric.py
+> @@ -573,7 +573,7 @@ def ParsePerfJson(orig: str) -> Expression:
+>    # a double by the Bison parser
+>    py =3D re.sub(r'0Event\(r"[xX]([0-9a-fA-F]*)"\)', r'Event("0x\1")', py=
+)
+>    # Convert accidentally converted scientific notation constants back
+> -  py =3D re.sub(r'([0-9]+)Event\(r"(e[0-9]+)"\)', r'\1\2', py)
+> +  py =3D re.sub(r'([0-9]+)Event\(r"(e[0-9]*)"\)', r'\1\2', py)
 
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
----
-Found this error through static analysis. This has only been compile
-tested.
----
- tools/perf/tests/pmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I don't understand how it can handle negative numbers.
+Why isn't it like Event\(r"(e-?[0-9]+)"\) ?
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 8f18127d876a..f751e6cb6ac0 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -106,8 +106,10 @@ static char *test_format_dir_get(char *dir, size_t sz)
- 		if (!file)
- 			return NULL;
- 
--		if (1 != fwrite(format->value, strlen(format->value), 1, file))
-+		if (1 != fwrite(format->value, strlen(format->value), 1, file)) {
-+			fclose(file);
- 			break;
-+		}
- 
- 		fclose(file);
- 	}
--- 
-2.43.0
+Thanks,
+Namhyung
 
+
+>    # Convert all the known keywords back from events to just the keyword
+>    keywords =3D ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', '=
+has_event', 'strcmp_cpuid_str']
+>    for kw in keywords:
+> diff --git a/tools/perf/pmu-events/metric_test.py b/tools/perf/pmu-events=
+/metric_test.py
+> index ee22ff43ddd7..8acfe4652b55 100755
+> --- a/tools/perf/pmu-events/metric_test.py
+> +++ b/tools/perf/pmu-events/metric_test.py
+> @@ -61,6 +61,10 @@ class TestMetricExpressions(unittest.TestCase):
+>      after =3D before
+>      self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+>
+> +    before =3D r'a + 3e-12 + b'
+> +    after =3D before
+> +    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+> +
+>    def test_IfElseTests(self):
+>      # if-else needs rewriting to Select and back.
+>      before =3D r'Event1 if #smt_on else Event2'
+> --
+> 2.44.0.278.ge034bb2e1d-goog
+>
