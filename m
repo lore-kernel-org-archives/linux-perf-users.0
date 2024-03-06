@@ -1,323 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCB5F60882;
-	Wed,  6 Mar 2024 16:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E068B14290D;
+	Wed,  6 Mar 2024 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709743153; cv=none; b=nR4kfWu6do2gN+7rWzl/nHFy9JFgeNfMQCRcM/a5MtEmJQCHpEoWMoAOYm+9jGgpSBAbKtnIgM43NehYhbuC3lNyVszrRAy1sgILcs8vmz3ozci1E1uEWqB90KwhVhk15QGieUI44pFCcfIWipi8C2K/mNU21niSJdNVuXztVgw=
+	t=1709749598; cv=none; b=OBEACqQWnc8FrUvqNR/MQCot3BTAdJt0heWfe57V3RblxQdvCLYBCHOaXD4xZj/nmDPAOfa1ukJAPUCXpwcQ9h3BAnJAL46brvmc68PcHw1jJXJodijl36pNi3KS5aIBbmXY4TCL6QRNK9xWxws5CmoE2jjA1KycDhPcRsn3I70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709743153; c=relaxed/simple;
-	bh=naaNCoSOuNVUkWDcaYDQKKJnozHSJmiQUw1z+TKcMqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgxwjp7F+Y+vynLoFmf/7X4xUXaxdErN89Vm+2ggRPnNL3UeM+qmezJTamRb9pNksyJnRw3VeFg1lrYTHy9ag1SCoBL+7taJeHb+/0CWsATEPWc1GH8iVdhfqsNd7sHnVu8Jt4jXm/m4HBd7gxw4HgFXHvLPqzHrosnbmorOfn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FF81FB;
-	Wed,  6 Mar 2024 08:39:47 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.69.185])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4FD93F73F;
-	Wed,  6 Mar 2024 08:39:07 -0800 (PST)
-Date: Wed, 6 Mar 2024 16:38:17 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Handle generic events normally instead of
- trying all pmu
-Message-ID: <Zeib-e1RYm2Dlk8c@FVFF77S0Q05N>
-References: <20240306151017.2114-1-jialong.yang@shingroup.cn>
+	s=arc-20240116; t=1709749598; c=relaxed/simple;
+	bh=T71wY2scHtTXTP4/sl05QrepXCFVXT46YKK4DY2mUDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XdCDr4pAK2C1xqZ9InSqR1dA3AbclCw4kUchNOp2WzPdCRf4TN74XqYmASYMaEmCLyIqIaMWiwkR1fDyiO5tO2Us4Bl3NV8LRLhpagvhLvpv1zG7LyoxGPssr18W8qOy+nf0RUyIU0mq7PjQmAJ07vfPgUhzCv757yfDy+Iq5lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso994118a12.2;
+        Wed, 06 Mar 2024 10:26:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709749596; x=1710354396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9R6qqm0g/+E63vqpNrdKfjU08hftBk5a0rLrgW5krU=;
+        b=s5tZGIscCF40KeW5U+6wRzxDhXiBnmnRNdu6FNJf9nEKDrMEkK1nvah3z9/btcUhoQ
+         w40CAkok0ZOIsExAHf0Pbbivh+nJqpqJinnhetYdrgc5pzPXm2unBVzuy+zM6NaODM0L
+         PCAG8l7Rb3vSEg/9a/4VzDESa654T4qga8ZIxprd664S+MoVEsQcO2yvDK4keINI2swQ
+         jvUecKFfL/dhJ84Kv1ZIktGe41JzRnlJ/jyCIimetm2IVlNi9z4P5rpmNSiQuLX6tt6d
+         BDLaYpwL7YYyXUHSGVgkcxusEkPsDRBu3Fjh2urXpNaIFcPoHXA8ZZAPkL4v9mhv4LlU
+         e8mA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8CMKUkxVVDGLOasIRNNoU5+11bU5GKSumY1ak6p04I7WouzXcPOXYHlA0sJG3Nu1Mw0rgDogTo7hKrZ9mifLHjzutO6k95eb1maakUHYUB+0jgHAVQFzHfhtz2JUkJanKGxxN1UvwU5ePQwLvLg==
+X-Gm-Message-State: AOJu0Yxs/FBga9babKTJ1Bggx2bUv75gorwgv72IbVtJtUUMlpS5Gi1f
+	OhA2RXC5EpcQl1FH38S4CnPeHSKlGuFsvR/W27QUjGXtw8fVodVr0KBdPGZ5RrG/zdsNVgyHuGF
+	IlT1VfHPHmYhu2ZA1aKrHUffPR7Q=
+X-Google-Smtp-Source: AGHT+IH7yeQ6EPQb5Dz9tV6ssROlhefmL/NLrrsFoEA04BJ4KF6ZRvT5NZoQ/7OSNL/fsMcn0GLg9I+a0XenK+g0PEA=
+X-Received: by 2002:a17:90b:892:b0:299:5401:89d2 with SMTP id
+ bj18-20020a17090b089200b00299540189d2mr12323738pjb.45.1709749596082; Wed, 06
+ Mar 2024 10:26:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306151017.2114-1-jialong.yang@shingroup.cn>
+References: <20240304230815.1440583-1-namhyung@kernel.org>
+In-Reply-To: <20240304230815.1440583-1-namhyung@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 6 Mar 2024 10:26:24 -0800
+Message-ID: <CAM9d7chkbcV14PtjhretGLkhUh2mF7sGx9Y0fvG3kZE8aUqpeg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol histogram
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 06, 2024 at 11:10:15PM +0800, JiaLong.Yang wrote:
-> We have pay more effort on handling generic events. We treat them
-> specially caused us paying more.
+Hi Arnaldo,
 
-Are you seeing an actual problem in practice? ... or is this just intended as a
-cleanup/improvement?
+On Mon, Mar 4, 2024 at 3:08=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> This is another series of memory optimization in perf annotate.
+>
+> v2 changes:
+>  * fix a bug when offset is bigger than 16 bits
 
-What problem are you actually trying to solve here?
+Are you ok with this now?
 
-> Now time have told us that PMU type between 0 and PERF_TYPE_MAX only
-> corresponds to one PMU.
+Thanks,
+Namhyung
 
-There can be at most one PMU registered for each type, but several PMUs may
-need to handle events for that type.
-
-Trivially, there are a number of PMUs which share the PERF_TYPE_SOFTWARE type,
-e.g.
-
-* perf_swevent, handled by perf_swevent_init()
-* perf_cpu_clock, handled by cpu_clock_event_init()
-* perf_task_clock, handled by task_clock_event_init()
-
-... which have non-overlapping events in the PERF_TYPE_SOFTWARE event
-namespace.
-
-On systems with heterogeneous PMUs (e.g. ARM big.LITTLE systems), several PMUs
-can handle the PERF_TYPE_{HARDWARE,RAW,CACHE} event namespaces, and there's
-existing software that depends upon that working *without* the extended HW type
-IDs.
-
-> So we can handle the special when registering PMU not in event opening. And
-> we can know which PMU is used to the generic event.
-
-No we cannot. There may be several PMUs which need to handle a given generic
-event type.
-
-> The added capabilities PERF_PMU_CAP_EVENT_HARDWARE and
-> PERF_PMU_CAP_EVENT_HW_CACHE will alloc idr for PERF_TYPE_HARDWARE and
-> PERF_TYPE_HW_CACHE with same PMU.
-
-When I suggested using capabilities in:
-
-  https://lore.kernel.org/lkml/ZecStMBA4YgQaBEZ@FVFF77S0Q05N/
-
-... I had meant that the core code could check just before calling the
-pmu::event_init() function, in order to simplify the implementation of the
-event_init() functions. I did not mean for this to change the way we
-manipulated the IDR.
-
-> We'd better handle uncore-task event before calling pmu->event_init().
-
-This is a nice-to-have, but it's logically separate from the rest of this
-patch.
-
-> 
-> The code is compatible with PERF_PMU_TYPE_SHIFT.
-> /*
->  * attr.config layout for type PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
->  * PERF_TYPE_HARDWARE:			0xEEEEEEEE000000AA
->  *					AA: hardware event ID
->  *					EEEEEEEE: PMU type ID
->  * PERF_TYPE_HW_CACHE:			0xEEEEEEEE00DDCCBB
->  *					BB: hardware cache ID
->  *					CC: hardware cache op ID
->  *					DD: hardware cache op result ID
->  *					EEEEEEEE: PMU type ID
->  * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
->  */
-> 
-> But the drivers have to give the corresponding capabilities obviously.
-> 
-> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
-> ---
->  include/linux/perf_event.h |  4 +-
->  kernel/events/core.c       | 83 +++++++++++++++++++++++---------------
->  2 files changed, 54 insertions(+), 33 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index d2a15c0c6f8a..edf4365ab7cc 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -290,7 +290,9 @@ struct perf_event_pmu_context;
->  #define PERF_PMU_CAP_ITRACE			0x0020
->  #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
->  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
-> -#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
-> +#define PERF_PMU_CAP_EVENT_HARDWARE             0x0100
-> +#define PERF_PMU_CAP_EVENT_HW_CACHE             0x0200
-> +#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0300
->  
->  struct perf_output_handle;
->  
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f0f0f71213a1..02f14ae09d09 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11516,6 +11516,7 @@ static struct lock_class_key cpuctx_lock;
->  int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->  {
->  	int cpu, ret, max = PERF_TYPE_MAX;
-> +	int cap = pmu->capabilities;
->  
->  	mutex_lock(&pmus_lock);
->  	ret = -ENOMEM;
-> @@ -11523,7 +11524,6 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->  	if (!pmu->pmu_disable_count)
->  		goto unlock;
->  
-> -	pmu->type = -1;
->  	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
->  		ret = -EINVAL;
->  		goto free_pdc;
-> @@ -11538,15 +11538,34 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->  	if (ret < 0)
->  		goto free_pdc;
->  
-> +	/*
-> +	 * Ensure one type ([0, PERF_TYPE_MAX)) correspond to one PMU.
-> +	 */
->  	WARN_ON(type >= 0 && ret != type);
->  
->  	type = ret;
->  	pmu->type = type;
->  
-> +	if ((type != PERF_TYPE_HARDWARE) &&
-> +	    (cap & PERF_PMU_CAP_EVENT_HARDWARE)) {
-> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HARDWARE,
-> +				PERF_TYPE_HARDWARE + 1, GFP_KERNEL);
-> +		if (ret < 0)
-> +			goto free_idr;
-> +	}
-
-This means that if I try to register more than one PMU with
-PERF_PMU_CAP_EVENT_HARDWARE, the second will fail IDR allocation and fail to
-register.
-
-... so this is entirely useless for systems with heterogeneous PMUs, where each
-of those *should* be able to handle plain PERF_TYPE_HARDWARE events for legacy reasons.
-
-I agree that the existing event initialization code is grotty, but that's
-largely an artifact of maintaining existing ABI. AFAICT this patch breaks that,
-and makes the code complex in a different way rather than actually simlifying anything.
-
-Therefore, NAK to this patch.
-
-As above, I think it does make sense to have the core code own some common
-checks (e.g. rejecting task-bound uncore events, filting generic events from
-PMUs that don't support those), so I'm open to patches doing that.
-
-Mark.
-
-> +
-> +	if ((type != PERF_TYPE_HW_CACHE) &&
-> +	    (cap & PERF_PMU_CAP_EVENT_HW_CACHE)) {
-> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HW_CACHE,
-> +				PERF_TYPE_HW_CACHE + 1, GFP_KERNEL);
-> +		if (ret < 0)
-> +			goto free_idr_hw;
-> +	}
-> +
->  	if (pmu_bus_running && !pmu->dev) {
->  		ret = pmu_dev_alloc(pmu);
->  		if (ret)
-> -			goto free_idr;
-> +			goto free_idr_hw_cache;
->  	}
->  
->  	ret = -ENOMEM;
-> @@ -11604,6 +11623,14 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->  		put_device(pmu->dev);
->  	}
->  
-> +free_idr_hw_cache:
-> +	if (cap & PERF_PMU_CAP_EVENT_HW_CACHE)
-> +		idr_remove(&pmu_idr, PERF_TYPE_HW_CACHE);
-> +
-> +free_idr_hw:
-> +	if (cap & PERF_PMU_CAP_EVENT_HARDWARE)
-> +		idr_remove(&pmu_idr, PERF_TYPE_HARDWARE);
-> +
->  free_idr:
->  	idr_remove(&pmu_idr, pmu->type);
->  
-> @@ -11648,6 +11675,7 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->  {
->  	struct perf_event_context *ctx = NULL;
->  	int ret;
-> +	bool uncore_pmu = false, extded_pmu = false;
->  
->  	if (!try_module_get(pmu->module))
->  		return -ENODEV;
-> @@ -11668,6 +11696,20 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->  		BUG_ON(!ctx);
->  	}
->  
-> +	if (perf_invalid_context == pmu->task_ctx_nr)
-> +		uncore_pmu = true;
-> +
-> +	if (pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
-> +		extded_pmu = true;
-> +
-> +	/* Disallow uncore-task events. */
-> +	if (uncore_pmu && (event->attach_state & PERF_ATTACH_TASK))
-> +		return -EINVAL;
-> +
-> +	/* Ensure pmu not supporting generic events will not be passed such event. */
-> +	if (!extded_pmu && (event->attr.type & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> +		return -EINVAL;
-> +
->  	event->pmu = pmu;
->  	ret = pmu->event_init(event);
->  
-> @@ -11695,7 +11737,6 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->  
->  static struct pmu *perf_init_event(struct perf_event *event)
->  {
-> -	bool extended_type = false;
->  	int idx, type, ret;
->  	struct pmu *pmu;
->  
-> @@ -11720,36 +11761,15 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  	 * are often aliases for PERF_TYPE_RAW.
->  	 */
->  	type = event->attr.type;
-> -	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
-> -		type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
-> -		if (!type) {
-> -			type = PERF_TYPE_RAW;
-> -		} else {
-> -			extended_type = true;
-> -			event->attr.config &= PERF_HW_EVENT_MASK;
-> -		}
-> -	}
-> +	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)
-> +		event->attr.config &= PERF_HW_EVENT_MASK;
->  
-> -again:
->  	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
->  	rcu_read_unlock();
-> -	if (pmu) {
-> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> -			goto fail;
->  
-> -		ret = perf_try_init_event(pmu, event);
-> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> -			type = event->attr.type;
-> -			goto again;
-> -		}
-> -
-> -		if (ret)
-> -			pmu = ERR_PTR(ret);
-> -
-> -		goto unlock;
-> -	}
-> +	if (!pmu || perf_try_init_event(pmu, event))
-> +		goto fail;
->  
->  	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
->  		ret = perf_try_init_event(pmu, event);
-> @@ -12026,11 +12046,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  	}
->  
->  	/*
-> -	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
-> -	 * events (they don't make sense as the cgroup will be different
-> -	 * on other CPUs in the uncore mask).
-> +	 * Disallow uncore-cgroup events (they don't make sense
-> +	 * as the cgroup will be different on other CPUs in the uncore mask).
->  	 */
-> -	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
-> +	if (task || cgroup_fd != -1) {
->  		err = -EINVAL;
->  		goto err_pmu;
->  	}
-> -- 
-> 2.25.1
-> 
+>
+>
+> When perf annotate (or perf report/top with TUI) processes samples, it
+> needs to save the sample period (overhead) at instruction level.  For
+> now, it allocates an array to do that for the whole symbol when it
+> hits any new symbol.  This comes with a lot of waste since samples can
+> be very few and instructions span to multiple bytes.
+>
+> For example, when a sample hits symbol 'foo' that has size of 100 and
+> that's the only sample falls into the symbol.  Then it needs to
+> allocate a symbol histogram (sym_hist) and the its size would be
+>
+>   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
+>
+> But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
+> get worse if the symbol size is bigger (and it doesn't have many
+> samples in different places).  Also note that it needs a separate
+> histogram for each event.
+>
+> Let's split the sym_hist_entry and have it in a hash table so that it
+> can allocate only necessary entries.
+>
+> No functional change intended.
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (4):
+>   perf annotate: Add a hashmap for symbol histogram
+>   perf annotate: Calculate instruction overhead using hashmap
+>   perf annotate: Remove sym_hist.addr[] array
+>   perf annotate: Add comments in the data structures
+>
+>  tools/perf/ui/gtk/annotate.c |  14 ++++-
+>  tools/perf/util/annotate.c   | 116 ++++++++++++++++++++++-------------
+>  tools/perf/util/annotate.h   |  86 +++++++++++++++++++++++---
+>  3 files changed, 159 insertions(+), 57 deletions(-)
+>
+> --
+> 2.44.0.rc1.240.g4c46232300-goog
+>
+>
