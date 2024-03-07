@@ -1,35 +1,59 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17793D53E
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 03:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9A114F78;
+	Thu,  7 Mar 2024 03:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709781387; cv=none; b=DoSFl4sT9j8woeXSLryCAbBjzELI9MJb7OjB1CUhHq7RL93PGsy91J/hJ2IupnVIJj/BhdwthoYL8QCoDwF5Ys7yUpaUuJ9T4ASDsVVD6fOJbgaTgXDmOD4zOqRWB/uBECHeY+xkfQfK9VrXan3PLXytQJ0OW6d0H5cehZ6LT+0=
+	t=1709782083; cv=none; b=C3hHtY7AzSc1QI7Rz3oPgMir10L5ptAHcA6L2mQaedvPApCV80crteY1pGb8/s41YikAX3bMJ+6OOy4NvnjHr+wE0T8fbIsZH4NeJgdYadrdCw6UpkcKL3/l18AL6MJMLrUW03v/xO6TJ/sgwGt94YXfZMIxsW7K5kHwE8j5/3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709781387; c=relaxed/simple;
-	bh=ZVqbas+1y6f0zcBPwDjaqRxR+PIBBUBSjcDr4o9cHeQ=;
+	s=arc-20240116; t=1709782083; c=relaxed/simple;
+	bh=KHdr03Dz9D0+bk1OD9MB4zgKTO/IXrHrWWSkxIyLymQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HNf+DGwsu8q1LCzkLJkUqIbLVw1LoVsir/q6ypm73aS+oD5YtOR8JOY6efHnL1pPkHQCg3VPfQa9rEjN/Yx8wLAs+y7tCzURD2Xpu3H5CnCyLISYN5jKZbuw4vU4xnIuR3uJZmuj+7X7TJO2as380R11uDhdNljjonagkJGoL90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp72t1709781367toxgkw18
-X-QQ-Originating-IP: KoZh+Po1jLVQC+oHcWtjmGtLtMf0+3W5LeETRJ5+ABg=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 07 Mar 2024 11:16:05 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: Sm8l2YSuDymxf++w3HKzK4EdUwh7ZB6wZT8AOqyrvXP2/q3K7LZGwqh5TzK28
-	SdWIMUsk5pBQ8DHE15nuOhKTFrzUH7gSWmMyxeURquSja7VhPfyqGwYROxzWI4jvIMqr+53
-	qb2OH/2yPWLOVpukbO8ksWFq4eooIN/U4Au+lIUrU67EIQpu8zIyLUWydoota5poApC2Fw3
-	OKx0eytuCw+WJeWZbeqEwY3n9ocN5vKtPQHPeYjPi6VMKEwa2d5dMR2TtJLAjmAq/w1HDMG
-	amK7iofJexg8QIXDTF8yM9cMoFKj78WapSS4ujpx5fwHVfjkkeleOlFeasI3CC6t/txpDjC
-	yUjHKS1dqfn+uLymyQc/DhOPgT6R+BVoTNiP+e32GRw/OGzYZznZqS0wZUbIFg01j8q/hUZ
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 15119548749084099075
-Message-ID: <39E57A3DFB5843A6+f56f2b52-445f-4205-a99f-bd6374985389@shingroup.cn>
-Date: Thu, 7 Mar 2024 11:16:05 +0800
+	 In-Reply-To:Content-Type; b=EroQ+rIo2IValz7vORUuCBBuzAWPwX3yHLnnpG3VFpaPrJfojN4q7BoOzqT6HpjLD79Ks2Jmy/9QzYx64A9XEhE5STwak9SAqbqEfrbzCpdysIk/cXjTpnQBf78M4TWFXETxbVpfBaA730W2+w2n22P/7+JN+yn4iaS0TPa+gbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFaVdReH; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFaVdReH"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dbae7b8ff2so3657265ad.3;
+        Wed, 06 Mar 2024 19:28:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709782081; x=1710386881; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RoMrqob6XzKrx2l68g3uNby2pIPa2rZQW8xZRw2X/0M=;
+        b=BFaVdReHGQSWivGSP3GqzHgms4/COs0wxpsp1UxcT0pfVmP3WemBX60wJcziHYNOwF
+         /95mTXb36EEEI+bIdqlZB/8fPbiB7rry+9fAwqC4ATlOUwRauu1oLv2awdADmoNGtFkH
+         ZaZoOQ8vLkw11zwAqtUMFc89f/3eTwZU9malOappUNFUR1TtHGk6thrYyB3lUR0Zqsaf
+         Sk5sZx71uRtERXOyhl2nb0OgPM38bD5iLt1MCmApewE62LgVzPNlN8nNN5eShi5tl7Vz
+         GkRranR9C2xmywBUdUv+GatW69+t2mMibsMOj0kT4NxK4dA+A3bOlnTbGns0wzNHaEOX
+         AySg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709782081; x=1710386881;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RoMrqob6XzKrx2l68g3uNby2pIPa2rZQW8xZRw2X/0M=;
+        b=XNXnSdhmsa/6UCByKDso/jhlzWG34A1Z2YHhhxPwcAWCpUACHh5ns/6JR00FJZLbLG
+         qDZp/kLh+1N34g/KM/ron9fbZl6zugj7gUrXdPjidxSijT2+CxneoqdntFlLIzS1mRqJ
+         +HVcx+o2/D6SVRbZaojBiBa3939+uoH/eddDpqJkv2P0I++7eOUi5G2ZTVbufsjvq/So
+         JbVRHh3u3OFdTYqKGYkGgprO9BbyFxkhX2Ib5A5o8NCt+mDfQ5gSlXcWqckB9H4qC400
+         HLwHy9b4KViwe9jgTIQBEfH1btBTMQj1f4DG6vtA+P0bRqQCO4s4ZI5Rl7E2K21tXdPc
+         yLUA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0B/Omkr8T9DA2O0M07K/NYnyklltVbRU4gj2rZRPIMHzjQh+1kF2edDHuW0YKsmAfPsl+RvGEdNvWfvq0kg1bjpfEw/YjZfzdPXvowPZRy5NvR9cZPYa40yfCn0ts9YLOe5mtqQ1ZAI/mfcF/aiehUxCVK9yPgzMmNJyhxwyrFlr39g==
+X-Gm-Message-State: AOJu0YxnG3u3Oq/pLn3fR79G3nE5G4wTCuUbX0qSC34lgf6jMIJ3StId
+	fp7E5AcqkrL03FSZDhFWkNQC2S94Vw+9jBYAePaLULypTGzzj+JO
+X-Google-Smtp-Source: AGHT+IF3jPKeUektLW+KNlDJ+Jd7EPB4xUij5sBZpclzvJfCYK52Km8Efp8bXa3IaLLUQKm3r7KFpw==
+X-Received: by 2002:a17:902:ecd1:b0:1dc:8c27:9a07 with SMTP id a17-20020a170902ecd100b001dc8c279a07mr8455112plh.31.1709782080902;
+        Wed, 06 Mar 2024 19:28:00 -0800 (PST)
+Received: from [192.168.255.10] ([43.132.141.24])
+        by smtp.gmail.com with ESMTPSA id e8-20020a170902784800b001da001aed18sm13593993pln.54.2024.03.06.19.27.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 19:28:00 -0800 (PST)
+Message-ID: <8475706a-c6ba-45a2-b2ee-a4dc7f4621c5@gmail.com>
+Date: Thu, 7 Mar 2024 11:27:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,388 +61,244 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/core: Handle generic events normally instead of
- trying all pmu
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240306151017.2114-1-jialong.yang@shingroup.cn>
- <Zeib-e1RYm2Dlk8c@FVFF77S0Q05N>
+Subject: Re: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
+ macros
 Content-Language: en-US
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <Zeib-e1RYm2Dlk8c@FVFF77S0Q05N>
+To: Jim Mattson <jmattson@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Kan Liang <kan.liang@linux.intel.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
+ <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
+ <ZeepGjHCeSfadANM@google.com>
+ <2677739b-bc84-43ee-ba56-a5e243148ceb@gmail.com>
+ <CALMp9eQ531ZC-8-Y+gwLer9mCK-hZ9yVNQZAFE6z76RXkMNnPA@mail.gmail.com>
+From: Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <CALMp9eQ531ZC-8-Y+gwLer9mCK-hZ9yVNQZAFE6z76RXkMNnPA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-
-
-在 2024/3/7 0:38, Mark Rutland 写道:
-> On Wed, Mar 06, 2024 at 11:10:15PM +0800, JiaLong.Yang wrote:
->> We have pay more effort on handling generic events. We treat them
->> specially caused us paying more.
-> 
-> Are you seeing an actual problem in practice? ... or is this just intended as a
-> cleanup/improvement? >
-> What problem are you actually trying to solve here?
-> 
-
-Latter. I write a driver. But I have to do some checks which likes that 
-they should be done in framework. And treating PERF_TYPE_HARDWARE and 
-PERF_TYPE_HW_CACHE specially like introducing PERF_PMU_TYPE_SHIFT is not 
-very beautiful.
-
->> Now time have told us that PMU type between 0 and PERF_TYPE_MAX only
->> corresponds to one PMU.
-> 
-> There can be at most one PMU registered for each type, but several PMUs may
-> need to handle events for that type.
-> 
-> Trivially, there are a number of PMUs which share the PERF_TYPE_SOFTWARE type,
-> e.g.
-> 
-> * perf_swevent, handled by perf_swevent_init()
-> * perf_cpu_clock, handled by cpu_clock_event_init()
-> * perf_task_clock, handled by task_clock_event_init()
-> 
-This is the current code for above example:
-	perf_pmu_register(&perf_swevent, "software", PERF_TYPE_SOFTWARE);
-         perf_pmu_register(&perf_cpu_clock, "cpu_clock", -1);
-         perf_pmu_register(&perf_task_clock, "task_clock", -1);
-
-But what I said still is wrong. At least the type PERF_TYPE_RAW is general.
-
-PERF_TYPE_TRACEPOINT is also only one.
-
-> ... which have non-overlapping events in the PERF_TYPE_SOFTWARE event
-> namespace.
-> 
-> On systems with heterogeneous PMUs (e.g. ARM big.LITTLE systems), several PMUs
-> can handle the PERF_TYPE_{HARDWARE,RAW,CACHE} event namespaces, and there's
-> existing software that depends upon that working *without* the extended HW type
-> IDs.
-> 
-
-The event framework mapping event to pmu is mainly according to type or 
-pmu idr. The type PERF_TYPE_HARDWARE and HW_CACHE only is a feature. For 
-the feature, we trying such events in all PMUs and drivers not handling 
-them should reject it obviously. Now uncore PMU is so many. And core PMU 
-only several.
-
-Whatever, the tools calling perf_event_open should tell framework the 
-PMU idr. Maybe by event->attr.type, or event->attr.config >> 
-PERF_PMU_TYPE_SHIFT. We can save the latter and make idr number 
-special(PERF_TYPE_HARDWARE, HW_CACHE) as a default choice.
-
-Each special type([0, PERF_TYPE_RAW)) is not necessary to correspond 
-more PMUs. Except hardware core PMUs, all other PMUs could be registered 
-as type == -1.
-
-We keeping the special types originally is to do some different logic 
-and maybe also have a fixed idr number. But now in framework code, they 
-are almost no difference. For example PERF_TYPE_TRACEPOINT scenes in 
-core.c(only two):
-static int perf_tp_event_init(struct perf_event *event)
-{
-	if(event->attr.type != PERF_TYPE_TRACEPOINT)
-		return -ENOENT;
-
-	...
-}
-
-static inline void perf_tp_register(void)
-{
-         perf_pmu_register(&perf_tracepoint, "tracepoint", 
-PERF_TYPE_TRACEPOINT);
-#ifdef CONFIG_KPROBE_EVENTS
-         perf_pmu_register(&perf_kprobe, "kprobe", -1);
-#endif
-#ifdef CONFIG_UPROBE_EVENTS
-         perf_pmu_register(&perf_uprobe, "uprobe", -1);
-#endif
-}
-
-Why we need the check(event->attr.type != PERF_TYPE_TRACEPOINT)?
-The trying event init.
-
-And for the heterogeneous PMUs, they are distinguished according to 
-event->attr.config >> PERF_PMU_TYPE_SHIFT. I will have to be compatible 
-with it.
-
-It is funny. Why there is only one PMU registered with each special 
-type. OK, except PERF_TYPE_RAW.
-
->> So we can handle the special when registering PMU not in event opening. And
->> we can know which PMU is used to the generic event.
-> 
-> No we cannot. There may be several PMUs which need to handle a given generic
-> event type.
-> 
->> The added capabilities PERF_PMU_CAP_EVENT_HARDWARE and
->> PERF_PMU_CAP_EVENT_HW_CACHE will alloc idr for PERF_TYPE_HARDWARE and
->> PERF_TYPE_HW_CACHE with same PMU.
-> 
-> When I suggested using capabilities in:
-> 
->    https://lore.kernel.org/lkml/ZecStMBA4YgQaBEZ@FVFF77S0Q05N/
-> 
-> ... I had meant that the core code could check just before calling the
-> pmu::event_init() function, in order to simplify the implementation of the
-> event_init() functions. I did not mean for this to change the way we
-> manipulated the IDR.
-
-Yes.I get some inspire from you.
-But there is not flag telling me that the pmu is a extended one.
-
-> 
->> We'd better handle uncore-task event before calling pmu->event_init().
-> 
-> This is a nice-to-have, but it's logically separate from the rest of this
-> patch.
-
-If we not use the trying, we can do more checks here. Because we have 
-know more information.
-
-> 
+On 6/3/2024 11:09 pm, Jim Mattson wrote:
+> On Wed, Mar 6, 2024 at 1:11 AM Like Xu <like.xu.linux@gmail.com> wrote:
 >>
->> The code is compatible with PERF_PMU_TYPE_SHIFT.
->> /*
->>   * attr.config layout for type PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
->>   * PERF_TYPE_HARDWARE:			0xEEEEEEEE000000AA
->>   *					AA: hardware event ID
->>   *					EEEEEEEE: PMU type ID
->>   * PERF_TYPE_HW_CACHE:			0xEEEEEEEE00DDCCBB
->>   *					BB: hardware cache ID
->>   *					CC: hardware cache op ID
->>   *					DD: hardware cache op result ID
->>   *					EEEEEEEE: PMU type ID
->>   * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
->>   */
+>> On 6/3/2024 7:22 am, Sean Christopherson wrote:
+>>> +Mingwei
+>>>
+>>> On Thu, Aug 24, 2023, Dapeng Mi wrote:
+>>>    diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+>>>> index 7d9ba301c090..ffda2ecc3a22 100644
+>>>> --- a/arch/x86/kvm/pmu.h
+>>>> +++ b/arch/x86/kvm/pmu.h
+>>>> @@ -12,7 +12,8 @@
+>>>>                                         MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+>>>>
+>>>>    /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
+>>>> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
+>>>> +#define fixed_ctrl_field(ctrl_reg, idx) \
+>>>> +    (((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
+>>>>
+>>>>    #define VMWARE_BACKDOOR_PMC_HOST_TSC               0x10000
+>>>>    #define VMWARE_BACKDOOR_PMC_REAL_TIME              0x10001
+>>>> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>>>>
+>>>>       if (pmc_is_fixed(pmc))
+>>>>               return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>>>> -                                    pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>>>> +                                    pmc->idx - INTEL_PMC_IDX_FIXED) &
+>>>> +                                    (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
+>>>>
+>>>>       return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>>>>    }
+>>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>>>> index f2efa0bf7ae8..b0ac55891cb7 100644
+>>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>>>> @@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>>>>               setup_fixed_pmc_eventsel(pmu);
+>>>>       }
+>>>>
+>>>> -    for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+>>>> -            pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
+>>>> +    for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+>>>> +            pmu->fixed_ctr_ctrl_mask &=
+>>>> +                     ~intel_fixed_bits_by_idx(i,
+>>>> +                                              INTEL_FIXED_0_KERNEL |
+>>>> +                                              INTEL_FIXED_0_USER |
+>>>> +                                              INTEL_FIXED_0_ENABLE_PMI);
+>>>> +    }
+>>>>       counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
+>>>>               (((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
+>>>>       pmu->global_ctrl_mask = counter_mask;
+>>>> @@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>>>>                       pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
+>>>>                       for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+>>>>                               pmu->fixed_ctr_ctrl_mask &=
+>>>> -                                    ~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
+>>>
+>>> OMG, this might just win the award for most obfuscated PMU code in KVM, which is
+>>> saying something.  The fact that INTEL_PMC_IDX_FIXED happens to be 32, the same
+>>> bit number as ICL_FIXED_0_ADAPTIVE, is 100% coincidence.  Good riddance.
+>>>
+>>> Argh, and this goofy code helped introduce a real bug.  reprogram_fixed_counters()
+>>> doesn't account for the upper 32 bits of IA32_FIXED_CTR_CTRL.
+>>>
+>>> Wait, WTF?  Nothing in KVM accounts for the upper bits.  This can't possibly work.
+>>>
+>>> IIUC, because KVM _always_ sets precise_ip to a non-zero bit for PEBS events,
+>>> perf will _always_ generate an adaptive record, even if the guest requested a
+>>> basic record.  Ugh, and KVM will always generate adaptive records even if the
+>>> guest doesn't support them.  This is all completely broken.  It probably kinda
+>>> sorta works because the Basic info is always stored in the record, and generating
+>>> more info requires a non-zero MSR_PEBS_DATA_CFG, but ugh.
 >>
->> But the drivers have to give the corresponding capabilities obviously.
+>> Yep, it works at least on machines with both adaptive and pebs_full features.
 >>
->> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->> ---
->>   include/linux/perf_event.h |  4 +-
->>   kernel/events/core.c       | 83 +++++++++++++++++++++++---------------
->>   2 files changed, 54 insertions(+), 33 deletions(-)
+>> I remember one generation of Atom core (? GOLDMONT) that didn't have both
+>> above PEBS sub-features, so we didn't set x86_pmu.pebs_ept on that platform.
 >>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index d2a15c0c6f8a..edf4365ab7cc 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -290,7 +290,9 @@ struct perf_event_pmu_context;
->>   #define PERF_PMU_CAP_ITRACE			0x0020
->>   #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
->>   #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->> -#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->> +#define PERF_PMU_CAP_EVENT_HARDWARE             0x0100
->> +#define PERF_PMU_CAP_EVENT_HW_CACHE             0x0200
->> +#define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0300
->>   
->>   struct perf_output_handle;
->>   
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index f0f0f71213a1..02f14ae09d09 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -11516,6 +11516,7 @@ static struct lock_class_key cpuctx_lock;
->>   int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   {
->>   	int cpu, ret, max = PERF_TYPE_MAX;
->> +	int cap = pmu->capabilities;
->>   
->>   	mutex_lock(&pmus_lock);
->>   	ret = -ENOMEM;
->> @@ -11523,7 +11524,6 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   	if (!pmu->pmu_disable_count)
->>   		goto unlock;
->>   
->> -	pmu->type = -1;
->>   	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
->>   		ret = -EINVAL;
->>   		goto free_pdc;
->> @@ -11538,15 +11538,34 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   	if (ret < 0)
->>   		goto free_pdc;
->>   
->> +	/*
->> +	 * Ensure one type ([0, PERF_TYPE_MAX)) correspond to one PMU.
->> +	 */
->>   	WARN_ON(type >= 0 && ret != type);
->>   
->>   	type = ret;
->>   	pmu->type = type;
->>   
->> +	if ((type != PERF_TYPE_HARDWARE) &&
->> +	    (cap & PERF_PMU_CAP_EVENT_HARDWARE)) {
->> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HARDWARE,
->> +				PERF_TYPE_HARDWARE + 1, GFP_KERNEL);
->> +		if (ret < 0)
->> +			goto free_idr;
->> +	}
-> 
-> This means that if I try to register more than one PMU with
-> PERF_PMU_CAP_EVENT_HARDWARE, the second will fail IDR allocation and fail to
-> register.
-
-We can make the first as default one. The latter will pass through 
-without registering PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE.
-
-> 
-> ... so this is entirely useless for systems with heterogeneous PMUs, where each
-> of those *should* be able to handle plain PERF_TYPE_HARDWARE events for legacy reasons.
-> 
-> I agree that the existing event initialization code is grotty, but that's
-> largely an artifact of maintaining existing ABI. AFAICT this patch breaks that,
-> and makes the code complex in a different way rather than actually simlifying anything.
-> 
-> Therefore, NAK to this patch.
-
-The patch has many problems I known. It just is a thought.
-
-> 
-> As above, I think it does make sense to have the core code own some common
-> checks (e.g. rejecting task-bound uncore events, filting generic events from
-> PMUs that don't support those), so I'm open to patches doing that.
-> 
-
-Fine. It's useful.
-
-> Mark.
-> 
->> +
->> +	if ((type != PERF_TYPE_HW_CACHE) &&
->> +	    (cap & PERF_PMU_CAP_EVENT_HW_CACHE)) {
->> +		ret = idr_alloc(&pmu_idr, pmu, PERF_TYPE_HW_CACHE,
->> +				PERF_TYPE_HW_CACHE + 1, GFP_KERNEL);
->> +		if (ret < 0)
->> +			goto free_idr_hw;
->> +	}
->> +
->>   	if (pmu_bus_running && !pmu->dev) {
->>   		ret = pmu_dev_alloc(pmu);
->>   		if (ret)
->> -			goto free_idr;
->> +			goto free_idr_hw_cache;
->>   	}
->>   
->>   	ret = -ENOMEM;
->> @@ -11604,6 +11623,14 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
->>   		put_device(pmu->dev);
->>   	}
->>   
->> +free_idr_hw_cache:
->> +	if (cap & PERF_PMU_CAP_EVENT_HW_CACHE)
->> +		idr_remove(&pmu_idr, PERF_TYPE_HW_CACHE);
->> +
->> +free_idr_hw:
->> +	if (cap & PERF_PMU_CAP_EVENT_HARDWARE)
->> +		idr_remove(&pmu_idr, PERF_TYPE_HARDWARE);
->> +
->>   free_idr:
->>   	idr_remove(&pmu_idr, pmu->type);
->>   
->> @@ -11648,6 +11675,7 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   {
->>   	struct perf_event_context *ctx = NULL;
->>   	int ret;
->> +	bool uncore_pmu = false, extded_pmu = false;
->>   
->>   	if (!try_module_get(pmu->module))
->>   		return -ENODEV;
->> @@ -11668,6 +11696,20 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   		BUG_ON(!ctx);
->>   	}
->>   
->> +	if (perf_invalid_context == pmu->task_ctx_nr)
->> +		uncore_pmu = true;
->> +
->> +	if (pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
->> +		extded_pmu = true;
->> +
->> +	/* Disallow uncore-task events. */
->> +	if (uncore_pmu && (event->attach_state & PERF_ATTACH_TASK))
->> +		return -EINVAL;
->> +
->> +	/* Ensure pmu not supporting generic events will not be passed such event. */
->> +	if (!extded_pmu && (event->attr.type & PERF_PMU_CAP_EXTENDED_HW_TYPE))
->> +		return -EINVAL;
->> +
->>   	event->pmu = pmu;
->>   	ret = pmu->event_init(event);
->>   
->> @@ -11695,7 +11737,6 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>   
->>   static struct pmu *perf_init_event(struct perf_event *event)
->>   {
->> -	bool extended_type = false;
->>   	int idx, type, ret;
->>   	struct pmu *pmu;
->>   
->> @@ -11720,36 +11761,15 @@ static struct pmu *perf_init_event(struct perf_event *event)
->>   	 * are often aliases for PERF_TYPE_RAW.
->>   	 */
->>   	type = event->attr.type;
->> -	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
->> -		type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
->> -		if (!type) {
->> -			type = PERF_TYPE_RAW;
->> -		} else {
->> -			extended_type = true;
->> -			event->attr.config &= PERF_HW_EVENT_MASK;
->> -		}
->> -	}
->> +	if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)
->> +		event->attr.config &= PERF_HW_EVENT_MASK;
->>   
->> -again:
->>   	rcu_read_lock();
->>   	pmu = idr_find(&pmu_idr, type);
->>   	rcu_read_unlock();
->> -	if (pmu) {
->> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
->> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
->> -			goto fail;
->>   
->> -		ret = perf_try_init_event(pmu, event);
->> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
->> -			type = event->attr.type;
->> -			goto again;
->> -		}
->> -
->> -		if (ret)
->> -			pmu = ERR_PTR(ret);
->> -
->> -		goto unlock;
->> -	}
->> +	if (!pmu || perf_try_init_event(pmu, event))
->> +		goto fail;
->>   
->>   	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
->>   		ret = perf_try_init_event(pmu, event);
->> @@ -12026,11 +12046,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->>   	}
->>   
->>   	/*
->> -	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
->> -	 * events (they don't make sense as the cgroup will be different
->> -	 * on other CPUs in the uncore mask).
->> +	 * Disallow uncore-cgroup events (they don't make sense
->> +	 * as the cgroup will be different on other CPUs in the uncore mask).
->>   	 */
->> -	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
->> +	if (task || cgroup_fd != -1) {
->>   		err = -EINVAL;
->>   		goto err_pmu;
->>   	}
->> -- 
->> 2.25.1
+>> Mingwei or others are encouraged to construct use cases in KUT::pmu_pebs.flat
+>> that violate guest-pebs rules (e.g., leak host state), as we all recognize that
+>> testing
+>> is the right way to condemn legacy code, not just lengthy emails.
 >>
+>>>
+>>> Oh great, and it gets worse.  intel_pmu_disable_fixed() doesn't clear the upper
+>>> bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set.  Unless I'm misreading the code,
+>>> intel_pmu_enable_fixed() effectively doesn't clear ICL_FIXED_0_ADAPTIVE either,
+>>> as it only modifies the bit when it wants to set ICL_FIXED_0_ADAPTIVE.
+>>>
+>>> *sigh*
+>>>
+>>> I'm _very_ tempted to disable KVM PEBS support for the current PMU, and make it
+>>> available only when the so-called passthrough PMU is available[*].  Because I
+>>> don't see how this is can possibly be functionally correct, nor do I see a way
+>>> to make it functionally correct without a rather large and invasive series.
+>>
+>> Considering that I've tried the idea myself, I have no inclination towards
+>> "passthrough PMU", and I'd like to be able to take the time to review that
+>> patchset while we all wait for a clear statement from that perf-core man,
+>> who don't really care about virtualization and don't want to lose control
+>> of global hardware resources.
+>>
+>> Before we actually get to that ideal state you want, we have to deal with
+>> some intermediate state and face to any users that rely on the current code,
+>> you had urged to merge in a KVM document for vPMU, not sure how far
+>> along that part of the work is.
+>>
+>>>
+>>> Ouch.  And after chatting with Mingwei, who asked the very good question of
+>>> "can this leak host state?", I am pretty sure that yes, this can leak host state.
+>>
+>> The Basic Info has a tsc field, I suspect it's the host-state-tsc.
+>>
+>>>
+>>> When PERF_CAP_PEBS_BASELINE is enabled for the guest, i.e. when the guest has
+>>> access to adaptive records, KVM gives the guest full access to MSR_PEBS_DATA_CFG
+>>>
+>>>        pmu->pebs_data_cfg_mask = ~0xff00000full;
+>>>
+>>> which makes sense in a vacuum, because AFAICT the architecture doesn't allow
+>>> exposing a subset of the four adaptive controls.
+>>>
+>>> GPRs and XMMs are always context switched and thus benign, but IIUC, Memory Info
+>>> provides data that might now otherwise be available to the guest, e.g. if host
+>>> userspace has disallowed equivalent events via KVM_SET_PMU_EVENT_FILTER.
+>>
+>> Indeed, KVM_SET_PMU_EVENT_FILTER doesn't work in harmony with
+>> guest-pebs, and I believe there is a big problem here, especially with the
+>> lack of targeted testing.
+>>
+>> One reason for this is that we don't use this cockamamie API in our
+>> large-scale production environments, and users of vPMU want to get real
+>> runtime information about physical cpus, not just virtualised hardware
+>> architecture interfaces.
+>>
+>>>
+>>> And unless I'm missing something, LBRs are a full leak of host state.  Nothing
+>>> in the SDM suggests that PEBS records honor MSR intercepts, so unless KVM is
+>>> also passing through LBRs, i.e. is context switching all LBR MSRs, the guest can
+>>> use PEBS to read host LBRs at will.
+>>
+>> KVM is also passing through LBRs when guest uses LBR but not at the
+>> granularity of vm-exit/entry. I'm not sure if the LBR_EN bit is required
+>> to get LBR information via PEBS, also not confirmed whether PEBS-lbr
+>> can be enabled at the same time as independent LBR;
+>>
+>> I recall that PEBS-assist, per cpu-arch, would clean up this part of the
+>> record when crossing root/non-root boundaries, or not generate record.
+>>
+>> We're looking forward to the tests that will undermine this perception.
+>>
+>> There are some devilish details during the processing of vm-exit and
+>> the generation of host/guest pebs, and those interested can delve into
+>> the short description in this SDM section "20.9.5 EPT-Friendly PEBS".
+>>
+>>>
+>>> Unless someone chimes in to point out how PEBS virtualization isn't a broken mess,
+>>> I will post a patch to effectively disable PEBS virtualization.
+>>
+>> There are two factors that affect the availability of guest-pebs:
+>>
+>> 1. the technical need to use core-PMU in both host/guest worlds;
+>> (I don't think Googlers are paying attention to this part of users' needs)
 > 
+> Let me clear up any misperceptions you might have that Google alone is
+> foisting the pass-through PMU on the world. The work so far has been a
+> collaboration between Google and Intel. Now, AMD has joined the
+> collaboration as well. Mingwei is taking the lead on the project, but
+> Googlers are outnumbered by the x86 CPU vendors ten to one.
+
+This is such great news.
+
+> 
+> The pass-through PMU allows both the host and guest worlds to use the
+> core PMU, more so than the existing vPMU implementation. I assume your
+
+Can I further confirm that in any case, host/guest can use PMU resources,
+such as some special more accurate counters ? Is there an end of story
+for that static partitioning scheme ?
+
+> complaint is about the desire for host software to monitor guest
+> behavior with core PMU events while the guest is running. Today,
+> Google Cloud does this for fleet management, and losing this
+> capability is not something we are looking forward to. However, the
+> writing is on the wall: Coco is going to take this capability away
+> from us anyway.
+
+Coco pays a corresponding performance cost, and it's a paradox to hide
+any performance trace of coco-guests from host's point of view.
+
+Thanks for the input, Jim. Let me try to help.
+
+> 
+>> 2. guest-pebs is temporarily disabled in the case of cross-mapping counter,
+>> which reduces the number of performance samples collected by guest;
+>>
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+>>> index 41a4533f9989..a2f827fa0ca1 100644
+>>> --- a/arch/x86/kvm/vmx/capabilities.h
+>>> +++ b/arch/x86/kvm/vmx/capabilities.h
+>>> @@ -392,7 +392,7 @@ static inline bool vmx_pt_mode_is_host_guest(void)
+>>>
+>>>    static inline bool vmx_pebs_supported(void)
+>>>    {
+>>> -       return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
+>>> +       return false;
+>>
+>> As you know, user-space VMM may disable guest-pebs by filtering out the
+>> MSR_IA32_PERF_CAPABILITIE.PERF_CAP_PEBS_FORMAT or CPUID.PDCM.
+>>
+>> In the end, if our great KVM maintainers insist on doing this,
+>> there is obviously nothing I can do about it.
+>>
+>> Hope you have a good day.
+>>
+>>>    }
+>>>
+>>>    static inline bool cpu_has_notify_vmexit(void)
+>>>
+>>
