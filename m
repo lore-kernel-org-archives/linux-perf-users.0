@@ -1,212 +1,246 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2087.outbound.protection.outlook.com [40.107.7.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FCB12FB1B;
-	Thu,  7 Mar 2024 16:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709829766; cv=fail; b=ILiZoS92xpM/B8QbNg36Q0mxYRnxJGpjQIkgncddX2rty/0BnUDf7HDQ/Rq//gqFKUapr4SGJ6iCV8XEVw86krjLoyzF+EGvljmpk2lnSvjqZCQ+xuLLVr/LQzwcj4y2tEuq1ACaOQbkQA4/P6K4SfO6IFadatqQms/HOFpcwek=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709829766; c=relaxed/simple;
-	bh=Gc6an6OQxaP9EH3KNDZ3CgeZnXGdeXcxKuJeTBZHrSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oX/nw1j4NstUFbtzlmJAH2TfHSFECNkM80GZ6gCQCb4YHkh8Nza7p6XmaH59om+xJRmNzCbVT4EXoQ45Md6SsqiQ4d4/3tgQWKPHHU4j0s+kaXkmD2g567Kq3FZxXhE6/8H8QVfGVcyYwaSlt1Bw1/mYWrKb29X+GjHBYdwcNgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AmpQhUt8; arc=fail smtp.client-ip=40.107.7.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D412F5BD
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 16:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709829970; cv=none; b=Qf/P82733yTBZYu/kAByBOIsF5cyv2ahKPAgteW61IjcVcpmaNryQc9HTtUq3I8JUW2w6Jn5YkHJg/HYZT1qcdtJqLL7sOnvdKnP/oviB4PseJqZSX3u48A0ZP+zFi2HaThA5uRNlXChlCsmVf3eX7Mrilu0tcOnMD/OLsJXXvE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709829970; c=relaxed/simple;
+	bh=ca2ECfmGdh+lPb0ZgM6o3LCAKKCh4yup/fgnToovGz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dbgnd0SBWUEmnDJOjQEU7SOsTsqmRshm/rjb7J7KAkMc/YvxKG326dpfvRy2Qja03lIVTTS2NDYNkiTQ3+yZ5xXCGqwxM5dLRDY0V2CD3TbsaHW4c70ZSpyAUzeDVvB3EC3YbAzqy3NsDbYC0sRqFuteooNW4Bs/UynKLn7nakQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HSolM5VP; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AmpQhUt8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DTgXZqdns4yDVj0ZSr5YG/IkRflWqvgCfEdiPJXu6sO0oXFdenGU24dcI0M8ZwsZAjxWP2DbKkNeD09aB4Sa7G+bfqefauQmmDqkgClXw8aM+cKZKoJ3mOvMQvBrqfALDzOn2kpaKmVDKX7+wbdi7czc4Dss4BfPy4NJ2ez/2kX17dTCvmBAtu6Brq5WcSr/iSGZI9uiUtz+YzofgsLYXDoV+5ASy/BGszBdu3yb1NfG5icfRVXfKBB6oX4eE380anQtAfgkvMmolMiRvMIU6K8kal4zpOM1eUvm2HVumlL/wn14dNhd18T7L2g562tbyVlC79woyXjNmO2ByfrTKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TQT8uxOCAH7XQhJz/sE1knanGGOrZqJOTuvvAvf1ZNs=;
- b=IfyjvRBSTfKzj/iCcXS5Q6iiWaljRnLbMXcCMGVup+c8tRHRU5VS+cuokty54o2hkRanQBTf/L1RyEjQkIN1pcrq1LIokesbzsESVlKMf3wVbwK8yEgaJNPoAX8RXxU20crxgfDt6dskj0HiQwMJAZ1FE0ktRYUXg7+osf644GLmgSti7xChnlItaKVJhTuEpYW9mxapgcYMdmgMMdWr3n69rroSJOjptrxoG+gwCunTsrVNVzWtmXS4ZX9dxEK8NojwKvphOgzFFMm/8A40j2iLSsV+buWZbAWsqhg+xiU9VH8+9mCKf8rYFynlPdA5f8ZNMn8tZUppRc//UgYBgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQT8uxOCAH7XQhJz/sE1knanGGOrZqJOTuvvAvf1ZNs=;
- b=AmpQhUt8b02JWFCu3bdoBBOOuVN3a3U5iKaDyyB7lDhUhA/0JYz6B/QFMfqG+afYUNbiAvvus5PVIKQMbxBDLZmSI5N5wiakq10EQfR/FheV1bse0XrO5TSYZkBQqtg1GlSOWlTERyOdSITxE6GRsAeElXfNDY7xSqykqKLgD+Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB6896.eurprd04.prod.outlook.com (2603:10a6:803:12e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
- 2024 16:42:40 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
- 16:42:40 +0000
-Date: Thu, 7 Mar 2024 11:42:28 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: will@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, mike.leach@linaro.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v6 2/7] perf: imx_perf: add macro definitions for parsing
- config attr
-Message-ID: <ZenudMDnq9bGzKbI@lizhi-Precision-Tower-5810>
-References: <20240307095730.3792680-1-xu.yang_2@nxp.com>
- <20240307095730.3792680-2-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240307095730.3792680-2-xu.yang_2@nxp.com>
-X-ClientProxiedBy: SJ0PR13CA0220.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSolM5VP"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42f024b809cso342331cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 08:46:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709829967; x=1710434767; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n9/McXY1cqhuGh0I/LrZgjK1iM+tpaM0etIsMoa6+mM=;
+        b=HSolM5VPvP20crJTHNLM6mxjjAKj/VA0VyTMqqp6f0e1wvd3+CpS2e1Tpw0Wq9pW54
+         MqCsEcVCcVTvcliCEcn65k9Ufm5K6MS8aixOsiUJAwcekfowNedlMosqOoQl6+QSDcv+
+         6/Ib8L5lB/BplylXaKjJjzP2y/7X3QqgnruZD5l+sWsI0NJqgfY/ED+o1gMv6sNntUm9
+         4H8uUxHjFgdc5urfRei3aa/aWpSLvWsauOvw2Rg0Zp89D2thta/Ns3H+kOm38LpkCDU4
+         DeGj0Fi5MoK1+ioF+vG7sqrmvaOPoC6AHU1Xr4z5Qtd3H73qHfwpGi76vD4GwOm5S109
+         tM0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709829967; x=1710434767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n9/McXY1cqhuGh0I/LrZgjK1iM+tpaM0etIsMoa6+mM=;
+        b=eibAyZiCGHFTDh/rhUK/MM57pHSs+sIVBDxxOjYoVnGnpdYeL99TdPujuruOU5WIr8
+         Op+6XbPB3nwpUM/NmLfMYxOPsWqeLkqyxwM2hzW53uf8RLEs4gZtYrM82n01oSdUSyl6
+         x4m1JGcv5XuHoAV1NZplRnH3wM6BiJonGU09uhiNrIpAMcxZNK6oyFqci2qIG+PZKGbC
+         P2Zx++JmtQWyijaU0WK04DSxBlYC/kNsznHptnKN8WVLhK0mXY1Xh2HrEV2Y6laj6h4p
+         Pu7eUhG7m1z91+ckKZ5yKYcUEwJWc6CCsPvP1UjtqsJeJ+CzIHGt9H8z5JQdO3pP1Psd
+         owiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAFwqsarc/pw5LB691y7sJwg8Y3q/i4Niz7xEAY/e+q2QOzpJrarrFQ1thAOz8r2RiVWs28W1LBJY2/VXc9ChaAVQHZ+cpSS+9czU0Yn0ZRA==
+X-Gm-Message-State: AOJu0Yzo++phK36RUqXeifjDNL97V5rJ1tRIGoztGPlxQMiKnnz/OxjP
+	lg0KTC1EK4Q1/pLMwcD4IpTW2hmgMpb3cB4lHYeoeu+zxjpi8fQgAJBRzHyp19BCKD8ilye3oon
+	Kb7URxR2aLZS7bHliuYk345vnKPY0mNP1zqNJ
+X-Google-Smtp-Source: AGHT+IGGaXzx67xcFvyAWUW6MFQTgwc95aB/V2T54UX2bkhrsBrYdzneVEzZIYQ9mEh9g6qo6RtT1xNO0GNtViV8vcI=
+X-Received: by 2002:ac8:590f:0:b0:42e:6de9:cd13 with SMTP id
+ 15-20020ac8590f000000b0042e6de9cd13mr334460qty.3.1709829967309; Thu, 07 Mar
+ 2024 08:46:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB6896:EE_
-X-MS-Office365-Filtering-Correlation-Id: bef73d75-9459-4a7d-0daa-08dc3ec59a6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	myjcAflcTZfsaGFYvQrLbU9u3YF9JksUrhRWy2GE0JiCHnNIfTfBFvFWJESDW0p4GEsl6nJdKQXsK4a/28LR70VyTf+fY0sqKjfpvU7qLYLigVfVkVol7Zr3LefECDnfzWQKyoVDCQsmdE57/dzSWdVUwSnR1ay9h2uYxBZHNkZAkK4VHPLyNprc494LxOAFEZlYZgnTr0liDNkJARk+vvxk176OoMvkeXROL7Rg1enomjeisge6HS7uZNpco4VAiu/liLQKwno9RfF7pFBzc9B/E/RKayOCJILWiYBC0nh+tDCRo1toJpjK9fvoIt8iBqDvs1ZgpiRZInSjLs7IMJYu+3i5L+pmtXgQqWLu9LeUxnKWBtFWvMymVO4BLJC4Y5Eqh7NmehMTE6LrAcv7cfnlDgEGQwOS/SthpQl3F5sjRSwn1bIT6Gy34yInpZVn3iXuRJ7mok47USPuekfS2hjKM1NRsNv4vfP8a0ITfSXHLM8DHMVkwHTAEE5WUycmKVcgZ3hYTgkl4j/GHgi2ER2ZH8OTPlVa6nCUTBd9/uip0oKfMo05QiRvewSlvL9wDDaRIzUgqo2y5v/U8sGK4X5VYcbElZv36i2WlSI4wC5VH3X8UTBqvIIEERaqnKBa5AJGODhdKw3UL10ZUcMxPW7b2sEtoKjBuufahsNTvmPIK37M2elTda0Jmnvif4a0xgOdqyFUMxSeaZ+kjNl4a3ghRbZQ2n3DTaSkvqHb+zY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yJ5OeX1lDQo58fhMyUyJRf8J6Byigj0t1ViVZFcExwFzDrp+6VLmjCDP2BVR?=
- =?us-ascii?Q?zwvwNeFckTeWlQ1tYcV2WB2nWyC7mYirVu9DlrMm9C3HFeiHURkMzaKl1ei3?=
- =?us-ascii?Q?1AVOCTi3WA4jvIF8kiEIhJg+uwejYj0yiQX1+84yniXktYlZ2DF0fVPpaEkI?=
- =?us-ascii?Q?2HEVv2Y0txPsCN0xJ6qzr1hdZstT3tHx7213LTMKxxeYxlaUSsuDs/2v14Bq?=
- =?us-ascii?Q?haNSl2HYgb9ht+99kIjTwxhdxTq+IcCf0SlR37GkRFTSuxb1rW6etC6tpysU?=
- =?us-ascii?Q?AtG1bRZNcP+W5eEN8EJi5Lj8iiC5wsKbREH3bwIM3MFQR70PP+KuElrj8I5g?=
- =?us-ascii?Q?vp0+Umpnd4Q60Ly5aoRoKnVwegUVdgsR+UmQlFNhMs89ssN5hzw4DIxa07v1?=
- =?us-ascii?Q?FZMR98eAxJwtr4p1n5Hq1fIP1OsITDaKMhrbCDdUwO79sr5NOw7tSfdvHc0A?=
- =?us-ascii?Q?nKDdcgnUf4qM/sqx6lJ519aa7AYKhBwVi6HDFyw0uCdTiJQNdv0n7oqYmumC?=
- =?us-ascii?Q?zcalGNgB298eC0WVWg20GuMNH68bZmD6sgYCUwpZ/iaaKnE8vH3ejyq/daYc?=
- =?us-ascii?Q?2Jm7Cnn366YnVQp4PNDao2AqF5gNn3miy7fURjxJ+JjFjPGHNwwurMPfRKoP?=
- =?us-ascii?Q?uq1x5P2ixNPrgz0gFwOFBbaxGqVyrVs03U6ofhLbiOKfbuJu6gs/p1gz+yDr?=
- =?us-ascii?Q?ZDxEtJj/yPSzJsR5T6mIjtEV/B8OcNGh1Xgh6015RanBj7nC8v8C7VBUhgbO?=
- =?us-ascii?Q?2UEhG5grCUvPMNoEQum2NmmyPXN4m5ZHnp5RHCm0gj+sUzoCLIF7TtCQoY5f?=
- =?us-ascii?Q?2sw/cBwI0PZEvRJaQ2mNOUAuizkNXq6vnKJ1BGDpcvR3h/5p2VC1QD8fqYMM?=
- =?us-ascii?Q?jxa8WhhV/WMS8Qk3n6IJiu3bn1swKMgaC4TK4jOXfi5iVtyYNKr/RPWSXXnf?=
- =?us-ascii?Q?p/boOCoaf/R9NOduPIsrqgLZAL54oum83KBsQE1LW/Ff7TU2bwl8zUHSgriA?=
- =?us-ascii?Q?yn2LCybQYxeKpCpLGT5xTccIfqhL59DbXXczXSoXe/MYB/4d63O51aqa5NAN?=
- =?us-ascii?Q?wSXc6+xCqBovlaJQ1MmFy4gWV+W97oqZ+wDMmGaTp761Mhbow1c4cblgi7vl?=
- =?us-ascii?Q?nEHqZrS9xTgB2dlNNfUs3rKktM5OP6/pSVxn75Plw2y0Jz0xBK3wIxAlSaqV?=
- =?us-ascii?Q?vi9GEI310I3Ocz0IovoBSVloPkNhTJYpWXJ4SzKTdFB7z4nqmuLd0VhxfUVX?=
- =?us-ascii?Q?h6LPDcyL0Ip+ck5xJDS1zns6a0bHipRyK7xBBV7fmjm/9355DG3D/wcZa90s?=
- =?us-ascii?Q?96ZqRpjuKrVE+USzSWK4UIRY1lNapCwKk+xbylSJSZTJdEijB43vM6mwsEns?=
- =?us-ascii?Q?cw1nv6nBudCeuGqMusGIbfy35qGvsFGAohyE0zLmK0zeCuq/7v37gp2uORMt?=
- =?us-ascii?Q?rP0TpG4VRC3JFHUeMbrR5+C1AqRXR8yhtUEyr7YNpY6MS6x1ekEb4fBlZUbD?=
- =?us-ascii?Q?ouBwucPz2/I26CBV56MabvOoDWoWWjcPcTwDix9v9KqdxrPUwI5pbg01SF1x?=
- =?us-ascii?Q?F9wdZjuJ9iEaZ2n1sfK1WboXQG/GKb1jaGFVIZJJ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bef73d75-9459-4a7d-0daa-08dc3ec59a6c
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 16:42:40.1301
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YIG3l6XnmcMy3ffokboNyQpfV8rSQKyZz28du7eKdr+J80Qh6fU+YdQgRaMogAWV89wE7fNqzcY9o5DhcAiopw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6896
+References: <20240307081412.3933750-1-irogers@google.com> <20240307081412.3933750-6-irogers@google.com>
+ <c22e0d67-cf63-4bb7-8cef-05fccc384214@linux.intel.com>
+In-Reply-To: <c22e0d67-cf63-4bb7-8cef-05fccc384214@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 7 Mar 2024 08:45:56 -0800
+Message-ID: <CAP-5=fWeNgEPrHwXcFoLKB64v=DpQqKnNaZ_ckxK7B+tE8XWNQ@mail.gmail.com>
+Subject: Re: [PATCH v1 5/6] perf tools: Use pmus to describe type from attribute
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 07, 2024 at 05:57:25PM +0800, Xu Yang wrote:
-> The user can set event and counter in cmdline and the driver need to parse
-> it using 'config' attr value. This will add macro definitions to avoid
-> hard-code in driver.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
-> ---
-> Changes in v4:
->  - new patch
-> Changes in v5:
->  - move this patch earlier
-> Changes in v6:
->  - no changes
-> ---
->  drivers/perf/fsl_imx9_ddr_perf.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-> index 9685645bfe04..d1c566e661d8 100644
-> --- a/drivers/perf/fsl_imx9_ddr_perf.c
-> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-> @@ -42,6 +42,11 @@
->  #define NUM_COUNTERS		11
->  #define CYCLES_COUNTER		0
->  
-> +#define CONFIG_EVENT_MASK	0x00FF
-> +#define CONFIG_EVENT_OFFSET	0
+On Thu, Mar 7, 2024 at 6:36=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2024-03-07 3:14 a.m., Ian Rogers wrote:
+> > When dumping a perf_event_attr, use pmus to find the PMU and its name
+> > by the type number. This allows dynamically added PMUs to be described.
+> >
+> > Before:
+> > ```
+> > $ perf stat -vv -e data_read true
+> > ...
+> > perf_event_attr:
+> >   type                             24
+> >   size                             136
+> >   config                           0x20ff
+> >   sample_type                      IDENTIFIER
+> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
+G
+> >   disabled                         1
+> >   inherit                          1
+> >   exclude_guest                    1
+> > ...
+> > ```
+> >
+> > After:
+> > ```
+> > $ perf stat -vv -e data_read true
+> > ...
+> > perf_event_attr:
+> >   type                             24 (uncore_imc_free_running_0)
+> >   size                             136
+> >   config                           0x20ff
+> >   sample_type                      IDENTIFIER
+> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
+G
+> >   disabled                         1
+> >   inherit                          1
+> >   exclude_guest                    1
+> > ...
+> > ```
+> >
+> > However, it also means that when we have a PMU name we prefer it to a
+> > hard coded name:
+> >
+> > Before:
+> > ```
+> > $ perf stat -vv -e cycles true
+>
+> faults?
 
-Needn't need OFFSET if use FIELD_*
+Thanks, will fix in v2. It does highlight we lack a struct pmu in pmus
+for legacy types like hardware, hence switching to faults as a
+software event that has a PMU. Perhaps we should just make legacy PMUs
+anyway, to avoid special case logic. Anyway, not in these changes.
 
-> +#define CONFIG_COUNTER_MASK	0xFF00
-> +#define CONFIG_COUNTER_OFFSET	8
+Thanks,
+Ian
 
-The same
-
-> +
->  #define to_ddr_pmu(p)		container_of(p, struct ddr_pmu, pmu)
->  
->  #define DDR_PERF_DEV_NAME	"imx9_ddr"
-> @@ -339,8 +344,10 @@ static void ddr_perf_counter_local_config(struct ddr_pmu *pmu, int config,
->  				    int counter, bool enable)
->  {
->  	u32 ctrl_a;
-> +	int event;
->  
->  	ctrl_a = readl_relaxed(pmu->base + PMLCA(counter));
-> +	event = (config & CONFIG_EVENT_MASK) >> CONFIG_EVENT_OFFSET;
-
-FIELD_GET(CONFIG_EVENT_MASK, config);
-
-same below all code about config.
-
->  
->  	if (enable) {
->  		ctrl_a |= PMLCA_FC;
-> @@ -352,7 +359,7 @@ static void ddr_perf_counter_local_config(struct ddr_pmu *pmu, int config,
->  		ctrl_a &= ~PMLCA_FC;
->  		ctrl_a |= PMLCA_CE;
->  		ctrl_a &= ~FIELD_PREP(PMLCA_EVENT, 0x7F);
-> -		ctrl_a |= FIELD_PREP(PMLCA_EVENT, (config & 0x000000FF));
-> +		ctrl_a |= FIELD_PREP(PMLCA_EVENT, event);
->  		writel(ctrl_a, pmu->base + PMLCA(counter));
->  	} else {
->  		/* Freeze counter. */
-> @@ -366,8 +373,8 @@ static void ddr_perf_monitor_config(struct ddr_pmu *pmu, int cfg, int cfg1, int
->  	u32 pmcfg1, pmcfg2;
->  	int event, counter;
->  
-> -	event = cfg & 0x000000FF;
-> -	counter = (cfg & 0x0000FF00) >> 8;
-> +	event = (cfg & CONFIG_EVENT_MASK) >> CONFIG_EVENT_OFFSET;
-> +	counter = (cfg & CONFIG_COUNTER_MASK) >> CONFIG_COUNTER_OFFSET;
->  
->  	pmcfg1 = readl_relaxed(pmu->base + PMCFG1);
->  
-> @@ -469,7 +476,7 @@ static int ddr_perf_event_add(struct perf_event *event, int flags)
->  	int cfg2 = event->attr.config2;
->  	int counter;
->  
-> -	counter = (cfg & 0x0000FF00) >> 8;
-> +	counter = (cfg & CONFIG_COUNTER_MASK) >> CONFIG_COUNTER_OFFSET;
->  
->  	pmu->events[counter] = event;
->  	pmu->active_events++;
-> -- 
-> 2.34.1
-> 
+> Thanks,
+> Kan
+> > ...
+> > perf_event_attr:
+> >   type                             1 (PERF_TYPE_SOFTWARE)
+> >   size                             136
+> >   config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
+> >   sample_type                      IDENTIFIER
+> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
+G
+> >   disabled                         1
+> >   inherit                          1
+> >   enable_on_exec                   1
+> >   exclude_guest                    1
+> > ...
+> > ```
+> >
+> > After:
+> > ```
+> > $ perf stat -vv -e faults true
+> > ...
+> > perf_event_attr:
+> >   type                             1 (software)
+> >   size                             136
+> >   config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
+> >   sample_type                      IDENTIFIER
+> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
+G
+> >   disabled                         1
+> >   inherit                          1
+> >   enable_on_exec                   1
+> >   exclude_guest                    1
+> > ...
+> > ```
+> >
+> > It feels more consistent to do this, rather than only prefer a PMU
+> > name when a hard coded name isn't available.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/perf_event_attr_fprintf.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/uti=
+l/perf_event_attr_fprintf.c
+> > index 8f04d3b7f3ec..29e66835da3a 100644
+> > --- a/tools/perf/util/perf_event_attr_fprintf.c
+> > +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> > @@ -7,6 +7,8 @@
+> >  #include <linux/types.h>
+> >  #include <linux/perf_event.h>
+> >  #include "util/evsel_fprintf.h"
+> > +#include "util/pmu.h"
+> > +#include "util/pmus.h"
+> >  #include "trace-event.h"
+> >
+> >  struct bit_names {
+> > @@ -75,9 +77,12 @@ static void __p_read_format(char *buf, size_t size, =
+u64 value)
+> >  }
+> >
+> >  #define ENUM_ID_TO_STR_CASE(x) case x: return (#x);
+> > -static const char *stringify_perf_type_id(u64 value)
+> > +static const char *stringify_perf_type_id(struct perf_pmu *pmu, u32 ty=
+pe)
+> >  {
+> > -     switch (value) {
+> > +     if (pmu)
+> > +             return pmu->name;
+> > +
+> > +     switch (type) {
+> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_HARDWARE)
+> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_SOFTWARE)
+> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_TRACEPOINT)
+> > @@ -175,9 +180,9 @@ do {                                               =
+               \
+> >  #define print_id_unsigned(_s)        PRINT_ID(_s, "%"PRIu64)
+> >  #define print_id_hex(_s)     PRINT_ID(_s, "%#"PRIx64)
+> >
+> > -static void __p_type_id(char *buf, size_t size, u64 value)
+> > +static void __p_type_id(struct perf_pmu *pmu, char *buf, size_t size, =
+u64 value)
+> >  {
+> > -     print_id_unsigned(stringify_perf_type_id(value));
+> > +     print_id_unsigned(stringify_perf_type_id(pmu, value));
+> >  }
+> >
+> >  static void __p_config_hw_id(char *buf, size_t size, u64 value)
+> > @@ -246,7 +251,7 @@ static void __p_config_id(char *buf, size_t size, u=
+32 type, u64 value)
+> >  #define p_sample_type(val)   __p_sample_type(buf, BUF_SIZE, val)
+> >  #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE=
+, val)
+> >  #define p_read_format(val)   __p_read_format(buf, BUF_SIZE, val)
+> > -#define p_type_id(val)               __p_type_id(buf, BUF_SIZE, val)
+> > +#define p_type_id(val)               __p_type_id(pmu, buf, BUF_SIZE, v=
+al)
+> >  #define p_config_id(val)     __p_config_id(buf, BUF_SIZE, attr->type, =
+val)
+> >
+> >  #define PRINT_ATTRn(_n, _f, _p, _a)                  \
+> > @@ -262,6 +267,7 @@ do {                                               =
+       \
+> >  int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+> >                            attr__fprintf_f attr__fprintf, void *priv)
+> >  {
+> > +     struct perf_pmu *pmu =3D perf_pmus__find_by_type(attr->type);
+> >       char buf[BUF_SIZE];
+> >       int ret =3D 0;
+> >
