@@ -1,107 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2041C1BC22;
-	Wed,  6 Mar 2024 22:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD744C6C
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 01:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709763721; cv=none; b=lnQz80WiaLpGxe9HbH3QnEHL6ilUnSLRyoEBmV3WOaue7ovylkRTpdSU1vqWCLSETPhQ7vpcBh+zKP62Z7e9bMZV234jiPgraF1WyDmmkqC8dj42OFeloifqEiJreDiPl3/IpF+UB//M3IHXpWc28O90xCuSow9HtTa3Ava1xAs=
+	t=1709774030; cv=none; b=pnGKpAKkYKd8MbmpalA/pF+G6XpyTOwZyZzUfwZIwBNaubm+q2cd2wNmM7+ziGN6EJ1bs0voF4WU462KbZf3e/2I0snoKLX5gzHw12c+FvRSr8Vriu+q2/Hs3PbVvJGR4pHLpjpMM3pyLLoRzaVz1ioTKOWHTgtB0r6GpHAyKnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709763721; c=relaxed/simple;
-	bh=MlQq2QOH4T5O53iSAeAQzQexenXuj0qdDakJrAMFRSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lOezdhvDjMZl5cfADo0W3sPEautFxyQQixsNAkkvLQWZTaqActZ4C/uw+cPERFK9VVbNF8eT6Y3jwKKcyT3BRlBrC/ZV5Gx+fJ9zIPLthB1RMFsthLlJlcJqb3CvusMNymMAeHOCAeUqul0K68OQUMfnJleIxPS7i9KQwH3uBHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8awcRI+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709774030; c=relaxed/simple;
+	bh=hZ5Sn1jSz8DAkNrCHxC3gfo9H5L7otCVEGMyNOPmqyo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pVwwQcqqEe7FzT0t8tdUTqhJRsxaZXenUL+v2dukQYgk1V1oH81OLN36Gz2hB27XCNuLjzFjkuCb55TEaqq5anOI0GHjgVDox0CqCHO9MYuXZNL77uc56i0shR4y4yDcI90Wo3IFKhO0+I1TUR9jZsprZZyRBQcJ5bW219bDnb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PKHGNoPu; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8awcRI+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A63C433C7;
-	Wed,  6 Mar 2024 22:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709763720;
-	bh=MlQq2QOH4T5O53iSAeAQzQexenXuj0qdDakJrAMFRSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L8awcRI+cbOQJ4rFYl4bBiukwg9eMMOOdqzZW0bvoWx/Km8dBtRKxJbmMAEjBD0eA
-	 cHZh292AmDPfCHHSfp/bsFgKO3w8qo1JDn8FE10B6L3u5QJxD5Ki9sNyuZCe+fqwlm
-	 TF/8wHBLxGibSw7vZCFZoibS1J6y2wciUYeMf5jWB/EZFqToWqor3YDfefnSKLJSF1
-	 Sp7ZBhJ+hijF9j8mdyDS930GGC9UpabGJlkRruygLYXfvk2M+O3ArV65KDGUC1+w/Z
-	 wTpkVQG/6NzWxcwDLAsmxePOXzQAxwmkEeHHShKaWrmg5LyY9VHesY+c4PiHKH+na1
-	 g3S7Abgc9IMOg==
-Date: Wed, 6 Mar 2024 19:21:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol
- histogram
-Message-ID: <ZejshUg8XiQz5YGa@x1>
-References: <20240304230815.1440583-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PKHGNoPu"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608ac8c5781so7009457b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Mar 2024 17:13:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709774027; x=1710378827; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rt0lW+kiwJbcMwQc46VkiXalXJk5+eKabvSXhIGfvyw=;
+        b=PKHGNoPumI+ZyWWTJJp1Hm9EYyJ1/44OIk65AK6xkd5m6NWOAIy/KTz13KYELFKviV
+         nmYniytveXrg4Xt+VI1znvSH4EcKFEHIuzMc5pnDWeFeIlgnBpI+k7BNzqcEHAJZs83i
+         CAS3CQqGp+X3Qx95rb4GKvZKvbHn/jauLZbq7a0/ohknT82EsCaYMKtbYCLG7nqkjQKR
+         PnRjZ3LGWxE3VwJ0EGBg04+V07oYThqX5RVBPiR8J4A1KKBFY9PHahd0F8kGQTJ3VUBY
+         Pfs9UHWDk7o7FLEwMca2rgkrOJ2dsXLVzGsUSiHlXmfEWU7aaZ8xxQd24TrpotVYiz8g
+         BEQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709774027; x=1710378827;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rt0lW+kiwJbcMwQc46VkiXalXJk5+eKabvSXhIGfvyw=;
+        b=cMLhgVjTbI1w/I+vUfbPWpMQoDoiFlwn1JcOQFdKXNGxEO+Ze540QvaJXqKbYsIq+v
+         wXaTnX9pgTRzWOJwVFW7uFseWNKnDDK9OLCOD3JRxsUQhAXzRfarMwPHdjwpL+2AWXBL
+         VeEqanDiiC70fPv3jRWNEUgDLIibTCy4C5FweqN9PcItaVCo1z1m5WtQqKA+Purg/mxF
+         BGnApU9tBeKALTGLxIebyDaC8qJaG/JwR/IAvF3pcn9hPQQ1BmLFcDQRIkhzEAwobDm2
+         9W882RQmyPpt3L5aiSsBJ6cs1TJn8QoYn947uFN8g937l/daeegX7Zc5nUkCUMU0mI85
+         eIFg==
+X-Gm-Message-State: AOJu0YxAfgJLm9JddEAIH9YMF6bID9xJpemc6qCAcUxAEUMrE5oHzJUB
+	HWoDcONE4u7hu+IJxN6EL2+6t0IDlvCgT5WUX3bw4nfnU+enFj/tc6mkoANbFVqUmifAOqyzG4H
+	rDA==
+X-Google-Smtp-Source: AGHT+IHf2WAdN8sJOEpl8sXRG0fsScQWF4WTan2Mj8l4gnGUdx7FojV+fNOXpKpPaex0EROrURmv1CzhYg0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:9b97:0:b0:609:38d1:2ad9 with SMTP id
+ s145-20020a819b97000000b0060938d12ad9mr4120303ywg.4.1709774027042; Wed, 06
+ Mar 2024 17:13:47 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed,  6 Mar 2024 17:13:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304230815.1440583-1-namhyung@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240307011344.835640-1-seanjc@google.com>
+Subject: [PATCH 0/3] KVM: VMX: Disable LBRs if CPU doesn't have callstacks
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 04, 2024 at 03:08:11PM -0800, Namhyung Kim wrote:
-> Hello,
-> 
-> This is another series of memory optimization in perf annotate.
-> 
-> v2 changes:
->  * fix a bug when offset is bigger than 16 bits
-> 
-> 
-> When perf annotate (or perf report/top with TUI) processes samples, it
-> needs to save the sample period (overhead) at instruction level.  For
-> now, it allocates an array to do that for the whole symbol when it
-> hits any new symbol.  This comes with a lot of waste since samples can
-> be very few and instructions span to multiple bytes.
-> 
-> For example, when a sample hits symbol 'foo' that has size of 100 and
-> that's the only sample falls into the symbol.  Then it needs to
-> allocate a symbol histogram (sym_hist) and the its size would be
-> 
->   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) = 1616
-> 
-> But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
-> get worse if the symbol size is bigger (and it doesn't have many
-> samples in different places).  Also note that it needs a separate
-> histogram for each event.
-> 
-> Let's split the sym_hist_entry and have it in a hash table so that it
-> can allocate only necessary entries.
-> 
-> No functional change intended.
-> 
-> Thanks,
-> Namhyung
+Disable LBR virtualization if the CPU (or I guess perf) doesn't support
+LBR callstacks, as KVM unconditionally creates the associated perf LBR
+event with PERF_SAMPLE_BRANCH_CALL_STACK.  That results in perf rejecting
+the event, and cause LBR virtualization to silently fail.
 
-No difference before/after on that 'perf annotate --stdio2' for all
-binaries in a perf record of building perf using the default binutils
-objdump disassembler, etc.
+This was detected by running vmx_pmu_caps_test on older hardware.  I didn't
+tag it for stable because I can't imagine anyone is trying to use KVM's LBR
+virtualization on pre-HSW.
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sean Christopherson (3):
+  KVM: VMX: Snapshot LBR capabilities during module initialization
+  perf/x86/intel: Expose existence of callback support to KVM
+  KVM: VMX: Disable LBR virtualization if the CPU doesn't support LBR
+    callstacks
 
-- Arnaldo
- 
-> 
-> Namhyung Kim (4):
->   perf annotate: Add a hashmap for symbol histogram
->   perf annotate: Calculate instruction overhead using hashmap
->   perf annotate: Remove sym_hist.addr[] array
->   perf annotate: Add comments in the data structures
-> 
->  tools/perf/ui/gtk/annotate.c |  14 ++++-
->  tools/perf/util/annotate.c   | 116 ++++++++++++++++++++++-------------
->  tools/perf/util/annotate.h   |  86 +++++++++++++++++++++++---
->  3 files changed, 159 insertions(+), 57 deletions(-)
-> 
-> -- 
-> 2.44.0.rc1.240.g4c46232300-goog
+ arch/x86/events/intel/lbr.c       |  1 +
+ arch/x86/include/asm/perf_event.h |  1 +
+ arch/x86/kvm/vmx/pmu_intel.c      |  2 +-
+ arch/x86/kvm/vmx/vmx.c            | 17 +++++++++++++----
+ arch/x86/kvm/vmx/vmx.h            |  2 ++
+ 5 files changed, 18 insertions(+), 5 deletions(-)
+
+
+base-commit: 0c64952fec3ea01cb5b09f00134200f3e7ab40d5
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
