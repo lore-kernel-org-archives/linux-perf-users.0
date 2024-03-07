@@ -1,246 +1,330 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2060.outbound.protection.outlook.com [40.107.20.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D412F5BD
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 16:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709829970; cv=none; b=Qf/P82733yTBZYu/kAByBOIsF5cyv2ahKPAgteW61IjcVcpmaNryQc9HTtUq3I8JUW2w6Jn5YkHJg/HYZT1qcdtJqLL7sOnvdKnP/oviB4PseJqZSX3u48A0ZP+zFi2HaThA5uRNlXChlCsmVf3eX7Mrilu0tcOnMD/OLsJXXvE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709829970; c=relaxed/simple;
-	bh=ca2ECfmGdh+lPb0ZgM6o3LCAKKCh4yup/fgnToovGz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dbgnd0SBWUEmnDJOjQEU7SOsTsqmRshm/rjb7J7KAkMc/YvxKG326dpfvRy2Qja03lIVTTS2NDYNkiTQ3+yZ5xXCGqwxM5dLRDY0V2CD3TbsaHW4c70ZSpyAUzeDVvB3EC3YbAzqy3NsDbYC0sRqFuteooNW4Bs/UynKLn7nakQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HSolM5VP; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7018B1B;
+	Thu,  7 Mar 2024 16:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709830573; cv=fail; b=pZByEf1/kc6XbsoXgil+3WuZPgouE5zfawTdF587bKHnrJS8GBpuKiJFk0qbBUTjDGC9Ayn2Y1Nv4Vl5ov30np9n9QJH63a7knWpTCf5oGEtpY8kR5OypoOBZXqOj3EZLOWgABA+WWbwPrkaJ100gH+p6KuHHGNITJlrboaTbng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709830573; c=relaxed/simple;
+	bh=Lwd8vJJhdibybs086AxhBGaZwGgAbRo4YSzZYqQ1yS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=baQ0HtmODgYQ4cZlBVxOxFQMDpVOf80lDU0830QUiDD3I8WIGxHRhtw1CAOVgzORxjfq3ZAaaXAYQNNeEpd4AwunS4AIHuOw2b1HcmtzHG882xweIBeAGC1qLXcbW8kFPImoZXz0HgyahEnzRjzCwZ08OOvTNvHx9NRbopeVgIk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=NbZv4L7s; arc=fail smtp.client-ip=40.107.20.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSolM5VP"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42f024b809cso342331cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 08:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709829967; x=1710434767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n9/McXY1cqhuGh0I/LrZgjK1iM+tpaM0etIsMoa6+mM=;
-        b=HSolM5VPvP20crJTHNLM6mxjjAKj/VA0VyTMqqp6f0e1wvd3+CpS2e1Tpw0Wq9pW54
-         MqCsEcVCcVTvcliCEcn65k9Ufm5K6MS8aixOsiUJAwcekfowNedlMosqOoQl6+QSDcv+
-         6/Ib8L5lB/BplylXaKjJjzP2y/7X3QqgnruZD5l+sWsI0NJqgfY/ED+o1gMv6sNntUm9
-         4H8uUxHjFgdc5urfRei3aa/aWpSLvWsauOvw2Rg0Zp89D2thta/Ns3H+kOm38LpkCDU4
-         DeGj0Fi5MoK1+ioF+vG7sqrmvaOPoC6AHU1Xr4z5Qtd3H73qHfwpGi76vD4GwOm5S109
-         tM0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709829967; x=1710434767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n9/McXY1cqhuGh0I/LrZgjK1iM+tpaM0etIsMoa6+mM=;
-        b=eibAyZiCGHFTDh/rhUK/MM57pHSs+sIVBDxxOjYoVnGnpdYeL99TdPujuruOU5WIr8
-         Op+6XbPB3nwpUM/NmLfMYxOPsWqeLkqyxwM2hzW53uf8RLEs4gZtYrM82n01oSdUSyl6
-         x4m1JGcv5XuHoAV1NZplRnH3wM6BiJonGU09uhiNrIpAMcxZNK6oyFqci2qIG+PZKGbC
-         P2Zx++JmtQWyijaU0WK04DSxBlYC/kNsznHptnKN8WVLhK0mXY1Xh2HrEV2Y6laj6h4p
-         Pu7eUhG7m1z91+ckKZ5yKYcUEwJWc6CCsPvP1UjtqsJeJ+CzIHGt9H8z5JQdO3pP1Psd
-         owiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAFwqsarc/pw5LB691y7sJwg8Y3q/i4Niz7xEAY/e+q2QOzpJrarrFQ1thAOz8r2RiVWs28W1LBJY2/VXc9ChaAVQHZ+cpSS+9czU0Yn0ZRA==
-X-Gm-Message-State: AOJu0Yzo++phK36RUqXeifjDNL97V5rJ1tRIGoztGPlxQMiKnnz/OxjP
-	lg0KTC1EK4Q1/pLMwcD4IpTW2hmgMpb3cB4lHYeoeu+zxjpi8fQgAJBRzHyp19BCKD8ilye3oon
-	Kb7URxR2aLZS7bHliuYk345vnKPY0mNP1zqNJ
-X-Google-Smtp-Source: AGHT+IGGaXzx67xcFvyAWUW6MFQTgwc95aB/V2T54UX2bkhrsBrYdzneVEzZIYQ9mEh9g6qo6RtT1xNO0GNtViV8vcI=
-X-Received: by 2002:ac8:590f:0:b0:42e:6de9:cd13 with SMTP id
- 15-20020ac8590f000000b0042e6de9cd13mr334460qty.3.1709829967309; Thu, 07 Mar
- 2024 08:46:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NbZv4L7s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gXNEreF1TgGqWMXDoxvbZ2Vk58O9BdAahsElsUojYqzMLNF6vxBOvyFZJHDKhUUsoEcD8RQ7+K9OpsPe6ezJVq1b7KDcqLyBnU4hPy0XGtr+ZDDfMIOn175vlwEa+gY2G0rn3A9CRkdUYP+6Y5T/HtVIKhysyoFSIlbBKcp04V8dEBmdkuSdRtuBSfMwg8b28NDPD2bkUIY0ueHq9eJCvDYO1UYW6ewLxihvATVnu4h1Z593YoYC+Ii4jP1UbfwNR5SAKE0q8f51+0p2Mb5VNKpOWw2Az4MCGZp/SIDwuh0xaSOWjzGGKtYMBU0PYvs+czzrJhm2KVqM38P1H0GHYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7dP4N+IlGESD/lJlmXe2HCFXwJDJupvBdW9SxpHcgh4=;
+ b=V1tSSn5m2WbDvq36AJqsvfYxUNokeqyKpJSTlrxA5BVUT87Y+kwu/ztphy8vhqiQiapRSJAo5tT16UkXBBVjbqMWdDXpXDE0frkKF2dCOAWoFuOhBcW0sXwgrMY7E6Z/dYieTTF9578IFWYXyunV65nfqqQFbaLN9IEj5/+GeLDyfpv5FSqJp4JWkMn613r4+JeguJhbpfgXVGSO+4bj3dGNjI0ftM6Ggo7EDDzF0w2KQhOpF8V7YDktJuCCF2IEl6LuNffUl/7MwYORO1GDm0Fh959+L/tLrTVjtFT+h6bC+SxhF0MefO1CJ43z6VJodZisnOcdn40YXH7pGOrB3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7dP4N+IlGESD/lJlmXe2HCFXwJDJupvBdW9SxpHcgh4=;
+ b=NbZv4L7ssx/vGj/jL2rPhtVqzuJ8fBKn4GwGtiNKI00Zc1LEBhzI8m+hvKb+K99xnTZ4mx1lWYmwI+YLFqCw11xMnCCo4pPyOhIMVigAlYD6xN+45UUhs8tEOFr4F9i3x/1UgysIn2d0CpvZODu4xgcqA2ak5Th5n8na4wYn7Ck=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS4PR04MB9313.eurprd04.prod.outlook.com (2603:10a6:20b:4e4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 7 Mar
+ 2024 16:56:07 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7362.024; Thu, 7 Mar 2024
+ 16:56:07 +0000
+Date: Thu, 7 Mar 2024 11:55:57 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: will@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
+	namhyung@kernel.org, irogers@google.com, mike.leach@linaro.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v6 4/7] perf: imx_perf: refactor driver for imx93
+Message-ID: <ZenxnY83dnYIT9dJ@lizhi-Precision-Tower-5810>
+References: <20240307095730.3792680-1-xu.yang_2@nxp.com>
+ <20240307095730.3792680-4-xu.yang_2@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240307095730.3792680-4-xu.yang_2@nxp.com>
+X-ClientProxiedBy: SJ0PR03CA0173.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307081412.3933750-1-irogers@google.com> <20240307081412.3933750-6-irogers@google.com>
- <c22e0d67-cf63-4bb7-8cef-05fccc384214@linux.intel.com>
-In-Reply-To: <c22e0d67-cf63-4bb7-8cef-05fccc384214@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 7 Mar 2024 08:45:56 -0800
-Message-ID: <CAP-5=fWeNgEPrHwXcFoLKB64v=DpQqKnNaZ_ckxK7B+tE8XWNQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/6] perf tools: Use pmus to describe type from attribute
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS4PR04MB9313:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc55828f-22ae-4ee4-a354-08dc3ec77bc1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	O6ycz7qXL5kv7RKg+YinBR7G0i1dPhy9h4onGWHQhNFZHoSBwH3LOpOdvvySuqcYNMwfnSlqxBKJCplbAp0fOnU+5W3f4vfj4aFkjp2kGM4Qx79Os4aPhF0nXOObLnof99XPZrYSJvfqP2OqoDNkOPhzXW6fiiK9790/DK2vXxcWZkZOBU8CixLJjYs2zkyJyjltP8vIEX1XEvgj1g1LIRLPGOyp1zXl7pwlghC5UYEbLFS+KcWj1/54oOHoqcmMWV6hsrhndFIwNsBajuZP1oK7nZmLWmWSfF6MdSxgRxrbzUxdIY/OPM3+rgmoltMI/S8/5ufAD+vr8txlkz8dtjI49CgV0hEnPiuOXvaK/BBYbr5tQLvz4oS2jHLkXWHXVCa/7sTGjvCsGrIi8IYIWIys5ospd8kEsQeBKFaPQOaGvchFxBRbddvLn1X6ffk7Pbm4IrHVE4+ppIxSNhyiyjkxr897b1mwCRQT5Y1OOqzTX6hKhirCeBHYmDOc/bwUwypH4e/3TJMrNFu+QwgJ96j6/gYOHLiYPs6xkR8FvNfaNcOvpO5oriFcj4hSrHxZdXYZaOTqfGpG/tS1234jOwNlh9YLZ4wmAcEgUFOouiwYyiXgdsI4a9+axYEHJflLr4CFwGn9cR9keUhOxAUhTDT17oHAEtnj/amgOPldLkMA+p6VTZufjcrnH63CwMgmOUJM6THAwviISvt7Z4kNylLBl3WN0RgSJQnQMyB2mf0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RgETTToAvbGgek9i1kanfhzmBhmST42j6F/CNTFutlF9N6UFqknvDyGKdlNg?=
+ =?us-ascii?Q?M1YbJ1hCIXvvM3ZWAEwpE6PN245uVBEka9zZJHFKEs4qJt38E4ypkLflsxIi?=
+ =?us-ascii?Q?502G0ADqSSmf+jHw2EB7tHAIn2gEeq7BV8ac1QHTsy91MLCS13rayU4eeOvx?=
+ =?us-ascii?Q?hdtsiGrDdmCUcEyBzRaAcniRJpnjE5ilpDn8pHn0Rmn0N0WSNCCLATzucmg8?=
+ =?us-ascii?Q?4alt31DDPx8GDgGqLxbVn2Aj+XCasz9E6gSqORR8/SpPGnwv+Z6eih3atNGC?=
+ =?us-ascii?Q?YIxCyhii1hGaLMUqKzH2MXpqqnIhx90OTOvwkocOEErmqpztj0gTSyWzvRUU?=
+ =?us-ascii?Q?cSEwDje169b1kgGcnaW7Z3N8jI8gpUBR1PW+OdLprv3YO1Uc5je1aaS6QsJu?=
+ =?us-ascii?Q?WGj55bzfyVYCOKibQsnJPtlHCvlw5uuqpl5hpITxPG0+SzmeSu99ccxsfsnf?=
+ =?us-ascii?Q?RJl/t6r1jINNYPtOkCPix9j9Xzc6+fqs70Dn3pTb2FjGIrV3g0Le2be4GGEb?=
+ =?us-ascii?Q?f/lUz6sJu0TJ4x5YfVYMUUsG8d2pLzSMFeZ9v/002qjgVOhvTEHM8o6E93qa?=
+ =?us-ascii?Q?NO76VIIUvYroJvT5Fkp2D2XnM/pACCA3Fsi8qVISFIbfBaPJ7lW5jzNB2Z84?=
+ =?us-ascii?Q?wv+51gTgn23LCYn2BJJXpfIs+YtCaQ94k3wsxmqAHakUtf2Awv4r1U7ldvkr?=
+ =?us-ascii?Q?QVX6Vtjv4XEte+0S3A1XkL6CR10xnijHnNUXfDrXbYkOgEHsisg0hb1acbME?=
+ =?us-ascii?Q?BLdPWzHiouRGvUhoNAWb2XhxONU7C2Xvx/S38Kw3X2MhxU+7W/caEvb2nHIM?=
+ =?us-ascii?Q?dGDG3+asIiOhIU+ry/JKlMKGwEutchQ88cq8B/+y2EQdLn1bmtiHvN+M3srb?=
+ =?us-ascii?Q?/416DathrbmaNZMEI4kmhB90BkKctc/NLwJJgQ2GCUSYKnzGVKwkFS2QniTz?=
+ =?us-ascii?Q?57QoCKjU5gAXdUExiglZ1FPf7PHVJKBGM7LQJc83W7eecOd0iYWPH5+vt7v2?=
+ =?us-ascii?Q?55HN3gV1dYodE1K5tnYmTPkbpJtwyimx04sXW1geXrKwowiFoJqJGhsebQV4?=
+ =?us-ascii?Q?QHIi370m1cg179FAfZrpN3fxEbei4grfVsjchsn2nLTReS7+Qweha6spYAaq?=
+ =?us-ascii?Q?OMc9u5trqJd7ApnYf0DMrhucZsYO2Q8UQps3UvZ7Kq6usQ8ht+7gSiXc8/B2?=
+ =?us-ascii?Q?sEGe4cLD9+YOPfFbqJEWJtEXkLFNcK2FaUTvYFV1GcluB8TXMNfHpLuXiL0U?=
+ =?us-ascii?Q?ac5AUhKVG+/fpZ0brNiys/QMBJLAYYARQcP9Kn1vFFXowxx/svxOqIN5qUlB?=
+ =?us-ascii?Q?D6kUZqbCDz2duqkNUT2PqzsgmJ8CrDTKWxeSafKQkVxFr+o0OkVACT6XCMpd?=
+ =?us-ascii?Q?wFxOKPlMlUE/3dv+qsTW79X+5pMVCACqTmEjcTuQ1+kjQoyFuBbnAPkcS0OB?=
+ =?us-ascii?Q?dSpOsgoIiFCwoPva7+Q6Av7sqs6++xLylmMHxBY0xps6kZCQS3LqeRGO0BF9?=
+ =?us-ascii?Q?oOjfzpkMZrHZisQe7hjsfBUg+dcuDUWRCL15qSV6s71DnZRG/DVNBJUtpWVx?=
+ =?us-ascii?Q?OtNfMspFaeRxHVm76AU30WoOjYk25Z9t+ExDoVdR?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc55828f-22ae-4ee4-a354-08dc3ec77bc1
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 16:56:07.6905
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4feo7/pL6ySlQayTDz9IHho90Sw2uo2LY14sVJcKGf+39/Y4PmBRANdhCrAp1YhuizejBCtDTXrK1MCBRB3SZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9313
 
-On Thu, Mar 7, 2024 at 6:36=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
->
->
->
-> On 2024-03-07 3:14 a.m., Ian Rogers wrote:
-> > When dumping a perf_event_attr, use pmus to find the PMU and its name
-> > by the type number. This allows dynamically added PMUs to be described.
-> >
-> > Before:
-> > ```
-> > $ perf stat -vv -e data_read true
-> > ...
-> > perf_event_attr:
-> >   type                             24
-> >   size                             136
-> >   config                           0x20ff
-> >   sample_type                      IDENTIFIER
-> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
-G
-> >   disabled                         1
-> >   inherit                          1
-> >   exclude_guest                    1
-> > ...
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf stat -vv -e data_read true
-> > ...
-> > perf_event_attr:
-> >   type                             24 (uncore_imc_free_running_0)
-> >   size                             136
-> >   config                           0x20ff
-> >   sample_type                      IDENTIFIER
-> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
-G
-> >   disabled                         1
-> >   inherit                          1
-> >   exclude_guest                    1
-> > ...
-> > ```
-> >
-> > However, it also means that when we have a PMU name we prefer it to a
-> > hard coded name:
-> >
-> > Before:
-> > ```
-> > $ perf stat -vv -e cycles true
->
-> faults?
+On Thu, Mar 07, 2024 at 05:57:27PM +0800, Xu Yang wrote:
+> This driver is initinally used to support imx93 Soc and now it's time to
+> add support for imx95 Soc. However, some macro definitions and events are
+> different on these two Socs. For preparing imx95 supports, this will
+> refactor driver for imx93.
+> 
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> 
+> ---
+> Changes in v4:
+>  - new patch
+> Changes in v5:
+>  - use is_visible to hide unwanted attributes as suggested by Will
+> Changes in v6:
+>  - improve imx93_ddr_perf_monitor_config()
+> ---
+>  drivers/perf/fsl_imx9_ddr_perf.c | 99 +++++++++++++++++++++-----------
+>  1 file changed, 66 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
+> index 8d85b4d98544..4e8a3a4349c5 100644
+> --- a/drivers/perf/fsl_imx9_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
+> @@ -11,14 +11,14 @@
+>  #include <linux/perf_event.h>
+>  
+>  /* Performance monitor configuration */
+> -#define PMCFG1  			0x00
+> -#define PMCFG1_RD_TRANS_FILT_EN 	BIT(31)
+> -#define PMCFG1_WR_TRANS_FILT_EN 	BIT(30)
+> -#define PMCFG1_RD_BT_FILT_EN 		BIT(29)
+> -#define PMCFG1_ID_MASK  		GENMASK(17, 0)
+> +#define PMCFG1				0x00
+> +#define MX93_PMCFG1_RD_TRANS_FILT_EN	BIT(31)
+> +#define MX93_PMCFG1_WR_TRANS_FILT_EN	BIT(30)
+> +#define MX93_PMCFG1_RD_BT_FILT_EN	BIT(29)
+> +#define MX93_PMCFG1_ID_MASK		GENMASK(17, 0)
+>  
+> -#define PMCFG2  			0x04
+> -#define PMCFG2_ID			GENMASK(17, 0)
+> +#define PMCFG2				0x04
+> +#define MX93_PMCFG2_ID			GENMASK(17, 0)
+>  
+>  /* Global control register affects all counters and takes priority over local control registers */
+>  #define PMGC0		0x40
+> @@ -77,6 +77,11 @@ static const struct imx_ddr_devtype_data imx93_devtype_data = {
+>  	.identifier = "imx93",
+>  };
+>  
+> +static inline bool is_imx93(struct ddr_pmu *pmu)
+> +{
+> +	return pmu->devtype_data == &imx93_devtype_data;
+> +}
+> +
+>  static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
+>  	{.compatible = "fsl,imx93-ddr-pmu", .data = &imx93_devtype_data},
+>  	{ /* sentinel */ }
+> @@ -186,7 +191,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_ld_wiq_6, ID(2, 70)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_ld_wiq_7, ID(2, 71)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_empty, ID(2, 72)),
+> -	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_trans_filt, ID(2, 73)),
+> +	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_trans_filt, ID(2, 73)),	/* imx93 specific*/
+>  
+>  	/* counter3 specific events */
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_collision_0, ID(3, 64)),
+> @@ -198,7 +203,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_collision_6, ID(3, 70)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_collision_7, ID(3, 71)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_full, ID(3, 72)),
+> -	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_wr_trans_filt, ID(3, 73)),
+> +	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_wr_trans_filt, ID(3, 73)),	/* imx93 specific*/
+>  
+>  	/* counter4 specific events */
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_open_0, ID(4, 64)),
+> @@ -210,7 +215,7 @@ static struct attribute *ddr_perf_events_attrs[] = {
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_open_6, ID(4, 70)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_row_open_7, ID(4, 71)),
+>  	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pmon_ld_rdq2_rmw, ID(4, 72)),
+> -	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt, ID(4, 73)),
+> +	IMX9_DDR_PMU_EVENT_ATTR(eddrtq_pm_rd_beat_filt, ID(4, 73)),	/* imx93 specific*/
+>  
+>  	/* counter5 specific events */
+>  	IMX9_DDR_PMU_EVENT_ATTR(ddrc_qx_valid_start_0, ID(5, 64)),
+> @@ -245,9 +250,26 @@ static struct attribute *ddr_perf_events_attrs[] = {
+>  	NULL,
+>  };
+>  
+> +static umode_t
+> +ddr_perf_events_attrs_is_visible(struct kobject *kobj,
+> +				       struct attribute *attr, int unused)
+> +{
+> +	struct pmu *pmu = dev_get_drvdata(kobj_to_dev(kobj));
+> +	struct ddr_pmu *ddr_pmu = to_ddr_pmu(pmu);
+> +
+> +	if ((!strcmp(attr->name, "eddrtq_pm_rd_trans_filt") ||
+> +		!strcmp(attr->name, "eddrtq_pm_wr_trans_filt") ||
+> +		!strcmp(attr->name, "eddrtq_pm_rd_beat_filt")) &&
+> +		!is_imx93(ddr_pmu))
+> +		return 0;
+> +
+> +	return attr->mode;
+> +}
+> +
+>  static const struct attribute_group ddr_perf_events_attr_group = {
+>  	.name = "events",
+>  	.attrs = ddr_perf_events_attrs,
+> +	.is_visible = ddr_perf_events_attrs_is_visible,
+>  };
+>  
+>  PMU_FORMAT_ATTR(event, "config:0-15");
+> @@ -369,36 +391,47 @@ static void ddr_perf_counter_local_config(struct ddr_pmu *pmu, int config,
+>  	}
+>  }
+>  
+> -static void ddr_perf_monitor_config(struct ddr_pmu *pmu, int event,
+> -				    int counter, int axi_id, int axi_mask)
+> +static void imx93_ddr_perf_monitor_config(struct ddr_pmu *pmu, int event,
+> +					  int counter, int axi_id, int axi_mask)
+>  {
+>  	u32 pmcfg1, pmcfg2;
+>  
+>  	pmcfg1 = readl_relaxed(pmu->base + PMCFG1);
+>  
+> -	if (counter == 2 && event == 73)
+> -		pmcfg1 |= PMCFG1_RD_TRANS_FILT_EN;
+> -	else if (counter == 2 && event != 73)
+> -		pmcfg1 &= ~PMCFG1_RD_TRANS_FILT_EN;
+> -
+> -	if (counter == 3 && event == 73)
+> -		pmcfg1 |= PMCFG1_WR_TRANS_FILT_EN;
+> -	else if (counter == 3 && event != 73)
+> -		pmcfg1 &= ~PMCFG1_WR_TRANS_FILT_EN;
+> -
+> -	if (counter == 4 && event == 73)
+> -		pmcfg1 |= PMCFG1_RD_BT_FILT_EN;
+> -	else if (counter == 4 && event != 73)
+> -		pmcfg1 &= ~PMCFG1_RD_BT_FILT_EN;
+> +	if (event == 73) {
+> +		switch (counter) {
+> +		case 2:
+> +			pmcfg1 |= MX93_PMCFG1_RD_TRANS_FILT_EN;
+> +			break;
+> +		case 3:
+> +			pmcfg1 |= MX93_PMCFG1_WR_TRANS_FILT_EN;
+> +			break;
+> +		case 4:
+> +			pmcfg1 |= MX93_PMCFG1_RD_BT_FILT_EN;
+> +			break;
+> +		}
+> +	} else {
+> +		switch (counter) {
+> +		case 2:
+> +			pmcfg1 &= ~MX93_PMCFG1_RD_TRANS_FILT_EN;
+> +			break;
+> +		case 3:
+> +			pmcfg1 &= ~MX93_PMCFG1_WR_TRANS_FILT_EN;
+> +			break;
+> +		case 4:
+> +			pmcfg1 &= ~MX93_PMCFG1_RD_BT_FILT_EN;
+> +			break;
+> +		}
+> +	}
 
-Thanks, will fix in v2. It does highlight we lack a struct pmu in pmus
-for legacy types like hardware, hence switching to faults as a
-software event that has a PMU. Perhaps we should just make legacy PMUs
-anyway, to avoid special case logic. Anyway, not in these changes.
+how about
+	u32 mask[] = { 	MX93_PMCFG1_RD_TRANS_FILT_EN, 
+			MX93_PMCFG1_WR_TRANS_FILT_EN,
+			MX93_PMCFG1_RD_BT_FILT_EN
+	      	     };
 
-Thanks,
-Ian
+	if (couter >=2 && counter <= 4)
+		event == 73 ? pmcfg1 |= mask[counter - 2] :
+			      pmcfg1 &= ~mask[counter - 2];
 
-> Thanks,
-> Kan
-> > ...
-> > perf_event_attr:
-> >   type                             1 (PERF_TYPE_SOFTWARE)
-> >   size                             136
-> >   config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
-> >   sample_type                      IDENTIFIER
-> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
-G
-> >   disabled                         1
-> >   inherit                          1
-> >   enable_on_exec                   1
-> >   exclude_guest                    1
-> > ...
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf stat -vv -e faults true
-> > ...
-> > perf_event_attr:
-> >   type                             1 (software)
-> >   size                             136
-> >   config                           0x2 (PERF_COUNT_SW_PAGE_FAULTS)
-> >   sample_type                      IDENTIFIER
-> >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNIN=
-G
-> >   disabled                         1
-> >   inherit                          1
-> >   enable_on_exec                   1
-> >   exclude_guest                    1
-> > ...
-> > ```
-> >
-> > It feels more consistent to do this, rather than only prefer a PMU
-> > name when a hard coded name isn't available.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/perf_event_attr_fprintf.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/uti=
-l/perf_event_attr_fprintf.c
-> > index 8f04d3b7f3ec..29e66835da3a 100644
-> > --- a/tools/perf/util/perf_event_attr_fprintf.c
-> > +++ b/tools/perf/util/perf_event_attr_fprintf.c
-> > @@ -7,6 +7,8 @@
-> >  #include <linux/types.h>
-> >  #include <linux/perf_event.h>
-> >  #include "util/evsel_fprintf.h"
-> > +#include "util/pmu.h"
-> > +#include "util/pmus.h"
-> >  #include "trace-event.h"
-> >
-> >  struct bit_names {
-> > @@ -75,9 +77,12 @@ static void __p_read_format(char *buf, size_t size, =
-u64 value)
-> >  }
-> >
-> >  #define ENUM_ID_TO_STR_CASE(x) case x: return (#x);
-> > -static const char *stringify_perf_type_id(u64 value)
-> > +static const char *stringify_perf_type_id(struct perf_pmu *pmu, u32 ty=
-pe)
-> >  {
-> > -     switch (value) {
-> > +     if (pmu)
-> > +             return pmu->name;
-> > +
-> > +     switch (type) {
-> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_HARDWARE)
-> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_SOFTWARE)
-> >       ENUM_ID_TO_STR_CASE(PERF_TYPE_TRACEPOINT)
-> > @@ -175,9 +180,9 @@ do {                                               =
-               \
-> >  #define print_id_unsigned(_s)        PRINT_ID(_s, "%"PRIu64)
-> >  #define print_id_hex(_s)     PRINT_ID(_s, "%#"PRIx64)
-> >
-> > -static void __p_type_id(char *buf, size_t size, u64 value)
-> > +static void __p_type_id(struct perf_pmu *pmu, char *buf, size_t size, =
-u64 value)
-> >  {
-> > -     print_id_unsigned(stringify_perf_type_id(value));
-> > +     print_id_unsigned(stringify_perf_type_id(pmu, value));
-> >  }
-> >
-> >  static void __p_config_hw_id(char *buf, size_t size, u64 value)
-> > @@ -246,7 +251,7 @@ static void __p_config_id(char *buf, size_t size, u=
-32 type, u64 value)
-> >  #define p_sample_type(val)   __p_sample_type(buf, BUF_SIZE, val)
-> >  #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE=
-, val)
-> >  #define p_read_format(val)   __p_read_format(buf, BUF_SIZE, val)
-> > -#define p_type_id(val)               __p_type_id(buf, BUF_SIZE, val)
-> > +#define p_type_id(val)               __p_type_id(pmu, buf, BUF_SIZE, v=
-al)
-> >  #define p_config_id(val)     __p_config_id(buf, BUF_SIZE, attr->type, =
-val)
-> >
-> >  #define PRINT_ATTRn(_n, _f, _p, _a)                  \
-> > @@ -262,6 +267,7 @@ do {                                               =
-       \
-> >  int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
-> >                            attr__fprintf_f attr__fprintf, void *priv)
-> >  {
-> > +     struct perf_pmu *pmu =3D perf_pmus__find_by_type(attr->type);
-> >       char buf[BUF_SIZE];
-> >       int ret =3D 0;
-> >
+
+Frank
+
+>  
+> -	pmcfg1 &= ~FIELD_PREP(PMCFG1_ID_MASK, 0x3FFFF);
+> -	pmcfg1 |= FIELD_PREP(PMCFG1_ID_MASK, axi_mask);
+> -	writel(pmcfg1, pmu->base + PMCFG1);
+> +	pmcfg1 &= ~FIELD_PREP(MX93_PMCFG1_ID_MASK, 0x3FFFF);
+> +	pmcfg1 |= FIELD_PREP(MX93_PMCFG1_ID_MASK, axi_mask);
+> +	writel_relaxed(pmcfg1, pmu->base + PMCFG1);
+>  
+>  	pmcfg2 = readl_relaxed(pmu->base + PMCFG2);
+> -	pmcfg2 &= ~FIELD_PREP(PMCFG2_ID, 0x3FFFF);
+> -	pmcfg2 |= FIELD_PREP(PMCFG2_ID, axi_id);
+> -	writel(pmcfg2, pmu->base + PMCFG2);
+> +	pmcfg2 &= ~FIELD_PREP(MX93_PMCFG2_ID, 0x3FFFF);
+> +	pmcfg2 |= FIELD_PREP(MX93_PMCFG2_ID, axi_id);
+> +	writel_relaxed(pmcfg2, pmu->base + PMCFG2);
+>  }
+>  
+>  static void ddr_perf_event_update(struct perf_event *event)
+> @@ -514,7 +547,7 @@ static int ddr_perf_event_add(struct perf_event *event, int flags)
+>  		ddr_perf_event_start(event, flags);
+>  
+>  	/* read trans, write trans, read beat */
+> -	ddr_perf_monitor_config(pmu, event_id, counter, cfg1, cfg2);
+> +	imx93_ddr_perf_monitor_config(pmu, event_id, counter, cfg1, cfg2);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
