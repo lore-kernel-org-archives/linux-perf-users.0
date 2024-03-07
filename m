@@ -1,63 +1,66 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8343617722
-	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 17:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40933130E3B
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 17:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709833226; cv=none; b=QtRXgMNxD4p956GI+EhUIj6eNu6a4/MkNNeDKO9mNMZpUWY96hKALMKcRfVBfBTR90N00aUqj7P5NOwHecIIox4rvwFqNFyAOq8rGBPtFFQTTY0oaSzY6ymXBzYcOxhnmLi77EdFrQihravdGXGRieL2ZQ5CkRNsk8zgruQHa7w=
+	t=1709833228; cv=none; b=cSJ4i9z+ibYW0t/f1dtdDfwaLtRMV4axvrKFj4H5e8r9dmpxZu/eUI4Q7/4kkSWOAJz2HVCdKJV4k5vactz2EeAzU7hujytW05x7sjNk9NUn1ejEgxRTAwzQTuGMsz4XRjtxAVN4FIrGkk3HpysD5FCDZVAdgEt/Qpfqb2vhwAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709833226; c=relaxed/simple;
-	bh=E3FbZVS+5W3wbr+dJuJyj/1HOsmFrMm/1IuvFUVVRH0=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=W/oH51vLUdQPLsFcd9nU3VEW2cst2Rs+OjQkFrcLerDrZhjKzT7vtlBMSJjczZ3aAbT39vAdUhjFABtq9vTDRgXS4MwcoxLOUcwex3D29AIovz55xtsDfln326YannI0fn0yD9q5K4SCYEwl3jm3I0aI02e+kwgt3VGS/BdT+LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R/vsGspl; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1709833228; c=relaxed/simple;
+	bh=zZMAjPThw9neF0rFKQqn5K77WjJlmrho8flUA6F99+Y=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=H1n/22qKpx4M4fDk7wJUaunPDZkdc+4Wh4riNBcvzdNQSCze57JwoAkXas4I7NwUG7N4vuVni4KqbRnB4jYXhRueEEAa4R/dcohSQH3Mw72rNuYyvVgEdecBYFW0GJnk/7d3Zz77NsDqepwsURDm/ZaS13nVGVoVXA8ldlXEp3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BBCU+VEa; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R/vsGspl"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc743cc50a6so1748626276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 09:40:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BBCU+VEa"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6047fed0132so18474097b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 09:40:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709833223; x=1710438023; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bbbX1TG2BWH8q29heBgqTmsbGlvHWc4NiRRO0gtZGa8=;
-        b=R/vsGsplAP1XeaKUaGssGFV3Jf/w9ffek3jYJuqxpMC4zVJ19bJA/rUezCKcVs9WGC
-         1biXVidEdXIlbaq4LJLgwaKzwIK1XoG7fc5pOqUkYhK5umWgxyffY8UwIoGW9JVF8iBy
-         vMza7ML4zNx7kpBhx1Bem8qj+4FkFzR+5et/iWu/0rAC6wPgnpvuTHK2FrG+t+0dYkdk
-         LW9SyLopXx54FpFS9a1bof4LwufHYoXBD0WFYMVWuSKVfM/dyUEKIpH5ow/0sZtTt0ZL
-         /4nPtYpbD+zEv9rti9ww7JNY98MUtmGf4Fff+i+AV1+rS5quNJntwRSyzgTYewLjpkdX
-         yfxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709833223; x=1710438023;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1709833225; x=1710438025; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bbbX1TG2BWH8q29heBgqTmsbGlvHWc4NiRRO0gtZGa8=;
-        b=jfXRTPLPiHPTyOAdfi2yxFEuSqO3yvrElTPzn0ud1vG42gxUdY4bbI6pertbaF5VFG
-         gZ7qBOjKFtj2eoAnmOGjBUGNIzWkfjydLB+ZMgOT/oQpoeY1+0CAwECCyuURwQefYEv7
-         nsZwhfrCkl0iM5WjwicVh2RFbQUIxFPbibeR4GAZjX73r0cOO8di/ANf4Sd1sJT33A4J
-         muPFn7EZubi0idd8FKG9ibz5qZBGfiE+Npsi6xcIcrRi+JvAnuuCh5CCWH8SAetm71C8
-         n2IhfDBlbOYz3IaQpGQVBtH1o0w0xYJEhuaVW1WbkGcIVQQikyTi2ji3MYOAOREPh1Vz
-         mynQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhkdJDQnqfD0kNOO/cmfxJuowRKY3oRVqpCgh3uUGuIjP6/as+e4D/uISxKrpeqKPaK4of4U4vI9ffSPLMSrBX2NBBdryluQ77ot5v60l2Lw==
-X-Gm-Message-State: AOJu0Yz/TY+++ZqxifnLCo/ZxqalSgizJHpkVHFPJ0+KuDHtTkoJCDCK
-	GopmgnHY4CEcbwRLtcd+85WZQs5iDGRv/8fBoHarx0cVE/bB2mlvVzOtgahwsb/sKMT+7s6pv42
-	QrH9RKg==
-X-Google-Smtp-Source: AGHT+IHUl58MW/cUd9uCSmHmzkjs13fm14Tb3sqkIFHwDcPvVmTVkoCqoONHriLNYdM1AH7uH9UBW2dY5WQp
+        bh=N0YwbzbP5FZTLjIONNJPfeJ1/VNBa3uXm6yCLCKpsEw=;
+        b=BBCU+VEabxMteTfQQ0YbHVlpHHe8FZCvBBaJuRl4Dd2futHm+M7gLFgEm9cbD5HfRv
+         AkTTF1anKkI8rsJM60PhVXHTQKXIZQ/76oHeCipPZiyPPHX4pMTP+1a4KBt+K3dlTxyp
+         DHdahlfx6ZGDQ8Y18lRdQlPJHx18P8Md6fYB/aWVXLcPfwSyS45VAwjyexZZ2h3nWIO1
+         MorSdSMkWEea2ckkLN8JCqDjlDMd86pKrPwksEoVB8DlfLwqitQmCIXYQEc9uL/NVm0q
+         W5QUaao5yRj6qWEguF41Tg2Ec3d59IYeM4PpGJGsDMVOhebrvk3fWLOJxYClev8/mIMl
+         Rd1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709833225; x=1710438025;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N0YwbzbP5FZTLjIONNJPfeJ1/VNBa3uXm6yCLCKpsEw=;
+        b=C+XHV9A11YcNLT4Wmatifa1Xm0amvDl5PZgGA9N8gy16jrAzOOlHVIPSwQHhpH0Evl
+         js75m8SBHYgqHkzJ6j1xrhaSvtBhBzh5e2fxyxNHmS+a+eD9/y8R3RttJ/bW3zyHPxoe
+         tNf+7oh5GmDP2GYxpp7UT9RmlLk4eoV2VSJddrhR6AgsBrxXshCXEgRT4rFAJWeJChze
+         nFsIDIhZO0ouKSGXAyIilJkBqI/W2ajmukQUKpun1jeAhkrydf/C+HfxKhH8kwEGVlho
+         yD3LinQMa2aigoklZ6EQqH5joZ5WoQRl82RxnbtX3uDxuxqN8oTyXKGXo4n6Xf+kdqM4
+         DyGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQntj8z5yg4UHCB2PbsokqfvIleEJGOKBAPX6y39WyS8lL3fDu5mkWsSgv4OUpviAK2cuKL2O6OPCf3SteKpBEU8yDbipaF1P10VVqFqEODQ==
+X-Gm-Message-State: AOJu0YwFY4lireYOPcMzOPCuAp5PiT4Dr9TuuztC5j3DwoWgeCdOnIQT
+	ZJm86z5FE1w4S0x3O91ehJ1cq6YPlufQ8C72wDtReJXffAiQMMsLy87v28idmc5qBwCmdadtIPl
+	oA1G9Og==
+X-Google-Smtp-Source: AGHT+IFi8pCz2tpIMM3csNv3mom/3CvP1+s6BJFEc09p5I4T6sVJFww7h8sxsrG+ozo/wb7E1npkw5pklwNz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:47d6:1de1:237a:6728])
- (user=irogers job=sendgmr) by 2002:a05:6902:18d3:b0:dc7:865b:22c6 with SMTP
- id ck19-20020a05690218d300b00dc7865b22c6mr762132ybb.8.1709833222401; Thu, 07
- Mar 2024 09:40:22 -0800 (PST)
-Date: Thu,  7 Mar 2024 09:39:49 -0800
-Message-Id: <20240307173955.3982040-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:3581:b0:609:4293:23eb with SMTP
+ id fr1-20020a05690c358100b00609429323ebmr4024349ywb.10.1709833225272; Thu, 07
+ Mar 2024 09:40:25 -0800 (PST)
+Date: Thu,  7 Mar 2024 09:39:50 -0800
+In-Reply-To: <20240307173955.3982040-1-irogers@google.com>
+Message-Id: <20240307173955.3982040-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240307173955.3982040-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 0/6] Extra verbose/perf-list details
+Subject: [PATCH v2 1/6] perf list: Add tracepoint encoding to detailed output
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,32 +72,94 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add more encoding detail and raw event details in perf list. Add PMU
-name and reverse lookup from config to event name to
-perf_event_attr_fprintf. This makes the verbose output easier to read,
-and the perf list information more specific.
+The tracepoint id holds the config value and is probed in determining
+what an event is. Add reading of the id so that we can display the
+event encoding as:
 
-v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
-    becomes "Raw event descriptor" add assert to keep term numbers in
-    sync, fix a commit message.
+```
+$ perf list --details
+...
+  alarmtimer:alarmtimer_cancel                       [Tracepoint event]
+        tracepoint/config=0x18c/
+...
+```
 
-Ian Rogers (6):
-  perf list: Add tracepoint encoding to detailed output
-  perf pmu: Drop "default_core" from alias names
-  perf list: Allow wordwrap to wrap on commas
-  perf list: Give more details about raw event encodings
-  perf tools: Use pmus to describe type from attribute
-  perf tools: Add/use PMU reverse lookup from config to name
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/print-events.c | 35 ++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
- tools/perf/builtin-list.c                 | 21 ++++-
- tools/perf/util/perf_event_attr_fprintf.c | 26 +++++--
- tools/perf/util/pmu.c                     | 83 +++++++++++++++++++-
- tools/perf/util/pmu.h                     |  4 +
- tools/perf/util/pmus.c                    | 94 +++++++++++++++++++++++
- tools/perf/util/pmus.h                    |  1 +
- tools/perf/util/print-events.c            | 55 +++++++------
- 7 files changed, 243 insertions(+), 41 deletions(-)
-
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 7b54e9385442..e0d2b49bab66 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -9,6 +9,7 @@
+ #include <unistd.h>
+ 
+ #include <api/fs/tracing_path.h>
++#include <api/io.h>
+ #include <linux/stddef.h>
+ #include <linux/perf_event.h>
+ #include <linux/zalloc.h>
+@@ -92,34 +93,48 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+ 
+ 		evt_items = scandirat(events_fd, sys_dirent->d_name, &evt_namelist, NULL, alphasort);
+ 		for (int j = 0; j < evt_items; j++) {
++			/*
++			 * Buffer sized at twice the max filename length + 1
++			 * separator + 1 \0 terminator.
++			 */
++			char buf[NAME_MAX * 2 + 2];
++			/* 16 possible hex digits and 22 other characters and \0. */
++			char encoding[16 + 22];
+ 			struct dirent *evt_dirent = evt_namelist[j];
+-			char evt_path[MAXPATHLEN];
+-			int evt_fd;
++			struct io id;
++			__u64 config;
+ 
+ 			if (evt_dirent->d_type != DT_DIR ||
+ 			    !strcmp(evt_dirent->d_name, ".") ||
+ 			    !strcmp(evt_dirent->d_name, ".."))
+ 				goto next_evt;
+ 
+-			snprintf(evt_path, sizeof(evt_path), "%s/id", evt_dirent->d_name);
+-			evt_fd = openat(dir_fd, evt_path, O_RDONLY);
+-			if (evt_fd < 0)
++			snprintf(buf, sizeof(buf), "%s/id", evt_dirent->d_name);
++			io__init(&id, openat(dir_fd, buf, O_RDONLY), buf, sizeof(buf));
++
++			if (id.fd < 0)
++				goto next_evt;
++
++			if (io__get_dec(&id, &config) < 0) {
++				close(id.fd);
+ 				goto next_evt;
+-			close(evt_fd);
++			}
++			close(id.fd);
+ 
+-			snprintf(evt_path, MAXPATHLEN, "%s:%s",
++			snprintf(buf, sizeof(buf), "%s:%s",
+ 				 sys_dirent->d_name, evt_dirent->d_name);
++			snprintf(encoding, sizeof(encoding), "tracepoint/config=0x%llx/", config);
+ 			print_cb->print_event(print_state,
+ 					/*topic=*/NULL,
+-					/*pmu_name=*/NULL,
+-					evt_path,
++					/*pmu_name=*/NULL, /* really "tracepoint" */
++					/*event_name=*/buf,
+ 					/*event_alias=*/NULL,
+ 					/*scale_unit=*/NULL,
+ 					/*deprecated=*/false,
+ 					"Tracepoint event",
+ 					/*desc=*/NULL,
+ 					/*long_desc=*/NULL,
+-					/*encoding_desc=*/NULL);
++					encoding);
+ next_evt:
+ 			free(evt_namelist[j]);
+ 		}
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
