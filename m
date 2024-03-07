@@ -1,182 +1,452 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A201C12A154;
-	Thu,  7 Mar 2024 13:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709816648; cv=fail; b=stArhjDXhlfOzGj1zlNdWnf2pWMRLDATQmR/Qq7KDjyykfSZ1EsNsoaeQ02Vj8nuyi0YL7vy2rJT13u/F6R8DjEg2E+5xdis0kaj1j/fi5MYIiua/XLO6ZX+dg2XLjfcpbF3+STYz/2NTK5A61S/GhD38ahtPY6yCDHGaRPgD0w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709816648; c=relaxed/simple;
-	bh=9BDruaWuO0r7+PFYmNRNdjP1FFHyMlq3l/o3+CY9520=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kNzPUMBpR3YcNzbt4d8bimx7C+eFR6y+qhitC3ijfXI7ld68gANRdfsdYjgrV0M1rssVNsVrweZLkKmm78OUzD3XL/ea1plNZG+e6dfp5fY4CAoel4DMStfUEkRtf1QmIsyyUWmCBg8Qziv7HQfb3gzAbWtyzhs6mcr1Rc3Mm+s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=avzTPkCv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=m8msBu8q; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C2E1B96E;
+	Thu,  7 Mar 2024 14:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709822090; cv=none; b=UuiJxnirQZ36IWWEyFMMpmNp2zc4+3cyi4It/Wu8ZuIFeXRrlROwg515UlrO5RtHsgfB+7k2Tva84jYRLaFyh9qp829LhnAv6s3hIhRDxhcJ4Z9vHbSILvMfs5685M1Q+LXZNiH6/pLoiV5/F25xxsb10W2KaOsLjYCwazL9KqI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709822090; c=relaxed/simple;
+	bh=vJuI5mBdP+Bu2oOxq3NaWAoAvqNCz5fIZ0+M1GDcD7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QG/apGtjiLM8gJ93ZIDQcjV4K8Qkhh1D6tpFrWCc5TLY7NXPvHoUFhcxDdrcBYy9d6v5jPHRQC9qAE9CcnjP+ACHmQKv87WCopcg5A2UQ3eWZ++IeDBCk+ReD4BiBXpX28N2+7h5mQA1jlWztllpsl7S1siyi10OvS8QnlvIsUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMB3+pz8; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="avzTPkCv";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="m8msBu8q"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4279n1LP019127;
-	Thu, 7 Mar 2024 13:02:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
- b=avzTPkCvHrlgvD30IrHDrHg6R2u00JD8KYQZKGu8mSBLQPQGHlkaCbGQDy5ciItxalTo
- hH4vx1if5C+U2oT2N9uJCpXcWzjYlErDzS9K7sEfgGtNE/Csf1ewDiFbjNUa7+/DXw0d
- 9zWgw5O+cuIeYi7zaBz3Hji9QEP7FkQpuOqjwwehlkDegjpiaUGg8Y41QB/uPzW2gEJI
- BQi3Yv/rYu3n+R5tWsE9AIQBTCX2x4kR+m3RTDMaKVdUxcdGIaxZ61C5n9/LTMxCTJt5
- tgc6Qt3C5W39EuHv8VzmSFC/mvMR7t2i3kexKFW6eEifC4cWw58W3rSb6/xvrOc3BuHD RQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkv5dm2p3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 07 Mar 2024 13:02:25 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 427BVRLV031985;
-	Thu, 7 Mar 2024 13:02:22 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wktjb68p1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 07 Mar 2024 13:02:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WlToNqntDNB7iVpWidTjsMILatr4OFWlDdF0wg/s6fvjEvsvfaUaBrAbbmRTCxXd994hL+WAnyGW/8s+4DPjReBCxk93yJB4Q9uY7tGicSkfe7IbP0gGKiPV6XB28hyzJqcqVNMhfdG2jKE5nHGC8oJVuH/SdJt02CMRA2arCX3YsFxxnNku9yA+VkFsSLYdFZeS1QTbIVMFgJk1BAaVz19f0NwEfq/dvRgh/TLZNuEsHRj1ArExNfNtIB8Jcs5pXIBehSggNqiyclB+nq7aSpkaL7qdO+ybUyNW1CloBAg++NlY5Z0xX7bwht+db1JsXH0cyUFvi8n0prkzSig9+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
- b=ksFfvTl8CIOLeHOagSvTqX+xQeSKdAAtcK9CnepdbsJYPS02H3zEqSS8MW5diE18eXDYoRMApM9xqDDwS0IRua3QtQh4X/j7ooj41nqg0R3GbdAXaMEplSO+opUgEg9kGEJiCX6PZeSoZPeqHcebrIwRQS7YwYweje/Lm4ygpdmrbJSevNoAMnZDtSuiaNtD05qcY1RPzio18odEmoylBKSlHrvj7FtC/LNSjaat+wHZRfzai5YsRTDRAk8vLEIUPb17uIww1Qygcn3JROi1kyiCJIna1QPJ9tCgZo3qXJat+xVraQFV7iBfWTCt6w2FmPidhtqsTm9XrVA9/q1SnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
- b=m8msBu8q70GRVbr9cZWxgKYUK16TzJQkd/aWLSWSXPlP9OWRT/ZiJa8NxV7elSIDYA2G7J03kNZa/i4yeoaVzbMU7kIW5cnfqYwkhAi3QRkabD9rgrE/hTyETa0uDXkhhEe82xJDDx7gu3gOdj9YURu7tg4Yq/qgcy+CqSBSfBU=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CH3PR10MB7495.namprd10.prod.outlook.com (2603:10b6:610:15f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
- 2024 13:02:19 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 13:02:19 +0000
-Message-ID: <85ffb1f4-75d9-4ac5-9be4-9f80b122679d@oracle.com>
-Date: Thu, 7 Mar 2024 13:02:12 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] perf vendor events arm64:: Add i.MX95 DDR
- Performance Monitor metrics
-To: Xu Yang <xu.yang_2@nxp.com>, Frank.li@nxp.com, will@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, imx@lists.linux.dev
-References: <20240307095730.3792680-1-xu.yang_2@nxp.com>
- <20240307095730.3792680-7-xu.yang_2@nxp.com>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20240307095730.3792680-7-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR01CA0110.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::15) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMB3+pz8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709822089; x=1741358089;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=vJuI5mBdP+Bu2oOxq3NaWAoAvqNCz5fIZ0+M1GDcD7Y=;
+  b=IMB3+pz8tOwNX/rTY23aIEDWmPpxbdTO0NLjfbkFeu/CH8oB6TcRVBL7
+   7Ttw7/EGfwDfiQtO8280+u2eeqF8NeUyAqpzGclgiumAZV4xiRSR3wvd6
+   WxTwWb1IVeW9xDdiyiYKeGL8qe4ErYBdi5a7Ts9TGw017jmqAYfPuHD6U
+   R4A/C7wDCLPEFhE4lLxSJ/O//p3/znft9NBJ2o82MkwWqyUsQlB7ODUWj
+   QDpX26zsRtPtM9zx9AvEmd+Tnmbl7Uy9rATWCod30qLcw0iD3fXL83X4C
+   3rkxdMHOE/FCNfn7bdeyktOMwafbcq6IfuCnou71BOXfVlt2qXWGsQ9Ok
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15214245"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="15214245"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 06:34:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="10197849"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 06:34:43 -0800
+Received: from [10.213.180.166] (kliang2-mobl1.ccr.corp.intel.com [10.213.180.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id E3782580D54;
+	Thu,  7 Mar 2024 06:34:40 -0800 (PST)
+Message-ID: <f8f6df3a-2061-4ee1-8d69-735361f83cdd@linux.intel.com>
+Date: Thu, 7 Mar 2024 09:34:39 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB7495:EE_
-X-MS-Office365-Filtering-Correlation-Id: 40442c00-3613-44e4-941f-08dc3ea6d1d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	bTZ7DwKZRkYrYUzBzZBZZuZzAkjuqihlOr0iO/eKztk3HWMWwHs2mE/KKcXdkoRwRnP/S5l25+iIs7AJKqdicTZbWIAwkZdf279z7Dn0rRarKfo6o9v9p3QU2yTvPJmgeupMPexrXjnS0yARvHBipKGm9Vn0i9Gm6/qBdOdQzKdPcleLP4GMZY3bTIzG77M9f6NvufXZkO8D7AW58BvhBj3UTYYCzbLUZOHJBmgUo0erC29lPs6RjTBlah0SiQw3KF7TYHDDQOHuq/tysNTPrvCdJ01T6sJqsa7HMZJc+fuLunOuFTOcDT16v6K9hXwj0unQqvS329jOmNbuef6vcLpz7iunc3yRunK8nC55I0v69jypQhT6Q5nNaw5tghPoiZ+FlINc+Zoc48j6YFqQCu3ZRuB22LxSlp58lWFJ0W5A4QsEHXdBZ6Kp2B8qKxFnARuldYUUuV7kX8TbzU4JFqisZRSy3s0A63RsOufH1/6vXDes5TKtTUvXgAI8UXulXSkTXr77L8BNmEMxfmAA+K7rC9R8Pl/lUAXndxg6zOmNYnpMLfOPsYox9rJGEjmlOVrEzkoNaPYxBVH7ibjDbh4T5UrHsHKrOjTUFUBy3AWjYkckOc4HEJTyRgChgOC8ybv3IknrVThX/f+pTk0DMA==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?RUFpM29zU3NycTFtTzlrS2NGZStvblJWd3EvaDA2cTg0bndqR0lFK1N6cmY0?=
- =?utf-8?B?bml1V0dkSCtNcyt2UW5QUFBOT20xb2ZWdUY4WHJWekFIMVk1UDlqaWxBUWgv?=
- =?utf-8?B?RkRMZUhRZHBlTnhTVCs2VEJHWEowYXhSY2lFck11Ykxhd0ZtU1ViWk15UjUv?=
- =?utf-8?B?dEp5MFdmeURrMXlQR25LcGdwSE9rR1RYbXpXeXZTMWFScU04TmZialM5Wk9K?=
- =?utf-8?B?ZllJWmRpRy9oM05Gd0F0WU5vUjluUVFLbUxqdzJOMzRvMXhDVUV0WDJKQStP?=
- =?utf-8?B?VFRKTmtQalZqZmhreUw1aG9GQ3dHZmU1WXVmM0pRSUYyY25KbHIrc1Z3bVFx?=
- =?utf-8?B?bFNsR09qZHJuR0NOQkxqdURUbi9kWEhXNGNsTHZVTXUzOWVZNE9CQmpmaFBq?=
- =?utf-8?B?eGtFaDVWcGhWMzZGakI5cUh3TDNrZllYaVNSRllIMWNQK0c3a3E5YkhoMVJD?=
- =?utf-8?B?M0ZRYWpCck5kNE1WeE9uSEg5SjNLdTZjNFEzeXMxZ3FoTmgrQ0ZicjRBU09Y?=
- =?utf-8?B?TlczYVRSYlFmMm9kUVQ2eTJuWUI5aldsMEtBeWJ1L2huOHhNeVZHQVZKbE1I?=
- =?utf-8?B?UDRrSWh0M1lFQWhFNi9TU1dhVEhyU2dBY1V2V2JYZFlyazRnT1N1TndhWkJ4?=
- =?utf-8?B?T3NwdFNFcWF3dWNOcHdzMzVmOTZsRWVsSmdiYzd5N0FGenpUK25hNlFqdi9H?=
- =?utf-8?B?UHBwVWxnYmxQYU1sR1RHeWtPaVg0STVyQlRoMWpkVkZrTWJPMTlqd2hPNkdk?=
- =?utf-8?B?WkdFZE1SamllYnNvZU1rY2ZaanE1R1J1TUFlL3g2UlB6M2dBYzVuT1orNnJK?=
- =?utf-8?B?a1BzcGl5U0p2ckVyVlR5V29ackpDZkFIaGNEYUpXRXdhZE9pVVdqZkdPMVRu?=
- =?utf-8?B?clNRWjcrM0NOTGVUZFUzbTNvQlpKMTF3N2I2Q3Q5Nk5KRHZYakRRTTlFVENu?=
- =?utf-8?B?a1ZsTWtaUFBSM1BrVVhKT3RLeU51aGtXUG5ra051amRpL1Q0Z0gxUlNDNjhQ?=
- =?utf-8?B?NEE5YmxHMGVEUGV5VUh0VEhreDdOblNpZnB6OTNOYnFKaUp4YWJlUW5NM2dZ?=
- =?utf-8?B?UjdaR0gvVFdNS2RNOHp5cUtjZUIvbDJRczEzMURwNkJ2dVhMdi9LS2dFcVIv?=
- =?utf-8?B?SDVhbnRhcXhvS3BzVGgxd25FUW11alFoQ1lxd0R1SlRxQXIrdDIwMU84dHhB?=
- =?utf-8?B?N0tQOEZlTlRSVmZ5R2l2Y2ZHTXdPSUhCZDNvSm9McjZROFpLNTMrSWRHUC9I?=
- =?utf-8?B?N2hyaWVtUGFNU2dRMWlNWVQ5MDhmekRndUN0YytieEYybFBSOGk4aDc1TG0r?=
- =?utf-8?B?VGwxNEZSYVpqb01ZNitPNit3a1NHbmZCdzd5aDJzUUpzbXYxOWdxNlY1M3FC?=
- =?utf-8?B?eGJ6RzdiZmovWEpOR2pIMXUwRUQ2V3ZXTUdpNHEwaC9vZlFPVmVYeWpTYUFz?=
- =?utf-8?B?UkNac1VLaU9tWHZ2OEgrVWgxVkJBZEJPTU0wek9PUnUxL1VkTUFzUE5VR25k?=
- =?utf-8?B?amJTdmZWc3VFdlhwMFNpS3JTSk42RVB6NFZjbWk1aFpkVlRjY2xCYUd4WmNP?=
- =?utf-8?B?NEFaSEFDa0xEM042aHdQSW9LdjNQYU9UWWkrWmErcE1oODUzQmRiWjB1NHIy?=
- =?utf-8?B?UytoUEFkZTh4VldmQ2pGMnZ0STZBcFlsNEsxQ09PYUEyRzhEZ0w1U1dFK01y?=
- =?utf-8?B?azZ1Z0lxRWl1eFdnNG8zMFBpQlorQ2lXYWhteGF4SmJ2WTBsVTdtTHFoRnFJ?=
- =?utf-8?B?VG1jTlBjZmdRVDJGdk9CT282WjJiWXVKZkFtZHBXSWRRVlZKQkFNY1IrTzdp?=
- =?utf-8?B?ZCtHRC9iSnpaU3Q3bTVOTHl0OGZ1Y3dOVkRnM2ZQM2t1SWxTMDhQNk8yNWlj?=
- =?utf-8?B?L2YzSHdMUGp0SHVmbkpwajZqMzhRNHZYV3kyWFZqUXk2UUhYV0FRbXllbXRY?=
- =?utf-8?B?clZ2RUF2KzhHMHhsRWhWVzhxeDlOVDRBWWZaKzdBbGZZb0tDaUZtV0FaMmNl?=
- =?utf-8?B?NnRPZzhkRTVvR05Oa2Y3RWZOYTRyM245T3RsdFFYbWJYSU5FaHI5eXBsVG9R?=
- =?utf-8?B?NTZEWG9GcDRkNy9xTHB3QktRWnNDbEtvTVlNSFhiaEpTSm1RdW5XWnFaaFYr?=
- =?utf-8?B?NUlkcDVVYUk1MFd1ODZzS1MzM1hSVTZGODA1Nkw5aDBxd09YL3ZVQ29IeVh6?=
- =?utf-8?B?R2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	CqovrHxpQSL8jDC0cvMMFemPHCDLGIAmXxS/AB3R6L/cSOHYIPkrlwoSzq9FQvdRM8NtbNW/03Nd2XFIodVszg374dtGOqyFzLfqsgyO0wsR822bItVGdh8USf0O6jh8inxwVi9vVB0eCdZkGygTp82Vz4c9DVW7Gl9YKqQxtY1QpScPCrdR/iTqR9cw3qdV1dlxxguBFz8viTqyP171HcUVnoUmwKpOnZO/MrPdPRaJGiA4kMu6hsJumZ/41e1RNovjAf455gOKdL+GZgbTzoJjM0uIepLw62koqOHIquYCzVufIH1tKz1DqtA6FaGnweUHnfIRttDjDQoXtU5mevKh+MGn2GLXBIhlVhtg5ONjftRXW4jxEp7h0sYsdP1Cv+EWeaKWfaDKhm5QOfTj1YTgwmt6AZbvbTwEfAzf4VU/CCtCHjNU0T2cqXRC1oIi8T22g7GJwLxYfXhMVAdAJAQ19pYhhppWjVKaCh0h2kGsthSxflstmuvYRYRgZg8iwhwXfUmS8p3894bbr8DtS0XTFsvwJrjWjKWbMlflBL3+Fjn/xcQPelTmcjquhph25j+EcMiDSmysQ3N93prqLn0a9Fd1zyz/EkSxvy1tqEI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40442c00-3613-44e4-941f-08dc3ea6d1d1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 13:02:18.9699
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uHktPmVa6cxVmo38Pt0ErnUgqIDwGprOI4q3h3NUENUu+Jpev9eZ/NIgUDRtka5rx/ctV1IsrEOujKI8tdQQ4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7495
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- spamscore=0 phishscore=0 mlxscore=0 malwarescore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403070087
-X-Proofpoint-GUID: n-6QZKdnaBOYuzKzpsmEyIQDMkjOlv4b
-X-Proofpoint-ORIG-GUID: n-6QZKdnaBOYuzKzpsmEyIQDMkjOlv4b
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/6] perf list: Give more details about raw event
+ encodings
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Yang Jihong <yangjihong1@huawei.com>, James Clark <james.clark@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240307081412.3933750-1-irogers@google.com>
+ <20240307081412.3933750-5-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240307081412.3933750-5-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07/03/2024 09:57, Xu Yang wrote:
-> Add JSON metrics for i.MX95 DDR Performance Monitor.
+
+
+On 2024-03-07 3:14 a.m., Ian Rogers wrote:
+> List all the PMUs, not just the first core one, and list real format
+> specifiers with value ranges.
 > 
-> Reviewed-by: Ian Rogers<irogers@google.com>
-> Reviewed-by: Frank Li<Frank.Li@nxp.com>
-> Signed-off-by: Xu Yang<xu.yang_2@nxp.com>
+> Before:
+> ```
+> $ perf list
+> ...
+>   rNNN                                               [Raw hardware event descriptor]
+>   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+>        [(see 'man perf-list' on how to encode it)]
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint]
+> ...
+> ```
+> 
+> After:
+> ```
+> $ perf list
+> ...
+>   rNNN                                               [Raw hardware event descriptor]
+>   cpu/event=0..255,pc,edge,.../modifier              [Raw hardware event descriptor]
+>        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
+>   breakpoint//modifier                               [Raw hardware event descriptor]
+>   cstate_core/event=0..0xffffffffffffffff/modifier   [Raw hardware event descriptor]
+>   cstate_pkg/event=0..0xffffffffffffffff/modifier    [Raw hardware event descriptor]
+>   i915/i915_eventid=0..0x1fffff/modifier             [Raw hardware event descriptor]
+>   intel_bts//modifier                                [Raw hardware event descriptor]
+>   intel_pt/ptw,event,cyc_thresh=0..15,.../modifier   [Raw hardware event descriptor]
+>   kprobe/retprobe/modifier                           [Raw hardware event descriptor]
+>   msr/event=0..0xffffffffffffffff/modifier           [Raw hardware event descriptor]
+>   power/event=0..255/modifier                        [Raw hardware event descriptor]
+>   software//modifier                                 [Raw hardware event descriptor]
 
-FWIW, Please note that I gave a RB tag here:
-https://lore.kernel.org/linux-perf-users/dd69cee0-ac14-4e20-9255-367240b1dbc8@oracle.com/
+Software apparently is not a raw hardware event. Ideally, we should have
+a consist name. E.g.,
+software//modifier	[Raw Software event descriptor]
+tracepoint//modifier	[Raw Tracepoint event descriptor]
 
+If it's too complex, I guess using [event descriptor] or just dropping
+it should be OK for me as well.
+
+>   tracepoint//modifier                               [Raw hardware event descriptor]
+>   uncore_arb/event=0..255,edge,inv,.../modifier      [Raw hardware event descriptor]
+>   uncore_cbox/event=0..255,edge,inv,.../modifier     [Raw hardware event descriptor]
+>   uncore_clock/event=0..255/modifier                 [Raw hardware event descriptor]
+>   uncore_imc_free_running/event=0..255,umask=0..255/modifier[Raw hardware event descriptor]
+>   uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier[Raw hardware event descriptor]
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint]
+> ...
+> ```
+> 
+> With '--details' provide more details on the formats encoding:
+> ```
+>   cpu/event=0..255,pc,edge,.../modifier              [Raw hardware event descriptor]
+>        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
+>         cpu/event=0..255,pc,edge,offcore_rsp=0..0xffffffffffffffff,ldlat=0..0xffff,inv,
+>         umask=0..255,frontend=0..0xffffff,cmask=0..255,config=0..0xffffffffffffffff,
+>         config1=0..0xffffffffffffffff,config2=0..0xffffffffffffffff,config3=0..0xffffffffffffffff,
+>         name=string,period=number,freq=number,branch_type=(u|k|hv|any|...),time,
+>         call-graph=(fp|dwarf|lbr),stack-size=number,max-stack=number,nr=number,inherit,no-inherit,
+>         overwrite,no-overwrite,percore,aux-output,aux-sample-size=number/modifier
+>   breakpoint//modifier                               [Raw hardware event descriptor]
+>         breakpoint//modifier
+>   cstate_core/event=0..0xffffffffffffffff/modifier   [Raw hardware event descriptor]
+>         cstate_core/event=0..0xffffffffffffffff/modifier
+>   cstate_pkg/event=0..0xffffffffffffffff/modifier    [Raw hardware event descriptor]
+>         cstate_pkg/event=0..0xffffffffffffffff/modifier
+>   i915/i915_eventid=0..0x1fffff/modifier             [Raw hardware event descriptor]
+>         i915/i915_eventid=0..0x1fffff/modifier
+>   intel_bts//modifier                                [Raw hardware event descriptor]
+>         intel_bts//modifier
+>   intel_pt/ptw,event,cyc_thresh=0..15,.../modifier   [Raw hardware event descriptor]
+>         intel_pt/ptw,event,cyc_thresh=0..15,pt,notnt,branch,tsc,pwr_evt,fup_on_ptw,cyc,noretcomp,
+>         mtc,psb_period=0..15,mtc_period=0..15/modifier
+>   kprobe/retprobe/modifier                           [Raw hardware event descriptor]
+>         kprobe/retprobe/modifier
+>   msr/event=0..0xffffffffffffffff/modifier           [Raw hardware event descriptor]
+>         msr/event=0..0xffffffffffffffff/modifier
+>   power/event=0..255/modifier                        [Raw hardware event descriptor]
+>         power/event=0..255/modifier
+>   software//modifier                                 [Raw hardware event descriptor]
+>         software//modifier
+>   tracepoint//modifier                               [Raw hardware event descriptor]
+>         tracepoint//modifier
+>   uncore_arb/event=0..255,edge,inv,.../modifier      [Raw hardware event descriptor]
+>         uncore_arb/event=0..255,edge,inv,umask=0..255,cmask=0..31/modifier
+>   uncore_cbox/event=0..255,edge,inv,.../modifier     [Raw hardware event descriptor]
+>         uncore_cbox/event=0..255,edge,inv,umask=0..255,cmask=0..31/modifier
+>   uncore_clock/event=0..255/modifier                 [Raw hardware event descriptor]
+>         uncore_clock/event=0..255/modifier
+>   uncore_imc_free_running/event=0..255,umask=0..255/modifier[Raw hardware event descriptor]
+>         uncore_imc_free_running/event=0..255,umask=0..255/modifier
+>   uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier[Raw hardware event descriptor]
+>         uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c          | 55 +++++++++++++++++++-
+>  tools/perf/util/pmu.h          |  3 ++
+>  tools/perf/util/pmus.c         | 94 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/pmus.h         |  1 +
+>  tools/perf/util/print-events.c | 18 +------
+>  5 files changed, 153 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 24be587e3537..904725f03d29 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1603,6 +1603,55 @@ bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name)
+>  	return false;
+>  }
+>  
+> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_callback cb)
+> +{
+> +	static const char *const terms[] = {
+> +		"config=0..0xffffffffffffffff",
+> +		"config1=0..0xffffffffffffffff",
+> +		"config2=0..0xffffffffffffffff",
+> +		"config3=0..0xffffffffffffffff",
+> +		"name=string",
+> +		"period=number",
+> +		"freq=number",
+> +		"branch_type=(u|k|hv|any|...)",
+> +		"time",
+> +		"call-graph=(fp|dwarf|lbr)",
+> +		"stack-size=number",
+> +		"max-stack=number",
+> +		"nr=number",
+> +		"inherit",
+> +		"no-inherit",
+> +		"overwrite",
+> +		"no-overwrite",
+> +		"percore",
+> +		"aux-output",
+> +		"aux-sample-size=number",
+> +	};
+
+I think it's very likely we forget to update the const table when
+introducing a new term. In the parse-events.c, there is
+config_term_names[] to restore the name of terms. Can it be shared here?
+So every time a new term is introduced, the perf list can be updated
+automatically.
+
+Thanks,
+Kan
+> +	struct perf_pmu_format *format;
+> +	int ret;
+> +
+> +	list_for_each_entry(format, &pmu->format, list) {
+> +		perf_pmu_format__load(pmu, format);
+> +		ret = cb(state, format->name, (int)format->value, format->bits);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	if (!pmu->is_core)
+> +		return 0;
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(terms); i++) {
+> +		int config = PERF_PMU_FORMAT_VALUE_CONFIG;
+> +
+> +		if (i < PERF_PMU_FORMAT_VALUE_CONFIG_END)
+> +			config = i;
+> +
+> +		ret = cb(state, terms[i], config, /*bits=*/NULL);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+>  bool is_pmu_core(const char *name)
+>  {
+>  	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
+> @@ -1697,8 +1746,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+>  	pmu_add_cpu_aliases(pmu);
+>  	list_for_each_entry(event, &pmu->aliases, list) {
+>  		size_t buf_used;
+> +		int pmu_name_len;
+>  
+>  		info.pmu_name = event->pmu_name ?: pmu->name;
+> +		pmu_name_len = skip_duplicate_pmus
+> +			? pmu_name_len_no_suffix(info.pmu_name, /*num=*/NULL)
+> +			: (int)strlen(info.pmu_name);
+>  		info.alias = NULL;
+>  		if (event->desc) {
+>  			info.name = event->name;
+> @@ -1723,7 +1776,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+>  		info.encoding_desc = buf + buf_used;
+>  		parse_events_terms__to_strbuf(&event->terms, &sb);
+>  		buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
+> -				"%s/%s/", info.pmu_name, sb.buf) + 1;
+> +				"%.*s/%s/", pmu_name_len, info.pmu_name, sb.buf) + 1;
+>  		info.topic = event->topic;
+>  		info.str = sb.buf;
+>  		info.deprecated = event->deprecated;
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index e35d985206db..9f5284b29ecf 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -196,6 +196,8 @@ struct pmu_event_info {
+>  };
+>  
+>  typedef int (*pmu_event_callback)(void *state, struct pmu_event_info *info);
+> +typedef int (*pmu_format_callback)(void *state, const char *name, int config,
+> +				   const unsigned long *bits);
+>  
+>  void pmu_add_sys_aliases(struct perf_pmu *pmu);
+>  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
+> @@ -215,6 +217,7 @@ int perf_pmu__find_event(struct perf_pmu *pmu, const char *event, void *state, p
+>  int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load);
+>  void perf_pmu_format__set_value(void *format, int config, unsigned long *bits);
+>  bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name);
+> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_callback cb);
+>  
+>  bool is_pmu_core(const char *name);
+>  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 16505071d362..89b15ddeb24e 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -16,6 +16,7 @@
+>  #include "pmus.h"
+>  #include "pmu.h"
+>  #include "print-events.h"
+> +#include "strbuf.h"
+>  
+>  /*
+>   * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's sysfs
+> @@ -503,6 +504,99 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+>  	zfree(&aliases);
+>  }
+>  
+> +struct build_format_string_args {
+> +	struct strbuf short_string;
+> +	struct strbuf long_string;
+> +	int num_formats;
+> +};
+> +
+> +static int build_format_string(void *state, const char *name, int config,
+> +			       const unsigned long *bits)
+> +{
+> +	struct build_format_string_args *args = state;
+> +	unsigned int num_bits;
+> +	int ret1, ret2 = 0;
+> +
+> +	(void)config;
+> +	args->num_formats++;
+> +	if (args->num_formats > 1) {
+> +		strbuf_addch(&args->long_string, ',');
+> +		if (args->num_formats < 4)
+> +			strbuf_addch(&args->short_string, ',');
+> +	}
+> +	num_bits = bits ? bitmap_weight(bits, PERF_PMU_FORMAT_BITS) : 0;
+> +	if (num_bits <= 1) {
+> +		ret1 = strbuf_addf(&args->long_string, "%s", name);
+> +		if (args->num_formats < 4)
+> +			ret2 = strbuf_addf(&args->short_string, "%s", name);
+> +	} else if (num_bits > 8) {
+> +		ret1 = strbuf_addf(&args->long_string, "%s=0..0x%llx", name,
+> +				   ULLONG_MAX >> (64 - num_bits));
+> +		if (args->num_formats < 4) {
+> +			ret2 = strbuf_addf(&args->short_string, "%s=0..0x%llx", name,
+> +					   ULLONG_MAX >> (64 - num_bits));
+> +		}
+> +	} else {
+> +		ret1 = strbuf_addf(&args->long_string, "%s=0..%llu", name,
+> +				  ULLONG_MAX >> (64 - num_bits));
+> +		if (args->num_formats < 4) {
+> +			ret2 = strbuf_addf(&args->short_string, "%s=0..%llu", name,
+> +					   ULLONG_MAX >> (64 - num_bits));
+> +		}
+> +	}
+> +	return ret1 < 0 ? ret1 : (ret2 < 0 ? ret2 : 0);
+> +}
+> +
+> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, void *print_state)
+> +{
+> +	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
+> +	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+> +	struct perf_pmu *pmu = NULL;
+> +
+> +	if (skip_duplicate_pmus)
+> +		scan_fn = perf_pmus__scan_skip_duplicates;
+> +	else
+> +		scan_fn = perf_pmus__scan;
+> +
+> +	while ((pmu = scan_fn(pmu)) != NULL) {
+> +		struct build_format_string_args format_args = {
+> +			.short_string = STRBUF_INIT,
+> +			.long_string = STRBUF_INIT,
+> +			.num_formats = 0,
+> +		};
+> +		int len = pmu_name_len_no_suffix(pmu->name, /*num=*/NULL);
+> +		const char *desc = "(see 'man perf-list' or 'man perf-record' on how to encode it)";
+> +
+> +		if (!pmu->is_core)
+> +			desc = NULL;
+> +
+> +		strbuf_addf(&format_args.short_string, "%.*s/", len, pmu->name);
+> +		strbuf_addf(&format_args.long_string, "%.*s/", len, pmu->name);
+> +		perf_pmu__for_each_format(pmu, &format_args, build_format_string);
+> +
+> +		if (format_args.num_formats > 3)
+> +			strbuf_addf(&format_args.short_string, ",.../modifier");
+> +		else
+> +			strbuf_addf(&format_args.short_string, "/modifier");
+> +
+> +		strbuf_addf(&format_args.long_string, "/modifier");
+> +		print_cb->print_event(print_state,
+> +				/*topic=*/NULL,
+> +				/*pmu_name=*/NULL,
+> +				format_args.short_string.buf,
+> +				/*event_alias=*/NULL,
+> +				/*scale_unit=*/NULL,
+> +				/*deprecated=*/false,
+> +				"Raw hardware event descriptor",
+> +				desc,
+> +				/*long_desc=*/NULL,
+> +				format_args.long_string.buf);
+> +
+> +		strbuf_release(&format_args.short_string);
+> +		strbuf_release(&format_args.long_string);
+> +	}
+> +}
+> +
+>  bool perf_pmus__have_event(const char *pname, const char *name)
+>  {
+>  	struct perf_pmu *pmu = perf_pmus__find(pname);
+> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> index 94d2a08d894b..eec599d8aebd 100644
+> --- a/tools/perf/util/pmus.h
+> +++ b/tools/perf/util/pmus.h
+> @@ -18,6 +18,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
+>  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+>  
+>  void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
+> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, void *print_state);
+>  bool perf_pmus__have_event(const char *pname, const char *name);
+>  int perf_pmus__num_core_pmus(void);
+>  bool perf_pmus__supports_extended_type(void);
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> index e0d2b49bab66..3a7f14fe2390 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -416,8 +416,6 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
+>   */
+>  void print_events(const struct print_callbacks *print_cb, void *print_state)
+>  {
+> -	char *tmp;
+> -
+>  	print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
+>  			event_symbols_hw, PERF_COUNT_HW_MAX);
+>  	print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
+> @@ -441,21 +439,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
+>  			/*long_desc=*/NULL,
+>  			/*encoding_desc=*/NULL);
+>  
+> -	if (asprintf(&tmp, "%s/t1=v1[,t2=v2,t3 ...]/modifier",
+> -		     perf_pmus__scan_core(/*pmu=*/NULL)->name) > 0) {
+> -		print_cb->print_event(print_state,
+> -				/*topic=*/NULL,
+> -				/*pmu_name=*/NULL,
+> -				tmp,
+> -				/*event_alias=*/NULL,
+> -				/*scale_unit=*/NULL,
+> -				/*deprecated=*/false,
+> -				event_type_descriptors[PERF_TYPE_RAW],
+> -				"(see 'man perf-list' on how to encode it)",
+> -				/*long_desc=*/NULL,
+> -				/*encoding_desc=*/NULL);
+> -		free(tmp);
+> -	}
+> +	perf_pmus__print_raw_pmu_events(print_cb, print_state);
+>  
+>  	print_cb->print_event(print_state,
+>  			/*topic=*/NULL,
