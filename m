@@ -1,304 +1,105 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9A114F78;
-	Thu,  7 Mar 2024 03:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562A25767;
+	Thu,  7 Mar 2024 04:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709782083; cv=none; b=C3hHtY7AzSc1QI7Rz3oPgMir10L5ptAHcA6L2mQaedvPApCV80crteY1pGb8/s41YikAX3bMJ+6OOy4NvnjHr+wE0T8fbIsZH4NeJgdYadrdCw6UpkcKL3/l18AL6MJMLrUW03v/xO6TJ/sgwGt94YXfZMIxsW7K5kHwE8j5/3Y=
+	t=1709785229; cv=none; b=eXr1YBg/6CaXUr7BIrhgh00q9YOJp2pJUz889yMNTyXZxIJYIpZMLZ9BYMdEdMvEAasa0fCG9AI1sCkRX4ln29igYd/+QbLQLHxzwZV//w1n99yNfcC5BgAw0mVyBuqjTRaYCBpw4t4pjiw6ryEw0gMo5RMPpSD6+xys+DjvFro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709782083; c=relaxed/simple;
-	bh=KHdr03Dz9D0+bk1OD9MB4zgKTO/IXrHrWWSkxIyLymQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EroQ+rIo2IValz7vORUuCBBuzAWPwX3yHLnnpG3VFpaPrJfojN4q7BoOzqT6HpjLD79Ks2Jmy/9QzYx64A9XEhE5STwak9SAqbqEfrbzCpdysIk/cXjTpnQBf78M4TWFXETxbVpfBaA730W2+w2n22P/7+JN+yn4iaS0TPa+gbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFaVdReH; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1709785229; c=relaxed/simple;
+	bh=53JxyFKU3XAtE0lZPMuBF9A7iLQtuV0Q4p9eES+00j0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gvMTcyOjV8aWIidHIIvM+XzuiI9e3aFGhVp9b+0qhCtFQprQzIvUtXfLeyXfxmYaFOQSFDEqZWkj3c7xqv43TuD0xcCgWIax9yQmBXVbsBbF6mtWymzdUgbYdat+OIzCPP/9meLKLYbOcCCaJeMqcick0HhQX5dJ5VghngL0eMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFaVdReH"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dbae7b8ff2so3657265ad.3;
-        Wed, 06 Mar 2024 19:28:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709782081; x=1710386881; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RoMrqob6XzKrx2l68g3uNby2pIPa2rZQW8xZRw2X/0M=;
-        b=BFaVdReHGQSWivGSP3GqzHgms4/COs0wxpsp1UxcT0pfVmP3WemBX60wJcziHYNOwF
-         /95mTXb36EEEI+bIdqlZB/8fPbiB7rry+9fAwqC4ATlOUwRauu1oLv2awdADmoNGtFkH
-         ZaZoOQ8vLkw11zwAqtUMFc89f/3eTwZU9malOappUNFUR1TtHGk6thrYyB3lUR0Zqsaf
-         Sk5sZx71uRtERXOyhl2nb0OgPM38bD5iLt1MCmApewE62LgVzPNlN8nNN5eShi5tl7Vz
-         GkRranR9C2xmywBUdUv+GatW69+t2mMibsMOj0kT4NxK4dA+A3bOlnTbGns0wzNHaEOX
-         AySg==
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-299dba8fd24so258772a91.2;
+        Wed, 06 Mar 2024 20:20:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709782081; x=1710386881;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RoMrqob6XzKrx2l68g3uNby2pIPa2rZQW8xZRw2X/0M=;
-        b=XNXnSdhmsa/6UCByKDso/jhlzWG34A1Z2YHhhxPwcAWCpUACHh5ns/6JR00FJZLbLG
-         qDZp/kLh+1N34g/KM/ron9fbZl6zugj7gUrXdPjidxSijT2+CxneoqdntFlLIzS1mRqJ
-         +HVcx+o2/D6SVRbZaojBiBa3939+uoH/eddDpqJkv2P0I++7eOUi5G2ZTVbufsjvq/So
-         JbVRHh3u3OFdTYqKGYkGgprO9BbyFxkhX2Ib5A5o8NCt+mDfQ5gSlXcWqckB9H4qC400
-         HLwHy9b4KViwe9jgTIQBEfH1btBTMQj1f4DG6vtA+P0bRqQCO4s4ZI5Rl7E2K21tXdPc
-         yLUA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0B/Omkr8T9DA2O0M07K/NYnyklltVbRU4gj2rZRPIMHzjQh+1kF2edDHuW0YKsmAfPsl+RvGEdNvWfvq0kg1bjpfEw/YjZfzdPXvowPZRy5NvR9cZPYa40yfCn0ts9YLOe5mtqQ1ZAI/mfcF/aiehUxCVK9yPgzMmNJyhxwyrFlr39g==
-X-Gm-Message-State: AOJu0YxnG3u3Oq/pLn3fR79G3nE5G4wTCuUbX0qSC34lgf6jMIJ3StId
-	fp7E5AcqkrL03FSZDhFWkNQC2S94Vw+9jBYAePaLULypTGzzj+JO
-X-Google-Smtp-Source: AGHT+IF3jPKeUektLW+KNlDJ+Jd7EPB4xUij5sBZpclzvJfCYK52Km8Efp8bXa3IaLLUQKm3r7KFpw==
-X-Received: by 2002:a17:902:ecd1:b0:1dc:8c27:9a07 with SMTP id a17-20020a170902ecd100b001dc8c279a07mr8455112plh.31.1709782080902;
-        Wed, 06 Mar 2024 19:28:00 -0800 (PST)
-Received: from [192.168.255.10] ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id e8-20020a170902784800b001da001aed18sm13593993pln.54.2024.03.06.19.27.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 19:28:00 -0800 (PST)
-Message-ID: <8475706a-c6ba-45a2-b2ee-a4dc7f4621c5@gmail.com>
-Date: Thu, 7 Mar 2024 11:27:55 +0800
+        d=1e100.net; s=20230601; t=1709785227; x=1710390027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J+lcNCz0f80j0accvsGVgfR5v7RKJSfcCBpAdb7j5m0=;
+        b=EbJMVmC20/3fqzFy5NtcjvZKQCUtoAJ6sHekLFIOSxr5MlVg3DoTHpgolA6pyMybk1
+         s1UFJ/BEkeZ6jsSZ3f6LYPXx1YHvMsSeS/ryQNzdsreAZ0RWbZvkn6jrGc50JAL+0uh6
+         iJIdPmImF0pTe41NUgbfW10WiH8kjy0F20cRlFoh6+njhPOp7Bt7rHfXSGHPxvUGBLFe
+         4MJeG8i3Q62HnLKIA3BUt8YuESFrCjmlND77MR5Te60DiheUYeh9A4goe8UX2tFg1HAL
+         hMaErqBuIFXVF5xQ089bzapjTUYZ9HAsun1xeM5iArNtjE07EzKL/wdRZVazcJfYEa7e
+         HmGw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/YyaASI3TRCVf1PRIqbCsWY2la6AEwc0huSJ9EfI74Gy76JBF5fbAtRknjdux7hEYfViZmfZXIRV5EvDDyaqWD/TZcH7oGm86+4OIwmJ+kKTV+63IJTkn70twFJClUEuEFLyxXoAjxMIeuzNgDg==
+X-Gm-Message-State: AOJu0YxnhL/7iIC7eDzWXDRE8fF0KkU5pOgiJDManE++Q/3oH3mCOKk6
+	ocl51Joo9pgNzr0wRU2TleCU5L9HT53CmTAfKBivmoljS7IBCg9994gYE8tiLeNQ/IeW+k6OFJF
+	cSsW3g6Rw7unsf5ZUN3YAlBmrM24=
+X-Google-Smtp-Source: AGHT+IEJg/55esdoBBZ22UKlhPO5qyU5+AYFJ3a8FNzE2CU7mhAqtk9JrvYiIHJKnmMOglrVSM9M17uRpV+9QzJcIPQ=
+X-Received: by 2002:a17:90a:53e2:b0:29b:7244:c4eb with SMTP id
+ y89-20020a17090a53e200b0029b7244c4ebmr4288131pjh.42.1709785227553; Wed, 06
+ Mar 2024 20:20:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
- macros
-Content-Language: en-US
-To: Jim Mattson <jmattson@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Kan Liang <kan.liang@linux.intel.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
- <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-References: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
- <ZeepGjHCeSfadANM@google.com>
- <2677739b-bc84-43ee-ba56-a5e243148ceb@gmail.com>
- <CALMp9eQ531ZC-8-Y+gwLer9mCK-hZ9yVNQZAFE6z76RXkMNnPA@mail.gmail.com>
-From: Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <CALMp9eQ531ZC-8-Y+gwLer9mCK-hZ9yVNQZAFE6z76RXkMNnPA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240304230815.1440583-1-namhyung@kernel.org> <ZejshUg8XiQz5YGa@x1>
+In-Reply-To: <ZejshUg8XiQz5YGa@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 6 Mar 2024 20:20:15 -0800
+Message-ID: <CAM9d7cjfH7e5wiM9Zwfn_oCqL1tUvy1=c3RUuO=zvgTJVrU6oQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol histogram
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/2024 11:09 pm, Jim Mattson wrote:
-> On Wed, Mar 6, 2024 at 1:11 AM Like Xu <like.xu.linux@gmail.com> wrote:
->>
->> On 6/3/2024 7:22 am, Sean Christopherson wrote:
->>> +Mingwei
->>>
->>> On Thu, Aug 24, 2023, Dapeng Mi wrote:
->>>    diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->>>> index 7d9ba301c090..ffda2ecc3a22 100644
->>>> --- a/arch/x86/kvm/pmu.h
->>>> +++ b/arch/x86/kvm/pmu.h
->>>> @@ -12,7 +12,8 @@
->>>>                                         MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
->>>>
->>>>    /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
->>>> -#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
->>>> +#define fixed_ctrl_field(ctrl_reg, idx) \
->>>> +    (((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
->>>>
->>>>    #define VMWARE_BACKDOOR_PMC_HOST_TSC               0x10000
->>>>    #define VMWARE_BACKDOOR_PMC_REAL_TIME              0x10001
->>>> @@ -165,7 +166,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->>>>
->>>>       if (pmc_is_fixed(pmc))
->>>>               return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->>>> -                                    pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
->>>> +                                    pmc->idx - INTEL_PMC_IDX_FIXED) &
->>>> +                                    (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
->>>>
->>>>       return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->>>>    }
->>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->>>> index f2efa0bf7ae8..b0ac55891cb7 100644
->>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
->>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->>>> @@ -548,8 +548,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->>>>               setup_fixed_pmc_eventsel(pmu);
->>>>       }
->>>>
->>>> -    for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
->>>> -            pmu->fixed_ctr_ctrl_mask &= ~(0xbull << (i * 4));
->>>> +    for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
->>>> +            pmu->fixed_ctr_ctrl_mask &=
->>>> +                     ~intel_fixed_bits_by_idx(i,
->>>> +                                              INTEL_FIXED_0_KERNEL |
->>>> +                                              INTEL_FIXED_0_USER |
->>>> +                                              INTEL_FIXED_0_ENABLE_PMI);
->>>> +    }
->>>>       counter_mask = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
->>>>               (((1ull << pmu->nr_arch_fixed_counters) - 1) << INTEL_PMC_IDX_FIXED));
->>>>       pmu->global_ctrl_mask = counter_mask;
->>>> @@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->>>>                       pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
->>>>                       for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
->>>>                               pmu->fixed_ctr_ctrl_mask &=
->>>> -                                    ~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
->>>
->>> OMG, this might just win the award for most obfuscated PMU code in KVM, which is
->>> saying something.  The fact that INTEL_PMC_IDX_FIXED happens to be 32, the same
->>> bit number as ICL_FIXED_0_ADAPTIVE, is 100% coincidence.  Good riddance.
->>>
->>> Argh, and this goofy code helped introduce a real bug.  reprogram_fixed_counters()
->>> doesn't account for the upper 32 bits of IA32_FIXED_CTR_CTRL.
->>>
->>> Wait, WTF?  Nothing in KVM accounts for the upper bits.  This can't possibly work.
->>>
->>> IIUC, because KVM _always_ sets precise_ip to a non-zero bit for PEBS events,
->>> perf will _always_ generate an adaptive record, even if the guest requested a
->>> basic record.  Ugh, and KVM will always generate adaptive records even if the
->>> guest doesn't support them.  This is all completely broken.  It probably kinda
->>> sorta works because the Basic info is always stored in the record, and generating
->>> more info requires a non-zero MSR_PEBS_DATA_CFG, but ugh.
->>
->> Yep, it works at least on machines with both adaptive and pebs_full features.
->>
->> I remember one generation of Atom core (? GOLDMONT) that didn't have both
->> above PEBS sub-features, so we didn't set x86_pmu.pebs_ept on that platform.
->>
->> Mingwei or others are encouraged to construct use cases in KUT::pmu_pebs.flat
->> that violate guest-pebs rules (e.g., leak host state), as we all recognize that
->> testing
->> is the right way to condemn legacy code, not just lengthy emails.
->>
->>>
->>> Oh great, and it gets worse.  intel_pmu_disable_fixed() doesn't clear the upper
->>> bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set.  Unless I'm misreading the code,
->>> intel_pmu_enable_fixed() effectively doesn't clear ICL_FIXED_0_ADAPTIVE either,
->>> as it only modifies the bit when it wants to set ICL_FIXED_0_ADAPTIVE.
->>>
->>> *sigh*
->>>
->>> I'm _very_ tempted to disable KVM PEBS support for the current PMU, and make it
->>> available only when the so-called passthrough PMU is available[*].  Because I
->>> don't see how this is can possibly be functionally correct, nor do I see a way
->>> to make it functionally correct without a rather large and invasive series.
->>
->> Considering that I've tried the idea myself, I have no inclination towards
->> "passthrough PMU", and I'd like to be able to take the time to review that
->> patchset while we all wait for a clear statement from that perf-core man,
->> who don't really care about virtualization and don't want to lose control
->> of global hardware resources.
->>
->> Before we actually get to that ideal state you want, we have to deal with
->> some intermediate state and face to any users that rely on the current code,
->> you had urged to merge in a KVM document for vPMU, not sure how far
->> along that part of the work is.
->>
->>>
->>> Ouch.  And after chatting with Mingwei, who asked the very good question of
->>> "can this leak host state?", I am pretty sure that yes, this can leak host state.
->>
->> The Basic Info has a tsc field, I suspect it's the host-state-tsc.
->>
->>>
->>> When PERF_CAP_PEBS_BASELINE is enabled for the guest, i.e. when the guest has
->>> access to adaptive records, KVM gives the guest full access to MSR_PEBS_DATA_CFG
->>>
->>>        pmu->pebs_data_cfg_mask = ~0xff00000full;
->>>
->>> which makes sense in a vacuum, because AFAICT the architecture doesn't allow
->>> exposing a subset of the four adaptive controls.
->>>
->>> GPRs and XMMs are always context switched and thus benign, but IIUC, Memory Info
->>> provides data that might now otherwise be available to the guest, e.g. if host
->>> userspace has disallowed equivalent events via KVM_SET_PMU_EVENT_FILTER.
->>
->> Indeed, KVM_SET_PMU_EVENT_FILTER doesn't work in harmony with
->> guest-pebs, and I believe there is a big problem here, especially with the
->> lack of targeted testing.
->>
->> One reason for this is that we don't use this cockamamie API in our
->> large-scale production environments, and users of vPMU want to get real
->> runtime information about physical cpus, not just virtualised hardware
->> architecture interfaces.
->>
->>>
->>> And unless I'm missing something, LBRs are a full leak of host state.  Nothing
->>> in the SDM suggests that PEBS records honor MSR intercepts, so unless KVM is
->>> also passing through LBRs, i.e. is context switching all LBR MSRs, the guest can
->>> use PEBS to read host LBRs at will.
->>
->> KVM is also passing through LBRs when guest uses LBR but not at the
->> granularity of vm-exit/entry. I'm not sure if the LBR_EN bit is required
->> to get LBR information via PEBS, also not confirmed whether PEBS-lbr
->> can be enabled at the same time as independent LBR;
->>
->> I recall that PEBS-assist, per cpu-arch, would clean up this part of the
->> record when crossing root/non-root boundaries, or not generate record.
->>
->> We're looking forward to the tests that will undermine this perception.
->>
->> There are some devilish details during the processing of vm-exit and
->> the generation of host/guest pebs, and those interested can delve into
->> the short description in this SDM section "20.9.5 EPT-Friendly PEBS".
->>
->>>
->>> Unless someone chimes in to point out how PEBS virtualization isn't a broken mess,
->>> I will post a patch to effectively disable PEBS virtualization.
->>
->> There are two factors that affect the availability of guest-pebs:
->>
->> 1. the technical need to use core-PMU in both host/guest worlds;
->> (I don't think Googlers are paying attention to this part of users' needs)
-> 
-> Let me clear up any misperceptions you might have that Google alone is
-> foisting the pass-through PMU on the world. The work so far has been a
-> collaboration between Google and Intel. Now, AMD has joined the
-> collaboration as well. Mingwei is taking the lead on the project, but
-> Googlers are outnumbered by the x86 CPU vendors ten to one.
+On Wed, Mar 6, 2024 at 2:22=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Mon, Mar 04, 2024 at 03:08:11PM -0800, Namhyung Kim wrote:
+> > Hello,
+> >
+> > This is another series of memory optimization in perf annotate.
+> >
+> > v2 changes:
+> >  * fix a bug when offset is bigger than 16 bits
+> >
+> >
+> > When perf annotate (or perf report/top with TUI) processes samples, it
+> > needs to save the sample period (overhead) at instruction level.  For
+> > now, it allocates an array to do that for the whole symbol when it
+> > hits any new symbol.  This comes with a lot of waste since samples can
+> > be very few and instructions span to multiple bytes.
+> >
+> > For example, when a sample hits symbol 'foo' that has size of 100 and
+> > that's the only sample falls into the symbol.  Then it needs to
+> > allocate a symbol histogram (sym_hist) and the its size would be
+> >
+> >   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
+> >
+> > But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
+> > get worse if the symbol size is bigger (and it doesn't have many
+> > samples in different places).  Also note that it needs a separate
+> > histogram for each event.
+> >
+> > Let's split the sym_hist_entry and have it in a hash table so that it
+> > can allocate only necessary entries.
+> >
+> > No functional change intended.
+> >
+> > Thanks,
+> > Namhyung
+>
+> No difference before/after on that 'perf annotate --stdio2' for all
+> binaries in a perf record of building perf using the default binutils
+> objdump disassembler, etc.
+>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is such great news.
+Great, thanks for testing.
 
-> 
-> The pass-through PMU allows both the host and guest worlds to use the
-> core PMU, more so than the existing vPMU implementation. I assume your
-
-Can I further confirm that in any case, host/guest can use PMU resources,
-such as some special more accurate counters ? Is there an end of story
-for that static partitioning scheme ?
-
-> complaint is about the desire for host software to monitor guest
-> behavior with core PMU events while the guest is running. Today,
-> Google Cloud does this for fleet management, and losing this
-> capability is not something we are looking forward to. However, the
-> writing is on the wall: Coco is going to take this capability away
-> from us anyway.
-
-Coco pays a corresponding performance cost, and it's a paradox to hide
-any performance trace of coco-guests from host's point of view.
-
-Thanks for the input, Jim. Let me try to help.
-
-> 
->> 2. guest-pebs is temporarily disabled in the case of cross-mapping counter,
->> which reduces the number of performance samples collected by guest;
->>
->>>
->>> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
->>> index 41a4533f9989..a2f827fa0ca1 100644
->>> --- a/arch/x86/kvm/vmx/capabilities.h
->>> +++ b/arch/x86/kvm/vmx/capabilities.h
->>> @@ -392,7 +392,7 @@ static inline bool vmx_pt_mode_is_host_guest(void)
->>>
->>>    static inline bool vmx_pebs_supported(void)
->>>    {
->>> -       return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
->>> +       return false;
->>
->> As you know, user-space VMM may disable guest-pebs by filtering out the
->> MSR_IA32_PERF_CAPABILITIE.PERF_CAP_PEBS_FORMAT or CPUID.PDCM.
->>
->> In the end, if our great KVM maintainers insist on doing this,
->> there is obviously nothing I can do about it.
->>
->> Hope you have a good day.
->>
->>>    }
->>>
->>>    static inline bool cpu_has_notify_vmexit(void)
->>>
->>
+Namhyung
