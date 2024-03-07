@@ -1,105 +1,95 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562A25767;
-	Thu,  7 Mar 2024 04:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB67320E
+	for <linux-perf-users@vger.kernel.org>; Thu,  7 Mar 2024 05:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709785229; cv=none; b=eXr1YBg/6CaXUr7BIrhgh00q9YOJp2pJUz889yMNTyXZxIJYIpZMLZ9BYMdEdMvEAasa0fCG9AI1sCkRX4ln29igYd/+QbLQLHxzwZV//w1n99yNfcC5BgAw0mVyBuqjTRaYCBpw4t4pjiw6ryEw0gMo5RMPpSD6+xys+DjvFro=
+	t=1709788840; cv=none; b=Jmsp8qZ0s/QpJLqy0vFT6JpHaQZ7i6cSNdUxx851H57QluZpeEBFmT9uDymnCvQ+gr0F9RAi9KFP6cE61vvGQ4s/OXwBjKr2qqPWhg7G5zLCsA6yrtAVSF0kHk6MmkYaC6J6xtit9X6ydAhTrEHDDMQDBN/4DpMX5mo8WFgF5Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709785229; c=relaxed/simple;
-	bh=53JxyFKU3XAtE0lZPMuBF9A7iLQtuV0Q4p9eES+00j0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gvMTcyOjV8aWIidHIIvM+XzuiI9e3aFGhVp9b+0qhCtFQprQzIvUtXfLeyXfxmYaFOQSFDEqZWkj3c7xqv43TuD0xcCgWIax9yQmBXVbsBbF6mtWymzdUgbYdat+OIzCPP/9meLKLYbOcCCaJeMqcick0HhQX5dJ5VghngL0eMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1709788840; c=relaxed/simple;
+	bh=reJgXuWZvX9Km+Paa4xVhvcWJ0DeFLVwvc/JgsdYzww=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=gvW3nYX3A8MZ2zChNeTLV9Ux2YDyVz7DpsLfdC4GdmcCIUTwIWf84ItxXOHujfy+XFrT8lyk/qkjhMRhBIBjhWR3gTFxavJU8jSh+/c9wo9VHErWtylAQ1VsNB9g4/bCt8Kkoq2kHz2wkD0o3zJ2Mo3TNPk4DVhclKiOVvmsadc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajR+YYzb; arc=none smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-299dba8fd24so258772a91.2;
-        Wed, 06 Mar 2024 20:20:28 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajR+YYzb"
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5654f700705so505304a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Mar 2024 21:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709788836; x=1710393636; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=reJgXuWZvX9Km+Paa4xVhvcWJ0DeFLVwvc/JgsdYzww=;
+        b=ajR+YYzbufWX04Px3TyR6cWoF4AxN2V8C74Wlvjfcnf5ojqzxAXJmn+NSb8nMuv9vr
+         m318yLB2FMw0/LBjxsUy8eQO87qkCaGDiP4nQLnT99qQOBxJA9cfLi2EViAQSQOMXtvp
+         7Rw4aCvlhsFoObkV4RLLqs+RsYwiapJtjbCoUiHfc/DSrOt4eZ9lzdad4qC3zjb6faxM
+         1yLvLng002w0NeFPW9SY7i8VyaiYplpDSKQY45xl5I+y2DujP4UM7C5lHo7i1XQbjgrx
+         CSuwnZ9VK+c6uxMl12H3cGs5AfubmgMbX4Rr0z3TffvaUkIYEnVgTPQXmxznR5hpeyPc
+         rJOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709785227; x=1710390027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J+lcNCz0f80j0accvsGVgfR5v7RKJSfcCBpAdb7j5m0=;
-        b=EbJMVmC20/3fqzFy5NtcjvZKQCUtoAJ6sHekLFIOSxr5MlVg3DoTHpgolA6pyMybk1
-         s1UFJ/BEkeZ6jsSZ3f6LYPXx1YHvMsSeS/ryQNzdsreAZ0RWbZvkn6jrGc50JAL+0uh6
-         iJIdPmImF0pTe41NUgbfW10WiH8kjy0F20cRlFoh6+njhPOp7Bt7rHfXSGHPxvUGBLFe
-         4MJeG8i3Q62HnLKIA3BUt8YuESFrCjmlND77MR5Te60DiheUYeh9A4goe8UX2tFg1HAL
-         hMaErqBuIFXVF5xQ089bzapjTUYZ9HAsun1xeM5iArNtjE07EzKL/wdRZVazcJfYEa7e
-         HmGw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/YyaASI3TRCVf1PRIqbCsWY2la6AEwc0huSJ9EfI74Gy76JBF5fbAtRknjdux7hEYfViZmfZXIRV5EvDDyaqWD/TZcH7oGm86+4OIwmJ+kKTV+63IJTkn70twFJClUEuEFLyxXoAjxMIeuzNgDg==
-X-Gm-Message-State: AOJu0YxnhL/7iIC7eDzWXDRE8fF0KkU5pOgiJDManE++Q/3oH3mCOKk6
-	ocl51Joo9pgNzr0wRU2TleCU5L9HT53CmTAfKBivmoljS7IBCg9994gYE8tiLeNQ/IeW+k6OFJF
-	cSsW3g6Rw7unsf5ZUN3YAlBmrM24=
-X-Google-Smtp-Source: AGHT+IEJg/55esdoBBZ22UKlhPO5qyU5+AYFJ3a8FNzE2CU7mhAqtk9JrvYiIHJKnmMOglrVSM9M17uRpV+9QzJcIPQ=
-X-Received: by 2002:a17:90a:53e2:b0:29b:7244:c4eb with SMTP id
- y89-20020a17090a53e200b0029b7244c4ebmr4288131pjh.42.1709785227553; Wed, 06
- Mar 2024 20:20:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709788836; x=1710393636;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=reJgXuWZvX9Km+Paa4xVhvcWJ0DeFLVwvc/JgsdYzww=;
+        b=g4UhLHcVI4c9YeZR3og5AujXNt+9amvf6VyRTzYdn0nnPR9axRxs9uPKoXkRNeCZD2
+         MTKaDF310v2U1cegrzX9E0IT8Yjp468I4co1MN6W2pajX3JnmWJbBVLaDsdFhqW4+UkR
+         wtPXD0oHDDVrJVc/Hmgt87NgNzir1U3TCbB1U5Q9zS2bsNTunIGcnrqNxLXLCuturSgh
+         OqOzYsfVf/PwjdmcZuVVBYTpP4kZDFlJgeie6lVutLRfTCA3TCCGQmYTU2ybZ/Icw/mN
+         Do5Dctr9QqeD/kn4JmHjNOw9V+VdfGDZx+W5BP5Imotc2j3bZwlpghcwJ8rB9UpajyxR
+         cFRA==
+X-Gm-Message-State: AOJu0Yz+xN1pL7jDMd15Q8gDEv/r02qtt2uJozxWbq3gMxBiF3cVIhIm
+	acJOcqNyaxpOo8ockj19ocDd7R0zJKMDycxMI3MgOlASnDvaARxHYD0xZAg9wUtSlvHkzBvQo1S
+	1sQbgRy1VAJNRKmpSnkEKJUaUivTLJuJ0DOuBDg==
+X-Google-Smtp-Source: AGHT+IGogCAN74f74Jq/IHyR8nGTlaYn3kjn4ObyclmHMZHpKz5ZwDViDpuI8sfwyV9rpkNXE9qEkXdhn1zmeh+2COk=
+X-Received: by 2002:a50:c90d:0:b0:565:471b:c047 with SMTP id
+ o13-20020a50c90d000000b00565471bc047mr12827101edh.0.1709788836400; Wed, 06
+ Mar 2024 21:20:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304230815.1440583-1-namhyung@kernel.org> <ZejshUg8XiQz5YGa@x1>
-In-Reply-To: <ZejshUg8XiQz5YGa@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 6 Mar 2024 20:20:15 -0800
-Message-ID: <CAM9d7cjfH7e5wiM9Zwfn_oCqL1tUvy1=c3RUuO=zvgTJVrU6oQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] perf annotate: Improve memory usage for symbol histogram
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+From: M V V S Manoj Kumar <mvvsmanojkumar.mailinglist@gmail.com>
+Date: Thu, 7 Mar 2024 10:50:25 +0530
+Message-ID: <CAMZOccS0NcTSSHkJEiM6X5pM95OT98iwz152303qPnKdw49azA@mail.gmail.com>
+Subject: Proposal for Roofline Support in perf
+To: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 6, 2024 at 2:22=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Mon, Mar 04, 2024 at 03:08:11PM -0800, Namhyung Kim wrote:
-> > Hello,
-> >
-> > This is another series of memory optimization in perf annotate.
-> >
-> > v2 changes:
-> >  * fix a bug when offset is bigger than 16 bits
-> >
-> >
-> > When perf annotate (or perf report/top with TUI) processes samples, it
-> > needs to save the sample period (overhead) at instruction level.  For
-> > now, it allocates an array to do that for the whole symbol when it
-> > hits any new symbol.  This comes with a lot of waste since samples can
-> > be very few and instructions span to multiple bytes.
-> >
-> > For example, when a sample hits symbol 'foo' that has size of 100 and
-> > that's the only sample falls into the symbol.  Then it needs to
-> > allocate a symbol histogram (sym_hist) and the its size would be
-> >
-> >   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
-> >
-> > But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
-> > get worse if the symbol size is bigger (and it doesn't have many
-> > samples in different places).  Also note that it needs a separate
-> > histogram for each event.
-> >
-> > Let's split the sym_hist_entry and have it in a hash table so that it
-> > can allocate only necessary entries.
-> >
-> > No functional change intended.
-> >
-> > Thanks,
-> > Namhyung
->
-> No difference before/after on that 'perf annotate --stdio2' for all
-> binaries in a perf record of building perf using the default binutils
-> objdump disassembler, etc.
->
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+My name is M V V S Manoj Kumar, an open-source contributor to GCC with
+contributions to GCCRS [see
+here](https://github.com/Rust-GCC/gccrs/issues?q=assignee%3Amvvsmk+is%3Aclosed)
+and a research intern with the compilers group at IITH [website
+link](https://compilers.cse.iith.ac.in/), India. I'm writing to
+propose a project that aims to add roofline support to the perf tool.
 
-Great, thanks for testing.
+During my internship, I've gained significant experience in roofline
+analysis. This project involves incorporating micro-benchmarks to
+generate roofline data, initially using the Original roofline model
+outlined in the following paper:
+[paper](https://people.eecs.berkeley.edu/~kubitron/cs252/handouts/papers/RooflineVyNoYellow.pdf).
+We can later explore incorporating cache-aware rooflines
+[paper](https://www.inesc-id.pt/ficheiros/publicacoes/9068.pdf).
 
-Namhyung
+For testing and comparison, I have access to a laptop with an Intel
+10300H processor. This allows for comparison with tools like Intel
+Advisor, Likwid, and other open source toolkits.
+
+I believe your mentorship would be invaluable in guiding me through
+this project. I'd like to explore the perf codebase to gain a better
+understanding of its structure. I would be grateful for any advice you
+may have regarding exploring the codebase, suggesting initial "easy
+hacks" or beginner-friendly issues to contribute to, and pointing me
+towards appropriate communication channels within the perf community.
+
+Thank you for your time and consideration.
+
+Sincerely,
+
+M V V S Manoj Kumar
+mailing-list email : mvvsmanojkumar.mailinglist@gmail.com
+personal email : mvvsmanojkumar@gmail.com
+official email : compiler.intern.24005@cse.iith.ac.in
