@@ -1,347 +1,182 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D79B26AF5;
-	Thu,  7 Mar 2024 12:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709812958; cv=none; b=r8M+mR39Uba+nuL/5RYv4qqD/pn0VCn+Muu2iR7cxzugjuDXoIx9sGFx4S2088Fq2jELe8A1p4sOUzcONsSTTQC960MVVGyskS7nh6WhLVLgwoCgrvcpTiB2lt1EQA4QLioadeNgOGRjwCRBE8fzKak3PW9gXhgUWUn/ISB3AH0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709812958; c=relaxed/simple;
-	bh=jq/yLDCr7ooLKZzMBxV6A1cyASSSs5RmVDgW+iMhRus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PJ6ob/OZ4txTY8/f+qIWURPUxugZButblxOVhOiwbDehhfiam1bTuugtcan492Fh3bKrLhS2jUVfX2d8neM8/5iF8xZemZyyAQS/mRvEi6MVt9u+0m/YULMGwwkhi81n/OxLNhXr6PgneCKeErt4E0WVkBWbGOFg5foxvuNVOJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fN4mYmbG; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A201C12A154;
+	Thu,  7 Mar 2024 13:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709816648; cv=fail; b=stArhjDXhlfOzGj1zlNdWnf2pWMRLDATQmR/Qq7KDjyykfSZ1EsNsoaeQ02Vj8nuyi0YL7vy2rJT13u/F6R8DjEg2E+5xdis0kaj1j/fi5MYIiua/XLO6ZX+dg2XLjfcpbF3+STYz/2NTK5A61S/GhD38ahtPY6yCDHGaRPgD0w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709816648; c=relaxed/simple;
+	bh=9BDruaWuO0r7+PFYmNRNdjP1FFHyMlq3l/o3+CY9520=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kNzPUMBpR3YcNzbt4d8bimx7C+eFR6y+qhitC3ijfXI7ld68gANRdfsdYjgrV0M1rssVNsVrweZLkKmm78OUzD3XL/ea1plNZG+e6dfp5fY4CAoel4DMStfUEkRtf1QmIsyyUWmCBg8Qziv7HQfb3gzAbWtyzhs6mcr1Rc3Mm+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=avzTPkCv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=m8msBu8q; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fN4mYmbG"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dc1ff3ba1aso6130845ad.3;
-        Thu, 07 Mar 2024 04:02:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="avzTPkCv";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="m8msBu8q"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4279n1LP019127;
+	Thu, 7 Mar 2024 13:02:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
+ b=avzTPkCvHrlgvD30IrHDrHg6R2u00JD8KYQZKGu8mSBLQPQGHlkaCbGQDy5ciItxalTo
+ hH4vx1if5C+U2oT2N9uJCpXcWzjYlErDzS9K7sEfgGtNE/Csf1ewDiFbjNUa7+/DXw0d
+ 9zWgw5O+cuIeYi7zaBz3Hji9QEP7FkQpuOqjwwehlkDegjpiaUGg8Y41QB/uPzW2gEJI
+ BQi3Yv/rYu3n+R5tWsE9AIQBTCX2x4kR+m3RTDMaKVdUxcdGIaxZ61C5n9/LTMxCTJt5
+ tgc6Qt3C5W39EuHv8VzmSFC/mvMR7t2i3kexKFW6eEifC4cWw58W3rSb6/xvrOc3BuHD RQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wkv5dm2p3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 07 Mar 2024 13:02:25 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 427BVRLV031985;
+	Thu, 7 Mar 2024 13:02:22 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wktjb68p1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 07 Mar 2024 13:02:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WlToNqntDNB7iVpWidTjsMILatr4OFWlDdF0wg/s6fvjEvsvfaUaBrAbbmRTCxXd994hL+WAnyGW/8s+4DPjReBCxk93yJB4Q9uY7tGicSkfe7IbP0gGKiPV6XB28hyzJqcqVNMhfdG2jKE5nHGC8oJVuH/SdJt02CMRA2arCX3YsFxxnNku9yA+VkFsSLYdFZeS1QTbIVMFgJk1BAaVz19f0NwEfq/dvRgh/TLZNuEsHRj1ArExNfNtIB8Jcs5pXIBehSggNqiyclB+nq7aSpkaL7qdO+ybUyNW1CloBAg++NlY5Z0xX7bwht+db1JsXH0cyUFvi8n0prkzSig9+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
+ b=ksFfvTl8CIOLeHOagSvTqX+xQeSKdAAtcK9CnepdbsJYPS02H3zEqSS8MW5diE18eXDYoRMApM9xqDDwS0IRua3QtQh4X/j7ooj41nqg0R3GbdAXaMEplSO+opUgEg9kGEJiCX6PZeSoZPeqHcebrIwRQS7YwYweje/Lm4ygpdmrbJSevNoAMnZDtSuiaNtD05qcY1RPzio18odEmoylBKSlHrvj7FtC/LNSjaat+wHZRfzai5YsRTDRAk8vLEIUPb17uIww1Qygcn3JROi1kyiCJIna1QPJ9tCgZo3qXJat+xVraQFV7iBfWTCt6w2FmPidhtqsTm9XrVA9/q1SnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709812956; x=1710417756; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=32Xd4vG74gCf71WpQP/SsM5wd+5XoWj9D9vwMONqJCc=;
-        b=fN4mYmbG2i0xNRMxIIcGoAWlg2B43XitFsmZxJUsTmuEnvlsPgqDkjBn4+NShLCohj
-         GvVZuaBezGscjLVwOFOuhJVFHmAtme640fq+SC25gy07QgIQkCACzbFHblnFglkIcW2D
-         N1c9inexH+ke7AtuzUx70d2tiRXDQd7L7K+ObrdghqCnbCaM23zRwXxgQnDDODIj+XTt
-         UiyOoDb13OLmu6wly/a8Qmwq8a/B9zqWoxAoQq83xnrC8tkR1w9xKfIJ+JXBMtXjv9lU
-         mTzmQm/37aQ0gKkIS/XnBFRabPTWRLzN2fOE59YHsmZgCfBMfCXg68FrKvf5KHnR+sM4
-         qObA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709812956; x=1710417756;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=32Xd4vG74gCf71WpQP/SsM5wd+5XoWj9D9vwMONqJCc=;
-        b=WpfVnNbRKgh1V4uLwN9Q1qjmZMmkOh45+nxSoLIeyAz5cIUVlFdjGHPG2UO6r1onpr
-         ZWZbfGpT/UZWvsxBtEzGF5Edf9QiRSHe5PYktR4Fo/bOnJbDFXFlsY9L68NBZKhDAiDw
-         52scbJrUFM6BpduHS0Y228SxvMtxj4Rem52xVnTQu2kh2WijeFihz3oaFgsnxT8U7nop
-         5IdFPjI1XwF+0O+gySE8HjagwmxfS7lKFfXQr9X37da0nPaXiNUWjNnstv0qHh+K0Q4G
-         Q9syti44qhPRODg0FfTgRKFEqk7Y3DZv1y6KhUArvyhtXDPblZf8gE9hp7Hi2yyYC5M9
-         ebDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDAAfw6EK6bSJr2dntk212BueujseISHh8Ls4k8EeY+qdIYSLYsPUfk8TlWwKUlkkIVTMkXitL6n1rSSRapfdvUMLxs4IdSfu5eK08n8rO3znn70WNFgxUgGtd6/+1yydVUOoBcmEIWZl4B2XtmubF8xCv8EMMkhoZYoRQWrViV+tQ1A==
-X-Gm-Message-State: AOJu0YxeQzpQJ8w6Ebsih4s1US7Xeve5Yl5va1+6cBi06AlJHgRM0UAW
-	Vjmv93ljvHvzkFyGK5nC1wnRr4UFkowq+WQTQlrSb7kqy1v+NXax
-X-Google-Smtp-Source: AGHT+IHO2Tcyyo8b0ZOJtzXB28nrZnzZtAvNHlbs5a0WFXDRKhBQ87TY3wNqV65CXNKXG6lMakSUqQ==
-X-Received: by 2002:a17:902:e544:b0:1db:7195:5fca with SMTP id n4-20020a170902e54400b001db71955fcamr9330350plf.34.1709812956086;
-        Thu, 07 Mar 2024 04:02:36 -0800 (PST)
-Received: from [192.168.255.10] ([43.132.141.20])
-        by smtp.gmail.com with ESMTPSA id p24-20020a170903249800b001dbcfb4766csm14396800plw.226.2024.03.07.04.02.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 04:02:32 -0800 (PST)
-Message-ID: <8548ea3c-7ec6-4027-927f-fce9bbd5e6a3@gmail.com>
-Date: Thu, 7 Mar 2024 20:02:27 +0800
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kp4NcfQDoTMlwlaO7gQW3cVCrZyjHtpy1/q+AopxSZ0=;
+ b=m8msBu8q70GRVbr9cZWxgKYUK16TzJQkd/aWLSWSXPlP9OWRT/ZiJa8NxV7elSIDYA2G7J03kNZa/i4yeoaVzbMU7kIW5cnfqYwkhAi3QRkabD9rgrE/hTyETa0uDXkhhEe82xJDDx7gu3gOdj9YURu7tg4Yq/qgcy+CqSBSfBU=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by CH3PR10MB7495.namprd10.prod.outlook.com (2603:10b6:610:15f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26; Thu, 7 Mar
+ 2024 13:02:19 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
+ 13:02:19 +0000
+Message-ID: <85ffb1f4-75d9-4ac5-9be4-9f80b122679d@oracle.com>
+Date: Thu, 7 Mar 2024 13:02:12 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 7/7] perf vendor events arm64:: Add i.MX95 DDR
+ Performance Monitor metrics
+To: Xu Yang <xu.yang_2@nxp.com>, Frank.li@nxp.com, will@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, imx@lists.linux.dev
+References: <20240307095730.3792680-1-xu.yang_2@nxp.com>
+ <20240307095730.3792680-7-xu.yang_2@nxp.com>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240307095730.3792680-7-xu.yang_2@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR01CA0110.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::15) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with
- macros
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Kan Liang <kan.liang@linux.intel.com>, Like Xu <likexu@tencent.com>,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Zhang Xiong <xiong.y.zhang@intel.com>, Lv Zhiyuan <zhiyuan.lv@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-References: <20230824020546.1108516-1-dapeng1.mi@linux.intel.com>
- <ZeepGjHCeSfadANM@google.com>
- <2677739b-bc84-43ee-ba56-a5e243148ceb@gmail.com>
- <ZejPRlFpWNRs5jzp@google.com>
-From: Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <ZejPRlFpWNRs5jzp@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB7495:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40442c00-3613-44e4-941f-08dc3ea6d1d1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	bTZ7DwKZRkYrYUzBzZBZZuZzAkjuqihlOr0iO/eKztk3HWMWwHs2mE/KKcXdkoRwRnP/S5l25+iIs7AJKqdicTZbWIAwkZdf279z7Dn0rRarKfo6o9v9p3QU2yTvPJmgeupMPexrXjnS0yARvHBipKGm9Vn0i9Gm6/qBdOdQzKdPcleLP4GMZY3bTIzG77M9f6NvufXZkO8D7AW58BvhBj3UTYYCzbLUZOHJBmgUo0erC29lPs6RjTBlah0SiQw3KF7TYHDDQOHuq/tysNTPrvCdJ01T6sJqsa7HMZJc+fuLunOuFTOcDT16v6K9hXwj0unQqvS329jOmNbuef6vcLpz7iunc3yRunK8nC55I0v69jypQhT6Q5nNaw5tghPoiZ+FlINc+Zoc48j6YFqQCu3ZRuB22LxSlp58lWFJ0W5A4QsEHXdBZ6Kp2B8qKxFnARuldYUUuV7kX8TbzU4JFqisZRSy3s0A63RsOufH1/6vXDes5TKtTUvXgAI8UXulXSkTXr77L8BNmEMxfmAA+K7rC9R8Pl/lUAXndxg6zOmNYnpMLfOPsYox9rJGEjmlOVrEzkoNaPYxBVH7ibjDbh4T5UrHsHKrOjTUFUBy3AWjYkckOc4HEJTyRgChgOC8ybv3IknrVThX/f+pTk0DMA==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?RUFpM29zU3NycTFtTzlrS2NGZStvblJWd3EvaDA2cTg0bndqR0lFK1N6cmY0?=
+ =?utf-8?B?bml1V0dkSCtNcyt2UW5QUFBOT20xb2ZWdUY4WHJWekFIMVk1UDlqaWxBUWgv?=
+ =?utf-8?B?RkRMZUhRZHBlTnhTVCs2VEJHWEowYXhSY2lFck11Ykxhd0ZtU1ViWk15UjUv?=
+ =?utf-8?B?dEp5MFdmeURrMXlQR25LcGdwSE9rR1RYbXpXeXZTMWFScU04TmZialM5Wk9K?=
+ =?utf-8?B?ZllJWmRpRy9oM05Gd0F0WU5vUjluUVFLbUxqdzJOMzRvMXhDVUV0WDJKQStP?=
+ =?utf-8?B?VFRKTmtQalZqZmhreUw1aG9GQ3dHZmU1WXVmM0pRSUYyY25KbHIrc1Z3bVFx?=
+ =?utf-8?B?bFNsR09qZHJuR0NOQkxqdURUbi9kWEhXNGNsTHZVTXUzOWVZNE9CQmpmaFBq?=
+ =?utf-8?B?eGtFaDVWcGhWMzZGakI5cUh3TDNrZllYaVNSRllIMWNQK0c3a3E5YkhoMVJD?=
+ =?utf-8?B?M0ZRYWpCck5kNE1WeE9uSEg5SjNLdTZjNFEzeXMxZ3FoTmgrQ0ZicjRBU09Y?=
+ =?utf-8?B?TlczYVRSYlFmMm9kUVQ2eTJuWUI5aldsMEtBeWJ1L2huOHhNeVZHQVZKbE1I?=
+ =?utf-8?B?UDRrSWh0M1lFQWhFNi9TU1dhVEhyU2dBY1V2V2JYZFlyazRnT1N1TndhWkJ4?=
+ =?utf-8?B?T3NwdFNFcWF3dWNOcHdzMzVmOTZsRWVsSmdiYzd5N0FGenpUK25hNlFqdi9H?=
+ =?utf-8?B?UHBwVWxnYmxQYU1sR1RHeWtPaVg0STVyQlRoMWpkVkZrTWJPMTlqd2hPNkdk?=
+ =?utf-8?B?WkdFZE1SamllYnNvZU1rY2ZaanE1R1J1TUFlL3g2UlB6M2dBYzVuT1orNnJK?=
+ =?utf-8?B?a1BzcGl5U0p2ckVyVlR5V29ackpDZkFIaGNEYUpXRXdhZE9pVVdqZkdPMVRu?=
+ =?utf-8?B?clNRWjcrM0NOTGVUZFUzbTNvQlpKMTF3N2I2Q3Q5Nk5KRHZYakRRTTlFVENu?=
+ =?utf-8?B?a1ZsTWtaUFBSM1BrVVhKT3RLeU51aGtXUG5ra051amRpL1Q0Z0gxUlNDNjhQ?=
+ =?utf-8?B?NEE5YmxHMGVEUGV5VUh0VEhreDdOblNpZnB6OTNOYnFKaUp4YWJlUW5NM2dZ?=
+ =?utf-8?B?UjdaR0gvVFdNS2RNOHp5cUtjZUIvbDJRczEzMURwNkJ2dVhMdi9LS2dFcVIv?=
+ =?utf-8?B?SDVhbnRhcXhvS3BzVGgxd25FUW11alFoQ1lxd0R1SlRxQXIrdDIwMU84dHhB?=
+ =?utf-8?B?N0tQOEZlTlRSVmZ5R2l2Y2ZHTXdPSUhCZDNvSm9McjZROFpLNTMrSWRHUC9I?=
+ =?utf-8?B?N2hyaWVtUGFNU2dRMWlNWVQ5MDhmekRndUN0YytieEYybFBSOGk4aDc1TG0r?=
+ =?utf-8?B?VGwxNEZSYVpqb01ZNitPNit3a1NHbmZCdzd5aDJzUUpzbXYxOWdxNlY1M3FC?=
+ =?utf-8?B?eGJ6RzdiZmovWEpOR2pIMXUwRUQ2V3ZXTUdpNHEwaC9vZlFPVmVYeWpTYUFz?=
+ =?utf-8?B?UkNac1VLaU9tWHZ2OEgrVWgxVkJBZEJPTU0wek9PUnUxL1VkTUFzUE5VR25k?=
+ =?utf-8?B?amJTdmZWc3VFdlhwMFNpS3JTSk42RVB6NFZjbWk1aFpkVlRjY2xCYUd4WmNP?=
+ =?utf-8?B?NEFaSEFDa0xEM042aHdQSW9LdjNQYU9UWWkrWmErcE1oODUzQmRiWjB1NHIy?=
+ =?utf-8?B?UytoUEFkZTh4VldmQ2pGMnZ0STZBcFlsNEsxQ09PYUEyRzhEZ0w1U1dFK01y?=
+ =?utf-8?B?azZ1Z0lxRWl1eFdnNG8zMFBpQlorQ2lXYWhteGF4SmJ2WTBsVTdtTHFoRnFJ?=
+ =?utf-8?B?VG1jTlBjZmdRVDJGdk9CT282WjJiWXVKZkFtZHBXSWRRVlZKQkFNY1IrTzdp?=
+ =?utf-8?B?ZCtHRC9iSnpaU3Q3bTVOTHl0OGZ1Y3dOVkRnM2ZQM2t1SWxTMDhQNk8yNWlj?=
+ =?utf-8?B?L2YzSHdMUGp0SHVmbkpwajZqMzhRNHZYV3kyWFZqUXk2UUhYV0FRbXllbXRY?=
+ =?utf-8?B?clZ2RUF2KzhHMHhsRWhWVzhxeDlOVDRBWWZaKzdBbGZZb0tDaUZtV0FaMmNl?=
+ =?utf-8?B?NnRPZzhkRTVvR05Oa2Y3RWZOYTRyM245T3RsdFFYbWJYSU5FaHI5eXBsVG9R?=
+ =?utf-8?B?NTZEWG9GcDRkNy9xTHB3QktRWnNDbEtvTVlNSFhiaEpTSm1RdW5XWnFaaFYr?=
+ =?utf-8?B?NUlkcDVVYUk1MFd1ODZzS1MzM1hSVTZGODA1Nkw5aDBxd09YL3ZVQ29IeVh6?=
+ =?utf-8?B?R2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	CqovrHxpQSL8jDC0cvMMFemPHCDLGIAmXxS/AB3R6L/cSOHYIPkrlwoSzq9FQvdRM8NtbNW/03Nd2XFIodVszg374dtGOqyFzLfqsgyO0wsR822bItVGdh8USf0O6jh8inxwVi9vVB0eCdZkGygTp82Vz4c9DVW7Gl9YKqQxtY1QpScPCrdR/iTqR9cw3qdV1dlxxguBFz8viTqyP171HcUVnoUmwKpOnZO/MrPdPRaJGiA4kMu6hsJumZ/41e1RNovjAf455gOKdL+GZgbTzoJjM0uIepLw62koqOHIquYCzVufIH1tKz1DqtA6FaGnweUHnfIRttDjDQoXtU5mevKh+MGn2GLXBIhlVhtg5ONjftRXW4jxEp7h0sYsdP1Cv+EWeaKWfaDKhm5QOfTj1YTgwmt6AZbvbTwEfAzf4VU/CCtCHjNU0T2cqXRC1oIi8T22g7GJwLxYfXhMVAdAJAQ19pYhhppWjVKaCh0h2kGsthSxflstmuvYRYRgZg8iwhwXfUmS8p3894bbr8DtS0XTFsvwJrjWjKWbMlflBL3+Fjn/xcQPelTmcjquhph25j+EcMiDSmysQ3N93prqLn0a9Fd1zyz/EkSxvy1tqEI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40442c00-3613-44e4-941f-08dc3ea6d1d1
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 13:02:18.9699
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uHktPmVa6cxVmo38Pt0ErnUgqIDwGprOI4q3h3NUENUu+Jpev9eZ/NIgUDRtka5rx/ctV1IsrEOujKI8tdQQ4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7495
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ spamscore=0 phishscore=0 mlxscore=0 malwarescore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403070087
+X-Proofpoint-GUID: n-6QZKdnaBOYuzKzpsmEyIQDMkjOlv4b
+X-Proofpoint-ORIG-GUID: n-6QZKdnaBOYuzKzpsmEyIQDMkjOlv4b
 
-On 7/3/2024 4:17 am, Sean Christopherson wrote:
-> On Wed, Mar 06, 2024, Like Xu wrote:
->>>> @@ -595,7 +600,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->>>>    			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
->>>>    			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
->>>>    				pmu->fixed_ctr_ctrl_mask &=
->>>> -					~(1ULL << (INTEL_PMC_IDX_FIXED + i * 4));
->>>
->>> OMG, this might just win the award for most obfuscated PMU code in KVM, which is
->>> saying something.  The fact that INTEL_PMC_IDX_FIXED happens to be 32, the same
->>> bit number as ICL_FIXED_0_ADAPTIVE, is 100% coincidence.  Good riddance.
->>>
->>> Argh, and this goofy code helped introduce a real bug.  reprogram_fixed_counters()
->>> doesn't account for the upper 32 bits of IA32_FIXED_CTR_CTRL.
->>>
->>> Wait, WTF?  Nothing in KVM accounts for the upper bits.  This can't possibly work.
->>>
->>> IIUC, because KVM _always_ sets precise_ip to a non-zero bit for PEBS events,
->>> perf will _always_ generate an adaptive record, even if the guest requested a
->>> basic record.  Ugh, and KVM will always generate adaptive records even if the
->>> guest doesn't support them.  This is all completely broken.  It probably kinda
->>> sorta works because the Basic info is always stored in the record, and generating
->>> more info requires a non-zero MSR_PEBS_DATA_CFG, but ugh.
->>
->> Yep, it works at least on machines with both adaptive and pebs_full features.
+On 07/03/2024 09:57, Xu Yang wrote:
+> Add JSON metrics for i.MX95 DDR Performance Monitor.
 > 
-> *AND* if the guest uses PEBS exactly the same way that the Linux kernel uses PEBS.
-> 
->> Mingwei or others are encouraged to construct use cases in KUT::pmu_pebs.flat
->> that violate guest-pebs rules (e.g., leak host state), as we all recognize
->> that testing is the right way to condemn legacy code, not just lengthy emails.
-> 
-> *sigh*
-> 
-> diff --git a/x86/pmu_pebs.c b/x86/pmu_pebs.c
-> index f7b52b90..43e7a207 100644
-> --- a/x86/pmu_pebs.c
-> +++ b/x86/pmu_pebs.c
-> @@ -212,8 +212,12 @@ static void pebs_enable(u64 bitmask, u64 pebs_data_cfg)
->          u64 baseline_extra_ctrl = 0, fixed_ctr_ctrl = 0;
->          unsigned int idx;
->   
-> -       if (has_baseline)
-> -               wrmsr(MSR_PEBS_DATA_CFG, pebs_data_cfg);
-> +       if (has_baseline) {
-> +               if (pebs_data_cfg)
-> +                       wrmsr(MSR_PEBS_DATA_CFG, pebs_data_cfg);
-> +               else
-> +                       wrmsr(MSR_PEBS_DATA_CFG, 0xf);
-> +       }
->   
->          ds = (struct debug_store *)ds_bufer;
->          ds->pebs_index = ds->pebs_buffer_base = (unsigned long)pebs_buffer;
-> @@ -224,7 +228,7 @@ static void pebs_enable(u64 bitmask, u64 pebs_data_cfg)
->          for (idx = 0; idx < pmu.nr_fixed_counters; idx++) {
->                  if (!(BIT_ULL(FIXED_CNT_INDEX + idx) & bitmask))
->                          continue;
-> -               if (has_baseline)
-> +               if (has_baseline && pebs_data_cfg)
->                          baseline_extra_ctrl = BIT(FIXED_CNT_INDEX + idx * 4);
->                  wrmsr(MSR_PERF_FIXED_CTRx(idx), ctr_start_val);
->                  fixed_ctr_ctrl |= (0xbULL << (idx * 4) | baseline_extra_ctrl);
-> @@ -235,7 +239,7 @@ static void pebs_enable(u64 bitmask, u64 pebs_data_cfg)
->          for (idx = 0; idx < max_nr_gp_events; idx++) {
->                  if (!(BIT_ULL(idx) & bitmask))
->                          continue;
-> -               if (has_baseline)
-> +               if (has_baseline && pebs_data_cfg)
->                          baseline_extra_ctrl = ICL_EVENTSEL_ADAPTIVE;
->                  wrmsr(MSR_GP_EVENT_SELECTx(idx), EVNTSEL_EN | EVNTSEL_OS | EVNTSEL_USR |
->                                                   intel_arch_events[idx] | baseline_extra_ctrl);
-> 
-> FAIL: Multiple (0x700000055): PEBS record (written seq 0) is verified (including size, counters and cfg).
-> FAIL: The pebs_record_size (488) doesn't match with MSR_PEBS_DATA_CFG (32).
-> FAIL: The pebs_data_cfg (0xf) doesn't match with MSR_PEBS_DATA_CFG (0x0).
-> FAIL: GP counter 0 (0xfffffffffffe): PEBS record (written seq 0) is verified (including size, counters and cfg).
-> FAIL: The pebs_record_size (488) doesn't match with MSR_PEBS_DATA_CFG (32).
-> FAIL: The pebs_data_cfg (0xf) doesn't match with MSR_PEBS_DATA_CFG (0x0).
-> FAIL: Multiple (0x700000055): PEBS record (written seq 0) is verified (including size, counters and cfg).
-> FAIL: The pebs_record_size (488) doesn't match with MSR_PEBS_DATA_CFG (32).
-> FAIL: The pebs_data_cfg (0xf) doesn't match with MSR_PEBS_DATA_CFG (0x0).
-> 
->>> Oh great, and it gets worse.  intel_pmu_disable_fixed() doesn't clear the upper
->>> bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set.  Unless I'm misreading the code,
->>> intel_pmu_enable_fixed() effectively doesn't clear ICL_FIXED_0_ADAPTIVE either,
->>> as it only modifies the bit when it wants to set ICL_FIXED_0_ADAPTIVE.
->>>
->>> *sigh*
->>>
->>> I'm _very_ tempted to disable KVM PEBS support for the current PMU, and make it
->>> available only when the so-called passthrough PMU is available[*].  Because I
->>> don't see how this is can possibly be functionally correct, nor do I see a way
->>> to make it functionally correct without a rather large and invasive series.
->>
->> Considering that I've tried the idea myself, I have no inclination towards
->> "passthrough PMU", and I'd like to be able to take the time to review that
->> patchset while we all wait for a clear statement from that perf-core man,
->> who don't really care about virtualization and don't want to lose control
->> of global hardware resources.
->>
->> Before we actually get to that ideal state you want, we have to deal with
->> some intermediate state and face to any users that rely on the current code,
-> 
-> It's not an ideal state, it's simply the only way I see to get things like adaptive
-> PEBS to work safely, reliably, and correctly without taking on an absurd amount of
-> complexity.
+> Reviewed-by: Ian Rogers<irogers@google.com>
+> Reviewed-by: Frank Li<Frank.Li@nxp.com>
+> Signed-off-by: Xu Yang<xu.yang_2@nxp.com>
 
-The upstream guest_pebs feature has always been broken from my perspective,
-but unfortunately I didn't get enough time to polish it (slow path, host/guest 
-multiplexing,
-live migration support, security defense), so I'm really glad that Google is 
-seriously
-considering using this or that PMU feature.
+FWIW, Please note that I gave a RB tag here:
+https://lore.kernel.org/linux-perf-users/dd69cee0-ac14-4e20-9255-367240b1dbc8@oracle.com/
 
-> 
->> you had urged to merge in a KVM document for vPMU, not sure how far
->> along that part of the work is.
-> 
->>> Ouch.  And after chatting with Mingwei, who asked the very good question of
->>> "can this leak host state?", I am pretty sure that yes, this can leak host state.
->>
->> The Basic Info has a tsc field, I suspect it's the host-state-tsc.
-> 
-> It's not, the CPU offsets it correctly, at least on ICX (I haven't check scaling).
-
-And one more to check, the tsc fields form the guest Intel_PT or Timed LBR if any.
-
-> 
->>> When PERF_CAP_PEBS_BASELINE is enabled for the guest, i.e. when the guest has
->>> access to adaptive records, KVM gives the guest full access to MSR_PEBS_DATA_CFG
->>>
->>> 	pmu->pebs_data_cfg_mask = ~0xff00000full;
->>>
->>> which makes sense in a vacuum, because AFAICT the architecture doesn't allow
->>> exposing a subset of the four adaptive controls.
->>>
->>> GPRs and XMMs are always context switched and thus benign, but IIUC, Memory Info
->>> provides data that might now otherwise be available to the guest, e.g. if host
->>> userspace has disallowed equivalent events via KVM_SET_PMU_EVENT_FILTER.
->>
->> Indeed, KVM_SET_PMU_EVENT_FILTER doesn't work in harmony with
->> guest-pebs, and I believe there is a big problem here, especially with the
->> lack of targeted testing.
->>
->> One reason for this is that we don't use this cockamamie API in our
-> 
-> Libeling APIs because they aren't useful for _your_ security goals doesn't mean
-> you get to ignore their existence when contributing upstream.  New features don't
-> necessarilly have to fully support existing capabilities, e.g. I would be a-ok
-> making KVM_SET_PMU_EVENT_FILTER mututally exclusive with exposing adapative PEBS
-> to the guest.  That way the user can at least know that filtering won't work if
-> adapative PEBS is exposed to the guest.
-
-Yes, that should be considered.
-
-> 
->> large-scale production environments, and users of vPMU want to get real
->> runtime information about physical cpus, not just virtualised hardware
->> architecture interfaces.
->>
->>>
->>> And unless I'm missing something, LBRs are a full leak of host state.  Nothing
->>> in the SDM suggests that PEBS records honor MSR intercepts, so unless KVM is
->>> also passing through LBRs, i.e. is context switching all LBR MSRs, the guest can
->>> use PEBS to read host LBRs at will.
->>
->> KVM is also passing through LBRs when guest uses LBR but not at the
->> granularity of vm-exit/entry. I'm not sure if the LBR_EN bit is required
->> to get LBR information via PEBS, also not confirmed whether PEBS-lbr
->> can be enabled at the same time as independent LBR;
->>
->> I recall that PEBS-assist, per cpu-arch, would clean up this part of the
->> record when crossing root/non-root boundaries, or not generate record.
-> 
-> Nope.  The MSRs definitely leak to the guest.  The only hard part was figuring
-> out how to get perf to utilize LBRs without consuming every counter (`perf top`
-> was the extent of my knowledge, until now...).
-> 
-> E.g.
-> 
->    perf record -b -e instructions
-
-Consulting "Ian Rogers" is the fastest route.
-
-> 
-> and
-> 
->    FAIL: PEBS LBR record 0 isn't empty, got from = 'ffffffffc0a00ccb', to = 'ffffffffc0a010af', info = '2'
->    FAIL: PEBS LBR record 1 isn't empty, got from = 'ffffffffc0a010aa', to = 'ffffffffc0a00cb0', info = '6'
->    FAIL: PEBS LBR record 2 isn't empty, got from = 'ffffffffc0a00e06', to = 'ffffffffc0a01090', info = '1'
->    FAIL: PEBS LBR record 3 isn't empty, got from = 'ffffffffc0a00df4', to = 'ffffffffc0a00e00', info = '2'
->    FAIL: PEBS LBR record 4 isn't empty, got from = 'ffffffffc0a00dbc', to = 'ffffffffc0a00de0', info = '1'
->    FAIL: PEBS LBR record 5 isn't empty, got from = 'ffffffffc0a00f63', to = 'ffffffffc0a00db5', info = '1'
->    FAIL: PEBS LBR record 6 isn't empty, got from = 'ffffffffc0903f23', to = 'ffffffffc0a00f61', info = '11'
->    FAIL: PEBS LBR record 7 isn't empty, got from = 'ffffffffc0a00f5c', to = 'ffffffffc0903f10', info = '1'
->    FAIL: PEBS LBR record 8 isn't empty, got from = 'ffffffffc0a00db0', to = 'ffffffffc0a00f55', info = '1'
->    FAIL: PEBS LBR record 9 isn't empty, got from = 'ffffffff8f6b2c23', to = 'ffffffffc0a00da6', info = 'a'
->    FAIL: PEBS LBR record 10 isn't empty, got from = 'ffffffffc0a00da1', to = 'ffffffff8f6b2b60', info = '7'
->    FAIL: PEBS LBR record 11 isn't empty, got from = 'ffffffff8eba1b85', to = 'ffffffffc0a00d9a', info = '6'
->    FAIL: PEBS LBR record 12 isn't empty, got from = 'ffffffff8eba1b8c', to = 'ffffffff8eba1b3f', info = '1'
->    FAIL: PEBS LBR record 13 isn't empty, got from = 'ffffffff8eba1b2d', to = 'ffffffff8eba1b87', info = 'e'
->    FAIL: PEBS LBR record 14 isn't empty, got from = 'ffffffff8eba1aff', to = 'ffffffff8eba1b18', info = '7'
->    FAIL: PEBS LBR record 15 isn't empty, got from = 'ffffffff8eb996e0', to = 'ffffffff8eba1aeb', info = '2'
->    FAIL: PEBS LBR record 16 isn't empty, got from = 'ffffffff8eb9963a', to = 'ffffffff8eb996cc', info = '1'
->    FAIL: PEBS LBR record 17 isn't empty, got from = 'ffffffff8eb995ef', to = 'ffffffff8eb9962f', info = '1'
->    FAIL: PEBS LBR record 18 isn't empty, got from = 'ffffffff8f6b30a1', to = 'ffffffff8eb995df', info = '4'
->    FAIL: PEBS LBR record 19 isn't empty, got from = 'ffffffff8eb995da', to = 'ffffffff8f6b3070', info = '2'
->    FAIL: PEBS LBR record 20 isn't empty, got from = 'ffffffff8eba1ae6', to = 'ffffffff8eb995c0', info = '6'
->    FAIL: PEBS LBR record 21 isn't empty, got from = 'ffffffffc0a00d95', to = 'ffffffff8eba1a90', info = '2'
->    FAIL: PEBS LBR record 22 isn't empty, got from = 'ffffffff8eb69135', to = 'ffffffffc0a00d89', info = '2'
->    FAIL: PEBS LBR record 23 isn't empty, got from = 'ffffffff8eb690d6', to = 'ffffffff8eb69104', info = '2'
->    FAIL: PEBS LBR record 24 isn't empty, got from = 'ffffffff8eb69102', to = 'ffffffff8eb690c3', info = '1'
->    FAIL: PEBS LBR record 25 isn't empty, got from = 'ffffffff8eb6f442', to = 'ffffffff8eb69100', info = '2'
->    FAIL: PEBS LBR record 26 isn't empty, got from = 'ffffffff8eb6f3f3', to = 'ffffffff8eb6f429', info = '5'
->    FAIL: PEBS LBR record 27 isn't empty, got from = 'ffffffff8eb6f3a6', to = 'ffffffff8eb6f3c3', info = '2'
->    FAIL: PEBS LBR record 28 isn't empty, got from = 'ffffffff8eb690fb', to = 'ffffffff8eb6f390', info = '2'
->    FAIL: PEBS LBR record 29 isn't empty, got from = 'ffffffff8eb690c1', to = 'ffffffff8eb690d8', info = '2'
->    FAIL: PEBS LBR record 30 isn't empty, got from = 'ffffffff8eb6907b', to = 'ffffffff8eb690b1', info = '1'
->    FAIL: PEBS LBR record 31 isn't empty, got from = 'ffffffff8eb690af', to = 'ffffffff8eb6906e', info = '1'
-
-Guilty Guilty Guilty
-
-> 
->>> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
->>> index 41a4533f9989..a2f827fa0ca1 100644
->>> --- a/arch/x86/kvm/vmx/capabilities.h
->>> +++ b/arch/x86/kvm/vmx/capabilities.h
->>> @@ -392,7 +392,7 @@ static inline bool vmx_pt_mode_is_host_guest(void)
->>>    static inline bool vmx_pebs_supported(void)
->>>    {
->>> -       return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
->>> +       return false;
->>
->> As you know, user-space VMM may disable guest-pebs by filtering out the
->> MSR_IA32_PERF_CAPABILITIE.PERF_CAP_PEBS_FORMAT or CPUID.PDCM.
-> 
-> Relying on userspace to fudge around KVM bugs is not acceptable for upstream.
-> PMU virtualization is already a bit dicey in that KVM relies on userspace to
-> filter out sensitive events, but leaking host addresses and failing to correctly
-> virtualize the architecture is an entirely different level of wrong.
-
-The leak is real and I would do the same thing (drop ADAPTIVE) in the kernel side.
-
-> 
->> In the end, if our great KVM maintainers insist on doing this,
->> there is obviously nothing I can do about it.
-> 
-> Bullshit.  There is plenty you could have done to prevent this.  It took me what,
-> 6 hours total?  To (a) realize the code is buggy, (b) type up an email, and (c)
-> modify tests to confirm the bugs.  And at least half of that time was due to me
-> floundering around trying to generate LBR records because I know nothing about
-> the perf tool.
-> 
-> If you were more interested in ensuring KVM is maintainble, secure, and functionally
-> correct, we wouldn't be where we are today.
-
-I was actually really trying to communicate my todo list to my successors
-in this direction, but it took a long time for them to warm up.
-
-Very pleased to know that you have so much manpower invested in vPMU,
-which was unimaginable a few years ago when I was the only one doing
-these things.
-
-We have benefited from your efforts here or there, and hope to still have
-the opportunity to contribute back. Thank you, Sean.
