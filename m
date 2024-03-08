@@ -1,57 +1,57 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BEA3C30
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 00:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5142063BF
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 00:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709857182; cv=none; b=VYu1q306Tkqp4T/fFjbEQtVeoomL4xGprRu5uU+Ql8d/SFvy1l0XGyrZTyRL6qWRIr/l9OBxvhrWc64DTvddAEzahcObGNfzhcPrfOm3iXSrS8pzZYwaCEbXU7jTcvpbiT2n8MrdL+PrrofSDIzwKYYRo+bzs1WRPd/2R6I+lGU=
+	t=1709857184; cv=none; b=sWRZIe706upty31wt2OCAZ9muW/hZjBV5IKGV6QJxhOWEaD6c4sr+oBLMDpfTjw3NSQfoIb8p02G49M14IYMuCmmGE1G94qe+G3KMhHDPzwpx2XndgIT3qvcv2KuBKLtpxVUf0azY8Es5l6osN47vk3ELYHErxIYU+VOitFKAx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709857182; c=relaxed/simple;
-	bh=kbFBHdCad/TTKVPzgQtSH7M2inFZrQ/NSaJSVlW2wnY=;
+	s=arc-20240116; t=1709857184; c=relaxed/simple;
+	bh=FRTaxqQ9z0fdBOTvorH6lKFlBCFvX2RUJshMGjEelbw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=lIikpHnIdC822sfX4Y/5TM5i1P6Unsd4JZT1SYZkP50s9ytgFhoosJ61xPaOakVSqUBaO/ZQ3IzWufEehR2QPQLRLqukyFPtn0kw0kya6tnRTKqRCx+q+r1871lc59z6XY60dmB/GywjTCMrL4a8UHQsKdx9FF9fY4HC/nYMDr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QQ4ZptBi; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=q509FakfstHy3SUA/kzT32VScCjqt2umUlcqvOekMXaoOnkTJWaaaxTFhtOHa0Ehq76XSiyJ4LMWpZMyqz6PBIQbfvuj0MDhKGj33eti02ds6ryQfKUl9OiDJR5FiwZtf0cFfFQ1QHEJWYkTIVSMt6yyyuHXytgpfr/K3LHjfdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pIkvQnQI; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQ4ZptBi"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b269686aso2415246276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 16:19:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pIkvQnQI"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc64b659a9cso2724913276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 16:19:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709857180; x=1710461980; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709857182; x=1710461982; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w11Yp0wodb7GDuRE7Pf73tA+Sknph1YJzxldtQ9IWAs=;
-        b=QQ4ZptBitK5TTDAKSdCOdFGhIpb55UUs/3U5tVvnVepfGVdHa06+0GZPrX0LlJA5JK
-         DThxZ+bWZ0IPOkhKkZrcHJSGFLGkqoStRlWrwsDA0MOZ3MA3W07sT1CJm9gse97kV6Dl
-         3XuZgf6fyFw2wViovu5srkfbuxNEJM7Jidwk1YBvNOE24HWmtSwzvks1pebQmtHWf9eB
-         Omhw53U1CLQ2IXE5+6CbWkpP2fO1fDJRD93r/wVg2BS3EMiDZ5xG1AvRZuUvHpu1a79q
-         Ds6VyVAP8DVpKqc6YFE8JmL/H8Nc9e8nw0w1vhFdTl6CC81kKfF7RO2bgYTyYtoZNn+e
-         ohpA==
+        bh=GMafHwnxZN4CIEYFiJO7IENRNxeo2KK0p3Rv7PcNfpc=;
+        b=pIkvQnQIWFxNjYJNyjvMsnfG4CsaRWlnjpM/gDrLqTO35Y3Xp+G51s7QoiwSl6XSUx
+         CubaXRgY1mqdxO9cImQC1OFCqtVU46K77QWORxLr9j/RlswtREscTEoqIWYcdqLm/y9R
+         x2r0r9neCJ2vkXigtbuYXindTKpRd7Byqo6DPKWmVJE4gcgVKiXI8uxfx1D+5OUnvtH7
+         JERjBdz+3+qz630bxjMiS8Ui1W27wj0+gZRzmls9eidTIU8P6VyCq3+nwEyJwNltuTma
+         r49bl8T1ddDrasTYjfOZFu7wkqTYVEmDm9oo5BHB2+Tc7gvBeInJISOAXZFLd2IzuKxK
+         WCbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709857180; x=1710461980;
+        d=1e100.net; s=20230601; t=1709857182; x=1710461982;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w11Yp0wodb7GDuRE7Pf73tA+Sknph1YJzxldtQ9IWAs=;
-        b=MbkfJBhaxaPONB8Gng6r5zdTQCJYHMYVyxlCXZtjdRXtW8d2wW1BTRp95wNUkJMj5B
-         WwiSG4CEkhd9HQ+9lkohRcT3BjiyUjrDq4073z54Uk+BmoLucGORP/MzB04143+uDNqR
-         1ZPEbpa1xepAJ/X2J2lUk/ORTVlqu9tTGoxEj63AX0o4MpbW6hY/0RzkeFLP+52c8zhp
-         KswTbc4DSlSMkQAsZCXTo4ejwIp9gcfsrl7DBfQTkA3qhXRe6YY+wiaVVqZNi6AeBYVa
-         FvtupxG1jf+xNC+n5EDVTPTIbZdIDUYp7UjQNpwod9jXSBMKXACj8NdhF+pnaGE/ISqc
-         /lFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLO49eD9FsDwouJJxclyyIvLQDbDUqYY7Q9BU+vYYp4gI0xSCIE3HtHpq4+H27fugpvARdNTN0/httk4gZA9/eT/Z8Lm0ZIdYVNnsEq9mrnA==
-X-Gm-Message-State: AOJu0Yxm4LyImH+3kI63Bfae6JslMfU1P0wk9YMGJ5gJmkOcR4x/VfV/
-	kAbmxJgCUuuaateWTLJLV3cVjgv1xgNvc1RALj8c/gKKcp/2FGR3YLom8rcHdPFZlx7RDgHIjbi
-	Hcl/gZQ==
-X-Google-Smtp-Source: AGHT+IHztcMIkTIC8gB0elvRFJcsKwcUzsPx2wj83xiF8gMH2QEYPBba6BBXD9kRH4bglX9Pa8g2PDxs21M3
+        bh=GMafHwnxZN4CIEYFiJO7IENRNxeo2KK0p3Rv7PcNfpc=;
+        b=TNQB5AFeI8zayHiP9Cu1p4CfPI05bThXgwv4+lfCnxAGPU7FDcs1zvpV3uHDOUQY3N
+         oIcxX+iRitGZgvkjROBnbbSFIzbzCCWpiXeZUGtetAAW3EnlfOPQLhND8Z1dceRwWuUO
+         DH8YzIvlduEtKkOR9n6YkPpjYhjM8cRTDnaW8uoMugwlzh/gvl4chaNcDop/d4XO68UM
+         mhdtE/ApQk6PzwUdyg+g6p6lIdEA9UX8GzLgOr2j/omqy5hS9owPN69UiN5u0yJdMY5b
+         +iRnzWCNXJyfihs3FJNgsihQ6yvRVez/EdLuutNSm2umOwWDvLLoJ5MV2bTcQVsJh8Sd
+         KuGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGoZ5pONVihvljMMNHESuu2V0L987yOGdXT6SJBA6kySgbuw1D2tCkT+wpc39zOHw4H/ReTWvUvyvqPhzX05uhN6vlV8KCiMagOMuPV+f69g==
+X-Gm-Message-State: AOJu0YyoC2GYbZPk40MUczLLetdS2BXb6gMbJwZ+2DmkA2Q41HgfQceW
+	T3t6cgp4wSsGoRiLELoE4V1mOqbAqWhZftIHgqpQT0iR0A8N5M6lGRARcEH0vtaYqqC4xP0qTYz
+	BQv0/9w==
+X-Google-Smtp-Source: AGHT+IGZxH2VZwUiw1GgVvXnRBpm+B1jZaK1xeAq56iEuY9fI4p8nAEwAgnGzMx47spPAqo13VuXbW27mppI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:218f:92ee:d543:c1a2])
- (user=irogers job=sendgmr) by 2002:a05:6902:1821:b0:dc7:9218:df3b with SMTP
- id cf33-20020a056902182100b00dc79218df3bmr879191ybb.10.1709857179792; Thu, 07
- Mar 2024 16:19:39 -0800 (PST)
-Date: Thu,  7 Mar 2024 16:19:11 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1004:b0:dc7:42:ecd with SMTP id
+ w4-20020a056902100400b00dc700420ecdmr4897415ybt.6.1709857182253; Thu, 07 Mar
+ 2024 16:19:42 -0800 (PST)
+Date: Thu,  7 Mar 2024 16:19:12 -0800
 In-Reply-To: <20240308001915.4060155-1-irogers@google.com>
-Message-Id: <20240308001915.4060155-3-irogers@google.com>
+Message-Id: <20240308001915.4060155-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240308001915.4060155-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 2/6] perf pmu: Drop "default_core" from alias names
+Subject: [PATCH v3 3/6] perf list: Allow wordwrap to wrap on commas
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,53 +72,70 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-"default_core" is used by jevents.py for json events' PMU name when
-none is specified. On x86 the "default_core" is typically the PMU
-"cpu". When creating an alias see if the event's PMU name is
-"default_core" in which case don't record it. This means in places
-like "perf list" the PMU's name will be used in its place.
-
-Before:
-```
-$ perf list --details
-...
-cache:
-  l1d.replacement
-       [Counts the number of cache lines replaced in L1 data cache]
-        default_core/event=0x51,period=0x186a3,umask=0x1/
-...
-```
-
-After:
-```
-$ perf list --details
-...
-cache:
-  l1d.replacement
-       [Counts the number of cache lines replaced in L1 data cache. Unit: cpu]
-        cpu/event=0x51,period=0x186a3,umask=0x1/
-...
-```
+A raw event encoding may be a block with terms separated by commas. If
+wrapping such a string it would be useful to break at the commas, so
+add this ability to wordwrap.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-list.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f39cbbc1a7ec..24be587e3537 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -518,7 +518,8 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 		unit = pe->unit;
- 		perpkg = pe->perpkg;
- 		deprecated = pe->deprecated;
--		pmu_name = pe->pmu;
-+		if (pe->pmu && strcmp(pe->pmu, "default_core"))
-+			pmu_name = pe->pmu;
- 	}
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 02bf608d585e..e0fe3d178d63 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -22,6 +22,7 @@
+ #include <subcmd/pager.h>
+ #include <subcmd/parse-options.h>
+ #include <linux/zalloc.h>
++#include <ctype.h>
+ #include <stdarg.h>
+ #include <stdio.h>
  
- 	alias = zalloc(sizeof(*alias));
+@@ -76,26 +77,38 @@ static void default_print_start(void *ps)
+ 
+ static void default_print_end(void *print_state __maybe_unused) {}
+ 
++static const char *skip_spaces_or_commas(const char *str)
++{
++	while (isspace(*str) || *str == ',')
++		++str;
++	return str;
++}
++
+ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
+ {
+ 	int column = start;
+ 	int n;
+ 	bool saw_newline = false;
++	bool comma = false;
+ 
+ 	while (*s) {
+-		int wlen = strcspn(s, " \t\n");
++		int wlen = strcspn(s, " ,\t\n");
++		const char *sep = comma ? "," : " ";
+ 
+ 		if ((column + wlen >= max && column > start) || saw_newline) {
+-			fprintf(fp, "\n%*s", start, "");
++			fprintf(fp, comma ? ",\n%*s" : "\n%*s", start, "");
+ 			column = start + corr;
+ 		}
+-		n = fprintf(fp, "%s%.*s", column > start ? " " : "", wlen, s);
++		if (column <= start)
++			sep = "";
++		n = fprintf(fp, "%s%.*s", sep, wlen, s);
+ 		if (n <= 0)
+ 			break;
+ 		saw_newline = s[wlen] == '\n';
+ 		s += wlen;
++		comma = s[0] == ',';
+ 		column += n;
+-		s = skip_spaces(s);
++		s = skip_spaces_or_commas(s);
+ 	}
+ }
+ 
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
