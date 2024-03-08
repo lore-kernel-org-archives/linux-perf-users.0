@@ -1,364 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A0B241E6
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 17:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D783FB9E;
+	Fri,  8 Mar 2024 17:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709917644; cv=none; b=JSQcIElucfCbCCP+PbwEoeDWT1GH3VUyFcji2723WLXsPFA3XuRxq4PshF6Os8FBCGjXi9RSp2SVIX4U1KoC5IoJHkAkhlAlIU5cgrmCBls0rsj/740Pq5pLyeCy7TyCkRPo7jpAx8gTWoJhJnuD3x92SLwUQcf52uMLZQESJ5w=
+	t=1709920258; cv=none; b=s1H4IhI9574eEknLrbEYRxAlcVJNMYJG0gJZCJ5MSq0MgS4wnfrQV7Gam5G3h/Qx82NgKHYflehVuc03QbsZ2SIygouSrow18TO/UR00rh5UheIuIOfyTSi1cH39x62ZT0FQwe0g5IhqdJBidxLlAw/Gp9Lei3viyT6IM43xn30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709917644; c=relaxed/simple;
-	bh=X6hzdD/gId3YUg4OKFYvtckScv9NhQ+i+WB9NFI/hfk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IzM8mXmGy41dJ8NypXb9E1Jxeo6fMjm9w+2gz1xq71N2p/LSHeEXE43+zDTv4Q2lLxdHerhG58mGT+BuLpGcF9N8DbYsiEyuut20u6k5bGD/brVNcviRB5tUI8Z5PnLyfaqLdU+mGJycM8elTCtOze5TSCyePhn8lymWcn6rvvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T87jwyBN; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709920258; c=relaxed/simple;
+	bh=5xlHmpYcqX2VUgXngSc898YF3hx2VkRxiuAQwacZBvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=artOMHw1J+knYC8yGAOP1NKEnGWq6m51v5+bLHW9mtI0fkYuZi9idTaqS1KlBBaoFlbcyNOw93ypZOTkUt2LerxDdgBt2r2ON5lVtOYb5NOqum13VshuHo421L5f8GRUfyAR0FkBFlQsSSJBwQRhjqkWHeaHGJpC7rwIr69gqDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aY13+6zW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T87jwyBN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709917643; x=1741453643;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=X6hzdD/gId3YUg4OKFYvtckScv9NhQ+i+WB9NFI/hfk=;
-  b=T87jwyBNL1ODmkeuyZk/F4yJEWrrAlwZ4ucQwU43E9vKdrVJ+owmGbk+
-   vC5rjvYosNR91KU18oJGIDU8bdJ+tWrkQtludSAWecvLh74mxyD0qY8ud
-   wbGyoZMQPf1wZieGZ5FI0VCjtEVBNi6FDT3YtfjJe/HgYFy4UQYiAIFu8
-   x820REgLgF6LWLP8n77Jvax03kNc5zzt4ciV25PKcO+NNSDTp6lYC+9vQ
-   ypA6Z9FKq1l8pSEuYjFEF9/D8xddMC7r9VHLv/cXBDaeo6na+fswfHWrW
-   ycTqINqvRUlfbjOD8D/f2bwonvxUVG/uQM/Dpkk4Kbp7hNu72HPGSP+kh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11007"; a="15212309"
-X-IronPort-AV: E=Sophos;i="6.07,110,1708416000"; 
-   d="scan'208";a="15212309"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 09:06:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,110,1708416000"; 
-   d="scan'208";a="10522233"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 09:06:17 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: adrian.hunter@intel.com,
-	changbin.du@huawei.com,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 2/2] perf, script, capstone: Add support for -F +brstackdisasm
-Date: Fri,  8 Mar 2024 09:06:08 -0800
-Message-ID: <20240308170611.719794-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240308170611.719794-1-ak@linux.intel.com>
-References: <20240308170611.719794-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aY13+6zW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D64C433C7;
+	Fri,  8 Mar 2024 17:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709920258;
+	bh=5xlHmpYcqX2VUgXngSc898YF3hx2VkRxiuAQwacZBvY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aY13+6zW6S/SJhSKtscJ8SAlZD9kmmmL1bE/UpTi/J8R2Up0ewZMv997Zku8Ua/Sp
+	 XqCkOiWfYDolLNMnFMFs9D3+RR49W8gk7akIbuqzdD+NGZPSI0Cx2fihdNBffJmL/d
+	 eaTl3HhoL2JZFvLrJjMzP858Yvbt1HW63It3+5+4nvfBx4F+gl8xViyJMX3qEpSEST
+	 U48vvdJ/ssYIz+QezYTR13c9oF60RCppAWdXFSXdliQLqf0GNOzv3ix3ai9nq1FbWX
+	 UdRKji47GcObTSuoqC9z9GW50AieebFDzgMuMI2hUWP1XdLvzoBwsM+X1Pkb1/F+b/
+	 pnrHPnR1iGQuw==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] tools/tracing: Use tools/build makefiles like perf
+Date: Fri,  8 Mar 2024 18:50:42 +0100
+Message-ID: <cover.1709914259.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Support capstone output for the -F +brstackinsn branch dump.
-The new output is enabled with the new field brstackdisasm
-This was possible before with --xed, but now also allow
-it for users that don't have xed using the builtin capstone support.
+tools/tracing and tools/verification/rv are using standalone Makefiles.
+However, This approach has some drawbacks. For example, code
+duplication and lack of proper dependency handling, making things
+harder for users. 
 
-Before:
+Linus suggested using perf's build system, and it is indeed the best way to go.
 
-perf record -b emacs -Q --batch '()'
-perf script -F +brstackinsn
-...
-          emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
-        00007f0ab2d17105        insn: 73 51
-        00007f0ab2d17107        insn: 48 89 c1
-        00007f0ab2d1710a        insn: 48 39 ca
-        00007f0ab2d1710d        insn: 73 96
-        00007f0ab2d1710f        insn: 48 8d 04 11
-        00007f0ab2d17113        insn: 48 d1 e8
-        00007f0ab2d17116        insn: 49 8d 34 c1
-        00007f0ab2d1711a        insn: 44 3a 06
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        insn: 48 8d 50 01
-        00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        insn: 48 39 ca
-        00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
+This series replaces tools/tracing and tools/verification/rv makefiles
+with makefiles inspired by perf and objtool that use tools/build/
+infrastructure.
 
-After (perf must be compiled with capstone):
+Thanks, Arnaldo, for the pointers via chat.
 
-perf script -F +brstackdisasm
+Link: https://lore.kernel.org/lkml/CAHk-=wjQ9BJKBPi3sJN2Dy5jVwPO03u9aOc6-g8AnLcGq-E4-g@mail.gmail.com/
 
-...
-           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
-        00007f0ab2d17107        movq %rax, %rcx
-        00007f0ab2d1710a        cmpq %rcx, %rdx
-        00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
-        00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
-        00007f0ab2d17113        shrq $1, %rax
-        00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
-        00007f0ab2d1711a        cmpb (%rsi), %r8b
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        leaq 1(%rax), %rdx
-        00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        cmpq %rcx, %rdx
-        00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
+Daniel Bristot de Oliveira (3):
+  tools/tracing: Use tools/build makefiles on latency-collector
+  tools/verification: Use tools/build makefiles on rv
+  tools/rtla: Use tools/build makefiles to build rtla
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+ tools/tracing/latency/.gitignore       |   1 +
+ tools/tracing/latency/Build            |   1 +
+ tools/tracing/latency/Makefile         |  48 ++++---
+ tools/tracing/latency/Makefile.config  |  28 ++++
+ tools/tracing/rtla/.gitignore          |   4 +-
+ tools/tracing/rtla/Build               |   1 +
+ tools/tracing/rtla/Makefile            | 177 +++++--------------------
+ tools/tracing/rtla/Makefile.config     |  44 ++++++
+ tools/tracing/rtla/Makefile.rtla       |  77 +++++++++++
+ tools/tracing/rtla/Makefile.standalone |  24 ++++
+ tools/tracing/rtla/src/Build           |  11 ++
+ tools/verification/rv/.gitignore       |   2 +
+ tools/verification/rv/Build            |   1 +
+ tools/verification/rv/Makefile         | 166 +++++------------------
+ tools/verification/rv/Makefile.config  |  44 ++++++
+ tools/verification/rv/Makefile.rv      |  49 +++++++
+ tools/verification/rv/src/Build        |   4 +
+ 17 files changed, 387 insertions(+), 295 deletions(-)
+ create mode 100644 tools/tracing/latency/Build
+ create mode 100644 tools/tracing/latency/Makefile.config
+ create mode 100644 tools/tracing/rtla/Build
+ create mode 100644 tools/tracing/rtla/Makefile.config
+ create mode 100644 tools/tracing/rtla/Makefile.rtla
+ create mode 100644 tools/tracing/rtla/Makefile.standalone
+ create mode 100644 tools/tracing/rtla/src/Build
+ create mode 100644 tools/verification/rv/.gitignore
+ create mode 100644 tools/verification/rv/Build
+ create mode 100644 tools/verification/rv/Makefile.config
+ create mode 100644 tools/verification/rv/Makefile.rv
+ create mode 100644 tools/verification/rv/src/Build
 
----
-
-v2: Use brstackdisasm instead of keying of disasm
----
- tools/perf/Documentation/perf-script.txt |  7 +++-
- tools/perf/builtin-script.c              | 32 +++++++++++----
- tools/perf/util/dump-insn.h              |  1 +
- tools/perf/util/print_insn.c             | 52 ++++++++++++++++++++++++
- tools/perf/util/print_insn.h             |  3 ++
- 5 files changed, 86 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 005e51df855e..ff086ef05a0c 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,9 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
-         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
--        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
- 
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-@@ -257,6 +257,9 @@ OPTIONS
- 	can’t know the next sequential instruction after an unconditional branch unless
- 	you calculate that based on its length.
- 
-+	brstackdisasm acts like brstackinsn, but will print disassembled instructions if
-+	perf is built with the capstone library.
-+
- 	The brstackoff field will print an offset into a specific dso/binary.
- 
- 	With the metric option perf script can compute metrics for
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 0299b1ed8744..db18d2c54c59 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -136,6 +136,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- 	PERF_OUTPUT_DISASM          = 1ULL << 42,
-+	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
- };
- 
- struct perf_script {
-@@ -210,6 +211,7 @@ struct output_option {
- 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
- 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
-+	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
- };
- 
- enum {
-@@ -510,7 +512,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
-+	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
-+	    && !allow_user_set &&
- 	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
- 		       "Hint: run 'perf record -b ...'\n");
-@@ -1162,6 +1165,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 	return ret;
- }
- 
-+static const char *any_dump_insn(struct perf_event_attr *attr,
-+			struct perf_insn *x, uint64_t ip,
-+			u8 *inbuf, int inlen, int *lenp)
-+{
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+	if (PRINT_FIELD(BRSTACKDISASM)) {
-+		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-+		if (p)
-+			return p;
-+	}
-+#endif
-+	return dump_insn(x, ip, inbuf, inlen, lenp);
-+}
-+
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
-@@ -1170,7 +1187,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
--			      dump_insn(x, ip, inbuf, len, &ilen));
-+			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
- 
- 	if (PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += fprintf(fp, "ilen: %d\t", ilen);
-@@ -1262,6 +1279,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		nr = max_blocks + 1;
- 
- 	x.thread = thread;
-+	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
- 	printed += fprintf(fp, "%c", '\n');
-@@ -1313,7 +1331,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			} else {
- 				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
--						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
- 				if (PRINT_FIELD(BRSTACKINSNLEN))
- 					printed += fprintf(fp, "\tilen: %d", ilen);
- 				printed += fprintf(fp, "\n");
-@@ -1361,7 +1379,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			goto out;
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1372,7 +1390,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	for (off = 0; off <= end - start; off += ilen) {
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
--				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1534,7 +1552,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, "\t\t");
- 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-+	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
- 	return printed;
-@@ -3940,7 +3958,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-+		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..4a7797dd6d09 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -11,6 +11,7 @@ struct thread;
- struct perf_insn {
- 	/* Initialized by callers: */
- 	struct thread *thread;
-+	struct machine *machine;
- 	u8	      cpumode;
- 	bool	      is64bit;
- 	int	      cpu;
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index 8e4e3cffd677..bca4449f0fa8 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -12,6 +12,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "print_insn.h"
-+#include "dump-insn.h"
- #include "map.h"
- #include "dso.h"
- 
-@@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
- 	return 0;
- }
- 
-+static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-+{
-+	struct addr_location al;
-+	bool printed = false;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-+		    al.sym &&
-+		    al.addr < al.sym->end) {
-+			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-+					al.sym->name, al.addr - al.sym->start, op->imm);
-+			printed = true;
-+		}
-+		addr_location__exit(&al);
-+	}
-+
-+	if (!printed)
-+		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-+}
-+
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+			 u8 *inbuf, int inlen, int *lenp)
-+{
-+	int ret;
-+	int count;
-+	cs_insn *insn;
-+	csh cs_handle;
-+
-+	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-+	if (ret < 0)
-+		return NULL;
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(x->machine, "x86"))
-+			dump_insn_x86(x->thread, &insn[0], x);
-+		else
-+			snprintf(x->out, sizeof(x->out), "%s %s",
-+					insn[0].mnemonic, insn[0].op_str);
-+		*lenp = insn->size;
-+		cs_free(insn, count);
-+	} else {
-+		return NULL;
-+	}
-+	return x->out;
-+}
-+
- static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
- 			     cs_insn *insn, FILE *fp)
- {
-diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-index 6447dd41b543..c2a6391a45ce 100644
---- a/tools/perf/util/print_insn.h
-+++ b/tools/perf/util/print_insn.h
-@@ -8,9 +8,12 @@
- struct perf_sample;
- struct thread;
- struct machine;
-+struct perf_insn;
- 
- size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
- 				struct machine *machine, FILE *fp, struct addr_location *al);
- size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+                         u8 *inbuf, int inlen, int *lenp);
- 
- #endif /* PERF_PRINT_INSN_H */
 -- 
-2.43.0
+2.44.0
 
