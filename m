@@ -1,157 +1,112 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C2956746
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 12:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A091865;
+	Fri,  8 Mar 2024 15:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709900016; cv=none; b=MFVSEPeadlCZmH/LWGvC0BTOUiaDEDBKxLYq6hJ68hRHImqvtC3QX66C4QAJsYhE4fUMR7YRhR2gp0jfS+hd5mG9fmLXQwcla+Q3DIUhaS1xoThozcLNoMgrhgd54cWBEnBDAvkFZkBMoeTqjx3bT4EKLx8yXUijXRNoMuZVJEQ=
+	t=1709912373; cv=none; b=Sskr6vry2UZuGgsPAi1TffeAWITztrpI5KMfdAmzbtvxbLNrABFVEEiE4quFNxRxyOMY1ks/yLFpUu8W0YCNO7PwA+AUK7SbbZPSbuDXx6RRTtSr9cey5DCmX83l73yoWvnJxh9/OzcuqELzBdeRLdQPTvWRcBX6e6Odk/SPImI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709900016; c=relaxed/simple;
-	bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k9e7ei3DeTnDlIaEtxWKpmt/XCBa0D8kPc9JrhupTJHjTNJMzDpP30AYvth8JgE6YL4INDklkSv4iNYw+7Zc+JGiL+8a6YtG9Twp+1cil8PkcJSVqnIBpK9hTxJv6AQCL9psZJiu0FHYLM82/js0fcMnS4KE9dSxM57SjhKOdZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XW/ufEFY; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1709912373; c=relaxed/simple;
+	bh=9h4zpabX33FnuG9PKHlSlWYTN5xYzT8IUzo10FfqYyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=M3PCttQCuOmmXmSyhkQtkgGThfofbrUrcSs0xxqyH9kQ/ibSt8+hHWNQwtfHQ1AOVfyBP7QkLP+B29zfeb2xc+90AOai6l1727yT+nT3qGWXTLW/EJru5bEuQMHjdbJFuhYbLXUpTRYJLlOzNrlot3wFzRZIFwLx77Nj+/M4SDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0C9+I+w; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XW/ufEFY"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id B8043240101
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 13:04:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1709899492; bh=o0MIa9u9Hqk3ZI02Q4Ut0uAnmSuanvs+Ylycd/Utd04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=XW/ufEFYmNghRO9/dJpnthQiWG7F4dM+r84VMWzKXpuhutstXjOfZcZVwq8eD5q01
-	 t4A8Ln8tyESKKT1F6ZDp2vvod4+GJ7xKCv/k3vNStrYVmHZGYm+8mPempnvYqOJvsy
-	 IO9XVYJdX5DGKgBSmWI1didokQ4Zwy6/Yw8gwX+WhVYHBIzKqvPi6WSiMymB3u5izt
-	 Yf8NnyPMgTePJtbcEKA4zif/FT+3mHfKD72jAPe46dZ/iqkTenldUYejPs87ZQKjMS
-	 l5nLQnXLx/7SfOCKQZl+LRa93RQa0mTE6wLfu1jmAoiwZ5HB6zR5xp54LSrOd1Qs5a
-	 PYDPrkir/LokA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TrlGQ6hCkz6tm4;
-	Fri,  8 Mar 2024 13:04:46 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Anne Macedo <retpolanne@posteo.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v0] perf lock contention: skip traceiter functions
-Date: Fri,  8 Mar 2024 12:03:31 +0000
-Message-Id: <20240308120332.372810-1-retpolanne@posteo.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0C9+I+w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709912372; x=1741448372;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=9h4zpabX33FnuG9PKHlSlWYTN5xYzT8IUzo10FfqYyk=;
+  b=K0C9+I+w7qdQZ8nfP8VucQes+Ievyqbw+yrRcw8G7MwzkTm9b4b0pvIQ
+   VdjEh+KJQiE+M9iNzykDFzEN1LCOhxt6g+egKkbz/4xIsuTuideCPUisr
+   TRHWDoVGNCzZ4KcpOIuVi4kwC8VOiqMm8gWoVbPKOfam+IGlK9N20uv4/
+   4gqQOCfehrSt/V+bIQD0d9XiUhFkDjQzXrlax0gJ8Ds69P6r16SJCyqGX
+   0Mm/38PCzN5C1+Sy4iR3mL2zkkRqBEOper+i4qaMukqrKw7x7hdn+966U
+   LQkZeqM6rtZg94B5YeBenGSFapwdBWpCgEIeyT5JGOgVrQ4zhq+dTaj/2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4773475"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="4773475"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 07:39:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="41465976"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 07:39:30 -0800
+Received: from [10.212.124.40] (kliang2-mobl1.ccr.corp.intel.com [10.212.124.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 3B445580DDD;
+	Fri,  8 Mar 2024 07:39:28 -0800 (PST)
+Message-ID: <89249fc5-6102-45d4-9345-5dd80d06e001@linux.intel.com>
+Date: Fri, 8 Mar 2024 10:39:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] Extra verbose/perf-list details
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Yang Jihong <yangjihong1@huawei.com>, James Clark <james.clark@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240308001915.4060155-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240308001915.4060155-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The perf lock contention program currently shows the caller of the locks
-as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
-from the traceiter itself. Instead, it should show the real callers for
-the locks.
 
-When fiddling with the --stack-skip parameter, the actual callers for
-the locks start to show up. However, just ignore the
-__traceiter_contention_begin and the __traceiter_contention_end symbols
-so the actual callers will show up.
 
-Before this patch is applied:
+On 2024-03-07 7:19 p.m., Ian Rogers wrote:
+> Add more encoding detail and raw event details in perf list. Add PMU
+> name and reverse lookup from config to event name to
+> perf_event_attr_fprintf. This makes the verbose output easier to read,
+> and the perf list information more specific.
+> 
+> v3. Fix to reverse lookup to ensure or aliases are loaded and if
+>     getting the config value fails for an event/alias just continue to
+>     the next one.
+> v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
+>     becomes "Raw event descriptor" add assert to keep term numbers in
+>     sync, fix a commit message.
+> 
+> Ian Rogers (6):
+>   perf list: Add tracepoint encoding to detailed output
+>   perf pmu: Drop "default_core" from alias names
+>   perf list: Allow wordwrap to wrap on commas
+>   perf list: Give more details about raw event encodings
+>   perf tools: Use pmus to describe type from attribute
+>   perf tools: Add/use PMU reverse lookup from config to name
 
-sudo perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
+The patch series look good to me.
+I verified it on a hybrid machine. The new format is the same as the
+advertise.
 
-         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
-         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
-         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
-         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
-         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
-         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
-         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
 
-Before this patch is applied - using --stack-skip 5
-
-sudo perf lock con --stack-skip 5 -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
-         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
-         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
-         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
-         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
-         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
-         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
-
-After this patch is applied:
-
-sudo ./perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         6      5.27 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
-         2      2.99 s       2.99 s       1.50 s      spinlock   do_send_sig_info+0x3c
-         2      1.77 s       1.77 s     884.39 ms     spinlock   sigprocmask+0x98
-         2      1.76 s       1.76 s     878.56 ms     rwlock:W   do_exit+0x338
-         2      1.76 s       1.76 s     878.55 ms     rwlock:W   release_task+0x68
-         5      1.76 s       1.76 s     351.41 ms     rwlock:W   do_exit+0x338
-         1     48.10 ms     48.10 ms     48.10 ms        mutex   trace_contention_begin+0x84
-         4    257.80 us    119.34 us     64.45 us     spinlock   get_signal+0x108
-         1      9.33 us      9.33 us      9.33 us     rwlock:W   do_exit+0x338
-
-Signed-off-by: Anne Macedo <retpolanne@posteo.net>
----
- tools/perf/util/machine.c | 10 ++++++++++
- tools/perf/util/machine.h |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 527517db3182..8e729167c1aa 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3266,6 +3266,12 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 
- 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
- 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
-+		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_end", &kmap);
-+		machine->traceiter.text_end = map__unmap_ip(kmap, sym->start);
- 	}
- 
- 	/* failed to get kernel symbols */
-@@ -3280,5 +3286,9 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
- 		return true;
- 
-+	/* traceiter functions are in traceiter text section  */
-+	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
-+		return true;
-+
- 	return false;
- }
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index e28c787616fe..ec51e9b080b9 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -49,7 +49,7 @@ struct machine {
- 	struct {
- 		u64	  text_start;
- 		u64	  text_end;
--	} sched, lock;
-+	} sched, lock, traceiter;
- 	pid_t		  *current_tid;
- 	size_t		  current_tid_sz;
- 	union { /* Tool specific area */
--- 
-2.39.2
-
+Thanks,
+Kan
+> 
+>  tools/perf/builtin-list.c                 | 21 ++++-
+>  tools/perf/util/perf_event_attr_fprintf.c | 26 +++++--
+>  tools/perf/util/pmu.c                     | 82 +++++++++++++++++++-
+>  tools/perf/util/pmu.h                     |  4 +
+>  tools/perf/util/pmus.c                    | 94 +++++++++++++++++++++++
+>  tools/perf/util/pmus.h                    |  1 +
+>  tools/perf/util/print-events.c            | 55 +++++++------
+>  7 files changed, 242 insertions(+), 41 deletions(-)
+> 
