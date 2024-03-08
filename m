@@ -1,125 +1,103 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD3B3D3BB;
-	Thu,  7 Mar 2024 23:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02278363
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Mar 2024 00:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709855234; cv=none; b=lfiASgz6KUnuDKrlC5vy117d7dIUjhNmh7M4pKRmbpNKbk85ZcUfZcYkDaar8ogiaCSP2NP4iapvu/X7aRIUQ5tnxTFhjRRBuXcKnbTy5uJUSS25lhMmPMEsfdjjTL57PsUK12v0iDTN12Io3sMWw89ONODr2P06ow3px5hTIN0=
+	t=1709857176; cv=none; b=lPWq2id+hWFOAdFY7stQd7S2n5J1dQbe+aLCwd5FAhw9eT25YDPrQ8FDNNk7GZSVKi/EcypmGhHkOToZJLLZbTNTsrHbugI3ZHqiuoNxFGmY5HxJjoPKLdwrN4LBs+m1OgMSXbpm6t/rbStAA+4BUrL5ut5u69ipLVwItmHxE/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709855234; c=relaxed/simple;
-	bh=hiSn8SSIe9tegeKwF4wqEjbTESubvyzdJG8DyIQ2F5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eeYUKyWAssq/PH17TdZoh610PnCZest8s0i99wfSuBm3p0IF6PglRQsPT4CTI8jzxO3Hw8b7Bl4OTQ5FjS8TSGME7hC7c890ZrGrKgepz2BsfxOY7oMHS6j2IX3HTPpFm+ojg0I1WPaxVl3QPPjbBFPyJNO9/tbaefNh2gqcu2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6da202aa138so1038511b3a.2;
-        Thu, 07 Mar 2024 15:47:13 -0800 (PST)
+	s=arc-20240116; t=1709857176; c=relaxed/simple;
+	bh=41OGcxDXHE9reRyhpUNhOqjp5DIntWx9erI9QUJZ7zM=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=B8MYrtY0cgcaM9a+42tSF6O2QV94o2nz5XPNcb88sSP0R2Nmm7s4zBs2c0SaZLXsl1fsdxQU16oAVJRcwDHpb/NFbLZZ1C/ikaxZfBuNQgLrN7wk+Uo2Q3LALzxEDUgOUoOueJnaOKO1fkDR4OPXNnW+nqVzN2KiDOaFlVm18pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lfrtRmJG; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lfrtRmJG"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcdc3db67f0so3035390276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 07 Mar 2024 16:19:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709857174; x=1710461974; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=De+xXG9LErpx0jsehLOAYTZORpUzSmU7F+YMDvAGffE=;
+        b=lfrtRmJGg9W8iRwkRhBBdvZpYoH+RwfbIKDOAp+IjVKwyl19jfUOTy0F9+0qGR4mG9
+         ari+gJ0P/aKFPVa1l+EIGJrXGCJdQJV4YyToA6qV7m93/vrC+RzqFya5ZP74PDnpzCf3
+         eQiOOJbqONhh/ENrWi53ej6pupp0vo0vCRYR4Y7094buNYsVtucbjkwyrk0lp5xgbls7
+         U1f4mw2smZNQG2nClM9dbHA0e/e2aLtqRIL47sJvvV9AJzEjE3AH+aX98osWwafANe9k
+         58UxjFw0rqd2Ac5K1zUwxsiha/4K1LXFj5YuNZUvbCypUnWsC9Eq1rIt8R6mrEXkkbLq
+         FwOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709855232; x=1710460032;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VRglE+lg+GiCjlWhoic2nCJGJlQoZ9wZneASUD21CRs=;
-        b=TgFBz6bhZ/32RivFypCTKygjGuZ3oo+p25WazFc9QsblTtfbxKUjzIIPoFRgQDikhi
-         /yvPFHCbI1ux8+ClRWPazLDAIZ+HYKghgx+Tomev8Lr2i+XM7rNbHC+i/FrdDL4gAokM
-         XF42pZSvOM3cu4DhahKFJMWzceckE9m0dSvdKqQ5Wf11i7s7UVS5CgHwHG/NnA+PSPiU
-         GN8C60vLg36Wmalz1iI5Mup8/i8Kpwuagf3xRMxfA2YAsF0kjMxxKVEg4ASQVrrGklhM
-         RMpmNoOsuX0iP5LTyT27kweljyNc1a+PTlomOBGHxiMcCgtdUg6ttuLD+LAVtxjLxJnF
-         ++Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQzlVVNnr2G02vgUU/+wX8NFr8sp6S5eov9mq95qpWjysgdmpVWEYcZieOhtllCahMMMM+tYwNKW87vJwuEv4hbns2hyDEOi3cnDCuV15Ob1xfyeo94k2tlbKnZXKYkWK11EuVDskzSK+/DcnQGcws8kFoU2RnSsXsTAvDqB7YYszP3A==
-X-Gm-Message-State: AOJu0YwXAWCRmyJyYyaWA3cqooshjpUvhHNSBNsX3R0KOri3NqPhpDn9
-	AAOLJDfk4GsEP3QX3Yu1xLaUwF7JOA42b4sbJC+8a2t/auBT+czGpPyld383ieP9c3mbUcA9Ml/
-	mUxIEl8cVFyukok36zxlJQck4njo=
-X-Google-Smtp-Source: AGHT+IGjnH5Y4f8Xc68LPqBs4yQPZ4Urn7qyiy5Tf+SuqPL2hThvfF428reoLcncH5TvvcXLda4DiyJCHhDBIBQxWys=
-X-Received: by 2002:a05:6a20:a99a:b0:1a0:e187:87c4 with SMTP id
- cc26-20020a056a20a99a00b001a0e18787c4mr8978541pzb.38.1709855232461; Thu, 07
- Mar 2024 15:47:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709857174; x=1710461974;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=De+xXG9LErpx0jsehLOAYTZORpUzSmU7F+YMDvAGffE=;
+        b=Llxrc73/0bO4UZUaDOOec9fg7dTrj+8/Jh1x5P0wrrnpVnrsOtkwHDQOh63ZOYBI85
+         kq4UPRWBUYGrY7uUSvoA4JCT8/i706zphYH0PY9L2mSmjGDL1IyCXhuIUr5p2nKp1umz
+         jwviDOTDTtQn5ByC0n/zisNRAVzPWvzI1NSZdyBc/CcGdCBL8zeTy4IY5pskrVJvTN2Y
+         E4rF1rssvEj3iLOfK5NyUC+i+KAqN+DMMEEctsoIsMZDMAzRIR3Lh+2v4VeS4esAodfk
+         Dod+d1dSwu8icr7CuV/phfa2ZQ80T4eQdjDPwki4N25gCSMcvFcOzCa10VtZ8iRLIioO
+         I86A==
+X-Forwarded-Encrypted: i=1; AJvYcCUyRcuHLz9jH7wg/MHWCEGw+mc7T/kYBFnF53UdjEkrgnqaE1nMrn08RZH0QIbhd3BZzxi+xVodoo+oKshhSE33GaOTds8L3yC22G28hXGHqQ==
+X-Gm-Message-State: AOJu0YzF2KdNxqk3XuEuNavYLObtZZL+JRT9xMrW1MrTni5t5aC0uymT
+	A/FSEca2uYMtQ5dRs/xSDZvEmMpHmzmIM03OHBb4l879JZlxpyf6fQMhjkHjR3FBOWz1lFsxlxD
+	qeDT1Pw==
+X-Google-Smtp-Source: AGHT+IHNsQE0fEVEtOu1phuNJbGl8EvuyfUoDyFIcxYP78HmFEzRfUDobphGohVDT9DtbXgpL2DDOGV/1fHt
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:218f:92ee:d543:c1a2])
+ (user=irogers job=sendgmr) by 2002:a25:310a:0:b0:dc6:b7c2:176e with SMTP id
+ x10-20020a25310a000000b00dc6b7c2176emr84209ybx.4.1709857173521; Thu, 07 Mar
+ 2024 16:19:33 -0800 (PST)
+Date: Thu,  7 Mar 2024 16:19:09 -0800
+Message-Id: <20240308001915.4060155-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240202234057.2085863-1-irogers@google.com> <CAP-5=fVjAHqAHHLqE=3v2bP6S6k98psiuZds7TUTFCT7RgMFdQ@mail.gmail.com>
- <CAM9d7ciPYMd4zckrcgnPtradZ_bvaNOHji1tkkYQu_TTF5=eYw@mail.gmail.com>
-In-Reply-To: <CAM9d7ciPYMd4zckrcgnPtradZ_bvaNOHji1tkkYQu_TTF5=eYw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 7 Mar 2024 15:47:00 -0800
-Message-ID: <CAM9d7cgbxHZoaq4ZLCda-6TW5A+b+-8dSrRApk+AjcTVNC5hNA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Clean up libperf cpumap's empty function
-To: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v3 0/6] Extra verbose/perf-list details
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
-	Leo Yan <leo.yan@linux.dev>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
+Add more encoding detail and raw event details in perf list. Add PMU
+name and reverse lookup from config to event name to
+perf_event_attr_fprintf. This makes the verbose output easier to read,
+and the perf list information more specific.
 
-Sorry for the late reply.
+v3. Fix to reverse lookup to ensure or aliases are loaded and if
+    getting the config value fails for an event/alias just continue to
+    the next one.
+v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
+    becomes "Raw event descriptor" add assert to keep term numbers in
+    sync, fix a commit message.
 
-On Fri, Feb 16, 2024 at 5:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, Feb 14, 2024 at 2:03=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Fri, Feb 2, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > Rename and clean up the use of libperf CPU map functions particularly
-> > > focussing on perf_cpu_map__empty that may return true for maps
-> > > containing CPUs but also with an "any CPU"/dummy value.
-> > >
-> > > perf_cpu_map__nr is also troubling in that iterating an empty CPU map
-> > > will yield the "any CPU"/dummy value. Reduce the appearance of some
-> > > calls to this by using the perf_cpu_map__for_each_cpu macro.
-> > >
-> > > v3: Address handling of "any" is arm-spe/cs-etm patch.
-> > > v2: 6 patches were merged by Arnaldo. New patch added ensure empty
-> > >     maps are allocated as NULL (suggested by James Clark). Hopefully =
-a
-> > >     fix to "perf arm-spe/cs-etm: Directly iterate CPU maps".
-> > >
-> > > Ian Rogers (8):
-> > >   libperf cpumap: Add any, empty and min helpers
-> > >   libperf cpumap: Ensure empty cpumap is NULL from alloc
-> > >   perf arm-spe/cs-etm: Directly iterate CPU maps
-> > >   perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is_emp=
-ty
-> > >     use
-> > >   perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_empty
-> > >   perf arm64 header: Remove unnecessary CPU map get and put
-> > >   perf stat: Remove duplicate cpus_map_matched function
-> > >   perf cpumap: Use perf_cpu_map__for_each_cpu when possible
-> >
-> > Ping. Thanks,
-> > Ian
->
-> Adrian and James, are you ok with this now?
+Ian Rogers (6):
+  perf list: Add tracepoint encoding to detailed output
+  perf pmu: Drop "default_core" from alias names
+  perf list: Allow wordwrap to wrap on commas
+  perf list: Give more details about raw event encodings
+  perf tools: Use pmus to describe type from attribute
+  perf tools: Add/use PMU reverse lookup from config to name
 
-I think James is fine now and the Intel-pt part seems straight-forward
-so I'd like to merge this change.  Please tell me if you have any concerns.
+ tools/perf/builtin-list.c                 | 21 ++++-
+ tools/perf/util/perf_event_attr_fprintf.c | 26 +++++--
+ tools/perf/util/pmu.c                     | 82 +++++++++++++++++++-
+ tools/perf/util/pmu.h                     |  4 +
+ tools/perf/util/pmus.c                    | 94 +++++++++++++++++++++++
+ tools/perf/util/pmus.h                    |  1 +
+ tools/perf/util/print-events.c            | 55 +++++++------
+ 7 files changed, 242 insertions(+), 41 deletions(-)
 
-Thanks,
-Namhyung
+-- 
+2.44.0.278.ge034bb2e1d-goog
+
