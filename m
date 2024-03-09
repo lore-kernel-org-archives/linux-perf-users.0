@@ -1,175 +1,165 @@
-Received: from PR0P264CU014.outbound.protection.outlook.com (mail-francecentralazon11022018.outbound.protection.outlook.com [52.101.167.18])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356BE37707
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 09:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709978078; cv=fail; b=YN65PiJqXaPWf+pAEtzTWCfv77EZ/u3ianUnIuVCZLvwccYVNH3XNXJMgVHCMMg6mtSTwQlpjXlYT2s+VH4Vu4lHUXlfiGhKtRM/Epmb0LEEhIFBI4bPS34kqix46QFyLo3ym/1/iQMD9TLb+e9cObg6bLbEspAfovF52JX4MoE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709978078; c=relaxed/simple;
-	bh=lhoCGnXEHzXRA4GWatYlmkJZJLwhmayNskiohW6T4fE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cMzgcyJbkbdxKFxZugn+3mXtG1dPtEVKk9In8cArhBECfmET5/lB51tyG+LgSQoyr4zd5NMVXi1N8R25IkwH70RxhxL3wk/eELcgTr6pwPn8bmFMwYLbCpVICceuNSwivJNYNjSdugM3ZQDgb+d2M4bjmyCHrbjJbeaoT38vZT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=c0rxJUii; arc=fail smtp.client-ip=52.101.167.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929E13BBF1
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 13:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709990853; cv=none; b=eAUswyHSae/EI4+LaYSsAKY9ga6ujc9eZABTOL8JdB0ovo605mLPbygBThkquFtOFm2k45mUHYWCN1Al8Z7lLUZ0691U2djf3iKoaiDI71PMN8OTl6KeJ/R0d0UFkfYp1gOVqX2IwhJicBVVzF7UznQn4iKDxttyAK6929JowfM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709990853; c=relaxed/simple;
+	bh=H5KG5JIlYcGKNIUTpGPnJgLheL+UM4pOuIquZzGQ48Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hy19a+JgKRCSQ1EcYyVIAY61LioERtj7fQ6wmmjiuT/G9cMeHohrghwBZeeLL2/Dwk44HhUaB7KVlbrWsX70IvDJ62/IwKA6mBKyGrYrND0kD72GqHNYC2YHMdNlr/YHX41p+ClQx1GrSTtcTZxVc94ZmIJy71OaLhzaURFlF3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=F/iUVdae; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="c0rxJUii"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kHVsKxGXFC9go/AlVEJM++npfSLn1gB6jPCjYedTsHLl0LY5MjKUwy7l29mBlgm+H7kT0IWMYpdkHy4qRUvxY7qy9HmqYs/NzdWS3tVQq2j+JfpfmYZ+R6yYXUHHFRSInUYJcadVSKHLG+Ong+EqGI/4+j6Uz2Kc4g9RJngvbJG36ItBNda0s6O5nnisfh68kp2gBMM/eZdFZYZ+TjCmXtQGUV10KCShli6XTBO00Fi68T6Bexz9nTEQzhwlB4yJtg0cwSpTrmAOMa1SYhuiKA0zPn8zAFBx9so6LFkBKFyJH+txWLSMHaWuLKGbG8cua/6+h9WggoTX+4+sNHiRJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lhoCGnXEHzXRA4GWatYlmkJZJLwhmayNskiohW6T4fE=;
- b=WHNcXKK9F+ilEjxFezWU3o4SHmvw5PvK3+HHmBaW4sZFbiWzJcbFVfF/kRiHOdQNjfCqsRoN2dkabflNeytCR3bzdOYgf9DxRFL0JEwhJm42tOIg79e1r+OUbHNYrhrwV5o4PEKAU1HhQzmGtjJ125Hj6niTb2yCeHE4eSm43U+TviGjp2y8e5yg06qEw+V+mD0oJaF6EpKhMQj1zfF9s3eZ9qaVdM5uU3BVlgm9xDSiioT5YAxjNsmJ8oKZSbqbhRuuaa6F+uhcZs5XUQnb0nANky44UOxFDTNEGx5joARhUtnjcRxEIv+F6RW50RkkY5mESWJu9KQ/oTy5mf1Ntw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
- dkim=pass header.d=csgroup.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lhoCGnXEHzXRA4GWatYlmkJZJLwhmayNskiohW6T4fE=;
- b=c0rxJUiihet8wapEXjhPVhW5da9AJRQtNrCRu9ko91QzaMs03wniVLj8u8TIZEv9n8OsuHWUzLEb0YAHsBjqwd0/ariSzsbb5RPPprVE3K4LmLy1Uc4Xd3Bk1e8oJj5joESHTzDUGa74ybxw0YuuV4unuzc24YCJU4GCgTNhaQRpjW6T5LENm869OK2sUNaLbYR/oCtQ8UPccnTmDZKV96PaIcn0ivNobUOAIq6IW322psBLUwhKtERaK4IsIwxtI8EOJeFcQZelyXwHGQrW5q+PBNj8flor1WnNOKFRgm693/h+d5fTSfdNnjmBrzL7mi+s4gvVX+I+awSTMluehA==
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
- by PAZP264MB3119.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1f2::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.33; Sat, 9 Mar
- 2024 09:54:34 +0000
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::c192:d40f:1c33:1f4e]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::c192:d40f:1c33:1f4e%6]) with mapi id 15.20.7362.031; Sat, 9 Mar 2024
- 09:54:34 +0000
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, "acme@kernel.org"
-	<acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "irogers@google.com"
-	<irogers@google.com>, "namhyung@kernel.org" <namhyung@kernel.org>
-CC: "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"maddy@linux.ibm.com" <maddy@linux.ibm.com>, "disgoel@linux.vnet.ibm.com"
-	<disgoel@linux.vnet.ibm.com>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 3/3] tools/perf/arch/powerc: Add get_arch_regnum for
- powerpc
-Thread-Topic: [PATCH 3/3] tools/perf/arch/powerc: Add get_arch_regnum for
- powerpc
-Thread-Index: AQHacfNe3jEDhePPPkmbU6MiSyY7bLEvK6oA
-Date: Sat, 9 Mar 2024 09:54:34 +0000
-Message-ID: <6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup.eu>
-References: <20240309072513.9418-1-atrajeev@linux.vnet.ibm.com>
- <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=csgroup.eu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PAZP264MB3119:EE_
-x-ms-office365-filtering-correlation-id: cd135fd4-50b1-43bf-c6f0-08dc401eec87
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- c8uY7SMKUvuJGgrGki+tkzt4zba86479pw8c1BbIekjQETh5ehGj1at9cQUSNeSaKVFyx4tO2IEaKBNYjcasevUIFpe6OiLSiSffWRAPwTTdBkCPfYhwiVM5gIJffqfdLxMPt44U0MJzSxT2rcTjPecjSZ7qfHxk2Q8djW4Kdpuh4hlSwpJi/arLL2HMFyncyF3UOme7VOOwlMnH6cUIB2oBL7uD3UstSkBZYFFVvTd0Lqp8RhrazkTbSdpHgkiDvqkNlpVHNPtlN+LJQ8Kn6ICPdb0OkVGT4ZTkYtIRSecDe06MoHTP0srAy4Lg4lN1H1ryDjNi4Im3tcOauN28w77d/AqBYR4hFky/g2JzoycH7ftgtVQhV0yophUBEzI6M7hYAnSyp5x7lmgrKU+KgR9Nvq372cXtnAuFwlysOeZtY2lueLrhwsEty1f4yff+OkzO87rhKcGt0ccJK+rkU0oon9IqEVZD7gIdO9j08pIzvdt8KdwIOu0VuSzGLro0/C1GA5eV+34/sxAZthcQzWj2sG+330DlJNDd5kQptix82+TqCTR7MRM2qgEhoL8U6XaG8CA9jDLEiCa5mBTTjsVfz0qN/3AIuF4zwlYtsV1vV9IQ3UBlcotlbc4uBpWBIeX4wDGNJlvYOBgJ5fRDcM+bwhfBqCn9ThmP+7JpbkfBYLN089KEhNzzMxaQTdUlWEEPT9fk73iqnfexXD2dTw==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NElkK0hGQTEvUDhYRlZSNmtISUlJeFM4eCt4V3Naa0ZjcCtzbjNTRGlrZTdO?=
- =?utf-8?B?Y0laVjRGYThPSzVKK3Bxbkh2eFRxaUQ5SXRXSjNUTjBCMTloNXZmZ2g4NW5q?=
- =?utf-8?B?UlRXNXFyemZjUHNiZ1h3L3ljbjlwN1VwYTZIKzFSc0JrY29PVWlCeldDaUZB?=
- =?utf-8?B?VnN1TXlxU0dreE0vY2N0UU9PeEVpNll6YW9Oa0JwZk1vejA0dDAyZVo1dURH?=
- =?utf-8?B?VWhGd0c5U2c2SVVSUE9pbVY5NVlJRklJR3VpZ0dCS25SS1l0YUxtSFNMMW9B?=
- =?utf-8?B?Tys1UFZtbEFQcGtPbE5icVh1czdORXR4SlJyK0hEeFpLS3MxVVZhRitMQnMx?=
- =?utf-8?B?S2xDOVJZMVA2N1gvQXg2VXdhcktzV1dsczJRZThUWEg0dXc2S3F5UGVGUFEy?=
- =?utf-8?B?VnVqZ2Z6akNhaVNneE03eCt5dm4wNlQyNEFiVXVZbmlzd3VSZlJvV2IvSmZn?=
- =?utf-8?B?Y3A2amptSGVMSndsSkdGbDJKTXJjNFdmeVVMc1lBLzVZSEZ0QkxxcEgwQU5l?=
- =?utf-8?B?UlExQ3RCQ010a1VPNi9lc203VTNvYkxTbnZVSWkzMVB6U1VUamJHNHhIRVp0?=
- =?utf-8?B?aGs5L1dud0ZqcnpiNUh5NlR2anJKUG9qVlIzNllNbmt2V1g1MkNOb3hZWjQ2?=
- =?utf-8?B?WVVNZ3d2cUNBam5DbjRPanRtNWtUY0tFcHlTVzFIR2tZNkNmU2NId1BjRHg4?=
- =?utf-8?B?RSt5WWo5TmE2UFdUVGI5bEYzb25Ia0t0YWtvSGt6VlNxRld0SjllU3k1WTZO?=
- =?utf-8?B?bnQ3OEsraTkxSVhNSUlKMEY1dGU2MEZvTVBqcXBHbXNRRWRNcDFCMGtTVWxL?=
- =?utf-8?B?cHJwUW1VdGgxRWVKdXpSU0FhQzR2bVNacGlHQUZ0WkprVjVPVWJKM0lXSDVu?=
- =?utf-8?B?RlljMFZvRXQrTTQxVWl3QjNoNzR4VHRrSkRyTDUwaklxdmJ2bEdQMGF1YUFO?=
- =?utf-8?B?d3hKVXJzeHZTRTBMOHA3MVk3aEtlbUdPTlQxQ2paRkc0SUxZWVRzZVl0d2tX?=
- =?utf-8?B?T3V4Rk5TdEtVKzg4SzhZamZPWVh5QWNFNW1vZFZLUmJqNlgwb1dtNnV0WmV3?=
- =?utf-8?B?Umh2ZXhpemxyN05VMWVrY2N3Zm5EMXRLeGo0ZlBxOHplQWtWejNiQnBZRm9w?=
- =?utf-8?B?KzBzRllabDY1bW4yc2xCYjk0RGc1dThrQ1VsaENjNm5RWGdWeVZ2Smh5NXdC?=
- =?utf-8?B?eE1GR0tQY3d0QlpOcjY4eWZYd245N251NlRvdzNzeWQyeU0zQVRmNE5HM3pE?=
- =?utf-8?B?K1Y5T0dVZmpSc1ZqTkNOSlk5cDU4U2pVa2UwZWI3MVZPTzFJNTFGMGFYeEZM?=
- =?utf-8?B?RlJVSVZRM3gxV3NpdHJPbGM5UVN2a0ZYWEZqZ1BXWENLVWtvM3JURVZCeGZv?=
- =?utf-8?B?WnI3NEhnUVVrWGpNMWJ4dnVROElySnN5OHpmZ0lYYnlMM2lmSjUwbGloMC8z?=
- =?utf-8?B?b3hFbXRsemQyaWcrcXdPZzRxaFVJYURtSXBjUFJNeGM0TmpXY2pMdUd2Vysv?=
- =?utf-8?B?cEhOdkdPOWp1YzdtRFZLSk1WUml1SCtONUdQNHdHRzRsVEJDSDdEdG9samJP?=
- =?utf-8?B?YTQ2ci9xc3NQallmeUhKOFE2ZzVZVmdoZUlEZlZiVWFOY0daMzRDb2Y5ZDNs?=
- =?utf-8?B?TXhBanNhbjNtbmtvNVBhVXBSY3ZFeW9FbFhrQzljMEFOeFI3N3dKYURPdlRQ?=
- =?utf-8?B?eEV4U3JncFJPNDBWbndvUklvdis4TG1XYVNPT1FETmcvOU1XRVJwSVBiMDIx?=
- =?utf-8?B?QjhuV0lXaGtiZ2VNSUZUY2ZWQnp6VWthMWxiYUhMcVJKSFZrczBkM0RzVE5O?=
- =?utf-8?B?bE83UlIrUXp5L1E3Rk1UZk5JWGt2QkRSbDRyK0YvQ3N4c0FhYjFhL1hpQytW?=
- =?utf-8?B?dGJGemxvcFpHZWxKeW9nQ3M0bDRmUm1XUmlwU2thd2tNMnhweDdOSmIvL0Z1?=
- =?utf-8?B?UEd2VTlKVXI0YjRyMU01THhXOW5nRndFZ1ErRGJpOU55N1FLZ2RrNE1GVFlM?=
- =?utf-8?B?TDMrTjdBKzVEazJEczZjRHhxRlNUS3RoZVFReDg3NTlDWm1jdnpNY0ZXWHFt?=
- =?utf-8?B?NDhnTHdUYXlxdDE0L2VPbloyaVMrcWRmU1N2WUVkMTdJUnVHVVB6SmxsVjNC?=
- =?utf-8?Q?4VAX+VBmOCDVqet4FAmR2VkVH?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7C003D63579E844E96682F8A6FA8A193@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="F/iUVdae"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id D8F47240101
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 14:27:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1709990843; bh=H5KG5JIlYcGKNIUTpGPnJgLheL+UM4pOuIquZzGQ48Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
+	 Content-Transfer-Encoding:From;
+	b=F/iUVdae+0D4WrggHOP/rzjqSvD2LbbBugqcZhVMqwxkOH5WfVecY6InQSasLcI3n
+	 0TnLTkOOl9+B/FUw3NWKUklGPwo6ijzWydsfiUgNWosAKMOPgsbGcZCyigAJL/puhZ
+	 7/+DJ4fmGhxYktbO2cM3urNw4IWjOicENVPfTVoCLY8mRNym+UQSQhbgE3aZhEygVs
+	 JxBN4UJz/MM05AsuLrBa2aPzv/8ltF00tSONaCQOSd9aR54zCgm+/Xq/pJ94JtBWUo
+	 vHWx7jtqc5j3VK+bVqc8jGrNjDoIpKqcrATlnrpTQSHAw6MF1UzYKNqBmRvtrXgPvw
+	 wMSGy+cpLPFXA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4TsP394wgsz9rxB;
+	Sat,  9 Mar 2024 14:27:17 +0100 (CET)
+From: Anne Macedo <retpolanne@posteo.net>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Anne Macedo <retpolanne@posteo.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] perf lock contention: skip traceiter functions
+Date: Sat,  9 Mar 2024 13:27:08 +0000
+Message-Id: <20240309132710.1055941-1-retpolanne@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: csgroup.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd135fd4-50b1-43bf-c6f0-08dc401eec87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2024 09:54:34.0981
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wkr12T4QM2pgK0dkpHCGKE+xrPhnGqlJlv8WuxoioBBZB/jejWVGi5C83CP+EDkGRHYP507Otdsswpja76OC/5iwvv+gwYKuIApJOLwbEw4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3119
+Content-Transfer-Encoding: 8bit
 
-DQoNCkxlIDA5LzAzLzIwMjQgw6AgMDg6MjUsIEF0aGlyYSBSYWplZXYgYSDDqWNyaXTCoDoNCj4g
-VGhlIGZ1bmN0aW9uIGdldF9kd2FyZl9yZWdudW0oKSByZXR1cm5zIGEgRFdBUkYgcmVnaXN0ZXIg
-bnVtYmVyDQo+IGZyb20gYSByZWdpc3RlciBuYW1lIHN0cmluZy4gVGhpcyBjYWxscyBhcmNoIHNw
-ZWNpZmljIGZ1bmN0aW9uDQo+IGdldF9hcmNoX3JlZ251bSB0byByZXR1cm4gcmVnaXN0ZXIgbnVt
-YmVyIGZvciBjb3JyZXNwb25kaW5nIGFyY2guDQo+IEFkZCBtYXBwaW5ncyBmb3IgcmVnaXN0ZXIg
-bmFtZSB0byByZWdpc3RlciBudW1iZXIgaW4gcG93ZXJwYyBjb2RlOg0KPiBhcmNoL3Bvd2VycGMv
-dXRpbC9kd2FyZi1yZWdzLmMNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEF0aGlyYSBSYWplZXYgPGF0
-cmFqZWV2QGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gLS0tDQo+ICAgdG9vbHMvcGVyZi9hcmNoL3Bv
-d2VycGMvdXRpbC9kd2FyZi1yZWdzLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKw0KPiAg
-IDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvdG9v
-bHMvcGVyZi9hcmNoL3Bvd2VycGMvdXRpbC9kd2FyZi1yZWdzLmMgYi90b29scy9wZXJmL2FyY2gv
-cG93ZXJwYy91dGlsL2R3YXJmLXJlZ3MuYw0KPiBpbmRleCAwYzRmNGNhZjUzYWMuLmQ5NTVlM2U1
-NzdlYSAxMDA2NDQNCj4gLS0tIGEvdG9vbHMvcGVyZi9hcmNoL3Bvd2VycGMvdXRpbC9kd2FyZi1y
-ZWdzLmMNCj4gKysrIGIvdG9vbHMvcGVyZi9hcmNoL3Bvd2VycGMvdXRpbC9kd2FyZi1yZWdzLmMN
-Cj4gQEAgLTk4LDMgKzk4LDMyIEBAIGludCByZWdzX3F1ZXJ5X3JlZ2lzdGVyX29mZnNldChjb25z
-dCBjaGFyICpuYW1lKQ0KPiAgIAkJCXJldHVybiByb2ZmLT5wdHJlZ3Nfb2Zmc2V0Ow0KPiAgIAly
-ZXR1cm4gLUVJTlZBTDsNCj4gICB9DQo+ICsNCj4gK3N0cnVjdCBkd2FyZl9yZWdzX2lkeCB7DQo+
-ICsJY29uc3QgY2hhciAqbmFtZTsNCj4gKwlpbnQgaWR4Ow0KPiArfTsNCj4gKw0KPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkd2FyZl9yZWdzX2lkeCBwb3dlcnBjX3JlZ2lkeF90YWJsZVtdID0gew0K
-PiArCXsgInIwIiwgMCB9LCB7ICJyMSIsIDEgfSwgeyAicjIiLCAyIH0sIHsgInIzIiwgMyB9LCB7
-ICJyNCIsIDQgfSwNCj4gKwl7ICJyNSIsIDUgfSwgeyAicjYiLCA2IH0sIHsgInI3IiwgNyB9LCB7
-ICJyOCIsIDggfSwgeyAicjkiLCA5IH0sDQo+ICsJeyAicjEwIiwgMTAgfSwgeyAicjExIiwgMTEg
-fSwgeyAicjEyIiwgMTIgfSwgeyAicjEzIiwgMTMgfSwgeyAicjE0IiwgMTQgfSwNCj4gKwl7ICJy
-MTUiLCAxNSB9LCB7ICJyMTYiLCAxNiB9LCB7ICJyMTciLCAxNyB9LCB7ICJyMTgiLCAxOCB9LCB7
-ICJyMTkiLCAxOSB9LA0KPiArCXsgInIyMCIsIDIwIH0sIHsgInIyMSIsIDIxIH0sIHsgInIyMiIs
-IDIyIH0sIHsgInIyMyIsIDIzIH0sIHsgInIyNCIsIDI0IH0sDQo+ICsJeyAicjI1IiwgMjUgfSwg
-eyAicjI2IiwgMjYgfSwgeyAicjI3IiwgMjcgfSwgeyAicjI3IiwgMjcgfSwgeyAicjI4IiwgMjgg
-fSwNCj4gKwl7ICJyMjkiLCAyOSB9LCB7ICJyMzAiLCAzMCB9LCB7ICJyMzEiLCAzMSB9LA0KPiAr
-fTsNCj4gKw0KPiAraW50IGdldF9hcmNoX3JlZ251bShjb25zdCBjaGFyICpuYW1lKQ0KPiArew0K
-PiArCXVuc2lnbmVkIGludCBpOw0KPiArDQo+ICsJaWYgKCpuYW1lICE9ICdyJykNCj4gKwkJcmV0
-dXJuIC1FSU5WQUw7DQo+ICsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShwb3dlcnBj
-X3JlZ2lkeF90YWJsZSk7IGkrKykNCj4gKwkJaWYgKCFzdHJjbXAocG93ZXJwY19yZWdpZHhfdGFi
-bGVbaV0ubmFtZSwgbmFtZSkpDQo+ICsJCQlyZXR1cm4gcG93ZXJwY19yZWdpZHhfdGFibGVbaV0u
-aWR4Ow0KDQpDYW4geW91IGRvIG1vcmUgc2ltcGxlID8NCg0KU29tZXRoaW5nIGxpa2U6DQoNCglp
-bnQgbjsNCg0KCWlmICgqbmFtZSAhPSAncicpDQoJCXJldHVybiAtRUlOVkFMOw0KCW4gPSBhdG9p
-KG5hbWUgKyAxKTsNCglyZXR1cm4gbiA+PSAwICYmIG4gPCAzMiA/IG4gOiAtRU5PRU5UOw0KDQo+
-ICsNCj4gKwlyZXR1cm4gLUVOT0VOVDsNCj4gK30NCg==
+The perf lock contention program currently shows the caller of the locks
+as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
+from the traceiter itself. Instead, it should show the real callers for
+the locks.
+
+When fiddling with the --stack-skip parameter, the actual callers for
+the locks start to show up. However, just ignore the
+__traceiter_contention_begin and the __traceiter_contention_end symbols
+so the actual callers will show up.
+
+Before this patch is applied:
+
+sudo perf lock con -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
+         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
+         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
+         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
+         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
+         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
+         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+
+Before this patch is applied - using --stack-skip 5
+
+sudo perf lock con --stack-skip 5 -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
+         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
+         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
+         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
+         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
+         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
+         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
+
+After this patch is applied:
+
+sudo ./perf lock con -a -b -- sleep 3
+ contended   total wait     max wait     avg wait         type   caller
+
+         4      4.13 s       2.07 s       1.03 s      rwlock:W   release_task+0x68
+         2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_update_next_owner+0x50
+         2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+0x338
+         1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_kn_lock_live+0x58
+         2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+0x338
+
+changes since v0:
+
+- skip trace_contention functions
+- use sym->end instead of __traceiter_contention_end for text_end
+
+Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+---
+ tools/perf/util/machine.c | 17 +++++++++++++++++
+ tools/perf/util/machine.h |  2 +-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 527517db3182..db443947ccd1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3266,6 +3266,14 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+ 
+ 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
+ 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
++
++		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
++		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
++		machine->traceiter.text_end = map__unmap_ip(kmap, sym->end);
++
++		sym = machine__find_kernel_symbol_by_name(machine, "trace_contention_begin", &kmap);
++		machine->trace.text_start = map__unmap_ip(kmap, sym->start);
++		machine->trace.text_end = map__unmap_ip(kmap, sym->end);
+ 	}
+ 
+ 	/* failed to get kernel symbols */
+@@ -3280,5 +3288,14 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
+ 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
+ 		return true;
+ 
++	/* traceiter functions currently don't have their own section
++	 * but we consider them lock functions
++	 */
++	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
++		return true;
++
++	if (machine->trace.text_start <= addr && addr < machine->trace.text_end)
++		return true;
++
+ 	return false;
+ }
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index e28c787616fe..4312f6db6de0 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -49,7 +49,7 @@ struct machine {
+ 	struct {
+ 		u64	  text_start;
+ 		u64	  text_end;
+-	} sched, lock;
++	} sched, lock, traceiter, trace;
+ 	pid_t		  *current_tid;
+ 	size_t		  current_tid_sz;
+ 	union { /* Tool specific area */
+-- 
+2.39.2
+
