@@ -1,165 +1,81 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929E13BBF1
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 13:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3EFBA4D
+	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 18:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709990853; cv=none; b=eAUswyHSae/EI4+LaYSsAKY9ga6ujc9eZABTOL8JdB0ovo605mLPbygBThkquFtOFm2k45mUHYWCN1Al8Z7lLUZ0691U2djf3iKoaiDI71PMN8OTl6KeJ/R0d0UFkfYp1gOVqX2IwhJicBVVzF7UznQn4iKDxttyAK6929JowfM=
+	t=1710009778; cv=none; b=pwd7GDoeOTajymFc9c0KlZejF1qSgwFg/x8r9PoYn70vvi0pld2AqUuA7y3b5fBNabJGS0hDiMbcvBGPqPxlRyGdnNWicKYOtVX2tyy8O/czFsEvA/zGX4Dqf9aNuNb6Yusjin8+4nLuB6zuTFYHZ0mf45cRgRMKk9OcvxbQ00w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709990853; c=relaxed/simple;
-	bh=H5KG5JIlYcGKNIUTpGPnJgLheL+UM4pOuIquZzGQ48Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hy19a+JgKRCSQ1EcYyVIAY61LioERtj7fQ6wmmjiuT/G9cMeHohrghwBZeeLL2/Dwk44HhUaB7KVlbrWsX70IvDJ62/IwKA6mBKyGrYrND0kD72GqHNYC2YHMdNlr/YHX41p+ClQx1GrSTtcTZxVc94ZmIJy71OaLhzaURFlF3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=F/iUVdae; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="F/iUVdae"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id D8F47240101
-	for <linux-perf-users@vger.kernel.org>; Sat,  9 Mar 2024 14:27:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1709990843; bh=H5KG5JIlYcGKNIUTpGPnJgLheL+UM4pOuIquZzGQ48Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=F/iUVdae+0D4WrggHOP/rzjqSvD2LbbBugqcZhVMqwxkOH5WfVecY6InQSasLcI3n
-	 0TnLTkOOl9+B/FUw3NWKUklGPwo6ijzWydsfiUgNWosAKMOPgsbGcZCyigAJL/puhZ
-	 7/+DJ4fmGhxYktbO2cM3urNw4IWjOicENVPfTVoCLY8mRNym+UQSQhbgE3aZhEygVs
-	 JxBN4UJz/MM05AsuLrBa2aPzv/8ltF00tSONaCQOSd9aR54zCgm+/Xq/pJ94JtBWUo
-	 vHWx7jtqc5j3VK+bVqc8jGrNjDoIpKqcrATlnrpTQSHAw6MF1UzYKNqBmRvtrXgPvw
-	 wMSGy+cpLPFXA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4TsP394wgsz9rxB;
-	Sat,  9 Mar 2024 14:27:17 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Anne Macedo <retpolanne@posteo.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] perf lock contention: skip traceiter functions
-Date: Sat,  9 Mar 2024 13:27:08 +0000
-Message-Id: <20240309132710.1055941-1-retpolanne@posteo.net>
+	s=arc-20240116; t=1710009778; c=relaxed/simple;
+	bh=KxmG+wyO+T6Zq/Qd6IbgqH9vgBtS2JnkHOOhVKkt0yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2VWduuJi8znEtLYCollHa/wDtPOghHfcjjai28e4+5ApJXzOaZ87pULilpFAhRgUEp9QqwhaurOXMG9nnmDxUXXEuESPt0C9qYLo345nv3PKRU4ToROGTjjadR8uSW0PoCVfDpRHD1rpfnnabLVlpEYf2dEOfsnIZmQUIhjbWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 429HhSE3003665;
+	Sat, 9 Mar 2024 11:43:28 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 429HhRAn003661;
+	Sat, 9 Mar 2024 11:43:27 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Sat, 9 Mar 2024 11:43:26 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, kjain@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/3] tools/erf/util/annotate: Set register_char and memory_ref_char for powerpc
+Message-ID: <20240309174326.GU19790@gate.crashing.org>
+References: <20240309072513.9418-1-atrajeev@linux.vnet.ibm.com> <20240309072513.9418-3-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240309072513.9418-3-atrajeev@linux.vnet.ibm.com>
+User-Agent: Mutt/1.4.2.3i
 
-The perf lock contention program currently shows the caller of the locks
-as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
-from the traceiter itself. Instead, it should show the real callers for
-the locks.
+All instructions with a primary opcode from 32 to 63 are memory insns,
+and no others.  It's trivial to see whether it is a load or store, too
+(just bit 3 of the insn).  Trying to parse disassembled code is much
+harder, and you easily make some mistakes here.
 
-When fiddling with the --stack-skip parameter, the actual callers for
-the locks start to show up. However, just ignore the
-__traceiter_contention_begin and the __traceiter_contention_end symbols
-so the actual callers will show up.
+On Sat, Mar 09, 2024 at 12:55:12PM +0530, Athira Rajeev wrote:
+> To identify if the instruction has any memory reference,
+> "memory_ref_char" field needs to be set for specific architecture.
+> Example memory instruction:
+> lwz     r10,0(r9)
+> 
+> Here "(" is the memory_ref_char. Set this as part of arch->objdump
 
-Before this patch is applied:
+What about "lwzx r10,0,r19", semantically exactly the same instruction?
+There is no paren in there.  Not all instructions using parens are
+memory insns, either, not in assembler code at least.
 
-sudo perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
+> To get register number and access offset from the given instruction,
+> arch->objdump.register_char is used. In case of powerpc, the register
+> char is "r" (since reg names are r0 to r31). Hence set register_char
+> as "r".
 
-         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
-         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
-         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
-         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
-         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
-         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
-         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+cr0..cr7
+r0..r31
+f0..f31
+v0..v31
+vs0..vs63
+and many other spellings.  Plain "0..63" is also fine.
 
-Before this patch is applied - using --stack-skip 5
+The "0" in my lwzx example is a register field as well (and it stands
+for "no register", not for "r0").  Called "(RA|0)" usually (incidentally,
+see the parens there as well, oh joy).
 
-sudo perf lock con --stack-skip 5 -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
+Don't you have the binary code here as well, not just a disassembled
+representation of it?  It is way easier to just use that, and you'll get
+much better results that way :-)
 
-         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
-         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
-         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
-         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
-         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
-         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
-         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
 
-After this patch is applied:
-
-sudo ./perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         4      4.13 s       2.07 s       1.03 s      rwlock:W   release_task+0x68
-         2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_update_next_owner+0x50
-         2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+0x338
-         1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_kn_lock_live+0x58
-         2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+0x338
-
-changes since v0:
-
-- skip trace_contention functions
-- use sym->end instead of __traceiter_contention_end for text_end
-
-Signed-off-by: Anne Macedo <retpolanne@posteo.net>
----
- tools/perf/util/machine.c | 17 +++++++++++++++++
- tools/perf/util/machine.h |  2 +-
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 527517db3182..db443947ccd1 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3266,6 +3266,14 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 
- 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
- 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
-+		machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
-+		machine->traceiter.text_end = map__unmap_ip(kmap, sym->end);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "trace_contention_begin", &kmap);
-+		machine->trace.text_start = map__unmap_ip(kmap, sym->start);
-+		machine->trace.text_end = map__unmap_ip(kmap, sym->end);
- 	}
- 
- 	/* failed to get kernel symbols */
-@@ -3280,5 +3288,14 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
- 		return true;
- 
-+	/* traceiter functions currently don't have their own section
-+	 * but we consider them lock functions
-+	 */
-+	if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
-+		return true;
-+
-+	if (machine->trace.text_start <= addr && addr < machine->trace.text_end)
-+		return true;
-+
- 	return false;
- }
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index e28c787616fe..4312f6db6de0 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -49,7 +49,7 @@ struct machine {
- 	struct {
- 		u64	  text_start;
- 		u64	  text_end;
--	} sched, lock;
-+	} sched, lock, traceiter, trace;
- 	pid_t		  *current_tid;
- 	size_t		  current_tid_sz;
- 	union { /* Tool specific area */
--- 
-2.39.2
-
+Segher
