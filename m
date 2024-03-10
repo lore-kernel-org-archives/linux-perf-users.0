@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8116FF5F
-	for <linux-perf-users@vger.kernel.org>; Sun, 10 Mar 2024 02:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326AC1B7FD
+	for <linux-perf-users@vger.kernel.org>; Sun, 10 Mar 2024 02:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036345; cv=none; b=mZNJ3mVTRLh/vNAWNitfeXbqkhke4idkAWqZCMfP94sK6WpE4vI1PvAd3/7mCwK7NOhmTVqgPxid7jDziVhFLP62ckQyMGIRFKZnsqxflYGSVMZ27Hq4bP/mcymkv4L4GRFivW+sktFB2Wq4d92zkGvOPYfyMTMVwOmdhbsAamw=
+	t=1710036347; cv=none; b=PSdAVIewxe1hPZjwyQDRBzbmYD8y4EL3+NBnpPhanz+LTddOrlc2hUKqw5r40fyr8Yke6+69zcZzqMsAdnyUGpT8gX2cNBiar7celRH/cJP5mAl/+VYIWPAp8rkRpyBJlxycLZ2zwT2tN3oCFUy8m5gPji6K7TtlD4lgtfYX+uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036345; c=relaxed/simple;
-	bh=xr9hx9bRTXredcOnZvT9aTZmO8EItvyRPuWwawu0cX0=;
+	s=arc-20240116; t=1710036347; c=relaxed/simple;
+	bh=6Ap0HyfNfUIjggJWxJHCU3eDXgcXlw9rod9BkywTOBU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=tf3mzDGtNy2C4qfHgI2VuRjb41mA1vpm24z6/lbVyieb8MG0P/sASJrcApWjpXtMRC9RcBvpWupqAplDaqRzFFaXTXM/i1XIjXj8i/MFEawNyqmQXgdlN2mzm8cEPIIxoFKJUlOtzBp4HRSea2vp924Xf7V4rbdnk8ib+C0eNZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GDFA5/1S; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=tsvyuUaDqUfpH/cbpwpPXnzngl0zJWj4wrLW8LZpX3HZ9k2pfmtTwZhrHyFmRlG57C+tieax40QCK/m69MNMxIP1KopSHAzEPpOspggiiJMoKWypUWsYMkvRNEwui1MT42kNoSE5z5erS2dTBMZOR4TVx7Y6wmQAbk13/c2lVU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0p4sSbDK; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDFA5/1S"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a0151f194so40237207b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 09 Mar 2024 18:05:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0p4sSbDK"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a0815e3f9so25389317b3.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 09 Mar 2024 18:05:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036342; x=1710641142; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710036344; x=1710641144; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4OaMyUQu371uaOuekdLYCxktVf9TU0U4kdxUUW/XeAo=;
-        b=GDFA5/1SAcDvh5wHDztVT4fdrpGGN0qq+wpmeK16nZfyhHocB7oKXyTmzVAjzmV6VQ
-         5efsx7rWgkIJt9XTz3UTXv0jUKjDM44630OfMOWCL+/MX2eTAFoiJOGBI13uUTGVPtTz
-         NDN+lhd3oRLxtTVbRD4XZr/lLDtewndKru+9BgwwM7FlnwBteO5LxseGlOoFtQxEBNkx
-         mrP9DMhE3682KLijmsAxz1fyTIHq0zDD5ZT8yJohRFnrcvMiz/QlvnRqfLRzwk5Rj2yS
-         7y4iNFQSZiHWgNU0RM9VoGK+Gh9T6Fkg3yOEDCSxbtF+obf/+2LqKuC/0FUrQ6sd1l60
-         veaA==
+        bh=LWN/JVLNlztmw39JaEsdXVzONxn2KraPuSeDAn+uvDI=;
+        b=0p4sSbDK+xbwGajxOc/9NHGc3pECJbuzXz2qTm4o3nPD+bK3UfXwNOWVstRLgTD5lM
+         W1KWojx/Z/ntmDsARJ6GVG3ZyPG3ZSem43s6PK3oplE3hM18e9BWUGaJ22QqnalSD+/J
+         SgO8y5dlhUbs7PvVnaYHvvN4nCxD5uQfbPSrH/N4ERh2ZGXpESwBtS4rIhLtPkA+L6Pw
+         /PtVXuiqCfY1Iiq9AynkPUGfmoAeduUGfqJ4WBBAeG+bbUaRRbzDGKrCEnZGeHjab6Qn
+         WJx2G8P33hTyuS8Ye4sV/dWLfrlFSLuFsIW3FSZ7xFMzEtvGXTWR//ixPnk3c3uih6M5
+         gwGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036342; x=1710641142;
+        d=1e100.net; s=20230601; t=1710036344; x=1710641144;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4OaMyUQu371uaOuekdLYCxktVf9TU0U4kdxUUW/XeAo=;
-        b=gcyW14Aqv0+mhV97znbacFznR9LQqC+7M5h+ZFtttDnFLk5CRpwUENDa9UabIsS9IW
-         y0H2GsPFI0CndtEvKoPoU2fRm0azQcFahXM4NwjSm1FFEvSBPOyLNeVBOoGbQ/HsNwHN
-         ShGjOuW9pTHVzmH49EY2o2WXhJ2/xleZkO6Q7LR6pRMiZaHLs0B/1gYeOrRcJYxM5B54
-         WaO6V87wUFikdlxl4D4oZJaH7GplniAegsFvgqn0qExhwV1Si/gGP64m7J2HL6+WHEaD
-         AGUkSnZEepbt+wM435Kn2ew6xL5NPN8mRHWTIU8IuEQS0CKQeSn3l8J7u9dwrCqleJ9K
-         9zaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbtw7Frlm5ZHnwRGBqPkhbEhFqqgrdb/dVCC4CFHE/+jF6Qf6u9S8SF4Am8cjGj1PJDAs/jj/2MwmXlwz5oBhRrfvWX72p/PJJ1XUiedCjgg==
-X-Gm-Message-State: AOJu0YzzgGU7HW3zfbT21lH9NW4RRJGNeS/vNnNnTCyXnmFhKyJmDUSN
-	Ldj3mI0lowZOqEke+QskvMXniv9LnuigQ3MA64wAS0E+cGyvGjO5dcUDJzCyW8voyR1a7gMEOs7
-	AOZthQA==
-X-Google-Smtp-Source: AGHT+IGxAKGLHfU5lr4cLxfntoHY/lII821Bv6GcWrrnRg5nZbXZHQCblMErp4nOuwdOu0LpnsGeX3qwWfLp
+        bh=LWN/JVLNlztmw39JaEsdXVzONxn2KraPuSeDAn+uvDI=;
+        b=pt8Eq4YjXvWluMsJwu+1HR3GBXCHyKUEkeh3PI84yN+Yms91j/Kp5nS8ArI38NkeKm
+         aTWprtoXKxoUqv0VH27EqVg1oB+NW/BgvICkXRqNUcnzOR+UiA/UCbiz9VcZB8C/rY4w
+         ZZ9ScI2DwdgaT0JcxvFYhW55pgjo3DXLd17Tf6ZJQrW4YCuBi1E/2s/J48+dTrVVOIvF
+         paavdVLfW00iNRMKNMGW7NvIh2mNu1sjXeLuHkwULnIlkpo2Cm3cwq3V3gsOGG1Eo2ij
+         kcOpKR90m6ThrbpnbtDX81yJnttJxOzs4Qt+51kTESZchpaY0JoCn6q7avTud8GxgwdX
+         +hrA==
+X-Forwarded-Encrypted: i=1; AJvYcCULZaVivxyLgmmNcCADZPN0jnVN9SPBAHjXZkINMkYmZk5Pm3aH7Jm21Ei5GNYjwrqGkj4zykqPN0Ic7+47myGkQXvKruMiQvCtcNFWZnzBjg==
+X-Gm-Message-State: AOJu0YyFNUYaYFZQ0toyH4ezvLOMED3QKG8QKuoTARqWV1Iq3plZ0L9P
+	8oWOCZi4LEc1C36RLJpcSAZZsydI9TzpD3S7fIsABe2oEjEBokcHf6ioqgV4speb12TAN0CV2r6
+	AVg9fNg==
+X-Google-Smtp-Source: AGHT+IGdHS2QsdL4lo4wwM/5ksoTAkI5r0dtMhbFMCM7lkSFe3H0TlXafv3xzq/LQr021fLnWjD7VJ9M/wIG
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a05:6902:1889:b0:dc6:dfc6:4207 with SMTP
- id cj9-20020a056902188900b00dc6dfc64207mr903918ybb.10.1710036341778; Sat, 09
- Mar 2024 18:05:41 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:04:59 -0800
+ (user=irogers job=sendgmr) by 2002:a81:a04e:0:b0:5e6:1e40:e2e3 with SMTP id
+ x75-20020a81a04e000000b005e61e40e2e3mr729292ywg.5.1710036344368; Sat, 09 Mar
+ 2024 18:05:44 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:05:00 -0800
 In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-5-irogers@google.com>
+Message-Id: <20240310020509.647319-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240310020509.647319-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 04/13] perf expr: Add missing stdbool.h include
+Subject: [PATCH v1 05/13] perf expr: Tidy up header guard
 From: Ian Rogers <irogers@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -93,28 +93,33 @@ To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-bool is used in this header and so stdbool.h is necessary. Add to
-avoid compilation errors that aren't currently seen due to transitive
-dependencies.
+Make the header guard reflect the name of the file and add a comment
+to the terminating endif.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/expr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index c0cec29ddc29..d4166b3eb654 100644
+index d4166b3eb654..cd53ee7989fd 100644
 --- a/tools/perf/util/expr.h
 +++ b/tools/perf/util/expr.h
-@@ -2,6 +2,8 @@
- #ifndef PARSE_CTX_H
- #define PARSE_CTX_H 1
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef PARSE_CTX_H
+-#define PARSE_CTX_H 1
++#ifndef __PERF_EXPR_H
++#define __PERF_EXPR_H 1
  
-+#include <stdbool.h>
-+
- struct hashmap;
- struct metric_ref;
+ #include <stdbool.h>
  
+@@ -59,4 +59,4 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
+ double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
+ double expr__strcmp_cpuid_str(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
+ 
+-#endif
++#endif /* __PERF_EXPR_H */
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
