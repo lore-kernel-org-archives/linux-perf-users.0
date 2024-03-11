@@ -1,711 +1,167 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF8C5822A
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 18:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1224206B
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 18:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710182802; cv=none; b=GqrwsQh08nQQ6XRqDgIpCMQD1SINhBEX6kZo3XgEI9SjsmE/Wd8amLv9lwJknlbkLOORq9pagqZHP4EIMPtrho3EX67G8DHGe+vWF+Yty1y8mCxBORSiTX2jaZD4R0s5cIrfwDdGccs0YaIrJOSM5xncr2qjc2vq+akKoBTDTlI=
+	t=1710183287; cv=none; b=AAdFCJ6vffNpUdGXfE22PwypjZwgUnJIdnpbJoKKSaaRfeCHE6P5pHJTmYd6rSSAhgSXndYT2yz48FvOK8iJUKPLGdkkVjw/c7tBoKZL8wAFDrAvD8oqLAggLbdILBk0x5w/t6WIWBFcKB5MGyztS2tSwoGKW5tlE1gsFgrUfsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710182802; c=relaxed/simple;
-	bh=4tnukOvt1JwFp+9tYJHauPDa8rFBUHDXgGWEbETxn9k=;
+	s=arc-20240116; t=1710183287; c=relaxed/simple;
+	bh=sg1d/ANVhdMJVWpfU8bbvkMp+uD3nzj9x9rv9aGU7ss=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UQu/wZli8mZN4v+7MHDxMgKWhBtXxq8VZR+cBZivBaCg1tHIyImCPbzWk0TUUyb4PZ8tsNJBYhLl0rE1SLqp56SOiDj3PoIRA/9chOJJ/hlnmAszFEvDBfkGYXGdPqwQxA/BRQxAf38dhIiP9PwHQrULVq0l4NNtKSSGlzcMzq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sqFMMRjB; arc=none smtp.client-ip=209.85.166.182
+	 To:Cc:Content-Type; b=Li38A0c2drftaohUuBo0Cn5IK1kaqyw6w1HVMs0UJsSD9mA2PbhZ98qjTI6vq1KB/VOo2TC6j5WVdG6jNFoQMw2D56HIRLDN8HjrkZBg+km/yX5TFSLB40QHhNpj2+DC/DZWa+o3/5XtLquCnZX00S0ktzQP6lsQPpGR8A/4R78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xey65aa7; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqFMMRjB"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36645c1169cso13515ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 11:46:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xey65aa7"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3663528c0a5so15515ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 11:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710182799; x=1710787599; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710183284; x=1710788084; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=okeaD/qeYIbeOhpxp6GW5j3JWeLxsb+oQ1MKTosIVPY=;
-        b=sqFMMRjBYbBUTaMTc7mgAarl1E06hxoPLNUVToiWKXNeHjrxc+WryDOTnAlmMdc9BN
-         BwPVryzW0iQif0yXoVUc7t1En2Cg/AC5932Jn7CyfUkh3eMDQt8R5Jd/3YOawlf5jblN
-         RBhJnh33YgBHp+cjwoaIRd4BnwjgOzJ8flkWA/kvzwmdoHFWCG42kgVl3EHhyWLAhaI6
-         gPTIoTbulLNhgn2DQL9pyeZjNVAHvjrZlB9UQNk67qwuzWHgys9VDx0ClPEKQ6BOefMP
-         04ckgCI2gMGF6mWHtIShQ7yzpB22b5pkQglYL4Uo39cHR5dg0Q+rLCrTHVC1lbu3qb9m
-         X3BQ==
+        bh=9EWPj2I4xpYoZRjyOYAm/kocZbdOlLT2RiNEmzadKaY=;
+        b=xey65aa7VE1wIljt/ixV6xel+/R5udOqzmcbCiIrUaErlg1igTj+xHHwuQCYTzh9up
+         gwX6SRiXKyFi/2K6SzwjHRVVhUiSb/E6H1m293SMrMno++CElm7lah0vjw0nbxBPCKF1
+         1KggYhb+LqBJqmmZ+PjaihjMv1sfV3+JTNBadSbrM+lesNUkMK2Ws9704W07WK2+pPYc
+         6yNgIhKkmJeGhuWAccjBZ+gNrzM1cQggQKYtv4DqDvtm1uRcSM2laMjrvR4ONMWaJcGI
+         5Ebo4Df4MVwLcOu1UbbtZ/WX9SPh9X+w0fyq/yEgqaleOURfABAA6PjEc0YfhnymHV3M
+         re1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710182799; x=1710787599;
+        d=1e100.net; s=20230601; t=1710183284; x=1710788084;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=okeaD/qeYIbeOhpxp6GW5j3JWeLxsb+oQ1MKTosIVPY=;
-        b=BNBXpLUi4WOvV0g33mMLU+Un9pZ0uDhSwGcCkhVt+G2SvL0yMIEiFZ+Qa/tlqV3wRt
-         JXbqfEmrrOE/1/IQ3Olt6qvnqNps2z40CQSHF7zMPo0FByxRil8HLiJxO8eg/JvTylu6
-         UZ3nQlbri7M4a81mQTKNdzvjJD+/82B8ZMoaS9yG31HG7LYP7G1DyrPd66AqsP4pu5Zd
-         NYXhSATix+SZn/jCB9bWUpgRHRrM5OG+16c43LM3JJ4fqJMFGjtHdCxl1zVaDhvGUxNO
-         komaycphZXc7Sy8a/VWKxglItrEReTsNvU8kbePsnWVVMn54SrGHfENUosX/cB7pNgMF
-         CBAg==
-X-Gm-Message-State: AOJu0YyX5Hhbs+n11vfEPKEOOnYJH04IlV60aVMcKv4gg2tn6SQqHWey
-	+DrbIa+3wkbCh1jaZHbnhoxv8w4S2RPasK5r8ackwMhRmrF7Lyk+DR0mckQ4Csf1ilIltWNNd4c
-	dgJzW6Fd3FVCO6DWJvEaveWQFT4/XF7p8EMnX
-X-Google-Smtp-Source: AGHT+IH9V6zXFkH2eIcaEf6hb7GOj/t5Kz3yRY4fZ+YxUfZVuT/kDFTVTu1nQNq7B5Q34+6Z4JM7XREgt6qzrUbmkcw=
-X-Received: by 2002:a05:6e02:260b:b0:366:222d:6625 with SMTP id
- by11-20020a056e02260b00b00366222d6625mr11644ilb.1.1710182798920; Mon, 11 Mar
- 2024 11:46:38 -0700 (PDT)
+        bh=9EWPj2I4xpYoZRjyOYAm/kocZbdOlLT2RiNEmzadKaY=;
+        b=WGJI7lHs4/bFSEeKYhISxvCtSuCocnn8SFZ2y0OYz4Se3ImCcmksAvkX2FXAXpg4TM
+         OiDyGMvG0Hf7kujJ+ohMPmclfckHAjVJ71WS/WGAKC8yeVSYp48/0QqjYvM3DL2ELDIP
+         rDjEP+BTkPNVu9b6mQFc043QqUH9SOSRjN+s9wBu0C0GvOWq6pSYvtKgEL+k9QM4VPGT
+         4wDk5Hj07WJvwT8bWTPjnHu5sUt1xfgLJ2aIEAKS108xJi8DixZaIO8CW3K3wvYfrcdT
+         6RDW+RV0/pdgDZZu+VeZUuh/gb7ZneAKy/JclYbx2/zRq9RMRwvHQFOOjeWH0yGairNw
+         q5fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUT5U2V3UHR8BklYyEnLOTUGvGbHPs1g841ASkEkDo0k5dyp8d/mposMg/8LJNm9v4laZhA6mjnTq9YFS3AyMXoEvy2Oicu0FGJnSm21cQLfA==
+X-Gm-Message-State: AOJu0Yxji3AvFjkcV/xVUN9ZYb9NnN0/cKAjfPLWCRuiTSseXAstORc4
+	hwvkbkIvcKn/peM3u20RwvTlwcVrPkjmGaAGEPkyrVg6yryKmS22Yq7jBKWRnFrqt+Tvm3b299i
+	Q/tNfXzI/eIcHenG5ESo/wYn2u+H6bm6+MndQ
+X-Google-Smtp-Source: AGHT+IF9Y1AJY3TwC+yrKD+SLGX6DGVejGuk9zVLbhhSZF+Z1op/fddC1zPHT7AUjYPqnvQvkBSi2u31QCO6TEveBME=
+X-Received: by 2002:a05:6e02:1648:b0:366:444b:82d6 with SMTP id
+ v8-20020a056e02164800b00366444b82d6mr6714ilu.15.1710183283551; Mon, 11 Mar
+ 2024 11:54:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1710133771.git.sandipan.das@amd.com> <017b0abebc24535e3e96fa9f9cc4ba4c11fffb57.1710133771.git.sandipan.das@amd.com>
-In-Reply-To: <017b0abebc24535e3e96fa9f9cc4ba4c11fffb57.1710133771.git.sandipan.das@amd.com>
+References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-3-irogers@google.com>
+ <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Mar 2024 11:46:24 -0700
-Message-ID: <CAP-5=fWc5ZJaiR_tS8RHPxcdAPST61CYUS_9Qvc2ztzBUETQbg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] perf vendor events amd: Add Zen 5 metrics
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, eranian@google.com, ravi.bangoria@amd.com, 
-	ananth.narayan@amd.com
+Date: Mon, 11 Mar 2024 11:54:32 -0700
+Message-ID: <CAP-5=fUQY=ho1OSk-wosw8=7Sjp8MB_kngggP00BXs+nVNj7Pg@mail.gmail.com>
+Subject: Re: [PATCH v1 02/13] libbpf: Make __printf define conditional
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
+	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
+	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
+	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
+	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 10, 2024 at 10:24=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
-> wrote:
+On Mon, Mar 11, 2024 at 10:49=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Add metrics taken from Section 1.2 "Performance Measurement" of the
-> Performance Monitor Counters for AMD Family 1Ah Model 00h-0Fh Processors
-> document available at the link below.
+> On Sat, Mar 9, 2024 at 6:05=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > libbpf depends upon linux/err.h which has a linux/compiler.h
+> > dependency. In the kernel includes, as opposed to the tools version,
+> > linux/compiler.h includes linux/compiler_attributes.h which defines
+> > __printf. As the libbpf.c __printf definition isn't guarded by an
+> > ifndef, this leads to a duplicate definition compilation error when
+> > trying to update the tools/include/linux/compiler.h. Fix this by
+> > adding the missing ifndef.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/bpf/libbpf.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > index afd09571c482..2152360b4b18 100644
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> > @@ -66,7 +66,9 @@
+> >   */
+> >  #pragma GCC diagnostic ignored "-Wformat-nonliteral"
+> >
+> > -#define __printf(a, b) __attribute__((format(printf, a, b)))
+> > +#ifndef __printf
+> > +# define __printf(a, b)        __attribute__((format(printf, a, b)))
 >
-> The recommended metrics are sourced from Table 1 "Guidance for Common
-> Performance Statistics with Complex Event Selects".
+> styling nit: don't add spaces between # and define, please
 >
-> The pipeline utilization metrics are sourced from Table 2 "Guidance
-> for Pipeline Utilization Analysis Statistics". These are useful for
-> finding performance bottlenecks by analyzing activity at different
-> stages of the pipeline. There are metric groups available for Level 1
-> and Level 2 analysis.
+> overall LGTM
 >
-> Link: https://bugzilla.kernel.org/attachment.cgi?id=3D305974
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-
-Could you consider reviewing:
-https://lore.kernel.org/lkml/20240301184737.2660108-1-irogers@google.com/
-
-> ---
->  .../pmu-events/arch/x86/amdzen5/pipeline.json |  98 +++++
->  .../arch/x86/amdzen5/recommended.json         | 357 ++++++++++++++++++
->  2 files changed, 455 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/recommended.js=
-on
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 >
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/amdzen5/pipeline.json
-> new file mode 100644
-> index 000000000000..36dc76b793ae
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json
-> @@ -0,0 +1,98 @@
-> +[
-> +  {
-> +    "MetricName": "total_dispatch_slots",
-> +    "BriefDescription": "Total dispatch slots (up to 8 instructions can =
-be dispatched in each cycle).",
-> +    "MetricExpr": "8 * ls_not_halted_cyc"
+> Two questions, though.
+>
+> 1. It seems like just dropping #define __printf in libbpf.c compiles
+> fine (I checked both building libbpf directly, and BPF selftest, and
+> perf, and bpftool directly, all of them built fine). So we can
+> probably just drop this. I'll need to add __printf on Github, but
+> that's fine.
+>
+> 2. Logistics. Which tree should this patch go through? Can I land it
+> in bpf-next or it's too much inconvenience for you?
 
-Should the unit be slots?
+Thanks Andrii,
 
-> +  },
-> +  {
-> +    "MetricName": "frontend_bound",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because the frontend did not supply enough instructions/ops.",
-
-Given the output is in percent, is fraction an accurate description?
-Wouldn't "percentage" be better? This issue repeats below, but I'll
-just highlight the first instance.
-
-> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend,=
- total_dispatch_slots)",
-> +    "MetricGroup": "PipelineL1",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots" ?
-
-> +  },
-> +  {
-> +    "MetricName": "bad_speculation",
-> +    "BriefDescription": "Fraction of dispatched ops that did not retire.=
-",
-> +    "MetricExpr": "d_ratio(de_src_op_disp.all - ex_ret_ops, total_dispat=
-ch_slots)",
-> +    "MetricGroup": "PipelineL1",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% ops"
-
-> +  },
-> +  {
-> +    "MetricName": "backend_bound",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because of backend stalls.",
-> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.backend_stalls, total=
-_dispatch_slots)",
-> +    "MetricGroup": "PipelineL1",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots"
-
-> +  },
-> +  {
-> +    "MetricName": "smt_contention",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because the other thread was selected.",
-> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.smt_contention, total=
-_dispatch_slots)",
-> +    "MetricGroup": "PipelineL1",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots"
-
-> +  },
-> +  {
-> +    "MetricName": "retiring",
-> +    "BriefDescription": "Fraction of dispatch slots used by ops that ret=
-ired.",
-> +    "MetricExpr": "d_ratio(ex_ret_ops, total_dispatch_slots)",
-> +    "MetricGroup": "PipelineL1",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots"
-
-> +  },
-> +  {
-> +    "MetricName": "frontend_bound_latency",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because of a latency bottleneck in the frontend (such as instruction cache=
- or TLB misses).",
-> +    "MetricExpr": "d_ratio((8 * cpu@de_no_dispatch_per_slot.no_ops_from_=
-frontend\\,cmask\\=3D0x8@), total_dispatch_slots)",
-> +    "MetricGroup": "PipelineL2;frontend_bound_group",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots"
-
-> +  },
-> +  {
-> +    "MetricName": "frontend_bound_bandwidth",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because of a bandwidth bottleneck in the frontend (such as decode or op ca=
-che fetch bandwidth).",
-> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend =
-- (8 * cpu@de_no_dispatch_per_slot.no_ops_from_frontend\\,cmask\\=3D0x8@), =
-total_dispatch_slots)",
-> +    "MetricGroup": "PipelineL2;frontend_bound_group",
-> +    "ScaleUnit": "100%"
-
-Perhaps "100% slots"
-
-It seems unexpected that a latency (above) and  bandwidth metric would
-be reporting a percentage, perhaps this needs capturing in the metric
-name.
-
-Same issues repeat below...
-
-> +  },
-> +  {
-> +    "MetricName": "bad_speculation_mispredicts",
-> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
-e to branch mispredicts.",
-> +    "MetricExpr": "d_ratio(bad_speculation * ex_ret_brn_misp, ex_ret_brn=
-_misp + bp_redirects.resync)",
-> +    "MetricGroup": "PipelineL2;bad_speculation_group",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "bad_speculation_pipeline_restarts",
-> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
-e to pipeline restarts (resyncs).",
-> +    "MetricExpr": "d_ratio(bad_speculation * bp_redirects.resync, ex_ret=
-_brn_misp + bp_redirects.resync)",
-> +    "MetricGroup": "PipelineL2;bad_speculation_group",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "backend_bound_memory",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because of stalls due to the memory subsystem.",
-> +    "MetricExpr": "backend_bound * d_ratio(ex_no_retire.load_not_complet=
-e, ex_no_retire.not_complete)",
-> +    "MetricGroup": "PipelineL2;backend_bound_group",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "backend_bound_cpu",
-> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
- because of stalls not related to the memory subsystem.",
-> +    "MetricExpr": "backend_bound * (1 - d_ratio(ex_no_retire.load_not_co=
-mplete, ex_no_retire.not_complete))",
-> +    "MetricGroup": "PipelineL2;backend_bound_group",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "retiring_fastpath",
-> +    "BriefDescription": "Fraction of dispatch slots used by fastpath ops=
- that retired.",
-> +    "MetricExpr": "retiring * (1 - d_ratio(ex_ret_ucode_ops, ex_ret_ops)=
-)",
-> +    "MetricGroup": "PipelineL2;retiring_group",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "retiring_microcode",
-> +    "BriefDescription": "Fraction of dispatch slots used by microcode op=
-s that retired.",
-> +    "MetricExpr": "retiring * d_ratio(ex_ret_ucode_ops, ex_ret_ops)",
-> +    "MetricGroup": "PipelineL2;retiring_group",
-> +    "ScaleUnit": "100%"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/recommended.json b/to=
-ols/perf/pmu-events/arch/x86/amdzen5/recommended.json
-> new file mode 100644
-> index 000000000000..986f8b2b2d5b
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/recommended.json
-> @@ -0,0 +1,357 @@
-> +[
-> +  {
-> +    "MetricName": "branch_misprediction_ratio",
-> +    "BriefDescription": "Execution-time branch misprediction ratio (non-=
-speculative).",
-
-Is ratio or rate better?
-```
-$ grep -r MetricName tools/perf/pmu-events/arch/| grep _rate |wc -l
-246
-$ grep -r MetricName tools/perf/pmu-events/arch/| grep _ratio |wc -l
-135
-```
-
-> +    "MetricExpr": "d_ratio(ex_ret_brn_misp, ex_ret_brn)",
-> +    "MetricGroup": "branch_prediction",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "all_data_cache_accesses_pti",
-> +    "BriefDescription": "All data cache accesses per thousand instructio=
-ns.",
-> +    "MetricExpr": "ls_dispatch.all / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-
-Perhaps "1e3instructions", and below.
-
-> +  },
-> +  {
-> +    "MetricName": "all_l2_cache_accesses_pti",
-> +    "BriefDescription": "All L2 cache accesses per thousand instructions=
-.",
-> +    "MetricExpr": "(l2_request_g1.all_no_prefetch + l2_pf_hit_l2.l2_hwpf=
- + l2_pf_miss_l2_hit_l3.l2_hwpf + l2_pf_miss_l2_l3.l2_hwpf) / instructions"=
-,
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_accesses_from_l1_ic_misses_pti",
-> +    "BriefDescription": "L2 cache accesses from L1 instruction cache mis=
-ses (including prefetch) per thousand instructions.",
-> +    "MetricExpr": "l2_request_g1.cacheable_ic_read / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_accesses_from_l1_dc_misses_pti",
-> +    "BriefDescription": "L2 cache accesses from L1 data cache misses (in=
-cluding prefetch) per thousand instructions.",
-> +    "MetricExpr": "l2_request_g1.all_dc / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_accesses_from_l2_hwpf_pti",
-> +    "BriefDescription": "L2 cache accesses from L2 cache hardware prefet=
-cher per thousand instructions.",
-> +    "MetricExpr": "(l2_pf_hit_l2.l1_dc_l2_hwpf + l2_pf_miss_l2_hit_l3.l1=
-_dc_l2_hwpf + l2_pf_miss_l2_l3.l1_dc_l2_hwpf) / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "all_l2_cache_misses_pti",
-> +    "BriefDescription": "All L2 cache misses per thousand instructions."=
-,
-> +    "MetricExpr": "(l2_cache_req_stat.ic_dc_miss_in_l2 + l2_pf_miss_l2_h=
-it_l3.l2_hwpf + l2_pf_miss_l2_l3.l2_hwpf) / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_misses_from_l1_ic_miss_pti",
-> +    "BriefDescription": "L2 cache misses from L1 instruction cache misse=
-s per thousand instructions.",
-> +    "MetricExpr": "l2_cache_req_stat.ic_fill_miss / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_misses_from_l1_dc_miss_pti",
-> +    "BriefDescription": "L2 cache misses from L1 data cache misses per t=
-housand instructions.",
-> +    "MetricExpr": "l2_cache_req_stat.ls_rd_blk_c / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_misses_from_l2_hwpf_pti",
-> +    "BriefDescription": "L2 cache misses from L2 cache hardware prefetch=
-er per thousand instructions.",
-> +    "MetricExpr": "(l2_pf_miss_l2_hit_l3.l1_dc_l2_hwpf + l2_pf_miss_l2_l=
-3.l1_dc_l2_hwpf) / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "all_l2_cache_hits_pti",
-> +    "BriefDescription": "All L2 cache hits per thousand instructions.",
-> +    "MetricExpr": "(l2_cache_req_stat.ic_dc_hit_in_l2 + l2_pf_hit_l2.l2_=
-hwpf) / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_hits_from_l1_ic_miss_pti",
-> +    "BriefDescription": "L2 cache hits from L1 instruction cache misses =
-per thousand instructions.",
-> +    "MetricExpr": "l2_cache_req_stat.ic_hit_in_l2 / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_hits_from_l1_dc_miss_pti",
-> +    "BriefDescription": "L2 cache hits from L1 data cache misses per tho=
-usand instructions.",
-> +    "MetricExpr": "l2_cache_req_stat.dc_hit_in_l2 / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_cache_hits_from_l2_hwpf_pti",
-> +    "BriefDescription": "L2 cache hits from L2 cache hardware prefetcher=
- per thousand instructions.",
-> +    "MetricExpr": "l2_pf_hit_l2.l1_dc_l2_hwpf / instructions",
-> +    "MetricGroup": "l2_cache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l3_cache_accesses",
-> +    "BriefDescription": "L3 cache accesses.",
-> +    "MetricExpr": "l3_lookup_state.all_coherent_accesses_to_l3",
-> +    "MetricGroup": "l3_cache"
-> +  },
-> +  {
-> +    "MetricName": "l3_misses",
-> +    "BriefDescription": "L3 misses (including cacheline state change req=
-uests).",
-
-local vs remote?
-
-> +    "MetricExpr": "l3_lookup_state.l3_miss",
-> +    "MetricGroup": "l3_cache"
-> +  },
-> +  {
-> +    "MetricName": "l3_read_miss_latency",
-> +    "BriefDescription": "Average L3 read miss latency (in core clocks)."=
-,
-> +    "MetricExpr": "(l3_xi_sampled_latency.all * 10) / l3_xi_sampled_late=
-ncy_requests.all",
-> +    "MetricGroup": "l3_cache",
-> +    "ScaleUnit": "1core clocks"
-> +  },
-> +  {
-> +    "MetricName": "l3_read_miss_latency_for_local_dram",
-> +    "BriefDescription": "Average L3 read miss latency (in core clocks) f=
-or local DRAM.",
-> +    "MetricExpr": "(l3_xi_sampled_latency.dram_near * 10) / l3_xi_sample=
-d_latency_requests.dram_near",
-> +    "MetricGroup": "l3_cache",
-> +    "ScaleUnit": "1core clocks"
-
-"core clocks" isn't defined in the attached documentation. How can one
-look up the different clock types? If "core" is basically all clock
-types in the metrics then consider dropping "core" here.
-
-> +  },
-> +  {
-> +    "MetricName": "l3_read_miss_latency_for_remote_dram",
-> +    "BriefDescription": "Average L3 read miss latency (in core clocks) f=
-or remote DRAM.",
-> +    "MetricExpr": "(l3_xi_sampled_latency.dram_far * 10) / l3_xi_sampled=
-_latency_requests.dram_far",
-> +    "MetricGroup": "l3_cache",
-> +    "ScaleUnit": "1core clocks"
-> +  },
-> +  {
-> +    "MetricName": "op_cache_fetch_miss_ratio",
-> +    "BriefDescription": "Op cache miss ratio for all fetches.",
-> +    "MetricExpr": "d_ratio(op_cache_hit_miss.op_cache_miss, op_cache_hit=
-_miss.all_op_cache_accesses)",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "ic_fetch_miss_ratio",
-> +    "BriefDescription": "Instruction cache miss ratio for all fetches. A=
-n instruction cache miss will not be counted by this metric if it is an OC =
-hit.",
-> +    "MetricExpr": "d_ratio(ic_tag_hit_miss.instruction_cache_miss, ic_ta=
-g_hit_miss.all_instruction_cache_accesses)",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "l1_data_cache_fills_from_memory_pti",
-> +    "BriefDescription": "L1 data cache fills from DRAM or MMIO in any NU=
-MA node per thousand instructions.",
-> +    "MetricExpr": "ls_any_fills_from_sys.dram_io_all / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_data_cache_fills_from_remote_node_pti",
-> +    "BriefDescription": "L1 data cache fills from a different NUMA node =
-per thousand instructions.",
-> +    "MetricExpr": "ls_any_fills_from_sys.far_all / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_data_cache_fills_from_same_ccx_pti",
-> +    "BriefDescription": "L1 data cache fills from within the same CCX pe=
-r thousand instructions.",
-> +    "MetricExpr": "ls_any_fills_from_sys.local_all / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_data_cache_fills_from_different_ccx_pti",
-> +    "BriefDescription": "L1 data cache fills from another CCX cache in a=
-ny NUMA node per thousand instructions.",
-> +    "MetricExpr": "ls_any_fills_from_sys.remote_cache / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "all_l1_data_cache_fills_pti",
-> +    "BriefDescription": "All L1 data cache fills per thousand instructio=
-ns.",
-> +    "MetricExpr": "ls_any_fills_from_sys.all / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_local_l2_pti",
-> +    "BriefDescription": "L1 demand data cache fills from local L2 cache =
-per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_l2 / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_same_ccx_pti",
-> +    "BriefDescription": "L1 demand data cache fills from within the same=
- CCX per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_ccx / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_near_cache_pti",
-> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
-he in the same NUMA node per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.near_cache / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_near_memory_pti",
-> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
- the same NUMA node per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_near / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_far_cache_pti",
-> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
-he in a different NUMA node per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.far_cache / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_demand_data_cache_fills_from_far_memory_pti",
-> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
- a different NUMA node per thousand instructions.",
-> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_far / instructions",
-> +    "MetricGroup": "l1_dcache",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_itlb_misses_pti",
-> +    "BriefDescription": "L1 instruction TLB misses per thousand instruct=
-ions.",
-> +    "MetricExpr": "(bp_l1_tlb_miss_l2_tlb_hit + bp_l1_tlb_miss_l2_tlb_mi=
-ss.all) / instructions",
-> +    "MetricGroup": "tlb",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_itlb_misses_pti",
-> +    "BriefDescription": "L2 instruction TLB misses and instruction page =
-walks per thousand instructions.",
-> +    "MetricExpr": "bp_l1_tlb_miss_l2_tlb_miss.all / instructions",
-> +    "MetricGroup": "tlb",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l1_dtlb_misses_pti",
-> +    "BriefDescription": "L1 data TLB misses per thousand instructions.",
-> +    "MetricExpr": "ls_l1_d_tlb_miss.all / instructions",
-> +    "MetricGroup": "tlb",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "l2_dtlb_misses_pti",
-> +    "BriefDescription": "L2 data TLB misses and data page walks per thou=
-sand instructions.",
-> +    "MetricExpr": "ls_l1_d_tlb_miss.all_l2_miss / instructions",
-> +    "MetricGroup": "tlb",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "all_tlbs_flushed_pti",
-> +    "BriefDescription": "All TLBs flushed per thousand instructions.",
-> +    "MetricExpr": "ls_tlb_flush.all / instructions",
-> +    "MetricGroup": "tlb",
-> +    "ScaleUnit": "1e3"
-> +  },
-> +  {
-> +    "MetricName": "macro_ops_dispatched",
-> +    "BriefDescription": "Macro-ops dispatched.",
-> +    "MetricExpr": "de_src_op_disp.all",
-> +    "MetricGroup": "decoder"
-> +  },
-> +  {
-> +    "MetricName": "sse_avx_stalls",
-> +    "BriefDescription": "Mixed SSE/AVX stalls.",
-> +    "MetricExpr": "fp_disp_faults.sse_avx_all"
-> +  },
-> +  {
-> +    "MetricName": "macro_ops_retired",
-> +    "BriefDescription": "Macro-ops retired.",
-> +    "MetricExpr": "ex_ret_ops"
-> +  },
-> +  {
-> +    "MetricName": "umc_data_bus_utilization",
-> +    "BriefDescription": "Memory controller data bus utilization.",
-> +    "MetricExpr": "d_ratio(umc_data_slot_clks.all / 2, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_rate",
-> +    "BriefDescription": "Memory controller CAS command rate.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_read_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
-ds.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_write_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for wri=
-tes.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.wr, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_read_bandwidth",
-> +    "BriefDescription": "Estimated memory read bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.rd * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_write_bandwidth",
-> +    "BriefDescription": "Estimated memory write bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.wr * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_mem_bandwidth",
-> +    "BriefDescription": "Estimated combined memory bandwidth.",
-> +    "MetricExpr": "(umc_cas_cmd.all * 64) / 1e6 / duration_time",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_read_ratio",
-> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
-ds.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1",
-> +    "ScaleUnit": "100%"
-> +  },
-> +  {
-> +    "MetricName": "umc_cas_cmd_rate",
-> +    "BriefDescription": "Memory controller CAS command rate.",
-> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_activate_cmd_rate",
-> +    "BriefDescription": "Memory controller ACTIVATE command rate.",
-> +    "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-> +  },
-> +  {
-> +    "MetricName": "umc_precharge_cmd_rate",
-> +    "BriefDescription": "Memory controller PRECHARGE command rate.",
-> +    "MetricExpr": "d_ratio(umc_pchg_cmd.all * 1000, umc_mem_clk)",
-> +    "MetricGroup": "memory_controller",
-> +    "PerPkg": "1"
-
-Units of umc_mem_clk?
+dropping the #define (1) sgtm but the current compiler.h will fail to
+build libbpf.c without the later compiler.h update in this series.
+This causes another logistic issue for your point 2. Presumably if
+this patch goes through bpf-next, the first patch "tools bpf:
+Synchronize bpf.h with kernel uapi version" should also go through the
+bpf-next.
 
 Thanks,
 Ian
 
-> +  }
-> +]
-> --
-> 2.34.1
->
+
+> > +#endif
+> >
+> >  static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
+> >  static bool prog_is_subprog(const struct bpf_object *obj, const struct=
+ bpf_program *prog);
+> > --
+> > 2.44.0.278.ge034bb2e1d-goog
+> >
