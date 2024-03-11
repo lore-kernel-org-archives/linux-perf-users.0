@@ -1,226 +1,711 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71784084A
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 18:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF8C5822A
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 18:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710182675; cv=none; b=EsJwMW+FHbMm1ecIpiX8BWYeh2IjusWsP72vLW6wbCxHt1GqJOvxfGa7GY2tjeLIJ9JowChd5eyENu8Z1iEVZOfMmFGWKvXw0q8AXgiG8S/Obb+T8tpKdqUSchWqOE+vM8RGi1d3jX+e7ivoXhTQN6UiI0sXu/tRxDS14dLLvVw=
+	t=1710182802; cv=none; b=GqrwsQh08nQQ6XRqDgIpCMQD1SINhBEX6kZo3XgEI9SjsmE/Wd8amLv9lwJknlbkLOORq9pagqZHP4EIMPtrho3EX67G8DHGe+vWF+Yty1y8mCxBORSiTX2jaZD4R0s5cIrfwDdGccs0YaIrJOSM5xncr2qjc2vq+akKoBTDTlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710182675; c=relaxed/simple;
-	bh=LZmCCWatL7zUeGzsKNkDzV6t886L3zaARgo6mZvV6cU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AGQnnikRoOTFqg9qTxY3NnaysOs4XFYSdwRVd+2FrA2rC/41Q78wTetCYwIDZ3SO7MEMfqy1G1DgIzAA9j49XBOTIvqJiimxzvDpkbN7D4xdGRQiTlzAHz5CpoFOt5FmXX8Omn2Rdah0Dn52I0/nm1T64XB5b0GbK22XFPM0VuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=m8Hw4SnG; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1710182802; c=relaxed/simple;
+	bh=4tnukOvt1JwFp+9tYJHauPDa8rFBUHDXgGWEbETxn9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UQu/wZli8mZN4v+7MHDxMgKWhBtXxq8VZR+cBZivBaCg1tHIyImCPbzWk0TUUyb4PZ8tsNJBYhLl0rE1SLqp56SOiDj3PoIRA/9chOJJ/hlnmAszFEvDBfkGYXGdPqwQxA/BRQxAf38dhIiP9PwHQrULVq0l4NNtKSSGlzcMzq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sqFMMRjB; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="m8Hw4SnG"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 46E15240028
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 19:44:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1710182665; bh=LZmCCWatL7zUeGzsKNkDzV6t886L3zaARgo6mZvV6cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=m8Hw4SnG0/4NQM/htNE8ZC2irbxh2yjYbGeWnXKYlZNjlWsfgpfWqfSGDrZcd+oGy
-	 y+soHTYAdX8QEsV3ZtE+bYPuTjuBGigvm14S/at+xf0Dgjtcg7i66txdAG81dNuqbK
-	 K/y3B/5mFEv1Re4hsYAQdCaF4uDgo7C3SearYdEzuYrD2LWyFpWR4E4Z8wbyoU0/Rk
-	 gy+RQCM/jZQZOUT2Hx57eA8z0YWKAYt21wKBXK8c1rTjunzw6x/CObyxxI5POwKxHC
-	 prP5jhrv2fHzz1k7dCx6PNwOlMEjm3y36HSjYvO7V/6kcX6yAZ+s/PU9ffWANsyGts
-	 khTOxAozeay8g==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ttm033Nzlz6tvq;
-	Mon, 11 Mar 2024 19:44:18 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,  Peter Zijlstra
- <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Mark Rutland
- <mark.rutland@arm.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  Jiri Olsa <jolsa@kernel.org>,  Ian
- Rogers <irogers@google.com>,  Adrian Hunter <adrian.hunter@intel.com>,
-  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf lock contention: skip traceiter functions
-In-Reply-To: <CAM9d7cjhiua5rBj=CTDJJC-XJN6PzKxQ5DsooJGEz0QcQAry7w@mail.gmail.com>
-	(Namhyung Kim's message of "Mon, 11 Mar 2024 11:17:01 -0700")
-References: <20240309132710.1055941-1-retpolanne@posteo.net>
-	<CAM9d7cjhiua5rBj=CTDJJC-XJN6PzKxQ5DsooJGEz0QcQAry7w@mail.gmail.com>
-Date: Mon, 11 Mar 2024 18:44:15 +0000
-Message-ID: <m2il1sbocg.fsf@posteo.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqFMMRjB"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36645c1169cso13515ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 11:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710182799; x=1710787599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=okeaD/qeYIbeOhpxp6GW5j3JWeLxsb+oQ1MKTosIVPY=;
+        b=sqFMMRjBYbBUTaMTc7mgAarl1E06hxoPLNUVToiWKXNeHjrxc+WryDOTnAlmMdc9BN
+         BwPVryzW0iQif0yXoVUc7t1En2Cg/AC5932Jn7CyfUkh3eMDQt8R5Jd/3YOawlf5jblN
+         RBhJnh33YgBHp+cjwoaIRd4BnwjgOzJ8flkWA/kvzwmdoHFWCG42kgVl3EHhyWLAhaI6
+         gPTIoTbulLNhgn2DQL9pyeZjNVAHvjrZlB9UQNk67qwuzWHgys9VDx0ClPEKQ6BOefMP
+         04ckgCI2gMGF6mWHtIShQ7yzpB22b5pkQglYL4Uo39cHR5dg0Q+rLCrTHVC1lbu3qb9m
+         X3BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710182799; x=1710787599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=okeaD/qeYIbeOhpxp6GW5j3JWeLxsb+oQ1MKTosIVPY=;
+        b=BNBXpLUi4WOvV0g33mMLU+Un9pZ0uDhSwGcCkhVt+G2SvL0yMIEiFZ+Qa/tlqV3wRt
+         JXbqfEmrrOE/1/IQ3Olt6qvnqNps2z40CQSHF7zMPo0FByxRil8HLiJxO8eg/JvTylu6
+         UZ3nQlbri7M4a81mQTKNdzvjJD+/82B8ZMoaS9yG31HG7LYP7G1DyrPd66AqsP4pu5Zd
+         NYXhSATix+SZn/jCB9bWUpgRHRrM5OG+16c43LM3JJ4fqJMFGjtHdCxl1zVaDhvGUxNO
+         komaycphZXc7Sy8a/VWKxglItrEReTsNvU8kbePsnWVVMn54SrGHfENUosX/cB7pNgMF
+         CBAg==
+X-Gm-Message-State: AOJu0YyX5Hhbs+n11vfEPKEOOnYJH04IlV60aVMcKv4gg2tn6SQqHWey
+	+DrbIa+3wkbCh1jaZHbnhoxv8w4S2RPasK5r8ackwMhRmrF7Lyk+DR0mckQ4Csf1ilIltWNNd4c
+	dgJzW6Fd3FVCO6DWJvEaveWQFT4/XF7p8EMnX
+X-Google-Smtp-Source: AGHT+IH9V6zXFkH2eIcaEf6hb7GOj/t5Kz3yRY4fZ+YxUfZVuT/kDFTVTu1nQNq7B5Q34+6Z4JM7XREgt6qzrUbmkcw=
+X-Received: by 2002:a05:6e02:260b:b0:366:222d:6625 with SMTP id
+ by11-20020a056e02260b00b00366222d6625mr11644ilb.1.1710182798920; Mon, 11 Mar
+ 2024 11:46:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <cover.1710133771.git.sandipan.das@amd.com> <017b0abebc24535e3e96fa9f9cc4ba4c11fffb57.1710133771.git.sandipan.das@amd.com>
+In-Reply-To: <017b0abebc24535e3e96fa9f9cc4ba4c11fffb57.1710133771.git.sandipan.das@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 11 Mar 2024 11:46:24 -0700
+Message-ID: <CAP-5=fWc5ZJaiR_tS8RHPxcdAPST61CYUS_9Qvc2ztzBUETQbg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf vendor events amd: Add Zen 5 metrics
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, eranian@google.com, ravi.bangoria@amd.com, 
+	ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Namhyung Kim <namhyung@kernel.org> writes:
-
-> Hello Anne,
->
-> On Sat, Mar 9, 2024 at 5:27=E2=80=AFAM Anne Macedo <retpolanne@posteo.net=
+On Sun, Mar 10, 2024 at 10:24=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
 > wrote:
->>
->> The perf lock contention program currently shows the caller of the locks
->> as __traceiter_contention_begin+0x??. This caller can be ignored, as it =
-is
->> from the traceiter itself. Instead, it should show the real callers for
->> the locks.
->>
->> When fiddling with the --stack-skip parameter, the actual callers for
->> the locks start to show up. However, just ignore the
->> __traceiter_contention_begin and the __traceiter_contention_end symbols
->> so the actual callers will show up.
->>
->> Before this patch is applied:
->>
->> sudo perf lock con -a -b -- sleep 3
->>  contended   total wait     max wait     avg wait         type   caller
->>
->>          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __trace=
-iter_contention_begin+0x44
->>          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __trace=
-iter_contention_begin+0x44
->>          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __trace=
-iter_contention_begin+0x44
->>          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_c=
-ontention_begin+0x84
->>          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __trace=
-iter_contention_begin+0x44
->>          1     13.54 us     13.54 us     13.54 us        mutex   trace_c=
-ontention_begin+0x84
->>          1      3.67 us      3.67 us      3.67 us      rwsem:R   __trace=
-iter_contention_begin+0x44
->>
->> Before this patch is applied - using --stack-skip 5
->>
->> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
->>  contended   total wait     max wait     avg wait         type   caller
->>
->>          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epol=
-l_wait+0x5a0
->>          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit=
-+0x338
->>          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_sig=
-nal+0x108
->>          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release=
-_task+0x68
->>          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_=
-kn_lock_live+0x58
->>          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit=
-+0x44
->>          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm=
-_and_find_vma+0xb0
->>
->> After this patch is applied:
->>
->> sudo ./perf lock con -a -b -- sleep 3
->>  contended   total wait     max wait     avg wait         type   caller
->>
->>          4      4.13 s       2.07 s       1.03 s      rwlock:W   release=
-_task+0x68
->>          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_upda=
-te_next_owner+0x50
->>          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit=
-+0x338
->>          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_=
-kn_lock_live+0x58
->>          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit=
-+0x338
->>
->> changes since v0:
->>
->> - skip trace_contention functions
->> - use sym->end instead of __traceiter_contention_end for text_end
->>
->> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
->> ---
->>  tools/perf/util/machine.c | 17 +++++++++++++++++
->>  tools/perf/util/machine.h |  2 +-
->>  2 files changed, 18 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
->> index 527517db3182..db443947ccd1 100644
->> --- a/tools/perf/util/machine.c
->> +++ b/tools/perf/util/machine.c
->> @@ -3266,6 +3266,14 @@ bool machine__is_lock_function(struct machine *ma=
-chine, u64 addr)
->>
->>                 sym =3D machine__find_kernel_symbol_by_name(machine, "__=
-lock_text_end", &kmap);
->>                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->star=
-t);
->> +
->> +               sym =3D machine__find_kernel_symbol_by_name(machine, "__=
-traceiter_contention_begin", &kmap);
 >
-> Unlike __sched_text_{start,end} and __lock_text_{start,end} I guess
-> this traceiter thing is optional so it might not be there.  You need to
-> handle if it's NULL.
+> Add metrics taken from Section 1.2 "Performance Measurement" of the
+> Performance Monitor Counters for AMD Family 1Ah Model 00h-0Fh Processors
+> document available at the link below.
 >
+> The recommended metrics are sourced from Table 1 "Guidance for Common
+> Performance Statistics with Complex Event Selects".
+>
+> The pipeline utilization metrics are sourced from Table 2 "Guidance
+> for Pipeline Utilization Analysis Statistics". These are useful for
+> finding performance bottlenecks by analyzing activity at different
+> stages of the pipeline. There are metric groups available for Level 1
+> and Level 2 analysis.
+>
+> Link: https://bugzilla.kernel.org/attachment.cgi?id=3D305974
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 
-Let me test with CONFIG_TRACEPOINTS=3Dn then.
+Could you consider reviewing:
+https://lore.kernel.org/lkml/20240301184737.2660108-1-irogers@google.com/
 
-> I think it depends on the kernel version and configuration.  I remember
-> I saw a different symbol on old kernels.  But it'd be hard to handle all
-> the cases.  Let's have a single trace text section in the struct machine
-> and use __traceiter_contention_begin only.  If it's not found you can
-> fallback to trace_contention_begin.
+> ---
+>  .../pmu-events/arch/x86/amdzen5/pipeline.json |  98 +++++
+>  .../arch/x86/amdzen5/recommended.json         | 357 ++++++++++++++++++
+>  2 files changed, 455 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/recommended.js=
+on
 >
-ACK :)
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/amdzen5/pipeline.json
+> new file mode 100644
+> index 000000000000..36dc76b793ae
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/pipeline.json
+> @@ -0,0 +1,98 @@
+> +[
+> +  {
+> +    "MetricName": "total_dispatch_slots",
+> +    "BriefDescription": "Total dispatch slots (up to 8 instructions can =
+be dispatched in each cycle).",
+> +    "MetricExpr": "8 * ls_not_halted_cyc"
+
+Should the unit be slots?
+
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because the frontend did not supply enough instructions/ops.",
+
+Given the output is in percent, is fraction an accurate description?
+Wouldn't "percentage" be better? This issue repeats below, but I'll
+just highlight the first instance.
+
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend,=
+ total_dispatch_slots)",
+> +    "MetricGroup": "PipelineL1",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots" ?
+
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation",
+> +    "BriefDescription": "Fraction of dispatched ops that did not retire.=
+",
+> +    "MetricExpr": "d_ratio(de_src_op_disp.all - ex_ret_ops, total_dispat=
+ch_slots)",
+> +    "MetricGroup": "PipelineL1",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% ops"
+
+> +  },
+> +  {
+> +    "MetricName": "backend_bound",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of backend stalls.",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.backend_stalls, total=
+_dispatch_slots)",
+> +    "MetricGroup": "PipelineL1",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots"
+
+> +  },
+> +  {
+> +    "MetricName": "smt_contention",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because the other thread was selected.",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.smt_contention, total=
+_dispatch_slots)",
+> +    "MetricGroup": "PipelineL1",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots"
+
+> +  },
+> +  {
+> +    "MetricName": "retiring",
+> +    "BriefDescription": "Fraction of dispatch slots used by ops that ret=
+ired.",
+> +    "MetricExpr": "d_ratio(ex_ret_ops, total_dispatch_slots)",
+> +    "MetricGroup": "PipelineL1",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots"
+
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound_latency",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of a latency bottleneck in the frontend (such as instruction cache=
+ or TLB misses).",
+> +    "MetricExpr": "d_ratio((8 * cpu@de_no_dispatch_per_slot.no_ops_from_=
+frontend\\,cmask\\=3D0x8@), total_dispatch_slots)",
+> +    "MetricGroup": "PipelineL2;frontend_bound_group",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots"
+
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound_bandwidth",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of a bandwidth bottleneck in the frontend (such as decode or op ca=
+che fetch bandwidth).",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend =
+- (8 * cpu@de_no_dispatch_per_slot.no_ops_from_frontend\\,cmask\\=3D0x8@), =
+total_dispatch_slots)",
+> +    "MetricGroup": "PipelineL2;frontend_bound_group",
+> +    "ScaleUnit": "100%"
+
+Perhaps "100% slots"
+
+It seems unexpected that a latency (above) and  bandwidth metric would
+be reporting a percentage, perhaps this needs capturing in the metric
+name.
+
+Same issues repeat below...
+
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation_mispredicts",
+> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
+e to branch mispredicts.",
+> +    "MetricExpr": "d_ratio(bad_speculation * ex_ret_brn_misp, ex_ret_brn=
+_misp + bp_redirects.resync)",
+> +    "MetricGroup": "PipelineL2;bad_speculation_group",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation_pipeline_restarts",
+> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
+e to pipeline restarts (resyncs).",
+> +    "MetricExpr": "d_ratio(bad_speculation * bp_redirects.resync, ex_ret=
+_brn_misp + bp_redirects.resync)",
+> +    "MetricGroup": "PipelineL2;bad_speculation_group",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "backend_bound_memory",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of stalls due to the memory subsystem.",
+> +    "MetricExpr": "backend_bound * d_ratio(ex_no_retire.load_not_complet=
+e, ex_no_retire.not_complete)",
+> +    "MetricGroup": "PipelineL2;backend_bound_group",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "backend_bound_cpu",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of stalls not related to the memory subsystem.",
+> +    "MetricExpr": "backend_bound * (1 - d_ratio(ex_no_retire.load_not_co=
+mplete, ex_no_retire.not_complete))",
+> +    "MetricGroup": "PipelineL2;backend_bound_group",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "retiring_fastpath",
+> +    "BriefDescription": "Fraction of dispatch slots used by fastpath ops=
+ that retired.",
+> +    "MetricExpr": "retiring * (1 - d_ratio(ex_ret_ucode_ops, ex_ret_ops)=
+)",
+> +    "MetricGroup": "PipelineL2;retiring_group",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "retiring_microcode",
+> +    "BriefDescription": "Fraction of dispatch slots used by microcode op=
+s that retired.",
+> +    "MetricExpr": "retiring * d_ratio(ex_ret_ucode_ops, ex_ret_ops)",
+> +    "MetricGroup": "PipelineL2;retiring_group",
+> +    "ScaleUnit": "100%"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/recommended.json b/to=
+ols/perf/pmu-events/arch/x86/amdzen5/recommended.json
+> new file mode 100644
+> index 000000000000..986f8b2b2d5b
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/recommended.json
+> @@ -0,0 +1,357 @@
+> +[
+> +  {
+> +    "MetricName": "branch_misprediction_ratio",
+> +    "BriefDescription": "Execution-time branch misprediction ratio (non-=
+speculative).",
+
+Is ratio or rate better?
+```
+$ grep -r MetricName tools/perf/pmu-events/arch/| grep _rate |wc -l
+246
+$ grep -r MetricName tools/perf/pmu-events/arch/| grep _ratio |wc -l
+135
+```
+
+> +    "MetricExpr": "d_ratio(ex_ret_brn_misp, ex_ret_brn)",
+> +    "MetricGroup": "branch_prediction",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "all_data_cache_accesses_pti",
+> +    "BriefDescription": "All data cache accesses per thousand instructio=
+ns.",
+> +    "MetricExpr": "ls_dispatch.all / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+
+Perhaps "1e3instructions", and below.
+
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_accesses_pti",
+> +    "BriefDescription": "All L2 cache accesses per thousand instructions=
+.",
+> +    "MetricExpr": "(l2_request_g1.all_no_prefetch + l2_pf_hit_l2.l2_hwpf=
+ + l2_pf_miss_l2_hit_l3.l2_hwpf + l2_pf_miss_l2_l3.l2_hwpf) / instructions"=
+,
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l1_ic_misses_pti",
+> +    "BriefDescription": "L2 cache accesses from L1 instruction cache mis=
+ses (including prefetch) per thousand instructions.",
+> +    "MetricExpr": "l2_request_g1.cacheable_ic_read / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l1_dc_misses_pti",
+> +    "BriefDescription": "L2 cache accesses from L1 data cache misses (in=
+cluding prefetch) per thousand instructions.",
+> +    "MetricExpr": "l2_request_g1.all_dc / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l2_hwpf_pti",
+> +    "BriefDescription": "L2 cache accesses from L2 cache hardware prefet=
+cher per thousand instructions.",
+> +    "MetricExpr": "(l2_pf_hit_l2.l1_dc_l2_hwpf + l2_pf_miss_l2_hit_l3.l1=
+_dc_l2_hwpf + l2_pf_miss_l2_l3.l1_dc_l2_hwpf) / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_misses_pti",
+> +    "BriefDescription": "All L2 cache misses per thousand instructions."=
+,
+> +    "MetricExpr": "(l2_cache_req_stat.ic_dc_miss_in_l2 + l2_pf_miss_l2_h=
+it_l3.l2_hwpf + l2_pf_miss_l2_l3.l2_hwpf) / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l1_ic_miss_pti",
+> +    "BriefDescription": "L2 cache misses from L1 instruction cache misse=
+s per thousand instructions.",
+> +    "MetricExpr": "l2_cache_req_stat.ic_fill_miss / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l1_dc_miss_pti",
+> +    "BriefDescription": "L2 cache misses from L1 data cache misses per t=
+housand instructions.",
+> +    "MetricExpr": "l2_cache_req_stat.ls_rd_blk_c / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l2_hwpf_pti",
+> +    "BriefDescription": "L2 cache misses from L2 cache hardware prefetch=
+er per thousand instructions.",
+> +    "MetricExpr": "(l2_pf_miss_l2_hit_l3.l1_dc_l2_hwpf + l2_pf_miss_l2_l=
+3.l1_dc_l2_hwpf) / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_hits_pti",
+> +    "BriefDescription": "All L2 cache hits per thousand instructions.",
+> +    "MetricExpr": "(l2_cache_req_stat.ic_dc_hit_in_l2 + l2_pf_hit_l2.l2_=
+hwpf) / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l1_ic_miss_pti",
+> +    "BriefDescription": "L2 cache hits from L1 instruction cache misses =
+per thousand instructions.",
+> +    "MetricExpr": "l2_cache_req_stat.ic_hit_in_l2 / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l1_dc_miss_pti",
+> +    "BriefDescription": "L2 cache hits from L1 data cache misses per tho=
+usand instructions.",
+> +    "MetricExpr": "l2_cache_req_stat.dc_hit_in_l2 / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l2_hwpf_pti",
+> +    "BriefDescription": "L2 cache hits from L2 cache hardware prefetcher=
+ per thousand instructions.",
+> +    "MetricExpr": "l2_pf_hit_l2.l1_dc_l2_hwpf / instructions",
+> +    "MetricGroup": "l2_cache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l3_cache_accesses",
+> +    "BriefDescription": "L3 cache accesses.",
+> +    "MetricExpr": "l3_lookup_state.all_coherent_accesses_to_l3",
+> +    "MetricGroup": "l3_cache"
+> +  },
+> +  {
+> +    "MetricName": "l3_misses",
+> +    "BriefDescription": "L3 misses (including cacheline state change req=
+uests).",
+
+local vs remote?
+
+> +    "MetricExpr": "l3_lookup_state.l3_miss",
+> +    "MetricGroup": "l3_cache"
+> +  },
+> +  {
+> +    "MetricName": "l3_read_miss_latency",
+> +    "BriefDescription": "Average L3 read miss latency (in core clocks)."=
+,
+> +    "MetricExpr": "(l3_xi_sampled_latency.all * 10) / l3_xi_sampled_late=
+ncy_requests.all",
+> +    "MetricGroup": "l3_cache",
+> +    "ScaleUnit": "1core clocks"
+> +  },
+> +  {
+> +    "MetricName": "l3_read_miss_latency_for_local_dram",
+> +    "BriefDescription": "Average L3 read miss latency (in core clocks) f=
+or local DRAM.",
+> +    "MetricExpr": "(l3_xi_sampled_latency.dram_near * 10) / l3_xi_sample=
+d_latency_requests.dram_near",
+> +    "MetricGroup": "l3_cache",
+> +    "ScaleUnit": "1core clocks"
+
+"core clocks" isn't defined in the attached documentation. How can one
+look up the different clock types? If "core" is basically all clock
+types in the metrics then consider dropping "core" here.
+
+> +  },
+> +  {
+> +    "MetricName": "l3_read_miss_latency_for_remote_dram",
+> +    "BriefDescription": "Average L3 read miss latency (in core clocks) f=
+or remote DRAM.",
+> +    "MetricExpr": "(l3_xi_sampled_latency.dram_far * 10) / l3_xi_sampled=
+_latency_requests.dram_far",
+> +    "MetricGroup": "l3_cache",
+> +    "ScaleUnit": "1core clocks"
+> +  },
+> +  {
+> +    "MetricName": "op_cache_fetch_miss_ratio",
+> +    "BriefDescription": "Op cache miss ratio for all fetches.",
+> +    "MetricExpr": "d_ratio(op_cache_hit_miss.op_cache_miss, op_cache_hit=
+_miss.all_op_cache_accesses)",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "ic_fetch_miss_ratio",
+> +    "BriefDescription": "Instruction cache miss ratio for all fetches. A=
+n instruction cache miss will not be counted by this metric if it is an OC =
+hit.",
+> +    "MetricExpr": "d_ratio(ic_tag_hit_miss.instruction_cache_miss, ic_ta=
+g_hit_miss.all_instruction_cache_accesses)",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_memory_pti",
+> +    "BriefDescription": "L1 data cache fills from DRAM or MMIO in any NU=
+MA node per thousand instructions.",
+> +    "MetricExpr": "ls_any_fills_from_sys.dram_io_all / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_remote_node_pti",
+> +    "BriefDescription": "L1 data cache fills from a different NUMA node =
+per thousand instructions.",
+> +    "MetricExpr": "ls_any_fills_from_sys.far_all / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_same_ccx_pti",
+> +    "BriefDescription": "L1 data cache fills from within the same CCX pe=
+r thousand instructions.",
+> +    "MetricExpr": "ls_any_fills_from_sys.local_all / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_different_ccx_pti",
+> +    "BriefDescription": "L1 data cache fills from another CCX cache in a=
+ny NUMA node per thousand instructions.",
+> +    "MetricExpr": "ls_any_fills_from_sys.remote_cache / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "all_l1_data_cache_fills_pti",
+> +    "BriefDescription": "All L1 data cache fills per thousand instructio=
+ns.",
+> +    "MetricExpr": "ls_any_fills_from_sys.all / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_local_l2_pti",
+> +    "BriefDescription": "L1 demand data cache fills from local L2 cache =
+per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_l2 / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_same_ccx_pti",
+> +    "BriefDescription": "L1 demand data cache fills from within the same=
+ CCX per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_ccx / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_near_cache_pti",
+> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
+he in the same NUMA node per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.near_cache / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_near_memory_pti",
+> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
+ the same NUMA node per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_near / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_far_cache_pti",
+> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
+he in a different NUMA node per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.far_cache / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_far_memory_pti",
+> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
+ a different NUMA node per thousand instructions.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_far / instructions",
+> +    "MetricGroup": "l1_dcache",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_itlb_misses_pti",
+> +    "BriefDescription": "L1 instruction TLB misses per thousand instruct=
+ions.",
+> +    "MetricExpr": "(bp_l1_tlb_miss_l2_tlb_hit + bp_l1_tlb_miss_l2_tlb_mi=
+ss.all) / instructions",
+> +    "MetricGroup": "tlb",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_itlb_misses_pti",
+> +    "BriefDescription": "L2 instruction TLB misses and instruction page =
+walks per thousand instructions.",
+> +    "MetricExpr": "bp_l1_tlb_miss_l2_tlb_miss.all / instructions",
+> +    "MetricGroup": "tlb",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l1_dtlb_misses_pti",
+> +    "BriefDescription": "L1 data TLB misses per thousand instructions.",
+> +    "MetricExpr": "ls_l1_d_tlb_miss.all / instructions",
+> +    "MetricGroup": "tlb",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "l2_dtlb_misses_pti",
+> +    "BriefDescription": "L2 data TLB misses and data page walks per thou=
+sand instructions.",
+> +    "MetricExpr": "ls_l1_d_tlb_miss.all_l2_miss / instructions",
+> +    "MetricGroup": "tlb",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "all_tlbs_flushed_pti",
+> +    "BriefDescription": "All TLBs flushed per thousand instructions.",
+> +    "MetricExpr": "ls_tlb_flush.all / instructions",
+> +    "MetricGroup": "tlb",
+> +    "ScaleUnit": "1e3"
+> +  },
+> +  {
+> +    "MetricName": "macro_ops_dispatched",
+> +    "BriefDescription": "Macro-ops dispatched.",
+> +    "MetricExpr": "de_src_op_disp.all",
+> +    "MetricGroup": "decoder"
+> +  },
+> +  {
+> +    "MetricName": "sse_avx_stalls",
+> +    "BriefDescription": "Mixed SSE/AVX stalls.",
+> +    "MetricExpr": "fp_disp_faults.sse_avx_all"
+> +  },
+> +  {
+> +    "MetricName": "macro_ops_retired",
+> +    "BriefDescription": "Macro-ops retired.",
+> +    "MetricExpr": "ex_ret_ops"
+> +  },
+> +  {
+> +    "MetricName": "umc_data_bus_utilization",
+> +    "BriefDescription": "Memory controller data bus utilization.",
+> +    "MetricExpr": "d_ratio(umc_data_slot_clks.all / 2, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_rate",
+> +    "BriefDescription": "Memory controller CAS command rate.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_read_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
+ds.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_write_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for wri=
+tes.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.wr, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_read_bandwidth",
+> +    "BriefDescription": "Estimated memory read bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.rd * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_write_bandwidth",
+> +    "BriefDescription": "Estimated memory write bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.wr * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_mem_bandwidth",
+> +    "BriefDescription": "Estimated combined memory bandwidth.",
+> +    "MetricExpr": "(umc_cas_cmd.all * 64) / 1e6 / duration_time",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_read_ratio",
+> +    "BriefDescription": "Ratio of memory controller CAS commands for rea=
+ds.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "umc_cas_cmd_rate",
+> +    "BriefDescription": "Memory controller CAS command rate.",
+> +    "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_activate_cmd_rate",
+> +    "BriefDescription": "Memory controller ACTIVATE command rate.",
+> +    "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+> +  },
+> +  {
+> +    "MetricName": "umc_precharge_cmd_rate",
+> +    "BriefDescription": "Memory controller PRECHARGE command rate.",
+> +    "MetricExpr": "d_ratio(umc_pchg_cmd.all * 1000, umc_mem_clk)",
+> +    "MetricGroup": "memory_controller",
+> +    "PerPkg": "1"
+
+Units of umc_mem_clk?
+
+Thanks,
+Ian
+
+> +  }
+> +]
+> --
+> 2.34.1
 >
-> Thanks,
-> Namhyung
->
->
->> +               machine->traceiter.text_start =3D map__unmap_ip(kmap, sy=
-m->start);
->> +               machine->traceiter.text_end =3D map__unmap_ip(kmap, sym-=
->end);
->> +
->> +               sym =3D machine__find_kernel_symbol_by_name(machine, "tr=
-ace_contention_begin", &kmap);
->> +               machine->trace.text_start =3D map__unmap_ip(kmap, sym->s=
-tart);
->> +               machine->trace.text_end =3D map__unmap_ip(kmap, sym->end=
-);
->>         }
->>
->>         /* failed to get kernel symbols */
->> @@ -3280,5 +3288,14 @@ bool machine__is_lock_function(struct machine *ma=
-chine, u64 addr)
->>         if (machine->lock.text_start <=3D addr && addr < machine->lock.t=
-ext_end)
->>                 return true;
->>
->> +       /* traceiter functions currently don't have their own section
->> +        * but we consider them lock functions
->> +        */
->> +       if (machine->traceiter.text_start <=3D addr && addr < machine->t=
-raceiter.text_end)
->> +               return true;
->> +
->> +       if (machine->trace.text_start <=3D addr && addr < machine->trace=
-.text_end)
->> +               return true;
->> +
->>         return false;
->>  }
->> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
->> index e28c787616fe..4312f6db6de0 100644
->> --- a/tools/perf/util/machine.h
->> +++ b/tools/perf/util/machine.h
->> @@ -49,7 +49,7 @@ struct machine {
->>         struct {
->>                 u64       text_start;
->>                 u64       text_end;
->> -       } sched, lock;
->> +       } sched, lock, traceiter, trace;
->>         pid_t             *current_tid;
->>         size_t            current_tid_sz;
->>         union { /* Tool specific area */
->> --
->> 2.39.2
->>
