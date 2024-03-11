@@ -1,249 +1,407 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB36D56B90;
-	Mon, 11 Mar 2024 21:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710192635; cv=fail; b=D1h51wyqkn1vKvilGIOXxBDYkWCabLjEAKLHoZ7MlW3QgPPGzZq55gGMyAkITR/QRTNPkvHnTjlY+vWm3nY3ffeTsy7xUywWFiiOhSsRGRR8pY+TEN9uzKWZzWWes2ynfwszkIXI73tlCqggSZKQyyV2ki7G+5EgVA8PjVhK0+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710192635; c=relaxed/simple;
-	bh=PMAsaEbu9cajDzrWsHNRWLD13El8EFBPEW1y/HCWG2Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rWDSiZey3KLHORPpDFChp1r/C9y22yMkZ3iOsjg/aKq4Y8ySxHFdJQhMaiBuAcj0n8bQKzpVTyV+1IR/haeU93xZBW2UsV2jd/JprLGdZZc8qxD/4wZn/1nVnfCtke9Y/3fT6BOATMs+/5OU3kgSEI36QmG/mEkOWZxNeBXW9TE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5BLSvx5; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DA956B98;
+	Mon, 11 Mar 2024 22:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710194608; cv=none; b=FmCqifKIbcEjWezD8QHgYajsNpkIRvY9N0llzOS3HKKDcZZSYlZ3ZWKBoaL6Y+fcvlXQsKqpNHPWv9ZZ3JAqmeXdFbA1VqtomqiT/zLHhQNpVnQ/Erm/cL4ehq8tbTNC8lkKwHl5HTCUOssZy2WZnjXoyOSJS6u0nXI45v6EU4I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710194608; c=relaxed/simple;
+	bh=65bTy4O/5LgvJRBpVeWNXhuk+mmuaIAFbCgxKM2xEkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkBRBmi/+NudJ/KeLVS8L2/Zpfsx/ThdHdXfawbuKo9tXYUyGWsq1XRCqzp26lojn/AUn7w38TlArmn/mi/1uVXQ2j/67eNaKhysPNzIzJ4A1KPnfz7AFzeczviG181203qGHXJ12DniCgtn0J9O7DYX/hXkcPYL8nAtPBTL2Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkNiBOpf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5BLSvx5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710192634; x=1741728634;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=PMAsaEbu9cajDzrWsHNRWLD13El8EFBPEW1y/HCWG2Q=;
-  b=d5BLSvx5FP0nTQ4Xn4FzZStGOjclLQYGJoyD49SCD0f3Zo3jBPctNHLc
-   zlbNkyaakuoJMId2ZcZTmA94eACMfMhz1dbjhrZVBYyjKmQMlQ+wVxgCv
-   sWrM51BeEF6DrhF8o3ltkWlEfoh1+oXX6jb3CLOZMpojy40XTnW0XmS/M
-   ZMbRpDVAeXR3aWxTFlu7w+FLgRNzBXDUS5i+QicDcHo2npGw87Lc9d/X5
-   v9NTnZJ09Cm4FmSjMJd894pWiFnux6sNNJKFZcM0gIEn8QyIbkmXq5eQu
-   kjdzBoxMUMKziWVWy51L6x3Hy+jCGUOeYu8WuT9iGCIbVY+FFYMkGiXUx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="22398149"
-X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
-   d="scan'208";a="22398149"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 14:30:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
-   d="scan'208";a="11367611"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Mar 2024 14:30:31 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 11 Mar 2024 14:30:30 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 11 Mar 2024 14:30:30 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 11 Mar 2024 14:30:30 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 11 Mar 2024 14:30:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ev82WlWhLLoCTl0OCu3t+gYxL0UvezaYVpsHIZ6j+y2wOIt4r93699Gl7WzJnl0rdaAWIJ2OaTmPb3rSNaSOB1Fb3QJXsssrsSGQg1BIsLV0FaSlISdA0TDvudqHb9WBXSlSbF+n9jszCaSoZy+hipiSJC3r61dyNo4iPx1F+riU9kt688t2dxxjNQn+nljPo28ziYO3yV/YMMIHdnsGzKTa5ZAeHHGJNxtWuCkG3ocCj1QiolqrKc7uTApQYwOrr9sO3bC6uaHJDkmIMGiIEv02qzQFg2dacqUrTbThrLzDSbv9x2xM4nIAQ/XnPTEpp8Gqu3ikb1gc2LUs4pyKmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PMAsaEbu9cajDzrWsHNRWLD13El8EFBPEW1y/HCWG2Q=;
- b=i04AVSgv5Ko2FVmlrfUVTWdGuU/AUMWB4+Y1qLaEZXTSw1fk9JjL6k0w9R1JXL5xcnP2z0I7fvh29LuqcD7rKEA+LY6Q9gZeADB17cdHy45veF1qFEUwkyMF8wTfa2QrTezoOe6LmxagCcmPKMkguoLNnzB7Iu9/Uewb7Vv51pzt+wZtVLvmy78sBSQyBpEWebHLQ4NMG6eML21Vcgbu1gqd88zYWR0dS0xj7krUe2O/+8nCTdLKSTAt9R03y1t7qH4lfJ+7pvyoATMYK2r5Ip+OWVlYlN7jKvT3pMIUjIeB1u1j/mfUiqAuyQhD1BIKbg3MK6HdZ0eifkzc87aDlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
- by CY8PR11MB7393.namprd11.prod.outlook.com (2603:10b6:930:84::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.16; Mon, 11 Mar
- 2024 21:30:28 +0000
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::d3a0:f70a:9340:9a3e]) by CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::d3a0:f70a:9340:9a3e%3]) with mapi id 15.20.7386.016; Mon, 11 Mar 2024
- 21:30:28 +0000
-From: "Wang, Weilin" <weilin.wang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
-	<jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang
-	<kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb"
-	<caleb.biggers@intel.com>
-Subject: RE: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-Thread-Topic: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-Thread-Index: AQHabDY/WYWU0sDgOkmWpl/MeP21nLEzF/sAgAAFmPA=
-Date: Mon, 11 Mar 2024 21:30:28 +0000
-Message-ID: <CO6PR11MB5635949BE12E694160F28D5CEE242@CO6PR11MB5635.namprd11.prod.outlook.com>
-References: <20240302001139.604829-1-weilin.wang@intel.com>
- <20240302001139.604829-3-weilin.wang@intel.com>
- <CAM9d7cjz1JPM0MQ5m6V7DCgShCBNCd5uqVLotf61J3eu216mEQ@mail.gmail.com>
-In-Reply-To: <CAM9d7cjz1JPM0MQ5m6V7DCgShCBNCd5uqVLotf61J3eu216mEQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|CY8PR11MB7393:EE_
-x-ms-office365-filtering-correlation-id: f051b33a-1798-41b2-08c3-08dc421278e6
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: haBiT0fkN3G5XrcZoi6p0iIYUjp8s/rDHJlVm304/sm8jII/jiwUluxYNlz9GpjC1vxQa9faFPjJ1Qx0TZ3Ffu4QpZVJpLv6P33D7RHcKYEvxfdJk41Q7tYNlf+eBilLZ4IGyjDosYBha29Z24+fq3IyCHKkBlQN8fql8M7QkvmlEcmEBPqI5qzHXM4nAzraAe3EYheT7rCKv58ndosICWNlJSxX4+0BbAVY4S8e8MrIzitNjTQCjMrijuVqCmn2gZdkbcZacRc1Jb8NPqBHovxFbahmxD9nJY29uloivZDKp+hiLqMw8tKXyQhXdNZQ4OP7ArBp4sJoMf6tZ3x2v/oB1fRQ1pyZGGHDZxQE1DJSAFfG1RLDNvpR7a3ITRtK+r5zwRp/ejquazLD+lyntXggTVK81NrLSC+7ngL+hfHuTErlgkEN7GnXphqFTzi98GAhZGSkI8f4c+J90fUh6fQ9nQlTpO9oqEFxRFidv6moLlpJgkuTgL5qaZtzZQL+xX9i8qEFdP8dDwlfxIO8ha7hEopOR7E59dnnu3hR8q8mwz3zbqFinOOZjAcAxnpvStznRAhBR9MPePOQPG96nyJ8cGjjy0bZUTXulMumEeg+dgHRoUuv1L35deVpkvW7IQN/3WQJJOqivcDdfMrFMNrgE3rjEcqNpqOR21mT5PgFAXBXXrkWGw0OmipMOz+x9c3HN+NeG79z3x9veAAIIKuGuxeatKxOQoqgAK/HOSQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SnlQaG1UVk5qUlI5MjFlcnUrZzNuQmJDSDdEQUxzeURFTUhnUFR4WDZaKzZq?=
- =?utf-8?B?SlFpSjZ3ZldGQzZNTW1yNll4dVpLVXl0SkV5YllUVDMwYTVKUmxJRnVZeFI3?=
- =?utf-8?B?THRKbElyaWxWR3UzZTErR2R6dnZPdGQxdzF1Nk1DNHphRlRidUJRRW14WXpY?=
- =?utf-8?B?cmx1RFhnOXQrNTlVditmVXZPTWxBKzNCUjY2SXJsZWRBZU9DKzdJdG5mRUxa?=
- =?utf-8?B?aUlqT2NESmsrTmVtekloSkcxR2FKbVV5b0FPejNkWmtOWmd0L0swckE2bUNo?=
- =?utf-8?B?U1hPcWFOKy8vVi9aZkdwb3l6aUk3WXBGQWh0RjI0N20wL3kzZDJyajlBNW1t?=
- =?utf-8?B?SnFmUjVMTXUrb1R4MnZNMTF2dW01bldiOWVPbU1zR0RScGxaOTk5MmlGRkV1?=
- =?utf-8?B?RDNKNFVvK1AyY3lEU1dYNWY3RUUzTDF1UDlVdXlSdEZNTHhLOTZxRktyaHdF?=
- =?utf-8?B?eDlGc2I1SzVFTU54L2dhTExMVURLSnFybk5Sd0d6SWN6QWxPMGI0aGd1aUhE?=
- =?utf-8?B?UFpmS09vV3lmeHJNQlU3OE9WVEUyWjBNdGJxR3hydmNBUGxXK0xnRVFZT1A3?=
- =?utf-8?B?YldSbmlVeGN4alo4bThnR3pxVDFaMjJUeFVGSmRIQW9VR081RWNBSDkyR29I?=
- =?utf-8?B?TFpVVEplWkFDWUxpQlVKUTdmVDBPUStoZCtnWFZzSUpUUGN4VVlHZEpIQzU1?=
- =?utf-8?B?aGpIMXR4L21HeGhWY1lDQ0NQeGE3RGtMakJhQWdwaXJMMDdUemV4N0dvaHV5?=
- =?utf-8?B?aHljZ0FPSlRRQ2x4UUlVSXk0empoNHBHZzZKQTI1Y1dvOWUrM3REOFFMdUQw?=
- =?utf-8?B?MlptRVdPcmNPZCt0L1loU2g4SUJ6Sk9uVzRIdyt0QUtwUWtnZEhVUVA0UHZP?=
- =?utf-8?B?V3c1cFRnc3M0NmdIUXJCRC9BcnpRckJrK3JYckNNWlRGNmN2NW8wSkZ5RXJ2?=
- =?utf-8?B?dmI3NGlPVktVQWNRWjhWZHo3Z0Nod2ZXQmpsNVRHei9peHIrczQxN1VBYllF?=
- =?utf-8?B?UWhVdFhQRmswM1hRbmloNDNneXJuNXFTQXBCK3VoZ0lBZzJoN043SndzeXMx?=
- =?utf-8?B?d1k3R3NkelBQaHRPL3VPY3BNQmNEalVaSlhqWURsWS8rT1c4OHZPMWZhQVZY?=
- =?utf-8?B?d3RUSStqd1Q4dVF4eHlEWkFDT1VTUFhLOWlsa1VhVGtLRHFtK05wU25kek5l?=
- =?utf-8?B?QitDbHBBVDJpYlVWZmZNTU52N3RzSGxUejhHV0M5NzgrV2xuRFd2RU5xK3Nx?=
- =?utf-8?B?ZVhBQmpsa0MyeWhaVjZnalJmZEZKS1VXWitMU0pFZENtMkdrbGtqWTJpUWI0?=
- =?utf-8?B?QnBQTS9CSE50K1ZBOU9VQWY4cXI1MmxqVTkzb3IvemQ3c251S0ZXRmZNSFRw?=
- =?utf-8?B?N3hiM21CZDVVWEFKczBFTGtmRkg2cGIwSmZZblh3NVI5ZTB3V01KZm9vZWlX?=
- =?utf-8?B?amtHZnlZUEhKR0hITEo5ZjhydWNaeGh5VElTWlNDaUlyY294UVVGRjRvclJz?=
- =?utf-8?B?SmpQWUpYVnNYL3pwOWJONjJJVGhhRFNsMllIelBJMWQvUG5kY24rbkVIeFMy?=
- =?utf-8?B?cStSZmtJSVIzWnJoaVMxYVRSVm45RUJLcDU4M0c1cW9Cb2VTcWRPVG1aZHJj?=
- =?utf-8?B?S2JjL0pqVm1WYTBJYVZzcyt1Zyt0YndJQjJIcDV6R2QyZWJuWlZKRktmTzN4?=
- =?utf-8?B?ZHY2TWFHMWVPbTU4NEhqckhhYm55eU9BdkpDK0U5bjFreVZVNDVYUTI5bHFy?=
- =?utf-8?B?TEExb0lFakRXU1N0eDNNNk1hQkJsOTlCSjArM0JGRUVyWFZqbXY3QmV6UGwr?=
- =?utf-8?B?d3ZHM2gyMG1udDRQdTFubktqUG96R3BsVzdrTC9yZ0tGS0wwYkJDbDdQN0hr?=
- =?utf-8?B?M2tMSWdTWlFQbENxTE1kbTFaS3p2NXhHSUpUNTJYNFFXNnp1anY2czJQTGR5?=
- =?utf-8?B?b3RCdmhiOXFxOUY5R3M1N3BRVXh2NGtaMEhTQmtLZWJIRk5FTWtpbDR5eDE3?=
- =?utf-8?B?SFFCcUY5MFN4ZzdZWHlGdjUrbzhrVENYVXFFS1BPU1ZBOVgzK1FjYVZmYkJD?=
- =?utf-8?B?TG5RMU9FSExZaURsQXN6WGhuQkpRMkhUWW5qaCtyWUtoN0hvVDZYNmQzODhY?=
- =?utf-8?Q?7jFXAx3gtJ2fmoVMt46J/amjr?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkNiBOpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C5BC433F1;
+	Mon, 11 Mar 2024 22:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710194608;
+	bh=65bTy4O/5LgvJRBpVeWNXhuk+mmuaIAFbCgxKM2xEkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hkNiBOpfmjo2MVDbBPtTy1U/VGXNjG769GkKY2FH6bpANaaT343BmKK9knlt0oU9Q
+	 e0QTUW2+QD6sgBPdLqvNxMD91ckMbp1sAPR7QkMeKTXeU2ol7kEqmgKfrPHIh986bS
+	 ZvrmwEWUbuUeRpLE7SrzUBv/NxhmZjkFoSlxVZz5HvUhnTzEfpvJSuYF3SLCzuMxR1
+	 WNK8YCMqjR6NR1tDOZidbRmB/+OPESzpFz3M4YgfkRspz8ndsT1F6keyD5/ZqdnRD4
+	 ef/8S8dFL/fFtTb0m1g0V7wHxYpQxN7Zp8AhlC6d8p9bS0+9IBqyXnOSjp+m7MbvSx
+	 FSiBJlDVjHy+g==
+Date: Mon, 11 Mar 2024 19:03:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/4] perf: Make SIGTRAP and __perf_pending_irq() work on
+ RT.
+Message-ID: <Ze9_rP9FaMq_fWHt@x1>
+References: <20240308175810.2894694-1-bigeasy@linutronix.de>
+ <Ze7eKgdajyEgQcpL@elver.google.com>
+ <20240311155927.sbWzLN62@linutronix.de>
+ <CANpmjNNXd6rL10Vju-tsa1aPsCSMykmfoMg1E1_B-DwKVQw_2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f051b33a-1798-41b2-08c3-08dc421278e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2024 21:30:28.4518
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7ozb/OC/Lji3kZRSg4wIMyqeqH4VCO8B3thqpMu53dUraszHP1spbENUISQy1JIU5LH7vwHu9p3TSPc0w5LYyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7393
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANpmjNNXd6rL10Vju-tsa1aPsCSMykmfoMg1E1_B-DwKVQw_2w@mail.gmail.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTmFtaHl1bmcgS2ltIDxu
-YW1oeXVuZ0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDExLCAyMDI0IDI6MDgg
-UE0NCj4gVG86IFdhbmcsIFdlaWxpbiA8d2VpbGluLndhbmdAaW50ZWwuY29tPg0KPiBDYzogSWFu
-IFJvZ2VycyA8aXJvZ2Vyc0Bnb29nbGUuY29tPjsgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZy
-YWRlYWQub3JnPjsNCj4gSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+OyBBcm5hbGRvIENh
-cnZhbGhvIGRlIE1lbG8NCj4gPGFjbWVAa2VybmVsLm9yZz47IEFsZXhhbmRlciBTaGlzaGtpbg0K
-PiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT47IEppcmkgT2xzYSA8am9sc2FA
-a2VybmVsLm9yZz47IEh1bnRlciwNCj4gQWRyaWFuIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47
-IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT47DQo+IGxpbnV4LXBlcmYtdXNl
-cnNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBUYXlsb3Is
-IFBlcnJ5DQo+IDxwZXJyeS50YXlsb3JAaW50ZWwuY29tPjsgQWx0LCBTYW1hbnRoYSA8c2FtYW50
-aGEuYWx0QGludGVsLmNvbT47IEJpZ2dlcnMsDQo+IENhbGViIDxjYWxlYi5iaWdnZXJzQGludGVs
-LmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggdjMgMi82XSBwZXJmIHN0YXQ6IEZvcmsg
-YW5kIGxhdW5jaCBwZXJmIHJlY29yZCB3aGVuDQo+IHBlcmYgc3RhdCBuZWVkcyB0byBnZXQgcmV0
-aXJlIGxhdGVuY3kgdmFsdWUgZm9yIGEgbWV0cmljLg0KPiANCj4gSGVsbG8gV2VpbGluLA0KPiAN
-Cj4gT24gRnJpLCBNYXIgMSwgMjAyNCBhdCA0OjEx4oCvUE0gPHdlaWxpbi53YW5nQGludGVsLmNv
-bT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBXZWlsaW4gV2FuZyA8d2VpbGluLndhbmdAaW50ZWwu
-Y29tPg0KPiA+DQo+ID4gV2hlbiByZXRpcmVfbGF0ZW5jeSB2YWx1ZSBpcyB1c2VkIGluIGEgbWV0
-cmljIGZvcm11bGEsIHBlcmYgc3RhdCB3b3VsZCBmb3JrIGENCj4gPiBwZXJmIHJlY29yZCBwcm9j
-ZXNzIHdpdGggIi1lIiBhbmQgIi1XIiBvcHRpb25zLiBQZXJmIHJlY29yZCB3aWxsIGNvbGxlY3QN
-Cj4gPiByZXF1aXJlZCByZXRpcmVfbGF0ZW5jeSB2YWx1ZXMgaW4gcGFyYWxsZWwgd2hpbGUgcGVy
-ZiBzdGF0IGlzIGNvbGxlY3RpbmcNCj4gPiBjb3VudGluZyB2YWx1ZXMuDQo+ID4NCj4gPiBBdCB0
-aGUgcG9pbnQgb2YgdGltZSB0aGF0IHBlcmYgc3RhdCBzdG9wcyBjb3VudGluZywgaXQgd291bGQg
-c2VuZCBzaWd0ZXJtDQo+IHNpZ25hbA0KPiA+IHRvIHBlcmYgcmVjb3JkIHByb2Nlc3MgYW5kIHJl
-Y2VpdmluZyBzYW1wbGluZyBkYXRhIGJhY2sgZnJvbSBwZXJmIHJlY29yZA0KPiBmcm9tIGENCj4g
-PiBwaXBlLiBQZXJmIHN0YXQgd2lsbCB0aGVuIHByb2Nlc3MgdGhlIHJlY2VpdmVkIGRhdGEgdG8g
-Z2V0IHJldGlyZSBsYXRlbmN5IGRhdGENCj4gPiBhbmQgY2FsY3VsYXRlIG1ldHJpYyByZXN1bHQu
-DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZWlsaW4gV2FuZyA8d2VpbGluLndhbmdAaW50ZWwu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICB0b29scy9wZXJmL2J1aWx0aW4tc3RhdC5jICAgICB8IDE3OQ0K
-PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIHRvb2xzL3BlcmYvdXRp
-bC9kYXRhLmMgICAgICAgIHwgICA0ICsNCj4gPiAgdG9vbHMvcGVyZi91dGlsL2RhdGEuaCAgICAg
-ICAgfCAgIDEgKw0KPiA+ICB0b29scy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuaCB8ICAgNyArKw0K
-PiA+ICB0b29scy9wZXJmL3V0aWwvc3RhdC5oICAgICAgICB8ICAgMyArDQo+ID4gIDUgZmlsZXMg
-Y2hhbmdlZCwgMTkxIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZm
-IC0tZ2l0IGEvdG9vbHMvcGVyZi9idWlsdGluLXN0YXQuYyBiL3Rvb2xzL3BlcmYvYnVpbHRpbi1z
-dGF0LmMNCj4gPiBpbmRleCA1YTMwOTM1NDFjZmYuLjM4OTBhNTc5MzQ5ZSAxMDA2NDQNCj4gPiAt
-LS0gYS90b29scy9wZXJmL2J1aWx0aW4tc3RhdC5jDQo+ID4gKysrIGIvdG9vbHMvcGVyZi9idWls
-dGluLXN0YXQuYw0KPiA+IEBAIC05NCw4ICs5NCwxMyBAQA0KPiA+ICAjaW5jbHVkZSA8cGVyZi9l
-dmxpc3QuaD4NCj4gPiAgI2luY2x1ZGUgPGludGVybmFsL3RocmVhZG1hcC5oPg0KPiA+DQo+ID4g
-KyNpbmNsdWRlICJ1dGlsL3NhbXBsZS5oIg0KPiA+ICsjaW5jbHVkZSA8c3lzL3BhcmFtLmg+DQo+
-ID4gKyNpbmNsdWRlIDxzdWJjbWQvcnVuLWNvbW1hbmQuaD4NCj4gPiArDQo+ID4gICNkZWZpbmUg
-REVGQVVMVF9TRVBBUkFUT1IgICAgICAiICINCj4gPiAgI2RlZmluZSBGUkVFWkVfT05fU01JX1BB
-VEggICAgICJkZXZpY2VzL2NwdS9mcmVlemVfb25fc21pIg0KPiA+ICsjZGVmaW5lIFBFUkZfREFU
-QSAgICAgICAgICAgICAgIi0iDQo+ID4NCj4gPiAgc3RhdGljIHZvaWQgcHJpbnRfY291bnRlcnMo
-c3RydWN0IHRpbWVzcGVjICp0cywgaW50IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2KTsNCj4gPg0K
-PiA+IEBAIC0xNjIsNyArMTY3LDggQEAgc3RhdGljIHN0cnVjdCBwZXJmX3N0YXRfY29uZmlnIHN0
-YXRfY29uZmlnID0gew0KPiA+ICAgICAgICAgLmN0bF9mZCAgICAgICAgICAgICAgICAgPSAtMSwN
-Cj4gPiAgICAgICAgIC5jdGxfZmRfYWNrICAgICAgICAgICAgID0gLTEsDQo+ID4gICAgICAgICAu
-aW9zdGF0X3J1biAgICAgICAgICAgICA9IGZhbHNlLA0KPiA+IC0gICAgICAgLnRwZWJzX2V2ZW50
-X3NpemUgPSAwLA0KPiA+ICsgICAgICAgLnRwZWJzX2V2ZW50X3NpemUgICAgICAgPSAwLA0KPiA+
-ICsgICAgICAgLnRwZWJzX3BpZCAgICAgICAgICAgICAgPSAtMSwNCj4gPiAgfTsNCj4gPg0KPiA+
-ICBzdGF0aWMgYm9vbCBjcHVzX21hcF9tYXRjaGVkKHN0cnVjdCBldnNlbCAqYSwgc3RydWN0IGV2
-c2VsICpiKQ0KPiA+IEBAIC02ODcsMTIgKzY5MywxNjMgQEAgc3RhdGljIGVudW0gY291bnRlcl9y
-ZWNvdmVyeQ0KPiBzdGF0X2hhbmRsZV9lcnJvcihzdHJ1Y3QgZXZzZWwgKmNvdW50ZXIpDQo+ID4g
-ICAgICAgICByZXR1cm4gQ09VTlRFUl9GQVRBTDsNCj4gPiAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBp
-bnQgX19ydW5fcGVyZl9yZWNvcmQodm9pZCkNCj4gPiArc3RhdGljIGludCBfX3J1bl9wZXJmX3Jl
-Y29yZChjb25zdCBjaGFyICoqcmVjb3JkX2FyZ3YpDQo+ID4gIHsNCj4gPiArICAgICAgIGludCBp
-ID0gMDsNCj4gPiArICAgICAgIHN0cnVjdCB0cGVic19ldmVudCAqZTsNCj4gDQo+IFBsZWFzZSBw
-dXQgYSBibGFuayBsaW5lIGFmdGVyIHRoZSBkZWNsYXJhdGlvbi4NCj4gDQo+IA0KPiA+ICAgICAg
-ICAgcHJfZGVidWcoIlByZXBhcmUgcGVyZiByZWNvcmQgZm9yIHJldGlyZV9sYXRlbmN5XG4iKTsN
-Cj4gPiArDQo+ID4gKw0KPiANCj4gQSBkdXBsaWNhdGUgbmV3IGxpbmUuDQo+IA0KPiA+ICsgICAg
-ICAgcmVjb3JkX2FyZ3ZbaSsrXSA9ICJwZXJmIjsNCj4gPiArICAgICAgIHJlY29yZF9hcmd2W2kr
-K10gPSAicmVjb3JkIjsNCj4gPiArICAgICAgIHJlY29yZF9hcmd2W2krK10gPSAiLVciOw0KPiA+
-ICsNCj4gPiArICAgICAgIGlmIChzdGF0X2NvbmZpZy51c2VyX3JlcXVlc3RlZF9jcHVfbGlzdCkg
-ew0KPiA+ICsgICAgICAgICAgICAgICByZWNvcmRfYXJndltpKytdID0gIi1DIjsNCj4gPiArICAg
-ICAgICAgICAgICAgcmVjb3JkX2FyZ3ZbaSsrXSA9IHN0YXRfY29uZmlnLnVzZXJfcmVxdWVzdGVk
-X2NwdV9saXN0Ow0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGlmIChzdGF0X2Nv
-bmZpZy5zeXN0ZW1fd2lkZSkNCj4gPiArICAgICAgICAgICAgICAgcmVjb3JkX2FyZ3ZbaSsrXSA9
-ICItYSI7DQo+ID4gKw0KPiA+ICsgICAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeShlLCAmc3RhdF9j
-b25maWcudHBlYnNfZXZlbnRzLCBuZCkgew0KPiA+ICsgICAgICAgICAgICAgICByZWNvcmRfYXJn
-dltpKytdID0gIi1lIjsNCj4gPiArICAgICAgICAgICAgICAgcmVjb3JkX2FyZ3ZbaSsrXSA9IGUt
-Pm5hbWU7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcmVjb3JkX2FyZ3ZbaSsr
-XSA9ICItbyI7DQo+ID4gKyAgICAgICByZWNvcmRfYXJndltpKytdID0gUEVSRl9EQVRBOw0KPiAN
-Cj4gSSBkb24ndCB0aGluayB5b3UgbmVlZCBzaWRlLWJhbmQgcmVjb3JkcyBhbmQgc3ludGhlc2l6
-aW5nIGZvciB0aGlzLg0KPiBJJ2QgbGlrZSB0byBkaXNhYmxlIGFsbCBvZiB0aGVtIGJ1dCBpdCdk
-IHJlcXVpcmUgY2hhbmdlcyBpbiBwZXJmIHJlY29yZC4NCj4gRm9yIG5vdywgeW91IG5lZWQgdG8g
-cGFzcyAtLXN5bnRoPW5vIGF0IGxlYXN0Lg0KPiANCj4gVGhhbmtzLA0KPiBOYW1oeXVuZw0KPiAN
-Cg0KVGhhbmtzIE5hbWh5dW5nISBJIHdpbGwgdXBkYXRlIHRoZSBjb2RlIGFuZCBzZW5kIGEgbmV3
-IHZlcnNpb24uIA0KDQo+IA0KPiA+ICsNCj4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ICB9DQo=
+On Mon, Mar 11, 2024 at 05:31:09PM +0100, Marco Elver wrote:
+> On Mon, 11 Mar 2024 at 16:59, Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de> wrote:
+> >
+> > On 2024-03-11 11:34:18 [+0100], Marco Elver wrote:
+> > > Unfortunately there's a bug in it somewhere. It can be reproduced with
+> > > tools/testing/selftests/perf_events/remove_on_exec.
+> > >
+> > > (FWIW, the kselftests in that directory are more aggressive test cases
+> > > that I never figured out how to properly port to the 'perf test'
+> > > framework: sigtrap_threads is a more aggressive version of the 'sigtr=
+ap'
+> > > perf test, and remove_on_exec has no perf test counterpart.)
+> >
+> > You posted to warnings, I can only reproduce the second one. Based on t=
+he
+> > backtrace it is obvious what happens and I dare to say that I know why=
+=E2=80=A6
+> > Let me try address them.
+>=20
+> I guess I got lucky with hitting 2 warnings instantly. It might be
+> necessary to run remove_on_exec several times, or even start several
+> instances of it concurrently (something like "for x in {0..100}; do
+> (./remove_on_exec &); done" might do the trick).
+
+Doing this parallel remove_on_exec selftest, without Sebastian's patchs I
+eventually hit, which is the original, the following output, then I
+managed to replicate Marco's two different splats, see below.
+
+[  275.644373] BUG: scheduling while atomic: remove_on_exec/10716/0x00000002
+[  275.644378] Modules linked in: xfs libcrc32c i915 i2c_algo_bit drm_buddy=
+ ttm intel_gtt drm_display_helper drm_kms_helper sr_mod sd_mod cdrom t10_pi=
+ sg drm sdhci_pci cqhci ahci crct10dif_pclmul crc32_pclmul libahci crc32c_i=
+ntel sdhci e1000e libata ghash_clmulni_intel mmc_core cec video wmi serio_r=
+aw dm_mirror dm_region_hash dm_log dm_mod fuse
+[  275.644402] Preemption disabled at:
+[  275.644402] [<0000000000000000>] 0x0
+[  275.644407] CPU: 0 PID: 10716 Comm: remove_on_exec Kdump: loaded Tainted=
+: G        W          6.8.0-rc7-rt6 #1
+[  275.644410] Hardware name: LENOVO 427623U/427623U, BIOS 8BET45WW (1.25 )=
+ 05/18/2011
+[  275.644411] Call Trace:
+[  275.644414]  <TASK>
+[  275.644416]  dump_stack_lvl+0x51/0x70
+[  275.644421]  __schedule_bug+0x89/0xa0
+[  275.644426]  schedule_debug.constprop.0+0xd1/0x120
+[  275.644430]  __schedule+0x50/0x680
+[  275.644433]  ? _raw_spin_lock+0x13/0x40
+[  275.644436]  ? __sigqueue_alloc+0x81/0x120
+[  275.644440]  schedule_rtlock+0x1e/0x40
+[  275.644443]  rtlock_slowlock_locked+0xcd/0x270
+[  275.644446]  rt_spin_lock+0x41/0x60
+[  275.644448]  obj_cgroup_charge+0x3c/0x1d0
+[  275.644451]  kmem_cache_alloc+0x255/0x2a0
+[  275.644455]  __sigqueue_alloc+0x81/0x120
+[  275.644459]  __send_signal_locked+0x25c/0x3c0
+[  275.644461]  ? send_signal_locked+0x3f/0x130
+[  275.644464]  do_send_sig_info+0x54/0xb0
+[  275.644467]  send_sig_perf+0x70/0x90
+[  275.644470]  perf_pending_task+0x89/0xa0
+[  275.644473]  task_work_run+0x59/0x90
+[  275.644476]  irqentry_exit_to_user_mode+0x1dd/0x1e0
+[  275.644480]  asm_sysvec_irq_work+0x16/0x20
+[  275.644483] RIP: 0033:0x403376
+[  275.644485] Code: 48 89 bd c8 fe ff ff 48 89 b5 c0 fe ff ff 48 89 95 b8 =
+fe ff ff e8 1a df ff ff 89 85 24 ff ff ff 83 bd 24 ff ff ff 00 75 15 90 <8b=
+> 05 84 53 00 00 85 c0 74 f6 bf 2a 00 00 00 e8 e6 dc ff ff 48 8d
+[  275.644487] RSP: 002b:00007fffc462fde0 EFLAGS: 00000246
+[  275.644489] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f442bd=
+9a018
+[  275.644490] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
+00001
+[  275.644491] RBP: 00007fffc462ff30 R08: 0000000000000000 R09: 00000000000=
+00000
+[  275.644493] R10: 00007f442bd9a008 R11: 0000000000000246 R12: 00007fffc46=
+301f8
+[  275.644494] R13: 00000000004046cf R14: 0000000000407e08 R15: 00007f442bd=
+99000
+[  275.644497]  </TASK>
+[  275.681832] BUG: using smp_processor_id() in preemptible [00000000] code=
+: remove_on_exec/10716
+[  275.681838] caller is perf_pending_task+0x34/0xa0
+
+
+
+Now with Sebastian's patch series:
+
+  612.723013] ------------[ cut here ]------------
+[  612.723016] WARNING: CPU: 3 PID: 8655 at kernel/events/core.c:9595 __per=
+f_event_overflow+0x21a/0x230
+[  612.723026] Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nf=
+t_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_c=
+hain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables=
+ nfnetlink bnep sunrpc iwldvm intel_rapl_msr intel_rapl_common x86_pkg_temp=
+_thermal intel_powerclamp mac80211 snd_hda_codec_hdmi snd_ctl_led snd_hda_c=
+odec_conexant coretemp snd_hda_codec_generic kvm_intel snd_hda_intel snd_in=
+tel_dspcfg snd_intel_sdw_acpi libarc4 snd_hda_codec kvm snd_hda_core iwlwif=
+i snd_hwdep uvcvideo snd_seq uvc btusb snd_seq_device videobuf2_vmalloc btr=
+tl snd_pcm videobuf2_memops btintel btbcm videobuf2_v4l2 btmtk videodev mei=
+_wdt irqbypass thinkpad_acpi snd_timer rapl think_lmi iTCO_wdt cfg80211 blu=
+etooth iTCO_vendor_support intel_cstate snd videobuf2_common i2c_i801 firmw=
+are_attributes_class mei_me mc pcspkr intel_uncore wmi_bmof ledtrig_audio i=
+2c_smbus mei soundcore lpc_ich platform_profile rfkill joydev xfs libcrc32c=
+ i915 i2c_algo_bit drm_buddy ttm intel_gtt drm_display_helper
+[  612.723090]  drm_kms_helper sr_mod sd_mod cdrom t10_pi sg drm crct10dif_=
+pclmul ahci crc32_pclmul sdhci_pci libahci crc32c_intel e1000e cqhci libata=
+ sdhci ghash_clmulni_intel mmc_core cec video wmi serio_raw dm_mirror dm_re=
+gion_hash dm_log dm_mod fuse
+[  612.723111] CPU: 3 PID: 8655 Comm: remove_on_exec Kdump: loaded Not tain=
+ted 6.8.0-rc7.sebastian-rt6+ #1
+[  612.723114] Hardware name: LENOVO 427623U/427623U, BIOS 8BET45WW (1.25 )=
+ 05/18/2011
+[  612.723115] RIP: 0010:__perf_event_overflow+0x21a/0x230
+[  612.723120] Code: 45 31 ed 5b 5d 44 89 e8 41 5c 41 5d 41 5e c3 cc cc cc =
+cc 48 c7 83 40 03 00 00 00 00 00 00 e9 03 ff ff ff 0f 0b e9 c8 fe ff ff <0f=
+> 0b e9 77 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00
+[  612.723123] RSP: 0000:ffffb81e833abc50 EFLAGS: 00010087
+[  612.723125] RAX: 00000000004045c1 RBX: ffff93e80107ec48 RCX: 00000000004=
+045bb
+[  612.723127] RDX: 0000000000000020 RSI: ffffffffac25de92 RDI: ffffffffac1=
+f45ee
+[  612.723128] RBP: ffffb81e833abcc0 R08: 0000000000000002 R09: ffffb81e833=
+abcc0
+[  612.723130] R10: 0000000000000000 R11: 0000000000000000 R12: ffffb81e833=
+abf58
+[  612.723131] R13: 0000000000000000 R14: 0000000000000001 R15: 00000000000=
+00020
+[  612.723132] FS:  00007f6a22d87600(0000) GS:ffff93eb1e2c0000(0000) knlGS:=
+0000000000000000
+[  612.723135] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  612.723136] CR2: 0000000000405730 CR3: 000000011687c003 CR4: 00000000000=
+606f0
+[  612.723138] Call Trace:
+[  612.723139]  <TASK>
+[  612.723141]  ? __warn+0x85/0x140
+[  612.723145]  ? __perf_event_overflow+0x21a/0x230
+[  612.723149]  ? report_bug+0x1c3/0x1d0
+[  612.723155]  ? handle_bug+0x3c/0x70
+[  612.723159]  ? exc_invalid_op+0x14/0x70
+[  612.723163]  ? asm_exc_invalid_op+0x16/0x20
+[  612.723170]  ? __perf_event_overflow+0x21a/0x230
+[  612.723174]  handle_pmi_common+0x18b/0x400
+[  612.723178]  ? kick_process+0x46/0xc0
+[  612.723183]  ? migrate_enable+0xaa/0xf0
+[  612.723188]  ? rt_spin_unlock+0x13/0x40
+[  612.723191]  ? do_send_sig_info+0x63/0xb0
+[  612.723195]  ? kill_pid_info+0x9f/0xb0
+[  612.723199]  ? kill_something_info+0x170/0x1a0
+[  612.723202]  ? rt_read_unlock+0x31/0x1a0
+[  612.723205]  ? __x64_sys_kill+0x7f/0xb0
+[  612.723209]  intel_pmu_handle_irq+0x112/0x2a0
+[  612.723213]  perf_event_nmi_handler+0x28/0x50
+[  612.723217]  nmi_handle+0x5e/0x150
+[  612.723222]  default_do_nmi+0x6b/0x180
+[  612.723225]  exc_nmi+0x10f/0x190
+[  612.723227]  asm_exc_nmi+0xb1/0xfa
+[  612.723230] RIP: 0033:0x4045c1
+[  612.723233] Code: 8b 40 2c 85 c0 75 d4 83 45 c4 01 8b 45 c4 83 f8 1d 0f =
+86 3e fe ff ff 8b 05 4c 41 00 00 89 85 2c ff ff ff 90 8b 15 3f 41 00 00 <8b=
+> 85 2c ff ff ff 39 c2 74 f0 90 90 c9 c3 55 48 89 e5 48 81 ec b0
+[  612.723234] RSP: 002b:00007ffc40fd6c40 EFLAGS: 00000246
+[  612.723236] RAX: 0000000000000005 RBX: 0000000000000000 RCX: 00007f6a22b=
+a676b
+[  612.723238] RDX: 0000000000000005 RSI: 0000000000000009 RDI: 00000000000=
+021ed
+[  612.723239] RBP: 00007ffc40fd6d40 R08: 00000000000021ed R09: 00000000000=
+00000
+[  612.723241] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc40f=
+d7008
+[  612.723242] R13: 00000000004046cf R14: 0000000000407e08 R15: 00007f6a22d=
+ca000
+[  612.723246]  </TASK>
+[  612.723247] ---[ end trace 0000000000000000 ]---
+[  617.892290] perf: interrupt took too long (2509 > 2500), lowering kernel=
+=2Eperf_event_max_sample_rate to 79000
+[  618.992995] ------------[ cut here ]------------
+[  618.992999] unexpected event refcount: 2; ptr=3D0000000022c05d43
+[  618.993007] WARNING: CPU: 2 PID: 8967 at kernel/events/core.c:5240 free_=
+event+0x36/0x40
+[  618.993015] Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nf=
+t_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_c=
+hain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables=
+ nfnetlink bnep sunrpc iwldvm intel_rapl_msr intel_rapl_common x86_pkg_temp=
+_thermal intel_powerclamp mac80211 snd_hda_codec_hdmi snd_ctl_led snd_hda_c=
+odec_conexant coretemp snd_hda_codec_generic kvm_intel snd_hda_intel snd_in=
+tel_dspcfg snd_intel_sdw_acpi libarc4 snd_hda_codec kvm snd_hda_core iwlwif=
+i snd_hwdep uvcvideo snd_seq uvc btusb snd_seq_device videobuf2_vmalloc btr=
+tl snd_pcm videobuf2_memops btintel btbcm videobuf2_v4l2 btmtk videodev mei=
+_wdt irqbypass thinkpad_acpi snd_timer rapl think_lmi iTCO_wdt cfg80211 blu=
+etooth iTCO_vendor_support intel_cstate snd videobuf2_common i2c_i801 firmw=
+are_attributes_class mei_me mc pcspkr intel_uncore wmi_bmof ledtrig_audio i=
+2c_smbus mei soundcore lpc_ich platform_profile rfkill joydev xfs libcrc32c=
+ i915 i2c_algo_bit drm_buddy ttm intel_gtt drm_display_helper
+[  618.993068]  drm_kms_helper sr_mod sd_mod cdrom t10_pi sg drm crct10dif_=
+pclmul ahci crc32_pclmul sdhci_pci libahci crc32c_intel e1000e cqhci libata=
+ sdhci ghash_clmulni_intel mmc_core cec video wmi serio_raw dm_mirror dm_re=
+gion_hash dm_log dm_mod fuse
+[  618.993086] CPU: 2 PID: 8967 Comm: exe Kdump: loaded Tainted: G        W=
+          6.8.0-rc7.sebastian-rt6+ #1
+[  618.993089] Hardware name: LENOVO 427623U/427623U, BIOS 8BET45WW (1.25 )=
+ 05/18/2011
+[  618.993090] RIP: 0010:free_event+0x36/0x40
+[  618.993093] Code: f0 48 0f b1 97 38 02 00 00 48 83 f8 01 75 05 e9 a0 fd =
+ff ff 48 8b b7 38 02 00 00 48 89 fa 48 c7 c7 20 9c 1b ac e8 6a 52 dd ff <0f=
+> 0b c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90
+[  618.993095] RSP: 0018:ffffb81e83c8bd30 EFLAGS: 00010282
+[  618.993097] RAX: 0000000000000000 RBX: dead000000000122 RCX: 00000000000=
+00000
+[  618.993099] RDX: 0000000000000002 RSI: ffffffffac1dcc6a RDI: 00000000fff=
+fffff
+[  618.993100] RBP: ffff93e8010799c8 R08: 0000000000000000 R09: ffffb81e83c=
+8bb28
+[  618.993102] R10: ffffb81e83c8bb20 R11: ffffffffacdefe48 R12: ffff93e8010=
+4e1f8
+[  618.993103] R13: ffff93e82d021284 R14: ffffb81e83c8bad8 R15: dead0000000=
+00100
+[  618.993104] FS:  0000000000000000(0000) GS:ffff93eb1e280000(0000) knlGS:=
+0000000000000000
+[  618.993106] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  618.993108] CR2: 00007ffce8826e40 CR3: 0000000116464004 CR4: 00000000000=
+606f0
+[  618.993110] Call Trace:
+[  618.993111]  <TASK>
+[  618.993113]  ? __warn+0x85/0x140
+[  618.993116]  ? free_event+0x36/0x40
+[  618.993118]  ? report_bug+0x1c3/0x1d0
+[  618.993124]  ? handle_bug+0x3c/0x70
+[  618.993127]  ? exc_invalid_op+0x14/0x70
+[  618.993130]  ? asm_exc_invalid_op+0x16/0x20
+[  618.993136]  ? free_event+0x36/0x40
+[  618.993138]  perf_event_release_kernel+0x255/0x2f0
+[  618.993142]  perf_release+0x11/0x20
+[  618.993144]  __fput+0x96/0x2c0
+[  618.993147]  task_work_run+0x59/0x90
+[  618.993152]  get_signal+0x91/0x900
+[  618.993156]  arch_do_signal_or_restart+0x25/0x100
+[  618.993160]  ? do_execveat_common.isra.0+0x1ae/0x230
+[  618.993164]  ? syscall_exit_work+0x103/0x130
+[  618.993166]  syscall_exit_to_user_mode+0x1ae/0x1f0
+[  618.993170]  do_syscall_64+0x90/0x170
+[  618.993173]  ? do_user_addr_fault+0x31b/0x690
+[  618.993177]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+[  618.993180] RIP: 0033:0x7f573a46eed0
+[  618.993185] Code: Unable to access opcode bytes at 0x7f573a46eea6.
+[  618.993186] RSP: 002b:00007ffce8826e40 EFLAGS: 00000200 ORIG_RAX: 000000=
+000000003b
+[  618.993188] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000000=
+00000
+[  618.993189] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
+00000
+[  618.993190] RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000000=
+00000
+[  618.993191] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000=
+00000
+[  618.993192] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
+00000
+[  618.993195]  </TASK>
+[  618.993195] ---[ end trace 0000000000000000 ]---
+[  619.727029] ------------[ cut here ]------------
+[  619.727033] unexpected event refcount: 2; ptr=3D00000000b09e0f42
+[  619.727042] WARNING: CPU: 2 PID: 9017 at kernel/events/core.c:5240 free_=
+event+0x36/0x40
+[  619.727048] Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nf=
+t_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_c=
+hain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables=
+ nfnetlink bnep sunrpc iwldvm intel_rapl_msr intel_rapl_common x86_pkg_temp=
+_thermal intel_powerclamp mac80211 snd_hda_codec_hdmi snd_ctl_led snd_hda_c=
+odec_conexant coretemp snd_hda_codec_generic kvm_intel snd_hda_intel snd_in=
+tel_dspcfg snd_intel_sdw_acpi libarc4 snd_hda_codec kvm snd_hda_core iwlwif=
+i snd_hwdep uvcvideo snd_seq uvc btusb snd_seq_device videobuf2_vmalloc btr=
+tl snd_pcm videobuf2_memops btintel btbcm videobuf2_v4l2 btmtk videodev mei=
+_wdt irqbypass thinkpad_acpi snd_timer rapl think_lmi iTCO_wdt cfg80211 blu=
+etooth iTCO_vendor_support intel_cstate snd videobuf2_common i2c_i801 firmw=
+are_attributes_class mei_me mc pcspkr intel_uncore wmi_bmof ledtrig_audio i=
+2c_smbus mei soundcore lpc_ich platform_profile rfkill joydev xfs libcrc32c=
+ i915 i2c_algo_bit drm_buddy ttm intel_gtt drm_display_helper
+[  619.727102]  drm_kms_helper sr_mod sd_mod cdrom t10_pi sg drm crct10dif_=
+pclmul ahci crc32_pclmul sdhci_pci libahci crc32c_intel e1000e cqhci libata=
+ sdhci ghash_clmulni_intel mmc_core cec video wmi serio_raw dm_mirror dm_re=
+gion_hash dm_log dm_mod fuse
+[  619.727119] CPU: 2 PID: 9017 Comm: exe Kdump: loaded Tainted: G        W=
+          6.8.0-rc7.sebastian-rt6+ #1
+[  619.727122] Hardware name: LENOVO 427623U/427623U, BIOS 8BET45WW (1.25 )=
+ 05/18/2011
+[  619.727123] RIP: 0010:free_event+0x36/0x40
+[  619.727126] Code: f0 48 0f b1 97 38 02 00 00 48 83 f8 01 75 05 e9 a0 fd =
+ff ff 48 8b b7 38 02 00 00 48 89 fa 48 c7 c7 20 9c 1b ac e8 6a 52 dd ff <0f=
+> 0b c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90
+[  619.727128] RSP: 0018:ffffb81e83d5bca8 EFLAGS: 00010282
+[  619.727130] RAX: 0000000000000000 RBX: dead000000000122 RCX: 00000000000=
+00000
+[  619.727132] RDX: 0000000000000002 RSI: ffffffffac1dcc6a RDI: 00000000fff=
+fffff
+[  619.727133] RBP: ffff93e801023390 R08: 0000000000000000 R09: ffffb81e83d=
+5baa0
+[  619.727134] R10: ffffb81e83d5ba98 R11: ffffffffacdefe48 R12: ffff93e8010=
+261f8
+[  619.727136] R13: ffff93e8054b7d84 R14: ffffb81e83d5ba50 R15: dead0000000=
+00100
+[  619.727137] FS:  0000000000000000(0000) GS:ffff93eb1e280000(0000) knlGS:=
+0000000000000000
+[  619.727139] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  619.727140] CR2: 00007ffe58ed17b9 CR3: 00000001058da003 CR4: 00000000000=
+606f0
+[  619.727142] Call Trace:
+[  619.727143]  <TASK>
+[  619.727145]  ? __warn+0x85/0x140
+[  619.727148]  ? free_event+0x36/0x40
+[  619.727150]  ? report_bug+0x1c3/0x1d0
+[  619.727156]  ? handle_bug+0x3c/0x70
+[  619.727159]  ? exc_invalid_op+0x14/0x70
+[  619.727162]  ? asm_exc_invalid_op+0x16/0x20
+[  619.727169]  ? free_event+0x36/0x40
+[  619.727171]  ? free_event+0x36/0x40
+[  619.727172]  perf_event_release_kernel+0x255/0x2f0
+[  619.727176]  perf_release+0x11/0x20
+[  619.727178]  __fput+0x96/0x2c0
+[  619.727182]  task_work_run+0x59/0x90
+[  619.727185]  get_signal+0x91/0x900
+[  619.727190]  ? migrate_enable+0xaa/0xf0
+[  619.727194]  arch_do_signal_or_restart+0x25/0x100
+[  619.727197]  ? do_execveat_common.isra.0+0x1ae/0x230
+[  619.727200]  ? syscall_exit_work+0x103/0x130
+[  619.727202]  syscall_exit_to_user_mode+0x1ae/0x1f0
+[  619.727206]  do_syscall_64+0x90/0x170
+[  619.727209]  ? __count_memcg_events+0x60/0x100
+[  619.727213]  ? mm_account_fault+0x6c/0x100
+[  619.727217]  ? handle_mm_fault+0xd8/0x210
+[  619.727220]  ? do_user_addr_fault+0x31b/0x690
+[  619.727224]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+[  619.727227] RIP: 0033:0x7ffb0bcffed0
+[  619.727232] Code: Unable to access opcode bytes at 0x7ffb0bcffea6.
+[  619.727233] RSP: 002b:00007ffe58ed14b0 EFLAGS: 00000200 ORIG_RAX: 000000=
+000000003b
+[  619.727236] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000000=
+00000
+[  619.727237] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
+00000
+[  619.727238] RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000000=
+00000
+[  619.727239] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000=
+00000
+[  619.727240] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
+00000
+[  619.727242]  </TASK>
+[  619.727243] ---[ end trace 0000000000000000 ]---
+[acme@nine perf_events]$=20
+
+
