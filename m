@@ -1,171 +1,62 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A9754744;
-	Mon, 11 Mar 2024 21:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18E240C14
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 21:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710191296; cv=none; b=l5F/SYiYAQEEgdIQQzrbXw5GMH/DEYbTd4mLwLpjzP+Rd8QG017mDJ5L4DknAkNSEWbcMfS7hoWiv5M1K2R5rCHwVFiz+ADJiJAjvCcaiFKWSdbUPmh049cmj/WLWhJcQ2Oq+t0MzHazgbDcWwMnJFRgEGXAJXJd3Bo+TjWTHNU=
+	t=1710192128; cv=none; b=EqTDCrDqFWo16oL0WcfMwb/1aEWoYmHHuFOJhG6Px0d9FU+Wk1DEDsoxu9JIaCNqhvY/F+Z+wDdKkZjhx7ivQBylxuLHkzbhrM719RXaA8q8PD1y4d4D2GJMc7fDvNt8iWB8L7gDQ2cqCR3SVADQXcN7DoHo+zysbXN/aIQCW7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710191296; c=relaxed/simple;
-	bh=WuLL2kNfykIrPC02UoqXP1sqC6o5ywnMEccY3IEjVIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWo3Q1Io7NmfcRy1ybenKgtOne+yBqR7twr2npPUd2+nhJd2ZPHpyxBt0gD4bhNbtW1cC4orTuaduYw1qt5+SIXNJfV2g3gU6P/4dOt4l/QSG8Xr8GkibVvJyrcKICCu3bDanRVoY1qInskZwWuyrSNscoSQ033p5eaGHQvC0Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e64997a934so3799101b3a.0;
-        Mon, 11 Mar 2024 14:08:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710191294; x=1710796094;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9HJ7mGPmH4nvjVfLzJ9f2J+CexeqjKqHI5a66rdCrjw=;
-        b=gaOB93a76u5569Bz0LjmaciYg+g4Vd1uqUrAzYV4Zw/vr1hG83qlZ5RW4UCPb/7/wb
-         F0Ag6Mpi+JbbHGkHI6QwMChrHA8yYMAp9CDIhk2PuI9MwCuBFoGLMatkmfTIdWaJ+ip1
-         CUvQBq/hIC1OE0F+TcAaJJFzYrp4oB3uQyJhx0Em4bmeWGANDz3TOfHxDUZIg8F1o5tV
-         VCxDQ18W6qXoa+zTsTPp4/LvJD42bFxZGu/JsYdxDEYlKZZvskLvefyMDxRFATyPi/4/
-         5Odzd4OZObD3elLGfEah8U9l6tQ2YhuyBbzMQsyK1aP2XYtbUnhkzD0kkx71JQpLq7dd
-         z/cA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzU/BElW0WEnZ103l2edALYaxZA2jXL96mqwfLkyLTdTbnY/Z5+on0nLHSYCOTqMc37VIUmE2Aur0MMT4G1pIb5QzpQv837u8D5QPLQ5k7RTR+F+cpmk5ibC3XF7n3YdZl87ILoFCF2qpPBspuJA==
-X-Gm-Message-State: AOJu0Yy4oo959RKi9MLkbRoy4L5r+oQHw58WoH+VN148WrAsyfNTgmM4
-	UDioAZWJphGuTQIi63q/A3Lrjq4+Itr/v0FnP8G5clOROuIUCzE2dLMV8wrT4ph6HIpR8fksjrd
-	NQ1YQYIY1zFNnDca8il20dgGmnJQ=
-X-Google-Smtp-Source: AGHT+IH9CfieunkQBz28qm/hisRo9qN+6hrgmX1gRGP34fCVDFRLxULcr2KH8jvyniuhK9MsjvrPXdTTQGB58nYaY7Q=
-X-Received: by 2002:a05:6a21:6da7:b0:1a3:115b:acb5 with SMTP id
- wl39-20020a056a216da700b001a3115bacb5mr1583039pzb.21.1710191294083; Mon, 11
- Mar 2024 14:08:14 -0700 (PDT)
+	s=arc-20240116; t=1710192128; c=relaxed/simple;
+	bh=rU4xSNrOkCPdgwpTy+jxPQGnVqBNHfhLebHJ/P49pf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJMd/2y3qCiiEcDsIl4WjYRx/4szwcC0iccwug+Mb6p3S5rgc+KrZ7tGQplzIsZVR9UaNwhKJ9GxJaKhfTzs1+6p//Hi1/FpZMwQM6GJULtkD6pQt7GvIhXujDpSC1ka8RIDtEQK78K3UdSp0BB/vZrIdgz90R20GCosNBSe4jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SA87zAlL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SA87zAlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A44C433C7;
+	Mon, 11 Mar 2024 21:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710192127;
+	bh=rU4xSNrOkCPdgwpTy+jxPQGnVqBNHfhLebHJ/P49pf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SA87zAlLtZ5T0c+XNsBW0Yj3E94xqtWMIW5BMkdUUvSnGhI+RZhuJd2pYD9A+K6eG
+	 E8M9p0OLfiwQYhps1QAfzAS8XO7P3MvAAmNq52HW92AkXGsC5VYC55hYIJi/BSW5gG
+	 s13TkuSqc+8WJsLs4N9Oj8kaDLyT9+B6OrHlGeJ+yx0bb6ZoZZmtILYvps1D86aAxl
+	 outkZG18X8S02vWEXQUwGhvNvUQ/3DVX/mylXCd040bQ/WntkyfzNWME60m3qJ2yte
+	 k4Ari1bJcum+pYknzGbako146cA6TL3INsZjEB+uyzgjl0w9OH1wLHDx5e+z0o5kqS
+	 RziFjcKK6sJ4g==
+Date: Mon, 11 Mar 2024 18:22:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Madhu patel <patelmadhu06@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: GSoC'2024: Perf: The Linux-Foundation
+Message-ID: <Ze91_IjWIfNIdiko@x1>
+References: <CABDzTvZMHo_ryQeZjz5t0vvGzeNZKzDW70z+rFHjmYZLfRwsEw@mail.gmail.com>
+ <CAP-5=fWWs++A+qKBnnj+OSFWUF+nDitvyNn92K3L-5F2mezJQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-3-weilin.wang@intel.com>
-In-Reply-To: <20240302001139.604829-3-weilin.wang@intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 14:08:02 -0700
-Message-ID: <CAM9d7cjz1JPM0MQ5m6V7DCgShCBNCd5uqVLotf61J3eu216mEQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWWs++A+qKBnnj+OSFWUF+nDitvyNn92K3L-5F2mezJQA@mail.gmail.com>
 
-Hello Weilin,
+On Mon, Mar 11, 2024 at 02:15:02PM -0700, Ian Rogers wrote:
+>    Sorry for not replying earlier and thank you for the interest! Helping
+>    to improve the Development wiki page would be a great help! I'm not
+>    sure why that guide suggests downloading the code from Arnaldo's tree
 
-On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> When retire_latency value is used in a metric formula, perf stat would fo=
-rk a
-> perf record process with "-e" and "-W" options. Perf record will collect
-> required retire_latency values in parallel while perf stat is collecting
-> counting values.
->
-> At the point of time that perf stat stops counting, it would send sigterm=
- signal
-> to perf record process and receiving sampling data back from perf record =
-from a
-> pipe. Perf stat will then process the received data to get retire latency=
- data
-> and calculate metric result.
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/builtin-stat.c     | 179 +++++++++++++++++++++++++++++++++-
->  tools/perf/util/data.c        |   4 +
->  tools/perf/util/data.h        |   1 +
->  tools/perf/util/metricgroup.h |   7 ++
->  tools/perf/util/stat.h        |   3 +
->  5 files changed, 191 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 5a3093541cff..3890a579349e 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -94,8 +94,13 @@
->  #include <perf/evlist.h>
->  #include <internal/threadmap.h>
->
-> +#include "util/sample.h"
-> +#include <sys/param.h>
-> +#include <subcmd/run-command.h>
-> +
->  #define DEFAULT_SEPARATOR      " "
->  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
-> +#define PERF_DATA              "-"
->
->  static void print_counters(struct timespec *ts, int argc, const char **a=
-rgv);
->
-> @@ -162,7 +167,8 @@ static struct perf_stat_config stat_config =3D {
->         .ctl_fd                 =3D -1,
->         .ctl_fd_ack             =3D -1,
->         .iostat_run             =3D false,
-> -       .tpebs_event_size =3D 0,
-> +       .tpebs_event_size       =3D 0,
-> +       .tpebs_pid              =3D -1,
->  };
->
->  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> @@ -687,12 +693,163 @@ static enum counter_recovery stat_handle_error(str=
-uct evsel *counter)
->         return COUNTER_FATAL;
->  }
->
-> -static int __run_perf_record(void)
-> +static int __run_perf_record(const char **record_argv)
->  {
-> +       int i =3D 0;
-> +       struct tpebs_event *e;
+That guide is outdated, I tried fixing it a bit but I'm having trouble
+with the credentials, I asked for help from a wiki admin to fix that.
 
-Please put a blank line after the declaration.
+- Arnaldo
 
-
->         pr_debug("Prepare perf record for retire_latency\n");
-> +
-> +
-
-A duplicate new line.
-
-> +       record_argv[i++] =3D "perf";
-> +       record_argv[i++] =3D "record";
-> +       record_argv[i++] =3D "-W";
-> +
-> +       if (stat_config.user_requested_cpu_list) {
-> +               record_argv[i++] =3D "-C";
-> +               record_argv[i++] =3D stat_config.user_requested_cpu_list;
-> +       }
-> +
-> +       if (stat_config.system_wide)
-> +               record_argv[i++] =3D "-a";
-> +
-> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
-> +               record_argv[i++] =3D "-e";
-> +               record_argv[i++] =3D e->name;
-> +       }
-> +
-> +       record_argv[i++] =3D "-o";
-> +       record_argv[i++] =3D PERF_DATA;
-
-I don't think you need side-band records and synthesizing for this.
-I'd like to disable all of them but it'd require changes in perf record.
-For now, you need to pass --synth=3Dno at least.
-
-Thanks,
-Namhyung
-
-
-> +
->         return 0;
->  }
+>    at v6.3, the latest code is in:
+>    [3]https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next
+>    .git/
+>    in the perf-tools-next branch.
