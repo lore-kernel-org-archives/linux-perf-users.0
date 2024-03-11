@@ -1,178 +1,171 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA2243AAC;
-	Mon, 11 Mar 2024 20:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A9754744;
+	Mon, 11 Mar 2024 21:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710190325; cv=none; b=NnvQJoB1EbU+fzwNSALBjvELsu8qv9VO+SxlYdYDRly6V/3L/GsxWxkwlsos/CUz6Cd0QE0aUtS1k9hIdtjf2XyieJ97Sz7t5yK6ea+fwtrWR1WitOU3/t0qS9FUYJQ6j8MbzdoP6tcTtBPiMP1SVizq8YD7KyQ2SSNjmrSrex8=
+	t=1710191296; cv=none; b=l5F/SYiYAQEEgdIQQzrbXw5GMH/DEYbTd4mLwLpjzP+Rd8QG017mDJ5L4DknAkNSEWbcMfS7hoWiv5M1K2R5rCHwVFiz+ADJiJAjvCcaiFKWSdbUPmh049cmj/WLWhJcQ2Oq+t0MzHazgbDcWwMnJFRgEGXAJXJd3Bo+TjWTHNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710190325; c=relaxed/simple;
-	bh=ByUIPZ47pKYggMFQ2m6tctWjj7DYdv9nhhKxwYcw3UI=;
+	s=arc-20240116; t=1710191296; c=relaxed/simple;
+	bh=WuLL2kNfykIrPC02UoqXP1sqC6o5ywnMEccY3IEjVIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LrIoCnnSUBKYCIwPjxjs4ushdVrJXNFEEsd6G0b4lEHTBC03YcxUEbJPjOfqsbLpq5WjnyUJ378asCLmSqVzdbEhDaB0fyYmOYaC5BxajdZC0Ec2ViaQfLf0KttWu5ZppQieXLOnICTaDfas7bq2dJ+LYYw8tZEo1mhCllJUVQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hARHJHvt; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=eWo3Q1Io7NmfcRy1ybenKgtOne+yBqR7twr2npPUd2+nhJd2ZPHpyxBt0gD4bhNbtW1cC4orTuaduYw1qt5+SIXNJfV2g3gU6P/4dOt4l/QSG8Xr8GkibVvJyrcKICCu3bDanRVoY1qInskZwWuyrSNscoSQ033p5eaGHQvC0Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hARHJHvt"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29aa91e173dso3332025a91.0;
-        Mon, 11 Mar 2024 13:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710190322; x=1710795122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dd981U9xN2VeJ5yKqoYAGms3X6oq3hxLcufVnnlsh9s=;
-        b=hARHJHvtO737bqTwyz5cg0hA6e4j2p8yu7kDcJCBs4t+YWcppX0ASRrMknh4fV7Y6Z
-         Dss5OEVuHQ8WZ1mR3Yjf4rDuK3aQmjKKIqhshXXm4LJcmA+2r1eruvwGKCGBTPSc6VLj
-         Bv8aW/0Mo7TW792qRJu3WUR8fDcrUFv2gqinqU6Wl8AC6q4tOHFbhvKnoMHMq+X5ePVE
-         BA11BRQjlrpd/9rdIb09X44q6y6jBXZWS/7/7kGVz6x7fHn7tEbrT3tI3BU47AKhMLqT
-         y9HZq0n25TyObQvIXQMvT+nR4gBwUHcZSEirDJX8/u8YxTWJlNojXtW9DX3nzGYiUyZW
-         Q0eA==
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e64997a934so3799101b3a.0;
+        Mon, 11 Mar 2024 14:08:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710190322; x=1710795122;
+        d=1e100.net; s=20230601; t=1710191294; x=1710796094;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dd981U9xN2VeJ5yKqoYAGms3X6oq3hxLcufVnnlsh9s=;
-        b=NbhijlJZd2ZU4E0sFDIPllG42CvxZdrXgm/u+glXLpgsX1nRWbdgTz/UNLwbjzPvBX
-         NY210+hm30TQ50jCU/v1b0DAkp6YOWAObT8GcjIUNxLBvm00nZ8VR1qfOZOvM6ggUuAe
-         TUfz3desXGtkkkz/aYsxIWvNfHVI108kypWYowK2aczu90ay5+AtaT9+QsM9BA1FclfI
-         a27rORLAcsZe/asASTunQos6w0+s7cWHmPHsn5hOEruD4WUcRE42B1NvjaHBfgyC6iRm
-         3jMOprw2ELmtFPljpVfsisFwSbCPvzbny9fxQkswLEUEu4bYKLwwJFhYL4QOOR5Pm/8t
-         dATA==
-X-Forwarded-Encrypted: i=1; AJvYcCWc6Y2UhhcH4A1sw02tIt4uD7jMjnBQqXu3R4KYrPVN43SLPRBafZKCJ/xGKjpkLUQRu8S91sh0aGEpEbWbYdB/DE68JHlQWLTTrn3kWw6FMTOa6jzsdVp7OQSguqPWZM3kQiZX5hZcLrn489Bt5ExpzsTq+YYl1JY0q1ALdFKC2STCdVKv+q7nu/DbFh21tKXWqcsGGEmFJCQCOspQ81KP63cu/0p53sGe88uXwnMCxyqe1HrqJIQX2NfXM1fejwwb0uIPfE8MgeSCC2HNAZMYo0CXHyVT+OasV/8m7tedV4nKTqwRyc1CnEaLfZ+8gUdbH7KVbcc=
-X-Gm-Message-State: AOJu0YwThJrmvk04hJJZhgs5DVjAbJGNS0aS1MyxZGtLfpKLGvJwL9uR
-	yHmUlm9A4HWKIj3ve+K7GaTw2/bbcEH2vzy3x5m40cgkOyT6VO8CJuWkACmDtyQNuZMnLL02KM7
-	9MiPypxLF1BX7fxLTLYrc6LSIafI=
-X-Google-Smtp-Source: AGHT+IEgfLgZ9vcdFhZoSO6fknZCxb89NjyC+7Z+5uVV9Zl7CWKCYHTODpZc68UrZGzW1EcTqjEdltk5w4Wxjqea6SM=
-X-Received: by 2002:a17:90a:390c:b0:29b:a509:30aa with SMTP id
- y12-20020a17090a390c00b0029ba50930aamr112253pjb.14.1710190321684; Mon, 11 Mar
- 2024 13:52:01 -0700 (PDT)
+        bh=9HJ7mGPmH4nvjVfLzJ9f2J+CexeqjKqHI5a66rdCrjw=;
+        b=gaOB93a76u5569Bz0LjmaciYg+g4Vd1uqUrAzYV4Zw/vr1hG83qlZ5RW4UCPb/7/wb
+         F0Ag6Mpi+JbbHGkHI6QwMChrHA8yYMAp9CDIhk2PuI9MwCuBFoGLMatkmfTIdWaJ+ip1
+         CUvQBq/hIC1OE0F+TcAaJJFzYrp4oB3uQyJhx0Em4bmeWGANDz3TOfHxDUZIg8F1o5tV
+         VCxDQ18W6qXoa+zTsTPp4/LvJD42bFxZGu/JsYdxDEYlKZZvskLvefyMDxRFATyPi/4/
+         5Odzd4OZObD3elLGfEah8U9l6tQ2YhuyBbzMQsyK1aP2XYtbUnhkzD0kkx71JQpLq7dd
+         z/cA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzU/BElW0WEnZ103l2edALYaxZA2jXL96mqwfLkyLTdTbnY/Z5+on0nLHSYCOTqMc37VIUmE2Aur0MMT4G1pIb5QzpQv837u8D5QPLQ5k7RTR+F+cpmk5ibC3XF7n3YdZl87ILoFCF2qpPBspuJA==
+X-Gm-Message-State: AOJu0Yy4oo959RKi9MLkbRoy4L5r+oQHw58WoH+VN148WrAsyfNTgmM4
+	UDioAZWJphGuTQIi63q/A3Lrjq4+Itr/v0FnP8G5clOROuIUCzE2dLMV8wrT4ph6HIpR8fksjrd
+	NQ1YQYIY1zFNnDca8il20dgGmnJQ=
+X-Google-Smtp-Source: AGHT+IH9CfieunkQBz28qm/hisRo9qN+6hrgmX1gRGP34fCVDFRLxULcr2KH8jvyniuhK9MsjvrPXdTTQGB58nYaY7Q=
+X-Received: by 2002:a05:6a21:6da7:b0:1a3:115b:acb5 with SMTP id
+ wl39-20020a056a216da700b001a3115bacb5mr1583039pzb.21.1710191294083; Mon, 11
+ Mar 2024 14:08:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-3-irogers@google.com>
- <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com> <CAP-5=fUQY=ho1OSk-wosw8=7Sjp8MB_kngggP00BXs+nVNj7Pg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUQY=ho1OSk-wosw8=7Sjp8MB_kngggP00BXs+nVNj7Pg@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 11 Mar 2024 13:51:49 -0700
-Message-ID: <CAEf4BzZ+4WAaySJVGArk3epJ-u92ULkcoXTr2HnRXshGx8fPDw@mail.gmail.com>
-Subject: Re: [PATCH v1 02/13] libbpf: Make __printf define conditional
-To: Ian Rogers <irogers@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
-	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
-	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev
+References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-3-weilin.wang@intel.com>
+In-Reply-To: <20240302001139.604829-3-weilin.wang@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 11 Mar 2024 14:08:02 -0700
+Message-ID: <CAM9d7cjz1JPM0MQ5m6V7DCgShCBNCd5uqVLotf61J3eu216mEQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: weilin.wang@intel.com
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 11:54=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Mon, Mar 11, 2024 at 10:49=E2=80=AFAM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, Mar 9, 2024 at 6:05=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > libbpf depends upon linux/err.h which has a linux/compiler.h
-> > > dependency. In the kernel includes, as opposed to the tools version,
-> > > linux/compiler.h includes linux/compiler_attributes.h which defines
-> > > __printf. As the libbpf.c __printf definition isn't guarded by an
-> > > ifndef, this leads to a duplicate definition compilation error when
-> > > trying to update the tools/include/linux/compiler.h. Fix this by
-> > > adding the missing ifndef.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/lib/bpf/libbpf.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > index afd09571c482..2152360b4b18 100644
-> > > --- a/tools/lib/bpf/libbpf.c
-> > > +++ b/tools/lib/bpf/libbpf.c
-> > > @@ -66,7 +66,9 @@
-> > >   */
-> > >  #pragma GCC diagnostic ignored "-Wformat-nonliteral"
-> > >
-> > > -#define __printf(a, b) __attribute__((format(printf, a, b)))
-> > > +#ifndef __printf
-> > > +# define __printf(a, b)        __attribute__((format(printf, a, b)))
-> >
-> > styling nit: don't add spaces between # and define, please
-> >
-> > overall LGTM
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > Two questions, though.
-> >
-> > 1. It seems like just dropping #define __printf in libbpf.c compiles
-> > fine (I checked both building libbpf directly, and BPF selftest, and
-> > perf, and bpftool directly, all of them built fine). So we can
-> > probably just drop this. I'll need to add __printf on Github, but
-> > that's fine.
-> >
-> > 2. Logistics. Which tree should this patch go through? Can I land it
-> > in bpf-next or it's too much inconvenience for you?
->
-> Thanks Andrii,
->
-> dropping the #define (1) sgtm but the current compiler.h will fail to
-> build libbpf.c without the later compiler.h update in this series.
-> This causes another logistic issue for your point 2. Presumably if
-> this patch goes through bpf-next, the first patch "tools bpf:
-> Synchronize bpf.h with kernel uapi version" should also go through the
-> bpf-next.
->
+Hello Weilin,
 
-That's what I'm saying, it seems to work without your patches already.
-At least on bpf-next/master. But it's ok, let's keep it and just add
-#ifndef guard, that will make my life easier when syncing to Github
-later one. Then the patch can go through other trees and eventually
-make it into bpf-next and then Github. So please keep my ack for
-#ifndef version, thanks.
+On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/builtin-stat.c     | 179 +++++++++++++++++++++++++++++++++-
+>  tools/perf/util/data.c        |   4 +
+>  tools/perf/util/data.h        |   1 +
+>  tools/perf/util/metricgroup.h |   7 ++
+>  tools/perf/util/stat.h        |   3 +
+>  5 files changed, 191 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 5a3093541cff..3890a579349e 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -94,8 +94,13 @@
+>  #include <perf/evlist.h>
+>  #include <internal/threadmap.h>
+>
+> +#include "util/sample.h"
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +
+>  #define DEFAULT_SEPARATOR      " "
+>  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
+> +#define PERF_DATA              "-"
+>
+>  static void print_counters(struct timespec *ts, int argc, const char **a=
+rgv);
+>
+> @@ -162,7 +167,8 @@ static struct perf_stat_config stat_config =3D {
+>         .ctl_fd                 =3D -1,
+>         .ctl_fd_ack             =3D -1,
+>         .iostat_run             =3D false,
+> -       .tpebs_event_size =3D 0,
+> +       .tpebs_event_size       =3D 0,
+> +       .tpebs_pid              =3D -1,
+>  };
+>
+>  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> @@ -687,12 +693,163 @@ static enum counter_recovery stat_handle_error(str=
+uct evsel *counter)
+>         return COUNTER_FATAL;
+>  }
+>
+> -static int __run_perf_record(void)
+> +static int __run_perf_record(const char **record_argv)
+>  {
+> +       int i =3D 0;
+> +       struct tpebs_event *e;
 
-> Thanks,
-> Ian
->
->
-> > > +#endif
-> > >
-> > >  static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
-> > >  static bool prog_is_subprog(const struct bpf_object *obj, const stru=
-ct bpf_program *prog);
-> > > --
-> > > 2.44.0.278.ge034bb2e1d-goog
-> > >
+Please put a blank line after the declaration.
+
+
+>         pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +
+
+A duplicate new line.
+
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +
+> +       if (stat_config.user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config.user_requested_cpu_list;
+> +       }
+> +
+> +       if (stat_config.system_wide)
+> +               record_argv[i++] =3D "-a";
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+
+I don't think you need side-band records and synthesizing for this.
+I'd like to disable all of them but it'd require changes in perf record.
+For now, you need to pass --synth=3Dno at least.
+
+Thanks,
+Namhyung
+
+
+> +
+>         return 0;
+>  }
