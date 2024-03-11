@@ -1,209 +1,87 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97875786B;
-	Mon, 11 Mar 2024 22:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B107D5786B;
+	Mon, 11 Mar 2024 22:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710196082; cv=none; b=gquCYiYWm66NJf2brWw9dX+M4ceGUjZh8h3YfAK+o9NgWTx5Ls7lzJx3Yo3fLGpNuceLiVMXUAGOwcjVY8vS+cHA4/TESGNSm+8rr9mFruOJKiHpakK7e+dBAbxOCsDEal8XlMiQecGevnKVzt8DbJ7Ib/pZtgHxv2hiEAjq08o=
+	t=1710196167; cv=none; b=E0hlrgy+r/y3onPpYjJroyE2EHqBxjneNZbLaBxAQMemmIqhcDCZf9N6nj24Rz79027RUpqhnFgKpvwSXFnsn27VBEX8GUWQXzYXS19hgvB9ERkcxN7RH6hBeu/+s1BQQ+DIVycprKAHdnC7lBqXkwbaLZQn9AC/FuL70Ym8TVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710196082; c=relaxed/simple;
-	bh=kJLJQBV2qw2+MpH8WSSGUqmdlVUCAwJYDgoLRmvo8Mg=;
+	s=arc-20240116; t=1710196167; c=relaxed/simple;
+	bh=64IRN8BB8NWzcfQhQXiRkoqffUz/4sNxlkK5ICLel/c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KwIqw/cTvbX86ugkLmsav4uZhpuMrMH3yWOpYAw7YkxY/UVstsKzijzOr82BMndqqh0m/rLW9g7blwIBgXF/HpSfEIiFJxFbVgDqcPwPlwb8qYjgon3uGIZ2kaVa9NKJ7b8WAsdDV6H3ntbdGY8R1rkHOBUpiiTYv0csGRxe2xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.171
+	 To:Cc:Content-Type; b=jx1xHZitenQTtxp+TKY7RLgWBW54nMEInRYECCs61S/GQle6s3CaqnUhHevKoC7AeccGFJi1y/FwhBJesKudlkylRfuARQIZaeilZTlj4lyGchLCxMb7FxVQFBwGzwB0zUkiSqOZMSZDIvpRcv8WcBnXrZLakWhBsysnYMDVUqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so4251211a12.1;
-        Mon, 11 Mar 2024 15:28:00 -0700 (PDT)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29be5386b74so1333545a91.3;
+        Mon, 11 Mar 2024 15:29:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710196080; x=1710800880;
+        d=1e100.net; s=20230601; t=1710196164; x=1710800964;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hoIhOy+bFc3EA31aYO9oJWfnZngLi2VKXb3hTBJEHAM=;
-        b=K5MHCvUp5V1BuBXZNmXCLL2n8ayZIBhLEWfntM/44Nu9WrGyvkogMFaRuSnGJpY9Hu
-         G9vvt4ep0BhWetPogZu+aEobVB/ZHLaQO4MycmyWlHzwhVMAViGmvPcAbpR8ilIY2TkE
-         A90ub3q0kYhsSgO74Lu0G5UM5N2XKoqD+QGZA9jIvfX9IzcD9dxPfmZ1Yj3B4w870dwa
-         62Ngo0czBbGkiMXXJzwI65aFBlqTczuG+3RuzTlB2XeKSPbSiPrQRy5UdAxgzLZqd0xJ
-         TA73vOR4ujPZqaWJ9FGllGSuONy007uPCjk5WPY5p/Y0/LDKi0UzlMnmL2ooL4yZ2O3V
-         QMEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSRDqxpL/khMsRTkpjUbGKbKN4b+bYzAXmjOn9YPkSI5UeVOZooCMlkTVtv00gqiUJHVklEPjAWMc/bA4x8aH5yOusee7D+Vy8WRZLHfumoSHqe2pi2vSsZbA98CEDXZMq6fkcUkarpiec6UiTiQ==
-X-Gm-Message-State: AOJu0Ywi5PF1YLfMk//MdH9r4AeKUhRI7g1uMY2pzlnNpskGoNpXmDFA
-	sTn5E2i7LZVLcCaJQuuf2eodPglPGfTx2yyITcwve+AwAuVyIqIjadw5DsD3L2KReM9FDO6mpqz
-	5XcSrOC9EiMwCYSEQZD9CGlGmq3w=
-X-Google-Smtp-Source: AGHT+IFjNFdQjHHUJQQcXyliyhtxgze7FxedmY1LnorDAMMBCzpujSs9gQ06GBC3JW/65IQlh1/141MEhm7ShuPa+HQ=
-X-Received: by 2002:a05:6a20:9385:b0:1a1:66d3:bc9e with SMTP id
- x5-20020a056a20938500b001a166d3bc9emr8869335pzh.3.1710196080086; Mon, 11 Mar
- 2024 15:28:00 -0700 (PDT)
+        bh=ueXoXFA5YWcxkJgIX7h3GbyEpjWYt6UJ+XYCA7cZuX0=;
+        b=UakH8Ej0x2sJ6+PH/XKNdfR+BQmV9spTHHRe1QROyrJnQkgFB2Ma0uaA1aS7m0tZz0
+         01UUwQMoyqCjbXLeoc4w6RJ1FfqZM6wNfvOP6f0jKtiR6FktCqOKd7ZFbO/dgI8t+j2D
+         xDDbKHLhCpe2dQjnKfnKANkal81aF/vlMMivDWAIlifcckoLTj3KY1XLV0bfU1/Du5Fm
+         8St43crJBovBc7t/7a2m2XErhyTV4cDeR7m8/lTXx0LPL4Buc779dhKDVrhhODek+m7P
+         3seDb4BuHIuNXl4Y/YwcwP84t5kCgfLBIGICgRAx1iuSxHyVxzp5UkIOQRY4qB8pzE/V
+         lrwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaKx8SzB8G54iihDFvUaTgGzgu9tx60MgeLyhZ8D8g1zkcPGHNd+Li4R0siyc3VStiGCCTk9sIOmh86z+K1gz5izesdy3HocM//bfGVd1v+2xR1yfrFlhoM4DxmPD8j7yS+wRr6InOmR0+ywEE9Q==
+X-Gm-Message-State: AOJu0YwmkUStQ1T17ADcTgahLmq4KTqjEzVjmBk0O5FIGMOPZMMxy6Zl
+	P2Pz0m8za1eNVr5dC/QS3w4YFq7Nvn2+HU+zuu8FvDlR+QjNcoVi/6kxG58BSice5foCWKcc8r8
+	4h49oboxxgL/OUFP2yAk+MKYsWHE=
+X-Google-Smtp-Source: AGHT+IGEtIsx/4F2eFU4GPqQGvUk+dKfz4Y4x66uZMxgnHDJv4K0THOmrfMvwi/7m97mEsgp3DRu8NVeRiC1mLGXTbM=
+X-Received: by 2002:a17:90a:420d:b0:299:72d7:5b9a with SMTP id
+ o13-20020a17090a420d00b0029972d75b9amr253791pjg.24.1710196163919; Mon, 11 Mar
+ 2024 15:29:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com>
- <20240302001139.604829-3-weilin.wang@intel.com> <CAM9d7cjz1JPM0MQ5m6V7DCgShCBNCd5uqVLotf61J3eu216mEQ@mail.gmail.com>
- <CO6PR11MB5635949BE12E694160F28D5CEE242@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB5635949BE12E694160F28D5CEE242@CO6PR11MB5635.namprd11.prod.outlook.com>
+References: <20240309132710.1055941-1-retpolanne@posteo.net>
+ <CAM9d7cjhiua5rBj=CTDJJC-XJN6PzKxQ5DsooJGEz0QcQAry7w@mail.gmail.com>
+ <m2il1sbocg.fsf@posteo.net> <m24jdcbmg3.fsf@posteo.net> <Ze9hH5UzmnkFrTmB@x1>
+In-Reply-To: <Ze9hH5UzmnkFrTmB@x1>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 15:27:48 -0700
-Message-ID: <CAM9d7cguqEnxABCNYDr6W93sY3hPRBV1ieuWhy+6+H54OmWprA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-To: "Wang, Weilin" <weilin.wang@intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+Date: Mon, 11 Mar 2024 15:29:13 -0700
+Message-ID: <CAM9d7chSavuxXJG8M9LMVWZfJXJPjQ3M4aLTKGsixmKef0-bkw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf lock contention: skip traceiter functions
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Anne Macedo <retpolanne@posteo.net>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 2:30=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com=
-> wrote:
+On Mon, Mar 11, 2024 at 12:53=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
+> On Mon, Mar 11, 2024 at 07:25:16PM +0000, Anne Macedo wrote:
+> > Anne Macedo <retpolanne@posteo.net> writes:
+> > > Namhyung Kim <namhyung@kernel.org> writes:
+> > >> I think it depends on the kernel version and configuration.  I remem=
+ber
+> > >> I saw a different symbol on old kernels.  But it'd be hard to handle=
+ all
+> > >> the cases.  Let's have a single trace text section in the struct mac=
+hine
+> > >> and use __traceiter_contention_begin only.  If it's not found you ca=
+n
+> > >> fallback to trace_contention_begin.
 >
+> > However, if we fallback to trace_contention_begin, we won't be able to
+> > filter out both __traceiter_contention_begin and trace_contention_begin
+> > at the same time.
 >
-> > -----Original Message-----
-> > From: Namhyung Kim <namhyung@kernel.org>
-> > Sent: Monday, March 11, 2024 2:08 PM
-> > To: Wang, Weilin <weilin.wang@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>; Peter Zijlstra <peterz@infradead.o=
-rg>;
-> > Ingo Molnar <mingo@redhat.com>; Arnaldo Carvalho de Melo
-> > <acme@kernel.org>; Alexander Shishkin
-> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
-ter,
-> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
-;
-> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
- Perry
-> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
-rs,
-> > Caleb <caleb.biggers@intel.com>
-> > Subject: Re: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record =
-when
-> > perf stat needs to get retire latency value for a metric.
-> >
-> > Hello Weilin,
-> >
-> > On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
-> > >
-> > > From: Weilin Wang <weilin.wang@intel.com>
-> > >
-> > > When retire_latency value is used in a metric formula, perf stat woul=
-d fork a
-> > > perf record process with "-e" and "-W" options. Perf record will coll=
-ect
-> > > required retire_latency values in parallel while perf stat is collect=
-ing
-> > > counting values.
-> > >
-> > > At the point of time that perf stat stops counting, it would send sig=
-term
-> > signal
-> > > to perf record process and receiving sampling data back from perf rec=
-ord
-> > from a
-> > > pipe. Perf stat will then process the received data to get retire lat=
-ency data
-> > > and calculate metric result.
-> > >
-> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> > > ---
-> > >  tools/perf/builtin-stat.c     | 179
-> > +++++++++++++++++++++++++++++++++-
-> > >  tools/perf/util/data.c        |   4 +
-> > >  tools/perf/util/data.h        |   1 +
-> > >  tools/perf/util/metricgroup.h |   7 ++
-> > >  tools/perf/util/stat.h        |   3 +
-> > >  5 files changed, 191 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index 5a3093541cff..3890a579349e 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -94,8 +94,13 @@
-> > >  #include <perf/evlist.h>
-> > >  #include <internal/threadmap.h>
-> > >
-> > > +#include "util/sample.h"
-> > > +#include <sys/param.h>
-> > > +#include <subcmd/run-command.h>
-> > > +
-> > >  #define DEFAULT_SEPARATOR      " "
-> > >  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
-> > > +#define PERF_DATA              "-"
-> > >
-> > >  static void print_counters(struct timespec *ts, int argc, const char=
- **argv);
-> > >
-> > > @@ -162,7 +167,8 @@ static struct perf_stat_config stat_config =3D {
-> > >         .ctl_fd                 =3D -1,
-> > >         .ctl_fd_ack             =3D -1,
-> > >         .iostat_run             =3D false,
-> > > -       .tpebs_event_size =3D 0,
-> > > +       .tpebs_event_size       =3D 0,
-> > > +       .tpebs_pid              =3D -1,
-> > >  };
-> > >
-> > >  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> > > @@ -687,12 +693,163 @@ static enum counter_recovery
-> > stat_handle_error(struct evsel *counter)
-> > >         return COUNTER_FATAL;
-> > >  }
-> > >
-> > > -static int __run_perf_record(void)
-> > > +static int __run_perf_record(const char **record_argv)
-> > >  {
-> > > +       int i =3D 0;
-> > > +       struct tpebs_event *e;
-> >
-> > Please put a blank line after the declaration.
-> >
-> >
-> > >         pr_debug("Prepare perf record for retire_latency\n");
-> > > +
-> > > +
-> >
-> > A duplicate new line.
-> >
-> > > +       record_argv[i++] =3D "perf";
-> > > +       record_argv[i++] =3D "record";
-> > > +       record_argv[i++] =3D "-W";
-> > > +
-> > > +       if (stat_config.user_requested_cpu_list) {
-> > > +               record_argv[i++] =3D "-C";
-> > > +               record_argv[i++] =3D stat_config.user_requested_cpu_l=
-ist;
-> > > +       }
-> > > +
-> > > +       if (stat_config.system_wide)
-> > > +               record_argv[i++] =3D "-a";
-> > > +
-> > > +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
-> > > +               record_argv[i++] =3D "-e";
-> > > +               record_argv[i++] =3D e->name;
-> > > +       }
-> > > +
-> > > +       record_argv[i++] =3D "-o";
-> > > +       record_argv[i++] =3D PERF_DATA;
-> >
-> > I don't think you need side-band records and synthesizing for this.
-> > I'd like to disable all of them but it'd require changes in perf record=
-.
-> > For now, you need to pass --synth=3Dno at least.
-> >
-> > Thanks,
-> > Namhyung
-> >
->
-> Thanks Namhyung! I will update the code and send a new version.
+> I think for ARM we need to skip both, no? I.e. I agree with Anne.
 
-Sure, let me finish my review before then.
+I haven't tested it on ARM, please go ahead if it is needed.
 
 Thanks,
 Namhyung
