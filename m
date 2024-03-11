@@ -1,97 +1,105 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BFA1B599
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 16:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5317F138E;
+	Mon, 11 Mar 2024 16:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710174710; cv=none; b=KKalbC5V7UYMq6GMJ7IWGujw4VDND5gFN4smTf50Ia8Ah+C8NrD6xJSMBrDwrYCmlkuWv7C/dcyDZKOWcPioYd9bsk7qTBYfkz89BkVkhRzYHuDslxDXHvWQ2DkFPEOjLJokyYXSABNMY0JgAR+nBc0XRbm3ztNMEVPETvXeiYI=
+	t=1710174868; cv=none; b=I+3uuGsgLSOAOouTbufhyX+3njPNomwdBAO+bbZtlH3vtfxmIXDFLF6UlFQXdIi6H1T9XT9FPw4ebvV8xIywzRtEsrZ2FB6Tejr4iP7k/vn7F+gHYn6mUKb2DQVOHJZ2lMrZN//t4evkKn1d8u4eCt0oi1otJlwrXCNqeio0RQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710174710; c=relaxed/simple;
-	bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gfu/WlfiO/RC52v1uirrwxVLr17o88RJVtqruK3Uq2zhZd/MkyPJbMMuOMbk1cb+02wgU9hSrDItvpRLJj/TYaqA1zQIeO+17SIY+5feYSfEVzrfrPkCnhYT8ctEUuYn97pYlkFR4qWpIBEGiNf+qCTlxYGvn6VD7NoRPMyl+js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n5H4sxEC; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n5H4sxEC"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d36196a7f7so742599e0c.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 09:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710174708; x=1710779508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
-        b=n5H4sxECl3NdDS4e1fQ8e+AVrKUBP6GCPdrfGTcJJ4QKgn4/4wm1FnTLb0WC9hSX9C
-         gLZfygNuzxPnKvnn8YnzDo2YO33+VXhEsJMzPkZyq5RdEWLIi0bP60Dv3EuMsDQc1+Jz
-         MbJLCtSvNu/bwCK90EnmYa4t7ESwuK49+gzcu/mdKdoULe0m7UD9CcER6pNWdQS759Q6
-         utGPUn1gZF5Ergx+JMw7tsC25zwg1ip+PbRX74A8pQky/aeJPuNOVOmEyKLPKdFKRO+l
-         dfQLWIHdXR7d0y/MTfs+ytvel6M8HVaAngYZ1XlyUu20jwyvseW/cf3+qun0Rsy3Omy3
-         mgaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710174708; x=1710779508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
-        b=PWCzTebAwO0g+JyC4X0yRUc8g8Sm8unAkKmsWSOtk1BpWXoBLsAHofAzEg8U6rVtNJ
-         412CxblDkfO4g41fKE+SrKVwCS8cY5heK+nHETykbYnag+1ehPWbiiq550eYBdHYdYZ0
-         L2ZMLp3OujxOYL8WVWs67Ud/V3u5BOXppHxLgDxjQyptLgAZo0nxUIm9YhqlDYSMxeyX
-         IDXo2x2fn7lzp9GeOEVhWLXIVS3RD/Z/2cTec1h1Iv3tBpQnvlAVvnboD8ytGAKIs5as
-         fz+HocA7tmtArHmOMAjBOFnO3uqdn0jxDa6E+vjPrVSonxPDPnPwnATeB31BZjAqnQWN
-         5ctg==
-X-Gm-Message-State: AOJu0Yy/pebV8+WrKbYBrYY7zltD6STLXEFiqU0CH3E6EmexD8IYF1QO
-	roWqK4iWrJJ3KVlyIGTLxGnXRJCJ46hZufM106upHirDXC5vrg69JRg5qdP/0KECtuXF1np0CI0
-	uK8FtG4dM7UYkXT2wB/cFw+EWRxI+hZ647irM
-X-Google-Smtp-Source: AGHT+IGG6tjJkSt9OkcKXfNVtLGhqr27OAfuELtJY5krE9OyBu7TM6m3M/iTbZIXQW16F0jLQbSik03g0TSoqevrMS0=
-X-Received: by 2002:a05:6122:2a0f:b0:4c8:8149:848e with SMTP id
- fw15-20020a0561222a0f00b004c88149848emr3996116vkb.5.1710174707834; Mon, 11
- Mar 2024 09:31:47 -0700 (PDT)
+	s=arc-20240116; t=1710174868; c=relaxed/simple;
+	bh=WixOqrZR+rJh/Fbz+wWrf8dVTfQslX0GeSZNmY4xbK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=sgNdPA3bpwooKtZGLXUbTSNmXqj4NYWytNwjZUQIDTva+meTuCLnUzYVjFXodSXztS8aGozb4Svzws0v8wD6dL/4xi0A8goC6joZMPAl0oCS+EX+RbAjtZQ+SBGuR4Vd2G0MmRBSNWppn6rjs9aVJF+K2z5V6ENDfoIxYYUhL7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A7831007;
+	Mon, 11 Mar 2024 09:35:02 -0700 (PDT)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D3233F762;
+	Mon, 11 Mar 2024 09:34:12 -0700 (PDT)
+Message-ID: <1ab20914-b6d2-fe39-7b14-c1ccebaa34f6@arm.com>
+Date: Mon, 11 Mar 2024 16:34:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308175810.2894694-1-bigeasy@linutronix.de>
- <Ze7eKgdajyEgQcpL@elver.google.com> <20240311155927.sbWzLN62@linutronix.de>
-In-Reply-To: <20240311155927.sbWzLN62@linutronix.de>
-From: Marco Elver <elver@google.com>
-Date: Mon, 11 Mar 2024 17:31:09 +0100
-Message-ID: <CANpmjNNXd6rL10Vju-tsa1aPsCSMykmfoMg1E1_B-DwKVQw_2w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf: Make SIGTRAP and __perf_pending_irq() work on RT.
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 12/13] tools headers: Sync compiler.h headers
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+References: <20240310020509.647319-1-irogers@google.com>
+ <20240310020509.647319-13-irogers@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
+ David Laight <David.Laight@ACULAB.COM>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>,
+ Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
+ Nick Forrington <nick.forrington@arm.com>, Leo Yan <leo.yan@linux.dev>,
+ German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>,
+ John Garry <john.g.garry@oracle.com>, Sean Christopherson
+ <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
+ Fuad Tabba <tabba@google.com>, Andrew Jones <ajones@ventanamicro.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>, Haibo Xu <haibo1.xu@intel.com>,
+ Peter Xu <peterx@redhat.com>, Vishal Annapurve <vannapurve@google.com>,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240310020509.647319-13-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 11 Mar 2024 at 16:59, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2024-03-11 11:34:18 [+0100], Marco Elver wrote:
-> > Unfortunately there's a bug in it somewhere. It can be reproduced with
-> > tools/testing/selftests/perf_events/remove_on_exec.
-> >
-> > (FWIW, the kselftests in that directory are more aggressive test cases
-> > that I never figured out how to properly port to the 'perf test'
-> > framework: sigtrap_threads is a more aggressive version of the 'sigtrap=
-'
-> > perf test, and remove_on_exec has no perf test counterpart.)
->
-> You posted to warnings, I can only reproduce the second one. Based on the
-> backtrace it is obvious what happens and I dare to say that I know why=E2=
-=80=A6
-> Let me try address them.
 
-I guess I got lucky with hitting 2 warnings instantly. It might be
-necessary to run remove_on_exec several times, or even start several
-instances of it concurrently (something like "for x in {0..100}; do
-(./remove_on_exec &); done" might do the trick).
+
+On 10/03/2024 02:05, Ian Rogers wrote:
+> compiler.h - synced from include/linux/compiler.h, guards were
+>  added to definitions to avoid redefinition of macros
+>  in libc. ftrace, CONFIG_OBJTOOL and kentry logic was removed as
+>  redundant.
+> 
+
+Hi Ian,
+
+This commit breaks the Arm build (and cross compilation for Arm on x86):
+
+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+
+Something like this, but I won't paste the whole output because it's huge:
+
+tools/include/linux/ring_buffer.h: In function ‘ring_buffer_read_head’:
+
+tools/include/asm/../../arch/arm64/include/asm/barrier.h:72:35: error:
+‘__u8_alias_t’ undeclared (first use in this function)
+   72 |                         : "=r" (*(__u8_alias_t *)__u.__c)
+       \
+      |                                   ^~~~~~~~~~~~
+tools/include/linux/ring_buffer.h:59:16: note: in expansion of macro
+‘smp_load_acquire’
+   59 |         return smp_load_acquire(&base->data_head);
+      |                ^~~~~~~~~~~~~~~~
+
+Thanks
+James
