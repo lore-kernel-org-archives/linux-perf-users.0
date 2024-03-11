@@ -1,121 +1,97 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A870E56B78
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 16:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BFA1B599
+	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 16:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710174085; cv=none; b=c7FS+XqbEoi7FvcsFpKb8xomYRzTFD47q24we7qHaLJXpI7e5IXV5ZPo/50xiPuj/6CmD2Ao+zr/nukfnUxJDo2mOlMtvVQKLtY0U0Bu9CPDOlc+rde+M25YWRC2eq9KmU0mVJM40TORCUlo1rcPwHcWoUwrBMuxLL38QfEmY/I=
+	t=1710174710; cv=none; b=KKalbC5V7UYMq6GMJ7IWGujw4VDND5gFN4smTf50Ia8Ah+C8NrD6xJSMBrDwrYCmlkuWv7C/dcyDZKOWcPioYd9bsk7qTBYfkz89BkVkhRzYHuDslxDXHvWQ2DkFPEOjLJokyYXSABNMY0JgAR+nBc0XRbm3ztNMEVPETvXeiYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710174085; c=relaxed/simple;
-	bh=Aj2DDU2R3CP9L+cvs3h77l1rCBccotGIwcymgcAqh4U=;
+	s=arc-20240116; t=1710174710; c=relaxed/simple;
+	bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fYHZkqbYqxZBfNrd57qrkTOGNqdIMPWkAbafLJNTPFUQGddH8RImQB7SRobCIkvpRcabJKePamTk+f5HB21XXoWBs5Vg7Ci9b+gpn77+RzpLN5WOlNppACKuvrr/a0fi1DiJ9dn54JNOoOkklQVA1Rtl+FmFoXWa4p1haDHckOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1tbydqMK; arc=none smtp.client-ip=209.85.167.45
+	 To:Cc:Content-Type; b=gfu/WlfiO/RC52v1uirrwxVLr17o88RJVtqruK3Uq2zhZd/MkyPJbMMuOMbk1cb+02wgU9hSrDItvpRLJj/TYaqA1zQIeO+17SIY+5feYSfEVzrfrPkCnhYT8ctEUuYn97pYlkFR4qWpIBEGiNf+qCTlxYGvn6VD7NoRPMyl+js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n5H4sxEC; arc=none smtp.client-ip=209.85.221.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1tbydqMK"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51380c106d9so3441677e87.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 09:21:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n5H4sxEC"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d36196a7f7so742599e0c.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 09:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710174082; x=1710778882; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710174708; x=1710779508; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Aj2DDU2R3CP9L+cvs3h77l1rCBccotGIwcymgcAqh4U=;
-        b=1tbydqMK5d47mP/AaFRs9nz1D/0UrgShdiSVhxxPlu+qsgZaWxGTY2sz/C6Jhx9iEU
-         huW8lbcM6IYIKN7X2pOKKaoWLojo7y3yyoEZfJSJYOulvBnuwavrcrztBTYy9avGuRH9
-         UUSQ0PFIyxzBRVD8SY61mjoMmOMNOB66kUqUG/Giq2ASBuGDqtnwzdO5eXx0c2PH7Tr3
-         7Px6Q5TjM+jTz2Ab5aw/sBaBGC6mbnqD5MvjunYczQ5xqj9oEgISprLXQIHDeKFUc7SK
-         NDiQkxAnaF8t5H/n7OuXbz8K1BEaXXru6a45u+MACSs8PlfdAgSBMi0CoWzuREmu6jvg
-         d//Q==
+        bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
+        b=n5H4sxECl3NdDS4e1fQ8e+AVrKUBP6GCPdrfGTcJJ4QKgn4/4wm1FnTLb0WC9hSX9C
+         gLZfygNuzxPnKvnn8YnzDo2YO33+VXhEsJMzPkZyq5RdEWLIi0bP60Dv3EuMsDQc1+Jz
+         MbJLCtSvNu/bwCK90EnmYa4t7ESwuK49+gzcu/mdKdoULe0m7UD9CcER6pNWdQS759Q6
+         utGPUn1gZF5Ergx+JMw7tsC25zwg1ip+PbRX74A8pQky/aeJPuNOVOmEyKLPKdFKRO+l
+         dfQLWIHdXR7d0y/MTfs+ytvel6M8HVaAngYZ1XlyUu20jwyvseW/cf3+qun0Rsy3Omy3
+         mgaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710174082; x=1710778882;
+        d=1e100.net; s=20230601; t=1710174708; x=1710779508;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Aj2DDU2R3CP9L+cvs3h77l1rCBccotGIwcymgcAqh4U=;
-        b=ceX+OnJpkVq3BsMKwdJHuyK6iQb+mcVBT6P+FRz3TtWI7/SNHGo/1VuszN7mbNYWw4
-         JFQzN2pTwsD6M34hDIrA/iCVN4frAwchKjB2S0SeKvi+XFFi2zaklG0iHlHpdeBcKOzr
-         NMTTyva5bChhQJSIzStRjkSMG6wB/u7ssMFMz5f6VEOU6hDzf+RpwnAF7m466zsweJzb
-         ashJlUm+NTHuKOCMiBDliio9jjMYFOnO6UkSDKrQrbEZgBUC8k6bg5/gRPcNMkGebPs5
-         2A8okx4H+Tm7dFU1g6bF/UdjxybD1qMk6nAHpLA8Xnm39T8/G1W+AjwPCU3k4afAhM4w
-         91aA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgpvMpGa8dowzDnGHlezmje/GllrBcJDfCbrX5+C1+Q5KC4PLF1PBO5umpc1t0PDzjCxbF2adrZ0gUafZVkdAIlN1DmSa6rN9lGKfn+AnzpQ==
-X-Gm-Message-State: AOJu0YyHzJHns9EVFVXOhR/ZxMgzUzkwFXXhYD0QSrJivao/ZCZMN70/
-	tt5P6ag2v69QH6zq+DSHzyDrqqXfwzZQK2q5P9N+YFvf6pug9C5YaQG3nvAx0mTeuhO1iTQTC9Z
-	erC2lP5aHJLx//PK8wOKmJfhe4oTtwSzIBKPj
-X-Google-Smtp-Source: AGHT+IHS01FCe9haSj8hz/MjlOpYjKoCZ7p5Q//xT1au7RU9ERgiqKLg8dLzsYObrWdNTUdk4e7k8GKHb5tETRrwm2g=
-X-Received: by 2002:a05:6512:3996:b0:513:4afa:a719 with SMTP id
- j22-20020a056512399600b005134afaa719mr6647016lfu.59.1710174081606; Mon, 11
- Mar 2024 09:21:21 -0700 (PDT)
+        bh=HTmx+rglP8DyioqNi7J7NVsP/noZw8YF/rOjIVAdCv0=;
+        b=PWCzTebAwO0g+JyC4X0yRUc8g8Sm8unAkKmsWSOtk1BpWXoBLsAHofAzEg8U6rVtNJ
+         412CxblDkfO4g41fKE+SrKVwCS8cY5heK+nHETykbYnag+1ehPWbiiq550eYBdHYdYZ0
+         L2ZMLp3OujxOYL8WVWs67Ud/V3u5BOXppHxLgDxjQyptLgAZo0nxUIm9YhqlDYSMxeyX
+         IDXo2x2fn7lzp9GeOEVhWLXIVS3RD/Z/2cTec1h1Iv3tBpQnvlAVvnboD8ytGAKIs5as
+         fz+HocA7tmtArHmOMAjBOFnO3uqdn0jxDa6E+vjPrVSonxPDPnPwnATeB31BZjAqnQWN
+         5ctg==
+X-Gm-Message-State: AOJu0Yy/pebV8+WrKbYBrYY7zltD6STLXEFiqU0CH3E6EmexD8IYF1QO
+	roWqK4iWrJJ3KVlyIGTLxGnXRJCJ46hZufM106upHirDXC5vrg69JRg5qdP/0KECtuXF1np0CI0
+	uK8FtG4dM7UYkXT2wB/cFw+EWRxI+hZ647irM
+X-Google-Smtp-Source: AGHT+IGG6tjJkSt9OkcKXfNVtLGhqr27OAfuELtJY5krE9OyBu7TM6m3M/iTbZIXQW16F0jLQbSik03g0TSoqevrMS0=
+X-Received: by 2002:a05:6122:2a0f:b0:4c8:8149:848e with SMTP id
+ fw15-20020a0561222a0f00b004c88149848emr3996116vkb.5.1710174707834; Mon, 11
+ Mar 2024 09:31:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-14-irogers@google.com>
- <20240311114009-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240311114009-mutt-send-email-mst@kernel.org>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 11 Mar 2024 09:21:06 -0700
-Message-ID: <CAKwvOdkGALie1d6oNXKNT8vwGmHbymsQ-dv-i0U_SQGFrhEJew@mail.gmail.com>
-Subject: Re: [PATCH v1 13/13] tools headers: Rename noinline to __noinline
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Ian Rogers <irogers@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+References: <20240308175810.2894694-1-bigeasy@linutronix.de>
+ <Ze7eKgdajyEgQcpL@elver.google.com> <20240311155927.sbWzLN62@linutronix.de>
+In-Reply-To: <20240311155927.sbWzLN62@linutronix.de>
+From: Marco Elver <elver@google.com>
+Date: Mon, 11 Mar 2024 17:31:09 +0100
+Message-ID: <CANpmjNNXd6rL10Vju-tsa1aPsCSMykmfoMg1E1_B-DwKVQw_2w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf: Make SIGTRAP and __perf_pending_irq() work on RT.
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Liam Howlett <liam.howlett@oracle.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	David Laight <David.Laight@aculab.com>, Shunsuke Mie <mie@igel.co.jp>, 
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
-	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
-	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, Christopher Di Bella <cjdb@google.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 8:44=E2=80=AFAM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
+On Mon, 11 Mar 2024 at 16:59, Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> On Sat, Mar 09, 2024 at 06:05:08PM -0800, Ian Rogers wrote:
-> > An issue was reported with clang and llvm libc where the noinline
-> > attribute [1] was being expanded due to the #define in
-> > linux/compiler.h (now in compiler_attributes.h). The expansion caused
-> > the __attribute__ to appear twice and break the build. To avoid this
-> > conflict, rename noinline to __noinline which is more consistent with
-> > other compiler attributes.
+> On 2024-03-11 11:34:18 [+0100], Marco Elver wrote:
+> > Unfortunately there's a bug in it somewhere. It can be reproduced with
+> > tools/testing/selftests/perf_events/remove_on_exec.
 > >
-> > [1] https://clang.llvm.org/docs/AttributeReference.html#noinline
+> > (FWIW, the kselftests in that directory are more aggressive test cases
+> > that I never figured out how to properly port to the 'perf test'
+> > framework: sigtrap_threads is a more aggressive version of the 'sigtrap=
+'
+> > perf test, and remove_on_exec has no perf test counterpart.)
 >
-> Following this link, I don't see __noinline there - only __noinline__ and
-> noinline. What's up?
+> You posted to warnings, I can only reproduce the second one. Based on the
+> backtrace it is obvious what happens and I dare to say that I know why=E2=
+=80=A6
+> Let me try address them.
 
-__noinline (which is what this patch is changing the preprocessor
-define to) will not be expanded in the presence of
-__attribute__((__noinline__)), __attribute__((noinline)), or
-[[gnu::inline]], unlike the previous macro definition.
-
---=20
-Thanks,
-~Nick Desaulniers
+I guess I got lucky with hitting 2 warnings instantly. It might be
+necessary to run remove_on_exec several times, or even start several
+instances of it concurrently (something like "for x in {0..100}; do
+(./remove_on_exec &); done" might do the trick).
