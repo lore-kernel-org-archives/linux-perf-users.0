@@ -1,95 +1,151 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265E154736
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 17:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C273D5467F;
+	Mon, 11 Mar 2024 17:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179032; cv=none; b=ILd/Dd/YrQjPVnl416Rl6Fz/j8Acrl8Wi0c+oP7fT8OxeBf8cxqVuohbl7wbmONuSCVDq8rYVcXvRBJ7gmghhvEOXHpdfX8OOAG2p2wEAssP2wsdVAeEkIk9qAX5M2In6YN+r+va1AaR437LfDJIaKkEt/M1vkcrLAaxt0sSmCE=
+	t=1710179371; cv=none; b=GFYHSXQNiFhKTcDxCjfqppVooQy6UehSQY4yXQRtQTqodAB/E9juZ2Wror0ZbZM+xcN+x85DnpUWaZO33quAkap4Ch+C3Nw+xYhV05G7RW4p8683KGk1qBCoInd9BszwtufcWLhn0kk8glOCLEycZQDa9AHXToXF3OQ9Lw06y0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179032; c=relaxed/simple;
-	bh=6giF1Y1yY2eNcLEL7A3kln8xD7UdhAKJ+1Jewg7oVW4=;
+	s=arc-20240116; t=1710179371; c=relaxed/simple;
+	bh=FruVc137rIMV3xfiSwhivbMir0fGyRuBlxHaGRlShtM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLMm6Y7cmhthvD9PLCp8pLVO0qOvx+w6se7H2/NGTMQu1P5z0dNNBPF2yPq8lW4QARxW2gFxF3cZtjkxIGAM2f8P+3SSECAuEdxiwzjqcOGW13qZxToqBr/A63UsEZEgYHJv+YQiarze/3HDm7ffeN6EegztVWsXZZ9TEP4b9Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7Qkamd4; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=DUF4r5YLgepXaM3UpuE/0wqOq8SJMtQw9+vHFYGrtWY+HaHQaZFg9MEpCQ8R2OUXNFm4j8eDy5l6QmSnKv9VsZYbITfbIycgAmiFsg/7KTdkjK/36VOOkjZ6XSG84FSMnkun08/7PvUYns81aI6H9UsVxEydDNfxbvKIfrCYTLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TwAZDQj7; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7Qkamd4"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-366248b78d9so5945ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Mar 2024 10:43:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwAZDQj7"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso3955923a12.3;
+        Mon, 11 Mar 2024 10:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710179030; x=1710783830; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710179369; x=1710784169; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oF34FEnMH9EnB0cuP15G09+KTXv6xLWNfYuekhXlBCo=;
-        b=q7Qkamd4UXnrHRrB8DgXkiREgd0f/sdvVdwQZmGvZlYSI4gxX1cZ47GVph2o09FiTK
-         syLzN+nVx7jhiJU7jD/Jri5i8e4kTNTJvlYjut93dMk6xld+ccjroGmc0vb6w6eEQmmA
-         0FhOZlEKEZfdam9+uIcBTNaKi/5q9FJ81Pn360XN+5pYvSAquH01GK/eiyHrZ/o3ZkEd
-         ReJIPe+EtcTJRXaRXQKlLc8Q9GLl3pLXaHfwz+hokCRhYvrFbMMGv1nV/D+G5tdzC9MB
-         wg+8cRlM1zq5hT/v9W/gIm6nARb1NF6RxdMeNJ1sEXWKhjuPT5/MWWftWxL3P8q9dOXI
-         IDWw==
+        bh=fbU798yjoe9QW28weq/V45GGj69Gs5hSFHP5NyuJ08o=;
+        b=TwAZDQj7Ve1xAmz6j70L/UFHTlK2nwUQ54hQPjVWTnwDDu+8q0kP6A2lRBN1Z55miy
+         vN4VUcOi27egSN9NPW6olGx/2FAHl5DK/1vwdVfcLkyqaPmhpqRpRLAmLRxahsKBHWxx
+         ZtHA8ZOd1Gcq6f355xmgDdxhkeXYNObOmGjovSllT/Wf8LVv4rRhvV7tRuKxlSTIPE6r
+         c+7mJkW31ocTJ2fmMJvr5zGRLe4QxQUyLLo0WPCe4X/fgOFnVR8EffqRMZi32OGMKeX9
+         MVomS77iLHQPpz8ijBOYp8JMEpGU3JnwhBNM3ACGESZM3q8F1lVRA590jZpOMgjITEjg
+         AJxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710179030; x=1710783830;
+        d=1e100.net; s=20230601; t=1710179369; x=1710784169;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oF34FEnMH9EnB0cuP15G09+KTXv6xLWNfYuekhXlBCo=;
-        b=LcU07LdI4rwbTRI+NfZ5JOhafvIQfGKnDsy7IZlVZrECAm4BsW1jECyFPC8oxuCMMa
-         5lMl9CIRRAGTYnhtU0EW23sT65lUq+Z/vFSPEjocpKlrbhHqgBerez5zs784SUx0AOYo
-         AoEW6vynnn/1wxz4l0/oYFAReLzwFGapkJ3q1E86VDt5Y1ESrA2lE2C32SH2Qjq9M2SR
-         uJqdIBu50pFXzj8lP4SsXFs249JMyN2FB0PwUrMZUwnI7+I4Pa2jDysSiQk7VaGD2fP1
-         +RE19NHqWqfMaUTzqHeHG1I7IE6GAhRs0Id/HrViUorkbvdRvnsa0P6BwO3jocvpjgfc
-         1Blw==
-X-Gm-Message-State: AOJu0YzMfMkWJxF8EvauTbUeByBL1uQCnMJh8h6Qdx4kdzAwuMYRMX1U
-	T32uNaPlO5sYJ/EdJPmAZspxnFsgmWYrK9Vi6zrW7zEnHoNIieZXiJLTZKpJpSvSOe7AMLYEH0S
-	MWmAKzwFBmMbhsbrzHIJC1hDmgqBgXPWDH/4T
-X-Google-Smtp-Source: AGHT+IEwJK8LM9z6GepM09xe/l66yPSQAakxHFHLM5guTXsfm4sHI3a8LbuWLfASfh/ViCQG02XZVW2mngXeYb08Zkk=
-X-Received: by 2002:a05:6e02:1c24:b0:366:50b7:10ec with SMTP id
- m4-20020a056e021c2400b0036650b710ecmr224089ilh.11.1710179030122; Mon, 11 Mar
- 2024 10:43:50 -0700 (PDT)
+        bh=fbU798yjoe9QW28weq/V45GGj69Gs5hSFHP5NyuJ08o=;
+        b=poGM+8RxQw27f+id7lEoDsc6dXIE94TqrV43eB9/hc9ydZujE1nlrbsm+820lmLuIS
+         LIpXM00qxgnJWJdNyDk0RXLEIOIl5oB97iYhCP+V3wtlKHK297SLOrelFF1LEc3Vciq1
+         RtTo0AGEcxHCn0XVY+z2kz6AMapDiu29R69wx65BICbdspjnjai/9sHX5hBSmYluk7Uz
+         +ADgG9R2ya5XisgIPxlocPR/MeseNVSlmQRZPZDmVVjF3arDqArsriH3UJkxOBzhpTh5
+         XGnbEtHVH30mRK1kp6wh7cKrJB8bCZk6oyIzr7PTj4Zfo8mzi2xSriptUuS3WCqdEn4k
+         rxBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/0B10mEjr2FIeKTkcn7Tup854ejATWA/e+qFEVQQivhMRlrluZYlGVweeTlsGaenuNPH+mv0lfZsRx/mHpcJ9b3uRYI7bTqqJDaSDydDCf9F5vDs3dQOeEuMGaQFAZGluMTbDAp5/E51JDCRRY+ycmNok3ve69Xxx4sUPJLbR6N8Q7q60cAM2pcrxISGynPiRCKarfXhilcaII/3ZkJ8zuLYb0n4R33O4VUaWHTEvwrEOToKvnZhvIA/UtZAb7H+PDb8T9ci4DpbE7O4eB30d4IQGY8jfMNqswi7kGYr93ACjrM18q8Ze3o/ZfeaptcbOXDHVDBQ=
+X-Gm-Message-State: AOJu0YyXNSCqfjL1S/b/feLQMTWgOnllF/oByARruJeRwX2UonpcREa2
+	qyUUoCFtZQ1ULMyuuDsqC32lvYjHax3YWXsx5iN7+KwRHVZ6BkHPZGRkrKUswLgseVOKkmcQ1c2
+	E7WglPayOkW+AlFAOAJkMpFugbXA=
+X-Google-Smtp-Source: AGHT+IFoTIEdjqsxBYqxcW2ZvSOL+ezHdwHnCQaQtLgWWppeaIwje2I36qXoDeTn1HfSnWTODh8p84OGtT7sU7h7l88=
+X-Received: by 2002:a17:90a:7563:b0:29a:d7ba:2c99 with SMTP id
+ q90-20020a17090a756300b0029ad7ba2c99mr5706073pjk.10.1710179369144; Mon, 11
+ Mar 2024 10:49:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1710133771.git.sandipan.das@amd.com> <e100c902fd9e1e4f58e3a9c175d572962a9cdd50.1710133771.git.sandipan.das@amd.com>
-In-Reply-To: <e100c902fd9e1e4f58e3a9c175d572962a9cdd50.1710133771.git.sandipan.das@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Mar 2024 10:43:35 -0700
-Message-ID: <CAP-5=fU=gO49ASVVLUbT5bFPoOE3qi3+xJqvRD3tA=upVUT_aQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf vendor events amd: Add Zen 5 uncore events
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, eranian@google.com, ravi.bangoria@amd.com, 
-	ananth.narayan@amd.com
+References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-3-irogers@google.com>
+In-Reply-To: <20240310020509.647319-3-irogers@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 11 Mar 2024 10:49:17 -0700
+Message-ID: <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
+Subject: Re: [PATCH v1 02/13] libbpf: Make __printf define conditional
+To: Ian Rogers <irogers@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
+	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
+	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
+	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
+	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 10, 2024 at 10:24=E2=80=AFPM Sandipan Das <sandipan.das@amd.com=
-> wrote:
+On Sat, Mar 9, 2024 at 6:05=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> Add uncore events taken from Section 1.5 "L3 Cache Performance Monitor
-> Counters" and Section 2 "UMC Performance Monitors" of the Performance
-> Monitor Counters for AMD Family 1Ah Model 00h-0Fh Processors document
-> available at the link below. This constitutes events which capture L3
-> cache and UMC command activity.
-
-Why do the L3 uncore PMU events go in the same topic as the core/cpu
-events, but the memory controller events not? Could they both go in
-separate files to make better use of the topic?
-
-Thanks,
-Ian
-
-> Link: https://bugzilla.kernel.org/attachment.cgi?id=3D305974
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> libbpf depends upon linux/err.h which has a linux/compiler.h
+> dependency. In the kernel includes, as opposed to the tools version,
+> linux/compiler.h includes linux/compiler_attributes.h which defines
+> __printf. As the libbpf.c __printf definition isn't guarded by an
+> ifndef, this leads to a duplicate definition compilation error when
+> trying to update the tools/include/linux/compiler.h. Fix this by
+> adding the missing ifndef.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  .../pmu-events/arch/x86/amdzen5/cache.json    | 175 ++++++++++++++++++
->  .../arch/x86/amdzen5/memory-controller.json   | 101 ++++++++++
+>  tools/lib/bpf/libbpf.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index afd09571c482..2152360b4b18 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -66,7 +66,9 @@
+>   */
+>  #pragma GCC diagnostic ignored "-Wformat-nonliteral"
+>
+> -#define __printf(a, b) __attribute__((format(printf, a, b)))
+> +#ifndef __printf
+> +# define __printf(a, b)        __attribute__((format(printf, a, b)))
 
-[ ... snip ... ]
+styling nit: don't add spaces between # and define, please
+
+overall LGTM
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+Two questions, though.
+
+1. It seems like just dropping #define __printf in libbpf.c compiles
+fine (I checked both building libbpf directly, and BPF selftest, and
+perf, and bpftool directly, all of them built fine). So we can
+probably just drop this. I'll need to add __printf on Github, but
+that's fine.
+
+2. Logistics. Which tree should this patch go through? Can I land it
+in bpf-next or it's too much inconvenience for you?
+
+
+> +#endif
+>
+>  static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
+>  static bool prog_is_subprog(const struct bpf_object *obj, const struct b=
+pf_program *prog);
+> --
+> 2.44.0.278.ge034bb2e1d-goog
+>
