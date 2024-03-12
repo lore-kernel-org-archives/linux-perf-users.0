@@ -1,186 +1,214 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468F169944;
-	Tue, 12 Mar 2024 06:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710226160; cv=none; b=ht13XW5F49VDXK71gjpWCgca30CnDgIElpqQciHZp9JkXKGjNvL7p15gEDF+dBvYY72liwMOqQtM47RE2b8oIEGJg+RdmIV70/5kUR53K5n7ljI/mJwJORlWrBPaY/D5ClCOGrLzrzsfDJS9nZx35RzdSOsEwSlSyKSE4qBAXUs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710226160; c=relaxed/simple;
-	bh=NpTpzOFpjTFaXZX5FuKeyjBow4yCTS2iQk19N51842M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qm6RATTZhK5q11FMjgwGyYUD4Qxn62wzHSKjCekh8+WtlFWCGBEz5JcjT/Pzoa2tnMPu70bCeJ3iwWCeeVHxsy7oSUYkxPAJ1HZThMdUWhVpHRuNda3m/2tcexCBhN9F98C0zHjq1PvFX3vfC5cwEYKC2x0/0752C+hWAbwoaZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso4414152a12.2;
-        Mon, 11 Mar 2024 23:49:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710226158; x=1710830958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dcrdLEFHw+u0g7KmoV4uvHmtfMU74jrO4Ftzic9JdHY=;
-        b=w+JzyRFAPkfsyHTDa7K2jJxbjZ2OMTpi2ey3NeG7PKw1/twG4l99XDfJok+8wPbGzf
-         oysxQq3OO0A5lSPo/ryfCLVTYSLeSWFq6plnNkwZDMgChAmdQolJMPaCKeuio6nTmOiC
-         Y5LaXs6LJ3ibuRAFVp8bI6tEfVj0Srm5VLY7DDXSBNaFoUquMd5yuSgzsnS9I9/0ij7p
-         Unv1XD98YTxaVd+HFONypE8+n0AodXkeR0kq9ZZCzWyY7bObN1usXmlZa7wLicuaWHj/
-         AheWs1wzGIxX89qlHW/Kux5Ol2rNAMCaZnBrucmvo1DPf2xnmaHGUYJC+4B95gUFyK3u
-         XQ0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7CKA792BUj2v8FumZXxp0apr1UL2avnFuG2nibVYQSwbpIPU/4z6CXrtBSSS8E8htGsjsZXEouSCfCZTe0GmLTEIUzrYR26Ql3Fczoh4+33EMXqpEvUE9MgpshbN1i+LnbAU4caZNMtGOze9MEA==
-X-Gm-Message-State: AOJu0YyFIf2KqGlxUtiwqadtAZ/jg9vATCykvcKvs0ShixhgD1pnDDO9
-	AfWokTctrVJ34WFvhI0Ycuk8pyB+w6tyLzPobpZFT6tIkU8c/J0P37LNgvtx85w2k1WoHnQjMiV
-	XJl6tzNh9uLyFjJ86VF1VL6GULbs=
-X-Google-Smtp-Source: AGHT+IHEEQ4htWFGblRT2MDrS6Alav/pYfvCk8JQ92wqkOomZN63ZSyGvbrCmp/vxvJ76Dpnic40NYf7b1gVWwK3A14=
-X-Received: by 2002:a05:6a20:2443:b0:1a1:847f:8e8c with SMTP id
- t3-20020a056a20244300b001a1847f8e8cmr10907618pzc.20.1710226158531; Mon, 11
- Mar 2024 23:49:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DB177F32;
+	Tue, 12 Mar 2024 09:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710237582; cv=fail; b=jFg9z/cD/ayovKvzDDIhNS6zw/Qua06GDOzP1SV2tuWsv9I6tfmsULaZho68gOCGhTDvNi9Xs7vB88yYlOYLkboFaB5DW7KAbxaaLkGAnrjR8OswSyV6DCqjmAeHqm2pjUUAyyhNkHt74258pSgKw2eiYzuRIOt504j5mWtoWbA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710237582; c=relaxed/simple;
+	bh=OACp1nH4REljyLAay6XzNvFfchubv4NVK7YzwpDLKtg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T1J4AFZm+y69u30Y+CL1k3AO+x5kyLKopYOc4nS8gKHMKhpolO0saI060emUYeE2wATzdsPBx82F7ofFNXzH8p5Kbx4nfeR3p/EYsxaP97KZfQLE9+S7lcHwZxsJHB7rk70PxD8Z8Ash684Uy0GhcEOGZD+VFVRM2cTs5rMu9Ls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JvHBhK+P; arc=fail smtp.client-ip=40.107.223.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JvHBhK+P"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MvQ4x6F6eEEx1OlnwOaBFFCtuDoVmMX68HQttK1Oh/m+JVVGzHsDYpfJ9kexXsPNNs0Hy6GM+P+kqxK/isR8G9W54SXoyj4fDNR5L80ZVUB3xP5A9o3Li6iLdX7T4NiDmX/dEzhIadSGVExEt1QB3o9AaJSuYLXbM3sVKkMDq3hPzeHwCrrXCM6YdDNAMwXYxI+yG4yDwgGV8rff78JUweu9D06MXWh/fVhWTLsDj6HvRNGELfkQ+ixqv+OuIPa8AEyBekPYf5UiyoNJUh45s0Dle+5wJ0nk5mG1qD9JaKO30aejK6q812WcVf27/OG+ghstM/LNMMzV+TeMEcZ1ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hB3gntr3TXpoBwP0sncA5cPKjAGXe+wDUTCw1rR1XbM=;
+ b=IOpoRrEF5UZCoIs8TJvhWu0gDjE1UO+/u8b4/j1X7/b2NuuiilP1F4QBHKQer6GpGMMWitV5LhHCgFuhKvk+sYFFP94e2X4kQlAc8tDtqISQBGKDX5n/2sX8bupgXUnDfhntrPwKg+jYaQgQ7/VslRAKk2CAXTpBv94V1Gv9c/TMX0ta15G3YNx+pUAIQPW+65Bgxmk2D7lloxJrOm4pDZQJmGvqqq9bkuvAipdqEzvHvjEmRtXrjLqf5SOB3nXDSPlNhwJ5Gyxnv2ckELKTj/FWMol5YSRBFl8TSI8QgtQSQaxSi9ljVkRZD1nY25eB5wUZoyX9w/5hvT7Yuq1ENA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hB3gntr3TXpoBwP0sncA5cPKjAGXe+wDUTCw1rR1XbM=;
+ b=JvHBhK+PhmcYsa8PcPKs+3c1NED8NDjuQFeaCaDbBJHBG9w0G+Qjgb+K406H4xzgYTTzeXpR9fQrMt7EO4DupkOmK6XNJ1PQPpFkgen/X8J1rvvYv2zKDiy1VaItzMnzEeV6QnZJw/F/yxeJ1X7rcyVyemZnDIH4ZZ79pePRWBY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by IA1PR12MB7542.namprd12.prod.outlook.com (2603:10b6:208:42e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Tue, 12 Mar
+ 2024 09:59:37 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9dcb:30:4f52:82f5]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9dcb:30:4f52:82f5%5]) with mapi id 15.20.7362.035; Tue, 12 Mar 2024
+ 09:59:37 +0000
+Message-ID: <ae49f714-24c9-485d-b2f3-a319a53ba1a3@amd.com>
+Date: Tue, 12 Mar 2024 15:29:26 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] perf vendor events amd: Add Zen 5 core events
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, eranian@google.com, ravi.bangoria@amd.com,
+ ananth.narayan@amd.com
+References: <cover.1710133771.git.sandipan.das@amd.com>
+ <0d18c3a93083f12481f27dcc5f5795877fa02b90.1710133771.git.sandipan.das@amd.com>
+ <CAP-5=fUV=6my-+z0Qc+TS2+CbKT1DqsLbpHZrZLitqpAnDd2-A@mail.gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fUV=6my-+z0Qc+TS2+CbKT1DqsLbpHZrZLitqpAnDd2-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0158.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:c8::11) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-6-weilin.wang@intel.com>
-In-Reply-To: <20240302001139.604829-6-weilin.wang@intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 23:49:07 -0700
-Message-ID: <CAM9d7ciP5HJP__Hoh70q5F2drCwtyqzSmvLzMS06dvkYeVu2-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 5/6] perf stat: Add retire latency print functions
- to print out at the very end of print out
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|IA1PR12MB7542:EE_
+X-MS-Office365-Filtering-Correlation-Id: c10d07fa-a2b9-43c1-21c1-08dc427b2044
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	9N0VVnOMX5gbzToL1Pv/2+8gx6HjdsOtuHVforawRGIbK5poiAFrfvSldhJojYYpDuiyBXMNq8GIl/IQfw0WeMS/Sgb7mhsmYipbKDG0m/sBT2drlqMh0RriRUiu4c4ddOReLawhw1WCLzP5iYgM6BtdrXnffAxkYnJ5dOqpFDoV666lH7pBTotXJoAnO+1Ltg8ta3kmmI29HuvUW0EYeSsbtPcOVGKNqwTG2OVB55oN2YcgvVOr3YmwM4U+x9cF+OYth2/hdJ/Z4mTTzEtmJsUA30sVE1OQxANIWPlAZC+clZ6KWpiaBZrXm9jn9tk5LYh/D7UMdpysskpKV7VCr3zY5RYGssUOBWeN1Q6JoL6Nr0PH7mYkdXFJ2Tupl+swrOotTebAGRl0pb8PtotlXHFTPLaxGN+rSHekO9iBpD33l7cy3HFUUrJjh8UIRQCzhwmsUhEdSN6KZ6mqLQxKD0fwe3Oxz9XjantAvdRZ39w4wX714YXz3KdfizcZkJQ1WPG03Ai/EQFHr66/A7PnS4ViaSxD1PkPyQdtHyx6gJkJy4eQ55sTvr+a69qqBwcBbyUNZNtf3w5gySq+13lVIOLwVDi+a6Uox56dYoZaC/k=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VytFQW96eHl6dnBqY2VMM3ZjYVRwaW1vaWpUMWg5UnFnRTJBUGlieHAwQS9j?=
+ =?utf-8?B?dVJmMnJBdm9hT3M5eVMzcnhzUHhvT0RvenE0a1hIcTZuZXFMVnU0VmpOQ1BL?=
+ =?utf-8?B?bWY0b2t1STFjd01kSllOVC95cWpuWTBtcE1FU0xNWjg1TmNXVll3d2xoODN3?=
+ =?utf-8?B?MTE4N0c2SEl0OVEraGI2TXQ3OXV0TllkcDUvSzZ0MjhZNFIxeGJ3RXJ3alNF?=
+ =?utf-8?B?T0lmTkpFTURNQ3RiYWVTZmFNUzMybC9lRXgrVmMxUkF6OGdoRXA1RWlhekZs?=
+ =?utf-8?B?Y1RoS0ZySmpVUTFXRG11TTZXUk9rRktvZmlzSTA2K1VHMXRlOXYrYXcwMUd6?=
+ =?utf-8?B?Y1BQZEZFZUdHNGllVkVDOVBCUitFR3dJS1pDM0JnNVliZ0d6Njg1U1lscHpo?=
+ =?utf-8?B?ZzEvb2NDWUpVUG9YaEJqZE9MVk45cEN4L2JleElwNVFqeXBqQk1iVXNINDF3?=
+ =?utf-8?B?NElEZXZ4Nk5tam52NG5FUFhUSDVSdlF0VWpmMy85Y1VOUDF6Q1QrZklwWjVF?=
+ =?utf-8?B?Uzc4Z09reXNUdU5NRUhuSXJhMElwQXpHQzdnVnVCMnRBZi93eEIzb08xUXVZ?=
+ =?utf-8?B?dWl3VFEwM21Oa2xpZjQzM3U3YUpaU1ZpS3k2c1ljVmJBYTd0Sm5iOWRRM1Nr?=
+ =?utf-8?B?dS9zTTQ1dnA2dUpkUmRaamNWckdncHFtQk1Uc0ZJLzVBYWlCYUZNM3p6eHJ5?=
+ =?utf-8?B?K08zQ1F5ZkJTRGhrUWFoc1ExbDMxQ3B5ZlNxV2xPK3huSlZOYjhiZTZDSHYw?=
+ =?utf-8?B?bFJSWkwwbm9sMnVIa211YnJUWis3NW8rVTN0anFPVXU4MFBQMDFzQ0dlOXUr?=
+ =?utf-8?B?VHM3anVXNDF6blRsRnFxK251bDFoNWZLVVV2eFVUVW9ubUNlNHJQTU1URm40?=
+ =?utf-8?B?N2xOOE1iRzh5ZGpCSHc0NzNYZ2RONnV5MDFTQkh5SUxGZjdEcnhGd0szd0dY?=
+ =?utf-8?B?MEtGY2dNdE43aWZlcUVjMWtleGdEWmo2Zk5oRm1iaUprL2xQaUtGRTRydGlR?=
+ =?utf-8?B?dmpvdlBCeHZNWkowS2ZlUHhqZUhMdUx4VlkrRlVmWkwwQUFtby9ZNWtuUFM5?=
+ =?utf-8?B?S0g4cnRIeUZORldMQ2R0dERFN1RwMStWd21JdFVqM3F2em1FR2YwcHpBSDhy?=
+ =?utf-8?B?THBqcTdrY3JHZnZVWE40NFhhUzFuSjJ6d0FUQ1J1QTE0Z1JYT0dQUmxWVjRz?=
+ =?utf-8?B?Uk50VHl0cERHWVZXQW4vYXZvamgwKy9CYWNpeXZCb1JVTWZZdWVUUWlkZ25S?=
+ =?utf-8?B?QzVBTjNwWEx6WG14MHJXNmViN21UWW5ld3IyV1IwWTYwZlRhbERJcEI4dEpl?=
+ =?utf-8?B?SENQVStmSG9xbCt5L0wyMW1uVzNWWmJ5TDM2NDI5SllyZWV5djZwWUFWN25D?=
+ =?utf-8?B?YnBONDB6eW5GRWovbTBBRTNvRWUzNzl0K3BDSnlVZ3BGUXUxakVlVmxDbTkv?=
+ =?utf-8?B?MHFxMUIvQmpnUG01cWEzMWZVMjR3Tno3ZDdpMVdJNm9SanEzWUovVExjL0Fv?=
+ =?utf-8?B?eWp0OVArYWg3N0tPZG52SWI4YzY1VStHZkNZYXJ0Und5cUh3L2Y2bjY5eDN1?=
+ =?utf-8?B?K2FoU0RvVVNIalJkWnNUdTZPb0U2MFNGUEFHTTdJVko5eXo1c3F5VUR1NlNG?=
+ =?utf-8?B?V0lNNFYvRm5VYWZFM0dlNDJudzdNQms2VEVQTHZtSXdtTVV4STQ2Sld3UTh1?=
+ =?utf-8?B?V0x1eHVkTlltUmt5dVNFdmVidjRHUWhVSGZFN0xiYXZEc1FoYkh4YmlQd1Jj?=
+ =?utf-8?B?SFM5RG5SL0djSndUdkRibUFnVDFkV2Rua1JTc3krZXhsQnd6SXhvcWxWQ21h?=
+ =?utf-8?B?aEtldHpBbERVUFZ5YUdNbjZ6K3lRS0RGN1ErYkVyWDZaVkVqSmU2ZWcvYngx?=
+ =?utf-8?B?ZWZYSzE1blA4NmkzRDBIWlN5VENBWmFyajFnQTBlVVBVQ3FWWXZENWdSVG9r?=
+ =?utf-8?B?RFRPME5xUDBUMW41T0lYZFBXandxODRRejU4aTVlRVFNY3FwZTUxcVBFWVg3?=
+ =?utf-8?B?c1M3cmt4cUZTUjZXM2tBNGhmdm45RDlVa0E3L0N6aFhsRHp2d1hkRWJDSHFM?=
+ =?utf-8?B?RG9ZcnVGRnNTUlY5NzRoQkNIeDIrdWh1QjR6Z1BGdE1RSDYraEUwOVpuNUNO?=
+ =?utf-8?Q?Bq6J/k8AiNdR4Lv1wvdYnFtQj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c10d07fa-a2b9-43c1-21c1-08dc427b2044
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 09:59:37.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FaSI+3+CAwBJpDLnEr+Uzr3UytnIM3rLBMvX7+g2znsx1Pxs4V2NlU9hpUTUMR83HuRlXG25+mmKUQVljEATFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7542
 
-On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add print out functions so that users could read retire latency values.
+On 3/11/2024 11:10 PM, Ian Rogers wrote:
+> On Sun, Mar 10, 2024 at 10:23 PM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> Add core events taken from Section 1.4 "Core Performance Monitor
+>> Counters" of the Performance Monitor Counters for AMD Family 1Ah Model
+>> 00h-0Fh Processors document available at the link below. This
+>> constitutes events which capture information on op dispatch, execution
+>> and retirement, branch prediction, L1 and L2 cache activity,
+>> TLB activity, etc.
+>>
+>> Link: https://bugzilla.kernel.org/attachment.cgi?id=305974
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>> ---
+>>  .../pmu-events/arch/x86/amdzen5/branch.json   |  82 ++
+>>  .../pmu-events/arch/x86/amdzen5/cache.json    | 605 +++++++++++++
+>>  .../pmu-events/arch/x86/amdzen5/core.json     | 122 +++
+>>  .../arch/x86/amdzen5/floating-point.json      | 830 ++++++++++++++++++
+>>  .../pmu-events/arch/x86/amdzen5/memory.json   | 180 ++++
+>>  .../pmu-events/arch/x86/amdzen5/other.json    | 168 ++++
+>>  6 files changed, 1987 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/branch.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/cache.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/core.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/memory.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen5/other.json
+>>
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/branch.json b/tools/perf/pmu-events/arch/x86/amdzen5/branch.json
+>> new file mode 100644
+>> index 000000000000..208c646c59ca
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/branch.json
+>> @@ -0,0 +1,82 @@
+>> +[
+>> +  {
+>> +    "EventName": "bp_l2_btb_correct",
+>> +    "EventCode": "0x8b",
+>> +    "BriefDescription": "L2 branch prediction overrides existing prediction (speculative)."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_dyn_ind_pred",
+>> +    "EventCode": "0x8e",
+>> +    "BriefDescription": "Dynamic indirect predictions (branch used the indirect predictor to make a prediction)."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_de_redirect",
+>> +    "EventCode": "0x91",
+>> +    "BriefDescription": "Instruction decoder corrects the predicted target and resteers the branch predictor."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn",
+>> +    "EventCode": "0xc2",
+>> +    "BriefDescription": "Retired branch instructions (all types of architectural control flow changes, including exceptions and interrupts)."
+>> +  },
+> 
+> So the "bp_" prefix means branch predictor, but here this is an "ex_"
+> prefix. You've put them both in the topic "branch".
+> 
+> [ ... snip ... ]
+> 
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/other.json b/tools/perf/pmu-events/arch/x86/amdzen5/other.json
+>> new file mode 100644
+>> index 000000000000..9d49a23622e9
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/other.json
+>> @@ -0,0 +1,168 @@
+>> +[
+>> +  {
+>> +    "EventName": "bp_redirects.resync",
+>> +    "EventCode": "0x9f",
+>> +    "BriefDescription": "Redirects of the branch predictor caused by resyncs.",
+>> +    "UMask": "0x01"
+>> +  },
+> 
+> Here is a branch predictor "bp_" event but the topic is "other", why
+> isn't it a topic of branch?
+> 
+> Given the number of events categorized as topic "other" wouldn't it be
+> better to regenerate the events just using the prefix to set the
+> topic?
+> 
 
-Can you please put some example output here?
-
-Thanks,
-Namhyung
-
-
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/util/stat-display.c | 65 ++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index bfc1d705f437..e2996ba67bfe 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -21,6 +21,7 @@
->  #include "iostat.h"
->  #include "pmu.h"
->  #include "pmus.h"
-> +#include "metricgroup.h"
->
->  #define CNTR_NOT_SUPPORTED     "<not supported>"
->  #define CNTR_NOT_COUNTED       "<not counted>"
-> @@ -34,6 +35,7 @@
->  #define COMM_LEN     16
->  #define PID_LEN       7
->  #define CPUS_LEN      4
-> +#define RETIRE_LEN    8
->
->  static int aggr_header_lens[] =3D {
->         [AGGR_CORE]     =3D 18,
-> @@ -426,6 +428,67 @@ static void print_metric_std(struct perf_stat_config=
- *config,
->         fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
->  }
->
-> +static void print_retire_lat_std(struct perf_stat_config *config,
-> +                                struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       bool newline =3D os->newline;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               if (newline)
-> +                       do_new_line_std(config, os);
-> +               fprintf(out, "%'*.2f %-*s", COUNTS_LEN, t->val, EVNAME_LE=
-N, t->name);
-> +               fprintf(out, "%*ld %*d\n", RETIRE_LEN, t->count,
-> +                        RETIRE_LEN, t->sum);
-> +       }
-> +}
-> +
-> +static void print_retire_lat_csv(struct perf_stat_config *config,
-> +                                struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +       const char *sep =3D config->csv_sep;
-> +
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->=
-name, sep,
-> +                       t->count, sep, t->sum);
-> +       }
-> +}
-> +
-> +static void print_retire_lat_json(struct perf_stat_config *config,
-> +                                 struct outstate *os)
-> +{
-> +       FILE *out =3D os->fh;
-> +       struct tpebs_retire_lat *t;
-> +       struct list_head *retire_lats =3D &config->tpebs_results;
-> +
-> +       fprintf(out, "{");
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->va=
-l);
-> +               fprintf(out, "\"event-name\" : \"%s\"", t->name);
-> +               fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
-> +               fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
-> +       }
-> +       fprintf(out, "}");
-> +}
-> +
-> +static void print_retire_lat(struct perf_stat_config *config,
-> +                            struct outstate *os)
-> +{
-> +       if (!&config->tpebs_results)
-> +               return;
-> +       if (config->json_output)
-> +               print_retire_lat_json(config, os);
-> +       else if (config->csv_output)
-> +               print_retire_lat_csv(config, os);
-> +       else
-> +               print_retire_lat_std(config, os);
-> +}
-> +
->  static void new_line_csv(struct perf_stat_config *config, void *ctx)
->  {
->         struct outstate *os =3D ctx;
-> @@ -1609,6 +1672,8 @@ void evlist__print_counters(struct evlist *evlist, =
-struct perf_stat_config *conf
->                 break;
->         }
->
-> +       print_retire_lat(config, &os);
-> +
->         print_footer(config);
->
->         fflush(config->output);
-> --
-> 2.43.0
->
+Sure, I'll reorganize them.
