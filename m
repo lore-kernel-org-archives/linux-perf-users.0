@@ -1,54 +1,54 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D824E2E3EF;
-	Tue, 12 Mar 2024 06:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F8343AAF;
+	Tue, 12 Mar 2024 06:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710224057; cv=none; b=VWZ5wx42sbhda3U64wVGnb3Q2I98Nj85AdrDZN5OIs1xjXKkyEcYUE8X77sbjG/jL6cc6DDDUmtbxVfxpCQqcztQkbY1HdgVOoppJFMcxqKskA9ASw5qIrqUKOwEmu2OvQfcTaR8DNDhSbsbWdRscZ5d8xcWjF5h5Mlx3vrtcCk=
+	t=1710225624; cv=none; b=BRzzzg8fvs3f1KxTlv3dvyHgBLP++HJSq3qWj/BXKZfOaQa7wRMK92LysXz+MBS9QEaexRH3UmH1uHW1gKzpsnURGpm5gsYhbCTXPiELf3++D4nmBMNahYmVwPcLtKtISB8CIZLEZMMuoGNoEIj4J8O9SjzL7wFXIYk+wcLe+04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710224057; c=relaxed/simple;
-	bh=8rdKn5qNAExNjkXbTn10cc1Q2+Zo7aImTOmx+JryztI=;
+	s=arc-20240116; t=1710225624; c=relaxed/simple;
+	bh=tenB6xSk70QSx/vjj8bnnqnMOqvauftzNl1q/oOyNEQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yb+Wd3DSY10+7LsyzdAYufTOZsRLhYPdFdN4MhJZ5kZ4TRuGR/NYg9vpEBboBW39Jv3BxitAZB/HvO5nlnHCMApbtfLOEtnNUvuiIGDZKMcA71n67uOD1WSEyRu9f4Z16aIfjwEvb6++zQdcgo7TrZE7oePMlGWsB342Sc4m6Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
+	 To:Cc:Content-Type; b=beCHORzB2+I3U+vH1oJhA1dT1oyoJcRik0yrNFnJc1rp28IkXFF0BHkXjCc3G1Ib0uIzlnOdZBu94NpOucW9tIpyeca0SR9btvs4W2B3T3FusamcRpe5pRBtbGg7jYP02oMBa1CK+Qnsa+tKrXdp+FpX+XUwRmfgXcUzyoipDEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so3373494a12.3;
-        Mon, 11 Mar 2024 23:14:15 -0700 (PDT)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e6082eab17so4714973b3a.1;
+        Mon, 11 Mar 2024 23:40:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710224055; x=1710828855;
+        d=1e100.net; s=20230601; t=1710225622; x=1710830422;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4bKLlfKsDNs2d/W4ZG9d/7+1WGOXPO6kNhFqvy115PU=;
-        b=Nhg4ymVHuNi+UtRzfpm+JtQ0jo1srPj5E428RakEpx8Dn5CHY7Oeia6qqTrd+VzsVa
-         +Q1PcJLMBceqkhw9/EWmsJtGdJRKj1eKMQvDJ2zy74rlngGhte1m9HqOfPdyTjdIiZZJ
-         NNxGY12B1vObk3W60v7Z45t1sLemIj23HyhgeLJ5Qo0YOtFer/SMIVHGY9EsPzG45pIv
-         OCawefgqcNZUKoLYEdFM/2LFL0t7RkVxBxiUZd3xR/irUDVzOzr+kW3Y4dYDvxzIgnfl
-         bbpTMJX1DOtwJQ0SWNnrXuH1xMaNHPZKFsT5+kD/kR3u6u+9oym3eiFbkMmJVHiFIOK3
-         bfOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXB04w5TysgQF30Y10J9GuIM61Km/apOkgotUNMLfAMCekmOUcGs9XkzANRU2t5fbIA579wbYpwEoY98RnHrYtikfNbtrQ1REiQAZX7qLbiHtin7KOYMTnULCsWrBhEN+6oC9GRQJL1LnEN6QkENw==
-X-Gm-Message-State: AOJu0YyNmGuo1RrxntddBp8EmKZcx5W3xG4/UbRTAuiCWl9mMkTwtJNf
-	8GnxxqknWcPwKHPOXMnS+FYcOVZS1LDu6rVzjkeLb2UU4DNsz1nSdaMKzmmOup/GqjTH4Nx90PS
-	+9F/4Q10C4C4DolxF0vaMT+EoQ3w=
-X-Google-Smtp-Source: AGHT+IGz6hFN1HCMN2L6jNRTe2vy4IZ9XPp+cK/cZSI03A9WI4rDHt4g2XE2BfFJqs2bgtKiSNjxJJJVQyOSNrEBLoE=
-X-Received: by 2002:a17:90b:4b52:b0:29c:67:115a with SMTP id
- mi18-20020a17090b4b5200b0029c0067115amr4521365pjb.42.1710224054819; Mon, 11
- Mar 2024 23:14:14 -0700 (PDT)
+        bh=d3Fd6N+sp6G9YZ6b5OQNrXrgNifGe6J2VP43OGs23qw=;
+        b=vFyqEcbf8OjLgXdtwjenAWKikkhC2+O2OTFtwZ2sonnaauIrsfi4A+xZ7QMIS7oiuR
+         b2SUI1Z9+Pa4qPZ5gk+iec8mzsBuFOyp4r8uX5unN/O4WSd/5MX6Ze4kYXuihc48wK3n
+         mro6c6Oru8GJplfKHuq+buJ2usn+riNJHphArevqI8szfuwqHRr6mJhxZS8V2qxVpWiZ
+         AfTHNLm0K2Ok56Aha5OlNfoe86n7Y/OsZnkkC675jgj+IFtdOB9RRrEHxN/1ZQr2VmmE
+         rwm/1TlWqKl1areslS6c5tg31d7DuI/+O9YwlYoIb3Qe91Qfj6kVjmz8EevuyQcTQ6/l
+         7Z6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWY81JYjtIFGMfsktTLHZ+Nj+VSoU7uB48g0epBOYOBA3hcbXDUQdHu1Hjx/VsI/codEr9LA+cyKQ6hoSjgUW/z2EaX9+K2B95XCQHfHjpLLbwioEAYDvgM9o+70Ea7qiOtCjw71qRFppNh5XMSdg==
+X-Gm-Message-State: AOJu0Ywv0HlQ0QIy1OtUwZ/a6i4KB3qSnjI1RNDwTsAEX7CsGaeiGUtW
+	ElQ0Vq16EZ6dlpHQTdGS3BLk+NHwUL3NHH3d32A+BHXMLfws/0X3HQY0LULmExoMFu4wIzSNhU4
+	yM0m0zPw35J75xBd4jPNq7tvV3yo=
+X-Google-Smtp-Source: AGHT+IELypRCtp0Ytd1Uie9r1mCXMkhNj21UceQl8iaUuvaj9miXHPh976I2EVbUOF+9+lkhQYjsIZoMZ+Vn9oE99U8=
+X-Received: by 2002:a05:6a20:948e:b0:1a3:1136:e71e with SMTP id
+ hs14-20020a056a20948e00b001a31136e71emr2106795pzb.36.1710225622229; Mon, 11
+ Mar 2024 23:40:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-2-weilin.wang@intel.com>
-In-Reply-To: <20240302001139.604829-2-weilin.wang@intel.com>
+References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-3-weilin.wang@intel.com>
+In-Reply-To: <20240302001139.604829-3-weilin.wang@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 23:14:03 -0700
-Message-ID: <CAM9d7cjvJgd0ZRnmX+8OYs2YHjDCyt25kHxHQ4yjmR+n9CiMDg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 1/6] perf stat: Parse and find tpebs events when
- parsing metrics to prepare for perf record sampling
+Date: Mon, 11 Mar 2024 23:40:10 -0700
+Message-ID: <CAM9d7cjWEmZqb7BpDpybJG-WXO-fMNa9UQP=pP8=uXGuBu+z6g@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/6] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
 To: weilin.wang@intel.com
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -64,446 +64,395 @@ On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> Metrics that use tpebs values would use the :retire_latency keyword in
-> formulas. We put all these events into a list and pass the list to perf
-> record to collect their retire latency value.
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
 >
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->  tools/perf/builtin-stat.c     | 38 +++++++++++++---
->  tools/perf/util/metricgroup.c | 81 +++++++++++++++++++++++++++++------
->  tools/perf/util/metricgroup.h | 10 ++++-
->  tools/perf/util/stat.h        |  2 +
->  4 files changed, 112 insertions(+), 19 deletions(-)
+>  tools/perf/builtin-stat.c     | 179 +++++++++++++++++++++++++++++++++-
+>  tools/perf/util/data.c        |   4 +
+>  tools/perf/util/data.h        |   1 +
+>  tools/perf/util/metricgroup.h |   7 ++
+>  tools/perf/util/stat.h        |   3 +
+>  5 files changed, 191 insertions(+), 3 deletions(-)
 >
 > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 6bba1a89d030..5a3093541cff 100644
+> index 5a3093541cff..3890a579349e 100644
 > --- a/tools/perf/builtin-stat.c
 > +++ b/tools/perf/builtin-stat.c
-> @@ -162,6 +162,7 @@ static struct perf_stat_config stat_config =3D {
+> @@ -94,8 +94,13 @@
+>  #include <perf/evlist.h>
+>  #include <internal/threadmap.h>
+>
+> +#include "util/sample.h"
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +
+>  #define DEFAULT_SEPARATOR      " "
+>  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
+> +#define PERF_DATA              "-"
+>
+>  static void print_counters(struct timespec *ts, int argc, const char **a=
+rgv);
+>
+> @@ -162,7 +167,8 @@ static struct perf_stat_config stat_config =3D {
 >         .ctl_fd                 =3D -1,
 >         .ctl_fd_ack             =3D -1,
 >         .iostat_run             =3D false,
-> +       .tpebs_event_size =3D 0,
-
-Usually you don't need to add 0 initial value as it's the default.
-
-
+> -       .tpebs_event_size =3D 0,
+> +       .tpebs_event_size       =3D 0,
+> +       .tpebs_pid              =3D -1,
 >  };
 >
 >  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> @@ -686,6 +687,12 @@ static enum counter_recovery stat_handle_error(struc=
-t evsel *counter)
+> @@ -687,12 +693,163 @@ static enum counter_recovery stat_handle_error(str=
+uct evsel *counter)
 >         return COUNTER_FATAL;
 >  }
 >
-> +static int __run_perf_record(void)
+> -static int __run_perf_record(void)
+> +static int __run_perf_record(const char **record_argv)
+>  {
+> +       int i =3D 0;
+> +       struct tpebs_event *e;
+>         pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +
+> +       if (stat_config.user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config.user_requested_cpu_list;
+> +       }
+> +
+> +       if (stat_config.system_wide)
+> +               record_argv[i++] =3D "-a";
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+> +
+>         return 0;
+>  }
+>
+> +static void prepare_run_command(struct child_process *cmd,
+> +                              const char **argv)
 > +{
-> +       pr_debug("Prepare perf record for retire_latency\n");
+> +       memset(cmd, 0, sizeof(*cmd));
+> +       cmd->argv =3D argv;
+> +       cmd->out =3D -1;
+> +}
+
+A new line please.
+
+> +static int prepare_perf_record(struct child_process *cmd)
+> +{
+> +       const char **record_argv;
+> +
+> +       record_argv =3D calloc(10 + 2 * stat_config.tpebs_event_size, siz=
+eof(char *));
+> +       if (!record_argv)
+> +               return -1;
+> +       __run_perf_record(record_argv);
+> +
+> +       prepare_run_command(cmd, record_argv);
+> +       return start_command(cmd);
+> +}
+> +
+> +struct perf_script {
+> +       struct perf_tool        tool;
+> +       struct perf_session     *session;
+> +       struct evswitch         evswitch;
+> +       struct perf_cpu_map     *cpus;
+> +       struct perf_thread_map *threads;
+> +       int                     name_width;
+> +};
+
+Do we really need all these?
+
+> +
+> +static void tpebs_data__delete(void)
+> +{
+> +       struct tpebs_retire_lat *r, *rtmp;
+> +       struct tpebs_event *e, *etmp;
+> +       list_for_each_entry_safe(r, rtmp, &stat_config.tpebs_results, nd)=
+ {
+> +               list_del_init(&r->nd);
+> +               free(r);
+> +       }
+> +       list_for_each_entry_safe(e, etmp, &stat_config.tpebs_events, nd) =
+{
+> +               list_del_init(&e->nd);
+> +               free(e);
+> +       }
+> +}
+> +
+> +static int process_sample_event(struct perf_tool *tool,
+> +                               union perf_event *event __maybe_unused,
+> +                               struct perf_sample *sample,
+> +                               struct evsel *evsel,
+> +                               struct machine *machine __maybe_unused)
+> +{
+> +       struct perf_script *script =3D container_of(tool, struct perf_scr=
+ipt, tool);
+> +       int ret =3D 0;
+> +       const char *evname;
+> +       struct tpebs_retire_lat *t;
+> +
+> +       pr_debug("entering function %s\n ", __func__);
+> +       evname =3D evsel__name(evsel);
+> +
+> +       pr_debug("[%03d] ", sample->cpu);
+> +       pr_debug("%*s: ", script->name_width, evname ?: "[unknown]");
+> +       pr_debug("%16" PRIu16, sample->retire_lat);
+> +       pr_debug("\n");
+
+These debug messages can go away.
+
+> +
+> +       // Need to handle per core results?
+> +       // We are assuming average retire latency value will be used. Sav=
+e the number of
+> +       // samples and the sum of retire latency value for each event.
+> +       list_for_each_entry(t, &stat_config.tpebs_results, nd) {
+> +               if (!strcmp(evname, t->name)) {
+> +                       t->count +=3D 1;
+> +                       t->sum +=3D sample->retire_lat;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int process_feature_event(struct perf_session *session,
+> +                                union perf_event *event)
+> +{
+> +       if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> +               return perf_event__process_feature(session, event);
+
+Just curious.  Why is this necessary?
+
+
 > +       return 0;
+> +}
+> +
+> +static int __cmd_script(struct child_process *cmd __maybe_unused)
+
+__cmd_script() is probably not a good name.  Maybe just
+process_tpebs_samples()?  Also 'cmd' is actually used.
+
+> +{
+> +       int err =3D 0;
+> +       struct perf_session *session;
+> +       struct perf_data data =3D {
+> +               .mode =3D PERF_DATA_MODE_READ,
+> +               .path =3D PERF_DATA,
+> +               .fd   =3D cmd->out,
+> +       };
+> +       struct perf_script script =3D {
+> +               .tool =3D {
+> +               .sample          =3D process_sample_event,
+> +               .ordered_events  =3D true,
+> +               .ordering_requires_timestamps =3D true,
+
+I don't think you need an ordered events queue for this.
+
+
+> +               .feature         =3D process_feature_event,
+> +               .attr            =3D perf_event__process_attr,
+> +               },
+> +       };
+> +       struct tpebs_event *e;
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               struct tpebs_retire_lat *new =3D malloc(sizeof(struct tpe=
+bs_retire_lat));
+> +
+> +               if (!new)
+> +                       return -1;
+> +               new->name =3D strdup(e->name);
+> +               new->tpebs_name =3D strdup(e->tpebs_name);
+> +               new->count =3D 0;
+> +               new->sum =3D 0;
+
+I think you can simply use zalloc() instead.
+
+
+> +               list_add_tail(&new->nd, &stat_config.tpebs_results);
+> +       }
+> +
+> +       kill(cmd->pid, SIGTERM);
+> +       session =3D perf_session__new(&data, &script.tool);
+> +       if (IS_ERR(session))
+> +               return PTR_ERR(session);
+> +       script.session =3D session;
+> +       err =3D perf_session__process_events(session);
+> +       perf_session__delete(session);
+> +
+> +       return err;
 > +}
 > +
 >  static int __run_perf_stat(int argc, const char **argv, int run_idx)
 >  {
 >         int interval =3D stat_config.interval;
-> @@ -703,6 +710,15 @@ static int __run_perf_stat(int argc, const char **ar=
-gv, int run_idx)
+> @@ -709,12 +866,14 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>         struct affinity saved_affinity, *affinity =3D NULL;
 >         int err;
 >         bool second_pass =3D false;
+> +       struct child_process cmd;
 >
-> +       //Prepare perf record for sampling event retire_latency before fo=
+>         //Prepare perf record for sampling event retire_latency before fo=
 rk and prepare workload
-
-We prefer C style comments /* ... */.
-
-
+>         if (stat_config.tpebs_event_size > 0) {
+>                 int ret;
+>
+> -               ret =3D __run_perf_record();
+> +               pr_debug("perf stat pid =3D %d\n", getpid());
+> +               ret =3D prepare_perf_record(&cmd);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -924,6 +1083,17 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>
+>         t1 =3D rdclock();
+>
 > +       if (stat_config.tpebs_event_size > 0) {
 > +               int ret;
 > +
-> +               ret =3D __run_perf_record();
-> +               if (ret)
-> +                       return ret;
+> +               pr_debug("pid =3D %d\n", getpid());
+> +               pr_debug("cmd.pid =3D %d\n", cmd.pid);
+> +
+> +               ret =3D __cmd_script(&cmd);
+> +               close(cmd.out);
+> +               pr_debug("%d\n", ret);
+
+Please remove all the unnecessary debug messages.
+
+And you don't need to wait for the target process to finish
+in order to process samples.  Actually it'd increase the
+chance that the pipe is full during the execution.
+
+
 > +       }
 > +
->         if (forks) {
->                 if (evlist__prepare_workload(evsel_list, &target, argv, i=
-s_pipe, workload_exec_failed_signal) < 0) {
->                         perror("failed to prepare workload");
-> @@ -2106,7 +2122,9 @@ static int add_default_attributes(void)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> -                                               &stat_config.metric_event=
-s);
-> +                                               &stat_config.metric_event=
-s,
-> +                                               &stat_config.tpebs_events=
-,
-> +                                               &stat_config.tpebs_event_=
-size);
-
-Hmm.. the argument list is too long.  Maybe we need to think
-about just passing a pointer to the stat_config instead.
-
-
+>         if (stat_config.walltime_run_table)
+>                 stat_config.walltime_run[run_idx] =3D t1 - t0;
+>
+> @@ -2761,6 +2931,7 @@ int cmd_stat(int argc, const char **argv)
 >         }
 >
->         if (smi_cost) {
-> @@ -2139,7 +2157,9 @@ static int add_default_attributes(void)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> -                                               &stat_config.metric_event=
-s);
-> +                                               &stat_config.metric_event=
-s,
-> +                                               &stat_config.tpebs_events=
-,
-> +                                               &stat_config.tpebs_event_=
-size);
->         }
+>         INIT_LIST_HEAD(&stat_config.tpebs_events);
+> +       INIT_LIST_HEAD(&stat_config.tpebs_results);
 >
->         if (topdown_run) {
-> @@ -2173,7 +2193,9 @@ static int add_default_attributes(void)
->                                                 /*metric_no_threshold=3D*=
-/true,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> -                                               &stat_config.metric_event=
-s) < 0)
-> +                                               &stat_config.metric_event=
-s,
-> +                                               &stat_config.tpebs_events=
-,
-> +                                               &stat_config.tpebs_event_=
-size) < 0)
->                         return -1;
->         }
->
-> @@ -2214,7 +2236,9 @@ static int add_default_attributes(void)
->                                                         /*metric_no_thres=
-hold=3D*/true,
->                                                         stat_config.user_=
-requested_cpu_list,
->                                                         stat_config.syste=
-m_wide,
-> -                                                       &stat_config.metr=
-ic_events) < 0)
-> +                                                       &stat_config.metr=
-ic_events,
-> +                                                       /*&stat_config.tp=
-ebs_events=3D*/NULL,
-> +                                                       /*stat_config.tpe=
-bs_event_size=3D*/0) < 0)
->                                 return -1;
->
->                         evlist__for_each_entry(metric_evlist, metric_evse=
-l) {
-> @@ -2736,6 +2760,8 @@ int cmd_stat(int argc, const char **argv)
->                 }
->         }
->
-> +       INIT_LIST_HEAD(&stat_config.tpebs_events);
-
-You can move it to the initializer using LIST_HEAD_INIT().
-
-> +
 >         /*
 >          * Metric parsing needs to be delayed as metrics may optimize eve=
 nts
->          * knowing the target is system-wide.
-> @@ -2748,7 +2774,9 @@ int cmd_stat(int argc, const char **argv)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> -                                               &stat_config.metric_event=
-s);
-> +                                               &stat_config.metric_event=
-s,
-> +                                               &stat_config.tpebs_events=
-,
-> +                                               &stat_config.tpebs_event_=
-size);
+> @@ -2972,5 +3143,7 @@ int cmd_stat(int argc, const char **argv)
+>         metricgroup__rblist_exit(&stat_config.metric_events);
+>         evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack,=
+ &stat_config.ctl_fd_close);
 >
->                 zfree(&metrics);
->                 if (ret) {
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index b24a1c177a80..5ee96d2f16c9 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -277,7 +277,8 @@ static bool contains_metric_id(struct evsel **metric_=
-events, int num_events,
->   */
->  static int setup_metric_events(const char *pmu, struct hashmap *ids,
->                                struct evlist *metric_evlist,
-> -                              struct evsel ***out_metric_events)
-> +                              struct evsel ***out_metric_events,
-> +                              size_t tpebs_event_size)
->  {
->         struct evsel **metric_events;
->         const char *metric_id;
-> @@ -286,7 +287,7 @@ static int setup_metric_events(const char *pmu, struc=
-t hashmap *ids,
->         bool all_pmus =3D !strcmp(pmu, "all") || perf_pmus__num_core_pmus=
-() =3D=3D 1 || !is_pmu_core(pmu);
->
->         *out_metric_events =3D NULL;
-> -       ids_size =3D hashmap__size(ids);
-> +       ids_size =3D hashmap__size(ids) - tpebs_event_size;
->
->         metric_events =3D calloc(ids_size + 1, sizeof(void *));
->         if (!metric_events)
-> @@ -323,6 +324,7 @@ static int setup_metric_events(const char *pmu, struc=
-t hashmap *ids,
->                 }
->         }
->         if (matched_events < ids_size) {
-> +               pr_debug("Error: matched_events =3D %lu, ids_size =3D %lu=
-\n", matched_events, ids_size);
->                 free(metric_events);
->                 return -EINVAL;
->         }
-> @@ -670,7 +672,9 @@ static int decode_all_metric_ids(struct evlist *perf_=
-evlist, const char *modifie
->  static int metricgroup__build_event_string(struct strbuf *events,
->                                            const struct expr_parse_ctx *c=
-tx,
->                                            const char *modifier,
-> -                                          bool group_events)
-> +                                          bool group_events,
-> +                                          struct list_head *tpebs_events=
- __maybe_unused,
-> +                                          size_t *tpebs_event_size)
->  {
->         struct hashmap_entry *cur;
->         size_t bkt;
-> @@ -683,8 +687,47 @@ static int metricgroup__build_event_string(struct st=
-rbuf *events,
->         hashmap__for_each_entry(ctx->ids, cur, bkt) {
->                 const char *sep, *rsep, *id =3D cur->pkey;
->                 enum perf_tool_event ev;
-> +               char *p =3D strstr(id, ":R");
-> +               char *p1 =3D strstr(id, "@R");
-
-Can you please add a comment on what you are doing here?
-
+> +       tpebs_data__delete();
 > +
-> +               if (p =3D=3D NULL && p1) {
-> +                       p =3D strstr(p1+1, "@R");
-> +                       if (p =3D=3D NULL)
-> +                               p =3D p1;
-> +                       p =3D p+1;
-> +               }
-> +
-> +               if (p) {
-> +                       struct tpebs_event *new_event =3D malloc(sizeof(s=
-truct tpebs_event));
-> +                       char *name;
-> +                       char *at;
->
-> -               pr_debug("found event %s\n", id);
-> +                       pr_debug("event name %s\n", id);
-> +                       new_event->tpebs_name =3D strdup(id);
-> +                       *p =3D '\0';
-> +                       name =3D malloc(strlen(id) + 2);
-> +                       if (!name)
-> +                               return -ENOMEM;
-
-Note the previous two allocations can also fail. :)
-
-> +
-> +                       at =3D strchr(id, '@');
-> +                       if (at !=3D NULL) {
-> +                               pr_debug("tpebs name %s\n", id);
-> +                               *at =3D '/';
-> +                               at =3D strchr(id, '@');
-> +                               *at =3D '/';
-> +                               strcpy(name, id);
-> +                               strcat(name, "p");
-> +                       } else {
-> +                               strcpy(name, id);
-> +                               strcat(name, ":p");
-> +                       }
-> +                       new_event->name =3D name;
-> +                       *tpebs_event_size +=3D 1;
-> +                       pr_debug("retire_latency required, tpebs_event_si=
-ze=3D%lu, new_event=3D%s\n",
-> +                       *tpebs_event_size, new_event->name);
-
-Broken indentation.
-
-
-> +                       list_add_tail(&new_event->nd, tpebs_events);
-> +                       continue;
-> +               }
->
->                 /* Always move tool events outside of the group. */
->                 ev =3D perf_tool_event__from_str(id);
-> @@ -1449,7 +1492,8 @@ static int build_combined_expr_ctx(const struct lis=
-t_head *metric_list,
->  static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
->                      struct expr_parse_ctx *ids, const char *modifier,
->                      bool group_events, const bool tool_events[PERF_TOOL_=
-MAX],
-> -                    struct evlist **out_evlist)
-> +                    struct evlist **out_evlist, struct list_head *tpebs_=
-events,
-> +                    size_t *tpebs_event_size)
->  {
->         struct parse_events_error parse_error;
->         struct evlist *parsed_evlist;
-> @@ -1492,7 +1536,7 @@ static int parse_ids(bool metric_no_merge, struct p=
-erf_pmu *fake_pmu,
->                 }
->         }
->         ret =3D metricgroup__build_event_string(&events, ids, modifier,
-> -                                             group_events);
-> +                                             group_events, tpebs_events,=
- tpebs_event_size);
->         if (ret)
->                 return ret;
->
-> @@ -1531,7 +1575,9 @@ static int parse_groups(struct evlist *perf_evlist,
->                         bool system_wide,
->                         struct perf_pmu *fake_pmu,
->                         struct rblist *metric_events_list,
-> -                       const struct pmu_metrics_table *table)
-> +                       const struct pmu_metrics_table *table,
-> +                       struct list_head *tpebs_events,
-> +                       size_t *tpebs_event_size)
->  {
->         struct evlist *combined_evlist =3D NULL;
->         LIST_HEAD(metric_list);
-> @@ -1563,7 +1609,8 @@ static int parse_groups(struct evlist *perf_evlist,
->                                         /*modifier=3D*/NULL,
->                                         /*group_events=3D*/false,
->                                         tool_events,
-> -                                       &combined_evlist);
-> +                                       &combined_evlist,
-> +                                       tpebs_events, tpebs_event_size);
->                 }
->                 if (combined)
->                         expr__ctx_free(combined);
-> @@ -1618,14 +1665,15 @@ static int parse_groups(struct evlist *perf_evlis=
-t,
->                 }
->                 if (!metric_evlist) {
->                         ret =3D parse_ids(metric_no_merge, fake_pmu, m->p=
-ctx, m->modifier,
-> -                                       m->group_events, tool_events, &m-=
->evlist);
-> +                                       m->group_events, tool_events, &m-=
->evlist,
-> +                                       tpebs_events, tpebs_event_size);
->                         if (ret)
->                                 goto out;
->
->                         metric_evlist =3D m->evlist;
->                 }
->                 ret =3D setup_metric_events(fake_pmu ? "all" : m->pmu, m-=
->pctx->ids,
-> -                                         metric_evlist, &metric_events);
-> +                                         metric_evlist, &metric_events, =
-*tpebs_event_size);
->                 if (ret) {
->                         pr_err("Cannot resolve IDs for %s: %s\n",
->                                 m->metric_name, m->metric_expr);
-> @@ -1692,16 +1740,21 @@ int metricgroup__parse_groups(struct evlist *perf=
-_evlist,
->                               bool metric_no_threshold,
->                               const char *user_requested_cpu_list,
->                               bool system_wide,
-> -                             struct rblist *metric_events)
-> +                             struct rblist *metric_events,
-> +                             struct list_head *tpebs_events,
-> +                             size_t *tpebs_event_size)
->  {
->         const struct pmu_metrics_table *table =3D pmu_metrics_table__find=
-();
->
-> +       pr_debug("Test debugging\n");
-> +
-
-Can you please remove these debug messages before submitting?
-
-Thanks,
-Namhyung
-
-
->         if (!table)
->                 return -EINVAL;
->
->         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
-c_no_merge,
->                             metric_no_threshold, user_requested_cpu_list,=
- system_wide,
-> -                           /*fake_pmu=3D*/NULL, metric_events, table);
-> +                           /*fake_pmu=3D*/NULL, metric_events, table, tp=
-ebs_events,
-> +                           tpebs_event_size);
+>         return status;
 >  }
+> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> index 08c4bfbd817f..2e2a20fc5c30 100644
+> --- a/tools/perf/util/data.c
+> +++ b/tools/perf/util/data.c
+> @@ -185,6 +185,10 @@ static bool check_pipe(struct perf_data *data)
+>         int fd =3D perf_data__is_read(data) ?
+>                  STDIN_FILENO : STDOUT_FILENO;
 >
->  int metricgroup__parse_groups_test(struct evlist *evlist,
-> @@ -1715,7 +1768,9 @@ int metricgroup__parse_groups_test(struct evlist *e=
-vlist,
->                             /*metric_no_threshold=3D*/false,
->                             /*user_requested_cpu_list=3D*/NULL,
->                             /*system_wide=3D*/false,
-> -                           &perf_pmu__fake, metric_events, table);
-> +                           &perf_pmu__fake, metric_events, table,
-> +                           /*tpebs_events=3D*/NULL,
-> +                           /*tpebs_event_size=3D*/0);
->  }
+> +       if (data->fd > 0) {
+> +               fd =3D data->fd;
+> +       }
+
+I'm not sure if it's needed.  The data->path is set and it'll be
+checked in the below.
+
+
+> +
+>         if (!data->path) {
+>                 if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+>                         is_pipe =3D true;
+> diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> index 110f3ebde30f..720638116ca0 100644
+> --- a/tools/perf/util/data.h
+> +++ b/tools/perf/util/data.h
+> @@ -28,6 +28,7 @@ struct perf_data_file {
 >
->  struct metricgroup__has_metric_data {
+>  struct perf_data {
+>         const char              *path;
+> +       int                      fd;
+
+Can we remove this?
+
+
+>         struct perf_data_file    file;
+>         bool                     is_pipe;
+>         bool                     is_dir;
 > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
 h
-> index d5325c6ec8e1..7c24ed768ff3 100644
+> index 7c24ed768ff3..1fa12cc3294e 100644
 > --- a/tools/perf/util/metricgroup.h
 > +++ b/tools/perf/util/metricgroup.h
-> @@ -66,6 +66,12 @@ struct metric_expr {
->         int runtime;
+> @@ -71,6 +71,13 @@ struct tpebs_event {
+>         const char *name;
+>         const char *tpebs_name;
 >  };
->
-> +struct tpebs_event {
+
+A new line please.
+
+> +struct tpebs_retire_lat {
 > +       struct list_head nd;
 > +       const char *name;
 > +       const char *tpebs_name;
+
+What are the 'name' and 'tpebs_name'?
+
+
+> +       size_t count;
+> +       int sum;
 > +};
-> +
+>
 >  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
 >                                          struct evsel *evsel,
->                                          bool create);
-> @@ -77,7 +83,9 @@ int metricgroup__parse_groups(struct evlist *perf_evlis=
-t,
->                               bool metric_no_threshold,
->                               const char *user_requested_cpu_list,
->                               bool system_wide,
-> -                             struct rblist *metric_events);
-> +                             struct rblist *metric_events,
-> +                             struct list_head *tpebs_events,
-> +                             size_t *tpebs_event_size);
->  int metricgroup__parse_groups_test(struct evlist *evlist,
->                                    const struct pmu_metrics_table *table,
->                                    const char *str,
 > diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index d6e5c8787ba2..b987960df3c5 100644
+> index b987960df3c5..2387c6289f93 100644
 > --- a/tools/perf/util/stat.h
 > +++ b/tools/perf/util/stat.h
-> @@ -109,6 +109,8 @@ struct perf_stat_config {
->         struct cpu_aggr_map     *cpus_aggr_map;
->         u64                     *walltime_run;
+> @@ -111,6 +111,9 @@ struct perf_stat_config {
 >         struct rblist            metric_events;
-> +       struct list_head         tpebs_events;
-> +       size_t                   tpebs_event_size;
+>         struct list_head         tpebs_events;
+>         size_t                   tpebs_event_size;
+> +       struct list_head         tpebs_results;
+> +       pid_t                    tpebs_pid;
+> +       int                      tpebs_pipe;
+
+Did you use these?
+
+
 >         int                      ctl_fd;
 >         int                      ctl_fd_ack;
 >         bool                     ctl_fd_close;
