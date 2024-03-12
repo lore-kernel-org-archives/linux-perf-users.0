@@ -1,263 +1,267 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA61014374F;
-	Tue, 12 Mar 2024 20:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0359613B2BF;
+	Tue, 12 Mar 2024 21:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710276692; cv=none; b=pVyaU8Q2RHEENFoRxoBWNPSnZ0xdi8cnPQy+/unnF9ALdjLN9L+XAhsVLZEcLPAagZg5BT5WEeyAuayhoPUOa1pPtahrmfUwhfl+aNEJhuk4AcnuCPqxsVUiFEwzDBC4wYdXkUmsVa/WQx0JaqroDt1aBYpIt+jBX/r9lcQyS0E=
+	t=1710279763; cv=none; b=iu7nZl9M2RO50W9/ombIRB+chMoU7AneFbpYaeMQ/F/EOXjqtUUFU5tROFpCQjSPyhufEO9E+sqVVakHXhTqiK8gWgROnkd0g0TDbfedQwlMMC7C0aUPvu0AAze2MLbit+WGVTTtxUjpldkbi6wfOoXCVBokEBQJqVfSrMb5AnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710276692; c=relaxed/simple;
-	bh=2TiUaR/zgBzTGSvXrzZw/55Fy772pQs7tRpaW5Bu84A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D3bLrWw0tcEYE3Ea1yQ1D2VwFf6V+tMJATFen1ymUfpY66A8NZ6GEaiPatrKI8c54qnD9QlyQESLKYdPFe7cZNagdvbTPqn1plx4KmhgUgZAkfEkBDHzE5HxTUpxMaW7wwC6goRsBYVnF9v2S8YT+f8EpQA5PIQYonLl6nTkxBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrPOuVw7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710279763; c=relaxed/simple;
+	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJ661UC9522zhw1rV28SqkUerTNuA8VTJUbpMauBsPcZuPRrqBaxiCmt6bYwRrEM4+Eqcnt3ZjfDPSF9uJ1axnavj/QDHdSoXL9V2/cj1YWuLPBtiZly6R+mF6QYutJqOYstLZHK/y/nhjSbei9qVdU0gi2XJWeIWHezHxltb3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0k2xDwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrPOuVw7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB84EC433F1;
-	Tue, 12 Mar 2024 20:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0k2xDwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC695C433F1;
+	Tue, 12 Mar 2024 21:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710276692;
-	bh=2TiUaR/zgBzTGSvXrzZw/55Fy772pQs7tRpaW5Bu84A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IrPOuVw7OIbxE4pqJbkd75rdxc4tGeU+qz6+wcQhPE2GbOv8efgxxvLi4/2njq8vd
-	 kMoYEdXsjpaQ8BZ1K/yh03oq5UKf5SYMUyCWtby/2dfq6s8LaA6OElIw6JyUqZfIsk
-	 OgXy9oCwwD4tkIfmzTuXlwkqN841lCESbauVIU/UTG69+U24NBGKRUppdxVt8HfKJ+
-	 WCn+++6r+xZKRNfC73CtSXSEv+NAhnNQOEGTMy0ZQx+G6tzkyp5NH/SCKo12a8rqvk
-	 vGwwYorBm3XZWXXcZibymrQnCaoUsXprT79Jkgtj5gKnJNAmUCBpO+SfTHq8dXic/E
-	 wLUW+O2o/oZYg==
+	s=k20201202; t=1710279762;
+	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y0k2xDwolymaumbjRTiV58xRgX4XLltojrHqEZrvlWwXAMHGRVmP3IEM3+SsqgWgc
+	 lXxgnVtINJC5uTFBwf8tBUDCLftr3SH/bNYay5OwncMKBhoo8HyBKXl2rQwm/2lMCX
+	 iIpy3IsbD+Saz7WuHu4dzMHTBUExBfgP7IvPTsTJoWgkgfZEn1fOmdlOjfMI5IjIac
+	 oEihZdonxJzRLz1wt9ZYG5HTChfYsXdy/5yoPfobZpG+esewEaKvXqOcFgVUzXeJWd
+	 QJKP7Cbnyv8afeEcQaDSlxstskuNXemnDRWGa2GQqq8Lk4rzGIDF8fZN0+bE3jTIOa
+	 maj7+y+Ubc13A==
+Date: Tue, 12 Mar 2024 18:42:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/2] perf beauty: Move uapi/linux/mount.h copy out of the directory used to build perf
-Date: Tue, 12 Mar 2024 17:51:12 -0300
-Message-ID: <20240312205112.688776-3-acme@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240312205112.688776-1-acme@kernel.org>
-References: <20240312205112.688776-1-acme@kernel.org>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfDMTlTH2SdwlB9M@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240312180814.3373778-1-bigeasy@linutronix.de>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, Mar 12, 2024 at 07:01:48PM +0100, Sebastian Andrzej Siewior wrote:
+> Hi,
+>=20
+> Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+> the signal gets delayed until event_sched_out() which then uses
+> task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+> signal is delivered with disabled preemption.
+>=20
+> While looking at this, I also stumbled upon __perf_pending_irq() which
+> requires disabled interrupts but this is not the case on PREEMPT_RT.
+>=20
+> This series aim to address both issues while not introducing a new issue
+> at the same time ;)
+> Any testing is appreciated.
+>=20
+> v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigea=
+sy@linutronix.de/
+>     - Marco pointed me to the testsuite that showed two problems:
+>       - Delayed task_work from NMI / missing events.
+>         Fixed by triggering dummy irq_work to enforce an interrupt for
+> 	the exit-to-userland path which checks task_work
+>       - Increased ref-count on clean up/ during exec.
+>         Mostly addressed by the former change. There is still a window
+> 	if the NMI occurs during execve(). This is addressed by removing
+> 	the task_work before free_event().
+>       The testsuite (remove_on_exec) fails sometimes if the event/
+>       SIGTRAP is sent before the sighandler is installed.
 
-It is mostly used only to generate string tables, not to build perf, so
-move it to the tools/perf/trace/beauty/include/ hierarchy, that is used
-just for scrapping.
+Survives:
 
-This is a something that should've have happened, as happened with the
-linux/socket.h scrapper, do it now as Ian suggested while doing an
-audit/refactor session in the headers used by perf.
+[acme@nine perf_events]$ for x in {0..1000}; do (perf test sigtrap &); done
 
-No other tools/ living code uses it, just <linux/mount.h> coming from
-either 'make install_headers' or from the system /usr/include/
-directory.
+And:
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/CAP-5=fWZVrpRufO4w-S4EcSi9STXcTAN2ERLwTSN7yrSSA-otQ@mail.gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Makefile.perf                      | 21 +++++++++----------
- tools/perf/check-headers.sh                   |  2 +-
- tools/perf/trace/beauty/fsconfig.sh           |  6 +++---
- tools/perf/trace/beauty/fsmount.sh            |  6 +++---
- tools/perf/trace/beauty/fspick.sh             |  6 +++---
- .../trace/beauty}/include/uapi/linux/mount.h  |  0
- tools/perf/trace/beauty/mount_flags.sh        |  6 +++---
- tools/perf/trace/beauty/move_mount_flags.sh   |  6 +++---
- 8 files changed, 26 insertions(+), 27 deletions(-)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/mount.h (100%)
+[acme@nine perf_events]$ pwd
+/home/acme/git/linux/tools/testing/selftests/perf_events
+[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 643e9fa6ec89c58c..523c3b7d6c9d3f51 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -500,20 +500,20 @@ $(fadvise_advice_array): $(linux_uapi_dir)/in.h $(fadvise_advice_tbl)
- fsmount_arrays := $(beauty_outdir)/fsmount_arrays.c
- fsmount_tbls := $(srctree)/tools/perf/trace/beauty/fsmount.sh
- 
--$(fsmount_arrays): $(linux_uapi_dir)/mount.h $(fsmount_tbls)
--	$(Q)$(SHELL) '$(fsmount_tbls)' $(linux_uapi_dir) > $@
-+$(fsmount_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_tbls)
-+	$(Q)$(SHELL) '$(fsmount_tbls)' $(beauty_uapi_linux_dir) > $@
- 
- fspick_arrays := $(beauty_outdir)/fspick_arrays.c
- fspick_tbls := $(srctree)/tools/perf/trace/beauty/fspick.sh
- 
--$(fspick_arrays): $(linux_uapi_dir)/mount.h $(fspick_tbls)
--	$(Q)$(SHELL) '$(fspick_tbls)' $(linux_uapi_dir) > $@
-+$(fspick_arrays): $(beauty_uapi_linux_dir)/mount.h $(fspick_tbls)
-+	$(Q)$(SHELL) '$(fspick_tbls)' $(beauty_uapi_linux_dir) > $@
- 
- fsconfig_arrays := $(beauty_outdir)/fsconfig_arrays.c
- fsconfig_tbls := $(srctree)/tools/perf/trace/beauty/fsconfig.sh
- 
--$(fsconfig_arrays): $(linux_uapi_dir)/mount.h $(fsconfig_tbls)
--	$(Q)$(SHELL) '$(fsconfig_tbls)' $(linux_uapi_dir) > $@
-+$(fsconfig_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsconfig_tbls)
-+	$(Q)$(SHELL) '$(fsconfig_tbls)' $(beauty_uapi_linux_dir) > $@
- 
- pkey_alloc_access_rights_array := $(beauty_outdir)/pkey_alloc_access_rights_array.c
- asm_generic_hdr_dir := $(srctree)/tools/include/uapi/asm-generic/
-@@ -598,15 +598,14 @@ $(mremap_flags_array): $(linux_uapi_dir)/mman.h $(mremap_flags_tbl)
- mount_flags_array := $(beauty_outdir)/mount_flags_array.c
- mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/mount_flags.sh
- 
--$(mount_flags_array): $(linux_uapi_dir)/mount.h $(mount_flags_tbl)
--	$(Q)$(SHELL) '$(mount_flags_tbl)' $(linux_uapi_dir) > $@
-+$(mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(mount_flags_tbl)
-+	$(Q)$(SHELL) '$(mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
- 
- move_mount_flags_array := $(beauty_outdir)/move_mount_flags_array.c
- move_mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/move_mount_flags.sh
- 
--$(move_mount_flags_array): $(linux_uapi_dir)/mount.h $(move_mount_flags_tbl)
--	$(Q)$(SHELL) '$(move_mount_flags_tbl)' $(linux_uapi_dir) > $@
--
-+$(move_mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(move_mount_flags_tbl)
-+	$(Q)$(SHELL) '$(move_mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
- 
- mmap_prot_array := $(beauty_outdir)/mmap_prot_array.c
- mmap_prot_tbl := $(srctree)/tools/perf/trace/beauty/mmap_prot.sh
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 015f74137b755eaf..c2c26d6b87ef52f9 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -15,7 +15,6 @@ FILES=(
-   "include/uapi/linux/kcmp.h"
-   "include/uapi/linux/kvm.h"
-   "include/uapi/linux/in.h"
--  "include/uapi/linux/mount.h"
-   "include/uapi/linux/openat2.h"
-   "include/uapi/linux/perf_event.h"
-   "include/uapi/linux/prctl.h"
-@@ -98,6 +97,7 @@ declare -a BEAUTY_FILES
- BEAUTY_FILES=(
-   "include/linux/socket.h"
-   "include/uapi/linux/fs.h"
-+  "include/uapi/linux/mount.h"
- )
- 
- declare -a FAILURES
-diff --git a/tools/perf/trace/beauty/fsconfig.sh b/tools/perf/trace/beauty/fsconfig.sh
-index bc6ef7bb7a5f93c2..09cee79de00ca35d 100755
---- a/tools/perf/trace/beauty/fsconfig.sh
-+++ b/tools/perf/trace/beauty/fsconfig.sh
-@@ -2,12 +2,12 @@
- # SPDX-License-Identifier: LGPL-2.1
- 
- if [ $# -ne 1 ] ; then
--	linux_header_dir=tools/include/uapi/linux
-+	beauty_uapi_linux_dir=tools/perf/trace/beauty/include/uapi/linux/
- else
--	linux_header_dir=$1
-+	beauty_uapi_linux_dir=$1
- fi
- 
--linux_mount=${linux_header_dir}/mount.h
-+linux_mount=${beauty_uapi_linux_dir}/mount.h
- 
- printf "static const char *fsconfig_cmds[] = {\n"
- ms='[[:space:]]*'
-diff --git a/tools/perf/trace/beauty/fsmount.sh b/tools/perf/trace/beauty/fsmount.sh
-index cba8897a751fd487..6b67a54cdeee64b3 100755
---- a/tools/perf/trace/beauty/fsmount.sh
-+++ b/tools/perf/trace/beauty/fsmount.sh
-@@ -2,12 +2,12 @@
- # SPDX-License-Identifier: LGPL-2.1
- 
- if [ $# -ne 1 ] ; then
--	linux_header_dir=tools/include/uapi/linux
-+	beauty_uapi_linux_dir=tools/perf/trace/beauty/include/uapi/linux/
- else
--	linux_header_dir=$1
-+	beauty_uapi_linux_dir=$1
- fi
- 
--linux_mount=${linux_header_dir}/mount.h
-+linux_mount=${beauty_uapi_linux_dir}/mount.h
- 
- # Remove MOUNT_ATTR_RELATIME as it is zeros, handle it a special way in the beautifier
- # Only handle MOUNT_ATTR_ followed by a capital letter/num as __ is special case
-diff --git a/tools/perf/trace/beauty/fspick.sh b/tools/perf/trace/beauty/fspick.sh
-index 1f088329b96ef0f2..0d9951c22b952ed1 100755
---- a/tools/perf/trace/beauty/fspick.sh
-+++ b/tools/perf/trace/beauty/fspick.sh
-@@ -2,12 +2,12 @@
- # SPDX-License-Identifier: LGPL-2.1
- 
- if [ $# -ne 1 ] ; then
--	linux_header_dir=tools/include/uapi/linux
-+	beauty_uapi_linux_dir=tools/perf/trace/beauty/include/uapi/linux/
- else
--	linux_header_dir=$1
-+	beauty_uapi_linux_dir=$1
- fi
- 
--linux_mount=${linux_header_dir}/mount.h
-+linux_mount=${beauty_uapi_linux_dir}/mount.h
- 
- printf "static const char *fspick_flags[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+FSPICK_([[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
-diff --git a/tools/include/uapi/linux/mount.h b/tools/perf/trace/beauty/include/uapi/linux/mount.h
-similarity index 100%
-rename from tools/include/uapi/linux/mount.h
-rename to tools/perf/trace/beauty/include/uapi/linux/mount.h
-diff --git a/tools/perf/trace/beauty/mount_flags.sh b/tools/perf/trace/beauty/mount_flags.sh
-index 730099a9a67c1e57..ff578f7b451b5a1d 100755
---- a/tools/perf/trace/beauty/mount_flags.sh
-+++ b/tools/perf/trace/beauty/mount_flags.sh
-@@ -1,15 +1,15 @@
- #!/bin/sh
- # SPDX-License-Identifier: LGPL-2.1
- 
--[ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
-+[ $# -eq 1 ] && beauty_uapi_linux_dir=$1 || beauty_uapi_linux_dir=tools/perf/trace/beauty/include/uapi/linux/
- 
- printf "static const char *mount_flags[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MS_([[:alnum:]_]+)[[:space:]]+([[:digit:]]+)[[:space:]]*.*'
--grep -E $regex ${header_dir}/mount.h | grep -E -v '(MSK|VERBOSE|MGC_VAL)\>' | \
-+grep -E $regex ${beauty_uapi_linux_dir}/mount.h | grep -E -v '(MSK|VERBOSE|MGC_VAL)\>' | \
- 	sed -r "s/$regex/\2 \2 \1/g" | sort -n | \
- 	xargs printf "\t[%s ? (ilog2(%s) + 1) : 0] = \"%s\",\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MS_([[:alnum:]_]+)[[:space:]]+\(1<<([[:digit:]]+)\)[[:space:]]*.*'
--grep -E $regex ${header_dir}/mount.h | \
-+grep -E $regex ${beauty_uapi_linux_dir}/mount.h | \
- 	sed -r "s/$regex/\2 \1/g" | \
- 	xargs printf "\t[%s + 1] = \"%s\",\n"
- printf "};\n"
-diff --git a/tools/perf/trace/beauty/move_mount_flags.sh b/tools/perf/trace/beauty/move_mount_flags.sh
-index ce5e632d14484bd2..c0dde9020bc38c21 100755
---- a/tools/perf/trace/beauty/move_mount_flags.sh
-+++ b/tools/perf/trace/beauty/move_mount_flags.sh
-@@ -2,12 +2,12 @@
- # SPDX-License-Identifier: LGPL-2.1
- 
- if [ $# -ne 1 ] ; then
--	linux_header_dir=tools/include/uapi/linux
-+	beauty_uapi_linux_dir=tools/perf/trace/beauty/include/uapi/linux/
- else
--	linux_header_dir=$1
-+	beauty_uapi_linux_dir=$1
- fi
- 
--linux_mount=${linux_header_dir}/mount.h
-+linux_mount=${beauty_uapi_linux_dir}/mount.h
- 
- printf "static const char *move_mount_flags[] = {\n"
- regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MOVE_MOUNT_([^_]+[[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
--- 
-2.43.0
+Nothing on dmesg.
 
+But:
+
+[acme@nine ~]$ pidof exec_child
+24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 242=
+60 24259 24258 24257 24256 24255 24254 24253 24252 24251 24250 24249 24248 =
+24247 24246 24245 24244 24243 24242 24241 24240 24239 24238 24237 24236 242=
+33 24232 24231 24230 24229 24228 24227 24226 24225 24224 24223 24220 24219 =
+24218 24217 24216 24215 24214 24213 24212 24211 24210 24209 24208 24207 242=
+06 24204 24203 24202 24201 24200 24199 24198 24197 24196 24195 24194 24192 =
+24191 24190 24189 24188 24187 24186 24185 24184 24183 24182 24181 24180 241=
+79 24178 24177 24176 24175 24174 24173 24172 24171 24170 24169 24168 24167 =
+24166 24165 24164 24163 24162 24161 24160 24159 24158 24157 24154 24153 241=
+52 24151 24150 24149 24148 24147 24146 24145 24144 24143 24142 24141 24140 =
+24139 24138 24137 24136 24135 24134 24133 24132 24131 24130 24129 24127 241=
+26 24125 24124 24123 24122 24121 24120 24119 24118 24117 24115 24114 24113 =
+24112 24111 24110 24109 24108 24107 24106 24105 24104 24103 24102 24101 241=
+00 24099 24098 24097 24096 24095 24094 24093 24092 24091 24090 24089 24088 =
+24087 24086 24085 24084 24083 24082 24081 24080 24076 24075 24074 24073 240=
+72 24071 24070 24069 24068 24067 24066 24065 24064 24063 24062 24061 24060 =
+24059 24058 24057 24056 24055 24054 24053 24052 24051 24049 24048 24047 240=
+46 24045 24044 24043 24042 24041 24040 24039 24037 24036 24035 24034 24033 =
+24032 24031 24030 24029 24028 24027 24026 24025 24024 24023 24022 24021 240=
+20 24019 24018 24017 24016 24015 24014 24013 24012 24011 24010 24009 24008 =
+24007 24006 24005 24004 24003 24002 23998 23997 23996 23995 23994 23993 239=
+92 23991 23990 23989 23988 23986 23985 23984 23983 23982 23981 23980 23979 =
+23978 23977 23976 23975 23974 23973 23972 23970 23969 23968 23967 23966 239=
+65 23964 23963 23962 23961 23960 23958 23957 23956 23955 23954 23953 23952 =
+23951 23950 23949 23948 23947 23946 23945 23944 23943 23942 23941 23940 239=
+39 23938 23937 23936 23935 23934 23933 23932 23931 23930 23929 23928 23927 =
+23926 23925 23924 23923 23919 23918 23917 23916 23915 23914 23913 23912 239=
+11 23910 23909 23907 23906 23905 23904 23903 23902 23901 23900 23899 23898 =
+23897 23896 23895 23894 23893 23891 23890 23889 23888 23887 23886 23885 238=
+84 23883 23882 23881 23879 23878 23877 23876 23875 23874 23873 23872 23871 =
+23870 23869 23867 23866 23865 23864 23863 23862 23858 23857 23856 23855 238=
+54 23853 23852 23851 23850 23849 23848 23847 23846 23845 23844 23843 23842 =
+23841 23840 23833 23832 23831 23830 23829 23828 23827 23826 23825 23824 238=
+23 23820 23819 23818 23817 23816 23815 23814 23813 23812 23811 23810 23809 =
+23808 23807 23806 23804 23803 23802 23801 23800 23799 23798 23797 23793 237=
+92 23791 23787 23786 23774 23773 23772 23771 23770 23769 23768 23767 23756 =
+23754 23751 23750 23749 23748 23747 23746 23743 23734 23733 23732 23731 237=
+30 23729 23728 23727 23726 23725 23724 23723 23722 23719 23716 23715 23684 =
+23668 23667 23666 23589 23574 23573 23526 23461 23396 23395 23375 23271 232=
+70 23266 23242 23241 23231 23214 23213 23210 23197 23196 23182 23181 23129 =
+23128 23046 22964
+[acme@nine ~]$
+
+[root@nine ~]# cat /proc/24263/stack
+[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+[root@nine ~]#
+
+[root@nine ~]# for a in `pidof exec_child` ; do cat /proc/$a/stack ; done |=
+ sort | uniq -c
+      1 [<0>] asm_common_interrupt+0x22/0x40
+    495 [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+      2 [<0>] asm_sysvec_reschedule_ipi+0x16/0x20
+    498 [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[root@nine ~]#
+
+[acme@nine ~]$ ps ax|grep exec_child| wc -l
+504
+[acme@nine ~]$ ps ax|grep exec_child| tail
+  24264 pts/0    R      0:04 exec_child
+  24265 pts/0    R      0:04 exec_child
+  24266 pts/0    R      0:04 exec_child
+  24267 pts/0    R      0:04 exec_child
+  24268 pts/0    R      0:04 exec_child
+  24269 pts/0    R      0:04 exec_child
+  24270 pts/0    R      0:04 exec_child
+  24271 pts/0    R      0:04 exec_child
+  24273 pts/0    R      0:04 exec_child
+  26704 pts/1    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine ~]$
+
+All in 'R' state.
+
+[root@nine ~]# killall exec_child
+exec_child: no process found
+[root@nine ~]# ps ax | grep exec_child | head -5
+  22964 pts/0    R      0:06 exec_child
+  23046 pts/0    R      0:05 exec_child
+  23128 pts/0    R      0:05 exec_child
+  23129 pts/0    R      0:05 exec_child
+  23181 pts/0    R      0:05 exec_child
+[root@nine ~]# kill 22964 23046 23128 23129 23181
+[root@nine ~]# ps ax | grep exec_child | head -5
+  23182 pts/0    R      0:06 exec_child
+  23196 pts/0    R      0:06 exec_child
+  23197 pts/0    R      0:06 exec_child
+  23210 pts/0    R      0:06 exec_child
+  23213 pts/0    R      0:06 exec_child
+[root@nine ~]#
+
+[root@nine ~]# kill `pidof exec_child`
+[root@nine ~]# ps ax | grep exec_child | head -5
+  26806 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[root@nine ~]#
+
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26816 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$ ./remove_on_exec=20
+TAP version 13
+1..4
+# Starting 4 tests from 1 test cases.
+#  RUN           remove_on_exec.fork_only ...
+#            OK  remove_on_exec.fork_only
+ok 1 remove_on_exec.fork_only
+#  RUN           remove_on_exec.fork_exec_then_enable ...
+#            OK  remove_on_exec.fork_exec_then_enable
+ok 2 remove_on_exec.fork_exec_then_enable
+#  RUN           remove_on_exec.enable_then_fork_exec ...
+*#            OK  remove_on_exec.enable_then_fork_exec
+ok 3 remove_on_exec.enable_then_fork_exec
+#  RUN           remove_on_exec.exec_stress ...
+*************************#            OK  remove_on_exec.exec_stress
+ok 4 remove_on_exec.exec_stress
+# PASSED: 4 / 4 tests passed.
+# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26858 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$ ps ax|grep exec_child
+  26860 pts/0    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine perf_events]$=20
+
+[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
+<SNIP>
+
+While it runs I can see:
+
+[acme@nine ~]$ ps ax|grep exec_child
+  28627 pts/0    R      0:00 exec_child
+  28668 pts/0    R      0:00 exec_child
+  28744 pts/0    R      0:00 exec_child
+  28813 pts/0    R      0:00 exec_child
+  28912 pts/0    R      0:00 exec_child
+  29666 pts/1    S+     0:00 grep --color=3Dauto exec_child
+[acme@nine ~]$
+
+at the end they disappeared, on this last run.
+
+But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
+we get all those exec_child running a seemingly eternal loop:
+
+[acme@nine ~]$ ps ax|grep exec_child|wc -l
+479
+[acme@nine ~]$ ps ax|grep exec_child|head
+  30143 pts/0    R      0:01 exec_child
+  30144 pts/0    R      0:01 exec_child
+  30145 pts/0    R      0:01 exec_child
+  30147 pts/0    R      0:01 exec_child
+  30150 pts/0    R      0:01 exec_child
+  30151 pts/0    R      0:01 exec_child
+  30153 pts/0    R      0:01 exec_child
+  30154 pts/0    R      0:01 exec_child
+  30155 pts/0    R      0:01 exec_child
+  30156 pts/0    R      0:01 exec_child
+[acme@nine ~]$ sudo cat /proc/30143/stack=20
+[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+[acme@nine ~]$
+
+[acme@nine perf_events]$ uptime
+ 18:36:17 up 16 min,  2 users,  load average: 460.01, 375.77, 240.59
+[acme@nine perf_events]$ uptime
+ 18:36:21 up 16 min,  2 users,  load average: 461.53, 377.49, 241.87
+[acme@nine perf_events]$ uptime
+ 18:36:24 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
+[acme@nine perf_events]$ uptime
+ 18:36:27 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
+[acme@nine perf_events]$
+
+- Arnaldo
