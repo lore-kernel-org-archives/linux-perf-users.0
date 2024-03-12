@@ -1,54 +1,54 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864AB2CA5;
-	Tue, 12 Mar 2024 06:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ECE2CA5;
+	Tue, 12 Mar 2024 06:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710225755; cv=none; b=rgZVVUd68p5JsAtLjeKm6iw5XjBaY1NdnY0MP60aDP+7bNUeByFLWrJW4Kc0VGXVRezmxxRNRvqaedzushkmsu3VAFk/5NeU/W8VZSGlCNvYXgQZ5ZSfG+Dyvk6KHw0LsR2B1H2s2J/SZkUxoHvfi4mOa38GO0C5HbSexAhj+IU=
+	t=1710226077; cv=none; b=eg9JoUwVRyoW48fE1ka+mFEw81vXraqDWWxw44HCajLSZVe/jyTN8Q+JrJSrcOkrv4jvrpAmhJCUDB7gcwWHhpVuDKvlUnAVafZtB6mC/CQNaapeyc3IT7QsWpF41K3NOJtJsx/2TciJEuJBRLbpJYi4gqIwrLZhHboE8BwO4Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710225755; c=relaxed/simple;
-	bh=eoAvukz6RS6ZtpG98LS9t8+xdMi4WfhaRf5okKy+uE4=;
+	s=arc-20240116; t=1710226077; c=relaxed/simple;
+	bh=PlJZqEJ9PQ3q4PFFvBh1tIPhdakR8LTKPRG9E4U+P+k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H+LkDwtv+imFC3mUex9NY3NYsqsnK9y6Xl2/1qtqzPWdQuPJo0743/qojeAj665bVv942raGwnKvHtOJcX8uFN5eryWfP5hWVP+PU0ztcGAuWTgtKT6XEJ7EMWHUAuwIe82wfaZ6vBUfMYmTd7fbHhcR5CvaybAQL4rgqQRgRDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+	 To:Cc:Content-Type; b=e7YIoJLSx7IFB6z8B/qEHMc7BAKczm65EXvPpWigQkh9g8sSQ7o4LBDwGpUilnPgzuZ13h8cnVi6+ZAe/zz4fXKR+v60do1F+bdihoIoeBcOZJDV+FHW9XysNFgmYcsY4dwT2dpMIfIy58btN1v1uB9YNLFt4VrZzLjWuOlpmNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-29bd4dfbf56so1643866a91.3;
-        Mon, 11 Mar 2024 23:42:33 -0700 (PDT)
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso4355312a12.3;
+        Mon, 11 Mar 2024 23:47:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710225753; x=1710830553;
+        d=1e100.net; s=20230601; t=1710226075; x=1710830875;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wIEkWn//dMuVIa9BTNR1dksCTmGOO0zz69/ek9CrfqU=;
-        b=DTSKRDkPE+mMW95W2AZkrVafTqjlaQRFudW3HwxXA9l1V7hVx2xVfoDH69QxA4sreg
-         5myj5Bp9u/apa3chA5nSdWhPI1cKm/cUcR6ge5Ta7seYhKsBnHMPaOPCFivw6JTPCZPm
-         iaScuj7JLudXaT/mkbhHDgir5J5tUKy4IwIuc4G4BgGMTnTkNDc9MbIFFyE2hwR19JkI
-         KGm/vLF+schcBpg+8fXXaCb0D3sK8jr5OfIkCI6SRDYpG1JRpaobJ8e/rrMwdMFCSxko
-         KO2GJiaBnHvAFy5tdoEyd+ixgRSciO1vR9aPpmNOK67MzGlWFPR+e4hE7ue1TsdRgo8T
-         6hnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtytnxg/MKgUlprYwq/8eaCG7FnWYNYO3Lk1zChBM5TQEiBF7R27LjyhV1faI8WmHUB9ygGPyuVezsIQl7yLijvv8jkL90i6BFU2zn6CxDd0eZp9Uj1SxZtDxvC9GsxMWBRihGFSF6jYSctEpVBQ==
-X-Gm-Message-State: AOJu0YyoH2dXDgouDn8KOz7Me+C7mS9tBcvrhjy8uAFkYdK93i5G8Skf
-	pKUVdKZ1H/XQkwqPHWqVHCSX/s4dKfq8bgtepXgM7GoTI3YqkYtHj6NoOMg1pv9Jua77NlpXqy3
-	qv8u+HfoQ3tKolfFY0Z6vNfYwbOQ=
-X-Google-Smtp-Source: AGHT+IHyG3lOHt+KcpSwkz65hRX/O9wVgkNap2m7bb8y/vt+WyUXzEW3Ie5Wd6qUwK9vGpKKsSJQYKzTMpsFIvULcz0=
-X-Received: by 2002:a17:90a:2ec7:b0:29b:e9c1:3656 with SMTP id
- h7-20020a17090a2ec700b0029be9c13656mr4292306pjs.43.1710225752834; Mon, 11 Mar
- 2024 23:42:32 -0700 (PDT)
+        bh=iySuK8tBj9x5RPHeMMneDuiFjL0KBkHXO3jOJaV8CBo=;
+        b=VIu4IHM1U2LPH0lduNNzUNpLaExDHcvJfZ2947uIO26zyxgJUA+8LDANQe6SHELgOC
+         xSS+yKMGMDbsPTywRI67YFL2XSieJiKDb65+ReAz73gtspVq8FSxGdKCZ/GZuP+DD01v
+         wC4WoYBAiX7oldXr644aI5sWQV/ykZb+7qiuG8+VBnEkySG/PH+RUGHtNYfIC2kz1qBu
+         7MgKt3pbHKcLBRPtm48dp/wUplWAKGoCQBcEwqBbqKnE+muA9E0N7IjaX7j845w0yQXA
+         d0B9QEpYKjsLUMvW967hRYKPCyWrOsh8uiith7nHi6nCZ++rukkoNubqBZFH1EJccGUR
+         6Oyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXmHmznjh9JNp/RO2scHPuBY0g+59oZDcagYSKZVl98i2j8ZWn+Q0SOD46yqdd9O/U4CpWuC/d7+AGO7Gx7ZaYIZ1/MWGiiD1CRfVCYckuf4VuaFnTHaqt2drDAEE9Hu1lU/qPm5/FcvPYlxV1cg==
+X-Gm-Message-State: AOJu0YxULfRkMCMdvliYH9NOqb2wPOcVeFHnotf1qibVNBwNx2wikpjY
+	vWAkUPRHomV8DH4dsJsG6TSIZ5oVHmkYkC+DTyJbCFTQSiT68ykC2fbOHBtW/O6QNVkJpTtv2KT
+	3MTRKusg3epFNlfxwULCPjWrZp+o=
+X-Google-Smtp-Source: AGHT+IHbvAEfPOf6/ksBQ1FeevInSTbeZwU8ZMSO93X5JFfLcM8mXZwqzMRlAolhsk2VJ/qYu1erxjSo6q6EMf8Sdtc=
+X-Received: by 2002:a17:90a:17af:b0:299:7842:baf6 with SMTP id
+ q44-20020a17090a17af00b002997842baf6mr6146711pja.47.1710226075408; Mon, 11
+ Mar 2024 23:47:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-4-weilin.wang@intel.com>
-In-Reply-To: <20240302001139.604829-4-weilin.wang@intel.com>
+References: <20240302001139.604829-1-weilin.wang@intel.com> <20240302001139.604829-5-weilin.wang@intel.com>
+In-Reply-To: <20240302001139.604829-5-weilin.wang@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 11 Mar 2024 23:42:21 -0700
-Message-ID: <CAM9d7cixE8r0Kbrnx_gSzPvfXt60zC7Qkerwf1UkJkCq0yHC+A@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 3/6] perf stat: Add retire latency values into the
- expr_parse_ctx to prepare for final metric calculation
+Date: Mon, 11 Mar 2024 23:47:44 -0700
+Message-ID: <CAM9d7ciVnWkaLMwHcJwC58KYDTW9t4SQevEGnqKcNZmJ7XF57Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 4/6] perf stat: Create another thread for sample
+ data processing
 To: weilin.wang@intel.com
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -64,96 +64,154 @@ On Fri, Mar 1, 2024 at 4:11=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> Retire latency values of events are used in metric formulas. This update =
-adds
-> code to process data from perf record for required retire latency values.
+> Another thread is required to synchronize between perf stat and perf reco=
+rd
+> when we pass data through pipe.
 >
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->  tools/perf/builtin-stat.c     |  1 +
->  tools/perf/util/metricgroup.h |  1 +
->  tools/perf/util/stat-shadow.c | 18 ++++++++++++++++++
->  3 files changed, 20 insertions(+)
+>  tools/perf/builtin-stat.c | 58 +++++++++++++++++++++++----------------
+>  1 file changed, 34 insertions(+), 24 deletions(-)
 >
 > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 3890a579349e..3e5865572266 100644
+> index 3e5865572266..2372175d3408 100644
 > --- a/tools/perf/builtin-stat.c
 > +++ b/tools/perf/builtin-stat.c
-> @@ -792,6 +792,7 @@ static int process_sample_event(struct perf_tool *too=
+> @@ -777,7 +777,6 @@ static int process_sample_event(struct perf_tool *too=
 l,
->                 if (!strcmp(evname, t->name)) {
->                         t->count +=3D 1;
->                         t->sum +=3D sample->retire_lat;
-> +                       t->val =3D t->count > 0 ? t->sum/t->count : 0;
-
-You already increase the count, then it cannot be 0, right?
-
-
->                         break;
->                 }
->         }
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index 1fa12cc3294e..08af0f447550 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -77,6 +77,7 @@ struct tpebs_retire_lat {
->         const char *tpebs_name;
->         size_t count;
->         int sum;
-> +       double val;
->  };
+>         const char *evname;
+>         struct tpebs_retire_lat *t;
 >
->  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
-c
-> index 3466aa952442..c63ba52004fc 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -355,6 +355,19 @@ static void print_nsecs(struct perf_stat_config *con=
-fig,
->                 print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0=
-);
+> -       pr_debug("entering function %s\n ", __func__);
+>         evname =3D evsel__name(evsel);
+>
+>         pr_debug("[%03d] ", sample->cpu);
+> @@ -808,9 +807,9 @@ static int process_feature_event(struct perf_session =
+*session,
+>         return 0;
 >  }
 >
-> +static int prepare_retire_lat(struct expr_parse_ctx *pctx,
-> +                            struct list_head *retire_lats)
-> +{
-> +       int ret =3D 0;
-> +       struct tpebs_retire_lat *t;
+> -static int __cmd_script(struct child_process *cmd __maybe_unused)
+> +static void *__cmd_script(void *arg __maybe_unused)
+>  {
+> -       int err =3D 0;
+> +       struct child_process *cmd =3D arg;
+>         struct perf_session *session;
+>         struct perf_data data =3D {
+>                 .mode =3D PERF_DATA_MODE_READ,
+> @@ -826,29 +825,15 @@ static int __cmd_script(struct child_process *cmd _=
+_maybe_unused)
+>                 .attr            =3D perf_event__process_attr,
+>                 },
+>         };
+> -       struct tpebs_event *e;
+> -
+> -       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> -               struct tpebs_retire_lat *new =3D malloc(sizeof(struct tpe=
+bs_retire_lat));
+> -
+> -               if (!new)
+> -                       return -1;
+> -               new->name =3D strdup(e->name);
+> -               new->tpebs_name =3D strdup(e->tpebs_name);
+> -               new->count =3D 0;
+> -               new->sum =3D 0;
+> -               list_add_tail(&new->nd, &stat_config.tpebs_results);
+> -       }
+>
+> -       kill(cmd->pid, SIGTERM);
+>         session =3D perf_session__new(&data, &script.tool);
+>         if (IS_ERR(session))
+> -               return PTR_ERR(session);
+> +               return NULL;
+>         script.session =3D session;
+> -       err =3D perf_session__process_events(session);
+> +       perf_session__process_events(session);
+>         perf_session__delete(session);
+>
+> -       return err;
+> +       return NULL;
+>  }
+>
+>  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+> @@ -868,15 +853,37 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>         int err;
+>         bool second_pass =3D false;
+>         struct child_process cmd;
+> +       pthread_t thread_script;
+>
+>         //Prepare perf record for sampling event retire_latency before fo=
+rk and prepare workload
+>         if (stat_config.tpebs_event_size > 0) {
+>                 int ret;
+>
+> +               struct tpebs_event *e;
+>                 pr_debug("perf stat pid =3D %d\n", getpid());
+>                 ret =3D prepare_perf_record(&cmd);
+>                 if (ret)
+>                         return ret;
+> +
+> +               list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +                       struct tpebs_retire_lat *new =3D malloc(sizeof(st=
+ruct tpebs_retire_lat));
+> +
+> +                       if (!new)
+> +                               return -1;
 
-A newline please.
+This would leave the record command.  I think you'd better
+do this before prepare_perf_record().
+
+
+> +                       new->name =3D strdup(e->name);
+> +                       new->tpebs_name =3D strdup(e->tpebs_name);
+> +                       new->count =3D 0;
+> +                       new->sum =3D 0;
+> +                       list_add_tail(&new->nd, &stat_config.tpebs_result=
+s);
+> +               }
+> +
+> +               if (pthread_create(&thread_script, NULL, __cmd_script, &c=
+md)) {
+> +                       kill(cmd.pid, SIGTERM);
+> +                       close(cmd.out);
+> +                       pr_err("Could not create thread to process sample=
+ data.\n");
+> +                       return -1;
+> +               }
+> +               sleep(2);
+
+Why?
 
 Thanks,
 Namhyung
 
 
-> +       list_for_each_entry(t, retire_lats, nd) {
-> +               ret =3D expr__add_id_val(pctx, strdup(t->tpebs_name), t->=
-val);
-> +               if (ret < 0)
+>         }
+>
+>         if (forks) {
+> @@ -1087,12 +1094,15 @@ static int __run_perf_stat(int argc, const char *=
+*argv, int run_idx)
+>         if (stat_config.tpebs_event_size > 0) {
+>                 int ret;
+>
+> -               pr_debug("pid =3D %d\n", getpid());
+> -               pr_debug("cmd.pid =3D %d\n", cmd.pid);
+> +               pr_debug("Workload finished, finishing record\n");
+> +               pr_debug("Perf stat pid =3D %d, Perf record pid =3D %d\n"=
+, getpid(), cmd.pid);
+>
+> -               ret =3D __cmd_script(&cmd);
+> +               kill(cmd.pid, SIGTERM);
+> +               pthread_join(thread_script, NULL);
+>                 close(cmd.out);
+> -               pr_debug("%d\n", ret);
+> +               ret =3D finish_command(&cmd);
+> +               if (ret !=3D -ERR_RUN_COMMAND_WAITPID_SIGNAL)
 > +                       return ret;
-> +       }
-> +       return ret;
-> +}
-> +
->  static int prepare_metric(const struct metric_expr *mexp,
->                           const struct evsel *evsel,
->                           struct expr_parse_ctx *pctx,
-> @@ -486,6 +499,11 @@ static void generic_metric(struct perf_stat_config *=
-config,
->                 pctx->sctx.user_requested_cpu_list =3D strdup(config->use=
-r_requested_cpu_list);
->         pctx->sctx.runtime =3D runtime;
->         pctx->sctx.system_wide =3D config->system_wide;
-> +       i =3D prepare_retire_lat(pctx, &config->tpebs_results);
-> +       if (i < 0) {
-> +               expr__ctx_free(pctx);
-> +               return;
-> +       }
->         i =3D prepare_metric(mexp, evsel, pctx, aggr_idx);
->         if (i < 0) {
->                 expr__ctx_free(pctx);
+>         }
+>
+>         if (stat_config.walltime_run_table)
 > --
 > 2.43.0
 >
