@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638F81386D1;
-	Tue, 12 Mar 2024 18:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E63E1386D8;
+	Tue, 12 Mar 2024 18:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710266903; cv=none; b=oyk9hwO+Sj22yA9pnZYWmBQ2+kJPdQgfOOumr7L+ol14xZbmQrj6Wk9RHYvW/kjTCRmSLJ9eYNDYjxFfvSCv28eH0BONH0FGAWZVlEPXkwhq3D/xrjjiYkAfso5J09eWh58q6WeAox1QRXoSkRGSsQkXmsuvI2KDUAmS8aI6Np8=
+	t=1710266904; cv=none; b=cmAIpQtBqm6fJOBuTut095owvQ8TZOPBedS7v+dccR4R2F6/vfUGTHtoCa2D00kIf6oLt4FcKZv5znwUZsu2wVzhHju9nJeM8/zdjlM25V0DwWL5ijsLoz1ZMsMAQ+pdUw5Xsyb1h/y2A5f2MvEajCaev4i2BlcBUBDAiLvmxJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710266903; c=relaxed/simple;
-	bh=oSh885xTWKQ1RgRzIZ35HM/jKMTC9MM21WT7E2eDHhc=;
+	s=arc-20240116; t=1710266904; c=relaxed/simple;
+	bh=c3RmwsE63wrR9rwinoDk/iQsOuyG4zNU5E4UVMKVuGg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VkoGXLOY6B2OnSsQIhV858gtJEEYHrfLsNRx1iVIaW/kJN/NU8yviMRcVHXtpQwWywzg9Gx7aLrtiWFz3HVF1FUDAZt4QjhLQU2ydzkQw/5lNxf/hOHMZhAOX9vLvzq7xFs7Qx9OIF+4R+3TNPUXMxHZSNCZCcZARCiSSRSYxhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KNe/wpzl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JuPvkuXr; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=UcfFbxg+l0rOvFZwODgphcvixvDWjJE8lLUHws3yQAWDiKn3MPD2ytORS2+f7hcMtvHEyOjEfzMM4d1G7LU+/ozHf+CWIE56Mm7Is1biUeBvY1U03+2VMrh4Culxl/vV8/fFSsMdQr/vRe1fv08qLG5U1GK9Vy06GxNYbhDp/PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pvCNqIBc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+7e0kFLc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KNe/wpzl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JuPvkuXr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pvCNqIBc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+7e0kFLc"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710266899;
+	s=2020; t=1710266900;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FE3b5PyhcD0TC3K+2ITLv4adUr9UbVkRxLK+4jENi1c=;
-	b=KNe/wpzleBuytTNWmN+9si37DQRO1Y5ECkdID0eDtVsQ4gy82jDsGnmbnmHvE2Vroe9vmN
-	y3J/uTp/xWufHXtBqzUaEhs1grsO96Ri2258o5BbmeHDpuebFs02AeoFWwnQas43MJcYKc
-	H8OnaVMqNkG/x9POZiowCOcBH04P/0JEUDU0Yf96JHA4kNfVAd5QstJi+T/GQUp1uEIACU
-	7Kve/X7BaAuldwIrilJ8NaRzkpRZIf/FQFj6CWa9km3tcSyWabVQAVw/YXUH1ZUtGGrBhH
-	CUjGrXhTm09Bhq7kOGxX+Q97JIZDDAnZclP1goE9kYPCnylAZIuVZn6GduUBOw==
+	bh=s85+LWr3GUAFugfSGnQlcG4gV/dvTGj/TQOXg49YnL8=;
+	b=pvCNqIBc2IjnnFRffOrX62nWsq0MOzO/4UkxBxjqqbWtyrdTvMKUt4G+epjDV9e0yBamg6
+	FmWEcwgr1L6xuivlS7hH4zXrRgNiX2KfVdbZFUOOp1cxFtEDea8AMyXN0A6GEojyNT4Mwu
+	Ho39bhLuDfHO/0uLMN1iJIP828Z0sHaxsKjAu4KC05XEH8TVhlBfPrwNJJqtzRaTohZcm7
+	2teDDSD+6DQFPnP2AH1EpodRnKT3brMGAdIChJi74jhTF/TBMZzmz509wLJhGeGMUAqqpL
+	q/E67n20SgIcTFRAeJNrBw6eYRTdfphNBXsKRdnweLR7WYwMNo/OqDZIBK89Wg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710266899;
+	s=2020e; t=1710266900;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FE3b5PyhcD0TC3K+2ITLv4adUr9UbVkRxLK+4jENi1c=;
-	b=JuPvkuXrOEbkzZdHF7heOO9tFIBO+vI7c6+PnRC2JQXqN9IFTCqYiFV7yScuvnIkMHKih9
-	3s5NrcTaKLb6XSCQ==
+	bh=s85+LWr3GUAFugfSGnQlcG4gV/dvTGj/TQOXg49YnL8=;
+	b=+7e0kFLctOs/4SSNohdj4923xFKm3YSxEtkAbnpj3TDWyGChxSqxV7SuQ8caDkjzhpWd8x
+	ezoIbSip4TBHbhCA==
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
@@ -53,9 +53,9 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 2/4] perf: Enqueue SIGTRAP always via task_work.
-Date: Tue, 12 Mar 2024 19:01:50 +0100
-Message-ID: <20240312180814.3373778-3-bigeasy@linutronix.de>
+Subject: [PATCH v2 4/4] perf: Split __perf_pending_irq() out of perf_pending_irq()
+Date: Tue, 12 Mar 2024 19:01:52 +0100
+Message-ID: <20240312180814.3373778-5-bigeasy@linutronix.de>
 In-Reply-To: <20240312180814.3373778-1-bigeasy@linutronix.de>
 References: <20240312180814.3373778-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -66,157 +66,140 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A signal is delivered by raising irq_work() which works from any context
-including NMI. irq_work() can be delayed if the architecture does not
-provide an interrupt vector. In order not to lose a signal, the signal
-is injected via task_work during event_sched_out().
+perf_pending_irq() invokes perf_event_wakeup() and __perf_pending_irq().
+The former is in charge of waking any tasks which wait to be woken up
+while the latter disables perf-events.
 
-Instead going via irq_work, the signal could be added directly via
-task_work. The signal is sent to current and can be enqueued on its
-return path to userland instead of triggering irq_work. A dummy IRQ is
-required in the NMI case to ensure the task_work is handled before
-returning to user land. For this irq_work is used. An alternative would
-be just raising an interrupt like arch_send_call_function_single_ipi().
+The irq_work perf_pending_irq(), while this an irq_work, the callback
+is invoked in thread context on PREEMPT_RT. This is needed because all
+the waking functions (wake_up_all(), kill_fasync()) acquire sleep locks
+which must not be used with disabled interrupts.
+Disabling events, as done by __perf_pending_irq(), expects a hardirq
+context and disabled interrupts. This requirement is not fulfilled on
+PREEMPT_RT.
 
-During testing with `remove_on_exec' it become visible that the event
-can be enqueued via NMI during execve(). The task_work must not be kept
-because free_event() will complain later. Also the new task will not
-have a sighandler installed.
-
-Queue signal via task_work. Remove perf_event::pending_sigtrap and
-and use perf_event::pending_work instead. Raise irq_work in the NMI case
-for a dummy interrupt. Remove the task_work if the event is freed.
+Split functionality based on perf_event::pending_disable into irq_work
+named `pending_disable_irq' and invoke it in hardirq context on
+PREEMPT_RT. Rename the split out callback to perf_pending_disable().
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/perf_event.h |  3 +--
- kernel/events/core.c       | 45 +++++++++++++++++---------------------
- 2 files changed, 21 insertions(+), 27 deletions(-)
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 31 +++++++++++++++++++++++--------
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index d2a15c0c6f8a9..24ac6765146c7 100644
+index 24ac6765146c7..c1c6600541657 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -781,7 +781,6 @@ struct perf_event {
- 	unsigned int			pending_wakeup;
- 	unsigned int			pending_kill;
+@@ -783,6 +783,7 @@ struct perf_event {
  	unsigned int			pending_disable;
--	unsigned int			pending_sigtrap;
  	unsigned long			pending_addr;	/* SIGTRAP */
  	struct irq_work			pending_irq;
++	struct irq_work			pending_disable_irq;
  	struct callback_head		pending_task;
-@@ -959,7 +958,7 @@ struct perf_event_context {
- 	struct rcu_head			rcu_head;
+ 	unsigned int			pending_work;
 =20
- 	/*
--	 * Sum (event->pending_sigtrap + event->pending_work)
-+	 * Sum (event->pending_work + event->pending_work)
- 	 *
- 	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
- 	 * that until the signal is delivered.
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c7a0274c662c8..e9926baaa1587 100644
+index 806514d76d8dc..9aafb949fa100 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2283,21 +2283,6 @@ event_sched_out(struct perf_event *event, struct per=
-f_event_context *ctx)
- 		state =3D PERF_EVENT_STATE_OFF;
+@@ -2449,7 +2449,7 @@ static void __perf_event_disable(struct perf_event *e=
+vent,
+  * hold the top-level event's child_mutex, so any descendant that
+  * goes to exit will block in perf_event_exit_event().
+  *
+- * When called from perf_pending_irq it's OK because event->ctx
++ * When called from perf_pending_disable it's OK because event->ctx
+  * is the current context on this CPU and preemption is disabled,
+  * hence we can't get into perf_event_task_sched_out for this context.
+  */
+@@ -2489,7 +2489,7 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ void perf_event_disable_inatomic(struct perf_event *event)
+ {
+ 	event->pending_disable =3D 1;
+-	irq_work_queue(&event->pending_irq);
++	irq_work_queue(&event->pending_disable_irq);
+ }
+=20
+ #define MAX_INTERRUPTS (~0ULL)
+@@ -5175,6 +5175,7 @@ static void perf_addr_filters_splice(struct perf_even=
+t *event,
+ static void _free_event(struct perf_event *event)
+ {
+ 	irq_work_sync(&event->pending_irq);
++	irq_work_sync(&event->pending_disable_irq);
+=20
+ 	unaccount_event(event);
+=20
+@@ -6711,7 +6712,7 @@ static void perf_sigtrap(struct perf_event *event)
+ /*
+  * Deliver the pending work in-event-context or follow the context.
+  */
+-static void __perf_pending_irq(struct perf_event *event)
++static void __perf_pending_disable(struct perf_event *event)
+ {
+ 	int cpu =3D READ_ONCE(event->oncpu);
+=20
+@@ -6749,11 +6750,26 @@ static void __perf_pending_irq(struct perf_event *e=
+vent)
+ 	 *				  irq_work_queue(); // FAILS
+ 	 *
+ 	 *  irq_work_run()
+-	 *    perf_pending_irq()
++	 *    perf_pending_disable()
+ 	 *
+ 	 * But the event runs on CPU-B and wants disabling there.
+ 	 */
+-	irq_work_queue_on(&event->pending_irq, cpu);
++	irq_work_queue_on(&event->pending_disable_irq, cpu);
++}
++
++static void perf_pending_disable(struct irq_work *entry)
++{
++	struct perf_event *event =3D container_of(entry, struct perf_event, pendi=
+ng_disable_irq);
++	int rctx;
++
++	/*
++	 * If we 'fail' here, that's OK, it means recursion is already disabled
++	 * and we won't recurse 'further'.
++	 */
++	rctx =3D perf_swevent_get_recursion_context();
++	__perf_pending_disable(event);
++	if (rctx >=3D 0)
++		perf_swevent_put_recursion_context(rctx);
+ }
+=20
+ static void perf_pending_irq(struct irq_work *entry)
+@@ -6776,8 +6792,6 @@ static void perf_pending_irq(struct irq_work *entry)
+ 		perf_event_wakeup(event);
  	}
 =20
--	if (event->pending_sigtrap) {
--		bool dec =3D true;
+-	__perf_pending_irq(event);
 -
--		event->pending_sigtrap =3D 0;
--		if (state !=3D PERF_EVENT_STATE_OFF &&
--		    !event->pending_work) {
--			event->pending_work =3D 1;
--			dec =3D false;
--			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
--			task_work_add(current, &event->pending_task, TWA_RESUME);
--		}
--		if (dec)
--			local_dec(&event->ctx->nr_pending);
--	}
--
- 	perf_event_set_state(event, state);
-=20
- 	if (!is_software_event(event))
-@@ -6741,11 +6726,6 @@ static void __perf_pending_irq(struct perf_event *ev=
-ent)
- 	 * Yay, we hit home and are in the context of the event.
- 	 */
- 	if (cpu =3D=3D smp_processor_id()) {
--		if (event->pending_sigtrap) {
--			event->pending_sigtrap =3D 0;
--			perf_sigtrap(event);
--			local_dec(&event->ctx->nr_pending);
--		}
- 		if (event->pending_disable) {
- 			event->pending_disable =3D 0;
- 			perf_event_disable_local(event);
-@@ -9592,14 +9572,17 @@ static int __perf_event_overflow(struct perf_event =
-*event,
-=20
- 		if (regs)
- 			pending_id =3D hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
--		if (!event->pending_sigtrap) {
--			event->pending_sigtrap =3D pending_id;
-+		if (!event->pending_work) {
-+			event->pending_work =3D pending_id;
- 			local_inc(&event->ctx->nr_pending);
--			irq_work_queue(&event->pending_irq);
-+			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-+			task_work_add(current, &event->pending_task, TWA_RESUME);
-+			if (in_nmi())
-+				irq_work_queue(&event->pending_irq);
+ 	if (rctx >=3D 0)
+ 		perf_swevent_put_recursion_context(rctx);
+ }
+@@ -9566,7 +9580,7 @@ static int __perf_event_overflow(struct perf_event *e=
+vent,
+ 			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+ 			task_work_add(current, &event->pending_task, TWA_RESUME);
+ 			if (in_nmi())
+-				irq_work_queue(&event->pending_irq);
++				irq_work_queue(&event->pending_disable_irq);
  		} else if (event->attr.exclude_kernel && valid_sample) {
  			/*
  			 * Should not be able to return to user space without
--			 * consuming pending_sigtrap; with exceptions:
-+			 * consuming pending_work; with exceptions:
- 			 *
- 			 *  1. Where !exclude_kernel, events can overflow again
- 			 *     in the kernel without returning to user space.
-@@ -9609,7 +9592,7 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 			 *     To approximate progress (with false negatives),
- 			 *     check 32-bit hash of the current IP.
- 			 */
--			WARN_ON_ONCE(event->pending_sigtrap !=3D pending_id);
-+			WARN_ON_ONCE(event->pending_work !=3D pending_id);
- 		}
+@@ -11906,6 +11920,7 @@ perf_event_alloc(struct perf_event_attr *attr, int =
+cpu,
 =20
- 		event->pending_addr =3D 0;
-@@ -13049,6 +13032,13 @@ static void sync_child_event(struct perf_event *ch=
-ild_event)
- 		     &parent_event->child_total_time_running);
- }
+ 	init_waitqueue_head(&event->waitq);
+ 	init_irq_work(&event->pending_irq, perf_pending_irq);
++	event->pending_disable_irq =3D IRQ_WORK_INIT_HARD(perf_pending_disable);
+ 	init_task_work(&event->pending_task, perf_pending_task);
 =20
-+static bool task_work_cb_match(struct callback_head *cb, void *data)
-+{
-+	struct perf_event *event =3D container_of(cb, struct perf_event, pending_=
-task);
-+
-+	return event =3D=3D data;
-+}
-+
- static void
- perf_event_exit_event(struct perf_event *event, struct perf_event_context =
-*ctx)
- {
-@@ -13088,6 +13078,11 @@ perf_event_exit_event(struct perf_event *event, st=
-ruct perf_event_context *ctx)
- 		 * Kick perf_poll() for is_event_hup();
- 		 */
- 		perf_event_wakeup(parent_event);
-+		if (event->pending_work &&
-+		    task_work_cancel_match(current, task_work_cb_match, event)) {
-+			put_event(event);
-+			local_dec(&event->ctx->nr_pending);
-+		}
- 		free_event(event);
- 		put_event(parent_event);
- 		return;
+ 	mutex_init(&event->mmap_mutex);
 --=20
 2.43.0
 
