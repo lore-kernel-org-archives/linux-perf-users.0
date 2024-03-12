@@ -1,233 +1,223 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4297B1F95F;
-	Tue, 12 Mar 2024 11:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAAC79DA6
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Mar 2024 11:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710243572; cv=none; b=rJJFKmUlSVsVf6ZXJ+N6bbqSDtknZuNqR1gXzkaIlf7iDNKIIEEtMsnetXjbTLxuuMIoJ+OxfSUuX9NprExVNLgPznLPkPNzHEpg56E+y6I2c3IIqx1WDyksZxZfUwbE3MG9MXzIZypMXfIytBkXJWir9+s/4FOuSv07jHADN3A=
+	t=1710244471; cv=none; b=rFTfzZnjd/BTTEmNOjJFM/+/qAbIkBoyFZQcvbslFOZlas4zQG0vD1M5VX1AlOOdKYSPsZh1YDtl0HFQZ7ZOpKuozN/JFBOhKXnZ5mMbUp9Jgd1tEI1xIX/+WnbpDoRLWKdCRzTYZ7LLVvTxjdxFlR8L6W05pJUz5YYYAm8qZOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710243572; c=relaxed/simple;
-	bh=DPI9vTTcn4dH2XQ7PWhAYSYxobucnJ0fRAPUtDXFC0Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qHTMw9l3YZlVbrgsmp6L4DI9Mj0ybRmNNOgAb2HisTjCfoX622xHV2xibNfEllU8ATtMm1w4Ztv9JOKVBVjU/9TGMDKeCl2MbgXOViZNO4lKeHVPHGiWXuNm/JJVdNO+MbhlKWBQ78Yi6cdKPUQzFu6h4WrLWtrv/CjGKR/8Btw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TvBSW2jDBz2BfxP;
-	Tue, 12 Mar 2024 19:36:59 +0800 (CST)
-Received: from dggpemm500019.china.huawei.com (unknown [7.185.36.180])
-	by mail.maildlp.com (Postfix) with ESMTPS id C906B1A016C;
-	Tue, 12 Mar 2024 19:39:25 +0800 (CST)
-Received: from huawei.com (10.67.174.193) by dggpemm500019.china.huawei.com
- (7.185.36.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 12 Mar
- 2024 19:39:25 +0800
-From: Luo Gengkun <luogengkun2@huawei.com>
-To: <peterz@infradead.org>
-CC: <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<luogengkun2@huawei.com>
-Subject: [PATCH v2] perf/core: Fix small negative period being ignored
-Date: Tue, 12 Mar 2024 19:38:01 +0000
-Message-ID: <20240312193801.520641-1-luogengkun2@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1710244471; c=relaxed/simple;
+	bh=7QkCGft8B2o2xCJx9N2GwQjiIUV7fTEs2imD/3PseKg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jItMbR9kpWdNzPe/a2pf/lReGt07yAJZCR9XKrhSBQYY0k5Raqb45ubtzG5cgiuzpcAWgIMFrLETYN42xRO2tvMBVeiCQXw5VGEvIFgQTuFqviqqMxFv6uCxVDKTwVic08kwAKakZ6g8ach7FcKVsFKZPKH2n+OS/o/olHC9nhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=AyGRqGmW; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="AyGRqGmW"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 8BB1C240028
+	for <linux-perf-users@vger.kernel.org>; Tue, 12 Mar 2024 12:54:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1710244467; bh=7QkCGft8B2o2xCJx9N2GwQjiIUV7fTEs2imD/3PseKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=AyGRqGmWl/shMyTL+iXwTnpYxYDe+c6qe3aqJpQL4c2F9SG3mY1IAMI6p2kenQ3HV
+	 vtUQ3zEHifwGtjpymAbqpaDqVtjJ8av4k5tM47ogEcXORwDYXBPXYT9zU6puUHesgB
+	 nQDMv7BGIqnXMAjR5Cn8zMi01Y+eSm5a54QMpVFqtf3rUgcjqG9b5Mzte+5nrBjtAg
+	 IZ9H3h6pPx3UqA9o4idHQr5n3rUUC5gcqMHbeqvPnZYpTfZD4tYs9oy9KOrJZy5JnY
+	 gkhUMJZ8HSqiKRrhH4u9tMG0VDxDQ4kkyD+XcE2XUGoQSrYN8/m5Bc6/8IcObLPz0g
+	 ww1O+vQTZjdUQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4TvBrY4JpMz6tm4;
+	Tue, 12 Mar 2024 12:54:21 +0100 (CET)
+From: Anne Macedo <retpolanne@posteo.net>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,  Peter Zijlstra
+ <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Mark Rutland
+ <mark.rutland@arm.com>,  Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,  Jiri Olsa <jolsa@kernel.org>,  Ian
+ Rogers <irogers@google.com>,  Adrian Hunter <adrian.hunter@intel.com>,
+  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf lock contention: skip traceiter functions
+In-Reply-To: <CAM9d7civcSVL92SYhssCjYzaomyJNfn0CHWz7ErGwKY-H8_Kfw@mail.gmail.com>
+	(Namhyung Kim's message of "Mon, 11 Mar 2024 22:44:12 -0700")
+References: <20240311225617.179184-1-retpolanne@posteo.net>
+	<CAM9d7civcSVL92SYhssCjYzaomyJNfn0CHWz7ErGwKY-H8_Kfw@mail.gmail.com>
+Date: Tue, 12 Mar 2024 11:54:18 +0000
+Message-ID: <m2v85racnp.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500019.china.huawei.com (7.185.36.180)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-In perf_adjust_period, we will first calculate period, and then use
-this period to calculate delta. However, when delta is less than 0,
-there will be a deviation compared to when delta is greater than or
-equal to 0. For example, when delta is in the range of [-14,-1], the
-range of delta = delta + 7 is between [-7,6], so the final value of
-delta/8 is 0. Therefore, the impact of -1 and -2 will be ignored.
-This is unacceptable when the target period is very short, because
-we will lose a lot of samples.
+Namhyung Kim <namhyung@kernel.org> writes:
 
-Here are some tests and analyzes:
-before:
-  # perf record -e cs -F 1000  ./a.out
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.022 MB perf.data (518 samples) ]
-
-  # perf script
-  ...
-  a.out     396   257.956048:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.957891:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.959730:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.961545:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.963355:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.965163:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.966973:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.968785:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.970593:         23 cs:  ffffffff81f4eeec schedul>
-  ...
-
-after:
-  # perf record -e cs -F 1000  ./a.out
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.058 MB perf.data (1466 samples) ]
-
-  # perf script
-  ...
-  a.out     395    59.338813:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.339707:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.340682:         13 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.341751:         13 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.342799:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.343765:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.344651:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.345539:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.346502:         13 cs:  ffffffff81f4eeec schedul>
-  ...
-
-test.c
-
-int main() {
-        for (int i = 0; i < 20000; i++)
-                usleep(10);
-
-        return 0;
-}
-
-  # time ./a.out
-  real    0m1.583s
-  user    0m0.040s
-  sys     0m0.298s
-
-The above results were tested on x86-64 qemu with KVM enabled using
-test.c as test program. Ideally, we should have around 1500 samples,
-but the previous algorithm had only about 500, whereas the modified
-algorithm now has about 1400. Further more, the new version shows 1
-sample per 0.001s, while the previous one is 1 sample per 0.002s.This
-indicates that the new algorithm is more sensitive to small negative
-values compared to old algorithm.
-
-Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
-
-Link:https://lore.kernel.org/all/7919005d-ca26-4cae-8c1c-4adea63704ce@huawei.com/
-Signed-off-by: Luo Gengkun <luogengkun2@huawei.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
----
-v1 -> v2: Fix incorrected time diff in tick adjust period and review
-
-It seems that the Timer Interrupts is not coming every TICK_NSEC when
-system is idle. So the final period that we calculate will be bigger
-than expected because we pass an incorrected nsec to perf_adjust_period.
-As shown below, the unexcepted period is come from perf_adjust_freq_unthr_context.
-Moreover, we cannot re-adjust the period using __perf_event_account_interrupt
-because the overflow time is larger than 2 * TICK_NSEC. To fix this
-problem, we can calculate the interval of Timer Interrupts using perf_clock.
-
-  # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
-
-  # perf script
-  ...
-  test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
-  test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
-  ...
----
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 22 ++++++++++++++++++----
- 2 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index afb028c54f33..2708f1d0692c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -265,6 +265,7 @@ struct hw_perf_event {
- 	 * State for freq target events, see __perf_event_overflow() and
- 	 * perf_adjust_freq_unthr_context().
- 	 */
-+	u64				freq_tick_stamp;
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
- #endif
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 683dc086ef10..3f58d3803237 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4078,7 +4078,11 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
- 	period = perf_calculate_period(event, nsec, count);
- 
- 	delta = (s64)(period - hwc->sample_period);
--	delta = (delta + 7) / 8; /* low pass filter */
-+	if (delta >= 0)
-+		delta += 7;
-+	else
-+		delta -= 7;
-+	delta /= 8; /* low pass filter */
- 
- 	sample_period = hwc->sample_period + delta;
- 
-@@ -4108,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- {
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
--	u64 now, period = TICK_NSEC;
-+	u64 now, period, tick_stamp;
- 	s64 delta;
- 
- 	/*
-@@ -4147,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 */
- 		event->pmu->stop(event, PERF_EF_UPDATE);
- 
-+		tick_stamp = perf_clock();
-+		period = tick_stamp - hwc->freq_tick_stamp;
-+		hwc->freq_tick_stamp = tick_stamp;
-+
- 		now = local64_read(&event->count);
- 		delta = now - hwc->freq_count_stamp;
- 		hwc->freq_count_stamp = now;
-@@ -4158,8 +4166,14 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 * to perf_adjust_period() to avoid stopping it
- 		 * twice.
- 		 */
--		if (delta > 0)
--			perf_adjust_period(event, period, delta, false);
-+		if (delta > 0) {
-+			/*
-+			 * we skip first tick adjust period
-+			 */
-+			if (likely(period != tick_stamp && period < 2*TICK_NSEC)) {
-+				perf_adjust_period(event, period, delta, false);
-+			}
-+		}
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
- 	next:
--- 
-2.34.1
-
+> On Mon, Mar 11, 2024 at 3:57=E2=80=AFPM Anne Macedo <retpolanne@posteo.ne=
+t> wrote:
+>>
+>> The perf lock contention program currently shows the caller of the locks
+>> as __traceiter_contention_begin+0x??. This caller can be ignored, as it =
+is
+>> from the traceiter itself. Instead, it should show the real callers for
+>> the locks.
+>>
+>> When fiddling with the --stack-skip parameter, the actual callers for
+>> the locks start to show up. However, just ignore the
+>> __traceiter_contention_begin and the __traceiter_contention_end symbols
+>> so the actual callers will show up.
+>>
+>> Before this patch is applied:
+>>
+>> sudo perf lock con -a -b -- sleep 3
+>>  contended   total wait     max wait     avg wait         type   caller
+>>
+>>          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __trace=
+iter_contention_begin+0x44
+>>          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __trace=
+iter_contention_begin+0x44
+>>          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __trace=
+iter_contention_begin+0x44
+>>          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_c=
+ontention_begin+0x84
+>>          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __trace=
+iter_contention_begin+0x44
+>>          1     13.54 us     13.54 us     13.54 us        mutex   trace_c=
+ontention_begin+0x84
+>>          1      3.67 us      3.67 us      3.67 us      rwsem:R   __trace=
+iter_contention_begin+0x44
+>>
+>> Before this patch is applied - using --stack-skip 5
+>>
+>> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
+>>  contended   total wait     max wait     avg wait         type   caller
+>>
+>>          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epol=
+l_wait+0x5a0
+>>          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit=
++0x338
+>>          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_sig=
+nal+0x108
+>>          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release=
+_task+0x68
+>>          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_=
+kn_lock_live+0x58
+>>          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit=
++0x44
+>>          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm=
+_and_find_vma+0xb0
+>>
+>> After this patch is applied:
+>>
+>> sudo ./perf lock con -a -b -- sleep 3
+>>  contended   total wait     max wait     avg wait         type   caller
+>>
+>>          4      4.13 s       2.07 s       1.03 s      rwlock:W   release=
+_task+0x68
+>>          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_upda=
+te_next_owner+0x50
+>>          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit=
++0x338
+>>          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_=
+kn_lock_live+0x58
+>>          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit=
++0x338
+>>
+>> changes since v1:
+>>
+>> - consider trace_contention and __traceiter_contention functions as
+>> optional (i.e. check if sym is null to avoid segfault)
+>>
+>> changes since v0:
+>>
+>> - skip trace_contention functions
+>> - use sym->end instead of __traceiter_contention_end for text_end
+>>
+>> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+>> ---
+>>  tools/perf/util/machine.c | 21 +++++++++++++++++++++
+>>  tools/perf/util/machine.h |  2 +-
+>>  2 files changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>> index 527517db3182..968f69364f9a 100644
+>> --- a/tools/perf/util/machine.c
+>> +++ b/tools/perf/util/machine.c
+>> @@ -3266,6 +3266,18 @@ bool machine__is_lock_function(struct machine *ma=
+chine, u64 addr)
+>>
+>>                 sym =3D machine__find_kernel_symbol_by_name(machine, "__=
+lock_text_end", &kmap);
+>>                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->star=
+t);
+>> +
+>> +               sym =3D machine__find_kernel_symbol_by_name(machine, "__=
+traceiter_contention_begin", &kmap);
+>> +               if (sym) {
+>> +                       machine->traceiter.text_start =3D map__unmap_ip(=
+kmap, sym->start);
+>> +                       machine->traceiter.text_end =3D map__unmap_ip(km=
+ap, sym->end);
+>> +               }
+>> +
+>> +               sym =3D machine__find_kernel_symbol_by_name(machine, "tr=
+ace_contention_begin", &kmap);
+>> +               if (sym) {
+>> +                       machine->trace.text_start =3D map__unmap_ip(kmap=
+, sym->start);
+>> +                       machine->trace.text_end =3D map__unmap_ip(kmap, =
+sym->end);
+>> +               }
+>>         }
+>>
+>>         /* failed to get kernel symbols */
+>> @@ -3280,5 +3292,14 @@ bool machine__is_lock_function(struct machine *ma=
+chine, u64 addr)
+>>         if (machine->lock.text_start <=3D addr && addr < machine->lock.t=
+ext_end)
+>>                 return true;
+>>
+>> +       /* traceiter functions currently don't have their own section
+>> +        * but we consider them lock functions
+>> +        */
+>> +       if (machine->traceiter.text_start <=3D addr && addr < machine->t=
+raceiter.text_end)
+>> +               return true;
+>> +
+>> +       if (machine->trace.text_start <=3D addr && addr < machine->trace=
+.text_end)
+>> +               return true;
+>
+> You cannot simply check these as they are set optionally.
+>
+Should I move them to the same if block where I check for the sym?
+>
+> Thanks,
+> Namhyung
+>
+>
+>> +
+>>         return false;
+>>  }
+>> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+>> index e28c787616fe..4312f6db6de0 100644
+>> --- a/tools/perf/util/machine.h
+>> +++ b/tools/perf/util/machine.h
+>> @@ -49,7 +49,7 @@ struct machine {
+>>         struct {
+>>                 u64       text_start;
+>>                 u64       text_end;
+>> -       } sched, lock;
+>> +       } sched, lock, traceiter, trace;
+>>         pid_t             *current_tid;
+>>         size_t            current_tid_sz;
+>>         union { /* Tool specific area */
+>> --
+>> 2.39.2
+>>
+Thanks, Anne
