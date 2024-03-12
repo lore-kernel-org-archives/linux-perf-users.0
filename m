@@ -1,90 +1,135 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112F77AE66;
-	Tue, 12 Mar 2024 14:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BCFE58107;
+	Tue, 12 Mar 2024 17:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710253688; cv=none; b=ZKFPpmm9YA5Wo4QF5Puy07aklfxbO4NDYocrn1RN7U+noWHJ8RScbMu6b48JHFVIO4Fn5ljMGQptYlk+myczcadkPk3OPMLuvXmJDskK7Z4n2grXF9ZEuF9L8ABFuKJlFkXH1VAHak0JqdWMDgkabhnG6BExOF3ZJoSBf/y/U/c=
+	t=1710264867; cv=none; b=t6fTQcTyxMPESBK93a6vmWFk9OBTBv9Wo5JpXkN85btIvMqNz3xOZIwOUbqx5mjIDG4NahwdUFfJEIrd0obPsXY/oQvPXDxODFgRlym6OXOcff5kx8VGGlTM8pxLDy8XMQbHaV6YT7YCiMwXF6JOuqQnE+txT5bw/bVui59HZR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710253688; c=relaxed/simple;
-	bh=Jf+f71BudLnO/2W1fMmDx0pZd3N23SST9FD0UG7nlxU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KEh3eYRTLf+SlGbhPbcCEiYWq1Ov+ioIWL5gVl4oqzk//r+5HilnXdBHnlmGa1rvkYpNmi7BFarMbPrzSjpRhdT+VeV1m4C+oM2ZaGynDG1uCePJPqJDhTSslke2vrNvut4+MaM+aw1Nl8szF8TY5XFWMF6ecymxKKDiIzA3YgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gkd42EZN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cD3gLAD+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gkd42EZN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cD3gLAD+"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710253685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4XVmae+JgcDRh2ZKkyqUURMemYqkLUazTfEI4APXLG8=;
-	b=Gkd42EZNkxkb0gExXtDTx7jWtBaTPBoUwDTCkVnine3q786/2VyXE+TFzta5tHdTvyY3r6
-	0IppMKL/dDQgNVitWDG887sTq0mkp0YSMQMrp4J5KiWgryFdjcMAK0XI5+krNFTqqlkI24
-	ZPRjAOpPr4JFL9A24qO2FEPoCqbJn3OsrOXd3gK9JhfIlb5jgABbKC+D0DhI1IH8SQtwqn
-	VK/6/AA4WU+xKbG/bu3birdCHd/m1nZqp1Hl47hrjSXlrrTvsPkRZWmOqdhCXDTqi/hr1z
-	nsXWLPu9GxRcJOS1zlHvRJfjTx0Qz1WpvPCqgOgeUuW7E13yopFjKq++prVDSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710253685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4XVmae+JgcDRh2ZKkyqUURMemYqkLUazTfEI4APXLG8=;
-	b=cD3gLAD+A5hhLRuybrw9y36IXuxxC0wmJs+Kxm6eMNoqnmzJejztRvj6E/1wUaNsGms837
-	7RFeuZJRKtJkUtAw==
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: peterlin@andestech.com, acme@kernel.org, adrian.hunter@intel.com,
- ajones@ventanamicro.com, alexander.shishkin@linux.intel.com,
- andre.przywara@arm.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- atishp@atishpatra.org, conor+dt@kernel.org, Conor Dooley
- <conor.dooley@microchip.com>, Conor Dooley <conor@kernel.org>,
- devicetree@vger.kernel.org, Evan Green <evan@rivosinc.com>,
- geert+renesas@glider.be, guoren@kernel.org, Heiko Stuebner
- <heiko@sntech.de>, irogers@google.com, jernej.skrabec@gmail.com,
- jolsa@kernel.org, jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
- locus84@andestech.com, magnus.damm@gmail.com, Mark Rutland
- <mark.rutland@arm.com>, mingo@redhat.com, n.shubin@yadro.com,
- namhyung@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
- peterlin@andestech.com, peterz@infradead.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, rdunlap@infradead.org,
- robh+dt@kernel.org, samuel@sholland.org, Sunil V L
- <sunilvl@ventanamicro.com>, tim609@andestech.com, uwu@icenowy.me,
- wens@csie.org, Will Deacon <will@kernel.org>, inochiama@outlook.com,
- unicorn_wang@outlook.com, wefu@redhat.com, randolph@andestech.com
-Subject: Re: [PATCH v9 03/10] irqchip/riscv-intc: Introduce Andes hart-level
- interrupt controller
-In-Reply-To: <mhng-d47edbdb-0a36-4adb-9575-8af094d80e5e@palmer-ri-x1c9>
-References: <mhng-d47edbdb-0a36-4adb-9575-8af094d80e5e@palmer-ri-x1c9>
-Date: Tue, 12 Mar 2024 15:28:04 +0100
-Message-ID: <871q8fplsb.ffs@tglx>
+	s=arc-20240116; t=1710264867; c=relaxed/simple;
+	bh=7drBWCwWabZEy2dYA9+ueo/gCQDbMJkiZFLgldP5+yI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LLSvl2pBUic+OxCfH3CI6Xurxg3jpNjw2x1XnySKwxPmEpUc/gccodtSdoPhqdrCaUiev1uSxa4kWsEQUCQ3NJCg8ovTB+Tdp5ohpTO7tXw8vWSsyZUY4MKCZ3SaMvrk6SS+oTHXCTpr0797qH2W/oExZMcnw09qr27aJY5fdHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDA101570;
+	Tue, 12 Mar 2024 10:35:01 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9BAB63F762;
+	Tue, 12 Mar 2024 10:34:22 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	jialong.yang@shingroup.cn
+Subject: [PATCH 00/10] perf: Clean up common uncore boilerplate
+Date: Tue, 12 Mar 2024 17:34:02 +0000
+Message-Id: <cover.1710257512.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 12 2024 at 07:23, Palmer Dabbelt wrote:
-> On Fri, 23 Feb 2024 01:06:44 PST (-0800), tglx@linutronix.de wrote:
->> Contains:
->>
->>   f4cc33e78ba8 ("irqchip/riscv-intc: Introduce Andes hart-level interrupt controller")
->>   96303bcb401c ("irqchip/riscv-intc: Allow large non-standard interrupt number")
->>
->> on top of v6.8-rc1
->
-> Sorry I missed this.  I just merged this into my testing tree, it might 
-> take a bit to show up because I've managed to break my VPN so I can't 
-> poke the tester box right now...
+Hi all,
 
-Alternatively you can just rebase on Linus tree. The interrupt changes
-are already merged.
+Since this came up yet again recently, and it's an idea which has been
+nagging me for years, I decided it was time to see how hard it really
+would be to start shaving this yak. And it turns out to be refreshingly
+simple - the core code has quietly become capable of doing most of what
+we want, the one new functional addition is trivial (patch #2), and the
+resulting largely-mechanical cleanup seems a pretty nice win.
+
+This series is focused on drivers/perf/ as that's where most mess is
+concentrated, but figured I'd include the arch/ patches as well since
+they might be reasonable to land with the core changes, at least for x86
+(FWIW I did also look at the powerpc drivers but they scared me and I
+ran away; sorry). The remaining stragglers elsewhere around the tree I'd
+come back to as a follow-up.
+
+(And yes, I appreciate it's mid-merge-window already, but since I do
+have a tree-wide rename proposed here, may as well give the discussion
+a chance for a head start before -rc1...)
+
+Thanks,
+Robin.
+
+
+Robin Murphy (10):
+  perf/alibaba_uncore_drw: Use correct CPU affinity
+  perf: Add capability for common event support
+  drivers/perf: Use PERF_PMU_CAP_NO_COMMON_EVENTS
+  perf: Rename PERF_PMU_CAP_NO_INTERRUPT
+  drivers/perf: Use PERF_PMU_CAP_NO_SAMPLING consistently
+  drivers/perf: Clean up redundant per-task checks
+  perf: Define common uncore capabilities
+  drivers/perf: Use common uncore capabilities
+  x86: Use common uncore PMU capabilities
+  ARM: Use common uncore PMU capabilities
+
+ arch/arc/kernel/perf_event.c              |  2 +-
+ arch/arm/mach-imx/mmdc.c                  | 16 +-------------
+ arch/arm/mm/cache-l2x0-pmu.c              | 12 +---------
+ arch/csky/kernel/perf_event.c             |  2 +-
+ arch/powerpc/perf/8xx-pmu.c               |  2 +-
+ arch/powerpc/perf/hv-24x7.c               |  2 +-
+ arch/powerpc/perf/hv-gpci.c               |  2 +-
+ arch/powerpc/platforms/pseries/papr_scm.c |  2 +-
+ arch/s390/kernel/perf_cpum_cf.c           |  2 +-
+ arch/sh/kernel/perf_event.c               |  2 +-
+ arch/x86/events/amd/iommu.c               | 17 +-------------
+ arch/x86/events/amd/power.c               | 10 +--------
+ arch/x86/events/amd/uncore.c              | 12 +++-------
+ arch/x86/events/core.c                    |  2 +-
+ arch/x86/events/intel/cstate.c            | 16 +++-----------
+ arch/x86/events/intel/uncore.c            | 11 +--------
+ arch/x86/events/intel/uncore_snb.c        | 20 +++--------------
+ arch/x86/events/msr.c                     |  9 +-------
+ arch/x86/events/rapl.c                    |  9 +-------
+ drivers/fpga/dfl-fme-perf.c               |  2 +-
+ drivers/perf/alibaba_uncore_drw_pmu.c     | 27 +++--------------------
+ drivers/perf/amlogic/meson_ddr_pmu_core.c | 11 +--------
+ drivers/perf/arm-cci.c                    | 15 +------------
+ drivers/perf/arm-ccn.c                    | 20 +----------------
+ drivers/perf/arm-cmn.c                    | 10 +--------
+ drivers/perf/arm_cspmu/arm_cspmu.c        | 27 ++---------------------
+ drivers/perf/arm_dmc620_pmu.c             | 18 +--------------
+ drivers/perf/arm_dsu_pmu.c                | 22 +-----------------
+ drivers/perf/arm_pmu_platform.c           |  2 +-
+ drivers/perf/arm_smmuv3_pmu.c             | 15 +------------
+ drivers/perf/arm_spe_pmu.c                |  7 ++----
+ drivers/perf/cxl_pmu.c                    |  8 +------
+ drivers/perf/dwc_pcie_pmu.c               | 13 +----------
+ drivers/perf/fsl_imx8_ddr_perf.c          | 13 +----------
+ drivers/perf/fsl_imx9_ddr_perf.c          | 13 +----------
+ drivers/perf/hisilicon/hisi_pcie_pmu.c    | 10 +--------
+ drivers/perf/hisilicon/hisi_uncore_pmu.c  | 20 +----------------
+ drivers/perf/hisilicon/hns3_pmu.c         |  9 +-------
+ drivers/perf/marvell_cn10k_ddr_pmu.c      | 15 +------------
+ drivers/perf/marvell_cn10k_tad_pmu.c      |  6 +----
+ drivers/perf/qcom_l2_pmu.c                | 21 ++----------------
+ drivers/perf/qcom_l3_pmu.c                | 21 +-----------------
+ drivers/perf/riscv_pmu_sbi.c              |  2 +-
+ drivers/perf/thunderx2_pmu.c              | 17 +-------------
+ drivers/perf/xgene_pmu.c                  | 16 +-------------
+ include/linux/perf_event.h                |  6 ++++-
+ kernel/events/core.c                      |  7 +++++-
+ 47 files changed, 67 insertions(+), 456 deletions(-)
+
+-- 
+2.39.2.101.g768bb238c484.dirty
+
