@@ -1,132 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21D6013C9C8;
-	Tue, 12 Mar 2024 17:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA6B1386C9;
+	Tue, 12 Mar 2024 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710264891; cv=none; b=DSvq24/jWSoovBAazH0Kh7ja3yDdYRAN+k1IrOBQ5U886NQ5fct00ypMkFLTWkmwGhW2+iM35NpsYa1TKKvZw53Hos49Vs0RkVM9zlP3CTrbcTk/iS71a3CKfyJoVCdOHVZ2uJIsB2GWEYqYDXAuilxJV09+ZE/uESNZ9vgGyG4=
+	t=1710266902; cv=none; b=TjR0yoR63k8thHBZpGlKzluSDfDM4tVeX09TCgcxHvWdKswgk2GKu4E9xnFJdmnNQX+xtj2eaYkkSP9AUykgl3yQMxqyqOIsUqPmtW/BSxplSepNPjUGTb4kzk1r95Us0DyTLtcRbwvF9vFLZ/8FqA6DiQyGllC+EntJXi0Fvgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710264891; c=relaxed/simple;
-	bh=Pk7t1v7Z0Gk895Rwp6txDZ/tZxG8qIP6U+5tr65qLPY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qylRY2WJAh+cowD7Sjvzzhm/kxX1lbzhLYvMrrPth1Rf8XHk+AmKKyAkNKdk5G0JkUXs7qWkCqnMZRTVN6y88nVstHcqO+KlPgXEnoWJkqm80kJtD3iAykIkfOgSrfeuiweanqwoRN4TPg23Tmh2LQVYLsk03mRNzmo0z5tepVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB0D615BF;
-	Tue, 12 Mar 2024 10:35:26 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4EB4D3F762;
-	Tue, 12 Mar 2024 10:34:47 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	s=arc-20240116; t=1710266902; c=relaxed/simple;
+	bh=1x/H3KVUUkvLDmgpGS1Nke9B7aI3HIltrKV+AEtaWUg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Zzjoo7CXlaKlcGfK2EIwT+/sBmeVZGt2ua9lkBOJeqT9QDeEIiJ24wh47EIq85ZlCkTZbnlJkoobj0EFf5onWjsmUHadzL+u1B7ZHs1OLYmOdcp5gOVuwzmPL9D/qNP6rdD0yFqyXA/MGRrfcksYJl15+j91DQdHjz+wA5JefjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FlRpaK8V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zkQxTGQN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FlRpaK8V";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zkQxTGQN"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710266899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Hqyi2fLhMWja1cb9pKy7mpQ/l/tY6lU3b5qleZavj0=;
+	b=FlRpaK8V0LL+grFWiufBw6+J4iYqdxrDkwuneWjK1G48cxiZtepWKEOa2k/7TPhSwRz6Gn
+	EpYwmF4LUCXk4zVE0Ij+6iIHU5lVhQ45qExcy9z7ToJiRHyoomz9F9nOK6dpk1b7uNFsCm
+	DoxYXnkzrainnR3BdfiydZwdEXUWSibSQPn+bZfv8z2rZz7T54sLUAYWB96ltn4hH+AoXe
+	cwVGdm6r233oUFOFnzQzHE1gfHNPNQIutPXx356RU5QUAfo4axFH8h5ZPKnSImGgM2yQRJ
+	R7HPpcIPlxzDiZqb6/JDY6fj524+48V33G+N6kv6X3ojPtmI3JAcjpypEhZgMw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710266899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Hqyi2fLhMWja1cb9pKy7mpQ/l/tY6lU3b5qleZavj0=;
+	b=zkQxTGQNAcgLTsONtHCfBggjrEVyeFiJ7l+Hc7dC1ndjspI4TpWGszvL4/I+7FHgYNvTKT
+	A/Z9i0hwgXo8WxCw==
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	jialong.yang@shingroup.cn,
-	Russell King <linux@armlinux.org.uk>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 10/10] ARM: Use common uncore PMU capabilities
-Date: Tue, 12 Mar 2024 17:34:12 +0000
-Message-Id: <de2646ca1d333cd9286f22ed3a5e8d57d22833b1.1710257512.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
-In-Reply-To: <cover.1710257512.git.robin.murphy@arm.com>
-References: <cover.1710257512.git.robin.murphy@arm.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 1/4] perf: Move irq_work_queue() where the event is prepared.
+Date: Tue, 12 Mar 2024 19:01:49 +0100
+Message-ID: <20240312180814.3373778-2-bigeasy@linutronix.de>
+In-Reply-To: <20240312180814.3373778-1-bigeasy@linutronix.de>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-Switch the ARM system PMU drivers over to the new common capabilities,
-allowing to remove all the checks that perf core now takes care of.
+Only if perf_event::pending_sigtrap is zero, the irq_work accounted by
+increminging perf_event::nr_pending. The member perf_event::pending_addr
+might be overwritten by a subsequent event if the signal was not yet
+delivered and is expected. The irq_work will not be enqeueued again
+because it has a check to be only enqueued once.
 
-CC: Russell King <linux@armlinux.org.uk>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Move irq_work_queue() to where the counter is incremented and
+perf_event::pending_sigtrap is set to make it more obvious that the
+irq_work is scheduled once.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/arm/mach-imx/mmdc.c     | 16 +---------------
- arch/arm/mm/cache-l2x0-pmu.c | 12 +-----------
- 2 files changed, 2 insertions(+), 26 deletions(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/mmdc.c b/arch/arm/mach-imx/mmdc.c
-index 444a7eaa320c..806ab6675b37 100644
---- a/arch/arm/mach-imx/mmdc.c
-+++ b/arch/arm/mach-imx/mmdc.c
-@@ -280,20 +280,6 @@ static int mmdc_pmu_event_init(struct perf_event *event)
- 	struct mmdc_pmu *pmu_mmdc = to_mmdc_pmu(event->pmu);
- 	int cfg = event->attr.config;
- 
--	if (event->attr.type != event->pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EOPNOTSUPP;
--
--	if (event->cpu < 0) {
--		dev_warn(pmu_mmdc->dev, "Can't provide per-task data!\n");
--		return -EOPNOTSUPP;
--	}
--
--	if (event->attr.sample_period)
--		return -EINVAL;
--
- 	if (cfg < 0 || cfg >= MMDC_NUM_COUNTERS)
- 		return -EINVAL;
- 
-@@ -445,7 +431,7 @@ static int mmdc_pmu_init(struct mmdc_pmu *pmu_mmdc,
- 			.start          = mmdc_pmu_event_start,
- 			.stop           = mmdc_pmu_event_stop,
- 			.read           = mmdc_pmu_event_update,
--			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+			.capabilities	= PERF_PMU_UNCORE_CAPS,
- 		},
- 		.mmdc_base = mmdc_base,
- 		.dev = dev,
-diff --git a/arch/arm/mm/cache-l2x0-pmu.c b/arch/arm/mm/cache-l2x0-pmu.c
-index 993fefdc167a..a2567d953fdb 100644
---- a/arch/arm/mm/cache-l2x0-pmu.c
-+++ b/arch/arm/mm/cache-l2x0-pmu.c
-@@ -295,16 +295,6 @@ static int l2x0_pmu_event_init(struct perf_event *event)
- {
- 	struct hw_perf_event *hw = &event->hw;
- 
--	if (event->attr.type != l2x0_pmu->type)
--		return -ENOENT;
--
--	if (is_sampling_event(event) ||
--	    event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
--
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	if (event->attr.config & ~L2X0_EVENT_CNT_CFG_SRC_MASK)
- 		return -EINVAL;
- 
-@@ -524,7 +514,7 @@ static __init int l2x0_pmu_init(void)
- 		.del = l2x0_pmu_event_del,
- 		.event_init = l2x0_pmu_event_init,
- 		.attr_groups = l2x0_pmu_attr_groups,
--		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
-+		.capabilities = PERF_PMU_UNCORE_CAPS,
- 	};
- 
- 	l2x0_pmu_reset();
--- 
-2.39.2.101.g768bb238c484.dirty
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f0f0f71213a1d..c7a0274c662c8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9595,6 +9595,7 @@ static int __perf_event_overflow(struct perf_event *e=
+vent,
+ 		if (!event->pending_sigtrap) {
+ 			event->pending_sigtrap =3D pending_id;
+ 			local_inc(&event->ctx->nr_pending);
++			irq_work_queue(&event->pending_irq);
+ 		} else if (event->attr.exclude_kernel && valid_sample) {
+ 			/*
+ 			 * Should not be able to return to user space without
+@@ -9614,7 +9615,6 @@ static int __perf_event_overflow(struct perf_event *e=
+vent,
+ 		event->pending_addr =3D 0;
+ 		if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+ 			event->pending_addr =3D data->addr;
+-		irq_work_queue(&event->pending_irq);
+ 	}
+=20
+ 	READ_ONCE(event->overflow_handler)(event, data, regs);
+--=20
+2.43.0
 
