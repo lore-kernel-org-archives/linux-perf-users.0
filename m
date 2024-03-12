@@ -1,267 +1,295 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0359613B2BF;
-	Tue, 12 Mar 2024 21:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710279763; cv=none; b=iu7nZl9M2RO50W9/ombIRB+chMoU7AneFbpYaeMQ/F/EOXjqtUUFU5tROFpCQjSPyhufEO9E+sqVVakHXhTqiK8gWgROnkd0g0TDbfedQwlMMC7C0aUPvu0AAze2MLbit+WGVTTtxUjpldkbi6wfOoXCVBokEBQJqVfSrMb5AnU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710279763; c=relaxed/simple;
-	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJ661UC9522zhw1rV28SqkUerTNuA8VTJUbpMauBsPcZuPRrqBaxiCmt6bYwRrEM4+Eqcnt3ZjfDPSF9uJ1axnavj/QDHdSoXL9V2/cj1YWuLPBtiZly6R+mF6QYutJqOYstLZHK/y/nhjSbei9qVdU0gi2XJWeIWHezHxltb3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0k2xDwo; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5DA4AEEB;
+	Tue, 12 Mar 2024 21:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710280268; cv=fail; b=E4ttJHWhJZGUMOd9VowOvnCkL/SRmOxR8lRhsMuwzaAyouJMfSUy1jtM0SDQPUTyliZ1Df3uo0o4bMrJ+92cjByFGZq9kKhSQhr35AV7MFTTwP87G5YN+k/JVKhPX5YiMLVEBhKEMBVuzt9HoXPooSoPl4IjSKsioMnrN6aTqi8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710280268; c=relaxed/simple;
+	bh=R7elNealj0Tc86WFXYnDP3FtPqAxkxxbRg505MW4oks=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z6BPIeL1VyqQ2bvmBtL2Fh6W4EW0p2U8/4hcyiUi9YuoNOv6ryuUSKwPF0eF579wTRJ7BxASZRkSinwJAtMdtZMT0E6OsgvxJqVwmIQh2GjdzWzJ5T7SWBuNP/HJoVjlcWeVnv4xr0trnMujQy4F62/Cg4mwaVVlxGezGkVL/GE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l34fCoBx; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0k2xDwo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC695C433F1;
-	Tue, 12 Mar 2024 21:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710279762;
-	bh=W3FSQZv89cusMUVW3ElHSNyEA18sloH+ZNmd7l2ek4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y0k2xDwolymaumbjRTiV58xRgX4XLltojrHqEZrvlWwXAMHGRVmP3IEM3+SsqgWgc
-	 lXxgnVtINJC5uTFBwf8tBUDCLftr3SH/bNYay5OwncMKBhoo8HyBKXl2rQwm/2lMCX
-	 iIpy3IsbD+Saz7WuHu4dzMHTBUExBfgP7IvPTsTJoWgkgfZEn1fOmdlOjfMI5IjIac
-	 oEihZdonxJzRLz1wt9ZYG5HTChfYsXdy/5yoPfobZpG+esewEaKvXqOcFgVUzXeJWd
-	 QJKP7Cbnyv8afeEcQaDSlxstskuNXemnDRWGa2GQqq8Lk4rzGIDF8fZN0+bE3jTIOa
-	 maj7+y+Ubc13A==
-Date: Tue, 12 Mar 2024 18:42:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
- on RT.
-Message-ID: <ZfDMTlTH2SdwlB9M@x1>
-References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l34fCoBx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710280266; x=1741816266;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=R7elNealj0Tc86WFXYnDP3FtPqAxkxxbRg505MW4oks=;
+  b=l34fCoBxW+I3D8Kb1yMGn9kQ5S6NBmK8daZVNMwhhWINuVjQC0yhm+gf
+   yBsQwGxSFgwh31vS35eF6yjzKuBFXax0GRS13uwB8yBkxN/FXHm5thCJs
+   dBreLQlsDgZHgfpeoUV+nFiXN9a1QxWm/cBK5B770y/vFXJnJ9TF6MeaJ
+   vhsjnFZR0PGT5fGjt65gLR4MVbF5RKZTMucHJo90vpp14NJhachc8SEn5
+   z9FvuNfDDM4+CskZ6cPQQTFav4/Z4WE1yUVlFhaxa2XVghePrqLJIjd2h
+   TpUo92Te7Mq/TA20dw+s/Yax4WoY52iDB1RvxUfHLV+wIeLZKN89gVZj2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="5186926"
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="5186926"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:51:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
+   d="scan'208";a="11770341"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Mar 2024 14:51:06 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 12 Mar 2024 14:51:05 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 12 Mar 2024 14:51:04 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 12 Mar 2024 14:51:04 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 12 Mar 2024 14:51:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H77iKSs2fgQNIzdv+lYXYJfdCkF/Hl531vY41aKTigJaq22eWzTnKxGOm48jaP5UpbrkHwq7Tb3qyNLJbw+i8AgwJ3MqpWZdtAfxi6FZOmY/nwWIevx8S4QygAYKVTS8SjkByjRkMLEBdNDtNpEIWWTqGLe63sPrau1EXhr7tobuItwefhE/N1KeeqD0zBWWsd4MH6eSxXDfaU4NrVAbwKldelSm/QGNOrCX/r/VkZe2EinD3tDhOse2orshVC+FjSxbI5UygJOG+od7T5rdeTJRn3uEWOkx7zvjCTpQ7OcE72dWHLBVymbs65IoktkoRskqh5Zwo7ks7umCKL6HgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R7elNealj0Tc86WFXYnDP3FtPqAxkxxbRg505MW4oks=;
+ b=V+sGx1irm0MqE1OdMFx7g1gm6LFEHQppi98GNaaLREu1qiljkQO4XoyJ9cua6PDM8s/rPWmaQeF2q1NCBfj+vU7J8nOibdsD6LyAn/xUHFVVVTb8RnXFcI3Ty2tSXKM990CkPNDNAHdDkEHi54dvskxAGrfyWawAEAQ7vz/JETXkbi3pucbPpOWg1Uy3WuXsgctS/pBUEeaI4B19cqcd0DiO0Gp0qcbxDWuqznCQsaTRSdkU49jZSuKec2pIjkwHnoBEe6x4Mdwrct5q53BfO7Vs2LgUUAV6E6FyUCst1Quxbh7J/3j6EimV9avhuYiIEsPYIaY6TRcKuTEhO6LyvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
+ by DM4PR11MB5245.namprd11.prod.outlook.com (2603:10b6:5:388::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.13; Tue, 12 Mar
+ 2024 21:51:02 +0000
+Received: from CO6PR11MB5635.namprd11.prod.outlook.com
+ ([fe80::d3a0:f70a:9340:9a3e]) by CO6PR11MB5635.namprd11.prod.outlook.com
+ ([fe80::d3a0:f70a:9340:9a3e%3]) with mapi id 15.20.7386.017; Tue, 12 Mar 2024
+ 21:51:02 +0000
+From: "Wang, Weilin" <weilin.wang@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang
+	<kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>,
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb"
+	<caleb.biggers@intel.com>
+Subject: RE: [RFC PATCH v3 4/6] perf stat: Create another thread for sample
+ data processing
+Thread-Topic: [RFC PATCH v3 4/6] perf stat: Create another thread for sample
+ data processing
+Thread-Index: AQHabDY/rCjOAZSfEkSw1OpOQwk2QrEzufIAgAD5SUA=
+Date: Tue, 12 Mar 2024 21:51:02 +0000
+Message-ID: <CO6PR11MB56357CAB40A05370512C0D3DEE2B2@CO6PR11MB5635.namprd11.prod.outlook.com>
+References: <20240302001139.604829-1-weilin.wang@intel.com>
+ <20240302001139.604829-5-weilin.wang@intel.com>
+ <CAM9d7ciVnWkaLMwHcJwC58KYDTW9t4SQevEGnqKcNZmJ7XF57Q@mail.gmail.com>
+In-Reply-To: <CAM9d7ciVnWkaLMwHcJwC58KYDTW9t4SQevEGnqKcNZmJ7XF57Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|DM4PR11MB5245:EE_
+x-ms-office365-filtering-correlation-id: 72b1d869-6c86-4c93-b79f-08dc42de8295
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IUgT2y02tq6DfUDMmO+D4ZP9L8EDF49+dV75DAC9Mh6+F9HFxUjzz0gZDSr+4cGHiCgi7ESFrHKwKioDuyEi2KhupuQXj6LZAJpXJoHTHZoISnL7+4ZCsnil7w9APj0k0iEWb90mR6wR/3ytbtgT0uNd7noRR8Rd3sYQyFksqYFBBs1r8lz5impG5JB3x4UgIUB7fime5xF8V83SNxRZY6kd3HdZuSda2Btv/AXQgGui/eMWS7eSqSA8jVPRTN0KSJeK/8izUXbKsnnyyy6ShBC/Icd3FL6qOGNoGsrc4LII/zMATn6xJb7RXiPvkoSXNy1fO014/1a6q/34QkEH7oz1/fuvvPOLm1aXOjVdokV+dZrQY7lKyW4CyQygxwL2VbffpP0scSsEpaCxQ5RFT1PsXjn3TE2Dqm8/+Kbdn4vZzTZaXWlM0tVOHYFbervgcRVAaeRAbE74pjumOJoZtJVY4U/nOiJlTVSLzUFuVaAIhnyp7vBFIwqwukNWP0JuRWDxWxmbVMk3I1Xh/r/jHE3iVgZEOqRi4rl96Hj2XSqheE6lc4jXL91eFXu5Eq8Y8wH/ZFdBHqsxj8F8V7HjpKzP3drjTb5J4iha6CjnjQjMwUFWuIhF4qD2PEvUU/zetEe/J1uiTW2Y1mTEWjfPwfPd7MepXyeVuDLPeJ2PX32+G692GeSehT1usJnewefNlH9LaAEKibq8rLnrgNLQkw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?aFNpMzZtdWhUbWVTMXFINkI1czA3ZWlMYXA2T00rU1hJdWlFMEJxYXJtenpy?=
+ =?utf-8?B?d2FlRlhEcFdPci9mOXd4bEdTUjl6NkhOWWFaY3djellRYjdRUko4dTY5d2tH?=
+ =?utf-8?B?TVR0aGdPbTM5ZVJCaFdOT3BIcGRraHExQ01GOWdUcTE1S0NIZ1pycGhsbi9z?=
+ =?utf-8?B?dk1UcEZRbTg3aTlVZHVSQ2d2RC9PczNld1lXaFNqb2ZBMWQvL0FBakE4aFJh?=
+ =?utf-8?B?eUk4L1E4dW9VaXg1YUNSTEhwcjNnTUpkSmt0WEZvMWdqQUp4MDJTczZQM3Rt?=
+ =?utf-8?B?ZStMYS9OV1RiblJpU1dCYVF3V1Vpc04ydTVlMHF4UUVWM0VIVVp1L2hvTFZ6?=
+ =?utf-8?B?S3Z0V2U3d2E0M2ZBVlU5Y1FxUmlTWjRQS1pJUVlybDZhb1dCeS9yQUQ3UFU2?=
+ =?utf-8?B?U01qc1lWeXpoZDdoYXloMVFVUGIyTTMyQlVsOXY0bDFtdlN5RlpicjlIYkFF?=
+ =?utf-8?B?Qk5nQmUvejExU2lON0RtL0s0Z25pR2VZMGIwQ0dnenJGV1VrcTI5YlZwaEI0?=
+ =?utf-8?B?YktUV2R3YlJ0alJkVmVibGwxTTRVRVl6V3drTld2QVNsNmVZcnMrbjQxTGpE?=
+ =?utf-8?B?My8vR0dNckdpbHRjSHVjTmMyUnQrMVdWWmxCSlRiMlQxS2tHeTNWRWJRSytS?=
+ =?utf-8?B?b3MwYnNKSm1nVm9MbjRocjFoV1hkbitBMlJrU0JnRmZpd1drU3VFdUNHZDVR?=
+ =?utf-8?B?Zm55NEYyd3pkRU5Mc2VvVy9qS2hmNEM5RE1GYXR5WEc4VFZiT210RWt6aUh6?=
+ =?utf-8?B?T0lHTjdXRmZrUG13R1dadUJ3TTlRRUVzbHppNGRqM3ZhT0EwVzBSNndWc2lY?=
+ =?utf-8?B?UGo5NHZSQ1FQUmlSL3V0S1U3em9hTXpBdWFUWDRkT2VpZUs4dTJGN0p5Qm1W?=
+ =?utf-8?B?dTJGTmljSFFpZy8zOTFUZkhLUlQ3OVlCUjV2NVhqR1Rldkw3cDZlTERFYUx2?=
+ =?utf-8?B?LzFYYlZZaVdwaDFOdFNrZEZudWF4Syszd2FVaG1VRW1GYkdUSnRJV1Rnencv?=
+ =?utf-8?B?N09xSVgxd1BhdUtkSEpjbEErM3gxRXJvWkE5b2N2Y1R6Y1JrZkhyKzRJN2JM?=
+ =?utf-8?B?aG9lYkI4NkhiRWdtZUROcm5lcHYwUG1LSkVPZ2hwaVNiSXYyaHIvbnllYmpK?=
+ =?utf-8?B?eWdnSjJhSDNIeDYyVHVHQUU0QllKWEFBeitYU1BXZVNYbUNQb0dwemVvZDNZ?=
+ =?utf-8?B?TlkyUGcycThDRDduaWNVUTJhbnhqTEhkM3hIN2pDc21aN2ozMjBvWTFSVmZW?=
+ =?utf-8?B?S0Y1cjZ2RURKN2l6LzBUb0h2bll3VVJ4SitrRzZMQWFyQ0RSd0dNOVVFNzFs?=
+ =?utf-8?B?V09RSjVRaThnV241TDFDc3BDbnBvK2NEdzhGMk1yV0R4VWN5NThLQzh1WUts?=
+ =?utf-8?B?aDYrSFh1RHErK1M2bGFBbFNXWUdnN0Y1RmNOQUs4OXlnM1FNbFFLM0hpWnly?=
+ =?utf-8?B?Q0RYN1NUVGF6Qmg4YU0vMkhIVzRBOHhBRWxJMUErTEhTU0piL2ZiQi9DZklD?=
+ =?utf-8?B?Ym1rU2ZMdjVuZlgvS09GbEUybzJBMDM2aDZ3Zlp0U2lsd0FlRXVTa3RqcXdI?=
+ =?utf-8?B?eldlYUVuVVNFVmNrYzNKM3N3emZ4UVQ1YnN0b1MxU3gvOFBmMVFSWWlDWEo1?=
+ =?utf-8?B?V1VYQ2xCSlRJQkcrOVkwbzRuL1lJN1hVaXZlSlRBYlpqNGhxS1BHV1VmZklF?=
+ =?utf-8?B?NDI3WmJXdGN3TWN5VWo2OVhIckk2TTYyUkhQSk5NWERYakJxdWxwemNIVy9p?=
+ =?utf-8?B?WUx2RXlKbGpUQmxjQXN5d3RZOHV5OUhGdVJTcHQ0RC83SEZDMFp3dm5NNlBh?=
+ =?utf-8?B?YlRmUnA1V3doVjY5aHUzb3ZucEUwWWZEMk5VMXdXTGJ6WTkrai9sNWl2SXYx?=
+ =?utf-8?B?cVJDZ0lzcGhsMzd5Z3o0QzhwYzYzd0lxNXZmZlFINllxSXllcU92UHo3WEhX?=
+ =?utf-8?B?Y2x3SktPcm4xOFBxQWRGN0hoSWYzV2tqM1h0REl1ZGZnMEN3QVExdHNBdzFt?=
+ =?utf-8?B?UFZNZ2xtSjNSSTBQNzkrK2p1Y0p4eklkV3FCZ0tybzNwN2pBcVhOV0c1V084?=
+ =?utf-8?B?aDVvS2J6UFRCNk5aYzhUY3NSWEVnOHlxUDZ6UG9UaGNzVmJhTDFHdktZU2V2?=
+ =?utf-8?Q?HP1Zy1ct2bCFgyBYylzzmf1eJ?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240312180814.3373778-1-bigeasy@linutronix.de>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72b1d869-6c86-4c93-b79f-08dc42de8295
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2024 21:51:02.0672
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cZEThaQN9fCXHJZ6wVtAzJu/uCLUmYDrWm3Rk+2rRF710wzbbXLRLCC+XqQJxy3PJORk0hGXXnlSBkZnRzsmiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5245
+X-OriginatorOrg: intel.com
 
-On Tue, Mar 12, 2024 at 07:01:48PM +0100, Sebastian Andrzej Siewior wrote:
-> Hi,
->=20
-> Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
-> the signal gets delayed until event_sched_out() which then uses
-> task_work_add() for its delivery. This breaks on PREEMPT_RT because the
-> signal is delivered with disabled preemption.
->=20
-> While looking at this, I also stumbled upon __perf_pending_irq() which
-> requires disabled interrupts but this is not the case on PREEMPT_RT.
->=20
-> This series aim to address both issues while not introducing a new issue
-> at the same time ;)
-> Any testing is appreciated.
->=20
-> v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigea=
-sy@linutronix.de/
->     - Marco pointed me to the testsuite that showed two problems:
->       - Delayed task_work from NMI / missing events.
->         Fixed by triggering dummy irq_work to enforce an interrupt for
-> 	the exit-to-userland path which checks task_work
->       - Increased ref-count on clean up/ during exec.
->         Mostly addressed by the former change. There is still a window
-> 	if the NMI occurs during execve(). This is addressed by removing
-> 	the task_work before free_event().
->       The testsuite (remove_on_exec) fails sometimes if the event/
->       SIGTRAP is sent before the sighandler is installed.
-
-Survives:
-
-[acme@nine perf_events]$ for x in {0..1000}; do (perf test sigtrap &); done
-
-And:
-
-[acme@nine perf_events]$ pwd
-/home/acme/git/linux/tools/testing/selftests/perf_events
-[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
-
-Nothing on dmesg.
-
-But:
-
-[acme@nine ~]$ pidof exec_child
-24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 242=
-60 24259 24258 24257 24256 24255 24254 24253 24252 24251 24250 24249 24248 =
-24247 24246 24245 24244 24243 24242 24241 24240 24239 24238 24237 24236 242=
-33 24232 24231 24230 24229 24228 24227 24226 24225 24224 24223 24220 24219 =
-24218 24217 24216 24215 24214 24213 24212 24211 24210 24209 24208 24207 242=
-06 24204 24203 24202 24201 24200 24199 24198 24197 24196 24195 24194 24192 =
-24191 24190 24189 24188 24187 24186 24185 24184 24183 24182 24181 24180 241=
-79 24178 24177 24176 24175 24174 24173 24172 24171 24170 24169 24168 24167 =
-24166 24165 24164 24163 24162 24161 24160 24159 24158 24157 24154 24153 241=
-52 24151 24150 24149 24148 24147 24146 24145 24144 24143 24142 24141 24140 =
-24139 24138 24137 24136 24135 24134 24133 24132 24131 24130 24129 24127 241=
-26 24125 24124 24123 24122 24121 24120 24119 24118 24117 24115 24114 24113 =
-24112 24111 24110 24109 24108 24107 24106 24105 24104 24103 24102 24101 241=
-00 24099 24098 24097 24096 24095 24094 24093 24092 24091 24090 24089 24088 =
-24087 24086 24085 24084 24083 24082 24081 24080 24076 24075 24074 24073 240=
-72 24071 24070 24069 24068 24067 24066 24065 24064 24063 24062 24061 24060 =
-24059 24058 24057 24056 24055 24054 24053 24052 24051 24049 24048 24047 240=
-46 24045 24044 24043 24042 24041 24040 24039 24037 24036 24035 24034 24033 =
-24032 24031 24030 24029 24028 24027 24026 24025 24024 24023 24022 24021 240=
-20 24019 24018 24017 24016 24015 24014 24013 24012 24011 24010 24009 24008 =
-24007 24006 24005 24004 24003 24002 23998 23997 23996 23995 23994 23993 239=
-92 23991 23990 23989 23988 23986 23985 23984 23983 23982 23981 23980 23979 =
-23978 23977 23976 23975 23974 23973 23972 23970 23969 23968 23967 23966 239=
-65 23964 23963 23962 23961 23960 23958 23957 23956 23955 23954 23953 23952 =
-23951 23950 23949 23948 23947 23946 23945 23944 23943 23942 23941 23940 239=
-39 23938 23937 23936 23935 23934 23933 23932 23931 23930 23929 23928 23927 =
-23926 23925 23924 23923 23919 23918 23917 23916 23915 23914 23913 23912 239=
-11 23910 23909 23907 23906 23905 23904 23903 23902 23901 23900 23899 23898 =
-23897 23896 23895 23894 23893 23891 23890 23889 23888 23887 23886 23885 238=
-84 23883 23882 23881 23879 23878 23877 23876 23875 23874 23873 23872 23871 =
-23870 23869 23867 23866 23865 23864 23863 23862 23858 23857 23856 23855 238=
-54 23853 23852 23851 23850 23849 23848 23847 23846 23845 23844 23843 23842 =
-23841 23840 23833 23832 23831 23830 23829 23828 23827 23826 23825 23824 238=
-23 23820 23819 23818 23817 23816 23815 23814 23813 23812 23811 23810 23809 =
-23808 23807 23806 23804 23803 23802 23801 23800 23799 23798 23797 23793 237=
-92 23791 23787 23786 23774 23773 23772 23771 23770 23769 23768 23767 23756 =
-23754 23751 23750 23749 23748 23747 23746 23743 23734 23733 23732 23731 237=
-30 23729 23728 23727 23726 23725 23724 23723 23722 23719 23716 23715 23684 =
-23668 23667 23666 23589 23574 23573 23526 23461 23396 23395 23375 23271 232=
-70 23266 23242 23241 23231 23214 23213 23210 23197 23196 23182 23181 23129 =
-23128 23046 22964
-[acme@nine ~]$
-
-[root@nine ~]# cat /proc/24263/stack
-[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
-[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-[root@nine ~]#
-
-[root@nine ~]# for a in `pidof exec_child` ; do cat /proc/$a/stack ; done |=
- sort | uniq -c
-      1 [<0>] asm_common_interrupt+0x22/0x40
-    495 [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-      2 [<0>] asm_sysvec_reschedule_ipi+0x16/0x20
-    498 [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
-[root@nine ~]#
-
-[acme@nine ~]$ ps ax|grep exec_child| wc -l
-504
-[acme@nine ~]$ ps ax|grep exec_child| tail
-  24264 pts/0    R      0:04 exec_child
-  24265 pts/0    R      0:04 exec_child
-  24266 pts/0    R      0:04 exec_child
-  24267 pts/0    R      0:04 exec_child
-  24268 pts/0    R      0:04 exec_child
-  24269 pts/0    R      0:04 exec_child
-  24270 pts/0    R      0:04 exec_child
-  24271 pts/0    R      0:04 exec_child
-  24273 pts/0    R      0:04 exec_child
-  26704 pts/1    S+     0:00 grep --color=3Dauto exec_child
-[acme@nine ~]$
-
-All in 'R' state.
-
-[root@nine ~]# killall exec_child
-exec_child: no process found
-[root@nine ~]# ps ax | grep exec_child | head -5
-  22964 pts/0    R      0:06 exec_child
-  23046 pts/0    R      0:05 exec_child
-  23128 pts/0    R      0:05 exec_child
-  23129 pts/0    R      0:05 exec_child
-  23181 pts/0    R      0:05 exec_child
-[root@nine ~]# kill 22964 23046 23128 23129 23181
-[root@nine ~]# ps ax | grep exec_child | head -5
-  23182 pts/0    R      0:06 exec_child
-  23196 pts/0    R      0:06 exec_child
-  23197 pts/0    R      0:06 exec_child
-  23210 pts/0    R      0:06 exec_child
-  23213 pts/0    R      0:06 exec_child
-[root@nine ~]#
-
-[root@nine ~]# kill `pidof exec_child`
-[root@nine ~]# ps ax | grep exec_child | head -5
-  26806 pts/0    S+     0:00 grep --color=3Dauto exec_child
-[root@nine ~]#
-
-[acme@nine perf_events]$ ps ax|grep exec_child
-  26816 pts/0    S+     0:00 grep --color=3Dauto exec_child
-[acme@nine perf_events]$ ./remove_on_exec=20
-TAP version 13
-1..4
-# Starting 4 tests from 1 test cases.
-#  RUN           remove_on_exec.fork_only ...
-#            OK  remove_on_exec.fork_only
-ok 1 remove_on_exec.fork_only
-#  RUN           remove_on_exec.fork_exec_then_enable ...
-#            OK  remove_on_exec.fork_exec_then_enable
-ok 2 remove_on_exec.fork_exec_then_enable
-#  RUN           remove_on_exec.enable_then_fork_exec ...
-*#            OK  remove_on_exec.enable_then_fork_exec
-ok 3 remove_on_exec.enable_then_fork_exec
-#  RUN           remove_on_exec.exec_stress ...
-*************************#            OK  remove_on_exec.exec_stress
-ok 4 remove_on_exec.exec_stress
-# PASSED: 4 / 4 tests passed.
-# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-[acme@nine perf_events]$ ps ax|grep exec_child
-  26858 pts/0    S+     0:00 grep --color=3Dauto exec_child
-[acme@nine perf_events]$ ps ax|grep exec_child
-  26860 pts/0    S+     0:00 grep --color=3Dauto exec_child
-[acme@nine perf_events]$=20
-
-[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
-<SNIP>
-
-While it runs I can see:
-
-[acme@nine ~]$ ps ax|grep exec_child
-  28627 pts/0    R      0:00 exec_child
-  28668 pts/0    R      0:00 exec_child
-  28744 pts/0    R      0:00 exec_child
-  28813 pts/0    R      0:00 exec_child
-  28912 pts/0    R      0:00 exec_child
-  29666 pts/1    S+     0:00 grep --color=3Dauto exec_child
-[acme@nine ~]$
-
-at the end they disappeared, on this last run.
-
-But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
-we get all those exec_child running a seemingly eternal loop:
-
-[acme@nine ~]$ ps ax|grep exec_child|wc -l
-479
-[acme@nine ~]$ ps ax|grep exec_child|head
-  30143 pts/0    R      0:01 exec_child
-  30144 pts/0    R      0:01 exec_child
-  30145 pts/0    R      0:01 exec_child
-  30147 pts/0    R      0:01 exec_child
-  30150 pts/0    R      0:01 exec_child
-  30151 pts/0    R      0:01 exec_child
-  30153 pts/0    R      0:01 exec_child
-  30154 pts/0    R      0:01 exec_child
-  30155 pts/0    R      0:01 exec_child
-  30156 pts/0    R      0:01 exec_child
-[acme@nine ~]$ sudo cat /proc/30143/stack=20
-[<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
-[<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-[acme@nine ~]$
-
-[acme@nine perf_events]$ uptime
- 18:36:17 up 16 min,  2 users,  load average: 460.01, 375.77, 240.59
-[acme@nine perf_events]$ uptime
- 18:36:21 up 16 min,  2 users,  load average: 461.53, 377.49, 241.87
-[acme@nine perf_events]$ uptime
- 18:36:24 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
-[acme@nine perf_events]$ uptime
- 18:36:27 up 16 min,  2 users,  load average: 462.85, 379.16, 243.14
-[acme@nine perf_events]$
-
-- Arnaldo
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTmFtaHl1bmcgS2ltIDxu
+YW1oeXVuZ0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDExLCAyMDI0IDExOjQ4
+IFBNDQo+IFRvOiBXYW5nLCBXZWlsaW4gPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gQ2M6IElh
+biBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT47IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
+cmFkZWFkLm9yZz47DQo+IEluZ28gTW9sbmFyIDxtaW5nb0ByZWRoYXQuY29tPjsgQXJuYWxkbyBD
+YXJ2YWxobyBkZSBNZWxvDQo+IDxhY21lQGtlcm5lbC5vcmc+OyBBbGV4YW5kZXIgU2hpc2hraW4N
+Cj4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+OyBKaXJpIE9sc2EgPGpvbHNh
+QGtlcm5lbC5vcmc+OyBIdW50ZXIsDQo+IEFkcmlhbiA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+
+OyBLYW4gTGlhbmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Ow0KPiBsaW51eC1wZXJmLXVz
+ZXJzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgVGF5bG9y
+LCBQZXJyeQ0KPiA8cGVycnkudGF5bG9yQGludGVsLmNvbT47IEFsdCwgU2FtYW50aGEgPHNhbWFu
+dGhhLmFsdEBpbnRlbC5jb20+OyBCaWdnZXJzLA0KPiBDYWxlYiA8Y2FsZWIuYmlnZ2Vyc0BpbnRl
+bC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYzIDQvNl0gcGVyZiBzdGF0OiBDcmVh
+dGUgYW5vdGhlciB0aHJlYWQgZm9yIHNhbXBsZQ0KPiBkYXRhIHByb2Nlc3NpbmcNCj4gDQo+IE9u
+IEZyaSwgTWFyIDEsIDIwMjQgYXQgNDoxMeKAr1BNIDx3ZWlsaW4ud2FuZ0BpbnRlbC5jb20+IHdy
+b3RlOg0KPiA+DQo+ID4gRnJvbTogV2VpbGluIFdhbmcgPHdlaWxpbi53YW5nQGludGVsLmNvbT4N
+Cj4gPg0KPiA+IEFub3RoZXIgdGhyZWFkIGlzIHJlcXVpcmVkIHRvIHN5bmNocm9uaXplIGJldHdl
+ZW4gcGVyZiBzdGF0IGFuZCBwZXJmIHJlY29yZA0KPiA+IHdoZW4gd2UgcGFzcyBkYXRhIHRocm91
+Z2ggcGlwZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlaWxpbiBXYW5nIDx3ZWlsaW4ud2Fu
+Z0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIHRvb2xzL3BlcmYvYnVpbHRpbi1zdGF0LmMgfCA1
+OCArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1zdGF0LmMgYi90b29scy9wZXJmL2J1aWx0aW4tc3Rh
+dC5jDQo+ID4gaW5kZXggM2U1ODY1NTcyMjY2Li4yMzcyMTc1ZDM0MDggMTAwNjQ0DQo+ID4gLS0t
+IGEvdG9vbHMvcGVyZi9idWlsdGluLXN0YXQuYw0KPiA+ICsrKyBiL3Rvb2xzL3BlcmYvYnVpbHRp
+bi1zdGF0LmMNCj4gPiBAQCAtNzc3LDcgKzc3Nyw2IEBAIHN0YXRpYyBpbnQgcHJvY2Vzc19zYW1w
+bGVfZXZlbnQoc3RydWN0IHBlcmZfdG9vbA0KPiAqdG9vbCwNCj4gPiAgICAgICAgIGNvbnN0IGNo
+YXIgKmV2bmFtZTsNCj4gPiAgICAgICAgIHN0cnVjdCB0cGVic19yZXRpcmVfbGF0ICp0Ow0KPiA+
+DQo+ID4gLSAgICAgICBwcl9kZWJ1ZygiZW50ZXJpbmcgZnVuY3Rpb24gJXNcbiAiLCBfX2Z1bmNf
+Xyk7DQo+ID4gICAgICAgICBldm5hbWUgPSBldnNlbF9fbmFtZShldnNlbCk7DQo+ID4NCj4gPiAg
+ICAgICAgIHByX2RlYnVnKCJbJTAzZF0gIiwgc2FtcGxlLT5jcHUpOw0KPiA+IEBAIC04MDgsOSAr
+ODA3LDkgQEAgc3RhdGljIGludCBwcm9jZXNzX2ZlYXR1cmVfZXZlbnQoc3RydWN0IHBlcmZfc2Vz
+c2lvbg0KPiAqc2Vzc2lvbiwNCj4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4g
+PiAtc3RhdGljIGludCBfX2NtZF9zY3JpcHQoc3RydWN0IGNoaWxkX3Byb2Nlc3MgKmNtZCBfX21h
+eWJlX3VudXNlZCkNCj4gPiArc3RhdGljIHZvaWQgKl9fY21kX3NjcmlwdCh2b2lkICphcmcgX19t
+YXliZV91bnVzZWQpDQo+ID4gIHsNCj4gPiAtICAgICAgIGludCBlcnIgPSAwOw0KPiA+ICsgICAg
+ICAgc3RydWN0IGNoaWxkX3Byb2Nlc3MgKmNtZCA9IGFyZzsNCj4gPiAgICAgICAgIHN0cnVjdCBw
+ZXJmX3Nlc3Npb24gKnNlc3Npb247DQo+ID4gICAgICAgICBzdHJ1Y3QgcGVyZl9kYXRhIGRhdGEg
+PSB7DQo+ID4gICAgICAgICAgICAgICAgIC5tb2RlID0gUEVSRl9EQVRBX01PREVfUkVBRCwNCj4g
+PiBAQCAtODI2LDI5ICs4MjUsMTUgQEAgc3RhdGljIGludCBfX2NtZF9zY3JpcHQoc3RydWN0IGNo
+aWxkX3Byb2Nlc3MgKmNtZA0KPiBfX21heWJlX3VudXNlZCkNCj4gPiAgICAgICAgICAgICAgICAg
+LmF0dHIgICAgICAgICAgICA9IHBlcmZfZXZlbnRfX3Byb2Nlc3NfYXR0ciwNCj4gPiAgICAgICAg
+ICAgICAgICAgfSwNCj4gPiAgICAgICAgIH07DQo+ID4gLSAgICAgICBzdHJ1Y3QgdHBlYnNfZXZl
+bnQgKmU7DQo+ID4gLQ0KPiA+IC0gICAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeShlLCAmc3RhdF9j
+b25maWcudHBlYnNfZXZlbnRzLCBuZCkgew0KPiA+IC0gICAgICAgICAgICAgICBzdHJ1Y3QgdHBl
+YnNfcmV0aXJlX2xhdCAqbmV3ID0gbWFsbG9jKHNpemVvZihzdHJ1Y3QNCj4gdHBlYnNfcmV0aXJl
+X2xhdCkpOw0KPiA+IC0NCj4gPiAtICAgICAgICAgICAgICAgaWYgKCFuZXcpDQo+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgcmV0dXJuIC0xOw0KPiA+IC0gICAgICAgICAgICAgICBuZXctPm5h
+bWUgPSBzdHJkdXAoZS0+bmFtZSk7DQo+ID4gLSAgICAgICAgICAgICAgIG5ldy0+dHBlYnNfbmFt
+ZSA9IHN0cmR1cChlLT50cGVic19uYW1lKTsNCj4gPiAtICAgICAgICAgICAgICAgbmV3LT5jb3Vu
+dCA9IDA7DQo+ID4gLSAgICAgICAgICAgICAgIG5ldy0+c3VtID0gMDsNCj4gPiAtICAgICAgICAg
+ICAgICAgbGlzdF9hZGRfdGFpbCgmbmV3LT5uZCwgJnN0YXRfY29uZmlnLnRwZWJzX3Jlc3VsdHMp
+Ow0KPiA+IC0gICAgICAgfQ0KPiA+DQo+ID4gLSAgICAgICBraWxsKGNtZC0+cGlkLCBTSUdURVJN
+KTsNCj4gPiAgICAgICAgIHNlc3Npb24gPSBwZXJmX3Nlc3Npb25fX25ldygmZGF0YSwgJnNjcmlw
+dC50b29sKTsNCj4gPiAgICAgICAgIGlmIChJU19FUlIoc2Vzc2lvbikpDQo+ID4gLSAgICAgICAg
+ICAgICAgIHJldHVybiBQVFJfRVJSKHNlc3Npb24pOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1
+cm4gTlVMTDsNCj4gPiAgICAgICAgIHNjcmlwdC5zZXNzaW9uID0gc2Vzc2lvbjsNCj4gPiAtICAg
+ICAgIGVyciA9IHBlcmZfc2Vzc2lvbl9fcHJvY2Vzc19ldmVudHMoc2Vzc2lvbik7DQo+ID4gKyAg
+ICAgICBwZXJmX3Nlc3Npb25fX3Byb2Nlc3NfZXZlbnRzKHNlc3Npb24pOw0KPiA+ICAgICAgICAg
+cGVyZl9zZXNzaW9uX19kZWxldGUoc2Vzc2lvbik7DQo+ID4NCj4gPiAtICAgICAgIHJldHVybiBl
+cnI7DQo+ID4gKyAgICAgICByZXR1cm4gTlVMTDsNCj4gPiAgfQ0KPiA+DQo+ID4gIHN0YXRpYyBp
+bnQgX19ydW5fcGVyZl9zdGF0KGludCBhcmdjLCBjb25zdCBjaGFyICoqYXJndiwgaW50IHJ1bl9p
+ZHgpDQo+ID4gQEAgLTg2OCwxNSArODUzLDM3IEBAIHN0YXRpYyBpbnQgX19ydW5fcGVyZl9zdGF0
+KGludCBhcmdjLCBjb25zdCBjaGFyDQo+ICoqYXJndiwgaW50IHJ1bl9pZHgpDQo+ID4gICAgICAg
+ICBpbnQgZXJyOw0KPiA+ICAgICAgICAgYm9vbCBzZWNvbmRfcGFzcyA9IGZhbHNlOw0KPiA+ICAg
+ICAgICAgc3RydWN0IGNoaWxkX3Byb2Nlc3MgY21kOw0KPiA+ICsgICAgICAgcHRocmVhZF90IHRo
+cmVhZF9zY3JpcHQ7DQo+ID4NCj4gPiAgICAgICAgIC8vUHJlcGFyZSBwZXJmIHJlY29yZCBmb3Ig
+c2FtcGxpbmcgZXZlbnQgcmV0aXJlX2xhdGVuY3kgYmVmb3JlIGZvcmsgYW5kDQo+IHByZXBhcmUg
+d29ya2xvYWQNCj4gPiAgICAgICAgIGlmIChzdGF0X2NvbmZpZy50cGVic19ldmVudF9zaXplID4g
+MCkgew0KPiA+ICAgICAgICAgICAgICAgICBpbnQgcmV0Ow0KPiA+DQo+ID4gKyAgICAgICAgICAg
+ICAgIHN0cnVjdCB0cGVic19ldmVudCAqZTsNCj4gPiAgICAgICAgICAgICAgICAgcHJfZGVidWco
+InBlcmYgc3RhdCBwaWQgPSAlZFxuIiwgZ2V0cGlkKCkpOw0KPiA+ICAgICAgICAgICAgICAgICBy
+ZXQgPSBwcmVwYXJlX3BlcmZfcmVjb3JkKCZjbWQpOw0KPiA+ICAgICAgICAgICAgICAgICBpZiAo
+cmV0KQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+
+ICsgICAgICAgICAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KGUsICZzdGF0X2NvbmZpZy50cGVi
+c19ldmVudHMsIG5kKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHRwZWJz
+X3JldGlyZV9sYXQgKm5ldyA9IG1hbGxvYyhzaXplb2Yoc3RydWN0DQo+IHRwZWJzX3JldGlyZV9s
+YXQpKTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFuZXcpDQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLTE7DQo+IA0KPiBUaGlzIHdv
+dWxkIGxlYXZlIHRoZSByZWNvcmQgY29tbWFuZC4gIEkgdGhpbmsgeW91J2QgYmV0dGVyDQo+IGRv
+IHRoaXMgYmVmb3JlIHByZXBhcmVfcGVyZl9yZWNvcmQoKS4NCj4gDQo+IA0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIG5ldy0+bmFtZSA9IHN0cmR1cChlLT5uYW1lKTsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBuZXctPnRwZWJzX25hbWUgPSBzdHJkdXAoZS0+dHBlYnNfbmFtZSk7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbmV3LT5jb3VudCA9IDA7DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgbmV3LT5zdW0gPSAwOw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGxpc3RfYWRkX3RhaWwoJm5ldy0+bmQsICZzdGF0X2NvbmZpZy50cGVic19yZXN1bHRzKTsN
+Cj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHB0
+aHJlYWRfY3JlYXRlKCZ0aHJlYWRfc2NyaXB0LCBOVUxMLCBfX2NtZF9zY3JpcHQsICZjbWQpKSB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAga2lsbChjbWQucGlkLCBTSUdURVJNKTsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9zZShjbWQub3V0KTsNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICBwcl9lcnIoIkNvdWxkIG5vdCBjcmVhdGUgdGhyZWFkIHRvIHByb2Nlc3Mg
+c2FtcGxlIGRhdGEuXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLTE7
+DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiArICAgICAgICAgICAgICAgc2xlZXAoMik7DQo+
+IA0KPiBXaHk/DQoNCkluIG15IGV4cGVyaW1lbnRzLCBJIGZvdW5kIHRoYXQgcGVyZiByZWNvcmQg
+aW5pdGlhbGl6YXRpb24gdGltZSBpcyB1c3VhbGx5IGxvbmdlciB0aGFuIA0KdGhlIHRpbWUgbmVl
+ZGVkIGluIHBlcmYgc3RhdCwgZXNwZWNpYWxseSB3aGVuIHdlIHN0YXJ0IGEgbG90IG9mIGluaXRp
+YWxpemF0aW9uIG9mIHBlcmYgDQpzdGF0IGJlZm9yZSBwZXJmIHJlY29yZCBhbHJlYWR5LiBXaXRo
+b3V0IGEgd2FpdGluZyB0aW1lIGhlcmUsIHBlcmYgcmVjb3JkIG1heSBub3QgDQpoYXZlIGVub3Vn
+aCB0aW1lIHRvIGxhdW5jaCBhbmQgY29sbGVjdCBkYXRhIGlmIHRoZSBleGVjdXRpb24gdGltZSBv
+ZiB0aGUgcGFyZW50IA0KcHJvY2VzcyAocGVyZiBzdGF0KSBpcyB2ZXJ5IHNob3J0IChhIGZldyBz
+ZWNvbmRzKS4gVGhlcmVmb3JlLCBJIGFkZGVkIGEgc2xlZXAgaGVyZSB0byANCndhaXQgZm9yIHBl
+cmYgcmVjb3JkIGFzIGEgcXVpY2sgYnV0IGFkIGhvYyBzb2x1dGlvbiBoZXJlLiBUaGUgdHdvIHNl
+Y29uZCB0aW1lIGlzIA0Kc2VsZWN0ZWQgYmFzZWQgb24gbXkgZXhwZXJpbWVudCBkYXRhLiBJIG1l
+bnRpb25lZCB0aGlzIGFzIGEgcmVtYWluaW5nIGlzc3VlIGluIA0KdGhlIGNvdmVyIGxldHRlciBv
+ZiBwYXRjaCB2MS4NCg0KSSB3aWxsIGFkZCBhIGNvbW1lbnQgaGVyZS4gUGxlYXNlIGxldCBtZSBr
+bm93IGlmIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9ucyBvbiBob3cNClRvIHNvbHZlIHRoaXMgaXNz
+dWUuIFRoYW5rcyBhIGxvdCENCg0KPiANCj4gVGhhbmtzLA0KPiBOYW1oeXVuZw0KPiANCj4gDQo+
+ID4gICAgICAgICB9DQo+ID4NCj4gPiAgICAgICAgIGlmIChmb3Jrcykgew0KPiA+IEBAIC0xMDg3
+LDEyICsxMDk0LDE1IEBAIHN0YXRpYyBpbnQgX19ydW5fcGVyZl9zdGF0KGludCBhcmdjLCBjb25z
+dCBjaGFyDQo+ICoqYXJndiwgaW50IHJ1bl9pZHgpDQo+ID4gICAgICAgICBpZiAoc3RhdF9jb25m
+aWcudHBlYnNfZXZlbnRfc2l6ZSA+IDApIHsNCj4gPiAgICAgICAgICAgICAgICAgaW50IHJldDsN
+Cj4gPg0KPiA+IC0gICAgICAgICAgICAgICBwcl9kZWJ1ZygicGlkID0gJWRcbiIsIGdldHBpZCgp
+KTsNCj4gPiAtICAgICAgICAgICAgICAgcHJfZGVidWcoImNtZC5waWQgPSAlZFxuIiwgY21kLnBp
+ZCk7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2RlYnVnKCJXb3JrbG9hZCBmaW5pc2hlZCwgZmlu
+aXNoaW5nIHJlY29yZFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2RlYnVnKCJQZXJmIHN0
+YXQgcGlkID0gJWQsIFBlcmYgcmVjb3JkIHBpZCA9ICVkXG4iLCBnZXRwaWQoKSwNCj4gY21kLnBp
+ZCk7DQo+ID4NCj4gPiAtICAgICAgICAgICAgICAgcmV0ID0gX19jbWRfc2NyaXB0KCZjbWQpOw0K
+PiA+ICsgICAgICAgICAgICAgICBraWxsKGNtZC5waWQsIFNJR1RFUk0pOw0KPiA+ICsgICAgICAg
+ICAgICAgICBwdGhyZWFkX2pvaW4odGhyZWFkX3NjcmlwdCwgTlVMTCk7DQo+ID4gICAgICAgICAg
+ICAgICAgIGNsb3NlKGNtZC5vdXQpOw0KPiA+IC0gICAgICAgICAgICAgICBwcl9kZWJ1ZygiJWRc
+biIsIHJldCk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldCA9IGZpbmlzaF9jb21tYW5kKCZjbWQp
+Ow0KPiA+ICsgICAgICAgICAgICAgICBpZiAocmV0ICE9IC1FUlJfUlVOX0NPTU1BTkRfV0FJVFBJ
+RF9TSUdOQUwpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiAg
+ICAgICAgIH0NCj4gPg0KPiA+ICAgICAgICAgaWYgKHN0YXRfY29uZmlnLndhbGx0aW1lX3J1bl90
+YWJsZSkNCj4gPiAtLQ0KPiA+IDIuNDMuMA0KPiA+DQo=
