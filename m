@@ -1,140 +1,199 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBABC38DDD;
-	Wed, 13 Mar 2024 10:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710324919; cv=none; b=f5eu+Fdjx+YW4PbWGgUUHaC06Qjx+xoSE7hQoPdZfNPpczAfWc74u34h8hdfEDEXRek5K4ZXfbq+kGqZhR22SuqFa6ZWNE4GISajg1tuEpJMwBnxivgZTxdjI7M2O2wKTG4yW31t5jKgITPRU0uXr9jXI5KvxhQ4pSHWNgY/MgQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710324919; c=relaxed/simple;
-	bh=3xD+8JCwf86jkD5e60v0HwEHcqYhgbc7VhIyD3Yys0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8z/7Pjq/MWoRQGacCGZlCyXW59ux5azyFlCV7EdoFWtDDf08Jw+CTADKOzRTqsmM2XFOJ+Y8Q8uKrClIiHAb4TwGoC6jw689mb9L6D34RjYkYkyjetw0ZiUA4RRvo++9BLsyb3I7NXcpYEB1L40F8+s2eIv3UaTrWPrT8nGTMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AD1lDp0o; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED08387;
+	Wed, 13 Mar 2024 10:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710325621; cv=fail; b=qceq7H9+rQJih5liOlFDIr1M2rTAtKDRR09oG8IbeMXHDO11+JJBcSzitoHLpPFh8mp+TymGx1PjhThxNm+Hc8Uv1vV7pd5v7C/LGuHdyVtS+RRM7lFYUoTjw6WjicH6wLNNDpSell3UN8jLLghM4AJ0e4POLNtZucwWuLoV+iE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710325621; c=relaxed/simple;
+	bh=oKF01wXUo+KE8rNuQncUIvkT+AypCfIu9ehobK5aT4M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QN+J/r0TBI5wNugn7vLPWeiCZrxlX0jSbPkrUZkvEHdpDnyabQPqQEKlrtea5S54Rg+3fZ+PaMQB4s+fOOPI5RqGUfiqjgCYsrJpAKaHKCtkOS4b8U0Sby0cjNRwSjVbesdEtFubXsAQmB8ACiZXODKm/ZULXwXxFse26e3L1kw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jUMygvwB; arc=fail smtp.client-ip=40.107.94.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AD1lDp0o"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33e9623c3a8so681055f8f.0;
-        Wed, 13 Mar 2024 03:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710324916; x=1710929716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kheSY2qAqbE3EfWUfZ/cCoYdLw7ZBN3sckQtrZLqZmQ=;
-        b=AD1lDp0oaBzqO69zR9pEISPlDO57BXHpmJtpmqeyk/kQ9FlED9vL3w+/cnA94D/XaI
-         I8w3ck+sRb5zAe7x/9ItGSCiuECGUjwGXp5WhiemUS3VhAltt3/Lt8R1uzRcvJqgUuvA
-         8Lk0Vz2XzCS+UofKogYIXvuyLrfChAOAX2L8TPB5pElKO67RZdzCalmzzTsIOOSNkvxm
-         K1yFnYA1wr4nG08qC2st+xuK3Bl3hUPVfVYZyUhBCoe50rYZzmiPHmqVCZJ6S9C299VY
-         ALTTlltPqP6Um8Cc4Hh3RJXu4qJcUdlsIwyISX33r7KuB1ZdSLN2KzOX+oPYAQ4YZJ64
-         X0AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710324916; x=1710929716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kheSY2qAqbE3EfWUfZ/cCoYdLw7ZBN3sckQtrZLqZmQ=;
-        b=iRcI1MuxtgiL1E0uBGaVKnPKV0FHtdWzb3PLyLLBB+r5xRnoa3PYPEB2jPWSuOF1M2
-         Qb0uMt4nJBtMqojx39VPY/xKzKddrXyDlD6XZp4MEHQUAeEUdok4WvdekyDjjUNuaFyg
-         G6OaVspWO3akCTqMEoobOXWjbFGnuAmro2apA1BETr5YXaST/MrnsG8o/HgtxeOgrPLQ
-         iL3BtE5EUGBcX/WXkEwQv6c1PNNtzM5sJK6VKPF9CQOHrevR4m3//Gz0rjIBYkNYIj13
-         7EJcM8kB6mmzy7r7b63M3gjFMBd94AeHAu6+L44s6EJb8z2kiO8JIHN41RKxAG5Uf8A9
-         DBiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXE/AMqyOIDiH14XLshPQWYiZ0x6+pMpOdTxtXu8w8atrx/k7TDAO6/m0Y+YK2G7Cre+Tsc6ecOv1LJ9xvil1XFnPoyCPqkB53s4JiV
-X-Gm-Message-State: AOJu0YwIzQx7b2nmP9iWRaT8d9l8u32JpkNu8bgCgISw21sY5V+Ymd7g
-	JH6LH8UD4jDAan/jY+VxF51ksJfwWSfrkdmrAktoMX5On7A34bpu
-X-Google-Smtp-Source: AGHT+IFSt3/f3TSk6zw5n5Q8Lw6ZL0o9c38dSklyPWwS/Cvsr/znwMlO8pvtoidezN3tn4MCQmxkLg==
-X-Received: by 2002:a5d:5646:0:b0:33e:be35:d459 with SMTP id j6-20020a5d5646000000b0033ebe35d459mr110131wrw.48.1710324915413;
-        Wed, 13 Mar 2024 03:15:15 -0700 (PDT)
-Received: from gmail.com (1F2EF295.nat.pool.telekom.hu. [31.46.242.149])
-        by smtp.gmail.com with ESMTPSA id p12-20020adf9d8c000000b0033cf60e268fsm11324713wre.116.2024.03.13.03.15.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 03:15:14 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 13 Mar 2024 11:15:12 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
-	bp@alien8.de, eranian@google.com, irogers@google.com,
-	mario.limonciello@amd.com, ravi.bangoria@amd.com,
-	ananth.narayan@amd.com
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jUMygvwB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aQ5gFS8zXR2RwxIx9qzcqzozsuE/VgpIUx2i/rmwKmOyUNhA/ny5GXjPOl1iwoFT1EOUtxnki47XhezeHQ5QjYNustnbdh++7wSeEgR07G7jXxdQ2hcewBFPkEVKGS86NZRL42mYgPSyAPmEDlc0slb2rdhU6C8RsD7x0Qc4BTk8XW7JP9PqiajZaaXba+i3gyUlTD9qusUHo5e4rKYS7Fuup1cn3RQrUbGl1V/2LbocP2rTHH6yXPEB8sldEyP252LadYeo/jlCT8MLHSxUMnhmDtBRFPbPhAr50ef8NDc1VvNA6eTN6o1aMhpxhZlGRzw34aCt/cK3dE/3G7PqTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=12eczx+x6eLMExeLGEBzsuAOv4ZLnaGTlwx3USMDf+4=;
+ b=M/evedmpSnes7eYl7cIbJggMMXiW2StxhxGdMdMiZcFeEy/4612UV2Rq/GK6jrhZvRz+xMVvMsnXwz1qJC93zeWIMfu0Q1XPz2gb+qYJOMHxU0p5mkoNWLYEKxtbGA9YrGdrxeCJi0fpkWzxgycW816ZjHkEZzqnOFD+DJgOzUyuo70EI09YWtdHwLusVBwQwS8vS+w2rDGvOsDCMB+Dyp6MbDhxoFzDW3G05p/mFldWiUOihKMJtIVH9OreKc2mpso//Jk134YcVYTx1yuHlXKtPZ+C0UAtXfe+irvJD+cpThPhm3M5PVp4ah6DxUCBZhPtPwyOQFY4qXkMHpq5xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=12eczx+x6eLMExeLGEBzsuAOv4ZLnaGTlwx3USMDf+4=;
+ b=jUMygvwBUGIUpQAk3BQkgvG9a0CiXsfMUFCRrZRWRnLIaUdB5oOXgne1Qw7u23ihVoF26mSxu8ZsRRaPAgzSmA75uzAjTCWIXcxUeBZM0S0b3vzKD4evoh3+f/Ru1aA0PpuxL2U6KacZ9sW7kDxvqTn/4PtsYAZFeFdaaMhW8rE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by DS0PR12MB8477.namprd12.prod.outlook.com (2603:10b6:8:15b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32; Wed, 13 Mar
+ 2024 10:26:56 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9dcb:30:4f52:82f5]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::9dcb:30:4f52:82f5%5]) with mapi id 15.20.7362.035; Wed, 13 Mar 2024
+ 10:26:56 +0000
+Message-ID: <960ce5ba-a8b1-4db7-b76c-b97869c61f12@amd.com>
+Date: Wed, 13 Mar 2024 15:56:43 +0530
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 1/3] perf/x86/amd/lbr: Use freeze based on availability
-Message-ID: <ZfF8sIol5xQcJM9F@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
+ bp@alien8.de, eranian@google.com, irogers@google.com,
+ mario.limonciello@amd.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
 References: <cover.1706526029.git.sandipan.das@amd.com>
  <12f378d5c9459e765c6c3a14b092e6f91da596e3.1706526029.git.sandipan.das@amd.com>
+ <ZfF8sIol5xQcJM9F@gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <ZfF8sIol5xQcJM9F@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0105.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:27::20) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12f378d5c9459e765c6c3a14b092e6f91da596e3.1706526029.git.sandipan.das@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|DS0PR12MB8477:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60b704b5-6b27-4601-36e3-08dc43481b95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pkFCNYE8xZSDR8tdM1u18ABJoFDcXEARTr4Q7rG6MVPdgQMKc1Z/FJ2NoL3WAo7v9Zp55aNOLmJiKzefZKE7E2HNtTxhll82tLVXI7n1dDI6VBfPznfD7O5+8FgB929Khgj4KF0EJaxSp1X3JEPXXjnxleqk69nlE7TUMZC55RwlnfLWQ1hvC84J4X8tYOEPRoVtfV8WHqS1zZsfd93YdEd/QCWRAzzP3fnEkz5zjRnNPzLyau7dUJWEu7G7+yroor0nS4TY0XcmcnLgJX8sm5II9tEFd2qLHFy73qjk2sRfQIUltA+s9Xo/zdhAzTO52ZAYEXbbyKXU6mXOAU3N6O15G9C0XvNLXW8KjaMCcvWGZ07fOnQExk09m2/lC/Awg+bn6i4DdbHBVcq/tdgoP6kjo8A00iAmZuKZn5uYkQeqB820w5sVCh1YhHkWg83WW3QobY1AtuQXviMShzrAI3l86qKHf6L+cKeny5O+xJA4MzcPtp+XWZWO9nxiN4BFvzBvI3Cbwr7lsCKfjbuC6X2pYe0kPL61gct5TkyrODnJfd3v8rPryk2Rd3H/iY1xOgLJa5mQUlthph2uTMgYHX3UMks22eMMoZi/BOV1m3dd2vs1ukrbChGpuhui/nN4OXTRmY+7Z0HRovGQTwhhUnEOs7x7tvj+qjLrJx00JC0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bVdkYllWeW1IdGhERDQ4WUFXQWpnVVdVbmlBdDZKTndDTk42bXZyM3BEcUMy?=
+ =?utf-8?B?SldIZUVMblBrWHR6TEprWE92UGNsTlowb1NxSGw2NXBYMGlWVGhxbGFJYkNG?=
+ =?utf-8?B?aW1Cc3VRb0FtTlFxSWRrZ0dIclJiYXF1Z296WDZoMDhLU3Z6b2w4blNSNjd5?=
+ =?utf-8?B?NTNjUUs5TjFEWHRFWG1iVHUvT1JLaUhjQzA3TDdsamVWeHlmK3h6SEJPTDlF?=
+ =?utf-8?B?bGlIeWtjdmRxZ1FNLzBJdlB2Y243eThnbFgzRkpDU0tUckVySVoyZURObXU5?=
+ =?utf-8?B?cFdUOEpPWm1iUWtjVWxPWFBzYXdRaFJ3NFVMd0d6K0xkRitzUUI5QjlVWkw5?=
+ =?utf-8?B?UDZVRzBkQmR2MlMrVXlmZlpISHJDQUZiTklyeHRPV2g3MFcyNGZ4L2ZkN1ht?=
+ =?utf-8?B?RkNDV1FVeHNGK1JVTVA1VGt3SFJrbEdyREUwREhRejVrZ1VISkxlbEVVR1J0?=
+ =?utf-8?B?NTM5blo2QytJYkhPaVJUanlJUWJ3ZlpUMWtFcWYzd2crdUdBRWhna0lDcUx2?=
+ =?utf-8?B?VkhjMGRCL1hwSlBqM3N2ODc0bk5QS01mRGNKdVJPK3lhd0ZLdVNEUFFwYTJU?=
+ =?utf-8?B?djlSOWx1ZUdCVmxiZGxsVmxVekJCRW5hcTl3Tzd0dXBrd0x1Y0x0Yks3S0d2?=
+ =?utf-8?B?YTFYY3A5UGg2VFdFL1ZIWEQrb3ZGTWFTdi9FRGxOSW9xUnJVeGhsbUxhRzNQ?=
+ =?utf-8?B?L0htMnJIeTZvYklidlVIM004SWRHOGZ4MStXNHVJQzNSM3g2SWhiK3Q3QmtY?=
+ =?utf-8?B?V0pCQzhOLyt5b2t5dnVOekdMeFQrdG9uNjh5dlZNR1ZnbjA1ZHZqekQ0S3lI?=
+ =?utf-8?B?c296RFhnUFlteGdDZlIvOTFSNDBJdlJLVUsxRS9uQWoyNllBd2ZranhJUGJv?=
+ =?utf-8?B?NVYraHpRZGpaTERtbUxtWVBTOXMxMU5nRWQ0ZTJZaTE0dnRicThQY0pDQXN3?=
+ =?utf-8?B?bWZ2Y2JWckVmZ1YyWmVQQUg1cXRCR3RVdDIxK1RKZ2lUUjlvcUYrY0hMQlZB?=
+ =?utf-8?B?R24yMFdhME5Hc3ViYmphbWpoeFdJRmg4akljSGl4Y2hZVVZ6UUdoNW5JUlZT?=
+ =?utf-8?B?ZHBmSG1zV3gvV1hTaUI1TU5mblUvL0lXV2FyMVNQY3ZkdnlRQkhDREk3MUtW?=
+ =?utf-8?B?NzB6UHlHTXVXYUo4RmppdEpBTlV2N25tTW0yL2VNUTZnQis1WWptSXpFMU5w?=
+ =?utf-8?B?dVM1dTR5WjhDS3Fzd2tiaDZwZitnbmVKekJkbWVBc1ZkNTRkNUNyclBBYVps?=
+ =?utf-8?B?TUMvNWwyQVhiSVE5bXJsSnQySkhqSktCQnB4M01NNEVCSE80eFdqbHJsWS9F?=
+ =?utf-8?B?UHpoWGhrUDlvNFVZYkR0clNuaC90U2c1bHB3cDAybnl2b2YxQ0srNHpadUNG?=
+ =?utf-8?B?dVFIVW9TeWtWWTcrOWp6YkVuSDB0RU9RM2NRRkIwYzg1dVNOZW1JNnExUkZu?=
+ =?utf-8?B?QnhRUGVRMWJzN2FUZWpCUnNQWFRJYjI0UWtMdXJtVm84T3BtaE85MEF2eXcy?=
+ =?utf-8?B?M29oNkZsM1NTVkFCcHpTQjVTbk05S3RaeW1Vc3ZmSVYyY2tVVHFveHFRbDE2?=
+ =?utf-8?B?QkJBZk9pWVNkQzY4S3ZPN2huNGFyaDFzaFRseFlaM25TVnd6NTN0QU4ydDFH?=
+ =?utf-8?B?eXd3WTdVOTA4eW9rdmZiQ29DM25KMExmQ0M1ZnNqYmtKRmJrN1FKckJlNE04?=
+ =?utf-8?B?YXZNbVlPbDNMSW1CQ1UzU3dGaVplRHFESlZHNEorYVRhUXk1UXhRNE9KNzFY?=
+ =?utf-8?B?NVIxMXdRd2FVb0FQc2luVjJSSGUxMDBuR2t5cFAvajhqdi9IOXlMTkxreVRG?=
+ =?utf-8?B?RkhzY1l3UTNKblB0Y29MKzg5NVVmalE5clNnVW90Z0FzQ09EeHVvN2RCY2Uy?=
+ =?utf-8?B?WnJpc2lKOEVBTlZiVEVROE1VQmhHN3l0NWZWaUd0aWNkY0hDU1FsT2Fpbndr?=
+ =?utf-8?B?aDRWQUJuN05EMGVaNGNrYzF0K2pXN1MzRUlGcldqTlNlUTZrQ2NROHpZSk82?=
+ =?utf-8?B?djBKWStoSkRDNXF6akM4L29uMUZUbHNXVjkxaXRFZWN4eTdnRlRkaStBZlB5?=
+ =?utf-8?B?QkV6Zk85QnUxM2FRNW9WQnpjRklFQWwvVVZzcU9mdWlxRzhVd0xhSUtHVk5a?=
+ =?utf-8?Q?pCPeDH/v1RV/qeF9LXTEbY/e3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60b704b5-6b27-4601-36e3-08dc43481b95
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 10:26:56.0399
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wyIO84NFfg6c+xs/bgHRgV/xKe8QZniS3KPIVJcQPUKqhbhlp/TU6c4DW+twAhKMrjx+n7v8nk4CgzaKYQ86Kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8477
 
-
-* Sandipan Das <sandipan.das@amd.com> wrote:
-
-> Currently, it is assumed that LBR Freeze is supported on all processors
-> which have CPUID leaf 0x80000022[EAX] bit 1 set. This is incorrect as
-
-That's X86_FEATURE_AMD_LBR_V2, right? Should probably be mentioned in the 
-changelog.
-
-> the feature availability is additionally dependent on CPUID leaf 
-> 0x80000022[EAX] bit 2 being set which may not be set for all Zen 4 
-> processors. Define a new feature bit for LBR and PMC freeze and set the 
-> freeze enable bit (FLBRI) in DebugCtl (MSR 0x1d9) conditionally.
-
-What happens on such Zen 4 CPUs that don't support LBR Freeze? Does the CPU 
-just ignore it, or something worse?
-
-> It should still be possible to use LBR without freeze for profile-guided
-> optimization of user programs by using an user-only branch filter during
-> profiling. When the user-only filter is enabled, branches are no longer
-> recorded after the transition to CPL 0 upon PMI arrival. When branch
-> entries are read in the PMI handler, the branch stack does not change.
+On 3/13/2024 3:45 PM, Ingo Molnar wrote:
 > 
-> E.g.
+> * Sandipan Das <sandipan.das@amd.com> wrote:
 > 
->   $ perf record -j any,u -e ex_ret_brn_tkn ./workload
+>> Currently, it is assumed that LBR Freeze is supported on all processors
+>> which have CPUID leaf 0x80000022[EAX] bit 1 set. This is incorrect as
 > 
-> Since the feature bit is visible under flags in /proc/cpuinfo, it can be 
-> used to determine the feasibility of use-cases which require LBR Freeze 
-> to be supported by the hardware such as profile-guided optimization of 
-> kernels.
+> That's X86_FEATURE_AMD_LBR_V2, right? Should probably be mentioned in the 
+> changelog.
+> 
 
-Sounds good to me.
+Yes. I'll add it to the changelog.
 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 4af140cf5719..e47ea31b019d 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -97,7 +97,7 @@
->  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
->  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
->  #define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
-> -/* FREE, was #define X86_FEATURE_LFENCE_RDTSC		( 3*32+18) "" LFENCE synchronizes RDTSC */
-> +#define X86_FEATURE_AMD_LBR_PMC_FREEZE	( 3*32+18) /* AMD LBR and PMC Freeze */
->  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
->  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
->  #define X86_FEATURE_ALWAYS		( 3*32+21) /* "" Always-present feature */
+>> the feature availability is additionally dependent on CPUID leaf 
+>> 0x80000022[EAX] bit 2 being set which may not be set for all Zen 4 
+>> processors. Define a new feature bit for LBR and PMC freeze and set the 
+>> freeze enable bit (FLBRI) in DebugCtl (MSR 0x1d9) conditionally.
+> 
+> What happens on such Zen 4 CPUs that don't support LBR Freeze? Does the CPU 
+> just ignore it, or something worse?
+> 
 
-Could you please port this to the latest upstream kernel? The 3*32+18 slot 
-is now used for another purpose, and we need to define a new synthethic 
-CPUID word, word 21 if I'm counting it right.
+In this case, LBR ignores PMC overflows and the branch records keep getting
+updated continuously as execution progresses.
 
-Don't forget to increase NCAPINTS from 21 to 22, and consider the fixed 
-asserts in the x86_bug_flags[] definitions in <asm/cpufeature.h>, and the 
-asserts in <asm/disabled-features.h> and <asm/required-features.h>. This 
-new word should probably be added in a separate preparatory patch.
+>> It should still be possible to use LBR without freeze for profile-guided
+>> optimization of user programs by using an user-only branch filter during
+>> profiling. When the user-only filter is enabled, branches are no longer
+>> recorded after the transition to CPL 0 upon PMI arrival. When branch
+>> entries are read in the PMI handler, the branch stack does not change.
+>>
+>> E.g.
+>>
+>>   $ perf record -j any,u -e ex_ret_brn_tkn ./workload
+>>
+>> Since the feature bit is visible under flags in /proc/cpuinfo, it can be 
+>> used to determine the feasibility of use-cases which require LBR Freeze 
+>> to be supported by the hardware such as profile-guided optimization of 
+>> kernels.
+> 
+> Sounds good to me.
+> 
+>> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+>> index 4af140cf5719..e47ea31b019d 100644
+>> --- a/arch/x86/include/asm/cpufeatures.h
+>> +++ b/arch/x86/include/asm/cpufeatures.h
+>> @@ -97,7 +97,7 @@
+>>  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
+>>  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
+>>  #define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+>> -/* FREE, was #define X86_FEATURE_LFENCE_RDTSC		( 3*32+18) "" LFENCE synchronizes RDTSC */
+>> +#define X86_FEATURE_AMD_LBR_PMC_FREEZE	( 3*32+18) /* AMD LBR and PMC Freeze */
+>>  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
+>>  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
+>>  #define X86_FEATURE_ALWAYS		( 3*32+21) /* "" Always-present feature */
+> 
+> Could you please port this to the latest upstream kernel? The 3*32+18 slot 
+> is now used for another purpose, and we need to define a new synthethic 
+> CPUID word, word 21 if I'm counting it right.
+> 
+> Don't forget to increase NCAPINTS from 21 to 22, and consider the fixed 
+> asserts in the x86_bug_flags[] definitions in <asm/cpufeature.h>, and the 
+> asserts in <asm/disabled-features.h> and <asm/required-features.h>. This 
+> new word should probably be added in a separate preparatory patch.
+> 
 
-Thanks,
-
-	Ingo
+Sure. I'll rebase and send this along with the other changes.
+Thanks for the review.
