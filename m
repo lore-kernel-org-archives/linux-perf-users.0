@@ -1,228 +1,92 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C1E446AF
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 14:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2F947A5D;
+	Wed, 13 Mar 2024 15:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340917; cv=none; b=AKpa3LDcHRbkAqeFAAfyPKnhCdQVU977gHXAgRszlHdK2E0vzSa+5szWzvfEE6yEIIYZuRKpRHAvQu/BJjH8bK9IuBl6u4ekGFinSqGnpB4RkHThxuiLGyJPH3yI65bzHtc0ziXMtrB0M666CX5vvtGZrmnNMxQU7eMKGOZVI/g=
+	t=1710343416; cv=none; b=njp/wHzC41fQmPP+OkRaTAGU8kYxeU7yFCJ9CGz5Hr6WjE032oGRrc5KEbTjXkEVHFKjtSZCS/mMjUUb8l1HSdOycym2drrV/buJLxh9rvS0B37G1qFgJhYYkpYVBLGOHisZ+N6KqN+ymEmCgmY466TRCCmQxWJurwIlV04YtkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340917; c=relaxed/simple;
-	bh=TCxTim0JhN978rqo31dYi0sXMJZtVVHuwFfXWTUdTjQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iSnEEGh4edAjBWv5QjRP1YEQye6pzyOxVvT7QBjjHovolR9g+zog8DdFxztXdVUP48cEMZTl91mBZQ8q5cSN+xWmNBKshG2Ec+h87Lsx15J9Nx2Vq32vpqhk/iu/mjHctTRolLwkgrZkBwy4oLeLPL1FVx4b6J0spViiDSk5Rdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uUubTyAb; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710343416; c=relaxed/simple;
+	bh=IP2p6UB0Iw0uuB5s9+1fkRSK+RhQkxmHwBeJcrGlpEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lvMbUZEWMlRECYhVs/WaeI+ejZUwHSdWmqqK4HZkTncZYpEghn4g0w8KsMtjMaLzTlsSOW7VE8ZpyHTxt50nYNlPvTiTdUOmTQRR134/uw6x3CxujE5QoVYK8T56QCjehGgc2zQQEqLia3DTfmTbx3BubUWcGeCFhVOv28+H5l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHQc+hr0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uUubTyAb"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4728f30090dso838229137.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 07:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710340914; x=1710945714; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qyza15vzLpvyPMhUd5jAdze5xBbHjlf2omLucHJ3cjY=;
-        b=uUubTyAbv2g2vBvJhM6oyr62KonL0dPwyNe+DI1FqNGZO4B2zgcohktBRRqP/KNc5Q
-         I99og0N0S5yrCBAIjQkZgSSPzZKxa5y35+R7+28l3eMKmMSQpDm0FCuEBUkD8oj7FuAp
-         D4oLL27rspOfDCAbFpuUuWmOvtoLE2pUq7qN8Iw3dVfSZffMAoDAejOhJFlDmkOvTJze
-         zz4DmbQO3KIDaUPHEZhMHERKFTWArAgW7Y6KDVEYWnqqvObCJlfKlmUOCjfKKp30ixZ2
-         TPAwyyuMHpOKM5P6fCOTZiC++vtY26Gn5LhXJvPj5ptm9HguYYOXI1oTYz0Tg+g4iuTO
-         wgxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710340914; x=1710945714;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qyza15vzLpvyPMhUd5jAdze5xBbHjlf2omLucHJ3cjY=;
-        b=SBp87laiSLFyC22E2yoVcChQzSn7CFJvgdPSn6czpuxYVAduNFSldV5ySBmn6hdh2a
-         BZKXfI6t8eoXv4Kd0VMRHU0qthKRV4DvdONlTv1PDPPjTTIcb6gCW0G8zAQTL1g8YY01
-         DU7VqNVe5WuJWHuj7hraI8I0aNDbEe+nP+k4RHDS9FR9RVtuO1glgQoNxMGDlDU4cnRI
-         TZ8KegVGuv7g+jF6numGEfz0YISZ5plZk0zqyYzS90vubKd30UT5IhqciCGuFxJNMGIT
-         eiMAU5vCUJBoRuUkDTDQaOv3xEJYuJO/Kh+9SHZ1wDpBTr3zC/kr5VfKTL1Y0HRHlSdt
-         emdg==
-X-Gm-Message-State: AOJu0YyFoQxIXx7a2LRsWLomy3v0QY800hc9DPw20QQ1mQ6NhJpiGXQj
-	w6pw35JNO8gklmkUksbL/Lz/jiUfDazZFD2iZaXDvLdK7EfLQ6qzg6nrYoA2IJyOV+zCdyMcXkX
-	Q4KIzeSI/6uIICPHHVV7iMoMdZcYR9fnZWC3CW2euddzMIrgdjfE6
-X-Google-Smtp-Source: AGHT+IFUGJ7RGIpI/SpKlWXEVN+GnmAYmOYpP6RBV02YK44qzupP1X+wIECLxOlLIv5k2iX8BPoAuVGSQrmR/RNycu0=
-X-Received: by 2002:a05:6102:3714:b0:473:ed7:fbc with SMTP id
- s20-20020a056102371400b004730ed70fbcmr102731vst.5.1710340914104; Wed, 13 Mar
- 2024 07:41:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHQc+hr0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694F2C43390;
+	Wed, 13 Mar 2024 15:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710343415;
+	bh=IP2p6UB0Iw0uuB5s9+1fkRSK+RhQkxmHwBeJcrGlpEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lHQc+hr0Wq2NFCcdKe5SfpqUwSvs9H/E+m9e7UQp5YdGl4EKoulErVB8w4ygvnxHB
+	 yT8J03v1/sQ7kcy6n5UDpDcK5m6rt9KEgbxMr5iJmf8up73XvVjuX3QlKVljupQmb/
+	 0Ui6N7b/mk2ZzxhgO5a+jmVkn5rubI4tIrcQX+ofgq/AW0c67NWGnyvevI5pWRQ8LD
+	 Qgm0ODhAJ2VzHWlE6XngxLY4j/45yucUpHyQFj5YyI4mJSxtkhV4t+rtB69fgvzhB1
+	 szm3JN3CN/vh5L/OhXodECl/gighc7aF804j7a3bq01sPG0NdhkVv/Kl4eO96zGIGs
+	 4/TKRbtYfu+kw==
+Date: Wed, 13 Mar 2024 12:23:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfHE9Ev5T3Lq7o34@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312180814.3373778-1-bigeasy@linutronix.de> <20240312180814.3373778-3-bigeasy@linutronix.de>
-In-Reply-To: <20240312180814.3373778-3-bigeasy@linutronix.de>
-From: Marco Elver <elver@google.com>
-Date: Wed, 13 Mar 2024 15:41:18 +0100
-Message-ID: <CANpmjNNYNxMMSdWFiPiT3i888fi8--k_H0xMX7i17VCT97vARg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf: Enqueue SIGTRAP always via task_work.
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
 
-On Tue, 12 Mar 2024 at 19:08, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> A signal is delivered by raising irq_work() which works from any context
-> including NMI. irq_work() can be delayed if the architecture does not
-> provide an interrupt vector. In order not to lose a signal, the signal
-> is injected via task_work during event_sched_out().
->
-> Instead going via irq_work, the signal could be added directly via
-> task_work. The signal is sent to current and can be enqueued on its
-> return path to userland instead of triggering irq_work. A dummy IRQ is
-> required in the NMI case to ensure the task_work is handled before
-> returning to user land. For this irq_work is used. An alternative would
-> be just raising an interrupt like arch_send_call_function_single_ipi().
->
-> During testing with `remove_on_exec' it become visible that the event
-> can be enqueued via NMI during execve(). The task_work must not be kept
-> because free_event() will complain later. Also the new task will not
-> have a sighandler installed.
->
-> Queue signal via task_work. Remove perf_event::pending_sigtrap and
-> and use perf_event::pending_work instead. Raise irq_work in the NMI case
-> for a dummy interrupt. Remove the task_work if the event is freed.
->
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  include/linux/perf_event.h |  3 +--
->  kernel/events/core.c       | 45 +++++++++++++++++---------------------
->  2 files changed, 21 insertions(+), 27 deletions(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index d2a15c0c6f8a9..24ac6765146c7 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -781,7 +781,6 @@ struct perf_event {
->         unsigned int                    pending_wakeup;
->         unsigned int                    pending_kill;
->         unsigned int                    pending_disable;
-> -       unsigned int                    pending_sigtrap;
->         unsigned long                   pending_addr;   /* SIGTRAP */
->         struct irq_work                 pending_irq;
->         struct callback_head            pending_task;
-> @@ -959,7 +958,7 @@ struct perf_event_context {
->         struct rcu_head                 rcu_head;
->
->         /*
-> -        * Sum (event->pending_sigtrap + event->pending_work)
-> +        * Sum (event->pending_work + event->pending_work)
->          *
->          * The SIGTRAP is targeted at ctx->task, as such it won't do changing
->          * that until the signal is delivered.
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index c7a0274c662c8..e9926baaa1587 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2283,21 +2283,6 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
->                 state = PERF_EVENT_STATE_OFF;
->         }
->
-> -       if (event->pending_sigtrap) {
-> -               bool dec = true;
-> -
-> -               event->pending_sigtrap = 0;
-> -               if (state != PERF_EVENT_STATE_OFF &&
-> -                   !event->pending_work) {
-> -                       event->pending_work = 1;
-> -                       dec = false;
-> -                       WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-> -                       task_work_add(current, &event->pending_task, TWA_RESUME);
-> -               }
-> -               if (dec)
-> -                       local_dec(&event->ctx->nr_pending);
-> -       }
-> -
->         perf_event_set_state(event, state);
->
->         if (!is_software_event(event))
-> @@ -6741,11 +6726,6 @@ static void __perf_pending_irq(struct perf_event *event)
->          * Yay, we hit home and are in the context of the event.
->          */
->         if (cpu == smp_processor_id()) {
-> -               if (event->pending_sigtrap) {
-> -                       event->pending_sigtrap = 0;
-> -                       perf_sigtrap(event);
-> -                       local_dec(&event->ctx->nr_pending);
-> -               }
->                 if (event->pending_disable) {
->                         event->pending_disable = 0;
->                         perf_event_disable_local(event);
-> @@ -9592,14 +9572,17 @@ static int __perf_event_overflow(struct perf_event *event,
->
->                 if (regs)
->                         pending_id = hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
-> -               if (!event->pending_sigtrap) {
-> -                       event->pending_sigtrap = pending_id;
-> +               if (!event->pending_work) {
-> +                       event->pending_work = pending_id;
->                         local_inc(&event->ctx->nr_pending);
-> -                       irq_work_queue(&event->pending_irq);
-> +                       WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-> +                       task_work_add(current, &event->pending_task, TWA_RESUME);
-> +                       if (in_nmi())
-> +                               irq_work_queue(&event->pending_irq);
+On Wed, Mar 13, 2024 at 03:35:27PM +0100, Marco Elver wrote:
+> On Tue, 12 Mar 2024 at 19:08, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> > Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+> > the signal gets delayed until event_sched_out() which then uses
+> > task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+> > signal is delivered with disabled preemption.
 
-Some brief code comments here would help having to dig through git
-history to understand this.
+> > While looking at this, I also stumbled upon __perf_pending_irq() which
+> > requires disabled interrupts but this is not the case on PREEMPT_RT.
 
->                 } else if (event->attr.exclude_kernel && valid_sample) {
->                         /*
->                          * Should not be able to return to user space without
-> -                        * consuming pending_sigtrap; with exceptions:
-> +                        * consuming pending_work; with exceptions:
->                          *
->                          *  1. Where !exclude_kernel, events can overflow again
->                          *     in the kernel without returning to user space.
-> @@ -9609,7 +9592,7 @@ static int __perf_event_overflow(struct perf_event *event,
->                          *     To approximate progress (with false negatives),
->                          *     check 32-bit hash of the current IP.
->                          */
-> -                       WARN_ON_ONCE(event->pending_sigtrap != pending_id);
-> +                       WARN_ON_ONCE(event->pending_work != pending_id);
->                 }
->
->                 event->pending_addr = 0;
-> @@ -13049,6 +13032,13 @@ static void sync_child_event(struct perf_event *child_event)
->                      &parent_event->child_total_time_running);
->  }
->
-> +static bool task_work_cb_match(struct callback_head *cb, void *data)
-> +{
-> +       struct perf_event *event = container_of(cb, struct perf_event, pending_task);
-> +
-> +       return event == data;
-> +}
-> +
->  static void
->  perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
->  {
-> @@ -13088,6 +13078,11 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
->                  * Kick perf_poll() for is_event_hup();
->                  */
->                 perf_event_wakeup(parent_event);
-> +               if (event->pending_work &&
-> +                   task_work_cancel_match(current, task_work_cb_match, event)) {
+> > This series aim to address both issues while not introducing a new issue
+> > at the same time ;)
+> > Any testing is appreciated.
 
-Brief comment which case this covers would be good.
+> > v1…v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigeasy@linutronix.de/
+> >     - Marco pointed me to the testsuite that showed two problems:
+> >       - Delayed task_work from NMI / missing events.
+> >         Fixed by triggering dummy irq_work to enforce an interrupt for
+> >         the exit-to-userland path which checks task_work
+> >       - Increased ref-count on clean up/ during exec.
+> >         Mostly addressed by the former change. There is still a window
+> >         if the NMI occurs during execve(). This is addressed by removing
+> >         the task_work before free_event().
+> >       The testsuite (remove_on_exec) fails sometimes if the event/
+> >       SIGTRAP is sent before the sighandler is installed.
+ 
+> Tested-by: Marco Elver <elver@google.com>
+ 
+> It does pass the tests in tools/testing/selftests/perf_events (non-RT
+> kernel, lockdep enabled). But I do recall this being a particularly
+> sharp corner of perf, so any additional testing and review here is
+> useful.
 
-> +                       put_event(event);
-> +                       local_dec(&event->ctx->nr_pending);
-> +               }
->                 free_event(event);
->                 put_event(parent_event);
->                 return;
-> --
-> 2.43.0
->
+Right, I'm testing with the full 'perf test' suite now.
+
+- Arnaldo
