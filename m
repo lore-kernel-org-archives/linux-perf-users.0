@@ -1,34 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB744369;
-	Wed, 13 Mar 2024 14:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08517482D4;
+	Wed, 13 Mar 2024 14:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338810; cv=none; b=dEX/NjBy6M8D+FFLFjrhQs/Ggj4irvsZuuxcy3RkvD6AIqNnEs/So472H5BVmHE/roTve7RaSeDRppEAbuYR6pM2GZ2HWngED+eWMPmYWjZS0ofJNTh/VWIuvFNPeuXTYaKw4thn36KffrM3gwjrEK/QDjUuLyOjexpvOQ35Z1A=
+	t=1710339355; cv=none; b=nXH9UY25J1WbaejIY/oIyUlx/XHcg06xD0a5aayyOyBqwxxZ8PQGJzcTpLawjtovohIg9jzVZx2JyiQ2G3/Qs473l+mIVAxuDlx8WpeyRA4ZMLTB8LEvycthT1gMUYT6smNEZqHBr5u4Ck8ru11dIpQaDVbFoGL1PMaHSVZOY2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338810; c=relaxed/simple;
-	bh=0jlutHs2yvu1tTSpSrKgQrXzPWCFfYo1yaC03lAmRJs=;
+	s=arc-20240116; t=1710339355; c=relaxed/simple;
+	bh=WpNypiDUbIttvmRZkKiZ5UNvBc+73ezSZ8gMtTGp8RQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hAO3XgaoNVBIVSWKYszKP3jRe4SJCn1mTRv/1VMnNhRyEUutCQWzJQdg7RTC6uVVrcOhW2ZWpzGQSEJqBzpdkG7mQz7BFfI8VGjeJbTs6Vm9E0HBLMA8yEDiSA+9SRQwxO7j1Y1mC6D6zmEiwNdoMjRWC7OuCLxl6syLjH91NC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2rHGejP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DS1Ct7JooyWDbyK7czCMx6KLXLTEsHGSSawnGp04VF3VrYnO82VS8uVYALb4dwanW3I7TEMPU7fq8ccVde4AsaxdsITKGFnfHbvwQoq6/THliWRzTRqCamzFhwHnJM8Er188ZuUZIjR9kKo7iTZ/VOfetee7FqcyJm3v4twTW7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1hXvkL1Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h8KyTIjh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2rHGejP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59E71C433F1;
-	Wed, 13 Mar 2024 14:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710338809;
-	bh=0jlutHs2yvu1tTSpSrKgQrXzPWCFfYo1yaC03lAmRJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d2rHGejPC6zUe43HEHmolXuF+RGCmZkV3WlO/ezoNnheDMK4Ru0SNxL7xADNon3FG
-	 BYbtnxq1u0jdpg07fV4A0ULudqsvsuttjFGMwLDN0JAjIAjfi41XEjDfFpAnSQLnGz
-	 79VUBQ/GTfykN4HLG8lpZI9rrbIZJHWf0B+98jqX633EsbGzNo+XU2gTyETO1Gl0fu
-	 cpb/ZIirhxyV6+GC0B5yiM3T/HR6yGQuMZ6X/7x5j8Kn7WUwUMv5YhgDC48V6c5pw8
-	 wmCwVbmXMZILmfrEq4/9QQABTyq8uEwHWKnMzBtBSlMTUVLei7SPQg7M21LZ5lHPtZ
-	 uZ5l9by1bouIw==
-Date: Wed, 13 Mar 2024 11:06:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1hXvkL1Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h8KyTIjh"
+Date: Wed, 13 Mar 2024 15:15:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710339352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rI193fJDLU/y2cWHTwdgLD8Oka3XevL6LyppQimuzjM=;
+	b=1hXvkL1Zg/IhiS075mOGe9ZU0T4/6WK/nwiua1qSKzQlOHStZQrv4dOeJPtn9dUEF32h+b
+	n51CM6FTNuHGeJhd4QgkruPmi18/fHD5PMfV3BsjnBhVa+olyUGzydvSUQtW3vhALmw7LU
+	u+mrk9ru/rWzbgaQxNP48T/6WvEG3+OJhV/9X2sNVGQSLAfqMAkXBYyKHT+F/KEGU/2TJX
+	MY2L84ig2L+cfjsXBNyzTQKBWV1UaPVr/nuudxR7DEdIQln7fIRnybIXlTp+bag9XMy2nL
+	7AL7HaSkH6qfgUIbmt5NbxEulDFAyEr8iD3dY3uvXHdAZ/PtNT/IzHI24tdVaQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710339352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rI193fJDLU/y2cWHTwdgLD8Oka3XevL6LyppQimuzjM=;
+	b=h8KyTIjhtVY8rAzk8nCvbHrXPCRFSv3lon8hw5z3qffzk7/z8PcZMD1+MD9UhiI4+i6T2B
+	OJ6b0gBt196JxxAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -40,36 +52,54 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
  on RT.
-Message-ID: <ZfGy9ggOIvtr_-cd@x1>
-References: <20240312180814.3373778-1-bigeasy@linutronix.de>
- <ZfDMTlTH2SdwlB9M@x1>
- <20240313081303.DClwQrvb@linutronix.de>
- <ZfGqCWzyVzyGQrAQ@x1>
- <20240313134645.bO-XyxAM@linutronix.de>
+Message-ID: <20240313141550.eG5aJcAq@linutronix.de>
+References: <ZfGqCWzyVzyGQrAQ@x1>
+ <ZfGudRl9-tB_TszO@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240313134645.bO-XyxAM@linutronix.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZfGudRl9-tB_TszO@x1>
 
-On Wed, Mar 13, 2024 at 02:46:45PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2024-03-13 10:28:41 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > One part I don't get: did you let it run or did you kill it?
-> > 
-> > If I let them run they will finish and exit, no exec_child remains.
-> > 
-> > If I instead try to stop the loop that goes on forking the 100 of them,
-> > then the exec_child remain spinning.
-> 
-> Okay. So that problem only exists if you intervene. And you can
-> reproduce this odd behaviour with my patches but not without them,
-> right?
+On 2024-03-13 10:47:33 [-0300], Arnaldo Carvalho de Melo wrote:
+> /* For exec'd child. */
+> static void exec_child(void)
+> {
+>         struct sigaction action =3D {};
+>         const int val =3D 42;
+>=20
+>         /* Set up sigtrap handler in case we erroneously receive a trap. =
+*/
+>         action.sa_flags =3D SA_SIGINFO | SA_NODEFER;
+>         action.sa_sigaction =3D sigtrap_handler;
+>         sigemptyset(&action.sa_mask);
+>         if (sigaction(SIGTRAP, &action, NULL))
+>                 _exit((perror("sigaction failed"), 1));
+>=20
+>         /* Signal parent that we're starting to spin. */
+>         if (write(STDOUT_FILENO, &val, sizeof(int)) =3D=3D -1)
+>                 _exit((perror("write failed"), 1));
+>=20
+>         /* Should hang here until killed. */
+>         while (!signal_count);
+> }
+>=20
+> So probably just a test needing to be a bit more polished?
 
-See the next message, I managed to reproduce that behaviour in a non-RT
-kernel as well.
- 
-- Arnaldo
+Maybe. I'm not sure where this is coming from. Either someone should
+kill or the signal should be delivered but, hmm=E2=80=A6 If the signal isn't
+coming then it might one of those without a perf counter.
+
+> Seems like it, on a newer machine, faster, I managed to reproduce it on
+> a non-RT kernel, with one exec_child remaining:
+
+Okay, so no regression. That is something ;)
+
+> - Arnaldo
+
+Sebastian
