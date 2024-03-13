@@ -1,46 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7DB50261;
-	Tue, 12 Mar 2024 23:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3601D3FC7;
+	Wed, 13 Mar 2024 00:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710287906; cv=none; b=iq3AQbQNI5RtUNJmDoRF6t7S/ecjfsKrAzJx7kT0jAk2Or2m3/2YKldY+z3YYB5fa6lBEE8zCGRmAQbFKSFjRGnEKW5lHZ7jygN0K15PSt78FARFIxf/+cFxRXwkVJ8ZxkWUhdanh+s1CmTmvAlb8BiXo9G68s/aBO/x5OrtogA=
+	t=1710288201; cv=none; b=lg/4lwum4XHW9k7dUibqbAZeV5Ayzxo9Whsukaf5zYcYUAfnXAgoZclqQrvPTtOzUHu25KxOAmdJzWAuQOJrWkECGKdMBzWch5VMyuRIys5v1XxE7ZxyVsAL0mvGb4lwSD/tgREhBAXiewveRwq/Y7uzyQHwnpY9qY8c9moWWGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710287906; c=relaxed/simple;
-	bh=qjWayyyQhCi250zU2Opae+utKD9GihjjAv/L830N2jU=;
+	s=arc-20240116; t=1710288201; c=relaxed/simple;
+	bh=an4lj7u4rxlc8rDrEPZl5w8IO0sZqWWdvw0+g8g2qz4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dYdB6MrT3ohyD1dBlz0II5OtyRjiNqt/xTni5BqljeNxqkF/yMjZmhX18nvGEWZNYHR0vwUeehMtLrTcIIWCcB1C0Q7pRPF/v0uBA8gpVBzm7TVZmWiVTRZ8C3G5ciszUE9SfmB/i+G6cT6hqCSN7HPHvpxiYHHGW5SlUHAzVoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aWJXU5lY; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=eMR+BXyEDnJLISJWMVz2/YuUH3cbSL4zKW1Mjm+zI54Qgie8ldv6p0yHBMGG08Gkm2mKL/NDooDqQ7ewpsw5Hc7xPLLqXvFOtdYYKXXabectFi61686DErCboqPCfQhAxSO1AknUZ7QlKUyyBDsNahtSmcYAykdPhcXnqK/7R5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GT4TdMrI; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aWJXU5lY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GT4TdMrI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710287905; x=1741823905;
+  t=1710288200; x=1741824200;
   h=from:to:cc:subject:in-reply-to:references:date:
    message-id:mime-version;
-  bh=qjWayyyQhCi250zU2Opae+utKD9GihjjAv/L830N2jU=;
-  b=aWJXU5lYanpvQ71dv+cqLCA67RXnr5PPDLDVuEPrm0W+HaX+9jebbaDz
-   CPRQxtuViBbO9U6VF15BajtARYGX8tLVkYCnNxlBi54DipMI5ss+Wjjxc
-   SZqbNghZOJsEyUem3SxeRgXqj3UdnDuCt8A0MV0ub5uWhPApCJr3OtTDG
-   jmMl6U9GDBska5zBdjRBCcUp80GMFLLXVfp44Hhmubw10CGGUXE54Rkji
-   NyaqjJ1v/wIEr1x8S8GGvgfT90G4mEk6rjCISHB/rpubhPy/T8H3Hd3rl
-   WDe5QIy13ts+a0WWWvwV6a61663qD2ybB/3XV7zfqbyTZvH+4NF29yfus
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8848662"
+  bh=an4lj7u4rxlc8rDrEPZl5w8IO0sZqWWdvw0+g8g2qz4=;
+  b=GT4TdMrIXbUd3XmOqhJaVQ3acqbqbh2PWpjUb7JUO0ok7GR9ugWUu2Rh
+   NfDkpn5D0yT9Msi6QB6YWfhCGsZRz2EgDKi7cGgVjap7TFafB2zU7QIAB
+   vxEE5si2b2nSVcJffYd/5IjT/bhezOSft4kM6hg1r8xrwYMc6tXi/LN9p
+   2sc5SCRG5Qgk4ePTC81QcElUDAarnb42j9dGkqIq4EliPkLAs6oOWlLPJ
+   1pEhR7h7xMc8gdwqRcmP/YrNbI9bSGnU26nW3aP2ZchMYw+3JCpBh4Qxo
+   2ScTJpEG3CxYYCC7PwuDsnXjeYTeR6iNWxLwTWGBz0Q7jVELdmjcnh4TH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4898090"
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="8848662"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 16:58:24 -0700
+   d="scan'208";a="4898090"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 17:03:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="42717198"
+   d="scan'208";a="12137585"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
-  by fmviesa001.fm.intel.com with ESMTP; 12 Mar 2024 16:58:23 -0700
+  by orviesa006.jf.intel.com with ESMTP; 12 Mar 2024 17:03:19 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-	id D6244301066; Tue, 12 Mar 2024 16:58:22 -0700 (PDT)
+	id 4B55B301066; Tue, 12 Mar 2024 17:03:19 -0700 (PDT)
 From: Andi Kleen <ak@linux.intel.com>
 To: weilin.wang@intel.com
 Cc: Namhyung Kim <namhyung@kernel.org>,  Ian Rogers <irogers@google.com>,
@@ -52,14 +52,14 @@ Cc: Namhyung Kim <namhyung@kernel.org>,  Ian Rogers <irogers@google.com>,
   linux-kernel@vger.kernel.org,  Perry Taylor <perry.taylor@intel.com>,
   Samantha Alt <samantha.alt@intel.com>,  Caleb Biggers
  <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v4 1/6] perf stat: Parse and find tpebs events when
- parsing metrics to prepare for perf record sampling
-In-Reply-To: <20240312234921.812685-2-weilin.wang@intel.com> (weilin wang's
-	message of "Tue, 12 Mar 2024 19:49:16 -0400")
+Subject: Re: [RFC PATCH v4 2/6] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+In-Reply-To: <20240312234921.812685-3-weilin.wang@intel.com> (weilin wang's
+	message of "Tue, 12 Mar 2024 19:49:17 -0400")
 References: <20240312234921.812685-1-weilin.wang@intel.com>
-	<20240312234921.812685-2-weilin.wang@intel.com>
-Date: Tue, 12 Mar 2024 16:58:22 -0700
-Message-ID: <87plvzm28x.fsf@linux.intel.com>
+	<20240312234921.812685-3-weilin.wang@intel.com>
+Date: Tue, 12 Mar 2024 17:03:19 -0700
+Message-ID: <87le6nm20o.fsf@linux.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -70,28 +70,27 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 weilin.wang@intel.com writes:
-> +
-> +			new_event->tpebs_name = strdup(id);
-> +			*p = '\0';
-> +			name = malloc(strlen(id) + 2);
-> +			if (!name)
-> +				return -ENOMEM;
-> +
-> +			at = strchr(id, '@');
-> +			if (at != NULL) {
-> +				*at = '/';
-> +				at = strchr(id, '@');
-> +				*at = '/';
-> +				strcpy(name, id);
-> +				strcat(name, "p");
-> +			} else {
-> +				strcpy(name, id);
-> +				strcat(name, ":p");
 
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fork a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
 
-This seems like a buffer overflow because :p is 3 bytes including 0,
-but you only allocate + 2.
-You should really use safe string primitives, then you would have
-noticed the truncation.
+How does that work when the workload is specified on the command line?
+The workload would run twice? That is very inefficient and may not
+work if it's a large workload.
+
+The perf tool infrastructure is imho not up to the task of such
+parallel collection.
+
+Also it won't work for very long collections because you will get a
+very large perf.data. Better to use a pipeline.
+
+I think it would be better if you made it a separate operation that can
+generate a file that is then consumed by perf stat. This is also more efficient
+because often the calibration is only needed once. And it's all under
+user control so no nasty surprises.
 
 -Andi
