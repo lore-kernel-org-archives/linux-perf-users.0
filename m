@@ -1,136 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FDEBA27;
-	Wed, 13 Mar 2024 00:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ADD1755A;
+	Wed, 13 Mar 2024 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710291369; cv=none; b=vCiNPJQsRLGklTNxUmuu4KfrS5wSVXSzvtF8ao4VcGtztN1LeLNNN5rnuk4K2GzWtPKxyGn0/ZzDEwwtOLPcybXFqx2uMJM3mublppGq7sxaaxOisE/L8f0KZOBRUcBqngr+onOO4Unmq+AgHepd4pt6GofOHwF5vp/2aw2VEiA=
+	t=1710317589; cv=none; b=MnOr85bzxjXj1jQZXPD+AisYL+vIC9IInye9i5PkmHpBN9g1ng+dAB7XnJcrjNUh3U5vY0xciP1jle+otXUb+Rfkwm8bMrFDE5P6jhXxzxUzb9fegyjNHBHhsP276X6OEo+tLhbODzjV2TGvauU+td6gs9vj0QvGkWfxPWe00Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710291369; c=relaxed/simple;
-	bh=W2WJ8Yf5fBQg5Da9WYcCzog1dMgKBINweuFPZ+nOGJY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cYFRJNlplXk6k+kVkOm7gDsi0k5SMACUj+N9T4H4gQX6mQjDuWRaWzhV/1JKhjysSf4cuEsAPRUSxhK7E3Xm6Y1gjEn0SxRUS90wIwvOzGEUFNoyFYXIBYGEgttZIlWfIsvg4dvBOe2xJmmclakW/XmTHjXT1gU5C0Sr7iIyRnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V4bdSoyF; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710317589; c=relaxed/simple;
+	bh=tUuSOamMV4WydCgUMCgQyUEJgIyha1cE00JSbUEBgLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkV4/OP8xn/b/053YHZno9nea1e7zWbtfslAbFmeIhZD8ozp2P4N4w+oBcgajsZQBJ3pO10v/0LbIQJ+VyW6Vzmx+yMejZMg3d1CdR5tjYBWHlwIhc+qzdgSbQafOfWtass7qSIZzyF2F6HVHcsn8/Q0SsTIAfC57PHhusVey/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bDhckm8d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9mcgESd/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V4bdSoyF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710291366; x=1741827366;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=W2WJ8Yf5fBQg5Da9WYcCzog1dMgKBINweuFPZ+nOGJY=;
-  b=V4bdSoyFLrbecOSZZB3IneKmpYtUQzNtmF8jZ7Lu41kU+k7klHCkcx/+
-   41GHMucBSoWZDD/OhN6eOSK62He3oJY07qPrhelWk8dkZ0Qi4VVkWfUEA
-   oIHd/90lQsqfZQZyjUZuC6kZJtF3RsjIvNPPvYEyYDKA9oY/AUwe8Bi1k
-   2NLqvVVFLgqTSSjwG4Lix8edI5qexvVleX7UhRE4GF7WH8MPyOpzAb+DE
-   7DijAE9WU4Ic3G3CMV3Acio2L9VmG90i9hfpUXIApbDTbmoUO4cWpzXCe
-   cXQrkq843wbX8ZiSO9rydm0fMcq35WnRTeug0wGtTrme039ZJGfdUOj5T
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8852382"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="8852382"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 17:56:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="11770736"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
-  by orviesa009.jf.intel.com with ESMTP; 12 Mar 2024 17:56:05 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-	id 9BF24301066; Tue, 12 Mar 2024 17:56:04 -0700 (PDT)
-From: Andi Kleen <ak@linux.intel.com>
-To: "Wang, Weilin" <weilin.wang@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,  Ian Rogers <irogers@google.com>,
-  Arnaldo Carvalho de Melo <acme@kernel.org>,  Peter Zijlstra
- <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>,  "Hunter, Adrian" <adrian.hunter@intel.com>,  Kan
- Liang <kan.liang@linux.intel.com>,  "linux-perf-users@vger.kernel.org"
- <linux-perf-users@vger.kernel.org>,  "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,  "Taylor, Perry" <perry.taylor@intel.com>,
-  "Alt, Samantha" <samantha.alt@intel.com>,  "Biggers, Caleb"
- <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v4 2/6] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-In-Reply-To: <CO6PR11MB56356A213DBE53535E9D802BEE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
-	(Weilin Wang's message of "Wed, 13 Mar 2024 00:26:26 +0000")
-References: <20240312234921.812685-1-weilin.wang@intel.com>
-	<20240312234921.812685-3-weilin.wang@intel.com>
-	<87le6nm20o.fsf@linux.intel.com>
-	<CO6PR11MB56356A213DBE53535E9D802BEE2A2@CO6PR11MB5635.namprd11.prod.outlook.com>
-Date: Tue, 12 Mar 2024 17:56:04 -0700
-Message-ID: <87edcflzkr.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bDhckm8d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9mcgESd/"
+Date: Wed, 13 Mar 2024 09:13:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710317584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ghBbxv10Yx+PhzZT76BoMKiCE5Hea/IDnIEecFzQG0s=;
+	b=bDhckm8dgUj5r+TTLUf6hHq+frC9tCYE9Vh7d3Pnk31ugyDX1YpkeqZ1gdiIrGLw/BoThp
+	3cIqV3pIwFyJhO8MRKCDfZqaa5/N3VlHANaLMDTLIeijpQx6+x/LQXl5G9QTQC5hJsw3hv
+	SOD5QCLF9IZA4b/wih4/yuN/CBEj8LtdTplzojlH1IEpIe4q9DK4OwPfnakuzWDvp2x+rQ
+	23dAShmG/EghnDKaokywjOy6iVLGrvRF0MWMKW7fqByUV7+l3wp/fYAYcqFqOoFFptu/sp
+	6mqDQCR2APqOVStX5O1BoUXm58PW5tjUt1g0crB5RS2QThduxMgbsoy0mc3YZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710317584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ghBbxv10Yx+PhzZT76BoMKiCE5Hea/IDnIEecFzQG0s=;
+	b=9mcgESd/8meQye1/yvE06TsGjEeS/VwioA326OhcULvk/9NUl7usEuUkweobiIpwjgn6rc
+	V8bvyF3MVk3kDQAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <20240313081303.DClwQrvb@linutronix.de>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <ZfDMTlTH2SdwlB9M@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZfDMTlTH2SdwlB9M@x1>
 
-"Wang, Weilin" <weilin.wang@intel.com> writes:
+On 2024-03-12 18:42:38 [-0300], Arnaldo Carvalho de Melo wrote:
+=E2=80=A6
+> But:
+>=20
+> [acme@nine ~]$ pidof exec_child
+> 24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 2=
+4260 24259=20
+=E2=80=A6
 
->> -----Original Message-----
->> From: Andi Kleen <ak@linux.intel.com>
->> Sent: Tuesday, March 12, 2024 5:03 PM
->> To: Wang, Weilin <weilin.wang@intel.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>; Ian Rogers
->> <irogers@google.com>; Arnaldo Carvalho de Melo <acme@kernel.org>; Peter
->> Zijlstra <peterz@infradead.org>; Ingo Molnar <mingo@redhat.com>;
->> Alexander Shishkin <alexander.shishkin@linux.intel.com>; Jiri Olsa
->> <jolsa@kernel.org>; Hunter, Adrian <adrian.hunter@intel.com>; Kan Liang
->> <kan.liang@linux.intel.com>; linux-perf-users@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Taylor, Perry <perry.taylor@intel.com>; Alt, Samantha
->> <samantha.alt@intel.com>; Biggers, Caleb <caleb.biggers@intel.com>
->> Subject: Re: [RFC PATCH v4 2/6] perf stat: Fork and launch perf record when
->> perf stat needs to get retire latency value for a metric.
->> 
->> weilin.wang@intel.com writes:
->> 
->> > From: Weilin Wang <weilin.wang@intel.com>
->> >
->> > When retire_latency value is used in a metric formula, perf stat would fork a
->> > perf record process with "-e" and "-W" options. Perf record will collect
->> > required retire_latency values in parallel while perf stat is collecting
->> > counting values.
->> 
->> How does that work when the workload is specified on the command line?
->> The workload would run twice? That is very inefficient and may not
->> work if it's a large workload.
->> 
->> The perf tool infrastructure is imho not up to the task of such
->> parallel collection.
->> 
->> Also it won't work for very long collections because you will get a
->> very large perf.data. Better to use a pipeline.
->> 
->> I think it would be better if you made it a separate operation that can
->> generate a file that is then consumed by perf stat. This is also more efficient
->> because often the calibration is only needed once. And it's all under
->> user control so no nasty surprises.
->> 
->
-> Workload runs only once with perf stat. Perf record is forked by perf stat and run
-> in parallel with perf stat. Perf stat will send perf record a signal to terminate after 
-> perf stat stops collecting count value.
+> [root@nine ~]# cat /proc/24263/stack
+> [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+> [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+> [root@nine ~]#
+=E2=80=A6
+> [acme@nine ~]$ ps ax|grep exec_child| wc -l
+> 504
+> [acme@nine ~]$ ps ax|grep exec_child| tail
+>   24264 pts/0    R      0:04 exec_child
+>   24265 pts/0    R      0:04 exec_child
+>   24266 pts/0    R      0:04 exec_child
+>   24267 pts/0    R      0:04 exec_child
+>   24268 pts/0    R      0:04 exec_child
+>   24269 pts/0    R      0:04 exec_child
+>   24270 pts/0    R      0:04 exec_child
+>   24271 pts/0    R      0:04 exec_child
+>   24273 pts/0    R      0:04 exec_child
+>   26704 pts/1    S+     0:00 grep --color=3Dauto exec_child
+> [acme@nine ~]$
+>=20
+> All in 'R' state.
+>=20
+> [root@nine ~]# killall exec_child
+> exec_child: no process found
+> [root@nine ~]# ps ax | grep exec_child | head -5
+>   22964 pts/0    R      0:06 exec_child
+>   23046 pts/0    R      0:05 exec_child
+>   23128 pts/0    R      0:05 exec_child
+>   23129 pts/0    R      0:05 exec_child
+>   23181 pts/0    R      0:05 exec_child
+> [root@nine ~]# kill 22964 23046 23128 23129 23181
+> [root@nine ~]# ps ax | grep exec_child | head -5
+>   23182 pts/0    R      0:06 exec_child
+>   23196 pts/0    R      0:06 exec_child
+>   23197 pts/0    R      0:06 exec_child
+>   23210 pts/0    R      0:06 exec_child
+>   23213 pts/0    R      0:06 exec_child
+> [root@nine ~]#
 
-I don't understand how the perf record filters on the workload created by
-the perf stat. At a minimum you would need -p to connect to the pid
-of the parent, but IIRC -p doesnt follow children, so if it forked
-it wouldn't work.
+You can't kill them?
 
-I think your approach may only work with -a, but perhaps I'm missing
-something (-a is often not usable due to restrictions)
+> at the end they disappeared, on this last run.
+>=20
+> But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
+> we get all those exec_child running a seemingly eternal loop:
 
-Also if perf stat runs in interval mode and you only get the data
-at the end how would that work?
+Is this new or was it there? Is this VM or bare metal?
 
-iirc i wrestled with all these questions for toplev (which has a
-similar feature) and in the end i concluded doing it automatically
-has far too many problems.
+One part I don't get: did you let it run or did you kill it?
+`exec_child' spins until a signal is received or the parent kills it. So
+it shouldn't remain there for ever. And my guess, that it is in spinning
+in userland and not in kernel.
+I tried it on bare metal and VM and couldn't reproduce this.
+=E2=80=A6
+>=20
+> - Arnaldo
 
--Andi
+Sebastian
