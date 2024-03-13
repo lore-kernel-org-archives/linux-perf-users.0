@@ -1,106 +1,140 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F8024A1F;
-	Wed, 13 Mar 2024 09:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBABC38DDD;
+	Wed, 13 Mar 2024 10:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710322921; cv=none; b=kmPTwIFP2KW6+Q8gS+5JqphSjrrHMYjgOcouQ05XOQNLaslW4gZZgU6zTNEq5ZSZQwRuIsZ3XNXpZ3cwIweorGj4MyOQTk55HqEEKoViAAN2VEjQcEEj97F/HUyxyV6t2TOCzVRoTOS+pMZzFYFoccJi171Eg2UZwhhaIp5iFjw=
+	t=1710324919; cv=none; b=f5eu+Fdjx+YW4PbWGgUUHaC06Qjx+xoSE7hQoPdZfNPpczAfWc74u34h8hdfEDEXRek5K4ZXfbq+kGqZhR22SuqFa6ZWNE4GISajg1tuEpJMwBnxivgZTxdjI7M2O2wKTG4yW31t5jKgITPRU0uXr9jXI5KvxhQ4pSHWNgY/MgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710322921; c=relaxed/simple;
-	bh=0E+wY8cAtE6Az+PbtjplxiRyoa7X5nFl9m7Ia+hmBjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DTIa+e4wogDsl9g3Cj2I6lBMAFBdusPFtBOJE0hqNty2SYe8wW1ttPh6TDITjkq2VbsN46qR+tw8QBUbIxrdQLSAvFT4WdZ7h1Ik45yEsVnKBWfH0Q4GnauNKV6XgWk4lkU9BFdMeTYen+N6FzS5wnSG7FwQxxlbFXnMKJxyOyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28E0A1007;
-	Wed, 13 Mar 2024 02:42:35 -0700 (PDT)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35BA63F73F;
-	Wed, 13 Mar 2024 02:41:56 -0700 (PDT)
-Message-ID: <0c503c64-133a-705f-9dc4-47c623dacd2c@arm.com>
-Date: Wed, 13 Mar 2024 09:41:54 +0000
+	s=arc-20240116; t=1710324919; c=relaxed/simple;
+	bh=3xD+8JCwf86jkD5e60v0HwEHcqYhgbc7VhIyD3Yys0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8z/7Pjq/MWoRQGacCGZlCyXW59ux5azyFlCV7EdoFWtDDf08Jw+CTADKOzRTqsmM2XFOJ+Y8Q8uKrClIiHAb4TwGoC6jw689mb9L6D34RjYkYkyjetw0ZiUA4RRvo++9BLsyb3I7NXcpYEB1L40F8+s2eIv3UaTrWPrT8nGTMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AD1lDp0o; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AD1lDp0o"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33e9623c3a8so681055f8f.0;
+        Wed, 13 Mar 2024 03:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710324916; x=1710929716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kheSY2qAqbE3EfWUfZ/cCoYdLw7ZBN3sckQtrZLqZmQ=;
+        b=AD1lDp0oaBzqO69zR9pEISPlDO57BXHpmJtpmqeyk/kQ9FlED9vL3w+/cnA94D/XaI
+         I8w3ck+sRb5zAe7x/9ItGSCiuECGUjwGXp5WhiemUS3VhAltt3/Lt8R1uzRcvJqgUuvA
+         8Lk0Vz2XzCS+UofKogYIXvuyLrfChAOAX2L8TPB5pElKO67RZdzCalmzzTsIOOSNkvxm
+         K1yFnYA1wr4nG08qC2st+xuK3Bl3hUPVfVYZyUhBCoe50rYZzmiPHmqVCZJ6S9C299VY
+         ALTTlltPqP6Um8Cc4Hh3RJXu4qJcUdlsIwyISX33r7KuB1ZdSLN2KzOX+oPYAQ4YZJ64
+         X0AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710324916; x=1710929716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kheSY2qAqbE3EfWUfZ/cCoYdLw7ZBN3sckQtrZLqZmQ=;
+        b=iRcI1MuxtgiL1E0uBGaVKnPKV0FHtdWzb3PLyLLBB+r5xRnoa3PYPEB2jPWSuOF1M2
+         Qb0uMt4nJBtMqojx39VPY/xKzKddrXyDlD6XZp4MEHQUAeEUdok4WvdekyDjjUNuaFyg
+         G6OaVspWO3akCTqMEoobOXWjbFGnuAmro2apA1BETr5YXaST/MrnsG8o/HgtxeOgrPLQ
+         iL3BtE5EUGBcX/WXkEwQv6c1PNNtzM5sJK6VKPF9CQOHrevR4m3//Gz0rjIBYkNYIj13
+         7EJcM8kB6mmzy7r7b63M3gjFMBd94AeHAu6+L44s6EJb8z2kiO8JIHN41RKxAG5Uf8A9
+         DBiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXE/AMqyOIDiH14XLshPQWYiZ0x6+pMpOdTxtXu8w8atrx/k7TDAO6/m0Y+YK2G7Cre+Tsc6ecOv1LJ9xvil1XFnPoyCPqkB53s4JiV
+X-Gm-Message-State: AOJu0YwIzQx7b2nmP9iWRaT8d9l8u32JpkNu8bgCgISw21sY5V+Ymd7g
+	JH6LH8UD4jDAan/jY+VxF51ksJfwWSfrkdmrAktoMX5On7A34bpu
+X-Google-Smtp-Source: AGHT+IFSt3/f3TSk6zw5n5Q8Lw6ZL0o9c38dSklyPWwS/Cvsr/znwMlO8pvtoidezN3tn4MCQmxkLg==
+X-Received: by 2002:a5d:5646:0:b0:33e:be35:d459 with SMTP id j6-20020a5d5646000000b0033ebe35d459mr110131wrw.48.1710324915413;
+        Wed, 13 Mar 2024 03:15:15 -0700 (PDT)
+Received: from gmail.com (1F2EF295.nat.pool.telekom.hu. [31.46.242.149])
+        by smtp.gmail.com with ESMTPSA id p12-20020adf9d8c000000b0033cf60e268fsm11324713wre.116.2024.03.13.03.15.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 03:15:14 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 13 Mar 2024 11:15:12 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
+	bp@alien8.de, eranian@google.com, irogers@google.com,
+	mario.limonciello@amd.com, ravi.bangoria@amd.com,
+	ananth.narayan@amd.com
+Subject: Re: [PATCH v3 1/3] perf/x86/amd/lbr: Use freeze based on availability
+Message-ID: <ZfF8sIol5xQcJM9F@gmail.com>
+References: <cover.1706526029.git.sandipan.das@amd.com>
+ <12f378d5c9459e765c6c3a14b092e6f91da596e3.1706526029.git.sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] perf docs: arm_spe: Clarify more SPE requirements
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-kernel@vger.kernel.org
-References: <20240312132508.423320-1-james.clark@arm.com>
- <CAP-5=fWGrkjx1vz+2aQU0A+_B3d=nCtK9WBGiSPbDbUaTXR4pQ@mail.gmail.com>
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fWGrkjx1vz+2aQU0A+_B3d=nCtK9WBGiSPbDbUaTXR4pQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12f378d5c9459e765c6c3a14b092e6f91da596e3.1706526029.git.sandipan.das@amd.com>
 
 
+* Sandipan Das <sandipan.das@amd.com> wrote:
 
-On 12/03/2024 19:56, Ian Rogers wrote:
-> On Tue, Mar 12, 2024 at 6:25 AM James Clark <james.clark@arm.com> wrote:
->>
->> The question of exactly when KPTI needs to be disabled comes up a lot
->> because it doesn't always need to be done. Add the relevant kernel
->> function and some examples that describe the behavior.
->>
->> Also describe the interrupt requirement and that no error message will
->> be printed if this isn't met.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
+> Currently, it is assumed that LBR Freeze is supported on all processors
+> which have CPUID leaf 0x80000022[EAX] bit 1 set. This is incorrect as
+
+That's X86_FEATURE_AMD_LBR_V2, right? Should probably be mentioned in the 
+changelog.
+
+> the feature availability is additionally dependent on CPUID leaf 
+> 0x80000022[EAX] bit 2 being set which may not be set for all Zen 4 
+> processors. Define a new feature bit for LBR and PMC freeze and set the 
+> freeze enable bit (FLBRI) in DebugCtl (MSR 0x1d9) conditionally.
+
+What happens on such Zen 4 CPUs that don't support LBR Freeze? Does the CPU 
+just ignore it, or something worse?
+
+> It should still be possible to use LBR without freeze for profile-guided
+> optimization of user programs by using an user-only branch filter during
+> profiling. When the user-only filter is enabled, branches are no longer
+> recorded after the transition to CPL 0 upon PMI arrival. When branch
+> entries are read in the PMI handler, the branch stack does not change.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> E.g.
 > 
-> Thanks,
-> Ian
+>   $ perf record -j any,u -e ex_ret_brn_tkn ./workload
 > 
+> Since the feature bit is visible under flags in /proc/cpuinfo, it can be 
+> used to determine the feasibility of use-cases which require LBR Freeze 
+> to be supported by the hardware such as profile-guided optimization of 
+> kernels.
 
-Thanks for the review
+Sounds good to me.
 
->> ---
->>  tools/perf/Documentation/perf-arm-spe.txt | 12 +++++++++++-
->>  1 file changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
->> index bf03222e9a68..0a3eda482307 100644
->> --- a/tools/perf/Documentation/perf-arm-spe.txt
->> +++ b/tools/perf/Documentation/perf-arm-spe.txt
->> @@ -116,6 +116,15 @@ Depending on CPU model, the kernel may need to be booted with page table isolati
->>  (kpti=off). If KPTI needs to be disabled, this will fail with a console message "profiling buffer
->>  inaccessible. Try passing 'kpti=off' on the kernel command line".
->>
->> +For the full criteria that determine whether KPTI needs to be forced off or not, see function
->> +unmap_kernel_at_el0() in the kernel sources. Common cases where it's not required
->> +are on the CPUs in kpti_safe_list, or on Arm v8.5+ where FEAT_E0PD is mandatory.
->> +
->> +The SPE interrupt must also be described by the firmware. If the module is loaded and KPTI is
->> +disabled (or isn't required to be disabled) but the SPE PMU still doesn't show in
->> +/sys/bus/event_source/devices/, then it's possible that the SPE interrupt isn't described by
->> +ACPI or DT. In this case no warning will be printed by the driver.
->> +
->>  Capturing SPE with perf command-line tools
->>  ------------------------------------------
->>
->> @@ -199,7 +208,8 @@ Common errors
->>
->>   - "Cannot find PMU `arm_spe'. Missing kernel support?"
->>
->> -   Module not built or loaded, KPTI not disabled (see above), or running on a VM
->> +   Module not built or loaded, KPTI not disabled, interrupt not described by firmware,
->> +   or running on a VM. See 'Kernel Requirements' above.
->>
->>   - "Arm SPE CONTEXT packets not found in the traces."
->>
->> --
->> 2.34.1
->>
-> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 4af140cf5719..e47ea31b019d 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -97,7 +97,7 @@
+>  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
+>  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
+>  #define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+> -/* FREE, was #define X86_FEATURE_LFENCE_RDTSC		( 3*32+18) "" LFENCE synchronizes RDTSC */
+> +#define X86_FEATURE_AMD_LBR_PMC_FREEZE	( 3*32+18) /* AMD LBR and PMC Freeze */
+>  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
+>  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
+>  #define X86_FEATURE_ALWAYS		( 3*32+21) /* "" Always-present feature */
+
+Could you please port this to the latest upstream kernel? The 3*32+18 slot 
+is now used for another purpose, and we need to define a new synthethic 
+CPUID word, word 21 if I'm counting it right.
+
+Don't forget to increase NCAPINTS from 21 to 22, and consider the fixed 
+asserts in the x86_bug_flags[] definitions in <asm/cpufeature.h>, and the 
+asserts in <asm/disabled-features.h> and <asm/required-features.h>. This 
+new word should probably be added in a separate preparatory patch.
+
+Thanks,
+
+	Ingo
