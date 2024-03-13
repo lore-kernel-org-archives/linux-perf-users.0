@@ -1,34 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA9645BF9;
-	Wed, 13 Mar 2024 13:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638954174A;
+	Wed, 13 Mar 2024 13:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710336524; cv=none; b=Qoa4wEceRqL/8/9FrPMRECUfV7sWypiiGHNXi6YFHfjehIlVU8FQGllD+gm/EzfXhZ7hCiWRwuc8Rai/Q1kzwwkRfSB0HNHmIgfkZ7UjrFEDw6kFdvgsvj+c8lsjrHULfqKWqveDNm0auen4+RfEXo+WfkGeD+C6GqCAsaJkQno=
+	t=1710337610; cv=none; b=JPMb/ZNvxmYJcZ+iRS4B/w/4H05qWQXOdsVIIS9Q4bnk9WIEBI141U+m80F3bZ+QnWr3MCKbBFnZLeuHQnnZboYJPBaHKUZZz3I5ODmecEuzBBpLSxjSqPDuzvp/9AUdh/mfnNDvuTazN4zFstqlz5QzhdWkupG6iBa3Atv3YO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710336524; c=relaxed/simple;
-	bh=nxOroR4b2rIUnv+V/UG5lc0jC6pDP1cKjLwLqOz+xw4=;
+	s=arc-20240116; t=1710337610; c=relaxed/simple;
+	bh=vIjAdfBoiWL33bZ0WTDYgYhPbH4wUcMAQ5Y8wEr1dZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtRooB1ERS00008mCLxjI97D42P7fH2easJr87iIYvPLniry+PDP7gW53TH9mOJiKmIhCrhOrsKHlBDH6qzaxSIqQKznXNNWk61By4YS+diIscde4+4+MnBbWL559DmK34/4/Ivr2vxietg0k83PU/I3s/stq8Rqrtn8pFiqaWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpnFdPPB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tgviVFqb0d9VAcCnx6b64XHvSldqqPEUBW0CPegvcSuAeYhzfeTapOxPP+seGqFmEMI7y1z80R4nzfjaLHj2jRhirD1Rce681qNC0W8sjuyIVNX2kzE8KUzH0PtPy/MLVH8htWWsrcKsV01eRpQWHK6fvEbF+nkF/JJGUksiGi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J1KVgT+H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W1urmu50; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpnFdPPB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE02C433C7;
-	Wed, 13 Mar 2024 13:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710336524;
-	bh=nxOroR4b2rIUnv+V/UG5lc0jC6pDP1cKjLwLqOz+xw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TpnFdPPBkSHLmGC5KJOHt1TJpVHGJpEea8ClPaOqKVIyFvtdhjJ0EWPHeRAhiKvY1
-	 QZ7VYgdxAnJNIu4y8E184jdMnhX/LRfZYwS70aHgS1ycSXEI7GQ/5t2VfcerG0LqSX
-	 CceWrXXGev/8+Swu/K1Zsz2IJlBI5tVE/hdiItrknDSWg8qdKzPZiS/SEen7afHzn1
-	 aheZRPExhuNQ9iKhKqwB5DmBckF0Igb+mDQ5ikfOmHIfQEpG0LrZaTYjxsPjG4xYF3
-	 dg5TW+qViVGgU1SYlEzn1hbdvtSCvbUYGZB/c6cgSa4PqtPYKJIc7dB6XmvEYD3cDV
-	 EQ6u4II/Um+3Q==
-Date: Wed, 13 Mar 2024 10:28:41 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J1KVgT+H";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W1urmu50"
+Date: Wed, 13 Mar 2024 14:46:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710337607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vIjAdfBoiWL33bZ0WTDYgYhPbH4wUcMAQ5Y8wEr1dZY=;
+	b=J1KVgT+H/VBL8Agxtd3g3sdQEzrXIQCmmgC3w0ULmKRAro3/j4L9H3Gay8WHXFA7sIFsc9
+	L5Hdx7X3dY8JXM55fuYBhZfzR7xbh4agBFaLwpl7QRN+Q4E2K8YeHqlVfUV+03R3t+qO6I
+	3V0R6JXK/Vp+TecJ3zTb+hvR61wOZj/1BJ8FtJrkHRHjGWYsgbO3dXGN8F1QfuF3hR2L/M
+	RyMv8SnSLCMKAQPpwdcKpzEnOt1T2stcSxy38finxf63UjMH07uYRIidk8dhPX78DgZSh4
+	Kl0Z89JWHMTUpylW+thitV5soAJqvgbndIila2qyVAny64jmK8XkIlMdihuvSA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710337607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vIjAdfBoiWL33bZ0WTDYgYhPbH4wUcMAQ5Y8wEr1dZY=;
+	b=W1urmu50u6l/cXHFtJauFiPDwtDppplz/TQaBN0m9x4jLBK3dO38RFJgZ4cBxIZe96oMHQ
+	Pxbw7Fs0NUgpCVBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -40,10 +52,11 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
  on RT.
-Message-ID: <ZfGqCWzyVzyGQrAQ@x1>
+Message-ID: <20240313134645.bO-XyxAM@linutronix.de>
 References: <20240312180814.3373778-1-bigeasy@linutronix.de>
  <ZfDMTlTH2SdwlB9M@x1>
  <20240313081303.DClwQrvb@linutronix.de>
+ <ZfGqCWzyVzyGQrAQ@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,92 +65,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240313081303.DClwQrvb@linutronix.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZfGqCWzyVzyGQrAQ@x1>
 
-On Wed, Mar 13, 2024 at 09:13:03AM +0100, Sebastian Andrzej Siewior wrote:
-> On 2024-03-12 18:42:38 [-0300], Arnaldo Carvalho de Melo wrote:
-> …
-> > But:
-> > 
-> > [acme@nine ~]$ pidof exec_child
-> > 24273 24271 24270 24269 24268 24267 24266 24265 24264 24263 24262 24261 24260 24259 
-> …
-> 
-> > [root@nine ~]# cat /proc/24263/stack
-> > [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
-> > [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-> > [root@nine ~]#
-> …
-> > [acme@nine ~]$ ps ax|grep exec_child| wc -l
-> > 504
-> > [acme@nine ~]$ ps ax|grep exec_child| tail
-> >   24264 pts/0    R      0:04 exec_child
-> >   24265 pts/0    R      0:04 exec_child
-> >   24266 pts/0    R      0:04 exec_child
-> >   24267 pts/0    R      0:04 exec_child
-> >   24268 pts/0    R      0:04 exec_child
-> >   24269 pts/0    R      0:04 exec_child
-> >   24270 pts/0    R      0:04 exec_child
-> >   24271 pts/0    R      0:04 exec_child
-> >   24273 pts/0    R      0:04 exec_child
-> >   26704 pts/1    S+     0:00 grep --color=auto exec_child
-> > [acme@nine ~]$
-> > 
-> > All in 'R' state.
-> > 
-> > [root@nine ~]# killall exec_child
-> > exec_child: no process found
-> > [root@nine ~]# ps ax | grep exec_child | head -5
-> >   22964 pts/0    R      0:06 exec_child
-> >   23046 pts/0    R      0:05 exec_child
-> >   23128 pts/0    R      0:05 exec_child
-> >   23129 pts/0    R      0:05 exec_child
-> >   23181 pts/0    R      0:05 exec_child
-> > [root@nine ~]# kill 22964 23046 23128 23129 23181
-> > [root@nine ~]# ps ax | grep exec_child | head -5
-> >   23182 pts/0    R      0:06 exec_child
-> >   23196 pts/0    R      0:06 exec_child
-> >   23197 pts/0    R      0:06 exec_child
-> >   23210 pts/0    R      0:06 exec_child
-> >   23213 pts/0    R      0:06 exec_child
-> > [root@nine ~]#
- 
-> You can't kill them?
+On 2024-03-13 10:28:41 [-0300], Arnaldo Carvalho de Melo wrote:
+> > One part I don't get: did you let it run or did you kill it?
+>=20
+> If I let them run they will finish and exit, no exec_child remains.
+>=20
+> If I instead try to stop the loop that goes on forking the 100 of them,
+> then the exec_child remain spinning.
 
-I can, they remain in R state and I can kill them with 'kill `pidof exec_child`'
- 
-> > at the end they disappeared, on this last run.
+Okay. So that problem only exists if you intervene. And you can
+reproduce this odd behaviour with my patches but not without them,
+right?
 
-> > But if I do a 'killall remove_on_exec' and stop that loop (control+C/Z)
-> > we get all those exec_child running a seemingly eternal loop:
-> 
-> Is this new or was it there? Is this VM or bare metal?
+> > it shouldn't remain there for ever. And my guess, that it is in spinning
+> > in userland and not in kernel.
+>=20
+> Checking that now, the stack is the one I posted:
+>=20
+> > > [root@nine ~]# cat /proc/24263/stack
+> > > [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
+> > > [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
+> > > [root@nine ~]#
 
-bare metal.
- 
-> One part I don't get: did you let it run or did you kill it?
+could you resolve irqentry_exit_to_user_mode+0x1c9/0x1e0, please?
 
-If I let them run they will finish and exit, no exec_child remains.
+> > I tried it on bare metal and VM and couldn't reproduce this.
+>=20
+> All my tests are in bare metal.
 
-If I instead try to stop the loop that goes on forking the 100 of them,
-then the exec_child remain spinning.
+Would you mind sending me your .config? The shell is bash I guess. I
+will try to reproduce your setup on another box=E2=80=A6
 
-> `exec_child' spins until a signal is received or the parent kills it. So
+> - Arnaldo
 
-
-> it shouldn't remain there for ever. And my guess, that it is in spinning
-> in userland and not in kernel.
-
-Checking that now, the stack is the one I posted:
-
-> > [root@nine ~]# cat /proc/24263/stack
-> > [<0>] irqentry_exit_to_user_mode+0x1c9/0x1e0
-> > [<0>] asm_sysvec_apic_timer_interrupt+0x16/0x20
-> > [root@nine ~]#
-
-> I tried it on bare metal and VM and couldn't reproduce this.
-
-All my tests are in bare metal.
-
-- Arnaldo
+Sebastian
