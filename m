@@ -1,109 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CA857861;
-	Thu, 14 Mar 2024 12:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4440550A87;
+	Thu, 14 Mar 2024 12:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710419432; cv=none; b=hzeup4Oatr/M7KkX8iUSS6a+Wj82iIugUObXVqekX2eA6AGuoS4Hi9fymxvXZvhvSGA0x9DgX5WS6m+Mlx9xLX3c/CEJP3ptc0igBxuFjA9M200MZ4U1MDyVkCqX/WhM5o5Yq3pEmPaOxLdZ+QBKaWCAcrtBLHYRDaCReXIwC9w=
+	t=1710419678; cv=none; b=EnkHn4e9O8eh0xUViArp4tYvcQAW/BkavppiS9g1NsZDQskXjk1J3tk+y4K7qeiynGCkMtVFZ7W0FeJLiDOiwTcnjTP7EjwNIfgWjo6w4VhMYzCl1QAkDed13wQOkaZ6wOaJxdzBhqfNZ69v/I+/xdDI2flEHPoL6F2uosu1nMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710419432; c=relaxed/simple;
-	bh=CrTSWvnI80HBCf2z8Oy2nHbmglsJV2g15ydY/Fnd+/0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uSw+Cs0yJAhDIn893ELZie3+hlaLWxDh/+BNYnv/fYpUU5Id9FZ5kcOz3ZcZE/n1uhTE+IbwljOpG38tFJKq6RS80qWQKbqcJBDWLzWPmmspkQVyStWXG7h3Y2WkcCmo6cb/keChZ/b6FrcvxWgut2nQMnc9xyRUtSIsncSYF2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oG+C/r13; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oG+C/r13"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0781EC433A6;
-	Thu, 14 Mar 2024 12:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710419432;
-	bh=CrTSWvnI80HBCf2z8Oy2nHbmglsJV2g15ydY/Fnd+/0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oG+C/r13TmKdzhAlJcO0u+vL0vp9yOVmJ0g/oiKWmipU+n6rJquFJCWqrNOQSQ2k4
-	 ccIcGlpXIeboz94YUQO3bvjZFHoQJ6QV7wUhmBeJTFg5AWNmPZJYvIZIrJsFwFY2of
-	 OIDxH2h1iJBf+ExBpnRAcKnFNtoX8rVXNSVgbDEoVlaoUHKsiFD1FrD6Tj7O9vsH/i
-	 bk0FxwUKy6ccBHLapb0AVzUUOBDcALyYpl6oV9SH4llTH7PkbUQmxG8XfVK3qfK+BC
-	 mJ2zLPRrgeNtsRC/QnH5pih+YJGWb/AwwBnL8wrVtonOOJpKYURuS/S2mY0VJCAJFt
-	 54/cvGAWu8vMw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E921DD95055;
-	Thu, 14 Mar 2024 12:30:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1710419678; c=relaxed/simple;
+	bh=/h9fFk1XTjWgWaiifBl0FurCH2uEbyC1rYJ1sSa+lq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=irnt7iBBShYXr/Ib3GcW5HjgG++0DJG4C21SlA5uRKgV9/28sub3zjJgbXkqHy2++SWTu+vC3c5jYi/SgB0S4xtoJJ4OsWQpGcrkrvQibNtK94kIt5/lFX+DMPiGFzzrgiLJXcCVO2YtBQbypRjzqe41qBkLtAuVzh5Mx44MrAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D6221007;
+	Thu, 14 Mar 2024 05:35:11 -0700 (PDT)
+Received: from [10.57.50.244] (unknown [10.57.50.244])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58393F73F;
+	Thu, 14 Mar 2024 05:34:32 -0700 (PDT)
+Message-ID: <7ebe3c5f-577b-4c67-b8b9-14e8ed6429bf@arm.com>
+Date: Thu, 14 Mar 2024 12:34:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] perf: Add capability for common event support
+Content-Language: en-GB
+To: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <cover.1710257512.git.robin.murphy@arm.com>
+ <feb10873fe9e4e10b5ffbbe8e296c8a45632e3c2.1710257512.git.robin.murphy@arm.com>
+ <94DB0209EA3D1C5F+b646f31e-15a1-4753-8309-687b5860863e@shingroup.cn>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <94DB0209EA3D1C5F+b646f31e-15a1-4753-8309-687b5860863e@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v9 00/10] Support Andes PMU extension
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171041943194.26728.3807889559884607630.git-patchwork-notify@kernel.org>
-Date: Thu, 14 Mar 2024 12:30:31 +0000
-References: <20240222083946.3977135-1-peterlin@andestech.com>
-In-Reply-To: <20240222083946.3977135-1-peterlin@andestech.com>
-To: Yu Chien Peter Lin <peterlin@andestech.com>
-Cc: linux-riscv@lists.infradead.org, acme@kernel.org, adrian.hunter@intel.com,
- ajones@ventanamicro.com, alexander.shishkin@linux.intel.com,
- andre.przywara@arm.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- atishp@atishpatra.org, conor+dt@kernel.org, conor.dooley@microchip.com,
- conor@kernel.org, devicetree@vger.kernel.org, evan@rivosinc.com,
- geert+renesas@glider.be, guoren@kernel.org, heiko@sntech.de,
- irogers@google.com, jernej.skrabec@gmail.com, jolsa@kernel.org,
- jszhang@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com,
- mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com,
- namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
- rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org,
- sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com,
- uwu@icenowy.me, wens@csie.org, will@kernel.org, inochiama@outlook.com,
- unicorn_wang@outlook.com, wefu@redhat.com
 
-Hello:
-
-This series was applied to riscv/linux.git (for-next)
-by Palmer Dabbelt <palmer@rivosinc.com>:
-
-On Thu, 22 Feb 2024 16:39:36 +0800 you wrote:
-> Hi All,
+On 2024-03-14 8:09 am, Yang Jialong 杨佳龙 wrote:
 > 
-> This patch series introduces the Andes PMU extension, which serves the
-> same purpose as Sscofpmf and Smcntrpmf. Its non-standard local interrupt
-> is assigned to bit 18 in the custom S-mode local interrupt enable and
-> pending registers (slie/slip), while the interrupt cause is (256 + 18).
 > 
-> [...]
+> 在 2024/3/13 1:34, Robin Murphy 写道:
+>> Many PMUs do not support common hardware/cache/etc. events and only
+>> handle their own PMU-specific events. Since this only depends on
+>> matching the event and PMU types, it's a prime candidate for a core
+>> capability to save more event_init boilerplate in drivers.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   include/linux/perf_event.h | 1 +
+>>   kernel/events/core.c       | 5 +++++
+>>   2 files changed, 6 insertions(+)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index d2a15c0c6f8a..983201f21dd2 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
+>>   #define PERF_PMU_CAP_NO_EXCLUDE            0x0040
+>>   #define PERF_PMU_CAP_AUX_OUTPUT            0x0080
+>>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE        0x0100
+>> +#define PERF_PMU_CAP_NO_COMMON_EVENTS        0x0200
+>>   struct perf_output_handle;
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index f0f0f71213a1..7ad80826c218 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -11649,6 +11649,11 @@ static int perf_try_init_event(struct pmu 
+>> *pmu, struct perf_event *event)
+>>       struct perf_event_context *ctx = NULL;
+>>       int ret;
+>> +    /* Short-circuit if we know the PMU won't want this event */
+>> +    if (pmu->capabilities & PERF_PMU_CAP_NO_COMMON_EVENTS &&
+>> +        event->attr.type != pmu->type)
+>> +        return -ENOENT;
+>> +
+> 
+>          /*
+>           * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
+>           * are often aliases for PERF_TYPE_RAW.
+>           */
+>          type = event->attr.type;
+>          if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
+>                  type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
+>                  if (!type) {
+>                          type = PERF_TYPE_RAW;
+>                  } else {
+>                          extended_type = true;
+>                          event->attr.config &= PERF_HW_EVENT_MASK;
+>                  }
+>          }
+> 
+> again:
+>          rcu_read_lock();
+>          pmu = idr_find(&pmu_idr, type);
+>          rcu_read_unlock();
+>          if (pmu) {
+> Above code tells me it's possible that 'pmu->type != event->attr.type' 
+> is true when event->attr.type equals to PERF_TYPE_HARDWARE or 
+> PERF_TYPE_HW_CACHE, and pmu->type should equal to event->attr.config >> 
+> PERF_PMU_TYPE_SHIFT.
+> 
+> We find the target pmu by event->attr.config >> PERF_PMU_TYPE_SHIFT.
 
-Here is the summary with links:
-  - [v9,01/10] riscv: errata: Rename defines for Andes
-    https://git.kernel.org/riscv/c/be5e8872b3fb
-  - [v9,02/10] irqchip/riscv-intc: Allow large non-standard interrupt number
-    https://git.kernel.org/riscv/c/96303bcb401c
-  - [v9,03/10] irqchip/riscv-intc: Introduce Andes hart-level interrupt controller
-    https://git.kernel.org/riscv/c/f4cc33e78ba8
-  - [v9,04/10] dt-bindings: riscv: Add Andes interrupt controller compatible string
-    https://git.kernel.org/riscv/c/b88727d554f0
-  - [v9,05/10] riscv: dts: renesas: r9a07g043f: Update compatible string to use Andes INTC
-    https://git.kernel.org/riscv/c/95113bb70515
-  - [v9,06/10] perf: RISC-V: Eliminate redundant interrupt enable/disable operations
-    https://git.kernel.org/riscv/c/ea0e0178e101
-  - [v9,07/10] perf: RISC-V: Introduce Andes PMU to support perf event sampling
-    https://git.kernel.org/riscv/c/bc969d6cc96a
-  - [v9,08/10] dt-bindings: riscv: Add Andes PMU extension description
-    https://git.kernel.org/riscv/c/61609bf2b29d
-  - [v9,09/10] riscv: dts: renesas: Add Andes PMU extension for r9a07g043f
-    https://git.kernel.org/riscv/c/270fc77e7b0e
-  - [v9,10/10] riscv: andes: Support specifying symbolic firmware and hardware raw events
-    https://git.kernel.org/riscv/c/f5102e31c209
+And if that PMU doesn't actually support PERF_TYPE_HARDWARE or 
+PERF_TYPE_HW_CACHE then it would reject the event, if the very next 
+lines didn't already do that:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+	if (event->attr.type != type && type != PERF_TYPE_RAW &&
+	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+		goto fail;
 
+Either way it should be clear that there's no change of functionality 
+here since the flow into perf_try_init_event() itself is untouched.
 
+> Code added discard this option.
+
+It would already be nonsensical for a driver to advertise 
+PERF_PMU_CAP_EXTENDED_HW_TYPE to say it supports extended hardware 
+events, but then reject all hardware events with a "event->attr.type != 
+pmu->type" check in its event_init. Reworking the latter condition into 
+PERF_PMU_CAP_NO_COMMON_EVENTS doesn't change that.
+
+Thanks,
+Robin.
+
+> 
+> And code tells me that no try. Target PMU is doubtless.
+> 
+> 
+> 
+> 
+>>       if (!try_module_get(pmu->module))
+>>           return -ENODEV;
+> 
