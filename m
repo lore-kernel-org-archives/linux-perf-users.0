@@ -1,146 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4440550A87;
-	Thu, 14 Mar 2024 12:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131006FE1E;
+	Thu, 14 Mar 2024 14:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710419678; cv=none; b=EnkHn4e9O8eh0xUViArp4tYvcQAW/BkavppiS9g1NsZDQskXjk1J3tk+y4K7qeiynGCkMtVFZ7W0FeJLiDOiwTcnjTP7EjwNIfgWjo6w4VhMYzCl1QAkDed13wQOkaZ6wOaJxdzBhqfNZ69v/I+/xdDI2flEHPoL6F2uosu1nMs=
+	t=1710426883; cv=none; b=K1VvbdsaJfCGVVaC6lUKzbqhP3U7wTQGkoBlhFWhJMNoyR4/LupWFBCCPlRMNP7qq+GZDb2xN/634XZRaFU9L7+VD9Li+rAMx7O98luXYrYbguS/sJ+WJFiL781QQgBuI7ig92p/0S1Hw4lvYsQkc9Dq9BbZ0u345QO10FQbO3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710419678; c=relaxed/simple;
-	bh=/h9fFk1XTjWgWaiifBl0FurCH2uEbyC1rYJ1sSa+lq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=irnt7iBBShYXr/Ib3GcW5HjgG++0DJG4C21SlA5uRKgV9/28sub3zjJgbXkqHy2++SWTu+vC3c5jYi/SgB0S4xtoJJ4OsWQpGcrkrvQibNtK94kIt5/lFX+DMPiGFzzrgiLJXcCVO2YtBQbypRjzqe41qBkLtAuVzh5Mx44MrAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D6221007;
-	Thu, 14 Mar 2024 05:35:11 -0700 (PDT)
-Received: from [10.57.50.244] (unknown [10.57.50.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58393F73F;
-	Thu, 14 Mar 2024 05:34:32 -0700 (PDT)
-Message-ID: <7ebe3c5f-577b-4c67-b8b9-14e8ed6429bf@arm.com>
-Date: Thu, 14 Mar 2024 12:34:30 +0000
+	s=arc-20240116; t=1710426883; c=relaxed/simple;
+	bh=3QHwzUu9Qz5Nt+YZgo+FDXTbZnPnbZKymsKtzBbdHKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QGrNTWwm0E1+x6P7MPd+Edc5h9THXGMe/xfoFgcpKHyJs+rforHiSDRZV/MPjYWblC7DwwiLiku6IPraA1ZFP87YifBQKSJo7XpIP3k6zqX4yXKaHK5UpiX9YEms57TkR6cFjPKEqOXE0L0/M4J/+Sreq5SmEasGT4f6uPWe6o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLzNAp1a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLzNAp1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C6FC433F1;
+	Thu, 14 Mar 2024 14:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710426882;
+	bh=3QHwzUu9Qz5Nt+YZgo+FDXTbZnPnbZKymsKtzBbdHKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eLzNAp1anNhoQtXC+NyJPrviKJZbmL3QjAKlnrXCW/kJt473/Bz5B09XGBcfkSal5
+	 lwnHJM+n6ht4wZgZJ+zHynHbslWkR9fQWqHnnZmLHRptYDXFUEM9cczLF1uD9lFFSj
+	 pkN5Isyyic06169uPTAthAZCPfxPnrbHwpGf9tlbn0gJAm8f0Ie3CcbGeCB9tEdX7P
+	 kBdzSD0a4uRiG+wZhRDnv59/DZ7dTykUqIwLk/vF6NtPdGGlXYQ/0O3AXER6yZFCe0
+	 bTm5hDRfgZeoKYSGFUAUr4L1zrKwFyYA6Y3d21ftsKxzN+oBcbpImELqJqeg06iR8X
+	 6omVWiymzfJLw==
+Date: Thu, 14 Mar 2024 11:34:39 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfMK_yTzxTQCMGZ1@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
+ <ZfIJIfqeI9tWnnS5@x1>
+ <20240314091033.woaK8h83@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] perf: Add capability for common event support
-Content-Language: en-GB
-To: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-perf-users@vger.kernel.org
-References: <cover.1710257512.git.robin.murphy@arm.com>
- <feb10873fe9e4e10b5ffbbe8e296c8a45632e3c2.1710257512.git.robin.murphy@arm.com>
- <94DB0209EA3D1C5F+b646f31e-15a1-4753-8309-687b5860863e@shingroup.cn>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <94DB0209EA3D1C5F+b646f31e-15a1-4753-8309-687b5860863e@shingroup.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314091033.woaK8h83@linutronix.de>
 
-On 2024-03-14 8:09 am, Yang Jialong 杨佳龙 wrote:
+On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
+> On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> > > noticeable when running with/without the patch with Vince's regression
+> > > tests. So:
+> >  
+> > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
 > 
-> 
-> 在 2024/3/13 1:34, Robin Murphy 写道:
->> Many PMUs do not support common hardware/cache/etc. events and only
->> handle their own PMU-specific events. Since this only depends on
->> matching the event and PMU types, it's a prime candidate for a core
->> capability to save more event_init boilerplate in drivers.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   include/linux/perf_event.h | 1 +
->>   kernel/events/core.c       | 5 +++++
->>   2 files changed, 6 insertions(+)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index d2a15c0c6f8a..983201f21dd2 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
->>   #define PERF_PMU_CAP_NO_EXCLUDE            0x0040
->>   #define PERF_PMU_CAP_AUX_OUTPUT            0x0080
->>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE        0x0100
->> +#define PERF_PMU_CAP_NO_COMMON_EVENTS        0x0200
->>   struct perf_output_handle;
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index f0f0f71213a1..7ad80826c218 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -11649,6 +11649,11 @@ static int perf_try_init_event(struct pmu 
->> *pmu, struct perf_event *event)
->>       struct perf_event_context *ctx = NULL;
->>       int ret;
->> +    /* Short-circuit if we know the PMU won't want this event */
->> +    if (pmu->capabilities & PERF_PMU_CAP_NO_COMMON_EVENTS &&
->> +        event->attr.type != pmu->type)
->> +        return -ENOENT;
->> +
-> 
->          /*
->           * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
->           * are often aliases for PERF_TYPE_RAW.
->           */
->          type = event->attr.type;
->          if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
->                  type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
->                  if (!type) {
->                          type = PERF_TYPE_RAW;
->                  } else {
->                          extended_type = true;
->                          event->attr.config &= PERF_HW_EVENT_MASK;
->                  }
->          }
-> 
-> again:
->          rcu_read_lock();
->          pmu = idr_find(&pmu_idr, type);
->          rcu_read_unlock();
->          if (pmu) {
-> Above code tells me it's possible that 'pmu->type != event->attr.type' 
-> is true when event->attr.type equals to PERF_TYPE_HARDWARE or 
-> PERF_TYPE_HW_CACHE, and pmu->type should equal to event->attr.config >> 
-> PERF_PMU_TYPE_SHIFT.
-> 
-> We find the target pmu by event->attr.config >> PERF_PMU_TYPE_SHIFT.
+> Just to be clear: You revert your Tested-by because now you test this on
+> torvalds/master but not because you reported a regression which I
+> missed.
 
-And if that PMU doesn't actually support PERF_TYPE_HARDWARE or 
-PERF_TYPE_HW_CACHE then it would reject the event, if the very next 
-lines didn't already do that:
+You got it right. No regressions, the code is good, I just need to test
+it a bit further, with torvalds/master, without PREEMPT_RT.
 
-	if (event->attr.type != type && type != PERF_TYPE_RAW &&
-	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-		goto fail;
-
-Either way it should be clear that there's no change of functionality 
-here since the flow into perf_try_init_event() itself is untouched.
-
-> Code added discard this option.
-
-It would already be nonsensical for a driver to advertise 
-PERF_PMU_CAP_EXTENDED_HW_TYPE to say it supports extended hardware 
-events, but then reject all hardware events with a "event->attr.type != 
-pmu->type" check in its event_init. Reworking the latter condition into 
-PERF_PMU_CAP_NO_COMMON_EVENTS doesn't change that.
-
-Thanks,
-Robin.
-
-> 
-> And code tells me that no try. Target PMU is doubtless.
-> 
-> 
-> 
-> 
->>       if (!try_module_get(pmu->module))
->>           return -ENODEV;
-> 
+- Arnaldo
