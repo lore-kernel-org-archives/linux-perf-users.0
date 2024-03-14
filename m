@@ -1,121 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF47353C;
-	Thu, 14 Mar 2024 21:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38AC73196;
+	Thu, 14 Mar 2024 22:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710452785; cv=none; b=p5NHG2XTCmoeebV0jWKcJynkrmrgdzTX7t6ykWidLkFxAbg3hyLL2tbiewmcYxNqp4XxsqU3dBS/d6symJ9xDml3+iNdxYQrg3qM9h2Kvwl25WEFRJXxO834oHW9WZON2hXlQst3yS63T7QRoNQHWbb29KArnOJvh/Bv2H5zAMQ=
+	t=1710454820; cv=none; b=arRZDIoRyayP916q7qvI/uEtuxqTSiUsvESZF0u8DuXe6GwbyfN50KlJ0iuRHLVXY1wIlN8n0OsI67VpdloYpf+CdKN2figDOOFsi5EgX0URiNlp7+ebCQIj1YuxlCMgQQazZQuf/xm67TsiGuVixMiWWmwbEYONqZdhPSpOCdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710452785; c=relaxed/simple;
-	bh=K5BilDS17Npbpc53Aqd9Cf2INMeiMyEyXLe6XjTz3M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBcJnb822U2Y0yXLRM6g74dqq7rgQQ33H+yjc/bTxDo4X8E/EC48B24Bm5HKyIc45GqztmdCilEjdmGi3dR3wEjhj/HeKsR+gy6htpp1akAGh/pGvGYK6zSEhD7Ma+a4PUhxvrGsaux36I2+TtH812o+6YaTuQEzwUWTgeQs/cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyZOpcKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710454820; c=relaxed/simple;
+	bh=ncDx4rsB+pbrxuiP8gaQoYKHQO769X5h2FCKQ5CP22g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jWcTGCM8x5MPtVBxJ5mx+Wii3bxaNju+nRz7oUkYs7q6KY/AL331UFkdQxQJJzQg5ru7nQUSPKWWzet5NhwpOCwg7vy//+f3ZOi8Pwa1mU2UR1O3y6ZM6t0RTNvTItSdQFwYk+gb4AXVnagev0K03rN3/BPxGD82Gs1anziqZvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmCxUNlU; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyZOpcKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E7AC433C7;
-	Thu, 14 Mar 2024 21:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710452784;
-	bh=K5BilDS17Npbpc53Aqd9Cf2INMeiMyEyXLe6XjTz3M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eyZOpcKjip1OkLA5JpYNrlgh9e4GrDPk4POBs7RKVL9p6opHxyFSFGIbL0MeXk7Bf
-	 OQPksKWwuIJco5ESo6+j6msYm3+KBbRc5c+xvWWYOhZBtgwftKYPu0J4MFjZ6cpTmV
-	 FW3W/GtCV6sTh5czOjTUjU3glMfJc3BJcoVVTtLAWFHDzwVjzycCiL8Ci5NvjKXDgC
-	 FdUYXSDK8+TWFA12NtcT7/gUAWHLzAZa28nxnCY8OJqomhxyMqmD1I+CIJXMaO/pUY
-	 PJjuqeZ7BSjZqoN4jJ9IPU6ZPO4Tm1RoUecsDth+pLDx+oHpg6v+JGl0U+5LJi25nh
-	 AUCH9QxERI0kQ==
-Date: Thu, 14 Mar 2024 18:46:21 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmCxUNlU"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2219ed4e2d9so893112fac.1;
+        Thu, 14 Mar 2024 15:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710454818; x=1711059618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sGh/a0FjaaqhWt72exyFQnoUZiMKDdsCOSQoVbQhpF8=;
+        b=bmCxUNlUHmxAJdVXv8L9RsMAn3P8aEugbwGg744ms7oCkugyJKaArcviCPEY0mgnTp
+         Ak0IDYlmwDwVWeSFK9vWe4XNedXet3wxtj5eevPDVB2tBjLZXhkTE4gh41GQsQqvGIQZ
+         kK0n95Wrn2aj+T9YaB/g8Y+lQhSJrlr9gBsikJ4Wq3KRuPvenUPppyRmhn+sQ6aHQJot
+         ZpqOFewAA0BU3ERjcO581NpWHUxucPJKRyIwQIB5Vd6IaL2oqAT3wNXS5Fhr1iDvHrn2
+         aTNMSNDLK5TMPQeZyt48XG6RpJhnIC+0Z+69kAOEn2eWti9+msf03kqgtbDalEo1+rhF
+         wKFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710454818; x=1711059618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sGh/a0FjaaqhWt72exyFQnoUZiMKDdsCOSQoVbQhpF8=;
+        b=Sssl237UYekLUQrsOSGmHe8LlgwA9DbmejpFFSfaAWIOCbgvQD5tv7q119utkvhTWH
+         cvq2Je/XRHWon9DYFE1f0/EduLyUIcEfe07Z0H0IVQpml/5x2HXexlnCYQU0D7AvvHIb
+         dRcdQY3cBQ6IT4OuI0BaCA58R4pMz6vKuSmfGrRARb5diBCFq4y92Zkd+l+UxJNNu7oG
+         sseBS/grqoo/rGF5Vaz/H1diRMzFlWmYIxKN0r5TPVwkqakKISR5irwLbLnzjblIvvJf
+         1DMzXdv+TuW5NBBpioNqAH30R7z0DyzY9XbvfYX/ukQXDFiWZb3fGbfE4m0ouGXI5aAy
+         wl9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf9GCD2RQv6hBvlAiaJHmos6HIWfFnv7L6q0yo+eCh6fmGB+5zx94OQBu3Fpn8obDtHsASUxBaof3nbZThtUxoSInG3lRE/WyoK2fg/0wM2h6MJCuv8QdfhlgN6h1VCI6Ky1lGMN1iM3f7InC3tA==
+X-Gm-Message-State: AOJu0YyM9UYc1at4FlApM7Dy7lru2M0F3+AV7Mc3cquaAZdXFJu24YOB
+	HzaTUUnok5/kM4lwwtMSryHV+7OZ1zyK+2kZtJmUHkVPrbzC/0yK
+X-Google-Smtp-Source: AGHT+IExOWj5lAsmVjxruHjura7sadZXu4+15WI0M4zheCidFt5dk5nW42Jn4z4RNizJzdiCGhtmEw==
+X-Received: by 2002:a05:6871:289b:b0:221:c8a9:563d with SMTP id bq27-20020a056871289b00b00221c8a9563dmr2614098oac.3.1710454817885;
+        Thu, 14 Mar 2024 15:20:17 -0700 (PDT)
+Received: from localhost.localdomain ([2601:646:481:c7c0:d8ee:20e4:a0de:ff0c])
+        by smtp.gmail.com with ESMTPSA id py27-20020a056871e41b00b002227a590258sm160181oac.26.2024.03.14.15.20.16
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 14 Mar 2024 15:20:17 -0700 (PDT)
+From: Ethan Adams <j.ethan.adams@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
- on RT.
-Message-ID: <ZfNwLfdOLBytjF06@x1>
-References: <20240312180814.3373778-1-bigeasy@linutronix.de>
- <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
- <ZfHE9Ev5T3Lq7o34@x1>
- <ZfHtBB5_-3RByE8p@x1>
- <ZfHw3J5PY6qy4mXn@x1>
- <ZfIIqcmRlrxwUFTn@x1>
- <ZfIJIfqeI9tWnnS5@x1>
- <20240314091033.woaK8h83@linutronix.de>
- <ZfMK_yTzxTQCMGZ1@x1>
- <ZfNqnjdR-0YEsSnb@x1>
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ethan Adams <j.ethan.adams@gmail.com>,
+	Tycho Andersen <tycho@tycho.pizza>
+Subject: [PATCH] perf build: fix out of tree build
+Date: Thu, 14 Mar 2024 15:20:12 -0700
+Message-ID: <20240314222012.47193-1-j.ethan.adams@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfNqnjdR-0YEsSnb@x1>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 14, 2024 at 06:22:38PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Mar 14, 2024 at 11:34:39AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
-> > > > > noticeable when running with/without the patch with Vince's regression
-> > > > > tests. So:
-> 
-> > > > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> > > > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
-> 
-> > > Just to be clear: You revert your Tested-by because now you test this on
-> > > torvalds/master but not because you reported a regression which I
-> > > missed.
-> 
-> > You got it right. No regressions, the code is good, I just need to test
-> > it a bit further, with torvalds/master, without PREEMPT_RT.
-> 
-> Tests performed, no regressions detected, same behaviour when killing
-> the remove_on_exec selftests midway:
+It seems that a previous modification to sysreg-defs, which corrected
+emitting the headaer to the specified output directory, exposed missing
+subdir, prefix variables. This breaks out of tree builds of perf as the
+file is now built into the output directory, but still tries to descend
+into output directory as a subdir.
+
+Fixes: a29ee6aea703 ("perf build: Ensure sysreg-defs Makefile respects output dir")
+Tested-by: Tycho Andersen <tycho@tycho.pizza>
+Reviewed-by: Tycho Andersen <tycho@tycho.pizza>
+Signed-off-by: Ethan Adams <j.ethan.adams@gmail.com>
+---
+ tools/perf/Makefile.perf | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 058c9aecf608..63a8b4be5075 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -436,18 +436,19 @@ SHELL = $(SHELL_PATH)
  
-> [acme@nine linux]$ uname -a
-> Linux nine 6.8.0-rc7.sebastian-rt6+ #2 SMP PREEMPT_RT Tue Mar 12 18:01:31 -03 2024 x86_64 x86_64 x86_64 GNU/Linux
+ arm64_gen_sysreg_dir := $(srctree)/tools/arch/arm64/tools
+ ifneq ($(OUTPUT),)
+-  arm64_gen_sysreg_outdir := $(OUTPUT)
++  arm64_gen_sysreg_outdir := $(abspath $(OUTPUT))
+ else
+   arm64_gen_sysreg_outdir := $(CURDIR)
+ endif
+ 
+ arm64-sysreg-defs: FORCE
+-	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir)
++	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir) \
++		prefix= subdir=
+ 
+ arm64-sysreg-defs-clean:
+ 	$(call QUIET_CLEAN,arm64-sysreg-defs)
+ 	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir) \
+-		clean > /dev/null
++		prefix= subdir= clean > /dev/null
+ 
+ beauty_linux_dir := $(srctree)/tools/perf/trace/beauty/include/linux/
+ linux_uapi_dir := $(srctree)/tools/include/uapi/linux
 
-Re-reading this I noticed I really retested with the rt kernel, d0h, so
-here it goes again:
+base-commit: e365762bb26770b53d2475852453bed76c0d85f9
+-- 
+2.43.2
 
-[acme@nine ~]$ uname -r
-6.8.0.sigtrapfix+
-[acme@nine ~]$ set -o vi
-[acme@nine ~]$ perf test sigtrap
- 68: Sigtrap                                                         : Ok
-[acme@nine ~]$ cd ~acme/git/linux
-[acme@nine linux]$ cd tools/testing/selftests/perf_events && make
-make: Nothing to be done for 'all'.
-[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
-<snip>
-ok 4 remove_on_exec.exec_stress
-# PASSED: 4 / 4 tests passed.
-# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-#            OK  remove_on_exec.exec_stress
-ok 4 remove_on_exec.exec_stress
-# PASSED: 4 / 4 tests passed.
-# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-#            OK  remove_on_exec.exec_stress
-ok 4 remove_on_exec.exec_stress
-# PASSED: 4 / 4 tests passed.
-# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-[acme@nine perf_events]$
-
-So despite this mistake all is well, torvalds/master + your patchkit
-seems ok.
-
-Sorry for the noise :-\
-
-- Arnaldo
