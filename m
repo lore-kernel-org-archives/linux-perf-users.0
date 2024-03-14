@@ -1,139 +1,87 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D04E13FEE;
-	Thu, 14 Mar 2024 08:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC036AFB6;
+	Thu, 14 Mar 2024 09:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710403859; cv=none; b=pT/VpiRgWY3JwMqzJjKbegQNs3UT1ur8lQdNl14OhQ7fzT7wWkVryM4RqYRfzmsf/1NW3wdrEFkV6Y8GewJ581Hz2DM4js4+/5YFmHjxgmTK6kFH6HdBqHSLQkP9M/XY2ot+EQFG3yveLp71VSNvy1qHcoZWQ9RnYOY/QFyMcOc=
+	t=1710407438; cv=none; b=jORdzxsroSwHC6Hmz6Zc9vn8u57D30jwchVs0AeqeAFTuLwDnrCmCui/iXrcpCHQ3Sr2E1xp350QaSzGPHvsnTceCs+Un3tCWpQfYMrPhciR8ed7lHBMQEWwG3CLGTVwOBES51ugB3qbzm3yfElU6itAsQW7Nm7hjzijbxkEEIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710403859; c=relaxed/simple;
-	bh=bj94yDjLmPYOA+0eTpRudTLbhG6XPhmenWzv6F9cStY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uDhkTNmiBRCtuHCSVNOKBbNIQURiQ5xw5SXw8BOYTadL4f6eXU38bmBC1lW04TKcuJXwlI4FHa+XUJFeAjO0k8yBfnGmLHYN4HYPNkh58PF7Djv5DpA0aQWeDAy3wRpCBien0tbM49nD2Os82sDLgZku0yU58CuqRPCA4L78GNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.62.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp77t1710403784t1pjbe75
-X-QQ-Originating-IP: WJEFhGQswlmNp9YGR/xWQ89G4CXtgKJpagGX+Ce8iew=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 14 Mar 2024 16:09:42 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: 30t4+KEGo2kq6v309Md1M12EuDrEvJ6i7jIlo5yvBPHBEklZUJUHMza9816dM
-	bZ8X7LirP0f5I4NXxdkiEcqMKk9e5CcDNMEEJ+VBuzccx479+GW5yCZF2TfX6+l7mi2UfLG
-	lX0vTWwPpjbfUAekmPxMt8gATh7X/FDdspiZ16FVuI/N+/c7Cg/LmwvA26KBGQwK6pXFFfk
-	2bWw6RvEDv07XFMzfw+gdoTWnRLvaeqRMm3I3oRmViicHkZEhWXY4ayXCrtxl1iWOXetJAB
-	nPLrXaYCNu9bYYwMmXv005uuZYmqCG9GgEpVI50fg/BAwFtIzkqFjPIg3Htt3YhvJ25I477
-	v3GGIgrgLLCwrJ/vGcVj6v0EQUSYogufIxt2jl9GSBW9DkJ61UNsiomcQN/lbCB6TW5gVVR
-	vP/ZbUQTsWI=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 7111722576666211980
-Message-ID: <94DB0209EA3D1C5F+b646f31e-15a1-4753-8309-687b5860863e@shingroup.cn>
-Date: Thu, 14 Mar 2024 16:09:42 +0800
+	s=arc-20240116; t=1710407438; c=relaxed/simple;
+	bh=3v9SI2y0Fbvlzkw2wA+/CtWaFGYXqQtPaKDdJ2JD1XQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyNbV6lOxW+KwaqRP7a5ua1AmXJ87WuSLt/uiM79pqoMwL1DkNOo/DjLh3LJrjKU1h6Rbxngn128po5zjPoDd6MbNKZfYNdsea3wwu1szsyAXvC/8unsOWyotGCntHZnW9hLaBsznpWqQNrkDBycoRh7gY4VNFcYgsYenjkUbks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eG5My/UC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CjiPh8uk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eG5My/UC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CjiPh8uk"
+Date: Thu, 14 Mar 2024 10:10:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710407434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nmjRAo4dqjYG8fE9KebsrrowCz2F2+E8qqexBK8mMaQ=;
+	b=eG5My/UC4kai2HQxiRn18cvfF/+09X/3vLu6graK6aLIT2t8dVxjDz4k/kdb+PKU9Fiq+5
+	bgmh0E5GOHeXQcgfM3bZ9NAkKQ400dtIarrfaysX71YsniLWOzgYMT318yRFGBGZsLZexg
+	wn7NfulEYfBZt/LfQfmkfTTw53KaFynJ75zMcThreokM5NqPg+OA7vAEY4IOu5fLCX2Hgy
+	p6LQXfPD+HLc11Xc6rNXCyI2hbB5jxdGY2BD3W7I2NBE22kdAtvw3xdwVbGXomuzqtu1SD
+	zNVhh0cpO2I9CHHNW5glXngsPCyFhVLSf6GVmpSBhRtC3+iZ92oimAU1T/DALQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710407434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nmjRAo4dqjYG8fE9KebsrrowCz2F2+E8qqexBK8mMaQ=;
+	b=CjiPh8ukq0RYuOn4ajwbGi2UCFtxExM9RJEnxN4UtGFfg6j4WJ7LDKrl+KijWgVan2v01w
+	KQMNgYySV62EVzBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <20240314091033.woaK8h83@linutronix.de>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
+ <ZfIJIfqeI9tWnnS5@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] perf: Add capability for common event support
-To: Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-perf-users@vger.kernel.org
-References: <cover.1710257512.git.robin.murphy@arm.com>
- <feb10873fe9e4e10b5ffbbe8e296c8a45632e3c2.1710257512.git.robin.murphy@arm.com>
-Content-Language: en-US
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <feb10873fe9e4e10b5ffbbe8e296c8a45632e3c2.1710257512.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZfIJIfqeI9tWnnS5@x1>
 
-
-
-在 2024/3/13 1:34, Robin Murphy 写道:
-> Many PMUs do not support common hardware/cache/etc. events and only
-> handle their own PMU-specific events. Since this only depends on
-> matching the event and PMU types, it's a prime candidate for a core
-> capability to save more event_init boilerplate in drivers.
+On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
+> > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> > noticeable when running with/without the patch with Vince's regression
+> > tests. So:
+>  
+> > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->   include/linux/perf_event.h | 1 +
->   kernel/events/core.c       | 5 +++++
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index d2a15c0c6f8a..983201f21dd2 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
->   #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
->   #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->   #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
-> +#define PERF_PMU_CAP_NO_COMMON_EVENTS		0x0200
->   
->   struct perf_output_handle;
->   
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f0f0f71213a1..7ad80826c218 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11649,6 +11649,11 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->   	struct perf_event_context *ctx = NULL;
->   	int ret;
->   
-> +	/* Short-circuit if we know the PMU won't want this event */
-> +	if (pmu->capabilities & PERF_PMU_CAP_NO_COMMON_EVENTS &&
-> +	    event->attr.type != pmu->type)
-> +		return -ENOENT;
-> +
+> Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
 
-         /*
-          * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-          * are often aliases for PERF_TYPE_RAW.
-          */
-         type = event->attr.type;
-         if (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) {
-                 type = event->attr.config >> PERF_PMU_TYPE_SHIFT;
-                 if (!type) {
-                         type = PERF_TYPE_RAW;
-                 } else {
-                         extended_type = true;
-                         event->attr.config &= PERF_HW_EVENT_MASK;
-                 }
-         }
+Just to be clear: You revert your Tested-by because now you test this on
+torvalds/master but not because you reported a regression which I
+missed.
 
-again:
-         rcu_read_lock();
-         pmu = idr_find(&pmu_idr, type);
-         rcu_read_unlock();
-         if (pmu) {
-Above code tells me it's possible that 'pmu->type != event->attr.type' 
-is true when event->attr.type equals to PERF_TYPE_HARDWARE or 
-PERF_TYPE_HW_CACHE, and pmu->type should equal to event->attr.config >> 
-PERF_PMU_TYPE_SHIFT.
+> - Arnaldo
 
-We find the target pmu by event->attr.config >> PERF_PMU_TYPE_SHIFT.
-
-Code added discard this option.
-
-And code tells me that no try. Target PMU is doubtless.
-
-
-
-
->   	if (!try_module_get(pmu->module))
->   		return -ENODEV;
->   
-
+Sebastian
