@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F8D405FD
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 05:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43514594C
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 06:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710396000; cv=none; b=l9vo3RCHfVU0zSXAyFdSDhXlAeIxQiYLdo3sf5pOwXjPXIN/eLZzLPzorWS4X9attz7x7zIwo2Umb8SfNxX3W98hFaUt89vZ4qugeQ8Y65LuMgoNDc5Tz6RAAJ9V0XBdNyQCzqIqiZcGGSRs19iV0AkWv+spoJAkWZHgOWwV0Ik=
+	t=1710396002; cv=none; b=jtl0PdKJg3shVx0P6lDpfzNI2NDzT1+4S8AKwMuBOH+d9PXka4wNuN2CU9p/gQP8iuwtq7Ibi7jBoV3iVd4eLvc45DoJLPym7PY8DiLX6yx7EQCO1xgClHzHqfKKxPN/kTSG+T7vIisKq6DlnxpTkopSatSC7xgVSfk2Yda3q/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710396000; c=relaxed/simple;
-	bh=xtWp/os77FuNv6nPjjXYL4rEIzSmfCuzd+IK8xkj2yE=;
+	s=arc-20240116; t=1710396002; c=relaxed/simple;
+	bh=ATIEU1OwZT5UPCeNuSu9+OJJ7mgcQCq56xVHEiwhOQo=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=JWsnJ2WP9OocumdRQcq7X2WIsrLWp/HodCTAB/LhHmA49tQQYU9MvcUdjRgd2LG6pnVKQh7YwW/3zr0IoQrUAdO2wX6TRiEiSREE6t4DzyJx7JjGm2pPqXAOoTNPG2F+C7x+deQTkAgY19p/D0ejuX0Pn682uSSqWwfk9h79npQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVJOyGMf; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=HL8RAQGrg9p1kHSJYklUKOIzcWPu9cmObfWEUDNaejDfvEbPtdb3wJkbzz5AX6SEUYd/NvUVHp1ZVv4SPg2sMK/wqOFlLQz30LQKfCOxSx16m89RuoTX+vEgxjxtEw9J/EZSBCoKQMeh1kUhYnZn0LRyYqcwn2YMe2d+38Z75mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L//ABNds; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVJOyGMf"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-609fe434210so11146667b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 22:59:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L//ABNds"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a54004e9fso12940147b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 23:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710395998; x=1711000798; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710396000; x=1711000800; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2fqg3EeqdVKSD6hHFpARrgrIQYOAIUvUSGX0zthwymQ=;
-        b=tVJOyGMf8bD8yTeti1L+a0XeRJjll11lkbRs9h4xTfg76mNkdLCktnfRNP23i/6zeu
-         IT7qDYDm0RP6FEgutf6m6/XtvtkGp2DjnW3p5NGAI0BtQHY7du2+NHpngZLKhQw56oJB
-         +n+04bUS1SJTr/hLqCnyRRG6enGYTEFTG1Uh81OaxNvld4rP6KaBjdt9LqLuALoJQTTN
-         tBKmHJgLAZ1Ea4zYh+39ALNGvdjz4tIz6LC2MRH7StDIgwt/Xe78l/bV1zbJezWy2lz1
-         8YZessk789ac5io7gn3j3YDQJjEWprlUFE2ZrYFLfPI+Rd26qtn312hsS9FvZpau+UBu
-         uIdg==
+        bh=Dpf5hHVN3JuBV5acx4fDuNQxWamY4EcOXEKL6JOmADo=;
+        b=L//ABNdsdXLmodTQ6SJNfN+MPpaKjkg2GvsVR4+3VtQ1DKImzLP0AeXF83Yz4FF9Pb
+         5AxYKcmqfMxOK4+QbcvtHFHDn6kYbhaB20JLIv0JlN6flTyyI40KdBHj6MtwHa/0t7J0
+         b4QVe+o1/0vSM0eGvi5x6rkFzmRVjbO87bJ2SrHjsFhBfjuyYVTnF66vq4KUPacQffja
+         8YjdrvQHkCZveMQfG5cz+SyCJK2Wx1VDKjUdZNCfG3MMK1QZ7G3Y4HSe34Lx/l232Yjp
+         hIzEX4ocJYJF9D2l2OB10uiI8zu3C+fI/+GRzQauXz//S607VbJOvPHeBDHcRtXKT2Xr
+         bpSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710395998; x=1711000798;
+        d=1e100.net; s=20230601; t=1710396000; x=1711000800;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fqg3EeqdVKSD6hHFpARrgrIQYOAIUvUSGX0zthwymQ=;
-        b=d+CVNRZBnarKBrLXy37IvvXoUv6hgftvkGYJ8wHziTinXiHwyqQjVY2kl5s6Fwap1u
-         oHKoFE0FwlbfkkyFVQ3qdwndoQTJd0iLSe+VHWJHrEojRR5gytpQUS9BSmB+tXCtHWf+
-         7nqftSRMDTQDwdc1Tscgx15gU7ZUQdfYP+dLiatVqbgmALzWVKGsa5Eao7NbvM+2zmxM
-         UAeYTsC5F4C3+A1UbgPM3PlxJXFFdtAH0rQeNsFaHLknWsdDodJbMsmQaBDJukEGD3GI
-         /w9duVkDboAL+FPv41Zaq6Igp8xrPhbxy38QARomT/b2CaQDAnYVDquf4AF+PONjTKqO
-         dodg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaXxtA7NZLi9xx7+vIPGC/rW+NLMyMKK6jhA0kjLXcqU7YWHy6i+piznSqVziNjz6JVZ0sa8Mp+gYZYlo84ChKxJoTLBkvoGLA2j/X/rdsBQ==
-X-Gm-Message-State: AOJu0Yz3NHJ++i98mJ8ox1SWnSayMVluThx47c0oqZyIRaeOo+b5rCRK
-	GWrPdtZMPu12ogqO62t//UWmUN+KlSAYDurHQEwOhuZ0ZJDOCjjQwtGQWGoHoO8rbsQ+Tt0YGWi
-	62vkQcQ==
-X-Google-Smtp-Source: AGHT+IHUMcZuKn2Q0djcMQG4CWwtVgxjzUZW8HhN3F/IZn5XjFbhraj9iGU9PFaTm8wkVBScuQOWVBUsRENB
+        bh=Dpf5hHVN3JuBV5acx4fDuNQxWamY4EcOXEKL6JOmADo=;
+        b=n++qD+p5JlbF+UokCNB2NdJiyN/4KXq04d0OKC4U0KwWh0jO55QIXVwdzcPD+v9ZJZ
+         pMthT+RY/nz3UxoB0AdH61d+YGNmkdILmu9C0vGLm74c8Re99ScpZWQJljU8FcbVeDf4
+         KG7qqvs0TZ8qxs5nURg1sOHZYXap2U3a8Nu1PUD2PoODkjqmEK+0so1tn93R7aQOg85Q
+         DjGdifiDW7ZE3Ed6igpPP52kuvxLRo4PTXwsIndQGjFyywacSPQMU7PdSIfH8q3Y3WV0
+         ynLKpOJAcSAAUf2vcTfSRV8BMVCjnd7FVitYzARu9/czDu6+8VhaEdTX3sYHBagHIRed
+         RdiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpHLLhEF97d0wH1Hlh+4whW0oESXDprRcpWmeP4UBjX7z2CZYFEvg0c/b2BZcmFVHVu+2/v2bTrhjW8hTxA/L87DrpNKq9zkPmkv+jT8qEuQ==
+X-Gm-Message-State: AOJu0Yz/HYIKEAST1BZwWqyREHFlqw+8/2LnjjHUG9qLAWnxTAOZqqMx
+	0h8/AZSCndquULYpvtbiilpZMwpV3G+IXaY926/xuEHxsGsJtIw7d4Aww89eBmJXyFFv7Uegfbs
+	9egKaSQ==
+X-Google-Smtp-Source: AGHT+IGZTjZk04FELRhd0NJWv7Oiq9IKYNIMixNmG3acf5ytq9ZgxcP7xIUpAkvk/rTlh7aM/9Zepk/FZDZ5
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:1004:b0:dc6:44d4:bee0 with SMTP
- id w4-20020a056902100400b00dc644d4bee0mr27738ybt.7.1710395997689; Wed, 13 Mar
- 2024 22:59:57 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:59:09 -0700
+ (user=irogers job=sendgmr) by 2002:a81:5297:0:b0:60c:b1d4:a9f9 with SMTP id
+ g145-20020a815297000000b0060cb1d4a9f9mr210861ywb.10.1710396000037; Wed, 13
+ Mar 2024 23:00:00 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:10 -0700
 In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
-Message-Id: <20240314055919.1979781-11-irogers@google.com>
+Message-Id: <20240314055919.1979781-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240314055919.1979781-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 10/20] perf jevents: Add load store breakdown metrics ldst
- for Intel
+Subject: [PATCH v3 11/20] perf jevents: Add ILP metrics for Intel
 From: Ian Rogers <irogers@google.com>
 To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
 	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
@@ -75,125 +74,62 @@ To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>
 	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Give breakdown of number of instructions. Use the counter mask (cmask)
-to show the number of cycles taken to retire the instructions.
+Use the counter mask (cmask) to see how many cycles an instruction
+takes to retire. Present as a set of ILP metrics.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 86 +++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/intel_metrics.py | 30 ++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 9ef30e5d3e25..4ac419212b3d 100755
+index 4ac419212b3d..d15f9ac05204 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -2,7 +2,7 @@
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
--                    Metric, MetricGroup, MetricRef, Select)
-+                    Metric, MetricConstraint, MetricGroup, MetricRef, Select)
- import argparse
- import json
- import math
-@@ -508,6 +508,89 @@ def IntelSwpf() -> Optional[MetricGroup]:
-   ], description="Sofware prefetch instruction breakdown")
+@@ -266,6 +266,35 @@ def IntelBr():
+                      description="breakdown of retired branch instructions")
  
  
-+def IntelLdSt() -> Optional[MetricGroup]:
-+  if _args.model in [
-+      "bonnell",
-+      "nehalemep",
-+      "nehalemex",
-+      "westmereep-dp",
-+      "westmereep-sp",
-+      "westmereex",
-+  ]:
-+    return None
-+  LDST_LD = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
-+  LDST_ST = Event("MEM_INST_RETIRED.ALL_STORES", "MEM_UOPS_RETIRED.ALL_STORES")
-+  LDST_LDC1 = Event(f"{LDST_LD.name}/cmask=1/")
-+  LDST_STC1 = Event(f"{LDST_ST.name}/cmask=1/")
-+  LDST_LDC2 = Event(f"{LDST_LD.name}/cmask=2/")
-+  LDST_STC2 = Event(f"{LDST_ST.name}/cmask=2/")
-+  LDST_LDC3 = Event(f"{LDST_LD.name}/cmask=3/")
-+  LDST_STC3 = Event(f"{LDST_ST.name}/cmask=3/")
-+  ins = Event("instructions")
-+  LDST_CYC = Event("CPU_CLK_UNHALTED.THREAD",
-+                   "CPU_CLK_UNHALTED.CORE_P",
-+                   "CPU_CLK_UNHALTED.THREAD_P")
-+  LDST_PRE = None
-+  try:
-+    LDST_PRE = Event("LOAD_HIT_PREFETCH.SWPF", "LOAD_HIT_PRE.SW_PF")
-+  except:
-+    pass
-+  LDST_AT = None
-+  try:
-+    LDST_AT = Event("MEM_INST_RETIRED.LOCK_LOADS")
-+  except:
-+    pass
-+  cyc  = LDST_CYC
-+
-+  ld_rate = d_ratio(LDST_LD, interval_sec)
-+  st_rate = d_ratio(LDST_ST, interval_sec)
-+  pf_rate = d_ratio(LDST_PRE, interval_sec) if LDST_PRE else None
-+  at_rate = d_ratio(LDST_AT, interval_sec) if LDST_AT else None
-+
-+  ldst_ret_constraint = MetricConstraint.GROUPED_EVENTS
-+  if LDST_LD.name == "MEM_UOPS_RETIRED.ALL_LOADS":
-+    ldst_ret_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
-+
-+  return MetricGroup("ldst", [
-+      MetricGroup("ldst_total", [
-+          Metric("ldst_total_loads", "Load/store instructions total loads",
-+                 ld_rate, "loads"),
-+          Metric("ldst_total_stores", "Load/store instructions total stores",
-+                 st_rate, "stores"),
-+      ]),
-+      MetricGroup("ldst_prcnt", [
-+          Metric("ldst_prcnt_loads", "Percent of all instructions that are loads",
-+                 d_ratio(LDST_LD, ins), "100%"),
-+          Metric("ldst_prcnt_stores", "Percent of all instructions that are stores",
-+                 d_ratio(LDST_ST, ins), "100%"),
-+      ]),
-+      MetricGroup("ldst_ret_lds", [
-+          Metric("ldst_ret_lds_1", "Retired loads in 1 cycle",
-+                 d_ratio(max(LDST_LDC1 - LDST_LDC2, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_lds_2", "Retired loads in 2 cycles",
-+                 d_ratio(max(LDST_LDC2 - LDST_LDC3, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_lds_3", "Retired loads in 3 or more cycles",
-+                 d_ratio(LDST_LDC3, cyc), "100%"),
-+      ]),
-+      MetricGroup("ldst_ret_sts", [
-+          Metric("ldst_ret_sts_1", "Retired stores in 1 cycle",
-+                 d_ratio(max(LDST_STC1 - LDST_STC2, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_sts_2", "Retired stores in 2 cycles",
-+                 d_ratio(max(LDST_STC2 - LDST_STC3, 0), cyc), "100%",
-+                 constraint = ldst_ret_constraint),
-+          Metric("ldst_ret_sts_3", "Retired stores in 3 more cycles",
-+                 d_ratio(LDST_STC3, cyc), "100%"),
-+      ]),
-+      Metric("ldst_ld_hit_swpf", "Load hit software prefetches per second",
-+             pf_rate, "swpf/s") if pf_rate else None,
-+      Metric("ldst_atomic_lds", "Atomic loads per second",
-+             at_rate, "loads/s") if at_rate else None,
-+  ], description = "Breakdown of load/store instructions")
++def IntelIlp() -> MetricGroup:
++  tsc = Event("msr/tsc/")
++  c0 = Event("msr/mperf/")
++  low = tsc - c0
++  inst_ret = Event("INST_RETIRED.ANY_P")
++  inst_ret_c = [Event(f"{inst_ret.name}/cmask={x}/") for x in range(1, 6)]
++  ilp = [d_ratio(max(inst_ret_c[x] - inst_ret_c[x + 1], 0), core_cycles) for x in range(0, 4)]
++  ilp.append(d_ratio(inst_ret_c[4], core_cycles))
++  ilp0 = 1
++  for x in ilp:
++    ilp0 -= x
++  return MetricGroup("ilp", [
++      Metric("ilp_idle", "Lower power cycles as a percentage of all cycles",
++             d_ratio(low, tsc), "100%"),
++      Metric("ilp_inst_ret_0", "Instructions retired in 0 cycles as a percentage of all cycles",
++             ilp0, "100%"),
++      Metric("ilp_inst_ret_1", "Instructions retired in 1 cycles as a percentage of all cycles",
++             ilp[0], "100%"),
++      Metric("ilp_inst_ret_2", "Instructions retired in 2 cycles as a percentage of all cycles",
++             ilp[1], "100%"),
++      Metric("ilp_inst_ret_3", "Instructions retired in 3 cycles as a percentage of all cycles",
++             ilp[2], "100%"),
++      Metric("ilp_inst_ret_4", "Instructions retired in 4 cycles as a percentage of all cycles",
++             ilp[3], "100%"),
++      Metric("ilp_inst_ret_5", "Instructions retired in 5 or more cycles as a percentage of all cycles",
++             ilp[4], "100%"),
++  ])
 +
 +
- def main() -> None:
-   global _args
- 
-@@ -537,6 +620,7 @@ def main() -> None:
+ def IntelL2() -> Optional[MetricGroup]:
+   try:
+     DC_HIT = Event("L2_RQSTS.DEMAND_DATA_RD_HIT")
+@@ -619,6 +648,7 @@ def main() -> None:
+       Smi(),
        Tsx(),
        IntelBr(),
++      IntelIlp(),
        IntelL2(),
-+      IntelLdSt(),
+       IntelLdSt(),
        IntelPorts(),
-       IntelSwpf(),
-   ])
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
