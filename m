@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFDA5C61C;
-	Thu, 14 Mar 2024 21:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF47353C;
+	Thu, 14 Mar 2024 21:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710451362; cv=none; b=dSrzsfBSq/eb2tufmaMpBZGXuv11porFs7rTeJ8ecHr4Q9smbVJsR5mRwKWldaIAmw3nJtKjPEJjvqnUU7TVNZGTZwFoU7PFw1AOW0UTHOkClowKOlSrHVa2OE7Ww+y6wsvoRZDrOl6e8IYHsGabb6l0sdo9DOPmsv2V6owOej0=
+	t=1710452785; cv=none; b=p5NHG2XTCmoeebV0jWKcJynkrmrgdzTX7t6ykWidLkFxAbg3hyLL2tbiewmcYxNqp4XxsqU3dBS/d6symJ9xDml3+iNdxYQrg3qM9h2Kvwl25WEFRJXxO834oHW9WZON2hXlQst3yS63T7QRoNQHWbb29KArnOJvh/Bv2H5zAMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710451362; c=relaxed/simple;
-	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	s=arc-20240116; t=1710452785; c=relaxed/simple;
+	bh=K5BilDS17Npbpc53Aqd9Cf2INMeiMyEyXLe6XjTz3M4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u3TxehETkkln9f4jM4+qWDBaxXzojSLvW3/m3SLgXGWI8idwHxYRa1RLUr7mcOBsthPPq0pu1CJwhb2hqaycF9x/sXJvjGQNQEylfIbEpq8RMk8yzjW++mSNiAFsSeqyxKBRw0qBCi7nVT9nLEfpPySNte7UXSUmPvJZddVSEy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME+Sb6BD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBcJnb822U2Y0yXLRM6g74dqq7rgQQ33H+yjc/bTxDo4X8E/EC48B24Bm5HKyIc45GqztmdCilEjdmGi3dR3wEjhj/HeKsR+gy6htpp1akAGh/pGvGYK6zSEhD7Ma+a4PUhxvrGsaux36I2+TtH812o+6YaTuQEzwUWTgeQs/cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyZOpcKj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME+Sb6BD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6FDC433F1;
-	Thu, 14 Mar 2024 21:22:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyZOpcKj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E7AC433C7;
+	Thu, 14 Mar 2024 21:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710451361;
-	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	s=k20201202; t=1710452784;
+	bh=K5BilDS17Npbpc53Aqd9Cf2INMeiMyEyXLe6XjTz3M4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ME+Sb6BDJu10rxvJXW6AUg2TcwxVgYix6XDzJ4Roy/sPkqq/8HYVZpyskCfuDulPR
-	 nVndx/6RdRL8HnHw9vd+wJ+lz3wkIkQm+vPhFz7i2e7YgNZ49DjLJ7fZn6xyaARXxR
-	 eYaKDpPl3qFG0pZ5EKw5wx2PNnqXC8RGiJiJks3QPtkPsAnwZMrj7KLHSUdkWUc/MT
-	 jfaQIfnweLl1YZ4AlKZVDjwvuxViSUtyVUmT46MdibKgXYaGgN6PXNmwqEqUOcMBAC
-	 vJCLiladNTyBJSRIzk+sr6FlYxFzBn8TDWfevT7Iy4b87hyVl6giycA0LcFOsBTDcw
-	 t89L10ZLKPZcg==
-Date: Thu, 14 Mar 2024 18:22:38 -0300
+	b=eyZOpcKjip1OkLA5JpYNrlgh9e4GrDPk4POBs7RKVL9p6opHxyFSFGIbL0MeXk7Bf
+	 OQPksKWwuIJco5ESo6+j6msYm3+KBbRc5c+xvWWYOhZBtgwftKYPu0J4MFjZ6cpTmV
+	 FW3W/GtCV6sTh5czOjTUjU3glMfJc3BJcoVVTtLAWFHDzwVjzycCiL8Ci5NvjKXDgC
+	 FdUYXSDK8+TWFA12NtcT7/gUAWHLzAZa28nxnCY8OJqomhxyMqmD1I+CIJXMaO/pUY
+	 PJjuqeZ7BSjZqoN4jJ9IPU6ZPO4Tm1RoUecsDth+pLDx+oHpg6v+JGl0U+5LJi25nh
+	 AUCH9QxERI0kQ==
+Date: Thu, 14 Mar 2024 18:46:21 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
@@ -40,7 +40,7 @@ Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
 	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
  on RT.
-Message-ID: <ZfNqnjdR-0YEsSnb@x1>
+Message-ID: <ZfNwLfdOLBytjF06@x1>
 References: <20240312180814.3373778-1-bigeasy@linutronix.de>
  <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
  <ZfHE9Ev5T3Lq7o34@x1>
@@ -50,80 +50,72 @@ References: <20240312180814.3373778-1-bigeasy@linutronix.de>
  <ZfIJIfqeI9tWnnS5@x1>
  <20240314091033.woaK8h83@linutronix.de>
  <ZfMK_yTzxTQCMGZ1@x1>
+ <ZfNqnjdR-0YEsSnb@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZfMK_yTzxTQCMGZ1@x1>
+In-Reply-To: <ZfNqnjdR-0YEsSnb@x1>
 
-On Thu, Mar 14, 2024 at 11:34:39AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
-> > > > noticeable when running with/without the patch with Vince's regression
-> > > > tests. So:
+On Thu, Mar 14, 2024 at 06:22:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 14, 2024 at 11:34:39AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
+> > > On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> > > > > noticeable when running with/without the patch with Vince's regression
+> > > > > tests. So:
+> 
+> > > > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> > > > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
+> 
+> > > Just to be clear: You revert your Tested-by because now you test this on
+> > > torvalds/master but not because you reported a regression which I
+> > > missed.
+> 
+> > You got it right. No regressions, the code is good, I just need to test
+> > it a bit further, with torvalds/master, without PREEMPT_RT.
+> 
+> Tests performed, no regressions detected, same behaviour when killing
+> the remove_on_exec selftests midway:
+ 
+> [acme@nine linux]$ uname -a
+> Linux nine 6.8.0-rc7.sebastian-rt6+ #2 SMP PREEMPT_RT Tue Mar 12 18:01:31 -03 2024 x86_64 x86_64 x86_64 GNU/Linux
 
-> > > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Re-reading this I noticed I really retested with the rt kernel, d0h, so
+here it goes again:
 
-> > > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
-
-> > Just to be clear: You revert your Tested-by because now you test this on
-> > torvalds/master but not because you reported a regression which I
-> > missed.
-
-> You got it right. No regressions, the code is good, I just need to test
-> it a bit further, with torvalds/master, without PREEMPT_RT.
-
-Tests performed, no regressions detected, same behaviour when killing
-the remove_on_exec selftests midway:
-
-[acme@nine perf_events]$ perf annotate --stdio2 exec_child | tail
-              mov    $0x1,%edi
-            → callq  _exit@plt
-        b5:   nop           
-100.00  b6:   mov    signal_count,%eax
-              test   %eax,%eax
-            ↑ je     b6     
-              nop           
-              nop           
-              leaveq        
-            ← retq          
-[acme@nine perf_events]$ pidof exec_child 
-28256 28249 28241 28240 28239 28236 28228 28226 28224 28223 28219 28215 28208 28207 28206 28205 28200 28188 28187 28186 28185 28169 28168 28167 28166 28155 28154 28153 28152 28140 28139 28138 28137 28124 28123 28122 28121 28111 28110 28109 28108 28094 28093 28092 28091 28080 28079 28078 28077 28064 28062 28061 28060 28048 28047 28046 28045 28030 28029 28028 28027 28012 28011 28010 28009 27998 27996 27994 27993 27982 27981 27979 27978 27966 27965 27962 27961 27952 27951 27949 27948 27934 27933 27932 27931 27920 27919 27918 27917 27906 27905 27903 27902 27888 27885 27883 27882
+[acme@nine ~]$ uname -r
+6.8.0.sigtrapfix+
+[acme@nine ~]$ set -o vi
+[acme@nine ~]$ perf test sigtrap
+ 68: Sigtrap                                                         : Ok
+[acme@nine ~]$ cd ~acme/git/linux
+[acme@nine linux]$ cd tools/testing/selftests/perf_events && make
+make: Nothing to be done for 'all'.
+[acme@nine perf_events]$ for x in {0..100}; do (./remove_on_exec &); done
+<snip>
+ok 4 remove_on_exec.exec_stress
+# PASSED: 4 / 4 tests passed.
+# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
+#            OK  remove_on_exec.exec_stress
+ok 4 remove_on_exec.exec_stress
+# PASSED: 4 / 4 tests passed.
+# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
+#            OK  remove_on_exec.exec_stress
+ok 4 remove_on_exec.exec_stress
+# PASSED: 4 / 4 tests passed.
+# Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
 [acme@nine perf_events]$
 
-[acme@nine linux]$ uname -a
-Linux nine 6.8.0-rc7.sebastian-rt6+ #2 SMP PREEMPT_RT Tue Mar 12 18:01:31 -03 2024 x86_64 x86_64 x86_64 GNU/Linux
-[acme@nine linux]$ perf probe -L perf_pending_disable
-<perf_pending_disable@/home/acme/git/linux/kernel/events/core.c:0>
-      0  static void perf_pending_disable(struct irq_work *entry)
-         {
-      2         struct perf_event *event = container_of(entry, struct perf_event, pending_disable_irq);
-                int rctx;
-         
-                /*
-                 * If we 'fail' here, that's OK, it means recursion is already disabled
-                 * and we won't recurse 'further'.
-                 */
-                rctx = perf_swevent_get_recursion_context();
-     10         __perf_pending_disable(event);
-     11         if (rctx >= 0)
-     12                 perf_swevent_put_recursion_context(rctx);
-         }
-         
-         static void perf_pending_irq(struct irq_work *entry)
+So despite this mistake all is well, torvalds/master + your patchkit
+seems ok.
 
-[acme@nine linux]$
-
-So I keep my:
-
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Sorry for the noise :-\
 
 - Arnaldo
