@@ -1,142 +1,129 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD64DF53
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 16:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFDA5C61C;
+	Thu, 14 Mar 2024 21:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710435321; cv=none; b=IrFB/6PTcnc13FdoLH8a3LBrMZtgmNGyVDqvew4FSOx9p9yAO5eUKRXQ3ZgnOpMKRA8ufb964Y8k8aQDZYd49GqIhelGxqUYEHSvXBAdZE9HieH0FWuGc9W9bVaUtQYXaCybfjwdzkJ/sxImINfbk5/LAqP3wjwW00Tc+WCfeco=
+	t=1710451362; cv=none; b=dSrzsfBSq/eb2tufmaMpBZGXuv11porFs7rTeJ8ecHr4Q9smbVJsR5mRwKWldaIAmw3nJtKjPEJjvqnUU7TVNZGTZwFoU7PFw1AOW0UTHOkClowKOlSrHVa2OE7Ww+y6wsvoRZDrOl6e8IYHsGabb6l0sdo9DOPmsv2V6owOej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710435321; c=relaxed/simple;
-	bh=0oWET50ReYVFiUV39cnYiJFH1L/O2I+HkRr5gstNEjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NpllognMcrF3QVoUGmSWrMMZtNmlWm8NFiOcSxXpCLeiHp0pEVmo3n0exBOVmTRoPkWFFSc3rFpiV+bqSCUunHRBol4aLj3r2+0ETKyCavr93hvJi8C8S4wO1mQyxxTBqTlqIypAxMfgx6m/jhPDgzI/7486l9M6nqar/cXk4iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fbCz/o76; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710451362; c=relaxed/simple;
+	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3TxehETkkln9f4jM4+qWDBaxXzojSLvW3/m3SLgXGWI8idwHxYRa1RLUr7mcOBsthPPq0pu1CJwhb2hqaycF9x/sXJvjGQNQEylfIbEpq8RMk8yzjW++mSNiAFsSeqyxKBRw0qBCi7nVT9nLEfpPySNte7UXSUmPvJZddVSEy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME+Sb6BD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fbCz/o76"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36646d1c2b7so1635ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 09:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710435319; x=1711040119; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h5dW0gMuORo7rcnXCPfAPRP+bphbtCW0qVhM/Z5OPHY=;
-        b=fbCz/o76htBOISV2x6yRakdhz2zQOhjVWb0h5CM2AnAa3DQqQYFYv/ljnSnyq79mfx
-         5P72SsUoQE7EMh9l/EC5GgEKtjJpmamwwB+dTBnY7CeHWF8opVJq8HQHE5eiKJkIw/3R
-         0+9A1RaAZ1Cvg6S4/kLfspmo23BCSJsow+AdmmFFm6XtK1hA4IxN9Hx7m7g6cKEP1dUx
-         ileBIUKCW9wo0qMY2JnYBv8qI0FWgATRN2cHFf7F33JgvzyBj/QiwiRObZiaofX+kZ6u
-         nXISnWkiEj4ImWkSuzwjc9RTBapxTY0sNckiapDxcLDGtkK0KNv88q5hxgvk0i2kLjZo
-         Bcqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710435319; x=1711040119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h5dW0gMuORo7rcnXCPfAPRP+bphbtCW0qVhM/Z5OPHY=;
-        b=bQ+RYW5wLtsxOCregh5L4pQ/rZ89nOu0ErFCfvHFJnTIXGitXPbR3RAj0Smu2LFGFK
-         Fp3EcaSGX/+Ryoooy5XxT8J0B8H7UW/Hwxv9r8oIJM/Wnr6ugqIhGMZDoVe1vSTpxwBb
-         xD5QU3yYSp22DKD3p6ieQemPKpctKEUyVSwnIVknz/sPHAIOJcZ3Jqy/WXj3Hi4tfFU2
-         S/7qPzRPJrTIBnan1AemCItw5dbEERvYzK5mpNGJCKlqCriTS0PUJT94d/Ok/Lp7tbHp
-         WmS+T8520B+srYfmEocXI2uw9pgavI8Bd/x63JR6z02dQ3QGq+/RvdpuOFanQaLI+F+V
-         iKKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhf36OMmKaYn//bmP8CzGazJ0wXRmFXnfb1CT0AXeg4k82wjNptU/L+Ko8ZgdIxDSx3FlLM2GOjbjFXCO3QvEzunCMeImyMnf1BL2ObbPRmA==
-X-Gm-Message-State: AOJu0YzamVWVPsT4635r5SKM/YenwyxmuXPGJAdtSE7YgWM4niznliYj
-	jNsHh/p6TkbYz5WVtHmipF518DWLXd9ZO/Xm5qqL9GnoN1f/WC3qRZxa3SRmcDDQk5P/ETXoUZr
-	PmtjuPxH08+0jK31WyDxRWGfSFT1yy8ZE6JPm
-X-Google-Smtp-Source: AGHT+IGKatndCxMi834h/dlO/DC03asvOPVr9HAIlJRDGJOBaCq6kQ0C1aOMQZbfhFiIDxZzgJGPup9P3JwtQy2vn8I=
-X-Received: by 2002:a05:6e02:74a:b0:366:27e0:3436 with SMTP id
- x10-20020a056e02074a00b0036627e03436mr289316ils.15.1710435319075; Thu, 14 Mar
- 2024 09:55:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME+Sb6BD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6FDC433F1;
+	Thu, 14 Mar 2024 21:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710451361;
+	bh=PrLMFw2UxGleWAKNhTIQMqgQrAV0L+3Cp22tX7aB0hg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ME+Sb6BDJu10rxvJXW6AUg2TcwxVgYix6XDzJ4Roy/sPkqq/8HYVZpyskCfuDulPR
+	 nVndx/6RdRL8HnHw9vd+wJ+lz3wkIkQm+vPhFz7i2e7YgNZ49DjLJ7fZn6xyaARXxR
+	 eYaKDpPl3qFG0pZ5EKw5wx2PNnqXC8RGiJiJks3QPtkPsAnwZMrj7KLHSUdkWUc/MT
+	 jfaQIfnweLl1YZ4AlKZVDjwvuxViSUtyVUmT46MdibKgXYaGgN6PXNmwqEqUOcMBAC
+	 vJCLiladNTyBJSRIzk+sr6FlYxFzBn8TDWfevT7Iy4b87hyVl6giycA0LcFOsBTDcw
+	 t89L10ZLKPZcg==
+Date: Thu, 14 Mar 2024 18:22:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <ZfNqnjdR-0YEsSnb@x1>
+References: <20240312180814.3373778-1-bigeasy@linutronix.de>
+ <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
+ <ZfIJIfqeI9tWnnS5@x1>
+ <20240314091033.woaK8h83@linutronix.de>
+ <ZfMK_yTzxTQCMGZ1@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314144320.743217-1-acme@kernel.org> <CAP-5=fX=UmW2iAQNfYcBG89Bv9LmLUtSmPOOH+3LN=r396sO1g@mail.gmail.com>
- <CA+JHD93osaLDZurWep=ie5Rnshk-T8i8ZnLrneVfeQ6eNAaKJA@mail.gmail.com>
-In-Reply-To: <CA+JHD93osaLDZurWep=ie5Rnshk-T8i8ZnLrneVfeQ6eNAaKJA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 14 Mar 2024 09:55:04 -0700
-Message-ID: <CAP-5=fUzj7CFstDH-4=_wRFaib8sbuQ1vothgfUB7R2Ei=6ovQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Move some more header copies to tools/perf/trace/beauty/
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZfMK_yTzxTQCMGZ1@x1>
 
-On Thu, Mar 14, 2024 at 9:46=E2=80=AFAM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
->
->
-> On Thu, Mar 14, 2024, 12:00 PM Ian Rogers <irogers@google.com> wrote:
->>
->> On Thu, Mar 14, 2024 at 7:43=E2=80=AFAM Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->> >
->> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
->> >
->> > Hi,
->> >
->> >         Move a few more files that is used just by scrappers.
->>
->> Thanks Arnaldo! A nit, could you change s/scrapp/scrap/g in the commit
->> messages - scrapping is throwing away, you mean scraping :-)
->
->
-> Sure, learned the difference an extra p makes :-)
->
-> Can I take this as an acked-by?
+On Thu, Mar 14, 2024 at 11:34:39AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
+> > > > noticeable when running with/without the patch with Vince's regression
+> > > > tests. So:
 
-Yep.
+> > > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> > > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
 
-Thanks,
-Ian
+> > Just to be clear: You revert your Tested-by because now you test this on
+> > torvalds/master but not because you reported a regression which I
+> > missed.
 
-> - Arnaldo
->
->>
->> Ian
->>
->> > - Arnaldo
->> >
->> > Arnaldo Carvalho de Melo (3):
->> >   perf beauty: Move uapi/linux/usbdevice_fs.h copy out of the director=
-y
->> >     used to build perf
->> >   perf beauty: Move uapi/sound/asound.h copy out of the directory used
->> >     to build perf
->> >   perf beauty: Move arch/x86/include/asm/irq_vectors.h copy out of the
->> >     directory used to build perf
->> >
->> >  tools/perf/Makefile.perf                      | 19 +++++++++++-------=
--
->> >  tools/perf/check-headers.sh                   |  6 +++---
->> >  .../arch/x86/include/asm/irq_vectors.h        |  0
->> >  .../beauty}/include/uapi/linux/usbdevice_fs.h |  0
->> >  .../trace/beauty}/include/uapi/sound/asound.h |  0
->> >  tools/perf/trace/beauty/sndrv_ctl_ioctl.sh    |  4 ++--
->> >  tools/perf/trace/beauty/sndrv_pcm_ioctl.sh    |  4 ++--
->> >  .../beauty/tracepoints/x86_irq_vectors.sh     |  6 +++---
->> >  tools/perf/trace/beauty/usbdevfs_ioctl.sh     |  6 +++---
->> >  9 files changed, 24 insertions(+), 21 deletions(-)
->> >  rename tools/{ =3D> perf/trace/beauty}/arch/x86/include/asm/irq_vecto=
-rs.h (100%)
->> >  rename tools/{ =3D> perf/trace/beauty}/include/uapi/linux/usbdevice_f=
-s.h (100%)
->> >  rename tools/{ =3D> perf/trace/beauty}/include/uapi/sound/asound.h (1=
-00%)
->> >
->> > --
->> > 2.43.2
->> >
+> You got it right. No regressions, the code is good, I just need to test
+> it a bit further, with torvalds/master, without PREEMPT_RT.
+
+Tests performed, no regressions detected, same behaviour when killing
+the remove_on_exec selftests midway:
+
+[acme@nine perf_events]$ perf annotate --stdio2 exec_child | tail
+              mov    $0x1,%edi
+            → callq  _exit@plt
+        b5:   nop           
+100.00  b6:   mov    signal_count,%eax
+              test   %eax,%eax
+            ↑ je     b6     
+              nop           
+              nop           
+              leaveq        
+            ← retq          
+[acme@nine perf_events]$ pidof exec_child 
+28256 28249 28241 28240 28239 28236 28228 28226 28224 28223 28219 28215 28208 28207 28206 28205 28200 28188 28187 28186 28185 28169 28168 28167 28166 28155 28154 28153 28152 28140 28139 28138 28137 28124 28123 28122 28121 28111 28110 28109 28108 28094 28093 28092 28091 28080 28079 28078 28077 28064 28062 28061 28060 28048 28047 28046 28045 28030 28029 28028 28027 28012 28011 28010 28009 27998 27996 27994 27993 27982 27981 27979 27978 27966 27965 27962 27961 27952 27951 27949 27948 27934 27933 27932 27931 27920 27919 27918 27917 27906 27905 27903 27902 27888 27885 27883 27882
+[acme@nine perf_events]$
+
+[acme@nine linux]$ uname -a
+Linux nine 6.8.0-rc7.sebastian-rt6+ #2 SMP PREEMPT_RT Tue Mar 12 18:01:31 -03 2024 x86_64 x86_64 x86_64 GNU/Linux
+[acme@nine linux]$ perf probe -L perf_pending_disable
+<perf_pending_disable@/home/acme/git/linux/kernel/events/core.c:0>
+      0  static void perf_pending_disable(struct irq_work *entry)
+         {
+      2         struct perf_event *event = container_of(entry, struct perf_event, pending_disable_irq);
+                int rctx;
+         
+                /*
+                 * If we 'fail' here, that's OK, it means recursion is already disabled
+                 * and we won't recurse 'further'.
+                 */
+                rctx = perf_swevent_get_recursion_context();
+     10         __perf_pending_disable(event);
+     11         if (rctx >= 0)
+     12                 perf_swevent_put_recursion_context(rctx);
+         }
+         
+         static void perf_pending_irq(struct irq_work *entry)
+
+[acme@nine linux]$
+
+So I keep my:
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
