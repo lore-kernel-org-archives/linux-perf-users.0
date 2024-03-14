@@ -1,80 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131006FE1E;
-	Thu, 14 Mar 2024 14:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1120D5D75A;
+	Thu, 14 Mar 2024 14:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710426883; cv=none; b=K1VvbdsaJfCGVVaC6lUKzbqhP3U7wTQGkoBlhFWhJMNoyR4/LupWFBCCPlRMNP7qq+GZDb2xN/634XZRaFU9L7+VD9Li+rAMx7O98luXYrYbguS/sJ+WJFiL781QQgBuI7ig92p/0S1Hw4lvYsQkc9Dq9BbZ0u345QO10FQbO3g=
+	t=1710427408; cv=none; b=L4DZvbeRTUEFxgk+7hFSeC+0JLoK5d/uX+5cyGIlU6dzyegfMbYUzzPjTYfDlnX9/9MlsNq6jodfUkXU/4hrVkievy9IqNhCcgOXAA0WcN8R52RLobyyo5yWE8Sz3fJ/BPuO7kteMd38vrrALNc8KkYkHYDXlHapCxjqRWPoCDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710426883; c=relaxed/simple;
-	bh=3QHwzUu9Qz5Nt+YZgo+FDXTbZnPnbZKymsKtzBbdHKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QGrNTWwm0E1+x6P7MPd+Edc5h9THXGMe/xfoFgcpKHyJs+rforHiSDRZV/MPjYWblC7DwwiLiku6IPraA1ZFP87YifBQKSJo7XpIP3k6zqX4yXKaHK5UpiX9YEms57TkR6cFjPKEqOXE0L0/M4J/+Sreq5SmEasGT4f6uPWe6o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLzNAp1a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710427408; c=relaxed/simple;
+	bh=p6OB1jptEvWyAVFOR0SPMeWm5Yd+w9YyWXJOnwztUyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U5dPHH5o3bMpiikhX8on1bm3lNWbl3PcL7ceZI4UHkSlYv6vPmf4A3jDt6uh2zz18J20r66pLSS84ppDfUjw1wxP5YF9nDmhGxSGcb7GoNvKbLoc5PoYeR0jepB38uE3HXBT/QfjTBA+h1Q6aChqOAykZQvhECueKAPVeGKEQQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNyTc1Wl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLzNAp1a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C6FC433F1;
-	Thu, 14 Mar 2024 14:34:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNyTc1Wl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E0BC433F1;
+	Thu, 14 Mar 2024 14:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710426882;
-	bh=3QHwzUu9Qz5Nt+YZgo+FDXTbZnPnbZKymsKtzBbdHKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eLzNAp1anNhoQtXC+NyJPrviKJZbmL3QjAKlnrXCW/kJt473/Bz5B09XGBcfkSal5
-	 lwnHJM+n6ht4wZgZJ+zHynHbslWkR9fQWqHnnZmLHRptYDXFUEM9cczLF1uD9lFFSj
-	 pkN5Isyyic06169uPTAthAZCPfxPnrbHwpGf9tlbn0gJAm8f0Ie3CcbGeCB9tEdX7P
-	 kBdzSD0a4uRiG+wZhRDnv59/DZ7dTykUqIwLk/vF6NtPdGGlXYQ/0O3AXER6yZFCe0
-	 bTm5hDRfgZeoKYSGFUAUr4L1zrKwFyYA6Y3d21ftsKxzN+oBcbpImELqJqeg06iR8X
-	 6omVWiymzfJLw==
-Date: Thu, 14 Mar 2024 11:34:39 -0300
+	s=k20201202; t=1710427407;
+	bh=p6OB1jptEvWyAVFOR0SPMeWm5Yd+w9YyWXJOnwztUyM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NNyTc1WlVF/xZIfvUUmx6pE/v1b7VdpMgwkzsXC8/uO/ZY/cASIKcxB3YKWlLIhYA
+	 AWdKllZrGt1tmlEureu1Q0GnkWR5qN/vW+IeksM/PeoRV7CmW12d+9IJtnq46iF4iK
+	 uoMiBP0RHNnZvnwJkEap6vLUjw0o0nmcAPLc7EbiHBMmAvQkrBeVXZneA/xdeg0hRU
+	 B3v5Ilj5ViipP0r300TKazGZ4hnMjaN1PcXU/lDKj/jOjLkgssJPXc+JHfeezAMQC+
+	 /RZOk4lGOQeZNh3bM2uNBzbIkwDp9bEkKcw9zl6/6f2+B4XxolkZ+KqvKtiMJCqdJk
+	 B3gWQO86h7+lw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
- on RT.
-Message-ID: <ZfMK_yTzxTQCMGZ1@x1>
-References: <20240312180814.3373778-1-bigeasy@linutronix.de>
- <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
- <ZfHE9Ev5T3Lq7o34@x1>
- <ZfHtBB5_-3RByE8p@x1>
- <ZfHw3J5PY6qy4mXn@x1>
- <ZfIIqcmRlrxwUFTn@x1>
- <ZfIJIfqeI9tWnnS5@x1>
- <20240314091033.woaK8h83@linutronix.de>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 0/3] Move some more header copies to tools/perf/trace/beauty/
+Date: Thu, 14 Mar 2024 11:43:17 -0300
+Message-ID: <20240314144320.743217-1-acme@kernel.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240314091033.woaK8h83@linutronix.de>
+X-Mailer: git-send-email 2.44.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 14, 2024 at 10:10:33AM +0100, Sebastian Andrzej Siewior wrote:
-> On 2024-03-13 17:14:25 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > tldr; No dmesg activity, no kernel splats, most tests passed, nothing
-> > > noticeable when running with/without the patch with Vince's regression
-> > > tests. So:
-> >  
-> > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Too quick, now I'm testing it on top of torvalds/master, no PREEMPT_RT.
-> 
-> Just to be clear: You revert your Tested-by because now you test this on
-> torvalds/master but not because you reported a regression which I
-> missed.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-You got it right. No regressions, the code is good, I just need to test
-it a bit further, with torvalds/master, without PREEMPT_RT.
+Hi,
+
+   	Move a few more files that is used just by scrappers.
 
 - Arnaldo
+
+Arnaldo Carvalho de Melo (3):
+  perf beauty: Move uapi/linux/usbdevice_fs.h copy out of the directory
+    used to build perf
+  perf beauty: Move uapi/sound/asound.h copy out of the directory used
+    to build perf
+  perf beauty: Move arch/x86/include/asm/irq_vectors.h copy out of the
+    directory used to build perf
+
+ tools/perf/Makefile.perf                      | 19 +++++++++++--------
+ tools/perf/check-headers.sh                   |  6 +++---
+ .../arch/x86/include/asm/irq_vectors.h        |  0
+ .../beauty}/include/uapi/linux/usbdevice_fs.h |  0
+ .../trace/beauty}/include/uapi/sound/asound.h |  0
+ tools/perf/trace/beauty/sndrv_ctl_ioctl.sh    |  4 ++--
+ tools/perf/trace/beauty/sndrv_pcm_ioctl.sh    |  4 ++--
+ .../beauty/tracepoints/x86_irq_vectors.sh     |  6 +++---
+ tools/perf/trace/beauty/usbdevfs_ioctl.sh     |  6 +++---
+ 9 files changed, 24 insertions(+), 21 deletions(-)
+ rename tools/{ => perf/trace/beauty}/arch/x86/include/asm/irq_vectors.h (100%)
+ rename tools/{ => perf/trace/beauty}/include/uapi/linux/usbdevice_fs.h (100%)
+ rename tools/{ => perf/trace/beauty}/include/uapi/sound/asound.h (100%)
+
+-- 
+2.43.2
+
