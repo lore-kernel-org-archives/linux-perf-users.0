@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6994D50A66
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 06:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A169B53383
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Mar 2024 06:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710396008; cv=none; b=Eob7JKWx1WmHyC1PlYzGXKxkYbxOCdAUuyMD/aZn9KZiBSzjU6OZuSVSvtGt1rWgX1nMLlvfFD7zTu/7jfRICks7tsFhUyfkAtWX6k5+/7FvJ5fjTF7W4SjAaNYZCGRnc0G39S0l51QAc77fzZ8PPn5VxrG76An0fOg6ZfQ3VNY=
+	t=1710396011; cv=none; b=GWv724/Tm10hShJ1ppPaEdnnnI2xs4aPoywD6FEouiqQByWXppZI5KsaeOVLbnLl8rmN+d5vf9gc4tMm5VMrCTl9cBqsUKZIZjY5Tj5V68M5hv08HB/1FP4vikuJOh3470Sn0YVZtvOiN2DegZlGlh3sDfDfH7vClRqL26RtO4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710396008; c=relaxed/simple;
-	bh=gFhzpwFPHEzHqdpqsWr4rp9QKQBu1kI7PFwIsR9IC/k=;
+	s=arc-20240116; t=1710396011; c=relaxed/simple;
+	bh=9uJw1O918oN2FYmURJnSNa9KpCLd9v9rjdrnFyM6JbQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SaPP/pe9gnrfFzxzkU7YszpPA/wXSnV/RCRDz53nzP+hZDIdtSvAxfjZGt1CMOuhX9PCiFMgFaOD0uTwKEY7oj43ZNtVsl/KyVbHi8S5SS5M8QLuU6aM0IkWIOBD1eu08xZvh1QJScbwr+aLHr/zT4k0IJHPbuKKyDNTzzPzkzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RRrESQjJ; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=QDF2/cZacqUKeRndClDhTdul2yXKAt+hNMpH1u6TQyg/AQqwPe3VAAtADrVN/scnod0rlEyESeULTXYbwbnCt+VGj/LZqzj1h97aW+dk1moaaNXCrUzEs8IFJJ1mPkT+PwFQY3+PgK5Yca9D4rzD/JnllQYzMMtkuCQzKjLWAHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xvzDl1zA; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RRrESQjJ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-609fe434210so11148177b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 23:00:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xvzDl1zA"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5ee22efe5eeso12997537b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Mar 2024 23:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710396006; x=1711000806; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710396008; x=1711000808; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W7vxajjjO2isWih1cYJ4Ij+u5GgCOj0Bgjw8R4VQYtk=;
-        b=RRrESQjJ9NzRSA125Ua5W/OWa91CyFKJIrEyXF6GSv7Fu5Hxcb3RGndZXm44dwTt7P
-         HfqyTJKPOozeRjGUqHOcDKPpkeI5Ze7c/0SbSVyYVzk89iETYNHf/OTaxUDTOTf4AsMD
-         CARkAn/CN2S39WaVaYK1tzn1oSPAbMjkO438AwQ5qpUxDnX9/PqStDaMNnD8uaAvQPZY
-         Kvu7XK2I0PMmkK9dzqFnCZ1vhRMGyIEMTDDv0CE/D2PxQE1y96Sa5wHsPxrwz+5FRhBC
-         0HXpJ88V2gZ1TI67jdJMSt8SSYkP4afyw5dnwAxAZRPAlBy6KPpzC9BwEljmp5nkjURA
-         xnAw==
+        bh=UFiXNnmb/ZEVra2BYkk6K4dsDX+iGAa4EIuUf6Naynw=;
+        b=xvzDl1zAnPtrzCvpyOQeQ81wYM0OvPZ5Fy71crfJQS/Q1zGIfq1fuq/0vilF3UUIEU
+         y0b6EaFzv7iPr8WJ6ByFntBx3JFLeJE1U7l2bwgq7Zn91hZsfBXOerG8E74XI9Qug+Hc
+         sqwXrZ+lp6aohPM7Wd3wdQ77idp1G3xHf+g8oX9za+56Uq4CTYFk0sCuONPjBIsVMx/y
+         x6/v6q/00iqWurkZXWhJQ86Ev/3poRCtY3iy6kudTN22hdF9P7Dh4UJzWpE3ghl//bNh
+         Xo3VJVxN9sq0N8dAW4Pho+WNMhO7Lyj0BH/RWXGzJeM4+mTFaU6CM/62orSRR7daXn2g
+         DVMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710396006; x=1711000806;
+        d=1e100.net; s=20230601; t=1710396008; x=1711000808;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W7vxajjjO2isWih1cYJ4Ij+u5GgCOj0Bgjw8R4VQYtk=;
-        b=TEg2Me0s6cKTlK24zD3OBX9UA72KhedqySwcd6HtbhC1rhz57yCRucW3cMmiGwinT2
-         SrTr+QdrzmYSYZNT0dFM4a3Um37oivRigortbBJpIzfphHrrBBn5c3Y9uKxElprMPqiv
-         C42mMN23iVGZ4qbU+j6V0L2hztTg83ukmhKGnoNQNA3SASKguxRtAxhPi/X6u5zmG/4Q
-         q0QORFtlUYU6G74e5Z5lVWsjB9RvQ5u05taVuK5Z6+ZtAB63khaPOhJKbTC57EHrWo7n
-         Kr5nUWQrbz/qCFjdUaUgiDMM5NQyHuUZyNec2fCSTZPVJNZV0QJqvWdWrDYCcLd6SJVI
-         e2dA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnERf1G8QsbLQApQ9UpeF0g835Wo26olht6R+jPHgq+mb3yGnF8UKoITKJ5rOKxmCbrWejAKRSTZYbc00i3fRiYt/MGlsKbkc4kssQeVkcfA==
-X-Gm-Message-State: AOJu0YxZpZAN2OPJig57ZcTq1AoNJUJ5GY2FktqnERf/LNUf/eLZ/Pu4
-	y7HKCRQ2xRSPm4D5SQfS7SXbdAnmCmkPcuX6J8NXFQWzpmHs9bCFtczAG+IZ1KA6MAFKwgLZ2IJ
-	DsAkeqw==
-X-Google-Smtp-Source: AGHT+IHNwiqaYfw65s265xd7PnGQZUyDGWFCZKVZD5ioEDmzy049uZNTjUPtWKfxBg9etYsZdXej7arVN+2D
+        bh=UFiXNnmb/ZEVra2BYkk6K4dsDX+iGAa4EIuUf6Naynw=;
+        b=tqVOWv5I17CutHUWtGEyfN3CZwiSZb8Cm6I5vJp0D9Hw+mlkChWbQYQvcSH9wLtNIo
+         CJixGDwPkzvmiftYO6QbYURoQP9o+ht0VMPm97u/7+FoLLk9I2HaavST10OjhLF/DHnf
+         ekvHa2EPreWhM4CBY5Iy65JOhWqCZUjk6uGs6xAkvqGyGn6oT+94mgnoS99DV+sZx0FC
+         TBvn56jDazOHCgL/hiT9mxmfp8MHsbAQ4iT3cmTj0f34oMbT9AmfBQcFPB4CNro0KTtJ
+         oXY6P+rcprUQA1eDojmwceRUL2aItQOHPlxzGlJJBllkso3E74MV9s0xEtB2EwI0Wmkx
+         jxfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXR5S2iuoYXaXu1pk2pwE39zknSNPKre91uwIsNfvJLA9n0Yb7GY/bkKV7QFx3b3XnkGEZ7WvSgsZoRb4iHHcoEIVEFQOxItAz6hYQTXh6s5w==
+X-Gm-Message-State: AOJu0Yy+XusvQjCijz0yE8ZwiA6EFqzS8e1GoaZYWJRVukzPTq6IkmhG
+	lOjXZD/dJM4bOjxYBVdGbLJRtnG4ZAXE5iJ/4aW3SEWF2EqEs2yAujRKa9G/myh3alnos3QDkFi
+	p4MrnsA==
+X-Google-Smtp-Source: AGHT+IG6D/9cf2FaWOjiiIaSBSmoU23i8ct9mqVP2RbqJuRzciG2uPuROEkE4L6iloxBiIFlCCfNNNw4oDCo
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:449f:3bde:a4cd:806a])
- (user=irogers job=sendgmr) by 2002:a05:6902:e09:b0:dbd:73bd:e55a with SMTP id
- df9-20020a0569020e0900b00dbd73bde55amr27878ybb.4.1710396006451; Wed, 13 Mar
- 2024 23:00:06 -0700 (PDT)
-Date: Wed, 13 Mar 2024 22:59:13 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:d54e:0:b0:60a:2307:e3b with SMTP id
+ x75-20020a0dd54e000000b0060a23070e3bmr131957ywd.3.1710396008638; Wed, 13 Mar
+ 2024 23:00:08 -0700 (PDT)
+Date: Wed, 13 Mar 2024 22:59:14 -0700
 In-Reply-To: <20240314055919.1979781-1-irogers@google.com>
-Message-Id: <20240314055919.1979781-15-irogers@google.com>
+Message-Id: <20240314055919.1979781-16-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240314055919.1979781-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 14/20] perf jevents: Add Miss Level Parallelism (MLP)
- metric for Intel
+Subject: [PATCH v3 15/20] perf jevents: Add mem_bw metric for Intel
 From: Ian Rogers <irogers@google.com>
 To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
 	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
@@ -75,46 +74,97 @@ To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>
 	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Number of outstanding load misses per cycle.
+Break down memory bandwidth using uncore counters. For many models
+this matches the memory_bandwidth_* metrics, but these metrics aren't
+made available on all models. Add support for free running counters.
+Query the event json when determining which what events/counters are
+available.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 62 ++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index da97a1781be7..6a864c0b863a 100755
+index 6a864c0b863a..c7f536d3d4ed 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -595,6 +595,20 @@ def IntelL2() -> Optional[MetricGroup]:
-   ], description = "L2 data cache analysis")
+@@ -777,6 +777,67 @@ def IntelLdSt() -> Optional[MetricGroup]:
+   ], description = "Breakdown of load/store instructions")
  
  
-+def IntelMlp() -> Optional[Metric]:
++def UncoreMemBw() -> Optional[MetricGroup]:
++  mem_events = []
 +  try:
-+    l1d = Event("L1D_PEND_MISS.PENDING")
-+    l1dc = Event("L1D_PEND_MISS.PENDING_CYCLES")
++    mem_events = json.load(open(f"{os.path.dirname(os.path.realpath(__file__))}"
++                                f"/arch/x86/{args.model}/uncore-memory.json"))
 +  except:
-+    return None
++    pass
 +
-+  l1dc = Select(l1dc / 2, Literal("#smt_on"), l1dc)
-+  ml = d_ratio(l1d, l1dc)
-+  return Metric("mlp",
-+                "Miss level parallelism - number of outstanding load misses per cycle (higher is better)",
-+                ml, "load_miss_pending/cycle")
++  ddr_rds = 0
++  ddr_wrs = 0
++  ddr_total = 0
++  for x in mem_events:
++    if "EventName" in x:
++      name = x["EventName"]
++      if re.search("^UNC_MC[0-9]+_RDCAS_COUNT_FREERUN", name):
++        ddr_rds += Event(name)
++      elif re.search("^UNC_MC[0-9]+_WRCAS_COUNT_FREERUN", name):
++        ddr_wrs += Event(name)
++      #elif re.search("^UNC_MC[0-9]+_TOTAL_REQCOUNT_FREERUN", name):
++      #  ddr_total += Event(name)
++
++  if ddr_rds == 0:
++    try:
++      ddr_rds = Event("UNC_M_CAS_COUNT.RD")
++      ddr_wrs = Event("UNC_M_CAS_COUNT.WR")
++    except:
++      return None
++
++  ddr_total = ddr_rds + ddr_wrs
++
++  pmm_rds = 0
++  pmm_wrs = 0
++  try:
++    pmm_rds = Event("UNC_M_PMM_RPQ_INSERTS")
++    pmm_wrs = Event("UNC_M_PMM_WPQ_INSERTS")
++  except:
++    pass
++
++  pmm_total = pmm_rds + pmm_wrs
++
++  scale = 64 / 1_000_000
++  return MetricGroup("mem_bw", [
++      MetricGroup("mem_bw_ddr", [
++          Metric("mem_bw_ddr_read", "DDR memory read bandwidth",
++                 d_ratio(ddr_rds, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_ddr_write", "DDR memory write bandwidth",
++                 d_ratio(ddr_wrs, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_ddr_total", "DDR memory write bandwidth",
++                 d_ratio(ddr_total, interval_sec), f"{scale}MB/s"),
++      ], description = "DDR Memory Bandwidth"),
++      MetricGroup("mem_bw_pmm", [
++          Metric("mem_bw_pmm_read", "PMM memory read bandwidth",
++                 d_ratio(pmm_rds, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_pmm_write", "PMM memory write bandwidth",
++                 d_ratio(pmm_wrs, interval_sec), f"{scale}MB/s"),
++          Metric("mem_bw_pmm_total", "PMM memory write bandwidth",
++                 d_ratio(pmm_total, interval_sec), f"{scale}MB/s"),
++      ], description = "PMM Memory Bandwidth") if pmm_rds != 0 else None,
++  ], description = "Memory Bandwidth")
 +
 +
- def IntelPorts() -> Optional[MetricGroup]:
-   pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
+ def main() -> None:
+   global _args
  
-@@ -796,6 +810,7 @@ def main() -> None:
-       IntelIlp(),
-       IntelL2(),
-       IntelLdSt(),
-+      IntelMlp(),
+@@ -813,6 +874,7 @@ def main() -> None:
+       IntelMlp(),
        IntelPorts(),
        IntelSwpf(),
++      UncoreMemBw(),
    ])
+ 
+ 
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
