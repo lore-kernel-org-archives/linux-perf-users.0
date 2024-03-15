@@ -1,201 +1,649 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2043.outbound.protection.outlook.com [40.107.21.43])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366631863E;
-	Fri, 15 Mar 2024 09:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710496599; cv=fail; b=MIawAnds/79B9VnN/LgROleTDNGmI1XgRahq9Iqtn7FTy8oumTEO6iyG4QTz5qU9eW8BKB2JASe+IWYbEcqmAvCtVAeVFhbUg43oE9lJxMJTGrgwTS5yhOa2Sodjj4s2xjU3NFXnptP2D3Ey28L/kMTu4deJxNx9KGr3KuNZDUM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710496599; c=relaxed/simple;
-	bh=rwYqhNYoHdtUwYDATizhZoLEgdMlNqIGfle6Tw2boG4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mJbb0xzF/c7VDI5SNh87Ic7Gv5DTvjwN38JaolM0PNib7EbHlz4DOm3U5DD+EPRebWjheMcMaf1YWD1I3XPtSC7HIOXLrHoojtjV1+dz3ClJ24W2D9Nw5gr/trSvDN6bNVIC/LyiC1+YS5qBaZ5Lp5GhNCgvhWS1WzsZqjcZgMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MVACsic4; arc=fail smtp.client-ip=40.107.21.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E192619474
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Mar 2024 10:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710499798; cv=none; b=bfEFF0VKv3vQgqRY6pExzrqiKxANvxsR65x2g3sXS3eK5JhIDAz15BN9YYsC0tWTwqLVR4iiriPN/QXqiGllQJGqetwic1Dh5fn8EAqDX3L9H8d41yR3jYyIeSgeyhgKlOVpFy10bb0YqG4KfOPkMuyZQqAnBSu4MZwFBkexuc8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710499798; c=relaxed/simple;
+	bh=+rQOZ6qIkSZsyTvTH+iy3f/ymHvEaf9y4kOpd1DAjyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ePHs8q98pyag5iI3mDj2gmFzhhtxAaUI8TYuf0e66NymjvMaMpmRqdKjM3/xaTbzdWiT4TRG0eHnpS5mKGZWjvQXKDEC3BQCOJtdkzywiGp/Fi+TejfImb7ejK6k+rb2yBfQwzv+qvNw3y9uJkUG1ylssaSWAiFx7tPeYnp9+9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FA2vITGq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MVACsic4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=krJ6yUw7ewUF8vixYHbLe0o/8bA/3IvarojQ4iS7OB0ot9CHYhjWZHntEFWPaCPw+m1Ed9sFqhV/bOm/FuOxWN9/dDy2P70U2KckdWkiecN7/VqCgB/X9hRBZjwWJQhe9ujL6M0OLcZZPQcn/w3eBeQUs+KO8njVtAfu0fUCLZQKaVA2S+K6esw8AQsyaVnIr04fNM1WCeA5HHbPAfsMu920GlQiyS80W120oeamBOq6mL3ndJ4MF3rvqxslqgvrOov07Tnq3R60JtUh9NFq5LektKef9pcLNStlZKtc8icjAuHZ1AuV3e5SvITiji6U/7GYBNCYTwNpDaR6SOX4mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/vyDbuMctvpMPqycrjJSM65sHwairLUE/u4gLzHL5zA=;
- b=DSRR3xDhc8mXGR3GG5fb8EdbPLkgHP5aiOcIy3jI87iqh3YWhOyZnzxQ+Beg/JP5hUxIduvas1NE6mFJMhKMy65ahszzE6UN8u6tJsivZqjipiePtoo1uc5wIVle7ovIWzdqKamnblDmP5y8AyrmCnQk48sYDiV1pl8Ae7Rw7z1YEqVzC8ch8OP//jwZBBMMb9GEef3gX1wfpDowEfWxZguvPa0bhd48lUMcfy4aO5eusGaactOfs5Mmm5Km+K8B5ZwZ49pT4m9inujNp455hSEjhd+nZg86Ru7/t3lrbZvlP2qHHwWQh3PVvw22gHISlK53f+uRy5eg2+V/wbYiUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/vyDbuMctvpMPqycrjJSM65sHwairLUE/u4gLzHL5zA=;
- b=MVACsic42jNrMy3UsjhoCxOUhzPX0tFFzBSAJRKH2mgQyyh5hHQR8cQ2uyglOhrzf51OAu3CjFEkb6AsTKkx1kFQ2rH/GlyPTQpAwZ3rBllD3RjouTofMZU+2PBoEd8y1zsoI8LGSRId/R2kbHs0EYTDK1v5WlGUVGDlDDdWjdQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by AM8PR04MB7444.eurprd04.prod.outlook.com (2603:10a6:20b:1de::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Fri, 15 Mar
- 2024 09:56:34 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7386.021; Fri, 15 Mar 2024
- 09:56:34 +0000
-From: Xu Yang <xu.yang_2@nxp.com>
-To: Frank.li@nxp.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	john.g.garry@oracle.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com
-Cc: mike.leach@linaro.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: [PATCH v7 8/8] perf vendor events arm64:: Add i.MX93 DDR Performance Monitor metrics
-Date: Fri, 15 Mar 2024 17:55:55 +0800
-Message-Id: <20240315095555.2628684-8-xu.yang_2@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240315095555.2628684-1-xu.yang_2@nxp.com>
-References: <20240315095555.2628684-1-xu.yang_2@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0029.apcprd02.prod.outlook.com
- (2603:1096:4:195::6) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FA2vITGq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710499794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LpZmDmDKRhOdX8P//CpBJtpAczu4JKU5P5waFfPZOpA=;
+	b=FA2vITGqecKifFYOXUqPKfl7/9u6uYNPZWCOJbQr4ah8vkN7Ev+tmIvcYK797uvQgfzxLM
+	fVjNXWPHWOsxp0KFeJUQAgi3kDTQYDPPJvg1H9m+IRMDTdI1cGJ8aIR90iVGKozFliqInn
+	Le4VhPzJQMC3B7KbR8nZ3xltb2ncaDg=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-323-lWY0hGupPD6m4lX8xtFDuw-1; Fri, 15 Mar 2024 06:49:52 -0400
+X-MC-Unique: lWY0hGupPD6m4lX8xtFDuw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a468bdf8bbcso27579266b.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 15 Mar 2024 03:49:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710499791; x=1711104591;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LpZmDmDKRhOdX8P//CpBJtpAczu4JKU5P5waFfPZOpA=;
+        b=S6Tj3fQguRDPv8QM1I782v/5l3ZkHbQjORTLUHhzoGyKJl6U6Q0DEiEKo2wefRXXTL
+         ctsPWFQR0viErCK2nHIRv6s549yu88QBuptHGxPo1l1Wb4SeE6rorrIuw5UUkF/co9fy
+         QCnYxwL0sQymirl+QvGAJXjyqxeL7+I6EQGai9q9mDDjkTylpIHRrjn8Nidenzo2C2xO
+         MP5UJiMloa1mN/rbZy6rihjv6xu6Hyw/YfaZYkTLUWCfeLfzgKVvGd5vvKsPU7R/kHTX
+         M6yin2DScnTSYWbnzuqNmiQrywCg+9jSM1MeJQOWuLkEygQ/YSsG4sEB6bMplCKX327h
+         uLHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyEuL5KHHVJTZT4qIEllsIi9zZNvztSZ9wVIAo5AY1ZkJv8UrCHqVQZ3y+rwOs4mkPsIBV7OmDOvA+ZQeP6rzcoI3jbZ0GmSCcfXZEHAp4Xw==
+X-Gm-Message-State: AOJu0YzbSNzIPjeRig9m27V6y0AiBSkvvGo2ghzwUUiaa9YhHOjcrrB9
+	AQB+AMUAnFr1mxHTZJR9NGT3nF5GRcyGqOwnqFoFAuWlYv69tlYQi3WTow+W5zwuRFNDYvidRf8
+	d3RAHjvxEHdMTSSO28spyKm5r6fp3VejI5k3N4oBAJ6wT9ZZM4fAF1x08I41dsYFjdjY=
+X-Received: by 2002:a17:907:968c:b0:a46:220c:a55 with SMTP id hd12-20020a170907968c00b00a46220c0a55mr1722627ejc.73.1710499791366;
+        Fri, 15 Mar 2024 03:49:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDutRqIbdJ7CsFgkwFs56hcnwBslLAsot8uiNJtpndi+A0BjIAYz2/1xNaamWPFwSDcwyyIQ==
+X-Received: by 2002:a17:907:968c:b0:a46:220c:a55 with SMTP id hd12-20020a170907968c00b00a46220c0a55mr1722595ejc.73.1710499790880;
+        Fri, 15 Mar 2024 03:49:50 -0700 (PDT)
+Received: from [192.168.10.81] ([151.95.156.202])
+        by smtp.googlemail.com with ESMTPSA id bw9-20020a170906c1c900b00a4650ec48d0sm1600103ejb.140.2024.03.15.03.49.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Mar 2024 03:49:50 -0700 (PDT)
+Message-ID: <88118d12-fae0-4e7e-bec2-2f671eaa3b5e@redhat.com>
+Date: Fri, 15 Mar 2024 11:49:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|AM8PR04MB7444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e990d4e-185b-4481-0d4f-08dc44d632b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Jw08Qn/k8MTTF4JCIMIWwzkOhXQcwUacpcZ5v3tnWoTlIJU0AwjLTMFvu4dIkpwSQMLa6pxYCxTa3zvPAcqJ9CaCc7hCzWmzmWJn8FdfjZPm68GVjf06PjnRaqAgulINfeAK3XGSYIbtvghez1g9wDCx8/yZPLNkapMDaK/x460OgN5L1VDoxlphCnUPg/9FTLDgfisTUnxc3fuhHSB7T5ePmDhQ8IOQhB8IKCfZ8bUnD8L0Jg721VypZRiclTGJaUi7C9ZkpnzP9p95V+lFHyti8bx4VqqaBWlC4zfUlj7PtlBxHRZa3jXybXMpTseNbT16N8il7W8jt5F5dU7zBktVQJnw4STf6q8pQQ+GAQKiUH8o3M7ukDyjO1Bl49+Y22zgKr2ns5S+K/cIMHG8wFgZX0CT7/Rs05m1xzFQYz8UGLRNG1d7R+xtywI1X4XqfQb5Z6ZdtdQQwa+elNC4O0YjISbgfmIOAOp1rnUDO9VwfBx1U41jjcOFavMY443Rcl5/CxIMLyQh8PXC6Tq5rUgnRMgpxVsBxrEv6BlU6w7Ykb0X6geKsyK1uYAfpauKS7GdKE7+ldHasbSyfcIxQR1j6s4J11TWS/xr2aR28Em411FwOiPsEdb9tuUIWjqUheRxcZ/WP8g/I/QozogtYuhC9+PoTXbh/EGHEI3pv6ufOPd/3ooOUrRI/4zrxQeTWj4Q6txqt0lxTUZE4tjaSY/UTUe3TxzSdu9+g+SSXuw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005)(52116005)(921011)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g43Q+tXVw4Ybt/ZXMquurnvNwnRHUhIU2c2Ee4UlZpaKXkc2bjz9LMZ+164a?=
- =?us-ascii?Q?OOq7iewUDJDgu3VlTVU7U6GY7SLL0qUPVLY9QLycsxEaGMIO5woXqC1VWJzf?=
- =?us-ascii?Q?6pV7poKq1F91VwztoI7fSg6nC/zwFwXk1nLlCefZF58g6XD6AmVMPAyyyeLP?=
- =?us-ascii?Q?KJu8o4L8QzJn4JjYBnsRu+PRiE/Jo+PDc9tpWxsivq4Pn9lYgbR8TEBpEHes?=
- =?us-ascii?Q?uvkOFLivvrcDPGT3QQjC+sxfok3IF5SbJlM6Iv0RSqtJLdJAHjnHdzvBepN1?=
- =?us-ascii?Q?w1H38a1z+axpuSQosevIVOhM7/UpzId61Eo+ElX9d21/fQFnqjlW5qCSJMvu?=
- =?us-ascii?Q?Ofg+4JRlND1j+Z88bFkZVUfRC6ui0qLrY+WefQzEOnzsNowm/g1p50f8seDN?=
- =?us-ascii?Q?XFcM7kmg9Jbe3R3dJULv2xLLVUa+uNRU9H03X8PQD0s07Gpz5A4ZK8ogngUX?=
- =?us-ascii?Q?/ZvHN3IyPpGHDV1Iv5eLzMZDOYLPrpF1EqWMAWyM6vGMWARY6zoBJpx3MRLQ?=
- =?us-ascii?Q?RIbmeljS1W9z5x7AIy19UbLRMFVqv6DhM+4YRLqSncZvGiwMpyhU8/d8LKn2?=
- =?us-ascii?Q?zT8mF+rGjL9lqsI5+29UqLT/hPG/0X79oiZ9mZy9ECX2O13rEdJ6n0Fxt5XT?=
- =?us-ascii?Q?DnX5rxcDmZEKkWU/sDLS972jsoxJ3/uxQE5YWRxjHniVB66dnWy5eVP2xqpv?=
- =?us-ascii?Q?dguUVmCfNdT1lghuESCxvif5jqNchjCwpnMZukLfPQz9GVqCHw0wY+VjRGHw?=
- =?us-ascii?Q?qZwQzYcObgn0odMxFrxL1mLVrejRxSAhha4TcmqMFY5KqAsZ+EYeM6Ar+ziH?=
- =?us-ascii?Q?pcpfA+bi/Rhy5aosqxUDz2JMgxkwVI6mn9Hm8MTBRuxCLyhj63rUTyurgTeR?=
- =?us-ascii?Q?N29bsZS0qKXOHkeHom28ITLDypwPVCSQzQvyZ4jjF3fE3LhdP44ksneUJ3sf?=
- =?us-ascii?Q?sRfL6lZ7f2pBa+STNKko06u4nTZtYmNE1pfL0cxhJ8Yc+1/fsGtA0kmdlibu?=
- =?us-ascii?Q?R9Vddq6jptpqvrff+MNjON6Y7oBwQA69ZxAfnHYDUioIxH/IYdgSBEFSfeE5?=
- =?us-ascii?Q?bZPApuruxi5y3LoYd6x2Tb6PXgBuA/JGEr+9Cz+Ukn9KjMY/BbgV8VrAlUJ+?=
- =?us-ascii?Q?rDAQcdolSk6wv/T55gUJfN28Yp/MYyjb1gAF1uB4h3jcFpKgup631E76YxaM?=
- =?us-ascii?Q?wapcxMQUnyYZsA9LnPRBLwJvZ0rMnhEb285AKX9OBgoL4igFvUN+Lv0bkiWM?=
- =?us-ascii?Q?/qiRGKOHH5Qmr3HoqaLHM0DDeZpNPNO/DbopCeSuOvwUltzKKO9Y+IC5/L5D?=
- =?us-ascii?Q?sItfxzdsWBgv/LWzwfRab6Ae0yynmYa7XV3cbZZx0hQupEsXEJRtRTlEN1/H?=
- =?us-ascii?Q?NyLBRSwiggxhkZyXGv3PWMwjdXG4ILuW1hOxsv9ZCZvvAOG0D/1UTsmf7VtE?=
- =?us-ascii?Q?8hfEFBht0x2H4n12HKNuXqrF5aEjoW57zMFo3Itv2l850Qy/XDw5QLdUfnC0?=
- =?us-ascii?Q?Zm5guSeDnPLCuXM5MHNO39O4idvL9UpoR2JR+sJB+If05IQaS+0rsqV5d9z4?=
- =?us-ascii?Q?JOe4sqty3825iczbIHWQ9ZXZlybUScHqRYk1rSay?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e990d4e-185b-4481-0d4f-08dc44d632b2
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 09:56:34.6433
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1TlgGlF6lFNdluvBtxYiFMLaRdiZJO4Dd4qh5JIKsCrhsEjlGWlre2aPN5GBYt0SvP+kZct948fcR2fttS1PWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7444
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] treewide: remove meaningless assignments in Makefiles
+Content-Language: en-US
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>
+References: <20240221134201.2656908-1-masahiroy@kernel.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240221134201.2656908-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add JSON metrics for i.MX93 DDR Performance Monitor.
+On 2/21/24 14:42, Masahiro Yamada wrote:
+> In Makefiles, $(error ), $(warning ), and $(info ) expand to the empty
+> string, as explained in the GNU Make manual [1]:
+>   "The result of the expansion of this function is the empty string."
+> 
+> Therefore, they are no-op except for logging purposes.
+> 
+> $(shell ...) expands to the output of the command. It expands to the
+> empty string when the command does not print anything to stdout.
+> Hence, $(shell mkdir ...) is no-op except for creating the directory.
+> 
+> Remove meaningless assignments.
+> 
+> [1]: https://www.gnu.org/software/make/manual/make.html#Make-Control-Functions
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+> This is a treewide cleanup, but in practice, this is touching mostly
+> perf Makefiles. I am sending this to perf subsystem.
 
-Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+"Mostly" is not exclusively, and you did not even bother CCing the KVM 
+mailing list.  We would have told you that we have changes in flight for 
+6.9, and now there are conflicts in the file that you touched.
 
----
-Changes in v7:
- - new patch
----
- .../arch/arm64/freescale/imx93/sys/ddrc.json  |  9 +++++++
- .../arm64/freescale/imx93/sys/metrics.json    | 26 +++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
+Next time please prepare a topic branch, or split the patch.
 
-diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
-new file mode 100644
-index 000000000000..eeeae4d49fce
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
-@@ -0,0 +1,9 @@
-+[
-+   {
-+           "BriefDescription": "ddr cycles event",
-+           "EventCode": "0x00",
-+           "EventName": "imx93_ddr.cycles",
-+           "Unit": "imx9_ddr",
-+           "Compat": "imx93"
-+   }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
-new file mode 100644
-index 000000000000..4d2454ca1259
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
-@@ -0,0 +1,26 @@
-+[
-+   {
-+	    "BriefDescription": "bandwidth usage for lpddr4x evk board",
-+	    "MetricName": "imx93_bandwidth_usage.lpddr4x",
-+	    "MetricExpr": "(((( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8 ) + (( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32 )) / duration_time) / (3733 * 1000000 * 2)",
-+	    "ScaleUnit": "1e2%",
-+	    "Unit": "imx9_ddr",
-+	    "Compat": "imx93"
-+   },
-+   {
-+	    "BriefDescription": "bytes all masters read from ddr",
-+	    "MetricName": "imx93_ddr_read.all",
-+	    "MetricExpr": "( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8",
-+	    "ScaleUnit": "9.765625e-4KB",
-+	    "Unit": "imx9_ddr",
-+	    "Compat": "imx93"
-+   },
-+   {
-+	    "BriefDescription": "bytes all masters write to ddr",
-+	    "MetricName": "imx93_ddr_write.all",
-+	    "MetricExpr": "( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32",
-+	    "ScaleUnit": "9.765625e-4KB",
-+	    "Unit": "imx9_ddr",
-+	    "Compat": "imx93"
-+   }
-+]
--- 
-2.34.1
+Paolo
+
+> 
+>   tools/perf/Makefile.config           | 90 ++++++++++++++--------------
+>   tools/perf/Makefile.perf             |  4 +-
+>   tools/perf/arch/arm64/Makefile       |  2 +-
+>   tools/perf/arch/loongarch/Makefile   |  2 +-
+>   tools/perf/arch/mips/Makefile        |  2 +-
+>   tools/perf/arch/powerpc/Makefile     |  2 +-
+>   tools/perf/arch/s390/Makefile        |  2 +-
+>   tools/perf/arch/x86/Makefile         |  2 +-
+>   tools/scripts/Makefile.include       |  2 +-
+>   tools/testing/selftests/kvm/Makefile |  4 +-
+>   10 files changed, 56 insertions(+), 56 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index aa55850fbc21..6edf9916d41c 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -209,11 +209,11 @@ endif
+>   include $(srctree)/tools/scripts/utilities.mak
+>   
+>   ifeq ($(call get-executable,$(FLEX)),)
+> -  dummy := $(error Error: $(FLEX) is missing on this system, please install it)
+> +  $(error Error: $(FLEX) is missing on this system, please install it)
+>   endif
+>   
+>   ifeq ($(call get-executable,$(BISON)),)
+> -  dummy := $(error Error: $(BISON) is missing on this system, please install it)
+> +  $(error Error: $(BISON) is missing on this system, please install it)
+>   endif
+>   
+>   ifneq ($(OUTPUT),)
+> @@ -438,46 +438,46 @@ else
+>         LIBC_SUPPORT := 1
+>       endif
+>       ifeq ($(LIBC_SUPPORT),1)
+> -      msg := $(error ERROR: No libelf found. Disables 'probe' tool, jvmti and BPF support. Please install libelf-dev, libelf-devel, elfutils-libelf-devel or build with NO_LIBELF=1.)
+> +      $(error ERROR: No libelf found. Disables 'probe' tool, jvmti and BPF support. Please install libelf-dev, libelf-devel, elfutils-libelf-devel or build with NO_LIBELF=1.)
+>       else
+>         ifneq ($(filter s% -fsanitize=address%,$(EXTRA_CFLAGS),),)
+>           ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
+> -          msg := $(error No libasan found, please install libasan);
+> +          $(error No libasan found, please install libasan)
+>           endif
+>         endif
+>   
+>         ifneq ($(filter s% -fsanitize=undefined%,$(EXTRA_CFLAGS),),)
+>           ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
+> -          msg := $(error No libubsan found, please install libubsan);
+> +          $(error No libubsan found, please install libubsan)
+>           endif
+>         endif
+>   
+>         ifneq ($(filter s% -static%,$(LDFLAGS),),)
+> -        msg := $(error No static glibc found, please install glibc-static);
+> +        $(error No static glibc found, please install glibc-static)
+>         else
+> -        msg := $(error No gnu/libc-version.h found, please install glibc-dev[el]);
+> +        $(error No gnu/libc-version.h found, please install glibc-dev[el])
+>         endif
+>       endif
+>     else
+>       ifndef NO_LIBDW_DWARF_UNWIND
+>         ifneq ($(feature-libdw-dwarf-unwind),1)
+>           NO_LIBDW_DWARF_UNWIND := 1
+> -        msg := $(warning No libdw DWARF unwind found, Please install elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR);
+> +        $(warning No libdw DWARF unwind found, Please install elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR)
+>         endif
+>       endif
+>       ifneq ($(feature-dwarf), 1)
+>         ifndef NO_DWARF
+> -        msg := $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev);
+> +        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.138, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+>           NO_DWARF := 1
+>         endif
+>       else
+>         ifneq ($(feature-dwarf_getlocations), 1)
+> -        msg := $(warning Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.157);
+> +        $(warning Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.157)
+>         else
+>           CFLAGS += -DHAVE_DWARF_GETLOCATIONS_SUPPORT
+>         endif # dwarf_getlocations
+>         ifneq ($(feature-dwarf_getcfi), 1)
+> -        msg := $(warning Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.142);
+> +        $(warning Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.142)
+>         else
+>           CFLAGS += -DHAVE_DWARF_CFI_SUPPORT
+>         endif # dwarf_getcfi
+> @@ -525,7 +525,7 @@ ifdef CORESIGHT
+>         endif
+>       endif
+>     else
+> -    dummy := $(error Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1)
+> +    $(error Error: No libopencsd library found or the version is not up-to-date. Please install recent libopencsd to build with CORESIGHT=1)
+>     endif
+>   endif
+>   
+> @@ -551,7 +551,7 @@ ifndef NO_LIBELF
+>     ifeq ($(feature-libelf-gelf_getnote), 1)
+>       CFLAGS += -DHAVE_GELF_GETNOTE_SUPPORT
+>     else
+> -    msg := $(warning gelf_getnote() not found on libelf, SDT support disabled);
+> +    $(warning gelf_getnote() not found on libelf, SDT support disabled)
+>     endif
+>   
+>     ifeq ($(feature-libelf-getshdrstrndx), 1)
+> @@ -568,7 +568,7 @@ ifndef NO_LIBELF
+>   
+>     ifndef NO_DWARF
+>       ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
+> -      msg := $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled);
+> +      $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled)
+>         NO_DWARF := 1
+>       else
+>         CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
+> @@ -590,11 +590,11 @@ ifndef NO_LIBELF
+>             $(call detected,CONFIG_LIBBPF)
+>             $(call detected,CONFIG_LIBBPF_DYNAMIC)
+>           else
+> -          dummy := $(error Error: No libbpf devel library found or older than v1.0, please install/update libbpf-devel);
+> +          $(error Error: No libbpf devel library found or older than v1.0, please install/update libbpf-devel)
+>           endif
+>         else
+>           ifeq ($(NO_ZLIB), 1)
+> -          dummy := $(warning Warning: Statically building libbpf not possible as zlib is missing)
+> +          $(warning Warning: Statically building libbpf not possible as zlib is missing)
+>             NO_LIBBPF := 1
+>           else
+>             # Libbpf will be built as a static library from tools/lib/bpf.
+> @@ -609,7 +609,7 @@ endif # NO_LIBELF
+>   
+>   ifndef NO_SDT
+>     ifneq ($(feature-sdt), 1)
+> -    msg := $(warning No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev);
+> +    $(warning No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev)
+>       NO_SDT := 1;
+>     else
+>       CFLAGS += -DHAVE_SDT_EVENT
+> @@ -651,13 +651,13 @@ ifndef NO_LIBUNWIND
+>       have_libunwind = 1
+>       $(call feature_check,libunwind-debug-frame-aarch64)
+>       ifneq ($(feature-libunwind-debug-frame-aarch64), 1)
+> -      msg := $(warning No debug_frame support found in libunwind-aarch64);
+> +      $(warning No debug_frame support found in libunwind-aarch64)
+>         CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME_AARCH64
+>       endif
+>     endif
+>   
+>     ifneq ($(feature-libunwind), 1)
+> -    msg := $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR);
+> +    $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR)
+>       NO_LOCAL_LIBUNWIND := 1
+>     else
+>       have_libunwind := 1
+> @@ -673,7 +673,7 @@ endif
+>   
+>   ifndef NO_LIBBPF
+>     ifneq ($(feature-bpf), 1)
+> -    msg := $(warning BPF API too old. Please install recent kernel headers. BPF support in 'perf record' is disabled.)
+> +    $(warning BPF API too old. Please install recent kernel headers. BPF support in 'perf record' is disabled.)
+>       NO_LIBBPF := 1
+>     endif
+>   endif
+> @@ -686,28 +686,28 @@ endif
+>   
+>   ifeq ($(BUILD_BPF_SKEL),1)
+>     ifeq ($(filter -DHAVE_LIBELF_SUPPORT, $(CFLAGS)),)
+> -    dummy := $(warning Warning: Disabled BPF skeletons as libelf is required by bpftool)
+> +    $(warning Warning: Disabled BPF skeletons as libelf is required by bpftool)
+>       BUILD_BPF_SKEL := 0
+>     else ifeq ($(filter -DHAVE_ZLIB_SUPPORT, $(CFLAGS)),)
+> -    dummy := $(warning Warning: Disabled BPF skeletons as zlib is required by bpftool)
+> +    $(warning Warning: Disabled BPF skeletons as zlib is required by bpftool)
+>       BUILD_BPF_SKEL := 0
+>     else ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
+> -    dummy := $(warning Warning: Disabled BPF skeletons as libbpf is required)
+> +    $(warning Warning: Disabled BPF skeletons as libbpf is required)
+>       BUILD_BPF_SKEL := 0
+>     else ifeq ($(call get-executable,$(CLANG)),)
+> -    dummy := $(warning Warning: Disabled BPF skeletons as clang ($(CLANG)) is missing)
+> +    $(warning Warning: Disabled BPF skeletons as clang ($(CLANG)) is missing)
+>       BUILD_BPF_SKEL := 0
+>     else
+>       CLANG_VERSION := $(shell $(CLANG) --version | head -1 | sed 's/.*clang version \([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/g')
+>       ifeq ($(call version-lt3,$(CLANG_VERSION),12.0.1),1)
+> -      dummy := $(warning Warning: Disabled BPF skeletons as reliable BTF generation needs at least $(CLANG) version 12.0.1)
+> +      $(warning Warning: Disabled BPF skeletons as reliable BTF generation needs at least $(CLANG) version 12.0.1)
+>         BUILD_BPF_SKEL := 0
+>       endif
+>     endif
+>     ifeq ($(BUILD_BPF_SKEL),1)
+>       $(call feature_check,clang-bpf-co-re)
+>       ifeq ($(feature-clang-bpf-co-re), 0)
+> -      dummy := $(warning Warning: Disabled BPF skeletons as clang is too old)
+> +      $(warning Warning: Disabled BPF skeletons as clang is too old)
+>         BUILD_BPF_SKEL := 0
+>       endif
+>     endif
+> @@ -727,7 +727,7 @@ dwarf-post-unwind-text := BUG
+>   # setup DWARF post unwinder
+>   ifdef NO_LIBUNWIND
+>     ifdef NO_LIBDW_DWARF_UNWIND
+> -    msg := $(warning Disabling post unwind, no support found.);
+> +    $(warning Disabling post unwind, no support found.)
+>       dwarf-post-unwind := 0
+>     else
+>       dwarf-post-unwind-text := libdw
+> @@ -753,7 +753,7 @@ ifndef NO_LOCAL_LIBUNWIND
+>     ifeq ($(SRCARCH),$(filter $(SRCARCH),arm arm64))
+>       $(call feature_check,libunwind-debug-frame)
+>       ifneq ($(feature-libunwind-debug-frame), 1)
+> -      msg := $(warning No debug_frame support found in libunwind);
+> +      $(warning No debug_frame support found in libunwind)
+>         CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
+>       endif
+>     else
+> @@ -782,7 +782,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+>       ifndef NO_LIBAUDIT
+>         $(call feature_check,libaudit)
+>         ifneq ($(feature-libaudit), 1)
+> -        msg := $(warning No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev);
+> +        $(warning No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev)
+>           NO_LIBAUDIT := 1
+>         else
+>           CFLAGS += -DHAVE_LIBAUDIT_SUPPORT
+> @@ -795,7 +795,7 @@ endif
+>   
+>   ifndef NO_LIBCRYPTO
+>     ifneq ($(feature-libcrypto), 1)
+> -    msg := $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev);
+> +    $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev)
+>       NO_LIBCRYPTO := 1
+>     else
+>       CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
+> @@ -807,7 +807,7 @@ endif
+>   ifndef NO_SLANG
+>     ifneq ($(feature-libslang), 1)
+>       ifneq ($(feature-libslang-include-subdir), 1)
+> -      msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
+> +      $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev)
+>         NO_SLANG := 1
+>       else
+>         CFLAGS += -DHAVE_SLANG_INCLUDE_SUBDIR
+> @@ -825,7 +825,7 @@ ifdef GTK2
+>     FLAGS_GTK2=$(CFLAGS) $(LDFLAGS) $(EXTLIBS) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null)
+>     $(call feature_check,gtk2)
+>     ifneq ($(feature-gtk2), 1)
+> -    msg := $(warning GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev);
+> +    $(warning GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev)
+>       NO_GTK2 := 1
+>     else
+>       $(call feature_check,gtk2-infobar)
+> @@ -854,7 +854,7 @@ else
+>     ifneq ($(feature-libperl), 1)
+>       CFLAGS += -DNO_LIBPERL
+>       NO_LIBPERL := 1
+> -    msg := $(warning Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev);
+> +    $(warning Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev)
+>     else
+>       LDFLAGS += $(PERL_EMBED_LDFLAGS)
+>       EXTLIBS += $(PERL_EMBED_LIBADD)
+> @@ -869,7 +869,7 @@ endif
+>   ifeq ($(feature-timerfd), 1)
+>     CFLAGS += -DHAVE_TIMERFD_SUPPORT
+>   else
+> -  msg := $(warning No timerfd support. Disables 'perf kvm stat live');
+> +  $(warning No timerfd support. Disables 'perf kvm stat live')
+>   endif
+>   
+>   disable-python = $(eval $(disable-python_code))
+> @@ -903,7 +903,7 @@ else
+>              PYTHON_EXTENSION_SUFFIX := $(shell $(PYTHON) -c 'from importlib import machinery; print(machinery.EXTENSION_SUFFIXES[0])')
+>              LANG_BINDINGS += $(obj-perf)python/perf$(PYTHON_EXTENSION_SUFFIX)
+>   	 else
+> -           msg := $(warning Missing python setuptools, the python binding won't be built, please install python3-setuptools or equivalent);
+> +           $(warning Missing python setuptools, the python binding won't be built, please install python3-setuptools or equivalent)
+>            endif
+>            CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
+>            $(call detected,CONFIG_LIBPYTHON)
+> @@ -962,7 +962,7 @@ ifdef BUILD_NONDISTRO
+>     ifeq ($(feature-libbfd-buildid), 1)
+>       CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
+>     else
+> -    msg := $(warning Old version of libbfd/binutils things like PE executable profiling will not be available);
+> +    $(warning Old version of libbfd/binutils things like PE executable profiling will not be available)
+>     endif
+>   endif
+>   
+> @@ -994,7 +994,7 @@ ifndef NO_LZMA
+>       EXTLIBS += -llzma
+>       $(call detected,CONFIG_LZMA)
+>     else
+> -    msg := $(warning No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev);
+> +    $(warning No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev)
+>       NO_LZMA := 1
+>     endif
+>   endif
+> @@ -1007,7 +1007,7 @@ ifndef NO_LIBZSTD
+>       EXTLIBS += -lzstd
+>       $(call detected,CONFIG_ZSTD)
+>     else
+> -    msg := $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR);
+> +    $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR)
+>       NO_LIBZSTD := 1
+>     endif
+>   endif
+> @@ -1018,7 +1018,7 @@ ifndef NO_LIBCAP
+>       EXTLIBS += -lcap
+>       $(call detected,CONFIG_LIBCAP)
+>     else
+> -    msg := $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev);
+> +    $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev)
+>       NO_LIBCAP := 1
+>     endif
+>   endif
+> @@ -1031,11 +1031,11 @@ endif
+>   
+>   ifndef NO_LIBNUMA
+>     ifeq ($(feature-libnuma), 0)
+> -    msg := $(warning No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev);
+> +    $(warning No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev)
+>       NO_LIBNUMA := 1
+>     else
+>       ifeq ($(feature-numa_num_possible_cpus), 0)
+> -      msg := $(warning Old numa library found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev >= 2.0.8);
+> +      $(warning Old numa library found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev >= 2.0.8)
+>         NO_LIBNUMA := 1
+>       else
+>         CFLAGS += -DHAVE_LIBNUMA_SUPPORT
+> @@ -1090,14 +1090,14 @@ ifndef NO_LIBBABELTRACE
+>       EXTLIBS += -lbabeltrace-ctf
+>       $(call detected,CONFIG_LIBBABELTRACE)
+>     else
+> -    msg := $(warning No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev);
+> +    $(warning No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev)
+>     endif
+>   endif
+>   
+>   ifndef NO_AUXTRACE
+>     ifeq ($(SRCARCH),x86)
+>       ifeq ($(feature-get_cpuid), 0)
+> -      msg := $(warning Your gcc lacks the __get_cpuid() builtin, disables support for auxtrace/Intel PT, please install a newer gcc);
+> +      $(warning Your gcc lacks the __get_cpuid() builtin, disables support for auxtrace/Intel PT, please install a newer gcc)
+>         NO_AUXTRACE := 1
+>       endif
+>     endif
+> @@ -1155,7 +1155,7 @@ ifndef NO_LIBPFM4
+>       ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
+>       $(call detected,CONFIG_LIBPFM4)
+>     else
+> -    msg := $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev);
+> +    $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev)
+>     endif
+>   endif
+>   
+> @@ -1173,7 +1173,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+>       CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
+>       $(call detected,CONFIG_LIBTRACEEVENT)
+>     else
+> -    dummy := $(error ERROR: libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel or build with NO_LIBTRACEEVENT=1)
+> +    $(error ERROR: libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel or build with NO_LIBTRACEEVENT=1)
+>     endif
+>   
+>     $(call feature_check,libtracefs)
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index f8774a9b1377..3707fed8dfde 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -482,7 +482,7 @@ drm_hdr_dir := $(srctree)/tools/include/uapi/drm
+>   drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
+> +$(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
+>   
+>   $(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
+>   	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
+> @@ -672,7 +672,7 @@ tests-coresight-targets-clean:
+>   all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+>   
+>   # Create python binding output directory if not already present
+> -_dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+> +$(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+>   
+>   $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF) $(LIBSUBCMD)
+>   	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+> diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
+> index fab3095fb5d0..5735ed4479bb 100644
+> --- a/tools/perf/arch/arm64/Makefile
+> +++ b/tools/perf/arch/arm64/Makefile
+> @@ -18,7 +18,7 @@ sysprf := $(srctree)/tools/perf/arch/arm64/entry/syscalls/
+>   systbl := $(sysprf)/mksyscalltbl
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header): $(sysdef) $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
+> diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+> index c392e7af4743..3992a67a87d9 100644
+> --- a/tools/perf/arch/loongarch/Makefile
+> +++ b/tools/perf/arch/loongarch/Makefile
+> @@ -17,7 +17,7 @@ sysprf := $(srctree)/tools/perf/arch/loongarch/entry/syscalls/
+>   systbl := $(sysprf)/mksyscalltbl
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header): $(sysdef) $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
+> diff --git a/tools/perf/arch/mips/Makefile b/tools/perf/arch/mips/Makefile
+> index 8bc09072e3d6..cd0b011b3be5 100644
+> --- a/tools/perf/arch/mips/Makefile
+> +++ b/tools/perf/arch/mips/Makefile
+> @@ -11,7 +11,7 @@ sysdef := $(sysprf)/syscall_n64.tbl
+>   systbl := $(sysprf)/mksyscalltbl
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header): $(sysdef) $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' $(sysdef) > $@
+> diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
+> index 840ea0e59287..bf6d323574f6 100644
+> --- a/tools/perf/arch/powerpc/Makefile
+> +++ b/tools/perf/arch/powerpc/Makefile
+> @@ -19,7 +19,7 @@ sysdef := $(sysprf)/syscall.tbl
+>   systbl := $(sysprf)/mksyscalltbl
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header64): $(sysdef) $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' '64' $(sysdef) > $@
+> diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
+> index 74bffbea03e2..56994e63b43a 100644
+> --- a/tools/perf/arch/s390/Makefile
+> +++ b/tools/perf/arch/s390/Makefile
+> @@ -17,7 +17,7 @@ sysdef := $(sysprf)/syscall.tbl
+>   systbl := $(sysprf)/mksyscalltbl
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header): $(sysdef) $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' $(sysdef) > $@
+> diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
+> index 5a9f9a7bf07d..8952e00f9b60 100644
+> --- a/tools/perf/arch/x86/Makefile
+> +++ b/tools/perf/arch/x86/Makefile
+> @@ -17,7 +17,7 @@ sys       := $(srctree)/tools/perf/arch/x86/entry/syscalls
+>   systbl    := $(sys)/syscalltbl.sh
+>   
+>   # Create output directory if not already present
+> -_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+> +$(shell [ -d '$(out)' ] || mkdir -p '$(out)')
+>   
+>   $(header): $(sys)/syscall_64.tbl $(systbl)
+>   	$(Q)$(SHELL) '$(systbl)' $(sys)/syscall_64.tbl 'x86_64' > $@
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+> index 6fba29f3222d..0aa4005017c7 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -1,7 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   ifneq ($(O),)
+>   ifeq ($(origin O), command line)
+> -	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+> +        $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+>   	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+>   	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
+>   	COMMAND_O := O=$(ABSOLUTE_O)
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 492e937fab00..14684aeb4b55 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -285,7 +285,7 @@ EXTRA_CLEAN += $(GEN_HDRS) \
+>   	       $(TEST_GEN_OBJ) \
+>   	       cscope.*
+>   
+> -x := $(shell mkdir -p $(sort $(dir $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ))))
+> +$(shell mkdir -p $(sort $(dir $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ))))
+>   $(LIBKVM_C_OBJ): $(OUTPUT)/%.o: %.c $(GEN_HDRS)
+>   	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
+>   
+> @@ -298,7 +298,7 @@ $(LIBKVM_S_OBJ): $(OUTPUT)/%.o: %.S $(GEN_HDRS)
+>   $(LIBKVM_STRING_OBJ): $(OUTPUT)/%.o: %.c
+>   	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c -ffreestanding $< -o $@
+>   
+> -x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+> +$(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+>   $(SPLIT_TESTS_OBJS): $(GEN_HDRS)
+>   $(TEST_GEN_PROGS): $(LIBKVM_OBJS)
+>   $(TEST_GEN_PROGS_EXTENDED): $(LIBKVM_OBJS)
 
