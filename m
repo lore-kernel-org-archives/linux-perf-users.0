@@ -1,77 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D69F3C470;
-	Fri, 15 Mar 2024 15:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947A74CB37;
+	Fri, 15 Mar 2024 16:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710515875; cv=none; b=C8YXi5CZkvPcLicFYiXyfpHg3LUL1BOl6hK8JFEB4jyMEdlA9QuAIgRg90A/JeMAmOkC549Zy5hSz9bKexgJUkYtyxK/+no7UUAQvVkuWzMfCVl2OHKXCdUqyWTCUD5Ev3YwQxs5k3DLtViQuA5dwD5Tb8mukNyrAjAETY/Kpow=
+	t=1710521065; cv=none; b=DJmPo8STzP7OgBvXnuAaujanRVaRXQB3hY2ebjAFD125X16XjfHiw8frPeRSVnFOo4Ghdhp803Xl2kJZHdCVOmjCgMEwD0cXHE228As+JQGcv0jW0zBfj5kuhg2xDaN9qEA0m1CbIxbnhl58I0lEeM4ahnejgAsCilcs6XJNCP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710515875; c=relaxed/simple;
-	bh=uTrMcFCburtM5gMQYq+sgTQ/3X5irzj8OXkqsXBrsR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OfgG91Zup1I9VZeGZWToLcIkKmEUxc0JwVc9mB6ejrK0F0YhS/dMuXAeMzW5zMJpkRxagngUQiSpkSFD6ZhOiE9tr1BOfyAR2KwTrvHnAD51aIeomQJNvufPjD/D2SOFzqaPNz5rixjdNrS9+pGQmu0tEFo1dgGGfjcCBve0K0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pa884i45; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710521065; c=relaxed/simple;
+	bh=m2M0bzDQP7LBLbY5WGghf90fghZZ5GohwCMNQ8FH0GI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lFG6YVlqAtYKmCKsb0yhbooFQL7bC7tkGUGXx4V5aZB5unfT3/mUg2M9j8LSVswyV5HqVvOZM2k5PgsHfRWFEsgXlDVHurwdOKkxtYXF/xjDCrsAiF76CbfbKgp0bQKQ8VP5iJq/aflVrS4eRU7br4oQsJFS1PNwNmTuVuhkTjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZ9GQ/ow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pa884i45"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4F1C433F1;
-	Fri, 15 Mar 2024 15:17:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZ9GQ/ow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FBCC433C7;
+	Fri, 15 Mar 2024 16:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710515875;
-	bh=uTrMcFCburtM5gMQYq+sgTQ/3X5irzj8OXkqsXBrsR8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pa884i45IW1enWqmRUmGWoDWLOsWK/N+CfwBmzCpYaLKPVVRNaVvXqR7mJPqbUIAz
-	 bi6p+tmxqMk/LfBhjX/6RAZnHa+bf9rBoycYw/NGzX6q00uG/O6eFUkHsXjogmTsaT
-	 l7NkMMsQuZhH8lHJknrR0agFl9yCxLBaCL/PKgfNJwW8B4D1kcC2EOLHNlfomB8s3G
-	 qCtLL6iyofCrykK8CXfJPD5wQci47EwgksFzw/rM25YhmKWaFMLDRX4+ikCN/1kvwl
-	 Rv88AK7aIiivXAa6zC18zoyhPTJpL6X2S7rwrZnulATpjrrtfjwF/f9dnFPCGzmyM5
-	 t8pQ7qDMuWMPQ==
-Message-ID: <2c79bcb0-3ef5-4cf1-91f3-d1f0bc1f6465@kernel.org>
-Date: Fri, 15 Mar 2024 16:17:50 +0100
+	s=k20201202; t=1710521064;
+	bh=m2M0bzDQP7LBLbY5WGghf90fghZZ5GohwCMNQ8FH0GI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OZ9GQ/owYNz3xacaCyoTFY1itYJNNt8A3ZvpILKQ27jGrDKifPoTBdcwupc9kGhCi
+	 h6aldyYUh6EhncYWk6sPyNlZ99YOS/3JPBrBFnX/sxEQYKeCoz4N/PfJa+ECAkhOAh
+	 7whwIKgP1fkvy5dF+TVB+qT3qEAntkKhL8p0Tcqmg6cM7piyz3k2cwsGd5kx0dyWPr
+	 M77IqlxgzlWaH7Cm3jdA0zvckxBigivAbdnXKXqnhHj0l44+TUjyfFtwKYY1ID25mB
+	 5gepTzYFrqg8DYJSp5APF122ucYUELf4sfc5S0dhBaBYA9xe0Ee2TC9/YeLtWQp//3
+	 gTXUugGkVDUxg==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/3] tools/tracing: Use tools/build makefiles like perf
+Date: Fri, 15 Mar 2024 17:44:02 +0100
+Message-ID: <cover.1710519524.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/3] tools/tracing: Use tools/build makefiles on
- latency-collector
-Content-Language: en-US, pt-BR, it-IT
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, John Kacur <jkacur@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1710512430.git.bristot@kernel.org>
- <f2851351a1561a59a273a64de561022b1af4edcf.1710512430.git.bristot@kernel.org>
- <32958f50-b713-40ba-9e12-2a1b5667a91f@kernel.org> <ZfRg8CB5xXL2Y-zC@x1>
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <ZfRg8CB5xXL2Y-zC@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/15/24 15:53, Arnaldo Carvalho de Melo wrote:
-> On Fri, Mar 15, 2024 at 03:48:58PM +0100, Daniel Bristot de Oliveira wrote:
->> On 3/15/24 15:24, Daniel Bristot de Oliveira wrote:
->>> Use tools/build/ makefiles to build latency-collector, inheriting
->>> the benefits of it. For example: Before this patch, a missing
->>> tracefs/traceevents headers will result in fail like this:
->>>
->>> -------------------------------- %< -------------------------------
->>
->> Oops, b4 is interpreting these ------ as the '---' separator, and is truncating
->> the message. I will fix this in a v3.
->>
->> sorry.
-> 
-> Yeah, that confuses scripts, that separator.
+tools/tracing and tools/verification/rv are using standalone Makefiles
+and this approach has some drawbacks. For example, code duplication
+and lack of proper dependency handling, making things harder for
+users. 
 
-checkpatch did not point that as an error, and git am works as well.... but it
-indeed confuses other scripts...
+Linus suggested using perf's build system, and it is indeed the best way to go.
 
-Thanks, Arnaldo.
--- Daniel
+This series replaces tools/tracing and tools/verification/rv makefiles
+with makefiles inspired by perf and objtool that use tools/build/
+infrastructure.
+
+Thanks, Arnaldo, for the pointers via chat.
+
+Link: https://lore.kernel.org/lkml/CAHk-=wjQ9BJKBPi3sJN2Dy5jVwPO03u9aOc6-g8AnLcGq-E4-g@mail.gmail.com/
+
+Changes from V2:
+  - Link: https://lore.kernel.org/lkml/cover.1710512430.git.bristot@kernel.org/
+  - Fix the log of the first patch, removing the '----- %< ----' because
+    some scripts interpret them as the '---' patch separator, truncating
+    the log.
+
+Changes from V1:
+  - Link: https://lore.kernel.org/lkml/cover.1709914259.git.bristot@kernel.org/
+  - Proper handle O= and OUTPUT= flags fixing "make tools/tracing"
+  - Cleanups
+
+Daniel Bristot de Oliveira (3):
+  tools/tracing: Use tools/build makefiles on latency-collector
+  tools/rtla: Use tools/build makefiles to build rtla
+  tools/verification: Use tools/build makefiles on rv
+
+ tools/tracing/latency/.gitignore       |   5 +-
+ tools/tracing/latency/Build            |   1 +
+ tools/tracing/latency/Makefile         | 105 ++++++++++--
+ tools/tracing/latency/Makefile.config  |  30 ++++
+ tools/tracing/rtla/.gitignore          |   7 +-
+ tools/tracing/rtla/Build               |   1 +
+ tools/tracing/rtla/Makefile            | 217 +++++++++----------------
+ tools/tracing/rtla/Makefile.config     |  47 ++++++
+ tools/tracing/rtla/Makefile.rtla       |  80 +++++++++
+ tools/tracing/rtla/Makefile.standalone |  26 +++
+ tools/tracing/rtla/src/Build           |  11 ++
+ tools/verification/rv/.gitignore       |   6 +
+ tools/verification/rv/Build            |   1 +
+ tools/verification/rv/Makefile         | 207 +++++++++--------------
+ tools/verification/rv/Makefile.config  |  47 ++++++
+ tools/verification/rv/Makefile.rv      |  51 ++++++
+ tools/verification/rv/src/Build        |   4 +
+ 17 files changed, 549 insertions(+), 297 deletions(-)
+ create mode 100644 tools/tracing/latency/Build
+ create mode 100644 tools/tracing/latency/Makefile.config
+ create mode 100644 tools/tracing/rtla/Build
+ create mode 100644 tools/tracing/rtla/Makefile.config
+ create mode 100644 tools/tracing/rtla/Makefile.rtla
+ create mode 100644 tools/tracing/rtla/Makefile.standalone
+ create mode 100644 tools/tracing/rtla/src/Build
+ create mode 100644 tools/verification/rv/.gitignore
+ create mode 100644 tools/verification/rv/Build
+ create mode 100644 tools/verification/rv/Makefile.config
+ create mode 100644 tools/verification/rv/Makefile.rv
+ create mode 100644 tools/verification/rv/src/Build
+
+-- 
+2.44.0
+
