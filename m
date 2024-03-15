@@ -1,187 +1,222 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EFC1B7E3
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Mar 2024 11:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452CF1CA9E
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Mar 2024 12:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710501570; cv=none; b=Dvx28bzq64aI930nlqCTYvhLFR/Xl98HH0ufzicNZ3OOgnl28vAIiyT6Y+feWre/fZo8wReANRdwBFVXkVXLfrG0OLAMok9+L7LQhm6g7j3Jzm6zNFKrwwx4gLSzSzb3+pyMXB9TkrjMaNEJlRfDarzOvtFWQz3PDwDNmSIW+Rc=
+	t=1710505151; cv=none; b=lGzZqkwW7V57qCXUKCV0R2AZlox4tmQzepl18GjzQykcXbVBASNmPyNEoSHNApjt63WHqQvPFBQJjuSrP4qorZSG54gCgAlKS3nA3I2G5tncYshYvktXT/WozOp0LLMkq7uoKx9PA8vUzmjMBAOyh6lzpCgjV9gGZ4gKVsrN1HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710501570; c=relaxed/simple;
-	bh=pwl/ZGxNVzBYAh4anc3xOfMFeMbKqlbpzCtmLz2rWjU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cexwXUqTrn9SuLzKcoJ7isE5ZyJnq21DYcq9emaieoR5Vq7dZmdNF5YgYSsxrEC+YMQfIaypYCJl46cRYTP1hi31/LHx05dbUGJbZCn4iyjPKRwbzDzRt6MVMqd7CGaw5EzLwkUJxIyMMCQhJAdkEI2d1luF2k1+YnvXz09Mmnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=j3MXVxle; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1710505151; c=relaxed/simple;
+	bh=dHYV4qsDayQ2ruaIVB2tAtCwSzUF3zE6oFEBiOXmX24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LzKQztP3lpL0JceBijb+Mdy9nPj4gGHR3rygNwj32QbvO8w+oNXlxsUlvElrRf2GWRfldZiuIIBim+NQuPNQcAWt2QfNtak6ELHZQux7LB/Sqz7bKd9npMF4ZgTEucAEF8fvRgyhFNbcGGr6aW5MJ5hPj+UmqIKaHlSm+rtNTLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFDQR7K0; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="j3MXVxle"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 53AD624002B
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Mar 2024 12:19:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1710501560; bh=pwl/ZGxNVzBYAh4anc3xOfMFeMbKqlbpzCtmLz2rWjU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=j3MXVxle8/VivUQGcbrd0C2IuZofA4ZpoKYFOtwZpGVpYtPLtieMLS8L2LDYYq5DC
-	 XyFslOxjPQuDiP2EcNLlfKNoie1nBs4F2eR+AQxZ01Llg5Yon5kkg1EKDF0GgqgGgA
-	 vQJQeGqNl9kSpPh62bQTydQghmBdytHyRUw4cNQ7GY3cURmfgvGANU1GTaVoLtDgKp
-	 oWK5tkac0uGzUDWpOvPC9/w7qQJe/oEqLThs+bhNko6hOz8vX6Gv4knn1Av62godRf
-	 zBaWxue+CGC7CdZZa2ozwuccYSseHBkdWtC84t3he88mmpW9Xk95pcimx5ODu8Q5Mf
-	 X8f3fhxxpX1KA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Tx1wf1wbBz6tw2;
-	Fri, 15 Mar 2024 12:19:13 +0100 (CET)
-From: Anne Macedo <retpolanne@posteo.net>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Anne Macedo <retpolanne@posteo.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] perf lock contention: skip traceiter functions
-Date: Fri, 15 Mar 2024 11:19:05 +0000
-Message-Id: <20240315111907.1434909-1-retpolanne@posteo.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFDQR7K0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710505150; x=1742041150;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dHYV4qsDayQ2ruaIVB2tAtCwSzUF3zE6oFEBiOXmX24=;
+  b=hFDQR7K0NO+3zRhmCzIQVpSA5isIieOEpW7g7+KgzipCbku6K8DG5Ksd
+   jCVTV5kQNryyKgA5Mtyk51ks6Y/6vJBjOb8FO7qHKtJB5PtQX+qk+UKeI
+   aqPt+R7ixaFW/RjfZtjf8TnX+6e3e/brajDoY7LztVuKUuyTPt1E0J/OA
+   +b5s9y6IOxJqsdpIeIA3v9gvpSSjULmjQBMapXv04qHWfPzkeEqfjBpIf
+   BfdRC6LWNuS7ExlbQT9D+TMca0fNAL81xPA/xKJBgBWQ1ZUC3UwQw5FJd
+   I9IFCMGkV/H+xcYAaQDRgur7MmSxxfcMsqMIcpG9+vBZmzhYFFqg7kZW4
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="22832712"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="22832712"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 05:19:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="12693991"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.209.226])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 05:19:07 -0700
+Message-ID: <3792a391-df9b-4911-a14b-a3bb6f8b4b78@intel.com>
+Date: Fri, 15 Mar 2024 14:19:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] perf, capstone: Support 32bit code under 64bit OS
+Content-Language: en-US
+To: Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
+Cc: changbin.du@huawei.com
+References: <20240308170611.719794-1-ak@linux.intel.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240308170611.719794-1-ak@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The perf lock contention program currently shows the caller of the locks
-as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
-from the traceiter itself. Instead, it should show the real callers for
-the locks.
+On 8/03/24 19:06, Andi Kleen wrote:
+> Use the DSO to resolve whether an IP is 32bit or 64bit and use that to
+> configure capstone to the correct mode. This allows to correctly
+> disassemble 32bit code under a 64bit OS.
+> 
+> % cat > loop.c
+> volatile int var;
+> int main(void)
+> {
+> 	int i;
+> 	for (i = 0; i < 100000; i++)
+> 		var++;
+> }
+> % gcc -m32 -o loop loop.c
+> % perf record -e cycles:u ./loop
+> % perf script -F +disasm
+>             loop   82665 1833176.618023:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618029:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618031:          7 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618034:         91 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618036:       1242 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> ---
+> 
+> v2: Factor out DSO lookup into separate function
+> v3: Pass down al
+> v4: Simplify is64bitip
+> ---
+>  tools/perf/builtin-script.c  |  9 +++++----
+>  tools/perf/util/print_insn.c | 24 ++++++++++++++++++++----
+>  tools/perf/util/print_insn.h |  2 +-
+>  3 files changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 37088cc0ff1b..0299b1ed8744 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1517,7 +1517,8 @@ void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+>  static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  				     struct perf_event_attr *attr,
+>  				     struct thread *thread,
+> -				     struct machine *machine, FILE *fp)
+> +				     struct machine *machine, FILE *fp,
+> +				     struct addr_location *al)
 
-When fiddling with the --stack-skip parameter, the actual callers for
-the locks start to show up. However, just ignore the
-__traceiter_contention_begin and the __traceiter_contention_end symbols
-so the actual callers will show up.
+perf's fprintf functions usually have the "FILE *fp" as the last
+parameter, so better to add "struct addr_location *al" as second-to-last.
 
-Before this patch is applied:
+>  {
+>  	int printed = 0;
+>  
+> @@ -1531,7 +1532,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  	}
+>  	if (PRINT_FIELD(DISASM) && sample->insn_len) {
+>  		printed += fprintf(fp, "\t\t");
+> -		printed += sample__fprintf_insn_asm(sample, thread, machine, fp);
+> +		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
+>  	}
+>  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+> @@ -1606,7 +1607,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+>  	if (print_srcline_last)
+>  		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
+>  
+> -	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
+> +	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+>  	printed += fprintf(fp, "\n");
+>  	if (PRINT_FIELD(SRCCODE)) {
+>  		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
+> @@ -2259,7 +2260,7 @@ static void process_event(struct perf_script *script,
+>  
+>  	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
+>  		perf_sample__fprintf_bpf_output(sample, fp);
+> -	perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
+> +	perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+>  
+>  	if (PRINT_FIELD(PHYS_ADDR))
+>  		fprintf(fp, "%16" PRIx64, sample->phys_addr);
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> index 459e0e93d7b1..8e4e3cffd677 100644
+> --- a/tools/perf/util/print_insn.c
+> +++ b/tools/perf/util/print_insn.c
+> @@ -12,6 +12,8 @@
+>  #include "machine.h"
+>  #include "thread.h"
+>  #include "print_insn.h"
+> +#include "map.h"
+> +#include "dso.h"
+>  
+>  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+>  {
+> @@ -28,12 +30,12 @@ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+>  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+>  #include <capstone/capstone.h>
+>  
+> -static int capstone_init(struct machine *machine, csh *cs_handle)
+> +static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+>  {
+>  	cs_arch arch;
+>  	cs_mode mode;
+>  
+> -	if (machine__is(machine, "x86_64")) {
+> +	if (machine__is(machine, "x86_64") && is64) {
+>  		arch = CS_ARCH_X86;
+>  		mode = CS_MODE_64;
+>  	} else if (machine__normalized_is(machine, "x86")) {
+> @@ -93,17 +95,31 @@ static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+>  	return printed;
+>  }
+>  
+> +static bool is64bitip(struct machine *machine, struct addr_location *al)
+> +{
+> +	const struct dso *dso = al->map ? map__dso(al->map) : NULL;
+> +
+> +	if (dso)
+> +		return dso->is_64_bit;
+> +
+> +	return machine__is(machine, "x86_64") ||
+> +		machine__normalized_is(machine, "arm64") ||
+> +		machine__normalized_is(machine, "s390");
+> +}
+> +
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> -				struct machine *machine, FILE *fp)
+> +				struct machine *machine, FILE *fp,
+> +				struct addr_location *al)
+>  {
+>  	csh cs_handle;
+>  	cs_insn *insn;
+>  	size_t count;
+>  	size_t printed = 0;
+>  	int ret;
+> +	bool is64bit = is64bitip(machine, al);
+>  
+>  	/* TODO: Try to initiate capstone only once but need a proper place. */
+> -	ret = capstone_init(machine, &cs_handle);
+> +	ret = capstone_init(machine, &cs_handle, is64bit);
+>  	if (ret < 0) {
+>  		/* fallback */
+>  		return sample__fprintf_insn_raw(sample, fp);
 
-sudo perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
 
-         8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
-         4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
-         7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
-         2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
-         2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
-         1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
-         1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+sample__fprintf_insn_asm() stub needs changing too
 
-Before this patch is applied - using --stack-skip 5
-
-sudo perf lock con --stack-skip 5 -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
-         4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
-         2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
-         2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
-         1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
-         1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
-         1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
-
-After this patch is applied:
-
-sudo ./perf lock con -a -b -- sleep 3
- contended   total wait     max wait     avg wait         type   caller
-
-         4      4.13 s       2.07 s       1.03 s      rwlock:W   release_task+0x68
-         2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_update_next_owner+0x50
-         2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+0x338
-         1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_kn_lock_live+0x58
-         2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+0x338
-
-changes since v2:
-
-- add dummy value to machine->traceiter and machine->trace to make
-necessary checks, fixing possible null pointer access
-
-changes since v1:
-
-- consider trace_contention and __traceiter_contention functions as
-optional (i.e. check if sym is null to avoid segfault)
-
-changes since v0:
-
-- skip trace_contention functions
-- use sym->end instead of __traceiter_contention_end for text_end
-
-Signed-off-by: Anne Macedo <retpolanne@posteo.net>
----
- tools/perf/util/machine.c | 29 +++++++++++++++++++++++++++++
- tools/perf/util/machine.h |  2 +-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 527517db3182..373a3b852f72 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3266,6 +3266,22 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 
- 		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
- 		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
-+		if (sym) {
-+			machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
-+			machine->traceiter.text_end = map__unmap_ip(kmap, sym->end);
-+		} else {
-+			machine->traceiter.text_start = 1;
-+		}
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "trace_contention_begin", &kmap);
-+		if (sym) {
-+			machine->trace.text_start = map__unmap_ip(kmap, sym->start);
-+			machine->trace.text_end = map__unmap_ip(kmap, sym->end);
-+		} else {
-+			machine->trace.text_start = 1;
-+		}
- 	}
- 
- 	/* failed to get kernel symbols */
-@@ -3280,5 +3296,18 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
- 	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
- 		return true;
- 
-+	/* traceiter functions currently don't have their own section
-+	 * but we consider them lock functions
-+	 */
-+	if (machine->traceiter.text_start != 1) {
-+		if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
-+			return true;
-+	}
-+
-+	if (machine->trace.text_start != 1) {
-+		if (machine->trace.text_start <= addr && addr < machine->trace.text_end)
-+			return true;
-+	}
-+
- 	return false;
- }
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index e28c787616fe..4312f6db6de0 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -49,7 +49,7 @@ struct machine {
- 	struct {
- 		u64	  text_start;
- 		u64	  text_end;
--	} sched, lock;
-+	} sched, lock, traceiter, trace;
- 	pid_t		  *current_tid;
- 	size_t		  current_tid_sz;
- 	union { /* Tool specific area */
--- 
-2.39.2
+> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+> index 465bdcfcc2fd..6447dd41b543 100644
+> --- a/tools/perf/util/print_insn.h
+> +++ b/tools/perf/util/print_insn.h
+> @@ -10,7 +10,7 @@ struct thread;
+>  struct machine;
+>  
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> -				struct machine *machine, FILE *fp);
+> +				struct machine *machine, FILE *fp, struct addr_location *al);
+>  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+>  
+>  #endif /* PERF_PRINT_INSN_H */
 
