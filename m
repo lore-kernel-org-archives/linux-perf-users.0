@@ -1,118 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF891426E;
-	Fri, 15 Mar 2024 07:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7285112E71;
+	Fri, 15 Mar 2024 07:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710486832; cv=none; b=HWx9cSbMDdMMKNnNsGbaeVuYya6IO04DGzpMvToauOsYIS9oWnHz619NeA+2jirmljOWIq6EYXif/tTkM9/aZKy6hqI5m6RB2zXbZdAiFxkvdBZK2uAXJpUyVwW10eQFvfg/lH5NOlB1p4OsDqElGak8AUc+0CaUhFM82TUGteM=
+	t=1710488480; cv=none; b=CUhWPuNsiPKFEil51sbgkzLtHIkZkG+bsTLW03uAsaUUoePDWQWNp0vGhLHfihWcIYAKPi8RNIOeccff4coXqccHawS92RzHWNmh5/pXsyznZ09rHjFdOMfoRvJUtsyOIXkmzUbF/yoRz5Sk8jKD0UTONk195mdnZ4dvOCFcS0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710486832; c=relaxed/simple;
-	bh=GNfAooz/wTLMQAqprwx4AAcUd3RDnPeWtqu1ErkFcGo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RXMPQTM608q04DRmiODeo9TFEjPgYXCurFDBOtWyR3ohwWrS7E6FVQoyCz27Tn9jGNmCXqq/lUr5aA748KpLqsOFODA0IJgNkR2HL20q4vra3wpKfu8sS9C88dG3cl1s+Fbr0VzRmJDVt7eMQyrF9Rt7739tGYN4FO17Fd2xVNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwCi5mVS; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1710488480; c=relaxed/simple;
+	bh=CQ8sthM+ukAAJ+yhQdfaSjJZHn505UW1ZJOHTWsqQBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVwCBOlc2YQLS1tFBWKtoR3YGckoiyhNqmLdTg5R7zV6vG5IvR1hqgecICWlS+3N4Cueujnre2PmcujYpA0dBrxCAMX2Hb8l0CbGdNiQuCkUwjjHw2pzpwNbFpSotZv3sjZfA+FIGcMnGobc2RcVHE22HZqn+b07MFPDdBS6K+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GVhT/5Bm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uBzm4NEk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwCi5mVS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710486831; x=1742022831;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GNfAooz/wTLMQAqprwx4AAcUd3RDnPeWtqu1ErkFcGo=;
-  b=GwCi5mVS7D6qenj5vFAN5Jmmu/JHeeHeHY8eeEHAYXJ6f5cxpXV+2byr
-   T89srqhLwZMV2aF1xlgLv7foFLVHBkp3ZsVwqwZ1PhUuhiHSPPNETXQsA
-   SIK69FG2KEF1lHbrBi4jzEjU/SMtljvwOSkwe9LEjVSPrBb7HsvZCcF5z
-   9CpEwsE4+nvTxMq1uCk5dxcDpRtr2sLd/QB8lKtUA1mD+yBM170Ul4qnZ
-   PVYpROwzprLfzQ4IpwVXsOiI5MlewAiMk+M+gnebE+rcLmIrFl15inJku
-   A328gwGsAAWDYghNQOBBhvD3WhV8zoULw7i9iXdG3GgDXVCpwYPdeyIE4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="5944043"
-X-IronPort-AV: E=Sophos;i="6.07,127,1708416000"; 
-   d="scan'208";a="5944043"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 00:13:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,127,1708416000"; 
-   d="scan'208";a="12494637"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.209.226])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 00:13:48 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GVhT/5Bm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uBzm4NEk"
+Date: Fri, 15 Mar 2024 08:41:14 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710488476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9VDp1Ceo9uiNPto1QZnXHckVKvG4yvIiVDzP9krVh2w=;
+	b=GVhT/5BmPboBfXfrBdfMvV/KOSpjoHawAmDYKvFDbHx5/9opTgfSsjFJ3JhHBd312Pb/SS
+	b2RkTz1D3UJesQSqhCGxIbkSiBe5GWXifLzyzk1K11kfSyR4UpMGGUD5XF1V4PK7ofV4LH
+	nBiwDUJMpyy06QrsPxeZnPp3z7Pye6PbOjnDa99tQRgupbEowpr4r50IXp1WgZ87BysbiJ
+	I8B5OT/d73+czOKTv3C1jfzxk9vAnnaWUFhKZGAUE4OccYrkphNVgd39iN3mifZJCMOKxj
+	vs2TRoVjID5xS/tQBA0K0/Wla7Alf0Mr8KwQ4xl8wJhATb9QkbK3Bc9kpUPMyQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710488476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9VDp1Ceo9uiNPto1QZnXHckVKvG4yvIiVDzP9krVh2w=;
+	b=uBzm4NEkle7ynXXoIeCeRHz7B8GbWEJK9cohpzRcJGjM5hwkuP166D0FnbrqZAm4y+0Mid
+	M9MDGCiKTCybrxAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+Cc: Marco Elver <elver@google.com>, Vince Weaver <vincent.weaver@maine.edu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf auxtrace: Fix multiple use of --itrace option
-Date: Fri, 15 Mar 2024 09:13:34 +0200
-Message-Id: <20240315071334.3478-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240315071334.3478-1-adrian.hunter@intel.com>
-References: <20240315071334.3478-1-adrian.hunter@intel.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 0/4] perf: Make SIGTRAP and __perf_pending_irq() work
+ on RT.
+Message-ID: <20240315074114.1wRuzXFO@linutronix.de>
+References: <CANpmjNMYGa46pRQUOfzTa_FRvftOGqg+UDeD_B-tbZgYw-MWww@mail.gmail.com>
+ <ZfHE9Ev5T3Lq7o34@x1>
+ <ZfHtBB5_-3RByE8p@x1>
+ <ZfHw3J5PY6qy4mXn@x1>
+ <ZfIIqcmRlrxwUFTn@x1>
+ <ZfIJIfqeI9tWnnS5@x1>
+ <20240314091033.woaK8h83@linutronix.de>
+ <ZfMK_yTzxTQCMGZ1@x1>
+ <ZfNqnjdR-0YEsSnb@x1>
+ <ZfNwLfdOLBytjF06@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZfNwLfdOLBytjF06@x1>
 
-If the --itrace option is used more than once, the options are
-combined, but "i" and "y" (sub-)options can be corrupted because
-itrace_do_parse_synth_opts() incorrectly overwrites the period type and
-period with default values.
+On 2024-03-14 18:46:21 [-0300], Arnaldo Carvalho de Melo wrote:
+> So despite this mistake all is well, torvalds/master + your patchkit
+> seems ok.
+> 
+> Sorry for the noise :-\
 
-For example, with:
+No worries, thank you.
 
-	--itrace=i0ns --itrace=e
+> - Arnaldo
 
-The processing of "--itrace=e", resets the "i" period from 0 nanoseconds
-to the default 100 microseconds.
-
-Fix by performing the default setting of period type and period only if
-"i" or "y" are present in the currently processed --itrace value.
-
-Fixes: f6986c95af84 ("perf session: Add instruction tracing options")
-Cc: stable@vger.kernel.org
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/auxtrace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 3684e6009b63..ef314a5797e3 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1466,6 +1466,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 	char *endptr;
- 	bool period_type_set = false;
- 	bool period_set = false;
-+	bool iy = false;
- 
- 	synth_opts->set = true;
- 
-@@ -1484,6 +1485,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 		switch (*p++) {
- 		case 'i':
- 		case 'y':
-+			iy = true;
- 			if (p[-1] == 'y')
- 				synth_opts->cycles = true;
- 			else
-@@ -1649,7 +1651,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 		}
- 	}
- out:
--	if (synth_opts->instructions || synth_opts->cycles) {
-+	if (iy) {
- 		if (!period_type_set)
- 			synth_opts->period_type =
- 					PERF_ITRACE_DEFAULT_PERIOD_TYPE;
--- 
-2.34.1
-
+Sebastian
