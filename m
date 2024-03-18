@@ -1,137 +1,72 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4236F38382;
-	Mon, 18 Mar 2024 12:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4E84A990;
+	Mon, 18 Mar 2024 14:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710763933; cv=none; b=JKWpCfNCTElfzzEOZYFiljsAjrfEwdpAHuqnpPE+GuQewcJEGDfS94N4uC+oKkacaqOufQqyipJ2OI8rrX9IGUguODEQXc5y1KzhBMWM2LaYwHmbunLWABwNTlf9oh21XA9dKAhdjtQLZsE7bRvBvhy6g8S5yw92vgb4W+ToiTc=
+	t=1710770885; cv=none; b=kLMX/eEnZI5iUHlco6u7gx2QGYQzKZu85UWwNQvgM1ZPoRVQkCXv6qAhZKmsACg9ozUM7lQ9BtpAFcyE9kVppRg4Dnv2qY/hsDqu/OZxV2kk+/GFMuW6HhnokdPq/sCoRWcdH1/vkylnLIQquVjBXXk87h8jIZq3wsdXxlyIhqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710763933; c=relaxed/simple;
-	bh=qyMSm9yuXlCK1ICWk15XRGC74xl9VS7mkrc7PJHxCUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tnPyILkASjhvChX+qt6KaxnEdvm4dGePYZ5Xs1GhdCRvyTVleVrjJHGfro24bmD/PGwK+JBbgKa3P2uCqMyhsymaabiNb6oNh1PDLjLcxOFdJ1xIgRyDkk7kUwMp9rlI/X/8PGnD8Ru2PF5v2lrumG2YxxfL6GBMr/40NfWKiFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PasgsoSL; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710770885; c=relaxed/simple;
+	bh=0JUlQ9a4hnzd0bcr6tsbH/TQVpStPCr5iwkXDPIWGTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOpueVICeVqEn+YfymF4VkFecLKT5Y2Scw0Dkn9IOXtIa6yDqSd+V6OTLSedDXC4LEii+4eD7LMREmZtmbIgQs7K9t/xqQXfNP52okLbNX9LWgStiZpNVsWOQ1ZlbrYjcL6EDmqOgwq/rZQGk9O7kp2UPBeQNsZzvSpCJCx7Ahk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+E2ve2b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PasgsoSL"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e00b1c2684so9617695ad.0;
-        Mon, 18 Mar 2024 05:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710763931; x=1711368731; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=81j1Tz/Yqk9Itf6abMwUUdLtUi04c0EJZ65oWIYPoPs=;
-        b=PasgsoSLQ/2kZPQr/BXhqFqrWAN7L9RFkIW1PpGr4Z2kzc6fLRM2osDkWdm5QP+bE7
-         vqU91vLAyXEAibiZbzvwXilMmdLLSi4rKNlIlVRGOZKXcDBi4CovqRreEU/fTIHl4VPW
-         InaGiDvEa59ztCQnBlyZLX4OHZS520qNcN9PtUbm3whtbCvoduJvhmnVhmqFpILR/vVQ
-         rXsviQ3i23q+NmrYlZcSdh/d6pji9kAKPaArK8RJK01iXjhY0Y35cwTK8T/jRvYcBzxx
-         uIWy2EXyS+O6Efk8RIkJOVX3YfVFu4YtIgBMw08LyvmbXM/LckYdN5T3aca3EQWlgL9G
-         6lQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710763931; x=1711368731;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=81j1Tz/Yqk9Itf6abMwUUdLtUi04c0EJZ65oWIYPoPs=;
-        b=BtjJ63HywOT37HeXFODN7ApBzZ1mOXSC1nxF1Es7CjoZY0vWpxb9Ca4yeIb6CfUskP
-         FKJkndm/Ms7LA3NRKbmu7xbnq2eBPJvqQ1xKXuiaiwTmS7n2MYrRNKy+gzMPGCg584Nv
-         JaZYEMzR8KLeuSgEaXgnZyKWNuLodlgghOKxIxH+BV3Ur+zVT+wxJdr/plbhu+r9DXJ/
-         424h2iI8Q1wab/G4k1jCQhPrPs66S3FBcBxT07/JK2E7WASbjFwkd0tokq5WSKIjDuYv
-         plm/NuF2MP8jZ9VqmUvR6qQWf17CR/j4JFpvDTnunQLo/cido+bpftxBojxOpJovJa8S
-         0VAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRK5LJvGafdZ3x2CKGVJxlf+U7rt6DTT691/Zsm4isgnxu0DDRXXVMAlk61gM4688S5NunZVHI3SNhN0H9XxiLwFXPkv7zLzvQsb+6/wi4CLpunGHXqZjzQ7Xwy045m69MJkbVF/tUr+xFwCqZBg==
-X-Gm-Message-State: AOJu0Yzcub+Md0Dr8/rKbLTyovbIuyO7HDNBqaHJXJqXnjCt575nMzGm
-	Z1IGD7AVo2z/zZgkYlxG1kFecdNwdyCTA333c+2YJntm4GJdxFmx
-X-Google-Smtp-Source: AGHT+IG4m45MJ0D7WcceUJLDXwwhF8XuAcMN82ScuuAcZr2qvqDvfyrMu7hXxyWHCtgydnnzHYL/vQ==
-X-Received: by 2002:a17:902:d512:b0:1e0:1355:c6b9 with SMTP id b18-20020a170902d51200b001e01355c6b9mr4077784plg.32.1710763931414;
-        Mon, 18 Mar 2024 05:12:11 -0700 (PDT)
-Received: from pc-mac.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b001e01735f74asm2670673plh.128.2024.03.18.05.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 05:12:11 -0700 (PDT)
-From: Chunxin Zang <spring.cxz@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com
-Cc: yangchen11@lixiang.com,
-	zhouchunhua@lixiang.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zangchunxin@lixiang.com,
-	Chunxin Zang <spring.cxz@gmail.com>
-Subject: [PATCH] perf evlist: Fix the warning logic about warn_user_request_cpu
-Date: Mon, 18 Mar 2024 20:11:50 +0800
-Message-Id: <20240318121150.1552888-1-spring.cxz@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+E2ve2b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210C5C433C7;
+	Mon, 18 Mar 2024 14:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710770884;
+	bh=0JUlQ9a4hnzd0bcr6tsbH/TQVpStPCr5iwkXDPIWGTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n+E2ve2bvPshScJQ3QReFb80pLA7KO/uuvMrZE3Mabc3IOn1zDyrSpLn45KMZmccw
+	 sWaPXWoQOVEZQzLfW9qHaLgB36mCo4bcTI5B9LPzkpEAFeHwhyiNnj+tAWOrvyn7a9
+	 PR2VQwm2OBXUPrsCwW09M2pSej9smIgjaccfhElQ+Ef6E+BXsetJUYJe5zOmBFqEYY
+	 oIiBijqYOXW8ChSFx9Vv3FnJpR9aeLSIbOfijgjOCt88Nsa8hP5l2ZJ6WEHuZiggjo
+	 c1qv9th/x4SPXlZJ4WB/8s6izRDlLsqqNfREd5LjEjK286doMRbDFIe/8u9wdtmfjR
+	 NJGA0ojhqxKLg==
+Date: Mon, 18 Mar 2024 11:08:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf vendor events intel: Add umasks to PCU events.
+Message-ID: <ZfhKwM9DDMMMNs5u@x1>
+References: <20240226201517.3540187-1-irogers@google.com>
+ <0b2ff06f-099c-424a-97b5-fdf638892e41@linux.intel.com>
+ <CAP-5=fVTOgOO=N7uf4CaANWu+WCCLXXMuNBnDdBOP3E6vijG_A@mail.gmail.com>
+ <2b950564-fe20-4426-ac91-5b40a2087099@linux.intel.com>
+ <CAP-5=fURvd4nx_-QLgRBWSoJbXDUqO=WbsLkqMgjiyucXHVrjw@mail.gmail.com>
+ <ZfSvwBQRBhfWGb98@x1>
+ <CAP-5=fUxw21-1SXBbaPoGgvZv98E5k+V6KGM41e=8XTFhyQohA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUxw21-1SXBbaPoGgvZv98E5k+V6KGM41e=8XTFhyQohA@mail.gmail.com>
 
-The old logic in evlist__warn_user_requested_cpus incorrectly output
-the warning message when I run 'perf record -C xxx' command on my
-context(the cpu has 8 performance-cores and 8 efficient-cores.).
-
-The old warning like this:
-  # perf record -C 17
-  WARNING: A requested CPU in '17' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
-  # perf record -C 14
-  WARNING: A requested CPU in '14' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
-  # perf record -C 14-17
-  WARNING: A requested CPU in '15-16' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
-  WARNING: A requested CPU in '15-16' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
-
-After patching, the warning is as follows
-  # perf record -C 17
-  WARNING: A requested CPU '17' in '17' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
-  # perf record -C 14
-  WARNING: A requested CPU '14' in '14' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
-  # perf record -C 15-18
-  WARNING: A requested CPU '16-18' in '15-18' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
-  WARNING: A requested CPU '15' in '15-18' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
-
-Signed-off-by: Chunxin Zang <spring.cxz@gmail.com>
-Reviewed-by: Chen Yang <yangchen11@lixiang.com>
----
- tools/perf/util/evlist.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 55a300a0977b..82fee2e29966 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2514,12 +2514,16 @@ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_lis
+On Sun, Mar 17, 2024 at 04:04:17PM -0700, Ian Rogers wrote:
+> On Fri, Mar 15, 2024 at 1:29 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Wed, Feb 28, 2024 at 08:12:10AM -0800, Ian Rogers wrote:
+> > Please clarify if this remains reviewed and should be merged as-is.
  
- 		to_test = pmu && pmu->is_core ? pmu->cpus : cpu_map__online();
- 		intersect = perf_cpu_map__intersect(to_test, user_requested_cpus);
--		if (!perf_cpu_map__equal(intersect, user_requested_cpus)) {
--			char buf[128];
+> v2. is already applied in perf-tools-next [1] so we don't need v1. Thanks,
+> Ian
  
--			cpu_map__snprint(to_test, buf, sizeof(buf));
--			pr_warning("WARNING: A requested CPU in '%s' is not supported by PMU '%s' (CPUs %s) for event '%s'\n",
--				cpu_list, pmu ? pmu->name : "cpu", buf, evsel__name(pos));
-+		if (intersect && perf_cpu_map__is_subset(user_requested_cpus, intersect)) {
-+			char buf_test[128];
-+			char buf_intersect[128];
-+
-+			cpu_map__snprint(to_test, buf_test, sizeof(buf_test));
-+			cpu_map__snprint(intersect, buf_intersect, sizeof(buf_intersect));
-+			pr_warning("WARNING: A requested CPU '%s' in '%s' is not supported by "
-+				   "PMU '%s' (CPUs %s) for event '%s'\n", buf_intersect, cpu_list,
-+				   pmu ? pmu->name : "cpu", buf_test, evsel__name(pos));
- 		}
- 		perf_cpu_map__put(intersect);
- 	}
--- 
-2.34.1
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=dd267d056fed323f1684fa52d2a864fc93ca3be0
 
+Ok, thanks for checking.
+
+- Arnaldo
