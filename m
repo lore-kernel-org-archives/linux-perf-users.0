@@ -1,71 +1,74 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9FF5B5A5
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 22:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949C2E642
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 23:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802269; cv=none; b=kxl3a5QHcuOXaKTMKMKXwaiwh0aHsA64ylh9G17XwLHDVl1Ig+1YxgQxRBnmsiuC1QbDTNYIoB/TPku7RKuLzRQ1dgZ2zM19DA+zyZW+kTEzSDvC8ap7CZNVXHjW+yBFCgQ0iybOTcDF0qUdg1eXTq5MsjAIQSgfpimifzZoCfY=
+	t=1710805234; cv=none; b=hXwmZjwscBtaybh/QGUZhTCBwXZ6d7SJbV8bb/vyjWBlqHWPEtvLY97ZZtoiHRhgv5yPzDbGp2JIBon4e/OpUq7TjzMv755AiWE9LK/0ZS7XQleem1VHjPGUWmoqTyipqgLbu7/knDDtAhV6q5v8zW0cfRihYW+D9Sj83nZyJiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710802269; c=relaxed/simple;
-	bh=RtlWf1DUjv82ac5qipkxBnNnekJF65HsPSXIESmFR1A=;
+	s=arc-20240116; t=1710805234; c=relaxed/simple;
+	bh=Yijpf6hdcX9Zz+at/Pl05PNPDv5yz2KSyc2hARlGVyA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyfUpMxWqRXn2QC7/IqpQTulTNuV5KWjKQs6K768ffntcnOsLTfDb3BcreuBHF4LdfBYdvw5qKGtfgIFIjhEwxIuAvRHAlYU3xFtvn4jE7looY6MGPG6RHWpDhGyHdjMjz4gMeGlTMbwLHzPRsUqc7gHinB9PRhzAa4jgX/UUQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v0kwI8Io; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BS1WJA0FL24wNK9aYcCpGTw7K2hoCvIzurLpFNC/IFu18PwYGBbBUn7fTEhj1EUOgLFF1d/QpvUrCqBq8pafG7XtGOemhwlhvweDOOCdGLQLTrS3oxEwz5m0kDQacRIHugXL5Rs9rMtkmJzrRYfvdfB4iTCTYiADUWZ3V7H60nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LCWzjlg+; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v0kwI8Io"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e032fc60a0so8898295ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 15:51:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LCWzjlg+"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dddb160a37so35732495ad.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 16:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710802267; x=1711407067; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1710805232; x=1711410032; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ud5yd9UEneNd5ugAHKB8CxcOGP5/5ejBm7BMlFrBXtE=;
-        b=v0kwI8IoH1QjkCtl9IByXbtkUTfh3xQigQtvscjTfd7bmAWiIIGOEfbml1yk9n38Um
-         RZlwzkFuy+diFg9aO+QCNVNaUYj5t4zlS7kG8oES08a7EAumM7ZEO890z5FBqX6mMnVz
-         fy1gehMnTQ1A0Vxvs1+bw0JHLxKnoUKztS1Ubq+MecmpTaHWjN6y8/k7d+Z79/IDUg7M
-         OjYfJ5C61mRfRAlAmj6fa1511I7FB8MZhTDDh41gCCCybc7z8GQtfC7/QoHsTXe0wHYo
-         7Fdn2d3BjgH9nbMiI/mwvJRx/EReT9MHGRFd3WFv3DWguppJwwYqDWHJZAUogHrR0r1U
-         NNWw==
+        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
+        b=LCWzjlg+zokALRFDsK+PmKtA9cJKjFrbsPh5Q76Wk+vIfEd3TCLdznZ4ulGLVJRVke
+         IVY0QTj71Q4/89HFogbjEJVNrVwm5+1/7u0ilJJD/KTFAu0ytxpDmJmhu1PyfZFl39mM
+         0OOH+UAkCncaOGAYAPcnA11gKT0DIOXlP/36U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710802267; x=1711407067;
+        d=1e100.net; s=20230601; t=1710805232; x=1711410032;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ud5yd9UEneNd5ugAHKB8CxcOGP5/5ejBm7BMlFrBXtE=;
-        b=m9uCpeyRRWDBC6KUIHHBHmcapIJQ35Bx+Xu+/JKzdu7ifVkXXKrjQUKDuHpfxzBOhL
-         /dhR82UYVwpxem3ZOAHHoPkDMSX3r+HY2H9nwQwHWflRW+2P51XMyXVKuzzYMW0wLQfe
-         GM/ZByfABwgxj4bT7rMAMYP8GtTkzFFw8El1s1ZMXsDoHsXgawDl+mfXrqqGj1QPjkC4
-         CHHdvQDirRYPvO/n055L7X+tqy3QagPc1cfQyFTxEmagifCU95r7XX7fun8DpfvTFjzH
-         Y6OKSoqTYlaYinrbZ0JYotPkn6/qAjV7FCGXTlfvwFKGkpAsZ5HvaQq8gseO8E9h5Byi
-         FKAw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1jwr3R0uUnlqLcxJZem82o5y4Ye8HbRklux60rh0XlC6P+UiCvtGuCO+TRYRzogzDbopeGJyTCOR9F3NrfEqUA/7UhRrw8NjUsASmJ8H2dA==
-X-Gm-Message-State: AOJu0YxodwwiJWOcV4DnSrE5SuPOcSKArEcqLE2nAO5FSXpGli3pCzwY
-	/XxOR2s7qyYFfkvMpdJKoeIfDd4dp2qmFukn+duy0+jCldi0D7YHVpn8rmlDjVkzMXfL+yQpxcK
-	nwg==
-X-Google-Smtp-Source: AGHT+IGkbPpdZYo3CU/OW4NGStQrIoeWxFx9gM4FUXRlaZ1U+lwcKMp6kX2beZo/T/r2hiTw5nHSDw==
-X-Received: by 2002:a17:902:ea01:b0:1e0:e14:b19d with SMTP id s1-20020a170902ea0100b001e00e14b19dmr1326325plg.18.1710802266853;
-        Mon, 18 Mar 2024 15:51:06 -0700 (PDT)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id s8-20020a170902ea0800b001def99dc4d2sm6731245plg.96.2024.03.18.15.51.06
+        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
+        b=kV8Luz9/Ud/6fmKDhacj1K0MZ7f47Dh6e42O86JMiPjO63jQzJnCuqHfduim3u/mmW
+         uvOUjItBPQqMP1QHMVhheNi+oSJBMGq+lGbFseZdTcPCcSg3MYLprpDl5zI/jgwOFZcV
+         S+W5eGW/cWZDnIr+RXIOpyds6AqCS1wYMimEUS8m/ua0qZWHENK9p81GZpZnvOZbqgmm
+         d8eIxGldqG563+b7RkI8T5U+c2EPfMEQSrVfZLSlxY9HyucBRsWf9CErseBjS5IxXEbZ
+         alAkxV03AkAvm45J85ukYv+XTxmwGxYWLyKC6qZVYpJ2oqwKjnxCh2BLH/cpVSLg0vnq
+         j4GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUh1K73zwhg/3BNdk60MhWLmK+pVb4yZA0Ko/EBlEtLasPMsSnxzotPUY2b+F3cf4pZ8abF2XlrLiM0Ka6Bf47gb0R5i8DALqlPl2ElCvHOrQ==
+X-Gm-Message-State: AOJu0Yx1ymWIHADMDvWgjJ/3PLjU5xm2ArXr7H1fmrIN90XrBQ/COabv
+	3ccQkdpN1414mIC+RwRqAlPKmjcItpDeVWW5SEmh92LGLEX4qHjVYTvIJ4rmIA==
+X-Google-Smtp-Source: AGHT+IE6ZJkwZUoHdQ1XKk7dfD4fL/GhYshEq7O4lP3zklm4arTM8pnOn3Dx/fJ9+Pp6EnYJuQnZ2g==
+X-Received: by 2002:a17:902:b68e:b0:1e0:f8:17ca with SMTP id c14-20020a170902b68e00b001e000f817camr1076507pls.39.1710805231878;
+        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902a50700b001e0287592casm2566226plq.295.2024.03.18.16.40.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 15:51:06 -0700 (PDT)
-Date: Mon, 18 Mar 2024 22:51:03 +0000
-From: Mingwei Zhang <mizhang@google.com>
-To: Sean Christopherson <seanjc@google.com>
+        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
+Date: Mon, 18 Mar 2024 16:40:30 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Erick Archer <erick.archer@gmx.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 3/3] KVM: VMX: Disable LBR virtualization if the CPU
- doesn't support LBR callstacks
-Message-ID: <ZfjFV0W6-OCgugJl@google.com>
-References: <20240307011344.835640-1-seanjc@google.com>
- <20240307011344.835640-4-seanjc@google.com>
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202403181635.46CBABD994@keescook>
+References: <20240317164442.6729-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,49 +77,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240307011344.835640-4-seanjc@google.com>
+In-Reply-To: <20240317164442.6729-1-erick.archer@gmx.com>
 
-On Wed, Mar 06, 2024, Sean Christopherson wrote:
-> Disable LBR virtualization if the CPU doesn't support callstacks, which
-> were introduced in HSW (see commit e9d7f7cd97c4 ("perf/x86/intel: Add
-> basic Haswell LBR call stack support"), as KVM unconditionally configures
-> the perf LBR event with PERF_SAMPLE_BRANCH_CALL_STACK, i.e. LBR
-> virtualization always fails on pre-HSW CPUs.
+On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
 > 
-> Simply disable LBR support on such CPUs, as it has never worked, i.e.
-> there is no risk of breaking an existing setup, and figuring out a way
-> to performantly context switch LBRs on old CPUs is not worth the effort.
+> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
+> this structure ends in a flexible array:
 > 
-> Fixes: be635e34c284 ("KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES")
-> Cc: Mingwei Zhang <mizhang@google.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-Tested-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+> struct rapl_pmus {
+> 	[...]
+> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
+> };
 > 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 2a7cd66988a5..25a7652bee7c 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7859,7 +7859,15 @@ static __init u64 vmx_get_perf_capabilities(void)
->  
->  	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
->  		x86_perf_get_lbr(&vmx_lbr_caps);
-> -		if (vmx_lbr_caps.nr)
-> +
-> +		/*
-> +		 * KVM requires LBR callstack support, as the overhead due to
-> +		 * context switching LBRs without said support is too high.
-> +		 * See intel_pmu_create_guest_lbr_event() for more info.
-> +		 */
-> +		if (!vmx_lbr_caps.has_callstack)
-> +			memset(&vmx_lbr_caps, 0, sizeof(vmx_lbr_caps));
-> +		else if (vmx_lbr_caps.nr)
->  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
->  	}
->  
-> -- 
-> 2.44.0.278.ge034bb2e1d-goog
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc() function.
 > 
+> This way, the code is more readable and safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+
+Thanks!
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+I was inspired to come up with a Coccinelle script to find this pattern.
+This seems to do it, though it also removes the blank line. I'm not sure
+how to stop it from doing that. I'm running this treewide to see if I
+can find others...
+
+// Options: --no-includes --include-headers
+
+@allocation@
+type SIZE_TYPE;
+identifier SIZE;
+type PTR_TYPE;
+PTR_TYPE *PTR;
+identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+@@
+
+	SIZE_TYPE SIZE;
+	...
+	PTR = ALLOC(..., SIZE, ...)
+
+@structure@
+type allocation.PTR_TYPE;
+type FLEX_TYPE;
+identifier FLEX;
+@@
+
+	PTR_TYPE {
+		...
+ 		FLEX_TYPE FLEX[];
+		...
+	};
+
+@single_shot_sizing@
+type allocation.SIZE_TYPE;
+identifier allocation.SIZE;
+type allocation.PTR_TYPE;
+PTR_TYPE *allocation.PTR;
+identifier allocation.ALLOC;
+type structure.FLEX_TYPE;
+identifier structure.FLEX;
+expression COUNT;
+@@
+
+- 	SIZE_TYPE SIZE;
+ 	... when != SIZE
+-	SIZE = (\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)));
+ 	... when != SIZE
+ 	PTR = ALLOC(...,
+-			SIZE
++			struct_size(PTR, FLEX, COUNT)
+ 			, ...)
+ 	... when != SIZE
+
+@reused_sizing@
+type allocation.SIZE_TYPE;
+identifier allocation.SIZE;
+type allocation.PTR_TYPE;
+PTR_TYPE *allocation.PTR;
+identifier allocation.ALLOC;
+type structure.FLEX_TYPE;
+identifier structure.FLEX;
+expression COUNT;
+@@
+
+  	SIZE_TYPE SIZE;
+ 	...
+	SIZE =
+-		(\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)))
++		struct_size(PTR, FLEX, COUNT)
+	;
+ 	... when != SIZE
+ 	PTR = ALLOC(..., SIZE , ...)
+
+
+-- 
+Kees Cook
