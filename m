@@ -1,363 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C5A59B74
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 22:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36D35B03A
+	for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 22:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799936; cv=none; b=M1VwzjqdIK2tfGwzFr6Su+76beB+lxViqYRbX7eR1qo8xYDp8l/xcCrhcj8yDYLCU53RVVcEqrAbSoGdQbWWa6K77yaIYEYWW37OihkW+g28bDODr0ER1K6+LBJxVjlbsBI7yhBXgfI1nlNMMh/qXTp77/K1N/OW2WChmfuSotg=
+	t=1710802208; cv=none; b=EnTuSveXU1ZymfJFBmtJ1hRxzq1PatJPVjKRI7lVg6MoTY2iqtSsULPrsXRGKw5ClQFS7JkziaLetoB33QwoNa8h7VL8oasPiZJC/J/UHT5iihjC1h6s8M+iVXsjU78O8NqwY11qpNS5WeZ0v6LQtZAuvhXY54rg8gPoExnCPOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799936; c=relaxed/simple;
-	bh=5HtQ4AVIdN1w70JfGzYISTMow/0jZ9i/DgtEa+71NFQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pFEJcywuG6MuSkPsItZatxAw6VzBz0LqvAtj5Gkwx4G/qfSwP9np4l6oGfcwrjnFJjpGrjnLyMsL08zzaB8iF/09hQ8QFNOd5vMuMT13kvomuXowlRaR8ZJ38CS7U8XQ5XA3iAVJ2eqT5MV1ZrJRVwzJuOlMmqtnG99idlYt0IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+eKiykR; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710802208; c=relaxed/simple;
+	bh=j2F5c9awjwHydGFsrc6IensBkERJfcx5SEh0tNqi3PE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ALxD1HvF1/kBRhwZSRbpXD5ep9MdEbeJd1KpFY5d4epz0cHiI9V2FHl5IZ1JQcRJfFVsimyFp2uxJL2RXWIMhIqaslOf4l22BNOsP80nHaU2kTJHPjw7PkSuZfALfWpXWIyU9aYFK5HL08XxqQ17Z5A1SApotj5y9/fy+ZGK3qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZrKwcPLE; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+eKiykR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710799934; x=1742335934;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5HtQ4AVIdN1w70JfGzYISTMow/0jZ9i/DgtEa+71NFQ=;
-  b=D+eKiykR35OYqqvCHXnBWxMmZBnZfeVgcceTJW+u5sV2PIKFZDQvwC6N
-   BYfCq8NiGXiu/noUtAOAZ2c7/vAsJAuePbESdX/wK4cjQVgei1uxN0jqY
-   zDIGWldZLTYZi4jPOeX02sinyVSGtmW1UmfC8NOiuqEUPP5QZZf/Ngxw5
-   UdrkCC/wusEtTVcOBxfOP1rNcZjwib6/P1BEcgxJOwy1gXYG1uHpBD+WC
-   lcUopa0QDzhZ7dftx4rMMTot0mcD6TWbCV+6hqsZhb9EyebQOF0kNc5lX
-   TFbCk8mBMwieWej2iPyXwP2TsTzdSe16NGd4gqlLyd5zXCvzRARk71guk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5854507"
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="5854507"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 15:12:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,135,1708416000"; 
-   d="scan'208";a="13648408"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 15:12:11 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 2/2] perf, script, capstone: Add support for -F +brstackdisasm
-Date: Mon, 18 Mar 2024 15:12:05 -0700
-Message-ID: <20240318221206.30089-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240318221206.30089-1-ak@linux.intel.com>
-References: <20240318221206.30089-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZrKwcPLE"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e00b1c2684so15676745ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 15:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710802206; x=1711407006; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MNWbkAuEkPYJlyHqAZD/CIqyfffUNvIYkFP7cLrf3Yw=;
+        b=ZrKwcPLEDQsam1vj+NF+OrpFXsHDLTYIJzo3Of5lQFSrt5zoGvxdn9L4RMJAmfQyzp
+         D77ocX+b1YI//05iB+176cF6VN2BLRvkukGrZpWsd42AW9q/eN8+jRUIeBdDI8gIWXtj
+         rOSx9hxS5pRif5GzB1SutFY3JjEdy/JhlMpBhIsRbosN6ohMp3BBM9q4WBStnEPG3u6M
+         2LUK8KSlnpU199035gZ3H38yktJs5SBhtH4t0bwLXjayTNl0UNByAGt6JLPQDkPgts5T
+         UpgH25XDMx7o/622c7J6aZ5vkk/EUQFCLKZ+QYTo6lYxKj8ZUxhcvw8PDn2GGFLwpttD
+         K7Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710802206; x=1711407006;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MNWbkAuEkPYJlyHqAZD/CIqyfffUNvIYkFP7cLrf3Yw=;
+        b=JU36mb/9ZJsCTyD5eb5jnBS1LPmk3xi7eF56AG7Kfh8eCvibf9HOhg/7yILaujsxnm
+         n/j8xu14O91M319KZxywfuRxoRtbNwSLR168vv8zOP4+wLlyT6lQADEjYKe9Fyv5pLoq
+         vmtiboblUfGstnbM/Saiy3uprBjGP5+odRkrp9vJxl7p6iPI8+kr2tPS4/VJ0e38sgcx
+         1mkxdT1ZqTkVIL28xgUYLuRi0cVtImChMsxfaHwQPrEOogsaJabYaV8AQfBd7RjR5RKz
+         5nQtVaAAju5ycjjuF+ATg1tpUx83BNXTLN5jpp0BTiCyJbeoPCQRCZ7Kz1ML+yyPljga
+         /Wiw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8XO87A+jc/ygXtjutuOgMOJX7XHmSH2wkaNph09ZPfOyXczpiWdWwGFKrbJF2SfYHRHCj7UrQ+U+2uccreAdecVxV1C9+IV6pjVEOnOWTbQ==
+X-Gm-Message-State: AOJu0YyiV2Lo1ygBUATXMmlTk7uH9/jUkserCkGjaBIJhJ0YtdczhnM8
+	Z7cJHCsNvAzsPn9v3ijUF/vr5Obj5B8AIqA5Pqq91fjXP2ukLQSKQmP+OrO2Pg==
+X-Google-Smtp-Source: AGHT+IH2uub6actYUAG+gi1xsVDB1ZTBcKAecNEMuqQUMmgJWl3PcNTonWASodNB0f+Z/PZGYA/4vg==
+X-Received: by 2002:a17:903:1c9:b0:1de:f32d:f5ba with SMTP id e9-20020a17090301c900b001def32df5bamr12667167plh.42.1710802205857;
+        Mon, 18 Mar 2024 15:50:05 -0700 (PDT)
+Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
+        by smtp.gmail.com with ESMTPSA id w14-20020a170902a70e00b001db66f3748fsm3462466plq.182.2024.03.18.15.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 15:50:05 -0700 (PDT)
+Date: Mon, 18 Mar 2024 22:50:01 +0000
+From: Mingwei Zhang <mizhang@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH 1/3] KVM: VMX: Snapshot LBR capabilities during module
+ initialization
+Message-ID: <ZfjFGZvy_3gH1UjV@google.com>
+References: <20240307011344.835640-1-seanjc@google.com>
+ <20240307011344.835640-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240307011344.835640-2-seanjc@google.com>
 
-Support capstone output for the -F +brstackinsn branch dump.
-The new output is enabled with the new field brstackdisasm
-This was possible before with --xed, but now also allow
-it for users that don't have xed using the builtin capstone support.
+On Wed, Mar 06, 2024, Sean Christopherson wrote:
+> Snapshot VMX's LBR capabilities once during module initialization instead
+> of calling into perf every time a vCPU reconfigures its vPMU.  This will
+> allow massaging the LBR capabilities, e.g. if the CPU doesn't support
+> callstacks, without having to remember to update multiple locations.
+> 
+> Opportunistically tag vmx_get_perf_capabilities() with __init, as it's
+> only called from vmx_set_cpu_caps().
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+Reviewed-by: Mingwei Zhang <mizhang@google.com>
 
-Before:
-
-perf record -b emacs -Q --batch '()'
-perf script -F +brstackinsn
-...
-          emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
-        00007f0ab2d17105        insn: 73 51
-        00007f0ab2d17107        insn: 48 89 c1
-        00007f0ab2d1710a        insn: 48 39 ca
-        00007f0ab2d1710d        insn: 73 96
-        00007f0ab2d1710f        insn: 48 8d 04 11
-        00007f0ab2d17113        insn: 48 d1 e8
-        00007f0ab2d17116        insn: 49 8d 34 c1
-        00007f0ab2d1711a        insn: 44 3a 06
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        insn: 48 8d 50 01
-        00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        insn: 48 39 ca
-        00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
-
-After (perf must be compiled with capstone):
-
-perf script -F +brstackdisasm
-
-...
-           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
-        00007f0ab2d17107        movq %rax, %rcx
-        00007f0ab2d1710a        cmpq %rcx, %rdx
-        00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
-        00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
-        00007f0ab2d17113        shrq $1, %rax
-        00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
-        00007f0ab2d1711a        cmpb (%rsi), %r8b
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        leaq 1(%rax), %rdx
-        00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        cmpq %rcx, %rdx
-        00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
----
-
-v2: Use brstackdisasm instead of keying of disasm
-v3: Fix fallback
----
- tools/perf/Documentation/perf-script.txt |  7 +++-
- tools/perf/builtin-script.c              | 32 +++++++++++----
- tools/perf/util/dump-insn.h              |  1 +
- tools/perf/util/print_insn.c             | 52 ++++++++++++++++++++++++
- tools/perf/util/print_insn.h             |  3 ++
- 5 files changed, 86 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 005e51df855e..ff086ef05a0c 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,9 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
-         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
--        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
- 
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-@@ -257,6 +257,9 @@ OPTIONS
- 	can’t know the next sequential instruction after an unconditional branch unless
- 	you calculate that based on its length.
- 
-+	brstackdisasm acts like brstackinsn, but will print disassembled instructions if
-+	perf is built with the capstone library.
-+
- 	The brstackoff field will print an offset into a specific dso/binary.
- 
- 	With the metric option perf script can compute metrics for
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 0299b1ed8744..59933bd52e0f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -136,6 +136,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- 	PERF_OUTPUT_DISASM          = 1ULL << 42,
-+	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
- };
- 
- struct perf_script {
-@@ -210,6 +211,7 @@ struct output_option {
- 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
- 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
-+	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
- };
- 
- enum {
-@@ -510,7 +512,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
-+	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
-+	    && !allow_user_set &&
- 	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
- 		       "Hint: run 'perf record -b ...'\n");
-@@ -1162,6 +1165,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 	return ret;
- }
- 
-+static const char *any_dump_insn(struct perf_event_attr *attr __maybe_unused,
-+			struct perf_insn *x, uint64_t ip,
-+			u8 *inbuf, int inlen, int *lenp)
-+{
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+	if (PRINT_FIELD(BRSTACKDISASM)) {
-+		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-+		if (p)
-+			return p;
-+	}
-+#endif
-+	return dump_insn(x, ip, inbuf, inlen, lenp);
-+}
-+
- static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
-@@ -1170,7 +1187,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
--			      dump_insn(x, ip, inbuf, len, &ilen));
-+			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
- 
- 	if (PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += fprintf(fp, "ilen: %d\t", ilen);
-@@ -1262,6 +1279,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		nr = max_blocks + 1;
- 
- 	x.thread = thread;
-+	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
- 	printed += fprintf(fp, "%c", '\n');
-@@ -1313,7 +1331,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			} else {
- 				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
--						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
- 				if (PRINT_FIELD(BRSTACKINSNLEN))
- 					printed += fprintf(fp, "\tilen: %d", ilen);
- 				printed += fprintf(fp, "\n");
-@@ -1361,7 +1379,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			goto out;
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1372,7 +1390,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	for (off = 0; off <= end - start; off += ilen) {
- 		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
--				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
- 		if (PRINT_FIELD(BRSTACKINSNLEN))
- 			printed += fprintf(fp, "\tilen: %d", ilen);
- 		printed += fprintf(fp, "\n");
-@@ -1534,7 +1552,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, "\t\t");
- 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-+	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
- 	return printed;
-@@ -3940,7 +3958,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-+		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..4a7797dd6d09 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -11,6 +11,7 @@ struct thread;
- struct perf_insn {
- 	/* Initialized by callers: */
- 	struct thread *thread;
-+	struct machine *machine;
- 	u8	      cpumode;
- 	bool	      is64bit;
- 	int	      cpu;
-diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index 32dc9dad9cf2..8825330d435f 100644
---- a/tools/perf/util/print_insn.c
-+++ b/tools/perf/util/print_insn.c
-@@ -12,6 +12,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "print_insn.h"
-+#include "dump-insn.h"
- #include "map.h"
- #include "dso.h"
- 
-@@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
- 	return 0;
- }
- 
-+static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-+{
-+	struct addr_location al;
-+	bool printed = false;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-+		    al.sym &&
-+		    al.addr < al.sym->end) {
-+			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-+					al.sym->name, al.addr - al.sym->start, op->imm);
-+			printed = true;
-+		}
-+		addr_location__exit(&al);
-+	}
-+
-+	if (!printed)
-+		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-+}
-+
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+			 u8 *inbuf, int inlen, int *lenp)
-+{
-+	int ret;
-+	int count;
-+	cs_insn *insn;
-+	csh cs_handle;
-+
-+	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-+	if (ret < 0)
-+		return NULL;
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(x->machine, "x86"))
-+			dump_insn_x86(x->thread, &insn[0], x);
-+		else
-+			snprintf(x->out, sizeof(x->out), "%s %s",
-+					insn[0].mnemonic, insn[0].op_str);
-+		*lenp = insn->size;
-+		cs_free(insn, count);
-+	} else {
-+		return NULL;
-+	}
-+	return x->out;
-+}
-+
- static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
- 			     cs_insn *insn, FILE *fp)
- {
-diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-index 6447dd41b543..c2a6391a45ce 100644
---- a/tools/perf/util/print_insn.h
-+++ b/tools/perf/util/print_insn.h
-@@ -8,9 +8,12 @@
- struct perf_sample;
- struct thread;
- struct machine;
-+struct perf_insn;
- 
- size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
- 				struct machine *machine, FILE *fp, struct addr_location *al);
- size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+                         u8 *inbuf, int inlen, int *lenp);
- 
- #endif /* PERF_PRINT_INSN_H */
--- 
-2.44.0
-
+>  arch/x86/kvm/vmx/pmu_intel.c | 2 +-
+>  arch/x86/kvm/vmx/vmx.c       | 9 +++++----
+>  arch/x86/kvm/vmx/vmx.h       | 2 ++
+>  3 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 12ade343a17e..be40474de6e4 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -535,7 +535,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+>  	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
+>  	if (cpuid_model_is_consistent(vcpu) &&
+>  	    (perf_capabilities & PMU_CAP_LBR_FMT))
+> -		x86_perf_get_lbr(&lbr_desc->records);
+> +		memcpy(&lbr_desc->records, &vmx_lbr_caps, sizeof(vmx_lbr_caps));
+>  	else
+>  		lbr_desc->records.nr = 0;
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 7a74388f9ecf..2a7cd66988a5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -217,6 +217,8 @@ module_param(ple_window_max, uint, 0444);
+>  int __read_mostly pt_mode = PT_MODE_SYSTEM;
+>  module_param(pt_mode, int, S_IRUGO);
+>  
+> +struct x86_pmu_lbr __ro_after_init vmx_lbr_caps;
+> +
+>  static DEFINE_STATIC_KEY_FALSE(vmx_l1d_should_flush);
+>  static DEFINE_STATIC_KEY_FALSE(vmx_l1d_flush_cond);
+>  static DEFINE_MUTEX(vmx_l1d_flush_mutex);
+> @@ -7844,10 +7846,9 @@ static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+>  	vmx_update_exception_bitmap(vcpu);
+>  }
+>  
+> -static u64 vmx_get_perf_capabilities(void)
+> +static __init u64 vmx_get_perf_capabilities(void)
+>  {
+>  	u64 perf_cap = PMU_CAP_FW_WRITES;
+> -	struct x86_pmu_lbr lbr;
+>  	u64 host_perf_cap = 0;
+>  
+>  	if (!enable_pmu)
+> @@ -7857,8 +7858,8 @@ static u64 vmx_get_perf_capabilities(void)
+>  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+>  
+>  	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
+> -		x86_perf_get_lbr(&lbr);
+> -		if (lbr.nr)
+> +		x86_perf_get_lbr(&vmx_lbr_caps);
+> +		if (vmx_lbr_caps.nr)
+>  			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
+>  	}
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 65786dbe7d60..cc10df53966e 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -109,6 +109,8 @@ struct lbr_desc {
+>  	bool msr_passthrough;
+>  };
+>  
+> +extern struct x86_pmu_lbr vmx_lbr_caps;
+> +
+>  /*
+>   * The nested_vmx structure is part of vcpu_vmx, and holds information we need
+>   * for correct emulation of VMX (i.e., nested VMX) on this vcpu.
+> -- 
+> 2.44.0.278.ge034bb2e1d-goog
+> 
