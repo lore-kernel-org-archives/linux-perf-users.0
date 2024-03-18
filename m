@@ -1,173 +1,137 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF241374C4
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Mar 2024 11:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4236F38382;
+	Mon, 18 Mar 2024 12:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710761623; cv=none; b=Vj5n2M7bpIWQBYIEsMQJ046PRgxLhzLfd8Gx7EeIoPKbkxaNPRXXrcPoD7AD21zn1GmDqV4PAwOyslWGsHJ8EW/ZJLlI9Q8jjUL1euE0Iiop20JQ4D5PWyvaIts/NvnKJFO4Nv2feFe2wuFKJKo9+BDDdkPOdgNw8QVg8Z/x1TI=
+	t=1710763933; cv=none; b=JKWpCfNCTElfzzEOZYFiljsAjrfEwdpAHuqnpPE+GuQewcJEGDfS94N4uC+oKkacaqOufQqyipJ2OI8rrX9IGUguODEQXc5y1KzhBMWM2LaYwHmbunLWABwNTlf9oh21XA9dKAhdjtQLZsE7bRvBvhy6g8S5yw92vgb4W+ToiTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710761623; c=relaxed/simple;
-	bh=zmJ3Wj0XsR8z7CzLzeX4wJNvc9O/HMo2JD/4HLQk6Po=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Tz5Ckns3ohBwR8Kuh22osDby4rT1+6smGcPlmaELEY9pKHjVf4hpz0X7AJcNsPj+fgPr67N1znJXESqqGbKuFD+ujA6st4gQW1Iyr+Itlqh56m953OELdvO2JkTet0XoJvRZz3mEDnkmxsF/U2U3B58tm6SRCOo78NVQ+rXnIEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bKyio+GX; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1710763933; c=relaxed/simple;
+	bh=qyMSm9yuXlCK1ICWk15XRGC74xl9VS7mkrc7PJHxCUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tnPyILkASjhvChX+qt6KaxnEdvm4dGePYZ5Xs1GhdCRvyTVleVrjJHGfro24bmD/PGwK+JBbgKa3P2uCqMyhsymaabiNb6oNh1PDLjLcxOFdJ1xIgRyDkk7kUwMp9rlI/X/8PGnD8Ru2PF5v2lrumG2YxxfL6GBMr/40NfWKiFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PasgsoSL; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bKyio+GX"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42I4Gqh7023380;
-	Mon, 18 Mar 2024 11:33:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=xeTKzwCl4Wi3erLetE/p4EapN8V6yA4fDZLbO4gQw28=;
- b=bKyio+GXD2Hi06ueF611k6NImrXL6yeuxUgCcGYNTwJnp7tSsih0uit/1MdA12bMAi32
- 2b0wHtwNrPTCh562Z4a+8u5SX9QL7psBiRh3DfaCQAJxB/7pzrijoplDS5mpirEGj99R
- 6iuJiG1e5b8u7Gn65YiaSNvr73M7f0EzNlpdPy2Pw0C54P0k4liFFY5P+/Hzk/14HD3o
- 6KCIw0Bx6Wb17KHMT8GnsxupEQwoVXFrRwx+v1dlCx6pUSpKMVL/AcA3Q/h0yePS0124
- iuAZc05Pb891jzkxqBejEz1vs6rGi/L6AVKwA/Rd/dFkHtRhrN3MtQeMIPzQJt8KVs+K gg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wwabf1kcr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 11:33:25 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42IBMhsO029469;
-	Mon, 18 Mar 2024 11:33:25 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wwabf1kcj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 11:33:25 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42I9wlhe011539;
-	Mon, 18 Mar 2024 11:33:23 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8krdjp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 11:33:23 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42IBXI2V34800126
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 18 Mar 2024 11:33:20 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4677A2005A;
-	Mon, 18 Mar 2024 11:33:18 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3D40720043;
-	Mon, 18 Mar 2024 11:33:16 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.109.215.91])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 18 Mar 2024 11:33:16 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PasgsoSL"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e00b1c2684so9617695ad.0;
+        Mon, 18 Mar 2024 05:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710763931; x=1711368731; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=81j1Tz/Yqk9Itf6abMwUUdLtUi04c0EJZ65oWIYPoPs=;
+        b=PasgsoSLQ/2kZPQr/BXhqFqrWAN7L9RFkIW1PpGr4Z2kzc6fLRM2osDkWdm5QP+bE7
+         vqU91vLAyXEAibiZbzvwXilMmdLLSi4rKNlIlVRGOZKXcDBi4CovqRreEU/fTIHl4VPW
+         InaGiDvEa59ztCQnBlyZLX4OHZS520qNcN9PtUbm3whtbCvoduJvhmnVhmqFpILR/vVQ
+         rXsviQ3i23q+NmrYlZcSdh/d6pji9kAKPaArK8RJK01iXjhY0Y35cwTK8T/jRvYcBzxx
+         uIWy2EXyS+O6Efk8RIkJOVX3YfVFu4YtIgBMw08LyvmbXM/LckYdN5T3aca3EQWlgL9G
+         6lQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710763931; x=1711368731;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=81j1Tz/Yqk9Itf6abMwUUdLtUi04c0EJZ65oWIYPoPs=;
+        b=BtjJ63HywOT37HeXFODN7ApBzZ1mOXSC1nxF1Es7CjoZY0vWpxb9Ca4yeIb6CfUskP
+         FKJkndm/Ms7LA3NRKbmu7xbnq2eBPJvqQ1xKXuiaiwTmS7n2MYrRNKy+gzMPGCg584Nv
+         JaZYEMzR8KLeuSgEaXgnZyKWNuLodlgghOKxIxH+BV3Ur+zVT+wxJdr/plbhu+r9DXJ/
+         424h2iI8Q1wab/G4k1jCQhPrPs66S3FBcBxT07/JK2E7WASbjFwkd0tokq5WSKIjDuYv
+         plm/NuF2MP8jZ9VqmUvR6qQWf17CR/j4JFpvDTnunQLo/cido+bpftxBojxOpJovJa8S
+         0VAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRK5LJvGafdZ3x2CKGVJxlf+U7rt6DTT691/Zsm4isgnxu0DDRXXVMAlk61gM4688S5NunZVHI3SNhN0H9XxiLwFXPkv7zLzvQsb+6/wi4CLpunGHXqZjzQ7Xwy045m69MJkbVF/tUr+xFwCqZBg==
+X-Gm-Message-State: AOJu0Yzcub+Md0Dr8/rKbLTyovbIuyO7HDNBqaHJXJqXnjCt575nMzGm
+	Z1IGD7AVo2z/zZgkYlxG1kFecdNwdyCTA333c+2YJntm4GJdxFmx
+X-Google-Smtp-Source: AGHT+IG4m45MJ0D7WcceUJLDXwwhF8XuAcMN82ScuuAcZr2qvqDvfyrMu7hXxyWHCtgydnnzHYL/vQ==
+X-Received: by 2002:a17:902:d512:b0:1e0:1355:c6b9 with SMTP id b18-20020a170902d51200b001e01355c6b9mr4077784plg.32.1710763931414;
+        Mon, 18 Mar 2024 05:12:11 -0700 (PDT)
+Received: from pc-mac.company.local (014136220210.static.ctinets.com. [14.136.220.210])
+        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b001e01735f74asm2670673plh.128.2024.03.18.05.12.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 05:12:11 -0700 (PDT)
+From: Chunxin Zang <spring.cxz@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com
+Cc: yangchen11@lixiang.com,
+	zhouchunhua@lixiang.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zangchunxin@lixiang.com,
+	Chunxin Zang <spring.cxz@gmail.com>
+Subject: [PATCH] perf evlist: Fix the warning logic about warn_user_request_cpu
+Date: Mon, 18 Mar 2024 20:11:50 +0800
+Message-Id: <20240318121150.1552888-1-spring.cxz@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: [PATCH 2/3] tools/erf/util/annotate: Set register_char and
- memory_ref_char for powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20240309174326.GU19790@gate.crashing.org>
-Date: Mon, 18 Mar 2024 17:03:04 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, namhyung@kernel.org,
-        kjain@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C25ABF94-218E-4B9D-AE43-3B522908EA57@linux.vnet.ibm.com>
-References: <20240309072513.9418-1-atrajeev@linux.vnet.ibm.com>
- <20240309072513.9418-3-atrajeev@linux.vnet.ibm.com>
- <20240309174326.GU19790@gate.crashing.org>
-To: Segher Boessenkool <segher@kernel.crashing.org>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IUNOEUg12OKHaVOkYpq7O4TMrN6w5QfD
-X-Proofpoint-ORIG-GUID: haY41AjGA1UDLcEAFfuifGMJ8FFWIMcO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_02,2024-03-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=918
- lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0
- impostorscore=0 bulkscore=0 spamscore=0 clxscore=1011 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403180086
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+The old logic in evlist__warn_user_requested_cpus incorrectly output
+the warning message when I run 'perf record -C xxx' command on my
+context(the cpu has 8 performance-cores and 8 efficient-cores.).
 
+The old warning like this:
+  # perf record -C 17
+  WARNING: A requested CPU in '17' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
+  # perf record -C 14
+  WARNING: A requested CPU in '14' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
+  # perf record -C 14-17
+  WARNING: A requested CPU in '15-16' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
+  WARNING: A requested CPU in '15-16' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
 
-> On 09-Mar-2024, at 11:13=E2=80=AFPM, Segher Boessenkool =
-<segher@kernel.crashing.org> wrote:
->=20
-> All instructions with a primary opcode from 32 to 63 are memory insns,
-> and no others.  It's trivial to see whether it is a load or store, too
-> (just bit 3 of the insn).  Trying to parse disassembled code is much
-> harder, and you easily make some mistakes here.
+After patching, the warning is as follows
+  # perf record -C 17
+  WARNING: A requested CPU '17' in '17' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
+  # perf record -C 14
+  WARNING: A requested CPU '14' in '14' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
+  # perf record -C 15-18
+  WARNING: A requested CPU '16-18' in '15-18' is not supported by PMU 'cpu_atom' (CPUs 16-23) for event 'cycles:P'
+  WARNING: A requested CPU '15' in '15-18' is not supported by PMU 'cpu_core' (CPUs 0-15) for event 'cycles:P'
 
-Hi Segher
+Signed-off-by: Chunxin Zang <spring.cxz@gmail.com>
+Reviewed-by: Chen Yang <yangchen11@lixiang.com>
+---
+ tools/perf/util/evlist.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Thanks for checking the patch and sharing review comments.
-
-Ok, I am checking on this part.
-
->=20
-> On Sat, Mar 09, 2024 at 12:55:12PM +0530, Athira Rajeev wrote:
->> To identify if the instruction has any memory reference,
->> "memory_ref_char" field needs to be set for specific architecture.
->> Example memory instruction:
->> lwz     r10,0(r9)
->>=20
->> Here "(" is the memory_ref_char. Set this as part of arch->objdump
->=20
-> What about "lwzx r10,0,r19", semantically exactly the same =
-instruction?
-> There is no paren in there.  Not all instructions using parens are
-> memory insns, either, not in assembler code at least.
-Yes, right Segher.
-
-So, for the basic foundational patches, I targeted for instructions of =
-this form (D form)
-There are still samples, which comes as unknown and in that, X form =
-instructions also needs to be checked.
-Targeted to first get these basic foundational patches to add support in =
-powerpc and get the remaining =E2=80=9Cunknowns=E2=80=9D addressed in =
-follow up.
-But yes, X-form instructions also will be covered as part of the changes =
-needed for powerpc.
-
->=20
->> To get register number and access offset from the given instruction,
->> arch->objdump.register_char is used. In case of powerpc, the register
->> char is "r" (since reg names are r0 to r31). Hence set register_char
->> as "r".
->=20
-> cr0..cr7
-> r0..r31
-> f0..f31
-> v0..v31
-> vs0..vs63
-> and many other spellings.  Plain "0..63" is also fine.
-Ok=20
->=20
-> The "0" in my lwzx example is a register field as well (and it stands
-> for "no register", not for "r0").  Called "(RA|0)" usually =
-(incidentally,
-> see the parens there as well, oh joy).
->=20
-> Don't you have the binary code here as well, not just a disassembled
-> representation of it?  It is way easier to just use that, and you'll =
-get
-> much better results that way :-)
->=20
-
-Thanks Segher for the suggestion on this. I will check on this as well.
-
-Thanks
-Athira Rajeev
-
->=20
-> Segher
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 55a300a0977b..82fee2e29966 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -2514,12 +2514,16 @@ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_lis
+ 
+ 		to_test = pmu && pmu->is_core ? pmu->cpus : cpu_map__online();
+ 		intersect = perf_cpu_map__intersect(to_test, user_requested_cpus);
+-		if (!perf_cpu_map__equal(intersect, user_requested_cpus)) {
+-			char buf[128];
+ 
+-			cpu_map__snprint(to_test, buf, sizeof(buf));
+-			pr_warning("WARNING: A requested CPU in '%s' is not supported by PMU '%s' (CPUs %s) for event '%s'\n",
+-				cpu_list, pmu ? pmu->name : "cpu", buf, evsel__name(pos));
++		if (intersect && perf_cpu_map__is_subset(user_requested_cpus, intersect)) {
++			char buf_test[128];
++			char buf_intersect[128];
++
++			cpu_map__snprint(to_test, buf_test, sizeof(buf_test));
++			cpu_map__snprint(intersect, buf_intersect, sizeof(buf_intersect));
++			pr_warning("WARNING: A requested CPU '%s' in '%s' is not supported by "
++				   "PMU '%s' (CPUs %s) for event '%s'\n", buf_intersect, cpu_list,
++				   pmu ? pmu->name : "cpu", buf_test, evsel__name(pos));
+ 		}
+ 		perf_cpu_map__put(intersect);
+ 	}
+-- 
+2.34.1
 
