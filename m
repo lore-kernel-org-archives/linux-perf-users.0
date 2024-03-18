@@ -1,40 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0C858201;
-	Mon, 18 Mar 2024 21:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9D158237;
+	Mon, 18 Mar 2024 21:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710796825; cv=none; b=vAsj5YTwY5DSOKUHJWVV5rWgaA1DdgdZLZr3nh+Gz7baGSXweI0C3QSfh68sWb6VcIW1n2XnUsT9O5XpD4qhlomvbhA/kBMHATERgcWRIuvgAyQznjTMcML6iMD1c6SDKaYAH5TVP2E0H8XQKLatcwTkOw5lil2W2tTVrDeUCJg=
+	t=1710797125; cv=none; b=AG9sX2dcbaXk5iMpRp6Phaq2lkY7oyjV8UCZ/By0vViGhvyCfwnFl6b1xFDpkPYcwDHe9mXHSWYXuGsaJFpxryTwkdwzl5Ii8FpylKya0yj0ByTegFVA1PPS3yDzFeB9AFMT5MRY55rsrnUVPivDR7wcfY2tv8dUqOZMjc875cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710796825; c=relaxed/simple;
-	bh=FkbiyeuX+QmNZ+8tFY9VNUuhycImKMM3RYIiML/0zjc=;
+	s=arc-20240116; t=1710797125; c=relaxed/simple;
+	bh=EgN5gu2wMjSIP0mbe5rfnALGps7n0Wz607GxZRvXqDc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jy5k98rfsPMEKcI+Sh4cy+ssuxa8R8Xkbzb2zqpG5VgBqc25WLSufpKDnV4X2mYADg2XpSun4vVK26u2AU95/3xFlJ5QxIJoMXqUFP2Hf+Y9C0S/Ssdmo91ccPWh3zC/Rqt9FeE2ALW7Gb3OkoMs1t0Kx31pfU3Bn27wpdOT9Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0C88CsE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjB8p99TmpmOdVHLjJ8CYx6iyccz+IcqZNfsKlRw/EAodcrm0VWW+11vCjaT4n//2iln/594aflCCO8AjbKATvMVVpJNb6aY4+uxddNqF/+gip0WDkSp9PTMk9A7epGLZbhpaKZ735DR/8OphixfxRTbkGG5HTp6mtDWI0tYRvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV3PKwJG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0C88CsE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C100C433F1;
-	Mon, 18 Mar 2024 21:20:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV3PKwJG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B8BC433C7;
+	Mon, 18 Mar 2024 21:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710796823;
-	bh=FkbiyeuX+QmNZ+8tFY9VNUuhycImKMM3RYIiML/0zjc=;
+	s=k20201202; t=1710797123;
+	bh=EgN5gu2wMjSIP0mbe5rfnALGps7n0Wz607GxZRvXqDc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N0C88CsEckIF91Ho9J6+y90Cehfiic9le0z4iTcGYiD1bnaWqhsEwMZvMf8lIIX54
-	 ViiEv+CZB63nSsWeyEX7eNd1qW5JteWw0dZwnz2jcZazQeEg090lHkpYj6wYUfGBlY
-	 c2g2BwBKK0kgdwFGAhTCFyx6Lj+dqDpWUpncJcOTdQadLDh3V4mSyiGWVKVWIPSeWc
-	 aL6OPI9W+xZ7ot8pMl70BjaI7uaCEUx3gOL0ZXCMNyiohJ2k6rSpzqJK+tbW0RP7QU
-	 xOEEIqZnkpkDzpBqUsJ/iPJ6ouilOwZqRax5J09egu5igjEFClfYiDnx2p5tAyiagD
-	 1OUUfBnpkNqUA==
-Date: Mon, 18 Mar 2024 18:20:20 -0300
+	b=HV3PKwJGSqa8FSTdsgjVpPszxoRVAYFRkbQSGF87kXamJatqkNN1MFZEtJKFObwKA
+	 nBsVePhfCn00EVoek+Wt5UP1IE6I6arV5MC7MPfgP5/AlrpHbJqVMxHHInu8DhPwFo
+	 649eQzlPQkL3PIzBTnBQF/k7kfsxizTidWXkAOwwGlVglqMMo9CzdvnTivK/RZRWkL
+	 ZGZ+WlVQmyr65ssz85ElGap+/c1JnQEDyU84i4O5gedQjf6Y2BmEOUTV/l1nGAUWvG
+	 1iN+XzOlB5lOtiKfuzKO+J0/4WX1RY8n7/I5+4Z6xWg1B+Cdt7bDXUPz8kFvC00YFG
+	 3fnvfe8Df2JWw==
+Date: Mon, 18 Mar 2024 18:25:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf script: Show also errors for --insn-trace option
-Message-ID: <ZfiwFB6TpAX90YZf@x1>
-References: <20240315071334.3478-1-adrian.hunter@intel.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Ethan Adams <j.ethan.adams@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH] perf build: fix out of tree build
+Message-ID: <ZfixQKTeeN4Tes3G@x1>
+References: <20240314222012.47193-1-j.ethan.adams@gmail.com>
+ <Zfh46MytnE3zOA4E@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,18 +50,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240315071334.3478-1-adrian.hunter@intel.com>
+In-Reply-To: <Zfh46MytnE3zOA4E@linux.dev>
 
-On Fri, Mar 15, 2024 at 09:13:33AM +0200, Adrian Hunter wrote:
-> The trace could be misleading if trace errors are not taken into
-> account, so display them also by adding the itrace "e" option.
+On Mon, Mar 18, 2024 at 05:24:56PM +0000, Oliver Upton wrote:
+> On Thu, Mar 14, 2024 at 03:20:12PM -0700, Ethan Adams wrote:
+> > It seems that a previous modification to sysreg-defs, which corrected
+> > emitting the headaer to the specified output directory, exposed missing
 > 
-> Note --call-trace and --call-ret-trace already add the itrace "e"
-> option.
-> 
-> Fixes: b585ebdb5912 ("perf script: Add --insn-trace for instruction decoding")
-> Cc: stable@vger.kernel.org
+> typo: header
 
-Thanks, applied both patches to perf-tools-next.
+fixed
+ 
+> > subdir, prefix variables. This breaks out of tree builds of perf as the
+> > file is now built into the output directory, but still tries to descend
+> > into output directory as a subdir.
+> > 
+> > Fixes: a29ee6aea703 ("perf build: Ensure sysreg-defs Makefile respects output dir")
+> > Tested-by: Tycho Andersen <tycho@tycho.pizza>
+> > Reviewed-by: Tycho Andersen <tycho@tycho.pizza>
+> > Signed-off-by: Ethan Adams <j.ethan.adams@gmail.com>
+> 
+> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
