@@ -1,67 +1,67 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E236059B79
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 20:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A552B55E40
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 20:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710879153; cv=none; b=bhHt6lSvO3iZPwqH3JqnyMkhzPrYh/VVWoTRbhx3aXEVojqCs16JLUjlVRWsPoe6YhE8Ahi+oX54d3jb1IjxemS+EidYxD6VN6OascebBWLT77HIfrchsH8VzcsFmQi38cs93z9WMwJmGuVBSaCeYOARJgllD3U9vIPHpRb7iug=
+	t=1710879210; cv=none; b=RMysEMLkHhnxE+J/z80RWvG2bZNCnrToM+/o0XZh41kei+9aKJ42VyuuNFg6MRJ+aAD0BEmFtGfBjSqJDCg/TiMtvhC6sS43zMhDj4b8D1EJwssUEyB0e8vVJepK4eVWwvtUzAM5Z65xeF3BWWG4l5Mbf+s//xXC63JyCEdsHLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710879153; c=relaxed/simple;
-	bh=8yaxvB6bUHYBs0zmT9Eiw6XjDqKFmwedLMjHxHXfPnw=;
+	s=arc-20240116; t=1710879210; c=relaxed/simple;
+	bh=+sQCudOZfuqXiUUoG5vR5ACJJLNxAMax7xwD1W4e41A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bqFACUnVLd+VUDoLGKG8V8jjK2I4zL6528cNV3sjfYa2z8WnwbiexXQbwvKtE+593HsoRrKLyP3gE4vCKQysDPcIsmwLU5pyYiZBv6qXEsvizNFAbrErKcviIezqjSTtEyoj+nYDasrEZHEfkQkKwxGP+D3w4FdwoxHFg3JHB8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JjEYKWp8; arc=none smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=BWRFHku7HI1dtjk78pPi/lH+4WCnZH9almGsiufVUZ1Tut+YpuajxwnSZ+YIL5OZ9p4TtwWDiBHubvytnL7Jk09CXUTWn3VL/fI2zGHJyskyApiO1EAWamTWLB/HczPf4aSze4pK37jKyNtZmU+QFa8W23p5AL24NRkgMD9Ar7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lar24pDF; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JjEYKWp8"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1deddb82b43so45775ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 13:12:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lar24pDF"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1deddb82b43so45995ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 13:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710879150; x=1711483950; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710879208; x=1711484008; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tX+TNd0OCISuOTBPfi7a9IeALZq1DpePFpW0ki49zWs=;
-        b=JjEYKWp81VZOTPRz0O/AMmHTVGm4LIpxhFNIeDMFRQP7e/5X07nVeEUGvZNXpn7IvL
-         yvHRBSTbEfPC0c+Ky+BisAcCJ5uvAb9gM+rD8x1MIFlT2J439LaVihpxlP085HJRaLWJ
-         phihvpIW/R1CNY1vxIV2yVUWRzfpTfRcpONLXGc247catvviBgsNeCpMhm+KwYpbcRdC
-         g/TviK3v2rDZ3fsSVMgFRpj/wwjMn8TLu8MuIRoQxebUZdvYnsjiQi4aM7m3lDyIXJzt
-         zmudB+54e6KBliUG3zdJ3cgQ91LA5NB7fY1zwiP6PrEwHyI8W9lve3IyBm3DTrLFMG5F
-         cJRQ==
+        bh=/TmjIUAWre/OnPAbZKoo/CqmH4il78nzu/N6uFzuSi8=;
+        b=lar24pDFUtX0vMzb51TSzwEnwoyRetN5jsA51ZK+b/N1rz662USWBlivjRosZbUgVu
+         VuvOm2WMWPJktHRQI0tmukLK7fj6iW5Cn01nfso20ZqHRt5HJHykOyU680fvDrY3upXz
+         Ehhw2tyJOaDF6zLunagaC4gD2vjE+PtWF19b2B4GKeidnrh5OYceD/tYIVdc3jceA3zx
+         EoS9/z47ERCRLxCGKGSwEjZmoD8l0sUXDjMGS26CAQR0x20ZE6mCmJ8/zU3eVAlKIpd3
+         xa18f/j3Y0FeeLx2JzNNkzSAkxbnHczZ1P/HWr91ZwCiO/6z+aaXVCeODoPFk8dM8gH2
+         9nzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710879150; x=1711483950;
+        d=1e100.net; s=20230601; t=1710879208; x=1711484008;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tX+TNd0OCISuOTBPfi7a9IeALZq1DpePFpW0ki49zWs=;
-        b=ON9BDO7Q/Bo+xYQxrhPmVS29VtJXxqloUKV5k3O3tjtyw3sbaHO7SgIq+CneYRxU8C
-         Mf/4+D4DT3ApAIt/jSL7DY1BoN+p87yuE6VeuDyULOwVxSHwTo8Gz7JX3513QjP3CTPf
-         jcnwtqtneFi/Le9U/++RAYSV451lbHki2m0bIrace4x1cSwJevyPWmuXfZb9mtyLss19
-         ejQZeJ2EYMi/veayVcCH7v1Q4A+B2DCryBM7Nh3UkxkLpupbbm79Z9C9qQL2ROO4gvEn
-         WFYLCVI4t3Qn1HsYG3tYNR9GrgMoseoGXXRxohN5vmXNtAjZdKW/m7tR4n0l1XJdKqGq
-         YpYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWorqHmu1B7abVhQpPapjeBKD8sr0CmWQ/JPXWAYDvvywMlopcDtJB3dcuz9WAjQQO7gGpXoAOEVKg1gUNOENclD2NgiDQgXy9+eOaWTYXIrA==
-X-Gm-Message-State: AOJu0YzEsrKNuNZqLVmRzxhncZ+39j7hkNCbGes0YpZclxoJl9qRtl8N
-	i+6SxeBFeShWDgmkAPZpyFWob06avK7Cdqd9YRa7t6QwU6PjRhMlfaeXan5k7rEke0VsdsDBIBX
-	+H+zem4rl/0Jh11LCLeWYrk1dvCVb50vsS6B9
-X-Google-Smtp-Source: AGHT+IGbGf1RVMK7axLEkZqDasCPpcTykPmTPG7Mu7HWubRQke5co6hu1xILc3epPRWgfZ6F1xPBBZC5XffRHd5YKKQ=
-X-Received: by 2002:a17:902:d508:b0:1e0:e16:dcc0 with SMTP id
- b8-20020a170902d50800b001e00e16dcc0mr10873plg.13.1710879149903; Tue, 19 Mar
- 2024 13:12:29 -0700 (PDT)
+        bh=/TmjIUAWre/OnPAbZKoo/CqmH4il78nzu/N6uFzuSi8=;
+        b=bULmGHsNglmCHJyAiUDhD3lyig3Bz98UZJHqGmYVB0UauXfZcCPKKVS/rRtDITeYWo
+         SeaxbQRtC61OskA9/c228OI+InRLvo6hKJQ2CW0aM7pZh/JYClDJuzHLmm6djoyqjL5H
+         2hwVswXgGOs82N4ZGrnjBlryDaKTXQBy6MHR1m46yIpWsRIvNnYcDRl9+SvsuDlonK9Q
+         PKsW8+gX/qMEXLAoV3VG82DZ4V7EoiMkuhMijg9qu23AP7BxBV7LOvswvGQnUbKBiNAM
+         PmzE4qpWqOWtZHZhRWIFF1ihgV5GF0bbKVwVt1a0BGvqIL9o8/9zW5dFGS7VY2jOWNth
+         8tGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbiBIGNpjk4my0ihhh46b3upDrgp6pIb+lGH3vnGnsISXVDTQ6iP9ljLjZloH7rDdTzofXRQmZzQINA7NcTP90y5Sr/3mitqVZfg9fp7iB7w==
+X-Gm-Message-State: AOJu0YxPWe6fnLbHc36mee/ix+EYBH0pE93jwpMNWaK58p3Z9JB1GbxZ
+	pTpEXiGhXY00AOYIr0guUIBNH7B5H1zlLA3ka8K1Bem4reJrOXF15nnFFroiFOzjUIvwpVikWAL
+	uSxowc4WOlujKWB3ACqhL3KppxWZxJ4E91Hxk
+X-Google-Smtp-Source: AGHT+IEw7XqscOujrExd+TjwtySjz62M3/jll6P8bD2QCyweYla8m9DhRt5lU7Qo9n5jCXQMEtTIf22XYc74lAhBJZ8=
+X-Received: by 2002:a17:902:ea11:b0:1de:ed50:41f8 with SMTP id
+ s17-20020a170902ea1100b001deed5041f8mr65676plg.22.1710879207491; Tue, 19 Mar
+ 2024 13:13:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319180005.246930-1-visitorckw@gmail.com> <20240319180005.246930-13-visitorckw@gmail.com>
-In-Reply-To: <20240319180005.246930-13-visitorckw@gmail.com>
+References: <20240319180005.246930-1-visitorckw@gmail.com> <20240319180005.246930-3-visitorckw@gmail.com>
+In-Reply-To: <20240319180005.246930-3-visitorckw@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 19 Mar 2024 13:12:18 -0700
-Message-ID: <CAP-5=fVcBAxt8Mw72=NCJPRJfjDaJcqk4rjbadgouAEAHz_q1A@mail.gmail.com>
-Subject: Re: [PATCH 12/13] lib min_heap: Add min_heap_sift_up()
+Date: Tue, 19 Mar 2024 13:13:16 -0700
+Message-ID: <CAP-5=fXvQoOOpCTm1FXqatzv-wCTYxAymjAu5Veb2fBZE6KivQ@mail.gmail.com>
+Subject: Re: [PATCH 02/13] bcache: Fix typo
 To: Kuan-Wei Chiu <visitorckw@gmail.com>
 Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com, 
 	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
@@ -73,62 +73,34 @@ Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 11:01=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.co=
+On Tue, Mar 19, 2024 at 11:00=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.co=
 m> wrote:
 >
-> Add min_heap_sift_up() to sift up the element at index 'idx' in the
-> heap.
+> Replace 'utiility' with 'utility'.
+>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 
-Normally sift up is used to implement the min heap but isn't part of
-the API, eg. there is a sift up in min_heap_push. Should min_heapify
-be renamed to min_heap_sift_down to align with this name?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 > ---
->  include/linux/min_heap.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+>  drivers/md/bcache/util.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-> index ce085137fce7..586965977104 100644
-> --- a/include/linux/min_heap.h
-> +++ b/include/linux/min_heap.h
-> @@ -199,6 +199,26 @@ bool __min_heap_push(struct __min_heap *heap, const =
-void *element, size_t elem_s
->  #define min_heap_push(_heap, _element, _func, _args)   \
->         __min_heap_push(&(_heap)->heap, _element, __minheap_obj_size(_hea=
-p), _func, _args)
->
-> +/* Sift up ith element from the heap, O(log2(nr)). */
-> +static __always_inline
-> +void __min_heap_sift_up(struct __min_heap *heap, size_t elem_size, size_=
-t idx,
-> +               const struct min_heap_callbacks *func, void *args)
-> +{
-> +       void *data =3D heap->data;
-> +       size_t parent;
-> +
-> +       while (idx) {
-> +               parent =3D (idx - 1) / 2;
-> +               if (func->less(data + parent * elem_size, data + idx * el=
-em_size, args))
-> +                       break;
-> +               func->swp(data + parent * elem_size, data + idx * elem_si=
-ze, args);
-> +               idx =3D parent;
-> +       }
-> +}
-> +
-> +#define min_heap_sift_up(_heap, _idx, _func, _args)    \
-> +       __min_heap_sift_up(&(_heap)->heap, __minheap_obj_size(_heap), _id=
-x, _func, _args)
-> +
->  /* Remove ith element from the heap, O(log2(nr)). */
->  static __always_inline
->  bool __min_heap_del(struct __min_heap *heap, size_t elem_size, size_t id=
-x,
+> diff --git a/drivers/md/bcache/util.c b/drivers/md/bcache/util.c
+> index ae380bc3992e..410d8cb49e50 100644
+> --- a/drivers/md/bcache/util.c
+> +++ b/drivers/md/bcache/util.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * random utiility code, for bcache but in theory not specific to bcache
+> + * random utility code, for bcache but in theory not specific to bcache
+>   *
+>   * Copyright 2010, 2011 Kent Overstreet <kent.overstreet@gmail.com>
+>   * Copyright 2012 Google, Inc.
 > --
 > 2.34.1
 >
