@@ -1,191 +1,142 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616C47C0B2;
-	Tue, 19 Mar 2024 09:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5077E7D098;
+	Tue, 19 Mar 2024 09:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710841421; cv=none; b=IoeEeWZpGfH8YPBXLjd3Unc71Xymw+PRC8mByLquXHUrBZ7W9ytnq5xdipfUWNkUgFyIuMEtE+F9VxlNlyJRheH8Jrmp5nT740WTXLe1oJOdzJur0LLtvM8tpIeS0WqSJl+6S/wJpMUWiwJ7jLeaUIJ+5Fy6RRHQrZr91XbS6xg=
+	t=1710841869; cv=none; b=lsdrqsHcnW6faZeWpdQIjy9bjd97ksC53WX6kJ5wBRyD1652WveF4+eHG2yP05LEEReK/f7dNTgZ+K3R6a01FJIBFT08YXqbFUuZsM6KIRLKZcXwLcaRmnk8ZoXbNf0R3zF4ElR3XjW5XeDFF5r1Dzd57JwyXQGZAAGAKZ+jX8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710841421; c=relaxed/simple;
-	bh=tZrMPUpSUEU7+/wAovQ4fuYqq0PFfpqDVV8cAoNm9So=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=iJY4yZz24Y54d7d5VnYKFmni5VhulWvpHxE4R05URTV0hyefylSTKIYPB3auNrlV1kWXaEXv3kNoOOvu1VvhjP8vH7AlMFzGYeypzfQ4pyVaNjQglhiwQRukiwDPrefEK1EK/1GbqZfgw0vVCIwVanyDG285VUI5YIeISV2V/Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=can44KZ3; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710841869; c=relaxed/simple;
+	bh=0spjMsQPlJTDmjGtorWPzWT87tD+gg4/0qmis1bJQ3U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h+SJ4wcehIu/+DPoqA3EU/xapFOMadXlhnYGyfT6gZDuFL1WOeG/5rK9WcyCFl5CCt66BxBJNdmDMcFqrfXOz15YP0aZnLhXQKbCK/8oOvqK2JH3iBNYqBqJpaFdf7mxxr9ow/j/SikWJzZBkqTM1jNs5iFdOfijhIi4rAdQUgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QmBDf7cd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="can44KZ3"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c39bc142edso87060b6e.0;
-        Tue, 19 Mar 2024 02:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710841419; x=1711446219; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C45NETgBBINnVz5gYFapJ2sUx+OVUwgq5wHBDlDkcP8=;
-        b=can44KZ3pqSt3jZru6STF8PUcz2X6BIlvxIiIyJfXrOhm05eWuW2EgP2qxGdQa1IwZ
-         N0erq+Cg6Tj+fzTFVZJswUtbLwpTVZH5F8heuKA7gHdDcJcICTtDPUCFQK1OJ2FPGXWN
-         gzdDZOehuPLKKiqcN5T0MabwZ1WwCYoabr54RI7S6rTD7Ca+LGBJRf4XCGyBntJVRDHr
-         /+y15TjJm9oL6TKWaIfMBIhNNbNRLBuVq75P+oFtKzY9wgxdWSQCHQgMzclIOeb93rCp
-         eVJRvTnPR3MSwIEZ927+3bInFoGzOOOL4uU1zUL8sNsmG9jjj6HJZLM2Pq3UlYZOGFtW
-         Ez1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710841419; x=1711446219;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C45NETgBBINnVz5gYFapJ2sUx+OVUwgq5wHBDlDkcP8=;
-        b=jKXJnc8hWnpg3bffqDyCT194QMUYcSzJVf5mHnLu5ZdcA9xFSZwd+6riPLxop0qyJD
-         PJPz+FVvfuAOL9YtwNzMoBkdlGd/W6QM6W5r9cKdj3CkeBzvuR2heWsg3VRxbcQZ5jqG
-         FTPMwYnKwXHalMP/I3uxVMQkxblorACFuDfflhAOZEF2a0SHsNtC1sZRHgxHVqVMkZEv
-         +CkLDAQp7ALvjAzVEg5xhV5M6/f3FMeNAKq9wtmvxe3AWRzL1WlNpIDmrJVyzlfuBzbM
-         eWfuSfM/kf8C8XbIVgZAemJQlYWSwRqT9l6qE9ab268QFZ1jfREQa+X4liUMqXwRNum4
-         w3YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4CBBuJZQ+cgLiuMqAmf8JKxcDpH3GSWawKiIH1yEYzLZMgvx2CgXX2eUF1RAcX2CRNnyuuxQlr85ZPFwXY1+tnD4G8djYo2t8KCnlLdicYpsybv+lSE/8tTW0VCgq/zim7tXLeCRZLjMUlKedOQ==
-X-Gm-Message-State: AOJu0Yx9wYSYDdAeDYS34Bow2eRuRYVJSlbs/5vupjt11B/U3u01DVFd
-	8/pTxeEZ88InyO9BrfDgpZLysEQhUJfyMk2xUdVZg6wb5CYD/hmdcBnayPax99fFBQ==
-X-Google-Smtp-Source: AGHT+IEmWzEJuZYtdWV3gIS7NqMrntxS9uTnpBN85AAIikIEd2okw0k8r5PwtShsCUhdKgfok78zhQ==
-X-Received: by 2002:a05:6808:bcb:b0:3c1:e580:12a with SMTP id o11-20020a0568080bcb00b003c1e580012amr17999141oik.38.1710841419376;
-        Tue, 19 Mar 2024 02:43:39 -0700 (PDT)
-Received: from smtpclient.apple (174.137.59.200.16clouds.com. [174.137.59.200])
-        by smtp.gmail.com with ESMTPSA id y125-20020a62ce83000000b006e6b2ba1577sm9737576pfg.138.2024.03.19.02.43.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Mar 2024 02:43:38 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QmBDf7cd"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42J9B0G6003146;
+	Tue, 19 Mar 2024 09:51:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=kfFT1P/IgpeSJp39XAmKjKLqlIuz1wFwnZS2Gt96AvU=;
+ b=QmBDf7cdoRrNMAKh67Jqt6V2KPs8+RXh2dJGBZKMJJ401R58aj10Di44yX8/0FGcqkfd
+ WUoAglFmUV+mM1RkSPS6mwajLkMDC8KsaVcLYqvwzVe8O3+YrtGkSd937GXu83vqTsa/
+ SjHVokQfXHGy8a8wZVQ1S+vFp/URc8L4wW1PCHkFShDwCFjVZedKVmCRDHz0Kr/XK+Qj
+ ObYCkPVroS4sFDszPLZM2UbEGeaBMgDZLrPDjZqQ/3WphQ/Jrn4MvHZxgywtTPKWj/zy
+ uXSk7dJt5gqzD/zqZnJEHdDUvgQjjDF0hHBKZG29VA1N+JVnS/QNkwE6rHQXrkvsCY7i eQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy74u8jtu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 09:51:02 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42J9p15R024490;
+	Tue, 19 Mar 2024 09:51:01 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy74u8jtr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 09:51:01 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J73Fcg017190;
+	Tue, 19 Mar 2024 09:51:01 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwnrt6u1k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 09:51:00 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42J9otlJ48955860
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Mar 2024 09:50:57 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A4BC20040;
+	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 523F620043;
+	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 19 Mar 2024 09:50:55 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/2] perf report: Fix PAI counter names for s390 virtual machines
+Date: Tue, 19 Mar 2024 10:50:42 +0100
+Message-Id: <20240319095043.857594-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH v2] perf evlist: Fix 'perf record -C xx' failed issue
-From: Chunxin Zang <spring.cxz@gmail.com>
-In-Reply-To: <20240319091429.2056555-1-spring.cxz@gmail.com>
-Date: Tue, 19 Mar 2024 17:43:17 +0800
-Cc: yangchen11@lixiang.com,
- Jerry Zhou <zhouchunhua@lixiang.com>,
- linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9B585813-A300-4793-AC65-8C69086508CE@gmail.com>
-References: <20240319091429.2056555-1-spring.cxz@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
- mingo@redhat.com,
- acme@kernel.org,
- Namhyung Kim <namhyung@kernel.org>,
- mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com,
- jolsa@kernel.org,
- irogers@google.com,
- adrian.hunter@intel.com
-X-Mailer: Apple Mail (2.3731.700.6)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WGk10ZOD1v8jBIM4hO6cgv0zJwkMzaUB
+X-Proofpoint-GUID: YhFx5wsQgtIVvoJ6XEY-ZCitFLebkiVL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403140000 definitions=main-2403190075
 
-Sorry, I'm a little out of it, maybe because I didn't sleep at noon. =
-This version is deprecated, v1 is correct.
+s390 introduced Processor Activity Instrumentation (PAI) counter
+facility on LPAR and virtual machines z/VM for models 3931 and 3932.
+These counters are stored as raw data in the perf.data file and are
+displayed with command
 
-v1: =
-https://lore.kernel.org/linux-kernel/20240319084022.2036296-1-spring.cxz@g=
-mail.com/T/#u
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 <unknown> Value:0x00000000000186a0
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+ #
 
-Best wishes
-Chunxin
+However on z/VM virtual machines, the counter names are not retrieved
+from the PMU and are shown as '<unknown>'.
+This is caused by the CPU string saved in the mapfile.csv for this
+machine:
 
+   ^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
 
-> On Mar 19, 2024, at 17:14, Chunxin Zang <spring.cxz@gmail.com> wrote:
->=20
-> The cpu has 8 performance-cores and 8 efficient-cores on my pc.
-> 0-15 are performance-cores
-> 16-23 are 8 efficient-cores
->=20
-> When I run "perf record -C xxx", the command fails if xxx all belong =
-to
-> performance cores or efficient cores
->=20
-> The results are as follows
->=20
->  # perf record -C 12
->  WARNING: A requested CPU in '12' is not supported by PMU 'cpu_atom' =
-(CPUs 16-23) for event 'cycles:P'
->  Error:
->  The sys_perf_event_open() syscall returned with 22 (Invalid argument) =
-for event (cpu_atom/cycles:P/).
->  /bin/dmesg | grep -i perf may provide additional information.
->=20
->  # perf record -C 14-17
->  WARNING: A requested CPU in '14-17' is not supported by PMU =
-'cpu_atom' (CPUs 16-23) for event 'cycles:P'
->  WARNING: A requested CPU in '14-17' is not supported by PMU =
-'cpu_core' (CPUs 0-15) for event 'cycles:P'
->  ^C[ perf record: Woken up 1 times to write data ]
->=20
-> The reason is that the cpu_map of 'cpu_atom'-evsel is empty, causing
-> the sys_perf_event_open() result to fail.
->=20
-> Changes in v2:
-> - fix memory leak about 'intersect'
->=20
-> Signed-off-by: Chunxin Zang <spring.cxz@gmail.com>
-> Reviewed-by: Chen Yang <yangchen11@lixiang.com>
-> ---
-> tools/perf/util/evlist.c | 24 +++++++++++++++++-------
-> 1 file changed, 17 insertions(+), 7 deletions(-)
->=20
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 55a300a0977b..babbde29341f 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -2499,7 +2499,7 @@ void evlist__check_mem_load_aux(struct evlist =
-*evlist)
-> void evlist__warn_user_requested_cpus(struct evlist *evlist, const =
-char *cpu_list)
-> {
-> struct perf_cpu_map *user_requested_cpus;
-> - struct evsel *pos;
-> + struct evsel *pos, *tmp;
->=20
-> if (!cpu_list)
-> return;
-> @@ -2508,18 +2508,28 @@ void evlist__warn_user_requested_cpus(struct =
-evlist *evlist, const char *cpu_lis
-> if (!user_requested_cpus)
-> return;
->=20
-> - evlist__for_each_entry(evlist, pos) {
-> + evlist__for_each_entry_safe(evlist, tmp, pos) {
-> struct perf_cpu_map *intersect, *to_test;
-> const struct perf_pmu *pmu =3D evsel__find_pmu(pos);
->=20
-> to_test =3D pmu && pmu->is_core ? pmu->cpus : cpu_map__online();
-> intersect =3D perf_cpu_map__intersect(to_test, user_requested_cpus);
-> - if (!perf_cpu_map__equal(intersect, user_requested_cpus)) {
-> - char buf[128];
-> + if (!intersect) {
-> + evlist__remove(evlist, pos);
-> + evsel__delete(pos);
-> + perf_cpu_map__put(intersect);
-> + continue;
-> + }
-> +
-> + if (!perf_cpu_map__is_subset(user_requested_cpus, intersect)) {
-> + char buf_test[128];
-> + char buf_intersect[128];
->=20
-> - cpu_map__snprint(to_test, buf, sizeof(buf));
-> - pr_warning("WARNING: A requested CPU in '%s' is not supported by PMU =
-'%s' (CPUs %s) for event '%s'\n",
-> - cpu_list, pmu ? pmu->name : "cpu", buf, evsel__name(pos));
-> + cpu_map__snprint(to_test, buf_test, sizeof(buf_test));
-> + cpu_map__snprint(intersect, buf_intersect, sizeof(buf_intersect));
-> + pr_warning("WARNING: A requested CPU '%s' in '%s' is not supported =
-by "
-> +   "PMU '%s' (CPUs %s) for event '%s'\n", buf_intersect, cpu_list,
-> +   pmu ? pmu->name : "cpu", buf_test, evsel__name(pos));
-> }
-> perf_cpu_map__put(intersect);
-> }
-> --=20
-> 2.34.1
->=20
+This string contains the CPU Measurement facility first and second
+version number and authorization level (3\.7.[[:xdigit:]]+).
+These numbers do not apply to the PAI counter facility.
+In fact they can be omitted.
+Shorten the CPU identification string for this machine to manufacturer
+and model. This is sufficient for all PMU devices.
+
+Output after:
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 km_aes_128 Value:0x00000000000186a0
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+ #
+
+Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/pmu-events/arch/s390/mapfile.csv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index a918e1af77a5..b22648d12751 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -5,4 +5,4 @@ Family-model,Version,Filename,EventType
+ ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
+ ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
+ ^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_z15,core
+-^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
++^IBM.393[12].*$,3,cf_z16,core
+-- 
+2.44.0
 
