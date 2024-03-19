@@ -1,163 +1,148 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D5B7BAF7
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 03:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7DA1D540;
+	Tue, 19 Mar 2024 04:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710820189; cv=none; b=bnfj1/ZyikUKxwaND60LjVMrZ5VRNic1j5ByXup8jL8ubmLI/sgiEvOw1+4nvA5XMoJ59sfg4d8HEfSD0oQoG/IDEyPuNvR6F5y1WUepSAe6Tvy+9edR3SZi63+Hrxw9Xi5/Oft7rdSweUVpNLP3hhIqr7pSuUTbwx5wD2Whwps=
+	t=1710821945; cv=none; b=WkOFD5zH5wUTpKtFpTKDIvF1djCTbIoeWSbBVgN5/p2zrKKA2jeFdDCdmVKImgih3N5qmrixflUQpao8wHEYh5o1Tca+hF9EmgmQ2uRLb8QwSUzAv3NPj8gcC1mXQdUxdMy/pIf5C0jxm78zxR1RmuNaW8tcp15j5BdgtFO9yIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710820189; c=relaxed/simple;
-	bh=hNPVXYOhJcoLVTEV4WarZkDlgxg2epWF1bGQ17SmhQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rXwmS7pREMEp5TWzTfSuFz2MOmHWuNYvDNa2PQA7EHsQt8WNxS2n+iBbumiPogTHlmQeuRWYCVpLFJ5aoGm3/cCXnnXtyWEiafYS9u7tRTJObt3DKQ+IgKs+1zTUkQIrktFHF60BIXUpvEkQUWn5hWjgfuFM3RJsiI2UAs89gDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=jEicmtQt; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jEicmtQt"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id mHF2reUpJPM1hmQTyrOusz; Tue, 19 Mar 2024 03:49:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id mQTwrhTs2EKylmQTwre6dL; Tue, 19 Mar 2024 03:49:44 +0000
-X-Authority-Analysis: v=2.4 cv=Bombw5X5 c=1 sm=1 tr=0 ts=65f90b58
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=cm27Pg_UAAAA:8 a=VRTBL-XNDjFAICBfogcA:9
- a=QEXdDO2ut3YA:10 a=1F1461vogZIA:10 a=5kKzt1m56AEA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=SLz71HocmBbuEhFRYD3r:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=W2zZsoQWdc3rKe29I0hrlQr5HJTS/IblWppWq5S0AJA=; b=jEicmtQts4e0AtILeFpXWu2//o
-	XkPK7qH3ksyoQlXvWjiqhJJ0D37F5LNTRknSJacYIF0CgkjjBKpCi42DTexuHIfvpD9mvCMTBAoNa
-	5l/7bZr58+hPt6kxjNYFLNM3OqYGgnDaXZ1NLYFcDlT5odz0e5fzgugptaq1/IxIpgNoR8fnVtLoS
-	IXXJBZnfV01ZEWQJlPxtfLIVSkNHBdosWCBLIx5YeTdglM774IuqpNDgf/mjEM9O6ZvwDoo7D0rtL
-	/7d1J8NzTLTqQQgxuzGunUlyKabpg3CBetfp23D4WAgrHGKU6zZYiI2j52zCBkfgYSZFsoOoaECMU
-	FpRAC2IQ==;
-Received: from [201.172.174.229] (port=34604 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rmQTs-004HQs-1n;
-	Mon, 18 Mar 2024 22:49:40 -0500
-Message-ID: <38c7e956-9161-41d0-94a1-5f55481fd8a3@embeddedor.com>
-Date: Mon, 18 Mar 2024 21:49:37 -0600
+	s=arc-20240116; t=1710821945; c=relaxed/simple;
+	bh=exHMqg7ickwwb5Rk29OIXejwQmnRJaOjOa7LfvyI65M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SqomxxDPgU2JTT6jzBkb3wpZA/dsn+urdM6UrgeGjvdIYye8RUE4o4sTAttK0WPbHzAzjYHIY5nIX7Yg8lXMrMVlvDv7vYLTtPGZcLjSdukptb95QfH5OIp81h0fE9st90vKQx4QXGG81GtKMubtP+wpzlXmb10PcrSB3dhL3TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6ca2ac094so4629046b3a.0;
+        Mon, 18 Mar 2024 21:19:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710821942; x=1711426742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jgW4DmXI0kNiY/rl9Qkr5feefQ8+Vq38v1bD2ufKIVI=;
+        b=kHSALl5bI+Qte9CJczvwjqepgT/l6/yA4iuqaGq4dx7QRvWcvjBTaTTp6MZCiHzZkf
+         EFhnjxZaTLp6M5lJClhFp28RRt+1IZuNlYYMBKiCTxB1tvPI+VR4YwLE56GFleXdJ9mA
+         t3EiFUw7O93NJIsRggqmI9sz/hfWtOWRasej5gv9EYRqSoq2hDy7ZMSZh/tlisD0cVkN
+         YPGlqy4jMpLVghRRLqGzDHfiICkcVCamWwsCbWzd+vBHdM5G4MKPu/N1wZav6FXcCjq0
+         o+X52mX9R5NfQiWR2vQ/6/YU4UHhAxyV7gLNHoNzZCWNtE6j1LvjdrbrujOIc97Nvd06
+         WKvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvx+pzIZJkYgiBDGjP6MXZV+/5rW8uTaxFWbOA2K/YkqHIKzqo/wr+5jXpZWWCGWJdNvpwXuz2pSEXUSkcgXTR3llftaXEWxR7IikjQitwdmCFfYPkSxvhGiwlcJlsIvNeVg/CYyv85SL/Pcb8ugU59GS0/tFRd0CtkE7iUaz2ttkzyw==
+X-Gm-Message-State: AOJu0YwROynF9mB7iZlfnoUJwFi/h5yzQBijbS1ocei/HGL33vs7UCTU
+	mO8E+OSB/M/aRSiWFYOZC1n3+OovSkntKDEqalqfp2W1ftq92uVB/1fwgpJi6ALfJVVyOB8mlG5
+	fpxYCCOlSDCIsnmCbpAKU0H2OuqI=
+X-Google-Smtp-Source: AGHT+IFXLjhVkx7WgKBhbzRCSxQWGWWgaBadHRVGM50RAHgFRsU1xXuP336jq2Ijh9SBYvYnOKxkauqh2VsoLKHG8yA=
+X-Received: by 2002:a05:6a21:3390:b0:1a3:5465:f98 with SMTP id
+ yy16-20020a056a21339000b001a354650f98mr1713631pzb.44.1710821941646; Mon, 18
+ Mar 2024 21:19:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
- arithmetic
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Erick Archer <erick.archer@gmx.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240317164442.6729-1-erick.archer@gmx.com>
- <202403181635.46CBABD994@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202403181635.46CBABD994@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rmQTs-004HQs-1n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.229]:34604
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJcGLowFJ28oWysjXgCZG6eoQ6QTA1D6/LRVonGmjNkxHUQuSlCMlD0cxkRiVzu/ovT0Y1SsnMJbg7yJmqidMawXQxKCVolsPAXtupJY3FPfRELPZy5y
- mHmVcQZPS+mWPYegtKcz1Kq/j9QlOX6qM/FvGaUutO4ZTZ6F+qKBIuAtY6YQVK2J8J5ZAJdMU+6YNmUanBdSbZllAsxpN7zlVwTWdCsxtnLa8kQfNup4NfOK
+References: <20240202234057.2085863-1-irogers@google.com> <CAP-5=fVjAHqAHHLqE=3v2bP6S6k98psiuZds7TUTFCT7RgMFdQ@mail.gmail.com>
+ <CAM9d7ciPYMd4zckrcgnPtradZ_bvaNOHji1tkkYQu_TTF5=eYw@mail.gmail.com>
+ <CAM9d7cgbxHZoaq4ZLCda-6TW5A+b+-8dSrRApk+AjcTVNC5hNA@mail.gmail.com> <Zfi0IJV-OKwyDK0r@x1>
+In-Reply-To: <Zfi0IJV-OKwyDK0r@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 18 Mar 2024 21:18:50 -0700
+Message-ID: <CAM9d7cj+AzPwH8pjG+_HGfmMSMJm6XjkTgxRBWHNW4LF+XJomw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Clean up libperf cpumap's empty function
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
+	Leo Yan <leo.yan@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 18, 2024 at 2:37=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Thu, Mar 07, 2024 at 03:47:00PM -0800, Namhyung Kim wrote:
+> > Hi Ian,
+> >
+> > Sorry for the late reply.
+> >
+> > On Fri, Feb 16, 2024 at 5:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Feb 14, 2024 at 2:03=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > On Fri, Feb 2, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > > >
+> > > > > Rename and clean up the use of libperf CPU map functions particul=
+arly
+> > > > > focussing on perf_cpu_map__empty that may return true for maps
+> > > > > containing CPUs but also with an "any CPU"/dummy value.
+> > > > >
+> > > > > perf_cpu_map__nr is also troubling in that iterating an empty CPU=
+ map
+> > > > > will yield the "any CPU"/dummy value. Reduce the appearance of so=
+me
+> > > > > calls to this by using the perf_cpu_map__for_each_cpu macro.
+> > > > >
+> > > > > v3: Address handling of "any" is arm-spe/cs-etm patch.
+> > > > > v2: 6 patches were merged by Arnaldo. New patch added ensure empt=
+y
+> > > > >     maps are allocated as NULL (suggested by James Clark). Hopefu=
+lly a
+> > > > >     fix to "perf arm-spe/cs-etm: Directly iterate CPU maps".
+> > > > >
+> > > > > Ian Rogers (8):
+> > > > >   libperf cpumap: Add any, empty and min helpers
+> > > > >   libperf cpumap: Ensure empty cpumap is NULL from alloc
+> > > > >   perf arm-spe/cs-etm: Directly iterate CPU maps
+> > > > >   perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is=
+_empty
+> > > > >     use
+> > > > >   perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_em=
+pty
+> > > > >   perf arm64 header: Remove unnecessary CPU map get and put
+> > > > >   perf stat: Remove duplicate cpus_map_matched function
+> > > > >   perf cpumap: Use perf_cpu_map__for_each_cpu when possible
+> > > >
+> > > > Ping. Thanks,
+> > > > Ian
+>
+> > > Adrian and James, are you ok with this now?
+>
+> > I think James is fine now and the Intel-pt part seems straight-forward
+> > so I'd like to merge this change.  Please tell me if you have any conce=
+rns.
+>
+> Namhyung,
+>
+>         I noticed this hasn't been merged and applies cleanly, so I'm
+> adding it to perf-tools-next, from your comment above can I take it as
+> an Acked-by or even Reviewed-by?
 
+Oh, I thought I did it already, but I probably missed pushing it. :(
 
-On 18/03/24 17:40, Kees Cook wrote:
-> On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
->> This is an effort to get rid of all multiplications from allocation
->> functions in order to prevent integer overflows [1][2].
->>
->> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
->> this structure ends in a flexible array:
->>
->> struct rapl_pmus {
->> 	[...]
->> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
->> };
->>
->> the preferred way in the kernel is to use the struct_size() helper to
->> do the arithmetic instead of the calculation "size + count * size" in
->> the kzalloc() function.
->>
->> This way, the code is more readable and safer.
->>
->> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
->> Link: https://github.com/KSPP/linux/issues/160 [2]
->> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> 
-> Thanks!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> I was inspired to come up with a Coccinelle script to find this pattern.
-> This seems to do it, though it also removes the blank line. I'm not sure
-> how to stop it from doing that. I'm running this treewide to see if I
-> can find others...
-> 
-> // Options: --no-includes --include-headers
+Sure you can add it,  I'll do that for the sake of b4.
 
-with --no-includes this one is missed in arch/x86/events/:
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 258e2cdf28fa..213fe48f9391 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -350,12 +350,11 @@ static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
-  static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
-                                                  int node)
-  {
--       int i, size, numshared = type->num_shared_regs ;
-+       int i, numshared = type->num_shared_regs ;
-         struct intel_uncore_box *box;
-
--       size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
--
--       box = kzalloc_node(size, GFP_KERNEL, node);
-+       box = kzalloc_node(struct_size(box, shared_regs, numshared),
-+                          GFP_KERNEL, node);
-         if (!box)
-                 return NULL;
-
-Funny thing is that in this case it's quite convenient that the script removes
-the blank like. :P
-
---
-Gustavo
-
+Thanks,
+Namhyung
