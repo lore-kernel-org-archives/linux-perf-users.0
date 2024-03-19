@@ -1,148 +1,244 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7DA1D540;
-	Tue, 19 Mar 2024 04:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110AB5F544;
+	Tue, 19 Mar 2024 04:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710821945; cv=none; b=WkOFD5zH5wUTpKtFpTKDIvF1djCTbIoeWSbBVgN5/p2zrKKA2jeFdDCdmVKImgih3N5qmrixflUQpao8wHEYh5o1Tca+hF9EmgmQ2uRLb8QwSUzAv3NPj8gcC1mXQdUxdMy/pIf5C0jxm78zxR1RmuNaW8tcp15j5BdgtFO9yIM=
+	t=1710822301; cv=none; b=tZfOTHhNF84HqjoVQLOb95tHXrflEMi8Z+xp/+66SM0/3P5W7+K7eO3IsZIwVnzmqj/2DJDm510vuKOvvJXVGYcCNs/0wmXhqgLvqVwM/Z//cM0mUL7o6rBFT+pA8KusDeJvWOCZtUcQ9gSAa/OF6BJpDpO+ngiKaP2je74ZMG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710821945; c=relaxed/simple;
-	bh=exHMqg7ickwwb5Rk29OIXejwQmnRJaOjOa7LfvyI65M=;
+	s=arc-20240116; t=1710822301; c=relaxed/simple;
+	bh=ek6Pl79/6OC/W647PdCOnSWgMGV+lOPW1TxDkhL6tNU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SqomxxDPgU2JTT6jzBkb3wpZA/dsn+urdM6UrgeGjvdIYye8RUE4o4sTAttK0WPbHzAzjYHIY5nIX7Yg8lXMrMVlvDv7vYLTtPGZcLjSdukptb95QfH5OIp81h0fE9st90vKQx4QXGG81GtKMubtP+wpzlXmb10PcrSB3dhL3TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+	 To:Cc:Content-Type; b=Xs+8sVWVgGiW3obl2LuCgWr5vFOsXsJhMC8+nzpijAoATNCL0K3qEM+8nYJ0wDfaDjVaoeyyD9gAt1VpBNWl8XlD1QYgzfWNoixLxJUl1fNeKfwhwQKgTB47bDJavrRLz0zjkFpU/IJJFYY5kDkR8zWeBn1qu8OYEZD76hNY3gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6ca2ac094so4629046b3a.0;
-        Mon, 18 Mar 2024 21:19:02 -0700 (PDT)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29ddfd859eeso3906930a91.1;
+        Mon, 18 Mar 2024 21:24:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710821942; x=1711426742;
+        d=1e100.net; s=20230601; t=1710822299; x=1711427099;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jgW4DmXI0kNiY/rl9Qkr5feefQ8+Vq38v1bD2ufKIVI=;
-        b=kHSALl5bI+Qte9CJczvwjqepgT/l6/yA4iuqaGq4dx7QRvWcvjBTaTTp6MZCiHzZkf
-         EFhnjxZaTLp6M5lJClhFp28RRt+1IZuNlYYMBKiCTxB1tvPI+VR4YwLE56GFleXdJ9mA
-         t3EiFUw7O93NJIsRggqmI9sz/hfWtOWRasej5gv9EYRqSoq2hDy7ZMSZh/tlisD0cVkN
-         YPGlqy4jMpLVghRRLqGzDHfiICkcVCamWwsCbWzd+vBHdM5G4MKPu/N1wZav6FXcCjq0
-         o+X52mX9R5NfQiWR2vQ/6/YU4UHhAxyV7gLNHoNzZCWNtE6j1LvjdrbrujOIc97Nvd06
-         WKvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvx+pzIZJkYgiBDGjP6MXZV+/5rW8uTaxFWbOA2K/YkqHIKzqo/wr+5jXpZWWCGWJdNvpwXuz2pSEXUSkcgXTR3llftaXEWxR7IikjQitwdmCFfYPkSxvhGiwlcJlsIvNeVg/CYyv85SL/Pcb8ugU59GS0/tFRd0CtkE7iUaz2ttkzyw==
-X-Gm-Message-State: AOJu0YwROynF9mB7iZlfnoUJwFi/h5yzQBijbS1ocei/HGL33vs7UCTU
-	mO8E+OSB/M/aRSiWFYOZC1n3+OovSkntKDEqalqfp2W1ftq92uVB/1fwgpJi6ALfJVVyOB8mlG5
-	fpxYCCOlSDCIsnmCbpAKU0H2OuqI=
-X-Google-Smtp-Source: AGHT+IFXLjhVkx7WgKBhbzRCSxQWGWWgaBadHRVGM50RAHgFRsU1xXuP336jq2Ijh9SBYvYnOKxkauqh2VsoLKHG8yA=
-X-Received: by 2002:a05:6a21:3390:b0:1a3:5465:f98 with SMTP id
- yy16-20020a056a21339000b001a354650f98mr1713631pzb.44.1710821941646; Mon, 18
- Mar 2024 21:19:01 -0700 (PDT)
+        bh=eZWn6JmukE/KhxGaygznJp+UdYClha+aD49PPLebiJA=;
+        b=nybnYVzYgqc7N9VXVm02cu/jKl/Dj3s+roukQ/iCgI6M+IMYTel8ep1o8BOo/O2j7t
+         CwMmQaUAM6VvxZWFmWLRG07l9pEi57PLt6Zl4FZpzZha/0UkDHNjwYW69HiizURHs9J2
+         MDIIguYJOeCAqmOAiIpCQJR7HJM3ub6kDG4jPyKe7yhpOTI0v3D07MqUeyBkPsDlVv3c
+         mPTeBqXC4brOddk/LpGmzSHfD+phrnGTabzFXNsudozyvYAeVP5eWd6DiF9FRHBz7gaf
+         NWcr72CeN5E6hLfWFd0tKd/VcGKu5cXQgwfbr1NX9uefMk8OjGXTtqbp2q/t9FAz4Oe6
+         OMjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVi8VwOIsgtihBkbWr+3teF7OIKTf9BYTFIusXAlyjOIDnCAh51Rjnnatf5U0CEMoDE/wOFpGVNOnIOBnbJihT5+mMJnH+2/LmO4oX4LWhE4/YuDFaNz250gf2YnEqHNzSZPeTkXN1rZWiDKk8caA==
+X-Gm-Message-State: AOJu0YxQJbj6UzHtg7dbhUDNMEUWYbrqHZkGvN8RHQ2SR1WLdYKCJaUv
+	EYIBfmQ7kz3Oszp6BjUqWe6uoHCS3+nxy/chdztzlw5E3wsrfK+tOV5Qxgbs8jtqi2sVEGJFDxj
+	qzdETG42LeTQoJA6X/3KTkZcNxSE=
+X-Google-Smtp-Source: AGHT+IHt0U7BQFQl/8mm8RjT50key1Z1Mc/KUWFvQ4E/wXYLHbCFKfRyZf4eo+9EgSHqDBzY4wkdWGDGX2YxRHxBaB0=
+X-Received: by 2002:a17:90a:6c06:b0:29c:77f9:437f with SMTP id
+ x6-20020a17090a6c0600b0029c77f9437fmr10527868pjj.49.1710822299247; Mon, 18
+ Mar 2024 21:24:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202234057.2085863-1-irogers@google.com> <CAP-5=fVjAHqAHHLqE=3v2bP6S6k98psiuZds7TUTFCT7RgMFdQ@mail.gmail.com>
- <CAM9d7ciPYMd4zckrcgnPtradZ_bvaNOHji1tkkYQu_TTF5=eYw@mail.gmail.com>
- <CAM9d7cgbxHZoaq4ZLCda-6TW5A+b+-8dSrRApk+AjcTVNC5hNA@mail.gmail.com> <Zfi0IJV-OKwyDK0r@x1>
-In-Reply-To: <Zfi0IJV-OKwyDK0r@x1>
+References: <20240315111907.1434909-1-retpolanne@posteo.net>
+In-Reply-To: <20240315111907.1434909-1-retpolanne@posteo.net>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 18 Mar 2024 21:18:50 -0700
-Message-ID: <CAM9d7cj+AzPwH8pjG+_HGfmMSMJm6XjkTgxRBWHNW4LF+XJomw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Clean up libperf cpumap's empty function
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+Date: Mon, 18 Mar 2024 21:24:48 -0700
+Message-ID: <CAM9d7cia-zbAO_0U5MZA24-fGqjqAFT+SxN+DP60auCBy=_7Ww@mail.gmail.com>
+Subject: Re: [PATCH v3] perf lock contention: skip traceiter functions
+To: Anne Macedo <retpolanne@posteo.net>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
-	Leo Yan <leo.yan@linux.dev>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 2:37=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Mar 15, 2024 at 4:19=E2=80=AFAM Anne Macedo <retpolanne@posteo.net>=
+ wrote:
 >
-> On Thu, Mar 07, 2024 at 03:47:00PM -0800, Namhyung Kim wrote:
-> > Hi Ian,
-> >
-> > Sorry for the late reply.
-> >
-> > On Fri, Feb 16, 2024 at 5:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > On Wed, Feb 14, 2024 at 2:03=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > On Fri, Feb 2, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.c=
-om> wrote:
-> > > > >
-> > > > > Rename and clean up the use of libperf CPU map functions particul=
-arly
-> > > > > focussing on perf_cpu_map__empty that may return true for maps
-> > > > > containing CPUs but also with an "any CPU"/dummy value.
-> > > > >
-> > > > > perf_cpu_map__nr is also troubling in that iterating an empty CPU=
- map
-> > > > > will yield the "any CPU"/dummy value. Reduce the appearance of so=
-me
-> > > > > calls to this by using the perf_cpu_map__for_each_cpu macro.
-> > > > >
-> > > > > v3: Address handling of "any" is arm-spe/cs-etm patch.
-> > > > > v2: 6 patches were merged by Arnaldo. New patch added ensure empt=
-y
-> > > > >     maps are allocated as NULL (suggested by James Clark). Hopefu=
-lly a
-> > > > >     fix to "perf arm-spe/cs-etm: Directly iterate CPU maps".
-> > > > >
-> > > > > Ian Rogers (8):
-> > > > >   libperf cpumap: Add any, empty and min helpers
-> > > > >   libperf cpumap: Ensure empty cpumap is NULL from alloc
-> > > > >   perf arm-spe/cs-etm: Directly iterate CPU maps
-> > > > >   perf intel-pt/intel-bts: Switch perf_cpu_map__has_any_cpu_or_is=
-_empty
-> > > > >     use
-> > > > >   perf cpumap: Clean up use of perf_cpu_map__has_any_cpu_or_is_em=
-pty
-> > > > >   perf arm64 header: Remove unnecessary CPU map get and put
-> > > > >   perf stat: Remove duplicate cpus_map_matched function
-> > > > >   perf cpumap: Use perf_cpu_map__for_each_cpu when possible
-> > > >
-> > > > Ping. Thanks,
-> > > > Ian
+> The perf lock contention program currently shows the caller of the locks
+> as __traceiter_contention_begin+0x??. This caller can be ignored, as it i=
+s
+> from the traceiter itself. Instead, it should show the real callers for
+> the locks.
 >
-> > > Adrian and James, are you ok with this now?
+> When fiddling with the --stack-skip parameter, the actual callers for
+> the locks start to show up. However, just ignore the
+> __traceiter_contention_begin and the __traceiter_contention_end symbols
+> so the actual callers will show up.
 >
-> > I think James is fine now and the Intel-pt part seems straight-forward
-> > so I'd like to merge this change.  Please tell me if you have any conce=
-rns.
+> Before this patch is applied:
 >
-> Namhyung,
+> sudo perf lock con -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
 >
->         I noticed this hasn't been merged and applies cleanly, so I'm
-> adding it to perf-tools-next, from your comment above can I take it as
-> an Acked-by or even Reviewed-by?
+>          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __tracei=
+ter_contention_begin+0x44
+>          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __tracei=
+ter_contention_begin+0x44
+>          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __tracei=
+ter_contention_begin+0x44
+>          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_co=
+ntention_begin+0x84
+>          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __tracei=
+ter_contention_begin+0x44
+>          1     13.54 us     13.54 us     13.54 us        mutex   trace_co=
+ntention_begin+0x84
+>          1      3.67 us      3.67 us      3.67 us      rwsem:R   __tracei=
+ter_contention_begin+0x44
+>
+> Before this patch is applied - using --stack-skip 5
+>
+> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
+>
+>          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll=
+_wait+0x5a0
+>          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+=
+0x338
+>          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_sign=
+al+0x108
+>          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_=
+task+0x68
+>          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_k=
+n_lock_live+0x58
+>          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+=
+0x44
+>          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_=
+and_find_vma+0xb0
+>
+> After this patch is applied:
+>
+> sudo ./perf lock con -a -b -- sleep 3
+>  contended   total wait     max wait     avg wait         type   caller
+>
+>          4      4.13 s       2.07 s       1.03 s      rwlock:W   release_=
+task+0x68
+>          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_updat=
+e_next_owner+0x50
+>          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+=
+0x338
+>          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_k=
+n_lock_live+0x58
+>          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+=
+0x338
+>
+> changes since v2:
+>
+> - add dummy value to machine->traceiter and machine->trace to make
+> necessary checks, fixing possible null pointer access
+>
+> changes since v1:
+>
+> - consider trace_contention and __traceiter_contention functions as
+> optional (i.e. check if sym is null to avoid segfault)
+>
+> changes since v0:
+>
+> - skip trace_contention functions
+> - use sym->end instead of __traceiter_contention_end for text_end
+>
+> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+> ---
+>  tools/perf/util/machine.c | 29 +++++++++++++++++++++++++++++
+>  tools/perf/util/machine.h |  2 +-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 527517db3182..373a3b852f72 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -3266,6 +3266,22 @@ bool machine__is_lock_function(struct machine *mac=
+hine, u64 addr)
+>
+>                 sym =3D machine__find_kernel_symbol_by_name(machine, "__l=
+ock_text_end", &kmap);
+>                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->start=
+);
+> +
+> +               sym =3D machine__find_kernel_symbol_by_name(machine, "__t=
+raceiter_contention_begin", &kmap);
+> +               if (sym) {
+> +                       machine->traceiter.text_start =3D map__unmap_ip(k=
+map, sym->start);
+> +                       machine->traceiter.text_end =3D map__unmap_ip(kma=
+p, sym->end);
+> +               } else {
+> +                       machine->traceiter.text_start =3D 1;
+> +               }
 
-Oh, I thought I did it already, but I probably missed pushing it. :(
+I think you can remove the else part as it's initialized to 0
+and the addresses cannot be 0.
 
-Sure you can add it,  I'll do that for the sake of b4.
+> +
+> +               sym =3D machine__find_kernel_symbol_by_name(machine, "tra=
+ce_contention_begin", &kmap);
+> +               if (sym) {
+> +                       machine->trace.text_start =3D map__unmap_ip(kmap,=
+ sym->start);
+> +                       machine->trace.text_end =3D map__unmap_ip(kmap, s=
+ym->end);
+> +               } else {
+> +                       machine->trace.text_start =3D 1;
+> +               }
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Ditto.
+
+
+>         }
+>
+>         /* failed to get kernel symbols */
+> @@ -3280,5 +3296,18 @@ bool machine__is_lock_function(struct machine *mac=
+hine, u64 addr)
+>         if (machine->lock.text_start <=3D addr && addr < machine->lock.te=
+xt_end)
+>                 return true;
+>
+> +       /* traceiter functions currently don't have their own section
+> +        * but we consider them lock functions
+> +        */
+> +       if (machine->traceiter.text_start !=3D 1) {
+
+Then you can just check if it's non-zero here.
+
+
+> +               if (machine->traceiter.text_start <=3D addr && addr < mac=
+hine->traceiter.text_end)
+> +                       return true;
+> +       }
+> +
+> +       if (machine->trace.text_start !=3D 1) {
+
+And here too.
 
 Thanks,
 Namhyung
+
+
+> +               if (machine->trace.text_start <=3D addr && addr < machine=
+->trace.text_end)
+> +                       return true;
+> +       }
+> +
+>         return false;
+>  }
+> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> index e28c787616fe..4312f6db6de0 100644
+> --- a/tools/perf/util/machine.h
+> +++ b/tools/perf/util/machine.h
+> @@ -49,7 +49,7 @@ struct machine {
+>         struct {
+>                 u64       text_start;
+>                 u64       text_end;
+> -       } sched, lock;
+> +       } sched, lock, traceiter, trace;
+>         pid_t             *current_tid;
+>         size_t            current_tid_sz;
+>         union { /* Tool specific area */
+> --
+> 2.39.2
+>
