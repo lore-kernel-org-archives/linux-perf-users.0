@@ -1,25 +1,53 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34DA964CE9;
-	Tue, 19 Mar 2024 02:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D5B7BAF7
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 03:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710815179; cv=none; b=mAmqoI+0cJouvy00IxFIgoghU3YbqqVxehAUjuMXHUIGR8tF0zUN6zYvKKsckdrmItztncZXEzT/fuHPW6FPGtJSHe3Kb+4rjxTT2ZMQo/v2vk3yBZXTu/6ZTg/Jd3JUXKkI9vqTy3EM7liIunFzqVrklSsvyMmtJSv5PP6J87o=
+	t=1710820189; cv=none; b=bnfj1/ZyikUKxwaND60LjVMrZ5VRNic1j5ByXup8jL8ubmLI/sgiEvOw1+4nvA5XMoJ59sfg4d8HEfSD0oQoG/IDEyPuNvR6F5y1WUepSAe6Tvy+9edR3SZi63+Hrxw9Xi5/Oft7rdSweUVpNLP3hhIqr7pSuUTbwx5wD2Whwps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710815179; c=relaxed/simple;
-	bh=KQzfakRcrbHa4iQaTVLI/sbWCXQ1mlHncl75EffgA64=;
+	s=arc-20240116; t=1710820189; c=relaxed/simple;
+	bh=hNPVXYOhJcoLVTEV4WarZkDlgxg2epWF1bGQ17SmhQM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WY2QzQwbXtVIO/MFMBmnnROGoFkDdFNLqJbQyxRG0tgAeLtRpFNocG+050E1inAh64banbty4xnp1rG0vo3py9zLpCYXq99iPqyACp+h3eP1i6hptskos2hPDVb/F4y0J3aNy7CyGSFPUhoRFQ+L8AeRUH+n+HgCmpfNqFIXwOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72621106F;
-	Mon, 18 Mar 2024 19:26:49 -0700 (PDT)
-Received: from [10.163.53.80] (unknown [10.163.53.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB44B3F762;
-	Mon, 18 Mar 2024 19:26:12 -0700 (PDT)
-Message-ID: <ad9bdae3-0eb2-4262-8412-ba42c27ee767@arm.com>
-Date: Tue, 19 Mar 2024 07:56:02 +0530
+	 In-Reply-To:Content-Type; b=rXwmS7pREMEp5TWzTfSuFz2MOmHWuNYvDNa2PQA7EHsQt8WNxS2n+iBbumiPogTHlmQeuRWYCVpLFJ5aoGm3/cCXnnXtyWEiafYS9u7tRTJObt3DKQ+IgKs+1zTUkQIrktFHF60BIXUpvEkQUWn5hWjgfuFM3RJsiI2UAs89gDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=jEicmtQt; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jEicmtQt"
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id mHF2reUpJPM1hmQTyrOusz; Tue, 19 Mar 2024 03:49:46 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id mQTwrhTs2EKylmQTwre6dL; Tue, 19 Mar 2024 03:49:44 +0000
+X-Authority-Analysis: v=2.4 cv=Bombw5X5 c=1 sm=1 tr=0 ts=65f90b58
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=cm27Pg_UAAAA:8 a=VRTBL-XNDjFAICBfogcA:9
+ a=QEXdDO2ut3YA:10 a=1F1461vogZIA:10 a=5kKzt1m56AEA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=SLz71HocmBbuEhFRYD3r:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=W2zZsoQWdc3rKe29I0hrlQr5HJTS/IblWppWq5S0AJA=; b=jEicmtQts4e0AtILeFpXWu2//o
+	XkPK7qH3ksyoQlXvWjiqhJJ0D37F5LNTRknSJacYIF0CgkjjBKpCi42DTexuHIfvpD9mvCMTBAoNa
+	5l/7bZr58+hPt6kxjNYFLNM3OqYGgnDaXZ1NLYFcDlT5odz0e5fzgugptaq1/IxIpgNoR8fnVtLoS
+	IXXJBZnfV01ZEWQJlPxtfLIVSkNHBdosWCBLIx5YeTdglM774IuqpNDgf/mjEM9O6ZvwDoo7D0rtL
+	/7d1J8NzTLTqQQgxuzGunUlyKabpg3CBetfp23D4WAgrHGKU6zZYiI2j52zCBkfgYSZFsoOoaECMU
+	FpRAC2IQ==;
+Received: from [201.172.174.229] (port=34604 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rmQTs-004HQs-1n;
+	Mon, 18 Mar 2024 22:49:40 -0500
+Message-ID: <38c7e956-9161-41d0-94a1-5f55481fd8a3@embeddedor.com>
+Date: Mon, 18 Mar 2024 21:49:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,167 +55,109 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf tools: Only treat files as map files when they
- have the extension .map
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
- anshuman.khandual@arm.com,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20240220042957.2022391-1-ChaitanyaS.Prakash@arm.com>
- <20240220042957.2022391-3-ChaitanyaS.Prakash@arm.com>
- <CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com>
- <ZdYPf3wMl35VemsL@x1> <0fa391c6-fd9e-42fe-b535-17e7725280e5@arm.com>
- <ZfSw7AL8EgFoFQkM@x1>
+Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
+ arithmetic
 Content-Language: en-US
-From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
-In-Reply-To: <ZfSw7AL8EgFoFQkM@x1>
+To: Kees Cook <keescook@chromium.org>, Erick Archer <erick.archer@gmx.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240317164442.6729-1-erick.archer@gmx.com>
+ <202403181635.46CBABD994@keescook>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202403181635.46CBABD994@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.229
+X-Source-L: No
+X-Exim-ID: 1rmQTs-004HQs-1n
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.174.229]:34604
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJcGLowFJ28oWysjXgCZG6eoQ6QTA1D6/LRVonGmjNkxHUQuSlCMlD0cxkRiVzu/ovT0Y1SsnMJbg7yJmqidMawXQxKCVolsPAXtupJY3FPfRELPZy5y
+ mHmVcQZPS+mWPYegtKcz1Kq/j9QlOX6qM/FvGaUutO4ZTZ6F+qKBIuAtY6YQVK2J8J5ZAJdMU+6YNmUanBdSbZllAsxpN7zlVwTWdCsxtnLa8kQfNup4NfOK
 
-On 3/16/24 02:04, Arnaldo Carvalho de Melo wrote:
-> On Fri, Feb 23, 2024 at 05:40:02PM +0530, Chaitanya S Prakash wrote:
->> I'll make the changes, thanks for the review.
-> Have you submitted a new series?
->
-> Thanks,
->
-> - Arnaldo
-I will be posting it this week, extremely sorry for the delay!
->   
->> On 2/21/24 20:28, Arnaldo Carvalho de Melo wrote:
->>> On Tue, Feb 20, 2024 at 06:40:47AM -0800, Ian Rogers wrote:
->>>> On Mon, Feb 19, 2024 at 8:30 PM Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com> wrote:
->>>>> +++ b/tools/perf/util/string2.h
->>>>> @@ -40,5 +40,6 @@ char *strdup_esc(const char *str);
->>>>>
->>>>>    unsigned int hex(char c);
->>>>>    char *strreplace_chars(char needle, const char *haystack, const char *replace);
->>>>> +const char *ends_with(const char *str, const char *suffix);
->>>> nit: string2.h is an extension of linux's string.h. The tools copy of
->>>> that is missing functions in the kernel version:
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/string.h?h=perf-tools-next
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/include/linux/string.h?h=perf-tools-next#n398
->>>> specifically str_has_prefix.
->>>>
->>>> The naming ends_with makes sense but there is also strstarts and
->>>> str_has_prefix, perhaps str_has_suffix would be the most consistent
->>>> and intention revealing name?
->>>>
->>>> Also, we have strtailcmp which behaves like a reverse strcmp that
->>>> doesn't compare the lengths of the strings. It seems all uses of
->>>> strtailcmp are just for a "str_has_suffix". It would make sense to me
->>>> to remove that function and switch to a common str_has_suffix function
->>>> which I think is a more intention revealing way of naming what the
->>>> code is doing.
->>> So far in perf we try to just reuse whatever function the kernel has for
->>> the purpose at hand, right now the kernel has:
->>>
->>> /**
->>>    * strstarts - does @str start with @prefix?
->>>    * @str: string to examine
->>>    * @prefix: prefix to look for.
->>>    */
->>> static inline bool strstarts(const char *str, const char *prefix)
->>> {
->>>           return strncmp(str, prefix, strlen(prefix)) == 0;
->>> }
->>>
->>> And:
->>>
->>> /**
->>>    * str_has_prefix - Test if a string has a given prefix
->>>    * @str: The string to test
->>>    * @prefix: The string to see if @str starts with
->>>    *
->>>    * A common way to test a prefix of a string is to do:
->>>    *  strncmp(str, prefix, sizeof(prefix) - 1)
->>>    *
->>>    * But this can lead to bugs due to typos, or if prefix is a pointer
->>>    * and not a constant. Instead use str_has_prefix().
->>>    *
->>>    * Returns:
->>>    * * strlen(@prefix) if @str starts with @prefix
->>>    * * 0 if @str does not start with @prefix
->>>    */
->>> static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
->>> {
->>>           size_t len = strlen(prefix);
->>>           return strncmp(str, prefix, len) == 0 ? len : 0;
->>> }
->>>
->>> The later seems to give more bang for the buck, so to say, returning the
->>> prefix lenght.
->>>
->>> It is a new addition:
->>>
->>> 72921427d46bf9731 (Steven Rostedt (VMware) 2018-12-21 18:10:14 -0500 398) static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
->>>
->>> While:
->>>
->>> 66f92cf9d415e96a5 (Rusty Russell           2009-03-31 13:05:36 -0600 249)  * strstarts - does @str start with @prefix?
->>>
->>> ⬢[acme@toolbox linux]$ git grep str_has_prefix| wc -l
->>> 94
->>> ⬢[acme@toolbox linux]$ git grep strstarts| wc -l
->>> 177
->>> ⬢[acme@toolbox linux]$
->>>
->>> Some places use it:
->>>
->>> kernel/printk/printk.c: len = str_has_prefix(str, "on");
->>> kernel/printk/printk.c: len = str_has_prefix(str, "off");
->>> kernel/printk/printk.c: len = str_has_prefix(str, "ratelimit");
->>>
->>>
->>> static int __control_devkmsg(char *str)
->>> {
->>> 	size_t len;
->>>
->>> 	if (!str)
->>> 		return -EINVAL;
->>>
->>> 	len = str_has_prefix(str, "on");
->>> 	if (len) {
->>> 		devkmsg_log = DEVKMSG_LOG_MASK_ON;
->>> 		return len;
->>> 	}
->>>
->>> 	len = str_has_prefix(str, "off");
->>> 	if (len) {
->>> 		devkmsg_log = DEVKMSG_LOG_MASK_OFF;
->>> 		return len;
->>> 	}
->>>
->>> 	len = str_has_prefix(str, "ratelimit");
->>> 	if (len) {
->>> 		devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
->>> 		return len;
->>> 	}
->>>
->>> 	return -EINVAL;
->>> }
->>>
->>>
->>>                   err = __control_devkmsg(devkmsg_log_str);
->>>                   /*
->>>                    * Do not accept an unknown string OR a known string with
->>>                    * trailing crap...
->>>                    */
->>>                   if (err < 0 || (err + 1 != *lenp)) {
->>>
->>>                           /* ... and restore old setting. */
->>>                           devkmsg_log = old;
->>>                           strncpy(devkmsg_log_str, old_str, DEVKMSG_STR_MAX_SIZE);
->>>
->>>                           return -EINVAL;
->>>                   }
->>>
->>>
->>> So yeah, I agree with Ian that it is more intention revealing, has this
->>> bonus of returning the strlen for the above use cases, is in the kernel
->>> sources, so I'm in favour of grabbing a copy of it and replacing the
->>> strstarts() usage with it, drop strstarts(), then also introduce
->>> str_has_suffix(), the kernel will get it when it needs, possibly from
->>> tools/lib/ :-)
->>>
->>> - Arnaldo
+
+
+On 18/03/24 17:40, Kees Cook wrote:
+> On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
+>> This is an effort to get rid of all multiplications from allocation
+>> functions in order to prevent integer overflows [1][2].
+>>
+>> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
+>> this structure ends in a flexible array:
+>>
+>> struct rapl_pmus {
+>> 	[...]
+>> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
+>> };
+>>
+>> the preferred way in the kernel is to use the struct_size() helper to
+>> do the arithmetic instead of the calculation "size + count * size" in
+>> the kzalloc() function.
+>>
+>> This way, the code is more readable and safer.
+>>
+>> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+>> Link: https://github.com/KSPP/linux/issues/160 [2]
+>> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> 
+> Thanks!
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> I was inspired to come up with a Coccinelle script to find this pattern.
+> This seems to do it, though it also removes the blank line. I'm not sure
+> how to stop it from doing that. I'm running this treewide to see if I
+> can find others...
+> 
+> // Options: --no-includes --include-headers
+
+with --no-includes this one is missed in arch/x86/events/:
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 258e2cdf28fa..213fe48f9391 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -350,12 +350,11 @@ static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
+  static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
+                                                  int node)
+  {
+-       int i, size, numshared = type->num_shared_regs ;
++       int i, numshared = type->num_shared_regs ;
+         struct intel_uncore_box *box;
+
+-       size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+-
+-       box = kzalloc_node(size, GFP_KERNEL, node);
++       box = kzalloc_node(struct_size(box, shared_regs, numshared),
++                          GFP_KERNEL, node);
+         if (!box)
+                 return NULL;
+
+Funny thing is that in this case it's quite convenient that the script removes
+the blank like. :P
+
+--
+Gustavo
+
