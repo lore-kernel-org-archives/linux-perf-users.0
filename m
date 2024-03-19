@@ -1,162 +1,145 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7302B9CF;
-	Tue, 19 Mar 2024 17:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F0A2C18E;
+	Tue, 19 Mar 2024 18:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710870285; cv=none; b=T19UgmrnTYlHZswjLUj2fJskbzKxBPwaRQ+y7fGRjGKF4eg2Qg4xNPD0+HCXVxU749rNitzasWmbckmP7KgxenaFWxgLWZf8IwlEtzrnEIxg5O/kuh/8lL/V2vPOzGQBdFsOlfhSNb45KWR6XubUNS0gIKFsyKyc+9VtVBDhM+s=
+	t=1710871216; cv=none; b=s4RyljexK8obcUo7Chjzva1qg3yPhMkJTivzzLepFuxcBOaieQuZf7jBciuIL63dtnpyIOPWiAo5ezNH1w59QdLEF+nO32uiM5xhuyhvi3QrFCE4K+Sq/5wsg9jbuiPCQgZtcrRfHcdrnNDT5HiEp/sILkOGqTCupB0eUFNkjHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710870285; c=relaxed/simple;
-	bh=YNQG5gO9WlpU/AlVGMzkLhdH1gT/jgzXyquEnTHOZ+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VShQO6oHLksBO9IUDcUqSPcKhLFyTnlMWoheHtW7KOKi0t2UWiYilb5XxI7dm7EQu9S/6VnUdwXJCTDrpwzWHn+78M0wiAvHZMJadLjAZXuwGki5DJvR0jSXwKc8YOxe3mvLMjO7azlRYb0//9azPMZwY3YXqEB32+N+qRaqsks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1710871216; c=relaxed/simple;
+	bh=m6qS5617TuTpmfK97/po0jJIyNcw9wN2GHQJwTKGgww=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YgNU7whFRFdBmSLXS/O/gJ9dTZNrioF5K5ii8+iwqz0fSqsriPM/BIsD+OZBfUjAerkpliorTpnAvQxEyZrAZW87xoybggZ80ZxXQrviPiNURz4dBU9DU/UTXOLezrvrW1obw9/c6/94G/udLiH3DyiZqjgOED1aYt8PUJLB9dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P28VbwyB; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so4723730a12.1;
-        Tue, 19 Mar 2024 10:44:43 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P28VbwyB"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dee5daedf6so7810645ad.0;
+        Tue, 19 Mar 2024 11:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710871215; x=1711476015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/7BfNykyTLG5a+/FmijDVcSSld3Qh/CcbfWa98bWLIQ=;
+        b=P28VbwyBAyTRH+x0rSgK34ROjRqFr1yL00lFZjp3aaXgpXEb18eEbakS5Btk/or8Lb
+         hAyWAPFNFCpdHqMJTAGf0ut2f0FYF7dWWisTnnuKgYxZmLzRQjG5omG9Xuoaw+NTYlnT
+         5d2TqrxyVACfSeUSqng3fpS0ObQpFI22mhaDOb7bIfEVYQQYi9i5kD2AGDp1M76GoFsX
+         jnLbF8W8cjY7wbq+SNgBpj0e58AwKUNJK56Ghr+ozMbcj6gJeaaMPtp+qRxRT8PGytwG
+         rgrOj2Y8rvMFsEYZuMxiHnHs06XGEj8ey0q+KOMWCOY6YvowFq8y6hUi/3Q+SOS0gyFr
+         ynJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710870283; x=1711475083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LLidFdPPt+9QGX0eU+M4Nd/N7qIdu9ep3/M0iAS5xu8=;
-        b=cEWK4zAIUwliT+5wxQS3Z1UD6P4VM+fZd0H6tj4KfaPxtc/RVHUVZtE5SoSH1uoR5G
-         STHrut/XE+f2GfOuOdU7yMwRvL2Cg2PlAisv22XUpLxlJ1lytfO1I6FDF4n0V8yFI5zn
-         5XROr3DLVAVF6u6jq5artN4AmWQiCefWiyyItCDbUMErShMi7omQKXRgoJAd0tgZWTz4
-         pKblbxUbC3zbjPU2uYLMsi5QUXsCUmemaJNcCigvGyOV+1B/0iMEXkRiyKAt/2qnV8j7
-         ACdQtMrNe97CARH6tSbXhUxjEufXO46r/RMFpzN2oHlqAPxYmJ8tGVOJ5mjKO4wDD30M
-         hzlA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpvTwIu0sAahrN0JWn9l2ygycNvikVgRmDWHKRH302434V/UMmIsfsJgVqogNqkdKENtss+Ectx72fCfnw8OF57ndRL/xSLX8lK2aLvLJAaiCNmMXMURVag6l5vj8zaoPEA+Q4s72Us/RNM6mymF+zYYB6fRhzmYNtfFBgQCqtTvbt/o48+xZlMghmjOiULhSUb0i6XZoxrBQQXUMUWAYud2L+DBEWokt7Ts5ACK/t7aIpUA==
-X-Gm-Message-State: AOJu0YyhumyqE3V+i9L4MK3YDrwv90TaRzBQmjyOreh97IhiR3K76q+l
-	GDrnp7kUp0hnN57KK8J4UMdSHl052XJQOm4WI6hc9W4dwbkh/F3/EGaDUqIpcngzzYo4eaZw9mc
-	HGrsjTXFCCmGK5U1Ng90dnrv1ClE=
-X-Google-Smtp-Source: AGHT+IEcwxRhZAINrFOhMoOKS6MDR9e+tjMHRVCgvgpferCGmN4fIMPxcMoI52RIPOXBxjAGEjlOyFbebnpE8YNdCn4=
-X-Received: by 2002:a17:90a:ce12:b0:29b:b485:f4f8 with SMTP id
- f18-20020a17090ace1200b0029bb485f4f8mr12573838pju.20.1710870283313; Tue, 19
- Mar 2024 10:44:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710871215; x=1711476015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/7BfNykyTLG5a+/FmijDVcSSld3Qh/CcbfWa98bWLIQ=;
+        b=mEqsUQLG/FU3YPSrB1M6djBjqoQ27JrkRMbzwM0QtXo6Q5U0cXzuqqDdyRU48MVxpL
+         tH2pqZqI/hwEk5Bfk+3QmhOnusJZ+MP0S+2o0smxwVPnrz4fpflN0H4sDLhCtsg5yMnj
+         KfO1RbJ8N4bk3pk3YVlxF3nc9/VPSP32AYjCUowFFybIY7b0rkQBGU9riSU9jyYbsq/C
+         dXH5J49IQtMxoxKD7fBotfj9yFLTc4ZUJKwUU2o57x7BP9+6dm2hRApjhnze+3D+FbdD
+         9ZBgGUh9VrjQS73qfxURkeGZVK0DE+3GlKeqYQF9YcP5R7TpFVFG9+fXlTur12lTr3UR
+         G6/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ7GK43co8a28dgK+OKjNrJFrJkxyqEfZyJ2XMOOCnSDCBHuPFxqf2jOWRar2rb1wLhUdt6ikIjjleRzLCC9vc/0NTTsU48T0PPegSx1/eTk4aQZMEyhnFLlySTI2U+X7YAfQ7KR7iohRTSXOEDUHqwKhWjTED4lRXrxvnSmuodVVh0ci5HdLHl/2Rh8AXjscmCwlglL+q/jgTtRD9Y1v5ZHzUgC2ED2pAJFcM
+X-Gm-Message-State: AOJu0Yw5iOxD9WJD0kQYY5rX8hQMzyK9dVv7j3Y+AKNRf22kKG55aziw
+	TUxirhrwoevl/JGrZSe2djhgwTM26PX9vD8E+W1x5XWwNZVysdr4
+X-Google-Smtp-Source: AGHT+IHe8YREwchsBs/MaMDuaMAMnJOq1i+WfWlbqsJTZbtd+9d60AYKAxpEKoD2MKO4iTbMEMZ5oA==
+X-Received: by 2002:a17:903:2448:b0:1dd:85eb:b11 with SMTP id l8-20020a170903244800b001dd85eb0b11mr3178823pls.1.1710871214158;
+        Tue, 19 Mar 2024 11:00:14 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id u16-20020a17090341d000b001dd3bee3cd6sm5531359ple.219.2024.03.19.11.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 11:00:13 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: bfoster@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH 00/13] treewide: Refactor heap related implementation
+Date: Wed, 20 Mar 2024 01:59:52 +0800
+Message-Id: <20240319180005.246930-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319055115.4063940-1-namhyung@kernel.org> <20240319055115.4063940-10-namhyung@kernel.org>
- <ZfmcN4YuvQpVgJQN@x1>
-In-Reply-To: <ZfmcN4YuvQpVgJQN@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 19 Mar 2024 10:44:31 -0700
-Message-ID: <CAM9d7cjatKSH7hw_sC3MCmY1fYT+bDBgSpFWJg=RM2oqgL5X0A@mail.gmail.com>
-Subject: Re: [PATCH 09/23] perf annotate-data: Maintain variable type info
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 19, 2024 at 7:07=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Mar 18, 2024 at 10:51:01PM -0700, Namhyung Kim wrote:
-> > As it collected basic block and variable information in each scope, it
-> > now can build a state table to find matching variable at the location.
-> >
-> > The struct type_state is to keep the type info saved in each register
-> > and stack slot.  The update_var_state() updates the table when it finds
-> > variables in the current address.  It expects die_collect_vars() filled
-> > a list of variables with type info and starting address.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/annotate-data.c | 173 ++++++++++++++++++++++++++++++++
-> >  tools/perf/util/dwarf-aux.c     |   4 +
-> >  2 files changed, 177 insertions(+)
-> >
-> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate=
--data.c
-> > index f482ccfdaa91..8eaa06f1cee5 100644
-> > --- a/tools/perf/util/annotate-data.c
-> > +++ b/tools/perf/util/annotate-data.c
-> > @@ -46,6 +46,62 @@ static void pr_debug_type_name(Dwarf_Die *die)
-> >       free(str);
-> >  }
-> >
-> > +/* Type information in a register, valid when ok is true */
-> > +struct type_state_reg {
-> > +     Dwarf_Die type;
-> > +     bool ok;
-> > +};
-> > +
-> > +/* Type information in a stack location, dynamically allocated */
-> > +struct type_state_stack {
-> > +     struct list_head list;
-> > +     Dwarf_Die type;
-> > +     int offset;
-> > +     int size;
-> > +     bool compound;
-> > +};
-> > +
-> > +/* FIXME: This should be arch-dependent */
-> > +#define TYPE_STATE_MAX_REGS  16
-> > +
-> > +/*
-> > + * State table to maintain type info in each register and stack locati=
-on.
-> > + * It'll be updated when new variable is allocated or type info is mov=
-ed
-> > + * to a new location (register or stack).  As it'd be used with the
-> > + * shortest path of basic blocks, it only maintains a single table.
-> > + */
-> > +struct type_state {
-> > +     struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-> > +     struct list_head stack_vars;
-> > +};
-> > +
-> > +static bool has_reg_type(struct type_state *state, int reg)
-> > +{
-> > +     return (unsigned)reg < ARRAY_SIZE(state->regs);
-> > +}
-> > +
-> > +/* These declarations will be remove once they are changed to static *=
-/
-> > +void init_type_state(struct type_state *state, struct arch *arch __may=
-be_unused);
-> > +void exit_type_state(struct type_state *state);
-> > +void update_var_state(struct type_state *state, struct data_loc_info *=
-dloc,
-> > +                   u64 addr, u64 insn_offset, struct die_var_type *var=
-_types);
-> > +
-> > +void init_type_state(struct type_state *state, struct arch *arch __may=
-be_unused)
-> > +{
-> > +     memset(state, 0, sizeof(*state));
-> > +     INIT_LIST_HEAD(&state->stack_vars);
-> > +}
-> > +
-> > +void exit_type_state(struct type_state *state)
-> > +{
-> > +     struct type_state_stack *stack, *tmp;
-> > +
-> > +     list_for_each_entry_safe(stack, tmp, &state->stack_vars, list) {
-> > +             list_del(&stack->list);
->
-> list_del_init()?
+Hello,
 
-Maybe.. but I'm not sure how much value it'd have as we free it right after=
-.
+This patch series focuses on several adjustments related to heap
+implementation. Firstly, a type-safe interface has been added to the
+min_heap, along with the introduction of several new functions to
+enhance its functionality. Additionally, the heap implementation for
+bcache and bcachefs has been replaced with the generic min_heap
+implementation from include/linux. Furthermore, several typos have been
+corrected.
 
-Thanks,
-Namhyung
+Previous discussion with Kent Overstreet:
+https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
 
->
-> > +             free(stack);
-> > +     }
-> > +}
-> > +
+Regards,
+Kuan-Wei
+
+Kuan-Wei Chiu (13):
+  perf/core: Fix several typos
+  bcache: Fix typo
+  bcachefs: Fix typo
+  lib min_heap: Add type safe interface
+  lib min_heap: Add min_heap_init()
+  lib min_heap: Add min_heap_peek()
+  lib min_heap: Add min_heap_full()
+  lib min_heap: Add args for min_heap_callbacks
+  lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
+    values
+  bcache: Remove heap-related macros and switch to generic min_heap
+  lib min_heap: Add min_heap_del()
+  lib min_heap: Add min_heap_sift_up()
+  bcachefs: Remove heap-related macros and switch to generic min_heap
+
+ drivers/md/bcache/alloc.c      |  66 ++++++++----
+ drivers/md/bcache/bcache.h     |   2 +-
+ drivers/md/bcache/bset.c       |  73 ++++++++-----
+ drivers/md/bcache/bset.h       |  38 ++++---
+ drivers/md/bcache/btree.c      |  27 ++++-
+ drivers/md/bcache/extents.c    |  44 ++++----
+ drivers/md/bcache/movinggc.c   |  40 ++++++--
+ drivers/md/bcache/super.c      |  16 +++
+ drivers/md/bcache/sysfs.c      |   3 +
+ drivers/md/bcache/util.c       |   2 +-
+ drivers/md/bcache/util.h       |  81 +--------------
+ drivers/md/dm-vdo/repair.c     |  29 +++---
+ drivers/md/dm-vdo/slab-depot.c |  21 ++--
+ fs/bcachefs/clock.c            |  53 +++++++---
+ fs/bcachefs/clock_types.h      |   2 +-
+ fs/bcachefs/ec.c               |  99 +++++++++++-------
+ fs/bcachefs/ec_types.h         |   2 +-
+ fs/bcachefs/util.c             |   2 +-
+ fs/bcachefs/util.h             | 127 ++---------------------
+ include/linux/min_heap.h       | 180 ++++++++++++++++++++++++++-------
+ kernel/events/core.c           |  53 +++++-----
+ lib/test_min_heap.c            |  75 +++++++-------
+ 22 files changed, 565 insertions(+), 470 deletions(-)
+
+-- 
+2.34.1
+
