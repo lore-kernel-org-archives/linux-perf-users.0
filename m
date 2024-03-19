@@ -1,183 +1,141 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700747D3FB;
-	Tue, 19 Mar 2024 09:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF14A7C6CC;
+	Tue, 19 Mar 2024 10:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710842169; cv=none; b=RQrI5vX6oCDPLx+q4zs2neD8DDhScOf7TZ7IjRhWvJeK0vw48kUWYiO1qjrSZWP37jTTq/UdxrYEY9aITAo3UAo+LilyqyzH0GRP6m9RhLv9+XXqsI8lTUFSmk11+M9F+UCF0QoFH9Dx+++EKSTz5Fuf/PR9ah2hAEB/RdUitbw=
+	t=1710843483; cv=none; b=uR+dT2wk08ekWP9KljnyChH7PomlyeONu3SvS5fmHC7bYoQU6P08tkiTFQxx80GmoVCHXbPIM+Rg5vB3RxYcSlx3KmRuJey9F6mV0uXfjBeP5PV/CCVnOPaE+kFwoYrG/dJPovwMd9y1sgHdx7BLecxO/eVXYntNbhO31R4ov0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710842169; c=relaxed/simple;
-	bh=6Q1YQ9YaWQnSUaD6gx/UktQdUNdjrS2tZjoZqNG5yTs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R6Gg/VLxguN48rf/dHJsWwRCqGrSgOptcFYFjNFv/il2jaHVxhL6ddNPdFQ9BWZKFp/sUSb8K9Jr46KuvCsChQM6UkEuE0Vl1c8ifOFpYsuGmD34+05KaJFhZGhFW46JKQI2CWzzbSO6jYGAdQnhrofyiwRrho9IfGgFnZcJwkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JUYBjJRF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1710843483; c=relaxed/simple;
+	bh=365o9eDCvsM8wbCp72AERkVI996vUgJ5Na3hZvSH5kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSx+7pE84NsC2rhjy0GDpobpKvCLE/vEchc60PU6mxPKZGMk3oe14l2WRi5yJRUq+tnCMvBQnDt/HujZTSecI7C63IFWD4SttKjZJ4Ovd7VLZSafiQGIgwJ+9Bwuuzs0OK21JlG4upErwDn98gLgh1Y/lczR0qNWEc9+VB5VKq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rs56Prpc; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JUYBjJRF"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42J9WUW7021788;
-	Tue, 19 Mar 2024 09:56:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=QpOwfZ/YlyW8DcF4PsTBwqDZqHcO+DL5JJeLS2rz8Qs=;
- b=JUYBjJRFTJR2vEHdQ6gUNfiUqzapIMrWfqKSaH7WlJknGSCD/VjXI/lWNlgTK0ExMvb1
- LO6y9K2aePFNK9tkX5RR0FU/Z1uJnHttTgKwJwqfPNeiGsDMhANcQBhplTuqERGnYKnj
- 8xgPA7RzXrXKzHM7CHFdk1wQ7fpjqfkI/ULNL+EauU4nVfzq4CeGS4m8BS1X4JDzjfMu
- cUor2NgIzTwdmtv6TNsA8WZvkZt2chj8HDmhOS/ocJEqn0AhEU4OnCin8ZGQY3mZJpjV
- eX2U6vI9GlVFRCOZK68RaMbe4eybdO0McUism3fgJ7Ztr+8ccHOip61P6bD0p0NDcFyB jQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy85n83ya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:56:03 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42J9u2k8005123;
-	Tue, 19 Mar 2024 09:56:02 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy85n83y9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:56:02 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J7Jvla017231;
-	Tue, 19 Mar 2024 09:51:02 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwnrt6u1r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 09:51:02 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42J9ouJp25297416
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 09:50:58 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 958AB2005A;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E38020043;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 09:50:56 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 2/2] perf list: do not print metrics on s390 zvm systems
-Date: Tue, 19 Mar 2024 10:50:43 +0100
-Message-Id: <20240319095043.857594-2-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240319095043.857594-1-tmricht@linux.ibm.com>
-References: <20240319095043.857594-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rs56Prpc"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-414612cfd82so8067915e9.2;
+        Tue, 19 Mar 2024 03:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710843480; x=1711448280; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MnHSJBNeEvbT29QiMgDZHpJRvsgypNSMg8OafGtTRvs=;
+        b=Rs56Prpca1H7JfSW05TjlEWPxif3iROSD8vF6zKqKJxISmWC28NkwvXfCAyxHxCaZS
+         NsVZRjX0lV1/HDDGu5y9FfAoWfwtQp2O0nK/A8jy1RauqzfqZe4WRKHNZTmlZuJ2pDAZ
+         fFb7nB6uEZHXmshM3PIKtv8dGjnolelzhsuaaTxhWdo/WFguDNuso9/+ZSwXLkUwkqlz
+         3K8TS1zCOs/9ZiSMLUvX4ZszMvLaM+34CDXXYkhe8OHvgo/1bZgvB+n69GwMjizYaRkv
+         YHkFpQmRtSRTAl6HD3sgZDjzVbdF8JQ+BAHP4RjEgS1g1OZGPJoJ+LgtMEZSf+7dfwX9
+         YcbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710843480; x=1711448280;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MnHSJBNeEvbT29QiMgDZHpJRvsgypNSMg8OafGtTRvs=;
+        b=VC2dM0ljm+k6TamiSp6/GYCbdb/5X3wN9u43hxHuDi5YI7D3HIJxqbxRl9kNBMxnVy
+         nq3fFJcqq+YZXSdxcJs4L94dQ9AdUfQps6t5Rkf5A09/Y0j1oDiNyZJ90HA7Sci1DiHT
+         aN7T2WlHvXGsfYX3MHfHL17Jlw7nCNvt7mYLuXm7O1JZZRR1D6SeE+C3eNDSd22dXiXp
+         e1OFdOJJz09ZQq3EOFLyWD8jjdlCpxsKsEXeVvEEczjGfroDZ9RWVrh9tzbifcniw1j1
+         Achk2U8R/X4SPEPGtf3dQYCetWSBwOQfrVrZ1HBuCy2xZbbYgUB7HslX1CM5Qx88Vrrf
+         qSnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAYT1URPSnVu2rGx87R0YBVa9z8C1sXX7ydiv+48ZgUPkqBjrzjUnjQo/rSBj2c1IcVZPcuq+cyjHNDGX8wUoiGZRa28LIvHBrKFZs
+X-Gm-Message-State: AOJu0Yztjawinhwkjh+++rPcjI9XV3KzgJvP5XIkeuzcqbiO5O/Ce/qY
+	PuKTMtZqqy34hEpdLFmT+Sw8wXDXW+m+Pw2MeL2B3V9SW49Qc3zM
+X-Google-Smtp-Source: AGHT+IFdl0FftVh0XL4WgEwBkni9DHeEr8l08lps6xbWM7T1YFUWMH9NANb4rR4i2mAfkji0A469Jg==
+X-Received: by 2002:a05:600c:4f88:b0:412:efc8:299b with SMTP id n8-20020a05600c4f8800b00412efc8299bmr1384372wmq.39.1710843479483;
+        Tue, 19 Mar 2024 03:17:59 -0700 (PDT)
+Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
+        by smtp.gmail.com with ESMTPSA id ck7-20020a5d5e87000000b0033b48190e5esm6798380wrb.67.2024.03.19.03.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 03:17:58 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Tue, 19 Mar 2024 11:17:55 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+	seanjc@google.com, pbonzini@redhat.com, eranian@google.com,
+	irogers@google.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
+Subject: Re: [PATCH v4 1/2] x86/cpufeatures: Add dedicated feature word for
+ CPUID leaf 0x80000022[EAX]
+Message-ID: <ZflmU+H2Lt2I0VOq@gmail.com>
+References: <cover.1710836172.git.sandipan.das@amd.com>
+ <846eebace0aea3a600b81b06bddd0024e5ac1350.1710836172.git.sandipan.das@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UcUxdN1hkDnoEjw-dYDpE_aJfsQIKbNq
-X-Proofpoint-GUID: 2jVV7YqfoNoE154-d1m7KTWv6n0pjF5h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190076
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <846eebace0aea3a600b81b06bddd0024e5ac1350.1710836172.git.sandipan.das@amd.com>
 
-On s390 z/VM virtual machines command perf list also displays metrics:
 
- # ./perf list | grep -A 20 'Metric Groups:'
- Metric Groups:
+* Sandipan Das <sandipan.das@amd.com> wrote:
 
- No_group:
-  cpi
-       [Cycles per Instruction]
-  est_cpi
-       [Estimated Instruction Complexity CPI infinite Level 1]
-  finite_cpi
-       [Cycles per Instructions from Finite cache/memory]
-  l1mp
-       [Level One Miss per 100 Instructions]
-  l2p
-       [Percentage sourced from Level 2 cache]
-  l3p
-       [Percentage sourced from Level 3 on same chip cache]
-  l4lp
-       [Percentage sourced from Level 4 Local cache on same book]
-  l4rp
-       [Percentage sourced from Level 4 Remote cache on different book]
-  memp
-       [Percentage sourced from memory]
-  ....
- #
+> Move the existing scattered performance monitoring related feature bits
+> from CPUID leaf 0x80000022[EAX] into a dedicated word since additional
+> bits will be defined from the same leaf in the future. This includes
+> X86_FEATURE_PERFMON_V2 and X86_FEATURE_AMD_LBR_V2.
+> 
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  arch/x86/include/asm/cpufeature.h        |  7 +++++--
+>  arch/x86/include/asm/cpufeatures.h       | 10 +++++++---
+>  arch/x86/include/asm/disabled-features.h |  3 ++-
+>  arch/x86/include/asm/required-features.h |  3 ++-
+>  arch/x86/kernel/cpu/common.c             |  3 +++
+>  arch/x86/kernel/cpu/scattered.c          |  2 --
+>  arch/x86/kvm/cpuid.c                     |  5 +----
+>  arch/x86/kvm/reverse_cpuid.h             |  1 -
+>  8 files changed, 20 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+> index a1273698fc43..68dd27d60748 100644
+> --- a/arch/x86/include/asm/cpufeature.h
+> +++ b/arch/x86/include/asm/cpufeature.h
+> @@ -33,6 +33,7 @@ enum cpuid_leafs
+>  	CPUID_7_EDX,
+>  	CPUID_8000_001F_EAX,
+>  	CPUID_8000_0021_EAX,
+> +	CPUID_8000_0022_EAX,
 
-This is not correct, on s390 z/VM virtual machines the referenced
-CPU Counter Measurement facility does not exist. The command
+>  #define X86_FEATURE_SYSCALL32		( 3*32+14) /* "" syscall in IA32 userspace */
+>  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
+>  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
+> -#define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+> +/* FREE!				( 3*32+17) */
+>  #define X86_FEATURE_CLEAR_CPU_BUF	( 3*32+18) /* "" Clear CPU buffers using VERW */
+>  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
+>  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
+> @@ -209,7 +209,7 @@
+>  #define X86_FEATURE_SSBD		( 7*32+17) /* Speculative Store Bypass Disable */
+>  #define X86_FEATURE_MBA			( 7*32+18) /* Memory Bandwidth Allocation */
+>  #define X86_FEATURE_RSB_CTXSW		( 7*32+19) /* "" Fill RSB on context switches */
+> -#define X86_FEATURE_PERFMON_V2		( 7*32+20) /* AMD Performance Monitoring Version 2 */
+> +/* FREE!				( 7*32+20) */
+>  #define X86_FEATURE_USE_IBPB		( 7*32+21) /* "" Indirect Branch Prediction Barrier enabled */
+>  #define X86_FEATURE_USE_IBRS_FW		( 7*32+22) /* "" Use IBRS during runtime firmware calls */
+>  #define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE	( 7*32+23) /* "" Disable Speculative Store Bypass. */
+> @@ -459,6 +459,10 @@
+>  #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* "" MSR_PRED_CMD[IBPB] flushes all branch type predictions */
+>  #define X86_FEATURE_SRSO_NO		(20*32+29) /* "" CPU is not affected by SRSO */
+>  
+> +/* AMD-defined performance monitoring features, CPUID level 0x80000022 (EAX), word 21 */
+> +#define X86_FEATURE_PERFMON_V2		(21*32+ 0) /* AMD Performance Monitoring Version 2 */
+> +#define X86_FEATURE_AMD_LBR_V2		(21*32+ 1) /* AMD Last Branch Record Extension Version 2 */
 
- # ./perf stat -M cpi -- true
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/.....'
-                       \___ Bad event or PMU
+Thank you! I presume you tested both patches on the relevant system 
+with the X86_FEATURE_AMD_LBR_PMC_FREEZE bug?
 
- Unable to find PMU or event on a PMU of 'CPU_CYCLES'
+Thanks,
 
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/...'
-                       \___ Cannot find PMU `CPU_CYCLES'.
-			    Missing kernel support?
- #
-
-fails.
-
-Perf list should not display the metrics when the referenced
-CPU Counter Measurement PMU is not available.
-
-Output after:
- # ./perf list | grep -A 20 'Metric Groups:'
- #
-
-Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- tools/perf/arch/s390/util/pmu.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/pmu.c
-index 886c30e001fa..2dc27acc860c 100644
---- a/tools/perf/arch/s390/util/pmu.c
-+++ b/tools/perf/arch/s390/util/pmu.c
-@@ -8,6 +8,7 @@
- #include <string.h>
- 
- #include "../../../util/pmu.h"
-+#include "../../../util/pmus.h"
- 
- #define	S390_PMUPAI_CRYPTO	"pai_crypto"
- #define	S390_PMUPAI_EXT		"pai_ext"
-@@ -20,3 +21,19 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
- 	    !strcmp(pmu->name, S390_PMUCPUM_CF))
- 		pmu->selectable = true;
- }
-+
-+const struct pmu_metrics_table *pmu_metrics_table__find(void)
-+{
-+	struct perf_pmu *pmu;
-+
-+	/*
-+	 * Metrics defined on events from PMU cpum_cf aren't supported
-+	 * on z/VM. Make sure the PMU exists and return NULL if that
-+	 * PMU cannot be found.
-+	 */
-+	pmu = perf_pmus__find("cpum_cf");
-+	if (pmu)
-+		return perf_pmu__find_metrics_table(pmu);
-+
-+	return NULL;
-+}
--- 
-2.44.0
-
+	Ingo
