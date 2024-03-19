@@ -1,87 +1,115 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CA93FB80;
-	Tue, 19 Mar 2024 20:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFCA5F860
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 22:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710880458; cv=none; b=uN6v9eIQGb49xwEI6CfmErj8TPMZGR1udrMQBOx+XfxQ0TZJMGFdiGOaZk/XNAtNC92NHftT8MS3VjeURgSudYhO8rJFQ0lUk1NnAC5ATAdZ6OhCNQKAqVCGDZ6C3m5O4oPSWutQrry16kodMrl7XOi5bOutWNdwXMHOWsmXQvc=
+	t=1710886347; cv=none; b=iK7ThtOxzqBY1Hgjvv04zhrSnckrEhnAK3e9Ew7jrmFQ7/UsMhIoSs+N+B0KnXTplF/M10NqNlkzm/Yil+fbpHRgd9QCRO0fOIXs8SiewcvoY9QLRH9V9I9m3GI+qMFdk/uBQOLc81akHnRqu+v4qAC3hsUN2zm9KzAWbh0MxpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710880458; c=relaxed/simple;
-	bh=fiaVOACM/C/ner0zjz+kZWrpVYTb+WyH0bwNXulDEN8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mvS2o4r92A1+ZhFbMJLaAt85S4XrrP2C2rZ9CScA3i+tDVtKuGYQRM/AUo7maAZqt5a1J5QLHdS7SiAYXmFPMbsFA0Rw05dwrujz8yrwSbKRBrcmSiH6dxiIJ0SmVQ3m02Nb3G/5Gvu4ovnNOL/SNrsJRrjZxZfWYQEL4FdvfEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-29de2dd22d8so3013214a91.2;
-        Tue, 19 Mar 2024 13:34:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710880456; x=1711485256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o+Df92XRVdf3D86q1MMjvFQKOFIc+7iDlGP6UKYnwIg=;
-        b=AiCpjm3f78tN+kGNHOtXIgZnXUqRN1W33iKnVVZjrwrn8teLTMX4bFoGUJ9lwVCUEQ
-         8ZxQKh/gpc3Okz0S2yoPiz0GE3NkXV5NQI9KjWoWkXvx9qxVnvnn7txe6xFAHerXfksP
-         SLpYPjY5QTqOusX5spQaWWDFEgXdgYNCJg2W18dXmcyz2zBBc5L7UOaLpVistWxIgc/t
-         5kBnZ8gmcEIisSmDbkTwAo8FJvBxfmpslEOA1NrjyVFejxQ+l4saSutmBoUnKramTOxC
-         XS+bXJ1lJn5Je0tgH/w8zvav9XHK2I0y4v12gkr7uX3Qb8NzS2xcOwBYgMoWsgCO3bWW
-         FYtg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3BD2NdVMhRNCwFwS+TAbmP6APoEaII33M9jgT0JE4VPCjJ0j3pK1CuIQlq7vd+yg4DtVsjGZLxTg+xz1u/jjL61N+wjCFUtnqFn8macEl+QhvvTZxsBr2WP2ncnRHtEyApctkUhnwXb6V4NaE54k2XI8/Ghoam3z+EQI53xpTUouM5V5LEyyCAdK/dxbJAYM/OWdFIcX2nNKWgwcEGvW/NcwtkkE6lIqF3DilAmSGF4wzJA==
-X-Gm-Message-State: AOJu0Yz/nEjIDv+cJF116HAhNbxv8F90B4+fa4j07aFg+Pc/HcK6hDOu
-	V5bQrn7udDT64BdzWN8E9ClszGCni+nOUZoChWvMajImPZIFP9v7rrm2t1+LIXRhcIBPM7UaUTc
-	EnpheVLDNCL4NmR/bcso2/3s9jnM=
-X-Google-Smtp-Source: AGHT+IGys9w9aG0aICGyKYR9HP8qtBimUlfM5OddAjz76RdcTxWoj2zCmFD78V8jRzfaZ16Yg9DhrKkOuqZ7xz82XQU=
-X-Received: by 2002:a17:90a:6c42:b0:29b:b3fa:b7a5 with SMTP id
- x60-20020a17090a6c4200b0029bb3fab7a5mr13418863pjj.7.1710880456588; Tue, 19
- Mar 2024 13:34:16 -0700 (PDT)
+	s=arc-20240116; t=1710886347; c=relaxed/simple;
+	bh=FSpXGTTyVcFLmOBYzG68wQp9qZCfjPDZWoIzafxsexY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVN/j9ZZCYcJmXCik1kO+nMrcvTjunrYXlC+gk7qh8z3yyz5RlVMsbOHGV0eD//P8xH0vx/71WQGT5y/yrpA0pn6CZZTOpUk3mvI8DzMPEtVA/9vyk2aEjrQFpzAFg/TnzVvC7G/JUQ+0GY/RKVmuWCH9I4dWSbs4/i5qST/eiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tvKCpo8r; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tvKCpo8r"
+Date: Tue, 19 Mar 2024 18:12:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710886342;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZHwWUj98l5L/yUkAsvEJGLxMWq5ZltzecbPLlxTRTAE=;
+	b=tvKCpo8ruu978e0ft9bxNb7vjIwS7F5eiZdqRWl4ERqglw7xu6OCOFCp33AoWTP3aDM8nN
+	fztlSwH0Fg+RK/ajUVdHbb46irQ6Rf9lS8Cb6SwSkgq1t3J6zu1bjyiPwa9tULiSYiHL9v
+	FLnbpGwUVRYQ+9WAvnZa/DGd++zZAAA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
+	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] treewide: Refactor heap related implementation
+Message-ID: <4t6kkvswhacphbjloh3fps7twqp5d3wgxv7yrkvthb5u3uzaoe@6pf7mnvsv3rm>
+References: <20240319180005.246930-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319055115.4063940-1-namhyung@kernel.org> <20240319055115.4063940-10-namhyung@kernel.org>
- <ZfmcN4YuvQpVgJQN@x1> <CAM9d7cjatKSH7hw_sC3MCmY1fYT+bDBgSpFWJg=RM2oqgL5X0A@mail.gmail.com>
- <ZfnVjPlo_L5l51Bq@x1>
-In-Reply-To: <ZfnVjPlo_L5l51Bq@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 19 Mar 2024 13:34:05 -0700
-Message-ID: <CAM9d7chUL9P5xBqezArz5sh4e+PFemCPCPt+a+PphGXJJYjRmw@mail.gmail.com>
-Subject: Re: [PATCH 09/23] perf annotate-data: Maintain variable type info
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
-	linux-trace-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319180005.246930-1-visitorckw@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Mar 19, 2024 at 11:12=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Mar 19, 2024 at 10:44:31AM -0700, Namhyung Kim wrote:
-> > On Tue, Mar 19, 2024 at 7:07=E2=80=AFAM Arnaldo Carvalho de Melo <acme@=
-kernel.org> wrote:
-> > > > +void exit_type_state(struct type_state *state)
-> > > > +{
-> > > > +     struct type_state_stack *stack, *tmp;
-> > > > +
-> > > > +     list_for_each_entry_safe(stack, tmp, &state->stack_vars, list=
-) {
-> > > > +             list_del(&stack->list);
->
-> > > list_del_init()?
->
-> > Maybe.. but I'm not sure how much value it'd have as we free it right a=
-fter.
->
-> Usually the value is in catching use after free more quickly, i.e.
-> someone may have a pointer to a freed list and then it would be able to
-> traverse the list of freed elements.
+On Wed, Mar 20, 2024 at 01:59:52AM +0800, Kuan-Wei Chiu wrote:
+> Hello,
+> 
+> This patch series focuses on several adjustments related to heap
+> implementation. Firstly, a type-safe interface has been added to the
+> min_heap, along with the introduction of several new functions to
+> enhance its functionality. Additionally, the heap implementation for
+> bcache and bcachefs has been replaced with the generic min_heap
+> implementation from include/linux. Furthermore, several typos have been
+> corrected.
+> 
+> Previous discussion with Kent Overstreet:
+> https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
 
-Ok, then. :)
+Hey, thanks for doing this. Can you post a git repo link? I'll point my
+CI at it.
+
+> 
+> Regards,
+> Kuan-Wei
+> 
+> Kuan-Wei Chiu (13):
+>   perf/core: Fix several typos
+>   bcache: Fix typo
+>   bcachefs: Fix typo
+>   lib min_heap: Add type safe interface
+>   lib min_heap: Add min_heap_init()
+>   lib min_heap: Add min_heap_peek()
+>   lib min_heap: Add min_heap_full()
+>   lib min_heap: Add args for min_heap_callbacks
+>   lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
+>     values
+>   bcache: Remove heap-related macros and switch to generic min_heap
+>   lib min_heap: Add min_heap_del()
+>   lib min_heap: Add min_heap_sift_up()
+>   bcachefs: Remove heap-related macros and switch to generic min_heap
+> 
+>  drivers/md/bcache/alloc.c      |  66 ++++++++----
+>  drivers/md/bcache/bcache.h     |   2 +-
+>  drivers/md/bcache/bset.c       |  73 ++++++++-----
+>  drivers/md/bcache/bset.h       |  38 ++++---
+>  drivers/md/bcache/btree.c      |  27 ++++-
+>  drivers/md/bcache/extents.c    |  44 ++++----
+>  drivers/md/bcache/movinggc.c   |  40 ++++++--
+>  drivers/md/bcache/super.c      |  16 +++
+>  drivers/md/bcache/sysfs.c      |   3 +
+>  drivers/md/bcache/util.c       |   2 +-
+>  drivers/md/bcache/util.h       |  81 +--------------
+>  drivers/md/dm-vdo/repair.c     |  29 +++---
+>  drivers/md/dm-vdo/slab-depot.c |  21 ++--
+>  fs/bcachefs/clock.c            |  53 +++++++---
+>  fs/bcachefs/clock_types.h      |   2 +-
+>  fs/bcachefs/ec.c               |  99 +++++++++++-------
+>  fs/bcachefs/ec_types.h         |   2 +-
+>  fs/bcachefs/util.c             |   2 +-
+>  fs/bcachefs/util.h             | 127 ++---------------------
+>  include/linux/min_heap.h       | 180 ++++++++++++++++++++++++++-------
+>  kernel/events/core.c           |  53 +++++-----
+>  lib/test_min_heap.c            |  75 +++++++-------
+>  22 files changed, 565 insertions(+), 470 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
