@@ -1,223 +1,201 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF54101EB
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 16:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0362B9BA;
+	Tue, 19 Mar 2024 17:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866227; cv=none; b=MkWOGlAJ+c/vg0HJhNbmyvDnMCn4khTaKYuL3pQig+6ld9COVuxmmuMVYWJFOo/Q5XhdEPY3BFf6HYyq9zkHE0uQk+UFual+uLIxb35eYi2Jx+smtEycnpvXZKfDNnUd0J+HXMjaaV9EYhrjjnjz6CGQAxJTkD7OX1O03LOxd0Y=
+	t=1710870010; cv=none; b=Hm/zE/4y/8YoApzYhbA/pchQmIjra1wtdTLb4Th3ICKywTHt7UVxlXx6I1tZZh7xPuQj/IdTekz4URBeRqBBoeQlce4mPiaQoFqAqfR6x7bqPhy/wyrKqWU/hDBie6Z+vYAfFupHSI8ULSuhcFqwgwPGYkx+WHGP0R3RO7oRvIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866227; c=relaxed/simple;
-	bh=DiDJbXClJgb1cM5ngsf4599IGKIEVZmVsszUVM95sbI=;
+	s=arc-20240116; t=1710870010; c=relaxed/simple;
+	bh=MhtixsmRO9wFMNPa7fZ+A1C63+g4Vno5+EgJASe3E04=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tOsT4Sz2gJ07WfcZpzmRAokqYYegZQlmuR9GGfoLb//LifGjVDpYCJiBxVAhZcb2lTUHmi60QLccG8z0gKMhHk37taUSazPYXNLCCWYHpxv623BUtev2X4gDfx1hJE8Bg/wEuzPWWCEeLGffxLX2oYHam1QqJKK2ygfE+ztClp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Erl0TSIa; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Erl0TSIa"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1dddd7d64cdso182585ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 09:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710866226; x=1711471026; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RrjuHZ6Kox9TX/BS1xzAx8QX4KFAzs+jwjCKuYq+Z68=;
-        b=Erl0TSIazOiH1pzrH86ukj6jM3ECmKjzYspXNd2Q135p+sahli/zfgZQmCXfEBmHcA
-         bE4+yejrYTxtIriqesRxxNyQ3sXVq4rOY4WjUXhXxQNdM2VG6k8jlTMOmiLeGQhuMszE
-         +DhHPz3vd+nb6fG3hn2YL8WM/1UnnB1rTUmqPXiL6YIa2j+QYceukkPleqRoniI22kHk
-         8e4nm2WkDNhLa//e9R9uJpFPCnfABymJ+9GRQaV1X3tfRQXx+7ISVcilmWRn6QNGljC5
-         5DLhEfxZoC3d/f4847ID2BvQ6oYfGOokoA2jnuqFTiTeLSZV/9vaOFsDPuS7tXcwjNZm
-         N3mA==
+	 To:Cc:Content-Type; b=Vq1kPDlX93B65XdY1DrOBvjICyTOyw6USZFtKqhdwmSYAvdB0J6W0riBGTLmQ+kg+oPg749Vy4FGfinckkQY29BalsA4u4pPvx+j1OxI//YuI8He5rgfrxla+w1re5vFgH4eZJaIw68hBkLmhL8U+Wkfx3YvjOMC42KTyEKVCWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29de4e12d12so4147328a91.3;
+        Tue, 19 Mar 2024 10:40:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710866226; x=1711471026;
+        d=1e100.net; s=20230601; t=1710870009; x=1711474809;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RrjuHZ6Kox9TX/BS1xzAx8QX4KFAzs+jwjCKuYq+Z68=;
-        b=pIqLnDjtPl6GRpC5gUGQfRM40vtw+KwN3QNIlI/tVh16RE2c3XEG4B7XgieqMQnLE5
-         q/yAlIW4oWvMgEYsGXeIM8bFEJiFFEwz2Wx1tTei+1ayIseScRI4txlYAgQoIFr75qeM
-         +zfMp91N5Sj4vH2kRuxiPhPCdi5aNpklazvpWHzOphsUSP9KCm0ksynLB686fzFr5YwM
-         MJpfl4wd9yii2PibZnC1u7QkS7xL6act/2z0F++f39D7tD/6QYHxbemzEUG0hcJ9X5Ab
-         gPi0h6NCAd1Z4ljfKq1elsJBWuBRfi6dEI5MtSWFl8gcpalM78jTkxBi5poANxBwjVPq
-         zJ3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWokhE1v4eGABN+YJQM30iy7BXyld42J9NpwhKqsC0+zYnQp0RgNmAr16vZSs/J/mg5c24WkmHtwinGK+EP7ANmtzr/K25JwMG457sUFst9Sw==
-X-Gm-Message-State: AOJu0Yy+5Tzudxw7xBnCb9lpn0XDdCukYwG9/nYRb8Xfpg8a3dMF1xcE
-	mAdY5IQwHXnXndMFAi83IGfua+omQoIqoLhYURzB5v0koD9r3zYDdqM40uB842WVfdetp+0cigS
-	6TSF7aKnN969cF7Ju6vTMcMYis2Cgy9h5qea2
-X-Google-Smtp-Source: AGHT+IFuvEAMa2HYTMxxsWcOsREdY/SJEi2+0RBp9e4eNZ6k3M7DL2FnItc0sbxzD2yuKBpCxQkz1IlPltYAjqPnXO4=
-X-Received: by 2002:a17:903:2292:b0:1df:f726:8b50 with SMTP id
- b18-20020a170903229200b001dff7268b50mr1044plh.10.1710866225128; Tue, 19 Mar
- 2024 09:37:05 -0700 (PDT)
+        bh=Wh275OKIsAYQ5o+GHxL9VNQG4dc3doJhtyP2ubPY/Z8=;
+        b=PlwWOiS0hu8V9MsEQZU6ID8Ew/CV0zr8FRgkiumAPMQFTdNQ4QG7JaPGf7EjxB8SmB
+         Xj+NPes5YR72SGsmBQonFO3HpwaJe9tiZuR/jTcBPiFL33oGYQUyNnFDcsh5JQbfgri3
+         V++96vKi2rU6HPIWOKiP5GzT6okDy4M0q+2UwXdmb/JMmwE71wdTsY107CDfhBeWbqRh
+         llDLrFWrxRAcJQTR/Dt1idZXTm3EAi1VBC3ZmMsS3r7CfBuFj4NDihVj7oWJVKcjDhaI
+         mIl5UEmRqQVr52dEmxmxl/XaMTf9NG+9iDABRr2gBfqBWqZzTHlYmT/bcj+elZWCsBT4
+         DdlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV8gggwmTdcVGzSPLWbFeg40KW06TdEenyoMAzHpFor1hs3eg8sMRQlTor4Acp5yFa9F3WcgfMia9QTqCzhmFDaqIK8wW40LhUYeDQ7fyGTskH1ViJ0o69D5P/H1hwq99JM2440kjEu05iaP2+7tjBYIi5mFmu+C7bb0stIAJCwQuLo59MYDqwVAsrXwgHkKy8kQBpc2i4Hy/DHWGydNeSyXDkxifJyFNUVSDxNrdHN9G9meg==
+X-Gm-Message-State: AOJu0Yyq4iOrAzIG8lygF8SlRX77mRTFrilFIhnTfPokLgmWnOiH5sVC
+	PTqbGMaF+neur46OItjvGsbAn7Hjl/TGGUaH4viM8W9RxQXRnSulnthJKk8IMYY8QOfs0EI5ugA
+	1lxbJFlOM5x75uxbpFUlDdo7fEyRsNw7f
+X-Google-Smtp-Source: AGHT+IFiRXVc5OoJ0hTZM0ANlRt2pYfdwl7srRGMkaCNCC9FY2P/oXFOO8VZ2L36SCVsBHcHH7PesVORwZ7PyNWqqVI=
+X-Received: by 2002:a17:90b:788:b0:29c:844:a91 with SMTP id
+ l8-20020a17090b078800b0029c08440a91mr11532418pjz.48.1710870008555; Tue, 19
+ Mar 2024 10:40:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319095043.857594-1-tmricht@linux.ibm.com> <20240319095043.857594-2-tmricht@linux.ibm.com>
-In-Reply-To: <20240319095043.857594-2-tmricht@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 19 Mar 2024 09:36:51 -0700
-Message-ID: <CAP-5=fUGakVrS36u73dSU8KMbp1zQBQea6N5zOidMKoQoL0F7w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf list: do not print metrics on s390 zvm systems
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, namhyung@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
+References: <20240319055115.4063940-1-namhyung@kernel.org> <20240319055115.4063940-2-namhyung@kernel.org>
+ <ZfmWgbkApCMoeWHm@x1>
+In-Reply-To: <ZfmWgbkApCMoeWHm@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 19 Mar 2024 10:39:56 -0700
+Message-ID: <CAM9d7cgm_-zyiZpCVoKH2dfqEESO5ohZYHYRnnBFWxagDiMrqA@mail.gmail.com>
+Subject: Re: [PATCH 01/23] perf dwarf-aux: Remove unused pc argument
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 2:56=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Tue, Mar 19, 2024 at 6:43=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On s390 z/VM virtual machines command perf list also displays metrics:
+> On Mon, Mar 18, 2024 at 10:50:53PM -0700, Namhyung Kim wrote:
+> > It's not used, let's get rid of it.
 >
->  # ./perf list | grep -A 20 'Metric Groups:'
->  Metric Groups:
+> I looked for data->pc, there is usage somewhere else, but not via
+> __die_find_var_addr_cb() nor match_var_offset().
 >
->  No_group:
->   cpi
->        [Cycles per Instruction]
->   est_cpi
->        [Estimated Instruction Complexity CPI infinite Level 1]
->   finite_cpi
->        [Cycles per Instructions from Finite cache/memory]
->   l1mp
->        [Level One Miss per 100 Instructions]
->   l2p
->        [Percentage sourced from Level 2 cache]
->   l3p
->        [Percentage sourced from Level 3 on same chip cache]
->   l4lp
->        [Percentage sourced from Level 4 Local cache on same book]
->   l4rp
->        [Percentage sourced from Level 4 Remote cache on different book]
->   memp
->        [Percentage sourced from memory]
->   ....
->  #
+> I think renaming:
 >
-> This is not correct, on s390 z/VM virtual machines the referenced
-> CPU Counter Measurement facility does not exist. The command
+>   struct find_var_data data;
 >
->  # ./perf stat -M cpi -- true
->  event syntax error: '{CPU_CYCLES/metric-id=3DCPU_CYCLES/.....'
->                        \___ Bad event or PMU
+> to:
 >
->  Unable to find PMU or event on a PMU of 'CPU_CYCLES'
+>   struct find_var_data var;
 >
->  event syntax error: '{CPU_CYCLES/metric-id=3DCPU_CYCLES/...'
->                        \___ Cannot find PMU `CPU_CYCLES'.
->                             Missing kernel support?
->  #
+> And:
 >
-> fails.
+>   struct find_scope_data data;
 >
-> Perf list should not display the metrics when the referenced
-> CPU Counter Measurement PMU is not available.
+> to:
 >
-> Output after:
->  # ./perf list | grep -A 20 'Metric Groups:'
->  #
+>   struct find_scope_data scope;
 >
-> Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> ---
->  tools/perf/arch/s390/util/pmu.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/=
-pmu.c
-> index 886c30e001fa..2dc27acc860c 100644
-> --- a/tools/perf/arch/s390/util/pmu.c
-> +++ b/tools/perf/arch/s390/util/pmu.c
-> @@ -8,6 +8,7 @@
->  #include <string.h>
->
->  #include "../../../util/pmu.h"
-> +#include "../../../util/pmus.h"
->
->  #define        S390_PMUPAI_CRYPTO      "pai_crypto"
->  #define        S390_PMUPAI_EXT         "pai_ext"
-> @@ -20,3 +21,19 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
->             !strcmp(pmu->name, S390_PMUCPUM_CF))
->                 pmu->selectable =3D true;
->  }
-> +
-> +const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> +{
-> +       struct perf_pmu *pmu;
-> +
-> +       /*
-> +        * Metrics defined on events from PMU cpum_cf aren't supported
-> +        * on z/VM. Make sure the PMU exists and return NULL if that
-> +        * PMU cannot be found.
-> +        */
-> +       pmu =3D perf_pmus__find("cpum_cf");
-> +       if (pmu)
-> +               return perf_pmu__find_metrics_table(pmu);
-> +
-> +       return NULL;
-> +}
+> Helps with grepping for 'data->pc', but that can be left for later.
 
-Hi Thomas,
+Ok, I can rename them later.
 
-Thank you for this, it is good the patch addresses the issue but I'm
-less keen on the approach. The approach is to disable all metrics when
-the PMU cpum_cf isn't present.
-
-Similar to the metric cpi there is a hard coded IPC metric:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/stat-shadow.c?h=3Dperf-tools-next#n314
-I'd like to delete this code :-) The hard coded metrics magically fire
-when certain events are present. This causes issues with code that
-processes the output as some metrics can accidentally fire unasked for
-additional hard coded metrics. The hard coded metrics also don't use
-groups for events, etc. I do like they have more color options
-(thresholds) than the json metrics.
-
-Using python to generate metrics achieves a lot of simplification and
-hopefully lowers the bar for new metrics being written. Having metrics
-disabled when a PMU isn't present means that the only way to get the
-metric could be to hard code it - something I want to delete :-) There
-are metrics like cycles (looking for review/unmerged):
-https://lore.kernel.org/lkml/20240314055801.1973422-3-irogers@google.com/
-that don't use sysfs or json events and that could work on s390. I
-think ideally we'd work to enable this.
-
-(1) For the cpi metric here, presumably CPU_CYCLES is used to avoid
-the legacy cpu-cycles event. Would using cpu-cycles fix the metric
-(assuming legacy events work in a virtual machine) ? An aside, it is
-kind of gross that the event names are so similar as event names
-aren't case sensitive. As sysfs/json events now have priority over
-legacy events, using the name cpu-cycles is a possibility (x86 uses
-this name).
-
-(2) Another option is that in the metric you can use the "has_event"
-function. So:
-    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
-becomes something like :
-    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) if has_event(CPU_CYCLES) els=
-e 0"
-This has been the existing approach taken.
-
-(3) We could also make "perf list" not show metrics when the events
-aren't present. We do something similar for legacy cache events:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/print-events.c?h=3Dperf-tools-next#n306
-This could complicate testing as we iterate through all metrics
-expecting them to work. An event name typo would hide the metric in
-the list from and we'd miss the typo in testing.
-
-So I think solution (2) is best, wdyt?
-
-Thanks,
-Ian
-
-
-> --
-> 2.44.0
 >
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Thanks for the review!
+Namhyung
+
+>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/annotate-data.c | 4 ++--
+> >  tools/perf/util/dwarf-aux.c     | 7 ++-----
+> >  tools/perf/util/dwarf-aux.h     | 6 ++----
+> >  3 files changed, 6 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate=
+-data.c
+> > index 30c4d19fcf11..59ce5f4f4a40 100644
+> > --- a/tools/perf/util/annotate-data.c
+> > +++ b/tools/perf/util/annotate-data.c
+> > @@ -263,7 +263,7 @@ static int find_data_type_die(struct debuginfo *di,=
+ u64 pc, u64 addr,
+> >       offset =3D loc->offset;
+> >
+> >       if (reg =3D=3D DWARF_REG_PC) {
+> > -             if (die_find_variable_by_addr(&cu_die, pc, addr, &var_die=
+, &offset)) {
+> > +             if (die_find_variable_by_addr(&cu_die, addr, &var_die, &o=
+ffset)) {
+> >                       ret =3D check_variable(&var_die, type_die, offset=
+,
+> >                                            /*is_pointer=3D*/false);
+> >                       loc->offset =3D offset;
+> > @@ -312,7 +312,7 @@ static int find_data_type_die(struct debuginfo *di,=
+ u64 pc, u64 addr,
+> >       /* Search from the inner-most scope to the outer */
+> >       for (i =3D nr_scopes - 1; i >=3D 0; i--) {
+> >               if (reg =3D=3D DWARF_REG_PC) {
+> > -                     if (!die_find_variable_by_addr(&scopes[i], pc, ad=
+dr,
+> > +                     if (!die_find_variable_by_addr(&scopes[i], addr,
+> >                                                      &var_die, &offset)=
+)
+> >                               continue;
+> >               } else {
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index 2791126069b4..e84d0d6a7750 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -1456,7 +1456,6 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_=
+mem, void *arg)
+> >  /**
+> >   * die_find_variable_by_addr - Find variable located at given address
+> >   * @sc_die: a scope DIE
+> > - * @pc: the program address to find
+> >   * @addr: the data address to find
+> >   * @die_mem: a buffer to save the resulting DIE
+> >   * @offset: the offset in the resulting type
+> > @@ -1464,12 +1463,10 @@ static int __die_find_var_addr_cb(Dwarf_Die *di=
+e_mem, void *arg)
+> >   * Find the variable DIE located at the given address (in PC-relative =
+mode).
+> >   * This is usually for global variables.
+> >   */
+> > -Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+> > -                                  Dwarf_Addr addr, Dwarf_Die *die_mem,
+> > -                                  int *offset)
+> > +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr add=
+r,
+> > +                                  Dwarf_Die *die_mem, int *offset)
+> >  {
+> >       struct find_var_data data =3D {
+> > -             .pc =3D pc,
+> >               .addr =3D addr,
+> >       };
+> >       Dwarf_Die *result;
+> > diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> > index 85dd527ae1f7..9973801a20c1 100644
+> > --- a/tools/perf/util/dwarf-aux.h
+> > +++ b/tools/perf/util/dwarf-aux.h
+> > @@ -146,9 +146,8 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_d=
+ie, Dwarf_Addr pc, int reg,
+> >                                   Dwarf_Die *die_mem);
+> >
+> >  /* Find a (global) variable located in the 'addr' */
+> > -Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr pc,
+> > -                                  Dwarf_Addr addr, Dwarf_Die *die_mem,
+> > -                                  int *offset);
+> > +Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr add=
+r,
+> > +                                  Dwarf_Die *die_mem, int *offset);
+> >
+> >  #else /*  HAVE_DWARF_GETLOCATIONS_SUPPORT */
+> >
+> > @@ -170,7 +169,6 @@ static inline Dwarf_Die *die_find_variable_by_reg(D=
+warf_Die *sc_die __maybe_unus
+> >  }
+> >
+> >  static inline Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die _=
+_maybe_unused,
+> > -                                                Dwarf_Addr pc __maybe_=
+unused,
+> >                                                  Dwarf_Addr addr __mayb=
+e_unused,
+> >                                                  Dwarf_Die *die_mem __m=
+aybe_unused,
+> >                                                  int *offset __maybe_un=
+used)
+> > --
+> > 2.44.0.291.gc1ea87d7ee-goog
+> >
