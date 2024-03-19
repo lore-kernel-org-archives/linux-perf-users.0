@@ -1,584 +1,314 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A62604C6;
-	Tue, 19 Mar 2024 18:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9792B9CC;
+	Tue, 19 Mar 2024 18:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710871278; cv=none; b=jMaM/sy/hRgBwnaFtgMcs2psjoJx5w5o5PvMWVmVA68iYqBDKO6sTKB2N923SChs4Q2JjAuQTZBrXes0iYkxg41JLc3TKtOefdpIOzev5Bzz906BP8DwnbQIrYQ4Qyb2CGn2/wHq3QEcTX43dOHEXCWMjb/RWUle4JDk4ztyShE=
+	t=1710871517; cv=none; b=lyOX0CXd34vEBYnfRpZ35bvJUculfvk9zVV5jBfe8rww0d7hT4VcX9RszgIqw1TdeWsYbJ94xa3LsloeOAlmm8b14G2enanX3DGVUBhktroViA6i3lDJP2LhAGU23R2LFiSNVVVlfgBa2RMupfOXa+y/AX9K9+tkl9TobbQKiL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710871278; c=relaxed/simple;
-	bh=+yEiZ43RB1kHULxTTuB/64NK5y0o51aXqEIqAtlaiH4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uSXUJkM/WL6eIWBYCgaF7Qv5Xpb9xKBTUP81BfpZOISrMxLiV5Hf/mFRXGP7TTYSYopZpi6+4CkF1WBdgVu1s/b4g4sdJAfBFABv5FDfTcm+tasi67vu3HxIa7/4bBgX4kTKQwZDrjA4SK3rWjxiVE6vwa3VUnUCX2J9Xc8BIIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i30JLY0f; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1710871517; c=relaxed/simple;
+	bh=DJNy2TohmbTVOJdHdPDSq/sRpyMSsgcjQh38nVA0HxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UjeyMv5Om9bpSkT2J71Fb2ezhcAri9JSyVnh4NJTJ97wVqfz2fJ+L4vWm2OJyHLUpva4WEbMLicOoINtHtWAGWAUGFXmtZdaxCed4kSzvhapelbvq3V26N+2TJWIErUe61z+6fhZulNrwyuZMVHC3/AxlDqBWJplGaB/joA3GJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i30JLY0f"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cfcf509fbdso831062a12.1;
-        Tue, 19 Mar 2024 11:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710871276; x=1711476076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hU4FK6Bj2mTXqR3yAD+6lLX+CSXCbIHfMQPQKJ2HSxw=;
-        b=i30JLY0fMi+tIwqkxU6vnPXrDEkaGgn9cbEHx3HufEcHoxzpdVIvRWH6VJJSIou1aT
-         li9eVxDTTZjrK5TgYHUxgCaEa92m5a1W9eFRHjP12VEml7cBhOqRl7/S523DsZiDYcoM
-         BqMqWkJnn7T0O2f1Ox7FzFIZ/WF1LZ96VIRlRtxl9xwhCuh0bg0zqFhsJ0IFBgkH4Qss
-         NhaK5M7vyWbTkVYgYr3sP5SN8Z0ymu8qUcCi9Xvu0Lz0f+ecUm4RwfzmgcxVAb/n+5iy
-         JvM5lqo8RirRJZkX3ItZRsN7Rn0wbo+H4uFVTCvvZgB4CKEpb12OYqL9Yu4msYHv5POG
-         +ekw==
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e0411c0a52so10792655ad.0;
+        Tue, 19 Mar 2024 11:05:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710871276; x=1711476076;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710871515; x=1711476315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hU4FK6Bj2mTXqR3yAD+6lLX+CSXCbIHfMQPQKJ2HSxw=;
-        b=ZIaiAEE61Z4RlwZVJou62yt4zjdh4wJA58BDspfDQuJUpQgJVY2mmkkzUZ9FKONbt7
-         t+0NJ6T3EKmuseXwkQn8n8uq0kfm+l7oxUNGabjAc/9c4ISVsT4opQY4GVQCXODJGJRB
-         8ptoJU0s010ignlX2DHerSRXLohE8hkzRBHlexzy8+ep+Q3OYVS+k3cTl1RFs2aJs57/
-         dTrpwj1N3luUHOPLJf7qimN2AGpYoe8a+g3wcKHvOHAFUIAG+cRVDoYi9YxAvgw0zTxx
-         laNRQ2AnhXbGUZ+2TBvuWdIddwxPrA7QDnu4f3s6X2oezF2hMBC/jOENkG+BgYH4rp3z
-         F1lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrgVNhiV2Drqn/6BtS1jEMCRYLdy6Bmx1EaUFUdHGRXJOZiDj7nwK5GPv1cKCp5DDGIWe1c/Bu410TIvsHAKQZ4X+oxDG7Au5ojJR2g+INKxD7uVRy3bHiikS6EXphG/aaXRFVMoOAmg3HDGpxQLmExu+Wca1KUTTnY20EVGjhLA6Pw2Zzlt3V4gwy9mM6k7qAYCD7EkNgTZBok0l7QUnJ9ql20N4ZAc0W7ENf
-X-Gm-Message-State: AOJu0Yzh/l5cfT9ipdgJuifb2pt27PgTZ95MyiHJrcrhQYjZhpt9jVTe
-	0who3fmbwzT9G0h0mbm3CvZ1iPxkH6bm/J/d2uptPrkNf0tl4uEB
-X-Google-Smtp-Source: AGHT+IF5MYW1/my3A16x1xiJ2X9onBhMDXT1Q1JNKBukA3ROQE+f0XhQUeEXgXWNWSqq/75VhaWycw==
-X-Received: by 2002:a17:903:244e:b0:1dd:7350:29f6 with SMTP id l14-20020a170903244e00b001dd735029f6mr3131478pls.3.1710871275782;
-        Tue, 19 Mar 2024 11:01:15 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id u16-20020a17090341d000b001dd3bee3cd6sm5531359ple.219.2024.03.19.11.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 11:01:15 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: colyli@suse.de,
-	kent.overstreet@linux.dev,
-	msakai@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	akpm@linux-foundation.org
-Cc: bfoster@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH 13/13] bcachefs: Remove heap-related macros and switch to generic min_heap
-Date: Wed, 20 Mar 2024 02:00:05 +0800
-Message-Id: <20240319180005.246930-14-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240319180005.246930-1-visitorckw@gmail.com>
-References: <20240319180005.246930-1-visitorckw@gmail.com>
+        bh=eLmPTyrnYvg0mqlvufhGAL1B5AMMFytUWBWUfteYyH8=;
+        b=nTadr1DvNlTGhhFn4u9F1n3O5X4mdBSzIFVpdpUE1DUZODqFsoRovSfULR1S0Ka/zk
+         gFaQxnOSjz8UNiLC8enoWtakDJ6YVl3bBzRZ/B7fs5CrZ+CdelMK/QNTp9zhYLW59n9c
+         Rb24Hjp6cJ41gMozgZJkxKI5XLE5C+c7fxWAWetry0yx0F1+HBFHwczaMvGdaRLfrmuD
+         scVi5rpXGn1+N/do5N3ceLTRY4x7igDSDSW0M3KYv2APTMTlH9LwVgJZpAbHYwN8sM5G
+         8r7Hp51g7XujQi2E3zF4GB6OUeRqixIIz6gc/uWBG9oecYuQaRCswRra38gjCwngyGOn
+         nvjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd+6mKSc5A3M87GriRvRuxqOA5MW/lIcn1VdRXq3iB5a950Y1oCrlKnGElgJILoEcyrTqbe4YScyaNpgzYcU9xsE6BbnReonISUCB7YBrXRV+LL1DFtf7tTb3qauIrkNbE8OvIk8PiPAnd0FJMUQKmvrZ5sS5PQNUZIhJuhgHm/OpQiG6ptqNHIDoTBsZBZ03Cp9Ov5J41+1Tw+JZ6eOV2fgTjF6EBW9oztWa9niuuMS72yg==
+X-Gm-Message-State: AOJu0Yy6kRlvb56Rs072Qi4fWREZfL2GnegMKlou+xodZshgTJcmsFQ/
+	jLZuhmU8Sj+eyAMyGgfx7pZWywY19DSrkOGag28dfrIRGAqLso+xTnK48GBj8zFZv0jKOzSifjI
+	dnbNBuqJN2rnANyqr8ExA8hjHPz0KWVYb
+X-Google-Smtp-Source: AGHT+IF/dh/ZOhds+v50NacrVPuH5krtLnXzNAPSyQOUgr48a7+CjYqKrwf+HsDuQ8xywz6PVvKyK6NrGoGs1TpN2JI=
+X-Received: by 2002:a17:902:f547:b0:1dd:8b94:c4c7 with SMTP id
+ h7-20020a170902f54700b001dd8b94c4c7mr4246279plf.16.1710871515002; Tue, 19 Mar
+ 2024 11:05:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240319055115.4063940-1-namhyung@kernel.org> <20240319055115.4063940-23-namhyung@kernel.org>
+In-Reply-To: <20240319055115.4063940-23-namhyung@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 19 Mar 2024 11:05:04 -0700
+Message-ID: <CAM9d7cjhuxB_iWPPWgFxK1_oBaYqF=MgthV=EBG0HeyJ9-ONXg@mail.gmail.com>
+Subject: Re: [PATCH 22/23] perf annotate-data: Add a cache for global variable types
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Stephane Eranian <eranian@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-toolchains@vger.kernel.org, 
+	linux-trace-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Drop the heap-related macros from bcachefs and replaces them with the
-generic min_heap implementation from include/linux. This change
-improves code readability by using functions instead of macros.
+On Mon, Mar 18, 2024 at 10:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> They are often searched by many different places.  Let's add a cache
+> for them to reduce the duplicate DWARF access.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate-data.c | 107 +++++++++++++++++++++++++++++++-
+>  tools/perf/util/annotate-data.h |   7 +++
+>  tools/perf/util/dso.c           |   2 +
+>  tools/perf/util/dso.h           |   6 +-
+>  4 files changed, 118 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-d=
+ata.c
+> index 633fe125fcd8..4b3184b7c799 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -433,6 +433,91 @@ static struct type_state_stack *findnew_stack_state(=
+struct type_state *state,
+>         return stack;
+>  }
+>
+> +/* Maintain a cache for quick global variable lookup */
+> +struct global_var_entry {
+> +       struct rb_node node;
+> +       char *name;
+> +       u64 start;
+> +       u64 end;
+> +       u64 die_offset;
+> +};
+> +
+> +static int global_var_cmp(const void *_key, const struct rb_node *node)
+> +{
+> +       const u64 addr =3D (uintptr_t)_key;
+> +       struct global_var_entry *gvar;
+> +
+> +       gvar =3D rb_entry(node, struct global_var_entry, node);
+> +
+> +       if (gvar->start <=3D addr && addr < gvar->end)
+> +               return 0;
+> +       return gvar->start > addr ? -1 : 1;
+> +}
+> +
+> +static bool global_var_less(struct rb_node *node_a, const struct rb_node=
+ *node_b)
+> +{
+> +       struct global_var_entry *gvar_a, *gvar_b;
+> +
+> +       gvar_a =3D rb_entry(node_a, struct global_var_entry, node);
+> +       gvar_b =3D rb_entry(node_b, struct global_var_entry, node);
+> +
+> +       return gvar_a->start < gvar_b->start;
+> +}
+> +
+> +static struct global_var_entry *global_var__find(struct data_loc_info *d=
+loc, u64 addr)
+> +{
+> +       struct dso *dso =3D map__dso(dloc->ms->map);
+> +       struct rb_node *node;
+> +
+> +       node =3D rb_find((void *)addr, &dso->global_vars, global_var_cmp)=
+;
 
-Link: https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
- fs/bcachefs/clock.c       |  53 +++++++++++-----
- fs/bcachefs/clock_types.h |   2 +-
- fs/bcachefs/ec.c          |  99 ++++++++++++++++++-----------
- fs/bcachefs/ec_types.h    |   2 +-
- fs/bcachefs/util.h        | 127 +++-----------------------------------
- 5 files changed, 109 insertions(+), 174 deletions(-)
+It seems to cause a build error on 32-bit systems.  It needs one
+more cast to suppress the "pointer cast w/ different size" warning.
 
-diff --git a/fs/bcachefs/clock.c b/fs/bcachefs/clock.c
-index 363644451106..7a7d13f7a629 100644
---- a/fs/bcachefs/clock.c
-+++ b/fs/bcachefs/clock.c
-@@ -6,16 +6,29 @@
- #include <linux/kthread.h>
- #include <linux/preempt.h>
- 
--static inline long io_timer_cmp(io_timer_heap *h,
--				struct io_timer *l,
--				struct io_timer *r)
-+static inline bool io_timer_cmp(const void *l, const void *r, void *args)
- {
--	return l->expire - r->expire;
-+	struct io_timer *_l = (struct io_timer *)l;
-+	struct io_timer *_r = (struct io_timer *)r;
-+
-+	return _l->expire >= _r->expire;
-+}
-+
-+static inline void io_timer_swp(void *l, void *r, void *args)
-+{
-+	struct io_timer *_l = (struct io_timer *)l;
-+	struct io_timer *_r = (struct io_timer *)r;
-+
-+	swap(*_l, *_r);
- }
- 
- void bch2_io_timer_add(struct io_clock *clock, struct io_timer *timer)
- {
- 	size_t i;
-+	const struct min_heap_callbacks callbacks = {
-+		.less = io_timer_cmp,
-+		.swp = io_timer_swp,
-+	};
- 
- 	spin_lock(&clock->timer_lock);
- 
-@@ -26,11 +39,11 @@ void bch2_io_timer_add(struct io_clock *clock, struct io_timer *timer)
- 		return;
- 	}
- 
--	for (i = 0; i < clock->timers.used; i++)
--		if (clock->timers.data[i] == timer)
-+	for (i = 0; i < clock->timers.heap.nr; i++)
-+		if (min_heap_peek(&clock->timers)[i] == timer)
- 			goto out;
- 
--	BUG_ON(!heap_add(&clock->timers, timer, io_timer_cmp, NULL));
-+	BUG_ON(!min_heap_push(&clock->timers, &timer, &callbacks, NULL));
- out:
- 	spin_unlock(&clock->timer_lock);
- }
-@@ -38,12 +51,16 @@ void bch2_io_timer_add(struct io_clock *clock, struct io_timer *timer)
- void bch2_io_timer_del(struct io_clock *clock, struct io_timer *timer)
- {
- 	size_t i;
-+	const struct min_heap_callbacks callbacks = {
-+		.less = io_timer_cmp,
-+		.swp = io_timer_swp,
-+	};
- 
- 	spin_lock(&clock->timer_lock);
- 
--	for (i = 0; i < clock->timers.used; i++)
--		if (clock->timers.data[i] == timer) {
--			heap_del(&clock->timers, i, io_timer_cmp, NULL);
-+	for (i = 0; i < clock->timers.heap.nr; i++)
-+		if (min_heap_peek(&clock->timers)[i] == timer) {
-+			min_heap_pop(&clock->timers, &callbacks, NULL);
- 			break;
- 		}
- 
-@@ -131,12 +148,16 @@ static struct io_timer *get_expired_timer(struct io_clock *clock,
- 					  unsigned long now)
- {
- 	struct io_timer *ret = NULL;
-+	const struct min_heap_callbacks callbacks = {
-+		.less = io_timer_cmp,
-+		.swp = io_timer_swp,
-+	};
- 
- 	spin_lock(&clock->timer_lock);
- 
--	if (clock->timers.used &&
--	    time_after_eq(now, clock->timers.data[0]->expire))
--		heap_pop(&clock->timers, ret, io_timer_cmp, NULL);
-+	if (clock->timers.heap.nr &&
-+	    time_after_eq(now, min_heap_peek(&clock->timers)[0]->expire))
-+		min_heap_pop(&clock->timers, &callbacks, NULL);
- 
- 	spin_unlock(&clock->timer_lock);
- 
-@@ -161,10 +182,10 @@ void bch2_io_timers_to_text(struct printbuf *out, struct io_clock *clock)
- 	spin_lock(&clock->timer_lock);
- 	now = atomic64_read(&clock->now);
- 
--	for (i = 0; i < clock->timers.used; i++)
-+	for (i = 0; i < clock->timers.heap.nr; i++)
- 		prt_printf(out, "%ps:\t%li\n",
--		       clock->timers.data[i]->fn,
--		       clock->timers.data[i]->expire - now);
-+		       min_heap_peek(&clock->timers)[i]->fn,
-+		       min_heap_peek(&clock->timers)[i]->expire - now);
- 	spin_unlock(&clock->timer_lock);
- 	--out->atomic;
- }
-diff --git a/fs/bcachefs/clock_types.h b/fs/bcachefs/clock_types.h
-index 5fae0012d808..b02b24b9d74f 100644
---- a/fs/bcachefs/clock_types.h
-+++ b/fs/bcachefs/clock_types.h
-@@ -23,7 +23,7 @@ struct io_timer {
- /* Amount to buffer up on a percpu counter */
- #define IO_CLOCK_PCPU_SECTORS	128
- 
--typedef HEAP(struct io_timer *)	io_timer_heap;
-+typedef MIN_HEAP(struct io_timer *, io_timer_heap) io_timer_heap;
- 
- struct io_clock {
- 	atomic64_t		now;
-diff --git a/fs/bcachefs/ec.c b/fs/bcachefs/ec.c
-index b98e2c2b8bf0..7b6a31237503 100644
---- a/fs/bcachefs/ec.c
-+++ b/fs/bcachefs/ec.c
-@@ -860,14 +860,14 @@ static int __ec_stripe_mem_alloc(struct bch_fs *c, size_t idx, gfp_t gfp)
- {
- 	ec_stripes_heap n, *h = &c->ec_stripes_heap;
- 
--	if (idx >= h->size) {
-+	if (idx >= h->heap.size) {
- 		if (!init_heap(&n, max(1024UL, roundup_pow_of_two(idx + 1)), gfp))
- 			return -BCH_ERR_ENOMEM_ec_stripe_mem_alloc;
- 
- 		mutex_lock(&c->ec_stripes_heap_lock);
--		if (n.size > h->size) {
--			memcpy(n.data, h->data, h->used * sizeof(h->data[0]));
--			n.used = h->used;
-+		if (n.heap.size > h->heap.size) {
-+			memcpy(min_heap_peek(&n), min_heap_peek(h), h->heap.nr * sizeof(*min_heap_peek(h)));
-+			n.heap.nr = h->heap.nr;
- 			swap(*h, n);
- 		}
- 		mutex_unlock(&c->ec_stripes_heap_lock);
-@@ -958,20 +958,21 @@ static u64 stripe_idx_to_delete(struct bch_fs *c)
- 
- 	lockdep_assert_held(&c->ec_stripes_heap_lock);
- 
--	if (h->used &&
--	    h->data[0].blocks_nonempty == 0 &&
--	    !bch2_stripe_is_open(c, h->data[0].idx))
--		return h->data[0].idx;
-+	if (h->heap.nr &&
-+	    min_heap_peek(h)->blocks_nonempty == 0 &&
-+	    !bch2_stripe_is_open(c, min_heap_peek(h)->idx))
-+		return min_heap_peek(h)->idx;
- 
- 	return 0;
- }
- 
--static inline int ec_stripes_heap_cmp(ec_stripes_heap *h,
--				      struct ec_stripe_heap_entry l,
--				      struct ec_stripe_heap_entry r)
-+static inline bool ec_stripes_heap_cmp(const void *l, const void *r, void *args)
- {
--	return ((l.blocks_nonempty > r.blocks_nonempty) -
--		(l.blocks_nonempty < r.blocks_nonempty));
-+	struct ec_stripe_heap_entry *_l = (struct ec_stripe_heap_entry *)l;
-+	struct ec_stripe_heap_entry *_r = (struct ec_stripe_heap_entry *)r;
-+
-+	return ((_l->blocks_nonempty > _r->blocks_nonempty) >=
-+		(_l->blocks_nonempty < _r->blocks_nonempty));
- }
- 
- static inline void ec_stripes_heap_set_backpointer(ec_stripes_heap *h,
-@@ -979,7 +980,21 @@ static inline void ec_stripes_heap_set_backpointer(ec_stripes_heap *h,
- {
- 	struct bch_fs *c = container_of(h, struct bch_fs, ec_stripes_heap);
- 
--	genradix_ptr(&c->stripes, h->data[i].idx)->heap_idx = i;
-+	genradix_ptr(&c->stripes, min_heap_peek(h)[i].idx)->heap_idx = i;
-+}
-+
-+static inline void ec_stripes_heap_swap(void *l, void *r, void *h)
-+{
-+	struct ec_stripe_heap_entry *_l = (struct ec_stripe_heap_entry *)l;
-+	struct ec_stripe_heap_entry *_r = (struct ec_stripe_heap_entry *)r;
-+	ec_stripes_heap *_h = (ec_stripes_heap *)h;
-+	size_t i = _l - min_heap_peek(_h);
-+	size_t j = _r - min_heap_peek(_h);
-+
-+	ec_stripes_heap_set_backpointer(_h, i);
-+	ec_stripes_heap_set_backpointer(_h, j);
-+
-+	swap(*_l, *_r);
- }
- 
- static void heap_verify_backpointer(struct bch_fs *c, size_t idx)
-@@ -987,34 +1002,43 @@ static void heap_verify_backpointer(struct bch_fs *c, size_t idx)
- 	ec_stripes_heap *h = &c->ec_stripes_heap;
- 	struct stripe *m = genradix_ptr(&c->stripes, idx);
- 
--	BUG_ON(m->heap_idx >= h->used);
--	BUG_ON(h->data[m->heap_idx].idx != idx);
-+	BUG_ON(m->heap_idx >= h->heap.nr);
-+	BUG_ON(min_heap_peek(h)[m->heap_idx].idx != idx);
- }
- 
- void bch2_stripes_heap_del(struct bch_fs *c,
- 			   struct stripe *m, size_t idx)
- {
-+	const struct min_heap_callbacks callbacks = {
-+		.less = ec_stripes_heap_cmp,
-+		.swp = ec_stripes_heap_swap,
-+	};
-+
- 	mutex_lock(&c->ec_stripes_heap_lock);
- 	heap_verify_backpointer(c, idx);
- 
--	heap_del(&c->ec_stripes_heap, m->heap_idx,
--		 ec_stripes_heap_cmp,
--		 ec_stripes_heap_set_backpointer);
-+	min_heap_del(&c->ec_stripes_heap, m->heap_idx, &callbacks, &c->ec_stripes_heap);
- 	mutex_unlock(&c->ec_stripes_heap_lock);
- }
- 
- void bch2_stripes_heap_insert(struct bch_fs *c,
- 			      struct stripe *m, size_t idx)
- {
-+	const struct min_heap_callbacks callbacks = {
-+		.less = ec_stripes_heap_cmp,
-+		.swp = ec_stripes_heap_swap,
-+	};
-+
- 	mutex_lock(&c->ec_stripes_heap_lock);
--	BUG_ON(heap_full(&c->ec_stripes_heap));
-+	BUG_ON(min_heap_full(&c->ec_stripes_heap));
- 
--	heap_add(&c->ec_stripes_heap, ((struct ec_stripe_heap_entry) {
-+	genradix_ptr(&c->stripes, idx)->heap_idx = c->ec_stripes_heap.heap.nr;
-+	min_heap_push(&c->ec_stripes_heap, &((struct ec_stripe_heap_entry) {
- 			.idx = idx,
- 			.blocks_nonempty = m->blocks_nonempty,
- 		}),
--		 ec_stripes_heap_cmp,
--		 ec_stripes_heap_set_backpointer);
-+		 &callbacks,
-+		 &c->ec_stripes_heap);
- 
- 	heap_verify_backpointer(c, idx);
- 	mutex_unlock(&c->ec_stripes_heap_lock);
-@@ -1026,17 +1050,20 @@ void bch2_stripes_heap_update(struct bch_fs *c,
- 	ec_stripes_heap *h = &c->ec_stripes_heap;
- 	bool do_deletes;
- 	size_t i;
-+	const struct min_heap_callbacks callbacks = {
-+		.less = ec_stripes_heap_cmp,
-+		.swp = ec_stripes_heap_swap,
-+	};
- 
- 	mutex_lock(&c->ec_stripes_heap_lock);
- 	heap_verify_backpointer(c, idx);
- 
--	h->data[m->heap_idx].blocks_nonempty = m->blocks_nonempty;
-+	min_heap_peek(h)[m->heap_idx].blocks_nonempty = m->blocks_nonempty;
- 
- 	i = m->heap_idx;
--	heap_sift_up(h,	  i, ec_stripes_heap_cmp,
--		     ec_stripes_heap_set_backpointer);
--	heap_sift_down(h, i, ec_stripes_heap_cmp,
--		       ec_stripes_heap_set_backpointer);
-+
-+	min_heap_sift_up(h,	i, &callbacks, &c->ec_stripes_heap);
-+	min_heapify(h, i, &callbacks, &c->ec_stripes_heap);
- 
- 	heap_verify_backpointer(c, idx);
- 
-@@ -1828,12 +1855,12 @@ static s64 get_existing_stripe(struct bch_fs *c,
- 		return -1;
- 
- 	mutex_lock(&c->ec_stripes_heap_lock);
--	for (heap_idx = 0; heap_idx < h->used; heap_idx++) {
-+	for (heap_idx = 0; heap_idx < h->heap.nr; heap_idx++) {
- 		/* No blocks worth reusing, stripe will just be deleted: */
--		if (!h->data[heap_idx].blocks_nonempty)
-+		if (!min_heap_peek(h)[heap_idx].blocks_nonempty)
- 			continue;
- 
--		stripe_idx = h->data[heap_idx].idx;
-+		stripe_idx = min_heap_peek(h)[heap_idx].idx;
- 
- 		m = genradix_ptr(&c->stripes, stripe_idx);
- 
-@@ -2159,14 +2186,14 @@ void bch2_stripes_heap_to_text(struct printbuf *out, struct bch_fs *c)
- 	size_t i;
- 
- 	mutex_lock(&c->ec_stripes_heap_lock);
--	for (i = 0; i < min_t(size_t, h->used, 50); i++) {
--		m = genradix_ptr(&c->stripes, h->data[i].idx);
-+	for (i = 0; i < min_t(size_t, h->heap.nr, 50); i++) {
-+		m = genradix_ptr(&c->stripes, min_heap_peek(h)[i].idx);
- 
--		prt_printf(out, "%zu %u/%u+%u", h->data[i].idx,
--		       h->data[i].blocks_nonempty,
-+		prt_printf(out, "%zu %u/%u+%u", min_heap_peek(h)[i].idx,
-+		       min_heap_peek(h)[i].blocks_nonempty,
- 		       m->nr_blocks - m->nr_redundant,
- 		       m->nr_redundant);
--		if (bch2_stripe_is_open(c, h->data[i].idx))
-+		if (bch2_stripe_is_open(c, min_heap_peek(h)[i].idx))
- 			prt_str(out, " open");
- 		prt_newline(out);
- 	}
-diff --git a/fs/bcachefs/ec_types.h b/fs/bcachefs/ec_types.h
-index 976426da3a12..2ed67431a81c 100644
---- a/fs/bcachefs/ec_types.h
-+++ b/fs/bcachefs/ec_types.h
-@@ -36,6 +36,6 @@ struct ec_stripe_heap_entry {
- 	unsigned		blocks_nonempty;
- };
- 
--typedef HEAP(struct ec_stripe_heap_entry) ec_stripes_heap;
-+typedef MIN_HEAP(struct ec_stripe_heap_entry, ec_stripes_heap) ec_stripes_heap;
- 
- #endif /* _BCACHEFS_EC_TYPES_H */
-diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
-index 7ffbddb80400..c599dc5276ac 100644
---- a/fs/bcachefs/util.h
-+++ b/fs/bcachefs/util.h
-@@ -8,6 +8,7 @@
- #include <linux/errno.h>
- #include <linux/freezer.h>
- #include <linux/kernel.h>
-+#include <linux/min_heap.h>
- #include <linux/sched/clock.h>
- #include <linux/llist.h>
- #include <linux/log2.h>
-@@ -54,134 +55,20 @@ static inline size_t buf_pages(void *p, size_t len)
- 			    PAGE_SIZE);
- }
- 
--#define HEAP(type)							\
--struct {								\
--	size_t size, used;						\
--	type *data;							\
--}
--
--#define DECLARE_HEAP(type, name) HEAP(type) name
--
- #define init_heap(heap, _size, gfp)					\
- ({									\
--	(heap)->used = 0;						\
--	(heap)->size = (_size);						\
--	(heap)->data = kvmalloc((heap)->size * sizeof((heap)->data[0]),\
--				 (gfp));				\
--})
--
--#define free_heap(heap)							\
--do {									\
--	kvfree((heap)->data);						\
--	(heap)->data = NULL;						\
--} while (0)
--
--#define heap_set_backpointer(h, i, _fn)					\
--do {									\
--	void (*fn)(typeof(h), size_t) = _fn;				\
--	if (fn)								\
--		fn(h, i);						\
--} while (0)
--
--#define heap_swap(h, i, j, set_backpointer)				\
--do {									\
--	swap((h)->data[i], (h)->data[j]);				\
--	heap_set_backpointer(h, i, set_backpointer);			\
--	heap_set_backpointer(h, j, set_backpointer);			\
--} while (0)
--
--#define heap_peek(h)							\
--({									\
--	EBUG_ON(!(h)->used);						\
--	(h)->data[0];							\
--})
--
--#define heap_full(h)	((h)->used == (h)->size)
--
--#define heap_sift_down(h, i, cmp, set_backpointer)			\
--do {									\
--	size_t _c, _j = i;						\
--									\
--	for (; _j * 2 + 1 < (h)->used; _j = _c) {			\
--		_c = _j * 2 + 1;					\
--		if (_c + 1 < (h)->used &&				\
--		    cmp(h, (h)->data[_c], (h)->data[_c + 1]) >= 0)	\
--			_c++;						\
--									\
--		if (cmp(h, (h)->data[_c], (h)->data[_j]) >= 0)		\
--			break;						\
--		heap_swap(h, _c, _j, set_backpointer);			\
--	}								\
--} while (0)
--
--#define heap_sift_up(h, i, cmp, set_backpointer)			\
--do {									\
--	while (i) {							\
--		size_t p = (i - 1) / 2;					\
--		if (cmp(h, (h)->data[i], (h)->data[p]) >= 0)		\
--			break;						\
--		heap_swap(h, i, p, set_backpointer);			\
--		i = p;							\
--	}								\
--} while (0)
--
--#define __heap_add(h, d, cmp, set_backpointer)				\
--({									\
--	size_t _i = (h)->used++;					\
--	(h)->data[_i] = d;						\
--	heap_set_backpointer(h, _i, set_backpointer);			\
--									\
--	heap_sift_up(h, _i, cmp, set_backpointer);			\
--	_i;								\
--})
--
--#define heap_add(h, d, cmp, set_backpointer)				\
--({									\
--	bool _r = !heap_full(h);					\
--	if (_r)								\
--		__heap_add(h, d, cmp, set_backpointer);			\
--	_r;								\
-+	void *data = kvmalloc(_size * sizeof(*min_heap_peek(heap)), (gfp));\
-+	min_heap_init(heap, data, _size);				\
-+	min_heap_peek(heap);						\
- })
- 
--#define heap_add_or_replace(h, new, cmp, set_backpointer)		\
--do {									\
--	if (!heap_add(h, new, cmp, set_backpointer) &&			\
--	    cmp(h, new, heap_peek(h)) >= 0) {				\
--		(h)->data[0] = new;					\
--		heap_set_backpointer(h, 0, set_backpointer);		\
--		heap_sift_down(h, 0, cmp, set_backpointer);		\
--	}								\
--} while (0)
- 
--#define heap_del(h, i, cmp, set_backpointer)				\
-+#define free_heap(_heap)							\
- do {									\
--	size_t _i = (i);						\
--									\
--	BUG_ON(_i >= (h)->used);					\
--	(h)->used--;							\
--	if ((_i) < (h)->used) {						\
--		heap_swap(h, _i, (h)->used, set_backpointer);		\
--		heap_sift_up(h, _i, cmp, set_backpointer);		\
--		heap_sift_down(h, _i, cmp, set_backpointer);		\
--	}								\
-+	kvfree((_heap)->heap.data);						\
-+	(_heap)->heap.data = NULL;						\
- } while (0)
- 
--#define heap_pop(h, d, cmp, set_backpointer)				\
--({									\
--	bool _r = (h)->used;						\
--	if (_r) {							\
--		(d) = (h)->data[0];					\
--		heap_del(h, 0, cmp, set_backpointer);			\
--	}								\
--	_r;								\
--})
--
--#define heap_resort(heap, cmp, set_backpointer)				\
--do {									\
--	ssize_t _i;							\
--	for (_i = (ssize_t) (heap)->used / 2 -  1; _i >= 0; --_i)	\
--		heap_sift_down(heap, _i, cmp, set_backpointer);		\
--} while (0)
- 
- #define ANYSINT_MAX(t)							\
- 	((((t) 1 << (sizeof(t) * 8 - 2)) - (t) 1) * (t) 2 + (t) 1)
--- 
-2.34.1
+    node =3D rb_find(void *)(uintptr_tr)addr, ...);
 
+Thanks,
+Namhyung
+
+
+
+> +       if (node =3D=3D NULL)
+> +               return NULL;
+> +
+> +       return rb_entry(node, struct global_var_entry, node);
+> +}
+> +
+> +static bool global_var__add(struct data_loc_info *dloc, u64 addr,
+> +                           const char *name, Dwarf_Die *type_die)
+> +{
+> +       struct dso *dso =3D map__dso(dloc->ms->map);
+> +       struct global_var_entry *gvar;
+> +       Dwarf_Word size;
+> +
+> +       if (dwarf_aggregate_size(type_die, &size) < 0)
+> +               return false;
+> +
+> +       gvar =3D malloc(sizeof(*gvar));
+> +       if (gvar =3D=3D NULL)
+> +               return false;
+> +
+> +       gvar->name =3D strdup(name);
+> +       if (gvar->name =3D=3D NULL) {
+> +               free(gvar);
+> +               return false;
+> +       }
+> +
+> +       gvar->start =3D addr;
+> +       gvar->end =3D addr + size;
+> +       gvar->die_offset =3D dwarf_dieoffset(type_die);
+> +
+> +       rb_add(&gvar->node, &dso->global_vars, global_var_less);
+> +       return true;
+> +}
+> +
+> +void global_var_type__tree_delete(struct rb_root *root)
+> +{
+> +       struct global_var_entry *gvar;
+> +
+> +       while (!RB_EMPTY_ROOT(root)) {
+> +               struct rb_node *node =3D rb_first(root);
+> +
+> +               rb_erase(node, root);
+> +               gvar =3D rb_entry(node, struct global_var_entry, node);
+> +               free(gvar->name);
+> +               free(gvar);
+> +       }
+> +}
+> +
+>  static bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
+>                                 const char **var_name, int *var_offset)
+>  {
+> @@ -467,14 +552,25 @@ static bool get_global_var_type(Dwarf_Die *cu_die, =
+struct data_loc_info *dloc,
+>         u64 pc;
+>         int offset;
+>         bool is_pointer =3D false;
+> -       const char *var_name;
+> +       const char *var_name =3D NULL;
+> +       struct global_var_entry *gvar;
+>         Dwarf_Die var_die;
+>
+> +       gvar =3D global_var__find(dloc, var_addr);
+> +       if (gvar) {
+> +               if (!dwarf_offdie(dloc->di->dbg, gvar->die_offset, type_d=
+ie))
+> +                       return false;
+> +
+> +               *var_offset =3D var_addr - gvar->start;
+> +               return true;
+> +       }
+> +
+>         /* Try to get the variable by address first */
+>         if (die_find_variable_by_addr(cu_die, var_addr, &var_die, &offset=
+) &&
+>             check_variable(&var_die, type_die, offset, is_pointer) =3D=3D=
+ 0) {
+> +               var_name =3D dwarf_diename(&var_die);
+>                 *var_offset =3D offset;
+> -               return true;
+> +               goto ok;
+>         }
+>
+>         if (!get_global_var_info(dloc, var_addr, &var_name, var_offset))
+> @@ -485,9 +581,14 @@ static bool get_global_var_type(Dwarf_Die *cu_die, s=
+truct data_loc_info *dloc,
+>         /* Try to get the name of global variable */
+>         if (die_find_variable_at(cu_die, var_name, pc, &var_die) &&
+>             check_variable(&var_die, type_die, *var_offset, is_pointer) =
+=3D=3D 0)
+> -               return true;
+> +               goto ok;
+>
+>         return false;
+> +
+> +ok:
+> +       /* The address should point to the start of the variable */
+> +       global_var__add(dloc, var_addr - *var_offset, var_name, type_die)=
+;
+> +       return true;
+>  }
+>
+>  /**
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-d=
+ata.h
+> index 1b5a152163b5..fe1e53d6e8c7 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -153,6 +153,9 @@ int annotated_data_type__update_samples(struct annota=
+ted_data_type *adt,
+>  /* Release all data type information in the tree */
+>  void annotated_data_type__tree_delete(struct rb_root *root);
+>
+> +/* Release all global variable information in the tree */
+> +void global_var_type__tree_delete(struct rb_root *root);
+> +
+>  #else /* HAVE_DWARF_SUPPORT */
+>
+>  static inline struct annotated_data_type *
+> @@ -175,6 +178,10 @@ static inline void annotated_data_type__tree_delete(=
+struct rb_root *root __maybe
+>  {
+>  }
+>
+> +static inline void global_var_type__tree_delete(struct rb_root *root __m=
+aybe_unused)
+> +{
+> +}
+> +
+>  #endif /* HAVE_DWARF_SUPPORT */
+>
+>  #endif /* _PERF_ANNOTATE_DATA_H */
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 22fd5fa806ed..6e2a7198b382 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1329,6 +1329,7 @@ struct dso *dso__new_id(const char *name, struct ds=
+o_id *id)
+>                 dso->inlined_nodes =3D RB_ROOT_CACHED;
+>                 dso->srclines =3D RB_ROOT_CACHED;
+>                 dso->data_types =3D RB_ROOT;
+> +               dso->global_vars =3D RB_ROOT;
+>                 dso->data.fd =3D -1;
+>                 dso->data.status =3D DSO_DATA_STATUS_UNKNOWN;
+>                 dso->symtab_type =3D DSO_BINARY_TYPE__NOT_FOUND;
+> @@ -1373,6 +1374,7 @@ void dso__delete(struct dso *dso)
+>         dso->symbol_names_len =3D 0;
+>         zfree(&dso->symbol_names);
+>         annotated_data_type__tree_delete(&dso->data_types);
+> +       global_var_type__tree_delete(&dso->global_vars);
+>
+>         if (dso->short_name_allocated) {
+>                 zfree((char **)&dso->short_name);
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index ce9f3849a773..2cdcd1e2ef8b 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -154,7 +154,8 @@ struct dso {
+>         size_t           symbol_names_len;
+>         struct rb_root_cached inlined_nodes;
+>         struct rb_root_cached srclines;
+> -       struct rb_root  data_types;
+> +       struct rb_root   data_types;
+> +       struct rb_root   global_vars;
+>
+>         struct {
+>                 u64             addr;
+> @@ -411,4 +412,7 @@ int dso__strerror_load(struct dso *dso, char *buf, si=
+ze_t buflen);
+>
+>  void reset_fd_limit(void);
+>
+> +u64 dso__find_global_type(struct dso *dso, u64 addr);
+> +u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
+> +
+>  #endif /* __PERF_DSO */
+> --
+> 2.44.0.291.gc1ea87d7ee-goog
+>
+>
