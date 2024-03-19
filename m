@@ -1,106 +1,200 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158975FB95
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 20:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C6A39AF0
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 20:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710879228; cv=none; b=fjcki6ATS/50jozSIpauyQwW5mxaSwXMsI1D7Sd93gORYmp/xekT+Ey83OY/RBeyI8w4xP1CcYOUO3OnzSXmZFq4TAHqsHUsXXSyCeC3k7YnprzxwpoFYQDlnZN7ERrEEpy8HGzPKMgYjctQ6sJiFJVzLzi7Ox0bfTFNPrUd7TA=
+	t=1710880421; cv=none; b=MDovuVcrdg5E8uCaomM9mC8HqQ0x2+3K7bd3dNsnnJHPwk6EQPVXn2UBG2/9akRpDjRlgjibuhFBG5Fv5RUZABdm14K+pvG3HNgIfJEjVqQlw6I+5oeBXn8odj75Z0OS16Jj2r9TrxOUUVUjvBelQU6nw3WO5dMDgiSUiBbXqoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710879228; c=relaxed/simple;
-	bh=TEI1l16U8O229iRg+bnRlquzTRC42x/8zMW3wG5XbLs=;
+	s=arc-20240116; t=1710880421; c=relaxed/simple;
+	bh=Eok2DGTMs9IQ05hXDYxc0HToH4eXhUzDfxur7FtwE/U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KsadZ4ZMYcaLkn9IWJZIQvacMNi0FrtRTnXMeA52/11Px7XY0FdaC/KrQpUQjckhkpOrd7XBUiXAY3sLVtOm7RG+z30NnrinjNzOHN0WUJ4kUkcSWbyWybUv/Nuyywf39gB6QJphgM0fLJ2UK/aQLCPx5SJ65N3eALDFC9a3PGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gtAnEDUV; arc=none smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=uJzEBFeFZ90lCB1KkaMIFgFNvOOmbnaIBmeBNakZZERL6iJ4bErZu+UfFa1wbcYcRTq3xLEa0SuxAT43hOvJ0H4HftDV9v+9943pDKOxGejm+ILJHGp+mjlSohnt03Fj0NxGCbphMAk7bVgTtGIYuieaASH77058/GHwxXH+R6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RQVtpJzh; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gtAnEDUV"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e058b9e479so28115ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 13:13:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RQVtpJzh"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-366abfd7b09so33045ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 13:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710879225; x=1711484025; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710880419; x=1711485219; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=61E5NQ6/YcOhVh/0k2iDBO7WpqpNwA0nbieT/ua9ouc=;
-        b=gtAnEDUVnZvHgfuPvOALSV92laz8czMB1cfJmNpfaAI3SDF8yI8PpIvoIB8wspgUSY
-         5w0y9kN4RgfF7ReI8e8vf1xrpiVTr17eG083oEne+DYTGEmE3qgXtLu/7Ad3h+kW1gPX
-         GaL5y0w+oY/C33fvFIQYF30A396dqMPN2qPiGBAs5sjCkxnV2Y//egkHXxm/fJGBrhdf
-         dVx0alJ9xtYq+nY2azq325TtMfdnKGeP6rsk6yUV/UwKP91IqIs2bgxXabJsNoAZbrI4
-         hbursat8QPTCctysg1URfQUtJoyMy7Oc3+xw9D8pgDaTrccOhuEab4eNJr7jzdEgQiLA
-         Vuqg==
+        bh=f7PpDNpShgz+B/PDR36qmkNusndcc30e4ilE7bZHSuo=;
+        b=RQVtpJzhd0g7iDyp2STlM2a+1mir7pn6WJlOV8tKr5IreGlXdYDRlLLVcR1KwOZ3NJ
+         oMdmXuLCdJKMdU3eUIvybNaiIwGdfysBWjhcFOpNtL1SJ6uwzGXOBucnYymsJ5H5x74Z
+         8rp1rQo/6rsJtsWvaKwGTY4T5kHxJ8bvDJqSMsEtaH7KG1n3LcSdQQQHFiFrx3MwT9yf
+         +aHj6p6P81F428UX1PdeZkGEZP5BpR+ZcmeZsHCWmr24iUxb5vIb6AKXpA5K98dezg4o
+         DevZrZm2C7Z7I+5yf+8DtBSb8hRtz046IAtzv39tfVqD7TTmyjXxK0gB6Hmcyp+K33FR
+         BD/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710879225; x=1711484025;
+        d=1e100.net; s=20230601; t=1710880419; x=1711485219;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=61E5NQ6/YcOhVh/0k2iDBO7WpqpNwA0nbieT/ua9ouc=;
-        b=VW0y+/+LTR80dfapcl0E3HyX0N7U387lg9xtWyyXON4gcd2hpHnZvdwVKREYb3/IQR
-         Ya9cm8zsyD1SIcxlvSJm/io695pwClZ+/akcTp2MAHn9JOr8AUV5D9XEoMxXwjQ7B17x
-         CgMjKAmb/UxhEsLhNrpeVMNjUntTxjzsS1ZdxYhmNL6ZCKq3BZjzT8R4puOuGSb6Rksv
-         zkHGRjJ1VEJcwDqXALX8hZNacxLMwYE0T6sdfY40K90PW/ARrqBcjXMZ25PjB68tYW1V
-         hFLF94RSOVhKyyV/wzKzb94XW75wGnx/WFPbGp/Z99kZRHx2eYrdeqasYRO480QmxD6s
-         HMzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWi3Lemra+OlVxMrIkDwnkLFoNSDfR68DhPCBS5NESUTxDlKRroeOssXCC+x+RG24kYbPDF5UmXciPKw/TUKAbbzDu6AxNnMXYAzBsnLLjgFw==
-X-Gm-Message-State: AOJu0YyppTSqlsUw/v9SoMSyzY59Kj+/AJjaIcZ/gyB1Yt3bKELDAd62
-	DXuiOIWaKxnvElqZcjUXwIDM0V8DV6gzCy2XP+3MUP5P5ikAbx3cYSQ2Z/gN0ldBJkdK9a0BYc9
-	3+okinoDB0+VbqEJ17MLLZ1ZWX/QNw43NXjUx
-X-Google-Smtp-Source: AGHT+IFREg9SwBdMDFnHH3n5tmN6yW8u/tyc7IrpIagXi7ukyBFEM1dN3wdN7uqPHmnG3vaEtYonkph3M4qPe2lMJDA=
-X-Received: by 2002:a17:902:f691:b0:1de:f0f0:90aa with SMTP id
- l17-20020a170902f69100b001def0f090aamr68484plg.26.1710879225101; Tue, 19 Mar
- 2024 13:13:45 -0700 (PDT)
+        bh=f7PpDNpShgz+B/PDR36qmkNusndcc30e4ilE7bZHSuo=;
+        b=aFtxcxZo47YfjP8qUUwgKFrjKX4iWmBZFaRP6ZAjAMEzDtbwPiacC4UvpPSFcM2qv2
+         cb24aOYGW8Dv0iBNUDzNXOzICvaoESX8/xEcV1WMEiRwi9eb3S81itnKn4n5RGtWN+CT
+         /AzLZWYn+SwrKsmCvo3HNPbq7VVSBRGa8YDrdimOaDa7Hwn0kHfQj5N8arBpw4MKcfLY
+         bN72Nu0T4RQ+GXL4JV470VXHIDGSRgVKCPCmzGjgMjCucmGxkMLKnVeJyR4lLyTfqJfG
+         2kbUyWfvw8aoGJB4LW/0V21TN1QQkrZpmYt438Cet6EwrR8YNd9kkqIwsur4BvHFQHO9
+         gctA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgjCA/PaTt6lazaev0ARteRtTcIA9159wk2Jqzu/wXUirovOL+xcGsGtQoAnR5X4bgNjh3VGxtQhyZFwBtPrzHHo0+O5vWlVQhT3rBdf1r3w==
+X-Gm-Message-State: AOJu0YwR0YB0g9AUobFO4xJLfHsgI+Bp2pzwSMfDkw/z0MGRZ9rzGhHf
+	zXK695xSMbhagOqma4RA3+tCa+iWS5Ul6nyEuaR4qr7yr84OscXXRQwm5JrmuX6VEzU1UkF+HR0
+	2/8/FOkqQvONtRHHuOiUbqF9+ykP448knfU2z
+X-Google-Smtp-Source: AGHT+IGsTVhS/2yhbQDJCUv6iNQsxl/+sTPLGwMubE605DJqqvDFBD6eN/G9bEceIBxeW0iy/i36FAP6lq2oS2NcOgg=
+X-Received: by 2002:a05:6e02:219b:b0:363:c7a9:c5a2 with SMTP id
+ j27-20020a056e02219b00b00363c7a9c5a2mr71438ila.28.1710880418724; Tue, 19 Mar
+ 2024 13:33:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319180005.246930-1-visitorckw@gmail.com> <20240319180005.246930-4-visitorckw@gmail.com>
-In-Reply-To: <20240319180005.246930-4-visitorckw@gmail.com>
+References: <20240319091429.2056555-1-spring.cxz@gmail.com>
+In-Reply-To: <20240319091429.2056555-1-spring.cxz@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 19 Mar 2024 13:13:33 -0700
-Message-ID: <CAP-5=fUy=m2_f7jKO_kn4+onto5As2fUwrcNBtKEh8uObsNvYA@mail.gmail.com>
-Subject: Re: [PATCH 03/13] bcachefs: Fix typo
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, 
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 19 Mar 2024 13:33:24 -0700
+Message-ID: <CAP-5=fWD3bmeDoG626gds_R85JrWEAKrd_6hau6LfZXGnD=_NQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf evlist: Fix 'perf record -C xx' failed issue
+To: Chunxin Zang <spring.cxz@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, yangchen11@lixiang.com, 
+	zhouchunhua@lixiang.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zangchunxin@lixiang.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 11:00=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.co=
-m> wrote:
+On Tue, Mar 19, 2024 at 2:14=E2=80=AFAM Chunxin Zang <spring.cxz@gmail.com>=
+ wrote:
 >
-> Replace 'utiility' with 'utility'.
+> The cpu has 8 performance-cores and 8 efficient-cores on my pc.
+> 0-15 are performance-cores
+> 16-23 are 8 efficient-cores
 >
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> When I run "perf record -C xxx", the command fails if xxx all belong to
+> performance cores or efficient cores
+>
+> The results are as follows
+>
+>   # perf record -C 12
+>   WARNING: A requested CPU in '12' is not supported by PMU 'cpu_atom' (CP=
+Us 16-23) for event 'cycles:P'
+>   Error:
+>   The sys_perf_event_open() syscall returned with 22 (Invalid argument) f=
+or event (cpu_atom/cycles:P/).
+>   /bin/dmesg | grep -i perf may provide additional information.
+>
+>   # perf record -C 14-17
+>   WARNING: A requested CPU in '14-17' is not supported by PMU 'cpu_atom' =
+(CPUs 16-23) for event 'cycles:P'
+>   WARNING: A requested CPU in '14-17' is not supported by PMU 'cpu_core' =
+(CPUs 0-15) for event 'cycles:P'
+>   ^C[ perf record: Woken up 1 times to write data ]
+>
+> The reason is that the cpu_map of 'cpu_atom'-evsel is empty, causing
+> the sys_perf_event_open() result to fail.
+>
+> Changes in v2:
+> - fix memory leak about 'intersect'
+>
+> Signed-off-by: Chunxin Zang <spring.cxz@gmail.com>
+> Reviewed-by: Chen Yang <yangchen11@lixiang.com>
+> ---
+>  tools/perf/util/evlist.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 55a300a0977b..babbde29341f 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -2499,7 +2499,7 @@ void evlist__check_mem_load_aux(struct evlist *evli=
+st)
+>  void evlist__warn_user_requested_cpus(struct evlist *evlist, const char =
+*cpu_list)
+>  {
+>         struct perf_cpu_map *user_requested_cpus;
+> -       struct evsel *pos;
+> +       struct evsel *pos, *tmp;
+>
+>         if (!cpu_list)
+>                 return;
+> @@ -2508,18 +2508,28 @@ void evlist__warn_user_requested_cpus(struct evli=
+st *evlist, const char *cpu_lis
+>         if (!user_requested_cpus)
+>                 return;
+>
+> -       evlist__for_each_entry(evlist, pos) {
+> +       evlist__for_each_entry_safe(evlist, tmp, pos) {
+>                 struct perf_cpu_map *intersect, *to_test;
+>                 const struct perf_pmu *pmu =3D evsel__find_pmu(pos);
+>
+>                 to_test =3D pmu && pmu->is_core ? pmu->cpus : cpu_map__on=
+line();
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Perhaps this would be clearer if we just made sure requested uncore
+CPUs were online. Uncore cpu maps are weird, they say the default CPU
+but other CPUs are valid. It'd be worth testing the impact of this
+change on uncore events.
+
+>                 intersect =3D perf_cpu_map__intersect(to_test, user_reque=
+sted_cpus);
+> -               if (!perf_cpu_map__equal(intersect, user_requested_cpus))=
+ {
+> -                       char buf[128];
+> +               if (!intersect) {
+> +                       evlist__remove(evlist, pos);
+> +                       evsel__delete(pos);
+> +                       perf_cpu_map__put(intersect);
+
+evlist__warn_user_requested_cpus seems like a wrong function name if
+evsels are being removed. Perhaps something like
+evlist__remove_empty_cpu_map_evsels. It seems this change will remove
+warnings in cases like:
+
+$ perf record cpu_atom/cycles/ -C 0 ...
+
+I wonder that we need a flag in the evsel to say when an event comes
+from wildcard expansion so we only don't warn/remove in that case.
+
+Wrt memory leaks, try compiling with EXTRA_CFLAGS=3D"-fsanitize=3Daddress"
+which also incorporates leak sanitizer.
 
 Thanks,
 Ian
 
-> ---
->  fs/bcachefs/util.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> +                       continue;
+> +               }
+> +
+> +               if (!perf_cpu_map__is_subset(user_requested_cpus, interse=
+ct)) {
+> +                       char buf_test[128];
+> +                       char buf_intersect[128];
 >
-> diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-> index 216fadf16928..f5a16ad65424 100644
-> --- a/fs/bcachefs/util.c
-> +++ b/fs/bcachefs/util.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * random utiility code, for bcache but in theory not specific to bcache
-> + * random utility code, for bcache but in theory not specific to bcache
->   *
->   * Copyright 2010, 2011 Kent Overstreet <kent.overstreet@gmail.com>
->   * Copyright 2012 Google, Inc.
+> -                       cpu_map__snprint(to_test, buf, sizeof(buf));
+> -                       pr_warning("WARNING: A requested CPU in '%s' is n=
+ot supported by PMU '%s' (CPUs %s) for event '%s'\n",
+> -                               cpu_list, pmu ? pmu->name : "cpu", buf, e=
+vsel__name(pos));
+> +                       cpu_map__snprint(to_test, buf_test, sizeof(buf_te=
+st));
+> +                       cpu_map__snprint(intersect, buf_intersect, sizeof=
+(buf_intersect));
+> +                       pr_warning("WARNING: A requested CPU '%s' in '%s'=
+ is not supported by "
+> +                                  "PMU '%s' (CPUs %s) for event '%s'\n",=
+ buf_intersect, cpu_list,
+> +                                  pmu ? pmu->name : "cpu", buf_test, evs=
+el__name(pos));
+>                 }
+>                 perf_cpu_map__put(intersect);
+>         }
 > --
 > 2.34.1
 >
