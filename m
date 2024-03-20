@@ -1,40 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A689D41C84
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 14:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7752747F6B;
+	Wed, 20 Mar 2024 14:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710944373; cv=none; b=XXXpaDkSTnVKG5QjOr8NZOpQ9JPlM9kGiXHlPLSZYk87t6h7MjY9tP1nQa1rJ22A13XqsTkToUSw6jU9luIeS7DzFQ8Yo+0KYfv+/eFXq5K0un1pVS43QF4aKU3uzXnD97gu/oJNjYzwaNm8RMRSOs1BjxCvwSp3kvR+4o1jA5Y=
+	t=1710945743; cv=none; b=Wtlqv/NjI3VjWbBg8FYPJeTov6Oq0f+6HTuY9pcHVBQC0gu4YPZCKQuvtZT8vcopfCtQ4y4ce0D4i9k4j84b1YLJoPo9UWopJjXZpTO0RhptGRDWG0pP7yMR90FUntqJA2CQ00p1Ib8qI2yjUtbtNPyvg8o3xTbNCLMpmNsMlVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710944373; c=relaxed/simple;
-	bh=rIly7YZyoe0bASacPjoo0y1zWW+9QHWJoihngsaciUk=;
+	s=arc-20240116; t=1710945743; c=relaxed/simple;
+	bh=ovUrCh8ivPKPBF6OH/SCopVigijIup+Lh212CGR0Tes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jBEf0rSoRP08eck8kTT00yb7yCNF3oAMwNTG6CTeQlU09BAYgeZodR2IF/7H1a9T2j8GuWPGRNk0XO46c3vKUQF/54t/Aaqyc84D9DTfF+G4RchxP19G4YEFiZA/JMP7iYUIwAWfABymXxkvq9UFotn9g18q8dSkOxmmdGA+SRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNNNTqGx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H9syWB3lwkKEHrQFmrU3KDEi0914n/jd5vS0VVDCGhEiVDKjKcRJxquWothb3HkD2Ju1cjBO25sc7zlI5znhULUBY9brSFGVZCxCqg0jiwVd7bPCINlwreZpQ6uJFzwDLW0a15SUgRygyhq1/G18v1OMCh8UizLsByTQuH2V92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTIubWms; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNNNTqGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5B4C43390;
-	Wed, 20 Mar 2024 14:19:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTIubWms"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A31DBC433C7;
+	Wed, 20 Mar 2024 14:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710944373;
-	bh=rIly7YZyoe0bASacPjoo0y1zWW+9QHWJoihngsaciUk=;
+	s=k20201202; t=1710945743;
+	bh=ovUrCh8ivPKPBF6OH/SCopVigijIup+Lh212CGR0Tes=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hNNNTqGxZCOnHrxT/MPrHrbOeSZjyolZDrkQDglIlZ5rGw3qDNx+x1nbmXhmq54lh
-	 hEJimttAn+ndnTq1QIwfY6PpWNGS+Axss/8/ZlWNEG2gS/D7fTg9oeLFC92t+ggbla
-	 QdIJC51lJha90SRfsX4cfK0C1p4IIFGrZO2meajetNWEIziFj0NBcivbcQkaVO46XD
-	 9CMW5u0HNGnk9Acr8AHGSPkjokA+cwEa1aawZ5unD3aZ4i/2RiTLDBl7zIVLDd+4dJ
-	 Yjw/hPMwC7z2Ity+JP0yB2FLhmHPCMY7q6RLQdtltitpYkvslOGymVD0NFfthgwt2C
-	 HIhWz1HcwELug==
-Date: Wed, 20 Mar 2024 11:19:30 -0300
+	b=gTIubWms1oa9XTtUMbASdKDkDuJOG3hO/dFuzHc1lwm7xOKQZqmAJ4zMHnUFC2N7B
+	 Uqf/SaCJY58qbKHlMNIdIq5BkV1cA1OsoGqkam4KX9YGQUxYere0uqgF7AlwxAvohb
+	 3j42WcY4uTtPM4xfM49AEcSG5u2fFz8rirqJL7zHhfnRNZT9CwfC10S703ol+VyyN7
+	 po7y1egF1ccmb+vism+STYHXlyn4NtNlqrKkUFeL02O//gQKLaMGIs8IpymRchRZOI
+	 LmLjv0CHiyAhyvkmGY2z+ayo1okcCxNQl54WI6mjGOopv7+IVeSJnJuu7gFqz6E1Ur
+	 KcGuLIX5dMQEw==
+Date: Wed, 20 Mar 2024 11:42:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, acme@redhat.com
-Subject: Re: [PATCH v2] perf test record.sh: Raise limit of open file
- descriptors
-Message-ID: <ZfrwcurxSYKy9uma@x1>
-References: <20240311081127.7652-1-vmolnaro@redhat.com>
- <alpine.LRH.2.20.2403201310220.4040@Diego>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	James Clark <james.clark@arm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] Extra verbose/perf-list details
+Message-ID: <Zfr1zCn3lxmu2uc2@x1>
+References: <20240308001915.4060155-1-irogers@google.com>
+ <89249fc5-6102-45d4-9345-5dd80d06e001@linux.intel.com>
+ <CAP-5=fWGhZHnsBWo4=+9PdfaAPNEnx7u40G+BHAWR+4rPC2Udw@mail.gmail.com>
+ <CAP-5=fXXACwattr9fEcmxoDfGNNi8zmzrDUc8RjUtuX5sV4M9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,61 +55,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.LRH.2.20.2403201310220.4040@Diego>
+In-Reply-To: <CAP-5=fXXACwattr9fEcmxoDfGNNi8zmzrDUc8RjUtuX5sV4M9w@mail.gmail.com>
 
-On Wed, Mar 20, 2024 at 01:14:32PM +0100, Michael Petlan wrote:
-> Hello Arnaldo,
-> kind reminder, any chance this being merged soon?
-> Thanks,
-> Michael
+On Tue, Mar 19, 2024 at 06:01:35PM -0700, Ian Rogers wrote:
+> On Fri, Mar 8, 2024 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
+> > On Fri, Mar 8, 2024 at 7:39 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >> On 2024-03-07 7:19 p.m., Ian Rogers wrote:
+> >> > Add more encoding detail and raw event details in perf list. Add PMU
+> >> > name and reverse lookup from config to event name to
+> >> > perf_event_attr_fprintf. This makes the verbose output easier to read,
+> >> > and the perf list information more specific.
+> >> >
+> >> > v3. Fix to reverse lookup to ensure or aliases are loaded and if
+> >> >     getting the config value fails for an event/alias just continue to
+> >> >     the next one.
+> >> > v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
+> >> >     becomes "Raw event descriptor" add assert to keep term numbers in
+> >> >     sync, fix a commit message.
+> >> >
+> >> > Ian Rogers (6):
+> >> >   perf list: Add tracepoint encoding to detailed output
+> >> >   perf pmu: Drop "default_core" from alias names
+> >> >   perf list: Allow wordwrap to wrap on commas
+> >> >   perf list: Give more details about raw event encodings
+> >> >   perf tools: Use pmus to describe type from attribute
+> >> >   perf tools: Add/use PMU reverse lookup from config to name
+> >>
+> >> The patch series look good to me.
+> >> I verified it on a hybrid machine. The new format is the same as the
+> >> advertise.
+> >>
+> >> Tested-by: Kan Liang <kan.liang@linux.intel.com>
 > 
-> On Mon, 11 Mar 2024, vmolnaro@redhat.com wrote:
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > 
-> > Subtest for system-wide record with '--threads=cpu' option fails due
-> > to a limit of open file descriptors on systems with 128 or more CPUs
-> > as the default limit is set to 1024.
-> > 
-> > The number of open file descriptors should be slightly above
-> > nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
-> > which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
-> > 16*nmb_cpus for the test.
-> >
-> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> 
-> Acked-by: Michael Petlan <mpetlan@redhat.com>
+> Ping.
 
-Its not applying, can you please check?
-
-Please use the
-git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-repo, tmp.perf-tools-next branch.
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
-
-⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers alpine.LRH.2.20.2403201310220.4040@Diego
-Grabbing thread from lore.kernel.org/all/alpine.LRH.2.20.2403201310220.4040@Diego/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 2 messages in the thread
-Checking attestation on all messages, may take a moment...
----
-  [PATCH v2] perf test record.sh: Raise limit of open file descriptors
-    + Acked-by: Michael Petlan <mpetlan@redhat.com>
-    + Link: https://lore.kernel.org/r/20240311081127.7652-1-vmolnaro@redhat.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ---
-  NOTE: install dkimpy for DKIM signature verification
----
-Total patches: 1
----
- Link: https://lore.kernel.org/r/20240311081127.7652-1-vmolnaro@redhat.com
- Base: not specified
-       git am ./v2_20240311_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
-⬢[acme@toolbox perf-tools-next]$ vim ./v2_20240311_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
-⬢[acme@toolbox perf-tools-next]$ patch -p1 < ./v2_20240311_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
-patching file tools/perf/tests/shell/record.sh
-Hunk #1 succeeded at 12 with fuzz 2 (offset 1 line).
-Hunk #2 FAILED at 162.
-1 out of 2 hunks FAILED -- saving rejects to file tools/perf/tests/shell/record.sh.rej
-⬢[acme@toolbox perf-tools-next]$ 
