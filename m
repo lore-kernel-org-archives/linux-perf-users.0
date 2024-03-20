@@ -1,81 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9354453378;
-	Wed, 20 Mar 2024 15:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007BF52F78
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 15:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710949469; cv=none; b=DcxOw/klk50qfaTKYTQgsg0luvba7fArk4udMr4YzDy5WeotMNiTu/4uM1OYtvhprxnktSZYuWvdkij4bC8Hq9CVAVExjfxik5Upg3jdFTSsRm/Zx3w5TrCTWBpGJcaBCo0jSdZog/LqyqpLVsKdADmvuDU8YPoWIEVmIE1v+IQ=
+	t=1710950334; cv=none; b=QGeyQWyhus+UTGWlps5U+1E24H9SQ7esBewfFR6rG2Bj5LBMmckzPjlLnU+jbtL9DGFWBL9Bf9Y8QfqnnkEdgJHRxssUIJewAnHh5DtCSmNukT0IOJB4FKxMt2X3k+30+WUAptqtUPBDLLw+l3y41PwQobSqSn3JmhpIrO5YdJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710949469; c=relaxed/simple;
-	bh=a0za4WCCKbmt2ceizF1eT8CjZalN0VYRpB7LLv7Opm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBjXnO1BaCiVWMGbhs0MTY6HP5l40/ZEKL1iXr3K7eyirghVDJmvvHVHxI2NP3S8tOrcFHWPL5ezfSGWvG/kQxDAn88vLSSorkl116h6FODMOHSRLaHG+cNDCRXj4yYMrmlCFrS42kzMwG96fuSoZXYHgiRZtXb66fbocgAu6eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tO2L/JJv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710950334; c=relaxed/simple;
+	bh=GmmRjBu8OPrKOqfE4JDgrdYsY7XBEdzR9WTE+oGBr6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=A++tQFz1s0/Pbe7wo49uTSAQ+1CLzXdwrak04/xN92BaNjRUe+lYzDOqMlsHbll2WsstzJ+WoounJAuoPMvZs9/xmsStAdWXPbcAT2kuL9MxbT6nFbJT9Sb+foNQUCtPDl47NhML9i5RHRQ2W/iuu3a88qlHDi0hcVO7abHBM3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wxYv5h07; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tO2L/JJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE94C43390;
-	Wed, 20 Mar 2024 15:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710949469;
-	bh=a0za4WCCKbmt2ceizF1eT8CjZalN0VYRpB7LLv7Opm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tO2L/JJvVcqFMoZ+uhlo2XCL/9B3it6J2Pn3Sdp0CpVsBr6CwpL0y/RarhJSvVW6F
-	 piqDwxgFl8MlKsMBAZ72TakOPmBzYn6pFJUoYxXHgW+pjEUDyEjFKrgULXlveBBaQU
-	 8/0PeP/FSj5H50ry9ZLDOIdKtL6eRuQQY+0/IeRjhz2qMrt1R60cCcopj+e0Qibhk6
-	 miTioizB19R2Z2eN8mxhIEs1CGCT9aHR6CR1lQt5Chbk/y+zRw1DbZCSAXokwUVuyH
-	 CqSMALkdGU/7d/fUxZspmwXyIzuBzac25dxR8WqUcsHWEr4iDrGTPSWltB6GjL+3xI
-	 pHCsH75UVFddg==
-Date: Wed, 20 Mar 2024 12:44:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf: Suggest inbuilt commands for unknown command
-Message-ID: <ZfsEWoi6eevwLRQC@x1>
-References: <20240301201306.2680986-1-irogers@google.com>
- <Zfr4jX_b8FCOG_x_@x1>
- <Zfr5__Ej3-0C8sJj@x1>
- <CAP-5=fXXrJRH=Dto2ajD_TUDE1YmkkJZO5Ey2pq5YB0wbVAzeg@mail.gmail.com>
- <Zfr-sQJPbZzbtk8K@x1>
- <ZfsBopALY3whsst5@x1>
- <ZfsDtr5ejAwGySOR@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wxYv5h07"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dee917abd5so183595ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 08:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710950332; x=1711555132; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4SAiUylEBb4Do6kg5NlBhcM+tFCB4UT2cndOgQS39Kg=;
+        b=wxYv5h07nv/rLa/H/Uqnw4++Kcc0gMtr/v+EOmdHtgAYH8Sg9iMnVcXmksESG1CNp6
+         etHECM0+LYXy5+0lUuIrhUR3z3+WrzHjkk0BzUFDlSNeNP28eRMZmswnQxaCkKu6rzvb
+         ngvgB9UbdTI4J4YvDwuRGDqIRin6IZ2AUwSRKnasMKlRDBz3kUwfy6nzfdU0OS6nJl4T
+         GhHiETz4lWSoIexY/dTEeFv2suA7cIceGJZ+ZKiwBwgwBHPi4FScIBcheyqYdvE0F9a9
+         Jh33drI9D1Y859Ge1ZNfOk+z+9ZipL/3yzX4RJiiD7Oh1qcBE09SQm5/le5ZHgVVVp+w
+         1hMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710950332; x=1711555132;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4SAiUylEBb4Do6kg5NlBhcM+tFCB4UT2cndOgQS39Kg=;
+        b=MQ7PFR27hZOezsMPiVNsRHQFrVV754BpvxD1V28j7m5MnqoQ/U/JKXjz/nAB9/pKmi
+         Z8zXYqhAFrCZ5q+Qr1FiwbOP8WqVoSr408iDj4+Vc9sV8N9KP4FKJwWpfZGcxux8szHJ
+         NIVodATlczwq524B37DyLRakpY/Gg8C9te1PnZSF5PBzElxAZ0/AsFWyZdJxnmsA4TkO
+         jg7SsmKrU22rdjNLyTiSzeVx4LFGS2TgXUaGn3WbFskEVJtEnNzRFMyahGOUPCsdoR06
+         k4M8paYfvC484HOVndikJYof5U5fCsugX1aoddXHnvxmXabOLHVBxYotKvvY6uXMe0C2
+         iBkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjr/EHAyTHyzMu86CJ8bilgFb4IqR/MthCz876yWwiSPEP5LG0E+iqLf9SXK4F0afWpiczeCWJZ/HRrOxvGdaB21CvK7NWrKYramJ1xZJjxg==
+X-Gm-Message-State: AOJu0YyGWG2UmMzPGXS7XwaxcM1IuOK6Me+sLgv/2SelGsDAIWnmqOe+
+	sXPqXeq5WA9ul0FIM1EZZsMWBEQUlvT5q//QD0jcKz62FETXlElQC2/RLZBRPOszN8Mif30QMh/
+	wolCwLO5rX+ZyVEAplOloHZUvCASsqiih3u5z
+X-Google-Smtp-Source: AGHT+IH+gChMwdD3bcfIhE7cZKWnqVX+ASAjEpb0BwxuT9gdJcGkpFGM/aRMHTBT1CXACIqug1dPf3Vvu+VIO5R1hIE=
+X-Received: by 2002:a17:902:ecc8:b0:1de:ff9f:e760 with SMTP id
+ a8-20020a170902ecc800b001deff9fe760mr293403plh.0.1710950331830; Wed, 20 Mar
+ 2024 08:58:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZfsDtr5ejAwGySOR@x1>
+References: <20240301174711.2646944-1-irogers@google.com>
+In-Reply-To: <20240301174711.2646944-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 20 Mar 2024 08:58:37 -0700
+Message-ID: <CAP-5=fU7PNEDgOg=cFKkSMgHe7_Xbi5Y9k6yPoAwOpN-Uwdp7A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 12:41:45PM -0300, Arnaldo Carvalho de Melo wrote:
-> ⬢[acme@toolbox perf-tools-next]$ perf raccord
-> perf: 'raccord' is not a perf-command. See 'perf --help'.
+On Fri, Mar 1, 2024 at 9:47=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Switch from running tests sequentially to running in parallel by
+> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
+> '--sequential'.
+>
+> On an 8 core tigerlake an address sanitizer run time changes from:
+> 326.54user 622.73system 6:59.91elapsed 226%CPU
+> to:
+> 973.02user 583.98system 3:01.17elapsed 859%CPU
+>
+> So over twice as fast, saving 4 minutes.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-This works with the second patch.
+Ping.
 
-- Arnaldo
+Thanks,
+Ian
 
-> ⬢[acme@toolbox perf-tools-next]$ perf ricord
-> perf: 'ricord' is not a perf-command. See 'perf --help'.
-> 
-> Did you mean this?
-> 	record
-> ⬢[acme@toolbox perf-tools-next]$ perf ricord
-> perf: 'ricord' is not a perf-command. See 'perf --help'.
-> 
-> Did you mean this?
-> 	record
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> So I'll add that and go on from there.
-> 
-> - Arnaldo
+> ---
+> This change is on top of the test fixes in:
+> https://lore.kernel.org/lkml/20240301074639.2260708-1-irogers@google.com/
+> ---
+>  tools/perf/tests/builtin-test.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index ddb2f4e38ea5..73f53b02f733 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -39,8 +39,8 @@
+>   * making them easier to debug.
+>   */
+>  static bool dont_fork;
+> -/* Fork the tests in parallel and then wait for their completion. */
+> -static bool parallel;
+> +/* Don't fork the tests in parallel and wait for their completion. */
+> +static bool sequential;
+>  const char *dso_to_test;
+>  const char *test_objdump_path =3D "objdump";
+>
+> @@ -374,7 +374,7 @@ static int start_test(struct test_suite *test, int i,=
+ int subi, struct child_tes
+>         }
+>         (*child)->process.no_exec_cmd =3D run_test_child;
+>         err =3D start_command(&(*child)->process);
+> -       if (err || parallel)
+> +       if (err || !sequential)
+>                 return  err;
+>         return finish_test(*child, width);
+>  }
+> @@ -440,7 +440,7 @@ static int __cmd_test(int argc, const char *argv[], s=
+truct intlist *skiplist)
+>                         int err =3D start_test(t, curr, -1, &child_tests[=
+child_test_num++], width);
+>
+>                         if (err) {
+> -                               /* TODO: if parallel waitpid the already =
+forked children. */
+> +                               /* TODO: if !sequential waitpid the alrea=
+dy forked children. */
+>                                 free(child_tests);
+>                                 return err;
+>                         }
+> @@ -460,7 +460,7 @@ static int __cmd_test(int argc, const char *argv[], s=
+truct intlist *skiplist)
+>                 }
+>         }
+>         for (i =3D 0; i < child_test_num; i++) {
+> -               if (parallel) {
+> +               if (!sequential) {
+>                         int ret  =3D finish_test(child_tests[i], width);
+>
+>                         if (ret)
+> @@ -536,8 +536,8 @@ int cmd_test(int argc, const char **argv)
+>                     "be more verbose (show symbol address, etc)"),
+>         OPT_BOOLEAN('F', "dont-fork", &dont_fork,
+>                     "Do not fork for testcase"),
+> -       OPT_BOOLEAN('p', "parallel", &parallel,
+> -                   "Run the tests altogether in parallel"),
+> +       OPT_BOOLEAN('S', "sequential", &sequential,
+> +                   "Run the tests one after another rather than in paral=
+lel"),
+>         OPT_STRING('w', "workload", &workload, "work", "workload to run f=
+or testing"),
+>         OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+>         OPT_STRING(0, "objdump", &test_objdump_path, "path",
+> @@ -564,6 +564,9 @@ int cmd_test(int argc, const char **argv)
+>         if (workload)
+>                 return run_workload(workload, argc, argv);
+>
+> +       if (dont_fork)
+> +               sequential =3D true;
+> +
+>         symbol_conf.priv_size =3D sizeof(int);
+>         symbol_conf.try_vmlinux_path =3D true;
+>
+> --
+> 2.44.0.278.ge034bb2e1d-goog
+>
