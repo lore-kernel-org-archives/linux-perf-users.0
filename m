@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E364254BE8
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 16:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD72EDC
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 16:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951986; cv=none; b=gl1VaaltbPN3v5o5qmUq0eA652EmqB2p0mw1YE6TEg9+pHUY9fPBca5kYSQOO/Rnw0TdQkFmpvGnE+0Zz12EqK04VM4Puny+Bi2w8huB5qq0WAL7mYv2VwxjlNtXrXylpeSeEHZloaMRaqqVAYF0Ic15tMoYzCx7/VKCn6E+sLc=
+	t=1710952377; cv=none; b=f7/xRd5sEqD0YwE4rGW+7jS4/R1QkPOnloloFqMigfCdPE+TgKmZ5AHw9FtCC0cnmzO53AwhZVzbEBz7yxtYGRPpp4G2QeHKLAVE2pr0tGufWl/GuW+8OZvP8FhsgZdcGvgmld2rnzLPkuN2OgMC/O/NT8qOkcMYkVBuNq5a/Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951986; c=relaxed/simple;
-	bh=+wS+o2Y9kpcSMjVdaZN1AtZmfdNjBWtj59lkeN10uQw=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=kTEelFoL8eDDRFjwsycvd5CFXU4L++3TKPnParTxkZ0NS+q2fsgZDF5QCFF9TRA30gPK/mr9CeSEJAetIYkCyyLurQGR5/L0qZ+LIgYFXAEBbd1P9qKJFRnExUcNJfz0nAPTUOXBwGmlBQBT2TdNo6jTW/fa+AUGLI/pa8eQk08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pGHVAS6p; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1710952377; c=relaxed/simple;
+	bh=RPvZL/F/5+LZWPkRsGvRCYGU0F/BRfHT875AjHjPcQk=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=j9UPn61aPy7HY3WKapEjIvZohlRoarziw78l3AC1tDYnXi3FDnMp2AhA/VavBdto87n/q4hED+0USzu2gJzSOwHSqzGNLe1Matvm1tjXVcPrLvb6zf1p0pd1508gVbYdPSeHvGuaSRe5o/Ad6gTK9C6qpTrTE6SepuhVe8uSMR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GpTm3xKu; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pGHVAS6p"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61100c749afso5735937b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 09:26:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GpTm3xKu"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so10815245276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 09:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710951984; x=1711556784; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710952374; x=1711557174; darn=vger.kernel.org;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=TpjaWbEXXGPMCnUDGYsVsjoUeJRl4xtMeKFE5VoNlZo=;
-        b=pGHVAS6pTj/GG8GLc2T05+PhBj7mQOxIPsjpA7xWBGfp0aT3BOproP81zxg+WR6HM5
-         HT8UuypHi1lSnSiEbtpFL98WyDAqaJeTw4agWgkOz01lGBgp1AGtBFVw9wEvwBLp1ZQv
-         Rd5L+nCU3NIVbr5/yznCmj12/xt3xbwyQnwfQD0op1A6s3JHyWkE6+uCTFdBn9o7ItTA
-         UdrH2QwfmOCyka0WZdZd8upldt7kKOXMCoL+wJ8PEg5u3Zc/k63M+RlPdIsIkQQhBUn6
-         H/yC29hg4FumA00Cgq8lFmxB9TFK8s6qelwzWjoPvwU5/C6RHVOFVt3icq5a1sOAJtZ5
-         MEOg==
+        bh=PPh3+JK8STaNVcaoNnrH04Bjmq+JVNkjWGAVdUYYJeY=;
+        b=GpTm3xKuy410sMKsXDSQGUFIj+rNkFZsErRGI/47uYdGayXTv4rxHDu49yW38OC3pQ
+         wmuH5ojL/XEeFlSFhmP9k0unaNCsYYJ/hVXrgintVjT2TmS/halhKarxvlBZbsNGRNqR
+         1Tm29B+cGE2yJNXyX1+KAvpFHc30NeLnL/gedZmzQpHjsN/33jReS8WzGXQBxMDqXC6h
+         PMQvMHfWbvjyhUFOMuaNes3j4uHoT107GN1gncHvTvRHjNfA6+2x95UBuAfjOxCDz3IK
+         f5DMjQGA/qp4P8JM6V9RpMEGz0XHNNAAF9nr0o6Lu8+azN4dSCX5sivDMg2U+cpf18iy
+         LtAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710951984; x=1711556784;
+        d=1e100.net; s=20230601; t=1710952374; x=1711557174;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=TpjaWbEXXGPMCnUDGYsVsjoUeJRl4xtMeKFE5VoNlZo=;
-        b=bBlVLQuNqRNsNI/1mh6kZWJkw80sIq4zwz87mO9LC/SLKmK6C3RcxoBS6kWqKYAsmy
-         TMS8oBXXU3SfXtqu8JFWwbalD2rtBOVA0nILfDmA0/NzWW6uktyziVsST+aC7H4WB0bJ
-         K3MOxYbjjk/YsvPnG1Zax0liVPrsBtE5PHDhPceppLOuNPP/BEwwt8TudG2LJif0boG7
-         oBu7fLgtxjvZDvRJYbQ2z5lxt+PQEZSn9pzUekR8UJCO8XLcoyR1MTZgSBTpBdd8UtMK
-         cI4+fqeWfdifZRhyNWyU/0Mq/XcibCR9wEADFXLDU0/6sSHUA39g520UlLOUuMlYq4AL
-         9wdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUad+136+x0vj3/eQaxgy62Owyc+vW12Tb6Ry2Byqtdvjuy6qHEeRJTBEq7mmxVsD92Y7pYu52e6WqoCx8ZFs3uxPUEHltFL7eAwk2KI38uJg==
-X-Gm-Message-State: AOJu0YyFUjsZRZYABxOtvA0DfuDuAq6ejFJWgi0QVl5Ej90a3diQehNG
-	waTNS6RzDJsSuHfdupjlo7OKlCHP+8p83GgZgRrI3qpSmAVa4uzgzzn/y2pzGQY9QM4eeg0Ivma
-	FrOPPeg==
-X-Google-Smtp-Source: AGHT+IFBdqKy9AaBHuJA8oBTGDInO4OP/MmxEhOVgHKwTdC2CpWRoL4O+5eBVeSVUkPiIfGDiAQcgSVTTT+A
+        bh=PPh3+JK8STaNVcaoNnrH04Bjmq+JVNkjWGAVdUYYJeY=;
+        b=lAl9P3A65fq2Z5dnspWcRG3o1XLf7yPiMjovDKsjT/GIVMYe8iyutTPyyi3EQoAdDu
+         ARSz0NkjVreHl4wAF0R7D0ZI3v6VVNeUlKovL0FazsaTjO2fNvyCDUbny8qIqHCDLCXG
+         YFIawc/2b9xqc2r9g1kg5pNJwWPJs5EqlEFywHAVWpbiu46t5csDMP9/OhF0YlwgN662
+         uxVnXFiIwJTffCBBOQgAaKiZ59gHKhFpJn4r526ixsCnR8y542S9CXs/jqacHixrT4or
+         ewAevVkaL2KkYD4ltsOtIxxWhVAdJuMqs2TvrvsQwjkZMBKikcQ3E+GrkK+WY61S7m6j
+         o+MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTwjjCL64zC1Qmm9axIX8gvESzZkQRf/qyYeXM5jq2DlDf0t18MWFIQwkX93gKccx3BABOuHmRoCjOdOAzZIoNqJKyQz76IwEMzuodlA1AbA==
+X-Gm-Message-State: AOJu0YwXu+Ps11YtWg4qn21ItFL6jK+V4VP6vRJf8x8uOkyJ8t82tksY
+	Im4UKd5zU0yCS4Z+jDxXNFWR1o3W/dxko+83GZQb8ZCddXafXPKqyQX0qHIMDs9hd3hAtOqNJeh
+	3/1hJOg==
+X-Google-Smtp-Source: AGHT+IFy9qjZJ8qJt0m0fdcRwFHSNGZaErdUyns14VLHFaZriYh2eKSTtrlv5EWKfPlpoppugb2t3dHqFr41
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f4f0:8ad8:3c73:cef7])
- (user=irogers job=sendgmr) by 2002:a81:6d52:0:b0:610:f287:93b5 with SMTP id
- i79-20020a816d52000000b00610f28793b5mr681040ywc.7.1710951984025; Wed, 20 Mar
- 2024 09:26:24 -0700 (PDT)
-Date: Wed, 20 Mar 2024 09:26:19 -0700
-Message-Id: <20240320162619.1272015-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:124b:b0:dd9:312c:83c8 with SMTP
+ id t11-20020a056902124b00b00dd9312c83c8mr460549ybu.10.1710952374659; Wed, 20
+ Mar 2024 09:32:54 -0700 (PDT)
+Date: Wed, 20 Mar 2024 09:32:44 -0700
+Message-Id: <20240320163244.1287780-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,114 +57,42 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.44.0.291.gc1ea87d7ee-goog
-Subject: [PATCH v1] perf intel-pt: Fix memory sanitizer use-of-uninitialized-value
+Subject: [PATCH v1] perf build: Pretend scandirat is missing with msan
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Running the test "Miscellaneous Intel PT testing" with a build with
--fsanitize=memory and -fsanitize-memory-track-origins I saw:
+Memory sanitizer lacks an interceptor for scandirat, reporting all
+memory it allocates as uninitialized. Memory sanitizer has a scandir
+interceptor so use the fallback function in this case. This allows
+perf test to run under memory sanitizer.
 
-```
-==1257749==WARNING: MemorySanitizer: use-of-uninitialized-value
-    #0 0x5581c00a76b3 in intel_pt_sample_flags tools/perf/util/intel-pt.c:1527:17
-    #1 0x5581c00c5cf6 in intel_pt_run_decoder tools/perf/util/intel-pt.c:2961:3
-    #2 0x5581c00968f8 in intel_pt_process_timeless_queues tools/perf/util/intel-pt.c:3074:4
-    #3 0x5581c007cf49 in intel_pt_process_event tools/perf/util/intel-pt.c:3482:10
-    #4 0x5581bffa269a in auxtrace__process_event tools/perf/util/auxtrace.c:2830:9
-    #5 0x5581bfb826c0 in perf_session__deliver_event tools/perf/util/session.c:1649:8
-    #6 0x5581bfba1d7f in perf_session__process_event tools/perf/util/session.c:1891:9
-    #7 0x5581bfba82e4 in process_simple tools/perf/util/session.c:2452:9
-    #8 0x5581bfbabcc3 in reader__read_event tools/perf/util/session.c:2381:14
-    #9 0x5581bfbad942 in reader__process_events tools/perf/util/session.c:2430:8
-    #10 0x5581bfb78256 in __perf_session__process_events tools/perf/util/session.c:2477:8
-    #11 0x5581bfb702c4 in perf_session__process_events tools/perf/util/session.c:2643:9
-    #12 0x5581bf2da266 in __cmd_script tools/perf/builtin-script.c:2855:8
-    #13 0x5581bf2bfcdd in cmd_script tools/perf/builtin-script.c:4402:8
-    #14 0x5581bf67004b in run_builtin tools/perf/perf.c:350:11
-    #15 0x5581bf66b8ea in handle_internal_command tools/perf/perf.c:403:8
-    #16 0x5581bf66f527 in run_argv tools/perf/perf.c:447:2
-    #17 0x5581bf669d2d in main tools/perf/perf.c:561:3
-
-  Uninitialized value was stored to memory at
-    #0 0x5581c005ddf8 in intel_pt_walk_insn tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1256:25
-    #1 0x5581c001a932 in intel_pt_walk_fup tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1428:9
-    #2 0x5581c000f76c in intel_pt_walk_trace tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:3299:10
-    #3 0x5581c000899b in intel_pt_decode tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:3988:10
-    #4 0x5581c00c5180 in intel_pt_run_decoder tools/perf/util/intel-pt.c:2941:11
-    #5 0x5581c00968f8 in intel_pt_process_timeless_queues tools/perf/util/intel-pt.c:3074:4
-    #6 0x5581c007cf49 in intel_pt_process_event tools/perf/util/intel-pt.c:3482:10
-    #7 0x5581bffa269a in auxtrace__process_event tools/perf/util/auxtrace.c:2830:9
-    #8 0x5581bfb826c0 in perf_session__deliver_event tools/perf/util/session.c:1649:8
-    #9 0x5581bfba1d7f in perf_session__process_event tools/perf/util/session.c:1891:9
-    #10 0x5581bfba82e4 in process_simple tools/perf/util/session.c:2452:9
-    #11 0x5581bfbabcc3 in reader__read_event tools/perf/util/session.c:2381:14
-    #12 0x5581bfbad942 in reader__process_events tools/perf/util/session.c:2430:8
-    #13 0x5581bfb78256 in __perf_session__process_events tools/perf/util/session.c:2477:8
-    #14 0x5581bfb702c4 in perf_session__process_events tools/perf/util/session.c:2643:9
-    #15 0x5581bf2da266 in __cmd_script tools/perf/builtin-script.c:2855:8
-    #16 0x5581bf2bfcdd in cmd_script tools/perf/builtin-script.c:4402:8
-    #17 0x5581bf67004b in run_builtin tools/perf/perf.c:350:11
-    #18 0x5581bf66b8ea in handle_internal_command tools/perf/perf.c:403:8
-    #19 0x5581bf66f527 in run_argv tools/perf/perf.c:447:2
-```
-
-Adding a curly brace initializer for the intel_pt_insn in
-intel_pt_walk_fup rectifies this, however, there may be other issues
-lurking behind this so initialize all similar instances.
-
-Fixes: f4aa081949e7 ("perf tools: Add Intel PT decoder")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/Makefile.config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index b450178e3420..b4a95af2e4cc 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1115,7 +1115,7 @@ static void intel_pt_sample_insn(struct intel_pt_decoder *decoder)
-  */
- static void intel_pt_sample_fup_insn(struct intel_pt_decoder *decoder)
- {
--	struct intel_pt_insn intel_pt_insn;
-+	struct intel_pt_insn intel_pt_insn = {};
- 	uint64_t max_insn_cnt, insn_cnt = 0;
- 	int err;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 1fe8df97fe88..74e0b17050b5 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -486,7 +486,10 @@ ifdef NO_DWARF
+ endif
  
-@@ -1418,7 +1418,7 @@ static inline bool intel_pt_fup_with_nlip(struct intel_pt_decoder *decoder,
+ ifeq ($(feature-scandirat), 1)
+-  CFLAGS += -DHAVE_SCANDIRAT_SUPPORT
++  # Ignore having scandirat with memory sanitizer that lacks an interceptor.
++  ifeq ($(filter s% -fsanitize=memory%,$(EXTRA_CFLAGS),),)
++    CFLAGS += -DHAVE_SCANDIRAT_SUPPORT
++  endif
+ endif
  
- static int intel_pt_walk_fup(struct intel_pt_decoder *decoder)
- {
--	struct intel_pt_insn intel_pt_insn;
-+	struct intel_pt_insn intel_pt_insn = {};
- 	uint64_t ip;
- 	int err;
- 
-@@ -1461,7 +1461,7 @@ static int intel_pt_walk_fup(struct intel_pt_decoder *decoder)
- 
- static int intel_pt_walk_tip(struct intel_pt_decoder *decoder)
- {
--	struct intel_pt_insn intel_pt_insn;
-+	struct intel_pt_insn intel_pt_insn = {};
- 	int err;
- 
- 	err = intel_pt_walk_insn(decoder, &intel_pt_insn, 0);
-@@ -1626,7 +1626,7 @@ static int intel_pt_emulated_ptwrite(struct intel_pt_decoder *decoder)
- 
- static int intel_pt_walk_tnt(struct intel_pt_decoder *decoder)
- {
--	struct intel_pt_insn intel_pt_insn;
-+	struct intel_pt_insn intel_pt_insn = {};
- 	int err;
- 
- 	while (1) {
+ ifeq ($(feature-sched_getcpu), 1)
 -- 
 2.44.0.291.gc1ea87d7ee-goog
 
