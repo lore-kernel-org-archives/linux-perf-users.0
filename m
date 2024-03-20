@@ -1,93 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAC485651;
-	Wed, 20 Mar 2024 19:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A28D85658
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 19:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710963303; cv=none; b=HNQjzoxJltqos1LR4DkKmk6t+uOPgezgmqeCkaBRncNwZrgreBJBpMvFrtafXxpm7t8Cvc2umuqw/ceqbSkTPeNQXcePQyF6nXkHtUWwEpeolSfGdq5x8hfyrweG8OQG2bPlFiW3WjX4IK8aeRRbjKZu/mQyj0WhJQoIY2SjI7I=
+	t=1710964688; cv=none; b=RPSWVThXICtZdF/mIck+G3hWjwbaMd/WG4EVRbbYNbh6yQFYmTGf+5F09FnXDVpoMlAGhdARLlDCfcZiW6AFWh83hgGsB9oPDPUulMf00R2y0+YFUkAfWF3vVeDWyj1fUz74pAQw3ECykkPECrqRjuDduXvh5xpARnLciIojo6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710963303; c=relaxed/simple;
-	bh=Hzv4nYUlXWx6PbH044pOECb6/zc0T+L/UTtBzoHs6mc=;
+	s=arc-20240116; t=1710964688; c=relaxed/simple;
+	bh=pEG22NwYFyFmWvY2wmyPkiIdnK/c+xHCUdLEhr5WMZA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h/E0seafKAS4KSrLfBDJwEXRgdgMguac1/hE6vECX7NXHjnN9WGJwuR/YNFHMz1MqakNsbqXjTqGb1I+kTsWby0aWrAj00BGmKbthkBPowPzuGgTtpL8BS+Vj0NmDXwUwarV7g7FcD3aOLsxZAi+eQ0XKTCwZbTpEJxp+NAjFUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQvNDRbu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tpYPRrXDK+sVmXridjhRSM6offhun2SUqEcngzKBwiVqifu1dPFdjKlgKcADMDXzyq2D40qo1I33Gxjb3eyj0wWi4wjS6ZpTHGxdn5MhiC8iGoz/104204oLRd5PkN0FLLm5hTA6qPBmZobVtDYv3D33LCnYcqO0BhGGAtELwGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d2F4V4P4; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQvNDRbu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE52C433F1;
-	Wed, 20 Mar 2024 19:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710963302;
-	bh=Hzv4nYUlXWx6PbH044pOECb6/zc0T+L/UTtBzoHs6mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jQvNDRbu9P0Tbkb7AFaHjIs/g02AHMsvd5OaGgeZvRHNRvl4ObtRbRatQEwiRGita
-	 IyjgPj7+grFVMcOdrzQ9uFxEp8de2sX3I7bOrxdC3H6K5OkCkiP2Tjx+xVwxf8oGDb
-	 zUJfMU4R06GBUiCNbIV+f4K3Co40kZHX6bjGbx5QvgZo0wJveZbLcT2Nsz7GJphV4L
-	 NzYuF2lj7r3JEuy1slDdcpk8uZf/qPUnpLnuPks7Z2umTC2C++YujHk+PgYlJfBXRh
-	 PKsKfjmmXoiml133Ypy6eQcEJK5cidX9oaPtheXvzpwfcOvjwml0Dmf2yAdnKtRQqg
-	 6/ohGfum4k7dw==
-Date: Wed, 20 Mar 2024 16:34:59 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf: Suggest inbuilt commands for unknown command
-Message-ID: <Zfs6Y3ZxHL7g4BZ0@x1>
-References: <20240301201306.2680986-1-irogers@google.com>
- <Zfr4jX_b8FCOG_x_@x1>
- <Zfr5__Ej3-0C8sJj@x1>
- <CAP-5=fXXrJRH=Dto2ajD_TUDE1YmkkJZO5Ey2pq5YB0wbVAzeg@mail.gmail.com>
- <Zfr-sQJPbZzbtk8K@x1>
- <ZfsBopALY3whsst5@x1>
- <ZfsDtr5ejAwGySOR@x1>
- <ZfsEWoi6eevwLRQC@x1>
- <CAP-5=fUbiudT+ocbGEauca2aX8PJSV9rHQUCCxQ4bxWXL6eoyA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d2F4V4P4"
+Date: Wed, 20 Mar 2024 15:57:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1710964684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pEG22NwYFyFmWvY2wmyPkiIdnK/c+xHCUdLEhr5WMZA=;
+	b=d2F4V4P4bPTRcE2lpe+a6XWprf6h5GK9jnuoWgPaJ7mE0xvoMbWvpdgvK1X+H93iwYmH6t
+	W+bSB2V9OOJddBA4EyhOk3RMBpTziueWbPAosBX4fPGZmBC3c/moYCGmLSMr5VFLui/NS3
+	s22KyXrwvNzMjcMnpmvfRWH/GA8vWOg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
+	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, dm-devel@lists.linux.dev, linux-bcache@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 00/15] treewide: Refactor heap related implementation
+Message-ID: <ofjgwiygmyl4fmstibtrckzdoibsmxqypjg2aohwpsg57urqhw@5bikquw6kwew>
+References: <20240320145417.336208-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUbiudT+ocbGEauca2aX8PJSV9rHQUCCxQ4bxWXL6eoyA@mail.gmail.com>
+In-Reply-To: <20240320145417.336208-1-visitorckw@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Mar 20, 2024 at 10:07:55AM -0700, Ian Rogers wrote:
-> On Wed, Mar 20, 2024 at 8:44 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, Mar 20, 2024 at 12:41:45PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > ⬢[acme@toolbox perf-tools-next]$ perf raccord
-> > > perf: 'raccord' is not a perf-command. See 'perf --help'.
-> >
-> > This works with the second patch.
-> >
-> > - Arnaldo
-> >
-> > > ⬢[acme@toolbox perf-tools-next]$ perf ricord
-> > > perf: 'ricord' is not a perf-command. See 'perf --help'.
-> > >
-> > > Did you mean this?
-> > >       record
-> > > ⬢[acme@toolbox perf-tools-next]$ perf ricord
-> > > perf: 'ricord' is not a perf-command. See 'perf --help'.
-> > >
-> > > Did you mean this?
-> > >       record
-> > > ⬢[acme@toolbox perf-tools-next]$
-> > >
-> > > So I'll add that and go on from there.
-> 
-> Thanks, let me know if I need to send a v3 with the 2 uninitialized
-> variables fixed.
+On Wed, Mar 20, 2024 at 10:54:02PM +0800, Kuan-Wei Chiu wrote:
+> This patch series focuses on several adjustments related to heap
+> implementation. Firstly, a type-safe interface has been added to the
+> min_heap, along with the introduction of several new functions to
+> enhance its functionality. Additionally, the heap implementation for
+> bcache and bcachefs has been replaced with the generic min_heap
+> implementation from include/linux. Furthermore, several typos have been
+> corrected.
 
-No need, its all in tmp.perf-tools-next now, will go to perf-tools-next
-soon,
+looks like something's busted:
 
-- Arnaldo
+https://evilpiepirate.org/~testdashboard/ci?branch=refactor-heap
