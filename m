@@ -1,122 +1,105 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B1FCA47
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 16:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947E815C9
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 16:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952594; cv=none; b=h1LLJoaREm/UAi0g+b75oTEjthf7buIGPN10f/jaf0JjRyHXlXMNoc37l9v5X4KYlZPoKQWEMU7D/IyTDvZzmctOKzj5LDZVQVh1mxm+6DdAU5cP0nAnKoMqaTxwN+dCrWWis9snO12/g4fXDSKatLmKlTeIlMP5WBDwFMpOvXk=
+	t=1710952847; cv=none; b=PX5zzQQizuqA7pruasBtRE18AzXOMZ6IN24DX0K75rHHUHJi5CgXVUPpTP+0QD+LsJILMArhJ34loAEDoj+qYaOW4iarzJEZe4ZuJj2nT/A153XDND71ev/YJ72AAvWJ9TwgoXrKpOOrAI1J5l4O298BUxSr8hDTk4oYz1tosko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952594; c=relaxed/simple;
-	bh=l5AeG0Hxuv67K1Go/GLyYqU3kNt94rkpGVsR7OP3Qes=;
+	s=arc-20240116; t=1710952847; c=relaxed/simple;
+	bh=IPFJcENiCyzyUJ0Rcq2tI05Ded+kvu7vtcAY8HhSnFM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=bg1h4UqFszUEV6XejPDQ8C46nwB/FhQiObBPoIveuSJXNIuZIwuIfTs3ub/2h6RgE/GVeNY8pIyuW6D8EwlXWuH8HWp/FxvSd+4LBHUtwMvF9xlR2n0ul7vtQMDBaN4/7kBXTV0wvDnjyZ2rsoBLcA6p4M2zRyV4tafPyEIyeJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G/CzanzS; arc=none smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=sHtF3rTDbyFvRwnbysEXilqWJHiMni+LJWpA1a8eZapZIdxRxqk/Bt4Uuc7WRgGSDkod1tDEsOSSxbLqVP3RXtcN30WQSVzlH3SV3ux0Ai90SdKANPgcSfyveKSzXCd/yXziwQZxhJC/T/sKEG9KS586gHVhjBRsa8NVEtxSQow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B2TYOo+T; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/CzanzS"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dee917abd5so192055ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 09:36:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B2TYOo+T"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-428405a0205so377491cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 09:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710952592; x=1711557392; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4izGi/rNzGfjGaZHpmZ8og5U3NrqJ/cahTTnT/gINSY=;
-        b=G/CzanzSfyU220C8sMvYbglJ6zB4W7WrzG2qSdY4wh2oBRnbR3j1CpiguJccRJwgze
-         QS1VkA+4/8vYzzufVBZ/bcW/5bxXkZJhP3nWfasP/5Oc06/MXCaKJNB7DqdFU9FHiIyH
-         EW5osJ4gl7Y7rQZbJVmjNnVfurE7xgmkwTvKkcK3UD3QOxnJJyabyVZoCSUhGiBPiBEE
-         JbbZU0JARStnDeiwD+WA7Bc2BrTqFeskJmsEXi3TYGhNM093BLQd2heo8V9tmSLP2z5J
-         jfukkYFzF77ANBwl8rdT38OIWrZWm7tx6h1mIgHl+mhMCTKcRHfACvl1V0PcL3l7Mubr
-         Afiw==
+        d=google.com; s=20230601; t=1710952844; x=1711557644; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E2Iioua2lyhsilXiJJfaF8CCrcEUXRoDq4VH/C+Uq1U=;
+        b=B2TYOo+TB5/IzVY/NQHHP+S2PCrjCrzwDxoydNWzbz2sb+34SjrB7/daM35F6KKQYy
+         m3rXSqNHJwuhvrZTTsxTjgYWeY48+ZH2w2Ei+aD5cc14UGb3xO0b8j2VYspZkL3TpR4N
+         0jcwlzSer/4G/BcU5KrR2JbOxGFY5aw6v0FnNIJLNx8M8pD4SstnQ2GaoQd6BINXbgVB
+         bd6O7AkiMWZNWwAdRHrJZwLLjsKzHqEVNqqOMfOtuTFUI27iopl3M7tDe/IrKqU+4rE3
+         s4rhHP2rzauXe148UmHDNxonq/GTnUtM8XyvLbN//vNImbwPe8FKa5lPYMvF3VvrT0Cg
+         3e+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710952592; x=1711557392;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4izGi/rNzGfjGaZHpmZ8og5U3NrqJ/cahTTnT/gINSY=;
-        b=M0FYw/MQW5zRg3qvLAM59RQB5ZhsDy8XXBrAcwFWPzQ/ppAWFrMPpVAGbhlEl5ozPU
-         sPOXibCrA2vak15Fr1WLJjQZAb30WdocCpLIa7InewhAZI8bJNHhB/N+9a77AhAp1uUx
-         pGw/IJqzoEjmlvMRmsVarYXtQsYzvNwWS15Rsi6r7UksO4a+lft3pcgymIqYr1ha8Kdw
-         HrhLWS+xEZlq5EHvxefKhEPrroxvNSUZ8Oua715IrU9pYAXIdxfnn2iBn1shWn/r6B16
-         0f9bjFXdaL6cRP+JFSw9UsloJgUCLSgVLxwpHv5pQr9hEewCuqNWFahZYHf7bFk5p28f
-         XBpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWjl9SwdZCgUaL5o47pnuI66FvDB+dlzCOObjLZcoe6xUk5CzZSS1rpujoD3Ywuf27+ECrrk/Fvs7rZfKt8OL+4M11zKnLgMFgWkziYd7g1w==
-X-Gm-Message-State: AOJu0YysZ7xnqJ5iAiFPfXsj+Hg1ELz+PyNrUtpQ45I4d4Z8HLDagguU
-	7RIwkWVb2LXr3G7g44H1ItcFC88hdopDvq6W4+PjktSELbmU0L3gi/JLwoFInehPZRME/CdnBu7
-	zLMiwGCe2lxMbvxXLjFpKeWHEXv8Aj0qUPqFP
-X-Google-Smtp-Source: AGHT+IF7jYpEg16J8IICPrk2uxY/KNN1OfAQNS+bv5buJgizk1nYFdnC4gxFboKp3i5ehUdUJUD65mXqfnDdWgLG8xs=
-X-Received: by 2002:a17:903:2447:b0:1dd:a473:750e with SMTP id
- l7-20020a170903244700b001dda473750emr240457pls.27.1710952592275; Wed, 20 Mar
- 2024 09:36:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710952844; x=1711557644;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E2Iioua2lyhsilXiJJfaF8CCrcEUXRoDq4VH/C+Uq1U=;
+        b=qs8tSPmW73qNt2NGqjAcgFppCXl0XmyE9+aHmzVFdtFusQ9fi4jMJ3A0RWPzX42Eda
+         uqfm8/hlx3JljB6k1FC7lJKFSXRPwHU5o9tQ55HXHoOa55EB4wuYfdqmsBA7TunGEDw/
+         U0/iGdg0BRna/Pqj7sUFBP02KD6XxY1riBClOqvRwGNNNlvzrtLY/si8dd2rRNWHckMH
+         swCcGpM1h8hAZgZVfvFJxXvof7TPlNA2GveXrCknWu8ojED6nlod/Ip8j3OtOEW+VoLd
+         TNFXzzA7nN6NR+kF8GbTap5k3pWv/uR9tpOSKCw4TzOoInt+cj8k63q8pOruty5GqJEp
+         Yoew==
+X-Forwarded-Encrypted: i=1; AJvYcCU4DKOnbMIc5c+7vA2LkTf50qZwNa9D464X+1m/cr2R7l7GGcxksKvyndYhCQeAm2SUMoHaq6TKXQJHaizRbW43zcHJq+TrkzdGPpFbue6rSA==
+X-Gm-Message-State: AOJu0YyEFHlWZ5a0B4EgOIo3fRCUdp58+oQFSypi+wrHBIejADZcE5Pb
+	pS1n0+uIz40Yo5V16IPLgtF2Y5lhSwS7Yi2ySS7CdyMwXH1DX6wRdZgkUl3zV5SX6xme/mqZocz
+	Ov7YksfXudaA0HyY3Nqvux3ynyUM7UN1a+CEv
+X-Google-Smtp-Source: AGHT+IGiVjjeu/I+qCPN7/5tTyBw/r40GN/5VRWHH4Ks7bnzHDezQwHcKs4lD6F55rSEQaRGRR9F3BFwXms+THBnfjA=
+X-Received: by 2002:a05:622a:1904:b0:431:55a:57fa with SMTP id
+ w4-20020a05622a190400b00431055a57famr221576qtc.16.1710952844403; Wed, 20 Mar
+ 2024 09:40:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320163244.1287780-1-irogers@google.com>
-In-Reply-To: <20240320163244.1287780-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 20 Mar 2024 09:36:19 -0700
-Message-ID: <CAP-5=fUVtGgaLgVhoSa3SZdSceifFWs_v1rMnEANj3N=VdpC_A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf build: Pretend scandirat is missing with msan
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+In-Reply-To: <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+From: Raghavendra Rao Ananta <rananta@google.com>
+Date: Wed, 20 Mar 2024 09:40:31 -0700
+Message-ID: <CAJHc60ww7cOhtbWNp9WP7bxWKXCZtcT=6e4Fk2TaB63YqWMWbw@mail.gmail.com>
+Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
+To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org, 
+	mizhang@google.com, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
+	Kan Liang <kan.liang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 9:32=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Memory sanitizer lacks an interceptor for scandirat, reporting all
-> memory it allocates as uninitialized. Memory sanitizer has a scandir
-> interceptor so use the fallback function in this case. This allows
-> perf test to run under memory sanitizer.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hi Kan,
 
-Note, as msan needs to instrument memory allocations libraries need to
-be compiled with it. I lacked the msan built libraries and so built
-with:
-```
-$ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g
--fno-omit-frame-pointer -fsanitize=3Dmemory
--fsanitize-memory-track-origins" CC=3Dclang CXX=3Dclang++ HOSTCC=3Dclang
-NO_LIBTRACEEVENT=3D1 NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0 NO_LIBPFM=3D1
-```
-oh, I disabled libbpf here as the bpf system call also lacks msan intercept=
-ors.
+>
+> +static void __perf_force_exclude_guest_pmu(struct perf_event_pmu_context *pmu_ctx,
+> +                                          struct perf_event *event)
+> +{
+> +       struct perf_event_context *ctx = pmu_ctx->ctx;
+> +       struct perf_event *sibling;
+> +       bool include_guest = false;
+> +
+> +       event_sched_out(event, ctx);
+> +       if (!event->attr.exclude_guest)
+> +               include_guest = true;
+> +       for_each_sibling_event(sibling, event) {
+> +               event_sched_out(sibling, ctx);
+> +               if (!sibling->attr.exclude_guest)
+> +                       include_guest = true;
+> +       }
+> +       if (include_guest) {
+> +               perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> +               for_each_sibling_event(sibling, event)
+> +                       perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> +       }
+Does the perf core revert the PERF_EVENT_STATE_ERROR state somewhere
+from the perf_guest_exit() path, or is it expected to remain in this
+state?
+IIUC, in the perf_guest_exit() path, when we land into
+merge_sched_in(), we never schedule the event back if event->state <=
+PERF_EVENT_STATE_OFF.
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/Makefile.config | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 1fe8df97fe88..74e0b17050b5 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -486,7 +486,10 @@ ifdef NO_DWARF
->  endif
->
->  ifeq ($(feature-scandirat), 1)
-> -  CFLAGS +=3D -DHAVE_SCANDIRAT_SUPPORT
-> +  # Ignore having scandirat with memory sanitizer that lacks an intercep=
-tor.
-> +  ifeq ($(filter s% -fsanitize=3Dmemory%,$(EXTRA_CFLAGS),),)
-> +    CFLAGS +=3D -DHAVE_SCANDIRAT_SUPPORT
-> +  endif
->  endif
->
->  ifeq ($(feature-sched_getcpu), 1)
-> --
-> 2.44.0.291.gc1ea87d7ee-goog
->
+Thank you.
+Raghavendra
