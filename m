@@ -1,114 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F3E3EA64;
-	Wed, 20 Mar 2024 17:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710954757; cv=none; b=Q84u9FGQIohNLhMUV9M4McVfKJQaYgBWPPm32b0uhCYKDGYrjRGvFkQSqLWLYXWjiWLTRTgIJ36hP/M3AFv0du9hP8dfntbDrLvw/YWXFv11d6BRGHaRmByiJj3C475Lqx4AXMmgF3Vrb9GZj6xa+ezyqP64am6289jLrTVPZjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710954757; c=relaxed/simple;
-	bh=NS4x9r2TFhkTcyObcZJpU6SIzpzXoCPOlYMJEotNZqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sbfQ7PAMvFdUqww/OCYyVt1+JO7hOBKqUu1UOYCqing8e7wuZtxT0+I0UuAO8j69HSlNOSUwwrGxTL5I0q0fdv+8nf6b0OUD7nJOfRrrYLzXywBaHee4fszve9XE6I/3T6OYreHqhQYbZ9ztEYR72+6C+x1p1+JA3RyYqIJAvMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tx1+fgFN; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tx1+fgFN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710954756; x=1742490756;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NS4x9r2TFhkTcyObcZJpU6SIzpzXoCPOlYMJEotNZqs=;
-  b=Tx1+fgFNloggEUmgCNmr2qexTAu0mEpUt6iVzvoD22npKi89lS3GRFZZ
-   2sM1h9233k6z8vrdt5yAQZPJ72yiImzI7g1LFmwa2+a/XZmSoEXiD5OFu
-   ZBpMxrzwhqSS+UGiSgfz9WE57z7BhBofUC/dIUYeOzNhmc+EpThuz5kUf
-   6K5xU1P+2mCTj8MZYNMpHQwEvzrsMu8946rfb3R4nMDTdY7i0u/siKc/5
-   xKyfmsZMI8F3SjBxctu1sY04XVRrKo4jfSW62hfTLwrRGfJAYHBl+dYZD
-   aM8NQpxOHxUHjiFXXyxjh37pc1hoAjtY9YScRCGBvurEzeIgIZ/VJHRPo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="5771437"
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="5771437"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 10:12:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="14618463"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 10:12:35 -0700
-Received: from [10.212.76.154] (kliang2-mobl1.ccr.corp.intel.com [10.212.76.154])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 477B9580E13;
-	Wed, 20 Mar 2024 10:12:33 -0700 (PDT)
-Message-ID: <e4200636-90b1-419f-a4c7-61766eac3b9a@linux.intel.com>
-Date: Wed, 20 Mar 2024 13:12:31 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C79569DE8
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 17:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710954832; cv=none; b=SwHf3vPdhuk60CWbLpSrDZuh6r4vpPlUsMzEwGFk6Nk0zGZjKBb+4oOXlMEptod/P86us+Ry7xJYvtcfTEDacCqJJ0E4cl24kulCf/4o970AHzQzBQ9FmeUrzdu1vppdGCpmneD1WZHamQkPUK3PHzdi7njW4j40Y/M1iGPKl50=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710954832; c=relaxed/simple;
+	bh=Z2QMshSRUV/Ic6Kf5osNo4mJkuPuXiVLb5k5is3/ucs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vBfnGSWASa/HHfi8XlrpktGR76TOehy7upWTO2OutI5L4cfL1DB85hB+vyv5OJ86JUlBAAvsEANH81tQjGbMDqdACmVRnN4rsU/VWOkL5xFPRDilEYYVUywCFePjad6BtOLHPZ2mL5njfDtp3+Pwp49PnZvrvmeM3GGMiMIO1OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZK+zV9NB; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZK+zV9NB"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dee917abd5so6855ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 10:13:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710954830; x=1711559630; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f+GdX2jdkDlWHWBVOsGIoAg8YOz++4sTFpjiRVGx7IY=;
+        b=ZK+zV9NBZTGdUYxJDa0k4CUSddFVcRdznVDuyaWV2v9j+WFlVMsdDdBRV1L+CmxX0X
+         bmo3Z+MMeBnkO3FqSMVNsTJM9g0iCFHq+bJV5VX6JYMsm5Kw8EGBjbfn4Jhb1bWwYgaD
+         Prrgc0ja1NiG3CP++dvo52ABLpFt1wXJ5vJUy3DpvJFa8pScbd7ZK0Dz9uv+7OTPxbTh
+         JosWOiQdZuEBKQi9XlkDxbR1Ch6d5jdqza0hkWfrNRwFKqR9jganS7bPoT9mihccCGHZ
+         2n788+mQpUecUZ1ErlGOyPm55tcvJn8L52TNtou7B0KHq84EF4neGpyOA0mpqBJ/4DMF
+         rb/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710954830; x=1711559630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f+GdX2jdkDlWHWBVOsGIoAg8YOz++4sTFpjiRVGx7IY=;
+        b=Haki/1/CrgYDUr9oNOs5pdNvGOE3SqkE8jLVJE6c9EN7OJt2Sd+CyEglxKe4pl2+AQ
+         kZhVsRZCPfZCe7T0GYsaj4Ps/mocpOORvujkkqSHXWEHNSCDPFDIPuTuVezeeO5Lq7oy
+         rVUDyWdHXOnNuikFbN9nculcjdgx5OHPDnF9h8tnXMx0Ah3iEyTjYzZcZv2BS6bLebD4
+         53+1wLCkQ8lXnV8XatUSG0s9KYBosHzc/BK7IEmjM0+obiiY8sCFp1GmeD8Rov9kXpkl
+         T/K8gK5k84bHuhFE/zFaEpOZckKnECXJgMKe9O9BxRsv7WmgqSQf4nLOwX4p8WYKDNaf
+         EjpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmgothgfdbjrWkP7lBSFav34jEDiWPX5SF4Vw8cp4CcnyBNJ/9F+idENPZHNsRm0SzS4KLvgr82Bk7Zofj8W87wGz03ifE49N9eqx9HOQZ1w==
+X-Gm-Message-State: AOJu0Yw75qKCX0MOK8PP1aX9ThFDCf2ULab86HxYDk81E+nnHsQrInnw
+	mu2QLZ3DblsaJnYaJ2Cn8mteGx4TE0rBoJqaIfgJ0a5QTfNEfwdV/16y+K09pqLj3m21sr6DeXx
+	qKEZHJWB3cHdLA6HjHiO9WyQTnc6JSGPXSnec
+X-Google-Smtp-Source: AGHT+IH0qAID20MP6jp6NpXqn9mW2kuq00RtO9yb0PwCHdZ99yKuZBY632oWoHKU4JglvZUaklYHu5xGsWpmsCAynaA=
+X-Received: by 2002:a17:902:6805:b0:1de:fdbd:930d with SMTP id
+ h5-20020a170902680500b001defdbd930dmr312651plk.16.1710954830070; Wed, 20 Mar
+ 2024 10:13:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
-To: Raghavendra Rao Ananta <rananta@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
- mizhang@google.com, kan.liang@intel.com, zhenyuw@linux.intel.com,
- dapeng1.mi@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com,
- samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
- <CAJHc60ww7cOhtbWNp9WP7bxWKXCZtcT=6e4Fk2TaB63YqWMWbw@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAJHc60ww7cOhtbWNp9WP7bxWKXCZtcT=6e4Fk2TaB63YqWMWbw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240320145417.336208-1-visitorckw@gmail.com> <20240320145417.336208-6-visitorckw@gmail.com>
+In-Reply-To: <20240320145417.336208-6-visitorckw@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 20 Mar 2024 10:13:38 -0700
+Message-ID: <CAP-5=fXcWRfsAnByOnX5z6aBJrW6+CLRpj=bQ6uiLM38OZjbRw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/15] lib min_heap: Add min_heap_init()
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, dm-devel@lists.linux.dev, 
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Mar 20, 2024 at 7:54=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.com=
+> wrote:
+>
+> Add min_heap_init() for initializing heap with data, nr, and size.
+>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 
+Thanks, is it possible to update lib/test_min_heap.c to use min_heap_init?
 
-On 2024-03-20 12:40 p.m., Raghavendra Rao Ananta wrote:
-> Hi Kan,
-> 
->>
->> +static void __perf_force_exclude_guest_pmu(struct perf_event_pmu_context *pmu_ctx,
->> +                                          struct perf_event *event)
->> +{
->> +       struct perf_event_context *ctx = pmu_ctx->ctx;
->> +       struct perf_event *sibling;
->> +       bool include_guest = false;
->> +
->> +       event_sched_out(event, ctx);
->> +       if (!event->attr.exclude_guest)
->> +               include_guest = true;
->> +       for_each_sibling_event(sibling, event) {
->> +               event_sched_out(sibling, ctx);
->> +               if (!sibling->attr.exclude_guest)
->> +                       include_guest = true;
->> +       }
->> +       if (include_guest) {
->> +               perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
->> +               for_each_sibling_event(sibling, event)
->> +                       perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
->> +       }
-> Does the perf core revert the PERF_EVENT_STATE_ERROR state somewhere
-> from the perf_guest_exit() path, or is it expected to remain in this
-> state?
-> IIUC, in the perf_guest_exit() path, when we land into
-> merge_sched_in(), we never schedule the event back if event->state <=
-> PERF_EVENT_STATE_OFF.
-> 
+Ian
 
-The perf doesn't revert event with the ERROR STATE. A user asks to
-profile both guest and host, but the pass-through mode doesn't allow the
-profiling of the guest. So it has to error out and remain the ERROR STATE.
-
-Thanks,
-Kan
-
+> ---
+>  include/linux/min_heap.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
+> index c3635a7fdb88..ed462f194b88 100644
+> --- a/include/linux/min_heap.h
+> +++ b/include/linux/min_heap.h
+> @@ -44,6 +44,18 @@ struct min_heap_callbacks {
+>         void (*swp)(void *lhs, void *rhs);
+>  };
+>
+> +/* Initialize a min-heap. */
+> +static __always_inline
+> +void __min_heap_init(struct __min_heap *heap, void *data, int size)
+> +{
+> +       heap->data =3D data;
+> +       heap->nr =3D 0;
+> +       heap->size =3D size;
+> +}
+> +
+> +#define min_heap_init(_heap, _data, _size)     \
+> +       __min_heap_init(&(_heap)->heap, _data, _size)
+> +
+>  /* Sift the element at pos down the heap. */
+>  static __always_inline
+>  void __min_heapify(struct __min_heap *heap, int pos, size_t elem_size,
+> --
+> 2.34.1
+>
