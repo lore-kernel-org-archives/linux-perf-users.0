@@ -1,102 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19158613F;
-	Wed, 20 Mar 2024 19:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAC485651;
+	Wed, 20 Mar 2024 19:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710963091; cv=none; b=RdjIGERs2oh8RD6W+Y9DHnxQhDJ5Zfs3LaDOsGEpXy/l4VebePIDNIYnrT5jojizcYE2iEL2uI8WD68vZVFq0OJ7JAZliSVTJUsmBtRqq2DskVuUCh9uJgMoNUPpm7TEMCYIjRoBfXEN2N70on2UI54MjSue31Q7N/NV/bynoBc=
+	t=1710963303; cv=none; b=HNQjzoxJltqos1LR4DkKmk6t+uOPgezgmqeCkaBRncNwZrgreBJBpMvFrtafXxpm7t8Cvc2umuqw/ceqbSkTPeNQXcePQyF6nXkHtUWwEpeolSfGdq5x8hfyrweG8OQG2bPlFiW3WjX4IK8aeRRbjKZu/mQyj0WhJQoIY2SjI7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710963091; c=relaxed/simple;
-	bh=eUsuge4+k2kINM17oy2Ter3CncLnZySKltBWMB5vbbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kTOYs3knViQxNzb6y/noPk+tBMyxQfYxeOAeeruNBXEkdV1pk+rDe0EEJpeSenxP3/xWpDOcAaEsosGPj78EbslG5qj/EnBoLKdQ5RKfmBlnuAibXbYBHedi/vNTpSb+rlq45rwk4cVbkNd4gBhg4HVhfpv2Sna9JRFJcGNJYTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZY1ZrA5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710963303; c=relaxed/simple;
+	bh=Hzv4nYUlXWx6PbH044pOECb6/zc0T+L/UTtBzoHs6mc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h/E0seafKAS4KSrLfBDJwEXRgdgMguac1/hE6vECX7NXHjnN9WGJwuR/YNFHMz1MqakNsbqXjTqGb1I+kTsWby0aWrAj00BGmKbthkBPowPzuGgTtpL8BS+Vj0NmDXwUwarV7g7FcD3aOLsxZAi+eQ0XKTCwZbTpEJxp+NAjFUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQvNDRbu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZY1ZrA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB80C43390;
-	Wed, 20 Mar 2024 19:31:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQvNDRbu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE52C433F1;
+	Wed, 20 Mar 2024 19:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710963091;
-	bh=eUsuge4+k2kINM17oy2Ter3CncLnZySKltBWMB5vbbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IZY1ZrA5S0DC73gt5+EmLLLY7vwtrq0eJygxt9XgK77vnYr9sMbj2Df0hZ3Mtu/5l
-	 mSiXeAOIUeKfow22tazsZSrRKEx0D+yPhZH1Hs96ey9NJEVtWS9jlYt7ode1tstaeY
-	 mAyrXS6z5udHAPBrR2GCWY7COT1/06cODxB5/AWpz7+vYeTn8rMO4h/uF8EevAc04l
-	 6xsTzVTPpXFHqKYq8DMtgJPgALpyH2J66oTQUX+5I6wChSr7MVgrO7tGu4RuSmgxwd
-	 /ap8binKOZrO7qMbYDt7pA7MTNBEwnXkVLQciDUCNEUkLqB199a1oPf6v+BpDDZ4Jl
-	 L2WSkqHExIM0g==
+	s=k20201202; t=1710963302;
+	bh=Hzv4nYUlXWx6PbH044pOECb6/zc0T+L/UTtBzoHs6mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jQvNDRbu9P0Tbkb7AFaHjIs/g02AHMsvd5OaGgeZvRHNRvl4ObtRbRatQEwiRGita
+	 IyjgPj7+grFVMcOdrzQ9uFxEp8de2sX3I7bOrxdC3H6K5OkCkiP2Tjx+xVwxf8oGDb
+	 zUJfMU4R06GBUiCNbIV+f4K3Co40kZHX6bjGbx5QvgZo0wJveZbLcT2Nsz7GJphV4L
+	 NzYuF2lj7r3JEuy1slDdcpk8uZf/qPUnpLnuPks7Z2umTC2C++YujHk+PgYlJfBXRh
+	 PKsKfjmmXoiml133Ypy6eQcEJK5cidX9oaPtheXvzpwfcOvjwml0Dmf2yAdnKtRQqg
+	 6/ohGfum4k7dw==
+Date: Wed, 20 Mar 2024 16:34:59 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/5] perf trace: Fix 'newfstatat'/'fstatat' argument pretty printing
-Date: Wed, 20 Mar 2024 16:31:15 -0300
-Message-ID: <20240320193115.811899-6-acme@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240320193115.811899-1-acme@kernel.org>
-References: <20240320193115.811899-1-acme@kernel.org>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf: Suggest inbuilt commands for unknown command
+Message-ID: <Zfs6Y3ZxHL7g4BZ0@x1>
+References: <20240301201306.2680986-1-irogers@google.com>
+ <Zfr4jX_b8FCOG_x_@x1>
+ <Zfr5__Ej3-0C8sJj@x1>
+ <CAP-5=fXXrJRH=Dto2ajD_TUDE1YmkkJZO5Ey2pq5YB0wbVAzeg@mail.gmail.com>
+ <Zfr-sQJPbZzbtk8K@x1>
+ <ZfsBopALY3whsst5@x1>
+ <ZfsDtr5ejAwGySOR@x1>
+ <ZfsEWoi6eevwLRQC@x1>
+ <CAP-5=fUbiudT+ocbGEauca2aX8PJSV9rHQUCCxQ4bxWXL6eoyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUbiudT+ocbGEauca2aX8PJSV9rHQUCCxQ4bxWXL6eoyA@mail.gmail.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, Mar 20, 2024 at 10:07:55AM -0700, Ian Rogers wrote:
+> On Wed, Mar 20, 2024 at 8:44 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Wed, Mar 20, 2024 at 12:41:45PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > ⬢[acme@toolbox perf-tools-next]$ perf raccord
+> > > perf: 'raccord' is not a perf-command. See 'perf --help'.
+> >
+> > This works with the second patch.
+> >
+> > - Arnaldo
+> >
+> > > ⬢[acme@toolbox perf-tools-next]$ perf ricord
+> > > perf: 'ricord' is not a perf-command. See 'perf --help'.
+> > >
+> > > Did you mean this?
+> > >       record
+> > > ⬢[acme@toolbox perf-tools-next]$ perf ricord
+> > > perf: 'ricord' is not a perf-command. See 'perf --help'.
+> > >
+> > > Did you mean this?
+> > >       record
+> > > ⬢[acme@toolbox perf-tools-next]$
+> > >
+> > > So I'll add that and go on from there.
+> 
+> Thanks, let me know if I need to send a v3 with the 2 uninitialized
+> variables fixed.
 
-There were needless two entries, one for 'newfstatat' and another for
-'fstatat', keep just one and pretty print its 'flags' argument using the
-fs_at_flags scnprintf that is also used by other FS syscalls such as
-'stat', now:
+No need, its all in tmp.perf-tools-next now, will go to perf-tools-next
+soon,
 
-  root@number:~# perf trace -e newfstatat --max-events=5
-       0.000 ( 0.010 ms): abrt-dump-jour/1400 newfstatat(dfd: 7, filename: "", statbuf: 0x7fff0d127000, flag: EMPTY_PATH) = 0
-       0.020 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 9, filename: "", statbuf: 0x55752507b0e8, flag: EMPTY_PATH) = 0
-       0.039 ( 0.004 ms): abrt-dump-jour/1400 newfstatat(dfd: 19, filename: "", statbuf: 0x557525061378, flag: EMPTY_PATH) = 0
-       0.047 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 20, filename: "", statbuf: 0x5575250b8cc8, flag: EMPTY_PATH) = 0
-       0.053 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 22, filename: "", statbuf: 0x5575250535d8, flag: EMPTY_PATH) = 0
-  root@number:~#
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index ef0dfffd99fdf3cc..d3ec244e692a415e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -978,7 +978,6 @@ static const struct syscall_fmt syscall_fmts[] = {
- 		   [1] = { .scnprintf = SCA_FILENAME,	  /* path */ },
- 		   [2] = { .scnprintf = SCA_FSPICK_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "fstat", .alias = "newfstat", },
--	{ .name	    = "fstatat", .alias = "newfstatat", },
- 	{ .name	    = "futex",
- 	  .arg = { [1] = { .scnprintf = SCA_FUTEX_OP, /* op */ },
- 		   [5] = { .scnprintf = SCA_FUTEX_VAL3, /* val3 */ }, }, },
-@@ -1060,8 +1059,10 @@ static const struct syscall_fmt syscall_fmts[] = {
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
- 	{ .name	    = "nanosleep",
- 	  .arg = { [0] = { .scnprintf = SCA_TIMESPEC,  /* req */ }, }, },
--	{ .name	    = "newfstatat",
--	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
-+	{ .name	    = "newfstatat", .alias = "fstatat",
-+	  .arg = { [0] = { .scnprintf = SCA_FDAT,	  /* dirfd */ },
-+		   [1] = { .scnprintf = SCA_FILENAME,	  /* pathname */ },
-+		   [3] = { .scnprintf = SCA_FS_AT_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "open",
- 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "open_by_handle_at",
--- 
-2.44.0
-
+- Arnaldo
