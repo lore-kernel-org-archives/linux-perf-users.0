@@ -1,43 +1,56 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFCA5F860
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 22:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511D515B3
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 00:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710886347; cv=none; b=iK7ThtOxzqBY1Hgjvv04zhrSnckrEhnAK3e9Ew7jrmFQ7/UsMhIoSs+N+B0KnXTplF/M10NqNlkzm/Yil+fbpHRgd9QCRO0fOIXs8SiewcvoY9QLRH9V9I9m3GI+qMFdk/uBQOLc81akHnRqu+v4qAC3hsUN2zm9KzAWbh0MxpI=
+	t=1710894937; cv=none; b=fLv2wR/sdjfQ8ecjIJIhmAOL3lO/Agk2nqipUPqhByR73f215aR7cvbeGphH6fzCmBZloAQACvYLL1XHYYbPr9e0Cw3X7N1FqXN64B0D3VFm4TjGUFQIY1niMnkfSEF4l61rmz11mNtJZTgb1o1cb+cTi/2OTJZXpXFEyK4P5Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710886347; c=relaxed/simple;
-	bh=FSpXGTTyVcFLmOBYzG68wQp9qZCfjPDZWoIzafxsexY=;
+	s=arc-20240116; t=1710894937; c=relaxed/simple;
+	bh=1ekwuOjckgT/DWJAorZ2U6shHkcN9zxUZXtFIZbO6aY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVN/j9ZZCYcJmXCik1kO+nMrcvTjunrYXlC+gk7qh8z3yyz5RlVMsbOHGV0eD//P8xH0vx/71WQGT5y/yrpA0pn6CZZTOpUk3mvI8DzMPEtVA/9vyk2aEjrQFpzAFg/TnzVvC7G/JUQ+0GY/RKVmuWCH9I4dWSbs4/i5qST/eiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tvKCpo8r; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwDIDfSdv8X0GQqZzHN/CCpUNnMSBT62g+ZPHFhcwPbqnUIar70u6asqB7RQhvy9a0YxWzGB0ShDPctTLD4qiE637dbfSlQBYzPXpgokUH13hbRyDWGns2deG4bpraJylWJ6Wp/IMDFKCjMP24dQrfMU2y+YbEYK8qFyh9EX4Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXc8uLlP; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tvKCpo8r"
-Date: Tue, 19 Mar 2024 18:12:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1710886342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZHwWUj98l5L/yUkAsvEJGLxMWq5ZltzecbPLlxTRTAE=;
-	b=tvKCpo8ruu978e0ft9bxNb7vjIwS7F5eiZdqRWl4ERqglw7xu6OCOFCp33AoWTP3aDM8nN
-	fztlSwH0Fg+RK/ajUVdHbb46irQ6Rf9lS8Cb6SwSkgq1t3J6zu1bjyiPwa9tULiSYiHL9v
-	FLnbpGwUVRYQ+9WAvnZa/DGd++zZAAA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
-	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] treewide: Refactor heap related implementation
-Message-ID: <4t6kkvswhacphbjloh3fps7twqp5d3wgxv7yrkvthb5u3uzaoe@6pf7mnvsv3rm>
-References: <20240319180005.246930-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXc8uLlP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710894938; x=1742430938;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1ekwuOjckgT/DWJAorZ2U6shHkcN9zxUZXtFIZbO6aY=;
+  b=DXc8uLlPVJWjy2tp+BqfBCVXEro3tPir9muiqw7/ZkVQFitDEFD+D2zG
+   4BYKuMP4ZvPSOkmqcZBf7+19aPu10nicK7v9tTiSeeksR1C/vIQCeCcgK
+   7qquGenbbjX05GCWLb70Rxuvf77alXzHYP8oTWa40ONLg9u8mRR5Pydfz
+   WRjho2SrypGUpSi8fVMSO0tM3ogM1oW8W4NdarpXtJShD3AeehEhiXzqW
+   WZobFP9kIkUnQi1Oll1AvTgGJ4RixDm0P/VKm0XAWjCM13X3DTyKdbemY
+   0CEF6RJAoqzxdcRKoepGWZHW1ncm4VYPX4CZszPXn7QFD0QivIJlRlrgl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="16345327"
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="16345327"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 17:35:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
+   d="scan'208";a="18567091"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 17:35:35 -0700
+Date: Tue, 19 Mar 2024 17:35:34 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, changbin.du@huawei.com
+Subject: Re: [PATCH v4 2/2] perf, script, capstone: Add support for -F
+ +brstackdisasm
+Message-ID: <ZfovVgjCm5oDbze9@tassilo>
+References: <20240308170611.719794-1-ak@linux.intel.com>
+ <20240308170611.719794-2-ak@linux.intel.com>
+ <bd71b8f5-bf56-4af5-bd55-deb12cc01415@intel.com>
+ <Zfi6vkODkhWQpHJJ@tassilo>
+ <fcdb6a82-30bf-4da5-a898-bba3c0bbc592@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,70 +59,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319180005.246930-1-visitorckw@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <fcdb6a82-30bf-4da5-a898-bba3c0bbc592@intel.com>
 
-On Wed, Mar 20, 2024 at 01:59:52AM +0800, Kuan-Wei Chiu wrote:
-> Hello,
+On Tue, Mar 19, 2024 at 08:52:33AM +0200, Adrian Hunter wrote:
+> On 19/03/24 00:06, Andi Kleen wrote:
+> >> Better to factor out a function that does not depend on "sample"
+> >> e.g. see fprintf_insn_asm() below.
+> > 
+> > this doesn't work because it completely ignores the need of the
+> > cs_dump_insn caller for the path that i actually need for my feature,
+> > which requires to return a string.  I didn't apply it.
 > 
-> This patch series focuses on several adjustments related to heap
-> implementation. Firstly, a type-safe interface has been added to the
-> min_heap, along with the introduction of several new functions to
-> enhance its functionality. Additionally, the heap implementation for
-> bcache and bcachefs has been replaced with the generic min_heap
-> implementation from include/linux. Furthermore, several typos have been
-> corrected.
-> 
-> Previous discussion with Kent Overstreet:
-> https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
+> I would probably change the call sites because they already have a
+> file descriptor, but output to memory is doable:
 
-Hey, thanks for doing this. Can you post a git repo link? I'll point my
-CI at it.
+> 	FILE *fp = fmemopen(x->out, sizeof(x->out), "w+");
 
-> 
-> Regards,
-> Kuan-Wei
-> 
-> Kuan-Wei Chiu (13):
->   perf/core: Fix several typos
->   bcache: Fix typo
->   bcachefs: Fix typo
->   lib min_heap: Add type safe interface
->   lib min_heap: Add min_heap_init()
->   lib min_heap: Add min_heap_peek()
->   lib min_heap: Add min_heap_full()
->   lib min_heap: Add args for min_heap_callbacks
->   lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
->     values
->   bcache: Remove heap-related macros and switch to generic min_heap
->   lib min_heap: Add min_heap_del()
->   lib min_heap: Add min_heap_sift_up()
->   bcachefs: Remove heap-related macros and switch to generic min_heap
-> 
->  drivers/md/bcache/alloc.c      |  66 ++++++++----
->  drivers/md/bcache/bcache.h     |   2 +-
->  drivers/md/bcache/bset.c       |  73 ++++++++-----
->  drivers/md/bcache/bset.h       |  38 ++++---
->  drivers/md/bcache/btree.c      |  27 ++++-
->  drivers/md/bcache/extents.c    |  44 ++++----
->  drivers/md/bcache/movinggc.c   |  40 ++++++--
->  drivers/md/bcache/super.c      |  16 +++
->  drivers/md/bcache/sysfs.c      |   3 +
->  drivers/md/bcache/util.c       |   2 +-
->  drivers/md/bcache/util.h       |  81 +--------------
->  drivers/md/dm-vdo/repair.c     |  29 +++---
->  drivers/md/dm-vdo/slab-depot.c |  21 ++--
->  fs/bcachefs/clock.c            |  53 +++++++---
->  fs/bcachefs/clock_types.h      |   2 +-
->  fs/bcachefs/ec.c               |  99 +++++++++++-------
->  fs/bcachefs/ec_types.h         |   2 +-
->  fs/bcachefs/util.c             |   2 +-
->  fs/bcachefs/util.h             | 127 ++---------------------
->  include/linux/min_heap.h       | 180 ++++++++++++++++++++++++++-------
->  kernel/events/core.c           |  53 +++++-----
->  lib/test_min_heap.c            |  75 +++++++-------
->  22 files changed, 565 insertions(+), 470 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+I considered using this at some point, but I'm sure there is some non glibc,
+that people build perf with, that doesn't have fmemopen, so I didn't.
+
+Can we just use my version for now and if you prefer more refactor
+please submit a follow on cleanup patch?
+
+-andi
+
