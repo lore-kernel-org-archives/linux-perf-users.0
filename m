@@ -1,76 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E39664A4;
-	Wed, 20 Mar 2024 18:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56EE10FF;
+	Wed, 20 Mar 2024 19:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710958832; cv=none; b=D5G3ojlMkpYC0Yrd8QdYj2ntz0INDLdgiwBm1H3oVkzfm95Muj1Sjrq/rxUgIjaWSEmELohSVNKvhfSk84r+93Czp6tq9amEK1IBvwW0kY24cQJQ8tyOaN2JdrekSzRQAmcKQmvW6frYfLHORHAb/k2P1SIVCArs4wDs2P68uXg=
+	t=1710963081; cv=none; b=By55Yc0FM5gLCRGVDCIkSBbIL+eo8g5U9sd34+8qFS1otOhonsR2r5NO5528YpZLrhIf6slGJwHeR9VmAiPbc1B34oLDGPa96zqzweCjBhJlj8DyB1nOreGsKSKlouowkcLFxf0ab7nq5FfjHd3xbOB3rEX3HNYsVgbIGFdhlIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710958832; c=relaxed/simple;
-	bh=eVjzfg5iQZiHcL703HNMokoGFzg5pRPfbFf/xbifFaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RlIxZfHVmquD8WHqHzD3ZMS7LBWSsICK6r/8udXE24JkQEf73OH6pvqpCEkg63nXaukfJgs8kmH9nasTxh0WZSKRlct1wV/EnMS9dTfLjSw6MdSSHpiG8Q2Q/Nh21ELxFV4XLD1E+oV4/+jDqmUt+XZWETAiKBM+0gbirLoOU6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ove95qgE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710963081; c=relaxed/simple;
+	bh=uxhQ189kOj3hcNc/balsR6hLko7zNmVg0E06RlS6EKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fNhKEpuhymnstG98cTs2dng7cfHjgkdnCEK1EF/7g8xEgJAcdxu/26w3jSP7UZWAUFNqOkeJZV7hPk3WQyKZQZmyu+aBvMM/dsx/0jmpesTFYEd0+D/6RSXs3HcmEaghhPR6BEhY1TcOEutxOLTtdhgPGApZgv+vx9azPRXh8OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fopIckmn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ove95qgE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB4EC433C7;
-	Wed, 20 Mar 2024 18:20:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fopIckmn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977B7C433F1;
+	Wed, 20 Mar 2024 19:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710958831;
-	bh=eVjzfg5iQZiHcL703HNMokoGFzg5pRPfbFf/xbifFaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ove95qgE/9QvnlrXaca6i0w2LZMZsnDj2Ts4cXVL06kL0jvHcdHRuqOrwqLcNXSTQ
-	 WCY4/ZmtiIRLNtMlB3IpRjS085adAGCOuvNin+vcQwZFp/5esf2cd4BqvZYPib/hV2
-	 lBMS1ZZJzYc23fTxlSCFip0KuOKArO1vBzsb8XFOXpzlTO7Jno1XV3DtNdH4x2G5no
-	 06mPZVVoCZ0W34OuMUR0rnrSbNcT30kYTv7egPR4cCgFwjf5YHzJLPVHV1dviymZUE
-	 8LTfx4AVGWz96uz4zebT5Hm9yTADkerC/6aItKZ0mOYpeoIN8MpkWau+Fuc07HrCv/
-	 pOkLtktr3mC3Q==
-Date: Wed, 20 Mar 2024 15:20:27 -0300
+	s=k20201202; t=1710963081;
+	bh=uxhQ189kOj3hcNc/balsR6hLko7zNmVg0E06RlS6EKU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fopIckmnpxsoE3dk1mKUMUeNdEALb3WAxNH0HKcnZOkq3/VihAgh7Po/m0Lo4ontV
+	 TD4s/fFVzXVvha3Op1CJ4NH+VZlUAujQ0t6J0w+2LvpyPuIIPmGaizcP9yYGn0buMJ
+	 uXzVfEArS/HA5P1SK909gBY653pSA1+vSzXJzNLbeDZs43Zbnza8bmJ1esSvClog88
+	 lPLy2/EgdOjDAx5KdKoRX4/FkXiBSeI+SRYGEF+aXF6N9QwZoBjR8KbSaMWELjdOTf
+	 9l/vSzq6Xn96BpK3tMOAgZZbXQHEfpV/EOvalnh11/1uQmHzXoeaulZH4cFuslJz2e
+	 5Sb+AjWfBLuOg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@arm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
-Message-ID: <Zfso6wDszEoCVeEX@x1>
-References: <20240301174711.2646944-1-irogers@google.com>
- <CAP-5=fU7PNEDgOg=cFKkSMgHe7_Xbi5Y9k6yPoAwOpN-Uwdp7A@mail.gmail.com>
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 0/5] More perf trace syscall pretty printing improvements
+Date: Wed, 20 Mar 2024 16:31:10 -0300
+Message-ID: <20240320193115.811899-1-acme@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU7PNEDgOg=cFKkSMgHe7_Xbi5Y9k6yPoAwOpN-Uwdp7A@mail.gmail.com>
 
-On Wed, Mar 20, 2024 at 08:58:37AM -0700, Ian Rogers wrote:
-> On Fri, Mar 1, 2024 at 9:47 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Switch from running tests sequentially to running in parallel by
-> > default. Change the opt-in '-p' or '--parallel' flag to '-S' or
-> > '--sequential'.
-> >
-> > On an 8 core tigerlake an address sanitizer run time changes from:
-> > 326.54user 622.73system 6:59.91elapsed 226%CPU
-> > to:
-> > 973.02user 583.98system 3:01.17elapsed 859%CPU
-> >
-> > So over twice as fast, saving 4 minutes.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Ping.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks, applied.
+Hi,
+
+	Here are some more improvements for 'perf trace', please review,
+
+Thanks,
 
 - Arnaldo
+
+Arnaldo Carvalho de Melo (5):
+  perf beauty: Introduce scrape script for various fs syscalls 'flags' arguments
+  perf beauty: Introduce scrape script for the 'statx' syscall 'mask' argument
+  perf beauty: Introduce faccessat2 flags scnprintf routine
+  perf trace: Beautify the 'flags' arg of unlinkat
+  perf trace: Fix 'newfstatat'/'fstatat' argument pretty printing
+
+ tools/perf/Makefile.perf                      |  14 ++
+ tools/perf/builtin-trace.c                    |  22 +-
+ tools/perf/check-headers.sh                   |   2 +
+ tools/perf/trace/beauty/Build                 |   1 +
+ tools/perf/trace/beauty/beauty.h              |   7 +-
+ tools/perf/trace/beauty/fs_at_flags.c         |  50 +++++
+ tools/perf/trace/beauty/fs_at_flags.sh        |  21 ++
+ .../trace/beauty/include/uapi/linux/fcntl.h   | 123 +++++++++++
+ .../trace/beauty/include/uapi/linux/stat.h    | 195 ++++++++++++++++++
+ tools/perf/trace/beauty/statx.c               |  77 +------
+ tools/perf/trace/beauty/statx_mask.sh         |  23 +++
+ 11 files changed, 458 insertions(+), 77 deletions(-)
+ create mode 100644 tools/perf/trace/beauty/fs_at_flags.c
+ create mode 100755 tools/perf/trace/beauty/fs_at_flags.sh
+ create mode 100644 tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+ create mode 100644 tools/perf/trace/beauty/include/uapi/linux/stat.h
+ create mode 100755 tools/perf/trace/beauty/statx_mask.sh
+
+-- 
+2.44.0
+
