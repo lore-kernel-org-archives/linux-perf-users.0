@@ -1,151 +1,134 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B9E1364;
-	Wed, 20 Mar 2024 03:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE97101E8
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 04:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710903694; cv=none; b=mdHw0MW3atEFZ4re8HWYV7Q5lEP5wIGx1Gbc1OfW7X1e84nUEPLXq4s5gVvU08t0TinnqZoecjyYTcO+GE2wZ35DgFpZCmsl5JMr+opXVrAKz2fspsBPvdoZmznVMSy3GAardHMk+pxovcJcYRKA2CXIWPXptvL2YOf8J0jkys0=
+	t=1710909760; cv=none; b=pkqSHRR3QYkgLrLb9sXsR2lQVyAhhibU4nd+leiqUo/5wcOL3cwG8oTTaAFrrDkRThKpNcYo6tKXPeKtR+N+WeFma2rYJbmRivVZYmfvpa9n30kMshK0Q2UFJ2kSLgFFrgMCGWIi9oZOUZ8rCHoXnxkz8PGJh7iiiD5TzCGphgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710903694; c=relaxed/simple;
-	bh=TyLpdxJTBr3425nDHzYBQd+Ij8cler9kgdT3/QEAlqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NYaeNeY47CNKzkTVTkyLSPojs/6dxfrtdQJOvSSdeIEg/3eW7XvbfkV16fvwi72vrC5AwNdnfvJ3qar6GIVpUH8crdfjYn7oPluBAZbEmZ0p+/krCCPInp2AgsZq+YDayTmP0Rq95aZXA/S9Wy4PaOMQsEB+bghV1Y+hjxMcMAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMpbKCiy; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710909760; c=relaxed/simple;
+	bh=FFkw7m91uLgfhzY8lSs7u3SRzgLtl3hfepkuhkqEOco=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=GNXLgHFTosUvL24u1bBvnwtebLFjOpBWl6XiYcDrcMbjZKe2tsSsA3KFnzbu0GuoHz1+iH1t0wW8f6O2gtvsYpAmva5+LzL8aGNlAW9vNznsAIAOWulFtzUi2yJnztZUmhIajxs6N7RPu0+ZpuNoa2cvN0S8ONSBfjjQADCiw34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=umQltqgJ; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMpbKCiy"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29d51cdde7eso1914173a91.0;
-        Tue, 19 Mar 2024 20:01:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umQltqgJ"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-430e1e06e75so221941cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 21:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710903692; x=1711508492; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=35rpOMt9N0PQI1HtZYax5BoW4EBNkuuGWd0M4cm/nKw=;
-        b=gMpbKCiyshPdSSVFfx2n678ICLyt+DPM4PBWIXRwXcOxTaBuGBg/y+2h05Nqr3H/IG
-         yGFSrb7oE/8IWe6/pCXxkqAynVxXrbo+vWUPf4/vysVZxwHsq17IjAkBJXcw5/Hu/3SD
-         A2Bd2q32AntyK34r9TUBZ7KgK12QMcgsNZUmhaeF3Km5SdDNgJz7pseaaWrjTlHk7WyR
-         xG4sAGh+85DEVl4psS+HTfXbNWYOsYuNdJZAU1b/jfUDKxw4VByfDU/sTWeaBk+440B6
-         SVlHNs1uN7g1LBV5Y8BMiNJy8e0M9xHK0hmev782+HPveB3X+Y8KSiKVqkgV8w39veeZ
-         vlxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710903692; x=1711508492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1710909757; x=1711514557; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=35rpOMt9N0PQI1HtZYax5BoW4EBNkuuGWd0M4cm/nKw=;
-        b=maaDFC4XzeW54jRAfzsId5P4rbFQ/xC69HMdi++lF3wMQvTlPQvc40HqQUGBLvfDHd
-         6PvmkMrXla2bh4UMV3Sqm4hWthgcN4nt4UeWjuP/uynpgeJxhf335ao15rRQU73Mkwbl
-         DcKhsah1N7hz45ZaTNbm83eBNr0IbY5Wj0xpTA/HENfC9i6O8qYzt+vv/OqZynjS3rrn
-         1d6Hj/UrIxhryIjn5c6EowLtryjljBFa55STScqFiQq7P1HNnZ7dGCS7fYY9TCS/OmAL
-         SVq34w/2o9GIHxmhansoq6aQFkHmy2hqRP7pyp47K8WAW9foy12BLO9NDPzjM6YqCITb
-         xYRA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6rVn9uCwiLKEK8zODdaN/yV1P/WUJEim1x1DVVls0So1BA5swKjiJ9umR+RSotSnrhEcWRFk6QLMtB4P+WTO3hO7B9QxFQdXMTv+PC4BmnOMfq3b37QKCwKS9mrO/aJR/pHRpiVN36BMnvVPgVvVYF+6Am0dYtjIva0nb2mWXtNkeLF4pJm26OZtt4MDiM4JP9Q5ZL8epI5O1z/TzNdkf4tM/00K5ZnrSYIWk
-X-Gm-Message-State: AOJu0YzE3To3T9KP4y9W19Q/KYLqGGaAbODeQG6fQVXWAdf7zQlzzyQu
-	EFNgrylhaZVSHF+hg0STer5ta0MS/oElx3si5xCWlUdoDyKFLF+H
-X-Google-Smtp-Source: AGHT+IE2pZ+9Hs3pLB7GNfVXiBAJR9GLVUQZAmgXsl3JRbC6bSvpked11TQIwgYq2A8lQ95xjs/DLg==
-X-Received: by 2002:a05:6a20:7f8f:b0:1a3:4721:ded3 with SMTP id d15-20020a056a207f8f00b001a34721ded3mr4617995pzj.1.1710903692352;
-        Tue, 19 Mar 2024 20:01:32 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id w2-20020a1709026f0200b001db2b8b2da7sm12206955plk.122.2024.03.19.20.01.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 20:01:31 -0700 (PDT)
-Date: Wed, 20 Mar 2024 11:01:27 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] treewide: Refactor heap related implementation
-Message-ID: <ZfpRh1pcab4PFLiw@visitorckw-System-Product-Name>
-References: <20240319180005.246930-1-visitorckw@gmail.com>
- <4t6kkvswhacphbjloh3fps7twqp5d3wgxv7yrkvthb5u3uzaoe@6pf7mnvsv3rm>
+        bh=fOiFkCsSh82NJJ1OPmoUof4RsaZcNQDwXob9oPa1+fo=;
+        b=umQltqgJvKjISLCQoXswHJ1OmRyYhQQqfidbg/Xg0BLoL9l0YvWui6ATV0qvP+fYFX
+         vfUnCrIkFVwhQvncI0vGL4fvEBWeZ3s5OaY54GWA8nLDJgtI19sZ2BEAAPsOSx6MefSJ
+         3nLmeNQQNPEDC6VMef8nJOQDdsbWlRaO5If2Kmo2s4jm5cH0WLSfrRMVoTnlrR02gVVl
+         QhlrhfiWqjQHRhTMgnJlEmlEA7/E7U1PnPbRazlU4m/n+Oj/pn1KpxiD2qkvUJEZYMpw
+         oSw3T7zBCl/lTVwjBDWpwqNfYn13UAg8tAy2mR13i4Zln8igaN47P6chTkbb5le1kGju
+         Uiyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710909757; x=1711514557;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOiFkCsSh82NJJ1OPmoUof4RsaZcNQDwXob9oPa1+fo=;
+        b=dLbHwer8o3UKbhhhq4Y06HPo4lP+h7upqLZpYSme7rfPcuGx3Ld1s3N8sZk+0+BUNL
+         2vlmyqsjc0TKPxKKIzEfHswJ1cBpt9EsekN048a9eU2yGTO+PlcuZiI+9tOA260ITkLn
+         twW3LWv7LMkezZa2pGu48NjdKsaJQqn3s+O8+LCZB/raEyNe68vOxv9omkbrmJ7rqDjB
+         leo3svx6ydrF7/TTsjO+8P1mmTdt43MJ3CiGWPXzejvbzSgq/kh57iIv+c0qmHEhOVLB
+         ebswLWE/HtpSRrMnha4ja4k9CjuBrsBxFBOQw6K5PN1mPBo19COdyb5I6MTYc4+DVbXy
+         +zuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIFZcZ02YDYwjAEIZlwWhBODpL9wCnrvWM6lGHsYqoWZgq+1nldXzwvh8SZBbxiUOgbHoDsY2Ilk5u1L7zagUfayUks2hwlA1FyzoBIcPstA==
+X-Gm-Message-State: AOJu0Yx/ew+8fRsJ2/v0vXl9+4pcL4ikMH+MANQCk7KHXDh5AETYpRbP
+	UVrpTQZv39vCD4L9OrgZchtxHcGiIMolWBJXktMfNq6NtVShec3cif2lKlIqH2KYexfBimBZmQD
+	1vjiw1m1NuExeDTAOYhi4aJcWp23jltIJzbap
+X-Google-Smtp-Source: AGHT+IGvy6ooA+9qkzEhIrOI3gXaBwhszV/McOy/gsH1cWTMSTRqckFGy0rcatNzzbMM7CZUnFl6+FXXBeEblwuCZrg=
+X-Received: by 2002:ac8:5c91:0:b0:42e:e40f:fca4 with SMTP id
+ r17-20020ac85c91000000b0042ee40ffca4mr136551qta.13.1710909757167; Tue, 19 Mar
+ 2024 21:42:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4t6kkvswhacphbjloh3fps7twqp5d3wgxv7yrkvthb5u3uzaoe@6pf7mnvsv3rm>
+References: <20240301074639.2260708-1-irogers@google.com> <CAP-5=fX7JDkyPEXwJGmhYf75EA5KsFQpZ3tC-70hNe8kUnZ=rw@mail.gmail.com>
+In-Reply-To: <CAP-5=fX7JDkyPEXwJGmhYf75EA5KsFQpZ3tC-70hNe8kUnZ=rw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 19 Mar 2024 21:42:26 -0700
+Message-ID: <CAP-5=fW_B-HOU0moGXjesjNaz2FR8emSB1LsadXOh5O71CrWWQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] perf record: Delete session after stopping
+ sideband thread
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Christian Brauner <brauner@kernel.org>, James Clark <james.clark@arm.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Tim Chen <tim.c.chen@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Disha Goel <disgoel@linux.ibm.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Song Liu <songliubraving@fb.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 06:12:17PM -0400, Kent Overstreet wrote:
-> On Wed, Mar 20, 2024 at 01:59:52AM +0800, Kuan-Wei Chiu wrote:
-> > Hello,
-> > 
-> > This patch series focuses on several adjustments related to heap
-> > implementation. Firstly, a type-safe interface has been added to the
-> > min_heap, along with the introduction of several new functions to
-> > enhance its functionality. Additionally, the heap implementation for
-> > bcache and bcachefs has been replaced with the generic min_heap
-> > implementation from include/linux. Furthermore, several typos have been
-> > corrected.
-> > 
-> > Previous discussion with Kent Overstreet:
-> > https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
-> 
-> Hey, thanks for doing this. Can you post a git repo link? I'll point my
-> CI at it.
+On Thu, Feb 29, 2024 at 11:50=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-Here is the link to my GitHub repository:
-https://github.com/visitorckw/linux.git
+> On Thu, Feb 29, 2024 at 11:47=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > The session has a header in it which contains a perf env with
+> > bpf_progs. The bpf_progs are accessed by the sideband thread and so
+> > the sideband thread must be stopped before the session is deleted, to
+> > avoid a use after free.  This error was detected by AddressSanitizer
+> > in the following:
+> >
+> > ```
+> > =3D=3D2054673=3D=3DERROR: AddressSanitizer: heap-use-after-free on addr=
+ess 0x61d000161e00 at pc 0x55769289de54 bp 0x7f9df36d4ab0 sp 0x7f9df36d4aa8
+> > READ of size 8 at 0x61d000161e00 thread T1
+> >     #0 0x55769289de53 in __perf_env__insert_bpf_prog_info util/env.c:42
+> >     #1 0x55769289dbb1 in perf_env__insert_bpf_prog_info util/env.c:29
+> >     #2 0x557692bbae29 in perf_env__add_bpf_info util/bpf-event.c:483
+> >     #3 0x557692bbb01a in bpf_event__sb_cb util/bpf-event.c:512
+> >     #4 0x5576928b75f4 in perf_evlist__poll_thread util/sideband_evlist.=
+c:68
+> >     #5 0x7f9df96a63eb in start_thread nptl/pthread_create.c:444
+> >     #6 0x7f9df9726a4b in clone3 ../sysdeps/unix/sysv/linux/x86_64/clone=
+3.S:81
+> >
+> > 0x61d000161e00 is located 384 bytes inside of 2136-byte region [0x61d00=
+0161c80,0x61d0001624d8)
+> > freed by thread T0 here:
+> >     #0 0x7f9dfa6d7288 in __interceptor_free libsanitizer/asan/asan_mall=
+oc_linux.cpp:52
+> >     #1 0x557692978d50 in perf_session__delete util/session.c:319
+> >     #2 0x557692673959 in __cmd_record tools/perf/builtin-record.c:2884
+> >     #3 0x55769267a9f0 in cmd_record tools/perf/builtin-record.c:4259
+> >     #4 0x55769286710c in run_builtin tools/perf/perf.c:349
+> >     #5 0x557692867678 in handle_internal_command tools/perf/perf.c:402
+> >     #6 0x557692867a40 in run_argv tools/perf/perf.c:446
+> >     #7 0x557692867fae in main tools/perf/perf.c:562
+> >     #8 0x7f9df96456c9 in __libc_start_call_main ../sysdeps/nptl/libc_st=
+art_call_main.h:58
+> > ```
+> >
+> > Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Note, after this series I'm seeing parallel perf testing being as
+> reliable as serial but parallel testing is nearly 3 times faster. I
+> think after these changes land we can make parallel execution the
+> default.
 
-The patch series can be found on the 'refactor-heap' branch.
+Ping.
 
-Regards,
-Kuan-Wei
-
-> > 
-> > Regards,
-> > Kuan-Wei
-> > 
-> > Kuan-Wei Chiu (13):
-> >   perf/core: Fix several typos
-> >   bcache: Fix typo
-> >   bcachefs: Fix typo
-> >   lib min_heap: Add type safe interface
-> >   lib min_heap: Add min_heap_init()
-> >   lib min_heap: Add min_heap_peek()
-> >   lib min_heap: Add min_heap_full()
-> >   lib min_heap: Add args for min_heap_callbacks
-> >   lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
-> >     values
-> >   bcache: Remove heap-related macros and switch to generic min_heap
-> >   lib min_heap: Add min_heap_del()
-> >   lib min_heap: Add min_heap_sift_up()
-> >   bcachefs: Remove heap-related macros and switch to generic min_heap
-> > 
-> >  drivers/md/bcache/alloc.c      |  66 ++++++++----
-> >  drivers/md/bcache/bcache.h     |   2 +-
-> >  drivers/md/bcache/bset.c       |  73 ++++++++-----
-> >  drivers/md/bcache/bset.h       |  38 ++++---
-> >  drivers/md/bcache/btree.c      |  27 ++++-
-> >  drivers/md/bcache/extents.c    |  44 ++++----
-> >  drivers/md/bcache/movinggc.c   |  40 ++++++--
-> >  drivers/md/bcache/super.c      |  16 +++
-> >  drivers/md/bcache/sysfs.c      |   3 +
-> >  drivers/md/bcache/util.c       |   2 +-
-> >  drivers/md/bcache/util.h       |  81 +--------------
-> >  drivers/md/dm-vdo/repair.c     |  29 +++---
-> >  drivers/md/dm-vdo/slab-depot.c |  21 ++--
-> >  fs/bcachefs/clock.c            |  53 +++++++---
-> >  fs/bcachefs/clock_types.h      |   2 +-
-> >  fs/bcachefs/ec.c               |  99 +++++++++++-------
-> >  fs/bcachefs/ec_types.h         |   2 +-
-> >  fs/bcachefs/util.c             |   2 +-
-> >  fs/bcachefs/util.h             | 127 ++---------------------
-> >  include/linux/min_heap.h       | 180 ++++++++++++++++++++++++++-------
-> >  kernel/events/core.c           |  53 +++++-----
-> >  lib/test_min_heap.c            |  75 +++++++-------
-> >  22 files changed, 565 insertions(+), 470 deletions(-)
-> > 
-> > -- 
-> > 2.34.1
-> > 
+Thanks,
+Ian
