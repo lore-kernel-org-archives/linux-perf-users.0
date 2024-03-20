@@ -1,148 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBC353E14;
-	Wed, 20 Mar 2024 15:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6B35472A
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 15:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710948774; cv=none; b=chmHMJoYNWcy+pJVGF2pPYm+CMcxXkjpsVYHTR7WD1S+FppjmSiSqBl7036ShKNThvC+HkJX3Qp1UL4LgiX0MpLHCJFolbNCgZ3VVpjjz/tHqf5LTU48fdY4y2AJvLX70fnUfl2UZLNoVNloMz6qxx7EH75GKp3NE0a208oG7GU=
+	t=1710949269; cv=none; b=sL14y7kmKsm+AWmXfn9ntR7c/k9nL9vS9Px3Kq1AEZt6FyTaE4tltd4b3NccFiahBKf/4NlZfM4p4+lUb4Io+eMH3YQ/sp0Egds8DQmjSSz2foCBZsiC+tWh/0D3ZV6JqhFi4BGvLxViFM4cOd/aaOt4hlTbuR89+s4bIqRqAbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710948774; c=relaxed/simple;
-	bh=jXnepYnPUUQUuOFTV5avKiVLlnCRROuyiCpNkq1UfMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4Huoh78uo4V6x4gccQm9qRlmMqwuI26UkgEujy+bpyOeNFe3vrI2egFNGK6wJ+AEXEWdriFdDgd/9apjWpQeSjRVWifjvO9EbWig4nX+mtx6SuTpFW6ZVWSyNJYVm2760eHM9e6vStRXwpobJ9RV3jkbhyL0G2VRL96+w/FteE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIv0ooDJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710949269; c=relaxed/simple;
+	bh=iCunZ+6YcFE7t2PkWp192A1LxUrQ4MKFnnxcQpM6ksg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghr0wkYxRJ7JDYOF3zZ5lfH6jkIAb1Dw4esIVMQaMXUADyUU03VisUCpI4dJtGUr9xjzzBWgELW1Vz4vTKrlXSDHatwKKczHdlSemHrBzXVI9YBlGaXnoFILFfGhcRBEuqRc5iDu211b8ObpkXqFz7A0Jh0pQzbZD+ZHKVSolw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tsxpcmjW; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIv0ooDJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8811C43390;
-	Wed, 20 Mar 2024 15:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710948774;
-	bh=jXnepYnPUUQUuOFTV5avKiVLlnCRROuyiCpNkq1UfMI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aIv0ooDJZ71ZSc/Dwbb5OF/iiZubkD0MGkdRmCnfsN1RwF+oGbFywJYb3ZhFjft9q
-	 dJrnBAjjQzWpdeNow+P8auLLHYdGnuLl86GeAyo/EFZY8EYLVIgvoRw5EsCYkRaREh
-	 F7qhvfwBNOJWE/iz/bHu1qLo4aRbaPRvYj9qD8+uD01y2xPu/8ZCBJsjugiMtpGrYB
-	 7d+xjmZHokc3zLfTtL8pKXivjJVCktF46JhQGc7xjtVlDXbHrEah4lgRP73YtnwAkq
-	 XzllpHz7hn7eqKfEOx+jtgTZiL1b5jacYlibFMzBWTG+W96ZopZS8kb12CLp/zuOFp
-	 M5yw55RLKsDbA==
-Date: Wed, 20 Mar 2024 12:32:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf: Suggest inbuilt commands for unknown command
-Message-ID: <ZfsBopALY3whsst5@x1>
-References: <20240301201306.2680986-1-irogers@google.com>
- <Zfr4jX_b8FCOG_x_@x1>
- <Zfr5__Ej3-0C8sJj@x1>
- <CAP-5=fXXrJRH=Dto2ajD_TUDE1YmkkJZO5Ey2pq5YB0wbVAzeg@mail.gmail.com>
- <Zfr-sQJPbZzbtk8K@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tsxpcmjW"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36849db2578so138795ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 08:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710949266; x=1711554066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M0jkrB/0fBH+KbVOwuSNWx0pd80AKnh03N5PGTLZESg=;
+        b=tsxpcmjWzM4TV0aC4bUGpRe4FCz/Zg0JYGQarj56iuS5LXtDuYgspr9dAhmdLgkeOd
+         zqXK+4Srz6fEs0cVMq4x3NeRW/6jP3R1MTyl+Lkxn+5YbrW0QlW1bcHVQg7s5h5AZEJF
+         Z7aWk3b+8hSVWNMlMDze7g3P3eXj5qQIE97tVGx2F/cYztEwyyyLQ421uCeIqElzZ8s9
+         +w+qO3UrXT1091Ppgs53EthkT7vIZ9i3DoZ4PTcqyMKNhuzcxxylX49iXD2vx5j5XeUs
+         kyWGIMn1DIfrtcQsTmLI3u8kowvifhgZ1N62SwINwVuDnKvtQto1sgYgSmvEwhxMaWs+
+         vX9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710949266; x=1711554066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M0jkrB/0fBH+KbVOwuSNWx0pd80AKnh03N5PGTLZESg=;
+        b=IMKHh8cKJAOSYfrcBFS5HZaBTRZHrGdSXllwsBU+6WdagNo9/uX2aYzhugvymLGP5l
+         gJ02tQY7aC1ZAc4+u686GPxRw7u8UJF4uogivVsSqogx57znhli94VXvvU6Lur1GG8Qa
+         ow1mUtTYBdTyaYce6nkZTrxnqKRDsqK2IjsGztdMkrAsXEEr4HIxsyNXcSo96f84oE5w
+         pnY5CsVfYvs0Fo3Qt2f8mgOeWnSStlBAn+waQMtNw6KI9HcytPE33D93o0xlPJuVCZ0P
+         ipm5qlbdYEkbqKStlk6ptwkKMSnzb+0i00p3GMF/yjmmABiXTCzDYQRDlz3gP6Vy4Y9n
+         RzlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVS9qajt9AHeIldWVQaqqwcC5P8bxQLj0C3MBXfqStW50/uIZp6N9vDHMPI1Cl2/arli7YQcrcPOfPotWVQRGK3dDT7iQGZIBdU9ofz8nU3SQ==
+X-Gm-Message-State: AOJu0YzqTf/q/zZciEZMjvM7BVdwK7mxCXV5MG14zkSb0ucf792m/Y+i
+	T9OiThSvEit5R+rTMKN8Cyy4zHibiZp4935zda7rtNMKE6YGkigs7S9T6NJ8FhCr+f1MkZKw7Pc
+	mDRIvBP7u0E4Ut0wRwW2H4uNkWlGs7WHJMTtg
+X-Google-Smtp-Source: AGHT+IFA0TJQu0728H2S5fTBoKBtazLc2VkFUwKlMTDSZ4EQS7K7GdYQY/Hi1tgzHPt3h88l5unhnUslSejtawQgf/w=
+X-Received: by 2002:a05:6e02:b4f:b0:366:4f55:bdc7 with SMTP id
+ f15-20020a056e020b4f00b003664f55bdc7mr306850ilu.20.1710949266478; Wed, 20 Mar
+ 2024 08:41:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zfr-sQJPbZzbtk8K@x1>
+References: <20240301201306.2680986-1-irogers@google.com> <Zfr4jX_b8FCOG_x_@x1>
+ <Zfr5__Ej3-0C8sJj@x1> <CAP-5=fXXrJRH=Dto2ajD_TUDE1YmkkJZO5Ey2pq5YB0wbVAzeg@mail.gmail.com>
+ <Zfr-sQJPbZzbtk8K@x1> <ZfsBopALY3whsst5@x1>
+In-Reply-To: <ZfsBopALY3whsst5@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 20 Mar 2024 08:40:52 -0700
+Message-ID: <CAP-5=fXwfckSBwMVRj_MuZ=aZkkS-bxrcWkzg1y=AZwFQGUjCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf: Suggest inbuilt commands for unknown command
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 12:20:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Mar 20, 2024 at 08:12:56AM -0700, Ian Rogers wrote:
-> > Ah, the change:
-> > 
-> > -               static int done_help;
-> > +               int done_help;
-> > 
-> > created an uninitialized use. Compiler warning/sanitizers? Anyway,
-> > done_help needs hoisting out of the loop and initializing to zero, or
-> > being made static again (ugh).
-> 
-> ⬢[acme@toolbox perf-tools-next]$ git diff
+On Wed, Mar 20, 2024 at 8:32=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Mar 20, 2024 at 12:20:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Mar 20, 2024 at 08:12:56AM -0700, Ian Rogers wrote:
+> > > Ah, the change:
+> > >
+> > > -               static int done_help;
+> > > +               int done_help;
+> > >
+> > > created an uninitialized use. Compiler warning/sanitizers? Anyway,
+> > > done_help needs hoisting out of the loop and initializing to zero, or
+> > > being made static again (ugh).
+> >
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$ git diff
+> > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> > index c719e6ccd9e27778..f9532b20e87cbf05 100644
+> > --- a/tools/perf/perf.c
+> > +++ b/tools/perf/perf.c
+> > @@ -459,7 +459,7 @@ static int libperf_print(enum libperf_print_level l=
+evel,
+> >
+> >  int main(int argc, const char **argv)
+> >  {
+> > -       int err;
+> > +       int err, done_help =3D 0;
+> >         const char *cmd;
+> >         char sbuf[STRERR_BUFSIZE];
+> >
+> > @@ -558,8 +558,6 @@ int main(int argc, const char **argv)
+> >         pthread__block_sigwinch();
+> >
+> >         while (1) {
+> > -               int done_help;
+> > -
+> >                 run_argv(&argc, &argv);
+> >
+> >                 if (errno !=3D ENOENT)
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$ perf raccord
+> >   Fatal: Out of memory, realloc failed
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$
+> >
+> > Then:
+> >
+> > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> > index c719e6ccd9e27778..54f62aa6612bc290 100644
+> > --- a/tools/perf/perf.c
+> > +++ b/tools/perf/perf.c
+> > @@ -558,7 +558,7 @@ int main(int argc, const char **argv)
+> >         pthread__block_sigwinch();
+> >
+> >         while (1) {
+> > -               int done_help;
+> > +               static int done_help;
+> >
+> >                 run_argv(&argc, &argv);
+> >
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$ perf raccord
+> >   Fatal: Out of memory, realloc failed
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> That main_cmds variable is uninitialized, which ends up making
+> add_cmdname() to explode, are you sure this is working on your side?
+>
+> Further clarifying, this is without considering the second patch, I
+> haven't got to it yet, from what I recall from the description it
+> shouldn't matter tho.
+>
+> - Arnaldo
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git diff
 > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index c719e6ccd9e27778..f9532b20e87cbf05 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -459,7 +459,7 @@ static int libperf_print(enum libperf_print_level level,
->  
->  int main(int argc, const char **argv)
->  {
-> -       int err;
-> +       int err, done_help = 0;
->         const char *cmd;
->         char sbuf[STRERR_BUFSIZE];
->  
-> @@ -558,8 +558,6 @@ int main(int argc, const char **argv)
->         pthread__block_sigwinch();
->  
->         while (1) {
-> -               int done_help;
-> -
->                 run_argv(&argc, &argv);
->  
->                 if (errno != ENOENT)
-> ⬢[acme@toolbox perf-tools-next]$ perf raccord
->   Fatal: Out of memory, realloc failed
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> Then:
-> 
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index c719e6ccd9e27778..54f62aa6612bc290 100644
+> index c719e6ccd9e27778..164b3c78baff4204 100644
 > --- a/tools/perf/perf.c
 > +++ b/tools/perf/perf.c
 > @@ -558,7 +558,7 @@ int main(int argc, const char **argv)
 >         pthread__block_sigwinch();
->  
+>
 >         while (1) {
 > -               int done_help;
 > +               static int done_help;
->  
+>
 >                 run_argv(&argc, &argv);
->  
-> ⬢[acme@toolbox perf-tools-next]$ perf raccord
->   Fatal: Out of memory, realloc failed
-> ⬢[acme@toolbox perf-tools-next]$
+>
+> @@ -566,7 +566,7 @@ int main(int argc, const char **argv)
+>                         break;
+>
+>                 if (!done_help) {
+> -                       struct cmdnames main_cmds;
+> +                       struct cmdnames main_cmds =3D { 0, };
+>
+>                         for (unsigned int i =3D 0; i < ARRAY_SIZE(command=
+s); i++) {
+>                                 add_cmdname(&main_cmds,
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ perf raccord
+> perf: 'raccord' is not a perf-command. See 'perf --help'.
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
 
-That main_cmds variable is uninitialized, which ends up making
-add_cmdname() to explode, are you sure this is working on your side?
+Perhaps change the 'a' to an 'e', the 2nd patch just improves the
+weights on removing characters. For me:
 
-Further clarifying, this is without considering the second patch, I
-haven't got to it yet, from what I recall from the description it
-shouldn't matter tho.
-
-- Arnaldo
-
-⬢[acme@toolbox perf-tools-next]$ git diff
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index c719e6ccd9e27778..164b3c78baff4204 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -558,7 +558,7 @@ int main(int argc, const char **argv)
-        pthread__block_sigwinch();
- 
-        while (1) {
--               int done_help;
-+               static int done_help;
- 
-                run_argv(&argc, &argv);
- 
-@@ -566,7 +566,7 @@ int main(int argc, const char **argv)
-                        break;
- 
-                if (!done_help) {
--                       struct cmdnames main_cmds;
-+                       struct cmdnames main_cmds = { 0, };
- 
-                        for (unsigned int i = 0; i < ARRAY_SIZE(commands); i++) {
-                                add_cmdname(&main_cmds,
-⬢[acme@toolbox perf-tools-next]$ perf raccord
+```
+$ /tmp/perf/perf raccord
 perf: 'raccord' is not a perf-command. See 'perf --help'.
-⬢[acme@toolbox perf-tools-next]$ 
+
+Did you mean this?
+       record
+```
+
+For a memory sanitizer build with the 2 patches and the 2 line changes
+I sent before. Fwiw, I'm trying to get memory sanitizer to test "perf
+test" but running into an issue with scandirat not having an msan
+interceptor.
+
+Thanks,
+Ian
