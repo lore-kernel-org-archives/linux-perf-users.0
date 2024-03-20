@@ -1,85 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511D515B3
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 00:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253E7A35
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 01:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710894937; cv=none; b=fLv2wR/sdjfQ8ecjIJIhmAOL3lO/Agk2nqipUPqhByR73f215aR7cvbeGphH6fzCmBZloAQACvYLL1XHYYbPr9e0Cw3X7N1FqXN64B0D3VFm4TjGUFQIY1niMnkfSEF4l61rmz11mNtJZTgb1o1cb+cTi/2OTJZXpXFEyK4P5Kc=
+	t=1710896512; cv=none; b=XTBgAbyzz9i4YNGkVFmBN/5kyhT8Wnj6nJyKW5tU/PX0b9YuY4VUcfI4y8epSdGt4MzlBjr5fZgcsdPCivTJtBhxDaIFwEj23teBv1eZ1d44KJTHcK/sjeu7U1PYy1Kqps2WYqIPzo/3Ccn+HSPomEgUxehB6Jyo2RGYAMC+aXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710894937; c=relaxed/simple;
-	bh=1ekwuOjckgT/DWJAorZ2U6shHkcN9zxUZXtFIZbO6aY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hwDIDfSdv8X0GQqZzHN/CCpUNnMSBT62g+ZPHFhcwPbqnUIar70u6asqB7RQhvy9a0YxWzGB0ShDPctTLD4qiE637dbfSlQBYzPXpgokUH13hbRyDWGns2deG4bpraJylWJ6Wp/IMDFKCjMP24dQrfMU2y+YbEYK8qFyh9EX4Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXc8uLlP; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710896512; c=relaxed/simple;
+	bh=L4ekNnZJBJQCdBiJrurgbWZbl+dv+0cR5wcH0ZLHdLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bUjYP3GPu0NcmIggdDgYxPvsq/3lHTQc8q6ibBHEvQd2kGIWxIT7Ty6tUllc+GD+iQx6L0zJvo6ExdHqygmQO78jCysMxWv+K1hgD4QdIiGiwDK8ZfKBPxBM7UK8dta8g5TbsO2BrpVQRjti+rVEzYlquzZmBFk3W7ifem8LkEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ClVEhYFk; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXc8uLlP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710894938; x=1742430938;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1ekwuOjckgT/DWJAorZ2U6shHkcN9zxUZXtFIZbO6aY=;
-  b=DXc8uLlPVJWjy2tp+BqfBCVXEro3tPir9muiqw7/ZkVQFitDEFD+D2zG
-   4BYKuMP4ZvPSOkmqcZBf7+19aPu10nicK7v9tTiSeeksR1C/vIQCeCcgK
-   7qquGenbbjX05GCWLb70Rxuvf77alXzHYP8oTWa40ONLg9u8mRR5Pydfz
-   WRjho2SrypGUpSi8fVMSO0tM3ogM1oW8W4NdarpXtJShD3AeehEhiXzqW
-   WZobFP9kIkUnQi1Oll1AvTgGJ4RixDm0P/VKm0XAWjCM13X3DTyKdbemY
-   0CEF6RJAoqzxdcRKoepGWZHW1ncm4VYPX4CZszPXn7QFD0QivIJlRlrgl
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="16345327"
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="16345327"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 17:35:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,138,1708416000"; 
-   d="scan'208";a="18567091"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 17:35:35 -0700
-Date: Tue, 19 Mar 2024 17:35:34 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, changbin.du@huawei.com
-Subject: Re: [PATCH v4 2/2] perf, script, capstone: Add support for -F
- +brstackdisasm
-Message-ID: <ZfovVgjCm5oDbze9@tassilo>
-References: <20240308170611.719794-1-ak@linux.intel.com>
- <20240308170611.719794-2-ak@linux.intel.com>
- <bd71b8f5-bf56-4af5-bd55-deb12cc01415@intel.com>
- <Zfi6vkODkhWQpHJJ@tassilo>
- <fcdb6a82-30bf-4da5-a898-bba3c0bbc592@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ClVEhYFk"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1deddb82b43so85105ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Mar 2024 18:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710896510; x=1711501310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kpWW1bFpJVMD3sRuOnLO32nSb544c3j1m+DkhHID8gY=;
+        b=ClVEhYFkllBHJofQCDU3EklbyGkkqW2MaM+Zk3rcANnre4Wl/L5jTZd6FJ3RNx1qMx
+         QhfA52vAXxFYSwDQZZApIlKPkHBZTfccEUUAcv8ulQOxDo/uljlt4+3hna8SwSncXCjj
+         RNiET2A+7YfEz+fNTjI31SKjEU31LTzcuBG7r8TGX4KTrv5AUguIql/AJNfPKX0hHDvM
+         QpdB+mIoH+6nJ3uMEVaIQgg/drGXVVQYA25v/N4GVXTHJKFaXy3I8PmvFcYuXIjlbjQs
+         Rqfa9FLApSfLyFKQEBy9iyW/KJk3Etlndav4bf/LuNiBRbOgGttNi8svJzCJlAZaVUPS
+         uALA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710896510; x=1711501310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kpWW1bFpJVMD3sRuOnLO32nSb544c3j1m+DkhHID8gY=;
+        b=eUtCEohNM+cu2lWQiiYdSpOASYRa/AEAjrfUKNnY7zJtMs+z/3FsuB/WIc9ZULkHh6
+         M9qU6zJwOk6P1e7hYmZ4t3/ZrzC4zl1BahLv5KMnfd1zIzooMQxRdl0z1RLso6e6DW17
+         GHxmUcGUPaUwIkrJSLSHdPIZ2FHw9s5q4jkPjAlQreFabSXKboRWAqkaOGp6Xcq+9TBV
+         2uy9wj7AV40G6IGU/i/iXkZVNNo0+mExKj+p30rMWdaMxfo6bW25cJz53w9FIvqloBdM
+         /BfCbe5dKSoSe13h7Af7vhhAJyYmWcDmXqARNBnn8Fi862PNHXTmQUubRl8QIpod7wJJ
+         t3fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqLXXaFJEqCv0vzMjmEHmOh3d9w1pgUiMrSnLfirjkuJRR3HjLsGUbMPNuZAS1E9X5fcdlb3WEHSe4jVKcEMzuuH9Z7Bx17hn4V7sBl96Y0w==
+X-Gm-Message-State: AOJu0YzEVE73TNhWEsQiAbE6aL9eQfxOfJWPP+K+EHAl7hLZqF2w4RoP
+	wcg/7T3hzDiYPXRBBmCcWEo6B+3+NRb2Xyk2JIIASosU88bn79d2lxXlTC35dQCYmUcwaJl+UxH
+	ji/U/2r89/3v++2IKoiZJT2CRVnHmv4VWMNX6
+X-Google-Smtp-Source: AGHT+IG+L+f/SBk0W3esZ49IqdSRTH4MYcpaA1eBHDFF2MNr4SueBl3e/hceRKoL5PYiMH96Ek0i1g0Yqc1MG4JOGGc=
+X-Received: by 2002:a17:902:e5cd:b0:1de:fbe1:beb1 with SMTP id
+ u13-20020a170902e5cd00b001defbe1beb1mr80891plf.7.1710896510100; Tue, 19 Mar
+ 2024 18:01:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcdb6a82-30bf-4da5-a898-bba3c0bbc592@intel.com>
+References: <20240308001915.4060155-1-irogers@google.com> <89249fc5-6102-45d4-9345-5dd80d06e001@linux.intel.com>
+ <CAP-5=fWGhZHnsBWo4=+9PdfaAPNEnx7u40G+BHAWR+4rPC2Udw@mail.gmail.com>
+In-Reply-To: <CAP-5=fWGhZHnsBWo4=+9PdfaAPNEnx7u40G+BHAWR+4rPC2Udw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 19 Mar 2024 18:01:35 -0700
+Message-ID: <CAP-5=fXXACwattr9fEcmxoDfGNNi8zmzrDUc8RjUtuX5sV4M9w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Extra verbose/perf-list details
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 08:52:33AM +0200, Adrian Hunter wrote:
-> On 19/03/24 00:06, Andi Kleen wrote:
-> >> Better to factor out a function that does not depend on "sample"
-> >> e.g. see fprintf_insn_asm() below.
-> > 
-> > this doesn't work because it completely ignores the need of the
-> > cs_dump_insn caller for the path that i actually need for my feature,
-> > which requires to return a string.  I didn't apply it.
-> 
-> I would probably change the call sites because they already have a
-> file descriptor, but output to memory is doable:
+On Fri, Mar 8, 2024 at 8:34=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Fri, Mar 8, 2024 at 7:39=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>>
+>>
+>>
+>> On 2024-03-07 7:19 p.m., Ian Rogers wrote:
+>> > Add more encoding detail and raw event details in perf list. Add PMU
+>> > name and reverse lookup from config to event name to
+>> > perf_event_attr_fprintf. This makes the verbose output easier to read,
+>> > and the perf list information more specific.
+>> >
+>> > v3. Fix to reverse lookup to ensure or aliases are loaded and if
+>> >     getting the config value fails for an event/alias just continue to
+>> >     the next one.
+>> > v2. Address feedback from Kan Liang, "Raw hardware event descriptor"
+>> >     becomes "Raw event descriptor" add assert to keep term numbers in
+>> >     sync, fix a commit message.
+>> >
+>> > Ian Rogers (6):
+>> >   perf list: Add tracepoint encoding to detailed output
+>> >   perf pmu: Drop "default_core" from alias names
+>> >   perf list: Allow wordwrap to wrap on commas
+>> >   perf list: Give more details about raw event encodings
+>> >   perf tools: Use pmus to describe type from attribute
+>> >   perf tools: Add/use PMU reverse lookup from config to name
+>>
+>> The patch series look good to me.
+>> I verified it on a hybrid machine. The new format is the same as the
+>> advertise.
+>>
+>> Tested-by: Kan Liang <kan.liang@linux.intel.com>
 
-> 	FILE *fp = fmemopen(x->out, sizeof(x->out), "w+");
+Ping.
 
-I considered using this at some point, but I'm sure there is some non glibc,
-that people build perf with, that doesn't have fmemopen, so I didn't.
+Thanks,
+Ian
 
-Can we just use my version for now and if you prefer more refactor
-please submit a follow on cleanup patch?
-
--andi
-
+>
+> Thanks Kan! Just to add another feature of perf_event_attr_fprintf change=
+s is that it shows up in perf trace output:
+>
+> ```
+> $ perf trace -e perf_event_open perf stat -e data_read true
+>      0.000 ( 0.011 ms): :36857/36857 perf_event_open(attr_uptr: { type: 2=
+4 (uncore_imc_free_running_0), size: 136, config: 0x20ff (unc_mc0_rdcas_cou=
+nt_freerun), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL=
+_TIME_RUNNING, disabled: 1, inherit: 1, exclude_guest: 1 }, pid: -1, group_=
+fd: -1, flags: FD_CLOEXEC) =3D -1 EINVAL (Invalid argument)
+>      0.014 ( 0.002 ms): :36857/36857 perf_event_open(attr_uptr: { type: 2=
+4 (uncore_imc_free_running_0), size: 136, config: 0x20ff (unc_mc0_rdcas_cou=
+nt_freerun), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL=
+_TIME_RUNNING, disabled: 1, inherit: 1, exclude_guest: 1 }, pid: -1, group_=
+fd: -1) =3D -1 EINVAL (Invalid argument)
+>      0.020 ( 0.008 ms): :36857/36857 perf_event_open(attr_uptr: { type: 2=
+4 (uncore_imc_free_running_0), size: 136, config: 0x20ff (unc_mc0_rdcas_cou=
+nt_freerun), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL=
+_TIME_RUNNING, disabled: 1, inherit: 1 }, pid: -1, group_fd: -1) =3D 8
+>      0.031 ( 0.006 ms): :36857/36857 perf_event_open(attr_uptr: { type: 2=
+5 (uncore_imc_free_running_1), size: 136, config: 0x20ff (unc_mc1_rdcas_cou=
+nt_freerun), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL=
+_TIME_RUNNING, disabled: 1, inherit: 1, exclude_guest: 1 }, pid: -1, group_=
+fd: -1) =3D -1 EINVAL (Invalid argument)
+>      0.044 ( 0.004 ms): :36857/36857 perf_event_open(attr_uptr: { type: 2=
+5 (uncore_imc_free_running_1), size: 136, config: 0x20ff (unc_mc1_rdcas_cou=
+nt_freerun), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL=
+_TIME_RUNNING, disabled: 1, inherit: 1 }, pid: -1, group_fd: -1) =3D 9
+>
+>  Performance counter stats for 'system wide':
+>
+>               5.07 MiB  data_read
+>
+>        0.001178187 seconds time elapsed
+> ```
+>
+> Thanks,
+> Ian
+>
+>>
+>> Thanks,
+>> Kan
+>> >
+>> >  tools/perf/builtin-list.c                 | 21 ++++-
+>> >  tools/perf/util/perf_event_attr_fprintf.c | 26 +++++--
+>> >  tools/perf/util/pmu.c                     | 82 +++++++++++++++++++-
+>> >  tools/perf/util/pmu.h                     |  4 +
+>> >  tools/perf/util/pmus.c                    | 94 ++++++++++++++++++++++=
++
+>> >  tools/perf/util/pmus.h                    |  1 +
+>> >  tools/perf/util/print-events.c            | 55 +++++++------
+>> >  7 files changed, 242 insertions(+), 41 deletions(-)
+>> >
