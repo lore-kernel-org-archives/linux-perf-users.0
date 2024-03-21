@@ -1,59 +1,59 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576D548CF0
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 06:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEA55731B
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 06:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711000845; cv=none; b=feASMBGdmzAFWlYX7vKEI7Qu383X1LmfwwsOv1OpD/2Y3L0bh0z8nAe4dUqmpv/TEs7eZhUSkkhSbhQE+/IbectMeHAcfDfzvZ7YQPCZzZ0w6baxG0O1A+l3RvJhx/Iavpmx0eAagA/YnUjzNaz+XF93Uncji2NiwP56xr6YhEI=
+	t=1711000847; cv=none; b=rCBb7Vg2rCkOuKs2cAcj2bpIie84C1mgCAB0HNIlGY1PJKGEZeBTyMRs0B26oN+N/Dv2stblyQ67nUVTwdmI0N9yM672hwVE07kF818SuxRiLxCDt9cYa57ykyG2efVKjbVgETEl1iDVXJ8ViSnVRypzqL9I0aN1CpWLcWXB+sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711000845; c=relaxed/simple;
-	bh=2sCGHhfTvM1eiqRT31kAjLhAeORQLvJAfAZ05gaUerQ=;
+	s=arc-20240116; t=1711000847; c=relaxed/simple;
+	bh=6m0KZRRJflU5tJ8OGjhibHJSv5U59NbYKp/Jo7HCkXA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=GgGlNL3JK7ScbG8IRIKW02ppjLbMARq8dLWdbdus48JRscgv6PaBcFDcbvx43zgnjsMY5+SlC72A5OJKVFXOgRaTiQUXFgoqJVSK+jC8cvUZumnKVEE97vd0hc5xTaMGYBfrizsfE87xfmJPCnTIiZ5S91WCvYaxN3Vs9GK983o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PxVEFMnx; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=fJ9jsMfweoNR/+6yyfeGjOzTcL2xtbyJxrkgDhPUHSYJjSbMfnRFa9AAllk/iWJpM/Ho8li0Uz0D5LZ3U7lv0WwzAsZozSjkzuahOo+gxe1srPc7YQhgMB6KcbScsTgjquyYStdUcBi0YwFYxAyrRg6lD9YpBoALiGIyjIHXZAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3ymIyrUo; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PxVEFMnx"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc3645a6790so1021413276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 23:00:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3ymIyrUo"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc0bcf9256so812632276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 23:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711000840; x=1711605640; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711000845; x=1711605645; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6f2Tz0wa9PP4JsoaCr/wF5HYEQ1obQs2H+ep9hMsTjo=;
-        b=PxVEFMnxIh+AcS5yd18RI7SeEi66dGNoKBsGZX2YRxrrAYHCTEetEtKmJl9BPzhGcd
-         g3/U5pIqscoE23Lgf56v2UNJVZ/HKx40SaQK+nDLqpJpwqhVLOb5TopphJU/01CeHG4Y
-         nZ/6usrpGguZSy7LNuKU3qNhZd61Q8UOj4lp79K6uKrd7tRWFf5yM89sPNmAQhiH8Ebg
-         GG66HRcsUa3m1WkPy7gnmkTyxbGzmXdFF8fiyU4qIBoN1v+pGD8Kp2Z5fM8qjo1+oOFS
-         1vn6xdEm3Dy8eT4qO0JUif24NueA4BiPj5UiMGrlGFVX7YkFrl/r8We+rbRlJoLQ0SYn
-         GQRQ==
+        bh=zRnFA9pfHXZ9RNQTcmi2ijnTiZS/iti8+cu2PF/551A=;
+        b=3ymIyrUo2uKiiLvknycpL37ZKsczHYUdVJgMpp6G7QXODBdw4M80ZIoSqEcZK7IzTh
+         1za8V7JgKwyQ7+LJzOpssWdXKAjvXxyxdQd8W576pNL7kLoMaCTy4di3XEJdiKJYIODZ
+         mKugSmxuC02RtQ1TetxiX25Yw4/iqd8PTpYVvD8CqAIcLY18Y5phVNy+MsMLzBvLyBDy
+         1/QwXr32itnfaTrZWQouWViVsOr6ryN1xHrWigcRTjCMSSZu/19qKOCoyYki2qNOmyaQ
+         sLanOKeowoByClk64DmAQcrMwQ6dFo8iJNUKJo1OX9xumMSpyFzuDxzqIC7yN9jHiyyM
+         5duQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711000840; x=1711605640;
+        d=1e100.net; s=20230601; t=1711000845; x=1711605645;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=6f2Tz0wa9PP4JsoaCr/wF5HYEQ1obQs2H+ep9hMsTjo=;
-        b=YZwbXs59qPhmaGrQQumXk6eN52ycZepSQBItzik6fR4pj9yBFqF6DEJBLDMEXxHdnK
-         D1EMhfAzkM5dXUSg2WfInT7psHzXF8Rn1uRcb6rJuar6mWIKyDkBZhZqhQJ1zIKhqQ2l
-         mbh2ZpCrodfii60OS9kTQBXk0wjMrjmVgEg84dGc6skg8Tp8ikMTMrrML9kLKXDE8kVD
-         P0SFSW8i7JGauW+KtRhOY+3KU/4xh0XP3MgnQAS92Gz/UNKmi8S1aRZTAtCO4yEb9SqG
-         d0RijjTxXlSmQIAvWAt0rgytZhPLjHFOGH6umbc4fMK7pAhi6i/1zzb9i/HoPh8iHvnh
-         6fGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDpmIr1gNAlYkaHUq7OLkLJz3HDsY2wsNFBddUSvTUpUvPWqjwGPH6IMlE7PsDJ8n3IW7hU5PF0dL35vANNOs8KLi6llkFSKYQTUX+Z50uvA==
-X-Gm-Message-State: AOJu0Yx1gqkD0f5sVIzYoIs1Zm9FlRCNyTojhkH8oiWtvt4KP60NHNCD
-	YdbXZl9yl8Fey4tTjBLi76i0dx19QOu1XIvGBP20+WvPl+u/FANM+zJV3srovKjrmeYc4DyoLkW
-	adHon0g==
-X-Google-Smtp-Source: AGHT+IHTJi2GTvvRI42Q5AFPFDj3KegPH5WeaBPpBHusLoVhhDjjb1FoRh5RUtm1vb8QKvqvL5iGEuPEZI5i
+        bh=zRnFA9pfHXZ9RNQTcmi2ijnTiZS/iti8+cu2PF/551A=;
+        b=PMVq0DXHXWQB+ya+HStNOgEy+IpAmy1TzcEju4yUKfivPsrazriUdgMLkAYora9VFz
+         wENY+CUrwifs8/BU5SQyV1vKUBGm5M2Kfvp/TZShNlzNV5aIXia1Z1NUKVQdXDs4Xxpr
+         LKZZ8hmP/OAy4J0UG3CN/HMh3/EsoiIQiooXpKliAC5BGpjeubVBgZfFMrd4dftWrwow
+         czuAAd2KWj5YhsnQn8dmq0H44CKNNKbtLZiqxfeUiJCVJuwTcaLiWYJ70QOHKpkIK7+i
+         e7lowbIaQ3hpfFfJFOc28GDujeZCK4jG70YlnoNndcYuSZSSCfZtqplZd2hzzhmAF31z
+         +SwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmoX5IBq7n3GixmTaqmL63vCIlwK/oDMag6UhsoSUYqLAlil08jHuUEyoIuGAqySu1rd7MQLKbQ/9gOg0lXiVO4Afj+ht2XaOoaGLCRUTvgg==
+X-Gm-Message-State: AOJu0YzQ/hJjEJPwY+K0CovyfPD3IDEDdPYiTzhzrusrEkD8MZnJkS/s
+	c9TBkkxlg9TJhX84w7iLDvGa2FUFbxU+3Ayvcz5/sLBQUI/g0Er+vTBYUQlwvhI2lr27CI24+21
+	77O5VeA==
+X-Google-Smtp-Source: AGHT+IH7dLwVAgKevoQ4rNxLbtZHJaCXA6L6vZg0WcTg8hlz2pjhVnbpYqXUMudcz+f+HPRyPvXAO94ks4CC
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
- (user=irogers job=sendgmr) by 2002:a05:6902:983:b0:dcb:b9d7:2760 with SMTP id
- bv3-20020a056902098300b00dcbb9d72760mr2040596ybb.13.1711000840263; Wed, 20
- Mar 2024 23:00:40 -0700 (PDT)
-Date: Wed, 20 Mar 2024 23:00:11 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1b85:b0:dbe:30cd:8fcb with SMTP
+ id ei5-20020a0569021b8500b00dbe30cd8fcbmr1126034ybb.0.1711000844811; Wed, 20
+ Mar 2024 23:00:44 -0700 (PDT)
+Date: Wed, 20 Mar 2024 23:00:13 -0700
 In-Reply-To: <20240321060016.1464787-1-irogers@google.com>
-Message-Id: <20240321060016.1464787-8-irogers@google.com>
+Message-Id: <20240321060016.1464787-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321060016.1464787-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Subject: [PATCH v1 07/12] perf vendor events intel: Update sapphirerapids to 1.20
+Subject: [PATCH v1 09/12] perf vendor events intel: Update skylakex to 1.33
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,627 +76,306 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from 1.17 to 1.20 as released in:
-https://github.com/intel/perfmon/commit/6f674057745acf0125395638ca6be36458a=
-59bda
+Update events from 1.32 to 1.33 as released in:
+https://github.com/intel/perfmon/commit/3fe7390dd18496c35ec3a9cf17de0473fd5=
+485cb
 
-Various description updates. Adds uncore events
-UNC_CHA_TOR_INSERTS.IO_ITOMCACHENEAR_LOCAL,
-UNC_CHA_TOR_INSERTS.IO_ITOMCACHENEAR_REMOTE,
-UNC_CHA_TOR_INSERTS.IO_ITOM_LOCAL, UNC_CHA_TOR_INSERTS.IO_ITOM_REMOTE,
-UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_LOCAL,
-UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_REMOTE,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOMCACHENEAR_LOCAL,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOMCACHENEAR_REMOTE,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM_LOCAL,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM_REMOTE,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_PCIRDCUR_LOCAL,
-UNC_CHA_TOR_OCCUPANCY.IO_MISS_PCIRDCUR_REMOTE and removes core events
-AMX_OPS_RETIRED.BF16 and AMX_OPS_RETIRED.INT8.
+Various description updates. Adds the event
+OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_CORE_FWD.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- .../arch/x86/sapphirerapids/cache.json        |   1 +
- .../arch/x86/sapphirerapids/frontend.json     |   2 +-
- .../arch/x86/sapphirerapids/memory.json       |   1 +
- .../arch/x86/sapphirerapids/pipeline.json     |  19 +--
- .../arch/x86/sapphirerapids/uncore-cache.json | 112 +++++++++++++++++-
- .../sapphirerapids/uncore-interconnect.json   |  26 ++--
- 7 files changed, 130 insertions(+), 33 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv         |  2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/cache.json |  9 +++++++++
+ .../pmu-events/arch/x86/skylakex/frontend.json     | 10 +++++-----
+ .../perf/pmu-events/arch/x86/skylakex/memory.json  |  2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/other.json |  2 +-
+ .../pmu-events/arch/x86/skylakex/pipeline.json     |  2 +-
+ .../arch/x86/skylakex/uncore-interconnect.json     | 14 +++++++-------
+ .../pmu-events/arch/x86/skylakex/uncore-io.json    |  2 +-
+ .../arch/x86/skylakex/virtual-memory.json          |  2 +-
+ 9 files changed, 27 insertions(+), 18 deletions(-)
 
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index fedaacbe981a..e5de35c96358 100644
+index ac32377ab01a..e67e7906b2cf 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -26,7 +26,7 @@ GenuineIntel-6-1[AEF],v4,nehalemep,core
- GenuineIntel-6-2E,v4,nehalemex,core
- GenuineIntel-6-A7,v1.02,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
--GenuineIntel-6-8F,v1.17,sapphirerapids,core
-+GenuineIntel-6-8F,v1.20,sapphirerapids,core
- GenuineIntel-6-AF,v1.01,sierraforest,core
+@@ -30,7 +30,7 @@ GenuineIntel-6-8F,v1.20,sapphirerapids,core
+ GenuineIntel-6-AF,v1.02,sierraforest,core
  GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
  GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v58,skylake,core
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json b/too=
-ls/perf/pmu-events/arch/x86/sapphirerapids/cache.json
-index 9606e76b98d6..b0447aad0dfc 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/cache.json
-@@ -432,6 +432,7 @@
-         "BriefDescription": "Retired load instructions with remote Intel(R=
-) Optane(TM) DC persistent memory as the data source where the data request=
- missed all caches.",
-         "EventCode": "0xd3",
-         "EventName": "MEM_LOAD_L3_MISS_RETIRED.REMOTE_PMM",
-+        "PEBS": "1",
-         "PublicDescription": "Counts retired load instructions with remote=
- Intel(R) Optane(TM) DC persistent memory as the data source and the data r=
-equest missed L3.",
-         "SampleAfterValue": "100007",
-         "UMask": "0x10"
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json b/=
-tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
-index 9e53da55d0c1..93d99318a623 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/frontend.json
-@@ -267,7 +267,7 @@
-         "CounterMask": "6",
+-GenuineIntel-6-55-[01234],v1.32,skylakex,core
++GenuineIntel-6-55-[01234],v1.33,skylakex,core
+ GenuineIntel-6-86,v1.21,snowridgex,core
+ GenuineIntel-6-8[CD],v1.15,tigerlake,core
+ GenuineIntel-6-2C,v5,westmereep-dp,core
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/cache.json b/tools/per=
+f/pmu-events/arch/x86/skylakex/cache.json
+index d28d8822a51a..14229f4b29d8 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/cache.json
+@@ -763,6 +763,15 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_C=
+ORE_FWD hit in the L3 and the snoop to one of the sibling cores hits the li=
+ne in E/S/F state and the line is forwarded.",
++        "EventCode": "0xB7, 0xBB",
++        "EventName": "OFFCORE_RESPONSE.ALL_READS.L3_HIT.HIT_OTHER_CORE_FWD=
+",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x8003C07F7",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts all demand & prefetch RFOs that have a=
+ny response type.",
+         "EventCode": "0xB7, 0xBB",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/frontend.json b/tools/=
+perf/pmu-events/arch/x86/skylakex/frontend.json
+index 095904c77001..d6f543471b24 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/frontend.json
+@@ -19,7 +19,7 @@
+         "BriefDescription": "Decode Stream Buffer (DSB)-to-MITE switches",
+         "EventCode": "0xAB",
+         "EventName": "DSB2MITE_SWITCHES.COUNT",
+-        "PublicDescription": "This event counts the number of the Decode S=
+tream Buffer (DSB)-to-MITE switches including all misses because of missing=
+ Decode Stream Buffer (DSB) cache and u-arch forced misses.\nNote: Invoking=
+ MITE requires two or three cycles delay.",
++        "PublicDescription": "This event counts the number of the Decode S=
+tream Buffer (DSB)-to-MITE switches including all misses because of missing=
+ Decode Stream Buffer (DSB) cache and u-arch forced misses. Note: Invoking =
+MITE requires two or three cycles delay.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1"
+     },
+@@ -267,11 +267,11 @@
+         "UMask": "0x4"
+     },
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 or more Uops [This event is alias to IDQ.DSB_CYCLES_OK]",
+         "CounterMask": "4",
+         "EventCode": "0x79",
+         "EventName": "IDQ.ALL_DSB_CYCLES_4_UOPS",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.DSB_CYCLES_OK]",
++        "PublicDescription": "Counts the number of cycles 4 or more uops w=
+ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
+er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
+s alias to IDQ.DSB_CYCLES_OK]",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x18"
+     },
+@@ -321,11 +321,11 @@
+         "UMask": "0x18"
+     },
+     {
+-        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng 4 or more Uops [This event is alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
+         "CounterMask": "4",
          "EventCode": "0x79",
          "EventName": "IDQ.DSB_CYCLES_OK",
--        "PublicDescription": "Counts the number of cycles where optimal nu=
-mber of uops was delivered to the Instruction Decode Queue (IDQ) from the M=
-ITE (legacy decode pipeline) path. During these cycles uops are not being d=
-elivered from the Decode Stream Buffer (DSB).",
-+        "PublicDescription": "Counts the number of cycles where optimal nu=
-mber of uops was delivered to the Instruction Decode Queue (IDQ) from the D=
-SB (Decode Stream Buffer) path. Count includes uops that may 'bypass' the I=
-DQ.",
+-        "PublicDescription": "Counts the number of cycles 4 uops were deli=
+vered to Instruction Decode Queue (IDQ) from the Decode Stream Buffer (DSB)=
+ path. Count includes uops that may 'bypass' the IDQ. [This event is alias =
+to IDQ.ALL_DSB_CYCLES_4_UOPS]",
++        "PublicDescription": "Counts the number of cycles 4 or more uops w=
+ere delivered to Instruction Decode Queue (IDQ) from the Decode Stream Buff=
+er (DSB) path. Count includes uops that may 'bypass' the IDQ. [This event i=
+s alias to IDQ.ALL_DSB_CYCLES_4_UOPS]",
          "SampleAfterValue": "2000003",
-         "UMask": "0x8"
+         "UMask": "0x18"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json b/to=
-ols/perf/pmu-events/arch/x86/sapphirerapids/memory.json
-index e8bf7c9c44e1..5420f529f491 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/memory.json
-@@ -264,6 +264,7 @@
-         "BriefDescription": "Number of times an RTM execution aborted.",
-         "EventCode": "0xc9",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/memory.json b/tools/pe=
+rf/pmu-events/arch/x86/skylakex/memory.json
+index 2b797dbc75fe..dba3cd6b3690 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/memory.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/memory.json
+@@ -864,7 +864,7 @@
+         "BriefDescription": "Number of times an RTM execution aborted due =
+to any reasons (multiple categories may count as one).",
+         "EventCode": "0xC9",
          "EventName": "RTM_RETIRED.ABORTED",
-+        "PEBS": "1",
-         "PublicDescription": "Counts the number of times RTM abort was tri=
-ggered.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x4"
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json b/=
-tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-index 2cfe814d2015..e2086bedeca8 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
-@@ -1,20 +1,4 @@
- [
--    {
--        "BriefDescription": "AMX retired arithmetic BF16 operations.",
--        "EventCode": "0xce",
--        "EventName": "AMX_OPS_RETIRED.BF16",
--        "PublicDescription": "Number of AMX-based retired arithmetic bfloa=
-t16 (BF16) floating-point operations. Counts TDPBF16PS FP instructions. SW =
-to use operation multiplier of 4",
--        "SampleAfterValue": "1000003",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "AMX retired arithmetic integer 8-bit operatio=
-ns.",
--        "EventCode": "0xce",
--        "EventName": "AMX_OPS_RETIRED.INT8",
--        "PublicDescription": "Number of AMX-based retired arithmetic integ=
-er operations of 8-bit width source operands. Counts TDPB[SS,UU,US,SU]D ins=
-tructions. SW should use operation multiplier of 8.",
--        "SampleAfterValue": "1000003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-ARITH.DIV_ACTIVE",
-         "CounterMask": "1",
-@@ -444,6 +428,7 @@
-         "BriefDescription": "INST_RETIRED.MACRO_FUSED",
-         "EventCode": "0xc0",
-         "EventName": "INST_RETIRED.MACRO_FUSED",
-+        "PEBS": "1",
+-        "PEBS": "1",
++        "PEBS": "2",
+         "PublicDescription": "Number of times RTM abort was triggered.",
          "SampleAfterValue": "2000003",
-         "UMask": "0x10"
+         "UMask": "0x4"
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/other.json b/tools/per=
+f/pmu-events/arch/x86/skylakex/other.json
+index cda8a7a45f0c..2511d722327a 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/other.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/other.json
+@@ -19,7 +19,7 @@
+         "BriefDescription": "Core cycles where the core was running in a m=
+anner where Turbo may be clipped to the AVX512 turbo schedule.",
+         "EventCode": "0x28",
+         "EventName": "CORE_POWER.LVL2_TURBO_LICENSE",
+-        "PublicDescription": "Core cycles where the core was running with =
+power-delivery for license level 2 (introduced in Skylake Server michroarch=
+tecture).  This includes high current AVX 512-bit instructions.",
++        "PublicDescription": "Core cycles where the core was running with =
+power-delivery for license level 2 (introduced in Skylake Server microarchi=
+tecture).  This includes high current AVX 512-bit instructions.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x20"
      },
-@@ -451,6 +436,7 @@
-         "BriefDescription": "Retired NOP instructions.",
-         "EventCode": "0xc0",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json b/tools/=
+perf/pmu-events/arch/x86/skylakex/pipeline.json
+index 66d686cc933e..c50ddf5b40dd 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
+@@ -396,7 +396,7 @@
+         "Errata": "SKL091, SKL044",
+         "EventCode": "0xC0",
          "EventName": "INST_RETIRED.NOP",
-+        "PEBS": "1",
-         "PublicDescription": "Counts all retired NOP or ENDBR32/64 instruc=
-tions",
+-        "PEBS": "1",
++        "PEBS": "2",
          "SampleAfterValue": "2000003",
          "UMask": "0x2"
-@@ -467,6 +453,7 @@
-         "BriefDescription": "Iterations of Repeat string retired instructi=
-ons.",
-         "EventCode": "0xc0",
-         "EventName": "INST_RETIRED.REP_ITERATION",
-+        "PEBS": "1",
-         "PublicDescription": "Number of iterations of Repeat (REP) string =
-retired instructions such as MOVS, CMPS, and SCAS. Each has a byte, word, a=
-nd doubleword version and string instructions can be repeated using a repet=
-ition prefix, REP, that allows their architectural execution to be repeated=
- a number of times as specified by the RCX register. Note the number of ite=
-rations is implementation-dependent.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x8"
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.jso=
-n b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
-index cf6fa70f37c1..25a2b9695135 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
-@@ -4143,6 +4143,42 @@
-         "UMask": "0xcd43ff04",
-         "Unit": "CHA"
      },
-+    {
-+        "BriefDescription": "ItoMCacheNear (partial write) transactions fr=
-om an IO device that addresses memory on the local socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_ITOMCACHENEAR_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts : ItoMCacheNears, indicating a p=
-artial write request, from IO Devices that missed the LLC : Counts the numb=
-er of entries successfully inserted into the TOR that match qualifications =
-specified by the subevent.   Does not include addressless requests such as =
-locks and interrupts.",
-+        "UMask": "0xcd42ff04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "ItoMCacheNear (partial write) transactions fr=
-om an IO device that addresses memory on a remote socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_ITOMCACHENEAR_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "TOR Inserts : ItoMCacheNears, indicating a p=
-artial write request, from IO Devices that missed the LLC : Counts the numb=
-er of entries successfully inserted into the TOR that match qualifications =
-specified by the subevent.   Does not include addressless requests such as =
-locks and interrupts.",
-+        "UMask": "0xcd437f04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "ItoM (write) transactions from an IO device t=
-hat addresses memory on the local socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_ITOM_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "Counts the number of entries successfully in=
-serted into the TOR that match qualifications specified by the subevent.   =
-Does not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xcc42ff04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "ItoM (write) transactions from an IO device t=
-hat addresses memory on a remote socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_ITOM_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "Counts the number of entries successfully in=
-serted into the TOR that match qualifications specified by the subevent.   =
-Does not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xcc437f04",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts; Misses from local IO",
-         "EventCode": "0x35",
-@@ -4153,7 +4189,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "TOR Inserts; ItoM misses from local IO",
-+        "BriefDescription": "TOR Inserts : ItoM, indicating a full cacheli=
-ne write request, from IO Devices that missed the LLC",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_ITOM",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.js=
+on b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+index 3eece8a728b5..f32d4d9d283a 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+@@ -38,7 +38,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.CLFLUSH",
          "PerPkg": "1",
-@@ -4171,7 +4207,7 @@
-         "Unit": "CHA"
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x80",
+         "Unit": "IRP"
      },
-     {
--        "BriefDescription": "TOR Inserts; RdCur and FsRdCur misses from lo=
-cal IO",
-+        "BriefDescription": "TOR Inserts; RdCur and FsRdCur requests from =
-local IO that miss LLC",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_PCIRDCUR",
+@@ -47,7 +47,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.CRD",
          "PerPkg": "1",
-@@ -4197,6 +4233,24 @@
-         "UMask": "0xc8f3ff04",
-         "Unit": "CHA"
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x2",
+         "Unit": "IRP"
      },
-+    {
-+        "BriefDescription": "PCIRDCUR (read) transactions from an IO devic=
-e that addresses memory on a remote socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "Counts the number of entries successfully in=
-serted into the TOR that match qualifications specified by the subevent.   =
-Does not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xc8f2ff04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "PCIRDCUR (read) transactions from an IO devic=
-e that addresses memory on the local socket",
-+        "EventCode": "0x35",
-+        "EventName": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "Counts the number of entries successfully in=
-serted into the TOR that match qualifications specified by the subevent.   =
-Does not include addressless requests such as locks and interrupts.",
-+        "UMask": "0xc8f37f04",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Inserts; RFO from local IO",
-         "EventCode": "0x35",
-@@ -5565,6 +5619,42 @@
-         "UMask": "0xcd43fe04",
-         "Unit": "CHA"
+@@ -56,7 +56,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.DRD",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x4",
+         "Unit": "IRP"
      },
-+    {
-+        "BriefDescription": "TOR Occupancy : ItoMCacheNears, indicating a =
-partial write request, from IO Devices that missed the LLC and targets loca=
-l memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOMCACHENEAR_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xcd42fe04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy : ItoMCacheNears, indicating a =
-partial write request, from IO Devices that missed the LLC and targets remo=
-te memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOMCACHENEAR_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xcd437e04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy; ITOM misses from local IO and =
-targets local memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xcc42fe04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy; ITOM misses from local IO and =
-targets remote memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xcc437e04",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy; RdCur and FsRdCur misses from =
-local IO",
-         "EventCode": "0x36",
-@@ -5574,6 +5664,24 @@
-         "UMask": "0xc8f3fe04",
-         "Unit": "CHA"
+@@ -65,7 +65,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.PCIDCAHINT",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x20",
+         "Unit": "IRP"
      },
-+    {
-+        "BriefDescription": "TOR Occupancy; RdCur and FsRdCur misses from =
-local IO and targets local memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_PCIRDCUR_LOCAL",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xc8f2fe04",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "TOR Occupancy; RdCur and FsRdCur misses from =
-local IO and targets remote memory",
-+        "EventCode": "0x36",
-+        "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_PCIRDCUR_REMOTE",
-+        "PerPkg": "1",
-+        "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.     Does not include addressless requests such as locks and int=
-errupts.",
-+        "UMask": "0xc8f37e04",
-+        "Unit": "CHA"
-+    },
-     {
-         "BriefDescription": "TOR Occupancy; RFO misses from local IO",
-         "EventCode": "0x36",
-diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconn=
-ect.json b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnec=
-t.json
-index 65d088556bae..22bb490e9666 100644
---- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
-n
-+++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.jso=
-n
-@@ -4888,7 +4888,7 @@
-         "Unit": "MDF"
+@@ -74,7 +74,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.PCIRDCUR",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x1",
+         "Unit": "IRP"
+     },
+@@ -101,7 +101,7 @@
+         "EventCode": "0x10",
+         "EventName": "UNC_I_COHERENT_OPS.WBMTOI",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of coherency related opera=
+tions servied by the IRP",
++        "PublicDescription": "Counts the number of coherency related opera=
+tions serviced by the IRP",
+         "UMask": "0x40",
+         "Unit": "IRP"
+     },
+@@ -500,7 +500,7 @@
+         "EventCode": "0x11",
+         "EventName": "UNC_I_TRANSACTIONS.WRITES",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Trackes only write requests.=
+  Each write request should have a prefetch, so there is no need to explici=
+tly track these requests.  For writes that are tickled and have to retry, t=
+he counter will be incremented for each retry.",
++        "PublicDescription": "Counts the number of Inbound transactions fr=
+om the IRP to the Uncore.  This can be filtered based on request type in ad=
+dition to the source queue.  Note the special filtering equation.  We do OR=
+-reduction on the request type.  If the SOURCE bit is set, then we also do =
+AND qualification based on the source portID.; Tracks only write requests. =
+ Each write request should have a prefetch, so there is no need to explicit=
+ly track these requests.  For writes that are tickled and have to retry, th=
+e counter will be incremented for each retry.",
+         "UMask": "0x2",
+         "Unit": "IRP"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json b/tools=
+/perf/pmu-events/arch/x86/skylakex/uncore-io.json
+index 2a3a709018bb..743c91f3d2f0 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
+@@ -34,7 +34,7 @@
+         "EventCode": "0x1",
+         "EventName": "UNC_IIO_CLOCKTICKS",
+         "PerPkg": "1",
+-        "PublicDescription": "Counts clockticks of the 1GHz trafiic contro=
+ller clock in the IIO unit.",
++        "PublicDescription": "Counts clockticks of the 1GHz traffic contro=
+ller clock in the IIO unit.",
+         "Unit": "IIO"
      },
      {
--        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO\r\nIngress (V-EMIB) (AD)",
-+        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO Ingress (V-EMIB) (AD)",
-         "EventCode": "0x4B",
-         "EventName": "UNC_MDF_CRS_TxR_V_BOUNCES.AD",
-         "PerPkg": "1",
-@@ -4897,7 +4897,7 @@
-         "Unit": "MDF"
-     },
-     {
--        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO\r\nIngress (V-EMIB) (AK)",
-+        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO Ingress (V-EMIB) (AK)",
-         "EventCode": "0x4B",
-         "EventName": "UNC_MDF_CRS_TxR_V_BOUNCES.AK",
-         "PerPkg": "1",
-@@ -4906,7 +4906,7 @@
-         "Unit": "MDF"
-     },
-     {
--        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO\r\nIngress (V-EMIB) (AKC)",
-+        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO Ingress (V-EMIB) (AKC)",
-         "EventCode": "0x4B",
-         "EventName": "UNC_MDF_CRS_TxR_V_BOUNCES.AKC",
-         "PerPkg": "1",
-@@ -4915,7 +4915,7 @@
-         "Unit": "MDF"
-     },
-     {
--        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO\r\nIngress (V-EMIB) (BL)",
-+        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO Ingress (V-EMIB) (BL)",
-         "EventCode": "0x4B",
-         "EventName": "UNC_MDF_CRS_TxR_V_BOUNCES.BL",
-         "PerPkg": "1",
-@@ -4924,7 +4924,7 @@
-         "Unit": "MDF"
-     },
-     {
--        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO\r\nIngress (V-EMIB) (IV)",
-+        "BriefDescription": "Number of cycles incoming messages from the v=
-ertical ring that are bounced at the SBO Ingress (V-EMIB) (IV)",
-         "EventCode": "0x4B",
-         "EventName": "UNC_MDF_CRS_TxR_V_BOUNCES.IV",
-         "PerPkg": "1",
-@@ -5291,7 +5291,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass : Matches on Receive path of a UPI port.\r\nMatch based on =
-UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enable=
-\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote E=
-nable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr E=
-nable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excluded=
- (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r\n=
-Note: If Message Class is disabled, we expect opcode to also be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass : Matches on Receive path of a UPI port. Match based on UMa=
-sk specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opcod=
-e (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr Ena=
-ble R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Enabl=
-e Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even un=
-der specific opcode match_en cases. Note: If Message Class is disabled, we =
-expect opcode to also be disabled.",
-         "UMask": "0xe",
-         "Unit": "UPI"
-     },
-@@ -5300,7 +5300,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass, Match Opcode : Matches on Receive path of a UPI port.\r\nM=
-atch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Messag=
-e Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\=
-r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: D=
-ual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control type=
-s are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode match=
-_en cases.\r\nNote: If Message Class is disabled, we expect opcode to also =
-be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Bypass, Match Opcode : Matches on Receive path of a UPI port. Matc=
-h based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class E=
-nable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S=
-: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single =
-Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL, =
-LLCRD) even under specific opcode match_en cases. Note: If Message Class is=
- disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10e",
-         "Unit": "UPI"
-     },
-@@ -5309,7 +5309,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCS",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard : Matches on Receive path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard : Matches on Receive path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0xf",
-         "Unit": "UPI"
-     },
-@@ -5318,7 +5318,7 @@
-         "EventCode": "0x05",
-         "EventName": "UNC_UPI_RxL_BASIC_HDR_MATCH.NCS_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard, Match Opcode : Matches on Receive path of a UPI port.\r\=
-nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Mess=
-age Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enabl=
-e\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ:=
- Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control ty=
-pes are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode mat=
-ch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to als=
-o be disabled.",
-+        "PublicDescription": "Matches on Receive path of a UPI Port : Non-=
-Coherent Standard, Match Opcode : Matches on Receive path of a UPI port. Ma=
-tch based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class=
- Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable=
- S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Singl=
-e Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL=
-, LLCRD) even under specific opcode match_en cases. Note: If Message Class =
-is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10f",
-         "Unit": "UPI"
-     },
-@@ -5763,7 +5763,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCB",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass : Matches on Transmit path of a UPI port.\r\nMatch based o=
-n UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class Enab=
-le\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remote=
- Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot Hdr=
- Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are exclud=
-ed (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.\r=
-\nNote: If Message Class is disabled, we expect opcode to also be disabled.=
-",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass : Matches on Transmit path of a UPI port. Match based on U=
-Mask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: Opc=
-ode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr E=
-nable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr Ena=
-ble Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) even =
-under specific opcode match_en cases. Note: If Message Class is disabled, w=
-e expect opcode to also be disabled.",
-         "UMask": "0xe",
-         "Unit": "UPI"
-     },
-@@ -5772,7 +5772,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCB_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass, Match Opcode : Matches on Transmit path of a UPI port.\r\=
-nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Mess=
-age Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enabl=
-e\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ:=
- Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control ty=
-pes are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode mat=
-ch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to als=
-o be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Bypass, Match Opcode : Matches on Transmit path of a UPI port. Ma=
-tch based on UMask specific bits: Z: Message Class (3-bit) Y: Message Class=
- Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable=
- S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Singl=
-e Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NULL=
-, LLCRD) even under specific opcode match_en cases. Note: If Message Class =
-is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10e",
-         "Unit": "UPI"
-     },
-@@ -5781,7 +5781,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCS",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard : Matches on Transmit path of a UPI port.\r\nMatch based=
- on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Message Class En=
-able\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Enable\r\nT: Remo=
-te Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\nQ: Dual Slot H=
-dr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control types are excl=
-uded (LL CTRL, slot NULL, LLCRD) even under specific opcode match_en cases.=
-\r\nNote: If Message Class is disabled, we expect opcode to also be disable=
-d.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard : Matches on Transmit path of a UPI port. Match based on=
- UMask specific bits: Z: Message Class (3-bit) Y: Message Class Enable W: O=
-pcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enable S: Data Hdr=
- Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Single Slot Hdr E=
-nable Link Layer control types are excluded (LL CTRL, slot NULL, LLCRD) eve=
-n under specific opcode match_en cases. Note: If Message Class is disabled,=
- we expect opcode to also be disabled.",
-         "UMask": "0xf",
-         "Unit": "UPI"
-     },
-@@ -5790,7 +5790,7 @@
-         "EventCode": "0x04",
-         "EventName": "UNC_UPI_TxL_BASIC_HDR_MATCH.NCS_OPC",
-         "PerPkg": "1",
--        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard, Match Opcode : Matches on Transmit path of a UPI port.\=
-r\nMatch based on UMask specific bits:\r\nZ: Message Class (3-bit)\r\nY: Me=
-ssage Class Enable\r\nW: Opcode (4-bit)\r\nV: Opcode Enable\r\nU: Local Ena=
-ble\r\nT: Remote Enable\r\nS: Data Hdr Enable\r\nR: Non-Data Hdr Enable\r\n=
-Q: Dual Slot Hdr Enable\r\nP: Single Slot Hdr Enable\r\nLink Layer control =
-types are excluded (LL CTRL, slot NULL, LLCRD) even under specific opcode m=
-atch_en cases.\r\nNote: If Message Class is disabled, we expect opcode to a=
-lso be disabled.",
-+        "PublicDescription": "Matches on Transmit path of a UPI Port : Non=
--Coherent Standard, Match Opcode : Matches on Transmit path of a UPI port. =
-Match based on UMask specific bits: Z: Message Class (3-bit) Y: Message Cla=
-ss Enable W: Opcode (4-bit) V: Opcode Enable U: Local Enable T: Remote Enab=
-le S: Data Hdr Enable R: Non-Data Hdr Enable Q: Dual Slot Hdr Enable P: Sin=
-gle Slot Hdr Enable Link Layer control types are excluded (LL CTRL, slot NU=
-LL, LLCRD) even under specific opcode match_en cases. Note: If Message Clas=
-s is disabled, we expect opcode to also be disabled.",
-         "UMask": "0x10f",
-         "Unit": "UPI"
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json b/=
+tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
+index f59405877ae8..73feadaf7674 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/virtual-memory.json
+@@ -205,7 +205,7 @@
+         "BriefDescription": "Counts 1 per cycle for each PMH that is busy =
+with a page walk for an instruction fetch request. EPT page walk duration a=
+re excluded in Skylake.",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.WALK_PENDING",
+-        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
+andler) that is busy with a page walk for an instruction fetch request. EPT=
+ page walk duration are excluded in Skylake michroarchitecture.",
++        "PublicDescription": "Counts 1 per cycle for each PMH (Page Miss H=
+andler) that is busy with a page walk for an instruction fetch request. EPT=
+ page walk duration are excluded in Skylake microarchitecture.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x10"
      },
 --=20
 2.44.0.396.g6e790dbe36-goog
