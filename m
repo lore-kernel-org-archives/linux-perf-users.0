@@ -1,45 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DBA5660;
-	Thu, 21 Mar 2024 20:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CB0135A5C
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 21:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711054123; cv=none; b=bD2+neLWOWaLimU5ljz8Y3Dh4EHwtyhcdx6uNnvITSy0dgIx3CQTQziKTxYMHajGuuvLNwMoSegchXSDG7TMZ9k7+Pdn3AYLY6ci4WQZhwEACrsn54N3jRO+wRUuSd/OD8Z2LnxCdr97LzglrZbhjXewktJZnnAXKFDTvRT8Jfk=
+	t=1711056143; cv=none; b=G0l2zQVdWvU4E21qQ66xqWeadgN5Qu0ZDYFfGlrWFyAIS8uLrpMCsPAS9QlUNmVdarMW3nqH+UljmJCPlmUh8WTTjH2fGF72UaJTvCU2ekUqFm/8v+w9k7SUw6DHItbybBjyL4Rwj4uYfzLnXIHTArNtB67ZPPpBCblVI7KjyJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711054123; c=relaxed/simple;
-	bh=Zfum68HEytLWKgrAIfscXuFBNg4ll/RiXypMBqUsJUU=;
+	s=arc-20240116; t=1711056143; c=relaxed/simple;
+	bh=Anq4NcuB/lwgoTXLF75lThmEeR+MuCgA6bicmSCWtE4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kH7AUog0kYYiw0yf6UQzMC9BI3wBJuVMHRcg/BkCCYRuaMWwLxOwYe73bmyfY3/9BlhXah1cJDP/9xQYjctHggK7e8r9o+7OIoFlrjlKvvn230c5vojHJMB899KNUjR/jrJULEEfobcI+IWy7zAs/7R9KWciQKD5W8OmWDjQC9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgbYbhTa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=atOXxiBVElGY0R+/CFOLB/QoX+F5204Q0moOQdDPsmVzIMYaTsa9J5NHYI57q6rZHYQsJBd4WSgMpB+mb5uEYINQSOIR9sXauIsTzouK2DLQ6JoPGCOflT+xSbQk7+0JZxSr6RT7IA2icopDJ0NiSgZmsTCefVP6Ojn3n76CxwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KXyqdB/5; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgbYbhTa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73594C433C7;
-	Thu, 21 Mar 2024 20:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711054122;
-	bh=Zfum68HEytLWKgrAIfscXuFBNg4ll/RiXypMBqUsJUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tgbYbhTaDPrg1MzZEM7wc09W+s1ifR1arErWffJrNG5SHnyDDJYsLeVtXNRvvJdiZ
-	 rFaMq0nSJEpJDZUxN6MynuUljvrYsvcJD/kqFZW39uhZlLJCRynxFNyYefn+1CtrkT
-	 PKFcW4y1kEKxoIbYUMz2bAOw+lO55U5oK8XecYIAN8r77jywzOjfjad+ubS1H0O4uL
-	 W5VhKvKxIjhw8cIaiUK9WiSkr0OHTB+QsP8GG1Uw1DSYdidmBF63ZtQFMOECjgyVpw
-	 Hw26S4mdsU9QKtjx5Go/7ZAvG3FhBOJebVW+ht11RcxfmUesYIWRutPxN47m/O/+S0
-	 tuXrM0865Z8kQ==
-Date: Thu, 21 Mar 2024 17:48:39 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Anne Macedo <retpolanne@posteo.net>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf lock contention: skip traceiter functions
-Message-ID: <ZfydJzGgz4qy7Inh@x1>
-References: <20240319143629.3422590-1-retpolanne@posteo.net>
- <ZfyRWZqxypTzdvQF@x1>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KXyqdB/5"
+Date: Thu, 21 Mar 2024 17:22:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711056139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S05qIGXtD9xW8hBhYLVEJF2bePesL9LF4WflE+oBdCA=;
+	b=KXyqdB/5x6fm8sKDy7Wx6c1+9/aaeEK0c6jkGhTWGiLB9kU+pA76QZmr1Kf9DTr66Dc60G
+	fB2C5gKBmUG3J3KTzZLaNkFSoCZTsVYWkK9kLZLejwfJhbprlY/Qz7wCVcISG86ycSSRRM
+	37QJ0vm12wWgJX97hIfyhbDmoQVqYJg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
+	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, dm-devel@lists.linux.dev, linux-bcache@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 04/15] lib min_heap: Add type safe interface
+Message-ID: <mi3uq4gqvseubfiylslxfrnwupfzopz753md5f53v6brlgiamv@l5bxmctqnz6g>
+References: <20240320145417.336208-1-visitorckw@gmail.com>
+ <20240320145417.336208-5-visitorckw@gmail.com>
+ <iz6wl3twuc72txd4ifxy73bbbfijo3ecy7izw3drsmcb2payeu@b2dusfoqobgu>
+ <Zfwgu8+IeH/YqWYR@visitorckw-System-Product-Name>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,34 +49,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZfyRWZqxypTzdvQF@x1>
+In-Reply-To: <Zfwgu8+IeH/YqWYR@visitorckw-System-Product-Name>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 21, 2024 at 04:58:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> Thanks, testing it now on x86_64 and aarch64, will apply it then.
+On Thu, Mar 21, 2024 at 07:57:47PM +0800, Kuan-Wei Chiu wrote:
+> On Wed, Mar 20, 2024 at 04:56:57PM -0400, Kent Overstreet wrote:
+> > On Wed, Mar 20, 2024 at 10:54:06PM +0800, Kuan-Wei Chiu wrote:
+> > > Introduce a type-safe interface for min_heap by adding small macro
+> > > wrappers around functions and using a 0-size array to store type
+> > > information. This enables the use of __minheap_cast and
+> > > __minheap_obj_size macros for type casting and obtaining element size.
+> > > The implementation draws inspiration from generic-radix-tree.h,
+> > > eliminating the need to pass element size in min_heap_callbacks.
+> > 
+> > let's avoid the heap->heap.nr - darray (fs/bcachefs/darray.h) has a
+> > trick for that. All heaps have the same memory layout, so we can just
+> > cast to a void pointer heap to get something the C code can use.
+> >
+> If I understand correctly, you're suggesting adding APIs similar to
+> darray_top(), darray_first(), and darray_last() within min_heap and
+> having them return a pointer. However, some users are using heap.nr in
+> conditional statements instead of utilizing heap.nr for memory
+> operations, so returning pointers may not be as convenient. What about
+> adding get and set functions for nr instead?
 
-Done, applied, on aarch64:
-
-root@roc-rk3399-pc:~# perf lock contention --use-bpf -a find / > /dev/null
- contended   total wait     max wait     avg wait         type   caller
-
-         6      6.03 s       6.03 s       1.00 s      spinlock   __tick_broadcast_oneshot_control+0xc0
-        19    811.74 ms    621.76 ms     42.72 ms     spinlock   rcu_core+0xec
-         2    201.76 ms    201.75 ms    100.88 ms     spinlock   sugov_update_shared+0x44
-         6      7.80 ms      2.35 ms      1.30 ms        mutex   regulator_lock_recursive+0x144
-         1    702.63 us    702.63 us    702.63 us      rwsem:W   __btrfs_tree_lock+0x2c
-         4     62.42 us     18.96 us     15.60 us     spinlock   tick_do_update_jiffies64+0x44
-         2     39.96 us     22.17 us     19.98 us     spinlock   __tick_broadcast_oneshot_control+0xc0
-         2     33.83 us     18.08 us     16.92 us        mutex   mmc_blk_rw_wait+0x138
-         1     21.58 us     21.58 us     21.58 us     spinlock   sugov_update_shared+0x44
-         1     16.92 us     16.92 us     16.92 us     spinlock   cpu_pm_enter+0x34
-         1     16.04 us     16.04 us     16.04 us        mutex   clk_prepare_lock+0x4c
-root@roc-rk3399-pc:~# uname -a
-Linux roc-rk3399-pc 6.1.68-12200-g1c40dda3081e #1 SMP PREEMPT_DYNAMIC Thu Dec 14 04:02:49 EST 2023 aarch64 aarch64 aarch64 GNU/Linux
-root@roc-rk3399-pc:~#
-
-its in tmp.perf-tools-next, will move to perf-tools-next in the next batch, after build
-tests together with other patches.
-
-Thanks!
-
-- Arnaldo
+No, I mean not having separate inner and outer types. Want me to sketch
+something out?
