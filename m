@@ -1,236 +1,503 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D03381D1;
-	Wed, 20 Mar 2024 22:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78376D39
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 01:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710975302; cv=none; b=KZM9Vb7SakBQDGEyYg4Ypje7tAdQRhSO43n/keeqyp1gBiShd2kYYeUlYGiO3aBAymb0E7nQnQJFe7YvceH3gnb1mkh1ujEeyuOpuToa0UFXH6dDQJ2vvRCg4pjDA603CWR1DYjif/9tK1MKWewES2hVNx/o+dw9kv3J7IoUfHA=
+	t=1710985665; cv=none; b=LkyRUVc/TdAUBaukSngbivdn8UiO8meZ5mPYGX6FRARsD1dexfPG6pELAV05+WqGO4vd+PkqXH9offjFH7OrvmxU/fKRe510BFMg1p1qNXyS5Kehwsv8dZWfTPk6/4unvFIr/YOS8rkupdBTyGCBIDtMZbenGK8nC5tnsnS7ngQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710975302; c=relaxed/simple;
-	bh=W3PdZbuJxmfIn33kY02vgnrW1nMZ5/5OIYob3g+hyuA=;
+	s=arc-20240116; t=1710985665; c=relaxed/simple;
+	bh=innGn1gRjEEA70FFSFWrBlMqIE72Mis+QUn8qEWYLnE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PdRsCsQpM1QHmGVTDowvOQ4Upa97bp0F2UMchihbzwv3TLee//TutpWUmDxqbRpmeNI0m0jwldpRPsFO4o3Bt5tRGbwiQlHl390tz6Z0pvuZ7TQoIQZz35JFBMKikR4C0jhnWsNjytw0WJWyDZX0ykllhLpz8GXJboT1P2k1UjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-29fb7e52731so345988a91.2;
-        Wed, 20 Mar 2024 15:55:00 -0700 (PDT)
+	 To:Cc:Content-Type; b=E8kHkAtE2+mjvjRpBATxNJG9NsdYZ5BrX7SiuCqVxXK1OZ0CjCfB7YBTuphHml+bojRRs2wxoKAgviwFGKSZv/5OwwmF/uozJvBrZ8tnaRzmjkLcXZs0fCNOIDXRoRenG70qd/cii+RaxNyezrLx3CChvoeNMYL5iWyddr8SmlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z2rCzmt+; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z2rCzmt+"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e062f3a47bso50995ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 18:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710985663; x=1711590463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sx6SfRuv9LLLnehF2XOw09ZyMX/yZGxxNegkKjOPj2s=;
+        b=Z2rCzmt+i18GkwtP6zoN9I+ZzhxzbTK+gjBEejU1+5/ckEKAtrri316PnNpR+SaXHH
+         TYNlNvh8kS6hWjLF6ENS12e2QLe2xI6Faw7yfNXIkWNoROklxjI2I8TTJxN7wRippxP6
+         H5Fhwn5cV/CA9eMKmihJLNWonf/WcwqvLAhVIuC3HJRxH733r+x30oZEhKQnuHHWl62o
+         iM0OsCJEz7Sc8mtzohkp2V6W7leP0itrtXr3Uc6bEtJxKjKkBsRGVr2cFmByOvcCFluj
+         w/bUFXVZaKhNn82zYrnLwLYbSBO3OL/Jqng3MVp2bhCvWpDE+wHa6wrQUK/QbWXXGhJh
+         HtXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710975300; x=1711580100;
+        d=1e100.net; s=20230601; t=1710985663; x=1711590463;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nd9U5cv4fdeaFsXK9u3eZEmu+VOq7nI3lOVtZgOEtyY=;
-        b=obVN7hNbg4HTYMcpkx2ivLjK7nTBPyIp6/+atwtfeWAxQkB9rBMljfGZUCyUL46uUN
-         gw68dkwTX1/werKMk/rIqJX8SvaZPP3IyzjRAqt+Z91fjZVSRz6tXu2XWfNpC6SDhxtM
-         OhgsJlUTktmio6U8+AIR/TTTyLp19/gfl9SBm1O2KQoxs/acS0vn6XyhGBJMUq1NjFOI
-         JliqevRG6K2F4tHaj7tLCdzWecxkwubpyVgi615Hw6kpll/n3B1qQb2QSSBQTO+SRCxZ
-         0254CeQdgup261a/Tzucasf/079I793JGtNdB5t41IVFB58nIOMrkELxvzfqvmc7oaIO
-         ZSuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWygv95FAcdZNyhOejJv7w8ATSxuz2edwsf5SMGyR2nI9MRQ6+K11Eh7mTUTXpE3Yg3KEudSXvnInZfRUKWG/mgs1hpvMCmESFZz4010uXjyQX+0fYt6dRoAoAG+OGiIa3qDXLQlF2Z8iRSf8Jv8g==
-X-Gm-Message-State: AOJu0Yw5qCjV0mTBNkJn0GZm6JqbtejGCFxuvUZZD3REJUhtnf6Do62U
-	oRELk3ERHdntaUBbaiKEmfoIpVyVZ+psu0Q310cQXUrKTH5T8eve/1UIEH3u8g7iuJn+7wjshpt
-	8NV7V9uCUSvs7eUGqlE96ttuAFZY=
-X-Google-Smtp-Source: AGHT+IEnoMeN9R6PtAZ8FNx+i2CH/pU82cRjrkklkma1HQX0vAwUIJPjKWHTrG32gxIPrFkcP7h7DoM1eWBDT4d0Q6c=
-X-Received: by 2002:a17:90a:dc10:b0:29f:c352:7941 with SMTP id
- i16-20020a17090adc1000b0029fc3527941mr5987788pjv.45.1710975300227; Wed, 20
- Mar 2024 15:55:00 -0700 (PDT)
+        bh=Sx6SfRuv9LLLnehF2XOw09ZyMX/yZGxxNegkKjOPj2s=;
+        b=n2eg8f4jB7dAuTRfohjiSSZuO/aJ3QtW1XNuVafr/y9vAxP3UgzRaGeX9NVcO1oe/k
+         UU0WhJsyHvHgopyMqUeydHRv5B4pR+sS2A8IgzX3QtmHeIhU9ac2NRnWLNjFdx7xdXoI
+         sEoZSIYYwUkV9WoDgOSytCKGlOC3sHR5iZIZL6EZP4Ya8L7BDr3AFFhnepR3enpDCERT
+         ETY3q/iOlsEhJTCOa4o3U8gxuSBdcHuvWjsTnuwgRdxdKq1bGkRXlarwXHkH1GEb0UOW
+         64g/PdKuRCYEyTqntUcq/em5ZjJz0UZwQ/wZx05cD1HHo0DkjSYI3BUDgazwBAcM1ZJZ
+         5scw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwxwvba8lyOxHyA2FC+DEXWu3dDPqTTtXFBIZJwWgXGV9k41e6OmEvx5fNyARcflh2YoN0t36eWAMjNp1qsuvl+zHoflGaGm3C61DPHZ/ReA==
+X-Gm-Message-State: AOJu0YxJJXSlW78jRID/rKcAunaxOHImT69UAYrZs86mXAYSQi82Y5cq
+	getSvM3LkhTiLv7q3nsalLSDH5XqIx+7SJHkH6FmbiPPf4eNSZwWp3StvE2VrulEZsOxxsaVz8K
+	spC9oAHbSElijEzjRXKI1X2d+cOQmCK4K8SIu
+X-Google-Smtp-Source: AGHT+IEdfW4gsOO9KtJU/DA9EOOHiJsoyZ4egTT2mau5BDr8h+gDYoq5NMuN6Cpd7WVnFDjmAhRxijmxEZPptKsyVVs=
+X-Received: by 2002:a17:902:e750:b0:1de:ed50:41f8 with SMTP id
+ p16-20020a170902e75000b001deed5041f8mr120729plf.22.1710985662419; Wed, 20 Mar
+ 2024 18:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319143629.3422590-1-retpolanne@posteo.net>
-In-Reply-To: <20240319143629.3422590-1-retpolanne@posteo.net>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 20 Mar 2024 15:54:49 -0700
-Message-ID: <CAM9d7cjU-LdApNjFt+hDbX5GGPC2Ako8WZsFbV8DF=RzE3cZ+Q@mail.gmail.com>
-Subject: Re: [PATCH v4] perf lock contention: skip traceiter functions
-To: Anne Macedo <retpolanne@posteo.net>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240320193115.811899-1-acme@kernel.org> <20240320193115.811899-2-acme@kernel.org>
+In-Reply-To: <20240320193115.811899-2-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 20 Mar 2024 18:47:28 -0700
+Message-ID: <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf beauty: Introduce scrape script for various fs
+ syscalls 'flags' arguments
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Anne,
+On Wed, Mar 20, 2024 at 12:31=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> It was using the first variation on producing a string representation
+> for a binary flag, one that used the system's fcntl.h and preprocessor
+> tricks that had to be updated everytime a new flag was introduced.
+>
+> Use the more recent scrape script + strarray + strarray__scnprintf_flags(=
+) combo.
+>
+>   $ tools/perf/trace/beauty/fs_at_flags.sh
+>   static const char *fs_at_flags[] =3D {
+>         [ilog2(0x100) + 1] =3D "SYMLINK_NOFOLLOW",
+>         [ilog2(0x200) + 1] =3D "REMOVEDIR",
+>         [ilog2(0x400) + 1] =3D "SYMLINK_FOLLOW",
+>         [ilog2(0x800) + 1] =3D "NO_AUTOMOUNT",
+>         [ilog2(0x1000) + 1] =3D "EMPTY_PATH",
+>         [ilog2(0x0000) + 1] =3D "STATX_SYNC_AS_STAT",
+>         [ilog2(0x2000) + 1] =3D "STATX_FORCE_SYNC",
+>         [ilog2(0x4000) + 1] =3D "STATX_DONT_SYNC",
+>         [ilog2(0x8000) + 1] =3D "RECURSIVE",
+>         [ilog2(0x80000000) + 1] =3D "GETATTR_NOSEC",
+>   };
+>   $
+>
+> Now we need a copy of uapi/linux/fcntl.h from tools/include/ in the
+> scrape only directory tools/perf/trace/beauty/include and will use that
+> fs_at_flags array for other fs syscalls.
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On Tue, Mar 19, 2024 at 7:36=E2=80=AFAM Anne Macedo <retpolanne@posteo.net>=
- wrote:
->
-> The perf lock contention program currently shows the caller of the locks
-> as __traceiter_contention_begin+0x??. This caller can be ignored, as it i=
-s
-> from the traceiter itself. Instead, it should show the real callers for
-> the locks.
->
-> When fiddling with the --stack-skip parameter, the actual callers for
-> the locks start to show up. However, just ignore the
-> __traceiter_contention_begin and the __traceiter_contention_end symbols
-> so the actual callers will show up.
->
-> Before this patch is applied:
->
-> sudo perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
->
->          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_co=
-ntention_begin+0x84
->          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __tracei=
-ter_contention_begin+0x44
->          1     13.54 us     13.54 us     13.54 us        mutex   trace_co=
-ntention_begin+0x84
->          1      3.67 us      3.67 us      3.67 us      rwsem:R   __tracei=
-ter_contention_begin+0x44
->
-> Before this patch is applied - using --stack-skip 5
->
-> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
->
->          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll=
-_wait+0x5a0
->          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+=
-0x338
->          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_sign=
-al+0x108
->          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_=
-task+0x68
->          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_k=
-n_lock_live+0x58
->          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+=
-0x44
->          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_=
-and_find_vma+0xb0
->
-> After this patch is applied:
->
-> sudo ./perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
->
->          4      4.13 s       2.07 s       1.03 s      rwlock:W   release_=
-task+0x68
->          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_updat=
-e_next_owner+0x50
->          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+=
-0x338
->          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_k=
-n_lock_live+0x58
->          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+=
-0x338
->
-> changes since v3:
->
-> - remove dummy value and assume machine->traceiter and machine->trace
-> have zero address
->
-> changes since v2:
->
-> - add dummy value to machine->traceiter and machine->trace to make
-> necessary checks, fixing possible null pointer access
->
-> changes since v1:
->
-> - consider trace_contention and __traceiter_contention functions as
-> optional (i.e. check if sym is null to avoid segfault)
->
-> changes since v0:
->
-> - skip trace_contention functions
-> - use sym->end instead of __traceiter_contention_end for text_end
->
-> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
-
-Thanks for your work!
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
-
+Ian
 
 > ---
->  tools/perf/util/machine.c | 24 ++++++++++++++++++++++++
->  tools/perf/util/machine.h |  2 +-
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>  tools/perf/Makefile.perf                      |   7 +
+>  tools/perf/builtin-trace.c                    |   2 +-
+>  tools/perf/check-headers.sh                   |   1 +
+>  tools/perf/trace/beauty/Build                 |   1 +
+>  tools/perf/trace/beauty/beauty.h              |   4 +-
+>  tools/perf/trace/beauty/fs_at_flags.c         |  26 ++++
+>  tools/perf/trace/beauty/fs_at_flags.sh        |  21 +++
+>  .../trace/beauty/include/uapi/linux/fcntl.h   | 123 ++++++++++++++++++
+>  tools/perf/trace/beauty/statx.c               |  31 -----
+>  9 files changed, 182 insertions(+), 34 deletions(-)
+>  create mode 100644 tools/perf/trace/beauty/fs_at_flags.c
+>  create mode 100755 tools/perf/trace/beauty/fs_at_flags.sh
+>  create mode 100644 tools/perf/trace/beauty/include/uapi/linux/fcntl.h
 >
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 527517db3182..5eb9044bc223 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -3266,6 +3266,17 @@ bool machine__is_lock_function(struct machine *mac=
-hine, u64 addr)
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index ccd2dcbc64f720d2..73d5603450b0a547 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -489,6 +489,12 @@ beauty_ioctl_outdir :=3D $(beauty_outdir)/ioctl
+>  # Create output directory if not already present
+>  $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outd=
+ir)')
 >
->                 sym =3D machine__find_kernel_symbol_by_name(machine, "__l=
-ock_text_end", &kmap);
->                 machine->lock.text_end =3D map__unmap_ip(kmap, sym->start=
-);
+> +fs_at_flags_array :=3D $(beauty_outdir)/fs_at_flags_array.c
+> +fs_at_flags_tbl :=3D $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
 > +
-> +               sym =3D machine__find_kernel_symbol_by_name(machine, "__t=
-raceiter_contention_begin", &kmap);
-> +               if (sym) {
-> +                       machine->traceiter.text_start =3D map__unmap_ip(k=
-map, sym->start);
-> +                       machine->traceiter.text_end =3D map__unmap_ip(kma=
-p, sym->end);
-> +               }
-> +               sym =3D machine__find_kernel_symbol_by_name(machine, "tra=
-ce_contention_begin", &kmap);
-> +               if (sym) {
-> +                       machine->trace.text_start =3D map__unmap_ip(kmap,=
- sym->start);
-> +                       machine->trace.text_end =3D map__unmap_ip(kmap, s=
-ym->end);
-> +               }
->         }
->
->         /* failed to get kernel symbols */
-> @@ -3280,5 +3291,18 @@ bool machine__is_lock_function(struct machine *mac=
-hine, u64 addr)
->         if (machine->lock.text_start <=3D addr && addr < machine->lock.te=
-xt_end)
->                 return true;
->
-> +       /* traceiter functions currently don't have their own section
-> +        * but we consider them lock functions
-> +        */
-> +       if (machine->traceiter.text_start !=3D 0) {
-> +               if (machine->traceiter.text_start <=3D addr && addr < mac=
-hine->traceiter.text_end)
-> +                       return true;
-> +       }
+> +$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl=
+)
+> +       $(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
 > +
-> +       if (machine->trace.text_start !=3D 0) {
-> +               if (machine->trace.text_start <=3D addr && addr < machine=
-->trace.text_end)
-> +                       return true;
-> +       }
+
+I wonder if rather than update Makefile.perf, we could push more of
+the logic into tools/perf/trace/beauty/Build. It would also be nice to
+add there the shellcheck logic:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/Build?h=3Dperf-tools-next#n81
+
+>  clone_flags_array :=3D $(beauty_outdir)/clone_flags_array.c
+>  clone_flags_tbl :=3D $(srctree)/tools/perf/trace/beauty/clone.sh
+>
+> @@ -772,6 +778,7 @@ build-dir   =3D $(or $(__build-dir),.)
+>
+>  prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders \
+>         arm64-sysreg-defs \
+> +       $(fs_at_flags_array) \
+>         $(clone_flags_array) \
+>         $(drm_ioctl_array) \
+>         $(fadvise_advice_array) \
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 8fb032caeaf53288..8417387aafa8295d 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1144,7 +1144,7 @@ static const struct syscall_fmt syscall_fmts[] =3D =
+{
+>         { .name     =3D "stat", .alias =3D "newstat", },
+>         { .name     =3D "statx",
+>           .arg =3D { [0] =3D { .scnprintf =3D SCA_FDAT,        /* fdat */=
+ },
+> -                  [2] =3D { .scnprintf =3D SCA_STATX_FLAGS, /* flags */ =
+} ,
+> +                  [2] =3D { .scnprintf =3D SCA_FS_AT_FLAGS, /* flags */ =
+} ,
+>                    [3] =3D { .scnprintf =3D SCA_STATX_MASK,  /* mask */ }=
+, }, },
+>         { .name     =3D "swapoff",
+>           .arg =3D { [0] =3D { .scnprintf =3D SCA_FILENAME, /* specialfil=
+e */ }, }, },
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index 413c9b747216020f..d23a84fdf3efef78 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -89,6 +89,7 @@ BEAUTY_FILES=3D(
+>    "arch/x86/include/asm/irq_vectors.h"
+>    "arch/x86/include/uapi/asm/prctl.h"
+>    "include/linux/socket.h"
+> +  "include/uapi/linux/fcntl.h"
+>    "include/uapi/linux/fs.h"
+>    "include/uapi/linux/mount.h"
+>    "include/uapi/linux/prctl.h"
+> diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Buil=
+d
+> index d11ce256f5114034..d8ce1b6989832134 100644
+> --- a/tools/perf/trace/beauty/Build
+> +++ b/tools/perf/trace/beauty/Build
+> @@ -1,6 +1,7 @@
+>  perf-y +=3D clone.o
+>  perf-y +=3D fcntl.o
+>  perf-y +=3D flock.o
+> +perf-y +=3D fs_at_flags.o
+>  perf-y +=3D fsmount.o
+>  perf-y +=3D fspick.o
+>  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86))
+> diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/b=
+eauty.h
+> index 9feb794f5c6e15f4..c94ae8701bc65a2f 100644
+> --- a/tools/perf/trace/beauty/beauty.h
+> +++ b/tools/perf/trace/beauty/beauty.h
+> @@ -234,8 +234,8 @@ size_t syscall_arg__scnprintf_socket_protocol(char *b=
+f, size_t size, struct sysc
+>  size_t syscall_arg__scnprintf_socket_level(char *bf, size_t size, struct=
+ syscall_arg *arg);
+>  #define SCA_SK_LEVEL syscall_arg__scnprintf_socket_level
+>
+> -size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct =
+syscall_arg *arg);
+> -#define SCA_STATX_FLAGS syscall_arg__scnprintf_statx_flags
+> +size_t syscall_arg__scnprintf_fs_at_flags(char *bf, size_t size, struct =
+syscall_arg *arg);
+> +#define SCA_FS_AT_FLAGS syscall_arg__scnprintf_fs_at_flags
+>
+>  size_t syscall_arg__scnprintf_statx_mask(char *bf, size_t size, struct s=
+yscall_arg *arg);
+>  #define SCA_STATX_MASK syscall_arg__scnprintf_statx_mask
+> diff --git a/tools/perf/trace/beauty/fs_at_flags.c b/tools/perf/trace/bea=
+uty/fs_at_flags.c
+> new file mode 100644
+> index 0000000000000000..2a099953d9935782
+> --- /dev/null
+> +++ b/tools/perf/trace/beauty/fs_at_flags.c
+> @@ -0,0 +1,26 @@
+> +// SPDX-License-Identifier: LGPL-2.1
+> +/*
+> + * trace/beauty/fs_at_flags.c
+> + *
+> + *  Copyright (C) 2017, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redh=
+at.com>
+> + */
 > +
->         return false;
->  }
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index e28c787616fe..4312f6db6de0 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -49,7 +49,7 @@ struct machine {
->         struct {
->                 u64       text_start;
->                 u64       text_end;
-> -       } sched, lock;
-> +       } sched, lock, traceiter, trace;
->         pid_t             *current_tid;
->         size_t            current_tid_sz;
->         union { /* Tool specific area */
+> +#include "trace/beauty/beauty.h"
+> +#include <sys/types.h>
+> +#include <linux/log2.h>
+> +
+> +#include "trace/beauty/generated/fs_at_flags_array.c"
+> +static DEFINE_STRARRAY(fs_at_flags, "AT_");
+> +
+> +static size_t fs_at__scnprintf_flags(unsigned long flags, char *bf, size=
+_t size, bool show_prefix)
+> +{
+> +       return strarray__scnprintf_flags(&strarray__fs_at_flags, bf, size=
+, show_prefix, flags);
+> +}
+> +
+> +size_t syscall_arg__scnprintf_fs_at_flags(char *bf, size_t size, struct =
+syscall_arg *arg)
+> +{
+> +       bool show_prefix =3D arg->show_string_prefix;
+> +       int flags =3D arg->val;
+> +
+> +       return fs_at__scnprintf_flags(flags, bf, size, show_prefix);
+> +}
+> diff --git a/tools/perf/trace/beauty/fs_at_flags.sh b/tools/perf/trace/be=
+auty/fs_at_flags.sh
+> new file mode 100755
+> index 0000000000000000..456f59addf741062
+> --- /dev/null
+> +++ b/tools/perf/trace/beauty/fs_at_flags.sh
+> @@ -0,0 +1,21 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: LGPL-2.1
+> +
+> +if [ $# -ne 1 ] ; then
+> +       beauty_uapi_linux_dir=3Dtools/perf/trace/beauty/include/uapi/linu=
+x/
+> +else
+> +       beauty_uapi_linux_dir=3D$1
+> +fi
+> +
+> +linux_fcntl=3D${beauty_uapi_linux_dir}/fcntl.h
+> +
+> +printf "static const char *fs_at_flags[] =3D {\n"
+> +regex=3D'^[[:space:]]*#[[:space:]]*define[[:space:]]+AT_([^_]+[[:alnum:]=
+_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
+> +# AT_EACCESS is only meaningful to faccessat, so we will special case it=
+ there...
+> +# AT_STATX_SYNC_TYPE is not a bit, its a mask of AT_STATX_SYNC_AS_STAT, =
+AT_STATX_FORCE_SYNC and AT_STATX_DONT_SYNC
+> +grep -E $regex ${linux_fcntl} | \
+> +       grep -v AT_EACCESS | \
+> +       grep -v AT_STATX_SYNC_TYPE | \
+> +       sed -r "s/$regex/\2 \1/g"       | \
+> +       xargs printf "\t[ilog2(%s) + 1] =3D \"%s\",\n"
+> +printf "};\n"
+> diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/p=
+erf/trace/beauty/include/uapi/linux/fcntl.h
+> new file mode 100644
+> index 0000000000000000..282e90aeb163c028
+> --- /dev/null
+> +++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _UAPI_LINUX_FCNTL_H
+> +#define _UAPI_LINUX_FCNTL_H
+> +
+> +#include <asm/fcntl.h>
+> +#include <linux/openat2.h>
+> +
+> +#define F_SETLEASE     (F_LINUX_SPECIFIC_BASE + 0)
+> +#define F_GETLEASE     (F_LINUX_SPECIFIC_BASE + 1)
+> +
+> +/*
+> + * Cancel a blocking posix lock; internal use only until we expose an
+> + * asynchronous lock api to userspace:
+> + */
+> +#define F_CANCELLK     (F_LINUX_SPECIFIC_BASE + 5)
+> +
+> +/* Create a file descriptor with FD_CLOEXEC set. */
+> +#define F_DUPFD_CLOEXEC        (F_LINUX_SPECIFIC_BASE + 6)
+> +
+> +/*
+> + * Request nofications on a directory.
+> + * See below for events that may be notified.
+> + */
+> +#define F_NOTIFY       (F_LINUX_SPECIFIC_BASE+2)
+> +
+> +/*
+> + * Set and get of pipe page size array
+> + */
+> +#define F_SETPIPE_SZ   (F_LINUX_SPECIFIC_BASE + 7)
+> +#define F_GETPIPE_SZ   (F_LINUX_SPECIFIC_BASE + 8)
+> +
+> +/*
+> + * Set/Get seals
+> + */
+> +#define F_ADD_SEALS    (F_LINUX_SPECIFIC_BASE + 9)
+> +#define F_GET_SEALS    (F_LINUX_SPECIFIC_BASE + 10)
+> +
+> +/*
+> + * Types of seals
+> + */
+> +#define F_SEAL_SEAL    0x0001  /* prevent further seals from being set *=
+/
+> +#define F_SEAL_SHRINK  0x0002  /* prevent file from shrinking */
+> +#define F_SEAL_GROW    0x0004  /* prevent file from growing */
+> +#define F_SEAL_WRITE   0x0008  /* prevent writes */
+> +#define F_SEAL_FUTURE_WRITE    0x0010  /* prevent future writes while ma=
+pped */
+> +#define F_SEAL_EXEC    0x0020  /* prevent chmod modifying exec bits */
+> +/* (1U << 31) is reserved for signed error codes */
+> +
+> +/*
+> + * Set/Get write life time hints. {GET,SET}_RW_HINT operate on the
+> + * underlying inode, while {GET,SET}_FILE_RW_HINT operate only on
+> + * the specific file.
+> + */
+> +#define F_GET_RW_HINT          (F_LINUX_SPECIFIC_BASE + 11)
+> +#define F_SET_RW_HINT          (F_LINUX_SPECIFIC_BASE + 12)
+> +#define F_GET_FILE_RW_HINT     (F_LINUX_SPECIFIC_BASE + 13)
+> +#define F_SET_FILE_RW_HINT     (F_LINUX_SPECIFIC_BASE + 14)
+> +
+> +/*
+> + * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
+> + * used to clear any hints previously set.
+> + */
+> +#define RWH_WRITE_LIFE_NOT_SET 0
+> +#define RWH_WRITE_LIFE_NONE    1
+> +#define RWH_WRITE_LIFE_SHORT   2
+> +#define RWH_WRITE_LIFE_MEDIUM  3
+> +#define RWH_WRITE_LIFE_LONG    4
+> +#define RWH_WRITE_LIFE_EXTREME 5
+> +
+> +/*
+> + * The originally introduced spelling is remained from the first
+> + * versions of the patch set that introduced the feature, see commit
+> + * v4.13-rc1~212^2~51.
+> + */
+> +#define RWF_WRITE_LIFE_NOT_SET RWH_WRITE_LIFE_NOT_SET
+> +
+> +/*
+> + * Types of directory notifications that may be requested.
+> + */
+> +#define DN_ACCESS      0x00000001      /* File accessed */
+> +#define DN_MODIFY      0x00000002      /* File modified */
+> +#define DN_CREATE      0x00000004      /* File created */
+> +#define DN_DELETE      0x00000008      /* File removed */
+> +#define DN_RENAME      0x00000010      /* File renamed */
+> +#define DN_ATTRIB      0x00000020      /* File changed attibutes */
+> +#define DN_MULTISHOT   0x80000000      /* Don't remove notifier */
+> +
+> +/*
+> + * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EA=
+CCESS is
+> + * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
+o
+> + * unlinkat.  The two functions do completely different things and there=
+fore,
+> + * the flags can be allowed to overlap.  For example, passing AT_REMOVED=
+IR to
+> + * faccessat would be undefined behavior and thus treating it equivalent=
+ to
+> + * AT_EACCESS is valid undefined behavior.
+> + */
+> +#define AT_FDCWD               -100    /* Special value used to indicate
+> +                                           openat should use the current
+> +                                           working directory. */
+> +#define AT_SYMLINK_NOFOLLOW    0x100   /* Do not follow symbolic links. =
+ */
+> +#define AT_EACCESS             0x200   /* Test access permitted for
+> +                                           effective IDs, not real IDs. =
+ */
+> +#define AT_REMOVEDIR           0x200   /* Remove directory instead of
+> +                                           unlinking file.  */
+> +#define AT_SYMLINK_FOLLOW      0x400   /* Follow symbolic links.  */
+> +#define AT_NO_AUTOMOUNT                0x800   /* Suppress terminal auto=
+mount traversal */
+> +#define AT_EMPTY_PATH          0x1000  /* Allow empty relative pathname =
+*/
+> +
+> +#define AT_STATX_SYNC_TYPE     0x6000  /* Type of synchronisation requir=
+ed from statx() */
+> +#define AT_STATX_SYNC_AS_STAT  0x0000  /* - Do whatever stat() does */
+> +#define AT_STATX_FORCE_SYNC    0x2000  /* - Force the attributes to be s=
+ync'd with the server */
+> +#define AT_STATX_DONT_SYNC     0x4000  /* - Don't sync attributes with t=
+he server */
+> +
+> +#define AT_RECURSIVE           0x8000  /* Apply to the entire subtree */
+> +
+> +/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
+.. */
+> +#define AT_HANDLE_FID          AT_REMOVEDIR    /* file handle is needed =
+to
+> +                                       compare object identity and may n=
+ot
+> +                                       be usable to open_by_handle_at(2)=
+ */
+> +#if defined(__KERNEL__)
+> +#define AT_GETATTR_NOSEC       0x80000000
+> +#endif
+> +
+> +#endif /* _UAPI_LINUX_FCNTL_H */
+> diff --git a/tools/perf/trace/beauty/statx.c b/tools/perf/trace/beauty/st=
+atx.c
+> index 1f7e34ed4e02be86..4e0059fd02118f9c 100644
+> --- a/tools/perf/trace/beauty/statx.c
+> +++ b/tools/perf/trace/beauty/statx.c
+> @@ -8,7 +8,6 @@
+>  #include "trace/beauty/beauty.h"
+>  #include <linux/kernel.h>
+>  #include <sys/types.h>
+> -#include <linux/fcntl.h>
+>  #include <linux/stat.h>
+>
+>  #ifndef STATX_MNT_ID
+> @@ -21,36 +20,6 @@
+>  #define STATX_MNT_ID_UNIQUE    0x00004000U
+>  #endif
+>
+> -size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct =
+syscall_arg *arg)
+> -{
+> -       bool show_prefix =3D arg->show_string_prefix;
+> -       const char *prefix =3D "AT_";
+> -       int printed =3D 0, flags =3D arg->val;
+> -
+> -       if (flags =3D=3D 0)
+> -               return scnprintf(bf, size, "%s%s", show_prefix ? "AT_STAT=
+X_" : "", "SYNC_AS_STAT");
+> -#define        P_FLAG(n) \
+> -       if (flags & AT_##n) { \
+> -               printed +=3D scnprintf(bf + printed, size - printed, "%s%=
+s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+> -               flags &=3D ~AT_##n; \
+> -       }
+> -
+> -       P_FLAG(SYMLINK_NOFOLLOW);
+> -       P_FLAG(REMOVEDIR);
+> -       P_FLAG(SYMLINK_FOLLOW);
+> -       P_FLAG(NO_AUTOMOUNT);
+> -       P_FLAG(EMPTY_PATH);
+> -       P_FLAG(STATX_FORCE_SYNC);
+> -       P_FLAG(STATX_DONT_SYNC);
+> -
+> -#undef P_FLAG
+> -
+> -       if (flags)
+> -               printed +=3D scnprintf(bf + printed, size - printed, "%s%=
+#x", printed ? "|" : "", flags);
+> -
+> -       return printed;
+> -}
+> -
+>  size_t syscall_arg__scnprintf_statx_mask(char *bf, size_t size, struct s=
+yscall_arg *arg)
+>  {
+>         bool show_prefix =3D arg->show_string_prefix;
 > --
-> 2.39.2
+> 2.44.0
 >
