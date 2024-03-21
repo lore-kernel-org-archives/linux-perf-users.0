@@ -1,563 +1,152 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B85E2900
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 02:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC612DF84
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 06:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710989960; cv=none; b=jJK4gyr77iU7ccGHOb+We6JW+6DNHQ+SMUjU5HthTwK2XJmnJdnDkv61MKSRN2SREmDHqVejP185Du5v5XZQka8E+o+Ea8C06rwLlKq06Ig3//F42JvK/xG/zeCiLDQTc+WJvs7O0lJ+zqEvwaugP9DO28B0ybPmzkmX++EgsYg=
+	t=1711000826; cv=none; b=hYFrVzyDsgxxBjL+HV5TLIzdwxLsUANzCQ00x0OMkqZdTXZ06MezM+KUmZPK291oIdvysNIF5fbsIFBWlJ8yKqk0A10zQWnaGXtW004Wf66JKI14P6uk1V8vnqSgD9wXQaTCuj3gkMXKcHR3NkOwF4ShOUSRTACOgQAInnGul5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710989960; c=relaxed/simple;
-	bh=EjRrdnSlSqLeRHzJerJ26z8jXsiR5lW18G484JLGgFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tMcWtPSHxlgXzv4dOuadNWe8Jv43E7iClvZSYC10dm/6eaCg19zb2GWYb1LMKlh0W3vj5mt1GcwnDKTYvHqiUhe8ghzMAf+pVuiRYlrHNlyoTe9RhFGGjd0nr8mCd5o/VGLagskS9UOmY8zPZQsNDTP0s5Uvl/AT7Aa2UfPFgmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ryjpc9G2; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1711000826; c=relaxed/simple;
+	bh=jRpRaEdrA7J6780gMXcjf+L/UPrcyknXSq1ovHjiA8E=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=HZ64PHeMRAfyoLXSqY0mvmwDTFqFkVPWI8XLj5PjNj9xj515SSl/a+wUtpQmbXM0+iLVpfGbVNGBcVCNny6RFfbUz/fi+vup5SXy85RnTr3IYEGRhO3r/1gguqywkde0W0L/g/Kdj2v4RxM2rBiTfDATWjRvhAVUKuUHr44DVp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EIpg7JSp; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ryjpc9G2"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e062f3a47bso57815ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 19:59:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EIpg7JSp"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso805726276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 23:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710989958; x=1711594758; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
-        b=Ryjpc9G216SVusEkBmGYkDcHo9C21XixDq4TlFlkkbgYc7g4yxdbWGbhOExuX4E1Gw
-         DuWlynUB3KC29ZqZYa3dEMWrmkiH6y34Blg0YAD0s7A/Hmja55HFVhAQY5rWHuW8c+U1
-         XQUzwUK0+JXgOUmdi1PHWyglMi7G8HyIodM5c3F8+gC8FmFVAO1SLT/kH3Z+Bqn3PP2o
-         RuonLxiSjSaylQhcpL3sk2gqiuIZfwPr84B69ok9/G2gvuzYgC2bCQei/bCVQDVQOjxv
-         xE5ozJfS1/QG7t8Eg0cm5++A/Ts7QOD+luoDLc6ed7fn5agU+hQs6G++CQSm1yiKmROU
-         ODIw==
+        d=google.com; s=20230601; t=1711000823; x=1711605623; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gfW/k6FjlFxqVo75q9wM0sppIP+cY08HjgX4S+SAtUw=;
+        b=EIpg7JSpNXPonPYSre0xGF76x6YWexOPqjBTwtDfmlEcGw7JScb68mVKxxgIY786Pv
+         cAChBimIUSwKQOdNSRsyVWlHzeJzdtFiR63kFcqe+VK127wkztEoyl5KRKKvGSsxS3ik
+         mnLTeRm01IPfJQqKgwPrOY4lsKZen68JMHLLeBluEBen+g3jRxCpYcdIxTudEeuwkaXd
+         tlN1286htg4AVpjlm37VQRdNdB7Wu1RRnCB0HGw43qW9cyqYpiBfzWraGCCY9vBY6f/n
+         sURPm1YJVcUOKv6NsAMlXU2ep8cmtehnjvBtD8s6XXc+GkeZGh1HPPC+pBBJjXyuzJAf
+         Lzsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710989958; x=1711594758;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
-        b=wH9WZ0Zzmy+nG9bJhGt6rdLEcp8hgrckJpvKhJOijVdr8uOfPYS8XNajJelSeevxcv
-         e1Yz6LhWjFEAwZ/NdicTSCtyG0KBcX1AUolazS6iNikj6Nsi2YEtYrZbSKAFc1G6KppN
-         2DlevLER9v2sLGbF61UpSG2vM1EYJf/4C377EdVzrVBjlxZB1GWTfWC/HytpNK6N9u+W
-         R/2KhW7veQICWorTbM/OFTcixbTwgEXA7zcWBJOuNd/3XcR9HlMT1dmhzxj4IW2KZcfj
-         mhOBwHMo65csJlDpN6lYRjyJK5HHMYHXhsj0V09TWcgbnF02MFp9rW3vgw4KgZ85Xn54
-         oLpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJnqhXnjaSyFtimiXNV2Vp4mKImlDuSeLVQPFdhew2yEVkx/VxsP+LiVv+BgR3D/AXGJLS7utXoc0nA6Z9om7xp46IMkbFyHikDZAYHYBxAA==
-X-Gm-Message-State: AOJu0Yzvpcpv4tvZ5bOmlm/8NXhK+KMUvLpfWTj44ux0QJ++lH11M2bZ
-	T0ldmBqwi7edpMRreIIFu/H0gLEGjblvvk6XwyrjIIMT89Smr7Xhh96yafoUD978pAau0EUvBTX
-	i0KJ4V57AdwCK4UiweK8B5hTlCWkOw2Nhoprt
-X-Google-Smtp-Source: AGHT+IGFajvD9r3TtnhkoyDDj5ngVjHitTWx2l6VCzb021jVwYrKUvapXg4Hs8AYUApFp56SG/1y855GzgIoc89B9Lg=
-X-Received: by 2002:a17:902:e750:b0:1de:ed50:41f8 with SMTP id
- p16-20020a170902e75000b001deed5041f8mr133357plf.22.1710989957442; Wed, 20 Mar
- 2024 19:59:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711000823; x=1711605623;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gfW/k6FjlFxqVo75q9wM0sppIP+cY08HjgX4S+SAtUw=;
+        b=CEZcEN53txCBUq9pAUkjr4sW2NABuR1ElQeke8Lgkgvam3qwhkEIcCyR86JeoNOxq1
+         x6+XQWbjjYmIt1GSkbe3CwTo+ekY/sOcySV5GJ6/uXw7ZiZeFW/ry/0tNLyFxdXSiRgj
+         8n9bBfSJOKJq15eSbJwPVsLnUtxNJY+CkG6roJsXhtEh9ouUW9D/zLU4jkH/6Pm3rGH9
+         Gx9lmH+KcJvWiIbhfNAq5TkqkNm+hUIO9Q62GHUS58fEMtrqZWzqJ75aXh6D0Komgxxk
+         mukRJIIOBPXInkSaD3d7go0ilaHkCJsbZ3bOak0MtUwn5WSmoRc3dgTg1brkP73w41RE
+         72Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYspHu6JhT3pbvdKWbv/IBpYKCq6YuZx8Zsqom52ERTAxNhyDjEiQvYGLKfKrIMHKJ0N7ayzak0Dxqg/mTNBLSIO9imMt3gKkdW8qQd0EwLg==
+X-Gm-Message-State: AOJu0YwvGMqji6ImN4peezcrtkmsw5Yyb38gtMXKtCDrjQb0sJE38SUj
+	zcHH72BkENIXxDZC31x3y/RVITgsTdT56ZjX2V8unIulmXFpkCO/JTbq6AJ3OcmcS9K4CmGYnXr
+	p8zJkAg==
+X-Google-Smtp-Source: AGHT+IHqv08Xeqxe2iF1yDdfWFz+qxIc0flbopKHrucZepi2C33PrG1v26T9/zvfy66hWpV8Zngn85t2bJIx
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:200b:b0:dc8:27e6:cde1 with SMTP
+ id dh11-20020a056902200b00b00dc827e6cde1mr1073935ybb.5.1711000823597; Wed, 20
+ Mar 2024 23:00:23 -0700 (PDT)
+Date: Wed, 20 Mar 2024 23:00:04 -0700
+Message-Id: <20240321060016.1464787-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240308001915.4060155-1-irogers@google.com> <20240308001915.4060155-5-irogers@google.com>
-In-Reply-To: <20240308001915.4060155-5-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Subject: [PATCH v1 00/12] perf vendor events intel update
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 20 Mar 2024 19:59:06 -0700
-Message-ID: <CAP-5=fVE3f-Q3Zcdi2qWb5EJSadp5c7xbhzWeq8PFw2NOZEEJw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] perf list: Give more details about raw event encodings
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 7, 2024 at 4:19=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> List all the PMUs, not just the first core one, and list real format
-> specifiers with value ranges.
->
-> Before:
-> ```
-> $ perf list
-> ...
->   rNNN                                               [Raw hardware event =
-descriptor]
->   cpu/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier                  [Raw hardware ev=
-ent descriptor]
->        [(see 'man perf-list' on how to encode it)]
->   mem:<addr>[/len][:access]                          [Hardware breakpoint=
-]
-> ...
-> ```
->
-> After:
-> ```
-> $ perf list
-> ...
->   rNNN                                               [Raw event descripto=
-r]
->   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
-tor]
->        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
->   breakpoint//modifier                               [Raw event descripto=
-r]
->   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
-tor]
->   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
-tor]
->   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
-tor]
->   intel_bts//modifier                                [Raw event descripto=
-r]
->   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
-tor]
->   kprobe/retprobe/modifier                           [Raw event descripto=
-r]
->   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
-tor]
->   power/event=3D0..255/modifier                        [Raw event descrip=
-tor]
->   software//modifier                                 [Raw event descripto=
-r]
->   tracepoint//modifier                               [Raw event descripto=
-r]
->   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
-tor]
->   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
-tor]
->   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
-tor]
->   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
-t descriptor]
->   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
-iptor]
->   mem:<addr>[/len][:access]                          [Hardware breakpoint=
-]
-> ...
-> ```
->
-> With '--details' provide more details on the formats encoding:
-> ```
->   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
-tor]
->        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
->         cpu/event=3D0..255,pc,edge,offcore_rsp=3D0..0xffffffffffffffff,ld=
-lat=3D0..0xffff,inv,
->         umask=3D0..255,frontend=3D0..0xffffff,cmask=3D0..255,config=3D0..=
-0xffffffffffffffff,
->         config1=3D0..0xffffffffffffffff,config2=3D0..0xffffffffffffffff,c=
-onfig3=3D0..0xffffffffffffffff,
->         name=3Dstring,period=3Dnumber,freq=3Dnumber,branch_type=3D(u|k|hv=
-|any|...),time,
->         call-graph=3D(fp|dwarf|lbr),stack-size=3Dnumber,max-stack=3Dnumbe=
-r,nr=3Dnumber,inherit,no-inherit,
->         overwrite,no-overwrite,percore,aux-output,aux-sample-size=3Dnumbe=
-r/modifier
->   breakpoint//modifier                               [Raw event descripto=
-r]
->         breakpoint//modifier
->   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
-tor]
->         cstate_core/event=3D0..0xffffffffffffffff/modifier
->   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
-tor]
->         cstate_pkg/event=3D0..0xffffffffffffffff/modifier
->   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
-tor]
->         i915/i915_eventid=3D0..0x1fffff/modifier
->   intel_bts//modifier                                [Raw event descripto=
-r]
->         intel_bts//modifier
->   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
-tor]
->         intel_pt/ptw,event,cyc_thresh=3D0..15,pt,notnt,branch,tsc,pwr_evt=
-,fup_on_ptw,cyc,noretcomp,
->         mtc,psb_period=3D0..15,mtc_period=3D0..15/modifier
->   kprobe/retprobe/modifier                           [Raw event descripto=
-r]
->         kprobe/retprobe/modifier
->   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
-tor]
->         msr/event=3D0..0xffffffffffffffff/modifier
->   power/event=3D0..255/modifier                        [Raw event descrip=
-tor]
->         power/event=3D0..255/modifier
->   software//modifier                                 [Raw event descripto=
-r]
->         software//modifier
->   tracepoint//modifier                               [Raw event descripto=
-r]
->         tracepoint//modifier
->   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
-tor]
->         uncore_arb/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/m=
-odifier
->   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
-tor]
->         uncore_cbox/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/=
-modifier
->   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
-tor]
->         uncore_clock/event=3D0..255/modifier
->   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
-t descriptor]
->         uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier
->   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
-iptor]
->         uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier
-> ```
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/pmu.c          | 61 +++++++++++++++++++++-
->  tools/perf/util/pmu.h          |  3 ++
->  tools/perf/util/pmus.c         | 94 ++++++++++++++++++++++++++++++++++
->  tools/perf/util/pmus.h         |  1 +
->  tools/perf/util/print-events.c | 20 +-------
->  5 files changed, 160 insertions(+), 19 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 24be587e3537..e24bc3b8f696 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1603,6 +1603,61 @@ bool perf_pmu__has_format(const struct perf_pmu *p=
-mu, const char *name)
->         return false;
->  }
->
-> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
-mat_callback cb)
-> +{
-> +       static const char *const terms[] =3D {
-> +               "config=3D0..0xffffffffffffffff",
-> +               "config1=3D0..0xffffffffffffffff",
-> +               "config2=3D0..0xffffffffffffffff",
-> +               "config3=3D0..0xffffffffffffffff",
-> +               "name=3Dstring",
-> +               "period=3Dnumber",
-> +               "freq=3Dnumber",
-> +               "branch_type=3D(u|k|hv|any|...)",
-> +               "time",
-> +               "call-graph=3D(fp|dwarf|lbr)",
-> +               "stack-size=3Dnumber",
-> +               "max-stack=3Dnumber",
-> +               "nr=3Dnumber",
-> +               "inherit",
-> +               "no-inherit",
-> +               "overwrite",
-> +               "no-overwrite",
-> +               "percore",
-> +               "aux-output",
-> +               "aux-sample-size=3Dnumber",
-> +       };
-> +       struct perf_pmu_format *format;
-> +       int ret;
-> +
-> +       /*
-> +        * max-events and driver-config are missing above as are the inte=
-rnal
-> +        * types user, metric-id, raw, legacy cache and hardware. Assert =
-against
-> +        * the enum parse_events__term_type so they are kept in sync.
-> +        */
-> +       _Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE=
-_NR - 6);
+Update events to the latest on:
+https://github.com/intel/perfmon
 
-For C11 it is required that a 2nd message argument be passed:
-https://en.cppreference.com/w/c/language/_Static_assert
+Using the converter script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-This line needs to be something like:
-_Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE_NR - 6,
-"Unexpected array size");
+Ian Rogers (12):
+  perf vendor events intel: Update cascadelakex to 1.21
+  perf vendor events intel: Update emeraldrapids to 1.06
+  perf vendor events intel: Update grandridge to 1.02
+  perf vendor events intel: Update icelakex to 1.24
+  perf vendor events intel: Update lunarlake to 1.01
+  perf vendor events intel: Update meteorlake to 1.08
+  perf vendor events intel: Update sapphirerapids to 1.20
+  perf vendor events intel: Update sierraforest to 1.02
+  perf vendor events intel: Update skylakex to 1.33
+  perf vendor events intel: Update skylake to v58
+  perf vendor events intel: Update snowridgex to 1.22
+  perf vendor events intel: Remove info metrics erroneously in TopdownL1
 
-Let me know if we I should send a fix, resend all the patches or if
-you can fix in tmp.perf-tools-next.
+ .../arch/x86/broadwellx/bdx-metrics.json      |  35 +++---
+ .../arch/x86/cascadelakex/clx-metrics.json    |  85 +++++--------
+ .../arch/x86/cascadelakex/frontend.json       |  10 +-
+ .../arch/x86/cascadelakex/memory.json         |   2 +-
+ .../arch/x86/cascadelakex/other.json          |   2 +-
+ .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+ .../x86/cascadelakex/uncore-interconnect.json |  14 +--
+ .../arch/x86/cascadelakex/virtual-memory.json |   2 +-
+ .../arch/x86/emeraldrapids/frontend.json      |   2 +-
+ .../arch/x86/emeraldrapids/memory.json        |   1 +
+ .../arch/x86/emeraldrapids/pipeline.json      |   3 +
+ .../arch/x86/emeraldrapids/uncore-cache.json  | 112 ++++++++++++++++-
+ .../emeraldrapids/uncore-interconnect.json    |  26 ++--
+ .../arch/x86/grandridge/pipeline.json         |  43 ++++++-
+ .../arch/x86/grandridge/uncore-cache.json     |  28 ++++-
+ .../arch/x86/haswellx/hsx-metrics.json        |  35 +++---
+ .../arch/x86/icelakex/frontend.json           |   2 +-
+ .../arch/x86/icelakex/icx-metrics.json        |  95 ++++++--------
+ .../pmu-events/arch/x86/icelakex/memory.json  |   1 +
+ .../arch/x86/icelakex/uncore-cache.json       |  22 +++-
+ .../x86/icelakex/uncore-interconnect.json     |  64 +++++-----
+ .../arch/x86/icelakex/uncore-io.json          |  11 --
+ .../pmu-events/arch/x86/lunarlake/cache.json  |  24 ++--
+ .../arch/x86/lunarlake/frontend.json          |   2 +-
+ .../pmu-events/arch/x86/lunarlake/memory.json |   4 +-
+ .../pmu-events/arch/x86/lunarlake/other.json  |   4 +-
+ .../arch/x86/lunarlake/pipeline.json          | 109 +++++++++++++---
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  20 +--
+ .../pmu-events/arch/x86/meteorlake/cache.json |  30 +++++
+ .../arch/x86/meteorlake/frontend.json         |   4 +-
+ .../arch/x86/meteorlake/memory.json           |  20 +++
+ .../pmu-events/arch/x86/meteorlake/other.json |  42 ++++++-
+ .../arch/x86/meteorlake/pipeline.json         |  44 +++++--
+ .../x86/meteorlake/uncore-interconnect.json   |  22 +++-
+ .../arch/x86/sapphirerapids/cache.json        |   1 +
+ .../arch/x86/sapphirerapids/frontend.json     |   2 +-
+ .../arch/x86/sapphirerapids/memory.json       |   1 +
+ .../arch/x86/sapphirerapids/pipeline.json     |  19 +--
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 119 +++++++-----------
+ .../arch/x86/sapphirerapids/uncore-cache.json | 112 ++++++++++++++++-
+ .../sapphirerapids/uncore-interconnect.json   |  26 ++--
+ .../arch/x86/sierraforest/pipeline.json       |  36 +++++-
+ .../pmu-events/arch/x86/skylake/frontend.json |  10 +-
+ .../pmu-events/arch/x86/skylakex/cache.json   |   9 ++
+ .../arch/x86/skylakex/frontend.json           |  10 +-
+ .../pmu-events/arch/x86/skylakex/memory.json  |   2 +-
+ .../pmu-events/arch/x86/skylakex/other.json   |   2 +-
+ .../arch/x86/skylakex/pipeline.json           |   2 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  85 +++++--------
+ .../x86/skylakex/uncore-interconnect.json     |  14 +--
+ .../arch/x86/skylakex/uncore-io.json          |   2 +-
+ .../arch/x86/skylakex/virtual-memory.json     |   2 +-
+ .../arch/x86/snowridgex/uncore-cache.json     |   4 +-
+ .../x86/snowridgex/uncore-interconnect.json   |   6 +-
+ .../arch/x86/snowridgex/uncore-io.json        |  11 --
+ 55 files changed, 911 insertions(+), 486 deletions(-)
 
-Thanks,
-Ian
+-- 
+2.44.0.396.g6e790dbe36-goog
 
-> +       list_for_each_entry(format, &pmu->format, list) {
-> +               perf_pmu_format__load(pmu, format);
-> +               ret =3D cb(state, format->name, (int)format->value, forma=
-t->bits);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       if (!pmu->is_core)
-> +               return 0;
-> +
-> +       for (size_t i =3D 0; i < ARRAY_SIZE(terms); i++) {
-> +               int config =3D PERF_PMU_FORMAT_VALUE_CONFIG;
-> +
-> +               if (i < PERF_PMU_FORMAT_VALUE_CONFIG_END)
-> +                       config =3D i;
-> +
-> +               ret =3D cb(state, terms[i], config, /*bits=3D*/NULL);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       return 0;
-> +}
-> +
->  bool is_pmu_core(const char *name)
->  {
->         return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sys=
-fs_pmu_core(name);
-> @@ -1697,8 +1752,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu,=
- bool skip_duplicate_pmus,
->         pmu_add_cpu_aliases(pmu);
->         list_for_each_entry(event, &pmu->aliases, list) {
->                 size_t buf_used;
-> +               int pmu_name_len;
->
->                 info.pmu_name =3D event->pmu_name ?: pmu->name;
-> +               pmu_name_len =3D skip_duplicate_pmus
-> +                       ? pmu_name_len_no_suffix(info.pmu_name, /*num=3D*=
-/NULL)
-> +                       : (int)strlen(info.pmu_name);
->                 info.alias =3D NULL;
->                 if (event->desc) {
->                         info.name =3D event->name;
-> @@ -1723,7 +1782,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, =
-bool skip_duplicate_pmus,
->                 info.encoding_desc =3D buf + buf_used;
->                 parse_events_terms__to_strbuf(&event->terms, &sb);
->                 buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_=
-used,
-> -                               "%s/%s/", info.pmu_name, sb.buf) + 1;
-> +                               "%.*s/%s/", pmu_name_len, info.pmu_name, =
-sb.buf) + 1;
->                 info.topic =3D event->topic;
->                 info.str =3D sb.buf;
->                 info.deprecated =3D event->deprecated;
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index e35d985206db..9f5284b29ecf 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -196,6 +196,8 @@ struct pmu_event_info {
->  };
->
->  typedef int (*pmu_event_callback)(void *state, struct pmu_event_info *in=
-fo);
-> +typedef int (*pmu_format_callback)(void *state, const char *name, int co=
-nfig,
-> +                                  const unsigned long *bits);
->
->  void pmu_add_sys_aliases(struct perf_pmu *pmu);
->  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
-> @@ -215,6 +217,7 @@ int perf_pmu__find_event(struct perf_pmu *pmu, const =
-char *event, void *state, p
->  int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_l=
-oad);
->  void perf_pmu_format__set_value(void *format, int config, unsigned long =
-*bits);
->  bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name);
-> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
-mat_callback cb);
->
->  bool is_pmu_core(const char *name);
->  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 16505071d362..2fd369e45832 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -16,6 +16,7 @@
->  #include "pmus.h"
->  #include "pmu.h"
->  #include "print-events.h"
-> +#include "strbuf.h"
->
->  /*
->   * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's =
-sysfs
-> @@ -503,6 +504,99 @@ void perf_pmus__print_pmu_events(const struct print_=
-callbacks *print_cb, void *p
->         zfree(&aliases);
->  }
->
-> +struct build_format_string_args {
-> +       struct strbuf short_string;
-> +       struct strbuf long_string;
-> +       int num_formats;
-> +};
-> +
-> +static int build_format_string(void *state, const char *name, int config=
-,
-> +                              const unsigned long *bits)
-> +{
-> +       struct build_format_string_args *args =3D state;
-> +       unsigned int num_bits;
-> +       int ret1, ret2 =3D 0;
-> +
-> +       (void)config;
-> +       args->num_formats++;
-> +       if (args->num_formats > 1) {
-> +               strbuf_addch(&args->long_string, ',');
-> +               if (args->num_formats < 4)
-> +                       strbuf_addch(&args->short_string, ',');
-> +       }
-> +       num_bits =3D bits ? bitmap_weight(bits, PERF_PMU_FORMAT_BITS) : 0=
-;
-> +       if (num_bits <=3D 1) {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s", name);
-> +               if (args->num_formats < 4)
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s", n=
-ame);
-> +       } else if (num_bits > 8) {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..0x%llx"=
-, name,
-> +                                  ULLONG_MAX >> (64 - num_bits));
-> +               if (args->num_formats < 4) {
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
-..0x%llx", name,
-> +                                          ULLONG_MAX >> (64 - num_bits))=
-;
-> +               }
-> +       } else {
-> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..%llu", =
-name,
-> +                                 ULLONG_MAX >> (64 - num_bits));
-> +               if (args->num_formats < 4) {
-> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
-..%llu", name,
-> +                                          ULLONG_MAX >> (64 - num_bits))=
-;
-> +               }
-> +       }
-> +       return ret1 < 0 ? ret1 : (ret2 < 0 ? ret2 : 0);
-> +}
-> +
-> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
-_cb, void *print_state)
-> +{
-> +       bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(print_=
-state);
-> +       struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-> +       struct perf_pmu *pmu =3D NULL;
-> +
-> +       if (skip_duplicate_pmus)
-> +               scan_fn =3D perf_pmus__scan_skip_duplicates;
-> +       else
-> +               scan_fn =3D perf_pmus__scan;
-> +
-> +       while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
-> +               struct build_format_string_args format_args =3D {
-> +                       .short_string =3D STRBUF_INIT,
-> +                       .long_string =3D STRBUF_INIT,
-> +                       .num_formats =3D 0,
-> +               };
-> +               int len =3D pmu_name_len_no_suffix(pmu->name, /*num=3D*/N=
-ULL);
-> +               const char *desc =3D "(see 'man perf-list' or 'man perf-r=
-ecord' on how to encode it)";
-> +
-> +               if (!pmu->is_core)
-> +                       desc =3D NULL;
-> +
-> +               strbuf_addf(&format_args.short_string, "%.*s/", len, pmu-=
->name);
-> +               strbuf_addf(&format_args.long_string, "%.*s/", len, pmu->=
-name);
-> +               perf_pmu__for_each_format(pmu, &format_args, build_format=
-_string);
-> +
-> +               if (format_args.num_formats > 3)
-> +                       strbuf_addf(&format_args.short_string, ",.../modi=
-fier");
-> +               else
-> +                       strbuf_addf(&format_args.short_string, "/modifier=
-");
-> +
-> +               strbuf_addf(&format_args.long_string, "/modifier");
-> +               print_cb->print_event(print_state,
-> +                               /*topic=3D*/NULL,
-> +                               /*pmu_name=3D*/NULL,
-> +                               format_args.short_string.buf,
-> +                               /*event_alias=3D*/NULL,
-> +                               /*scale_unit=3D*/NULL,
-> +                               /*deprecated=3D*/false,
-> +                               "Raw event descriptor",
-> +                               desc,
-> +                               /*long_desc=3D*/NULL,
-> +                               format_args.long_string.buf);
-> +
-> +               strbuf_release(&format_args.short_string);
-> +               strbuf_release(&format_args.long_string);
-> +       }
-> +}
-> +
->  bool perf_pmus__have_event(const char *pname, const char *name)
->  {
->         struct perf_pmu *pmu =3D perf_pmus__find(pname);
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index 94d2a08d894b..eec599d8aebd 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -18,6 +18,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *=
-pmu);
->  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
->
->  void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb,=
- void *print_state);
-> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
-_cb, void *print_state);
->  bool perf_pmus__have_event(const char *pname, const char *name);
->  int perf_pmus__num_core_pmus(void);
->  bool perf_pmus__supports_extended_type(void);
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
-s.c
-> index e0d2b49bab66..3f38c27f0157 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -39,7 +39,7 @@ static const char * const event_type_descriptors[] =3D =
-{
->         "Software event",
->         "Tracepoint event",
->         "Hardware cache event",
-> -       "Raw hardware event descriptor",
-> +       "Raw event descriptor",
->         "Hardware breakpoint",
->  };
->
-> @@ -416,8 +416,6 @@ void print_symbol_events(const struct print_callbacks=
- *print_cb, void *print_sta
->   */
->  void print_events(const struct print_callbacks *print_cb, void *print_st=
-ate)
->  {
-> -       char *tmp;
-> -
->         print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
->                         event_symbols_hw, PERF_COUNT_HW_MAX);
->         print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
-> @@ -441,21 +439,7 @@ void print_events(const struct print_callbacks *prin=
-t_cb, void *print_state)
->                         /*long_desc=3D*/NULL,
->                         /*encoding_desc=3D*/NULL);
->
-> -       if (asprintf(&tmp, "%s/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier",
-> -                    perf_pmus__scan_core(/*pmu=3D*/NULL)->name) > 0) {
-> -               print_cb->print_event(print_state,
-> -                               /*topic=3D*/NULL,
-> -                               /*pmu_name=3D*/NULL,
-> -                               tmp,
-> -                               /*event_alias=3D*/NULL,
-> -                               /*scale_unit=3D*/NULL,
-> -                               /*deprecated=3D*/false,
-> -                               event_type_descriptors[PERF_TYPE_RAW],
-> -                               "(see 'man perf-list' on how to encode it=
-)",
-> -                               /*long_desc=3D*/NULL,
-> -                               /*encoding_desc=3D*/NULL);
-> -               free(tmp);
-> -       }
-> +       perf_pmus__print_raw_pmu_events(print_cb, print_state);
->
->         print_cb->print_event(print_state,
->                         /*topic=3D*/NULL,
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
