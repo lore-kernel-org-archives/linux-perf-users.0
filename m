@@ -1,82 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F5A947;
-	Thu, 21 Mar 2024 15:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D5712BF15;
+	Thu, 21 Mar 2024 16:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711034626; cv=none; b=DkLec4vSfKLoD3dYQ68dNDNVUW8r5v9qPHCsNDOWoQLe2GrO06nc8c0iESfJrpSccpH2kdKoUqTARivDfk3cRletSPyK1hM6om0YF2UAZibG8wR/CSo45VDyI4CtodwxCVkcmXHGPzfLI76RWTH4kIv9rA6kEgQyzN0LEtS6V08=
+	t=1711036812; cv=none; b=nhTD6pwLJjWEcsjpQcQF9uhRNoMVH8NbSV9qGuOeIOo900QjgFLL/Zj7rICbrrooWkRER7b/3Bd4uxRJn+jlo7LTxs0kzhrLTi/TAljOCNTaWWCqiFKhAb3IN7BPOI7SczzW3LFybxMP+UTbIjZVnXKaYlGzNmlQeC+y8UUWfQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711034626; c=relaxed/simple;
-	bh=+m9kWk3iS2HPFwiXLggGjYbe+7JtOa3E70CJ3D/8dAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ssMitwOKT6ne6cPovVK4/iNRXGdDFGSIQz/9A/sstoS1r2MbxjXeAK9qKRZ4L3agc9svD5jj0uW16/PQIuW9Mcbt/3rzoXQ+QDg0Vlam/ufaGHHjrJ9eDT8gXJogyJEcWR4dVtU/ySfKo2ELiAIpnv/25wayumFBrvF8q+fXv+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/WxVTvC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711036812; c=relaxed/simple;
+	bh=jgszpCqH/WMZwNM8t5t78GNbQLJNqJmTX2YntToQXyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rlBv2bHmNU/QaMQv6gjCOMgaMcqaxCVZyxl5No6reaKi380RUyt+vV251+G9ihH18HHm9ujii5sm2NSsDKUM9hAGbEVBV3PIos2vOA42xH2vDm2yESyAqJ2teqa2RPXv1LlqkRcTK/4OHMjJSV7wBfLpDEa/ruFQKI0VspLAzNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsFba1ko; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/WxVTvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98C4C433C7;
-	Thu, 21 Mar 2024 15:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711034626;
-	bh=+m9kWk3iS2HPFwiXLggGjYbe+7JtOa3E70CJ3D/8dAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u/WxVTvC2Xh2unxOwqNeieRonBCU2/RpcwsCg5RvX89aEfLHCpaS/WbVUojtRdMKs
-	 bK08zB4+vI3atQSuXzIvEMa3YlF2h9uu65OKHxp/yUBXI0qkI9PU/97xGi7lACelUv
-	 RuHRDr+qBM1mMesbxvUxKKKQuaL/q4l7hJNpfxwAOg7rX9mN7KR/Xs/qzlb86tzdID
-	 ch6WumuOxPnSXXtCLevcNT3qOpf+w8GJx8tOwJA6GFXq0k6rnwLCb8UatFxQm+4ziZ
-	 KVpmpPzoP8VJOOeLjAI9wdaygqj+YFwqJqjWZYEdYtqn99CODLmHp0arDJL/KnDluc
-	 bK71bq5rNX2ig==
-Date: Thu, 21 Mar 2024 12:23:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Edward Baker <edward.baker@intel.com>
-Subject: Re: [PATCH v1 00/12] perf vendor events intel update
-Message-ID: <ZfxQ_68hcyag2itr@x1>
-References: <20240321060016.1464787-1-irogers@google.com>
- <ZfxDX--WFVDlGad5@x1>
- <c1ade566-111a-46b2-81b7-c165890c84ce@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsFba1ko"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5cedfc32250so782169a12.0;
+        Thu, 21 Mar 2024 09:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711036810; x=1711641610; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JedxGpSetrtUkKTUasSUOChUtssLfFO66jso+nC0zqs=;
+        b=BsFba1kovw/pv+FL+jItcWw2mIXxAd1qJcO2/OQhR8ewktw6UfI8bm9J/kGi8Y8jYZ
+         P4QqBZawv5lOVC44tpraO+Xx/D159Ayr4fnDW66SLfE3cZc6xMIHWvHufmfHLoIwqp3P
+         G9EeI5fLttRZ/o0trmTnl0qUwn1Mth3k/D2NoV9KFBB0j9iATjOPKxKtEg9JTP8KRsNN
+         g9aOdq1iMNu1SYSk9wtIqZzjyE5TtDK6j7/mRwSzwnva7amiZ0ttMo6GmZi7OV0ygt94
+         FGkZqgV0CfD6LPhy2d5DGhUehp+jvfpMAMqAbub3IswPcjNJTWs0rWb0onqOGOECwopR
+         OO9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711036810; x=1711641610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JedxGpSetrtUkKTUasSUOChUtssLfFO66jso+nC0zqs=;
+        b=C9JyLYQVlC9G8o7R6E3WXdjOY5qKmDjrSWHiNgrda7gvLlXXVgioURIV6YmCJWECXr
+         VQM1N5pK6ZfRPgpvxH3E4oPQOn8hDPB7aQTMC7BKu8iD6xKcY18Y4vp884v8+iaibWrO
+         QNMmlizYSq9v9GbRAQTitmQZQ8EQpbsFWlx4FoHW90uLW9adVvsTQFTrzVDO/wneWHV9
+         tWli9mq9YFcpRJcHEfOO1wv/7gzcU94lZdCetC1fQK+C3A9iYOSnj9oO0Ojr4fUwXhUN
+         23Lk6d5CwGStm+dH29Yqi/vDBHrZ1ZesqtB8hP9/hUrqaqyU0YpyibcZCWGTv9J9WaXA
+         AmMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsK2hHfVQF0GEBewxUUbU2rnWlJc899oePUU+vXJMI5+ZsoFS94+YRCjeT04y5yhUMg31pHQDeSUKnY5BY9Op+Rmr6bGab8h2kWTViZNXLyRehf32sQni/O/2DKTJPiNjFi15uFQ==
+X-Gm-Message-State: AOJu0YyLV4flYgiiGwX1ym27SnHdoUa+q6tsb/FYFvqW9FnV2VXhsyxh
+	APfUFg9vQunIduR2FecmEek4RKcVNjQQfRYmjsVE07Mhd8ITeNg3rKO9EvZrKNmbBi199Za31gX
+	JaLPFumEyCyypKfix9WHftglrn6Q=
+X-Google-Smtp-Source: AGHT+IGvhgHoR/H3/Joew5fwC9WdlIUAZfI4tSWvfbxz0Cmjw6rZcLp6DtCisk5HjPqv4qMcZGzipc9q3RGiyb9GEus=
+X-Received: by 2002:a17:90a:17ed:b0:29b:c17c:5fa6 with SMTP id
+ q100-20020a17090a17ed00b0029bc17c5fa6mr2263229pja.33.1711036809548; Thu, 21
+ Mar 2024 09:00:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1ade566-111a-46b2-81b7-c165890c84ce@linux.intel.com>
+References: <ZfxKeSF5e6mXpnrs@x1>
+In-Reply-To: <ZfxKeSF5e6mXpnrs@x1>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 21 Mar 2024 08:59:57 -0700
+Message-ID: <CAEf4BzY2iVCDPajdzNvJPfFHCjHiMb2eq7rk-rfKejhkD9v48A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] libbpf: Use (uintptr_t) for a u64 cast to a void
+ pointer to fix build on 32-bit arches
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 21, 2024 at 11:14:35AM -0400, Liang, Kan wrote:
-> 
-> 
-> On 2024-03-21 10:25 a.m., Arnaldo Carvalho de Melo wrote:
-> > On Wed, Mar 20, 2024 at 11:00:04PM -0700, Ian Rogers wrote:
-> >> Update events to the latest on:
-> >> https://github.com/intel/perfmon
-> >>
-> >> Using the converter script:
-> >> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> > 
-> > Kan,
-> > 
-> > 	Can you please take a look and provide an Acked or Reviewed-by?
-> > 
-> 
-> 
-> Sure. The patch series look good to me. Thanks Ian!
-> 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Mar 21, 2024 at 8:16=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Noticed on several perf container builds:
+>
+>   perfbuilder@number:~$ grep -B1 -A2 "cast to pointer"  dm.log/*\:*
+>   dm.log/ubuntu:18.04-x-arm-libbpf.c: In function 'bpf_object__create_map=
+s':
+>   dm.log/ubuntu:18.04-x-arm:libbpf.c:5355:24: error: cast to pointer from=
+ integer of different size [-Werror=3Dint-to-pointer-cast]
+>   dm.log/ubuntu:18.04-x-arm-     map->mmaped =3D mmap((void *)map->map_ex=
+tra, bpf_map_mmap_sz(map),
+>   dm.log/ubuntu:18.04-x-arm-                        ^
+>   --
+>   dm.log/ubuntu:18.04-x-powerpc-libbpf.c: In function 'bpf_object__create=
+_maps':
+>   dm.log/ubuntu:18.04-x-powerpc:libbpf.c:5355:24: error: cast to pointer =
+from integer of different size [-Werror=3Dint-to-pointer-cast]
+>   dm.log/ubuntu:18.04-x-powerpc-     map->mmaped =3D mmap((void *)map->ma=
+p_extra, bpf_map_mmap_sz(map),
+>   dm.log/ubuntu:18.04-x-powerpc-                        ^
+>   --
+>   dm.log/ubuntu:18.04-x-sh4-libbpf.c: In function 'bpf_object__create_map=
+s':
+>   dm.log/ubuntu:18.04-x-sh4:libbpf.c:5355:24: error: cast to pointer from=
+ integer of different size [-Werror=3Dint-to-pointer-cast]
+>   dm.log/ubuntu:18.04-x-sh4-     map->mmaped =3D mmap((void *)map->map_ex=
+tra, bpf_map_mmap_sz(map),
+>   dm.log/ubuntu:18.04-x-sh4-                        ^
+>   perfbuilder@number:~$
+>
+> I think Namhyung mentioned as well on a chat conversation about noticing
+> this on a 32-bit build on Debian.
+>
+> Fixes: 79ff13e99169ddb0 ("libbpf: Add support for bpf_arena.")
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
 
-Thanks!
+We've already landed a similar fix in the bpf tree, see [0].
 
-- Arnaldo
+  [0] https://patchwork.kernel.org/project/netdevbpf/patch/20240319215143.1=
+279312-1-andrii@kernel.org/
+
+
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index efab29b8935bd9f7..af0b0e24978558f8 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -14,6 +14,7 @@
+>  #define _GNU_SOURCE
+>  #endif
+>  #include <stdlib.h>
+> +#include <stdint.h>
+>  #include <stdio.h>
+>  #include <stdarg.h>
+>  #include <libgen.h>
+> @@ -5352,7 +5353,7 @@ bpf_object__create_maps(struct bpf_object *obj)
+>                                         goto err_out;
+>                         }
+>                         if (map->def.type =3D=3D BPF_MAP_TYPE_ARENA) {
+> -                               map->mmaped =3D mmap((void *)map->map_ext=
+ra, bpf_map_mmap_sz(map),
+> +                               map->mmaped =3D mmap((void *)(uintptr_t)m=
+ap->map_extra, bpf_map_mmap_sz(map),
+>                                                    PROT_READ | PROT_WRITE=
+,
+>                                                    map->map_extra ? MAP_S=
+HARED | MAP_FIXED : MAP_SHARED,
+>                                                    map->fd, 0);
+> --
+> 2.44.0
