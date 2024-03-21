@@ -1,44 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBAC134428;
-	Thu, 21 Mar 2024 19:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C9A133402;
+	Thu, 21 Mar 2024 20:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711051101; cv=none; b=OrXKi/mC2AojAYcDJz9wqn4AQ9TY1TS6TP5e1dtN1rWuGXDw3+EqK0KsrBWxV7eFP4fj81fDYHNHtfLyEBjp5Oju576ARinqmxt/XHU/rFEBm+h4pj8Rrd6fx6HE/1c7NRi7fk4RW62Rk+FFmdP716WrrWMA2klcdbXdHh9VVkQ=
+	t=1711052893; cv=none; b=eaNTBU4yLmAxfcb+9JizW3HfIN4cyynFgPr4gvlnTYvgs4LIfrzWbp7/0ERdKuHJuHUQR1AEhjqKWoHGglTYrlIY63axnhlst4Tovrsiw49obZOtkXj+NMOQgl1G/ytd9UjJsRMH56Z2Fzkv4qrIXRqh3KUSNJrm7Y1xOKa0uZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711051101; c=relaxed/simple;
-	bh=412A9G1xvc9KWN8uYFJK6xoGGzzP/mRkZgKkvJrAdPU=;
+	s=arc-20240116; t=1711052893; c=relaxed/simple;
+	bh=fv29jsGkpY39loNkVFVRiRflO64Iy3xyWL+d6AJ6Bek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3nq50PjdGvxJrzMZPOsCJsK+EvFS+VP9QvSu460q2YP7vOiAaKPq9vhrSBjauiSxSlHT3O1nbWFbB/qGqHBx+Td/jECJQqoS1VYwYfi+2eTeL+NLL1izFGI4eoauTV/XId+972clobwEWv1RNX4NpwO6o2CB0nrnSc/VtHwiWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bswh3M17; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BbwvZCpKAr4fL979veHzzYT2og/HXAkH8H0n2TmO1bOAF2yYg6V7Wn/A94M0+WLl/H0qwiwv8atdVVyVwLR69SWn8Xl09t1MDLmbTx/x2bz5wPFgQmxMj3pGGWCbnhPgkIO5IejndncJ853q/5MRlaMcvMjz+Z1eFGDwXGOAPfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPpBJteL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bswh3M17"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04026C433C7;
-	Thu, 21 Mar 2024 19:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPpBJteL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E48C433F1;
+	Thu, 21 Mar 2024 20:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711051100;
-	bh=412A9G1xvc9KWN8uYFJK6xoGGzzP/mRkZgKkvJrAdPU=;
+	s=k20201202; t=1711052892;
+	bh=fv29jsGkpY39loNkVFVRiRflO64Iy3xyWL+d6AJ6Bek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bswh3M17MUp9NQTSHevNoVHvLBea911+J3WRyO6SnDRPv4B8eJ3uiN9zMYDSKXehA
-	 Tz4lZ6s0NbImA5YLC0fkP4atBLp8SPFvtmS4Lx/0iD0rzrnKUQKGoBnFtY5GXXxKCE
-	 ifDxFRV9O5SW6lrortJjcYs9P4pykL/tEsP7JfGbWN4PdenQ0bbjEOEz956eQAiI1m
-	 reXbU9812uUEb3QA2rnfFXPLRlhOLtGgeJaL5vfkwAASKWYY5evR7p82rjttz5Oh3S
-	 XcmmuElVLQDzeZu8JeCv+FDJvW0TOhoAniYgY+TWrLCzn4vSLk1TEE0qD+yeXrE6Ln
-	 6+yFqzk8Uq+/w==
-Date: Thu, 21 Mar 2024 16:58:17 -0300
+	b=EPpBJteL3VBDttaosg/kR7CL735OSUtwgtdk6Z4hD4f7zPgPd8FqCtg1ZyVRJKiJg
+	 A7c13uYeD+uNt/wRiULZBkruy4GR9dU9c2VSwVE/ZV2qSTFRcsZPXgXTlyjhDno8t/
+	 wX5p5hTbFNJTB6zV/y8u30VuVyLl31lzYII+RzYUeZTBNwaZT0Y5UhGw/aQWVCwOh5
+	 e+a3lg8ckRKT1u8KvUgd38lpvKMbyCjQynRF/2anB7xmiWluwzr9WWCC8G6jxV0a8v
+	 QwJQmIiUPuOcLqED5syJ5SAR91vxKGHN9slK43A+sztpD2fE+cvEL0BNNe0buFgvhm
+	 X1HoLgzhAIpnQ==
+Date: Thu, 21 Mar 2024 17:28:09 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Anne Macedo <retpolanne@posteo.net>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf lock contention: skip traceiter functions
-Message-ID: <ZfyRWZqxypTzdvQF@x1>
-References: <20240319143629.3422590-1-retpolanne@posteo.net>
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+	Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Liam Howlett <liam.howlett@oracle.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Changbin Du <changbin.du@huawei.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
+	elfring@users.sourceforge.net, Andi Kleen <ak@linux.intel.com>,
+	Markus Elfring <Markus.Elfring@web.de>,
+	Chengen Du <chengen.du@canonical.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] perf dso: Reorder variables to save space in
+ struct dso
+Message-ID: <ZfyYWcu0E-Pcn6Rf@x1>
+References: <20240321160300.1635121-1-irogers@google.com>
+ <20240321160300.1635121-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,164 +71,341 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319143629.3422590-1-retpolanne@posteo.net>
+In-Reply-To: <20240321160300.1635121-2-irogers@google.com>
 
-Now lemme nitpick a bit, and I'll do it myself while processing the
-patch, some are from my days sending patches to Ingo and from his
-requests it become second nature, others I do to further clarify the
-text:
+On Thu, Mar 21, 2024 at 09:02:48AM -0700, Ian Rogers wrote:
+> Save 40 bytes and move from 8 to 7 cache lines. Make variable dwfl
+> dependent on being a powerpc build. Squeeze bits of int/enum types
+> when appropriate. Remove holes/padding by reordering variables.
 
-And here is the reason for top posting, the first request is about the
-subject line:
-
-Subject: [PATCH v4] perf lock contention: skip traceiter functions
-
-Becomes:
-
-Subject: [PATCH v4] perf lock contention: Trim backtrace by skipping traceiter functions
-
-Please make it so that after the component the one line summary starts
-with a capital letter and packs as much info as possible.
-
-On Tue, Mar 19, 2024 at 02:36:26PM +0000, Anne Macedo wrote:
-> The perf lock contention program currently shows the caller of the locks
-
-I try to make the sub (sub) command stand out by single quoting it:
-
-  The 'perf lock contention' program currently shows the caller of the locks
-
-What follows is great, nice description, before/after.
-
-Thanks, testing it now on x86_64 and aarch64, will apply it then.
+Thanks, applied.
 
 - Arnaldo
-
-> as __traceiter_contention_begin+0x??. This caller can be ignored, as it is
-> from the traceiter itself. Instead, it should show the real callers for
-> the locks.
+ 
+> Before:
+> ```
+> struct dso {
+>         struct mutex               lock;                 /*     0    40 */
+>         struct list_head           node;                 /*    40    16 */
+>         struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+>         /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+>         struct rb_root *           root;                 /*    80     8 */
+>         struct rb_root_cached      symbols;              /*    88    16 */
+>         struct symbol * *          symbol_names;         /*   104     8 */
+>         size_t                     symbol_names_len;     /*   112     8 */
+>         struct rb_root_cached      inlined_nodes;        /*   120    16 */
+>         /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+>         struct rb_root_cached      srclines;             /*   136    16 */
+>         struct {
+>                 u64                addr;                 /*   152     8 */
+>                 struct symbol *    symbol;               /*   160     8 */
+>         } last_find_result;                              /*   152    16 */
+>         void *                     a2l;                  /*   168     8 */
+>         char *                     symsrc_filename;      /*   176     8 */
+>         unsigned int               a2l_fails;            /*   184     4 */
+>         enum dso_space_type        kernel;               /*   188     4 */
+>         /* --- cacheline 3 boundary (192 bytes) --- */
+>         _Bool                      is_kmod;              /*   192     1 */
 > 
-> When fiddling with the --stack-skip parameter, the actual callers for
-> the locks start to show up. However, just ignore the
-> __traceiter_contention_begin and the __traceiter_contention_end symbols
-> so the actual callers will show up.
+>         /* XXX 3 bytes hole, try to pack */
 > 
-> Before this patch is applied:
+>         enum dso_swap_type         needs_swap;           /*   196     4 */
+>         enum dso_binary_type       symtab_type;          /*   200     4 */
+>         enum dso_binary_type       binary_type;          /*   204     4 */
+>         enum dso_load_errno        load_errno;           /*   208     4 */
+>         u8                         adjust_symbols:1;     /*   212: 0  1 */
+>         u8                         has_build_id:1;       /*   212: 1  1 */
+>         u8                         header_build_id:1;    /*   212: 2  1 */
+>         u8                         has_srcline:1;        /*   212: 3  1 */
+>         u8                         hit:1;                /*   212: 4  1 */
+>         u8                         annotate_warned:1;    /*   212: 5  1 */
+>         u8                         auxtrace_warned:1;    /*   212: 6  1 */
+>         u8                         short_name_allocated:1; /*   212: 7  1 */
+>         u8                         long_name_allocated:1; /*   213: 0  1 */
+>         u8                         is_64_bit:1;          /*   213: 1  1 */
 > 
-> sudo perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
+>         /* XXX 6 bits hole, try to pack */
 > 
->          8      2.33 s       2.28 s     291.18 ms     rwlock:W   __traceiter_contention_begin+0x44
->          4      2.33 s       2.28 s     582.35 ms     rwlock:W   __traceiter_contention_begin+0x44
->          7    140.30 ms     46.77 ms     20.04 ms     rwlock:W   __traceiter_contention_begin+0x44
->          2     63.35 ms     33.76 ms     31.68 ms        mutex   trace_contention_begin+0x84
->          2     46.74 ms     46.73 ms     23.37 ms     rwlock:W   __traceiter_contention_begin+0x44
->          1     13.54 us     13.54 us     13.54 us        mutex   trace_contention_begin+0x84
->          1      3.67 us      3.67 us      3.67 us      rwsem:R   __traceiter_contention_begin+0x44
+>         _Bool                      sorted_by_name;       /*   214     1 */
+>         _Bool                      loaded;               /*   215     1 */
+>         u8                         rel;                  /*   216     1 */
 > 
-> Before this patch is applied - using --stack-skip 5
+>         /* XXX 7 bytes hole, try to pack */
 > 
-> sudo perf lock con --stack-skip 5 -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
+>         struct build_id            bid;                  /*   224    32 */
+>         /* --- cacheline 4 boundary (256 bytes) --- */
+>         u64                        text_offset;          /*   256     8 */
+>         u64                        text_end;             /*   264     8 */
+>         const char  *              short_name;           /*   272     8 */
+>         const char  *              long_name;            /*   280     8 */
+>         u16                        long_name_len;        /*   288     2 */
+>         u16                        short_name_len;       /*   290     2 */
 > 
->          2      2.24 s       2.24 s       1.12 s      rwlock:W   do_epoll_wait+0x5a0
->          4      1.65 s     824.21 ms    412.08 ms     rwlock:W   do_exit+0x338
->          2    824.35 ms    824.29 ms    412.17 ms     spinlock   get_signal+0x108
->          2    824.14 ms    824.14 ms    412.07 ms     rwlock:W   release_task+0x68
->          1     25.22 ms     25.22 ms     25.22 ms        mutex   cgroup_kn_lock_live+0x58
->          1     24.71 us     24.71 us     24.71 us     spinlock   do_exit+0x44
->          1     22.04 us     22.04 us     22.04 us      rwsem:R   lock_mm_and_find_vma+0xb0
+>         /* XXX 4 bytes hole, try to pack */
 > 
-> After this patch is applied:
+>         void *                     dwfl;                 /*   296     8 */
+>         struct auxtrace_cache *    auxtrace_cache;       /*   304     8 */
+>         int                        comp;                 /*   312     4 */
 > 
-> sudo ./perf lock con -a -b -- sleep 3
->  contended   total wait     max wait     avg wait         type   caller
+>         /* XXX 4 bytes hole, try to pack */
 > 
->          4      4.13 s       2.07 s       1.03 s      rwlock:W   release_task+0x68
->          2      2.07 s       2.07 s       1.03 s      rwlock:R   mm_update_next_owner+0x50
->          2      2.07 s       2.07 s       1.03 s      rwlock:W   do_exit+0x338
->          1     41.56 ms     41.56 ms     41.56 ms        mutex   cgroup_kn_lock_live+0x58
->          2     36.12 us     18.83 us     18.06 us     rwlock:W   do_exit+0x338
+>         /* --- cacheline 5 boundary (320 bytes) --- */
+>         struct {
+>                 struct rb_root     cache;                /*   320     8 */
+>                 int                fd;                   /*   328     4 */
+>                 int                status;               /*   332     4 */
+>                 u32                status_seen;          /*   336     4 */
 > 
-> changes since v3:
+>                 /* XXX 4 bytes hole, try to pack */
 > 
-> - remove dummy value and assume machine->traceiter and machine->trace
-> have zero address
+>                 u64                file_size;            /*   344     8 */
+>                 struct list_head   open_entry;           /*   352    16 */
+>                 u64                elf_base_addr;        /*   368     8 */
+>                 u64                debug_frame_offset;   /*   376     8 */
+>                 /* --- cacheline 6 boundary (384 bytes) --- */
+>                 u64                eh_frame_hdr_addr;    /*   384     8 */
+>                 u64                eh_frame_hdr_offset;  /*   392     8 */
+>         } data;                                          /*   320    80 */
+>         struct {
+>                 u32                id;                   /*   400     4 */
+>                 u32                sub_id;               /*   404     4 */
+>                 struct perf_env *  env;                  /*   408     8 */
+>         } bpf_prog;                                      /*   400    16 */
+>         union {
+>                 void *             priv;                 /*   416     8 */
+>                 u64                db_id;                /*   416     8 */
+>         };                                               /*   416     8 */
+>         struct nsinfo *            nsinfo;               /*   424     8 */
+>         struct dso_id              id;                   /*   432    24 */
+>         /* --- cacheline 7 boundary (448 bytes) was 8 bytes ago --- */
+>         refcount_t                 refcnt;               /*   456     4 */
+>         char                       name[];               /*   460     0 */
 > 
-> changes since v2:
+>         /* size: 464, cachelines: 8, members: 49 */
+>         /* sum members: 440, holes: 4, sum holes: 18 */
+>         /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
+>         /* padding: 4 */
+>         /* forced alignments: 1 */
+>         /* last cacheline: 16 bytes */
+> } __attribute__((__aligned__(8)));
+> ```
 > 
-> - add dummy value to machine->traceiter and machine->trace to make
-> necessary checks, fixing possible null pointer access
+> After:
+> ```
+> struct dso {
+>         struct mutex               lock;                 /*     0    40 */
+>         struct list_head           node;                 /*    40    16 */
+>         struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+>         /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+>         struct rb_root *           root;                 /*    80     8 */
+>         struct rb_root_cached      symbols;              /*    88    16 */
+>         struct symbol * *          symbol_names;         /*   104     8 */
+>         size_t                     symbol_names_len;     /*   112     8 */
+>         struct rb_root_cached      inlined_nodes;        /*   120    16 */
+>         /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+>         struct rb_root_cached      srclines;             /*   136    16 */
+>         struct {
+>                 u64                addr;                 /*   152     8 */
+>                 struct symbol *    symbol;               /*   160     8 */
+>         } last_find_result;                              /*   152    16 */
+>         struct build_id            bid;                  /*   168    32 */
+>         /* --- cacheline 3 boundary (192 bytes) was 8 bytes ago --- */
+>         u64                        text_offset;          /*   200     8 */
+>         u64                        text_end;             /*   208     8 */
+>         const char  *              short_name;           /*   216     8 */
+>         const char  *              long_name;            /*   224     8 */
+>         void *                     a2l;                  /*   232     8 */
+>         char *                     symsrc_filename;      /*   240     8 */
+>         struct nsinfo *            nsinfo;               /*   248     8 */
+>         /* --- cacheline 4 boundary (256 bytes) --- */
+>         struct auxtrace_cache *    auxtrace_cache;       /*   256     8 */
+>         union {
+>                 void *             priv;                 /*   264     8 */
+>                 u64                db_id;                /*   264     8 */
+>         };                                               /*   264     8 */
+>         struct {
+>                 struct perf_env *  env;                  /*   272     8 */
+>                 u32                id;                   /*   280     4 */
+>                 u32                sub_id;               /*   284     4 */
+>         } bpf_prog;                                      /*   272    16 */
+>         struct {
+>                 struct rb_root     cache;                /*   288     8 */
+>                 struct list_head   open_entry;           /*   296    16 */
+>                 u64                file_size;            /*   312     8 */
+>                 /* --- cacheline 5 boundary (320 bytes) --- */
+>                 u64                elf_base_addr;        /*   320     8 */
+>                 u64                debug_frame_offset;   /*   328     8 */
+>                 u64                eh_frame_hdr_addr;    /*   336     8 */
+>                 u64                eh_frame_hdr_offset;  /*   344     8 */
+>                 int                fd;                   /*   352     4 */
+>                 int                status;               /*   356     4 */
+>                 u32                status_seen;          /*   360     4 */
+>         } data;                                          /*   288    80 */
 > 
-> changes since v1:
+>         /* XXX last struct has 4 bytes of padding */
 > 
-> - consider trace_contention and __traceiter_contention functions as
-> optional (i.e. check if sym is null to avoid segfault)
+>         struct dso_id              id;                   /*   368    24 */
+>         /* --- cacheline 6 boundary (384 bytes) was 8 bytes ago --- */
+>         unsigned int               a2l_fails;            /*   392     4 */
+>         int                        comp;                 /*   396     4 */
+>         refcount_t                 refcnt;               /*   400     4 */
+>         enum dso_load_errno        load_errno;           /*   404     4 */
+>         u16                        long_name_len;        /*   408     2 */
+>         u16                        short_name_len;       /*   410     2 */
+>         enum dso_binary_type       symtab_type:8;        /*   412: 0  4 */
+>         enum dso_binary_type       binary_type:8;        /*   412: 8  4 */
+>         enum dso_space_type        kernel:2;             /*   412:16  4 */
+>         enum dso_swap_type         needs_swap:2;         /*   412:18  4 */
 > 
-> changes since v0:
+>         /* Bitfield combined with next fields */
 > 
-> - skip trace_contention functions
-> - use sym->end instead of __traceiter_contention_end for text_end
+>         _Bool                      is_kmod:1;            /*   414: 4  1 */
+>         u8                         adjust_symbols:1;     /*   414: 5  1 */
+>         u8                         has_build_id:1;       /*   414: 6  1 */
+>         u8                         header_build_id:1;    /*   414: 7  1 */
+>         u8                         has_srcline:1;        /*   415: 0  1 */
+>         u8                         hit:1;                /*   415: 1  1 */
+>         u8                         annotate_warned:1;    /*   415: 2  1 */
+>         u8                         auxtrace_warned:1;    /*   415: 3  1 */
+>         u8                         short_name_allocated:1; /*   415: 4  1 */
+>         u8                         long_name_allocated:1; /*   415: 5  1 */
+>         u8                         is_64_bit:1;          /*   415: 6  1 */
 > 
-> Signed-off-by: Anne Macedo <retpolanne@posteo.net>
+>         /* XXX 1 bit hole, try to pack */
+> 
+>         _Bool                      sorted_by_name;       /*   416     1 */
+>         _Bool                      loaded;               /*   417     1 */
+>         u8                         rel;                  /*   418     1 */
+>         char                       name[];               /*   419     0 */
+> 
+>         /* size: 424, cachelines: 7, members: 48 */
+>         /* sum members: 415 */
+>         /* sum bitfield members: 31 bits, bit holes: 1, sum bit holes: 1 bits */
+>         /* padding: 5 */
+>         /* paddings: 1, sum paddings: 4 */
+>         /* forced alignments: 1 */
+>         /* last cacheline: 40 bytes */
+> } __attribute__((__aligned__(8)));
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/machine.c | 24 ++++++++++++++++++++++++
->  tools/perf/util/machine.h |  2 +-
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>  tools/perf/util/dso.h | 84 +++++++++++++++++++++----------------------
+>  1 file changed, 42 insertions(+), 42 deletions(-)
 > 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 527517db3182..5eb9044bc223 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -3266,6 +3266,17 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
->  
->  		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
->  		machine->lock.text_end = map__unmap_ip(kmap, sym->start);
-> +
-> +		sym = machine__find_kernel_symbol_by_name(machine, "__traceiter_contention_begin", &kmap);
-> +		if (sym) {
-> +			machine->traceiter.text_start = map__unmap_ip(kmap, sym->start);
-> +			machine->traceiter.text_end = map__unmap_ip(kmap, sym->end);
-> +		}
-> +		sym = machine__find_kernel_symbol_by_name(machine, "trace_contention_begin", &kmap);
-> +		if (sym) {
-> +			machine->trace.text_start = map__unmap_ip(kmap, sym->start);
-> +			machine->trace.text_end = map__unmap_ip(kmap, sym->end);
-> +		}
->  	}
->  
->  	/* failed to get kernel symbols */
-> @@ -3280,5 +3291,18 @@ bool machine__is_lock_function(struct machine *machine, u64 addr)
->  	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
->  		return true;
->  
-> +	/* traceiter functions currently don't have their own section
-> +	 * but we consider them lock functions
-> +	 */
-> +	if (machine->traceiter.text_start != 0) {
-> +		if (machine->traceiter.text_start <= addr && addr < machine->traceiter.text_end)
-> +			return true;
-> +	}
-> +
-> +	if (machine->trace.text_start != 0) {
-> +		if (machine->trace.text_start <= addr && addr < machine->trace.text_end)
-> +			return true;
-> +	}
-> +
->  	return false;
->  }
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index e28c787616fe..4312f6db6de0 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -49,7 +49,7 @@ struct machine {
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 2cdcd1e2ef8b..17dab230a2ca 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -161,66 +161,66 @@ struct dso {
+>  		u64		addr;
+>  		struct symbol	*symbol;
+>  	} last_find_result;
+> -	void		 *a2l;
+> -	char		 *symsrc_filename;
+> -	unsigned int	 a2l_fails;
+> -	enum dso_space_type	kernel;
+> -	bool			is_kmod;
+> -	enum dso_swap_type	needs_swap;
+> -	enum dso_binary_type	symtab_type;
+> -	enum dso_binary_type	binary_type;
+> -	enum dso_load_errno	load_errno;
+> -	u8		 adjust_symbols:1;
+> -	u8		 has_build_id:1;
+> -	u8		 header_build_id:1;
+> -	u8		 has_srcline:1;
+> -	u8		 hit:1;
+> -	u8		 annotate_warned:1;
+> -	u8		 auxtrace_warned:1;
+> -	u8		 short_name_allocated:1;
+> -	u8		 long_name_allocated:1;
+> -	u8		 is_64_bit:1;
+> -	bool		 sorted_by_name;
+> -	bool		 loaded;
+> -	u8		 rel;
+>  	struct build_id	 bid;
+>  	u64		 text_offset;
+>  	u64		 text_end;
+>  	const char	 *short_name;
+>  	const char	 *long_name;
+> -	u16		 long_name_len;
+> -	u16		 short_name_len;
+> +	void		 *a2l;
+> +	char		 *symsrc_filename;
+> +#if defined(__powerpc__)
+>  	void		*dwfl;			/* DWARF debug info */
+> +#endif
+> +	struct nsinfo	*nsinfo;
+>  	struct auxtrace_cache *auxtrace_cache;
+> -	int		 comp;
+> -
+> +	union { /* Tool specific area */
+> +		void	 *priv;
+> +		u64	 db_id;
+> +	};
+> +	/* bpf prog information */
+> +	struct {
+> +		struct perf_env	*env;
+> +		u32		id;
+> +		u32		sub_id;
+> +	} bpf_prog;
+>  	/* dso data file */
 >  	struct {
->  		u64	  text_start;
->  		u64	  text_end;
-> -	} sched, lock;
-> +	} sched, lock, traceiter, trace;
->  	pid_t		  *current_tid;
->  	size_t		  current_tid_sz;
->  	union { /* Tool specific area */
+>  		struct rb_root	 cache;
+> -		int		 fd;
+> -		int		 status;
+> -		u32		 status_seen;
+> -		u64		 file_size;
+>  		struct list_head open_entry;
+> +		u64		 file_size;
+>  		u64		 elf_base_addr;
+>  		u64		 debug_frame_offset;
+>  		u64		 eh_frame_hdr_addr;
+>  		u64		 eh_frame_hdr_offset;
+> +		int		 fd;
+> +		int		 status;
+> +		u32		 status_seen;
+>  	} data;
+> -	/* bpf prog information */
+> -	struct {
+> -		u32		id;
+> -		u32		sub_id;
+> -		struct perf_env	*env;
+> -	} bpf_prog;
+> -
+> -	union { /* Tool specific area */
+> -		void	 *priv;
+> -		u64	 db_id;
+> -	};
+> -	struct nsinfo	*nsinfo;
+>  	struct dso_id	 id;
+> +	unsigned int	 a2l_fails;
+> +	int		 comp;
+>  	refcount_t	 refcnt;
+> +	enum dso_load_errno	load_errno;
+> +	u16		 long_name_len;
+> +	u16		 short_name_len;
+> +	enum dso_binary_type	symtab_type:8;
+> +	enum dso_binary_type	binary_type:8;
+> +	enum dso_space_type	kernel:2;
+> +	enum dso_swap_type	needs_swap:2;
+> +	bool			is_kmod:1;
+> +	u8		 adjust_symbols:1;
+> +	u8		 has_build_id:1;
+> +	u8		 header_build_id:1;
+> +	u8		 has_srcline:1;
+> +	u8		 hit:1;
+> +	u8		 annotate_warned:1;
+> +	u8		 auxtrace_warned:1;
+> +	u8		 short_name_allocated:1;
+> +	u8		 long_name_allocated:1;
+> +	u8		 is_64_bit:1;
+> +	bool		 sorted_by_name;
+> +	bool		 loaded;
+> +	u8		 rel;
+>  	char		 name[];
+>  };
+>  
 > -- 
-> 2.39.2
+> 2.44.0.396.g6e790dbe36-goog
 > 
