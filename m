@@ -1,63 +1,66 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18F712BF1C
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 16:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCD312BF35
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 16:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711036989; cv=none; b=ss49B/0oiIPBPBjPIc3lO4TtVDXegVhch5MZZbJzrpEolHO9Eq/z09swtHAos2XKR27Dfsymkdb7FYDygcfF72txqbexSeDy6SwLmhIkQ4mz75rc42o4SDgK2YuQqC4jA4quCMTZ6PvS1Kq6vsJ6zXl7s9BpVY2Uh0INwS/V1sI=
+	t=1711036993; cv=none; b=p0iJ894GvAhAzoCuPGiNRcPb8Y1/0ZKTm9k4EFT9TuMqfOR5P/D10DB0sXESMgeKFqHJtNLXzwyXE+8B1ug72tBQWs+cqImocZ3Ao61vvx7gnvB1YrWxdwK0qXtBdguATeHJvp8RKW/C6SoczqqEzSj+PCw6z2ebWgu5AMZzdMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711036989; c=relaxed/simple;
-	bh=nB1k5uaFBqYaBOpNNY+26UH1wVO5501tHpsS/EBiFYQ=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=gMMa1/MxNR5e9ppDmCroNDvUD3BFL7ZH7s+LIheTNeNZ2pcGn5/qFKYyB7Zx9L2ejw6/7qwP0qyN1tTwY1B9BIeYs137soKN2fcX0YZA+Hg84S5Hxwgx/fjTMOueey/rPCjkGKJj682NxaxohWuAROsYDt/vs+qnMu8Gjsn1ldc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p5/3wQnM; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1711036993; c=relaxed/simple;
+	bh=RBrB5BXaNoo1IQoJ9V9QDA+EU1D4Wq30rZpNB+sQ3mE=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=H6q+gOU09dVXGGgX2bfvlD9xtWeK9Upujpx9M3moJEpKrzxUQYyiyL5RPROCgxgLW4LMlhT0XHJZdfuoFazbQ3aRzwQk96UPBgWykT2ZEu8nAdd8RqgQt9HJ/2mECLdbB6tJUi3Qzrk7QkgQjf7v2c9/84FxD4M/rAKm+OGDTDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xQ8TQAhU; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p5/3wQnM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc58cddb50so1691537276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 09:03:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xQ8TQAhU"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso1528890276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 09:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711036987; x=1711641787; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bTRt1HiPuKsc9DFIQ0MUxj2NIV+5m7aSyK2vQDOvUXE=;
-        b=p5/3wQnM3cqV4w8xndCAPuTFpxQw1lwaQ47lv1lUULB9H6T7p5cYS5ww5UhUZ6q8+p
-         IIsH8CxvvCrJKd94DCyGnZPyGG63IdpvEF6qnliEsWEvdD7UlRPYipz+8fGcI55+dQhx
-         Sgdokqtcu7kVS13PCur9/nDmazc5cNZ7yRvNapsy7ibjs94CAhP51LrmBCkGDGMaCzdn
-         QSpwsH86JMaeFSFi5XDHcIKqAP0RdTT7nb9BaylswtIck4TA5Sskx/zDWSmDtsRWcCSS
-         VmBsKpOHveLJNY97kWEG6R/rl0NuDoaKzja71DgsZazo9DXq4NKXlSa7ItODvZ6Bbebf
-         ZA6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711036987; x=1711641787;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1711036989; x=1711641789; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bTRt1HiPuKsc9DFIQ0MUxj2NIV+5m7aSyK2vQDOvUXE=;
-        b=r6qVk0QUHinFo6CHJzdWT6j6zYG1d+ZwGy8r+FgDlOC2Kv20c9fTrA4cQThvfxrpJu
-         RdUie43fy6OnTOXzNY1pp/s6JAKERx6iWoxWORecyUcVCbbHkicrCHQcxj/NP8yVS/S4
-         l3lrtgyVMA5F94BM2s66zcHWlm8Az9EGTvWHj+vmqyVt8n4aRofXDHPu8oVOW68waxWv
-         qEIZUDykjxH4FqGJhDuG6EWo2yVwuyKwpI4Smy0gtU+lZ2LFjkZaZP2IV6SDjPBMdiG/
-         2wy3xsx25vTvSzSJ38vuED9zrL/Bl1f76mmHmnev7PNBylFZkGelAg6XM1vrpEvbfLXu
-         s7xg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUDmFUWlZrbe09PPIHHGaXma3vF3P1AJrU/OE/s7CyMQhGbhDX+EDEj3lHyff2da+NGogF4t/5NycrTX+kotYmNdnOUxElr2JpBq4n53zuFQ==
-X-Gm-Message-State: AOJu0YwjafhDBfMObX8BKpxzy8nG/gmBvduP8yPvhts0cFebJBRGvkbG
-	imPGI54ZFiiS8k8KXiWf66hajPirnzZwvb1XnLg/7pO+ulQ+44MDjVZt+SrMlNd+116I3oKO6aM
-	n4TIPKQ==
-X-Google-Smtp-Source: AGHT+IG0+ZDqllFR0+pj15UK/R+4X9/CrYVOdT9x1taLSZGE+fXa9uTPhVWCY3Nso8QPBTPsQKxFF72pAyVr
+        bh=f+MEbM++g16iMexStgeW5mWbub1tgw8efwRK0qIdUcA=;
+        b=xQ8TQAhUpQZW/nj8RuwbyUQz8RtuI9qMw9Dud1a6giL8MFhn+V7ejMrnb0/0MV8TFT
+         IXotjNJGtnbQOtx1ns3N8DN+O92S/0LNsfVMhlAmwF+gm7wV5nkTLWjrNDj5vjiVTQrh
+         JQJ3CcgSK10GsZoqwrFDdUcoTYfx7bx4LbuKB1x1CwywnmV2YqySXEwTW1YJ4jUjWAX0
+         ComgBD3LB/WhRRzFcSbMEhrC9h3n4d3W+P0fkR9aK4vEH3Wvj8k+0VkPQxITbcQYIihd
+         Pi/5/KSRBH2r4NixZMeemwKZIA5GxVAjOKOx6a4LwGe09/Cq6YrjvYCSy11Vpngz59/f
+         Qh3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711036989; x=1711641789;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+MEbM++g16iMexStgeW5mWbub1tgw8efwRK0qIdUcA=;
+        b=E3KRfQuALrXc7crGimGL2OF+lv34XL60YfIcCTqkD0efdeuT14324hFd0jPirYYQsQ
+         C03Ob9/JnQbLWzyl4dIAm66wCHKb7I3SsXcTfNEMqrRipq8zqGyQVED3WQaanfp0nJOP
+         64sbZUlf//X4P3WFJtGzdugysGzFSJkuz32kHUjif9+w9njWXuzUKj1zU1V9zSoYzWFH
+         PJ1wWkNNCgDsayQLrSelNes7NEv+awMv9izdC/LCeOt2efSVQwcspqxjTmTH0rrx5VZx
+         QIVjGLkFL9/67y33aaHNmEfoEbOuuBtSxaEmS0GjvIlasgfJaY56cyd4YUQ+cZVPg63g
+         /LXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFECo/bdzD62wYA5H0xFJfr2g8cuij2kwjnX9xtwm5G+BBFmlCTNXcEY/LHgCdi3Y8xpyv6sqEbpOgG9k3dABx6yzWt3o0/DrT5nMaeVPkWA==
+X-Gm-Message-State: AOJu0Yz/h5gDKMgOAX2jebeiyG8LmZ1YTUgQunZM8BmRBCjiU7Ptrz7W
+	4U4leeGeJ3n09t0vvTa7f6GFTKJYPjb4JugwQ3Gp1sqm5AoqMUMfyTPuy7nlqXScsRSzyPkrVGS
+	JyxUeYQ==
+X-Google-Smtp-Source: AGHT+IFpBo6k8tuUdOIJKcJBl2RWui1ScCSnQi70hMgOd5Gzx9PU8JVNw6XG+ulNbwPBSK4Y37K+Mi/3q7As
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
- (user=irogers job=sendgmr) by 2002:a05:6902:100e:b0:dc9:5ef8:2b2d with SMTP
- id w14-20020a056902100e00b00dc95ef82b2dmr5504757ybt.4.1711036986806; Thu, 21
- Mar 2024 09:03:06 -0700 (PDT)
-Date: Thu, 21 Mar 2024 09:02:47 -0700
-Message-Id: <20240321160300.1635121-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:240f:b0:dc6:e20f:80cb with SMTP
+ id dr15-20020a056902240f00b00dc6e20f80cbmr1122314ybb.3.1711036989312; Thu, 21
+ Mar 2024 09:03:09 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:02:48 -0700
+In-Reply-To: <20240321160300.1635121-1-irogers@google.com>
+Message-Id: <20240321160300.1635121-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240321160300.1635121-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Subject: [PATCH v2 00/13] dso/dsos memory savings and clean up
+Subject: [PATCH v2 01/13] perf dso: Reorder variables to save space in struct dso
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,159 +83,334 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-13 more patches from:
-https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
-a near half year old adventure in trying to lower perf's dynamic
-memory use. Bits like the memory overhead of opendir are on the
-sidelines for now, too much fighting over how
-distributions/C-libraries present getdents. These changes are more
-good old fashioned replace an rb-tree with a sorted array and add
-reference count tracking.
+Save 40 bytes and move from 8 to 7 cache lines. Make variable dwfl
+dependent on being a powerpc build. Squeeze bits of int/enum types
+when appropriate. Remove holes/padding by reordering variables.
 
-The changes migrate dsos code, the collection of dso structs, more
-into the dsos.c/dsos.h files. As with maps and threads, this is done
-so the internals can be changed - replacing a linked list (for fast
-iteration) and an rb-tree (for fast finds) with a lazily sorted
-array. The complexity of operations remain roughly the same, although
-iterating an array is likely faster than iterating a linked list, the
-memory usage is at least reduce by half.
+Before:
+```
+struct dso {
+        struct mutex               lock;                 /*     0    40 */
+        struct list_head           node;                 /*    40    16 */
+        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+        struct rb_root *           root;                 /*    80     8 */
+        struct rb_root_cached      symbols;              /*    88    16 */
+        struct symbol * *          symbol_names;         /*   104     8 */
+        size_t                     symbol_names_len;     /*   112     8 */
+        struct rb_root_cached      inlined_nodes;        /*   120    16 */
+        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+        struct rb_root_cached      srclines;             /*   136    16 */
+        struct {
+                u64                addr;                 /*   152     8 */
+                struct symbol *    symbol;               /*   160     8 */
+        } last_find_result;                              /*   152    16 */
+        void *                     a2l;                  /*   168     8 */
+        char *                     symsrc_filename;      /*   176     8 */
+        unsigned int               a2l_fails;            /*   184     4 */
+        enum dso_space_type        kernel;               /*   188     4 */
+        /* --- cacheline 3 boundary (192 bytes) --- */
+        _Bool                      is_kmod;              /*   192     1 */
 
-As fixing the memory usage necessitates changing operations like find,
-modify these operations so that they increment the reference count to
-avoid races like a find in dsos and a remove. Similarly tighten up
-lock usage so that operations working on dsos state hold the
-appropriate lock.
+        /* XXX 3 bytes hole, try to pack */
 
-Here are some questions (with answers) that I am expecting from reviewers:
+        enum dso_swap_type         needs_swap;           /*   196     4 */
+        enum dso_binary_type       symtab_type;          /*   200     4 */
+        enum dso_binary_type       binary_type;          /*   204     4 */
+        enum dso_load_errno        load_errno;           /*   208     4 */
+        u8                         adjust_symbols:1;     /*   212: 0  1 */
+        u8                         has_build_id:1;       /*   212: 1  1 */
+        u8                         header_build_id:1;    /*   212: 2  1 */
+        u8                         has_srcline:1;        /*   212: 3  1 */
+        u8                         hit:1;                /*   212: 4  1 */
+        u8                         annotate_warned:1;    /*   212: 5  1 */
+        u8                         auxtrace_warned:1;    /*   212: 6  1 */
+        u8                         short_name_allocated:1; /*   212: 7  1 */
+        u8                         long_name_allocated:1; /*   213: 0  1 */
+        u8                         is_64_bit:1;          /*   213: 1  1 */
 
- - Why not refactor dso with accessors first and then do the other things?
+        /* XXX 6 bits hole, try to pack */
 
-My ambition with this change was to lower memory overhead not to
-particularly clean up and fix dso. Fixing the memory overhead, by
-refactoring and changing the internals, showed that locking discipline
-and reference counting discipline was lacking. The later changes try
-to fix these as a service to the community while I am changing the
-code and to also ensure that code is correct (more correct than it was
-wrt locking and reference counting than before the patches).
+        _Bool                      sorted_by_name;       /*   214     1 */
+        _Bool                      loaded;               /*   215     1 */
+        u8                         rel;                  /*   216     1 */
 
-Reordering the patches to do the refactoring first will be a giant
-pain. It will merge conflict with every other patch in the series and
-is basically a request to reimplement everything from square 1. The
-only thing I'd have in my favor would be how the code should look at
-the end of the series, and reordering patches doesn't change the
-eventual outcome of applying the patches. Note also, were I to send
-the memory saving patches and then a week later send the API clean up
-and reference counting fix patches the patches would be merged in the
-order they are here. I've done my best, I know you may consider that
-I'm adding to your reviewing overhead but I've also got to think about
-the overhead to me.
+        /* XXX 7 bytes hole, try to pack */
 
- - Please break apart this change...
+        struct build_id            bid;                  /*   224    32 */
+        /* --- cacheline 4 boundary (256 bytes) --- */
+        u64                        text_offset;          /*   256     8 */
+        u64                        text_end;             /*   264     8 */
+        const char  *              short_name;           /*   272     8 */
+        const char  *              long_name;            /*   280     8 */
+        u16                        long_name_len;        /*   288     2 */
+        u16                        short_name_len;       /*   290     2 */
 
-The first changes are moving things, but when a broken API is spotted
-like the missing get on dsos__find I put it in a change to move the
-function and to add the missed get. Could this be two changes? Yes, it
-could. Does moving code materially change the behavior of the tool?
-No. I've done it in one patch to minimize churn and to some extent for
-my sanity. Such changes are less than 100 lines of code and all
-independently tested.
+        /* XXX 4 bytes hole, try to pack */
 
- - The logic in dso around short, long name and id with sorting is weird
+        void *                     dwfl;                 /*   296     8 */
+        struct auxtrace_cache *    auxtrace_cache;       /*   304     8 */
+        int                        comp;                 /*   312     4 */
 
-Yes, I've tried to make it less weird while retaining the existing
-behavior. It would be easy to make a series of patches just cleaning
-it up but I came here to save memory not change the dso API.
+        /* XXX 4 bytes hole, try to pack */
 
- - Move the fixes in the 12th patch earlier.
+        /* --- cacheline 5 boundary (320 bytes) --- */
+        struct {
+                struct rb_root     cache;                /*   320     8 */
+                int                fd;                   /*   328     4 */
+                int                status;               /*   332     4 */
+                u32                status_seen;          /*   336     4 */
 
-This is possible but then impossible to test with reference count
-checking. This does mean there are broken reference counts before the
-patch is applied, but this is generally already the case. Yes, some
-hypothetical person may decide to fork midway through this patch
-series and my order would mean they wouldn't have a fix. I've done my
-best while working within the bounds of my time and trying to avoid
-churn.
+                /* XXX 4 bytes hole, try to pack */
 
-v2. Rebases on top of tmp.perf-tools-next resolving merge conflicts.
+                u64                file_size;            /*   344     8 */
+                struct list_head   open_entry;           /*   352    16 */
+                u64                elf_base_addr;        /*   368     8 */
+                u64                debug_frame_offset;   /*   376     8 */
+                /* --- cacheline 6 boundary (384 bytes) --- */
+                u64                eh_frame_hdr_addr;    /*   384     8 */
+                u64                eh_frame_hdr_offset;  /*   392     8 */
+        } data;                                          /*   320    80 */
+        struct {
+                u32                id;                   /*   400     4 */
+                u32                sub_id;               /*   404     4 */
+                struct perf_env *  env;                  /*   408     8 */
+        } bpf_prog;                                      /*   400    16 */
+        union {
+                void *             priv;                 /*   416     8 */
+                u64                db_id;                /*   416     8 */
+        };                                               /*   416     8 */
+        struct nsinfo *            nsinfo;               /*   424     8 */
+        struct dso_id              id;                   /*   432    24 */
+        /* --- cacheline 7 boundary (448 bytes) was 8 bytes ago --- */
+        refcount_t                 refcnt;               /*   456     4 */
+        char                       name[];               /*   460     0 */
 
-Ian Rogers (13):
-  perf dso: Reorder variables to save space in struct dso
-  perf dsos: Attempt to better abstract dsos internals
-  perf dsos: Tidy reference counting and locking
-  perf dsos: Add dsos__for_each_dso
-  perf dso: Move dso functions out of dsos
-  perf dsos: Switch more loops to dsos__for_each_dso
-  perf dsos: Switch backing storage to array from rbtree/list
-  perf dsos: Remove __dsos__addnew
-  perf dsos: Remove __dsos__findnew_link_by_longname_id
-  perf dsos: Switch hand code to bsearch
-  perf dso: Add reference count checking and accessor functions
-  perf dso: Reference counting related fixes
-  perf dso: Use container_of to avoid a pointer in dso_data
+        /* size: 464, cachelines: 8, members: 49 */
+        /* sum members: 440, holes: 4, sum holes: 18 */
+        /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
+        /* padding: 4 */
+        /* forced alignments: 1 */
+        /* last cacheline: 16 bytes */
+} __attribute__((__aligned__(8)));
+```
 
- tools/perf/builtin-annotate.c                 |   8 +-
- tools/perf/builtin-buildid-cache.c            |   2 +-
- tools/perf/builtin-buildid-list.c             |  18 +-
- tools/perf/builtin-inject.c                   |  96 +--
- tools/perf/builtin-kallsyms.c                 |   2 +-
- tools/perf/builtin-mem.c                      |   4 +-
- tools/perf/builtin-record.c                   |   2 +-
- tools/perf/builtin-report.c                   |   6 +-
- tools/perf/builtin-script.c                   |   8 +-
- tools/perf/builtin-top.c                      |   4 +-
- tools/perf/builtin-trace.c                    |   2 +-
- tools/perf/tests/code-reading.c               |   8 +-
- tools/perf/tests/dso-data.c                   |  67 ++-
- tools/perf/tests/hists_common.c               |   6 +-
- tools/perf/tests/hists_cumulate.c             |   4 +-
- tools/perf/tests/hists_output.c               |   2 +-
- tools/perf/tests/maps.c                       |   4 +-
- tools/perf/tests/symbols.c                    |   8 +-
- tools/perf/tests/vmlinux-kallsyms.c           |   6 +-
- tools/perf/ui/browsers/annotate.c             |   6 +-
- tools/perf/ui/browsers/hists.c                |   8 +-
- tools/perf/ui/browsers/map.c                  |   4 +-
- tools/perf/util/annotate-data.c               |  14 +-
- tools/perf/util/annotate.c                    |  47 +-
- tools/perf/util/auxtrace.c                    |   2 +-
- tools/perf/util/block-info.c                  |   2 +-
- tools/perf/util/bpf-event.c                   |   8 +-
- tools/perf/util/build-id.c                    | 136 ++---
- tools/perf/util/build-id.h                    |   2 -
- tools/perf/util/callchain.c                   |   2 +-
- tools/perf/util/data-convert-json.c           |   2 +-
- tools/perf/util/db-export.c                   |   6 +-
- tools/perf/util/dlfilter.c                    |  12 +-
- tools/perf/util/dso.c                         | 472 +++++++++------
- tools/perf/util/dso.h                         | 554 +++++++++++++++---
- tools/perf/util/dsos.c                        | 529 +++++++++++------
- tools/perf/util/dsos.h                        |  40 +-
- tools/perf/util/event.c                       |   8 +-
- tools/perf/util/header.c                      |   8 +-
- tools/perf/util/hist.c                        |   4 +-
- tools/perf/util/intel-pt.c                    |  22 +-
- tools/perf/util/machine.c                     | 192 ++----
- tools/perf/util/machine.h                     |   2 +
- tools/perf/util/map.c                         |  82 ++-
- tools/perf/util/maps.c                        |  14 +-
- tools/perf/util/probe-event.c                 |  25 +-
- .../util/scripting-engines/trace-event-perl.c |   6 +-
- .../scripting-engines/trace-event-python.c    |  21 +-
- tools/perf/util/session.c                     |  21 +
- tools/perf/util/session.h                     |   2 +
- tools/perf/util/sort.c                        |  19 +-
- tools/perf/util/srcline.c                     |  65 +-
- tools/perf/util/symbol-elf.c                  | 145 +++--
- tools/perf/util/symbol-minimal.c              |   4 +-
- tools/perf/util/symbol.c                      | 186 +++---
- tools/perf/util/symbol_fprintf.c              |   4 +-
- tools/perf/util/synthetic-events.c            |  24 +-
- tools/perf/util/thread.c                      |   4 +-
- tools/perf/util/unwind-libunwind-local.c      |  18 +-
- tools/perf/util/unwind-libunwind.c            |   2 +-
- tools/perf/util/vdso.c                        |  56 +-
- 61 files changed, 1817 insertions(+), 1220 deletions(-)
+After:
+```
+struct dso {
+        struct mutex               lock;                 /*     0    40 */
+        struct list_head           node;                 /*    40    16 */
+        struct rb_node             rb_node __attribute__((__aligned__(8))); /*    56    24 */
+        /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+        struct rb_root *           root;                 /*    80     8 */
+        struct rb_root_cached      symbols;              /*    88    16 */
+        struct symbol * *          symbol_names;         /*   104     8 */
+        size_t                     symbol_names_len;     /*   112     8 */
+        struct rb_root_cached      inlined_nodes;        /*   120    16 */
+        /* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+        struct rb_root_cached      srclines;             /*   136    16 */
+        struct {
+                u64                addr;                 /*   152     8 */
+                struct symbol *    symbol;               /*   160     8 */
+        } last_find_result;                              /*   152    16 */
+        struct build_id            bid;                  /*   168    32 */
+        /* --- cacheline 3 boundary (192 bytes) was 8 bytes ago --- */
+        u64                        text_offset;          /*   200     8 */
+        u64                        text_end;             /*   208     8 */
+        const char  *              short_name;           /*   216     8 */
+        const char  *              long_name;            /*   224     8 */
+        void *                     a2l;                  /*   232     8 */
+        char *                     symsrc_filename;      /*   240     8 */
+        struct nsinfo *            nsinfo;               /*   248     8 */
+        /* --- cacheline 4 boundary (256 bytes) --- */
+        struct auxtrace_cache *    auxtrace_cache;       /*   256     8 */
+        union {
+                void *             priv;                 /*   264     8 */
+                u64                db_id;                /*   264     8 */
+        };                                               /*   264     8 */
+        struct {
+                struct perf_env *  env;                  /*   272     8 */
+                u32                id;                   /*   280     4 */
+                u32                sub_id;               /*   284     4 */
+        } bpf_prog;                                      /*   272    16 */
+        struct {
+                struct rb_root     cache;                /*   288     8 */
+                struct list_head   open_entry;           /*   296    16 */
+                u64                file_size;            /*   312     8 */
+                /* --- cacheline 5 boundary (320 bytes) --- */
+                u64                elf_base_addr;        /*   320     8 */
+                u64                debug_frame_offset;   /*   328     8 */
+                u64                eh_frame_hdr_addr;    /*   336     8 */
+                u64                eh_frame_hdr_offset;  /*   344     8 */
+                int                fd;                   /*   352     4 */
+                int                status;               /*   356     4 */
+                u32                status_seen;          /*   360     4 */
+        } data;                                          /*   288    80 */
 
+        /* XXX last struct has 4 bytes of padding */
+
+        struct dso_id              id;                   /*   368    24 */
+        /* --- cacheline 6 boundary (384 bytes) was 8 bytes ago --- */
+        unsigned int               a2l_fails;            /*   392     4 */
+        int                        comp;                 /*   396     4 */
+        refcount_t                 refcnt;               /*   400     4 */
+        enum dso_load_errno        load_errno;           /*   404     4 */
+        u16                        long_name_len;        /*   408     2 */
+        u16                        short_name_len;       /*   410     2 */
+        enum dso_binary_type       symtab_type:8;        /*   412: 0  4 */
+        enum dso_binary_type       binary_type:8;        /*   412: 8  4 */
+        enum dso_space_type        kernel:2;             /*   412:16  4 */
+        enum dso_swap_type         needs_swap:2;         /*   412:18  4 */
+
+        /* Bitfield combined with next fields */
+
+        _Bool                      is_kmod:1;            /*   414: 4  1 */
+        u8                         adjust_symbols:1;     /*   414: 5  1 */
+        u8                         has_build_id:1;       /*   414: 6  1 */
+        u8                         header_build_id:1;    /*   414: 7  1 */
+        u8                         has_srcline:1;        /*   415: 0  1 */
+        u8                         hit:1;                /*   415: 1  1 */
+        u8                         annotate_warned:1;    /*   415: 2  1 */
+        u8                         auxtrace_warned:1;    /*   415: 3  1 */
+        u8                         short_name_allocated:1; /*   415: 4  1 */
+        u8                         long_name_allocated:1; /*   415: 5  1 */
+        u8                         is_64_bit:1;          /*   415: 6  1 */
+
+        /* XXX 1 bit hole, try to pack */
+
+        _Bool                      sorted_by_name;       /*   416     1 */
+        _Bool                      loaded;               /*   417     1 */
+        u8                         rel;                  /*   418     1 */
+        char                       name[];               /*   419     0 */
+
+        /* size: 424, cachelines: 7, members: 48 */
+        /* sum members: 415 */
+        /* sum bitfield members: 31 bits, bit holes: 1, sum bit holes: 1 bits */
+        /* padding: 5 */
+        /* paddings: 1, sum paddings: 4 */
+        /* forced alignments: 1 */
+        /* last cacheline: 40 bytes */
+} __attribute__((__aligned__(8)));
+```
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/dso.h | 84 +++++++++++++++++++++----------------------
+ 1 file changed, 42 insertions(+), 42 deletions(-)
+
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 2cdcd1e2ef8b..17dab230a2ca 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -161,66 +161,66 @@ struct dso {
+ 		u64		addr;
+ 		struct symbol	*symbol;
+ 	} last_find_result;
+-	void		 *a2l;
+-	char		 *symsrc_filename;
+-	unsigned int	 a2l_fails;
+-	enum dso_space_type	kernel;
+-	bool			is_kmod;
+-	enum dso_swap_type	needs_swap;
+-	enum dso_binary_type	symtab_type;
+-	enum dso_binary_type	binary_type;
+-	enum dso_load_errno	load_errno;
+-	u8		 adjust_symbols:1;
+-	u8		 has_build_id:1;
+-	u8		 header_build_id:1;
+-	u8		 has_srcline:1;
+-	u8		 hit:1;
+-	u8		 annotate_warned:1;
+-	u8		 auxtrace_warned:1;
+-	u8		 short_name_allocated:1;
+-	u8		 long_name_allocated:1;
+-	u8		 is_64_bit:1;
+-	bool		 sorted_by_name;
+-	bool		 loaded;
+-	u8		 rel;
+ 	struct build_id	 bid;
+ 	u64		 text_offset;
+ 	u64		 text_end;
+ 	const char	 *short_name;
+ 	const char	 *long_name;
+-	u16		 long_name_len;
+-	u16		 short_name_len;
++	void		 *a2l;
++	char		 *symsrc_filename;
++#if defined(__powerpc__)
+ 	void		*dwfl;			/* DWARF debug info */
++#endif
++	struct nsinfo	*nsinfo;
+ 	struct auxtrace_cache *auxtrace_cache;
+-	int		 comp;
+-
++	union { /* Tool specific area */
++		void	 *priv;
++		u64	 db_id;
++	};
++	/* bpf prog information */
++	struct {
++		struct perf_env	*env;
++		u32		id;
++		u32		sub_id;
++	} bpf_prog;
+ 	/* dso data file */
+ 	struct {
+ 		struct rb_root	 cache;
+-		int		 fd;
+-		int		 status;
+-		u32		 status_seen;
+-		u64		 file_size;
+ 		struct list_head open_entry;
++		u64		 file_size;
+ 		u64		 elf_base_addr;
+ 		u64		 debug_frame_offset;
+ 		u64		 eh_frame_hdr_addr;
+ 		u64		 eh_frame_hdr_offset;
++		int		 fd;
++		int		 status;
++		u32		 status_seen;
+ 	} data;
+-	/* bpf prog information */
+-	struct {
+-		u32		id;
+-		u32		sub_id;
+-		struct perf_env	*env;
+-	} bpf_prog;
+-
+-	union { /* Tool specific area */
+-		void	 *priv;
+-		u64	 db_id;
+-	};
+-	struct nsinfo	*nsinfo;
+ 	struct dso_id	 id;
++	unsigned int	 a2l_fails;
++	int		 comp;
+ 	refcount_t	 refcnt;
++	enum dso_load_errno	load_errno;
++	u16		 long_name_len;
++	u16		 short_name_len;
++	enum dso_binary_type	symtab_type:8;
++	enum dso_binary_type	binary_type:8;
++	enum dso_space_type	kernel:2;
++	enum dso_swap_type	needs_swap:2;
++	bool			is_kmod:1;
++	u8		 adjust_symbols:1;
++	u8		 has_build_id:1;
++	u8		 header_build_id:1;
++	u8		 has_srcline:1;
++	u8		 hit:1;
++	u8		 annotate_warned:1;
++	u8		 auxtrace_warned:1;
++	u8		 short_name_allocated:1;
++	u8		 long_name_allocated:1;
++	u8		 is_64_bit:1;
++	bool		 sorted_by_name;
++	bool		 loaded;
++	u8		 rel;
+ 	char		 name[];
+ };
+ 
 -- 
 2.44.0.396.g6e790dbe36-goog
 
