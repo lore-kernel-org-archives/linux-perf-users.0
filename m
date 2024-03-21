@@ -1,78 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E925810B;
-	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C6284A5A;
+	Thu, 21 Mar 2024 14:25:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711028151; cv=none; b=o0jYGmLChB8zhsFlUKvFMN4It2Y7gGVQss0r6rTAMilPZYucKBM7zJej64O+mc4nJ4F1EEhDEJm7xaL0U6Yl5Kw4pebhLvnrWZFR8Rj0UdlV7e3k7NaSSKVgLB6/eMkl7hX2Ifhw7B0scdTZsaT9lUq9qH4nEk7YTEHMkcdSLRQ=
+	t=1711031140; cv=none; b=m0olSNhRzyhxwaAFf8C+sg3NoVxjQ38YOQefwl0JZS+VjRtdv8h3Ekadpj3Z0x9HfgPlrMddMIUOsTmGFaSNKa/sFVuY9wbSSt23gJwjhs3wSTiVhB1JTH9ySzrvfpmunzCMSJ0SiTD00Abqx/pAjj0a6VVUkN+oKAkLrish3hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711028151; c=relaxed/simple;
-	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
+	s=arc-20240116; t=1711031140; c=relaxed/simple;
+	bh=sD/KIQEO+fx6yqY2lQN2AMCQqENRl5eMUN8NxSIl674=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6Qydh7+v7Fx5AH1lT/R45qHTAZ65btKYUILK2yV6YRjNUV37FAcCWE7HaVuPdzXAPbea+XhwNLVGjxTA53x7vpZAlscP9KZtzQTsT1lpRlFagXkWCbcDCcMDtzaTSqMHOgESq/cVeOD0zC+Ip56vZp7cWie8GLErKVyxeN8c7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWL3OMvA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ymu2Ud0xxitUna2jH3sccbVfGtcrWp8T55IDLY4guOODSizg2Dw29fXfjOPvD/tJILepPmFpArItecImmR3Kn7GkZoovt2BfyG8zcop7wrXk0Ag3AD2yHiABuLDel4Z4HkHn85jF21m1WDEN9NrKgYpGU7SduvtwFUR+WXdg11k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sC3ZqBRp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWL3OMvA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33725C433F1;
-	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sC3ZqBRp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CA6C433F1;
+	Thu, 21 Mar 2024 14:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711028148;
-	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
+	s=k20201202; t=1711031140;
+	bh=sD/KIQEO+fx6yqY2lQN2AMCQqENRl5eMUN8NxSIl674=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aWL3OMvAh+ElF/VUhZ0KMxI0c3OGNrXWdU89Qndzm30HdLttjDBbytGBGm+ZKGGxr
-	 /ZDjPlJ2b3WgNPNl2kNDpOPl7sYsFHqjBL4EeH+4QG0BTxmH99DhLwtoE8XeDYxD5H
-	 Xje8VqXOhHjlI+o1tODEpGtBtJM2lQ5ydgHn1BRur3eDQgd3fEEvw4hDdiK6FNu042
-	 E4PoAN6lcZoSfw4Zmre3F+ovsfU/pRAlbP8lW4l2Y0UggQthuxlFUkPBrK6rum6PfG
-	 uebbkN6Db7OL2XKiFa8sSqWpMd+/vsixn5BsyzJD+kb56iazj2t6GvQ/WzqeOiAU0R
-	 DuuqNKMOb7dXw==
-Date: Thu, 21 Mar 2024 10:35:45 -0300
+	b=sC3ZqBRps+8ys6X1NNGzTrU+QUtWFoxPRaru2zaweD36ssvox7vckG/unwY4jJoUA
+	 dxIsS3BU2/TNj+vlxn7vpLblGDyRBYrTJ9/uk8aFP/lkw50WHDQzcqZssHwPLru0mN
+	 X6RPiDnVrJC8l10Y2FopRhOTyARR0L1pWdtluGfhCtbU8AsZXW7SCP8O3M9YVHtdyL
+	 gs1zbMHMCEeLNni8t4JAUzPN290G0xWFueYcqMuoZQEXDaVnqNiKXhdjccVc2YDE5h
+	 5Qk1BByVQbd2wUzsKBrPKA2F2JSplJ+HWQkCz3ht7QMwOewNg581QlMtISSwh9NDvk
+	 CPhB1+kRJJcKg==
+Date: Thu, 21 Mar 2024 11:25:35 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+To: Kan Liang <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 1/5] perf beauty: Introduce scrape script for various fs
- syscalls 'flags' arguments
-Message-ID: <Zfw3sRGespUx-qQ4@x1>
-References: <20240320193115.811899-1-acme@kernel.org>
- <20240320193115.811899-2-acme@kernel.org>
- <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Edward Baker <edward.baker@intel.com>
+Subject: Re: [PATCH v1 00/12] perf vendor events intel update
+Message-ID: <ZfxDX--WFVDlGad5@x1>
+References: <20240321060016.1464787-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
+In-Reply-To: <20240321060016.1464787-1-irogers@google.com>
 
-On Wed, Mar 20, 2024 at 06:47:28PM -0700, Ian Rogers wrote:
-> On Wed, Mar 20, 2024 at 12:31 PM Arnaldo Carvalho de Melo
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -489,6 +489,12 @@ beauty_ioctl_outdir := $(beauty_outdir)/ioctl
-> >  # Create output directory if not already present
-> >  $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
-> >
-> > +fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
-> > +fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
-> > +
-> > +$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl)
-> > +       $(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
-> > +
+On Wed, Mar 20, 2024 at 11:00:04PM -0700, Ian Rogers wrote:
+> Update events to the latest on:
+> https://github.com/intel/perfmon
 > 
-> I wonder if rather than update Makefile.perf, we could push more of
-> the logic into tools/perf/trace/beauty/Build. It would also be nice to
-> add there the shellcheck logic:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/Build?h=perf-tools-next#n81
+> Using the converter script:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-Sure, I thought about consolidating lots of boilerplate there and also
-to move it to tools/perf/trace/beauty/Build. Will see if I can do it in
-this series at some point.
+Kan,
 
-Thanks for reviewing the patches,
+	Can you please take a look and provide an Acked or Reviewed-by?
+
+Thanks!
 
 - Arnaldo
+ 
+> Ian Rogers (12):
+>   perf vendor events intel: Update cascadelakex to 1.21
+>   perf vendor events intel: Update emeraldrapids to 1.06
+>   perf vendor events intel: Update grandridge to 1.02
+>   perf vendor events intel: Update icelakex to 1.24
+>   perf vendor events intel: Update lunarlake to 1.01
+>   perf vendor events intel: Update meteorlake to 1.08
+>   perf vendor events intel: Update sapphirerapids to 1.20
+>   perf vendor events intel: Update sierraforest to 1.02
+>   perf vendor events intel: Update skylakex to 1.33
+>   perf vendor events intel: Update skylake to v58
+>   perf vendor events intel: Update snowridgex to 1.22
+>   perf vendor events intel: Remove info metrics erroneously in TopdownL1
+> 
+>  .../arch/x86/broadwellx/bdx-metrics.json      |  35 +++---
+>  .../arch/x86/cascadelakex/clx-metrics.json    |  85 +++++--------
+>  .../arch/x86/cascadelakex/frontend.json       |  10 +-
+>  .../arch/x86/cascadelakex/memory.json         |   2 +-
+>  .../arch/x86/cascadelakex/other.json          |   2 +-
+>  .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+>  .../x86/cascadelakex/uncore-interconnect.json |  14 +--
+>  .../arch/x86/cascadelakex/virtual-memory.json |   2 +-
+>  .../arch/x86/emeraldrapids/frontend.json      |   2 +-
+>  .../arch/x86/emeraldrapids/memory.json        |   1 +
+>  .../arch/x86/emeraldrapids/pipeline.json      |   3 +
+>  .../arch/x86/emeraldrapids/uncore-cache.json  | 112 ++++++++++++++++-
+>  .../emeraldrapids/uncore-interconnect.json    |  26 ++--
+>  .../arch/x86/grandridge/pipeline.json         |  43 ++++++-
+>  .../arch/x86/grandridge/uncore-cache.json     |  28 ++++-
+>  .../arch/x86/haswellx/hsx-metrics.json        |  35 +++---
+>  .../arch/x86/icelakex/frontend.json           |   2 +-
+>  .../arch/x86/icelakex/icx-metrics.json        |  95 ++++++--------
+>  .../pmu-events/arch/x86/icelakex/memory.json  |   1 +
+>  .../arch/x86/icelakex/uncore-cache.json       |  22 +++-
+>  .../x86/icelakex/uncore-interconnect.json     |  64 +++++-----
+>  .../arch/x86/icelakex/uncore-io.json          |  11 --
+>  .../pmu-events/arch/x86/lunarlake/cache.json  |  24 ++--
+>  .../arch/x86/lunarlake/frontend.json          |   2 +-
+>  .../pmu-events/arch/x86/lunarlake/memory.json |   4 +-
+>  .../pmu-events/arch/x86/lunarlake/other.json  |   4 +-
+>  .../arch/x86/lunarlake/pipeline.json          | 109 +++++++++++++---
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |  20 +--
+>  .../pmu-events/arch/x86/meteorlake/cache.json |  30 +++++
+>  .../arch/x86/meteorlake/frontend.json         |   4 +-
+>  .../arch/x86/meteorlake/memory.json           |  20 +++
+>  .../pmu-events/arch/x86/meteorlake/other.json |  42 ++++++-
+>  .../arch/x86/meteorlake/pipeline.json         |  44 +++++--
+>  .../x86/meteorlake/uncore-interconnect.json   |  22 +++-
+>  .../arch/x86/sapphirerapids/cache.json        |   1 +
+>  .../arch/x86/sapphirerapids/frontend.json     |   2 +-
+>  .../arch/x86/sapphirerapids/memory.json       |   1 +
+>  .../arch/x86/sapphirerapids/pipeline.json     |  19 +--
+>  .../arch/x86/sapphirerapids/spr-metrics.json  | 119 +++++++-----------
+>  .../arch/x86/sapphirerapids/uncore-cache.json | 112 ++++++++++++++++-
+>  .../sapphirerapids/uncore-interconnect.json   |  26 ++--
+>  .../arch/x86/sierraforest/pipeline.json       |  36 +++++-
+>  .../pmu-events/arch/x86/skylake/frontend.json |  10 +-
+>  .../pmu-events/arch/x86/skylakex/cache.json   |   9 ++
+>  .../arch/x86/skylakex/frontend.json           |  10 +-
+>  .../pmu-events/arch/x86/skylakex/memory.json  |   2 +-
+>  .../pmu-events/arch/x86/skylakex/other.json   |   2 +-
+>  .../arch/x86/skylakex/pipeline.json           |   2 +-
+>  .../arch/x86/skylakex/skx-metrics.json        |  85 +++++--------
+>  .../x86/skylakex/uncore-interconnect.json     |  14 +--
+>  .../arch/x86/skylakex/uncore-io.json          |   2 +-
+>  .../arch/x86/skylakex/virtual-memory.json     |   2 +-
+>  .../arch/x86/snowridgex/uncore-cache.json     |   4 +-
+>  .../x86/snowridgex/uncore-interconnect.json   |   6 +-
+>  .../arch/x86/snowridgex/uncore-io.json        |  11 --
+>  55 files changed, 911 insertions(+), 486 deletions(-)
+> 
+> -- 
+> 2.44.0.396.g6e790dbe36-goog
+> 
