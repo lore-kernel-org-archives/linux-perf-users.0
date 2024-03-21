@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3E784038;
-	Thu, 21 Mar 2024 13:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E925810B;
+	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711027899; cv=none; b=fP3MTomaM0+ftVnzSUAWg3BlOSOauEJN1vgO9d2UrYJxegC2UDHnsxXH5f824v6QpcW+cnu3RYlWAKokpY8rfrPvwmjGSWWABysOU2GsDndFnxw8rJAVnda7fO9n+bEimuquJC7Kb/+z33bDS7lr8SNHWgvdi7GVhCc5CX954vw=
+	t=1711028151; cv=none; b=o0jYGmLChB8zhsFlUKvFMN4It2Y7gGVQss0r6rTAMilPZYucKBM7zJej64O+mc4nJ4F1EEhDEJm7xaL0U6Yl5Kw4pebhLvnrWZFR8Rj0UdlV7e3k7NaSSKVgLB6/eMkl7hX2Ifhw7B0scdTZsaT9lUq9qH4nEk7YTEHMkcdSLRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711027899; c=relaxed/simple;
-	bh=Bh4EodqFgM9nVjjSAVSZ8P+J632vjPhrdTO1Ck6PnDo=;
+	s=arc-20240116; t=1711028151; c=relaxed/simple;
+	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a7HGD+deP52WQzHRgUDJlCYZ+E7JTkXSusVHqQcqcE9KQbMA4zGIXlXEO56keeXGYuUCocMl6+yw8x0JlfVzuDY38zbCQ5YzOBhJ8TGQ6T6qSr8u0vu9pBLwjH9D67NqlXP+7tD1Ag6uDThaRali4N2mvWb+knFinYyo7B91jWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4ba6nGS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6Qydh7+v7Fx5AH1lT/R45qHTAZ65btKYUILK2yV6YRjNUV37FAcCWE7HaVuPdzXAPbea+XhwNLVGjxTA53x7vpZAlscP9KZtzQTsT1lpRlFagXkWCbcDCcMDtzaTSqMHOgESq/cVeOD0zC+Ip56vZp7cWie8GLErKVyxeN8c7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWL3OMvA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4ba6nGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04B83C433C7;
-	Thu, 21 Mar 2024 13:31:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWL3OMvA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33725C433F1;
+	Thu, 21 Mar 2024 13:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711027898;
-	bh=Bh4EodqFgM9nVjjSAVSZ8P+J632vjPhrdTO1Ck6PnDo=;
+	s=k20201202; t=1711028148;
+	bh=fYG4E4wFakwbj3fhrxbqt2XkujIXeIIfV+EnH3hriVw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H4ba6nGSLR9ekjdt5fUr9wKSr/Ci/1VVVgCadYKFoAWoo0g1LJlJQYm1ipbRF3Zyz
-	 IvYiCE71CAeMN3z89D2P5/b3VL9L7PLp/LiSX/CnYgs4xR+Fd8OHsuwnui5fMTjwvw
-	 AwUXU3Z/C0euGjKcHDsZ5GYsTaP0BmzwdqctpvmwoWH6zOdFOP+2EUBmDc6E3Va1g/
-	 hZRBbDw1TFmKuwV99DRURh843IzQhBMMjBpuAXhGBd1/7KvNgLTw1BJDwQKwVXRg+w
-	 32aHENbvsyDngp7DYRzt9VZwERXy9XCBLsClND60m99vP1h1k+S4hsDTWdSguntpa0
-	 /u4ktpVYhMdDA==
-Date: Thu, 21 Mar 2024 10:31:33 -0300
+	b=aWL3OMvAh+ElF/VUhZ0KMxI0c3OGNrXWdU89Qndzm30HdLttjDBbytGBGm+ZKGGxr
+	 /ZDjPlJ2b3WgNPNl2kNDpOPl7sYsFHqjBL4EeH+4QG0BTxmH99DhLwtoE8XeDYxD5H
+	 Xje8VqXOhHjlI+o1tODEpGtBtJM2lQ5ydgHn1BRur3eDQgd3fEEvw4hDdiK6FNu042
+	 E4PoAN6lcZoSfw4Zmre3F+ovsfU/pRAlbP8lW4l2Y0UggQthuxlFUkPBrK6rum6PfG
+	 uebbkN6Db7OL2XKiFa8sSqWpMd+/vsixn5BsyzJD+kb56iazj2t6GvQ/WzqeOiAU0R
+	 DuuqNKMOb7dXw==
+Date: Thu, 21 Mar 2024 10:35:45 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] perf list: Give more details about raw event
- encodings
-Message-ID: <Zfw2tR6R-Uvf6ity@x1>
-References: <20240308001915.4060155-1-irogers@google.com>
- <20240308001915.4060155-5-irogers@google.com>
- <CAP-5=fVE3f-Q3Zcdi2qWb5EJSadp5c7xbhzWeq8PFw2NOZEEJw@mail.gmail.com>
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 1/5] perf beauty: Introduce scrape script for various fs
+ syscalls 'flags' arguments
+Message-ID: <Zfw3sRGespUx-qQ4@x1>
+References: <20240320193115.811899-1-acme@kernel.org>
+ <20240320193115.811899-2-acme@kernel.org>
+ <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,173 +48,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVE3f-Q3Zcdi2qWb5EJSadp5c7xbhzWeq8PFw2NOZEEJw@mail.gmail.com>
+In-Reply-To: <CAP-5=fWXCL0AAdp4bSQHPo_XR1iiF8KY4=Bo4756XC1tE0PDUw@mail.gmail.com>
 
-On Wed, Mar 20, 2024 at 07:59:06PM -0700, Ian Rogers wrote:
-> On Thu, Mar 7, 2024 at 4:19 PM Ian Rogers <irogers@google.com> wrote:
+On Wed, Mar 20, 2024 at 06:47:28PM -0700, Ian Rogers wrote:
+> On Wed, Mar 20, 2024 at 12:31 PM Arnaldo Carvalho de Melo
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -489,6 +489,12 @@ beauty_ioctl_outdir := $(beauty_outdir)/ioctl
+> >  # Create output directory if not already present
+> >  $(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
 > >
-> > List all the PMUs, not just the first core one, and list real format
-> > specifiers with value ranges.
-> >
-> > Before:
-> > ```
-> > $ perf list
-> > ...
-> >   rNNN                                               [Raw hardware event descriptor]
-> >   cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
-> >        [(see 'man perf-list' on how to encode it)]
-> >   mem:<addr>[/len][:access]                          [Hardware breakpoint]
-> > ...
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf list
-> > ...
-> >   rNNN                                               [Raw event descriptor]
-> >   cpu/event=0..255,pc,edge,.../modifier              [Raw event descriptor]
-> >        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
-> >   breakpoint//modifier                               [Raw event descriptor]
-> >   cstate_core/event=0..0xffffffffffffffff/modifier   [Raw event descriptor]
-> >   cstate_pkg/event=0..0xffffffffffffffff/modifier    [Raw event descriptor]
-> >   i915/i915_eventid=0..0x1fffff/modifier             [Raw event descriptor]
-> >   intel_bts//modifier                                [Raw event descriptor]
-> >   intel_pt/ptw,event,cyc_thresh=0..15,.../modifier   [Raw event descriptor]
-> >   kprobe/retprobe/modifier                           [Raw event descriptor]
-> >   msr/event=0..0xffffffffffffffff/modifier           [Raw event descriptor]
-> >   power/event=0..255/modifier                        [Raw event descriptor]
-> >   software//modifier                                 [Raw event descriptor]
-> >   tracepoint//modifier                               [Raw event descriptor]
-> >   uncore_arb/event=0..255,edge,inv,.../modifier      [Raw event descriptor]
-> >   uncore_cbox/event=0..255,edge,inv,.../modifier     [Raw event descriptor]
-> >   uncore_clock/event=0..255/modifier                 [Raw event descriptor]
-> >   uncore_imc_free_running/event=0..255,umask=0..255/modifier[Raw event descriptor]
-> >   uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier[Raw event descriptor]
-> >   mem:<addr>[/len][:access]                          [Hardware breakpoint]
-> > ...
-> > ```
-> >
-> > With '--details' provide more details on the formats encoding:
-> > ```
-> >   cpu/event=0..255,pc,edge,.../modifier              [Raw event descriptor]
-> >        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
-> >         cpu/event=0..255,pc,edge,offcore_rsp=0..0xffffffffffffffff,ldlat=0..0xffff,inv,
-> >         umask=0..255,frontend=0..0xffffff,cmask=0..255,config=0..0xffffffffffffffff,
-> >         config1=0..0xffffffffffffffff,config2=0..0xffffffffffffffff,config3=0..0xffffffffffffffff,
-> >         name=string,period=number,freq=number,branch_type=(u|k|hv|any|...),time,
-> >         call-graph=(fp|dwarf|lbr),stack-size=number,max-stack=number,nr=number,inherit,no-inherit,
-> >         overwrite,no-overwrite,percore,aux-output,aux-sample-size=number/modifier
-> >   breakpoint//modifier                               [Raw event descriptor]
-> >         breakpoint//modifier
-> >   cstate_core/event=0..0xffffffffffffffff/modifier   [Raw event descriptor]
-> >         cstate_core/event=0..0xffffffffffffffff/modifier
-> >   cstate_pkg/event=0..0xffffffffffffffff/modifier    [Raw event descriptor]
-> >         cstate_pkg/event=0..0xffffffffffffffff/modifier
-> >   i915/i915_eventid=0..0x1fffff/modifier             [Raw event descriptor]
-> >         i915/i915_eventid=0..0x1fffff/modifier
-> >   intel_bts//modifier                                [Raw event descriptor]
-> >         intel_bts//modifier
-> >   intel_pt/ptw,event,cyc_thresh=0..15,.../modifier   [Raw event descriptor]
-> >         intel_pt/ptw,event,cyc_thresh=0..15,pt,notnt,branch,tsc,pwr_evt,fup_on_ptw,cyc,noretcomp,
-> >         mtc,psb_period=0..15,mtc_period=0..15/modifier
-> >   kprobe/retprobe/modifier                           [Raw event descriptor]
-> >         kprobe/retprobe/modifier
-> >   msr/event=0..0xffffffffffffffff/modifier           [Raw event descriptor]
-> >         msr/event=0..0xffffffffffffffff/modifier
-> >   power/event=0..255/modifier                        [Raw event descriptor]
-> >         power/event=0..255/modifier
-> >   software//modifier                                 [Raw event descriptor]
-> >         software//modifier
-> >   tracepoint//modifier                               [Raw event descriptor]
-> >         tracepoint//modifier
-> >   uncore_arb/event=0..255,edge,inv,.../modifier      [Raw event descriptor]
-> >         uncore_arb/event=0..255,edge,inv,umask=0..255,cmask=0..31/modifier
-> >   uncore_cbox/event=0..255,edge,inv,.../modifier     [Raw event descriptor]
-> >         uncore_cbox/event=0..255,edge,inv,umask=0..255,cmask=0..31/modifier
-> >   uncore_clock/event=0..255/modifier                 [Raw event descriptor]
-> >         uncore_clock/event=0..255/modifier
-> >   uncore_imc_free_running/event=0..255,umask=0..255/modifier[Raw event descriptor]
-> >         uncore_imc_free_running/event=0..255,umask=0..255/modifier
-> >   uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier[Raw event descriptor]
-> >         uprobe/ref_ctr_offset=0..0xffffffff,retprobe/modifier
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmu.c          | 61 +++++++++++++++++++++-
-> >  tools/perf/util/pmu.h          |  3 ++
-> >  tools/perf/util/pmus.c         | 94 ++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/pmus.h         |  1 +
-> >  tools/perf/util/print-events.c | 20 +-------
-> >  5 files changed, 160 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 24be587e3537..e24bc3b8f696 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -1603,6 +1603,61 @@ bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name)
-> >         return false;
-> >  }
-> >
-> > +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_callback cb)
-> > +{
-> > +       static const char *const terms[] = {
-> > +               "config=0..0xffffffffffffffff",
-> > +               "config1=0..0xffffffffffffffff",
-> > +               "config2=0..0xffffffffffffffff",
-> > +               "config3=0..0xffffffffffffffff",
-> > +               "name=string",
-> > +               "period=number",
-> > +               "freq=number",
-> > +               "branch_type=(u|k|hv|any|...)",
-> > +               "time",
-> > +               "call-graph=(fp|dwarf|lbr)",
-> > +               "stack-size=number",
-> > +               "max-stack=number",
-> > +               "nr=number",
-> > +               "inherit",
-> > +               "no-inherit",
-> > +               "overwrite",
-> > +               "no-overwrite",
-> > +               "percore",
-> > +               "aux-output",
-> > +               "aux-sample-size=number",
-> > +       };
-> > +       struct perf_pmu_format *format;
-> > +       int ret;
+> > +fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
+> > +fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
 > > +
-> > +       /*
-> > +        * max-events and driver-config are missing above as are the internal
-> > +        * types user, metric-id, raw, legacy cache and hardware. Assert against
-> > +        * the enum parse_events__term_type so they are kept in sync.
-> > +        */
-> > +       _Static_assert(ARRAY_SIZE(terms) == __PARSE_EVENTS__TERM_TYPE_NR - 6);
+> > +$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl)
+> > +       $(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+> > +
 > 
-> For C11 it is required that a 2nd message argument be passed:
-> https://en.cppreference.com/w/c/language/_Static_assert
-> 
-> This line needs to be something like:
-> _Static_assert(ARRAY_SIZE(terms) == __PARSE_EVENTS__TERM_TYPE_NR - 6,
-> "Unexpected array size");
-> 
-> Let me know if we I should send a fix, resend all the patches or if
-> you can fix in tmp.perf-tools-next.
+> I wonder if rather than update Makefile.perf, we could push more of
+> the logic into tools/perf/trace/beauty/Build. It would also be nice to
+> add there the shellcheck logic:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/Build?h=perf-tools-next#n81
 
-I added this, no need to resend.
+Sure, I thought about consolidating lots of boilerplate there and also
+to move it to tools/perf/trace/beauty/Build. Will see if I can do it in
+this series at some point.
+
+Thanks for reviewing the patches,
 
 - Arnaldo
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index e24bc3b8f696a9f5..81952c6cd3c6f5e8 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1635,7 +1635,8 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
- 	 * types user, metric-id, raw, legacy cache and hardware. Assert against
- 	 * the enum parse_events__term_type so they are kept in sync.
- 	 */
--	_Static_assert(ARRAY_SIZE(terms) == __PARSE_EVENTS__TERM_TYPE_NR - 6);
-+	_Static_assert(ARRAY_SIZE(terms) == __PARSE_EVENTS__TERM_TYPE_NR - 6,
-+		       "perf_pmu__for_each_format()'s terms must be kept in sync with enum parse_events__term_type");
- 	list_for_each_entry(format, &pmu->format, list) {
- 		perf_pmu_format__load(pmu, format);
- 		ret = cb(state, format->name, (int)format->value, format->bits);
