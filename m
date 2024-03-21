@@ -1,149 +1,563 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CFC79FD
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 01:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B85E2900
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 02:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710985864; cv=none; b=A5nylg3DMRxUpR8e8wQp/NJ3/K7b0ef4vFfD9cOWN8qZX85kEYBXbYSGjhR806rrWhu/tGuhrDbYZdPpTr3DA0I3+VnEX3w6AdFkFc9XAE5ntYPIA6qjrNzFsjG4YgvsrFCltoh+CQeNgjyEocxT/agHwq2aTrZEqK0ep2KWKC8=
+	t=1710989960; cv=none; b=jJK4gyr77iU7ccGHOb+We6JW+6DNHQ+SMUjU5HthTwK2XJmnJdnDkv61MKSRN2SREmDHqVejP185Du5v5XZQka8E+o+Ea8C06rwLlKq06Ig3//F42JvK/xG/zeCiLDQTc+WJvs7O0lJ+zqEvwaugP9DO28B0ybPmzkmX++EgsYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710985864; c=relaxed/simple;
-	bh=5OH1HhBNQ4E7KZG0KnYehzuDvsgYQmJCQoB0QMizlpg=;
+	s=arc-20240116; t=1710989960; c=relaxed/simple;
+	bh=EjRrdnSlSqLeRHzJerJ26z8jXsiR5lW18G484JLGgFU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YxQkuZuAIFdrY0Fp7jwHpi73OM+NJeD0iIhgBJJYDjr58VLjwliV4dgk8+sSu4poG/XZ3kcV6HCe+PVOJqQUHjB7avFR/6dfOfriEVCeBnz2vcazK4WsqrI7lNXsjQOhX8zldUIxgs1/W7svMBauR81w2xR5g1hFk9OQLITpsBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=grOJyBM0; arc=none smtp.client-ip=209.85.166.173
+	 To:Content-Type; b=tMcWtPSHxlgXzv4dOuadNWe8Jv43E7iClvZSYC10dm/6eaCg19zb2GWYb1LMKlh0W3vj5mt1GcwnDKTYvHqiUhe8ghzMAf+pVuiRYlrHNlyoTe9RhFGGjd0nr8mCd5o/VGLagskS9UOmY8zPZQsNDTP0s5Uvl/AT7Aa2UfPFgmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ryjpc9G2; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grOJyBM0"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36849db2578so42325ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 18:51:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ryjpc9G2"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e062f3a47bso57815ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 Mar 2024 19:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710985862; x=1711590662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1710989958; x=1711594758; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nYU9J7zFBTCo8/TGqyh4wiUR0hjUIzHAyC/ggld+LKI=;
-        b=grOJyBM0KiIt4uguVTA0aw/sb195Xlg6RRWn4eQg1KNx0anlMYM9vmai1GkBGSc2IZ
-         3lObZ1LeYDDvtkjoSEXC3Mvj0HrsoA6p6wVOP8W+zcorSE1ciiD0os4ArK4QfOmIlIU8
-         z1vsUrVJQYerQDSPuQDvw75+y58N0nvgu5Nh4OkcJC0cYqEG4bajjXzrudcPWMGGMDuF
-         4cIEGDP9Nahs2bjwPJ2QzwPENSRndq0cHJK30pyOy5yS5Qy8Y2xFF3GcR76Ftuj+joLk
-         YUzYOfy562njtbZBunR282Q0CgDSqnYfkl03OgsBk+JAS5/if3ZRMRD6MY4QpPU8+3Eg
-         Ke9g==
+        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
+        b=Ryjpc9G216SVusEkBmGYkDcHo9C21XixDq4TlFlkkbgYc7g4yxdbWGbhOExuX4E1Gw
+         DuWlynUB3KC29ZqZYa3dEMWrmkiH6y34Blg0YAD0s7A/Hmja55HFVhAQY5rWHuW8c+U1
+         XQUzwUK0+JXgOUmdi1PHWyglMi7G8HyIodM5c3F8+gC8FmFVAO1SLT/kH3Z+Bqn3PP2o
+         RuonLxiSjSaylQhcpL3sk2gqiuIZfwPr84B69ok9/G2gvuzYgC2bCQei/bCVQDVQOjxv
+         xE5ozJfS1/QG7t8Eg0cm5++A/Ts7QOD+luoDLc6ed7fn5agU+hQs6G++CQSm1yiKmROU
+         ODIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710985862; x=1711590662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1710989958; x=1711594758;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nYU9J7zFBTCo8/TGqyh4wiUR0hjUIzHAyC/ggld+LKI=;
-        b=vtDC0+Y9AAKvp9L82C20vNFzIhCqGzZmDG4eiAr//QsNvpQW/VsrakzH9DMWeJ5ELd
-         9DPoqz0dcpFIQNDncxFoYR3uaxW330ZMylhl3DB5GckRP7cfl63aGCGpv6JURzk6S+n/
-         cdxDQGjXlFqfPhqmcOhLjct2BZjcDwOUIuSEeQJaI4D2om+syphDLE7CSXvlvGl9vPiL
-         4Rx2za2p7Y3KYxeS5+sE88t0AfjkV3rOysX4VWUlUwQth2iuNZJ5ElMsBLOIU6jR8ShJ
-         gS49v5r/iEmJ4vLEsx876isDR46/jTpNEjUPLGcjkKKriHm+OMGHKKLJ8EQApfzM/+nf
-         7qeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUK0Ugv7p3dnmc1QLSEjArdXv7NSEMZc3r5w9g9Na4KjhWs4vT4B2bQ8DJ8v4koie5mTx4UnaHQlY7IkRUreXuQnz0OeAmMFkXLFAvNpuu6sA==
-X-Gm-Message-State: AOJu0YyU6lRqdyYgA6Cs+uFcwJSAQKD5yXa/dQB23qNljusAcAFLgjsq
-	4+DokQC2u4rpJlPwOwR7IGFeuzyJ1Qsxt80lDsMfSFKSFT69w/jpeWQsiXy2ZYEQAWcLWGugu3Y
-	oS3uT5qByFzuAPtxcWa/zv4dcFN2UIAAyPqjm
-X-Google-Smtp-Source: AGHT+IG97IT+pKG4kVZObTgVLGGuIN+Q4dsZ89nyfiz3iy42xhap1df934wbnlGR1HGpgQoYRuryoyYsvKyiT4ht6k0=
-X-Received: by 2002:a05:6e02:164e:b0:366:a817:61e5 with SMTP id
- v14-20020a056e02164e00b00366a81761e5mr126039ilu.26.1710985862059; Wed, 20 Mar
- 2024 18:51:02 -0700 (PDT)
+        bh=eOCWhX/Y1Zj3mfL1r+Yvr+Ag8M+NipZNhGY0tYQmAso=;
+        b=wH9WZ0Zzmy+nG9bJhGt6rdLEcp8hgrckJpvKhJOijVdr8uOfPYS8XNajJelSeevxcv
+         e1Yz6LhWjFEAwZ/NdicTSCtyG0KBcX1AUolazS6iNikj6Nsi2YEtYrZbSKAFc1G6KppN
+         2DlevLER9v2sLGbF61UpSG2vM1EYJf/4C377EdVzrVBjlxZB1GWTfWC/HytpNK6N9u+W
+         R/2KhW7veQICWorTbM/OFTcixbTwgEXA7zcWBJOuNd/3XcR9HlMT1dmhzxj4IW2KZcfj
+         mhOBwHMo65csJlDpN6lYRjyJK5HHMYHXhsj0V09TWcgbnF02MFp9rW3vgw4KgZ85Xn54
+         oLpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJnqhXnjaSyFtimiXNV2Vp4mKImlDuSeLVQPFdhew2yEVkx/VxsP+LiVv+BgR3D/AXGJLS7utXoc0nA6Z9om7xp46IMkbFyHikDZAYHYBxAA==
+X-Gm-Message-State: AOJu0Yzvpcpv4tvZ5bOmlm/8NXhK+KMUvLpfWTj44ux0QJ++lH11M2bZ
+	T0ldmBqwi7edpMRreIIFu/H0gLEGjblvvk6XwyrjIIMT89Smr7Xhh96yafoUD978pAau0EUvBTX
+	i0KJ4V57AdwCK4UiweK8B5hTlCWkOw2Nhoprt
+X-Google-Smtp-Source: AGHT+IGFajvD9r3TtnhkoyDDj5ngVjHitTWx2l6VCzb021jVwYrKUvapXg4Hs8AYUApFp56SG/1y855GzgIoc89B9Lg=
+X-Received: by 2002:a17:902:e750:b0:1de:ed50:41f8 with SMTP id
+ p16-20020a170902e75000b001deed5041f8mr133357plf.22.1710989957442; Wed, 20 Mar
+ 2024 19:59:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320193115.811899-1-acme@kernel.org> <20240320193115.811899-6-acme@kernel.org>
-In-Reply-To: <20240320193115.811899-6-acme@kernel.org>
+References: <20240308001915.4060155-1-irogers@google.com> <20240308001915.4060155-5-irogers@google.com>
+In-Reply-To: <20240308001915.4060155-5-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 20 Mar 2024 18:50:50 -0700
-Message-ID: <CAP-5=fWw9n=b02KOvh=OuWrSx0KgUikPdnhs70DHNqNsG6mWPA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] perf trace: Fix 'newfstatat'/'fstatat' argument
- pretty printing
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Wed, 20 Mar 2024 19:59:06 -0700
+Message-ID: <CAP-5=fVE3f-Q3Zcdi2qWb5EJSadp5c7xbhzWeq8PFw2NOZEEJw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] perf list: Give more details about raw event encodings
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 20, 2024 at 12:31=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Thu, Mar 7, 2024 at 4:19=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> List all the PMUs, not just the first core one, and list real format
+> specifiers with value ranges.
 >
-> There were needless two entries, one for 'newfstatat' and another for
-> 'fstatat', keep just one and pretty print its 'flags' argument using the
-> fs_at_flags scnprintf that is also used by other FS syscalls such as
-> 'stat', now:
+> Before:
+> ```
+> $ perf list
+> ...
+>   rNNN                                               [Raw hardware event =
+descriptor]
+>   cpu/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier                  [Raw hardware ev=
+ent descriptor]
+>        [(see 'man perf-list' on how to encode it)]
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint=
+]
+> ...
+> ```
 >
->   root@number:~# perf trace -e newfstatat --max-events=3D5
->        0.000 ( 0.010 ms): abrt-dump-jour/1400 newfstatat(dfd: 7, filename=
-: "", statbuf: 0x7fff0d127000, flag: EMPTY_PATH) =3D 0
->        0.020 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 9, filename=
-: "", statbuf: 0x55752507b0e8, flag: EMPTY_PATH) =3D 0
->        0.039 ( 0.004 ms): abrt-dump-jour/1400 newfstatat(dfd: 19, filenam=
-e: "", statbuf: 0x557525061378, flag: EMPTY_PATH) =3D 0
->        0.047 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 20, filenam=
-e: "", statbuf: 0x5575250b8cc8, flag: EMPTY_PATH) =3D 0
->        0.053 ( 0.003 ms): abrt-dump-jour/1400 newfstatat(dfd: 22, filenam=
-e: "", statbuf: 0x5575250535d8, flag: EMPTY_PATH) =3D 0
->   root@number:~#
+> After:
+> ```
+> $ perf list
+> ...
+>   rNNN                                               [Raw event descripto=
+r]
+>   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
+tor]
+>        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
+>   breakpoint//modifier                               [Raw event descripto=
+r]
+>   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
+tor]
+>   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
+tor]
+>   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
+tor]
+>   intel_bts//modifier                                [Raw event descripto=
+r]
+>   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
+tor]
+>   kprobe/retprobe/modifier                           [Raw event descripto=
+r]
+>   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
+tor]
+>   power/event=3D0..255/modifier                        [Raw event descrip=
+tor]
+>   software//modifier                                 [Raw event descripto=
+r]
+>   tracepoint//modifier                               [Raw event descripto=
+r]
+>   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
+tor]
+>   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
+tor]
+>   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
+tor]
+>   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
+t descriptor]
+>   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
+iptor]
+>   mem:<addr>[/len][:access]                          [Hardware breakpoint=
+]
+> ...
+> ```
 >
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> With '--details' provide more details on the formats encoding:
+> ```
+>   cpu/event=3D0..255,pc,edge,.../modifier              [Raw event descrip=
+tor]
+>        [(see 'man perf-list' or 'man perf-record' on how to encode it)]
+>         cpu/event=3D0..255,pc,edge,offcore_rsp=3D0..0xffffffffffffffff,ld=
+lat=3D0..0xffff,inv,
+>         umask=3D0..255,frontend=3D0..0xffffff,cmask=3D0..255,config=3D0..=
+0xffffffffffffffff,
+>         config1=3D0..0xffffffffffffffff,config2=3D0..0xffffffffffffffff,c=
+onfig3=3D0..0xffffffffffffffff,
+>         name=3Dstring,period=3Dnumber,freq=3Dnumber,branch_type=3D(u|k|hv=
+|any|...),time,
+>         call-graph=3D(fp|dwarf|lbr),stack-size=3Dnumber,max-stack=3Dnumbe=
+r,nr=3Dnumber,inherit,no-inherit,
+>         overwrite,no-overwrite,percore,aux-output,aux-sample-size=3Dnumbe=
+r/modifier
+>   breakpoint//modifier                               [Raw event descripto=
+r]
+>         breakpoint//modifier
+>   cstate_core/event=3D0..0xffffffffffffffff/modifier   [Raw event descrip=
+tor]
+>         cstate_core/event=3D0..0xffffffffffffffff/modifier
+>   cstate_pkg/event=3D0..0xffffffffffffffff/modifier    [Raw event descrip=
+tor]
+>         cstate_pkg/event=3D0..0xffffffffffffffff/modifier
+>   i915/i915_eventid=3D0..0x1fffff/modifier             [Raw event descrip=
+tor]
+>         i915/i915_eventid=3D0..0x1fffff/modifier
+>   intel_bts//modifier                                [Raw event descripto=
+r]
+>         intel_bts//modifier
+>   intel_pt/ptw,event,cyc_thresh=3D0..15,.../modifier   [Raw event descrip=
+tor]
+>         intel_pt/ptw,event,cyc_thresh=3D0..15,pt,notnt,branch,tsc,pwr_evt=
+,fup_on_ptw,cyc,noretcomp,
+>         mtc,psb_period=3D0..15,mtc_period=3D0..15/modifier
+>   kprobe/retprobe/modifier                           [Raw event descripto=
+r]
+>         kprobe/retprobe/modifier
+>   msr/event=3D0..0xffffffffffffffff/modifier           [Raw event descrip=
+tor]
+>         msr/event=3D0..0xffffffffffffffff/modifier
+>   power/event=3D0..255/modifier                        [Raw event descrip=
+tor]
+>         power/event=3D0..255/modifier
+>   software//modifier                                 [Raw event descripto=
+r]
+>         software//modifier
+>   tracepoint//modifier                               [Raw event descripto=
+r]
+>         tracepoint//modifier
+>   uncore_arb/event=3D0..255,edge,inv,.../modifier      [Raw event descrip=
+tor]
+>         uncore_arb/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/m=
+odifier
+>   uncore_cbox/event=3D0..255,edge,inv,.../modifier     [Raw event descrip=
+tor]
+>         uncore_cbox/event=3D0..255,edge,inv,umask=3D0..255,cmask=3D0..31/=
+modifier
+>   uncore_clock/event=3D0..255/modifier                 [Raw event descrip=
+tor]
+>         uncore_clock/event=3D0..255/modifier
+>   uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier[Raw even=
+t descriptor]
+>         uncore_imc_free_running/event=3D0..255,umask=3D0..255/modifier
+>   uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier[Raw event descr=
+iptor]
+>         uprobe/ref_ctr_offset=3D0..0xffffffff,retprobe/modifier
+> ```
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c          | 61 +++++++++++++++++++++-
+>  tools/perf/util/pmu.h          |  3 ++
+>  tools/perf/util/pmus.c         | 94 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/pmus.h         |  1 +
+>  tools/perf/util/print-events.c | 20 +-------
+>  5 files changed, 160 insertions(+), 19 deletions(-)
+>
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 24be587e3537..e24bc3b8f696 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1603,6 +1603,61 @@ bool perf_pmu__has_format(const struct perf_pmu *p=
+mu, const char *name)
+>         return false;
+>  }
+>
+> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
+mat_callback cb)
+> +{
+> +       static const char *const terms[] =3D {
+> +               "config=3D0..0xffffffffffffffff",
+> +               "config1=3D0..0xffffffffffffffff",
+> +               "config2=3D0..0xffffffffffffffff",
+> +               "config3=3D0..0xffffffffffffffff",
+> +               "name=3Dstring",
+> +               "period=3Dnumber",
+> +               "freq=3Dnumber",
+> +               "branch_type=3D(u|k|hv|any|...)",
+> +               "time",
+> +               "call-graph=3D(fp|dwarf|lbr)",
+> +               "stack-size=3Dnumber",
+> +               "max-stack=3Dnumber",
+> +               "nr=3Dnumber",
+> +               "inherit",
+> +               "no-inherit",
+> +               "overwrite",
+> +               "no-overwrite",
+> +               "percore",
+> +               "aux-output",
+> +               "aux-sample-size=3Dnumber",
+> +       };
+> +       struct perf_pmu_format *format;
+> +       int ret;
+> +
+> +       /*
+> +        * max-events and driver-config are missing above as are the inte=
+rnal
+> +        * types user, metric-id, raw, legacy cache and hardware. Assert =
+against
+> +        * the enum parse_events__term_type so they are kept in sync.
+> +        */
+> +       _Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE=
+_NR - 6);
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+For C11 it is required that a 2nd message argument be passed:
+https://en.cppreference.com/w/c/language/_Static_assert
+
+This line needs to be something like:
+_Static_assert(ARRAY_SIZE(terms) =3D=3D __PARSE_EVENTS__TERM_TYPE_NR - 6,
+"Unexpected array size");
+
+Let me know if we I should send a fix, resend all the patches or if
+you can fix in tmp.perf-tools-next.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-trace.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> +       list_for_each_entry(format, &pmu->format, list) {
+> +               perf_pmu_format__load(pmu, format);
+> +               ret =3D cb(state, format->name, (int)format->value, forma=
+t->bits);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +       if (!pmu->is_core)
+> +               return 0;
+> +
+> +       for (size_t i =3D 0; i < ARRAY_SIZE(terms); i++) {
+> +               int config =3D PERF_PMU_FORMAT_VALUE_CONFIG;
+> +
+> +               if (i < PERF_PMU_FORMAT_VALUE_CONFIG_END)
+> +                       config =3D i;
+> +
+> +               ret =3D cb(state, terms[i], config, /*bits=3D*/NULL);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +       return 0;
+> +}
+> +
+>  bool is_pmu_core(const char *name)
+>  {
+>         return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sys=
+fs_pmu_core(name);
+> @@ -1697,8 +1752,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu,=
+ bool skip_duplicate_pmus,
+>         pmu_add_cpu_aliases(pmu);
+>         list_for_each_entry(event, &pmu->aliases, list) {
+>                 size_t buf_used;
+> +               int pmu_name_len;
 >
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index ef0dfffd99fdf3cc..d3ec244e692a415e 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -978,7 +978,6 @@ static const struct syscall_fmt syscall_fmts[] =3D {
->                    [1] =3D { .scnprintf =3D SCA_FILENAME,     /* path */ =
-},
->                    [2] =3D { .scnprintf =3D SCA_FSPICK_FLAGS, /* flags */=
- }, }, },
->         { .name     =3D "fstat", .alias =3D "newfstat", },
-> -       { .name     =3D "fstatat", .alias =3D "newfstatat", },
->         { .name     =3D "futex",
->           .arg =3D { [1] =3D { .scnprintf =3D SCA_FUTEX_OP, /* op */ },
->                    [5] =3D { .scnprintf =3D SCA_FUTEX_VAL3, /* val3 */ },=
- }, },
-> @@ -1060,8 +1059,10 @@ static const struct syscall_fmt syscall_fmts[] =3D=
- {
->           .arg =3D { [0] =3D { .scnprintf =3D SCA_FDAT, /* dfd */ }, }, }=
+>                 info.pmu_name =3D event->pmu_name ?: pmu->name;
+> +               pmu_name_len =3D skip_duplicate_pmus
+> +                       ? pmu_name_len_no_suffix(info.pmu_name, /*num=3D*=
+/NULL)
+> +                       : (int)strlen(info.pmu_name);
+>                 info.alias =3D NULL;
+>                 if (event->desc) {
+>                         info.name =3D event->name;
+> @@ -1723,7 +1782,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, =
+bool skip_duplicate_pmus,
+>                 info.encoding_desc =3D buf + buf_used;
+>                 parse_events_terms__to_strbuf(&event->terms, &sb);
+>                 buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_=
+used,
+> -                               "%s/%s/", info.pmu_name, sb.buf) + 1;
+> +                               "%.*s/%s/", pmu_name_len, info.pmu_name, =
+sb.buf) + 1;
+>                 info.topic =3D event->topic;
+>                 info.str =3D sb.buf;
+>                 info.deprecated =3D event->deprecated;
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index e35d985206db..9f5284b29ecf 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -196,6 +196,8 @@ struct pmu_event_info {
+>  };
+>
+>  typedef int (*pmu_event_callback)(void *state, struct pmu_event_info *in=
+fo);
+> +typedef int (*pmu_format_callback)(void *state, const char *name, int co=
+nfig,
+> +                                  const unsigned long *bits);
+>
+>  void pmu_add_sys_aliases(struct perf_pmu *pmu);
+>  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
+> @@ -215,6 +217,7 @@ int perf_pmu__find_event(struct perf_pmu *pmu, const =
+char *event, void *state, p
+>  int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_l=
+oad);
+>  void perf_pmu_format__set_value(void *format, int config, unsigned long =
+*bits);
+>  bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name);
+> +int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_for=
+mat_callback cb);
+>
+>  bool is_pmu_core(const char *name);
+>  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 16505071d362..2fd369e45832 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -16,6 +16,7 @@
+>  #include "pmus.h"
+>  #include "pmu.h"
+>  #include "print-events.h"
+> +#include "strbuf.h"
+>
+>  /*
+>   * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's =
+sysfs
+> @@ -503,6 +504,99 @@ void perf_pmus__print_pmu_events(const struct print_=
+callbacks *print_cb, void *p
+>         zfree(&aliases);
+>  }
+>
+> +struct build_format_string_args {
+> +       struct strbuf short_string;
+> +       struct strbuf long_string;
+> +       int num_formats;
+> +};
+> +
+> +static int build_format_string(void *state, const char *name, int config=
 ,
->         { .name     =3D "nanosleep",
->           .arg =3D { [0] =3D { .scnprintf =3D SCA_TIMESPEC,  /* req */ },=
- }, },
-> -       { .name     =3D "newfstatat",
-> -         .arg =3D { [0] =3D { .scnprintf =3D SCA_FDAT, /* dfd */ }, }, }=
-,
-> +       { .name     =3D "newfstatat", .alias =3D "fstatat",
-> +         .arg =3D { [0] =3D { .scnprintf =3D SCA_FDAT,         /* dirfd =
-*/ },
-> +                  [1] =3D { .scnprintf =3D SCA_FILENAME,     /* pathname=
- */ },
-> +                  [3] =3D { .scnprintf =3D SCA_FS_AT_FLAGS, /* flags */ =
-}, }, },
->         { .name     =3D "open",
->           .arg =3D { [1] =3D { .scnprintf =3D SCA_OPEN_FLAGS, /* flags */=
- }, }, },
->         { .name     =3D "open_by_handle_at",
+> +                              const unsigned long *bits)
+> +{
+> +       struct build_format_string_args *args =3D state;
+> +       unsigned int num_bits;
+> +       int ret1, ret2 =3D 0;
+> +
+> +       (void)config;
+> +       args->num_formats++;
+> +       if (args->num_formats > 1) {
+> +               strbuf_addch(&args->long_string, ',');
+> +               if (args->num_formats < 4)
+> +                       strbuf_addch(&args->short_string, ',');
+> +       }
+> +       num_bits =3D bits ? bitmap_weight(bits, PERF_PMU_FORMAT_BITS) : 0=
+;
+> +       if (num_bits <=3D 1) {
+> +               ret1 =3D strbuf_addf(&args->long_string, "%s", name);
+> +               if (args->num_formats < 4)
+> +                       ret2 =3D strbuf_addf(&args->short_string, "%s", n=
+ame);
+> +       } else if (num_bits > 8) {
+> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..0x%llx"=
+, name,
+> +                                  ULLONG_MAX >> (64 - num_bits));
+> +               if (args->num_formats < 4) {
+> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
+..0x%llx", name,
+> +                                          ULLONG_MAX >> (64 - num_bits))=
+;
+> +               }
+> +       } else {
+> +               ret1 =3D strbuf_addf(&args->long_string, "%s=3D0..%llu", =
+name,
+> +                                 ULLONG_MAX >> (64 - num_bits));
+> +               if (args->num_formats < 4) {
+> +                       ret2 =3D strbuf_addf(&args->short_string, "%s=3D0=
+..%llu", name,
+> +                                          ULLONG_MAX >> (64 - num_bits))=
+;
+> +               }
+> +       }
+> +       return ret1 < 0 ? ret1 : (ret2 < 0 ? ret2 : 0);
+> +}
+> +
+> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
+_cb, void *print_state)
+> +{
+> +       bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(print_=
+state);
+> +       struct perf_pmu *(*scan_fn)(struct perf_pmu *);
+> +       struct perf_pmu *pmu =3D NULL;
+> +
+> +       if (skip_duplicate_pmus)
+> +               scan_fn =3D perf_pmus__scan_skip_duplicates;
+> +       else
+> +               scan_fn =3D perf_pmus__scan;
+> +
+> +       while ((pmu =3D scan_fn(pmu)) !=3D NULL) {
+> +               struct build_format_string_args format_args =3D {
+> +                       .short_string =3D STRBUF_INIT,
+> +                       .long_string =3D STRBUF_INIT,
+> +                       .num_formats =3D 0,
+> +               };
+> +               int len =3D pmu_name_len_no_suffix(pmu->name, /*num=3D*/N=
+ULL);
+> +               const char *desc =3D "(see 'man perf-list' or 'man perf-r=
+ecord' on how to encode it)";
+> +
+> +               if (!pmu->is_core)
+> +                       desc =3D NULL;
+> +
+> +               strbuf_addf(&format_args.short_string, "%.*s/", len, pmu-=
+>name);
+> +               strbuf_addf(&format_args.long_string, "%.*s/", len, pmu->=
+name);
+> +               perf_pmu__for_each_format(pmu, &format_args, build_format=
+_string);
+> +
+> +               if (format_args.num_formats > 3)
+> +                       strbuf_addf(&format_args.short_string, ",.../modi=
+fier");
+> +               else
+> +                       strbuf_addf(&format_args.short_string, "/modifier=
+");
+> +
+> +               strbuf_addf(&format_args.long_string, "/modifier");
+> +               print_cb->print_event(print_state,
+> +                               /*topic=3D*/NULL,
+> +                               /*pmu_name=3D*/NULL,
+> +                               format_args.short_string.buf,
+> +                               /*event_alias=3D*/NULL,
+> +                               /*scale_unit=3D*/NULL,
+> +                               /*deprecated=3D*/false,
+> +                               "Raw event descriptor",
+> +                               desc,
+> +                               /*long_desc=3D*/NULL,
+> +                               format_args.long_string.buf);
+> +
+> +               strbuf_release(&format_args.short_string);
+> +               strbuf_release(&format_args.long_string);
+> +       }
+> +}
+> +
+>  bool perf_pmus__have_event(const char *pname, const char *name)
+>  {
+>         struct perf_pmu *pmu =3D perf_pmus__find(pname);
+> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> index 94d2a08d894b..eec599d8aebd 100644
+> --- a/tools/perf/util/pmus.h
+> +++ b/tools/perf/util/pmus.h
+> @@ -18,6 +18,7 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *=
+pmu);
+>  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
+>
+>  void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb,=
+ void *print_state);
+> +void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print=
+_cb, void *print_state);
+>  bool perf_pmus__have_event(const char *pname, const char *name);
+>  int perf_pmus__num_core_pmus(void);
+>  bool perf_pmus__supports_extended_type(void);
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
+s.c
+> index e0d2b49bab66..3f38c27f0157 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -39,7 +39,7 @@ static const char * const event_type_descriptors[] =3D =
+{
+>         "Software event",
+>         "Tracepoint event",
+>         "Hardware cache event",
+> -       "Raw hardware event descriptor",
+> +       "Raw event descriptor",
+>         "Hardware breakpoint",
+>  };
+>
+> @@ -416,8 +416,6 @@ void print_symbol_events(const struct print_callbacks=
+ *print_cb, void *print_sta
+>   */
+>  void print_events(const struct print_callbacks *print_cb, void *print_st=
+ate)
+>  {
+> -       char *tmp;
+> -
+>         print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
+>                         event_symbols_hw, PERF_COUNT_HW_MAX);
+>         print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
+> @@ -441,21 +439,7 @@ void print_events(const struct print_callbacks *prin=
+t_cb, void *print_state)
+>                         /*long_desc=3D*/NULL,
+>                         /*encoding_desc=3D*/NULL);
+>
+> -       if (asprintf(&tmp, "%s/t1=3Dv1[,t2=3Dv2,t3 ...]/modifier",
+> -                    perf_pmus__scan_core(/*pmu=3D*/NULL)->name) > 0) {
+> -               print_cb->print_event(print_state,
+> -                               /*topic=3D*/NULL,
+> -                               /*pmu_name=3D*/NULL,
+> -                               tmp,
+> -                               /*event_alias=3D*/NULL,
+> -                               /*scale_unit=3D*/NULL,
+> -                               /*deprecated=3D*/false,
+> -                               event_type_descriptors[PERF_TYPE_RAW],
+> -                               "(see 'man perf-list' on how to encode it=
+)",
+> -                               /*long_desc=3D*/NULL,
+> -                               /*encoding_desc=3D*/NULL);
+> -               free(tmp);
+> -       }
+> +       perf_pmus__print_raw_pmu_events(print_cb, print_state);
+>
+>         print_cb->print_event(print_state,
+>                         /*topic=3D*/NULL,
 > --
-> 2.44.0
+> 2.44.0.278.ge034bb2e1d-goog
 >
