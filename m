@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3F412DD99
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 16:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D6B12DDAF
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 16:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711037020; cv=none; b=YmL4vSq9Ol+wBH4ZPq+kg+9w+A/u7zcepL/luFbf4bqDy7r5mrTxpTrOwMu4BJLCuNXr3SCC0qYkQlCcgWn9g7jCtVm8pNDVgZ2UYxDbtOApdjkzp2gEYnAoqbVFwhyK6sc+2rubwZuThg3jvhzoKU2Utwg+5+K98FxtdC0LXuM=
+	t=1711037023; cv=none; b=swMsbCRo4Bg2h94zTFFuKIxNObwwTfRLxH0kf5hHXMtXzVFAmafC+SZAkiluSSFHttgMu/IaDS8T9QpW3F6GMQV2+W9pUkMdqTPkimTS+wfOVpDxt4WDTvu3GQuScLAOuZnmmMrvpEZvpNEHombW/S9snJCre6ANbHfmKWqgAU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711037020; c=relaxed/simple;
-	bh=ajfSGUSK6Jil7GSQtwCQravAQoMFTLhTKffJm6L2W5M=;
+	s=arc-20240116; t=1711037023; c=relaxed/simple;
+	bh=hSMuUa1ZbCYjg1HblkWJi89sX+KRofSvSmdTL9QiRM4=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=SfmebcO3IdfIUxHDK16H/TRBVXJR/9AWQYHWUsJerzhXDxcuA2/t/tldAe86+D8Lha9BiX6STAl0CIBcJNGGKH9zKwt8OH4fcBdJpfGtTAzsCZFkhdeEh1rEgZGpZMVILvyqKuQKci/1rollKFpyd2AjyGrGg0KNCYWoC+1o+ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bTbHfMCF; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=t+uZdRlfrPhneWOMxLYo+xFwBGEhIjvkeFdJJEVauHOCIPPvsQ6DInIkKW55urfnHwffr3TDkc2rD/soT6CRKZqJ6x8HVUD4OC63LQPiBXBvdLi/qCGRNNQdrHG7l8oklzRSgottF1yd/Wnahw6n2bZw7Nhk+u1PzQ5NYVQWrkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qx1O0F+b; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTbHfMCF"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a54004e9fso20735297b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 09:03:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qx1O0F+b"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so1794358276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Mar 2024 09:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711037017; x=1711641817; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711037020; x=1711641820; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QSWFRUv0PmSjQhtJM1Pggtzo9mpMbnZ+euPjjZfflDg=;
-        b=bTbHfMCFfb2XhbYsJtaS2OLd7sB9Ai+3LjOQwzrN6gjgQ8EVsQBGG7S79C0LcwAMDE
-         GZTZZnaSf1HrzfkBRBYHruqgHCEjsNav1i4Yu11kxRp0IE3aozDnU8n5FK8ItQGc9LXy
-         /FWrC5iD9TuRgD4ow97vUSIV9z3hOi61uXVKFKp0TDdycqGY6V0PiNq5vdk9jKzzXD+T
-         A5AJxkzN+0J4LUQXBPQbUdxYRjuYgz6NNEj25T2h1x19gnF2Kb2CWJSBR6WLkmMk/cCp
-         pXAGyNS1Li/AwZ026fqsuQ7+fiqrShAF/ROn6Oit6jzhlb80uhg9uRUXvAS+ZzAaeAd3
-         AZwg==
+        bh=3Gaj42JKJGpbBMXevo1XN/rsx9c1VGwA8xTiPugnM4A=;
+        b=Qx1O0F+bFc65A6y+UoQN7tTSy5W2CwqZwvtVGOLE454j84ZrwV/t9wLMxQnUI9vpPC
+         g+9vqRHPr+vq8CaIDJCqbaBOL1zm7pn/VTiNcN13ntQDXMGMzxdV7rSbnTL9oHM9Z9nG
+         17BDb/kTDenVTvLZBwkoJP8XcXOYUPKOe9NqkIjvIPR6qjqmI9ED8cQLcnl2viPim6K/
+         gZRFfLkC0zU5kjo6C1IzkdvbE/nvjt1sXFcufYmiBharm0LITvSzE5HTPD6pYTfZcL+l
+         4zoq2aQSCdnA94Xr2p+Sxd/nbeFtwzgno/Df+kw9sSFrqfGgMzPG5DPcJ1jadN2xhIGn
+         +vqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711037017; x=1711641817;
+        d=1e100.net; s=20230601; t=1711037020; x=1711641820;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QSWFRUv0PmSjQhtJM1Pggtzo9mpMbnZ+euPjjZfflDg=;
-        b=kVowEbmmZMb9afWwkBNjtvAwvzw/w/7CKlx7H+f8CxzzbjHcZZIBX+t9DeK2t3JKaq
-         kx61yuH2vccwGRyRh7biEsFEvUqGNcCaDBnn8trfyHJ/tc4Fy9CTc0+F5QxHXtqq+goc
-         EIYxq2znNXBDz/aerrezPYcJEvw+xLUgf8Btjmq4a4r6VDkgSuODfa5M+v396JGU05DM
-         PDBXvow7EcTumTBxUGtxxKLCDgN2NhsRfgNBTXrQ0DI1+24AgZouTRjkRvUGwbwjdRQH
-         7+vSAv1TYWW/wsV0rIKNLlROUxZ+8eIfnzbPz2FU57bhMr6xr+ktMZVWrroYMMMjxk0p
-         tnfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVACwJ/5ZPUcvQZBfYCf/ImUHwEcWWW69I5DbwaqEDHMXcYYcCfbrpknQQ/QIIBzL9OttDeTuaht3l2qY92BKWnVNU0ZddA/cO2IcYagZLT3g==
-X-Gm-Message-State: AOJu0YzCWYB4FqCnsszULBu+DKqSb47zy4AGjPfM+jmWx4oZX2T9iqM/
-	1DqwrZv9LdYbEPprf7VFiWJTdQXbNiCt8BVFho3d6w6a6plIkg1ZQ5wWYSNv3ns0AtiKV7oBNBP
-	xm4hAnA==
-X-Google-Smtp-Source: AGHT+IFWpf0oTVgMx1wxX0LndU4NIISvXBSxOofnmLhO+OeoGjed2VRi2fUiXdWGXlj6VLqCmuuiopvMmoji
+        bh=3Gaj42JKJGpbBMXevo1XN/rsx9c1VGwA8xTiPugnM4A=;
+        b=hCFU/wZw0XqX7xh7zLJpvBbjyfjAJ1QCbCd8AGuGRw5ZAIJ/JjZayMjRaZLi+/CnGy
+         3S/Uo3ZGN+LM+en//dpXnSshacs6btQh9THxSxYYwCTK23YMxoQIc9hvaFK93T85kSOc
+         UpkcaZ45iuEp+8/Kxk2xhN+2o3xPkp8sNAeIA7wQ6vNG/ytqYWTXjUlYCmkz5BaZgS05
+         zYm36l4+dwPC5pmLhdw/PwnoPJAnQqXClxPzgGc0o5DTh4Cd3Zp0eY7zjBVxUeQoXREw
+         3t67nIDMhhoGzbjHXLh6nQFko6ypOpqx/f9eRjMiD7O4xzp7XCqhdpFkSE6iFdpeE/ae
+         uZew==
+X-Forwarded-Encrypted: i=1; AJvYcCUrfhuO7TCYVxOVRmlOxeLFz0aoa3LNnSXVJwZXUf8Sddsl9jra/a01wgSV58ixyayIpqebpQk7F8eYqzXWuT37e3higi1aOfCv2m++xRaeag==
+X-Gm-Message-State: AOJu0YwQfpl7kJBRq85L+9QHtzt16tI5HxZlaV3JCKUEW7tht7m2zCMa
+	4YZWimwMHevgggoZvhVffX0RbZZFkWHQHacFl2OhnY/cQOnQhYLcfqLmNtcu9GYADpVoPOxbRWg
+	oJks/cQ==
+X-Google-Smtp-Source: AGHT+IEbE5WUFq8xfNUCKbDt50IXF5QiEpV7O81PoZcFnvlQr5NC0Zjv2R2VhftEmgI0GRlf2HbQHqPrmHFb
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7f3:cf74:42c4:c0a])
- (user=irogers job=sendgmr) by 2002:a05:690c:f88:b0:610:f11e:9d24 with SMTP id
- df8-20020a05690c0f8800b00610f11e9d24mr1661598ywb.4.1711037017498; Thu, 21 Mar
- 2024 09:03:37 -0700 (PDT)
-Date: Thu, 21 Mar 2024 09:02:59 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:188f:b0:dcf:f526:4cc6 with SMTP
+ id cj15-20020a056902188f00b00dcff5264cc6mr1128689ybb.11.1711037019952; Thu,
+ 21 Mar 2024 09:03:39 -0700 (PDT)
+Date: Thu, 21 Mar 2024 09:03:00 -0700
 In-Reply-To: <20240321160300.1635121-1-irogers@google.com>
-Message-Id: <20240321160300.1635121-13-irogers@google.com>
+Message-Id: <20240321160300.1635121-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240321160300.1635121-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Subject: [PATCH v2 12/13] perf dso: Reference counting related fixes
+Subject: [PATCH v2 13/13] perf dso: Use container_of to avoid a pointer in dso_data
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -83,191 +83,247 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure gets and puts are better aligned fixing reference couting
-checking problems.
+The dso pointer in dso_data is necessary for reference count checking
+to account for the dso_data forming a global list of open dso's with
+references to the dso. The dso pointer also allows for the indirection
+that reference count checking needs. Outside of reference count
+checking the indirection isn't needed and container_of is more
+efficient and saves space.
+
+The reference count won't be increased by placing items onto the
+global list, matching how things were before the reference count
+checking change, but we assert the dso is in dsos holding it live (and
+that the set of open dsos is a subset of all dsos for the
+machine). Update the DSO data tests so that they use a dsos struct to
+make the invariant true.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c    |  4 +--
- tools/perf/util/map.c        |  1 +
- tools/perf/util/symbol-elf.c | 51 ++++++++++++++++++------------------
- 3 files changed, 28 insertions(+), 28 deletions(-)
+ tools/perf/tests/dso-data.c | 60 ++++++++++++++++++-------------------
+ tools/perf/util/dso.c       | 16 +++++++++-
+ tools/perf/util/dso.h       |  2 ++
+ 3 files changed, 46 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 4153dc92154d..ca8b1d7e4028 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -683,7 +683,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 					     struct perf_sample *sample __maybe_unused)
- {
- 	struct symbol *sym;
--	struct dso *dso;
-+	struct dso *dso = NULL;
- 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
- 	int err = 0;
+diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+index fde4eca84b6f..5286ae8bd2d7 100644
+--- a/tools/perf/tests/dso-data.c
++++ b/tools/perf/tests/dso-data.c
+@@ -10,6 +10,7 @@
+ #include <sys/resource.h>
+ #include <api/fs/fs.h>
+ #include "dso.h"
++#include "dsos.h"
+ #include "machine.h"
+ #include "symbol.h"
+ #include "tests.h"
+@@ -123,9 +124,10 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
+ 	TEST_ASSERT_VAL("No test file", file);
  
-@@ -696,7 +696,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 		}
- 		dso__set_kernel(dso, DSO_SPACE__KERNEL);
- 		map = map__new2(0, dso);
--		dso__put(dso);
- 		if (!map) {
- 			err = -ENOMEM;
- 			goto out;
-@@ -735,6 +734,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 	dso__insert_symbol(dso, sym);
- out:
- 	map__put(map);
-+	dso__put(dso);
- 	return err;
+ 	memset(&machine, 0, sizeof(machine));
++	dsos__init(&machine.dsos);
+ 
+-	dso = dso__new((const char *)file);
+-
++	dso = dso__new(file);
++	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
+ 	TEST_ASSERT_VAL("Failed to access to dso",
+ 			dso__data_fd(dso, &machine) >= 0);
+ 
+@@ -170,6 +172,7 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
+ 	}
+ 
+ 	dso__put(dso);
++	dsos__exit(&machine.dsos);
+ 	unlink(file);
+ 	return 0;
+ }
+@@ -199,41 +202,35 @@ static long open_files_cnt(void)
+ 	return nr - 1;
  }
  
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 117c4bb78b35..e1d14936a60d 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -200,6 +200,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 				dso__set_build_id(dso, dso__bid(header_bid_dso));
- 				dso__set_header_build_id(dso, 1);
- 			}
-+			dso__put(header_bid_dso);
- 		}
- 		dso__put(dso);
- 	}
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 3be5e8d1e278..e398abfd13a0 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1419,7 +1419,7 @@ void __weak arch__sym_update(struct symbol *s __maybe_unused,
- static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 				      GElf_Sym *sym, GElf_Shdr *shdr,
- 				      struct maps *kmaps, struct kmap *kmap,
--				      struct dso **curr_dsop, struct map **curr_mapp,
-+				      struct dso **curr_dsop,
- 				      const char *section_name,
- 				      bool adjust_kernel_syms, bool kmodule, bool *remap_kernel,
- 				      u64 max_text_sh_offset)
-@@ -1470,8 +1470,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 			map__set_pgoff(map, shdr->sh_offset);
- 		}
- 
--		*curr_mapp = map;
--		*curr_dsop = dso;
-+		dso__put(*curr_dsop);
-+		*curr_dsop = dso__get(dso);
- 		return 0;
- 	}
- 
-@@ -1484,8 +1484,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 	 */
- 	if (kmodule && adjust_kernel_syms && is_exe_text(shdr->sh_flags) &&
- 	    shdr->sh_offset <= max_text_sh_offset) {
--		*curr_mapp = map;
--		*curr_dsop = dso;
-+		dso__put(*curr_dsop);
-+		*curr_dsop = dso__get(dso);
- 		return 0;
- 	}
- 
-@@ -1507,10 +1507,10 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		dso__set_binary_type(curr_dso, dso__binary_type(dso));
- 		dso__set_adjust_symbols(curr_dso, dso__adjust_symbols(dso));
- 		curr_map = map__new2(start, curr_dso);
--		dso__put(curr_dso);
--		if (curr_map == NULL)
-+		if (curr_map == NULL) {
-+			dso__put(curr_dso);
- 			return -1;
+-static struct dso **dsos;
 -
-+		}
- 		if (dso__kernel(curr_dso))
- 			map__kmap(curr_map)->kmaps = kmaps;
+-static int dsos__create(int cnt, int size)
++static int dsos__create(int cnt, int size, struct dsos *dsos)
+ {
+ 	int i;
  
-@@ -1524,21 +1524,15 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		dso__set_symtab_type(curr_dso, dso__symtab_type(dso));
- 		if (maps__insert(kmaps, curr_map))
- 			return -1;
--		/*
--		 * Add it before we drop the reference to curr_map, i.e. while
--		 * we still are sure to have a reference to this DSO via
--		 * *curr_map->dso.
--		 */
- 		dsos__add(&maps__machine(kmaps)->dsos, curr_dso);
--		/* kmaps already got it */
--		map__put(curr_map);
- 		dso__set_loaded(curr_dso);
--		*curr_mapp = curr_map;
-+		dso__put(*curr_dsop);
- 		*curr_dsop = curr_dso;
- 	} else {
--		*curr_dsop = map__dso(curr_map);
--		map__put(curr_map);
-+		dso__put(*curr_dsop);
-+		*curr_dsop = dso__get(map__dso(curr_map));
+-	dsos = malloc(sizeof(*dsos) * cnt);
+-	TEST_ASSERT_VAL("failed to alloc dsos array", dsos);
++	dsos__init(dsos);
+ 
+ 	for (i = 0; i < cnt; i++) {
+-		char *file;
++		struct dso *dso;
++		char *file = test_file(size);
+ 
+-		file = test_file(size);
+ 		TEST_ASSERT_VAL("failed to get dso file", file);
+-
+-		dsos[i] = dso__new(file);
+-		TEST_ASSERT_VAL("failed to get dso", dsos[i]);
++		dso = dso__new(file);
++		TEST_ASSERT_VAL("failed to get dso", dso);
++		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
++		dso__put(dso);
  	}
-+	map__put(curr_map);
  
  	return 0;
  }
-@@ -1549,11 +1543,9 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 
+-static void dsos__delete(int cnt)
++static void dsos__delete(struct dsos *dsos)
  {
- 	struct kmap *kmap = dso__kernel(dso) ? map__kmap(map) : NULL;
- 	struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
--	struct map *curr_map = map;
--	struct dso *curr_dso = dso;
-+	struct dso *curr_dso = NULL;
- 	Elf_Data *symstrs, *secstrs, *secstrs_run, *secstrs_sym;
- 	uint32_t nr_syms;
--	int err = -1;
- 	uint32_t idx;
- 	GElf_Ehdr ehdr;
- 	GElf_Shdr shdr;
-@@ -1656,6 +1648,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (kmodule && adjust_kernel_syms)
- 		max_text_sh_offset = max_text_section(runtime_ss->elf, &runtime_ss->ehdr);
+-	int i;
+-
+-	for (i = 0; i < cnt; i++) {
+-		struct dso *dso = dsos[i];
++	for (unsigned int i = 0; i < dsos->cnt; i++) {
++		struct dso *dso = dsos->dsos[i];
  
-+	curr_dso = dso__get(dso);
- 	elf_symtab__for_each_symbol(syms, nr_syms, idx, sym) {
- 		struct symbol *f;
- 		const char *elf_name = elf_sym__name(&sym, symstrs);
-@@ -1744,9 +1737,13 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			--sym.st_value;
- 
- 		if (dso__kernel(dso)) {
--			if (dso__process_kernel_symbol(dso, map, &sym, &shdr, kmaps, kmap, &curr_dso, &curr_map,
--						       section_name, adjust_kernel_syms, kmodule,
--						       &remap_kernel, max_text_sh_offset))
-+			if (dso__process_kernel_symbol(dso, map, &sym, &shdr,
-+						       kmaps, kmap, &curr_dso,
-+						       section_name,
-+						       adjust_kernel_syms,
-+						       kmodule,
-+						       &remap_kernel,
-+						       max_text_sh_offset))
- 				goto out_elf_end;
- 		} else if ((used_opd && runtime_ss->adjust_symbols) ||
- 			   (!used_opd && syms_ss->adjust_symbols)) {
-@@ -1795,6 +1792,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
- 		nr++;
+ 		dso__data_close(dso);
+ 		unlink(dso__name(dso));
+-		dso__put(dso);
  	}
-+	dso__put(curr_dso);
- 
- 	/*
- 	 * For misannotated, zeroed, ASM function sizes.
-@@ -1810,9 +1808,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			maps__fixup_end(kmaps);
- 		}
- 	}
--	err = nr;
-+	return nr;
- out_elf_end:
--	return err;
-+	dso__put(curr_dso);
-+	return -1;
+-
+-	free(dsos);
++	dsos__exit(dsos);
  }
  
- int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ static int set_fd_limit(int n)
+@@ -267,10 +264,10 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
+ 	/* and this is now our dso open FDs limit */
+ 	dso_cnt = limit / 2;
+ 	TEST_ASSERT_VAL("failed to create dsos\n",
+-		!dsos__create(dso_cnt, TEST_FILE_SIZE));
++			!dsos__create(dso_cnt, TEST_FILE_SIZE, &machine.dsos));
+ 
+ 	for (i = 0; i < (dso_cnt - 1); i++) {
+-		struct dso *dso = dsos[i];
++		struct dso *dso = machine.dsos.dsos[i];
+ 
+ 		/*
+ 		 * Open dsos via dso__data_fd(), it opens the data
+@@ -290,17 +287,17 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
+ 	}
+ 
+ 	/* verify the first one is already open */
+-	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(dsos[0])->fd != -1);
++	TEST_ASSERT_VAL("dsos[0] is not open", dso__data(machine.dsos.dsos[0])->fd != -1);
+ 
+ 	/* open +1 dso to reach the allowed limit */
+-	fd = dso__data_fd(dsos[i], &machine);
++	fd = dso__data_fd(machine.dsos.dsos[i], &machine);
+ 	TEST_ASSERT_VAL("failed to get fd", fd > 0);
+ 
+ 	/* should force the first one to be closed */
+-	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(dsos[0])->fd == -1);
++	TEST_ASSERT_VAL("failed to close dsos[0]", dso__data(machine.dsos.dsos[0])->fd == -1);
+ 
+ 	/* cleanup everything */
+-	dsos__delete(dso_cnt);
++	dsos__delete(&machine.dsos);
+ 
+ 	/* Make sure we did not leak any file descriptor. */
+ 	nr_end = open_files_cnt();
+@@ -325,9 +322,9 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
+ 	int fd, fd_extra;
+ 
+-#define dso_0 (dsos[0])
+-#define dso_1 (dsos[1])
+-#define dso_2 (dsos[2])
++#define dso_0 (machine.dsos.dsos[0])
++#define dso_1 (machine.dsos.dsos[1])
++#define dso_2 (machine.dsos.dsos[2])
+ 
+ 	/* Rest the internal dso open counter limit. */
+ 	reset_fd_limit();
+@@ -347,7 +344,8 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 	TEST_ASSERT_VAL("failed to set file limit",
+ 			!set_fd_limit((lim)));
+ 
+-	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
++	TEST_ASSERT_VAL("failed to create dsos\n",
++			!dsos__create(3, TEST_FILE_SIZE, &machine.dsos));
+ 
+ 	/* open dso_0 */
+ 	fd = dso__data_fd(dso_0, &machine);
+@@ -386,7 +384,7 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
+ 
+ 	/* cleanup everything */
+ 	close(fd_extra);
+-	dsos__delete(3);
++	dsos__delete(&machine.dsos);
+ 
+ 	/* Make sure we did not leak any file descriptor. */
+ 	nr_end = open_files_cnt();
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 27db65e96e04..dde706b71da7 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -497,14 +497,20 @@ static pthread_mutex_t dso__data_open_lock = PTHREAD_MUTEX_INITIALIZER;
+ static void dso__list_add(struct dso *dso)
+ {
+ 	list_add_tail(&dso__data(dso)->open_entry, &dso__data_open);
++#ifdef REFCNT_CHECKING
+ 	dso__data(dso)->dso = dso__get(dso);
++#endif
++	/* Assume the dso is part of dsos, hence the optional reference count above. */
++	assert(dso__dsos(dso));
+ 	dso__data_open_cnt++;
+ }
+ 
+ static void dso__list_del(struct dso *dso)
+ {
+ 	list_del_init(&dso__data(dso)->open_entry);
++#ifdef REFCNT_CHECKING
+ 	dso__put(dso__data(dso)->dso);
++#endif
+ 	WARN_ONCE(dso__data_open_cnt <= 0,
+ 		  "DSO data fd counter out of bounds.");
+ 	dso__data_open_cnt--;
+@@ -654,9 +660,15 @@ static void close_dso(struct dso *dso)
+ static void close_first_dso(void)
+ {
+ 	struct dso_data *dso_data;
++	struct dso *dso;
+ 
+ 	dso_data = list_first_entry(&dso__data_open, struct dso_data, open_entry);
+-	close_dso(dso_data->dso);
++#ifdef REFCNT_CHECKING
++	dso = dso_data->dso;
++#else
++	dso = container_of(dso_data, struct dso, data);
++#endif
++	close_dso(dso);
+ }
+ 
+ static rlim_t get_fd_limit(void)
+@@ -1449,7 +1461,9 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
+ 		data->fd = -1;
+ 		data->status = DSO_DATA_STATUS_UNKNOWN;
+ 		INIT_LIST_HEAD(&data->open_entry);
++#ifdef REFCNT_CHECKING
+ 		data->dso = NULL; /* Set when on the open_entry list. */
++#endif
+ 	}
+ 	return res;
+ }
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index f9689dd60de3..df2c98402af3 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -147,7 +147,9 @@ struct dso_cache {
+ struct dso_data {
+ 	struct rb_root	 cache;
+ 	struct list_head open_entry;
++#ifdef REFCNT_CHECKING
+ 	struct dso	 *dso;
++#endif
+ 	int		 fd;
+ 	int		 status;
+ 	u32		 status_seen;
 -- 
 2.44.0.396.g6e790dbe36-goog
 
