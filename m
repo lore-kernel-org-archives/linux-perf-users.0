@@ -1,189 +1,176 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379B186243;
+	Thu, 21 Mar 2024 15:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711034083; cv=none; b=si/9B6TyTgtQAHPhiqs4XS8HUSMafPKGpCsPAOJWBCNxwvih3dnEzH0CrBy1LXeIht2q2jGx/nb7y6FwFNZRBoY5+Rqn2kgzwpfODf4oQfvvCEq01u789D7t0D1AM/UvSiMExa1dh0W0/tZ42hzpjRQTDx2342RcqheYCY1fokc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711034083; c=relaxed/simple;
+	bh=w+3kmnXuBBmZnST7KWFEOyUpE7C1jEIO1nIlPJtmAE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cekQy7kdqq5Z5PROK6VmhO0TeT6BWzh1h/K7awoFM1EG+asLvEStinSLPTUmXLQg4qhFPeMCKWat7K2f0uC10PJGH3CkrHWGAJ1dWezJLp+2aEjWCv15sCeMtrUR5pt1KjSiMJeh2uUy6uQlRFf3rcBlB1B1UQ/ZdqacdY8famM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R9m6c5zt; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R9m6c5zt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711034081; x=1742570081;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=w+3kmnXuBBmZnST7KWFEOyUpE7C1jEIO1nIlPJtmAE0=;
+  b=R9m6c5ztpWeH0kGwlUx8Mx+FmNPPLPHDEx7aKWBmmEszIO8vb4W2E5uI
+   nz9zdQp36tTwTK1Eg39EW2ffgCcwHPMMND02/uksbIvIpETXdcW8A3vjy
+   b6dm3KoeEdamM5gKndrLwsjsxc9/Xp1WFU5hLc19BMwWnbHkEZBQAGJdh
+   93HfdB9QG6Xl2b4ZDJ5M1X6HS8BJDCN6SwjklsxGiMxTxd3lOHi2/q1V1
+   M3I/J3e36Qw5Cul3rj50NC8ztAOFUCi0AeH1rqFk3Ud9tCLyc/cpIDszp
+   IBiXD4xD7sYrlEAa78zF1DghTce7W/uFbALKDlspvMxfqnQMk8zsuHZKl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5973026"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="5973026"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 08:14:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="14579721"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 08:14:39 -0700
+Received: from [10.212.125.116] (kliang2-mobl1.ccr.corp.intel.com [10.212.125.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC0E84A5A;
-	Thu, 21 Mar 2024 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711033061; cv=none; b=L/fHaGI0uH4J3K7MZFHIK2ass6/GAlGDZEqSG+fudVGFRGyHpKjzwHgDk5yjifOXWGAFWchgPyrVjawkCU/X5ea4BTEirIb4TvoFqr5IvvdQXM6OzvNOo9Ki3D+yLFr2bAXAcIBuhHfmQZgjp1H2RUwEx1n/Br8Lqz583eg4frE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711033061; c=relaxed/simple;
-	bh=OP5rImtzJo8ufuiNRhbyyhSsEnw8dl1VEzRpPhWVrTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mOikl5PJxRoqeRTTLEU8PVCGcDdOa2wLmA9EzNakwsDUKGJ6Vrn7mCQlnjOculhXXN+FJ3rJZhSPlUnz/HghfyeHcwWrOapE+qW3z5Sb9VQCs4o7PYI4UzVkNJJ/xpZLPYY+FB1QEpXQn5rowBWxPfzf/cCW8EhqmNs4mjZXcRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWLffW4Y; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWLffW4Y"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so149327866b.0;
-        Thu, 21 Mar 2024 07:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711033057; x=1711637857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vPAsjljvq9spN9J6oarTkPbOp/uQy9Vt5YZP8TNCUI4=;
-        b=KWLffW4Y0k8TAYZLhfd3ckpCmSf4dq6adWwlGES2BIvnsVHp/rP+Yrl+jEJvv0wgv/
-         s0zpqPbTTYlo8oWvmEHeUdNcDqDKfJ0E2xk1oKhrcISTK8O3MKCIneilfpvcWUxNnP8W
-         fUUZ05aUWGehnbWVuKVbYgwZpzL/YzrIsehqYhAz447LFtQ9qNXgBg/O5bPqmWHdUUkI
-         tgXMLs3Bf+IBZASrihwPp3bHpawhhqRcaRXbyEEItAqGBbb3xVIUPWGJsmNsiE0bbrCG
-         aQOWO897OzhxL2JiKRcIiYasQhbaZFOYKELzscLWLLnSOlXPITNbKKjNjfpm+hNYANhk
-         e7iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711033057; x=1711637857;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vPAsjljvq9spN9J6oarTkPbOp/uQy9Vt5YZP8TNCUI4=;
-        b=r7FA0CFQ5bzO9twkeUTwwHwwdMh8RpgyV0p8yjuCgVykQrAM9unuJtrIQD2tjGAf+I
-         9lWf2qCwCkzkwAcmeYWSseau2uTomTMBtEEdFpEtjJ8kEjEtlx695ZgSLufnSkEjnmwt
-         tA2W7EBShXJa9pALZWUFGKNlkHVyDiQZF3QB1he6pw/5q+4mzJwt7tc2GCRdZ73Kr/Nd
-         US57+iRJconO3WiroJMfQ8RR9q7gqrIrR15Kb+X46af4SalV2ianHbSMjGMdB6vpwigN
-         ZdaSpdebInlSjvDzTRAyofsj+iP3VDNKjFooDOfktx2jpW1mk0PdrcNGKC8Q38hwgymS
-         VFbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlsZM2+8foCDQf5msT5KgjwNdoTEVK6ZAJ7CIg35jvOwBcHMt0AD3ZE7y7FjxMEoqBevahE0sCemHG4p6Ht0X5uzuM/AbQR+F44KeLMPbFHhD0H38Qi2fE0BwHe5F5dIBIx8y6SilW9fcKcb6FwENiF5pTX0hkv6XwfsI8gSDRM77kYA==
-X-Gm-Message-State: AOJu0YxgwN3ZqXfd3D/zO5rKiqh1SGNciZ2xGYLN6QsIXSK6/07fK54w
-	zs+cuc4Uls3iDN0IuT7Z/1Ew6ZfY4bKX6BNu9J8Aeij8u42J5Ae0l0i6+0ewbNGyEw==
-X-Google-Smtp-Source: AGHT+IFSqXkh2+8koR7VIEtj/qcJxmLHIngN30f6gr+BZ7rBiR3MmUYzBMVJ2N8B2BhwCtIBXUJa3w==
-X-Received: by 2002:a17:907:86a4:b0:a47:1d3f:b321 with SMTP id qa36-20020a17090786a400b00a471d3fb321mr650778ejc.8.1711033057333;
-        Thu, 21 Mar 2024 07:57:37 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
-        by smtp.gmail.com with ESMTPSA id bm19-20020a170906c05300b00a44180ab871sm5831ejb.50.2024.03.21.07.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 07:57:36 -0700 (PDT)
-From: Jonathan Haslam <jonathan.haslam@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: jonathan.haslam@gmail.com,
-	andrii@kernel.org,
-	bpf@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] uprobes: reduce contention on uprobes_tree access
-Date: Thu, 21 Mar 2024 07:57:35 -0700
-Message-ID: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	by linux.intel.com (Postfix) with ESMTPS id 39B89580C6E;
+	Thu, 21 Mar 2024 08:14:37 -0700 (PDT)
+Message-ID: <c1ade566-111a-46b2-81b7-c165890c84ce@linux.intel.com>
+Date: Thu, 21 Mar 2024 11:14:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 00/12] perf vendor events intel update
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Perry Taylor <perry.taylor@intel.com>, Samantha Alt
+ <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>
+References: <20240321060016.1464787-1-irogers@google.com>
+ <ZfxDX--WFVDlGad5@x1>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ZfxDX--WFVDlGad5@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Active uprobes are stored in an RB tree and accesses to this tree are
-dominated by read operations. Currently these accesses are serialized by
-a spinlock but this leads to enormous contention when large numbers of
-threads are executing active probes.
 
-This patch converts the spinlock used to serialize access to the
-uprobes_tree RB tree into a reader-writer spinlock. This lock type
-aligns naturally with the overwhelmingly read-only nature of the tree
-usage here. Although the addition of reader-writer spinlocks are
-discouraged [0], this fix is proposed as an interim solution while an
-RCU based approach is implemented (that work is in a nascent form). This
-fix also has the benefit of being trivial, self contained and therefore
-simple to backport.
 
-This change has been tested against production workloads that exhibit
-significant contention on the spinlock and an almost order of magnitude
-reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+On 2024-03-21 10:25 a.m., Arnaldo Carvalho de Melo wrote:
+> On Wed, Mar 20, 2024 at 11:00:04PM -0700, Ian Rogers wrote:
+>> Update events to the latest on:
+>> https://github.com/intel/perfmon
+>>
+>> Using the converter script:
+>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> 
+> Kan,
+> 
+> 	Can you please take a look and provide an Acked or Reviewed-by?
+> 
 
-[0] https://docs.kernel.org/locking/spinlocks.html
 
-Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
----
- kernel/events/uprobes.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Sure. The patch series look good to me. Thanks Ian!
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 929e98c62965..42bf9b6e8bc0 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-  */
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
- 
--static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- 
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
- 	struct uprobe *uprobe;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	uprobe = __find_uprobe(inode, offset);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return uprobe;
- }
-@@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
- {
- 	struct uprobe *u;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	u = __insert_uprobe(uprobe);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 
- 	return u;
- }
-@@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
- 	if (WARN_ON(!uprobe_is_active(uprobe)))
- 		return;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
- }
-@@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
- 	if (n) {
- 		for (t = n; t; t = rb_prev(t)) {
-@@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
- 			get_uprobe(u);
- 		}
- 	}
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- }
- 
- /* @vma contains reference counter, not the probed instruction. */
-@@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return !!n;
- }
--- 
-2.43.0
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
+Thanks,
+Kan
+
+> Thanks!
+> 
+> - Arnaldo
+>  
+>> Ian Rogers (12):
+>>   perf vendor events intel: Update cascadelakex to 1.21
+>>   perf vendor events intel: Update emeraldrapids to 1.06
+>>   perf vendor events intel: Update grandridge to 1.02
+>>   perf vendor events intel: Update icelakex to 1.24
+>>   perf vendor events intel: Update lunarlake to 1.01
+>>   perf vendor events intel: Update meteorlake to 1.08
+>>   perf vendor events intel: Update sapphirerapids to 1.20
+>>   perf vendor events intel: Update sierraforest to 1.02
+>>   perf vendor events intel: Update skylakex to 1.33
+>>   perf vendor events intel: Update skylake to v58
+>>   perf vendor events intel: Update snowridgex to 1.22
+>>   perf vendor events intel: Remove info metrics erroneously in TopdownL1
+>>
+>>  .../arch/x86/broadwellx/bdx-metrics.json      |  35 +++---
+>>  .../arch/x86/cascadelakex/clx-metrics.json    |  85 +++++--------
+>>  .../arch/x86/cascadelakex/frontend.json       |  10 +-
+>>  .../arch/x86/cascadelakex/memory.json         |   2 +-
+>>  .../arch/x86/cascadelakex/other.json          |   2 +-
+>>  .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+>>  .../x86/cascadelakex/uncore-interconnect.json |  14 +--
+>>  .../arch/x86/cascadelakex/virtual-memory.json |   2 +-
+>>  .../arch/x86/emeraldrapids/frontend.json      |   2 +-
+>>  .../arch/x86/emeraldrapids/memory.json        |   1 +
+>>  .../arch/x86/emeraldrapids/pipeline.json      |   3 +
+>>  .../arch/x86/emeraldrapids/uncore-cache.json  | 112 ++++++++++++++++-
+>>  .../emeraldrapids/uncore-interconnect.json    |  26 ++--
+>>  .../arch/x86/grandridge/pipeline.json         |  43 ++++++-
+>>  .../arch/x86/grandridge/uncore-cache.json     |  28 ++++-
+>>  .../arch/x86/haswellx/hsx-metrics.json        |  35 +++---
+>>  .../arch/x86/icelakex/frontend.json           |   2 +-
+>>  .../arch/x86/icelakex/icx-metrics.json        |  95 ++++++--------
+>>  .../pmu-events/arch/x86/icelakex/memory.json  |   1 +
+>>  .../arch/x86/icelakex/uncore-cache.json       |  22 +++-
+>>  .../x86/icelakex/uncore-interconnect.json     |  64 +++++-----
+>>  .../arch/x86/icelakex/uncore-io.json          |  11 --
+>>  .../pmu-events/arch/x86/lunarlake/cache.json  |  24 ++--
+>>  .../arch/x86/lunarlake/frontend.json          |   2 +-
+>>  .../pmu-events/arch/x86/lunarlake/memory.json |   4 +-
+>>  .../pmu-events/arch/x86/lunarlake/other.json  |   4 +-
+>>  .../arch/x86/lunarlake/pipeline.json          | 109 +++++++++++++---
+>>  tools/perf/pmu-events/arch/x86/mapfile.csv    |  20 +--
+>>  .../pmu-events/arch/x86/meteorlake/cache.json |  30 +++++
+>>  .../arch/x86/meteorlake/frontend.json         |   4 +-
+>>  .../arch/x86/meteorlake/memory.json           |  20 +++
+>>  .../pmu-events/arch/x86/meteorlake/other.json |  42 ++++++-
+>>  .../arch/x86/meteorlake/pipeline.json         |  44 +++++--
+>>  .../x86/meteorlake/uncore-interconnect.json   |  22 +++-
+>>  .../arch/x86/sapphirerapids/cache.json        |   1 +
+>>  .../arch/x86/sapphirerapids/frontend.json     |   2 +-
+>>  .../arch/x86/sapphirerapids/memory.json       |   1 +
+>>  .../arch/x86/sapphirerapids/pipeline.json     |  19 +--
+>>  .../arch/x86/sapphirerapids/spr-metrics.json  | 119 +++++++-----------
+>>  .../arch/x86/sapphirerapids/uncore-cache.json | 112 ++++++++++++++++-
+>>  .../sapphirerapids/uncore-interconnect.json   |  26 ++--
+>>  .../arch/x86/sierraforest/pipeline.json       |  36 +++++-
+>>  .../pmu-events/arch/x86/skylake/frontend.json |  10 +-
+>>  .../pmu-events/arch/x86/skylakex/cache.json   |   9 ++
+>>  .../arch/x86/skylakex/frontend.json           |  10 +-
+>>  .../pmu-events/arch/x86/skylakex/memory.json  |   2 +-
+>>  .../pmu-events/arch/x86/skylakex/other.json   |   2 +-
+>>  .../arch/x86/skylakex/pipeline.json           |   2 +-
+>>  .../arch/x86/skylakex/skx-metrics.json        |  85 +++++--------
+>>  .../x86/skylakex/uncore-interconnect.json     |  14 +--
+>>  .../arch/x86/skylakex/uncore-io.json          |   2 +-
+>>  .../arch/x86/skylakex/virtual-memory.json     |   2 +-
+>>  .../arch/x86/snowridgex/uncore-cache.json     |   4 +-
+>>  .../x86/snowridgex/uncore-interconnect.json   |   6 +-
+>>  .../arch/x86/snowridgex/uncore-io.json        |  11 --
+>>  55 files changed, 911 insertions(+), 486 deletions(-)
+>>
+>> -- 
+>> 2.44.0.396.g6e790dbe36-goog
+>>
+> 
