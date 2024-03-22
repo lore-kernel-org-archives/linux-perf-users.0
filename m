@@ -1,269 +1,138 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0FD85FDDD;
-	Fri, 22 Mar 2024 16:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4AA5E091;
+	Fri, 22 Mar 2024 17:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711125777; cv=none; b=S2DgJGkrLuona9Sbtp5RDIyUv4xaTSJi73FTBwdd/x8biO7bQTpkV1s/tyFmqxwD5L5i0IWav5i+jzWspYn+BMPS5rnAo8wTFTz0ki6lPk6HuHIH8pOK72CJ4oLOKhRCdshtMHddPMBhqr1LVBdcWREKQxmPj0lLTGqM7yUSPd4=
+	t=1711126958; cv=none; b=K87A8MuodrX4oL3mlaT5klX58+a9EoMwJ8qNQQQv9frto5mZZ1P1B08/qQfLKLwaph65g4sf23/GoW24dQAGYO0q8tIpgSy2BHC4W3apPepojal+o0bBpeP7xvqh05spUUmpHQXmJerzYfAJMJuM8hBEzwPW22cD3wgNNgyo5G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711125777; c=relaxed/simple;
-	bh=X45+6Et3bMjkkIBCb2MS1DoUmaZQ0uQN0xJ8G0oOWpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sPSDc0cP67J/LHJbyxghtc1Idw1+ut4GC69CumTZo4HQubH6pCooND6m0HgE0XhK3KJ/40WPaB/ZK6DunFqg4wx1PhZ9PIUr4liBmWns+dG++TgRnO5W38BUUaia8Tt7gRkb+CkFraRPhemuFes23BkPE915DV9ErhS3oZBSjO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73CE91063;
-	Fri, 22 Mar 2024 09:43:29 -0700 (PDT)
-Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 849003F762;
-	Fri, 22 Mar 2024 09:42:53 -0700 (PDT)
-From: Ben Gainey <ben.gainey@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH v4 4/4] tools/perf: Allow inherit + inherit_stat + PERF_SAMPLE_READ when opening events
-Date: Fri, 22 Mar 2024 16:42:37 +0000
-Message-ID: <20240322164237.203358-5-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240322164237.203358-1-ben.gainey@arm.com>
-References: <20240322164237.203358-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1711126958; c=relaxed/simple;
+	bh=JDNMOQbC3PXY7QpcMkns9oBdlRz2yyb1ZhLyIu3ZqTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bB65a2V4AbSJh4DF5anvQfYwscgKUpoECe8rs1RwnYvbvh4UD0rW6JD9jqGIpB5UCZnG2oyxOF71U1TNiGedhw7sFH/gAxfiper96NBAWMg8obfQE/vHTZNPi5vYAf0WTnFu0KCynuzJtLtWTglungmnlCB4SKY4fOrA8kf2wqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UBkqsDLb; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBkqsDLb"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e696233f44so218035b3a.0;
+        Fri, 22 Mar 2024 10:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711126956; x=1711731756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PxfXve+cVmsiI21kufWB4EHnClccPxAyzXoJTXcNJlo=;
+        b=UBkqsDLb+db1/fLsMmaXlC8dFIE3CNQzWeSjJdVL0ZrgZM78A7AY9Im26Jmuuq7qnK
+         iw5e1C4eoPx3ZZZvIapXutQiVh8/WgEzFigvmHxzFLrZKwvIs3bOtL2gsUy4CktUB3CR
+         nw5LthBuTwwoadRsgbu5ArHhBLws8MAK3ltRZ7neVbmGQYfEB76m/CTs16q9GcdiIADQ
+         JVnFZhxWTljJLkH7yoBou1gkRDh0meDHxAdzI0h54/NFT/0SmGSRXN0tJ7lR/tKbkH/S
+         Plsfqgx36389+WUkHXFHfF38afk3AinnHBfilhop4Rx/4By/m1p2gIhyIcJcRWU1E4Pf
+         CTbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711126956; x=1711731756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PxfXve+cVmsiI21kufWB4EHnClccPxAyzXoJTXcNJlo=;
+        b=YbtwzfPYcu6GsKGrgdjgUdQUCdg86/PHK9AHIVbbjNAfRZHW7BoFIpDz0QyDsb5JY5
+         v2WCXZ4wn4Tw0q1lMiUbzSiSKku9YRkmpMDMWbAA/wJpq/wxlA2RJtrrArb7aNwyC30S
+         LRTSG9GnSvekW/WYxfPLF/Cq11Ab3tE3IaY6JSs3vckpdG+7495VYqxVSbEu+aEzN7hr
+         mSNhSMsrfExgiVfHtL64rh7YUnO2WNZfvrX/qLdLyVjfz+9zoSwuQHRQORITXyTWYUw7
+         CuHOyjpNYNMRlfmo3ck1K85a4+FDaBh5ExhldPA/BsFGnblvk+wd10/raMJi7nJGHNNg
+         iXoA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3dllRRuB9nZebl8xrMmz43pAvHytcIvupmESCbOgbsQogUkSLJJkwruEq7u5An6T35WN+vKLITlqIJX/JyS+5a2Tu0kL/91gqKKuFZW77lRKQLDYJpokBv3Bov59N9oihRxpJ/v0+b6RdRqRmojBvJN8SySJjUiYOJiGJ386nol6F1Xjuy7MR++J62C2U4hyM9AZP6U2dr+ispcTXElwZMiOZYtJZnkfmMDRZ
+X-Gm-Message-State: AOJu0YxcgPEqoa6ynbSeeP36myzsqDFD9ZbH/c0ns3BKWZyzhew2X4GC
+	zuQfVVt2QIaPZIEoAB/AwrE2ympbjj31biiAagzdqpzSk46Fg5sJ
+X-Google-Smtp-Source: AGHT+IFa4H5VIiJ6qclzn3xJkPvqqFrgLJzJzz1hQuxN/TxMHL90VHkyed7eEbXy6+syQXO2mZ3qqA==
+X-Received: by 2002:a05:6a00:9aa:b0:6ea:7f2e:633 with SMTP id u42-20020a056a0009aa00b006ea7f2e0633mr365527pfg.2.1711126955763;
+        Fri, 22 Mar 2024 10:02:35 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id g26-20020aa79f1a000000b006e724ccdc3esm1879616pfr.55.2024.03.22.10.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 10:02:35 -0700 (PDT)
+Date: Sat, 23 Mar 2024 01:02:29 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+	dm-devel@lists.linux.dev, linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 04/15] lib min_heap: Add type safe interface
+Message-ID: <Zf25pSI4p0d5pFXX@visitorckw-System-Product-Name>
+References: <20240320145417.336208-1-visitorckw@gmail.com>
+ <20240320145417.336208-5-visitorckw@gmail.com>
+ <iz6wl3twuc72txd4ifxy73bbbfijo3ecy7izw3drsmcb2payeu@b2dusfoqobgu>
+ <Zfwgu8+IeH/YqWYR@visitorckw-System-Product-Name>
+ <mi3uq4gqvseubfiylslxfrnwupfzopz753md5f53v6brlgiamv@l5bxmctqnz6g>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mi3uq4gqvseubfiylslxfrnwupfzopz753md5f53v6brlgiamv@l5bxmctqnz6g>
 
-This change updates evsel to allow the combination of inherit
-and PERF_SAMPLE_READ.
+On Thu, Mar 21, 2024 at 05:22:14PM -0400, Kent Overstreet wrote:
+> On Thu, Mar 21, 2024 at 07:57:47PM +0800, Kuan-Wei Chiu wrote:
+> > On Wed, Mar 20, 2024 at 04:56:57PM -0400, Kent Overstreet wrote:
+> > > On Wed, Mar 20, 2024 at 10:54:06PM +0800, Kuan-Wei Chiu wrote:
+> > > > Introduce a type-safe interface for min_heap by adding small macro
+> > > > wrappers around functions and using a 0-size array to store type
+> > > > information. This enables the use of __minheap_cast and
+> > > > __minheap_obj_size macros for type casting and obtaining element size.
+> > > > The implementation draws inspiration from generic-radix-tree.h,
+> > > > eliminating the need to pass element size in min_heap_callbacks.
+> > > 
+> > > let's avoid the heap->heap.nr - darray (fs/bcachefs/darray.h) has a
+> > > trick for that. All heaps have the same memory layout, so we can just
+> > > cast to a void pointer heap to get something the C code can use.
+> > >
+> > If I understand correctly, you're suggesting adding APIs similar to
+> > darray_top(), darray_first(), and darray_last() within min_heap and
+> > having them return a pointer. However, some users are using heap.nr in
+> > conditional statements instead of utilizing heap.nr for memory
+> > operations, so returning pointers may not be as convenient. What about
+> > adding get and set functions for nr instead?
+> 
+> No, I mean not having separate inner and outer types. Want me to sketch
+> something out?
 
-A fallback is implemented for kernel versions where this feature is not
-supported.
+Based on your suggestion, I've come up with the following code snippet:
 
-The user must pass --stat option to perf record to opt into this new
-behaviour.
+#define MIN_HEAP_PREALLOCATED(_type, _name, _nr) \
+struct _name {  \
+    int nr; \
+    int size;   \
+    _type *data;    \
+    _type preallocated[_nr];    \
+};
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- .../test-record-group-sampling-inherit-stat   | 62 ++++++++++++++
- tools/perf/util/evsel.c                       | 82 ++++++++++++++++++-
- tools/perf/util/evsel.h                       |  1 +
- 3 files changed, 143 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling-inherit-stat
+#define MIN_HEAP(_type, _name) MIN_HEAP_PREALLOCATED(_type, _name, 0)
 
-diff --git a/tools/perf/tests/attr/test-record-group-sampling-inherit-stat b/tools/perf/tests/attr/test-record-group-sampling-inherit-stat
-new file mode 100644
-index 000000000000..281a17acb6ae
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-group-sampling-inherit-stat
-@@ -0,0 +1,62 @@
-+[config]
-+command = record
-+args    = --stat --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-1:base-record]
-+fd=1
-+group_fd=-1
-+
-+# cycles
-+type=0
-+config=0
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=87
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=31
-+task=1
-+mmap=1
-+comm=1
-+enable_on_exec=1
-+disabled=1
-+
-+# inherit is enabled for group sampling, as is inherit_stat
-+inherit=1
-+inherit_stat=1
-+
-+# sampling disabled
-+sample_freq=0
-+sample_period=10000
-+freq=0
-+write_backward=0
-+
-+[event-2:base-record]
-+fd=2
-+group_fd=1
-+
-+# cache-misses
-+type=0
-+config=3
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=87
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=31
-+task=0
-+mmap=0
-+comm=0
-+enable_on_exec=0
-+disabled=0
-+
-+# inherit is enabled for group sampling, as is inherit_stat
-+inherit=1
-+inherit_stat=1
-+
-+# sampling disabled
-+sample_freq=0
-+sample_period=0
-+freq=0
-+write_backward=0
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6d7c9c58a9bc..aec6b4f5264e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1097,6 +1097,64 @@ static bool evsel__is_offcpu_event(struct evsel *evsel)
- 	return evsel__is_bpf_output(evsel) && evsel__name_is(evsel, OFFCPU_EVENT);
- }
- 
-+static bool evsel__has_term_type(struct evsel *evsel, enum evsel_term_type type)
-+{
-+	return __evsel__get_config_term(evsel, type) != NULL;
-+}
-+
-+/*
-+ * Determine whether or not an evsel can support inherit+inherit_stat+PERF_SAMPLE_READ.
-+ *
-+ * In order not to break existing command line behaviour, this configuration
-+ * will only be enabled if certain specific requirements are met:
-+ *
-+ * 1) When making a system-wide capture, there is no need to support this
-+ *    configuration. Likewise, if the user disables inherit, or does not request
-+ *    inherit_stat, then the configuration is not supported.
-+ * 2) If the user explicitly specifies 'freq' as a config term, then do not
-+ *    support this feature, as frequency counters are not compatible.
-+ * 3) If the user explicitly specifies 'period' as a config term, then the
-+ *    feature is compatible with that event.
-+ * 4) If neither was explicitly set, and the event is part of a group, then
-+ *    base the decision on the leader.
-+ * 5) Otherwise base the decision on whether or not the user specified a period
-+ *    or frequency on the command line (which includes the default frequency
-+ *    setting).
-+ */
-+static bool evsel__compat_with_inherit_sample_read(struct record_opts *opts,
-+						   struct evsel *leader,
-+						   struct evsel *evsel)
-+{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+
-+	if (opts->target.system_wide)
-+		return false;
-+
-+	if (opts->no_inherit_set || !opts->inherit_stat)
-+		return false;
-+
-+	if (evsel__has_term_type(evsel, EVSEL__CONFIG_TERM_FREQ))
-+		return false;
-+
-+	if (evsel__has_term_type(evsel, EVSEL__CONFIG_TERM_PERIOD))
-+		return true;
-+
-+	if (leader && (leader != evsel)) {
-+		struct perf_event_attr *ldr_att = &leader->core.attr;
-+
-+		if (evsel__has_term_type(leader, EVSEL__CONFIG_TERM_FREQ))
-+			return false;
-+
-+		if (evsel__has_term_type(leader, EVSEL__CONFIG_TERM_PERIOD))
-+			return true;
-+
-+		if (ldr_att->freq)
-+			return false;
-+	}
-+
-+	return (!attr->freq && !opts->freq);
-+}
-+
- /*
-  * The enable_on_exec/disabled value strategy:
-  *
-@@ -1133,6 +1191,9 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	int track = evsel->tracking;
- 	bool per_cpu = opts->target.default_per_cpu && !opts->target.per_thread;
- 
-+	bool allow_inherit_stat_sample_read = evsel__compat_with_inherit_sample_read(
-+		opts, leader, evsel);
-+
- 	attr->sample_id_all = perf_missing_features.sample_id_all ? 0 : 1;
- 	attr->inherit	    = !opts->no_inherit;
- 	attr->write_backward = opts->overwrite ? 1 : 0;
-@@ -1156,7 +1217,17 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		 */
- 		if (leader->core.nr_members > 1) {
- 			attr->read_format |= PERF_FORMAT_GROUP;
--			attr->inherit = 0;
-+			if (!allow_inherit_stat_sample_read)
-+				attr->inherit = 0;
-+		}
-+
-+		/*
-+		 * Inherit + READ requires inherit_stat, but only if freq is
-+		 * not set as the two are incompatible
-+		 */
-+		if (attr->inherit && allow_inherit_stat_sample_read) {
-+			attr->inherit_stat = 1;
-+			evsel__set_sample_bit(evsel, TID);
- 		}
- 	}
- 
-@@ -1832,6 +1903,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- static void evsel__disable_missing_features(struct evsel *evsel)
- {
-+	if (perf_missing_features.inherit_sample_read)
-+		evsel->core.attr.inherit = 0;
- 	if (perf_missing_features.branch_counters)
- 		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_COUNTERS;
- 	if (perf_missing_features.read_lost)
-@@ -1887,7 +1960,12 @@ bool evsel__detect_missing_features(struct evsel *evsel)
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.branch_counters &&
-+	if (!perf_missing_features.inherit_sample_read &&
-+	    evsel->core.attr.inherit && (evsel->core.attr.sample_type & PERF_SAMPLE_READ)) {
-+		perf_missing_features.inherit_sample_read = true;
-+		pr_debug2("Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.\n");
-+		return true;
-+	} else if (!perf_missing_features.branch_counters &&
- 	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
- 		perf_missing_features.branch_counters = true;
- 		pr_debug2("switching off branch counters support\n");
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index efbb6e848287..11cc9b8bee27 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -192,6 +192,7 @@ struct perf_missing_features {
- 	bool weight_struct;
- 	bool read_lost;
- 	bool branch_counters;
-+	bool inherit_sample_read;
- };
- 
- extern struct perf_missing_features perf_missing_features;
--- 
-2.44.0
+typdef MIN_HEAP(char, _) min_heap_char;
 
+static __always_inline
+void min_heap_init(min_heap_char *heap, void *data, int size)
+{
+	heap->nr = 0;
+	heap->size = size;
+    heap->data = size <= ARRAY_SIZE(heap->preallocated) ? heap->preallocated : data;
+}
+
+But I'm not sure how to implement other inline functions like
+min_heap_push or min_heap_pop if I do that, unless they are rewritten
+using macros. Also, I'm not sure how to make the less and swp functions
+in the min_heap_callbacks not use void * type parameters. Or perhaps I
+misunderstood your meaning again. If you could sketch out your idea or
+have a better approach, it would be a great help to me. Any guidance
+would be greatly appreciated.
+
+Regards,
+Kuan-Wei
