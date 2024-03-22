@@ -1,44 +1,41 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB47D12E4E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB1F12E51;
 	Fri, 22 Mar 2024 06:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711090337; cv=none; b=A/848OsFi/yi4rO4ZzHi0k8h3yML+iSxdR4EiJl6jgIXxJFOOZAKEbc/LXViUQbXXezoeYJk1cvPa5AZjNS8eyCo4om0B0OsE9JVKlVo5loFXkuMneWy3bzqhrHwpE5/Ib1sbeKWsaNXv0Jt6mvsVLiZv1XCvVqlJQ86grRbSf8=
+	t=1711090337; cv=none; b=DDj3Tqn1Crnl9WE6NClddG4rx0qJNIcCT9S48nLL8W9juwZkwjyl+T0ODWNfrtdLTEy2gX8WFXh6bdAeQNc0X0svWVtDrGjJqtjsg6t9qXm/Azq8ISmjP4eWxQ6fyYKMCQbDs3vgfpnShUogA1epqDKA4E7TJB7SB7x+2cYYBOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711090337; c=relaxed/simple;
-	bh=c/c2J0T4Njb2yEG5FXJ/KJsgOSV2WBfTuNEbXUIr2sM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lmUyc1mstjtCE/lUQYwgBRoXSUeRu12av/fQapvNOEGNHJl9LQAGV+cOl/YNMts9jDhQRqSAKxy833cy6k8WNC8VJoOsSA4Q5rD/HmqAkfAu0rfTmWhB5Aqbo+RD2VxxKHhsYEqUDU5C+Y3uA6/vOb6a6uZGBLDTg8RXutGNjFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OfM2OJn5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D5En/XVX; arc=none smtp.client-ip=193.142.43.55
+	bh=taVimAut1RqnRtaMWo43maVz+nQQ2R8r7EJzpVStgOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l+yRqyP4MoPGqYXoru+T0tqqQmP+KbaZIAem11GO/wK9kgV/K04pXVnC4AndPcrmgGVB/Ke/4hHL78fRax9xET2Rx3zlenhZ6W/sZlCWnxFYcNvu8GRnK1YLoT5gT9gI1dmLBovwWjtCAAKdDPxlTNgIzJ2qDcpB3yX0Bs8ZsqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wdef2tgP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qOCqU6e6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OfM2OJn5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D5En/XVX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wdef2tgP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qOCqU6e6"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711090333;
+	s=2020; t=1711090332;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hnlY1ymuqUTKAU2tKPJuN/MrGHqEs1BNfNhRgjDfv7c=;
-	b=OfM2OJn5IabXIDYl8vmOV2MLXD5UBzlico2CZPj6O+ZZ7CASQ3NIJm3J4Bu/2LjcX9MRvQ
-	bChWYQOhAMaH5Y8ANmL2JvTbSh8t5XUk5lJX6tR0hVs/VNc4rxZvTl42JcxWrCksSv9vBH
-	6UykHfMqr/xSZr0uIU57pozfow3WdeATjEOBn1Z9Qj3nOwAY9Pe55xouOylzZxbcf73Y+q
-	bD1ZdP2P3KMBiH5h5erepNVgT89AzRCehrT8oOjJ8DepMagb2Q58WkzPyhejPo13hlgo2S
-	8OWJ6jxzGbWxNhX/5gXHKUQfEeQiFALsZEQvtnYI84YL8bXvAlfi5fS90bJRIw==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EEFbnnAVHmdwzZCxVsdsp8BUSsMIXx8yGOcnfHYn3Fk=;
+	b=Wdef2tgPLCOqGGtkx2ZVDVOVKFAxDIW4y5+c5fiioQP90MBCr2SWHLHdcOaqOhyRQX2YoZ
+	BRBbWfA5r8VRFNbtxWV03P2ekUwchmuRqAtOx6e5taGV5aARozjR0CbelLYo15pNvuMhq5
+	qAzRXuys0P1Mgg7YX8v2V3YsNQ1pPCUayokC+6f+6azAs0bYP3vYZnrLigmvNyl/iRrJSc
+	81onx5w+SLk8VYXhiuCZNsW1pWkd8hjetlvumCPCujvxXH7QSFLaZh9Y8zSPob11NRXvR1
+	VoGMJb0SY0ZpRxSe2eEQwo7x1GP6nMbkzyMV18dP3wahQLYo+WL0MonKy/qKkQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711090333;
+	s=2020e; t=1711090332;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hnlY1ymuqUTKAU2tKPJuN/MrGHqEs1BNfNhRgjDfv7c=;
-	b=D5En/XVXaGh2CWize9oJe0opewKazr80KyguOrkAtzXDDcDOWzgQUDxXXTfW66dae5VVVv
-	Q5YFLO8KZUd//9Dw==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EEFbnnAVHmdwzZCxVsdsp8BUSsMIXx8yGOcnfHYn3Fk=;
+	b=qOCqU6e6MVm6EFs4oYmDEkX7krgqeTDtAWgumfWSPCHnc8yANEGsrgaHG1al3bGMi2Ud4m
+	9kGX4eo04W6FatCg==
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
@@ -51,74 +48,53 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context() from perf_pending_task().
-Date: Fri, 22 Mar 2024 07:48:23 +0100
-Message-ID: <20240322065208.60456-4-bigeasy@linutronix.de>
-In-Reply-To: <20240322065208.60456-1-bigeasy@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 0/4] perf: Make SIGTRAP and __perf_pending_irq() work on RT.
+Date: Fri, 22 Mar 2024 07:48:20 +0100
+Message-ID: <20240322065208.60456-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-perf_swevent_get_recursion_context() is supposed to avoid recursion.
-This requires to remain on the same CPU in order to decrement/ increment
-the same counter. This is done by using preempt_disable(). Having
-preemption disabled while sending a signal leads to locking problems on
-PREEMPT_RT because sighand, a spinlock_t, becomes a sleeping lock.
+Hi,
 
-This callback runs in task context and currently delivers only a signal
-to "itself". Any kind of recusrion protection in this context is not
-required.
+Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
+the signal gets delayed until event_sched_out() which then uses
+task_work_add() for its delivery. This breaks on PREEMPT_RT because the
+signal is delivered with disabled preemption.
 
-Remove recursion protection in perf_pending_task().
+While looking at this, I also stumbled upon __perf_pending_irq() which
+requires disabled interrupts but this is not the case on PREEMPT_RT.
 
-Tested-by: Marco Elver <elver@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/events/core.c | 12 ------------
- 1 file changed, 12 deletions(-)
+This series aim to address both issues while not introducing a new issue
+at the same time ;)
+Any testing is appreciated.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e0b2da8de485f..5400f7ed2f98b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6785,14 +6785,6 @@ static void perf_pending_irq(struct irq_work *entry)
- static void perf_pending_task(struct callback_head *head)
- {
- 	struct perf_event *event =3D container_of(head, struct perf_event, pendin=
-g_task);
--	int rctx;
--
--	/*
--	 * If we 'fail' here, that's OK, it means recursion is already disabled
--	 * and we won't recurse 'further'.
--	 */
--	preempt_disable_notrace();
--	rctx =3D perf_swevent_get_recursion_context();
-=20
- 	if (event->pending_work) {
- 		event->pending_work =3D 0;
-@@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *=
-head)
- 		local_dec(&event->ctx->nr_pending);
- 	}
-=20
--	if (rctx >=3D 0)
--		perf_swevent_put_recursion_context(rctx);
--	preempt_enable_notrace();
--
- 	put_event(event);
- }
-=20
---=20
-2.43.0
+v2=E2=80=A6v3: https://lore.kernel.org/all/20240312180814.3373778-1-bigeasy=
+@linutronix.de/
+    - Marco suggested to add a few comments
+      - Added a comment to __perf_event_overflow() to explain why irq_work
+        is raised in the in_nmi() case.
+      - Added a comment to perf_event_exit_event() to explain why the
+        pending event is deleted.
+
+v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigeasy=
+@linutronix.de/
+    - Marco pointed me to the testsuite that showed two problems:
+      - Delayed task_work from NMI / missing events.
+        Fixed by triggering dummy irq_work to enforce an interrupt for
+	the exit-to-userland path which checks task_work
+      - Increased ref-count on clean up/ during exec.
+        Mostly addressed by the former change. There is still a window
+	if the NMI occurs during execve(). This is addressed by removing
+	the task_work before free_event().
+      The testsuite (remove_on_exec) fails sometimes if the event/
+      SIGTRAP is sent before the sighandler is installed.
+
+Sebastian
 
