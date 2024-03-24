@@ -1,67 +1,67 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAFE14A9F
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 05:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289E714A8D
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 05:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711259208; cv=none; b=Ne7hIvjReCmARpBBR2VM4HOZHp4+XmcJ7NZWSKlCErRMsJsgEUd5w6RLIgRtKkYZhU3mfse/goFetpHdbVg7ZNLM1pPvHPFlLANoPvSBMUgoKytJTs0ygjoqFnIYBI2vbd01GzZT9fseSTEViFR502nZn01YOu/uqiUF9qL0Ao0=
+	t=1711259794; cv=none; b=sitOLBLYpxxZAZyAZtgcqVPvFINZQ8/ara7uC+ZQ0HtZGAbuEEobyOWyMwpzWZsunIG6HTGQL7tYRP0yIZSsN1bSjraivEJND34hxbg6tGBu9s4eSQNIMrQQP5qX2WenJC/BNE8pHHpI9CeKYpYUACixlbHhU0Kt9Av5P3Z4seo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711259208; c=relaxed/simple;
-	bh=O0XldRplkMLNWV58ngQOMmBKvGWitMJyVzfI5WPr5Yg=;
+	s=arc-20240116; t=1711259794; c=relaxed/simple;
+	bh=CglfzhccKRRVNOdN9WE+R4L8/3qXn8fiXVfcJRfWP/U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K8Dr3q7vW+m2ztraEZ2sbItQjeIAD4SuWrGb16EusGpGp55xdane4FTgeDQUHUQcKqCmPZ+zaTosZZkAJgW5rXRCzz7mJv4Z/KGCK/FYaVoX/N0RaeHKz1OhC66VUL1/afjVN/OueJIgZFvuw/M9LJ2AwbPPKbhbtsgcIoyvqXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m2rWLvRP; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=WbZszWIMRUo5YXrECVaij9i9PZzRq+2eK5YvaGDi3C6UoDDX4f8gokZcD2coYka3+KcQYPV6kC49I+rHxWB0cav5Fs2z+rRO81+VLjLCgxiftmqbCd8x2EoiPUjYN/gu2zw9t/TkL92ihcnAQsg8HCfYExm/OYC10kDAYvP6LPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LzwB6ftE; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m2rWLvRP"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1deddb82b43so89735ad.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 22:46:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LzwB6ftE"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-366abfd7b09so182275ab.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 22:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711259206; x=1711864006; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711259792; x=1711864592; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0dUARXd4gdSbPM+q5LS9OaBlde6RxChbJRkKpkQ0Eh8=;
-        b=m2rWLvRPMhkv6HOxec8LpjOsR77IpGpm9rjXx9wL+Ttq2ub4yAks4lCDa4ocWGuZpV
-         WTlvzHOFuQoF7TDhnImIyPgtuqPV5XH3Q3vBZmRqNSYeXZ5LH0P0XPnGhQrAcJC+9zhh
-         C7g3m5ZfCHv8Im55/XI/4IH2mjoAhvvcxH91s8JmbBMiyXD8dzdlBQeQZghiGICSspOA
-         T/W4jfBw8s4MTl1ndZxByIHTmeJTPGKthjSWOrhEmF9zeF+SPgpvM+jtZxCTBIDLot0J
-         29wnaJP367oKx1u/mAIlaSIkUve1l38bD4bmGrANqa92cD770AkrOoDAFtbTo/nyD+4D
-         SHtg==
+        bh=tw8D1j2/4hkLnvjGIi5NWG+l0k25+0Ejq7ssYfT7e2o=;
+        b=LzwB6ftEEh+s9XjwVAtj515vRAzMGd+gwc1KRqEe2yNcXIRhXo4GTS5xJvjiP0hfpj
+         LtHgX3etPT2V7Litvz2y6Fvl2xvIBUlO/BUFPXSCsZCxQnEtu8VOV7MDNCYyQPv1E3lL
+         dUR+fXN50Jo1lM7/QOF37BuE14Zkc5Pt+Dbz4Gpt7IYe5vQ6tinglBk66vZMlG4yhRwz
+         kDI7w1dTgRyzyo7tQKwngpN1ljg1+fQn4TmmQNBwrYsjtqxxcMFNedi5YyBpZ7Hnu/1H
+         XbjhzguU3f0X+jlt91zEpenMMszJ40fq8Xdw61d/DAw1L8IdbnXCHYQqMzffu6ibfwni
+         JPqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711259206; x=1711864006;
+        d=1e100.net; s=20230601; t=1711259792; x=1711864592;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0dUARXd4gdSbPM+q5LS9OaBlde6RxChbJRkKpkQ0Eh8=;
-        b=ixzEvuGRNsLK/A9BOQ8UY2MrK9qt8twVp4plqS+Ub30N6w1ZpiziG/uNI2tiqtua7I
-         61GgSKAMGdD+tQFMjIwPTCjHfEaYv/Qw3GQ7GhESUXylC9YWbvTt0HNlgCwk2dW1WhDK
-         3lw+Nbm3NxmSVHgnCHODsKKUoqpWKr66Z+1nEcbjjnC2S4Wl/o+v3LlCVrpMDPS+Fan5
-         D1QDXkNRwI72gQuB3Z69joqF+6iSOGRDMhI5DjNZzSzUmHgPi5QVnXEezK2iK/w1lZmd
-         0STgLR4v6ILbN35s4SUHeu/Qbn50/i3tM57jDcc5UqILVvj561CZtHqz8Kyzv/ohA96a
-         CFFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVg7T5iw9NhO63Pg0c/+V3zlVJQ4re0hcjCJa+1tuAo5d3N9lFX/TDFy/TdUh5W9Jy7UAbCbe9KLoyUBPmO+m0rUTHwMnPt/8EEy5sHjHAfNg==
-X-Gm-Message-State: AOJu0YxidAwbJeI3Zyc6y3wei7D86trZAQX3GuJ5z3t515pym87eSGUg
-	wZqhH5YYgPC3V5ngUZUOGkDbimIRcANQf4uuaSE7zZUwhinWNIEL12rM4EWouOf2U1YFwtbbVm8
-	vWf4v8Acl8bHtCNU//PA9dLoKHchWjYeHo13K
-X-Google-Smtp-Source: AGHT+IFOWExseneOH0bN94qKvv3VaKIFnz3HaXYyPDGXlocCZ9qQHN0NxvsWUK3ofddfUvEsNhuI35TweVOZtkNCWow=
-X-Received: by 2002:a17:902:ecc6:b0:1de:e36a:d3aa with SMTP id
- a6-20020a170902ecc600b001dee36ad3aamr775557plh.6.1711259205866; Sat, 23 Mar
- 2024 22:46:45 -0700 (PDT)
+        bh=tw8D1j2/4hkLnvjGIi5NWG+l0k25+0Ejq7ssYfT7e2o=;
+        b=IGvOTtTc4BxpfUjVDDvK95NrjmAoQZguTJDbbnImvz80MK583G+j49IwgN6q4Bnf0W
+         hSKJf/93GSxrE4tsTE7E/qg18lo6brSXueP2+dTtvNTE5jZY8LQ4I8AdvxhWDqwpxPh0
+         iwbIelJTTNdd8sokWisTFGfLuoYiB/ZY7h+IIO7yqvTaEXCFW37kiGJoeXalmqyoIuA0
+         tIpxobY4SNmeelMyZdzyMPeiYqMOgPn726bNgAI073E9KjsQfAZ4d24xWUVFAjaXmPzz
+         yO/qpFCrcd+ggeoH6rugtCrqP77strzoytGSTB6B+6BRgG+vO31r/zeSl+VM+7+rrV8c
+         +4Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkhgsAJLYmN1LB4qLmz42WetleRImr5vk52nOH/gvHxb8rI+/Bt5jy3ufOFEv/OwBVHnI9Vn5HiiBP5UEQC1PcclQdQUF+mMPP3j+G8JF5ow==
+X-Gm-Message-State: AOJu0YyPvlpW3zw2QvrPBZ6ydXhAbv7v4z3JHenHk0SX+DkRvYuk5Xor
+	vGjCP2kz6dibPYRNrPbtYB9IXyej32cpXUNMVoZCFnO6lNkECbUbxuM9UYVmawr6CE3umqxhhDh
+	Ln3MRAlHg8U/wvVst1HKtv7mdf+7pSsRSJAP9
+X-Google-Smtp-Source: AGHT+IFjwhGTJq1dU3Oc60J9o9lR4R/6m2aZZGZOKsZJzaJkC6YPBIm48eTuy3yyOjgZJZECYkfdMeyyMPiAUc9dJS0=
+X-Received: by 2002:a92:c24c:0:b0:368:7b7b:5233 with SMTP id
+ k12-20020a92c24c000000b003687b7b5233mr224271ilo.15.1711259792125; Sat, 23 Mar
+ 2024 22:56:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209031441.943012-1-weilin.wang@intel.com> <20240209031441.943012-14-weilin.wang@intel.com>
-In-Reply-To: <20240209031441.943012-14-weilin.wang@intel.com>
+References: <20240209031441.943012-1-weilin.wang@intel.com> <20240209031441.943012-15-weilin.wang@intel.com>
+In-Reply-To: <20240209031441.943012-15-weilin.wang@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 23 Mar 2024 22:46:33 -0700
-Message-ID: <CAP-5=fVEDik60cFZHevWDj4OdNynB+LF6r7jkuqc1x6M=4qyGg@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 13/15] perf stat: Code refactoring in hardware-grouping
+Date: Sat, 23 Mar 2024 22:56:21 -0700
+Message-ID: <CAP-5=fU1R7QYKCWPrrZ_wA1RCfat+BqiA12=UG2a-GrBLPL0BA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 14/15] perf stat: Add tool events support in hardware-grouping
 To: weilin.wang@intel.com
 Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -77,166 +77,168 @@ On Thu, Feb 8, 2024 at 7:14=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> Decouple the step to generate final grouping strings out from the
-> build_grouping step so that we could do single metric grouping and then
-> merge groups if needed later.
+> Add tool events into default_core grouping strings if find tool events so
+> that metrics use tool events could be correctly calculated. Need this ste=
+p
+> to support TopdownL4-L5.
 >
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/util/metricgroup.c | 49 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 48 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index cfdbb5f7fb77..e5b8456d0405 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1486,6 +1486,35 @@ static void find_tool_events(const struct list_hea=
+d *metric_list,
+>         }
+>  }
+>
+> +/**
+> + * get_tool_event_str - Generate and return a string with all the used t=
+ool
+> + * event names.
+> + */
+> +static int get_tool_event_str(struct strbuf *events,
+> +                             const bool tool_events[PERF_TOOL_MAX],
+> +                             bool *has_tool_event)
+> +{
+> +       int i =3D 0;
+> +       int ret;
+> +
+> +       perf_tool_event__for_each_event(i) {
+> +               if (tool_events[i]) {
+> +                       const char *tmp =3D strdup(perf_tool_event__to_st=
+r(i));
+> +
+> +                       if (!tmp)
+> +                               return -ENOMEM;
+> +                       *has_tool_event =3D true;
+> +                       ret =3D strbuf_addstr(events, ",");
+> +                       if (ret)
+> +                               return ret;
+> +                       ret =3D strbuf_addstr(events, tmp);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       }
+> +       return 0;
+> +}
+> +
+>  /**
+>   * build_combined_expr_ctx - Make an expr_parse_ctx with all !group_even=
+ts
+>   *                           metric IDs, as the IDs are held in a set,
+> @@ -2049,6 +2078,7 @@ static int assign_event_grouping(struct metricgroup=
+__event_info *e,
+>
+>  static int hw_aware_metricgroup__build_event_string(struct list_head *gr=
+oup_strs,
+>                                            const char *modifier,
+> +                                          const bool tool_events[PERF_TO=
+OL_MAX],
+>                                            struct list_head *groups)
+>  {
+>         struct metricgroup__pmu_group_list *p;
+> @@ -2056,8 +2086,12 @@ static int hw_aware_metricgroup__build_event_strin=
+g(struct list_head *group_strs
+>         struct metricgroup__group_events *ge;
+>         bool no_group =3D true;
+>         int ret =3D 0;
+> +       struct strbuf tool_event_str =3D STRBUF_INIT;
+> +       bool has_tool_event =3D false;
+>
+>  #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+> +       ret =3D get_tool_event_str(&tool_event_str, tool_events, &has_too=
+l_event);
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Does metricgroup__build_event_string need updating to use this helper
+function too?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/metricgroup.c | 50 +++++++++++++++++------------------
->  1 file changed, 25 insertions(+), 25 deletions(-)
+> +       RETURN_IF_NON_ZERO(ret);
 >
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index f1eb73957765..cfdbb5f7fb77 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1896,9 +1896,10 @@ static int find_and_set_counters(struct metricgrou=
-p__event_info *e,
->  {
->         int ret;
->         unsigned long find_bit =3D 0;
-> -
-> -       if (e->taken_alone && current_group->taken_alone)
-> +       if (e->taken_alone && current_group->taken_alone) {
-> +               pr_debug("current group with taken alone event already\n"=
-);
->                 return -ENOSPC;
-> +       }
->         if (e->free_counter)
->                 return 0;
->         if (e->fixed_counter) {
-> @@ -2017,7 +2018,8 @@ static int assign_event_grouping(struct metricgroup=
-__event_info *e,
->
->         list_for_each_entry(g, groups, nd) {
->                 if (!strcasecmp(g->pmu_name, e->pmu_name)) {
-> -                       pr_debug("found group for event %s in pmu %s\n", =
-e->name, g->pmu_name);
-> +                       pr_debug("found group header for event %s in pmu =
-%s\n",
-> +                               e->name, g->pmu_name);
->                         pmu_group_head =3D g;
->                         break;
+>         list_for_each_entry(p, groups, nd) {
+>                 list_for_each_entry(g, &p->group_head, nd) {
+> @@ -2129,6 +2163,12 @@ static int hw_aware_metricgroup__build_event_strin=
+g(struct list_head *group_strs
+>                         }
+>                         ret =3D strbuf_addf(events, "}:W");
+>                         RETURN_IF_NON_ZERO(ret);
+> +
+> +                       if (!strcmp(p->pmu_name, "default_core") && has_t=
+ool_event) {
+> +                               ret =3D strbuf_addstr(events, tool_event_=
+str.buf);
+> +                               RETURN_IF_NON_ZERO(ret);
+> +                       }
+> +
+>                         pr_debug("events-buf: %s\n", events->buf);
+>                         list_add_tail(&new_group_str->nd, group_strs);
 >                 }
-> @@ -2146,26 +2148,22 @@ static int hw_aware_metricgroup__build_event_stri=
-ng(struct list_head *group_strs
->   */
->  static int create_grouping(struct list_head *pmu_info_list,
->                           struct list_head *event_info_list,
-> -                         struct list_head *groupings,
-> -                         const char *modifier)
-> +                         struct list_head *grouping)
->  {
->         int ret =3D 0;
->         struct metricgroup__event_info *e;
-> -       LIST_HEAD(groups);
->         char *bit_buf =3D malloc(NR_COUNTERS);
->
-> -       //TODO: for each new core group, we should consider to add events=
- that uses fixed counters
-> +       //TODO: for each new core group, we could consider to add events =
-that
-> +       //uses fixed counters
->         list_for_each_entry(e, event_info_list, nd) {
->                 bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_CO=
-UNTERS);
->                 pr_debug("Event name %s, [pmu]=3D%s, [counters]=3D%s, [ta=
-ken_alone]=3D%d\n",
->                         e->name, e->pmu_name, bit_buf, e->taken_alone);
-> -               ret =3D assign_event_grouping(e, pmu_info_list, &groups);
-> +               ret =3D assign_event_grouping(e, pmu_info_list, grouping)=
-;
+> @@ -2214,6 +2254,7 @@ static int hw_aware_build_grouping(struct expr_pars=
+e_ctx *ctx,
 >                 if (ret)
-> -                       goto out;
-> +                       return ret;
+>                         goto err_out;
 >         }
-> -       ret =3D hw_aware_metricgroup__build_event_string(groupings, modif=
-ier, &groups);
-> -out:
-> -       metricgroup__free_group_list(&groups);
->         return ret;
->  };
->
-> @@ -2186,9 +2184,8 @@ static bool is_special_event(const char *id)
->   * @groupings: header to the list of final event grouping.
->   * @modifier: any modifiers added to the events.
->   */
-> -static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_un=
-used,
-> -                                 struct list_head *groupings __maybe_unu=
-sed,
-> -                                 const char *modifier __maybe_unused)
-> +static int hw_aware_build_grouping(struct expr_parse_ctx *ctx,
-> +                                  struct list_head *grouping)
->  {
->         int ret =3D 0;
->         struct hashmap_entry *cur;
-> @@ -2220,8 +2217,7 @@ static int hw_aware_build_grouping(struct expr_pars=
-e_ctx *ctx __maybe_unused,
+> +
 >         ret =3D get_pmu_counter_layouts(&pmu_info_list, ltable);
 >         if (ret)
 >                 goto err_out;
-> -       ret =3D create_grouping(&pmu_info_list, &event_info_list, groupin=
-gs,
-> -                            modifier);
-> +       ret =3D create_grouping(&pmu_info_list, &event_info_list, groupin=
-g);
->
->  err_out:
->         metricgroup__free_event_info(&event_info_list);
-> @@ -2267,23 +2263,25 @@ static int hw_aware_parse_ids(struct perf_pmu *fa=
-ke_pmu,
+> @@ -2259,6 +2300,7 @@ static void metricgroup__free_grouping_strs(struct =
+list_head
+>   */
+>  static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+>                              struct expr_parse_ctx *ids, const char *modi=
+fier,
+> +                            const bool tool_events[PERF_TOOL_MAX],
+>                              struct evlist **out_evlist)
 >  {
 >         struct parse_events_error parse_error;
->         struct evlist *parsed_evlist;
-> -       LIST_HEAD(groupings);
-> +       LIST_HEAD(grouping_str);
-> +       LIST_HEAD(grouping);
->         struct metricgroup__group_strs *group;
->         int ret;
->
->         *out_evlist =3D NULL;
-> -       ret =3D hw_aware_build_grouping(ids, &groupings, modifier);
-> -       if (ret) {
-> -               metricgroup__free_grouping_strs(&groupings);
-> -               return ret;
-> -       }
-> +       ret =3D hw_aware_build_grouping(ids, &grouping);
-> +       if (ret)
-> +               goto out;
-> +       ret =3D hw_aware_metricgroup__build_event_string(&grouping_str, m=
-odifier, &grouping);
-> +       if (ret)
-> +               goto out;
->
->         parsed_evlist =3D evlist__new();
->         if (!parsed_evlist) {
->                 ret =3D -ENOMEM;
->                 goto err_out;
->         }
-> -       list_for_each_entry(group, &groupings, nd) {
-> +       list_for_each_entry(group, &grouping_str, nd) {
->                 struct strbuf *events =3D &group->grouping_str;
->
->                 pr_debug("Parsing metric events '%s'\n", events->buf);
-> @@ -2303,7 +2301,9 @@ static int hw_aware_parse_ids(struct perf_pmu *fake=
+> @@ -2272,7 +2314,8 @@ static int hw_aware_parse_ids(struct perf_pmu *fake=
 _pmu,
->  err_out:
->         parse_events_error__exit(&parse_error);
->         evlist__delete(parsed_evlist);
-> -       metricgroup__free_grouping_strs(&groupings);
-> +out:
-> +       metricgroup__free_group_list(&grouping);
-> +       metricgroup__free_grouping_strs(&grouping_str);
->         return ret;
->  }
+>         ret =3D hw_aware_build_grouping(ids, &grouping);
+>         if (ret)
+>                 goto out;
+> -       ret =3D hw_aware_metricgroup__build_event_string(&grouping_str, m=
+odifier, &grouping);
+> +       ret =3D hw_aware_metricgroup__build_event_string(&grouping_str, m=
+odifier,
+> +                                                     tool_events, &group=
+ing);
+>         if (ret)
+>                 goto out;
+>
+> @@ -2407,6 +2450,7 @@ static int hw_aware_parse_groups(struct evlist *per=
+f_evlist,
+>         struct evlist *combined_evlist =3D NULL;
+>         LIST_HEAD(metric_list);
+>         struct metric *m;
+> +       bool tool_events[PERF_TOOL_MAX] =3D {false};
+>         int ret;
+>         bool metric_no_group =3D false;
+>         bool metric_no_merge =3D false;
+> @@ -2425,11 +2469,14 @@ static int hw_aware_parse_groups(struct evlist *p=
+erf_evlist,
+>         if (!metric_no_merge) {
+>                 struct expr_parse_ctx *combined =3D NULL;
+>
+> +               find_tool_events(&metric_list, tool_events);
+> +
+>                 ret =3D hw_aware_build_combined_expr_ctx(&metric_list, &c=
+ombined);
+>
+>                 if (!ret && combined && hashmap__size(combined->ids)) {
+>                         ret =3D hw_aware_parse_ids(fake_pmu, combined,
+>                                                 /*modifier=3D*/NULL,
+> +                                               tool_events,
+>                                                 &combined_evlist);
+>                 }
 >
 > --
 > 2.42.0
