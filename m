@@ -1,108 +1,430 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892961A38DE;
-	Sun, 24 Mar 2024 03:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF3F17C8
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 03:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711250941; cv=none; b=flAPVYt8JMZ/omHGYb1wJDyjAFYdHyPtw09X0Z6SyUE7MWcQhkPSSUrOM66J+LHzZ/DYgx7NYtrgYnWW4dnSSuPsT+Z5vIGCJ8ph/91Xa85ruPmxyEFob49KYhf/xrAvt9fno73gcYax7p09kxsECB2gOHAj0CWoK1Nn5bPuXU0=
+	t=1711251612; cv=none; b=nHB+rVvepHt7Oz6ySFlZNf9KrETYZVAcfLmXw6KZtbU0xkWZQu9fTm0DbAOBh5mkHZErFgzwW1Q7KvghAvXqY67R5498y/5mfMmIsxVwYu5NzB1IubZWxfl/hbGK2giGnkNdLO9/zN2/qU5e8cRleOOpzATO2euJ1sdcoOK7L8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711250941; c=relaxed/simple;
-	bh=p/DG45cfaW8SBZRy9Pe2lFJhbWEPNRh2Wm9whP/pLtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3nUIq1pOtyNvJJPp28saU8UcpsQxL0KoitSURGh3gWwDdRyRWeru8SeAQqXScUX7KwJ9Ys6g6/neoShokOQWl6/XA2S1Gzs5dVbd98CyPrp9kFh+lke6yuEzMJ2WpsDIOyEIqfnDC5QH/r+SFZztOnJsKXBY+2ukZwHMTdgBv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxp8dy49; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711251612; c=relaxed/simple;
+	bh=S7b5ZbpXRqKI5JmrrK1NgiQdzQmNlR0MslST3M8ZaCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HVzLhv+GRy3hcsdtzyAweXDQVX8BWOvg1zZbEKMlsKSKHXeKAFEYiZRsKDxpvgYo33ZGCe9McW7VcIt5J3IBcSKcaLsdJWeIR7Evew5xqjHlBbxAxh79Cy2gOCZLyZoaI9uB2Cjb1i3yD/EHzAT5gjtD2STZZKCwnXwPYPIEft0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aYm/Vl6U; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxp8dy49"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a450bedffdfso384451066b.3;
-        Sat, 23 Mar 2024 20:28:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aYm/Vl6U"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-431347c6c99so187901cf.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 20:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711250938; x=1711855738; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PydOQ1bmmSNTs+e+O2bAUybHfmosF+9k+V6RWawPtKc=;
-        b=jxp8dy49SfyG6ag9wCvfzZqyPWSCIetUKySrBJo0YJ4Zxv7kR3TFojC32FVWKi4qIK
-         hPn7zhEgDp2ZQco+110VCEJUwCHqRcGQtWgX2c2aLWMTiyreX7a7UtW46nkdFHtxBhDy
-         qglsS4HoaQU23Hb0pdeN8372kdhji+dVDWjyt1/+1A4F/y/+iyQ7NfGtj1uTyBMhdXBi
-         44/DFMl0ojEbgpDKEK2/nP4HOMoH1fF2yBTMUtsM5nOo9jS1GpdJm+T05D+Ch7+oZxyt
-         lxhTpp6EU8ixNBpsSPdFzT4YhLmfBVRuQzmTnGmHNTTH9xtWRe4HqCXMUAssVMtcukst
-         vV3w==
+        d=google.com; s=20230601; t=1711251610; x=1711856410; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2pALwttyO0Y8JdCBeWVNm2d5E3U5T3uBmPmjj6rFt50=;
+        b=aYm/Vl6UVrkx21t/yBGqoabvskRAVHUfhIjRGs8QfE0uUhEOCFyzs7AGt+HgXjIXXx
+         rf4rfCB70NFEU66DkVd3S8ZcNselzGUSx+OSc79RrWKWONqGHs2zgVLnJI81gTSA1sbt
+         UHc7BD592aBlbHYgjJWJdUxDnIawkO4BdiBOsAsCPVwaTFyvYN94AteJZPRJJLLpT9Ez
+         1g6/dN/fO9qlKayzdS+D5ZQkko6MTNjBWprZ2lxIRyNqXxgi9n5ozx+prKHCZ1LkZaBW
+         h2Fp3d/ZCjnjvOznUyIAs4CoHNWt6g9N7Pd38x1X+fXc5eWWw5T3IcojJV392twwoC2p
+         qscA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711250938; x=1711855738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711251610; x=1711856410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PydOQ1bmmSNTs+e+O2bAUybHfmosF+9k+V6RWawPtKc=;
-        b=XfyrkSmvoltaSrnqqjmOj2CxojvxKZ+ZJebNVzEwDDNH2hUATZBKLoqF0c1RELyBxV
-         pdOJbySSrRu0pTyymvwboBetjQjhLBOULGWL5tUgrRwK8jH0iHihaD3HL1cXxlJM0Oyr
-         qGpFtnBn/RnQw5rFrgZhzj9Ydu9aLczwVIklevg1l9Fdxzz9LlepQcBBAEqdnAunobFq
-         nEX3YnNUej2uzpzDQVY8TFRLSY9Sqa8fvU0qkzQFbfw0oUGLCHQEchF44DaqpL5xMu4R
-         rwWFpRnCG/u5hCmGa43izCDm49yf+q/ZVHf4aa4++a69D0wFY2hqBVMVH50alucK5PFP
-         Splw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3cQHZnq10WI4g9dGlPC9yowgjhygnrKppkAvwCto+gETmh1DdK9pF7WW4x339vAzrrTftwTllhn0Jsh4i1zkBirsfSIDiirckk/fnAcmetdAcLAxsrGeo9A+BptWNL1m883MeCyNvPutT3OKHJM5fnhVhaVj3GKkb9TG3QQeWpnBcxQ==
-X-Gm-Message-State: AOJu0YzfaG5tAB8Fdosnb2y7P3efyUt+TMDFMrDvk30lm46K7KIiBYfg
-	ukfZB51EEHBinuNExuHmqx+YJ+LnqakEo+TyC7rsxZYKRVpeZql2
-X-Google-Smtp-Source: AGHT+IFYFSWVv9IbQXjyThKPy1Mf+JJKlcuWw9dw4i0KwdZYpMQbYV1jMgqIe6gUkzqi38r666YnYw==
-X-Received: by 2002:a17:906:f2da:b0:a47:2f8c:7614 with SMTP id gz26-20020a170906f2da00b00a472f8c7614mr2228259ejb.43.1711250937491;
-        Sat, 23 Mar 2024 20:28:57 -0700 (PDT)
-Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
-        by smtp.gmail.com with ESMTPSA id hg24-20020a1709072cd800b00a4750705a07sm413706ejc.190.2024.03.23.20.28.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Mar 2024 20:28:56 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sun, 24 Mar 2024 04:28:54 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Jonathan Haslam <jonathan.haslam@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
-	bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <Zf+d9twfyIDosINf@gmail.com>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+        bh=2pALwttyO0Y8JdCBeWVNm2d5E3U5T3uBmPmjj6rFt50=;
+        b=Lm1S+wt7kV7HyXXmVAxsxru/OoFl7XG2L619HrKH2iQmmgZCL3PyGp1NJzIxlruOYB
+         tsFU5cFgXMIdLpkhomtwX3Bs2KERjA4S7f5ytOHxOS9MP2ks3VVwFAJutIMxUcjgJG5P
+         rQlSEfzVmHiaf/RUnFS1w/ADAfM4W8kRt3dMudGvBhi0dQNMf6KQtkkgqWi8w2L5+Ym0
+         wN5JnxfhW7jr4+ch43qK4Gl2/G0Lpg+YF+IK/mOgGix1jk//3OX0G6cqu0V9oi6sFptV
+         wMVgRvW0i0hKUrEdoUecHvjcT5yE2YGtktQtNe+LZQsU3LK63+dszzAB/8rPRj6MM+7f
+         XOAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlLOzkiz+vO/pbCkPSzeB0eHShezvICCkZVTk4kMehswMTLaS3oXfVar2EK6MeAKK6X/6yPMKOq51Sy/LurfWJQXoXROrUyceqmCuae3jMqQ==
+X-Gm-Message-State: AOJu0YzCpNFnnmHDAFjIbkgMlY+TUUd1zHEFLFph3JMz1PWQpotKZg59
+	fFNa/40flXoEBxL/LQQbVdBumZ1tFQxOfIFFm3U3T7xJBb58gRwJh6Bog7623bBmnwLzTESAt4X
+	CuHppDXNRdbxzcI6p3HWD8TZrP39HXgzDp7Q2
+X-Google-Smtp-Source: AGHT+IG2kxiNHOFasiTIlhQOEd8tSgkv5C9tLigyDB9Oz8sxtO8ssFARZQmlkfE5tkcstjcglPvv8IKkKw6R/yCO0+I=
+X-Received: by 2002:ac8:5754:0:b0:431:15b3:cc33 with SMTP id
+ 20-20020ac85754000000b0043115b3cc33mr887392qtx.20.1711251609607; Sat, 23 Mar
+ 2024 20:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+References: <20240312234921.812685-1-weilin.wang@intel.com> <20240312234921.812685-3-weilin.wang@intel.com>
+In-Reply-To: <20240312234921.812685-3-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 23 Mar 2024 20:39:55 -0700
+Message-ID: <CAP-5=fVXmR70eUMco+B5TVmzTRjSfrk4tk3pw2o0epYiqQ=tTw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 2/6] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: weilin.wang@intel.com
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 12, 2024 at 4:49=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/builtin-stat.c     | 165 +++++++++++++++++++++++++++++++++-
+>  tools/perf/util/data.c        |   4 +
+>  tools/perf/util/data.h        |   1 +
+>  tools/perf/util/metricgroup.h |  12 +++
+>  tools/perf/util/stat.h        |   2 +
+>  5 files changed, 182 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 6291e1e24535..4e92e73cbeaf 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -94,8 +94,13 @@
+>  #include <perf/evlist.h>
+>  #include <internal/threadmap.h>
+>
+> +#include "util/sample.h"
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +
+>  #define DEFAULT_SEPARATOR      " "
+>  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
+> +#define PERF_DATA              "-"
+>
+>  static void print_counters(struct timespec *ts, int argc, const char **a=
+rgv);
+>
+> @@ -163,6 +168,8 @@ static struct perf_stat_config stat_config =3D {
+>         .ctl_fd_ack             =3D -1,
+>         .iostat_run             =3D false,
+>         .tpebs_events           =3D LIST_HEAD_INIT(stat_config.tpebs_even=
+ts),
+> +       .tpebs_results          =3D LIST_HEAD_INIT(stat_config.tpebs_resu=
+lts),
+> +       .tpebs_pid              =3D -1,
+>  };
+>
+>  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> @@ -687,12 +694,155 @@ static enum counter_recovery stat_handle_error(str=
+uct evsel *counter)
+>         return COUNTER_FATAL;
+>  }
+>
+> -static int __run_perf_record(void)
+> +static int __run_perf_record(const char **record_argv)
+>  {
+> +       int i =3D 0;
+> +       struct tpebs_event *e;
+> +
+>         pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +       record_argv[i++] =3D "--synth=3Dno";
+> +
+> +       if (stat_config.user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config.user_requested_cpu_list;
+> +       }
+> +
+> +       if (stat_config.system_wide)
+> +               record_argv[i++] =3D "-a";
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+> +
+>         return 0;
+>  }
+>
+> +static void prepare_run_command(struct child_process *cmd,
+> +                              const char **argv)
+> +{
+> +       memset(cmd, 0, sizeof(*cmd));
+> +       cmd->argv =3D argv;
+> +       cmd->out =3D -1;
+> +}
+> +
+> +static int prepare_perf_record(struct child_process *cmd)
+> +{
+> +       const char **record_argv;
+> +
+> +       record_argv =3D calloc(10 + 2 * stat_config.tpebs_event_size, siz=
+eof(char *));
+> +       if (!record_argv)
+> +               return -1;
+> +       __run_perf_record(record_argv);
+> +
+> +       prepare_run_command(cmd, record_argv);
+> +       return start_command(cmd);
+> +}
+> +
+> +struct perf_script {
+> +       struct perf_tool        tool;
+> +       struct perf_session     *session;
+> +};
+> +
+> +static void tpebs_data__delete(void)
+> +{
+> +       struct tpebs_retire_lat *r, *rtmp;
+> +       struct tpebs_event *e, *etmp;
+> +       list_for_each_entry_safe(r, rtmp, &stat_config.tpebs_results, nd)=
+ {
+> +               list_del_init(&r->nd);
+> +               free(r);
+> +       }
+> +       list_for_each_entry_safe(e, etmp, &stat_config.tpebs_events, nd) =
+{
+> +               list_del_init(&e->nd);
+> +               free(e);
+> +       }
+> +}
+> +
+> +static int process_sample_event(struct perf_tool *tool __maybe_unused,
+> +                               union perf_event *event __maybe_unused,
+> +                               struct perf_sample *sample,
+> +                               struct evsel *evsel,
+> +                               struct machine *machine __maybe_unused)
+> +{
+> +       int ret =3D 0;
+> +       const char *evname;
+> +       struct tpebs_retire_lat *t;
+> +
+> +       evname =3D evsel__name(evsel);
+> +
+> +       /*
+> +        * Need to handle per core results? We are assuming average retir=
+e
+> +        * latency value will be used. Save the number of samples and the=
+ sum of
+> +        * retire latency value for each event.
+> +        */
+> +       list_for_each_entry(t, &stat_config.tpebs_results, nd) {
+> +               if (!strcmp(evname, t->name)) {
+> +                       t->count +=3D 1;
+> +                       t->sum +=3D sample->retire_lat;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int process_feature_event(struct perf_session *session,
+> +                                union perf_event *event)
+> +{
+> +       if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> +               return perf_event__process_feature(session, event);
+> +       return 0;
+> +}
+> +
+> +static int __cmd_script(struct child_process *cmd __maybe_unused)
+> +{
+> +       int err =3D 0;
+> +       struct perf_session *session;
+> +       struct perf_data data =3D {
+> +               .mode =3D PERF_DATA_MODE_READ,
+> +               .path =3D PERF_DATA,
+> +               .fd   =3D cmd->out,
+> +       };
+> +       struct perf_script script =3D {
+> +               .tool =3D {
+> +               .sample          =3D process_sample_event,
+> +               .ordering_requires_timestamps =3D true,
+> +               .feature         =3D process_feature_event,
+> +               .attr            =3D perf_event__process_attr,
+> +               },
+> +       };
+> +       struct tpebs_event *e;
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               struct tpebs_retire_lat *new =3D malloc(sizeof(struct tpe=
+bs_retire_lat));
+> +
+> +               if (!new)
+> +                       return -1;
+> +               new->name =3D strdup(e->name);
+> +               new->tpebs_name =3D strdup(e->tpebs_name);
+> +               new->count =3D 0;
+> +               new->sum =3D 0;
+> +               list_add_tail(&new->nd, &stat_config.tpebs_results);
+> +       }
+> +
+> +       kill(cmd->pid, SIGTERM);
+> +       session =3D perf_session__new(&data, &script.tool);
+> +       if (IS_ERR(session))
+> +               return PTR_ERR(session);
+> +       script.session =3D session;
+> +       err =3D perf_session__process_events(session);
+> +       perf_session__delete(session);
+> +
+> +       return err;
+> +}
+> +
+>  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  {
+>         int interval =3D stat_config.interval;
+> @@ -709,13 +859,15 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>         struct affinity saved_affinity, *affinity =3D NULL;
+>         int err;
+>         bool second_pass =3D false;
+> +       struct child_process cmd;
+>
+>         /* Prepare perf record for sampling event retire_latency before f=
+ork and
+>          * prepare workload */
+>         if (stat_config.tpebs_event_size > 0) {
+>                 int ret;
+>
+> -               ret =3D __run_perf_record();
+> +               pr_debug("perf stat pid =3D %d\n", getpid());
+> +               ret =3D prepare_perf_record(&cmd);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -925,6 +1077,13 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>
+>         t1 =3D rdclock();
+>
+> +       if (stat_config.tpebs_event_size > 0) {
+> +               int ret;
+> +
+> +               ret =3D __cmd_script(&cmd);
+> +               close(cmd.out);
+> +       }
+> +
+>         if (stat_config.walltime_run_table)
+>                 stat_config.walltime_run[run_idx] =3D t1 - t0;
+>
+> @@ -2972,5 +3131,7 @@ int cmd_stat(int argc, const char **argv)
+>         metricgroup__rblist_exit(&stat_config.metric_events);
+>         evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack,=
+ &stat_config.ctl_fd_close);
+>
+> +       tpebs_data__delete();
+> +
+>         return status;
+>  }
+> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> index 08c4bfbd817f..2e2a20fc5c30 100644
+> --- a/tools/perf/util/data.c
+> +++ b/tools/perf/util/data.c
+> @@ -185,6 +185,10 @@ static bool check_pipe(struct perf_data *data)
+>         int fd =3D perf_data__is_read(data) ?
+>                  STDIN_FILENO : STDOUT_FILENO;
+>
+> +       if (data->fd > 0) {
+> +               fd =3D data->fd;
+> +       }
 
-* Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+nit: no curlies needed here
 
-> Active uprobes are stored in an RB tree and accesses to this tree are
-> dominated by read operations. Currently these accesses are serialized by
-> a spinlock but this leads to enormous contention when large numbers of
-> threads are executing active probes.
-> 
-> This patch converts the spinlock used to serialize access to the
-> uprobes_tree RB tree into a reader-writer spinlock. This lock type
-> aligns naturally with the overwhelmingly read-only nature of the tree
-> usage here. Although the addition of reader-writer spinlocks are
-> discouraged [0], this fix is proposed as an interim solution while an
-> RCU based approach is implemented (that work is in a nascent form). This
-> fix also has the benefit of being trivial, self contained and therefore
-> simple to backport.
-> 
-> This change has been tested against production workloads that exhibit
-> significant contention on the spinlock and an almost order of magnitude
-> reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+> +
+>         if (!data->path) {
+>                 if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+>                         is_pipe =3D true;
+> diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> index 110f3ebde30f..720638116ca0 100644
+> --- a/tools/perf/util/data.h
+> +++ b/tools/perf/util/data.h
+> @@ -28,6 +28,7 @@ struct perf_data_file {
+>
+>  struct perf_data {
+>         const char              *path;
+> +       int                      fd;
+>         struct perf_data_file    file;
 
-Have you considered/measured per-CPU RW semaphores?
+Could fd and file be a union, so that its clear they are mutually
+exclusive? Perhaps just comment.
+
+>         bool                     is_pipe;
+>         bool                     is_dir;
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index 7c24ed768ff3..3c37d80c4d34 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -68,10 +68,22 @@ struct metric_expr {
+>
+>  struct tpebs_event {
+>         struct list_head nd;
+> +       /* Event name */
+>         const char *name;
+> +       /* Event name with TPEBS modifier */
+>         const char *tpebs_name;
+>  };
+>
+> +struct tpebs_retire_lat {
+> +       struct list_head nd;
+> +       /* Event name */
+> +       const char *name;
+> +       /* Event name with TPEBS modifier */
+> +       const char *tpebs_name;
+> +       size_t count;
+> +       int sum;
+> +};
+
+nit: Would it make sense to make this:
+
+struct tpebs_retire_lat {
+  struct tpebs_event event;
+  size_t count;
+  int sum;
+}
 
 Thanks,
+Ian
 
-	Ingo
+> +
+>  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+>                                          struct evsel *evsel,
+>                                          bool create);
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index b987960df3c5..0726bdc06681 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -111,6 +111,8 @@ struct perf_stat_config {
+>         struct rblist            metric_events;
+>         struct list_head         tpebs_events;
+>         size_t                   tpebs_event_size;
+> +       struct list_head         tpebs_results;
+> +       pid_t                    tpebs_pid;
+>         int                      ctl_fd;
+>         int                      ctl_fd_ack;
+>         bool                     ctl_fd_close;
+> --
+> 2.43.0
+>
