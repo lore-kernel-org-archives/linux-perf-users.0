@@ -1,68 +1,67 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A6D33CA
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 05:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5E1134BE
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 05:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711257622; cv=none; b=k57Y3dSyMqTOxL7rTcI3zGo6zBtfCLloEoQtTPy7Lv9ZFhOaQmwOAfkxxkn+0P+eP7uJe8H2NNIP8C5Q63Oqv1bRSzxtfLF2ZvDrYLFmXCtpeiTAkLgz6yFW6zI3uvJMj9GFQYU8Vx6SEBlryhWL2FHmzeZeQSJshkLq72Hk1+8=
+	t=1711257887; cv=none; b=eW25QnLiuAIZH879t97EREe0gdAlMcmmESSbZsxEa1ibRbtiIXqzv+Yq7TPoCAl0tEncurIQJUKdhnFphYxWOqBwh8Sk95ktNpYSBFN2/ubIeq3jYsiKVqgYDMevfbFgTS9DBwbt9y7MmufPS9bhbQOOd67OqvO9gcHuWapEDv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711257622; c=relaxed/simple;
-	bh=huo0FqZh8qWe0LH5J17ricm/+PWwwHEYbbGfD/miNbQ=;
+	s=arc-20240116; t=1711257887; c=relaxed/simple;
+	bh=JX+oDdbRv0R2v1IYAefbVrNCF8D+0x1ug83g/J/1kzk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pE872O+Off0FOTsrKrmZwyrVzgyiaR7CC2M9m2Eq4c7IhvaYlQHtjEtKUmnPDM7W1jerWDwMhNoxBuwVvpI3sLkt/u0CTqU0bFVE+FY/XgdjmCYEY8xbWnKqydEzEWksX0kn72ZyfLNxiuQAGo7axOFuKtdfuMMUMDK9fwgPIg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MX/Gxhq/; arc=none smtp.client-ip=209.85.166.175
+	 To:Cc:Content-Type; b=KAQXPuLMJIXVegsOKWBuLuBdJWW0KNGYG2l/YEZ/KJgy1WiCpng1hKK9J11oymX2cE8Yu8DQoQujx17cNultFt05rdOJjGYoQBUBKOiOMay2drIjcZ8QT+3dMqqem2IbjSMlRQlGNqgZaDlOD/4Yrqzxk/A7RJXx2zefau8nGEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RM410Uf0; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MX/Gxhq/"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36880dc41c0so108375ab.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 22:20:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RM410Uf0"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e062f3a47bso97575ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 22:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711257620; x=1711862420; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711257885; x=1711862685; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kw1SuZHQQ91QtNOEACeszDGcG3fk1mZSY8v6Xr5GmH4=;
-        b=MX/Gxhq/iIiiZ0Sdenq12yPvEWRUUl1mXn60P8HUlAsHSElFe10T3vARJX9bJrAZD0
-         qe9yvrNldhqjsxiO1MiCOCi0Zcsi4UKjRJj6W1Oq8p67qzRPy5ANWUsvwnbyg/+VJLf1
-         990jLIs7D5Ev9UAWGT07ZFq+1wYrNz0pYLNMMzSw2cH/ViR4wNi/kyWCZrbY65yLKDw2
-         PWx2da4c9A+Q8gibEy0ucZH59JowEQGG03DD+LnO4rQ5yN4eitBLk7k8CBee/uS0hsk5
-         TxDB+8Qkvm7nhSxPxeJe/Nj6FholAyvLuz502eF2oWBKRBeA7huYfCbm1t87dpX1sClF
-         DFKg==
+        bh=KFwHm9w+MuTz5G1OAkaeQ+lnQ6liJolQwcfKncG2IEI=;
+        b=RM410Uf0ipGCe6XIWQj1LBaNE+KZC1OI4x+0fFzX5QMsx6VrCCHpMWbGRx+lNaZyED
+         J5Otczam1roL3qTYNLcWx0f4xDHnGQTQ5t1mkisI/jGmUAr6JWnqV3/ZvHUGUUd3g1c0
+         l5kBqSrr+NuC1fSL+TUuk9/NkvOaSf4j27qhjiUNj/yQeLoGH6eRF9bbRXJJI3eKAdz3
+         TqllasDuZ/HMQe65tb3V02m72tNhWaMcQEG3v6AD2wNmtSFknX7ErEFiKSHncnCMWlM9
+         Mwv50YARp7Xv741wvD5/4FqIJi0RYFAL+1q2h4zvmOk7gEopzlj8rYlYSh2i+6fVwg/A
+         obZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711257620; x=1711862420;
+        d=1e100.net; s=20230601; t=1711257885; x=1711862685;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kw1SuZHQQ91QtNOEACeszDGcG3fk1mZSY8v6Xr5GmH4=;
-        b=JXRaW1W5BVf2V1jKnxQnM/9wzCZpkTbxa0fsdAYDslAQNfU1y0wPU7FMqAo2mlxRAP
-         cVGT/NshKjgRP1TnSMh+Q7NAE3f1hqrCsT8RConIOvbNQoK8I+3VzQU3eMsfLsP6VWqd
-         0QuFRM9w2VpsxCGM8yf0OHemIirs9zo6w076B6Vem1TWeXmQwsp8UCkz2C3rPSkMHxod
-         qwCZAe3dV5P/NJ4P44wQw1KxeWHgCcFVVvTiaOiteDXOGw0pxpJ+xXx68xSmmsi97/lR
-         vl8OTKPCYK8v9QbIEQLGEaBxsqprX30TAqr8mId8ZS7k4kwyAwVYutq4CFNdWcOIqTbs
-         H/tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkH4OGe8B4v8TtHWTjJMP7NOzaEX7j3MZIFmw+KLp3AN1YeSZneSIxPeBytbsCtC1g+kDuvEr5JLYMWHWR1x+QCVeiS/7GL0arZlJAE4pZNQ==
-X-Gm-Message-State: AOJu0YwcYQn8ftmqmwA/22Ibbh4CICRPxPEm7Qnyxo5BycRoxCGeQ6eB
-	0PqtHqd2+J2SQZLvEn2QhBwNViA+MBLeO0c98xRnISEycwsdS56vtc66BtU4D/2MUSzVEBnniJn
-	f4scuy9tu87qMkPuuVJISN0NpkCXCX+CKlyu3
-X-Google-Smtp-Source: AGHT+IGzjQ9GZvPCCC08VsFv7CWQiTGELgPQgjgxPRZOGgogAqPAoIQPy2YAoAWbaMlFrohJxx8Y6IHi9FwsjM1Fr0c=
-X-Received: by 2002:a05:6e02:2184:b0:366:63a7:78e6 with SMTP id
- j4-20020a056e02218400b0036663a778e6mr820057ila.28.1711257620064; Sat, 23 Mar
- 2024 22:20:20 -0700 (PDT)
+        bh=KFwHm9w+MuTz5G1OAkaeQ+lnQ6liJolQwcfKncG2IEI=;
+        b=i/5CLv2LDp66BRbhJ1NNoGpAzTqlqYM9em3gFmdoZbacLdNkEQS8h03is1eeCsv2jb
+         W0avoGhCYvCEekcfZsJsTvdo32yj0bhKaTDYRYYGPCbIDc6owEcwKy2Ot7sgjo/RoxQK
+         VP5Xp7VeMA41Zs0k1PTUWbEPmR2WGkuKPpmdRsMdEJowiUxlcC61rDiS+L2cXEnWZmqx
+         m/dvSnSUX2leBZVL0+FQTnZoZ6AmTv/zUnp15tWLOYkZm+HIX3x6JlyXD/EBEeYmBbgv
+         4rtOs+SfVbkYxOGYQrUIguHihFLg4TUWD/51h1zAeBaJj/v076ThmoY3w5NODjydOAg/
+         MfPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBYzHTH+5dkmbcRM7fHICw1dCSGK8rrJlStBQ3gtSwLaSdrxq/FGcwDUt8fYQZJxSJlD/71WCw+1gmZlRHYWX1gpz5lYhD41XVWKmehzWNRg==
+X-Gm-Message-State: AOJu0Yxel4Pv+7kAqiMvRqzNta1TBz+Lh+oIss+cNL76t6+Sif8vp4Gm
+	4jwrMDxzscL7set+0VKJB4CEmzu1ZH1vVOAmhs6p858rp5ZbYIy+sWpmotw7ifJKAjadIkTCAkx
+	GyyiyAIcRK/LSW3knTt+ovD/O4e14BiGWqM6M
+X-Google-Smtp-Source: AGHT+IG/ypvtMd9SkyyJ5jW4bf26BEJt+Bt52L0K+3QoVHHTH54kbHfOFaD+QRqOYhCAJ7Q5Einc/Rsj8oHiBAI5pl8=
+X-Received: by 2002:a17:903:2445:b0:1dc:dfd1:72e9 with SMTP id
+ l5-20020a170903244500b001dcdfd172e9mr727173pls.29.1711257884720; Sat, 23 Mar
+ 2024 22:24:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209031441.943012-1-weilin.wang@intel.com> <20240209031441.943012-10-weilin.wang@intel.com>
-In-Reply-To: <20240209031441.943012-10-weilin.wang@intel.com>
+References: <20240209031441.943012-1-weilin.wang@intel.com> <20240209031441.943012-12-weilin.wang@intel.com>
+In-Reply-To: <20240209031441.943012-12-weilin.wang@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 23 Mar 2024 22:20:05 -0700
-Message-ID: <CAP-5=fV8fUBZihx-7wQf+DgOqoii5VVMs+Y3kFmg+5JdkD0NQA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 09/15] perf stat: Add function to handle special
- events in hardware-grouping
+Date: Sat, 23 Mar 2024 22:24:33 -0700
+Message-ID: <CAP-5=fW_8qsxxjh+vhunVALuqqgXhDZzZSWUnJYV0OhmTHm7rA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 11/15] perf stat: Handle taken alone in hardware-grouping
 To: weilin.wang@intel.com
 Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -78,118 +77,184 @@ On Thu, Feb 8, 2024 at 7:14=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> There are some special events like topdown events and TSC that are not
-> described in pmu-event JSON files. Add support to handle this type of
-> events. This should be considered as a temporary solution because includi=
-ng
-> these events in JSON files would be a better solution.
->
+> Add taken alone into consideration when grouping. Only one taken
+> alone event is supported per group.
+
+Is there an example of this?
+
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->  tools/perf/util/metricgroup.c | 38 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 37 insertions(+), 1 deletion(-)
+>  tools/perf/pmu-events/jevents.py   |  7 ++++++-
+>  tools/perf/pmu-events/pmu-events.h |  1 +
+>  tools/perf/util/metricgroup.c      | 20 +++++++++++++++-----
+>  3 files changed, 22 insertions(+), 6 deletions(-)
 >
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index bc91b7efa49a..4fbb367a3228 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -56,7 +56,9 @@ _json_event_attributes =3D [
+>      # The list of counter(s) this event could use
+>      'counters',
+>      # Longer things (the last won't be iterated over during decompress).
+> -    'long_desc'
+> +    'long_desc',
+> +    # Taken alone event could not be collected in the same group with ot=
+her taken alone event
+> +    'taken_alone'
+>  ]
+>
+>  # Attributes that are in pmu_unit_layout.
+> @@ -355,6 +357,9 @@ class JsonEvent:
+>      self.num_counters =3D jd.get('NumCounters')
+>      # Number of fixed counter
+>      self.num_fixed_counters =3D jd.get('NumFixedCounters')
+> +    # If the event is taken alone event, which cannot be grouped with an=
+y other
+> +    # taken alone event.
+> +    self.taken_alone =3D jd.get('TakenAlone')
+>      filter =3D jd.get('Filter')
+>      self.unit =3D jd.get('ScaleUnit')
+>      self.perpkg =3D jd.get('PerPkg')
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
+mu-events.h
+> index e245e4738970..837edfeb676a 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -54,6 +54,7 @@ struct pmu_event {
+>         const char *unit;
+>         bool perpkg;
+>         bool deprecated;
+> +       bool taken_alone;
+>  };
+>
+>  struct pmu_metric {
 > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
 c
-> index 660c6b9b5fa7..a0579b0f81e5 100644
+> index fe115f0880f9..95d3868819e3 100644
 > --- a/tools/perf/util/metricgroup.c
 > +++ b/tools/perf/util/metricgroup.c
-> @@ -160,6 +160,20 @@ struct metric {
+> @@ -189,6 +189,7 @@ struct metricgroup__event_info {
+>         /** The event uses special counters that we consider that as free=
+ counter
+>          *  during the event grouping*/
+>         bool free_counter;
+> +       bool taken_alone;
+>         /** The counters the event allowed to be collected on. */
+>         DECLARE_BITMAP(counters, NR_COUNTERS);
+>  };
+> @@ -235,6 +236,7 @@ struct metricgroup__group {
+>         DECLARE_BITMAP(fixed_counters, NR_COUNTERS);
+>         /** Head to the list of event names in this group*/
+>         struct list_head event_head;
+> +       bool taken_alone;
+>  };
 >
->  /* Maximum number of counters per PMU*/
->  #define NR_COUNTERS    16
-> +/* Special events that are not described in pmu-event JSON files.
-> + * topdown-* and TSC use dedicated registers, set as free
-> + * counter for grouping purpose
+>  struct metricgroup__group_events {
+> @@ -1717,6 +1719,7 @@ static void metricgroup__free_pmu_info(struct list_=
+head *pmu_info_list)
+>  static struct metricgroup__event_info *event_info__new(const char *name,
+>                                                       const char *pmu_nam=
+e,
+>                                                       const char *counter=
+,
+> +                                                     bool taken_alone,
+>                                                       bool free_counter)
+>  {
+>         int ret =3D 0;
+> @@ -1731,6 +1734,7 @@ static struct metricgroup__event_info *event_info__=
+new(const char *name,
+>                 pmu_name =3D "core";
+>
+>         e->name =3D name;
+> +       e->taken_alone =3D taken_alone;
+>         e->free_counter =3D free_counter;
+>         e->pmu_name =3D pmu_name;
+>         if (free_counter) {
+> @@ -1769,7 +1773,8 @@ static int metricgroup__add_metric_event_callback(c=
+onst struct pmu_event *pe,
+>         if (!strcasecmp(pe->name, d->event_name)) {
+>                 if (!pe->counters)
+>                         return -EINVAL;
+> -               event =3D event_info__new(d->event_id, pe->pmu, pe->count=
+ers, /*free_counter=3D*/false);
+> +               event =3D event_info__new(d->event_id, pe->pmu, pe->count=
+ers,
+> +                                       pe->taken_alone, /*free_counter=
+=3D*/false);
+>                 if (!event)
+>                         return -ENOMEM;
+>                 list_add(&event->nd, d->list);
+> @@ -1892,6 +1897,8 @@ static int find_and_set_counters(struct metricgroup=
+__event_info *e,
+>         int ret;
+>         unsigned long find_bit =3D 0;
+>
+> +       if (e->taken_alone && current_group->taken_alone)
+> +               return -ENOSPC;
+>         if (e->free_counter)
+>                 return 0;
+>         if (e->fixed_counter) {
+> @@ -1926,11 +1933,13 @@ static int _insert_event(struct metricgroup__even=
+t_info *e,
+>                 list_add(&event->nd, &group->event_head);
+>         else
+>                 list_add_tail(&event->nd, &group->event_head);
+> +       if (e->taken_alone)
+> +               group->taken_alone =3D true;
+>         return 0;
+>  }
+>
+>  /**
+> - * Insert the new_group node at the end of the group list.
+> + * Initialize the new group and insert it to the end of the group list.
+>   */
+>  static int insert_new_group(struct list_head *head,
+>                            struct metricgroup__group *new_group,
+> @@ -1940,6 +1949,7 @@ static int insert_new_group(struct list_head *head,
+>         INIT_LIST_HEAD(&new_group->event_head);
+>         fill_counter_bitmap(new_group->gp_counters, 0, num_counters);
+>         fill_counter_bitmap(new_group->fixed_counters, 0, num_fixed_count=
+ers);
+> +       new_group->taken_alone =3D false;
+>         list_add_tail(&new_group->nd, head);
+>         return 0;
+>  }
+> @@ -2143,8 +2153,8 @@ static int create_grouping(struct list_head *pmu_in=
+fo_list,
+>         //TODO: for each new core group, we should consider to add events=
+ that uses fixed counters
+>         list_for_each_entry(e, event_info_list, nd) {
+>                 bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_CO=
+UNTERS);
+> -               pr_debug("Event name %s, [pmu]=3D%s, [counters]=3D%s\n", =
+e->name,
+> -                       e->pmu_name, bit_buf);
+> +               pr_debug("Event name %s, [pmu]=3D%s, [counters]=3D%s, [ta=
+ken_alone]=3D%d\n",
+> +                       e->name, e->pmu_name, bit_buf, e->taken_alone);
+>                 ret =3D assign_event_grouping(e, pmu_info_list, &groups);
+>                 if (ret)
+>                         goto out;
+> @@ -2191,7 +2201,7 @@ static int hw_aware_build_grouping(struct expr_pars=
+e_ctx *ctx __maybe_unused,
+>                 if (is_special_event(id)) {
+>                         struct metricgroup__event_info *event;
+>
+> -                       event =3D event_info__new(id, "default_core", "0"=
+,
+> +                       event =3D event_info__new(id, "default_core", "0"=
+, false,
 
-msr/tsc/ is a software event where reading the value is done by rdtsc.
-Unlike tool events like duration_time we want msr/tsc/ in the group
-with the other hardware events so its running/enabled time scaling
-matches.
-
-To some extent the topdown- events do exist in the json as
-"TOPDOWN.*". Looking at
-tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json I see just
-TOPDOWN.BACKEND_BOUND_SLOTS. Perhaps we can add the rest rather than
-have a workaround here?
-
-If topdown events are in json and msr/tsc/ is treated like a software
-event, as we do here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n1920
-perhaps we don't need the special events category?
+nit: document constant arguments, so "/*taken_alone=3D*/false,"
 
 Thanks,
 Ian
 
-> + */
-> +enum special_events {
-> +       TOPDOWN =3D 0,
-> +       TSC     =3D 1,
-> +       SPECIAL_EVENT_MAX,
-> +};
-> +
-> +static const char *const special_event_names[SPECIAL_EVENT_MAX] =3D {
-> +       "topdown-",
-> +       "TSC",
-> +};
->
->  /**
->   * An event used in a metric. This info is for metric grouping.
-> @@ -2102,6 +2116,15 @@ static int create_grouping(struct list_head *pmu_i=
-nfo_list,
->         return ret;
->  };
->
-> +static bool is_special_event(const char *id)
-> +{
-> +       for (int i =3D 0; i < SPECIAL_EVENT_MAX; i++) {
-> +               if (!strncmp(id, special_event_names[i], strlen(special_e=
-vent_names[i])))
-> +                       return true;
-> +       }
-> +       return false;
-> +}
-> +
->  /**
->   * hw_aware_build_grouping - Build event groupings by reading counter
->   * requirement of the events and counter available on the system from
-> @@ -2126,6 +2149,17 @@ static int hw_aware_build_grouping(struct expr_par=
-se_ctx *ctx __maybe_unused,
->         hashmap__for_each_entry(ctx->ids, cur, bkt) {
->                 const char *id =3D cur->pkey;
->
-> +               if (is_special_event(id)) {
-> +                       struct metricgroup__event_info *event;
-> +
-> +                       event =3D event_info__new(id, "default_core", "0"=
-,
-> +                                               /*free_counter=3D*/true);
-> +                       if (!event)
-> +                               goto err_out;
-> +
-> +                       list_add(&event->nd, &event_info_list);
-> +                       continue;
-> +               }
->                 ret =3D get_metricgroup_events(id, etable, &event_info_li=
-st);
->                 if (ret)
->                         goto err_out;
-> @@ -2597,8 +2631,10 @@ int metricgroup__parse_groups(struct evlist *perf_=
-evlist,
->                 ret =3D hw_aware_parse_groups(perf_evlist, pmu, str,
->                             metric_no_threshold, user_requested_cpu_list,=
- system_wide,
->                             /*fake_pmu=3D*/NULL, metric_events, table);
-> -               if (!ret)
-> +               if (!ret) {
-> +                       pr_info("Hardware aware grouping completed\n");
->                         return 0;
-> +               }
->         }
->
->         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
-c_no_merge,
+>                                                 /*free_counter=3D*/true);
+>                         if (!event)
+>                                 goto err_out;
 > --
 > 2.42.0
 >
