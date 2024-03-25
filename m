@@ -1,189 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E4D42058;
-	Mon, 25 Mar 2024 16:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA7D128398
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 16:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711382796; cv=none; b=ixENszgLuyfiH5UohuuSbkQ1EdUjVXnHAvxwrKzrQubrHknbNOKMepduwBVP+iAf7/NjmvQ6kuSYaexha7FRX8wVjd/WzBDnrVx+XffDY1FJ6pcRiT2lBmlL427JUnI7Pzwq4bjIpCB6WN0/0W+MfRaTODgKoK2X6jhxC2LULuE=
+	t=1711383391; cv=none; b=Lm1lmyA0gHCtR6SaaT2uiRBbXghwYbSFaBLY3OAZxtm+dyS7fIP/a1IFkslOcCNgjJcC7oiq0kE46k3vdX368k4kSta8L4g1ofMdlL4MWWo6H46yEAvTOrOoVwBtn3JCjo6nK1gti2gfWSaUfp19lmBAUFTTZ2x2FZxWupIbSDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711382796; c=relaxed/simple;
-	bh=y/3hWyLLYdwPd2H6MxfXXqvOBBuPeOJ3qFta2ANbAcg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YDiIa+5ErKZIQcahrzjjUlCBmcF+b1tceMxJfH00nDUq4Z0Dlw8OgjawfBDe/vjjXQhwe8trcN12n3+Rbo2lh/sTo7bRW5QBIG/rowRNqL0zh7edPUDjDciz5d0DzyvS95YOhZ9GVRtSDsJH/B00z79TehQ8riuYIjKNZwMnGeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1JI8kZm; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711383391; c=relaxed/simple;
+	bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BUr8wY1hccN1YutGR0eUJ8Xb/9fKmcLzgC6vEJztf9i9+TWkuG3VbrP2tRjhbSMpgL5CctmXcMvQuz+/1G4wT9OXp1/Twugz2phsW1gbFJs8dXRI1ScEHmFgpAR9ARJ3wflUH29WsTfysfh01aVo9bDqZbGXu0fJT1wXs3RyEfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=we89xq5e; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1JI8kZm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711382794; x=1742918794;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y/3hWyLLYdwPd2H6MxfXXqvOBBuPeOJ3qFta2ANbAcg=;
-  b=I1JI8kZmsNotHvNJZWkRsRdWQ2KIQH6p+QrlDXUjABoaB68Cd8q7UZYB
-   VRN3wijuyD+ix8j9P7Eiuckn1yMSj5tdLmqVwRIS1KvQ3cfETbLxueOds
-   ytkjXlmm0qdBvZNB2e769DLXeTFqWJrUkveTrp5yC1mx66h4zx0Pt75sX
-   pVq05X9XcDQQZ7l0ml7I9QvLQ9rAI1B7YneQGwB8sygz7nKqh1PM4SuXX
-   fucYYIaLlpBSygypzWW4ud1leD850z4cV3lGL+FPdV82WeSGoophwS/YW
-   UvwD4NCAojkVa+0XnvtpyaIrNZtJqAu3wP8oIkCLhOMaTXSkZEhmwBN+M
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6256092"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="6256092"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:06:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="20125309"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.211.155])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:06:28 -0700
-Message-ID: <b91bc272-1524-4d14-9c73-dfbb334e8951@intel.com>
-Date: Mon, 25 Mar 2024 18:06:25 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="we89xq5e"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e058b9e479so250925ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 09:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711383384; x=1711988184; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
+        b=we89xq5ecztLSxHVx6TqX+Ik7StaB0sK7NID9ZZPca+ELv4T9mkbPrK3ONSbDzi+KM
+         0NIb+qVBDQiEltq4j0dbJsYrHDISIRYS+6Ajd9CzitHMOY3dSHapVJbSM6CdAozfjFzt
+         oFcSFSPaWb7qIckWHwx9vvpbJA22+RlgZCSVMDXpDEHUu4whLelp+1KxKWIiulJ1qrp8
+         Bhkp7cDqbtAZUVWm+fezuTyz9FVjt7DfWzeUOeRZAkY9+Y4uozJ84GoFh0Myd5m9GU7F
+         Sdlo1k8Pz6GqszAdZ+DzP2WFenL766XpRCAduDbmSKEPq/jrKaMt/XgnLzW8yDxezcRM
+         /B6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711383384; x=1711988184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
+        b=PIwgZfUrEyEbOXDcdWAMFWpX9Cj01g3J/0r2foMsb1gqWLL8RahAKti8zolpMu2XW8
+         vbkS0rtuUM5QL2aokHRZ482khQQ5o3ceSIw4hRYkUlwftlWBOHQ0MIamvLP6iTCpEPgq
+         KOOnuN7k4PN7PAJORySj4+5+Wtr/wZpnCF+wDiR/0LvW8KYltbW3DwyQW4OA2bp4Iu7t
+         T+bHJ3fy+WpeWwcmEI1In1ERLKOqAl9lSRyhIWx3a7a72bvuoY2rsLoe+uZmzpjOHv6t
+         QD2iYS7wYZFjWmikj4sBQxO0DfyMPhUnGkumj2Q1XrwwOEr1UgyOQqh9AqwglyS8sczM
+         1jTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUquRZM1bpXEgoQNMdh5SuWOTx8KTZY7MsIzkaCtGQBnz+AlyygR/zk9+FMc9KTm8ZCt2NrFQ4KqooQxqhBBgYl/FWzgfdQ8q4fVM25Yu8ozA==
+X-Gm-Message-State: AOJu0YwtrbddfO++VGN8zumyuQLQ1ZfaaGDwg+mdF6x6Bb1LCYqbKQoC
+	+h+5AwsJyZaJKb0z9RTPThmS0LW6PCIE9thPGQd5DwjDvJaPqK84W9jGXZsCj38a0jQYK77acpl
+	WH9j/sUX5sdUDRL846joZKCtouU5iFnMUDsIlQTYwf4ZnHQy4AK5w
+X-Google-Smtp-Source: AGHT+IEE80IN0sVZNeArGeomMw4UaISjfm+I0OBMZngIRqWMmK3knvlf5ImAi7Deh5srmwXQgVIpqgJFEWafSpW0Ndc=
+X-Received: by 2002:a17:903:2d2:b0:1e0:919d:b2ee with SMTP id
+ s18-20020a17090302d200b001e0919db2eemr539808plk.2.1711383383441; Mon, 25 Mar
+ 2024 09:16:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf intel-pt: Fix memory sanitizer
- use-of-uninitialized-value
-To: Ian Rogers <irogers@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
- Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Mark Rutland <mark.rutland@arm.com>, Liam Howlett <liam.howlett@oracle.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
-References: <20240320162619.1272015-1-irogers@google.com>
- <CAP-5=fU0XQ_F2Bax0fzPMtP9BQv3XaNuiGWKQMRQ7g54yzM8xQ@mail.gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fU0XQ_F2Bax0fzPMtP9BQv3XaNuiGWKQMRQ7g54yzM8xQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240202022223.GA903@debian-dev>
+In-Reply-To: <20240202022223.GA903@debian-dev>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 25 Mar 2024 09:16:08 -0700
+Message-ID: <CAP-5=fUtB4sk2f9oUU1+mFdxyKGC5_5+RAB8ov0h7a=BvMHKYQ@mail.gmail.com>
+Subject: Re: Document: How to Use Perf to Debug Perf
+To: Leo Yan <leo.yan@linux.dev>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	linux-perf-users@vger.kernel.org, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <James.Clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/03/24 17:44, Ian Rogers wrote:
-> On Wed, Mar 20, 2024 at 9:26 AM Ian Rogers <irogers@google.com> wrote:
->>
->> Running the test "Miscellaneous Intel PT testing" with a build with
->> -fsanitize=memory and -fsanitize-memory-track-origins I saw:
->>
->> ```
->> ==1257749==WARNING: MemorySanitizer: use-of-uninitialized-value
->>     #0 0x5581c00a76b3 in intel_pt_sample_flags tools/perf/util/intel-pt.c:1527:17
->>     #1 0x5581c00c5cf6 in intel_pt_run_decoder tools/perf/util/intel-pt.c:2961:3
->>     #2 0x5581c00968f8 in intel_pt_process_timeless_queues tools/perf/util/intel-pt.c:3074:4
->>     #3 0x5581c007cf49 in intel_pt_process_event tools/perf/util/intel-pt.c:3482:10
->>     #4 0x5581bffa269a in auxtrace__process_event tools/perf/util/auxtrace.c:2830:9
->>     #5 0x5581bfb826c0 in perf_session__deliver_event tools/perf/util/session.c:1649:8
->>     #6 0x5581bfba1d7f in perf_session__process_event tools/perf/util/session.c:1891:9
->>     #7 0x5581bfba82e4 in process_simple tools/perf/util/session.c:2452:9
->>     #8 0x5581bfbabcc3 in reader__read_event tools/perf/util/session.c:2381:14
->>     #9 0x5581bfbad942 in reader__process_events tools/perf/util/session.c:2430:8
->>     #10 0x5581bfb78256 in __perf_session__process_events tools/perf/util/session.c:2477:8
->>     #11 0x5581bfb702c4 in perf_session__process_events tools/perf/util/session.c:2643:9
->>     #12 0x5581bf2da266 in __cmd_script tools/perf/builtin-script.c:2855:8
->>     #13 0x5581bf2bfcdd in cmd_script tools/perf/builtin-script.c:4402:8
->>     #14 0x5581bf67004b in run_builtin tools/perf/perf.c:350:11
->>     #15 0x5581bf66b8ea in handle_internal_command tools/perf/perf.c:403:8
->>     #16 0x5581bf66f527 in run_argv tools/perf/perf.c:447:2
->>     #17 0x5581bf669d2d in main tools/perf/perf.c:561:3
->>
->>   Uninitialized value was stored to memory at
->>     #0 0x5581c005ddf8 in intel_pt_walk_insn tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1256:25
->>     #1 0x5581c001a932 in intel_pt_walk_fup tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1428:9
->>     #2 0x5581c000f76c in intel_pt_walk_trace tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:3299:10
->>     #3 0x5581c000899b in intel_pt_decode tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:3988:10
->>     #4 0x5581c00c5180 in intel_pt_run_decoder tools/perf/util/intel-pt.c:2941:11
->>     #5 0x5581c00968f8 in intel_pt_process_timeless_queues tools/perf/util/intel-pt.c:3074:4
->>     #6 0x5581c007cf49 in intel_pt_process_event tools/perf/util/intel-pt.c:3482:10
->>     #7 0x5581bffa269a in auxtrace__process_event tools/perf/util/auxtrace.c:2830:9
->>     #8 0x5581bfb826c0 in perf_session__deliver_event tools/perf/util/session.c:1649:8
->>     #9 0x5581bfba1d7f in perf_session__process_event tools/perf/util/session.c:1891:9
->>     #10 0x5581bfba82e4 in process_simple tools/perf/util/session.c:2452:9
->>     #11 0x5581bfbabcc3 in reader__read_event tools/perf/util/session.c:2381:14
->>     #12 0x5581bfbad942 in reader__process_events tools/perf/util/session.c:2430:8
->>     #13 0x5581bfb78256 in __perf_session__process_events tools/perf/util/session.c:2477:8
->>     #14 0x5581bfb702c4 in perf_session__process_events tools/perf/util/session.c:2643:9
->>     #15 0x5581bf2da266 in __cmd_script tools/perf/builtin-script.c:2855:8
->>     #16 0x5581bf2bfcdd in cmd_script tools/perf/builtin-script.c:4402:8
->>     #17 0x5581bf67004b in run_builtin tools/perf/perf.c:350:11
->>     #18 0x5581bf66b8ea in handle_internal_command tools/perf/perf.c:403:8
->>     #19 0x5581bf66f527 in run_argv tools/perf/perf.c:447:2
->> ```
->>
->> Adding a curly brace initializer for the intel_pt_insn in
->> intel_pt_walk_fup rectifies this, however, there may be other issues
->> lurking behind this so initialize all similar instances.
->>
->> Fixes: f4aa081949e7 ("perf tools: Add Intel PT decoder")
->> Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Adrian, could you take a look at this for the sake of tests passing with msan.
-
-I did have a look, but I found msan so slow and full of errors
-that it never gave any results.
-
-However, it is easy enough to instrument some debugging which is
-what I am still looking at.
-
-Just initializing intel_pt_insn is not quite right, so I need
-to check things a bit more.
-
-> 
+On Thu, Feb 1, 2024 at 6:22=E2=80=AFPM Leo Yan <leo.yan@linux.dev> wrote:
+>
+> Hi all,
+>
+> I have written an article on "How to Use Perf to Debug Perf" [1] and
+> would like to share it here.
+>
+> I call it as a self-contained topic, as the subject and the object are
+> the same in the same sentence. This highlights that perf is powerful
+> that it can debug itself ;)
+>
+> Hope the doc is helpful.
+>
 > Thanks,
-> Ian
-> 
->> ---
->>  tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
->> index b450178e3420..b4a95af2e4cc 100644
->> --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
->> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
->> @@ -1115,7 +1115,7 @@ static void intel_pt_sample_insn(struct intel_pt_decoder *decoder)
->>   */
->>  static void intel_pt_sample_fup_insn(struct intel_pt_decoder *decoder)
->>  {
->> -       struct intel_pt_insn intel_pt_insn;
->> +       struct intel_pt_insn intel_pt_insn = {};
->>         uint64_t max_insn_cnt, insn_cnt = 0;
->>         int err;
->>
->> @@ -1418,7 +1418,7 @@ static inline bool intel_pt_fup_with_nlip(struct intel_pt_decoder *decoder,
->>
->>  static int intel_pt_walk_fup(struct intel_pt_decoder *decoder)
->>  {
->> -       struct intel_pt_insn intel_pt_insn;
->> +       struct intel_pt_insn intel_pt_insn = {};
->>         uint64_t ip;
->>         int err;
->>
->> @@ -1461,7 +1461,7 @@ static int intel_pt_walk_fup(struct intel_pt_decoder *decoder)
->>
->>  static int intel_pt_walk_tip(struct intel_pt_decoder *decoder)
->>  {
->> -       struct intel_pt_insn intel_pt_insn;
->> +       struct intel_pt_insn intel_pt_insn = {};
->>         int err;
->>
->>         err = intel_pt_walk_insn(decoder, &intel_pt_insn, 0);
->> @@ -1626,7 +1626,7 @@ static int intel_pt_emulated_ptwrite(struct intel_pt_decoder *decoder)
->>
->>  static int intel_pt_walk_tnt(struct intel_pt_decoder *decoder)
->>  {
->> -       struct intel_pt_insn intel_pt_insn;
->> +       struct intel_pt_insn intel_pt_insn = {};
->>         int err;
->>
->>         while (1) {
->> --
->> 2.44.0.291.gc1ea87d7ee-goog
->>
+> Leo
 
+Thanks for sharing! I've added this to the wiki's useful links page.
+
+Ian
+
+> [1] https://github.com/Leo-Yan/write_plan/blob/master/how_to_use_perf_to_=
+debug_perf/how_to_use_perf_to_debug_perf.pdf
