@@ -1,116 +1,177 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F911426B
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 Mar 2024 05:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E712662A2;
+	Mon, 25 Mar 2024 03:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711259831; cv=none; b=IWJebYUNDv8CSD4wIlxplEZNRQZ4cgWkBs5jtnPpLmHby9mw/WnVRkop4TCreHrt03cuQSOxYWpMH1nj71tJIp0zlC5L9OevcqQr5imTqzYOoWH/meoMSDzSoR3dvj+74is5olNUwkFpbPJ6CVA3i8B0m8F/1nS5/1NQBNqjiSk=
+	t=1711335810; cv=none; b=LtaO7I7ruvtUZdxrBdOHnwBAYPL+ASuK3W/qGzQ3tr+ZTUYN0bEZeTYMrr2+l+oOfqaWEhM5sKd7qcYROFyV+HCFwXF85vQ3NBvJmVcu6rrGFUDCRXZ2LtgnkfETGSALeTevOeFsik7Or9HwDDR4ejTVQe/TIRDr0oHZGD1yU1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711259831; c=relaxed/simple;
-	bh=6IzC5f7q8Hc8Q5UlfrkfYNWS4BY11Ec+KoaESDdZrUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iXx5NbhnnrgtInLv9r3ln12T7WNlZ9Xsrv1M518+hpy7rje5TPBNI1zGa3MQeVV8KZxSb8hHfMyb+MXoySpcvcSMTweBd4Gx61ZulmhI9ulVsQSd1S3ClLVG99fFo9fxNV8z9MCCsmrXxgrcCIhaN+3/eWv8OLLtNhepRfSVvrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPoVzkjs; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711335810; c=relaxed/simple;
+	bh=zAKhiSdcqivjXcEs7RdADkipim2MVBTbYablrmDKivA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=diHTCUg1OoRPgsDAS6tgtWlBgbVWfPrYPBXnyJ2fBi4Gk7EdbBN8xCtDFY414JVusGA9UGUGUMAbvkC9P/h1j4kcgg/hQgnlNxqw2dj+dG2L2FsSGFj7kAGuno47NJyHj1PdNLLpqjSFskKMMf/KVrbcuzhvXZ4zNii9mVLyalk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b02pmxDK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPoVzkjs"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42ee0c326e8so175701cf.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 23 Mar 2024 22:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711259829; x=1711864629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OXAIIcbgeJRRW587MHc7p7n/VVnxiytnklGzR/XF9Zg=;
-        b=XPoVzkjsqhiIXeTp86bFWQ16f0/SArp1Gfiz3hzU2b/WTuyDPk9eTu07nNs9qWSXGI
-         /9XRJ4FIBRpaTEsMWN/CCnZa4Xktf1xrkE15IAeYXjY1bvdaQ1Rrs06FEEyRl4zQq8xh
-         i6UjGQ+nm7gjIgWPeLiN7067Pwu39gzBCKrWT9ZeKsNc/6+i7vwNcoouX5FCD2rYUhh/
-         MVu1a4qQaOQOKHzHnoKxBIPpW7cs/QTzeGW0qXVGNj/nXjpeAf2H6onBtS+IFFo9XEbv
-         ivyWC8N260B7zFtSNcd+Lp3hHnWr1BH6nuTzUbJ9cSKruferSk1A7ojY03Ub45r+w/O1
-         98Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711259829; x=1711864629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OXAIIcbgeJRRW587MHc7p7n/VVnxiytnklGzR/XF9Zg=;
-        b=Ovq9GgTEVgMa1ZT5H3V1d76mEH3rqZGFdym83hyr7pDhQ5JZcUiKMYR6cPJHhC/CTY
-         S9YrzrzPMcUnMotwtqiwJiv8dwgpNzbTxZvlJOiVN2j6NFSl9gZVmVxkiH/rKtcuea+9
-         E7wl5My+NnDfYolkQE5rk4vWhqnXzPSb4wYWJptAEQlbYHJ8WhuBopbTGxe2nm+vYW+U
-         2vnNSiHaScUiV0vsBNtBu9M4k2nFBfIpD8CUnG7sQKM5YD4Eg6ZcnGBw+RmRmMFGIqov
-         0XbS4iDIQm+symeRifN5tDRvH3fFSfwJ0UPizZFaOWsFmxZe3q4AYljxLB+y80z+fcWO
-         BO3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhu3lLymQW87NTkIgzRo5CUd+4ZGSNLTTgGvyoif7o9+LgHbp6IaCZDfzBs6CM74gmIyjz0y4DSJlp5KzSpR8krEUlwuMGfcxAYmFXJgLDmg==
-X-Gm-Message-State: AOJu0Yxn33N7jJCotJekiQE4y6S/fPLXTKLS+7ZkQo0eaDNTrR6WPuN0
-	lx64A89CIF+kltOJzeD69rXlNzs14H+zGFeFAdokgV/pxJUFm+xfzChNlIc02Vv2rewqopLI3sL
-	ZDtFtx4HeYf0OAc2tB2MNWoaGDCuEcMq+pdcA
-X-Google-Smtp-Source: AGHT+IFcaFG52euAc0uSDI2LIkoC6Mhhjoa6yC0WqUakrZmwGJK1Xnzfk63eZIMRoOtjvDFWTW6ZpPCOQOPK15SweSI=
-X-Received: by 2002:a05:622a:102:b0:431:20e1:a28 with SMTP id
- u2-20020a05622a010200b0043120e10a28mr890714qtw.22.1711259828614; Sat, 23 Mar
- 2024 22:57:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b02pmxDK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF66C43390;
+	Mon, 25 Mar 2024 03:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711335809;
+	bh=zAKhiSdcqivjXcEs7RdADkipim2MVBTbYablrmDKivA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b02pmxDKbv7Jb0Zu5jo594WBbOYkDyxWAQMz1bFBHsPkXVKSsiXfRwNm0JbQ+eqz/
+	 gRixYl6VzkSOIXry4LdMTyTTIFMyatrSvlTAWA5EzUdEXhH5/NKbrH6oc7XRNGhoiS
+	 PuUI6b8up8MY2mlSTPBMe8FGcDu36h483wqB09J2mGgKMe+RgKrMeb79PVHGik4pZ6
+	 7H4Bazz4TQaUVraPQtwg18lWJSBwPJrH5ZO4Yk+jEqHZPNrsWVYIR4H8pUTbXg0lBR
+	 B4pBTAraUllkkVza7KLBLcShIlwbmgWIj0ZKKAL5mv2OpmpsXk6BJgIp62tMYHX00E
+	 I4erOuDSPnlWA==
+Date: Mon, 25 Mar 2024 12:03:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jonathan Haslam <jonathan.haslam@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
+ bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-Id: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+In-Reply-To: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240209031441.943012-1-weilin.wang@intel.com> <20240209031441.943012-16-weilin.wang@intel.com>
-In-Reply-To: <20240209031441.943012-16-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 23 Mar 2024 22:56:57 -0700
-Message-ID: <CAP-5=fXh=CF2e57P_yVJGGPxu7RbOYA5d=HBxU-7y-_kgSqX1w@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 15/15] perf stat: Add hardware-grouping cmd option
- to perf stat
-To: weilin.wang@intel.com
-Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
-	Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 8, 2024 at 7:14=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add a cmd option to allow user to choose this new metric grouping method.
->
-> $ perf stat -M TopdownL1 -a --hardware-grouping
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+On Thu, 21 Mar 2024 07:57:35 -0700
+Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> Active uprobes are stored in an RB tree and accesses to this tree are
+> dominated by read operations. Currently these accesses are serialized by
+> a spinlock but this leads to enormous contention when large numbers of
+> threads are executing active probes.
+> 
+> This patch converts the spinlock used to serialize access to the
+> uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> aligns naturally with the overwhelmingly read-only nature of the tree
+> usage here. Although the addition of reader-writer spinlocks are
+> discouraged [0], this fix is proposed as an interim solution while an
+> RCU based approach is implemented (that work is in a nascent form). This
+> fix also has the benefit of being trivial, self contained and therefore
+> simple to backport.
+> 
+> This change has been tested against production workloads that exhibit
+> significant contention on the spinlock and an almost order of magnitude
+> reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
 
-Thanks,
-Ian
+Looks good to me.
 
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+BTW, how did you measure the overhead? I think spinlock overhead
+will depend on how much lock contention happens.
+
+Thank you,
+
+> 
+> [0] https://docs.kernel.org/locking/spinlocks.html
+> 
+> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
 > ---
->  tools/perf/builtin-stat.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d08a40c4bae1..e30f7a856122 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1257,6 +1257,8 @@ static struct option stat_options[] =3D {
->                        "don't try to share events between metrics in a gr=
-oup"),
->         OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_thre=
-shold,
->                        "disable adding events for the metric threshold ca=
-lculation"),
-> +       OPT_BOOLEAN(0, "hardware-grouping", &stat_config.hardware_aware_g=
-rouping,
-> +                               "Use hardware aware metric grouping metho=
-d"),
->         OPT_BOOLEAN(0, "topdown", &topdown_run,
->                         "measure top-down statistics"),
->         OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
-> --
-> 2.42.0
->
+>  kernel/events/uprobes.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 929e98c62965..42bf9b6e8bc0 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+>   */
+>  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+>  
+> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+>  
+>  #define UPROBES_HASH_SZ	13
+>  /* serialize uprobe->pending_list */
+> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+>  {
+>  	struct uprobe *uprobe;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	uprobe = __find_uprobe(inode, offset);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return uprobe;
+>  }
+> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+>  {
+>  	struct uprobe *u;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	u = __insert_uprobe(uprobe);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  
+>  	return u;
+>  }
+> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+>  	if (WARN_ON(!uprobe_is_active(uprobe)))
+>  		return;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+>  	put_uprobe(uprobe);
+>  }
+> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+>  	if (n) {
+>  		for (t = n; t; t = rb_prev(t)) {
+> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+>  			get_uprobe(u);
+>  		}
+>  	}
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  }
+>  
+>  /* @vma contains reference counter, not the probed instruction. */
+> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return !!n;
+>  }
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
