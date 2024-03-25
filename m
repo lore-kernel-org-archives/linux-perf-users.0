@@ -1,94 +1,102 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA7D128398
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 16:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA1D76401;
+	Mon, 25 Mar 2024 17:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711383391; cv=none; b=Lm1lmyA0gHCtR6SaaT2uiRBbXghwYbSFaBLY3OAZxtm+dyS7fIP/a1IFkslOcCNgjJcC7oiq0kE46k3vdX368k4kSta8L4g1ofMdlL4MWWo6H46yEAvTOrOoVwBtn3JCjo6nK1gti2gfWSaUfp19lmBAUFTTZ2x2FZxWupIbSDw=
+	t=1711387477; cv=none; b=iWzf5IddlpESiOAXf0FbMw8OkEOzYW7LK1IneM/ypKvVhRaJ8Xng2JjJ9I5qJZPsELqVrCOA3I+ito7cmrqT113QlRELyO5UixVTOEKqfTOAAd8SX7LDAyKX7VeivD0bP58esKklNSGQtUK0mTAm2f61X4tCpgSaqPnUQ2zfppQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711383391; c=relaxed/simple;
-	bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BUr8wY1hccN1YutGR0eUJ8Xb/9fKmcLzgC6vEJztf9i9+TWkuG3VbrP2tRjhbSMpgL5CctmXcMvQuz+/1G4wT9OXp1/Twugz2phsW1gbFJs8dXRI1ScEHmFgpAR9ARJ3wflUH29WsTfysfh01aVo9bDqZbGXu0fJT1wXs3RyEfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=we89xq5e; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711387477; c=relaxed/simple;
+	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=oFPpFxy7eLSc3RBBNX9IekYhUYMiHcJ3e34U29IMcfy74qDB1bEs3RCpef4PO2hMqMrmSJBbuQQ6+Sk5yG5WTf+loiW+ZsWE4FIil+S3lUoKfMcIoMfOnCmkEIUpVjbmmQxiXIyU8rUQIG2uAAGDjDgVQUkGhhYaYlbcD7vgu8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bRWZkVTC; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="we89xq5e"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e058b9e479so250925ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 09:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711383384; x=1711988184; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
-        b=we89xq5ecztLSxHVx6TqX+Ik7StaB0sK7NID9ZZPca+ELv4T9mkbPrK3ONSbDzi+KM
-         0NIb+qVBDQiEltq4j0dbJsYrHDISIRYS+6Ajd9CzitHMOY3dSHapVJbSM6CdAozfjFzt
-         oFcSFSPaWb7qIckWHwx9vvpbJA22+RlgZCSVMDXpDEHUu4whLelp+1KxKWIiulJ1qrp8
-         Bhkp7cDqbtAZUVWm+fezuTyz9FVjt7DfWzeUOeRZAkY9+Y4uozJ84GoFh0Myd5m9GU7F
-         Sdlo1k8Pz6GqszAdZ+DzP2WFenL766XpRCAduDbmSKEPq/jrKaMt/XgnLzW8yDxezcRM
-         /B6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711383384; x=1711988184;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zOlIRNoya9Aq3GjWxh2mtlQ6p0hJb024NC/3zSO3wCQ=;
-        b=PIwgZfUrEyEbOXDcdWAMFWpX9Cj01g3J/0r2foMsb1gqWLL8RahAKti8zolpMu2XW8
-         vbkS0rtuUM5QL2aokHRZ482khQQ5o3ceSIw4hRYkUlwftlWBOHQ0MIamvLP6iTCpEPgq
-         KOOnuN7k4PN7PAJORySj4+5+Wtr/wZpnCF+wDiR/0LvW8KYltbW3DwyQW4OA2bp4Iu7t
-         T+bHJ3fy+WpeWwcmEI1In1ERLKOqAl9lSRyhIWx3a7a72bvuoY2rsLoe+uZmzpjOHv6t
-         QD2iYS7wYZFjWmikj4sBQxO0DfyMPhUnGkumj2Q1XrwwOEr1UgyOQqh9AqwglyS8sczM
-         1jTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUquRZM1bpXEgoQNMdh5SuWOTx8KTZY7MsIzkaCtGQBnz+AlyygR/zk9+FMc9KTm8ZCt2NrFQ4KqooQxqhBBgYl/FWzgfdQ8q4fVM25Yu8ozA==
-X-Gm-Message-State: AOJu0YwtrbddfO++VGN8zumyuQLQ1ZfaaGDwg+mdF6x6Bb1LCYqbKQoC
-	+h+5AwsJyZaJKb0z9RTPThmS0LW6PCIE9thPGQd5DwjDvJaPqK84W9jGXZsCj38a0jQYK77acpl
-	WH9j/sUX5sdUDRL846joZKCtouU5iFnMUDsIlQTYwf4ZnHQy4AK5w
-X-Google-Smtp-Source: AGHT+IEE80IN0sVZNeArGeomMw4UaISjfm+I0OBMZngIRqWMmK3knvlf5ImAi7Deh5srmwXQgVIpqgJFEWafSpW0Ndc=
-X-Received: by 2002:a17:903:2d2:b0:1e0:919d:b2ee with SMTP id
- s18-20020a17090302d200b001e0919db2eemr539808plk.2.1711383383441; Mon, 25 Mar
- 2024 09:16:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bRWZkVTC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1711387398; x=1711992198; i=markus.elfring@web.de;
+	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:Cc:From:
+	 In-Reply-To;
+	b=bRWZkVTCzppdEH7uqzBNqYMs/I+Wvd1v3zhBOlzHh3JvP7VRPM7M14eaJdHwffT+
+	 gAH4F3Ndy2JRndaz0L++yVp9mVuezqn8yAisWi+T/7ZgpRVDpmmgygh6AjolOIvit
+	 kNb2ajA0LVr2iMG7p2dRzNlzS7KKaTG/7k/H9gJhARf9pzh47AGEYI19RP0OsWRVN
+	 7MZx3FHo/G8doNCDXvdMO3q2X4WytGjKYFc6BVjpNz2G8suO1gq1/n0fe5ADPBlll
+	 uqD3ntomL9G/wqtWWVR8a0kcq7740Q1sbGpaIZHGqyIe+Zw4JfmDK3UzuDFfaDaUk
+	 57ZRDApFvkWovxo26Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MUl9B-1sExm83qRV-00QmJk; Mon, 25
+ Mar 2024 18:23:18 +0100
+Message-ID: <8bb50ff8-ff26-45a2-a35b-956c81eb7e80@web.de>
+Date: Mon, 25 Mar 2024 18:22:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202022223.GA903@debian-dev>
-In-Reply-To: <20240202022223.GA903@debian-dev>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 25 Mar 2024 09:16:08 -0700
-Message-ID: <CAP-5=fUtB4sk2f9oUU1+mFdxyKGC5_5+RAB8ov0h7a=BvMHKYQ@mail.gmail.com>
-Subject: Re: Document: How to Use Perf to Debug Perf
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	linux-perf-users@vger.kernel.org, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <James.Clark@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/13] perf dso: Reference counting related fixes
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Colin Ian King <colin.i.king@gmail.com>,
+ =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+ Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+ Ben Gainey <ben.gainey@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Yanteng Si <siyanteng@loongson.cn>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Sun Haiyong <sunhaiyong@loongson.cn>,
+ Changbin Du <changbin.du@huawei.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+ Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
+ Andi Kleen <ak@linux.intel.com>, Chengen Du <chengen.du@canonical.com>,
+ linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240321160300.1635121-1-irogers@google.com>
+ <20240321160300.1635121-13-irogers@google.com>
+Content-Language: en-GB
+Cc: linux-kernel@vger.kernel.org
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240321160300.1635121-13-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:pskIHGf+C3w8pWYXN3g6cdHPcoa+SpW+UpkcrSPDmFidRUj6+xn
+ 88ySkN74QP0NtfTP2Lmo2qRkZZ3BIeQXWNFyJxVA8ZeybIhJNLIdyR2Sahum1O43vMwyRuw
+ OOV0NDeDZFiJWzgDjCoOtKCVV901Od+NWE8VGMLlycV6fJOfYdsBeBGYjgWmaqRr/bj0TAS
+ 6rlKrKSuiM/YlNuiwzFlg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:v95kMyinJlk=;E5e5fyRIagm+9ibeKx83xJAyNZz
+ MG0zuOKI+XCLrx6OgP0qgokntj0JnQvTBvQMTa28oqFle6B2qKuHjYsmjjHJXabJaj3sc9vyl
+ KUMIK4mTV6o8l19R43uwNK5OVqgZWnfPTCJ2OheBT7420/Rl2RxCFWs4DThYp9PvswCsD4Dqv
+ xRujJQTCA6/0kj6hMF18p/71h3RtcIj26TquPK9RoZ1lv2n0lYS+/UON+7JmV+k2dDUUlx1pa
+ qFftIZa+lXY2qx0aKqrWSBD72WMwtM4k/C1OEfWjhNkwFwGppH27Yxd1Spq7/A1GBKXl4CYFC
+ l8RnDUTn9vb04F7DiJkxD+elzKO3u0fHvMyLsG/NxRINlHa52v+PWa6RKncIiPSUwudlJj3Fz
+ vhz2Eyzr8ERTSI7brjkeJiIDMnw/XySuFb/0sGgy7VLOFGZ2m7U9cmHuVj2GpaEhrasRNkuDM
+ KVSzDv4PvTqmWOgfNF3BKsR77kJgkHsYKQ1PN9aPDL3vxThLNvuCCVn8Swc45NHTn1bxx5e6Q
+ byy17MQnYuxpepr3KpGJg3y8n/4WFVzJgeh/yBZ1Ivb0L0cac+DU596y7PoCfAT2kK31Yh9SA
+ NMpv8qZBaQLFKB9JPbQMbMGJDRG88rF4YvS/Rj7o3ke7RFiqp5CiP17gDFupq3TQe76Bu2Ena
+ 4z8FnxaUz5WpJnZYrTu1rCdKApYJJtIDUFRhjwBxdI3KTKLKtKLcyCRFkaEP+Grfu1l23C8RC
+ /waejXJa3cUUWHC5CQsf9NbKpWlVuR2Otbnve4TYOMgbDH/nF9HDqLLr2CclBx4v8R5AM6TcX
+ It4mU2lidzptegDjpdnhsHBkJivLO5bFhDrJKRH5J5Y4I=
 
-On Thu, Feb 1, 2024 at 6:22=E2=80=AFPM Leo Yan <leo.yan@linux.dev> wrote:
->
-> Hi all,
->
-> I have written an article on "How to Use Perf to Debug Perf" [1] and
-> would like to share it here.
->
-> I call it as a self-contained topic, as the subject and the object are
-> the same in the same sentence. This highlights that perf is powerful
-> that it can debug itself ;)
->
-> Hope the doc is helpful.
->
-> Thanks,
-> Leo
+> Ensure gets and puts are better aligned fixing reference couting
 
-Thanks for sharing! I've added this to the wiki's useful links page.
+How do you think about to avoid a typo in the last word of this text line
+for the final commit?
 
-Ian
 
-> [1] https://github.com/Leo-Yan/write_plan/blob/master/how_to_use_perf_to_=
-debug_perf/how_to_use_perf_to_debug_perf.pdf
+> checking problems.
+
+
+Regards,
+Markus
