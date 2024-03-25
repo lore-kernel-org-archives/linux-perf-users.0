@@ -1,102 +1,198 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA1D76401;
-	Mon, 25 Mar 2024 17:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4560101D5;
+	Mon, 25 Mar 2024 19:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387477; cv=none; b=iWzf5IddlpESiOAXf0FbMw8OkEOzYW7LK1IneM/ypKvVhRaJ8Xng2JjJ9I5qJZPsELqVrCOA3I+ito7cmrqT113QlRELyO5UixVTOEKqfTOAAd8SX7LDAyKX7VeivD0bP58esKklNSGQtUK0mTAm2f61X4tCpgSaqPnUQ2zfppQ=
+	t=1711393506; cv=none; b=Lmdm3WaFYT3eC7A4YQJJ3qLBF0QjPx61V6UCXx7CsDmm8iwjLnG2AUptO2pK9hRSxO9UBb7FpoOzVhYF2/NU+Wnp55GMhXlT6i4aZWR9vWnqk5IpUKPp0JxmaNw0mf1y1VCkAkfPw7BZJYrZDFxEx8czbVENsW44kjzfhNn2rz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387477; c=relaxed/simple;
-	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=oFPpFxy7eLSc3RBBNX9IekYhUYMiHcJ3e34U29IMcfy74qDB1bEs3RCpef4PO2hMqMrmSJBbuQQ6+Sk5yG5WTf+loiW+ZsWE4FIil+S3lUoKfMcIoMfOnCmkEIUpVjbmmQxiXIyU8rUQIG2uAAGDjDgVQUkGhhYaYlbcD7vgu8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bRWZkVTC; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1711393506; c=relaxed/simple;
+	bh=0M6UER/Be3AgeHG2qaIeMusA4U0meGPDWlvX5Xh2Rsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9rpygZbg0+kCV9vrcbNIFgdG69Y4gjNzmBtMwetXzIz10S6WSGMlHdF+q4Ohoa6YgNoG68vAbXurCWaKq9zYvCDg5u5WjhIuMhA0r10smC9lhjYH10Y41LZdhe1b126PuSEIGg6uex+D6OHIE5shkq4nv+CMU7/nA1Y6CfdCzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyIa5T5B; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bRWZkVTC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1711387398; x=1711992198; i=markus.elfring@web.de;
-	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:Cc:From:
-	 In-Reply-To;
-	b=bRWZkVTCzppdEH7uqzBNqYMs/I+Wvd1v3zhBOlzHh3JvP7VRPM7M14eaJdHwffT+
-	 gAH4F3Ndy2JRndaz0L++yVp9mVuezqn8yAisWi+T/7ZgpRVDpmmgygh6AjolOIvit
-	 kNb2ajA0LVr2iMG7p2dRzNlzS7KKaTG/7k/H9gJhARf9pzh47AGEYI19RP0OsWRVN
-	 7MZx3FHo/G8doNCDXvdMO3q2X4WytGjKYFc6BVjpNz2G8suO1gq1/n0fe5ADPBlll
-	 uqD3ntomL9G/wqtWWVR8a0kcq7740Q1sbGpaIZHGqyIe+Zw4JfmDK3UzuDFfaDaUk
-	 57ZRDApFvkWovxo26Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MUl9B-1sExm83qRV-00QmJk; Mon, 25
- Mar 2024 18:23:18 +0100
-Message-ID: <8bb50ff8-ff26-45a2-a35b-956c81eb7e80@web.de>
-Date: Mon, 25 Mar 2024 18:22:59 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyIa5T5B"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4734ae95b3so423666066b.0;
+        Mon, 25 Mar 2024 12:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711393503; x=1711998303; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6irC93lHsifgJBZFI2gmlUjMj2fb3xGPj1DjSZMPSd8=;
+        b=YyIa5T5B3ag5Sz/qT4IwsgFsesD7Sg3EX5sm3tyd3wUb+8nO/1sS1kNjUe7neYd0Uq
+         hUTE/MQyEM+DR9SHURJ4cjUmwA9ohAsKrO+KXYf7XZA/xW80FBtIbKAXWUxWxz6hmMKJ
+         xsT8AGQINeGJJbn1b1IF/BEw8neqIJckBaCpBhIYe9nuvLM6t0ZDS/JXeIibt9leGLiL
+         IPSZMfDSYbKgNgh6ZGvqzYU0zz19oOBuY3bztCmZPdUj1O2k8NfNb+ZxVB3Suy3Tc1fW
+         R2aTgn6KgGMgH2ejsJI7IhMglYpq4C0Qc4Af/bv3mlibzxZZS+m51Hkc199Z4xihxWoe
+         x2bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711393503; x=1711998303;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6irC93lHsifgJBZFI2gmlUjMj2fb3xGPj1DjSZMPSd8=;
+        b=Lq6PzOA4i54QOBnA+QIxHLYmN68Ij6L7HV0slL6yNS/6m35jXFEEZVhy54JMtlUzS1
+         HNmf2U9vS/y2bkQQlzJjQ4Ei1cUzz2WIqB1jwZtsXYZGmZ86pTEgrc1JT593E6fRD7Ca
+         aDLtc84QlAIPtnVZri/XCrJ1URkWUTUXSespk8cIiwdiISmyIdn0dfvH1aTiIY8mVBiI
+         Hegd3KuxzABlBSEpooOfzXYGxAR4cY104zltjEu3XkJDAOUdWOIL5gzmBB4hgJsjFu0m
+         /lJ+vok0D8HonIobIgIl0tT64k0wgsoSUV0DKP6GAc/jqktVP8aMY/2Bp7fx+OFY5gWR
+         j7gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIeAfiTR3/3r5zzXi8OOQfTIfWUa7eh+ULP3C3Psc0V/VjX91zKhc7px/2OV0A8xU2uCRAzc2HOLF/ikyMI1U/NREsxNUBlsHu/4qPYTv5FzGXwnzgEnvJ9saAhAmEXpS1Fko2PMRbnAmjiyCUVoG9wWYLIRMEakJsoJF3KBgcsqneGw==
+X-Gm-Message-State: AOJu0YxOKhA0DT+0vawDElz8kz8CvD7ee89v1AhtRBVgOVX+5oXY2Hon
+	frIs3vPefgpAVJjdyFtoQvrLZSIztRhbUQokV/rWdXWmxw8ukeZKO5GzQwrSZ/Y=
+X-Google-Smtp-Source: AGHT+IH3m3cl0SVzbic6j51HofxH6Xl4GYsjrllILu98d7DU4nTVUt9gWXH0UFVwSZJsVyxL4KuJzw==
+X-Received: by 2002:a17:907:6d04:b0:a47:4ae0:3bb9 with SMTP id sa4-20020a1709076d0400b00a474ae03bb9mr4650520ejc.23.1711393502898;
+        Mon, 25 Mar 2024 12:05:02 -0700 (PDT)
+Received: from jonhaslam-mbp ([2620:10d:c092:500::7:3fad])
+        by smtp.gmail.com with ESMTPSA id um8-20020a170906cf8800b00a4dac3d3a05sm416082ejb.111.2024.03.25.12.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 12:05:02 -0700 (PDT)
+Date: Mon, 25 Mar 2024 19:04:59 +0000
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org, 
+	bpf@vger.kernel.org, rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <dk3obkyavqgzr2xbpykbz3knwgyxl73acuunocoygbhtz5imhm@mdqdefp6kz3t>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/13] perf dso: Reference counting related fixes
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@arm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Colin Ian King <colin.i.king@gmail.com>,
- =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
- Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Liam Howlett <liam.howlett@oracle.com>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Ben Gainey <ben.gainey@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Kan Liang <kan.liang@linux.intel.com>, Yanteng Si <siyanteng@loongson.cn>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Sun Haiyong <sunhaiyong@loongson.cn>,
- Changbin Du <changbin.du@huawei.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
- Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
- Andi Kleen <ak@linux.intel.com>, Chengen Du <chengen.du@canonical.com>,
- linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20240321160300.1635121-1-irogers@google.com>
- <20240321160300.1635121-13-irogers@google.com>
-Content-Language: en-GB
-Cc: linux-kernel@vger.kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240321160300.1635121-13-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pskIHGf+C3w8pWYXN3g6cdHPcoa+SpW+UpkcrSPDmFidRUj6+xn
- 88ySkN74QP0NtfTP2Lmo2qRkZZ3BIeQXWNFyJxVA8ZeybIhJNLIdyR2Sahum1O43vMwyRuw
- OOV0NDeDZFiJWzgDjCoOtKCVV901Od+NWE8VGMLlycV6fJOfYdsBeBGYjgWmaqRr/bj0TAS
- 6rlKrKSuiM/YlNuiwzFlg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:v95kMyinJlk=;E5e5fyRIagm+9ibeKx83xJAyNZz
- MG0zuOKI+XCLrx6OgP0qgokntj0JnQvTBvQMTa28oqFle6B2qKuHjYsmjjHJXabJaj3sc9vyl
- KUMIK4mTV6o8l19R43uwNK5OVqgZWnfPTCJ2OheBT7420/Rl2RxCFWs4DThYp9PvswCsD4Dqv
- xRujJQTCA6/0kj6hMF18p/71h3RtcIj26TquPK9RoZ1lv2n0lYS+/UON+7JmV+k2dDUUlx1pa
- qFftIZa+lXY2qx0aKqrWSBD72WMwtM4k/C1OEfWjhNkwFwGppH27Yxd1Spq7/A1GBKXl4CYFC
- l8RnDUTn9vb04F7DiJkxD+elzKO3u0fHvMyLsG/NxRINlHa52v+PWa6RKncIiPSUwudlJj3Fz
- vhz2Eyzr8ERTSI7brjkeJiIDMnw/XySuFb/0sGgy7VLOFGZ2m7U9cmHuVj2GpaEhrasRNkuDM
- KVSzDv4PvTqmWOgfNF3BKsR77kJgkHsYKQ1PN9aPDL3vxThLNvuCCVn8Swc45NHTn1bxx5e6Q
- byy17MQnYuxpepr3KpGJg3y8n/4WFVzJgeh/yBZ1Ivb0L0cac+DU596y7PoCfAT2kK31Yh9SA
- NMpv8qZBaQLFKB9JPbQMbMGJDRG88rF4YvS/Rj7o3ke7RFiqp5CiP17gDFupq3TQe76Bu2Ena
- 4z8FnxaUz5WpJnZYrTu1rCdKApYJJtIDUFRhjwBxdI3KTKLKtKLcyCRFkaEP+Grfu1l23C8RC
- /waejXJa3cUUWHC5CQsf9NbKpWlVuR2Otbnve4TYOMgbDH/nF9HDqLLr2CclBx4v8R5AM6TcX
- It4mU2lidzptegDjpdnhsHBkJivLO5bFhDrJKRH5J5Y4I=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
 
-> Ensure gets and puts are better aligned fixing reference couting
+Hi Masami,
 
-How do you think about to avoid a typo in the last word of this text line
-for the final commit?
+> > This change has been tested against production workloads that exhibit
+> > significant contention on the spinlock and an almost order of magnitude
+> > reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+> 
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> BTW, how did you measure the overhead? I think spinlock overhead
+> will depend on how much lock contention happens.
 
+Absolutely. I have the original production workload to test this with and
+a derived one that mimics this test case. The production case has ~24
+threads running on a 192 core system which access 14 USDTs around 1.5
+million times per second in total (across all USDTs). My test case is
+similar but can drive a higher rate of USDT access across more threads and
+therefore generate higher contention.
 
-> checking problems.
+All measurements are done using bpftrace scripts around relevant parts of
+code in uprobes.c and application code.
 
+Jon.
 
-Regards,
-Markus
+> 
+> Thank you,
+> 
+> > 
+> > [0] https://docs.kernel.org/locking/spinlocks.html
+> > 
+> > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > ---
+> >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 929e98c62965..42bf9b6e8bc0 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> >   */
+> >  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+> >  
+> > -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+> > +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+> >  
+> >  #define UPROBES_HASH_SZ	13
+> >  /* serialize uprobe->pending_list */
+> > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> >  {
+> >  	struct uprobe *uprobe;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	uprobe = __find_uprobe(inode, offset);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  
+> >  	return uprobe;
+> >  }
+> > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> >  {
+> >  	struct uprobe *u;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	write_lock(&uprobes_treelock);
+> >  	u = __insert_uprobe(uprobe);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	write_unlock(&uprobes_treelock);
+> >  
+> >  	return u;
+> >  }
+> > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> >  	if (WARN_ON(!uprobe_is_active(uprobe)))
+> >  		return;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	write_lock(&uprobes_treelock);
+> >  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	write_unlock(&uprobes_treelock);
+> >  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> >  	put_uprobe(uprobe);
+> >  }
+> > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> >  	min = vaddr_to_offset(vma, start);
+> >  	max = min + (end - start) - 1;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	n = find_node_in_range(inode, min, max);
+> >  	if (n) {
+> >  		for (t = n; t; t = rb_prev(t)) {
+> > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> >  			get_uprobe(u);
+> >  		}
+> >  	}
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  }
+> >  
+> >  /* @vma contains reference counter, not the probed instruction. */
+> > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> >  	min = vaddr_to_offset(vma, start);
+> >  	max = min + (end - start) - 1;
+> >  
+> > -	spin_lock(&uprobes_treelock);
+> > +	read_lock(&uprobes_treelock);
+> >  	n = find_node_in_range(inode, min, max);
+> > -	spin_unlock(&uprobes_treelock);
+> > +	read_unlock(&uprobes_treelock);
+> >  
+> >  	return !!n;
+> >  }
+> > -- 
+> > 2.43.0
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
