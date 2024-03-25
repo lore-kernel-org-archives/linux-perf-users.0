@@ -1,105 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4337213BC11;
-	Mon, 25 Mar 2024 13:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711375016; cv=none; b=ReyJ53g0AG8I+EbUXJjNFFj2vlcWhauSe5qHK2Oi1ynOnkWdQmFcjL/PmWzPVO7yPOE3Q3jxtDxIFgcc+HsvjAFTZSc5ELeYh2H01jYTGKh4457ZpN54SwL9qzHCJdq387EZO0l4AeZLV5g3bV7XdScTs1ohXfWkJATLpy9PRjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711375016; c=relaxed/simple;
-	bh=CIjWgNa5/RqrWiWqTtP7C1MxhXcQymqkfeDs57zZTs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQdXg9HIvaFjWz1/adVb3D9ky4r5Tf0im4pGpe454sx+Adx/tTkFXLvRqHKnCVOs3Gzgp4ZMZzXXR9AGEHkvj10ltr9VkQnK7dRPRTSqhscs7q9l6kYMK+0vHNb9+brOGqVDH6ldjk41eFjxNQ0XIqefEu4YIS1B+/Cvp9pRRcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8waIhvF; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8waIhvF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711375014; x=1742911014;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CIjWgNa5/RqrWiWqTtP7C1MxhXcQymqkfeDs57zZTs0=;
-  b=X8waIhvFYoBoJobj1sB1xsbn1UAW1Vp8mJNql/JEo84j1MuWGGPnHBsN
-   6L2ansyTJsXUi4V+OwzI8Z8+umOkcoom9IbJbTW4yGX6t0xjoiuK5/HOP
-   GzwkC6gpDxPt56hVEc/L2aiS2g94ZXiDPHk/D5wwSo25aOXaBRtKq9+2n
-   xoy63Yb0Dcs4MHYtK2YB8yipEc6MxR1cBXaj2POwDWv4mfVQ8TAejbwki
-   oCD5f5oHhnIwo0G7T7VwMA3dvoMVARzI0rySaPr5fDYfWC4L6MkRBc4gS
-   aqQzSeqE1ry931Pj8u3cW/NFi51pJngWOyR1D/j6cA41GlJiGiHlhImGl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="23862500"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="23862500"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:56:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="46765985"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:56:53 -0700
-Received: from [10.212.65.128] (kliang2-mobl1.ccr.corp.intel.com [10.212.65.128])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id A933B580DE9;
-	Mon, 25 Mar 2024 06:56:51 -0700 (PDT)
-Message-ID: <9cfa43c3-3698-455c-8a2f-85c30470733c@linux.intel.com>
-Date: Mon, 25 Mar 2024 09:56:50 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADDD1474C1
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 14:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711377279; cv=none; b=KsLbSkgin6cm6EpfSQL0k0jesnKISeXJkUVdgft2ereAJ5mJIifaQ30ks0+j/BSHfU0yemejFqJ+u32+WsnTExOWe0qBjPHWNfWaOs44Qo9+GroXBzlxRE6KQCUXUQ/VWqWslfwUhDLwtIxeV+gh8giM00/ElDn5Xbz9rXOuNVY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711377279; c=relaxed/simple;
+	bh=FSU8nxuLRZyEBR/sJUxs+lckFjB8qs8rRlLhFigJQpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FjOBG0TGZ9Nr1mOhjsLEq4SOt7nOxUzUlw2jv2e2gshFNnfDU6LTybw5MJNO1dL6f7GYDHJxtHInCGz4WCI6bA6QNlmDixBPZmiVDk5fFpCx4/VbFLOKaBED667UY+AB/OpRlUV9Zm7wouPABO6JkQRHyoPBybeHXvrT1BSHYeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gQ4C3N0h; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gQ4C3N0h"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dee917abd5so241935ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 07:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711377277; x=1711982077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+8YEj37U1dlb1vZbCBV1T/aHB6t0dDPgqa1lum+Wmfs=;
+        b=gQ4C3N0hzzoyTpZ6jmCL2FRwBVDyi/d2ksDO88M1MMOvjLg5L9mVLhnHlrZBwVRAUR
+         Nxe6m7a8l59KFny6qqqfwTY0hSLD7f2SeY0nvzVl5vTfeltrgroW0KtqI2jDmkBhQwef
+         XMij6colOFOzjScm3aeZORc/LdYnRXTirULC8DO7K5hMnxhvU/kZVENgtv9XMZ9dBuKU
+         ibwPEKghuLALJTr9/bJL+i1nW92LQS/STp4P3v8EmPgiSfE7TMXMs1ziEtHHuB16Yp4g
+         YkwRzoXYtA00VhhOlhA/UHQZzynqVln/3XY4wlfetBb/yjk5I9FumZ5TDTUfzs4tsKck
+         3HIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711377277; x=1711982077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+8YEj37U1dlb1vZbCBV1T/aHB6t0dDPgqa1lum+Wmfs=;
+        b=NK1UyA11fV5ns4cxNJOOKbzFvLdPEF4aGXWpYlWNMXvVjw06c945kH8Cigb+bHTrO0
+         72fNfehvO3QQvdcNR9uXnwaVi6zD/N4sdkZ7rJMV87Gic1AqsnlR0sy/6rvRy3eisYbq
+         QrRhturmdOb9K7bRrxWV/nj2EIJ8RRCgfhWN/d2PuDGdXUYjMTYAmWCjJipYjuqAWoAm
+         CIg8V0x6r0DlpXvFuL0eVvQ39wEWhzMHPc043b7cC9RCMPw2vMX0MxCZf9LaypN8yBlt
+         DoJIZS00NHDFe/Q8yNbZC1zYHT4RVciXNSfu9nKqM/Cfu3vPJQox8IVxVX85Km253dKy
+         6x3Q==
+X-Gm-Message-State: AOJu0Ywy5m8jcX8NznIaQ+XcqkQlfOG49TmMKpi/tAUU8DgnhLzIl1oj
+	XUqoRIV5XaugA7AeRPEi+g2UMgW5xEfw95pV1/tdTYlyC+1htn6yMJd2DJ795mOrVRCho+7SOno
+	8PyI2L2rkWxuTYUFNt0OWc30xVonfqw54V3q8
+X-Google-Smtp-Source: AGHT+IHfIEpWY+UKyTJL5tlGScYFz/Ub+0+iS/aQY1imXrFMJtf8Ch/4u/JV4rS68dYWgcSOP1FOln6Z+3nL9aj/iBQ=
+X-Received: by 2002:a17:903:2284:b0:1e0:bc64:a37e with SMTP id
+ b4-20020a170903228400b001e0bc64a37emr162922plh.21.1711377276556; Mon, 25 Mar
+ 2024 07:34:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf annotate: Get rid of duplicate --group option
- item
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-References: <20240322224313.423181-1-namhyung@kernel.org>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240322224313.423181-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1711352180.git.sandipan.das@amd.com> <03d7fc8fa2a28f9be732116009025bdec1b3ec97.1711352180.git.sandipan.das@amd.com>
+In-Reply-To: <03d7fc8fa2a28f9be732116009025bdec1b3ec97.1711352180.git.sandipan.das@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 25 Mar 2024 07:34:23 -0700
+Message-ID: <CAP-5=fVLWMnT4TV2nvbOUTTkWHYowbEOFDYqAvf1hkUEDpkKfw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf/x86/amd/core: Update stalled-cycles-* events for
+ Zen 2 and later
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, peterz@infradead.org, mingo@kernel.org, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de, 
+	eranian@google.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 25, 2024 at 12:48=E2=80=AFAM Sandipan Das <sandipan.das@amd.com=
+> wrote:
+>
+> AMD processors based on Zen 2 and later microarchitectures do not
+> support PMCx087 (instruction pipe stalls) which is used as the backing
+> event for "stalled-cycles-frontend" and "stalled-cycles-backend". Use
+> PMCx0A9 (cycles where micro-op queue is empty) instead to count frontend
+> stalls and remove the entry for backend stalls since there is no direct
+> replacement.
+>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 
+This looks good to me. Should there be a Fixes tag for the sake of backport=
+s?
 
-On 2024-03-22 6:43 p.m., Namhyung Kim wrote:
-> The options array in cmd_annotate() has duplicate --group options.  It
-> only needs one and let's get rid of the other.
-> 
->   $ perf annotate -h 2>&1 | grep group
->         --group           Show event group information together
->         --group           Show event group information together
-> 
-> Fixes: 7ebaf4890f63 ("perf annotate: Support '--group' option")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-For the series,
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Kan
+Ian
+
 > ---
->  tools/perf/builtin-annotate.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index f677671409b1..3e9f7e0596e8 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -810,8 +810,6 @@ int cmd_annotate(int argc, const char **argv)
->  		    "Enable symbol demangling"),
->  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
->  		    "Enable kernel symbol demangling"),
-> -	OPT_BOOLEAN(0, "group", &symbol_conf.event_group,
-> -		    "Show event group information together"),
->  	OPT_BOOLEAN(0, "show-total-period", &symbol_conf.show_total_period,
->  		    "Show a column with the sum of periods"),
->  	OPT_BOOLEAN('n', "show-nr-samples", &symbol_conf.show_nr_samples,
+>  arch/x86/events/amd/core.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index aec16e581f5b..afe4a809f2ed 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -250,7 +250,7 @@ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_=
+MAX] =3D
+>  /*
+>   * AMD Performance Monitor Family 17h and later:
+>   */
+> -static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =3D
+> +static const u64 amd_zen1_perfmon_event_map[PERF_COUNT_HW_MAX] =3D
+>  {
+>         [PERF_COUNT_HW_CPU_CYCLES]              =3D 0x0076,
+>         [PERF_COUNT_HW_INSTRUCTIONS]            =3D 0x00c0,
+> @@ -262,10 +262,24 @@ static const u64 amd_f17h_perfmon_event_map[PERF_CO=
+UNT_HW_MAX] =3D
+>         [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]  =3D 0x0187,
+>  };
+>
+> +static const u64 amd_zen2_perfmon_event_map[PERF_COUNT_HW_MAX] =3D
+> +{
+> +       [PERF_COUNT_HW_CPU_CYCLES]              =3D 0x0076,
+> +       [PERF_COUNT_HW_INSTRUCTIONS]            =3D 0x00c0,
+> +       [PERF_COUNT_HW_CACHE_REFERENCES]        =3D 0xff60,
+> +       [PERF_COUNT_HW_CACHE_MISSES]            =3D 0x0964,
+> +       [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]     =3D 0x00c2,
+> +       [PERF_COUNT_HW_BRANCH_MISSES]           =3D 0x00c3,
+> +       [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =3D 0x00a9,
+> +};
+> +
+>  static u64 amd_pmu_event_map(int hw_event)
+>  {
+> -       if (boot_cpu_data.x86 >=3D 0x17)
+> -               return amd_f17h_perfmon_event_map[hw_event];
+> +       if (cpu_feature_enabled(X86_FEATURE_ZEN2) || boot_cpu_data.x86 >=
+=3D 0x19)
+> +               return amd_zen2_perfmon_event_map[hw_event];
+> +
+> +       if (cpu_feature_enabled(X86_FEATURE_ZEN1))
+> +               return amd_zen1_perfmon_event_map[hw_event];
+>
+>         return amd_perfmon_event_map[hw_event];
+>  }
+> --
+> 2.34.1
+>
