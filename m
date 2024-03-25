@@ -1,25 +1,51 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6315612DD8F
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Mar 2024 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4337213BC11;
+	Mon, 25 Mar 2024 13:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362098; cv=none; b=i/Bf/k1bXnOn5+0octi+FjJq4TphoUNsFIkALnrnKbQ9lA6pXOE+zfhE4M4uxTKNR1v9UG4L+MotACTO/Wmrmqek0cgcXFU7MR3/tiOo9Z96Kz29eywSuq96v1LX9m/f+AviJnIySNmob+GoS3rN7vFoydgZbFtMeNc9A9EXFFg=
+	t=1711375016; cv=none; b=ReyJ53g0AG8I+EbUXJjNFFj2vlcWhauSe5qHK2Oi1ynOnkWdQmFcjL/PmWzPVO7yPOE3Q3jxtDxIFgcc+HsvjAFTZSc5ELeYh2H01jYTGKh4457ZpN54SwL9qzHCJdq387EZO0l4AeZLV5g3bV7XdScTs1ohXfWkJATLpy9PRjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362098; c=relaxed/simple;
-	bh=S3dIH7EyPOGlJC/clWwgFyaH/ZgpQtWz+dEBaVM2JQs=;
+	s=arc-20240116; t=1711375016; c=relaxed/simple;
+	bh=CIjWgNa5/RqrWiWqTtP7C1MxhXcQymqkfeDs57zZTs0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DEJN/iT4rntq4f/NaprJGaVK14LTDDZATEEj5IPBhuHwm0mJUTAHIn7V3lY1SyFQDCBM6jBgYXGrstdPQZF7EIW4mnPDNKsSyDDgsDNu7mq5t+WPSehxvDFJNxPrdVbA6EV2dsMgt/sPDzYIzT+8Lt2Cg9PqBiDEOIiIcAyAutQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 601B81FB;
-	Mon, 25 Mar 2024 03:22:09 -0700 (PDT)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA8753F7C5;
-	Mon, 25 Mar 2024 03:21:34 -0700 (PDT)
-Message-ID: <6fc0c346-530f-476f-af2e-4f9d06828b64@arm.com>
-Date: Mon, 25 Mar 2024 10:21:33 +0000
+	 In-Reply-To:Content-Type; b=GQdXg9HIvaFjWz1/adVb3D9ky4r5Tf0im4pGpe454sx+Adx/tTkFXLvRqHKnCVOs3Gzgp4ZMZzXXR9AGEHkvj10ltr9VkQnK7dRPRTSqhscs7q9l6kYMK+0vHNb9+brOGqVDH6ldjk41eFjxNQ0XIqefEu4YIS1B+/Cvp9pRRcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8waIhvF; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8waIhvF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711375014; x=1742911014;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CIjWgNa5/RqrWiWqTtP7C1MxhXcQymqkfeDs57zZTs0=;
+  b=X8waIhvFYoBoJobj1sB1xsbn1UAW1Vp8mJNql/JEo84j1MuWGGPnHBsN
+   6L2ansyTJsXUi4V+OwzI8Z8+umOkcoom9IbJbTW4yGX6t0xjoiuK5/HOP
+   GzwkC6gpDxPt56hVEc/L2aiS2g94ZXiDPHk/D5wwSo25aOXaBRtKq9+2n
+   xoy63Yb0Dcs4MHYtK2YB8yipEc6MxR1cBXaj2POwDWv4mfVQ8TAejbwki
+   oCD5f5oHhnIwo0G7T7VwMA3dvoMVARzI0rySaPr5fDYfWC4L6MkRBc4gS
+   aqQzSeqE1ry931Pj8u3cW/NFi51pJngWOyR1D/j6cA41GlJiGiHlhImGl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="23862500"
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="23862500"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:56:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
+   d="scan'208";a="46765985"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:56:53 -0700
+Received: from [10.212.65.128] (kliang2-mobl1.ccr.corp.intel.com [10.212.65.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id A933B580DE9;
+	Mon, 25 Mar 2024 06:56:51 -0700 (PDT)
+Message-ID: <9cfa43c3-3698-455c-8a2f-85c30470733c@linux.intel.com>
+Date: Mon, 25 Mar 2024 09:56:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,150 +53,53 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf tools: Only treat files as map files when they
- have the extension .map
-To: Ian Rogers <irogers@google.com>,
- Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
-Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
- Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20240220042957.2022391-1-ChaitanyaS.Prakash@arm.com>
- <20240220042957.2022391-3-ChaitanyaS.Prakash@arm.com>
- <CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf annotate: Get rid of duplicate --group option
+ item
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240322224313.423181-1-namhyung@kernel.org>
 Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240322224313.423181-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 20/02/2024 14:40, Ian Rogers wrote:
-> On Mon, Feb 19, 2024 at 8:30 PM Chaitanya S Prakash
-> <ChaitanyaS.Prakash@arm.com> wrote:
->>
->> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
->>
->> Perf currently treats any file beginning with "/tmp/perf-" as a map
->> file, even when map files always have the extension ".map". This causes
->> the test "perf probe of function from different CU" to fail because it
->> generates a binary with a filename in that format. When the test passes
->> it as an argument to be opened as an elf file, it's parsed as a map file
->> and results in garbage symbol names. Fix this by only considering files
->> ending in ".map" as map files.
->>
->> The above failure is masked if Perf is built with dwarf support. But
->> with NO_DWARF=1, try_to_find_probe_trace_events() is skipped over in
->> convert_to_probe_trace_events() falling into
->> find_probe_trace_events_from_map() which results in the bad map file
->> parse data being consumed and the inability to create the probe event.
->>
->> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
->> ---
->>  tools/perf/builtin-script.c | 15 +--------------
->>  tools/perf/util/string.c    | 18 ++++++++++++++++++
->>  tools/perf/util/string2.h   |  1 +
->>  tools/perf/util/symbol.c    |  5 ++++-
->>  4 files changed, 24 insertions(+), 15 deletions(-)
->>
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index b1f57401ff23..c1c38a3df37a 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -48,6 +48,7 @@
->>  #include <errno.h>
->>  #include <inttypes.h>
->>  #include <signal.h>
->> +#include <string2.h>
->>  #include <sys/param.h>
->>  #include <sys/types.h>
->>  #include <sys/stat.h>
->> @@ -3240,20 +3241,6 @@ static struct script_desc *script_desc__findnew(const char *name)
->>         return s;
->>  }
->>
->> -static const char *ends_with(const char *str, const char *suffix)
->> -{
->> -       size_t suffix_len = strlen(suffix);
->> -       const char *p = str;
->> -
->> -       if (strlen(str) > suffix_len) {
->> -               p = str + strlen(str) - suffix_len;
->> -               if (!strncmp(p, suffix, suffix_len))
->> -                       return p;
->> -       }
->> -
->> -       return NULL;
->> -}
->> -
->>  static int read_script_info(struct script_desc *desc, const char *filename)
->>  {
->>         char line[BUFSIZ], *p;
->> diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
->> index 116a642ad99d..94c7af70e636 100644
->> --- a/tools/perf/util/string.c
->> +++ b/tools/perf/util/string.c
->> @@ -349,3 +349,21 @@ char *strreplace_chars(char needle, const char *haystack, const char *replace)
->>
->>         return new_s;
->>  }
->> +
->> +/*
->> + * Returns a pointer to the first character of the suffix in str if the string
->> + * ends with suffix, otherwise returns NULL.
->> + */
->> +const char *ends_with(const char *str, const char *suffix)
->> +{
->> +       size_t suffix_len = strlen(suffix);
->> +       const char *p = str;
->> +
->> +       if (strlen(str) > suffix_len) {
->> +               p = str + strlen(str) - suffix_len;
+On 2024-03-22 6:43 p.m., Namhyung Kim wrote:
+> The options array in cmd_annotate() has duplicate --group options.  It
+> only needs one and let's get rid of the other.
 > 
-> nit: I know this is just moving code but it seems unnecessary here to
-> call "strlen(str)" twice rather than just hold the result in a local
-> variable. A reasonable compiler should optimize this away, but it'd be
-> better to have the local imo.
+>   $ perf annotate -h 2>&1 | grep group
+>         --group           Show event group information together
+>         --group           Show event group information together
 > 
->> +               if (!strncmp(p, suffix, suffix_len))
->> +                       return p;
->> +       }
->> +
->> +       return NULL;
->> +}
->> diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
->> index 52cb8ba057c7..0b9d1579a701 100644
->> --- a/tools/perf/util/string2.h
->> +++ b/tools/perf/util/string2.h
->> @@ -40,5 +40,6 @@ char *strdup_esc(const char *str);
->>
->>  unsigned int hex(char c);
->>  char *strreplace_chars(char needle, const char *haystack, const char *replace);
->> +const char *ends_with(const char *str, const char *suffix);
-> 
-> nit: string2.h is an extension of linux's string.h. The tools copy of
-> that is missing functions in the kernel version:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/include/linux/string.h?h=perf-tools-next
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/include/linux/string.h?h=perf-tools-next#n398
-> specifically str_has_prefix.
-> 
-> The naming ends_with makes sense but there is also strstarts and
-> str_has_prefix, perhaps str_has_suffix would be the most consistent
-> and intention revealing name?
-> 
-> Also, we have strtailcmp which behaves like a reverse strcmp that
-> doesn't compare the lengths of the strings. It seems all uses of
-> strtailcmp are just for a "str_has_suffix". It would make sense to me
-> to remove that function and switch to a common str_has_suffix function
-> which I think is a more intention revealing way of naming what the
-> code is doing.
-> 
+> Fixes: 7ebaf4890f63 ("perf annotate: Support '--group' option")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-I glossed over this before, but looking in more detail I couldn't see
-that strtailcmp() was definitely being used as str_has_suffix(). Was it
-done this way because either the created probe or the dwarf entry could
-be using the tail as the filename, but it's not always known which is which?
+For the series,
 
-I couldn't see that function being hit in any of the tests either, so it
-seems quite risky to change it and it doesn't cost anything to leave it
-as it is seeing as it is a function that does something different to
-str_has_suffix().
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> ---
+>  tools/perf/builtin-annotate.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index f677671409b1..3e9f7e0596e8 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -810,8 +810,6 @@ int cmd_annotate(int argc, const char **argv)
+>  		    "Enable symbol demangling"),
+>  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+>  		    "Enable kernel symbol demangling"),
+> -	OPT_BOOLEAN(0, "group", &symbol_conf.event_group,
+> -		    "Show event group information together"),
+>  	OPT_BOOLEAN(0, "show-total-period", &symbol_conf.show_total_period,
+>  		    "Show a column with the sum of periods"),
+>  	OPT_BOOLEAN('n', "show-nr-samples", &symbol_conf.show_nr_samples,
