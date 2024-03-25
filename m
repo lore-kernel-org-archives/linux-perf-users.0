@@ -1,177 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E712662A2;
-	Mon, 25 Mar 2024 03:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711335810; cv=none; b=LtaO7I7ruvtUZdxrBdOHnwBAYPL+ASuK3W/qGzQ3tr+ZTUYN0bEZeTYMrr2+l+oOfqaWEhM5sKd7qcYROFyV+HCFwXF85vQ3NBvJmVcu6rrGFUDCRXZ2LtgnkfETGSALeTevOeFsik7Or9HwDDR4ejTVQe/TIRDr0oHZGD1yU1o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711335810; c=relaxed/simple;
-	bh=zAKhiSdcqivjXcEs7RdADkipim2MVBTbYablrmDKivA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=diHTCUg1OoRPgsDAS6tgtWlBgbVWfPrYPBXnyJ2fBi4Gk7EdbBN8xCtDFY414JVusGA9UGUGUMAbvkC9P/h1j4kcgg/hQgnlNxqw2dj+dG2L2FsSGFj7kAGuno47NJyHj1PdNLLpqjSFskKMMf/KVrbcuzhvXZ4zNii9mVLyalk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b02pmxDK; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F9C18E0CE;
+	Mon, 25 Mar 2024 07:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711351927; cv=fail; b=kZx8I07Xj+B+CR/DJPW1u5ShnwM0/gp9qEYo5oQFLCPHCHtkOULF0GJeo4vY6nA7Ppn9FwlGk9Nv4b1fnAyW/JGHjVSQky+7CBbhmkbpEACjXMOOuQSoeLJ4UdUotTQIdN4hmnpDvbsQpfaS6k0x16xYPA9xF8yc2vrBcwJ2aAU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711351927; c=relaxed/simple;
+	bh=Mes5BwtJFvqIwYbQhJ8iy32nOfVhJiIEexgH8dVBqNw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LkzWTcR9ruYkGFo1MSXqQg516153hZ4OFf0p+ZRs+VD84iD5Jw/ddPbHJ6BNzXjvGAF64FGppz+/0Kl2OTTjAAod+IbkLbhpiOQIQhZtVUnAh+7LCMRLBxSrEHCtn0DViUQxb1E1HWle++wr8dqjsTi99SE9V5jmNb9Rulx55rQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Tyn3X1m3; arc=fail smtp.client-ip=40.107.237.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b02pmxDK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF66C43390;
-	Mon, 25 Mar 2024 03:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711335809;
-	bh=zAKhiSdcqivjXcEs7RdADkipim2MVBTbYablrmDKivA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=b02pmxDKbv7Jb0Zu5jo594WBbOYkDyxWAQMz1bFBHsPkXVKSsiXfRwNm0JbQ+eqz/
-	 gRixYl6VzkSOIXry4LdMTyTTIFMyatrSvlTAWA5EzUdEXhH5/NKbrH6oc7XRNGhoiS
-	 PuUI6b8up8MY2mlSTPBMe8FGcDu36h483wqB09J2mGgKMe+RgKrMeb79PVHGik4pZ6
-	 7H4Bazz4TQaUVraPQtwg18lWJSBwPJrH5ZO4Yk+jEqHZPNrsWVYIR4H8pUTbXg0lBR
-	 B4pBTAraUllkkVza7KLBLcShIlwbmgWIj0ZKKAL5mv2OpmpsXk6BJgIp62tMYHX00E
-	 I4erOuDSPnlWA==
-Date: Mon, 25 Mar 2024 12:03:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonathan Haslam <jonathan.haslam@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
- bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-In-Reply-To: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Tyn3X1m3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mX13RB3gGSrn5jVv4O9nPIumHeHmKyVdJwlq4wFqrXe6aPbM4LcovecDZ+aaZqCMKCgRpnKmdS0DHr9N9tcSHK+zn7s0kouuWtDLx+zu+VNxiApD3ghYdqmeRz9NYEh8Pss9SmJfqMRxjNiE0NkqauraZ05K4VQCR5VtK6z+i9lS2PyuihTrodqnNG9eE7/wMw5VNDKGc98+C3Fz2Cxz2P0xd5We9IDH+On7wQoQjVTJOKDycLfwQvYo/PlkG+dkRcNH/zP8YBTkIJLSaGv2abOtNIPg0+L9vFnQ1pCUAKyCkMcXvMDTs7+EsfeTiky/vdGfSci9NfM8BdUz/W7AgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yLscRJG9cesDLsI+iXCDPMpBeHlnr7fCkaFqn3JmTCk=;
+ b=h/g9NGqlYWezxt0sUC0gFP2gv4GeVe6sepIsg5EBLhqbvejwDsI805BSC5hMWDl+Yevb+Hid9PQ3QKWIiraj2HklzFuhmmkzTq8YJIzSTmCLihLzH0v9g/vYG4kSYGzTy540zbEpqDFbd4IEqP/6oIDPciCiXZbMSe0sYBBio5hJ1BViqC5vj9QcWMogV64fvfji/Kr43Xn2ISBnaaqA5/AnMvUqu9ibyPPwk/kJwXiQVV55nNyPjO0Vr5s+RK8ru11ErU7OHD7g14KAyHQJ1EaSP2S+0Wrlsbm1UYTgkHK4aZy4AaW+Jc3R413TH5TbUSFxYnK9sKeIJe2GEo0Ubw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yLscRJG9cesDLsI+iXCDPMpBeHlnr7fCkaFqn3JmTCk=;
+ b=Tyn3X1m3Qmy6jtIY28Oxp1aZREJXQoFY1HJDKD+ZqlbDq54tTWVYLMtYPrXTe+uqXpnOuKi6KbPXSeKEe8mUR1WQXec7SXiN8TwSuiBZ7E45ok3BuGcqB0l1vgcY0JxKZyTI/Noy2P6WI9qum9ZaEnVGqFP/iQaZpqR91qTTQj4=
+Received: from BN0PR07CA0002.namprd07.prod.outlook.com (2603:10b6:408:141::17)
+ by DS7PR12MB8204.namprd12.prod.outlook.com (2603:10b6:8:e1::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.32; Mon, 25 Mar 2024 07:31:59 +0000
+Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
+ (2603:10b6:408:141:cafe::40) by BN0PR07CA0002.outlook.office365.com
+ (2603:10b6:408:141::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
+ Transport; Mon, 25 Mar 2024 07:31:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.0 via Frontend Transport; Mon, 25 Mar 2024 07:31:58 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 25 Mar
+ 2024 02:31:53 -0500
+From: Sandipan Das <sandipan.das@amd.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <x86@kernel.org>, <peterz@infradead.org>, <mingo@kernel.org>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+	<seanjc@google.com>, <pbonzini@redhat.com>, <eranian@google.com>,
+	<irogers@google.com>, <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
+	<sandipan.das@amd.com>
+Subject: [PATCH v5 0/2] perf/x86/amd: Fix for LBR Freeze
+Date: Mon, 25 Mar 2024 13:01:43 +0530
+Message-ID: <cover.1711091584.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|DS7PR12MB8204:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31a6e41f-aa0b-4b2a-ada1-08dc4c9da7c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oRczk6rROzFMur+RUp1kO+vFrdHx+YO1KxfnhqUWbqiqIffYUXJi5mXFClAcCUP1IoUFGRam1PQRFfYp3VaI6wKqqJbOjpGwZ8rPljNBvoAQDQhKG32lbTfRe8/gRKZlBX7yTAd0rTbkR5FVTXDL+EyxEH0oEHABklPhGVKJu1lw7GP9HmaRIvo1pATOmsns2eu6134tn8WnAhiv5JLnz9lQ62J+oepANhx9iDwOyi2uoHxLEMJZvPcYvApDu0W/arod6Av7WjWpNRtdg166vijnE7N3FqgyHoGkFioJ7wbK8EmqEqjcCAlVN/5g3VlUDRi2ugYAvqoDWOtlJBmXU67+aUkzWL3nsmqu0kDBrXghRpIRO4dKoEB3MZlnUqqMQTg7D1Pmb2lO3BLpFV9O6IVHr0qrs3rUx2k/soTdolUbL8Z+DKnHzDUOn0ZQMWItDSY13KVliZNJCqtaLw9L1ikAK0fIBDhD9/ptdLbdTZ69gyaXV8ZoXavNk+2h5X7VUosqOkGbHPKQzWckgclzHchom8tuSuR0hl8xNJD36SfnHYLJrSEYHu9GPou1pz8kUnTyXPBN28dtnoRsb+bpRLE9utlTlDdXMlKu5GPiW/gKbJaFbnM6nuRFEC896KHfoFA1c1THDfiKM5Tq3yiZ9K92iOlmifvj61n38oZ99OUcyzUzHRlLkGvHMO0gYKWUEVSq4s0kKwnce2U5j1uDrQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 07:31:58.7887
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31a6e41f-aa0b-4b2a-ada1-08dc4c9da7c9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B374.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8204
 
-On Thu, 21 Mar 2024 07:57:35 -0700
-Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+Contains a fix for usage of LBR Freeze.
 
-> Active uprobes are stored in an RB tree and accesses to this tree are
-> dominated by read operations. Currently these accesses are serialized by
-> a spinlock but this leads to enormous contention when large numbers of
-> threads are executing active probes.
-> 
-> This patch converts the spinlock used to serialize access to the
-> uprobes_tree RB tree into a reader-writer spinlock. This lock type
-> aligns naturally with the overwhelmingly read-only nature of the tree
-> usage here. Although the addition of reader-writer spinlocks are
-> discouraged [0], this fix is proposed as an interim solution while an
-> RCU based approach is implemented (that work is in a nascent form). This
-> fix also has the benefit of being trivial, self contained and therefore
-> simple to backport.
-> 
-> This change has been tested against production workloads that exhibit
-> significant contention on the spinlock and an almost order of magnitude
-> reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+Previous versions can be found at:
+v4: https://lore.kernel.org/all/cover.1710836172.git.sandipan.das@amd.com/
+v3: https://lore.kernel.org/all/cover.1706526029.git.sandipan.das@amd.com/
+v2: https://lore.kernel.org/all/cover.1704103399.git.sandipan.das@amd.com/
+v1: https://lore.kernel.org/all/cover.1702833179.git.sandipan.das@amd.com/
 
-Looks good to me.
+Changes in v5:
+ - Restore previously moved scattered bits and instead create a new
+   Linux-defined feature word for new scattered bits as suggested by
+   Boris and Ingo.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Changes in v4:
+ - Move scattered feature bits from CPUID 0x80000022[EAX] to a dedicated
+   word as suggested by Ingo.
+ - Remove patches that have been merged (patch 2 and 3 from v3).
 
-BTW, how did you measure the overhead? I think spinlock overhead
-will depend on how much lock contention happens.
+Changes in v3:
+ - As suggested by Boris, update the commit message of the first patch
+   with the reason behind making the LBR and PMC Freeze feature bit
+   visible in /proc/cpuinfo.
 
-Thank you,
+Changes in v2:
+ - Make the LBR and PMC Freeze feature bit visible in /proc/cpuinfo. As
+   suggested by Stephane, this will be useful to determine if it is
+   feasible to perform kernel FDO on a system.
 
-> 
-> [0] https://docs.kernel.org/locking/spinlocks.html
-> 
-> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> ---
->  kernel/events/uprobes.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 929e98c62965..42bf9b6e8bc0 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
->   */
->  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
->  
-> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
->  
->  #define UPROBES_HASH_SZ	13
->  /* serialize uprobe->pending_list */
-> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
->  {
->  	struct uprobe *uprobe;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	uprobe = __find_uprobe(inode, offset);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return uprobe;
->  }
-> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
->  {
->  	struct uprobe *u;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	u = __insert_uprobe(uprobe);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  
->  	return u;
->  }
-> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
->  	if (WARN_ON(!uprobe_is_active(uprobe)))
->  		return;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	rb_erase(&uprobe->rb_node, &uprobes_tree);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
->  	put_uprobe(uprobe);
->  }
-> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
->  	if (n) {
->  		for (t = n; t; t = rb_prev(t)) {
-> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
->  			get_uprobe(u);
->  		}
->  	}
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  }
->  
->  /* @vma contains reference counter, not the probed instruction. */
-> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return !!n;
->  }
-> -- 
-> 2.43.0
-> 
+Sandipan Das (2):
+  x86/cpufeatures: Add new word for scattered features
+  perf/x86/amd/lbr: Use freeze based on availability
 
+ arch/x86/events/amd/core.c               |  4 ++--
+ arch/x86/events/amd/lbr.c                | 16 ++++++++++------
+ arch/x86/include/asm/cpufeature.h        |  6 ++++--
+ arch/x86/include/asm/cpufeatures.h       | 10 +++++++++-
+ arch/x86/include/asm/disabled-features.h |  3 ++-
+ arch/x86/include/asm/required-features.h |  3 ++-
+ arch/x86/kernel/cpu/scattered.c          |  1 +
+ 7 files changed, 30 insertions(+), 13 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
