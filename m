@@ -1,119 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654F617C9;
-	Tue, 26 Mar 2024 08:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA9FE45C18
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 Mar 2024 09:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711441958; cv=none; b=nAP+cZ0Fuz5cxKG+5M8djk3agZH2QxBcSLEijZ3WrSbrkTs/p9XUcskgBZLmkYUPB+lB35ab1YxKU3eF5Wk7UT2ljAg9biwhM+fB8T7H/hR3BkAYRrDL+F85ATmppeG1/jVKlgbNThoiyfZ/YHchUTA/qlJHWl7cfjixUTsLs8A=
+	t=1711445717; cv=none; b=MiQchd7XCUyTUOHArIMz4gcb0bKwNRjIiF679D0uFOGTuuSiojnidnZy9kkiMBVSqYSSKhMKxG1vLiwz6PydEcpW/Fg8BoF4ilCn9B6WsmL6ncwd8ZMzm5HnbZLVv47H+WDxpPuMcXPleLdMklwq69gzDm2cqH+BOB/uT1vjyAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711441958; c=relaxed/simple;
-	bh=vtibaTy0fmAZOxfP+IoeO8sTpBtyzW8llhwWsl5a9Q4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q5N0uCKP80dT8OpyLs65qGaWz6vuvr/RhYes2VtOdfwaNUrICn4jgz6kMT/hZc7OJ8AFqTUv4wgohDByGvsY9j81EvGAwXyhHCbKdVa9nKBPjpKAr3w9dMQ6RRMde6I2MfzTUkJeROtcKxUiXB/wt05nDXCoaRDN3rwekI2JLnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnpbjfLa; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnpbjfLa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711441956; x=1742977956;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vtibaTy0fmAZOxfP+IoeO8sTpBtyzW8llhwWsl5a9Q4=;
-  b=dnpbjfLaegZ8/x1Qv+7S97bHmQGt8Ee1O4nyzLwulFgtkcAovEZpcZO4
-   idDrNHPHfcG2yXgymwpmltdSjjFgyJs2XOc9TSrEjluhvd8Hrcu0WRWh8
-   rSyVCFzNJiQRYiNtxp32DQZNkqX0ap3CTjOy+QDL04Pgw8J+Re5R0KK6p
-   cdCxosQTzdaA9IJDbrGL/BJT5InziHeVEqqsPYG0TtWgsWJbu9EHYCNdl
-   F1p0vcO5i6woAKD4tetotp1jUClT5RFjqNx+XoKRklm+cwxDHjltHKq93
-   ro6SyfUDK6jcWZLBuoNRASsmI+9IEg1USWfrqXiDIkpSkwU5SeRTmJ6xr
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17910815"
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="17910815"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 01:32:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="15931833"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.38.215])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 01:32:33 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf intel-pt: Fix unassigned instruction op
-Date: Tue, 26 Mar 2024 10:32:23 +0200
-Message-Id: <20240326083223.10883-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240320162619.1272015-1-irogers@google.com>
-References: <20240320162619.1272015-1-irogers@google.com>
+	s=arc-20240116; t=1711445717; c=relaxed/simple;
+	bh=AuBPGlc2S5bTaKFMc3qlfOSSM4pupvF9qJ0mH3B8dgY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eptH+2sWkoC1Q0iKo9mkLxvFDtW0o54u7IE4OzXGGhR4hyjgWRW9qk/CAgh2Gy7Bd2uC1iPDjQAn6nHDq4G9pY5YzS6NrudcJC8TekMTNX6j+l07vcs5YtXD72mqyculTWSkntnZqOrgnpP1NR5g5bwVjdQJP9/aavZsGRRlfIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxOPDNlgJmA1IeAA--.6151S3;
+	Tue, 26 Mar 2024 17:35:09 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx8OTIlgJmZL1oAA--.10454S3;
+	Tue, 26 Mar 2024 17:35:04 +0800 (CST)
+Subject: Re: [PATCH 3/3] tools/perf/arch/powerc: Add get_arch_regnum for
+ powerpc
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+ namhyung@kernel.org
+References: <20240309072513.9418-1-atrajeev@linux.vnet.ibm.com>
+ <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4072f03b-a8a2-5611-901e-bc16e97c3fe6@loongson.cn>
+Date: Tue, 26 Mar 2024 17:35:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Bx8OTIlgJmZL1oAA--.10454S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JrW8Cr1UWF1ruFy7ArW7KFX_yoW3CFbE9a
+	97Jr97JrWrXFnrKFy7GrWrZ34Fka13GFZxXF48Xa47Grn5ZFZI9F45Xrn3Cr10qr18Jrs2
+	kr1ktrn5Ww129osvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcApnDU
+	UUU
 
-MemorySanitizer discovered instances where the instruction op value was
-not assigned.:
+Hi Athira and Namhyung,
 
-  WARNING: MemorySanitizer: use-of-uninitialized-value
-    #0 0x5581c00a76b3 in intel_pt_sample_flags tools/perf/util/intel-pt.c:1527:17
-  Uninitialized value was stored to memory at
-    #0 0x5581c005ddf8 in intel_pt_walk_insn tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1256:25
+On 03/09/2024 03:25 PM, Athira Rajeev wrote:
+> The function get_dwarf_regnum() returns a DWARF register number
+> from a register name string. This calls arch specific function
+> get_arch_regnum to return register number for corresponding arch.
+> Add mappings for register name to register number in powerpc code:
+> arch/powerpc/util/dwarf-regs.c
+>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/arch/powerpc/util/dwarf-regs.c | 29 +++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 
-The op value is used to set branch flags for branch instructions
-encountered when walking the code, so fix by setting op to
-INTEL_PT_OP_OTHER in other cases.
+I found commit 3eee606757ad ("perf dwarf-regs: Add get_dwarf_regnum()")
+for x86, would you be able to share how to test these changes? What is
+the difference with and without the patches?
 
-Reported-by: Ian Rogers <irogers@google.com>
-Closes: https://lore.kernel.org/linux-perf-users/20240320162619.1272015-1-irogers@google.com/
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 2 ++
- tools/perf/util/intel-pt.c                          | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index b450178e3420..e733f6b1f7ac 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1319,6 +1319,8 @@ static bool intel_pt_fup_event(struct intel_pt_decoder *decoder, bool no_tip)
- 	bool ret = false;
- 
- 	decoder->state.type &= ~INTEL_PT_BRANCH;
-+	decoder->state.insn_op = INTEL_PT_OP_OTHER;
-+	decoder->state.insn_len = 0;
- 
- 	if (decoder->set_fup_cfe_ip || decoder->set_fup_cfe) {
- 		bool ip = decoder->set_fup_cfe_ip;
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index f38893e0b036..4db9a098f592 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -764,6 +764,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
- 
- 	addr_location__init(&al);
- 	intel_pt_insn->length = 0;
-+	intel_pt_insn->op = INTEL_PT_OP_OTHER;
- 
- 	if (to_ip && *ip == to_ip)
- 		goto out_no_cache;
-@@ -898,6 +899,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
- 
- 			if (to_ip && *ip == to_ip) {
- 				intel_pt_insn->length = 0;
-+				intel_pt_insn->op = INTEL_PT_OP_OTHER;
- 				goto out_no_cache;
- 			}
- 
--- 
-2.34.1
+Thanks,
+Tiezhu
 
