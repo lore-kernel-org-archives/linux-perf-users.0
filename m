@@ -1,113 +1,119 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E1513281B;
-	Tue, 26 Mar 2024 08:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654F617C9;
+	Tue, 26 Mar 2024 08:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711440364; cv=none; b=t1NpKhmjthALNYz9Wlrq14iG5RrUZ2ejh5OAZ4/UsRjK55yx0cwc0EcGMgQjA8+OhBu363SbeyUkva0a5KiLtsSahAKa+yhdpCCKd8BqtBLG7VpVRkRYY5qiLkpW+/edLytnMWtoErGq+Nn7nwlQbP2JjMR0+r6Ktm+TIlfji0Q=
+	t=1711441958; cv=none; b=nAP+cZ0Fuz5cxKG+5M8djk3agZH2QxBcSLEijZ3WrSbrkTs/p9XUcskgBZLmkYUPB+lB35ab1YxKU3eF5Wk7UT2ljAg9biwhM+fB8T7H/hR3BkAYRrDL+F85ATmppeG1/jVKlgbNThoiyfZ/YHchUTA/qlJHWl7cfjixUTsLs8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711440364; c=relaxed/simple;
-	bh=1dN1iTrP3tohzWptA2T2MCP7DsVN09BO7E3gaSGoAqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YehMoALx3zncIQHsz68zSl/DfRgqDqc/lYApgvXJGX6g/uTkqXc6nxfbqcf9R0jdWrztZED/0VyzNvkbS0iV40LEDb50X/WjFlXW1BDXhv/982lx5lThCYDYj17lOL67P3vumBHE6Dvpxr+C82TJgGrjyCKKU7iQMwU5+uv7rIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TNm+WJe1; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711441958; c=relaxed/simple;
+	bh=vtibaTy0fmAZOxfP+IoeO8sTpBtyzW8llhwWsl5a9Q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q5N0uCKP80dT8OpyLs65qGaWz6vuvr/RhYes2VtOdfwaNUrICn4jgz6kMT/hZc7OJ8AFqTUv4wgohDByGvsY9j81EvGAwXyhHCbKdVa9nKBPjpKAr3w9dMQ6RRMde6I2MfzTUkJeROtcKxUiXB/wt05nDXCoaRDN3rwekI2JLnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnpbjfLa; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNm+WJe1"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4148c95db1fso5329265e9.0;
-        Tue, 26 Mar 2024 01:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711440361; x=1712045161; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w08KEwD3ex9mJ/Il0J55afzxUV9OS7OdtKcY03XKYns=;
-        b=TNm+WJe1MnGQ9O2oN7iVAfCudKv86KNvWZDIfm3dbwZzKNXPBryxlF+SZxIwdlVW0g
-         u3En7TFkqGSrFBExBz0ejhBj2idWbZArEP3SW225WfC8N6D6qEwpBvZYyevzUL1VWPXl
-         F3EkFds3rWF5aclCUFNv+PoX2TfGVm1sUFvsQmvptLRfk78Tk1QxEvI7CXSlE9VFvdvO
-         vx+M1yBZtOUNuJYACCjwOqGS9FymKUfVz69dZ8gX/dPrRkc0sHCH8vd9w36q5PZjPMmF
-         Hl8kL7S4EOTzFnJ/bIWziT/BNqrGJIRaRayld+X8XyiWAbplyrYnxevu8QggzHEZDTTr
-         qcsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711440361; x=1712045161;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w08KEwD3ex9mJ/Il0J55afzxUV9OS7OdtKcY03XKYns=;
-        b=kz1px4VF5SS6bcqOyB03Fm1whw+w2kRYaVAXQPYnxsZSixJ4e7Jfp5uX24J3O0dqkS
-         7XR/ADngBMyWtEFxiTWyqR9VXeMhrbJMUwCD3rR0re8IcMLL7flZ6HZW0UzyQKUHxOM7
-         OFUWXVay+To/l5UTjnUF0qUPSX3RkcVLw5FCdi4rNvjug4Vh1ie1+UAyqOSKHw0gwqPJ
-         DbW4ZDgXjgZCXuY/bGkjWQT3f2zN1xiKLSrDjRPrOizTzKye0PR79lim/BBQe0NwC5qS
-         GbyNTrbhc4+TIirxhv67lFEKV9d/SzUGf83Gi1uzzEfwbtpy90ZqdnheYCnZbz0wWVBe
-         qnrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXATkg0jqhDp7/e1MjbFcCjykG1dRy4/acbxauMcyyQFYn6dnqTh33TzGAio1yhCtoO8tdsdR6IPaOXBrXsTcOusnWzgKssXiNRnb10zCoNEHGAtIzb4O9OYe0BQJjuCfwwfpV3dW/j49kh+trpmA==
-X-Gm-Message-State: AOJu0YzXMpEDBrl/DAxyw7hRuVVFOHdD8oeyVPQn6njmjQ4saMpFzMpE
-	bHaY8ZaEp4NzeEJm7pwJlZgvOhgLzglftj31TrDVZdXPeItZEjHO
-X-Google-Smtp-Source: AGHT+IFBVo6PBngS8dXsiIROlPjirz7Ab1EtZgBC4EtLcpirIq0EtNRX6T8YzXEW4GTDM8sy8Tg9Rw==
-X-Received: by 2002:a05:600c:2807:b0:413:38ee:69e7 with SMTP id m7-20020a05600c280700b0041338ee69e7mr6443500wmb.36.1711440361185;
-        Tue, 26 Mar 2024 01:06:01 -0700 (PDT)
-Received: from gmail.com (1F2EF63C.nat.pool.telekom.hu. [31.46.246.60])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b004148c79f067sm2375333wmq.39.2024.03.26.01.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 01:06:00 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Tue, 26 Mar 2024 09:05:58 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
-	eranian@google.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
-Subject: Re: [PATCH 1/2] perf/x86/amd/core: Update stalled-cycles-* events
- for Zen 2 and later
-Message-ID: <ZgKB5hMlt87E5VhI@gmail.com>
-References: <cover.1711352180.git.sandipan.das@amd.com>
- <03d7fc8fa2a28f9be732116009025bdec1b3ec97.1711352180.git.sandipan.das@amd.com>
- <CAP-5=fVLWMnT4TV2nvbOUTTkWHYowbEOFDYqAvf1hkUEDpkKfw@mail.gmail.com>
- <5749c648-b6c4-4400-9628-3cd38d953f58@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnpbjfLa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711441956; x=1742977956;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vtibaTy0fmAZOxfP+IoeO8sTpBtyzW8llhwWsl5a9Q4=;
+  b=dnpbjfLaegZ8/x1Qv+7S97bHmQGt8Ee1O4nyzLwulFgtkcAovEZpcZO4
+   idDrNHPHfcG2yXgymwpmltdSjjFgyJs2XOc9TSrEjluhvd8Hrcu0WRWh8
+   rSyVCFzNJiQRYiNtxp32DQZNkqX0ap3CTjOy+QDL04Pgw8J+Re5R0KK6p
+   cdCxosQTzdaA9IJDbrGL/BJT5InziHeVEqqsPYG0TtWgsWJbu9EHYCNdl
+   F1p0vcO5i6woAKD4tetotp1jUClT5RFjqNx+XoKRklm+cwxDHjltHKq93
+   ro6SyfUDK6jcWZLBuoNRASsmI+9IEg1USWfrqXiDIkpSkwU5SeRTmJ6xr
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17910815"
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="17910815"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 01:32:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="15931833"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.38.215])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 01:32:33 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf intel-pt: Fix unassigned instruction op
+Date: Tue, 26 Mar 2024 10:32:23 +0200
+Message-Id: <20240326083223.10883-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240320162619.1272015-1-irogers@google.com>
+References: <20240320162619.1272015-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5749c648-b6c4-4400-9628-3cd38d953f58@amd.com>
 
+MemorySanitizer discovered instances where the instruction op value was
+not assigned.:
 
-* Sandipan Das <sandipan.das@amd.com> wrote:
+  WARNING: MemorySanitizer: use-of-uninitialized-value
+    #0 0x5581c00a76b3 in intel_pt_sample_flags tools/perf/util/intel-pt.c:1527:17
+  Uninitialized value was stored to memory at
+    #0 0x5581c005ddf8 in intel_pt_walk_insn tools/perf/util/intel-pt-decoder/intel-pt-decoder.c:1256:25
 
-> On 3/25/2024 8:04 PM, Ian Rogers wrote:
-> > On Mon, Mar 25, 2024 at 12:48 AM Sandipan Das <sandipan.das@amd.com> wrote:
-> >>
-> >> AMD processors based on Zen 2 and later microarchitectures do not
-> >> support PMCx087 (instruction pipe stalls) which is used as the backing
-> >> event for "stalled-cycles-frontend" and "stalled-cycles-backend". Use
-> >> PMCx0A9 (cycles where micro-op queue is empty) instead to count frontend
-> >> stalls and remove the entry for backend stalls since there is no direct
-> >> replacement.
-> >>
-> >> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> > 
-> > This looks good to me. Should there be a Fixes tag for the sake of backports?
-> > 
-> 
-> My bad. Yes, there should a fixes tag.
-> 
-> Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
-> 
-> Ingo, I see that you have already pushed this to the perf/urgent branch.
-> Should I send a v2?
+The op value is used to set branch flags for branch instructions
+encountered when walking the code, so fix by setting op to
+INTEL_PT_OP_OTHER in other cases.
 
-That's OK, no need, I've amended the commits in perf/urgent. 2019 is quite 
-a way back for a Fixes tag though. :-)
+Reported-by: Ian Rogers <irogers@google.com>
+Closes: https://lore.kernel.org/linux-perf-users/20240320162619.1272015-1-irogers@google.com/
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 2 ++
+ tools/perf/util/intel-pt.c                          | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Thanks,
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index b450178e3420..e733f6b1f7ac 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1319,6 +1319,8 @@ static bool intel_pt_fup_event(struct intel_pt_decoder *decoder, bool no_tip)
+ 	bool ret = false;
+ 
+ 	decoder->state.type &= ~INTEL_PT_BRANCH;
++	decoder->state.insn_op = INTEL_PT_OP_OTHER;
++	decoder->state.insn_len = 0;
+ 
+ 	if (decoder->set_fup_cfe_ip || decoder->set_fup_cfe) {
+ 		bool ip = decoder->set_fup_cfe_ip;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index f38893e0b036..4db9a098f592 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -764,6 +764,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 
+ 	addr_location__init(&al);
+ 	intel_pt_insn->length = 0;
++	intel_pt_insn->op = INTEL_PT_OP_OTHER;
+ 
+ 	if (to_ip && *ip == to_ip)
+ 		goto out_no_cache;
+@@ -898,6 +899,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 
+ 			if (to_ip && *ip == to_ip) {
+ 				intel_pt_insn->length = 0;
++				intel_pt_insn->op = INTEL_PT_OP_OTHER;
+ 				goto out_no_cache;
+ 			}
+ 
+-- 
+2.34.1
 
-	Ingo
