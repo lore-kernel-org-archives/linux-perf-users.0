@@ -1,81 +1,120 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C68548F5;
-	Tue, 26 Mar 2024 11:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501411E485;
+	Tue, 26 Mar 2024 11:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711453095; cv=none; b=SdFPqmgJSYe7eRkzR6u1TmbiUqeS60IFij73YwEAC6upZP+YEwtFzq0Ij285VNEcTSxKnu+6a4HW3Uirts2lTGrr6PxfUQ4IVPwGNqiF5sJ8qVCIACljQMlODdbIbtG8GqmVtoi7x6eh+UCuZuaGnGk1vVTWqNM0pvpu4zLy7eA=
+	t=1711454118; cv=none; b=RRfn3wbGfwaWMkXjaT79j1PJ0XARdYoYtMnDhK63gW6Pw81C3vnCfWMuXNqRoIy2oecQlh68RimxqOE/z0lO2WObNSE/udoQ5TRzj02xewl7jA2duw0RYKfay7OSH+F1VIZWvUjNc+RU9g/H8gk7PMu3m4eyHT8pSAfXTyqV2dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711453095; c=relaxed/simple;
-	bh=lw2/MHVdNGxwuR1HESLQBQVsZMg/4d22FzVRjET0DfQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ejmkFc/mwjKBFgucWvTlftJCXh+jbHamiKW06T1uqnaRFsLVm3mRSyaJJ2mb08VGyR3dZjcCY1TLBrmTkhkNKgGI0p0ucDf+uPDCpbRJMefsOUr4MMLmCMJqk9gznpYdM+M/iMfcK0jk5P5irnt8L/yVG1vHTQX4plSDg7sQ0V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 898932F4;
-	Tue, 26 Mar 2024 04:38:45 -0700 (PDT)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D48963F64C;
-	Tue, 26 Mar 2024 04:38:09 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf test: Increase buffer size for Coresight basic tests
-Date: Tue, 26 Mar 2024 11:37:49 +0000
-Message-Id: <20240326113749.257250-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711454118; c=relaxed/simple;
+	bh=uCcHRj1EPqJseqwLf22pNV9+UeLCYFNEJtYoMZqpZh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FTZ0Rg5Kli23QWqb3lh2ao9euSFF/fwwGoE0TfjUNJ3wvUYyIlJlWqHLTn6GBf3kNBwMV5IFE5HueNUpF6K9hsRk0YdwuGI+Hk65BiStxA0wkusyKxi5QY0TON2Nfq/neOktHGdwA5l/Y8wJSvdXa5ZWEbHXbNpasEwJvHRDFfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWJvw+bR; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWJvw+bR"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a46d0a8399aso1070146066b.1;
+        Tue, 26 Mar 2024 04:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711454114; x=1712058914; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qr/4I2RJUe85l43HNxbnkFvc01YkMgJpGYtWHzCf1GQ=;
+        b=XWJvw+bRAsiEQ+0qGNbbKn0G2JJVPnSjfOk7wNE+W4zfWzH5VcyodArHA5PVj3Iy0g
+         NCcs4HGgO3LPSdaH99AWWHP3mNBySm+YDqAORfmpwWgfL67XzxkUe/WsD5K5WLfLs04x
+         D0JXORkuTBnSdCKWT8lwfvSy2IxwpmjT7Kwaufx3QndwpBupfQztsHz576nXLFuA3u2u
+         5zK9/jGTzlGmF1z3bzCP4AghKKC6hWQSs/Yb+cn3yERyFC3qDKiKS8AfMwYLSNeU2nZ4
+         NHYol5O+blQqhvnlftuGPOVLUiipqyjxeRevEsX2sAMVe3/RuaRPZt2eWt/L4XL4nYi7
+         gtnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711454114; x=1712058914;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qr/4I2RJUe85l43HNxbnkFvc01YkMgJpGYtWHzCf1GQ=;
+        b=XhpGPq1JTYgdB27QgrxgB/KQ+mZ8rL2FqSeunrPnAIrZRrppB6VwAb4F/serb3Vdgg
+         Td+hK1nXPHyBLUS6ngbNVfBztaBhTuQBoRLXMCWgkwJfAwVpPlTCutqg4sWE1kY5cepe
+         EY3KIMugEQKXl3h+fBqIBSb6rwwHZg5C4UOz8fHNILk5/E1aIwZp5QVVAtUzPptJtDAx
+         sEg6fVgl+6OG9H/29wh+o1oHaE4kz6mLQTipklTKnFyFZhGut59ZvV3S60thQlk1tAsC
+         +8eD/ysQfXIc9F/O2/t5adHNDcfDzZogknRXAwMLOJdNLz2wYJWZ+v+dTje6Z/l/XP4C
+         f6sA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGeSHjy6L4qn4vmpJgRryBABb6T879N0rcmsQf5Tu/7VXof4OeG+ZC+KCWgPZvoYVTiHkX23fGD86knmh4gMdQ7PuMXDQmPRkvVce43qF4G85zh2lR5pxvMi2JIUA2yK/AVIXP2K1Q9XY/oMwLFT76FrrACZo4Z8AMV/hydbnIi8bzxqtJ1CNHU/NESCsHL8mm5J+9zaTvIhHeD+7kXFgPJ6yBBACexQ==
+X-Gm-Message-State: AOJu0YyXKOlJyKA3eoMKddgCUj1JTkQe8wUJ6BvB26dOsMm+HlNPAge/
+	CfpoksbSm0qDB2AJmktJeR0mpx4zbE8I8TJU/WXs0wGxQIp6Jlyl
+X-Google-Smtp-Source: AGHT+IGj7Coyzs0BQ3HvVy0I0XPj/KsFEkGhQjLHg0IkJe32C19rYisvF2RsktnUZUadBtnSCF4VYA==
+X-Received: by 2002:a17:907:97d5:b0:a47:4563:e5ba with SMTP id js21-20020a17090797d500b00a474563e5bamr1293548ejc.19.1711454114378;
+        Tue, 26 Mar 2024 04:55:14 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:400::5:35a3])
+        by smtp.gmail.com with ESMTPSA id o1-20020a1709064f8100b00a4a38d10801sm1958414eju.35.2024.03.26.04.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 04:55:14 -0700 (PDT)
+Date: Tue, 26 Mar 2024 11:55:12 +0000
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <45ei3cgqjuwcatz622nodyb4eal4ue4diclswpahc36gctdvri@2gfjlmljrisg>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <Zf+d9twfyIDosINf@gmail.com>
+ <syviklbpdblcwr3l2seuwyzfrg2hy2shx5f6ho6yf4s4ce63tc@nbo4by247y6z>
+ <CAEf4BzZnUcFEk+7r39n8=zopBeK96wfQ4Vtndd2tY2ymqOpCtA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZnUcFEk+7r39n8=zopBeK96wfQ4Vtndd2tY2ymqOpCtA@mail.gmail.com>
 
-These tests record in a mode that includes kernel trace but look for
-samples of a userspace process. This makes them sensitive to any kernel
-compilation options that increase the amount of time spent in the
-kernel. If the trace buffer is completely filled before userspace is
-reached then the test will fail. Double the buffer size to fix this.
+> > > Have you considered/measured per-CPU RW semaphores?
+> >
+> > No I hadn't but thanks hugely for suggesting it! In initial measurements
+> > it seems to be between 20-100% faster than the RW spinlocks! Apologies for
+> > all the exclamation marks but I'm very excited. I'll do some more testing
+> > tomorrow but so far it's looking very good.
+> >
+> 
+> Documentation ([0]) says that locking for writing calls
+> synchronize_rcu(), is that right? If that's true, attaching multiple
+> uprobes (including just attaching a single BPF multi-uprobe) will take
+> a really long time. We need to confirm we are not significantly
+> regressing this. And if we do, we need to take measures in the BPF
+> multi-uprobe attachment code path to make sure that a single
+> multi-uprobe attachment is still fast.
+> 
+> If my worries above turn out to be true, it still feels like a first
+> good step should be landing this patch as is (and get it backported to
+> older kernels), and then have percpu rw-semaphore as a final (and a
+> bit more invasive) solution (it's RCU-based, so feels like a good
+> primitive to settle on), making sure to not regress multi-uprobes
+> (we'll probably will need some batched API for multiple uprobes).
+> 
+> Thoughts?
 
-The other tests in the same file aren't sensitive to this for various
-reasons, for example the iterate devices test filters by userspace
-trace only. But in order to keep coverage of all the modes, increase the
-buffer size rather than filtering by userspace for the basic tests.
+Agreed. In the percpu_down_write() path we call rcu_sync_enter() which is
+what calls into synchronize_rcu(). I haven't done the measurements yet but
+I would imagine this has to regress probe attachment, at least in the
+uncontended case. Of course, reads are by far the dominant mode here but
+we probably shouldn't punish writes excessively. I will do some
+measurements to quantify the write penalty here.
 
-Fixes: d1efa4a0a696 ("perf cs-etm: Add separate decode paths for timeless and per-thread modes")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/shell/test_arm_coresight.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I agree that a batched interface for probe attachment is needed here. The
+usual mode of operation for us is that we have a number of USDTs (uprobes)
+in hand and we want to enable and disable them in one shot. Removing the
+need to do multiple locking operations is definitely an efficiency
+improvement that needs to be done. Tie that together with per-CPU RW
+semaphores and this should scale extremely well in both a read and write
+case.
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 65dd85207125..3302ea0b9672 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -188,7 +188,7 @@ arm_cs_etm_snapshot_test() {
- 
- arm_cs_etm_basic_test() {
- 	echo "Recording trace with '$*'"
--	perf record -o ${perfdata} "$@" -- ls > /dev/null 2>&1
-+	perf record -o ${perfdata} "$@" -m,8M -- ls > /dev/null 2>&1
- 
- 	perf_script_branch_samples ls &&
- 	perf_report_branch_samples ls &&
--- 
-2.34.1
-
+Jon.
