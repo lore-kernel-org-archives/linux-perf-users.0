@@ -1,119 +1,203 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AED482D90;
-	Mon, 25 Mar 2024 23:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711408472; cv=none; b=W7erh6GZmNnDMh2RKt8Ooi3/+Ydv0ZIRKAuOGLbDnP3NaO/hmRkmVnNNtxKl0HAC/YEIcBZ45ij9PpmIhRKkZQ/yo13/bUxjfPYls/d3o5nVId/p2HNT8MeIavLwl34WuAQnGrqLM2Oq4yGAZJzxPjL+xsMq53l+su7g5+72QeI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711408472; c=relaxed/simple;
-	bh=06TOXQCi5RKMcovaZsXCGquZGkXuqjIcnKZqO3Wu4Ro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ItLOPO1wYUGjcwtF/dptXBvDNQytHeAEm8Xan2lj5mCFy4Lxqe/cYeoeQe9ucMjuAhpdy/mwrltSo59fRQmkA2MeWvYo+vetFSo/8EVV9tPv4dUnPE8IYnbPtwRN8ud9KIbhj0KTbbd18pJQR/Af+3kUmSqXGKv2dtv4WUBRFng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iieNI8fM; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1956823C7;
+	Tue, 26 Mar 2024 06:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711432977; cv=fail; b=mEZE/8nhvPhRS1UWVYPOOC18e+t8OtcNMdsz40KJ95+d0Y5CbZyJ51yP9LhPGpxqY/h/daLP2rdqGY4vwrCHIYhN8RjYuDCGzKe5IkqE0KyaMEUcVyBAOYelglfEYFZ38Yj8f6Du0X6gOvU3zbKulqlNghC6tjN+cB3XuK1hkPQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711432977; c=relaxed/simple;
+	bh=S4ve10E+hznKi2KSgXbvrkfcd4csYrVgDE3shJGr6aw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jhNGe36N59FU9nCHWLX5CMzREMq6DMGO6bVQ76UOAZQ1ZvxCuD3fwOsThAdwac7xmd/nWFoy4oSXYhVrRxp/RdSMaQVAvsg6EqPj0UbCD2ZyYbNmk3UcC4sythMEmJxyTkar8DzOkGqYn/SEctsb0gXMjHiNx0Rfp7GkxCEMG3c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gRzdywb4; arc=fail smtp.client-ip=40.107.236.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iieNI8fM"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1def3340682so40200955ad.1;
-        Mon, 25 Mar 2024 16:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711408470; x=1712013270; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5NA+R3becyndYRGT5f8sRZeSnD9n4TKt3ID9pBHYfjo=;
-        b=iieNI8fMf+U7/f6xvIY/x3uJJ6gAqOUfnDAnwU4TYSeJOSKq4+HixgseY6BAz8Z55D
-         4axv4Q89DF7t8R1sK+HM5xPBLxD55CxniU4sotk5vxu0jyN0A7XZtaQbjADu88lPjqNG
-         9srCw1/AnqPsCCRSnf8/62Y+4/Z2ONS0heiGUW7DYeRDV+aX+AyaGXsyCGxEdEAfFWlf
-         R/iXRAS+dBLQA56it0hn+6+Ftnha0gABxB9fsD+5UeMTeRmAMhELBj4KF10AXN7awOzT
-         mxxsSnb7YmN+PehmW/zR7ua6WVExqYXt+6A31L1bUxyWFh9UriduT/Dhe0074frjEodZ
-         BjDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711408470; x=1712013270;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5NA+R3becyndYRGT5f8sRZeSnD9n4TKt3ID9pBHYfjo=;
-        b=QoOJB44E+iyTqJVk/p3TXAugqRQN31UIZpP07lk7LB93zDT3yqkbW1ihr4RfM/62/7
-         9JDy2MmoKGB25Im+nyH487TvyDHTh7IhNv/shjtgVhSfNKiSTs+65sJV+jtCg3lyyWyN
-         IQ/U86/42WL9uHdSjhlOf76Odfve7tQAV4WCGcSR/ZLTzvUA+CCgOF4m977lEhoHtc96
-         +ekvnD9M51cXNnI/xakVXP49QCRfLP6iTcAKNZrIUu2ZQL6tRTRqHpuLmzB+fsA8lhtF
-         m66UTXO8q3ek7cYP1TZBowm4B5tmVxD3XC9o7ZIiW+OdrT0yYd6KCSMlEvddXGcvM2Qa
-         SDkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOHmnhJ3F8oesh6LhVh7T9TNrjWBR03gVBXZAeSdiBhZlGO45Mco7ptgmM6ufAqgC3R7JWeIQ1PtKnAOL2hKKo3NuXhNLeQBNtQ2BaKMU5JaO+wzkoyeehxgPVizrxjDqB3CGEI68efBFPTWpeQhnduGlLwzJnrXUsHjhtPnPwdy69zIW8gmcXL0Ajv6aQfvqpmsj9RHSsnAAv5QtPcELhdYTZll5Uyw==
-X-Gm-Message-State: AOJu0YzJdlkUb3LlodBbswYaq+LXX4JTLyHOOhN/Mj6H49fzcPz5KTxi
-	ZVjEAel96YBWPLf26rji4xinf2L1I7OUmiVu8/PRSvzJTTU7pW8rwhF+J01z2QAiFkVNXC/NLKa
-	hg+ykcHWWvePZ7tHMPoUybpOjJuk=
-X-Google-Smtp-Source: AGHT+IFxtJvxausC+t3c2Ddd3qmq7+4yC5kPd5b9eF5t4jHFtC+2YDB2Ym3wRBE6w7MeUZl3AFK1b7sboD4SM2UzNxc=
-X-Received: by 2002:a17:902:dac3:b0:1e0:bd8e:5a66 with SMTP id
- q3-20020a170902dac300b001e0bd8e5a66mr5770221plx.8.1711408470124; Mon, 25 Mar
- 2024 16:14:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gRzdywb4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mOTz7wdfAGEPa39GgeDomrgB2CBBVYO/4pOR/F14xfYCJRy60KJDjv29xcpwptL3RUHpek7Bfk7kbZNKGcwY1EE2957FeL61DohBpoCXnsXHqKv6S0zEeJoCvyNM99ysLumA5H0Ds3Ojdf/ZAwEWaiGadKsK6hDyQDif1e0Rnvu8ghcinimRetWQf52bJgvcGl+6LQSu4D+HLDQM1bJloqTtmXtgyUVxFNULY2tqP8gZV8nyQoce7X++VcPGeKV1T6TqUAXicLE989a3AwStgOk0Us6fcKzoYZBaSIMXM3bP8mTQxGdenIlLpxxQwMF00UaldcWm6MFp/k3UIcM9lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b549lvw/sPsl133FqS7uXelyKGK7+k2/2iAp7rjKad0=;
+ b=Bg2tAi05PmGnqg7qeGWYP3SOCF5/RshJrvHQjDk4V06NsNlckZ3JmN1MslbBS96cpuBPSHMImpNtQcwSulHuZp96JnCxB/pi2uyXejYm5g72vokhD/IJ1ENmDfGw1oj/c0dZLkszBXHEObgU6v42+SeZBmM6egqToR47Gq5Hceg4WOUPxW3lcmDaytbzj7enXgbf3LTJQKlGtQV6i6yKfqMl8AIgd0nL56E4KVMCMAyFIKc69fRyHrsY2u9YAumCTJ69kJVkk7/zlTPFpNC3g9Trssz8fnJ601SKtNsDgB+2lArH8Rx6xB2t9vKW2n1HG/05r4WEK/PmtTPie3weCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b549lvw/sPsl133FqS7uXelyKGK7+k2/2iAp7rjKad0=;
+ b=gRzdywb4VP0NNOFXgHcLnPgpD8tuOZTuQKAzBq2E9RXTUivGnNrX7zceBTAdq1mC4ru4ZSjFYFlJEw81EKPmAkT+RAWWqrn6aTCVMXPER8YlSnMQVtn3lxsL/LThDLBycVHQtLnaaPqgn0QSW1CPOeIsFjPrLtEe30dhazJqTOc=
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by IA1PR12MB6065.namprd12.prod.outlook.com (2603:10b6:208:3ef::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Tue, 26 Mar
+ 2024 06:02:53 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2716:d557:4236:8f0f]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2716:d557:4236:8f0f%6]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
+ 06:02:52 +0000
+Message-ID: <5749c648-b6c4-4400-9628-3cd38d953f58@amd.com>
+Date: Tue, 26 Mar 2024 11:32:38 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/amd/core: Update stalled-cycles-* events for
+ Zen 2 and later
+To: Ian Rogers <irogers@google.com>, mingo@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ eranian@google.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
+References: <cover.1711352180.git.sandipan.das@amd.com>
+ <03d7fc8fa2a28f9be732116009025bdec1b3ec97.1711352180.git.sandipan.das@amd.com>
+ <CAP-5=fVLWMnT4TV2nvbOUTTkWHYowbEOFDYqAvf1hkUEDpkKfw@mail.gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fVLWMnT4TV2nvbOUTTkWHYowbEOFDYqAvf1hkUEDpkKfw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0033.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::8) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <Zf+d9twfyIDosINf@gmail.com> <syviklbpdblcwr3l2seuwyzfrg2hy2shx5f6ho6yf4s4ce63tc@nbo4by247y6z>
-In-Reply-To: <syviklbpdblcwr3l2seuwyzfrg2hy2shx5f6ho6yf4s4ce63tc@nbo4by247y6z>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 25 Mar 2024 16:14:18 -0700
-Message-ID: <CAEf4BzZnUcFEk+7r39n8=zopBeK96wfQ4Vtndd2tY2ymqOpCtA@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-trace-kernel@vger.kernel.org, andrii@kernel.org, 
-	bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|IA1PR12MB6065:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OHuJ2U0LVYbVHbzyQ9cLwqtO8MSmLJph8Y6SOrM2pXcC2gIYg2uElfQM8nf7MDgQRAd3b5pbZ0SVyK0Y64pUKMorNhd69WWGDUtX/sXACRv4cRtcRpAGH9eJYsEsLOsFFI8mL2BSn7ZosTHc7G3eDuKYh62k+nPaEBi19ExA8ic+dZc9Ds8j0Rw1x3xWZh8ce0LDMRLgTZRhbt3I3L/dG2t86vr5qQ/8gn3mIK9jd0rNqI+H+Yra4RYOBCRROduYgoB7oZOSIGVPEk73pRkuOLu2iAOWHmOJf7Fhs7OJkGnqCyJtK3KTqsrapMkLv6hilO7T0BCl1ZKXeAsdmzQlu5+zcjMF+VitYQqrZWpSQ2JDNYhPdn8eBhyzZBiHTFOlcdXB/z1eJizGMJcqDtYSbeamIO0onCHosCV5qtnLZoavXrNoCcDeyBL2ahP9A/nq1J8Dukw55nzyQZtxEO1CKTCcz3qtXQHPtPSNr7fjcpZAGVLHXyhTKpDMObFB1/g381tSrvL7T3zwkGvYz1o+sCWrDzhaQ/7IaOr79yJHV5IlP34czDfJEShyInwfuqoPnN4XAgUJ1aUYnI5v77/3wH99GNalW54fK5WdYt76AJnTIUxGGe1uWPGMjjBghZgA8TOasBPsnytxld9At2K9lPdRatQ0wtbDytAm3sQIDK8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RDBEMmM3a2hXdk5NYjl5NGFsTVB4a3ZMMnFld0NkTnpQQzZUeGlPMjVveW5O?=
+ =?utf-8?B?bUJFbVhJUlpPdGd4QkZ1OGlHbkpPR1ZvSVpGb2UrT2RjOGdXOWFpdkhwbVp0?=
+ =?utf-8?B?ZzJ4ZjZBVUo4WVh3S291dUZFdldlNFpjZ1g5MW1taTgvaXIwbmZEOE8zVHVK?=
+ =?utf-8?B?STVnMlRsbzdSbStPd3h0RmJBQW8wTG5BRHRyaEVvSUxDUUxNUDVNenBkWkZM?=
+ =?utf-8?B?U21vRU5zZWlOUmQwdDZsYm5kaER3WEpGdEtTQkNRSHlkQnFya0orc0FhekNJ?=
+ =?utf-8?B?K25BTDRyRFpLeVFFSXorY2pEL2FyWjlGTHpzbjlSdGNsNjZIOGRKanhXVFFw?=
+ =?utf-8?B?MmJvV0thK0VJczh6UURySHErSUoxMmx1czZFUkRSdlJ3TVpkaFduR3FQUTd1?=
+ =?utf-8?B?M3Fib3IvMGdzbEFwekhKR0lMU2xJdlRQeFRGWXZvWGhMcXlDa2ZQMWtHUC9Y?=
+ =?utf-8?B?UzdEQ3c3T2FsREpjK2FpRG1MT1ovN0EvZXNuM0xPU2IzZmJqdEJHUURnMHJr?=
+ =?utf-8?B?RDBCbVFOVFpOemErbUhYUmtNdnFUOG9nM3JJODJOMS9FWmVOa1ZjVHdERUl2?=
+ =?utf-8?B?cmw2czFIUll6Z2Y1YzlqZ09sdU1Kb1RLMDNCOU13aWY1dS9wWDlON3NuKzlO?=
+ =?utf-8?B?S2lKWXVUYmpmVDNBR2gwS0MvNURDdG11b0wwTURWa3BCSTJvdGx6OVRFM2J5?=
+ =?utf-8?B?dEFTRElmSDNpV1dwbHkyL1ozbGpoanFvOTZLc1lDbXZRM2draktoWUVuV3VL?=
+ =?utf-8?B?ODFPTk9OZkJRejFISS82MllBYWxuQ2NFYTJrU0RsZ1diOEdaZFhxQjJib0Fs?=
+ =?utf-8?B?dTBTVXZRUmZXaGJEVjl0M1g4WWZKL0VOcWxHT2hMdnl6OXpiRDJiZk5CRWdV?=
+ =?utf-8?B?Z3JVWG1oeVZWYkcvTmpzQXQ0NTRyaWsyRUZ2Z1dDbmRzSFBLWHFTWEtETCt1?=
+ =?utf-8?B?aDUwNHhHZEhKR3VtRm5TT3NDN3Vwb1ZibkNRMGNsNjZPSVJ2UW9aL2w1Wm5B?=
+ =?utf-8?B?Vm16ZnNxWWlzZENRSU5QcUxlUmNPM2Z1dFpFREFVOFpZZHpQc3Exd0ZYOXBS?=
+ =?utf-8?B?NkhmZGxLMXkyQWdHcitZaGdNd3VuM1RKUlZ3SnRPQytWUVhuOUlIY2xZbk9y?=
+ =?utf-8?B?eHQ2RWloRjgrbG1IUjRZUHpDeTZ5VHJRMisxQ3pwTEJHaEZNY1JrSmJHZnhW?=
+ =?utf-8?B?YTRWaWkzVm9FSzJWaWs4VSt3Mzk1c2hkZXNUVHJsb3dFb1ZpNldnNGc3clFE?=
+ =?utf-8?B?YXk5ZTJmSHVMZGdoU0F3TElMSTdnMkF2REJqdklxZW4zTFpXQThPak5CbitC?=
+ =?utf-8?B?dmVUMVB0SFFkV0JDVzBTOHdCaGxJWlNKWmtEZlZZdE5ZamtjMjQxUlRZSkpy?=
+ =?utf-8?B?SkVBME8rRXIrU1dxRnlVOXRlSkRTOC9GWDh0aW15OURKaFMyL0JNYkRQMkth?=
+ =?utf-8?B?eGkxMm93SEw2bzJaOUIxRXhEajFTWkhXcE5HQ0FHODZWb3VNbStiMnJnQkF4?=
+ =?utf-8?B?bVFtOFhvZ1diNTY5d3d2ZFVMT0pYMTNxVExMcUwyUFUvK25uNVZSSlVjRFZr?=
+ =?utf-8?B?c1prWEErMWdYaHN0VWNpcEtCaVl5UDJNbllXZFhXems5MlNMMkxsQjI5V0RI?=
+ =?utf-8?B?VERjQjFXUEkvbTBMb21NV0hkUHFLcUkxTzlBeDljcUlUeXNQRUZISWNwcjNa?=
+ =?utf-8?B?MG9ZMER4eHR0TllGZVlqcVFPRkJmNnlxZSt1cXZTTkdTMWl4WDVHamhTOWF1?=
+ =?utf-8?B?WHBYYnVQemhjSXFpZGdPOXFNdnFvQWF3c2p4WE5rZWxmTDFrek5zbGJXaVhL?=
+ =?utf-8?B?Zm5jeGhMV09iU21IMFNza0x4ekRwbzdjNGtqTU1ZSFVMdzliTkEyUmJFR0U1?=
+ =?utf-8?B?WUlBQ2JUZXdmMEMyZE15ZDJBOFIwMStId2hXT0pXYlAyMVh0aVlMVUQ4Sks0?=
+ =?utf-8?B?UlVzQk9iclU5VkdNbm9CRExpTWNYa3liKzZPK0pCMnlZRHBIUCtCdHB2aytn?=
+ =?utf-8?B?NDQyYW10ZnpWVXNmK21vRXp1N1M5endDZlJqeDdHUlpBRVl0OVRwRVg2Zk9F?=
+ =?utf-8?B?OUlaTy9mSnZOUjJrQklDQVZ5QTNrRUFVbHZDS1lMR3hSRDV2V1g4dXVwc0Yy?=
+ =?utf-8?Q?EvxCmCOMouABuWPVtAuAcRBvV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61586faf-5269-4b54-69b4-08dc4d5a5f82
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 06:02:52.8147
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c31M8OAQhX+chM+AQeAHU79NyPjh1Otfppmtvncb5VM4mKnoqhemr5m0lt08G+kHcMm6lw/mwbjqR/F6Xv+9WQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6065
 
-On Mon, Mar 25, 2024 at 12:12=E2=80=AFPM Jonthan Haslam
-<jonathan.haslam@gmail.com> wrote:
->
-> Hi Ingo,
->
-> > > This change has been tested against production workloads that exhibit
-> > > significant contention on the spinlock and an almost order of magnitu=
-de
-> > > reduction for mean uprobe execution time is observed (28 -> 3.5 micro=
-secs).
-> >
-> > Have you considered/measured per-CPU RW semaphores?
->
-> No I hadn't but thanks hugely for suggesting it! In initial measurements
-> it seems to be between 20-100% faster than the RW spinlocks! Apologies fo=
-r
-> all the exclamation marks but I'm very excited. I'll do some more testing
-> tomorrow but so far it's looking very good.
->
+On 3/25/2024 8:04 PM, Ian Rogers wrote:
+> On Mon, Mar 25, 2024 at 12:48 AM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> AMD processors based on Zen 2 and later microarchitectures do not
+>> support PMCx087 (instruction pipe stalls) which is used as the backing
+>> event for "stalled-cycles-frontend" and "stalled-cycles-backend". Use
+>> PMCx0A9 (cycles where micro-op queue is empty) instead to count frontend
+>> stalls and remove the entry for backend stalls since there is no direct
+>> replacement.
+>>
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> 
+> This looks good to me. Should there be a Fixes tag for the sake of backports?
+> 
 
-Documentation ([0]) says that locking for writing calls
-synchronize_rcu(), is that right? If that's true, attaching multiple
-uprobes (including just attaching a single BPF multi-uprobe) will take
-a really long time. We need to confirm we are not significantly
-regressing this. And if we do, we need to take measures in the BPF
-multi-uprobe attachment code path to make sure that a single
-multi-uprobe attachment is still fast.
+My bad. Yes, there should a fixes tag.
 
-If my worries above turn out to be true, it still feels like a first
-good step should be landing this patch as is (and get it backported to
-older kernels), and then have percpu rw-semaphore as a final (and a
-bit more invasive) solution (it's RCU-based, so feels like a good
-primitive to settle on), making sure to not regress multi-uprobes
-(we'll probably will need some batched API for multiple uprobes).
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
 
-Thoughts?
+Ingo, I see that you have already pushed this to the perf/urgent branch.
+Should I send a v2?
 
-  [0] https://docs.kernel.org/locking/percpu-rw-semaphore.html
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks,
+> Ian
+> 
+>> ---
+>>  arch/x86/events/amd/core.c | 20 +++++++++++++++++---
+>>  1 file changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>> index aec16e581f5b..afe4a809f2ed 100644
+>> --- a/arch/x86/events/amd/core.c
+>> +++ b/arch/x86/events/amd/core.c
+>> @@ -250,7 +250,7 @@ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>>  /*
+>>   * AMD Performance Monitor Family 17h and later:
+>>   */
+>> -static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>> +static const u64 amd_zen1_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>>  {
+>>         [PERF_COUNT_HW_CPU_CYCLES]              = 0x0076,
+>>         [PERF_COUNT_HW_INSTRUCTIONS]            = 0x00c0,
+>> @@ -262,10 +262,24 @@ static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>>         [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]  = 0x0187,
+>>  };
+>>
+>> +static const u64 amd_zen2_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>> +{
+>> +       [PERF_COUNT_HW_CPU_CYCLES]              = 0x0076,
+>> +       [PERF_COUNT_HW_INSTRUCTIONS]            = 0x00c0,
+>> +       [PERF_COUNT_HW_CACHE_REFERENCES]        = 0xff60,
+>> +       [PERF_COUNT_HW_CACHE_MISSES]            = 0x0964,
+>> +       [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]     = 0x00c2,
+>> +       [PERF_COUNT_HW_BRANCH_MISSES]           = 0x00c3,
+>> +       [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] = 0x00a9,
+>> +};
+>> +
+>>  static u64 amd_pmu_event_map(int hw_event)
+>>  {
+>> -       if (boot_cpu_data.x86 >= 0x17)
+>> -               return amd_f17h_perfmon_event_map[hw_event];
+>> +       if (cpu_feature_enabled(X86_FEATURE_ZEN2) || boot_cpu_data.x86 >= 0x19)
+>> +               return amd_zen2_perfmon_event_map[hw_event];
+>> +
+>> +       if (cpu_feature_enabled(X86_FEATURE_ZEN1))
+>> +               return amd_zen1_perfmon_event_map[hw_event];
+>>
+>>         return amd_perfmon_event_map[hw_event];
+>>  }
+>> --
+>> 2.34.1
+>>
 
-> Thanks again for the input.
->
-> Jon.
