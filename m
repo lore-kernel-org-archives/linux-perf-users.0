@@ -1,85 +1,81 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA9FE45C18
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Mar 2024 09:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C68548F5;
+	Tue, 26 Mar 2024 11:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711445717; cv=none; b=MiQchd7XCUyTUOHArIMz4gcb0bKwNRjIiF679D0uFOGTuuSiojnidnZy9kkiMBVSqYSSKhMKxG1vLiwz6PydEcpW/Fg8BoF4ilCn9B6WsmL6ncwd8ZMzm5HnbZLVv47H+WDxpPuMcXPleLdMklwq69gzDm2cqH+BOB/uT1vjyAU=
+	t=1711453095; cv=none; b=SdFPqmgJSYe7eRkzR6u1TmbiUqeS60IFij73YwEAC6upZP+YEwtFzq0Ij285VNEcTSxKnu+6a4HW3Uirts2lTGrr6PxfUQ4IVPwGNqiF5sJ8qVCIACljQMlODdbIbtG8GqmVtoi7x6eh+UCuZuaGnGk1vVTWqNM0pvpu4zLy7eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711445717; c=relaxed/simple;
-	bh=AuBPGlc2S5bTaKFMc3qlfOSSM4pupvF9qJ0mH3B8dgY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=eptH+2sWkoC1Q0iKo9mkLxvFDtW0o54u7IE4OzXGGhR4hyjgWRW9qk/CAgh2Gy7Bd2uC1iPDjQAn6nHDq4G9pY5YzS6NrudcJC8TekMTNX6j+l07vcs5YtXD72mqyculTWSkntnZqOrgnpP1NR5g5bwVjdQJP9/aavZsGRRlfIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxOPDNlgJmA1IeAA--.6151S3;
-	Tue, 26 Mar 2024 17:35:09 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx8OTIlgJmZL1oAA--.10454S3;
-	Tue, 26 Mar 2024 17:35:04 +0800 (CST)
-Subject: Re: [PATCH 3/3] tools/perf/arch/powerc: Add get_arch_regnum for
- powerpc
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
- jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
- namhyung@kernel.org
-References: <20240309072513.9418-1-atrajeev@linux.vnet.ibm.com>
- <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <4072f03b-a8a2-5611-901e-bc16e97c3fe6@loongson.cn>
-Date: Tue, 26 Mar 2024 17:35:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1711453095; c=relaxed/simple;
+	bh=lw2/MHVdNGxwuR1HESLQBQVsZMg/4d22FzVRjET0DfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ejmkFc/mwjKBFgucWvTlftJCXh+jbHamiKW06T1uqnaRFsLVm3mRSyaJJ2mb08VGyR3dZjcCY1TLBrmTkhkNKgGI0p0ucDf+uPDCpbRJMefsOUr4MMLmCMJqk9gznpYdM+M/iMfcK0jk5P5irnt8L/yVG1vHTQX4plSDg7sQ0V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 898932F4;
+	Tue, 26 Mar 2024 04:38:45 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D48963F64C;
+	Tue, 26 Mar 2024 04:38:09 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf test: Increase buffer size for Coresight basic tests
+Date: Tue, 26 Mar 2024 11:37:49 +0000
+Message-Id: <20240326113749.257250-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240309072513.9418-4-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bx8OTIlgJmZL1oAA--.10454S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JrW8Cr1UWF1ruFy7ArW7KFX_yoW3CFbE9a
-	97Jr97JrWrXFnrKFy7GrWrZ34Fka13GFZxXF48Xa47Grn5ZFZI9F45Xrn3Cr10qr18Jrs2
-	kr1ktrn5Ww129osvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcApnDU
-	UUU
+Content-Transfer-Encoding: 8bit
 
-Hi Athira and Namhyung,
+These tests record in a mode that includes kernel trace but look for
+samples of a userspace process. This makes them sensitive to any kernel
+compilation options that increase the amount of time spent in the
+kernel. If the trace buffer is completely filled before userspace is
+reached then the test will fail. Double the buffer size to fix this.
 
-On 03/09/2024 03:25 PM, Athira Rajeev wrote:
-> The function get_dwarf_regnum() returns a DWARF register number
-> from a register name string. This calls arch specific function
-> get_arch_regnum to return register number for corresponding arch.
-> Add mappings for register name to register number in powerpc code:
-> arch/powerpc/util/dwarf-regs.c
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/arch/powerpc/util/dwarf-regs.c | 29 +++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+The other tests in the same file aren't sensitive to this for various
+reasons, for example the iterate devices test filters by userspace
+trace only. But in order to keep coverage of all the modes, increase the
+buffer size rather than filtering by userspace for the basic tests.
 
-I found commit 3eee606757ad ("perf dwarf-regs: Add get_dwarf_regnum()")
-for x86, would you be able to share how to test these changes? What is
-the difference with and without the patches?
+Fixes: d1efa4a0a696 ("perf cs-etm: Add separate decode paths for timeless and per-thread modes")
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/shell/test_arm_coresight.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Tiezhu
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+index 65dd85207125..3302ea0b9672 100755
+--- a/tools/perf/tests/shell/test_arm_coresight.sh
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -188,7 +188,7 @@ arm_cs_etm_snapshot_test() {
+ 
+ arm_cs_etm_basic_test() {
+ 	echo "Recording trace with '$*'"
+-	perf record -o ${perfdata} "$@" -- ls > /dev/null 2>&1
++	perf record -o ${perfdata} "$@" -m,8M -- ls > /dev/null 2>&1
+ 
+ 	perf_script_branch_samples ls &&
+ 	perf_report_branch_samples ls &&
+-- 
+2.34.1
 
