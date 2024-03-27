@@ -1,206 +1,181 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B128014E2EE;
-	Wed, 27 Mar 2024 17:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165112E405;
+	Wed, 27 Mar 2024 20:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711559166; cv=none; b=YhA5FC4jlC3m/jMcdR2xshXxDwMbJJgQPvcA1aRqyehnbyU+6iS1IIa2WzVJe2QPvMnLX6EjJ3xXRcFtx4hsacze6eVrfIzDCz45QlVhjBW9WDu39OeLqYfVoMgYVWOqCSc/VNSXYH9FtTPbLh9VdB8PlNjMLEk7ExBsyc0k2UM=
+	t=1711571675; cv=none; b=MQfM21dLw4QLLKhkKMZx9/4cRlmh3X9hteEpZBuM1SXuut0RdDwFYTSXJnwTcBxd9/c6eh8s0Xu/Qb2dxgUOBrDE2KR8KrDd8t54trkAyu9dYdJhQGhzrC7Rjr6W7UkEusHN2Ny6WNKN7YUJRDJjClVG271zaJ68pZvGjJGek7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711559166; c=relaxed/simple;
-	bh=ahZyAforUiq+wNzRyymfSb7gbzaJyiqD41A/VBDCRLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TjdFiuI7xCaSHLHNFQFcG0fxugKTdjrCCAjBLaaQzEVAT5MB+xWlOa29GaV153bKzAm/U0Q6+u1hArY0jNlG1N9ljkgbPFUPiJyHHsI8ciOotAM5FAcn1maxjawAP+SiptYdg6a84fHq2gcpuFQjcYr63qVfZEFqg8H26oSTqak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7NmMz1a; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1711571675; c=relaxed/simple;
+	bh=KwmTraLokWvUVav8mjs3/ZYVbaEKtrQRNzc9845lWV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eFGTeQRLds4AtYuj2Pt1Hh9dcxxpTK2mepzqwTkTtZCjhW6UWv1muMkzn+B8PzIY7it68wCccltAJNe6E1u2DRVRv5tRz38qUt+j+svHVrg0jlc1bG7zoHpWgv1j3hvz/vtY9QZMi2K444ApwCluIV397QRxsHaWATeYONGvUFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7NmMz1a"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso3161566b.2;
-        Wed, 27 Mar 2024 10:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711559163; x=1712163963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
-        b=W7NmMz1adzD4xD9ZaD40hpdYRNJeP6pnvs3/osh3Ljz6zNen2HCuMXr0kvLnYE3DxC
-         diVIDBB8K0hCpu8l7lyZEnqDkEAXNBO8SLNAJifS4yi7cqiJTi46dxNhfZDqQVJv2ckI
-         Wel/BRYMQE5p/fJ+vZmxMkTKJiJlRUSI8K89ov/aVzXeDq52nNM8UsOfd9Gb523Kk9/w
-         jD3xeYyj3VjFjsHbUYw/RyWzoOSGbVpmjRo7vzkqT1XjvAuc+e1lguuR1nimrcQKURCS
-         55aMtVG5Kbg+st103pDRiDq5+h2y5K7IHgRMcmIy/hIuEkDpxjqxLc6Q5tfTwa8Umz3s
-         9gyg==
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e0d8403257so2439445ad.1;
+        Wed, 27 Mar 2024 13:34:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711559163; x=1712163963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
-        b=kVIRltAugArcPs53SXx2DvGV3nvOz05ID4T+4DpLpDdYkqMb/AkFShP3eyH2h8mDrz
-         yq3vqD5EgLDJrT8KJrj65hHIZ8VQUffQobe1+9lQVK0FftVM7vLaj9b3HbbzrnR40IPK
-         gGTGRFbq1XFSSC2A0es0W/k2z9okN2NjZqOE424ZncYM/yPjN6Qk4jo3M60uIht5q/Ff
-         fn70HmdSZ0UecDQ5qS6Lq99uvyMJvSEg61aCEnMeRsmsr10H2v6qzRwn2/U2U327Xrco
-         y3u1bvSxKl7Gm2g7AK5jym5KCXNkLT0a/ZbzJiABmvZ6m8kN1NONrUmoznjJhjmkAFW4
-         IRzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlGY06RdSAPg+Vve6/Q+QTxGNfeCbhyJJS1zeO/WrItC5Q1PFftZo3o5LcN4BjV47REFks0tAg8wcehmfQU2glKNigszXv9fH2lEsQ6jU3CltdjQP5k4l0t3YEmg9ntmixYVBfO4RJyxmEScDtLrtYo4RpITQrHhn3r86abFwjMkY046FY51fyCAsFfowfjY6YC/1TGTU4VH5IbTb6SbJsmcWREPrtbw==
-X-Gm-Message-State: AOJu0YzgwNLNTaMb5EoskME7IGt2MjUt0CGik99ZDcRbs1w86D75VR6M
-	hJKKR71bndpDY+zL+bziv71eJewoSTdQkAGYl8/I5wP/aHXPAabf
-X-Google-Smtp-Source: AGHT+IE1PEKoVdAhIynLjkvyagQxfnizdEEGmUrp4CFr48Ozk0XLMxEW+3OrgIWT6Rqhttdhya5atg==
-X-Received: by 2002:a17:906:3798:b0:a46:206d:369b with SMTP id n24-20020a170906379800b00a46206d369bmr52979ejc.28.1711559162756;
-        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
-Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::4:b63d])
-        by smtp.gmail.com with ESMTPSA id ao18-20020a170907359200b00a46aba003eesm5624401ejc.215.2024.03.27.10.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
-Date: Wed, 27 Mar 2024 17:06:01 +0000
-From: Jonthan Haslam <jonathan.haslam@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
- <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+        d=1e100.net; s=20230601; t=1711571673; x=1712176473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+x7D6kOto8z970KdkxwYoEzZ3J7QDTI0xwm/8QGlp4A=;
+        b=nQCZXaEfbcUS5fMXBagdziGUiFx3fI+vNQPynskZr+A8DGzB8fjig1UyREBdjP+IR2
+         WHtTHAxB5GTNL9WRKKgnB7pLdgb9l/JG5F+z5hCowj9ScRgtTDDbgfhQLRMQMX10+Apd
+         iStqmOYZBoefqQSabHoCHM04zKjEUK4a9lyzN6aK38339NyZkAZ3r6RBeKE5FvX0UBVM
+         GA+og9Xzr1XTC4MqTY5hpo0KIe9IKIfb/uOsNOhYBYWCksXfxgDdyPhD4VeJ5aBjgSZp
+         yJTeWFsbPjd3WkOGw1aZnGuqlR8s89Eh2XTMKlG/U947XZwafbBuYvWPGwr24WI7HH05
+         Nb0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXkRKbbD3SygrLpeqKWcXRW78805dDQjq50TBqX44qI0jmj+lYWnttKaGtRpM6Ecb/Fl9jn7raHUw/3xdLxFafE90IArEVDd7cnpQcz4eaxJWqvq0uNOiaLYjUw+LHqMX4J2soNRTUPsQweHZjXdw==
+X-Gm-Message-State: AOJu0YzL7cC5SLT0tocjs+ShGZ/YSSwcAOTzIsob1AVn8yBU0HqgLE6k
+	zlYAg0f55J1J9YrmtQkq9QrGdEjBzUmMKrAyRggNJb5gZH3E+vxdgZjkjYJR0+nh+ljjZqPtNoY
+	IGTWvu5uV/l09ScvJRQRWkGD01HE=
+X-Google-Smtp-Source: AGHT+IFCHLcKkNsvRbq1SvSTDKJZpEtgXNJVuHS8g8JgpKuR8S+4cBcizzVtu8ZhK0Bj1390CuRfButTxzapzb5F6AM=
+X-Received: by 2002:a17:902:d54f:b0:1e0:b5d4:9f55 with SMTP id
+ z15-20020a170902d54f00b001e0b5d49f55mr911146plf.50.1711571673343; Wed, 27 Mar
+ 2024 13:34:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+References: <20240322164237.203358-1-ben.gainey@arm.com> <CAM9d7chfXH0ynfT_PSPyjhE8ATa=fV-kbx_csgeQrWiv+1EiiQ@mail.gmail.com>
+ <70cb93e37dc6036c7638a2630ae6dcbaa728602a.camel@arm.com>
+In-Reply-To: <70cb93e37dc6036c7638a2630ae6dcbaa728602a.camel@arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 27 Mar 2024 13:34:22 -0700
+Message-ID: <CAM9d7ciy+8j86n0v_tOiL=MswcVjj+qkROXvOmVd57MT14v_0w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] perf: Support PERF_SAMPLE_READ with inherit_stat
+To: Ben Gainey <Ben.Gainey@arm.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, James Clark <James.Clark@arm.com>, 
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "irogers@google.com" <irogers@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > Masami,
-> > 
-> > Given the discussion around per-cpu rw semaphore and need for
-> > (internal) batched attachment API for uprobes, do you think you can
-> > apply this patch as is for now? We can then gain initial improvements
-> > in scalability that are also easy to backport, and Jonathan will work
-> > on a more complete solution based on per-cpu RW semaphore, as
-> > suggested by Ingo.
-> 
-> Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> I would like to wait for the next version.
+Hello,
 
-My initial tests show a nice improvement on the over RW spinlocks but
-significant regression in acquiring a write lock. I've got a few days
-vacation over Easter but I'll aim to get some more formalised results out
-to the thread toward the end of next week.
+On Mon, Mar 25, 2024 at 3:12=E2=80=AFAM Ben Gainey <Ben.Gainey@arm.com> wro=
+te:
+>
+> On Fri, 2024-03-22 at 18:22 -0700, Namhyung Kim wrote:
+> > On Fri, Mar 22, 2024 at 9:42=E2=80=AFAM Ben Gainey <ben.gainey@arm.com>
+> > wrote:
+> > >
+> > > This change allows events to use PERF_SAMPLE READ with inherit so
+> > > long
+> > > as both inherit_stat and PERF_SAMPLE_TID are set.
+> > >
+> > > Currently it is not possible to use PERF_SAMPLE_READ with inherit.
+> > > This
+> > > restriction assumes the user is interested in collecting aggregate
+> > > statistics as per `perf stat`. It prevents a user from collecting
+> > > per-thread samples using counter groups from a multi-threaded or
+> > > multi-process application, as with `perf record -e '{....}:S'`.
+> > > Instead
+> > > users must use system-wide mode, or forgo the ability to sample
+> > > counter
+> > > groups. System-wide mode is often problematic as it requires
+> > > specific
+> > > permissions (no CAP_PERFMON / root access), or may lead to capture
+> > > of
+> > > significant amounts of extra data from other processes running on
+> > > the
+> > > system.
+> > >
+> > > Perf already supports the ability to collect per-thread counts with
+> > > `inherit` via the `inherit_stat` flag. This patch changes
+> >
+> > I'm not sure about this part.  IIUC inherit and inherit_stat is not
+> > for
+> > per-thread counts, it only supports per-process (including children)
+> > events.
+>
+> Hi Namhyung
+>
+> Thanks for the comments...
+>
+> I don't think this is correct, if you compare the behaviour of
+>
+>     perf record --no-inherit ... <some-forking-processes>
+>     perf script -F pid,tid | sort -u
+> and
+>     perf record --no-inherit ... <some-multithreaded-processes>
+>     perf script -F pid,tid | sort -u
+>
+> vs
+>
+>     perf record ... <some-forking-processes>
+>     perf script -F pid,tid | sort -u
+> and
+>     perf record .. <some-multithreaded-processes>
+>     perf script -F pid,tid | sort -u
+>
+> The behaviour is consistent with the fact that no-inherit only records
+> the primary thread of the primary process, whereas in the inherit case
+> any child tasks (either threads or forked processes) is recorded.
 
-Jon.
+Right, I was talking about the counting behavior not sampling
+as inherit_stat is only for the counting.  I think it'd return an error
+if event attr has both sample_freq and inherit_stat.
 
-> 
-> Thank you,
-> 
-> > 
-> > >
-> > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > will depend on how much lock contention happens.
-> > >
-> > > Thank you,
-> > >
-> > > >
-> > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > >
-> > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > ---
-> > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > --- a/kernel/events/uprobes.c
-> > > > +++ b/kernel/events/uprobes.c
-> > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > >   */
-> > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > >
-> > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > >
-> > > >  #define UPROBES_HASH_SZ      13
-> > > >  /* serialize uprobe->pending_list */
-> > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > >  {
-> > > >       struct uprobe *uprobe;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       uprobe = __find_uprobe(inode, offset);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >
-> > > >       return uprobe;
-> > > >  }
-> > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > >  {
-> > > >       struct uprobe *u;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     write_lock(&uprobes_treelock);
-> > > >       u = __insert_uprobe(uprobe);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     write_unlock(&uprobes_treelock);
-> > > >
-> > > >       return u;
-> > > >  }
-> > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > >               return;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     write_lock(&uprobes_treelock);
-> > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     write_unlock(&uprobes_treelock);
-> > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > >       put_uprobe(uprobe);
-> > > >  }
-> > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > >       min = vaddr_to_offset(vma, start);
-> > > >       max = min + (end - start) - 1;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       n = find_node_in_range(inode, min, max);
-> > > >       if (n) {
-> > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > >                       get_uprobe(u);
-> > > >               }
-> > > >       }
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >  }
-> > > >
-> > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > >       min = vaddr_to_offset(vma, start);
-> > > >       max = min + (end - start) - 1;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       n = find_node_in_range(inode, min, max);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >
-> > > >       return !!n;
-> > > >  }
-> > > > --
-> > > > 2.43.0
-> > > >
-> > >
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> >
+> >
+> > > `perf_event_alloc` relaxing the restriction to combine `inherit`
+> > > with
+> > > `PERF_SAMPLE_READ` so that the combination will be allowed so long
+> > > as
+> > > `inherit_stat` and `PERF_SAMPLE_TID` are enabled.
+> >
+> > Anyway, does it really need 'inherit_stat'?  I think it's only for
+> > counting use cases (e.g. 'perf stat') not for sampling.
+>
+>
+> I would be very happy to remove the inherit_stat requirement. When I
+> first came to this it seemed like the logic was all there in
+> inherit_stat already, but now that I have to take a different path in
+> `perf_event_context_sched_out` I suspect it should be trivial to remove
+> the inherit_stat requirement.
+
+ok.
+
+> >
+> > Also technically, it can have PERF_SAMPLE_STREAM_ID instead
+> > of PERF_SAMPLE_TID to distinguish the counter values.
+>
+>
+> It looks like you are correct, but the ID given in the read_format part
+> of PERF_SAMPLE_RECORD is the ID rather than STREAM_ID. (I had
+> incorrectly thought/stated it was the latter). Hence when processing
+> the read_format values in the sample record, we either need to use the
+> TID to uniquely identify the source, or we would need to modify the
+> read_format to (additionally) include the STREAM_ID.
+>
+>  * The current approach in tools uses the ID+TID, which puts more
+> complexity in the tools but means there isn't an extra field in the
+> read_format data (for each value).
+>  * Alternatively I could introduce a PERF_FORMAT_STREAM_ID; I would
+> expect that the user/tool would need to specify
+> PERF_FORMAT_ID|PERF_FORMAT_STREAM_ID as they would need to use the ID
+> to lookup the correct perf_event_attr, but could use the STREAM_ID to
+> uniquely identify the child event. This approach would add an extra u64
+> per value in the read_format data but is possibly simpler/safer for
+> tools?
+>
+> Any preferences?
+
+I think it's better to use TID + ID.  IIUC there's no way to track
+STREAM_ID for new children other than getting it from sample.
+As sample has TID already it'd be meaningless using STREAM_ID
+to distinguish events.
+
+Thanks,
+Namhyung
