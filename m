@@ -1,127 +1,150 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D117D132808
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 16:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0B04437B;
+	Thu, 28 Mar 2024 17:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643807; cv=none; b=thfpNmluvmk9ShqMtQykdkuefUd4M5hMj9L7cefTBCLYj75/bx0bOJ9M4oM2CDNu+rmWaCJDtrL6wBS4pyDRgIugAVYF4FNKYCEl9SmE4H2Poo5/W5gz/Yh2W0ZqTfo9ax0mVf+uHch5K/LlQWcbooyz1ViDAzB2/dqoNoKOiqc=
+	t=1711648013; cv=none; b=iHvl/TV/6Wp93vqmwr+2qnaJWhj0/ds2wULTpKP3q9CP7Q3dne0x/jYC/ePraxfJ37AyZp1r6ZXnbVsdglSCVDenCb8FtSZmIt6R759tEyfn3tjYr5dkeD9OCK1cfEzSF09a6+TPVT2E6Ea8AlI8PtqvoHYcCGMoeB2RlVEkncI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643807; c=relaxed/simple;
-	bh=cEtyH6tzCXZpqAEUrIjkkPnv3RHdmfl3sgSQefQ/eQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0wgQILh/DTuTz5rBthDdehZllhWMl9Qkf4f9wVSSZKLr+hhY3lYrNFcoLAaBKaAhwP5s/NFTsqVstf8wn89gUhvUMmo1vuitK+juC24CR40oMkcz/Suz4117PoVR5oU+R9vKgIz7/T/MnSYnk6nGQ87InMVpqSMBVBaWu/K4sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M5G0B3zZ; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711648013; c=relaxed/simple;
+	bh=YNR7A+kRgAjMXDjHr2JB1yywFqUpQ/6e+8DUHAu4Nlg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nm/tXP2+yIQtZXI2ONJodO/9rf7GC3aUVWsbRsSTqQ9eFG8xrAaOojvomVLTGu8xrB3Jz8S1oiB8j8oh45v0Ox1GzQuUBpwf8yqnh+6QVKxw2ShsHUqjxKk8TUyQfXNy5E4rvNbX4vZU/S2/gpU4X7IvNhS3YQvYj50G+44/mGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0dgZsew; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M5G0B3zZ"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-430d3fcc511so353251cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 09:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711643805; x=1712248605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JyYiyB+19yl+3Mab3HR7ROG9FFYrqYxnBsEAwzAS+Xg=;
-        b=M5G0B3zZED1wx3GFt33wAVHvNh4RNTYQOZuS48LLzu8pSwMuOI5/G0isI+Ae2s7uJ3
-         UmboGTHEcmDqnRtoSRTH+5y6uta5PkSCT9mSySCfBbMfP5+kkNFoQBqmxG2y5AY7ZxFo
-         zr1ZPrZdhYGMNVidzVe30QaCcA1N7Ff10Fd4hLQJ+9JSAkZJRt1kd74G3dGMKuYM6uL5
-         QyyiT/ziN3TLDKry4BO1ISeizz8JY82OMAEXIMC4Q1Olm3nyIY037ixWZTXPmg97TQj6
-         v/DAC1fZrtVx1aJraZN9YlbQX5tKFe6T5mrGzzcIwqV2egJ7dyIkjOKn/ZHpEEqi8WIL
-         JFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711643805; x=1712248605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JyYiyB+19yl+3Mab3HR7ROG9FFYrqYxnBsEAwzAS+Xg=;
-        b=MGTmALDjD+eMENRQT+47eyfbulrO48JOCRRE/2zjrIRFWLEfpeZQaVPo+zHBoUxmXT
-         fH8/8E65l8Pq+eJQpV1kAM2MrRZWM5vFiiddCEG+L71HCObcy8RnkXZEszArdMLJASNs
-         r9UPRPdX3fYZMu6qB2KTeCNunb1oAVPytyBLhcnYkOaFdlLDmyOsUx7DK9OK6Nc71ndz
-         TnRsJMk+nrYYhD27Y8y5WPslvHn6qWXzgEQi9xdrKdTmCPBPEidjCNYsIksrEmYBteKk
-         aX/by991dnRTVt6QrMjJnrhLfLa4XFFvHVXkvb0iLvqjxBZ6uB8zk/nPIiF7+SPmXDg+
-         /rjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEOp4lty9h5Wvvnl1BUwgKfu9B+05Hgu97H95ZMXO4bi7xWy9quXV9fqt/PUlUuCPgcivYvzuFL6z7RnRg59/8rxXMechAwj2LjXmBEWhz6g==
-X-Gm-Message-State: AOJu0Yyast7W9mY2A2wMVsHrf+M+UdQWBBS+G+gmvcpUDDeMQZ6Ky6ZZ
-	/dhsvxcFHlZgjB1q6xdU5HLOX3F5bOBm2HhmmvDs99Je+3t1PracLe9LMRmUnoHUhSaXF3CIm+o
-	8iwuYRq+SixzX9ZIondp9MzNun2+CIDdV2EBn
-X-Google-Smtp-Source: AGHT+IHlZ9eO6WHEgYjS5TA/7zKzm6r7go+pnsDTXXfO5LZSesL0xptxLsIlxVDFf0RndXT9MS/+lYUHPWVESSFQ2iE=
-X-Received: by 2002:a05:622a:6182:b0:432:b6a9:9015 with SMTP id
- hh2-20020a05622a618200b00432b6a99015mr182897qtb.2.1711643804568; Thu, 28 Mar
- 2024 09:36:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0dgZsew"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F2CC433C7;
+	Thu, 28 Mar 2024 17:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711648012;
+	bh=YNR7A+kRgAjMXDjHr2JB1yywFqUpQ/6e+8DUHAu4Nlg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f0dgZsewbfCG8PiA45FJQw1TL/EasYUMhLz2/QhlXeqqfXOMfSFzRv9IkgTHijlFV
+	 FhqTfFXUmCq641ywYGBQNJBov/tcSVKyclO43CvFgYl4vG0jR5PyLIGzGCMyZLU3uq
+	 upLsVvNze+XfKUgkqPNlhtRQ4CV0x+8HigCh3u2WrcBvzfPqQuTABnjeZ6Hvb3VE8w
+	 6ZvOi3ANgqwkkwdMuKgaXo07dtclbN/G0YdTFjA+6G2vfiNmaVW0Ibuf2jgixdXOzz
+	 yzc01GzZXuDW31OzbOufYEa/h1z/NE2Qj9VquGG7bkMy752oMrsKA8KOWYY6NXnc2q
+	 ClRqTQBAOutLg==
+Message-ID: <1ea303d0-b5c6-4185-b6ae-8836c5ac0469@kernel.org>
+Date: Thu, 28 Mar 2024 10:46:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326202859.960577-1-weilin.wang@intel.com>
-In-Reply-To: <20240326202859.960577-1-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 28 Mar 2024 09:36:30 -0700
-Message-ID: <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/6] TPEBS counting mode support
-To: weilin.wang@intel.com, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/3] mm/gup: consistently call it GUP-fast
+To: Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Vineet Gupta <vgupta@kernel.org>, David Hildenbrand <david@redhat.com>,
+ peterx <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ x86@kernel.org, Ryan Roberts <ryan.roberts@arm.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Matt Turner <mattst88@gmail.com>,
+ Alexey Brodkin <abrodkin@synopsys.com>
+References: <20240327130538.680256-1-david@redhat.com> <ZgQ5hNltQ2DHQXps@x1n>
+ <3922460a-4d01-4ecb-b8c5-7c57fd46f3fd@redhat.com>
+ <dc1433ea-4e59-4ab7-83fb-23b393020980@app.fastmail.com>
+ <3360dba8-0fac-4126-b72b-abc036957d6a@kernel.org>
+ <10da3ced-9a79-4ebb-a77d-1aa49cc61952@app.fastmail.com>
+ <ZgUZCBNloC-grPWJ@kernel.org>
+Content-Language: en-US
+From: Vineet Gupta <vgupta@kernel.org>
+In-Reply-To: <ZgUZCBNloC-grPWJ@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 1:29=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Changes in v5:
-> - Update code and add comments for better code quality [Ian]
->
-> v4: https://lore.kernel.org/all/20240312234921.812685-1-weilin.wang@intel=
-.com/
->
-> Weilin Wang (6):
->   perf stat: Parse and find tpebs events when parsing metrics to prepare
->     for perf record sampling
->   perf stat: Fork and launch perf record when perf stat needs to get
->     retire latency value for a metric.
->   perf stat: Add retire latency values into the expr_parse_ctx to
->     prepare for final metric calculation
->   perf stat: Create another thread for sample data processing
->   perf stat: Add retire latency print functions to print out at the very
->     end of print out
->   perf vendor events intel: Add MTL metric json files
->
->  tools/perf/builtin-stat.c                     |  211 +-
->  .../arch/x86/meteorlake/metricgroups.json     |  127 +
->  .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
->  tools/perf/util/data.c                        |    3 +
->  tools/perf/util/data.h                        |    5 +
->  tools/perf/util/metricgroup.c                 |   88 +-
->  tools/perf/util/metricgroup.h                 |   22 +-
->  tools/perf/util/stat-display.c                |   65 +
->  tools/perf/util/stat-shadow.c                 |   19 +
->  tools/perf/util/stat.h                        |    4 +
->  10 files changed, 3076 insertions(+), 19 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroup=
-s.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics=
-.json
 
-Thanks Weilin,
-
-I'm happy with this series, my Reviewed-by is on all the patches.
-Arnaldo/Namhyung, could we land this for the sake of Meteorlake metric
-enablement? For the sake of tools, for the series:
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> --
-> 2.43.0
+On 3/28/24 00:15, Mike Rapoport wrote:
+> On Thu, Mar 28, 2024 at 07:09:13AM +0100, Arnd Bergmann wrote:
+>> On Thu, Mar 28, 2024, at 06:51, Vineet Gupta wrote:
+>>> On 3/27/24 09:22, Arnd Bergmann wrote:
+>>>> On Wed, Mar 27, 2024, at 16:39, David Hildenbrand wrote:
+>>>>> On 27.03.24 16:21, Peter Xu wrote:
+>>>>>> On Wed, Mar 27, 2024 at 02:05:35PM +0100, David Hildenbrand wrote:
+>>>>>>
+>>>>>> I'm not sure what config you tried there; as I am doing some build tests
+>>>>>> recently, I found turning off CONFIG_SAMPLES + CONFIG_GCC_PLUGINS could
+>>>>>> avoid a lot of issues, I think it's due to libc missing.  But maybe not the
+>>>>>> case there.
+>>>>> CCin Arnd; I use some of his compiler chains, others from Fedora directly. For
+>>>>> example for alpha and arc, the Fedora gcc is "13.2.1".
+>>>>> But there is other stuff like (arc):
+>>>>>
+>>>>> ./arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
+>>>>> ./arch/arc/include/asm/mmu-arcv2.h:82:9: error: implicit declaration of 
+>>>>> function 'write_aux_reg' [-Werro
+>>>>> r=implicit-function-declaration]
+>>>>>     82 |         write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
+>>>>>        |         ^~~~~~~~~~~~~
+>>>> Seems to be missing an #include of soc/arc/aux.h, but I can't
+>>>> tell when this first broke without bisecting.
+>>> Weird I don't see this one but I only have gcc 12 handy ATM.
+>>>
+>>>     gcc version 12.2.1 20230306 (ARC HS GNU/Linux glibc toolchain -
+>>> build 1360)
+>>>
+>>> I even tried W=1 (which according to scripts/Makefile.extrawarn) should
+>>> include -Werror=implicit-function-declaration but don't see this still.
+>>>
+>>> Tomorrow I'll try building a gcc 13.2.1 for ARC.
+>> David reported them with the toolchains I built at
+>> https://mirrors.edge.kernel.org/pub/tools/crosstool/
+>> I'm fairly sure the problem is specific to the .config
+>> and tree, not the toolchain though.
+> This happens with defconfig and both gcc 12.2.0 and gcc 13.2.0 from your
+> crosstools. I also see these on the current Linus' tree:
 >
+> arc/kernel/ptrace.c:342:16: warning: no previous prototype for 'syscall_trace_enter' [-Wmissing-prototypes]
+> arch/arc/kernel/kprobes.c:193:15: warning: no previous prototype for 'arc_kprobe_handler' [-Wmissing-prototypes]
+
+Yep these two I could trigger and fix posted [1]
+
+> This fixed the warning about write_aux_reg for me, probably Vineet would
+> want this include somewhere else...
+>
+> diff --git a/arch/arc/include/asm/mmu-arcv2.h b/arch/arc/include/asm/mmu-arcv2.h
+> index ed9036d4ede3..0fca342d7b79 100644
+> --- a/arch/arc/include/asm/mmu-arcv2.h
+> +++ b/arch/arc/include/asm/mmu-arcv2.h
+> @@ -69,6 +69,8 @@
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> +#include <asm/arcregs.h>
+> +
+>  struct mm_struct;
+>  extern int pae40_exist_but_not_enab(void);
+
+Thx Mike. Indeed the fix is trivial but on tip of tree I still can't
+trigger the warning to even test anything. I'm at following with my
+other fixes.
+
+    2024-03-27 962490525cff Merge tag 'probes-fixes-v6.9-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace  
+
+I tried defconfig build as well as the exact config from Linaro report
+[2], and/or various toolchains: from snps github, Arnd's crosstool
+toolchain.
+Granted all of these are linux toolchains - I vaguely remember at some
+time, baremetal elf32 toolchain behaved differently due to different
+defaults etc.
+I have a feeling this was something transient which got fixed up due to
+order of header includes etc.
+
+Anyone in the followup email David only reported 2 warnings which have
+been tended to as mentioned above - will be sent to Linus soon.
+
+[1]
+http://lists.infradead.org/pipermail/linux-snps-arc/2024-March/007916.html
+[2]
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2eA2VSZdDsL0DMBBhjoauN9IVoK/
+
+Thx,
+-Vineet
