@@ -1,150 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0B04437B;
-	Thu, 28 Mar 2024 17:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184D21EA6E;
+	Thu, 28 Mar 2024 19:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711648013; cv=none; b=iHvl/TV/6Wp93vqmwr+2qnaJWhj0/ds2wULTpKP3q9CP7Q3dne0x/jYC/ePraxfJ37AyZp1r6ZXnbVsdglSCVDenCb8FtSZmIt6R759tEyfn3tjYr5dkeD9OCK1cfEzSF09a6+TPVT2E6Ea8AlI8PtqvoHYcCGMoeB2RlVEkncI=
+	t=1711655018; cv=none; b=spP/LjrZDdU/EkFE3/VxeEqnUjQ2pBHC6XFKh52O8HeFVjIypwBJp8GC/oPGs1IUJ84uvGWrObn39p7GKXxfYy+5QkiYFzGwqBRr833oZC/xfFXN1Klo1euFFkX86NgqICvxOKf4T8Qah9F+QNTdqZOWQo/WW3u3lrj3e9lzJEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711648013; c=relaxed/simple;
-	bh=YNR7A+kRgAjMXDjHr2JB1yywFqUpQ/6e+8DUHAu4Nlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nm/tXP2+yIQtZXI2ONJodO/9rf7GC3aUVWsbRsSTqQ9eFG8xrAaOojvomVLTGu8xrB3Jz8S1oiB8j8oh45v0Ox1GzQuUBpwf8yqnh+6QVKxw2ShsHUqjxKk8TUyQfXNy5E4rvNbX4vZU/S2/gpU4X7IvNhS3YQvYj50G+44/mGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0dgZsew; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0dgZsew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F2CC433C7;
-	Thu, 28 Mar 2024 17:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711648012;
-	bh=YNR7A+kRgAjMXDjHr2JB1yywFqUpQ/6e+8DUHAu4Nlg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f0dgZsewbfCG8PiA45FJQw1TL/EasYUMhLz2/QhlXeqqfXOMfSFzRv9IkgTHijlFV
-	 FhqTfFXUmCq641ywYGBQNJBov/tcSVKyclO43CvFgYl4vG0jR5PyLIGzGCMyZLU3uq
-	 upLsVvNze+XfKUgkqPNlhtRQ4CV0x+8HigCh3u2WrcBvzfPqQuTABnjeZ6Hvb3VE8w
-	 6ZvOi3ANgqwkkwdMuKgaXo07dtclbN/G0YdTFjA+6G2vfiNmaVW0Ibuf2jgixdXOzz
-	 yzc01GzZXuDW31OzbOufYEa/h1z/NE2Qj9VquGG7bkMy752oMrsKA8KOWYY6NXnc2q
-	 ClRqTQBAOutLg==
-Message-ID: <1ea303d0-b5c6-4185-b6ae-8836c5ac0469@kernel.org>
-Date: Thu, 28 Mar 2024 10:46:50 -0700
+	s=arc-20240116; t=1711655018; c=relaxed/simple;
+	bh=wVbolrjWZzz2tt9Oifs/rvTBBYKri0+NsQlX4e5KS64=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XxS4VS3onFpP6wwIxj9oOFHPZW9jR0M/YKZr3zQaHLFi8XTJ2BpdoNX/NGud+XT1PL847oEKFfs9Xq6d5oHyP4ZZnrX22evNztmLiNPhfcxitzVdvm2EwaPTs2FiUjyGRC1adZp4aip8D5GUVSGo5bhMlmwAoGdBOsKkNvLssiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e0f3052145so13364085ad.2;
+        Thu, 28 Mar 2024 12:43:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711655016; x=1712259816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8RcH3WlR5p8M951HGkZcZ60zaN5AVgReTZhMk/mJonw=;
+        b=wFEUHmS+/e4EveWBMRBTw86/7VrDBsPvZCOdk9Yfr0lWBK8eGxRXTvp3Vk24wdhRuW
+         0L+RkWS1BTaCq8Vc10ZyT+2N0c7K24a4FdalpCd5JdHT+rBbQpLLsIqBVnApU6H8ezGS
+         g35QIwJ8R6zo1EB02ZGFvBReccfXOAqXBmssqgD+BhOUpY9TglED1pvachEUrjW6/xsc
+         6I7QpAxs8fMTJo2bYurq+dRJPoMUsVNwmgdIF0DlC0XssNJuvUexyqldzmakIa9fJgIt
+         +vYLPgBZAEOko9oZqiceTXD5Ay2TPGjKT96q2bTWTXMs1H7d+/WBwBbzVGE13TFCVK8E
+         SkxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn5MC+lRcJjFqSHNCSlHlhWWgBKsdr/D9f5Q4e6geNCsXLoUzT+nvsOgO5DxJZwSVipM83qALtb75ttK//Zymht0o4fe4tPUcCuUJ2/4y15J0RWVe6SvGxrZWY55vIbwFtF8PU5+ujCfDHhP6mgQ==
+X-Gm-Message-State: AOJu0YxabwJG04XUZLI9/XuvcHelQbFje8nchI3R+E0jm7ayc9vLfW9N
+	HyCdC+bgYneXiVMkp0RndvYXlF/Mkz8M1lQfO0TjhSO3MK8mFm8+rMAaIUSbwk9jTpgJy3egQux
+	n1eqMMka3WTsW1EnfOB7EUA3A6Lk=
+X-Google-Smtp-Source: AGHT+IEBy1aXrFyajdyPasnTT+M2+3ji66+7MTzin+appbvLi1fFoh1gGL28SLeTeKZ+74mvQXyRSKDtxEUpCrnoMoU=
+X-Received: by 2002:a17:902:d507:b0:1e0:bd7f:194 with SMTP id
+ b7-20020a170902d50700b001e0bd7f0194mr560608plg.36.1711655016218; Thu, 28 Mar
+ 2024 12:43:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/3] mm/gup: consistently call it GUP-fast
-To: Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Vineet Gupta <vgupta@kernel.org>, David Hildenbrand <david@redhat.com>,
- peterx <peterx@redhat.com>, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- x86@kernel.org, Ryan Roberts <ryan.roberts@arm.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Matt Turner <mattst88@gmail.com>,
- Alexey Brodkin <abrodkin@synopsys.com>
-References: <20240327130538.680256-1-david@redhat.com> <ZgQ5hNltQ2DHQXps@x1n>
- <3922460a-4d01-4ecb-b8c5-7c57fd46f3fd@redhat.com>
- <dc1433ea-4e59-4ab7-83fb-23b393020980@app.fastmail.com>
- <3360dba8-0fac-4126-b72b-abc036957d6a@kernel.org>
- <10da3ced-9a79-4ebb-a77d-1aa49cc61952@app.fastmail.com>
- <ZgUZCBNloC-grPWJ@kernel.org>
-Content-Language: en-US
-From: Vineet Gupta <vgupta@kernel.org>
-In-Reply-To: <ZgUZCBNloC-grPWJ@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240326202859.960577-1-weilin.wang@intel.com> <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 28 Mar 2024 12:43:24 -0700
+Message-ID: <CAM9d7ci+8m1-Hcm9OjkaLk4ZOs6J0ah+pg0phyQGA_HVX9Qb-A@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 0/6] TPEBS counting mode support
+To: Ian Rogers <irogers@google.com>
+Cc: weilin.wang@intel.com, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On 3/28/24 00:15, Mike Rapoport wrote:
-> On Thu, Mar 28, 2024 at 07:09:13AM +0100, Arnd Bergmann wrote:
->> On Thu, Mar 28, 2024, at 06:51, Vineet Gupta wrote:
->>> On 3/27/24 09:22, Arnd Bergmann wrote:
->>>> On Wed, Mar 27, 2024, at 16:39, David Hildenbrand wrote:
->>>>> On 27.03.24 16:21, Peter Xu wrote:
->>>>>> On Wed, Mar 27, 2024 at 02:05:35PM +0100, David Hildenbrand wrote:
->>>>>>
->>>>>> I'm not sure what config you tried there; as I am doing some build tests
->>>>>> recently, I found turning off CONFIG_SAMPLES + CONFIG_GCC_PLUGINS could
->>>>>> avoid a lot of issues, I think it's due to libc missing.  But maybe not the
->>>>>> case there.
->>>>> CCin Arnd; I use some of his compiler chains, others from Fedora directly. For
->>>>> example for alpha and arc, the Fedora gcc is "13.2.1".
->>>>> But there is other stuff like (arc):
->>>>>
->>>>> ./arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
->>>>> ./arch/arc/include/asm/mmu-arcv2.h:82:9: error: implicit declaration of 
->>>>> function 'write_aux_reg' [-Werro
->>>>> r=implicit-function-declaration]
->>>>>     82 |         write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
->>>>>        |         ^~~~~~~~~~~~~
->>>> Seems to be missing an #include of soc/arc/aux.h, but I can't
->>>> tell when this first broke without bisecting.
->>> Weird I don't see this one but I only have gcc 12 handy ATM.
->>>
->>>     gcc version 12.2.1 20230306 (ARC HS GNU/Linux glibc toolchain -
->>> build 1360)
->>>
->>> I even tried W=1 (which according to scripts/Makefile.extrawarn) should
->>> include -Werror=implicit-function-declaration but don't see this still.
->>>
->>> Tomorrow I'll try building a gcc 13.2.1 for ARC.
->> David reported them with the toolchains I built at
->> https://mirrors.edge.kernel.org/pub/tools/crosstool/
->> I'm fairly sure the problem is specific to the .config
->> and tree, not the toolchain though.
-> This happens with defconfig and both gcc 12.2.0 and gcc 13.2.0 from your
-> crosstools. I also see these on the current Linus' tree:
+On Thu, Mar 28, 2024 at 9:36=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> arc/kernel/ptrace.c:342:16: warning: no previous prototype for 'syscall_trace_enter' [-Wmissing-prototypes]
-> arch/arc/kernel/kprobes.c:193:15: warning: no previous prototype for 'arc_kprobe_handler' [-Wmissing-prototypes]
-
-Yep these two I could trigger and fix posted [1]
-
-> This fixed the warning about write_aux_reg for me, probably Vineet would
-> want this include somewhere else...
+> On Tue, Mar 26, 2024 at 1:29=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> >
+> > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > Changes in v5:
+> > - Update code and add comments for better code quality [Ian]
+> >
+> > v4: https://lore.kernel.org/all/20240312234921.812685-1-weilin.wang@int=
+el.com/
+> >
+> > Weilin Wang (6):
+> >   perf stat: Parse and find tpebs events when parsing metrics to prepar=
+e
+> >     for perf record sampling
+> >   perf stat: Fork and launch perf record when perf stat needs to get
+> >     retire latency value for a metric.
+> >   perf stat: Add retire latency values into the expr_parse_ctx to
+> >     prepare for final metric calculation
+> >   perf stat: Create another thread for sample data processing
+> >   perf stat: Add retire latency print functions to print out at the ver=
+y
+> >     end of print out
+> >   perf vendor events intel: Add MTL metric json files
+> >
+> >  tools/perf/builtin-stat.c                     |  211 +-
+> >  .../arch/x86/meteorlake/metricgroups.json     |  127 +
+> >  .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
+> >  tools/perf/util/data.c                        |    3 +
+> >  tools/perf/util/data.h                        |    5 +
+> >  tools/perf/util/metricgroup.c                 |   88 +-
+> >  tools/perf/util/metricgroup.h                 |   22 +-
+> >  tools/perf/util/stat-display.c                |   65 +
+> >  tools/perf/util/stat-shadow.c                 |   19 +
+> >  tools/perf/util/stat.h                        |    4 +
+> >  10 files changed, 3076 insertions(+), 19 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgro=
+ups.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metri=
+cs.json
 >
-> diff --git a/arch/arc/include/asm/mmu-arcv2.h b/arch/arc/include/asm/mmu-arcv2.h
-> index ed9036d4ede3..0fca342d7b79 100644
-> --- a/arch/arc/include/asm/mmu-arcv2.h
-> +++ b/arch/arc/include/asm/mmu-arcv2.h
-> @@ -69,6 +69,8 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +#include <asm/arcregs.h>
-> +
->  struct mm_struct;
->  extern int pae40_exist_but_not_enab(void);
+> Thanks Weilin,
+>
+> I'm happy with this series, my Reviewed-by is on all the patches.
+> Arnaldo/Namhyung, could we land this for the sake of Meteorlake metric
+> enablement? For the sake of tools, for the series:
+>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thx Mike. Indeed the fix is trivial but on tip of tree I still can't
-trigger the warning to even test anything. I'm at following with my
-other fixes.
+Let me review this series again.
 
-    2024-03-27 962490525cff Merge tag 'probes-fixes-v6.9-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace  
-
-I tried defconfig build as well as the exact config from Linaro report
-[2], and/or various toolchains: from snps github, Arnd's crosstool
-toolchain.
-Granted all of these are linux toolchains - I vaguely remember at some
-time, baremetal elf32 toolchain behaved differently due to different
-defaults etc.
-I have a feeling this was something transient which got fixed up due to
-order of header includes etc.
-
-Anyone in the followup email David only reported 2 warnings which have
-been tended to as mentioned above - will be sent to Linus soon.
-
-[1]
-http://lists.infradead.org/pipermail/linux-snps-arc/2024-March/007916.html
-[2]
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2eA2VSZdDsL0DMBBhjoauN9IVoK/
-
-Thx,
--Vineet
+Thanks,
+Namhyung
