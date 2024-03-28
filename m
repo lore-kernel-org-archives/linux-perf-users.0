@@ -1,55 +1,57 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA83FE31
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 05:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D734EB4C
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 05:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711605552; cv=none; b=XsvRbar9gH/U7sXtKINFlsMgGTnBkfX1j8IRMhmMnBDZ7SZqYPSGK10QF7eDpA22T9ygQ1+D9KS+VcpDjRalSeY4jdiSPMpmnIdimrnDSzWcCUivNBet1IyNSe6+UkaDc8838oNqdWuRQvNOYGlHZVWRYMuYACxhLE/7hB7+r50=
+	t=1711605557; cv=none; b=hTXxgtAgb13LuOY3g4/7LQmuypFx9YXvCtjzcmerCXT3DA30zc5VqXwjvZVP+RumMRCovWAjas2g+0h/u5ius06jytETWEHCX3nemJw1K1S1EbB3kI9LSNSYYbq/FcJ5yVdiObgZPJPMefWZRV3VihBNNQ9v0kPgVcydqFwQ6vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711605552; c=relaxed/simple;
-	bh=/321d+Qvt+lK15o4LdlFgN8rHDY1h6wWZiC7KtOA+6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eTXSOMJG2TZb3uvbibrQ1tmLPD/SrYJKslRcBgsdPaW8lTWy/9udcc/Iu2E+0yIBsTq8HbSGy7tn4SkSeFoiBGAyNFDMA4g45KIuTGboO8NXPox6PMUgYJAM6dtOhmYmklQGYsTfYK9IaTbW0x117nVac1JT2mdV9KKZMXPw5ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hdMF4pvv; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1711605557; c=relaxed/simple;
+	bh=EWZfbU+atOauhnn6eeT76S7ghdEOEJqps5k8nRkOICc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=i5Xeo6xwswCB1DYkSwXmIuB2fQQJCjQHnw0olWbg9ylBv0Y4bFE93PIW5CIT5IQPXZQzbYnVQb4lWwBnoN2PvPeUH3tXkDmtT1JB2HAWvbKj04QVafCofQEtpyaDpMoKGCvIWRDxQR6kitaUkM64t1nLx9Id9XzUUhd8SKjHNhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TYs5yBS8; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hdMF4pvv"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1de0f92e649so4750335ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Mar 2024 22:59:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TYs5yBS8"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e2178b2cf2so1820025ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Mar 2024 22:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711605549; x=1712210349; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3wulzPJ7dB/+aPvEvhFky4v54wMywLeN6EVfTjVAdQU=;
-        b=hdMF4pvvUDzz8T6IgwGAAVy9/xaV8PEhYZ+VKLq21xDHV+D9FWu+cBk6Ln2NFhL6gY
-         0J3djbf9oev700vA5SxVrjwYSgZSLLvugCwAxUeKtQrWnB4wwLSwGqlB+OkPgLEnBqT2
-         RzEameaBil07zxPQZghtBqPhNKFnaHjiqktIqJBee20Zm92yCJP3/oedDdUAe+tp0mgC
-         VnDPqtRMg0PFO1/ARW8bKuZXDUShItymykzKZh7T/58KeztO/VOlNeiQwIdP/iZXY+La
-         jWZHOC0cdci/7PqY1FPqD72IH4PCIPNATk+7Of6KTTdj0YlKOiBfXsRYcSJ7ClYQEQEr
-         uz4w==
+        d=bytedance.com; s=google; t=1711605554; x=1712210354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=irQLRsi22SkraHK4lMxqFBwPYj6fd+go4MNyv3pAG9Y=;
+        b=TYs5yBS8XJKFeTDn+0HELCB9zGvagMTmJWaUKYLXcGUJWZRFuh6FemLHD/uAO4LvcD
+         I2Fo9VTKqVPFahvw4nsYsryjZQ0qxU3uI/WDlnEOfufuxDd/2iy02uAalpIJ0SsC+r3j
+         L1Ak88eH1AM3KLc/aLaPo9uCKhdDMNzt+k5n3YPkP+9IFdrMZOgpdZBrBA7u2/LNYxAu
+         xDO9rhdf2t8Yfsw1lu0BpGRJ3rOFaTjVGZTo4ppVEdu8JXjvV3Lmk9vE8a9+p3v5V6Hj
+         /+tDZkYc7HfzvCueMJpoOBVJmYYWgu4n5xEwA6f4ugOfzX4E6Hb2KWETaqtZqacZGWuY
+         M+6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711605549; x=1712210349;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3wulzPJ7dB/+aPvEvhFky4v54wMywLeN6EVfTjVAdQU=;
-        b=avShuCE8iyqAO719b17PZ4s+CRXcVpr10n5fSTXAr8LZ9k01+WDCxY7SUw2HhaDaOA
-         ZvNqBMPRtcxbP2MbQ9mFKsFUNkUBU4O+KVQdZXEuQLfQkJJ84G//AHck8H6Mt9JnyVCb
-         /jpNE8flnXTyJ680ZF8o26dYNZ3K5dhq7PoBLGU355EjvZYdwfzkgriUjz4uBVLlRcbA
-         acDRiYmBWaMqUyROjfgA+1DjPKBU5UaQRVqjaOBTblmROG9XSHqulnAbbDkAEmv4DoQq
-         nFdQeKb2A+iZlQ7v8orWU1awyxRiIaVT2qcDvqjwgoFKFmlAdo6eYNbZcjCiBDKdeQVQ
-         Mo3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVt0aAUuLYIYpyGJ3PvpTnUgsuZrEo0jr4E6nHi+aGK+wf7C+hIRYRuZbnVFsHwRK9jWsHxavVfKSDOXgUl2pZxFumSB7nqf6yyyZ21voW/xA==
-X-Gm-Message-State: AOJu0Yw5PipfjFIZTX9DfNbjWip6M/5NSxxYRkA/64hafs434jx0sLoC
-	v6ylr/CzYtacXyH9rEeWQhdcJBuGLeQH7+7AfQHUGd2qFplaQeGUfuy9P+gfH0c=
-X-Google-Smtp-Source: AGHT+IGQs4yvoRNBq+7eeWYdLEpmrgliSr5BMY8vh6gqVLURZyVICtvGm8MBrUA4YaIyCit73IHg/w==
-X-Received: by 2002:a17:903:2a8e:b0:1df:df4:73e0 with SMTP id lv14-20020a1709032a8e00b001df0df473e0mr2022452plb.4.1711605548965;
-        Wed, 27 Mar 2024 22:59:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711605554; x=1712210354;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=irQLRsi22SkraHK4lMxqFBwPYj6fd+go4MNyv3pAG9Y=;
+        b=JfFrx0aS7Sw/DogeqG5A/txYlxMECmNrQWdhBe9OVH04POYoaMWrx+8qVdIluZ3s7z
+         pcWkYWFO/l6xok5U4SlwU4DAFySnI6mIYdp+AXrp6RNyVA4F0XhHpMvj3qQLcKOyU47p
+         wphEEggtFrTzmn+Id+2cQLO+tHQE5K0VwURl3+BRdRvlUieIYAuZB6yEEpV7as2lRO2G
+         nR2v4cnz2m2VLlh29Jh3G86zjBEnDxNy/FMN5X/03uY0mCnoVNG0g3+WWu7OaoLPhme/
+         HUq4rC5KinEZ95k7AMbCpBrSc4hUSo6Csa4EcI1PSeJjQmzYJZTS5NLAvE67CPUAX23d
+         Zu6g==
+X-Forwarded-Encrypted: i=1; AJvYcCX9y6MiUzvP0jAsWfZWI3vt6GnC62mO5XOnvmXnN6UFTcncOR/gMhYc3fmehjwOE+WLGSj8vFz7JoPqWYkNGTOzWkdZ/m+rbXq2bdcNDcHxFA==
+X-Gm-Message-State: AOJu0YzAZlkLaLonMxI3EWWR/nWQvDJJZEiwzNBai3nK0e8/xVvOMA55
+	/LPRiqr9h6T7/5c5Rujpr+jV8ZcpPJs/mC5SC7KnqSuoLnq38RTDSmobNfywu5Y=
+X-Google-Smtp-Source: AGHT+IGxL8g/d32e19PrXxu6Kp/faCdNfJNa6+6FITTlKuZg+NQhRbIo6OP8iZKzSLZu0zLul61+cg==
+X-Received: by 2002:a17:902:e884:b0:1e0:2c80:2aaf with SMTP id w4-20020a170902e88400b001e02c802aafmr2348711plg.44.1711605554542;
+        Wed, 27 Mar 2024 22:59:14 -0700 (PDT)
 Received: from ubuntu20.04 ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170902d34900b001e0b461d104sm595984plk.67.2024.03.27.22.59.03
+        by smtp.gmail.com with ESMTPSA id l9-20020a170902d34900b001e0b461d104sm595984plk.67.2024.03.27.22.59.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 22:59:08 -0700 (PDT)
+        Wed, 27 Mar 2024 22:59:14 -0700 (PDT)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -65,10 +67,12 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [PATCH 1/2] perf sched timehist: Fix -g/--call-graph option failure
-Date: Thu, 28 Mar 2024 13:58:56 +0800
-Message-Id: <20240328055857.383180-1-yangjihong@bytedance.com>
+Subject: [PATCH 2/2] perf evsel: Use evsel__name_is() helper
+Date: Thu, 28 Mar 2024 13:58:57 +0800
+Message-Id: <20240328055857.383180-2-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240328055857.383180-1-yangjihong@bytedance.com>
+References: <20240328055857.383180-1-yangjihong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,66 +81,250 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When perf-sched enables the call-graph recording, sample_type of dummy
-event does not have PERF_SAMPLE_CALLCHAIN, timehist_check_attr() checks
-that the evsel does not have a callchain, and set show_callchain to 0.
+Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
+evsel__name_is() helper.
 
-Currently perf sched timehist only saves callchain when processing
-sched:sched_switch event, timehist_check_attr() only needs to determine
-whether the event has PERF_SAMPLE_CALLCHAIN.
-
-Before:
-  # perf sched record -g true
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 4.153 MB perf.data (7536 samples) ]
-  # perf sched timehist
-  Samples do not have callchains.
-             time    cpu  task name                       wait time  sch delay   run time
-                          [tid/pid]                          (msec)     (msec)     (msec)
-  --------------- ------  ------------------------------  ---------  ---------  ---------
-    147851.826019 [0000]  perf[285035]                        0.000      0.000      0.000
-    147851.826029 [0000]  migration/0[15]                     0.000      0.003      0.009
-    147851.826063 [0001]  perf[285035]                        0.000      0.000      0.000
-    147851.826069 [0001]  migration/1[21]                     0.000      0.003      0.006
-  <SNIP>
-
-After:
-  # perf sched record -g true
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 2.572 MB perf.data (822 samples) ]
-  # perf sched timehist
-             time    cpu  task name                       wait time  sch delay   run time
-                          [tid/pid]                          (msec)     (msec)     (msec)
-  --------------- ------  ------------------------------  ---------  ---------  ---------
-    144193.035164 [0000]  perf[277062]                        0.000      0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_for_common <- wait_for_completion
-    144193.035174 [0000]  migration/0[15]                     0.000      0.003      0.009    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
-    144193.035207 [0001]  perf[277062]                        0.000      0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_for_common <- wait_for_completion
-    144193.035214 [0001]  migration/1[21]                     0.000      0.003      0.007    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
-<SNIP>
+No functional change.
 
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
- tools/perf/builtin-sched.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kmem.c               |  2 +-
+ tools/perf/builtin-sched.c              |  4 +--
+ tools/perf/builtin-script.c             |  2 +-
+ tools/perf/builtin-trace.c              |  4 +--
+ tools/perf/tests/evsel-roundtrip-name.c |  4 +--
+ tools/perf/tests/parse-events.c         | 39 +++++++++----------------
+ 6 files changed, 22 insertions(+), 33 deletions(-)
 
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 9714327fd0ea..6fd95be5032b 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
+ 	}
+ 
+ 	evlist__for_each_entry(session->evlist, evsel) {
+-		if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
++		if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
+ 		    evsel__field(evsel, "pfn")) {
+ 			use_pfn = true;
+ 			break;
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b248c433529a..1bfb22347371 100644
+index 1bfb22347371..0fce7d8986c0 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -2963,8 +2963,11 @@ static int timehist_check_attr(struct perf_sched *sched,
- 			return -1;
- 		}
+@@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *sample,
+ 			   struct evsel *evsel)
+ {
+ 	/* pid 0 == swapper == idle task */
+-	if (strcmp(evsel__name(evsel), "sched:sched_switch") == 0)
++	if (evsel__name_is(evsel, "sched:sched_switch"))
+ 		return evsel__intval(evsel, sample, "prev_pid") == 0;
  
--		if (sched->show_callchain && !evsel__has_callchain(evsel)) {
--			pr_info("Samples do not have callchains.\n");
-+		/* only need to save callchain related to sched_switch event */
-+		if (sched->show_callchain &&
-+		    evsel__name_is(evsel, "sched:sched_switch") &&
-+		    !evsel__has_callchain(evsel)) {
-+			pr_info("Samples of sched_switch event do not have callchains.\n");
- 			sched->show_callchain = 0;
- 			symbol_conf.use_callchain = 0;
+ 	return sample->pid == 0;
+@@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
+ 	}
+ 
+ 	if (sched->idle_hist) {
+-		if (strcmp(evsel__name(evsel), "sched:sched_switch"))
++		if (!evsel__name_is(evsel, "sched:sched_switch"))
+ 			rc = true;
+ 		else if (evsel__intval(evsel, sample, "prev_pid") != 0 &&
+ 			 evsel__intval(evsel, sample, "next_pid") != 0)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 37088cc0ff1b..cc981531ec00 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
+ 
+ 			match = 0;
+ 			evlist__for_each_entry(session->evlist, pos) {
+-				if (!strcmp(evsel__name(pos), evname)) {
++				if (evsel__name_is(pos, evname)) {
+ 					match = 1;
+ 					break;
+ 				}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 90eaff8c0f6e..9b93807a1906 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
+-	assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__augmented_syscalls__"));
++	assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augmented_syscalls__");
+ skip_augmentation:
+ #endif
+ 	err = -1;
+@@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
+ 	 */
+ 	if (trace.syscalls.events.bpf_output) {
+ 		evlist__for_each_entry(trace.evlist, evsel) {
+-			bool raw_syscalls_sys_exit = strcmp(evsel__name(evsel), "raw_syscalls:sys_exit") == 0;
++			bool raw_syscalls_sys_exit = evsel__name_is(evsel, "raw_syscalls:sys_exit");
+ 
+ 			if (raw_syscalls_sys_exit) {
+ 				trace.raw_augmented_syscalls = true;
+diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
+index 15ff86f9da0b..1922cac13a24 100644
+--- a/tools/perf/tests/evsel-roundtrip-name.c
++++ b/tools/perf/tests/evsel-roundtrip-name.c
+@@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
+ 					continue;
+ 				}
+ 				evlist__for_each_entry(evlist, evsel) {
+-					if (strcmp(evsel__name(evsel), name)) {
++					if (!evsel__name_is(evsel, name)) {
+ 						pr_debug("%s != %s\n", evsel__name(evsel), name);
+ 						ret = TEST_FAIL;
+ 					}
+@@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *const names[], int nr_names)
+ 			continue;
  		}
+ 		evlist__for_each_entry(evlist, evsel) {
+-			if (strcmp(evsel__name(evsel), names[i])) {
++			if (!evsel__name_is(evsel, names[i])) {
+ 				pr_debug("%s != %s\n", evsel__name(evsel), names[i]);
+ 				ret = TEST_FAIL;
+ 			}
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index feb5727584d1..0b70451451b3 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "mem:0:u"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
+ 
+ 	return test__checkevent_breakpoint(evlist);
+ }
+@@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "mem:0:x:k"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"));
+ 
+ 	return test__checkevent_breakpoint_x(evlist);
+ }
+@@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "mem:0:r:hp"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp"));
+ 
+ 	return test__checkevent_breakpoint_r(evlist);
+ }
+@@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "mem:0:w:up"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up"));
+ 
+ 	return test__checkevent_breakpoint_w(evlist);
+ }
+@@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "mem:0:rw:kp"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"));
+ 
+ 	return test__checkevent_breakpoint_rw(evlist);
+ }
+@@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "breakpoint"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
+ 
+ 	return test__checkevent_breakpoint(evlist);
+ }
+@@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "breakpoint"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
+ 
+ 	return test__checkevent_breakpoint_x(evlist);
+ }
+@@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "breakpoint"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
+ 
+ 	return test__checkevent_breakpoint_r(evlist);
+ }
+@@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "breakpoint"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
+ 
+ 	return test__checkevent_breakpoint_w(evlist);
+ }
+@@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "breakpoint"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
+ 
+ 	return test__checkevent_breakpoint_rw(evlist);
+ }
+@@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+ 
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
+-	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint1"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"));
+ 
+ 	evsel = evsel__next(evsel);
+ 
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
+-	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint2"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"));
+ 
+ 	return TEST_OK;
+ }
+@@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
+-	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
+ 
+ 	/* cpu/config=2/u" */
+ 	evsel = evsel__next(evsel);
+ 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
+-	TEST_ASSERT_VAL("wrong name",
+-			!strcmp(evsel__name(evsel), "cpu/config=2/u"));
++	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=2/u"));
+ 
+ 	return TEST_OK;
+ }
 -- 
 2.25.1
 
