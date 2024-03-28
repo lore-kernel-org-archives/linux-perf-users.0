@@ -1,260 +1,179 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5861619479;
-	Thu, 28 Mar 2024 00:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF821C680;
+	Thu, 28 Mar 2024 03:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711586751; cv=none; b=Ua8Ywi8ScUwa1VfPEWWVnAt/pZztzwZq+ckFig4ylLnlqimjnkQg3K8MdMcV4xH+im9Ujl1AotskxV31pbJMgm6+uyIKHjx9aCLFMgf3ppWVZ7irJCXqPXye0dRCeVkRJi7qz+zSp58HsiTg9aIZEYsjKGQ1nao/k/fMEeCRjxE=
+	t=1711596026; cv=none; b=QLZNggBduo85VkQ6WN43/yNEWa+MjbJz4ODHvcaoXILKsv72l9TgmqOuw97/suGse7bdaCb+ISh+cxCrxn1QaY1uJjjhyeRhWtFpk5gaYTw8DGfS65nB3DOvQ25t/NAmyHToy0eyFfVhDO5XBy+0KOO8VveNydU/s59+jCdQUFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711586751; c=relaxed/simple;
-	bh=ZT60A2mwFpyTdyfb6cjW6OdhzBClWNMVq24Fogaaf3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FAE69v16QRBUzrCpEXBlaeqGRfK6KuQgLvt8feMG38w3/VhIa8Iv1c8t8L6maDb/fPP7e+JAzCYhcI/AM+HTSGHQB0zc6L4vabgQqQslQUYbskBi5U9IyWp2CaFDQyMoicaIfpn9X6/MnDUD+w3a0xzA7HBpgyp/8xEn7hO4yEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzMKjw6D; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzMKjw6D"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ead4093f85so441637b3a.3;
-        Wed, 27 Mar 2024 17:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711586749; x=1712191549; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9jgFg7/Se2gP2Slxoyf+gmLzNt05ZQGYEDydGAiD2AQ=;
-        b=mzMKjw6D65a3hEv1u9ZdTZn9hxzuPqIdcYE+D69/o6bbHzcv0fdSgDm/lgGwfrRc0G
-         FInWA0yBch+DyTQIjX8gATsToOJ8BlTyco/e9epKfB4asY4VE19hNWk+dPs//Wn18RSp
-         zcqkh/2gCA9bSQw+c/OHcSCuljXAtG2Jicdbekov+CnqecOAkLJeBqLnFJA49ExJIRSB
-         lAM/1/womCprSyOWUcvGQhQVKCEKOiI1fMm0m87cepVEOxK8dzQQY5F8k0ha3fvyeVRe
-         q0wt/sbK4WEA9Q95ukFDSizoLZAkFP8vE9ITZdyIdgl+G1/FX6Z4n+9zNwL6CUVTJWDf
-         zi4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711586749; x=1712191549;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9jgFg7/Se2gP2Slxoyf+gmLzNt05ZQGYEDydGAiD2AQ=;
-        b=IhdrpNekCgLHteD8vP4iGVkhwsRF5sEC0ci6WtrMT6FhAejF73hUK2AMEgXUF1IQeV
-         5Evk5vtliVhTiU66Doxs/rxJmEjug/mCAxV0+qQDnqXrsG1udrZ3Y+wC5wy/dDrcFFLP
-         I2A/ufyKg4f3boNdFmBYqTRRVdEkYiLqK42ZSjtSaUPo51Xbwzs5E+si9m1EznK8n585
-         aQQckEOmKNSxL/wAR+TBefaT02hSxqFhWB+jvhzT4VD+QIilmKqLfUfnZZy/E7OrISh2
-         VV3a69iVyMvpZLpF/gBgsJh9xH3o7HmmNUftlZL0KiwIjJb5Sh7qFW9VCFIvbJW2NV+l
-         nsUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXK5lRu6NzdpXeqBP0db+MLBxvkjiBzI5IOLY5pVz3XFCmeAWNGIMP9c/qFKp/WlJ/a4j8TJjOp4j6U+bDMbIipPiksiLMr7Lc24673F/MLepP5q/WiZPJSwaWd+YMZ88gQAhQ2PmNkeAxInxcATJXaoNPyg/EhIO0mvgt7k85wjE8CxalDiHMACrV8RfzLb1+ggFXKwTBwCC7qP8XPVyNfKAap4C0sw==
-X-Gm-Message-State: AOJu0YwyjmPq8qz6sgcwlBrfRTIvaq25qyI9c7Ur56v1Pnx2czMVhBnI
-	A6KUkh8eeqb4/+6WglDJcy7OUf8LZIYHp6GuUfrn9aPJPQwWJs2XsDM5KxlhPv6qJqpmewMCw+t
-	sdhZO0mm8hYjdQ21B3NSPUiarufw=
-X-Google-Smtp-Source: AGHT+IFlKICW8fz6iHVeO34uBd3ttW60uqKrvw2Bvh9gRLxr0htA6R2XTOfaVpcr13VrMRzeVaXelEnyPNY9lvIUoZg=
-X-Received: by 2002:a05:6a20:af14:b0:1a3:67cb:f7c4 with SMTP id
- dr20-20020a056a20af1400b001a367cbf7c4mr1323907pzb.34.1711586748531; Wed, 27
- Mar 2024 17:45:48 -0700 (PDT)
+	s=arc-20240116; t=1711596026; c=relaxed/simple;
+	bh=lK/aYNgNeC3tGBp/BVxjGcGiyPKFhFWCXSbJr7n/9Mc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aoicRmz3ujElWe2BS7z4BlAwGZ7i1sk1AYaU84y0lnhX9jzmeKJ25u8Yj/mBzR5t/1b4dawvq40wkN9fwFrLXE1vhF3wTay99ANZdXllzx2S0mzGWEuNEcAJjCL8FeZqu8hUxhRD9AUcoUbL2k5vE/yuUBWAmz4CPzpQJ3QOzfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from localhost.localdomain (unknown [10.12.130.31])
+	by app1 (Coremail) with SMTP id TAJkCgDniOWq4QRmwD8DAA--.28501S5;
+	Thu, 28 Mar 2024 11:19:09 +0800 (CST)
+From: Shenlin Liang <liangshenlin@eswincomputing.com>
+To: anup@brainfault.org,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: Shenlin Liang <liangshenlin@eswincomputing.com>
+Subject: [PATCH 1/2] RISCV: KVM: add tracepoints for entry and exit events
+Date: Thu, 28 Mar 2024 03:12:19 +0000
+Message-Id: <20240328031220.1287-2-liangshenlin@eswincomputing.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+X-CM-TRANSID:TAJkCgDniOWq4QRmwD8DAA--.28501S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFWfJF15Cry5AFy7uw1xKrg_yoW5AFyrpF
+	1Dur98W3yrJrW7C34fZwnYgr45Zr9Y9r17try7WrW5Jr4vyF1kJrsagFWDtry5Ary09a4S
+	vF95WFyqk3W5XaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUml14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjfUbpnQUUUUU
+X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org> <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org> <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org>
-In-Reply-To: <20240328091841.ce9cc613db375536de843cfb@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 27 Mar 2024 17:45:36 -0700
-Message-ID: <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonthan Haslam <jonathan.haslam@gmail.com>, linux-trace-kernel@vger.kernel.org, 
-	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2024 at 5:18=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Wed, 27 Mar 2024 17:06:01 +0000
-> Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
->
-> > > > Masami,
-> > > >
-> > > > Given the discussion around per-cpu rw semaphore and need for
-> > > > (internal) batched attachment API for uprobes, do you think you can
-> > > > apply this patch as is for now? We can then gain initial improvemen=
-ts
-> > > > in scalability that are also easy to backport, and Jonathan will wo=
-rk
-> > > > on a more complete solution based on per-cpu RW semaphore, as
-> > > > suggested by Ingo.
-> > >
-> > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > > I would like to wait for the next version.
-> >
-> > My initial tests show a nice improvement on the over RW spinlocks but
-> > significant regression in acquiring a write lock. I've got a few days
-> > vacation over Easter but I'll aim to get some more formalised results o=
-ut
-> > to the thread toward the end of next week.
->
-> As far as the write lock is only on the cold path, I think you can choose
-> per-cpu RW semaphore. Since it does not do busy wait, the total system
-> performance impact will be small.
+Like other architectures, RISCV KVM also needs to add these event
+tracepoints to count the number of times kvm guest entry/exit.
 
-No, Masami, unfortunately it's not as simple. In BPF we have BPF
-multi-uprobe, which can be used to attach to thousands of user
-functions. It currently creates one uprobe at a time, as we don't
-really have a batched API. If each such uprobe registration will now
-take a (relatively) long time, when multiplied by number of attach-to
-user functions, it will be a horrible regression in terms of
-attachment/detachment performance.
+Signed-off-by: Shenlin Liang <liangshenlin@eswincomputing.com>
+---
+ arch/riscv/kvm/trace_riscv.h | 60 ++++++++++++++++++++++++++++++++++++
+ arch/riscv/kvm/vcpu.c        |  7 +++++
+ 2 files changed, 67 insertions(+)
+ create mode 100644 arch/riscv/kvm/trace_riscv.h
 
-So when we switch to per-CPU rw semaphore, we'll need to provide an
-internal batch uprobe attach/detach API to make sure that attaching to
-multiple uprobes is still fast.
+diff --git a/arch/riscv/kvm/trace_riscv.h b/arch/riscv/kvm/trace_riscv.h
+new file mode 100644
+index 000000000000..5848083c7a5e
+--- /dev/null
++++ b/arch/riscv/kvm/trace_riscv.h
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Tracepoints for RISC-V KVM
++ *
++ * Copyright 2024 Beijing ESWIN Computing Technology Co., Ltd.
++ *
++ */
++#if !defined(_TRACE_RSICV_KVM_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_RSICV_KVM_H
++
++#include <linux/tracepoint.h>
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM kvm
++
++TRACE_EVENT(kvm_entry,
++	TP_PROTO(struct kvm_vcpu *vcpu),
++	TP_ARGS(vcpu),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, pc)
++	),
++
++	TP_fast_assign(
++		__entry->pc	= vcpu->arch.guest_context.sepc;
++	),
++
++	TP_printk("PC: 0x%016lx", __entry->pc)
++);
++
++TRACE_EVENT(kvm_exit,
++	TP_PROTO(struct kvm_vcpu *vcpu, unsigned long exit_reason,
++			unsigned long scause),
++	TP_ARGS(vcpu, exit_reason, scause),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, pc)
++		__field(unsigned long, exit_reason)
++		__field(unsigned long, scause)
++	),
++
++	TP_fast_assign(
++		__entry->pc		= vcpu->arch.guest_context.sepc;
++		__entry->exit_reason	= exit_reason;
++		__entry->scause		= scause;
++	),
++
++	TP_printk("EXIT_REASON:0x%lx,PC: 0x%016lx,SCAUSE:0x%lx",
++			__entry->exit_reason, __entry->pc, __entry->scause)
++);
++
++#endif /* _TRACE_RSICV_KVM_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace_riscv
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index b5ca9f2e98ac..ed0932f0d514 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -21,6 +21,9 @@
+ #include <asm/cacheflush.h>
+ #include <asm/kvm_vcpu_vector.h>
+ 
++#define CREATE_TRACE_POINTS
++#include "trace_riscv.h"
++
+ const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
+ 	KVM_GENERIC_VCPU_STATS(),
+ 	STATS_DESC_COUNTER(VCPU, ecall_exit_stat),
+@@ -782,6 +785,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 		 */
+ 		kvm_riscv_local_tlb_sanitize(vcpu);
+ 
++		trace_kvm_entry(vcpu);
++
+ 		guest_timing_enter_irqoff();
+ 
+ 		kvm_riscv_vcpu_enter_exit(vcpu);
+@@ -820,6 +825,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 
+ 		local_irq_enable();
+ 
++		trace_kvm_exit(vcpu, run->exit_reason, trap.scause);
++
+ 		preempt_enable();
+ 
+ 		kvm_vcpu_srcu_read_lock(vcpu);
+-- 
+2.37.2
 
-Which is why I was asking to land this patch as is, as it relieves the
-scalability pains in production and is easy to backport to old
-kernels. And then we can work on batched APIs and switch to per-CPU rw
-semaphore.
-
-So I hope you can reconsider and accept improvements in this patch,
-while Jonathan will keep working on even better final solution.
-Thanks!
-
-> I look forward to your formalized results :)
->
-> Thank you,
->
-> >
-> > Jon.
-> >
-> > >
-> > > Thank you,
-> > >
-> > > >
-> > > > >
-> > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > will depend on how much lock contention happens.
-> > > > >
-> > > > > Thank you,
-> > > > >
-> > > > > >
-> > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > >
-> > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > ---
-> > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > >
-> > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > --- a/kernel/events/uprobes.c
-> > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree =3D RB_ROO=
-T;
-> > > > > >   */
-> > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > >
-> > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtr=
-ee access */
-> > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtr=
-ee access */
-> > > > > >
-> > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > >  /* serialize uprobe->pending_list */
-> > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct in=
-ode *inode, loff_t offset)
-> > > > > >  {
-> > > > > >       struct uprobe *uprobe;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       uprobe =3D __find_uprobe(inode, offset);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return uprobe;
-> > > > > >  }
-> > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct =
-uprobe *uprobe)
-> > > > > >  {
-> > > > > >       struct uprobe *u;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     write_lock(&uprobes_treelock);
-> > > > > >       u =3D __insert_uprobe(uprobe);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return u;
-> > > > > >  }
-> > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *up=
-robe)
-> > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > >               return;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     write_lock(&uprobes_treelock);
-> > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active(=
-) */
-> > > > > >       put_uprobe(uprobe);
-> > > > > >  }
-> > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode=
- *inode,
-> > > > > >       min =3D vaddr_to_offset(vma, start);
-> > > > > >       max =3D min + (end - start) - 1;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       n =3D find_node_in_range(inode, min, max);
-> > > > > >       if (n) {
-> > > > > >               for (t =3D n; t; t =3D rb_prev(t)) {
-> > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode=
- *inode,
-> > > > > >                       get_uprobe(u);
-> > > > > >               }
-> > > > > >       }
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >  }
-> > > > > >
-> > > > > >  /* @vma contains reference counter, not the probed instruction=
-. */
-> > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vm=
-a, unsigned long start, unsigned long e
-> > > > > >       min =3D vaddr_to_offset(vma, start);
-> > > > > >       max =3D min + (end - start) - 1;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       n =3D find_node_in_range(inode, min, max);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return !!n;
-> > > > > >  }
-> > > > > > --
-> > > > > > 2.43.0
-> > > > > >
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > >
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
