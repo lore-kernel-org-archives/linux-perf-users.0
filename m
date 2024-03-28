@@ -1,118 +1,94 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184D21EA6E;
-	Thu, 28 Mar 2024 19:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09A01CAA4;
+	Thu, 28 Mar 2024 23:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655018; cv=none; b=spP/LjrZDdU/EkFE3/VxeEqnUjQ2pBHC6XFKh52O8HeFVjIypwBJp8GC/oPGs1IUJ84uvGWrObn39p7GKXxfYy+5QkiYFzGwqBRr833oZC/xfFXN1Klo1euFFkX86NgqICvxOKf4T8Qah9F+QNTdqZOWQo/WW3u3lrj3e9lzJEs=
+	t=1711668011; cv=none; b=cliERQY7hTMWMv2esfvnZ9HJAL73mGVOkv8/OgUxujxhSZqxuihf3eeqK6gyjnaL9ZHCn5apfu8J2myvYrWFZ7j6eCq0oQI26u/s9RNH5HZWYM38OIHGelfxsiD7spAiRT3otaAJ8Zm6mylAqft5TOxgu3o+Eb/1oGLu/0aaspQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655018; c=relaxed/simple;
-	bh=wVbolrjWZzz2tt9Oifs/rvTBBYKri0+NsQlX4e5KS64=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XxS4VS3onFpP6wwIxj9oOFHPZW9jR0M/YKZr3zQaHLFi8XTJ2BpdoNX/NGud+XT1PL847oEKFfs9Xq6d5oHyP4ZZnrX22evNztmLiNPhfcxitzVdvm2EwaPTs2FiUjyGRC1adZp4aip8D5GUVSGo5bhMlmwAoGdBOsKkNvLssiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e0f3052145so13364085ad.2;
-        Thu, 28 Mar 2024 12:43:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711655016; x=1712259816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8RcH3WlR5p8M951HGkZcZ60zaN5AVgReTZhMk/mJonw=;
-        b=wFEUHmS+/e4EveWBMRBTw86/7VrDBsPvZCOdk9Yfr0lWBK8eGxRXTvp3Vk24wdhRuW
-         0L+RkWS1BTaCq8Vc10ZyT+2N0c7K24a4FdalpCd5JdHT+rBbQpLLsIqBVnApU6H8ezGS
-         g35QIwJ8R6zo1EB02ZGFvBReccfXOAqXBmssqgD+BhOUpY9TglED1pvachEUrjW6/xsc
-         6I7QpAxs8fMTJo2bYurq+dRJPoMUsVNwmgdIF0DlC0XssNJuvUexyqldzmakIa9fJgIt
-         +vYLPgBZAEOko9oZqiceTXD5Ay2TPGjKT96q2bTWTXMs1H7d+/WBwBbzVGE13TFCVK8E
-         SkxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWn5MC+lRcJjFqSHNCSlHlhWWgBKsdr/D9f5Q4e6geNCsXLoUzT+nvsOgO5DxJZwSVipM83qALtb75ttK//Zymht0o4fe4tPUcCuUJ2/4y15J0RWVe6SvGxrZWY55vIbwFtF8PU5+ujCfDHhP6mgQ==
-X-Gm-Message-State: AOJu0YxabwJG04XUZLI9/XuvcHelQbFje8nchI3R+E0jm7ayc9vLfW9N
-	HyCdC+bgYneXiVMkp0RndvYXlF/Mkz8M1lQfO0TjhSO3MK8mFm8+rMAaIUSbwk9jTpgJy3egQux
-	n1eqMMka3WTsW1EnfOB7EUA3A6Lk=
-X-Google-Smtp-Source: AGHT+IEBy1aXrFyajdyPasnTT+M2+3ji66+7MTzin+appbvLi1fFoh1gGL28SLeTeKZ+74mvQXyRSKDtxEUpCrnoMoU=
-X-Received: by 2002:a17:902:d507:b0:1e0:bd7f:194 with SMTP id
- b7-20020a170902d50700b001e0bd7f0194mr560608plg.36.1711655016218; Thu, 28 Mar
- 2024 12:43:36 -0700 (PDT)
+	s=arc-20240116; t=1711668011; c=relaxed/simple;
+	bh=JdsS1Ph4X37kZPwaxpWEWGD43JuhTV198Fbqnu88sSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mR2mErAy6MTjDNbbLk8h3xmiorzSDckqR9+NZ9cR3bmowcGr1UnORxhRYntuAqsHk5NoQxBwHdbLMx9rc5KIQeqIeSL3RVe3GRB9FNpqD3fvStjNRJKTHQsgW7wyfoBk/u8jbi0M1pRiPMkY9WlI4O4O35IWAaFp3JbwXn5Yckg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzBZ/XQg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzBZ/XQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6846AC433C7;
+	Thu, 28 Mar 2024 23:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711668010;
+	bh=JdsS1Ph4X37kZPwaxpWEWGD43JuhTV198Fbqnu88sSw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mzBZ/XQgkj/kNnFMUahn5RCa6UYJNuKBI9W/+LWeWNyD2VhZttYaOC4QEC9fUHYoB
+	 usU6Lh99zYSSjBl/HucEspgd9sbbyDQtFPK2F16lWJWA+2MS8ylC6Qh0o/MNA0zvwq
+	 4ZP5AaEs1I4kt3O+TajgPkkPOP/vfucEJskdtSViu7XI5iez92A54WWuXAo4KcgijD
+	 1vSrfaoYEDPATCl9Q3/fe/RA9PuU5+QS62Abrek+SUpvYTFDy6dOWJeeH+iRhoRRiW
+	 xi3y6cesVzCiSf4RGHaFQ4lWzoySnnZk41enilMqW5eTgbSB8updgN5QoNAyjAzhlx
+	 O6phQNgWHBgNw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH 0/4] perf annotate: Use libcapstone as a disasssembler
+Date: Thu, 28 Mar 2024 16:20:05 -0700
+Message-ID: <20240328232009.466018-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326202859.960577-1-weilin.wang@intel.com> <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 28 Mar 2024 12:43:24 -0700
-Message-ID: <CAM9d7ci+8m1-Hcm9OjkaLk4ZOs6J0ah+pg0phyQGA_HVX9Qb-A@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/6] TPEBS counting mode support
-To: Ian Rogers <irogers@google.com>
-Cc: weilin.wang@intel.com, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
 Hello,
 
-On Thu, Mar 28, 2024 at 9:36=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Tue, Mar 26, 2024 at 1:29=E2=80=AFPM <weilin.wang@intel.com> wrote:
-> >
-> > From: Weilin Wang <weilin.wang@intel.com>
-> >
-> > Changes in v5:
-> > - Update code and add comments for better code quality [Ian]
-> >
-> > v4: https://lore.kernel.org/all/20240312234921.812685-1-weilin.wang@int=
-el.com/
-> >
-> > Weilin Wang (6):
-> >   perf stat: Parse and find tpebs events when parsing metrics to prepar=
-e
-> >     for perf record sampling
-> >   perf stat: Fork and launch perf record when perf stat needs to get
-> >     retire latency value for a metric.
-> >   perf stat: Add retire latency values into the expr_parse_ctx to
-> >     prepare for final metric calculation
-> >   perf stat: Create another thread for sample data processing
-> >   perf stat: Add retire latency print functions to print out at the ver=
-y
-> >     end of print out
-> >   perf vendor events intel: Add MTL metric json files
-> >
-> >  tools/perf/builtin-stat.c                     |  211 +-
-> >  .../arch/x86/meteorlake/metricgroups.json     |  127 +
-> >  .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
-> >  tools/perf/util/data.c                        |    3 +
-> >  tools/perf/util/data.h                        |    5 +
-> >  tools/perf/util/metricgroup.c                 |   88 +-
-> >  tools/perf/util/metricgroup.h                 |   22 +-
-> >  tools/perf/util/stat-display.c                |   65 +
-> >  tools/perf/util/stat-shadow.c                 |   19 +
-> >  tools/perf/util/stat.h                        |    4 +
-> >  10 files changed, 3076 insertions(+), 19 deletions(-)
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgro=
-ups.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metri=
-cs.json
->
-> Thanks Weilin,
->
-> I'm happy with this series, my Reviewed-by is on all the patches.
-> Arnaldo/Namhyung, could we land this for the sake of Meteorlake metric
-> enablement? For the sake of tools, for the series:
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
+As we've added libcapstone support, it's natural to use it for perf annotate
+as well.  This change added the capstone support on x86 first.  Other archs
+can be added later (by someone who can verify it doesn't break things).
 
-Let me review this series again.
+For now it tries to use capstone (if available) before objdump.  But it
+doesn't support source file and line number info.  So users should use the
+objdump (by passing --objdump=PATH option) if they need them.  For example,
+this command line will keep the existing behavior (i.e. using objdump).
+
+  # not to use capstone for disassembly
+  $ perf annotate --objdump=objdump
+
+The capstone uses LLVM objdump style output which is slightly different than
+the GNU objdump.  But it should not have differences besides that.  I've
+verified the result of data type profiling and it produced the same output
+but gave me ~3x speedups.
 
 Thanks,
 Namhyung
+
+
+Cc: Changbin Du <changbin.du@huawei.com>
+
+
+Namhyung Kim (4):
+  perf annotate: Use ins__is_xxx() if possible
+  perf annotate: Add and use ins__is_nop()
+  perf annotate: Split out util/disasm.c
+  perf annotate: Use libcapstone to disassemble
+
+ tools/perf/util/Build      |    1 +
+ tools/perf/util/annotate.c | 1711 ++---------------------------------
+ tools/perf/util/annotate.h |   59 +-
+ tools/perf/util/disasm.c   | 1739 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/disasm.h   |  112 +++
+ 5 files changed, 1914 insertions(+), 1708 deletions(-)
+ create mode 100644 tools/perf/util/disasm.c
+ create mode 100644 tools/perf/util/disasm.h
+
+-- 
+2.44.0.478.gd926399ef9-goog
+
