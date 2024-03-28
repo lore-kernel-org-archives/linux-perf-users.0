@@ -1,67 +1,67 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F81311B9
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 16:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EB97E110
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 16:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641768; cv=none; b=vAV4Ln0W44D5gQuKou/YMH+sfSe26AYnD2ywXjC3Mni9hZ63pyUtc500a5XM+pJvegji/o87RMaBjnOfDlVYlyPYx39Xy2HRY0ZG8nupA4p8X/eAfsZBkPu9dJlbIWxY/HgXa0PtzF1BO+N6pKe2QhE+wdl5G6Hv57dasSvZ6+E=
+	t=1711642002; cv=none; b=IWGg+lRJoxXkOioVYRLeObhzp5dosuD3IOTK9BOs6tGPXa2xuJBJ+Kg/mpt3OvXUDOo7oemtF62KfZVUzoVgRXgE5tu75x1vaP25ZOHk61Xk2gkQCk9e9aD32upiRCXD3BDhjaKLNJpvCNjtdmgntqIlVrZiuxzwBjM4gTGBNHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641768; c=relaxed/simple;
-	bh=3edFfHGuTgBNAtyipnLKn6bXij3/XaZeoLIupKMiaqI=;
+	s=arc-20240116; t=1711642002; c=relaxed/simple;
+	bh=YNTfzZXkS2tduXOtdCnsa35rn72an0t5DimbmCwLsNw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gVUSVB/1ysgqyxuxgCXOFgqAQyiz73Xq0C3FIdqVett4PIApKBL3DlI8OETkNtjCh8BXQmaeZij8gBmFlEAAcVDWffBICESbO1czvjSxT+N8C8OU3/PLaNQOELVQ/mVi/IEcE3HaBBn57hQsekjwuMElJlJdTJgGtSAGG7aAF5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Axv+du0e; arc=none smtp.client-ip=209.85.166.174
+	 To:Cc:Content-Type; b=khZPnYP0c2RDUfEGekw7BSHrRwS/H0Zf8mTkLiug38UmLJRlqJ86BioxfOkQjVZbpWKfdky7ifKhvJutEunYFv0lD2uhHZEZSRiIIDwq9tU3irYy71GoqVYdWsX2YI+Y9L0SQ7MCjb0N6RvCk7H7BoxhTJMM9Xm0XTE5SOxM7ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0X+j32pB; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Axv+du0e"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36899c4e544so95615ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 09:02:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0X+j32pB"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-368c8845dd0so2605ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 09:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711641766; x=1712246566; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711641999; x=1712246799; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cBP7eIuQCT3cz5tMBaiLfJfh0r9VLr4sISDdgfizVcc=;
-        b=Axv+du0e20K0bEUGJkG0c6h8oCQxsiNH3REaD/MaU+c+6f/kqQUlSU5nB6qPZ/KMn6
-         nXZvSnJEz+GOIEDz95dUxrTp9S5nTYYvfXSC6ZhfcS3ifyUmSjxNc7h7B6bWpBDF2vZ2
-         N5fUlZ57z1vvli75VtmoGjlMXNnpdEkuVxzmzawY/pgJfJodFYiErakRw5Qo+ic57892
-         LXcDEwhKfiixzvfy7Ek7S8VxeDF5mADV4PmkE6mpDFjfCu3IfU+G/j37DEptDZKD8xVP
-         j3A0df5eZMfyc7Z+gd+EUQ1atmJYSrZWsWUfxbSR2Pus5i9kryArldHXWLUIHiywZl7l
-         xqig==
+        bh=ujVLH+Y4heKh4N6QqT0QfQEa56kMv090ypPqHTTSdJA=;
+        b=0X+j32pBo6R96cNotlDLcgsEgsoOqKjzs0hvgRs8nGsGX97aA6yzicEzkoVgdZ43Lz
+         To67Flr1UvAXIHWWGGlKQLKijgAum4/4NT0ILd9UEd8odtZhF8jTJnIWjkprHhfzKOkQ
+         oJ0xCEW7/FQrd8AVtjYgM336/4hRIUE5FdnnQM5VGc83nXdaZA8vMKg7VsuguK3H7Qnp
+         ecpNMsPSMy3vmuhcU/lT42Vz42mGNf5EmD/F9ih3Pp1TjUhdc7BQNVB2hwxaBOGlMBcg
+         /TjShuywDloxevXM62o5x0G4QmS3nfIYF/9WsOR3DAZjeKxXShuEHDDmBpPcC3y8H16c
+         2Hug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711641766; x=1712246566;
+        d=1e100.net; s=20230601; t=1711641999; x=1712246799;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cBP7eIuQCT3cz5tMBaiLfJfh0r9VLr4sISDdgfizVcc=;
-        b=D/T/Qda4UKpFS2t6802m/2/1GLk0FscyCrM7Mo70xwfQUIMJN+oRKtRV7oJisc5EAA
-         McSJ9hpunAZhPxPHd+UCieuEgG+mTMG1cSAfjIgy/fIS1rfyBSCQBd/xdQCoDrarUwHU
-         dPKaTTpNsvNqTMurUDKRe/Gw0p+SCFHHlZJNAoS31aFJmDm90MD13b0lY/17seT9fLiO
-         ou5Wj8v42D2Go1xzsbQCD/CZAVjX6rpn09HgUlsxdF6YL9vOni+E9Gd/c+BtxXmNP3yx
-         n7HG4G631Mb65ngFojCieE2+WsPwZlMAV1fRbHajxbBDQduHYnGwhbKaHVQ2tSX2cczG
-         hjVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWohUJhSO7Fz8wWIcu+1vY1adKG55G3ohkcLoNW0qYQW1/LhYOwZfkXGSeall96DR5W5jBEcv3i2Nv1BpcUq2JQhvEXq6PgSejIQVs3oH84sA==
-X-Gm-Message-State: AOJu0YwL+mmjgGg1BhDTzXkpWNgwd6UAyGa0ZcRgl0X+4hvA30sYoJOH
-	ycKpENiJyuSiYVRrmVrUEccSwfWSkB2zcDo3P1MjEP15bm8uYV0rX9jvuMrq1AREE97B2KnKgON
-	JNt+r6/FI+nxARr6dpfjDrWDIxlwkx6NW4zFCYqC6vCsruLYulrkF
-X-Google-Smtp-Source: AGHT+IE5sRRSnP6efrA0k65ve35cCb8jUxUvvFxl3PT4/ywpy6rDE0IK6F6PHTRirrQJFC7P30wEEgmC93Ik8v/WnaU=
-X-Received: by 2002:a05:6e02:1647:b0:366:4365:e83d with SMTP id
- v7-20020a056e02164700b003664365e83dmr264174ilu.4.1711641765514; Thu, 28 Mar
- 2024 09:02:45 -0700 (PDT)
+        bh=ujVLH+Y4heKh4N6QqT0QfQEa56kMv090ypPqHTTSdJA=;
+        b=mKHqX+hlcm2yhOEuBKNTYNaCOFbr0ktArF+HE3SDAdIBztpDpfqCbEU7XQlCFY9d84
+         Y5lD9QxEQWr/R/uB/sGmUNQ47gM+HXcuXkSJxCk98s+2Ythd8o6qJghJipZb1SB3/UVp
+         f6dA2V6YispW1L1IAPXnwFH9b2yjIqdlBY/s5LBzm/OY9J0i7dw33weDhBunPXBx/eJ+
+         lrqs8aMB+Xp3zf8MZdMlDHWpa04ncI6MAs1JY/SR3jMa5tBi/3Yn7qffb0Eoxc9xFyD0
+         datg1zOHRcqV/triG/IxQcyAsudTvSr1OEFVglWBZCpfqSKfc+M4B99AXpDFI7RV6xeJ
+         ozBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8En1So9KSeRWv9fCVqVk4T16BklFwUhdzn6Beyn4FXJD4aEZH6FDUy0z23d5TrSQBAxldFJsMZODtFdHYflq9fAlp15HRl9tzETfnbIwYDA==
+X-Gm-Message-State: AOJu0YyizMstapTc+t1Mw4maJSv4v6lbPjwgtAaPo7C02Uq0NbmpfqC+
+	N721ykENWK2Oaw3kg0uHLQ5rncSaaoIe/peBvjWGvbd5H4PRQGQfDmzioXLj7LjW19hfDbegWqD
+	bNIaGhEDKxM7nv0UU1Jy5alYIbsV04WFUI6Rl
+X-Google-Smtp-Source: AGHT+IGXyb02hCuIjtAdd5mD/XhWKmGBf7L9DX4y3Ph+vjGiubBqK//IsbbdX+zKsmiF2LodL4NeS6pdMyKCdfx5Ee0=
+X-Received: by 2002:a92:ca49:0:b0:368:775b:ad1a with SMTP id
+ q9-20020a92ca49000000b00368775bad1amr258472ilo.16.1711641998501; Thu, 28 Mar
+ 2024 09:06:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328055857.383180-1-yangjihong@bytedance.com>
-In-Reply-To: <20240328055857.383180-1-yangjihong@bytedance.com>
+References: <20240328055857.383180-1-yangjihong@bytedance.com> <20240328055857.383180-2-yangjihong@bytedance.com>
+In-Reply-To: <20240328055857.383180-2-yangjihong@bytedance.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 28 Mar 2024 09:02:31 -0700
-Message-ID: <CAP-5=fXms1noWT8PXqBu89QogcwVsvAGpxq3Q_bNUYOYL7PpKA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf sched timehist: Fix -g/--call-graph option failure
+Date: Thu, 28 Mar 2024 09:06:28 -0700
+Message-ID: <CAP-5=fWA0EmxfxHOL2N2j=itUu_-wPxugB1Am6zi2pRAxBSFtg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf evsel: Use evsel__name_is() helper
 To: Yang Jihong <yangjihong@bytedance.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
 	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
@@ -74,95 +74,321 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Mar 27, 2024 at 10:59=E2=80=AFPM Yang Jihong <yangjihong@bytedance.=
 com> wrote:
 >
-> When perf-sched enables the call-graph recording, sample_type of dummy
-> event does not have PERF_SAMPLE_CALLCHAIN, timehist_check_attr() checks
-> that the evsel does not have a callchain, and set show_callchain to 0.
+> Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
+> evsel__name_is() helper.
 >
-> Currently perf sched timehist only saves callchain when processing
-> sched:sched_switch event, timehist_check_attr() only needs to determine
-> whether the event has PERF_SAMPLE_CALLCHAIN.
+> No functional change.
 >
-> Before:
->   # perf sched record -g true
->   [ perf record: Woken up 0 times to write data ]
->   [ perf record: Captured and wrote 4.153 MB perf.data (7536 samples) ]
->   # perf sched timehist
->   Samples do not have callchains.
->              time    cpu  task name                       wait time  sch =
-delay   run time
->                           [tid/pid]                          (msec)     (=
-msec)     (msec)
->   --------------- ------  ------------------------------  ---------  ----=
------  ---------
->     147851.826019 [0000]  perf[285035]                        0.000      =
-0.000      0.000
->     147851.826029 [0000]  migration/0[15]                     0.000      =
-0.003      0.009
->     147851.826063 [0001]  perf[285035]                        0.000      =
-0.000      0.000
->     147851.826069 [0001]  migration/1[21]                     0.000      =
-0.003      0.006
->   <SNIP>
->
-> After:
->   # perf sched record -g true
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 2.572 MB perf.data (822 samples) ]
->   # perf sched timehist
->              time    cpu  task name                       wait time  sch =
-delay   run time
->                           [tid/pid]                          (msec)     (=
-msec)     (msec)
->   --------------- ------  ------------------------------  ---------  ----=
------  ---------
->     144193.035164 [0000]  perf[277062]                        0.000      =
-0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <-=
- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_=
-for_common <- wait_for_completion
->     144193.035174 [0000]  migration/0[15]                     0.000      =
-0.003      0.009    __traceiter_sched_switch <- __traceiter_sched_switch <-=
- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
->     144193.035207 [0001]  perf[277062]                        0.000      =
-0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <-=
- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_=
-for_common <- wait_for_completion
->     144193.035214 [0001]  migration/1[21]                     0.000      =
-0.003      0.007    __traceiter_sched_switch <- __traceiter_sched_switch <-=
- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
-> <SNIP>
+> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 
-This looks good, should there be a Fixes tag for the sake of backports?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 > ---
->  tools/perf/builtin-sched.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  tools/perf/builtin-kmem.c               |  2 +-
+>  tools/perf/builtin-sched.c              |  4 +--
+>  tools/perf/builtin-script.c             |  2 +-
+>  tools/perf/builtin-trace.c              |  4 +--
+>  tools/perf/tests/evsel-roundtrip-name.c |  4 +--
+>  tools/perf/tests/parse-events.c         | 39 +++++++++----------------
+>  6 files changed, 22 insertions(+), 33 deletions(-)
 >
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 9714327fd0ea..6fd95be5032b 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
+>         }
+>
+>         evlist__for_each_entry(session->evlist, evsel) {
+> -               if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
+> +               if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
+>                     evsel__field(evsel, "pfn")) {
+>                         use_pfn =3D true;
+>                         break;
 > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index b248c433529a..1bfb22347371 100644
+> index 1bfb22347371..0fce7d8986c0 100644
 > --- a/tools/perf/builtin-sched.c
 > +++ b/tools/perf/builtin-sched.c
-> @@ -2963,8 +2963,11 @@ static int timehist_check_attr(struct perf_sched *=
-sched,
->                         return -1;
->                 }
+> @@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *samp=
+le,
+>                            struct evsel *evsel)
+>  {
+>         /* pid 0 =3D=3D swapper =3D=3D idle task */
+> -       if (strcmp(evsel__name(evsel), "sched:sched_switch") =3D=3D 0)
+> +       if (evsel__name_is(evsel, "sched:sched_switch"))
+>                 return evsel__intval(evsel, sample, "prev_pid") =3D=3D 0;
 >
-> -               if (sched->show_callchain && !evsel__has_callchain(evsel)=
-) {
-> -                       pr_info("Samples do not have callchains.\n");
-> +               /* only need to save callchain related to sched_switch ev=
-ent */
-> +               if (sched->show_callchain &&
-> +                   evsel__name_is(evsel, "sched:sched_switch") &&
-> +                   !evsel__has_callchain(evsel)) {
-> +                       pr_info("Samples of sched_switch event do not hav=
-e callchains.\n");
->                         sched->show_callchain =3D 0;
->                         symbol_conf.use_callchain =3D 0;
+>         return sample->pid =3D=3D 0;
+> @@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched =
+*sched,
+>         }
+>
+>         if (sched->idle_hist) {
+> -               if (strcmp(evsel__name(evsel), "sched:sched_switch"))
+> +               if (!evsel__name_is(evsel, "sched:sched_switch"))
+>                         rc =3D true;
+>                 else if (evsel__intval(evsel, sample, "prev_pid") !=3D 0 =
+&&
+>                          evsel__intval(evsel, sample, "next_pid") !=3D 0)
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 37088cc0ff1b..cc981531ec00 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scr=
+iptname,
+>
+>                         match =3D 0;
+>                         evlist__for_each_entry(session->evlist, pos) {
+> -                               if (!strcmp(evsel__name(pos), evname)) {
+> +                               if (evsel__name_is(pos, evname)) {
+>                                         match =3D 1;
+>                                         break;
+>                                 }
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 90eaff8c0f6e..9b93807a1906 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
+>                 goto out;
+>         }
+>         trace.syscalls.events.bpf_output =3D evlist__last(trace.evlist);
+> -       assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__=
+augmented_syscalls__"));
+> +       assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augme=
+nted_syscalls__");
+>  skip_augmentation:
+>  #endif
+>         err =3D -1;
+> @@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
+>          */
+>         if (trace.syscalls.events.bpf_output) {
+>                 evlist__for_each_entry(trace.evlist, evsel) {
+> -                       bool raw_syscalls_sys_exit =3D strcmp(evsel__name=
+(evsel), "raw_syscalls:sys_exit") =3D=3D 0;
+> +                       bool raw_syscalls_sys_exit =3D evsel__name_is(evs=
+el, "raw_syscalls:sys_exit");
+>
+>                         if (raw_syscalls_sys_exit) {
+>                                 trace.raw_augmented_syscalls =3D true;
+> diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/e=
+vsel-roundtrip-name.c
+> index 15ff86f9da0b..1922cac13a24 100644
+> --- a/tools/perf/tests/evsel-roundtrip-name.c
+> +++ b/tools/perf/tests/evsel-roundtrip-name.c
+> @@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
+>                                         continue;
+>                                 }
+>                                 evlist__for_each_entry(evlist, evsel) {
+> -                                       if (strcmp(evsel__name(evsel), na=
+me)) {
+> +                                       if (!evsel__name_is(evsel, name))=
+ {
+>                                                 pr_debug("%s !=3D %s\n", =
+evsel__name(evsel), name);
+>                                                 ret =3D TEST_FAIL;
+>                                         }
+> @@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *cons=
+t names[], int nr_names)
+>                         continue;
 >                 }
+>                 evlist__for_each_entry(evlist, evsel) {
+> -                       if (strcmp(evsel__name(evsel), names[i])) {
+> +                       if (!evsel__name_is(evsel, names[i])) {
+>                                 pr_debug("%s !=3D %s\n", evsel__name(evse=
+l), names[i]);
+>                                 ret =3D TEST_FAIL;
+>                         }
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index feb5727584d1..0b70451451b3 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struc=
+t evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:u"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
+>
+>         return test__checkevent_breakpoint(evlist);
+>  }
+> @@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:x:k"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"))=
+;
+>
+>         return test__checkevent_breakpoint_x(evlist);
+>  }
+> @@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv)=
+;
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:r:hp"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp")=
+);
+>
+>         return test__checkevent_breakpoint_r(evlist);
+>  }
+> @@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:w:up"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up")=
+);
+>
+>         return test__checkevent_breakpoint_w(evlist);
+>  }
+> @@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(st=
+ruct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:rw:kp"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"=
+));
+>
+>         return test__checkevent_breakpoint_rw(evlist);
+>  }
+> @@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(=
+struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint(evlist);
+>  }
+> @@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_x(evlist);
+>  }
+> @@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv)=
+;
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_r(evlist);
+>  }
+> @@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_w(evlist);
+>  }
+> @@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_na=
+me(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_rw(evlist);
+>  }
+> @@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT =3D=3D evsel->=
+core.attr.type);
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakp=
+oint1"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"=
+));
+>
+>         evsel =3D evsel__next(evsel);
+>
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT =3D=3D evsel->=
+core.attr.type);
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakp=
+oint2"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"=
+));
+>
+>         return TEST_OK;
+>  }
+> @@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist =
+*evlist)
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"=
+));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
+>
+>         /* cpu/config=3D2/u" */
+>         evsel =3D evsel__next(evsel);
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "cpu/config=3D2/u"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=
+=3D2/u"));
+>
+>         return TEST_OK;
+>  }
 > --
 > 2.25.1
 >
