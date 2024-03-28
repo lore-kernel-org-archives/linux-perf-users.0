@@ -1,120 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7433DBBF
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 15:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F81311B9
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 16:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641126; cv=none; b=X2U9ToEo2uKt4smGXt7f1LML7/YaD1KVdKIhSJ5CNBZ9qtfVe9J+rcLplD445iSZSmXX6pVY2lrID7+KYFt/MN+Rbp67xH7kAI5Y1OW6YgICRpKE6sBOHKd8N/I1e8YDNj2vWnvQq1bRwtc2vhSb8B1AT2/SSd0MjkNP2ktBT54=
+	t=1711641768; cv=none; b=vAV4Ln0W44D5gQuKou/YMH+sfSe26AYnD2ywXjC3Mni9hZ63pyUtc500a5XM+pJvegji/o87RMaBjnOfDlVYlyPYx39Xy2HRY0ZG8nupA4p8X/eAfsZBkPu9dJlbIWxY/HgXa0PtzF1BO+N6pKe2QhE+wdl5G6Hv57dasSvZ6+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641126; c=relaxed/simple;
-	bh=/ck/1ENcqvxzmkMHzerk8YY23NIguPKoq3xNvI74eDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mFPT/RTFHvcL6Djw/0h3NDoSnsshgIhOh38HRPTeIs5XiFdNRnX4l0rQSgfOu6bP4EQun/jDjDzA1y4Y55iNKUxIPBz+KiCQB+0Ifc4PmPdqMiPW+tbCufRdxJoCQaMZsMW3J/nt+QCmGxqs2jLSUqaefbfXzEPlAd0+cuSRxwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATltxYg+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711641768; c=relaxed/simple;
+	bh=3edFfHGuTgBNAtyipnLKn6bXij3/XaZeoLIupKMiaqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gVUSVB/1ysgqyxuxgCXOFgqAQyiz73Xq0C3FIdqVett4PIApKBL3DlI8OETkNtjCh8BXQmaeZij8gBmFlEAAcVDWffBICESbO1czvjSxT+N8C8OU3/PLaNQOELVQ/mVi/IEcE3HaBBn57hQsekjwuMElJlJdTJgGtSAGG7aAF5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Axv+du0e; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATltxYg+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711641124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ceK+0hWqwrD4srtDhzJqxO6YnCvRIBHJ0AUCCWm59/A=;
-	b=ATltxYg+4kP0ZaGhbxjdtqW6p6I8O50c8m/bEXmY56QeT+w4mySwyP64E9KOn0DfAwZ7+x
-	qLdtrO406X4TkJps+sw468lBtNr34cDK8a6vDInrUh5B7mWlpNGllNcs/zdHuJJTrrOXbg
-	SHFU2hJVMnkRXvIGfyYyvqnotx69NU4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-HW-zEaofOKqfloO0Dubdyw-1; Thu, 28 Mar 2024 11:51:59 -0400
-X-MC-Unique: HW-zEaofOKqfloO0Dubdyw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5C0E6800264;
-	Thu, 28 Mar 2024 15:51:59 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.127])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C941917AA3;
-	Thu, 28 Mar 2024 15:51:57 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com
-Subject: [PATCH] perf test record.sh: Raise limit of open file descriptors
-Date: Thu, 28 Mar 2024 16:46:14 +0100
-Message-ID: <20240328155116.16473-1-vmolnaro@redhat.com>
-In-Reply-To: <ZfrwcurxSYKy9uma@x1>
-References: <ZfrwcurxSYKy9uma@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Axv+du0e"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36899c4e544so95615ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Mar 2024 09:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711641766; x=1712246566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cBP7eIuQCT3cz5tMBaiLfJfh0r9VLr4sISDdgfizVcc=;
+        b=Axv+du0e20K0bEUGJkG0c6h8oCQxsiNH3REaD/MaU+c+6f/kqQUlSU5nB6qPZ/KMn6
+         nXZvSnJEz+GOIEDz95dUxrTp9S5nTYYvfXSC6ZhfcS3ifyUmSjxNc7h7B6bWpBDF2vZ2
+         N5fUlZ57z1vvli75VtmoGjlMXNnpdEkuVxzmzawY/pgJfJodFYiErakRw5Qo+ic57892
+         LXcDEwhKfiixzvfy7Ek7S8VxeDF5mADV4PmkE6mpDFjfCu3IfU+G/j37DEptDZKD8xVP
+         j3A0df5eZMfyc7Z+gd+EUQ1atmJYSrZWsWUfxbSR2Pus5i9kryArldHXWLUIHiywZl7l
+         xqig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711641766; x=1712246566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cBP7eIuQCT3cz5tMBaiLfJfh0r9VLr4sISDdgfizVcc=;
+        b=D/T/Qda4UKpFS2t6802m/2/1GLk0FscyCrM7Mo70xwfQUIMJN+oRKtRV7oJisc5EAA
+         McSJ9hpunAZhPxPHd+UCieuEgG+mTMG1cSAfjIgy/fIS1rfyBSCQBd/xdQCoDrarUwHU
+         dPKaTTpNsvNqTMurUDKRe/Gw0p+SCFHHlZJNAoS31aFJmDm90MD13b0lY/17seT9fLiO
+         ou5Wj8v42D2Go1xzsbQCD/CZAVjX6rpn09HgUlsxdF6YL9vOni+E9Gd/c+BtxXmNP3yx
+         n7HG4G631Mb65ngFojCieE2+WsPwZlMAV1fRbHajxbBDQduHYnGwhbKaHVQ2tSX2cczG
+         hjVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWohUJhSO7Fz8wWIcu+1vY1adKG55G3ohkcLoNW0qYQW1/LhYOwZfkXGSeall96DR5W5jBEcv3i2Nv1BpcUq2JQhvEXq6PgSejIQVs3oH84sA==
+X-Gm-Message-State: AOJu0YwL+mmjgGg1BhDTzXkpWNgwd6UAyGa0ZcRgl0X+4hvA30sYoJOH
+	ycKpENiJyuSiYVRrmVrUEccSwfWSkB2zcDo3P1MjEP15bm8uYV0rX9jvuMrq1AREE97B2KnKgON
+	JNt+r6/FI+nxARr6dpfjDrWDIxlwkx6NW4zFCYqC6vCsruLYulrkF
+X-Google-Smtp-Source: AGHT+IE5sRRSnP6efrA0k65ve35cCb8jUxUvvFxl3PT4/ywpy6rDE0IK6F6PHTRirrQJFC7P30wEEgmC93Ik8v/WnaU=
+X-Received: by 2002:a05:6e02:1647:b0:366:4365:e83d with SMTP id
+ v7-20020a056e02164700b003664365e83dmr264174ilu.4.1711641765514; Thu, 28 Mar
+ 2024 09:02:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+References: <20240328055857.383180-1-yangjihong@bytedance.com>
+In-Reply-To: <20240328055857.383180-1-yangjihong@bytedance.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 28 Mar 2024 09:02:31 -0700
+Message-ID: <CAP-5=fXms1noWT8PXqBu89QogcwVsvAGpxq3Q_bNUYOYL7PpKA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf sched timehist: Fix -g/--call-graph option failure
+To: Yang Jihong <yangjihong@bytedance.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Wed, Mar 27, 2024 at 10:59=E2=80=AFPM Yang Jihong <yangjihong@bytedance.=
+com> wrote:
+>
+> When perf-sched enables the call-graph recording, sample_type of dummy
+> event does not have PERF_SAMPLE_CALLCHAIN, timehist_check_attr() checks
+> that the evsel does not have a callchain, and set show_callchain to 0.
+>
+> Currently perf sched timehist only saves callchain when processing
+> sched:sched_switch event, timehist_check_attr() only needs to determine
+> whether the event has PERF_SAMPLE_CALLCHAIN.
+>
+> Before:
+>   # perf sched record -g true
+>   [ perf record: Woken up 0 times to write data ]
+>   [ perf record: Captured and wrote 4.153 MB perf.data (7536 samples) ]
+>   # perf sched timehist
+>   Samples do not have callchains.
+>              time    cpu  task name                       wait time  sch =
+delay   run time
+>                           [tid/pid]                          (msec)     (=
+msec)     (msec)
+>   --------------- ------  ------------------------------  ---------  ----=
+-----  ---------
+>     147851.826019 [0000]  perf[285035]                        0.000      =
+0.000      0.000
+>     147851.826029 [0000]  migration/0[15]                     0.000      =
+0.003      0.009
+>     147851.826063 [0001]  perf[285035]                        0.000      =
+0.000      0.000
+>     147851.826069 [0001]  migration/1[21]                     0.000      =
+0.003      0.006
+>   <SNIP>
+>
+> After:
+>   # perf sched record -g true
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 2.572 MB perf.data (822 samples) ]
+>   # perf sched timehist
+>              time    cpu  task name                       wait time  sch =
+delay   run time
+>                           [tid/pid]                          (msec)     (=
+msec)     (msec)
+>   --------------- ------  ------------------------------  ---------  ----=
+-----  ---------
+>     144193.035164 [0000]  perf[277062]                        0.000      =
+0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <-=
+ __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_=
+for_common <- wait_for_completion
+>     144193.035174 [0000]  migration/0[15]                     0.000      =
+0.003      0.009    __traceiter_sched_switch <- __traceiter_sched_switch <-=
+ __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
+>     144193.035207 [0001]  perf[277062]                        0.000      =
+0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <-=
+ __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_=
+for_common <- wait_for_completion
+>     144193.035214 [0001]  migration/1[21]                     0.000      =
+0.003      0.007    __traceiter_sched_switch <- __traceiter_sched_switch <-=
+ __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
+> <SNIP>
 
-Subtest for system-wide record with '--threads=cpu' option fails due
-to a limit of open file descriptors on systems with 128 or more CPUs
-as the default limit is set to 1024.
+This looks good, should there be a Fixes tag for the sake of backports?
 
-The number of open file descriptors should be slightly above
-nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
-which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
-16*nmb_cpus for the test.
+Thanks,
+Ian
 
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
-Reworked the patch as the testfile has already changed since the patch
-was sent causing the applying to fail. Should be good now.
- tools/perf/tests/shell/record.sh | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 4fbc74805d52..8dc90fa08682 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -11,6 +11,14 @@ err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
- testprog="perf test -w thloop"
- testsym="test_loop"
-+default_fd_limit=$(ulimit -n)
-+# With option --threads=cpu the number of open file descriptors should be
-+# equal to sum of:    nmb_cpus * nmb_events (2+dummy),
-+#                     nmb_threads for perf.data.n (equal to nmb_cpus) and
-+#                     2*nmb_cpus of pipes = 4*nmb_cpus (each pipe has 2 ends)
-+# All together it needs 8*nmb_cpus file descriptors plus some are also used
-+# outside of testing, thus raising the limit to 16*nmb_cpus
-+min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
- 
- cleanup() {
-   rm -rf "${perfdata}"
-@@ -154,10 +162,18 @@ test_workload() {
-   echo "Basic target workload test [Success]"
- }
- 
-+# raise the limit of file descriptors to minimum
-+if [[ $default_fd_limit -lt $min_fd_limit ]]; then
-+	ulimit -n $min_fd_limit
-+fi
-+
- test_per_thread
- test_register_capture
- test_system_wide
- test_workload
- 
-+# restore the default value
-+ulimit -n $default_fd_limit
-+
- cleanup
- exit $err
--- 
-2.43.0
-
+> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> ---
+>  tools/perf/builtin-sched.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index b248c433529a..1bfb22347371 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -2963,8 +2963,11 @@ static int timehist_check_attr(struct perf_sched *=
+sched,
+>                         return -1;
+>                 }
+>
+> -               if (sched->show_callchain && !evsel__has_callchain(evsel)=
+) {
+> -                       pr_info("Samples do not have callchains.\n");
+> +               /* only need to save callchain related to sched_switch ev=
+ent */
+> +               if (sched->show_callchain &&
+> +                   evsel__name_is(evsel, "sched:sched_switch") &&
+> +                   !evsel__has_callchain(evsel)) {
+> +                       pr_info("Samples of sched_switch event do not hav=
+e callchains.\n");
+>                         sched->show_callchain =3D 0;
+>                         symbol_conf.use_callchain =3D 0;
+>                 }
+> --
+> 2.25.1
+>
