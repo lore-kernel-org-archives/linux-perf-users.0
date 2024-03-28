@@ -1,149 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD9822EED;
-	Thu, 28 Mar 2024 07:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5A54BDA;
+	Thu, 28 Mar 2024 09:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610169; cv=none; b=BXE428iIXpSTk2JsvdtKCyNXB91bsmr+ucHMqRQ1HUyMAgAP3XbDFQNaK1ux03u4L6O4erMYuuMrWSSKamxrLf7f5cLOkJioQQl61hkczlsY7zwCks8pqsn2Hw/cqbiHYim/ZiykTLtVUlaAYhncnTWmy9lejcrefYA8YfRlA7I=
+	t=1711616438; cv=none; b=AC9F/bAUCyGIJrjyyjaFmjNjoe3U/EBRT/L7PmANNfzhCV4rxKX/H8jz7rFSITmbZy7TdBBpts5SMuga2xg6pyOwOROqbZhhJ7NdXTdDnmuuKenaOSL5dZAjeJ6BRs4eQopWnHSe0mrws+Z85c/GIU+tAzqCsL37Ekw4SPh4tG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610169; c=relaxed/simple;
-	bh=r1JsHv6zvguqW90jyEY0U/U4DMDGMKwYQjCJCqIjmk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P7OQ/qSronR2jM6NmP59ZEgEk57TYrWQmo8NeUC1Og0SVylxp8nxV5+KvcbZiFchW7hYj+2kq7ki6/i7QIBZYfEBtHmFzoa+IAdGE+66XtlcBhJ8sLbXrwMCpoLkwMz+GYzNmrAl4OzstnbCLzOLof8ZZmdxNpm5yxqp5yqrd84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAmN/m71; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711616438; c=relaxed/simple;
+	bh=GKIEvQajVEoW3lcq/KMK1mQOWTmIcBZg/Y41L6hdBqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ca72kXE666jhwxD37YPE6tyIsxgLfce5m7tagSwOwMZNWTyv3qzaMu2SdHVs/NaqjxMdlIdKhN0+SNKXaAlS6x2t9showv24W1ZAskQimnF8PQDr6aqIzUUmd1i3x0xgAWHvsB1ETFU7lQUimFGn7LuDbo6ty1qXArc7yJf1S8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VmO4KkI+; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAmN/m71"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A23C433F1;
-	Thu, 28 Mar 2024 07:16:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711610168;
-	bh=r1JsHv6zvguqW90jyEY0U/U4DMDGMKwYQjCJCqIjmk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NAmN/m71xn3ib012g07l8sC+gyJIzFt9fFK3jdDigIHga4g8Fy0g4u0A9zMTn2G8y
-	 Hz/ArW+aqXuqTPb2fPpftu20+1RkDRzP/XFJQhHXJMj8KYnoe5TCRWhoGwSsNg3v4T
-	 H3jfZDkvrEoo5QMLri7RoQDmFW3FyBYt4qgxPfkHDpAB+8Ajo8fibnxufZyqfjrguR
-	 dBNlncXj4g94p9pzTUeGHFe+ZO+Z9/1/QE5YeVvQ97AoXIN+LsdR2yhA69cvKvdLXt
-	 K7hfz3k4p687HCWjsBvcGXgtiDBmENV6h+EZI1V7LNtQhQ+nyZGFPEfci2N6376cIj
-	 b9N3P6mb8dHLA==
-Date: Thu, 28 Mar 2024 09:15:20 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vineet Gupta <vgupta@kernel.org>, David Hildenbrand <david@redhat.com>,
-	peterx <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, x86@kernel.org,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Matt Turner <mattst88@gmail.com>,
-	Alexey Brodkin <abrodkin@synopsys.com>
-Subject: Re: [PATCH RFC 0/3] mm/gup: consistently call it GUP-fast
-Message-ID: <ZgUZCBNloC-grPWJ@kernel.org>
-References: <20240327130538.680256-1-david@redhat.com>
- <ZgQ5hNltQ2DHQXps@x1n>
- <3922460a-4d01-4ecb-b8c5-7c57fd46f3fd@redhat.com>
- <dc1433ea-4e59-4ab7-83fb-23b393020980@app.fastmail.com>
- <3360dba8-0fac-4126-b72b-abc036957d6a@kernel.org>
- <10da3ced-9a79-4ebb-a77d-1aa49cc61952@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VmO4KkI+"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42S8xu24021914;
+	Thu, 28 Mar 2024 09:00:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=cP1wgP/DVc7Se0b+n2O/NoJFwey3Ye5k1NuTvcEqC7w=;
+ b=VmO4KkI+OfRxi5Zf+9LgI0j6yKnQfzgZFfuxrG3oP2FE1Oe1ysCphcaRIXqR2b5YymwS
+ t3fYVnllmAvNQqfGlwaT5/Jnm7TSnrnEOAfcTipHYwUIu4u2qP8T+EBTitL8/HZZZakF
+ ilNnFsbgjzDk2CFDLXFbQICvXRjCNwxJKTneQ1ZNvnJBEaSTlDUpRoIPpF3Mt85tFj2o
+ ToO234oSBcbLMXrpPUzI7oU2RhksGvROYNPopA6OFobe7H5kv+xvPzORxaMM2FiMJVYJ
+ yKQuOTdrRNMxYmbq63flJhlf1BFAa4GEq179MF29ksO6PaYYnkGtock0DjS6+EKlcSjI qw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x55hb0021-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 09:00:18 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42S90HAf023260;
+	Thu, 28 Mar 2024 09:00:17 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x55hb001w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 09:00:17 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42S63qqu011267;
+	Thu, 28 Mar 2024 09:00:17 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2bmmc2rq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 09:00:16 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42S90Dsl49414452
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 09:00:15 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A3E020063;
+	Thu, 28 Mar 2024 09:00:13 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9FC5E2004D;
+	Thu, 28 Mar 2024 09:00:08 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.87.71])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 28 Mar 2024 09:00:08 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vineethr@linux.ibm.com
+Subject: [PATCH] perf sched: Rename switches to count and add usage description, options for latency
+Date: Thu, 28 Mar 2024 14:30:05 +0530
+Message-ID: <20240328090005.8321-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <10da3ced-9a79-4ebb-a77d-1aa49cc61952@app.fastmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: iHHZR2THhGI1J9DjZnmLMnLNdI-ypmY5
+X-Proofpoint-GUID: sLhF550g9e88-IFxtcEfw5cteEMG7lFy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_07,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2403280058
 
-On Thu, Mar 28, 2024 at 07:09:13AM +0100, Arnd Bergmann wrote:
-> On Thu, Mar 28, 2024, at 06:51, Vineet Gupta wrote:
-> > On 3/27/24 09:22, Arnd Bergmann wrote:
-> >> On Wed, Mar 27, 2024, at 16:39, David Hildenbrand wrote:
-> >>> On 27.03.24 16:21, Peter Xu wrote:
-> >>>> On Wed, Mar 27, 2024 at 02:05:35PM +0100, David Hildenbrand wrote:
-> >>>>
-> >>>> I'm not sure what config you tried there; as I am doing some build tests
-> >>>> recently, I found turning off CONFIG_SAMPLES + CONFIG_GCC_PLUGINS could
-> >>>> avoid a lot of issues, I think it's due to libc missing.  But maybe not the
-> >>>> case there.
-> >>> CCin Arnd; I use some of his compiler chains, others from Fedora directly. For
-> >>> example for alpha and arc, the Fedora gcc is "13.2.1".
-> >>> But there is other stuff like (arc):
-> >>>
-> >>> ./arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
-> >>> ./arch/arc/include/asm/mmu-arcv2.h:82:9: error: implicit declaration of 
-> >>> function 'write_aux_reg' [-Werro
-> >>> r=implicit-function-declaration]
-> >>>     82 |         write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
-> >>>        |         ^~~~~~~~~~~~~
-> >> Seems to be missing an #include of soc/arc/aux.h, but I can't
-> >> tell when this first broke without bisecting.
-> >
-> > Weird I don't see this one but I only have gcc 12 handy ATM.
-> >
-> >     gcc version 12.2.1 20230306 (ARC HS GNU/Linux glibc toolchain -
-> > build 1360)
-> >
-> > I even tried W=1 (which according to scripts/Makefile.extrawarn) should
-> > include -Werror=implicit-function-declaration but don't see this still.
-> >
-> > Tomorrow I'll try building a gcc 13.2.1 for ARC.
-> 
-> David reported them with the toolchains I built at
-> https://mirrors.edge.kernel.org/pub/tools/crosstool/
-> I'm fairly sure the problem is specific to the .config
-> and tree, not the toolchain though.
+Rename 'Switches' to 'Count' and document metrics shown for perf
+sched latency output. Also add options possible with perf sched
+latency.
 
-This happens with defconfig and both gcc 12.2.0 and gcc 13.2.0 from your
-crosstools. I also see these on the current Linus' tree:
+Initially, after seeing the output of 'perf sched latency', the term
+'Switches' seemed like it's the number of context switches-in for a
+particular task, but upon going through the code, it was observed that
+it's actually keeping track of number of times a delay was calculated so
+that it is used in calculation of the average delay.
 
-arc/kernel/ptrace.c:342:16: warning: no previous prototype for 'syscall_trace_enter' [-Wmissing-prototypes]
-arch/arc/kernel/kprobes.c:193:15: warning: no previous prototype for 'arc_kprobe_handler' [-Wmissing-prototypes]
+Actually, the switches here is a subset of number of context switches-in
+because there are some cases where the count is not incremented in
+switch-in handler 'add_sched_in_event'. For example when a task is
+switched-in while it's state is not ready to run(!= THREAD_WAIT_CPU).
 
-This fixed the warning about write_aux_reg for me, probably Vineet would
-want this include somewhere else...
+commit d9340c1db3f5 ("perf sched: Display time in milliseconds, reorganize
+output") changed it from the original count to switches.
 
-diff --git a/arch/arc/include/asm/mmu-arcv2.h b/arch/arc/include/asm/mmu-arcv2.h
-index ed9036d4ede3..0fca342d7b79 100644
---- a/arch/arc/include/asm/mmu-arcv2.h
-+++ b/arch/arc/include/asm/mmu-arcv2.h
-@@ -69,6 +69,8 @@
+So, renamed switches to count to make things a bit more clearer and
+added the metrics description of latency in the document.
+
+Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+---
+ tools/perf/Documentation/perf-sched.txt | 36 +++++++++++++++++++++++++
+ tools/perf/builtin-sched.c              |  2 +-
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 5fbe42bd599b..a216d2991b19 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -20,6 +20,26 @@ There are several variants of 'perf sched':
+   'perf sched latency' to report the per task scheduling latencies
+   and other scheduling properties of the workload.
  
- #ifndef __ASSEMBLY__
- 
-+#include <asm/arcregs.h>
++   Example usage:
++       perf sched record -- sleep 1
++       perf sched latency
 +
- struct mm_struct;
- extern int pae40_exist_but_not_enab(void);
++  -------------------------------------------------------------------------------------------------------------------------------------------
++  Task                  |   Runtime ms  |  Count   | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |
++  -------------------------------------------------------------------------------------------------------------------------------------------
++  perf:(2)              |      2.804 ms |       66 | avg:   0.524 ms | max:   1.069 ms | max start: 254752.314960 s | max end: 254752.316029 s
++  NetworkManager:1343   |      0.372 ms |       13 | avg:   0.008 ms | max:   0.013 ms | max start: 254751.551153 s | max end: 254751.551166 s
++  kworker/1:2-xfs:4649  |      0.012 ms |        1 | avg:   0.008 ms | max:   0.008 ms | max start: 254751.519807 s | max end: 254751.519815 s
++  kworker/3:1-xfs:388   |      0.011 ms |        1 | avg:   0.006 ms | max:   0.006 ms | max start: 254751.519809 s | max end: 254751.519815 s
++  sleep:147736          |      0.938 ms |        3 | avg:   0.006 ms | max:   0.007 ms | max start: 254751.313817 s | max end: 254751.313824 s
++
++  It shows Runtime(time that a task spent actually running on the CPU),
++  Count(number of times a delay was calculated) and delay(time that a
++  task was ready to run but was kept waiting).
++
++  Tasks with the same command name are merged and the merge count is
++  given within (), However if -p option is used, pid is mentioned.
++
+   'perf sched script' to see a detailed trace of the workload that
+    was recorded (aliased to 'perf script' for now).
  
+@@ -78,6 +98,22 @@ OPTIONS
+ --force::
+ 	Don't complain, do it.
  
-> >>> or (alpha)
-> >>>
-> >>> WARNING: modpost: "saved_config" [vmlinux] is COMMON symbol
-> >>> ERROR: modpost: "memcpy" [fs/reiserfs/reiserfs.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [fs/nfs/nfs.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [fs/nfs/nfsv3.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [fs/nfsd/nfsd.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [fs/lockd/lockd.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [crypto/crypto.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [crypto/crypto_algapi.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [crypto/aead.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [crypto/crypto_skcipher.ko] undefined!
-> >>> ERROR: modpost: "memcpy" [crypto/seqiv.ko] undefined!
-> >
-> > Are these from ARC build or otherwise ?
-> 
-> This was arch/alpha.
-> 
->       Arnd
-
++OPTIONS for 'perf sched latency'
++-------------------------------
++
++-C::
++--CPU <n>::
++        CPU to profile on.
++
++-p::
++--pids::
++        latency stats per pid instead of per command name.
++
++-s::
++--sort <key[,key2...]>::
++        sort by key(s): runtime, switch, avg, max
++        by default it's sorted by "avg ,max ,switch ,runtime".
++
+ OPTIONS for 'perf sched map'
+ ----------------------------
+ 
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b248c433529a..e66a935eab6f 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3210,7 +3210,7 @@ static int perf_sched__lat(struct perf_sched *sched)
+ 	perf_sched__sort_lat(sched);
+ 
+ 	printf("\n -------------------------------------------------------------------------------------------------------------------------------------------\n");
+-	printf("  Task                  |   Runtime ms  | Switches | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |\n");
++	printf("  Task                  |   Runtime ms  |  Count   | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |\n");
+ 	printf(" -------------------------------------------------------------------------------------------------------------------------------------------\n");
+ 
+ 	next = rb_first_cached(&sched->sorted_atom_root);
 -- 
-Sincerely yours,
-Mike.
+2.39.1
+
