@@ -1,140 +1,96 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E714131E59;
-	Fri, 29 Mar 2024 20:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4373413C67C;
+	Fri, 29 Mar 2024 21:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711742425; cv=none; b=OFuHNxgUzv7Go2zoty8nbjLuT006l/FgmehdTsKapZbXPXjB7WJqB1przQUmTeqIepIYeh+c2h/zbpY6p3hFLV+5/dtBcD2LEhTtpf3K2At5YVBf17h4ZPHbDNXZACK7W4JDUL4TPaS9qiZXVk0OulE3i7WhxT2WtDz3e0mNp+w=
+	t=1711749494; cv=none; b=FaEFEf4fIueTQhxeaIjHF4bXgrdW/n/3UCIud1n11FQhcHJwWIu+voonobLlL44RcEbfl1edjnbCpVfmgfRwZu6zYAxnGwlMdh3VyZlmkh1mf0bX8saX5SzHcLEan10qBjRZdkS+Kok7uKS5M10UI2fRbwGXWwOrPPkhZydoDzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711742425; c=relaxed/simple;
-	bh=1++0DM8i0dqzmzqs3djr8ioXOPQ6taXqWCdJQmS/Xmg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gyxy69FfYZDy2rOUBCoyycd/GE542JjcCBFspvskiO0fdJhxJrdmVZqM6iHujA0EpuEyFs9DPa+7kxqqeAPoizIQBQPrEjJ6VOnfaf0eorpoY3PvDdFwdR2eSuvGixJhsOh++c1ACWq9YZ7pp6FzSmpRw0Hc4OaTqmn5U4f/qtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e0ae065d24so20183495ad.1;
-        Fri, 29 Mar 2024 13:00:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711742424; x=1712347224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JFkPPgjy4X9nQGJj/20EPL04yQHaXr6BMM0WUNjEyaw=;
-        b=aNH9t83UcFmaUDIe/kiJSp1qjpwNnQfkuROMJ6SnafWA/2p9gLzHVlA5IQP1ahlgeP
-         b9EjDhrGjtUtTOuDBSTFfmRaw+vZopTiMBz8q4mzJydk2ZJ3kb1ZlgsfyDhO173xzuuM
-         rSwDQvHx36t58e/trymxJ4vrIUDiuZPfH21fpVfPfeSQI0LBgaHY5PEWk3pijShHMn98
-         KfMjiBrwl+oszjeG14HeV/x6TyMVDVrYvowMwnZgF/4Y1EJuAZyO4cU2lcHlXAIe2zcL
-         IauxL/gRNqA4xNtjsULV9E3Gulo9HMcEpYfcwM5lxGJyMGLJlLIqH/yzussZI+0cod45
-         fsRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWu6jDRRiES2n/CUUx/8z6ilrdsWrEvvFJMe9X0/myBJa/+l2rL1IOiJ8IpUZEXK4V83+BbFAyFvXl2c5tmV8FZAuLqSClugHNScNUbjdUXF9+WwVj/XC5YWTGSp5gigVC/0MdqS9i4Hb4W258jOA==
-X-Gm-Message-State: AOJu0YwIQY+MCxQgbv7LD7eNg4ZYfZ6lvsJYEEMJzEz4YL4OTHX1et0W
-	3aOBPLNKQDy1hBZoFQwgceCILr1Ib0TJopxwUx0mEzlYKkLOKZ/eL3/zpJ7sIszrnBzZq4oDXsq
-	zSL699442E3dB3R92YB0d0uh/8iI=
-X-Google-Smtp-Source: AGHT+IGjOHUNw3fJhIoWBrwcrmm+A/t3n6jNxEjosPyMxmwtX/LVGK25RfHLaz3BdL4VHHEnyKH0Wn89HaZrjR3EJLk=
-X-Received: by 2002:a17:902:d510:b0:1de:ffbc:8d95 with SMTP id
- b16-20020a170902d51000b001deffbc8d95mr3969864plg.67.1711742423073; Fri, 29
- Mar 2024 13:00:23 -0700 (PDT)
+	s=arc-20240116; t=1711749494; c=relaxed/simple;
+	bh=7/9SJAE0PB0hZ2kr9hir4oUxXdgdOk98SElceGoGKmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vp4GBlRT/+bOeSQLEgfPePVT4xdXanGhOzMqbt6CKIt6e2YfkBTaR+ek9pN9QpT8Gk/9NzoJDlkFn/Z/fZuO+53AC3LArrUvxQt5cOoPIREAUb+qqha5Nxk61YFLY36Mb0W2Da/J5Dk+MmRuvubX+GEVwmNajLrI59lHU62L/IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hp6T4qQv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hp6T4qQv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EE0C433F1;
+	Fri, 29 Mar 2024 21:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711749493;
+	bh=7/9SJAE0PB0hZ2kr9hir4oUxXdgdOk98SElceGoGKmQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hp6T4qQvst5fN/PU/zJ2s/8oDLDa83TrXKYJk7JoKjnggCHEsCnJUTmZ6MVcXoUUk
+	 VRu0vXKIdsHvpB35hiCMUsakrVavRNsdg9TbaXgILTYgqTcPhola4qsKeswHTXm7fE
+	 DLxCnRW2+Zk+MKylVdlTtfvoXnmFdRIE79KcRAXCPJLIe9SPpFyn1SlfHBgBa/9nGY
+	 +KwMTjZfPt2isF+EGDbcSqgL/qcNPzOGSuvYi6X6tylTYE0CaS+Uf+lJdCogd5z8Mh
+	 r8f0b+Ew1DQn+qq32PVcVbEwEeULPVzJ+Ur9L3u6zw/0dyxv/nAcp1J99BVcvZssUB
+	 ktT7BqKUn3Mgw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 0/5] perf annotate: Use libcapstone as a disasssembler
+Date: Fri, 29 Mar 2024 14:58:07 -0700
+Message-ID: <20240329215812.537846-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <9492dc44260c40598d1b282975eb9a4a@huawei.com>
-In-Reply-To: <9492dc44260c40598d1b282975eb9a4a@huawei.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 29 Mar 2024 13:00:10 -0700
-Message-ID: <CAM9d7cgnBk03-yBBFtV37ryj13RROmaqjC9S3sUF7QhnRYrenw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf annotate: Use libcapstone to disassemble
-To: duchangbin <changbin.du@huawei.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024 at 7:53=E2=80=AFPM duchangbin <changbin.du@huawei.com>=
- wrote:
->
-> Hi, Namhyung,
-> On Thu, Mar 28, 2024 at 04:20:09PM -0700, Namhyung Kim wrote:
-> > Now it can use the capstone library to disassemble the instructions.
-> > Let's use that (if available) for perf annotate to speed up.  Currently
-> > it only supports x86 architecture.  With this change I can see ~3x spee=
-d
-> > up in data type profiling.
-> >
-> > But note that capstone cannot give the source file and line number info=
-.
-> > For now, users should use the external objdump for that by specifying
-> > the --objdump option explicitly.
-> >
-> > Cc: Changbin Du <changbin.du@huawei.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/disasm.c | 153 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 153 insertions(+)
-> >
-> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> > index 59ac37723990..c58ea6d822ed 100644
-> > --- a/tools/perf/util/disasm.c
-> > +++ b/tools/perf/util/disasm.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >  #include <ctype.h>
-> >  #include <errno.h>
-> > +#include <fcntl.h>
-> >  #include <inttypes.h>
-> >  #include <libgen.h>
-> >  #include <regex.h>
-> > @@ -18,6 +19,7 @@
-> >  #include "evsel.h"
-> >  #include "map.h"
-> >  #include "maps.h"
-> > +#include "namespaces.h"
-> >  #include "srcline.h"
-> >  #include "symbol.h"
-> >
-> > @@ -1341,6 +1343,151 @@ symbol__disassemble_bpf_image(struct symbol *sy=
-m,
-> >       return 0;
-> >  }
-> >
-> > +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> > +#include <capstone/capstone.h>
-> > +
-> > +static int open_capstone_handle(struct annotate_args *args, bool is_64=
-bit,
-> > +                             csh *handle)
-> > +{
-> > +     struct annotation_options *opt =3D args->options;
-> > +     cs_mode mode =3D is_64bit ? CS_MODE_64 : CS_MODE_32;
-> > +
-> > +     /* TODO: support more architectures */
-> > +     if (!arch__is(args->arch, "x86"))
-> > +             return -1;
-> > +
-> > +     if (cs_open(CS_ARCH_X86, mode, handle) !=3D CS_ERR_OK)
-> > +             return -1;
-> > +
-> > +     if (!opt->disassembler_style ||
-> > +         !strcmp(opt->disassembler_style, "att"))
-> > +             cs_option(*handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
-> > +
-> > +     /*
-> > +      * Resolving address operands to symbols is implemented
-> > +      * on x86 by investigating instruction details.
-> > +      */
-> > +     cs_option(*handle, CS_OPT_DETAIL, CS_OPT_ON);
-> Enabling CS_OPT_DETAIL is to symbolize branch target address. You can ref=
-er to
-> print_insn_x86() in print_insn.c.
+Hello,
 
-Right, I think we can add it as a comment.
+As we've added libcapstone support, it's natural to use it for perf annotate
+as well.  This change added the capstone support on x86 first.  Other archs
+can be added later (by someone who can verify it doesn't break things).
+
+* v2 changes
+ - Show global symbols in the comment  (Changbin)
+ - Update the commit message for split  (Ian) 
+ - Add Ian's Tested-by
+
+For now it tries to use capstone (if available) before objdump.  But it
+doesn't support source file and line number info.  So users should use the
+objdump (by passing --objdump=PATH option) if they need them.  For example,
+this command line will keep the existing behavior (i.e. using objdump).
+
+  # not to use capstone for disassembly
+  $ perf annotate --objdump=objdump
+
+The capstone uses LLVM objdump style output which is slightly different than
+the GNU objdump.  But it should not have differences besides that.  I've
+verified the result of data type profiling and it produced the same output
+but gave me ~3x speedups.
 
 Thanks,
 Namhyung
+
+
+Namhyung Kim (5):
+  perf annotate: Use ins__is_xxx() if possible
+  perf annotate: Add and use ins__is_nop()
+  perf annotate: Split out util/disasm.c
+  perf annotate: Use libcapstone to disassemble
+  perf annotate: Add symbol name when using capstone
+
+ tools/perf/util/Build      |    1 +
+ tools/perf/util/annotate.c | 1711 ++--------------------------------
+ tools/perf/util/annotate.h |   59 +-
+ tools/perf/util/disasm.c   | 1814 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/disasm.h   |  112 +++
+ 5 files changed, 1989 insertions(+), 1708 deletions(-)
+ create mode 100644 tools/perf/util/disasm.c
+ create mode 100644 tools/perf/util/disasm.h
+
+-- 
+2.44.0.478.gd926399ef9-goog
+
