@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BB11AA2E3;
-	Fri, 29 Mar 2024 12:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54BF152175;
+	Fri, 29 Mar 2024 12:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716510; cv=none; b=rS3hR+AeXJFEU+yD6sl/uFiQkxX0zU+0EdXU/z/mjJUSd2nBSj/ZB7ttskqkjCY0OcQeQ9ZBABF0ilJPIUWJhiTwLJeekj2mkdPvMSVjocgrvwiIGEkXzZgv9cnJjYW+NnOMb/wIHW+sacQ5bhTWogl7HfvDvs92f4hkDxMbx04=
+	t=1711716579; cv=none; b=QNWnq1vzVrb6SiHTEnFnHmEF2lBGNqXZBEk9aLmPKCgc5BHwwntGOIIBp/0CuVI8qXNpUt20omtlRCkP4Od3sfZvSh5wosoQ+1nrX0d3Lcb7JWTd0tzrJYvaUtbJyAlCoqc04/Qjr0Y1fjASwehOCkGK9ljWjCvnMxGyGkLPFsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716510; c=relaxed/simple;
-	bh=VKEh8WoAVQm91ORr+Wi6O1sNZ5hN6y39we68l0cN8sE=;
+	s=arc-20240116; t=1711716579; c=relaxed/simple;
+	bh=1cRpH9u9GcPhAi9FPDgiOS4TNI9gX5GlB4HZJQCMBhQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cBjZGVboHrGXMmEtBEKle2swCciFEMtxvreqvRoyWv1gErHd8xnUFD9j4v77fSFW+mDMI1L2EU6V8Hb7P8LkTlq6YS3ke7DnlsIgrO7XlGEpgAefdlq0bx5jaTdiMJkhzKFBTQD1qzXTK63j+r0qBXcusqzdNmjQZ7vWf5pfZD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdI5WHf/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KMVqDMVCHl1+sYCmbMmBQPBNQkzRrVFZ005FITdNAKK3riZU4WtjH7s5N52m8bsAvi32k9yPYJgYOCxthg2t8Upw3m2qf4Bkf4RDqINdezY5fUAYYSKoqM1r4bSvTrUU191uCET5D2YXU8NnUB0l8zdXLRs6BHYpsdzQ40F6Nfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJNaUY9x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdI5WHf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2657C43390;
-	Fri, 29 Mar 2024 12:48:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJNaUY9x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E00FC433C7;
+	Fri, 29 Mar 2024 12:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716510;
-	bh=VKEh8WoAVQm91ORr+Wi6O1sNZ5hN6y39we68l0cN8sE=;
+	s=k20201202; t=1711716579;
+	bh=1cRpH9u9GcPhAi9FPDgiOS4TNI9gX5GlB4HZJQCMBhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DdI5WHf/tlX7ikbqVSaJ0rRYhdoYJf55Vq+dtS6ldj92S5vDreG6+b4GA+hobRKrf
-	 zE15BJSHzfaV6n8oGCwo+vXDe3WE+loZhgnwx/raZY6n8jD/U57LLXVUEl84OdiyAN
-	 scBSlts86ElrEaQXFuZqrlfEJJVL2qmON33EOh5mFo9OIru4gmrXYCb+wheE2Kclv7
-	 2Ns1hNxnarR4BJcaZlI7e81TMsBiAgo2I3+MHmq83EmwH5XtxXbHjKPSaHTcusMdcz
-	 YkF98+ec92jqItfGMFskzSRF+DM/KOn/m41+wJSYdS9YkJvPKyjGBtEwVbcs9icsB2
-	 8h/TYm/TOC27A==
+	b=UJNaUY9xAruBPer8ErYbcvEjRMu0bcXQfBoyTwyRI7EWhPY7KxQHFbw/DLOUVcYHy
+	 azQGTM3XceOkQiKYwb4UrGO5TliTxgVH0Ij9UGTBfil6YhTJDTZjcyDkFUiKwfYd2R
+	 opU0czl7QRYhyducmOPFfoTp1g0rjnvQGHKByjIx+1ouuEtUaFnt5klIWmjlAMXDor
+	 8Mg1WZGq0zcgHTT9qXy9YGOs70M/Hse+fhH0K0j8NEPRNernieuOXncykEnaM+Msid
+	 o9/U0O8mwl0c5UViH1X8OZQ7NW6Ua1k7hTXkmcoSPhvt2KFDmUQErnbTUAl9LWHf23
+	 2pCU6BDQPuFsQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	acme@kernel.org,
 	adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 22/34] libperf evlist: Avoid out-of-bounds access
-Date: Fri, 29 Mar 2024 08:47:23 -0400
-Message-ID: <20240329124750.3092394-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 20/31] libperf evlist: Avoid out-of-bounds access
+Date: Fri, 29 Mar 2024 08:48:37 -0400
+Message-ID: <20240329124903.3093161-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124750.3092394-1-sashal@kernel.org>
-References: <20240329124750.3092394-1-sashal@kernel.org>
+In-Reply-To: <20240329124903.3093161-1-sashal@kernel.org>
+References: <20240329124903.3093161-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.153
+X-stable-base: Linux 5.10.214
 Content-Transfer-Encoding: 8bit
 
 From: Ian Rogers <irogers@google.com>
@@ -99,10 +99,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 14 insertions(+), 8 deletions(-)
 
 diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 5146ff0fa078c..6aa1c35273a18 100644
+index f76b1a9d5a6e1..53cff32b2cb80 100644
 --- a/tools/lib/perf/evlist.c
 +++ b/tools/lib/perf/evlist.c
-@@ -224,10 +224,10 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist)
+@@ -226,10 +226,10 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist)
  
  static void perf_evlist__id_hash(struct perf_evlist *evlist,
  				 struct perf_evsel *evsel,
@@ -115,7 +115,7 @@ index 5146ff0fa078c..6aa1c35273a18 100644
  
  	sid->id = id;
  	sid->evsel = evsel;
-@@ -245,21 +245,27 @@ void perf_evlist__reset_id_hash(struct perf_evlist *evlist)
+@@ -239,21 +239,27 @@ static void perf_evlist__id_hash(struct perf_evlist *evlist,
  
  void perf_evlist__id_add(struct perf_evlist *evlist,
  			 struct perf_evsel *evsel,
@@ -146,7 +146,7 @@ index 5146ff0fa078c..6aa1c35273a18 100644
  	ret = ioctl(fd, PERF_EVENT_IOC_ID, &id);
  	if (!ret)
  		goto add;
-@@ -288,7 +294,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
+@@ -282,7 +288,7 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
  	id = read_data[id_idx];
  
  add:
@@ -156,10 +156,10 @@ index 5146ff0fa078c..6aa1c35273a18 100644
  }
  
 diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-index f366dbad6a88c..49b17b2b3923f 100644
+index 2d0fa02b036f6..8999f2cc8ee44 100644
 --- a/tools/lib/perf/include/internal/evlist.h
 +++ b/tools/lib/perf/include/internal/evlist.h
-@@ -119,11 +119,11 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist);
+@@ -118,10 +118,10 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist);
  
  void perf_evlist__id_add(struct perf_evlist *evlist,
  			 struct perf_evsel *evsel,
@@ -171,8 +171,7 @@ index f366dbad6a88c..49b17b2b3923f 100644
 -			   int cpu, int thread, int fd);
 +			   int cpu_map_idx, int thread, int fd);
  
- void perf_evlist__reset_id_hash(struct perf_evlist *evlist);
- 
+ #endif /* __LIBPERF_INTERNAL_EVLIST_H */
 -- 
 2.43.0
 
