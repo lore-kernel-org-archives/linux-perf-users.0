@@ -1,46 +1,62 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04olkn2028.outbound.protection.outlook.com [40.92.73.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0A7A936;
-	Sat, 30 Mar 2024 15:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.73.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711813651; cv=fail; b=N3etLIBgtSyTnlR+kDgFXMQodfi9LUeMPB3LmMS3EBrgtOWa86WAH1jk61KUV+I/OLdvOVEnGmXZARhp3CHrjSjng+t7/LhKkj1rfXY6mkKsH2/+1YlAu+GTF3V7KfMIcM72BkgeLWs3ahbK7BFvZgWGnLeX1BKu0391TsSMXT8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711813651; c=relaxed/simple;
-	bh=hQhK8DDo8vFlcw8efC5bKuqUHVusA+U3SuimOgY6w9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=d7TD85NCGqtCBifSZkm6r2Gx3aPNVkJeR/rk6iFLENGRWWT2jfpJZF/vRNSLkooEyNsT4DJBoI1igI7AJWtqLxWW5xmRffj5tAwQA2NpC6SArLlGpgaDGjtG7wDZJywp7Y4NUGSa2i2bgCKpwI8iB4DdTqt5sqCjEL9cQ5PgK54=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZlQ2CqeE; arc=fail smtp.client-ip=40.92.73.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3E43144;
+	Sat, 30 Mar 2024 21:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711833089; cv=none; b=Fc4WTDiN3fafyRFs4xubbxt2hTvFHTPjZbEo8aMhrIA67SjR200TI+09y7xLxICqzb9vXl2/ZX0WTtFXr6kGuGjj3HINgYSdEfLxPod6TgyHXyf/rlUvg0IDgvhvcPU8nHr14vzG+KXDMW9G6J1y25n4q5wnEZI4wiB8AbtqjDs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711833089; c=relaxed/simple;
+	bh=CHcXrxf2ENpQddGykj9rk3TKmc0vJHsnIQfhoa/d1sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDGMJgbw7uUTNcNvsRUJHkbGwVXrjcm3akhXq1A1xoQNkEifMCRhpiMmmub9EPrq13C8sxRMXBErgJmUM0GU0cBb/YBWPwpbxFyzuiH/h/wTXcvMaBA24NVXRdhh5PpfjDUCGCrsKkdWI7upcjSWjNPgz0Ch36q1dTsXZKzcFgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nYp7vNrP; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZlQ2CqeE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q1InGmtIYzLG9pdP78KQxTG4Q9jTI4kw94imKFNxFeLfkUc0FveHAI/mESd2LNYXLAI6IZMlUfGDKkfxoR17hK5qyZgh7s/FZqJtmNJfmDZJF3A4/abOFewieGdV04pmgjOrNged3Cb7z4uh5+ZHsHf+F1XPw2UEa780FJ/3qrUZi6+cLXgJovoDwmSm6dC4VWz7qFTVgoeqOuXp1DO8Ev1kGaxGCP7HZdpf0WMF/umfy4+rsdWG4ZL8Wj//bx9PeDs4Ofa3iAZlp/TBU+zYfI7KVYgZG07am/Yv6Esbl29byZr+TtYMg0qOeSoCVYANpwi04gS6NId7CTQeOp0ajQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=If+RXqyc7IV9zU0aYa448IBk1hQNid6O8k8iL/z6Pe0=;
- b=nn+tE86y2ApMkJbnQMXubyred0rbgcXDYqOhm+BtaJeVIEn4OHEffI+BR235oBvBf3dYuHSvzVNc/3hMpuN884njHf5aNMQmVdi/mK46NO/lVYLRhqjgl9btRdAG8jmwZW2XqfBE7UKWU1p5CAUCL7k6MvKSZuIcYYJT6d1pta7fZ01i9+Rnqj2WuHUGHgjbsAIAn5HKEfqIK1Z0JU1z0oGBPDl/CH5+DV8FqS/Ta3Zj9fq/bKzz1DHugALBqTAtQ24D1uzAtEeo2BlgisjTzVwYOOuEN41XEUUKEN021ofzr+ToXiXp7/eESLzt0PliFshTMwNWe7y8rkkF5dBlWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=If+RXqyc7IV9zU0aYa448IBk1hQNid6O8k8iL/z6Pe0=;
- b=ZlQ2CqeE30HLhKuCO+4/LXjZYr72CRQyVyh7vgP9ML8rv7PPT5klkMkvRyZaXxf0I5bqrbP7RhNuJVaPpNWvZVgN9OJZc8QG0vUBMkHMs7LDNAJZVyE2x/LGMKxG/jnX5ygCIH6Q4UeHmRW0hJ97RGwZsq8lIlEcOVGQFhSKajHJttW/XxAgDHgkuJTizaIdz38nQxstKQi1IERBGgXGMLqHmJrYFFTk/aQoHdvwlTyiije6/eBVdq2ipEqezmP/cG2wA83BLyVd6WAcRBi8WV6KdcXrIojCRp/AZHNTNUuGb37oNiZUF7hVR2zKA1zj0NGs2kny2T9c7GxyzRRMCg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AM9PR02MB7057.eurprd02.prod.outlook.com (2603:10a6:20b:270::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.43; Sat, 30 Mar
- 2024 15:47:26 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.042; Sat, 30 Mar 2024
- 15:47:25 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYp7vNrP"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56c0bd07e7bso3198910a12.1;
+        Sat, 30 Mar 2024 14:11:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711833086; x=1712437886; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6FfCXTwbIMZ0/LT2fPdhGW3nMXxEswf6TerbPzBdQ6o=;
+        b=nYp7vNrP4H6zxpt+VWqWiLxFuhvnUn9PhikSF+Qd+wu/XbGaVHX+zgk5bAK2paJCSY
+         dOdYpNkm1AGS4d4Tpho22pJoWmOvKkkNJ5PXVoegiClRps/KLCCUok8FUJdMXDRT1zbb
+         nGQrMRIa0FETxYrGP9bDwXl83ukC1B+wCFduUhI/1eauVrH3GO/ggMZOoCrafy4o+M/7
+         REV38wFjl/6dBlMO8VgS6gDdl0071CQ4SclNRbbZtS+7plD2Gc8srVdXLBU16VXRUKpV
+         gk4FQ5689wtStLlKlsCA7TYk6g2zMKkyWMIj0b8qV/wMpGOD21rizhMCm/30pajQuh/r
+         H6oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711833086; x=1712437886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6FfCXTwbIMZ0/LT2fPdhGW3nMXxEswf6TerbPzBdQ6o=;
+        b=SsP4hsVgfU+L7txdZ6IfDh/h4AGfKCJ67EXJ92vTdC74U0DlwicS2r+Ol5wC7X1oDc
+         r0qq/3HSSuxToUoqwMC0gbVHgW5qYIbfxMsoVQ4WyfRh+77cLCW0HpeoaJJIIwoHG+Cr
+         zkDCNjQIiOCg/+xJ5MMDECCAjfRIcRaXQNZWAKxxceyFelMBtexh+8mI/xQXeiDWBNgH
+         ohG1hruVb++72ckz2XGmtE4OdUr5QpTh1tVEQF5FvHTV1WYcLJqi3kCrO2GQO6/8OBVW
+         07pZ+xwl2xrVFuuPND7kJfDaUXz+z/HQOXeAUJr39IJ4BRCp7i/OnSLiQsFEIKRk1D5o
+         cNjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnBrSOYtl/MJ1PE+Gp6dEqlXYvZ+pQ4g0fNTuOdWvHWI2P/o1emDoRT5a1PSoNCVHHTLKI7/4BTM85IQVAOeLeCG0R37cuOmu1nl1wwRQqkQ0dVUL63Rzu76YEwID/ekSEa4LICkuw0Y5k6ORSchQRcOs8iXGHXX+GSdMw1+G/iNrnss0w6X9QIdWGwuZ2mg==
+X-Gm-Message-State: AOJu0YxW7mTqLTZN2dMZLnw7G8df9ZtDhAqUzePPbK18LkJ8d45kSIPG
+	F5Bm8gHx7QRnNlOW7iMzgya9p1Q/vjgerVUVouDPVXsZVQy4lUU3
+X-Google-Smtp-Source: AGHT+IF9fQng7glW1xiinlWjLAuPQJtBuNkRL7PDVj0cI0LwYsHs5I0gGvhlMWzwySRIuCzhsGUoUA==
+X-Received: by 2002:a17:907:78d7:b0:a4e:5a23:24d with SMTP id kv23-20020a17090778d700b00a4e5a23024dmr470387ejc.38.1711833085563;
+        Sat, 30 Mar 2024 14:11:25 -0700 (PDT)
+Received: from gmail.com (84-236-113-97.pool.digikabel.hu. [84.236.113.97])
+        by smtp.gmail.com with ESMTPSA id xc4-20020a170907074400b00a4e5ab88803sm314414ejb.183.2024.03.30.14.11.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 14:11:25 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sat, 30 Mar 2024 22:11:23 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -48,137 +64,93 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
-Date: Sat, 30 Mar 2024 16:46:59 +0100
-Message-ID:
- <AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [Gvr/LX26XvhxwM96zv0N+kIbncYlcblx]
-X-ClientProxiedBy: MA2P292CA0020.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::10)
- To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240330154659.7736-1-erick.archer@outlook.com>
+Subject: Re: [PATCH v2] perf/x86/amd/uncore: Use kcalloc*() instead of
+ kzalloc*()
+Message-ID: <Zgh/+xSyOil37H1F@gmail.com>
+References: <AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AM9PR02MB7057:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60dceaae-31b0-462f-03b3-08dc50d0b26b
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0ngjkSwGqpw6HMAr8o0k+F0JojbUKG+s1ppJDNlhm+rDmThCNLqLoayr/h0ml/k6Kh3IC9zGPuZdBf/AnS8YRCK6PtdrMnsYi1qCg4is6wzfn1zNL4OHRP2KH+tXD2D6tAsT7nRqwFOtWg3rmhJFqZ/zr2pwqtBkOSz2zcSCfFvLFQk96psZyUQUF/3DLB+6F1UaGZcCVw2xCXQpkLIscYpKkDEzKJf+6nb+wNQPATP2s75XRCy+TNgFYbzxjcFzrCoLPFJRcjQ7tZrRkYrOCL1a+P3LrB7EiR1zIPsfw2h0TMHVTjVRZUPujaLpm46Ac0giRMGHRHYlVI71/4RIG82ZIL2r7O4WVlirOCo3bf8pn/+hOHP5LfDShmbqKZ5q1oyiBlCkmnfwpBmgYT32jSvfrcXz57RlNIga3TvuAPT5dqdWq+BeKW0AKOuQJ2bfSspLdSKJwOIH2r8hxbjefZ1t36Zf3cSESSmEV5XD4wNR4M59X3wFsHDOo9mQu5PraHHWZG6QmoBQ4rOQ+O/paWM3pbFPnZM+XqTE/rHYWf1EWFC0z7SvGYWaMEbV25g9y8cS8zNsHqHSruCOTYNQ4RLhwwU+zKduLMwvSeILmC+kZ2FOIJU3x9qKoIg/S2th+SVLMXJuDgZXbD172Uf0sSWzGnQBDMmq5fwag6DbeJ5fL71b5X8Jac0vI0+ku1Aeuw6sTzydpgZ4Fg41qUpCvg==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?V2gC23BDlcfXnYmDo9/DVFo4LxZV1cvnT88kwVn26sCUuFszPjAJ2tmp9O3v?=
- =?us-ascii?Q?O8e8Uux3O0SoFXAYaRAJC/2+TRfSActglq16vUxmU4EHKefi7T8kpx8totiW?=
- =?us-ascii?Q?FPDPT/SaH23MWzRNoq/za9RPOjlO0C0tK44SVImm6VLS0DYOD5V1RT/Mzvoe?=
- =?us-ascii?Q?esJPDwG+rWbLa8t513YU84reIa5KMSPigG48vT9ppbs3LsAjFStJcOEMn30w?=
- =?us-ascii?Q?tQp/nlpQas5/cyzlsqEsYBEDVe4DPr/JmKn+hzVroc2CgX1JF5nM2V2eCBUy?=
- =?us-ascii?Q?fSP+rM27sVphhTkCAr5sNuzsBDd4KUJiNBLgvXR6N8DUTevEEQ3DQbDUqBy+?=
- =?us-ascii?Q?lQmIroZ3dYKyv3oM90he+OkUA8rQoHZuVCUIfsJEnM4r/1Wa56Hx7oooiszz?=
- =?us-ascii?Q?MGQQ4jLeJstJkzvKAmu+wl8vkVbV6A39WAwL9zslRrM+xWJoot6drZWLAM4l?=
- =?us-ascii?Q?PR2Psc24Qf1bYFpsR0IDEjeeLpNd7dlajJxlW618NAb5+s6VtbdFXpFYkSF7?=
- =?us-ascii?Q?CRxaEFh4zL44RZwZ6GChBhG9unqQwAKZkCfJRqANodTLpQWolDTZHN4UinR1?=
- =?us-ascii?Q?G5W7RqEP0mCiNGqce1zvF5rDkEBGhauhMWNtcz21umPv0Qs0OcAaTxJtKhJb?=
- =?us-ascii?Q?289Hmdker5xSfRL8NyHcdwpYuU9LbR22cDFftk1qoyvb78xyyTwL8RoCd3gK?=
- =?us-ascii?Q?EewKDrpF7V2289aGRSESuf/pO86DlyUBbJRdNSBeU6BO1z1bQ476GkfbDQ9t?=
- =?us-ascii?Q?ugW7C1cNuqyoZCsjF4PUBFxko6luU/EnHFjSq0+JR22Dv2k7IK2obvVZPpmE?=
- =?us-ascii?Q?yxQvG2VLImL9JQy4N6Q9mVV4iYT26Bx8gy3BCceTgvwOAlNFTsiRKS2xnYOz?=
- =?us-ascii?Q?Q1B4Clr2DBJzYuqPYyG5auDMlycNZGZ3bQ83QNDeIHWyzTNQN9nUgk8LUe3P?=
- =?us-ascii?Q?CpB3cpjkQWMqq/qAZEJSo9rQ9QZiEvE3SHn0xm+Tl+FVD2RP18Sym1Ntjyew?=
- =?us-ascii?Q?FdffFVq6rOR2Qh9wDiQxJrfRfu3lp1tzk3tjl1MPAy08aoH08q5ERDVSg6AC?=
- =?us-ascii?Q?ao+AhSZ6LRTX4wp/nE8REnL1lbfbt302GtCMQdSbqvGEKhV03XiDcHGdFwJF?=
- =?us-ascii?Q?hxvCc8kdK4L8maqBoUNrzJNOD/8dh2+zM4PmFpHtng3ccXwEjyi3jDr8JqzP?=
- =?us-ascii?Q?b33/aBka8t0MTDUfyv2xFCUmlV7tuwU7ogLO8tZBlHeI2XJQahyjzLnws7oM?=
- =?us-ascii?Q?IjXq82Og15UWJ7TqI3wx?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60dceaae-31b0-462f-03b3-08dc50d0b26b
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2024 15:47:25.8536
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB7057
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
 
-So, use the purpose specific kcalloc*() function instead of the argument
-size * count in the kzalloc*() function.
+* Erick Archer <erick.archer@outlook.com> wrote:
 
-[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, use the purpose specific kcalloc*() function instead of the argument
+> size * count in the kzalloc*() function.
+> 
+> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Changes in v2:
+> - Add the "Reviewed-by:" tag.
+> - Rebase against linux-next.
+> 
+> Previous versions:
+> v1 -> https://lore.kernel.org/linux-hardening/20240116125813.3754-1-erick.archer@gmx.com/
+> 
+> Hi everyone,
+> 
+> This patch seems to be lost. Gustavo reviewed it on January 16, 2024
+> but the patch has not been applied since.
+> 
+> Thanks,
+> Erick
+> ---
+>  arch/x86/events/amd/uncore.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 4ccb8fa483e6..61c0a2114183 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>  				goto fail;
+>  
+>  			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>  						    GFP_KERNEL, node);
+>  			if (!curr->events) {
+>  				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>  		uncore->num_pmus += group_num_pmus[gid];
+>  	}
+>  
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>  			       GFP_KERNEL);
+>  	if (!uncore->pmus) {
+>  		uncore->num_pmus = 0;
 
-Link: https://github.com/KSPP/linux/issues/162
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
-Changes in v2:
-- Add the "Reviewed-by:" tag.
-- Rebase against linux-next.
-
-Previous versions:
-v1 -> https://lore.kernel.org/linux-hardening/20240116125813.3754-1-erick.archer@gmx.com/
-
-Hi everyone,
-
-This patch seems to be lost. Gustavo reviewed it on January 16, 2024
-but the patch has not been applied since.
+This change is nonsense, kzalloc() is a perfectly usable interface, and 
+none of the arguments are user-controlled, so I don't see how there 
+could be a real overflow bug here.
 
 Thanks,
-Erick
----
- arch/x86/events/amd/uncore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 4ccb8fa483e6..61c0a2114183 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 				goto fail;
- 
- 			curr->cpu = cpu;
--			curr->events = kzalloc_node(sizeof(*curr->events) *
--						    pmu->num_counters,
-+			curr->events = kcalloc_node(pmu->num_counters,
-+						    sizeof(*curr->events),
- 						    GFP_KERNEL, node);
- 			if (!curr->events) {
- 				kfree(curr);
-@@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		uncore->num_pmus += group_num_pmus[gid];
- 	}
- 
--	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
-+	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
- 			       GFP_KERNEL);
- 	if (!uncore->pmus) {
- 		uncore->num_pmus = 0;
--- 
-2.25.1
-
+	Ingo
