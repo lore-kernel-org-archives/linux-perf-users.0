@@ -1,52 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625A653E12
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Apr 2024 21:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3996453E3C
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Apr 2024 21:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712005778; cv=none; b=ZERpajRbnOd6yrdCGBBjczU2RYAsughP3gd3QaCPicF2f60EoAAoeJ/gg0M49SZPP9l6WU3b5wDf2PnQGxizKiUZ6azyeLDbludEZ8NgO8gkv15+x7FLxmEOw0PLF+o2GbkO7TfKJ9ukHUdgOr1VqHOZE4E16BP3w9hwjH+8+bc=
+	t=1712005780; cv=none; b=Xg6P+TRB6+PTntZ8v7H89XY5/rfS4nS64IRX78QjPonl63eSfjY89NTmToTfGVE3T9M3pva4MGe6ra/MUSbvZfTHigpJ7ZLbPogP2FktmrZ2Vs4p/nCeKjmR5dNKMiWjmbbXoMndFQjkJqDyn+KAJP8KUQ3OsU4YiZblAezwI5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712005778; c=relaxed/simple;
-	bh=sXqQoe0eyWTFdzDNJi2O1I/u73WUHqjUSZwixxfjY9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F8ulPkrpL8Gcs3RiwBHl0jMsXYajogBFOo4+qxAfkbURK7ed7x/4AROAOTOYW7ps60x2uV1WsdwzrpDEWKwptsrJXJstigHxwcuMk5yDYZ/u77etT2wzQFlVLC3kwccshKI8lf51f/Yi9qiKrtbCSmK4u5PdlkTzMQXRHBviBnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZvfyYT65; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1712005780; c=relaxed/simple;
+	bh=Po6sf3DjWwqlYwvqAx3BgX6/vIlec34Pylsf6z2RFM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VKscjXW74TzUEAoJ5a79GyTuEfpI3eDwQe4QDZuhWTzs3FbSKZLrGtUUrRR41qf/9XOGeR22VDj2rzvwCURJwzAW3hqvc4n9Wi11zpVImfiGZW2XHuq4LTcJbZNo3hCHe8XF13cHADwI3Muk/674YLtWsOfTQAnoyCRnyE7iuwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/e7606b; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvfyYT65"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/e7606b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712005776; x=1743541776;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sXqQoe0eyWTFdzDNJi2O1I/u73WUHqjUSZwixxfjY9k=;
-  b=ZvfyYT659rHp58GbkO7YXkPj9CNP9DxvnRnesJCH5jHqOlNjxAIqCn+8
-   li7Z3NSbGUSZQDj1Mt3uaZH8ZZoVP262NEuBcKxRiO3YrHSAN/j8IteKs
-   ubh0A1bbB0tV67H8dFabCt5lTb+1qdmgZBkR5OTGecZGf+JRquCVXUrKa
-   uZ179egHsUxFCNiyBFT55Un2PDBEh+33xVv5eKuyzzMmucM3oIHMKDnBK
-   ItUrjJrqcbmqmjLJKMQueDYXqjgunQjxhqU8z7GEuiifoaAlRAMoU3QXG
-   zDdkQXEMpnl3QByoar9r3a4xk+//y7UQeRfTkpJt/GQ1dvNDQP26rnhtK
-   A==;
-X-CSE-ConnectionGUID: CrQGyp5QRhu+CKrLw5Y8YA==
-X-CSE-MsgGUID: 8kMJ5WCuTOKliQUtkTxSaw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7015548"
+  t=1712005778; x=1743541778;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Po6sf3DjWwqlYwvqAx3BgX6/vIlec34Pylsf6z2RFM0=;
+  b=K/e7606bV1OGUjteyMIvJ+l1YtscSSe/Q6uXfuE4MSuGJqS0nv0V4F8s
+   0W8s0U2MW+a4DSESg20601LtgUESvEHwhKA27p+DGO57TUQYSPcG6sI+A
+   LNbm2J6o+9Ojq3J1fOucm1KU7iDR38Jo2BkEme4Glnxu1J8XWDWXXbqqV
+   mLL/mR2CEwaUxAEPdlLQHEeJhFnLX3ElOKa06LClqfpFl7X2Y+QvijUYz
+   OIqiH3HUcrvjivCPtnh6KmxlzqLNtyoAuyK/9GQ8LzAJeHuUsFZ6/dBVA
+   Qnh4G5BhAbAq1AyD/mnSrIv9aaIOxjfbghvAUIcBxvSaA9Bg32ECs8s6L
+   g==;
+X-CSE-ConnectionGUID: GgtQriS/RTGijrDuXW/W4w==
+X-CSE-MsgGUID: 7MlCBd1/SAC7cwI+LVJ3xA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7015549"
 X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="7015548"
+   d="scan'208";a="7015549"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 14:09:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="55283624"
+   d="scan'208";a="55283627"
 Received: from tassilo.jf.intel.com ([10.54.38.190])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 14:09:35 -0700
 From: Andi Kleen <ak@linux.intel.com>
 To: linux-perf-users@vger.kernel.org
-Cc: adrian.hunter@intel.com
-Subject: Updated capstone fixes
-Date: Mon,  1 Apr 2024 14:08:02 -0700
-Message-ID: <20240401210925.209671-1-ak@linux.intel.com>
+Cc: adrian.hunter@intel.com,
+	Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v6 1/3] perf, capstone: Support 32bit code under 64bit OS
+Date: Mon,  1 Apr 2024 14:08:03 -0700
+Message-ID: <20240401210925.209671-2-ak@linux.intel.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240401210925.209671-1-ak@linux.intel.com>
+References: <20240401210925.209671-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,8 +59,167 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add -F +brstackdisasm and support 32bit x86 code in capstone
-v6 adds Adrian's cleanup patch and rebases. Other than that no changes.
+Use the DSO to resolve whether an IP is 32bit or 64bit and use that to
+configure capstone to the correct mode. This allows to correctly
+disassemble 32bit code under a 64bit OS.
 
--Andi
+% cat > loop.c
+volatile int var;
+int main(void)
+{
+	int i;
+	for (i = 0; i < 100000; i++)
+		var++;
+}
+% gcc -m32 -o loop loop.c
+% perf record -e cycles:u ./loop
+% perf script -F +disasm
+            loop   82665 1833176.618023:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+            loop   82665 1833176.618029:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+            loop   82665 1833176.618031:          7 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+            loop   82665 1833176.618034:         91 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+            loop   82665 1833176.618036:       1242 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+
+---
+
+v2: Factor out DSO lookup into separate function
+v3: Pass down al
+v4: Simplify is64bitip
+v5: Fix fallback
+---
+ tools/perf/builtin-script.c  |  9 +++++----
+ tools/perf/util/print_insn.c | 27 ++++++++++++++++++++++-----
+ tools/perf/util/print_insn.h |  2 +-
+ 3 files changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 2e7148d667bd..94946396bb6e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1517,7 +1517,8 @@ void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+-				     struct machine *machine, FILE *fp)
++				     struct machine *machine, FILE *fp,
++				     struct addr_location *al)
+ {
+ 	int printed = 0;
+ 
+@@ -1531,7 +1532,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 	}
+ 	if (PRINT_FIELD(DISASM) && sample->insn_len) {
+ 		printed += fprintf(fp, "\t\t");
+-		printed += sample__fprintf_insn_asm(sample, thread, machine, fp);
++		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
+ 	}
+ 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+ 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+@@ -1606,7 +1607,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+ 	if (print_srcline_last)
+ 		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
+ 
+-	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
++	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+ 	printed += fprintf(fp, "\n");
+ 	if (PRINT_FIELD(SRCCODE)) {
+ 		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
+@@ -2259,7 +2260,7 @@ static void process_event(struct perf_script *script,
+ 
+ 	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
+ 		perf_sample__fprintf_bpf_output(sample, fp);
+-	perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
++	perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR))
+ 		fprintf(fp, "%16" PRIx64, sample->phys_addr);
+diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+index 459e0e93d7b1..32dc9dad9cf2 100644
+--- a/tools/perf/util/print_insn.c
++++ b/tools/perf/util/print_insn.c
+@@ -12,6 +12,8 @@
+ #include "machine.h"
+ #include "thread.h"
+ #include "print_insn.h"
++#include "map.h"
++#include "dso.h"
+ 
+ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+ {
+@@ -28,12 +30,12 @@ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ #include <capstone/capstone.h>
+ 
+-static int capstone_init(struct machine *machine, csh *cs_handle)
++static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+ {
+ 	cs_arch arch;
+ 	cs_mode mode;
+ 
+-	if (machine__is(machine, "x86_64")) {
++	if (machine__is(machine, "x86_64") && is64) {
+ 		arch = CS_ARCH_X86;
+ 		mode = CS_MODE_64;
+ 	} else if (machine__normalized_is(machine, "x86")) {
+@@ -93,17 +95,31 @@ static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+ 	return printed;
+ }
+ 
++static bool is64bitip(struct machine *machine, struct addr_location *al)
++{
++	const struct dso *dso = al->map ? map__dso(al->map) : NULL;
++
++	if (dso)
++		return dso->is_64_bit;
++
++	return machine__is(machine, "x86_64") ||
++		machine__normalized_is(machine, "arm64") ||
++		machine__normalized_is(machine, "s390");
++}
++
+ size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+-				struct machine *machine, FILE *fp)
++				struct machine *machine, FILE *fp,
++				struct addr_location *al)
+ {
+ 	csh cs_handle;
+ 	cs_insn *insn;
+ 	size_t count;
+ 	size_t printed = 0;
+ 	int ret;
++	bool is64bit = is64bitip(machine, al);
+ 
+ 	/* TODO: Try to initiate capstone only once but need a proper place. */
+-	ret = capstone_init(machine, &cs_handle);
++	ret = capstone_init(machine, &cs_handle, is64bit);
+ 	if (ret < 0) {
+ 		/* fallback */
+ 		return sample__fprintf_insn_raw(sample, fp);
+@@ -128,7 +144,8 @@ size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *threa
+ size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
+ 				struct thread *thread __maybe_unused,
+ 				struct machine *machine __maybe_unused,
+-				FILE *fp __maybe_unused)
++				FILE *fp __maybe_unused,
++				struct addr_location *al __maybe_unused)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+index 465bdcfcc2fd..6447dd41b543 100644
+--- a/tools/perf/util/print_insn.h
++++ b/tools/perf/util/print_insn.h
+@@ -10,7 +10,7 @@ struct thread;
+ struct machine;
+ 
+ size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+-				struct machine *machine, FILE *fp);
++				struct machine *machine, FILE *fp, struct addr_location *al);
+ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+ 
+ #endif /* PERF_PRINT_INSN_H */
+-- 
+2.44.0
 
