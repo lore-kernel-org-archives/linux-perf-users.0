@@ -1,430 +1,547 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DFF53814;
-	Mon,  1 Apr 2024 22:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712009217; cv=fail; b=S3TL3LD+51XFef3dha8DwyHkF/EGBoTID2M0SxZ4Qdrkt5vYqFMpQ/ljbdwyE+XcIH/qJMc1dhxVou6SiDaxJb1Sfdjqycq/jIe8IdX+sH2xVQ6Fh+p+mTU16QcSDjgYrP+7Z80cgoDIGGvUVG3YymCVfIxzyh6k7JzEOYjm1Jo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712009217; c=relaxed/simple;
-	bh=4saYbcJ+BHhDuVegQEUX9iU1yiu1r2/1/YcUPCwi8aA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QzkDetMcLtg95HNC7+GoA82akgvCQqmm1/m2+rIxxmaDXMLKEpLpoLDeeRmDuqJR8wvNhSK31nsVXliYQKqWkxBuv5X6Y37OqrH2I0IEC6jht2wwgTr+QtceoFBfH12bwV+JxiHAPBiOJKREOMpLkWrw4M9ZlQ47pCznQZEkzsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C7jJsvfb; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7jJsvfb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712009215; x=1743545215;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4saYbcJ+BHhDuVegQEUX9iU1yiu1r2/1/YcUPCwi8aA=;
-  b=C7jJsvfb7Q0qKOJKibg7swLnhblVcMh7H8utKZJ4H/FTLJyWL6PUPchM
-   YaKBWTmVvyqBBMYGX9HRLFCfZZUe9qZgDcnqiW0xmRijYMCHOGLhgn43/
-   AcwqAPrloNXl6VLh1LmF+JXCdSLsIHMFXrT66BQNKFHm9X/P/DcneK1xT
-   hoHPlYRB89icm01isdCzgOxufQGfQ10ahz1MvCz6VU9JXbSSTEI3F9VFe
-   n5YbgQr5ow804MnQDN0mjCCNu9aJ7BD7mrroF/YS2MJL93tU756h4I8Z8
-   ofuAQzydM45RLSsQArMPreqFfBkDjenci83wJJJkqeXk49MdlrWg1rrkP
-   Q==;
-X-CSE-ConnectionGUID: c2qnwtsATYapAT7Vfs+EUg==
-X-CSE-MsgGUID: pT7cg8lmRs+cFvD1tKmofQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="18513701"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="18513701"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 15:06:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="17905746"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 15:06:54 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 1 Apr 2024 15:06:53 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 15:06:53 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 1 Apr 2024 15:06:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kgv2BN3Am53KuULUNHwQlD1wjInzm36+0RYQFHljEXiX4SUy3tH2Ud+cZEknP89EaRusEz0JXysirBQGtM3g1ps77IIc8xb/c4eyzP/q27uHZPSuS/Sx2QURg94Gx4HeP8UcXjwjzu/5arh5Qu1M8UACItlvQ6NYQ3DwPACWB6LFiD+VvMeF61x4BDRgY3COdg1Bkk35dbDfd/d8tGLvO+b0sXzATbR7wvYsSd68xvSv+wdt8QAv4ZQ7E46cjZhqHTg9sPA+mkgDwSWDGVdcBEdG9JC9zNtq/nfurh9iSIRkDINTq48FdJr/w9POYoGJQ8e/iv2QsqjUSn9SwEy+7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4saYbcJ+BHhDuVegQEUX9iU1yiu1r2/1/YcUPCwi8aA=;
- b=O3XPPaZTixKi8L5KCHZuhhLLD/7wcqojRvTw+YK4EwzD/vj4SYH+hWrzw/OWhm8lZo/KMkfB6qtgB+s09bp6VNlu0CxTb8SMDkXvpWlb+8e0WayJlckccnVCzo0KyEbIS8kUL6uj4s23ySyO1ODnKkPr7RUW0T8YN/uTqvxvjc9K3BKqgoAXECSgBzXoGBcH+kFzGdMcJjwRgU2olxyIQntprZ+9ZQ0f/4GCoYXPgqayb4CmO0v2KeYgnvW9vtZ2Nb/rZyvY3j6F4oFxEpyfzLnME586q1E9P8IrlDlJPMSHi8rzVoTlkV8NaghWdfnmC+NryAzdmgNf42HNfaWsuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
- by SA1PR11MB8373.namprd11.prod.outlook.com (2603:10b6:806:38d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.24; Mon, 1 Apr
- 2024 22:06:49 +0000
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::d3a0:f70a:9340:9a3e]) by CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::d3a0:f70a:9340:9a3e%3]) with mapi id 15.20.7452.019; Mon, 1 Apr 2024
- 22:06:49 +0000
-From: "Wang, Weilin" <weilin.wang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, Kan
- Liang <kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb"
-	<caleb.biggers@intel.com>
-Subject: RE: [RFC PATCH v6 1/5] perf stat: Parse and find tpebs events when
- parsing metrics to prepare for perf record sampling
-Thread-Topic: [RFC PATCH v6 1/5] perf stat: Parse and find tpebs events when
- parsing metrics to prepare for perf record sampling
-Thread-Index: AQHagg0XFH/kXd71u0GsiV0NQCZu37FT4+qAgAASfGCAAAZx8A==
-Date: Mon, 1 Apr 2024 22:06:49 +0000
-Message-ID: <CO6PR11MB563534FDC0C0EBEC68633206EE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
-References: <20240329191224.1046866-1-weilin.wang@intel.com>
- <20240329191224.1046866-2-weilin.wang@intel.com>
- <CAM9d7chzKCM1erCd4aBoGupPrwvY6Siy1mJ60_1XXZP-Bz8d+g@mail.gmail.com>
- <CO6PR11MB5635F1B237B9BFFF976A695CEE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB5635F1B237B9BFFF976A695CEE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|SA1PR11MB8373:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bu+2lr17dsQXbkNHoREYUVscIPS1vu3u/I+hWm2PNLHfJu9tU9dp8P4G5pvhoJbBGRIeDdRdeFxCcHwj4vkGHEF9tDiXiJf/pKw8CjwQ8GbCoYFQZ7C4Myt1GRF2zhtqT4Xbgkc9wwmNnpH0Pgz8K5zSBg15o5VztR38POwfsfH7ai/rbcztnjhN67h3xl4o+u3/eWdrJDpxEKu1aFwT4E8+xHeuuY774SJ/xvcZsHqZHt6MzQuegGF4NudFuoZSbAZdTZTPGIHuG8tDCFnK8xEdExKgJZkCFPgc/Ej/c0+JpqM00WgSSv/Z2Tyt6MsPocdkp0eScXiqNlqI0imLB6nr7oj7/ooENGxbEp085HJ0E9KETyO/7/1ZsQaE1hct0fTC5U5YYYUVE72c83w2Yre7BJ6KWH1vtOTkn0cn8ULtCfGm196IbxSk6qzMlkVVeAfYNrP9gbbtj2HMC066P1qMUrM0ncUX+XafLILGUKfg9+y0u5GQH4/8B0CLpJ3IAQdz7X7oFPckNvbe4k0FR+UgmBV6cshzYS30LpihdMwfI+JHOy2Kv2uloD/Zp7ML9rlN68FJeCV08grIJ4twSs8CdFSruL9Hj9Wzm1Yvu2bkDpUJYN0hMVDcfCO6Z9yBvMK6PC+xrIq3jMpyEEMFMqyDHljxOJ28+wbKJ6Q8Apg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OGtCOGRhZE1oUEFCOElVZ0hqWmJOb2pIU0FmazduMEJMdTNZS2N2MUd2MUNs?=
- =?utf-8?B?djZ5KzREaUVKdlllNTl1WGl2dTBGdllOWXlBZDhrMG10WHdSMjJnSzJDbGRv?=
- =?utf-8?B?aC9uZ3JjUy9SQmtkcnl5MUNveW03YnFiekFHSWRkb1hMUVArMkdKOFY0VzRN?=
- =?utf-8?B?SnBCc0c0aWpCOTgzTDRRWlRrYWd2QU9QOFVVYUZTMFh3WEZiRStWcmJMM0p4?=
- =?utf-8?B?anptcyswa1lPNmIwRUY3a2t1bStwWWZROXBBQVVVUE5iVitXVS9OSEpjWTBQ?=
- =?utf-8?B?TTBzL0JFdU0vL1BwOXZLQ0lnVllnNTAvbDg2VGRYcCtLeUhhSDBtekZxSldo?=
- =?utf-8?B?S0w2Wk4raEtCQ0ZHTXZ3dDMzeEdzT3ZtTzRobDhKV3NqNEQ3QVpyUldUVFlo?=
- =?utf-8?B?Y2V1NlY2WnNOeklXM2c0bnJwOVVJMmZpaFJEM1Z5RnNqb1R4b2VGd1BWd2xO?=
- =?utf-8?B?T0U0QWtJR2tqQ3FmSkJrUEVRNk40cXBDZ0pJa1F3Q0lnOHVFWTdYSXVOY2dN?=
- =?utf-8?B?Ly9QK2FFYURPYnVuREIva1NyYU02Tzg0U3l3ajdWV3FydU5RRGpzZkpxS1lj?=
- =?utf-8?B?MTdza0h5ZVhmSHFVQWRibWlxaWlCTUdiQ2RYRDlhU0FzeXlwZ1Z4OFpnZ3dH?=
- =?utf-8?B?MlJUQ1c1RHFZWjRBdlRTL0JMa2EybXFPbzVsU0ZMZWx2NHV2eWNXR216TmdM?=
- =?utf-8?B?cEtrUFoxSmR0UDVUWHpiVFprSkd5YlRjdGNOWTdVU1AvenAzaVJiSDZhV1Br?=
- =?utf-8?B?SU8xWldwYzJjb01UZWZpeStEd1ZSOEF2TnQxSUlGaGJjOXhjL0lFNi9nbVJL?=
- =?utf-8?B?c0RRcW51V1VzeTRrN0txRklSTVBHQ0pvb256N2RwYjZ4ZDFJV1VFa2lWbThD?=
- =?utf-8?B?dHc2U214UDNoM0hzNS9welpUeG5yYmVIREgwTlV1QXVXSEdEMW5wWThKNkpa?=
- =?utf-8?B?MkRJRjREN1I5L011K2NhNWxoeDVLRisxSEg3VjBSQW9BQVpOOVl1WEJ1ZEQ1?=
- =?utf-8?B?Tld0dG5sZ0l5UGVIK09VcnlQMjJXU0pzR0xrRmtCWVhYeFJWWmhYMHpWMnVi?=
- =?utf-8?B?UklsaWRSb2FtNlY5ZTUvbmlXZTFjNHcrd2htc0ZmT1dBeStjSyt6U3poaU1i?=
- =?utf-8?B?LzVGbmxOL0twOEdxZ3lPSlRSNUQyc0pPSWl0RExpR2JTREJrdDlydEZaL0xJ?=
- =?utf-8?B?OGlzcmRRQ1BUcGdTRzlXdXhvWEJYcVZ6V1VJbGVvRkQ0UEVORGFSUk5QVm0r?=
- =?utf-8?B?Y2w3VmZDYWRtSzlwQnNvMGR4MkFqNXJQWWFoeUhZUER6MFdhYlI2TDlVeS9B?=
- =?utf-8?B?Lzk4QXFmcVU4NzNNR3QwY2dsU1JkUzdVREVzcDcraDRyV21XVkFkclpSVFA2?=
- =?utf-8?B?bzF3MnJsdkpaY3Vab0xWSmF5YWJodldpS0JJRzVzMjFDSmFRNUV5WWFhUlFl?=
- =?utf-8?B?eUlKbFlZSmM0UVdIZ1NadllZRy9xRFRzZlBFMmthVUxOcWx2M053cCs2aURx?=
- =?utf-8?B?NHNMRTR3aEZFRExNeXdtdkx4enpLeDhLUjJ2RENSM1ZYL3MybE9CcXFycEN2?=
- =?utf-8?B?TWJaZ0QzWXFpRzFqbE5zMVRJdnZZZUl1NGUwVU5jWC9SNVRHYncwWU42OEJU?=
- =?utf-8?B?MExaRk1udnRWZG4rU3Z4Nnd2S1lDREplM0NtMWFFMlQ3ODU0VTlkaUZqTkFr?=
- =?utf-8?B?UG8wWDFlcmdsNjVBZml1MmZzZ1JGeUdHMTh4NktpK0Y0MDNZbVIyMm52VkxD?=
- =?utf-8?B?d0Izdlcza1BJUzQxUVREY3F4c2Q2ZTlVdjUxWWNvdWtvaDVwcXRkbEpoZ0E5?=
- =?utf-8?B?MFF5UnpLNm5ZWDFQVDFkVldzZVV5NGQybFlJLysva0kvUDQxUSsybWpMM2Nj?=
- =?utf-8?B?TUdzem9pR1g2VzZkQ1dhT3E0TnpWRTRmVWM3eUxJcjZNK3hPL0VHU2JNc2U1?=
- =?utf-8?B?WUxXQ05QWXNzd055SXhUQ3l2WTljQzBUSXc0SExOUFlUbEJyLzg2MFVvUldX?=
- =?utf-8?B?TVRGRnFHUHQxWFd5aTdmZmcwTFQxbkZmM1JqTUtPMms0NEVIeFk2dk5hbDBS?=
- =?utf-8?B?N3NyWXRBVnR2ZzZuT3IwdStGSHBYQnNMcVJWeS9ETEF6SEduRjVJUTVKenJz?=
- =?utf-8?Q?dU84eOgwll4AgLZyFyw59Qwhn?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAC255C3B;
+	Mon,  1 Apr 2024 23:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712014292; cv=none; b=CkbR/bTdFq6CFSb8erpyB9ir8Hn7fc+Vgga/n0GrQ3db2f/siGks6Mz6AjpycccnB8zBdTu3+Q5s8xSHGo/VJy/qUTId4AY4ntS6NCki6NnBRllBvCOZsOD4jftDadOFSAf0YCNp3Ok9ZcEdYWxKl5MmdU/01+Mphni4h6e4oUw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712014292; c=relaxed/simple;
+	bh=W9Rd3Vg90HSyochB1c8eX8D31ta8C0k+c1YAiursWOU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hZ3m7Wn4rMdkX2025OiMZZVYtfY5J32ecUiJZUfwVgASn+TUXtIlGSgSGA5x63t0zhgrM1Zc/lXhsIUftlTq85O/qaZSaTU8IRERWJ/1ZZRr+MIbE7zTG6HA+tZkC8TIOL1AXuKqmL1VZZXWw9GlxGnY/cDXgJjnZlCmN0RiNuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so2461033a12.3;
+        Mon, 01 Apr 2024 16:31:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712014290; x=1712619090;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kyRsGRAwNFsxUGN4nIP6zyyeaRDG9dHknKxTE5z7gR0=;
+        b=lp4YobQTI4WYiwRdnssDHWR0WzbryiEeXdulz98m+CSGYy36QCMs5dg0jnVrvTh/HG
+         M8UcryqlbO2OIINQYFphF4DdTuueDw9vUrJamtvFX1NnL1+7zueBiZ9rkK8LjgyHKWlH
+         2rfplynrE8h+lomsec5z7OgqpxU8O6q6NFphS9riQuiuNvkozSNS5PqJi53cRfPs80XT
+         mjkc8IjviavqU4coqgInCsBp1wS9+y/TMGbAc6AsDBIP6Eeytcbe5fClRUrwVH0CLi0c
+         UHysC+3C4XPlgh1YG53i06wNw8ypiacr4UhrRtk/i9z7owUaHin2GPnydXzp4ZrhLEd1
+         9Lew==
+X-Forwarded-Encrypted: i=1; AJvYcCUrIyuD4sn9w0zKFTy/y2lS8bxj5pVYR2QZoTAIsYgHcm6inySS80TZHY9erCCiHwJM8C16N/KMckcuLuxHqMPPeVJiNDB+Jr+quYi1VYNBGKh4cGDV2tUPJhl4uFdg2SeQpsbuEz70DYs6oKEwVg==
+X-Gm-Message-State: AOJu0Yxk8lBRQlnbdkEomiWWRB66+1jRiIRNZEB8TVxwwbnCGLmSKP9v
+	mYg2QEWfq1zjiBXJ289iucva9BGdUrJMF2HS2I5nnY9m6X0KPMsNVHDuEEgtHzjrIEyhoUno5wy
+	IshMP7Zt1/kFUNO/W5YMcGgIPgtY=
+X-Google-Smtp-Source: AGHT+IHUcj7bvvOAZ4jdASGxpoQpJwHl+eeiUqNOo7akmbttuzadQVwSi31YMAvfAdXehQ+GUFWlh/h7CiuRkBgK7CM=
+X-Received: by 2002:a17:903:11d1:b0:1e0:a8b8:aba3 with SMTP id
+ q17-20020a17090311d100b001e0a8b8aba3mr14714827plh.35.1712014289753; Mon, 01
+ Apr 2024 16:31:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20a3a165-ddb5-4a01-20ee-08dc529807b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 22:06:49.6939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XR9egwwFHO788TUw7lyOYe7luphiy++AU0G3WSEDfXWiwaBm8KCONJoWn5xDly7tkUaboCPWb9F0V7K84s7tHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8373
-X-OriginatorOrg: intel.com
+References: <20240401160805.51277-1-yakoyoku@gmail.com> <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+In-Reply-To: <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 1 Apr 2024 16:31:18 -0700
+Message-ID: <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
+Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
+To: Ian Rogers <irogers@google.com>
+Cc: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV2FuZywgV2VpbGluDQo+
-IFNlbnQ6IE1vbmRheSwgQXByaWwgMSwgMjAyNCAyOjU1IFBNDQo+IFRvOiBOYW1oeXVuZyBLaW0g
-PG5hbWh5dW5nQGtlcm5lbC5vcmc+DQo+IENjOiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5j
-b20+OyBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8NCj4gPGFjbWVAa2VybmVsLm9yZz47IFBldGVy
-IFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz47IEluZ28gTW9sbmFyDQo+IDxtaW5nb0By
-ZWRoYXQuY29tPjsgQWxleGFuZGVyIFNoaXNoa2luDQo+IDxhbGV4YW5kZXIuc2hpc2hraW5AbGlu
-dXguaW50ZWwuY29tPjsgSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgSHVudGVyLA0KPiBB
-ZHJpYW4gPGFkcmlhbi5odW50ZXJAaW50ZWwuY29tPjsgS2FuIExpYW5nIDxrYW4ubGlhbmdAbGlu
-dXguaW50ZWwuY29tPjsNCj4gbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFRheWxvciwgUGVycnkNCj4gPHBlcnJ5LnRheWxvckBp
-bnRlbC5jb20+OyBBbHQsIFNhbWFudGhhIDxzYW1hbnRoYS5hbHRAaW50ZWwuY29tPjsgQmlnZ2Vy
-cywNCj4gQ2FsZWIgPGNhbGViLmJpZ2dlcnNAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSRTogW1JG
-QyBQQVRDSCB2NiAxLzVdIHBlcmYgc3RhdDogUGFyc2UgYW5kIGZpbmQgdHBlYnMgZXZlbnRzIHdo
-ZW4NCj4gcGFyc2luZyBtZXRyaWNzIHRvIHByZXBhcmUgZm9yIHBlcmYgcmVjb3JkIHNhbXBsaW5n
-DQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBO
-YW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+DQo+ID4gU2VudDogTW9uZGF5LCBBcHJp
-bCAxLCAyMDI0IDE6MzUgUE0NCj4gPiBUbzogV2FuZywgV2VpbGluIDx3ZWlsaW4ud2FuZ0BpbnRl
-bC5jb20+DQo+ID4gQ2M6IElhbiBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT47IEFybmFsZG8g
-Q2FydmFsaG8gZGUgTWVsbw0KPiA+IDxhY21lQGtlcm5lbC5vcmc+OyBQZXRlciBaaWpsc3RyYSA8
-cGV0ZXJ6QGluZnJhZGVhZC5vcmc+OyBJbmdvIE1vbG5hcg0KPiA+IDxtaW5nb0ByZWRoYXQuY29t
-PjsgQWxleGFuZGVyIFNoaXNoa2luDQo+ID4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRl
-bC5jb20+OyBKaXJpIE9sc2EgPGpvbHNhQGtlcm5lbC5vcmc+OyBIdW50ZXIsDQo+ID4gQWRyaWFu
-IDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4Lmlu
-dGVsLmNvbT47DQo+ID4gbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFRheWxvciwgUGVycnkNCj4gPiA8cGVycnkudGF5bG9yQGlu
-dGVsLmNvbT47IEFsdCwgU2FtYW50aGEgPHNhbWFudGhhLmFsdEBpbnRlbC5jb20+Ow0KPiBCaWdn
-ZXJzLA0KPiA+IENhbGViIDxjYWxlYi5iaWdnZXJzQGludGVsLmNvbT4NCj4gPiBTdWJqZWN0OiBS
-ZTogW1JGQyBQQVRDSCB2NiAxLzVdIHBlcmYgc3RhdDogUGFyc2UgYW5kIGZpbmQgdHBlYnMgZXZl
-bnRzIHdoZW4NCj4gPiBwYXJzaW5nIG1ldHJpY3MgdG8gcHJlcGFyZSBmb3IgcGVyZiByZWNvcmQg
-c2FtcGxpbmcNCj4gPg0KPiA+IEhlbGxvIFdlaWxpbiwNCj4gPg0KPiA+IE9uIEZyaSwgTWFyIDI5
-LCAyMDI0IGF0IDEyOjEy4oCvUE0gPHdlaWxpbi53YW5nQGludGVsLmNvbT4gd3JvdGU6DQo+ID4g
-Pg0KPiA+ID4gRnJvbTogV2VpbGluIFdhbmcgPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gPiA+
-DQo+ID4gPiBNZXRyaWNzIHRoYXQgdXNlIHRwZWJzIHZhbHVlcyB3b3VsZCB1c2UgdGhlIFIgYXMg
-cmV0aXJlX2xhdGVuY3kgbW9kaWZpZXIgaW4NCj4gPiA+IGZvcm11bGFzLiBXZSBwdXQgYWxsIHRo
-ZXNlIGV2ZW50cyBpbnRvIGEgbGlzdCBhbmQgcGFzcyB0aGUgbGlzdCB0byBwZXJmDQo+ID4gPiBy
-ZWNvcmQgdG8gY29sbGVjdCB0aGVpciByZXRpcmUgbGF0ZW5jeSB2YWx1ZS4NCj4gPiA+DQo+ID4g
-PiBTaWduZWQtb2ZmLWJ5OiBXZWlsaW4gV2FuZyA8d2VpbGluLndhbmdAaW50ZWwuY29tPg0KPiA+
-ID4gUmV2aWV3ZWQtYnk6IElhbiBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT4NCj4gPiA+IC0t
-LQ0KPiA+ID4gIHRvb2xzL3BlcmYvYnVpbHRpbi1zdGF0LmMgICAgIHwgMzggKysrKysrKysrKysr
-Ky0tDQo+ID4gPiAgdG9vbHMvcGVyZi91dGlsL21ldHJpY2dyb3VwLmMgfCA4OCArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKy0NCj4gLS0NCj4gPiAtLS0NCj4gPiA+ICB0b29scy9wZXJmL3V0
-aWwvbWV0cmljZ3JvdXAuaCB8IDEwICsrKy0NCj4gPiA+ICB0b29scy9wZXJmL3V0aWwvc3RhdC5o
-ICAgICAgICB8ICAyICsNCj4gPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDExOSBpbnNlcnRpb25zKCsp
-LCAxOSBkZWxldGlvbnMoLSkNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9i
-dWlsdGluLXN0YXQuYyBiL3Rvb2xzL3BlcmYvYnVpbHRpbi1zdGF0LmMNCj4gPiA+IGluZGV4IDZi
-YmExYTg5ZDAzMC4uNjI5MWUxZTI0NTM1IDEwMDY0NA0KPiA+ID4gLS0tIGEvdG9vbHMvcGVyZi9i
-dWlsdGluLXN0YXQuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXN0YXQuYw0KPiA+
-ID4gQEAgLTE2Miw2ICsxNjIsNyBAQCBzdGF0aWMgc3RydWN0IHBlcmZfc3RhdF9jb25maWcgc3Rh
-dF9jb25maWcgPSB7DQo+ID4gPiAgICAgICAgIC5jdGxfZmQgICAgICAgICAgICAgICAgID0gLTEs
-DQo+ID4gPiAgICAgICAgIC5jdGxfZmRfYWNrICAgICAgICAgICAgID0gLTEsDQo+ID4gPiAgICAg
-ICAgIC5pb3N0YXRfcnVuICAgICAgICAgICAgID0gZmFsc2UsDQo+ID4gPiArICAgICAgIC50cGVi
-c19ldmVudHMgICAgICAgICAgID0gTElTVF9IRUFEX0lOSVQoc3RhdF9jb25maWcudHBlYnNfZXZl
-bnRzKSwNCj4gPiA+ICB9Ow0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgYm9vbCBjcHVzX21hcF9tYXRj
-aGVkKHN0cnVjdCBldnNlbCAqYSwgc3RydWN0IGV2c2VsICpiKQ0KPiA+ID4gQEAgLTY4Niw2ICs2
-ODcsMTIgQEAgc3RhdGljIGVudW0gY291bnRlcl9yZWNvdmVyeQ0KPiA+IHN0YXRfaGFuZGxlX2Vy
-cm9yKHN0cnVjdCBldnNlbCAqY291bnRlcikNCj4gPiA+ICAgICAgICAgcmV0dXJuIENPVU5URVJf
-RkFUQUw7DQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+ICtzdGF0aWMgaW50IF9fcnVuX3BlcmZfcmVj
-b3JkKHZvaWQpDQo+ID4gPiArew0KPiA+ID4gKyAgICAgICBwcl9kZWJ1ZygiUHJlcGFyZSBwZXJm
-IHJlY29yZCBmb3IgcmV0aXJlX2xhdGVuY3lcbiIpOw0KPiA+ID4gKyAgICAgICByZXR1cm4gMDsN
-Cj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIGludCBfX3J1bl9wZXJmX3N0YXQoaW50
-IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2LCBpbnQgcnVuX2lkeCkNCj4gPiA+ICB7DQo+ID4gPiAg
-ICAgICAgIGludCBpbnRlcnZhbCA9IHN0YXRfY29uZmlnLmludGVydmFsOw0KPiA+ID4gQEAgLTcw
-Myw2ICs3MTAsMTYgQEAgc3RhdGljIGludCBfX3J1bl9wZXJmX3N0YXQoaW50IGFyZ2MsIGNvbnN0
-IGNoYXINCj4gPiAqKmFyZ3YsIGludCBydW5faWR4KQ0KPiA+ID4gICAgICAgICBpbnQgZXJyOw0K
-PiA+ID4gICAgICAgICBib29sIHNlY29uZF9wYXNzID0gZmFsc2U7DQo+ID4gPg0KPiA+ID4gKyAg
-ICAgICAvKiBQcmVwYXJlIHBlcmYgcmVjb3JkIGZvciBzYW1wbGluZyBldmVudCByZXRpcmVfbGF0
-ZW5jeSBiZWZvcmUgZm9yaw0KPiBhbmQNCj4gPiA+ICsgICAgICAgICogcHJlcGFyZSB3b3JrbG9h
-ZCAqLw0KPiA+ID4gKyAgICAgICBpZiAoc3RhdF9jb25maWcudHBlYnNfZXZlbnRfc2l6ZSA+IDAp
-IHsNCj4gPiA+ICsgICAgICAgICAgICAgICBpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKyAgICAg
-ICAgICAgICAgIHJldCA9IF9fcnVuX3BlcmZfcmVjb3JkKCk7DQo+ID4gPiArICAgICAgICAgICAg
-ICAgaWYgKHJldCkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+
-ID4gPiArICAgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICAgICAgICAgaWYgKGZvcmtzKSB7DQo+ID4g
-PiAgICAgICAgICAgICAgICAgaWYgKGV2bGlzdF9fcHJlcGFyZV93b3JrbG9hZChldnNlbF9saXN0
-LCAmdGFyZ2V0LCBhcmd2LCBpc19waXBlLA0KPiA+IHdvcmtsb2FkX2V4ZWNfZmFpbGVkX3NpZ25h
-bCkgPCAwKSB7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBwZXJyb3IoImZhaWxlZCB0
-byBwcmVwYXJlIHdvcmtsb2FkIik7DQo+ID4gPiBAQCAtMjEwNiw3ICsyMTIzLDkgQEAgc3RhdGlj
-IGludCBhZGRfZGVmYXVsdF9hdHRyaWJ1dGVzKHZvaWQpDQo+ID4gPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0X2NvbmZpZy5tZXRyaWNfbm9fdGhy
-ZXNob2xkLA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgc3RhdF9jb25maWcudXNlcl9yZXF1ZXN0ZWRfY3B1X2xpc3QsDQo+ID4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0X2NvbmZpZy5zeXN0
-ZW1fd2lkZSwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICZzdGF0X2NvbmZpZy5tZXRyaWNfZXZlbnRzKTsNCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZzdGF0X2NvbmZpZy5tZXRyaWNfZXZl
-bnRzLA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgJnN0YXRfY29uZmlnLnRwZWJzX2V2ZW50cywNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICZzdGF0X2NvbmZpZy50cGVic19ldmVudF9zaXpl
-KTsNCj4gPg0KPiA+IE1heWJlIGl0J2QgYmUgYmV0dGVyIHRvIHBhc3MgdGhlIHN0YXRfY29uZmln
-LCBidXQgaXQgY2FuIGJlIGRvbmUgbGF0ZXIuDQo+ID4NCj4gPg0KPiA+ID4gICAgICAgICB9DQo+
-ID4gPg0KPiA+ID4gICAgICAgICBpZiAoc21pX2Nvc3QpIHsNCj4gPiA+IEBAIC0yMTM5LDcgKzIx
-NTgsOSBAQCBzdGF0aWMgaW50IGFkZF9kZWZhdWx0X2F0dHJpYnV0ZXModm9pZCkNCj4gPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRfY29uZmln
-Lm1ldHJpY19ub190aHJlc2hvbGQsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBzdGF0X2NvbmZpZy51c2VyX3JlcXVlc3RlZF9jcHVfbGlzdCwN
-Cj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
-YXRfY29uZmlnLnN5c3RlbV93aWRlLA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJnN0YXRfY29uZmlnLm1ldHJpY19ldmVudHMpOw0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnN0YXRfY29u
-ZmlnLm1ldHJpY19ldmVudHMsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAmc3RhdF9jb25maWcudHBlYnNfZXZlbnRzLA0KPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnN0YXRfY29uZmlnLnRw
-ZWJzX2V2ZW50X3NpemUpOw0KPiA+ID4gICAgICAgICB9DQo+ID4gPg0KPiA+ID4gICAgICAgICBp
-ZiAodG9wZG93bl9ydW4pIHsNCj4gPiA+IEBAIC0yMTczLDcgKzIxOTQsOSBAQCBzdGF0aWMgaW50
-IGFkZF9kZWZhdWx0X2F0dHJpYnV0ZXModm9pZCkNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qbWV0cmljX25vX3RocmVzaG9sZD0qL3RydWUs
-DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-dGF0X2NvbmZpZy51c2VyX3JlcXVlc3RlZF9jcHVfbGlzdCwNCj4gPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRfY29uZmlnLnN5c3RlbV93aWRl
-LA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-JnN0YXRfY29uZmlnLm1ldHJpY19ldmVudHMpIDwgMCkNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZzdGF0X2NvbmZpZy5tZXRyaWNfZXZlbnRz
-LA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-JnN0YXRfY29uZmlnLnRwZWJzX2V2ZW50cywNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICZzdGF0X2NvbmZpZy50cGVic19ldmVudF9zaXplKSA8
-IDApDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLTE7DQo+ID4gPiAgICAg
-ICAgIH0NCj4gPiA+DQo+ID4gPiBAQCAtMjIxNCw3ICsyMjM3LDkgQEAgc3RhdGljIGludCBhZGRf
-ZGVmYXVsdF9hdHRyaWJ1dGVzKHZvaWQpDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qbWV0cmljX25vX3RocmVzaG9sZD0qL3Ry
-dWUsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHN0YXRfY29uZmlnLnVzZXJfcmVxdWVzdGVkX2NwdV9saXN0LA0KPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0
-X2NvbmZpZy5zeXN0ZW1fd2lkZSwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgJnN0YXRfY29uZmlnLm1ldHJpY19ldmVudHMpIDwg
-MCkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgJnN0YXRfY29uZmlnLm1ldHJpY19ldmVudHMsDQo+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qJnN0YXRfY29uZmln
-LnRwZWJzX2V2ZW50cz0qL05VTEwsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qc3RhdF9jb25maWcudHBlYnNfZXZlbnRfc2l6
-ZT0qLzApIDwgMCkNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJu
-IC0xOw0KPiA+ID4NCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGV2bGlzdF9fZm9yX2Vh
-Y2hfZW50cnkobWV0cmljX2V2bGlzdCwgbWV0cmljX2V2c2VsKSB7DQo+ID4gPiBAQCAtMjczNiw2
-ICsyNzYxLDcgQEAgaW50IGNtZF9zdGF0KGludCBhcmdjLCBjb25zdCBjaGFyICoqYXJndikNCj4g
-PiA+ICAgICAgICAgICAgICAgICB9DQo+ID4gPiAgICAgICAgIH0NCj4gPiA+DQo+ID4gPiArDQo+
-ID4gPiAgICAgICAgIC8qDQo+ID4gPiAgICAgICAgICAqIE1ldHJpYyBwYXJzaW5nIG5lZWRzIHRv
-IGJlIGRlbGF5ZWQgYXMgbWV0cmljcyBtYXkgb3B0aW1pemUgZXZlbnRzDQo+ID4gPiAgICAgICAg
-ICAqIGtub3dpbmcgdGhlIHRhcmdldCBpcyBzeXN0ZW0td2lkZS4NCj4gPiA+IEBAIC0yNzQ4LDcg
-KzI3NzQsOSBAQCBpbnQgY21kX3N0YXQoaW50IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2KQ0KPiA+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdF9j
-b25maWcubWV0cmljX25vX3RocmVzaG9sZCwNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRfY29uZmlnLnVzZXJfcmVxdWVzdGVkX2NwdV9s
-aXN0LA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3RhdF9jb25maWcuc3lzdGVtX3dpZGUsDQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAmc3RhdF9jb25maWcubWV0cmljX2V2ZW50cyk7DQo+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmc3Rh
-dF9jb25maWcubWV0cmljX2V2ZW50cywNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICZzdGF0X2NvbmZpZy50cGVic19ldmVudHMsDQo+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmc3RhdF9jb25m
-aWcudHBlYnNfZXZlbnRfc2l6ZSk7DQo+ID4gPg0KPiA+ID4gICAgICAgICAgICAgICAgIHpmcmVl
-KCZtZXRyaWNzKTsNCj4gPiA+ICAgICAgICAgICAgICAgICBpZiAocmV0KSB7DQo+ID4gPiBkaWZm
-IC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL21ldHJpY2dyb3VwLmMgYi90b29scy9wZXJmL3V0aWwv
-bWV0cmljZ3JvdXAuYw0KPiA+ID4gaW5kZXggNzllZjYwOTVhYjI4Li44ZTAwN2Q2MGFmOTEgMTAw
-NjQ0DQo+ID4gPiAtLS0gYS90b29scy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuYw0KPiA+ID4gKysr
-IGIvdG9vbHMvcGVyZi91dGlsL21ldHJpY2dyb3VwLmMNCj4gPiA+IEBAIC0yNzcsNyArMjc3LDgg
-QEAgc3RhdGljIGJvb2wgY29udGFpbnNfbWV0cmljX2lkKHN0cnVjdCBldnNlbA0KPiA+ICoqbWV0
-cmljX2V2ZW50cywgaW50IG51bV9ldmVudHMsDQo+ID4gPiAgICovDQo+ID4gPiAgc3RhdGljIGlu
-dCBzZXR1cF9tZXRyaWNfZXZlbnRzKGNvbnN0IGNoYXIgKnBtdSwgc3RydWN0IGhhc2htYXAgKmlk
-cywNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZXZsaXN0ICpt
-ZXRyaWNfZXZsaXN0LA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBldnNlbCAqKipvdXRfbWV0cmljX2V2ZW50cykNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBzdHJ1Y3QgZXZzZWwgKioqb3V0X21ldHJpY19ldmVudHMsDQo+ID4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZV90IHRwZWJzX2V2ZW50X3NpemUpDQo+ID4g
-PiAgew0KPiA+ID4gICAgICAgICBzdHJ1Y3QgZXZzZWwgKiptZXRyaWNfZXZlbnRzOw0KPiA+ID4g
-ICAgICAgICBjb25zdCBjaGFyICptZXRyaWNfaWQ7DQo+ID4gPiBAQCAtMjg2LDcgKzI4Nyw3IEBA
-IHN0YXRpYyBpbnQgc2V0dXBfbWV0cmljX2V2ZW50cyhjb25zdCBjaGFyICpwbXUsDQo+ID4gc3Ry
-dWN0IGhhc2htYXAgKmlkcywNCj4gPiA+ICAgICAgICAgYm9vbCBhbGxfcG11cyA9ICFzdHJjbXAo
-cG11LCAiYWxsIikgfHwgcGVyZl9wbXVzX19udW1fY29yZV9wbXVzKCkNCj4gPiA9PSAxIHx8ICFp
-c19wbXVfY29yZShwbXUpOw0KPiA+ID4NCj4gPiA+ICAgICAgICAgKm91dF9tZXRyaWNfZXZlbnRz
-ID0gTlVMTDsNCj4gPiA+IC0gICAgICAgaWRzX3NpemUgPSBoYXNobWFwX19zaXplKGlkcyk7DQo+
-ID4gPiArICAgICAgIGlkc19zaXplID0gaGFzaG1hcF9fc2l6ZShpZHMpIC0gdHBlYnNfZXZlbnRf
-c2l6ZTsNCj4gPiA+DQo+ID4gPiAgICAgICAgIG1ldHJpY19ldmVudHMgPSBjYWxsb2MoaWRzX3Np
-emUgKyAxLCBzaXplb2Yodm9pZCAqKSk7DQo+ID4gPiAgICAgICAgIGlmICghbWV0cmljX2V2ZW50
-cykNCj4gPiA+IEBAIC0zMjMsNiArMzI0LDcgQEAgc3RhdGljIGludCBzZXR1cF9tZXRyaWNfZXZl
-bnRzKGNvbnN0IGNoYXIgKnBtdSwNCj4gPiBzdHJ1Y3QgaGFzaG1hcCAqaWRzLA0KPiA+ID4gICAg
-ICAgICAgICAgICAgIH0NCj4gPiA+ICAgICAgICAgfQ0KPiA+ID4gICAgICAgICBpZiAobWF0Y2hl
-ZF9ldmVudHMgPCBpZHNfc2l6ZSkgew0KPiA+ID4gKyAgICAgICAgICAgICAgIHByX2RlYnVnKCJF
-cnJvcjogbWF0Y2hlZF9ldmVudHMgPSAlbHUsIGlkc19zaXplID0gJWx1XG4iLA0KPiA+IG1hdGNo
-ZWRfZXZlbnRzLCBpZHNfc2l6ZSk7DQo+ID4gPiAgICAgICAgICAgICAgICAgZnJlZShtZXRyaWNf
-ZXZlbnRzKTsNCj4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiA+ICAg
-ICAgICAgfQ0KPiA+ID4gQEAgLTY2OCw3ICs2NzAsOSBAQCBzdGF0aWMgaW50IGRlY29kZV9hbGxf
-bWV0cmljX2lkcyhzdHJ1Y3QgZXZsaXN0DQo+ID4gKnBlcmZfZXZsaXN0LCBjb25zdCBjaGFyICpt
-b2RpZmllDQo+ID4gPiAgc3RhdGljIGludCBtZXRyaWNncm91cF9fYnVpbGRfZXZlbnRfc3RyaW5n
-KHN0cnVjdCBzdHJidWYgKmV2ZW50cywNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZXhwcl9wYXJzZV9jdHggKmN0eCwNCj4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpt
-b2RpZmllciwNCj4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBib29sIGdyb3VwX2V2ZW50cykNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBib29sIGdyb3VwX2V2ZW50cywNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgbGlzdF9oZWFkICp0cGVic19ldmVudHMg
-X19tYXliZV91bnVzZWQsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgc2l6ZV90ICp0cGVic19ldmVudF9zaXplKQ0KPiA+ID4gIHsNCj4gPiA+ICAgICAg
-ICAgc3RydWN0IGhhc2htYXBfZW50cnkgKmN1cjsNCj4gPiA+ICAgICAgICAgc2l6ZV90IGJrdDsN
-Cj4gPiA+IEBAIC02ODEsOCArNjg1LDU2IEBAIHN0YXRpYyBpbnQgbWV0cmljZ3JvdXBfX2J1aWxk
-X2V2ZW50X3N0cmluZyhzdHJ1Y3QNCj4gPiBzdHJidWYgKmV2ZW50cywNCj4gPiA+ICAgICAgICAg
-aGFzaG1hcF9fZm9yX2VhY2hfZW50cnkoY3R4LT5pZHMsIGN1ciwgYmt0KSB7DQo+ID4gPiAgICAg
-ICAgICAgICAgICAgY29uc3QgY2hhciAqc2VwLCAqcnNlcCwgKmlkID0gY3VyLT5wa2V5Ow0KPiA+
-ID4gICAgICAgICAgICAgICAgIGVudW0gcGVyZl90b29sX2V2ZW50IGV2Ow0KPiA+ID4gKyAgICAg
-ICAgICAgICAgIC8qDQo+ID4gPiArICAgICAgICAgICAgICAgICogUGFyc2UgYW5kIHNlYXJjaCBm
-b3IgZXZlbnQgbmFtZSB3aXRoIHJldGlyZV9sYXRlbmN5IG1vZGlmaWVyIFIuDQo+ID4gPiArICAg
-ICAgICAgICAgICAgICogSWYgZm91bmQsIHB1dCBldmVudCBuYW1lIGludG8gdGhlIHRwZWJzX2V2
-ZW50cyBsaXN0LiBUaGlzIGxpc3QNCj4gPiA+ICsgICAgICAgICAgICAgICAgKiBvZiBldmVudHMg
-d2lsbCBiZSBwYXNzZWQgdG8gcGVyZiByZWNvcmQgZm9yIHNhbXBsaW5nIHRvIGdldA0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAqIHRoZWlyIHJlaXRyZV9sYXRlbmN5IHZhbHVlLg0KPiA+ID4gKyAg
-ICAgICAgICAgICAgICAqIFNlYXJjaCBmb3IgIjpSIiBpbiBldmVudCBuYW1lIHdpdGhvdXQgIkAi
-LiBTZWFyY2ggZm9yIHRoZQ0KPiA+ID4gKyAgICAgICAgICAgICAgICAqIGxhc3QgIkBSIiBpbiBl
-dmVudCBuYW1lIHdpdGggIkAiLg0KPiA+DQo+ID4gSG1tLi4gaXQgc2VlbXMgeW91IGxvb2sgZm9y
-IGFuICdSJyBtb2RpZmllciBhbmQgdGhlbiBjaGFuZ2UgaXQgdG8gJ3AnLCByaWdodD8NCj4gPiBX
-aHkgbm90IHVzZSBzdHJyY2hyIHRvIGNoZWNrICc6JyBvciAnQCcgYW5kIGlmIGl0J3MgZm9sbG93
-ZWQgYnkgJ1InPw0KPiANCj4gWWVzLCB0aGlzIGlzIGxvb2tpbmcgZm9yIHRoZSAnUicgbW9kaWZp
-ZXIgYW5kIGFkZCAncCcgZm9yIHNhbXBsaW5nLiBXZSBtaWdodCB3YW50DQo+IHRvIGV4cGxvcmUg
-J1AnIG9yICdwcHAnIGxhdGVyLg0KPiANCj4gSSB3aWxsIHRyeSBzdHJyY2hyIG91dCBhbmQgdXBk
-YXRlIHRoZSBjb2RlIGlmIHRoYXQgbWFrZXMgdGhlIGNvZGUgc2ltcGxlciENCj4gDQo+ID4NCj4g
-PiBJcyB0aGUgJ1InIG1vZGlmaWVyIG9ubHkgdXNlZCBpbiB0aGUgbWV0cmljIGV4cHJlc3Npb25z
-PyAgQWxzbyBwbGVhc2UgbWVudGlvbg0KPiA+IHdoeSBzb21lIGV2ZW50cyBoYXZlICJAIiBpbiB0
-aGUgbmFtZSBhbmQgb3RoZXJzIGRvbid0Lg0KDQpTb3JyeSwgZm9yZ290IHRvIGFuc3dlciB0aGlz
-IG9uZSBpbiBsYXN0IGVtYWlsLiBZZXMsICdSJyBpcyBvbmx5IHVzZWQgaW4gbWV0cmljIGV4cHJl
-c3Npb24gDQpjdXJyZW50bHkuIEJ1dCBJIHJlbWVtYmVyIHRoZXJlIHdlcmUgc29tZSBkaXNjdXNz
-aW9ucyBvbiB1c2luZyB0aGlzIGZvciBwZXJmIHJlY29yZC4gDQpUaGlzIG1vZGlmaWVyIG1pZ2h0
-IGJlIHVzZWQgY29uc2lzdGVudGx5IGluIGJvdGggcmVjb3JkIGFuZCBzdGF0Lg0KDQpJIHdpbGwg
-dXBkYXRlIHRoZSBjb21tZW50IGFib3V0ICdAJy4gDQoNClRoYW5rcywNCldlaWxpbg0KDQo+ID4N
-Cj4gPg0KPiA+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ID4gKyAgICAgICAgICAgICAgIGNo
-YXIgKnAgPSBzdHJzdHIoaWQsICI6UiIpOw0KPiA+ID4gKyAgICAgICAgICAgICAgIGNoYXIgKnAx
-ID0gc3Ryc3RyKGlkLCAiQFIiKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICBpZiAo
-cCA9PSBOVUxMICYmIHAxKSB7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBwID0gc3Ry
-c3RyKHAxKzEsICJAUiIpOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKHAgPT0g
-TlVMTCkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcCA9IHAxOw0KPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcCA9IHArMTsNCj4gPiA+ICsgICAgICAgICAgICAg
-ICB9DQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAgICAgaWYgKHApIHsNCj4gPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGNoYXIgKm5hbWU7DQo+ID4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBjaGFyICphdDsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCB0cGVi
-c19ldmVudCAqbmV3X2V2ZW50ID0gbWFsbG9jKHNpemVvZihzdHJ1Y3QNCj4gPiB0cGVic19ldmVu
-dCkpOw0KPiA+ID4NCj4gPiA+IC0gICAgICAgICAgICAgICBwcl9kZWJ1ZygiZm91bmQgZXZlbnQg
-JXNcbiIsIGlkKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICghbmV3X2V2ZW50
-KQ0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsN
-Cj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG5ld19ldmVudC0+dHBlYnNf
-bmFtZSA9IHN0cmR1cChpZCk7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAqcCA9ICdc
-MCc7DQo+ID4NCj4gPiBJIHRoaW5rICdwJyBwb2ludHMgdG8gdGhlICdpZCcgc3RyaW5nICgiY3Vy
-LT5wa2V5IikuICBJcyBpdCBvayB0bw0KPiA+IGNoYW5nZSBpdCBoZXJlPw0KPiA+IEkgZ3Vlc3Mg
-eW91IG1heSB3YW50IHRvIGRvIGl0IG9uIHRoZSB0cGVic19uYW1lLg0KPiANCj4gSWYgSSB1bmRl
-cnN0YW5kIHlvdXIgcXVlc3Rpb24gY29ycmVjdGx5Og0KPiANCj4gVGhlIHRwZWJzX25hbWUgd2Fu
-dHMgdG8ga2VlcCB0aGUgZnVsbCBuYW1lIHdpdGggdGhlIG1vZGlmaWVyLiBCdXQgZm9yIHRoZQ0K
-PiByZXN0IHBsYWNlcywgd2UgZG9uJ3QgbmVlZCB0byBrZWVwIHRoaXMgbW9kaWZpZXIgaW4gdGhl
-IG5hbWUuIFNvIHdlIGNvdWxkDQo+IGNoYW5nZSAncCcgbGlrZSB0aGlzLg0KPiANCj4gVGhhbmtz
-LA0KPiBXZWlsaW4NCj4gDQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gTmFtaHl1bmcNCj4gPg0KPiA+
-DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBuYW1lID0gbWFsbG9jKHN0cmxlbihpZCkg
-KyAyKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICghbmFtZSkNCj4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gPiArDQo+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBhdCA9IHN0cmNocihpZCwgJ0AnKTsNCj4gPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChhdCAhPSBOVUxMKSB7DQo+ID4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICphdCA9ICcvJzsNCj4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgYXQgPSBzdHJjaHIoaWQsICdAJyk7DQo+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICphdCA9ICcvJzsNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgc3RyY3B5KG5hbWUsIGlkKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgc3RyY2F0KG5hbWUsICJwIik7DQo+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICB9IGVsc2Ugew0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-dHJjcHkobmFtZSwgaWQpOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-dHJjYXQobmFtZSwgIjpwIik7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBuZXdfZXZlbnQtPm5hbWUgPSBuYW1lOw0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgKnRwZWJzX2V2ZW50X3NpemUgKz0gMTsNCj4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHByX2RlYnVnKCJyZXRpcmVfbGF0ZW5jeSByZXF1aXJlZCwg
-dHBlYnNfZXZlbnRfc2l6ZT0lbHUsDQo+ID4gbmV3X2V2ZW50PSVzXG4iLA0KPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAqdHBlYnNfZXZlbnRfc2l6ZSwgbmV3X2V2ZW50LT5u
-YW1lKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpc3RfYWRkX3RhaWwoJm5ld19l
-dmVudC0+bmQsIHRwZWJzX2V2ZW50cyk7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBj
-b250aW51ZTsNCj4gPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gPg0K
+Hello,
+
+On Mon, Apr 1, 2024 at 9:56=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Mon, Apr 1, 2024 at 9:08=E2=80=AFAM Martin Rodriguez Reboredo
+> <yakoyoku@gmail.com> wrote:
+> >
+> > `perf script` can be quite slow when inlines are enabled, by default it
+> > spawns an `addr2line` process and communicates with it via pipes, that
+> > comes with a certain overhead. The other option is to build perf with
+> > libbfd enabled so that its methods are called directly instead, but due
+> > to its licensing the resulting binary cannot be redistribuited.
+> >
+> > This commit adds the ability for perf to use libdw to query the source
+> > lines of binaries from the passed addresses. This avoids the process
+> > spawn overhead and because libdw is licensed dually under
+> > GPL-2.0-or-later and LGPL-3.0-or-later it can be distributed by
+> > downstream packagers. Another thing to consider is that if libdebuginfo=
+d
+> > was enabled for libdw then it's used to download debug info, it can be
+> > switched off by unsetting the `DEBUGINFOD_URLS` envvar.
+
+Thanks for doing this!  Yep, we could unset the env temporarily.
+
+As a general comment, perf has some helper functions for libdw
+in util/dwarf-aux.[ch].  Please take a look and use/update them.
+
+> >
+> > Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+>
+> Awesome sauce! Namhyung was just mentioning the idea to do this to me.
+> I wonder when this lands we can just work to remove all of the
+> BUILD_NONDISTRO options, namely libbfd, libiberty, etc. I suspect we
+> have dead/broken code hiding there.
+>
+> > ---
+> >  tools/perf/Makefile.config |   7 +-
+> >  tools/perf/util/srcline.c  | 277 ++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 281 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 1fe8df97fe88..ab6d41e7a6b6 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -947,13 +947,16 @@ ifdef BUILD_NONDISTRO
+> >      $(call feature_check,disassembler-init-styled)
+> >    endif
+> >
+> > -  CFLAGS +=3D -DHAVE_LIBBFD_SUPPORT
+> > -  CXXFLAGS +=3D -DHAVE_LIBBFD_SUPPORT
+> > +  CFLAGS +=3D -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
+> > +  CXXFLAGS +=3D -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
+>
+> What does SYMBOLIZER mean in this context? Shouldn't the code be gated
+> on say a HAVE_LIBDW?
+>
+> >    ifeq ($(feature-libbfd-buildid), 1)
+> >      CFLAGS +=3D -DHAVE_LIBBFD_BUILDID_SUPPORT
+> >    else
+> >      $(warning Old version of libbfd/binutils things like PE executable=
+ profiling will not be available)
+> >    endif
+> > +else ifndef NO_LIBDW_DWARF_UNWIND
+> > +  CFLAGS +=3D -DHAVE_SYMBOLIZER_SUPPORT
+> > +  CXXFLAGS +=3D -DHAVE_SYMBOLIZER_SUPPORT
+> >  endif
+> >
+> >  ifndef NO_DEMANGLE
+> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> > index 7addc34afcf5..8117424137cc 100644
+> > --- a/tools/perf/util/srcline.c
+> > +++ b/tools/perf/util/srcline.c
+> > @@ -130,6 +130,8 @@ static struct symbol *new_inline_sym(struct dso *ds=
+o,
+> >
+> >  #define MAX_INLINE_NEST 1024
+> >
+> > +#ifdef HAVE_SYMBOLIZER_SUPPORT
+> > +
+> >  #ifdef HAVE_LIBBFD_SUPPORT
+> >
+> >  /*
+> > @@ -372,6 +374,279 @@ void dso__free_a2l(struct dso *dso)
+> >
+> >  #else /* HAVE_LIBBFD_SUPPORT */
+> >
+> > +#include <elfutils/libdwfl.h>
+> > +#include <dwarf.h>
+> > +
+> > +static char *debuginfo_path =3D NULL;
+> > +
+> > +static const Dwfl_Callbacks offline_callbacks =3D {
+> > +       /* We use this table for core files too.  */
+> > +       .find_elf =3D dwfl_build_id_find_elf,
+> > +       .find_debuginfo =3D dwfl_standard_find_debuginfo,
+> > +       .section_address =3D dwfl_offline_section_address,
+> > +       .debuginfo_path =3D &debuginfo_path,
+> > +
+> > +};
+> > +
+> > +struct a2l_data {
+>
+> Perhaps libdw_a2l_data to avoid confusion with data used for forked
+> addr2line. Could you comment the variables? Names like "input" are
+> fairly generic so you could provide an example of what their values
+> are. It is also useful to comment when something like a string is
+> owned by the struct, so that cleaning it up can be checked.
+>
+> > +       const char *input;
+> > +       Dwarf_Addr addr;
+> > +       Dwarf_Addr bias;
+> > +
+> > +       bool found;
+> > +       const char *filename;
+> > +       const char *funcname;
+> > +       int line;
+>
+> Moving "found" and "line" later will avoid padding. As this data is
+> attached to a DSO, does there need to be some kind of locking protocol
+> for >1 symbolizing the same DSO? Perhaps these should be filled in as
+> out arguments to avoid this kind of complexity.
+
+Right, we cannot attach this to a DSO.  Maybe only dwfl can be
+attached, but we might want to use debuginfo abstraction instead.
+
+Also I don't think we can keep all debuginfo/dwfl descriptors at
+once due to the file descriptor limit.  But I'm not sure if we have
+something for the external addr2line.
+
+
+>
+> Also, there is some DSO clean up happening in:
+> https://lore.kernel.org/lkml/CAM9d7chqnsDBCVFoK2hSs=3D22QrXBS=3D13Px5hGA4=
+hM=3Dho7CZd2g@mail.gmail.com/
+> where accessor functions are used for the sake of reference count checkin=
+g:
+> https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
+> which may cause some minor conflicts with this patch.
+>
+> > +
+> > +       Dwfl *dwfl;
+> > +       Dwfl_Module *mod;
+> > +       GElf_Sym **syms;
+> > +};
+> > +
+> > +static const char *get_diename(Dwarf_Die *die)
+> > +{
+> > +       Dwarf_Attribute attr;
+> > +       const char *name;
+> > +
+> > +       name =3D dwarf_formstring(
+> > +               dwarf_attr_integrate(die, DW_AT_MIPS_linkage_name, &att=
+r) ?:
+> > +                       dwarf_attr_integrate(die, DW_AT_linkage_name, &=
+attr));
+
+We have die_get_linkage_name() but it doesn't seem to
+handle MIPS_linkage_name though.
+
+
+> > +
+> > +       if (name =3D=3D NULL)
+> > +               name =3D dwarf_diename(die) ?: "??";
+> > +
+> > +       return name;
+> > +}
+> > +
+> > +static void find_address_in_section(struct a2l_data *a2l)
+
+Probably we can use cu_find_lineinfo().
+
+
+> > +{
+> > +       Dwarf_Addr addr;
+> > +       Dwfl_Line *line;
+> > +
+> > +       if (a2l->found)
+> > +               return;
+> > +
+> > +       a2l->mod =3D dwfl_addrmodule(a2l->dwfl, a2l->addr);
+> > +       if (!a2l->mod)
+> > +               return;
+> > +
+> > +       dwfl_module_getdwarf(a2l->mod, &a2l->bias);
+> > +       addr =3D a2l->addr + a2l->bias;
+> > +
+> > +       line =3D dwfl_module_getsrc(a2l->mod, addr);
+> > +       if (!line)
+> > +               line =3D dwfl_getsrc(a2l->dwfl, addr);
+> > +       if (!line)
+> > +               return;
+> > +
+> > +       a2l->filename =3D dwfl_lineinfo(line, NULL, &a2l->line, NULL, N=
+ULL, NULL);
+> > +       a2l->funcname =3D dwfl_module_addrname(a2l->mod, addr);
+> > +
+> > +       if (a2l->filename && !strlen(a2l->filename))
+> > +               a2l->filename =3D NULL;
+> > +       else
+> > +               a2l->found =3D true;
+> > +}
+> > +
+> > +static struct a2l_data *addr2line_init(const char *path)
+
+debuginfo__new()?
+
+
+> > +{
+> > +       Dwfl *dwfl;
+> > +       struct a2l_data *a2l =3D NULL;
+> > +
+> > +       dwfl =3D dwfl_begin(&offline_callbacks);
+> > +       if (!dwfl)
+> > +               goto out;
+> > +
+> > +       if (dwfl_report_offline(dwfl, "", path, -1) =3D=3D NULL)
+> > +               return NULL;
+> > +
+> > +       a2l =3D zalloc(sizeof(*a2l));
+> > +       if (a2l =3D=3D NULL)
+> > +               goto out;
+> > +
+> > +       a2l->dwfl =3D dwfl;
+> > +       a2l->input =3D strdup(path);
+> > +       if (a2l->input =3D=3D NULL)
+> > +               goto out;
+> > +
+> > +       if (dwfl_report_end(dwfl, NULL, NULL))
+> > +               goto out;
+> > +
+> > +       return a2l;
+> > +
+> > +out:
+> > +       if (a2l) {
+> > +               zfree((char **)&a2l->input);
+> > +               free(a2l);
+> > +       }
+> > +       dwfl_end(dwfl);
+> > +       return NULL;
+> > +}
+> > +
+> > +static void addr2line_cleanup(struct a2l_data *a2l)
+> > +{
+> > +       if (a2l->dwfl)
+> > +               dwfl_end(a2l->dwfl);
+> > +       zfree((char **)&a2l->input);
+> > +       zfree(&a2l->syms);
+> > +       free(a2l);
+> > +}
+> > +
+> > +static int inline_list__append_dso_a2l(struct dso *dso,
+> > +                                      struct inline_node *node,
+> > +                                      struct symbol *sym)
+> > +{
+> > +       struct a2l_data *a2l =3D dso->a2l;
+> > +       struct symbol *inline_sym =3D new_inline_sym(dso, sym, a2l->fun=
+cname);
+> > +       char *srcline =3D NULL;
+> > +
+> > +       if (a2l->filename)
+> > +               srcline =3D srcline_from_fileline(a2l->filename, a2l->l=
+ine);
+> > +
+> > +       return inline_list__append(inline_sym, srcline, node);
+> > +}
+> > +
+> > +static int get_inline_function(struct dso *dso, struct inline_node *no=
+de,
+> > +                              struct symbol *sym)
+> > +{
+> > +       struct a2l_data *a2l =3D dso->a2l;
+> > +       Dwarf_Addr addr =3D a2l->addr + a2l->bias;
+> > +       Dwarf_Addr bias =3D 0;
+> > +       Dwarf_Die *cudie =3D dwfl_module_addrdie(a2l->mod, addr, &bias)=
+;
+> > +
+> > +       Dwarf_Die *scopes =3D NULL;
+> > +       int nscopes =3D dwarf_getscopes(cudie, addr - bias, &scopes);
+
+It's not clear to me how this dwarf_getscopes() and later
+dwarf_getscopes_die() work together.  Can you please add some
+comment?  Also we have die_get_scopes() and I think it's simpler.
+
+
+> > +       if (nscopes < 0)
+> > +               return 0;
+> > +
+> > +       if (nscopes > 0) {
+>
+> Try to prefer early return to avoid indenting the code. So I think the
+> above can just be:
+>
+> if (nscopes <=3D 0)
+>     return 0;
+>
+> and then you don't need this "if (nscopes > 0) {"
+>
+> > +               Dwarf_Die subroutine;
+> > +               Dwarf_Off dieoff =3D dwarf_dieoffset(&scopes[0]);
+> > +               dwarf_offdie(dwfl_module_getdwarf(a2l->mod, &bias), die=
+off,
+> > +                            &subroutine);
+> > +               free(scopes);
+> > +               scopes =3D NULL;
+>
+> Is this dead code?
+
+It seems you can use zfree().
+
+
+>
+> > +
+> > +               nscopes =3D dwarf_getscopes_die(&subroutine, &scopes);
+> > +               if (nscopes > 1) {
+>
+> Similar early return comment to above to avoid indentation.
+>
+> Thanks,
+> Ian
+>
+> > +                       Dwarf_Die cu;
+> > +                       Dwarf_Files *files;
+> > +                       if (dwarf_diecu(&scopes[0], &cu, NULL, NULL) !=
+=3D NULL &&
+> > +                           dwarf_getsrcfiles(cudie, &files, NULL) =3D=
+=3D 0) {
+> > +                               for (int i =3D 0; i < nscopes - 1; i++)=
+ {
+> > +                                       Dwarf_Word val;
+> > +                                       Dwarf_Attribute attr;
+> > +                                       Dwarf_Die *die =3D &scopes[i];
+> > +                                       if (dwarf_tag(die) !=3D
+> > +                                           DW_TAG_inlined_subroutine)
+> > +                                               continue;
+> > +
+> > +                                       for (int j =3D i + 1; j < nscop=
+es; j++) {
+> > +                                               Dwarf_Die *parent =3D &=
+scopes[j];
+> > +                                               int tag =3D dwarf_tag(p=
+arent);
+> > +                                               if (tag =3D=3D DW_TAG_i=
+nlined_subroutine ||
+> > +                                                   tag =3D=3D DW_TAG_e=
+ntry_point ||
+> > +                                                   tag =3D=3D DW_TAG_s=
+ubprogram) {
+> > +                                                       a2l->funcname =
+=3D
+> > +                                                               get_die=
+name(
+> > +                                                                      =
+ parent);
+
+Why not get the function name from the abstract origin?
+
+
+> > +                                                       break;
+> > +                                               }
+> > +                                       }
+> > +
+> > +                                       a2l->filename =3D NULL;
+> > +                                       a2l->line =3D 0;
+> > +                                       if (dwarf_formudata(
+> > +                                                   dwarf_attr(die,
+> > +                                                              DW_AT_ca=
+ll_file,
+> > +                                                              &attr),
+> > +                                                   &val) =3D=3D 0)
+> > +                                               a2l->filename =3D dwarf=
+_filesrc(
+> > +                                                       files, val, NUL=
+L, NULL);
+> > +
+> > +                                       if (dwarf_formudata(
+> > +                                                   dwarf_attr(die,
+> > +                                                              DW_AT_ca=
+ll_line,
+> > +                                                              &attr),
+> > +                                                   &val) =3D=3D 0)
+> > +                                               a2l->line =3D val;
+
+We have die_get_call_file() and die_get_call_lineno().
+
+Thanks,
+Namhyung
+
+
+> > +
+> > +                                       if (a2l->filename !=3D NULL)
+> > +                                               if (inline_list__append=
+_dso_a2l(
+> > +                                                       dso, node, sym)=
+)
+> > +                                                       return 0;
+> > +                               }
+> > +                       }
+> > +               }
+> > +       }
+> > +       free(scopes);
+> > +
+> > +       return 1;
+> > +}
+> > +
+> > +static int addr2line(const char *dso_name, u64 addr, char **file,
+> > +                    unsigned int *line, struct dso *dso, bool unwind_i=
+nlines,
+> > +                    struct inline_node *node, struct symbol *sym)
+> > +{
+> > +       int ret =3D 0;
+> > +       struct a2l_data *a2l =3D dso->a2l;
+> > +
+> > +       if (!a2l) {
+> > +               dso->a2l =3D addr2line_init(dso_name);
+> > +               a2l =3D dso->a2l;
+> > +       }
+> > +
+> > +       if (a2l =3D=3D NULL) {
+> > +               if (!symbol_conf.disable_add2line_warn)
+> > +                       pr_warning("addr2line_init failed for %s\n", ds=
+o_name);
+> > +               return 0;
+> > +       }
+> > +
+> > +       a2l->addr =3D addr;
+> > +       a2l->found =3D false;
+> > +
+> > +       find_address_in_section(a2l);
+> > +
+> > +       if (!a2l->found)
+> > +               return 0;
+> > +
+> > +       if (unwind_inlines) {
+> > +               if (node && inline_list__append_dso_a2l(dso, node, sym)=
+)
+> > +                       return 0;
+> > +
+> > +               if (node && !get_inline_function(dso, node, sym))
+> > +                       return 0;
+> > +
+> > +               ret =3D 1;
+> > +       }
+> > +
+> > +       if (file) {
+> > +               *file =3D a2l->filename ? strdup(a2l->filename) : NULL;
+> > +               ret =3D *file ? 1 : 0;
+> > +       }
+> > +
+> > +       if (line)
+> > +               *line =3D (unsigned int)a2l->line;
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +void dso__free_a2l(struct dso *dso)
+> > +{
+> > +       struct a2l_data *a2l =3D dso->a2l;
+> > +
+> > +       if (!a2l)
+> > +               return;
+> > +
+> > +       addr2line_cleanup(a2l);
+> > +
+> > +       dso->a2l =3D NULL;
+> > +}
+> > +
+> > +#endif /* HAVE_LIBBFD_SUPPORT */
+> > +
+> > +#else /* HAVE_SYMBOLIZER_SUPPORT */
+> > +
+> >  static int filename_split(char *filename, unsigned int *line_nr)
+> >  {
+> >         char *sep;
+> > @@ -788,7 +1063,7 @@ void dso__free_a2l(struct dso *dso)
+> >         dso->a2l =3D NULL;
+> >  }
+> >
+> > -#endif /* HAVE_LIBBFD_SUPPORT */
+> > +#endif /* HAVE_SYMBOLIZER_SUPPORT */
+> >
+> >  static struct inline_node *addr2inlines(const char *dso_name, u64 addr=
+,
+> >                                         struct dso *dso, struct symbol =
+*sym)
+> > --
+> > 2.44.0
+> >
