@@ -1,53 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54C853E12
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Apr 2024 21:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37279548E1
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Apr 2024 21:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712005780; cv=none; b=KznSj+IhjktLmRHbYsWRU25RMZWWaP6nO5F5Wb95dB883dN/yjPg7ZWYlRr++i7+hYWpW7S9/MP0EI4M1+612CspxIyQHgn+dIyC5sS8OTJwXvqcHr4nA0VsY309HT7Tjx8HpMrHleZDNiM0E3qLo+iPJOj1AMdlppmb/o5GpEQ=
+	t=1712005782; cv=none; b=O2EVTOAZ2fk+EiomPlyPaKN2gu+A6L1Acw2v14HSAyKVoa/HyJRI2wjt8fnIe1W7cKTsPgYPudpOy11pCtrtj19+gk+WAh6AUGtzIe0LDLb/Z4NXY9RJyUbbISHQhD0LgHv/MTh1RL2Wrk0/GlxK6b0FYtkoUh8dt4bqTLAggJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712005780; c=relaxed/simple;
-	bh=CbkYWSqTBV/ai0H8pxDO6UOX2R9EiTbVQbAd27ussyg=;
+	s=arc-20240116; t=1712005782; c=relaxed/simple;
+	bh=Pr18TUxT/RGkBfSN4y1FU4Qj/IyOOGeTi1uM66NRAQ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nLQUeYAqo/WObz3m2Yr+nvh08sJjOtD7xbYTNaqbJWMAoo/gIDYG9k3N3gwJYfUX8K6yfwqYFqeLCJnnKhkUnO0MIn6yHSbvnMNA+uAWTrPecVqEJfpDQuRgKiillx1jQdOZKPDZrAa+QcbkqArD/GJFwN61Qk/RlPwPrTfqmdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZCp4G/0; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=RwdJYB1h23kaI+T1sxy4b7iNDGfMdXdH7KZMObsZuEgrW2XCdnnY33ytGwa/NA3wrTr/9VNl0YFnrMmeoGsjQE1L2EYojAnqGzc1VM3DDSuYaWrlUU55MLOqCZGtVq7SQaLdM9ccJ2c5mqEwBR9/fXLMK6284ThY9qYYZUgJ6IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Si3eKaVc; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZCp4G/0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Si3eKaVc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712005778; x=1743541778;
+  t=1712005780; x=1743541780;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CbkYWSqTBV/ai0H8pxDO6UOX2R9EiTbVQbAd27ussyg=;
-  b=VZCp4G/03WYzQeGMOgRUR7QocjgpMI+djfBHemPA4Pr9jxE+NxPE++Ps
-   AiANufGpO8dILYw5flG+iggmHXnfr7THG4vwYIskJg3Npvhzy4vSnmNLK
-   rgwbPDMNBtHfaB00xUKqVs8fEdiNajX2OuVyWFfo8b23s1nHSYTlGKUNY
-   jtZ16kbmMf+GzE39wq2eEWYdFUPZEkyw+2HMqlu3Qilb00uYWF04HoTGU
-   IFKKHLFOUX5wtUYoDomXo4m04/hR0+y2tQrKil6E3Ltt1Gb1ZV1bfiX7l
-   X0zPGJpZ1SeI2dA32k1w4J3ZDAvzbisrflm9TBJB0nZabLcVTBNdKA3Rc
+  bh=Pr18TUxT/RGkBfSN4y1FU4Qj/IyOOGeTi1uM66NRAQ4=;
+  b=Si3eKaVcgE3QDlvK/2h84eLpk0gpHp40szispP/QJQcrCY1K3OtoM80T
+   VHxWd76TLGByJkzIZ2+x2ZqwfzY+o4cWff/ycnD85BPxR5mgI7Y7vBhmB
+   CYf1pnnWevkJYYWuC/WDPW8NOpD3dnkLXOtf3EIm+di14dAtq3Cx7Wk05
+   YaSVg4kzxEZfKZdymWBcIIrAcCygDlR5iB2bSMnNl8XajmuHwUyqXWlcU
+   PaUtzhvYJTk9gpW5kHpOl3jd1Sx6Ovb7JIKimwyP5XjjdmCKK6RSe+Wba
+   yPJIgfmrEo8vMb+PbpaE8drnbahw6SB1AwzsWotoCuSPgPnTgV8Ahjzyz
    g==;
-X-CSE-ConnectionGUID: 4oD6ykhXSjKR7rOih1/OeQ==
-X-CSE-MsgGUID: 6Z42eNzsQS2UFob/WHd6FA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7015550"
+X-CSE-ConnectionGUID: /TOjvVDHTS6ArMBkTXVQSA==
+X-CSE-MsgGUID: JlAhj6bwTGuE5pUgoNnD8Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7015551"
 X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="7015550"
+   d="scan'208";a="7015551"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 14:09:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="55283630"
+   d="scan'208";a="55283633"
 Received: from tassilo.jf.intel.com ([10.54.38.190])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 14:09:35 -0700
 From: Andi Kleen <ak@linux.intel.com>
 To: linux-perf-users@vger.kernel.org
 Cc: adrian.hunter@intel.com,
 	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v6 2/3] perf, script, capstone: Add support for -F +brstackdisasm
-Date: Mon,  1 Apr 2024 14:08:04 -0700
-Message-ID: <20240401210925.209671-3-ak@linux.intel.com>
+Subject: [PATCH v6 3/3] perf script: Consolidate capstone print functions
+Date: Mon,  1 Apr 2024 14:08:05 -0700
+Message-ID: <20240401210925.209671-4-ak@linux.intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240401210925.209671-1-ak@linux.intel.com>
 References: <20240401210925.209671-1-ak@linux.intel.com>
@@ -57,308 +57,276 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Support capstone output for the -F +brstackinsn branch dump.
-The new output is enabled with the new field brstackdisasm
-This was possible before with --xed, but now also allow
-it for users that don't have xed using the builtin capstone support.
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Before:
+Consolidate capstone print functions, to reduce duplication. Amend call
+sites to use a file pointer for output, which is consistent with most
+perf tools print functions. Add print_opts with an option to print also
+the hex value of a resolved symbol+offset.
 
-perf record -b emacs -Q --batch '()'
-perf script -F +brstackinsn
-...
-          emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
-        00007f0ab2d17105        insn: 73 51
-        00007f0ab2d17107        insn: 48 89 c1
-        00007f0ab2d1710a        insn: 48 39 ca
-        00007f0ab2d1710d        insn: 73 96
-        00007f0ab2d1710f        insn: 48 8d 04 11
-        00007f0ab2d17113        insn: 48 d1 e8
-        00007f0ab2d17116        insn: 49 8d 34 c1
-        00007f0ab2d1711a        insn: 44 3a 06
-        00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        insn: 48 8d 50 01
-        00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        insn: 48 39 ca
-        00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
-
-After (perf must be compiled with capstone):
-
-perf script -F +brstackdisasm
-
-...
-           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
-        00007f0ab2d17107        movq %rax, %rcx
-        00007f0ab2d1710a        cmpq %rcx, %rdx
-        00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
-        00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
-        00007f0ab2d17113        shrq $1, %rax
-        00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
-        00007f0ab2d1711a        cmpb (%rsi), %r8b
-        00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
-        00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
-        00007f0ab2d17158        leaq 1(%rax), %rdx
-        00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
-        00007f0ab2d170f0        cmpq %rcx, %rdx
-        00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
-
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
 ---
+ tools/perf/builtin-script.c  |  43 ++++++++++-----
+ tools/perf/util/print_insn.c | 103 ++++++++++++-----------------------
+ tools/perf/util/print_insn.h |   7 ++-
+ 3 files changed, 67 insertions(+), 86 deletions(-)
 
-v2: Use brstackdisasm instead of keying of disasm
-v3: Fix fallback
----
- tools/perf/Documentation/perf-script.txt |  7 +++-
- tools/perf/builtin-script.c              | 32 +++++++++++----
- tools/perf/util/dump-insn.h              |  1 +
- tools/perf/util/print_insn.c             | 52 ++++++++++++++++++++++++
- tools/perf/util/print_insn.h             |  3 ++
- 5 files changed, 86 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 005e51df855e..ff086ef05a0c 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,9 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
-         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
--        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
- 
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-@@ -257,6 +257,9 @@ OPTIONS
- 	can’t know the next sequential instruction after an unconditional branch unless
- 	you calculate that based on its length.
- 
-+	brstackdisasm acts like brstackinsn, but will print disassembled instructions if
-+	perf is built with the capstone library.
-+
- 	The brstackoff field will print an offset into a specific dso/binary.
- 
- 	With the metric option perf script can compute metrics for
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 94946396bb6e..3acc0b79e988 100644
+index 3acc0b79e988..d8a3d2bde46a 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -136,6 +136,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- 	PERF_OUTPUT_DISASM          = 1ULL << 42,
-+	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
- };
- 
- struct perf_script {
-@@ -210,6 +211,7 @@ struct output_option {
- 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
- 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
-+	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
- };
- 
- enum {
-@@ -510,7 +512,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
-+	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
-+	    && !allow_user_set &&
- 	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
- 		       "Hint: run 'perf record -b ...'\n");
-@@ -1162,6 +1165,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
+@@ -1165,18 +1165,29 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
  	return ret;
  }
  
-+static const char *any_dump_insn(struct perf_event_attr *attr __maybe_unused,
-+			struct perf_insn *x, uint64_t ip,
-+			u8 *inbuf, int inlen, int *lenp)
-+{
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
-+	if (PRINT_FIELD(BRSTACKDISASM)) {
-+		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-+		if (p)
-+			return p;
-+	}
-+#endif
-+	return dump_insn(x, ip, inbuf, inlen, lenp);
+-static const char *any_dump_insn(struct perf_event_attr *attr __maybe_unused,
+-			struct perf_insn *x, uint64_t ip,
+-			u8 *inbuf, int inlen, int *lenp)
++static int any_dump_insn(struct perf_event_attr *attr __maybe_unused,
++			 struct perf_insn *x, uint64_t ip,
++			 u8 *inbuf, int inlen, int *lenp,
++			 FILE *fp)
+ {
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ 	if (PRINT_FIELD(BRSTACKDISASM)) {
+-		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
+-		if (p)
+-			return p;
++		int printed = fprintf_insn_asm(x->machine, x->thread, x->cpumode, x->is64bit,
++					       (uint8_t *)inbuf, inlen, ip, lenp,
++					       PRINT_INSN_IMM_HEX, fp);
++
++		if (printed > 0)
++			return printed;
+ 	}
+ #endif
+-	return dump_insn(x, ip, inbuf, inlen, lenp);
++	return fprintf(fp, "%s", dump_insn(x, ip, inbuf, inlen, lenp));
 +}
 +
++static int add_padding(FILE *fp, int printed, int padding)
++{
++	if (printed >= 0 && printed < padding)
++		printed += fprintf(fp, "%*s", padding - printed, "");
++	return printed;
+ }
+ 
  static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
-@@ -1170,7 +1187,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+@@ -1186,8 +1197,10 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+ 			    struct thread *thread)
  {
  	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
--			      dump_insn(x, ip, inbuf, len, &ilen));
-+			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
+-	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
+-			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
++	int printed = fprintf(fp, "\t%016" PRIx64 "\t", ip);
++
++	printed += add_padding(fp, any_dump_insn(attr, x, ip, inbuf, len, &ilen, fp), 30);
++	printed += fprintf(fp, "\t");
  
  	if (PRINT_FIELD(BRSTACKINSNLEN))
  		printed += fprintf(fp, "ilen: %d\t", ilen);
-@@ -1262,6 +1279,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		nr = max_blocks + 1;
- 
- 	x.thread = thread;
-+	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
- 	printed += fprintf(fp, "%c", '\n');
-@@ -1313,7 +1331,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+@@ -1330,8 +1343,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				break;
  			} else {
  				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
--						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-+						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
+-				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
+-						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
++				printed += fprintf(fp, "\t%016" PRIx64 "\t", ip);
++				printed += any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen, fp);
  				if (PRINT_FIELD(BRSTACKINSNLEN))
  					printed += fprintf(fp, "\tilen: %d", ilen);
  				printed += fprintf(fp, "\n");
-@@ -1361,7 +1379,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+@@ -1378,8 +1391,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		if (len <= 0)
  			goto out;
  		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
--			dump_insn(&x, sample->ip, buffer, len, &ilen));
-+			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
+-		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
+-			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
++		printed += fprintf(fp, "\t%016" PRIx64 "\t", sample->ip);
++		printed += any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen, fp);
  		if (PRINT_FIELD(BRSTACKINSNLEN))
  			printed += fprintf(fp, "\tilen: %d", ilen);
  		printed += fprintf(fp, "\n");
-@@ -1372,7 +1390,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+@@ -1389,8 +1402,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 	}
  	for (off = 0; off <= end - start; off += ilen) {
  		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
--				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-+				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
+-		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
+-				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
++		printed += fprintf(fp, "\t%016" PRIx64 "\t", start + off);
++		printed += any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen, fp);
  		if (PRINT_FIELD(BRSTACKINSNLEN))
  			printed += fprintf(fp, "\tilen: %d", ilen);
  		printed += fprintf(fp, "\n");
-@@ -1534,7 +1552,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, "\t\t");
- 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-+	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
- 	return printed;
-@@ -3940,7 +3958,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-+		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
-diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-index 650125061530..4a7797dd6d09 100644
---- a/tools/perf/util/dump-insn.h
-+++ b/tools/perf/util/dump-insn.h
-@@ -11,6 +11,7 @@ struct thread;
- struct perf_insn {
- 	/* Initialized by callers: */
- 	struct thread *thread;
-+	struct machine *machine;
- 	u8	      cpumode;
- 	bool	      is64bit;
- 	int	      cpu;
 diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-index 32dc9dad9cf2..8825330d435f 100644
+index 8825330d435f..931a2c5293c9 100644
 --- a/tools/perf/util/print_insn.c
 +++ b/tools/perf/util/print_insn.c
-@@ -12,6 +12,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "print_insn.h"
-+#include "dump-insn.h"
- #include "map.h"
- #include "dso.h"
- 
-@@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+@@ -72,59 +72,8 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
  	return 0;
  }
  
-+static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-+{
-+	struct addr_location al;
-+	bool printed = false;
-+
-+	if (insn->detail && insn->detail->x86.op_count == 1) {
-+		cs_x86_op *op = &insn->detail->x86.operands[0];
-+
-+		addr_location__init(&al);
-+		if (op->type == X86_OP_IMM &&
-+		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-+		    al.sym &&
-+		    al.addr < al.sym->end) {
-+			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-+					al.sym->name, al.addr - al.sym->start, op->imm);
-+			printed = true;
-+		}
-+		addr_location__exit(&al);
-+	}
-+
-+	if (!printed)
-+		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-+}
-+
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+			 u8 *inbuf, int inlen, int *lenp)
-+{
-+	int ret;
-+	int count;
-+	cs_insn *insn;
-+	csh cs_handle;
-+
-+	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-+	if (ret < 0)
-+		return NULL;
-+
-+	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-+	if (count > 0) {
-+		if (machine__normalized_is(x->machine, "x86"))
-+			dump_insn_x86(x->thread, &insn[0], x);
-+		else
-+			snprintf(x->out, sizeof(x->out), "%s %s",
-+					insn[0].mnemonic, insn[0].op_str);
-+		*lenp = insn->size;
-+		cs_free(insn, count);
-+	} else {
-+		return NULL;
-+	}
-+	return x->out;
-+}
-+
- static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
- 			     cs_insn *insn, FILE *fp)
+-static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
+-{
+-	struct addr_location al;
+-	bool printed = false;
+-
+-	if (insn->detail && insn->detail->x86.op_count == 1) {
+-		cs_x86_op *op = &insn->detail->x86.operands[0];
+-
+-		addr_location__init(&al);
+-		if (op->type == X86_OP_IMM &&
+-		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
+-		    al.sym &&
+-		    al.addr < al.sym->end) {
+-			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
+-					al.sym->name, al.addr - al.sym->start, op->imm);
+-			printed = true;
+-		}
+-		addr_location__exit(&al);
+-	}
+-
+-	if (!printed)
+-		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
+-}
+-
+-const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
+-			 u8 *inbuf, int inlen, int *lenp)
+-{
+-	int ret;
+-	int count;
+-	cs_insn *insn;
+-	csh cs_handle;
+-
+-	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
+-	if (ret < 0)
+-		return NULL;
+-
+-	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
+-	if (count > 0) {
+-		if (machine__normalized_is(x->machine, "x86"))
+-			dump_insn_x86(x->thread, &insn[0], x);
+-		else
+-			snprintf(x->out, sizeof(x->out), "%s %s",
+-					insn[0].mnemonic, insn[0].op_str);
+-		*lenp = insn->size;
+-		cs_free(insn, count);
+-	} else {
+-		return NULL;
+-	}
+-	return x->out;
+-}
+-
+-static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+-			     cs_insn *insn, FILE *fp)
++static size_t print_insn_x86(struct thread *thread, u8 cpumode, cs_insn *insn,
++			     int print_opts, FILE *fp)
  {
+ 	struct addr_location al;
+ 	size_t printed = 0;
+@@ -134,9 +83,11 @@ static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+ 
+ 		addr_location__init(&al);
+ 		if (op->type == X86_OP_IMM &&
+-		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
++		    thread__find_symbol(thread, cpumode, op->imm, &al)) {
+ 			printed += fprintf(fp, "%s ", insn[0].mnemonic);
+ 			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
++			if (print_opts & PRINT_INSN_IMM_HEX)
++				printed += fprintf(fp, " [%#" PRIx64 "]", op->imm);
+ 			addr_location__exit(&al);
+ 			return printed;
+ 		}
+@@ -159,39 +110,53 @@ static bool is64bitip(struct machine *machine, struct addr_location *al)
+ 		machine__normalized_is(machine, "s390");
+ }
+ 
+-size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+-				struct machine *machine, FILE *fp,
+-				struct addr_location *al)
++ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpumode,
++			 bool is64bit, const uint8_t *code, size_t code_size,
++			 uint64_t ip, int *lenp, int print_opts, FILE *fp)
+ {
+-	csh cs_handle;
++	size_t printed;
+ 	cs_insn *insn;
++	csh cs_handle;
+ 	size_t count;
+-	size_t printed = 0;
+ 	int ret;
+-	bool is64bit = is64bitip(machine, al);
+ 
+ 	/* TODO: Try to initiate capstone only once but need a proper place. */
+ 	ret = capstone_init(machine, &cs_handle, is64bit);
+-	if (ret < 0) {
+-		/* fallback */
+-		return sample__fprintf_insn_raw(sample, fp);
+-	}
++	if (ret < 0)
++		return ret;
+ 
+-	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
+-			  sample->ip, 1, &insn);
++	count = cs_disasm(cs_handle, code, code_size, ip, 1, &insn);
+ 	if (count > 0) {
+ 		if (machine__normalized_is(machine, "x86"))
+-			printed += print_insn_x86(sample, thread, &insn[0], fp);
++			printed = print_insn_x86(thread, cpumode, &insn[0], print_opts, fp);
+ 		else
+-			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
++			printed = fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
++		if (lenp)
++			*lenp = insn->size;
+ 		cs_free(insn, count);
+ 	} else {
+-		printed += fprintf(fp, "illegal instruction");
++		printed = -1;
+ 	}
+ 
+ 	cs_close(&cs_handle);
+ 	return printed;
+ }
++
++size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
++				struct machine *machine, FILE *fp,
++				struct addr_location *al)
++{
++	bool is64bit = is64bitip(machine, al);
++	ssize_t printed;
++
++	printed = fprintf_insn_asm(machine, thread, sample->cpumode, is64bit,
++				   (uint8_t *)sample->insn, sample->insn_len,
++				   sample->ip, NULL, 0, fp);
++	if (printed < 0)
++		return sample__fprintf_insn_raw(sample, fp);
++
++	return printed;
++}
+ #else
+ size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
+ 				struct thread *thread __maybe_unused,
 diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-index 6447dd41b543..c2a6391a45ce 100644
+index c2a6391a45ce..07d11af3fc1c 100644
 --- a/tools/perf/util/print_insn.h
 +++ b/tools/perf/util/print_insn.h
-@@ -8,9 +8,12 @@
- struct perf_sample;
- struct thread;
+@@ -10,10 +10,13 @@ struct thread;
  struct machine;
-+struct perf_insn;
+ struct perf_insn;
  
++#define PRINT_INSN_IMM_HEX		(1<<0)
++
  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
  				struct machine *machine, FILE *fp, struct addr_location *al);
  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-+const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-+                         u8 *inbuf, int inlen, int *lenp);
+-const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
+-                         u8 *inbuf, int inlen, int *lenp);
++ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpumode,
++			 bool is64bit, const uint8_t *code, size_t code_size,
++			 uint64_t ip, int *lenp, int print_opts, FILE *fp);
  
  #endif /* PERF_PRINT_INSN_H */
 -- 
