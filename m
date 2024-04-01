@@ -1,78 +1,71 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3309D8F7A
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Apr 2024 06:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC87947A5D;
+	Mon,  1 Apr 2024 16:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711952901; cv=none; b=tIc0WyMz1YJKlCrdhYkgenMfzL3b9uG1vnCLqlhC1/+a+pvp2HJjfqnzZBtN6jJe6PzYOj12wSwuIDReGFKluhATxEg4IJ25dUQY0Q2390A0YoA2QZD9o6cp2gZUFr9nH2/GPerxfyGml2zI87Or6+rF/wCVNhyTK1W+iQkM7Nc=
+	t=1711987704; cv=none; b=dH5y/El147Ff4ZZLj9WU+U2QCLF0zeD4G2260ukxvBGBOU3TMtcHthv179aaw/vwmacFP1aTj73zIo9/ooYXhsMOUa0PjS/i7HzmioCyRQgxazq3k6YksKIYDBVzFuSv1qR7YyvGpCHWUd+t5PZsPxJHGKPWoJAtEFx4q6n+27U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711952901; c=relaxed/simple;
-	bh=DQXvKpO1rEy2B5qFpeFFi2Ewi9nm8JCW+OWHChzWmT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LKAQy9cvYW4tDMzNttxUDCt92P4U8FhRNMkUPsVWxU3XmnQEERPuO5JQBjEM3cxzUMa/ZPRmjxdR8cgw+oiTd/bJ3itEeHN2I0mLX9K27IlAKpChsrrb8qeuy8NR5TZOZNqB4DwUHkg1Afa1unSh8OwhMzo/X57kODGDI0RPksU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bioxSWDa; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1711987704; c=relaxed/simple;
+	bh=9bITHKZ5rO+1vTGvp2y8QmNzKURvjczM+SpfxLPcY04=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gbD3+deRm2ol4LGKkO/12b9Sze6WQ6e2RibK+i/RiBHGxadM5yaxWg9lyNyQD0TZ0OASZG6NUoCrBSzgnp33Xxr+W5k1I1stP8etAs4Za/UlB70hPOdoJ5BvGoUt3TE2Eu/peGzNWNl3XbDO3Z6CQ5ApvFOAVBbv9JManyzprLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwJkdrvc; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bioxSWDa"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c3ca3c3bbaso2281428b6e.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 Mar 2024 23:28:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwJkdrvc"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso2793745a12.3;
+        Mon, 01 Apr 2024 09:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711952898; x=1712557698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSf2vAhcQ3pOxdj1mWuxA0G409t04uxcVataEyECxYU=;
-        b=bioxSWDay2QAdh8dFGYD9XUsqPRVmO7xO1CJt9yMviHxRgab2VqmTrH1bipOT4b8VH
-         P2fZdEpzcqGQbvm6BriWs/RflBtoMFFAa2leGSIxub2qkLoWowhaKYAiUI395lb8RT8N
-         WjZ4exVweErNnvpBFjsYyd/MXSdH8jF4gwlenSJltMoOgLry/y3GpYdWIbadARB1BalX
-         zcV38vt2vR2TchZ4EwwBlesVs9bNLycF9Xz4B3tbl4rmdJxbN8p5pe8VzfUDLgUOtdDU
-         6yeVO8S3hqnGcuswdLOeMwcxVliphNFmjC4gc9XjLlgIx71s0hiatx2cegVyiMP8FUVq
-         MdzQ==
+        d=gmail.com; s=20230601; t=1711987702; x=1712592502; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5kTVCa0PGqApTZDHgKJ/qHVy7JMqS/3uydjX9OHDJj4=;
+        b=iwJkdrvcqfnF1ConhAmI2zfmw2ksZLe+HSDYdnqo1ttHibuJcD4GLTjeMtMFi3l/U3
+         5Dum/b8hYZ8SW2+i3NvV1qsZkocy2LIl6SSyrnpIA4queMtAjL4/01XYyg1GmVAFnzOX
+         l57h7XGt7dd3VIB6acubDZ+shBFVkPJwVLz5MDexW/zu16FtqMAW4MipzeTLGLb1xIrl
+         y/KgjCU6UdqkUDzsjtazZ8bPAHiUAIIs/ZmBKukjXdVk3D6tTWKZlRGyFwbOZKeRA+Ta
+         XG0tfDp1Bu/hEA1XFEDzh7fXc/zZGkBn0L3u4JneYqoL4zh0kQ0zACz8FhuWdU48P8OT
+         EB/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711952898; x=1712557698;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hSf2vAhcQ3pOxdj1mWuxA0G409t04uxcVataEyECxYU=;
-        b=bLnWkp5mGEv4mkhdzjVLjvmBWSGPcWfosTHkgq3pfBVNtBS5p5/Z5KMSCQo4iHChHK
-         VlbcDXWSQtr/aLUUDVTApdz1swVAIi2HpN6xuAXDYP7z3aGMBUo1D3zEWkwpOSC+tpIe
-         x+IMk60OGRZF1vgqlh/Smgniq2IesPr2SmWHVVTfLsqTpSxn1EuP5YeJ0+N8q4pGq7es
-         mlFO/ESMaCKqr9P2pJ0zbpIsMUkyQE+7HDXR4TYIPH9QfyQ+fYiSHNb6wKqpVZXAFGLw
-         pbyfG7zhVDuOZn5oLIpSbI9v/qIgmUET2epfrNXtlD6UeDCI6WcQdIqJ7/vosR+MG3u4
-         BW9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVLoAVbeXxlZZTIzK5CJtJX0BuyoGVz7QAng2eHEiVhFpku94QbKWo8AYyjAN++0QRbJA+qB6r4N2DGVaxcYuE+2nQLzM72HOCF6yWJnkHhQQ==
-X-Gm-Message-State: AOJu0YxtKcUU4E01hTBMyofF2wipRDBgL9NAblZdW2EnzyyyE5/HZuM9
-	CBoIL/HckaLCtkdHlHWU+CXhkmt8qX/YUdjHdvmP8lxdnctpNNgjin8gapwZxA8=
-X-Google-Smtp-Source: AGHT+IFE4zFY5oDG3RDXbEPGYCxij5ssu6TmeNR7lKTyF0VXFdu13aY+9lvDD8LviyQ8f/HKbT1wxg==
-X-Received: by 2002:a05:6808:3196:b0:3c3:df89:c220 with SMTP id cd22-20020a056808319600b003c3df89c220mr10728948oib.19.1711952898121;
-        Sun, 31 Mar 2024 23:28:18 -0700 (PDT)
-Received: from ubuntu20.04 ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id y15-20020a056a00038f00b006e6b2ba1577sm7102001pfs.138.2024.03.31.23.28.12
+        d=1e100.net; s=20230601; t=1711987702; x=1712592502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5kTVCa0PGqApTZDHgKJ/qHVy7JMqS/3uydjX9OHDJj4=;
+        b=MPL4fQT4mjwvpUe7+1MhX3+0syowr9D6VX99jQs99Tt+c5t2imc0HAepnCHSCLhTCD
+         SLw3UXmeP76KGTKJ0LuZeHEf+EfeSkb9Fa8PYSMw1VsYHPxkh05gXJMOfP9ZmHCC5wOl
+         jhSb/F7rMSABreSLO+pVCD18zdBP/nD60YTby050K0kM3RQnP1uQVWnXsWvUi5MtEZzp
+         CIUr+Xv1a8yZSuvlqtZHVuR078DOUcvNVleFKZNGevCn7vepwS1vDBIWF5koFGQB4mbD
+         YpbFvz7hgGOhDU4WuMQvsAA66BYv3QB1NMR8JzxLHAK00/TMbp+gbEjjHXi9lroCo2WZ
+         cS0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWz/f/MoUY5fOm0jnTrkx8jDqQ9uBoLSlgFkaYhZ2zZFzdTqSLUIhyxqjth6jIL7pa1/eOyWem7grBaJOELBhRRLD8ScvFcK28u4lO3
+X-Gm-Message-State: AOJu0Yx8LxVUeSVHNf7EaKRgglEanhGUJQguiGNJmh316yydt4nj3UY9
+	wDJsBqgq8pvnRPgA81Wz7fWPXmzYHO4aVarZqHFm1/9T9vZvKFLW
+X-Google-Smtp-Source: AGHT+IGm3n+Mqa4BLC3iAKPWt10ze4VMKaXtAR7PZV3YAWTIuLaSuAgIgaToGDRoBs/wJhNKC4ohEg==
+X-Received: by 2002:a17:90a:db58:b0:29f:6a6f:c42 with SMTP id u24-20020a17090adb5800b0029f6a6f0c42mr7225599pjx.13.1711987702160;
+        Mon, 01 Apr 2024 09:08:22 -0700 (PDT)
+Received: from tx3000mach.io (static.220.238.itcsa.net. [190.15.220.238])
+        by smtp.gmail.com with ESMTPSA id f11-20020a17090ac28b00b002a058af5e12sm10132244pjt.12.2024.04.01.09.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Mar 2024 23:28:17 -0700 (PDT)
-From: Yang Jihong <yangjihong@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org,
+        Mon, 01 Apr 2024 09:08:21 -0700 (PDT)
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: yangjihong@bytedance.com
-Subject: [PATCH v2 2/2] perf evsel: Use evsel__name_is() helper
-Date: Mon,  1 Apr 2024 14:27:24 +0800
-Message-Id: <20240401062724.1006010-3-yangjihong@bytedance.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240401062724.1006010-1-yangjihong@bytedance.com>
-References: <20240401062724.1006010-1-yangjihong@bytedance.com>
+Subject: [PATCH] perf srcline: Implement addr2line using libdw
+Date: Mon,  1 Apr 2024 13:08:03 -0300
+Message-ID: <20240401160805.51277-1-yakoyoku@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,251 +74,351 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
-evsel__name_is() helper.
+`perf script` can be quite slow when inlines are enabled, by default it
+spawns an `addr2line` process and communicates with it via pipes, that
+comes with a certain overhead. The other option is to build perf with
+libbfd enabled so that its methods are called directly instead, but due
+to its licensing the resulting binary cannot be redistribuited.
 
-No functional change.
+This commit adds the ability for perf to use libdw to query the source
+lines of binaries from the passed addresses. This avoids the process
+spawn overhead and because libdw is licensed dually under
+GPL-2.0-or-later and LGPL-3.0-or-later it can be distributed by
+downstream packagers. Another thing to consider is that if libdebuginfod
+was enabled for libdw then it's used to download debug info, it can be
+switched off by unsetting the `DEBUGINFOD_URLS` envvar.
 
-Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 ---
- tools/perf/builtin-kmem.c               |  2 +-
- tools/perf/builtin-sched.c              |  4 +--
- tools/perf/builtin-script.c             |  2 +-
- tools/perf/builtin-trace.c              |  4 +--
- tools/perf/tests/evsel-roundtrip-name.c |  4 +--
- tools/perf/tests/parse-events.c         | 39 +++++++++----------------
- 6 files changed, 22 insertions(+), 33 deletions(-)
+ tools/perf/Makefile.config |   7 +-
+ tools/perf/util/srcline.c  | 277 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 281 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 9714327fd0ea..6fd95be5032b 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
- 	}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 1fe8df97fe88..ab6d41e7a6b6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -947,13 +947,16 @@ ifdef BUILD_NONDISTRO
+     $(call feature_check,disassembler-init-styled)
+   endif
  
- 	evlist__for_each_entry(session->evlist, evsel) {
--		if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
-+		if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
- 		    evsel__field(evsel, "pfn")) {
- 			use_pfn = true;
- 			break;
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 1bfb22347371..0fce7d8986c0 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *sample,
- 			   struct evsel *evsel)
+-  CFLAGS += -DHAVE_LIBBFD_SUPPORT
+-  CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
++  CFLAGS += -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
++  CXXFLAGS += -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
+   ifeq ($(feature-libbfd-buildid), 1)
+     CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
+   else
+     $(warning Old version of libbfd/binutils things like PE executable profiling will not be available)
+   endif
++else ifndef NO_LIBDW_DWARF_UNWIND
++  CFLAGS += -DHAVE_SYMBOLIZER_SUPPORT
++  CXXFLAGS += -DHAVE_SYMBOLIZER_SUPPORT
+ endif
+ 
+ ifndef NO_DEMANGLE
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 7addc34afcf5..8117424137cc 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -130,6 +130,8 @@ static struct symbol *new_inline_sym(struct dso *dso,
+ 
+ #define MAX_INLINE_NEST 1024
+ 
++#ifdef HAVE_SYMBOLIZER_SUPPORT
++
+ #ifdef HAVE_LIBBFD_SUPPORT
+ 
+ /*
+@@ -372,6 +374,279 @@ void dso__free_a2l(struct dso *dso)
+ 
+ #else /* HAVE_LIBBFD_SUPPORT */
+ 
++#include <elfutils/libdwfl.h>
++#include <dwarf.h>
++
++static char *debuginfo_path = NULL;
++
++static const Dwfl_Callbacks offline_callbacks = {
++	/* We use this table for core files too.  */
++	.find_elf = dwfl_build_id_find_elf,
++	.find_debuginfo = dwfl_standard_find_debuginfo,
++	.section_address = dwfl_offline_section_address,
++	.debuginfo_path = &debuginfo_path,
++
++};
++
++struct a2l_data {
++	const char *input;
++	Dwarf_Addr addr;
++	Dwarf_Addr bias;
++
++	bool found;
++	const char *filename;
++	const char *funcname;
++	int line;
++
++	Dwfl *dwfl;
++	Dwfl_Module *mod;
++	GElf_Sym **syms;
++};
++
++static const char *get_diename(Dwarf_Die *die)
++{
++	Dwarf_Attribute attr;
++	const char *name;
++
++	name = dwarf_formstring(
++		dwarf_attr_integrate(die, DW_AT_MIPS_linkage_name, &attr) ?:
++			dwarf_attr_integrate(die, DW_AT_linkage_name, &attr));
++
++	if (name == NULL)
++		name = dwarf_diename(die) ?: "??";
++
++	return name;
++}
++
++static void find_address_in_section(struct a2l_data *a2l)
++{
++	Dwarf_Addr addr;
++	Dwfl_Line *line;
++
++	if (a2l->found)
++		return;
++
++	a2l->mod = dwfl_addrmodule(a2l->dwfl, a2l->addr);
++	if (!a2l->mod)
++		return;
++
++	dwfl_module_getdwarf(a2l->mod, &a2l->bias);
++	addr = a2l->addr + a2l->bias;
++
++	line = dwfl_module_getsrc(a2l->mod, addr);
++	if (!line)
++		line = dwfl_getsrc(a2l->dwfl, addr);
++	if (!line)
++		return;
++
++	a2l->filename = dwfl_lineinfo(line, NULL, &a2l->line, NULL, NULL, NULL);
++	a2l->funcname = dwfl_module_addrname(a2l->mod, addr);
++
++	if (a2l->filename && !strlen(a2l->filename))
++		a2l->filename = NULL;
++	else
++		a2l->found = true;
++}
++
++static struct a2l_data *addr2line_init(const char *path)
++{
++	Dwfl *dwfl;
++	struct a2l_data *a2l = NULL;
++
++	dwfl = dwfl_begin(&offline_callbacks);
++	if (!dwfl)
++		goto out;
++
++	if (dwfl_report_offline(dwfl, "", path, -1) == NULL)
++		return NULL;
++
++	a2l = zalloc(sizeof(*a2l));
++	if (a2l == NULL)
++		goto out;
++
++	a2l->dwfl = dwfl;
++	a2l->input = strdup(path);
++	if (a2l->input == NULL)
++		goto out;
++
++	if (dwfl_report_end(dwfl, NULL, NULL))
++		goto out;
++
++	return a2l;
++
++out:
++	if (a2l) {
++		zfree((char **)&a2l->input);
++		free(a2l);
++	}
++	dwfl_end(dwfl);
++	return NULL;
++}
++
++static void addr2line_cleanup(struct a2l_data *a2l)
++{
++	if (a2l->dwfl)
++		dwfl_end(a2l->dwfl);
++	zfree((char **)&a2l->input);
++	zfree(&a2l->syms);
++	free(a2l);
++}
++
++static int inline_list__append_dso_a2l(struct dso *dso,
++				       struct inline_node *node,
++				       struct symbol *sym)
++{
++	struct a2l_data *a2l = dso->a2l;
++	struct symbol *inline_sym = new_inline_sym(dso, sym, a2l->funcname);
++	char *srcline = NULL;
++
++	if (a2l->filename)
++		srcline = srcline_from_fileline(a2l->filename, a2l->line);
++
++	return inline_list__append(inline_sym, srcline, node);
++}
++
++static int get_inline_function(struct dso *dso, struct inline_node *node,
++			       struct symbol *sym)
++{
++	struct a2l_data *a2l = dso->a2l;
++	Dwarf_Addr addr = a2l->addr + a2l->bias;
++	Dwarf_Addr bias = 0;
++	Dwarf_Die *cudie = dwfl_module_addrdie(a2l->mod, addr, &bias);
++
++	Dwarf_Die *scopes = NULL;
++	int nscopes = dwarf_getscopes(cudie, addr - bias, &scopes);
++	if (nscopes < 0)
++		return 0;
++
++	if (nscopes > 0) {
++		Dwarf_Die subroutine;
++		Dwarf_Off dieoff = dwarf_dieoffset(&scopes[0]);
++		dwarf_offdie(dwfl_module_getdwarf(a2l->mod, &bias), dieoff,
++			     &subroutine);
++		free(scopes);
++		scopes = NULL;
++
++		nscopes = dwarf_getscopes_die(&subroutine, &scopes);
++		if (nscopes > 1) {
++			Dwarf_Die cu;
++			Dwarf_Files *files;
++			if (dwarf_diecu(&scopes[0], &cu, NULL, NULL) != NULL &&
++			    dwarf_getsrcfiles(cudie, &files, NULL) == 0) {
++				for (int i = 0; i < nscopes - 1; i++) {
++					Dwarf_Word val;
++					Dwarf_Attribute attr;
++					Dwarf_Die *die = &scopes[i];
++					if (dwarf_tag(die) !=
++					    DW_TAG_inlined_subroutine)
++						continue;
++
++					for (int j = i + 1; j < nscopes; j++) {
++						Dwarf_Die *parent = &scopes[j];
++						int tag = dwarf_tag(parent);
++						if (tag == DW_TAG_inlined_subroutine ||
++						    tag == DW_TAG_entry_point ||
++						    tag == DW_TAG_subprogram) {
++							a2l->funcname =
++								get_diename(
++									parent);
++							break;
++						}
++					}
++
++					a2l->filename = NULL;
++					a2l->line = 0;
++					if (dwarf_formudata(
++						    dwarf_attr(die,
++							       DW_AT_call_file,
++							       &attr),
++						    &val) == 0)
++						a2l->filename = dwarf_filesrc(
++							files, val, NULL, NULL);
++
++					if (dwarf_formudata(
++						    dwarf_attr(die,
++							       DW_AT_call_line,
++							       &attr),
++						    &val) == 0)
++						a2l->line = val;
++
++					if (a2l->filename != NULL)
++						if (inline_list__append_dso_a2l(
++							dso, node, sym))
++							return 0;
++				}
++			}
++		}
++	}
++	free(scopes);
++
++	return 1;
++}
++
++static int addr2line(const char *dso_name, u64 addr, char **file,
++		     unsigned int *line, struct dso *dso, bool unwind_inlines,
++		     struct inline_node *node, struct symbol *sym)
++{
++	int ret = 0;
++	struct a2l_data *a2l = dso->a2l;
++
++	if (!a2l) {
++		dso->a2l = addr2line_init(dso_name);
++		a2l = dso->a2l;
++	}
++
++	if (a2l == NULL) {
++		if (!symbol_conf.disable_add2line_warn)
++			pr_warning("addr2line_init failed for %s\n", dso_name);
++		return 0;
++	}
++
++	a2l->addr = addr;
++	a2l->found = false;
++
++	find_address_in_section(a2l);
++
++	if (!a2l->found)
++		return 0;
++
++	if (unwind_inlines) {
++		if (node && inline_list__append_dso_a2l(dso, node, sym))
++			return 0;
++
++		if (node && !get_inline_function(dso, node, sym))
++			return 0;
++
++		ret = 1;
++	}
++
++	if (file) {
++		*file = a2l->filename ? strdup(a2l->filename) : NULL;
++		ret = *file ? 1 : 0;
++	}
++
++	if (line)
++		*line = (unsigned int)a2l->line;
++
++	return ret;
++}
++
++void dso__free_a2l(struct dso *dso)
++{
++	struct a2l_data *a2l = dso->a2l;
++
++	if (!a2l)
++		return;
++
++	addr2line_cleanup(a2l);
++
++	dso->a2l = NULL;
++}
++
++#endif /* HAVE_LIBBFD_SUPPORT */
++
++#else /* HAVE_SYMBOLIZER_SUPPORT */
++
+ static int filename_split(char *filename, unsigned int *line_nr)
  {
- 	/* pid 0 == swapper == idle task */
--	if (strcmp(evsel__name(evsel), "sched:sched_switch") == 0)
-+	if (evsel__name_is(evsel, "sched:sched_switch"))
- 		return evsel__intval(evsel, sample, "prev_pid") == 0;
- 
- 	return sample->pid == 0;
-@@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- 	}
- 
- 	if (sched->idle_hist) {
--		if (strcmp(evsel__name(evsel), "sched:sched_switch"))
-+		if (!evsel__name_is(evsel, "sched:sched_switch"))
- 			rc = true;
- 		else if (evsel__intval(evsel, sample, "prev_pid") != 0 &&
- 			 evsel__intval(evsel, sample, "next_pid") != 0)
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37088cc0ff1b..cc981531ec00 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
- 
- 			match = 0;
- 			evlist__for_each_entry(session->evlist, pos) {
--				if (!strcmp(evsel__name(pos), evname)) {
-+				if (evsel__name_is(pos, evname)) {
- 					match = 1;
- 					break;
- 				}
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 90eaff8c0f6e..9b93807a1906 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
- 		goto out;
- 	}
- 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
--	assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__augmented_syscalls__"));
-+	assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augmented_syscalls__");
- skip_augmentation:
- #endif
- 	err = -1;
-@@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
- 	 */
- 	if (trace.syscalls.events.bpf_output) {
- 		evlist__for_each_entry(trace.evlist, evsel) {
--			bool raw_syscalls_sys_exit = strcmp(evsel__name(evsel), "raw_syscalls:sys_exit") == 0;
-+			bool raw_syscalls_sys_exit = evsel__name_is(evsel, "raw_syscalls:sys_exit");
- 
- 			if (raw_syscalls_sys_exit) {
- 				trace.raw_augmented_syscalls = true;
-diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
-index 15ff86f9da0b..1922cac13a24 100644
---- a/tools/perf/tests/evsel-roundtrip-name.c
-+++ b/tools/perf/tests/evsel-roundtrip-name.c
-@@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
- 					continue;
- 				}
- 				evlist__for_each_entry(evlist, evsel) {
--					if (strcmp(evsel__name(evsel), name)) {
-+					if (!evsel__name_is(evsel, name)) {
- 						pr_debug("%s != %s\n", evsel__name(evsel), name);
- 						ret = TEST_FAIL;
- 					}
-@@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *const names[], int nr_names)
- 			continue;
- 		}
- 		evlist__for_each_entry(evlist, evsel) {
--			if (strcmp(evsel__name(evsel), names[i])) {
-+			if (!evsel__name_is(evsel, names[i])) {
- 				pr_debug("%s != %s\n", evsel__name(evsel), names[i]);
- 				ret = TEST_FAIL;
- 			}
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index feb5727584d1..0b70451451b3 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
- 
- 	return test__checkevent_breakpoint(evlist);
+ 	char *sep;
+@@ -788,7 +1063,7 @@ void dso__free_a2l(struct dso *dso)
+ 	dso->a2l = NULL;
  }
-@@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:x:k"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"));
  
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:r:hp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp"));
+-#endif /* HAVE_LIBBFD_SUPPORT */
++#endif /* HAVE_SYMBOLIZER_SUPPORT */
  
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:w:up"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:rw:kp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint(evlist);
- }
-@@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint1"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"));
- 
- 	evsel = evsel__next(evsel);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint2"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"));
- 
- 	return TEST_OK;
- }
-@@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
- 
- 	/* cpu/config=2/u" */
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "cpu/config=2/u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=2/u"));
- 
- 	return TEST_OK;
- }
+ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ 					struct dso *dso, struct symbol *sym)
 -- 
-2.25.1
+2.44.0
 
