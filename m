@@ -1,69 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5786C83CD7
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Apr 2024 12:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2132F17582;
+	Tue,  2 Apr 2024 18:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712062563; cv=none; b=mKbTB2XMxH47qGmRK3k/8jI0Zd+GT7roPd7wTX/bN6e2Ur8TP20Eo8q2yjiHTpDpaL7oHxdG/kwpwxzZo7xtjeYsWZe9kfvzrQb0juQ2JapU+6dGILc5HJ8BGbAfVaMNRkZ9Ix7m4dVpRKscfvKFgZ+B7I1toV03NoGebr7akgA=
+	t=1712083545; cv=none; b=dHMEpn/NKomV//1EofR+uPPbCVZNKv9w8NMJZtNbAfJYhjlyT2XxzsemF4qT3fvEHjsGVNpDGNjH1oKFrW/47tf8Gw/lgxg500G7OEp1cH05I6OKPmtBcS+wpbBFBgMkFCRcttD1SIXXOhwBpyBb3pZvkso702/jcYaF2lb9P4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712062563; c=relaxed/simple;
-	bh=zN8QbrS4azbPCsghFpZd2U9tA5iFf1lkMG/47l0YA4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PoAt/Ryx59ucbofcplfGt+Qh097NY6o2vv3V5MCX8GHW45JONQ2TW7XIToYeQdOoWAdfrHjT0Oi39x7RONz81zcKKA1Wx3CifW2r/pAb6BMLi+2EUgsSLqOGWy/YN9na+GgrYA5oSagBAEKRVIXkBeJwiGEvwJZ5yagvWCs984U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fj0kHomC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712083545; c=relaxed/simple;
+	bh=HOVqg2Er+74+MeO5rrzusHbqWwKSikD0noVEquqbUw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jf5FsJbxkTSOCVMZLN86veYrc81mdKoqLMlCkV/46ytJM771QKHlP5+YOCKtiSfWKU0yveIyHz+BE4jqqO3Ee6bMUXNlTqRCneLeU5bjR+UrA2JxVw8NOqE+HsUt8BSUuj/Ght10xadtmoRSqaZWfFnhOi/GiAEEc5ERVugHNPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5Rw7oYe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fj0kHomC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712062560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z7LWvvJr0ZLeVlbglQU3vOlFLqLTXjJjluvDd3mIpGc=;
-	b=fj0kHomCx+QBfVD12G/6ClWpGqWAlqODDDI775NUdm0sWGuf2Qfz69bqU/X36fWnHzWyCD
-	zKS8BZp9FztncWR6srfIteOZTGJxivcANcX9pSYTsO7tL0XMFbxSbZcaev4H3uVBGLvDFS
-	x7y/aV3282qDG2ZhKF4Nu+2lKMLMuvw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-rp9IQ797NSqx0sgO2R02KQ-1; Tue,
- 02 Apr 2024 08:55:55 -0400
-X-MC-Unique: rp9IQ797NSqx0sgO2R02KQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3FBAA2823F33;
-	Tue,  2 Apr 2024 12:55:54 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.194.247])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 02C913C22;
-	Tue,  2 Apr 2024 12:55:50 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5Rw7oYe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C24C433C7;
+	Tue,  2 Apr 2024 18:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712083544;
+	bh=HOVqg2Er+74+MeO5rrzusHbqWwKSikD0noVEquqbUw0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U5Rw7oYeehrvzdYKOy9I4OhtE0J+OS7A91mVCv8R5+y6LyKuJBR53Mr+xm4UFuaTu
+	 Wq6l+yU83oepmkeOsyjlgZzWVXqScOin+hYP/rZi6UBevq3pSzeg4ICgPpGs5rKk1z
+	 o47A7ls168CBvGfUzOTai+KFeAs7/tx1P86j1/ebglkYz+irSk3UZo0KD1QI3PKIrn
+	 kuZOtXRBWMSU5GujaO/8qNgg7uO8hf2lE7O37NyzYkPIAUM0cP5Z3kUlIyZ7NKYWBx
+	 z6qyml6XXVy7lkPOGN/+pFLV34X0cLbwzhjuCLHQixFQmzcDY1ELv1FyCsqdDypsg7
+	 vYUW+d7YnXDAg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v1 3/3] mm: use "GUP-fast" instead "fast GUP" in remaining comments
-Date: Tue,  2 Apr 2024 14:55:16 +0200
-Message-ID: <20240402125516.223131-4-david@redhat.com>
-In-Reply-To: <20240402125516.223131-1-david@redhat.com>
-References: <20240402125516.223131-1-david@redhat.com>
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [PATCH] perf lock contention: Add a missing NULL check
+Date: Tue,  2 Apr 2024 11:45:43 -0700
+Message-ID: <20240402184543.898923-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,44 +48,43 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Let's fixup the remaining comments to consistently call that thing
-"GUP-fast". With this change, we consistently call it "GUP-fast".
+I got a report for a failure in BPF verifier on a recent kernel with
+perf lock contention command.  It checks task->sighand->siglock without
+checking if sighand is NULL or not.  Let's add one.
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+  ; if (&curr->sighand->siglock == (void *)lock)
+  265: (79) r1 = *(u64 *)(r0 +2624)     ; frame1: R0_w=trusted_ptr_task_struct(off=0,imm=0) R1_w=rcu_ptr_or_null_sighand_struct(off=0,imm=0)
+  266: (b7) r2 = 0                      ; frame1: R2_w=0
+  267: (0f) r1 += r2
+  R1 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
+  processed 164 insns (limit 1000000) max_states_per_insn 1 total_states 15 peak_states 15 mark_read 5
+  -- END PROG LOAD LOG --
+  libbpf: prog 'contention_end': failed to load: -13
+  libbpf: failed to load object 'lock_contention_bpf'
+  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
+  Failed to load lock-contention BPF skeleton
+  lock contention BPF setup failed
+  lock contention did not detect any lock contention
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- mm/filemap.c    | 2 +-
- mm/khugepaged.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 387b394754fa..c668e11cd6ef 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1810,7 +1810,7 @@ EXPORT_SYMBOL(page_cache_prev_miss);
-  * C. Return the page to the page allocator
-  *
-  * This means that any page may have its reference count temporarily
-- * increased by a speculative page cache (or fast GUP) lookup as it can
-+ * increased by a speculative page cache (or GUP-fast) lookup as it can
-  * be allocated by another user before the RCU grace period expires.
-  * Because the refcount temporarily acquired here may end up being the
-  * last refcount on the page, any page allocation must be freeable by
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 38830174608f..6972fa05132e 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1169,7 +1169,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 * huge and small TLB entries for the same virtual address to
- 	 * avoid the risk of CPU bugs in that area.
- 	 *
--	 * Parallel fast GUP is fine since fast GUP will back off when
-+	 * Parallel GUP-fast is fine since GUP-fast will back off when
- 	 * it detects PMD is changed.
- 	 */
- 	_pmd = pmdp_collapse_flush(vma, address, pmd);
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index fb54bd38e7d0..4e5914d7eeaa 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -305,7 +305,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
+ 		break;
+ 	case LCB_F_SPIN:  /* spinlock */
+ 		curr = bpf_get_current_task_btf();
+-		if (&curr->sighand->siglock == (void *)lock)
++		if (curr->sighand && &curr->sighand->siglock == (void *)lock)
+ 			return LCD_F_SIGHAND_LOCK;
+ 		break;
+ 	default:
 -- 
-2.44.0
+2.44.0.478.gd926399ef9-goog
 
