@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC69815B96D;
-	Tue,  2 Apr 2024 19:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E16A15DBC5;
+	Tue,  2 Apr 2024 20:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712087112; cv=none; b=n2adZTUyBOAQlRF0051efpj9KPj19ngk+QoGK5IYQM/Z+X+ppv1IF2QMSTH/T4ul2mXL2HlXFwz/hNKx9xbVZ/U3GlVaS1RO5LNVt/VUJtIYNcOhTAGIOQ3gDtX4/hE7Iv1lSbtPr9GXvsF+5B44xd/W+WeE5+LIe6MbWumgnsA=
+	t=1712090413; cv=none; b=e2mBIYXMyuIXdsOqNlOl0NMlogllkobIKPlt/CVglCgttL4LzH5eb4j3rPhxROAHnNigTihZT0YlAO16WSjGdG6lfnikt9Gm1MenOcS8ioaB2qUFLczGiCyc1CTzrbVWvtgu1YbEvGJ/bd+Qgp9zaTXiRrZhVk0DIpyW9N5Ugpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712087112; c=relaxed/simple;
-	bh=OCkiz1fFVyxFYnxJmcfbd3VtR/LccfvnaYWq2AE25E4=;
+	s=arc-20240116; t=1712090413; c=relaxed/simple;
+	bh=QDZNTpJuyP7aLWGIsgsagZLgjLOYqAjgx9+HQirqdUU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUuiEAVDGNOytrbFBA50Ss4LqNb/E3dhpeaR8xJez0tF0+QAGXkdaOJ7XXdU5+ElI7nPstqH/ElC6+tEo4yIbG76qB56RuyIdIaTS3mPFamlrdxgvx/J9H1vCQcHPUE+5ibUojpOV8XSlNRxzwnCSBgXUbwFIzexkTswwWSYYqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq+Sa8v/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=phIGmkgPAJVbL1wDeIcvGjyLkd3gG+JYw7yKnNVSY2Fo/HLVmKo5UUHRjZ3STqhPkHUimsNuA3vokk3FIGoQEZbdZtt4fkeqDL5AfEoWfcz+LG+G6mpALfDVOGuyKw5hOuI8f3MzUESkHhKLqiAYRE26eUvSFQEKUl3ufHrxcq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCfTRQNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq+Sa8v/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8386C433C7;
-	Tue,  2 Apr 2024 19:45:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCfTRQNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C32EC433F1;
+	Tue,  2 Apr 2024 20:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712087112;
-	bh=OCkiz1fFVyxFYnxJmcfbd3VtR/LccfvnaYWq2AE25E4=;
+	s=k20201202; t=1712090412;
+	bh=QDZNTpJuyP7aLWGIsgsagZLgjLOYqAjgx9+HQirqdUU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pq+Sa8v/DZFRLpo5wOB3lzgRngffOG2bIbOh96A2ODu1+da25MmvhPBO34uhfsVsM
-	 yJYT2wB3bq4zAFqeC26/SdFNxlsH3wnJ8FoPydgNKfxWzlXXgJenzC0ZexzbT6uydI
-	 FKHfBZl2I6dqtw8+H3CetnSSgYIq2FcvwLmxw/eLuGBagSIEZwUoL4alZILofWacta
-	 8zIuY9GYp+C9VdfSEFSkoe+vTcZoiVD14HHSU/H5iZcGD8iVeuEQGDUxmHLYg/6cJZ
-	 MapXSCNQqzPtI9iFd63z3oDcz+caakNpuFSFrcx4lAaB7URl8tH86P52mQX7pZYjhA
-	 s2N6k8upcAA5w==
-Date: Tue, 2 Apr 2024 16:45:08 -0300
+	b=OCfTRQNGK7CwcA16/gLj36P5+CX840TopJQPgiksEHuMhwe4k5ktDeorHs5+JnnV4
+	 7IWvIXOFyytRM84h2HGU2Oi3tA7Fkskp4IMbSgrkzP6zbmacT33vmeY0hV6igvF0su
+	 zveS1PuBndJyZO4QaS8RtKp9a0mCUfC0vsxHDPoFa1NWGHOMXmut6gyEuUjUv7fdsJ
+	 1Z1H0QcGv1/iy8ICihNbBsL2+TgQYYll+z+aEXqrvpCNMZzrKXpw6K7WBNEcROt44M
+	 JACSMG9y8LbN1fz612F2SrG7dwWhVSQcgbtv8IklbSM3p2eaFRXTssi50FS05YfZIe
+	 RIS9qnHvdZmZg==
+Date: Tue, 2 Apr 2024 17:40:09 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH] perf lock contention: Add a missing NULL check
-Message-ID: <ZgxgRJdFlwfESwKF@x1>
-References: <20240402184543.898923-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf annotate: Get rid of duplicate --group option
+ item
+Message-ID: <ZgxtKVSwAbFXK01k@x1>
+References: <20240322224313.423181-1-namhyung@kernel.org>
+ <9cfa43c3-3698-455c-8a2f-85c30470733c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,53 +48,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240402184543.898923-1-namhyung@kernel.org>
+In-Reply-To: <9cfa43c3-3698-455c-8a2f-85c30470733c@linux.intel.com>
 
-On Tue, Apr 02, 2024 at 11:45:43AM -0700, Namhyung Kim wrote:
-> I got a report for a failure in BPF verifier on a recent kernel with
-> perf lock contention command.  It checks task->sighand->siglock without
-> checking if sighand is NULL or not.  Let's add one.
+On Mon, Mar 25, 2024 at 09:56:50AM -0400, Liang, Kan wrote:
 > 
->   ; if (&curr->sighand->siglock == (void *)lock)
->   265: (79) r1 = *(u64 *)(r0 +2624)     ; frame1: R0_w=trusted_ptr_task_struct(off=0,imm=0) R1_w=rcu_ptr_or_null_sighand_struct(off=0,imm=0)
->   266: (b7) r2 = 0                      ; frame1: R2_w=0
->   267: (0f) r1 += r2
->   R1 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
->   processed 164 insns (limit 1000000) max_states_per_insn 1 total_states 15 peak_states 15 mark_read 5
->   -- END PROG LOAD LOG --
->   libbpf: prog 'contention_end': failed to load: -13
->   libbpf: failed to load object 'lock_contention_bpf'
->   libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
->   Failed to load lock-contention BPF skeleton
->   lock contention BPF setup failed
->   lock contention did not detect any lock contention
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> On 2024-03-22 6:43 p.m., Namhyung Kim wrote:
+> > The options array in cmd_annotate() has duplicate --group options.  It
+> > only needs one and let's get rid of the other.
+> > 
+> >   $ perf annotate -h 2>&1 | grep group
+> >         --group           Show event group information together
+> >         --group           Show event group information together
+> > 
+> > Fixes: 7ebaf4890f63 ("perf annotate: Support '--group' option")
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> For the series,
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+For 'b4' sake, next time please send the Reviewed-by to the cover letter
+in the series so that it picks your Reviewed-by for all patches, not
+just for the one that you replied to, as in this case.
 
-Are you going to have this merged into perf-tools?
+I'm adding it to this whole series,
 
-A Fixes: tag isn't perhaps needed as it worked in the past?
+Thanks!
 
 - Arnaldo
-
-> ---
->  tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index fb54bd38e7d0..4e5914d7eeaa 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -305,7 +305,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
->  		break;
->  	case LCB_F_SPIN:  /* spinlock */
->  		curr = bpf_get_current_task_btf();
-> -		if (&curr->sighand->siglock == (void *)lock)
-> +		if (curr->sighand && &curr->sighand->siglock == (void *)lock)
->  			return LCD_F_SIGHAND_LOCK;
->  		break;
->  	default:
-> -- 
-> 2.44.0.478.gd926399ef9-goog
