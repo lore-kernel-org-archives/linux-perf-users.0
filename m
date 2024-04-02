@@ -1,547 +1,292 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAC255C3B;
-	Mon,  1 Apr 2024 23:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5331A3FB14;
+	Tue,  2 Apr 2024 08:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712014292; cv=none; b=CkbR/bTdFq6CFSb8erpyB9ir8Hn7fc+Vgga/n0GrQ3db2f/siGks6Mz6AjpycccnB8zBdTu3+Q5s8xSHGo/VJy/qUTId4AY4ntS6NCki6NnBRllBvCOZsOD4jftDadOFSAf0YCNp3Ok9ZcEdYWxKl5MmdU/01+Mphni4h6e4oUw=
+	t=1712047456; cv=none; b=EKlmClSB9g58b6FqVqvlZgxZvWm+ToLownvJvZECQuWaBkjffmiC5W/bkrXOHRg4DTOvUApHXZqYBHkJMqxkv2yuaETF/zW4zJHo4x+A4Rl8hpa+6BTBgm71Y7C+5WKZ0Uyn5gIGUKPAzEeb2sMTDc1spjQK5prbYd7h9ATx3nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712014292; c=relaxed/simple;
-	bh=W9Rd3Vg90HSyochB1c8eX8D31ta8C0k+c1YAiursWOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hZ3m7Wn4rMdkX2025OiMZZVYtfY5J32ecUiJZUfwVgASn+TUXtIlGSgSGA5x63t0zhgrM1Zc/lXhsIUftlTq85O/qaZSaTU8IRERWJ/1ZZRr+MIbE7zTG6HA+tZkC8TIOL1AXuKqmL1VZZXWw9GlxGnY/cDXgJjnZlCmN0RiNuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so2461033a12.3;
-        Mon, 01 Apr 2024 16:31:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712014290; x=1712619090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kyRsGRAwNFsxUGN4nIP6zyyeaRDG9dHknKxTE5z7gR0=;
-        b=lp4YobQTI4WYiwRdnssDHWR0WzbryiEeXdulz98m+CSGYy36QCMs5dg0jnVrvTh/HG
-         M8UcryqlbO2OIINQYFphF4DdTuueDw9vUrJamtvFX1NnL1+7zueBiZ9rkK8LjgyHKWlH
-         2rfplynrE8h+lomsec5z7OgqpxU8O6q6NFphS9riQuiuNvkozSNS5PqJi53cRfPs80XT
-         mjkc8IjviavqU4coqgInCsBp1wS9+y/TMGbAc6AsDBIP6Eeytcbe5fClRUrwVH0CLi0c
-         UHysC+3C4XPlgh1YG53i06wNw8ypiacr4UhrRtk/i9z7owUaHin2GPnydXzp4ZrhLEd1
-         9Lew==
-X-Forwarded-Encrypted: i=1; AJvYcCUrIyuD4sn9w0zKFTy/y2lS8bxj5pVYR2QZoTAIsYgHcm6inySS80TZHY9erCCiHwJM8C16N/KMckcuLuxHqMPPeVJiNDB+Jr+quYi1VYNBGKh4cGDV2tUPJhl4uFdg2SeQpsbuEz70DYs6oKEwVg==
-X-Gm-Message-State: AOJu0Yxk8lBRQlnbdkEomiWWRB66+1jRiIRNZEB8TVxwwbnCGLmSKP9v
-	mYg2QEWfq1zjiBXJ289iucva9BGdUrJMF2HS2I5nnY9m6X0KPMsNVHDuEEgtHzjrIEyhoUno5wy
-	IshMP7Zt1/kFUNO/W5YMcGgIPgtY=
-X-Google-Smtp-Source: AGHT+IHUcj7bvvOAZ4jdASGxpoQpJwHl+eeiUqNOo7akmbttuzadQVwSi31YMAvfAdXehQ+GUFWlh/h7CiuRkBgK7CM=
-X-Received: by 2002:a17:903:11d1:b0:1e0:a8b8:aba3 with SMTP id
- q17-20020a17090311d100b001e0a8b8aba3mr14714827plh.35.1712014289753; Mon, 01
- Apr 2024 16:31:29 -0700 (PDT)
+	s=arc-20240116; t=1712047456; c=relaxed/simple;
+	bh=2QS9C22Nsp15QOTHapTYNst3qyOy0U2BUE2u6hPUunw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oQ5y8P7ZY9UQARBnG1B8kwN/sd2GUYA88FM1kT0lfHmMeSu7+fkjwDFIJJdQE2u0CboI+eoNqsA5tAXOD47TFhjGfcTRv1TYJgteBliD9zOii0DFrObT4Xobpd99DZUTt22Y3vkitgVkdvNarGorW0kY+bkUXUPDSAAK8vOZ1tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxvutRxQtmXEIiAA--.13043S3;
+	Tue, 02 Apr 2024 16:44:01 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLBNOxQtmGa9xAA--.23906S2;
+	Tue, 02 Apr 2024 16:43:58 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: Ming Wang <wangming01@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf kvm: Add kvm-stat for loongarch64
+Date: Tue,  2 Apr 2024 16:43:58 +0800
+Message-Id: <20240402084358.205003-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401160805.51277-1-yakoyoku@gmail.com> <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 1 Apr 2024 16:31:18 -0700
-Message-ID: <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
-Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
-To: Ian Rogers <irogers@google.com>
-Cc: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxLBNOxQtmGa9xAA--.23906S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hello,
+Add support for 'perf kvm stat' on loongarch64 platform, now only
+kvm exit event is supported.
 
-On Mon, Apr 1, 2024 at 9:56=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Mon, Apr 1, 2024 at 9:08=E2=80=AFAM Martin Rodriguez Reboredo
-> <yakoyoku@gmail.com> wrote:
-> >
-> > `perf script` can be quite slow when inlines are enabled, by default it
-> > spawns an `addr2line` process and communicates with it via pipes, that
-> > comes with a certain overhead. The other option is to build perf with
-> > libbfd enabled so that its methods are called directly instead, but due
-> > to its licensing the resulting binary cannot be redistribuited.
-> >
-> > This commit adds the ability for perf to use libdw to query the source
-> > lines of binaries from the passed addresses. This avoids the process
-> > spawn overhead and because libdw is licensed dually under
-> > GPL-2.0-or-later and LGPL-3.0-or-later it can be distributed by
-> > downstream packagers. Another thing to consider is that if libdebuginfo=
-d
-> > was enabled for libdw then it's used to download debug info, it can be
-> > switched off by unsetting the `DEBUGINFOD_URLS` envvar.
+Here is example output about "perf kvm --host stat report" command
 
-Thanks for doing this!  Yep, we could unset the env temporarily.
+       Event name   Samples   Sample%    Time (ns)   Time%  Mean Time (ns)
+     Memory store     73427    50.00%    630743820  10.00%            8590
+      Memory read     36110    24.00%    109129170   1.00%            3022
+  Privilege Error     18921    12.00%   5231868450  87.00%          276511
+        Interrupt     10214     6.00%     13674060   0.00%            1338
+        Hypercall      5043     3.00%     14121450   0.00%            2800
+      FP Disabled      1850     1.00%      2798020   0.00%            1512
+           Ifecth       813     0.00%      2035340   0.00%            2503
+    Memory modify       362     0.00%       633070   0.00%            1748
+    LASX Disabled         3     0.00%         5440   0.00%            1813
+     LSX Disabled         2     0.00%         2670   0.00%            1335
 
-As a general comment, perf has some helper functions for libdw
-in util/dwarf-aux.[ch].  Please take a look and use/update them.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ tools/perf/arch/loongarch/Makefile        |  1 +
+ tools/perf/arch/loongarch/util/Build      |  2 +
+ tools/perf/arch/loongarch/util/header.c   | 85 ++++++++++++++++++++
+ tools/perf/arch/loongarch/util/kvm-stat.c | 98 +++++++++++++++++++++++
+ 4 files changed, 186 insertions(+)
+ create mode 100644 tools/perf/arch/loongarch/util/header.c
+ create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
 
-> >
-> > Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
->
-> Awesome sauce! Namhyung was just mentioning the idea to do this to me.
-> I wonder when this lands we can just work to remove all of the
-> BUILD_NONDISTRO options, namely libbfd, libiberty, etc. I suspect we
-> have dead/broken code hiding there.
->
-> > ---
-> >  tools/perf/Makefile.config |   7 +-
-> >  tools/perf/util/srcline.c  | 277 ++++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 281 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index 1fe8df97fe88..ab6d41e7a6b6 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -947,13 +947,16 @@ ifdef BUILD_NONDISTRO
-> >      $(call feature_check,disassembler-init-styled)
-> >    endif
-> >
-> > -  CFLAGS +=3D -DHAVE_LIBBFD_SUPPORT
-> > -  CXXFLAGS +=3D -DHAVE_LIBBFD_SUPPORT
-> > +  CFLAGS +=3D -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
-> > +  CXXFLAGS +=3D -DHAVE_LIBBFD_SUPPORT -DHAVE_SYMBOLIZER_SUPPORT
->
-> What does SYMBOLIZER mean in this context? Shouldn't the code be gated
-> on say a HAVE_LIBDW?
->
-> >    ifeq ($(feature-libbfd-buildid), 1)
-> >      CFLAGS +=3D -DHAVE_LIBBFD_BUILDID_SUPPORT
-> >    else
-> >      $(warning Old version of libbfd/binutils things like PE executable=
- profiling will not be available)
-> >    endif
-> > +else ifndef NO_LIBDW_DWARF_UNWIND
-> > +  CFLAGS +=3D -DHAVE_SYMBOLIZER_SUPPORT
-> > +  CXXFLAGS +=3D -DHAVE_SYMBOLIZER_SUPPORT
-> >  endif
-> >
-> >  ifndef NO_DEMANGLE
-> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> > index 7addc34afcf5..8117424137cc 100644
-> > --- a/tools/perf/util/srcline.c
-> > +++ b/tools/perf/util/srcline.c
-> > @@ -130,6 +130,8 @@ static struct symbol *new_inline_sym(struct dso *ds=
-o,
-> >
-> >  #define MAX_INLINE_NEST 1024
-> >
-> > +#ifdef HAVE_SYMBOLIZER_SUPPORT
-> > +
-> >  #ifdef HAVE_LIBBFD_SUPPORT
-> >
-> >  /*
-> > @@ -372,6 +374,279 @@ void dso__free_a2l(struct dso *dso)
-> >
-> >  #else /* HAVE_LIBBFD_SUPPORT */
-> >
-> > +#include <elfutils/libdwfl.h>
-> > +#include <dwarf.h>
-> > +
-> > +static char *debuginfo_path =3D NULL;
-> > +
-> > +static const Dwfl_Callbacks offline_callbacks =3D {
-> > +       /* We use this table for core files too.  */
-> > +       .find_elf =3D dwfl_build_id_find_elf,
-> > +       .find_debuginfo =3D dwfl_standard_find_debuginfo,
-> > +       .section_address =3D dwfl_offline_section_address,
-> > +       .debuginfo_path =3D &debuginfo_path,
-> > +
-> > +};
-> > +
-> > +struct a2l_data {
->
-> Perhaps libdw_a2l_data to avoid confusion with data used for forked
-> addr2line. Could you comment the variables? Names like "input" are
-> fairly generic so you could provide an example of what their values
-> are. It is also useful to comment when something like a string is
-> owned by the struct, so that cleaning it up can be checked.
->
-> > +       const char *input;
-> > +       Dwarf_Addr addr;
-> > +       Dwarf_Addr bias;
-> > +
-> > +       bool found;
-> > +       const char *filename;
-> > +       const char *funcname;
-> > +       int line;
->
-> Moving "found" and "line" later will avoid padding. As this data is
-> attached to a DSO, does there need to be some kind of locking protocol
-> for >1 symbolizing the same DSO? Perhaps these should be filled in as
-> out arguments to avoid this kind of complexity.
+diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+index c392e7af4743..c8be64c5cdb4 100644
+--- a/tools/perf/arch/loongarch/Makefile
++++ b/tools/perf/arch/loongarch/Makefile
+@@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS := 1
+ endif
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+ PERF_HAVE_JITDUMP := 1
++HAVE_KVM_STAT_SUPPORT := 1
+ 
+ #
+ # Syscall table generation for perf
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+index d776125a2d06..e1a13761037b 100644
+--- a/tools/perf/arch/loongarch/util/Build
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -1,5 +1,7 @@
+ perf-y += perf_regs.o
++perf-y += header.o
+ 
++perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+ perf-$(CONFIG_DWARF)     += dwarf-regs.o
+ perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
+new file mode 100644
+index 000000000000..8f7061cf6977
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/header.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Implementation of get_cpuid().
++ *
++ * Author: Nikita Shubin <n.shubin@yadro.com>
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <api/fs/fs.h>
++#include <errno.h>
++#include "util/debug.h"
++#include "util/header.h"
++
++#define CPUINFO_MODEL	"Model Name"
++#define CPUINFO		"/proc/cpuinfo"
++
++static char *_get_field(const char *line)
++{
++	char *line2, *nl;
++
++	line2 = strrchr(line, ' ');
++	if (!line2)
++		return NULL;
++
++	line2++;
++	nl = strrchr(line, '\n');
++	if (!nl)
++		return NULL;
++
++	return strndup(line2, nl - line2);
++}
++
++static char *_get_cpuid(void)
++{
++	char *line = NULL;
++	char *model = NULL;
++	char *cpuid = NULL;
++	int read;
++	unsigned long line_sz;
++	FILE *cpuinfo;
++
++	cpuinfo = fopen(CPUINFO, "r");
++	if (cpuinfo == NULL)
++		return cpuid;
++
++	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
++		if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL)))
++			continue;
++
++		model = _get_field(line);
++		if (!model)
++			goto free;
++		break;
++	}
++
++	if (asprintf(&cpuid, "%s", model) < 0)
++		cpuid = NULL;
++
++free:
++	fclose(cpuinfo);
++	free(model);
++	return cpuid;
++}
++
++int get_cpuid(char *buffer, size_t sz)
++{
++	char *cpuid = _get_cpuid();
++	int ret = 0;
++
++	if (sz < strlen(cpuid)) {
++		ret = -EINVAL;
++		goto free;
++	}
++
++	scnprintf(buffer, sz, "%s", cpuid);
++free:
++	free(cpuid);
++	return ret;
++}
++
++char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
++{
++	return _get_cpuid();
++}
+diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/arch/loongarch/util/kvm-stat.c
+new file mode 100644
+index 000000000000..c69ab40e3ba6
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/kvm-stat.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <errno.h>
++#include <memory.h>
++#include <errno.h>
++#include "util/kvm-stat.h"
++#include "util/parse-events.h"
++#include "util/debug.h"
++#include "util/evsel.h"
++#include "util/evlist.h"
++#include "util/pmus.h"
++
++#define LOONGARCH_EXCEPTION_INT		0
++#define LOONGARCH_EXCEPTION_PIL		1
++#define LOONGARCH_EXCEPTION_PIS		2
++#define LOONGARCH_EXCEPTION_PIF		3
++#define LOONGARCH_EXCEPTION_PME		4
++#define LOONGARCH_EXCEPTION_PNR		5
++#define LOONGARCH_EXCEPTION_PNX		6
++#define LOONGARCH_EXCEPTION_PPI		7
++#define LOONGARCH_EXCEPTION_FPD		15
++#define LOONGARCH_EXCEPTION_SXD		16
++#define LOONGARCH_EXCEPTION_ASXD	17
++#define LOONGARCH_EXCEPTION_GSPR	22
++#define LOONGARCH_EXCEPTION_HVC		23
++#define LOONGARCH_EXCEPTION_GCM		24
++
++#define loongarch_exception_type				\
++	{LOONGARCH_EXCEPTION_INT,  "Interrupt" },		\
++	{LOONGARCH_EXCEPTION_PIL,  "Memory read" },		\
++	{LOONGARCH_EXCEPTION_PIS,  "Memory store" },		\
++	{LOONGARCH_EXCEPTION_PIF,  "Ifecth" },			\
++	{LOONGARCH_EXCEPTION_PME,  "Memory modify" },		\
++	{LOONGARCH_EXCEPTION_PNR,  "Memory NR" },		\
++	{LOONGARCH_EXCEPTION_PNX,  "Memory NX" },		\
++	{LOONGARCH_EXCEPTION_PPI,  "Memory Privilege" },	\
++	{LOONGARCH_EXCEPTION_FPD,  "FP Disabled" },		\
++	{LOONGARCH_EXCEPTION_SXD,  "LSX Disabled" },		\
++	{LOONGARCH_EXCEPTION_ASXD, "LASX Disabled" },		\
++	{LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },		\
++	{LOONGARCH_EXCEPTION_HVC,  "Hypercall" },		\
++	{LOONGARCH_EXCEPTION_GCM,  "CSR modified" }
++
++define_exit_reasons_table(loongarch_exit_reasons, loongarch_exception_type);
++
++const char *vcpu_id_str = "vcpu_id";
++const char *kvm_exit_reason = "reason";
++const char *kvm_entry_trace = "kvm:kvm_enter";
++const char *kvm_reenter_trace = "kvm:kvm_reenter";
++const char *kvm_exit_trace = "kvm:kvm_exit";
++
++const char *kvm_events_tp[] = {
++	"kvm:kvm_enter",
++	"kvm:kvm_reenter",
++	"kvm:kvm_exit",
++	NULL,
++};
++
++static bool event_end(struct evsel *evsel,
++		struct perf_sample *sample __maybe_unused,
++		struct event_key *key __maybe_unused)
++{
++	/*
++	 * LoongArch kvm is a little different with other architectures
++	 *
++	 * There is kvm:kvm_reenter and kvm:kvm_enter event adjacent with
++	 * kvm:kvm_exit event.
++	 *   kvm:kvm_reenter means returning to guest immediately
++	 *   kvm:kvm_enter   means returning to vmm and then to guest
++	 */
++	return evsel__name_is(evsel, kvm_entry_trace) ||
++		evsel__name_is(evsel, kvm_reenter_trace);
++}
++
++static struct kvm_events_ops exit_events = {
++	.is_begin_event = exit_event_begin,
++	.is_end_event = event_end,
++	.decode_key = exit_event_decode_key,
++	.name = "VM-EXIT"
++};
++
++struct kvm_reg_events_ops kvm_reg_events_ops[] = {
++	{
++		.name	= "vmexit",
++		.ops	= &exit_events,
++	},
++	{ NULL, NULL },
++};
++
++const char * const kvm_skip_events[] = {
++	NULL,
++};
++
++int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
++{
++	kvm->exit_reasons_isa = "loongarch64";
++	kvm->exit_reasons = loongarch_exit_reasons;
++	return 0;
++}
+-- 
+2.33.0
 
-Right, we cannot attach this to a DSO.  Maybe only dwfl can be
-attached, but we might want to use debuginfo abstraction instead.
-
-Also I don't think we can keep all debuginfo/dwfl descriptors at
-once due to the file descriptor limit.  But I'm not sure if we have
-something for the external addr2line.
-
-
->
-> Also, there is some DSO clean up happening in:
-> https://lore.kernel.org/lkml/CAM9d7chqnsDBCVFoK2hSs=3D22QrXBS=3D13Px5hGA4=
-hM=3Dho7CZd2g@mail.gmail.com/
-> where accessor functions are used for the sake of reference count checkin=
-g:
-> https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
-> which may cause some minor conflicts with this patch.
->
-> > +
-> > +       Dwfl *dwfl;
-> > +       Dwfl_Module *mod;
-> > +       GElf_Sym **syms;
-> > +};
-> > +
-> > +static const char *get_diename(Dwarf_Die *die)
-> > +{
-> > +       Dwarf_Attribute attr;
-> > +       const char *name;
-> > +
-> > +       name =3D dwarf_formstring(
-> > +               dwarf_attr_integrate(die, DW_AT_MIPS_linkage_name, &att=
-r) ?:
-> > +                       dwarf_attr_integrate(die, DW_AT_linkage_name, &=
-attr));
-
-We have die_get_linkage_name() but it doesn't seem to
-handle MIPS_linkage_name though.
-
-
-> > +
-> > +       if (name =3D=3D NULL)
-> > +               name =3D dwarf_diename(die) ?: "??";
-> > +
-> > +       return name;
-> > +}
-> > +
-> > +static void find_address_in_section(struct a2l_data *a2l)
-
-Probably we can use cu_find_lineinfo().
-
-
-> > +{
-> > +       Dwarf_Addr addr;
-> > +       Dwfl_Line *line;
-> > +
-> > +       if (a2l->found)
-> > +               return;
-> > +
-> > +       a2l->mod =3D dwfl_addrmodule(a2l->dwfl, a2l->addr);
-> > +       if (!a2l->mod)
-> > +               return;
-> > +
-> > +       dwfl_module_getdwarf(a2l->mod, &a2l->bias);
-> > +       addr =3D a2l->addr + a2l->bias;
-> > +
-> > +       line =3D dwfl_module_getsrc(a2l->mod, addr);
-> > +       if (!line)
-> > +               line =3D dwfl_getsrc(a2l->dwfl, addr);
-> > +       if (!line)
-> > +               return;
-> > +
-> > +       a2l->filename =3D dwfl_lineinfo(line, NULL, &a2l->line, NULL, N=
-ULL, NULL);
-> > +       a2l->funcname =3D dwfl_module_addrname(a2l->mod, addr);
-> > +
-> > +       if (a2l->filename && !strlen(a2l->filename))
-> > +               a2l->filename =3D NULL;
-> > +       else
-> > +               a2l->found =3D true;
-> > +}
-> > +
-> > +static struct a2l_data *addr2line_init(const char *path)
-
-debuginfo__new()?
-
-
-> > +{
-> > +       Dwfl *dwfl;
-> > +       struct a2l_data *a2l =3D NULL;
-> > +
-> > +       dwfl =3D dwfl_begin(&offline_callbacks);
-> > +       if (!dwfl)
-> > +               goto out;
-> > +
-> > +       if (dwfl_report_offline(dwfl, "", path, -1) =3D=3D NULL)
-> > +               return NULL;
-> > +
-> > +       a2l =3D zalloc(sizeof(*a2l));
-> > +       if (a2l =3D=3D NULL)
-> > +               goto out;
-> > +
-> > +       a2l->dwfl =3D dwfl;
-> > +       a2l->input =3D strdup(path);
-> > +       if (a2l->input =3D=3D NULL)
-> > +               goto out;
-> > +
-> > +       if (dwfl_report_end(dwfl, NULL, NULL))
-> > +               goto out;
-> > +
-> > +       return a2l;
-> > +
-> > +out:
-> > +       if (a2l) {
-> > +               zfree((char **)&a2l->input);
-> > +               free(a2l);
-> > +       }
-> > +       dwfl_end(dwfl);
-> > +       return NULL;
-> > +}
-> > +
-> > +static void addr2line_cleanup(struct a2l_data *a2l)
-> > +{
-> > +       if (a2l->dwfl)
-> > +               dwfl_end(a2l->dwfl);
-> > +       zfree((char **)&a2l->input);
-> > +       zfree(&a2l->syms);
-> > +       free(a2l);
-> > +}
-> > +
-> > +static int inline_list__append_dso_a2l(struct dso *dso,
-> > +                                      struct inline_node *node,
-> > +                                      struct symbol *sym)
-> > +{
-> > +       struct a2l_data *a2l =3D dso->a2l;
-> > +       struct symbol *inline_sym =3D new_inline_sym(dso, sym, a2l->fun=
-cname);
-> > +       char *srcline =3D NULL;
-> > +
-> > +       if (a2l->filename)
-> > +               srcline =3D srcline_from_fileline(a2l->filename, a2l->l=
-ine);
-> > +
-> > +       return inline_list__append(inline_sym, srcline, node);
-> > +}
-> > +
-> > +static int get_inline_function(struct dso *dso, struct inline_node *no=
-de,
-> > +                              struct symbol *sym)
-> > +{
-> > +       struct a2l_data *a2l =3D dso->a2l;
-> > +       Dwarf_Addr addr =3D a2l->addr + a2l->bias;
-> > +       Dwarf_Addr bias =3D 0;
-> > +       Dwarf_Die *cudie =3D dwfl_module_addrdie(a2l->mod, addr, &bias)=
-;
-> > +
-> > +       Dwarf_Die *scopes =3D NULL;
-> > +       int nscopes =3D dwarf_getscopes(cudie, addr - bias, &scopes);
-
-It's not clear to me how this dwarf_getscopes() and later
-dwarf_getscopes_die() work together.  Can you please add some
-comment?  Also we have die_get_scopes() and I think it's simpler.
-
-
-> > +       if (nscopes < 0)
-> > +               return 0;
-> > +
-> > +       if (nscopes > 0) {
->
-> Try to prefer early return to avoid indenting the code. So I think the
-> above can just be:
->
-> if (nscopes <=3D 0)
->     return 0;
->
-> and then you don't need this "if (nscopes > 0) {"
->
-> > +               Dwarf_Die subroutine;
-> > +               Dwarf_Off dieoff =3D dwarf_dieoffset(&scopes[0]);
-> > +               dwarf_offdie(dwfl_module_getdwarf(a2l->mod, &bias), die=
-off,
-> > +                            &subroutine);
-> > +               free(scopes);
-> > +               scopes =3D NULL;
->
-> Is this dead code?
-
-It seems you can use zfree().
-
-
->
-> > +
-> > +               nscopes =3D dwarf_getscopes_die(&subroutine, &scopes);
-> > +               if (nscopes > 1) {
->
-> Similar early return comment to above to avoid indentation.
->
-> Thanks,
-> Ian
->
-> > +                       Dwarf_Die cu;
-> > +                       Dwarf_Files *files;
-> > +                       if (dwarf_diecu(&scopes[0], &cu, NULL, NULL) !=
-=3D NULL &&
-> > +                           dwarf_getsrcfiles(cudie, &files, NULL) =3D=
-=3D 0) {
-> > +                               for (int i =3D 0; i < nscopes - 1; i++)=
- {
-> > +                                       Dwarf_Word val;
-> > +                                       Dwarf_Attribute attr;
-> > +                                       Dwarf_Die *die =3D &scopes[i];
-> > +                                       if (dwarf_tag(die) !=3D
-> > +                                           DW_TAG_inlined_subroutine)
-> > +                                               continue;
-> > +
-> > +                                       for (int j =3D i + 1; j < nscop=
-es; j++) {
-> > +                                               Dwarf_Die *parent =3D &=
-scopes[j];
-> > +                                               int tag =3D dwarf_tag(p=
-arent);
-> > +                                               if (tag =3D=3D DW_TAG_i=
-nlined_subroutine ||
-> > +                                                   tag =3D=3D DW_TAG_e=
-ntry_point ||
-> > +                                                   tag =3D=3D DW_TAG_s=
-ubprogram) {
-> > +                                                       a2l->funcname =
-=3D
-> > +                                                               get_die=
-name(
-> > +                                                                      =
- parent);
-
-Why not get the function name from the abstract origin?
-
-
-> > +                                                       break;
-> > +                                               }
-> > +                                       }
-> > +
-> > +                                       a2l->filename =3D NULL;
-> > +                                       a2l->line =3D 0;
-> > +                                       if (dwarf_formudata(
-> > +                                                   dwarf_attr(die,
-> > +                                                              DW_AT_ca=
-ll_file,
-> > +                                                              &attr),
-> > +                                                   &val) =3D=3D 0)
-> > +                                               a2l->filename =3D dwarf=
-_filesrc(
-> > +                                                       files, val, NUL=
-L, NULL);
-> > +
-> > +                                       if (dwarf_formudata(
-> > +                                                   dwarf_attr(die,
-> > +                                                              DW_AT_ca=
-ll_line,
-> > +                                                              &attr),
-> > +                                                   &val) =3D=3D 0)
-> > +                                               a2l->line =3D val;
-
-We have die_get_call_file() and die_get_call_lineno().
-
-Thanks,
-Namhyung
-
-
-> > +
-> > +                                       if (a2l->filename !=3D NULL)
-> > +                                               if (inline_list__append=
-_dso_a2l(
-> > +                                                       dso, node, sym)=
-)
-> > +                                                       return 0;
-> > +                               }
-> > +                       }
-> > +               }
-> > +       }
-> > +       free(scopes);
-> > +
-> > +       return 1;
-> > +}
-> > +
-> > +static int addr2line(const char *dso_name, u64 addr, char **file,
-> > +                    unsigned int *line, struct dso *dso, bool unwind_i=
-nlines,
-> > +                    struct inline_node *node, struct symbol *sym)
-> > +{
-> > +       int ret =3D 0;
-> > +       struct a2l_data *a2l =3D dso->a2l;
-> > +
-> > +       if (!a2l) {
-> > +               dso->a2l =3D addr2line_init(dso_name);
-> > +               a2l =3D dso->a2l;
-> > +       }
-> > +
-> > +       if (a2l =3D=3D NULL) {
-> > +               if (!symbol_conf.disable_add2line_warn)
-> > +                       pr_warning("addr2line_init failed for %s\n", ds=
-o_name);
-> > +               return 0;
-> > +       }
-> > +
-> > +       a2l->addr =3D addr;
-> > +       a2l->found =3D false;
-> > +
-> > +       find_address_in_section(a2l);
-> > +
-> > +       if (!a2l->found)
-> > +               return 0;
-> > +
-> > +       if (unwind_inlines) {
-> > +               if (node && inline_list__append_dso_a2l(dso, node, sym)=
-)
-> > +                       return 0;
-> > +
-> > +               if (node && !get_inline_function(dso, node, sym))
-> > +                       return 0;
-> > +
-> > +               ret =3D 1;
-> > +       }
-> > +
-> > +       if (file) {
-> > +               *file =3D a2l->filename ? strdup(a2l->filename) : NULL;
-> > +               ret =3D *file ? 1 : 0;
-> > +       }
-> > +
-> > +       if (line)
-> > +               *line =3D (unsigned int)a2l->line;
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +void dso__free_a2l(struct dso *dso)
-> > +{
-> > +       struct a2l_data *a2l =3D dso->a2l;
-> > +
-> > +       if (!a2l)
-> > +               return;
-> > +
-> > +       addr2line_cleanup(a2l);
-> > +
-> > +       dso->a2l =3D NULL;
-> > +}
-> > +
-> > +#endif /* HAVE_LIBBFD_SUPPORT */
-> > +
-> > +#else /* HAVE_SYMBOLIZER_SUPPORT */
-> > +
-> >  static int filename_split(char *filename, unsigned int *line_nr)
-> >  {
-> >         char *sep;
-> > @@ -788,7 +1063,7 @@ void dso__free_a2l(struct dso *dso)
-> >         dso->a2l =3D NULL;
-> >  }
-> >
-> > -#endif /* HAVE_LIBBFD_SUPPORT */
-> > +#endif /* HAVE_SYMBOLIZER_SUPPORT */
-> >
-> >  static struct inline_node *addr2inlines(const char *dso_name, u64 addr=
-,
-> >                                         struct dso *dso, struct symbol =
-*sym)
-> > --
-> > 2.44.0
-> >
