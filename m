@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590B915E5D5;
-	Tue,  2 Apr 2024 21:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988F615E5DC;
+	Tue,  2 Apr 2024 21:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712094346; cv=none; b=L9nQ09AJz/fUNd8S9BJiAevVVM3L7TQa3EJQX3hJ6GGDPP73YvRTt59xwwGND9FRqFcqfJ6I8mGsN+rLTYBeQpmll9d71fcGeUYQThhk3p/iHreSrk6Oor3RCDN1hiky13PInID+aji11keDUXzsVtcPKT34y9d5rk7zw4LcEpU=
+	t=1712094360; cv=none; b=R7GyxDO/zI8P88xT/oOfXfnI7r/RFuXHVJVBgQE8y0OWAxEvOzKC0gsa+NONnbUUezVh2pJBo34tSkO5eNU8h5/9n/W5re+OSTI/VU87IOzm1xJvmamPeNZw+WFT0G0VOYuQvJZxRHfzM17B6/d87r1Iiw2gSGJ6KgtHOb7cIus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712094346; c=relaxed/simple;
-	bh=wuM3QGEWiNElGXaP4/VJAD12VO/Zng+KWQq+AWUQPeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WVhobv927ZXZ6NOY52PwRLYseo/XDlD258bb/rQFZl0dORnsqasBCeQROcaF4xNI+y/Wdxn/a0pU7DSABRicDVAnKdyg5j5qdBxx45YVxeuBTXgJVFrdjU44dwuxpPXJ27zaDWFESZjU5JLahx902H84FfWSCiIDGzmzHrAw4TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UleE0SbI; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1712094360; c=relaxed/simple;
+	bh=El3YDeqjczhekPR1W+uyDSK2dsNIh5KkIWwOCQU6c88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ekkpNGpGhmXNtn92Y2I/QZ1XfpPPy1/jqHNtseXyhQ5BPkiKsWbmmRCaPRkKBBztine08lW/BODoov9lRwYtVkuNYEdRi1xL0KxkeavT4DpFiV1GJiYwX9WYC6t99MZzHnLCA9CyFV7PIw5NzM7AzMixgiYsu0YCl+bYFXFTQAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A+MAAN2D; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UleE0SbI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A+MAAN2D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712094345; x=1743630345;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wuM3QGEWiNElGXaP4/VJAD12VO/Zng+KWQq+AWUQPeE=;
-  b=UleE0SbIOdel1ICpr9teRpaU+ndrjyoTjSuv0na5cmITOQWxzzw0cpi6
-   r8NcYloD8Eg8AIOXT+d8/lVUsQJtqXMwEyOVrqf/dmaEDpNh/wt2W+XmS
-   qFLLLxuXH8r+Wyz7sqqN/V3r85415kdfnYtFgRgxrCuiRS6S50oMoSana
-   WLWKKZwY2IvkWzOx62mgnNNzKjLonFVoILpBLwDunDZsWlowhUoq3cx4I
-   XVpACq+JqqE+976REARgxG/mf7uy4GX3IqeuqXpG63THW3nbk3oiMm5QM
-   qZvAelIfyJSqGzSeclZIlK2SpzrnueQikbsyS4Ow9Nj919T7X5By6rTpr
+  t=1712094358; x=1743630358;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=El3YDeqjczhekPR1W+uyDSK2dsNIh5KkIWwOCQU6c88=;
+  b=A+MAAN2DczFen6ll4k8166sNPwT69In0OQuUrP7us64/735NtNXdnyEZ
+   5YI+nnWveIuOCY3XwGB+NPV5ZfBjhOeP8m2nmHP02TPLiCsyVX+XhmA8C
+   dhAGX/PzIbITi116ad71q1ITbx88yhG+Zcgsg0s4erQDroSKD06OkAegG
+   7QkNgmJBOAfroth9a4+WQK0GbnY5nB9wJLIgqk/zzLIF40bJWVt07Iec4
+   Zej66kgiIWjAy3ZqRXs/e9k0QM6VNQSj+xJOO0YDpKam/66s6e4KHDra0
+   ISazi5tmtuf7IkgQEZjvg2Lr15FkLvx5O7txrOpn242SMLGRUgvyYG4Lf
    w==;
-X-CSE-ConnectionGUID: p78YnM1jTl+hC3uERUXR5Q==
-X-CSE-MsgGUID: CMWbr/z5QcStFBqflrdf7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18019997"
+X-CSE-ConnectionGUID: 3T9yNCSnTWi6/sFTZgqEWw==
+X-CSE-MsgGUID: /i6HwwxoSNGrjJbIyuSNQw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18020008"
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="18019997"
+   d="scan'208";a="18020008"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 14:45:03 -0700
-X-CSE-ConnectionGUID: wK9kq6GISk2XPCSgLU3cgQ==
-X-CSE-MsgGUID: UqzJJAhoQOOFLL8B8trqWw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 14:45:05 -0700
+X-CSE-ConnectionGUID: OXYJXYhrSS6eAJGF95FUyQ==
+X-CSE-MsgGUID: oJF2vaD9TDOWQZfwq61Jsg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="22849052"
+   d="scan'208";a="22849070"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by fmviesa004.fm.intel.com with ESMTP; 02 Apr 2024 14:45:01 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 02 Apr 2024 14:45:03 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -58,10 +59,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v7 0/6] TPEBS counting mode support
-Date: Tue,  2 Apr 2024 17:44:30 -0400
-Message-ID: <20240402214436.1409476-1-weilin.wang@intel.com>
+Subject: [RFC PATCH v7 2/6] perf data: Allow to use given fd in data->file.fd
+Date: Tue,  2 Apr 2024 17:44:32 -0400
+Message-ID: <20240402214436.1409476-3-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240402214436.1409476-1-weilin.wang@intel.com>
+References: <20240402214436.1409476-1-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,38 +75,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Changes in v7:
-- Update code and comments for better code quality [Namhyung]
-- Add a separate commit for perf data [Namhyung]
-- Update retire latency print function to improve alignment [Namhyung]
+When in PIPE mode, allow to use fd dynamically opened and asigned to
+data->file.fd instead of STDIN_FILENO or STDOUT_FILENO.
 
-v6: https://lore.kernel.org/all/20240329191224.1046866-1-weilin.wang@intel.com/
+Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+---
+ tools/perf/util/data.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Weilin Wang (6):
-  perf stat: Parse and find tpebs events when parsing metrics to prepare
-    for perf record sampling
-  perf data: Allow to use given fd in data->file.fd
-  perf stat: Fork and launch perf record when perf stat needs to get
-    retire latency value for a metric.
-  perf stat: Add retire latency values into the expr_parse_ctx to
-    prepare for final metric calculation
-  perf stat: Add retire latency print functions to print out at the very
-    end of print out
-  perf vendor events intel: Add MTL metric json files
-
- tools/perf/builtin-stat.c                     |  249 +-
- .../arch/x86/meteorlake/metricgroups.json     |  127 +
- .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
- tools/perf/util/data.c                        |    7 +-
- tools/perf/util/metricgroup.c                 |   87 +-
- tools/perf/util/metricgroup.h                 |   22 +-
- tools/perf/util/stat-display.c                |   69 +
- tools/perf/util/stat-shadow.c                 |   19 +
- tools/perf/util/stat.h                        |    4 +
- 9 files changed, 3115 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
-
---
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 08c4bfbd817f..98661ede2a73 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -204,7 +204,12 @@ static bool check_pipe(struct perf_data *data)
+ 				data->file.fd = fd;
+ 				data->use_stdio = false;
+ 			}
+-		} else {
++
++		/*
++		 * When is_pipe and data->file.fd is given, use given fd
++		 * instead of STDIN_FILENO or STDOUT_FILENO
++		 */
++		} else if (data->file.fd <= 0) {
+ 			data->file.fd = fd;
+ 		}
+ 	}
+-- 
 2.43.0
 
