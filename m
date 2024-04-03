@@ -1,149 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8083F15443A;
-	Wed,  3 Apr 2024 18:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3C2155A29
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Apr 2024 20:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712170658; cv=none; b=b4x5SXq8u6/Iy9nsl9EOvAIqinqnvgqQTTPwJsjVUwBGIAyNpXz9wOlE2mti6Ltzagy/amAdrgDuQTEMXdIaAToCTz/SSw17PCUFAvAurS86iR6LwOTTPRdnP/MICuSO5rTECc3pYBNkVipQMLINvXqTiHqVajsMRsSIsfppeZ8=
+	t=1712175847; cv=none; b=WmJOE1A5vxPA7ohU1IefZ9FmKLGoCGXbvwJgPmsJCEPrXDJisUVbJpbCwj6zRrcqK0+imr9tVPpLoChH1MaosfcWDnWlsV11ftsj8R5xCKonGSttcfwb6cgKH7h65MegOSWXEmOT+Kr6nejcnMCsgrqai13zqUiHS11KPwKXJvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712170658; c=relaxed/simple;
-	bh=Vhjx7KPQnEG8AJd2dyNwYayiNAX+hSP6AO4U0tDlWfc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nu7HY4WFO8AnsQAJgk2+ydJgCtWm5UkU1hR2yw50BEw2Akp0oVDYU8mUMJc6AwxjOfcCKBDIRmhTFOkydXgR4xE/PL+VSnYzFatYd3FHRWL1DE/0ziJfz/HKo7dD7SB0HgtkMJKPmLxuD+f9YTjwy/+pMdazfojlBfRmhhScIt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXgdaxMO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712175847; c=relaxed/simple;
+	bh=EKlQoR2IwAcNBhIZaP0pvhBaPu27ciSZd+tBUsZpkgU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=loKPdFisIRJczQ+xt48pSn671VpyZDz1UtVSJIaDS41B5gyORzGipxyl1qD2z7Ni/CVbP8a9v3L1TOl2q9ZjGN5+szMc50S33387zsT9y6p+SU5yuaD7KA90+Dxaw58LpI9mH1HANICrgwS2wTcMbv6PX6kWp6infYJjKNSqE/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W9n3T+Jw; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXgdaxMO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712170657; x=1743706657;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Vhjx7KPQnEG8AJd2dyNwYayiNAX+hSP6AO4U0tDlWfc=;
-  b=gXgdaxMOkZSVKlZ+TJfga02cT5MJ9B5DLlcTwDXBSallbolS4MV8a7GN
-   QytmjE1q2nT0exjisHgj9WKHcZoSXPoV6NwSFJ5jy2Dl0i2U5Dnriw0EJ
-   9xx/9NVi+tBn5CWmV6TnxZInGHUg8q0kGdusugQmINcM3NgPLB+iTvv66
-   +AtD5bfs0sHNeFIqFvCzvAqrc7yh9ACFAcG3+xbquTmc2MT/CdTCO6xbQ
-   cZUsi1SKPLve8XO083EIJjtlYa1UDpYJV07vuHR6I3/6I+owe1+krFbSq
-   ytuhF8bqbAARqcYyI023ohLcA0msRzr0xgcONOBqKIvTN2gaYJGXZFMXT
-   g==;
-X-CSE-ConnectionGUID: 0XwNGbukTciX67zAbY6dYQ==
-X-CSE-MsgGUID: TNSEIC/MQ7SQfRVZ24wGxw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7592974"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7592974"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:57:36 -0700
-X-CSE-ConnectionGUID: fOhFYz28SPGDLFMOp8k+Mg==
-X-CSE-MsgGUID: DOzYTKmdSJ2iRVhjRqGnjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="41691414"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:57:35 -0700
-Received: from [10.212.3.167] (kliang2-mobl1.ccr.corp.intel.com [10.212.3.167])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9A5B6206DF9A;
-	Wed,  3 Apr 2024 11:57:33 -0700 (PDT)
-Message-ID: <b9868e97-e353-45e0-83b7-aa28bc35dd67@linux.intel.com>
-Date: Wed, 3 Apr 2024 14:57:32 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W9n3T+Jw"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e277154d4cso10675ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Apr 2024 13:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712175845; x=1712780645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EKlQoR2IwAcNBhIZaP0pvhBaPu27ciSZd+tBUsZpkgU=;
+        b=W9n3T+JwHYw8by+O13xUUQf3XoAo9/+pu3NuIpyQyS6Ar+0iSr047lRELjtnm3cOCM
+         /eU/F6qdRAc8Q3OiIaL06C5pvGg+XnfKXycCT4WHg88W+SQM3uRB29CQNdk5qP6Vy2OL
+         4QOY0phQEkKKzCdUKh2WtZVmoySDOyixzdOcRwthxPSGcQWOIHknT7QuGwgYwIgrs0kb
+         djJ+O3SDwH38lJTMs16zEdGHUwthf5Y2CJbEkQYHJ/bBpZH7bh15phcrPultLz7I7wwk
+         GV2oxjqy6A11t+CCE2QCkCRN6F4/Zo+FsuR+bgfmj13pjGbzpgC/UfxoEqRzqd22hLJn
+         kFCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712175845; x=1712780645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EKlQoR2IwAcNBhIZaP0pvhBaPu27ciSZd+tBUsZpkgU=;
+        b=mw8wl9qOYl6cFZXqjUqRVexnRVWc+JJ2JmvS5OJHlzqcze00hp/+Nc/yWaYzAcpRqH
+         JcX7uY82QRIiI/zmi5MmYZwTS4unDhQj/3CiYKG/DFvHkfMJXJFpctv5dWeNnLCUO6i7
+         Z+q4CXMXt41OtkIc/6fJYGxcwkZa0lesSExGhwdOwjNlYFdvqCNG4zKez0yAYWXNQrRB
+         73j+wqRoAM1R69Kblu9Wf6lTvVBjMe3wXJQtIvdWXJ6dgTMQVA3l5LQsNN4ZKDYdBe1E
+         lMagMkG4T4QrvEVe1zOqBRRy4WFJEh82WwU+HtZykGIAGJgpY9akRSDYIBRtg1GNDEA9
+         CP8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUJmLZdiVQrXeNqZ2PIcqOawwGv2iqDV1Z9zY/Xe2YYahZRl698l9/MpDsJudX9PT2iBavPIGR62y55q5VEtZGuh2onQsupPuXup+6VgQkXdA==
+X-Gm-Message-State: AOJu0YxiNCuUht3+zQqMSTKMciz7KEan0b7K9I0g1o349nScxIXiqyOm
+	H3apxaLI8OLzM6n3PvF+HNaRTQxMI0zKS2VwkRTnTxpc8W4PHppui/xHlEtVHUZFCKQcZsa2HPA
+	asWXZ2Fb+YbyJ3db0kXIdlbr1g0WDFK1k4gWu
+X-Google-Smtp-Source: AGHT+IGaQ1rrzpJ2yRKs3uqUHY1o4iZdBddjpY4n6NwPtk4ppMDyXIl26yh4emb/jApyta9gcqzTCpVEMrBseUTr15c=
+X-Received: by 2002:a17:902:f551:b0:1e0:a977:d88 with SMTP id
+ h17-20020a170902f55100b001e0a9770d88mr306363plf.13.1712175845279; Wed, 03 Apr
+ 2024 13:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20240403164636.3429091-1-irogers@google.com> <Zg2jdJ3-LNRkL95T@tassilo>
+In-Reply-To: <Zg2jdJ3-LNRkL95T@tassilo>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 3 Apr 2024 13:23:51 -0700
+Message-ID: <CAP-5=fU1ZC2dAr-U9kecXxxVAyyx3BtnQVOAax2PtvzEfAKjyg@mail.gmail.com>
 Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andi Kleen <ak@linux.intel.com>
-References: <20240403164636.3429091-1-irogers@google.com>
- <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
- <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2024-04-03 2:31 p.m., Ian Rogers wrote:
-> On Wed, Apr 3, 2024 at 10:59 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
->>> Rather than place metrics without a metric group in "No_group" place
->>> them in a a metric group that is their name. Still allow such metrics
->>> to be selected if "No_group" is passed, this change just impacts perf
->>> list.
->>
->> So it looks like the "No_group" is not completely removed.
->> They are just not seen in the perf list, but users can still use it via
->> perf stat -M No_group, right?
->>
->> If so, why we want to remove it from perf list? Where can the end user
->> know which metrics are included in the No_group?
->>
->> If the No_group is useless, why not completely remove it?
-> 
-> Agreed. For command line argument deprecation we usually keep the
-> option but hide it from help with PARSE_OPT_HIDDEN, so I was trying to
-> follow that pattern albeit that a metric group isn't a command line
-> option it's an option to an option.
+On Wed, Apr 3, 2024 at 11:44=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wro=
+te:
 >
+> On Wed, Apr 03, 2024 at 09:46:36AM -0700, Ian Rogers wrote:
+> > Rather than place metrics without a metric group in "No_group" place
+> > them in a a metric group that is their name. Still allow such metrics
+> > to be selected if "No_group" is passed, this change just impacts perf
+> > list.
+>
+> But what's the point of it? It will just make perf list more verbose,
+> but I don't see any advantage.
 
-Perf list has a deprecated option to show the deprecated events.
-The "No_group" should be a deprecated metrics group.
-
-If so, to follow the same pattern, I think perf list should still
-display the "No_group" with the --deprecated option at least.
+So it is possible to list all metrics, that's not changed here. The
+thing I'm looking to change is that when a metric is standalone it
+appears in "perf list metricgroups". The reason is that a metric group
+can gather a bunch of related metrics, say some form of read, write
+and total bandwidth, whereas something like an idle metric
+("d_ratio(max(msr@tsc@ - msr@mperf@, 0), msr@tsc@)") that could get
+placed in No_group is more useful if it appears in a metric group of
+"idle". I'd put forward that nobody ever wants to run "idle" as part
+of "No_group" whereas being able to see it as a thing in metricgroups
+is useful. I want to be able to run "perf list metricgroups" and get
+groups of 1 or more metrics that someone might want to pass to "perf
+stat -M", currently this just shows when there is a group of more than
+1 metric as there is no practice of putting a metric like "idle" into
+a metric group called "idle". We could update all metrics to make it
+so that when they don't have a metric group we add them to one with
+their name. We could do this in jevents.py. Those changes would make
+the No_group logic redundant, so we should remove it. Just updating
+the No_group logic in the perf command seemed like the minimal
+approach.
 
 Thanks,
-Kan
+Ian
 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Kan
->>
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/metricgroup.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->>> index 79ef6095ab28..6ec083af14a1 100644
->>> --- a/tools/perf/util/metricgroup.c
->>> +++ b/tools/perf/util/metricgroup.c
->>> @@ -455,7 +455,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
->>>       const char *g;
->>>       char *omg, *mg;
->>>
->>> -     mg = strdup(pm->metric_group ?: "No_group");
->>> +     mg = strdup(pm->metric_group ?: pm->metric_name);
->>>       if (!mg)
->>>               return -ENOMEM;
->>>       omg = mg;
->>> @@ -466,7 +466,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
->>>               if (strlen(g))
->>>                       me = mep_lookup(groups, g, pm->metric_name);
->>>               else
->>> -                     me = mep_lookup(groups, "No_group", pm->metric_name);
->>> +                     me = mep_lookup(groups, pm->metric_name, pm->metric_name);
->>>
->>>               if (me) {
->>>                       me->metric_desc = pm->desc;
+> -Andi
