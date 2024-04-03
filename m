@@ -1,337 +1,126 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA21139581;
-	Wed,  3 Apr 2024 11:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A563C1420C4
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Apr 2024 12:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712142324; cv=none; b=eIQywWjZ5Tv74QA0J1DVXaVAhOXjaXtyqDJ5Vnb07G6fZuzW2ubez309XxqletXUNCgTvU2sUh6vqv22pENwjE3+xT4l9Zz69pAtKQ1eF0lM1JvKpyNLjsi55t9a503cb5JbcIPJl5rDknWLwLdpduHqGVOf48BHwOdJMNJVS7I=
+	t=1712147171; cv=none; b=q7CBl5OaKDVQb/pvbd6RayTM9HZtvURNaEc02yu1dn6X/uxpRtITWDwpfghIPBviaz+Rqn/oYtxrrlicT1DE9aONcHedbDfsI81c4i0etpt0sCvTqa7ZEEfUyMloi0PHHOj6ZK3utAdPvwygYnhDLzK29BtxPKHztvBYKAq0a94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712142324; c=relaxed/simple;
-	bh=w18UVu/TU5bC9jQqSryPrDVzIgbmEeVdpghUNQpemyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2LIlYG4gFURdLDcJirtJMk1xCuXXs5A1dl96iiGynQcA8yFmpzKsfwi0g36V3K2Op4dAABg+WuORnpPj7CVDhlrOMKRjEy/p3s66rn5xHFB0RLrXsntjOPVl6qQdbqpkzUIq8PZ2vR3frSkE2rkFq+FWfw1e0l8p8s89tHOXGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PF5EwxrM; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712147171; c=relaxed/simple;
+	bh=C+TwzIv0q7ONt2hgD/9G+JyqyDZ6Vk0qZXSCafE4C6I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sarEDV8L6CWKoT217MiroHs1DG77GROzQz+Li16pUI6Epz29Po72i3LGD0PeKVGIO4m6xu4f9JJhDTnB+3u5NTodZziKLXBP2sg2hqIcxziA1cFKAB/Co0OHKxwo4eeUOgJwBYIsy6bKUcpLjbH7nxECI6QR5JRBxe0YFeZGa9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kv3Y+KhC; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF5EwxrM"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56df377bd13so2159724a12.0;
-        Wed, 03 Apr 2024 04:05:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kv3Y+KhC"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e27fadbbe1so12540205ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Apr 2024 05:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712142320; x=1712747120; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uTa8/TOckEyTpCdBl7olLE+j8uZidjm/TMH1XrW2qkA=;
-        b=PF5EwxrM/xHaB8H3yTJIIT1CiRCMmxurwoCyekCQIhjvvVmOc+Pq5buR4t9/okvKuA
-         aSSduU3imy6WSejZZo+nWkGh5le2KgYPVkM9p4nOf5CisEmOx2TGRMa/xcGDquJ5uZSe
-         xhRzaPsEBaK1/06HExxMLntsrJYaxOpn+KTOU1FDmT9sitTi7R2jA7SJGF0LuNy5m2qL
-         sNDotinPLibhQhQ3t7gyDpXUFRZirv5ZBHcmEZ41mIKh+b+49x+U85RBAvVkCqswevkx
-         fsxLTRUmMLPuSOEDNjumuUEeE70H+iKQwT3QXIDAg9Ru9XHjQX4MMnO7ieULwoljk8rV
-         jqcQ==
+        d=bytedance.com; s=google; t=1712147169; x=1712751969; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=680IOIiYvO7U69q8/3NO/TM8zSL1qJ6oi50wwHypzL0=;
+        b=kv3Y+KhCCdxJ/tXae9hD6NuHH8nXalMcD9CXmQiTAd8wM2d1Sq16vqJFUWfR7rRNDK
+         5dXeA2Ox/OHF7F+Wog4bpp5q8UZkL+Wj1NrWrcg8Yvp+9hP/Q6ldBNNnGY5AUgeL6u+p
+         3gN+cYXKTIVV1IZyrWq6dksu2hKNkMNCY7cQFTjLp4hsWRINlY9nXyy4BqB7Cei3IhwS
+         fJ683WM1YOZnzGCTwNGdN16esx3gm7NYNZdzV/m9it9DEU/JZw1CGydptcTmJb7tT8dp
+         KGN0F01kRthlKmvGLpwrMjL0I91ScSq/RbGyadYeM4K7OEDBlLRJVEtTALst2R4W+vqI
+         Nizg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712142320; x=1712747120;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uTa8/TOckEyTpCdBl7olLE+j8uZidjm/TMH1XrW2qkA=;
-        b=vizDw1zEE3+AuUjqhNiZMk9CX0DOQhTAj8gghKcYxgL2r+2kgy4e3AIoUMkSbn4GxM
-         GbT3Y0Ljgice1/vdAlRaRjjkZXvJaTO479RyTetGRIQkC7nJfZy1maNqDi7DcbspmHhY
-         i9GbVXJ3Z4c8aFHRHj3mQNBBVnWGfvgHIgmEmLLTsDNhBAaKJIlheN6xYh/V+YD7cx/H
-         wpG9UiwJrzg1xb4Iq4bNu6oaBsps73eT87gORapTe2i9LhWLcdyLLhPavABdJ+tdv8ah
-         paf8cBcGslXNEof9ten2h56nktu5/cj0AwLwHZHaYqXW9ez7Pb5/Qci3kDRcC0TpGEog
-         wUlA==
-X-Forwarded-Encrypted: i=1; AJvYcCU584VqPBXTU72dOjbi7RVHJGCAGoYhxZ94MgLvaGF13Eo7E/oBWDSnUdeLljvtKRo7JlX4WvkwU/eDUuhiaNbtKoN+puB0yNHXvEF/Jt3aPjTrVFaSZvCjbfC8vDAfbg+jh9h+dHeVAEFlvpG7cCK3Grfk0b+ofnUnPJk6eEChzXUbefWpQsBbZqxZzxYa2Ta7j7AES3ju4Q5ftcs9uUUe+2L6UiGcbg==
-X-Gm-Message-State: AOJu0YxEvXJi8fdn21S+1hViV0x7ToqAnIu82J5D6h3wLs50qHiOHFhY
-	5/86bXguVTjRIh1YjYqBUQLag/DOqpGuzfmubl6Nh3Y1j1j8Acxj
-X-Google-Smtp-Source: AGHT+IH3UuYlS2hljnHx5KnGJBypuk1UtnhWXyO/31w1MhNfOjxHFjgdTOAY7TOIKWDlG+e+AcUDqg==
-X-Received: by 2002:a05:6402:3507:b0:56b:9b69:2e81 with SMTP id b7-20020a056402350700b0056b9b692e81mr10836228edd.27.1712142319992;
-        Wed, 03 Apr 2024 04:05:19 -0700 (PDT)
-Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:400::5:2b67])
-        by smtp.gmail.com with ESMTPSA id fi8-20020a056402550800b0056c509a11acsm7814866edb.33.2024.04.03.04.05.18
+        d=1e100.net; s=20230601; t=1712147169; x=1712751969;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=680IOIiYvO7U69q8/3NO/TM8zSL1qJ6oi50wwHypzL0=;
+        b=FYdb0wluhaMCXAQdYkwVf4BLtYUHuVCZsKRJcU0dMvBy5C1Kf0H4aYoXugqN2SYIy8
+         gEHSSqXJkt4IykfOQoTwW8R9rImvWcKNIMep9RX+OatBpDul/i6yu/ipzG5xYfUDotIy
+         W7ZLi5RJgFxy/S0/XTMhf1YwM/WUfqZQ37S69VpRuRDehYvBrIh8S/Gjmc21LLUuUWvq
+         i/N8CnsbAGzqQnl+htVoq7FjQlvnDquxbaoL1yZbZsFWPiWXsjQ/306WX4MICRXx3XT7
+         6Q41qg+rdYJT/ZOcXbuT8tthBZug6B2UkzlDSWpwkPTNrxHlKVMaPF1+Hv9jCqwLjhWP
+         VCHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCVJtN4hChXHuD3hVMHqYnBsEagd9FeZbj/QM8y+xkP0z4yEs8n0nSgGei68hdUoK5hMR4EzjUYWmolL+p90h82ThsLCbchUyFLN5WELLhHA==
+X-Gm-Message-State: AOJu0YyJyLyobnwwVg88JJEUKUMnude3wV74LwBsh4IipWvLiIY3+MAW
+	BIKE4XIgtG8gr9z4zsz58zdOIBEVGvCaryr9EcqQz3vIHQM9pQ2AzQAPQoTXMBY=
+X-Google-Smtp-Source: AGHT+IE1BA6R9WM9FnWdKVLkzpxYrahMEwc8w8zzEYzMNbHHltFWvb9umn9zs6POLTFfyBTl89xnvA==
+X-Received: by 2002:a17:902:d897:b0:1dd:b728:b8d8 with SMTP id b23-20020a170902d89700b001ddb728b8d8mr16254189plz.45.1712147168884;
+        Wed, 03 Apr 2024 05:26:08 -0700 (PDT)
+Received: from ubuntu20.04 ([203.208.189.8])
+        by smtp.gmail.com with ESMTPSA id lg13-20020a170902fb8d00b001dddbb58d5esm13168939plb.109.2024.04.03.05.26.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 04:05:19 -0700 (PDT)
-Date: Wed, 3 Apr 2024 12:05:18 +0100
-From: Jonthan Haslam <jonathan.haslam@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
- <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
- <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+        Wed, 03 Apr 2024 05:26:08 -0700 (PDT)
+From: Yang Jihong <yangjihong@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yangjihong@bytedance.com
+Subject: [PATCH] perf beauty: Fix AT_EACCESS undeclared build error for system with kernel versions lower than v5.8
+Date: Wed,  3 Apr 2024 20:25:58 +0800
+Message-Id: <20240403122558.1438841-1-yangjihong@bytedance.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240328091841.ce9cc613db375536de843cfb@kernel.org>
 
-> > > > Given the discussion around per-cpu rw semaphore and need for
-> > > > (internal) batched attachment API for uprobes, do you think you can
-> > > > apply this patch as is for now? We can then gain initial improvements
-> > > > in scalability that are also easy to backport, and Jonathan will work
-> > > > on a more complete solution based on per-cpu RW semaphore, as
-> > > > suggested by Ingo.
-> > > 
-> > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > > I would like to wait for the next version.
-> > 
-> > My initial tests show a nice improvement on the over RW spinlocks but
-> > significant regression in acquiring a write lock. I've got a few days
-> > vacation over Easter but I'll aim to get some more formalised results out
-> > to the thread toward the end of next week.
-> 
-> As far as the write lock is only on the cold path, I think you can choose
-> per-cpu RW semaphore. Since it does not do busy wait, the total system
-> performance impact will be small.
-> I look forward to your formalized results :)
+In the environment of ubuntu20.04 (the version of kernel headers is 5.4),
+there is an error in building perf:
 
-Sorry for the delay in getting back to you on this Masami. 
+    CC      trace/beauty/fs_at_flags.o
+  trace/beauty/fs_at_flags.c: In function ‘faccessat2__scnprintf_flags’:
+  trace/beauty/fs_at_flags.c:35:14: error: ‘AT_EACCESS’ undeclared (first use in this function); did you mean ‘DN_ACCESS’?
+     35 |  if (flags & AT_EACCESS) {
+        |              ^~~~~~~~~~
+        |              DN_ACCESS
+  trace/beauty/fs_at_flags.c:35:14: note: each undeclared identifier is reported only once for each function it appears in
 
-I have used one of the bpf selftest benchmarks to provide some form of
-comparison of the 3 different approaches (spinlock, RW spinlock and
-per-cpu RW semaphore). The benchmark used here is the 'trig-uprobe-nop'
-benchmark which just executes a single uprobe with a minimal bpf program
-attached. The tests were done on a 32 core qemu/kvm instance.
+commit 8a1ad4413519 ("tools headers: Remove now unused copies of
+uapi/{fcntl,openat2}.h and asm/fcntl.h") removes fcntl.h from tools
+headers directory, and fs_at_flags.c uses the 'AT_EACCESS' macro.
+This macro was introduced in the kernel version v5.8.
+For system with a kernel version older than this version,
+it will cause compilation to fail.
 
-Things to note about the results:
+Fixes: 8a1ad4413519 ("tools headers: Remove now unused copies of uapi/{fcntl,openat2}.h and asm/fcntl.h")
+Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+---
+ tools/perf/trace/beauty/fs_at_flags.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-- The results are slightly variable so don't get too caught up on
-  individual thread count - it's the trend that is important.
-- In terms of throughput with this specific benchmark a *very* macro view
-  is that the RW spinlock provides 40-60% more throughput than the
-  spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
-  more throughput then the spinlock.
-- This doesn't fully reflect the large reduction in latency that we have
-  seen in application based measurements. However, it does demonstrate
-  that even the trivial change of going to a RW spinlock provides
-  significant benefits.
+diff --git a/tools/perf/trace/beauty/fs_at_flags.c b/tools/perf/trace/beauty/fs_at_flags.c
+index c1365e8f0b96..c200669cb944 100644
+--- a/tools/perf/trace/beauty/fs_at_flags.c
++++ b/tools/perf/trace/beauty/fs_at_flags.c
+@@ -10,6 +10,14 @@
+ #include <linux/fcntl.h>
+ #include <linux/log2.h>
+ 
++/*
++ * uapi/linux/fcntl.h does not keep a copy in tools headers directory,
++ * for system with kernel versions before v5.8, need to sync AT_EACCESS macro.
++ */
++#ifndef AT_EACCESS
++#define AT_EACCESS 0x200
++#endif
++
+ #include "trace/beauty/generated/fs_at_flags_array.c"
+ static DEFINE_STRARRAY(fs_at_flags, "AT_");
+ 
+-- 
+2.25.1
 
-I haven't included the measurements on per-CPU RW semaphore write
-performance as they are completely in line with those that Paul McKenney
-posted on his journal [0]. On a 32 core system I see semaphore writes to
-take in the order of 25-28 millisecs - the cost of the synchronize_rcu().
-
-Each block of results below show 1 line per execution of the benchmark (the
-"Summary" line) and each line is a run with one more thread added - a
-thread is a "producer". The lines are edited to remove extraneous output
-that adds no value here.
-
-The tests were executed with this driver script:
-
-for num_threads in {1..20}
-do
-    sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
-done
-
-
-spinlock
-
-Summary: hits    1.453 ± 0.005M/s (  1.453M/prod)
-Summary: hits    2.087 ± 0.005M/s (  1.043M/prod)
-Summary: hits    2.701 ± 0.012M/s (  0.900M/prod)
-Summary: hits    1.917 ± 0.011M/s (  0.479M/prod)
-Summary: hits    2.105 ± 0.003M/s (  0.421M/prod)
-Summary: hits    1.615 ± 0.006M/s (  0.269M/prod)
-Summary: hits    2.046 ± 0.004M/s (  0.292M/prod)
-Summary: hits    1.818 ± 0.002M/s (  0.227M/prod)
-Summary: hits    1.867 ± 0.024M/s (  0.207M/prod)
-Summary: hits    1.692 ± 0.003M/s (  0.169M/prod)
-Summary: hits    1.778 ± 0.004M/s (  0.162M/prod)
-Summary: hits    1.710 ± 0.011M/s (  0.142M/prod)
-Summary: hits    1.687 ± 0.022M/s (  0.130M/prod)
-Summary: hits    1.697 ± 0.004M/s (  0.121M/prod)
-Summary: hits    1.645 ± 0.011M/s (  0.110M/prod)
-Summary: hits    1.671 ± 0.002M/s (  0.104M/prod)
-Summary: hits    1.692 ± 0.014M/s (  0.100M/prod)
-Summary: hits    1.700 ± 0.015M/s (  0.094M/prod)
-Summary: hits    1.668 ± 0.005M/s (  0.088M/prod)
-Summary: hits    1.644 ± 0.004M/s (  0.082M/prod)
-
-
-RW spinlock
-
-Summary: hits    1.465 ± 0.008M/s (  1.465M/prod)
-Summary: hits    1.750 ± 0.035M/s (  0.875M/prod)
-Summary: hits    2.164 ± 0.008M/s (  0.721M/prod)
-Summary: hits    2.235 ± 0.014M/s (  0.559M/prod)
-Summary: hits    2.202 ± 0.005M/s (  0.440M/prod)
-Summary: hits    2.816 ± 0.003M/s (  0.469M/prod)
-Summary: hits    2.364 ± 0.002M/s (  0.338M/prod)
-Summary: hits    2.327 ± 0.008M/s (  0.291M/prod)
-Summary: hits    2.147 ± 0.005M/s (  0.239M/prod)
-Summary: hits    2.266 ± 0.011M/s (  0.227M/prod)
-Summary: hits    2.483 ± 0.003M/s (  0.226M/prod)
-Summary: hits    2.573 ± 0.008M/s (  0.214M/prod)
-Summary: hits    2.569 ± 0.004M/s (  0.198M/prod)
-Summary: hits    2.507 ± 0.013M/s (  0.179M/prod)
-Summary: hits    2.165 ± 0.008M/s (  0.144M/prod)
-Summary: hits    2.524 ± 0.004M/s (  0.158M/prod)
-Summary: hits    2.059 ± 0.020M/s (  0.121M/prod)
-Summary: hits    2.332 ± 0.007M/s (  0.130M/prod)
-Summary: hits    2.404 ± 0.017M/s (  0.127M/prod)
-Summary: hits    2.187 ± 0.002M/s (  0.109M/prod)
-
-
-per-CPU RW semaphore
-
-Summary: hits    1.341 ± 0.017M/s (  1.341M/prod)
-Summary: hits    2.397 ± 0.011M/s (  1.198M/prod)
-Summary: hits    3.547 ± 0.041M/s (  1.182M/prod)
-Summary: hits    4.108 ± 0.016M/s (  1.027M/prod)
-Summary: hits    3.138 ± 0.055M/s (  0.628M/prod)
-Summary: hits    3.247 ± 0.017M/s (  0.541M/prod)
-Summary: hits    2.877 ± 0.005M/s (  0.411M/prod)
-Summary: hits    2.880 ± 0.002M/s (  0.360M/prod)
-Summary: hits    2.579 ± 0.001M/s (  0.287M/prod)
-Summary: hits    2.982 ± 0.011M/s (  0.298M/prod)
-Summary: hits    2.603 ± 0.002M/s (  0.237M/prod)
-Summary: hits    3.013 ± 0.004M/s (  0.251M/prod)
-Summary: hits    3.059 ± 0.001M/s (  0.235M/prod)
-Summary: hits    2.721 ± 0.014M/s (  0.194M/prod)
-Summary: hits    2.943 ± 0.005M/s (  0.196M/prod)
-Summary: hits    3.366 ± 0.011M/s (  0.210M/prod)
-Summary: hits    2.459 ± 0.001M/s (  0.145M/prod)
-Summary: hits    3.023 ± 0.024M/s (  0.168M/prod)
-Summary: hits    2.919 ± 0.002M/s (  0.154M/prod)
-Summary: hits    2.569 ± 0.002M/s (  0.128M/prod)
-
-[0] https://paulmck.livejournal.com/67547.html
-
-Thanks.
-
-Jon.
-
-> 
-> Thank you,
-> 
-> > 
-> > Jon.
-> > 
-> > > 
-> > > Thank you,
-> > > 
-> > > > 
-> > > > >
-> > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > will depend on how much lock contention happens.
-> > > > >
-> > > > > Thank you,
-> > > > >
-> > > > > >
-> > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > >
-> > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > ---
-> > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > >
-> > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > --- a/kernel/events/uprobes.c
-> > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > > >   */
-> > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > >
-> > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > > >
-> > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > >  /* serialize uprobe->pending_list */
-> > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > > >  {
-> > > > > >       struct uprobe *uprobe;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return uprobe;
-> > > > > >  }
-> > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > > >  {
-> > > > > >       struct uprobe *u;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     write_lock(&uprobes_treelock);
-> > > > > >       u = __insert_uprobe(uprobe);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return u;
-> > > > > >  }
-> > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > >               return;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     write_lock(&uprobes_treelock);
-> > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > > >       put_uprobe(uprobe);
-> > > > > >  }
-> > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > >       max = min + (end - start) - 1;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > >       if (n) {
-> > > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > >                       get_uprobe(u);
-> > > > > >               }
-> > > > > >       }
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >  }
-> > > > > >
-> > > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > >       max = min + (end - start) - 1;
-> > > > > >
-> > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > +     read_lock(&uprobes_treelock);
-> > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > >
-> > > > > >       return !!n;
-> > > > > >  }
-> > > > > > --
-> > > > > > 2.43.0
-> > > > > >
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
