@@ -1,79 +1,114 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B539E2260B;
-	Tue,  2 Apr 2024 23:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFDE5C613
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Apr 2024 07:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712099027; cv=none; b=NdJbh4bhYTUWm5MqSUPlRQI8tA3rCp6BapuyulItaRtsQhpfdsgY5m4/fZeWH7V46nw9LnUXOfGdXUvW0R/fpP8vtQAxjR1ocOogmeEhNeUNAPs0L0Qu25wSjs3ENKZ1er8gjFd5tVsrauUEw4eSRFrlCB/oS6fduahczgZmank=
+	t=1712130321; cv=none; b=ZIZyd1HM0jv4MERbQ7YwsLcSu7zhwl32E/UZlnJyqTuHalkhRdV6lmtHxf5k7JYWqJ5J/h/58YRejkdVYB7yJxkUaJ0xYoA1xYN4DMyI08Gsu4t1rP8oXt/Rr3uxToEDliZgO73aFnN5IaIxenCPYjnSWYdjTePuXdZc5ibLHMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712099027; c=relaxed/simple;
-	bh=ScF6QNSnuOKd9KNJpYsFm03BlNSwOxnA/QZp3srCbNA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZhcQOd9aKXlyahk8fM2/6PkFXO38RDdRhjlb5AT9lktcNywQosq35A65CZlsGGNzKRRrC60Gr4Qd7tv5J2fN25+wNRy3SeIlDjQjBD1smpr6/aTj8cHfREX1J6JaYJTI1XJBO/C0c3dc32WRWKl2BGIJ4lPu8R5PQEJ8vhRiknM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so3412645a12.3;
-        Tue, 02 Apr 2024 16:03:45 -0700 (PDT)
+	s=arc-20240116; t=1712130321; c=relaxed/simple;
+	bh=P+ymv59+XPwhmmC1tXPNUwhkKRHh9CCFQRAHfsCi/Hs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzV+wfHe7NKY/tppAppQBcjX2xRFS2lPdsBK7SlS6bUYqKz4NbJIZKpKHiY7DC6r3DOi3ZDwDPWyXpk8JIS9kSXQSBA5wNQc9WgyB9bU3FXAvbJGUvQIbTmP8aMf7OiYNQR/Qnk07/RwQIOmtXRLZVPYG3ovytPizuuOXTCo4o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gW0xVN4o; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gW0xVN4o"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e27e174ccbso8966615ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Apr 2024 00:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712130319; x=1712735119; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G6UlaZMTnbxA96vbvATXylhXvaYbKi6kAc2YotmnHXo=;
+        b=gW0xVN4oITPrrODZ2Zop3ePLoUl9SdOchKpYcF3tFHMpnM0KwkBxr0qwQKCITBoSDb
+         /hBGK7Oz61hUX1OtyC1QlaMK3MM1CMxIFpaZlTMD6yqE5cBeHOCcA/JDkgR1u9WhwKjU
+         c8jhWlRgK+F8BAI0L57vvwWo2XT0aPeDEOwMY45mXcy1MH86oLUe+ASDPAQ0P7MxAup1
+         61zsPHpxIsy+npq8jrokJm4Y02KqIn8vG1s7ipH8MKqPxvzvVv6h+2b5mvYakzelYiPZ
+         5pFLGDAStUnDYsCGnNYwCOPmlVabMk4ax2l2BGYQ38tQVmInu4bs/ONYZl+Q7+0w/2va
+         0/RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712099025; x=1712703825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wzCXitGPhuYyMfQTaMVMsMslYOPk+D4W9QEmIyDGsKY=;
-        b=rUqSKQZ82jNZsKTk4fJTo3FaDs0pAVwkELurCTPqaGvPP4MhjjwpCyEl6A5w/+unRA
-         mmRU055Ng3XnQ283vPUrGDjraTr1TmYgC1U+62WifYbH1CfBj4P7QlMcpXyX3qzqQjT8
-         YboI6G4hEMXy9sFO1GHXKiE6OYrFCZI7EAl498keeeHKK4jMz51Kvs+XON0ZZov/pZaa
-         jqty5oEYk1ydfky97ed7eI/de5XAeEnBMwTh6Ew8SgAenUJpLCamajAPEs2x+ZC+qwXn
-         hZzT50ngEoZ5NlXC+oFPKf0jB7R7pODstSGVRFeHDY5sd2kAZR4DJ38l1qe64XzIeoOm
-         BiCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU31/0iRnq7MORXYRBIeR+sKCDV3qhSCG3bfU3IGRlwG4iM05tfHmeEWsplm5tkUrdDPP/ESdiSebNABX+orQ6VGDh9ryvmA/JgoTKbRYyGixIpM3sd4DMkRmM+1xD0oNwvd5Ap3fNJVhySZbKmsQ==
-X-Gm-Message-State: AOJu0Yxqx3YwKu2NmUU3sYU21YlPSZfTh5G1er84xER7aUrLuaZLGXMO
-	FQTkhsS8PwGmyT8uRsxutx8wjijok0TES9ZT+H2UsXt0+SxOkMGDtTHGnwNCJmmj9O7FduZ42OO
-	Md6GNFoEBoC8YVDoCh+70reaFlAM=
-X-Google-Smtp-Source: AGHT+IGszTCneZu4ykuvLxJsvsUgt2mSghjdJCooBB86zYzoye45jsKqEZ1uuYbwuK8XVNcTAPmAZ5SB1MvmjwiiMz4=
-X-Received: by 2002:a17:90b:4b10:b0:2a2:672f:ef6d with SMTP id
- lx16-20020a17090b4b1000b002a2672fef6dmr921013pjb.49.1712099024988; Tue, 02
- Apr 2024 16:03:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712130319; x=1712735119;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G6UlaZMTnbxA96vbvATXylhXvaYbKi6kAc2YotmnHXo=;
+        b=sYh/lggdHQR71wTW+WeF2kEkEJTbUQjT1X7C7QpgLCSt9UFWhNj9gJk518flF0ch3L
+         TSOSzBqMlu19oa4LE557wc7Tgzy+on+cx/mCLHYXf2JusYt+sQLpRxrGHmKeDIMJBOki
+         UzlciRJEFDwy8eMkdWOGzgZ1VBTnQUlHt3Eg6vSQq8FPFnCI4is9IPTYT7tgHMb8QQGt
+         +mOWRjvvJcHs358OKTt1EtkjvkfSehlrvuB6Wv9SwdzSFm/6ZDnhsMombZosZ9nMGNIo
+         qgjmhDZWq0lMoL/AyrrWvTjqsNaQmFt1vA67ZHGnmJBfEhtnbNR/VJXyi7Zd9TIut28f
+         5pxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh0I1PnwGBZ0BMQ1mEmew0Q1QDfr6NXiCXeynST5ChD9EihIb6pN+ajQX2uYiKNXHz3NKBhSBQ4bKmghcyaztnxZy1DoIiV5WplOdw7f+ZBg==
+X-Gm-Message-State: AOJu0YztcsEZ7/gHjLj3W4U1iqWgQaV125C133aNDA4OL+QEpG3i42hL
+	tlkypqp5jR352ifuxX1kVmrIpo8RjdCGHDU8fNLy4oFJ8On6goSYEYYV8/jc1qI=
+X-Google-Smtp-Source: AGHT+IFdgfnRPQf+r6TuP+UrXweCza3KRzieFrS+SjQEAI04ntMVVmPgZmWTWVgVFgR9QSxGudL7xw==
+X-Received: by 2002:a17:903:191:b0:1e0:59f4:a776 with SMTP id z17-20020a170903019100b001e059f4a776mr17844629plg.13.1712130319192;
+        Wed, 03 Apr 2024 00:45:19 -0700 (PDT)
+Received: from [10.70.146.105] ([203.208.189.8])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902d50f00b001e0eae230f2sm12532969plg.151.2024.04.03.00.45.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 00:45:18 -0700 (PDT)
+Message-ID: <20fd87a5-7c9b-458f-9f77-3235185db7f4@bytedance.com>
+Date: Wed, 3 Apr 2024 15:45:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329215812.537846-1-namhyung@kernel.org> <20240329215812.537846-4-namhyung@kernel.org>
- <ZgyBwTWv8OZlbl9m@x1> <ZgyCkETBtsTX3tA8@x1>
-In-Reply-To: <ZgyCkETBtsTX3tA8@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 2 Apr 2024 16:03:33 -0700
-Message-ID: <CAM9d7cgyeaeTPyw5fZjX2OsVrGqv-VrqpU_RPgUu8yWN+qTDsg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] perf annotate: Split out util/disasm.c
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] Re: [PATCH v2 2/2] perf evsel: Use evsel__name_is()
+ helper
+Content-Language: en-US
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ james.clark@arm.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240401062724.1006010-1-yangjihong@bytedance.com>
+ <20240401062724.1006010-3-yangjihong@bytedance.com> <ZgxzmkCGNXLipMVg@x1>
+From: Yang Jihong <yangjihong@bytedance.com>
+In-Reply-To: <ZgxzmkCGNXLipMVg@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 2, 2024 at 3:11=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Tue, Apr 02, 2024 at 07:08:04PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Mar 29, 2024 at 02:58:10PM -0700, Namhyung Kim wrote:
-> > > The util/annotate.c code has both disassembly and sample annotation
-> > > related codes.  Factor out the disasm part so that it can be handled
-> > > more easily.
-> > >
-> > > No functional changes intended.
-> > >
-> >
-> > Unsure if here, will check and fix later, detected with:
-> >
-> >   make -C tools/perf build-test'
->
-> did it, added the missing env.h header to disasm.c
+Hello,
 
-Thanks a lot!
-Namhyung
+On 4/3/24 05:07, Arnaldo Carvalho de Melo wrote:
+> On Mon, Apr 01, 2024 at 02:27:24PM +0800, Yang Jihong wrote:
+>> Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
+>> evsel__name_is() helper.
+>>
+>> No functional change.
+> 
+> Well, its not building:
+> 
+> builtin-trace.c: In function ‘cmd_trace’:
+> builtin-trace.c:4919:90: error: macro "assert" passed 2 arguments, but takes just 1
+>   4919 |         assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augmented_syscalls__");
+>        |                                                                                          ^
+> In file included from /home/acme/git/perf-tools-next/tools/include/linux/kernel.h:7,
+>                   from /home/acme/git/perf-tools-next/tools/include/linux/refcount.h:42,
+>                   from util/cgroup.h:6,
+>                   from builtin-trace.c:29:
+> /usr/include/assert.h:50: note: macro "assert" defined here
+> 
+> I'll fix it, but please test build things next time.
+
+Sorry. I compiled it in a new environment before. This environment does 
+not support bpf skel, and the modified part of the code is included in 
+HAVE_BPF_SKEL, so I did not find this problem when I compiled it in my 
+environment.
+
+
+Thanks for the correction. will confirm whether the modified code is 
+actually compiled next time.
+
+
+Thanks,
+Yang
