@@ -1,126 +1,136 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A563C1420C4
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Apr 2024 12:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01BB148305;
+	Wed,  3 Apr 2024 14:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712147171; cv=none; b=q7CBl5OaKDVQb/pvbd6RayTM9HZtvURNaEc02yu1dn6X/uxpRtITWDwpfghIPBviaz+Rqn/oYtxrrlicT1DE9aONcHedbDfsI81c4i0etpt0sCvTqa7ZEEfUyMloi0PHHOj6ZK3utAdPvwygYnhDLzK29BtxPKHztvBYKAq0a94=
+	t=1712153613; cv=none; b=ayjtEXRBup5ByHw/WWV9qIDzENIkHZJB0nf+eKbAtK+b2Ce5ou/Cb/5sZw4GYEMpeb0/gScgChnVCOygkJghvos/M9FyosrVADcvQtVUyYtvbGeIj/8K/xOv5Ad54PjZ2oViCAdGMrtG7xmjbMnjVI1YQoFv2Ektpsixk9b2Ejo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712147171; c=relaxed/simple;
-	bh=C+TwzIv0q7ONt2hgD/9G+JyqyDZ6Vk0qZXSCafE4C6I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sarEDV8L6CWKoT217MiroHs1DG77GROzQz+Li16pUI6Epz29Po72i3LGD0PeKVGIO4m6xu4f9JJhDTnB+3u5NTodZziKLXBP2sg2hqIcxziA1cFKAB/Co0OHKxwo4eeUOgJwBYIsy6bKUcpLjbH7nxECI6QR5JRBxe0YFeZGa9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kv3Y+KhC; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1712153613; c=relaxed/simple;
+	bh=oQYdkSycvPqbfcL8zV1mGBUEeLAVUzVXPrPdPWpM2sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObWPUX17mEvCapnQrbcyGkMRBDInydK0RvqOlBDxMbh2RZUysizV7FfMg7esrCHKTbkjruIEU3vI9nZRc4aMWe6wu35z79sQ4oXS/a5HJ+uvomNFab7hlsY1ZvT58JAYmtOcBDfGRHByJy3XHozA7XXepd1mkX6GfhZeApdxVoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVKZxVmm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kv3Y+KhC"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e27fadbbe1so12540205ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Apr 2024 05:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1712147169; x=1712751969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=680IOIiYvO7U69q8/3NO/TM8zSL1qJ6oi50wwHypzL0=;
-        b=kv3Y+KhCCdxJ/tXae9hD6NuHH8nXalMcD9CXmQiTAd8wM2d1Sq16vqJFUWfR7rRNDK
-         5dXeA2Ox/OHF7F+Wog4bpp5q8UZkL+Wj1NrWrcg8Yvp+9hP/Q6ldBNNnGY5AUgeL6u+p
-         3gN+cYXKTIVV1IZyrWq6dksu2hKNkMNCY7cQFTjLp4hsWRINlY9nXyy4BqB7Cei3IhwS
-         fJ683WM1YOZnzGCTwNGdN16esx3gm7NYNZdzV/m9it9DEU/JZw1CGydptcTmJb7tT8dp
-         KGN0F01kRthlKmvGLpwrMjL0I91ScSq/RbGyadYeM4K7OEDBlLRJVEtTALst2R4W+vqI
-         Nizg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712147169; x=1712751969;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=680IOIiYvO7U69q8/3NO/TM8zSL1qJ6oi50wwHypzL0=;
-        b=FYdb0wluhaMCXAQdYkwVf4BLtYUHuVCZsKRJcU0dMvBy5C1Kf0H4aYoXugqN2SYIy8
-         gEHSSqXJkt4IykfOQoTwW8R9rImvWcKNIMep9RX+OatBpDul/i6yu/ipzG5xYfUDotIy
-         W7ZLi5RJgFxy/S0/XTMhf1YwM/WUfqZQ37S69VpRuRDehYvBrIh8S/Gjmc21LLUuUWvq
-         i/N8CnsbAGzqQnl+htVoq7FjQlvnDquxbaoL1yZbZsFWPiWXsjQ/306WX4MICRXx3XT7
-         6Q41qg+rdYJT/ZOcXbuT8tthBZug6B2UkzlDSWpwkPTNrxHlKVMaPF1+Hv9jCqwLjhWP
-         VCHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCVJtN4hChXHuD3hVMHqYnBsEagd9FeZbj/QM8y+xkP0z4yEs8n0nSgGei68hdUoK5hMR4EzjUYWmolL+p90h82ThsLCbchUyFLN5WELLhHA==
-X-Gm-Message-State: AOJu0YyJyLyobnwwVg88JJEUKUMnude3wV74LwBsh4IipWvLiIY3+MAW
-	BIKE4XIgtG8gr9z4zsz58zdOIBEVGvCaryr9EcqQz3vIHQM9pQ2AzQAPQoTXMBY=
-X-Google-Smtp-Source: AGHT+IE1BA6R9WM9FnWdKVLkzpxYrahMEwc8w8zzEYzMNbHHltFWvb9umn9zs6POLTFfyBTl89xnvA==
-X-Received: by 2002:a17:902:d897:b0:1dd:b728:b8d8 with SMTP id b23-20020a170902d89700b001ddb728b8d8mr16254189plz.45.1712147168884;
-        Wed, 03 Apr 2024 05:26:08 -0700 (PDT)
-Received: from ubuntu20.04 ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id lg13-20020a170902fb8d00b001dddbb58d5esm13168939plb.109.2024.04.03.05.26.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 05:26:08 -0700 (PDT)
-From: Yang Jihong <yangjihong@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yangjihong@bytedance.com
-Subject: [PATCH] perf beauty: Fix AT_EACCESS undeclared build error for system with kernel versions lower than v5.8
-Date: Wed,  3 Apr 2024 20:25:58 +0800
-Message-Id: <20240403122558.1438841-1-yangjihong@bytedance.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVKZxVmm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1174EC43390;
+	Wed,  3 Apr 2024 14:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712153612;
+	bh=oQYdkSycvPqbfcL8zV1mGBUEeLAVUzVXPrPdPWpM2sk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QVKZxVmmRpT2UuBVrMkJN4j6QAsZvTJG5XS+d8+f8CCEIatF/O80939pAd6Rkg3Mh
+	 8zBLMasfk18iLwbj04SdoWyUevPKUYipyh0lZgXuFLvi5IaUwbT0+66K816uSZAOYY
+	 PYvclJ1Cs9dyFePT1a46c9mPQgZKNTdKiOcSTiVZAjEUZkP4+jNQFIo56yIjGOPjij
+	 Fs6q9LDC7kMwZD5gnhJIVAuqTnwOZJqP6BHLjAkZrJg62gqFBMxUGDH1UB+mjawsxH
+	 AePpsbvsAjEXmQl4cGRf+18pn7FRHBo0s+cJ4LrIv7niK3AhQgm7Fd9/uT2go0zMgO
+	 0wSKS9cNEkLgg==
+Date: Wed, 3 Apr 2024 11:13:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] perf annotate: Split out util/disasm.c
+Message-ID: <Zg1kCT3V3n9l0fJc@x1>
+References: <20240329215812.537846-1-namhyung@kernel.org>
+ <20240329215812.537846-4-namhyung@kernel.org>
+ <ZgyBwTWv8OZlbl9m@x1>
+ <ZgyCkETBtsTX3tA8@x1>
+ <CAM9d7cgyeaeTPyw5fZjX2OsVrGqv-VrqpU_RPgUu8yWN+qTDsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cgyeaeTPyw5fZjX2OsVrGqv-VrqpU_RPgUu8yWN+qTDsg@mail.gmail.com>
 
-In the environment of ubuntu20.04 (the version of kernel headers is 5.4),
-there is an error in building perf:
+On Tue, Apr 02, 2024 at 04:03:33PM -0700, Namhyung Kim wrote:
+> On Tue, Apr 2, 2024 at 3:11 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > On Tue, Apr 02, 2024 at 07:08:04PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Fri, Mar 29, 2024 at 02:58:10PM -0700, Namhyung Kim wrote:
+> > > > The util/annotate.c code has both disassembly and sample annotation
+> > > > related codes.  Factor out the disasm part so that it can be handled
+> > > > more easily.
+> > > >
+> > > > No functional changes intended.
+> > > >
+> > >
+> > > Unsure if here, will check and fix later, detected with:
+> > >
+> > >   make -C tools/perf build-test'
+> >
+> > did it, added the missing env.h header to disasm.c
 
-    CC      trace/beauty/fs_at_flags.o
-  trace/beauty/fs_at_flags.c: In function ‘faccessat2__scnprintf_flags’:
-  trace/beauty/fs_at_flags.c:35:14: error: ‘AT_EACCESS’ undeclared (first use in this function); did you mean ‘DN_ACCESS’?
-     35 |  if (flags & AT_EACCESS) {
-        |              ^~~~~~~~~~
-        |              DN_ACCESS
-  trace/beauty/fs_at_flags.c:35:14: note: each undeclared identifier is reported only once for each function it appears in
+> Thanks a lot!
 
-commit 8a1ad4413519 ("tools headers: Remove now unused copies of
-uapi/{fcntl,openat2}.h and asm/fcntl.h") removes fcntl.h from tools
-headers directory, and fs_at_flags.c uses the 'AT_EACCESS' macro.
-This macro was introduced in the kernel version v5.8.
-For system with a kernel version older than this version,
-it will cause compilation to fail.
+Three more, also fixed:
 
-Fixes: 8a1ad4413519 ("tools headers: Remove now unused copies of uapi/{fcntl,openat2}.h and asm/fcntl.h")
-Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
----
- tools/perf/trace/beauty/fs_at_flags.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+util/disasm.c: In function ‘symbol__disassemble_bpf’:
+util/disasm.c:1203:9: error: implicit declaration of function ‘perf_exe’ [-Werror=implicit-function-declaration]
+ 1203 |         perf_exe(tpath, sizeof(tpath));
+      |         ^~~~~~~~
 
-diff --git a/tools/perf/trace/beauty/fs_at_flags.c b/tools/perf/trace/beauty/fs_at_flags.c
-index c1365e8f0b96..c200669cb944 100644
---- a/tools/perf/trace/beauty/fs_at_flags.c
-+++ b/tools/perf/trace/beauty/fs_at_flags.c
-@@ -10,6 +10,14 @@
- #include <linux/fcntl.h>
- #include <linux/log2.h>
+
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 3438c31437f46e71..c2664215554d0bb3 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -21,6 +21,7 @@
+ #include "maps.h"
+ #include "srcline.h"
+ #include "symbol.h"
++#include "util.h"
  
-+/*
-+ * uapi/linux/fcntl.h does not keep a copy in tools headers directory,
-+ * for system with kernel versions before v5.8, need to sync AT_EACCESS macro.
-+ */
-+#ifndef AT_EACCESS
-+#define AT_EACCESS 0x200
-+#endif
+ static regex_t	 file_lineno;
+ 
+util/disasm.c:1229:32: error: invalid use of undefined type ‘struct bpf_prog_info_node’
+ 1229 |         info_linear = info_node->info_linear;
+      |                                ^~
+util/disasm.c: In function ‘symbol__disassemble_bpf’:
+util/disasm.c:1230:32: error: invalid use of undefined type ‘struct bpf_prog_info_node’
+ 1230 |         info_linear = info_node->info_linear;
+      |                                ^~
+
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index c2664215554d0bb3..5b5407525b31f47f 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1170,6 +1170,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ #include <linux/btf.h>
+ #include <tools/dis-asm-compat.h>
+ 
++#include "bpf-event.h"
 +
- #include "trace/beauty/generated/fs_at_flags_array.c"
- static DEFINE_STRARRAY(fs_at_flags, "AT_");
- 
--- 
-2.25.1
+ static int symbol__disassemble_bpf(struct symbol *sym,
+ 				   struct annotate_args *args)
+ {
 
+util/disasm.c: In function ‘symbol__disassemble_bpf’:
+util/disasm.c:1235:54: error: invalid use of undefined type ‘struct perf_bpil’
+ 1235 |         info.buffer = (void *)(uintptr_t)(info_linear->info.jited_prog_insns);
+      | 
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index a88d33fd38a58e4a..a1219eb930aaeb5a 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1173,6 +1173,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ #include <tools/dis-asm-compat.h>
+ 
+ #include "bpf-event.h"
++#include "bpf-utils.h"
+ 
+ static int symbol__disassemble_bpf(struct symbol *sym,
+ 				   struct annotate_args *args)
