@@ -1,167 +1,156 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B7812D770;
-	Thu,  4 Apr 2024 18:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4881F74BE5;
+	Thu,  4 Apr 2024 20:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712254167; cv=none; b=V7NCC9WuQhSHgV00Fbu8+jkmwzBlTZURgE1Kyza01mXhDRX2EX9FYSE2yGeYJ0b8KTpPwQ/Gi0Q68KH/9mn8Rd7pJZoTviGp8PEo6fD0J+ZBMgnSbnRGcgcfNbdx9RDF7T7tPJfs9qrjYfR2pzSNCGLeOTxkTQadEw7VN4rSiDw=
+	t=1712262580; cv=none; b=tsdzmBLU58lVH6nlivm3S+5CX/XBjZV+/mskX8geA9DfxTLt8SLhugATPSVUiGoQ7LCiY1IVa+rKVtzQWZ5puxRrwCkj9/mtDoNqus1A0bg9DKQakHM3EV+M4KbzLqwXEaUj/bzi7staYvGBAPODFu3Ubkx9Qw/GpRRtJlYSxBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712254167; c=relaxed/simple;
-	bh=x4eAu7x6Idzvlda3hIQDcIF+4wKEpZYKt9rgpsoqlDo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jGanmn0Oja3tAD4vJdcFY7PEHaLOWMCPEVQXoAbqznOsQG8+OjH0z7wqH/0QMXVuLG/Rx00y9ZuU5MYl04pibwclTO4O3FaFvle4Y+/b8Zs/sBg2+Rod17pP2SWFEHymXrWKdegshTEBd9GUX1zUy6071bsdSGAFDAwfzVWbTOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=aXjO9lqD; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1712262580; c=relaxed/simple;
+	bh=wqNFfj9b3aR76gtBX0p3eNz5eYoSoJSspbSMEOy53yg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BFslgyCHffhLWSUVBQy133Rjdy3J9GepixyBVMD0w5/AURdHnYROH9XCWOvx3YZttLUPtaxDY40k4wsdT9RrNI0ofFGTDIplkaSedHS3gQpvgicnZcPyBGwX/yA3v69wHHCb1anOX/DW/QaosW8garb0gZ9le666Vt3VLXL7+RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZUb3Q7Wg; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="aXjO9lqD"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 434GsQgH030426;
-	Thu, 4 Apr 2024 11:08:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=bs9rzbl/ZJsjnoCm4UWhViM7erxeHXkxZ5PmGyvl0I8=; b=aXj
-	O9lqDdd0wiA3CPbcfwE1zgxKibz9wZCAF45eIvd6vtwgycbwtv7lyv0QGFfE4DJr
-	vw6m0jYaUkAsg2lrBlnV6ycIPOy+/MeOs6X1R+oTIUBgSn7P0rhDlMsNlod9S3Lb
-	GU1rtGlIZ6RPInEFZV06FZGsyN1kMGQJiomt5g1zll68zJ72lRV2SDHCyrv4o9b9
-	kHJfrhiIWvvGjtsZ4bArg1J5EFSvit2gZBDosRmXMLDknWv2oq0UCqvRfpQKcJH9
-	JpHbTbLU/SrQpC252FmyTSnOBjog5E1lUIN4DE6+IyYAdHquRnMlQ8LCBDZj+mw8
-	sKf3BAOpyK1EO2G153g==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x9em6kka2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 11:08:52 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Apr 2024 11:08:52 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 4 Apr 2024 11:08:51 -0700
-Received: from POWEREDGE.marvell.com (POWEREDGE.marvell.com [10.28.8.3])
-	by maili.marvell.com (Postfix) with ESMTP id 32F4D3F7076;
-	Thu,  4 Apr 2024 11:08:45 -0700 (PDT)
-From: Tanmay Jagdale <tanmay@marvell.com>
-To: <john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linux.dev>, <suzuki.poulose@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <irogers@google.com>, <adrian.hunter@intel.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sgoutham@marvell.com>, <gcherian@marvell.com>, <lcherian@marvell.com>,
-        Tanmay Jagdale <tanmay@marvell.com>
-Subject: [PATCH V2 2/2] perf: cs-etm: Store previous timestamp in packet queue
-Date: Thu, 4 Apr 2024 23:37:31 +0530
-Message-ID: <20240404180731.7006-3-tanmay@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240404180731.7006-1-tanmay@marvell.com>
-References: <20240404180731.7006-1-tanmay@marvell.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZUb3Q7Wg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712262578; x=1743798578;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wqNFfj9b3aR76gtBX0p3eNz5eYoSoJSspbSMEOy53yg=;
+  b=ZUb3Q7WgaLtMCQdOQdUZH2vdVhvvLEq3/bamidyEHzvYsKhysGYiI557
+   pMg7rskUtuzOOL73aHa9cz2jMfjCmMNY6nzL6fjs+qGK3R8qarDXfM5Hj
+   IzTigOKwo9ZzP0vqDX+lYokVisOk7D4lpThThyOSi2aOt0yxQI+SEHgEO
+   kDRRtW1zprXnkzbsr1lAtDj0biWjMYDGHMCiwatMhJO8c6QN9zpcD/TgQ
+   cemUofeN6O+YZupMVDBiaIf3gwsXSBwNxWqj4r/5Gxdi3YQwAi4IHS31W
+   WQw8UHgNfQEkWTlWAbuIiu/6X9yHHvrHQHoXEHDWS3xHUuezIHvJLcKpa
+   w==;
+X-CSE-ConnectionGUID: 2OQW+aMbT6KahUkqishkbg==
+X-CSE-MsgGUID: sOxIEY1uQEGyUHvhh3uXng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="18135113"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="18135113"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 13:29:37 -0700
+X-CSE-ConnectionGUID: 1PJ/Bl/mRJyO7DOGslCA4A==
+X-CSE-MsgGUID: lRm9VEgGSN2Hr8AVvf6RPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="23597732"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 13:29:38 -0700
+Received: from [10.212.51.158] (kliang2-mobl1.ccr.corp.intel.com [10.212.51.158])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1E75F206DFCB;
+	Thu,  4 Apr 2024 13:29:36 -0700 (PDT)
+Message-ID: <ceca5922-6b83-464f-9e64-e8999068f734@linux.intel.com>
+Date: Thu, 4 Apr 2024 16:29:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andi Kleen <ak@linux.intel.com>
+References: <20240403164636.3429091-1-irogers@google.com>
+ <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
+ <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com>
+ <b9868e97-e353-45e0-83b7-aa28bc35dd67@linux.intel.com>
+ <CAP-5=fX+YuEgD4pF-2YRcqgD2cwLw_7Z4ak+wszctvagPS+Xbw@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fX+YuEgD4pF-2YRcqgD2cwLw_7Z4ak+wszctvagPS+Xbw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: nkJzkpKjPUXW5Ol3SCC4ytqvRjEW0W77
-X-Proofpoint-GUID: nkJzkpKjPUXW5Ol3SCC4ytqvRjEW0W77
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_14,2024-04-04_01,2023-05-22_02
 
-Since logic in cs_etm__sample is changed to synthesizing the previous
-packet (tidq->prev_packet) instead of current packet (tidq->packet),
-the first time this function is called, tidq->prev_packet is NULL
-and we return without processing anything.
 
-This is as expected but, in the first call, we would have a valid
-timestamp (stored in tidq->packet_queue.cs_timestamp) which belongs
-to tidq->packet. This would be lost due to no processing.
 
-Losing this timestamp results in all the synthesized packets being
-associated with the next timestamp and not their corresponding one.
+On 2024-04-03 4:26 p.m., Ian Rogers wrote:
+> On Wed, Apr 3, 2024 at 11:57 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-04-03 2:31 p.m., Ian Rogers wrote:
+>>> On Wed, Apr 3, 2024 at 10:59 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
+>>>>> Rather than place metrics without a metric group in "No_group" place
+>>>>> them in a a metric group that is their name. Still allow such metrics
+>>>>> to be selected if "No_group" is passed, this change just impacts perf
+>>>>> list.
+>>>>
+>>>> So it looks like the "No_group" is not completely removed.
+>>>> They are just not seen in the perf list, but users can still use it via
+>>>> perf stat -M No_group, right?
+>>>>
+>>>> If so, why we want to remove it from perf list? Where can the end user
+>>>> know which metrics are included in the No_group?
+>>>>
+>>>> If the No_group is useless, why not completely remove it?
+>>>
+>>> Agreed. For command line argument deprecation we usually keep the
+>>> option but hide it from help with PARSE_OPT_HIDDEN, so I was trying to
+>>> follow that pattern albeit that a metric group isn't a command line
+>>> option it's an option to an option.
+>>>
+>>
+>> Perf list has a deprecated option to show the deprecated events.
+>> The "No_group" should be a deprecated metrics group.
+>>
+>> If so, to follow the same pattern, I think perf list should still
+>> display the "No_group" with the --deprecated option at least.
+> 
+> Such metrics would be shown twice, once under No_group and once under
+> a metric group of their name.
+You mean with the --deprecated option?
+Yes, that's because the old/deprecated metrics group (No_group) is not
+complete removed. So both the new name and old/deprecated name are shown
+with the --deprecated option. The metrics which belong to both groups
+will be shown twice.
 
-To fix this, introduce a new variable (prev_cs_timestamp) to store the
-queue's timestamp in cs_etm__sample(). When we start synthesizing the
-prev_packet, use this cached value instead of the current timestamp
-(cs_timestamp).
+Without the --deprecated option, only the new group and its members are
+shown.
 
-Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
----
- tools/perf/util/cs-etm.c | 17 +++++++++++++----
- tools/perf/util/cs-etm.h |  1 +
- 2 files changed, 14 insertions(+), 4 deletions(-)
+> With deprecated events this isn't the
+> case, you can only see them with --deprecated. Given we can see the
+> metric without the No_group grouping, what is being added by having a
+> No_group grouping? It feels entirely redundant and something we don't
+> need to advertise.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 55db1932f785..d5072c16fcd8 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1459,13 +1459,15 @@ u64 cs_etm__convert_sample_time(struct cs_etm_queue *etmq, u64 cs_timestamp)
- }
- 
- static inline u64 cs_etm__resolve_sample_time(struct cs_etm_queue *etmq,
--					       struct cs_etm_traceid_queue *tidq)
-+					       struct cs_etm_traceid_queue *tidq,
-+					       bool instruction_sample)
- {
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 	struct cs_etm_packet_queue *packet_queue = &tidq->packet_queue;
- 
- 	if (!etm->timeless_decoding && etm->has_virtual_ts)
--		return packet_queue->cs_timestamp;
-+		return instruction_sample ? packet_queue->prev_cs_timestamp :
-+					    packet_queue->cs_timestamp;
- 	else
- 		return etm->latest_kernel_timestamp;
- }
-@@ -1484,7 +1486,7 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 	event->sample.header.size = sizeof(struct perf_event_header);
- 
- 	/* Set time field based on etm auxtrace config. */
--	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
-+	sample.time = cs_etm__resolve_sample_time(etmq, tidq, true);
- 
- 	sample.ip = addr;
- 	sample.pid = thread__pid(tidq->thread);
-@@ -1560,7 +1562,7 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
- 	event->sample.header.size = sizeof(struct perf_event_header);
- 
- 	/* Set time field based on etm auxtrace config. */
--	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
-+	sample.time = cs_etm__resolve_sample_time(etmq, tidq, false);
- 
- 	sample.ip = ip;
- 	sample.pid = thread__pid(tidq->prev_packet_thread);
-@@ -1849,6 +1851,13 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		}
- 	}
- 
-+	/*
-+	 * Since we synthesize the prev_packet, store the current timestamp
-+	 * here in prev_cs_timestamp so that when we *actually* synthesize
-+	 * the prev_packet, we use this timestamp and not the future one.
-+	 */
-+	tidq->packet_queue.prev_cs_timestamp = tidq->packet_queue.cs_timestamp;
-+
- 	cs_etm__packet_swap(etm, tidq);
- 
- 	return 0;
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 4696267a32f0..333eeb2c06a0 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -205,6 +205,7 @@ struct cs_etm_packet_queue {
- 	u32 instr_count;
- 	u64 cs_timestamp; /* Timestamp from trace data, converted to ns if possible */
- 	u64 next_cs_timestamp;
-+	u64 prev_cs_timestamp;
- 	struct cs_etm_packet packet_buffer[CS_ETM_PACKET_MAX_BUFFER];
- };
- 
--- 
-2.34.1
+I just want to have a generic pattern for deprecating a metrics/metrics
+group that everybody can follow.
 
+I treat the "No_group" as a normal metrics group name. So this patch is
+to introduce a new name, and hide the old name. Both new and old names
+can still be used.
+
+If it's for a deprecated event, the expectation is to only see the new
+name by default, and see both new name and old name with the
+--deprecated option.
+
+Now, if it's a generic deprecated metrics group, what's the expected
+behavior? I prefer to follow the same pattern as a deprecated event.
+If we do so, yes, there will be some redundancy with the --deprecated
+option, since some members may belong to both old and new groups.
+But I don't think it's an issue. It's normal that metrics belong to
+different groups.
+
+Thanks,
+Kan
