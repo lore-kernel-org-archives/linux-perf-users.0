@@ -1,135 +1,144 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5097412FF71;
-	Thu,  4 Apr 2024 18:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5C0130486;
+	Thu,  4 Apr 2024 18:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712254124; cv=none; b=NODe+CjvRK+Ozjbj08F4BflB+8DONn7tF0OoB9kYQAT8o51hh/dFoMiXbX6GA6z2Asb0gBru5rUMm6InViD7kgcv1Kwn4N8jkb4EnOaKzPGBjKiLoO196v2aSSZdndPGTUJGkheYwjun5pbSFfr5qUHm1uV0SPYF5Kv2cIA6L/c=
+	t=1712254131; cv=none; b=i79QY1gNMfE1rsk8i6s/deUCg6DspfUKwxexJfXG1pWtBa0nIB6r1I0oSyLgZvlin7e03u14MM1R0I7cm/IXNxvdrReDmM/tdStBFak7Vnmke9oWcJtArGU73q22lW/77wqQHnLoTbgB30nVUID20lVdM2AHqJ1qiMU4h3fibW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712254124; c=relaxed/simple;
-	bh=0DbusI7GY03Wj0tGOtwXkpAVva/Wgxk1NxWdN40xn+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lIqGutPbNbrRHVIqm8jLoBuJfOTZcONcsvc1ClT4A3nOcwnaB+op80EJMDNJgOs4SoOHq1qt1b0AGHYhPCWBR7hmpCReBxIzrwYrZm32zLZIKuUA631vqV5LVn9tLIER3kfSlox+4yX5Xl0OfzioUsxtu/XNBoSdFLw3N3QU7DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5f034b4dcecso955368a12.1;
-        Thu, 04 Apr 2024 11:08:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712254122; x=1712858922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q0Iw1ZA3glUSrCjqo0XgoMrR9akniIS9Yku901iiv9o=;
-        b=ulMHaorPtVCabsUrESsseKQfmWnMvlVkxcFB37bT5VEtcpDETjkyVbagX7IwpiZFyC
-         NRzafD/yCi1DJ7+H9eSMlX0U19F1HjfZus5ajA9YnnLywxhG/wVEI/qEDJ4JpegMirS7
-         V5cW0TXxlDXM8cL+un6mtUZp9n/b2m+jpjISEz/GIZ5Y08EDj85qdZ5w9AbmWxepjj74
-         YgXMiYjfXMDvyHbZP8u49AegoaW6ANYpYdY9ksRHJzVuJRO0LSR7z76+CbzCOrHmP21Y
-         9YDRh0mxJH6vDzCQ/pGrzDXJGjeu6ropFVGMJym5t76+eITpavL4VpZpuaV2BlA2C8Tm
-         i1Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXm1rYO+no7od/chJB6iXHCSv0SPxTklj3ow+lFRO6yJoGIgXxFw/DDC78pSpN5+V3XA3geDoattItSsji+fV3oiDPXATltYg9L7S5u4iNI1DGi0XiUFNxxvTD442dSdbXuqdn14EnBLd9CGnTyeg==
-X-Gm-Message-State: AOJu0YwMIJMsygu7934SaCsi552+paQt+3DvVXe9+hunHTx69Gk9iFfh
-	VMCLNGGGJLJeJ/NQfgmmi9y1GDy9QYBX3eJzVHHuZjWmB3OU7WNpM7r3srfUmpAIx8h3LRP+Ffj
-	IEgMIN+PcmgzDnoF8X0JUOOKvjWg=
-X-Google-Smtp-Source: AGHT+IFunuj9sblh5HiySy+tjJp5z708RHdeC2RTydCVSG5q+NeE58+2Z93eUeFeYUJGARdzOg09IbCz8sKaJabfE2A=
-X-Received: by 2002:a17:90a:2f05:b0:2a2:6244:32b5 with SMTP id
- s5-20020a17090a2f0500b002a2624432b5mr374623pjd.11.1712254122425; Thu, 04 Apr
- 2024 11:08:42 -0700 (PDT)
+	s=arc-20240116; t=1712254131; c=relaxed/simple;
+	bh=whxOD+12dLAYPGaIgNLWaUtgIqUiZ0Gq8qWeXfT4t7k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hMpuYCEOOETZRS2URpIUCsVwld5XpoRDI9Dy7wstV/PjrDlnCSB4+AriQ7d9hgUkonewStW0m+HBf1dbskEidq6eTsQQovZIfe0uqHdailgjmgqzN1kAXp+wGIF3k9Fo70WA37+A2z/ZWMhgwTBzF8JJ/ikobINz2304i5JXzGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=F9+nIWdV; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="F9+nIWdV"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 434GsWuM030547;
+	Thu, 4 Apr 2024 11:08:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=2fQHR/QP
+	ziiwV0xMwMaSaBgJWBoHDC5/OXUOImeI4Xg=; b=F9+nIWdVDJPdaOn7TE6R5yTl
+	RV9Mq4RFyU5MzcUHYdD9DJP7F2uOEIyTOnXHaruSUKZ1XE27Qqc1EuMRsel7faNF
+	O5cxbFrvPuh9ZSOZid5Grl7vPZeLr4ix24QlCJraqif50QvULZTlmvroreRD88VR
+	pZAjpC5aeRNN9uZXNb8sj4OvX4e7fJeomvMUGXr9doT7mio/NLWEY1VU6oBJFv+s
+	ui8YFJcUv39I35I/TPPis+unemyA/V5hsdd1vk1mr2/qe54xxz275A0e/RGl0vEU
+	2AgqeC1H0RfwG8fWkwB1pQw57w3+0zyV+roy8BUWeA6YRLysF9vbVgIwwYbpIw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x9em6kk6w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 11:08:14 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 4 Apr 2024 11:07:58 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 4 Apr 2024 11:07:58 -0700
+Received: from POWEREDGE.marvell.com (POWEREDGE.marvell.com [10.28.8.3])
+	by maili.marvell.com (Postfix) with ESMTP id 2A8103F7070;
+	Thu,  4 Apr 2024 11:07:52 -0700 (PDT)
+From: Tanmay Jagdale <tanmay@marvell.com>
+To: <john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linux.dev>, <suzuki.poulose@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <irogers@google.com>, <adrian.hunter@intel.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sgoutham@marvell.com>, <gcherian@marvell.com>, <lcherian@marvell.com>,
+        Tanmay Jagdale <tanmay@marvell.com>
+Subject: [PATCH V2 0/2] Fix Coresight instruction synthesis logic 
+Date: Thu, 4 Apr 2024 23:37:29 +0530
+Message-ID: <20240404180731.7006-1-tanmay@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403164818.3431325-1-irogers@google.com>
-In-Reply-To: <20240403164818.3431325-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 4 Apr 2024 11:08:31 -0700
-Message-ID: <CAM9d7chRiUO8uqJjHNbf3w8bx00xpS7f-rjGnKwMp+6+ftZniA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: TGZ0rNbCBB2i8lZeFidxwG7Xgksor3Ml
+X-Proofpoint-GUID: TGZ0rNbCBB2i8lZeFidxwG7Xgksor3Ml
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_14,2024-04-04_01,2023-05-22_02
 
-Hi Ian,
+When we use perf to catpure Coresight trace and generate instruction
+trace using 'perf script', we get the following output:
 
-On Wed, Apr 3, 2024 at 9:48=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Previously "set -e" meant any non-zero exit code from perf stat would
-> cause a test failure. As a non-zero exit happens when there aren't
-> sufficient permissions, check for this case and make the exit code
-> 2/skip for it.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+# perf record -e cs_etm/@tmc_etr0/ -C 9 taskset -c 9 sleep 1
+# perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent
+...
+ perf  9024/9024  [009]  2690.650470551:      instructions:   call                                 0 ffffb305591aed54 coresight_timeout+0x28
+ perf  9024/9024  [009]  2690.650470551:      instructions:   call                                 0 ffffb305591aed58 coresight_timeout+0x2c
+ perf  9024/9024  [009]  2690.650470551:      instructions:   call                                 0 ffffb305591aed5c coresight_timeout+0x30
+ perf  9024/9024  [009]  2690.650470551:      instructions:   call                                 0 ffffb305591aed60 coresight_timeout+0x34
+ perf  9024/9024  [009]  2690.650470551:      instructions:   jmp                                  0 ffffb305591aed7c coresight_timeout+0x50
+ perf  9024/9024  [009]  2690.650470551:      instructions:   jmp                                  0 ffffb305591aed80 coresight_timeout+0x54
+ perf  9024/9024  [009]  2690.650470551:      instructions:   jmp                                  0 ffffb305591aed84 coresight_timeout+0x58
+ perf  9024/9024  [009]  2690.650470552:      instructions:   jcc                                  0 ffffb305591aede4 coresight_timeout+0xb8
+ perf  9024/9024  [009]  2690.650470552:      instructions:   jcc                                  0 ffffb305591aede8 coresight_timeout+0xbc
+ perf  9024/9024  [009]  2690.650470552:      instructions:   jcc                                  0 ffffb305591aedec coresight_timeout+0xc0
+ perf  9024/9024  [009]  2690.650470552:      instructions:   jcc                                  0 ffffb305591aedf0 coresight_timeout+0xc4
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bccec ete_sysreg_read+0x0
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bccf0 ete_sysreg_read+0x4
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bccf4 ete_sysreg_read+0x8
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bccf8 ete_sysreg_read+0xc
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bccfc ete_sysreg_read+0x10
+ perf  9024/9024  [009]  2690.650470557:      instructions:   call                                 0 ffffb305591bcd00 ete_sysreg_read+0x14
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+This output has the following issues:
+1. Non-branch instructions have mnemonics of branch instructions (Column 6)
+2. Branch target address is missing (Column 7)
 
-Thanks,
-Namhyung
+This patch fixes these issues by changing the logic of instruction syntehsis
+for the Coresight trace queues.
 
+Output after applying the patch:
+ ...
+ perf  6111/6111  [008]   457.332794461:      instructions:                                        0 ffffb305591aed54 coresight_timeout+0x28
+ perf  6111/6111  [008]   457.332794461:      instructions:                                        0 ffffb305591aed58 coresight_timeout+0x2c
+ perf  6111/6111  [008]   457.332794461:      instructions:                                        0 ffffb305591aed5c coresight_timeout+0x30
+ perf  6111/6111  [008]   457.332794461:      instructions:   jmp                   ffffb305591aed7c ffffb305591aed60 coresight_timeout+0x34
+ perf  6111/6111  [008]   457.332794461:      instructions:                                        0 ffffb305591aed7c coresight_timeout+0x50
+ perf  6111/6111  [008]   457.332794461:      instructions:                                        0 ffffb305591aed80 coresight_timeout+0x54
+ perf  6111/6111  [008]   457.332794461:      instructions:   jcc                   ffffb305591aede4 ffffb305591aed84 coresight_timeout+0x58
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591aede4 coresight_timeout+0xb8
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591aede8 coresight_timeout+0xbc
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591aedec coresight_timeout+0xc0
+ perf  6111/6111  [008]   457.332794462:      instructions:   call                  ffffb305591bccec ffffb305591aedf0 coresight_timeout+0xc4
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bccec ete_sysreg_read+0x0
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bccf0 ete_sysreg_read+0x4
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bccf4 ete_sysreg_read+0x8
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bccf8 ete_sysreg_read+0xc
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bccfc ete_sysreg_read+0x10
+ perf  6111/6111  [008]   457.332794462:      instructions:                                        0 ffffb305591bcd00 ete_sysreg_read+0x14
 
-> ---
->  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
->  1 file changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf=
-/tests/shell/stat_all_metricgroups.sh
-> index 55ef9c9ded2d..d6db192b9f18 100755
-> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-> @@ -1,9 +1,7 @@
-> -#!/bin/sh
-> +#!/bin/bash
->  # perf all metricgroups test
->  # SPDX-License-Identifier: GPL-2.0
->
-> -set -e
-> -
->  ParanoidAndNotRoot()
->  {
->    [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
-)" -gt $1 ]
-> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
->  then
->    system_wide_flag=3D""
->  fi
-> -
-> +err=3D0
->  for m in $(perf list --raw-dump metricgroups)
->  do
->    echo "Testing $m"
-> -  perf stat -M "$m" $system_wide_flag sleep 0.01
-> +  result=3D$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
-> +  result_err=3D$?
-> +  if [[ $result_err -gt 0 ]]
-> +  then
-> +    if [[ "$result" =3D~ \
-> +          "Access to performance monitoring and observability operations=
- is limited" ]]
-> +    then
-> +      echo "Permission failure"
-> +      echo $result
-> +      if [[ $err -eq 0 ]]
-> +      then
-> +        err=3D2 # Skip
-> +      fi
-> +    else
-> +      echo "Metric group $m failed"
-> +      echo $result
-> +      err=3D1 # Fail
-> +    fi
-> +  fi
->  done
->
-> -exit 0
-> +exit $err
-> --
-> 2.44.0.478.gd926399ef9-goog
->
+Changes in V2
+  - Updated commit message of Patch 1
+  - As discussed in the previous version [1], there were differences in instruction
+    trace output before and after the patch. The timestamps for the instructions
+    were not in sync. Added a patch 2 which fixes this issue.
+
+Changes in V1
+  - https://lkml.org/lkml/2023/6/23/912
+
+[1] https://lkml.org/lkml/2023/6/28/506
+
+Tanmay Jagdale (2):
+  perf: cs-etm: Fixes in instruction sample synthesis
+  perf: cs-etm: Store previous timestamp in packet queue
+
+ tools/perf/util/cs-etm.c | 49 +++++++++++++++++++++++++++++++---------
+ tools/perf/util/cs-etm.h |  1 +
+ 2 files changed, 39 insertions(+), 11 deletions(-)
+
+-- 
+2.34.1
+
