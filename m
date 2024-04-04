@@ -1,375 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260AB4C3DE
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Apr 2024 06:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0052756471;
+	Thu,  4 Apr 2024 06:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712211815; cv=none; b=ZrOH3j35yD3kepX03tidDmc9uHqCFTLZOST2aFBz0zC0hDHA/b/eZ9BvbTXiDp+PR5SoOGyPUydkrhW/L/uN61IYQF/6gi/fjR9wnxPzDXeTqhIGF/TQ1wfUu2+ryEefg6wgyLeSosN5ltHs9V4taLldTiGRZJNAPQYbg/Kn5r8=
+	t=1712213311; cv=none; b=c10CJH9JeuYN1llBuJIaTHf66GZaoCjMsFeMLtWuP+cX7Bt31UFiZ61m+brxk7IesrvnVDWiop5l1e/n15dnWhElslNEtogWvI0fYX2ofO2LtKGvqs9DkUqyxY8bj2peBMpV+sCff6i1kf2Qdl9bw0pXXkSwd78iByWmqrhj3n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712211815; c=relaxed/simple;
-	bh=9ulTsnglsIbr59Bi0CgC4mZPRWXai1ck3ond5HaT2KI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WgOPWY7epSzbgfjsoOlDORgRgjQvqaJmTyNOTTdNBENoapeK2SDdQ+YM+eoU9cSraWq3AbOLzBVPg+UyDRnfZ2QHjeftrezDGjaT0rsGZMJTUhXbHDIiZKjgLDOplI46QoOmrjqr7128GDBXxLug4RrxSc9AI/PefBFHP60wFFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LqVGU0Op; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712213311; c=relaxed/simple;
+	bh=0BHKcHIZtORzL2QSY9kHdJR44umnViVVEXDbS+LBEoc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ewK3yz2L8nY7rG370O/Gb0P0hxZE8Er2snGuRnCS9y4Txebu5LYfvHxdHA2GwSXZhCvTKs/UTwP8BCNSGeVf3Uf+Br4WJbMTrkAFq4smc+6ytzW3JgkxmCJDhOag69TN+vmHV8XfFnB54vZqV4z0mWSkKjXKBgccxbWXQCz15IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TEEMyRfM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LqVGU0Op"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712211813; x=1743747813;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=9ulTsnglsIbr59Bi0CgC4mZPRWXai1ck3ond5HaT2KI=;
-  b=LqVGU0OpO4S1ADXtkOOD+EAsZAGU5XooBS1Q2QNGjOPaE56ZbC/HRNiS
-   3BvbNDnI4xCIFI3UcnQ3J+tUTWIXEKbjgiRz4Kn7G718GIh5UpNsrbGHx
-   t1DaQWvoJyiuvX7KI7QeVSMZmYbQZek6O6uNothYTznDIL5EYa9nFFYNH
-   He+7+hEzhHHKPZFeygPiT9dxb0muVJIJlyyu4Wz+zBFV+6d630JcPkTQS
-   N+YvTUjSbFTOyUpQiG0GwwJeljaIa2S0VP2+zPmQHV//BHPcPnJGph/cx
-   cl9wgbOjpv3Za1Lf50W1/eoxWebG+NWz0ACVAhfwy6XxOqscJ7usaPmVp
-   Q==;
-X-CSE-ConnectionGUID: iZqJ0VC6SmKA+Mk03FNmNg==
-X-CSE-MsgGUID: 3hzYIXd1RvSvWRO1R4qpDA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="11293654"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="11293654"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:23:32 -0700
-X-CSE-ConnectionGUID: WRDhs9f8T1OaPc4h2LEP+w==
-X-CSE-MsgGUID: 4Vigb9EHSIWdKNPNSk63JQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="23331144"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.213.127])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:23:31 -0700
-Message-ID: <4cfe51ad-ee80-4bef-b4e0-0d6b92b20726@intel.com>
-Date: Thu, 4 Apr 2024 09:23:27 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TEEMyRfM"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4346dS9n025311;
+	Thu, 4 Apr 2024 06:48:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=V7evhjpTFK9lm74+v57J7Xg0uT3wJ4ThHPEeFTWCAko=;
+ b=TEEMyRfMulrC+cP/oyQRzmKMny70gyFYWpPGaPhmAbMhNVb+orpUJogx1JsoFW0UjVxK
+ 6cMNbCg2kNcUvTC8GZunwJ0bS7lgS2M/IPlj3W5ZGasbAEeFJI5jd+E+rV2UOHO3aQMI
+ SZfL/44LRIFdurze/wAfJGtPIOTw8MkQb0ztEI1cE1mywj5jEP2wQJP7sK3RPnscCPQQ
+ JShcUSdsqzTItIx22DwyzA190o2K5kUSbHzAHV78bi27IMc3MHK9C1aRElR+qfmNoXsV
+ x4qVMmbJ8py4WakB3tY4oVIaJoDAbBbYckSvNr5jW9tzEfQCThrZUroNPKPtTHMCT4fs 1A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9pj4r2wy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:24 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4346mO2S008206;
+	Thu, 4 Apr 2024 06:48:24 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9pj4r2wx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:24 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43442PpJ031079;
+	Thu, 4 Apr 2024 06:48:23 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epxjj1v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:23 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4346mHtq44368380
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 06:48:19 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B7BCB20043;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7EAFF20040;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [Ping PATCH 1/2 v2] perf report: Fix PAI counter names for s390 virtual machines
+Date: Thu,  4 Apr 2024 08:48:05 +0200
+Message-Id: <20240404064806.1362876-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] perf, script, capstone: Add support for -F
- +brstackdisasm
-To: Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
-References: <20240401210925.209671-1-ak@linux.intel.com>
- <20240401210925.209671-3-ak@linux.intel.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240401210925.209671-3-ak@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wMPdyqtEhokfUQu_u3fm-w5kXlzap0wM
+X-Proofpoint-GUID: RaCYlNc5oY8ikhRFXIrfForHg67OUq82
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_02,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 phishscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404040042
 
-On 2/04/24 00:08, Andi Kleen wrote:
-> Support capstone output for the -F +brstackinsn branch dump.
-> The new output is enabled with the new field brstackdisasm
-> This was possible before with --xed, but now also allow
-> it for users that don't have xed using the builtin capstone support.
-> 
-> Before:
-> 
-> perf record -b emacs -Q --batch '()'
-> perf script -F +brstackinsn
-> ...
->           emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
->         00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [3]
->         00007f0ab2d17105        insn: 73 51
->         00007f0ab2d17107        insn: 48 89 c1
->         00007f0ab2d1710a        insn: 48 39 ca
->         00007f0ab2d1710d        insn: 73 96
->         00007f0ab2d1710f        insn: 48 8d 04 11
->         00007f0ab2d17113        insn: 48 d1 e8
->         00007f0ab2d17116        insn: 49 8d 34 c1
->         00007f0ab2d1711a        insn: 44 3a 06
->         00007f0ab2d1711d        insn: 75 e6                     # PRED 3 cycles [6] 3.00 IPC
->         00007f0ab2d17105        insn: 73 51                     # PRED 1 cycles [7] 1.00 IPC
->         00007f0ab2d17158        insn: 48 8d 50 01
->         00007f0ab2d1715c        insn: eb 92                     # PRED 1 cycles [8] 2.00 IPC
->         00007f0ab2d170f0        insn: 48 39 ca
->         00007f0ab2d170f3        insn: 73 b0                     # PRED 1 cycles [9] 2.00 IPC
-> 
-> After (perf must be compiled with capstone):
-> 
-> perf script -F +brstackdisasm
-> 
-> ...
->            emacs   55778 1814366.755945:     151564 cycles:P:      7f0ab2d17192 intel_check_word.constprop.0+0x162 (/usr/lib64/ld-linux-x86-64.s>        intel_check_word.constprop.0+237:
->         00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [3]
->         00007f0ab2d17105        jae intel_check_word.constprop.0+0x128
->         00007f0ab2d17107        movq %rax, %rcx
->         00007f0ab2d1710a        cmpq %rcx, %rdx
->         00007f0ab2d1710d        jae intel_check_word.constprop.0+0x75
->         00007f0ab2d1710f        leaq (%rcx, %rdx), %rax
->         00007f0ab2d17113        shrq $1, %rax
->         00007f0ab2d17116        leaq (%r9, %rax, 8), %rsi
->         00007f0ab2d1711a        cmpb (%rsi), %r8b
->         00007f0ab2d1711d        jne intel_check_word.constprop.0+0xd5   # PRED 3 cycles [6] 3.00 IPC
->         00007f0ab2d17105        jae intel_check_word.constprop.0+0x128  # PRED 1 cycles [7] 1.00 IPC
->         00007f0ab2d17158        leaq 1(%rax), %rdx
->         00007f0ab2d1715c        jmp intel_check_word.constprop.0+0xc0   # PRED 1 cycles [8] 2.00 IPC
->         00007f0ab2d170f0        cmpq %rcx, %rdx
->         00007f0ab2d170f3        jae intel_check_word.constprop.0+0x75   # PRED 1 cycles [9] 2.00 IPC
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+s390 introduced Processor Activity Instrumentation (PAI) counter
+facility on LPAR and virtual machines z/VM for models 3931 and 3932.
+These counters are stored as raw data in the perf.data file and are
+displayed with command
 
-As with V4, commas in subject are slightly odd, otherwise:
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 <unknown> Value:0x00000000000186a0
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+ #
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+However on z/VM virtual machines, the counter names are not retrieved
+from the PMU and are shown as '<unknown>'.
+This is caused by the CPU string saved in the mapfile.csv for this
+machine:
 
-> 
-> ---
-> 
-> v2: Use brstackdisasm instead of keying of disasm
-> v3: Fix fallback
-> ---
->  tools/perf/Documentation/perf-script.txt |  7 +++-
->  tools/perf/builtin-script.c              | 32 +++++++++++----
->  tools/perf/util/dump-insn.h              |  1 +
->  tools/perf/util/print_insn.c             | 52 ++++++++++++++++++++++++
->  tools/perf/util/print_insn.h             |  3 ++
->  5 files changed, 86 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index 005e51df855e..ff086ef05a0c 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -132,9 +132,9 @@ OPTIONS
->          Comma separated list of fields to print. Options are:
->          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
->          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-> -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-> +        brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
->          insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
-> -        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-> +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
->  
->          Field list can be prepended with the type, trace, sw or hw,
->          to indicate to which event type the field list applies.
-> @@ -257,6 +257,9 @@ OPTIONS
->  	can’t know the next sequential instruction after an unconditional branch unless
->  	you calculate that based on its length.
->  
-> +	brstackdisasm acts like brstackinsn, but will print disassembled instructions if
-> +	perf is built with the capstone library.
-> +
->  	The brstackoff field will print an offset into a specific dso/binary.
->  
->  	With the metric option perf script can compute metrics for
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 94946396bb6e..3acc0b79e988 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -136,6 +136,7 @@ enum perf_output_field {
->  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
->  	PERF_OUTPUT_DSOFF           = 1ULL << 41,
->  	PERF_OUTPUT_DISASM          = 1ULL << 42,
-> +	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
->  };
->  
->  struct perf_script {
-> @@ -210,6 +211,7 @@ struct output_option {
->  	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
->  	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
->  	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
-> +	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
->  };
->  
->  enum {
-> @@ -510,7 +512,8 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
->  		       "selected. Hence, no address to lookup the source line number.\n");
->  		return -EINVAL;
->  	}
-> -	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN)) && !allow_user_set &&
-> +	if ((PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
-> +	    && !allow_user_set &&
->  	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_ANY)) {
->  		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
->  		       "Hint: run 'perf record -b ...'\n");
-> @@ -1162,6 +1165,20 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
->  	return ret;
->  }
->  
-> +static const char *any_dump_insn(struct perf_event_attr *attr __maybe_unused,
-> +			struct perf_insn *x, uint64_t ip,
-> +			u8 *inbuf, int inlen, int *lenp)
-> +{
-> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
-> +	if (PRINT_FIELD(BRSTACKDISASM)) {
-> +		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
-> +		if (p)
-> +			return p;
-> +	}
-> +#endif
-> +	return dump_insn(x, ip, inbuf, inlen, lenp);
-> +}
-> +
->  static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
->  			    struct perf_insn *x, u8 *inbuf, int len,
->  			    int insn, FILE *fp, int *total_cycles,
-> @@ -1170,7 +1187,7 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
->  {
->  	int ilen = 0;
->  	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
-> -			      dump_insn(x, ip, inbuf, len, &ilen));
-> +			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
->  
->  	if (PRINT_FIELD(BRSTACKINSNLEN))
->  		printed += fprintf(fp, "ilen: %d\t", ilen);
-> @@ -1262,6 +1279,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->  		nr = max_blocks + 1;
->  
->  	x.thread = thread;
-> +	x.machine = machine;
->  	x.cpu = sample->cpu;
->  
->  	printed += fprintf(fp, "%c", '\n');
-> @@ -1313,7 +1331,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->  			} else {
->  				ilen = 0;
->  				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
-> -						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
-> +						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
->  				if (PRINT_FIELD(BRSTACKINSNLEN))
->  					printed += fprintf(fp, "\tilen: %d", ilen);
->  				printed += fprintf(fp, "\n");
-> @@ -1361,7 +1379,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->  			goto out;
->  		ilen = 0;
->  		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
-> -			dump_insn(&x, sample->ip, buffer, len, &ilen));
-> +			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
->  		if (PRINT_FIELD(BRSTACKINSNLEN))
->  			printed += fprintf(fp, "\tilen: %d", ilen);
->  		printed += fprintf(fp, "\n");
-> @@ -1372,7 +1390,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
->  	for (off = 0; off <= end - start; off += ilen) {
->  		ilen = 0;
->  		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
-> -				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
-> +				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
->  		if (PRINT_FIELD(BRSTACKINSNLEN))
->  			printed += fprintf(fp, "\tilen: %d", ilen);
->  		printed += fprintf(fp, "\n");
-> @@ -1534,7 +1552,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
->  		printed += fprintf(fp, "\t\t");
->  		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
->  	}
-> -	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
-> +	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
->  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
->  
->  	return printed;
-> @@ -3940,7 +3958,7 @@ int cmd_script(int argc, const char **argv)
->  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
->  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
->  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
-> -		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
-> +		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
->  		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
->  		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
->  		     parse_output_fields),
-> diff --git a/tools/perf/util/dump-insn.h b/tools/perf/util/dump-insn.h
-> index 650125061530..4a7797dd6d09 100644
-> --- a/tools/perf/util/dump-insn.h
-> +++ b/tools/perf/util/dump-insn.h
-> @@ -11,6 +11,7 @@ struct thread;
->  struct perf_insn {
->  	/* Initialized by callers: */
->  	struct thread *thread;
-> +	struct machine *machine;
->  	u8	      cpumode;
->  	bool	      is64bit;
->  	int	      cpu;
-> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-> index 32dc9dad9cf2..8825330d435f 100644
-> --- a/tools/perf/util/print_insn.c
-> +++ b/tools/perf/util/print_insn.c
-> @@ -12,6 +12,7 @@
->  #include "machine.h"
->  #include "thread.h"
->  #include "print_insn.h"
-> +#include "dump-insn.h"
->  #include "map.h"
->  #include "dso.h"
->  
-> @@ -71,6 +72,57 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
->  	return 0;
->  }
->  
-> +static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
-> +{
-> +	struct addr_location al;
-> +	bool printed = false;
-> +
-> +	if (insn->detail && insn->detail->x86.op_count == 1) {
-> +		cs_x86_op *op = &insn->detail->x86.operands[0];
-> +
-> +		addr_location__init(&al);
-> +		if (op->type == X86_OP_IMM &&
-> +		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
-> +		    al.sym &&
-> +		    al.addr < al.sym->end) {
-> +			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
-> +					al.sym->name, al.addr - al.sym->start, op->imm);
-> +			printed = true;
-> +		}
-> +		addr_location__exit(&al);
-> +	}
-> +
-> +	if (!printed)
-> +		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
-> +}
-> +
-> +const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-> +			 u8 *inbuf, int inlen, int *lenp)
-> +{
-> +	int ret;
-> +	int count;
-> +	cs_insn *insn;
-> +	csh cs_handle;
-> +
-> +	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
-> +	if (ret < 0)
-> +		return NULL;
-> +
-> +	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
-> +	if (count > 0) {
-> +		if (machine__normalized_is(x->machine, "x86"))
-> +			dump_insn_x86(x->thread, &insn[0], x);
-> +		else
-> +			snprintf(x->out, sizeof(x->out), "%s %s",
-> +					insn[0].mnemonic, insn[0].op_str);
-> +		*lenp = insn->size;
-> +		cs_free(insn, count);
-> +	} else {
-> +		return NULL;
-> +	}
-> +	return x->out;
-> +}
-> +
->  static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
->  			     cs_insn *insn, FILE *fp)
->  {
-> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
-> index 6447dd41b543..c2a6391a45ce 100644
-> --- a/tools/perf/util/print_insn.h
-> +++ b/tools/perf/util/print_insn.h
-> @@ -8,9 +8,12 @@
->  struct perf_sample;
->  struct thread;
->  struct machine;
-> +struct perf_insn;
->  
->  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
->  				struct machine *machine, FILE *fp, struct addr_location *al);
->  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
-> +const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
-> +                         u8 *inbuf, int inlen, int *lenp);
->  
->  #endif /* PERF_PRINT_INSN_H */
+   ^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
+
+This string contains the CPU Measurement facility first and second
+version number and authorization level (3\.7.[[:xdigit:]]+).
+These numbers do not apply to the PAI counter facility.
+In fact they can be omitted.
+Shorten the CPU identification string for this machine to manufacturer
+and model. This is sufficient for all PMU devices.
+
+Output after:
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 km_aes_128 Value:0x00000000000186a0
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+ #
+
+Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/s390/mapfile.csv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index a918e1af77a5..b22648d12751 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -5,4 +5,4 @@ Family-model,Version,Filename,EventType
+ ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
+ ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
+ ^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_z15,core
+-^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
++^IBM.393[12].*$,3,cf_z16,core
+-- 
+2.44.0
 
