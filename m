@@ -1,250 +1,157 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6B65647E;
-	Thu,  4 Apr 2024 06:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5B38DD1;
+	Thu,  4 Apr 2024 10:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712213312; cv=none; b=B/BGUp1MmykCl80qjFrpkm80Ro2j9f30Bg+r1fK2BRKB2u8xUh5i0k9al0ufEVZNtHesMiims4fzhQ9O5BfMUVLmdkW0C9Xcx8stdP4nqK0yss08MbvtMCP9hNqCY/TgRx8qBkpiRK3KPtnSrn/10TMNg38D9BMXEz+wEL1JtTs=
+	t=1712227562; cv=none; b=UdrMjTdx1TTqfLziB+yF3ZBB+eTEdUjItjAr2eIBvte0/j0JqGZA7XHDKAjhwrT71HMS2PHUOaszyIHXg8zOVhP7hLhdD172Omawbxstz9/EPq21esoIdkPdhqT7QWCxcp0IzzvX5gK9tkc+NJlWBOQlTqQvc92ma0Y9nPaj1aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712213312; c=relaxed/simple;
-	bh=CbAmz+aWs+CWVYAvKygY/zR/Cn+sQafTt1184Bv4PI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lh4A2iO8nmOuHQSpRJ25dnl0BiNms2bb4Fjg2LFxK1NNHRpdWTCDbqCBcAFrfUrhelhBuySWfgIGYvttRix/UY+JmUq9FZdSET3DKxbxzWjJQK6yM6kctnYA8wIpWqZUZ5BzT02H+kBXdtKl/FQ6e5E6gKRisnfktRyRgoRT/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XSMm1SFE; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712227562; c=relaxed/simple;
+	bh=ePPMM/uIseZje0ZcIe4lHLIZ0Wj4HLiZRHfwugMfC08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JKb3KhEsDFg2ZzfWrqaLPqBwwr9PVX9RVIWdKHrveZ3jUGXYT7H+IyZclkWsYJUAI96I2vknQVgRfV1eRNt1LSDoeLoKl6ZZYtcYQj2Ahn10fmZbi/R6vC/p3egakG11kC0y0qpm768LQgU8L9g5P9eXOpDFfvXjPMWRVEmRSB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UdmvL/MB; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XSMm1SFE"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4346XnaA025867;
-	Thu, 4 Apr 2024 06:48:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=+o7eU/Pqmj0XjTMIQ3Syylu4ad9U7Idv5dPX97beCvI=;
- b=XSMm1SFEHGqELEC5cpfgNlfUdW1qj9+Sqp0kZs6Cu1WXljN11uPuXbC1s3eFESTBDokP
- suq3sww12mXaHtOKox+F5zpwP0JQO5Z3TnOdYLUHXLydRfpWLIs2uaEcf5meAHEt0eKE
- aZgRp/MykFQVEDuAD5Wi0a9e7Uk0EzMhvxubeb4QDvCWLKCx0CQ6dyYITvoziGoXHcRU
- L7Ag+lUm/b9bP7ZNRq5VGW7A5o5zZjz3SRAas7tZKgHSoEZFwHYp+4nD0zR/otnPybmn
- hNuUFPuSPeaiCHWXfTuOnjCPpiQR0lGJV54YxS2zJNuUJKAnBlOCbO//GfkPWfN1rNwv rA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9q1hr0wm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 06:48:25 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4346mPaO017810;
-	Thu, 4 Apr 2024 06:48:25 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9q1hr0wk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 06:48:25 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43442mqI009114;
-	Thu, 4 Apr 2024 06:48:24 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x9epxtjbf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 06:48:24 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4346mIp015597950
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Apr 2024 06:48:20 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA4D22004B;
-	Thu,  4 Apr 2024 06:48:18 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B69820040;
-	Thu,  4 Apr 2024 06:48:18 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Apr 2024 06:48:18 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [Ping PATCH 2/2 v2] perf stat: do not fail on metrics on s390 zvm systems
-Date: Thu,  4 Apr 2024 08:48:06 +0200
-Message-Id: <20240404064806.1362876-2-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240404064806.1362876-1-tmricht@linux.ibm.com>
-References: <20240404064806.1362876-1-tmricht@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdmvL/MB"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a5193f56986so25153966b.0;
+        Thu, 04 Apr 2024 03:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712227559; x=1712832359; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
+        b=UdmvL/MBM0WrFHCdPUDLQ0S1t/W8Rkph1rANEJkNmLIr4Gy+EDUbLNpf+CFS6LMlVL
+         GdBpvi2Yx3qOH/XmBunoZ+iViLqWDKjrgP9EZR93tE/fn4U/ryYscPJXv8aPtmz+KAR4
+         8ezawz5XeeJTTBkRkMWQomVAJtokSawOoQuJnbkM7icz2/6ikOTuVUhc+iw8XyKc5O16
+         qe572ztoyDM6PS9iUjGz7OmBIIkq7gOx+b6wdsF1so76O0jlqSDlNQHU7iMOka9tG7nh
+         MjJiSsmwv6lS8aehn+F3vLPc2npnTKvgI03FTKy9UzWptmClOAyQJFczdXKLYzvUjkhb
+         cL1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712227559; x=1712832359;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
+        b=WseqHV3uqH39PeL22KGbb6ip8vWdOJGqnPrzJi3CoqoV5iz6Wh4eXClrzMCgQHK3ef
+         /HvUS8SrBw+ugdAxmiMAbfPDY3wGIbaf2SMrzTQ2LX6WVZDc4Mp1FtwU4RAE5d6hh4Ji
+         4wrU5nu54jK75pMG/oyE38w3q6GqXbAy/KIpokGtHlPeDzqFgBJfpAzaSFk510ctsDn9
+         4AYq3WmfszCZRntBKTx6eOVmZ5bIJM71Mq+fzVy5K6VhXZFBQ24kpGbZ4Y5Kq0drcMJG
+         F94olmrHpk0BEhW2IOrAntCJcr9X4esG/cr952o5jH4FjM1x3QEaMe2ASjKJNrsZ4ZTU
+         IEnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVA6nNmtq/O8u5+NawdASg71L2XPxZlDzWh2MfC3URWltDdaoq387M8K3F8QMzR1P4GEEx7muKIc0v0beV7Ktaojs9FpG29wg3FNrOn2N5aATc85lN1Ii5QNYphbNju6VLHXyt2qiBZKuP6kHsiEHouawlu7JeNXelpvZP8g5OC3Fh9rL32Xr4qZp6rW94Rg5PrTa8uA4Aw4P5yZyk0420Tyts83WIv7g==
+X-Gm-Message-State: AOJu0YzBUuERcFRZ/aXxLx7oVupcfnTJhtE6ovuNsXJoI1j16HM4oku1
+	7t9axN/v0yMDBM8n4HWlITrfJ6NgPhc+LwtyXfGWDDQj2dmlyVA7
+X-Google-Smtp-Source: AGHT+IE/1NLjMS8nR+IXCRExhY8KPmE74KM21lSRlzizDo1/vs09k4iCje3Q2udrPyYWdVVbVFLRFw==
+X-Received: by 2002:a17:907:10c2:b0:a4e:21e0:2e6e with SMTP id rv2-20020a17090710c200b00a4e21e02e6emr1249068ejb.5.1712227559174;
+        Thu, 04 Apr 2024 03:45:59 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::7:2535])
+        by smtp.gmail.com with ESMTPSA id wn2-20020a170907068200b00a4e781bd30dsm4060237ejb.24.2024.04.04.03.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 03:45:58 -0700 (PDT)
+Date: Thu, 4 Apr 2024 11:45:55 +0100
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <ktzm722fdhwmtjfbvoymaof2k2jh53x627swbswi24d4hq7aes@yje5kzpmzizy>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+ <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+ <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+ <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
+ <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 37w_HzPZ2i3shMUtf0b7dDmfu_bm_6I7
-X-Proofpoint-ORIG-GUID: IQNtOTFeopGPm4wjJLJ2voyr6NelNs0G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_02,2024-04-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404040042
+In-Reply-To: <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
 
-On s390 z/VM virtual machines command perf list also displays metrics:
+> > Things to note about the results:
+> >
+> > - The results are slightly variable so don't get too caught up on
+> >   individual thread count - it's the trend that is important.
+> > - In terms of throughput with this specific benchmark a *very* macro view
+> >   is that the RW spinlock provides 40-60% more throughput than the
+> >   spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
+> >   more throughput then the spinlock.
+> > - This doesn't fully reflect the large reduction in latency that we have
+> >   seen in application based measurements. However, it does demonstrate
+> >   that even the trivial change of going to a RW spinlock provides
+> >   significant benefits.
+> 
+> This is probably because trig-uprobe-nop creates a single uprobe that
+> is triggered on many CPUs. While in production we have also *many*
+> uprobes running on many CPUs. In this benchmark, besides contention on
+> uprobes_treelock, we are also hammering on other per-uprobe locks
+> (register_rwsem, also if you don't have [0] patch locally, there will
+> be another filter lock taken each time, filter->rwlock). There is also
+> atomic refcounting going on, which when you have the same uprobe
+> across all CPUs at the same time will cause a bunch of cache line
+> bouncing.
+> 
+> So yes, it's understandable that in practice in production you see an
+> even larger effect of optimizing uprobe_treelock than in this
+> micro-benchmark.
+> 
+>   [0] https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/commit/?h=probes/for-next&id=366f7afd3de31d3ce2f4cbff97c6c23b6aa6bcdf
 
- # ./perf list | grep -A 20 'Metric Groups:'
- Metric Groups:
+Thanks for the reply and the thoughts on this Andrii. Yes, I do have the
+filter->rwlock fix applied but, as you say, there are no doubt other
+effects at play here as to be expected in such a synthetic workload. I'm
+pleased with the outcomes though as they show a good result even if they
+are at the lower end of what I expect.
 
- No_group:
-  cpi
-       [Cycles per Instruction]
-  est_cpi
-       [Estimated Instruction Complexity CPI infinite Level 1]
-  finite_cpi
-       [Cycles per Instructions from Finite cache/memory]
-  l1mp
-       [Level One Miss per 100 Instructions]
-  l2p
-       [Percentage sourced from Level 2 cache]
-  l3p
-       [Percentage sourced from Level 3 on same chip cache]
-  l4lp
-       [Percentage sourced from Level 4 Local cache on same book]
-  l4rp
-       [Percentage sourced from Level 4 Remote cache on different book]
-  memp
-       [Percentage sourced from memory]
-  ....
- #
+The results also show that pursuing an RCU solution is definitely worth it
+but that write penalty is brutal in the case of a full synchronize_rcu()!
+Should be fun.
 
-The command
+> > for num_threads in {1..20}
+> > do
+> >     sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
+> 
+> just want to mention -a (affinity) option that you can pass a bench
+> tool, it will pin each thread on its own CPU. It generally makes tests
+> more uniform, eliminating CPU migrations variability.
 
- # ./perf stat -M cpi -- true
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/.....'
-                       \___ Bad event or PMU
+Thanks for pointing that flag  out!
 
- Unable to find PMU or event on a PMU of 'CPU_CYCLES'
+Jon.
 
- event syntax error: '{CPU_CYCLES/metric-id=CPU_CYCLES/...'
-                       \___ Cannot find PMU `CPU_CYCLES'.
-			    Missing kernel support?
- #
-
-fails. Perf stat should not fail on metrics when the referenced
-CPU Counter Measurement PMU is not available.
-
-Output after:
- # ./perf stat -M est_cpi -- sleep 1
-
- Performance counter stats for 'sleep 1':
-
-     1,000,887,494 ns   duration_time   #     0.00 est_cpi
-
-       1.000887494 seconds time elapsed
-
-       0.000143000 seconds user
-       0.000662000 seconds sys
-
- #
-
-Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- .../arch/s390/cf_z16/transaction.json         | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-index ec2ff78e2b5f..3ab1d3a6638c 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-@@ -2,71 +2,71 @@
-   {
-     "BriefDescription": "Transaction count",
-     "MetricName": "transaction",
--    "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
-+    "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL if has_event(TX_C_TEND) else 0"
-   },
-   {
-     "BriefDescription": "Cycles per Instruction",
-     "MetricName": "cpi",
--    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
-+    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(INSTRUCTIONS) else 0"
-   },
-   {
-     "BriefDescription": "Problem State Instruction Ratio",
-     "MetricName": "prbstate",
--    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
-+    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-   },
-   {
-     "BriefDescription": "Level One Miss per 100 Instructions",
-     "MetricName": "l1mp",
--    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
-+    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-   },
-   {
-     "BriefDescription": "Percentage sourced from Level 2 cache",
-     "MetricName": "l2p",
--    "MetricExpr": "((DCW_REQ + DCW_REQ_IV + ICW_REQ + ICW_REQ_IV) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+    "MetricExpr": "((DCW_REQ + DCW_REQ_IV + ICW_REQ + ICW_REQ_IV) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100 if has_event(DCW_REQ) else 0"
-   },
-   {
-     "BriefDescription": "Percentage sourced from Level 3 on same chip cache",
-     "MetricName": "l3p",
--    "MetricExpr": "((DCW_REQ_CHIP_HIT + DCW_ON_CHIP + DCW_ON_CHIP_IV + DCW_ON_CHIP_CHIP_HIT + ICW_REQ_CHIP_HIT + ICW_ON_CHIP + ICW_ON_CHIP_IV + ICW_ON_CHIP_CHIP_HIT) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+    "MetricExpr": "((DCW_REQ_CHIP_HIT + DCW_ON_CHIP + DCW_ON_CHIP_IV + DCW_ON_CHIP_CHIP_HIT + ICW_REQ_CHIP_HIT + ICW_ON_CHIP + ICW_ON_CHIP_IV + ICW_ON_CHIP_CHIP_HIT) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100 if has_event(DCW_REQ_CHIP_HIT) else 0"
-   },
-   {
-     "BriefDescription": "Percentage sourced from Level 4 Local cache on same book",
-     "MetricName": "l4lp",
--    "MetricExpr": "((DCW_REQ_DRAWER_HIT + DCW_ON_CHIP_DRAWER_HIT + DCW_ON_MODULE + DCW_ON_DRAWER + IDCW_ON_MODULE_IV + IDCW_ON_MODULE_CHIP_HIT + IDCW_ON_MODULE_DRAWER_HIT + IDCW_ON_DRAWER_IV + IDCW_ON_DRAWER_CHIP_HIT + IDCW_ON_DRAWER_DRAWER_HIT + ICW_REQ_DRAWER_HIT + ICW_ON_CHIP_DRAWER_HIT + ICW_ON_MODULE + ICW_ON_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+    "MetricExpr": "((DCW_REQ_DRAWER_HIT + DCW_ON_CHIP_DRAWER_HIT + DCW_ON_MODULE + DCW_ON_DRAWER + IDCW_ON_MODULE_IV + IDCW_ON_MODULE_CHIP_HIT + IDCW_ON_MODULE_DRAWER_HIT + IDCW_ON_DRAWER_IV + IDCW_ON_DRAWER_CHIP_HIT + IDCW_ON_DRAWER_DRAWER_HIT + ICW_REQ_DRAWER_HIT + ICW_ON_CHIP_DRAWER_HIT + ICW_ON_MODULE + ICW_ON_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100 if has_event(DCW_REQ_DRAWER_HIT) else 0"
-   },
-   {
-     "BriefDescription": "Percentage sourced from Level 4 Remote cache on different book",
-     "MetricName": "l4rp",
--    "MetricExpr": "((DCW_OFF_DRAWER + IDCW_OFF_DRAWER_IV + IDCW_OFF_DRAWER_CHIP_HIT + IDCW_OFF_DRAWER_DRAWER_HIT + ICW_OFF_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+    "MetricExpr": "((DCW_OFF_DRAWER + IDCW_OFF_DRAWER_IV + IDCW_OFF_DRAWER_CHIP_HIT + IDCW_OFF_DRAWER_DRAWER_HIT + ICW_OFF_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100 if has_event(DCW_OFF_DRAWER) else 0"
-   },
-   {
-     "BriefDescription": "Percentage sourced from memory",
-     "MetricName": "memp",
--    "MetricExpr": "((DCW_ON_CHIP_MEMORY + DCW_ON_MODULE_MEMORY + DCW_ON_DRAWER_MEMORY + DCW_OFF_DRAWER_MEMORY + ICW_ON_CHIP_MEMORY + ICW_ON_MODULE_MEMORY + ICW_ON_DRAWER_MEMORY + ICW_OFF_DRAWER_MEMORY) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+    "MetricExpr": "((DCW_ON_CHIP_MEMORY + DCW_ON_MODULE_MEMORY + DCW_ON_DRAWER_MEMORY + DCW_OFF_DRAWER_MEMORY + ICW_ON_CHIP_MEMORY + ICW_ON_MODULE_MEMORY + ICW_ON_DRAWER_MEMORY + ICW_OFF_DRAWER_MEMORY) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100 if has_event(DCW_ON_CHIP_MEMORY) else 0"
-   },
-   {
-     "BriefDescription": "Cycles per Instructions from Finite cache/memory",
-     "MetricName": "finite_cpi",
--    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS"
-+    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS if has_event(L1C_TLB2_MISSES) else 0"
-   },
-   {
-     "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
-     "MetricName": "est_cpi",
--    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS)"
-+    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
-   },
-   {
-     "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-     "MetricName": "scpl1m",
--    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES)"
-+    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES) if has_event(L1C_TLB2_MISSES) else 0"
-   },
-   {
-     "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-     "MetricName": "tlb_percent",
--    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100"
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100 if has_event(CPU_CYCLES) else 0"
-   },
-   {
-     "BriefDescription": "Estimated Cycles per TLB Miss",
-     "MetricName": "tlb_miss",
--    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) if has_event(DTLB2_MISSES) else 0"
-   }
- ]
--- 
-2.44.0
-
+> 
+> > done
+> >
+> >
+> > spinlock
+> >
+> > Summary: hits    1.453 ± 0.005M/s (  1.453M/prod)
+> > Summary: hits    2.087 ± 0.005M/s (  1.043M/prod)
+> > Summary: hits    2.701 ± 0.012M/s (  0.900M/prod)
+> 
+> I also wanted to point out that the first measurement (1.453M/s in
+> this row) is total throughput across all threads, while value in
+> parenthesis (0.900M/prod) is averaged throughput per each thread. So
+> this M/prod value is the most interesting in this benchmark where we
+> assess the effect of reducing contention.
+> 
+> > Summary: hits    1.917 ± 0.011M/s (  0.479M/prod)
+> > Summary: hits    2.105 ± 0.003M/s (  0.421M/prod)
+> > Summary: hits    1.615 ± 0.006M/s (  0.269M/prod)
+> 
+> [...]
