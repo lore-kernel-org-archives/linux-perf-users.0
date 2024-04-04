@@ -1,166 +1,238 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820C15539A
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Apr 2024 20:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45011B810
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Apr 2024 06:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712176012; cv=none; b=bZ/zAxSktGsAZu6miPqilkJrAwkr48GWXaX6SAKV6pj86zIDlCMwmxSfUpwfWfikan0KT+7gDX3BilFYta+2Ajz7st65XWGe0OtY7jTd1Tjg0nahfig+S/H4zsyxMPsM/hUsku1czgCD4tAH6WZfGVxON3qtrDRPSijADWhtfAc=
+	t=1712211742; cv=none; b=mxLx2sTy3n+e3Dcu9KTcdY5cAkwezWTJXgmESPAWTmUJNAPHOyw3ju8HsrFmAESKHG8+Ro7KTr9KIzVdEodsjzyjn1UFSDK54Zc/FqIUqEfoEx1hYTEiSCZxdImQwsUK3KOLvSElAkTMAPitY1Z8H+p6EP25TACbbZ4L/vjqguU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712176012; c=relaxed/simple;
-	bh=FBpLE1iiZfLzq2PgZFZDfGl4fcVL4tEXMWlXr8qXDs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ji8zi5hjjJFlP1WrrtOXIceXAr62sYFeEJEsPATDs8tf02CJ+Q/4tyOMWKUldlIuri5SuitXgyQr537zexujcvyC89cAhXqVNhlPwCG+8wrPR8fOkkvCvV7d0yoryIe8J62341yoQvSfvm7xDRbvLEcUiHmJVNu/tiXSoXkT6U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E3+AZuqj; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712211742; c=relaxed/simple;
+	bh=N9mU7wUXvWAraObkg91KrYjzYyWfJokGqgSinkPGR/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AAc64vdsNiyz9sRtxowEHo2wLV2xaBJFX7HOnVRXgQLVDvRBza3CVQPwY+Hu/tiu+8A7qT4PUyxTU+6CCqF1tm0xX8YrBgUiFtuEPHH+sIX7r+e+C6fVm2f7LxBIG0kV9uWuDV87atRFXznNYBzjy+tEKRcIEw0dXfrcuBsTnT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JXiSyIBx; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E3+AZuqj"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e277154d4cso11235ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Apr 2024 13:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712176010; x=1712780810; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NFhYmzmWZcVM7eK0cRz8FdXnZiXwCUMIE3os1iAStEY=;
-        b=E3+AZuqjXjd+FxKgjzE7dLxLq19QVZJzlwKjQmR8RSrEjA51KQJH9KCkpZmHwK6Arj
-         fQKOS9CCTTfHRTlhkNeYcnYpbsP1LQIoIBdC8rkp+YLVbRKiCskkGrhDT99F0m0s0zn2
-         eMJQtbmrnyKE4O1EnhlCjHbycJuSCty+XHGIcMd782/DWQzMGOHPKiBJjPzCf6+hEuzm
-         B/P1TTf9m9d83ht4HDLVepUjIvwFCQfRjg0wJG11jUFBYtH/k+izLbyJpX57JlJF3ftp
-         A7HWnL5V481+Rbcp+rBwIO1K8pIZWyoV2CVqlM/EQdJxbeL1mtEjeted+k39G7fV+OFb
-         /s6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712176010; x=1712780810;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NFhYmzmWZcVM7eK0cRz8FdXnZiXwCUMIE3os1iAStEY=;
-        b=SJ+cgvqrLzXh8TAmt5dhFH451acK1/YYEmxX8PrKludAFGom97klOcPi9id80LF4fP
-         GewRUFYUtjA7t3wb8jmC6T0KZLg6lYaYqx7+WIe8pr9ySzomODpGL8v6NSNC7nP/7qw8
-         PSTlLetqLdN6DpYdSUfoFQidoAh5C5B1mwu4FM+5KCLAT29RAoUgjAlldbPu2DNyxUFo
-         XYv2eDTBnmOx4I1pqDxdE7ZRKMbdFyztAeU1qUx3FGxJsvA9IeHNeTBzoXhqDuasLBLJ
-         mh7SNjkzigR8RNMNwizJauOxjVFvJrVA3mQdN+MVKUsEYRrZI1FQ2qpdJM0Y/bV678os
-         SoTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVe2OTI7c5RACReCYfwbUc5jx+eeqnqFTeg8Pdbeo0bKQFO/0M0Q/XuaYQREukPmOTGEdGYPi6pwZa/iKJlO1TAzyg7ZyG0GZHvnB0zHmKv0w==
-X-Gm-Message-State: AOJu0YwKhL0cPdEusTB5S5Y2yEf9Ow1ojK0iuW2Q+0pmLrgexk/HpQ6W
-	4afYc5ONHRoAygLTdTK/Cn9I/lKunx8lqaiKqY0W3m+Zf6oR4ze8qy5GxUt3u/WX/MWqxlD1/QO
-	X9e2Xasnppx2UDVhleMu/bi8SaHnJsxSsLn3Z
-X-Google-Smtp-Source: AGHT+IGlZVVWRSaRx9yR2KM9XZ42+4Oxvf7icoyilN7Z97fSwtU7BQZQKwk9L6EJWgf9mQnTLuf4q02X3qebqJ4culY=
-X-Received: by 2002:a17:902:c405:b0:1e2:1955:1b1c with SMTP id
- k5-20020a170902c40500b001e219551b1cmr303929plk.27.1712176010154; Wed, 03 Apr
- 2024 13:26:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JXiSyIBx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712211740; x=1743747740;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=N9mU7wUXvWAraObkg91KrYjzYyWfJokGqgSinkPGR/U=;
+  b=JXiSyIBxI6b52tx1U5GoWxir37rmmObqKJE8DpEhM+zVLYircBXJxwr4
+   +f9AQ33V3qev4uBkGnp7MA1ivrh1o8zDT4h6O6AEKAJ3Ihb5RQwsDdpca
+   DOoAeQPE/M7TIJR90/Dl55mWoigPDpAL7cjM9+bMH0+iiEhBBg3mL2Ldo
+   3TYE9ph/mDFIGakOqe0YvBPVIWlASaYTBsJO8CpRifrtRCp0KxbRrk74z
+   xQ86JI2thylBZUhmZGr2ynzHQ20aKHPzDyDbShU0GtCLJIzlZsqsD6Fby
+   OCvN6STyNqGjQTP3U8PSpPG6NUj1TfI4BT4/eKEu0HXVIEDSAZLOOydqy
+   g==;
+X-CSE-ConnectionGUID: zep44R3GQKS82ox3R0cUGQ==
+X-CSE-MsgGUID: YnCp80ItSgC6YxgpQJWHHg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="11293494"
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="11293494"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:22:19 -0700
+X-CSE-ConnectionGUID: XWktPK5vSVaGlbVtl0kLRA==
+X-CSE-MsgGUID: 5gtXhHTwSzaAE61TJ7o0uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="23330836"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.213.127])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:22:16 -0700
+Message-ID: <3b60c8dd-32fe-4dfb-a78f-8596b3ef4410@intel.com>
+Date: Thu, 4 Apr 2024 09:22:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403164636.3429091-1-irogers@google.com> <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
- <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com> <b9868e97-e353-45e0-83b7-aa28bc35dd67@linux.intel.com>
-In-Reply-To: <b9868e97-e353-45e0-83b7-aa28bc35dd67@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Apr 2024 13:26:35 -0700
-Message-ID: <CAP-5=fX+YuEgD4pF-2YRcqgD2cwLw_7Z4ak+wszctvagPS+Xbw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/3] perf, capstone: Support 32bit code under 64bit OS
+To: Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
+References: <20240401210925.209671-1-ak@linux.intel.com>
+ <20240401210925.209671-2-ak@linux.intel.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240401210925.209671-2-ak@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 3, 2024 at 11:57=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-04-03 2:31 p.m., Ian Rogers wrote:
-> > On Wed, Apr 3, 2024 at 10:59=E2=80=AFAM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
-> >>> Rather than place metrics without a metric group in "No_group" place
-> >>> them in a a metric group that is their name. Still allow such metrics
-> >>> to be selected if "No_group" is passed, this change just impacts perf
-> >>> list.
-> >>
-> >> So it looks like the "No_group" is not completely removed.
-> >> They are just not seen in the perf list, but users can still use it vi=
-a
-> >> perf stat -M No_group, right?
-> >>
-> >> If so, why we want to remove it from perf list? Where can the end user
-> >> know which metrics are included in the No_group?
-> >>
-> >> If the No_group is useless, why not completely remove it?
-> >
-> > Agreed. For command line argument deprecation we usually keep the
-> > option but hide it from help with PARSE_OPT_HIDDEN, so I was trying to
-> > follow that pattern albeit that a metric group isn't a command line
-> > option it's an option to an option.
-> >
->
-> Perf list has a deprecated option to show the deprecated events.
-> The "No_group" should be a deprecated metrics group.
->
-> If so, to follow the same pattern, I think perf list should still
-> display the "No_group" with the --deprecated option at least.
+On 2/04/24 00:08, Andi Kleen wrote:
+> Use the DSO to resolve whether an IP is 32bit or 64bit and use that to
+> configure capstone to the correct mode. This allows to correctly
+> disassemble 32bit code under a 64bit OS.
+> 
+> % cat > loop.c
+> volatile int var;
+> int main(void)
+> {
+> 	int i;
+> 	for (i = 0; i < 100000; i++)
+> 		var++;
+> }
+> % gcc -m32 -o loop loop.c
+> % perf record -e cycles:u ./loop
+> % perf script -F +disasm
+>             loop   82665 1833176.618023:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618029:          1 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618031:          7 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618034:         91 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+>             loop   82665 1833176.618036:       1242 cycles:u:          f7eed500 _start+0x0 (/usr/lib/ld-linux.so.2)             movl %esp, %eax
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-Such metrics would be shown twice, once under No_group and once under
-a metric group of their name. With deprecated events this isn't the
-case, you can only see them with --deprecated. Given we can see the
-metric without the No_group grouping, what is being added by having a
-No_group grouping? It feels entirely redundant and something we don't
-need to advertise.
+As with V4, comma in subject is slightly odd, otherwise:
 
-Thanks,
-Ian
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> Thanks,
-> Kan
->
-> > Thanks,
-> > Ian
-> >
-> >> Thanks,
-> >> Kan
-> >>
-> >>>
-> >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>> ---
-> >>>  tools/perf/util/metricgroup.c | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgr=
-oup.c
-> >>> index 79ef6095ab28..6ec083af14a1 100644
-> >>> --- a/tools/perf/util/metricgroup.c
-> >>> +++ b/tools/perf/util/metricgroup.c
-> >>> @@ -455,7 +455,7 @@ static int metricgroup__add_to_mep_groups(const s=
-truct pmu_metric *pm,
-> >>>       const char *g;
-> >>>       char *omg, *mg;
-> >>>
-> >>> -     mg =3D strdup(pm->metric_group ?: "No_group");
-> >>> +     mg =3D strdup(pm->metric_group ?: pm->metric_name);
-> >>>       if (!mg)
-> >>>               return -ENOMEM;
-> >>>       omg =3D mg;
-> >>> @@ -466,7 +466,7 @@ static int metricgroup__add_to_mep_groups(const s=
-truct pmu_metric *pm,
-> >>>               if (strlen(g))
-> >>>                       me =3D mep_lookup(groups, g, pm->metric_name);
-> >>>               else
-> >>> -                     me =3D mep_lookup(groups, "No_group", pm->metri=
-c_name);
-> >>> +                     me =3D mep_lookup(groups, pm->metric_name, pm->=
-metric_name);
-> >>>
-> >>>               if (me) {
-> >>>                       me->metric_desc =3D pm->desc;
+Also note V4 Ack from Thomas Richter:
+
+	https://lore.kernel.org/all/5399c3b2-a1f0-41c6-ba91-a6a6692629dd@linux.ibm.com/
+
+> 
+> ---
+> 
+> v2: Factor out DSO lookup into separate function
+> v3: Pass down al
+> v4: Simplify is64bitip
+> v5: Fix fallback
+> ---
+>  tools/perf/builtin-script.c  |  9 +++++----
+>  tools/perf/util/print_insn.c | 27 ++++++++++++++++++++++-----
+>  tools/perf/util/print_insn.h |  2 +-
+>  3 files changed, 28 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 2e7148d667bd..94946396bb6e 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1517,7 +1517,8 @@ void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+>  static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  				     struct perf_event_attr *attr,
+>  				     struct thread *thread,
+> -				     struct machine *machine, FILE *fp)
+> +				     struct machine *machine, FILE *fp,
+> +				     struct addr_location *al)
+>  {
+>  	int printed = 0;
+>  
+> @@ -1531,7 +1532,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>  	}
+>  	if (PRINT_FIELD(DISASM) && sample->insn_len) {
+>  		printed += fprintf(fp, "\t\t");
+> -		printed += sample__fprintf_insn_asm(sample, thread, machine, fp);
+> +		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
+>  	}
+>  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+> @@ -1606,7 +1607,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+>  	if (print_srcline_last)
+>  		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
+>  
+> -	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
+> +	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+>  	printed += fprintf(fp, "\n");
+>  	if (PRINT_FIELD(SRCCODE)) {
+>  		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
+> @@ -2259,7 +2260,7 @@ static void process_event(struct perf_script *script,
+>  
+>  	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
+>  		perf_sample__fprintf_bpf_output(sample, fp);
+> -	perf_sample__fprintf_insn(sample, attr, thread, machine, fp);
+> +	perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
+>  
+>  	if (PRINT_FIELD(PHYS_ADDR))
+>  		fprintf(fp, "%16" PRIx64, sample->phys_addr);
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> index 459e0e93d7b1..32dc9dad9cf2 100644
+> --- a/tools/perf/util/print_insn.c
+> +++ b/tools/perf/util/print_insn.c
+> @@ -12,6 +12,8 @@
+>  #include "machine.h"
+>  #include "thread.h"
+>  #include "print_insn.h"
+> +#include "map.h"
+> +#include "dso.h"
+>  
+>  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+>  {
+> @@ -28,12 +30,12 @@ size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp)
+>  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+>  #include <capstone/capstone.h>
+>  
+> -static int capstone_init(struct machine *machine, csh *cs_handle)
+> +static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+>  {
+>  	cs_arch arch;
+>  	cs_mode mode;
+>  
+> -	if (machine__is(machine, "x86_64")) {
+> +	if (machine__is(machine, "x86_64") && is64) {
+>  		arch = CS_ARCH_X86;
+>  		mode = CS_MODE_64;
+>  	} else if (machine__normalized_is(machine, "x86")) {
+> @@ -93,17 +95,31 @@ static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+>  	return printed;
+>  }
+>  
+> +static bool is64bitip(struct machine *machine, struct addr_location *al)
+> +{
+> +	const struct dso *dso = al->map ? map__dso(al->map) : NULL;
+> +
+> +	if (dso)
+> +		return dso->is_64_bit;
+> +
+> +	return machine__is(machine, "x86_64") ||
+> +		machine__normalized_is(machine, "arm64") ||
+> +		machine__normalized_is(machine, "s390");
+> +}
+> +
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> -				struct machine *machine, FILE *fp)
+> +				struct machine *machine, FILE *fp,
+> +				struct addr_location *al)
+>  {
+>  	csh cs_handle;
+>  	cs_insn *insn;
+>  	size_t count;
+>  	size_t printed = 0;
+>  	int ret;
+> +	bool is64bit = is64bitip(machine, al);
+>  
+>  	/* TODO: Try to initiate capstone only once but need a proper place. */
+> -	ret = capstone_init(machine, &cs_handle);
+> +	ret = capstone_init(machine, &cs_handle, is64bit);
+>  	if (ret < 0) {
+>  		/* fallback */
+>  		return sample__fprintf_insn_raw(sample, fp);
+> @@ -128,7 +144,8 @@ size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *threa
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
+>  				struct thread *thread __maybe_unused,
+>  				struct machine *machine __maybe_unused,
+> -				FILE *fp __maybe_unused)
+> +				FILE *fp __maybe_unused,
+> +				struct addr_location *al __maybe_unused)
+>  {
+>  	return 0;
+>  }
+> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+> index 465bdcfcc2fd..6447dd41b543 100644
+> --- a/tools/perf/util/print_insn.h
+> +++ b/tools/perf/util/print_insn.h
+> @@ -10,7 +10,7 @@ struct thread;
+>  struct machine;
+>  
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> -				struct machine *machine, FILE *fp);
+> +				struct machine *machine, FILE *fp, struct addr_location *al);
+>  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+>  
+>  #endif /* PERF_PRINT_INSN_H */
+
