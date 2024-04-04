@@ -1,121 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07CC134426;
-	Thu,  4 Apr 2024 17:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5097412FF71;
+	Thu,  4 Apr 2024 18:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712253443; cv=none; b=jTFdKCAw2oNcAFidg8JafWX+42HeEjBVk5R9Sc/p79Jn6+ZVHIQqe9Jtopa2Gn0NYwzksal5ja3l+YJb8q3IOHLM6Ua/gdqIiR/4ADB0tSGqnnvMkslGE/dgLBz4kxkR2+YEmO/kZOrRQ+bNvQhcR+YU8BoosL1Smrg345yOQFU=
+	t=1712254124; cv=none; b=NODe+CjvRK+Ozjbj08F4BflB+8DONn7tF0OoB9kYQAT8o51hh/dFoMiXbX6GA6z2Asb0gBru5rUMm6InViD7kgcv1Kwn4N8jkb4EnOaKzPGBjKiLoO196v2aSSZdndPGTUJGkheYwjun5pbSFfr5qUHm1uV0SPYF5Kv2cIA6L/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712253443; c=relaxed/simple;
-	bh=niT6BQxb6KQYb+xioB6nmxiNDINwRSyOvMNKOzr69J0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B1DlNZ7TKTsoofDHADQQqI5iXQSTeNZkYWE1pNpv3rRM3/L5UsE29SGxQPEviU0DW35kToXlPqjOLslphM63qurBjEdmVkIkOqAGbW7YWrdZqg2IdwGN84zYkwLNXYx6WjasPk9u7/xGPEIqdba1BeWUjIhU0qKfJFCx1OVnQFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGSYEztl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGSYEztl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE04AC4167E;
-	Thu,  4 Apr 2024 17:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712253443;
-	bh=niT6BQxb6KQYb+xioB6nmxiNDINwRSyOvMNKOzr69J0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CGSYEztlyQ2d65DXA/9VDqohrGM22hsX9Jl7GvQKfzYroW5NOWOm8xcbfc75gyZOg
-	 zs1J6GGB8bgZFbLi8kPFU05yqF3pKdzWw6wbkX1ms/zOREFLMaGD6i/wIOucNH2+Za
-	 jvUzAqbjZVuX3cgrAuoZoiy3cz4x/9hWDR/5NhgBkfdnDBIbJ6gw50132AJFq32HdB
-	 NydZ3T8DLM42PxfD4RzT2riPmDFvELSiWYpXpWalQaBRzDQkEX8C106rgxbMkyrUOT
-	 Z/SA1v+jmFDjZ7HnIyvzCv2sEdIgs0HgwLZUYzH7ryxyZHaE1+5Bn6HAM50l4j/FOf
-	 t6lpcYs3TkxLw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 9/9] perf annotate: Move start field struct to annotated_source
-Date: Thu,  4 Apr 2024 10:57:16 -0700
-Message-ID: <20240404175716.1225482-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-In-Reply-To: <20240404175716.1225482-1-namhyung@kernel.org>
-References: <20240404175716.1225482-1-namhyung@kernel.org>
+	s=arc-20240116; t=1712254124; c=relaxed/simple;
+	bh=0DbusI7GY03Wj0tGOtwXkpAVva/Wgxk1NxWdN40xn+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lIqGutPbNbrRHVIqm8jLoBuJfOTZcONcsvc1ClT4A3nOcwnaB+op80EJMDNJgOs4SoOHq1qt1b0AGHYhPCWBR7hmpCReBxIzrwYrZm32zLZIKuUA631vqV5LVn9tLIER3kfSlox+4yX5Xl0OfzioUsxtu/XNBoSdFLw3N3QU7DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5f034b4dcecso955368a12.1;
+        Thu, 04 Apr 2024 11:08:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712254122; x=1712858922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0Iw1ZA3glUSrCjqo0XgoMrR9akniIS9Yku901iiv9o=;
+        b=ulMHaorPtVCabsUrESsseKQfmWnMvlVkxcFB37bT5VEtcpDETjkyVbagX7IwpiZFyC
+         NRzafD/yCi1DJ7+H9eSMlX0U19F1HjfZus5ajA9YnnLywxhG/wVEI/qEDJ4JpegMirS7
+         V5cW0TXxlDXM8cL+un6mtUZp9n/b2m+jpjISEz/GIZ5Y08EDj85qdZ5w9AbmWxepjj74
+         YgXMiYjfXMDvyHbZP8u49AegoaW6ANYpYdY9ksRHJzVuJRO0LSR7z76+CbzCOrHmP21Y
+         9YDRh0mxJH6vDzCQ/pGrzDXJGjeu6ropFVGMJym5t76+eITpavL4VpZpuaV2BlA2C8Tm
+         i1Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXm1rYO+no7od/chJB6iXHCSv0SPxTklj3ow+lFRO6yJoGIgXxFw/DDC78pSpN5+V3XA3geDoattItSsji+fV3oiDPXATltYg9L7S5u4iNI1DGi0XiUFNxxvTD442dSdbXuqdn14EnBLd9CGnTyeg==
+X-Gm-Message-State: AOJu0YwMIJMsygu7934SaCsi552+paQt+3DvVXe9+hunHTx69Gk9iFfh
+	VMCLNGGGJLJeJ/NQfgmmi9y1GDy9QYBX3eJzVHHuZjWmB3OU7WNpM7r3srfUmpAIx8h3LRP+Ffj
+	IEgMIN+PcmgzDnoF8X0JUOOKvjWg=
+X-Google-Smtp-Source: AGHT+IFunuj9sblh5HiySy+tjJp5z708RHdeC2RTydCVSG5q+NeE58+2Z93eUeFeYUJGARdzOg09IbCz8sKaJabfE2A=
+X-Received: by 2002:a17:90a:2f05:b0:2a2:6244:32b5 with SMTP id
+ s5-20020a17090a2f0500b002a2624432b5mr374623pjd.11.1712254122425; Thu, 04 Apr
+ 2024 11:08:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240403164818.3431325-1-irogers@google.com>
+In-Reply-To: <20240403164818.3431325-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 4 Apr 2024 11:08:31 -0700
+Message-ID: <CAM9d7chRiUO8uqJjHNbf3w8bx00xpS7f-rjGnKwMp+6+ftZniA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's only used in perf annotate output which means functions with actual
-samples.  No need to consume memory for every symbol (annotation).
+Hi Ian,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate.c | 10 +++++-----
- tools/perf/util/annotate.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+On Wed, Apr 3, 2024 at 9:48=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Previously "set -e" meant any non-zero exit code from perf stat would
+> cause a test failure. As a non-zero exit happens when there aren't
+> sufficient permissions, check for this case and make the exit code
+> 2/skip for it.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5f79ae0bccfd..4db49611c386 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -909,9 +909,9 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 	args.arch = arch;
- 	args.ms = *ms;
- 	if (annotate_opts.full_addr)
--		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
-+		notes->src->start = map__objdump_2mem(ms->map, ms->sym->start);
- 	else
--		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
-+		notes->src->start = map__rip_2objdump(ms->map, ms->sym->start);
- 
- 	return symbol__disassemble(sym, &args);
- }
-@@ -1456,9 +1456,9 @@ void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *m
- 	annotate_opts.full_addr = !annotate_opts.full_addr;
- 
- 	if (annotate_opts.full_addr)
--		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
-+		notes->src->start = map__objdump_2mem(ms->map, ms->sym->start);
- 	else
--		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
-+		notes->src->start = map__rip_2objdump(ms->map, ms->sym->start);
- 
- 	annotation__update_column_widths(notes);
- }
-@@ -1766,7 +1766,7 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 		int color = -1;
- 
- 		if (!annotate_opts.use_offset)
--			addr += notes->start;
-+			addr += notes->src->start;
- 
- 		if (!annotate_opts.use_offset) {
- 			printed = scnprintf(bf, sizeof(bf), "%" PRIx64 ": ", addr);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index d22b9e9a2fad..d5c821c22f79 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -270,6 +270,7 @@ struct annotated_source {
- 	int			nr_entries;
- 	int			nr_asm_entries;
- 	int			max_jump_sources;
-+	u64			start;
- 	struct {
- 		u8		addr;
- 		u8		jumps;
-@@ -312,7 +313,6 @@ struct annotated_branch {
- };
- 
- struct LOCKABLE annotation {
--	u64			start;
- 	struct annotated_source *src;
- 	struct annotated_branch *branch;
- };
--- 
-2.44.0.478.gd926399ef9-goog
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+Thanks,
+Namhyung
+
+
+> ---
+>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+>  1 file changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf=
+/tests/shell/stat_all_metricgroups.sh
+> index 55ef9c9ded2d..d6db192b9f18 100755
+> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> @@ -1,9 +1,7 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf all metricgroups test
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> -set -e
+> -
+>  ParanoidAndNotRoot()
+>  {
+>    [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid=
+)" -gt $1 ]
+> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+>  then
+>    system_wide_flag=3D""
+>  fi
+> -
+> +err=3D0
+>  for m in $(perf list --raw-dump metricgroups)
+>  do
+>    echo "Testing $m"
+> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+> +  result=3D$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+> +  result_err=3D$?
+> +  if [[ $result_err -gt 0 ]]
+> +  then
+> +    if [[ "$result" =3D~ \
+> +          "Access to performance monitoring and observability operations=
+ is limited" ]]
+> +    then
+> +      echo "Permission failure"
+> +      echo $result
+> +      if [[ $err -eq 0 ]]
+> +      then
+> +        err=3D2 # Skip
+> +      fi
+> +    else
+> +      echo "Metric group $m failed"
+> +      echo $result
+> +      err=3D1 # Fail
+> +    fi
+> +  fi
+>  done
+>
+> -exit 0
+> +exit $err
+> --
+> 2.44.0.478.gd926399ef9-goog
+>
