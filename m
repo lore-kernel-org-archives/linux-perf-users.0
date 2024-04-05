@@ -1,59 +1,59 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9152113C687;
-	Thu,  4 Apr 2024 23:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7244D36F;
+	Fri,  5 Apr 2024 00:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712274824; cv=none; b=m7qQ3L7mrBjH+Ojc9wS5A20IVKpARXb2xNWzrix/uvj78XYldCow0kK6nuFPH9pSw9oEMdXQztK3SLp1tQwhM01SqI/jQumtbseozn8S7VvPY5LtW1iJsx3RmPNHC/Aayr2frzo1Zjm8/3g1WKcH43pMV0zlMeznpAeWu9cZNjU=
+	t=1712275797; cv=none; b=BaOBvfSlMOhHrrV6EDu08DdZ5a4ABAV/+Ig2EJCEbWUe41vzSIMDnhztIs7JO7ncQpqEVg6iPKThs6z1e9d8r8LKnl9iegRuxBae4adNjJfzGKhO5pBd25BegdLp+/FnoZuSQ9+0Le89mGDpSodm+mvpiYHXbV3jcI96vHN82ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712274824; c=relaxed/simple;
-	bh=yPUkKEmnMlbH24omeQEh7wwPFqns/bYkVK8OvtQn0pc=;
+	s=arc-20240116; t=1712275797; c=relaxed/simple;
+	bh=VslqtpWV8HZ2n6jsi2flLRXK1lNliMOrPOyCoQd/QcM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FMfWxZpMhgTqgufpupVPib4EiJ4h4xzd+BP1gGLq6GeTBR8IDHBeEbZtubjQtKFM3+U1JCWYXoK//mA/ywLyYobNY6MOC8R2gWduY6Ly49zXllIVigqT5rd3nGL7Ij0q+BwwPZmRRM6AdPnz6ChtdsGWiyd7ABfAqutpfEN9+9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LADr0tLD; arc=none smtp.client-ip=209.85.210.180
+	 In-Reply-To:Content-Type; b=ezHg0+rsoXU9z6lu02IcG5JmFdJACvqv8oQXX9ypDmKXuaT3kMaZiSt7flIwemnG1s+TSUelBoU7KkQVOTyZe7+zCMeH0/eG+7EtqiVvnDS6Ul42wh0SHuPT3TQhw9uY2IpkSJuxwoQyByV7KAEIUEJwx1QBNzJbN08x4mTX1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4MH14xC; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LADr0tLD"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6eaf9565e6bso1194787b3a.2;
-        Thu, 04 Apr 2024 16:53:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4MH14xC"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ead4093f85so1403967b3a.3;
+        Thu, 04 Apr 2024 17:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712274822; x=1712879622; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712275796; x=1712880596; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pemxDaE/c4hiqnOrM7jkQhQHqjMoRFwFG/wb/u72+qc=;
-        b=LADr0tLDjr+QPwuNndjikpExp1SnuIezV0Zq/Va091F00I0hq3YZgg8Al080AGH4Ci
-         7MdNL8pE/Z3j1wLvS2W0E46kSuKUX9NkonoPcW/Vma99+J0+dgDGztIh4WnS41chPjNJ
-         QQ6UjnZt+i3s+v3AI31m6s7TX1S50Rdtq+7PO/MnJOpBFXCAxueS4o134lGt2sP1uz4j
-         4v4HC4qY0PE3cgHzLQUSwD3A1Wk2BKooPbW2P2aUOgskL3fRxm9uu3EOXd9Af7fGt/1q
-         8abdvWuOyfxPS0Nkj7AmPZmRJpfbMxXsqbeTqNVkzGftN7EAj5OQvmzTUySObVnwFulb
-         Mf0g==
+        bh=DrEadAnWsc+S5I9mQlpyw9ef/mT3Xvv+Fy/i8/caB1o=;
+        b=L4MH14xCKZd8t54HVCwUYaSR90xY+EXmRKLUuE3XF7iJAFt+V0v8L8+7G5mNUn+hXX
+         U4Wqd1NDMIUCnc64iKAyobfbl2ZiuGgwHF6zMITqHYgp4XiWqHQwWQ8bnfHg8FhfVXBX
+         lB8lpGyBXIOzgRomLmAs5uvk+W/SwTDIybZe3b3KU50ZLXD6wIiXKyBt52OJSMpQ2Bfd
+         0YzsS/kwwcvWTstIWG8fF6Fum8mHktFC0QC6uC31HT8yMG414r0XRNvvS88RFp31jahC
+         odUHBFJmQxyxpK6fcmsbSE6Tx2lJgnc1+5SE6/kdursJRNZr9649cCp6pbP/MZFjv3kK
+         eOWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712274822; x=1712879622;
+        d=1e100.net; s=20230601; t=1712275796; x=1712880596;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pemxDaE/c4hiqnOrM7jkQhQHqjMoRFwFG/wb/u72+qc=;
-        b=ga4B3tRIjIcgC71V+E1714SCA+dlniwiIeAeFMmsDOp0XZH8Kw60J25TFlrmTLaS+G
-         KmBuX0AVlCAnaaH1ydssE+5tEAgIWE2WgwV3P3A9Cdx26JR5qPLNNd8WmAIHIVTJ6RRA
-         ZRngXa3EmJfCXtmfAll2YRiZoRoc8tmzRi5JHGdhPeVEAfBmWPbyWEEZlZh7eozxfmLu
-         mlTqehJI/4fnEZAeo1l5Z373EGxYwbg8pHRoy4VXMZ8lqCHfM6U8UlweG7MXotf8Pltu
-         H5X28Gg8uq3yjRCXA92BrJnNkcnEDiOBNFLC4v8TscFk4seSTXIeK2BNjYpEWpWWLZ9X
-         X56g==
-X-Forwarded-Encrypted: i=1; AJvYcCWR6hCT3EVYJG8jBYWD+kKUzzd7bYNtm+dThr8p79P/msQSNYEg3GzrHuYLYcRL4P9D/2hnXrAk1oCWc8g7UG7nV8dLvScus5pEp111KEDNj27DkhYvUO7BLTC65FLW6VS0nMoqPcQM9QU9f0UIQA==
-X-Gm-Message-State: AOJu0Yw8Xv0o1RD7VvOpbqf8L9oQObSzjEpOW6qkD4fpnMoYsZ0coLeM
-	noPYXxo668xI3Eo76+1vg32F0ZVjy7QZSiBm/6xc7du20f0KrcL0
-X-Google-Smtp-Source: AGHT+IFUdjuEWq9BCDpG2Xzm4IMEnETdqMHAsq9KiJRZUSVJtT1IDB5qfW6+TzqJo16UOlqdwCao8g==
-X-Received: by 2002:a05:6a00:2e87:b0:6e6:9a11:ccec with SMTP id fd7-20020a056a002e8700b006e69a11ccecmr3968389pfb.17.1712274821562;
-        Thu, 04 Apr 2024 16:53:41 -0700 (PDT)
+        bh=DrEadAnWsc+S5I9mQlpyw9ef/mT3Xvv+Fy/i8/caB1o=;
+        b=PjFvI3FhI+CgenWHzLCE4UHhxgNPqDiFfrCPhyzOffGRCrRZTDCJs6fnVbSkIj1KW8
+         qR9hegPEHZNLjc0jvo7iRDaSvqgxUDeTdooVfoOz2VZEW4kpySrOZJ/Hrl9+b8uWgJIS
+         HcvUIlwTYtBUhBin+KBr+V7LHPA26i6Bt3lqCfTSyAFDUQFevZpv9/OuXdIRN7STu4it
+         cVlGgYcmw2L7Lf/eRwmvoQPIE0Ki7sjwJsnpGbxzgO8YoQRGMEetck0azFOrqbaFW7LC
+         /jjqFGXHEiPfXozF0YmhiAI3bOn/p7h1jauWn5kZmJLdE8z5DIxJW1IPEUz+M9N0LhfI
+         srKg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9dvo/xuX2uHoGcG0Mn2rWp9kufKVF+Yi7J1DhMIFIIVSRiT3C9jLKc2p9MSyhgYhHpgz9w40iXGPIP8wgTNZ0kZMeoS14kkOqVQxhLNb+RI1VF0ktT1STFRF+tagHsjBIsWbC6enO0oCTuEZ2Kg==
+X-Gm-Message-State: AOJu0Yz+k5e3EkOLc72FXoIjOC85Db4a7iC7EdaXMg0qjhQnwnV4Kf4k
+	lvn21xIdqkmfoB+2obnF7HgN6hLulzeIL9N/1c/F7oaFYUqLLk06
+X-Google-Smtp-Source: AGHT+IEcdC5Fj+xZsa6xKFUVGzWAnng2NU9K2uBBv1ktE65A/1SnfTCrPvgaXU54obPC2xiNLu7riw==
+X-Received: by 2002:a05:6a20:d80d:b0:1a3:c549:62ef with SMTP id iv13-20020a056a20d80d00b001a3c54962efmr69231pzb.1.1712275795657;
+        Thu, 04 Apr 2024 17:09:55 -0700 (PDT)
 Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
-        by smtp.gmail.com with ESMTPSA id y7-20020a63de47000000b005e838b99c96sm191208pgi.80.2024.04.04.16.53.38
+        by smtp.gmail.com with ESMTPSA id 3-20020a631843000000b005e485fbd455sm253708pgy.45.2024.04.04.17.09.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 16:53:41 -0700 (PDT)
-Message-ID: <6d2666bd-1c86-484d-8b4f-f195f1bf1f7e@gmail.com>
-Date: Thu, 4 Apr 2024 20:53:35 -0300
+        Thu, 04 Apr 2024 17:09:55 -0700 (PDT)
+Message-ID: <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
+Date: Thu, 4 Apr 2024 21:09:51 -0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,99 +62,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
-To: Ian Rogers <irogers@google.com>
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20240401160805.51277-1-yakoyoku@gmail.com>
  <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+ <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
 Content-Language: en-US
 From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-In-Reply-To: <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+In-Reply-To: <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 4/1/24 1:56 PM, Ian Rogers wrote:
-> On Mon, Apr 1, 2024 at 9:08 AM Martin Rodriguez Reboredo
-> <yakoyoku@gmail.com> wrote:
+On 4/1/24 8:31 PM, Namhyung Kim wrote:
 > [...]
 > 
-> Awesome sauce! Namhyung was just mentioning the idea to do this to me.
-> I wonder when this lands we can just work to remove all of the
-> BUILD_NONDISTRO options, namely libbfd, libiberty, etc. I suspect we
-> have dead/broken code hiding there.
+> Thanks for doing this!  Yep, we could unset the env temporarily.
+> 
+> As a general comment, perf has some helper functions for libdw
+> in util/dwarf-aux.[ch].  Please take a look and use/update them.
 
-I thought about the same, though I think there's some disassembler
-things to tackle, otherwise it'd be easy to do.
+Whoops! I haven't seen that file, thanks for mentioning it.
 
 > [...]
 > 
-> What does SYMBOLIZER mean in this context? Shouldn't the code be gated
-> on say a HAVE_LIBDW?
+> Probably we can use cu_find_lineinfo().
 
-Accourding to LLVM `addr2line` is a "symbolizer" program, that
-`SYMBOLIZER` means that we have a library for translating an address or
-a symbol with an offset into a source file and line.
+I could use that, I'll see.
 
 > [...]
 > 
-> Perhaps libdw_a2l_data to avoid confusion with data used for forked
-> addr2line. Could you comment the variables? Names like "input" are
-> fairly generic so you could provide an example of what their values
-> are. It is also useful to comment when something like a string is
-> owned by the struct, so that cleaning it up can be checked.
-
-I've left out some unused and suboptimal fields, a mistake from my part.
-Though `filename` and `funcname` come as read-only from `dwfl` so they
-don't have to be copied.
-
->> +       const char *input;
->> +       Dwarf_Addr addr;
->> +       Dwarf_Addr bias;
->> +
->> +       bool found;
->> +       const char *filename;
->> +       const char *funcname;
->> +       int line;
+>>> +static struct a2l_data *addr2line_init(const char *path)
 > 
-> Moving "found" and "line" later will avoid padding. As this data is
-> attached to a DSO, does there need to be some kind of locking protocol
-> for >1 symbolizing the same DSO? Perhaps these should be filled in as
-> out arguments to avoid this kind of complexity.
+> debuginfo__new()?
 
-Maybe not, I'm not sure about it.
-
-> Also, there is some DSO clean up happening in:
-> https://lore.kernel.org/lkml/CAM9d7chqnsDBCVFoK2hSs=22QrXBS=13Px5hGA4hM=ho7CZd2g@mail.gmail.com/
-> where accessor functions are used for the sake of reference count checking:
-> https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
-> which may cause some minor conflicts with this patch.
-
-Will rebase it, then.
+`libdw_a2l_new` can be another option too.
 
 > [...]
 > 
->> +               Dwarf_Die subroutine;
->> +               Dwarf_Off dieoff = dwarf_dieoffset(&scopes[0]);
->> +               dwarf_offdie(dwfl_module_getdwarf(a2l->mod, &bias), dieoff,
->> +                            &subroutine);
->> +               free(scopes);
->> +               scopes = NULL;
+>>> +static int get_inline_function(struct dso *dso, struct inline_node *node,
+>>> +                              struct symbol *sym)
+>>> +{
+>>> +       struct a2l_data *a2l = dso->a2l;
+>>> +       Dwarf_Addr addr = a2l->addr + a2l->bias;
+>>> +       Dwarf_Addr bias = 0;
+>>> +       Dwarf_Die *cudie = dwfl_module_addrdie(a2l->mod, addr, &bias);
+>>> +
+>>> +       Dwarf_Die *scopes = NULL;
+>>> +       int nscopes = dwarf_getscopes(cudie, addr - bias, &scopes);
 > 
-> Is this dead code?
+> It's not clear to me how this dwarf_getscopes() and later
+> dwarf_getscopes_die() work together.  Can you please add some
+> comment?  Also we have die_get_scopes() and I think it's simpler.
 
-I don't think so, as the scopes could probably differ in each call, I
-will have to investigate.
+I think the first is to get the scopes at an address and the second is
+for the scopes with the addr offset at that DIE. Off the top of my head.
 
->> +
->> +               nscopes = dwarf_getscopes_die(&subroutine, &scopes);
->> +               if (nscopes > 1) {
+> [...]
 > 
-> Similar early return comment to above to avoid indentation.
-> 
-> Thanks,
-> Ian
+> Why not get the function name from the abstract origin?
+
+I'm not getting it, where's that abstract origin?
+
 > [...]
