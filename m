@@ -1,229 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660071F941;
-	Fri,  5 Apr 2024 02:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2382D60B
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Apr 2024 07:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712285272; cv=none; b=dcwHqsBg6xh8O1xDAek7nhbLBV4GyBp98NjSg5FfcWuu9X2hGJDDGRRtnWcrTcYEf85UjFmqVufS8yquhFPO2JSXNnwWVg0C15PtZIy+JsN/8z51D1M3q2x/ZgbA3vwiqwSJ9mDbeN/ZU4AtpAxxKNuBNDebu1KKTjqwgiUl9uw=
+	t=1712300986; cv=none; b=qdwmIjJ9NqQUXkRPWuNEH1ZAS8H0KFB377I56eAaRFPr9mdeT2jAFUYUoBcq8ixUeoq/HsLmdZ3I0HVDqhBKwFJulDYPxNuovMOydAmqYa2o3A/HhA2U63NeKPLB8CRbXDRAb5t9V7kc7qEhUGenuQxx2GS+dRdISPw19gn39XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712285272; c=relaxed/simple;
-	bh=RFASlju1J/idb9H4G+iKYzxfK2XXo2YiFp5ZbUMCaZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iihjuCa/wBqt38YQ0wqNEn8yuOrdHi7uPjQt1gwStdBVtLdSGNhlaTl236ZzYCQ9I6UnEaRIVYfmGR+NcQTVlLfcI9n93FJlwxZ32jRZi5iK/YSAe1T4LnyAlEuhhtygYPw5wW16Fzzfx4+TXeZwCkT2VeFlcC5FtxuZg8AzmPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E7EB1007;
-	Thu,  4 Apr 2024 19:48:20 -0700 (PDT)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.41.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A6B323F766;
-	Thu,  4 Apr 2024 19:47:44 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	German Gomez <german.gomez@arm.com>
-Subject: [PATCH V17 9/9] perf: test: Extend branch stack sampling test for Arm64 BRBE
-Date: Fri,  5 Apr 2024 08:16:39 +0530
-Message-Id: <20240405024639.1179064-10-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240405024639.1179064-1-anshuman.khandual@arm.com>
-References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1712300986; c=relaxed/simple;
+	bh=8e9KWBvPyofUY9y0WRoCSTVhc7X7fvbk4pxXNNYyPx4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=VgBjL0XIdkgaLTapmxFIxK4c829SEhkvB0mLVaZBUU/sNqOfYUP93SagD1GQTTxrgci38woegZEZVleD/rgntZFiSPZrnzVB2nC3rPJO/O5ce9aJecrQudIUtu0HLBTjmBxZ7WV8C6Fsg8atga53OzQXAI+8+SuG86E39N+Ow/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aC8A6Eze; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aC8A6Eze"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-610b96c8ca2so30902867b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Apr 2024 00:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712300983; x=1712905783; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0Ob7TzpDpTM9SCKkDzrXTBQ/YxjYsrPaKVbzk6RxhdE=;
+        b=aC8A6Eze0FwSxcNzfpl74IOV4pdnzvKZxVFE+o1WOI78aTVuBY/0stL97OPGyqFZPP
+         mjCLJ6l/BZFLfE+C6OH4X1+sRCLtwEiIXPs39/Q3Cyv0b6QcOdubSCeyLB1E7Ge5ky7Q
+         CmEySy6/2NqIYNxxKeEFvikHpxGq0HCh1UVPqBNe0QDACuD6v0USzJVcsl3utQIbRe6Q
+         GUphOIaBE3xD1fURRctceDQmcyE3t3vUUDXGK5mTyUcJvcXVbiCRHePZiFdMNncPXKNs
+         zjog8j9PIBaJlr74R0BZe4VaRl9L6qVJuZdLu+wJYeGexQBCOJCHJMhJwwFm1Pd6l2GG
+         Q3ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712300983; x=1712905783;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Ob7TzpDpTM9SCKkDzrXTBQ/YxjYsrPaKVbzk6RxhdE=;
+        b=vKxdeqn1wqZxzXOesVdqSGPWlVqLA3SOjcSlcGFjPjoNyW/tSKT3BZ93AYHUVrZXLS
+         MzJn0OskOck+NCO7HXtscDWlsdIEfH+tDZygzyMUTfeQ94UiPReWbcwdWpRhZBGQ73F0
+         xYxqQdiCcKxIO+FZh7cw+XBr1Ooc4AGnPAhSLTMECq/kQtDuCq5VwHUtEN47KuktLYa2
+         TzawBR8WYox1dw/58hLDoec4nRbmbnF/uOxaxnIg+V6D00wkW7hcq7ggKkHM6pP3rqBy
+         6EKZ1oX7Qo6Jtipl2Fqb4vBgx4RyDRV0Zzp1D88AFBiaFKfgM1H8j0QYmpsd3IbnrWb/
+         bhxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFAGyh288/K7WINTqj5mwgQ5kfhejKqrDnQiOF3Irzc7IsZm/OBk+IQ6Ppcq7lKioOjOuwN6cXTauZKKfPwSAlMTpwFI8a8giDocvodB+r/w==
+X-Gm-Message-State: AOJu0YyyIR81wD4DBo0/i/wyTc0KJroUsW+oevK1JhltVfgdpGm5+XdI
+	Y2zSVSlivFQq/CcGyieZBWLgYcLE98oz8NvM+01+Y+ICF/QWtlLTQqzodilCg1sWHfJp5e0GR0M
+	IGV7IPQ==
+X-Google-Smtp-Source: AGHT+IFcU9sQHia2Mb0d3O/yCjE4MOE0iAyf7ZUHX4r565opxam1MGsSvxr6cU2YG4krjMG3mQrf4pd+2jk6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6765:20d3:72cb:f573])
+ (user=irogers job=sendgmr) by 2002:a81:fe0c:0:b0:611:747a:daac with SMTP id
+ j12-20020a81fe0c000000b00611747adaacmr162273ywn.0.1712300983701; Fri, 05 Apr
+ 2024 00:09:43 -0700 (PDT)
+Date: Fri,  5 Apr 2024 00:09:30 -0700
+Message-Id: <20240405070931.1231245-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Subject: [PATCH v1 1/2] tools subcmd: Add check_if_command_finished
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: James Clark <james.clark@arm.com>
+Add non-blocking function to check if a child_process has
+completed. If the process has completed the exit code is stored in the
+child_process so that finish_command returns it.
 
-Add Arm64 BRBE-specific testing to the existing branch stack sampling test.
-The test currently passes on the Arm FVP RevC model, but no hardware has
-been tested yet.
-
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Co-developed-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c        |  1 +
- tools/perf/tests/shell/test_brstack.sh | 42 ++++++++++++++++++++++++--
- tools/perf/tests/tests.h               |  1 +
- tools/perf/tests/workloads/Build       |  2 ++
- tools/perf/tests/workloads/traploop.c  | 39 ++++++++++++++++++++++++
- 5 files changed, 82 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/tests/workloads/traploop.c
+ tools/lib/subcmd/run-command.c | 70 ++++++++++++++++++++++------------
+ tools/lib/subcmd/run-command.h |  3 ++
+ 2 files changed, 49 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d13ee7683d9d..40083c4a7654 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -149,6 +149,7 @@ static struct test_workload *workloads[] = {
- 	&workload__sqrtloop,
- 	&workload__brstack,
- 	&workload__datasym,
-+	&workload__traploop
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 928790f35747..6a4069c930e8 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -53,12 +53,43 @@ test_user_branches() {
- 	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
-+
-+	if is_arm64; then
-+		# in arm64 with BRBE, we get IRQ entries that correspond
-+		# to any point in the process
-+		grep -m1 "/IRQ/"					$TMPDIR/perf.script
-+	fi
- 	set +x
- 
- 	# some branch types are still not being tested:
- 	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index d435eb42354b..4e3a557a2f37 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -165,43 +165,65 @@ int start_command(struct child_process *cmd)
+ 	return 0;
  }
  
-+test_arm64_trap_eret_branches() {
-+	echo "Testing trap & eret branches (arm64 brbe)"
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- \
-+		perf test -w traploop 250
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | tr ' ' '\n' > $TMPDIR/perf.script
-+	set -x
-+	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_SYSCALL by the BRBE driver
-+	grep -E -m1 "^trap_bench\+[^ ]*/\[unknown\][^ ]*/SYSCALL/" $TMPDIR/perf.script
-+	grep -E -m1 "^\[unknown\][^ ]*/trap_bench\+[^ ]*/ERET/"	$TMPDIR/perf.script
-+	set +x
-+}
-+
-+test_arm64_kernel_branches() {
-+	echo "Testing kernel branches (arm64 brbe)"
-+	# skip if perf doesn't have enough privileges
-+	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-+		echo "[skipped: not enough privileges]"
-+		return 0
-+	fi
-+	perf record -o $TMPDIR/perf.data --branch-filter any,k -- uname -a
-+	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' > $TMPDIR/perf.script
-+	grep -E -m1 "0xffff[0-9a-f]{12}" $TMPDIR/perf.script
-+	! egrep -E -m1 "0x0000[0-9a-f]{12}" $TMPDIR/perf.script
-+}
-+
- # first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
- # second argument are the expected branch types for the given filter
- test_filter() {
-@@ -81,11 +112,16 @@ set -e
+-static int wait_or_whine(pid_t pid)
++static int wait_or_whine(struct child_process *cmd, bool block)
+ {
+-	char sbuf[STRERR_BUFSIZE];
++	bool finished = cmd->finished;
++	int result = cmd->finish_result;
  
- test_user_branches
- 
--test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
-+if is_arm64; then
-+	test_arm64_trap_eret_branches
-+	test_arm64_kernel_branches
-+fi
+-	for (;;) {
++	while (!finished) {
+ 		int status, code;
+-		pid_t waiting = waitpid(pid, &status, 0);
++		pid_t waiting = waitpid(cmd->pid, &status, block ? 0 : WNOHANG);
 +
-+test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST"
- test_filter "call"	"CALL|SYSCALL"
- test_filter "cond"	"COND"
- test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
- 
- test_filter "call,cond"		"CALL|SYSCALL|COND"
--test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
--test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-+test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND|FAULT_DATA|FAULT_INST"
-+test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET|FAULT_DATA|FAULT_INST"
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 3aa7701ee0e9..e4c677adccb6 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
-+DECLARE_WORKLOAD(traploop);
- 
- extern const char *dso_to_test;
- extern const char *test_objdump_path;
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index a1f34d5861e3..a9dc93d8468b 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -6,8 +6,10 @@ perf-y += leafloop.o
- perf-y += sqrtloop.o
- perf-y += brstack.o
- perf-y += datasym.o
-+perf-y += traploop.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
- CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/traploop.c b/tools/perf/tests/workloads/traploop.c
-new file mode 100644
-index 000000000000..7dac94897e49
---- /dev/null
-+++ b/tools/perf/tests/workloads/traploop.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include "../tests.h"
-+
-+#define BENCH_RUNS 999999
-+
-+static volatile int cnt;
-+
-+#ifdef __aarch64__
-+static void trap_bench(void)
-+{
-+	unsigned long val;
-+
-+	asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
-+}
-+#else
-+static void trap_bench(void)
-+{
-+
-+}
-+#endif
-+
-+static int traploop(int argc, const char **argv)
-+{
-+	int num_loops = BENCH_RUNS;
-+
-+	if (argc > 0)
-+		num_loops = atoi(argv[0]);
-+
-+	while (1) {
-+		if ((cnt++) > num_loops)
++		if (!block && waiting == 0)
 +			break;
 +
-+		trap_bench();
++		if (waiting < 0 && errno == EINTR)
++			continue;
+ 
++		finished = true;
+ 		if (waiting < 0) {
+-			if (errno == EINTR)
+-				continue;
++			char sbuf[STRERR_BUFSIZE];
++
+ 			fprintf(stderr, " Error: waitpid failed (%s)",
+ 				str_error_r(errno, sbuf, sizeof(sbuf)));
+-			return -ERR_RUN_COMMAND_WAITPID;
+-		}
+-		if (waiting != pid)
+-			return -ERR_RUN_COMMAND_WAITPID_WRONG_PID;
+-		if (WIFSIGNALED(status))
+-			return -ERR_RUN_COMMAND_WAITPID_SIGNAL;
+-
+-		if (!WIFEXITED(status))
+-			return -ERR_RUN_COMMAND_WAITPID_NOEXIT;
+-		code = WEXITSTATUS(status);
+-		switch (code) {
+-		case 127:
+-			return -ERR_RUN_COMMAND_EXEC;
+-		case 0:
+-			return 0;
+-		default:
+-			return -code;
++			result = -ERR_RUN_COMMAND_WAITPID;
++		} else if (waiting != cmd->pid) {
++			result = -ERR_RUN_COMMAND_WAITPID_WRONG_PID;
++		} else if (WIFSIGNALED(status)) {
++			result = -ERR_RUN_COMMAND_WAITPID_SIGNAL;
++		} else if (!WIFEXITED(status)) {
++			result = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
++		} else {
++			code = WEXITSTATUS(status);
++			switch (code) {
++			case 127:
++				result = -ERR_RUN_COMMAND_EXEC;
++				break;
++			case 0:
++				result = 0;
++				break;
++			default:
++				result = -code;
++				break;
++			}
+ 		}
+ 	}
++	if (finished) {
++		cmd->finished = 1;
++		cmd->finish_result = result;
 +	}
-+	return 0;
++	return result;
 +}
 +
-+DEFINE_WORKLOAD(traploop);
++int check_if_command_finished(struct child_process *cmd)
++{
++	wait_or_whine(cmd, /*block=*/false);
++	return cmd->finished;
+ }
+ 
+ int finish_command(struct child_process *cmd)
+ {
+-	return wait_or_whine(cmd->pid);
++	return wait_or_whine(cmd, /*block=*/true);
+ }
+ 
+ int run_command(struct child_process *cmd)
+diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
+index d794138a797f..b2d39de6e690 100644
+--- a/tools/lib/subcmd/run-command.h
++++ b/tools/lib/subcmd/run-command.h
+@@ -41,17 +41,20 @@ struct child_process {
+ 	int err;
+ 	const char *dir;
+ 	const char *const *env;
++	int finish_result;
+ 	unsigned no_stdin:1;
+ 	unsigned no_stdout:1;
+ 	unsigned no_stderr:1;
+ 	unsigned exec_cmd:1; /* if this is to be external sub-command */
+ 	unsigned stdout_to_stderr:1;
++	unsigned finished:1;
+ 	void (*preexec_cb)(void);
+ 	 /* If set, call function in child rather than doing an exec. */
+ 	int (*no_exec_cmd)(struct child_process *process);
+ };
+ 
+ int start_command(struct child_process *);
++int check_if_command_finished(struct child_process *);
+ int finish_command(struct child_process *);
+ int run_command(struct child_process *);
+ 
 -- 
-2.25.1
+2.44.0.478.gd926399ef9-goog
 
