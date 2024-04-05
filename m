@@ -1,101 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D66F175560;
-	Fri,  5 Apr 2024 21:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5286339A8
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Apr 2024 23:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712351884; cv=none; b=IIljUsd58MNODHMkhSZT8aaxemvo7H9jJmv0X1stNmHSAjfm9HR9WLHKxnjZCO4AkWKT3Yg3KlJMiFWGz0IJ2weEFiFD2Wg6Z9nslAhYUISJPa8m3Hp6fQyB520yIKvCHi8wfh67UrjxCw4We9CL5Zzd6TXAA1XELVWe1HtA8Ng=
+	t=1712360518; cv=none; b=tgoRDCwu3x0ihUoA69iVk3OjFLp0nqkNhQ5JvLoXeNxn7BTXeFRh4zh3OxUNMq88DHH0X7nZfad98fxYEe9MYdyhF2DqXXI3T912CJ3sFfLqwGbsEgwofc/yDmUe6Na78U7nYIy8Db4bdxEkLz1i1XyNzKqafq6l5N3GB3VIJ2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712351884; c=relaxed/simple;
-	bh=ItK41RqmUBjvIaYBvM/7weZYcst7IoTKTUZ5r9Uaq5E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F89K/WZrJ/77ZnLKu4K5cClkbwf4UArVfxvXBkpiOtLGG3C6NncJ5vlU8K66HRV1TA053lrzKLJCcMdlNUWDwEVRodecJiDTgdK/YQ0XQR0+tktv91qqfpa22CLfBz71txNyU9PSJb4dt8D7PdMvQAS7V3n8KDEwnLo0YcS8OGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqL9R1aN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712360518; c=relaxed/simple;
+	bh=w8Kwq/WskFZvkKyjoPGgyWzgPyPvXyYnh4uIK0TJyJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTXgOExFJc2/KWag+tvF57aKY+JFPn/Fl4a7RMKHefA4rMVZCLbD/C6Wm6Z6LeS5tVymipUmaIQIGgHEGul2EHrOxQ8nTpXUIbBxHCT7jtJ6S+pjrihPNBR8r0T3Eg2Q1qKDzirr3xpFWt9shmQ7UJXu1d/urdfanJVA4hdZmpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ge0+Nhsy; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqL9R1aN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A20D8C43330;
-	Fri,  5 Apr 2024 21:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712351884;
-	bh=ItK41RqmUBjvIaYBvM/7weZYcst7IoTKTUZ5r9Uaq5E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iqL9R1aNx0z3z2Y0rkUr9j5gHKm0DsE1Vsw9uWJhqm6FZsRjllivep+e2PrSjvkTk
-	 U99AkUgd+gQPkxrg15+F2yA0DuFy0SQcmQp7byinTYntJSJkDew+z5e5W5nyZ9NjEZ
-	 v4zKsrjk79nRJO9tVwHRuqakLBO0BuUfmum5e//SeuT+HVG2mTfmPWVEc7I3s7o6qQ
-	 DoOVdLJF7Tk4gJE6c9f5x9fkeRiOXxFgI1sdwp4RJM2wl1uwabMnPbqMjMTgYMqGfo
-	 puNHp5XCV/eAeVkKAD/Wb5A3OOhobTDUkNltqEvfqi9wqq4alxxOW05PUZyRJwisRP
-	 FNl3hhW6LwhXg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf annotate: Get rid of symbol__ensure_annotate()
-Date: Fri,  5 Apr 2024 14:18:00 -0700
-Message-ID: <20240405211800.1412920-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-In-Reply-To: <20240405211800.1412920-1-namhyung@kernel.org>
-References: <20240405211800.1412920-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ge0+Nhsy"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e062f3a47bso29485ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Apr 2024 16:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712360516; x=1712965316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OfevWNOIm2n/bg5ng8kzCCoEm0rtL0MBosGvA1jLHV0=;
+        b=ge0+NhsyhL7DPAjIJ7ZlQNVwqViPHWZyxFkxaj7nUaa4esliWPC20V8M/WvjZt2sDO
+         /niuU7Ja9wDWyorYC70hTx9/JCd0HUNRBBPE/sE7A3qTRHm1LBj/Tel1UGYbBYdq8LLH
+         FyyPo559CMffbtJqvLDslSiXTY0UfI21XUzNFV9aos9yjYJAxSIfgH/vZogKgbqlIxQw
+         YFlIU8yI5HtrhEC7eiI8rHoGmIg8au3DoJy2p7HUWDZnc5/w3HbiVTwSTifl2uuXUJUZ
+         xgbqmeOLu7dUgkYLgobXp2a5sPzmE1o3H+L1Ol9qo87dcjcbDwTjd6T5kMtGF1vTcti3
+         WiOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712360516; x=1712965316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OfevWNOIm2n/bg5ng8kzCCoEm0rtL0MBosGvA1jLHV0=;
+        b=dDJyzh8eOD93BOynDNJ6vQhqJVy1fM84VYluDSEiYqJxJ4BKFcvfPgvHxm3ITGQqTj
+         Ov4RhADA1hXQ/6xuChDGdmCtSsWbADSF+km3uxbz03no47pRHylkmJJ/1LG2QK8Ct/g0
+         1ljXTIXIyByNDRlvo8xkbXJwsYqvt/iBT2xp9Vg5Hn9+dlOgcQmYxZNnCY11zgK42YmY
+         jA6xwhkSyxKlq3lw1AgNlAhuEFi+iun54wSPZ/jlxwk4HEsnvGzRmpwukZSb4DMyBFx2
+         ceLN1jjwAQ+4lm1y1GfkLb9dawZ0ClpFfcPQOf4JlDOythnSuKz5yxxgGJd0GqpFVab5
+         +biA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiJTa3S4rozKs0iUVo6pY4SfOfzhij8mTCFN95wpQLdnhz0bRRqsjSnt9iY6cX2uDgUtjEgGdrALW9DG03v+My4o2MoSJt4yJGrAAap00H8g==
+X-Gm-Message-State: AOJu0Yx+Lqx+l4N5vnIx7nYQWqG/ZlNJr2/YSql4nnH1cFHTGb6lmhpm
+	PsEIQx5YQGKsrzOJucnvp+G9lgEhT/bj4MEEDwzKe8P3xW1giT0o+G4UQ3//zikAi1rW7pnY5W0
+	O7r8NWgx3Mzr8cqLlVID1jmq0C9QsOybOrxCQ
+X-Google-Smtp-Source: AGHT+IEfd/ee+OVZj2lpDpdK0+JyB26WYotuuxq3NskTle96PsOoi5evd6gVO81E1DavaEnBTJXZ9GmQ7AKUA5h4L88=
+X-Received: by 2002:a17:903:2345:b0:1e2:3991:9e9 with SMTP id
+ c5-20020a170903234500b001e2399109e9mr95117plh.0.1712360515704; Fri, 05 Apr
+ 2024 16:41:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240404175716.1225482-1-namhyung@kernel.org> <20240404175716.1225482-10-namhyung@kernel.org>
+In-Reply-To: <20240404175716.1225482-10-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 5 Apr 2024 16:41:43 -0700
+Message-ID: <CAP-5=fXecm7N5+2dP_qkF1B21mQ-WJwwic9TspDyo7atbiojSA@mail.gmail.com>
+Subject: Re: [PATCH 9/9] perf annotate: Move start field struct to annotated_source
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now symbol__annotate() is reentrant and it doesn't need to remove
-non-instruction lines.  Let's get rid of symbol__ensure_annotate() and
-call symbol__annotate() directly.  Also we can use it to get the arch
-pointer instead of calling evsel__get_arch() directly.
+On Thu, Apr 4, 2024 at 10:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> It's only used in perf annotate output which means functions with actual
+> samples.  No need to consume memory for every symbol (annotation).
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate.c | 10 +++++-----
+>  tools/perf/util/annotate.h |  2 +-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 5f79ae0bccfd..4db49611c386 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -909,9 +909,9 @@ int symbol__annotate(struct map_symbol *ms, struct ev=
+sel *evsel,
+>         args.arch =3D arch;
+>         args.ms =3D *ms;
+>         if (annotate_opts.full_addr)
+> -               notes->start =3D map__objdump_2mem(ms->map, ms->sym->star=
+t);
+> +               notes->src->start =3D map__objdump_2mem(ms->map, ms->sym-=
+>start);
+>         else
+> -               notes->start =3D map__rip_2objdump(ms->map, ms->sym->star=
+t);
+> +               notes->src->start =3D map__rip_2objdump(ms->map, ms->sym-=
+>start);
+>
+>         return symbol__disassemble(sym, &args);
+>  }
+> @@ -1456,9 +1456,9 @@ void annotation__toggle_full_addr(struct annotation=
+ *notes, struct map_symbol *m
+>         annotate_opts.full_addr =3D !annotate_opts.full_addr;
+>
+>         if (annotate_opts.full_addr)
+> -               notes->start =3D map__objdump_2mem(ms->map, ms->sym->star=
+t);
+> +               notes->src->start =3D map__objdump_2mem(ms->map, ms->sym-=
+>start);
+>         else
+> -               notes->start =3D map__rip_2objdump(ms->map, ms->sym->star=
+t);
+> +               notes->src->start =3D map__rip_2objdump(ms->map, ms->sym-=
+>start);
+>
+>         annotation__update_column_widths(notes);
+>  }
+> @@ -1766,7 +1766,7 @@ static void __annotation_line__write(struct annotat=
+ion_line *al, struct annotati
+>                 int color =3D -1;
+>
+>                 if (!annotate_opts.use_offset)
+> -                       addr +=3D notes->start;
+> +                       addr +=3D notes->src->start;
+>
+>                 if (!annotate_opts.use_offset) {
+>                         printed =3D scnprintf(bf, sizeof(bf), "%" PRIx64 =
+": ", addr);
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index d22b9e9a2fad..d5c821c22f79 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -270,6 +270,7 @@ struct annotated_source {
+>         int                     nr_entries;
+>         int                     nr_asm_entries;
+>         int                     max_jump_sources;
+> +       u64                     start;
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+This introduces a 4 byte hole:
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 9df82e58cf6e..903565799d1b 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2140,14 +2140,6 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
- 	return 0;
- }
- 
--static void symbol__ensure_annotate(struct map_symbol *ms, struct evsel *evsel)
--{
--	struct annotation *notes = symbol__annotation(ms->sym);
--
--	if (list_empty(&notes->src->source))
--		symbol__annotate(ms, evsel, NULL);
--}
--
- static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
- 					    bool allow_update)
- {
-@@ -2322,14 +2314,12 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		return NULL;
- 	}
- 
--	if (evsel__get_arch(evsel, &arch) < 0) {
-+	/* Make sure it has the disasm of the function */
-+	if (symbol__annotate(ms, evsel, &arch) < 0) {
- 		ann_data_stat.no_insn++;
- 		return NULL;
- 	}
- 
--	/* Make sure it runs objdump to get disasm of the function */
--	symbol__ensure_annotate(ms, evsel);
--
- 	/*
- 	 * Get a disasm to extract the location from the insn.
- 	 * This is too slow...
--- 
-2.44.0.478.gd926399ef9-goog
+```
+struct annotated_source {
+       struct list_head           source;               /*     0    16 */
+       struct sym_hist *          histograms;           /*    16     8 */
+       struct hashmap *           samples;              /*    24     8 */
+       int                        nr_histograms;        /*    32     4 */
+       int                        nr_events;            /*    36     4 */
+       int                        nr_entries;           /*    40     4 */
+       int                        nr_asm_entries;       /*    44     4 */
+       int                        max_jump_sources;     /*    48     4 */
 
+       /* XXX 4 bytes hole, try to pack */
+
+       u64                        start;                /*    56     8 */
+       /* --- cacheline 1 boundary (64 bytes) --- */
+       struct {
+               u8                 addr;                 /*    64     1 */
+               u8                 jumps;                /*    65     1 */
+               u8                 target;               /*    66     1 */
+               u8                 min_addr;             /*    67     1 */
+               u8                 max_addr;             /*    68     1 */
+               u8                 max_ins_name;         /*    69     1 */
+               u16                max_line_len;         /*    70     2 */
+       } widths;                                        /*    64     8 */
+
+       /* size: 72, cachelines: 2, members: 10 */
+       /* sum members: 68, holes: 1, sum holes: 4 */
+       /* last cacheline: 8 bytes */
+};
+```
+
+If you sort variables from largest to smallest then it generally
+avoids holes (so max_line_len violates this, but it doesn't introduce
+padding). Anyway, a simple fix is to just shuffle things a little.
+
+Thanks,
+Ian
+
+>         struct {
+>                 u8              addr;
+>                 u8              jumps;
+> @@ -312,7 +313,6 @@ struct annotated_branch {
+>  };
+>
+>  struct LOCKABLE annotation {
+> -       u64                     start;
+>         struct annotated_source *src;
+>         struct annotated_branch *branch;
+>  };
+> --
+> 2.44.0.478.gd926399ef9-goog
+>
