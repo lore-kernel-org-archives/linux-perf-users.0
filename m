@@ -1,131 +1,205 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7244D36F;
-	Fri,  5 Apr 2024 00:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA87256D
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Apr 2024 01:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712275797; cv=none; b=BaOBvfSlMOhHrrV6EDu08DdZ5a4ABAV/+Ig2EJCEbWUe41vzSIMDnhztIs7JO7ncQpqEVg6iPKThs6z1e9d8r8LKnl9iegRuxBae4adNjJfzGKhO5pBd25BegdLp+/FnoZuSQ9+0Le89mGDpSodm+mvpiYHXbV3jcI96vHN82ko=
+	t=1712279806; cv=none; b=QGJPkL0OHwixsHZlpOpV1mAMi05T4JN9s+6lYx/AMSmegkv0QKTf3azUVu61ydPdNlIW8BAMOhG4ZasBALp3A5hOZtJ6HXvisyHeHd1nZribxypIvvgoE0gIHSp74C6PguossOijALAPc89Xm00UUFnCgQcYV2Y3D6IxZMljnuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712275797; c=relaxed/simple;
-	bh=VslqtpWV8HZ2n6jsi2flLRXK1lNliMOrPOyCoQd/QcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezHg0+rsoXU9z6lu02IcG5JmFdJACvqv8oQXX9ypDmKXuaT3kMaZiSt7flIwemnG1s+TSUelBoU7KkQVOTyZe7+zCMeH0/eG+7EtqiVvnDS6Ul42wh0SHuPT3TQhw9uY2IpkSJuxwoQyByV7KAEIUEJwx1QBNzJbN08x4mTX1Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4MH14xC; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712279806; c=relaxed/simple;
+	bh=2/2Kj338jH+uBPSbzYrJGs8uligsmRJYmh5N5iDFTMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U6d0hmVqcIwYZDb0Kn4F/PmeG9giwVDvsz1EEWx+NBet3ct0hFdNi/fD9ui3RSgfNv5PLkazm+M/KGm1WBPhoDRrtv3fveKlj+6QutYDSIMfuSLPH4S2+CjZ+KeVTTD+1WS6esf4dcw37e9iPgHjFY6rAS0QRk2/jRT2KQ5OAY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MZDZJFjB; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4MH14xC"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ead4093f85so1403967b3a.3;
-        Thu, 04 Apr 2024 17:09:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MZDZJFjB"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-432d55b0fa9so109221cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Apr 2024 18:16:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712275796; x=1712880596; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DrEadAnWsc+S5I9mQlpyw9ef/mT3Xvv+Fy/i8/caB1o=;
-        b=L4MH14xCKZd8t54HVCwUYaSR90xY+EXmRKLUuE3XF7iJAFt+V0v8L8+7G5mNUn+hXX
-         U4Wqd1NDMIUCnc64iKAyobfbl2ZiuGgwHF6zMITqHYgp4XiWqHQwWQ8bnfHg8FhfVXBX
-         lB8lpGyBXIOzgRomLmAs5uvk+W/SwTDIybZe3b3KU50ZLXD6wIiXKyBt52OJSMpQ2Bfd
-         0YzsS/kwwcvWTstIWG8fF6Fum8mHktFC0QC6uC31HT8yMG414r0XRNvvS88RFp31jahC
-         odUHBFJmQxyxpK6fcmsbSE6Tx2lJgnc1+5SE6/kdursJRNZr9649cCp6pbP/MZFjv3kK
-         eOWA==
+        d=google.com; s=20230601; t=1712279803; x=1712884603; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fz47VsQ4PR0UnZ5hKlGOlqLoTfw+m5you2mPgmtXA/4=;
+        b=MZDZJFjB1JtRnH1aqC9xvOQuxmNrvgHmqYDOAMXscp6qB+/qDg3wR1DKv9UufBUHid
+         OL6Mt/cR6bxoeEd2Mw114w5vZakkfGf9YVndAOSQJk3RdjjMHh9jF0dO+gFEfjxRET/I
+         QwJbKrg/23mQotcTMI2UqEf94/RJDU4RMWuToPETO5UjeE/370T4u0taF3xV1iq6Mbpo
+         Kn5+YLkXkyyrtseDXJXuWEge5PQT+vMODTPZdQG3tz+UrwnHZMzAj12D+vXhiuO4QYMw
+         pVObRgn0Gjazsb4+l1+piO9TyWkRWB+xqCov6KPzfUJfxVtPGRKOM15NnEUZQx+dOVNu
+         iKLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712275796; x=1712880596;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DrEadAnWsc+S5I9mQlpyw9ef/mT3Xvv+Fy/i8/caB1o=;
-        b=PjFvI3FhI+CgenWHzLCE4UHhxgNPqDiFfrCPhyzOffGRCrRZTDCJs6fnVbSkIj1KW8
-         qR9hegPEHZNLjc0jvo7iRDaSvqgxUDeTdooVfoOz2VZEW4kpySrOZJ/Hrl9+b8uWgJIS
-         HcvUIlwTYtBUhBin+KBr+V7LHPA26i6Bt3lqCfTSyAFDUQFevZpv9/OuXdIRN7STu4it
-         cVlGgYcmw2L7Lf/eRwmvoQPIE0Ki7sjwJsnpGbxzgO8YoQRGMEetck0azFOrqbaFW7LC
-         /jjqFGXHEiPfXozF0YmhiAI3bOn/p7h1jauWn5kZmJLdE8z5DIxJW1IPEUz+M9N0LhfI
-         srKg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9dvo/xuX2uHoGcG0Mn2rWp9kufKVF+Yi7J1DhMIFIIVSRiT3C9jLKc2p9MSyhgYhHpgz9w40iXGPIP8wgTNZ0kZMeoS14kkOqVQxhLNb+RI1VF0ktT1STFRF+tagHsjBIsWbC6enO0oCTuEZ2Kg==
-X-Gm-Message-State: AOJu0Yz+k5e3EkOLc72FXoIjOC85Db4a7iC7EdaXMg0qjhQnwnV4Kf4k
-	lvn21xIdqkmfoB+2obnF7HgN6hLulzeIL9N/1c/F7oaFYUqLLk06
-X-Google-Smtp-Source: AGHT+IEcdC5Fj+xZsa6xKFUVGzWAnng2NU9K2uBBv1ktE65A/1SnfTCrPvgaXU54obPC2xiNLu7riw==
-X-Received: by 2002:a05:6a20:d80d:b0:1a3:c549:62ef with SMTP id iv13-20020a056a20d80d00b001a3c54962efmr69231pzb.1.1712275795657;
-        Thu, 04 Apr 2024 17:09:55 -0700 (PDT)
-Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
-        by smtp.gmail.com with ESMTPSA id 3-20020a631843000000b005e485fbd455sm253708pgy.45.2024.04.04.17.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 17:09:55 -0700 (PDT)
-Message-ID: <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
-Date: Thu, 4 Apr 2024 21:09:51 -0300
+        d=1e100.net; s=20230601; t=1712279803; x=1712884603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fz47VsQ4PR0UnZ5hKlGOlqLoTfw+m5you2mPgmtXA/4=;
+        b=Kea1yH6bGFkbfIUrphtIrsS9nkSZBv1Lhufy6qQEyUIGSVHXKcozsQ3RdhiIfnbgX2
+         F2mFehHuJ542CSiubsB+Tp7k6oApIFBtixwRfIQ0bbOhaqrzKTWF4pk+T12LJRqMydct
+         07Poy3IcZfT3/DSdVkmaR4lib4G+vEuvmu8Eir99GP2ZnlBRekXR7xiOeyNWSJLoQ++z
+         NKbuwsDHKPhIZ5cDmVbxIR50fxOWzt+yS5ev9wJUrrex6ZEo3TMw5MSFqZid/5d6O8YO
+         NMiog+/UuHlWQfOFhnxKoP8zCTynqVvkM0cGUTu/dodREdcvLchs9FpNjLBUu6yn+yC9
+         ESvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyaxADXvqr0JQYpSuYhSJ/TUfKaph6fV1RGSA1qiFVIVaMy5dSHs3IvwFSZP+LAQY6vEfJbdpS0qnX9J08GzK9DHLkEag/kRp8400fjhD0Rw==
+X-Gm-Message-State: AOJu0YyDoAESJ+NZQep0NIyHxzidx2ZN8sWuGvVPCoc1HIo7pqEFxAAZ
+	F0fhY68WILXgKse8Hw8Vuj9Qc7UfkCYhfi1rM2+eT7d943mDGKHe4IOLwn/+lULhYcowe4vLLeq
+	mXHwnlF9klLzTkDlKBQyORMsPqzDkzPkrEYaA
+X-Google-Smtp-Source: AGHT+IFUq9vJBzX6fyePrn42Vhylhz/H9PviQBjHEDP52yrzxEujRAw4KtQPEpY2WIpMRGhwGJAsgB7TUS3MOds3rkA=
+X-Received: by 2002:a05:622a:4296:b0:434:5ea8:2eef with SMTP id
+ cr22-20020a05622a429600b004345ea82eefmr29925qtb.7.1712279802902; Thu, 04 Apr
+ 2024 18:16:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240401160805.51277-1-yakoyoku@gmail.com>
- <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
- <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
-Content-Language: en-US
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-In-Reply-To: <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240403164636.3429091-1-irogers@google.com> <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
+ <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com>
+ <b9868e97-e353-45e0-83b7-aa28bc35dd67@linux.intel.com> <CAP-5=fX+YuEgD4pF-2YRcqgD2cwLw_7Z4ak+wszctvagPS+Xbw@mail.gmail.com>
+ <ceca5922-6b83-464f-9e64-e8999068f734@linux.intel.com>
+In-Reply-To: <ceca5922-6b83-464f-9e64-e8999068f734@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 4 Apr 2024 18:16:27 -0700
+Message-ID: <CAP-5=fUA_SZVHtO82pUgL+MT0XQFVyuLw=Sd_s10W-XvcNqaDQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/1/24 8:31 PM, Namhyung Kim wrote:
-> [...]
-> 
-> Thanks for doing this!  Yep, we could unset the env temporarily.
-> 
-> As a general comment, perf has some helper functions for libdw
-> in util/dwarf-aux.[ch].  Please take a look and use/update them.
+On Thu, Apr 4, 2024 at 1:29=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2024-04-03 4:26 p.m., Ian Rogers wrote:
+> > On Wed, Apr 3, 2024 at 11:57=E2=80=AFAM Liang, Kan <kan.liang@linux.int=
+el.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2024-04-03 2:31 p.m., Ian Rogers wrote:
+> >>> On Wed, Apr 3, 2024 at 10:59=E2=80=AFAM Liang, Kan <kan.liang@linux.i=
+ntel.com> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
+> >>>>> Rather than place metrics without a metric group in "No_group" plac=
+e
+> >>>>> them in a a metric group that is their name. Still allow such metri=
+cs
+> >>>>> to be selected if "No_group" is passed, this change just impacts pe=
+rf
+> >>>>> list.
+> >>>>
+> >>>> So it looks like the "No_group" is not completely removed.
+> >>>> They are just not seen in the perf list, but users can still use it =
+via
+> >>>> perf stat -M No_group, right?
+> >>>>
+> >>>> If so, why we want to remove it from perf list? Where can the end us=
+er
+> >>>> know which metrics are included in the No_group?
+> >>>>
+> >>>> If the No_group is useless, why not completely remove it?
+> >>>
+> >>> Agreed. For command line argument deprecation we usually keep the
+> >>> option but hide it from help with PARSE_OPT_HIDDEN, so I was trying t=
+o
+> >>> follow that pattern albeit that a metric group isn't a command line
+> >>> option it's an option to an option.
+> >>>
+> >>
+> >> Perf list has a deprecated option to show the deprecated events.
+> >> The "No_group" should be a deprecated metrics group.
+> >>
+> >> If so, to follow the same pattern, I think perf list should still
+> >> display the "No_group" with the --deprecated option at least.
+> >
+> > Such metrics would be shown twice, once under No_group and once under
+> > a metric group of their name.
+> You mean with the --deprecated option?
+> Yes, that's because the old/deprecated metrics group (No_group) is not
+> complete removed. So both the new name and old/deprecated name are shown
+> with the --deprecated option. The metrics which belong to both groups
+> will be shown twice.
+>
+> Without the --deprecated option, only the new group and its members are
+> shown.
+>
+> > With deprecated events this isn't the
+> > case, you can only see them with --deprecated. Given we can see the
+> > metric without the No_group grouping, what is being added by having a
+> > No_group grouping? It feels entirely redundant and something we don't
+> > need to advertise.
+>
+> I just want to have a generic pattern for deprecating a metrics/metrics
+> group that everybody can follow.
 
-Whoops! I haven't seen that file, thanks for mentioning it.
+Currently there is no concept of a metric group in the json except for
+descriptions. Metrics and events share the same encoding, and the
+deprecated flag belongs to the event.
 
-> [...]
-> 
-> Probably we can use cu_find_lineinfo().
+> I treat the "No_group" as a normal metrics group name. So this patch is
+> to introduce a new name, and hide the old name. Both new and old names
+> can still be used.
 
-I could use that, I'll see.
+Why are you using No_group? I stand firm that it has no real use.
 
-> [...]
-> 
->>> +static struct a2l_data *addr2line_init(const char *path)
-> 
-> debuginfo__new()?
+> If it's for a deprecated event, the expectation is to only see the new
+> name by default, and see both new name and old name with the
+> --deprecated option.
+>
+> Now, if it's a generic deprecated metrics group, what's the expected
+> behavior? I prefer to follow the same pattern as a deprecated event.
+> If we do so, yes, there will be some redundancy with the --deprecated
+> option, since some members may belong to both old and new groups.
+> But I don't think it's an issue. It's normal that metrics belong to
+> different groups.
 
-`libdw_a2l_new` can be another option too.
+What you are requesting here isn't something that is unreasonable, it
+is just something unconnected with this change and requires a
+reorganization of the json to facilitate. As such I consider it to be
+something for follow up work.
 
-> [...]
-> 
->>> +static int get_inline_function(struct dso *dso, struct inline_node *node,
->>> +                              struct symbol *sym)
->>> +{
->>> +       struct a2l_data *a2l = dso->a2l;
->>> +       Dwarf_Addr addr = a2l->addr + a2l->bias;
->>> +       Dwarf_Addr bias = 0;
->>> +       Dwarf_Die *cudie = dwfl_module_addrdie(a2l->mod, addr, &bias);
->>> +
->>> +       Dwarf_Die *scopes = NULL;
->>> +       int nscopes = dwarf_getscopes(cudie, addr - bias, &scopes);
-> 
-> It's not clear to me how this dwarf_getscopes() and later
-> dwarf_getscopes_die() work together.  Can you please add some
-> comment?  Also we have die_get_scopes() and I think it's simpler.
+I think if we're going to restructure metric groups it would be nice
+to add a more tree-like structure which could be used to visualize
+metrics better. For example here:
+https://lore.kernel.org/lkml/20240314055919.1979781-11-irogers@google.com/
+the metrics could be shown under a tree like:
+ldst
+ - ldst_total
+   - ldst_total_loads
+ - ldst_prcnt
+   - ldst_prcnt_loads
+   - ldst_prcnt_stores
+ - ldst_ret_lds
+   - ldst_ret_lds_1
+   - ldst_ret_lds_2
+   - ldst_ret_lds_3
+ - ldst_ret_sts
+   - ldst_ret_sts_1
+   - ldst_ret_sts_2
+   - ldst_ret_sts_3
+ - ldst_ld_hit_swpf
+ - ldst_atomic_lds
 
-I think the first is to get the scopes at an address and the second is
-for the scopes with the addr offset at that DIE. Off the top of my head.
+but again it is follow up work to do this. In this change I just
+wanted a way to list all sensibly grouped metrics or metrics in a
+group just on their own which doesn't require some kind of analysis of
+metric groups. No_group has no use so let's just get rid of it.
 
-> [...]
-> 
-> Why not get the function name from the abstract origin?
+Thanks,
+Ian
 
-I'm not getting it, where's that abstract origin?
-
-> [...]
+> Thanks,
+> Kan
