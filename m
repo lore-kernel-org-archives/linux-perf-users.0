@@ -1,91 +1,103 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23CD3FB92;
-	Sat,  6 Apr 2024 17:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324AE368;
+	Sun,  7 Apr 2024 02:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712424713; cv=none; b=eF/vfA6X2cyrb6V+Mt/tkYGhFRh5G8jRHz+S/JuA+8V+3wpkpwxooSTvAEWSWo4lHkSZS4s9JMbb9/QVyAIKaw97moA81BR1eugHEDb7YQvKcVIY2iIZ1pa/O45CfO7i+ptVDrm30Mf8WZpa+eU6/NO3bmy/PLdHHHf0N9Yzl0s=
+	t=1712457225; cv=none; b=eSVQWw+cs5IDo7yYHQW9GsFfQJ7LzXF17CvQgV/LfrZS3bP/H8QhUdPpnchl8RiHJEuJUQkAjiwaQcZtrayc6kBevfQvAL+ZBJOuEfrOsHoZ2VHPjzixFbPL5fNOLoVTCJswyTZauTSCnalfrLFdP6c/K5hC7zivFxtIwh2GrIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712424713; c=relaxed/simple;
-	bh=vZ8hOquufdNKiyCJecLeixIcMnrnV1AW3oXr5DxC8CU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d51g6F4sOrv5Kgfob578ZH1Jj1RGnG+rVyhKcTohxsK/f2fm85Mkl6Tm8Ct9I1jnsoSXIi5mbg6upmor98tSFhGlWd12LL8HqSywvsnQvGFIXxvocUw/2DtvVTti1AygXivx/+r1l9uiGaa4ohmemkxo4CoGnWRBOFFup5OApYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qVCVk5mo; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qVCVk5mo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=5v76W08TT679PKia3IEz1oLMJe/sls4wnfr6gKUBWtQ=; b=qVCVk5moDyycimdiGI9lb20ivU
-	+bUKgCMQn2i7dGau9Yj4YI18gbUtwisM3meIjdLI3kVbGwa8PKbwhJ7JZz2dk0908QC+eRTAkr6D+
-	RkuKXz2HX+CYJn+t7/mhcyQyCWNvn2+nU+qw7ipMn3shNoyk6lnkrz8d2o6NsivsWkyqF1G/7OELq
-	JST25fzpSg9ygATfKklKt+N6DgP6GeQyxZIYMAjh1vWJ1cl0M/jq9dqG435fF+ioFCA0LddV6A8Ud
-	/cCP6CLuGq8ooK/o37+2HBimh+Xh/k/it3HgKFuBy8nleqRoKynnS63U4ltWtPsdSMlJqFfOGSAkq
-	cW9He2Bg==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rt9tE-0000000Ajxe-1mzp;
-	Sat, 06 Apr 2024 17:31:40 +0000
-Message-ID: <bce1e749-1317-446b-a07a-6381ceb599e8@infradead.org>
-Date: Sat, 6 Apr 2024 10:31:39 -0700
+	s=arc-20240116; t=1712457225; c=relaxed/simple;
+	bh=vvc00YemBHkBGmzAmPgwXj7gzhMI2fSH6tZO1sA3vQ4=;
+	h=Date:From:To:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Z/LmBltDCQTOElBsuCk8P0Gv3Ds4XLZKkuL7aO29iBxWji4Uo1Is/yUX5sMMRQEq8+hM8VsXv+5jV6TmSscplWFrxnvp+tN3PhiR75SpzY397wDUY3IUqqAmFd2NxZ2s9T5nF0otQ7zuf9zCN58atZn1ADBfr00ajaL+fv+kKSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from liangshenlin$eswincomputing.com ( [10.12.96.90] ) by
+ ajax-webmail-app2 (Coremail) ; Sun, 7 Apr 2024 10:31:34 +0800 (GMT+08:00)
+Date: Sun, 7 Apr 2024 10:31:34 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Shenlin Liang" <liangshenlin@eswincomputing.com>
+To: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, 
+	linux-perf-users@vger.kernel.org, 
+	"Shenlin Liang" <liangshenlin@eswincomputing.com>
+Subject: Re: [PATCH 0/2] perf kvm: Add kvm stat support on riscv
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT6.0.3 build 20220420(169d3f8c)
+ Copyright (c) 2002-2024 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/17] bcachefs: Fix typo
-To: Kuan-Wei Chiu <visitorckw@gmail.com>, colyli@suse.de,
- kent.overstreet@linux.dev, msakai@redhat.com, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- akpm@linux-foundation.org
-Cc: bfoster@redhat.com, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
- linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240406164727.577914-1-visitorckw@gmail.com>
- <20240406164727.577914-4-visitorckw@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240406164727.577914-4-visitorckw@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <71d045ed.2258.18eb6659685.Coremail.liangshenlin@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgBHWbuGBRJmHT0FAA--.2754W
+X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/1tbiAgEADGYRGI
+	0ZWwAAsv
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
-
-On 4/6/24 9:47 AM, Kuan-Wei Chiu wrote:
-> Replace 'utiility' with 'utility'.
-> 
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  fs/bcachefs/util.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-> index 92c6ad75e702..05ac1b3b0604 100644
-> --- a/fs/bcachefs/util.c
-> +++ b/fs/bcachefs/util.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * random utiility code, for bcache but in theory not specific to bcache
-> + * random utility code, for bcache but in theory not specific to bcache
->   *
->   * Copyright 2010, 2011 Kent Overstreet <kent.overstreet@gmail.com>
->   * Copyright 2012 Google, Inc.
-
--- 
-#Randy
+R2VudGxlIHBpbmcuLi4KCj4gCj4gJ3BlcmYga3ZtIHN0YXQgcmVwb3J0L3JlY29yZCcgZ2VuZXJh
+dGVzIGEgc3RhdGlzdGljYWwgYW5hbHlzaXMgb2YgS1ZNCj4gZXZlbnRzIGFuZCBjYW4gYmUgdXNl
+ZCB0byBhbmFseXplIGd1ZXN0IGV4aXQgcmVhc29ucy4gVGhpcyBwYXRjaCB0cmllcwo+IHRvIGFk
+ZCBzdGF0IHN1cHBvcnQgb24gcmlzY3YuCj4gCj4gTWFwIHRoZSByZXR1cm4gdmFsdWUgb2YgdHJh
+Y2Vfa3ZtX2V4aXQoKSB0byB0aGUgc3BlY2lmaWMgY2F1c2Ugb2YgdGhlIAo+IGV4Y2VwdGlvbiwg
+YW5kIGV4cG9ydCBpdCB0byB1c2Vyc3BhY2UuCj4gCj4gSXQgcmVjb3JkcyBvbiB0d28gYXZhaWxh
+YmxlIEtWTSB0cmFjZXBvaW50cyBmb3IgcmlzY3Y6ICJrdm06a3ZtX2VudHJ5Igo+IGFuZCAia3Zt
+Omt2bV9leGl0IiwgYW5kIHJlcG9ydHMgc3RhdGlzdGljYWwgZGF0YSB3aGljaCBpbmNsdWRlcyBl
+dmVudHMKPiBoYW5kbGVzIHRpbWUsIHNhbXBsZXMsIGFuZCBzbyBvbi4KPiAKPiBTaW1wbGUgdGVz
+dHMgZ28gYmVsb3c6Cj4gCj4gIyAuL3BlcmYga3ZtIHJlY29yZCAtZSAia3ZtOmt2bV9lbnRyeSIg
+LWUgImt2bTprdm1fZXhpdCIKPiBMb3dlcmluZyBkZWZhdWx0IGZyZXF1ZW5jeSByYXRlIGZyb20g
+NDAwMCB0byAyNTAwLgo+IFBsZWFzZSBjb25zaWRlciB0d2Vha2luZyAvcHJvYy9zeXMva2VybmVs
+L3BlcmZfZXZlbnRfbWF4X3NhbXBsZV9yYXRlLgo+IFsgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDE4
+IHRpbWVzIHRvIHdyaXRlIGRhdGEgXQo+IFsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3cm90
+ZSA1LjQzMyBNQiBwZXJmLmRhdGEuZ3Vlc3QgKDYyNTE5IHNhbXBsZXMpIAo+IAo+ICMgLi9wZXJm
+IGt2bSByZXBvcnQKPiAzMUsga3ZtOmt2bV9lbnRyeQo+IDMxSyBrdm06a3ZtX2V4aXQKPiAKPiAj
+IC4vcGVyZiBrdm0gc3RhdCByZWNvcmQgLWEKPiBbIHBlcmYgcmVjb3JkOiBXb2tlbiB1cCAzIHRp
+bWVzIHRvIHdyaXRlIGRhdGEgXQo+IFsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3cm90ZSA4
+LjUwMiBNQiBwZXJmLmRhdGEuZ3Vlc3QgKDk5MzM4IHNhbXBsZXMpIF0KPiAKPiAjIC4vcGVyZiBr
+dm0gc3RhdCByZXBvcnQgLS1ldmVudD12bWV4aXQKPiBFdmVudCBuYW1lICAgICAgICAgICAgICAg
+IFNhbXBsZXMgICBTYW1wbGUlICAgIFRpbWUgKG5zKSAgICAgVGltZSUgICBNYXggVGltZSAobnMp
+ICAgTWluIFRpbWUgKG5zKSAgTWVhbiBUaW1lIChucykKPiBTVE9SRV9HVUVTVF9QQUdFX0ZBVUxU
+ICAgICAyNjk2OCAgICAgNTQuMDAlICAgIDIwMDMwMzE4MDAgICAgNDAuMDAlICAgICAzMzYxNDAw
+ICAgICAgICAgMjc2MDAgICAgICAgICAgNzQyNzQKPiBMT0FEX0dVRVNUX1BBR0VfRkFVTFQgICAg
+ICAxNzY0NSAgICAgMzUuMDAlICAgIDExNTMzMzgxMDAgICAgMjMuMDAlICAgICAyNTEzNDAwICAg
+ICAgICAgMzA4MDAgICAgICAgICAgNjUzNjMKPiBWSVJUVUFMX0lOU1RfRkFVTFQgICAgICAgICAx
+MjQ3ICAgICAgMi4wMCUgICAgIDM0MDgyMDgwMCAgICAgNi4wMCUgICAgICAxMTkwODAwICAgICAg
+ICAgNDMzMDAgICAgICAgICAgMjczMzEyCj4gSU5TVF9HVUVTVF9QQUdFX0ZBVUxUICAgICAgMTEy
+OCAgICAgIDIuMDAlICAgICAzNDA2NDU4MDAgICAgIDYuMDAlICAgICAgMjEyMzIwMCAgICAgICAg
+IDMwMjAwICAgICAgICAgIDMwMTk5MAo+IFNVUEVSVklTT1JfU1lTQ0FMTCAgICAgICAgIDEwMTkg
+ICAgICAyLjAwJSAgICAgMjQ1OTg5OTAwICAgICA0LjAwJSAgICAgIDE4NTE1MDAgICAgICAgICAy
+OTMwMCAgICAgICAgICAyNDE0MDMKPiBMT0FEX0FDQ0VTUyAgICAgICAgICAgICAgICA5ODYgICAg
+ICAgMS4wMCUgICAgIDY3MTU1NjIwMCAgICAgMTMuMDAlICAgICA0MTgwMjAwICAgICAgICAgMTAw
+NzAwICAgICAgICAgNjgxMDkxCj4gSU5TVF9BQ0NFU1MgICAgICAgICAgICAgICAgNjU1ICAgICAg
+IDEuMDAlICAgICAxNzAwNTQ4MDAgICAgIDMuMDAlICAgICAgMTgwODMwMCAgICAgICAgIDU0NjAw
+ICAgICAgICAgIDI1OTYyNQo+IEhZUEVSVklTT1JfU1lTQ0FMTCAgICAgICAgIDIxICAgICAgICAw
+LjAwJSAgICAgNDI3NjQwMCAgICAgICAwLjAwJSAgICAgIDcxNjUwMCAgICAgICAgICAxMTYwMDAg
+ICAgICAgICAyMDM2MzggCj4gCj4gU2hlbmxpbiBMaWFuZyAoMik6Cj4gICBSSVNDVjogS1ZNOiBh
+ZGQgdHJhY2Vwb2ludHMgZm9yIGVudHJ5IGFuZCBleGl0IGV2ZW50cwo+ICAgcGVyZiBrdm0vcmlz
+Y3Y6IFBvcnQgcGVyZiBrdm0gc3RhdCB0byBSSVNDLVYKPiAKPiAgYXJjaC9yaXNjdi9rdm0vdHJh
+Y2VfcmlzY3YuaCAgICAgICAgICAgICAgICAgIHwgNjAgKysrKysrKysrKysrKysKPiAgYXJjaC9y
+aXNjdi9rdm0vdmNwdS5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDcgKysKPiAgdG9vbHMv
+cGVyZi9hcmNoL3Jpc2N2L01ha2VmaWxlICAgICAgICAgICAgICAgIHwgIDEgKwo+ICB0b29scy9w
+ZXJmL2FyY2gvcmlzY3YvdXRpbC9CdWlsZCAgICAgICAgICAgICAgfCAgMSArCj4gIHRvb2xzL3Bl
+cmYvYXJjaC9yaXNjdi91dGlsL2t2bS1zdGF0LmMgICAgICAgICB8IDc4ICsrKysrKysrKysrKysr
+KysrKysKPiAgLi4uL2FyY2gvcmlzY3YvdXRpbC9yaXNjdl9leGNlcHRpb25fdHlwZXMuaCAgIHwg
+NDEgKysrKysrKysrKwo+ICA2IGZpbGVzIGNoYW5nZWQsIDE4OCBpbnNlcnRpb25zKCspCj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Jpc2N2L2t2bS90cmFjZV9yaXNjdi5oCj4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCB0b29scy9wZXJmL2FyY2gvcmlzY3YvdXRpbC9rdm0tc3RhdC5jCj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL2FyY2gvcmlzY3YvdXRpbC9yaXNjdl9leGNlcHRpb25f
+dHlwZXMuaAo+IAo+IC0tIAo+IDIuMzcuMgo=
