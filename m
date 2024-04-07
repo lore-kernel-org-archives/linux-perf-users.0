@@ -1,147 +1,390 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3870F3D3BA
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Apr 2024 18:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07638DDBD
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Apr 2024 19:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712514767; cv=none; b=gTK8C4yk7OtPflac/ue3JHpycx9LMXrJtZQQCD40QsAFbRQ12XdfsIdhruIny978Iv0OTq8cODjxop1VKYAGuYZxjizRyDRrN9TmhEng4pvVUP2LuU77fit6o67v5Hh8aeQTG89ClGwKwBiZooPYjHu5fz6adeH4rwP3Aq72YF0=
+	t=1712516918; cv=none; b=IrWfMeARaWdGHr5qwyDz5fYdqboSuw6SdHS0v98i3UlMEX7TuJqNda17nfB00UOPYrza/qcdIqHUcXlnh9vArXReHSrmmoYzB0eOQbYnNcJgl4r9pehgVryoSi+JauyoiOBvXRnuZ3TTSrxcu0OpUNzRQxjnAdWC3PyC7ZtcCFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712514767; c=relaxed/simple;
-	bh=ztHnNx/SQUL/wwuwHRpMPiRVSAVPrQTfiIVmDy7B+jk=;
+	s=arc-20240116; t=1712516918; c=relaxed/simple;
+	bh=OWf9iMYU718Cfwl9zV/F2GWj0Yvqhq3vGoGy/+ELSgQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q7cBeoB7L1lTx+qr2NjxIyWsSNy8NlxKGq5aBPm1slNSy0b55Nlyj7TuSPi7kx9SKBhEPsQm05drqkPRYnMi9GXhCZURc2zXT32QjWvxj3DF6kFxl6yfO/mE6D7RLKElxT7N6oM5nKzbbZDWP0u06Z+vhW5kYydJDBHUWadANVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N0ws60Lq; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=YfVFRc2f1JDcnI9ZGFAlOEWI9Sx61sbZ5yAGRcReGDIR83rXzhJegvJi2Wsn1zUxK8Pkqzq33vzdzKPRCvLdReTlEzS6YcSzvJEp0LG5gXuBKrZHXb+034FNuBomy9Lro61/KEygpdjQUrVlHZW4qVYDQDkl24n7w+IEOLA/kfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BXbQICRZ; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N0ws60Lq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e3c89f3d32so156275ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Apr 2024 11:32:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BXbQICRZ"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36a267bb43aso8335ab.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 07 Apr 2024 12:08:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712514765; x=1713119565; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712516916; x=1713121716; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gLqjjjy5BIBpzS1nANECMi7hVdMwuO/IpZycBkQpgS0=;
-        b=N0ws60LqS/uXI5sgK/zPm6o1eyGkFkIQs2EwwM8woaIKJgGWGbVJ5OV3JMKVP3BXey
-         FHJ5iwLE5Egvb2xAYyu2LqutK5O2hYy9/IYAcx0I6hjIZZxLypcmu4b9IaRf4CvbUwu9
-         YVI5qWpnqMmTfPXwJfHqmRTyElYdBqJwCSGSnLtPWnbkpjsqC8bJxukjkSDFNGxEDF0X
-         n1vkgeNYEiYzG1pFVb2juCvoGutIU7aL9A2Um+8VNH5IWT6RPMFFfYP9+A4JgPbF2RtK
-         XXDC0TkLWIoWsaYkNx8pjmszep0gIsJOsOaQVr59lf2vCxpPvsslh7zZir7YI+aYpHBE
-         yT2Q==
+        bh=x5YRgmYN/L7JWBp5a51XmuKrKNy5xHlYAyqPW0wO7Hs=;
+        b=BXbQICRZQ51QDqh7zhrCwopElbuLd8cKQLvJ0et+rNsaAxX3gwHQsujlfX9lHL2Hgu
+         yyFVe0WrUA7s7mo83E3enHcpLUXs82T8aJL/6uy5nfDWrjM2NfiMxuHJVJLkpeyOo1i3
+         DtVN0/VU7mar9jvsFAq0VBe4xLhdXiG442eD7yNpu8CQ2Mb5CiWBd54ezRpiZKFRsU0p
+         03EUnucuLrwfsXRt83zkVKoIAQqTAzK/npchK7iwFGWYOT7l4vu+iuaaRyo3+IRuNktT
+         mV3honNZedgK/F4bEeGDE1saE2wX9xrXU2YH4FLL9FyJZmkPjsqqNNoaqMUTARqnR4BZ
+         o/8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712514765; x=1713119565;
+        d=1e100.net; s=20230601; t=1712516916; x=1713121716;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gLqjjjy5BIBpzS1nANECMi7hVdMwuO/IpZycBkQpgS0=;
-        b=QlBoSkvuEPpIbxMtS03VaR3EKq8xIxxxiTyNbq8bkGzoFcBS3dFpZm8MDge2GXOUc2
-         9dE304lVOklRftO7bJvN3fZuAt2OJFMn2S5CuDU6s5RdbSxUwn1tR+axbf12ESaEyIL0
-         Uzz2B8xMTasofNfai8iuwDGks8D6loAoBUil3pg6OQa9836kTtyVnZrA3Ss5FB4eUAAs
-         +jE8YOkBJsettrcsmAnuQUrYrNVqfzW2S4yxGZ0xFda+XpyMW4/2Iuzf+CoeZsDvJmL+
-         tGhHfEaGDxwAqKlpy1Etzoa/hkx6vMNAXc4nW2fBew1GIAjXTY+pPArSmDapC22Az8KS
-         plsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHtXyaaZ358RgLnOc5pjKPNXFbHpNbH8zlKBhSUlSon3cGjVnYUY5KcQhU9dmHxRQP7iHzK3gO0hadsi+T774eQcJakLa9mN0RE918s8BCbg==
-X-Gm-Message-State: AOJu0YwJ/qpQHz+IDmLrfY4Vz+/46Qf9ipw952Ir6etQmKGdb9/8xpag
-	mvQbM8XF5Y+pp/F0BGBVL3wqoGk0isXtALRC1wxk3cnMaG/iA3LYwJF2UqAa5KixSbwDSJmXmOE
-	CBG3zs4+m/dDjLTA5INnwujt7czz4fLnfuJPN
-X-Google-Smtp-Source: AGHT+IFJVydgcdM1xx89HGIXg/sm7hAU4b3TmyPgCj29iXcoepIXFDZtzFe8jWiNvQAUJAbfsMrh/qPjYSNKJohaHgk=
-X-Received: by 2002:a17:902:d2c1:b0:1e2:29f3:aff1 with SMTP id
- n1-20020a170902d2c100b001e229f3aff1mr178307plc.25.1712514765171; Sun, 07 Apr
- 2024 11:32:45 -0700 (PDT)
+        bh=x5YRgmYN/L7JWBp5a51XmuKrKNy5xHlYAyqPW0wO7Hs=;
+        b=A5X3OJGkQXnH2UTcsEYrBac/cG2AgShq7CbxXQJUJtaM4Gj8IVJzQO0UVyTdk5zvIK
+         FIIQ5Pm4DJE3EJUaXfCEzVUYwasSBAO20NE4+xm98UbHt5xn61WdqI1M+te1M75vIKXg
+         suo/F22IObDVOi9ahRat8GwBoe48sdxSWhyCBjbuODg605i/3yfKcVe4Bn1YaHB3Xux2
+         eHEIPZ+aXFJetdax3wjcsYB6FRnjhxob7t7Pj+1Vb8cLQb+0k5HATYD7UIM11jETIDxR
+         KpoOFNUDpPWSHfY+N/PSTzrgXIpT9TKP/MIP6xyK/hkUuUMO+rMUDJrPynpz/NQfRsTE
+         rtzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUqmunWMwPHwoH3+OzEQkQ+0emS6rdiGv81cDCEs/ycduSxkXUUqM0+kzaxj/2oNOO3411guP+4izNWQ6j+xROr2D+qgbkplWemjFZzGz/4A==
+X-Gm-Message-State: AOJu0YxzmVY4U4tQSB/LiODHnF8+/RNnRyqTl20DiZryeuwlDSoRy1yf
+	RJnOmNTrp8HYHwvI8HF4ULsDpe/OfMMJcw6CIhyiUso+GuonS5CFpFawL0lU+aSFQCwEn4HnhPQ
+	XFBhB2o3thAHossUeNDZjZdkWneFpkB/9UlXc
+X-Google-Smtp-Source: AGHT+IGdlR/gwGxmaiZ8d30vDLkRJydnlWZJZS+iymAoZFFHQYGUj8c89wfkczS+kPXW5B/yWkFTc01EbOBT7I/vwUs=
+X-Received: by 2002:a92:cc42:0:b0:369:e18b:bda2 with SMTP id
+ t2-20020a92cc42000000b00369e18bbda2mr297969ilq.6.1712516915950; Sun, 07 Apr
+ 2024 12:08:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407-perf_digit-v1-0-57ec37c63394@codewreck.org>
- <20240407-perf_digit-v1-3-57ec37c63394@codewreck.org> <ZhKTrUPbUnBviQYK@codewreck.org>
-In-Reply-To: <ZhKTrUPbUnBviQYK@codewreck.org>
+References: <20240407083715.851461-1-maobibo@loongson.cn>
+In-Reply-To: <20240407083715.851461-1-maobibo@loongson.cn>
 From: Ian Rogers <irogers@google.com>
-Date: Sun, 7 Apr 2024 11:32:31 -0700
-Message-ID: <CAP-5=fWT4=yT9rxKmR4ing9i-EffRQnjTP355wU-fFN1Mfnezg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf parse: Allow names to start with digits
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Sun, 7 Apr 2024 12:08:20 -0700
+Message-ID: <CAP-5=fX4DtOWVAByfJudMEhHianK8nutybu4FN41yr8_2+W4TA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf kvm: Add kvm-stat for loongarch64
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 7, 2024 at 5:38=E2=80=AFAM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
+On Sun, Apr 7, 2024 at 1:37=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
 >
-> Dominique Martinet wrote on Sun, Apr 07, 2024 at 09:18:21PM +0900:
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
-nts.l
-> > index e86c45675e1d..41c30ff29783 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -158,7 +158,7 @@ event             [^,{}/]+
-> >  num_dec              [0-9]+
-> >  num_hex              0x[a-fA-F0-9]{1,16}
-> >  num_raw_hex  [a-fA-F0-9]{1,16}
-> > -name         [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
-> > +name         [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
+> Add support for 'perf kvm stat' on loongarch64 platform, now only
+> kvm exit event is supported.
 >
-> grmbl sorry I guess I didn't actually test this two years ago (?!), or
-> used it differently (commit message is weird and also needs fixing,
-> perf probe -e 9p:* does not make sense) or something changed but
-> that's not enough:
+> Here is example output about "perf kvm --host stat report" command
 >
-> ----
-> $ sudo ./perf trace -e 9p:9p_fid_ref
-> event syntax error: '9p:9p_fid_ref'
->                      \___ parser error
-> Run 'perf list' for a list of valid events
-> ----
+>    Event name   Samples   Sample%     Time (ns)   Time%   Mean Time (ns)
+>     Mem store     83969    51.00%     625697070   8.00%             7451
+>      Mem read     37641    22.00%     112485730   1.00%             2988
+>     Interrupt     15542     9.00%      20620190   0.00%             1326
+>         Iocsr     15207     9.00%      94296190   1.00%             6200
+>     Hypercall      4873     2.00%      12265280   0.00%             2516
+>          Idle      3713     2.00%    6322055860  87.00%          1702681
+>           FPU      1819     1.00%       2750300   0.00%             1511
+>        Ifecth       502     0.00%       1341740   0.00%             2672
+>    Mem modify       324     0.00%        602240   0.00%             1858
+>        Cpucfg        55     0.00%         77610   0.00%             1411
+>           Csr        12     0.00%         19690   0.00%             1640
+>          LASX         3     0.00%          4870   0.00%             1623
+>           LSX         2     0.00%          2100   0.00%             1050
 >
-> Adding 0-9 to name_tag as well makes perf trace works.
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> v1 --- v2:
+>   1. Add child_ops for kvm exit event, split kvm:kvm_exit_gspr events
+> into cpucfg/csr/iocsr/idle child events by decoding detailed gspr
+> instruction.
+>   2. Remove some exception code type which does not happen in current
+> kvm implementation, such as meomry NR/NX/priviledge exception.
+> ---
+>  tools/perf/arch/loongarch/Makefile        |   1 +
+>  tools/perf/arch/loongarch/util/Build      |   2 +
+>  tools/perf/arch/loongarch/util/header.c   |  85 +++++++++++++
+>  tools/perf/arch/loongarch/util/kvm-stat.c | 141 ++++++++++++++++++++++
+>  4 files changed, 229 insertions(+)
+>  create mode 100644 tools/perf/arch/loongarch/util/header.c
+>  create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
 >
-> I'm not sure what name_minus is for but I did't need to add that one in
-> my test.
+> diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongar=
+ch/Makefile
+> index 3992a67a87d9..c89d6bb6b184 100644
+> --- a/tools/perf/arch/loongarch/Makefile
+> +++ b/tools/perf/arch/loongarch/Makefile
+> @@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS :=3D 1
+>  endif
+>  PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET :=3D 1
+>  PERF_HAVE_JITDUMP :=3D 1
+> +HAVE_KVM_STAT_SUPPORT :=3D 1
 >
-> That also highlights that the test I added isn't sufficient, if someone
-> familiar with the code could hint at a better place to test please tell!
-> Otherwise I'll have a look next weekend, I need to get back to my 9p
-> bugs now I've got a working perf command..
+>  #
+>  # Syscall table generation for perf
+> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loong=
+arch/util/Build
+> index d776125a2d06..e1a13761037b 100644
+> --- a/tools/perf/arch/loongarch/util/Build
+> +++ b/tools/perf/arch/loongarch/util/Build
+> @@ -1,5 +1,7 @@
+>  perf-y +=3D perf_regs.o
+> +perf-y +=3D header.o
 >
-> >  name_tag     [\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=3D]*[\']
-> >  name_minus   [a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
-> >  drv_cfg_term [a-zA-Z0-9_\.]+(=3D[a-zA-Z0-9_*?\.:]+)?
-> >
+> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
+>  perf-$(CONFIG_DWARF)     +=3D dwarf-regs.o
+>  perf-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
+>  perf-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
+> diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/lo=
+ongarch/util/header.c
+> new file mode 100644
+> index 000000000000..8f7061cf6977
+> --- /dev/null
+> +++ b/tools/perf/arch/loongarch/util/header.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Implementation of get_cpuid().
+> + *
+> + * Author: Nikita Shubin <n.shubin@yadro.com>
+> + */
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <api/fs/fs.h>
+> +#include <errno.h>
+> +#include "util/debug.h"
+> +#include "util/header.h"
+> +
+> +#define CPUINFO_MODEL  "Model Name"
+> +#define CPUINFO                "/proc/cpuinfo"
+> +
+> +static char *_get_field(const char *line)
+> +{
+> +       char *line2, *nl;
+> +
+> +       line2 =3D strrchr(line, ' ');
+> +       if (!line2)
+> +               return NULL;
+> +
+> +       line2++;
+> +       nl =3D strrchr(line, '\n');
+> +       if (!nl)
+> +               return NULL;
+> +
+> +       return strndup(line2, nl - line2);
+> +}
+> +
+> +static char *_get_cpuid(void)
+> +{
+> +       char *line =3D NULL;
+> +       char *model =3D NULL;
+> +       char *cpuid =3D NULL;
+> +       int read;
+> +       unsigned long line_sz;
+> +       FILE *cpuinfo;
+> +
+> +       cpuinfo =3D fopen(CPUINFO, "r");
+> +       if (cpuinfo =3D=3D NULL)
+> +               return cpuid;
+> +
+> +       while ((read =3D getline(&line, &line_sz, cpuinfo)) !=3D -1) {
+> +               if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL)))
+> +                       continue;
+> +
+> +               model =3D _get_field(line);
+> +               if (!model)
+> +                       goto free;
+> +               break;
+> +       }
+> +
+> +       if (asprintf(&cpuid, "%s", model) < 0)
+> +               cpuid =3D NULL;
+> +
+> +free:
+> +       fclose(cpuinfo);
+> +       free(model);
+> +       return cpuid;
+> +}
+> +
+> +int get_cpuid(char *buffer, size_t sz)
+> +{
+> +       char *cpuid =3D _get_cpuid();
+> +       int ret =3D 0;
+> +
+> +       if (sz < strlen(cpuid)) {
 
-Try adding PARSER_DEBUG=3D1 to your command line, I need to do the followin=
-g:
-```
-$ make EXTRA_CFLAGS=3D"-Wno-error=3Dredundant-decls" PARSER_DEBUG=3D1
-```
-For your example it seems to parse with the changes, but I see (which
-should be expected):
-```
-event syntax error: '9p:9p_fid_ref'
-                    \___ unknown tracepoint
-
-Error:  File /sys/kernel/tracing//events/9p/9p_fid_ref not found.
-Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feat=
-ure?.
-
-Run 'perf list' for a list of valid events
-
-Usage: perf stat [<options>] [<command>]
-
-   -e, --event <event>   event selector. use 'perf list' to list
-available events
-```
-I think Jiri's e-mail should be jolsa@kernel.org.
+Could this not segfault if cpuid is NULL?
 
 Thanks,
 Ian
 
+> +               ret =3D -EINVAL;
+> +               goto free;
+> +       }
+> +
+> +       scnprintf(buffer, sz, "%s", cpuid);
+> +free:
+> +       free(cpuid);
+> +       return ret;
+> +}
+> +
+> +char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+> +{
+> +       return _get_cpuid();
+> +}
+> diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/arch/=
+loongarch/util/kvm-stat.c
+> new file mode 100644
+> index 000000000000..2c21d73cd855
+> --- /dev/null
+> +++ b/tools/perf/arch/loongarch/util/kvm-stat.c
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <errno.h>
+> +#include <memory.h>
+> +#include <errno.h>
+> +#include "util/kvm-stat.h"
+> +#include "util/parse-events.h"
+> +#include "util/debug.h"
+> +#include "util/evsel.h"
+> +#include "util/evlist.h"
+> +#include "util/pmus.h"
+> +
+> +#define LOONGARCH_EXCEPTION_INT                0
+> +#define LOONGARCH_EXCEPTION_PIL                1
+> +#define LOONGARCH_EXCEPTION_PIS                2
+> +#define LOONGARCH_EXCEPTION_PIF                3
+> +#define LOONGARCH_EXCEPTION_PME                4
+> +#define LOONGARCH_EXCEPTION_FPD                15
+> +#define LOONGARCH_EXCEPTION_SXD                16
+> +#define LOONGARCH_EXCEPTION_ASXD       17
+> +#define LOONGARCH_EXCEPTION_GSPR       22
+> +#define  LOONGARCH_EXCEPTION_CPUCFG    100
+> +#define  LOONGARCH_EXCEPTION_CSR       101
+> +#define  LOONGARCH_EXCEPTION_IOCSR     102
+> +#define  LOONGARCH_EXCEPTION_IDLE      103
+> +#define  LOONGARCH_EXCEPTION_OTHERS    104
+> +#define LOONGARCH_EXCEPTION_HVC                23
+> +
+> +#define loongarch_exception_type                               \
+> +       {LOONGARCH_EXCEPTION_INT,  "Interrupt" },               \
+> +       {LOONGARCH_EXCEPTION_PIL,  "Mem read" },                \
+> +       {LOONGARCH_EXCEPTION_PIS,  "Mem store" },               \
+> +       {LOONGARCH_EXCEPTION_PIF,  "Ifecth" },                  \
+> +       {LOONGARCH_EXCEPTION_PME,  "Mem modify" },              \
+> +       {LOONGARCH_EXCEPTION_FPD,  "FPU" },             \
+> +       {LOONGARCH_EXCEPTION_SXD,  "LSX" },             \
+> +       {LOONGARCH_EXCEPTION_ASXD, "LASX" },            \
+> +       {LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },         \
+> +       {LOONGARCH_EXCEPTION_HVC,  "Hypercall" },               \
+> +       {LOONGARCH_EXCEPTION_CPUCFG, "Cpucfg" },                \
+> +       {LOONGARCH_EXCEPTION_CSR,    "Csr" },                   \
+> +       {LOONGARCH_EXCEPTION_IOCSR,  "Iocsr" },                 \
+> +       {LOONGARCH_EXCEPTION_IDLE,   "Idle" },                  \
+> +       {LOONGARCH_EXCEPTION_OTHERS, "Others" }
+> +
+> +
+> +define_exit_reasons_table(loongarch_exit_reasons, loongarch_exception_ty=
+pe);
+> +
+> +const char *vcpu_id_str =3D "vcpu_id";
+> +const char *kvm_exit_reason =3D "reason";
+> +const char *kvm_entry_trace =3D "kvm:kvm_enter";
+> +const char *kvm_reenter_trace =3D "kvm:kvm_reenter";
+> +const char *kvm_exit_trace =3D "kvm:kvm_exit";
+> +
+> +const char *kvm_events_tp[] =3D {
+> +       "kvm:kvm_enter",
+> +       "kvm:kvm_reenter",
+> +       "kvm:kvm_exit",
+> +       "kvm:kvm_exit_gspr",
+> +       NULL,
+> +};
+> +
+> +static bool event_end(struct evsel *evsel,
+> +               struct perf_sample *sample __maybe_unused,
+> +               struct event_key *key __maybe_unused)
+> +{
+> +       /*
+> +        * LoongArch kvm is a little different with other architectures
+> +        *
+> +        * There is kvm:kvm_reenter and kvm:kvm_enter event adjacent with
+> +        * kvm:kvm_exit event.
+> +        *   kvm:kvm_reenter means returning to guest immediately
+> +        *   kvm:kvm_enter   means returning to vmm and then to guest
+> +        */
+> +       return evsel__name_is(evsel, kvm_entry_trace) ||
+> +               evsel__name_is(evsel, kvm_reenter_trace);
+> +}
+> +
+> +static void event_gspr_get_key(struct evsel *evsel,
+> +                       struct perf_sample *sample,
+> +                       struct event_key *key)
+> +{
+> +       unsigned int insn;
+> +
+> +       key->key =3D LOONGARCH_EXCEPTION_OTHERS;
+> +       insn =3D evsel__intval(evsel, sample, "inst_word");
+> +       switch (insn >> 24) {
+> +       case 0:
+> +               /* cpucfg inst trap */
+> +               if ((insn >> 10) =3D=3D 0x1b)
+> +                       key->key =3D LOONGARCH_EXCEPTION_CPUCFG;
+> +               break;
+> +       case 4:
+> +               /* csr inst trap */
+> +               key->key =3D LOONGARCH_EXCEPTION_CSR;
+> +               break;
+> +       case 6:
+> +               /* iocsr inst trap */
+> +               if ((insn >> 15) =3D=3D 0xc90)
+> +                       key->key =3D LOONGARCH_EXCEPTION_IOCSR;
+> +               else if ((insn >> 15) =3D=3D 0xc91)
+> +                       /* idle inst trap */
+> +                       key->key =3D LOONGARCH_EXCEPTION_IDLE;
+> +               break;
+> +       default:
+> +               key->key =3D LOONGARCH_EXCEPTION_OTHERS;
+> +               break;
+> +       }
+> +}
+> +
+> +static struct child_event_ops child_events[] =3D {
+> +       { .name =3D "kvm:kvm_exit_gspr",
+> +       .get_key =3D event_gspr_get_key },
+> +       { NULL, NULL },
+> +};
+> +
+> +static struct kvm_events_ops exit_events =3D {
+> +       .is_begin_event =3D exit_event_begin,
+> +       .is_end_event =3D event_end,
+> +       .child_ops =3D child_events,
+> +       .decode_key =3D exit_event_decode_key,
+> +       .name =3D "VM-EXIT"
+> +};
+> +
+> +struct kvm_reg_events_ops kvm_reg_events_ops[] =3D {
+> +       {
+> +               .name   =3D "vmexit",
+> +               .ops    =3D &exit_events,
+> +       },
+> +       { NULL, NULL },
+> +};
+> +
+> +const char * const kvm_skip_events[] =3D {
+> +       NULL,
+> +};
+> +
+> +int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_un=
+used)
+> +{
+> +       kvm->exit_reasons_isa =3D "loongarch64";
+> +       kvm->exit_reasons =3D loongarch_exit_reasons;
+> +       return 0;
+> +}
+>
+> base-commit: f2f80ac809875855ac843f9e5e7480604b5cbff5
 > --
-> Dominique Martinet | Asmadeus
+> 2.39.3
+>
+>
