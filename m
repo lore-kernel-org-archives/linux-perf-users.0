@@ -1,347 +1,128 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8DD8F66;
-	Sun,  7 Apr 2024 08:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56023D69;
+	Sun,  7 Apr 2024 12:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712479047; cv=none; b=ug/05J8YOcQAHgmADQc0S8OnpVbuNb3tTlQjxj/nK+Y87qE834wLUsjqZOCuZGGizgv2hg6g+vgL5ZIbwCW2/C0EYXUpbFQYYJRIDV2PKoCWo57DW6HPSUtd+hYJsIYGq2mf+1Jsark2CwM0SXazVQ/mhBDmUSkL8+2vkV89v28=
+	t=1712492340; cv=none; b=oynhvfzqynN1Gty0Xsnbabc1ZrPs476lV57dL/q9HNAFHkXTnSK89QRj6MU4efEBTiVlk82xOA+aXyEUxN+dw3w4ZJZZzWfEYu0GZqiP6PQfz0RUCi5mZ9TsW+12R6IrLASOOL1nmClO20RrVOj1Fx2bup2BwtppSehZKo/yXOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712479047; c=relaxed/simple;
-	bh=MXeC9BXxotjbIWyCRJS9bnfR7LpF54OtfaVtR/+NUWc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P7qp4uKRqVSIx6UpvMmA55niyiPCs8rSn3IgaoeeyurIlRFgErkEu3w1e/nXIxLvH2MNYOa0ZN2ZjWa+VKX4usUAWW0X0/Q+lkmu7nLDSPpvc2S6Bb8gBuWs+ycVBqVea7ERHNa5p5H1nYspnGr1F+NFMZxMwg3NxUsrWYR9GTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Cxqro_WxJmdgEkAA--.1779S3;
-	Sun, 07 Apr 2024 16:37:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZMw7WxJmnYZ0AA--.34647S2;
-	Sun, 07 Apr 2024 16:37:15 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Ming Wang <wangming01@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: [PATCH v2] perf kvm: Add kvm-stat for loongarch64
-Date: Sun,  7 Apr 2024 16:37:15 +0800
-Message-Id: <20240407083715.851461-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1712492340; c=relaxed/simple;
+	bh=CB9SVe/1nQccnowqa2Oy0yOfeCmRu1RyfMh4/x6FP/A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UJY7XuaT3xoLPlxEU/XkgpIyhIxMuic7yBCD+cLR2BE4C1T9Z9SgEScmnKyE88rEUIpv/ttgLdm94dq9tnmgJUJZyzSRDxO6DzHa6FtdttiSZMWW8gsantnRAlKrSdJFivLSr1A0D2cDXhUtr9ZCCq9uLLKnffvjzAyTs8Yk2qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=rsIuPVSV; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=wAb6PB3x; arc=none smtp.client-ip=91.121.71.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="rsIuPVSV";
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="wAb6PB3x"
+Received: by nautica.notk.org (Postfix, from userid 108)
+	id 73177C01F; Sun,  7 Apr 2024 14:18:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1712492329; bh=476gbRuIfQWnruL6kbPBxqlAzWZec7nUlTEesb8byRU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=rsIuPVSVWLqWeRQmVlyDhwPzGm4TXu4FiERvRdU6XTgCMg685Rsi+LAYD7WE5JBSB
+	 dRd+I5OZfEHbimtRI4EP+PN+ottTzCuPn7pi37S3rU8SkNNNyPZxX6DoqJzlpZirrw
+	 MUvWrvaRgBFKqaLKzWVQlj8QlMgWituGNGX3hdM0uDoOEWWuq5YR6/xNk+qPdIU1a+
+	 ysh68T+8joaSZmDNks8GzzjmnP0dz0WqM7IcTOgOPLknMIwHH0FW6OxxZk+P9gblAN
+	 ta3IVo+iGIZ9QprVSFD8Rbzm1tISLZKGY6izR2n5YuvAdqxFM1OyPoFbyokaU8I4ST
+	 WYdKGxlOf50Sw==
+X-Spam-Level: 
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by nautica.notk.org (Postfix) with ESMTPS id E6BBCC009;
+	Sun,  7 Apr 2024 14:18:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1712492328; bh=476gbRuIfQWnruL6kbPBxqlAzWZec7nUlTEesb8byRU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=wAb6PB3xxpdvzlZW/pDS0OHO7d65HIWJav4uMGSKhK/hEXLjDcCgDympo99xg3tsV
+	 MUrcdxmc5YXjlnDOGpmVvAlnW7+u7//UFB5sNPgy+8dqLQ2eJa1gYL4tCLKIqZsWq1
+	 JsBnVhYCXpxH7/yEpW0y+091kgeECIe1IXkHDe2KdLoOdAEI/MqLyAjRAgBDu+6Q9o
+	 o2Zm/GOTA28AlOa5XVWd4F+IUM6mvwaz03PeoZGUVZKth8uVfN7iDGt41ZKM/PFOSR
+	 rvG6E7CkcLkBK7iQkWy0ZE3z3Gor8y8DH8LNtlNYhI7/mX2LLiXfZMeBawKvzql0qS
+	 HayvTUq1zmu3A==
+Received: from [127.0.0.1] (localhost.lan [::1])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 1674e6f1;
+	Sun, 7 Apr 2024 12:18:38 +0000 (UTC)
+From: Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 0/3] perf probe: Allow names to start with digits
+Date: Sun, 07 Apr 2024 21:18:18 +0900
+Message-Id: <20240407-perf_digit-v1-0-57ec37c63394@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxZMw7WxJmnYZ0AA--.34647S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAqPEmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDEwNz3YLUorT4lMz0zBJdcyMTE9Mk09SUJDMjJaCGgqLUtMwKsGHRsbW
+ 1AIdXhYFcAAAA
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dominique Martinet <asmadeus@codewreck.org>, Jiri Olsa <olsajiri@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1645;
+ i=asmadeus@codewreck.org; h=from:subject:message-id;
+ bh=CB9SVe/1nQccnowqa2Oy0yOfeCmRu1RyfMh4/x6FP/A=;
+ b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmEo8enPO1cmisFZv/oCO/4zIoqz3TIhzVByPhY
+ bZN0Rt7sGyJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZhKPHgAKCRCrTpvsapjm
+ cEfREACcs8tJAf7bxlqZ85mU7XjXzZgnpKnf5hxlEz/1uNAtC3oEOIIjkJIN3oT7/yg4GwQMAu4
+ 8whERMSEuqNeIA0Lb/yjuY+DFgZ8OJu+6BU9iQ8+3ES1HEIksOH6+FRUZYXwjgqaEMzyP8OWTSB
+ /VM7N7V0lAGAVgHFLgqmWRkQM/pNfIR+9rhwOurFdhfDykU5rH7OJwDfQxWqYF5HAQepXZZ6H5h
+ eBoN7EUeiISciPkub2WBFuSmSvlBzBS7AsEJ24nZBzEd17VUybKuQUi+RjLkX3v8hepZ0NWO0HT
+ XdXJYY3SvoUvgTPavJDHCLQJMBwIZD4BxHFfMipsKNSaVsqsWjNMf+2SAxxem+Pm9aZ42dLNQFy
+ Bb6Rp7dOyvxXWhV4X76Tm89daB/yRxmTrxIGL+9AbjTWWISOuIJv02/70pmNq75RFWYU/S+yPKI
+ tiW+iM63/SqWj+p0rn4lFeGYHRsmFYIj3OmMKdrw1xbil/Dr3elWCoAZH7adnlE45VKpKCF8P/g
+ cSbABwB1Z+h6q5NI5fsvfLNL4v/ogWFoidA4Uk8xS9Z6c9d+apdheA3VhhCkqAVtCsjg8X9uR8Y
+ PcJHmkpBARChj+wEuXRUkCMTzSv2XeWk2HCwDaxmzgGJZRq3Z+gmSpQmuAoUzkxu5/JfBeEa1o8
+ OcQbOVy09k0Ij3A==
+X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
+ fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-Add support for 'perf kvm stat' on loongarch64 platform, now only
-kvm exit event is supported.
+This is a rebase of the patch orginally sent almost two years ago here:
+https://lkml.kernel.org/r/20220612061508.1449636-1-asmadeus@codewreck.org
 
-Here is example output about "perf kvm --host stat report" command
+At the time I was asked to add tests, and Jiri whipped up something to
+make the test pass even for probes that don't exist on most systems but
+that ended up never being formatted or sent... I asked what happened of
+it and got asked to send it myself, but obviously also totally forget
+about it myself until I needed it again now.
 
-   Event name   Samples   Sample%     Time (ns)   Time%   Mean Time (ns)
-    Mem store     83969    51.00%     625697070   8.00%             7451
-     Mem read     37641    22.00%     112485730   1.00%             2988
-    Interrupt     15542     9.00%      20620190   0.00%             1326
-        Iocsr     15207     9.00%      94296190   1.00%             6200
-    Hypercall      4873     2.00%      12265280   0.00%             2516
-         Idle      3713     2.00%    6322055860  87.00%          1702681
-          FPU      1819     1.00%       2750300   0.00%             1511
-       Ifecth       502     0.00%       1341740   0.00%             2672
-   Mem modify       324     0.00%        602240   0.00%             1858
-       Cpucfg        55     0.00%         77610   0.00%             1411
-          Csr        12     0.00%         19690   0.00%             1640
-         LASX         3     0.00%          4870   0.00%             1623
-          LSX         2     0.00%          2100   0.00%             1050
+I've taken the diff from that thread, adapted it a little bit to the
+current master branch and checked things still fall in place -- I didn't
+see any obvious problem.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-v1 --- v2:
-  1. Add child_ops for kvm exit event, split kvm:kvm_exit_gspr events
-into cpucfg/csr/iocsr/idle child events by decoding detailed gspr
-instruction.
-  2. Remove some exception code type which does not happen in current
-kvm implementation, such as meomry NR/NX/priviledge exception.
+Thanks!
+
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 ---
- tools/perf/arch/loongarch/Makefile        |   1 +
- tools/perf/arch/loongarch/util/Build      |   2 +
- tools/perf/arch/loongarch/util/header.c   |  85 +++++++++++++
- tools/perf/arch/loongarch/util/kvm-stat.c | 141 ++++++++++++++++++++++
- 4 files changed, 229 insertions(+)
- create mode 100644 tools/perf/arch/loongarch/util/header.c
- create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
+Dominique Martinet (3):
+      perf parse-events: pass parse_state to add_tracepoint
+      perf parse-events: Add new 'fake_tp' parameter for tests
+      perf parse: Allow names to start with digits
 
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-index 3992a67a87d9..c89d6bb6b184 100644
---- a/tools/perf/arch/loongarch/Makefile
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS := 1
- endif
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- PERF_HAVE_JITDUMP := 1
-+HAVE_KVM_STAT_SUPPORT := 1
- 
- #
- # Syscall table generation for perf
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-index d776125a2d06..e1a13761037b 100644
---- a/tools/perf/arch/loongarch/util/Build
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -1,5 +1,7 @@
- perf-y += perf_regs.o
-+perf-y += header.o
- 
-+perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-$(CONFIG_DWARF)     += dwarf-regs.o
- perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
-new file mode 100644
-index 000000000000..8f7061cf6977
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/header.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Implementation of get_cpuid().
-+ *
-+ * Author: Nikita Shubin <n.shubin@yadro.com>
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <api/fs/fs.h>
-+#include <errno.h>
-+#include "util/debug.h"
-+#include "util/header.h"
-+
-+#define CPUINFO_MODEL	"Model Name"
-+#define CPUINFO		"/proc/cpuinfo"
-+
-+static char *_get_field(const char *line)
-+{
-+	char *line2, *nl;
-+
-+	line2 = strrchr(line, ' ');
-+	if (!line2)
-+		return NULL;
-+
-+	line2++;
-+	nl = strrchr(line, '\n');
-+	if (!nl)
-+		return NULL;
-+
-+	return strndup(line2, nl - line2);
-+}
-+
-+static char *_get_cpuid(void)
-+{
-+	char *line = NULL;
-+	char *model = NULL;
-+	char *cpuid = NULL;
-+	int read;
-+	unsigned long line_sz;
-+	FILE *cpuinfo;
-+
-+	cpuinfo = fopen(CPUINFO, "r");
-+	if (cpuinfo == NULL)
-+		return cpuid;
-+
-+	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
-+		if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL)))
-+			continue;
-+
-+		model = _get_field(line);
-+		if (!model)
-+			goto free;
-+		break;
-+	}
-+
-+	if (asprintf(&cpuid, "%s", model) < 0)
-+		cpuid = NULL;
-+
-+free:
-+	fclose(cpuinfo);
-+	free(model);
-+	return cpuid;
-+}
-+
-+int get_cpuid(char *buffer, size_t sz)
-+{
-+	char *cpuid = _get_cpuid();
-+	int ret = 0;
-+
-+	if (sz < strlen(cpuid)) {
-+		ret = -EINVAL;
-+		goto free;
-+	}
-+
-+	scnprintf(buffer, sz, "%s", cpuid);
-+free:
-+	free(cpuid);
-+	return ret;
-+}
-+
-+char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-+{
-+	return _get_cpuid();
-+}
-diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/arch/loongarch/util/kvm-stat.c
-new file mode 100644
-index 000000000000..2c21d73cd855
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/kvm-stat.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
-+#include <memory.h>
-+#include <errno.h>
-+#include "util/kvm-stat.h"
-+#include "util/parse-events.h"
-+#include "util/debug.h"
-+#include "util/evsel.h"
-+#include "util/evlist.h"
-+#include "util/pmus.h"
-+
-+#define LOONGARCH_EXCEPTION_INT		0
-+#define LOONGARCH_EXCEPTION_PIL		1
-+#define LOONGARCH_EXCEPTION_PIS		2
-+#define LOONGARCH_EXCEPTION_PIF		3
-+#define LOONGARCH_EXCEPTION_PME		4
-+#define LOONGARCH_EXCEPTION_FPD		15
-+#define LOONGARCH_EXCEPTION_SXD		16
-+#define LOONGARCH_EXCEPTION_ASXD	17
-+#define LOONGARCH_EXCEPTION_GSPR	22
-+#define  LOONGARCH_EXCEPTION_CPUCFG	100
-+#define  LOONGARCH_EXCEPTION_CSR	101
-+#define  LOONGARCH_EXCEPTION_IOCSR	102
-+#define  LOONGARCH_EXCEPTION_IDLE	103
-+#define  LOONGARCH_EXCEPTION_OTHERS	104
-+#define LOONGARCH_EXCEPTION_HVC		23
-+
-+#define loongarch_exception_type				\
-+	{LOONGARCH_EXCEPTION_INT,  "Interrupt" },		\
-+	{LOONGARCH_EXCEPTION_PIL,  "Mem read" },		\
-+	{LOONGARCH_EXCEPTION_PIS,  "Mem store" },		\
-+	{LOONGARCH_EXCEPTION_PIF,  "Ifecth" },			\
-+	{LOONGARCH_EXCEPTION_PME,  "Mem modify" },		\
-+	{LOONGARCH_EXCEPTION_FPD,  "FPU" },		\
-+	{LOONGARCH_EXCEPTION_SXD,  "LSX" },		\
-+	{LOONGARCH_EXCEPTION_ASXD, "LASX" },		\
-+	{LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },		\
-+	{LOONGARCH_EXCEPTION_HVC,  "Hypercall" },		\
-+	{LOONGARCH_EXCEPTION_CPUCFG, "Cpucfg" },		\
-+	{LOONGARCH_EXCEPTION_CSR,    "Csr" },			\
-+	{LOONGARCH_EXCEPTION_IOCSR,  "Iocsr" },			\
-+	{LOONGARCH_EXCEPTION_IDLE,   "Idle" },			\
-+	{LOONGARCH_EXCEPTION_OTHERS, "Others" }
-+
-+
-+define_exit_reasons_table(loongarch_exit_reasons, loongarch_exception_type);
-+
-+const char *vcpu_id_str = "vcpu_id";
-+const char *kvm_exit_reason = "reason";
-+const char *kvm_entry_trace = "kvm:kvm_enter";
-+const char *kvm_reenter_trace = "kvm:kvm_reenter";
-+const char *kvm_exit_trace = "kvm:kvm_exit";
-+
-+const char *kvm_events_tp[] = {
-+	"kvm:kvm_enter",
-+	"kvm:kvm_reenter",
-+	"kvm:kvm_exit",
-+	"kvm:kvm_exit_gspr",
-+	NULL,
-+};
-+
-+static bool event_end(struct evsel *evsel,
-+		struct perf_sample *sample __maybe_unused,
-+		struct event_key *key __maybe_unused)
-+{
-+	/*
-+	 * LoongArch kvm is a little different with other architectures
-+	 *
-+	 * There is kvm:kvm_reenter and kvm:kvm_enter event adjacent with
-+	 * kvm:kvm_exit event.
-+	 *   kvm:kvm_reenter means returning to guest immediately
-+	 *   kvm:kvm_enter   means returning to vmm and then to guest
-+	 */
-+	return evsel__name_is(evsel, kvm_entry_trace) ||
-+		evsel__name_is(evsel, kvm_reenter_trace);
-+}
-+
-+static void event_gspr_get_key(struct evsel *evsel,
-+			struct perf_sample *sample,
-+			struct event_key *key)
-+{
-+	unsigned int insn;
-+
-+	key->key = LOONGARCH_EXCEPTION_OTHERS;
-+	insn = evsel__intval(evsel, sample, "inst_word");
-+	switch (insn >> 24) {
-+	case 0:
-+		/* cpucfg inst trap */
-+		if ((insn >> 10) == 0x1b)
-+			key->key = LOONGARCH_EXCEPTION_CPUCFG;
-+		break;
-+	case 4:
-+		/* csr inst trap */
-+		key->key = LOONGARCH_EXCEPTION_CSR;
-+		break;
-+	case 6:
-+		/* iocsr inst trap */
-+		if ((insn >> 15) == 0xc90)
-+			key->key = LOONGARCH_EXCEPTION_IOCSR;
-+		else if ((insn >> 15) == 0xc91)
-+			/* idle inst trap */
-+			key->key = LOONGARCH_EXCEPTION_IDLE;
-+		break;
-+	default:
-+		key->key = LOONGARCH_EXCEPTION_OTHERS;
-+		break;
-+	}
-+}
-+
-+static struct child_event_ops child_events[] = {
-+	{ .name = "kvm:kvm_exit_gspr",
-+	.get_key = event_gspr_get_key },
-+	{ NULL, NULL },
-+};
-+
-+static struct kvm_events_ops exit_events = {
-+	.is_begin_event = exit_event_begin,
-+	.is_end_event = event_end,
-+	.child_ops = child_events,
-+	.decode_key = exit_event_decode_key,
-+	.name = "VM-EXIT"
-+};
-+
-+struct kvm_reg_events_ops kvm_reg_events_ops[] = {
-+	{
-+		.name	= "vmexit",
-+		.ops	= &exit_events,
-+	},
-+	{ NULL, NULL },
-+};
-+
-+const char * const kvm_skip_events[] = {
-+	NULL,
-+};
-+
-+int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
-+{
-+	kvm->exit_reasons_isa = "loongarch64";
-+	kvm->exit_reasons = loongarch_exit_reasons;
-+	return 0;
-+}
+ tools/perf/tests/parse-events.c | 11 +++++++++--
+ tools/perf/tests/pmu-events.c   |  2 +-
+ tools/perf/util/evlist.c        |  3 ++-
+ tools/perf/util/evsel.c         | 20 +++++++++++++-------
+ tools/perf/util/evsel.h         |  4 ++--
+ tools/perf/util/metricgroup.c   |  3 ++-
+ tools/perf/util/parse-events.c  | 38 +++++++++++++++++++++++---------------
+ tools/perf/util/parse-events.h  |  9 ++++++---
+ tools/perf/util/parse-events.l  |  2 +-
+ tools/perf/util/parse-events.y  |  2 +-
+ 10 files changed, 60 insertions(+), 34 deletions(-)
+---
+base-commit: 7382f9ae4a924c4fdc37f303db019170ce374167
+change-id: 20240407-perf_digit-72445b5edb62
 
-base-commit: f2f80ac809875855ac843f9e5e7480604b5cbff5
+Best regards,
 -- 
-2.39.3
+Dominique Martinet | Asmadeus
 
