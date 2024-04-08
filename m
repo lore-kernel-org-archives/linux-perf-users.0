@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E01148835;
-	Mon,  8 Apr 2024 18:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F821DDD6;
+	Mon,  8 Apr 2024 19:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602527; cv=none; b=pkoKst4hQyQkZRr2Gd/hxZbfy4wBVad9SOmcoPkj6f29vTQxURK2stFE9i9X0Kf9ri22blyIa2hryyTosz0A26xSdrWdfLa2sBDJZpfnD/VQ9NzmJHa6LaCxO/cXGqBZR3bxOhixnklTAjONztT80Apxc1aDL2pqk/WiGp32oxI=
+	t=1712603620; cv=none; b=sm5enWCcCdzta01B5aC5WrTfAKLMBor2tdQfoNKPr4XmaEkBr4l5MPlWglSGRRjVcCRVSYjxkq/ci3r7JBkvNXCTXvBUcWZH2/XNAR5BSfEYjYVmcva+Yiz/4rteps3r1FA7xSXLYkExiviLdXpF7stzC4pQONb3Oct9vjmYa4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602527; c=relaxed/simple;
-	bh=BvHgZcFAUDVTBrBRbiRaDYjdO4l4T3ZRwoMXPA6BMQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aWltg7frMU05UPwsMDnsuWrK3KWZbq7EOjndEcT1qy1scnItFLGd0H1vz0eJ8yJE6bDyggXX9R9XW6SMtvA3Y5L1gBZzEgtOs8g75GpSsHvvgHZbNmR/5T0dKH/HhU3F20wQwHLDG/DhB1xdhJjjUSK+rQ/Y0uC95ydpMsqgrnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzBTMfx3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712603620; c=relaxed/simple;
+	bh=ZQYtPEJCpxwgy71jYr4Xt0wKLHqXYR73lblW6olRIfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GMFzUotZgCX2GePb8mQ1EcyvCwYEYqDXMZ9/ofpSciCaKkPAAYxaFWFs3hfbwFEgOoAyeIcm2ZeWK9QcSWlqTlRuCoeHeu42BTrx5ImuNH6xsh/I/BdynYnmM4JxDWOHCVRMwBIdoxK8akBLGzHizoIa4FH/gTZ3YukoGMNRGSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngdI8VkP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzBTMfx3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB06EC433C7;
-	Mon,  8 Apr 2024 18:55:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngdI8VkP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18CAC433C7;
+	Mon,  8 Apr 2024 19:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712602527;
-	bh=BvHgZcFAUDVTBrBRbiRaDYjdO4l4T3ZRwoMXPA6BMQk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EzBTMfx3rwiLU0W2aX9wWUyhTBaWz8dCWK1EzV/EnvzsHz3Nd2thn6M96J7zpmzmC
-	 fnxpCzSKtT4aojVmgTDApEZjvrIU23q8AS36rpJAYggyoz5tC+Js+e1Xreb5B4hHGC
-	 sjUJLk/LsYzTkkN4dNda7Ka3n/CwWbcvoO5OIT/Ve/4TNOsGuo0m/uqqM/T8pCblsV
-	 8P4pWQNgQre8cdPR9gbFt4lyu0edvSWJUqyY11t6SDAHJBRsyV7J4ygqNM6YDZbT7V
-	 a/k1oTb6ZZe8gp0ewJk15NBYvMqwC+MDm5+skXK19QtQMPDCWKNbciVQJ/k6af9I90
-	 a8oP1UOACEB1A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+	s=k20201202; t=1712603620;
+	bh=ZQYtPEJCpxwgy71jYr4Xt0wKLHqXYR73lblW6olRIfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ngdI8VkPGjQyywirngIsUWF1u+GWVSlbMXTxfuLCGGZyDPUmr63zbWDxBMBOWviFL
+	 9VLQhh0EazNUwXEUijaXrOxlp5Ux2/aieECbqvhv4mJZ22hw49NmhCPhHPaqcA2rEW
+	 8L/YnGEDsRH0dkOaliG2zcIan3Qi375Q6srDu5HkwwLgF5j/n6Z/tpqxBqsu8fwbMS
+	 7pfDfDTEqdo7afpO/K4XW1gA15Q8qJg4kDq5pkCZdJOP1dKoXiTdEmYLOaGmBAquZe
+	 zGq9A5g2qb0IH53KIzeeFk7pcOdh5oxTOuSpvQl1mjvYtqjB2FEHn9Sg74z/qp47Kr
+	 Yh2uYpEmcsGhQ==
+Date: Mon, 8 Apr 2024 16:13:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 9/9] tools/include: Sync arm64 asm/cputype.h with the kernel sources
-Date: Mon,  8 Apr 2024 11:55:20 -0700
-Message-ID: <20240408185520.1550865-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHSET 0/9] Sync tools headers with the kernel source
+Message-ID: <ZhRB4BULj1Y1f1TN@x1>
 References: <20240408185520.1550865-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -51,54 +44,131 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
 
-To pick up the changes from:
+On Mon, Apr 08, 2024 at 11:55:11AM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> I'm gonna carry these changes on the perf tools tree.  I'll update the
+> vhost.h once it lands on the mainline.
 
-  fb091ff39479 ("arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata")
+Humm, maybe its not a good idea to do that this cycle? I mean some of
+these were moved from tools/{include,arch} to tools/perf/trace/beauty/{include,arch},
+like tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h.
 
-This should address these tools/perf build warnings:
+But having said that, probably isn't a problem, when you get this pulled
+upstream I'll do a merge with perf-tools-next and this should be
+trivially resolved, I think.
 
-  Warning: Kernel ABI header differences:
-    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+Using the above example:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/arch/arm64/include/asm/cputype.h | 4 ++++
- 1 file changed, 4 insertions(+)
+⬢[acme@toolbox perf-tools-next]$ git log tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
+commit c8bfe3fad4f86a029da7157bae9699c816f0c309
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon Mar 11 17:07:33 2024 -0300
 
-diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-index 7c7493cb571f..52f076afeb96 100644
---- a/tools/arch/arm64/include/asm/cputype.h
-+++ b/tools/arch/arm64/include/asm/cputype.h
-@@ -61,6 +61,7 @@
- #define ARM_CPU_IMP_HISI		0x48
- #define ARM_CPU_IMP_APPLE		0x61
- #define ARM_CPU_IMP_AMPERE		0xC0
-+#define ARM_CPU_IMP_MICROSOFT		0x6D
+    perf beauty: Move arch/x86/include/asm/irq_vectors.h copy out of the directory used to build perf
+    
+    It is used only to generate string tables, not to build perf, so move it
+    to the tools/perf/trace/beauty/include/ hierarchy, that is used just for
+    scraping.
+    
+    This is a something that should've have happened, as happened with the
+    linux/socket.h scrapper, do it now as Ian suggested while doing an
+    audit/refactor session in the headers used by perf.
+    
+    No other tools/ living code uses it.
+    
+    Suggested-by: Ian Rogers <irogers@google.com>
+    Reviewed-by: Ian Rogers <irogers@google.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Link: https://lore.kernel.org/lkml/CAP-5=fWZVrpRufO4w-S4EcSi9STXcTAN2ERLwTSN7yrSSA-otQ@mail.gmail.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
  
- #define ARM_CPU_PART_AEM_V8		0xD0F
- #define ARM_CPU_PART_FOUNDATION		0xD00
-@@ -135,6 +136,8 @@
- 
- #define AMPERE_CPU_PART_AMPERE1		0xAC3
- 
-+#define MICROSOFT_CPU_PART_AZURE_COBALT_100	0xD49 /* Based on r0p0 of ARM Neoverse N2 */
-+
- #define MIDR_CORTEX_A53 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A53)
- #define MIDR_CORTEX_A57 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A57)
- #define MIDR_CORTEX_A72 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A72)
-@@ -193,6 +196,7 @@
- #define MIDR_APPLE_M2_BLIZZARD_MAX MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M2_BLIZZARD_MAX)
- #define MIDR_APPLE_M2_AVALANCHE_MAX MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M2_AVALANCHE_MAX)
- #define MIDR_AMPERE1 MIDR_CPU_MODEL(ARM_CPU_IMP_AMPERE, AMPERE_CPU_PART_AMPERE1)
-+#define MIDR_MICROSOFT_AZURE_COBALT_100 MIDR_CPU_MODEL(ARM_CPU_IMP_MICROSOFT, MICROSOFT_CPU_PART_AZURE_COBALT_100)
- 
- /* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
- #define MIDR_FUJITSU_ERRATUM_010001		MIDR_FUJITSU_A64FX
--- 
-2.44.0.478.gd926399ef9-goog
-
+> This is the full explanation from Arnaldo:
+> 
+> There used to be no copies, with tools/ code using kernel headers
+> directly. From time to time tools/perf/ broke due to legitimate kernel
+> hacking. At some point Linus complained about such direct usage. Then we
+> adopted the current model.
+> 
+> The way these headers are used in perf are not restricted to just
+> including them to compile something.
+> 
+> There are sometimes used in scripts that convert defines into string
+> tables, etc, so some change may break one of these scripts, or new MSRs
+> may use some different #define pattern, etc.
+> 
+> E.g.:
+> 
+>   $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+>   tools/perf/trace/beauty/arch_errno_names.sh
+>   tools/perf/trace/beauty/drm_ioctl.sh
+>   tools/perf/trace/beauty/fadvise.sh
+>   tools/perf/trace/beauty/fsconfig.sh
+>   tools/perf/trace/beauty/fsmount.sh
+>   $
+>   $ tools/perf/trace/beauty/fadvise.sh
+>   static const char *fadvise_advices[] = {
+>         [0] = "NORMAL",
+>         [1] = "RANDOM",
+>         [2] = "SEQUENTIAL",
+>         [3] = "WILLNEED",
+>         [4] = "DONTNEED",
+>         [5] = "NOREUSE",
+>   };
+>   $
+> 
+> The tools/perf/check-headers.sh script, part of the tools/ build
+> process, points out changes in the original files.
+> 
+> So its important not to touch the copies in tools/ when doing changes in
+> the original kernel headers, that will be done later, when
+> check-headers.sh inform about the change to the perf tools hackers.
+> 
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (9):
+>   tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
+>   tools/include: Sync uapi/linux/fs.h with the kernel sources
+>   tools/include: Sync uapi/linux/kvm.h and asm/kvm.h with the kernel
+>     sources
+>   tools/include: Sync uapi/sound/asound.h with the kernel sources
+>   tools/include: Sync x86 CPU feature headers with the kernel sources
+>   tools/include: Sync x86 asm/irq_vectors.h with the kernel sources
+>   tools/include: Sync x86 asm/msr-index.h with the kernel sources
+>   tools/include: Sync asm-generic/bitops/fls.h with the kernel sources
+>   tools/include: Sync arm64 asm/cputype.h with the kernel sources
+> 
+>  tools/arch/arm64/include/asm/cputype.h        |   4 +
+>  tools/arch/arm64/include/uapi/asm/kvm.h       |  15 +-
+>  tools/arch/powerpc/include/uapi/asm/kvm.h     |  45 +-
+>  tools/arch/s390/include/uapi/asm/kvm.h        | 315 +++++++-
+>  tools/arch/x86/include/asm/cpufeatures.h      |  17 +-
+>  .../arch/x86/include/asm/disabled-features.h  |  11 +-
+>  tools/arch/x86/include/asm/irq_vectors.h      |   2 -
+>  tools/arch/x86/include/asm/msr-index.h        |  74 +-
+>  .../arch/x86/include/asm/required-features.h  |   3 +-
+>  tools/arch/x86/include/uapi/asm/kvm.h         | 308 +++++++-
+>  tools/include/asm-generic/bitops/__fls.h      |   8 +-
+>  tools/include/asm-generic/bitops/fls.h        |   8 +-
+>  tools/include/uapi/drm/i915_drm.h             |  16 +
+>  tools/include/uapi/linux/fs.h                 |  30 +-
+>  tools/include/uapi/linux/kvm.h                | 689 +-----------------
+>  tools/include/uapi/sound/asound.h             |   4 +-
+>  16 files changed, 809 insertions(+), 740 deletions(-)
+> 
+> 
+> base-commit: 25e973a0e077da585e472b4cadb1d2f4c1113285
+> -- 
+> 2.44.0.478.gd926399ef9-goog
