@@ -1,70 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556128564E;
-	Mon,  8 Apr 2024 14:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B4E1CD21;
+	Mon,  8 Apr 2024 14:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585738; cv=none; b=aR/qyWSZfb2AWsPnnZn8NWs2crlV7jOyt61LVLq+LLNhrB1cgO3CwFYYBe6svYbkz4/+IovoHqGJafXbLqJsEK7wdpuEw3hCpCm4ohxy570kCrkD/i+9+QJ/zeThCMbzUO+fp1OnRVf9fEeDS+S+vM++xxfUvEcagWgocVtnI34=
+	t=1712587867; cv=none; b=hrpGbAMIdvlQjvzzCI2pnzxBdZD/glskzBo98lPsusRjUfV0+ov5GzdzAp+FfwYx3EaqxenAObw3q8ozToHOr9gAweOroYkAmW7SnbHa0Yzck0SDAp3dJcaNU5UxajbdJ54DMYNwCJ+Rz+8mbSARPdxyfks3goQl8F1SygrH21A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585738; c=relaxed/simple;
-	bh=uGAyf8hbUzFZhn6hO+6/TbFvwKdd+ftBukqq+4D8pHY=;
+	s=arc-20240116; t=1712587867; c=relaxed/simple;
+	bh=ROVMmw8JAVlfeAbn9frbLivPaMaLeic75F5rRmUOPYs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pAENubTFajeuNniX+qZRiNisbbeKqQ91BcPc3I9DMZphulNBVnf1JhI0yvb6BRXLgxdiN72OckzTP3AhKTtdYe/t4FReZwretgF91KT1++PxlYSqYS/Cu+6tt4CED/Ir6PSNF1VqTeGFBBa28CcclyQdTFEdpTpKxbg50xIBNJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agSuONB/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMWde7ZJe6OcdY8e8lgUcTjgG2O5JD2DpD4NnlrYspGHI5BjFf7Ue4ryjPebkeD1Yf3u2O22fvBRmPD2UNmJzLAjC0LT0qHjSc3rxEirkjGdQAjmYbygTWJAC2hF+l0ckmNZq0FnfKpSY8UnXlZwLg92RBGEvOihB7Xrj8pty/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xh2Y1AE4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agSuONB/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE48C433F1;
-	Mon,  8 Apr 2024 14:15:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xh2Y1AE4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C011C433C7;
+	Mon,  8 Apr 2024 14:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712585738;
-	bh=uGAyf8hbUzFZhn6hO+6/TbFvwKdd+ftBukqq+4D8pHY=;
+	s=k20201202; t=1712587866;
+	bh=ROVMmw8JAVlfeAbn9frbLivPaMaLeic75F5rRmUOPYs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=agSuONB/gh4uhRRAvIAMCWT5aX0LpJfs7T7ty2R92xMfaMzyEHDq6Z7uPUOGMweOv
-	 xL+t/Gds9o+MDffDujhKtft/1wftFS5tf9FAriGJXHWyVXMckgSIUD1r2ruZ5/RfLj
-	 daD/VigkmJmPvtwsF2SvRVgpKy4hdFOADWBG4rcoJcB97qT6mhHTDUWz3kDeT1lsDP
-	 uEWq6PwJ7xi/CZlp/j/SD3X6Z1B/9Edz+aLiCCN7ZUsoe1OA/kmHRLCHZrU4JuwUpy
-	 fIiI0HstYvm+RlwvSKPdYNSLU2g0Uhjb9aqGfJ7tSB/nN32bH/hA3tvB+pGBKLI7Fx
-	 GXy1AxdpaTBjA==
-Date: Mon, 8 Apr 2024 11:15:34 -0300
+	b=Xh2Y1AE4NFBOOykqNwxsDWTV5SlBHlnyXPyxZrP1LpwudwYDRoL2HPJfC+45uFMhv
+	 kzvUg3nMucWx1SHLUnffJm+RJ2cbCueZFS4ySZ6bfWvcZ/3SkDmM+4MCpQPZm2UKKL
+	 9cL9V98QMONV6U0l5Zkgk0mUeQa1QfIHaYqC+onTuzcCGhBDzTTZv/8zCMBKKLWAF4
+	 FIQs8y7IfzUcRUFWtYIvJ5CxQpjUi1MZnEpZsk8VWK0wOWEe7xCiO/oTZTWj0fFmjO
+	 38Ot4yNR4lf54ZomspbXIMYwFXE0o1vE6d9vUkw9G8iZFo3plku0XSadIQqOz5ah7E
+	 oMSr8YuLKFn5A==
+Date: Mon, 8 Apr 2024 11:51:02 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf annotate-data: small random fixes and updates
-Message-ID: <ZhP8BgVBDrl-HgEb@x1>
-References: <20240405211800.1412920-1-namhyung@kernel.org>
- <CAP-5=fUhngjbL3Q7a3EuBSGdDKg8PFjRzpe5yHTDdeLmz4oWDg@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
+Message-ID: <ZhQEVu2MS9g_Xwic@x1>
+References: <20240403164636.3429091-1-irogers@google.com>
+ <8e60ccd6-907e-445c-85e0-785b1426e98c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUhngjbL3Q7a3EuBSGdDKg8PFjRzpe5yHTDdeLmz4oWDg@mail.gmail.com>
+In-Reply-To: <8e60ccd6-907e-445c-85e0-785b1426e98c@linux.intel.com>
 
-On Fri, Apr 05, 2024 at 05:02:20PM -0700, Ian Rogers wrote:
-> On Fri, Apr 5, 2024 at 2:18 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > I found some problems in the data type profiling with perf annotate.
-> > The patch 1 should go to perf-tools and others can go to perf-tools-next.
-
-> > Namhyung Kim (4):
-> >   perf annotate: Make sure to call symbol__annotate2() in TUI
-> >   perf annotate-data: Fix global variable lookup
-> >   perf annotate-data: Do not delete non-asm lines
-> >   perf annotate: Get rid of symbol__ensure_annotate()
+On Fri, Apr 05, 2024 at 10:45:59AM -0400, Liang, Kan wrote:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
+> > Rather than place metrics without a metric group in "No_group" place
+> > them in a a metric group that is their name. Still allow such metrics
+> > to be selected if "No_group" is passed, this change just impacts perf
+> > list.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Applied 2-4 to perf-tools-next,
-
-Thanks,
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
