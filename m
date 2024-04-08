@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269D118C05
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Apr 2024 23:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A603518C05
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Apr 2024 23:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712617746; cv=none; b=Mu5f17IAqbY7AKJb7Pb4ql+Eu5cvcHaO1+9rWO3WOTdlrxHhEa+pwYolAMfSxOvgOxICs8FTytzmKavuLiXLOEzt4NYJovwwOzpDxJyuMQR3ptt46qsr/6T9elvNhxDj3D41p7LtURSN7ufHqoitCy+q6BQIyxTJ5usl68hSQAg=
+	t=1712617881; cv=none; b=Sse80F2szrnINZC2WKtjzon2LOkd8Ns3uTNBQT3SyPHpK+nyAAULmIjbd/2zvFsNPfGfQGKwccUKCfLlLni6WnL79EGVEYEeIlzAAQT96/MiWmEjqVbzr/D6E31rgFPH+To4QMBwP31DgpxxWarI4G++5oV7UsMO+lQTp2wt4Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712617746; c=relaxed/simple;
-	bh=TPkHJJre/fBBn/tRBy2O9wRECv2XZKDifq56U7buxN8=;
+	s=arc-20240116; t=1712617881; c=relaxed/simple;
+	bh=A9aKpADHIwvkPA5NFutDZtWUu/BjpCFUH7OgzxGsRy4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=I2WmuGeQHN2bTSMrRc8NmP1N/ZnH06NmlfzdMRmnrwofSUbHMQm8ZSc0fAA0mDOI9FWJrgxF2x7Pq8dnLK8PYOgIOucXhu7UZ1C4Sx7Ey+Fn0RMuZ7bt0LT2FGvHxsYfO7KjX8o07UUmdE9oiEDkXUy3Btfm0tJmvc95SO+CGxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8wrDZ6M; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=MjFiF+bDFGCaqBA3Q1ZM6jP6ZQBhMG9MhJ1YPtkOO6fgEYH6gYpg8i6iuUKmJzXpksA0HVQeOOO3aud4w5ztH8CTNnX/vi+4/7J+Whd7MMiQdJ4z1GES/XjAlwbfFakRLmcLri7FnI1XkG1M5+nJOP77ef8KiluyBm3mBYPlsh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezvF8vUv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8wrDZ6M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D4BC433F1;
-	Mon,  8 Apr 2024 23:09:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezvF8vUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF86C433F1;
+	Mon,  8 Apr 2024 23:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712617746;
-	bh=TPkHJJre/fBBn/tRBy2O9wRECv2XZKDifq56U7buxN8=;
+	s=k20201202; t=1712617881;
+	bh=A9aKpADHIwvkPA5NFutDZtWUu/BjpCFUH7OgzxGsRy4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J8wrDZ6M+7es5m6EKNO8StPTUDCJKgxUgR4teS/POPXCBXIIBQnwOpYrsoAuR9/qb
-	 iWBvikT8nRPsAzy9gDEAIfpZc+yqYn4L2rP+iHacR3WpsxipQ9teWX2vfU7qMhSUox
-	 hTMi/1HEnRKJppO0MB+QoTfW4FlW6Z0dHdGzQxYLEjTmzoh82LlbRN3gZgL/ZOLn5K
-	 /rCIsu08ThMs7JTRuHtIROQSDp4Nuqg6O4tLgTHQj1felhNIirvJFPaJYtXcQR6JYG
-	 tEDHaazUS0DMIm/VlwTNATM5EYBiejGNlxLAbuDBksZIwv/AiX5Js2kVIbsqaytIeT
-	 5nNR1LbBvZ0oA==
-Date: Tue, 9 Apr 2024 08:09:02 +0900
+	b=ezvF8vUvfGh6m4E5td3G7Ec9hsxx8k+J9IadWGRQeEINpmiuOUh9ZKtvUJROCiVH1
+	 v/NhV+UTWXi40Ycb1iLnCRi7DiLS+2rmExQ7AWXda2MOYWC+EvSYkfciAsPenHMEgb
+	 zP69PD4rBy1LXUnjRoiDhxzQQLDe4EdVaH1+Vq5Dbu5iGV0s8U3fT+760BkkrKn2uZ
+	 sPsD+oJqafDcoDbfWmIavMQm7qM47o1FmHh1fAyA0kWpLPb/ZwUSCBvALEFUAvD7RM
+	 Bh+vylE5Ku6Yq0yoY4HGsEnHVNWZ8KPBRVLAfIWkGIuOKv9r96hF9GYMDJBSFIoa5K
+	 7NlcfE5qqVopA==
+Date: Tue, 9 Apr 2024 08:11:17 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
 Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
  james.clark@arm.com, Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-Subject: Re: [PATCH V2 8/8] perf test: Check output of the probe ... --funcs
- command
-Message-Id: <20240409080902.6f2ccd1239c64ca49861d6d6@kernel.org>
-In-Reply-To: <20240408062230.1949882-9-ChaitanyaS.Prakash@arm.com>
+Subject: Re: [PATCH V2 6/8] perf tools: Enable configs required for
+ test_uprobe_from_different_cu.sh
+Message-Id: <20240409081117.beef0c0e192d647aeeb88235@kernel.org>
+In-Reply-To: <20240408062230.1949882-7-ChaitanyaS.Prakash@arm.com>
 References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
-	<20240408062230.1949882-9-ChaitanyaS.Prakash@arm.com>
+	<20240408062230.1949882-7-ChaitanyaS.Prakash@arm.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -47,44 +47,41 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  8 Apr 2024 11:52:30 +0530
+On Mon,  8 Apr 2024 11:52:28 +0530
 Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com> wrote:
 
 > From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 > 
-> Test "perf probe of function from different CU" only checks if the perf
-> command has failed and doesn't test the --funcs output. In the issue
-> reported in the previous commit, the garbage output of the --funcs
-> command was being ignored by the test when it could have been caught.
+> Test "perf probe of function from different CU" fails due to certain
+> configs not being enabled. Building the kernel with
+> CONFIG_KPROBE_EVENTS=y and CONFIG_UPROBE_EVENTS=y fixes the issue. As
+> CONFIG_KPROBE_EVENTS is dependent on CONFIG_KPROBES, enable it as well.
+> Some platforms enable these configs as a part of their defconfig, so
+> this change is only required for the ones that don't do so.
 > 
-> An additional check to grep for "foo" has been added to test the --funcs
-> output.
 
 Looks good to me.
 
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thanks,
+Thank you,
 
-> 
 > Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 > ---
->  tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/tests/config-fragments/config | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> index 319f36ebb9a4..82bc774a078a 100755
-> --- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> +++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-> @@ -77,7 +77,7 @@ gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
->  gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
->  gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
->  
-> -perf probe -x ${temp_dir}/testfile --funcs foo
-> +perf probe -x ${temp_dir}/testfile --funcs foo | grep "foo"
->  perf probe -x ${temp_dir}/testfile foo
->  
->  cleanup
+> diff --git a/tools/perf/tests/config-fragments/config b/tools/perf/tests/config-fragments/config
+> index c340b3195fca..4fca12851016 100644
+> --- a/tools/perf/tests/config-fragments/config
+> +++ b/tools/perf/tests/config-fragments/config
+> @@ -9,3 +9,6 @@ CONFIG_GENERIC_TRACER=y
+>  CONFIG_FTRACE=y
+>  CONFIG_FTRACE_SYSCALLS=y
+>  CONFIG_BRANCH_PROFILE_NONE=y
+> +CONFIG_KPROBES=y
+> +CONFIG_KPROBE_EVENTS=y
+> +CONFIG_UPROBE_EVENTS=y
 > -- 
 > 2.30.2
 > 
