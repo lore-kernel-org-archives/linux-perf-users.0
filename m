@@ -1,200 +1,118 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6B918C05;
-	Mon,  8 Apr 2024 06:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB05418C19
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Apr 2024 06:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712557408; cv=none; b=TAEwbkWOZPVWkvdUAXM6wSz8B5ujRERvaCz5q1ebHRmOHIxtjydTIPLkNX2GgnNtJVvP2ZIb3aJVHQ2pcAAyNSPqsa6ZSuzLh6Ie89LGRteFTirhU+y+Ps+OcIKOgtM2KV1qwbW/CYEKo/LkGbQLJkpdfuz6aZTVdmeaDOTAkJg=
+	t=1712557408; cv=none; b=AyJGXHivqcUwxiZNizZIK3+Uqx84bT1+Ex4MF3N6achOfzKVcDZdkPddC0n0HeTlibG1qL2qP8PodQ1RrIaMf6CQWp/nVeslrx7eV3zYE54yAL90cbhHwD4ctnVlRADlwqgKYjT9CRRkLoNU4FgDpc6+aV5LKc3Hr5uGYtdl58U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712557408; c=relaxed/simple;
-	bh=MDilTp9RpE7g2rCJ/IYvSQbKWXU6/qfFiAgirnCRvWg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Qb/b4XiHOzl/VLrsX6M5XfeBpQfh+83/kNNPDlklZSAaYabwJGNpJ5VirpeKfs+8vZUPoFXEXgwZVZzWZJKVtK9vvmgr92KUdwOHiYI9aQpl6R7EZUSNRzid288F+yJ4jjB31ZODTIe3565Lvp+aqoYQIE376PahkEa05fz9/PQ=
+	bh=ihpKRxw2ESqM+8ukW4kmzFgrfLFqCKymCnlYsjQtElk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fNGdrqw4uELEnkIwYsy99uNSmYy5I9dubgbaVhP7XEJ6yoAn9pr/CBJsgoLN6u1PbBNHeaeq+WxPepbuGBSa0VPP2VjdkjVPpQWfU3Tt8/P+HhhdUzYrsT/H/DATl8mLcbdN6nXWLUBB50OU/tXwKg988OZ5KcSuXpzcZKH8cgo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24E181007;
-	Sun,  7 Apr 2024 23:23:50 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93E621682;
+	Sun,  7 Apr 2024 23:23:56 -0700 (PDT)
 Received: from a079740.arm.com (unknown [10.163.54.109])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 72EB73F6C4;
-	Sun,  7 Apr 2024 23:23:01 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A03E53F6C4;
+	Sun,  7 Apr 2024 23:23:23 -0700 (PDT)
 From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
 To: linux-perf-users@vger.kernel.org
 Cc: anshuman.khandual@arm.com,
 	james.clark@arm.com,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Leo Yan <leo.yan@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Chenyuan Mi <cymi20@fudan.edu.cn>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	=?UTF-8?q?Ahelenia=20Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	=?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	bpf@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from different CU"
-Date: Mon,  8 Apr 2024 11:52:22 +0530
-Message-Id: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+Subject: [PATCH V2 2/8] perf util: Delete ends_with() and replace its use with str_has_suffix()
+Date: Mon,  8 Apr 2024 11:52:24 +0530
+Message-Id: <20240408062230.1949882-3-ChaitanyaS.Prakash@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 
-Defconfig doesn't provide all the necessary configs required for the
-test "perf probe of function from different CU" to run successfully on
-all platforms. Therefore the required configs have been added to
-config fragments to resolve this issue. On further investigation it was
-seen that the Perf treated all files beginning with "/tmp/perf-" as a
-map file despite them always ending in ".map", this caused the test to
-fail when Perf was built with NO_DWARF=1. As the file was parsed as a
-map file, the probe...--funcs command output garbage values instead of
-listing the functions in the binary. After fixing the issue an
-additional check to test the output of the probe...--funcs command has
-been added.
+As str_has_suffix() has been introduced in tools/lib/string.c having
+another locally defined function ends_with() to check if a string has a
+given suffix is redundant. Delete ends_with() and replace its use with
+str_has_suffix(), and update the error checks accordingly.
 
-Additionally, various functions within the codebase have been refactored
-and restructured. The definition of str_has_suffix() has been adopted
-from tools/bpf/bpftool/gen.c and added to tools/lib/string.c in an
-attempt to make the function more generic. The implementation has been
-retained but the return values have been modified to resemble that of
-str_has_prefix(), i.e., return strlen(suffix) on success and 0 on
-failure. In light of the new addition, "ends_with()", a locally defined
-function used for checking if a string had a given suffix has been
-deleted and str_has_suffix() has replaced its usage. A call to
-strtailcmp() has also been replaced as str_has_suffix() seemed more
-suited for that particular use case.
+The return type of ends_with() is const char*, whereas that of
+str_has_suffix() is size_t. get_script_root() has been modified
+accordingly to accommodate this change.
 
-Finally str_has_prefix() is adopted from the kernel and is added to
-tools/lib/string.c, following which strstarts() is deleted and its use
-has been replaced with str_has_prefix().
+Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+---
+ tools/perf/builtin-script.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-This patch series has been tested on 6.9-rc2 mainline kernel, both on
-arm64 and x86 platforms.
-
-Changes in V2:
-- Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
-- Delete ends_with() and replace its usage with str_has_suffix()
-- Replace an instance of strtailcmp() with str_has_suffix()
-- Delete strstarts() from tools/include/linux/string.h and replace its
-  usage with str_has_prefix()
-
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: John Garry <john.g.garry@oracle.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Chenyuan Mi <cymi20@fudan.edu.cn>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
-Cc: Colin Ian King <colin.i.king@gmail.com>
-Cc: Changbin Du <changbin.du@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Georg Müller <georgmueller@gmx.net>
-Cc: Liam Howlett <liam.howlett@oracle.com>
-Cc: bpf@vger.kernel.org
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-
-Chaitanya S Prakash (8):
-  tools lib: adopt str_has_suffix() from bpftool/gen.c
-  perf util: Delete ends_with() and replace its use with
-    str_has_suffix()
-  perf util: Replace an instance of strtailcmp() by str_has_suffix()
-  tools lib: Adopt str_has_prefix() from kernel
-  tools: Delete strstarts() and replace its usage with str_has_prefix()
-  perf tools: Enable configs required for
-    test_uprobe_from_different_cu.sh
-  perf tools: Only treat files as map files when they have the extension
-    .map
-  perf test: Check output of the probe ... --funcs command
-
- tools/include/linux/string.h                  | 12 ++----
- tools/lib/string.c                            | 42 +++++++++++++++++++
- tools/lib/subcmd/help.c                       |  2 +-
- tools/lib/subcmd/parse-options.c              | 18 ++++----
- tools/objtool/check.c                         |  2 +-
- tools/perf/arch/arm/util/pmu.c                |  4 +-
- tools/perf/arch/x86/annotate/instructions.c   | 14 +++----
- tools/perf/arch/x86/util/env.c                |  2 +-
- tools/perf/builtin-c2c.c                      |  4 +-
- tools/perf/builtin-config.c                   |  2 +-
- tools/perf/builtin-daemon.c                   |  2 +-
- tools/perf/builtin-ftrace.c                   |  2 +-
- tools/perf/builtin-help.c                     |  6 +--
- tools/perf/builtin-kmem.c                     |  2 +-
- tools/perf/builtin-kvm.c                      | 14 +++----
- tools/perf/builtin-kwork.c                    | 10 ++---
- tools/perf/builtin-lock.c                     |  6 +--
- tools/perf/builtin-mem.c                      |  4 +-
- tools/perf/builtin-sched.c                    |  6 +--
- tools/perf/builtin-script.c                   | 30 ++++---------
- tools/perf/builtin-stat.c                     |  4 +-
- tools/perf/builtin-timechart.c                |  2 +-
- tools/perf/builtin-trace.c                    |  6 +--
- tools/perf/perf.c                             | 12 +++---
- tools/perf/tests/config-fragments/config      |  3 ++
- .../shell/test_uprobe_from_different_cu.sh    |  2 +-
- tools/perf/tests/symbols.c                    |  2 +-
- tools/perf/ui/browser.c                       |  2 +-
- tools/perf/ui/browsers/scripts.c              |  2 +-
- tools/perf/ui/stdio/hist.c                    |  2 +-
- tools/perf/util/amd-sample-raw.c              |  4 +-
- tools/perf/util/annotate.c                    |  2 +-
- tools/perf/util/callchain.c                   |  2 +-
- tools/perf/util/config.c                      | 12 +++---
- tools/perf/util/map.c                         |  8 ++--
- tools/perf/util/pmus.c                        |  2 +-
- tools/perf/util/probe-event.c                 |  2 +-
- tools/perf/util/sample-raw.c                  |  2 +-
- tools/perf/util/symbol-elf.c                  |  4 +-
- tools/perf/util/symbol.c                      |  4 +-
- 40 files changed, 146 insertions(+), 117 deletions(-)
-
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 37088cc0ff1b..6cedd9cdde21 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3263,20 +3263,6 @@ static struct script_desc *script_desc__findnew(const char *name)
+ 	return s;
+ }
+ 
+-static const char *ends_with(const char *str, const char *suffix)
+-{
+-	size_t suffix_len = strlen(suffix);
+-	const char *p = str;
+-
+-	if (strlen(str) > suffix_len) {
+-		p = str + strlen(str) - suffix_len;
+-		if (!strncmp(p, suffix, suffix_len))
+-			return p;
+-	}
+-
+-	return NULL;
+-}
+-
+ static int read_script_info(struct script_desc *desc, const char *filename)
+ {
+ 	char line[BUFSIZ], *p;
+@@ -3320,19 +3306,21 @@ static int read_script_info(struct script_desc *desc, const char *filename)
+ 
+ static char *get_script_root(struct dirent *script_dirent, const char *suffix)
+ {
+-	char *script_root, *str;
++	char *script_root;
++	size_t script_len, suffix_len;
+ 
+ 	script_root = strdup(script_dirent->d_name);
+ 	if (!script_root)
+ 		return NULL;
+ 
+-	str = (char *)ends_with(script_root, suffix);
+-	if (!str) {
++	script_len = strlen(script_root);
++	suffix_len = str_has_suffix(script_root, suffix);
++	if (!suffix_len) {
+ 		free(script_root);
+ 		return NULL;
+ 	}
+ 
+-	*str = '\0';
++	script_root[script_len - suffix_len] = '\0';
+ 	return script_root;
+ }
+ 
+@@ -3608,7 +3596,7 @@ static char *get_script_path(const char *script_root, const char *suffix)
+ 
+ static bool is_top_script(const char *script_path)
+ {
+-	return ends_with(script_path, "top") != NULL;
++	return str_has_suffix(script_path, "top") != 0;
+ }
+ 
+ static int has_required_arg(char *script_path)
 -- 
 2.30.2
 
