@@ -1,96 +1,73 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1058B1C0DE8;
-	Mon,  8 Apr 2024 12:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B53D79955;
+	Mon,  8 Apr 2024 13:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580595; cv=none; b=UcR7g931y3fiwRZAm80eKT3aouTDPRbkb8oC2HzIkNPUcaDnLUJBnu85CgYpt8QWNJydRee90cC6S4IGX+qn41R9XudthGqBUZcZb7kHNLdY9i23jlIVe2WSXaCog6+h0PEhFmyTYDaHga9+czy3zaK1xynYaNAucPCBJb2jNic=
+	t=1712584583; cv=none; b=fGXAPDkehakMsnRdB5mpf+H9FFzRiuLlQZihGF/3yw4n/AosHluodIBt1QWBCSAo39NY6I9mitn69Tfu6NILrGNNOBRIe1jp8CvNCnyfbDGWKk3u2FzPnBqkbIMuRuI9BJGo+ifC7YJkbtqQXShPdTv8X64NLZlb5h7u9eUSOhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580595; c=relaxed/simple;
-	bh=UeYcGq37CDN7VKkwoTNLCUWAOzA2D/z/oBg4gvur3Hk=;
+	s=arc-20240116; t=1712584583; c=relaxed/simple;
+	bh=aLYcoDPwUFsUit2u1j/5yFGuRmxNoZ15e8nXxxHoW/8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LiQROK1cc48CNoyTDEdp7haqOQsjTxwbBbWGeSZCcxfOSUD4KUNWh/T2dEyY6QMAv5Ss6xZO6IB+pTRSHMGe0vbd5h4osyPmSD83PszemJLjAyZNv3x/U8jGRVJSg69UUmlbyyaic3jWJANUyIHdapu/4/OwjTPqRJ/BXsfCAsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=Z8MIPen1; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=MBFcVCR4; arc=none smtp.client-ip=91.121.71.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cCHKCCpvsTQ7e1RRkGW0nS//tcHOJ/cSvsDugVvS0ZUI8gDctvXUXj9EEYezunKXqlYk+uJIw4Jh3JP/xSPkBDZKM3Nq2ksM1zbzhJlHBMYObFMgqjyVim5Yf2dExnQilsN/17D2iEm99I7zI7ypHDMBojzu4L6eu7saeowtJtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6A9ytY1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="Z8MIPen1";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="MBFcVCR4"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id 5BF32C020; Mon,  8 Apr 2024 14:49:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1712580584; bh=sW0O3UuAkGmxozVYNCUjZ+LwPS0GlqwCSzkatBIT1fw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6A9ytY1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFDAC43390;
+	Mon,  8 Apr 2024 13:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712584583;
+	bh=aLYcoDPwUFsUit2u1j/5yFGuRmxNoZ15e8nXxxHoW/8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z8MIPen122SH9rqCIV2PrBZ3woCMKx0UKV45OUZgp55pN7WjL84rWv3t/aFe7eKV+
-	 tQNZ9zTV+MHZo1OVGggsjC92v9tPJx5KWgIGDFCVhzrVd8UnWz5D6zVQiF7J+kTKjk
-	 azy4h7dMpO8vlliYwRM5wz6OAT4qH5n1v5+zYoBB8dW6Yes9vp2CcVfR8j7jqzr3QY
-	 BxiQy6h1yvf/S4nMfp3iHgunvvcAX+iVWqBR13Js+yibjZCJ+rjepGgLnF8urG7Kpg
-	 Np7Y9Metd1evUvZ8qyyV2s3xGA10HHVEc9CVINkgG501k+2P3s0NNVAn7+qnhBzNuJ
-	 FhCDuSn5AjRwg==
-X-Spam-Level: 
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 66B77C009;
-	Mon,  8 Apr 2024 14:49:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1712580583; bh=sW0O3UuAkGmxozVYNCUjZ+LwPS0GlqwCSzkatBIT1fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MBFcVCR48YIr43oJzAY9jvP0rmb/Mn9UltewHdcjnRllg8qvcclMu/lReqeQLY3IM
-	 3iw/WuXyWHTMdpHDaHItNT0hPRot6rpIFl6tIOho2byvD1LirPj48V0lDJ0FvKALGn
-	 6KtChdABVtFcF9Xg8VP6SzIcchRcoqx7SOISgAunUaErFHccViyPRbP9nxVQHar3Qi
-	 aIA7f2LF0H8fUkzOC89sxfxkX/B1AN4BH4IAR8m9tg8KETFhXcqOBDXpzpCmBhbCZ1
-	 1EBvxkGvbARLJbnTORtA4DkHNcRXOACbcYoVERJy/SEyrOzconLmUsz+yTNbZQpIJC
-	 ovaxRF2ZeHITA==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id dc276578;
-	Mon, 8 Apr 2024 12:49:35 +0000 (UTC)
-Date: Mon, 8 Apr 2024 21:49:20 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	b=l6A9ytY1NmhMim7uIJdEIzkWs7DHtbd13oUu3zs5nbmfyBov9+e02zrZOrTgDrukp
+	 vXsttbjZUYCSXBxeqBNzEsA4GQW8gMUlOIaVO2FFopg1qVGAyFGHaOH6+77wKc1HDT
+	 223KMONzV+w95f6nZbwmQm9TzpXO153FK5zBap3xbedphtY0H1NNEepROtSAS8QqfJ
+	 YRxN1fPzgoRh7FWdC02y966CaTv0OHP8w9eQplZEUd7iOXOdsrhuWYh3kib5QVhqnJ
+	 oL/a4vGIAkzUmCi1HOH7jnsNGlaqm8VjOk/KFe2Uycr+tR0QXSelf1qjWnLEoWiQ0d
+	 ykr9Qe0m9L83g==
+Date: Mon, 8 Apr 2024 10:56:22 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf parse: Allow names to start with digits
-Message-ID: <ZhPn0EwXf_bPBj-p@codewreck.org>
-References: <20240407-perf_digit-v1-0-57ec37c63394@codewreck.org>
- <20240407-perf_digit-v1-3-57ec37c63394@codewreck.org>
- <ZhKTrUPbUnBviQYK@codewreck.org>
- <CAP-5=fWT4=yT9rxKmR4ing9i-EffRQnjTP355wU-fFN1Mfnezg@mail.gmail.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHSET 0/9] perf annotate: More memory footprint reduction
+Message-ID: <ZhP3N-oBezFN1ISW@x1>
+References: <20240404175716.1225482-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWT4=yT9rxKmR4ing9i-EffRQnjTP355wU-fFN1Mfnezg@mail.gmail.com>
+In-Reply-To: <20240404175716.1225482-1-namhyung@kernel.org>
 
-Ian Rogers wrote on Sun, Apr 07, 2024 at 11:32:31AM -0700:
-> Try adding PARSER_DEBUG=1 to your command line, I need to do the following:
-> ```
-> $ make EXTRA_CFLAGS="-Wno-error=redundant-decls" PARSER_DEBUG=1
-> ```
+On Thu, Apr 04, 2024 at 10:57:07AM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> This work is continuation of the previous work to reduce the memory
+> usage in symbol and annotation structures.  Basically I moved some
+> fields in the annotation which consume spaces in the struct symbol
+> which is allocated regardless if the symbol has a sample or not when
+> annotation is enabled.
+> 
+> With this change applied, the struct annotation only has two members -
+> annotated_source and annotated_branch.  The next step would be to
+> remove the struct annotation and to have a hash table from symbol to
+> each annotated struct directly.
+> 
+> No function changes intended.
+> 
+> The code is available at perf/annotate-diet-v3 branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-Thanks for this hint!
-I tried with that earlier and couldn't reproduce either (e.g. it works
-with this patch as you observed), looking at my shell history it turns
-out I was just sleep-deprived and I had forgotten the '-e' preceding the
-probe and didn't grok the error message...
+Thanks, applied to perf-tools-next,
 
-So this patch is ok.
-
-> I think Jiri's e-mail should be jolsa@kernel.org.
-
-Ah, right -- I used the mail he actually sent the diff with a couple of
-years back, but the address in maintainers is jolsa@kernel.org so you're
-probably correct that it should be prefered.
-
-I can send a v2 with just this address changed, or whoever picks the
-patches up can fix the commit messages for patches 1 & 2, just tell me.
--- 
-Dominique Martinet | Asmadeus
+- Arnaldo
