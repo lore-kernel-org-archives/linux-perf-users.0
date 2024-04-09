@@ -1,171 +1,64 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CE07E0FF;
-	Tue,  9 Apr 2024 08:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C47C74435;
+	Tue,  9 Apr 2024 08:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712650664; cv=none; b=jatRflh7+897iGnr4b/mbHXpoDG0/HpLo9Bk+XPFdUIjGbkbGwLvH8IR49nDdzgrwxkfUnCocOPV3k3cQA+C4PMJLUA8+Q7Xxv5rVTYbKv0Rgrfzv4t3qoKF025O9OZVbo1/DyX6DbrfGQ8H60Xwr5jOWUnj4PqEoEj8933JljI=
+	t=1712652485; cv=none; b=SALegB6iUmwWfmWV0lj20AF95x7yoGhL00oDlf/PqxN3zpk5N6GbDcMozRn4gi3wZRmdjkSTVajIoOwccXKnNvGWmVhl5Bd9lL8ey5wbixphULAJs+4YdaNyQYuH550ssBjhx3B3eJtzC5y51f2ggbWRUIlYi+C2mnWVzHbwqV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712650664; c=relaxed/simple;
-	bh=AiFhZZUZqB6jjCLTAQDauhVTYjRmfj10W8hqnvzki7E=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=cdCssfdIhcbW9tmf8AtBeaULtlVfiqwYHKeiZL13hljOgm8NC3JGA+uFhStMsedmw0E2+C+pZE2CfG0jtcYyFEW+VwQTchQSB5jJlNyuNE9Yr0Sa1j7jBJxp+c54A96xc3US3U8xYdepTVAZ2MkhZDEsvlo2wrAE6b8IU9MdGaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bCFKi5E3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1grhO2tR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bCFKi5E3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1grhO2tR; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bCFKi5E3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1grhO2tR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bCFKi5E3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1grhO2tR"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 63E692089D;
-	Tue,  9 Apr 2024 08:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712650661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AiFhZZUZqB6jjCLTAQDauhVTYjRmfj10W8hqnvzki7E=;
-	b=bCFKi5E3op8vqPkRE5Sbt976rEx7PoAKBquyYapJgpO6sHmPOMPbigIrteb2mHDVxdnsBr
-	wuhHZebZF4o7lZLq3nC7dYUJ5Z8v/HOEuH+gxLV9HM7QikbQtV9eiTvkbsy5gDQitRlBuE
-	NNKJQomcOvD5NHxwcCnL6I3Fa0Ep3h0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712650661;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AiFhZZUZqB6jjCLTAQDauhVTYjRmfj10W8hqnvzki7E=;
-	b=1grhO2tRTMiz95IcoHP+oe+0Ibc+xLaBLrj2dYVbPsag9vxLnppOfoEEzTfy02DmkekeIB
-	0r5f6bsqUpvWv1Bg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712650661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AiFhZZUZqB6jjCLTAQDauhVTYjRmfj10W8hqnvzki7E=;
-	b=bCFKi5E3op8vqPkRE5Sbt976rEx7PoAKBquyYapJgpO6sHmPOMPbigIrteb2mHDVxdnsBr
-	wuhHZebZF4o7lZLq3nC7dYUJ5Z8v/HOEuH+gxLV9HM7QikbQtV9eiTvkbsy5gDQitRlBuE
-	NNKJQomcOvD5NHxwcCnL6I3Fa0Ep3h0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712650661;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AiFhZZUZqB6jjCLTAQDauhVTYjRmfj10W8hqnvzki7E=;
-	b=1grhO2tRTMiz95IcoHP+oe+0Ibc+xLaBLrj2dYVbPsag9vxLnppOfoEEzTfy02DmkekeIB
-	0r5f6bsqUpvWv1Bg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id C638713253;
-	Tue,  9 Apr 2024 08:17:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id yQHPF5z5FGaONgAAn2gu4w
-	(envelope-from <colyli@suse.de>); Tue, 09 Apr 2024 08:17:32 +0000
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1712652485; c=relaxed/simple;
+	bh=5UtZwVwg0+eLbI4V2GVivZZc1pMjPWaJxNjlZleeagw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ysnm4osUUpLlmZhQRU3DQUgglJFFotIPH72J3yKbcix0mzglQCQj401HWgW/4WGR/mdKs7gkxzf9DhV9VPNmkjAvLtq/q9VTTtFfhX5Hljw1RJvhMmAUmWS5B24FvUdS+clrr0tq20lLyWtayMmYl64mPp5ZttMy2ubIgeNmeYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92F14DA7;
+	Tue,  9 Apr 2024 01:48:32 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A7FB3F6C4;
+	Tue,  9 Apr 2024 01:47:59 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf test: "object code reading" test fixes
+Date: Tue,  9 Apr 2024 09:47:36 +0100
+Message-Id: <20240409084741.405433-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
-From: Coly Li <colyli@suse.de>
-In-Reply-To: <i2qewo34mvw7bizhefwz5s3fc4nlc4zk7eijglkieuci5iradm@zgcks3u5omhw>
-Date: Tue, 9 Apr 2024 16:17:14 +0800
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>,
- msakai@redhat.com,
- peterz@infradead.org,
- mingo@redhat.com,
- acme@kernel.org,
- namhyung@kernel.org,
- akpm@linux-foundation.org,
- bfoster@redhat.com,
- mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com,
- jolsa@kernel.org,
- irogers@google.com,
- adrian.hunter@intel.com,
- jserv@ccns.ncku.edu.tw,
- Bcache Linux <linux-bcache@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dm-devel@lists.linux.dev,
- Linux bcachefs <linux-bcachefs@vger.kernel.org>,
- linux-perf-users@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8D0FD5AF-2AD9-4A91-831D-C79A798BED11@suse.de>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
- <i2qewo34mvw7bizhefwz5s3fc4nlc4zk7eijglkieuci5iradm@zgcks3u5omhw>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
-X-Spam-Flag: NO
-X-Spam-Score: -1.58
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.58 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.78)[84.53%];
-	MV_CASE(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,redhat.com,infradead.org,kernel.org,linux-foundation.org,arm.com,linux.intel.com,google.com,intel.com,ccns.ncku.edu.tw,vger.kernel.org,lists.linux.dev];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns]
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+A few fixes around the object code reading test. The third patch
+appears to be unrelated, but in this case the data symbol test was
+broken on Arm N1 by the first commit.
 
+James Clark (3):
+  perf tests: Apply attributes to all events in object code reading test
+  perf map: Remove kernel map before updating start and end addresses
+  perf tests: Skip "test data symbol" on Neoverse N1
 
-> 2024=E5=B9=B44=E6=9C=889=E6=97=A5 11:40=EF=BC=8CKent Overstreet =
-<kent.overstreet@linux.dev> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
->> This patch series focuses on several adjustments related to heap
->> implementation. Firstly, a type-safe interface has been added to the
->> min_heap, along with the introduction of several new functions to
->> enhance its functionality. Additionally, the heap implementation for
->> bcache and bcachefs has been replaced with the generic min_heap
->> implementation from include/linux. Furthermore, several typos have =
-been
->> corrected.
->>=20
->> Previous discussion with Kent Overstreet:
->> =
-https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg=
-@nrlek5vmisbu
->>=20
->> Regards,
->> Kuan-Wei
->=20
-> pointing test automation at it now:
-> https://evilpiepirate.org/~testdashboard/ci?branch=3Drefactor-heap-v3
->=20
-> Coli, could I get some acks from you?
+ tools/perf/tests/code-reading.c            | 10 +++++-----
+ tools/perf/tests/shell/test_data_symbol.sh |  6 ++++++
+ tools/perf/util/machine.c                  |  2 +-
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-Yes, the code tested and Acked-by sent.
+-- 
+2.34.1
 
-Thanks.
-
-Coly Li=
