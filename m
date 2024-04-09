@@ -1,135 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82B4134416;
-	Tue,  9 Apr 2024 10:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0C285631
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 10:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657660; cv=none; b=hgLe6868jtVlJDbTnXqntMIdURIdwbdoxc0QgMBYpOgkgqLLXXX/H/ghFf09+3y0wo7A38hW9Fo6H4No0KNvTaA82uHKmYrUQbNUBi06drWjAk1HQ8Nxj4rx15T2JF1VnG/ZTQljBc32UMvtPLaG4Mxt1ljQRycGxIcszKyF8Cc=
+	t=1712658119; cv=none; b=qynZbZFGlx7TlsbT4Yy9e6nYn/g3JkLGzbXET69JWoRk04oQgkmHySutsuWmy4u6mfp3oxg9vl+sV/qhbeIrDfY7ox4pzBRSRB1SoViLVzfEkNCEcJXP2CjiFCkVBfRtW+2Sd59JeGk4rdqk6JH7SFQX7A3X8g3TDSAZBqcmy18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657660; c=relaxed/simple;
-	bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u6BRQYGhJbj7Em1aSfQhp6+v5469lFahbP3kTHv38W37EnhdcohqwGzVePb1wSBIKydygWkSAYNyiURbZKy8plk5qJcfIArQrMgTn2qcUBYQIXyVq7Ge09Ll6bqTPZeQx3rqC9JZdklLi8B70HwzWZJPZumUNEvCEZRatonE8f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5AQpQ5k; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5AQpQ5k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712657658; x=1744193658;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
-  b=I5AQpQ5koz4IMx09Emdru1FfHW6sOe9OgDS7XKmjFyJPH6zDZOunrLbc
-   ezbmtxeyyPJp3I28YSfbMD9GPcf3Q/VCmbEwWle773LHHb9RhzUsg6TVN
-   0lCke7lzMf55Khq9oiKeMhsTMUgStLOawQ4X423LbaTNybqUFOgA5zKTv
-   pXsx//Zc0NUE9OAq6qOjchalJv2SvXALyCRllIW7aLZA3cO4dRCzodqTG
-   +0rbz3DBtujYbkqIJITmsNbg2/EoGdo96wFezmQNaBKak2H1SZ5Zq91Nv
-   wX6sL0pHLg1sVawt5kbX7ehJYck7/zW2mkTfGtQgtMvcp9Czt9spQDGXX
-   Q==;
-X-CSE-ConnectionGUID: Z3Drv98YT6iP1WvZtHyPFw==
-X-CSE-MsgGUID: CAp3ioGRRKW+Is6znYeMBQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8193955"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="8193955"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:17 -0700
-X-CSE-ConnectionGUID: h6vK66UbSkiXc+RIBnnazw==
-X-CSE-MsgGUID: NfhpuIMUS02Pkod9R4umgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="51180842"
-Received: from mserban-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.59.228])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:11 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
- <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
- <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
- kernel sources
-In-Reply-To: <ZhTwPLliHXKPAJUQ@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240408185520.1550865-1-namhyung@kernel.org>
- <20240408185520.1550865-2-namhyung@kernel.org> <874jcb9etk.fsf@intel.com>
- <ZhTwPLliHXKPAJUQ@gmail.com>
-Date: Tue, 09 Apr 2024 13:14:09 +0300
-Message-ID: <87pluy972m.fsf@intel.com>
+	s=arc-20240116; t=1712658119; c=relaxed/simple;
+	bh=gue8F4EmzdskPgu72KCdnvJQXgP388yDHIsKhgBC6VI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mkj559BWCGeWwDtBK0Qz7WDU6Dvw1dmoD8kMf7s/Lg3fllTXSGk+DOYR2x5n3aPN2PSY99Ieu6vFCue8/1I+pe1MHX+w3Mfe9Iah+qhSlaDtfJvxP0/zmMf70dlDkA1r4WHykfVpPuTLcKlyCgyAPAuQ3P9tjnMIE7ZCkJ0428c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03711DA7;
+	Tue,  9 Apr 2024 03:22:28 -0700 (PDT)
+Received: from [10.57.52.202] (unknown [10.57.52.202])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB6723F6C4;
+	Tue,  9 Apr 2024 03:21:56 -0700 (PDT)
+Message-ID: <7ba7a9ee-901c-48a4-bd6c-b59294da7a65@arm.com>
+Date: Tue, 9 Apr 2024 11:21:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 7/8] perf tools: Only treat files as map files when
+ they have the extension .map
+To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
+ linux-perf-users@vger.kernel.org
+Cc: anshuman.khandual@arm.com
+References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+ <20240408062230.1949882-8-ChaitanyaS.Prakash@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240408062230.1949882-8-ChaitanyaS.Prakash@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 09 Apr 2024, Ingo Molnar <mingo@kernel.org> wrote:
-> * Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
->> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
->> > To pick up changes from:
->> >
->> >    b112364867499 ("drm/i915: Add GuC submission interface version query")
->> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
->> >
->> > This should be used to beautify DRM syscall arguments and it addresses
->> > these tools/perf build warnings:
->> >
->> >   Warning: Kernel ABI header differences:
->> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
->> 
->> All these years and I never realized there are header copies
->> there. But... why copies?
->
-> It's better than all the alternatives we tried so far:
->
->  - Symbolic links and direct #includes: this was the original approach but 
->    was pushed back on from the kernel side, when tooling modified the 
->    headers and broke them accidentally for kernel builds.
->
->  - Duplicate self-defined ABI headers like glibc: double the maintenance 
->    burden, double the chance for mistakes, plus there's no tech-driven 
->    notification mechanism to look at new kernel side changes.
->
-> What we are doing now is a third option:
->
->  - A software-enforced copy-on-write mechanism of kernel headers to 
->    tooling, driven by non-fatal warnings on the tooling side build when 
->    kernel headers get modified:
->
->     Warning: Kernel ABI header differences:
->       diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
->       diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
->       diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
->       ...
->
->    The tooling policy is to always pick up the kernel side headers as-is, 
->    and integate them into the tooling build. The warnings above serve as a 
->    notification to tooling maintainers that there's changes on the kernel 
->    side.
->
-> We've been using this for many years now, and it might seem hacky, but 
-> works surprisingly well.
->
-> Does this make sense to you?
 
-Yes, although there are probably pieces of the puzzle I'm missing.
-Thanks for the explanation! (That might work almost as-is copied to
-tools/include/uapi/README. ;)
 
-It's also kind of funny to find this kind of back alleys of the kernel
-repo I've never wandered to before.
+On 08/04/2024 07:22, Chaitanya S Prakash wrote:
+> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> 
+> Strengthen the check to locate symbol map files in the tool's /tmp
+> directory. As the existing check allows non map files named in
+> "/tmp/perf-" pattern, it leads to possible dwarf library corruption
+> when perf is built with NO_DWARF=1. The try_to_find_probe_trace_events()
+> function behaves differently when built in that manner. Extending the
+> current check condition using the str_has_suffix() function to not only
+> validate the pattern but also ensure the file is of ".map" type allows
+> test perf probe of function from different CU to pass when built with
+> NO_DWARF=1.
+> 
+> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> ---
+>  tools/perf/util/symbol.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 9ebdb8e13c0b..812684aa42ce 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1792,7 +1792,9 @@ int dso__load(struct dso *dso, struct map *map)
+>  	const char *map_path = dso->long_name;
+>  
+>  	mutex_lock(&dso->lock);
+> -	perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0;
+> +	perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0 &&
+> +		  str_has_suffix(dso->name, ".map") != 0;
+> +
+>  	if (perfmap) {
+>  		if (dso->nsinfo && (dso__find_perf_map(newmapname,
+>  		    sizeof(newmapname), &dso->nsinfo) == 0)) {
 
-BR,
-Jani.
-
--- 
-Jani Nikula, Intel
+Reviewed-by: James Clark <james.clark@arm.com>
