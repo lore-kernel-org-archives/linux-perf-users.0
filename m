@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DA613B284;
-	Tue,  9 Apr 2024 18:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE1879CF;
+	Tue,  9 Apr 2024 18:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686704; cv=none; b=EPPfR9BBfTzwbzGKpRjhZKlXzjLAOqDjXq/ZaMqTkSwM4Ps4Jzprt3oZYliJM+ypFwrTAfsqakK4bR4dhjYZ7HI0Sr7vOGbG6LezfGkKV9QwcDIg2JAq77dpTftiA90djBtKf+fqDUdaw1+62LlZNMGe2z+RRctF4pCbS9rki0I=
+	t=1712688627; cv=none; b=QJL7Le5SJoeY5Gao7cqfIe4Fff0+K2Eqzyn3dOjJWMl6OLcs+ZmS6W5J/CXfT324y8+JDWLlK1XZLJJBagekLGYkQvVJ7S3BfA+Dr81pFjgus4IEYY3xjjzwARKg9qXTd5jFFnJEV9bqH4sUn2ta7ZdqG80mZt9BF3vY9kugk9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686704; c=relaxed/simple;
-	bh=jikeKFV5YTyaoHcnI26N71nbgtzbSdGLSnHmNo5O4hw=;
+	s=arc-20240116; t=1712688627; c=relaxed/simple;
+	bh=FguMz23FW6ZbatJSy5rT04Y4YJTScx64eYTx+iYHe4I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lPdUOBPgWrzlODcSDaYqjQIAUPvhPF9PgFmTOD4YpeHxs4pUCU4P7cK2nW2VOVQ2WwY6v0u0tsowlGAriYlx7P8eRb5a5jvdaIGr1RPNXnUonRoIInbA/kBigaR8Q/s3HLoZOgPxEI28gxC+0k1F8XWu48XUiP87dBOnoclaHMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+Rxupzf; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=c2RFwHhFllfLanWJ+1gA5AO/nhu/UfEIcw+CQyQTsuctokbR0ZlMXMVFsrYFk6quqDL893cnBJ7Z13/oGsEKNdjseDm+YlantrjG5ti+KC5wwRHq0rDDUZy6v4noJFo/Kqlrn070IM7UsK4J3sQ5v9SdNDHzcCOzs5IWAYiGueQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcdkYf9l; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+Rxupzf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcdkYf9l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712686704; x=1744222704;
+  t=1712688626; x=1744224626;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=jikeKFV5YTyaoHcnI26N71nbgtzbSdGLSnHmNo5O4hw=;
-  b=B+RxupzfUBWcVkh9BoQnWTPkHJ2DFSKOFCl74RxtUCuAgEGqTWbklxJN
-   Uzs828rqIqMPccTAtXSNBsJrHXiZvkJ3jNoOtU5fU8ZdLkWDz6vPbLtTD
-   XNMzU1Wd7ay90pYxHFTvGtmXhYFzrG70Ugt6jbjL1SXWd6kWv/GikmKH8
-   OSpRIqeWfFY8fqD+G7reKiuzub4v3AjCAkQ/AbQ3zUc60j19BtLTtj2n7
-   kbBrIwhzBU7MIjOq7vuQ6x9cZUBvDQ4g/ktqRIuviOTnfUGv2UPcj0zOV
-   nuZUx1dPoVQyPbyINGRPDwTX+eI2kXXLLGCowEXSgSbv7DcO3mvnu7o30
+  bh=FguMz23FW6ZbatJSy5rT04Y4YJTScx64eYTx+iYHe4I=;
+  b=bcdkYf9l2xoJ1kVddAWQiqb964ILlT6xX2Y1RGa72NwO7umrkoHxhl9m
+   QB2bPuB/WM2NIGxZaXTzbYTllRBxV08BAYYAuAG0bNn6cnjC7j+d0wQGQ
+   IImAwWUgXhAdIFGjrcfVwOLSLeElL4GWzALi64oZQomn66Qjavdi9gRUh
+   EleuYMuJmpATfxDY0V0i3r/j3KxwZVs//uOVCfXI10QHCqE4+DVUEtr/Q
+   rayoS/xOqGPd2IP7r8B1Vf4L9nod34R4yML+vqBmwsObNosU0QlnTQioo
+   MiaiqG7XUz8OXt6nZ5P/EcrgfvyncP/gvEBFZKUSxqLON+0wx3yif6ypf
    A==;
-X-CSE-ConnectionGUID: 131NvEhhTbWrlgqCxWXDTg==
-X-CSE-MsgGUID: tUfA1JwiR/amGxpvahdTgA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8246490"
+X-CSE-ConnectionGUID: O/cGXXdeR7ehozucopAiqg==
+X-CSE-MsgGUID: 1fbEFCJ0QZSq/gV0YGgtDg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25523567"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8246490"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:18:23 -0700
-X-CSE-ConnectionGUID: 9y6xtvftRcq/It0oniJviw==
-X-CSE-MsgGUID: HirWmNQDRlC3NlpKa6n0kA==
+   d="scan'208";a="25523567"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:50:25 -0700
+X-CSE-ConnectionGUID: 4F9BKsHOTVqt98KLthO6/w==
+X-CSE-MsgGUID: g/MFK4g8T6yQSBn6LV4O7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20254944"
+   d="scan'208";a="43544562"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:18:23 -0700
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:50:25 -0700
 Received: from [10.213.177.168] (kliang2-mobl1.ccr.corp.intel.com [10.213.177.168])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D3DE520B573A;
-	Tue,  9 Apr 2024 11:18:20 -0700 (PDT)
-Message-ID: <16587efd-ab12-463a-bd87-7721adfc731d@linux.intel.com>
-Date: Tue, 9 Apr 2024 14:18:19 -0400
+	by linux.intel.com (Postfix) with ESMTPS id C1D1F20B573A;
+	Tue,  9 Apr 2024 11:50:22 -0700 (PDT)
+Message-ID: <8fb7e240-07af-4c7e-8eac-60731d837bd7@linux.intel.com>
+Date: Tue, 9 Apr 2024 14:50:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,124 +58,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf report: Add weight[123] output fields
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Stephane Eranian <eranian@google.com>, Andi Kleen <ak@linux.intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-References: <20240409000659.1727785-1-namhyung@kernel.org>
- <20240409000659.1727785-3-namhyung@kernel.org>
- <0ec1328a-0731-42a6-b953-163ac5a56deb@linux.intel.com>
- <CAM9d7cizZLMNa82VxuuvEWEY3vwdbs_iTG9jsogJQBoWMLP7Fw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat: Remove evlist__add_default_attrs use
+ strings
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, Yang Jihong <yangjihong1@huawei.com>,
+ Kaige Ye <ye@kaige.org>, Yicong Yang <yangyicong@hisilicon.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240406073804.1932415-1-irogers@google.com>
+ <0d498870-b235-4860-9563-befcddf0ec3e@linux.intel.com>
+ <CAP-5=fU=bEvzWw+62HxL=5kOSqQxaBYeDBomv8Fdu+R+fNv5sw@mail.gmail.com>
+ <cd4b5229-b938-44ef-822a-68d29c463aa7@linux.intel.com>
+ <CAP-5=fUNTiju7sv5R3P+=rUm-BzL_HmaEicdhCuBVPKooPHWeA@mail.gmail.com>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7cizZLMNa82VxuuvEWEY3vwdbs_iTG9jsogJQBoWMLP7Fw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUNTiju7sv5R3P+=rUm-BzL_HmaEicdhCuBVPKooPHWeA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 2024-04-09 12:53 p.m., Namhyung Kim wrote:
-> Hi Kan,
+On 2024-04-09 12:04 p.m., Ian Rogers wrote:
+> On Tue, Apr 9, 2024 at 9:00 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-04-09 11:20 a.m., Ian Rogers wrote:
+>>>>> +             ret = parse_events(evlist,
+>>>>> +                             "context-switches,"
+>>>>> +                             "cpu-migrations,"
+>>>>> +                             "page-faults,"
+>>>>> +                             "instructions,"
+>>>>> +                             "cycles,"
+>>>> "cycles",
+>>>> "instructions",
+>>>>
+>>>> It's better to keep the original order.
+>>> So the original order was:
+>>> "cycles,"
+>>> "stalled-cycles-frontend,"
+>>> "stalled-cycles-backend,"
+>>> "instructions"
+>>>
+>>
+>> Right. The stalled-* events are added between default_attrs0 and
+>> default_attrs1.
+>>
+>>
+>>> but many/most/all core PMUs don't provide the stalled-* events. At the
+>>> programmer level instructions is the most fundamental thing, so having
+>>> it last felt wrong hence moving it to be the first after the software
+>>> events. My thought was, if we're going to reorder things then let's
+>>> not do a half measure like:
+>>> "cycles,"
+>>> "instructions,"
+>>> "stalled-cycles-frontend,"
+>>> "stalled-cycles-backend"
+>>>
+>>> let's just put things into their best order. It is obviously easy to
+>>> change but having this way wasn't an accident. There's obviously
+>>> subjectivity about whether cycles is more fundamental than
+>>> instructions, my thought is that you get taught instructions first and
+>>> that these take some number of cycles to execute, hence thinking
+>>> instructions should have some priority in the output over cycles -
+>>> some people may not even know what cycles means, it is hard enough
+>>> when you do given the variety of different clocks 🙂
+>>>
+>>
+>> My concern is that there may be someone who still relies on the std
+>> output of perf stat default. So the output format/order matters for
+>> them. Their scripts probably be broken if the order is changed.
 > 
-> On Tue, Apr 9, 2024 at 9:37 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-04-08 8:06 p.m., Namhyung Kim wrote:
->>> Add weight1, weight2 and weight3 fields to -F/--fields and their aliases
->>> like 'ins_lat', 'p_stage_cyc' and 'retire_lat'.  Note that they are in
->>> the sort keys too but the difference is that output fields will sum up
->>> the weight values and display the average.
->>>
->>> In the sort key, users can see the distribution of weight value and I
->>> think it's confusing we have local vs. global weight for the same weight.
->>>
->>> For example, I experiment with mem-loads events to get the weights.  On
->>> my laptop, it seems only weight1 field is supported.
->>>
->>>   $ perf mem record -- perf test -w noploop
->>>
->>> Let's look at the noploop function only.  It has 7 samples.
->>>
->>>   $ perf script -F event,ip,sym,weight | grep noploop
->>>   # event                         weight     ip           sym
->>>   cpu/mem-loads,ldlat=30/P:           43     55b3c122bffc noploop
->>>   cpu/mem-loads,ldlat=30/P:           48     55b3c122bffc noploop
->>>   cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
->>>   cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
->>>   cpu/mem-loads,ldlat=30/P:           59     55b3c122bffc noploop
->>>   cpu/mem-loads,ldlat=30/P:           33     55b3c122bffc noploop
->>>   cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
->>>
->>> When you use the 'weight' sort key, it'd show entries with a separate
->>> weight value separately.  Also note that the first entry has 3 samples
->>> with weight value 38, so they are displayed together and the weight
->>> value is the sum of 3 samples (114 = 38 * 3).
->>>
->>>   $ perf report -n -s +weight | grep -e Weight -e noploop
->>>   # Overhead  Samples  Command   Shared Object   Symbol         Weight
->>>        0.53%        3     perf   perf            [.] noploop    114
->>>        0.18%        1     perf   perf            [.] noploop    59
->>>        0.18%        1     perf   perf            [.] noploop    48
->>>        0.18%        1     perf   perf            [.] noploop    43
->>>        0.18%        1     perf   perf            [.] noploop    33
->>>
->>> If you use 'local_weight' sort key, you can see the actualy weight.
->>>
->>>   $ perf report -n -s +local_weight | grep -e Weight -e noploop
->>>   # Overhead  Samples  Command   Shared Object   Symbol         Local Weight
->>>        0.53%        3     perf   perf            [.] noploop    38
->>>        0.18%        1     perf   perf            [.] noploop    59
->>>        0.18%        1     perf   perf            [.] noploop    48
->>>        0.18%        1     perf   perf            [.] noploop    43
->>>        0.18%        1     perf   perf            [.] noploop    33
->>>
->>> But when you use the -F/--field option instead, you can see the average
->>> weight for the while noploop funciton (as it won't group samples by
->>
->> %s/funciton/function/
->>
->>> weight value and use the default 'comm,dso,sym' sort keys).
->>>
->>>   $ perf report -n -F +weight | grep -e Weight -e noploop
->>>   # Overhead  Samples  Weight1  Command  Shared Object  Symbol
->>>        1.23%        7     42.4  perf     perf           [.] noploop
->>
->> I think the current +weight shows the sum of weight1 of all samples,
->> (global weight). With this patch, it becomes an average (local_weight).
->> The definition change may break the existing user script.
->>
->> Ideally, I think we should keep the meaning of the weight and
->> local_weight as is.
-> 
-> Hmm.. then we may add 'avg_weight' or something.
-> 
-> But note that there's a subtle difference in the usage.  If you use
-> 'weight' as a sort key (-s weight) it'd keep the existing behavior
-> that shows the sum (global_weight).  It'd show average only if
-> you use it as an output field (-F weight).
->
-
-As my understanding, the -F weight is implicitly replaced by the -F
-weight1 with this patch. There is no way to get the sum of weight with
--F anymore.
-
-I think that's a user visible behavior change. At least, we have to warn
-the end user with a message, e.g., "weight is not supported with -F
-anymore. Using weight1 to instead". Only updating the doc may not be enough.
-
-> The issue of the sort key is that it cannot have the total sum
-> of weights for a function.  It'll have separate entries for each
-> weight for each function like in the above example.
+> I think making everyone suffer for the case of a tool that may behave
+> in this way doesn't make sense. The tool should transition to not care
+> or to say the json output, or at least contribute a test. There is
+> precedent for this attitude, the default metrics for topdown removed
+> the event names in perf stat default output - no one screamed, and I
+> expect that to be the case here.
 > 
 
-That seems to be a different issue. If the total sum of weights for a
-function is required, we should fix the existing "weight".
+They did, but that happened after the change was merged. And there was
+no test case for the output at that time.
+
+I agree that if the order is important, there should be a test for it.
+I've emailed the tool owners I know and see if the change impacts them.
+But they are all out of office this week and should be back next week.
+I will let you know regarding their feedback. If the order is important,
+I will update the stat+std_output.sh.
 
 Thanks,
 Kan
