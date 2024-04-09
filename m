@@ -1,101 +1,93 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A58A2EAE9;
-	Tue,  9 Apr 2024 07:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240887605D;
+	Tue,  9 Apr 2024 07:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712646920; cv=none; b=DjtPD3g1KAierNWgol7py0Gq7lhN1Lebar+EmYoDtuqTXl0g8QYZk/PQtmAx/koQLbHsR4ywS4k0WLpcua9WHh47PFFSUXHPLt1vG9i+rWVu1AtFCHt/Xfm8lXblDSZ8JIq72gz6nF/Z0BK0U9VdnznapOVOQKMHui5VRz0qE8k=
+	t=1712647619; cv=none; b=d+dWdpfJuZZseBXPNjN7MtrO375pGNH2aqv88FYHfNLwlxgfYh/f6ZRaNGIMJGcjKxSWpOib6hXBI+JcJw7ImjHQ23FBClETSC7LmE05Tm5eHmq3Zwvb/5MIK9anLog16j3dkHpuPaGxDnurlGDRrB+G+8CZpS2YGnw3pJM6RCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712646920; c=relaxed/simple;
-	bh=kZeZDpvDhgQHjJRM2Bq/1wDRQG+O/WgjTTA91Txg9zw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VAY1TTUON+XEqsRTKxF5C++dX8p7hiLiN/nmr7wpeQ5SzIaALnCq/Wk3HBjk51PbDNmNotkWvb07d6LHy/EZaYu9bZgBG9aE5UsvlErl82XAlBLooPPQAR1HTztdBau77MS8WA3H9gXIqyMAlDvY/0UcGpOtHHYkhaL1DJnA/4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6150670d372so48912037b3.1;
-        Tue, 09 Apr 2024 00:15:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712646917; x=1713251717;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zBJu5F6YpSTJLRMDOchXILY0XfUp8hZW0pkMDWSU8vQ=;
-        b=KjBeQ/y3RbwAzmjjvYkpK5ZMzB+z2VYqIwPZJt3ZcqFoZ6JTRtl4hP9tMJZ7tsu4AX
-         opNo+YYGKTJoUxPJl7HUzd2v448/zFT986sp1yzNhF5wCiZDZhYH0V/Rfjas/3bCwx71
-         jRL88e2L8HvSYIBS3cxh02DFQOXHJgWcVdBEjgoHMYB8HhlxqAhK2GBkpWqXDMephUig
-         tbbZfh8xYLbUUqkgRuyY3Y2svWBsiHrmvwEQOBMZtYB9G7WUf0tF5oBqBn9pHiHkLUU+
-         X3+mtWxsbtgHbeIS+OcZK6l+R0hXqjnCPLImBkYJU3pqmfUMRy4Q3UvprP6RvuefhC3U
-         GERA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDFZ2RlboO+givETEsA+R2wBc31G55UPNS34vd8iWHSvqc2ImYTXteiAdXck5i0gxERs9Q1etz6dl1snJfLo/bG3+r+/yvPCexviQAK3ZHvb1jKNAeS3TWo6oRepPkmXI4dL+5d87C0yBuh0Mxag==
-X-Gm-Message-State: AOJu0Yw00vWLNc2s0q2kCdO2mLyMC/mNIdensoT2ltrYQtq62oftRDAd
-	rEXLWzMgjhp8TOTFMeC92Ac8XJZN279brR+xsf22NzcrXSKQBZar6ke0ympp2xc=
-X-Google-Smtp-Source: AGHT+IFnXsuEwVCOSkpBiyOfSEMidMA70781MpLQ2C3XY6kZnkTP0QIipztzizlmuYFV9YNmEwGf6g==
-X-Received: by 2002:a0d:c344:0:b0:615:2849:6086 with SMTP id f65-20020a0dc344000000b0061528496086mr10357547ywd.10.1712646916017;
-        Tue, 09 Apr 2024 00:15:16 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id jv3-20020a05690c748300b0061520765e11sm2025235ywb.143.2024.04.09.00.15.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 00:15:15 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-617d25b2bc4so39354457b3.2;
-        Tue, 09 Apr 2024 00:15:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVzHeeEOTdMS6/CMicBeIcuzhiS98+bmL5tJmEBypqpRwLIgyonqmibvprDbjcHKSH7ZlphGnGvyLvhyCSeBsgHxOFgWzfpmPQ2s1YNFAYto1v0W+miPTZXMlbADhvMUnbp0iPyHYloPCvs4A8dOw==
-X-Received: by 2002:a25:aea4:0:b0:dcd:40fa:7bd0 with SMTP id
- b36-20020a25aea4000000b00dcd40fa7bd0mr8167509ybj.3.1712646915579; Tue, 09 Apr
- 2024 00:15:15 -0700 (PDT)
+	s=arc-20240116; t=1712647619; c=relaxed/simple;
+	bh=daUzE7PdhRD4SgLG9zKOOsfMuWRE0I6EtRMVENqc/98=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=U5Z5lZB7uIMTxiS7XIEd4lPCZn+to6wIJV9GCCYtPlQGNyAadGM3If8Dzs4aQlsI4Gk48HscTBZebidISts7DASWq4ru7yqaV7lXXEqwvMyzwYiXLEAYyuyfTZqMcKQwlkdk76fixzg8A4x29wEdCjrIZ23oWp+AUkFXqG/hBOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AKatHfYU; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AKatHfYU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712647617; x=1744183617;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=daUzE7PdhRD4SgLG9zKOOsfMuWRE0I6EtRMVENqc/98=;
+  b=AKatHfYU/obN7UwyWBS5rrPZKzKxFxQqUJZzIuCDScDgn6IZUZ/ZK6Pi
+   PLnubkzcTUMLxqylJKEBRRkQU5cwYstO30drVBfxfNCFYAGfS9SpJPCqN
+   8SZRiBbSJLHdLSGTvjB0HEkoX4WMidaV9PFZrlwnfzLlECnaBdBRa5uhf
+   p/Z/Mrn5180om0TTru7XpE7G096TSm30QQBCZ3Y7mD3fxTDFvMjwRfc+s
+   qV9dr3qVZwQhTDfa9JK30baTUcbzGSbFbvUcqCtrz7AYehdesHzd01i+F
+   arjuXoJonughtgClA0wt6omzcTaBGz2mRRylZrx7qWteubWSUZA2J9WbG
+   Q==;
+X-CSE-ConnectionGUID: naIUizQGRcSULX0MVwzUtg==
+X-CSE-MsgGUID: sfY7LiksT5upKG2hIqsDqw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8110431"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="8110431"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 00:26:56 -0700
+X-CSE-ConnectionGUID: Vh6Zj9t+TO+fDY1xnrUssw==
+X-CSE-MsgGUID: 63XeEpTzQf2JrlksYXceig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="24925457"
+Received: from mserban-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.59.228])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 00:26:51 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
+ <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
+ kernel sources
+In-Reply-To: <20240408185520.1550865-2-namhyung@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240408185520.1550865-1-namhyung@kernel.org>
+ <20240408185520.1550865-2-namhyung@kernel.org>
+Date: Tue, 09 Apr 2024 10:26:47 +0300
+Message-ID: <874jcb9etk.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408185520.1550865-1-namhyung@kernel.org>
-In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 9 Apr 2024 09:15:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXQ_osFeknmg=oR6-fMH_MkVqabCtbynxQ6UvpZRwry3Q@mail.gmail.com>
-Message-ID: <CAMuHMdXQ_osFeknmg=oR6-fMH_MkVqabCtbynxQ6UvpZRwry3Q@mail.gmail.com>
-Subject: Re: [PATCHSET 0/9] Sync tools headers with the kernel source
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Namhyung, Arnaldo,
-
-On Mon, Apr 8, 2024 at 8:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
-> I'm gonna carry these changes on the perf tools tree.  I'll update the
-> vhost.h once it lands on the mainline.
+On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
+> To pick up changes from:
 >
-> This is the full explanation from Arnaldo:
+>    b112364867499 ("drm/i915: Add GuC submission interface version query")
+>    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
 >
-> There used to be no copies, with tools/ code using kernel headers
-> directly. From time to time tools/perf/ broke due to legitimate kernel
-> hacking. At some point Linus complained about such direct usage. Then we
-> adopted the current model.
+> This should be used to beautify DRM syscall arguments and it addresses
+> these tools/perf build warnings:
+>
+>   Warning: Kernel ABI header differences:
+>     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
 
-Do you have a reference to that?
-I was gonna reply to [PATCH 8/9] (where I was CCed) with "why can't
-you use the original include file directly?", then read the cover letter.
+All these years and I never realized there are header copies
+there. But... why copies?
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+BR,
+Jani.
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+Jani Nikula, Intel
