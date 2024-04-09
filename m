@@ -1,70 +1,105 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98A354BCA
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 03:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED91138E;
+	Tue,  9 Apr 2024 05:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712634012; cv=none; b=F3fx60Uac0QPt9lrrRIg8T73Uo5G6hG9sSyGcceqMXvcY15oz2rdKn0ngU0HZzZ3sHSm8mngIxPBDrGi0kF0rKeODl2pppolRyiWI9Do5bRyTcOH7AjO94mqTUBX9tg7gTYo0LNJVok4BpFOhIfkB3BZ+suMPc65nQlR3Be4yuY=
+	t=1712640744; cv=none; b=a8Hssl6lg1M12ipkMp1DqsLhd0kSRUdAs/MzNMIZNRV9hh40KwS1J26j5EIE+yie0qW+IDWqXgYMFgIfuFCI50Ov+tq8gF2j+yl5rGVMrILvqsAx04F0PJZi8LvmGsGO7s81t8vL5qUJYLQmlizRWTmRAZl63L9y7Cchobbngfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712634012; c=relaxed/simple;
-	bh=fFF78VPngM7y/us+qOuPjusOESrskdwFUvjmvDF+A5w=;
+	s=arc-20240116; t=1712640744; c=relaxed/simple;
+	bh=9lZWekprgzyxrfgFM5K0oPFDxTJVjijkbbZ6B4fmnHE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k2dkd0MqMM7DL+cRqX7ZXFZzowH+SMtVMw6AeyaxrZ7t0CF/DduQFu428eP623D6LtQPngRXkIBUptfQZPmdoJpC7EykezpqVKpbI25gauOg3JDCMONP4SNuX8G57HO4I5IrqqKpzcMFDa+teEuYCG4cQn6kh8vftmtZSU4Kdtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IybSXFxI; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=KARXVi8ICtWXvSRIztCctyv0+GGb+K2sG0qo57YuTpbVFQ/+iNCnLmlP4b6eUOPvrZyzokSoZRXYZdyA7MYYjp+mIk2x425TuMg7SAbHMkoUx+jaUXCSr3GVpNxJPtsAeBeLr/XZ6uyK6s303MK6Ky8piQWFUEAC777TLmGhClI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X7NzfviO; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IybSXFxI"
-Date: Mon, 8 Apr 2024 23:40:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712634008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pJRkboi1XfUhwyGSGsoCmSy3Kg0vHEU0PUHEGOzc2K4=;
-	b=IybSXFxIG7G4z7NZL+lJGPg3IP8nE6mX+nildWlX3cc2xvghUUnsiz25bQ9ZJHtE/jiBQJ
-	oOjHPj4AbaXKZ77GaqwLNwsodiSXm9Jvw9uh5krnkCXS2gJyMAjONervwTyIj//5sAqmTC
-	54/zO9xkgRXwbddjtU2UOjvsrrFfF9A=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
-	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
-Message-ID: <i2qewo34mvw7bizhefwz5s3fc4nlc4zk7eijglkieuci5iradm@zgcks3u5omhw>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7NzfviO"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516ab4b3251so5772000e87.0;
+        Mon, 08 Apr 2024 22:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712640741; x=1713245541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7CGb/5Mee8Fak1uuYWFLZbIIgpz0svekZAVX6sH4tG4=;
+        b=X7NzfviOUJ8lFJ8Lhhsw/SFRQStdg7aroFNGBbB1zyr0ze6zvhZ5REijfdxll4AUX2
+         mEG+ef0tTkcYRX/JxBVmEQc39T4wNnzg4EpeaU7u/d8gcYI+x89U7vrkgbaizNpxxJ2y
+         1Ng5hMaGKn+7kxdni0P5XYMOnXiGTw1dVSgP+9U8R8O1BLAhRWmxKigBcCBTudXWeTb1
+         3h18iq2hsmLD01Tka4I2XAa13bOz3L6S2zmiRv2eV8a9uZywQdKEstkgLfoFK/N4wJrc
+         +1Vddw3n8tSWXCOgrG1rBrT+W+qlLyP6ixRz7WlUE6xB9IBTviI+EEj3XazWK9o1NxPc
+         tXNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712640741; x=1713245541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7CGb/5Mee8Fak1uuYWFLZbIIgpz0svekZAVX6sH4tG4=;
+        b=Fz6lD/8eauLpZm11hOZB0PBQCY5unM9RJ7BQrTdUCBEcGFbtwTxtjySTpJ4ulvRvXM
+         O+eJLEgFPfGBcZgPEv9OLZayFeJ+KuKKhre1hD/lGjhs8E55e4t/ug32itDQO0WMGHWh
+         FhKYhXYakB8s7MXUl5dJrO5CoYcAr+wgmn+nWrAtsCoRKol2n3brH92fVRpC3mJhj7Z0
+         2ZLNc9vsdgbdX091Ya3gkSddw5kaDx2owJieW2xleBg1BBjOO8XkzCiKk2R63ROg8Y5L
+         Dw2JGapbpw+cusrW8JenSAVKYu12abAcm5hxI4X93CzQn+3MPQI/i9I3J6jmfHV8ON5O
+         upgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXodEyWJSY7ugxtJncYZQ140fpIURauHhFSSzL+rs2132lAGY/ZB86sg1agVgar6HWlkMjo5T2KDLMKo2hFAoOQPS7rLda/ZxlB5g4a9xxcL0IG2Mkl7RRBfxydx9+EVFsS
+X-Gm-Message-State: AOJu0Yxbe9oTTpEFGCN0CfteyVG6OuNXoFmTgvWvkLPW2rT+ZYYflVd4
+	FHF2Ju/oNvt3Edq4tudBuj12gY67MTLSE8E78DtsaLjFp8pvGXU=
+X-Google-Smtp-Source: AGHT+IESwnp6fyQVdc0UfqoknG/o5y9Albgpx0kzEFOO2bgYX0crR9IV1mKmZPx7JT2wOY1nCgvH8Q==
+X-Received: by 2002:a05:6512:539:b0:515:8c97:ff47 with SMTP id o25-20020a056512053900b005158c97ff47mr7660491lfc.23.1712640740773;
+        Mon, 08 Apr 2024 22:32:20 -0700 (PDT)
+Received: from p183 ([46.53.248.67])
+        by smtp.gmail.com with ESMTPSA id k4-20020a5d4284000000b0033e7603987dsm10594309wrq.12.2024.04.08.22.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 22:32:20 -0700 (PDT)
+Date: Tue, 9 Apr 2024 08:32:17 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
+Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
+	james.clark@arm.com, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linaro.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Chenyuan Mi <cymi20@fudan.edu.cn>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Georg =?utf-8?Q?M=C3=BCller?= <georgmueller@gmx.net>,
+	Liam Howlett <liam.howlett@oracle.com>, bpf@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from
+ different CU"
+Message-ID: <d0dc91b6-98ee-4ddd-b0a9-ba74e1b6c85f@p183>
+References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240406164727.577914-1-visitorckw@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
 
-On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
-> This patch series focuses on several adjustments related to heap
-> implementation. Firstly, a type-safe interface has been added to the
-> min_heap, along with the introduction of several new functions to
-> enhance its functionality. Additionally, the heap implementation for
-> bcache and bcachefs has been replaced with the generic min_heap
-> implementation from include/linux. Furthermore, several typos have been
-> corrected.
-> 
-> Previous discussion with Kent Overstreet:
-> https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
-> 
-> Regards,
-> Kuan-Wei
+On Mon, Apr 08, 2024 at 11:52:22AM +0530, Chaitanya S Prakash wrote:
+> - Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
+> - Delete ends_with() and replace its usage with str_has_suffix()
 
-pointing test automation at it now:
-https://evilpiepirate.org/~testdashboard/ci?branch=refactor-heap-v3
+> - Delete strstarts() from tools/include/linux/string.h and replace its
+>   usage with str_has_prefix()
 
-Coli, could I get some acks from you?
+It should be the other way: starts_with is normal in userspace.
+C++, Python, Java, C# all have it. JavaScript too!
