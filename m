@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA5786651;
-	Tue,  9 Apr 2024 12:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B97C22318;
+	Tue,  9 Apr 2024 12:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664053; cv=none; b=gRpFv6PWI3uP6IY7IhmJkhI1eQi8kQqBBo99LElnRRmq8sNiMkZy/eXyG847eNHQOV0+W+oU1rjQOGfaBhFmWY0B38kFCs7cUEhQFLy6gvtPhlVQW76nQpuB/XsHEfzFcL+3uGSMUmESUMG1lv166aFof6VQdmL9eui8j234hR8=
+	t=1712666214; cv=none; b=JoB8JeG2OEfVQ9ioCRyT61XiWC9+DzmZOyXBTgoMoOhxv1d3gjAZDiVeMuJAk/CryINyhgZH3Df2QCYZOLAf1vVl7QEe5peqTJEHCLMWMgxo1rkkJ5Q17ADr2t0DiO6RUxogoF8ujV+XIzUb0cKGB67fMhGhMJJuCAxtQCWm35I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664053; c=relaxed/simple;
-	bh=tAyPAeaQANhI4c3tAyeCyOp+cseGWerbAlJvZtQeEac=;
+	s=arc-20240116; t=1712666214; c=relaxed/simple;
+	bh=PCvyTmJFSBw/wF40SXFhkTfbKGm+lHZssDURb5RxCoU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVAsG53aGCe3s2IumZEYfyTu3GErtFfH4w5aK8ZblS8cMFlpLd4LszW0mWqLZtl/rxhYggQwHNwVXZa7Jk5Fqkd4qsb4Xy2EwpVz9umfmBaAcWvjHCbXqZHwC5ibMbKcODROhvL3snAOioDSoXjx3mMayRxxsbbZruJeBnjr5hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCeatPVO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BoGwBFscXKmGUVRkMDZNRlsMs/Hs8kVgSy07fc1gAUeydubmkOAzZh/wl0FByFg3S+lukZyujG5NGtwQZ9ja2ra8+ECC7gTry9Zkio0ZjvuZjWIrpfYvoVCOMsH+jB935FoqHQF3A63rT+L2+B4FFygMu+ywA9bZRufyBxL08Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qit/Rphu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCeatPVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63AB4C433F1;
-	Tue,  9 Apr 2024 12:00:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qit/Rphu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A15CC433F1;
+	Tue,  9 Apr 2024 12:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712664052;
-	bh=tAyPAeaQANhI4c3tAyeCyOp+cseGWerbAlJvZtQeEac=;
+	s=k20201202; t=1712666213;
+	bh=PCvyTmJFSBw/wF40SXFhkTfbKGm+lHZssDURb5RxCoU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vCeatPVOqX3Hx7iTF3LlEUcKobQjBcaRcBc+fJpctd/culjL8StZejl0MHXkpetUm
-	 eYa8kVtD6iizmqCJs/r5uYdajS02qAc9/rJ8H9LkYw/XYk73EC/DkPp8415WO7xGEC
-	 K1qXCt9G1iTV6jyTJsCPv7dZMZC2LL46PmD87sEL3nRwcr88pwhMVj0UNWoWMBmhAx
-	 w/AHNjgvxZV2nKPZtpUrCRfcPEvayZbDK9kja90XB4QDPjLq5HYT/ucwEVbVyfvDcc
-	 PAw6kGw4pZOX7tx8QrPZQOmj9lLbyTgD+94FH+uxRXtdJdLSk2cWy4JsjBs/t9aoqW
-	 FepHEf5w4IOZQ==
-Date: Tue, 9 Apr 2024 14:00:49 +0200
+	b=Qit/RphuZykfOHrkij6ZIkv1Qecy6nLHuhMx7XEMF51KTWC+HGbppgU0AK8gFBBaN
+	 MEHQ97xUdN4r7yJoGgnwXx35nhSOoL2FCFLz8BXBRuLanxXq0RHdTslAH4V9kONz/P
+	 GqyMDdRiXBepBE9VikefvML5XxetOrB4Y7TbdcD2T/G8S8WMT1fgUwL4dRXMgl9oz/
+	 Rg/8StVaH7BdVBsHKYdodOYbHC7Y8HBqZzt8451ISYjNgBH7mse3NC7mYgEh0zxr7D
+	 5Lt8XyU9geBjz4IFMZfUHkpXlKUrldyWDzzPAk34F4OtUnjkIEuVNswDgcMQv7WYtV
+	 a/ZVFNmYVdDwA==
+Date: Tue, 9 Apr 2024 14:36:51 +0200
 From: Frederic Weisbecker <frederic@kernel.org>
 To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -40,57 +40,80 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <ZhUt8XMndGSwNuwx@localhost.localdomain>
+Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <ZhU2YwettB6i6AMp@localhost.localdomain>
 References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
- <20240409062501.h4rA_ck4@linutronix.de>
- <ZhUaAjhQXN6ahtpS@localhost.localdomain>
- <20240409105405.TXUU--_W@linutronix.de>
+ <20240322065208.60456-3-bigeasy@linutronix.de>
+ <ZhRhn1B0rMSNv6mV@pavilion.home>
+ <20240409085732.FBItbOSO@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240409105405.TXUU--_W@linutronix.de>
+In-Reply-To: <20240409085732.FBItbOSO@linutronix.de>
 
-Le Tue, Apr 09, 2024 at 12:54:05PM +0200, Sebastian Andrzej Siewior a �crit :
-> On 2024-04-09 12:35:46 [+0200], Frederic Weisbecker wrote:
-> > > > > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *head)
-> > > > >  		local_dec(&event->ctx->nr_pending);
-> > > > >  	}
-> > > > >  
-> > > > > -	if (rctx >= 0)
-> > > > > -		perf_swevent_put_recursion_context(rctx);
-> > > > > -	preempt_enable_notrace();
-> > > > 
-> > > > Well, if a software event happens during perf_sigtrap(), the task work
-> > > > may be requeued endlessly and the task may get stuck in task_work_run()...
-> > > 
-> > > The last time I checked it had no users in the task context. How would
-> > > that happen?
+Le Tue, Apr 09, 2024 at 10:57:32AM +0200, Sebastian Andrzej Siewior a écrit :
+> > >  static void
+> > >  perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+> > >  {
+> > > @@ -13088,6 +13084,18 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+> > >  		 * Kick perf_poll() for is_event_hup();
+> > >  		 */
+> > >  		perf_event_wakeup(parent_event);
+> > > +		/*
+> > > +		 * Cancel pending task_work and update counters if it has not
+> > > +		 * yet been delivered to userland. free_event() expects the
+> > > +		 * reference counter at one and keeping the event around until
+> > > +		 * the task returns to userland can be a unexpected if there is
+> > > +		 * no signal handler registered.
+> > > +		 */
+> > > +		if (event->pending_work &&
+> > > +		    task_work_cancel_match(current, task_work_cb_match, event)) {
+> > > +			put_event(event);
+> > > +			local_dec(&event->ctx->nr_pending);
+> > > +		}
 > > 
-> > I guess many tracepoint events would do the trick. Such as trace_lock_acquire()
-> > for example.
+> > So exiting task, privileged exec and also exit on exec call into this before
+> > releasing the children.
+> > 
+> > And parents rely on put_event() from file close + the task work.
+> > 
+> > But what about remote release of children on file close?
+> > See perf_event_release_kernel() directly calling free_event() on them.
 > 
-> So the perf_trace_buf_alloc() is invoked from that trace point and
-> avoids the recursion. And any trace event from within perf_sigtrap()
-> would trigger the endless loop?
+> Interesting things you are presenting. I had events popping up at random
+> even after the task decided that it won't go back to userland to handle
+> it so letting it free looked like the only option…
+> 
+> > One possible fix is to avoid the reference count game around task work
+> > and flush them on free_event().
+> > 
+> > See here:
+> > 
+> > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
+> 
+> That wake_up() within preempt_disable() section breaks on RT.
 
-No sure I'm following:
+Ah, but the wake-up still wants to go inside recursion protection somehow or
+it could generate task_work loop again due to tracepoint events...
 
-1) event->perf_event_overflow() -> task_work_add()
-//return to userspace
-2) task_work_run() -> perf_pending_task() -> perf_sigtrap() -> tracepoint event
-   -> perf_event_overflow() -> task_work_add()
-3) task_work_run() -> perf_pending_task() -> etc...
+Although... the wake up occurs only when the event is dead after all...
 
-What am I missing?
+> How do we go on from here?
+
+I'd tend to think you need my patchset first because the problems it
+fixes were not easily visible as long as there was an irq work to take
+care of things most of the time. But once you rely on task_work only then
+these become a real problem. Especially the sync against perf_release().
 
 Thanks.
+
+> 
+> > Thanks.
+> 
+> Sebastian
