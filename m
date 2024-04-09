@@ -1,79 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0C285631
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 10:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC021EB46;
+	Tue,  9 Apr 2024 10:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712658119; cv=none; b=qynZbZFGlx7TlsbT4Yy9e6nYn/g3JkLGzbXET69JWoRk04oQgkmHySutsuWmy4u6mfp3oxg9vl+sV/qhbeIrDfY7ox4pzBRSRB1SoViLVzfEkNCEcJXP2CjiFCkVBfRtW+2Sd59JeGk4rdqk6JH7SFQX7A3X8g3TDSAZBqcmy18=
+	t=1712658949; cv=none; b=tpbUVzal3+ppzplFr+849cSaLQnoomBnKvtj7M30v+hi6Aok+OLWVaDA61pxWogTqhC34ohrIR/u9qie6ME45CCPqRSx+1tDwJwS88cUe3MlK5gcr55shwtjIbq/yTORFJCLilcV3gBnTglvloS+j6hGsVr2lgcDC2pzEAIBTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712658119; c=relaxed/simple;
-	bh=gue8F4EmzdskPgu72KCdnvJQXgP388yDHIsKhgBC6VI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mkj559BWCGeWwDtBK0Qz7WDU6Dvw1dmoD8kMf7s/Lg3fllTXSGk+DOYR2x5n3aPN2PSY99Ieu6vFCue8/1I+pe1MHX+w3Mfe9Iah+qhSlaDtfJvxP0/zmMf70dlDkA1r4WHykfVpPuTLcKlyCgyAPAuQ3P9tjnMIE7ZCkJ0428c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03711DA7;
-	Tue,  9 Apr 2024 03:22:28 -0700 (PDT)
-Received: from [10.57.52.202] (unknown [10.57.52.202])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB6723F6C4;
-	Tue,  9 Apr 2024 03:21:56 -0700 (PDT)
-Message-ID: <7ba7a9ee-901c-48a4-bd6c-b59294da7a65@arm.com>
-Date: Tue, 9 Apr 2024 11:21:55 +0100
+	s=arc-20240116; t=1712658949; c=relaxed/simple;
+	bh=VtU83v3DWvkdgwKB+G89/DK3CwaUjxGtmhjxn0puGsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ver0O2a7yPSohgHutzDNssst6689gmdH6LqvJ6VZEbNc2nkLWbddwWoz+pgGY3ba3AhTdAQJ5dBly8aaw8VejiTg2fprOYdO+SSw/Uxzv5GN39PFhPWIE2Ot4JtJ24jar8wK6J3MdFE7xTE+szPqA04ikuILGF4XTMVph6mRF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tg43mS9k; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tg43mS9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6876AC433F1;
+	Tue,  9 Apr 2024 10:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712658948;
+	bh=VtU83v3DWvkdgwKB+G89/DK3CwaUjxGtmhjxn0puGsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tg43mS9kXZIXZvrq/9CZMbPD0lSXpOJRDmWZ2vTZcZNmU1Ydu6b7qkeTOrg7EqsU5
+	 NpOaqhJOcnWbi0E1cZ4rc7RWiMsMZDfu+FLsrebBVGmeHXC9NnnQQql/98iMOEC+bT
+	 9Vt3oPrIfe/6rvxEhoHlUxW4N1FxjjCIJNe5NMgEhDwMGKPTJNsevaHqSyjyPnJSR/
+	 ChvnkD/69zdi8BwIkb1LlW8YHqlGW2GxkLYFACLate0fJ0mxnolEtyMncr1evVV4Ir
+	 yw7CtSp/KUgH4auNBkn7JcPZTvsu4fmr+Ny0NPStYt7lGslfhmbrZvYl/0hVRTGE8b
+	 IA0IWtYJZINnw==
+Date: Tue, 9 Apr 2024 12:35:46 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
+ from perf_pending_task().
+Message-ID: <ZhUaAjhQXN6ahtpS@localhost.localdomain>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-4-bigeasy@linutronix.de>
+ <ZhRqSEbyd1rqVwfN@pavilion.home>
+ <20240409062501.h4rA_ck4@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/8] perf tools: Only treat files as map files when
- they have the extension .map
-To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
- linux-perf-users@vger.kernel.org
-Cc: anshuman.khandual@arm.com
-References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
- <20240408062230.1949882-8-ChaitanyaS.Prakash@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240408062230.1949882-8-ChaitanyaS.Prakash@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409062501.h4rA_ck4@linutronix.de>
 
-
-
-On 08/04/2024 07:22, Chaitanya S Prakash wrote:
-> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+Le Tue, Apr 09, 2024 at 08:25:01AM +0200, Sebastian Andrzej Siewior a écrit :
+> On 2024-04-09 00:06:00 [+0200], Frederic Weisbecker wrote:
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index e0b2da8de485f..5400f7ed2f98b 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -6785,14 +6785,6 @@ static void perf_pending_irq(struct irq_work *entry)
+> > >  static void perf_pending_task(struct callback_head *head)
+> > >  {
+> > >  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
+> > > -	int rctx;
+> > > -
+> > > -	/*
+> > > -	 * If we 'fail' here, that's OK, it means recursion is already disabled
+> > > -	 * and we won't recurse 'further'.
+> > > -	 */
+> > > -	preempt_disable_notrace();
+> > > -	rctx = perf_swevent_get_recursion_context();
+> > >  
+> > >  	if (event->pending_work) {
+> > >  		event->pending_work = 0;
+> > > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *head)
+> > >  		local_dec(&event->ctx->nr_pending);
+> > >  	}
+> > >  
+> > > -	if (rctx >= 0)
+> > > -		perf_swevent_put_recursion_context(rctx);
+> > > -	preempt_enable_notrace();
+> > 
+> > Well, if a software event happens during perf_sigtrap(), the task work
+> > may be requeued endlessly and the task may get stuck in task_work_run()...
 > 
-> Strengthen the check to locate symbol map files in the tool's /tmp
-> directory. As the existing check allows non map files named in
-> "/tmp/perf-" pattern, it leads to possible dwarf library corruption
-> when perf is built with NO_DWARF=1. The try_to_find_probe_trace_events()
-> function behaves differently when built in that manner. Extending the
-> current check condition using the str_has_suffix() function to not only
-> validate the pattern but also ensure the file is of ".map" type allows
-> test perf probe of function from different CU to pass when built with
-> NO_DWARF=1.
-> 
-> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-> ---
->  tools/perf/util/symbol.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9ebdb8e13c0b..812684aa42ce 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1792,7 +1792,9 @@ int dso__load(struct dso *dso, struct map *map)
->  	const char *map_path = dso->long_name;
->  
->  	mutex_lock(&dso->lock);
-> -	perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0;
-> +	perfmap = strncmp(dso->name, "/tmp/perf-", 10) == 0 &&
-> +		  str_has_suffix(dso->name, ".map") != 0;
-> +
->  	if (perfmap) {
->  		if (dso->nsinfo && (dso__find_perf_map(newmapname,
->  		    sizeof(newmapname), &dso->nsinfo) == 0)) {
+> The last time I checked it had no users in the task context. How would
+> that happen?
 
-Reviewed-by: James Clark <james.clark@arm.com>
+I guess many tracepoint events would do the trick. Such as trace_lock_acquire()
+for example.
+
+Thanks.
