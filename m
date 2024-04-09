@@ -1,170 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC681156F5D;
-	Tue,  9 Apr 2024 19:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E312A156F28;
+	Tue,  9 Apr 2024 19:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712689957; cv=none; b=AqK+fYCDcQc6FeCzQpXERwbGexl+XaQdb0Quwld1ffliMQIviv0oIdIapqLvK1h+W1RtSO6Doz6E9gjVvQss46agbVeaif6wxFrDjL1Alx+bIhP/3rgPfzsZ3WvU4RrbpUAyKpnO4UBbWR21BP/7dbtU/GIKJI903NUHu9JH25A=
+	t=1712690877; cv=none; b=kXSoWw6UtlkzlwtZuAy1UM2xDIf5WJH2hUo68tnur2+yy5mHw3ulGOE0DgP7Vw1RjppSaq6wRK80K3GRfcuEbdePNB84zchZ3dzGQaU6/dRN6lu2dSCveDbmLIgmaMOHE9T7SfT6eJ0MX0tvkmBB8hD8I3/dm+u8d5scZwiNKjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712689957; c=relaxed/simple;
-	bh=DfuXTGkraLWHkNJuO+9SBnAAUaw6k8nUYkhO8ZyCDKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ckmDcL87brtxbnPGOwQUBM2/qSPMdJY+gKNyebvYFOVilfduc5c/loYldwU554cBj+hz0mUxPQSpjbZfyx4zW3FA1JF5i2QuTcCdlJr31mGQOu0ZYaTFBxkmlBUHomK9wW+qAZjVAB5Q9oUt2/4pWNA3w677LMDmDOCfyk3dppU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5vtu7Tk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5vtu7Tk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69D7C433F1;
-	Tue,  9 Apr 2024 19:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712689957;
-	bh=DfuXTGkraLWHkNJuO+9SBnAAUaw6k8nUYkhO8ZyCDKM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=u5vtu7TkhAT4Whr3XXyEt7LbQMEwCqFiFl3pUziIPU1kp8AGW7WDFIof0cHHjpHcL
-	 X0BlnbIX68Z6vz3irSxDq0XI7SP9nkanqb0Efexz1n64JWM4XWeW9FItbBdMyYQUB7
-	 OHOofB+P5raIG8wSWpNGyHecFaOtCz9eNaZqKeSjq7M8ZljQOi+fOhtR8Rb9Fmc6dN
-	 i9pjJxtEq9+bY7HpQbFVKAXnfw0w8LAB2IQlL0gpIo76MN1duPZDhOAuoTCyCRX6aR
-	 0+WPQsylN8Zm6grDseHtdReZmCAFN9X7ypdq22Om0vrlvNEdzHDT0GaS3/u1jYfkPF
-	 QnbS/56STmeDA==
-Date: Tue, 9 Apr 2024 16:12:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: BISECTED: perf test -v "Test data symbol" failing on Intel Hybrid
- systems
-Message-ID: <ZhWTIuyB9p1ORbQH@x1>
+	s=arc-20240116; t=1712690877; c=relaxed/simple;
+	bh=NBlFKQKXdDSYGy3jDOPVW5jSTQHFXmqLC8ubcBtwg54=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YjaOac+v4PBja4E22NhbbDfHXiCE44TlvnfYPasXOMDFsQb7ogtYMPumsxFVuWkhG1UcB62PQzaQ7bdyaD2rjnsKE9GLB6lVXfeKMC97FW0cTyyWKEZTkDrzk3+m6QCZwwDVwTUiguQznoBgEHJcK9rXJMFJ0PVqaKOPqWAw3oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2a5215314a4so1667516a91.0;
+        Tue, 09 Apr 2024 12:27:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712690875; x=1713295675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cXBwMc0h/4YLxnhtwXB+DKeKsXV/rxCsNtc2huo+byQ=;
+        b=LGav91RS97JIfWh9RMP+qb5CxXwRZiQTKLrfOYxuLMXmk8wfX0O8ttvIf/4LHjXL1O
+         umQ/pc/AcQ6rCt4ui0cZEXK3QRapLWdZcSB5K7i8926JOG3QE7Hoj3YsxDp1THHbENpM
+         xS8Y7l8i6+eiihSfvgyUzvPpCznH6h9zvYdxnApVo+OcbNB2TE771UaUTReJkhXfxmke
+         b3Er4WGImrUbWKo2EaAvks7S+1+ybnZVkjhopioAOl1c0H+BpGzjCWfNI436FZpT6l+5
+         ysSCBv9Y0u9/x18VEEYUKjwi/MHbpCbfLo0VzHHp/enJDqTmIPoqU6v463ATodnFSoSv
+         NIVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpPmvWa949/GN0Sj62CSdIFHODRinHuf+zi3AvS08PWJZ239SjdDj2uRg7rCEhS+xjNujlvzKteT7WWSfA1nBKlE0X/AwnCP/jPR/+uVMSsbCiavK8xLQYBdAa2f3SvfyWr86RgdwIsdF+sTRf6g==
+X-Gm-Message-State: AOJu0Yz8NC307DjGdAgqVWj/DI5kMJZRUb0qfJoDAduLQFF4DzYUpMS7
+	lxWYYQiC4++MWW9AmrTC4a6B/Xf2NCxhKnbWQzEQN4Pp46tuBh+t3ABTWOsFnR/zrrwGsV+9bWB
+	rrp+SKHBislN3jwfEvq4Q0uSW2vU=
+X-Google-Smtp-Source: AGHT+IFiwn6TKeknl8NcxMwdYLJrJyMYKVDsWQOTWyfbswX3lKMej+Au58XwvS5zZcFoFDvHhirmDD001y2DkDHl5Io=
+X-Received: by 2002:a17:90a:38a1:b0:2a1:f455:c3d7 with SMTP id
+ x30-20020a17090a38a100b002a1f455c3d7mr600957pjb.16.1712690875020; Tue, 09 Apr
+ 2024 12:27:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240409000659.1727785-1-namhyung@kernel.org> <20240409000659.1727785-3-namhyung@kernel.org>
+ <0ec1328a-0731-42a6-b953-163ac5a56deb@linux.intel.com> <CAM9d7cizZLMNa82VxuuvEWEY3vwdbs_iTG9jsogJQBoWMLP7Fw@mail.gmail.com>
+ <16587efd-ab12-463a-bd87-7721adfc731d@linux.intel.com>
+In-Reply-To: <16587efd-ab12-463a-bd87-7721adfc731d@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 12:27:43 -0700
+Message-ID: <CAM9d7cg65=Hr2Utuuh=8EC7v80y-n1iZ-dyCfDU=kreuovLjfQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf report: Add weight[123] output fields
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-root@x1:~# grep -m1 "model name" /proc/cpuinfo 
-model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-root@x1:~# uname -a
-Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
-root@x1:~#
+On Tue, Apr 9, 2024 at 11:18=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2024-04-09 12:53 p.m., Namhyung Kim wrote:
+> > Hi Kan,
+> >
+> > On Tue, Apr 9, 2024 at 9:37=E2=80=AFAM Liang, Kan <kan.liang@linux.inte=
+l.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2024-04-08 8:06 p.m., Namhyung Kim wrote:
+> >>> Add weight1, weight2 and weight3 fields to -F/--fields and their alia=
+ses
+> >>> like 'ins_lat', 'p_stage_cyc' and 'retire_lat'.  Note that they are i=
+n
+> >>> the sort keys too but the difference is that output fields will sum u=
+p
+> >>> the weight values and display the average.
+> >>>
+> >>> In the sort key, users can see the distribution of weight value and I
+> >>> think it's confusing we have local vs. global weight for the same wei=
+ght.
+> >>>
+> >>> For example, I experiment with mem-loads events to get the weights.  =
+On
+> >>> my laptop, it seems only weight1 field is supported.
+> >>>
+> >>>   $ perf mem record -- perf test -w noploop
+> >>>
+> >>> Let's look at the noploop function only.  It has 7 samples.
+> >>>
+> >>>   $ perf script -F event,ip,sym,weight | grep noploop
+> >>>   # event                         weight     ip           sym
+> >>>   cpu/mem-loads,ldlat=3D30/P:           43     55b3c122bffc noploop
+> >>>   cpu/mem-loads,ldlat=3D30/P:           48     55b3c122bffc noploop
+> >>>   cpu/mem-loads,ldlat=3D30/P:           38     55b3c122bffc noploop  =
+  <--- same weight
+> >>>   cpu/mem-loads,ldlat=3D30/P:           38     55b3c122bffc noploop  =
+  <--- same weight
+> >>>   cpu/mem-loads,ldlat=3D30/P:           59     55b3c122bffc noploop
+> >>>   cpu/mem-loads,ldlat=3D30/P:           33     55b3c122bffc noploop
+> >>>   cpu/mem-loads,ldlat=3D30/P:           38     55b3c122bffc noploop  =
+  <--- same weight
+> >>>
+> >>> When you use the 'weight' sort key, it'd show entries with a separate
+> >>> weight value separately.  Also note that the first entry has 3 sample=
+s
+> >>> with weight value 38, so they are displayed together and the weight
+> >>> value is the sum of 3 samples (114 =3D 38 * 3).
+> >>>
+> >>>   $ perf report -n -s +weight | grep -e Weight -e noploop
+> >>>   # Overhead  Samples  Command   Shared Object   Symbol         Weigh=
+t
+> >>>        0.53%        3     perf   perf            [.] noploop    114
+> >>>        0.18%        1     perf   perf            [.] noploop    59
+> >>>        0.18%        1     perf   perf            [.] noploop    48
+> >>>        0.18%        1     perf   perf            [.] noploop    43
+> >>>        0.18%        1     perf   perf            [.] noploop    33
+> >>>
+> >>> If you use 'local_weight' sort key, you can see the actualy weight.
+> >>>
+> >>>   $ perf report -n -s +local_weight | grep -e Weight -e noploop
+> >>>   # Overhead  Samples  Command   Shared Object   Symbol         Local=
+ Weight
+> >>>        0.53%        3     perf   perf            [.] noploop    38
+> >>>        0.18%        1     perf   perf            [.] noploop    59
+> >>>        0.18%        1     perf   perf            [.] noploop    48
+> >>>        0.18%        1     perf   perf            [.] noploop    43
+> >>>        0.18%        1     perf   perf            [.] noploop    33
+> >>>
+> >>> But when you use the -F/--field option instead, you can see the avera=
+ge
+> >>> weight for the while noploop funciton (as it won't group samples by
+> >>
+> >> %s/funciton/function/
+> >>
+> >>> weight value and use the default 'comm,dso,sym' sort keys).
+> >>>
+> >>>   $ perf report -n -F +weight | grep -e Weight -e noploop
+> >>>   # Overhead  Samples  Weight1  Command  Shared Object  Symbol
+> >>>        1.23%        7     42.4  perf     perf           [.] noploop
+> >>
+> >> I think the current +weight shows the sum of weight1 of all samples,
+> >> (global weight). With this patch, it becomes an average (local_weight)=
+.
+> >> The definition change may break the existing user script.
+> >>
+> >> Ideally, I think we should keep the meaning of the weight and
+> >> local_weight as is.
+> >
+> > Hmm.. then we may add 'avg_weight' or something.
+> >
+> > But note that there's a subtle difference in the usage.  If you use
+> > 'weight' as a sort key (-s weight) it'd keep the existing behavior
+> > that shows the sum (global_weight).  It'd show average only if
+> > you use it as an output field (-F weight).
+> >
+>
+> As my understanding, the -F weight is implicitly replaced by the -F
+> weight1 with this patch. There is no way to get the sum of weight with
+> -F anymore.
 
-Bisected down to:
+Right.
 
-commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
-Author: Ravi Bangoria <ravi.bangoria@amd.com>
-Date:   Thu Jun 15 10:47:00 2023 +0530
+>
+> I think that's a user visible behavior change. At least, we have to warn
+> the end user with a message, e.g., "weight is not supported with -F
+> anymore. Using weight1 to instead". Only updating the doc may not be enou=
+gh.
 
-    perf mem: Scan all PMUs instead of just core ones
-    
-    Scanning only core PMUs is not sufficient on platforms like AMD since
-    perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
-    Scan all PMUs instead of just core PMUs. There should be negligible
-    performance overhead because of scanning all PMUs, so we should be okay.
-    
-    Reviewed-by: Ian Rogers <irogers@google.com>
-    Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+I understand your concern.  I can add the warning.
 
-root@x1:~# perf -v ; perf test -v "Test data symbol"
-perf version 6.4.rc3.g5752c20f3787
-111: Test data symbol                                                :
---- start ---
-test child forked, pid 522202
-Recording workload...
-malloc_consolidate(): invalid chunk size
-/home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 522208 Aborted                 (core dumped) perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM
-/home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: kill: (522208) - No such process
-Cleaning up files...
-test child finished with -1
----- end ----
-Test data symbol: FAILED!
-root@x1:~# perf -v ; perf test -v "Test data symbol"
-perf version 6.8.g63c22868714b
-116: Test data symbol:
---- start ---
-test child forked, pid 526540
- 954300-954339 l buf1
-perf does have symbol 'buf1'
-Recording workload...
-Waiting for "perf record has started" message
-OK
-Cleaning up files...
----- end(-1) ----
-116: Test data symbol                                                : FAILED!
-root@x1:~#
+>
+> > The issue of the sort key is that it cannot have the total sum
+> > of weights for a function.  It'll have separate entries for each
+> > weight for each function like in the above example.
+> >
+>
+> That seems to be a different issue. If the total sum of weights for a
+> function is required, we should fix the existing "weight".
 
-Further details:
+Yeah, I guess that's more reasonable behavior.  But I'm not sure
+how we can fix it without breaking the existing behavior.
 
-(gdb) run mem record --all-user sleep 1
-Starting program: /root/bin/perf mem record --all-user sleep 1
+Actually this is my approach to keep the behavior for the "sort" key.
+I think users are more familiar with -s (--sort) rather than the -F
+(--fields) option.  That's why I'd like to "break" that part only.
 
-
-This GDB supports auto-downloading debuginfo from the following URLs:
-  <https://debuginfod.fedoraproject.org/>
-Enable debuginfod for this session? (y or [n]) y
-Debuginfod has been enabled.
-To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
-[Thread debugging using libthread_db enabled]                                                                                                                                                  
-Using host libthread_db library "/lib64/libthread_db.so.1".
-                                                                                                                                                                                               
-Program received signal SIGSEGV, Segmentation fault.
-0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-213					s = perf_mem_events__name(j, pmu->name);
-(gdb) bt
-#0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-#1  0x000000000045c47f in __cmd_record (argc=2, argv=0x7fffffffe420, mem=0x7fffffffda20) at builtin-mem.c:152
-#2  0x000000000045d69b in cmd_mem (argc=4, argv=0x7fffffffe420) at builtin-mem.c:514
-#3  0x00000000004ffe38 in run_builtin (p=0xe08aa0 <commands+672>, argc=5, argv=0x7fffffffe420) at perf.c:323
-#4  0x00000000005000ac in handle_internal_command (argc=5, argv=0x7fffffffe420) at perf.c:377
-#5  0x00000000005001fb in run_argv (argcp=0x7fffffffe23c, argv=0x7fffffffe230) at perf.c:421
-#6  0x00000000005004e8 in main (argc=5, argv=0x7fffffffe420) at perf.c:537
-(gdb) list -5
-file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-(gdb) 
-
-
-
-(gdb) list -5
-file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-(gdb) p j
-$1 = 0
-(gdb) p pmu->name
-Cannot access memory at address 0x64ffffff9c
-(gdb) 
-
-183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-184                                  char **rec_tmp, int *tmp_nr)
-185 {
-186         int i = *argv_nr, k = 0;
-187         struct perf_mem_event *e;
-188         struct perf_pmu *pmu;
-189         char *s;
-190 
-191         for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-192                 e = perf_mem_events__ptr(j);
-193                 if (!e->record)
-194                         continue;
-195 
-196                 if (perf_pmus__num_mem_pmus() == 1) {
-197                         if (!e->supported) {
-198                                 pr_err("failed: event '%s' not supported\n",
-199                                        perf_mem_events__name(j, NULL));
-200                                 return -1;
-201                         }
-202 
-203                         rec_argv[i++] = "-e";
-204                         rec_argv[i++] = perf_mem_events__name(j, NULL);
-205                 } else {
-206                         if (!e->supported) {
-207                                 perf_mem_events__print_unsupport_hybrid(e, j);
-208                                 return -1;
-209                         }
-210 
-211                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-212                                 rec_argv[i++] = "-e";
-213                                 s = perf_mem_events__name(j, pmu->name);
-214                                 if (s) {
-215                                         s = strdup(s);
+Thanks,
+Namhyung
