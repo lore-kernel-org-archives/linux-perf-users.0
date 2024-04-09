@@ -1,224 +1,176 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A9D136E1D
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 15:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB9713667F;
+	Tue,  9 Apr 2024 15:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712677605; cv=none; b=uFuVK6KWo579SW5czHhnmpz8h5e6z3UzTOtxrsDpmDerYKmLBhuKUPvHoh6xR/W2zH82cxPTT8YE7m3KYlEloUXAHnzf2zGBmEoDior85AKUbJurwoomrmW2VrC/n90wWxAydlVrvIiIqabUEqSRqLU6THRqG9bpJuD16KvcoRo=
+	t=1712677886; cv=none; b=jJGNhp18O2dq9E/vSAm98eg9XzHCKFW8EDhPR//54Z48LUcHJqHMZ7QA65/kA6KHqyVpS/54HcQ4IvfODzd/qkgB+r7RMXYagYgrl6y8wnV6YTnUQMQVtufqAKE1GBTMVENMgPBuToVK5AsOPXBAe5hPmrFij+gLzcTowbPr8VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712677605; c=relaxed/simple;
-	bh=ImqAvE5DqPsCmdddnql+7QuydKOmyUgd30+SWAWpb6Y=;
+	s=arc-20240116; t=1712677886; c=relaxed/simple;
+	bh=bdt/bR+NhJhIw+HiJQzVZ+Uyt6Q1HO/2VzhcIjPmoTw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KfUltLRSfnPf97CzroaQRTdwLSDQ8J37GfWOAqdgLnBgzlqv/BghEFzb4ogPAG6dFYgrqWolCdd1smPdF3zodvj57J286I8OHHt4QuR11qHaEvGvjaets7nNVUFSQjd2kzgWqaivh6ixKxnp7MDkF7/qaoU0FkzOaoR0r8dndrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knhlVV0a; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knhlVV0a"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36a267bb43aso94425ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 08:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712677603; x=1713282403; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E0puCatRq0DqyA1/imYz3YosP+4LfQJpZakwVvO0S4E=;
-        b=knhlVV0ato9jox8yYj+LB9o1aM3GDjt+Hune3nawzFPLts2+747Ut/nIsL/6RfLrNn
-         RLkU1mAZ5AbLg2H8/8T4W5hjAM7PWz3Yq4ARmtZ0ykaB+M6nCAhkMsNcmspKJ8p+FNaW
-         PhstDOHW30yF+nM/uyZ8j4K1hH0JKYqH9uVvEnmRhY9AB2Jexj/FYYvPBx852pB8xmJQ
-         4wYyTnNNcmm9fl/LaUQejmcPUnWtmZzK1T3ASowxk8gyio9Kh5LOgwAD8w1yY9UoCp8u
-         36mpyu95CrCqzuEWMctdWhFXldsiruRQPlXKLqahKOKWG/eB25InyIx1AGyP56QuRpyt
-         EkNA==
+	 To:Cc:Content-Type; b=o466+usKKW1mM25VqIPyHMxibUGTyvzj6g10wE0HG96ZTQJ9R+UE5hc9jmvRjT1Vl8k6xaHAXrZXfWFl5vBunqw0okXoVxyWCPZa+uBG7XHDEOOZXZ00LqdVt3p5vROmgwYmlrYxeglk5BxeyV7MrEKzTQCORSm/u0X0YDzCP3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2a564ca6f67so971554a91.2;
+        Tue, 09 Apr 2024 08:51:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712677603; x=1713282403;
+        d=1e100.net; s=20230601; t=1712677884; x=1713282684;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E0puCatRq0DqyA1/imYz3YosP+4LfQJpZakwVvO0S4E=;
-        b=RsLL4C9GR4jK8XxOAw0WnR2YkWl3hluRgEuab+/XxM1Sd97JDnroh3XHMTa6iN3coQ
-         6CUJWgnK72R0oTet8kUJV7nJdbGwtpm1178LlE8Fe+fU4WOs07NYEeKf7Ax5AwkAIUoJ
-         FOSQsIyaK78I1N0FA2akZ/H3BzBKU5ojweSK6dJn5sPMqfpDSheVbnr5ubdliFkyHLJC
-         J7cTfQLw0POc7oo2ouKmG1MyL5XIg3MEI7dqL3rvhfztfAg0W0zG0VciHuFxMH4YhKcx
-         mLUM1MSG6Rd+Epsz661sUEg8f9UTbc0zmSRZXVvL+3KWA56vUmeG6FyVLLYa9GkEjBd3
-         gwZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPlq8D9SGkDnUfOyWZBUxsc/TGvNG18e2IED3N9wr8vB+LMTXFRjqybUjexvEre7MycW3SwKZkbLd8eCtnW+hedDgu9ID3fZJTwf2ovrnN+g==
-X-Gm-Message-State: AOJu0YxqbphugIoCiCE5LsFTxbQVEGS7MgdhWZrHN7btpGz5EVVUr/PT
-	IhLb8pXOINLOK+IL671V7XhCwnErSSslJ9mVcHm0J9fflUAas6FlP1rEd6DK7onB7SDfjjYAwus
-	D2kPDYd/rHXgy9uO0QUCs44QaG0JCHE8HZdBdZSksddPknZS6izpV8YM=
-X-Google-Smtp-Source: AGHT+IE4MNU0jEp18FzZk97qTk/n3dSHqzgLpj63SE+bgTmWvUMttM0EQOKPZ9WtIcMPRFd7N6cTAlH4UqUwtCKzkYg=
-X-Received: by 2002:a05:6e02:1d02:b0:369:eca2:1a43 with SMTP id
- i2-20020a056e021d0200b00369eca21a43mr307178ila.8.1712677602814; Tue, 09 Apr
- 2024 08:46:42 -0700 (PDT)
+        bh=3iStaDiJUNn76p5iia7p4n3GHyQy8GKOLFFVj9zvj24=;
+        b=f+XQCxvgvTuXKc/OePur+WpAzG+xb6BqDiOCzpQHnBENPDtAq/stfqmX3hxRLxBZrX
+         96BwX2A8kW9+y89WBZ5oG+KnIQ6l3QOZOHDswj0mhfHBcZ7JetnS3IFJrpnMdin2qfPp
+         oMlsmDpfgKOyvEuoWPU6C0VkE8kWCV/WMz1ZZj94vMT3YIcC3THbuixSu+SheCeKj4nw
+         +pGsOswbJpH8jFKkPA6xF65BAGhrW9x4iRotVBjjlDrCGY7OOiIarIRo9VMdq56Kz4Pc
+         KegQff1SCQ2mTupByBTVdw4AXcy0lM4I85YpSERl+778lDvn8O+UxmqiI30TaWXZZbXl
+         mCUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXABpwJOHyz55AavmVnekvLn/R/Dy+D2Ft4swZjnICFPY0IvN9In/LvXMyiPAJTS/PUW/EEb6ltZqr7QhuLh/Ks8xk4MsXsQe/FYGqeZ9a6KNJnlNvWzYax7pNdRRcD0OzqBT7I9PBPKzRqR8/30A==
+X-Gm-Message-State: AOJu0Yzh1c0o5hM06YNBGnigGzzir32mDlmSQOmhWz/xxM9HMHYCX3O/
+	3MFR2p20Y302qC0AfUZxGIwJM7s13695J7V+akLdxq+GdsHeT06Sgk9/3mxBY8e0eWmhC9Z9Bho
+	QKQ1uQLXgHv5apM2yzMUk2xCoR6s=
+X-Google-Smtp-Source: AGHT+IGhizdnGDQXqrK8UwNhe+8FbSog4L66KyixWACXgLYZgdMqaNu4NhQkUn8w51V9Wcfs3wfw3jSBPQHXxAT3hjI=
+X-Received: by 2002:a17:90b:11cd:b0:2a2:73e9:c3bf with SMTP id
+ gv13-20020a17090b11cd00b002a273e9c3bfmr28936pjb.20.1712677884057; Tue, 09 Apr
+ 2024 08:51:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZhVfc5jYLarnGzKa@x1> <ZhVf9rO-b3xTqZEK@x1>
-In-Reply-To: <ZhVf9rO-b3xTqZEK@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 9 Apr 2024 08:46:31 -0700
-Message-ID: <CAP-5=fVbkj74K3w0cOfpbKe2=9wK1AJYkGQmbHLD4SKzc=dVBw@mail.gmail.com>
-Subject: Re: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel
- hybrid machines
+References: <20240408185520.1550865-1-namhyung@kernel.org> <ZhRB4BULj1Y1f1TN@x1>
+ <ZhTw7e+sy0wfzgR5@gmail.com> <ZhVJegoH7FKVtp0F@x1>
+In-Reply-To: <ZhVJegoH7FKVtp0F@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 08:51:11 -0700
+Message-ID: <CAM9d7ciifGEZt_hdDTZaQfQTjoCiHssWZB9Lg6cX26EOLZ=2=w@mail.gmail.com>
+Subject: Re: [PATCHSET 0/9] Sync tools headers with the kernel source
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 9, 2024 at 8:34=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+Hi Arnaldo and Ingo,
+
+On Tue, Apr 9, 2024 at 6:58=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> On Tue, Apr 09, 2024 at 12:32:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> > root@x1:~# perf test "Miscellaneous Intel PT testing"
-> > 112: Miscellaneous Intel PT testing                                  : =
-FAILED!
-> > root@x1:~#
+> On Tue, Apr 09, 2024 at 09:40:29AM +0200, Ingo Molnar wrote:
 > >
-> > then I revert:
+> > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > >
-> > commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-nex=
-t)
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Tue Apr 9 12:28:49 2024 -0300
+> > > On Mon, Apr 08, 2024 at 11:55:11AM -0700, Namhyung Kim wrote:
+> > > > Hello,
+> > > >
+> > > > I'm gonna carry these changes on the perf tools tree.  I'll update =
+the
+> > > > vhost.h once it lands on the mainline.
+> > >
+> > > Humm, maybe its not a good idea to do that this cycle?
 > >
-> >     Revert "perf pmus: Check if we can encode the PMU number in perf_ev=
-ent_attr.type"
-> >
-> >     This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
-> > =E2=AC=A2[acme@toolbox perf-tools-next]$
-> >
-> > It works now:
-> >
-> > root@x1:~# perf -v
-> > perf version 6.8.g642e1ac96aaa
-> > root@x1:~# perf test "Miscellaneous Intel PT testing"
-> > 117: Miscellaneous Intel PT testing                                  : =
-Ok
-> > root@x1:~#
-> >
-> > Investigating, if you come up with ideas, lemme know.
+> > Maybe it's just me, but I've been looking sadly at all the header warni=
+ngs
+> > for months. :-) Would be better to keep them in sync with a bit higher
 >
-> Some more context:
+> I backtracked from asking for a delay, the reason for me first thinking
+> about not doing it this time is because in perf-tools-next we have, to
+> be merged for 6.10:
 >
-> When this patch was implemented/tested I had access only to an ARM64
-> hybrid machine, now my notebook is a Rocket Lake lenovo (13th gen), that
-> is hybrid and the test is failing with:
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git log --oneline torvalds/maste=
+r.. | tail
+> f324b73c2c05832b perf beauty: Stop using the copy of uapi/linux/prctl.h
+> c8bfe3fad4f86a02 perf beauty: Move arch/x86/include/asm/irq_vectors.h cop=
+y out of the directory used to build perf
+> 7050e33e86ad03d2 perf beauty: Move uapi/sound/asound.h copy out of the di=
+rectory used to build perf
+> 44512bd6136ec7bb perf beauty: Move uapi/linux/usbdevice_fs.h copy out of =
+the directory used to build perf
+> ab3316119f9d0b3a perf beauty: Move uapi/linux/mount.h copy out of the dir=
+ectory used to build perf
+> 22916d2cbad9a20d perf beauty: Don't include uapi/linux/mount.h, use sys/m=
+ount.h instead
+> faf7217a397f041f perf beauty: Move uapi/linux/fs.h copy out of the direct=
+ory used to build perf
+> 5d8c646038f2f173 perf beauty: Fix dependency of tables using uapi/linux/m=
+ount.h
+> 4b3761eebb1c5c1b perf c2c: Fix a punctuation
+> a9f4c6c999008c92 perf trace: Collect sys_nanosleep first argument
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
 >
-> root@x1:~# perf test -v "Miscellaneous Intel PT testing"
-> 112: Miscellaneous Intel PT testing                                  :
-> --- start ---
-> test child forked, pid 304355
-> --- Test system-wide sideband ---
-> Checking for CPU-wide recording on CPU 0
-> OK
-> Checking for CPU-wide recording on CPU 1
-> OK
-> Linux
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 1.934 MB /tmp/perf-test-intel-pt-sh.xAC=
-V6V7Hn4/test-perf.data ]
-> OK
-> --- Test per-thread recording ---
-> Workload PIDs are 304377 and 304378
-> perf PID is 304389
-> Waiting for "perf record has started" message
-> OK
-> pid 0 cpu -1 fd 5 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flag=
-s 0x8 =3D 5
-> pid 0 cpu -1 fd 6 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flag=
-s 0x8 =3D 6
-> pid 304377 cpu -1 fd 7 : sys_perf_event_open: pid 304377  cpu -1  group_f=
-d -1  flags 0x8 =3D 7
-> pid 304380 cpu -1 fd 8 : sys_perf_event_open: pid 304380  cpu -1  group_f=
-d -1  flags 0x8 =3D 8
-> pid 304378 cpu -1 fd 9 : sys_perf_event_open: pid 304378  cpu -1  group_f=
-d -1  flags 0x8 =3D 9
-> pid 304381 cpu -1 fd 10 : sys_perf_event_open: pid 304381  cpu -1  group_=
-fd -1  flags 0x8 =3D 10
-> pid 304377 cpu -1 fd 11 : sys_perf_event_open: pid 304377  cpu -1  group_=
-fd -1  flags 0x8 =3D 11
-> pid 304380 cpu -1 fd 12 : sys_perf_event_open: pid 304380  cpu -1  group_=
-fd -1  flags 0x8 =3D 12
-> pid 304378 cpu -1 fd 13 : sys_perf_event_open: pid 304378  cpu -1  group_=
-fd -1  flags 0x8 =3D 13
-> pid 304381 cpu -1 fd 14 : sys_perf_event_open: pid 304381  cpu -1  group_=
-fd -1  flags 0x8 =3D 14
-> fd 7 : idx 0: mmapping fd 7
-> fd 11 fd_to 7 : idx 0: set output fd 11 -> 7
-> fd 8 : idx 1: mmapping fd 8
-> fd 12 fd_to 8 : idx 1: set output fd 12 -> 8
-> fd 9 : idx 2: mmapping fd 9
-> fd 13 fd_to 9 : idx 2: set output fd 13 -> 9
-> fd 10 : idx 3: mmapping fd 10
-> fd 14 fd_to 10 : idx 3: set output fd 14 -> 10
-> Checking 10 fds
-> No mmap for fd 5
+> The reasoning for these changes is in the csets, for instance:
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git show 7050e33e86ad03d2 | head=
+ -21
+> commit 7050e33e86ad03d26d7b969bba1d48ee159be496
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Mon Mar 11 17:07:33 2024 -0300
+>
+>     perf beauty: Move uapi/sound/asound.h copy out of the directory used =
+to build perf
+>
+>     It is used only to generate string tables, not to build perf, so move=
+ it
+>     to the tools/perf/trace/beauty/include/ hierarchy, that is used just =
+for
+>     scraping.
+>
+>     This is a something that should've have happened, as happened with th=
+e
+>     linux/socket.h scraper, do it now as Ian suggested while doing an
+>     audit/refactor session in the headers used by perf.
+>
+>     Suggested-by: Ian Rogers <irogers@google.com>
+>     Reviewed-by: Ian Rogers <irogers@google.com>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Link: https://lore.kernel.org/lkml/CAP-5=3DfWZVrpRufO4w-S4EcSi9STXcTA=
+N2ERLwTSN7yrSSA-otQ@mail.gmail.com
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> I.e. I had moved some of the stuff that is being updated, but nah,
+> better to have v6.9 tools/perf building without warnings, I'll fixup the
+> merge when I merge perf-tools-next with torvalds/master after the
+> updates are merged upstream.
 
-Thanks Arnaldo, so the reverted change is:
-```
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -4,6 +4,7 @@
-#include <subcmd/pager.h>
-#include <sys/types.h>
-#include <dirent.h>
-+#include <pthread.h>
-#include <string.h>
-#include <unistd.h>
-#include "debug.h"
-@@ -492,9 +493,35 @@ int perf_pmus__num_core_pmus(void)
-       return count;
-}
+Yeah I noticed that, but I thought it's better to keep v6.9 headers in
+sync.  Please take care of them in perf-tools-next for v6.10.
 
-+static bool __perf_pmus__supports_extended_type(void)
-+{
-+       struct perf_pmu *pmu =3D NULL;
-+
-+       if (perf_pmus__num_core_pmus() <=3D 1)
-+               return false;
-+
-+       while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-+               if (!is_event_supported(PERF_TYPE_HARDWARE,
-PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->
-type << PERF_PMU_TYPE_SHIFT)))
-+                       return false;
-+       }
-+
-+       return true;
-+}
-+
-+static bool perf_pmus__do_support_extended_type;
-+
-+static void perf_pmus__init_supports_extended_type(void)
-+{
-+       perf_pmus__do_support_extended_type =3D
-__perf_pmus__supports_extended_type();
-+}
-+
-bool perf_pmus__supports_extended_type(void)
-{
--       return perf_pmus__num_core_pmus() > 1;
-+       static pthread_once_t extended_type_once =3D PTHREAD_ONCE_INIT;
-+
-+       pthread_once(&extended_type_once,
-perf_pmus__init_supports_extended_type);
-+
-+       return perf_pmus__do_support_extended_type;
-}
+>
+> This is sometimes difficult to achieve tho or would require more pull
+> requests to be sent to Linus to get some last minute changes, its not
+> something common, but I think happened a few times.
+>
+> > frequency, IMO - which would reduce the pain and churn rate:
+> >
+> > > >  16 files changed, 809 insertions(+), 740 deletions(-)
+> >
+> > That's like about a year of changes missed? An update once per cycle an=
+d
+> > this wouldn't be nearly as painful, right?
+>
+> Humm, I haven't checked if it stays that long without merging, what I've
+> agreed with Namhyung is to wait a bit for things to reach upstream, say
+> -rc3, and then do the update, trying not to do these things nor early
+> not late in the -rc sequence, to pick a sweet spot where most likely no
+> changes will be made, we make the update and the perf build has no
+> warnings in the final release.
 
-struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
-```
-On your Intel this should have previously returned true as
-"perf_pmus__num_core_pmus() > 1", and with the new code presumably
-is_event_supported is returning false. Could you dump the PMU's name
-at that point? Is cpu_core or cpu_atom looking like it doesn't support
-the event? Is the test failing when run as root (ie is
-is_event_supported failing to have expected fallback paths)?
+I think we're doing it once per release cycle already.  This is just for v6=
+.9.
+The kvm changes moved some code to arch directories.
+
+This is what I did for v6.7.
+
+https://lore.kernel.org/r/20231121225650.390246-1-namhyung@kernel.org/
 
 Thanks,
-Ian
+Namhyung
