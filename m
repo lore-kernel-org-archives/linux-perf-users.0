@@ -1,227 +1,116 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64045763F1
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 21:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C246158A2B;
+	Tue,  9 Apr 2024 22:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712698142; cv=none; b=J6gOH21mOKJanOyf0vbVlTpRjL0+5RejJ2LZAwu971MBgJ11HkxgLbJEMZmFQruXBD2bCX8hjEONcLYZ+8sQeSVmcUsikISUxjQd3CK6Vx4qnwBxt1kcnLmbzRfRwS2GHBBRSE/loBezmY99lDY9yDXOzyfDCDgj3JXZmqOdoEM=
+	t=1712701776; cv=none; b=fELYEZFvmJCMaymMy5bjDGTcKrUgZgseQK3C0s1Jx19tnpda2nuGXR7wAjIknkI8Ag4eZ3DwTfPFMEM9ZEUC18ojGBYC73GFDblQwkjVfH6j0QBsVOzeNZhjbzyPdVZFQJmr0tqKVKtL/0IOtt8M96XQa77pr1J0w+PaT+/kWso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712698142; c=relaxed/simple;
-	bh=8hahaSlpUCuWs5ErEu7Vn6rWT9MWMKsz31mT4yVZ8DM=;
+	s=arc-20240116; t=1712701776; c=relaxed/simple;
+	bh=b0H/amPHHksimk86o1QnVAoGtJK2xTBcOHzFeNUPX+o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i5DqHgF3iWBWSYP7fpMzTdphxwJxDxQs406iXLOVCTtCvX+tgkmqLPGywOIW2ltEWQv7oGwoU65nlT++3UDmD+WtkWYekMRp1oOz43zDRqGhq8EPVRm4pxu8hXklxwmbruqQrU8+qDdpGWkYiQRkpx/Yd0b5BI8EtwgfPbQLTNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P5jzyBH5; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P5jzyBH5"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36a3a4c9d11so14065ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 14:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712698139; x=1713302939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TlpIKC9YdW3AY0kdbg2B0nJR6pLjcYcStssU1/0Zjls=;
-        b=P5jzyBH5+nCOxSWDphqokJ3FYil/RinNmtIhBDV7XEV2iXnhR/ygjYgXf7L5wKoZa7
-         H585douqHIB3rRkmSuneNjIuC9LS/gClMD3janzqHBiBsLxqmRy1Ad/QtbwuEJR7PERg
-         qLNI8iL8LOduNI1RET2Rit00+cXMK0kKNI8eC+gPikFDPDyKQkFbkNX87At8QJ7jFeLl
-         iq7Qu4yWDomlVdtiUvcRfgmh65hvIOmhwtBPrMLYXQF9JOzLtndjdBHNClaLV53vIQaG
-         kzxFAyD5PHSEaXWRGM8XazsLT0h93Z4bBwYJ7X3ziuuQkB2RQAc9ewuO2BULQuVc+UMG
-         Us1g==
+	 To:Cc:Content-Type; b=KPfDh6+FTpTf8LGczJlIF3JRABY5kEJ8K+dlRgLVDDSCELI41v1Fp4RTN9TkAJSwBuJj5bpKxPbnu1kwwD3o47Vjx/a+08ezvstoJlSEtkFXt1NzRypFt7h/OcACcSfoi7+Ttb32z8Gw37yUx5S/JfixRnZkIg9L3T8L3zZG6ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so8151635ad.1;
+        Tue, 09 Apr 2024 15:29:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712698139; x=1713302939;
+        d=1e100.net; s=20230601; t=1712701774; x=1713306574;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TlpIKC9YdW3AY0kdbg2B0nJR6pLjcYcStssU1/0Zjls=;
-        b=vg1laPky3YcBZQNMg25vdZdWYm2RHr79BYv0d0ODvZ51ILIAWL3jTTlarikj8vRMbY
-         1KpFyjagNfhfWJUPJBFKWI6XilQqbpRTg8lxKErIzXp8/Wz8l0rxNnOyZl1Hfp5zS0m7
-         PzZp55cOy75c74E00Ht0F1KaJ9/DCvHnDAvl0AgdRZ9DCO5z6rmIkh+y9EnUYM6D8O+i
-         4pLP5FNDJxBjgzLblQbwj2DE6LtXSEuGHPPQsGuaItIqoMXIFAphidr2oN9k3dL8Vl7B
-         Y7cmVPepInM8xzAueMSlahQjmBSO4UjaTVX4msfrjc87G6e/p1FB+EZF5yBE9hPxIuKE
-         IuEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNWpmEgRnaFOshA1Fat5iIC6icWQu8PiXrMvjeYOV31Ki7dz0lCtMESRZFbz8FErw5Wb3Sn0WNvVfrt+ue+4myHpqburidp2/OYlQ+FhK5dA==
-X-Gm-Message-State: AOJu0YyDAFI3nYhBfTgz2D9pZTqFCbb5njWbNhH7QJETqhZ0jCRr6dDQ
-	nfi6A3nQJf+lWN718NFX9cMS6cpQ75QS/Gx28C32cQdeF42mHrYYuPae8nO6N+HO8VWqfsCntYc
-	6qJ4oG40NxBDCz+BvYnY6LcR9EsUmzIRQkSf1
-X-Google-Smtp-Source: AGHT+IE1zKKybQi1Lfs3RAG8qynsc0HXtJ1BtoUXE6F+s0GlQP9B2DXUSp/JCFIP41AdV1QhhpyXAR/usmUi3Lk2bF8=
-X-Received: by 2002:a05:6e02:1d1a:b0:36a:2a78:1c38 with SMTP id
- i26-20020a056e021d1a00b0036a2a781c38mr19233ila.13.1712698139335; Tue, 09 Apr
- 2024 14:28:59 -0700 (PDT)
+        bh=D6DTozpE9GkFZUHw98n4xWKR6LXmFpO2uEODuiiWHyU=;
+        b=TQAjfWTXW5NH/6VCznnU7E9pxxDyWJ3kCf9qgPRA4x2h1IkPJ1HbcKumLz+dXWsL9h
+         HWJXMVclhSM9EsLgl282oSDBEWRTXvmd/aIFQIaB06Rt+VtdxCuGn/aiXtb9ddo8gQP3
+         IiowM6D0K8aRNjru24eO9m8NsOyG7g6DKK0flxne6bumaT0uu3duXmdixs5XoM+vJAxf
+         apSa5ZvWtwscI2Qiidb3y4vVf0jQttQbDj4jKwJElEfQB7etBI/raXuPwMwDYtag8GK2
+         nFSziDIMy+qK2v41e/Wgo1qCElE3nux6ola/7NHCmzrdN1fACuMactB3d8owHXBsZvTe
+         GEsA==
+X-Forwarded-Encrypted: i=1; AJvYcCURsukU57uOmcxk67IUzsK9MC7pf+IyUWkWNz9Pk52ZejCCKBEs+I5zv/JoSD3L/ur6w4fu3o59QEuSBG3q7Q4/jD/r1vh56mg3GIj8SfpxV/hsVj0+3fweNT4jH48aiTnKA+r+fawOUFSPDkd15lYutGQvEUlyV4BnuyVegO5cdn8FcA==
+X-Gm-Message-State: AOJu0YzWoCzDC95KM+NNJei773hPAQSmERLVZT7lss8Cg6JAL2/RsVmB
+	CnorDCSZ3H+nl0MG7y4lx2BkUcIx5KSpMSNP8Z/KGKhTNJpqzpfqRCpObIB9+Cp1Q8mtVDOy6Qq
+	29Q+kUIn5H4Bjovb1Lyc+YOwLeUk=
+X-Google-Smtp-Source: AGHT+IHUa83TqHnJ0da6WQeqT27lQpuAaXPbGxW4kXiHblvJSkibfHnVvMRtFkOGa9Zo+/j9Q0dK08P3R37a4i1Q9ZU=
+X-Received: by 2002:a17:902:e944:b0:1e3:e093:b5f0 with SMTP id
+ b4-20020a170902e94400b001e3e093b5f0mr1160661pll.8.1712701773667; Tue, 09 Apr
+ 2024 15:29:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZhWTIuyB9p1ORbQH@x1>
-In-Reply-To: <ZhWTIuyB9p1ORbQH@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 9 Apr 2024 14:28:43 -0700
-Message-ID: <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
-Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel Hybrid systems
+References: <20240402184543.898923-1-namhyung@kernel.org> <ZgxgRJdFlwfESwKF@x1>
+ <CAM9d7ci7a2dbn1cz-OBkYF7P1fFA3yoBMuTzXRx=KP-yEnyfnQ@mail.gmail.com> <Zgx6mMda_X4pcAj6@x1>
+In-Reply-To: <Zgx6mMda_X4pcAj6@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 15:29:22 -0700
+Message-ID: <CAM9d7cjegWoDE_q3nNydpdyjCvger0_nGWcNCinSWNiXOepe3A@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Add a missing NULL check
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 9, 2024 at 12:12=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Apr 2, 2024 at 2:37=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> root@x1:~# grep -m1 "model name" /proc/cpuinfo
-> model name      : 13th Gen Intel(R) Core(TM) i7-1365U
-> root@x1:~# uname -a
-> Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:3=
-9 UTC 2024 x86_64 GNU/Linux
-> root@x1:~#
+> On Tue, Apr 02, 2024 at 01:42:05PM -0700, Namhyung Kim wrote:
+> > On Tue, Apr 2, 2024 at 12:45=E2=80=AFPM Arnaldo Carvalho de Melo <acme@=
+kernel.org> wrote:
+> > > Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> Bisected down to:
+> > > Are you going to have this merged into perf-tools?
 >
-> commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
-> Author: Ravi Bangoria <ravi.bangoria@amd.com>
-> Date:   Thu Jun 15 10:47:00 2023 +0530
+> > > A Fixes: tag isn't perhaps needed as it worked in the past?
 >
->     perf mem: Scan all PMUs instead of just core ones
+> > Fixes: 1811e82767dcc ("perf lock contention: Track and show siglock
+> > with address")
 >
->     Scanning only core PMUs is not sufficient on platforms like AMD since
->     perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
->     Scan all PMUs instead of just core PMUs. There should be negligible
->     performance overhead because of scanning all PMUs, so we should be ok=
-ay.
+> > It was introduced in v6.4 and it should be fine to have this
+> > even without the error.  I'll queue it to perf-tools.
 >
->     Reviewed-by: Ian Rogers <irogers@google.com>
->     Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
->
-> root@x1:~# perf -v ; perf test -v "Test data symbol"
-> perf version 6.4.rc3.g5752c20f3787
-> 111: Test data symbol                                                :
-> --- start ---
-> test child forked, pid 522202
-> Recording workload...
-> malloc_consolidate(): invalid chunk size
-> /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 52=
-2208 Aborted                 (core dumped) perf mem record --all-user -o ${=
-PERF_DATA} -- $TEST_PROGRAM
-> /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: ki=
-ll: (522208) - No such process
-> Cleaning up files...
-> test child finished with -1
-> ---- end ----
-> Test data symbol: FAILED!
-> root@x1:~# perf -v ; perf test -v "Test data symbol"
-> perf version 6.8.g63c22868714b
-> 116: Test data symbol:
-> --- start ---
-> test child forked, pid 526540
->  954300-954339 l buf1
-> perf does have symbol 'buf1'
-> Recording workload...
-> Waiting for "perf record has started" message
-> OK
-> Cleaning up files...
-> ---- end(-1) ----
-> 116: Test data symbol                                                : FA=
-ILED!
-> root@x1:~#
->
-> Further details:
->
-> (gdb) run mem record --all-user sleep 1
-> Starting program: /root/bin/perf mem record --all-user sleep 1
->
->
-> This GDB supports auto-downloading debuginfo from the following URLs:
->   <https://debuginfod.fedoraproject.org/>
-> Enable debuginfod for this session? (y or [n]) y
-> Debuginfod has been enabled.
-> To make this setting permanent, add 'set debuginfod enabled on' to .gdbin=
-it.
-> [Thread debugging using libthread_db enabled]
-> Using host libthread_db library "/lib64/libthread_db.so.1".
->
-> Program received signal SIGSEGV, Segmentation fault.
-> 0x0000000000611860 in perf_mem_events__record_args (rec_argv=3D0xea8280, =
-argv_nr=3D0x7fffffffd6bc, rec_tmp=3D0xebbda0, tmp_nr=3D0x7fffffffd6c0) at u=
-til/mem-events.c:213
-> 213                                     s =3D perf_mem_events__name(j, pm=
-u->name);
-> (gdb) bt
-> #0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=3D0xea82=
-80, argv_nr=3D0x7fffffffd6bc, rec_tmp=3D0xebbda0, tmp_nr=3D0x7fffffffd6c0) =
-at util/mem-events.c:213
-> #1  0x000000000045c47f in __cmd_record (argc=3D2, argv=3D0x7fffffffe420, =
-mem=3D0x7fffffffda20) at builtin-mem.c:152
-> #2  0x000000000045d69b in cmd_mem (argc=3D4, argv=3D0x7fffffffe420) at bu=
-iltin-mem.c:514
-> #3  0x00000000004ffe38 in run_builtin (p=3D0xe08aa0 <commands+672>, argc=
-=3D5, argv=3D0x7fffffffe420) at perf.c:323
-> #4  0x00000000005000ac in handle_internal_command (argc=3D5, argv=3D0x7ff=
-fffffe420) at perf.c:377
-> #5  0x00000000005001fb in run_argv (argcp=3D0x7fffffffe23c, argv=3D0x7fff=
-ffffe230) at perf.c:421
-> #6  0x00000000005004e8 in main (argc=3D5, argv=3D0x7fffffffe420) at perf.=
-c:537
-> (gdb) list -5
-> file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-> (gdb)
->
->
->
-> (gdb) list -5
-> file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-> (gdb) p j
-> $1 =3D 0
-> (gdb) p pmu->name
-> Cannot access memory at address 0x64ffffff9c
-> (gdb)
->
-> 183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> 184                                  char **rec_tmp, int *tmp_nr)
-> 185 {
-> 186         int i =3D *argv_nr, k =3D 0;
-> 187         struct perf_mem_event *e;
-> 188         struct perf_pmu *pmu;
-> 189         char *s;
-> 190
-> 191         for (int j =3D 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> 192                 e =3D perf_mem_events__ptr(j);
-> 193                 if (!e->record)
-> 194                         continue;
-> 195
-> 196                 if (perf_pmus__num_mem_pmus() =3D=3D 1) {
-> 197                         if (!e->supported) {
-> 198                                 pr_err("failed: event '%s' not suppor=
-ted\n",
-> 199                                        perf_mem_events__name(j, NULL)=
-);
-> 200                                 return -1;
-> 201                         }
-> 202
-> 203                         rec_argv[i++] =3D "-e";
-> 204                         rec_argv[i++] =3D perf_mem_events__name(j, NU=
-LL);
-> 205                 } else {
-> 206                         if (!e->supported) {
-> 207                                 perf_mem_events__print_unsupport_hybr=
-id(e, j);
-> 208                                 return -1;
-> 209                         }
-> 210
-> 211                         while ((pmu =3D perf_pmus__scan(pmu)) !=3D NU=
-LL) {
-> 212                                 rec_argv[i++] =3D "-e";
-> 213                                 s =3D perf_mem_events__name(j, pmu->n=
-ame);
-> 214                                 if (s) {
-> 215                                         s =3D strdup(s);
+> ok, better, people trying the tool with a recent kernel will experience
+> this, so its the right thing to get it thru perf-tools.
 
-This looks like something that address/memory sanitizers could help with.
+Hmm.. it was not sufficient.  I've got another report of failure on loading
+the BPF program.  It seems the verifier treated the NULL check and
+the later loading separately.
+
+I'll send v2 soon.
 
 Thanks,
-Ian
+Namhyung
+
+
+; curr =3D bpf_get_current_task_btf();
+264: (85) call bpf_get_current_task_btf#158
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+265: (79) r1 =3D *(u64 *)(r0 +2624)
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+      R1_w=3Drcu_ptr_or_null_sighand_struct(off=3D0,imm=3D0)
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+266: (15) if r1 =3D=3D 0x0 goto pc+5
+   ; frame1: R1_w=3Drcu_ptr_sighand_struct(off=3D0,imm=3D0)
+267: (b7) r1 =3D 0                      ; frame1: R1_w=3D0
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+268: (79) r2 =3D *(u64 *)(r0 +2624)
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+      R2_w=3Drcu_ptr_or_null_sighand_struct(off=3D0,imm=3D0)
+269: (0f) r2 +=3D r1
+R2 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
+processed 166 insns (limit 1000000) max_states_per_insn 0
+ total_states 15 peak_states 15 mark_read 5
+-- END PROG LOAD LOG --
+libbpf: prog 'contention_end': failed to load: -13
+libbpf: failed to load object 'lock_contention_bpf'
+libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
+Failed to load lock-contention BPF skeleton
+lock contention BPF setup failed
