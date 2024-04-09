@@ -1,120 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051B813B293;
-	Tue,  9 Apr 2024 15:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A721353F4
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 15:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676858; cv=none; b=ocoovgjLxqXAAYfwwCpEaOvkbIHertcZchi5xRHJNkiqJPMzl/k/f4mGbPgmQ51BfqT9qmaQCuon6K1oLSqOnNKFf4O+1vIV5e4rncxLy+Q4jKKrYoNrT4f5MDLKkXZ9+Hp6XtuTXhZFXnS7UCOHGjdGeIY9YECSjTGgWLwiP/w=
+	t=1712677168; cv=none; b=he+IJBw0UNi2MaZ7FkJEAmvSs1obiWrSFER6ng4XHPxFOjec2ZgHIME9FnfFcrM1s4k6Q5F3DL8IeY5h+ZZMs/Fxgho4wmDyeU6M/h0DbCbwZNv4QSghjgWXeNw0eeqlrqUXHlTCZqy4P0a1f6FT70FXEhU4/rCPcEQDlHh4nks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676858; c=relaxed/simple;
-	bh=UOhKabfItxET3ULoSOS1JWZmwpxrExFjqIzeLK3XjNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PM9H8MunoHuh4O3r20466XdI5uGqdZTnPZR02EwiIUcaE4XcKSTHRD7oMsQSZ7M0JAqoEepvWxVhndZqtr8KVIZKmT7VvoHFQGxRX58oj2ZTFe2OFmZptewboNDF2+nbkojHr9WGAUZHzoS/IB8rMJDpEr4T+YWahL9T1sXOSXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aByLc8KO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712677168; c=relaxed/simple;
+	bh=TdZbbcvibKNEubySC1+cZnIcJaZJ5ysQzEMkQS6d5mc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NRzBxBJ6PcFPCcE/QeKJBtYxDilSJVccwPKwgEs42/pl4SyWCkbm3aCQTH3At1rSsgsklDHYZSyHjYVnM5MPBT14Kaj1QdpzMeTvR8rySyU6tjTBj0m9XvfhhX0O5/cye/jPaGkV6FHzCR/I3sfuW/QPomT9w+ioVxSHNZtQgiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IZT0NNfD; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aByLc8KO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BB1C433C7;
-	Tue,  9 Apr 2024 15:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712676857;
-	bh=UOhKabfItxET3ULoSOS1JWZmwpxrExFjqIzeLK3XjNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aByLc8KOhk3SjmIeX3HiEE54zuWlvsuFrdFIVwpvFVM3e5WYptiYH59wRakil01eq
-	 hswuvwpJv1LauKgQ1+/YCoeKmfgysYzXcoVpe/2NJQXqPaN8oOb1qUeCI/QjBAnRm4
-	 jHQQOif0SSSG+nBuEcipU21PnnZahUSKPnYf8a+skI3Jjk+4fVBUEOj1kycQ5+Klr0
-	 iEkfXktH0de/l2SIBAisWcd13Y/SoIeSErPPlXDO5FcZqeuFbtVVU3vQTutC8RBLGV
-	 lnMiD00+1P4Q2ECpfe9h9tkOHJSIjFIviTYdJdYXl19MR07OPc4cPGTntozGYsx87L
-	 Qphf/ugxeEHvQ==
-Date: Tue, 9 Apr 2024 12:34:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel
- hybrid machines
-Message-ID: <ZhVf9rO-b3xTqZEK@x1>
-References: <ZhVfc5jYLarnGzKa@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IZT0NNfD"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36a2667fdaeso96605ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 08:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712677166; x=1713281966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2D59yPPfuGSeOXa0T7H8XaawbruvNp5rSjLW+dQV/V4=;
+        b=IZT0NNfDaCWRwnaTClnZvolAXzInxquSWWu5NKczC167BGmkKPkQslPiHETVPO+Zxi
+         hRYrh1QzqkC3OLpPyXQIa0UkEWVb+7ifnFPIc4oPuS6zdLmw1rbET52jb0XtILke5+H9
+         t0ap2jjFIM0zT6HrIyRpby24BeMcL/v9Kmv5BqOirmctXmLlXQuiXPuOLqmFr9PXvpiv
+         y70018dZnhcbkoicxDHKbzdezRrT18c/ESkLO+ADvQeh0fmW2YwOOsbWT52AOAsx7oOl
+         vRkZzXrfLHnJfC+mUp8K6EawEYz7GjDceEmibm/YhquclDvU1LHXw4yUIpuLL5GapqcX
+         qL6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712677166; x=1713281966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2D59yPPfuGSeOXa0T7H8XaawbruvNp5rSjLW+dQV/V4=;
+        b=wznphJ0UhMzfuE8BqKQ2GYonSQGRUZhzvGwKcP7y0qqKxitofn3SlC1ylZg0Eo7J+X
+         bJxotAcpe+vwrRhCGumijrlCOCROugNDbriwd9+K2SpZaifBP+9sx1zRyf0aIz5Ok3gd
+         /TobrrzWrVDjrn1luDbV+WEsyw1yumA7ASwTFJcsihR/clW/DBkEOAAyGphX9woJHMgW
+         BoE2prJovRP1TN/4hgjJDsShl+u4mITy7QFbVVfV5F/J6jYc5J1P+CzkUjj8VFC+LB+l
+         XCB8UPJe6uVSbTUnrsCJ22Gp9aMwDyVygxZ4j4T1CzURhapyXahpffgx69NlcACMlVDt
+         dCtg==
+X-Gm-Message-State: AOJu0YyvZZPQYQN3Hn3cPtogYZ7lJAusTzmS3fVvaluy+UDLXLoN3fr1
+	FwoWNaU1mJYqnP7Zw5r46OlJ541w4AbHERfkU30hW3AIm3W+I8BRwWVsbE1inR7uw2JY3FnLko9
+	AKV3PXrczwp0omESYkEbTzijoJcKowkxFzSbISkvZRpuTtqlHclcH+40=
+X-Google-Smtp-Source: AGHT+IFkayyl+X2axDy+TRHXNNVTcPE8tGFRWfcc/gS5tKeuISFjOsFa6BTkf3xYxLseiI6nYyW/dAZrcZ0vJ7IdyJE=
+X-Received: by 2002:a92:910:0:b0:368:8f9f:4066 with SMTP id
+ y16-20020a920910000000b003688f9f4066mr177822ilg.9.1712677166065; Tue, 09 Apr
+ 2024 08:39:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhVfc5jYLarnGzKa@x1>
+References: <20240409084741.405433-1-james.clark@arm.com> <20240409084741.405433-4-james.clark@arm.com>
+In-Reply-To: <20240409084741.405433-4-james.clark@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 9 Apr 2024 08:39:10 -0700
+Message-ID: <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf tests: Skip "test data symbol" on Neoverse N1
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 12:32:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> root@x1:~# perf test "Miscellaneous Intel PT testing"
-> 112: Miscellaneous Intel PT testing                                  : FAILED!
-> root@x1:~#
-> 
-> then I revert:
-> 
-> commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-next)
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Tue Apr 9 12:28:49 2024 -0300
-> 
->     Revert "perf pmus: Check if we can encode the PMU number in perf_event_attr.type"
->     
->     This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> It works now:
-> 
-> root@x1:~# perf -v
-> perf version 6.8.g642e1ac96aaa
-> root@x1:~# perf test "Miscellaneous Intel PT testing"
-> 117: Miscellaneous Intel PT testing                                  : Ok
-> root@x1:~#
-> 
-> Investigating, if you come up with ideas, lemme know.
+On Tue, Apr 9, 2024 at 1:48=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
+>
+> To prevent anyone from seeing a test failure appear as a regression and
+> thinking that it was caused by their code change, just skip the test on
+> N1.
+>
+> It can be caused by any unrelated change that shifts the loop into an
+> unfortunate position in the Perf binary which is almost impossible to
+> debug as the root cause of the test failure. Ultimately it's caused by
+> the referenced errata.
+>
+> Fixes: 60abedb8aa90 ("perf test: Introduce script for data symbol testing=
+")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Some more context:
+This change makes me sad :-( Is there no hope of aligning the loop? We
+have little enough testing coverage for memory events and even precise
+events on ARM that anything take away testing coverage feels like we
+should try to do better.
 
-When this patch was implemented/tested I had access only to an ARM64
-hybrid machine, now my notebook is a Rocket Lake lenovo (13th gen), that
-is hybrid and the test is failing with:
+Which models are we losing coverage for, presumably neoverse-n1 but
+what about neoverse-v1 and neoverse-n2-v2?
 
-root@x1:~# perf test -v "Miscellaneous Intel PT testing"
-112: Miscellaneous Intel PT testing                                  :
---- start ---
-test child forked, pid 304355
---- Test system-wide sideband ---
-Checking for CPU-wide recording on CPU 0
-OK
-Checking for CPU-wide recording on CPU 1
-OK
-Linux
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 1.934 MB /tmp/perf-test-intel-pt-sh.xACV6V7Hn4/test-perf.data ]
-OK
---- Test per-thread recording ---
-Workload PIDs are 304377 and 304378
-perf PID is 304389
-Waiting for "perf record has started" message
-OK
-pid 0 cpu -1 fd 5 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
-pid 0 cpu -1 fd 6 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 6
-pid 304377 cpu -1 fd 7 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 7
-pid 304380 cpu -1 fd 8 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 8
-pid 304378 cpu -1 fd 9 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 9
-pid 304381 cpu -1 fd 10 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 10
-pid 304377 cpu -1 fd 11 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 11
-pid 304380 cpu -1 fd 12 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 12
-pid 304378 cpu -1 fd 13 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 13
-pid 304381 cpu -1 fd 14 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 14
-fd 7 : idx 0: mmapping fd 7
-fd 11 fd_to 7 : idx 0: set output fd 11 -> 7
-fd 8 : idx 1: mmapping fd 8
-fd 12 fd_to 8 : idx 1: set output fd 12 -> 8
-fd 9 : idx 2: mmapping fd 9
-fd 13 fd_to 9 : idx 2: set output fd 13 -> 9
-fd 10 : idx 3: mmapping fd 10
-fd 14 fd_to 10 : idx 3: set output fd 14 -> 10
-Checking 10 fds
-No mmap for fd 5
+If aligning the loop doesn't work, could we use objdump and check its
+alignment skipping when it is off? Or run the test and turn fails to
+skip on neoverse-n1 - so we get some coverage testing.
+
+It would also be nice if the change didn't add a dependency on lscpu
+for the sake of parsing /proc/cpuinfo, I see another arm test already
+did this test_arm_callgraph_fp.sh - that case looks like it should be
+using uname.
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/tests/shell/test_data_symbol.sh | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/test=
+s/shell/test_data_symbol.sh
+> index 3dfa91832aa8..ffc641d00aa4 100755
+> --- a/tools/perf/tests/shell/test_data_symbol.sh
+> +++ b/tools/perf/tests/shell/test_data_symbol.sh
+> @@ -16,6 +16,12 @@ skip_if_no_mem_event() {
+>         return 2
+>  }
+>
+> +# Skip on Arm N1 due to errata 1694299. Bias exists in SPE sampling
+> +# which can cause the load and store instructions to be skipped
+> +# entirely. This comes and goes randomly depending on the offset the
+> +# linker places the datasym loop at in the Perf binary.
+> +lscpu | grep -q "Neoverse-N1" && exit 2
+> +
+>  skip_if_no_mem_event || exit 2
+>
+>  skip_test_missing_symbol buf1
+> --
+> 2.34.1
+>
