@@ -1,176 +1,97 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB9713667F;
-	Tue,  9 Apr 2024 15:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA26513B293;
+	Tue,  9 Apr 2024 15:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712677886; cv=none; b=jJGNhp18O2dq9E/vSAm98eg9XzHCKFW8EDhPR//54Z48LUcHJqHMZ7QA65/kA6KHqyVpS/54HcQ4IvfODzd/qkgB+r7RMXYagYgrl6y8wnV6YTnUQMQVtufqAKE1GBTMVENMgPBuToVK5AsOPXBAe5hPmrFij+gLzcTowbPr8VM=
+	t=1712678106; cv=none; b=UCueXl24J299Z4u0ruRpcfW2Tr+xhWY9dE0FxSuNwG286bDhUnDu24JIv6yPaQmMruKRTFSgHLiPgJbz2L5zM5/C1Jm1qL0T42P3zpaFheFWRrNcQONab2bCqEIHaz1+bXkM517hMUsZipZ+pqK8/SFqWnKarUrvcl9LmsSFLRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712677886; c=relaxed/simple;
-	bh=bdt/bR+NhJhIw+HiJQzVZ+Uyt6Q1HO/2VzhcIjPmoTw=;
+	s=arc-20240116; t=1712678106; c=relaxed/simple;
+	bh=0lPHtPQnZWwOuPYNH0Mij7OvM1YjXB78i9gew5k4nBo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o466+usKKW1mM25VqIPyHMxibUGTyvzj6g10wE0HG96ZTQJ9R+UE5hc9jmvRjT1Vl8k6xaHAXrZXfWFl5vBunqw0okXoVxyWCPZa+uBG7XHDEOOZXZ00LqdVt3p5vROmgwYmlrYxeglk5BxeyV7MrEKzTQCORSm/u0X0YDzCP3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=G/Nhrh2hJJBCZbXaZrdjBziBgBgfBFjOeu9bsfR4GAwMQSk5MaVnSIm/jD8mNX4bJea5KtM5CNHka84g2myQr5GZ3UdoK8YPTfkBxIE+R9GHnWMo1qIz1TMeRj8gM0vZuCZ5yESLg5GDTnk71y1k4BuFSEwSW6SkX8XtPvAY+uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2a564ca6f67so971554a91.2;
-        Tue, 09 Apr 2024 08:51:24 -0700 (PDT)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so4435961a12.1;
+        Tue, 09 Apr 2024 08:55:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712677884; x=1713282684;
+        d=1e100.net; s=20230601; t=1712678104; x=1713282904;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3iStaDiJUNn76p5iia7p4n3GHyQy8GKOLFFVj9zvj24=;
-        b=f+XQCxvgvTuXKc/OePur+WpAzG+xb6BqDiOCzpQHnBENPDtAq/stfqmX3hxRLxBZrX
-         96BwX2A8kW9+y89WBZ5oG+KnIQ6l3QOZOHDswj0mhfHBcZ7JetnS3IFJrpnMdin2qfPp
-         oMlsmDpfgKOyvEuoWPU6C0VkE8kWCV/WMz1ZZj94vMT3YIcC3THbuixSu+SheCeKj4nw
-         +pGsOswbJpH8jFKkPA6xF65BAGhrW9x4iRotVBjjlDrCGY7OOiIarIRo9VMdq56Kz4Pc
-         KegQff1SCQ2mTupByBTVdw4AXcy0lM4I85YpSERl+778lDvn8O+UxmqiI30TaWXZZbXl
-         mCUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXABpwJOHyz55AavmVnekvLn/R/Dy+D2Ft4swZjnICFPY0IvN9In/LvXMyiPAJTS/PUW/EEb6ltZqr7QhuLh/Ks8xk4MsXsQe/FYGqeZ9a6KNJnlNvWzYax7pNdRRcD0OzqBT7I9PBPKzRqR8/30A==
-X-Gm-Message-State: AOJu0Yzh1c0o5hM06YNBGnigGzzir32mDlmSQOmhWz/xxM9HMHYCX3O/
-	3MFR2p20Y302qC0AfUZxGIwJM7s13695J7V+akLdxq+GdsHeT06Sgk9/3mxBY8e0eWmhC9Z9Bho
-	QKQ1uQLXgHv5apM2yzMUk2xCoR6s=
-X-Google-Smtp-Source: AGHT+IGhizdnGDQXqrK8UwNhe+8FbSog4L66KyixWACXgLYZgdMqaNu4NhQkUn8w51V9Wcfs3wfw3jSBPQHXxAT3hjI=
-X-Received: by 2002:a17:90b:11cd:b0:2a2:73e9:c3bf with SMTP id
- gv13-20020a17090b11cd00b002a273e9c3bfmr28936pjb.20.1712677884057; Tue, 09 Apr
- 2024 08:51:24 -0700 (PDT)
+        bh=6krUFkZxSu7NHCuJ24hvqtrbwkrF1MhKocaeSXBeP1g=;
+        b=BVTkKK/MdEWX6HBXWry60C1xxrWD9IFMx+se6VU9KlsAeaw9cJWHRS689RPSKhXTHs
+         GZTCqB0I8/TkEaZnR8hFyJDPEdu/FaDhGhtCe43bWp5PvLtUcdpyY7KpfRl9ngevTb30
+         DbwX45tdYgSAuy5w+PeEBkv90LuU75HAPa/p9+UTGYL/291zG8edNiuikYg1t1oWvffg
+         1LGqnL1+K6VwLfncFqfCo9fUj8Xe1UGZBmmFb7bK3DjpSB7n9etNkDfrIHCoojXxrNFO
+         G6bYC7bssTiyHNJxMHpBZyTg5i1/aWEZOhfZo8dwJZx8inNbB3Mpz0Fms1/C1SjmSYTR
+         9PRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXgKioS39D+vOK6OChRLWYE/VCg/usgUYVa11WUK9MtYnjf+jOJRSvdeOWvsrUchocHCK6IEcfD6lWw7ALQWJvy3nGG7CQpM36z/1xm9LZMxB2xheJnnQ+TG3RvajurrjlRd2MoUWVkZ9hSe40eQ==
+X-Gm-Message-State: AOJu0Ywgm6y4bCj1+bujwjDBLkWa1NLXmiFK/oaoKLqI9mv/HSceruaf
+	pYCo00CfoKPh9JthI9NmTfbNgxodBtAkICdUXzxfD+IAIDJWN0DxlbD1+s8w2KsBaMRFMAmADmc
+	Ceq1lsY/AE3MWWKEysAkI/vL/QY4=
+X-Google-Smtp-Source: AGHT+IHE/dEmZWu5fRh3HefzkZZpkUkBWoB/yZw6LtaPY8lxKNr+Qil08N6s7/bplA2zcN7caznfjTQ4tImCgt1wQzo=
+X-Received: by 2002:a17:90a:101:b0:29b:ccb4:a250 with SMTP id
+ b1-20020a17090a010100b0029bccb4a250mr40293pjb.16.1712678103729; Tue, 09 Apr
+ 2024 08:55:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408185520.1550865-1-namhyung@kernel.org> <ZhRB4BULj1Y1f1TN@x1>
- <ZhTw7e+sy0wfzgR5@gmail.com> <ZhVJegoH7FKVtp0F@x1>
-In-Reply-To: <ZhVJegoH7FKVtp0F@x1>
+References: <20240408185520.1550865-1-namhyung@kernel.org> <CAMuHMdXQ_osFeknmg=oR6-fMH_MkVqabCtbynxQ6UvpZRwry3Q@mail.gmail.com>
+ <ZhVG_9KpcWLLhc-s@x1>
+In-Reply-To: <ZhVG_9KpcWLLhc-s@x1>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 9 Apr 2024 08:51:11 -0700
-Message-ID: <CAM9d7ciifGEZt_hdDTZaQfQTjoCiHssWZB9Lg6cX26EOLZ=2=w@mail.gmail.com>
+Date: Tue, 9 Apr 2024 08:54:51 -0700
+Message-ID: <CAM9d7ci+r73oNUOS7zjHmRGkQk0OhLAdv4zqt7BV+y4jb1rkwg@mail.gmail.com>
 Subject: Re: [PATCHSET 0/9] Sync tools headers with the kernel source
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Ian Rogers <irogers@google.com>, 
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ian Rogers <irogers@google.com>, 
 	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo and Ingo,
+Hello,
 
-On Tue, Apr 9, 2024 at 6:58=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+On Tue, Apr 9, 2024 at 6:47=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> On Tue, Apr 09, 2024 at 09:40:29AM +0200, Ingo Molnar wrote:
+> On Tue, Apr 09, 2024 at 09:15:02AM +0200, Geert Uytterhoeven wrote:
+> > Hi Namhyung, Arnaldo,
 > >
-> > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > > On Mon, Apr 08, 2024 at 11:55:11AM -0700, Namhyung Kim wrote:
-> > > > Hello,
-> > > >
-> > > > I'm gonna carry these changes on the perf tools tree.  I'll update =
-the
-> > > > vhost.h once it lands on the mainline.
-> > >
-> > > Humm, maybe its not a good idea to do that this cycle?
-> >
-> > Maybe it's just me, but I've been looking sadly at all the header warni=
-ngs
-> > for months. :-) Would be better to keep them in sync with a bit higher
->
-> I backtracked from asking for a delay, the reason for me first thinking
-> about not doing it this time is because in perf-tools-next we have, to
-> be merged for 6.10:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git log --oneline torvalds/maste=
-r.. | tail
-> f324b73c2c05832b perf beauty: Stop using the copy of uapi/linux/prctl.h
-> c8bfe3fad4f86a02 perf beauty: Move arch/x86/include/asm/irq_vectors.h cop=
-y out of the directory used to build perf
-> 7050e33e86ad03d2 perf beauty: Move uapi/sound/asound.h copy out of the di=
-rectory used to build perf
-> 44512bd6136ec7bb perf beauty: Move uapi/linux/usbdevice_fs.h copy out of =
-the directory used to build perf
-> ab3316119f9d0b3a perf beauty: Move uapi/linux/mount.h copy out of the dir=
-ectory used to build perf
-> 22916d2cbad9a20d perf beauty: Don't include uapi/linux/mount.h, use sys/m=
-ount.h instead
-> faf7217a397f041f perf beauty: Move uapi/linux/fs.h copy out of the direct=
-ory used to build perf
-> 5d8c646038f2f173 perf beauty: Fix dependency of tables using uapi/linux/m=
-ount.h
-> 4b3761eebb1c5c1b perf c2c: Fix a punctuation
-> a9f4c6c999008c92 perf trace: Collect sys_nanosleep first argument
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> The reasoning for these changes is in the csets, for instance:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git show 7050e33e86ad03d2 | head=
- -21
-> commit 7050e33e86ad03d26d7b969bba1d48ee159be496
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Mon Mar 11 17:07:33 2024 -0300
->
->     perf beauty: Move uapi/sound/asound.h copy out of the directory used =
-to build perf
->
->     It is used only to generate string tables, not to build perf, so move=
- it
->     to the tools/perf/trace/beauty/include/ hierarchy, that is used just =
-for
->     scraping.
->
->     This is a something that should've have happened, as happened with th=
+> > On Mon, Apr 8, 2024 at 8:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > > I'm gonna carry these changes on the perf tools tree.  I'll update th=
 e
->     linux/socket.h scraper, do it now as Ian suggested while doing an
->     audit/refactor session in the headers used by perf.
->
->     Suggested-by: Ian Rogers <irogers@google.com>
->     Reviewed-by: Ian Rogers <irogers@google.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Link: https://lore.kernel.org/lkml/CAP-5=3DfWZVrpRufO4w-S4EcSi9STXcTA=
-N2ERLwTSN7yrSSA-otQ@mail.gmail.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> I.e. I had moved some of the stuff that is being updated, but nah,
-> better to have v6.9 tools/perf building without warnings, I'll fixup the
-> merge when I merge perf-tools-next with torvalds/master after the
-> updates are merged upstream.
-
-Yeah I noticed that, but I thought it's better to keep v6.9 headers in
-sync.  Please take care of them in perf-tools-next for v6.10.
-
->
-> This is sometimes difficult to achieve tho or would require more pull
-> requests to be sent to Linus to get some last minute changes, its not
-> something common, but I think happened a few times.
->
-> > frequency, IMO - which would reduce the pain and churn rate:
+> > > vhost.h once it lands on the mainline.
+> > >
+> > > This is the full explanation from Arnaldo:
+> > >
+> > > There used to be no copies, with tools/ code using kernel headers
+> > > directly. From time to time tools/perf/ broke due to legitimate kerne=
+l
+> > > hacking. At some point Linus complained about such direct usage. Then=
+ we
+> > > adopted the current model.
 > >
-> > > >  16 files changed, 809 insertions(+), 740 deletions(-)
-> >
-> > That's like about a year of changes missed? An update once per cycle an=
-d
-> > this wouldn't be nearly as painful, right?
+> > Do you have a reference to that?
 >
-> Humm, I haven't checked if it stays that long without merging, what I've
-> agreed with Namhyung is to wait a bit for things to reach upstream, say
-> -rc3, and then do the update, trying not to do these things nor early
-> not late in the -rc sequence, to pick a sweet spot where most likely no
-> changes will be made, we make the update and the perf build has no
-> warnings in the final release.
+> I would have to do a search on the mailing list to find the exact
+> exchange, this is from memory and from people asking this repeatedly.
+>
+> Ingo replied with reasons similar to the ones I use in this canned
+> explanation when sending the notice of updating the files.
 
-I think we're doing it once per release cycle already.  This is just for v6=
-.9.
-The kvm changes moved some code to arch directories.
+This is the Ingo's reply:
 
-This is what I did for v6.7.
-
-https://lore.kernel.org/r/20231121225650.390246-1-namhyung@kernel.org/
+https://lore.kernel.org/r/ZhTwPLliHXKPAJUQ@gmail.com/
 
 Thanks,
 Namhyung
