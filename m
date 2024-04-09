@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657BE54BED
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 02:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FA656B67
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 02:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712629946; cv=none; b=LQHv3QHJHlz3pEmUPLNgfR0YusuU72HaDTi9iALFcN85F30XcqnKrMqTw5b6ijoBXF41ZzmM6dAaZyRsfxgCt5D6A3DFfoIWGlHEBM8Mxhbz5NCPdzdkdPFjOSHLy31I+LdTaoJJ/6LyTTyIJhOlBp2S7C6ewwwYnF7ZKNoObmg=
+	t=1712629949; cv=none; b=SiE9yNW2UwsPZqHYGH+gyS2pyuEdBEGgIHhOoBGJcRxHDcwGRcOjlVhQLbY2kpu4wayih42n+tPBBg2MRhryoMMEnPlGyZxYT5Cu+W/vIN4O8vP4IAreF+tCLkGOwKRStjbFtlYvZEjt1hWD2UDwO7qrh7aUtWoVuT2fQvXiNHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712629946; c=relaxed/simple;
-	bh=g5FISTb0SUz4N5bO73qDIESdt6Zvkkf5ticX23tz8Bc=;
+	s=arc-20240116; t=1712629949; c=relaxed/simple;
+	bh=PL/A3WVadEL63FKjbVqnoa/RshNov2kFBvTQ0RAhX60=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=u0UgGpaBnTyPnSnmyno3c/35AvBsvpuM/1+jzFKQwFNbl5h9FYIdLWDvYk2plYqezpJNpD593zLCFF5WZo9SUCOg9dmp+C+JYGJoU+Yol7JaL5yV1n7TQsTnDtsmqs7rOXaYpy4N4eB8wqInsyKWyqmuLmvRqt61/DWvdAqkJu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rtHKB4cu; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=Ep+q3h+HxNrYRVdAxT04u2tUMlK6b5x+GVkJTCB7n9kvPZKYack30G1qoay89/o49CKomHLgl/BT8VLZGUbH7ipldmMSXQACYEPVUN/fTIlUrg8dVfSsWCFITRqhBiFFkIly4lyEssWFi7hj4t8iBVNoub9NN3U/MnUSsQnNTpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1PthwBvX; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rtHKB4cu"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6144244c60cso75194227b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Apr 2024 19:32:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1PthwBvX"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc58cddb50so8117472276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Apr 2024 19:32:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712629944; x=1713234744; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712629947; x=1713234747; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LUCLlDEOF+eDEIPKja8ueM/Rrqkxl5/XYQOKdkpQkzo=;
-        b=rtHKB4cu7defFE4KGVpxM94EV2s7SxXiEi5eWRjTaKIJXmgdqcZI8c2QdnkZY586En
-         62t4x2Y6ISckkcB1H77Jx/IcN6HQUMxNijUJWysA/fLdebJ/kTJxbYi/5fkLroiJ/UAt
-         hqKjiCzJoC6kZ+QyrEAN28Ulv1RKlFUSZe4Xiq/OcvDOi9YHM5Y5EwdySOzQ1H6UfX7i
-         nV7PDdH3Pn0lZ1i+19V4G60gbvQfgZZzpQOYuPv70MLKaYbT/gyjDoQ4gFtxf4tSLfUo
-         RCdXcoIALCPq17t459Q41kCkS2MA2Z6e9QI2yB+ptre0ZhO1UvxCymnG+QUmQ0qYLu9J
-         ZD+w==
+        bh=4JjU99n3cntJzSuWKEHlCabsCaDKhMo8d9uJcAKSqpE=;
+        b=1PthwBvXPHwvvmq6plmmvmLYVnOlygUuuRIINo98O3rrNKn0jObdQAfTok4aTPei3j
+         XxRd+tcDDPf4pf7l4J6UQw3IJ+cbnFitt79aa+J9EUZYkMn6Fps9YKuaLfWO7s5LFcNS
+         ktU5ez2sUtVi7XH+dNL64ESAS69nA8IAD31AdnzyWMQehJHlJii+LMo9S8TKTA369Pcn
+         xmyRHXTLVYbNx8XknFWtmo9Ee/ifK79tiPt5uOK0fXK5j5hkwjmh1nOtEMbAGBp37aST
+         oumd1fc5uy/1m//A1fepNCDQbGCy1UYYn23Vza9eb3fNf3dydx+udtWIKUGNdj5r5+BD
+         G6TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712629944; x=1713234744;
+        d=1e100.net; s=20230601; t=1712629947; x=1713234747;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LUCLlDEOF+eDEIPKja8ueM/Rrqkxl5/XYQOKdkpQkzo=;
-        b=fmYVUMhXMCX6KAbN184NZs+xdEE/ya3P1C1sFqwLwf+8QSjCn3b4pwIjVDZXSPz+zF
-         xKkW3kl/GGz+R0k1weiCsNv63jPl4xcDnT1rGDaO60FrSxyLsDwub8qFQojhyhu9Ejho
-         fYOKInvJVlzxnxD9dcTovgVvredGkNnVXnEdkZKDv7rCQlTrUy/7J8ynLjtHdwNjrJFO
-         0zH93MW7tqfPtfE/tJSwGqD8Pg9kmpu3JZv+l0H4sXrM/eaz6DSsCZBwGesMTrGmYhxQ
-         tl0x/I29Vesh86kdxWiirwrUkpV4ojXh6OGfrVmK5r83g0j4vdeGn9ZaQIdpchzT+Ub6
-         92KA==
-X-Forwarded-Encrypted: i=1; AJvYcCWS5Hvl69+Tjkaj/spF8YzEemyvPpSYD4P1pjt4zoMaAewPdkQMUM2b10ZBZh9WI+bDASdhJbblIRhIKpFiT+7q38fwNMztYYk+SItmVZ3LFg==
-X-Gm-Message-State: AOJu0Yz9Rc8oYx6BWf06SOSRr9btxCqCOkAQWS3BpoR6uGUl/8UQd/Ad
-	Sv43+HisOYcoxteOAK+jcCHJr1Fb9X49vUiO42zzBczUTBodk24iX+Kx8AmqWK1q3SxXMixIUpm
-	hZHp2Qw==
-X-Google-Smtp-Source: AGHT+IGvQTYCP5+xDoLlENaNXCS0algoYiy4sK2dX6WUL4feZ6IfsnScgDm7nhrevc/FNjddvi6LrIbefbqr
+        bh=4JjU99n3cntJzSuWKEHlCabsCaDKhMo8d9uJcAKSqpE=;
+        b=kStCDLOv8Yv4re09mIc9Izt2JYg9FjeSD803S2GT0PxCg6K0A2mWZMNNohqLIyMmPQ
+         e2r+c2w/XFYCT+p7GIvOapPaBWTAQZ+EAh6Hc1e0ED/7oCPJKyYgsQYicoFtHJDaCAea
+         zbg7nh+NRA9a+376t9Irnbu4IlLEvhCuF9S26rauxy+ElIRKnAF93um4+koXYStHlOve
+         ZBsKy87cBSHZCK5Dkl5rggPSONJ+nPlE2pERHtynFbcl5bO2uY/AaSAyvnsQIWy6b9P8
+         cxkWPohwxF/5aKTgLDVIks9+XJt9Ox15YKKo6TiIjgW3Jc27+450fZlb5F6KFBIKkW1o
+         mZCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWek2F0iKrHXRle6xa5kQVAuxPxFJVt6FJx0Db/Jaz9PFrnpHk5RjDltl8LP2xofegXMUuCCLucP4bui2j3px2RJjhmapt0hlHwRD/2GbP5SA==
+X-Gm-Message-State: AOJu0YxOHqBobzCHYSDeuuxp+/QjfaVuq2SzJLscpdJSB1YYgRG5FR3B
+	es7mS0zngcRV7M+gxukCqDAo/7ESgprAtS1x4JDCW8B7QPFRzaJpW5VVjCI8mbYegqdg5YkNlw+
+	eIOzfBw==
+X-Google-Smtp-Source: AGHT+IHrxNdg3AbPwFqBK+ciQlIUmbNjVBlMy/hHjaGqY4bavIjah0RyNlXtnMe94CNiX51z2K7BxkRbPJfh
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5520:7788:6b7d:7115])
- (user=irogers job=sendgmr) by 2002:a05:6902:727:b0:dcc:8927:7496 with SMTP id
- l7-20020a056902072700b00dcc89277496mr873262ybt.5.1712629944477; Mon, 08 Apr
- 2024 19:32:24 -0700 (PDT)
-Date: Mon,  8 Apr 2024 19:32:14 -0700
+ (user=irogers job=sendgmr) by 2002:a25:a288:0:b0:dc9:5ef8:2b2d with SMTP id
+ c8-20020a25a288000000b00dc95ef82b2dmr3131277ybi.4.1712629947067; Mon, 08 Apr
+ 2024 19:32:27 -0700 (PDT)
+Date: Mon,  8 Apr 2024 19:32:15 -0700
 In-Reply-To: <20240409023216.2342032-1-irogers@google.com>
-Message-Id: <20240409023216.2342032-3-irogers@google.com>
+Message-Id: <20240409023216.2342032-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240409023216.2342032-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Subject: [PATCH v1 2/4] perf arch x86: Add shellcheck to build
+Subject: [PATCH v1 3/4] perf util: Add shellcheck to generate-cmdlist.sh
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,28 +73,25 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add shellcheck for:
-tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
-Address a minor quoting issue.
+Add shellcheck to generate-cmdlist.sh to avoid basic shell script
+mistakes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/Build                     | 14 ++++++++++++++
- tools/perf/arch/x86/tests/Build               | 14 ++++++++++++++
- tools/perf/arch/x86/tests/gen-insn-x86-dat.sh |  2 +-
- 3 files changed, 29 insertions(+), 1 deletion(-)
+ tools/perf/util/Build | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
-index a7dd46a5b678..ed37013b4289 100644
---- a/tools/perf/arch/x86/Build
-+++ b/tools/perf/arch/x86/Build
-@@ -1,2 +1,16 @@
- perf-y += util/
- perf-y += tests/
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index aec5a590e349..292170a99ab6 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -389,3 +389,17 @@ $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
+ $(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
 +
 +ifdef SHELLCHECK
-+  SHELL_TESTS := entry/syscalls/syscalltbl.sh
++  SHELL_TESTS := generate-cmdlist.sh
 +  TEST_LOGS := $(SHELL_TESTS:%=%.shellcheck_log)
 +else
 +  SHELL_TESTS :=
@@ -106,41 +103,6 @@ index a7dd46a5b678..ed37013b4289 100644
 +	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
 +
 +perf-y += $(TEST_LOGS)
-diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-index b87f46e5feea..c1e3b7d39554 100644
---- a/tools/perf/arch/x86/tests/Build
-+++ b/tools/perf/arch/x86/tests/Build
-@@ -10,3 +10,17 @@ perf-$(CONFIG_AUXTRACE) += insn-x86.o
- endif
- perf-$(CONFIG_X86_64) += bp-modify.o
- perf-y += amd-ibs-via-core-pmu.o
-+
-+ifdef SHELLCHECK
-+  SHELL_TESTS := gen-insn-x86-dat.sh
-+  TEST_LOGS := $(SHELL_TESTS:%=%.shellcheck_log)
-+else
-+  SHELL_TESTS :=
-+  TEST_LOGS :=
-+endif
-+
-+$(OUTPUT)%.shellcheck_log: %
-+	$(call rule_mkdir)
-+	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+
-+perf-y += $(TEST_LOGS)
-diff --git a/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh b/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-index 0d0a003a9c5e..89c46532cd5c 100755
---- a/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-+++ b/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-@@ -11,7 +11,7 @@ if [ "$(uname -m)" != "x86_64" ]; then
- 	exit 1
- fi
- 
--cd $(dirname $0)
-+cd "$(dirname $0)"
- 
- trap 'echo "Might need a more recent version of binutils"' EXIT
- 
 -- 
 2.44.0.478.gd926399ef9-goog
 
