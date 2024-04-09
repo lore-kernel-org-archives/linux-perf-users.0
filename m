@@ -1,140 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D454E155313;
-	Tue,  9 Apr 2024 17:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ACE156244;
+	Tue,  9 Apr 2024 17:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682058; cv=none; b=KF4i6bieNB8B2Pwb/1QPYWTILQkZVfUM1A//F2tmgbIXi/YR7HtGIwODOPR0guHCuWqZRVft2qMtqz3Mm1n9Gbt2024f6RhWplL3BUpjWVLVhBJULiGsCkJWYzOAoiEA1QuYlqFyOzPlVf9lW223zmkA/30QdijQ8RX+y6SQ5cc=
+	t=1712682137; cv=none; b=Y/K5EMpOctEE1Co/Pez5v8kLdOFRnsCO5JHcrmLYJlV04TKIVPgliOuEZ9SBM+jN07OnkXPN7LZUUwxrMjIDD5aTZSq9wwdjkHbZ495tM5xP0xPa0nwkKtsNJo+SbE7/RS/GGcK0vriXokZ77pdS9O7CoQcmnh4hRophUES/Hqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682058; c=relaxed/simple;
-	bh=4WrtbOs8msag5qvCpx6Nx6EDmYJtha46rksweGE/IUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ki8m+6gv42S09ECSHGiA7PJ9738QAdGqppWRLr6BGBEF6To8Vu3b8DXVEAZ6uQyreg0d9xifDe6Jm9hLNm2BOJHuMcmY7xAmyMeNqgCWPAk0PIiCkXVtaC3/btNNcqbEpxB9Cy+0KiO4sqx8fQAcaWKHdBS4BGK1GKRIrmH0ObE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgYtO5Tj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgYtO5Tj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36113C433B1;
-	Tue,  9 Apr 2024 17:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712682058;
-	bh=4WrtbOs8msag5qvCpx6Nx6EDmYJtha46rksweGE/IUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MgYtO5Tj2EoU/v1AvFrGNp8xJ8FBv7ZUQrP9IrkGf8gFF0Wewc2uyF3jdNxNbApkI
-	 Cmi45Fh24KdIDPs+RVXnjEc4VHazHSPw0iCqDakt3IMufLEb0ESclkjlkNCZRg9qjG
-	 x6xl5THoYixhoTQej9s12kSr033vdeKGMpb0ErzR0djdcukweuz63kACjq79TJOg0o
-	 9RIDZ316Bec+NnDjBJMwWfBxhcwB/H7QB8cv+0lPQ+Hz9xZsFGJnpyDUrgam6eBPXA
-	 vZklfbulNp0Zc0UoORNPGHZjsefhYZk7OQI5/4rqipKXvYabOAKYBiBg2gWK4YlFYG
-	 999SQuF2Bw3Qw==
-Date: Tue, 9 Apr 2024 14:00:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
- kernel sources
-Message-ID: <ZhV0R1lNRrcOYKkV@x1>
-References: <20240408185520.1550865-1-namhyung@kernel.org>
- <20240408185520.1550865-2-namhyung@kernel.org>
- <874jcb9etk.fsf@intel.com>
- <ZhTwPLliHXKPAJUQ@gmail.com>
- <87pluy972m.fsf@intel.com>
- <CAM9d7cizO8j3tLjxiVKh4qw3dOzqKmUKZg8BZwaCF=ChmbX81A@mail.gmail.com>
+	s=arc-20240116; t=1712682137; c=relaxed/simple;
+	bh=Ld1GNPh7eliglJwz4JBGCOxXq7qQT41qVZlmJL8DJ24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W61KxIYvN21Hi4Flg2vqdvYEvlMB0JS1LvomCHbYY4Y4GMbEcRGadq8vcxlCeCNMpT6f6rrjJmW+Tzqg+Hd/BNq4HECzHxAK9qj2ScNX2hDT9OLjBIQK57JyjNmlW77mIwn3n0zp2+kP/1zwbXx1kCigA298wXq/r2UBVq5rm2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e3c7549078so25623965ad.0;
+        Tue, 09 Apr 2024 10:02:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712682135; x=1713286935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NU+IDV5MPL7YcPa1Of4+Gylt4ybk+lO5OFWOj3lGe3I=;
+        b=hOE1bzQ2VZQ9f1nstzmBkuhgq+9PCpRoY+D3G6/51B9AE+rvoTxGU1PoJUNyLJvPGi
+         kSmOgtSxPqJaE9rN6Eq1f1F2U/ateC7pSc13H2JRDpNkzu4dpFHyRF9DPbiKVEcQz5K/
+         tBexZrHT7CrG39pPH944VEDRhFysVvLzb1mivBKIsOKyCCzPKFhM5TrRWvDwhSV9R3cn
+         YwRgM+2Tvu3nxEbD0m9U0keqgWMN1o4KTgweX+KpK/yfFfQdmdIOOIKwVr+jlfVi6X8y
+         +Tj41BnIePcqwKinOoPAYBJDLXnVqQBExIuFxNCwl4/5WzlSrJppQaLEZB23LbdUrFQB
+         AgYA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0xs0nIZAiAWoBz8MVpTjuAtJAWTUOAU6kKQXvvycrQSADzPRWe4LfoP0nIlUs+G/a6TADQhHkbhNjPHOXxwo+q4nl2cKv+HsESDzQNcm2VGhYfmf3u0+i32/RdnnhPOv4cg6l1gGuZVquOm3wOw==
+X-Gm-Message-State: AOJu0YysDRYesbEal26z/qjMBpp5YxIwo7767blWHc6/moPZeSRhD3k4
+	6DiCMHgPsrLfooz//ijF4B9s1EYS/tmeL2j9UgFPgXGfD2ZpRiSBcg+/G/gHA08Y2Xz9UsTHyCI
+	isE0xiUZ49P8m0OmMA1LurM5zVn8=
+X-Google-Smtp-Source: AGHT+IEpJNTORpTm1ddk7PF/G0t6Ihuam5TpPLhreBZHNaS0kqHtFWmIzr2KECl8i2g5CiMZixMScHe0Kk2GD+Fw5Sk=
+X-Received: by 2002:a17:902:a3c5:b0:1e4:39e0:660c with SMTP id
+ q5-20020a170902a3c500b001e439e0660cmr4030195plb.23.1712682135001; Tue, 09 Apr
+ 2024 10:02:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cizO8j3tLjxiVKh4qw3dOzqKmUKZg8BZwaCF=ChmbX81A@mail.gmail.com>
+References: <20240401160805.51277-1-yakoyoku@gmail.com> <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+ <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com> <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
+In-Reply-To: <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 10:02:03 -0700
+Message-ID: <CAM9d7chCGcPQrHbpX0aDWy127a=RG5uFRpVBQ4Lc+jYgRy5uLQ@mail.gmail.com>
+Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
+To: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 08:58:55AM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Apr 9, 2024 at 3:14 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+Hello,
+
+On Thu, Apr 4, 2024 at 5:10=E2=80=AFPM Martin Rodriguez Reboredo
+<yakoyoku@gmail.com> wrote:
+>
+> On 4/1/24 8:31 PM, Namhyung Kim wrote:
+> > [...]
 > >
-> > On Tue, 09 Apr 2024, Ingo Molnar <mingo@kernel.org> wrote:
-> > > * Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > >
-> > >> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >> > To pick up changes from:
-> > >> >
-> > >> >    b112364867499 ("drm/i915: Add GuC submission interface version query")
-> > >> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
-> > >> >
-> > >> > This should be used to beautify DRM syscall arguments and it addresses
-> > >> > these tools/perf build warnings:
-> > >> >
-> > >> >   Warning: Kernel ABI header differences:
-> > >> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
-> > >>
-> > >> All these years and I never realized there are header copies
-> > >> there. But... why copies?
-> > >
-> > > It's better than all the alternatives we tried so far:
-> > >
-> > >  - Symbolic links and direct #includes: this was the original approach but
-> > >    was pushed back on from the kernel side, when tooling modified the
-> > >    headers and broke them accidentally for kernel builds.
-> > >
-> > >  - Duplicate self-defined ABI headers like glibc: double the maintenance
-> > >    burden, double the chance for mistakes, plus there's no tech-driven
-> > >    notification mechanism to look at new kernel side changes.
-> > >
-> > > What we are doing now is a third option:
-> > >
-> > >  - A software-enforced copy-on-write mechanism of kernel headers to
-> > >    tooling, driven by non-fatal warnings on the tooling side build when
-> > >    kernel headers get modified:
-> > >
-> > >     Warning: Kernel ABI header differences:
-> > >       diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
-> > >       diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
-> > >       diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-> > >       ...
-> > >
-> > >    The tooling policy is to always pick up the kernel side headers as-is,
-> > >    and integate them into the tooling build. The warnings above serve as a
-> > >    notification to tooling maintainers that there's changes on the kernel
-> > >    side.
-> > >
-> > > We've been using this for many years now, and it might seem hacky, but
-> > > works surprisingly well.
-> > >
-> > > Does this make sense to you?
+> > Thanks for doing this!  Yep, we could unset the env temporarily.
 > >
-> > Yes, although there are probably pieces of the puzzle I'm missing.
-> > Thanks for the explanation! (That might work almost as-is copied to
-> > tools/include/uapi/README. ;)
+> > As a general comment, perf has some helper functions for libdw
+> > in util/dwarf-aux.[ch].  Please take a look and use/update them.
+>
+> Whoops! I haven't seen that file, thanks for mentioning it.
+>
+> > [...]
 > >
-> > It's also kind of funny to find this kind of back alleys of the kernel
-> > repo I've never wandered to before.
-> 
-> I have some explanation in the cover letter of the series but I forgot
-> to mention that in each commit message.  Probably I can update the
-> explanation with Ingo's reply.
+> > Probably we can use cu_find_lineinfo().
+>
+> I could use that, I'll see.
+>
+> > [...]
+> >
+> >>> +static struct a2l_data *addr2line_init(const char *path)
+> >
+> > debuginfo__new()?
+>
+> `libdw_a2l_new` can be another option too.
+>
+> > [...]
+> >
+> >>> +static int get_inline_function(struct dso *dso, struct inline_node *=
+node,
+> >>> +                              struct symbol *sym)
+> >>> +{
+> >>> +       struct a2l_data *a2l =3D dso->a2l;
+> >>> +       Dwarf_Addr addr =3D a2l->addr + a2l->bias;
+> >>> +       Dwarf_Addr bias =3D 0;
+> >>> +       Dwarf_Die *cudie =3D dwfl_module_addrdie(a2l->mod, addr, &bia=
+s);
+> >>> +
+> >>> +       Dwarf_Die *scopes =3D NULL;
+> >>> +       int nscopes =3D dwarf_getscopes(cudie, addr - bias, &scopes);
+> >
+> > It's not clear to me how this dwarf_getscopes() and later
+> > dwarf_getscopes_die() work together.  Can you please add some
+> > comment?  Also we have die_get_scopes() and I think it's simpler.
+>
+> I think the first is to get the scopes at an address and the second is
+> for the scopes with the addr offset at that DIE. Off the top of my head.
+>
+> > [...]
+> >
+> > Why not get the function name from the abstract origin?
+>
+> I'm not getting it, where's that abstract origin?
 
-I think we can combine Ingo's with the reply I used and you adopted and
-continue to have it when sending the update messages, probably keep it
-in the cover letter (the combined text) and add a link to each
-individual update:
+IIUC DW_TAG_inlined_subroutine has DW_AT_abstract_origin
+to point to the original definition of the function.  It should have
+the name of the function.
 
-"Please see tools/include/README.kernel-copies."
+ <2><5ca8>: Abbrev Number: 40 (DW_TAG_inlined_subroutine)
+    <5ca9>   DW_AT_abstract_origin: <0x5eeb>
+    <5cad>   DW_AT_low_pc      : 0x24efc6
+    <5cb5>   DW_AT_high_pc     : 0x2d
+    <5cbd>   DW_AT_call_file   : 3
+    <5cbe>   DW_AT_call_line   : 135
+    <5cbf>   DW_AT_call_column : 9
 
-The recommendation that developers shouldn't update the copy seems
-important to have there as well.
-
-- Arnaldo
+Thanks,
+Namhyung
