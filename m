@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B7F12D1E7;
-	Tue,  9 Apr 2024 15:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051B813B293;
+	Tue,  9 Apr 2024 15:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676726; cv=none; b=foT4JrR8navTCUdHYb8wCeXyUlin1hJitUoEPGV0ubrfSe3qgrDfHwwLu2tYdv0GTOplWdyrkmUvuYVCTyn845aHtsPOjpSaVCnzLuqug8kbieT/0GoKsmNQFEpZ2LYuMESg+rSUP9iXRf/PQBtd0Y1X4LrnF+vDnTLO0ImDsw0=
+	t=1712676858; cv=none; b=ocoovgjLxqXAAYfwwCpEaOvkbIHertcZchi5xRHJNkiqJPMzl/k/f4mGbPgmQ51BfqT9qmaQCuon6K1oLSqOnNKFf4O+1vIV5e4rncxLy+Q4jKKrYoNrT4f5MDLKkXZ9+Hp6XtuTXhZFXnS7UCOHGjdGeIY9YECSjTGgWLwiP/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676726; c=relaxed/simple;
-	bh=Dschz1gJNw4+/0FWjY5GsFcl2UP4wt6UsR+ejRfU6Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ja6TUnrqlvCnMJ5baZVug9IUnj+VNM2BkkOaKNLiN4oRbJBKqMB/vsoSXWmZijfUnCXQYNKwaFLg9hAcWVBT7TRpxAYwEVBP/5tubvJISPkQ7Sg6nI7W5aNVIDEzwn/A29NCwnnzq44mpNNYArbBSEX1PCl08j6YXUKu6Kujd50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgOJ6l2O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712676858; c=relaxed/simple;
+	bh=UOhKabfItxET3ULoSOS1JWZmwpxrExFjqIzeLK3XjNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PM9H8MunoHuh4O3r20466XdI5uGqdZTnPZR02EwiIUcaE4XcKSTHRD7oMsQSZ7M0JAqoEepvWxVhndZqtr8KVIZKmT7VvoHFQGxRX58oj2ZTFe2OFmZptewboNDF2+nbkojHr9WGAUZHzoS/IB8rMJDpEr4T+YWahL9T1sXOSXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aByLc8KO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgOJ6l2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06432C433F1;
-	Tue,  9 Apr 2024 15:32:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aByLc8KO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BB1C433C7;
+	Tue,  9 Apr 2024 15:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712676726;
-	bh=Dschz1gJNw4+/0FWjY5GsFcl2UP4wt6UsR+ejRfU6Xw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KgOJ6l2OUGMgXBC4fuzMl5zGoe1zVJGfeouFgQXiLzZD3wIhgmDPSM/Mg0gMD4Ztg
-	 6/XwIb68fZWUT4xe+qX2U0NwhsiI3/Nx8lSV85OOlOoF/zUvPx7Zp7jiym49N7/pOT
-	 KNLUIq6Ni9yBeUuGxhprY4Az1tKa+cKkrLG+f6+yjE11IxYGxFnoH+LGjAaR05ro8X
-	 KOuasHvfu810u3PRszkrI/QOLprRWme7EuBZlXsBb03GC+W9Fa/jRi1IozF0zpMOsw
-	 9zaK64oZ3uUGsd4Aph/546AYrk7UwITU0MXJMWIcEHBSd6BzUOOurbxtItchktoabg
-	 cQGElHeQwxwog==
-Date: Tue, 9 Apr 2024 12:32:03 -0300
+	s=k20201202; t=1712676857;
+	bh=UOhKabfItxET3ULoSOS1JWZmwpxrExFjqIzeLK3XjNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aByLc8KOhk3SjmIeX3HiEE54zuWlvsuFrdFIVwpvFVM3e5WYptiYH59wRakil01eq
+	 hswuvwpJv1LauKgQ1+/YCoeKmfgysYzXcoVpe/2NJQXqPaN8oOb1qUeCI/QjBAnRm4
+	 jHQQOif0SSSG+nBuEcipU21PnnZahUSKPnYf8a+skI3Jjk+4fVBUEOj1kycQ5+Klr0
+	 iEkfXktH0de/l2SIBAisWcd13Y/SoIeSErPPlXDO5FcZqeuFbtVVU3vQTutC8RBLGV
+	 lnMiD00+1P4Q2ECpfe9h9tkOHJSIjFIviTYdJdYXl19MR07OPc4cPGTntozGYsx87L
+	 Qphf/ugxeEHvQ==
+Date: Tue, 9 Apr 2024 12:34:14 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel hybrid
- machines
-Message-ID: <ZhVfc5jYLarnGzKa@x1>
+Subject: Re: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel
+ hybrid machines
+Message-ID: <ZhVf9rO-b3xTqZEK@x1>
+References: <ZhVfc5jYLarnGzKa@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,30 +46,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhVfc5jYLarnGzKa@x1>
 
-root@x1:~# perf test "Miscellaneous Intel PT testing"
-112: Miscellaneous Intel PT testing                                  : FAILED!
-root@x1:~#
+On Tue, Apr 09, 2024 at 12:32:06PM -0300, Arnaldo Carvalho de Melo wrote:
+> root@x1:~# perf test "Miscellaneous Intel PT testing"
+> 112: Miscellaneous Intel PT testing                                  : FAILED!
+> root@x1:~#
+> 
+> then I revert:
+> 
+> commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-next)
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Tue Apr 9 12:28:49 2024 -0300
+> 
+>     Revert "perf pmus: Check if we can encode the PMU number in perf_event_attr.type"
+>     
+>     This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
+> ⬢[acme@toolbox perf-tools-next]$
+> 
+> It works now:
+> 
+> root@x1:~# perf -v
+> perf version 6.8.g642e1ac96aaa
+> root@x1:~# perf test "Miscellaneous Intel PT testing"
+> 117: Miscellaneous Intel PT testing                                  : Ok
+> root@x1:~#
+> 
+> Investigating, if you come up with ideas, lemme know.
 
-then I revert:
+Some more context:
 
-commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-next)
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Apr 9 12:28:49 2024 -0300
+When this patch was implemented/tested I had access only to an ARM64
+hybrid machine, now my notebook is a Rocket Lake lenovo (13th gen), that
+is hybrid and the test is failing with:
 
-    Revert "perf pmus: Check if we can encode the PMU number in perf_event_attr.type"
-    
-    This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
-⬢[acme@toolbox perf-tools-next]$
-
-It works now:
-
-root@x1:~# perf -v
-perf version 6.8.g642e1ac96aaa
-root@x1:~# perf test "Miscellaneous Intel PT testing"
-117: Miscellaneous Intel PT testing                                  : Ok
-root@x1:~#
-
-Investigating, if you come up with ideas, lemme know.
-
-- Arnaldo
+root@x1:~# perf test -v "Miscellaneous Intel PT testing"
+112: Miscellaneous Intel PT testing                                  :
+--- start ---
+test child forked, pid 304355
+--- Test system-wide sideband ---
+Checking for CPU-wide recording on CPU 0
+OK
+Checking for CPU-wide recording on CPU 1
+OK
+Linux
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.934 MB /tmp/perf-test-intel-pt-sh.xACV6V7Hn4/test-perf.data ]
+OK
+--- Test per-thread recording ---
+Workload PIDs are 304377 and 304378
+perf PID is 304389
+Waiting for "perf record has started" message
+OK
+pid 0 cpu -1 fd 5 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
+pid 0 cpu -1 fd 6 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 6
+pid 304377 cpu -1 fd 7 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 7
+pid 304380 cpu -1 fd 8 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 8
+pid 304378 cpu -1 fd 9 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 9
+pid 304381 cpu -1 fd 10 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 10
+pid 304377 cpu -1 fd 11 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 11
+pid 304380 cpu -1 fd 12 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 12
+pid 304378 cpu -1 fd 13 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 13
+pid 304381 cpu -1 fd 14 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 14
+fd 7 : idx 0: mmapping fd 7
+fd 11 fd_to 7 : idx 0: set output fd 11 -> 7
+fd 8 : idx 1: mmapping fd 8
+fd 12 fd_to 8 : idx 1: set output fd 12 -> 8
+fd 9 : idx 2: mmapping fd 9
+fd 13 fd_to 9 : idx 2: set output fd 13 -> 9
+fd 10 : idx 3: mmapping fd 10
+fd 14 fd_to 10 : idx 3: set output fd 14 -> 10
+Checking 10 fds
+No mmap for fd 5
