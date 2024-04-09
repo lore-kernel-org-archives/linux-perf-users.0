@@ -1,109 +1,133 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD80B157476;
-	Tue,  9 Apr 2024 23:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F881E491
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 23:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712704663; cv=none; b=APQVXO0iIsfnS8OlVWqxLM3LEtmtC6/60LZJUq7+D03ZGpkaQr3Z5XOJLm5TMKzny67BOQL/vAhEZ4ZY5u8sLcYUgQ+JOUktjKfkCvdSzXZ9bmwwScd2Tj+qBORp/mlxgDLGqSqsqIGoWqqtA7ydmytUBBWrp3PTF3siNZ1Mhac=
+	t=1712705074; cv=none; b=hs0n/d1MMuYTyAtwLrCaLYZeg32NsJ+DkcVpxVy2n1YI+053xJL32hbGeAxWenXb4zQNdTfco+9K34tmOF3zkm57Q04fQ6xjInUn2MZZbqYl7BEoymd5y6QccXt+9SydHNG+jz/Nup9Ako2RaGA/Ck/+Uop6uBR+P//qhqLlaW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712704663; c=relaxed/simple;
-	bh=XzfRDNRGPZVbbxVVG5TQM5B8RqqnACAXlUaLzu/rLQ0=;
+	s=arc-20240116; t=1712705074; c=relaxed/simple;
+	bh=IFxtp5/b3NCxyIehAWBjqG/rLI/kFXb2xNTe9AJi6Ns=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hT93bvvbA5fLm+9S1C/6qomGrdanEVyIjp/symLs+wnXYemdBEFMrmAkq2HK+OCPC/ltP6RZpyGAMXDwu1h3NfFwKbES1v0WAw47rsanQ5u0P+DVl748UhtuNaKvifPcw9PiNS4c0k6IUsU59Lvdey6M/yG5YvBAEXdPms0eIs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=PKZBSFw2m2R4oh6MfAUF1cmnbF2uGGYepdl84MWdBNG2fzR/nORttHGAvWZbNmxBgE8q72WeBGKxBLWOdVbkg4R7PYU9620PvZpadBBvyaoKjBKaMqJWcsHM7fuYHRZudJ5XC7QufCebb8voLrzUifNXdrCbzWjZoJAp/KAr7BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBsPy056; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4da5eb33c45so1505162e0c.0;
-        Tue, 09 Apr 2024 16:17:41 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBsPy056"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7e3555015a8so2243418241.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 16:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712705071; x=1713309871; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8AukJ/1QwXoCft0xV39YvmnOfhwMCP+WOFf+PnF8g68=;
+        b=TBsPy056f6MOKYD/zDyBfJW/yAKQNxK6egSZYtsVGu8SnGXSWkrOcZuQx0ER5vp7Wf
+         //jos8E6BcVJ/5NIlGQqUkWMSgP1s8W51IuRrugdLFwj+JXjo7EknMZ8L43pHNwcAecg
+         90Artnku6mIoqAD8Vo2X3fF2epLM2YH0AAAtBvE/xaBqAZzxbMuaN8RrqCfrtkWLRo9l
+         X6Ss5jxsPp+Jq+kcFty1pMz1WykGPkyC0m+FaNLJ1NekbXzcPRgB7nh/M5cHV1Bq7GmK
+         EklnU5+A0Z8oosiDcPdxt1Q18kIqnQaroB/LGIkmp92Nqog68KSFrt0wtct9p72pHnVW
+         n+1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712704660; x=1713309460;
+        d=1e100.net; s=20230601; t=1712705071; x=1713309871;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gZRdzvjTP1IiYFiNM6neO/CKV1723f7tgntEnWqUvYk=;
-        b=YEYQpT8b3YlVjlVq1E09ckx/Rd3igxB45/L/ZmJckvKjITJnou2LRk8f1SwHmbO4Kn
-         5QmaVSe6GmxfVDyunawxxGCErHbJzGkmoBh8P0FkNwu6H0IVdztbcnyWo7aYlFwRaUdQ
-         otnfja++neB+jgJGm1XLZKcyl+0LAyIm4Kj0DkDy9X6nawQviv0f4apSOSlZd01XGJBl
-         Z9lHgFo/J2fq1IpC4ccWwEve7wCv4Xl9nN9jvrpFrmH3xEhb/TFCy6QSXPZf4UJW3Fip
-         iN2tyoWyAB+L9EXQjNumxkgKrdyxe1BYH1qopoMrfUPRDzegC2Nzn0ejBr9/eSselrmv
-         /93g==
-X-Forwarded-Encrypted: i=1; AJvYcCX4D0CAvHlQ00o5RIf4NKbOJVE4AuLqhgjvBYUFVuRS1I10NCr5XZO7NOBwG02SejlHIYwd6f9NiWVh/tHBS1znVdIrnvM1HKclWLSPyNzL4lyO9dGWwQJ93jjbDWn8wZHEzk0wV58kacgO0cMnKQ==
-X-Gm-Message-State: AOJu0YyNAKlrDWG/gSbvVKKOkWhQQkNZPmOWtW/alldLPxyEZ3Pwcy54
-	Gsl0g3GOmLtXaK7NIo9vptrJtldxRwJ4dEzC3jjZhBd5NLHXw0IqNAnxGF1Ga6M4E418T+nYMtl
-	n36dA00TQBTcV+NreKvCAaMIEpdg=
-X-Google-Smtp-Source: AGHT+IHNDxLPNgcQXhQLC6gMByHBE5tO0KLOEhiOzKz+Il4TiFL/ag6z6u+wFZdYLk4Z2sXSQgcHVMQR36btc96oDa4=
-X-Received: by 2002:ac5:c77b:0:b0:4c7:7407:e8ab with SMTP id
- c27-20020ac5c77b000000b004c77407e8abmr1163331vkn.12.1712704660524; Tue, 09
- Apr 2024 16:17:40 -0700 (PDT)
+        bh=8AukJ/1QwXoCft0xV39YvmnOfhwMCP+WOFf+PnF8g68=;
+        b=bnNWZQIdoorngpmQoCnsgafLtFPT4CwfFgzsW6LZKlmvoiPNSfOtPFIYxO6h4itpph
+         dObKup1oWTqCl4VGBB9fLRwW9LnSOiI6Lm2ytMtRMV/XdOK9cKWKyNFJLXijtHy/j1yH
+         55mX6CoEzcFPcyGsK47I24sif8T5OKuL5gr29zg/jxwkMpiNy79Vfav/GqHtpvMdde9T
+         h94hvSqVQT9fskIZ2ycuzPxWCY8pvSGkpcno4MrM1bcqzJE8EwQVQR0fRvWSt6P2a3IJ
+         ZrlsbrLcjDAoJ2Gp+aOFxo5kfNEHIg4hrfPjrbNyFakxqCsmPoNHCOxoE/Kk9z1WF03P
+         QRKA==
+X-Gm-Message-State: AOJu0YyCUC4HYbITH3gGZlQGbveexEMqe514ZtDPRYAQnb8Eu1P53B4U
+	5nwVbluHEXyxllMMSQ7DWTaDcJUCeOZbTbn92aULfoKwziJSNIF9oAk+9DQVhYpN4OsG78ANZhO
+	G95m855YByhMwWe+SaUMwTxaOZJ0UN2Q0
+X-Google-Smtp-Source: AGHT+IFn/WOjHfCjq+PMmmRTl3WsAxtBlaK0Xhi5c3+A6FlffRHLruBkzzNxhrxX2Yp/ijKtA0eMG15X1DpKm7mJF+c=
+X-Received: by 2002:a05:6102:3714:b0:47a:268c:9c1b with SMTP id
+ s20-20020a056102371400b0047a268c9c1bmr6550vst.1.1712705071603; Tue, 09 Apr
+ 2024 16:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409084741.405433-1-james.clark@arm.com> <20240409084741.405433-4-james.clark@arm.com>
- <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
-In-Reply-To: <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 9 Apr 2024 16:17:28 -0700
-Message-ID: <CAM9d7cio+JYnzwtiVSpsmGrxJWyqv3m0ppmqGidHs5psZdi93w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf tests: Skip "test data symbol" on Neoverse N1
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>, 
-	linux-kernel@vger.kernel.org
+References: <83b3aa2678b7a82c4247669cd8edae4573d1f52b.camel@yandex.ru>
+In-Reply-To: <83b3aa2678b7a82c4247669cd8edae4573d1f52b.camel@yandex.ru>
+From: Namhyung Kim <namhyung@gmail.com>
+Date: Tue, 9 Apr 2024 16:24:19 -0700
+Message-ID: <CAM9d7cid-rmSVrQ2_eHH90NKxiXcX-u-udJv5WhRimkFtAyZVw@mail.gmail.com>
+Subject: Re: `annotate --data-type` is empty
+To: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+Cc: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian and James,
+Hello,
 
-On Tue, Apr 9, 2024 at 8:39=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
+On Fri, Apr 5, 2024 at 6:17=E2=80=AFAM Konstantin Kharlamov <Hi-Angel@yande=
+x.ru> wrote:
 >
-> On Tue, Apr 9, 2024 at 1:48=E2=80=AFAM James Clark <james.clark@arm.com> =
-wrote:
-> >
-> > To prevent anyone from seeing a test failure appear as a regression and
-> > thinking that it was caused by their code change, just skip the test on
-> > N1.
-> >
-> > It can be caused by any unrelated change that shifts the loop into an
-> > unfortunate position in the Perf binary which is almost impossible to
-> > debug as the root cause of the test failure. Ultimately it's caused by
-> > the referenced errata.
-> >
-> > Fixes: 60abedb8aa90 ("perf test: Introduce script for data symbol testi=
-ng")
-> > Signed-off-by: James Clark <james.clark@arm.com>
->
-> This change makes me sad :-( Is there no hope of aligning the loop? We
-> have little enough testing coverage for memory events and even precise
-> events on ARM that anything take away testing coverage feels like we
-> should try to do better.
+> 6.8 release added a new feature: ability to see which struct fields are a=
+ccessed the
+> most, to figure out how to reorder them to maximize performance.
 
-Can we just add some noise in the loop?
+Thanks for testing this out!
+
+>
+> However, I am testing this with Emacs and I seem to get no results. Emacs=
+ is built
+> with debugging information.
+
+Can you please share the output of `readelf -SW ./build/src/emacs` to verif=
+y
+if it has the debug information in the binary?
+
+>
+> # Steps to reproduce
+>
+> 1. Build emacs
+> 2. Record a bit of Emacs work as:
+>
+>     perf mem record ./build/src/emacs --batch --eval '(benchmark-run 9999=
+999 (cons 1 2))'
+>
+> 3. Get the results with
+>
+>    perf annotate --data-type
+>
+> ## Expected
+>
+> Information on a lot of different structs that are being used.
+>
+> ## Actual
+>
+> There is only one struct
+>
+>       Annotate type: 'struct _IO_FILE' in /usr/lib/libc.so.6 (1 samples):
+>       [=E2=80=A6]
+>
+> and that's it.
+
+And it seems it didn't get the debug info from the binary and
+only got one from the libc.  I suspect it missed the debug info
+somehow.
+
+>
+> # Additional information
+>
+> * perf version: 6.8 built manually from commit "e8f897f4afef: Linux 6.8"
+> * `perf.data` for the testcase is 3.6M, so it definitely has more informa=
+tion than
+>   just this one struct. I can upload it somewhere if that helps.
+
+If you can build from the perf source code, I'd recommend to use the
+latest version which has a lot of improvements.  v6.8 only has the
+basic support with pointer variables.  And the full features will be
+available from v6.10.
 
 Thanks,
 Namhyung
-
-
-diff --git a/tools/perf/tests/workloads/datasym.c
-b/tools/perf/tests/workloads/datasym.c
-index ddd40bc63448..e2514bf393cd 100644
---- a/tools/perf/tests/workloads/datasym.c
-+++ b/tools/perf/tests/workloads/datasym.c
-@@ -16,6 +16,8 @@ static int datasym(int argc __maybe_unused, const
-char **argv __maybe_unused)
- {
-        for (;;) {
-                buf1.data1++;
-+               if ((buf1.data1 % 100129) =3D=3D 0)
-+                       buf1.data1++;
-                buf1.data2 +=3D buf1.data1;
-        }
-        return 0;
