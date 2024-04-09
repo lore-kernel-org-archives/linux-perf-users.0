@@ -1,107 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7381B757F6;
-	Tue,  9 Apr 2024 22:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD80B157476;
+	Tue,  9 Apr 2024 23:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712703344; cv=none; b=fuiE/9QcqlOrSTR3s13vH3zo9UUVHOI65JN5x5kINj4zDU4WxgijXqJsEd3wyFn6XfHPbMdO+fAkvprjzRL4X7tqN5W1duN44InVsjZyDv5wCZxHH8OrEKMWtAAvO/OO7QTh0L3+yx/+IpCF8Bue2MeKel6SzTY2/h+iKasboyk=
+	t=1712704663; cv=none; b=APQVXO0iIsfnS8OlVWqxLM3LEtmtC6/60LZJUq7+D03ZGpkaQr3Z5XOJLm5TMKzny67BOQL/vAhEZ4ZY5u8sLcYUgQ+JOUktjKfkCvdSzXZ9bmwwScd2Tj+qBORp/mlxgDLGqSqsqIGoWqqtA7ydmytUBBWrp3PTF3siNZ1Mhac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712703344; c=relaxed/simple;
-	bh=AFB5JJxzNK0ssWsl0dAByIzKSEq22BTDirPDWg2fGr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFDG+G6rlOtGkVq7rkS8KG+fNYnO6b1uF8FHf3XFhMntpu6zYqyXRJTYOgncymZPqUQIDzKJ7X5C8lMA72oEMAGKU0r02JnPsR4V3OhFR14KBVGEycVW5XI0GL6iUUrp6b//hus5SqSGSw94gS3maao+fLlbLib5NZh1YNkl3R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNVhCnQD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNVhCnQD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F749C433F1;
-	Tue,  9 Apr 2024 22:55:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712703343;
-	bh=AFB5JJxzNK0ssWsl0dAByIzKSEq22BTDirPDWg2fGr0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QNVhCnQDb33aAtFoSRkz5s4jbUOSu7zxI1O24mEXGmmBsCG5SmrWgvwL1v1X1dtYo
-	 m1xjrrleKCM9BINwTdfNiyjfBLIzbUqFLuvELnPjLGoknpEXUlPez+XkxNLN+xsb/A
-	 m/pnRojoDuXa+RYvfQnH9o194L+rBXzwqBUGE7HWKu+STfL4F7xzv9iaK/B5upu6m6
-	 GkRAJ4RrDE9y1Z4eruIUydEFIC7CTyXUlI0vFPFhlzjOiUlsTcLQj86nQa0mI6u6+9
-	 eEhVesQnv13FB9b9MQ/Cuy57LoFkRBABQtCkV8ijQCuoctfV/OtO40Whw7FFCEKxQ0
-	 eAw22zzJc9ahw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: [PATCH v2] perf lock contention: Add a missing NULL check
-Date: Tue,  9 Apr 2024 15:55:42 -0700
-Message-ID: <20240409225542.1870999-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+	s=arc-20240116; t=1712704663; c=relaxed/simple;
+	bh=XzfRDNRGPZVbbxVVG5TQM5B8RqqnACAXlUaLzu/rLQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hT93bvvbA5fLm+9S1C/6qomGrdanEVyIjp/symLs+wnXYemdBEFMrmAkq2HK+OCPC/ltP6RZpyGAMXDwu1h3NfFwKbES1v0WAw47rsanQ5u0P+DVl748UhtuNaKvifPcw9PiNS4c0k6IUsU59Lvdey6M/yG5YvBAEXdPms0eIs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4da5eb33c45so1505162e0c.0;
+        Tue, 09 Apr 2024 16:17:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712704660; x=1713309460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gZRdzvjTP1IiYFiNM6neO/CKV1723f7tgntEnWqUvYk=;
+        b=YEYQpT8b3YlVjlVq1E09ckx/Rd3igxB45/L/ZmJckvKjITJnou2LRk8f1SwHmbO4Kn
+         5QmaVSe6GmxfVDyunawxxGCErHbJzGkmoBh8P0FkNwu6H0IVdztbcnyWo7aYlFwRaUdQ
+         otnfja++neB+jgJGm1XLZKcyl+0LAyIm4Kj0DkDy9X6nawQviv0f4apSOSlZd01XGJBl
+         Z9lHgFo/J2fq1IpC4ccWwEve7wCv4Xl9nN9jvrpFrmH3xEhb/TFCy6QSXPZf4UJW3Fip
+         iN2tyoWyAB+L9EXQjNumxkgKrdyxe1BYH1qopoMrfUPRDzegC2Nzn0ejBr9/eSselrmv
+         /93g==
+X-Forwarded-Encrypted: i=1; AJvYcCX4D0CAvHlQ00o5RIf4NKbOJVE4AuLqhgjvBYUFVuRS1I10NCr5XZO7NOBwG02SejlHIYwd6f9NiWVh/tHBS1znVdIrnvM1HKclWLSPyNzL4lyO9dGWwQJ93jjbDWn8wZHEzk0wV58kacgO0cMnKQ==
+X-Gm-Message-State: AOJu0YyNAKlrDWG/gSbvVKKOkWhQQkNZPmOWtW/alldLPxyEZ3Pwcy54
+	Gsl0g3GOmLtXaK7NIo9vptrJtldxRwJ4dEzC3jjZhBd5NLHXw0IqNAnxGF1Ga6M4E418T+nYMtl
+	n36dA00TQBTcV+NreKvCAaMIEpdg=
+X-Google-Smtp-Source: AGHT+IHNDxLPNgcQXhQLC6gMByHBE5tO0KLOEhiOzKz+Il4TiFL/ag6z6u+wFZdYLk4Z2sXSQgcHVMQR36btc96oDa4=
+X-Received: by 2002:ac5:c77b:0:b0:4c7:7407:e8ab with SMTP id
+ c27-20020ac5c77b000000b004c77407e8abmr1163331vkn.12.1712704660524; Tue, 09
+ Apr 2024 16:17:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240409084741.405433-1-james.clark@arm.com> <20240409084741.405433-4-james.clark@arm.com>
+ <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
+In-Reply-To: <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 16:17:28 -0700
+Message-ID: <CAM9d7cio+JYnzwtiVSpsmGrxJWyqv3m0ppmqGidHs5psZdi93w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf tests: Skip "test data symbol" on Neoverse N1
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I got a report for a failure in BPF verifier on a recent kernel with
-perf lock contention command.  It checks task->sighand->siglock without
-checking if sighand is NULL or not.  Let's add one.
+Hi Ian and James,
 
-  ; if (&curr->sighand->siglock == (void *)lock)
-  265: (79) r1 = *(u64 *)(r0 +2624)     ; frame1: R0_w=trusted_ptr_task_struct(off=0,imm=0)
-                                        ;         R1_w=rcu_ptr_or_null_sighand_struct(off=0,imm=0)
-  266: (b7) r2 = 0                      ; frame1: R2_w=0
-  267: (0f) r1 += r2
-  R1 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
-  processed 164 insns (limit 1000000) max_states_per_insn 1 total_states 15 peak_states 15 mark_read 5
-  -- END PROG LOAD LOG --
-  libbpf: prog 'contention_end': failed to load: -13
-  libbpf: failed to load object 'lock_contention_bpf'
-  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
-  Failed to load lock-contention BPF skeleton
-  lock contention BPF setup failed
-  lock contention did not detect any lock contention
+On Tue, Apr 9, 2024 at 8:39=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Tue, Apr 9, 2024 at 1:48=E2=80=AFAM James Clark <james.clark@arm.com> =
+wrote:
+> >
+> > To prevent anyone from seeing a test failure appear as a regression and
+> > thinking that it was caused by their code change, just skip the test on
+> > N1.
+> >
+> > It can be caused by any unrelated change that shifts the loop into an
+> > unfortunate position in the Perf binary which is almost impossible to
+> > debug as the root cause of the test failure. Ultimately it's caused by
+> > the referenced errata.
+> >
+> > Fixes: 60abedb8aa90 ("perf test: Introduce script for data symbol testi=
+ng")
+> > Signed-off-by: James Clark <james.clark@arm.com>
+>
+> This change makes me sad :-( Is there no hope of aligning the loop? We
+> have little enough testing coverage for memory events and even precise
+> events on ARM that anything take away testing coverage feels like we
+> should try to do better.
 
-Fixes: 1811e82767dcc ("perf lock contention: Track and show siglock with address")
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Can we just add some noise in the loop?
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index fb54bd38e7d0..d931a898c434 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -284,6 +284,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 	struct task_struct *curr;
- 	struct mm_struct___old *mm_old;
- 	struct mm_struct___new *mm_new;
-+	struct sighand_struct *sighand;
- 
- 	switch (flags) {
- 	case LCB_F_READ:  /* rwsem */
-@@ -305,7 +306,9 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 		break;
- 	case LCB_F_SPIN:  /* spinlock */
- 		curr = bpf_get_current_task_btf();
--		if (&curr->sighand->siglock == (void *)lock)
-+		sighand = curr->sighand;
-+
-+		if (sighand && &sighand->siglock == (void *)lock)
- 			return LCD_F_SIGHAND_LOCK;
- 		break;
- 	default:
--- 
-2.44.0.478.gd926399ef9-goog
+Thanks,
+Namhyung
 
+
+diff --git a/tools/perf/tests/workloads/datasym.c
+b/tools/perf/tests/workloads/datasym.c
+index ddd40bc63448..e2514bf393cd 100644
+--- a/tools/perf/tests/workloads/datasym.c
++++ b/tools/perf/tests/workloads/datasym.c
+@@ -16,6 +16,8 @@ static int datasym(int argc __maybe_unused, const
+char **argv __maybe_unused)
+ {
+        for (;;) {
+                buf1.data1++;
++               if ((buf1.data1 % 100129) =3D=3D 0)
++                       buf1.data1++;
+                buf1.data2 +=3D buf1.data1;
+        }
+        return 0;
