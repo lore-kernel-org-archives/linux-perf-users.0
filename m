@@ -1,79 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBCE1E89D;
-	Tue,  9 Apr 2024 10:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82B4134416;
+	Tue,  9 Apr 2024 10:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657463; cv=none; b=dKtmhjrgOEKk94dmQsmpkvsRQu9/zEy/WDeO9dh7d/BNkvNfpFUtmobMvfr70pZD+GdxGaLFOiXbN8ZpYR+dl2LDYNwU/2T8ZujI1khTSypmSdMK9gZ2CIraPjJdp0XkvDyz1r80n7lunW7jzlzltQsKp2b5E8byDdCMNu+3p5g=
+	t=1712657660; cv=none; b=hgLe6868jtVlJDbTnXqntMIdURIdwbdoxc0QgMBYpOgkgqLLXXX/H/ghFf09+3y0wo7A38hW9Fo6H4No0KNvTaA82uHKmYrUQbNUBi06drWjAk1HQ8Nxj4rx15T2JF1VnG/ZTQljBc32UMvtPLaG4Mxt1ljQRycGxIcszKyF8Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657463; c=relaxed/simple;
-	bh=PEWOZXQjdfAMZp2Rg7dsCexBjTtJ/VYS56bP2lSsKBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K6ax48yr8CpmoUQEEqGlNyu0ZrVbx02PdHi2G61oy9xMXNVxkzBL4NMgFTr4ykdi2N9xNu9iC4yF32nai4fx4XM72sqvy/5idAfNd1srtJhSJ/9+aaTJ6FsERtfAgbYZE9Wzq9BfPoZP/PfEB1/thpu4iPu8Wj+O4RptGbR5x+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSSLhcB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712657660; c=relaxed/simple;
+	bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u6BRQYGhJbj7Em1aSfQhp6+v5469lFahbP3kTHv38W37EnhdcohqwGzVePb1wSBIKydygWkSAYNyiURbZKy8plk5qJcfIArQrMgTn2qcUBYQIXyVq7Ge09Ll6bqTPZeQx3rqC9JZdklLi8B70HwzWZJPZumUNEvCEZRatonE8f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5AQpQ5k; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSSLhcB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A04C433F1;
-	Tue,  9 Apr 2024 10:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712657462;
-	bh=PEWOZXQjdfAMZp2Rg7dsCexBjTtJ/VYS56bP2lSsKBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QSSLhcB1vuFhLuBYg82dueqUzgeKNUesajJuPFEGXZo+Vq8cnQcEdPRyQWZjHFYxz
-	 lr5jQ1LWqKsRTm9l8mHLKpVKtZtnYcwJ7wH+UKBfXC5WPDpBdWq52sIAidIY7o2CKh
-	 PMIu84kRw1GSaRW+vUuKGb7cXfttm2gK+5l/Z4ywufK4Zh+uPlAl/WxnYBE2xQtwQU
-	 Gp7b6hKAWH5TM+IA6ZEGIzVSRLbd64TSVoCeGgoJ6WcT+oTa2n4R1r9bXPvYxmfzOs
-	 Wu6F0AdaTFPxeeiv1q9sxu0w8dVWP4W1zGx3pV6poGg2LXtW51cir9SXiJsq+ETebX
-	 2yB/KmIaKqQ+g==
-Date: Tue, 9 Apr 2024 12:10:55 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/9] tools/include: Sync uapi/linux/fs.h with the kernel
- sources
-Message-ID: <20240409-unbezahlbar-erzwungen-a815739eb854@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5AQpQ5k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712657658; x=1744193658;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
+  b=I5AQpQ5koz4IMx09Emdru1FfHW6sOe9OgDS7XKmjFyJPH6zDZOunrLbc
+   ezbmtxeyyPJp3I28YSfbMD9GPcf3Q/VCmbEwWle773LHHb9RhzUsg6TVN
+   0lCke7lzMf55Khq9oiKeMhsTMUgStLOawQ4X423LbaTNybqUFOgA5zKTv
+   pXsx//Zc0NUE9OAq6qOjchalJv2SvXALyCRllIW7aLZA3cO4dRCzodqTG
+   +0rbz3DBtujYbkqIJITmsNbg2/EoGdo96wFezmQNaBKak2H1SZ5Zq91Nv
+   wX6sL0pHLg1sVawt5kbX7ehJYck7/zW2mkTfGtQgtMvcp9Czt9spQDGXX
+   Q==;
+X-CSE-ConnectionGUID: Z3Drv98YT6iP1WvZtHyPFw==
+X-CSE-MsgGUID: CAp3ioGRRKW+Is6znYeMBQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8193955"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="8193955"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:17 -0700
+X-CSE-ConnectionGUID: h6vK66UbSkiXc+RIBnnazw==
+X-CSE-MsgGUID: NfhpuIMUS02Pkod9R4umgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="51180842"
+Received: from mserban-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.59.228])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:11 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
+ <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
+ <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
+ kernel sources
+In-Reply-To: <ZhTwPLliHXKPAJUQ@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 References: <20240408185520.1550865-1-namhyung@kernel.org>
- <20240408185520.1550865-3-namhyung@kernel.org>
- <20240409100439.mal6tpxdvhphoyrp@quack3>
+ <20240408185520.1550865-2-namhyung@kernel.org> <874jcb9etk.fsf@intel.com>
+ <ZhTwPLliHXKPAJUQ@gmail.com>
+Date: Tue, 09 Apr 2024 13:14:09 +0300
+Message-ID: <87pluy972m.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240409100439.mal6tpxdvhphoyrp@quack3>
+Content-Type: text/plain
 
-On Tue, Apr 09, 2024 at 12:04:39PM +0200, Jan Kara wrote:
-> On Mon 08-04-24 11:55:13, Namhyung Kim wrote:
-> > To pick up the changes from:
-> > 
-> >   41bcbe59c3b3f ("fs: FS_IOC_GETUUID")
-> >   ae8c511757304 ("fs: add FS_IOC_GETFSSYSFSPATH")
-> >   73fa7547c70b3 ("vfs: add RWF_NOAPPEND flag for pwritev2")
-> > 
-> > This should be used to beautify fs syscall arguments and it addresses
-> > these tools/perf build warnings:
-> > 
-> >   Warning: Kernel ABI header differences:
-> >     diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
-> > 
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Makes sense. Feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
+On Tue, 09 Apr 2024, Ingo Molnar <mingo@kernel.org> wrote:
+> * Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>
+>> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
+>> > To pick up changes from:
+>> >
+>> >    b112364867499 ("drm/i915: Add GuC submission interface version query")
+>> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
+>> >
+>> > This should be used to beautify DRM syscall arguments and it addresses
+>> > these tools/perf build warnings:
+>> >
+>> >   Warning: Kernel ABI header differences:
+>> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+>> 
+>> All these years and I never realized there are header copies
+>> there. But... why copies?
+>
+> It's better than all the alternatives we tried so far:
+>
+>  - Symbolic links and direct #includes: this was the original approach but 
+>    was pushed back on from the kernel side, when tooling modified the 
+>    headers and broke them accidentally for kernel builds.
+>
+>  - Duplicate self-defined ABI headers like glibc: double the maintenance 
+>    burden, double the chance for mistakes, plus there's no tech-driven 
+>    notification mechanism to look at new kernel side changes.
+>
+> What we are doing now is a third option:
+>
+>  - A software-enforced copy-on-write mechanism of kernel headers to 
+>    tooling, driven by non-fatal warnings on the tooling side build when 
+>    kernel headers get modified:
+>
+>     Warning: Kernel ABI header differences:
+>       diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+>       diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+>       diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+>       ...
+>
+>    The tooling policy is to always pick up the kernel side headers as-is, 
+>    and integate them into the tooling build. The warnings above serve as a 
+>    notification to tooling maintainers that there's changes on the kernel 
+>    side.
+>
+> We've been using this for many years now, and it might seem hacky, but 
+> works surprisingly well.
+>
+> Does this make sense to you?
 
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+Yes, although there are probably pieces of the puzzle I'm missing.
+Thanks for the explanation! (That might work almost as-is copied to
+tools/include/uapi/README. ;)
+
+It's also kind of funny to find this kind of back alleys of the kernel
+repo I've never wandered to before.
+
+BR,
+Jani.
+
+-- 
+Jani Nikula, Intel
