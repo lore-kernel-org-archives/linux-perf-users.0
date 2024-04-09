@@ -1,92 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4306C130E2D;
-	Tue,  9 Apr 2024 13:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B870D13118C;
+	Tue,  9 Apr 2024 13:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669606; cv=none; b=Wpe2jkL/t+cpz/5iBW9dvljuLuxv8MwG5mDokY4sxykaFuHKCwQE5CK/lAuwEYGofiw63cZAwyLMwY+PHR/0fnUsyJJzwyg9gl2Q9eReAmDJVafSnphrEKin4W1l9fffDE1E/PFzHWHxq9dnLaNh2qXyRMcvIbZMUdTOBXZIdck=
+	t=1712669621; cv=none; b=SWkLUybGChpiWPIaRlKUr9yft2A7QiJrlRzCBF8gqe+s1BHu0uUeeXhrIVLQVNGC38GMU9DcImf4z1DN5cJf4zURrjcU2+d6NA70R7GF1faqMDDOeAsP5pdHc9v3MaF1gc46twsRwFzvQDnXA+N0+RRX2Fl7AU+I264Y6ZLmbDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669606; c=relaxed/simple;
-	bh=u4FR5Y+UEiIgK8eplC+h87f4MqY4iTWX06FqasbSRuI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s/zY7ejd/cE4Fodulanb2z4WtCOUCu+zd9LyrzSTDm1B6L3dBmrKUtPxhZlssiumIh+cvcwssn1+wUl5WDb7qlU6hleS6SRN4nf3WGhqeYt6SLHyH73MYaB9w0wsPg+8w7ZWRkBixtKbUawOFkjOPqgIMlWc1KhF+7dluygHNpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C409139F;
-	Tue,  9 Apr 2024 06:33:53 -0700 (PDT)
-Received: from [192.168.1.100] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A97F3F766;
-	Tue,  9 Apr 2024 06:33:19 -0700 (PDT)
-Message-ID: <3df74a0a-6778-43c4-a8c2-70d71c324f6a@arm.com>
-Date: Tue, 9 Apr 2024 14:33:18 +0100
+	s=arc-20240116; t=1712669621; c=relaxed/simple;
+	bh=pWQnQ9LXN4+KTgXHpwSd2PzBppm7znjsfC8WNvHWtjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X/NepFyaJjMBGWh9yd5W9hatsdWdhIFBvo95Y+ydWeuZGyFBQg5LuHB+CfyK0OSWraQfJFsTsfYLdqiJ/ytRch2m/wvuFOvZuNGmKt87K0yMXK3GR2OuIUmbBnF8dDX1xJ70WkZsPooXrnDHnIrjGQxRB0+j1kw/DqEATgRRQ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nIC9LRyw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=plxGPPUi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nIC9LRyw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="plxGPPUi"
+Date: Tue, 9 Apr 2024 15:33:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712669618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9SMVgpEWOLLh7oySvccsorrgvMSBwV0srF8b/SH3+RY=;
+	b=nIC9LRywVeMI/z6XQ+u9lIdyMZ/5bXgDOvx6IbXX81fygT6yE6vTF6krHnYgNVr6CIv80g
+	tHZ6pZuIiX1PHZK39sZF/t9OIPzaIBTSYeYSVZzVXP75+dK1QaRRqKb58KLjHWDc5pg9T0
+	4nLTBBtBt+7mKJxDdPYwtBEjmE/GydCh9BUQx6EqOJq/AAfhmUiwBqxuxs4SL9J2Cc2Wg5
+	L+xkxPoO1Nmq81wazQOoOMd4RBIBZk3CcmEo2JLi4AeqFZAHixoAa7RQ5joF2bOEBdUWBC
+	WXmLVS6bJPMC58hShMKlbj3gjgCoe3JZ8v46yaYB4Kn562gzBsKqKB7XD8U4Xg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712669618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9SMVgpEWOLLh7oySvccsorrgvMSBwV0srF8b/SH3+RY=;
+	b=plxGPPUitPqhGo4DexbruoCSFELJK1rx3Z2L0afSobUiuIyjZelu3pAQ9uxPnyJmPRgd5z
+	W71JKLViKvlKn7BQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
+ from perf_pending_task().
+Message-ID: <20240409133336.Y4Io-16-@linutronix.de>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-4-bigeasy@linutronix.de>
+ <ZhRqSEbyd1rqVwfN@pavilion.home>
+ <20240409062501.h4rA_ck4@linutronix.de>
+ <ZhUaAjhQXN6ahtpS@localhost.localdomain>
+ <20240409105405.TXUU--_W@linutronix.de>
+ <ZhUt8XMndGSwNuwx@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf vendor events arm64: AmpereOne/AmpereOneX: Mark
- L1D_CACHE_INVAL impacted by errata
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-References: <20240408214022.541839-1-ilkka@os.amperecomputing.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240408214022.541839-1-ilkka@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZhUt8XMndGSwNuwx@localhost.localdomain>
 
+On 2024-04-09 14:00:49 [+0200], Frederic Weisbecker wrote:
+> Le Tue, Apr 09, 2024 at 12:54:05PM +0200, Sebastian Andrzej Siewior a =C3=
+=A9crit :
+> > On 2024-04-09 12:35:46 [+0200], Frederic Weisbecker wrote:
+> > > > > > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct cal=
+lback_head *head)
+> > > > > >  		local_dec(&event->ctx->nr_pending);
+> > > > > >  	}
+> > > > > > =20
+> > > > > > -	if (rctx >=3D 0)
+> > > > > > -		perf_swevent_put_recursion_context(rctx);
+> > > > > > -	preempt_enable_notrace();
+> > > > >=20
+> > > > > Well, if a software event happens during perf_sigtrap(), the task=
+ work
+> > > > > may be requeued endlessly and the task may get stuck in task_work=
+_run()...
+> > > >=20
+> > > > The last time I checked it had no users in the task context. How wo=
+uld
+> > > > that happen?
+> > >=20
+> > > I guess many tracepoint events would do the trick. Such as trace_lock=
+_acquire()
+> > > for example.
+> >=20
+> > So the perf_trace_buf_alloc() is invoked from that trace point and
+> > avoids the recursion. And any trace event from within perf_sigtrap()
+> > would trigger the endless loop?
+>=20
+> No sure I'm following:
+>=20
+> 1) event->perf_event_overflow() -> task_work_add()
+> //return to userspace
+> 2) task_work_run() -> perf_pending_task() -> perf_sigtrap() -> tracepoint=
+ event
+>    -> perf_event_overflow() -> task_work_add()
+> 3) task_work_run() -> perf_pending_task() -> etc...
+>
+> What am I missing?
 
+Yes, that is what I tried to say. Anyway, I misunderstood the concept
+before. That means we need to keep that counter here and a
+migrate_disable() is needed to avoid CPU migration which is sad.
 
-On 08/04/2024 22:40, Ilkka Koskinen wrote:
-> L1D_CACHE_INVAL overcounts in certain situations. See AC03_CPU_41 and
-> AC04_CPU_1 for more details. Mark the event impacted by the errata.
-> 
-> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> ---
->  tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json  | 4 +++-
->  tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> index 7a2b7b200f14..ac75f12e27bf 100644
-> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> @@ -9,7 +9,9 @@
->          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
->      },
->      {
-> -        "ArchStdEvent": "L1D_CACHE_INVAL"
-> +        "ArchStdEvent": "L1D_CACHE_INVAL",
-> +        "Errata": "Errata AC03_CPU_41",
-> +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
->      },
->      {
->          "ArchStdEvent": "L1D_TLB_REFILL_RD"
-> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> index c50d8e930b05..f4bfe7083a6b 100644
-> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> @@ -9,7 +9,9 @@
->          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
->      },
->      {
-> -        "ArchStdEvent": "L1D_CACHE_INVAL"
-> +        "ArchStdEvent": "L1D_CACHE_INVAL",
-> +        "Errata": "Errata AC04_CPU_1",
-> +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
->      },
->      {
->          "ArchStdEvent": "L1D_TLB_REFILL_RD"
+> Thanks.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+Sebastian
