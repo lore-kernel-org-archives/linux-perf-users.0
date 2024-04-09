@@ -1,93 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240887605D;
-	Tue,  9 Apr 2024 07:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289277CF1B;
+	Tue,  9 Apr 2024 07:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712647619; cv=none; b=d+dWdpfJuZZseBXPNjN7MtrO375pGNH2aqv88FYHfNLwlxgfYh/f6ZRaNGIMJGcjKxSWpOib6hXBI+JcJw7ImjHQ23FBClETSC7LmE05Tm5eHmq3Zwvb/5MIK9anLog16j3dkHpuPaGxDnurlGDRrB+G+8CZpS2YGnw3pJM6RCs=
+	t=1712648260; cv=none; b=ea+iw+dlwQ48l7B4icVaAcJQ6dXK3A5OdAHgLnIVNK7CCcE4CKLv9V/1bgH+naG0Yq6tMulfjpKqEmcPrG/152rbQPimEDaHu1F7NPhcQaEnFEupvPGDdWHfzrUjsrkH4KIrEkiKBWBLRGESFJhtBa/fBC3ac/L+PBvIhogj+Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712647619; c=relaxed/simple;
-	bh=daUzE7PdhRD4SgLG9zKOOsfMuWRE0I6EtRMVENqc/98=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=U5Z5lZB7uIMTxiS7XIEd4lPCZn+to6wIJV9GCCYtPlQGNyAadGM3If8Dzs4aQlsI4Gk48HscTBZebidISts7DASWq4ru7yqaV7lXXEqwvMyzwYiXLEAYyuyfTZqMcKQwlkdk76fixzg8A4x29wEdCjrIZ23oWp+AUkFXqG/hBOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AKatHfYU; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712648260; c=relaxed/simple;
+	bh=f2v6EemJgH8gUwOG9G1BJvqod8DiK6XZ/DoVV1vkxVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W0PGLSwinLcTM860IC8qI7BucpwDU39zcCRU50OipNT447k85lDjx9fDiWXokMFCbtoxSHBt0eFgFVdvdYdfF3wSD81pUilo6jG1dssXhlyFvWB90hl5dH1sjUGWf0l+djg1GUTD+1jAAxeixSsSOHI5hYpycDKDmxIxxzgyOkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKTruYtj; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AKatHfYU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712647617; x=1744183617;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=daUzE7PdhRD4SgLG9zKOOsfMuWRE0I6EtRMVENqc/98=;
-  b=AKatHfYU/obN7UwyWBS5rrPZKzKxFxQqUJZzIuCDScDgn6IZUZ/ZK6Pi
-   PLnubkzcTUMLxqylJKEBRRkQU5cwYstO30drVBfxfNCFYAGfS9SpJPCqN
-   8SZRiBbSJLHdLSGTvjB0HEkoX4WMidaV9PFZrlwnfzLlECnaBdBRa5uhf
-   p/Z/Mrn5180om0TTru7XpE7G096TSm30QQBCZ3Y7mD3fxTDFvMjwRfc+s
-   qV9dr3qVZwQhTDfa9JK30baTUcbzGSbFbvUcqCtrz7AYehdesHzd01i+F
-   arjuXoJonughtgClA0wt6omzcTaBGz2mRRylZrx7qWteubWSUZA2J9WbG
-   Q==;
-X-CSE-ConnectionGUID: naIUizQGRcSULX0MVwzUtg==
-X-CSE-MsgGUID: sfY7LiksT5upKG2hIqsDqw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8110431"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="8110431"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 00:26:56 -0700
-X-CSE-ConnectionGUID: Vh6Zj9t+TO+fDY1xnrUssw==
-X-CSE-MsgGUID: 63XeEpTzQf2JrlksYXceig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="24925457"
-Received: from mserban-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.59.228])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 00:26:51 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
- <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKTruYtj"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a44f2d894b7so596657766b.1;
+        Tue, 09 Apr 2024 00:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712648256; x=1713253056; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oeZX37alwhVBm66iueJmj96zOvfZbQdgLcxSPkunHuE=;
+        b=mKTruYtjKsdA1cLDFPYMi8Ps8DLrcs+lpxQ2SFdxpdFIWSiOUhzK87H0oieJ87ncDp
+         Ep/2Q48zvt16GeG93fhkMU47NV5//FgCCvkIUtIls3p5tTOaNUMvmiruw8NMuQV+d6Uw
+         td+KVPWKPn1j4AGzwdWvWfZZSwt7Qresecp1OIg7BiKPjGIex6Yvdvc35ypAMQ9lBnOD
+         P3dLmPar0CP8vsPEuuiu+bl/OV9RvT7XV0rfnW8C8QtNyvXa08XT5kQV7p1FBxGQ7+LE
+         urPOcTBVEsxA14/DV6kuJLw8YBTdOqOInhxmx7GvjFLMuB/Wbg7Uuwly6K3Gtt1Jk7YJ
+         c2/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712648256; x=1713253056;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oeZX37alwhVBm66iueJmj96zOvfZbQdgLcxSPkunHuE=;
+        b=orfM69QqTCXr6w3z787TryyKo2eTpniLMhqIKtrMSBj1kbC6+6dk6tUl9sd2RzcVSU
+         wVBn7ptYWQpgK52i62Stj9ZGwhb/CdVY4LJsgSCgsU/tSMIXdeOGBgCfcMp27Hi2ZM0A
+         1oouY3KhqBbqT1ounYv4s/omOKtQwKzXq2OaO3+HLQi1uI4Eop4KexKkDbOTw223xuLn
+         CLO9aKoYboTvjoYo0Iam8SRgJk4HoSfMH0rPLIPleLOYAXcjJ/gIG+8vqhOcescdy7pk
+         Oii4yOkjUwatGC8YCglGZ7FiApzUdZFC8gzeGQAGsu/yC3e7W7cG5jgb3VswcFAo4qWf
+         dpUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOGOGomPov9U41uwnS+udIlviQyrDipChmGW20zgDO+kLo8yAoo4T5GSy/iNbrT4IK7+UZoCx/0w3b6a0IM5WjkZFAs9lxB/z61ACYYyLp7+nZBJoLThHu5GKjPEVCl1NV2gHRPDEKAD1mzCFAXQ==
+X-Gm-Message-State: AOJu0Yx3UGW2qcLN5Mic0GAfMFsEMkGUaETo4X3y9Q5Mpp5xQ5jiqVT7
+	dtnE3WbTYU7CZ26owl8EStDVIEOa2DJ4s6887DFzrJzlOqBMTgSi
+X-Google-Smtp-Source: AGHT+IGC9u6AdJJdmgz3Ddo1LVoNSbNdizV6+YvEnSzrTXf8auCvZmdmyCV946q1E5gu6YDtorI07Q==
+X-Received: by 2002:a17:906:ae4a:b0:a51:b3cb:cdca with SMTP id lf10-20020a170906ae4a00b00a51b3cbcdcamr6859147ejb.26.1712648255795;
+        Tue, 09 Apr 2024 00:37:35 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id jw20-20020a170906e95400b00a51c5940247sm3368760ejb.213.2024.04.09.00.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 00:37:35 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Tue, 9 Apr 2024 09:37:32 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org
 Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
  kernel sources
-In-Reply-To: <20240408185520.1550865-2-namhyung@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <ZhTwPLliHXKPAJUQ@gmail.com>
 References: <20240408185520.1550865-1-namhyung@kernel.org>
  <20240408185520.1550865-2-namhyung@kernel.org>
-Date: Tue, 09 Apr 2024 10:26:47 +0300
-Message-ID: <874jcb9etk.fsf@intel.com>
+ <874jcb9etk.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
-> To pick up changes from:
->
->    b112364867499 ("drm/i915: Add GuC submission interface version query")
->    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
->
-> This should be used to beautify DRM syscall arguments and it addresses
-> these tools/perf build warnings:
->
->   Warning: Kernel ABI header differences:
->     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
-
-All these years and I never realized there are header copies
-there. But... why copies?
-
-BR,
-Jani.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874jcb9etk.fsf@intel.com>
 
 
--- 
-Jani Nikula, Intel
+* Jani Nikula <jani.nikula@linux.intel.com> wrote:
+
+> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
+> > To pick up changes from:
+> >
+> >    b112364867499 ("drm/i915: Add GuC submission interface version query")
+> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
+> >
+> > This should be used to beautify DRM syscall arguments and it addresses
+> > these tools/perf build warnings:
+> >
+> >   Warning: Kernel ABI header differences:
+> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+> 
+> All these years and I never realized there are header copies
+> there. But... why copies?
+
+It's better than all the alternatives we tried so far:
+
+ - Symbolic links and direct #includes: this was the original approach but 
+   was pushed back on from the kernel side, when tooling modified the 
+   headers and broke them accidentally for kernel builds.
+
+ - Duplicate self-defined ABI headers like glibc: double the maintenance 
+   burden, double the chance for mistakes, plus there's no tech-driven 
+   notification mechanism to look at new kernel side changes.
+
+What we are doing now is a third option:
+
+ - A software-enforced copy-on-write mechanism of kernel headers to 
+   tooling, driven by non-fatal warnings on the tooling side build when 
+   kernel headers get modified:
+
+    Warning: Kernel ABI header differences:
+      diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+      diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+      diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+      ...
+
+   The tooling policy is to always pick up the kernel side headers as-is, 
+   and integate them into the tooling build. The warnings above serve as a 
+   notification to tooling maintainers that there's changes on the kernel 
+   side.
+
+We've been using this for many years now, and it might seem hacky, but 
+works surprisingly well.
+
+Does this make sense to you?
+
+Thanks,
+
+	Ingo
