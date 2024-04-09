@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C74774435;
-	Tue,  9 Apr 2024 08:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38DD7E77B;
+	Tue,  9 Apr 2024 08:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712652488; cv=none; b=MsE/y/e3YdikkVtZVxI6uSyur9QwDek5J2J6ufGGj0baGgCwZcnRo1QgDbxbdlmDPwF6U53MM8VfMX8BiBEQgjq98DDH8ABKmlSu57uza+3rn+EpzwOKNA7INhH6TzRLexEcFI3sHC1mO9k5p0hcbuIg9n09yerqHmCJSzDa3N4=
+	t=1712652493; cv=none; b=VCNLKQY+dmAMj6P3g9auLbsVZxIr4eHBaKNthInmrjeEG4lUrEVV0TkJarRliETL47x2dwsqsIZst9gTCOxIUhBUKkFYbVPlkDD//CPjFkWzICsI0HbT131dMN7lsm5yL5942oMhkv7cL717qq4VG7uhI8iK7KpK80WYw9xHM6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712652488; c=relaxed/simple;
-	bh=KeD4xL0gB/xCATWdOFUs5Nts/UM0E+U+CU8Lg6aBHO0=;
+	s=arc-20240116; t=1712652493; c=relaxed/simple;
+	bh=ypMirJBQln4cahP5+iyf5ns4VS6WkKkpnbUKpCIXRMM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XA4EqhDq4GpncarOErcvPdHjRyMx4kSb349Gg/C4CWSccDrK117GCeVXVqBRPcDNCTut6lGypY0G0wCmyVOceyts31qfeOr8X/Qcm8+EtHV+CEO2RDOO4Dbi8OGqhKboThIRxqFkpZ/pIAi06eUvYiaj2RfecEiJezfoNCyE3Ow=
+	 MIME-Version; b=MOQilDrE4205mzrevI5M6Nv/7ll5FtTW76F2UXbn9eWIjm8X/tyF2ybQc5ASDLevKs+M1c46Oxz+3+uYD3rHcCVGw4sl9rvWHgFYm0K0UPiXsOclC+IEO/hLk+e/2SNN4fzHiMpYIc99+NX+jd93SO9NseQFHU/Z7IMGSCK7upY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 186B51007;
-	Tue,  9 Apr 2024 01:48:37 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DD8D12FC;
+	Tue,  9 Apr 2024 01:48:41 -0700 (PDT)
 Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 910253F6C4;
-	Tue,  9 Apr 2024 01:48:04 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2201C3F6C4;
+	Tue,  9 Apr 2024 01:48:09 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	irogers@google.com
@@ -34,9 +34,9 @@ Cc: James Clark <james.clark@arm.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
 	Leo Yan <leo.yan@linux.dev>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] perf tests: Apply attributes to all events in object code reading test
-Date: Tue,  9 Apr 2024 09:47:37 +0100
-Message-Id: <20240409084741.405433-2-james.clark@arm.com>
+Subject: [PATCH 2/3] perf map: Remove kernel map before updating start and end addresses
+Date: Tue,  9 Apr 2024 09:47:38 +0100
+Message-Id: <20240409084741.405433-3-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240409084741.405433-1-james.clark@arm.com>
 References: <20240409084741.405433-1-james.clark@arm.com>
@@ -48,47 +48,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PERF_PMU_CAP_EXTENDED_HW_TYPE results in multiple events being opened on
-heterogeneous systems. Currently this test only sets its required
-attributes on the first event. Not disabling enable_on_exec on the other
-events causes the test to fail because the forked objdump processes are
-sampled. No tracking event is opened so Perf only knows about its own
-mappings causing the objdump samples to give the following error:
+In a debug build there is validation that mmap lists are sorted when
+taking a lock. In machine__update_kernel_mmap() the start and end
+addresses are updated resulting in an unsorted list before the map is
+removed from the list. When the map is removed, the lock is taken which
+triggers the validation and the failure:
 
-  $ perf test -vvv "object code reading"
+  $ perf test "object code reading"
+  --- start ---
+  perf: util/maps.c:88: check_invariants: Assertion `map__start(prev) <= map__start(map)' failed.
+  Aborted
 
-  Reading object code for memory address: 0xffff9aaa55ec
-  thread__find_map failed
-  ---- end(-1) ----
-  24: Object code reading              : FAILED!
+Fix it by updating the addresses after removal, but before insertion.
+The bug depends on the ordering and type of debug info on the system and
+doesn't reproduce everywhere.
 
-Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/tests/code-reading.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/machine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 7a3a7bbbec71..29d2f3ee4e10 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -637,11 +637,11 @@ static int do_test_code_reading(bool try_kcore)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 5eb9044bc223..a26c8bea58d0 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1549,8 +1549,8 @@ static int machine__update_kernel_mmap(struct machine *machine,
+ 	updated = map__get(orig);
  
- 		evlist__config(evlist, &opts, NULL);
+ 	machine->vmlinux_map = updated;
+-	machine__set_kernel_mmap(machine, start, end);
+ 	maps__remove(machine__kernel_maps(machine), orig);
++	machine__set_kernel_mmap(machine, start, end);
+ 	err = maps__insert(machine__kernel_maps(machine), updated);
+ 	map__put(orig);
  
--		evsel = evlist__first(evlist);
--
--		evsel->core.attr.comm = 1;
--		evsel->core.attr.disabled = 1;
--		evsel->core.attr.enable_on_exec = 0;
-+		evlist__for_each_entry(evlist, evsel) {
-+			evsel->core.attr.comm = 1;
-+			evsel->core.attr.disabled = 1;
-+			evsel->core.attr.enable_on_exec = 0;
-+		}
- 
- 		ret = evlist__open(evlist);
- 		if (ret < 0) {
 -- 
 2.34.1
 
