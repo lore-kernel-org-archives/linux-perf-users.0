@@ -1,93 +1,95 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC1C56465
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 02:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61B35477C
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Apr 2024 02:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712628181; cv=none; b=snQwrYRe6/E2HwSNrbQINxgeXesv6ZCWQdwfZvKztiRceadcmmEvQIkLy4vWvJS+e0X6MnNNy0XFuTvE6mrn4wa/b5zesFf+ZjL4xyHZnXWK4iDyub2pjLYInOscJm4LT5qTW4w3o1PXTVc00cd4I2G7A+qxKw/GgJZ+a2VEiSM=
+	t=1712629942; cv=none; b=XqiUzzaPVL3VaZg3sJZrttMa4PTQdXVBVsV+lnL3HszRYBajAUGKxatIvko7o++au7zHq6OHpFdL+cKLwZygo7dE+pTFv0OYG3HQpGns239YPhZfbucJE8EaAmARg6jvl4mEMB53qWbqnChbpOZHYhEPKk8Bt5oRIgxJ/5TfFZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712628181; c=relaxed/simple;
-	bh=/66ANqhlgh6dfJsAL2UyKasucCcRFsXjIhwslGGnq/g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z1GqGhlquaNWa95vVmhCoyz1JkVVZCVuSfLyrBOHswQS1a0ELABFcAZk/yihrDbuz6j/oU2gnNqGUVXsILWnWfHl4GEGum5MFM03GDVfWf7xVhVUX764PuBBGCvQ5crmpAXLrlGcYxmmkDXwb46O8VA0QM/mARiJ3ctrBs2e/Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N8DNuWvL; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1712629942; c=relaxed/simple;
+	bh=Ig1KBbQC+Wey0nk2eqBsqNOecgBt4OBUm9yv3zQ5v3c=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=XWQT+AAiuHlk1pgMyXxCGyCnZCZerP6TIDo1cH3igwdlEq8VYdgNok42aqZYV1K5vRjeLtRfiFw4iwyfIotcTJj+SUoSDVwNdAnV/D/V6ElEoThi/5B2R8Goukz3W+Ljhd0ZSqH8qrfJvbej/k3TR/3jlQRhRjqDshdNsvZOe5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BWLA7b5x; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8DNuWvL"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ceade361so8416606276.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Apr 2024 19:02:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BWLA7b5x"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b269686aso7252698276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Apr 2024 19:32:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712628178; x=1713232978; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fpNLMOdTuzWqLni5ebK55upYwMGmEgOY//8538KyEg=;
-        b=N8DNuWvLg3Dek3uI8v83apdHF9SLE1XFPySDK9L1YGz45j9sYI4m337gzEk4m9My9l
-         NBZLqmjGtvxWinETu8607auqI99rW7LmGKX3LDLxGfU4gwClUCXTmK2e0D0aj/0PPzsE
-         wHD9atofGr8b3GKrEwObEHYTKBDnQasXEEdbFHHujjX4VDwzdz626Zq8vJVZIy54ghij
-         wQXg/bPppavQqNokBrSLfRPz9OvL8PWlfB/Q/R/wdshr4V4XmCjmykbzO8EVVe9b1X+D
-         7a/Kd6QY+0ubKVMLkODNfwqv4sj6AOgxosVgBQLGJRrEMoewt2z7Zb1cQ1BQ0PIS9HeD
-         P90g==
+        d=google.com; s=20230601; t=1712629940; x=1713234740; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KUIS0MyTzJCVZ+gD/HZpV18hXpIYqV5o1vAPtPINFuE=;
+        b=BWLA7b5xa0LQOm1Oe+68LZhu6+oFcL6XB8p/nKFY1TzLW2nEoPYWoz+376MchTjJ+l
+         0WB5OPnEMRtzwzZVUTfLx6i6jBx0Zi24i6cj540T8gphGPu0/ohXkzKTIlutyUIpg58z
+         CwCCpytxe+r9FkdRgBE2D7uP+RtU6txNEfVVck40ca7ul3C771pbjDcyPOl7JEpkajWo
+         QBNQuobiNFun4EQVGinwvpnjvsj2qJj4/SvrVeYiwFIN7nsJeVpEu2To3iPIi34wXUB3
+         YEwhrLjCy4SN7RJ1SPcnVnW9RzOEbFeliqqJXy551/kxXEv2PnqckxrySx1kVTXjFXoa
+         5UgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712628178; x=1713232978;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fpNLMOdTuzWqLni5ebK55upYwMGmEgOY//8538KyEg=;
-        b=c6HcFbpim8jSeKCd0I5CFu89V/SXPLzezCEYpTlTdVsXgqt7gZYIRibNMg/ffPAWzt
-         xG2YLcra1qFbM18b21yMJxgzeDnT/pinbKJ8u7gdhxvyOfsaAHhkmERidpuNQCmSDkU9
-         WdS6ynqcv5pRy7TM60qKOHlmUHRjq99OLTlJ7IKe1cwgkhiGcbv7VSvN0pBRy232pClp
-         YtUrxk9kKJfOBoeST2549podCSVYIkJ0wLs/VdJlUAyKlHKsbiVvfBdi0GEZ9ToMKUEc
-         ATXht+MqVBhvnia1jkzvVfX8Y5tFWExQAmWEUTP/Z6dJLk2Lf3AF1Z9JV8lo1xC8UkW1
-         WEmg==
-X-Gm-Message-State: AOJu0Yx+EHjp77ikYJ1YALGctrWSXKEpypXoW27kf5uyARl6bUpbkODp
-	mH0zN+40yHM3TR3sTx+Bu2JhAdJqvJ6ceI91bwp2WCHN45kpRbLNsuXE6bSthus/qvafvBBns7j
-	IYQ==
-X-Google-Smtp-Source: AGHT+IFkT3IqNk8Swm6Z6BzO4HQMeVVomPflFll1hzbTPvwK61G/5hP4ruxToK9jO/RPTXxksja17dHvTW0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:c03:b0:dc2:1f34:fac4 with SMTP id
- fs3-20020a0569020c0300b00dc21f34fac4mr3156555ybb.2.1712628178083; Mon, 08 Apr
- 2024 19:02:58 -0700 (PDT)
-Date: Mon,  8 Apr 2024 19:01:33 -0700
-In-Reply-To: <20240307011344.835640-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1712629940; x=1713234740;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KUIS0MyTzJCVZ+gD/HZpV18hXpIYqV5o1vAPtPINFuE=;
+        b=anPhepJEw/Jl2WE3jstYELdUSmyVKFfZimEds9RvZp+Svv/EPGU04yF6QmAAYgfXDQ
+         Xy8xLDgy9XeVK7Nk7z2qaq5mvnNLQX2QNHDrBkYP0+cCyc8zsbvURlx3ze0lDI15ZOHc
+         rylNln+hqj6hlny8XLILl7YYJFjUX6YR7ifKupIqZWCbPeq5ckIaptzMY4RTpwtR9Pso
+         +ZQwx2rIw1+uKVKF6JHkIuUiwleIqatB4NjOj4P2INuRn4tA5NQJZ9NHUVj8meQlcbLp
+         /AiNynCQrfKutONQe6eUv90hAbvlhl5J8UD/v6A7hkmsTqr26u5Ibye/zCccgtgM+Ikc
+         +/qw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXIZCYbOKW3S994zvs3txEMIVkGEM3OKIIPP7HQ/AUZI1cW1X3P2fZrP09cO+KSYbluMcXWLPvexLV+w4Tf/uS3byakXQcNRXo1/boMe7scQ==
+X-Gm-Message-State: AOJu0YzKLfm5Ih7gR+wka+ZbmClVhrJuB1SHjbpoAisVgde7Vgg9iuBM
+	Aflx1SIjZuwSVfIW8tn22y5cWqftyHChAWm45bgdC6HjRn3O4M2bUmGxpBp7buKo0sdKFH5jj8h
+	xDMPU0g==
+X-Google-Smtp-Source: AGHT+IFLk3uhl9FNy1Hb+p1VyRcNScSA1q8SStSpGeuCj4ki57fZYqE1fDks/q160igDIs/p6DJDVcbL5IOQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5520:7788:6b7d:7115])
+ (user=irogers job=sendgmr) by 2002:a25:c712:0:b0:dcc:4785:b51e with SMTP id
+ w18-20020a25c712000000b00dcc4785b51emr811897ybe.12.1712629939984; Mon, 08 Apr
+ 2024 19:32:19 -0700 (PDT)
+Date: Mon,  8 Apr 2024 19:32:12 -0700
+Message-Id: <20240409023216.2342032-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240307011344.835640-1-seanjc@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <171262750089.1420807.14858434543826601467.b4-ty@google.com>
-Subject: Re: [PATCH 0/3] KVM: VMX: Disable LBRs if CPU doesn't have callstacks
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="utf-8"
+Subject: [PATCH v1 0/4] Add shellcheck beyond perf/tests
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 06 Mar 2024 17:13:41 -0800, Sean Christopherson wrote:
-> Disable LBR virtualization if the CPU (or I guess perf) doesn't support
-> LBR callstacks, as KVM unconditionally creates the associated perf LBR
-> event with PERF_SAMPLE_BRANCH_CALL_STACK.  That results in perf rejecting
-> the event, and cause LBR virtualization to silently fail.
-> 
-> This was detected by running vmx_pmu_caps_test on older hardware.  I didn't
-> tag it for stable because I can't imagine anyone is trying to use KVM's LBR
-> virtualization on pre-HSW.
-> 
-> [...]
+Add shellcheck to other locations of shell scripts, not just
+tools/perf/tests. Fix issues detected by shellcheck.
 
-Applied to kvm-x86 fixes, as I can't imagine anyone objecting to patch 2.
+Ian Rogers (4):
+  perf build: Add shellcheck to tools/perf scripts
+  perf arch x86: Add shellcheck to build
+  perf util: Add shellcheck to generate-cmdlist.sh
+  perf trace beauty: Add shellcheck to scripts
 
-[1/3] KVM: VMX: Snapshot LBR capabilities during module initialization
-      https://github.com/kvm-x86/linux/commit/2a94a2761236
-[2/3] perf/x86/intel: Expose existence of callback support to KVM
-      https://github.com/kvm-x86/linux/commit/0c0241c12332
-[3/3] KVM: VMX: Disable LBR virtualization if the CPU doesn't support LBR callstacks
-      https://github.com/kvm-x86/linux/commit/0eb2416c8111
+ tools/perf/Build                              | 14 +++++++++++
+ tools/perf/arch/x86/Build                     | 14 +++++++++++
+ tools/perf/arch/x86/tests/Build               | 14 +++++++++++
+ tools/perf/arch/x86/tests/gen-insn-x86-dat.sh |  2 +-
+ tools/perf/perf-archive.sh                    |  2 +-
+ tools/perf/perf-completion.sh                 | 23 +++++++++++++------
+ tools/perf/trace/beauty/Build                 | 14 +++++++++++
+ tools/perf/trace/beauty/arch_errno_names.sh   |  8 ++++---
+ tools/perf/util/Build                         | 14 +++++++++++
+ 9 files changed, 93 insertions(+), 12 deletions(-)
 
---
-https://github.com/kvm-x86/linux/tree/next
+-- 
+2.44.0.478.gd926399ef9-goog
+
