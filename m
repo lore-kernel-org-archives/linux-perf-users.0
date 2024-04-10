@@ -1,118 +1,221 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44B217F377
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 19:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B477828FD;
+	Wed, 10 Apr 2024 19:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712776493; cv=none; b=JZkfkB3H3tYMt8bv2r2gRPOgP3Ox7kPC04fQ4uaVbfrGpA8W6Kr5FZ25xLD4TgbNzstGIKPbd+k1L4ioLVeQfPDlgCF/Xy/vX+FDQaUg8VWkGDKEqDNaAMQQf3YUQLVFJEpYJ/C3fYCMFyTeiyeOhwFP21UJRj4Icr0D9kaLl+A=
+	t=1712778763; cv=none; b=dCZrMORbmyW+JGyY900zv/juCAwRYOM5IFUm4/lz0/wjeZTMjzI7r14REM3n4xpCmwXkoIH42usjUWmYun099tEUDsuW4jLu+Ry1tXo1dfg33OdQ77UB9sLtujwkwHyFuxNUaucjCXMat7wa4Yzk+p7Eq0O0Ct71wEAQc2YReVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712776493; c=relaxed/simple;
-	bh=1svL0E74yAjpQMbTutyztcwNrRVSEN5XvfFbGICi+Zg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gG7juhx5ndQNK3l9McniCkRlo9p6LWQ34LbXtphXoRvvgdEHMk8rtzTCzoibLm+oJaIO4FUPsyEENAlEF3aQh9Sph+Pn/eQptB5WmGn59dwhDsuG44i+jZBeUMRQYZuHY0uZjgTYsLym3kTL1IFydFpTKl75HCA8VXas0OstjGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J8R0v2V6; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712778763; c=relaxed/simple;
+	bh=HmV0bjsSlKEC99Ik9DKscFRJxpEuP1+26uWiLWV86jE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1OXK0mXevcfHFQH0pklayi+MCULiPCXzgo26Sks+CGJtLKlwMVgfrvGkTztemaqPhvDpTxXVPmmueITNOYzZ3k9tkGOFP+N2R8LKJH4le9zX3qwXVGMhqEhZc9oqJuXzCZPQ0KSNaE9K2sIRjoad1dl88FQLOCUkETUxC8AV4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/tyxoTy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J8R0v2V6"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43477091797so56321cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 12:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712776491; x=1713381291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fnSzzFgP2liAY4gSnshhFACs6sQ4XACv2JFHDRUpzPA=;
-        b=J8R0v2V6gHZEtzvofZ/erUeB0bClsvAtgKVPe9YXzsfRluAJkhffpF4lRmT6yXdNX+
-         vKhSjurTB9HisjNg8sHokfKQ/9jLxsIozqs4VJQhPHPW6xmt7UF9fZ2XcvmovbzR7EQF
-         QfZSf6tVFwZFpiaOhVVRfTTTHH1cvJWbDQ3AatGkpid+9g0uz11PIFy6NJ57KnaxxCjO
-         TxrmFProz1T2RJiKDBWhH2bd64SAVhhAqWaqi+lJSSQxw3+kM5o8p+eTgsKK20GYqhnX
-         2NmO6d4Nwg0KU3sm/4+MOIZxtEkd9gj6ahPS8RbqnsPhEGykuSmakUxF70hVDy/zysFt
-         epzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712776491; x=1713381291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fnSzzFgP2liAY4gSnshhFACs6sQ4XACv2JFHDRUpzPA=;
-        b=ZubbG++gxKVY5pbsCdpEJF6rKfjWAcbOQKp0jgWQOHIc/LPy1cyMdoswYLxdmt0wWs
-         8pFN1nZVLGTA/s9VedWs1knN6Q69pGJPPfim9G9NZ+gtYkEfY+q87y14zfcWZ7NU4KsP
-         wqKJYkW2y6sAmvajowyzX2M2YYVvhrIDKE7s8QPEX35WjiS5A+65h7hlCbAkvcXMz9fN
-         i0ylKpBxM0aTsgxfUiz98MzykCehgv3UMqspEze51SHUHLDMInaF15MD8SvXDc+VkXIY
-         CYtkPzyFImhxse8IBQG/4twHE7ok9UP1b9ahjm/KNGVxWtqYAYa5e5M9PfavZz+4ldK3
-         0WtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcTkf9CnrC2f6MdaGB+NdbjDSmd5bxzpEgB5i3LztiTipnsRImy4uIq7IgiiKwiMUmws/72t/+zy9qAbT/ElavCYQTAyu01IuAS5DKl43e4A==
-X-Gm-Message-State: AOJu0YxgmyLPkfaq0NJCEjBubUBtFPZcLJRalO6RiL2Lw69prZKeJrpa
-	FdwamJwQBjuYpbRxVqzoDU9aCyUHus1e6PmKzKmga/xfnw+xwpXhjusYE5BGalLhcwZvTuKl2HE
-	dfeK2e8HRrcGFi8T+zboI7sEg93PJlYTojJ5l
-X-Google-Smtp-Source: AGHT+IHXVM/rxOkvyaDPAoKQ59qRsklTHGKlP31SHouUdoafoSVXDuobM6bY0ykUcWsmXEHIn5XFlcm2mx9dboBqHMY=
-X-Received: by 2002:a05:622a:4d88:b0:434:4a49:da75 with SMTP id
- ff8-20020a05622a4d8800b004344a49da75mr30363qtb.11.1712776490581; Wed, 10 Apr
- 2024 12:14:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/tyxoTy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26F5C433C7;
+	Wed, 10 Apr 2024 19:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712778763;
+	bh=HmV0bjsSlKEC99Ik9DKscFRJxpEuP1+26uWiLWV86jE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m/tyxoTy/wuuYMKP78XeK61XHpz9pROlv6nWW9vTKwTHvf1DS88n6UIxf0OMt8S5R
+	 jLU0JkE0nfbSjxFqtXDW/9hP+yq1A2HP9iyi0rc6EyQR33e+ETOcat1uP94YUU9+rm
+	 cXpAsO2b+czJCIm2sojByH4QjLw/N+phz1WYVo5DsgthysWkNb2wwQPdoF6agtJ1a+
+	 jMr+Zj1y3f6uD05OZRRpeN5B7ueMW1Hl+tLpD4s/IYxAdFBVsus8zaNLXDLI1whaJU
+	 K7L5W/xUlRFdy6EBazve70BsqgVQ3ZdXx2B8g+EUAJ4BMYI0n3RJskmO3+1L6j+5Ko
+	 vB/ePzX/EKBZQ==
+Date: Wed, 10 Apr 2024 16:52:39 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/6] perf annotate-data: Support event group display in
+ TUI
+Message-ID: <ZhbuB43qQXzfUT14@x1>
+References: <20240409235000.1893969-1-namhyung@kernel.org>
+ <20240409235000.1893969-5-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410185117.1987239-1-namhyung@kernel.org>
-In-Reply-To: <20240410185117.1987239-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Apr 2024 12:14:37 -0700
-Message-ID: <CAP-5=fXeM32=wnkMnp49wLYDS1PWwhKtK9UiKyAa=XvJz9kANg@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Skip DSOs not found
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409235000.1893969-5-namhyung@kernel.org>
 
-On Wed, Apr 10, 2024 at 11:51=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> In some data file, I see the following messages repeated.  It seems it
-> doesn't have DSOs in the system and the dso->binary_type is set to
-> DSO_BINARY_TYPE__NOT_FOUND.  Let's skip them to avoid the followings.
->
->   No output from objdump  --start-address=3D0x0000000000000000 --stop-add=
-ress=3D0x00000000000000d4  -d --no-show-raw-insn       -C "$1"
->   Error running objdump  --start-address=3D0x0000000000000000 --stop-addr=
-ess=3D0x0000000000000631  -d --no-show-raw-insn       -C "$1"
->   ...
->
+On Tue, Apr 09, 2024 at 04:49:58PM -0700, Namhyung Kim wrote:
+> Like in stdio, it should print all events in a group together.
+
+Please provide the desired output, i.e. the "like in stdio", together
+with the 'perf record' that creates a perf.data file that will then be
+used with 'perf annotate' to produce the old output and then the new,
+I'm trying to do that now to review the patch.
+
+- Arnaldo
+ 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Perhaps: Closes:
-https://lore.kernel.org/linux-perf-users/15e1a2847b8cebab4de57fc68e033086aa=
-6980ce.camel@yandex.ru/
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-
 > ---
->  tools/perf/util/disasm.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index a1219eb930aa..92937809be85 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -1669,6 +1669,8 @@ int symbol__disassemble(struct symbol *sym, struct =
-annotate_args *args)
->                 return symbol__disassemble_bpf(sym, args);
->         } else if (dso->binary_type =3D=3D DSO_BINARY_TYPE__BPF_IMAGE) {
->                 return symbol__disassemble_bpf_image(sym, args);
-> +       } else if (dso->binary_type =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
-> +               return -1;
->         } else if (dso__is_kcore(dso)) {
->                 kce.kcore_filename =3D symfs_filename;
->                 kce.addr =3D map__rip_2objdump(map, sym->start);
-> --
+>  tools/perf/ui/browsers/annotate-data.c | 50 ++++++++++++++++++++------
+>  1 file changed, 40 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
+> index fefacaaf16db..a4a0f042f201 100644
+> --- a/tools/perf/ui/browsers/annotate-data.c
+> +++ b/tools/perf/ui/browsers/annotate-data.c
+> @@ -10,20 +10,27 @@
+>  #include "util/annotate.h"
+>  #include "util/annotate-data.h"
+>  #include "util/evsel.h"
+> +#include "util/evlist.h"
+>  #include "util/sort.h"
+>  
+>  struct annotated_data_browser {
+>  	struct ui_browser b;
+>  	struct list_head entries;
+> +	int nr_events;
+>  };
+>  
+>  struct browser_entry {
+>  	struct list_head node;
+>  	struct annotated_member *data;
+> -	struct type_hist_entry hists;
+> +	struct type_hist_entry *hists;
+>  	int indent;
+>  };
+>  
+> +static struct annotated_data_browser *get_browser(struct ui_browser *uib)
+> +{
+> +	return container_of(uib, struct annotated_data_browser, b);
+> +}
+> +
+>  static void update_hist_entry(struct type_hist_entry *dst,
+>  			      struct type_hist_entry *src)
+>  {
+> @@ -33,17 +40,21 @@ static void update_hist_entry(struct type_hist_entry *dst,
+>  
+>  static int get_member_overhead(struct annotated_data_type *adt,
+>  			       struct browser_entry *entry,
+> -			       struct evsel *evsel)
+> +			       struct evsel *leader)
+>  {
+>  	struct annotated_member *member = entry->data;
+> -	int i;
+> +	int i, k;
+>  
+>  	for (i = 0; i < member->size; i++) {
+>  		struct type_hist *h;
+> +		struct evsel *evsel;
+>  		int offset = member->offset + i;
+>  
+> -		h = adt->histograms[evsel->core.idx];
+> -		update_hist_entry(&entry->hists, &h->addr[offset]);
+> +		for_each_group_evsel(evsel, leader) {
+> +			h = adt->histograms[evsel->core.idx];
+> +			k = evsel__group_idx(evsel);
+> +			update_hist_entry(&entry->hists[k], &h->addr[offset]);
+> +		}
+>  	}
+>  	return 0;
+>  }
+> @@ -61,6 +72,12 @@ static int add_child_entries(struct annotated_data_browser *browser,
+>  	if (entry == NULL)
+>  		return -1;
+>  
+> +	entry->hists = calloc(browser->nr_events, sizeof(*entry->hists));
+> +	if (entry->hists == NULL) {
+> +		free(entry);
+> +		return -1;
+> +	}
+> +
+>  	entry->data = member;
+>  	entry->indent = indent;
+>  	if (get_member_overhead(adt, entry, evsel) < 0) {
+> @@ -113,6 +130,7 @@ static void annotated_data_browser__delete_entries(struct annotated_data_browser
+>  
+>  	list_for_each_entry_safe(pos, tmp, &browser->entries, node) {
+>  		list_del_init(&pos->node);
+> +		free(pos->hists);
+>  		free(pos);
+>  	}
+>  }
+> @@ -126,6 +144,7 @@ static int browser__show(struct ui_browser *uib)
+>  {
+>  	struct hist_entry *he = uib->priv;
+>  	struct annotated_data_type *adt = he->mem_type;
+> +	struct annotated_data_browser *browser = get_browser(uib);
+>  	const char *help = "Press 'h' for help on key bindings";
+>  	char title[256];
+>  
+> @@ -146,7 +165,8 @@ static int browser__show(struct ui_browser *uib)
+>  	else
+>  		strcpy(title, "Percent");
+>  
+> -	ui_browser__printf(uib, " %10s %10s %10s  %s",
+> +	ui_browser__printf(uib, "%*s %10s %10s %10s  %s",
+> +			   11 * (browser->nr_events - 1), "",
+>  			   title, "Offset", "Size", "Field");
+>  	ui_browser__write_nstring(uib, "", uib->width);
+>  	return 0;
+> @@ -175,18 +195,20 @@ static void browser__write_overhead(struct ui_browser *uib,
+>  
+>  static void browser__write(struct ui_browser *uib, void *entry, int row)
+>  {
+> +	struct annotated_data_browser *browser = get_browser(uib);
+>  	struct browser_entry *be = entry;
+>  	struct annotated_member *member = be->data;
+>  	struct hist_entry *he = uib->priv;
+>  	struct annotated_data_type *adt = he->mem_type;
+> -	struct evsel *evsel = hists_to_evsel(he->hists);
+> +	struct evsel *leader = hists_to_evsel(he->hists);
+> +	struct evsel *evsel;
+>  
+>  	if (member == NULL) {
+>  		bool current = ui_browser__is_current_entry(uib, row);
+>  
+>  		/* print the closing bracket */
+>  		ui_browser__set_percent_color(uib, 0, current);
+> -		ui_browser__write_nstring(uib, "", 11);
+> +		ui_browser__write_nstring(uib, "", 11 * browser->nr_events);
+>  		ui_browser__printf(uib, " %10s %10s  %*s};",
+>  				   "", "", be->indent * 4, "");
+>  		ui_browser__write_nstring(uib, "", uib->width);
+> @@ -194,8 +216,12 @@ static void browser__write(struct ui_browser *uib, void *entry, int row)
+>  	}
+>  
+>  	/* print the number */
+> -	browser__write_overhead(uib, adt->histograms[evsel->core.idx],
+> -				&be->hists, row);
+> +	for_each_group_evsel(evsel, leader) {
+> +		struct type_hist *h = adt->histograms[evsel->core.idx];
+> +		int idx = evsel__group_idx(evsel);
+> +
+> +		browser__write_overhead(uib, h, &be->hists[idx], row);
+> +	}
+>  
+>  	/* print type info */
+>  	if (be->indent == 0 && !member->var_name) {
+> @@ -267,11 +293,15 @@ int hist_entry__annotate_data_tui(struct hist_entry *he, struct evsel *evsel,
+>  			.priv	 = he,
+>  			.extra_title_lines = 1,
+>  		},
+> +		.nr_events = 1,
+>  	};
+>  	int ret;
+>  
+>  	ui_helpline__push("Press ESC to exit");
+>  
+> +	if (evsel__is_group_event(evsel))
+> +		browser.nr_events = evsel->core.nr_members;
+> +
+>  	ret = annotated_data_browser__collect_entries(&browser);
+>  	if (ret == 0)
+>  		ret = annotated_data_browser__run(&browser, evsel, hbt);
+> -- 
 > 2.44.0.478.gd926399ef9-goog
->
