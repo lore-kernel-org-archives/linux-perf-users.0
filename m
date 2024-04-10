@@ -1,143 +1,296 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769631E878;
-	Wed, 10 Apr 2024 15:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FBA1791EA
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 16:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763955; cv=none; b=CkmtlIp7JkCNQer5QB2yRfHCRA+EE1uMyXOWee/SjiXCI+CH7hAoYuv6AXFMUm5+FKVqax2feClSMRKZTkwy181E1k/3sWpp38yyeoxhHfW46rbsXfOhIJPB4Rn5wAkWSxyifUzfiwu06SpCHeQdmJ3dyCvdcx1cU87OmCSScJ0=
+	t=1712765280; cv=none; b=mZYLzaF4xIyc3aCJkHqvE6Y3qTQds9cvGP8vNJwjwZ80doRnDQB0f9yttk4uF+ECErBLiRM80yJG6PQo4/yKEdQKHJgGhxOf+DiGkANu7ZPLnnoYTsPUHrdbX26lZ9/NMvNU1DtmQxYqPH8/MS1AZYrvqz8hYqxz/PClXnfGMyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763955; c=relaxed/simple;
-	bh=Iws5TST+OzZUPfFNgljptP+ZHHp7PyVhznvweeW0O3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NrXEVQoxKJYPovdGpwE5LZ0bNA+YfJokKOUIMA6IzE0sS+CqUsKuZhjqe4knKSGFArZBZ4hgyoWlTXvo+HZolatSYS6xzHxfbTLNs0w39jhWL47Zwiov7Xtw2PQ5QwIzQtcYIQLl21/cHumO8pf0314JkfdkGZI9g1RqTnrNfQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hztov4Vi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712765280; c=relaxed/simple;
+	bh=O9vyfiYW4qJ4aR4aUCNu5ffJRmKK3JS+Eqhztirud48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TT3Cozil6ne6yKlwZFajtlvMvE16N69z8uIzDBGhGzYQbuiCGVlrMm2ga8qbkXFqETY5fMVHy6EYg1MyIXYmu6NQF+0gv5w+PTQ4RyIYr6p+CJlDJ6oo4sKKLe0F8/Zv23LOzSTCaCdVcHl5NPnQqB6JxehN5JhQyAxT4+UBRpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G55rm0Mp; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hztov4Vi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9686BC433C7;
-	Wed, 10 Apr 2024 15:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712763955;
-	bh=Iws5TST+OzZUPfFNgljptP+ZHHp7PyVhznvweeW0O3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hztov4Vi8VkLznfPfx81BXFAyzQZRGXg8qs8z09Njupjvxnx0lq8moLtVwrtZ4ugW
-	 PC8HjJtzouaE2i7H0Fns76YObHbCk/NIkxZi/v36frgl5gP0eRQU6Yy7FjaIqmZeAs
-	 yNY4mKMoX/OlZUES+oyLQeYbXzLk0cWgTsFnn7t3QV1WdJLLJuUAVd7YTMtMU8Z6XV
-	 uXmd1hMQlpO7+R0QCk1KOHaVrg4BK2KNNGvLQuukpT85ZEkIGDSmtDjxdF08TxWyci
-	 FgVLt/uUPuyMo/JzX/4rG9ptLVA+EK4KPlPluLZ+tn/CzS8LgW5E+NzCSeU7Q5n+76
-	 +mWkohOqm0IwQ==
-Date: Wed, 10 Apr 2024 16:45:47 +0100
-From: Will Deacon <will@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"john.g.garry@oracle.com" <john.g.garry@oracle.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"mike.leach@linaro.org" <mike.leach@linaro.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [EXT] Re: [PATCH v8 3/8] perf: imx_perf: let the driver manage
- the counter usage rather the user
-Message-ID: <20240410154546.GA25225@willie-the-truck>
-References: <20240322063930.749126-1-xu.yang_2@nxp.com>
- <20240322063930.749126-3-xu.yang_2@nxp.com>
- <20240409152627.GA23621@willie-the-truck>
- <DU2PR04MB882209413AB62531713166B38C062@DU2PR04MB8822.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G55rm0Mp"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e42a6158d5so168275ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 09:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712765278; x=1713370078; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jQntAKieGT0i/s8HiScw2bDeUzaEYfiblRtqNRVHdc4=;
+        b=G55rm0MpB+CuWSLQ4HA9r/JG8GQ2mmtobGvRzbxtVwHW6XaU+jfhREkJzBKApFwt3z
+         IeiMfaZOWuY8LeJ9rqc/sUCi/nkpm831h7BrnXdOit7EtV8tjxvWIP7LjvPKqxp0uJKw
+         mCkyBTmhfJLh+lqBaPwWZQ+4DAsevlyapaGbx57g6FMWS3SuobM6F3QZczsrbODUgROD
+         6EMYa8pGYbh7vhT/6n+g7nPUUSBMBXtWHtcv5hM+/w1StyVaLEzL7yte8VwuL1LN5PSA
+         AUgBLfyjojBL/nyg/vC3u2a5Uz5Llag/LozY6rpb18zLb7cgS8KI7YzKdP5c+JAXRV6/
+         lOBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712765278; x=1713370078;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jQntAKieGT0i/s8HiScw2bDeUzaEYfiblRtqNRVHdc4=;
+        b=e33QQhr4LKS1G9HHnB2Xv3iP1X2+51IlNm0dq2FUl6/Gyol36xC4dZHd75u8PZ+Tcn
+         oW2bTNeV5LBrewp53Lz/CzYFTFbIq1CCspnXEXHTZATOffEbL55b2Q+7tZnuuLH7eS0f
+         DB1digTeHVrEc9o1TunLQcOOrofgSITNsjgFoLOf5NX7hBUSWezQE1FYDMokMzVx+IDq
+         1gosD7/fEX8zIUiZmZbqWba7ojok/CwPvrYu3Yv7alYS4IE/hJNs8Bo2K6QEVmT+w3tA
+         xJ3auMiq/GoHrFEY1ao8sPn8jqXt1aopoxA9MoVdl2ZSrIyWeDqHH2TZFf6SXUfXnTHM
+         3CvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1mNd8Ya6GzMu/kZ8fUoWPxZqWm8QS7iYPP6WovDR5QjcLo7VUF3V3F69R+x/nniWZ8xDTg9rikgtRmJtaa9F1asRx1TxPERevrEwvtUdJkA==
+X-Gm-Message-State: AOJu0Yybb4ZGiDwx9BuXP3KiYoGkY/rny0hciwac+9yzZQABrhKLmXK5
+	ejl9stDgtXm0EYtV3OF8Nyr4ARsnJeKDAaqE9OI5ZcPfgwmgahc2DS+ahikBXTLvyyUzHfVQds+
+	gSYaCmu7a0iMyCfNOHUKTnQWG+XuSAXmAo0Um
+X-Google-Smtp-Source: AGHT+IGJstmEj1XUFY34LSDgFUBaClLQ/9p78uMzbyL2cRc7G5dE+yDawDKh0XUCAv7+t9BJLvl36zI/jgsD4Ixi/Zs=
+X-Received: by 2002:a17:902:e842:b0:1e2:3991:9e9 with SMTP id
+ t2-20020a170902e84200b001e2399109e9mr261613plg.0.1712765278065; Wed, 10 Apr
+ 2024 09:07:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU2PR04MB882209413AB62531713166B38C062@DU2PR04MB8822.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20240410104450.15602-1-adrian.hunter@intel.com>
+In-Reply-To: <20240410104450.15602-1-adrian.hunter@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Apr 2024 09:07:42 -0700
+Message-ID: <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 07:39:46AM +0000, Xu Yang wrote:
-> > On Fri, Mar 22, 2024 at 02:39:25PM +0800, Xu Yang wrote:
-> > > In current design, the user of perf app needs to input counter ID to count
-> > > events. However, this is not user-friendly since the user needs to lookup
-> > > the map table to find the counter. Instead of letting the user to input
-> > > the counter, let this driver to manage the counters in this patch.
-> > 
-> > I think we still have to support the old interface so that we don't break
-> > those existing users (even if the driver just ignores whatever counter ID
-> > is provided in a backwards-compatible way).
-> > 
-> > > This will be implemented by:
-> > >  1. allocate counter 0 for cycle event.
-> > >  2. find unused counter from 1-10 for reference events.
-> > >  3. allocate specific counter for counter-specific events.
-> > >
-> > > In this patch, counter attribute is removed too. To mark counter-specific
-> > > events, counter ID will be encoded into perf_pmu_events_attr.id.
-> > >
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > >
-> > > ---
-> > > Changes in v6:
-> > >  - new patch
-> > > Changes in v7:
-> > >  - no changes
-> > > Changes in v8:
-> > >  - add Rb tag
-> > > ---
-> > >  drivers/perf/fsl_imx9_ddr_perf.c | 168 ++++++++++++++++++-------------
-> > >  1 file changed, 99 insertions(+), 69 deletions(-)
-> > >
-> > > diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-> > > index 0017f2c9ef91..b728719b494c 100644
-> > > --- a/drivers/perf/fsl_imx9_ddr_perf.c
-> > > +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-> > > @@ -245,14 +249,12 @@ static const struct attribute_group ddr_perf_events_attr_group = {
-> > >       .attrs = ddr_perf_events_attrs,
-> > >  };
-> > >
-> > > -PMU_FORMAT_ATTR(event, "config:0-7");
-> > > -PMU_FORMAT_ATTR(counter, "config:8-15");
-> > > +PMU_FORMAT_ATTR(event, "config:0-15");
-> > 
-> > Sadly, this is a user-visible change so I think it will break old tools,
-> > won't it?
-> 
-> For imx ddr pmu, most of the people will use metrics rather event itself,
-> and we have speficy the format of event parameters in metrics table.
-> The parameters is also updated in this patchset.
-> 
-> And to easy use for user, the counter should be hidden (transparent) to
-> user after I had talk with Frank. Then, the user need't to look up the event
-> table to find which counter to use. 
-> 
-> So this patchset will basically not break the usage of perf tools and will
-> improve practicality.
+On Wed, Apr 10, 2024 at 3:45=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> Simplify is_event_supported by using sys_perf_event_open() directly like
+> other perf API probe functions and move it into perf_api_probe.c where
+> other perf API probe functions reside.
+>
+> A side effect is that the probed events do not appear when debug prints
+> are enabled, which is beneficial because otherwise they can be confused
+> with selected events.
+>
+> This also affects "Test per-thread recording" in
+> "Miscellaneous Intel PT testing" which expects the debug prints of
+> only selected events to appear between the debug prints:
+> "perf record opening and mmapping events" and
+> "perf record done opening and mmapping events"
+>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Sorry, but I don't agree. The original commit adding this driver
-(55691f99d417) gives the following examples in the commit message:
+nit:
+Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
 
-For example:
-      perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_trans_filt,counter=2,axi_mask=ID_MASK,axi_id=ID/
-      perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_wr_trans_filt,counter=3,axi_mask=ID_MASK,axi_id=ID/
-      perf stat -a -I 1000 -e imx9_ddr0/eddrtq_pm_rd_beat_filt,counter=4,axi_mask=ID_MASK,axi_id=ID/
+> ---
+>  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
+>  tools/perf/util/perf_api_probe.h |  2 ++
+>  tools/perf/util/pmus.c           |  1 +
+>  tools/perf/util/print-events.c   | 50 +-------------------------------
+>  tools/perf/util/print-events.h   |  1 -
+>  5 files changed, 44 insertions(+), 50 deletions(-)
+>
+> diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_=
+probe.c
+> index 1de3b69cdf4a..13acb34a4e1c 100644
+> --- a/tools/perf/util/perf_api_probe.c
+> +++ b/tools/perf/util/perf_api_probe.c
+> @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
+>  {
+>         return perf_probe_api(perf_probe_cgroup);
+>  }
+> +
+> +bool is_event_supported(u8 type, u64 config)
+> +{
+> +       struct perf_event_attr attr =3D {
+> +               .type =3D type,
+> +               .config =3D config,
+> +               .disabled =3D 1,
+> +       };
+> +       int fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
 
-I don't think these will work any more if we apply this patch.
+It looks like this is a change to the actual perf_event_open
+arguments, I don't think it is an issue but wanted to flag it.
 
-Will
+> +
+> +       if (fd < 0) {
+> +               /*
+> +                * The event may fail to open if the paranoid value
+> +                * /proc/sys/kernel/perf_event_paranoid is set to 2
+> +                * Re-run with exclude_kernel set; we don't do that by
+> +                * default as some ARM machines do not support it.
+> +                */
+> +               attr.exclude_kernel =3D 1;
+
+I worry about the duplicated fallback logic getting out of sync,
+perhaps we could have a quiet option for evsel__open option, or better
+delineate the particular log entries. I don't really have a good
+alternative idea and kind of like that detecting an event is available
+loses the evsel baggage. I would kind of like event parsing just to
+give 1 or more perf_event_attr for similar reasons.
+
+Assuming there are no better ideas on how to approach this:
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> +               fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
+> +       }
+> +
+> +       if (fd < 0) {
+> +               /*
+> +                * The event may fail to open if the PMU requires
+> +                * exclude_guest to be set (e.g. as the Apple M1 PMU
+> +                * requires).
+> +                * Re-run with exclude_guest set; we don't do that by
+> +                * default as it's equally legitimate for another PMU
+> +                * driver to require that exclude_guest is clear.
+> +                */
+> +               attr.exclude_guest =3D 1;
+> +               fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
+> +       }
+> +
+> +       if (fd < 0)
+> +               return false;
+> +
+> +       close(fd);
+> +       return true;
+> +}
+> diff --git a/tools/perf/util/perf_api_probe.h b/tools/perf/util/perf_api_=
+probe.h
+> index b104168efb15..820f6a03221a 100644
+> --- a/tools/perf/util/perf_api_probe.h
+> +++ b/tools/perf/util/perf_api_probe.h
+> @@ -4,6 +4,7 @@
+>  #define __PERF_API_PROBE_H
+>
+>  #include <stdbool.h>
+> +#include <linux/types.h>
+>
+>  bool perf_can_aux_sample(void);
+>  bool perf_can_comm_exec(void);
+> @@ -13,5 +14,6 @@ bool perf_can_record_text_poke_events(void);
+>  bool perf_can_sample_identifier(void);
+>  bool perf_can_record_build_id(void);
+>  bool perf_can_record_cgroup(void);
+> +bool is_event_supported(u8 type, u64 config);
+>
+>  #endif // __PERF_API_PROBE_H
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index 2fd369e45832..5442442e0508 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -13,6 +13,7 @@
+>  #include "cpumap.h"
+>  #include "debug.h"
+>  #include "evsel.h"
+> +#include "perf_api_probe.h"
+>  #include "pmus.h"
+>  #include "pmu.h"
+>  #include "print-events.h"
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
+s.c
+> index 3f38c27f0157..a25be2b2c774 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -20,6 +20,7 @@
+>  #include "evsel.h"
+>  #include "metricgroup.h"
+>  #include "parse-events.h"
+> +#include "perf_api_probe.h"
+>  #include "pmu.h"
+>  #include "pmus.h"
+>  #include "print-events.h"
+> @@ -239,55 +240,6 @@ void print_sdt_events(const struct print_callbacks *=
+print_cb, void *print_state)
+>         strlist__delete(sdtlist);
+>  }
+>
+> -bool is_event_supported(u8 type, u64 config)
+> -{
+> -       bool ret =3D true;
+> -       struct evsel *evsel;
+> -       struct perf_event_attr attr =3D {
+> -               .type =3D type,
+> -               .config =3D config,
+> -               .disabled =3D 1,
+> -       };
+> -       struct perf_thread_map *tmap =3D thread_map__new_by_tid(0);
+> -
+> -       if (tmap =3D=3D NULL)
+> -               return false;
+> -
+> -       evsel =3D evsel__new(&attr);
+> -       if (evsel) {
+> -               ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+> -
+> -               if (!ret) {
+> -                       /*
+> -                        * The event may fail to open if the paranoid val=
+ue
+> -                        * /proc/sys/kernel/perf_event_paranoid is set to=
+ 2
+> -                        * Re-run with exclude_kernel set; we don't do th=
+at by
+> -                        * default as some ARM machines do not support it=
+.
+> -                        */
+> -                       evsel->core.attr.exclude_kernel =3D 1;
+> -                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+> -               }
+> -
+> -               if (!ret) {
+> -                       /*
+> -                        * The event may fail to open if the PMU requires
+> -                        * exclude_guest to be set (e.g. as the Apple M1 =
+PMU
+> -                        * requires).
+> -                        * Re-run with exclude_guest set; we don't do tha=
+t by
+> -                        * default as it's equally legitimate for another=
+ PMU
+> -                        * driver to require that exclude_guest is clear.
+> -                        */
+> -                       evsel->core.attr.exclude_guest =3D 1;
+> -                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
+> -               }
+> -
+> -               evsel__delete(evsel);
+> -       }
+> -
+> -       perf_thread_map__put(tmap);
+> -       return ret;
+> -}
+> -
+>  int print_hwcache_events(const struct print_callbacks *print_cb, void *p=
+rint_state)
+>  {
+>         struct perf_pmu *pmu =3D NULL;
+> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-event=
+s.h
+> index bf4290bef0cd..5d241b33b5a3 100644
+> --- a/tools/perf/util/print-events.h
+> +++ b/tools/perf/util/print-events.h
+> @@ -38,6 +38,5 @@ void print_symbol_events(const struct print_callbacks *=
+print_cb, void *print_sta
+>                          unsigned int max);
+>  void print_tool_events(const struct print_callbacks *print_cb, void *pri=
+nt_state);
+>  void print_tracepoint_events(const struct print_callbacks *print_cb, voi=
+d *print_state);
+> -bool is_event_supported(u8 type, u64 config);
+>
+>  #endif /* __PERF_PRINT_EVENTS_H */
+> --
+> 2.34.1
+>
