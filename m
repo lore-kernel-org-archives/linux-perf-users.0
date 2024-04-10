@@ -1,251 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C08138E;
-	Wed, 10 Apr 2024 23:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B3214A8C
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 23:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712791322; cv=none; b=tJQi0mhYzkEBDXgOsy4lqkzXtekv+AK/eEJP+xfIGJILZzzDKwr3rIZdRZ0nQdi/trM7g8I95DH3Xh6KtgcDFmhE3KynS6dfFGQwYoRbWoO2LVMD6GVumE+bsU/Vi+aatiRACJky36MG8y2hOS0LBZg4mhQZmEPZxt+JgtqomqE=
+	t=1712792796; cv=none; b=MaXx5LS7ZlOam1tI5G2dsEX6aPgIpOFKhZcGJH11OueE9kGYAlQq+98JiCswU8OOZCW02MwJUp9KpunRJrPj8egKhZqfY4K6Q1VrTCVU7jOdrZmFFtFX4gc11iiFjGdWspZTaQ2RL+oMKFIi4xolZWZv6zEbwrNmqyZ+heGOrbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712791322; c=relaxed/simple;
-	bh=vZjbMD6Jt287ODnsZPSuTjU7DsqVXUkB99DDCx9Tfrg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=m9j8l9V2H1zGgCHQC3R5o0Pdt/CyBhvgDC5z8frKKoHBuWGfBVNCGRxZbDhb7p/4DBcXGq4xgDFSmYOZUqU8fE8mHsRQa7o2efOsJEHOOkd79F4ZhQzogbD9MrIr+4IFzg8dXAruzzXy7hCNQJZzd5WJWilZWPQ6peGiGXKAt+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbHNuHzs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbHNuHzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB274C433C7;
-	Wed, 10 Apr 2024 23:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712791322;
-	bh=vZjbMD6Jt287ODnsZPSuTjU7DsqVXUkB99DDCx9Tfrg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MbHNuHzs8+ZKHxrg1xfuZ5COlcBxcxARniCXIPFp6Q4EZRxWJuwxe9/7ndRzpfblU
-	 To42eYEt+GeoNiMWxDCUG7+7IKGRTYk+KPpxTSDTanV9dZ0N1fehrb7jHTLgxn7Fry
-	 rhZSwIwRf2EqBZ0LBdrzZaOKWIS5c9mxP7dLyQCNvo+gtwBNNrmHoM/bGtbsbONN7n
-	 UH8XMmDxO3wdqFs4YP2GnX0h1ieR4Ne6gJKOaT24773nEla4CACSNBiHHuT7WzPns2
-	 MuOK6ItgEaIURhf7Mw9Tr+uvqbQ93qeKykTkk4VaVovQsjR2AovHWtAmmsdhkIw5XZ
-	 gnUKnqD0kHeUQ==
-Date: Thu, 11 Apr 2024 08:21:56 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
- rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
-In-Reply-To: <lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-	<20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-	<CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
-	<20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
-	<54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-	<20240328091841.ce9cc613db375536de843cfb@kernel.org>
-	<CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-	<CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
-	<20240330093631.72273967ba818cb16aeb58b6@kernel.org>
-	<lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712792796; c=relaxed/simple;
+	bh=htzDZNW2cBkCQhW2PnUjm99zk5aQQ6LfQxg4mPK2Ou4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ea5gnlXF//dWyeacPQt7gVmUjHz2qQzbajfMKS6yuAZZpgOH7nS78+T6SfCwvclfo4HC6d37C/zyd/vLo9nJbBDmaGXCXc6P5tIDq/aMLEy8MMQNA9unFrPPboxtuCPCRf5KYoIwSBTb9+nfhHLFSIiD4qIgDhC0RQmP49TFL7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2a2d82537efso4318273a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 16:46:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712792794; x=1713397594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7qQFngh/XWmfh4eCEflWO4VUptRw76shXZWfVWq1X8I=;
+        b=UKXKB4zCJ9LKND0amSBBnrsEqOE7u/V0RYeBC3Lt30eA9bQhNJwxk1GnQJ2ePTDYEE
+         Uyc19lm5C7fNccmbf24pjqEsz7Hj4rqYEoFTF5mFYUw0x09sPH+wIJcOn9srdc0mN89f
+         VIrLrA47LbU9g8yxXlQXpy6A+EgLnoT7+W3TiZzdhFDi1hL/ins+Ywa2+IKpyQxAKpoC
+         g0rYHa3bXHWOO9tYTp8+svCwKQ/7cWRrpsB40CKL16t6OezxF9+A/iwv0VI1zrBA+sNo
+         Bwn1vqCrH6vF4quoFKUTx21I6gng8UdQZJNU21mK23W9wdxl91KyBcyhQhJ1d7PrxFim
+         r+vQ==
+X-Gm-Message-State: AOJu0YzFMtcTuwRDSL3OMTTTcSR8WatKujT3tPmydhflUdFPK9uwWFbj
+	hUnY9xEHf8vRav2KyXFodmLquEetbJ7L/VzdrVraueO4jOuNfYonqqD5p0koKeXdfXxIFcjTqFz
+	amJQYGobRobEF3DTCkR+MPKyUAYmSAnc4
+X-Google-Smtp-Source: AGHT+IElLs+Zi7W6PaJ+xuaboCiMtN5U1BX3PiVSDCmmZy01FW5u4SVeYgjxlNTsL/NKh2mGIFyLFcd439fnyVKrxKA=
+X-Received: by 2002:a17:90a:4094:b0:2a2:e56a:ca8f with SMTP id
+ l20-20020a17090a409400b002a2e56aca8fmr4320583pjg.42.1712792794544; Wed, 10
+ Apr 2024 16:46:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <83b3aa2678b7a82c4247669cd8edae4573d1f52b.camel@yandex.ru>
+ <CAM9d7cid-rmSVrQ2_eHH90NKxiXcX-u-udJv5WhRimkFtAyZVw@mail.gmail.com> <15e1a2847b8cebab4de57fc68e033086aa6980ce.camel@yandex.ru>
+In-Reply-To: <15e1a2847b8cebab4de57fc68e033086aa6980ce.camel@yandex.ru>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 10 Apr 2024 16:46:22 -0700
+Message-ID: <CAM9d7chRRkEKxpvgD-=Aj+dWfma12EAQHJX=gakeNYrj7L_Lag@mail.gmail.com>
+Subject: Re: `annotate --data-type` is empty
+To: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Apr 2024 11:38:11 +0100
-Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
+On Wed, Apr 10, 2024 at 1:19=E2=80=AFAM Konstantin Kharlamov <Hi-Angel@yand=
+ex.ru> wrote:
+>
+> Cool, thank you!
+>
+> To cut story short: it worked. I followed your advice and built latest
+> `perf`, that is from 6.9-rc3. Additionally, I rebuilt Emacs because
+> that was an old build. I did check debug information in the older build
+> before I sent previous email, by running emacs in `gdb` and setting
+> breakpoint in a C file. So Idk if newer perf fixed it or somehow re-
+> built Emacs influenced it. For posterity, flags I build it with are:
+>
+>         CFLAGS=3D'-march=3Dnative -O0 -g3 -pipe -fmerge-all-constants'
+>         CC=3D'ccache cc'
 
-> Hi Masami,
-> 
-> > > > Which is why I was asking to land this patch as is, as it relieves the
-> > > > scalability pains in production and is easy to backport to old
-> > > > kernels. And then we can work on batched APIs and switch to per-CPU rw
-> > > > semaphore.
-> > 
-> > OK, then I'll push this to for-next at this moment.
-> > Please share if you have a good idea for the batch interface which can be
-> > backported. I guess it should involve updating userspace changes too.
-> 
-> Did you (or anyone else) need anything more from me on this one so that it
-> can be pushed? I provided some benchmark numbers but happy to provide
-> anything else that may be required.
+Good to hear it worked well.  And v6.10 would bring a lot more
+exciting updates, stay tuned!
 
-Yeah, if you can update with the result, it looks better to me.
-Or, can I update the description?
+>
+> -------------------------
+>
+> However, I am also getting the following errors, what are they about?
+>
+>         Error running objdump  --start-address=3D0x0000000000016d00 -- st=
+op-address=3D0x0000000000016f40  -d --no-show-raw-insn       -C "$1"
+>         No output from objdump  --start-address=3D0x0000000000016d00 -- s=
+top-address=3D0x0000000000016f40  -d --no-show-raw-insn       -C "$1"
+>         Error running objdump  --start-address=3D0x00000000000155d0 -- st=
+op-address=3D0x0000000000015910  -d --no-show-raw-insn       -C "$1"
+>         No output from objdump  --start-address=3D0x00000000000155d0 -- s=
+top-address=3D0x0000000000015910  -d --no-show-raw-insn       -C "$1"
 
-Thank you,
+I think it could not find the target binary for some reason.
+I've sent out a fix for that.
 
-> 
-> Thanks!
-> 
-> Jon.
-> 
-> > 
-> > Thank you!
-> > 
-> > > >
-> > > > So I hope you can reconsider and accept improvements in this patch,
-> > > > while Jonathan will keep working on even better final solution.
-> > > > Thanks!
-> > > >
-> > > > > I look forward to your formalized results :)
-> > > > >
-> > > 
-> > > BTW, as part of BPF selftests, we have a multi-attach test for uprobes
-> > > and USDTs, reporting attach/detach timings:
-> > > $ sudo ./test_progs -v -t uprobe_multi_test/bench
-> > > bpf_testmod.ko is already unloaded.
-> > > Loading bpf_testmod.ko...
-> > > Successfully loaded bpf_testmod.ko.
-> > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
-> > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
-> > > test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
-> > > test_bench_attach_uprobe: attached in   0.120s
-> > > test_bench_attach_uprobe: detached in   0.092s
-> > > #400/5   uprobe_multi_test/bench_uprobe:OK
-> > > test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
-> > > test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
-> > > test_bench_attach_usdt:PASS:usdt_count 0 nsec
-> > > test_bench_attach_usdt: attached in   0.124s
-> > > test_bench_attach_usdt: detached in   0.064s
-> > > #400/6   uprobe_multi_test/bench_usdt:OK
-> > > #400     uprobe_multi_test:OK
-> > > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > > Successfully unloaded bpf_testmod.ko.
-> > > 
-> > > So it should be easy for Jonathan to validate his changes with this.
-> > > 
-> > > > > Thank you,
-> > > > >
-> > > > > >
-> > > > > > Jon.
-> > > > > >
-> > > > > > >
-> > > > > > > Thank you,
-> > > > > > >
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > > > > > will depend on how much lock contention happens.
-> > > > > > > > >
-> > > > > > > > > Thank you,
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > > > > > ---
-> > > > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > > > > > >
-> > > > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > > > > > --- a/kernel/events/uprobes.c
-> > > > > > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > > > > > > >   */
-> > > > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > > > > > >
-> > > > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > > > > > > >
-> > > > > > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > > > > > >  /* serialize uprobe->pending_list */
-> > > > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > > > > > > >  {
-> > > > > > > > > >       struct uprobe *uprobe;
-> > > > > > > > > >
-> > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > >
-> > > > > > > > > >       return uprobe;
-> > > > > > > > > >  }
-> > > > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > > > > > > >  {
-> > > > > > > > > >       struct uprobe *u;
-> > > > > > > > > >
-> > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > >       u = __insert_uprobe(uprobe);
-> > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > >
-> > > > > > > > > >       return u;
-> > > > > > > > > >  }
-> > > > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > > > > > >               return;
-> > > > > > > > > >
-> > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > > > > > > >       put_uprobe(uprobe);
-> > > > > > > > > >  }
-> > > > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > >
-> > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > >       if (n) {
-> > > > > > > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > >                       get_uprobe(u);
-> > > > > > > > > >               }
-> > > > > > > > > >       }
-> > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > >  }
-> > > > > > > > > >
-> > > > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > >
-> > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > >
-> > > > > > > > > >       return !!n;
-> > > > > > > > > >  }
-> > > > > > > > > > --
-> > > > > > > > > > 2.43.0
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > --
-> > > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > >
-> > > > > > >
-> > > > > > > --
-> > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+https://lore.kernel.org/r/20240410185117.1987239-1-namhyung@kernel.org/
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Namhyung
