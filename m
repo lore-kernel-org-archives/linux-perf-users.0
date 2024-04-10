@@ -1,120 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60384159218;
-	Wed, 10 Apr 2024 10:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B813159566;
+	Wed, 10 Apr 2024 10:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712745533; cv=none; b=OjD7F2HPN8ZeNzLry0AvKvjwzYQV/J4hw91hbeX3XLKTza4LDo6LuYWwMv7AJ9EryOul6ecDUQ7Tarne/ZFynRJlf3Ads3TRSGwzVq1L4K/6rBFz3ytMSUyuG0msTe+k9nKAbFgff/SVfWWdgdVSot+Bk3JMC/a1gxG6PfSnQnM=
+	t=1712745908; cv=none; b=doARYOYi5CR8SDvb4YMpFP3MnMgqEpcepsiWw07+Tb4/72maC9Bj4YQCTg/9jBjILT9EEAijx2keTXn4ZTjSoA8yKlMcVzZQrsSAus0hj6pFVI2cWhKqv8sYhdLTapUz/FGTsYS0yEW/wlcI5fvMfX7pSGvvkn/ejDZTITtt+wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712745533; c=relaxed/simple;
-	bh=t7GHWU4HSYHo8xvnfjr3suCp1+Uv/uMlq4X/AQl8Qoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CDt1PCJMyJJlqADTIChaXqScabmToE7QYFBSWkm5b8W1x/jQLpUCn9064ykSZVz3tUem6N74T8Tf++yTQZPcFaLyMoTJCRiF1bwuQpjUwktxNTm/eSA58yg+jmz+VylUKobUoLpmQbG1p1uENBFV5QU/RGHbGkOqQcGJ+qfLdJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcnhCCBb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712745908; c=relaxed/simple;
+	bh=55Kx0QNqq2kdn87S5raCQY6gLhXmnYKjaQ+u8JeTHKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RM9yZb3EPSjh7I49tl/WeJ+NbrFGMzKxJuCm8RX0nOPqa11sHAyDDU2kPM3lljnJfCQPTVqMB13glW2sm//lpzP7FZ1If7hiBsqt6JbToY8L7oWq5u8dnZ0uPSWD0IDN+glv9LkURRKekUABdz7oy5fu54Kq1RHHYsinu7JbWHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BuAg7V5Q; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcnhCCBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65ACFC433F1;
-	Wed, 10 Apr 2024 10:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712745532;
-	bh=t7GHWU4HSYHo8xvnfjr3suCp1+Uv/uMlq4X/AQl8Qoc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pcnhCCBbcH29seTH6YJe4Dxo0mwJrYZF5/TXxBBu8OXbt7FMU/vDdVMJyP47VKsCA
-	 vGTC/MJGVRZTYFMCbf9GoRZRYBfhPwP/DSwKCSFawRTDDWP5XkquzQdJtK5LBcsJHE
-	 xZFVMRaDXrdrK89d4va5XUZczcZ+Zd+9Cu+Jsfmtfr6eJVf+3nSyZi77kXgN0ZDNX4
-	 RfbBj1oPrh5Y4jKNCeaF8KdIHEHr9/NDjqZoR9SufJ52A44kHgoUIv2jaQdue5DEIl
-	 IEaZlvV/jLvkE1NNOiBft9NolPgtLKB7Jt+6gU/P7lEpgPzwTvmSdueC72mHUpkBtq
-	 0dv7ejQXujpAQ==
-Date: Wed, 10 Apr 2024 12:38:50 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BuAg7V5Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712745906; x=1744281906;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=55Kx0QNqq2kdn87S5raCQY6gLhXmnYKjaQ+u8JeTHKs=;
+  b=BuAg7V5QpnvAn8p9j53ML3micqYREJHhiYZqyVxciwmzyuGd6Q+3MeUk
+   SozWjw+yLlvLyD6Ju2jGedi0p+Rcghy+cqsVwFunTOjF7DAYsn2qjLiez
+   3GjkJtTP6ZIEGJmCeLpz4bl95UIoSa8/CCU7qLsx8qRiGmqp5DJ/KaL1G
+   n0z4RYK9ycKqJZ03G66WfSM3qACcQ0Mnz1PqiCLfju5BrHtDThVtqkFch
+   kEbH9m1JYSBVfCefUZMJxEiuuTJvFdfaCi0I8KIkRGUp8JYvuZZJz82qy
+   J52fa0+ldDFXp8BF71bzGSnnbiqLTp4bz3uFoKBJF7w3x3CH0VexMDcOf
+   Q==;
+X-CSE-ConnectionGUID: w0lmgqqOSMaIMYsXTwE5rw==
+X-CSE-MsgGUID: Cazz14NcS0Ozf0m9o14DTg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="19489167"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="19489167"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:45:05 -0700
+X-CSE-ConnectionGUID: RGTYuv+xQqe3eE+In6IcJw==
+X-CSE-MsgGUID: ZZiWQ51/RiiN64ExWAMmnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="25293793"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.214.234])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:45:04 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
- <20240409062501.h4rA_ck4@linutronix.de>
- <ZhUaAjhQXN6ahtpS@localhost.localdomain>
- <20240409105405.TXUU--_W@linutronix.de>
- <ZhUt8XMndGSwNuwx@localhost.localdomain>
- <20240409133336.Y4Io-16-@linutronix.de>
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Simplify is_event_supported()
+Date: Wed, 10 Apr 2024 13:44:50 +0300
+Message-Id: <20240410104450.15602-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240409133336.Y4Io-16-@linutronix.de>
 
-Le Tue, Apr 09, 2024 at 03:33:36PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2024-04-09 14:00:49 [+0200], Frederic Weisbecker wrote:
-> > Le Tue, Apr 09, 2024 at 12:54:05PM +0200, Sebastian Andrzej Siewior a écrit :
-> > > On 2024-04-09 12:35:46 [+0200], Frederic Weisbecker wrote:
-> > > > > > > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *head)
-> > > > > > >  		local_dec(&event->ctx->nr_pending);
-> > > > > > >  	}
-> > > > > > >  
-> > > > > > > -	if (rctx >= 0)
-> > > > > > > -		perf_swevent_put_recursion_context(rctx);
-> > > > > > > -	preempt_enable_notrace();
-> > > > > > 
-> > > > > > Well, if a software event happens during perf_sigtrap(), the task work
-> > > > > > may be requeued endlessly and the task may get stuck in task_work_run()...
-> > > > > 
-> > > > > The last time I checked it had no users in the task context. How would
-> > > > > that happen?
-> > > > 
-> > > > I guess many tracepoint events would do the trick. Such as trace_lock_acquire()
-> > > > for example.
-> > > 
-> > > So the perf_trace_buf_alloc() is invoked from that trace point and
-> > > avoids the recursion. And any trace event from within perf_sigtrap()
-> > > would trigger the endless loop?
-> > 
-> > No sure I'm following:
-> > 
-> > 1) event->perf_event_overflow() -> task_work_add()
-> > //return to userspace
-> > 2) task_work_run() -> perf_pending_task() -> perf_sigtrap() -> tracepoint event
-> >    -> perf_event_overflow() -> task_work_add()
-> > 3) task_work_run() -> perf_pending_task() -> etc...
-> >
-> > What am I missing?
-> 
-> Yes, that is what I tried to say.
+Simplify is_event_supported by using sys_perf_event_open() directly like
+other perf API probe functions and move it into perf_api_probe.c where
+other perf API probe functions reside.
 
-Oh ok.. :o)
+A side effect is that the probed events do not appear when debug prints
+are enabled, which is beneficial because otherwise they can be confused
+with selected events.
 
-> Anyway, I misunderstood the concept
-> before. That means we need to keep that counter here and a
-> migrate_disable() is needed to avoid CPU migration which is sad.
+This also affects "Test per-thread recording" in
+"Miscellaneous Intel PT testing" which expects the debug prints of
+only selected events to appear between the debug prints:
+"perf record opening and mmapping events" and
+"perf record done opening and mmapping events"
 
-I fear that won't work either. The task is then pinned but another
-task can come up on that CPU and its software events will be ignored...
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
+ tools/perf/util/perf_api_probe.h |  2 ++
+ tools/perf/util/pmus.c           |  1 +
+ tools/perf/util/print-events.c   | 50 +-------------------------------
+ tools/perf/util/print-events.h   |  1 -
+ 5 files changed, 44 insertions(+), 50 deletions(-)
 
-Some alternatives:
+diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
+index 1de3b69cdf4a..13acb34a4e1c 100644
+--- a/tools/perf/util/perf_api_probe.c
++++ b/tools/perf/util/perf_api_probe.c
+@@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
+ {
+ 	return perf_probe_api(perf_probe_cgroup);
+ }
++
++bool is_event_supported(u8 type, u64 config)
++{
++	struct perf_event_attr attr = {
++		.type = type,
++		.config = config,
++		.disabled = 1,
++	};
++	int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
++
++	if (fd < 0) {
++		/*
++		 * The event may fail to open if the paranoid value
++		 * /proc/sys/kernel/perf_event_paranoid is set to 2
++		 * Re-run with exclude_kernel set; we don't do that by
++		 * default as some ARM machines do not support it.
++		 */
++		attr.exclude_kernel = 1;
++		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
++	}
++
++	if (fd < 0) {
++		/*
++		 * The event may fail to open if the PMU requires
++		 * exclude_guest to be set (e.g. as the Apple M1 PMU
++		 * requires).
++		 * Re-run with exclude_guest set; we don't do that by
++		 * default as it's equally legitimate for another PMU
++		 * driver to require that exclude_guest is clear.
++		 */
++		attr.exclude_guest = 1;
++		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
++	}
++
++	if (fd < 0)
++		return false;
++
++	close(fd);
++	return true;
++}
+diff --git a/tools/perf/util/perf_api_probe.h b/tools/perf/util/perf_api_probe.h
+index b104168efb15..820f6a03221a 100644
+--- a/tools/perf/util/perf_api_probe.h
++++ b/tools/perf/util/perf_api_probe.h
+@@ -4,6 +4,7 @@
+ #define __PERF_API_PROBE_H
+ 
+ #include <stdbool.h>
++#include <linux/types.h>
+ 
+ bool perf_can_aux_sample(void);
+ bool perf_can_comm_exec(void);
+@@ -13,5 +14,6 @@ bool perf_can_record_text_poke_events(void);
+ bool perf_can_sample_identifier(void);
+ bool perf_can_record_build_id(void);
+ bool perf_can_record_cgroup(void);
++bool is_event_supported(u8 type, u64 config);
+ 
+ #endif // __PERF_API_PROBE_H
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 2fd369e45832..5442442e0508 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -13,6 +13,7 @@
+ #include "cpumap.h"
+ #include "debug.h"
+ #include "evsel.h"
++#include "perf_api_probe.h"
+ #include "pmus.h"
+ #include "pmu.h"
+ #include "print-events.h"
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 3f38c27f0157..a25be2b2c774 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -20,6 +20,7 @@
+ #include "evsel.h"
+ #include "metricgroup.h"
+ #include "parse-events.h"
++#include "perf_api_probe.h"
+ #include "pmu.h"
+ #include "pmus.h"
+ #include "print-events.h"
+@@ -239,55 +240,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ 	strlist__delete(sdtlist);
+ }
+ 
+-bool is_event_supported(u8 type, u64 config)
+-{
+-	bool ret = true;
+-	struct evsel *evsel;
+-	struct perf_event_attr attr = {
+-		.type = type,
+-		.config = config,
+-		.disabled = 1,
+-	};
+-	struct perf_thread_map *tmap = thread_map__new_by_tid(0);
+-
+-	if (tmap == NULL)
+-		return false;
+-
+-	evsel = evsel__new(&attr);
+-	if (evsel) {
+-		ret = evsel__open(evsel, NULL, tmap) >= 0;
+-
+-		if (!ret) {
+-			/*
+-			 * The event may fail to open if the paranoid value
+-			 * /proc/sys/kernel/perf_event_paranoid is set to 2
+-			 * Re-run with exclude_kernel set; we don't do that by
+-			 * default as some ARM machines do not support it.
+-			 */
+-			evsel->core.attr.exclude_kernel = 1;
+-			ret = evsel__open(evsel, NULL, tmap) >= 0;
+-		}
+-
+-		if (!ret) {
+-			/*
+-			 * The event may fail to open if the PMU requires
+-			 * exclude_guest to be set (e.g. as the Apple M1 PMU
+-			 * requires).
+-			 * Re-run with exclude_guest set; we don't do that by
+-			 * default as it's equally legitimate for another PMU
+-			 * driver to require that exclude_guest is clear.
+-			 */
+-			evsel->core.attr.exclude_guest = 1;
+-			ret = evsel__open(evsel, NULL, tmap) >= 0;
+-		}
+-
+-		evsel__delete(evsel);
+-	}
+-
+-	perf_thread_map__put(tmap);
+-	return ret;
+-}
+-
+ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state)
+ {
+ 	struct perf_pmu *pmu = NULL;
+diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+index bf4290bef0cd..5d241b33b5a3 100644
+--- a/tools/perf/util/print-events.h
++++ b/tools/perf/util/print-events.h
+@@ -38,6 +38,5 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
+ 			 unsigned int max);
+ void print_tool_events(const struct print_callbacks *print_cb, void *print_state);
+ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state);
+-bool is_event_supported(u8 type, u64 config);
+ 
+ #endif /* __PERF_PRINT_EVENTS_H */
+-- 
+2.34.1
 
-_ Clear event->pending_work = 0 after perf_sigtrap(), preventing an
-event in there from adding a new task work. We may miss a signal though...
-
-_ Make the recursion context per task on -RT...
-
-> > Thanks.
-> 
-> Sebastian
