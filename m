@@ -1,91 +1,115 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C013AD30;
-	Wed, 10 Apr 2024 07:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C2B13CF81;
+	Wed, 10 Apr 2024 07:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712733182; cv=none; b=RBvhLExSv97S1uEKG5bXAm1uEcL/ZXkJ//5wcVCm2trC2Iwy5mT1WiNh7sSL9fxVw+vTkeVhha/Dbf9saxtsaqtF6JRGn8HJsMI0IEDU+z/9OYWNTFGmzF+ZRFi82llc07tx3N2fJpGZIwWXALb2WVCxRfuldjbajlzKLypbAsw=
+	t=1712733530; cv=none; b=rH0yDZ8Ec1Kqbq3ziuyBEFPtW51ZNWk98FR4NfODhnZ4JZhPtMpfAxBbr+c1egS4FruHNQieinEDWWQ9qNKSI36uv/GYRJY12KVrWeQk7lqB406v5lRzft6oFUHFEQP2anFmEkiXN31TEOghMoF/2T+kxrUO+ftk0UtdbKjeads=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712733182; c=relaxed/simple;
-	bh=2xuaVJiYV98yQZyJqCo8wDjLB4OZ8dHeBSX32T6poTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b3Io/0pJZiu5FGeCI2rXF9sya/Zuz1/yIGn0/LEwFUv0yQUUkiJf9A9pa7ZvGiEnw8w8iLby85z8VqnFk/YP0UDGCm0ewM0kG/KWIVvvTANgbZ4WbNAIgaYZ3ce+p/xC5yath1ZCIe7oScwagtfBRRp2THqFHX6MJwDEerddQnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRJxY7p5; arc=none smtp.client-ip=209.85.214.195
+	s=arc-20240116; t=1712733530; c=relaxed/simple;
+	bh=+p8EZ7ny+p4pzXyzpwaJvUcxWqhW4WlZRv4Z/0cASvc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NXwiVEBTSVvESyNH6d/fekV2ETEc8z0YZ/7+lt5eV0lye5moDWOVgcm0eU1s6gnz9o4xOZPaatW4UzSlkGESZgXeQYLmWPbGKyN4WwZkGKsy5yvCPc9qDrZOzyBlRuV2tVCGCI0ZYGua/a4uI5W/AymlSn+A9FUb8FSi+WLYQuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRLgz9lv; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRJxY7p5"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so6601905ad.0;
-        Wed, 10 Apr 2024 00:13:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRLgz9lv"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4166d58a71eso19849785e9.1;
+        Wed, 10 Apr 2024 00:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712733180; x=1713337980; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=v8Z0HpTMm7JW0HfSi1migXbtT3L5ZfuOmq81pu08fxY=;
-        b=VRJxY7p5egdlDZm/rODV84LBK9rf1qTTfDxSAScpwgvnvqQorofUcgFZD+EjwqXxxb
-         CEi+4kLzryoo3mWJz14UfoWUXko7bF7FSebmu36wk0dFXJkTTNQTYCCyup5kdf8hhqj2
-         J2plN8SuPPMHaFt0jWIyGYHnfFmUNB5k/X6PdPhvYzWXKPl5VKuG6r6+1wB+3PfCQJ78
-         snoKKCt+clqBxy223cRzcwFIgPXtHDDfD1M9txjD9QBjlEhYUM9WHSO+h+E1nMv9pA7h
-         aBPd4qQomXW3cFHduf74VQyVmPTv6JveKRrn83TAYO0GOKQ5ZvieESUidI1vO86uQ4SL
-         O9Zw==
+        d=gmail.com; s=20230601; t=1712733527; x=1713338327; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=REbaDXtbXbPPn2VITYxiiPFxNxaFeriboyDgjG/9txo=;
+        b=CRLgz9lv/WhWwS6RrGPbIqkTRBYkI16c62zdHy9FsDJV2ypT0JdWsOkWXIXu/tbM3C
+         4GjnE4bGukXdkKpbqHzXhXd/yHg8C4XS/Pp/YnKrxhibXvXbfKjtW2zCY3tsC/0IieO+
+         TCf6J6Jf53wOD7rsqb1rX2bCWX1O0a2H93OwcYfwQGjQNNGuwtTNK0kDTNMfNI2ZwHz7
+         +gTWd5rn9F/tYwfsxkWPQe9vpIdyQoOC7mP0/EbY14QMKa6p761wdTpg6tK5dQVsXVLV
+         Fplr4QGWIupaEmf2GXSZaHTxuS78CATHH3PnQjgwVpO0xhzZ2TiA/xvciRegTJOb/vfK
+         Sqpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712733180; x=1713337980;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8Z0HpTMm7JW0HfSi1migXbtT3L5ZfuOmq81pu08fxY=;
-        b=McLksPKrtnmMw3Yh7+v+gVGOsLS+Hg6tVyrv9/aFbAhTohoiZ6gT4vXuXkiJA3AIMK
-         HGK/e+kTKZlLna62Wuro9GivswzpVbgB665davjFvl0VmiDMvayV3x/oEK0WawEVE9k5
-         D8pwStAwDZw2M5PrX4o5jtEpgbdGBS2RTEgkZQPRk5MoCFEobYiKnQwXZYGTrgim8mQ9
-         JyDZFu+yKsVoULLzZ5/57YtR9GGY2M557P0h13i7USCKx5xymqx+ojlBdmpgbZfSw4bW
-         r9EId3ETqExrN1T+WFNs2Hcn3BS9EXmc5vmIK2k4FfG65fxc9KzfNrYA4hkh3rz/o76x
-         VebA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJZ8f8CMKZj3bfe/F7rWp9lcgLVZX6rVjYevKg9zyOjGFPzpyMeDqvRfLKpW7xJK8s4n4b/pVVHe4sfWbghIZEsvk7FvLyLyFXmj9OFdAnrbUGomiR2ezi9W4ZIfeGpykSsWlPnkl3NJOVAOHzNl29qJqVGMAP9gmwve5oqbaJ4iYu4A==
-X-Gm-Message-State: AOJu0YyOEMBRB1S+Lf5G+1RwistUNYinSS9nR6LzcrNkysaBhjzyBptq
-	KzDDQ+1K5Co3O8GUzSiMZstiXkEyST5gepir8s8Ubuqoml/ZugoT
-X-Google-Smtp-Source: AGHT+IFMrqnJaJlYiQxwL0LAGuOQ3kVshpqFKiYiLZtdnpGtgTDNithiisZ0+SBC0c+D4ORu1fIAqA==
-X-Received: by 2002:a17:903:a8c:b0:1e4:3c7f:c179 with SMTP id mo12-20020a1709030a8c00b001e43c7fc179mr5797235plb.12.1712733179945;
-        Wed, 10 Apr 2024 00:12:59 -0700 (PDT)
-Received: from [172.27.224.145] (ec2-16-163-40-128.ap-east-1.compute.amazonaws.com. [16.163.40.128])
-        by smtp.gmail.com with ESMTPSA id v12-20020a170902f0cc00b001e002673fddsm10100548pla.194.2024.04.10.00.12.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 00:12:59 -0700 (PDT)
-Message-ID: <40a8d9d3-20a8-44e8-96d2-0dcd8627cfc8@gmail.com>
-Date: Wed, 10 Apr 2024 15:12:52 +0800
+        d=1e100.net; s=20230601; t=1712733527; x=1713338327;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=REbaDXtbXbPPn2VITYxiiPFxNxaFeriboyDgjG/9txo=;
+        b=ocKBbO7BpJdFZUAsOU2Nn0EzggHHotIv2px/M7HlXcrawbn3DfNgdvjN0+Hvx5d1bM
+         k6ES6FvrUtBe/9PyAQe1arrhP/eqEpebhgJUWAJzs9Cu/jm/yV3cT8WEXHoBTmbKpKQj
+         4PzoekNtVYgjr3hdI6eiY5FzKK0SVNt/TP7O1l5qwnL3s/WzuWkjw1bXe8pv48DdRVa3
+         JwFEWxfWiXoaNJP9I5ztRFm31tM4Kwb7JZ/wWVj6gSmAVt8SMjgkqZLQcui+5CnoDi1G
+         /JE3c85rOY0pXXy7tuThbbXnjFx2cHNI2S/aD1oqzUOYAOpSR8APhxLJnMpfKluFVp18
+         ay1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDPVD0kg5y3SFobylm3NYdO40vtqFaKHleWF1QVRFL+pLr/mJac7BkSr+p6FmP8QUd8ZG281IChg7CF9/zoOjzUWEV4B4rkKfX80LYie1e/p/M9GTFTODGfUcetOMsCvVZqZETbTWGWzLkgmUY0oqt9l3/HCgyNw8W/8mK+JB8FAEZWA==
+X-Gm-Message-State: AOJu0YygJqzoAP7v8HtMA/7oEmdXJk16jR+EW/hXh04iHnrM0Rff7hTS
+	Hr1FLl2HatlVdRu21bJWLw2pBBzAo5lFdd/REVrtJkpK46cm196y
+X-Google-Smtp-Source: AGHT+IHfOWT59wWMwai4D3q1ku9mFPZxtzYZ94pxPITORAvb6tZphEFsRp44Z0Ow5y+geZ57CgSoNg==
+X-Received: by 2002:a05:600c:4f47:b0:416:32b8:8f3b with SMTP id m7-20020a05600c4f4700b0041632b88f3bmr1339095wmq.17.1712733526754;
+        Wed, 10 Apr 2024 00:18:46 -0700 (PDT)
+Received: from krava ([2a02:168:f656:0:bbb9:17bc:93d7:223])
+        by smtp.gmail.com with ESMTPSA id c12-20020a05600c0a4c00b00416770871f7sm1374713wmq.25.2024.04.10.00.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 00:18:46 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 10 Apr 2024 09:18:44 +0200
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Kees Cook <keescook@chromium.org>, Andrei Vagin <avagin@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf bench uprobe: Remove lib64 from libc.so.6
+ binary path
+Message-ID: <ZhY8xzVJ6_9BI-Vd@krava>
+References: <20240406040911.1603801-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] RISCV: KVM: add tracepoints for entry and exit events
-To: Shenlin Liang <liangshenlin@eswincomputing.com>, anup@brainfault.org,
- atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
-References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
- <20240328031220.1287-2-liangshenlin@eswincomputing.com>
-Content-Language: en-US
-From: Eric Cheng <eric.cheng.linux@gmail.com>
-In-Reply-To: <20240328031220.1287-2-liangshenlin@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240406040911.1603801-1-irogers@google.com>
 
-On 3/28/2024 11:12 AM, Shenlin Liang wrote:
-> Like other architectures, RISCV KVM also needs to add these event
-> tracepoints to count the number of times kvm guest entry/exit.
+On Fri, Apr 05, 2024 at 09:09:10PM -0700, Ian Rogers wrote:
+> bpf_program__attach_uprobe_opts will search LD_LIBRARY_PATH and so
+> specifying `/lib64` is unnecessary and causes failures for libc.so.6
+> paths like `/lib/x86_64-linux-gnu/libc.so.6`.
 > 
-> Signed-off-by: Shenlin Liang <liangshenlin@eswincomputing.com>
+> Fixes: 7b47623b8cae ("perf bench uprobe trace_printk: Add entry attaching an BPF program that does a trace_printk")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+patchset lgtm
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
 > ---
->   arch/riscv/kvm/trace_riscv.h | 60 ++++++++++++++++++++++++++++++++++++
-
-Conventionally, it should be named to trace.h, especially if only one. Refer to 
-other arch's.
-
+>  tools/perf/bench/uprobe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/bench/uprobe.c b/tools/perf/bench/uprobe.c
+> index 5c71fdc419dd..b722ff88fe7d 100644
+> --- a/tools/perf/bench/uprobe.c
+> +++ b/tools/perf/bench/uprobe.c
+> @@ -47,7 +47,7 @@ static const char * const bench_uprobe_usage[] = {
+>  #define bench_uprobe__attach_uprobe(prog) \
+>  	skel->links.prog = bpf_program__attach_uprobe_opts(/*prog=*/skel->progs.prog, \
+>  							   /*pid=*/-1, \
+> -							   /*binary_path=*/"/lib64/libc.so.6", \
+> +							   /*binary_path=*/"libc.so.6", \
+>  							   /*func_offset=*/0, \
+>  							   /*opts=*/&uprobe_opts); \
+>  	if (!skel->links.prog) { \
+> -- 
+> 2.44.0.478.gd926399ef9-goog
+> 
