@@ -1,34 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07816131C;
-	Wed, 10 Apr 2024 14:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7AF179207;
+	Wed, 10 Apr 2024 14:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712760179; cv=none; b=jc7M/tlfOyHt7HDp1znR5hKNi3dSTMsEgVPRpjRuQ3bzsposMEoBHBDvNKZma53fqF1u4zfZGUG/+5IMJLGmHMBZvgBGVV1eoKdnhtCz+9qzQ5S/PvHQtsAOkkM5JTWLehEx7CyHqG+WXD5s9p9OMkaws8fVcsSWestvSy+aWpM=
+	t=1712760505; cv=none; b=ipo/SSfd7VmCp29qRBW+eujpggpSiYLaMM2WcwnYnejdPBxPC6pidArTD2p/3aQPerO3g+NyE5wLh26tnjSIocQwYWrhexg7CiJ3HHgPckOukdPB1deMPIK92UZehTbsZ092f8u/kpX4VPKW/MUtoLsiVEZxrwbfFPcdMPGi64s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712760179; c=relaxed/simple;
-	bh=luoVgNyj4zzwwoGosR+LKd29Ur7JRFYhyAO39bS3iYY=;
+	s=arc-20240116; t=1712760505; c=relaxed/simple;
+	bh=tDuuEQyJDMcj9XwP0qQQysyngBeUz2Vpvg0kCnx+8xk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u0ZZJdEgvxxQXGUZMGZa8unUx7JwfP/et4TU/mCow6rKqeJqiUpFI0rmQIrht6nGkbLK/KnFpDgSzeAhsAuLQLrBnIag69QCtwZpLcziOUe0apmgtphNyqO4Ez2M8DsMazyE9FEcyvM8N9f1G/S1Fmpu0JOw+yoJbMnRfLM3GC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b07fLTai; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YQqk0U5Bz0Ot4NTe/ezAXQ1vBprPQjSNNCn1bPvW7mAzRC9HEnAyFeyjYfAt1OQzrVWX4Nvh2zPmmzg9Wo0tvzzgXVTN6krUo4EDGXk1AamdaV7bys2psMRYD8OFf+N97vzB21cUn5aIgOWNIf7k3wX/+FVyGUGa2N2gf63RNPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cq7VH3UU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rD1D0Im1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b07fLTai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8AC9C433C7;
-	Wed, 10 Apr 2024 14:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712760179;
-	bh=luoVgNyj4zzwwoGosR+LKd29Ur7JRFYhyAO39bS3iYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b07fLTaipG3I0kSFOt/zafbbHHiO4S32fLcqmYd6q0R37s3ScVmqRr1uG2MBoOyAS
-	 T81YMrNBgj2dJG1nDvP8oXw3IBGjaIduAuo4sfs7kypXW6perKZOQa8tj9dxeoImIN
-	 MbruKyDrUpoVlILRrZEPaBctf6piqLJtrAi+t+pBHG8VtAthdxbt62CbDhpDkhcE0M
-	 MZcOGJOZxVs9dEa/zznCVHr+2aWv/B5aP4yLYyVld1u4TDwaVRTzEbzHFFEB6P2Ymr
-	 z4cqJc2EvNO+hl43NNh/54nap8qjZcfyye30Y1vntHhuq6oiAbB3Ab2uEKUEhYe3FU
-	 Hj9WQB0qtU6wg==
-Date: Wed, 10 Apr 2024 16:42:56 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cq7VH3UU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rD1D0Im1"
+Date: Wed, 10 Apr 2024 16:48:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712760503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RhDVG2F9WXHf/tQLyq5MH5q7SbNdjT+z4V3IMNo6lx4=;
+	b=Cq7VH3UU9v17nIymWd7BnnRkuiUkRvP3jDCmzgN0BIkQpdaZbH6K8uS/+x6MhSIMheCscK
+	UTTCh/C0tkPqOKpmsUSUOAWKZ+45uMw4SIQ4VwgR2UHAoqcSWJ/1/bXg20w4kvKJm2Xc0i
+	v+2rsXopIP4efDjij6v/Hy800ZUmbTo1zYNV++tTKVWEZqmpT8Uo4gSaspFgBEGEevt37W
+	80LkdxqFWBglf0VlRyePtLrGSWoAR5G2HVQfT4+ZHP+54yl2M+CMA05phYwB2WrkGgrdlZ
+	b0tzHWuWwt1Rbm3bZu2xmJUjlmSiA1UHuE1ZIXzv+MKwW0XDBgN8uA8RbQiNXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712760503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RhDVG2F9WXHf/tQLyq5MH5q7SbNdjT+z4V3IMNo6lx4=;
+	b=rD1D0Im1EO5uMEliAwyEZ+ROwmRF7ctoAFXiBTycXQfc5VrdGW1yVkDhV61fhjb40kTQqx
+	c2Gs/Rg41ogRZBBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Frederic Weisbecker <frederic@kernel.org>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -41,9 +51,8 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
 Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <ZhalcBcd3w0w2HD_@localhost.localdomain>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-3-bigeasy@linutronix.de>
+Message-ID: <20240410144821.bVdBdVOR@linutronix.de>
+References: <20240322065208.60456-3-bigeasy@linutronix.de>
  <ZhRhn1B0rMSNv6mV@pavilion.home>
  <20240409085732.FBItbOSO@linutronix.de>
  <ZhU2YwettB6i6AMp@localhost.localdomain>
@@ -52,47 +61,34 @@ References: <20240322065208.60456-1-bigeasy@linutronix.de>
  <20240410134702.dcWYciZB@linutronix.de>
  <ZhabcanCbQej1azv@localhost.localdomain>
  <20240410140633.0MHBLpMI@linutronix.de>
+ <ZhalcBcd3w0w2HD_@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240410140633.0MHBLpMI@linutronix.de>
+In-Reply-To: <ZhalcBcd3w0w2HD_@localhost.localdomain>
 
-Le Wed, Apr 10, 2024 at 04:06:33PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2024-04-10 16:00:17 [+0200], Frederic Weisbecker wrote:
-> > Le Wed, Apr 10, 2024 at 03:47:02PM +0200, Sebastian Andrzej Siewior a écrit :
-> > > On 2024-04-10 13:37:05 [+0200], Frederic Weisbecker wrote:
-> > > > > Couldn't we either flush _or_ remove the task_work in perf_release()?
-> > > > 
-> > > > Right so the problem in perf_release() is that we may be dealing with task works
-> > > > of other tasks than current. In that case, task_work_cancel() is fine if it
-> > > > successes. But if it fails, you don't have the guarantee that the task work
-> > > > isn't concurrently running or about to run. And you have no way to know about
-> > > > that. So then you need some sort of flushing indeed.
+On 2024-04-10 16:42:56 [+0200], Frederic Weisbecker wrote:
+> > > Like this then?
 > > > 
-> > > Since perf_release() preemptible, a wait/sleep for completion would be
-> > > best (instead of flushing).
+> > > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
 > > 
-> > Like this then?
-> > 
-> > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
+> > Kind of, yes. Do we have more than one waiter? If not, maybe that
+> > rcuwait would work then.
 > 
-> Kind of, yes. Do we have more than one waiter? If not, maybe that
-> rcuwait would work then.
+> Indeed there is only one waiter so that should work. Would
+> that be something you can call while preemption is disabled?
 
-Indeed there is only one waiter so that should work. Would
-that be something you can call while preemption is disabled?
+rcuwait_wake_up() does only wake_up_process() which is fine.
+wake_up() does spin_lock_irqsave() which is a no.
 
-Thanks.
+On the other hand that preempt-disable needs to go anyway due to
+perf_sigtrap(). But a slim wake is a slim wake ;)
 
-> Otherwise (>1 waiter) we did establish that we may need a per-task
-> counter for recursion handling so preempt-disable shouldn't be a problem
-> then. The pending_work_wq must not be used outside of task context (means
-> no hardirq or something like that).
-> 
-> Sebastian
+> Thanks.
+
+Sebastian
