@@ -1,249 +1,193 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD48EC2
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 01:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245DE8F4E;
+	Wed, 10 Apr 2024 03:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712711632; cv=none; b=rveIX4wZaEeDN1dCMWboXPkv2SLpRPG2JLIx443obj46b/wYKQdRi3oJRT8nMHil71QOMSLMS2IJYl/xgiSX1BUmbU8ep5T56ai+hPxeY85YTW1Rk9BMWHWBla2ypFZ+LBzzBC6HrrNsd2zrVhbVOikglycNpCvEhRVErRwRjF4=
+	t=1712720112; cv=none; b=AO62VJYVpgw8+NwfELOt/1QnF3dXlGJANPakOfkc5b/BbbO9PUoaS9DaT23Jp/ob453gBQoJjdTAVFScEqzbhPxYf8wSQNZKszTltAqV0IRYOGPA7dakTjS5PZViEyPlEIKPPi/HnX5V2/O9QZoUjIYTXfbPvWrNCBUUovniiw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712711632; c=relaxed/simple;
-	bh=3gZCR/oI52h5oQWn/HwEs5tiS4Zkp/wa/QiF4W4R/qM=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=lDLCDht3M4fLg+AQPjp7qRFigcJc8XX3Eoge+oyg9ZwWi4Gf60xrwt03dj+BCMKeykPom6jwlWZn3ZQNTMpwo7jUxgUIs2yx7L4EQze06r/TAK0s/QBoW6+ZTjR63BjVkfW5trtL8K9mvff9mvi2id+7w1WrU3MwoXD8X/UcX4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HPmLMzBb; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HPmLMzBb"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd169dd4183so7964023276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 18:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712711629; x=1713316429; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1cn09GYr5ta/Z+upjf7mxVRyOt2fkI4BgGzEZQrJxdg=;
-        b=HPmLMzBbITQdJqBLtK3zeM5Ut90LU8zVllLcZ+7QJUOUFBLiEWUzGcS7a2vUpcJhh2
-         dZdMnwU3Y4OLo2kB+R9q5w0pCv0DLOrqmy4TxnXJa4EQExK+6kPAgSXTONnXkAGjmcvU
-         kAItwzSW4YR6y0r77d67a92jyIcvGPpUTq3phFJoL1LsAK3VZWBHki8iYcfalQxmjS3t
-         HKTaeYL0sNnTU8z6f15E6C99MjST3GT1DxVOUlpGeJpb53wNHDblLEXi/hg6O+/8CvL5
-         KnTrQdYlrIp5xY41f/1Htpk+GZRjExSjVdRUpbDtGo2w8Sbe1vxFlxd8Keo243tRZTIY
-         xAzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712711629; x=1713316429;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1cn09GYr5ta/Z+upjf7mxVRyOt2fkI4BgGzEZQrJxdg=;
-        b=Hn8ydP09yeA2aXHFC8B/14m1A6TKoJmjal4VD7EoH/JAgs1/jbwZrx+bqLe0VUTINR
-         ZQPlSRPo2zmxQ+JFFSbD4pLoxwchP53vexPotDPIdivfQjQjWfaq4ONGSIbgnClvJ3fI
-         BRqu1VYPLcGenkfBcjur8sxZgY4iETsTUwk15CcgaT6sxXsBlBd6MWKlIUIJLSlMT0Tm
-         OuTjcfI4pmYvVB2JxHVuLYdwyu5Fl5XsG8aOZKuGhDlwM/xqAqga8SNSwKegf9kivUE0
-         1xbZbO7ZOJrzsK8Vz9EmTMmX5llA6o1xOqti96uT4z7eHSkvwY62GBn6uDcygy2nIrZa
-         1Dbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWyFCQQxUutRGd869SseQfkNmH+NGWYKOTBkmtkeLNBqDu8MMPnQw/lbHZ0dB7wq2VXEQYMsgFtXVyJq8DQJuC+i5yc1+sUjdL9S993rvzkg==
-X-Gm-Message-State: AOJu0YyZe11i432tlLVtjJiQM56sMRysFMjkqatdKYwmBgOoEVnZItcy
-	7r+BCX3yaxtPLCDOAenC+1CoXjdnAbZicycollzw6UvSu6FLzjMioC2PEvHi/aIUNXgGipNC+5U
-	qVieNAA==
-X-Google-Smtp-Source: AGHT+IF3vVs0WTI0FKPFI7X5BHCZFvn1C4F3fCW2CxNBg+rtZ0F7OpXEraenZ1kq02SwwGiFkVUbeIiRvbvR
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:18c5:d9c6:d1d6:a3ec])
- (user=irogers job=sendgmr) by 2002:a05:6902:10c3:b0:de1:21b4:76a5 with SMTP
- id w3-20020a05690210c300b00de121b476a5mr116447ybu.13.1712711629664; Tue, 09
- Apr 2024 18:13:49 -0700 (PDT)
-Date: Tue,  9 Apr 2024 18:13:13 -0700
-In-Reply-To: <20240410011313.2556848-1-irogers@google.com>
-Message-Id: <20240410011313.2556848-2-irogers@google.com>
+	s=arc-20240116; t=1712720112; c=relaxed/simple;
+	bh=c+7ZAy2CudaAOXrHKv5vJc7LzLN8G3OwL/hongXFgSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GQGzHZ6kfLmWBgZ+FrhYF8665F8QWoZ/AXUA41d2k3gvt5CudFbndrm5boVjdwUKQke2wcOdFinC68xbCuewRsUgofGZYFNopH9RByyN+vPHGejRAVFK8PArlNJEgn4oTL33RRG8yDXR5Q1mvpj2hkt/4eNJd8JefuO6jWmA4ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D714F139F;
+	Tue,  9 Apr 2024 20:35:38 -0700 (PDT)
+Received: from [10.163.58.237] (unknown [10.163.58.237])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 631153F6C4;
+	Tue,  9 Apr 2024 20:34:59 -0700 (PDT)
+Message-ID: <8f7e67aa-3746-405d-9258-579343349be4@arm.com>
+Date: Wed, 10 Apr 2024 09:04:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240410011313.2556848-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Subject: [PATCH v2 2/2] perf tests: Add a pmus core functionality test suite
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, James Clark <james.clark@arm.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Bharat Bhushan <bbhushan2@marvell.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
-	Will Deacon <will@kernel.org>, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from
+ different CU"
+To: linux-perf-users@vger.kernel.org
+Cc: anshuman.khandual@arm.com, james.clark@arm.com,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Chenyuan Mi <cymi20@fudan.edu.cn>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Ravi Bangoria
+ <ravi.bangoria@amd.com>,
+ =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+ Colin Ian King <colin.i.king@gmail.com>, Changbin Du
+ <changbin.du@huawei.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Dobriyan <adobriyan@gmail.com>,
+ =?UTF-8?Q?Georg_M=C3=BCller?= <georgmueller@gmx.net>,
+ Liam Howlett <liam.howlett@oracle.com>, bpf@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+Content-Language: en-US
+From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
+In-Reply-To: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Test behavior of PMU names and comparisons wrt suffixes using Intel
-uncore_cha and marvell mrvl_ddr_pmu as examples.
+Link to V1: 
+https://lore.kernel.org/all/20240220042957.2022391-1-ChaitanyaS.Prakash@arm.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/builtin-test.c |   1 +
- tools/perf/tests/pmus.c         | 108 ++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |   2 +
- 4 files changed, 112 insertions(+)
- create mode 100644 tools/perf/tests/pmus.c
-
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index c7f9d9676095..a7bab6e9300f 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -14,6 +14,7 @@ perf-y += perf-record.o
- perf-y += evsel-roundtrip-name.o
- perf-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
- perf-y += fdarray.o
-+perf-y += pmus.o
- perf-y += pmu.o
- perf-y += pmu-events.o
- perf-y += hists_common.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d13ee7683d9d..c90f270a469a 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -68,6 +68,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__parse_events,
- 	&suite__expr,
- 	&suite__PERF_RECORD,
-+	&suite__pmus,
- 	&suite__pmu,
- 	&suite__pmu_events,
- 	&suite__dso_data,
-diff --git a/tools/perf/tests/pmus.c b/tools/perf/tests/pmus.c
-new file mode 100644
-index 000000000000..6279c925e689
---- /dev/null
-+++ b/tools/perf/tests/pmus.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+#include "pmus.h"
-+#include "tests.h"
-+#include <string.h>
-+#include <linux/kernel.h>
-+
-+static const char * const uncore_chas[] = {
-+	"uncore_cha_0",
-+	"uncore_cha_1",
-+	"uncore_cha_2",
-+	"uncore_cha_3",
-+	"uncore_cha_4",
-+	"uncore_cha_5",
-+	"uncore_cha_6",
-+	"uncore_cha_7",
-+	"uncore_cha_8",
-+	"uncore_cha_9",
-+	"uncore_cha_10",
-+	"uncore_cha_11",
-+	"uncore_cha_12",
-+	"uncore_cha_13",
-+	"uncore_cha_14",
-+	"uncore_cha_15",
-+	"uncore_cha_16",
-+	"uncore_cha_17",
-+	"uncore_cha_18",
-+	"uncore_cha_19",
-+	"uncore_cha_20",
-+	"uncore_cha_21",
-+	"uncore_cha_22",
-+	"uncore_cha_23",
-+	"uncore_cha_24",
-+	"uncore_cha_25",
-+	"uncore_cha_26",
-+	"uncore_cha_27",
-+	"uncore_cha_28",
-+	"uncore_cha_29",
-+	"uncore_cha_30",
-+	"uncore_cha_31",
-+};
-+
-+static const char * const mrvl_ddrs[] = {
-+	"mrvl_ddr_pmu_87e1b0000000",
-+	"mrvl_ddr_pmu_87e1b1000000",
-+	"mrvl_ddr_pmu_87e1b2000000",
-+	"mrvl_ddr_pmu_87e1b3000000",
-+	"mrvl_ddr_pmu_87e1b4000000",
-+	"mrvl_ddr_pmu_87e1b5000000",
-+	"mrvl_ddr_pmu_87e1b6000000",
-+	"mrvl_ddr_pmu_87e1b7000000",
-+	"mrvl_ddr_pmu_87e1b8000000",
-+	"mrvl_ddr_pmu_87e1b9000000",
-+	"mrvl_ddr_pmu_87e1ba000000",
-+	"mrvl_ddr_pmu_87e1bb000000",
-+	"mrvl_ddr_pmu_87e1bc000000",
-+	"mrvl_ddr_pmu_87e1bd000000",
-+	"mrvl_ddr_pmu_87e1be000000",
-+	"mrvl_ddr_pmu_87e1bf000000",
-+};
-+
-+static int test__name_len(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	TEST_ASSERT_EQUAL("cpu", pmu_name_len_no_suffix("cpu"), (int)strlen("cpu"));
-+	TEST_ASSERT_EQUAL("i915", pmu_name_len_no_suffix("i915"), (int)strlen("i915"));
-+	for (size_t i = 0; i < ARRAY_SIZE(uncore_chas); i++) {
-+		TEST_ASSERT_EQUAL("Strips uncore_cha suffix",
-+				pmu_name_len_no_suffix(uncore_chas[i]),
-+				(int)strlen("uncore_cha"));
-+	}
-+	for (size_t i = 0; i < ARRAY_SIZE(mrvl_ddrs); i++) {
-+		TEST_ASSERT_EQUAL("Strips mrvl_ddr_pmu suffix",
-+				pmu_name_len_no_suffix(mrvl_ddrs[i]),
-+				(int)strlen("mrvl_ddr_pmu"));
-+	}
-+	return TEST_OK;
-+}
-+
-+static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	TEST_ASSERT_EQUAL("cpu", pmu_name_cmp("cpu", "cpu"), 0);
-+	TEST_ASSERT_EQUAL("i915", pmu_name_cmp("i915", "i915"), 0);
-+	TEST_ASSERT_VAL("i915", pmu_name_cmp("cpu", "i915") < 0);
-+	TEST_ASSERT_VAL("i915", pmu_name_cmp("i915", "cpu") > 0);
-+	for (size_t i = 1; i < ARRAY_SIZE(uncore_chas); i++) {
-+		TEST_ASSERT_VAL("uncore_cha suffixes ordered lt",
-+				pmu_name_cmp(uncore_chas[i-1], uncore_chas[i]) < 0);
-+		TEST_ASSERT_VAL("uncore_cha suffixes ordered gt",
-+				pmu_name_cmp(uncore_chas[i], uncore_chas[i-1]) > 0);
-+	}
-+	for (size_t i = 1; i < ARRAY_SIZE(mrvl_ddrs); i++) {
-+		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered lt",
-+				pmu_name_cmp(mrvl_ddrs[i-1], mrvl_ddrs[i]) < 0);
-+		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered gt",
-+				pmu_name_cmp(mrvl_ddrs[i], mrvl_ddrs[i-1]) > 0);
-+	}
-+	return TEST_OK;
-+}
-+
-+static struct test_case tests__pmus[] = {
-+	TEST_CASE("PMU name combining", name_len),
-+	TEST_CASE("PMU name comparison", name_cmp),
-+	{	.name = NULL, }
-+};
-+
-+struct test_suite suite__pmus = {
-+	.desc = "PMUs test",
-+	.test_cases = tests__pmus,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 3aa7701ee0e9..03278f0f7698 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -3,6 +3,7 @@
- #define TESTS_H
- 
- #include <stdbool.h>
-+#include <debug.h>
- 
- enum {
- 	TEST_OK   =  0,
-@@ -81,6 +82,7 @@ DECLARE_SUITE(PERF_RECORD);
- DECLARE_SUITE(perf_evsel__roundtrip_name_test);
- DECLARE_SUITE(perf_evsel__tp_sched_test);
- DECLARE_SUITE(syscall_openat_tp_fields);
-+DECLARE_SUITE(pmus);
- DECLARE_SUITE(pmu);
- DECLARE_SUITE(pmu_events);
- DECLARE_SUITE(attr);
--- 
-2.44.0.478.gd926399ef9-goog
-
+On 4/8/24 11:52, Chaitanya S Prakash wrote:
+> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+>
+> Defconfig doesn't provide all the necessary configs required for the
+> test "perf probe of function from different CU" to run successfully on
+> all platforms. Therefore the required configs have been added to
+> config fragments to resolve this issue. On further investigation it was
+> seen that the Perf treated all files beginning with "/tmp/perf-" as a
+> map file despite them always ending in ".map", this caused the test to
+> fail when Perf was built with NO_DWARF=1. As the file was parsed as a
+> map file, the probe...--funcs command output garbage values instead of
+> listing the functions in the binary. After fixing the issue an
+> additional check to test the output of the probe...--funcs command has
+> been added.
+>
+> Additionally, various functions within the codebase have been refactored
+> and restructured. The definition of str_has_suffix() has been adopted
+> from tools/bpf/bpftool/gen.c and added to tools/lib/string.c in an
+> attempt to make the function more generic. The implementation has been
+> retained but the return values have been modified to resemble that of
+> str_has_prefix(), i.e., return strlen(suffix) on success and 0 on
+> failure. In light of the new addition, "ends_with()", a locally defined
+> function used for checking if a string had a given suffix has been
+> deleted and str_has_suffix() has replaced its usage. A call to
+> strtailcmp() has also been replaced as str_has_suffix() seemed more
+> suited for that particular use case.
+>
+> Finally str_has_prefix() is adopted from the kernel and is added to
+> tools/lib/string.c, following which strstarts() is deleted and its use
+> has been replaced with str_has_prefix().
+>
+> This patch series has been tested on 6.9-rc2 mainline kernel, both on
+> arm64 and x86 platforms.
+>
+> Changes in V2:
+> - Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
+> - Delete ends_with() and replace its usage with str_has_suffix()
+> - Replace an instance of strtailcmp() with str_has_suffix()
+> - Delete strstarts() from tools/include/linux/string.h and replace its
+>    usage with str_has_prefix()
+>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: John Garry <john.g.garry@oracle.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Chenyuan Mi <cymi20@fudan.edu.cn>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> Cc: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
+> Cc: Colin Ian King <colin.i.king@gmail.com>
+> Cc: Changbin Du <changbin.du@huawei.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Georg Müller <georgmueller@gmx.net>
+> Cc: Liam Howlett <liam.howlett@oracle.com>
+> Cc: bpf@vger.kernel.org
+> Cc: coresight@lists.linaro.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-perf-users@vger.kernel.org
+>
+> Chaitanya S Prakash (8):
+>    tools lib: adopt str_has_suffix() from bpftool/gen.c
+>    perf util: Delete ends_with() and replace its use with
+>      str_has_suffix()
+>    perf util: Replace an instance of strtailcmp() by str_has_suffix()
+>    tools lib: Adopt str_has_prefix() from kernel
+>    tools: Delete strstarts() and replace its usage with str_has_prefix()
+>    perf tools: Enable configs required for
+>      test_uprobe_from_different_cu.sh
+>    perf tools: Only treat files as map files when they have the extension
+>      .map
+>    perf test: Check output of the probe ... --funcs command
+>
+>   tools/include/linux/string.h                  | 12 ++----
+>   tools/lib/string.c                            | 42 +++++++++++++++++++
+>   tools/lib/subcmd/help.c                       |  2 +-
+>   tools/lib/subcmd/parse-options.c              | 18 ++++----
+>   tools/objtool/check.c                         |  2 +-
+>   tools/perf/arch/arm/util/pmu.c                |  4 +-
+>   tools/perf/arch/x86/annotate/instructions.c   | 14 +++----
+>   tools/perf/arch/x86/util/env.c                |  2 +-
+>   tools/perf/builtin-c2c.c                      |  4 +-
+>   tools/perf/builtin-config.c                   |  2 +-
+>   tools/perf/builtin-daemon.c                   |  2 +-
+>   tools/perf/builtin-ftrace.c                   |  2 +-
+>   tools/perf/builtin-help.c                     |  6 +--
+>   tools/perf/builtin-kmem.c                     |  2 +-
+>   tools/perf/builtin-kvm.c                      | 14 +++----
+>   tools/perf/builtin-kwork.c                    | 10 ++---
+>   tools/perf/builtin-lock.c                     |  6 +--
+>   tools/perf/builtin-mem.c                      |  4 +-
+>   tools/perf/builtin-sched.c                    |  6 +--
+>   tools/perf/builtin-script.c                   | 30 ++++---------
+>   tools/perf/builtin-stat.c                     |  4 +-
+>   tools/perf/builtin-timechart.c                |  2 +-
+>   tools/perf/builtin-trace.c                    |  6 +--
+>   tools/perf/perf.c                             | 12 +++---
+>   tools/perf/tests/config-fragments/config      |  3 ++
+>   .../shell/test_uprobe_from_different_cu.sh    |  2 +-
+>   tools/perf/tests/symbols.c                    |  2 +-
+>   tools/perf/ui/browser.c                       |  2 +-
+>   tools/perf/ui/browsers/scripts.c              |  2 +-
+>   tools/perf/ui/stdio/hist.c                    |  2 +-
+>   tools/perf/util/amd-sample-raw.c              |  4 +-
+>   tools/perf/util/annotate.c                    |  2 +-
+>   tools/perf/util/callchain.c                   |  2 +-
+>   tools/perf/util/config.c                      | 12 +++---
+>   tools/perf/util/map.c                         |  8 ++--
+>   tools/perf/util/pmus.c                        |  2 +-
+>   tools/perf/util/probe-event.c                 |  2 +-
+>   tools/perf/util/sample-raw.c                  |  2 +-
+>   tools/perf/util/symbol-elf.c                  |  4 +-
+>   tools/perf/util/symbol.c                      |  4 +-
+>   40 files changed, 146 insertions(+), 117 deletions(-)
+>
