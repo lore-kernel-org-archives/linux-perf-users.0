@@ -1,296 +1,108 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FBA1791EA
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 16:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8087417B4E6
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 16:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712765280; cv=none; b=mZYLzaF4xIyc3aCJkHqvE6Y3qTQds9cvGP8vNJwjwZ80doRnDQB0f9yttk4uF+ECErBLiRM80yJG6PQo4/yKEdQKHJgGhxOf+DiGkANu7ZPLnnoYTsPUHrdbX26lZ9/NMvNU1DtmQxYqPH8/MS1AZYrvqz8hYqxz/PClXnfGMyA=
+	t=1712765842; cv=none; b=hKuFhaeIW7AbmFGPXoSpxfRH5HDOWcYCmy5S6A6gVvKV0AjIVaFCBhow7O6GXsop3Ps7F3s/o0JvRhnPjWezzwSfbuEo/4oh1XYGMuadcn8B/L78nETjLW3QK2dqsqlXufGgRWTagjdekaGWwmU9Q4UBkt6hHcA9JGYuRh0z93U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712765280; c=relaxed/simple;
-	bh=O9vyfiYW4qJ4aR4aUCNu5ffJRmKK3JS+Eqhztirud48=;
+	s=arc-20240116; t=1712765842; c=relaxed/simple;
+	bh=z6IKR3JAhKYZVwCJuBfAEGi31YQCyS3o5wJrNYaVLZw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TT3Cozil6ne6yKlwZFajtlvMvE16N69z8uIzDBGhGzYQbuiCGVlrMm2ga8qbkXFqETY5fMVHy6EYg1MyIXYmu6NQF+0gv5w+PTQ4RyIYr6p+CJlDJ6oo4sKKLe0F8/Zv23LOzSTCaCdVcHl5NPnQqB6JxehN5JhQyAxT4+UBRpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G55rm0Mp; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=hupD1RZkezmAE6UZgE3uwuTdWAU3jhL3y1aXSjNsu+dqTTRCm7mEvi16YO1mygKVTiLejbcVpvflNmXSKH+ZVPig38dgwXY7EieSiZUcuIADMlgHJ9d90GpQYzrNnTAv+lUcseKwcY6aVaCJd5VBCe1l3mFl+3eR7+F5JMo4t0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dmb7HOSC; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G55rm0Mp"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e42a6158d5so168275ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 09:07:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmb7HOSC"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36a3a4c9d11so174845ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 09:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712765278; x=1713370078; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712765836; x=1713370636; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jQntAKieGT0i/s8HiScw2bDeUzaEYfiblRtqNRVHdc4=;
-        b=G55rm0MpB+CuWSLQ4HA9r/JG8GQ2mmtobGvRzbxtVwHW6XaU+jfhREkJzBKApFwt3z
-         IeiMfaZOWuY8LeJ9rqc/sUCi/nkpm831h7BrnXdOit7EtV8tjxvWIP7LjvPKqxp0uJKw
-         mCkyBTmhfJLh+lqBaPwWZQ+4DAsevlyapaGbx57g6FMWS3SuobM6F3QZczsrbODUgROD
-         6EMYa8pGYbh7vhT/6n+g7nPUUSBMBXtWHtcv5hM+/w1StyVaLEzL7yte8VwuL1LN5PSA
-         AUgBLfyjojBL/nyg/vC3u2a5Uz5Llag/LozY6rpb18zLb7cgS8KI7YzKdP5c+JAXRV6/
-         lOBw==
+        bh=S59M5ErJ4ghJIk0WuQtKw5Oah+bXQHt5R+GLddM1KKg=;
+        b=dmb7HOSCx0aOaxYV/MYcS7ebcCA2nJ6wfPnfA29+V0tO7yUB6hGVEUq/lQJJf4fH8F
+         7NhnoEhDs/HZjML4Xx/G3qDa9C+PhO8OnkgtKnrHiatAgWTGtnL2KK/Q3lJ4JeFigltA
+         rnUDPjHIFmxJ+9qY7qdxerxPGlfCG3SUGTdEhQ/sgy//elfQQFQPkzU/MhjbqiC888xQ
+         hzvQFEG2B7/3l7CwdSYkacIRHYLszG0F2FPGWXA1j76JWMsjozffKf8jMvIiuUOMovyr
+         DlNC8DA6YSddrBGBVn+V6rQgsMppY/YSEKMHcfn2Qn6Eu29etcm+sxbRgoFLjU/6Istf
+         Uh/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712765278; x=1713370078;
+        d=1e100.net; s=20230601; t=1712765836; x=1713370636;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jQntAKieGT0i/s8HiScw2bDeUzaEYfiblRtqNRVHdc4=;
-        b=e33QQhr4LKS1G9HHnB2Xv3iP1X2+51IlNm0dq2FUl6/Gyol36xC4dZHd75u8PZ+Tcn
-         oW2bTNeV5LBrewp53Lz/CzYFTFbIq1CCspnXEXHTZATOffEbL55b2Q+7tZnuuLH7eS0f
-         DB1digTeHVrEc9o1TunLQcOOrofgSITNsjgFoLOf5NX7hBUSWezQE1FYDMokMzVx+IDq
-         1gosD7/fEX8zIUiZmZbqWba7ojok/CwPvrYu3Yv7alYS4IE/hJNs8Bo2K6QEVmT+w3tA
-         xJ3auMiq/GoHrFEY1ao8sPn8jqXt1aopoxA9MoVdl2ZSrIyWeDqHH2TZFf6SXUfXnTHM
-         3CvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1mNd8Ya6GzMu/kZ8fUoWPxZqWm8QS7iYPP6WovDR5QjcLo7VUF3V3F69R+x/nniWZ8xDTg9rikgtRmJtaa9F1asRx1TxPERevrEwvtUdJkA==
-X-Gm-Message-State: AOJu0Yybb4ZGiDwx9BuXP3KiYoGkY/rny0hciwac+9yzZQABrhKLmXK5
-	ejl9stDgtXm0EYtV3OF8Nyr4ARsnJeKDAaqE9OI5ZcPfgwmgahc2DS+ahikBXTLvyyUzHfVQds+
-	gSYaCmu7a0iMyCfNOHUKTnQWG+XuSAXmAo0Um
-X-Google-Smtp-Source: AGHT+IGJstmEj1XUFY34LSDgFUBaClLQ/9p78uMzbyL2cRc7G5dE+yDawDKh0XUCAv7+t9BJLvl36zI/jgsD4Ixi/Zs=
-X-Received: by 2002:a17:902:e842:b0:1e2:3991:9e9 with SMTP id
- t2-20020a170902e84200b001e2399109e9mr261613plg.0.1712765278065; Wed, 10 Apr
- 2024 09:07:58 -0700 (PDT)
+        bh=S59M5ErJ4ghJIk0WuQtKw5Oah+bXQHt5R+GLddM1KKg=;
+        b=Y9JNe2ui1+QlxwvJJ0GZ8pfWaFuAjXRIkH8+Z3bzXmLEbRyKZ1ENZmnblrXyXw7UiF
+         ATJVEmg2pX/p1hgJG/XcFyHuZfpFDz+eYKj+VHLS6ETUJZRAzR6wqTagE/Ea9BJ9tqfQ
+         xK7jAxFjF8ZiejXUkn2kp47di8Mk5RfhMS3Yq2sUcL1Kt42kuIFRiRE+5pfai2Y/NsnE
+         01UVRGNUyySQBgGrjm2vn8n+XgHxL0o6XRYqhiPf4i741YvAWEog0YZ9w59mgQUPYx5D
+         SRRlX/JN715MoRckdFDgS/l5Iv1IBcjAsljsjmm8JL9zFC8qrVPVuBOQbPcW9Og0BM69
+         l0Sw==
+X-Gm-Message-State: AOJu0YzArhae1W38UcZjxuTaKnBR7Er2S1po6gkLkg7Ai/QmefH7Q7pU
+	XdAAdCXBpmtVz7zP7lXXYwv1HDVikxL7bjLhyZH4G8zaFRiYa7J578mnrsibiKEhSzFNe1j+Ddc
+	3BFNBx58fo2bPejP1kcIQSXx/NeP0zj+Utyut
+X-Google-Smtp-Source: AGHT+IFSvH09coKrJ0WxqpOywmBxAI87YC290XDstCLKVDm1m1WDtulWPdOHHiub4CKMpx0EF/LCtFf+rgqg4r4N370=
+X-Received: by 2002:a05:6e02:ee3:b0:36a:3d5f:e269 with SMTP id
+ j3-20020a056e020ee300b0036a3d5fe269mr131406ilk.13.1712765835647; Wed, 10 Apr
+ 2024 09:17:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410104450.15602-1-adrian.hunter@intel.com>
-In-Reply-To: <20240410104450.15602-1-adrian.hunter@intel.com>
+References: <20240410103458.813656-1-james.clark@arm.com>
+In-Reply-To: <20240410103458.813656-1-james.clark@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Apr 2024 09:07:42 -0700
-Message-ID: <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Wed, 10 Apr 2024 09:17:04 -0700
+Message-ID: <CAP-5=fVgf3cOgbV1KGGLd5gykxT+BzuX1=XUsp+2BNUahGn6QQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf test: "object code reading" test fixes
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Spoorthy S <spoorts2@in.ibm.com>, 
+	Leo Yan <leo.yan@linux.dev>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 3:45=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
+On Wed, Apr 10, 2024 at 3:35=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> Simplify is_event_supported by using sys_perf_event_open() directly like
-> other perf API probe functions and move it into perf_api_probe.c where
-> other perf API probe functions reside.
+> A few fixes around the object code reading test. The first patch
+> appears to be unrelated, but in this case the data symbol test is
+> broken on Arm N1 by the second commit.
 >
-> A side effect is that the probed events do not appear when debug prints
-> are enabled, which is beneficial because otherwise they can be confused
-> with selected events.
+> Changes since V1:
+>   * Put data symbol test fix first so that bisecting still works on N1
+>   * Instead of skipping "test data symbol" on N1, add some noise into
+>     the loop.
+>   * Add a commit to replace the only usage of lscpu in the tests with
+>     uname
 >
-> This also affects "Test per-thread recording" in
-> "Miscellaneous Intel PT testing" which expects the debug prints of
-> only selected events to appear between the debug prints:
-> "perf record opening and mmapping events" and
-> "perf record done opening and mmapping events"
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> James Clark (4):
+>   perf tests: Make "test data symbol" more robust on Neoverse N1
+>   perf tests: Apply attributes to all events in object code reading test
+>   perf map: Remove kernel map before updating start and end addresses
+>   perf tests: Remove dependency on lscpu
 
-nit:
-Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
-
-> ---
->  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
->  tools/perf/util/perf_api_probe.h |  2 ++
->  tools/perf/util/pmus.c           |  1 +
->  tools/perf/util/print-events.c   | 50 +-------------------------------
->  tools/perf/util/print-events.h   |  1 -
->  5 files changed, 44 insertions(+), 50 deletions(-)
->
-> diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_=
-probe.c
-> index 1de3b69cdf4a..13acb34a4e1c 100644
-> --- a/tools/perf/util/perf_api_probe.c
-> +++ b/tools/perf/util/perf_api_probe.c
-> @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
->  {
->         return perf_probe_api(perf_probe_cgroup);
->  }
-> +
-> +bool is_event_supported(u8 type, u64 config)
-> +{
-> +       struct perf_event_attr attr =3D {
-> +               .type =3D type,
-> +               .config =3D config,
-> +               .disabled =3D 1,
-> +       };
-> +       int fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
-
-It looks like this is a change to the actual perf_event_open
-arguments, I don't think it is an issue but wanted to flag it.
-
-> +
-> +       if (fd < 0) {
-> +               /*
-> +                * The event may fail to open if the paranoid value
-> +                * /proc/sys/kernel/perf_event_paranoid is set to 2
-> +                * Re-run with exclude_kernel set; we don't do that by
-> +                * default as some ARM machines do not support it.
-> +                */
-> +               attr.exclude_kernel =3D 1;
-
-I worry about the duplicated fallback logic getting out of sync,
-perhaps we could have a quiet option for evsel__open option, or better
-delineate the particular log entries. I don't really have a good
-alternative idea and kind of like that detecting an event is available
-loses the evsel baggage. I would kind of like event parsing just to
-give 1 or more perf_event_attr for similar reasons.
-
-Assuming there are no better ideas on how to approach this:
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +               fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
-> +       }
-> +
-> +       if (fd < 0) {
-> +               /*
-> +                * The event may fail to open if the PMU requires
-> +                * exclude_guest to be set (e.g. as the Apple M1 PMU
-> +                * requires).
-> +                * Re-run with exclude_guest set; we don't do that by
-> +                * default as it's equally legitimate for another PMU
-> +                * driver to require that exclude_guest is clear.
-> +                */
-> +               attr.exclude_guest =3D 1;
-> +               fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
-> +       }
-> +
-> +       if (fd < 0)
-> +               return false;
-> +
-> +       close(fd);
-> +       return true;
-> +}
-> diff --git a/tools/perf/util/perf_api_probe.h b/tools/perf/util/perf_api_=
-probe.h
-> index b104168efb15..820f6a03221a 100644
-> --- a/tools/perf/util/perf_api_probe.h
-> +++ b/tools/perf/util/perf_api_probe.h
-> @@ -4,6 +4,7 @@
->  #define __PERF_API_PROBE_H
+>  tools/perf/tests/code-reading.c                 | 10 +++++-----
+>  tools/perf/tests/shell/test_arm_callgraph_fp.sh |  4 +++-
+>  tools/perf/tests/workloads/datasym.c            | 16 ++++++++++++++++
+>  tools/perf/util/machine.c                       |  2 +-
+>  4 files changed, 25 insertions(+), 7 deletions(-)
 >
->  #include <stdbool.h>
-> +#include <linux/types.h>
->
->  bool perf_can_aux_sample(void);
->  bool perf_can_comm_exec(void);
-> @@ -13,5 +14,6 @@ bool perf_can_record_text_poke_events(void);
->  bool perf_can_sample_identifier(void);
->  bool perf_can_record_build_id(void);
->  bool perf_can_record_cgroup(void);
-> +bool is_event_supported(u8 type, u64 config);
->
->  #endif // __PERF_API_PROBE_H
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 2fd369e45832..5442442e0508 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -13,6 +13,7 @@
->  #include "cpumap.h"
->  #include "debug.h"
->  #include "evsel.h"
-> +#include "perf_api_probe.h"
->  #include "pmus.h"
->  #include "pmu.h"
->  #include "print-events.h"
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
-s.c
-> index 3f38c27f0157..a25be2b2c774 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -20,6 +20,7 @@
->  #include "evsel.h"
->  #include "metricgroup.h"
->  #include "parse-events.h"
-> +#include "perf_api_probe.h"
->  #include "pmu.h"
->  #include "pmus.h"
->  #include "print-events.h"
-> @@ -239,55 +240,6 @@ void print_sdt_events(const struct print_callbacks *=
-print_cb, void *print_state)
->         strlist__delete(sdtlist);
->  }
->
-> -bool is_event_supported(u8 type, u64 config)
-> -{
-> -       bool ret =3D true;
-> -       struct evsel *evsel;
-> -       struct perf_event_attr attr =3D {
-> -               .type =3D type,
-> -               .config =3D config,
-> -               .disabled =3D 1,
-> -       };
-> -       struct perf_thread_map *tmap =3D thread_map__new_by_tid(0);
-> -
-> -       if (tmap =3D=3D NULL)
-> -               return false;
-> -
-> -       evsel =3D evsel__new(&attr);
-> -       if (evsel) {
-> -               ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
-> -
-> -               if (!ret) {
-> -                       /*
-> -                        * The event may fail to open if the paranoid val=
-ue
-> -                        * /proc/sys/kernel/perf_event_paranoid is set to=
- 2
-> -                        * Re-run with exclude_kernel set; we don't do th=
-at by
-> -                        * default as some ARM machines do not support it=
-.
-> -                        */
-> -                       evsel->core.attr.exclude_kernel =3D 1;
-> -                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
-> -               }
-> -
-> -               if (!ret) {
-> -                       /*
-> -                        * The event may fail to open if the PMU requires
-> -                        * exclude_guest to be set (e.g. as the Apple M1 =
-PMU
-> -                        * requires).
-> -                        * Re-run with exclude_guest set; we don't do tha=
-t by
-> -                        * default as it's equally legitimate for another=
- PMU
-> -                        * driver to require that exclude_guest is clear.
-> -                        */
-> -                       evsel->core.attr.exclude_guest =3D 1;
-> -                       ret =3D evsel__open(evsel, NULL, tmap) >=3D 0;
-> -               }
-> -
-> -               evsel__delete(evsel);
-> -       }
-> -
-> -       perf_thread_map__put(tmap);
-> -       return ret;
-> -}
-> -
->  int print_hwcache_events(const struct print_callbacks *print_cb, void *p=
-rint_state)
->  {
->         struct perf_pmu *pmu =3D NULL;
-> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-event=
-s.h
-> index bf4290bef0cd..5d241b33b5a3 100644
-> --- a/tools/perf/util/print-events.h
-> +++ b/tools/perf/util/print-events.h
-> @@ -38,6 +38,5 @@ void print_symbol_events(const struct print_callbacks *=
-print_cb, void *print_sta
->                          unsigned int max);
->  void print_tool_events(const struct print_callbacks *print_cb, void *pri=
-nt_state);
->  void print_tracepoint_events(const struct print_callbacks *print_cb, voi=
-d *print_state);
-> -bool is_event_supported(u8 type, u64 config);
->
->  #endif /* __PERF_PRINT_EVENTS_H */
 > --
 > 2.34.1
 >
