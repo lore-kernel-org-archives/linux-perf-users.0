@@ -1,44 +1,34 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7AF179207;
-	Wed, 10 Apr 2024 14:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E05D174EE9;
+	Wed, 10 Apr 2024 14:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712760505; cv=none; b=ipo/SSfd7VmCp29qRBW+eujpggpSiYLaMM2WcwnYnejdPBxPC6pidArTD2p/3aQPerO3g+NyE5wLh26tnjSIocQwYWrhexg7CiJ3HHgPckOukdPB1deMPIK92UZehTbsZ092f8u/kpX4VPKW/MUtoLsiVEZxrwbfFPcdMPGi64s=
+	t=1712760616; cv=none; b=fjx2Z5kewUPfLRvQmsE6CygB3HHNemJL2YxSWXseT7YOCE3HRWMURBdyG9PuSganALikThQIwl/MtSotQ8LUZ01ZFWVBaGrTXp193o7IuqBUe28xzDnx7EFcnpa18u/zyys5PBjLtrqeDTLxx9q47P7s5FV3iXrolwcUpzjv58w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712760505; c=relaxed/simple;
-	bh=tDuuEQyJDMcj9XwP0qQQysyngBeUz2Vpvg0kCnx+8xk=;
+	s=arc-20240116; t=1712760616; c=relaxed/simple;
+	bh=QWBeKVujIF8v0rlPHbEKaf0gAf7oOpu5rJ9JUTdF9BM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQqk0U5Bz0Ot4NTe/ezAXQ1vBprPQjSNNCn1bPvW7mAzRC9HEnAyFeyjYfAt1OQzrVWX4Nvh2zPmmzg9Wo0tvzzgXVTN6krUo4EDGXk1AamdaV7bys2psMRYD8OFf+N97vzB21cUn5aIgOWNIf7k3wX/+FVyGUGa2N2gf63RNPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cq7VH3UU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rD1D0Im1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=rmtCLOb0HyIJsyStPxmKT31KJzj7nG4VQSkCQkbO14Pzc47nhqg/uvIWJxyCXlCkjx3+znpmoCBEFNGQqKStOdtPJFXj5PLAflmKgH31IIi51xdGvNNbPz7R94ZLpog9opzcYH8aRpg2bSlw0SWPgSuxJmaQ8+3pnS513ySVzTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDBIBuC7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cq7VH3UU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rD1D0Im1"
-Date: Wed, 10 Apr 2024 16:48:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712760503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RhDVG2F9WXHf/tQLyq5MH5q7SbNdjT+z4V3IMNo6lx4=;
-	b=Cq7VH3UU9v17nIymWd7BnnRkuiUkRvP3jDCmzgN0BIkQpdaZbH6K8uS/+x6MhSIMheCscK
-	UTTCh/C0tkPqOKpmsUSUOAWKZ+45uMw4SIQ4VwgR2UHAoqcSWJ/1/bXg20w4kvKJm2Xc0i
-	v+2rsXopIP4efDjij6v/Hy800ZUmbTo1zYNV++tTKVWEZqmpT8Uo4gSaspFgBEGEevt37W
-	80LkdxqFWBglf0VlRyePtLrGSWoAR5G2HVQfT4+ZHP+54yl2M+CMA05phYwB2WrkGgrdlZ
-	b0tzHWuWwt1Rbm3bZu2xmJUjlmSiA1UHuE1ZIXzv+MKwW0XDBgN8uA8RbQiNXQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712760503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RhDVG2F9WXHf/tQLyq5MH5q7SbNdjT+z4V3IMNo6lx4=;
-	b=rD1D0Im1EO5uMEliAwyEZ+ROwmRF7ctoAFXiBTycXQfc5VrdGW1yVkDhV61fhjb40kTQqx
-	c2Gs/Rg41ogRZBBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDBIBuC7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77080C433F1;
+	Wed, 10 Apr 2024 14:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712760615;
+	bh=QWBeKVujIF8v0rlPHbEKaf0gAf7oOpu5rJ9JUTdF9BM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pDBIBuC7E57OZzo5tK2mLc7aLpm1/IPAKzPyAwDN/IfgqssUg21BEwtfBBOjC7p90
+	 TVPvcpV3tzbuNRyJxe7G/R48sVeKWjLY/ltZ38KWn5gDXmHhQKBTbJvKNl3lpPElFV
+	 AIAwEbpwjp5SZ3E4juX+DIFSpabOVmM5GAhHrr9QikvKJJX2qyF/JtfMnm+7XnIaVJ
+	 nLfuCf+z8xiC/UY1RHA4Nqe8CcqqJ8R7p9/pxuvZ6dW4W0bjwMtQ8bU3YLi+BswnfG
+	 Dab6SvrXdWjJ/n9njoJD338nTybXYgxZ8JmnJIAcbJs9qXFRFD8G3KcDNj0FDNAKew
+	 sFFHa8Ppm0Rsw==
+Date: Wed, 10 Apr 2024 16:50:13 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -51,9 +41,8 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
 Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <20240410144821.bVdBdVOR@linutronix.de>
-References: <20240322065208.60456-3-bigeasy@linutronix.de>
- <ZhRhn1B0rMSNv6mV@pavilion.home>
+Message-ID: <ZhanJYjJQqrqYlg-@localhost.localdomain>
+References: <ZhRhn1B0rMSNv6mV@pavilion.home>
  <20240409085732.FBItbOSO@linutronix.de>
  <ZhU2YwettB6i6AMp@localhost.localdomain>
  <20240409134729.JpcBYOsK@linutronix.de>
@@ -62,33 +51,40 @@ References: <20240322065208.60456-3-bigeasy@linutronix.de>
  <ZhabcanCbQej1azv@localhost.localdomain>
  <20240410140633.0MHBLpMI@linutronix.de>
  <ZhalcBcd3w0w2HD_@localhost.localdomain>
+ <20240410144821.bVdBdVOR@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZhalcBcd3w0w2HD_@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240410144821.bVdBdVOR@linutronix.de>
 
-On 2024-04-10 16:42:56 [+0200], Frederic Weisbecker wrote:
-> > > Like this then?
+Le Wed, Apr 10, 2024 at 04:48:21PM +0200, Sebastian Andrzej Siewior a écrit :
+> On 2024-04-10 16:42:56 [+0200], Frederic Weisbecker wrote:
+> > > > Like this then?
+> > > > 
+> > > > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
 > > > 
-> > > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
+> > > Kind of, yes. Do we have more than one waiter? If not, maybe that
+> > > rcuwait would work then.
 > > 
-> > Kind of, yes. Do we have more than one waiter? If not, maybe that
-> > rcuwait would work then.
+> > Indeed there is only one waiter so that should work. Would
+> > that be something you can call while preemption is disabled?
 > 
-> Indeed there is only one waiter so that should work. Would
-> that be something you can call while preemption is disabled?
+> rcuwait_wake_up() does only wake_up_process() which is fine.
+> wake_up() does spin_lock_irqsave() which is a no.
 
-rcuwait_wake_up() does only wake_up_process() which is fine.
-wake_up() does spin_lock_irqsave() which is a no.
+Duh!
 
-On the other hand that preempt-disable needs to go anyway due to
-perf_sigtrap(). But a slim wake is a slim wake ;)
+> On the other hand that preempt-disable needs to go anyway due to
+> perf_sigtrap(). But a slim wake is a slim wake ;)
 
-> Thanks.
+Sure thing :)
 
-Sebastian
+> > Thanks.
+> 
+> Sebastian
