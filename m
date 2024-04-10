@@ -1,148 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D0A15B14C;
-	Wed, 10 Apr 2024 13:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1391854;
+	Wed, 10 Apr 2024 13:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712756408; cv=none; b=CfKA1OoapHNMKTl2mFb4c1eJQqzZNr/53BjkMCPJETAA6zId9AJZOISM9/ks2KLk/d6jGAKeFsL0fW33Qq5l9TIxHJH1k/D8RvR+6r8pK3wG/x5eQf3T4WcMEK3hq7G5ORkrPaD2E3JOaFylgSmyGfusswH4rjKqESRJm8OjdMM=
+	t=1712756827; cv=none; b=BuXz9uJqk49qZMhfR/DeDlZYNapPJ9DmUHopOlBJv9MbqcSNuHeVq3xLvPuGG0OFNiznqkOhEel7HNogEGgSn3MMaQYhX5RfaRuW+Ix1V4zX3EvyjBtcIKekFCbx4ULIF3gW29P4yOJ58OKSMxg5vhSpMCLe/nJPzismxHi/j8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712756408; c=relaxed/simple;
-	bh=g5GZtmMc/oxPQ/MUhPM0fv4b39WzxMIrkEvxhBmKbec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NEvkBvfDA9kHIvIG6X5wQgkEqeUW/pl8LR85SCGYkLdlBn2f9IBkbpr2K57t5EXCghcTq085VPGiHTZsFUUdXCFcxLpU5Jv63svLahHedLElh1R48+sHeq/Fmzw5WNLyViK2O877h39OrqOxmpn1NpMqx++N+54qMdNdbZnVZCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+wgZR98; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712756827; c=relaxed/simple;
+	bh=9ai/S2RKppG6/QBUvnM1yQb2xUplPv+uZ4oIw+16Bus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lzKPn/emKf6uUMprV1LkvnR9jZItlNGeO16N65hy8LHrx8xRg1JbIpp3+lFk19zLO87DaXLQLIO27mLPHIYsZcCcLAakPt7oP5lRwZlmlcNPaljHk5X82GENaPxxXiJYpwLNEyYOrAS9cbqEUo/qOTln8elIQ1iWR6wZ7BablnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Riu6LYCO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=09FWCbA5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+wgZR98"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712756406; x=1744292406;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=g5GZtmMc/oxPQ/MUhPM0fv4b39WzxMIrkEvxhBmKbec=;
-  b=C+wgZR98yGi3CI1s7YyPwutahdUQ4v5fYHQoXY86DZKtkyf5hvHRcvNm
-   GvRlTPjybKEEDZB4accCdVpqFBqtObcSLDt/eHln8otdvqjOp6joD+2WG
-   0c6Unu02/uypKOq0WQpH2qvoCpfndkDP8TAQUqeGoNWDNXmy2+vUmruED
-   9i5PEgj2OW83n+ioW6wSVrCXzeqEb7UMKfX8wjPbkEsZWXZfnK2RYHWnl
-   TgYTKDMvku/elmwYUbDkS5yZNcEa546J2Pr8HpdD2Vy1zTpxSTlaLugB0
-   wX+2Yo8bjV/EvTINu2cxYRpjIY3RrVwotwrpKDZ86gefHHZS4k9CqB2PS
-   A==;
-X-CSE-ConnectionGUID: 9K8VR/JlRWyLEB200Ab+aA==
-X-CSE-MsgGUID: 8KEsxZ36SZq/im7+aibTxg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11894475"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11894475"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:40:06 -0700
-X-CSE-ConnectionGUID: lTKryyL+QPazrXmhATpbOg==
-X-CSE-MsgGUID: ph2/+d14RHCfHJrgZeR6OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="43796591"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:40:05 -0700
-Received: from [10.212.84.148] (kliang2-mobl1.ccr.corp.intel.com [10.212.84.148])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E533820B573A;
-	Wed, 10 Apr 2024 06:40:03 -0700 (PDT)
-Message-ID: <014e70fb-e49a-4d5c-9daf-a080e0f12b11@linux.intel.com>
-Date: Wed, 10 Apr 2024 09:40:02 -0400
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Riu6LYCO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="09FWCbA5"
+Date: Wed, 10 Apr 2024 15:47:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712756824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mhPMkf0CnmtshBlL7f3oui1BPAffLvF7f43OGucaSdU=;
+	b=Riu6LYCOxJAkNl00u5Bj3HXspqVWVG8Ca0CkgDTEEZdAXPg+FqRORQt7OVj/m2G/OHAx1L
+	i7P/0rTdHxhgdlPN/SIs1X+Xi42IVCNdem15ynQyHGWdywtcCJNTtl9nNKLOzHnFM+QK6w
+	vQe/d9++1fx1E7jXFHgKOpQ4Mz+6FJyw64nLx4Cd8CsRJfasMJx++Tj0OPOe3g7/ixH6x7
+	OZcbWQtmHgPds9NhAr+SodvnCBdXpXbsdN9xLtXKquna6/Ok8h5azRkL7q0IvG5v8Mk+ge
+	8YJpyOEnnOYVd+VdrawJvzDV+F/HWIrqdWqIllcYMp1lIwSrOy7a+w6Fd342dA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712756824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mhPMkf0CnmtshBlL7f3oui1BPAffLvF7f43OGucaSdU=;
+	b=09FWCbA5NEKVjftJWaJb8Fqv88LdWfqW+AD4/9Dpfxi4KOIBw6/ksIx75cNeLY5EdYE5Ca
+	GAil9/8NDHFboaDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <20240410134702.dcWYciZB@linutronix.de>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-3-bigeasy@linutronix.de>
+ <ZhRhn1B0rMSNv6mV@pavilion.home>
+ <20240409085732.FBItbOSO@linutronix.de>
+ <ZhU2YwettB6i6AMp@localhost.localdomain>
+ <20240409134729.JpcBYOsK@linutronix.de>
+ <ZhZ54XAcBt50WEnE@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf report: Add weight[123] output fields
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- Stephane Eranian <eranian@google.com>, Andi Kleen <ak@linux.intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-References: <20240409000659.1727785-1-namhyung@kernel.org>
- <20240409000659.1727785-3-namhyung@kernel.org>
- <0ec1328a-0731-42a6-b953-163ac5a56deb@linux.intel.com>
- <CAM9d7cizZLMNa82VxuuvEWEY3vwdbs_iTG9jsogJQBoWMLP7Fw@mail.gmail.com>
- <16587efd-ab12-463a-bd87-7721adfc731d@linux.intel.com>
- <CAM9d7cg65=Hr2Utuuh=8EC7v80y-n1iZ-dyCfDU=kreuovLjfQ@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7cg65=Hr2Utuuh=8EC7v80y-n1iZ-dyCfDU=kreuovLjfQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZhZ54XAcBt50WEnE@localhost.localdomain>
 
-
-
-On 2024-04-09 3:27 p.m., Namhyung Kim wrote:
->>>>> weight value and use the default 'comm,dso,sym' sort keys).
->>>>>
->>>>>   $ perf report -n -F +weight | grep -e Weight -e noploop
->>>>>   # Overhead  Samples  Weight1  Command  Shared Object  Symbol
->>>>>        1.23%        7     42.4  perf     perf           [.] noploop
->>>> I think the current +weight shows the sum of weight1 of all samples,
->>>> (global weight). With this patch, it becomes an average (local_weight).
->>>> The definition change may break the existing user script.
->>>>
->>>> Ideally, I think we should keep the meaning of the weight and
->>>> local_weight as is.
->>> Hmm.. then we may add 'avg_weight' or something.
->>>
->>> But note that there's a subtle difference in the usage.  If you use
->>> 'weight' as a sort key (-s weight) it'd keep the existing behavior
->>> that shows the sum (global_weight).  It'd show average only if
->>> you use it as an output field (-F weight).
->>>
->> As my understanding, the -F weight is implicitly replaced by the -F
->> weight1 with this patch. There is no way to get the sum of weight with
->> -F anymore.
-> Right.
+On 2024-04-10 13:37:05 [+0200], Frederic Weisbecker wrote:
+> > Couldn't we either flush _or_ remove the task_work in perf_release()?
 > 
->> I think that's a user visible behavior change. At least, we have to warn
->> the end user with a message, e.g., "weight is not supported with -F
->> anymore. Using weight1 to instead". Only updating the doc may not be enough.
-> I understand your concern.  I can add the warning.
+> Right so the problem in perf_release() is that we may be dealing with task works
+> of other tasks than current. In that case, task_work_cancel() is fine if it
+> successes. But if it fails, you don't have the guarantee that the task work
+> isn't concurrently running or about to run. And you have no way to know about
+> that. So then you need some sort of flushing indeed.
+
+Since perf_release() preemptible, a wait/sleep for completion would be
+best (instead of flushing).
+
+> Thanks.
 > 
->>> The issue of the sort key is that it cannot have the total sum
->>> of weights for a function.  It'll have separate entries for each
->>> weight for each function like in the above example.
->>>
->> That seems to be a different issue. If the total sum of weights for a
->> function is required, we should fix the existing "weight".
-> Yeah, I guess that's more reasonable behavior.  But I'm not sure
-> how we can fix it without breaking the existing behavior.
->
+> > > Thanks.
 
-I did some experiments and found that with the -F weight option, the
-hist_entry__cmp() compares the newly added field, weight, as well.
-That may not the behavior we want.
-
-I think the expected behavior is that all the samples still be sorted by
-symbol, but just add a new field to show the sum of the weight.
-So perf probably should not cmp any newly added field.
-
-Another issue is that the current code will only use the weight from the
-first sample. If perf can avoid the cmp of the weight, it still needs to
-save all the weights and add them up.
-
-I'm not sure how hard the fix is or maybe it's too ugly. Just for your
-reference.
-
-> Actually this is my approach to keep the behavior for the "sort" key.
-> I think users are more familiar with -s (--sort) rather than the -F
-> (--fields) option.  That's why I'd like to "break" that part only.
-> 
-
-Yes, if we have to "break" something, it should be -F.
-I'm OK with it as long as there are proper warnings that can tell users
-that it's broken.
-
-Thanks,
-Kan
+Sebastian
