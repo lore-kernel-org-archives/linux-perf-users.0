@@ -1,175 +1,156 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0FEBA39
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 03:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D466910A09;
+	Wed, 10 Apr 2024 04:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712721331; cv=none; b=JSAGutf1BAhtFDJ6SiMq1QcZS9JkeUUyoECK4CxINTdek2VU4RW80Rhc3J5kTBEkf4LMcy1c05jd4KMCzZ3BLYwxzfCWigCrrrzXlBRE9WAkGDxAX153CIpjinFcCOFwxjkrvQcB5lh/KMssViZzOAhEuur07loONKeiYyytSKY=
+	t=1712723523; cv=none; b=G3HSDW16qzi4q0POyCNYB6UXB39Y8euXlgK6w297SkBCdwHrHZ4lvfro5MlNC/r+AZ45UEwqZlU5g2D1vtrxKgcDIkS8XJSEwxc1meLkNz452iZdnmwyW1cpDP3AoPx2T3EJ2j0X/wsCKaqjo/UYR0s4FdK2KD0d4j3F+O9FTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712721331; c=relaxed/simple;
-	bh=Fr+H5H+9OyxP/eMdoUL16dMlUuiEjVQJD40MloRhEwc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QbxJECZ35Q/l5ePgZuvc/5wCCHJwRRM0Hqh0N4MyhgyupvBrmzMPaX6NEPm3eFf6SF49z3FFsl+44WTwonNd+Eoq9FUQx+TSYxpZT/dLFHsR/WRPyVaBUKS3LAxKCvkNXYaSt6COM/dljNqU1x5+mhtMB8CBf8OlOhJUFfjLgDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=ca9fpLQJ; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1712723523; c=relaxed/simple;
+	bh=rMVm9URc9I8cVqvGGbdYnQEP4nxrZ957jULQWF63OlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eCBZI6KzPc4wiqy+soxvw8sWyETW/+J2ousyWBIws/a/S9BjS5fxIMPVfCL2PJsQ35o1eJOxm/4FksB22pWDDnyL/K34RpZiIPg2S8sksfYtirQs4iQRNqV9mU8sLecs4zk29gTUKRvfk3vjdvyOL5OQSS7jsb4q1/poqgwlxsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OVLg6fXH; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="ca9fpLQJ"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so2241340b3a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 20:55:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVLg6fXH"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a51c8274403so420889266b.1;
+        Tue, 09 Apr 2024 21:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1712721329; x=1713326129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yl8nuM83q3FvVMvZFRYv9k4mezej2QhOdeP7NWCHhgE=;
-        b=ca9fpLQJkymwtBa8ihV5JYKixxk3q2U6Kx64SKsBUqCvhzcUqE6J1KKqDBBB9Edwlv
-         Gt0bprITylOrcLSAR68fz4uxJCSYohAjWYohZvJOZSRV13QnVV7OXAeYlVFjb7j30eWl
-         yrJSg+JrUgpFmhRfX1mw/WKiySskFrzEYxkzV3xDYJ3IUzmpk1jk1iY7D7GoZ7e5xp3E
-         nOwnNXollP7T2CdJLQasuXqH2tPZoa9NSoQLiQOXlM3S09jQ9Q55brCSCI7sIZGSB6tO
-         X/QNdfs0pX+reOD4DsPhxGEmwhwNmh9mWM9Bt3Ey+1GZoH12HbGXJ+vzuM6YaKOz1Cpn
-         fs4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712721329; x=1713326129;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1712723520; x=1713328320; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yl8nuM83q3FvVMvZFRYv9k4mezej2QhOdeP7NWCHhgE=;
-        b=YkqPnj40mjTZiAfCZeFOfCg4jerSRE76HgGAsyR7EXze5YpRZZI6lN5VKgk8S2wA6L
-         ID8FJIBZvVGexcnbs2tmEDpyaU/DpikTj/+dXUTI3ivIEjuJhhAVBGMIP2yHr0Mke/YN
-         RnyCshvd77vE7VgwyxiixPFMfiPeG9groteyJtQ79IIcd48SlvoDnB/3xD2QNTZzTT0p
-         coDcKhktyRL4WCqWV0W/3RQpEds59lpysfJM82bDgMHrPVZD/L0uJNGM/Jy7sAQ9Md/o
-         70OZYxxWI/P7mKdm9UtRSaEJwvKXFsmRogLFVui2JpUPttHZjP2oQKKmnBX6kVfOWmtc
-         SQ3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWLM6cEvQ/T7Kd4ju9v3JTQvRw2iJo+IF2vdQDGzNmwpZoqg6pRJfaAIsjgi3mZki9uf6xtgzsIIbcvJO7QJ8r1XDDmNSXJ8VFmDjQLcXn7Gw==
-X-Gm-Message-State: AOJu0Yy56Bm1BWIZH/Ev6p1CU1kQznpxFEVkgBQmIQGeQSxbe2f2OtP5
-	8Kmr22YQE5bpp4sorsuPV3cdeBJiqc0D2VuSE8Am0SfTsC50sVOoOYvYWi8zUXo=
-X-Google-Smtp-Source: AGHT+IHKkMs0JkqFR7sXLavUkJ3Sj5i44MhlS+uWvhi0+CrDkKCUU6L0hoSYvA0vQvdDAcQjWQBH9Q==
-X-Received: by 2002:a05:6a20:f395:b0:1a7:a9ab:a72e with SMTP id qr21-20020a056a20f39500b001a7a9aba72emr1589220pzb.9.1712721329276;
-        Tue, 09 Apr 2024 20:55:29 -0700 (PDT)
-Received: from localhost.localdomain ([101.127.248.173])
-        by smtp.gmail.com with ESMTPSA id l17-20020a170902e2d100b001dddcfca329sm9747639plc.148.2024.04.09.20.55.26
+        bh=xNrSwE+dolE2QA8qHvdLe8vM7FO2G4niuceuaP/S8AE=;
+        b=OVLg6fXHFIWZErKmVfCiM1MKvWZsrWNKL/7OqSft/IhpQzSlR/Q+I0pHGK1Xbu3RAu
+         K8lNKMYTRXVf+TfUZC9QbGYoPw2bwguJeck8OQtLygXB9JjSgGvSoIacQd9hEXEXw27u
+         WLEOPZF6NJTLL1f94UCGRnL4YOMVh3T7tU0Mgm5VhK3mPwCKARC6SWwHbkCTdeylWLmD
+         GMZE4lqm28/qsLQckxEHKSw/gAr9IU6MtTdMnrDWKfrlblX9v/m8YMkftcn2x5kKyERR
+         yhrC6yl3FYXiCubKISZTTKwjVKkO2juVJ7ZknYVpT5e63o1w/UorIZDBOenGE0EH/4dX
+         YiyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712723520; x=1713328320;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xNrSwE+dolE2QA8qHvdLe8vM7FO2G4niuceuaP/S8AE=;
+        b=TL7pTOFnhQxJUXi/rGaKGfQOBdLbwRRdHCZuxkQxTAsL6Aes764AphE/l37ToXdT6m
+         DeKA8jHfN3sBZnvwnln5gjz5WIyH2SB79rFH6Rjm5fNQKdV8+u1XI0VGZg+djWQWvxfw
+         tyGsLFJBK0Eb5DEPmsqSZw94i+rt3xZhtGUJJmJGcc3WfK85RabAefpUvpgE4bZ+5CfU
+         2LHGSylhL3XjpjpPW/43vSTFQLgeLZ4SKjuDAHPWfc70g+zh7dW9Qooqz703DUfhZMxJ
+         yyBINs9P96QBLbWaNb2pKvtr15eFtb1SBf9AlQhc2GJFvvL638fCl/GY1jJ6wjTRtjxQ
+         Ry/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUA9vIO8aNisIoxtN7m2qA46R1XwlAA/PWIqgZ5FbYxOB02IYiP0waNUh+cRZwF5ksXAJ9ZxbIDHFWr6VrvFTGX4IksXFxUS/IHW7+xkyJDDt0+vnBu8Rio43ZlNsxg99hUWE2uuNt+r0OAoep8e+D3ZBhG4KhRhqyM8HI+SnBZKQrtuQ==
+X-Gm-Message-State: AOJu0YxXp1xEAnTUmZTXFK1QBdMk+Kf26NfCsJveNA9j3nnJ/EdaFgLZ
+	0xSNaNilQnQAIOfqRqO5cYvD76FaWAwTaGWyRME/iVvGxsMnTvfs
+X-Google-Smtp-Source: AGHT+IEFsrpybLrAxP55MzTpaSrenlWTPHzaVeLem3lu9vpNOhH0S2cMYNX2Xn5nmDfbQ8RsQjL+Bw==
+X-Received: by 2002:a17:906:7192:b0:a51:c191:c0a0 with SMTP id h18-20020a170906719200b00a51c191c0a0mr693725ejk.43.1712723519698;
+        Tue, 09 Apr 2024 21:31:59 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id h19-20020a1709070b1300b00a51971dd79csm6586263ejl.143.2024.04.09.21.31.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 20:55:28 -0700 (PDT)
-From: Haifeng Xu <haifeng.xu@shopee.com>
-To: peterz@infradead.org,
-	mingo@redhat.com
-Cc: acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: [PATCH] perf/core: Fix missing wakeup when waiting for context reference
-Date: Wed, 10 Apr 2024 03:55:06 +0000
-Message-Id: <20240410035506.599192-1-haifeng.xu@shopee.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 09 Apr 2024 21:31:58 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 10 Apr 2024 06:31:56 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Kyle Huey <me@kylehuey.com>
+Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Song Liu <song@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 1/4] perf/bpf: Call bpf handler directly, not
+ through overflow machinery
+Message-ID: <ZhYWPGX0RzamxOHx@gmail.com>
+References: <20240214173950.18570-1-khuey@kylehuey.com>
+ <20240214173950.18570-2-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214173950.18570-2-khuey@kylehuey.com>
 
-In our production environment, we found many hung tasks which are
-blocked for more than 18 hours. Their call traces are like this:
 
-[346278.191038] __schedule+0x2d8/0x890
-[346278.191046] schedule+0x4e/0xb0
-[346278.191049] perf_event_free_task+0x220/0x270
-[346278.191056] ? init_wait_var_entry+0x50/0x50
-[346278.191060] copy_process+0x663/0x18d0
-[346278.191068] kernel_clone+0x9d/0x3d0
-[346278.191072] __do_sys_clone+0x5d/0x80
-[346278.191076] __x64_sys_clone+0x25/0x30
-[346278.191079] do_syscall_64+0x5c/0xc0
-[346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
-[346278.191086] ? do_syscall_64+0x69/0xc0
-[346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
-[346278.191092] ? irqentry_exit+0x19/0x30
-[346278.191095] ? exc_page_fault+0x89/0x160
-[346278.191097] ? asm_exc_page_fault+0x8/0x30
-[346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+* Kyle Huey <me@kylehuey.com> wrote:
 
-The task was waiting for the refcount become to 1, but from the vmcore,
-we found the refcount has already been 1. It seems that the task didn't
-get woken up by perf_event_release_kernel() and got stuck forever. The
-below scenario may cause the problem.
+> To ultimately allow bpf programs attached to perf events to completely
+> suppress all of the effects of a perf event overflow (rather than just the
+> sample output, as they do today), call bpf_overflow_handler() from
+> __perf_event_overflow() directly rather than modifying struct perf_event's
+> overflow_handler. Return the bpf program's return value from
+> bpf_overflow_handler() so that __perf_event_overflow() knows how to
+> proceed. Remove the now unnecessary orig_overflow_handler from struct
+> perf_event.
+> 
+> This patch is solely a refactoring and results in no behavior change.
+> 
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Acked-by: Song Liu <song@kernel.org>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/perf_event.h |  6 +-----
+>  kernel/events/core.c       | 28 +++++++++++++++-------------
+>  2 files changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index d2a15c0c6f8a..c7f54fd74d89 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -810,7 +810,6 @@ struct perf_event {
+>  	perf_overflow_handler_t		overflow_handler;
+>  	void				*overflow_handler_context;
+>  #ifdef CONFIG_BPF_SYSCALL
+> -	perf_overflow_handler_t		orig_overflow_handler;
+>  	struct bpf_prog			*prog;
+>  	u64				bpf_cookie;
+>  #endif
 
-Thread A					Thread B
-...						...
-perf_event_free_task				perf_event_release_kernel
-						   ...
-						   acquire event->child_mutex
-						   ...
-						   get_ctx
-   ...						   release event->child_mutex
-   acquire ctx->mutex
-   ...
-   perf_free_event (acquire/release event->child_mutex)
-   ...
-   release ctx->mutex
-   wait_var_event
-						   acquire ctx->mutex
-						   acquire event->mutex
-						   # move existing events to free_list
-						   release event->child_mutex
-						   release ctx->mutex
-						   put_ctx
-...						...
+Could we reduce the #ifdeffery please?
 
-In this case, all events of the ctx have been freed, so we couldn't
-find the ctx in free_list and Thread A will miss the wakeup. It's thus
-necessary to add a wakeup after dropping the reference.
+On distros CONFIG_BPF_SYSCALL is almost always enabled, so it's not like 
+this truly saves anything on real systems.
 
-Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
----
- kernel/events/core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I'd suggest making the perf_event::prog and perf_event::bpf_cookie fields 
+unconditional.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4f0c45ab8d7d..01dfe715f09e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5340,6 +5340,8 @@ int perf_event_release_kernel(struct perf_event *event)
- again:
- 	mutex_lock(&event->child_mutex);
- 	list_for_each_entry(child, &event->child_list, child_list) {
-+		void *var;
-+		bool freed = false;
- 
- 		/*
- 		 * Cannot change, child events are not migrated, see the
-@@ -5380,11 +5382,25 @@ int perf_event_release_kernel(struct perf_event *event)
- 			 * this can't be the last reference.
- 			 */
- 			put_event(event);
-+		} else {
-+			freed = true;
-+			var = &ctx->refcount;
- 		}
- 
- 		mutex_unlock(&event->child_mutex);
- 		mutex_unlock(&ctx->mutex);
- 		put_ctx(ctx);
-+
-+		if (freed) {
-+			/*
-+			 * perf_event_free_task() delete all events of the ctx and
-+			 * there is no event of the ctx in free_list. It may step
-+			 * into wait_var_event() before decrement the refcount. So
-+			 * we should add a wakeup here.
-+			 */
-+			smp_mb(); /* pairs with wait_var_event() */
-+			wake_up_var(var);
-+		}
- 		goto again;
- 	}
- 	mutex_unlock(&event->child_mutex);
--- 
-2.25.1
+> +#ifdef CONFIG_BPF_SYSCALL
+> +static int bpf_overflow_handler(struct perf_event *event,
+> +				struct perf_sample_data *data,
+> +				struct pt_regs *regs);
+> +#endif
 
+If the function definitions are misordered then first do a patch that moves 
+the function earlier in the file, instead of slapping a random prototype 
+into a random place.
+
+> -	READ_ONCE(event->overflow_handler)(event, data, regs);
+> +#ifdef CONFIG_BPF_SYSCALL
+> +	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+> +#endif
+> +		READ_ONCE(event->overflow_handler)(event, data, regs);
+
+This #ifdef would go away too - on !CONFIG_BPF_SYSCALL event->prog should 
+always be NULL.
+
+Please keep the #ifdeffery reduction and function-moving patches separate 
+from these other changes.
+
+Thanks,
+
+	Ingo
