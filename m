@@ -1,193 +1,175 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245DE8F4E;
-	Wed, 10 Apr 2024 03:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0FEBA39
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 03:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712720112; cv=none; b=AO62VJYVpgw8+NwfELOt/1QnF3dXlGJANPakOfkc5b/BbbO9PUoaS9DaT23Jp/ob453gBQoJjdTAVFScEqzbhPxYf8wSQNZKszTltAqV0IRYOGPA7dakTjS5PZViEyPlEIKPPi/HnX5V2/O9QZoUjIYTXfbPvWrNCBUUovniiw0=
+	t=1712721331; cv=none; b=JSAGutf1BAhtFDJ6SiMq1QcZS9JkeUUyoECK4CxINTdek2VU4RW80Rhc3J5kTBEkf4LMcy1c05jd4KMCzZ3BLYwxzfCWigCrrrzXlBRE9WAkGDxAX153CIpjinFcCOFwxjkrvQcB5lh/KMssViZzOAhEuur07loONKeiYyytSKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712720112; c=relaxed/simple;
-	bh=c+7ZAy2CudaAOXrHKv5vJc7LzLN8G3OwL/hongXFgSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQGzHZ6kfLmWBgZ+FrhYF8665F8QWoZ/AXUA41d2k3gvt5CudFbndrm5boVjdwUKQke2wcOdFinC68xbCuewRsUgofGZYFNopH9RByyN+vPHGejRAVFK8PArlNJEgn4oTL33RRG8yDXR5Q1mvpj2hkt/4eNJd8JefuO6jWmA4ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D714F139F;
-	Tue,  9 Apr 2024 20:35:38 -0700 (PDT)
-Received: from [10.163.58.237] (unknown [10.163.58.237])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 631153F6C4;
-	Tue,  9 Apr 2024 20:34:59 -0700 (PDT)
-Message-ID: <8f7e67aa-3746-405d-9258-579343349be4@arm.com>
-Date: Wed, 10 Apr 2024 09:04:15 +0530
+	s=arc-20240116; t=1712721331; c=relaxed/simple;
+	bh=Fr+H5H+9OyxP/eMdoUL16dMlUuiEjVQJD40MloRhEwc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QbxJECZ35Q/l5ePgZuvc/5wCCHJwRRM0Hqh0N4MyhgyupvBrmzMPaX6NEPm3eFf6SF49z3FFsl+44WTwonNd+Eoq9FUQx+TSYxpZT/dLFHsR/WRPyVaBUKS3LAxKCvkNXYaSt6COM/dljNqU1x5+mhtMB8CBf8OlOhJUFfjLgDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=ca9fpLQJ; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="ca9fpLQJ"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so2241340b3a.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Apr 2024 20:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1712721329; x=1713326129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yl8nuM83q3FvVMvZFRYv9k4mezej2QhOdeP7NWCHhgE=;
+        b=ca9fpLQJkymwtBa8ihV5JYKixxk3q2U6Kx64SKsBUqCvhzcUqE6J1KKqDBBB9Edwlv
+         Gt0bprITylOrcLSAR68fz4uxJCSYohAjWYohZvJOZSRV13QnVV7OXAeYlVFjb7j30eWl
+         yrJSg+JrUgpFmhRfX1mw/WKiySskFrzEYxkzV3xDYJ3IUzmpk1jk1iY7D7GoZ7e5xp3E
+         nOwnNXollP7T2CdJLQasuXqH2tPZoa9NSoQLiQOXlM3S09jQ9Q55brCSCI7sIZGSB6tO
+         X/QNdfs0pX+reOD4DsPhxGEmwhwNmh9mWM9Bt3Ey+1GZoH12HbGXJ+vzuM6YaKOz1Cpn
+         fs4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712721329; x=1713326129;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yl8nuM83q3FvVMvZFRYv9k4mezej2QhOdeP7NWCHhgE=;
+        b=YkqPnj40mjTZiAfCZeFOfCg4jerSRE76HgGAsyR7EXze5YpRZZI6lN5VKgk8S2wA6L
+         ID8FJIBZvVGexcnbs2tmEDpyaU/DpikTj/+dXUTI3ivIEjuJhhAVBGMIP2yHr0Mke/YN
+         RnyCshvd77vE7VgwyxiixPFMfiPeG9groteyJtQ79IIcd48SlvoDnB/3xD2QNTZzTT0p
+         coDcKhktyRL4WCqWV0W/3RQpEds59lpysfJM82bDgMHrPVZD/L0uJNGM/Jy7sAQ9Md/o
+         70OZYxxWI/P7mKdm9UtRSaEJwvKXFsmRogLFVui2JpUPttHZjP2oQKKmnBX6kVfOWmtc
+         SQ3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWLM6cEvQ/T7Kd4ju9v3JTQvRw2iJo+IF2vdQDGzNmwpZoqg6pRJfaAIsjgi3mZki9uf6xtgzsIIbcvJO7QJ8r1XDDmNSXJ8VFmDjQLcXn7Gw==
+X-Gm-Message-State: AOJu0Yy56Bm1BWIZH/Ev6p1CU1kQznpxFEVkgBQmIQGeQSxbe2f2OtP5
+	8Kmr22YQE5bpp4sorsuPV3cdeBJiqc0D2VuSE8Am0SfTsC50sVOoOYvYWi8zUXo=
+X-Google-Smtp-Source: AGHT+IHKkMs0JkqFR7sXLavUkJ3Sj5i44MhlS+uWvhi0+CrDkKCUU6L0hoSYvA0vQvdDAcQjWQBH9Q==
+X-Received: by 2002:a05:6a20:f395:b0:1a7:a9ab:a72e with SMTP id qr21-20020a056a20f39500b001a7a9aba72emr1589220pzb.9.1712721329276;
+        Tue, 09 Apr 2024 20:55:29 -0700 (PDT)
+Received: from localhost.localdomain ([101.127.248.173])
+        by smtp.gmail.com with ESMTPSA id l17-20020a170902e2d100b001dddcfca329sm9747639plc.148.2024.04.09.20.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 20:55:28 -0700 (PDT)
+From: Haifeng Xu <haifeng.xu@shopee.com>
+To: peterz@infradead.org,
+	mingo@redhat.com
+Cc: acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haifeng Xu <haifeng.xu@shopee.com>
+Subject: [PATCH] perf/core: Fix missing wakeup when waiting for context reference
+Date: Wed, 10 Apr 2024 03:55:06 +0000
+Message-Id: <20240410035506.599192-1-haifeng.xu@shopee.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from
- different CU"
-To: linux-perf-users@vger.kernel.org
-Cc: anshuman.khandual@arm.com, james.clark@arm.com,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Chenyuan Mi <cymi20@fudan.edu.cn>,
- Masami Hiramatsu <mhiramat@kernel.org>, Ravi Bangoria
- <ravi.bangoria@amd.com>,
- =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
- Colin Ian King <colin.i.king@gmail.com>, Changbin Du
- <changbin.du@huawei.com>, Kan Liang <kan.liang@linux.intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Dobriyan <adobriyan@gmail.com>,
- =?UTF-8?Q?Georg_M=C3=BCller?= <georgmueller@gmx.net>,
- Liam Howlett <liam.howlett@oracle.com>, bpf@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
-Content-Language: en-US
-From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
-In-Reply-To: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Link to V1: 
-https://lore.kernel.org/all/20240220042957.2022391-1-ChaitanyaS.Prakash@arm.com/
+In our production environment, we found many hung tasks which are
+blocked for more than 18 hours. Their call traces are like this:
 
-On 4/8/24 11:52, Chaitanya S Prakash wrote:
-> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
->
-> Defconfig doesn't provide all the necessary configs required for the
-> test "perf probe of function from different CU" to run successfully on
-> all platforms. Therefore the required configs have been added to
-> config fragments to resolve this issue. On further investigation it was
-> seen that the Perf treated all files beginning with "/tmp/perf-" as a
-> map file despite them always ending in ".map", this caused the test to
-> fail when Perf was built with NO_DWARF=1. As the file was parsed as a
-> map file, the probe...--funcs command output garbage values instead of
-> listing the functions in the binary. After fixing the issue an
-> additional check to test the output of the probe...--funcs command has
-> been added.
->
-> Additionally, various functions within the codebase have been refactored
-> and restructured. The definition of str_has_suffix() has been adopted
-> from tools/bpf/bpftool/gen.c and added to tools/lib/string.c in an
-> attempt to make the function more generic. The implementation has been
-> retained but the return values have been modified to resemble that of
-> str_has_prefix(), i.e., return strlen(suffix) on success and 0 on
-> failure. In light of the new addition, "ends_with()", a locally defined
-> function used for checking if a string had a given suffix has been
-> deleted and str_has_suffix() has replaced its usage. A call to
-> strtailcmp() has also been replaced as str_has_suffix() seemed more
-> suited for that particular use case.
->
-> Finally str_has_prefix() is adopted from the kernel and is added to
-> tools/lib/string.c, following which strstarts() is deleted and its use
-> has been replaced with str_has_prefix().
->
-> This patch series has been tested on 6.9-rc2 mainline kernel, both on
-> arm64 and x86 platforms.
->
-> Changes in V2:
-> - Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
-> - Delete ends_with() and replace its usage with str_has_suffix()
-> - Replace an instance of strtailcmp() with str_has_suffix()
-> - Delete strstarts() from tools/include/linux/string.h and replace its
->    usage with str_has_prefix()
->
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: John Garry <john.g.garry@oracle.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Chenyuan Mi <cymi20@fudan.edu.cn>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> Cc: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
-> Cc: Colin Ian King <colin.i.king@gmail.com>
-> Cc: Changbin Du <changbin.du@huawei.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Georg Müller <georgmueller@gmx.net>
-> Cc: Liam Howlett <liam.howlett@oracle.com>
-> Cc: bpf@vger.kernel.org
-> Cc: coresight@lists.linaro.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-perf-users@vger.kernel.org
->
-> Chaitanya S Prakash (8):
->    tools lib: adopt str_has_suffix() from bpftool/gen.c
->    perf util: Delete ends_with() and replace its use with
->      str_has_suffix()
->    perf util: Replace an instance of strtailcmp() by str_has_suffix()
->    tools lib: Adopt str_has_prefix() from kernel
->    tools: Delete strstarts() and replace its usage with str_has_prefix()
->    perf tools: Enable configs required for
->      test_uprobe_from_different_cu.sh
->    perf tools: Only treat files as map files when they have the extension
->      .map
->    perf test: Check output of the probe ... --funcs command
->
->   tools/include/linux/string.h                  | 12 ++----
->   tools/lib/string.c                            | 42 +++++++++++++++++++
->   tools/lib/subcmd/help.c                       |  2 +-
->   tools/lib/subcmd/parse-options.c              | 18 ++++----
->   tools/objtool/check.c                         |  2 +-
->   tools/perf/arch/arm/util/pmu.c                |  4 +-
->   tools/perf/arch/x86/annotate/instructions.c   | 14 +++----
->   tools/perf/arch/x86/util/env.c                |  2 +-
->   tools/perf/builtin-c2c.c                      |  4 +-
->   tools/perf/builtin-config.c                   |  2 +-
->   tools/perf/builtin-daemon.c                   |  2 +-
->   tools/perf/builtin-ftrace.c                   |  2 +-
->   tools/perf/builtin-help.c                     |  6 +--
->   tools/perf/builtin-kmem.c                     |  2 +-
->   tools/perf/builtin-kvm.c                      | 14 +++----
->   tools/perf/builtin-kwork.c                    | 10 ++---
->   tools/perf/builtin-lock.c                     |  6 +--
->   tools/perf/builtin-mem.c                      |  4 +-
->   tools/perf/builtin-sched.c                    |  6 +--
->   tools/perf/builtin-script.c                   | 30 ++++---------
->   tools/perf/builtin-stat.c                     |  4 +-
->   tools/perf/builtin-timechart.c                |  2 +-
->   tools/perf/builtin-trace.c                    |  6 +--
->   tools/perf/perf.c                             | 12 +++---
->   tools/perf/tests/config-fragments/config      |  3 ++
->   .../shell/test_uprobe_from_different_cu.sh    |  2 +-
->   tools/perf/tests/symbols.c                    |  2 +-
->   tools/perf/ui/browser.c                       |  2 +-
->   tools/perf/ui/browsers/scripts.c              |  2 +-
->   tools/perf/ui/stdio/hist.c                    |  2 +-
->   tools/perf/util/amd-sample-raw.c              |  4 +-
->   tools/perf/util/annotate.c                    |  2 +-
->   tools/perf/util/callchain.c                   |  2 +-
->   tools/perf/util/config.c                      | 12 +++---
->   tools/perf/util/map.c                         |  8 ++--
->   tools/perf/util/pmus.c                        |  2 +-
->   tools/perf/util/probe-event.c                 |  2 +-
->   tools/perf/util/sample-raw.c                  |  2 +-
->   tools/perf/util/symbol-elf.c                  |  4 +-
->   tools/perf/util/symbol.c                      |  4 +-
->   40 files changed, 146 insertions(+), 117 deletions(-)
->
+[346278.191038] __schedule+0x2d8/0x890
+[346278.191046] schedule+0x4e/0xb0
+[346278.191049] perf_event_free_task+0x220/0x270
+[346278.191056] ? init_wait_var_entry+0x50/0x50
+[346278.191060] copy_process+0x663/0x18d0
+[346278.191068] kernel_clone+0x9d/0x3d0
+[346278.191072] __do_sys_clone+0x5d/0x80
+[346278.191076] __x64_sys_clone+0x25/0x30
+[346278.191079] do_syscall_64+0x5c/0xc0
+[346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
+[346278.191086] ? do_syscall_64+0x69/0xc0
+[346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
+[346278.191092] ? irqentry_exit+0x19/0x30
+[346278.191095] ? exc_page_fault+0x89/0x160
+[346278.191097] ? asm_exc_page_fault+0x8/0x30
+[346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+The task was waiting for the refcount become to 1, but from the vmcore,
+we found the refcount has already been 1. It seems that the task didn't
+get woken up by perf_event_release_kernel() and got stuck forever. The
+below scenario may cause the problem.
+
+Thread A					Thread B
+...						...
+perf_event_free_task				perf_event_release_kernel
+						   ...
+						   acquire event->child_mutex
+						   ...
+						   get_ctx
+   ...						   release event->child_mutex
+   acquire ctx->mutex
+   ...
+   perf_free_event (acquire/release event->child_mutex)
+   ...
+   release ctx->mutex
+   wait_var_event
+						   acquire ctx->mutex
+						   acquire event->mutex
+						   # move existing events to free_list
+						   release event->child_mutex
+						   release ctx->mutex
+						   put_ctx
+...						...
+
+In this case, all events of the ctx have been freed, so we couldn't
+find the ctx in free_list and Thread A will miss the wakeup. It's thus
+necessary to add a wakeup after dropping the reference.
+
+Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+---
+ kernel/events/core.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4f0c45ab8d7d..01dfe715f09e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5340,6 +5340,8 @@ int perf_event_release_kernel(struct perf_event *event)
+ again:
+ 	mutex_lock(&event->child_mutex);
+ 	list_for_each_entry(child, &event->child_list, child_list) {
++		void *var;
++		bool freed = false;
+ 
+ 		/*
+ 		 * Cannot change, child events are not migrated, see the
+@@ -5380,11 +5382,25 @@ int perf_event_release_kernel(struct perf_event *event)
+ 			 * this can't be the last reference.
+ 			 */
+ 			put_event(event);
++		} else {
++			freed = true;
++			var = &ctx->refcount;
+ 		}
+ 
+ 		mutex_unlock(&event->child_mutex);
+ 		mutex_unlock(&ctx->mutex);
+ 		put_ctx(ctx);
++
++		if (freed) {
++			/*
++			 * perf_event_free_task() delete all events of the ctx and
++			 * there is no event of the ctx in free_list. It may step
++			 * into wait_var_event() before decrement the refcount. So
++			 * we should add a wakeup here.
++			 */
++			smp_mb(); /* pairs with wait_var_event() */
++			wake_up_var(var);
++		}
+ 		goto again;
+ 	}
+ 	mutex_unlock(&event->child_mutex);
+-- 
+2.25.1
+
