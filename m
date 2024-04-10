@@ -1,145 +1,106 @@
-Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA548101C5
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 08:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959CF19BA6;
+	Wed, 10 Apr 2024 09:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712737574; cv=none; b=Q9j8ruSkbnjDsvGwABQWAPMBy+1sRnIeqANcShbjzy+KX+mvx9wXMuTYvVAinWFWtrCWfScELK7lRMzvEgCrRHttSYq7FaU0d+e4TMLel4qTE1RCfvFDtMQtwmYVLeqrMgRbp3SYFKFA9520mqqZeJfMBB54bVBlLEH+j4YUEk8=
+	t=1712740053; cv=none; b=K+p90tKzVV+pSdWEXvshyya9F38v5dE25JFf4aEtAq67BI8YoPTrgg1U2bxWzZdTYIBIZhdtxt0fUXzenfmtvd1WCWlU4PK88h08fom2+2r6qk5JSbuHukUIPPXqW8ti17/clztQx2bHyabswvfZqz4kUSaa4U9eiyMvfFhZEYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712737574; c=relaxed/simple;
-	bh=duDj0a+BJ/nN+ww8vqV7NuAk0aYdD7AxE8cfud7UXsU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UZNitK9Dr8Nm9j2vnV+JeTKehy2AMTYI3CjcwTkkhTgDthdI7qo4bjD2PogFZm2zdFkTlPUBnfauXSXuZAxPzDH3BwMAxQEWmqA+jY82vIL9NKx0Hj4rkpW66e/YYjveawwVdyHCYHyVZATVx+MOt5YkO3ReHZWh5GTHffsRa3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=TeiefwAu; arc=none smtp.client-ip=178.154.239.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="TeiefwAu"
-Received: from mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net [IPv6:2a02:6b8:c24:a33:0:640:d837:0])
-	by forward502b.mail.yandex.net (Yandex) with ESMTPS id 7B3B35F28E;
-	Wed, 10 Apr 2024 11:19:20 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id JJVJ4H5GfCg0-MrNu3eSh;
-	Wed, 10 Apr 2024 11:19:20 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1712737160; bh=Fym9ep649dXMDHbz2SrqO2OBPQLiz2ow4usaPg3iIYc=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=TeiefwAuOacXPA44zbxW6gjDNpQnqVOZz0ez4m7C0oiGnPKrxpsEOPjhduWU8hRAd
-	 B1Obl8snsbWvQQp32l3Cv+hczG1GPjgqhMUK47kSZf8KTrhFWzbbUBJ9NBMsAeCz6Q
-	 /J03JJX1hJ3Yxc+2AEC+czhcWw3BdZQHtNxGljoo=
-Authentication-Results: mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <15e1a2847b8cebab4de57fc68e033086aa6980ce.camel@yandex.ru>
-Subject: Re: `annotate --data-type` is empty
-From: Konstantin Kharlamov <Hi-Angel@yandex.ru>
-To: Namhyung Kim <namhyung@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-Date: Wed, 10 Apr 2024 11:19:19 +0300
-In-Reply-To: <CAM9d7cid-rmSVrQ2_eHH90NKxiXcX-u-udJv5WhRimkFtAyZVw@mail.gmail.com>
-References: <83b3aa2678b7a82c4247669cd8edae4573d1f52b.camel@yandex.ru>
-	 <CAM9d7cid-rmSVrQ2_eHH90NKxiXcX-u-udJv5WhRimkFtAyZVw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	s=arc-20240116; t=1712740053; c=relaxed/simple;
+	bh=DCFRPg6qIxiB1ACreiHrvx9LkKXCawxI0vGuJQNuNrs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VH0Z5pizymuyzUOGKRZpCSeX8j4lo7TyB47NormIdBzBvEsuk51VCrM2lkXT88KakRaKC953WFjhaYKlSGplGScIHaWXxz4K2ZXRXBV5ymFu5p+6IZLRXldV9c5No8BlNDbGXvpLhzWPG2Absh+B/UeUzKEudfnoM6Pe9RuPmHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98140139F;
+	Wed, 10 Apr 2024 02:07:59 -0700 (PDT)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED0143F6C4;
+	Wed, 10 Apr 2024 02:07:27 -0700 (PDT)
+Message-ID: <8d776c30-0e5c-4caf-9b7e-52adb6115eab@arm.com>
+Date: Wed, 10 Apr 2024 10:07:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] perf tests: Skip "test data symbol" on Neoverse N1
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>,
+ linux-kernel@vger.kernel.org
+References: <20240409084741.405433-1-james.clark@arm.com>
+ <20240409084741.405433-4-james.clark@arm.com>
+ <CAP-5=fXRODCKJexjxqkW_Wkf5MTxFJeq8zmu-iUbpEJM-9gjgg@mail.gmail.com>
+ <CAM9d7cio+JYnzwtiVSpsmGrxJWyqv3m0ppmqGidHs5psZdi93w@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7cio+JYnzwtiVSpsmGrxJWyqv3m0ppmqGidHs5psZdi93w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Cool, thank you!
 
-To cut story short: it worked. I followed your advice and built latest
-`perf`, that is from 6.9-rc3. Additionally, I rebuilt Emacs because
-that was an old build. I did check debug information in the older build
-before I sent previous email, by running emacs in `gdb` and setting
-breakpoint in a C file. So Idk if newer perf fixed it or somehow re-
-built Emacs influenced it. For posterity, flags I build it with are:
 
-	CFLAGS=3D'-march=3Dnative -O0 -g3 -pipe -fmerge-all-constants'
-	CC=3D'ccache cc'
-
--------------------------
-
-However, I am also getting the following errors, what are they about?
-
-	Error running objdump  --start-address=3D0x0000000000016d00 -- stop-addres=
-s=3D0x0000000000016f40  -d --no-show-raw-insn       -C "$1"
-	No output from objdump  --start-address=3D0x0000000000016d00 -- stop-addre=
-ss=3D0x0000000000016f40  -d --no-show-raw-insn       -C "$1"
-	Error running objdump  --start-address=3D0x00000000000155d0 -- stop-addres=
-s=3D0x0000000000015910  -d --no-show-raw-insn       -C "$1"
-	No output from objdump  --start-address=3D0x00000000000155d0 -- stop-addre=
-ss=3D0x0000000000015910  -d --no-show-raw-insn       -C "$1"
-
-On Tue, 2024-04-09 at 16:24 -0700, Namhyung Kim wrote:
-> Hello,
->
-> On Fri, Apr 5, 2024 at 6:17=E2=80=AFAM Konstantin Kharlamov
-> <Hi-Angel@yandex.ru> wrote:
-> >
-> > 6.8 release added a new feature: ability to see which struct fields
-> > are accessed the
-> > most, to figure out how to reorder them to maximize performance.
->
-> Thanks for testing this out!
->
-> >
-> > However, I am testing this with Emacs and I seem to get no results.
-> > Emacs is built
-> > with debugging information.
->
-> Can you please share the output of `readelf -SW ./build/src/emacs` to
-> verify
-> if it has the debug information in the binary?
->
-> >
-> > # Steps to reproduce
-> >
-> > 1. Build emacs
-> > 2. Record a bit of Emacs work as:
-> >
-> > =C2=A0=C2=A0=C2=A0 perf mem record ./build/src/emacs --batch --eval '(b=
-enchmark-
-> > run 9999999 (cons 1 2))'
-> >
-> > 3. Get the results with
-> >
-> > =C2=A0=C2=A0 perf annotate --data-type
-> >
-> > ## Expected
-> >
-> > Information on a lot of different structs that are being used.
-> >
-> > ## Actual
-> >
-> > There is only one struct
-> >
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Annotate type: 'struct _IO_FILE' in /usr=
-/lib/libc.so.6 (1
-> > samples):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> >
-> > and that's it.
->
-> And it seems it didn't get the debug info from the binary and
-> only got one from the libc.=C2=A0 I suspect it missed the debug info
-> somehow.
->
-> >
-> > # Additional information
-> >
-> > * perf version: 6.8 built manually from commit "e8f897f4afef: Linux
-> > 6.8"
-> > * `perf.data` for the testcase is 3.6M, so it definitely has more
-> > information than
-> > =C2=A0 just this one struct. I can upload it somewhere if that helps.
->
-> If you can build from the perf source code, I'd recommend to use the
-> latest version which has a lot of improvements.=C2=A0 v6.8 only has the
-> basic support with pointer variables.=C2=A0 And the full features will be
-> available from v6.10.
->
+On 10/04/2024 00:17, Namhyung Kim wrote:
+> Hi Ian and James,
+> 
+> On Tue, Apr 9, 2024 at 8:39 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Tue, Apr 9, 2024 at 1:48 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>> To prevent anyone from seeing a test failure appear as a regression and
+>>> thinking that it was caused by their code change, just skip the test on
+>>> N1.
+>>>
+>>> It can be caused by any unrelated change that shifts the loop into an
+>>> unfortunate position in the Perf binary which is almost impossible to
+>>> debug as the root cause of the test failure. Ultimately it's caused by
+>>> the referenced errata.
+>>>
+>>> Fixes: 60abedb8aa90 ("perf test: Introduce script for data symbol testing")
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>
+>> This change makes me sad :-( Is there no hope of aligning the loop? We
+>> have little enough testing coverage for memory events and even precise
+>> events on ARM that anything take away testing coverage feels like we
+>> should try to do better.
+> 
+> Can we just add some noise in the loop?
+> 
 > Thanks,
 > Namhyung
+> 
+
+Yes that would probably work. I decided to skip rather than touch the
+test because I didn't want the errata on one specific core to affect
+testing everywhere else.
+
+But if we don't think that it's too hacky to include that in the test
+then I can add it. To be honest maybe it makes the test more "realistic"
+because a very short infinite loop doesn't really represent a real workload.
+
+> 
+> diff --git a/tools/perf/tests/workloads/datasym.c
+> b/tools/perf/tests/workloads/datasym.c
+> index ddd40bc63448..e2514bf393cd 100644
+> --- a/tools/perf/tests/workloads/datasym.c
+> +++ b/tools/perf/tests/workloads/datasym.c
+> @@ -16,6 +16,8 @@ static int datasym(int argc __maybe_unused, const
+> char **argv __maybe_unused)
+>  {
+>         for (;;) {
+>                 buf1.data1++;
+> +               if ((buf1.data1 % 100129) == 0)
+> +                       buf1.data1++;
+>                 buf1.data2 += buf1.data1;
+>         }
+>         return 0;
+> 
