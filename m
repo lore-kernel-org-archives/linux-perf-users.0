@@ -1,103 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEC115B995;
-	Wed, 10 Apr 2024 12:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7650916131C;
+	Wed, 10 Apr 2024 13:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712753491; cv=none; b=WGgzaL13acGzADfvkoAWn0xauCPEURexuld0Ozm9+WuBNrzibWcp8McQuvR2ZOobf62P24r3o7SRdw2gYjKNy/gf5NTFFnUzMLX6cRI0ZJu81NA6PgmGAWqOO+DGDSgj7mnZ8IrIhzZgjiRpBEcHyL0NZrSCJc07j9lprsRzvDI=
+	t=1712755213; cv=none; b=bVqE+FeO33Ntxo8FcetkH9vEe/9xXlv4xZxrWvNjIFZaZaKJ3x0SuH6ZREAk4qtoq0fkYlhC6NAgtAfE4E0hby320rdj0M4hjYWjirItwUbHOxwzaVwzneG8+9bKxNbe9LBBpi0JkU6wi6Gi4i1XhVmbPxwQ9Mp4bXVoHtOqTFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712753491; c=relaxed/simple;
-	bh=LLMGp714NUJtAYoSJJfvg+tAURcKNyM+caOeo+Zjxmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNjOoaefTaayF9W1iF/fQLjzadMFe4c9fjf28mlF9GqBopjQmj5t5RDpCnX/MMfBm9HzYbTZmcBcMKe23qcL7rsQHB2qHLdVhByZtY6zVxUuM+hZNCrTrmmWnOCjl3F9k2rg1xKz4jGR8P3k2XLqIZn6F+OHtxdb9kef3eQTOKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iw2pEUtO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V7JASDXn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712755213; c=relaxed/simple;
+	bh=uHVxn6S6zS02geIFwmBs5SHYJUz02pa08bMj+uvJEIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PM269erX+HQnG2+JC6DhYHeewdERzal8Op7wzfvTUZ/Xo4bRKzl5Qny5oVsgCqL+0QhPXxlbrG+imqQ0Je96e45yhlUaBunLlDG8YwRfFoaE/vca0O4SQe5kZr3He+CyT5c/DxV8fmNXt28skkFl3ZY393JomPJ6ZKQFwm6jQ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=amlRCAAy; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iw2pEUtO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V7JASDXn"
-Date: Wed, 10 Apr 2024 14:51:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712753488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4QXXsu71JXQrIDib+0DcdWbOZC0pgoPfrFmZFNP9YI=;
-	b=iw2pEUtOI2eZiBNUtW4AgZjjSQmLZy0yBPIv5T+wXGvsHP/vuXHFfAEk+2JDNji2JuZLsQ
-	Ab9vPegknyD5vGwSW1VGmsRYvrkc6QhlWj4C7ORnw/Hc35OFqr2Nsni17Zdvxtmmt12WSN
-	Cnk7cFq/zsyrE985StGzJ6ugfTxqdCGYaCsj0bO3s+4fmd9+ObbRJAUezu8vuWqrbs4mTF
-	f9+qNqR5q2gKGWAuoUl4QYUsayf4PCjKySbF32oNI0NktBVhyyH/rofwjqVDcPHiipmtF5
-	2nI8U2Si4vQxzDOcWhypE9RX2EYJFsyFh9Jftyq0U5sS76/6Ezesxl38Jjp+3A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712753488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4QXXsu71JXQrIDib+0DcdWbOZC0pgoPfrFmZFNP9YI=;
-	b=V7JASDXnjHUwWxLVi//k+JlpDl2zSCScJLqjUnDnxSA1Nx3xsauxDrCktOo/z8fugJI5aN
-	t2jNcUrovOpx6uDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <20240410125126.X26tR8tM@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
- <20240409062501.h4rA_ck4@linutronix.de>
- <ZhUaAjhQXN6ahtpS@localhost.localdomain>
- <20240409105405.TXUU--_W@linutronix.de>
- <ZhUt8XMndGSwNuwx@localhost.localdomain>
- <20240409133336.Y4Io-16-@linutronix.de>
- <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="amlRCAAy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712755211; x=1744291211;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uHVxn6S6zS02geIFwmBs5SHYJUz02pa08bMj+uvJEIw=;
+  b=amlRCAAyA6a+vy7q/6P0ppurWsVmJLsuPuxAkvvM7lTLVmfDfgGPaITe
+   AuQnwqo2KaudXKWuJtktTZ+a8Z7mApoIuQ6RXOySEIMbOqjOmIXMS+3th
+   94N41a3qunFc9aDmGhNX0zLPCWXhiiJ0tk1i5+6nYg9THpLsbWuwSVsYW
+   uKpczIv3/Bm92mER6ESggqPWIOe333moWx/v7sTBF/w2F0tQ3GFmXA63r
+   KofUuymui/WaYlk1OB79jTiRZ6ffgGwM4W8MZuURlteiVcy55849qfDvS
+   YY0ub/nKkUggmCdowGkxmPZ1f/VnywtcesPxyP0OkDNnFCyWxUWqDMJJd
+   Q==;
+X-CSE-ConnectionGUID: WHiwNWEZRoyME+MhgQ4zTw==
+X-CSE-MsgGUID: Wh8fovDJRVG3S4sICspMVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7988973"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7988973"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:20:10 -0700
+X-CSE-ConnectionGUID: eycmoRiYS8y3Zs+HD8krtA==
+X-CSE-MsgGUID: AHdQNHWLRXqZQdb/dwvMfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="25186819"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:20:10 -0700
+Received: from [10.212.84.148] (kliang2-mobl1.ccr.corp.intel.com [10.212.84.148])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0066920B573A;
+	Wed, 10 Apr 2024 06:20:08 -0700 (PDT)
+Message-ID: <55528313-d858-41d2-b438-77bbc0e514f0@linux.intel.com>
+Date: Wed, 10 Apr 2024 09:20:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Arrow Lake
+To: Zhang Rui <rui.zhang@intel.com>, peterz@infradead.org
+Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com
+References: <20240410124554.448987-1-rui.zhang@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240410124554.448987-1-rui.zhang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2024-04-10 12:38:50 [+0200], Frederic Weisbecker wrote:
-> > Anyway, I misunderstood the concept
-> > before. That means we need to keep that counter here and a
-> > migrate_disable() is needed to avoid CPU migration which is sad.
+
+
+On 2024-04-10 8:45 a.m., Zhang Rui wrote:
+> Arrow Lake RAPL support is the same as previous Sky Lake.
+> Add Arrow Lake model for RAPL.
 > 
-> I fear that won't work either. The task is then pinned but another
-> task can come up on that CPU and its software events will be ignored...
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 
-oh, right.
+The series looks good to me.
 
-> Some alternatives:
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> ---
+>  arch/x86/events/rapl.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> _ Clear event->pending_work = 0 after perf_sigtrap(), preventing an
-> event in there from adding a new task work. We may miss a signal though...
-> 
-> _ Make the recursion context per task on -RT...
-
-The per-task counter would be indeed the easiest thing to do. But then
-only for task context, right?
-
-But why would we miss a signal if we clean event->pending_work late?
-Isn't cleaning late same as clearing in
-perf_swevent_put_recursion_context()?
-If clearing pending_work late works, I would prefer to avoid yet another
-per-task counter if possible.
-
-> > > Thanks.
-
-Sebastian
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index fb2b1961e5a3..6bfb78d5b37e 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -808,6 +808,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
+>  	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&model_skl),
+>  	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&model_skl),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE_H,		&model_skl),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE,		&model_skl),
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
