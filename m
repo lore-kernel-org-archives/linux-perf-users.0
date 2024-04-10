@@ -1,115 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EB528FD;
-	Wed, 10 Apr 2024 21:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABEC17BB2F
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 22:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712784737; cv=none; b=Jt05T9U5DJz3hUmRLmJ50GVxMog7GJ7J7QUtd9Uhxojf+fCglFGEjj+G7CjNzXPN+FMMYwvDtz5fCRChEAHgAGMWqM9NVmJBValZNu1SHIvtRdSXNhtp9Tc0z5YQi5utOXhEB51R4tekCHuxIH92nvcvhcCyQPtQ/NWQp3Kv+Lk=
+	t=1712787839; cv=none; b=KYk18qycS1olY5nzL54eqtUKKPsbWp5VxlxxkNLD0gAtOkjgVq+RN25+5I0o0GS1pKHXxD/rdr5I5eXkYh3acwg8/ji6xh2YnIW1KWb+Lj0C27lkvJB0x1rukmjdbtQNr7I10PcapXtTVtDtM4kD2EsM4CxoNViJuHBJ9XRIw88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712784737; c=relaxed/simple;
-	bh=DsgMr6BDiqsK3q9T1+THsDzho55RHG2QZeNku/055Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTGWTpixsPAa6mA2XtiCpe9FKRrcavmh3zNJPsyyY2T7ujS4+SI1VC0Usjxtr91jgYZZP60M4FMnwvEq+g1u5USxnL3ZU9rR8VrSkCitnNeRXDntUa3qiQuP+w+nPgPqUSPGjJUh+OOdHEsBMZs0QCnQRWi1FUavgaw/hksszY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nar6LfZn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712787839; c=relaxed/simple;
+	bh=GAU+2rZNqMkHZN8SbllEOZVUOsdEVBIYY2092Hb26Gw=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=A4t0tfegm74xg2IHlzv6CEqXJP5Zo2Cz3Y9NbNF5Pm/0XJBulvVe0OxxSgEboM1nyzgbmpsyRa/wV586XvrID9Z3mXcVl5Ay7YYCXJakOS4pJ4VBhdVpLIrFkR2uXlCDlee3GicNqiKwXEWw0sRx0YNe2fqhdDkNHgI5bCvcACc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BfaHxowS; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nar6LfZn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98312C433F1;
-	Wed, 10 Apr 2024 21:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712784737;
-	bh=DsgMr6BDiqsK3q9T1+THsDzho55RHG2QZeNku/055Yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nar6LfZn3s7SWdDNiyIov+OYYfRtmnf9YMtFnDqTcdOvYeB9hVkF/8okAE1zTCLK1
-	 rSTcbxNBXTKH8RTs5PHVrGqoyldmH7ctV7PYM9hTbT2epN/QsSl5IEPV0BDgpb4FTg
-	 9es7JBpdWRjno+6WOk1T5fozW3uOKNKJig5ZX10pqTWaq40vH1EoHg86BzFXjzxvLk
-	 t9fP88BA1qXdnHbm92joYzh+hWEvolvoAuLHKE1TvJe6n2Bkoz1cTrKmuuW4HmmOnv
-	 md7sIv6wIpFomRuRMAUwZi1Pf0p0+mayxgeTkYXjoTKEX0s+DELPzqhZNgu8C/yb60
-	 M0TvfOaScsatQ==
-Date: Wed, 10 Apr 2024 18:32:14 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/6] perf annotate-data: Add
- hist_entry__annotate_data_tui()
-Message-ID: <ZhcFXm9a2fzNeZwm@x1>
-References: <20240409235000.1893969-1-namhyung@kernel.org>
- <20240409235000.1893969-4-namhyung@kernel.org>
- <Zhb0raj1yW8JhuFW@x1>
- <Zhb-17CrgZt_PdUH@x1>
- <Zhb_F6hvWrjMcoM1@x1>
- <ZhcAvddbSEcMXzvH@x1>
- <ZhcB2Vh6lAcqPasI@x1>
- <ZhcCgzslBmDK4-vn@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfaHxowS"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b2682870so11235370276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 15:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712787837; x=1713392637; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B+F+2wBjMyMgvGwjkNxLfH9Fpi5N9urgZl/EZiGxcNI=;
+        b=BfaHxowS1E5//epfMSK7QJAm+KTlwWeB6m13K0yCyWVWjci28Hhj94PO6mpAh80WJP
+         OafXkaVuGZ6AjoJiM5hRyscG2AmmsH3wf60Etvv3PquCF09/q8J+1J1QC0bmG1i7H70p
+         +UaWZYnm7/RYgJEpsPdMc94javziLvhRJRIxaZn+oyfpJcd6vTLHODMHsEXCtl9U1YPD
+         5VQOJoB9UjUSgq7F8DE1YO1ADdgspGl4CpfvzhKP0uPsygxG4fvkxAaG7Hqg36qw2Dj7
+         eiT1yCnuAdA5UtNuaZ+CyW5Bo9hoTAw4+Jfo0Lb9aauMAS+DoJjYzP/158VZ01SWNGb4
+         NdXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712787837; x=1713392637;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B+F+2wBjMyMgvGwjkNxLfH9Fpi5N9urgZl/EZiGxcNI=;
+        b=Fk1lDhKEw7Omd9iZVQkUf5U8YWFAYzm+NgthtS+l58QHBpXXRj2Nwu+RajlFZ0w+eT
+         zdTx4IUeR1H5MgpyPM5iMjRlvcxHIYP3PznjZxCMr3bI1oYypSGQ2qVq0afF/RrSl+og
+         Ul1mWacfKR01KaPvwsn4hqtrz3O4f6yLCKSaRRAS8vgHzgnutDPBaW9xgFpuFVgJ2SF/
+         ysKpPgGe7laTeXdLRK6emKi4IzXq22lGTMVdeauu1L7MXT8x7gd8+i36wHvbz+KT6fMx
+         XPvzu6LaFhjI4hPQ5mqcrBSxhW+sHLqvMoVnYwcWFGbNNpXkZ8PbaiA95QRHdaYd+i/R
+         VyPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0caOecfiubN1SHF4ZhjxgifpnQ4FZglQjMADHdTZJf+JdsFUMK05I/5iwSNF0B/eQ16aVdln4fbSkeoVtJ/i/64xGJ5fRpyah0zFgZhhc4Q==
+X-Gm-Message-State: AOJu0YxKbX/k4MYUzqut65QtfxdA8VaxVEIlhfeujdcuCpUnJctPcFk9
+	Coy0enn9rhacvA+okZRxHgqfZyxaTc1Ei+bNloSfLuZIJgE7Tq9Pu7GxR7WMZrQoXnYO5gnN1F5
+	wZy9nBA==
+X-Google-Smtp-Source: AGHT+IGZDqrCoL9XuzYc4FDvlUWPcnEFM/Imu3Vrs1s2cAZGxjT4+opbZnt7CdVo7ONNX0j/wcoCJo1xyqWX
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ed7d:1d85:433a:d24c])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1506:b0:dc7:7ce9:fb4d with SMTP
+ id q6-20020a056902150600b00dc77ce9fb4dmr1086916ybu.12.1712787837515; Wed, 10
+ Apr 2024 15:23:57 -0700 (PDT)
+Date: Wed, 10 Apr 2024 15:23:53 -0700
+Message-Id: <20240410222353.1722840-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhcCgzslBmDK4-vn@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Subject: [PATCH v1] perf list: Esacpe \r in json output
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 10, 2024 at 06:20:06PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 10, 2024 at 06:17:16PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Apr 10, 2024 at 06:12:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Apr 10, 2024 at 06:05:27PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Wed, Apr 10, 2024 at 06:04:26PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > On Wed, Apr 10, 2024 at 05:21:01PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > > On Tue, Apr 09, 2024 at 04:49:57PM -0700, Namhyung Kim wrote:
-> > > > > > > Support data type profiling output on TUI.
-> > > > > > 
-> > > > > > Added the follow to the commit log message, to make reviewing easier.
-> > > > > > 
-> > > > > > As followup patches I think having the DSO name together with the type
-> > > > > > is important, also I think we could have a first menu with all the pairs
-> > > > > > of DSO/type, sorted top down by the types with most samples, wdyt?
-> > > > > > 
-> > > > > > Applied.
-> > > > > > 
-> > > > > 
-> > > > > There is something else here with the static build, checking...
-> > > > 
-> > > > Probably because of:
-> > > > 
-> > > > Makefile.config:810: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
-> > > > 
-> > > > Fixing...
-> > > 
-> > > Trying with:
-> > 
-> > Not really, I need to check for HAVE_DWARF_SUPPORT as well? Doing that
-> 
-> Attempting with:
+Events like for sapphirerapids have \r in the uncore descriptions. The
+non-escaped versions of this fail json validation the the perf list
+test.
 
-Nope, the surgery needed is a bit bigger, as you made
-hist_entry__annotate_data_tty dependent on DWARF but calls it without
-checking HAVE_DWARF_SUPPORT from builtin-annotate.c.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-list.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I put what I have in tmp.perf-tools-next, please take a look, I'll
-continue  tomorrow.
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 02bf608d585e..9333cc64c2ce 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -313,6 +313,9 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
+ 					case '\n':
+ 						strbuf_addstr(buf, "\\n");
+ 						break;
++					case '\r':
++						strbuf_addstr(buf, "\\r");
++						break;
+ 					case '\\':
+ 						fallthrough;
+ 					case '\"':
+-- 
+2.44.0.478.gd926399ef9-goog
 
-- Arnaldo
- 
-> ⬢[acme@toolbox perf-tools-next]$ git diff
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 458eafe65e4aa16f..521ec7e226e29e6b 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -469,7 +469,7 @@ static void hists__find_annotations(struct hists *hists,
->                                         goto find_next;
->                         }
->  
-> -#ifdef HAVE_SLANG_SUPPORT
-> +#if defined(HAVE_SLANG_SUPPORT) && defined(HAVE_DWARF_SUPPORT)
->                         if (use_browser == 1)
->                                 key = hist_entry__annotate_data_tui(he, evsel, NULL);
->                         else
-> ⬢[acme@toolbox perf-tools-next]$
