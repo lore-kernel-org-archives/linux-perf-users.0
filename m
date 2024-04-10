@@ -1,217 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C185D2747B;
-	Wed, 10 Apr 2024 10:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76FA15921E;
+	Wed, 10 Apr 2024 11:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712746053; cv=none; b=FyHRqud7j5Z2yrARI3J3LnVKGOJtWHNQmG91KxLapL0snu7oV37vPY9UUVtfT4++rUDGvs23lYa5APufXbiuQ0xH5iF74RHfeUY+3GAAm/DX5MBr25fDfxHcjO9sJXX23Vi7ggM8+THQd4SRtJfw7XVEoUtqDOzGwnvOqzNgqEU=
+	t=1712749028; cv=none; b=RF9x8FCztB8H5rlqn+vpS8QLihdAQB1BbFYA4wkr+sUbLWENN54MVVOIBMiPac772LOgikugvDhMVhVKIjSy/prgS5shILXqlXpZYzUCfN1rJKhhJeiU/ROBpZVsnC4JSixalN1B558kkVyamEbLuJ9yM/qFq2uCeTPnJQpJUA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712746053; c=relaxed/simple;
-	bh=bsQg0enSfShnN99/U/ckzFwZ367KWtErZDdZysJdEkE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EsJCMxDicUVFp6RQLS6N9VvsvXLxmsIjUxnBngUBVR1LjdvRap+k/gPwLisiMgZ3YQr+k2Gxzf0MeqWf5nczR1DNu7GJoRUy0F4u0NgfBgQm5VKX/xeKCJ7wh/5XkuMtpfHtOnDbLVDDwXYc4YFvdDuDoE/Iva75+bNZd3tx1pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZrF18Tt; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712749028; c=relaxed/simple;
+	bh=cjSpW4W9xjQq69YU3V2+lPGChaluI7MZVgYx3E/A/lU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBYiGCzeX/0jeoT3cYKwV6MW56ozmXyfEG8v0bJS3guMXiQLOnkRvHPk+Ivm/6PlwaeiEaYVKf5lQrN/OvJqzZKZyccysGQ/PqTQT0teKTjnb8ee3BXn6upt5vEzw8kUmLrd5vGv/Wtjz2swY+7s/IKeih+kcXD2RafMnMjgSoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYrihpXI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZrF18Tt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712746052; x=1744282052;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=bsQg0enSfShnN99/U/ckzFwZ367KWtErZDdZysJdEkE=;
-  b=VZrF18TttVPLrfwOEr9CP5BZJ/jnbK2oWhxhm+iWF+U0pBp/FPXeFWa8
-   oRjTIM041kw+1aMYKlWiXJQx5F1nX939b58zI6nKTwlOrkv4X5ataZR+s
-   E+Whjv9QxWD18P/vT22Oa2vGh781sjTY39FPHlw8PLgzZfesTpD98fBCg
-   BHxIWvUHP5gIfHngbh3oO+uxQHxRuvvq4uRVXkzvTlxwWenPJu7krRjsc
-   uEcSqfBPWHIU+FxrWr3+uDSMENceBNPtuSPUuAzwr4TEa/d7GestOXgAQ
-   QTd8ZhkoYeHhFvZZFVdg5yLPWYp29hOGi6ckAdtP9t6WVJzB2V6Kbbmp3
-   g==;
-X-CSE-ConnectionGUID: pvmAyBlUT+KeQiYjs93EOg==
-X-CSE-MsgGUID: LmQ/IfteTaKTYEOUQG8NKA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7972543"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7972543"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:47:30 -0700
-X-CSE-ConnectionGUID: 7dhDx613R6GIrIfGgmUK/Q==
-X-CSE-MsgGUID: vWPJwsZfQ1CvruV1CBmD9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="51742778"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.214.234])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:47:27 -0700
-Message-ID: <03b3c4a5-d3cc-4540-bbf3-3164f15285df@intel.com>
-Date: Wed, 10 Apr 2024 13:47:23 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYrihpXI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D7CC43390;
+	Wed, 10 Apr 2024 11:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712749028;
+	bh=cjSpW4W9xjQq69YU3V2+lPGChaluI7MZVgYx3E/A/lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PYrihpXIYXARvO9uOKEEnf5N7FxT1MNZSGHpQqr9w3lDeH/UqwiDvfd7T7Y9AW8Zd
+	 XZFtjQfniebrD2+godUcpvcctC6ik8EOiOuVhOuw9x1FH5bVQQ0GFYzEzsMqBp8a2X
+	 g+I7zXnIPIRVshUoGryiqqUW0fC7TMZOzb79fbdBCEFaBd+HkgUmH1Dhf6NXyMWiyf
+	 IUaC7PGQ4UJRvuUUtuH5Ufne7Y49nsqKZVqpQeNJy84l/bmDqVtk/SBNJH/mXJ9Jia
+	 ArI2XSjXLe8NNtdXZln9kRBddRzyfpYgrWhnYFIJuBX21XBPWzYI4Kc+FtMpRaDOdW
+	 jxsiD2X0hQy/w==
+Date: Wed, 10 Apr 2024 13:37:05 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <ZhZ54XAcBt50WEnE@localhost.localdomain>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-3-bigeasy@linutronix.de>
+ <ZhRhn1B0rMSNv6mV@pavilion.home>
+ <20240409085732.FBItbOSO@linutronix.de>
+ <ZhU2YwettB6i6AMp@localhost.localdomain>
+ <20240409134729.JpcBYOsK@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel
- hybrid machines
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <ZhVfc5jYLarnGzKa@x1> <ZhVf9rO-b3xTqZEK@x1>
- <CAP-5=fVbkj74K3w0cOfpbKe2=9wK1AJYkGQmbHLD4SKzc=dVBw@mail.gmail.com>
- <3a816064-ed40-496c-95ab-79753c64b5b6@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <3a816064-ed40-496c-95ab-79753c64b5b6@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409134729.JpcBYOsK@linutronix.de>
 
-On 9/04/24 22:05, Adrian Hunter wrote:
-> On 9/04/24 18:46, Ian Rogers wrote:
->> On Tue, Apr 9, 2024 at 8:34 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>
->>> On Tue, Apr 09, 2024 at 12:32:06PM -0300, Arnaldo Carvalho de Melo wrote:
->>>> root@x1:~# perf test "Miscellaneous Intel PT testing"
->>>> 112: Miscellaneous Intel PT testing                                  : FAILED!
->>>> root@x1:~#
->>>>
->>>> then I revert:
->>>>
->>>> commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-next)
->>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
->>>> Date:   Tue Apr 9 12:28:49 2024 -0300
->>>>
->>>>     Revert "perf pmus: Check if we can encode the PMU number in perf_event_attr.type"
->>>>
->>>>     This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
->>>> ⬢[acme@toolbox perf-tools-next]$
->>>>
->>>> It works now:
->>>>
->>>> root@x1:~# perf -v
->>>> perf version 6.8.g642e1ac96aaa
->>>> root@x1:~# perf test "Miscellaneous Intel PT testing"
->>>> 117: Miscellaneous Intel PT testing                                  : Ok
->>>> root@x1:~#
->>>>
->>>> Investigating, if you come up with ideas, lemme know.
->>>
->>> Some more context:
->>>
->>> When this patch was implemented/tested I had access only to an ARM64
->>> hybrid machine, now my notebook is a Rocket Lake lenovo (13th gen), that
->>> is hybrid and the test is failing with:
->>>
->>> root@x1:~# perf test -v "Miscellaneous Intel PT testing"
->>> 112: Miscellaneous Intel PT testing                                  :
->>> --- start ---
->>> test child forked, pid 304355
->>> --- Test system-wide sideband ---
->>> Checking for CPU-wide recording on CPU 0
->>> OK
->>> Checking for CPU-wide recording on CPU 1
->>> OK
->>> Linux
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 1.934 MB /tmp/perf-test-intel-pt-sh.xACV6V7Hn4/test-perf.data ]
->>> OK
->>> --- Test per-thread recording ---
->>> Workload PIDs are 304377 and 304378
->>> perf PID is 304389
->>> Waiting for "perf record has started" message
->>> OK
->>> pid 0 cpu -1 fd 5 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
->>> pid 0 cpu -1 fd 6 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 6
->>> pid 304377 cpu -1 fd 7 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 7
->>> pid 304380 cpu -1 fd 8 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 8
->>> pid 304378 cpu -1 fd 9 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 9
->>> pid 304381 cpu -1 fd 10 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 10
->>> pid 304377 cpu -1 fd 11 : sys_perf_event_open: pid 304377  cpu -1  group_fd -1  flags 0x8 = 11
->>> pid 304380 cpu -1 fd 12 : sys_perf_event_open: pid 304380  cpu -1  group_fd -1  flags 0x8 = 12
->>> pid 304378 cpu -1 fd 13 : sys_perf_event_open: pid 304378  cpu -1  group_fd -1  flags 0x8 = 13
->>> pid 304381 cpu -1 fd 14 : sys_perf_event_open: pid 304381  cpu -1  group_fd -1  flags 0x8 = 14
->>> fd 7 : idx 0: mmapping fd 7
->>> fd 11 fd_to 7 : idx 0: set output fd 11 -> 7
->>> fd 8 : idx 1: mmapping fd 8
->>> fd 12 fd_to 8 : idx 1: set output fd 12 -> 8
->>> fd 9 : idx 2: mmapping fd 9
->>> fd 13 fd_to 9 : idx 2: set output fd 13 -> 9
->>> fd 10 : idx 3: mmapping fd 10
->>> fd 14 fd_to 10 : idx 3: set output fd 14 -> 10
->>> Checking 10 fds
->>> No mmap for fd 5
->>
->> Thanks Arnaldo, so the reverted change is:
->> ```
->> --- a/tools/perf/util/pmus.c
->> +++ b/tools/perf/util/pmus.c
->> @@ -4,6 +4,7 @@
->> #include <subcmd/pager.h>
->> #include <sys/types.h>
->> #include <dirent.h>
->> +#include <pthread.h>
->> #include <string.h>
->> #include <unistd.h>
->> #include "debug.h"
->> @@ -492,9 +493,35 @@ int perf_pmus__num_core_pmus(void)
->>        return count;
->> }
->>
->> +static bool __perf_pmus__supports_extended_type(void)
->> +{
->> +       struct perf_pmu *pmu = NULL;
->> +
->> +       if (perf_pmus__num_core_pmus() <= 1)
->> +               return false;
->> +
->> +       while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
->> +               if (!is_event_supported(PERF_TYPE_HARDWARE,
->> PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->
->> type << PERF_PMU_TYPE_SHIFT)))
->> +                       return false;
->> +       }
->> +
->> +       return true;
->> +}
->> +
->> +static bool perf_pmus__do_support_extended_type;
->> +
->> +static void perf_pmus__init_supports_extended_type(void)
->> +{
->> +       perf_pmus__do_support_extended_type =
->> __perf_pmus__supports_extended_type();
->> +}
->> +
->> bool perf_pmus__supports_extended_type(void)
->> {
->> -       return perf_pmus__num_core_pmus() > 1;
->> +       static pthread_once_t extended_type_once = PTHREAD_ONCE_INIT;
->> +
->> +       pthread_once(&extended_type_once,
->> perf_pmus__init_supports_extended_type);
->> +
->> +       return perf_pmus__do_support_extended_type;
->> }
->>
->> struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
->> ```
->> On your Intel this should have previously returned true as
->> "perf_pmus__num_core_pmus() > 1", and with the new code presumably
->> is_event_supported is returning false. Could you dump the PMU's name
->> at that point? Is cpu_core or cpu_atom looking like it doesn't support
->> the event? Is the test failing when run as root (ie is
->> is_event_supported failing to have expected fallback paths)?
+Le Tue, Apr 09, 2024 at 03:47:29PM +0200, Sebastian Andrzej Siewior a �crit :
+> On 2024-04-09 14:36:51 [+0200], Frederic Weisbecker wrote:
+> > > That wake_up() within preempt_disable() section breaks on RT.
+> > 
+> > Ah, but the wake-up still wants to go inside recursion protection somehow or
+> > it could generate task_work loop again due to tracepoint events...
 > 
-> Problem is the test scrapes debug output and is_event_supported()
-> prints out debug that confuses the test.  Other probe functions
-> like in perf_api_probe.c use sys_perf_event_open() so the issue
-> has not arisen before.
+> okay.
+> 
+> > Although... the wake up occurs only when the event is dead after all...
+> 
+> corner case or not, it has to work, right?
 
-Patch here:
+Yep.
 
-	https://lore.kernel.org/all/20240410104450.15602-1-adrian.hunter@intel.com/
+> 
+> > > How do we go on from here?
+> > 
+> > I'd tend to think you need my patchset first because the problems it
+> > fixes were not easily visible as long as there was an irq work to take
+> > care of things most of the time. But once you rely on task_work only then
+> > these become a real problem. Especially the sync against perf_release().
+> 
+> I don't mind rebasing on top of your series. But defaulting to task_work
+> is not an option then?
+> 
+> RT wise the irq_work is not handled in hardirq because of locks it
+> acquires and is handled instead in a thread. Depending on the priority
+> the task (receiving the event) it may run before the irq_work-thread.
+> Therefore the task_work looked neat because the event would be handled
+> _before_ the task returned to userland.
 
+I see.
+ 
+> Couldn't we either flush _or_ remove the task_work in perf_release()?
+
+Right so the problem in perf_release() is that we may be dealing with task works
+of other tasks than current. In that case, task_work_cancel() is fine if it
+successes. But if it fails, you don't have the guarantee that the task work
+isn't concurrently running or about to run. And you have no way to know about
+that. So then you need some sort of flushing indeed.
+
+Thanks.
+
+> > Thanks.
+> Sebastian
