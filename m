@@ -1,107 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2137.outbound.protection.outlook.com [40.107.93.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76FA15921E;
-	Wed, 10 Apr 2024 11:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749028; cv=none; b=RF9x8FCztB8H5rlqn+vpS8QLihdAQB1BbFYA4wkr+sUbLWENN54MVVOIBMiPac772LOgikugvDhMVhVKIjSy/prgS5shILXqlXpZYzUCfN1rJKhhJeiU/ROBpZVsnC4JSixalN1B558kkVyamEbLuJ9yM/qFq2uCeTPnJQpJUA8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749028; c=relaxed/simple;
-	bh=cjSpW4W9xjQq69YU3V2+lPGChaluI7MZVgYx3E/A/lU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UBYiGCzeX/0jeoT3cYKwV6MW56ozmXyfEG8v0bJS3guMXiQLOnkRvHPk+Ivm/6PlwaeiEaYVKf5lQrN/OvJqzZKZyccysGQ/PqTQT0teKTjnb8ee3BXn6upt5vEzw8kUmLrd5vGv/Wtjz2swY+7s/IKeih+kcXD2RafMnMjgSoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYrihpXI; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B1F15A488;
+	Wed, 10 Apr 2024 11:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.137
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712749915; cv=fail; b=QsoOon36X+R30FW2yJxHLPUgv3dZ58E6NPXhwJeTxpOHwgd2PLAftf11caZpWfIKA6buR1yyXAi37aRJ6SzwvNAPztQSeeE0pNXuW4qsXxb+9DMJliglbho7atCmrtogwmdJiT8dldn03rHlShgRdaMDiKLw27oBPDXkeXNCXUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712749915; c=relaxed/simple;
+	bh=jDGknkImE0wrOIOAXdaKN0l7NduDulYeqoHsM9A2DOE=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=g3GCZY31oHRey0BS77ibRDzq+x/wVegXpXk8cGSEaqjUotyHx/IbuN5ZCfxohDrZjHY6i2/OHdHD8aJB+zQu64NKlMI9dCOd5dK8U/KaIP2ofT6SYgDz17dPmpTqrVat1EqDycCEupAv6LXdArqTo4tbzQMRn6iB9KH2A4fXTgM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qft1b2Jr; arc=fail smtp.client-ip=40.107.93.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYrihpXI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D7CC43390;
-	Wed, 10 Apr 2024 11:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712749028;
-	bh=cjSpW4W9xjQq69YU3V2+lPGChaluI7MZVgYx3E/A/lU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PYrihpXIYXARvO9uOKEEnf5N7FxT1MNZSGHpQqr9w3lDeH/UqwiDvfd7T7Y9AW8Zd
-	 XZFtjQfniebrD2+godUcpvcctC6ik8EOiOuVhOuw9x1FH5bVQQ0GFYzEzsMqBp8a2X
-	 g+I7zXnIPIRVshUoGryiqqUW0fC7TMZOzb79fbdBCEFaBd+HkgUmH1Dhf6NXyMWiyf
-	 IUaC7PGQ4UJRvuUUtuH5Ufne7Y49nsqKZVqpQeNJy84l/bmDqVtk/SBNJH/mXJ9Jia
-	 ArI2XSjXLe8NNtdXZln9kRBddRzyfpYgrWhnYFIJuBX21XBPWzYI4Kc+FtMpRaDOdW
-	 jxsiD2X0hQy/w==
-Date: Wed, 10 Apr 2024 13:37:05 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <ZhZ54XAcBt50WEnE@localhost.localdomain>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-3-bigeasy@linutronix.de>
- <ZhRhn1B0rMSNv6mV@pavilion.home>
- <20240409085732.FBItbOSO@linutronix.de>
- <ZhU2YwettB6i6AMp@localhost.localdomain>
- <20240409134729.JpcBYOsK@linutronix.de>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qft1b2Jr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bvbWY/2GD/EeU6Q9tBQdKPm5l0b1a57bIrgzQh93XGzon3jjWUHp2zBBEleUARH2OD+uw4al2SfrpgczRBPBtUjErwyTGxoSqiVan9mPjGDKCPr/tuJhxv5AYqLrb9AmcNcPZakda9enc74MWM6yR1ADbqcRf1Bi72J6qD7KTLaheQT2WUO/eEwg8Y8+bxLKmh/cyhbvCFabNHyeVj3ee8fwWFQSL7EC8FCsomdsy2j42KRJNuV2IdGBGEuRwTfe7CNqd1UEJATJLUVdc2bjrAF5TTA61q1AvsM5qrYQWKfCEzdCNRUz36v5NeW8m4pqXoE89qDcF6URDHT5ByYgIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X6mXdkoXjmTWMQKDs1EuJVnps9pVubJ+upNSeiqqXE8=;
+ b=Dl9T0VQxv0cD+BEu3Kg3vt8NXvRYgYIfXa5Sbtm7jkYnztyPmaD79NpjCgzweNWB3IO4KTr00Q+zgCP2R8AowBX/5eC063Uquex+6fhEDpppR6Ds3fyq8U6L3KZHLZLdT2hiy2Mtp0x1rhQ17gm5IjzVR8AN9/byEa6or6srI9WEakVvE6LWbdWkCpODzrKBFSYrq4NQo+wfmMwJS37rqz+w5Mm3KuKqwSbKCvm5Y4PQUIYIdiMbIhQrZ1klgZTjAEOVR3V/rR0tbRyodMjmsucy2nHMzvFQS3tR31IXRykQbp5CuVGxCxvLwMCKeE7EgTVFQMFTAdViOv2kt/tHWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X6mXdkoXjmTWMQKDs1EuJVnps9pVubJ+upNSeiqqXE8=;
+ b=Qft1b2JrfL/QsbJVRJodRfA25kp173/55688QjYVGqfwrW5jIjZh4tvmh9gOCml8ghS26+3qGlzSaV8yW7X/7WPXDS2p10CaTTxb2fKcaHWF6eDm5rM9zEUGW8jDC7tic+jpA9+S4Au6eMt49wYKpnUO62/f9pYIaXbgNcsHNh8=
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
+ 2024 11:51:50 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::ee44:e235:d5d7:94a1]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::ee44:e235:d5d7:94a1%4]) with mapi id 15.20.7409.042; Wed, 10 Apr 2024
+ 11:51:50 +0000
+Message-ID: <ed7925d5-f7e3-3de8-d99c-663877d7d04c@amd.com>
+Date: Wed, 10 Apr 2024 17:21:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel Hybrid
+ systems
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <ZhWTIuyB9p1ORbQH@x1>
+ <d08f02fa-7930-0d48-0f60-2520f890e7df@amd.com>
+In-Reply-To: <d08f02fa-7930-0d48-0f60-2520f890e7df@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXPR01CA0078.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:54::18) To DS0PR12MB6584.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::6)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240409134729.JpcBYOsK@linutronix.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DS0PR12MB6630:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kLW7bpATSNoenjOQbEsNa1w2s+xymYiB+N8eaf28K5C6FKBq84KiykdzK/ItB3CO6J8A4wRAUdeUVPw8ycbOKoj/Oqad3N8WsXNGeBAFWN51aPIPiDohau+TCnnwfJ11Z7RHcq4mhfTFlw2S8DWxMLRU8P2wlVG9rcZFPfL+6W9QLIWaYRj2LMBFHhsDMZrcAF9kvP5p4g8RHXBf40pOz/dgrrcvPpip1dG2HQVEQlCwUoRsguLhPUfk3Tc0hZ6w21bp0d+0oJIvXNGe7Y9oPvdI1eOZBRifRPkNs+esRZTV7aSRuLdNtvAVtoKuP9sRiSX4KunamuGwROtkQwn7V/hUDRaY8jw8/6UussukevIo5bFBQlwOqFWwL+6JIYIbOAmdYXrZFybzL0Kl4eWKs9sE6uY8WJJtwYD9Z18o3LmcBGN1QvikoTEPd1+e+Vu1Q5Txe7+fx3CDjIUJ1E28Okh56JGdBJ81vj7zVR3VH3xJxVJdI1lWYvVkXG7fOQ65Dk18peR1LhJrbD08LV1SOTpAOk+zuaEKGTIXfl5XV4fbbpClbLo491lEeyRE4aDrT8WuGo1rai76OOaeEIfK1qkop7sJSasA2wio9kL25gylVcbzyH92uTQxiNkjjhs798lq160Ypt3/5ZSIWk+r/jYNOf7l/oDXpL5hMUDQoBo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R1ZBQlpveDd6ZVpTT0dpTUkxNlpxQng2czI3VGF5RWh6Um95S1M5aEhNV1R1?=
+ =?utf-8?B?bDJkVU1yQlBhaDJDQllySlVhWXhGeHlVZFhCTTMySVJQVmI5RWw1clo2Z3Yx?=
+ =?utf-8?B?bE1QZVFrS0dOV3c0K0ZvUGZYbGozV1hRRGNOeXlGQlRvNEVpSmwvVGhiSExX?=
+ =?utf-8?B?b1F3TlNKS1RWZVlzTG5LbmFFWWtVM1prdWJaN05QaUI5N2ZwVjMycjJWTWRE?=
+ =?utf-8?B?NWFSNUZNMXNMZzVzSm9wclduVUp5bVhDRzRrVkJxelVYcm5sS3I4aDFmQm02?=
+ =?utf-8?B?TTZXSi90YzdOTFVYYTBhcG9FZ2xRcWxrWkh2a1V2RW1PUzg2Nzk0WGx2Zk4w?=
+ =?utf-8?B?a1JwUVpnQUk1UUlyUHVjc28wcEgySmMwWVlCZ0lJMnRvQjcvL3FDbFZvMG9h?=
+ =?utf-8?B?d2tXcDRLbUFYSUUrNnhpVmNKRmh5ZHBvejZYb29BaEhaTU9zMlZpb1hpMk1E?=
+ =?utf-8?B?dFQvWkRiOWU3d1pDZ2N6eDJ0TjJmSFV0ZDljNEl5ekgxVGpHMkFMcUxWNG1W?=
+ =?utf-8?B?eWxPK3VDUmZuaTY2WlZIOTgxR21tclZ1aUp5TDFjTGRtRkp1WXVSamgyaFZi?=
+ =?utf-8?B?YzQ2OEJHNDRkUzhuNEhCNXdqZFVOczBIZS8zTEx4YlpPQXBoV0VVV1dzdUNq?=
+ =?utf-8?B?UWxMdXE0cjQ4dE5sdXJrQTVwSHBJTWxmK2JBRlNaOFVwc1AvVVEvSERaeHRY?=
+ =?utf-8?B?L2NCTlpYMG9tSTcyWldzY0VGUm5CZjBhVitKMlVVOHNHUHFjL2VGQ2FTZ2Q2?=
+ =?utf-8?B?TjE1bWRCTXJzWjlzc2FSUkk5ZHd4OURCVzYwQlZmNjZXY0pNbGtpNW9jRW82?=
+ =?utf-8?B?RmxGNDhnZlNVMEFQemdrSDZVVzdWbEVkdXlWWXR4ZEJJUldidFd5Lyt6VW96?=
+ =?utf-8?B?MUREMlRXSmd1NFdWRkIwT0JmT0FmRzFycDluazBOdVE3b1NPNGNYNDc2MGI5?=
+ =?utf-8?B?WU5Tb2J2b2M2UUpIN1NvUDF2TkF5WDA3T00wdTVoMHN4Zmh1TEZUdDJaMEpB?=
+ =?utf-8?B?ckdZeWFBbWNpS0ZJd1RJTExodmZwYmVlc2JaQ0pGOGtTd1NLU2JBYnpJOUo5?=
+ =?utf-8?B?V3hGdC9sQkFPMldWb2ZiOER5NjE1OHEyUTdqM1dTdmdGMDVCSS9ZdDg1a3gy?=
+ =?utf-8?B?MlhkSmRpVnRIbXVSOVR3NVhFQW1hT04zYVBTV1h1ZHQvNXV0ZXR1TDNZMytZ?=
+ =?utf-8?B?a0RNMEE3VnFibmdkc0RhN25nNTNhdUNyTERtVjM3QTljamRoQi80eGlSQ2FC?=
+ =?utf-8?B?QWZ1RGVhQ1JKU2FkLzFlV3g4YS9uZ0JiMThGU2N1VSsrZStuUi8vWEdjTVdu?=
+ =?utf-8?B?VGJENlM5RmNnNjVrYWxUQS9ON1cyNW81RkpMUXpseE11YTdnOS8vUEhCSFFq?=
+ =?utf-8?B?UGtjaWRTV0lLTGFjR0JRNWFXOUNaUlFLOUFDWHBkT1IvRUw2ZENNM0JCejJR?=
+ =?utf-8?B?eWpsT1lpdU5Ua09WcCtXOVVFY21CYVFBdWhhTmhPVHdRaVFyUHVPWnZvMzdx?=
+ =?utf-8?B?cWIrRFRqVUJ3T0lTM1R6NlJUcGkxVG8yL2swUTZEUDlvOXd1cXVoRzhFT1FS?=
+ =?utf-8?B?VFUyVTIxSkUzajVHanRyRWFuN25RaUxmVXNSTk5XRFhBbWV0QmZtd3pFTFNw?=
+ =?utf-8?B?SGFQaFpwVFd4RURZTFZhV3JTSHkyUVgwSUgzeTdYbkJaRjBzTFNXL1JiTUln?=
+ =?utf-8?B?TG9JSnB0QVJMT0EyUUlCVHAyVm1SUEMrVGpyc1ZNdzJWZVRCWXZyWldrNTNX?=
+ =?utf-8?B?dWgyaFJ0WjJud01Hc3pDZ2wzOFU4OCtJUFg3anl5YmpLSHlXYUxRNisvTXR1?=
+ =?utf-8?B?ZjFxZDZ6UGwwMTVGODlZbUxuaWhaZUthK2Q4TjROckpsc25NTzRaOXR6c1Rz?=
+ =?utf-8?B?Qnhyc2tJUkdaRVFvc3NlZmNvMHFhTllNanlid1YycTR2bjJvSWRjSXNFck9C?=
+ =?utf-8?B?Tmpsa1ZHRTdaN1RKTCttVVl5cG9va3hSNXZRVDhjQ1MvL2Nnci9WODFWMnNw?=
+ =?utf-8?B?dXlCMDdQSW5VTG5LbFcvcnI4aUhmZTZGY1hFaEc5UXhXTmlGTW1pRUFBemVS?=
+ =?utf-8?B?TzdubWF5YjZkWEF6REQzMVgrT1lRejlkV2RqUFZIemhEZUNMM0VDMk8yc2F6?=
+ =?utf-8?Q?W7NKvlX48DVldZJz/RJCRoCq8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f46a3837-5c4b-4a39-e701-08dc59549a72
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6584.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 11:51:49.9282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8VXxlRbB3Ki1VctCQIRxv1HcehlPSLprc8Gd8g0oeyetgqTPm6tQ+iWvMA19PdeNr1O9kbhe8v82tFqiMESlxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
 
-Le Tue, Apr 09, 2024 at 03:47:29PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2024-04-09 14:36:51 [+0200], Frederic Weisbecker wrote:
-> > > That wake_up() within preempt_disable() section breaks on RT.
-> > 
-> > Ah, but the wake-up still wants to go inside recursion protection somehow or
-> > it could generate task_work loop again due to tracepoint events...
+>> root@x1:~# perf -v ; perf test -v "Test data symbol"
+>> perf version 6.8.g63c22868714b
 > 
-> okay.
-> 
-> > Although... the wake up occurs only when the event is dead after all...
-> 
-> corner case or not, it has to work, right?
+> Which tree/branch? I don't see this commit present in latest perf-tools
+> tree.
 
-Yep.
-
-> 
-> > > How do we go on from here?
-> > 
-> > I'd tend to think you need my patchset first because the problems it
-> > fixes were not easily visible as long as there was an irq work to take
-> > care of things most of the time. But once you rely on task_work only then
-> > these become a real problem. Especially the sync against perf_release().
-> 
-> I don't mind rebasing on top of your series. But defaulting to task_work
-> is not an option then?
-> 
-> RT wise the irq_work is not handled in hardirq because of locks it
-> acquires and is handled instead in a thread. Depending on the priority
-> the task (receiving the event) it may run before the irq_work-thread.
-> Therefore the task_work looked neat because the event would be handled
-> _before_ the task returned to userland.
-
-I see.
- 
-> Couldn't we either flush _or_ remove the task_work in perf_release()?
-
-Right so the problem in perf_release() is that we may be dealing with task works
-of other tasks than current. In that case, task_work_cancel() is fine if it
-successes. But if it fails, you don't have the guarantee that the task work
-isn't concurrently running or about to run. And you have no way to know about
-that. So then you need some sort of flushing indeed.
-
-Thanks.
-
-> > Thanks.
-> Sebastian
+I mean commit 63c22868714b
