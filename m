@@ -1,141 +1,302 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977481802A1;
-	Wed, 10 Apr 2024 17:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0D317F372
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 17:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771115; cv=none; b=L7DHqllPBAtMxv8n/4AYFuIFELPzNX+vkZqPNdaN5e0AgUiDz2EsZkMRlb8R4HHQ/yLFWBbh0RHc7pPkPSYc/Nk0BbdXmFxL8oPa6TMPBeX9zJLoowzR4bkrlKGEL+CAk7Zu+vHvEbgXLKLBvght3cjcnRtSn1Qr7mrLeoti5Vc=
+	t=1712771246; cv=none; b=VQ789JlKDKNpD2/yn+WFVUxdaxXjPvjfOJc9c8YlCDPIQaNJZ6/G3kid3Kf/XSerV3pnyVVBS7UNNjP1z5XhbwPm7L4J+tn5aBQM8zfDOo9zJ3CbNFpHZ5jXyyOcU6P3/S+WuLTqvar7TOpMZKxDWxC+r8Yy5FsdjV9MAN7n6sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771115; c=relaxed/simple;
-	bh=Wj6ZRvlrOSDMBt6W7n9IjAZ7AZ//hA1fkrsJS10CLKY=;
+	s=arc-20240116; t=1712771246; c=relaxed/simple;
+	bh=U2pZnP1konvnQhB/8ukCXwjpY2KiZnevOUsD5Sl3zFo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fi0xT0i61XOVV/0xLK41tH/g6Pk1jb/WZaMtPB0PSaA+Qi4FnkIuQ8hmSkUwhSOQYlTmlJUYbIMRCxPDxzLvsos6R17WgnRVqzCfDT/nktN9I/0Tz7CEPdZzBasV7sks8wwnbKNuXPkYHr6GoJak574SLcLw5JjQxpBfkfy/PbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dcc4076c13so63023a12.0;
-        Wed, 10 Apr 2024 10:45:13 -0700 (PDT)
+	 To:Cc:Content-Type; b=ZI2vgoaJhgijD/mKtdp8JdOUD2bqp+4Id1sWi7+48uM3Zu3LOHcczbxh+W3w2XJHDR19ud13yiE4KbgABG8Dew5dfWr9z2N1/ppy706Tkl2XQmvbNZI3eCfcCDmXgjW7VkMzDQGsjZ8yu7o7wgYrYNbfwL9NjcQGfcCz3CnWHCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uCwffH8w; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uCwffH8w"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36a267bb43aso6005ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Apr 2024 10:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712771244; x=1713376044; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M8JBr66IYQPbEWB8lMmmv3b0L51hsKTke/Sa3zBljZA=;
+        b=uCwffH8wGLg5SQVLHPhLu0l8cwC8AoGbNP5OAAZDSljmD0PMzbMzI3G4Xp9qZDgI/L
+         IOf7Z9T40zJz2EQCgX6kQFdLhU/GWECLuXzenHWrjKkTvHuX/yMIqw6wylWBcWXzRpLP
+         WCREJiRQh3BeWA1GXc0sTcKbQWE5CnfhIBQisTU4KH6b1BtpO/m7HQqKisTarCLBAvuZ
+         VjgHxa8qPr/BezZR4+XYXwM2SKD4z6XkyYLaHWSA/UQdscsTMvsjZtTPxQdGOd6E4oJg
+         3ayplhTclJ4lpHtXJnFRGNMBV/+/CFGyk4peT7MEk57ikSzAQZ+ifRlD/KuMcdAFp/P6
+         sjGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712771113; x=1713375913;
+        d=1e100.net; s=20230601; t=1712771244; x=1713376044;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l6yLmtZ0A7ipNhWm4F0IrALVPTgUBnQRDTiWvpPH58w=;
-        b=dqyQZVpHdH23KwIqFXX4O4Uvu9Q2boFA6jOYHfDl0o+ib0YsuILdwZrAzU4vib5PB0
-         bAWSuO54bJojiUPHyKgjjdpPUrh1IJkJqaAfckI4N6lM9+7RBp9ytxyE7YlY1+f/TOqW
-         cfstgQxzfuB2oyHEmAOaZFY6aVu4x/cZY/SgWTsVaTQvBzcdjEJICPRyqmzN7HbeTzm1
-         pwOFEBCZOJfJD7Akq6n6nfTUevOVP0EtxZd63y1/Or23ByG3JHe3b9Pk+aqPiGeUzPsu
-         hqPnib0qKjkCZlZZEDmppmJsFIVYSwHtanKO00hhlKEHjlxgsdVpml5a8ZpH678b9qVL
-         +o5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUrSlTfa+kf8JhIGKRrTnnb+rHNtdPBKL8ZbSTBrxqTQqBKZNAq+f7ObcxGhZZ/in9Y4+67/QjmCaYBJ1OpdFodhs8Eke5wzMVuloOHgNczJxDjx+lLbxa/IzQLUn6Kfdg9tuMvbhLPO0r7WRd3rw==
-X-Gm-Message-State: AOJu0YySWQCu09y2nvKNuK0VcGj0+CXQDclC1mD2aX/ywFxdFQVPUa5d
-	EOlv2NWj2gaHbQIQMC4OCvUuEDlFrHpdMKltnD6mOzKmP2gwdRqVIuVN744S460t28E9ut0yMWC
-	rkpYf87T/ximnfGlQ+Wn0OreKoSk=
-X-Google-Smtp-Source: AGHT+IGR5Q/4Md6XRPDFOZYZCA29OSHEwciU9ZcwjlSpvOPYr1vpBgVJGEcgGhvz5WXiumG4zrUPoZKHzxQHmQg+fC8=
-X-Received: by 2002:a17:90a:7281:b0:2a0:78f4:2dc5 with SMTP id
- e1-20020a17090a728100b002a078f42dc5mr415791pjg.22.1712771112758; Wed, 10 Apr
- 2024 10:45:12 -0700 (PDT)
+        bh=M8JBr66IYQPbEWB8lMmmv3b0L51hsKTke/Sa3zBljZA=;
+        b=ZwFMWZc2AIrGgjsXxp17lobudUAkehgxOj7owYeL0wCOxJxV18jMZ6LFyx/PbUTQPs
+         0nJgYx6BDJGx89159FXYBspvuZoQ+CPXUnNbhRMetIRZ2CHUtLc4763IEycRsrvcHRLW
+         WOlYcnVlXzzz2juj80JDKAWcihWgreA0PJFOd/cVe0xFDr4YPLpmuQ+NgYvM7jqz0CEy
+         SRjsvqsHq56aQwtBXw/5CNmLsAXfy/mQF3VPqCfQcNOf3NJEEsXOQT1SSL3NTkGdh/wO
+         vf37iY5k4SyKuwJj6n8X5a5qjLuLG+GQOYlmbeHSQkJ4FORVDOkCTKrIi9cQnBvlSTcZ
+         w1pA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2b2PhmqDcnGf2Qtsw6Be/Ryb+5xPXwvHfddmGO6NEd01M/Q0wFJnbvgm9dOu/zi1uGvXsfb+bxL40Lgmk1K2IhmEymxxYtaV9VEP9Ka8/QQ==
+X-Gm-Message-State: AOJu0Yz92ECXwwU1wEk9VHA97i+dMut/nxlonntfRaO2o/z9L5xhRcKI
+	LavMdQQov7WbwQDYlRxFN9Ck+K9yHB0XTLKukVGp0NRkQB9wvVh1w9o1Mn9aojvQD1tKEnQI+eY
+	ZpmC5A1DZKNthijteab7SXt0q6CDo7LA/GkNkTNUULm+QiwyUXXfW
+X-Google-Smtp-Source: AGHT+IEwyeH/uTKd6vE5FT7EZV1m93yRVgWhpRUWKwhkTvRVpwZ3B7d44wWKlovjHjyWZoB3QtTzSrMZh/Q2PW7McPE=
+X-Received: by 2002:a05:6e02:18c7:b0:369:e18b:bda2 with SMTP id
+ s7-20020a056e0218c700b00369e18bbda2mr14021ilu.6.1712771243877; Wed, 10 Apr
+ 2024 10:47:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410104450.15602-1-adrian.hunter@intel.com> <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 10 Apr 2024 10:45:00 -0700
-Message-ID: <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20240209031441.943012-1-weilin.wang@intel.com>
+ <20240209031441.943012-15-weilin.wang@intel.com> <CAP-5=fU1R7QYKCWPrrZ_wA1RCfat+BqiA12=UG2a-GrBLPL0BA@mail.gmail.com>
+ <CO6PR11MB56358253F9CE3C3772A665EEEE072@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB56358253F9CE3C3772A665EEEE072@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Apr 2024 10:47:12 -0700
+Message-ID: <CAP-5=fVtLbRva9KLMdDPNMkF-F9LDp-3C10RymC-QbYdtwEbQA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 14/15] perf stat: Add tool events support in hardware-grouping
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
+	Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 9:08=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Apr 9, 2024 at 1:51=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com>=
+ wrote:
 >
-> On Wed, Apr 10, 2024 at 3:45=E2=80=AFAM Adrian Hunter <adrian.hunter@inte=
-l.com> wrote:
+>
+>
+> > -----Original Message-----
+> > From: Ian Rogers <irogers@google.com>
+> > Sent: Saturday, March 23, 2024 10:56 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>; Namhyung Kim
+> > <namhyung@kernel.org>; Arnaldo Carvalho de Melo <acme@kernel.org>;
+> > Peter Zijlstra <peterz@infradead.org>; Ingo Molnar <mingo@redhat.com>;
+> > Alexander Shishkin <alexander.shishkin@linux.intel.com>; Jiri Olsa
+> > <jolsa@kernel.org>; Hunter, Adrian <adrian.hunter@intel.com>; linux-per=
+f-
+> > users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor, Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>; Mark Rutland <mark.rutland@arm.com>
+> > Subject: Re: [RFC PATCH v4 14/15] perf stat: Add tool events support in
+> > hardware-grouping
 > >
-> > Simplify is_event_supported by using sys_perf_event_open() directly lik=
-e
-> > other perf API probe functions and move it into perf_api_probe.c where
-> > other perf API probe functions reside.
+> > On Thu, Feb 8, 2024 at 7:14=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> > >
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > Add tool events into default_core grouping strings if find tool event=
+s so
+> > > that metrics use tool events could be correctly calculated. Need this=
+ step
+> > > to support TopdownL4-L5.
+> > >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > ---
+> > >  tools/perf/util/metricgroup.c | 49
+> > ++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 48 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgr=
+oup.c
+> > > index cfdbb5f7fb77..e5b8456d0405 100644
+> > > --- a/tools/perf/util/metricgroup.c
+> > > +++ b/tools/perf/util/metricgroup.c
+> > > @@ -1486,6 +1486,35 @@ static void find_tool_events(const struct
+> > list_head *metric_list,
+> > >         }
+> > >  }
+> > >
+> > > +/**
+> > > + * get_tool_event_str - Generate and return a string with all the us=
+ed tool
+> > > + * event names.
+> > > + */
+> > > +static int get_tool_event_str(struct strbuf *events,
+> > > +                             const bool tool_events[PERF_TOOL_MAX],
+> > > +                             bool *has_tool_event)
+> > > +{
+> > > +       int i =3D 0;
+> > > +       int ret;
+> > > +
+> > > +       perf_tool_event__for_each_event(i) {
+> > > +               if (tool_events[i]) {
+> > > +                       const char *tmp =3D strdup(perf_tool_event__t=
+o_str(i));
+> > > +
+> > > +                       if (!tmp)
+> > > +                               return -ENOMEM;
+> > > +                       *has_tool_event =3D true;
+> > > +                       ret =3D strbuf_addstr(events, ",");
+> > > +                       if (ret)
+> > > +                               return ret;
+> > > +                       ret =3D strbuf_addstr(events, tmp);
+> > > +                       if (ret)
+> > > +                               return ret;
+> > > +               }
+> > > +       }
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * build_combined_expr_ctx - Make an expr_parse_ctx with
+> > all !group_events
+> > >   *                           metric IDs, as the IDs are held in a se=
+t,
+> > > @@ -2049,6 +2078,7 @@ static int assign_event_grouping(struct
+> > metricgroup__event_info *e,
+> > >
+> > >  static int hw_aware_metricgroup__build_event_string(struct list_head
+> > *group_strs,
+> > >                                            const char *modifier,
+> > > +                                          const bool tool_events[PER=
+F_TOOL_MAX],
+> > >                                            struct list_head *groups)
+> > >  {
+> > >         struct metricgroup__pmu_group_list *p;
+> > > @@ -2056,8 +2086,12 @@ static int
+> > hw_aware_metricgroup__build_event_string(struct list_head *group_strs
+> > >         struct metricgroup__group_events *ge;
+> > >         bool no_group =3D true;
+> > >         int ret =3D 0;
+> > > +       struct strbuf tool_event_str =3D STRBUF_INIT;
+> > > +       bool has_tool_event =3D false;
+> > >
+> > >  #define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
+> > > +       ret =3D get_tool_event_str(&tool_event_str, tool_events,
+> > &has_tool_event);
 > >
-> > A side effect is that the probed events do not appear when debug prints
-> > are enabled, which is beneficial because otherwise they can be confused
-> > with selected events.
-> >
-> > This also affects "Test per-thread recording" in
-> > "Miscellaneous Intel PT testing" which expects the debug prints of
-> > only selected events to appear between the debug prints:
-> > "perf record opening and mmapping events" and
-> > "perf record done opening and mmapping events"
-> >
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> > Does metricgroup__build_event_string need updating to use this helper
+> > function too?
 >
-> nit:
-> Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
+> Hi Ian,
 >
-> > ---
-> >  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
-> >  tools/perf/util/perf_api_probe.h |  2 ++
-> >  tools/perf/util/pmus.c           |  1 +
-> >  tools/perf/util/print-events.c   | 50 +-------------------------------
-> >  tools/perf/util/print-events.h   |  1 -
-> >  5 files changed, 44 insertions(+), 50 deletions(-)
-> >
-> > diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_ap=
-i_probe.c
-> > index 1de3b69cdf4a..13acb34a4e1c 100644
-> > --- a/tools/perf/util/perf_api_probe.c
-> > +++ b/tools/perf/util/perf_api_probe.c
-> > @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
-> >  {
-> >         return perf_probe_api(perf_probe_cgroup);
-> >  }
-> > +
-> > +bool is_event_supported(u8 type, u64 config)
-> > +{
-> > +       struct perf_event_attr attr =3D {
-> > +               .type =3D type,
-> > +               .config =3D config,
-> > +               .disabled =3D 1,
-> > +       };
-> > +       int fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
+> In parse_ids, tool events are inserted to the ids that passed to
+> metricgroup__build_event_string. If we want to use this function here, I =
+think
+> we also need to update the code in parse_ids to not insert tool events.
 >
-> It looks like this is a change to the actual perf_event_open
-> arguments, I don't think it is an issue but wanted to flag it.
->
-> > +
-> > +       if (fd < 0) {
-> > +               /*
-> > +                * The event may fail to open if the paranoid value
-> > +                * /proc/sys/kernel/perf_event_paranoid is set to 2
-> > +                * Re-run with exclude_kernel set; we don't do that by
-> > +                * default as some ARM machines do not support it.
-> > +                */
-> > +               attr.exclude_kernel =3D 1;
->
-> I worry about the duplicated fallback logic getting out of sync,
-> perhaps we could have a quiet option for evsel__open option, or better
-> delineate the particular log entries. I don't really have a good
-> alternative idea and kind of like that detecting an event is available
-> loses the evsel baggage. I would kind of like event parsing just to
-> give 1 or more perf_event_attr for similar reasons.
+> I could add this change if you think we should do this update.
 
-We have the missing feature check in the evsel open code,
-and I think we should check the exclude-bits first than others.
-Currently struct pmu has missing_features.exclude_guest only
-and it can have exclude_kernel or others too.
-
-Anyway, I'm ok with this change.
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I like code-reuse and sharing logic whenever possible, it seems
+potentially messy though. I'll leave it up to your judgement as to
+whether it is worth cleaning up. Perhaps there should be a TODO if
+not.
 
 Thanks,
-Namhyung
+Ian
+
+> Thanks,
+> Weilin
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> > > +       RETURN_IF_NON_ZERO(ret);
+> > >
+> > >         list_for_each_entry(p, groups, nd) {
+> > >                 list_for_each_entry(g, &p->group_head, nd) {
+> > > @@ -2129,6 +2163,12 @@ static int
+> > hw_aware_metricgroup__build_event_string(struct list_head *group_strs
+> > >                         }
+> > >                         ret =3D strbuf_addf(events, "}:W");
+> > >                         RETURN_IF_NON_ZERO(ret);
+> > > +
+> > > +                       if (!strcmp(p->pmu_name, "default_core") && h=
+as_tool_event)
+> > {
+> > > +                               ret =3D strbuf_addstr(events, tool_ev=
+ent_str.buf);
+> > > +                               RETURN_IF_NON_ZERO(ret);
+> > > +                       }
+> > > +
+> > >                         pr_debug("events-buf: %s\n", events->buf);
+> > >                         list_add_tail(&new_group_str->nd, group_strs)=
+;
+> > >                 }
+> > > @@ -2214,6 +2254,7 @@ static int hw_aware_build_grouping(struct
+> > expr_parse_ctx *ctx,
+> > >                 if (ret)
+> > >                         goto err_out;
+> > >         }
+> > > +
+> > >         ret =3D get_pmu_counter_layouts(&pmu_info_list, ltable);
+> > >         if (ret)
+> > >                 goto err_out;
+> > > @@ -2259,6 +2300,7 @@ static void
+> > metricgroup__free_grouping_strs(struct list_head
+> > >   */
+> > >  static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+> > >                              struct expr_parse_ctx *ids, const char *=
+modifier,
+> > > +                            const bool tool_events[PERF_TOOL_MAX],
+> > >                              struct evlist **out_evlist)
+> > >  {
+> > >         struct parse_events_error parse_error;
+> > > @@ -2272,7 +2314,8 @@ static int hw_aware_parse_ids(struct perf_pmu
+> > *fake_pmu,
+> > >         ret =3D hw_aware_build_grouping(ids, &grouping);
+> > >         if (ret)
+> > >                 goto out;
+> > > -       ret =3D hw_aware_metricgroup__build_event_string(&grouping_st=
+r,
+> > modifier, &grouping);
+> > > +       ret =3D hw_aware_metricgroup__build_event_string(&grouping_st=
+r,
+> > modifier,
+> > > +                                                     tool_events, &g=
+rouping);
+> > >         if (ret)
+> > >                 goto out;
+> > >
+> > > @@ -2407,6 +2450,7 @@ static int hw_aware_parse_groups(struct evlist
+> > *perf_evlist,
+> > >         struct evlist *combined_evlist =3D NULL;
+> > >         LIST_HEAD(metric_list);
+> > >         struct metric *m;
+> > > +       bool tool_events[PERF_TOOL_MAX] =3D {false};
+> > >         int ret;
+> > >         bool metric_no_group =3D false;
+> > >         bool metric_no_merge =3D false;
+> > > @@ -2425,11 +2469,14 @@ static int hw_aware_parse_groups(struct evlis=
+t
+> > *perf_evlist,
+> > >         if (!metric_no_merge) {
+> > >                 struct expr_parse_ctx *combined =3D NULL;
+> > >
+> > > +               find_tool_events(&metric_list, tool_events);
+> > > +
+> > >                 ret =3D hw_aware_build_combined_expr_ctx(&metric_list=
+,
+> > &combined);
+> > >
+> > >                 if (!ret && combined && hashmap__size(combined->ids))=
+ {
+> > >                         ret =3D hw_aware_parse_ids(fake_pmu, combined=
+,
+> > >                                                 /*modifier=3D*/NULL,
+> > > +                                               tool_events,
+> > >                                                 &combined_evlist);
+> > >                 }
+> > >
+> > > --
+> > > 2.42.0
+> > >
