@@ -1,173 +1,88 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A6C29417
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 20:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989172941C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 20:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712868199; cv=none; b=ZjthAHwXmCo7uP/3G9lyX//2tRGTHGOyhdMyOgfe69O5HHcS9AkdqinMfGNAb3bf9k43mlRf8GT88+7SyzyHgWBYQ6TuVR5ZDiY/DJy1GI86Rai5NtWLaOMztrRcw507UrKTOMUm49w9Jx5LqDPoynw47zGpnQ04EQxst/qqix4=
+	t=1712868883; cv=none; b=ZsIeqk9wqS89GSV0cD1MUkAkFHDKITHDUZ/ybgMmr1mepAbnpiXqyct1etgoTzpc3NQ+e3dTJ3jyiTCtOWoT0wKSi1ky3UhB2adzdXFWXv/SVoxlXLGK2UvNwqHqqlYU9UhOjpeO1oOwwWB+cyvIfr0pNeEPfOFl5ePKI8bYD7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712868199; c=relaxed/simple;
-	bh=weomEscsKp+dv8w551tTrVJuaEiedKNRqyWw8eUBHo0=;
+	s=arc-20240116; t=1712868883; c=relaxed/simple;
+	bh=JbJc9VH1XYlYqPYhzkvludIa59RiQ4mtT6cP44sILfc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZN116tXi6W5P6yj/XUH82wh240z6iwawben9kcl0hktspRqRxnVoijXBg4idZJo14iVbP61ECL2f1rNnaIRM1MsSne4Nb7AIaJUM4GPFrdFu7H/r1XvXvqI9OFsyCWa6QnY9bMeEiylTduwxNFpScypfL+m53ygfg1ubRpmiSZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=soWsNjVV; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=YRPIUxeuKOtmQU2aGetP2E8ckylVEqTgEmeXkRLtNwT5hPTlK2ZTL8PUc1gDtVyipP3Z6zoUb0jxlxHMdXHuA2oC/KscUtwuyRwOf6zAB+nvWC0KES6vzhcSJIwhDADUunDXaihmABFWjPjcZ4OvpxVYzy6YuZ+qGYgR4cjOjNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TY8ZXoB7; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="soWsNjVV"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5dc4ffda13fso999239a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 13:43:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TY8ZXoB7"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6156b93c768so3682327b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 13:54:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712868198; x=1713472998; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8TxHX0PcxuES+Tf5l7zk1AZum/uiKOve5mEHI8s5roo=;
-        b=soWsNjVVIYGHHPpl9e8EJvIUcxnY+50xML3ljTrG2X7KUFgQqnieySu+Erihy+zy0w
-         Oo0/uNoKBIVdJ6Cv4/iHe00Tib7G1AUHRxaRK3iIyRrkGNq/nuF8Wk3GSbuxD34ZtFBe
-         tdQkMy6Yx2M3cmNoLiAHizYQIY1cflnPmbJCOBEJhewoC1U1Mtp1Idlfpgg9AMaawktS
-         4XQ9D06Kgs7njbEpwYYeYQBSzvN+TQ2wXPbNJOC2wggVm5W9A0b0JqEXYHwzBUGl9VQA
-         8jocbchzxb8ptOkAdZtRy09cm9G4fulk/tVgkXcJ8s/p3XTc7ZcY+Uc2oeNK+QuNUj/w
-         KFuw==
+        d=google.com; s=20230601; t=1712868881; x=1713473681; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KWFlaNq/9xtFUk/XAtkp7IqcVqI76yT0LdFHfnH2DTU=;
+        b=TY8ZXoB7UDPLSpRj0U9jgPIoZEP8aEUCiaZrLA5NQ4N3mvg+XZx9x7dlIb3QBhtCDu
+         MwN8/0s+MOXXstK9M/luRxlbWw822BGVECCVEkghqNfsKs3QcOFfbRCPHGnjD+IrZmQV
+         6kmWRivkQiesOYw2/4SOCfF8M+TIJ76Y90OyRRYw3RkgIOGiXJvpKF4I6W9O03NgaoMI
+         POLO19sDz0pKYBklK3+ZV7H540JM98d4kc3zwzkEiCeH+eLM4dMnLZ7RtX6wFYS9zIGt
+         xMOHquxlLD1Pmni0KielNscDQHEc/rReakRyIq9wTBOvYzNoDxlzn+3Bu7OkHAdO0xFe
+         Lmew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712868198; x=1713472998;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8TxHX0PcxuES+Tf5l7zk1AZum/uiKOve5mEHI8s5roo=;
-        b=HGpli1kio1G5Xm2n0ukB+VG5dgdyta9qhDzHUOaP0eYIeDpN4tCf826ANCtU8c02gn
-         aNfzx1yZUxDy9IN0zjUnsEl+zXoENwvbFMsXK1rA3WktNqu9Na3GLmnhVsnVuic0LRZC
-         +fkPU2UqIYoMfrC27+lDBLdSL9g0QNB0ZxJddlvC+5KS8v7e+Emi/+TGnv1qJPWLjVZF
-         t+my8cH4SsUjw91d67tax7jtRLEdb/HS92I9TJ1hOC9b860ibwPULm1mIpLVDYDG6eO1
-         k/0sOEUKR7UKFeHBhR7JcuNUcEHLCMb3okr8Mxk4v1/4+PB3zJV1OTlAF2rq4WVeQeFi
-         J6PA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdf0jj4SLBBZdyzv4bW5KkRdULhvgoH81LR5+31X/fqgGgmcxrdPzhdUQUCbV59tn9HoeMKbXb9jZhKHR7/+wWqwsG7E3Au/0HwLNzNe/b4w==
-X-Gm-Message-State: AOJu0Yz0b8TzELILUt2PLK7aSmHvktyp/8ASVS/qShHQVr3I5mVA/inm
-	6MCYgZHfZb2UIMCzNVwcTMF6VWR0/r9QLNFqjBmDfDe/VdIa/LKcfGp7YXBtXG5qbaAoa7zDb9h
-	zfQ==
-X-Google-Smtp-Source: AGHT+IF9gQW307iRIwllAMeb8K+vW4ZNtz0Vi4FocOSLvdeP6CfVMnng39hq/BWdmyR6gUO9iEtI2g5G7cY=
+        d=1e100.net; s=20230601; t=1712868881; x=1713473681;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KWFlaNq/9xtFUk/XAtkp7IqcVqI76yT0LdFHfnH2DTU=;
+        b=l0M8n4FMUBTn6bY0PTzRrxzWSZTlhZnGU8P96RnBiWZHr6keBKqvGM5yxLKe97pi1+
+         8D6Nk+4ky8YE90uIoqCh+vwAoSBgsjXndGSBHPAu6jlciT4qPvFcCOjT4rA3hLMfMNVq
+         31fAkRPulwkmjrevWz1Y67hQgGbCVW5omNVLP/noPuWJdnWq/wqPOlCV77Odf7K0Q9JS
+         mwtMHA0YFYV7NzWSsTDH0JQYgUb2twEH7Vj6eIfsZt1bsUPeXGExSIOuAetiS4Voln4B
+         OcMWSWooN7PFeVjEWuFVPJNTckb1ei5uc81om1o42blpvd040q3yUFKsixacmznxS3N1
+         Vq/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqPyc7q2G/mLmq037X5InbToTRIIitWWOKoWvVFbR5/H0C7NIN39yaNv6sqEJXwmj7up5aenbClEJ/xgxHbVa+PlfllmmH7HrbjVB1rofM0w==
+X-Gm-Message-State: AOJu0YwiASSSkSyqi7lAu0+PQ4G29UCMuGwFvCtBk8D4Ppirbh5mD/2Z
+	pG9cdBhvb7AgTllez1k6/PtiLiYfqDfftuk92Y2HSm3/PQYBSC+uFHYJT7AI42GSdEhNLzUGBrc
+	I8w==
+X-Google-Smtp-Source: AGHT+IG1z2bEzQy/U6i5K1RFHB6KQPvvtHyO8vGFX+thv3pSwymv/fnCDFqZ1oiTbGlRzVj5Jj0n+Oa+oPY=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:90:b0:2a6:dbca:b80f with SMTP id
- bb16-20020a17090b009000b002a6dbcab80fmr689pjb.0.1712868197645; Thu, 11 Apr
- 2024 13:43:17 -0700 (PDT)
-Date: Thu, 11 Apr 2024 13:43:16 -0700
-In-Reply-To: <afb9faeb-11f4-47a2-a77b-4f2496182952@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a05:6902:c01:b0:dc6:cd85:bcd7 with SMTP id
+ fs1-20020a0569020c0100b00dc6cd85bcd7mr199706ybb.3.1712868881704; Thu, 11 Apr
+ 2024 13:54:41 -0700 (PDT)
+Date: Thu, 11 Apr 2024 13:54:40 -0700
+In-Reply-To: <20240126085444.324918-12-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-2-xiong.y.zhang@linux.intel.com> <ZhgYD4B1szpbvlHq@google.com>
- <56a98cae-36c5-40f8-8554-77f9d9c9a1b0@linux.intel.com> <CALMp9eRwsyBUHRtjKZDyU6i13hr5tif3ty7tpNjfs=Zq3RA8RA@mail.gmail.com>
- <Zhgh_vQYx2MCzma6@google.com> <afb9faeb-11f4-47a2-a77b-4f2496182952@linux.intel.com>
-Message-ID: <ZhhLZFcNhTIidGRy@google.com>
-Subject: Re: [RFC PATCH 01/41] perf: x86/intel: Support PERF_PMU_CAP_VPMU_PASSTHROUGH
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-12-xiong.y.zhang@linux.intel.com>
+Message-ID: <ZhhOEDAl6k-NzOkM@google.com>
+Subject: Re: [RFC PATCH 11/41] KVM: x86/pmu: Introduce enable_passthrough_pmu
+ module parameter and propage to KVM instance
 From: Sean Christopherson <seanjc@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jim Mattson <jmattson@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
+To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
 	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
 	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Apr 11, 2024, Kan Liang wrote:
-> On 2024-04-11 1:46 p.m., Sean Christopherson wrote:
-> > On Thu, Apr 11, 2024, Jim Mattson wrote:
-> >> On Thu, Apr 11, 2024 at 10:21=E2=80=AFAM Liang, Kan <kan.liang@linux.i=
-ntel.com> wrote:
-> >>> On 2024-04-11 1:04 p.m., Sean Christopherson wrote:
-> >>>> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> >>>>> From: Kan Liang <kan.liang@linux.intel.com>
-> >>>>>
-> >>>>> Define and apply the PERF_PMU_CAP_VPMU_PASSTHROUGH flag for the ver=
-sion 4
-> >>>>> and later PMUs
-> >>>>
-> >>>> Why?  I get that is an RFC, but it's not at all obvious to me why th=
-is needs to
-> >>>> take a dependency on v4+.
-> >>>
-> >>> The IA32_PERF_GLOBAL_STATUS_RESET/SET MSRs are introduced in v4. They
-> >>> are used in the save/restore of PMU state. Please see PATCH 23/41.
-> >>> So it's limited to v4+ for now.
-> >>
-> >> Prior to version 4, semi-passthrough is possible, but IA32_PERF_GLOBAL=
-_STATUS
-> >> has to be intercepted and emulated, since it is non-trivial to set bit=
-s in
-> >> this MSR.
-> >=20
-> > Ah, then this _perf_ capability should be PERF_PMU_CAP_WRITABLE_GLOBAL_=
-STATUS or
-> > so, especially since it's introduced in advance of the KVM side of thin=
-gs.  Then
-> > whether or not to support a mediated PMU becomes a KVM decision, e.g. i=
-ntercepting
-> > accesses to IA32_PERF_GLOBAL_STATUS doesn't seem like a complete deal b=
-reaker
-> > (or maybe it is, I now see the comment about it being used to do the co=
-ntext switch).
->=20
-> The PERF_PMU_CAP_VPMU_PASSTHROUGH is to indicate whether the PMU has the
-> capability to support passthrough mode. It's used to distinguish the
-> other PMUs, e.g., uncore PMU.
+On Fri, Jan 26, 2024, Xiong Zhang wrote:
+> Finally, always propagate enable_passthrough_pmu and perf_capabilities into
+> kvm->arch for each KVM instance.
 
-Ah, the changelog blurb about SW/uncore PMUs finally clicked.
+Why?
 
-> Regarding the PERF_PMU_CAP_WRITABLE_GLOBAL_STATUS, I think perf already
-> passes the x86_pmu.version to KVM. Maybe KVM can add an internal flag to
-> track it, so a PERF_PMU_CAP_ bit can be saved?
+arch.enable_passthrough_pmu is simply "arch.enable_pmu && enable_passthrough_pmu",
+I don't see any reason to cache that information on a per-VM basis.  Blech, it's
+also cached in vcpu->pmu.passthrough, which is even more compexity that doesn't
+add any value.
 
-Yeah, I think that's totally fine.  At some point, KVM is going to need to =
-know
-that GLOBAL_STATUS is writable if PMU.version >=3D 4, e.g. to correctly emu=
-late
-guest accesses, so I don't see any reason to bury that logic in perf.
-
-> > And peeking ahead, IIUC perf effectively _forces_ a passthrough model w=
-hen
-> > has_vpmu_passthrough_cap() is true, which is wrong.  There needs to be =
-a user/admin
-> > opt-in (or opt-out) to that behavior, at a kernel/perf level, not just =
-at a KVM
-> > level.  Hmm, or is perf relying on KVM to do that right thing?  I.e. re=
-lying on
-> > KVM to do perf_guest_{enter,exit}() if and only if the PMU can support =
-the
-> > passthrough model.
-> >
->=20
-> Yes, perf relies on KVM to tell if a guest is entering the passthrough mo=
-de.
->=20
-> > If that's the case, most of the has_vpmu_passthrough_cap() checks are g=
-ratiutous
-> > and confusing, e.g. just WARN if KVM (or some other module) tries to tr=
-igger a
-> > PMU context switch when it's not supported by perf.
->=20
-> If there is only non supported PMUs running in the host, perf wouldn't
-> do any context switch. The guest can feel free to use the core PMU. We
-> should not WARN for this case.
-
-I'm struggling to wrap my head around this.  If there is no supported PMU i=
-n the
-host, how can there be a core PMU for the guest to use?  KVM virtualizes a =
-PMU
-if and only if kvm_init_pmu_capability() reports a compatible PMU, and IIUC=
- that
-reporting is done based on the core PMU.
-
-Specifically, I want to ensure we don't screw is passing through PMU MSR ac=
-cess,
-e.g. because KVM thinks perf will context switch those MSRs, but perf doesn=
-'t
-because perf doesn't think the relevant PMU supports a mediate/passthrough =
-mode.
+E.g. code that is reachable iff the VM/vCPU has a PMU can simply check the module
+param.  And if we commit to that model (all or nothing), then we can probably
+end up with cleaner code overall because we bifurcate everything at a module
+level, e.g. even use static_call() if we had reason to.
