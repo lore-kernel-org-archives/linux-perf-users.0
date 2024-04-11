@@ -1,201 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51C1E892;
-	Thu, 11 Apr 2024 18:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC3E48CDD
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858575; cv=none; b=X25fekGtZilgD2zflJ86HnlxRCP/QdGWa6yKPRIjskFZ7nzW7BsUEGazbmO9LaBFLl4XsATlg0OpSjACmRxuid/mEHrYyS3q/52sfn9XayIxu9aXKtL1WO4ot1cAtfBdLl8YmSjs0sKQroTi7WZVezbQmSDOiNTYW7PE9lGolLU=
+	t=1712858801; cv=none; b=SzV6CSFCa+XGKva2cEZeLsCmF/OtOD5dMWT5Mryi7XyvF5uZbcrV5b+x4P0fIyXZSUbs8rUeq/iLfEtCfAVHsilVof153a7AGOWydgFKxSgOAot+Olg3zpVAT4P8ysmhoDKHPCTepQIWUsR4mQ2QiUjNXkZ1coAJiPWVVWaXpqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858575; c=relaxed/simple;
-	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bV+/qVfCy9C7as5//Qxu8IMdO45CCX1EROCi1OIH5Vmo0DQ1giUztxYwAo8cZ4H3ILfTSI9hlYNkdE4I9DfiESpELh6VeFchuy+L5JtAx75LZgGAiCnIzfe0qHizLfCIJrYXPnd4Var+RtBUloikG+0Hv+ZSqVTFsDqI3yCOAhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlHKgg+D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712858801; c=relaxed/simple;
+	bh=YOTZKjL3bWzR+U2HGFh3CrQiGRxDH7YCmn8lKN3Z9WE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qw28okB7TogBFuymbZP9MZkWN0dqOKfpXiL0gzOc3xrmOXwmIITA4dIz2uoT17XS7MOajoPNkxIx6rD2sG9j9TO5dYCbsn6B7r22S0KoQdGpoy34DB9evQQ6klN5ZvgQWfBvgfgoG/1pwBHE62pX+3wjp8HrNMK3MClpPbahXcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMZCcpG8; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlHKgg+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824FEC072AA;
-	Thu, 11 Apr 2024 18:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712858574;
-	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IlHKgg+DA76Z0el5BLc3rN5PNpOY4yjbfGZWw9CSxcLHd9Lqqr3eoHns/FznGEI9m
-	 lrNBtvtjqn0DF3T6tu/loQbTxP01dY2r1Gt5ivenxQSyfpbRGsxC8dkl228WZLVNm7
-	 k0DCElk+AANvACFK86ZxCCpG7c9+xYDbXw3DTQSedXRlB0L003tl+JM1mlUxppotHa
-	 1FbDtGiu1/q3kzFBBXrKiXXPKXE4xIRoOnAZ3AbiImQ2kNVyCMWzmTUb9uMCgl+0/5
-	 Wej3FgCChUWaVL4cD+Z2EaYO7FTR5sGrxbee1BfiA96J75oSg4PWtMXkjrAR/cihYs
-	 k5keqvmfsxaZA==
-Date: Thu, 11 Apr 2024 15:02:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel
- Hybrid systems
-Message-ID: <Zhgly2eQ5vk4FdEE@x1>
-References: <ZhWTIuyB9p1ORbQH@x1>
- <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMZCcpG8"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5dcbb769a71so95530a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 11:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712858799; x=1713463599; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
+        b=KMZCcpG8t4eVXjZNqvoOu1520oK5BzutSG3kHoRp7G2vBZc4M9iZPc41t3kEI4iYCF
+         WvOZ2EaBUnsmfWsifUYKdlXDaNS9KOZtdtFjKds+6ZWUX3grpB0yoJnkinafn/E6LuSa
+         0tfae9s+zqkfoh2VT4y6368yGToHGtviBe8oJSI+uiigGWnx74lKQD7FbbcfwfJ+bnQc
+         A2KL66METhA3X2ox04n6WMW9Rb6fWAGpDhwRJaBAWAgVTyRUFlO/4WnpaWmXnGD+VOar
+         4Jg3jj4Sy3dwcXHePeia0jp/RkIuXR4tCsjYvjL+Vnxa0NhsCLJsjuGKvoxqQRDBH10l
+         flfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712858799; x=1713463599;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
+        b=N1W3FPtBpuAQUj3MZ4113Od1YEYNt6Mc6bDRQW7FsL0Sz1xlWf27FN+p+ckGjX7+k8
+         rccjGtI0C6nqng51JCF91tkuFVFaeqFZnhmiYNKFK2hiBmtu9tjccxnMr6GCwGyUZvFp
+         /ltPxkIlXY0S6dVNYg6MAQDLudhIFyesDlZZjriVUu0W23TNtMhdKUTBcuCp6sOxycCD
+         shZL1OcDpwtxgyoEWhZqJsWIa+kBn+ghe2JEBPqu5SuIXYD5vzTxJ0Y0OKGoJd91SzYx
+         GaxFoA41n5dLZDYJkhzjSC3ukBQp/RYuF6u4jGKCne5om5/ksw7NUs5fTYhbhUJ8ZRxX
+         B3JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNau4hFDG0wAdGSutpv5+zUUZUB1Bsi6C9l0lxvwqxWVawXCthNIl2m0ZowusQUJmtkUzDu7csu84WxaGMElk0jh6jevB/VDn0R4vJiFQgJA==
+X-Gm-Message-State: AOJu0YynXfcZPGXOSdnxV7fjsx7+Y+WZrxf/p/VApq1bdlDNqSPrAYEv
+	xjnmICZYyJYXq3vTJfSvztQ1BWsxnUKRWwyB5pG0ZDRZ5jpmPbG2/BxP2hxjLqHQG8XmuU5x6dn
+	1RQ==
+X-Google-Smtp-Source: AGHT+IGRmhNL+LYtfNLknZs4rkju5jm70OObUUVz9BOFnRyKJalzlRxy3ib78cNNkdoV+Yxe5+yMp480ebU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:f919:0:b0:5db:edca:d171 with SMTP id
+ h25-20020a63f919000000b005dbedcad171mr586pgi.6.1712858799398; Thu, 11 Apr
+ 2024 11:06:39 -0700 (PDT)
+Date: Thu, 11 Apr 2024 11:06:37 -0700
+In-Reply-To: <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+Message-ID: <ZhgmrczGpccfU-cI@google.com>
+Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
+	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com, Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 09, 2024 at 02:28:43PM -0700, Ian Rogers wrote:
-> On Tue, Apr 9, 2024 at 12:12 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > root@x1:~# grep -m1 "model name" /proc/cpuinfo
-> > model name      : 13th Gen Intel(R) Core(TM) i7-1365U
-> > root@x1:~# uname -a
-> > Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
-> > root@x1:~#
-> >
-> > Bisected down to:
-> >
-> > commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
-> > Author: Ravi Bangoria <ravi.bangoria@amd.com>
-> > Date:   Thu Jun 15 10:47:00 2023 +0530
-> >
-> >     perf mem: Scan all PMUs instead of just core ones
-> >
-> >     Scanning only core PMUs is not sufficient on platforms like AMD since
-> >     perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
-> >     Scan all PMUs instead of just core PMUs. There should be negligible
-> >     performance overhead because of scanning all PMUs, so we should be okay.
-> >
-> >     Reviewed-by: Ian Rogers <irogers@google.com>
-> >     Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> >
-> > root@x1:~# perf -v ; perf test -v "Test data symbol"
-> > perf version 6.4.rc3.g5752c20f3787
-> > 111: Test data symbol                                                :
-> > --- start ---
-> > test child forked, pid 522202
-> > Recording workload...
-> > malloc_consolidate(): invalid chunk size
-> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 522208 Aborted                 (core dumped) perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM
-> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: kill: (522208) - No such process
-> > Cleaning up files...
-> > test child finished with -1
-> > ---- end ----
-> > Test data symbol: FAILED!
-> > root@x1:~# perf -v ; perf test -v "Test data symbol"
-> > perf version 6.8.g63c22868714b
-> > 116: Test data symbol:
-> > --- start ---
-> > test child forked, pid 526540
-> >  954300-954339 l buf1
-> > perf does have symbol 'buf1'
-> > Recording workload...
-> > Waiting for "perf record has started" message
-> > OK
-> > Cleaning up files...
-> > ---- end(-1) ----
-> > 116: Test data symbol                                                : FAILED!
-> > root@x1:~#
-> >
-> > Further details:
-> >
-> > (gdb) run mem record --all-user sleep 1
-> > Starting program: /root/bin/perf mem record --all-user sleep 1
-> >
-> >
-> > This GDB supports auto-downloading debuginfo from the following URLs:
-> >   <https://debuginfod.fedoraproject.org/>
-> > Enable debuginfod for this session? (y or [n]) y
-> > Debuginfod has been enabled.
-> > To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
-> > [Thread debugging using libthread_db enabled]
-> > Using host libthread_db library "/lib64/libthread_db.so.1".
-> >
-> > Program received signal SIGSEGV, Segmentation fault.
-> > 0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-> > 213                                     s = perf_mem_events__name(j, pmu->name);
-> > (gdb) bt
-> > #0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-> > #1  0x000000000045c47f in __cmd_record (argc=2, argv=0x7fffffffe420, mem=0x7fffffffda20) at builtin-mem.c:152
-> > #2  0x000000000045d69b in cmd_mem (argc=4, argv=0x7fffffffe420) at builtin-mem.c:514
-> > #3  0x00000000004ffe38 in run_builtin (p=0xe08aa0 <commands+672>, argc=5, argv=0x7fffffffe420) at perf.c:323
-> > #4  0x00000000005000ac in handle_internal_command (argc=5, argv=0x7fffffffe420) at perf.c:377
-> > #5  0x00000000005001fb in run_argv (argcp=0x7fffffffe23c, argv=0x7fffffffe230) at perf.c:421
-> > #6  0x00000000005004e8 in main (argc=5, argv=0x7fffffffe420) at perf.c:537
-> > (gdb) list -5
-> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-> > (gdb)
+On Fri, Jan 26, 2024, Xiong Zhang wrote:
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 683dc086ef10..59471eeec7e4 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3803,6 +3803,8 @@ static inline void group_update_userpage(struct perf_event *group_event)
+>  		event_update_userpage(event);
+>  }
+>  
+> +static DEFINE_PER_CPU(bool, __perf_force_exclude_guest);
+> +
+>  static int merge_sched_in(struct perf_event *event, void *data)
+>  {
+>  	struct perf_event_context *ctx = event->ctx;
+> @@ -3814,6 +3816,14 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  	if (!event_filter_match(event))
+>  		return 0;
+>  
+> +	/*
+> +	 * The __perf_force_exclude_guest indicates entering the guest.
+> +	 * No events of the passthrough PMU should be scheduled.
+> +	 */
+> +	if (__this_cpu_read(__perf_force_exclude_guest) &&
+> +	    has_vpmu_passthrough_cap(event->pmu))
 
-> >
-> >
-> > (gdb) list -5
-> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-> > (gdb) p j
-> > $1 = 0
-> > (gdb) p pmu->name
-> > Cannot access memory at address 0x64ffffff9c
-> > (gdb)
-> >
-> > 183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> > 184                                  char **rec_tmp, int *tmp_nr)
-> > 185 {
-> > 186         int i = *argv_nr, k = 0;
-> > 187         struct perf_mem_event *e;
-> > 188         struct perf_pmu *pmu;
-> > 189         char *s;
-> > 190
-> > 191         for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> > 192                 e = perf_mem_events__ptr(j);
-> > 193                 if (!e->record)
-> > 194                         continue;
-> > 195
-> > 196                 if (perf_pmus__num_mem_pmus() == 1) {
-> > 197                         if (!e->supported) {
-> > 198                                 pr_err("failed: event '%s' not supported\n",
-> > 199                                        perf_mem_events__name(j, NULL));
-> > 200                                 return -1;
-> > 201                         }
-> > 202
-> > 203                         rec_argv[i++] = "-e";
-> > 204                         rec_argv[i++] = perf_mem_events__name(j, NULL);
-> > 205                 } else {
-> > 206                         if (!e->supported) {
-> > 207                                 perf_mem_events__print_unsupport_hybrid(e, j);
-> > 208                                 return -1;
-> > 209                         }
-> > 210
-> > 211                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-> > 212                                 rec_argv[i++] = "-e";
-> > 213                                 s = perf_mem_events__name(j, pmu->name);
-> > 214                                 if (s) {
-> > 215                                         s = strdup(s);
+As mentioned in the previous reply, I think perf should WARN and reject any attempt
+to trigger a "passthrough" context switch if such a switch isn't supported by
+perf, not silently let it go through and then skip things later.
+
+> +		return 0;
+> +
+>  	if (group_can_go_on(event, *can_add_hw)) {
+>  		if (!group_sched_in(event, ctx))
+>  			list_add_tail(&event->active_list, get_event_list(event));
+
+...
+
+> +/*
+> + * When a guest enters, force all active events of the PMU, which supports
+> + * the VPMU_PASSTHROUGH feature, to be scheduled out. The events of other
+> + * PMUs, such as uncore PMU, should not be impacted. The guest can
+> + * temporarily own all counters of the PMU.
+> + * During the period, all the creation of the new event of the PMU with
+> + * !exclude_guest are error out.
+> + */
+> +void perf_guest_enter(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (__this_cpu_read(__perf_force_exclude_guest))
+
+This should be a WARN_ON_ONCE, no?
+
+> +		return;
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	perf_force_exclude_guest_enter(&cpuctx->ctx);
+> +	if (cpuctx->task_ctx)
+> +		perf_force_exclude_guest_enter(cpuctx->task_ctx);
+> +
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +
+> +	__this_cpu_write(__perf_force_exclude_guest, true);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_enter);
+> +
+> +static void perf_force_exclude_guest_exit(struct perf_event_context *ctx)
+> +{
+> +	struct perf_event_pmu_context *pmu_ctx;
+> +	struct pmu *pmu;
+> +
+> +	update_context_time(ctx);
+> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+> +		pmu = pmu_ctx->pmu;
+> +		if (!has_vpmu_passthrough_cap(pmu))
+> +			continue;
+
+I don't see how we can sanely support a CPU that doesn't support writable
+PERF_GLOBAL_STATUS across all PMUs.
+
+> +
+> +		perf_pmu_disable(pmu);
+> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
+> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
+> +		perf_pmu_enable(pmu);
+> +	}
+> +}
+> +
+> +void perf_guest_exit(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (!__this_cpu_read(__perf_force_exclude_guest))
+
+WARN_ON_ONCE here too?
+
+> +		return;
+> +
+> +	__this_cpu_write(__perf_force_exclude_guest, false);
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	perf_force_exclude_guest_exit(&cpuctx->ctx);
+> +	if (cpuctx->task_ctx)
+> +		perf_force_exclude_guest_exit(cpuctx->task_ctx);
+> +
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_exit);
+> +
+> +static inline int perf_force_exclude_guest_check(struct perf_event *event,
+> +						 int cpu, struct task_struct *task)
+> +{
+> +	bool *force_exclude_guest = NULL;
+> +
+> +	if (!has_vpmu_passthrough_cap(event->pmu))
+> +		return 0;
+> +
+> +	if (event->attr.exclude_guest)
+> +		return 0;
+> +
+> +	if (cpu != -1) {
+> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, cpu);
+> +	} else if (task && (task->flags & PF_VCPU)) {
+> +		/*
+> +		 * Just need to check the running CPU in the event creation. If the
+> +		 * task is moved to another CPU which supports the force_exclude_guest.
+> +		 * The event will filtered out and be moved to the error stage. See
+> +		 * merge_sched_in().
+> +		 */
+> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, task_cpu(task));
+> +	}
+
+These checks are extremely racy, I don't see how this can possibly do the
+right thing.  PF_VCPU isn't a "this is a vCPU task", it's a "this task is about
+to do VM-Enter, or just took a VM-Exit" (the "I'm a virtual CPU" comment in
+include/linux/sched.h is wildly misleading, as it's _only_ valid when accounting
+time slices).
+
+Digging deeper, I think __perf_force_exclude_guest has similar problems, e.g.
+perf_event_create_kernel_counter() calls perf_event_alloc() before acquiring the
+per-CPU context mutex.
+
+> +	if (force_exclude_guest && *force_exclude_guest)
+> +		return -EBUSY;
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Holding the top-level event's child_mutex means that any
+>   * descendant process that has inherited this event will block
+> @@ -11973,6 +12142,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  		goto err_ns;
+>  	}
+>  
+> +	if (perf_force_exclude_guest_check(event, cpu, task)) {
+
+This should be:
+
+	err = perf_force_exclude_guest_check(event, cpu, task);
+	if (err)
+		goto err_pmu;
+
+i.e. shouldn't effectively ignore/override the return result.
+
+> +		err = -EBUSY;
+> +		goto err_pmu;
+> +	}
+> +
+>  	/*
+>  	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
+>  	 * events (they don't make sense as the cgroup will be different
+> -- 
+> 2.34.1
 > 
-> This looks like something that address/memory sanitizers could help with.
-
-I'm I forgetting something?
-
-⬢[acme@toolbox perf-tools-next]$ rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 EXTRA_CFLAGS="-fsanitize=address" O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
-
-root@x1:~# perf test -v 116
-116: Test data symbol:
---- start ---
-test child forked, pid 614595
- f87540-f87579 l buf1
-perf does have symbol 'buf1'
-Recording workload...
-Waiting for "perf record has started" message
-OK
-Cleaning up files...
----- end(-1) ----
-116: Test data symbol                                                : FAILED!
-root@x1:~# ldd ~/bin/perf | grep asan
-	libasan.so.8 => /lib64/libasan.so.8 (0x00007f8eb7a00000)
-root@x1:~#
