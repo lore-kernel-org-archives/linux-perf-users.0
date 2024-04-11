@@ -1,252 +1,539 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC3E48CDD
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 18:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E1CD534;
+	Thu, 11 Apr 2024 18:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858801; cv=none; b=SzV6CSFCa+XGKva2cEZeLsCmF/OtOD5dMWT5Mryi7XyvF5uZbcrV5b+x4P0fIyXZSUbs8rUeq/iLfEtCfAVHsilVof153a7AGOWydgFKxSgOAot+Olg3zpVAT4P8ysmhoDKHPCTepQIWUsR4mQ2QiUjNXkZ1coAJiPWVVWaXpqc=
+	t=1712859440; cv=none; b=sr/sthUoVZp7M0x1dLTDk1dFVNCYKijTxyVCbtJdhH1MtlyVFYH39eQyTqUZcB0d8ocHUL0zBd+/3W4ZdrFwN3KE/9zhkSKKtg7tBevJ2fD/YH1F5Z+9tUopo66CiLqiua3OWzPrl0EkjXUQnW+jGzt3fJ0tdsqZYqHWP4QiA1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858801; c=relaxed/simple;
-	bh=YOTZKjL3bWzR+U2HGFh3CrQiGRxDH7YCmn8lKN3Z9WE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qw28okB7TogBFuymbZP9MZkWN0dqOKfpXiL0gzOc3xrmOXwmIITA4dIz2uoT17XS7MOajoPNkxIx6rD2sG9j9TO5dYCbsn6B7r22S0KoQdGpoy34DB9evQQ6klN5ZvgQWfBvgfgoG/1pwBHE62pX+3wjp8HrNMK3MClpPbahXcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMZCcpG8; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712859440; c=relaxed/simple;
+	bh=HHn6cH8/ZhQ1IHeYJDPmSYJO412wKBUeeKR0WKW6cYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Et7Toz1ROE0bUuudGO88ZspeeRAV0PvfhAJ6fSwNwxBaZrB2Zwj3UjDricjnsOUMRT3OOT4H26zkpqnCdTUE2dc58PQqjYRXrPT1v5hK2vhF4/1Js9Y0K/RA+TbwiDsxyY+pUjXusB5e8WDkFIPGsu54KGjbzPqp6r1e10AC0eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJHqKazM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMZCcpG8"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5dcbb769a71so95530a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 11:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712858799; x=1713463599; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
-        b=KMZCcpG8t4eVXjZNqvoOu1520oK5BzutSG3kHoRp7G2vBZc4M9iZPc41t3kEI4iYCF
-         WvOZ2EaBUnsmfWsifUYKdlXDaNS9KOZtdtFjKds+6ZWUX3grpB0yoJnkinafn/E6LuSa
-         0tfae9s+zqkfoh2VT4y6368yGToHGtviBe8oJSI+uiigGWnx74lKQD7FbbcfwfJ+bnQc
-         A2KL66METhA3X2ox04n6WMW9Rb6fWAGpDhwRJaBAWAgVTyRUFlO/4WnpaWmXnGD+VOar
-         4Jg3jj4Sy3dwcXHePeia0jp/RkIuXR4tCsjYvjL+Vnxa0NhsCLJsjuGKvoxqQRDBH10l
-         flfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712858799; x=1713463599;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
-        b=N1W3FPtBpuAQUj3MZ4113Od1YEYNt6Mc6bDRQW7FsL0Sz1xlWf27FN+p+ckGjX7+k8
-         rccjGtI0C6nqng51JCF91tkuFVFaeqFZnhmiYNKFK2hiBmtu9tjccxnMr6GCwGyUZvFp
-         /ltPxkIlXY0S6dVNYg6MAQDLudhIFyesDlZZjriVUu0W23TNtMhdKUTBcuCp6sOxycCD
-         shZL1OcDpwtxgyoEWhZqJsWIa+kBn+ghe2JEBPqu5SuIXYD5vzTxJ0Y0OKGoJd91SzYx
-         GaxFoA41n5dLZDYJkhzjSC3ukBQp/RYuF6u4jGKCne5om5/ksw7NUs5fTYhbhUJ8ZRxX
-         B3JA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNau4hFDG0wAdGSutpv5+zUUZUB1Bsi6C9l0lxvwqxWVawXCthNIl2m0ZowusQUJmtkUzDu7csu84WxaGMElk0jh6jevB/VDn0R4vJiFQgJA==
-X-Gm-Message-State: AOJu0YynXfcZPGXOSdnxV7fjsx7+Y+WZrxf/p/VApq1bdlDNqSPrAYEv
-	xjnmICZYyJYXq3vTJfSvztQ1BWsxnUKRWwyB5pG0ZDRZ5jpmPbG2/BxP2hxjLqHQG8XmuU5x6dn
-	1RQ==
-X-Google-Smtp-Source: AGHT+IGRmhNL+LYtfNLknZs4rkju5jm70OObUUVz9BOFnRyKJalzlRxy3ib78cNNkdoV+Yxe5+yMp480ebU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:f919:0:b0:5db:edca:d171 with SMTP id
- h25-20020a63f919000000b005dbedcad171mr586pgi.6.1712858799398; Thu, 11 Apr
- 2024 11:06:39 -0700 (PDT)
-Date: Thu, 11 Apr 2024 11:06:37 -0700
-In-Reply-To: <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJHqKazM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357DFC072AA;
+	Thu, 11 Apr 2024 18:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712859439;
+	bh=HHn6cH8/ZhQ1IHeYJDPmSYJO412wKBUeeKR0WKW6cYY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WJHqKazMpP/dLlvlWYoD7CvyjWgjcxvb6dk9BWzKbVgPHZymakaPhrfg/xTVmXuza
+	 OCvbFm50xNnVObU3IzQcU036TsqcVByFlVlM6MYweRvBskvCVI3momF4fQPlBKeWFM
+	 IWMTHbcAsK/JbZMvOLyg+e/+kMIBU2eMfAEChYyWNe/Xl+iXv2nhH8v4rDStZ8zp69
+	 sDTVd8fDGPMxi1//Gk8lBpJiqKjUM/UEBFBU5wpwuM4xQ9DDLZuI2xandDtwc/kLp0
+	 MaKIkNzixwa7XEzB8b33SneOUyR4/FpA2UuSslA0XffdimiDCMVozUydjD1EydPpfT
+	 SVt0Otlpgl0zw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH v2 1/3] perf hist: Move histogram related code to hist.h
+Date: Thu, 11 Apr 2024 11:17:16 -0700
+Message-ID: <20240411181718.2367948-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
-Message-ID: <ZhgmrczGpccfU-cI@google.com>
-Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
-From: Sean Christopherson <seanjc@google.com>
-To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com, Kan Liang <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 683dc086ef10..59471eeec7e4 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3803,6 +3803,8 @@ static inline void group_update_userpage(struct perf_event *group_event)
->  		event_update_userpage(event);
->  }
->  
-> +static DEFINE_PER_CPU(bool, __perf_force_exclude_guest);
-> +
->  static int merge_sched_in(struct perf_event *event, void *data)
->  {
->  	struct perf_event_context *ctx = event->ctx;
-> @@ -3814,6 +3816,14 @@ static int merge_sched_in(struct perf_event *event, void *data)
->  	if (!event_filter_match(event))
->  		return 0;
->  
-> +	/*
-> +	 * The __perf_force_exclude_guest indicates entering the guest.
-> +	 * No events of the passthrough PMU should be scheduled.
-> +	 */
-> +	if (__this_cpu_read(__perf_force_exclude_guest) &&
-> +	    has_vpmu_passthrough_cap(event->pmu))
+It's strange that sort.h has the definition of struct hist_entry.  As
+sort.h already includes hist.h, let's move the data structure to hist.h.
 
-As mentioned in the previous reply, I think perf should WARN and reject any attempt
-to trigger a "passthrough" context switch if such a switch isn't supported by
-perf, not silently let it go through and then skip things later.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.h   | 191 +++++++++++++++++++++++++++++++++++++--
+ tools/perf/util/sort.h   | 188 --------------------------------------
+ tools/perf/util/values.h |   1 +
+ 3 files changed, 184 insertions(+), 196 deletions(-)
 
-> +		return 0;
-> +
->  	if (group_can_go_on(event, *can_add_hw)) {
->  		if (!group_sched_in(event, ctx))
->  			list_add_tail(&event->active_list, get_event_list(event));
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4a0aea0c9e00..8f072f3749eb 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -4,21 +4,22 @@
+ 
+ #include <linux/rbtree.h>
+ #include <linux/types.h>
+-#include "evsel.h"
++#include "callchain.h"
+ #include "color.h"
+ #include "events_stats.h"
++#include "evsel.h"
++#include "map_symbol.h"
+ #include "mutex.h"
++#include "sample.h"
++#include "spark.h"
++#include "stat.h"
+ 
+-struct hist_entry;
+-struct hist_entry_ops;
+ struct addr_location;
+-struct map_symbol;
+ struct mem_info;
+ struct kvm_info;
+ struct branch_info;
+ struct branch_stack;
+ struct block_info;
+-struct symbol;
+ struct ui_progress;
+ 
+ enum hist_filter {
+@@ -150,6 +151,159 @@ extern const struct hist_iter_ops hist_iter_branch;
+ extern const struct hist_iter_ops hist_iter_mem;
+ extern const struct hist_iter_ops hist_iter_cumulative;
+ 
++struct res_sample {
++	u64 time;
++	int cpu;
++	int tid;
++};
++
++struct he_stat {
++	u64			period;
++	u64			period_sys;
++	u64			period_us;
++	u64			period_guest_sys;
++	u64			period_guest_us;
++	u32			nr_events;
++};
++
++struct namespace_id {
++	u64			dev;
++	u64			ino;
++};
++
++struct hist_entry_diff {
++	bool	computed;
++	union {
++		/* PERF_HPP__DELTA */
++		double	period_ratio_delta;
++
++		/* PERF_HPP__RATIO */
++		double	period_ratio;
++
++		/* HISTC_WEIGHTED_DIFF */
++		s64	wdiff;
++
++		/* PERF_HPP_DIFF__CYCLES */
++		s64	cycles;
++	};
++	struct stats	stats;
++	unsigned long	svals[NUM_SPARKS];
++};
++
++struct hist_entry_ops {
++	void	*(*new)(size_t size);
++	void	(*free)(void *ptr);
++};
++
++/**
++ * struct hist_entry - histogram entry
++ *
++ * @row_offset - offset from the first callchain expanded to appear on screen
++ * @nr_rows - rows expanded in callchain, recalculated on folding/unfolding
++ */
++struct hist_entry {
++	struct rb_node		rb_node_in;
++	struct rb_node		rb_node;
++	union {
++		struct list_head node;
++		struct list_head head;
++	} pairs;
++	struct he_stat		stat;
++	struct he_stat		*stat_acc;
++	struct map_symbol	ms;
++	struct thread		*thread;
++	struct comm		*comm;
++	struct namespace_id	cgroup_id;
++	u64			cgroup;
++	u64			ip;
++	u64			transaction;
++	s32			socket;
++	s32			cpu;
++	u64			code_page_size;
++	u64			weight;
++	u64			ins_lat;
++	u64			p_stage_cyc;
++	u8			cpumode;
++	u8			depth;
++	int			mem_type_off;
++	struct simd_flags	simd_flags;
++
++	/* We are added by hists__add_dummy_entry. */
++	bool			dummy;
++	bool			leaf;
++
++	char			level;
++	u8			filtered;
++
++	u16			callchain_size;
++	union {
++		/*
++		 * Since perf diff only supports the stdio output, TUI
++		 * fields are only accessed from perf report (or perf
++		 * top).  So make it a union to reduce memory usage.
++		 */
++		struct hist_entry_diff	diff;
++		struct /* for TUI */ {
++			u16	row_offset;
++			u16	nr_rows;
++			bool	init_have_children;
++			bool	unfolded;
++			bool	has_children;
++			bool	has_no_entry;
++		};
++	};
++	char			*srcline;
++	char			*srcfile;
++	struct symbol		*parent;
++	struct branch_info	*branch_info;
++	long			time;
++	struct hists		*hists;
++	struct mem_info		*mem_info;
++	struct block_info	*block_info;
++	struct kvm_info		*kvm_info;
++	void			*raw_data;
++	u32			raw_size;
++	int			num_res;
++	struct res_sample	*res_samples;
++	void			*trace_output;
++	struct perf_hpp_list	*hpp_list;
++	struct hist_entry	*parent_he;
++	struct hist_entry_ops	*ops;
++	struct annotated_data_type *mem_type;
++	union {
++		/* this is for hierarchical entry structure */
++		struct {
++			struct rb_root_cached	hroot_in;
++			struct rb_root_cached   hroot_out;
++		};				/* non-leaf entries */
++		struct rb_root	sorted_chain;	/* leaf entry has callchains */
++	};
++	struct callchain_root	callchain[0]; /* must be last member */
++};
++
++static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
++{
++	return he->callchain_size != 0;
++}
++
++static inline bool hist_entry__has_pairs(struct hist_entry *he)
++{
++	return !list_empty(&he->pairs.node);
++}
++
++static inline struct hist_entry *hist_entry__next_pair(struct hist_entry *he)
++{
++	if (hist_entry__has_pairs(he))
++		return list_entry(he->pairs.node.next, struct hist_entry, pairs.node);
++	return NULL;
++}
++
++static inline void hist_entry__add_pair(struct hist_entry *pair,
++					struct hist_entry *he)
++{
++	list_add_tail(&pair->pairs.node, &he->pairs.head);
++}
++
+ struct hist_entry *hists__add_entry(struct hists *hists,
+ 				    struct addr_location *al,
+ 				    struct symbol *parent,
+@@ -186,6 +340,8 @@ int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
+ 			      struct hists *hists);
+ int hist_entry__snprintf_alignment(struct hist_entry *he, struct perf_hpp *hpp,
+ 				   struct perf_hpp_fmt *fmt, int printed);
++int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size,
++			     unsigned int width);
+ void hist_entry__delete(struct hist_entry *he);
+ 
+ typedef int (*hists__resort_cb_t)(struct hist_entry *he, void *arg);
+@@ -238,6 +394,20 @@ void hists__match(struct hists *leader, struct hists *other);
+ int hists__link(struct hists *leader, struct hists *other);
+ int hists__unlink(struct hists *hists);
+ 
++static inline float hist_entry__get_percent_limit(struct hist_entry *he)
++{
++	u64 period = he->stat.period;
++	u64 total_period = hists__total_period(he->hists);
++
++	if (unlikely(total_period == 0))
++		return 0;
++
++	if (symbol_conf.cumulate_callchain)
++		period = he->stat_acc->period;
++
++	return period * 100.0 / total_period;
++}
++
+ struct hists_evsel {
+ 	struct evsel evsel;
+ 	struct hists	  hists;
+@@ -460,15 +630,20 @@ struct hist_browser_timer {
+ 	int refresh;
+ };
+ 
+-struct res_sample;
+-
+ enum rstype {
+ 	A_NORMAL,
+ 	A_ASM,
+ 	A_SOURCE
+ };
+ 
+-struct block_hist;
++struct block_hist {
++	struct hists		block_hists;
++	struct perf_hpp_list	block_list;
++	struct perf_hpp_fmt	block_fmt;
++	int			block_idx;
++	bool			valid;
++	struct hist_entry	he;
++};
+ 
+ #ifdef HAVE_SLANG_SUPPORT
+ #include "../ui/keysyms.h"
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 6f6b4189a389..690892a92cf3 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -3,19 +3,9 @@
+ #define __PERF_SORT_H
+ #include <regex.h>
+ #include <stdbool.h>
+-#include <linux/list.h>
+-#include <linux/rbtree.h>
+-#include "map_symbol.h"
+-#include "symbol_conf.h"
+-#include "callchain.h"
+-#include "values.h"
+ #include "hist.h"
+-#include "stat.h"
+-#include "spark.h"
+ 
+ struct option;
+-struct thread;
+-struct annotated_data_type;
+ 
+ extern regex_t parent_regex;
+ extern const char *sort_order;
+@@ -39,175 +29,6 @@ extern struct sort_entry sort_type;
+ extern const char default_mem_sort_order[];
+ extern bool chk_double_cl;
+ 
+-struct res_sample {
+-	u64 time;
+-	int cpu;
+-	int tid;
+-};
+-
+-struct he_stat {
+-	u64			period;
+-	u64			period_sys;
+-	u64			period_us;
+-	u64			period_guest_sys;
+-	u64			period_guest_us;
+-	u32			nr_events;
+-};
+-
+-struct namespace_id {
+-	u64			dev;
+-	u64			ino;
+-};
+-
+-struct hist_entry_diff {
+-	bool	computed;
+-	union {
+-		/* PERF_HPP__DELTA */
+-		double	period_ratio_delta;
+-
+-		/* PERF_HPP__RATIO */
+-		double	period_ratio;
+-
+-		/* HISTC_WEIGHTED_DIFF */
+-		s64	wdiff;
+-
+-		/* PERF_HPP_DIFF__CYCLES */
+-		s64	cycles;
+-	};
+-	struct stats	stats;
+-	unsigned long	svals[NUM_SPARKS];
+-};
+-
+-struct hist_entry_ops {
+-	void	*(*new)(size_t size);
+-	void	(*free)(void *ptr);
+-};
+-
+-/**
+- * struct hist_entry - histogram entry
+- *
+- * @row_offset - offset from the first callchain expanded to appear on screen
+- * @nr_rows - rows expanded in callchain, recalculated on folding/unfolding
+- */
+-struct hist_entry {
+-	struct rb_node		rb_node_in;
+-	struct rb_node		rb_node;
+-	union {
+-		struct list_head node;
+-		struct list_head head;
+-	} pairs;
+-	struct he_stat		stat;
+-	struct he_stat		*stat_acc;
+-	struct map_symbol	ms;
+-	struct thread		*thread;
+-	struct comm		*comm;
+-	struct namespace_id	cgroup_id;
+-	u64			cgroup;
+-	u64			ip;
+-	u64			transaction;
+-	s32			socket;
+-	s32			cpu;
+-	u64			code_page_size;
+-	u64			weight;
+-	u64			ins_lat;
+-	u64			p_stage_cyc;
+-	u8			cpumode;
+-	u8			depth;
+-	int			mem_type_off;
+-	struct simd_flags	simd_flags;
+-
+-	/* We are added by hists__add_dummy_entry. */
+-	bool			dummy;
+-	bool			leaf;
+-
+-	char			level;
+-	u8			filtered;
+-
+-	u16			callchain_size;
+-	union {
+-		/*
+-		 * Since perf diff only supports the stdio output, TUI
+-		 * fields are only accessed from perf report (or perf
+-		 * top).  So make it a union to reduce memory usage.
+-		 */
+-		struct hist_entry_diff	diff;
+-		struct /* for TUI */ {
+-			u16	row_offset;
+-			u16	nr_rows;
+-			bool	init_have_children;
+-			bool	unfolded;
+-			bool	has_children;
+-			bool	has_no_entry;
+-		};
+-	};
+-	char			*srcline;
+-	char			*srcfile;
+-	struct symbol		*parent;
+-	struct branch_info	*branch_info;
+-	long			time;
+-	struct hists		*hists;
+-	struct mem_info		*mem_info;
+-	struct block_info	*block_info;
+-	struct kvm_info		*kvm_info;
+-	void			*raw_data;
+-	u32			raw_size;
+-	int			num_res;
+-	struct res_sample	*res_samples;
+-	void			*trace_output;
+-	struct perf_hpp_list	*hpp_list;
+-	struct hist_entry	*parent_he;
+-	struct hist_entry_ops	*ops;
+-	struct annotated_data_type *mem_type;
+-	union {
+-		/* this is for hierarchical entry structure */
+-		struct {
+-			struct rb_root_cached	hroot_in;
+-			struct rb_root_cached   hroot_out;
+-		};				/* non-leaf entries */
+-		struct rb_root	sorted_chain;	/* leaf entry has callchains */
+-	};
+-	struct callchain_root	callchain[0]; /* must be last member */
+-};
+-
+-static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
+-{
+-	return he->callchain_size != 0;
+-}
+-
+-int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width);
+-
+-static inline bool hist_entry__has_pairs(struct hist_entry *he)
+-{
+-	return !list_empty(&he->pairs.node);
+-}
+-
+-static inline struct hist_entry *hist_entry__next_pair(struct hist_entry *he)
+-{
+-	if (hist_entry__has_pairs(he))
+-		return list_entry(he->pairs.node.next, struct hist_entry, pairs.node);
+-	return NULL;
+-}
+-
+-static inline void hist_entry__add_pair(struct hist_entry *pair,
+-					struct hist_entry *he)
+-{
+-	list_add_tail(&pair->pairs.node, &he->pairs.head);
+-}
+-
+-static inline float hist_entry__get_percent_limit(struct hist_entry *he)
+-{
+-	u64 period = he->stat.period;
+-	u64 total_period = hists__total_period(he->hists);
+-
+-	if (unlikely(total_period == 0))
+-		return 0;
+-
+-	if (symbol_conf.cumulate_callchain)
+-		period = he->stat_acc->period;
+-
+-	return period * 100.0 / total_period;
+-}
+-
+ enum sort_mode {
+ 	SORT_MODE__NORMAL,
+ 	SORT_MODE__BRANCH,
+@@ -299,15 +120,6 @@ struct sort_entry {
+ 	u8	se_width_idx;
+ };
+ 
+-struct block_hist {
+-	struct hists		block_hists;
+-	struct perf_hpp_list	block_list;
+-	struct perf_hpp_fmt	block_fmt;
+-	int			block_idx;
+-	bool			valid;
+-	struct hist_entry	he;
+-};
+-
+ extern struct sort_entry sort_thread;
+ 
+ struct evlist;
+diff --git a/tools/perf/util/values.h b/tools/perf/util/values.h
+index 8c41f22f42cf..791c1ad606c2 100644
+--- a/tools/perf/util/values.h
++++ b/tools/perf/util/values.h
+@@ -2,6 +2,7 @@
+ #ifndef __PERF_VALUES_H
+ #define __PERF_VALUES_H
+ 
++#include <stdio.h>
+ #include <linux/types.h>
+ 
+ struct perf_read_values {
+-- 
+2.44.0.683.g7961c838ac-goog
 
-...
-
-> +/*
-> + * When a guest enters, force all active events of the PMU, which supports
-> + * the VPMU_PASSTHROUGH feature, to be scheduled out. The events of other
-> + * PMUs, such as uncore PMU, should not be impacted. The guest can
-> + * temporarily own all counters of the PMU.
-> + * During the period, all the creation of the new event of the PMU with
-> + * !exclude_guest are error out.
-> + */
-> +void perf_guest_enter(void)
-> +{
-> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	if (__this_cpu_read(__perf_force_exclude_guest))
-
-This should be a WARN_ON_ONCE, no?
-
-> +		return;
-> +
-> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +
-> +	perf_force_exclude_guest_enter(&cpuctx->ctx);
-> +	if (cpuctx->task_ctx)
-> +		perf_force_exclude_guest_enter(cpuctx->task_ctx);
-> +
-> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +
-> +	__this_cpu_write(__perf_force_exclude_guest, true);
-> +}
-> +EXPORT_SYMBOL_GPL(perf_guest_enter);
-> +
-> +static void perf_force_exclude_guest_exit(struct perf_event_context *ctx)
-> +{
-> +	struct perf_event_pmu_context *pmu_ctx;
-> +	struct pmu *pmu;
-> +
-> +	update_context_time(ctx);
-> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
-> +		pmu = pmu_ctx->pmu;
-> +		if (!has_vpmu_passthrough_cap(pmu))
-> +			continue;
-
-I don't see how we can sanely support a CPU that doesn't support writable
-PERF_GLOBAL_STATUS across all PMUs.
-
-> +
-> +		perf_pmu_disable(pmu);
-> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
-> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
-> +		perf_pmu_enable(pmu);
-> +	}
-> +}
-> +
-> +void perf_guest_exit(void)
-> +{
-> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	if (!__this_cpu_read(__perf_force_exclude_guest))
-
-WARN_ON_ONCE here too?
-
-> +		return;
-> +
-> +	__this_cpu_write(__perf_force_exclude_guest, false);
-> +
-> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +
-> +	perf_force_exclude_guest_exit(&cpuctx->ctx);
-> +	if (cpuctx->task_ctx)
-> +		perf_force_exclude_guest_exit(cpuctx->task_ctx);
-> +
-> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +}
-> +EXPORT_SYMBOL_GPL(perf_guest_exit);
-> +
-> +static inline int perf_force_exclude_guest_check(struct perf_event *event,
-> +						 int cpu, struct task_struct *task)
-> +{
-> +	bool *force_exclude_guest = NULL;
-> +
-> +	if (!has_vpmu_passthrough_cap(event->pmu))
-> +		return 0;
-> +
-> +	if (event->attr.exclude_guest)
-> +		return 0;
-> +
-> +	if (cpu != -1) {
-> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, cpu);
-> +	} else if (task && (task->flags & PF_VCPU)) {
-> +		/*
-> +		 * Just need to check the running CPU in the event creation. If the
-> +		 * task is moved to another CPU which supports the force_exclude_guest.
-> +		 * The event will filtered out and be moved to the error stage. See
-> +		 * merge_sched_in().
-> +		 */
-> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, task_cpu(task));
-> +	}
-
-These checks are extremely racy, I don't see how this can possibly do the
-right thing.  PF_VCPU isn't a "this is a vCPU task", it's a "this task is about
-to do VM-Enter, or just took a VM-Exit" (the "I'm a virtual CPU" comment in
-include/linux/sched.h is wildly misleading, as it's _only_ valid when accounting
-time slices).
-
-Digging deeper, I think __perf_force_exclude_guest has similar problems, e.g.
-perf_event_create_kernel_counter() calls perf_event_alloc() before acquiring the
-per-CPU context mutex.
-
-> +	if (force_exclude_guest && *force_exclude_guest)
-> +		return -EBUSY;
-> +	return 0;
-> +}
-> +
->  /*
->   * Holding the top-level event's child_mutex means that any
->   * descendant process that has inherited this event will block
-> @@ -11973,6 +12142,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  		goto err_ns;
->  	}
->  
-> +	if (perf_force_exclude_guest_check(event, cpu, task)) {
-
-This should be:
-
-	err = perf_force_exclude_guest_check(event, cpu, task);
-	if (err)
-		goto err_pmu;
-
-i.e. shouldn't effectively ignore/override the return result.
-
-> +		err = -EBUSY;
-> +		goto err_pmu;
-> +	}
-> +
->  	/*
->  	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
->  	 * events (they don't make sense as the cgroup will be different
-> -- 
-> 2.34.1
-> 
