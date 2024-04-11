@@ -1,158 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC9C13FD8E;
-	Thu, 11 Apr 2024 09:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A8D13BACD;
+	Thu, 11 Apr 2024 11:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712826117; cv=none; b=LoG4owra30ipdKxJvW+uFrM4LnAPSt1PLH9eM00Ee7HLtRYSbyQrOBy6cg7Q5tF0N6WUa+Z9F/jARPELDFy6wkE1qd93sPcNhYgLSm0GXLCETsCNdXxwezVRM0FlkGdxm2cVdTgKHpG/DKjl5jV8PXYpYoxQHqFS3VQ0kfGlHmg=
+	t=1712833327; cv=none; b=WlIkJDkPGs6IO7pqlLbFM7Q7h7Obxjb92l/Fa2ndaZlGaPY6ChfI2Q5cNdDQ87DFb922Z7ZHanhaX6s/4g2ctXfUClD1U+s4BidXIjS1ljBVHglOvTEENEyKZ20SH+NAYFkc8XRzlBkwZGGncIXPySufbJIzKPwhCwffv2oK4m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712826117; c=relaxed/simple;
-	bh=xVedsV4VfEGQGozEUtdTCCWXlxXgIeyFTHtRuT3EuY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQ7B2DKUFqoHer1+/gIvSLf/XG10ZwTIUf/sQloLReic7DEkdsSxvboLhIrw0971I713Bl1uaHV15JmgvgKQHg9hqRprR67tYnD6wyBcU8O/G/iD1Hcz4Vr1IuzNxIgUtx8X6HcNlRcratsEgkGevG4lQ8l8zVVdnJlaZ8vWbwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDNRm6y9; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712833327; c=relaxed/simple;
+	bh=ozY6hVvMNrGYH6tlZjxx5umvChurNxXOh6R9cmNMYMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l74tiWocR3Ty9DknRE1g8FcWkVs35tPR3U5vS/dLET1yXOZANmjZiHU+xXOA7Wg84NYrjr0pkXtbxZx85EznEEFqMb2G2EEIi1KMrsC055sJLVz21+zxKTKWFNmZVipOVYNHGkq0GY1N4PCe7ej2aookDUcpHEFMa8KpRPw8doo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITt7keUR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDNRm6y9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712826115; x=1744362115;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xVedsV4VfEGQGozEUtdTCCWXlxXgIeyFTHtRuT3EuY8=;
-  b=mDNRm6y9Q0AIhdmyI8HNXQB7TF/kxi/eMNb4KmkpPkW1CBbcoHD1U2l8
-   JoxFkRG+fnA3weHYuNwSXz3rrLWLnn/hlNQ9EpcD9QsTihofqdjka+LUk
-   +Lh/wLT6ipGyxYqkDGZN/dOdcoHsXbFjp95C3LCzaaH/IrWTkdhKCZyPO
-   osLg/X+G26dAgdDXW9zXwwn8qY/UXUmVCcDQTVEwAaMAZEj2tv3720V3Q
-   +h8QmavlY2lFr3yVNB5Bm/2EZG5itzbzKcfi7MRzHiodcz5UKbv9goCBi
-   MKBQI8+mB5u75IF0Cq7w9p6gAuO6hlAQciZ6VIXbu7I0ReohhRHjK+LCV
-   A==;
-X-CSE-ConnectionGUID: JCKLWtmrQnu6q4LSSnb2Zw==
-X-CSE-MsgGUID: rh+gDR0+SqKcSbADgvUOtg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8444815"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8444815"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:01:54 -0700
-X-CSE-ConnectionGUID: koQlii8mRDy4cv4dCye4BQ==
-X-CSE-MsgGUID: 5TFrG8/vT4GgcnntO57C4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="21436532"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.66])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:01:53 -0700
-Message-ID: <7ef5951b-fab2-4364-99cd-3ad8fef2dd3f@intel.com>
-Date: Thu, 11 Apr 2024 12:01:48 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITt7keUR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 901FAC433F1;
+	Thu, 11 Apr 2024 11:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712833327;
+	bh=ozY6hVvMNrGYH6tlZjxx5umvChurNxXOh6R9cmNMYMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ITt7keURFX8f4Tuy7WWwTF4VLc77ty5YMzo0qcwpMNZxXYZ+kXUODu6BcijHsQz5V
+	 qXz5kVKGawoKATUPjJ/c636nJYjPo8JBWXkNNNpn6krY/Hd3lVbteuHlXohb+TBkG5
+	 zv9X8c/l/2hhVTdRyqMB+2Gn/ONG11eAHqNLWjP1IwmATlGuH5yd8wPJNJUoxUT6VO
+	 nkWUnSh6cgZPFZyse0orJQ5BSaDxb4hjjKjJcS7w5t/BbvUjwP3pckTc7ilq2lhIAl
+	 1N/vP01ibLhrNE8LdBdl+cxMlbF99WNKKQBOw4xaqHyRi5OLUH+ZK5XqW49boL8FRC
+	 mJ3R9hwOqlKQA==
+Date: Thu, 11 Apr 2024 08:02:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHSET 0/7] perf annotate: Add TUI support for data type
+ profiling (v2)
+Message-ID: <ZhfDLHH98rgl6_4P@x1>
+References: <20240411033256.2099646-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240410104450.15602-1-adrian.hunter@intel.com>
- <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
- <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411033256.2099646-1-namhyung@kernel.org>
 
-On 10/04/24 20:45, Namhyung Kim wrote:
-> On Wed, Apr 10, 2024 at 9:08 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Wed, Apr 10, 2024 at 3:45 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> Simplify is_event_supported by using sys_perf_event_open() directly like
->>> other perf API probe functions and move it into perf_api_probe.c where
->>> other perf API probe functions reside.
->>>
->>> A side effect is that the probed events do not appear when debug prints
->>> are enabled, which is beneficial because otherwise they can be confused
->>> with selected events.
->>>
->>> This also affects "Test per-thread recording" in
->>> "Miscellaneous Intel PT testing" which expects the debug prints of
->>> only selected events to appear between the debug prints:
->>> "perf record opening and mmapping events" and
->>> "perf record done opening and mmapping events"
->>>
->>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>
->> nit:
->> Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
->>
->>> ---
->>>  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
->>>  tools/perf/util/perf_api_probe.h |  2 ++
->>>  tools/perf/util/pmus.c           |  1 +
->>>  tools/perf/util/print-events.c   | 50 +-------------------------------
->>>  tools/perf/util/print-events.h   |  1 -
->>>  5 files changed, 44 insertions(+), 50 deletions(-)
->>>
->>> diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
->>> index 1de3b69cdf4a..13acb34a4e1c 100644
->>> --- a/tools/perf/util/perf_api_probe.c
->>> +++ b/tools/perf/util/perf_api_probe.c
->>> @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
->>>  {
->>>         return perf_probe_api(perf_probe_cgroup);
->>>  }
->>> +
->>> +bool is_event_supported(u8 type, u64 config)
->>> +{
->>> +       struct perf_event_attr attr = {
->>> +               .type = type,
->>> +               .config = config,
->>> +               .disabled = 1,
->>> +       };
->>> +       int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
->>
->> It looks like this is a change to the actual perf_event_open
->> arguments, I don't think it is an issue but wanted to flag it.
->>
->>> +
->>> +       if (fd < 0) {
->>> +               /*
->>> +                * The event may fail to open if the paranoid value
->>> +                * /proc/sys/kernel/perf_event_paranoid is set to 2
->>> +                * Re-run with exclude_kernel set; we don't do that by
->>> +                * default as some ARM machines do not support it.
->>> +                */
->>> +               attr.exclude_kernel = 1;
->>
->> I worry about the duplicated fallback logic getting out of sync,
->> perhaps we could have a quiet option for evsel__open option, or better
->> delineate the particular log entries.
-
-That seemed like it would be messy, but upon closer inspection
-was straight forward.  Patch here:
-
-	https://lore.kernel.org/linux-perf-users/20240411075447.17306-1-adrian.hunter@intel.com/T/#u	
-
->>                                       I don't really have a good
->> alternative idea and kind of like that detecting an event is available
->> loses the evsel baggage. I would kind of like event parsing just to
->> give 1 or more perf_event_attr for similar reasons.
+On Wed, Apr 10, 2024 at 08:32:49PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> We have the missing feature check in the evsel open code,
-> and I think we should check the exclude-bits first than others.
-> Currently struct pmu has missing_features.exclude_guest only
-> and it can have exclude_kernel or others too.
+> This is to support interactive TUI browser for type annotation.
 > 
-> Anyway, I'm ok with this change.
+> v2 changes:
+>  * fix build errors when libslang2 or libdw is missing  (Arnaldo)
+>  * update commit messages with examples  (Arnaldo)
+>  * skip updating sample histogram for stack canary  (Arnaldo)
+>  * add Reviewed-by from Ian
+
+Thanks, applied.
+
+- Arnaldo
+  
+> Like the normal (code) annotation, it should be able to display the data type
+> annotation.  Now `perf annotate --data-type` will show the result in TUI by
+> default if it's enabled.  Also `perf report -s type` can show the same output
+> using a menu item.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> It's still in a very early stage and supports the basic functionalities only.
+> I'll work on more features like in the normal annotation browser later.
+> 
+> The code is also available at 'perf/annotate-data-tui-v2' branch at
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 > 
 > Thanks,
 > Namhyung
-
+> 
+> 
+> Namhyung Kim (7):
+>   perf annotate-data: Skip sample histogram for stack canary
+>   perf annotate: Show progress of sample processing
+>   perf annotate-data: Add hist_entry__annotate_data_tty()
+>   perf annotate-data: Add hist_entry__annotate_data_tui()
+>   perf annotate-data: Support event group display in TUI
+>   perf report: Add a menu item to annotate data type in TUI
+>   perf report: Do not collect sample histogram unnecessarily
+> 
+>  tools/perf/builtin-annotate.c          | 149 ++++--------
+>  tools/perf/builtin-report.c            |   7 +-
+>  tools/perf/ui/browsers/Build           |   1 +
+>  tools/perf/ui/browsers/annotate-data.c | 312 +++++++++++++++++++++++++
+>  tools/perf/ui/browsers/hists.c         |  31 +++
+>  tools/perf/util/annotate-data.c        | 113 +++++++++
+>  tools/perf/util/annotate-data.h        |  22 ++
+>  tools/perf/util/annotate.c             |  12 +-
+>  8 files changed, 534 insertions(+), 113 deletions(-)
+>  create mode 100644 tools/perf/ui/browsers/annotate-data.c
+> 
+> 
+> base-commit: 9c3e9af74326978ba6f4432bb038e6c80f4f56fd
+> -- 
+> 2.44.0.478.gd926399ef9-goog
