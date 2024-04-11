@@ -1,65 +1,66 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA238205E36
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 19:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ABE168B1
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 19:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712863076; cv=none; b=pKdpLRza54vwhxVGbtXGyVX6N+xQOLTChIfQIk1VGwVUx1VfASt1zrEjvxPF01UyYZU6yEDH/aiLcrcNCCJQK9S2oMokVtXKnalZWp0cdZV6YJh17TCiLDUr7QB7DTBshCmTeNdX7lXZNXIlQ9EVTN/2eNxfRCsUG8mdji41ovc=
+	t=1712863294; cv=none; b=oVgo/bKfUVzRkIrEDtk+vkQWnRp+KgNc5FTdfoz97Vw28HgT9/zQ0+m0rlCv6kJWMh1bTiLc/qk5K+a12uA9g6ayp9PG2zZinE1s87FZguKp7Xj3ioF+q8WgXq76WM9kctzvXJUw3x9J3Dd8b3ZTb5MY5UVu5WzhsvSEVU5BOCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712863076; c=relaxed/simple;
-	bh=sD4t/uLxUXQneloPRvioqFpGGr++WQw2Vhn8idLNvnQ=;
+	s=arc-20240116; t=1712863294; c=relaxed/simple;
+	bh=0iDrj2AwfZPdpvbdX9zswaCeouu1E0y3S0A8fzExlVM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lYGd8pc7AcsTi5aiU9mVNEMrERxW/3UkZvLAIeZYyY/jG/7UfHVYc5Yq7jWdWi8Mf3SrcD5E2aIKSSXrc9BotJ4MkOMDIEo10MUjhtTJmfkCsZ+012SW7AvT3xW97BTlmkM3jK4Wwc2vyUTw5Df0UM4PpZSsVmPTBH8PMOZR2Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ji3XyGUr; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=NEXB2p7x4sDWu3g7NbDw4Fm9s5K/GssrtSjjB+s71gHpOLHO9Un7O2Kv/xbgj12XnhGIySskG/UTCSyAtWgp8LmJQERNfgB7eh4K1XPTOTi8CqooIo96m6eKbiqOF5/q4hGQHBHqu7yv9z+SjA5Ab6QjY6pgaB+fbnykGDxGsQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HV0dDten; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ji3XyGUr"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d8dd488e09so166919a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 12:17:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HV0dDten"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2a537ab9d7eso116322a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 12:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712863073; x=1713467873; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712863292; x=1713468092; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LMIixoIt6lY2SkR94o/u4nUsQeakPmVSC2HlUkV0a60=;
-        b=ji3XyGUrxqhwI1zj90rfih7kd0TW0YjfCRz3T346bA7OGtMLhT8NjY06BjnAlzBUw+
-         OxmiuMvYQsMKttH0jSge8uOcp1izuIXfV0D95sHdFR4wdoPqy2XYPE90nxjtX5K/VzIu
-         e9LDyPKnA5GBaAjeLP5jhU6cynBesB37QYvftHmbNu56NLvDWcpX6JEaoK+0qo5bafBT
-         1VpIOOmXkSLuX0rzH+ZkkbGOV9LVJROgKSDeOb2EEU5gqmMd2NE+TfCHetXQvjPTOX50
-         r9OljLwy2I+wPKi8np1FQUxXuqOCRZBD/k+uC8XIUeAvFRtiONSfzONu1P20xbkYsYkl
-         XwKA==
+        bh=IuZWM+vvGhXI111nZezq7YkDGfyo2NaCVPFqmlVhiZg=;
+        b=HV0dDtenLo7xoWt3tuGE+MsFQMFI68O+g88NMlCmQKr+x8ZRiUGCECNYs/6jKKwChQ
+         JJXYDL7g+4v7xePFR0ZkxgAVUyYMR4F88GyBMSltXoz757Z0li4V93dpKTLmc0NeGWpP
+         TLSYY3cTGxAIKRQUwBI2pWU8VaLGCygpmrAQK7tZx/de+8DRt4dZUnUcB6HRxtH++iXI
+         5fR+HxsBgfm+CZ+En9OCBJYk7z0Bn+ingwGHgrwRUCFvbX4GDJFC2nFNrMATfF6oya0c
+         b1ir/jaxDMz3zFtMwB9kP9LZjoj47DyjRkvhOMcnx+Ui2Kw8CRY+ZbfypYQUQiirvjWy
+         A8jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712863073; x=1713467873;
+        d=1e100.net; s=20230601; t=1712863292; x=1713468092;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LMIixoIt6lY2SkR94o/u4nUsQeakPmVSC2HlUkV0a60=;
-        b=cJfUH3xmJysZbv1F5aQ1RDs6p396DCBdl3llGpiHWLkDUMwIlgRlAIbx5qdWV7UHhy
-         2Uum63BZCWx+XiyqdITpuJucmJtrKbbs9qqmMLLWf8uzMpmVng/YLUtU8jHmG+UvnwA1
-         gwjPoaE7BM5EZ1v4zlPlEA5ask0bFbAbP7MMJJlgeD28+f7PVWef53FEWKP8y63kPSda
-         t9sg37FII8qW6JyDapNb0ZIAY5hxu3MPOc/vGtJ1TGQWvvs3FhG4v9v8IQRgaWHMtuRV
-         wnLQwnE6E92TbPdHHP+MkLLl6GokVtQgUX2kF+9819ybnVrRgLusudhLKcsCrnjgiHmd
-         LSJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVdoGIElKQMW2UHd1xYdxCez7Jlgh7TiryOQVoZKip9jN+HLJIwSeDHtSYS/pQ7cjYmc1tCN/q2C7cSj5JFEBxCsABRbDfbS+OaOdw00jVlw==
-X-Gm-Message-State: AOJu0Yx0CWtEgEtd1mo+BYopZ+cbM+qG+VwkeB4PajEh6oiu9hZd/EpM
-	P6iUGktjC4ZGxf0of2TpJuf6d4pPWAM/uczfLw8M5dsexxiPr+Vl4auv7pDV/iXxzJTE9wy0u4n
-	jPg==
-X-Google-Smtp-Source: AGHT+IFguQvCmFsdS9wZt2947ESaktoib4WjScGApUlH985d9Wk7VnVVsEw7G9iuNo+2wFb72ko/YplirSU=
+        bh=IuZWM+vvGhXI111nZezq7YkDGfyo2NaCVPFqmlVhiZg=;
+        b=sJz1naJJXbYFJOWrsWxXaBFYso/NQv819VWImW7bNMQLCOICylEdJb2rZXnAKmgYgc
+         QIONxQdZmhNmlfN3V8kWiBSsGx5k7+keQdc7PCoVtrwdm0zK3n7LI+OxCndu4IBI509k
+         ps6wd40uwWlAyc4yQw+OaGuDl8k3JANvEf88TG8Csdpmf1a0Gj7UsQRehvoriN/WETq0
+         3jXtekS50IoA3m8Js7sZ2/dQPKpFHoTfK/TAh1jbhA9m/Rl9Tp0uMPPsSAx5BG8o8DPN
+         gb/6KOwgCTDpv6ecCEJqJWxILzDbVV+8iJwcpa6zp42snU62hPo9LZ2oiJzEiY+kx9O2
+         OFSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVpVnZrX/LDofVT1uUzwgSlT3otT035S+sujbB0OG9zzgql7mkqko7UTTJ2JYDOmQdby8q0r0raQD3XOMJJnfq6GijaySfM4uPC94mnErEFg==
+X-Gm-Message-State: AOJu0YzYLyZyf94x7mTGn3MEKWZi4NsE72xCj4vAF1BkQHFZuDckBuBN
+	NI6U1WMsuLLmfzEUASr1mKmXrc1FrzBkBL+5UuTicy6r+W28AQIfNBf2lcJowkBKaTSHi0j5Kmv
+	stg==
+X-Google-Smtp-Source: AGHT+IHPgtVqy0nFz025gGkTnMo7Alsvac05GAyUWXxa4k7Ytx/BHJCnyE1o2+n0hRWW+1ji8QfCIZN6pMU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:1761:0:b0:5e4:292b:d0eb with SMTP id
- 33-20020a631761000000b005e4292bd0ebmr1192pgx.2.1712863073071; Thu, 11 Apr
- 2024 12:17:53 -0700 (PDT)
-Date: Thu, 11 Apr 2024 12:17:51 -0700
-In-Reply-To: <20240126085444.324918-7-xiong.y.zhang@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a17:90a:fb94:b0:2a5:2428:2253 with SMTP id
+ cp20-20020a17090afb9400b002a524282253mr1232pjb.8.1712863291990; Thu, 11 Apr
+ 2024 12:21:31 -0700 (PDT)
+Date: Thu, 11 Apr 2024 12:21:30 -0700
+In-Reply-To: <20240126085444.324918-8-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-7-xiong.y.zhang@linux.intel.com>
-Message-ID: <Zhg3X_5A6BslIg-u@google.com>
-Subject: Re: [RFC PATCH 06/41] perf: x86: Add function to switch PMI handler
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-8-xiong.y.zhang@linux.intel.com>
+Message-ID: <Zhg4Oph6yCpN0DeX@google.com>
+Subject: Re: [RFC PATCH 07/41] perf/x86: Add interface to reflect virtual
+ LVTPC_MASK bit onto HW
 From: Sean Christopherson <seanjc@google.com>
 To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
@@ -73,39 +74,58 @@ Content-Type: text/plain; charset="us-ascii"
 On Fri, Jan 26, 2024, Xiong Zhang wrote:
 > From: Xiong Zhang <xiong.y.zhang@intel.com>
 > 
-> Add function to switch PMI handler since passthrough PMU and host PMU will
-> use different interrupt vectors.
+> When guest clear LVTPC_MASK bit in guest PMI handler at PMU passthrough
+> mode, this bit should be reflected onto HW, otherwise HW couldn't generate
+> PMI again during VM running until it is cleared.
+
+This fixes a bug in the previous patch, i.e. this should not be a standalone
+patch.
+
+> 
+> This commit set HW LVTPC_MASK bit at PMU vecctor switching to KVM PMI
+> vector.
 > 
 > Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
 > Signed-off-by: Mingwei Zhang <mizhang@google.com>
 > ---
->  arch/x86/events/core.c            | 15 +++++++++++++++
->  arch/x86/include/asm/perf_event.h |  3 +++
->  2 files changed, 18 insertions(+)
+>  arch/x86/events/core.c            | 9 +++++++--
+>  arch/x86/include/asm/perf_event.h | 2 +-
+>  arch/x86/kvm/lapic.h              | 1 -
+>  3 files changed, 8 insertions(+), 4 deletions(-)
 > 
 > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 40ad1425ffa2..3f87894d8c8e 100644
+> index 3f87894d8c8e..ece042cfb470 100644
 > --- a/arch/x86/events/core.c
 > +++ b/arch/x86/events/core.c
-> @@ -701,6 +701,21 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+> @@ -709,13 +709,18 @@ void perf_guest_switch_to_host_pmi_vector(void)
 >  }
->  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+>  EXPORT_SYMBOL_GPL(perf_guest_switch_to_host_pmi_vector);
 >  
-> +void perf_guest_switch_to_host_pmi_vector(void)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +}
-> +EXPORT_SYMBOL_GPL(perf_guest_switch_to_host_pmi_vector);
-> +
-> +void perf_guest_switch_to_kvm_pmi_vector(void)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
-> +}
-> +EXPORT_SYMBOL_GPL(perf_guest_switch_to_kvm_pmi_vector);
+> -void perf_guest_switch_to_kvm_pmi_vector(void)
+> +void perf_guest_switch_to_kvm_pmi_vector(bool mask)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  
+> -	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
+> +	if (mask)
+> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
+> +			   APIC_LVT_MASKED);
+> +	else
+> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
+>  }
 
-Why slice and dice the context switch if it's all in perf?  Just do this in
-perf_guest_enter().  
+Or more simply:
+
+void perf_guest_enter(u32 guest_lvtpc)
+{
+	...
+
+	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
+			       (guest_lvtpc & APIC_LVT_MASKED));
+}
+
+and then on the KVM side:
+
+	perf_guest_enter(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+
+because an in-kernel APIC should be a hard requirement for the mediated PMU.
