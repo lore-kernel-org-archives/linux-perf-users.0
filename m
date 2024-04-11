@@ -1,129 +1,201 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D67B84A45
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 17:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51C1E892;
+	Thu, 11 Apr 2024 18:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712857602; cv=none; b=IOTzkTnRujJBZ2nzr0ws08WFWvykHheal5zOgISQUQOHx5OhOUiO3bOv5m9dR34D3LLRh3+cFzk3g3kjgi4LFEvFO8O3erb7G60Abs0QTxdedaek7tWyUh/baPZe6uqBHNmYcvjFWrVAd6wgYRqFPOSy3mEvxHhKDHLlr2pGtj8=
+	t=1712858575; cv=none; b=X25fekGtZilgD2zflJ86HnlxRCP/QdGWa6yKPRIjskFZ7nzW7BsUEGazbmO9LaBFLl4XsATlg0OpSjACmRxuid/mEHrYyS3q/52sfn9XayIxu9aXKtL1WO4ot1cAtfBdLl8YmSjs0sKQroTi7WZVezbQmSDOiNTYW7PE9lGolLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712857602; c=relaxed/simple;
-	bh=xbyOWt7gDT90PHA8CmXecHjCn5gE8CXNTbkKxi7f40k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dt8IxpAcNVwWx9pghTi4S/V9F64k7SNh+sxkfcQi9N9FzLMdIGnUEf1besbTK2X5B66URKglVM9mdlpGM1d/gB7IBa+J9wtsFecj0/PQfBJIUe/YXUbwJU5x2YD5udkKq5VJSU+LS2I9a6kqMTyiw2bmKqwCgxO7k4oWE6RA9sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AsuAiIEO; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712858575; c=relaxed/simple;
+	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bV+/qVfCy9C7as5//Qxu8IMdO45CCX1EROCi1OIH5Vmo0DQ1giUztxYwAo8cZ4H3ILfTSI9hlYNkdE4I9DfiESpELh6VeFchuy+L5JtAx75LZgGAiCnIzfe0qHizLfCIJrYXPnd4Var+RtBUloikG+0Hv+ZSqVTFsDqI3yCOAhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlHKgg+D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AsuAiIEO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ed58ef3e3dso94431b3a.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 10:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712857600; x=1713462400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QDrKYmJhpcZaPcrJLV+DQJE+gAVulOU19ll4D+zrZcU=;
-        b=AsuAiIEOBcqOkZgTtx9qI9zxnLQwYaBFz/RUkS11cHSftsrR8KTgJzXez5NGQyC9UO
-         SL+hM0UoCUD3qoAj1L3xmFHtL02VwXjdeqEskE755+hCLORuubMqwl+Jf4NV9cxtHGiV
-         Rx476Z23+VPcxYz/KqDWBmjQVdAooI3p+rPSXx+lV3Y/Gb7o09oKL81Ut8+3ur7v1Dmv
-         B4y+AU/LfdBmR1jY9FIFV9CPuikuuFamtI/xDPIt7fe+pXBHnWFOEl38m+wEHY2v67qc
-         FYj4CtWS9plSDhWjDK7aEhPG12WFKKDMAonc+EZ/mjCNXuJEF4/0QNhKioWxqqyTsoZX
-         TeHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712857600; x=1713462400;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QDrKYmJhpcZaPcrJLV+DQJE+gAVulOU19ll4D+zrZcU=;
-        b=uupzYdCcca9hR8cWWPs7YwDZRo3S3pqLMPcljgylrxzAO7s45Xmsh/MVAuEp5lVCJH
-         0XKpJoTuUPI/cK+JJq7IaohVwGrEa9aHu2d4/0ORndhjnJFsIj9WiXI00HE9WX9GGrlu
-         8kcpYZXcV8itWc2MDnoGkV38xOW3SmgBj8Rxrb/HMSUTbPa3chB7qo93ZmK56mTCzVHv
-         rY6wWTeCiqe5TLLsqXPV2bPRrTjrI4b/hpbZIx1NCRXV62q6xQcaWjKUgympZ2t8ZnQf
-         Gxb0XC82lKwXC6DSInbUB178b298bk6sY46V1cMa11extuo4scCGLZc4TpxuqLtd9orL
-         313w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxgaUTR5vRIUepdeHrCMmbY5OUYdx1jKKnULqC+FJXXTOICzzSfuuyUm6bML5KJfwal3LUpy+jU6tqDC4yAqbSA7qijvmBNQOayImQcIu24g==
-X-Gm-Message-State: AOJu0YxMs3KL163h8/3EOo03l1Bphgjra8f4sBhcATGD+PjXt+Kxv064
-	AbjR34CTTa5DqHbtbLXz8C5qDtG246ZUzsV0KRShsGsJFDVMm36wbcd0fIwo8effIqxI5o6iPkv
-	yMQ==
-X-Google-Smtp-Source: AGHT+IFtoDfp5GyRetAbjF6DB8NcAHAaD2IM+hfZ0pw6BN3Rb7rwJGuZMBNHwb9J9vPhlLGRfTE9N8azeiU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2d87:b0:6ec:f406:ab4b with SMTP id
- fb7-20020a056a002d8700b006ecf406ab4bmr14703pfb.4.1712857599871; Thu, 11 Apr
- 2024 10:46:39 -0700 (PDT)
-Date: Thu, 11 Apr 2024 10:46:38 -0700
-In-Reply-To: <CALMp9eRwsyBUHRtjKZDyU6i13hr5tif3ty7tpNjfs=Zq3RA8RA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlHKgg+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824FEC072AA;
+	Thu, 11 Apr 2024 18:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712858574;
+	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IlHKgg+DA76Z0el5BLc3rN5PNpOY4yjbfGZWw9CSxcLHd9Lqqr3eoHns/FznGEI9m
+	 lrNBtvtjqn0DF3T6tu/loQbTxP01dY2r1Gt5ivenxQSyfpbRGsxC8dkl228WZLVNm7
+	 k0DCElk+AANvACFK86ZxCCpG7c9+xYDbXw3DTQSedXRlB0L003tl+JM1mlUxppotHa
+	 1FbDtGiu1/q3kzFBBXrKiXXPKXE4xIRoOnAZ3AbiImQ2kNVyCMWzmTUb9uMCgl+0/5
+	 Wej3FgCChUWaVL4cD+Z2EaYO7FTR5sGrxbee1BfiA96J75oSg4PWtMXkjrAR/cihYs
+	 k5keqvmfsxaZA==
+Date: Thu, 11 Apr 2024 15:02:51 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel
+ Hybrid systems
+Message-ID: <Zhgly2eQ5vk4FdEE@x1>
+References: <ZhWTIuyB9p1ORbQH@x1>
+ <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-2-xiong.y.zhang@linux.intel.com> <ZhgYD4B1szpbvlHq@google.com>
- <56a98cae-36c5-40f8-8554-77f9d9c9a1b0@linux.intel.com> <CALMp9eRwsyBUHRtjKZDyU6i13hr5tif3ty7tpNjfs=Zq3RA8RA@mail.gmail.com>
-Message-ID: <Zhgh_vQYx2MCzma6@google.com>
-Subject: Re: [RFC PATCH 01/41] perf: x86/intel: Support PERF_PMU_CAP_VPMU_PASSTHROUGH
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
 
-On Thu, Apr 11, 2024, Jim Mattson wrote:
-> On Thu, Apr 11, 2024 at 10:21=E2=80=AFAM Liang, Kan <kan.liang@linux.inte=
-l.com> wrote:
-> > On 2024-04-11 1:04 p.m., Sean Christopherson wrote:
-> > > On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > >> From: Kan Liang <kan.liang@linux.intel.com>
-> > >>
-> > >> Define and apply the PERF_PMU_CAP_VPMU_PASSTHROUGH flag for the vers=
-ion 4
-> > >> and later PMUs
-> > >
-> > > Why?  I get that is an RFC, but it's not at all obvious to me why thi=
-s needs to
-> > > take a dependency on v4+.
+On Tue, Apr 09, 2024 at 02:28:43PM -0700, Ian Rogers wrote:
+> On Tue, Apr 9, 2024 at 12:12 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > The IA32_PERF_GLOBAL_STATUS_RESET/SET MSRs are introduced in v4. They
-> > are used in the save/restore of PMU state. Please see PATCH 23/41.
-> > So it's limited to v4+ for now.
->=20
-> Prior to version 4, semi-passthrough is possible, but IA32_PERF_GLOBAL_ST=
-ATUS
-> has to be intercepted and emulated, since it is non-trivial to set bits i=
-n
-> this MSR.
+> > root@x1:~# grep -m1 "model name" /proc/cpuinfo
+> > model name      : 13th Gen Intel(R) Core(TM) i7-1365U
+> > root@x1:~# uname -a
+> > Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
+> > root@x1:~#
+> >
+> > Bisected down to:
+> >
+> > commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
+> > Author: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Date:   Thu Jun 15 10:47:00 2023 +0530
+> >
+> >     perf mem: Scan all PMUs instead of just core ones
+> >
+> >     Scanning only core PMUs is not sufficient on platforms like AMD since
+> >     perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
+> >     Scan all PMUs instead of just core PMUs. There should be negligible
+> >     performance overhead because of scanning all PMUs, so we should be okay.
+> >
+> >     Reviewed-by: Ian Rogers <irogers@google.com>
+> >     Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> >
+> > root@x1:~# perf -v ; perf test -v "Test data symbol"
+> > perf version 6.4.rc3.g5752c20f3787
+> > 111: Test data symbol                                                :
+> > --- start ---
+> > test child forked, pid 522202
+> > Recording workload...
+> > malloc_consolidate(): invalid chunk size
+> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 522208 Aborted                 (core dumped) perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM
+> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: kill: (522208) - No such process
+> > Cleaning up files...
+> > test child finished with -1
+> > ---- end ----
+> > Test data symbol: FAILED!
+> > root@x1:~# perf -v ; perf test -v "Test data symbol"
+> > perf version 6.8.g63c22868714b
+> > 116: Test data symbol:
+> > --- start ---
+> > test child forked, pid 526540
+> >  954300-954339 l buf1
+> > perf does have symbol 'buf1'
+> > Recording workload...
+> > Waiting for "perf record has started" message
+> > OK
+> > Cleaning up files...
+> > ---- end(-1) ----
+> > 116: Test data symbol                                                : FAILED!
+> > root@x1:~#
+> >
+> > Further details:
+> >
+> > (gdb) run mem record --all-user sleep 1
+> > Starting program: /root/bin/perf mem record --all-user sleep 1
+> >
+> >
+> > This GDB supports auto-downloading debuginfo from the following URLs:
+> >   <https://debuginfod.fedoraproject.org/>
+> > Enable debuginfod for this session? (y or [n]) y
+> > Debuginfod has been enabled.
+> > To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+> > [Thread debugging using libthread_db enabled]
+> > Using host libthread_db library "/lib64/libthread_db.so.1".
+> >
+> > Program received signal SIGSEGV, Segmentation fault.
+> > 0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
+> > 213                                     s = perf_mem_events__name(j, pmu->name);
+> > (gdb) bt
+> > #0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
+> > #1  0x000000000045c47f in __cmd_record (argc=2, argv=0x7fffffffe420, mem=0x7fffffffda20) at builtin-mem.c:152
+> > #2  0x000000000045d69b in cmd_mem (argc=4, argv=0x7fffffffe420) at builtin-mem.c:514
+> > #3  0x00000000004ffe38 in run_builtin (p=0xe08aa0 <commands+672>, argc=5, argv=0x7fffffffe420) at perf.c:323
+> > #4  0x00000000005000ac in handle_internal_command (argc=5, argv=0x7fffffffe420) at perf.c:377
+> > #5  0x00000000005001fb in run_argv (argcp=0x7fffffffe23c, argv=0x7fffffffe230) at perf.c:421
+> > #6  0x00000000005004e8 in main (argc=5, argv=0x7fffffffe420) at perf.c:537
+> > (gdb) list -5
+> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
+> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
+> > (gdb)
 
-Ah, then this _perf_ capability should be PERF_PMU_CAP_WRITABLE_GLOBAL_STAT=
-US or
-so, especially since it's introduced in advance of the KVM side of things. =
- Then
-whether or not to support a mediated PMU becomes a KVM decision, e.g. inter=
-cepting
-accesses to IA32_PERF_GLOBAL_STATUS doesn't seem like a complete deal break=
-er
-(or maybe it is, I now see the comment about it being used to do the contex=
-t switch).
+> >
+> >
+> > (gdb) list -5
+> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
+> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
+> > (gdb) p j
+> > $1 = 0
+> > (gdb) p pmu->name
+> > Cannot access memory at address 0x64ffffff9c
+> > (gdb)
+> >
+> > 183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+> > 184                                  char **rec_tmp, int *tmp_nr)
+> > 185 {
+> > 186         int i = *argv_nr, k = 0;
+> > 187         struct perf_mem_event *e;
+> > 188         struct perf_pmu *pmu;
+> > 189         char *s;
+> > 190
+> > 191         for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> > 192                 e = perf_mem_events__ptr(j);
+> > 193                 if (!e->record)
+> > 194                         continue;
+> > 195
+> > 196                 if (perf_pmus__num_mem_pmus() == 1) {
+> > 197                         if (!e->supported) {
+> > 198                                 pr_err("failed: event '%s' not supported\n",
+> > 199                                        perf_mem_events__name(j, NULL));
+> > 200                                 return -1;
+> > 201                         }
+> > 202
+> > 203                         rec_argv[i++] = "-e";
+> > 204                         rec_argv[i++] = perf_mem_events__name(j, NULL);
+> > 205                 } else {
+> > 206                         if (!e->supported) {
+> > 207                                 perf_mem_events__print_unsupport_hybrid(e, j);
+> > 208                                 return -1;
+> > 209                         }
+> > 210
+> > 211                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> > 212                                 rec_argv[i++] = "-e";
+> > 213                                 s = perf_mem_events__name(j, pmu->name);
+> > 214                                 if (s) {
+> > 215                                         s = strdup(s);
+> 
+> This looks like something that address/memory sanitizers could help with.
 
-And peeking ahead, IIUC perf effectively _forces_ a passthrough model when
-has_vpmu_passthrough_cap() is true, which is wrong.  There needs to be a us=
-er/admin
-opt-in (or opt-out) to that behavior, at a kernel/perf level, not just at a=
- KVM
-level.  Hmm, or is perf relying on KVM to do that right thing?  I.e. relyin=
-g on
-KVM to do perf_guest_{enter,exit}() if and only if the PMU can support the
-passthrough model.
+I'm I forgetting something?
 
-If that's the case, most of the has_vpmu_passthrough_cap() checks are grati=
-utous
-and confusing, e.g. just WARN if KVM (or some other module) tries to trigge=
-r a
-PMU context switch when it's not supported by perf.
+⬢[acme@toolbox perf-tools-next]$ rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 EXTRA_CFLAGS="-fsanitize=address" O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+
+root@x1:~# perf test -v 116
+116: Test data symbol:
+--- start ---
+test child forked, pid 614595
+ f87540-f87579 l buf1
+perf does have symbol 'buf1'
+Recording workload...
+Waiting for "perf record has started" message
+OK
+Cleaning up files...
+---- end(-1) ----
+116: Test data symbol                                                : FAILED!
+root@x1:~# ldd ~/bin/perf | grep asan
+	libasan.so.8 => /lib64/libasan.so.8 (0x00007f8eb7a00000)
+root@x1:~#
