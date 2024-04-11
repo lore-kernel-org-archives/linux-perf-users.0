@@ -1,268 +1,97 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFA32BCE8
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 18:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7DE1863B;
+	Thu, 11 Apr 2024 18:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712859997; cv=none; b=XCvCEfGgtFjsUvBxrKJy/6H6tjb5XXBJFiulqLKlC86zNhI+7rn9tA7RVAuIeHB0q7dbMJiHLOkE9kEWVEOq2Me1ey7zSzXYLTpLXLayg/90wHiObSj6lfnSorW5jWCeACg3UPRq1uer6s2WgknWmhOzpxd7qD1e8aZg7aYVW0U=
+	t=1712860951; cv=none; b=Y6hdvK/IiZ/MLbSWLGOKyUFjs3msHT6kBiRLZyS9F+gqpgUrpnhKVKUZ8x5gMwpmsOxMlw+qUC6v0PzFHBzPQzV8ffB3J7MPv17l19zd7iAiGyCrReKoGO3KoZO0j0xVMAKydYsQ6svM/pR3U+cWpOrjF9Y9fedr05aSdR84r94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712859997; c=relaxed/simple;
-	bh=cUoKJPO1frb65Eu9had+XQKYxvcWcC7R+sgZ987tX6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uyj7jcBsoVDfdnzqZNENBAQ5wM6g876yOYtJJ/rSDR4tJrg7TdxujAt4amwSfRKP2wCx9SHl4AaJEGhnjH4lYcYuKPylCxSKTvOqBQNM6q7+zArH8fDNf5lQxZeouUhfmQXQKjPwITZesMadVBXOdC0pfScPntpcyeDTZGANQuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v9tKPazp; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712860951; c=relaxed/simple;
+	bh=cNhplYhRegzLVfwCwfg5gMJlYQSZzSjONHOCJSpflbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SIlWiJwQvBr4CK0c42f84kI5LYt+er0L0nFpZx6TxgFcO1FZfgQbTlGte1A3hPqapYtv6yz6LpzRlGxFAgmfUql7Ek/aBOTY8aK9VH5B30D0Q1Ncr0qasu6yXIrmPmUmw+8eIQ5uvvgXGPchOIxu88/DDDHuj7iWWc1xQvXCRRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgYbnuYC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v9tKPazp"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e3c89f3d32so23515ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 11:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712859994; x=1713464794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XC41917dgny/jVUVx3QVCZJWuG+qzx5F6Qv3bCsIzVE=;
-        b=v9tKPazpTawHSe+rK7xqVCwbr+FkPHQsSK04WoQYHKIdON9RBl2LAC3dEg1EjIW8RS
-         9k1tglQbiFYIb5siVateaXj5fwpjL5qYwGCWfkDjSI0iLwUxh+hURzqzDL/iqAkIzOP7
-         DQZsyzqtLeRVbnuYxrCw8RDMJ/uA4RaBJPTxtf12BErU7bBLBIiFttITNx3LPMqsgOHJ
-         tSQdsZEX+TvdJG4GnDZPosfPImTI0ny7A2UtbxE2608KpRLkfvinYPUlgPZeCFeqd76B
-         P6zcVgTssCILt0h+VbPaYC/4DY6n4c8RsBFke67rtrIlICQu0n68/FEBpdW/8EdsMW06
-         55nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712859994; x=1713464794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XC41917dgny/jVUVx3QVCZJWuG+qzx5F6Qv3bCsIzVE=;
-        b=Uslc8TtUlKxukRfdyHFLxzaDeNIJPLSVi1NB9S5yixY//B+hqogs8Z+MK6DfiAZub2
-         vNdg2dDEIR9iL4hwcd/pcYurVH2aaCsEparaaFHmipB7bcUyLxWpMNum9K3+sYM+wIsE
-         j22fYY0+sAUw5MbvyJ4YInJeQ82RSJcZAWSwhVdfq5IyusG1/Mc0OGe0tltean/tgv/i
-         ptAsJFskehcoKGExIZPwqhMQlyEuD+ICEZ/wfGxImlbdZHyXHJtqFy+VbnY3BEkWFRQ4
-         M2ZLAojP8EsGEzixbKjRRfDRPrtEPN3bWTP19NAkz2iAGmCpYegG+TbhjDBZrlEtsndG
-         hXmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVH9XbW9gKS7llzx4tMUgs55a/3C4hOT6VWMwQthIELRYU5cI5eBFAQlk5wy41uK5PIj1K/N53kBr7u+T0RyJej22zsT/OXL6g/IDjXwbE3KA==
-X-Gm-Message-State: AOJu0Yyh0EAU+rETo+DcQYisvcdpkHymkKd6MeZMVwnkCLtDk7yQD508
-	ev4PUwbrgXZqi7Q8MiYBHTi8L3qUeh/9LCD9iBs6883VlF+AIop5DegVK7LKiezk3KlOrIzUCy+
-	14W1Y7S44rHNsIGRq71aLi1isjKH4Bq9FGmvJ
-X-Google-Smtp-Source: AGHT+IFAAV0KSnFsBZIG+Z9mxEFfB3YxRLmfRM8eML++JJOVy0kWDixF2H0Be9NL8D4o/ShBYoKWX03L19DmBH3RBQo=
-X-Received: by 2002:a17:902:ce87:b0:1e5:5c7a:6a4e with SMTP id
- f7-20020a170902ce8700b001e55c7a6a4emr15863plg.2.1712859993699; Thu, 11 Apr
- 2024 11:26:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgYbnuYC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B40C072AA;
+	Thu, 11 Apr 2024 18:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712860950;
+	bh=cNhplYhRegzLVfwCwfg5gMJlYQSZzSjONHOCJSpflbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AgYbnuYCc0JMHo7uYHO+6QPnfpboeaRS0PaGEwuP82rrgxX2VbGPLTYXeG5Jl5Gno
+	 tmAz1OwNaUIuEdInYEtmBWThstsKGyxKqxx/KbgxT/KfJW6PGEdOyg6el7+67T/6eB
+	 8Z32NOBritWtHec9WmFwsUhI+v4YDXC4kp9D4BlioNjU2AC6nMXxgaYgR8zylEaLRN
+	 wfxeg52DgHDYuRu7HzlJ4WVbK4MEkI8uGENf4Gij0UomdzlxHXoIvCS370y1MWJxUA
+	 R07NGa+iIMaswbN5Psz9l+ymZIfH0ycLV9ylYfUPraTKffS+ULtuv45bwZqlBTNnv7
+	 hrYeHRm2ptkgg==
+Date: Thu, 11 Apr 2024 15:42:27 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	Changbin Du <changbin.du@huawei.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Li Dong <lidong@vivo.com>, Paran Lee <p4ranlee@gmail.com>,
+	elfring@users.sourceforge.net,
+	Markus Elfring <Markus.Elfring@web.de>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Chengen Du <chengen.du@canonical.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] dso/dsos memory savings and clean up
+Message-ID: <ZhgvE7i9HGGar1eX@x1>
+References: <20240410064214.2755936-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZhWTIuyB9p1ORbQH@x1> <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
- <Zhgly2eQ5vk4FdEE@x1>
-In-Reply-To: <Zhgly2eQ5vk4FdEE@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Apr 2024 11:26:21 -0700
-Message-ID: <CAP-5=fVOR+9tEjn84Og-ZHSsNsfQcd7boLPrPv9cqdqtp8us1g@mail.gmail.com>
-Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel Hybrid systems
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410064214.2755936-1-irogers@google.com>
 
-On Thu, Apr 11, 2024 at 11:02=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Apr 09, 2024 at 02:28:43PM -0700, Ian Rogers wrote:
-> > On Tue, Apr 9, 2024 at 12:12=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > root@x1:~# grep -m1 "model name" /proc/cpuinfo
-> > > model name      : 13th Gen Intel(R) Core(TM) i7-1365U
-> > > root@x1:~# uname -a
-> > > Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:=
-50:39 UTC 2024 x86_64 GNU/Linux
-> > > root@x1:~#
-> > >
-> > > Bisected down to:
-> > >
-> > > commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
-> > > Author: Ravi Bangoria <ravi.bangoria@amd.com>
-> > > Date:   Thu Jun 15 10:47:00 2023 +0530
-> > >
-> > >     perf mem: Scan all PMUs instead of just core ones
-> > >
-> > >     Scanning only core PMUs is not sufficient on platforms like AMD s=
-ince
-> > >     perf mem on AMD uses IBS OP PMU, which is independent of core PMU=
-.
-> > >     Scan all PMUs instead of just core PMUs. There should be negligib=
-le
-> > >     performance overhead because of scanning all PMUs, so we should b=
-e okay.
-> > >
-> > >     Reviewed-by: Ian Rogers <irogers@google.com>
-> > >     Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> > >
-> > > root@x1:~# perf -v ; perf test -v "Test data symbol"
-> > > perf version 6.4.rc3.g5752c20f3787
-> > > 111: Test data symbol                                                =
-:
-> > > --- start ---
-> > > test child forked, pid 522202
-> > > Recording workload...
-> > > malloc_consolidate(): invalid chunk size
-> > > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60=
-: 522208 Aborted                 (core dumped) perf mem record --all-user -=
-o ${PERF_DATA} -- $TEST_PROGRAM
-> > > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62=
-: kill: (522208) - No such process
-> > > Cleaning up files...
-> > > test child finished with -1
-> > > ---- end ----
-> > > Test data symbol: FAILED!
-> > > root@x1:~# perf -v ; perf test -v "Test data symbol"
-> > > perf version 6.8.g63c22868714b
-> > > 116: Test data symbol:
-> > > --- start ---
-> > > test child forked, pid 526540
-> > >  954300-954339 l buf1
-> > > perf does have symbol 'buf1'
-> > > Recording workload...
-> > > Waiting for "perf record has started" message
-> > > OK
-> > > Cleaning up files...
-> > > ---- end(-1) ----
-> > > 116: Test data symbol                                                =
-: FAILED!
-> > > root@x1:~#
-> > >
-> > > Further details:
-> > >
-> > > (gdb) run mem record --all-user sleep 1
-> > > Starting program: /root/bin/perf mem record --all-user sleep 1
-> > >
-> > >
-> > > This GDB supports auto-downloading debuginfo from the following URLs:
-> > >   <https://debuginfod.fedoraproject.org/>
-> > > Enable debuginfod for this session? (y or [n]) y
-> > > Debuginfod has been enabled.
-> > > To make this setting permanent, add 'set debuginfod enabled on' to .g=
-dbinit.
-> > > [Thread debugging using libthread_db enabled]
-> > > Using host libthread_db library "/lib64/libthread_db.so.1".
-> > >
-> > > Program received signal SIGSEGV, Segmentation fault.
-> > > 0x0000000000611860 in perf_mem_events__record_args (rec_argv=3D0xea82=
-80, argv_nr=3D0x7fffffffd6bc, rec_tmp=3D0xebbda0, tmp_nr=3D0x7fffffffd6c0) =
-at util/mem-events.c:213
-> > > 213                                     s =3D perf_mem_events__name(j=
-, pmu->name);
-> > > (gdb) bt
-> > > #0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=3D0x=
-ea8280, argv_nr=3D0x7fffffffd6bc, rec_tmp=3D0xebbda0, tmp_nr=3D0x7fffffffd6=
-c0) at util/mem-events.c:213
-> > > #1  0x000000000045c47f in __cmd_record (argc=3D2, argv=3D0x7fffffffe4=
-20, mem=3D0x7fffffffda20) at builtin-mem.c:152
-> > > #2  0x000000000045d69b in cmd_mem (argc=3D4, argv=3D0x7fffffffe420) a=
-t builtin-mem.c:514
-> > > #3  0x00000000004ffe38 in run_builtin (p=3D0xe08aa0 <commands+672>, a=
-rgc=3D5, argv=3D0x7fffffffe420) at perf.c:323
-> > > #4  0x00000000005000ac in handle_internal_command (argc=3D5, argv=3D0=
-x7fffffffe420) at perf.c:377
-> > > #5  0x00000000005001fb in run_argv (argcp=3D0x7fffffffe23c, argv=3D0x=
-7fffffffe230) at perf.c:421
-> > > #6  0x00000000005004e8 in main (argc=3D5, argv=3D0x7fffffffe420) at p=
-erf.c:537
-> > > (gdb) list -5
-> > > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> > > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines=
-.
-> > > (gdb)
->
-> > >
-> > >
-> > > (gdb) list -5
-> > > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-> > > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines=
-.
-> > > (gdb) p j
-> > > $1 =3D 0
-> > > (gdb) p pmu->name
-> > > Cannot access memory at address 0x64ffffff9c
-> > > (gdb)
-> > >
-> > > 183 int perf_mem_events__record_args(const char **rec_argv, int *argv=
-_nr,
-> > > 184                                  char **rec_tmp, int *tmp_nr)
-> > > 185 {
-> > > 186         int i =3D *argv_nr, k =3D 0;
-> > > 187         struct perf_mem_event *e;
-> > > 188         struct perf_pmu *pmu;
-> > > 189         char *s;
-> > > 190
-> > > 191         for (int j =3D 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> > > 192                 e =3D perf_mem_events__ptr(j);
-> > > 193                 if (!e->record)
-> > > 194                         continue;
-> > > 195
-> > > 196                 if (perf_pmus__num_mem_pmus() =3D=3D 1) {
-> > > 197                         if (!e->supported) {
-> > > 198                                 pr_err("failed: event '%s' not su=
-pported\n",
-> > > 199                                        perf_mem_events__name(j, N=
-ULL));
-> > > 200                                 return -1;
-> > > 201                         }
-> > > 202
-> > > 203                         rec_argv[i++] =3D "-e";
-> > > 204                         rec_argv[i++] =3D perf_mem_events__name(j=
-, NULL);
-> > > 205                 } else {
-> > > 206                         if (!e->supported) {
-> > > 207                                 perf_mem_events__print_unsupport_=
-hybrid(e, j);
-> > > 208                                 return -1;
-> > > 209                         }
-> > > 210
-> > > 211                         while ((pmu =3D perf_pmus__scan(pmu)) !=
-=3D NULL) {
-> > > 212                                 rec_argv[i++] =3D "-e";
-> > > 213                                 s =3D perf_mem_events__name(j, pm=
-u->name);
-> > > 214                                 if (s) {
-> > > 215                                         s =3D strdup(s);
-> >
-> > This looks like something that address/memory sanitizers could help wit=
-h.
->
-> I'm I forgetting something?
+On Tue, Apr 09, 2024 at 11:42:02PM -0700, Ian Rogers wrote:
+> 12 more patches from:
+> https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+> a near half year old adventure in trying to lower perf's dynamic
+> memory use. Bits like the memory overhead of opendir are on the
+> sidelines for now, too much fighting over how
+> distributions/C-libraries present getdents. These changes are more
+> good old fashioned replace an rb-tree with a sorted array and add
+> reference count tracking.
+> 
+> The changes migrate dsos code, the collection of dso structs, more
+> into the dsos.c/dsos.h files. As with maps and threads, this is done
+> so the internals can be changed - replacing a linked list (for fast
+> iteration) and an rb-tree (for fast finds) with a lazily sorted
+> array. The complexity of operations remain roughly the same, although
+> iterating an array is likely faster than iterating a linked list, the
+> memory usage is at least reduce by half.
 
-I think it is just that the shell script pipes the output and so we
-don't see it in verbose mode. I'd add a "set -x" to
-tools/perf/tests/shell/test_data_symbol.sh so you can run the failing
-command without the redirects/pipes/..
+Got the first 5 patches, would be nice if more people could review it,
+I'll try and get back to is soon.
 
-Thanks,
-Ian
-
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ rm -rf ~/libexec/perf-core/ ; ma=
-ke -k CORESIGHT=3D1 EXTRA_CFLAGS=3D"-fsanitize=3Daddress" O=3D/tmp/build/$(=
-basename $PWD)/ -C tools/perf install-bin
->
-> root@x1:~# perf test -v 116
-> 116: Test data symbol:
-> --- start ---
-> test child forked, pid 614595
->  f87540-f87579 l buf1
-> perf does have symbol 'buf1'
-> Recording workload...
-> Waiting for "perf record has started" message
-> OK
-> Cleaning up files...
-> ---- end(-1) ----
-> 116: Test data symbol                                                : FA=
-ILED!
-> root@x1:~# ldd ~/bin/perf | grep asan
->         libasan.so.8 =3D> /lib64/libasan.so.8 (0x00007f8eb7a00000)
-> root@x1:~#
+- Arnaldo
