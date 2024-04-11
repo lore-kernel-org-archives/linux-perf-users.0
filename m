@@ -1,65 +1,65 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5DE3D3B1
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 21:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CAB2DF84
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 21:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712872563; cv=none; b=k0Gf2p0p/74l2M+ZhSrK+8G5ZyvitsB4aeEFf7ybfw3s9G0l/+rOk8bz2E/he7tjJQm2QE6BC2oCRkc1gmy/1dgnPFsY8+u6CzqSyS4WO42P6oXqkBCNoTTuo/UA4rIgUOd+k9ZjysFz9u7c4aQq3n7KFvR4DKYSS5UKJ3pKd08=
+	t=1712872602; cv=none; b=UYS7AEJHDPrcER7qIDQDa3p/xpvHYWKNr/V8V/2qtSISZTzyxYc41ILoLIPh/X/0ohTd3ca9CG2newQEpCQJ8Y7L7ZQ45SzDDj9r6ak/3y2GISXNRgBwX/he/QzGRC6YOb9XSpChe58bNOsqKasYa+4YsU5XMWCyf/Ld0czU8cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712872563; c=relaxed/simple;
-	bh=WhE2TsdaFBf//X6Mi0awY4JgS5Ez02ojQe+rYM89Pc0=;
+	s=arc-20240116; t=1712872602; c=relaxed/simple;
+	bh=5IskHx1Alp47+xsPcKeN3SCTGFddMnlcEHREVJpqLRY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lNUubUHJ5b1vH6+k0763I5ZaIbbpNCn4vwGasua+of9eoff70tc6T6MSbatPhdmjKlL6qy68ZdWGjGhx0keKAATvm4E6ratYYSXZn6zSoeoW9gLYBu86FEFVCKpBIRbSDi7IxQZyE3Idcgt/hK5chXQA7yl/h26pAEPwHVGfAgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YwKWh/M+; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=PxHzFsHmJ+epsxG6F40DJesBJIldX/EoO+NH/ezKLUr0ld+5PFXoBBv8jV9pZt2ilUoIhZ80toCdw6RjQHNSfs8HyrWfGHiapDRRxB5Qfas22D/O2kDoaNNzaKk2o5J2k5JqBr3GRZxfwaYMuVuY2qQFau+xQ/ZFTAsWmJLNULY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ffomuWUC; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YwKWh/M+"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6183c4a6d18so3854097b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 14:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ffomuWUC"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5d8bdadc79cso271346a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 14:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712872560; x=1713477360; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712872600; x=1713477400; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvBGm3WAp5dT0fLVD6CrBnCmwmbz5ObPTPCGBrsW24I=;
-        b=YwKWh/M+c9BEF5GW7MakBF9cybgGnUpIuYWjGheNg//iGe31o3pWZ96DMXkxTGUYw+
-         BfBHedjIGKOat2D/2azJhT5YM7M3KqhjcCDg+4R3NGxXeJafvBnZ4oCZEvZy5sYK8xdu
-         n9GqBZCJFrcUEbE6lmt0EGrud0nCzWSCpleuR246PpIUn8kJAnPNMHS85GfW+DnJTMIY
-         nFDWPiJO0L3ARYJZaf0NEamA2XS2G319nSfu2ZWOpjBzOTbzmUZ/AnAUVrZAusit85e6
-         V04NiU5o5W9Eyq4cg79D+EhgmwF843BFXZMh2uiV3g+94CVZkVT6xKqjXi1AZJs1lRlx
-         FDZg==
+        bh=2l7nkr1/AkcgDi+i114FYV92kBj0GcgXVLsLHaB4i3Q=;
+        b=ffomuWUC57kRC245jJ56gKBxolzmpFuvunAO9TsWS0ivrYTLgWPk+GCsXGuJfxqJDJ
+         uXpkH4vGXaRZ1ZPH4IxtKHgZHb3Hilll9pR+mDnV6TcU+vlS0DSZpZy1V4Dymb6fIHG2
+         trpgoZBy3YnHSOqVnEqkKwrKTf8SfheH6x2v1Hxp72m+ctRYAxy9VFXJwjlo6N7fLfgE
+         Dkoys1PDB4CU5CHfq/6iGUipLWCw1CoNa+SMEub2PQ7XU6pK+KBlO1Bxxnr1OFs4XHeQ
+         wwoT9xXlZWq6YzsCIDT11Z1lOUHI23TWIEz6hlazTsx8zddu7uuOagTYlyLqNcGBrgRa
+         38mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712872560; x=1713477360;
+        d=1e100.net; s=20230601; t=1712872600; x=1713477400;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvBGm3WAp5dT0fLVD6CrBnCmwmbz5ObPTPCGBrsW24I=;
-        b=grwhnCNyjWpnlnyVRTyiYtoATBI4coHyhtbi2dx2XTosXa2oEnovxv3AAbArx4O1sQ
-         tvdS4Fww2xd1brgsA2OjKdTZ8yB+E467iGywVOxQndqUGlpBmRKE/AOwaM0nic1g5hQt
-         JFatSY1QLrobd6zBpmc7noM6a03LOCeCT28uA93/msK7P6v4ETlAZ/OyIaWq4DCKMrli
-         jvrvXOb+tkw79fCwZKAIf+1wmAstL2JXnHmEGcPktPkQmYF+2pqPPmxTpp/6NAf2poBh
-         xSKkFOf3dbwxWztXCGnq92DBd4ys9VObnyQ/wAHTOlEhqehhljEBm/YkeE2mJZNtfrcx
-         rZ9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5XE9FQOHM9Mq8as2ErT80ZKoiTI9/cOA5ZUCRhIQrKlQAqHQQR/Ja3NpKLXsL95o0fRIK/uXi9j/uH/zYjObAQ+D4lI/DVhlGqlrU2D2iLw==
-X-Gm-Message-State: AOJu0YwysczHchLtBPXsiMk66LZaXbNlR6XftsrdNIX2Oe2aaWhfjLwK
-	TkW2jkVxDuJRiWlTeiOg2msGN9XFjSCaPuyMIjCk80+VpjO0LaxGZVoVN6LwYWFyAhuxne6m9vm
-	stw==
-X-Google-Smtp-Source: AGHT+IH9dyBjwYQ6qyY0Soi/iKEoDhgE0NmUsd3HLY8ONMNaCYYAfiPmG+fuJNw1ZCLcK+rYaU6AuAjCHHs=
+        bh=2l7nkr1/AkcgDi+i114FYV92kBj0GcgXVLsLHaB4i3Q=;
+        b=TXYj6vS1MEwz95ULzaB3dN7ITdyyWSIv30LuNEhEIFP5Ggt4iq+Hb1QLtUSM824+V6
+         vDILOsyWdmD0OYT+u9q05+GpjbONA1T9VK8c+bb0Xw4L8CKDMgiWgx9na4K4r50p+XCK
+         iv1vTJ02nvQb/pwt4C1MoasXYuJfMe5HVZDncywq7ZQF11WjcZJ7ILEcZQuhCOwL7gWe
+         8XZgBHM2mkR6oyr4u2NnG4FoIFmTHiIpGjn7HlcTtLcWZldBYWjBhX050EDI9ibHlgB4
+         SmEyNdp+LoA7w4ck3woVudee8Swl7k3s3s6utpfOwRgcHX4LzguR5bLsjeth177mLsEy
+         Jglw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWA5IZ8gcdvhZWF6pFwXC3bKseTQlxjYYXpxWyQrH4tLhR6muXuNTW5QgcwSHuVXbbmAmRj76MAX3hx19vD1D7gkNjOk/+LPZsxdUkBcvvTA==
+X-Gm-Message-State: AOJu0YxPZRVdBACf/zU5yS/iuQALmiPsYQEA7VpdwW4ZGIAU0LtAgWmT
+	oBAsJ2Py7GlksYpuqe4COZVssbRRJHJPOJ3NdBNedI1wktCuWZLVUnF2CfHe793tmJsCu1bKLm2
+	wrg==
+X-Google-Smtp-Source: AGHT+IGkE+X2zxbr1hHNUpWg21uobjE0x+B1Mp3y6MyplpSZTK7tHQrQsbMRcsPEdX3tPdwzxY1iWabyoHQ=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:c0c:b0:de1:d49:7ff6 with SMTP id
- fs12-20020a0569020c0c00b00de10d497ff6mr95831ybb.7.1712872560644; Thu, 11 Apr
- 2024 14:56:00 -0700 (PDT)
-Date: Thu, 11 Apr 2024 14:55:59 -0700
-In-Reply-To: <20240126085444.324918-35-xiong.y.zhang@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a63:7157:0:b0:5f0:5034:1c21 with SMTP id
+ b23-20020a637157000000b005f050341c21mr2010pgn.12.1712872599915; Thu, 11 Apr
+ 2024 14:56:39 -0700 (PDT)
+Date: Thu, 11 Apr 2024 14:56:38 -0700
+In-Reply-To: <20240126085444.324918-37-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-35-xiong.y.zhang@linux.intel.com>
-Message-ID: <Zhhcb9za_ShcESOh@google.com>
-Subject: Re: [RFC PATCH 34/41] KVM: x86/pmu: Intercept EVENT_SELECT MSR
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-37-xiong.y.zhang@linux.intel.com>
+Message-ID: <Zhhclu4VP3DDiPJM@google.com>
+Subject: Re: [RFC PATCH 36/41] KVM: x86/pmu: Intercept FIXED_CTR_CTRL MSR
 From: Sean Christopherson <seanjc@google.com>
 To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
@@ -73,43 +73,9 @@ Content-Type: text/plain; charset="us-ascii"
 On Fri, Jan 26, 2024, Xiong Zhang wrote:
 > From: Xiong Zhang <xiong.y.zhang@intel.com>
 > 
-> Event selectors for GP counters are still intercepted for the purpose of
-> security, i.e., preventing guest from using unallowed events to steal
-> information or take advantages of any CPU errata.
+> Fixed counters control MSR are still intercepted for the purpose of
+> security, i.e., preventing guest from using unallowed Fixed Counter
+> to steal information or take advantages of any CPU errata.
 
-Heh, so then they shouldn't have been passed through in the first place.
-
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/kvm/vmx/pmu_intel.c | 1 -
->  arch/x86/kvm/vmx/vmx.c       | 1 -
->  2 files changed, 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 9bbd5084a766..621922005184 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -809,7 +809,6 @@ void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
->  	int i;
->  
->  	for (i = 0; i < vcpu_to_pmu(vcpu)->nr_arch_gp_counters; i++) {
-> -		vmx_set_intercept_for_msr(vcpu, MSR_ARCH_PERFMON_EVENTSEL0 + i, MSR_TYPE_RW, false);
->  		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, false);
->  		if (fw_writes_is_enabled(vcpu))
->  			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, false);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index d28afa87be70..1a518800d154 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -698,7 +698,6 @@ static bool is_valid_passthrough_msr(u32 msr)
->  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
->  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
->  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
-> -	case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 7:
->  	case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
->  	case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
->  	case MSR_CORE_PERF_FIXED_CTR_CTRL:
-> -- 
-> 2.34.1
-> 
+Same comments as earlier patches.  Don't introduce bugs and then immediately fix
+said bugs.
