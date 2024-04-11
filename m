@@ -1,113 +1,109 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269CF1862E
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 22:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8AB46449
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 22:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712874647; cv=none; b=Q6Ow5DXgxxWNtuVPKPY0u4E+S+oWNk75XeXJa9qpBQPWrtRH9GyslFq8YPj/cXx8CSlHsiN0hH/4zT82uOjZgLXLLKWMb/4DX0Ozej/on4tcW/VAvR1y4ifaOSWVjURO8kkEi2YUGBMSubDsJfO3LXw+iakQs6tyQ48nFwtSNH8=
+	t=1712875206; cv=none; b=u+GL3X0ZaMFAlQwdt+T+kVC2oUv5b631traqdvqfDFuBC9+0aWZm9D3CVi+UnWivf6JrCagGpYO5/aiQb0gQkMzTFV04E68K43FzYDB0HL7MfTu3On5tRt6cXrifeFWOfcR9Q24pqf/phHQHAJ2K+L6vSUb+ibFYNfOdqXsSGzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712874647; c=relaxed/simple;
-	bh=FPP0pGTTQJ9w/af1qSi4/wrO18+xLS21UrdlmCqaGCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I1bEb/FbNAgm1DKhgSeNAuS9mUjIR1uju0pXkbaX1QXNH2j+b6KXTQBHxS+qF40Bd8I+zKeFUC7ZQBcatJhW9Nm1UhLF66ezOBxCqLXYwXQU6uGCqghF2WUcH+6AHXH/gr+DZnYRAz7P2Yz6LW1k2n+ic9pRy12o8ibJBgqcac0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLg0DMph; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712875206; c=relaxed/simple;
+	bh=S4TnsFcjuXgA9nuQRAvIeS3/zSNBm8/9BgUmS0MLmqs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=UDs6NQGfQBiHPsXW+xk/7ZEeLejbARx57vJ8naN6C2NSShLm5ueR3yoQihpo1vLEaPnn1XI8LoNKJ0yPiLpyQjlYAonuRx6b8dzF8A5q70AepxVcFVgGrY1jqQpoMifydUx4p1s/meNdSfWdfD3tttheAuQ7ozvJO7+arMk2I9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=HrE7Vx3V; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLg0DMph"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e5174ffc2so2035a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 15:30:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="HrE7Vx3V"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-516d6e23253so393868e87.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 15:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712874644; x=1713479444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712875203; x=1713480003; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TC6twZx6RBXTw+ooEGShhOHtZOxQHkfNzLmy0BDBQz0=;
-        b=oLg0DMph3m0qvauDhxcZIx4zSylGeblkJ5IL3Xo81f6825vW/N+BVcZz/zH+CDo8KG
-         lOVdkT2e5Jz+SMjL7sDiiDZt672RM3k9jKxfGyUZAZ9dyIPB6j9/tkQd/1Zq0x1oPty9
-         tEEVrFdmUzfio3g1QoAdMxHArUMOI80jKukPDw7pODSlb9/io2CiU3Qk7nDv3XX8I4jo
-         NuFFZGkYTsjB/CSFuuY/JAtFqBLyDtnZ/c3+1FJoufimMoebYEVwN8Pp29L7Uzt8H8qi
-         om91vGAohv4WqU0gWyET7avdjHh3YAoD0ewZVQ+axll3SY+pLSHF4yNG8gaOQR7KeIgm
-         r3pQ==
+        bh=S4TnsFcjuXgA9nuQRAvIeS3/zSNBm8/9BgUmS0MLmqs=;
+        b=HrE7Vx3VsjO9zx09zpOJKe5SAZpjbJiQlry9KLYoRT4w8RbuXZeMwwSh/XEXQESIck
+         gKMtNsMOwu9skWe5ekfDSLBm9kAKGi6YBVIC3zq9r8w2dIOlyjPm54EOXt6ohzfsymWF
+         cDzSb8jCYm4lcNa8gKha+9ObHZf9RrEPBm+D1TdrFVFbU1vkRKRrbxomgI18JDI02dXL
+         cnJEIiUlTz6UgXyGQUrkOXv+UjTQZKKbD9r7+S62qMAbE7sw33tjxBw+CrspLAqlSGlZ
+         MxDn6xfZu/vVjV2ou24iQm57Z6ry3iRc/F8pO+WVLF7OOEwOoFiggiVktAhIxaqG3Nwf
+         ilHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712874644; x=1713479444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712875203; x=1713480003;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TC6twZx6RBXTw+ooEGShhOHtZOxQHkfNzLmy0BDBQz0=;
-        b=CjJv11hjgw/VpRhIc8fOwZKlvJwjuz9euFtE2FABDezGCYqk2+JxjUmnvxl7nyEiIr
-         TfG/h2G37agR8NF3rL17ZkaT5nrMNZ+DmNOAO1RJ7eyd/KchwyVoEOJ2zh2dYcuWcvjF
-         2NKRqIFXv+G1ljAGr8FERq3LjSFhz6SLu4i6hGMMoLbQTqKk0Bs+RjJJrWNa1FIz1MJ0
-         9uVyMz0qt/W6CAGqesYMC2c/MZVPKf/QTqIu3SyvLapQjwbk8HfkKx9wSNfQRPECSqNG
-         uVusL98IeJTmHSW56nSzU1FGMOvC39ZqYJZ8NidR+fk6X47G8m25g5mKpmLvKWbBDM2I
-         orvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpusTCRTkxCS3AzW1DYx/rndgpB2RRJvHVp2zZF8BywkV3ySCzqdeYvYPss5OWmZS9r+aklTeKbX6M35zWU3FefDdHPNkhNLxI5fjzDj62wA==
-X-Gm-Message-State: AOJu0YyxYrAgVRuxEv9WHcyG/4BgF80oL6dujSjXWgz1bLxz1pZsfeCR
-	SGeDe2zAFhGyvdc/4sS73I06xplMGZrYqJ0yUlkllzU1cadRdCfwntiDv3V+fNr26dhcH2OQAXE
-	HvKuHnpPMllx2eL2t2tfUP/2iTjIkpbepdGj+
-X-Google-Smtp-Source: AGHT+IH0fRw88jlF/PTTGp8JUv+i2sdboTHFQlUCx9qkS0imAB+RnQjF3l7GHprGg80gvoA8gFg+M99vrf6oV9rVo0k=
-X-Received: by 2002:aa7:d889:0:b0:56e:5681:ff3e with SMTP id
- u9-20020aa7d889000000b0056e5681ff3emr59016edq.2.1712874644225; Thu, 11 Apr
- 2024 15:30:44 -0700 (PDT)
+        bh=S4TnsFcjuXgA9nuQRAvIeS3/zSNBm8/9BgUmS0MLmqs=;
+        b=cG/FoQ3vMAscWod6ayz7VOOmdGMRtNfD9F3Gmzy23PkiIZ5FaaA3e0t1uzRrbeafJo
+         5+onYDkkzpRVqaZwjyUMno2mvI3pIh5vxMejp7ZEK+j8H+3ZuE9g8Z8HmCqiAnmVkhzg
+         VdwHYoJP4VioeYOxoRgr8KRdQVsummpVnDW63RG8X/A3IW5PInMRGwOuTAWy1lw0NY7p
+         oKg6eBpQo0n2cu84MhkXj07zP6+Z2VmCb2s/FGDCRhgkd1yKhjGJjWbbK5SZgnOIrFGR
+         SCMKeLcoM8VirbwXQKfqGDSMeuew/5VNsPf+Z1Su5sJ425VHFbXNnJ0YFKhj9anwoMEq
+         rvCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZqGMlng5HwHLk73/0ezCqcUGH5/vAGc+AN8BSxGD+1xCF/6GcW7tgXb9rrM1EiTwxh25RN8UPIk6kU9Fc3y3JIvU7rH0qvRFQKovF3oqpSg==
+X-Gm-Message-State: AOJu0Yw89l6iVkvaEfsb+tYq6MeErF1H/bgrX2eu8ifxGFMbVkLAidPG
+	gBrXWOSpxJul2q6rd08KdTlZnFFrPlhRclHfODPgSZpMofA+1YHOi9SoFPHWnWc=
+X-Google-Smtp-Source: AGHT+IGY8qJhojjfCfabFUjR9vvGK5A/WLCfM1Bk52OhJKElMImmd0eUpMrnmf84M99SmcErfv1epA==
+X-Received: by 2002:ac2:57db:0:b0:513:eeaa:8f1f with SMTP id k27-20020ac257db000000b00513eeaa8f1fmr649500lfo.47.1712875203340;
+        Thu, 11 Apr 2024 15:40:03 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:10c6:ce01:a470:5d20:8e1a:464a])
+        by smtp.gmail.com with ESMTPSA id jx24-20020a170907761800b00a46aba003eesm1144762ejc.215.2024.04.11.15.40.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2024 15:40:02 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-16-xiong.y.zhang@linux.intel.com> <ZhhUZJ7rE0SbE6Vv@google.com>
-In-Reply-To: <ZhhUZJ7rE0SbE6Vv@google.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 11 Apr 2024 15:30:32 -0700
-Message-ID: <CALMp9eQ01NJZKKYt8XhTbnu8rNpuhpk388ocvyPqWJiO+sov5g@mail.gmail.com>
-Subject: Re: [RFC PATCH 15/41] KVM: x86/pmu: Manage MSR interception for IA32_PERF_GLOBAL_CTRL
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
-	Xiong Zhang <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] treewide: Fix common grammar mistake "the the"
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
+Date: Fri, 12 Apr 2024 00:39:51 +0200
+Cc: kernel-janitors@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-s390@vger.kernel.org,
+ speakup@linux-speakup.org,
+ intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org,
+ linux-wireless@vger.kernel.org,
+ linux-scsi@vger.kernel.org,
+ linux-afs@lists.infradead.org,
+ ecryptfs@vger.kernel.org,
+ netfs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org,
+ linux-unionfs@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ io-uring@vger.kernel.org,
+ cocci@inria.fr,
+ linux-perf-users@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <193B959E-60A3-499A-BFF3-EA7B2D0B6C12@toblux.com>
+References: <20240411150437.496153-4-thorsten.blum@toblux.com>
+ <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On Thu, Apr 11, 2024 at 2:21=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > +     if (is_passthrough_pmu_enabled(&vmx->vcpu)) {
-> > +             /*
-> > +              * Setup auto restore guest PERF_GLOBAL_CTRL MSR at vm en=
-try.
-> > +              */
-> > +             if (vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL)
-> > +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, 0);
-> > +             else {
-> > +                     i =3D vmx_find_loadstore_msr_slot(&vmx->msr_autol=
-oad.guest,
-> > +                                                    MSR_CORE_PERF_GLOB=
-AL_CTRL);
-> > +                     if (i < 0) {
-> > +                             i =3D vmx->msr_autoload.guest.nr++;
-> > +                             vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT,
-> > +                                          vmx->msr_autoload.guest.nr);
-> > +                     }
-> > +                     vmx->msr_autoload.guest.val[i].index =3D MSR_CORE=
-_PERF_GLOBAL_CTRL;
-> > +                     vmx->msr_autoload.guest.val[i].value =3D 0;
->
-> Eww, no.   Just make cpu_has_load_perf_global_ctrl() and VM_EXIT_SAVE_IA3=
-2_PERF_GLOBAL_CTRL
-> hard requirements for enabling passthrough mode.  And then have clear_ato=
-mic_switch_msr()
-> yell if KVM tries to disable loading MSR_CORE_PERF_GLOBAL_CTRL.
+On 11. Apr 2024, at 17:25, Dan Carpenter <dan.carpenter@linaro.org> =
+wrote:
+>=20
+> It's tricky to know which tree a patch like this would go through.
 
-Weren't you just complaining about the PMU version 4 constraint in
-another patch? And here, you are saying, "Don't support anything older
-than Sapphire Rapids."
+The patch is based on the mainline tree. Should I have sent it directly =
+to
+Linus then?
 
-Sapphire Rapids has PMU version 4, so if we require
-VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, PMU version 4 is irrelevant.
+I'm relatively new here and therefore only sent it to the corresponding =
+mailing
+lists.
+
+Thanks,
+Thorsten=
