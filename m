@@ -1,66 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F68182B3
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 20:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A117C72
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 21:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712869046; cv=none; b=LjzsdWCyRHkrULhKhjMdVwgVgjh82o0y45etF408tMWOLwtHflymPTJkrfOaUBs7bb13wHbkGXNjp9ObOau5FP6pQz49+t4+/s107cUkszDFvrmM5YAAypXzFV7HVQd2bsw5L2lBwv7qe+P7Tc0xP9FTAjuDB8LcJgmQJtgPrsQ=
+	t=1712869383; cv=none; b=XMZCT9yvE3EjG/JHvw6P7e7XFMnyTGCkxYB1vuPlk6b8buZvDoGLMfy/Oeu0n3JAl2GMNkj4V2LJt/1p2gEguPQGJCyiFIcW/ROsFZeaVBYEjdU7JhlbeG7hH3o6+tZG0a1JmKUgFujWl6ogMCoxbMiazcO8/ahkzt/6Sdvf7dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712869046; c=relaxed/simple;
-	bh=3USpWrUNdliUnscE24vOtr4QdAGj6lskCeojhOFYzPo=;
+	s=arc-20240116; t=1712869383; c=relaxed/simple;
+	bh=6ohnLm7z3PDG7MWeKCsPtN2uBOTfngdUGkrSE6HEqWQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Grym6zZhJMAR/nDpfKLIrp930XBzah0bNFsWR1gz6EeViFKPfCpfp0FC0AAsh/hfGD9RibUDeYlXSqb6Xdveay9sCXyp6tnAwFBOmKmvAkL7Ssq/1FG5nSLQv2WRyFQV+RPk7yAz2g8wgt73ATXZx+DMMUvjj692+LGRz29eWJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bgAo3Z5Z; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=cs5N9JchKe9nWrd09+p+QB8i9zOzUwwUgkpycuwwezQmH2i/5kpuq7rWkiaokXS/VpcZRJByMoYtwauR+aq7zfgA5WshFBMOsV3wPYOIMhGMyCMe8uLSGX0dfKeHdlKegQrymNTuTZfV4Ufv+i7eHi3ACH0hISdo2bO+8RJz92s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F13iYDMX; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bgAo3Z5Z"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6ceade361so453307276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 13:57:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F13iYDMX"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60cc00203faso3821257b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 14:03:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712869044; x=1713473844; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712869381; x=1713474181; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYEU2A1US/h58udhZtj8GUv/NlwFdWP5dUC/V5yhCYE=;
-        b=bgAo3Z5Z8YlxchApJSWwvLNxUIct4f5jUXsEVbv5eeRhP0AewFemHgKqtBB6/dOYP0
-         vjTPUIUlVcut7bUddcYVRUIbwpI/dW5clQ7eYbHZSZSjxlxkObzDnglp3LjwkyGT4hNZ
-         PXo9HUdOD02hvu/8lnJ6dYoliJzWi0edm67Ho6ItR/LSSUcuCtf06dwmNWsuBt/cIJM8
-         jwjxsHdIPCzF/j8NTKEeZJgbH+x1ku848sob740eY2iiy938RBIB0pkhT8YK8P7K9ygZ
-         5UCElEc560pFkIjkzDKdN/GCSMbly2t9Av+KVUz/qdSUTOK7mNuQoU5dW/cN0KxvVx0L
-         2IVw==
+        bh=LqNHTRbTBamf9CG0cXrMM0YOfuqafLOBk3xuoM8380s=;
+        b=F13iYDMX7yW18JTzN5qfC/hm/ZPvBRTo5yh/aO1ndLxy0G0tLlFAbH5L5rTjJ56BBx
+         ZO++GqvBmmI6zqXsVInX8cRsKLg1w5i4ZN+HzePNsubtpi6GnaprrsAA4vmHWhv7MUYz
+         n/uiJin7NXSG2TlZ9ud4FUM1pE0eT29LWDaYFYR+mNq/W3QL38gcX0P5jOUaZO73xX34
+         v4h6Wdgc/5HCNz4hdCblQcov/OfRN9Hik51ZyYhc/dJy8fYTIlYWilVrXy+1WpYO+O03
+         peEj9axx1TS3N4J5BakoxcMmQFpcgONFrXYWgZJq7u7bv98gquaIuBgRALSy6vgCvQ69
+         heyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712869044; x=1713473844;
+        d=1e100.net; s=20230601; t=1712869381; x=1713474181;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYEU2A1US/h58udhZtj8GUv/NlwFdWP5dUC/V5yhCYE=;
-        b=CKJ6lDS9TMmRaR6Z6mR02wKKqUlFofsml2N3Ol2TvNEb5Usd1kLzl+S3H0kWLtO2mD
-         MpyN425KUFwCJE0fNOUnPWDiUoncJt4HI4qq8m2kQ2RMIVY3w/1u2nAcco9j9A7ej1aH
-         ImOQJdA4YbNYGbjxgMKIHvmNdaddrSClH8dOGYc5qKv1C573BPExkgcLromdTSUPEdJk
-         NlP86eexeJJ1a6Xyuup3sroeZV5XozelAyK4G3/0iz/i71jYljVxWi/eiADTGdCFwmrj
-         LfmJ/YoIHkCXxxCikMt6nMdoGAE4/xuoOsIgUYo/E/NUmGTYagDyKtmxLnsSblKGrfFs
-         KpfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlJQIfA6UPcRf+kzWWyIeVQvAg6GPu33ezRPGDXNYORWjGnQGm8VboxXoXR1toUjzsVhFCHWcjvZviE/E0iRrWoob4maj7lF5KpUYnOu72KQ==
-X-Gm-Message-State: AOJu0YyIoPz+mMKEENKEAuaO0ptJz+41Hu6FP/eStesC6TysWIEO7FTU
-	WbSvO/PKJcuXuksk1sMd84rA3CWqAPXW9ldGpTBpaoHodMUkYI4xbd3CsZOZcSLrfxxewLduR94
-	vmA==
-X-Google-Smtp-Source: AGHT+IH0B7KlVbl2bxNL8+iczB8+rRyeR8gTDQmgFF/XhbcdNrmoi+RlgGKOLAAFLeDcsQfs3Ca5mIGAi50=
+        bh=LqNHTRbTBamf9CG0cXrMM0YOfuqafLOBk3xuoM8380s=;
+        b=GcxX8wl8/KB6qMbSCs1ov9mEjnbG4fekRNlgdb1YhjGy6Wiryc/63ZSdxlnF4HLsU8
+         gHvCv42nUfqWkHvZpvd0oG3vcdY3t4QGsOM8PVOS4plgzWZJhc+X7w0giNgOte7jdpU9
+         eGwlhygIlW/lJUFCX3gHz58NOflBNvhcUQjNMjCihaa1OrKq5kLdscKHVr6TMbMzuB7H
+         YFCMKb0ohb2aH29zFCMN6B2DrzhoVAyAaU5Z3lamKtdmEeqCMzjDg+bPGBeyZQcra/U3
+         R3YDKPhbaHUZQ8nKODEid0HvIZjC+zPxjzm73qzYHRfOtfq3cuqvztGJp/4YHuJ29M1r
+         vZog==
+X-Forwarded-Encrypted: i=1; AJvYcCW/Z5aMGOol+m3qdqRv4sKaBKqAVZa2lmN56wtidPtYqOv3yglWRGDFS0063pNqM2I3U9pK8IaI+GFVQjLoGdXEpEpNpQRuH54o6evHoTJuzw==
+X-Gm-Message-State: AOJu0YwkTmeJUxPh1ADmZH/EhyJtF7f0un26gKI2Sk+5I2Oyq9kFikFr
+	V2gsBhbKzpNDEPyfTQzVwRNg9n98WcR1BCE/DXNsdSXlR9QKZwiyBdnxCZLwgLSLgDvLVnOjLSx
+	D4w==
+X-Google-Smtp-Source: AGHT+IHLAavkjmCuRth9ZO5j6qCkcn9lXltBiSUO5FeZiNUU85dnwhoGihd7JtI7vD7CCsfcYc6LQX6nRa0=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:100b:b0:dcc:f01f:65e1 with SMTP id
- w11-20020a056902100b00b00dccf01f65e1mr183523ybt.8.1712869044460; Thu, 11 Apr
- 2024 13:57:24 -0700 (PDT)
-Date: Thu, 11 Apr 2024 13:57:22 -0700
-In-Reply-To: <20240126085444.324918-13-xiong.y.zhang@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a05:6902:70c:b0:dc6:e823:9edb with SMTP id
+ k12-20020a056902070c00b00dc6e8239edbmr104731ybt.12.1712869381654; Thu, 11 Apr
+ 2024 14:03:01 -0700 (PDT)
+Date: Thu, 11 Apr 2024 14:03:00 -0700
+In-Reply-To: <20240126085444.324918-12-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-13-xiong.y.zhang@linux.intel.com>
-Message-ID: <ZhhOsvPxhEQl9YmX@google.com>
-Subject: Re: [RFC PATCH 12/41] KVM: x86/pmu: Plumb through passthrough PMU to
- vcpu for Intel CPUs
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-12-xiong.y.zhang@linux.intel.com>
+Message-ID: <ZhhQBHQ6V7Zcb8Ve@google.com>
+Subject: Re: [RFC PATCH 11/41] KVM: x86/pmu: Introduce enable_passthrough_pmu
+ module parameter and propage to KVM instance
 From: Sean Christopherson <seanjc@google.com>
 To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
@@ -72,16 +72,35 @@ Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
 Content-Type: text/plain; charset="us-ascii"
 
 On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> From: Mingwei Zhang <mizhang@google.com>
-> 
-> Plumb through passthrough PMU setting from kvm->arch into kvm_pmu on each
-> vcpu created. Note that enabling PMU is decided by VMM when it sets the
-> CPUID bits exposed to guest VM. So plumb through the enabling for each pmu
-> in intel_pmu_refresh().
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4432e736129f..074452aa700d 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -193,6 +193,11 @@ bool __read_mostly enable_pmu = true;
+>  EXPORT_SYMBOL_GPL(enable_pmu);
+>  module_param(enable_pmu, bool, 0444);
+>  
+> +/* Enable/disable PMU virtualization */
 
-As stated in the previous patch, even the most naive implementation can be:
+Heh, copy+paste fail.  Just omit a comment, it's pretty self-explanatory.
 
-static inline bool is_passthrough_pmu_enabled(struct kvm_vcpu *vcpu)
-{
-	return enable_passthrough_pmu && vcpu_to_pmu(vcpu)->version;
-}
+> +bool __read_mostly enable_passthrough_pmu = true;
+> +EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
+> +module_param(enable_passthrough_pmu, bool, 0444);
+
+Almost forgot.  Two things:
+
+ 1. KVM should not enable the passthrough/mediate PMU by default until it has
+    reached feature parity with the existing PMU, because otherwise we are
+    essentially breaking userspace.  And if for some reason the passthrough PMU
+    *can't* reach feature parity, then (a) that's super interesting, and (b) we
+    need a more explicit/deliberate transition plan.
+
+ 2. The module param absolutely must not be exposed to userspace until all patches
+    are in place.  The easiest way to do that without creating dependency hell is
+    to simply not create the module param.
+
+I.e. this patch should do _only_
+
+bool __read_mostly enable_passthrough_pmu;
+EXPORT_SYMBOL_GPL(enable_passthrough_pmu);
