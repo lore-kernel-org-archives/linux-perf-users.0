@@ -1,58 +1,58 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE48F2C68F
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 23:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833F1481AA
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 23:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712878058; cv=none; b=uH2NyHQmK9i3px9FeOKw80aM2tQ41SvtIVPB+vxvVEVjNsB7qEtuEQhftNRiEO6FZ1TUmDG5+aYN2P+cVCBUr1HbuOHhYyegWnv+4iGS6vacfSgID086OjafQcCCo9MbkFxdIHHWO6Ziz2tPQ1TVIzrRWrq+PgrLiHaZfZ+z8mo=
+	t=1712878280; cv=none; b=By6hCBExi5ifQtgngIs99XtXJXGkxVEbsVW9LKwho0W+f8WEoEwca7bi41yFx4Stmi75QNHmndIsRiBKz4vwawguDDFXxRWgzIn9N0yNfAQs+RkGPRQTZA3CaR1vhexDrueDwkBSGmSJi40PQvPLgXKvrwl6/VOjaNFzAwzwa2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712878058; c=relaxed/simple;
-	bh=WXBZQqqsaarwjKUtWbCLyxoQ0wuHM1oXknYiv1gdIxc=;
+	s=arc-20240116; t=1712878280; c=relaxed/simple;
+	bh=4SuOykEybb7HcIIt3unOysdTVnJJ7Js5I2n5NiYPPNs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UraPUwD382ZuD2Xkdk2/d8JwP3YAXJIiVcypN3dbHD4oJ643N38I7U9IFFRTB0H9fq011BF1sdWxEZIU0aVq6TRm1d7S768v5qyQlCDXGk34XPicOQGuWRCXriNgE9n0c4IezXxoBbKROcUqF7k3f6XExPa2E9p3Owdx1P6oTIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cYUfy2lq; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=uyWI3MwN633larc54tb3ImhRX0Ef/EgWTRpuh5mGpdqniONEpzGig5IuCROqOuoqKwKOy7L+N1D8bf3bz/Fmv+Uc7A1i1810B4ji0PKir8yxqJFSO48phBm7qDrTjfBezEQxTq/r2sI0jUU2Wc7F+2zW2WTBpmjOv3St+s5vkGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XCdv+mXo; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cYUfy2lq"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2c3543b85so303245a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 16:27:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCdv+mXo"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2bc796cf4so305577a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 16:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712878056; x=1713482856; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712878279; x=1713483079; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pFDGv1Fd6zU3rOmtKT3KuxYcvY9ab+cz/ibHascQGAo=;
-        b=cYUfy2lqPfw/DkpZ13vNJmHXZQTCC6Zs1Exi3HEwYO0RdhWvTffRkjahAIKanpqKs0
-         aOpl+w07kOtiBTLqzTV5+dAzsIoOi01UJAwXYcMqAgbzGyWiLfa1KM7tK7/7ibrSVVZr
-         2MhuQwXCdi2ufRTNnQjx6tYTMDIk0ioC3IpfSsTda2sNxVmAkdzUb56aH26vKbO9sx9R
-         4jCPZN1Nn0Nti7qk3JfKDBVNR4acn225WFEQxY8ZZSYRTdDUHyzuk55DkmFNMJCMmJty
-         ZrCojFYgdRZbMqVUmd8YIgVJHxbBc/uNS8OO7gG1vmJBSng4yN6ZN4fZT7I42Jphf4MX
-         W2DQ==
+        bh=xfAluTUg9e6YSqecG2tHKocCu1vhJlnxyS6nHwDSGiw=;
+        b=XCdv+mXoF+oAD/CndueJFUU/0KaBRTzosFD2IIIg+FduonvtCgZSohu3O60oglcnIG
+         aU/5XOzUlPwqlxsAtGVZMNHlghA4Q0n9x+GNUxnh3WulAaeSdcdHArrCaIvffW2VyLAq
+         lg75Vu2dWSstrwtVNo41lV9VnHURHI3d77Yyr4gii143HRbfr7e4J34SC11c0O8c4q9O
+         3Nf4jTvzlOxEnFeHTd/k6ktnZryg/k0C3TWF/MLE3bqdtmJOH8Mn/581xYp4XSaX66bw
+         5kThN0SsFy/qjGwZmOg0p2JFZQdETEA3Gduw4vy1jkriDdcAqds6xYhVhxpyDXqWD7xN
+         BgDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712878056; x=1713482856;
+        d=1e100.net; s=20230601; t=1712878279; x=1713483079;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=pFDGv1Fd6zU3rOmtKT3KuxYcvY9ab+cz/ibHascQGAo=;
-        b=kF+AG1DuIs26BhOh+/EETCVfzL1OgLOaBpVikKlxth6WmHz8kmD1UPBpcoNMJ3xiSV
-         YhoflY7mG2vMJkyVlv8BTRUosJp4dAJ+4coRh/aDwJ1fyiBMArCBvvmIDvPVMxtnVdwW
-         JOB78+4MkwNyP/c9RF6MjuxGhI2KaMzIxiwDj8GFTzi+3mf4pH8LLhz+EvfvLduybWdP
-         iLQC1ktwC2uHvekBZfDBHe3C9LoROGycTW2MuPN+uJZQtu9unke0kqOr1SXpljtq997D
-         I6OidWVVPhfk7WN4213yWo7k9rnF9kp03+08A2rnSoXSTJ6vjw0Z9AES6/v8At5SEw+4
-         Ua/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVBGBn5RDI7ZKpUGBed4YUk9XMSmhjw9h+D9qWdpDifuf6pS+uY5dc3H9fW4wbtB+NDaITvs5FxF7vQlU0Zo5PHtiYlF2Z8jia8rdCJgcjaqQ==
-X-Gm-Message-State: AOJu0YzWCKbt2L7f8l8txXLgakSWMKrh6wZ9AvypcUEkY6bCaLWU9uVD
-	QzBomQhCSKSPp+bBCgYYmK2sU0ppKKGRGbQ1h+/czJNythZaDayUURXE/Nhy0KOv1a042VftOTm
-	DMQ==
-X-Google-Smtp-Source: AGHT+IHOPUle01tphb/6y2S3tsH8BofFyFX2qx7QzBLhpYQSpujr88lDM743fofYZ5mNuJKPwWhGM/C5qF0=
+        bh=xfAluTUg9e6YSqecG2tHKocCu1vhJlnxyS6nHwDSGiw=;
+        b=mI6hZDn8dz4QzoQtH4XMBzPZBjVJkNiptfWDdaaNeCtgdK9hoiqX836B6qrdDgj+4C
+         4ycmFoIm3Pkavd44OAdyE0bEsMi3Ngv7aO2Xise0jbjR48GX8l13CSqtd2FDQlJPSf11
+         D3kgJ85Rs4gys0y5RgbDXgQ56+Dd/y4wabievVpj+2S7VPUDFQSo5qBUdQ/yowjiNHCh
+         b6FkcO36AsS2/cKgsvgha12s9svlgf2C73p/zhI1h5BrGOdqHb8u93Nb3BHMZn4dcu7h
+         L61hCUAngLq6s602VwXYR95WRnMb4YoPotwnN14kGMUMNFqun4TFXa4Rwau2htr+O5CF
+         bo0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgh+5MEjngp30uoQmGMaMqwt5HtUrYTWxyNx4qlAfVUbk/R8UJHLmdoDjY5at+fvPq66nezHCZeVTvLLGhhp1VrLPFgltHz4cWvGwC20XPNA==
+X-Gm-Message-State: AOJu0YyOePpnLUId7wl9qmdLlDDGTztAROjvhk/zkod1KmWpmdbcspKV
+	4XV61uM8ZrZqmWBXPAqYDrA/2+0fm0586PPQ5biNdg1+IiCyQyoWH4qRhI4R2Lj67nxhiRBXvMk
+	vrg==
+X-Google-Smtp-Source: AGHT+IGACbup5qhwqtDsAZiOCGvghLAulCS/fhvTb+pjJJrKJViinsDcOsCtXCLMfcO+uGTvn4qi6C0+hKI=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:2c4e:b0:2a4:69fa:8b08 with SMTP id
- p14-20020a17090a2c4e00b002a469fa8b08mr2834pjm.4.1712878055952; Thu, 11 Apr
- 2024 16:27:35 -0700 (PDT)
-Date: Thu, 11 Apr 2024 16:27:34 -0700
-In-Reply-To: <CALMp9eQ01NJZKKYt8XhTbnu8rNpuhpk388ocvyPqWJiO+sov5g@mail.gmail.com>
+ (user=seanjc job=sendgmr) by 2002:a17:90a:9cd:b0:2a6:ce35:d357 with SMTP id
+ 71-20020a17090a09cd00b002a6ce35d357mr2765pjo.0.1712878278596; Thu, 11 Apr
+ 2024 16:31:18 -0700 (PDT)
+Date: Thu, 11 Apr 2024 16:31:17 -0700
+In-Reply-To: <CALMp9eS4H-WZXRCrp+6aAgwAp+qP2BgJx5ik5kA7vdyQ9qzARg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,10 +60,11 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-16-xiong.y.zhang@linux.intel.com> <ZhhUZJ7rE0SbE6Vv@google.com>
- <CALMp9eQ01NJZKKYt8XhTbnu8rNpuhpk388ocvyPqWJiO+sov5g@mail.gmail.com>
-Message-ID: <Zhhx5kMSpksInMq9@google.com>
-Subject: Re: [RFC PATCH 15/41] KVM: x86/pmu: Manage MSR interception for IA32_PERF_GLOBAL_CTRL
+ <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
+ <CALMp9eS4H-WZXRCrp+6aAgwAp+qP2BgJx5ik5kA7vdyQ9qzARg@mail.gmail.com>
+Message-ID: <ZhhyxT66RdpiCRA2@google.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
 From: Sean Christopherson <seanjc@google.com>
 To: Jim Mattson <jmattson@google.com>
 Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
@@ -71,51 +72,50 @@ Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
 	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
-	Xiong Zhang <xiong.y.zhang@intel.com>
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, Apr 11, 2024, Jim Mattson wrote:
-> On Thu, Apr 11, 2024 at 2:21=E2=80=AFPM Sean Christopherson <seanjc@googl=
+> On Thu, Apr 11, 2024 at 2:44=E2=80=AFPM Sean Christopherson <seanjc@googl=
 e.com> wrote:
+> > > +     /* Clear host global_ctrl and global_status MSR if non-zero. */
+> > > +     wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
 > >
-> > On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > > +     if (is_passthrough_pmu_enabled(&vmx->vcpu)) {
-> > > +             /*
-> > > +              * Setup auto restore guest PERF_GLOBAL_CTRL MSR at vm =
-entry.
-> > > +              */
-> > > +             if (vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL)
-> > > +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, 0);
-> > > +             else {
-> > > +                     i =3D vmx_find_loadstore_msr_slot(&vmx->msr_aut=
-oload.guest,
-> > > +                                                    MSR_CORE_PERF_GL=
-OBAL_CTRL);
-> > > +                     if (i < 0) {
-> > > +                             i =3D vmx->msr_autoload.guest.nr++;
-> > > +                             vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT,
-> > > +                                          vmx->msr_autoload.guest.nr=
-);
-> > > +                     }
-> > > +                     vmx->msr_autoload.guest.val[i].index =3D MSR_CO=
-RE_PERF_GLOBAL_CTRL;
-> > > +                     vmx->msr_autoload.guest.val[i].value =3D 0;
+> > Why?  PERF_GLOBAL_CTRL will be auto-loaded at VM-Enter, why do it now?
 > >
-> > Eww, no.   Just make cpu_has_load_perf_global_ctrl() and VM_EXIT_SAVE_I=
-A32_PERF_GLOBAL_CTRL
-> > hard requirements for enabling passthrough mode.  And then have clear_a=
-tomic_switch_msr()
-> > yell if KVM tries to disable loading MSR_CORE_PERF_GLOBAL_CTRL.
+> > > +     rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
+> > > +     if (global_status)
+> > > +             wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status);
+> >
+> > This seems especially silly, isn't the full MSR being written below?  O=
+r am I
+> > misunderstanding how these things work?
 >=20
-> Weren't you just complaining about the PMU version 4 constraint in
-> another patch? And here, you are saying, "Don't support anything older
-> than Sapphire Rapids."
+> LOL! You expect CPU design to follow basic logic?!?
+>=20
+> Writing a 1 to a bit in IA32_PERF_GLOBAL_STATUS_SET sets the
+> corresponding bit in IA32_PERF_GLOBAL_STATUS to 1.
+>=20
+> Writing a 0 to a bit in to IA32_PERF_GLOBAL_STATUS_SET is a nop.
+>=20
+> To clear a bit in IA32_PERF_GLOBAL_STATUS, you need to write a 1 to
+> the corresponding bit in IA32_PERF_GLOBAL_STATUS_RESET (aka
+> IA32_PERF_GLOBAL_OVF_CTRL).
 
-Heh, I didn't realize VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL was SPR+ when I wr=
-ote
-this, I thought it existed alongside the "load" controls.
+If only C had a way to annotate what the code is doing. :-)
 
-> Sapphire Rapids has PMU version 4, so if we require
-> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, PMU version 4 is irrelevant.
+> > > +     wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
+
+IIUC, that means this should be:
+
+	if (pmu->global_status)
+		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
+
+or even better:
+
+	toggle =3D pmu->global_status ^ global_status;
+	if (global_status & toggle)
+		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
+	if (pmu->global_status & toggle)
+		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
