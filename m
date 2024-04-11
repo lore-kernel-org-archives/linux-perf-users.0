@@ -1,106 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A8D13BACD;
-	Thu, 11 Apr 2024 11:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41AD1448EF;
+	Thu, 11 Apr 2024 11:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712833327; cv=none; b=WlIkJDkPGs6IO7pqlLbFM7Q7h7Obxjb92l/Fa2ndaZlGaPY6ChfI2Q5cNdDQ87DFb922Z7ZHanhaX6s/4g2ctXfUClD1U+s4BidXIjS1ljBVHglOvTEENEyKZ20SH+NAYFkc8XRzlBkwZGGncIXPySufbJIzKPwhCwffv2oK4m8=
+	t=1712833500; cv=none; b=CJJyJ+78MBbMwLM5MkPOgwNtzfhVSUIoeZe8H+7sVRLTC5m+C7cB/AK1H/12oPBULXGzhu2H3cms0/fyhtSuAk3N5rKIgn4lHKeW7QqviWHrxiYzfSRh6v1bQYsBwkA+xRPvXTydfyWnK3hJmlpUZZ8miMmoGLcjemHvWiJvmmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712833327; c=relaxed/simple;
-	bh=ozY6hVvMNrGYH6tlZjxx5umvChurNxXOh6R9cmNMYMU=;
+	s=arc-20240116; t=1712833500; c=relaxed/simple;
+	bh=++UYlsK6YPiWRvXsuUgKSwshDBZosFmb7aPsHR3zRDU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l74tiWocR3Ty9DknRE1g8FcWkVs35tPR3U5vS/dLET1yXOZANmjZiHU+xXOA7Wg84NYrjr0pkXtbxZx85EznEEFqMb2G2EEIi1KMrsC055sJLVz21+zxKTKWFNmZVipOVYNHGkq0GY1N4PCe7ej2aookDUcpHEFMa8KpRPw8doo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITt7keUR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSjIp/hMGiCvlHJFCewcFZVWLi8Zu52TML9osKipMXHkTHayD0fPf8KqbGDuUVXfV4e85Z4YeQIZnBovpC/hIu1/IzQMTmt/LFG96K69ZQhH7lUf3QwiLeZbSrFxHbOGVB0DiSku3juA9i15eiqpdi1Q/y/7SC90bY34iI1noq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZxhiMJ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITt7keUR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 901FAC433F1;
-	Thu, 11 Apr 2024 11:02:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZxhiMJ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14247C433F1;
+	Thu, 11 Apr 2024 11:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712833327;
-	bh=ozY6hVvMNrGYH6tlZjxx5umvChurNxXOh6R9cmNMYMU=;
+	s=k20201202; t=1712833499;
+	bh=++UYlsK6YPiWRvXsuUgKSwshDBZosFmb7aPsHR3zRDU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITt7keURFX8f4Tuy7WWwTF4VLc77ty5YMzo0qcwpMNZxXYZ+kXUODu6BcijHsQz5V
-	 qXz5kVKGawoKATUPjJ/c636nJYjPo8JBWXkNNNpn6krY/Hd3lVbteuHlXohb+TBkG5
-	 zv9X8c/l/2hhVTdRyqMB+2Gn/ONG11eAHqNLWjP1IwmATlGuH5yd8wPJNJUoxUT6VO
-	 nkWUnSh6cgZPFZyse0orJQ5BSaDxb4hjjKjJcS7w5t/BbvUjwP3pckTc7ilq2lhIAl
-	 1N/vP01ibLhrNE8LdBdl+cxMlbF99WNKKQBOw4xaqHyRi5OLUH+ZK5XqW49boL8FRC
-	 mJ3R9hwOqlKQA==
-Date: Thu, 11 Apr 2024 08:02:04 -0300
+	b=EZxhiMJ+eLMVTcFDC68n4ifgZZ4PnuVocSFbYFl0BqyFErcqStEkXyY1rMvmuKv3o
+	 bFfaVilritrINt9Cx6hbI0PlZHYKarZGAHoNZPyjWBr2petu4SQ7na4jcuoTWyAawn
+	 FH1SW7NtQOkfH1J/cMIQJnqHajcuRLMpVFVf9BoHmuKhTZuton9enz15ydSps2eka0
+	 yTeUM8LZF+CRa13cULssbZGj2xH1H6knWQDFzyiLNiVrwgWQAcsq3RRowR8jDMqy9t
+	 fHUZGfV6BUmUBcbPCYFuGuScyOX79TiDgdFEd8lGFmnJqJeZW+x24g9t8GfY8G1L9b
+	 dwlc4bsJf/Uqw==
+Date: Thu, 11 Apr 2024 08:04:56 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Konstantin Kharlamov <Hi-Angel@yandex.ru>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHSET 0/7] perf annotate: Add TUI support for data type
- profiling (v2)
-Message-ID: <ZhfDLHH98rgl6_4P@x1>
-References: <20240411033256.2099646-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf annotate: Skip DSOs not found
+Message-ID: <ZhfD2PZvjTpVstT3@x1>
+References: <20240410185117.1987239-1-namhyung@kernel.org>
+ <CAP-5=fXeM32=wnkMnp49wLYDS1PWwhKtK9UiKyAa=XvJz9kANg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240411033256.2099646-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXeM32=wnkMnp49wLYDS1PWwhKtK9UiKyAa=XvJz9kANg@mail.gmail.com>
 
-On Wed, Apr 10, 2024 at 08:32:49PM -0700, Namhyung Kim wrote:
-> Hello,
+On Wed, Apr 10, 2024 at 12:14:37PM -0700, Ian Rogers wrote:
+> On Wed, Apr 10, 2024 at 11:51 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > In some data file, I see the following messages repeated.  It seems it
+> > doesn't have DSOs in the system and the dso->binary_type is set to
+> > DSO_BINARY_TYPE__NOT_FOUND.  Let's skip them to avoid the followings.
+> >
+> >   No output from objdump  --start-address=0x0000000000000000 --stop-address=0x00000000000000d4  -d --no-show-raw-insn       -C "$1"
+> >   Error running objdump  --start-address=0x0000000000000000 --stop-address=0x0000000000000631  -d --no-show-raw-insn       -C "$1"
+> >   ...
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> This is to support interactive TUI browser for type annotation.
-> 
-> v2 changes:
->  * fix build errors when libslang2 or libdw is missing  (Arnaldo)
->  * update commit messages with examples  (Arnaldo)
->  * skip updating sample histogram for stack canary  (Arnaldo)
->  * add Reviewed-by from Ian
+> Perhaps: Closes:
+> https://lore.kernel.org/linux-perf-users/15e1a2847b8cebab4de57fc68e033086aa6980ce.camel@yandex.ru/
 
-Thanks, applied.
+I added:
+
+Closes: https://lore.kernel.org/linux-perf-users/15e1a2847b8cebab4de57fc68e033086aa6980ce.camel@yandex.ru/
+Reported-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Konstantin Kharlamov <Hi-Angel@yandex.ru>
+
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
 
 - Arnaldo
-  
-> Like the normal (code) annotation, it should be able to display the data type
-> annotation.  Now `perf annotate --data-type` will show the result in TUI by
-> default if it's enabled.  Also `perf report -s type` can show the same output
-> using a menu item.
-> 
-> It's still in a very early stage and supports the basic functionalities only.
-> I'll work on more features like in the normal annotation browser later.
-> 
-> The code is also available at 'perf/annotate-data-tui-v2' branch at
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> Namhyung Kim (7):
->   perf annotate-data: Skip sample histogram for stack canary
->   perf annotate: Show progress of sample processing
->   perf annotate-data: Add hist_entry__annotate_data_tty()
->   perf annotate-data: Add hist_entry__annotate_data_tui()
->   perf annotate-data: Support event group display in TUI
->   perf report: Add a menu item to annotate data type in TUI
->   perf report: Do not collect sample histogram unnecessarily
-> 
->  tools/perf/builtin-annotate.c          | 149 ++++--------
->  tools/perf/builtin-report.c            |   7 +-
->  tools/perf/ui/browsers/Build           |   1 +
->  tools/perf/ui/browsers/annotate-data.c | 312 +++++++++++++++++++++++++
->  tools/perf/ui/browsers/hists.c         |  31 +++
->  tools/perf/util/annotate-data.c        | 113 +++++++++
->  tools/perf/util/annotate-data.h        |  22 ++
->  tools/perf/util/annotate.c             |  12 +-
->  8 files changed, 534 insertions(+), 113 deletions(-)
->  create mode 100644 tools/perf/ui/browsers/annotate-data.c
-> 
-> 
-> base-commit: 9c3e9af74326978ba6f4432bb038e6c80f4f56fd
-> -- 
-> 2.44.0.478.gd926399ef9-goog
