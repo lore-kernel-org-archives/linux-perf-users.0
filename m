@@ -1,348 +1,179 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923C014AD0E;
-	Thu, 11 Apr 2024 12:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D0114AD24
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 12:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837461; cv=none; b=Rgap6aauPG9z0GUM8VAIIEx12XKDZRYkMj+yHaJjMY5n1c1iytUoyb1ff+k5/+G2bsm0ycCrGzbThBpCoqcTovLRF3ickhtvSHD3ssD4+u9G91ebDQ3SgkUmyz35teEXJ30SsL2Gda6hGpDYz1mvj+ztsggqrhMEWzbnxHgeeX8=
+	t=1712837506; cv=none; b=fWkPpwI4xuxee6ULXtfRAMr+9dSEhA1DEkwNlN+83ZAS81DPYt0BS5cfnxXmzrWpUv+qECfmEWpbbZcL3qA916QI4AON3OYI5c3YFfxanmvKdy1bsnUczeWhbyXqDM/f7YrqdSEbzFb6ZfHKsYKBD29CzXJsvnL7HzqyuSLYBgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837461; c=relaxed/simple;
-	bh=DkWAAwyam9HikN6Op7pFSS/s1NVXlIhFGYoWzZML+9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QVScAbcIvKQKkoKDRhDRsKEAkkgkBzZQuMMyu5KGcnCf68/CFIErjW2XCyLEzILDCvc7Ood+JOJTlmMHOJlV2f21IsHH5iflg+06RXheGyc0ATf4vta645fLYwm7+ubAcWiiQyDa/qEnCsUDOKXdl82GMcdOt5zqg67ayFXlbRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxZblJ0xdmr9YlAA--.5534S3;
-	Thu, 11 Apr 2024 20:10:49 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxSRJH0xdm5w14AA--.23232S2;
-	Thu, 11 Apr 2024 20:10:47 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Ming Wang <wangming01@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: [PATCH v3] perf kvm: Add kvm-stat for loongarch64
-Date: Thu, 11 Apr 2024 20:10:47 +0800
-Message-Id: <20240411121047.2005033-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1712837506; c=relaxed/simple;
+	bh=itSQk2b/qeERn9WLQJ1lpDYwPMRo4EGLiCJYs3ABnM4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NYzKw0nKcXcPlJ+7K87rdsV/SiBvJ4puSPnWhVDMJ8UoBZ7XHN70hOTwMf3LnSG0xM61zWxgfqQCW0IPepTLxy/mS3SMuTpVuOteY5p3IsPhVCvAwQ8yz4Yc2ae3EpUGwszKiyF32qmY4gqhTl+AMvpacfShF/w7xWwxnmdbPjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=TdE0uGBy; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="TdE0uGBy"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e69888a36so5627127a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 05:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1712837503; x=1713442303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ucpZc0sOAIBf0HKCIhwEI0FsYmNzoD9YG5D9Q7DejMI=;
+        b=TdE0uGByLu4vaXVla5g+rhIlo1ZpcPlP1q68tv+MGIqLpruVpHOk6GSUiLgY3oLvZk
+         CMT/X73OoQ+FocBDWUD614dolJJSnaxifMTwaisaqUDRW+BH3NbHGIL5/VHoy73h2U7A
+         1dd1mEprRI3ivF1rE+9hgdnwjcKfUweuol1LIyQMWxsVSCADeovL4qrvx8Fj2xSXDikn
+         SKdnsAvi2qhYHGtKXs0DMkH85yI9STG5w0gY/Mvvavx5OxhhS9JZ62Yc0Q4XE5Krb4/6
+         pzTMPff2Km+dBLoy/NWzHZ0TAYUVXucCdR36U4fV8tsMp+ZW2BsKY+i3bpvFv/dsGXY9
+         jtGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712837503; x=1713442303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ucpZc0sOAIBf0HKCIhwEI0FsYmNzoD9YG5D9Q7DejMI=;
+        b=I1RoWzWFQIKerFVb4zy9qny5OPtUpf8UvLuxVYiczsPwFr29nXUwnnNUooV+VC8Zrt
+         riXjZfiotopQ2vlMqX/VUI3q2KupiNX8zQuGfQvpoEOrtG90PW0et00MrbNW9pDAbzDN
+         ZTcS9QKFicHJ+v1sIxGMYX4PcbklMvYWxo5ICIVdHoBv/ywznU4jjq6Pqu9DRbCRmZG3
+         kwhSk5CPXs+IrmDuLddYSn9CZEUsyQDYPPiT2pTMzm5g2vCcPm/asHx6FkccyZY84rzG
+         I75me8LiUaNzZwp+NI2HqgkQ+3+JVbGoxvw8MozR71XZBewV1Ox2hMz3wMe+9bAHpB81
+         /mYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW1kaHCsqE2g2N2WhD48d/2Hbn3FV/XqrYDwLYqVtYbdK8UmsA5ppf8lRdGPNsWv0Zevyafg6iv1fxy4jHrcLAqaNKI+s0k4+dokrGeQKbtQ==
+X-Gm-Message-State: AOJu0Yx0pWaBsjOUQgHCT6/w5NSZFdHPTrMJaaliya0EEjnc8VhMe1a1
+	WtD+fHGbq6EDm5qyS3116fP4SYKIMGg66T2m1sMi5LjQOdiQkqcm5iJrAUqzNyMqi5tCdTJA/am
+	XqrSIpcPQ7HCdzs6iQNmX5XGViMyK/6DY9XQK
+X-Google-Smtp-Source: AGHT+IEm1nJ7qqYszNRR+8iGrnPF9c7cTgTJApzdsUPIBIcpnN/vB8gRio2LJbUzoSYF+OYsYhZgz6lqTXqURByJlXQ=
+X-Received: by 2002:a50:9558:0:b0:56e:4ac1:88f with SMTP id
+ v24-20020a509558000000b0056e4ac1088fmr3825888eda.27.1712837502837; Thu, 11
+ Apr 2024 05:11:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxSRJH0xdm5w14AA--.23232S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20240214173950.18570-1-khuey@kylehuey.com> <20240214173950.18570-2-khuey@kylehuey.com>
+ <ZhYWPGX0RzamxOHx@gmail.com>
+In-Reply-To: <ZhYWPGX0RzamxOHx@gmail.com>
+From: Kyle Huey <me@kylehuey.com>
+Date: Thu, 11 Apr 2024 08:11:28 -0400
+Message-ID: <CAP045AqQ0MbF2PAm9f5t=PnkJ4eOnwsNR624gEEjyLWEpTFz1g@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 1/4] perf/bpf: Call bpf handler directly, not
+ through overflow machinery
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	"Robert O'Callahan" <robert@ocallahan.org>, Song Liu <song@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for 'perf kvm stat' on loongarch64 platform, now only
-kvm exit event is supported.
+On Wed, Apr 10, 2024 at 12:32=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Kyle Huey <me@kylehuey.com> wrote:
+>
+> > To ultimately allow bpf programs attached to perf events to completely
+> > suppress all of the effects of a perf event overflow (rather than just =
+the
+> > sample output, as they do today), call bpf_overflow_handler() from
+> > __perf_event_overflow() directly rather than modifying struct perf_even=
+t's
+> > overflow_handler. Return the bpf program's return value from
+> > bpf_overflow_handler() so that __perf_event_overflow() knows how to
+> > proceed. Remove the now unnecessary orig_overflow_handler from struct
+> > perf_event.
+> >
+> > This patch is solely a refactoring and results in no behavior change.
+> >
+> > Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Acked-by: Song Liu <song@kernel.org>
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  include/linux/perf_event.h |  6 +-----
+> >  kernel/events/core.c       | 28 +++++++++++++++-------------
+> >  2 files changed, 16 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index d2a15c0c6f8a..c7f54fd74d89 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -810,7 +810,6 @@ struct perf_event {
+> >       perf_overflow_handler_t         overflow_handler;
+> >       void                            *overflow_handler_context;
+> >  #ifdef CONFIG_BPF_SYSCALL
+> > -     perf_overflow_handler_t         orig_overflow_handler;
+> >       struct bpf_prog                 *prog;
+> >       u64                             bpf_cookie;
+> >  #endif
+>
+> Could we reduce the #ifdeffery please?
 
-Here is example output about "perf kvm --host stat report" command
+Not easily.
 
-   Event name   Samples   Sample%     Time (ns)   Time%   Mean Time (ns)
-    Mem store     83969    51.00%     625697070   8.00%             7451
-     Mem read     37641    22.00%     112485730   1.00%             2988
-    Interrupt     15542     9.00%      20620190   0.00%             1326
-        Iocsr     15207     9.00%      94296190   1.00%             6200
-    Hypercall      4873     2.00%      12265280   0.00%             2516
-         Idle      3713     2.00%    6322055860  87.00%          1702681
-          FPU      1819     1.00%       2750300   0.00%             1511
-       Ifecth       502     0.00%       1341740   0.00%             2672
-   Mem modify       324     0.00%        602240   0.00%             1858
-       Cpucfg        55     0.00%         77610   0.00%             1411
-          Csr        12     0.00%         19690   0.00%             1640
-         LASX         3     0.00%          4870   0.00%             1623
-          LSX         2     0.00%          2100   0.00%             1050
+> On distros CONFIG_BPF_SYSCALL is almost always enabled, so it's not like
+> this truly saves anything on real systems.
+>
+> I'd suggest making the perf_event::prog and perf_event::bpf_cookie fields
+> unconditional.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-v2 --- v3:
-  1. Add NULL check with cpuid in function get_cpuid()
-  2. Add example output from /proc/cpuinfo before function get_cpuid()
-v1 --- v2:
-  1. Add child_ops for kvm exit event, split kvm:kvm_exit_gspr events
-into cpucfg/csr/iocsr/idle child events by decoding detailed gspr
-instruction.
-  2. Remove some exception code type which does not happen in current
-kvm implementation, such as meomry NR/NX/priviledge exception.
----
- tools/perf/arch/loongarch/Makefile        |   1 +
- tools/perf/arch/loongarch/util/Build      |   2 +
- tools/perf/arch/loongarch/util/header.c   |  88 ++++++++++++++
- tools/perf/arch/loongarch/util/kvm-stat.c | 135 ++++++++++++++++++++++
- 4 files changed, 226 insertions(+)
- create mode 100644 tools/perf/arch/loongarch/util/header.c
- create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
+That's not sufficient. See below.
 
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-index 3992a67a87d9..c89d6bb6b184 100644
---- a/tools/perf/arch/loongarch/Makefile
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS := 1
- endif
- PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
- PERF_HAVE_JITDUMP := 1
-+HAVE_KVM_STAT_SUPPORT := 1
- 
- #
- # Syscall table generation for perf
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-index d776125a2d06..b12d374d7096 100644
---- a/tools/perf/arch/loongarch/util/Build
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -1,5 +1,7 @@
-+perf-y += header.o
- perf-y += perf_regs.o
- 
- perf-$(CONFIG_DWARF)     += dwarf-regs.o
- perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
-new file mode 100644
-index 000000000000..a4ed732b49c6
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/header.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Implementation of get_cpuid().
-+ *
-+ * Author: Nikita Shubin <n.shubin@yadro.com>
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <api/fs/fs.h>
-+#include <errno.h>
-+#include "util/debug.h"
-+#include "util/header.h"
-+
-+/*
-+ * Output example from /proc/cpuinfo
-+ *   CPU Family              : Loongson-64bit
-+ *   Model Name              : Loongson-3C5000
-+ *   CPU Revision            : 0x11
-+ */
-+#define CPUINFO_MODEL	"Model Name"
-+#define CPUINFO		"/proc/cpuinfo"
-+static char *_get_field(const char *line)
-+{
-+	char *line2, *nl;
-+
-+	line2 = strrchr(line, ' ');
-+	if (!line2)
-+		return NULL;
-+
-+	line2++;
-+	nl = strrchr(line, '\n');
-+	if (!nl)
-+		return NULL;
-+
-+	return strndup(line2, nl - line2);
-+}
-+
-+static char *__get_cpuid(void)
-+{
-+	char *line, *model, *cpuid;
-+	unsigned long line_sz;
-+	FILE *file;
-+
-+	file = fopen(CPUINFO, "r");
-+	if (file == NULL)
-+		return cpuid;
-+
-+	line = model = cpuid = NULL;
-+	while (getline(&line, &line_sz, file) != -1) {
-+		if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL)))
-+			continue;
-+
-+		model = _get_field(line);
-+		if (!model)
-+			goto free;
-+		break;
-+	}
-+
-+	if (model && (asprintf(&cpuid, "%s", model) < 0))
-+		cpuid = NULL;
-+
-+free:
-+	fclose(file);
-+	free(model);
-+	return cpuid;
-+}
-+
-+int get_cpuid(char *buffer, size_t sz)
-+{
-+	char *cpuid = __get_cpuid();
-+	int ret = 0;
-+
-+	if (!cpuid)
-+		return EINVAL;
-+
-+	if (sz >= strlen(cpuid))
-+		scnprintf(buffer, sz, "%s", cpuid);
-+	else
-+		ret = ENOBUFS;
-+	free(cpuid);
-+	return ret;
-+}
-+
-+char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-+{
-+	return __get_cpuid();
-+}
-diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/arch/loongarch/util/kvm-stat.c
-new file mode 100644
-index 000000000000..cc50adb0835a
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/kvm-stat.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
-+#include <memory.h>
-+#include <errno.h>
-+#include "util/kvm-stat.h"
-+#include "util/parse-events.h"
-+#include "util/debug.h"
-+#include "util/evsel.h"
-+#include "util/evlist.h"
-+#include "util/pmus.h"
-+
-+#define LOONGARCH_EXCEPTION_INT		0
-+#define LOONGARCH_EXCEPTION_PIL		1
-+#define LOONGARCH_EXCEPTION_PIS		2
-+#define LOONGARCH_EXCEPTION_PIF		3
-+#define LOONGARCH_EXCEPTION_PME		4
-+#define LOONGARCH_EXCEPTION_FPD		15
-+#define LOONGARCH_EXCEPTION_SXD		16
-+#define LOONGARCH_EXCEPTION_ASXD	17
-+#define LOONGARCH_EXCEPTION_GSPR	22
-+#define  LOONGARCH_EXCEPTION_CPUCFG	100
-+#define  LOONGARCH_EXCEPTION_CSR	101
-+#define  LOONGARCH_EXCEPTION_IOCSR	102
-+#define  LOONGARCH_EXCEPTION_IDLE	103
-+#define  LOONGARCH_EXCEPTION_OTHERS	104
-+#define LOONGARCH_EXCEPTION_HVC		23
-+
-+#define loongarch_exception_type				\
-+	{LOONGARCH_EXCEPTION_INT,  "Interrupt" },		\
-+	{LOONGARCH_EXCEPTION_PIL,  "Mem read" },		\
-+	{LOONGARCH_EXCEPTION_PIS,  "Mem store" },		\
-+	{LOONGARCH_EXCEPTION_PIF,  "Ifecth" },			\
-+	{LOONGARCH_EXCEPTION_PME,  "Mem modify" },		\
-+	{LOONGARCH_EXCEPTION_FPD,  "FPU" },			\
-+	{LOONGARCH_EXCEPTION_SXD,  "LSX" },			\
-+	{LOONGARCH_EXCEPTION_ASXD, "LASX" },			\
-+	{LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },		\
-+	{LOONGARCH_EXCEPTION_HVC,  "Hypercall" },		\
-+	{LOONGARCH_EXCEPTION_CPUCFG, "Cpucfg" },		\
-+	{LOONGARCH_EXCEPTION_CSR,    "Csr" },			\
-+	{LOONGARCH_EXCEPTION_IOCSR,  "Iocsr" },			\
-+	{LOONGARCH_EXCEPTION_IDLE,   "Idle" },			\
-+	{LOONGARCH_EXCEPTION_OTHERS, "Others" }
-+
-+define_exit_reasons_table(loongarch_exit_reasons, loongarch_exception_type);
-+
-+const char *vcpu_id_str = "vcpu_id";
-+const char *kvm_exit_reason = "reason";
-+const char *kvm_entry_trace = "kvm:kvm_enter";
-+const char *kvm_reenter_trace = "kvm:kvm_reenter";
-+const char *kvm_exit_trace = "kvm:kvm_exit";
-+const char *kvm_events_tp[] = {
-+	"kvm:kvm_enter",
-+	"kvm:kvm_reenter",
-+	"kvm:kvm_exit",
-+	"kvm:kvm_exit_gspr",
-+	NULL,
-+};
-+
-+static bool event_end(struct evsel *evsel,
-+		struct perf_sample *sample __maybe_unused,
-+		struct event_key *key __maybe_unused)
-+{
-+	/*
-+	 * LoongArch kvm is different with other architectures
-+	 *
-+	 * There is kvm:kvm_reenter or kvm:kvm_enter event adjacent with
-+	 * kvm:kvm_exit event.
-+	 *   kvm:kvm_reenter means returning to guest immediately
-+	 *   kvm:kvm_enter   means returning to vmm and then to guest
-+	 */
-+	return evsel__name_is(evsel, kvm_entry_trace) ||
-+		evsel__name_is(evsel, kvm_reenter_trace);
-+}
-+
-+static void event_gspr_get_key(struct evsel *evsel,
-+			struct perf_sample *sample,
-+			struct event_key *key)
-+{
-+	unsigned int insn;
-+
-+	key->key = LOONGARCH_EXCEPTION_OTHERS;
-+	insn = evsel__intval(evsel, sample, "inst_word");
-+	switch (insn >> 24) {
-+	case 0:
-+		/* cpucfg inst trap */
-+		if ((insn >> 10) == 0x1b)
-+			key->key = LOONGARCH_EXCEPTION_CPUCFG;
-+		break;
-+	case 4:
-+		/* csr inst trap */
-+		key->key = LOONGARCH_EXCEPTION_CSR;
-+		break;
-+	case 6:
-+		/* iocsr inst trap */
-+		if ((insn >> 15) == 0xc90)
-+			key->key = LOONGARCH_EXCEPTION_IOCSR;
-+		else if ((insn >> 15) == 0xc91)
-+			/* idle inst trap */
-+			key->key = LOONGARCH_EXCEPTION_IDLE;
-+		break;
-+	default:
-+		key->key = LOONGARCH_EXCEPTION_OTHERS;
-+		break;
-+	}
-+}
-+
-+static struct child_event_ops child_events[] = {
-+	{ .name = "kvm:kvm_exit_gspr", .get_key = event_gspr_get_key },
-+	{ NULL, NULL },
-+};
-+
-+static struct kvm_events_ops exit_events = {
-+	.is_begin_event = exit_event_begin,
-+	.is_end_event = event_end,
-+	.child_ops = child_events,
-+	.decode_key = exit_event_decode_key,
-+	.name = "VM-EXIT"
-+};
-+
-+struct kvm_reg_events_ops kvm_reg_events_ops[] = {
-+	{ .name	= "vmexit", .ops = &exit_events, },
-+	{ NULL, NULL },
-+};
-+
-+const char * const kvm_skip_events[] = {
-+	NULL,
-+};
-+
-+int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
-+{
-+	kvm->exit_reasons_isa = "loongarch64";
-+	kvm->exit_reasons = loongarch_exit_reasons;
-+	return 0;
-+}
+> > +#ifdef CONFIG_BPF_SYSCALL
+> > +static int bpf_overflow_handler(struct perf_event *event,
+> > +                             struct perf_sample_data *data,
+> > +                             struct pt_regs *regs);
+> > +#endif
+>
+> If the function definitions are misordered then first do a patch that mov=
+es
+> the function earlier in the file, instead of slapping a random prototype
+> into a random place.
 
-base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
--- 
-2.39.3
+Ok.
 
+> > -     READ_ONCE(event->overflow_handler)(event, data, regs);
+> > +#ifdef CONFIG_BPF_SYSCALL
+> > +     if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+> > +#endif
+> > +             READ_ONCE(event->overflow_handler)(event, data, regs);
+>
+> This #ifdef would go away too - on !CONFIG_BPF_SYSCALL event->prog should
+> always be NULL.
+
+bpf_overflow_handler() is also #ifdef CONFIG_BPF_SYSCALL. It uses
+bpf_prog_active, so that would need to be moved out of the ifdef,
+which would require moving the DEFINE_PER_CPU out of bpf/syscall.c ...
+or I'd have to add a !CONFIG_BPF_SYSCALL definition of
+bpf_overflow_handler() that only returns 1 and never actually gets
+called because the condition short-circuits on event->prog. Neither
+seems like it makes my patch or the code simpler, especially since
+this weird ifdef-that-applies-only-to-the-condition goes away in Part
+3 where I actually change the behavior.
+
+It feels like the root of your objection is that CONFIG_BPF_SYSCALL
+exists at all. I could remove it in a separate patch if there's
+consensus about that.
+
+
+
+
+> Please keep the #ifdeffery reduction and function-moving patches separate
+> from these other changes.
+>
+> Thanks,
+>
+>         Ingo
+
+- Kyle
