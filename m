@@ -1,65 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83544134A6
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 19:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D565134A6
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 19:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712863381; cv=none; b=LpDsNIf14F69loQkNeh5vYOOKWp5yTv0i8LoHEq7lWq+BQOL5DimovrEBQIOtlZ5bPcoUz/538py4PkKut7RtpHA+zrL9WF+EbfHXP0CaNDjH2lkz+SvJvexPmowpZLWgpR1RqfZOtu++pvRCG/jGW2PaFvAbxLrIIzdklk9NM8=
+	t=1712863604; cv=none; b=Ml7mR2+iXhEUl9QYdzuiaUtDxF34AcBs52xZLTaoG4XxNwKm2CQkXpa6DBVaW67YW0axbE4+AHcBYzvViij1Vz1gV06icYpYskMGJLi6emL010F03aiDwfTSw9POAlpfUGBPVhQZEgOOLyMBlPR4kny/jo3WeU3FnfulxyrTEuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712863381; c=relaxed/simple;
-	bh=fT4P0gGE+O7sWBDiZ8pLxxyQEVTnnen55DJKAfs9ezU=;
+	s=arc-20240116; t=1712863604; c=relaxed/simple;
+	bh=0XgHpG9vX/kIvmtLehNYvc8OJhfk98bHSrvRyoWR2Kw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FvEFzW/e2Se5X5vu29tPWT3pSCagWMi2RHJ0Sfj+bOT91EDVocID/goA73iuzwBlhi0PtvhYcS+1XAoGlfnzYRVlLR7d4mzU1Pzzv2YVJiBbKhXcgOp+DbhlHy+vbkR7w/0CgYD8VS071ybSpz/4d2oZyW6qyr5Mx4RJr+459/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X4ADJCl3; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=CWcT5iZZ+Ovnegl4c9g0IVhvL+ySMP/NS5jGPq1gO7f0hLCqLme0F6gA7/HpPTS/FW0VQ62oXuLpkHEPWA7aomSf+J59w0MgD+uUCxidf/ProVNGKeVBxuxBS6aT2FNHrL2BP+v9MajugwHnPNYrK8aY3urpqquwQBTw4lzbElY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BTfyBTn4; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X4ADJCl3"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6144244c60cso1646247b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 12:23:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTfyBTn4"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso266343276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 12:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712863379; x=1713468179; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712863602; x=1713468402; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWyDifNB+g3/yqoVnm4if7NwdO+FurrszL4Rzn9n/PI=;
-        b=X4ADJCl3aXslKO6WR1GzXOkIx0F8RxwRThktrxh9RgpI76pJwgZ7dMeC4vPKWdryr7
-         NyvINpteUicAKPS/0EdyiSoTk/iB8XAl66qjAMj22rb35cwl1ahQf/ZGOBHaLswN21p+
-         Coj8WrxEOUz/KyypUDOlXG7Ayc9Wcag0eMGY1AcQ8Ke1tzRypVB/LGTxm0ZZEElfXh3r
-         QBj7b7rBXv9Kk2IV4CIp+33I+UQdShsd5G/5YLdTm6SXXzvxyktb2mminHz+xEGNOAGL
-         jqDzOxpblthADLbthzW0AV7ziin4Wgo1DXDSoseD+Sai/PTPu9dpnIxu8xgqUIz/3AeF
-         zVmg==
+        bh=6/MgwNwffmIAS0R8bxGeJvh6mxdWCPK8g/Rb9tm+ISo=;
+        b=BTfyBTn4+xT4GNw6Un9Vnjx/3EZ+7K8S6ZyJdjK/KqigtyYZB4h2C3f2Arwpf79C6G
+         Zc+Jy5zkfv9ThKFGnynTHP4bmWBM8JWZZ/hHv2KgO9LNiRU7qCEkOrFgIuJYyoSu+W5E
+         bXhw3o+uOHx7/C57TKe/X9e9O7UE/YXZ1EQ3ytOvJZJtqIAfl80CJ4UynE0KmomdpDx6
+         LJcfrDNWXN81AAqOBrcccbJinmGWH6zLqX6ooLa/JIpFWNx0Sb2l3p6e3VuMlnIzrUQy
+         VnM1bnGi3jtKAgE4UnMW7gDDqmEhhJxUWwvD5pK3t6+dfUdGH9owtxw4lC/0wo9qwBPm
+         bDEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712863379; x=1713468179;
+        d=1e100.net; s=20230601; t=1712863602; x=1713468402;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWyDifNB+g3/yqoVnm4if7NwdO+FurrszL4Rzn9n/PI=;
-        b=bOWP0xAqXDsmUEIHUFkbbgmGumlYofWi21gPC+e8goKplsOtH1rjCC4fWzEwIVZzND
-         I0rScnnOL52JlCly5v8BnoqmHR8Ah95iRCmXUIjGnqdBOCf1jxfjr0hbwcbSrJoFJJsL
-         f8cSNOJFkfvF2tJTrOjMM7xMFOrARCB7Ps3WapzEf0HkyKtb+K82FXUYE/qi6pf1Y/8b
-         ClTLJ79VNTgtXhs4+5v6fsspnWJbdJ0fjiIKhi+ZtP3xhW53dR5Dh0hEJmnqNu16r//5
-         oI7Xic1rPojCmuhcBLvR8YYB8jf3xj203sRdC3fzQK5FedZ/GOlmKYRr8aNa/QYU6CvI
-         KvBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs4c7kpeckpXQ7Kkx60MseDhXEUpnZimOXhrxq9A+KDOcd6kB6JMgxTV4F7dma4fSddWgIbOMKNN2zNDA6KAOp/o/c99Z6zfT6wGLrx/fTbA==
-X-Gm-Message-State: AOJu0YxfTzyjxdBF9Wf5yVxWcFutrY+kM37Rn3NfLU9xMNVRHDKASxLY
-	akmUXSU/xfohh8v2G4PkNkPgYbZPzFSNurbx8/JT8srNKKtu5uaz5Fy3xSqAW2OEUcL4AqJgkR/
-	ngw==
-X-Google-Smtp-Source: AGHT+IEkfHzR+4m+Th6V2ts/oqUxiy0aOaoToSSBUi9LCjdVmQdDERNlhn8Fq9lXwBTSzwWtpL0hLyOgrA4=
+        bh=6/MgwNwffmIAS0R8bxGeJvh6mxdWCPK8g/Rb9tm+ISo=;
+        b=a63gg1f3eZ0zSedgYSJQH5X/QEISsJYVfreW2XmN24VF51gk/nAhkNO4y1pZlFB1Zf
+         X+GO0hsP4YQ8F5D2y02nez78RJj+3B/4eK8uF+x93RWuqrxzLfWkuVj9zkwwTtkzGNm5
+         E9Owm8FvLyZeN17QLWIUhTi0z6X3ViIfgeD3ZcnmT+bcd3Ggp8rQ4ZkuLpii22+EAarw
+         odx2khjUUb8dxAm6J+d42tQILmcWNin6nT1Jb0wyreq6ZMSGs8VcjSvxMEAMcofi+TCR
+         ObfnxwZnHpV3nXwoMPtkNabIWhRWGCrjOhaU5jVSI1mhw6zhmNpFGgu5xfSG2kUXuMoZ
+         /R0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXjdtKJ9Dq0FvmRxc+uLUD2xdr1aVqUah0okSm+NfExK9lp2PfYj0+ytmjrqWGeU0sCaFavAiGAfTP20wGkr6Y8c/Ap+Hb7UEmLL5XaGFj6Ow==
+X-Gm-Message-State: AOJu0YzTZQd3bv+86LoEGJkHJMVTpHNFq+HAVvCkaKx9V7g9kzU7Y6Dy
+	sm7WpI2kwDGDpqSIWLoAwoP5utmi9AYoD0/Evn+qfHXixZTkJ/91tIExRdUsN/tv1VwA2rSWgGM
+	jTw==
+X-Google-Smtp-Source: AGHT+IGmzgf5KeeFYGZBCXwZQqfg4fCxOlevM9CoUirZy2bp2SeSl/953tOx5wakGYYh0uQowopD/M4RiEQ=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:6cc9:0:b0:615:2597:7246 with SMTP id
- h192-20020a816cc9000000b0061525977246mr83113ywc.6.1712863379573; Thu, 11 Apr
- 2024 12:22:59 -0700 (PDT)
-Date: Thu, 11 Apr 2024 12:22:58 -0700
-In-Reply-To: <20240126085444.324918-9-xiong.y.zhang@linux.intel.com>
+ (user=seanjc job=sendgmr) by 2002:a25:aac1:0:b0:de1:d50:ad47 with SMTP id
+ t59-20020a25aac1000000b00de10d50ad47mr120058ybi.13.1712863602281; Thu, 11 Apr
+ 2024 12:26:42 -0700 (PDT)
+Date: Thu, 11 Apr 2024 12:26:40 -0700
+In-Reply-To: <20240126085444.324918-10-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-9-xiong.y.zhang@linux.intel.com>
-Message-ID: <Zhg4kkDzmdUiCYg8@google.com>
-Subject: Re: [RFC PATCH 08/41] KVM: x86/pmu: Add get virtual LVTPC_MASK bit function
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-10-xiong.y.zhang@linux.intel.com>
+Message-ID: <Zhg5cFPL9GgujFKV@google.com>
+Subject: Re: [RFC PATCH 09/41] perf: core/x86: Forbid PMI handler when guest
+ own PMU
 From: Sean Christopherson <seanjc@google.com>
 To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
@@ -67,49 +68,34 @@ Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
 	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
 	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
+	chao.gao@intel.com
 Content-Type: text/plain; charset="us-ascii"
 
 On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> From: Xiong Zhang <xiong.y.zhang@intel.com>
-> 
-> On PMU passthrough mode, guest virtual LVTPC_MASK bit must be reflected
-> onto HW, especially when guest clear it, the HW bit should be cleared also.
-> Otherwise processor can't generate PMI until the HW mask bit is cleared.
-> 
-> This commit add a function to get virtual LVTPC_MASK bit, so that
+> +	/*
+> +	 * When PMU is pass-through into guest, this handler should be forbidden from
+> +	 * running, the reasons are:
+> +	 * 1. After perf_guest_switch_to_kvm_pmi_vector() is called, and before cpu
+> +	 *    enter into non-root mode, NMI could happen, but x86_pmu_handle_irq()
+> +	 *    restore PMU to use NMI vector, which destroy KVM PMI vector setting.
+> +	 * 2. When VM is running, host NMI other than PMI causes VM exit, KVM will
+> +	 *    call host NMI handler (vmx_vcpu_enter_exit()) first before KVM save
+> +	 *    guest PMU context (kvm_pmu_save_pmu_context()), as x86_pmu_handle_irq()
+> +	 *    clear global_status MSR which has guest status now, then this destroy
+> +	 *    guest PMU status.
+> +	 * 3. After VM exit, but before KVM save guest PMU context, host NMI other
+> +	 *    than PMI could happen, x86_pmu_handle_irq() clear global_status MSR
+> +	 *    which has guest status now, then this destroy guest PMU status.
+> +	 */
+> +	if (perf_is_in_guest_passthrough())
 
-No "This commit", "This patch", or any other variation.  Please read through:
+Maybe a name more along the lines of:
 
-  Documentation/process/maintainer-tip.rst 
-  Documentation/process/maintainer-kvm-x86.rst
+	if (perf_is_guest_context_loaded())
 
-> it can be set onto HW later.
-> 
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> ---
->  arch/x86/kvm/lapic.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index e30641d5ac90..dafae44325d1 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -277,4 +277,10 @@ static inline u8 kvm_xapic_id(struct kvm_lapic *apic)
->  {
->  	return kvm_lapic_get_reg(apic, APIC_ID) >> 24;
->  }
-> +
-> +static inline bool kvm_lapic_get_lvtpc_mask(struct kvm_vcpu *vcpu)
-> +{
-> +	return lapic_in_kernel(vcpu) &&
-> +	       (kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC) & APIC_LVT_MASKED);
-> +}
+because that makes it more obvious that the NMI _can't_ belong to the host PMU.
 
-As suggested in the previous patch, I'm pretty sure we can safely omit this
-helper.
-
->  #endif
-> -- 
-> 2.34.1
-> 
+For that matter, I would also rename __perf_force_exclude_guest to
+perf_guest_context_loaded (or "active" if that's better).  The boolean tracks
+the state (guest vs. host context loaded/active), where as forcing perf events
+to exclude_guest is an action based on that state.
