@@ -1,135 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6923234;
-	Fri, 12 Apr 2024 06:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2C481AA;
+	Fri, 12 Apr 2024 06:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712902668; cv=none; b=NCfqqykDViRUuieM+Oh8sLFylMpcSbG3D1gVLqDqEri/cBi1YPqXAjIQtbKCW6iLBxEeP4w1kh19C/h6jMLZFH1p9dAcrrSYh2OWNgB2STff7+zoscPwNBKLbsmr8qhbkMaeJtYVJ7occ+4XNj8aEEviI8Gf6534LZ6lgp/LfN4=
+	t=1712904086; cv=none; b=FcEPPII0PjuyIcdaDdrNQgRGh0jHTZJ64CCC+El55BAD71bsFllRqYtMsxuiTRwmIH+6zZnvlB5y5AUl5wH3s1mCNb9YHQCKfE/+3nmyyCL49/KnMMSsVyiBZc7CZmYQuwVd73jZ75sEp6m8ftE0iY0OVcTg9b17N1jRVNm4YZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712902668; c=relaxed/simple;
-	bh=fJad/M5v4UkmyQdRjVeibyM7pA9CQb94YlxCzIYU7Is=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TDmzXcjamuwUB/tRRVgm1PimRwWCduTH344T6y0iqtWdspVcKe13cRDxpYbgjf/pCoKDwjnzmk5eEUialBFA4uv17m+7lyxTT640S1+vD+baRbitje88RacUmKTHqGLbnvx+5MS7LG/pJyk+KjnszzA/QlAeaKCzM1YyFrpjuRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQW/WOLi; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1712904086; c=relaxed/simple;
+	bh=nnftp3y20mnefQs/zA7rIGucHoCz77k4ThTY/2DnxXQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WqZ4u2bp1etrmGwN4LvsEPc5P8AJHqF7YOdeX3PUsI0f7yW5353sMQfumFije+dnpo+1RbsV2oEBzu3BzyCh7zMWMGVGqHnsEXXP8w5YLHiRn6isxA0DilztxWv482/N9jaaplh0LdXlp6iYChmbPWluqpwmjkDKYt0JX8kP8AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iSIG88PM; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQW/WOLi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iSIG88PM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712902666; x=1744438666;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fJad/M5v4UkmyQdRjVeibyM7pA9CQb94YlxCzIYU7Is=;
-  b=XQW/WOLiH+iuCAMxlyMvgM/EUdd7FKeaKRMmjakPe3zMdpVhmGnvYlFZ
-   3tm51Egl4JB6K//jsmHXvoO14hj12YagfI0VjAssmm6YYF3jRCc/Kn07L
-   75h7hMjdp++hBFqbtbvQup3RbRXlKoBLhup2JiYiLqJB6j/rPTlbqoGfR
-   DBTmsDq/WTGd3qrFD9zbtVvgy5A8SxDxtFauF2GOrsDO5ArjyuAppLFIQ
-   t+9UqvVGfeHbdV8r7wUr1AnQBNmXYRaBYELG/orUjX22W7/XSnhCbrRQM
-   iNi71ry2kWKw8r33/IbTwkY5nWZJjgOCaIaE09BaSfmVVZ0OpCrf1occA
-   w==;
-X-CSE-ConnectionGUID: bfogTIZBTnunq0Cr87dWRg==
-X-CSE-MsgGUID: nC+kqSMJToOQLV/PefyeLA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8477867"
+  t=1712904084; x=1744440084;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=nnftp3y20mnefQs/zA7rIGucHoCz77k4ThTY/2DnxXQ=;
+  b=iSIG88PM9b2YgdRQ4szSPTsiEdHfMD5rvawOOi/wLLg8jMk/6RvNaAhh
+   oT8MCDqfxNcRKZIaxcmdnyc5dZFarta68w/0F5iqI/qjN12Q0xqiv/d3W
+   MzpkPrK3w3Kcc1AHe6HVTykvzAnyMk67pILZRjDVT2hnvtRmoe/Cw2Fd+
+   /uyq9R6DLLbY1+VPi8oWLD8fXYhTK1fOKpK5axS7YL1HSBv2I+Lw0Wccf
+   fe1j1FKLmWJwforIh40KJUeHO8Jk2MX9Ubj2Z2DTWjc8yz7+KWokasxYk
+   5t7Q9ylV9NvBLIftWfB78uD0Vkjhd9A4DcbrwRJ02bVl04XgItkgpfDlz
+   A==;
+X-CSE-ConnectionGUID: Y0HDLEZfStSZpp9NVKZxxw==
+X-CSE-MsgGUID: /QL/ha6+TkaFPIYYcUqo0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="19059686"
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="8477867"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:17:46 -0700
-X-CSE-ConnectionGUID: WoPCkQFySrilZjLdRbsGNQ==
-X-CSE-MsgGUID: MwvHk+UERuqY7ad9C/NZjw==
+   d="scan'208";a="19059686"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:41:22 -0700
+X-CSE-ConnectionGUID: gXMdnuYmRRqCKEW6OOQMYA==
+X-CSE-MsgGUID: D1rZkMzDT4yyHA2nqy/ldg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21185053"
-Received: from xiongzha-mobl1.ccr.corp.intel.com (HELO [10.124.244.162]) ([10.124.244.162])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:17:41 -0700
-Message-ID: <3a0c2542-2aa7-464b-8a09-e09e570c88da@linux.intel.com>
-Date: Fri, 12 Apr 2024 14:17:38 +0800
+   d="scan'208";a="21056020"
+Received: from gjantea-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.121])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:41:15 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@toblux.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+ speakup@linux-speakup.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-afs@lists.infradead.org, ecryptfs@vger.kernel.org,
+ netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-arch@vger.kernel.org,
+ io-uring@vger.kernel.org, cocci@inria.fr, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] treewide: Fix common grammar mistake "the the"
+In-Reply-To: <193B959E-60A3-499A-BFF3-EA7B2D0B6C12@toblux.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240411150437.496153-4-thorsten.blum@toblux.com>
+ <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
+ <193B959E-60A3-499A-BFF3-EA7B2D0B6C12@toblux.com>
+Date: Fri, 12 Apr 2024 09:41:10 +0300
+Message-ID: <87y19j3wxl.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 07/41] perf/x86: Add interface to reflect virtual
- LVTPC_MASK bit onto HW
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
- kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-8-xiong.y.zhang@linux.intel.com>
- <Zhg4Oph6yCpN0DeX@google.com>
-From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
-In-Reply-To: <Zhg4Oph6yCpN0DeX@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+
+On Fri, 12 Apr 2024, Thorsten Blum <thorsten.blum@toblux.com> wrote:
+> On 11. Apr 2024, at 17:25, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>> 
+>> It's tricky to know which tree a patch like this would go through.
+>
+> The patch is based on the mainline tree. Should I have sent it directly to
+> Linus then?
+>
+> I'm relatively new here and therefore only sent it to the corresponding mailing
+> lists.
+
+It's not just about mailing lists, it's also about changes flowing in to
+mainline via a plethora of subsystem and driver repos and branches. See
+MAINTAINERS. Or this old LWN page [1]. The development happens in those
+branches, and if you make treewide changes like this, it's not clear who
+should take it, and you also risk unnecessary conflicts if those places
+get modified in the individual branches. So it might just be easiest to
+split this up to smaller patches sent to the appropriate lists.
+
+Anyway, all that said,
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+
+on the i915 changes here.
 
 
-On 4/12/2024 3:21 AM, Sean Christopherson wrote:
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
->> From: Xiong Zhang <xiong.y.zhang@intel.com>
->>
->> When guest clear LVTPC_MASK bit in guest PMI handler at PMU passthrough
->> mode, this bit should be reflected onto HW, otherwise HW couldn't generate
->> PMI again during VM running until it is cleared.
-> 
-> This fixes a bug in the previous patch, i.e. this should not be a standalone
-> patch.
-> 
->>
->> This commit set HW LVTPC_MASK bit at PMU vecctor switching to KVM PMI
->> vector.
->>
->> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  arch/x86/events/core.c            | 9 +++++++--
->>  arch/x86/include/asm/perf_event.h | 2 +-
->>  arch/x86/kvm/lapic.h              | 1 -
->>  3 files changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 3f87894d8c8e..ece042cfb470 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -709,13 +709,18 @@ void perf_guest_switch_to_host_pmi_vector(void)
->>  }
->>  EXPORT_SYMBOL_GPL(perf_guest_switch_to_host_pmi_vector);
->>  
->> -void perf_guest_switch_to_kvm_pmi_vector(void)
->> +void perf_guest_switch_to_kvm_pmi_vector(bool mask)
->>  {
->>  	lockdep_assert_irqs_disabled();
->>  
->> -	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
->> +	if (mask)
->> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
->> +			   APIC_LVT_MASKED);
->> +	else
->> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
->>  }
-> 
-> Or more simply:
-> 
-> void perf_guest_enter(u32 guest_lvtpc)
-> {
-> 	...
-> 
-> 	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
-> 			       (guest_lvtpc & APIC_LVT_MASKED));
-> }
-> 
-> and then on the KVM side:
-> 
-> 	perf_guest_enter(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
-> 
-> because an in-kernel APIC should be a hard requirement for the mediated PMU.
-> this is simpler and we will follow this.
+BR,
+Jani.
 
-thanks
+
+[1] https://lwn.net/Articles/737094/
+
+-- 
+Jani Nikula, Intel
