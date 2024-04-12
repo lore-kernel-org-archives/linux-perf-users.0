@@ -1,146 +1,197 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13023139CE4
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 16:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F9153811;
+	Fri, 12 Apr 2024 16:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712937717; cv=none; b=J35SizdlX5N7MxEnBZfORpw4vZidsPsJxLj/6x0aSxY6jXFY9btUIEl1/atl30JpWXbeaNewD6AI9I7AcRZzIz6IsLfRY9Bhh6yQsfiP3swjsNSd//5+tCpowfflQHjL2OYnV2gWEYMpSoQnBTk27gBpuOXnRHC6EuD6qvZ5eRY=
+	t=1712939343; cv=none; b=LN2hHbTxqosScJSuYWtTEfXOKqT6pLHox+xNRk7ERzGq0srWgBYzeXG9c5wLCTtKHAT7pmJDOM843GgR6ry4/j9b9NQS69JZNtjamsUza9B7T7oDeUF9xj0OdxV/1XbMAbPhZqOOtjwplT4j++BIJd4ih3U3u9yetxIQV8bSV3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712937717; c=relaxed/simple;
-	bh=29mMxzABJNu2s6sXXHWuTqJmU9ZiVLQYln8kPDantDM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ObhB8xTr1nvZt/qkLlPbcGwH9ZUV6XbvutAatGfUCoIV9PbMcvXWs6dIniWxbZEGVBgIeJkmHYn79P578GiyTzFhh9+cG17vyVFelbxswkCxyn0AbGpCTeTf5OSvBi6tXhWR1SOUCx1fY5nWsdzySvPmt/Lk3GCKEx0q5Q3WWtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xv8SKoQu; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712939343; c=relaxed/simple;
+	bh=Nw76s36euEpvCv3rVMgFKiDKHwOrD8yGqXcaYuU/bQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJ+knEVh7O23ZlS4NvdVj5mKnFyDRlomntfpXc46gt8Xd7v05zgn7HteJbH3SC4ED3NpTn3K4tYKlpvjK0/h7NngPv0iZ52pHUbmb6wH+4diWvWeiCfL8OwrV79Kict1BsUyzdlDLd1EgH/fcsEGu640cYtRQEnIbJNfnJJFeH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rCHtAbCw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xv8SKoQu"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2f7048a7fso1025743a91.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 09:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712937714; x=1713542514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7zE2NMeREY9M0RzVWCwQFXSSfNx2GjxIaqj3+nSSE88=;
-        b=Xv8SKoQuY/mTjeQyYKDLH/lyGjpzQM1s2vyQFMUcc9Fgk7LIEVxFZmCc2GHJNro/1Y
-         z3iwG2NxaEFVdgEZVwgphJTR+zPnu5F+kIdv87w4XZwpEDp/XPMWanc0d+yT2hFQxzGZ
-         eXQmkVHJGvcIikUyLSfpnxewE1WXsuFf+ILmjaEM8iCtSFppU+ZD9Sx3zEtTk4RrKDdm
-         Nq5FQp0Qk3sQ72qD6f6llk1A3Av2t1qht/PDS9W6FGiGdGdRTvgP8MazmUYeRSb05Nzr
-         V7hNr3Th1junatKzNhdmg9bsdcL2i3gvWjfBE+UAb/P5+5Z3fiziiXwpJcbwVP7VgO5g
-         UaTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712937714; x=1713542514;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7zE2NMeREY9M0RzVWCwQFXSSfNx2GjxIaqj3+nSSE88=;
-        b=UAIwjiNg/Io7tCqDJEp36RWY25lyI8oqXqLil/xaAjHa5rJenqkvau1/zkuRtw/05v
-         s9FDs9nVM3yYMq3xmlABmwq2u9uWzWWfwOFEy/Ay4RacM+yWtXbTFbaznpuUJGi3La86
-         avMwkhh5cC4aOzIVyRQ0DE6kX6WBNm0JYPlDNM8LxhaAv8ULchwn5HtuVTLq0JJnOvNB
-         R8i3ArC6ve4QdtEE4On/mV4YZreaBghxf8a/oHxej4GgDRX3HodT43B/hxHUtITFIG7p
-         69i+EpI0rr8FAyys/27a34HEVXLCg93n58vr+bWm2Lk0mQO+7c0fPBgJXe1bf1q60Vd2
-         Vgeg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3+mS/w2OxCAO+oqEVL4TOqycy6UXZCkz9sXCLqqQqVv2QhVqrFoDoJHvkFw5S47PrdhtL5tq5KtJTj2bIf8g4bLqqYG7NIEtmo704551rig==
-X-Gm-Message-State: AOJu0YwkZVU9lMqcpdafArDMBjM62XcRv5c8oCfeLY4pJ1sjQ8v+nhxL
-	jEVQNyt2WrbGKEAGIJVLgkcjQxxyNIsUBiVSe7v4oEK7IidIQB1KEDwuOf4Haou/E2O2kC3jqeq
-	kUQ==
-X-Google-Smtp-Source: AGHT+IFKD4Hv8wNoDvr4Y5aQffHL1eNGOeIZjolKkjhO23bzQ9t+IKJIElrdebVXil7KaicTN70CogUiCbU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:66cf:b0:2a5:227f:dd7c with SMTP id
- z15-20020a17090a66cf00b002a5227fdd7cmr8569pjl.1.1712937714332; Fri, 12 Apr
- 2024 09:01:54 -0700 (PDT)
-Date: Fri, 12 Apr 2024 09:01:52 -0700
-In-Reply-To: <CALMp9eR6-7va0XUbEYFNVtGdEzmWbAr9pXhLgSL=f9dJyAso7Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rCHtAbCw"
+Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4B1FE20EBE27;
+	Fri, 12 Apr 2024 09:28:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4B1FE20EBE27
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712939336;
+	bh=aPNAajPgfa9tLlbi4R+vTG3tD1EMXPgxv/2aSoOWXiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rCHtAbCw94qufrUR+oDW0j7orn9yDy95q/+KzGcXHgvCdFkT8odTWCYYEqR3Xr71Q
+	 bQpRy1gVabzD6DDvkPbmutCYQpgXPFRnHU4Ep1i5dW6CWdBtDKTA5OCnStkcHXuB1g
+	 0RgMJe948AXGBvFi0KmgZi+0GjyReGjB2bUzpwOY=
+Date: Fri, 12 Apr 2024 09:28:48 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, primiano@google.com, aahringo@redhat.com,
+	dcook@linux.microsoft.com
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+Message-ID: <20240412162848.GA467-beaub@linux.microsoft.com>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-19-xiong.y.zhang@linux.intel.com> <ZhhUyk2uAXqG7GEd@google.com>
- <CALMp9eR6-7va0XUbEYFNVtGdEzmWbAr9pXhLgSL=f9dJyAso7Q@mail.gmail.com>
-Message-ID: <Zhla8NGvQgzhkclx@google.com>
-Subject: Re: [RFC PATCH 18/41] KVM: x86/pmu: Intercept full-width GP counter
- MSRs by checking with perf capabilities
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
-	Xiong Zhang <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
 
-On Thu, Apr 11, 2024, Jim Mattson wrote:
-> On Thu, Apr 11, 2024 at 2:23=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
+On Thu, Apr 11, 2024 at 09:52:22PM -0700, Ian Rogers wrote:
+> On Thu, Apr 11, 2024 at 5:17 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > >
-> > On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > > From: Mingwei Zhang <mizhang@google.com>
-> > >
-> > > Intercept full-width GP counter MSRs in passthrough PMU if guest does=
- not
-> > > have the capability to write in full-width. In addition, opportunisti=
-cally
-> > > add a warning if non-full-width counter MSRs are also intercepted, in=
- which
-> > > case it is a clear mistake.
-> > >
-> > > Co-developed-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> > > Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> > > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/pmu_intel.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_inte=
-l.c
-> > > index 7f6cabb2c378..49df154fbb5b 100644
-> > > --- a/arch/x86/kvm/vmx/pmu_intel.c
-> > > +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> > > @@ -429,6 +429,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vc=
-pu, struct msr_data *msr_info)
-> > >       default:
-> > >               if ((pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) |=
-|
-> > >                   (pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
-> > > +                     if (is_passthrough_pmu_enabled(vcpu) &&
-> > > +                         !(msr & MSR_PMC_FULL_WIDTH_BIT) &&
-> > > +                         !msr_info->host_initiated) {
-> > > +                             pr_warn_once("passthrough PMU never int=
-ercepts non-full-width PMU counters\n");
-> > > +                             return 1;
+> > In the Open Telemetry profiling SIG [1], we are trying to find a way to
+> > grab a tracing association quickly on a per-sample basis. The team at
+> > Elastic has a bespoke way to do this [2], however, I'd like to see a
+> > more general way to achieve this. The folks I've been talking with seem
+> > open to the idea of just having a TLS value for this we could capture
+> 
+> Presumably TLS == Thread Local Storage.
+> 
+
+Yes, the initial idea is to use thread local storage (TLS). It seems to
+be the fastest option to save a per-thread value that changes at a fast
+rate.
+
+> > upon each sample. We could then just state, Open Telemetry SDKs should
+> > have a TLS value for span correlation. However, we need a way to sample
+> > the TLS or other value(s) when a sampling event is generated. This is
+> > supported today on Windows via EventActivityIdControl() [3]. Since
+> > Open Telemetry works on both Windows and Linux, ideally we can do
+> > something as efficient for Linux based workloads.
 > >
-> > This is broken, KVM must be prepared to handle WRMSR (and RDMSR and RDP=
-MC) that
-> > come in through the emulator.
->=20
-> Don't tell me that we are still supporting CPUs that don't have
-> "unrestricted guest"! Sigh.
+> > This series is to explore how it would be best possible to collect
+> > supporting data from a user process when a profile sample is collected.
+> > Having a value stored in TLS makes a lot of sense for this however
+> > there are other ways to explore. Whatever is chosen, kernel samples
+> > taken in process context should be able to get this supporting data.
+> > In these patches on X64 the fsbase and gsbase are used for this.
+> >
+> > An option to explore suggested by Mathieu Desnoyers is to utilize rseq
+> > for processes to register a value location that can be included when
+> > profiling if desired. This would allow a tighter contract between user
+> > processes and a profiler.  It would allow better labeling/categorizing
+> > the correlation values.
+> 
+> It is hard to understand this idea. Are you saying stash a cookie in
+> TLS for samples to capture to indicate an activity? Restartable
+> sequences are about preemption on a CPU not of a thread, so at least
+> my intuition is that they feel different. You could stash information
+> like this today by changing the thread name which generates comm
+> events. I've wondered about having similar information in some form of
+> reserved for profiling stack slot, for example, to stash a pointer to
+> the name of a function being interpreted. Snapshotting all of a stack
+> is bad performance wise and for security. A stack slot would be able
+> to deal with nesting.
+> 
 
-Heh, KVM still supports CPUs without VMX virtual NMIs :-)
+You are getting the idea. A slot or tag for a thread would be great! I'm
+not a fan of overriding the thread comm name (as that already has a
+use). TLS would be fine, if we could also pass an offset + size + type.
 
-Practically speaking, if we want to eliminate things like emulated WRMSR/RD=
-MSR,
-a Kconfig to build a reduced emulator would be the way to go.  But while a =
-reduced
-emulator would be nice for host security, I don't think it would buy us muc=
-h from
-a code perspective, since KVM still needs to handle host userspace MSR acce=
-sses.
+Maybe a stack slot that just points to parts of TLS? That way you could
+have a set of slots that don't require much memory and selectively copy
+them out of TLS (or where ever those slots point to in user memory).
 
-E.g. KVM could have conditional sanity checks for MSRs that are supposed to=
- be
-passed through, but unless a reduced emulator is a hard requirement for pas=
-sthrough
-PMUs, we'd still need the code to handle the emulated accesses.  And even i=
-f a
-reduced emulator were a hard requirement, I'd still push for a WARN-and-con=
-tinue
-approach, not a "inject a bogus #GP because KVM screwed up" approach.
+When I was talking to Mathieu about this, it seems that rseq already had
+a place to potentially put these slots. I'm unsure though how the per
+thread aspects would work.
+
+Mathieu, can you post your ideas here about that?
+
+> > An idea flow would look like this:
+> > User Task               Profile
+> > do_work();              sample() -> IP + No activity
+> > ...
+> > set_activity(123);
+> > ...
+> > do_work();              sample() -> IP + activity (123)
+> > ...
+> > set_activity(124);
+> > ...
+> > do_work();              sample() -> IP + activity (124)
+> >
+> > Ideally, the set_activity() method would not be a syscall. It needs to
+> > be very cheap as this should not bottleneck work. Ideally this is just
+> > a memcpy of 16-20 bytes as it is on Windows via EventActivityIdControl()
+> > using EVENT_ACTIVITY_CTRL_SET_ID.
+> >
+> > For those not aware, Open Telemetry allows collecting data from multiple
+> > machines and show where time was spent. The tracing context is already
+> > available for logs, but not for profiling samples. The idea is to show
+> > where slowdowns occur and have profile samples to explain why they
+> > slowed down. This must be possible without having to track context
+> > switches to do this correlation. This is because the profiling rates
+> > are typically 20hz - 1Khz, while the context switching rates are much
+> > higher. We do not want to have to consume high context switch rates
+> > just to know a correlation for a 20hz signal. Often these 20hz signals
+> > are always enabled in some environments.
+> >
+> > Regardless if TLS, rseq, or other source is used I believe we will need
+> > a way for perf_events to include it within a sample. The changes in this
+> > series show how it could be done with TLS. There is some factoring work
+> > under perf to make it easier to add more dump types using the existing
+> > ABI. This is mostly to make the patches clearer, certainly the refactor
+> > parts could get dropped and we could have duplicated/specialized paths.
+> 
+> fs and gs may be used for more than just the C runtime's TLS. For
+> example, they may be used by emulators or managed runtimes. I'm not
+> clear why this specific case couldn't be handled through BPF.
+> 
+
+Agree about the fs/gs possibly being used for other things. If we had a
+stack slot we could avoid the confusion and have tighter couplings.
+
+You can do this in eBPF (see [2]). However, it's very clunky and depends
+on specific SDKs per-language/runtime. We ourselves don't run our profilers
+with anything other than CAP_PERFMON, and also have environments without
+BPF enabled due to various reasons. It'd be great if we could get this data
+directly from perf. At the very least, I'd love to get a standardized
+way to attribute thread values accessible to other performance systems
+(like eBPF and perf).
+
+Thanks,
+-Beau
+
+> Thanks,
+> Ian
+> 
+> > 1. https://opentelemetry.io/blog/2024/profiling/
+> > 2. https://www.elastic.co/blog/continuous-profiling-distributed-tracing-correlation
+> > 3. https://learn.microsoft.com/en-us/windows/win32/api/evntprov/nf-evntprov-eventactivityidcontrol
+> >
+> > Beau Belgrave (4):
+> >   perf/core: Introduce perf_prepare_dump_data()
+> >   perf: Introduce PERF_SAMPLE_TLS_USER sample type
+> >   perf/core: Factor perf_output_sample_udump()
+> >   perf/x86/core: Add tls dump support
+> >
+> >  arch/Kconfig                      |   7 ++
+> >  arch/x86/Kconfig                  |   1 +
+> >  arch/x86/events/core.c            |  14 +++
+> >  arch/x86/include/asm/perf_event.h |   5 +
+> >  include/linux/perf_event.h        |   7 ++
+> >  include/uapi/linux/perf_event.h   |   5 +-
+> >  kernel/events/core.c              | 166 +++++++++++++++++++++++-------
+> >  kernel/events/internal.h          |  16 +++
+> >  8 files changed, 180 insertions(+), 41 deletions(-)
+> >
+> >
+> > base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+> > --
+> > 2.34.1
+> >
