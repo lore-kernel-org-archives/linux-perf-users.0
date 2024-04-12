@@ -1,186 +1,308 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E652BA33
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 04:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4A21B968
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 05:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712897559; cv=none; b=jC+5wcCNvuRPajxMpu3Fwxx7LuhCfathhVzMKiCORpePvfPpAzXBaIlHp24OcyXjP/WQAYA/T9P9LtwDQZ/3qMfcIbW1Bau/8Y4AAWwRjH9a7zkOczOzVA9fhbXyTm/ISwtOCM1Ulj4SbTPc1Ot/SOcqNoMCA9lsFSGDescOqi4=
+	t=1712899379; cv=none; b=UjsbuoQFFdof64DmCsbS5tX7WJfPp3kwGCN90zNelJiCkjsj6FnVAggJ+vqLwpa/4gSFllIDtSErg5rSXDPYCPkRqdYDD/RmKXompEvEjDy7JgNNxSdTo66Vnao0xxX7Ru8e8ZqLzcb+QM2anV9Avlddbd1PTmfC/+F+8j3s+DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712897559; c=relaxed/simple;
-	bh=EHTXQfExvEKClzZc8qu7/rp3jXAcbV21sDzScgXNDME=;
+	s=arc-20240116; t=1712899379; c=relaxed/simple;
+	bh=UL/LpncOZyGtWXw7sXb64CLmGe4yYisGgtysed72NNM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ChK9/aXmyHsDbcwwrxldtXYMJQcdp/mUlgPaf8o9mo6BSe+/mQWL6jJduXnnre7yM1kG7bUe5ewQiFkC+0dQMh7RSmR/90uT4oB0WZiQCJUB9VpsjAzSY32ZlCEbejUEuH3M2EX3xBOaTLBQcFe+n1FTXKxddr7I0LyVnp3ANk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C/XYVGUJ; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=i1jZiOzl1kgN18weN5a7a1nyUG8uUX0u+mfQwlyeputOyG/RWz9iMfj/M00xNmMO9A8/KlwEvfhP4FyNk/6awFzeE8MzevR5LTlquLy0jK4JCqPtCYFl8dLrRV86C7an3qv925KVTp1AbvjtWKgxN7KkwDb2zLRhf0pILquPDNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M0Qz3sWn; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/XYVGUJ"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36a3a4c9d11so56145ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 21:52:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0Qz3sWn"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36a3a4c9d11so61245ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 22:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712897556; x=1713502356; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712899377; x=1713504177; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j1gNz4dak4ArAyqdrT+Hy711rFqRI2e21Pd9/Cyi2Yc=;
-        b=C/XYVGUJpwlRK1UHQj2FeSRw+PyCx1jVsMRi31Sn31r5Q1em9N+Dc6D2HLO8P9vZqQ
-         3kDfeK1ZKOW4trHWAcx+beeC/uPJjUAbHBVVVIF6FSVpkzMn7N+DTfaF52ow/VCOQooW
-         YhluwbBd8QKKSOqT/ualeEDxmadNcbXQ/dxYy3Y8Ij1qQozxo9+pf6xbiZyrFCsDwhrM
-         z92sBDRgc0xi54QUWtRksUuhHyZKIEuZCU3uz2uRlbL+c7AtvxJet+psYKre6SyeVLsR
-         7cQJMlw95kNZgr4swZEld1XshksSb8OKdbtAzXImdhNpnZus7TXm1tXxHYTBo6veTk/u
-         qJZA==
+        bh=4gNpPlT+WGI2X/oljO6U2N2ieR5VZIoAm4qmJbHtId0=;
+        b=M0Qz3sWnk3Ddf4Z7GodnMzpq64pZNnS+8Rnc27GLfBCfwTEgBRSTprycyRG9DKt/ur
+         8aeNT8qvkZRU82efIdjG87XlGru0Nwf/znmPwD2dKTxyCjXVtaSWSK9Mx0PUQ/uJzz9d
+         cGrXbMt3t8KDNVtTHYVt3aSYLA1aHSO+VydU7dc58FDtYJ8bGDsOkPyhhvAhUSulxm4M
+         YnQTp+kuUBKb1MYDZbO5ROGdQubWrHx8HUzC8ZAcrcTaDnI2XZImS+TxYSij15qqEdGU
+         JMHHVERhv9jVO4giQ1p/CE5iP7SS7ItOMWJLgJpa8e4fXoxIL6Dydxdp8f5dPS46KKRO
+         CZhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712897556; x=1713502356;
+        d=1e100.net; s=20230601; t=1712899377; x=1713504177;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=j1gNz4dak4ArAyqdrT+Hy711rFqRI2e21Pd9/Cyi2Yc=;
-        b=pqrSTlm/f326WYRv41Qi6gujqGtVkqQRUfN+5IMhhPgUmYRCGHWWx1+BdOrlNiJda/
-         oDSOj1/zgGg80dzIVk12g/EwM2bcsqp3rLnWIJu0YWJVo8WMGj9dgF7KA4RdrTNQ4ztc
-         qS5N/5djFWVaj+Cxxuno7CphqVSYYnkWfI1vXvDim2+lz1sgOHoqTmdANz02wYFz8YHH
-         455s7jh9LpOVlw8wHwVt8aAQm7Mm/aJq8QR7gL9Ognbqq7PoWsnW7VGncG1YV5ag12Tw
-         KlXCfZicD8LzTIAfNaZOO6QvDkeXPe2/b17ZSoSFRLpQzYHldc5up1kYZ0Dn1uvZDiVd
-         /u/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUsMjNj7ZQ+/PPB3aZmNWphBWRfXNPRyBUFpiTVGR1lSLDh6+VdZ4spqe960xwnPtBiT3k8/K/1KYOs+uKehDB7o9L9qw/WN3CELm3k02U6MA==
-X-Gm-Message-State: AOJu0Yxc1HMupHUF0Nq5T+PFfZp9K5n+Tp93uZpcyGttuisrXnjYi3zD
-	i/njBqBBOejYyn/gZBSum9ET1V/EozmhOUD3oKBkof4ZdN9R/n++ddLXGFica+ioW8bzZqj6Qys
-	qzIJn/JwT86EewRSSXRbHTr07YwFXMHl5/T8h
-X-Google-Smtp-Source: AGHT+IEPrdVc7vXlAwil+5Bi+DuQH+p49bvYaKFSFZiaEuf5w0/Tt/Gam+hGBFCE+dTy+hn9yDx/6J24VWxGhGeGmxQ=
-X-Received: by 2002:a92:c8cd:0:b0:36a:2978:7cc1 with SMTP id
- c13-20020a92c8cd000000b0036a29787cc1mr139455ilq.12.1712897556330; Thu, 11 Apr
- 2024 21:52:36 -0700 (PDT)
+        bh=4gNpPlT+WGI2X/oljO6U2N2ieR5VZIoAm4qmJbHtId0=;
+        b=cHj1Rkeeq12cOc/AoxKdme+GDoK0d6TulHw4UT0+Qk2Yip2/1oneyJmRoKpoT7zTy5
+         u7scypN9pB/yqhbtxQtvVjhJquniVtQay4mol1h6vfwd8wjsWbVNazg4rkjT4WekbJcU
+         ngdCw+WS68qgh3S+lQy66FtUcsi//pZrT3a6atqbXspMfqztmpDIySiDMu2AMF8Djb22
+         BeZnO+/wB2K0u26VBaZpbvHTc5Z54f6x3jhPbqALWzTHs1BVj2EPByIajVademZlGqIw
+         ApvMKEbkXsm3s/MeqRO1I80Z7SZTrenvesn6lcZzWyIFOfuO6smoF4TTIsJj5+p2/ifq
+         T8hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWasq+74KuYeuMHmTVkIttNUsLRsIlR7KtLZysFii1Qdddfca5ZWYhJm/8zMY2NnSNTAYhzjB9JIZAQXGdvhvyOuDCXrqCvB1qOMGueNhfI2Q==
+X-Gm-Message-State: AOJu0YwvsH5yvrfclxdgSvd4kdbJHqyd2/wfZwjsABi01lzwGmd3kLGx
+	u48CGf9n7Nq97UcbRssRHHf6wqDLK5BeUgUAgGxAjKGiKGqaAYf4hpWM4+bXl+5aV4fAG3mgIvI
+	4tfwoD+0LcENbYNxrVKMTun4fpsRK2oFVqFdS
+X-Google-Smtp-Source: AGHT+IFaxXfvgMGaQqQrfx6l6wm45mGMVB40AypZPvgD2u24sPWZke6TU3DNIdrJaUHBpgEu+mazw+ENL8ObWHJtEy4=
+X-Received: by 2002:a05:6e02:2190:b0:36a:36e7:6bf8 with SMTP id
+ j16-20020a056e02219000b0036a36e76bf8mr117545ila.15.1712899376701; Thu, 11 Apr
+ 2024 22:22:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412001732.475-1-beaub@linux.microsoft.com>
-In-Reply-To: <20240412001732.475-1-beaub@linux.microsoft.com>
+References: <20240405070931.1231245-1-irogers@google.com> <20240405070931.1231245-2-irogers@google.com>
+ <ZhP7VBvlSPrJKDP6@x1>
+In-Reply-To: <ZhP7VBvlSPrJKDP6@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Apr 2024 21:52:22 -0700
-Message-ID: <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, primiano@google.com, aahringo@redhat.com, 
-	dcook@linux.microsoft.com
+Date: Thu, 11 Apr 2024 22:22:42 -0700
+Message-ID: <CAP-5=fVbhf_JgO9APwgOVyktazOAyEL-3vM2d-M4ropMDdYH2w@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Display number of remaining tests
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024 at 5:17=E2=80=AFPM Beau Belgrave <beaub@linux.microsof=
-t.com> wrote:
+On Mon, Apr 8, 2024 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> In the Open Telemetry profiling SIG [1], we are trying to find a way to
-> grab a tracing association quickly on a per-sample basis. The team at
-> Elastic has a bespoke way to do this [2], however, I'd like to see a
-> more general way to achieve this. The folks I've been talking with seem
-> open to the idea of just having a TLS value for this we could capture
+> On Fri, Apr 05, 2024 at 12:09:31AM -0700, Ian Rogers wrote:
+> > Before polling or sleeping to wait for a test to complete, print out
+> > ": Running (<num> remaining)" where the number of remaining tests is
+> > determined by iterating over the remaining tests and seeing which
+> > return true for check_if_command_finished. After the delay, erase the
+> > line and either update it with the new number of remaining tests, or
+> > print the test's result. This allows a user to know a test is running
+> > and in parallel mode (default) how many of the tests are waiting to
+> > complete. If color mode is disabled then avoid displaying the
+> > "Running" message.
+>
+> Tested and applied, great improvement!
 
-Presumably TLS =3D=3D Thread Local Storage.
-
-> upon each sample. We could then just state, Open Telemetry SDKs should
-> have a TLS value for span correlation. However, we need a way to sample
-> the TLS or other value(s) when a sampling event is generated. This is
-> supported today on Windows via EventActivityIdControl() [3]. Since
-> Open Telemetry works on both Windows and Linux, ideally we can do
-> something as efficient for Linux based workloads.
->
-> This series is to explore how it would be best possible to collect
-> supporting data from a user process when a profile sample is collected.
-> Having a value stored in TLS makes a lot of sense for this however
-> there are other ways to explore. Whatever is chosen, kernel samples
-> taken in process context should be able to get this supporting data.
-> In these patches on X64 the fsbase and gsbase are used for this.
->
-> An option to explore suggested by Mathieu Desnoyers is to utilize rseq
-> for processes to register a value location that can be included when
-> profiling if desired. This would allow a tighter contract between user
-> processes and a profiler.  It would allow better labeling/categorizing
-> the correlation values.
-
-It is hard to understand this idea. Are you saying stash a cookie in
-TLS for samples to capture to indicate an activity? Restartable
-sequences are about preemption on a CPU not of a thread, so at least
-my intuition is that they feel different. You could stash information
-like this today by changing the thread name which generates comm
-events. I've wondered about having similar information in some form of
-reserved for profiling stack slot, for example, to stash a pointer to
-the name of a function being interpreted. Snapshotting all of a stack
-is bad performance wise and for security. A stack slot would be able
-to deal with nesting.
-
-> An idea flow would look like this:
-> User Task               Profile
-> do_work();              sample() -> IP + No activity
-> ...
-> set_activity(123);
-> ...
-> do_work();              sample() -> IP + activity (123)
-> ...
-> set_activity(124);
-> ...
-> do_work();              sample() -> IP + activity (124)
->
-> Ideally, the set_activity() method would not be a syscall. It needs to
-> be very cheap as this should not bottleneck work. Ideally this is just
-> a memcpy of 16-20 bytes as it is on Windows via EventActivityIdControl()
-> using EVENT_ACTIVITY_CTRL_SET_ID.
->
-> For those not aware, Open Telemetry allows collecting data from multiple
-> machines and show where time was spent. The tracing context is already
-> available for logs, but not for profiling samples. The idea is to show
-> where slowdowns occur and have profile samples to explain why they
-> slowed down. This must be possible without having to track context
-> switches to do this correlation. This is because the profiling rates
-> are typically 20hz - 1Khz, while the context switching rates are much
-> higher. We do not want to have to consume high context switch rates
-> just to know a correlation for a 20hz signal. Often these 20hz signals
-> are always enabled in some environments.
->
-> Regardless if TLS, rseq, or other source is used I believe we will need
-> a way for perf_events to include it within a sample. The changes in this
-> series show how it could be done with TLS. There is some factoring work
-> under perf to make it easier to add more dump types using the existing
-> ABI. This is mostly to make the patches clearer, certainly the refactor
-> parts could get dropped and we could have duplicated/specialized paths.
-
-fs and gs may be used for more than just the C runtime's TLS. For
-example, they may be used by emulators or managed runtimes. I'm not
-clear why this specific case couldn't be handled through BPF.
+And I think it is broken. Specifically I think the nohang waitpid can
+cause the later read of the stdout/err pipe to fail. We may need to
+drain the files before checking. I suspect this as I've seen an
+increase test fails where the verbose output shows nothing. The only
+remedy for that in the current code would be to run the tests
+sequentially, so we should probably back this out for now.
 
 Thanks,
 Ian
 
-> 1. https://opentelemetry.io/blog/2024/profiling/
-> 2. https://www.elastic.co/blog/continuous-profiling-distributed-tracing-c=
-orrelation
-> 3. https://learn.microsoft.com/en-us/windows/win32/api/evntprov/nf-evntpr=
-ov-eventactivityidcontrol
+> - Arnaldo
 >
-> Beau Belgrave (4):
->   perf/core: Introduce perf_prepare_dump_data()
->   perf: Introduce PERF_SAMPLE_TLS_USER sample type
->   perf/core: Factor perf_output_sample_udump()
->   perf/x86/core: Add tls dump support
->
->  arch/Kconfig                      |   7 ++
->  arch/x86/Kconfig                  |   1 +
->  arch/x86/events/core.c            |  14 +++
->  arch/x86/include/asm/perf_event.h |   5 +
->  include/linux/perf_event.h        |   7 ++
->  include/uapi/linux/perf_event.h   |   5 +-
->  kernel/events/core.c              | 166 +++++++++++++++++++++++-------
->  kernel/events/internal.h          |  16 +++
->  8 files changed, 180 insertions(+), 41 deletions(-)
->
->
-> base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
-> --
-> 2.34.1
->
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
+> >  tools/perf/util/color.h         |  1 +
+> >  2 files changed, 53 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
+-test.c
+> > index 73f53b02f733..15b8e8e32749 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -238,7 +238,10 @@ static int run_test_child(struct child_process *pr=
+ocess)
+> >       return -err;
+> >  }
+> >
+> > -static int print_test_result(struct test_suite *t, int i, int subtest,=
+ int result, int width)
+> > +#define TEST_RUNNING -3
+> > +
+> > +static int print_test_result(struct test_suite *t, int i, int subtest,=
+ int result, int width,
+> > +                          int remaining)
+> >  {
+> >       if (has_subtests(t)) {
+> >               int subw =3D width > 2 ? width - 2 : width;
+> > @@ -248,6 +251,9 @@ static int print_test_result(struct test_suite *t, =
+int i, int subtest, int resul
+> >               pr_info("%3d: %-*s:", i + 1, width, test_description(t, s=
+ubtest));
+> >
+> >       switch (result) {
+> > +     case TEST_RUNNING:
+> > +             color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d re=
+maining)\n", remaining);
+> > +             break;
+> >       case TEST_OK:
+> >               pr_info(" Ok\n");
+> >               break;
+> > @@ -269,13 +275,15 @@ static int print_test_result(struct test_suite *t=
+, int i, int subtest, int resul
+> >       return 0;
+> >  }
+> >
+> > -static int finish_test(struct child_test *child_test, int width)
+> > +static int finish_test(struct child_test **child_tests, int running_te=
+st, int child_test_num,
+> > +                    int width)
+> >  {
+> > +     struct child_test *child_test =3D child_tests[running_test];
+> >       struct test_suite *t =3D child_test->test;
+> >       int i =3D child_test->test_num;
+> >       int subi =3D child_test->subtest;
+> >       int err =3D child_test->process.err;
+> > -     bool err_done =3D err <=3D 0;
+> > +     bool err_done =3D false;
+> >       struct strbuf err_output =3D STRBUF_INIT;
+> >       int ret;
+> >
+> > @@ -290,7 +298,7 @@ static int finish_test(struct child_test *child_tes=
+t, int width)
+> >        * Busy loop reading from the child's stdout/stderr that are set =
+to be
+> >        * non-blocking until EOF.
+> >        */
+> > -     if (!err_done)
+> > +     if (err > 0)
+> >               fcntl(err, F_SETFL, O_NONBLOCK);
+> >       if (verbose > 1) {
+> >               if (has_subtests(t))
+> > @@ -304,29 +312,48 @@ static int finish_test(struct child_test *child_t=
+est, int width)
+> >                         .events =3D POLLIN | POLLERR | POLLHUP | POLLNV=
+AL,
+> >                       },
+> >               };
+> > -             char buf[512];
+> > -             ssize_t len;
+> > -
+> > -             /* Poll to avoid excessive spinning, timeout set for 100m=
+s. */
+> > -             poll(pfds, ARRAY_SIZE(pfds), /*timeout=3D*/100);
+> > -             if (!err_done && pfds[0].revents) {
+> > -                     errno =3D 0;
+> > -                     len =3D read(err, buf, sizeof(buf) - 1);
+> > -
+> > -                     if (len <=3D 0) {
+> > -                             err_done =3D errno !=3D EAGAIN;
+> > -                     } else {
+> > -                             buf[len] =3D '\0';
+> > -                             if (verbose > 1)
+> > -                                     fprintf(stdout, "%s", buf);
+> > -                             else
+> > +             if (perf_use_color_default) {
+> > +                     int tests_in_progress =3D running_test;
+> > +
+> > +                     for (int y =3D running_test; y < child_test_num; =
+y++) {
+> > +                             if (check_if_command_finished(&child_test=
+s[y]->process))
+> > +                                     tests_in_progress++;
+> > +                     }
+> > +                     print_test_result(t, i, subi, TEST_RUNNING, width=
+,
+> > +                                       child_test_num - tests_in_progr=
+ess);
+> > +             }
+> > +
+> > +             err_done =3D true;
+> > +             if (err <=3D 0) {
+> > +                     /* No child stderr to poll, sleep for 10ms for ch=
+ild to complete. */
+> > +                     usleep(10 * 1000);
+> > +             } else {
+> > +                     /* Poll to avoid excessive spinning, timeout set =
+for 100ms. */
+> > +                     poll(pfds, ARRAY_SIZE(pfds), /*timeout=3D*/100);
+> > +                     if (pfds[0].revents) {
+> > +                             char buf[512];
+> > +                             ssize_t len;
+> > +
+> > +                             len =3D read(err, buf, sizeof(buf) - 1);
+> > +
+> > +                             if (len > 0) {
+> > +                                     err_done =3D false;
+> > +                                     buf[len] =3D '\0';
+> >                                       strbuf_addstr(&err_output, buf);
+> > +                             }
+> >                       }
+> >               }
+> > +             if (err_done)
+> > +                     err_done =3D check_if_command_finished(&child_tes=
+t->process);
+> > +
+> > +             if (perf_use_color_default) {
+> > +                     /* Erase "Running (.. remaining)" line printed be=
+fore poll/sleep. */
+> > +                     fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
+> > +             }
+> >       }
+> >       /* Clean up child process. */
+> >       ret =3D finish_command(&child_test->process);
+> > -     if (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL) {
+> > +     if (verbose > 1 || (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL)) {
+> >               /* Add header for test that was skipped above. */
+> >               if (has_subtests(t))
+> >                       pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_d=
+escription(t, subi));
+> > @@ -335,7 +362,7 @@ static int finish_test(struct child_test *child_tes=
+t, int width)
+> >               fprintf(stderr, "%s", err_output.buf);
+> >       }
+> >       strbuf_release(&err_output);
+> > -     print_test_result(t, i, subi, ret, width);
+> > +     print_test_result(t, i, subi, ret, width, /*remaining=3D*/0);
+> >       if (err > 0)
+> >               close(err);
+> >       return 0;
+> > @@ -351,7 +378,7 @@ static int start_test(struct test_suite *test, int =
+i, int subi, struct child_tes
+> >               pr_debug("--- start ---\n");
+> >               err =3D test_function(test, subi)(test, subi);
+> >               pr_debug("---- end ----\n");
+> > -             print_test_result(test, i, subi, err, width);
+> > +             print_test_result(test, i, subi, err, width, /*remaining=
+=3D*/0);
+> >               return 0;
+> >       }
+> >
+> > @@ -376,7 +403,7 @@ static int start_test(struct test_suite *test, int =
+i, int subi, struct child_tes
+> >       err =3D start_command(&(*child)->process);
+> >       if (err || !sequential)
+> >               return  err;
+> > -     return finish_test(*child, width);
+> > +     return finish_test(child, /*running_test=3D*/0, /*child_test_num=
+=3D*/1, width);
+> >  }
+> >
+> >  #define for_each_test(j, k, t)                                       \
+> > @@ -461,7 +488,7 @@ static int __cmd_test(int argc, const char *argv[],=
+ struct intlist *skiplist)
+> >       }
+> >       for (i =3D 0; i < child_test_num; i++) {
+> >               if (!sequential) {
+> > -                     int ret  =3D finish_test(child_tests[i], width);
+> > +                     int ret  =3D finish_test(child_tests, i, child_te=
+st_num, width);
+> >
+> >                       if (ret)
+> >                               return ret;
+> > diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
+> > index 01f7bed21c9b..4b9f8d5d4439 100644
+> > --- a/tools/perf/util/color.h
+> > +++ b/tools/perf/util/color.h
+> > @@ -22,6 +22,7 @@
+> >  #define MIN_GREEN    0.5
+> >  #define MIN_RED              5.0
+> >
+> > +#define PERF_COLOR_DELETE_LINE       "\033[A\33[2K\r"
+> >  /*
+> >   * This variable stores the value of color.ui
+> >   */
+> > --
+> > 2.44.0.478.gd926399ef9-goog
