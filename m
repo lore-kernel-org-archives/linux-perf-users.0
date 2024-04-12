@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18F11BF24;
-	Fri, 12 Apr 2024 06:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6923234;
+	Fri, 12 Apr 2024 06:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712902089; cv=none; b=QA/LylP6eVV8YC3NC1Q43PO0clHNKhBC4QH2gmBTs0qepKHdCchTZDcFoWTzZFWDoKiYAqCNhpwnZuCrzVK4blwRWoL+AqO2LPY3Sq2gltGDFyWNWt1cdZtUFtgR0nZ5tZy0CzMxkmy69R2LoXOoKuR9Bo4P9q2sP0EuovZINN0=
+	t=1712902668; cv=none; b=NCfqqykDViRUuieM+Oh8sLFylMpcSbG3D1gVLqDqEri/cBi1YPqXAjIQtbKCW6iLBxEeP4w1kh19C/h6jMLZFH1p9dAcrrSYh2OWNgB2STff7+zoscPwNBKLbsmr8qhbkMaeJtYVJ7occ+4XNj8aEEviI8Gf6534LZ6lgp/LfN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712902089; c=relaxed/simple;
-	bh=7AS0uyUckK9jdmWhs9kJ6BR0ykSnUy0WjuTyWl8/ohE=;
+	s=arc-20240116; t=1712902668; c=relaxed/simple;
+	bh=fJad/M5v4UkmyQdRjVeibyM7pA9CQb94YlxCzIYU7Is=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cFZ19KvIBUzw1vwI565OPZMpl/KcY/ukg1b/6744cLVW0f28uAb+gn1CgAUBxY35CNfE6PkyhxyhW7DB30NH/VM+XQXtg2qb4rfZg5h22BnHUlvABGCr+XCEfcqs4IGNATI2K2DcHwirN3cjZzXfiAnorbxi7l3ju6zDUv/xiwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBmf5UVE; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=TDmzXcjamuwUB/tRRVgm1PimRwWCduTH344T6y0iqtWdspVcKe13cRDxpYbgjf/pCoKDwjnzmk5eEUialBFA4uv17m+7lyxTT640S1+vD+baRbitje88RacUmKTHqGLbnvx+5MS7LG/pJyk+KjnszzA/QlAeaKCzM1YyFrpjuRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQW/WOLi; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBmf5UVE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQW/WOLi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712902087; x=1744438087;
+  t=1712902666; x=1744438666;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=7AS0uyUckK9jdmWhs9kJ6BR0ykSnUy0WjuTyWl8/ohE=;
-  b=bBmf5UVEXmQmSPM5Dcdj3dFQ0GSFPhSDXCh2cIrZ7tt+8LEz97qIXWv1
-   MEAkXcMEdIQYHyhwjj0detXhtWUExCg813H3uWguXt0kH8UHl9nW1xX0p
-   hmy8AkMEISgNVb2r4yplCPkO7Gs8gLJQ7AtS5lU6gjgop6ubwIVwQo3/8
-   9WzApqmIE/5WHPY76u4WLjFJ2fqNMWhv/wdLyqUSTGmBb/QjjOWLdRugO
-   g8dAJN40heq1LYTZWEM2yn7RfaeLAelm0VhJOD7+eLoQskFz5tycdqE9u
-   kE9ulSVIOCrT9gRR/1Xgj5c8L2bu27BFq7YMR7ScB1EOezt6NZJSDgsok
-   Q==;
-X-CSE-ConnectionGUID: NvC5Sz5UQj6656row//eJA==
-X-CSE-MsgGUID: sp62JpVTQ+yz/L6TmHnxFA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18901351"
+  bh=fJad/M5v4UkmyQdRjVeibyM7pA9CQb94YlxCzIYU7Is=;
+  b=XQW/WOLiH+iuCAMxlyMvgM/EUdd7FKeaKRMmjakPe3zMdpVhmGnvYlFZ
+   3tm51Egl4JB6K//jsmHXvoO14hj12YagfI0VjAssmm6YYF3jRCc/Kn07L
+   75h7hMjdp++hBFqbtbvQup3RbRXlKoBLhup2JiYiLqJB6j/rPTlbqoGfR
+   DBTmsDq/WTGd3qrFD9zbtVvgy5A8SxDxtFauF2GOrsDO5ArjyuAppLFIQ
+   t+9UqvVGfeHbdV8r7wUr1AnQBNmXYRaBYELG/orUjX22W7/XSnhCbrRQM
+   iNi71ry2kWKw8r33/IbTwkY5nWZJjgOCaIaE09BaSfmVVZ0OpCrf1occA
+   w==;
+X-CSE-ConnectionGUID: bfogTIZBTnunq0Cr87dWRg==
+X-CSE-MsgGUID: nC+kqSMJToOQLV/PefyeLA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8477867"
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="18901351"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:08:06 -0700
-X-CSE-ConnectionGUID: HAilMb0TRpqlpVwKICv0Hw==
-X-CSE-MsgGUID: KcPwHYKjR2uqnY1qYhP0uw==
+   d="scan'208";a="8477867"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:17:46 -0700
+X-CSE-ConnectionGUID: WoPCkQFySrilZjLdRbsGNQ==
+X-CSE-MsgGUID: MwvHk+UERuqY7ad9C/NZjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21195572"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.136])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:07:55 -0700
-Message-ID: <3a238616-1fd0-4755-b7b7-fdc9c412fb03@intel.com>
-Date: Fri, 12 Apr 2024 09:07:50 +0300
+   d="scan'208";a="21185053"
+Received: from xiongzha-mobl1.ccr.corp.intel.com (HELO [10.124.244.162]) ([10.124.244.162])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:17:41 -0700
+Message-ID: <3a0c2542-2aa7-464b-8a09-e09e570c88da@linux.intel.com>
+Date: Fri, 12 Apr 2024 14:17:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,70 +52,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] perf scripts python: Add a script to run instances of
- perf script in parallel
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240313123634.4353-1-adrian.hunter@intel.com>
- <CAP-5=fW1bH8qQkD7LrO6_3fJ3NsqoW1GrX8=s-sfaTbrvk58+A@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/41] perf/x86: Add interface to reflect virtual
+ LVTPC_MASK bit onto HW
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fW1bH8qQkD7LrO6_3fJ3NsqoW1GrX8=s-sfaTbrvk58+A@mail.gmail.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
+ kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-8-xiong.y.zhang@linux.intel.com>
+ <Zhg4Oph6yCpN0DeX@google.com>
+From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
+In-Reply-To: <Zhg4Oph6yCpN0DeX@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 11/04/24 21:19, Ian Rogers wrote:
-> On Wed, Mar 13, 2024 at 5:36 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+
+On 4/12/2024 3:21 AM, Sean Christopherson wrote:
+> On Fri, Jan 26, 2024, Xiong Zhang wrote:
+>> From: Xiong Zhang <xiong.y.zhang@intel.com>
 >>
->> Add a Python script to run a perf script command multiple times in
->> parallel, using perf script options --cpu and --time so that each job
->> processes a different chunk of the data.
->>
->> The script supports the use of normal perf script options like
->>  --dlfilter and --script, so that the benefit of running parallel jobs
->> naturally extends to them also. In addition, a command can be provided
->> (refer --pipe-to option) to pipe standard output to a custom command.
->>
->> Refer to the script's own help text at the end of the patch for more
->> details.
->>
->> The script is useful for Intel PT traces, that can be efficiently
->> decoded by perf script when split by CPU and/or time ranges. Running
->> jobs in parallel can decrease the overall decoding time.
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>
->>
->> Changes in V2:
->>
->>         Added option to pipe to a custom command
->>         Added option to set a minimum time interval
->>         Minor tidying
->>
->>
->>  tools/perf/scripts/python/parallel-perf.py | 989 +++++++++++++++++++++
->>  1 file changed, 989 insertions(+)
->>  create mode 100755 tools/perf/scripts/python/parallel-perf.py
->>
->> diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/scripts/python/parallel-perf.py
->> new file mode 100755
->> index 000000000000..8fe398f81a42
->> --- /dev/null
->> +++ b/tools/perf/scripts/python/parallel-perf.py
->> @@ -0,0 +1,989 @@
->> +#!/usr/bin/env python3
->> +# SPDX-License-Identifier: GPL-2.0
+>> When guest clear LVTPC_MASK bit in guest PMI handler at PMU passthrough
+>> mode, this bit should be reflected onto HW, otherwise HW couldn't generate
+>> PMI again during VM running until it is cleared.
 > 
-> With the python summer of code proposal, that no-one applied to, I
-> wanted to package things like a perf.data IO library in some public
-> package index. As GPL 2 isn't permissive then we may need to
-> reimplement this code because of this. Fwiw, my preference is
-> GPL-2.0-only or BSD.
+> This fixes a bug in the previous patch, i.e. this should not be a standalone
+> patch.
+> 
+>>
+>> This commit set HW LVTPC_MASK bit at PMU vecctor switching to KVM PMI
+>> vector.
+>>
+>> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  arch/x86/events/core.c            | 9 +++++++--
+>>  arch/x86/include/asm/perf_event.h | 2 +-
+>>  arch/x86/kvm/lapic.h              | 1 -
+>>  3 files changed, 8 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index 3f87894d8c8e..ece042cfb470 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -709,13 +709,18 @@ void perf_guest_switch_to_host_pmi_vector(void)
+>>  }
+>>  EXPORT_SYMBOL_GPL(perf_guest_switch_to_host_pmi_vector);
+>>  
+>> -void perf_guest_switch_to_kvm_pmi_vector(void)
+>> +void perf_guest_switch_to_kvm_pmi_vector(bool mask)
+>>  {
+>>  	lockdep_assert_irqs_disabled();
+>>  
+>> -	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
+>> +	if (mask)
+>> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
+>> +			   APIC_LVT_MASKED);
+>> +	else
+>> +		apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
+>>  }
+> 
+> Or more simply:
+> 
+> void perf_guest_enter(u32 guest_lvtpc)
+> {
+> 	...
+> 
+> 	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR |
+> 			       (guest_lvtpc & APIC_LVT_MASKED));
+> }
+> 
+> and then on the KVM side:
+> 
+> 	perf_guest_enter(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> 
+> because an in-kernel APIC should be a hard requirement for the mediated PMU.
+> this is simpler and we will follow this.
 
-GPL-2.0 is GPL-2.0-only
-
+thanks
