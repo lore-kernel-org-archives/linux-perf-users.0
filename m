@@ -1,57 +1,57 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4B3101C4
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 01:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC25013FF6
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 01:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712886651; cv=none; b=dlLLXFZgOMkYNSy4fXOEWrd3lc2bPjFidv0LmHnbPztw8nhhlqSnQVtJKhsPd53IRiFPyEANbvP5B0t8pac2hD7wq7CbKXiMDuHFSEubnLe6+0fjGxotkITcZlb+ya5j75ba2cp1KmRk5JQwy+mfrWm2DtGJc6YT7/xoVhDBuLk=
+	t=1712886654; cv=none; b=XwU7gqvR8E7T2DrTc6lu9oq+d6pbvnIYvTwXJ0zDFDyrLzzK18XiiZncNLmMba8Z7Nad8VIg5TOw7yiJp03yx4VDPonDlMvRialzcNka4BG0YxoEj9Kz1pa+KTRRylR12v48khP+VCN4z9DXblb4aJz+PPPlELbKZ/DTovBthmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712886651; c=relaxed/simple;
-	bh=7YouWyZuxbSYzHxqPUnW+aY1UMlIJgGnhI+PHUoOFhQ=;
+	s=arc-20240116; t=1712886654; c=relaxed/simple;
+	bh=mqvWJPjJTCHg1USd6XVsQJr18Mdq8CtI+8+xAlWcLkc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e1BQHX8LOF0d2tTr5KCYHTQJ16I8XtTElR2BzRAWdwPiJ08+kUKe2eS5kgWLHy4VM0hJLt2puD1Brsy+BRUd23tT21keSCQM+/hyML3mZxBFKslEPYSawUvcr+bS+6rMT04bj2UHpWX4MTOCX/EUzzRcmXdBdfYV81RVvCA5caA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=aU0bVvpI; arc=none smtp.client-ip=209.85.222.180
+	 MIME-Version; b=gZaiHe78b7xljmwBXAscLmPeefquomEIBqIGLcpwt4GK/9DXMxNac4Mjb2TaDhqtJ0cdabJpr7vjtfAfSSXoeksevJTzysTlZqKlK4z60U6kl8U0U3LlYmD/XGg1DVnvlWjJTM+drNwEUmHfxHO7ItUF7X2UY2XSQVjIp1bEClA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=ikZxtLYP; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="aU0bVvpI"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78d62c1e82bso26438885a.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 18:50:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="ikZxtLYP"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-78d61097b43so25083585a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 18:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1712886649; x=1713491449; darn=vger.kernel.org;
+        d=kylehuey.com; s=google; t=1712886652; x=1713491452; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IR+aRAW+xEUckMtcdjKW/EEXnX6Dbx8rKcxaN3dNqzg=;
-        b=aU0bVvpItdjjGy0Uh4y25anjArKIOtlIy5bEQk0mhmXbgUtnAoxQU+EWL0JLXBUsGE
-         PaFzOpaJzH8GVLLDtvVTKCjsLTFLU3B0AAlawSh4HGgxhag7TfwZH/R+MYRm7QUwbMAG
-         w8FRBHIep8Bt+j5TOyytwhtljABL69vAvnkrXANE7rldNPtRV4s9KqL/BVLLdaS0EEhU
-         S7NYM1+pr3opDH0IQanKJieTjzymm+1VP+TTtawBfPlvipoLVVtG8Lq+0a4+iHZQoxji
-         bYan7dULV/jISLCvZvrhf5LY4IUpVNt3UDYdMtkiPY1qHjhOBcRJAb9+2KRRgreFRl9R
-         P3hA==
+        bh=aQsjAVDSJojOvZcYxeh0Pu2aG5e5UAQY3ALs9BYs2YU=;
+        b=ikZxtLYPc50oIz/X4NEG7KZwqzRruUor+I3VOuDCfG1LQyrc5eylNrOuhZSfmSHmAc
+         am3oTb/lwx3Jy6pqHyzqgcZfOwSkwSbeGQex0IwdoOT4Kt6dbEVbigxJTP7RF3khhV0I
+         17fNqUWNiycdyHmG0bKl0Keqnqw+5Tc7G+k6rsLoJdlBuT0zmfU0DjBrMYAAA5Lrpglz
+         l/cDG6eWN7C2FIUjo5yOr1CznpuXnDd6ImjaEGKYf66XxFnVXfc2oV6BRvzJpCWDMobG
+         Af7OOslT8s9085vEGyCOAduaWwbVuKC+1AGlV3iSK6iA5dt1gegimT+XMjesqDuym9+u
+         MQ+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712886649; x=1713491449;
+        d=1e100.net; s=20230601; t=1712886652; x=1713491452;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IR+aRAW+xEUckMtcdjKW/EEXnX6Dbx8rKcxaN3dNqzg=;
-        b=w95FSFknbS8SG+59WdjHCMZm4SlQO3tIErBL4Xvf966JEDOcZ/pIEUdByj/RYWl6M2
-         19yUZjEmBMyI+LgcJTCr7JUt59TxLzBKcZ/dylgzKf2kpGMNZk4pneRE3tRfFrCxBNQc
-         KRJRLX+VBx7frzgsJQ6wN8VG5Ax0iHf8c/4AHKIdTBTFVSuM5o9pUXUW8Ph9sKqRXK7/
-         uwShuehBlONlhM+OktRyuJhrOOkPx4c+iyryit3Hf713TrQmisObWnVvOExbmT40Qc3k
-         9Y/+o30Yb5sPOpUQs66id3nW947naSQpbpuftwthaq75xu3KqlCyw7uUkOkvCSi9XSJ3
-         wxVA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9wd/RqAlyq4XWA8+0OlIw8KAsvbV5Sqnib0e4iiPh5eSjyGucZna5K0LryAOLYbKdaRRooGHHgx89koONnQ8WI8zrIAIQmRHU5qWujyFT5A==
-X-Gm-Message-State: AOJu0YwsR6sMqbiBj5dOmTSIAXjQzGX+15GMAF9W/zRCRgkR/HxOdeP5
-	LZQNx8MPBKjhyVygO3KSjonvV8QLKH8jcKAZAA+IvcNtnOVNMqfrUj3yjMzLTg==
-X-Google-Smtp-Source: AGHT+IHD5DOmOr2nUz59Bfple5VcMmCJtdiKzwwn2KQ/kHy7BLf5evZIyHYa8ySlQOOQSWDiJjefKQ==
-X-Received: by 2002:a05:620a:1983:b0:78d:6339:b943 with SMTP id bm3-20020a05620a198300b0078d6339b943mr1698615qkb.20.1712886649123;
-        Thu, 11 Apr 2024 18:50:49 -0700 (PDT)
+        bh=aQsjAVDSJojOvZcYxeh0Pu2aG5e5UAQY3ALs9BYs2YU=;
+        b=CCaD+Tli/sNei2pJWSycaxlOtCxSUdSRyyxiKLBjIXz2WDqQ0kPqYx6iJ7gTtqmYfU
+         /7dh9IQCPHcMciQhR3+5k/wtishW28WPvlXkwrQQjpWd5VW+DVXF7X6Xoe9mUERU+h1t
+         wl1mppmYGlMqUlkDEPnrQKpcWWtX9ivY4VhBI5NeS/PJsoy7EeADPTY89y7SrcGLyfxB
+         CnWhlkVhsHLA0m//3ZejoXty8bkpCWTvj32OjWKbhA8PbDISIKfajNanGYk3ePIq3G9s
+         U1t0e2WtpKUjkdHU02hYn8bOA1Sw0U4ymNBJsIwVqT/DaZVKeo7bHh+S2LPW+AA1vsf9
+         lQ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWMVI/SzpzEmJEyiVvysw9HHSiN1T8v+FLxpKPcg4//OkMIp/cg5EKfcaLIezTBanmY4bw3yIC+DzbAt5qyBjLAfcpapHL+rgw+VXaws1ikMA==
+X-Gm-Message-State: AOJu0YxU88az320xpZQqQVkLaWV4yc9jscpn6iUSpGL3V5jSa2hZxqad
+	LBCulvdFvcin0FICdQnqpLC6ug/0syTXiASiLjsxleYm6J2QsidFlRMR0klBGA==
+X-Google-Smtp-Source: AGHT+IGKuvAU3YlymoVRT8hC2x9jWoKM60y5jVQlZXrkYD5Z3LF1GHcVUdYxkusrFaNEaXHiGScCmQ==
+X-Received: by 2002:a05:620a:15ac:b0:78d:3b3f:50cd with SMTP id f12-20020a05620a15ac00b0078d3b3f50cdmr1344767qkk.65.1712886651836;
+        Thu, 11 Apr 2024 18:50:51 -0700 (PDT)
 Received: from ip-172-31-44-15.us-east-2.compute.internal (ec2-52-15-100-147.us-east-2.compute.amazonaws.com. [52.15.100.147])
-        by smtp.googlemail.com with ESMTPSA id f10-20020a05620a15aa00b0078d76c1178esm1756677qkk.119.2024.04.11.18.50.47
+        by smtp.googlemail.com with ESMTPSA id f10-20020a05620a15aa00b0078d76c1178esm1756677qkk.119.2024.04.11.18.50.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 18:50:48 -0700 (PDT)
+        Thu, 11 Apr 2024 18:50:51 -0700 (PDT)
 From: Kyle Huey <me@kylehuey.com>
 X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
 To: Kyle Huey <khuey@kylehuey.com>,
@@ -72,9 +72,9 @@ Cc: Robert O'Callahan <robert@ocallahan.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 2/7] perf/bpf: Create bpf_overflow_handler() stub for !CONFIG_BPF_SYSCALL
-Date: Thu, 11 Apr 2024 18:50:14 -0700
-Message-Id: <20240412015019.7060-3-khuey@kylehuey.com>
+Subject: [PATCH v6 3/7] perf/bpf: Remove #ifdef CONFIG_BPF_SYSCALL from struct perf_event members
+Date: Thu, 11 Apr 2024 18:50:15 -0700
+Message-Id: <20240412015019.7060-4-khuey@kylehuey.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240412015019.7060-1-khuey@kylehuey.com>
 References: <20240412015019.7060-1-khuey@kylehuey.com>
@@ -87,30 +87,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 This will allow __perf_event_overflow() (which is independent of
-CONFIG_BPF_SYSCALL) to call bpf_overflow_handler().
+CONFIG_BPF_SYSCALL) to use struct perf_event's prog to decide whether to
+call bpf_overflow_handler().
 
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 ---
- kernel/events/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/perf_event.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ee025125a681..a7c2a739a27c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9624,6 +9624,12 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
- 	bpf_prog_put(prog);
- }
- #else
-+static void bpf_overflow_handler(struct perf_event *event,
-+				 struct perf_sample_data *data,
-+				 struct pt_regs *regs)
-+{
-+}
-+
- static int perf_event_set_bpf_handler(struct perf_event *event,
- 				      struct bpf_prog *prog,
- 				      u64 bpf_cookie)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d2a15c0c6f8a..07cd4722dedb 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -809,11 +809,9 @@ struct perf_event {
+ 	u64				(*clock)(void);
+ 	perf_overflow_handler_t		overflow_handler;
+ 	void				*overflow_handler_context;
+-#ifdef CONFIG_BPF_SYSCALL
+ 	perf_overflow_handler_t		orig_overflow_handler;
+ 	struct bpf_prog			*prog;
+ 	u64				bpf_cookie;
+-#endif
+ 
+ #ifdef CONFIG_EVENT_TRACING
+ 	struct trace_event_call		*tp_event;
 -- 
 2.34.1
 
