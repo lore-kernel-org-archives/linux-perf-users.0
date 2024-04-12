@@ -1,99 +1,133 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE96B54F87;
-	Fri, 12 Apr 2024 16:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C489414F121
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 18:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712939848; cv=none; b=h3j1fjPByaD7r42I7XOziFaC2f/SdWnGKLYZQa1fP7K/8vWPPyI+HwuaqeoLSTtwePjxvkBbjY3EeOt0eBcqySiK9Znudouz7QUtqsxMyQG85SasvfKN+rvLOYxPnV8UiITh3NAwX4g8VJECY/mJcN+vr+eAIssRRebpR4dDYkM=
+	t=1712946728; cv=none; b=KSV8pQ3VJbgeJJqxp8euXVbZ8e2QNgj5f7Y44TxeiTPx3fWQ4xKzsMzIlIvvUjx/OzSJT2yCHJEvY5nl6BCfb1aggM+ZFkjx6rSkO8bLLdj5V4T1XAzoozDS3TybaCiHPrh3yE8F8XK7UU4dogyPK4WPHTEUPKW+EmuUHWmxqaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712939848; c=relaxed/simple;
-	bh=eL+ycS6nm/gRr9yhEhYX/pOUHc+TkWYvKl79Vg5f0UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmR+xFzVFprOGHUXHvnjmopCirrDay0ZRli9Y59au84T/5DK3i1Q8lqgfn+9IXN6tCEi4+4q42+ICc1/gbsbc0KXO4HDcfeUxfXk69AoO+7+wUWHeH6PmPTtc4D8uuMGWtA5DUycHmL1b9R9QHz6Q4YgrNCE9To134/fE78vNd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kSFk5pfr; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1712946728; c=relaxed/simple;
+	bh=lmJ/NQbkLOHPPOHUsibhWTeMzkzMSGFbLN5ZZxA4uk8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YjoD9e+XBpCCJk1Ee0Z0Xq0QG3D0MNyYC4T268E1tu3seVg4a0QqmKipKtTdD5bxvntIEYB9+J2EzmWIgBVwC1mU8eNQ7cCEnkCeowg3n+bSPzmaNLBTWtFIeQTUvhETZ796342IAKLt4GQpmDDXhEtH/FR7k6zkKc8WMLjH2qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C+uydLnX; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kSFk5pfr"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1A58820EB6FE;
-	Fri, 12 Apr 2024 09:37:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A58820EB6FE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712939846;
-	bh=F8k2W578S74gEQH7nGfTYFa4dfuC5RV0P7eTtRq6MY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kSFk5pfrvg55LjL3zroE9m99IK/0FdkTymKgUmYyJSEcxiagBsbhgKXErbzvVv4sf
-	 24bgyXCauiYLXXjX3Ews6tPGFsxWvo/vD3mZ7rIsymplry2uUWjA7agDHcUyI8lgYT
-	 kOFAgjP9DrpLPbkoXPaNYX05bA5jIvtezCBUb5d8=
-Date: Fri, 12 Apr 2024 09:37:24 -0700
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
-	aahringo@redhat.com, dcook@linux.microsoft.com
-Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
-Message-ID: <20240412163724.GB467-beaub@linux.microsoft.com>
-References: <20240412001732.475-1-beaub@linux.microsoft.com>
- <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C+uydLnX"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1e2a1619cfcso10588875ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 11:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712946726; x=1713551526; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5uzPnCt0//PLoi123hKGABpzFaziAzmX8KGlxO2h3p0=;
+        b=C+uydLnX74HK8Hbf274dkmDDhSZwFcL52iIJkg8Iybr61KkOgA7Rv+1PGQvqyjedYp
+         RfaoXbtMkWKMzIbwsAp5hzaY6rK2RSUaq5rWprj0og80Mc6myc9uD3xubxeJvC/tV2Xe
+         cDQ3FlNnL7aUYJXZEIrJi4NiW4u0K7vudc9Xm2IUw24JocFCVgoPlgiyT3gdi6ocUY3u
+         S5wOMRA6R4jIaVRijNphZoMQT9HQv3pTOYYEFz7df8O//Q+YP+91SAPBl0AtvVSxGZqQ
+         8wPZ7W9QUSYtjjNbgPmTulgp7oNf7/9NRPlVIafqS562F/xNSMKCKdOyhdgbpOpX8vbt
+         TMdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712946726; x=1713551526;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5uzPnCt0//PLoi123hKGABpzFaziAzmX8KGlxO2h3p0=;
+        b=oO64CZG1Zb2dCMeTRFw9DtEIyKV0hn9vqS+/smGYv0zxjHjcRb6ONWz00K/P5EihW4
+         DM0ovhCZ+7JVBJuAmPj1nb4eLuNrs4leibhb2J7O4s93GxA1s0k8MsY69MyXpZLXVwLa
+         Ui3paPsrcJTJs+XmYAa1L9tkI0GxhfWKGNMcSjJOeY8LsEPVMsT/dPNwCQ9WT+ZDJkPz
+         VIJ8k24/B7zBPfpW9A9eq3QGrtRUdjKi5C+I78E0Er82zuoAlAudTnBPkMsRggDqUwXb
+         bfMcxJB3NfdlwvaUkxg+sCwPzDNUXDmvMqwVCrirgALEOoP9Ss9qs2dJ3d/kHnx23tEH
+         X6JA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0mlaX0hu7IlJvVNLeByQ48J0gi3ffgQZ+zttWiPyEYU5L8lpiMEPI7ciJ0VRTzTpcbXW5IyylqI5XtGyf1Pcs/4F2e/qDdhChVPDV2+XyPw==
+X-Gm-Message-State: AOJu0YxLX27lWDZIWzTZ9PW8nw7JKJJJpNy9/UA+vA2PbJmZwbVIdCYQ
+	5CrIrhZBfNeJepTwiUVkLOJnGPdN6BPvM8ZKSiNkTZhGKbEphb19IVEOgoB1G5xR83pvHUAugcB
+	EXg==
+X-Google-Smtp-Source: AGHT+IHBcElUyywm0HBVejjIMdijCs8yghvj4BRW5HrKQpxbplEMdBs+GBD1v71ej+e3h3H/Ym/pp0ugjOI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:2343:b0:1db:f11d:fef2 with SMTP id
+ c3-20020a170903234300b001dbf11dfef2mr218753plh.0.1712946726026; Fri, 12 Apr
+ 2024 11:32:06 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:32:04 -0700
+In-Reply-To: <f6f714ef-eb58-4aa9-9c4d-12bfe29c383b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <ZhgX6BStTh05OfEd@google.com> <f6f714ef-eb58-4aa9-9c4d-12bfe29c383b@linux.intel.com>
+Message-ID: <Zhl-JFk5hw-hlyGi@google.com>
+Subject: Re: [RFC PATCH 00/41] KVM: x86/pmu: Introduce passthrough vPM
+From: Sean Christopherson <seanjc@google.com>
+To: Xiong Y Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
+	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Apr 12, 2024 at 09:12:45AM +0200, Peter Zijlstra wrote:
-> 
-> On Fri, Apr 12, 2024 at 12:17:28AM +0000, Beau Belgrave wrote:
-> 
-> > An idea flow would look like this:
-> > User Task		Profile
-> > do_work();		sample() -> IP + No activity
-> > ...
-> > set_activity(123);
-> > ...
-> > do_work();		sample() -> IP + activity (123)
-> > ...
-> > set_activity(124);
-> > ...
-> > do_work();		sample() -> IP + activity (124)
-> 
-> This, start with this, because until I saw this, I was utterly confused
-> as to what the heck you were on about.
-> 
+On Fri, Apr 12, 2024, Xiong Y Zhang wrote:
+> >> 2. NMI watchdog
+> >>    the perf event for NMI watchdog is a system wide cpu pinned event, it
+> >>    will be stopped also during vm running, but it doesn't have
+> >>    attr.exclude_guest=1, we add it in this RFC. But this still means NMI
+> >>    watchdog loses function during VM running.
+> >>
+> >>    Two candidates exist for replacing perf event of NMI watchdog:
+> >>    a. Buddy hardlock detector[3] may be not reliable to replace perf event.
+> >>    b. HPET-based hardlock detector [4] isn't in the upstream kernel.
+> > 
+> > I think the simplest solution is to allow mediated PMU usage if and only if
+> > the NMI watchdog is disabled.  Then whether or not the host replaces the NMI
+> > watchdog with something else becomes an orthogonal discussion, i.e. not KVM's
+> > problem to solve.
+> Make sense. KVM should not affect host high priority work.
+> NMI watchdog is a client of perf and is a system wide perf event, perf can't
+> distinguish a system wide perf event is NMI watchdog or others, so how about
+> we extend this suggestion to all the system wide perf events ?  mediated PMU
+> is only allowed when all system wide perf events are disabled or non-exist at
+> vm creation.
 
-Will do.
+What other kernel-driven system wide perf events are there?
 
-> I started by thinking we already have TID in samples so you can already
-> associate back to user processes and got increasingly confused the
-> further I went.
-> 
-> What you seem to want to do however is have some task-state included so
-> you can see what the thread is doing.
-> 
+> but NMI watchdog is usually enabled, this will limit mediated PMU usage.
 
-Yeah, there is typically an external context (not on the machine) that
-wants to be tied to each sample. The context could be a simple integer,
-UUID, or something else entirely. For OTel, this is a 16-byte array [1].
+I don't think it is at all unreasonable to require users that want optimal PMU
+virtualization to adjust their environment.  And we can and should document the
+tradeoffs and alternatives, e.g. so that users that want better PMU results don't
+need to re-discover all the "gotchas" on their own.
 
-> Anyway, since we typically run stuff from NMI context, accessing user
-> data is 'interesting'. As such I would really like to make this work
-> depend on the call-graph rework that pushes all the user access bits
-> into return-to-user.
+This would even be one of the rare times where I would be ok with a dmesg log.
+E.g. if KVM is loaded with enable_mediated_pmu=true, but there are system wide
+perf events, pr_warn() to explain the conflict and direct the user at documentation
+explaining how to make their system compatible with mediate PMU usage.
 
-Cool, I assume that's the SFRAME work? Are there pointers to work I
-could look at and think about what a rebase looks like? Or do you have
-someone in mind I should work with for this?
+> >> 3. Dedicated kvm_pmi_vector
+> >>    In emulated vPMU, host PMI handler notify KVM to inject a virtual
+> >>    PMI into guest when physical PMI belongs to guest counter. If the
+> >>    same mechanism is used in passthrough vPMU and PMI skid exists
+> >>    which cause physical PMI belonging to guest happens after VM-exit,
+> >>    then the host PMI handler couldn't identify this PMI belongs to
+> >>    host or guest.
+> >>    So this RFC uses a dedicated kvm_pmi_vector, PMI belonging to guest
+> >>    has this vector only. The PMI belonging to host still has an NMI
+> >>    vector.
+> >>
+> >>    Without considering PMI skid especially for AMD, the host NMI vector
+> >>    could be used for guest PMI also, this method is simpler and doesn't
+> > 
+> > I don't see how multiplexing NMIs between guest and host is simpler.  At best,
+> > the complexity is a wash, just in different locations, and I highly doubt it's
+> > a wash.  AFAIK, there is no way to precisely know that an NMI came in via the
+> > LVTPC.
+> when kvm_intel.pt_mode=PT_MODE_HOST_GUEST, guest PT's PMI is a multiplexing
+> NMI between guest and host, we could extend guest PT's PMI framework to
+> mediated PMU. so I think this is simpler.
 
-Thanks,
--Beau
-
-1. https://www.w3.org/TR/trace-context/#version-format
+Heh, what do you mean by "this"?  Using a dedicated IRQ vector, or extending the
+PT framework of multiplexing NMI?
