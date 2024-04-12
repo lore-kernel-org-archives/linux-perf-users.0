@@ -1,170 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603C614F9FD;
-	Fri, 12 Apr 2024 18:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7645014F115
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 19:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946794; cv=none; b=DrEPjou17N4htiU2E2x7OYfmjOxQaQpaaqc4eIfrnkD6+prBKmQvAwZwaHgR83/uMxW41nEtB6ZhvmbOvAYw7EbeNyAzX3WtayijJUcgp3BWcTqA+MydmFNOoqBkDwwF1lycRw5v2gumPYXLLSV/GbKF6fyp10gVMxWZv/A7eZU=
+	t=1712949424; cv=none; b=h82Oj/lYkdzj5G4Q9Pcgib+ZI0NERFehcMV239lQtW19XxktalY/NegjZ5rw7g7961s1+0X8YjNetA/zSxosJDzrHNTBYsyKhybxUsU54lsmG6YGWpA5A3Wj0W+IjkVs8PZezPGT27HZ/kZRxS7zCdHyxDX5z1jXFUReyFyt6bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946794; c=relaxed/simple;
-	bh=Mt6sBBBPrGWipkKUwBCkIzYuDK3HGlK3FMB4X+GvFnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mVWLMo/XQdh4gBdxrbFMT/kuTAvAUMW0F1gsUr4Dk3q8SRYmO/lZQyveUTu/YGMhbRpraXUJR2YbMaJavPZuv5VgDMNKkbCf8WyZ4guIge+HHOdV8Rp/z4aGr5+QgreKp1RHS7TqmAkJZdWJ48r8Iejo8sRCtUGALirvdrExI5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cR2WVq5+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712949424; c=relaxed/simple;
+	bh=gXSq+T7XzqPxzRC/useeLBrjqvRyaotmwCPTNi4Tu1U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VCHUYRGuATloLf53+E/ISxkN0SKwXzNl29Alq0oBBtCHdBQ9rl+rVW/mcXUk0Gtx3DY8vmSqvFSFjzH0BXGwTQmZPYUw4SYYv5YnnuP02sEICiSqJk8gKYIHeuJdWUAZLje2dMl+OhJ2+qWd0XS2C/oQJi8kUY5UwZsqN00J1Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BELHwLci; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cR2WVq5+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF6DC2BBFC;
-	Fri, 12 Apr 2024 18:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712946793;
-	bh=Mt6sBBBPrGWipkKUwBCkIzYuDK3HGlK3FMB4X+GvFnk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cR2WVq5+L6yzaiB3qWpk0hll5h+FzZF2WrIWeo7NJfouZ0k9kps81jEHkev8wg/d3
-	 qBqF+XwW6fjiPOSPAk+MjxKZPnJVHJPcXoXU+pnV8ZJIcjUny2J2DBkT/5RKeN0vJS
-	 Vtp/s81axGPcYpGvUU9EeFy9Bq4D3FyYjsrQdrbslBsjxpjn0/ymVKpWIGHpFWMs8X
-	 +VLdo3LheHehC6TLtqBZNvF2wXBf7vEY05C3mRH2UzzPAN3Zzk+y2pFLztQlyMIW7F
-	 9bO76mFiRJYzXlIded2eG7bq+6vc4VRxRlUVVwsZxuE9T/H1+jQ0Na2aa18AOqXbtt
-	 YSVMS2sBxpJlA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf annotate-data: Handle RSP if it's not the FB register
-Date: Fri, 12 Apr 2024 11:33:10 -0700
-Message-ID: <20240412183310.2518474-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-In-Reply-To: <20240412183310.2518474-1-namhyung@kernel.org>
-References: <20240412183310.2518474-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BELHwLci"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6180225775bso17746487b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 12:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712949422; x=1713554222; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ZYm+Xc9AGuPFsnQm3QDSma2dM32/YHiWtmTC7mIj98=;
+        b=BELHwLciBDJOqbolC0twPLN6pusfksA9Wk1O7UW21mZKXGobDrSAWwT8s25SXaB9zn
+         1gq2sgXoyJEuZyQCQPZzvDhjomvltPVTbIUGB/ArUke6Gsf5vLSxmlbVu3mKXAHNrW9n
+         9DK8HP6dd/8kKRBVmYYA/7yKltD/VaXLnkBmZi2UIRSWN3m9osz/Ina1RdQefXGBhT8y
+         Ysf028Idia9gOI/UNfQWcpGnEW6/pfiUozYeFAEXMrqLn9D0rhzaaW7hg7aCd+e6z3mj
+         JqR8x3A6+NKplzlQqoTIh+bAK07hT8eBNM1Hzn3pdTyzrimL1CS2d1wvqD4of/FxdlTR
+         NXhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712949422; x=1713554222;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ZYm+Xc9AGuPFsnQm3QDSma2dM32/YHiWtmTC7mIj98=;
+        b=dUmRPHOMefXog3UBvS9f9AEKFrGYKwPIDtL9/kcpHDo11t8RprEdqWSlKyImm6ootC
+         g9HY4fcGg/0bo25vo5TGty1F4PmjvkOsP1x3SDcyIGSZOy51lS57DkqR/m82OTZhbQwy
+         Ytce6RW/MJ6B1a2AWZ2hJEiie1tNcH+jLvnYsQJfuKhkWE8eRJ6NgpQxJ9rZ6ItPKtCT
+         2gUcC5ZFJnTea1Z9NWI8xhRpioUSuZzou3Z6cHiIyEFhMUYhTfsgjD4xotCEtNZVXcBU
+         NpyGWgrOQTFaVc4+06goi2enyJExAt9beki2Zyp233nb76o/MM8T4n7IbRgBgIuL0OtN
+         69Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXazB7XjU05u2oB+9JeShe31+fhQ5SnwesMsEHdqatbEsGT26t7qfY0oDwYfn4h9cO3IPOJPOrKP/8mvseFrTrFmPXkq8XTkLLWm/h4nKstVg==
+X-Gm-Message-State: AOJu0Yyuwk4OK/sUfEJYfDjgdVUbtvBmWfHRYzK7ZMuoph1cNlYfTUkS
+	SRszGe6ut0eJCS8P1EA1BU+XxqzBkrKJNhoLzU25FWb/4CuhhXo5wXVlJiJegSxD+UnOEu4/0CZ
+	WuQ==
+X-Google-Smtp-Source: AGHT+IFLnup6JSKkiSb0UzDwD6karEhA7d20IDFCl5FKvYbjyr3ssyUHXmtdP3hCGhAQnldQxZ8f2unxvjc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:480d:0:b0:614:e20c:d3ef with SMTP id
+ v13-20020a81480d000000b00614e20cd3efmr785979ywa.10.1712949422548; Fri, 12 Apr
+ 2024 12:17:02 -0700 (PDT)
+Date: Fri, 12 Apr 2024 12:17:01 -0700
+In-Reply-To: <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-3-xiong.y.zhang@linux.intel.com> <ZhgmrczGpccfU-cI@google.com>
+ <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
+Message-ID: <ZhmIrQQVgblrhCZs@google.com>
+Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Kan Liang <kan.liang@linux.intel.com>
+Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
+	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, jmattson@google.com, 
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-In some cases, the stack pointer on x86 (rsp = reg7) is used to point
-variables on stack but it's not the frame base register.  Then it
-should handle the register like normal registers (IOW not to access
-the other stack variables using offset calculation) but it should not
-assume it would have a pointer.
+On Thu, Apr 11, 2024, Kan Liang wrote:
+> >> +/*
+> >> + * When a guest enters, force all active events of the PMU, which supports
+> >> + * the VPMU_PASSTHROUGH feature, to be scheduled out. The events of other
+> >> + * PMUs, such as uncore PMU, should not be impacted. The guest can
+> >> + * temporarily own all counters of the PMU.
+> >> + * During the period, all the creation of the new event of the PMU with
+> >> + * !exclude_guest are error out.
+> >> + */
+> >> +void perf_guest_enter(void)
+> >> +{
+> >> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> >> +
+> >> +	lockdep_assert_irqs_disabled();
+> >> +
+> >> +	if (__this_cpu_read(__perf_force_exclude_guest))
+> > 
+> > This should be a WARN_ON_ONCE, no?
+> 
+> To debug the improper behavior of KVM?
 
-Before:
-  -----------------------------------------------------------
-  find data type for 0x7c(reg7) at tcp_getsockopt+0xb62
-  CU for net/ipv4/tcp.c (die:0x7b5f516)
-  frame base: cfa=0 fbreg=6
-  no pointer or no type
-  check variable "zc" failed (die: 0x7b9580a)
-   variable location: base=reg7, offset=0x40
-   type='struct tcp_zerocopy_receive' size=0x40 (die:0x7b947f4)
+Not so much "debug" as ensure that the platform owner noticies that KVM is buggy.
 
-After:
-  -----------------------------------------------------------
-  find data type for 0x7c(reg7) at tcp_getsockopt+0xb62
-  CU for net/ipv4/tcp.c (die:0x7b5f516)
-  frame base: cfa=0 fbreg=6
-  found "zc" in scope=3/3 (die: 0x7b957fc) type_offset=0x3c
-   variable location: base=reg7, offset=0x40
-   type='struct tcp_zerocopy_receive' size=0x40 (die:0x7b947f4)
+> >> +static inline int perf_force_exclude_guest_check(struct perf_event *event,
+> >> +						 int cpu, struct task_struct *task)
+> >> +{
+> >> +	bool *force_exclude_guest = NULL;
+> >> +
+> >> +	if (!has_vpmu_passthrough_cap(event->pmu))
+> >> +		return 0;
+> >> +
+> >> +	if (event->attr.exclude_guest)
+> >> +		return 0;
+> >> +
+> >> +	if (cpu != -1) {
+> >> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, cpu);
+> >> +	} else if (task && (task->flags & PF_VCPU)) {
+> >> +		/*
+> >> +		 * Just need to check the running CPU in the event creation. If the
+> >> +		 * task is moved to another CPU which supports the force_exclude_guest.
+> >> +		 * The event will filtered out and be moved to the error stage. See
+> >> +		 * merge_sched_in().
+> >> +		 */
+> >> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, task_cpu(task));
+> >> +	}
+> > 
+> > These checks are extremely racy, I don't see how this can possibly do the
+> > right thing.  PF_VCPU isn't a "this is a vCPU task", it's a "this task is about
+> > to do VM-Enter, or just took a VM-Exit" (the "I'm a virtual CPU" comment in
+> > include/linux/sched.h is wildly misleading, as it's _only_ valid when accounting
+> > time slices).
+> >
+> 
+> This is to reject an !exclude_guest event creation for a running
+> "passthrough" guest from host perf tool.
+> Could you please suggest a way to detect it via the struct task_struct?
+> 
+> > Digging deeper, I think __perf_force_exclude_guest has similar problems, e.g.
+> > perf_event_create_kernel_counter() calls perf_event_alloc() before acquiring the
+> > per-CPU context mutex.
+> 
+> Do you mean that the perf_guest_enter() check could be happened right
+> after the perf_force_exclude_guest_check()?
+> It's possible. For this case, the event can still be created. It will be
+> treated as an existing event and handled in merge_sched_in(). It will
+> never be scheduled when a guest is running.
+> 
+> The perf_force_exclude_guest_check() is to make sure most of the cases
+> can be rejected at the creation place. For the corner cases, they will
+> be rejected in the schedule stage.
 
-Note that the type-offset was properly calculated to 0x3c as the
-variable starts at 0x40.
+Ah, the "rejected in the schedule stage" is what I'm missing.  But that creates
+a gross ABI, because IIUC, event creation will "randomly" succeed based on whether
+or not a CPU happens to be running in a KVM guest.  I.e. it's not just the kernel
+code that has races, the entire event creation is one big race.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+What if perf had a global knob to enable/disable mediate PMU support?  Then when
+KVM is loaded with enable_mediated_true, call into perf to (a) check that there
+are no existing !exclude_guest events (this part could be optional), and (b) set
+the global knob to reject all new !exclude_guest events (for the core PMU?).
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index c6eb5b2cc4d5..2dfbdd804222 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -25,6 +25,9 @@
- #include "symbol_conf.h"
- #include "thread.h"
+Hmm, or probably better, do it at VM creation.  That has the advantage of playing
+nice with CONFIG_KVM=y (perf could reject the enabling without completely breaking
+KVM), and not causing problems if KVM is auto-probed but the user doesn't actually
+want to run VMs.
+
+E.g. (very roughly)
+
+int x86_perf_get_mediated_pmu(void)
+{
+	if (refcount_inc_not_zero(...))
+		return 0;
+
+	if (<system wide events>)
+		return -EBUSY;
+
+	<slow path with locking>
+}
+
+void x86_perf_put_mediated_pmu(void)
+{
+	if (!refcount_dec_and_test(...))
+		return;
+
+	<slow path with locking>
+}
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1bbf312cbd73..f2994377ef44 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -12467,6 +12467,12 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+        if (type)
+                return -EINVAL;
  
-+/* register number of the stack pointer */
-+#define X86_REG_SP 7
++       if (enable_mediated_pmu)
++               ret = x86_perf_get_mediated_pmu();
++               if (ret)
++                       return ret;
++       }
 +
- enum type_state_kind {
- 	TSR_KIND_INVALID = 0,
- 	TSR_KIND_TYPE,
-@@ -197,7 +200,7 @@ static void init_type_state(struct type_state *state, struct arch *arch)
- 		state->regs[10].caller_saved = true;
- 		state->regs[11].caller_saved = true;
- 		state->ret_reg = 0;
--		state->stack_reg = 7;
-+		state->stack_reg = X86_REG_SP;
- 	}
+        ret = kvm_page_track_init(kvm);
+        if (ret)
+                goto out;
+@@ -12518,6 +12524,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+        kvm_mmu_uninit_vm(kvm);
+        kvm_page_track_cleanup(kvm);
+ out:
++       x86_perf_put_mediated_pmu();
+        return ret;
  }
  
-@@ -382,10 +385,18 @@ static bool find_cu_die(struct debuginfo *di, u64 pc, Dwarf_Die *cu_die)
+@@ -12659,6 +12666,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
+        kvm_page_track_cleanup(kvm);
+        kvm_xen_destroy_vm(kvm);
+        kvm_hv_destroy_vm(kvm);
++       x86_perf_put_mediated_pmu();
  }
  
- /* The type info will be saved in @type_die */
--static int check_variable(Dwarf_Die *var_die, Dwarf_Die *type_die, int offset,
--			  bool is_pointer)
-+static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
-+			  Dwarf_Die *type_die, int reg, int offset, bool is_fbreg)
- {
- 	Dwarf_Word size;
-+	bool is_pointer = true;
-+
-+	if (reg == DWARF_REG_PC)
-+		is_pointer = false;
-+	else if (reg == dloc->fbreg || is_fbreg)
-+		is_pointer = false;
-+	else if (arch__is(dloc->arch, "x86") && reg == X86_REG_SP)
-+		is_pointer = false;
- 
- 	/* Get the type of the variable */
- 	if (die_get_real_type(var_die, type_die) == NULL) {
-@@ -607,7 +618,6 @@ static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
- {
- 	u64 pc;
- 	int offset;
--	bool is_pointer = false;
- 	const char *var_name = NULL;
- 	struct global_var_entry *gvar;
- 	Dwarf_Die var_die;
-@@ -623,7 +633,8 @@ static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
- 
- 	/* Try to get the variable by address first */
- 	if (die_find_variable_by_addr(cu_die, var_addr, &var_die, &offset) &&
--	    check_variable(&var_die, type_die, offset, is_pointer) == 0) {
-+	    check_variable(dloc, &var_die, type_die, DWARF_REG_PC, offset,
-+			   /*is_fbreg=*/false) == 0) {
- 		var_name = dwarf_diename(&var_die);
- 		*var_offset = offset;
- 		goto ok;
-@@ -636,7 +647,8 @@ static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
- 
- 	/* Try to get the name of global variable */
- 	if (die_find_variable_at(cu_die, var_name, pc, &var_die) &&
--	    check_variable(&var_die, type_die, *var_offset, is_pointer) == 0)
-+	    check_variable(dloc, &var_die, type_die, DWARF_REG_PC, *var_offset,
-+			   /*is_fbreg=*/false) == 0)
- 		goto ok;
- 
- 	return false;
-@@ -1587,8 +1599,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 		}
- 
- 		/* Found a variable, see if it's correct */
--		ret = check_variable(&var_die, type_die, offset,
--				     reg != DWARF_REG_PC && !is_fbreg);
-+		ret = check_variable(dloc, &var_die, type_die, reg, offset, is_fbreg);
- 		if (ret == 0) {
- 			pr_debug_dtp("found \"%s\" in scope=%d/%d (die: %#lx) ",
- 				     dwarf_diename(&var_die), i+1, nr_scopes,
--- 
-2.44.0.683.g7961c838ac-goog
+ static void memslot_rmap_free(struct kvm_memory_slot *slot)
 
