@@ -1,308 +1,149 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4A21B968
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 05:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4CC1B96E;
+	Fri, 12 Apr 2024 05:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712899379; cv=none; b=UjsbuoQFFdof64DmCsbS5tX7WJfPp3kwGCN90zNelJiCkjsj6FnVAggJ+vqLwpa/4gSFllIDtSErg5rSXDPYCPkRqdYDD/RmKXompEvEjDy7JgNNxSdTo66Vnao0xxX7Ru8e8ZqLzcb+QM2anV9Avlddbd1PTmfC/+F+8j3s+DQ=
+	t=1712900659; cv=none; b=SfCOHi1Zxxx+MbVmK0BRMHDpA6mmTBoSrEr4M+rbkvke/jShGdc+/KUMcEb2o1eiqMCCApihgs2Xl1N/YOkEJvGE5HJ282EJcwL5lz9K49e+1Kd+s64QyCMhmd6kOEmwHLuzalhY3/hRmLw6+fWLGMfxOBqkjr7/woGMVdBWOW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712899379; c=relaxed/simple;
-	bh=UL/LpncOZyGtWXw7sXb64CLmGe4yYisGgtysed72NNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1jZiOzl1kgN18weN5a7a1nyUG8uUX0u+mfQwlyeputOyG/RWz9iMfj/M00xNmMO9A8/KlwEvfhP4FyNk/6awFzeE8MzevR5LTlquLy0jK4JCqPtCYFl8dLrRV86C7an3qv925KVTp1AbvjtWKgxN7KkwDb2zLRhf0pILquPDNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M0Qz3sWn; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712900659; c=relaxed/simple;
+	bh=t9IyVL79bJ8O2rJHXegBc6gcfFgf4W7Q52ai+x63gms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OwX8gskqcCxvXh4ZeeInt3+3fn59jvvw2jm1r9aRucMZ2hN0OKZ4j7vUg26Aqswc3nYV84FG9qpiQd8/ygCRnz8HDBBg38tfi7ntRD/5YCzVgDgKVEClEFLnHAceVloDQwgHuPMDA7EzCR2dgiP0mKpm0eb9K4aokE9zRpLIKH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWmUo1a3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0Qz3sWn"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36a3a4c9d11so61245ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Apr 2024 22:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712899377; x=1713504177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4gNpPlT+WGI2X/oljO6U2N2ieR5VZIoAm4qmJbHtId0=;
-        b=M0Qz3sWnk3Ddf4Z7GodnMzpq64pZNnS+8Rnc27GLfBCfwTEgBRSTprycyRG9DKt/ur
-         8aeNT8qvkZRU82efIdjG87XlGru0Nwf/znmPwD2dKTxyCjXVtaSWSK9Mx0PUQ/uJzz9d
-         cGrXbMt3t8KDNVtTHYVt3aSYLA1aHSO+VydU7dc58FDtYJ8bGDsOkPyhhvAhUSulxm4M
-         YnQTp+kuUBKb1MYDZbO5ROGdQubWrHx8HUzC8ZAcrcTaDnI2XZImS+TxYSij15qqEdGU
-         JMHHVERhv9jVO4giQ1p/CE5iP7SS7ItOMWJLgJpa8e4fXoxIL6Dydxdp8f5dPS46KKRO
-         CZhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712899377; x=1713504177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4gNpPlT+WGI2X/oljO6U2N2ieR5VZIoAm4qmJbHtId0=;
-        b=cHj1Rkeeq12cOc/AoxKdme+GDoK0d6TulHw4UT0+Qk2Yip2/1oneyJmRoKpoT7zTy5
-         u7scypN9pB/yqhbtxQtvVjhJquniVtQay4mol1h6vfwd8wjsWbVNazg4rkjT4WekbJcU
-         ngdCw+WS68qgh3S+lQy66FtUcsi//pZrT3a6atqbXspMfqztmpDIySiDMu2AMF8Djb22
-         BeZnO+/wB2K0u26VBaZpbvHTc5Z54f6x3jhPbqALWzTHs1BVj2EPByIajVademZlGqIw
-         ApvMKEbkXsm3s/MeqRO1I80Z7SZTrenvesn6lcZzWyIFOfuO6smoF4TTIsJj5+p2/ifq
-         T8hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWasq+74KuYeuMHmTVkIttNUsLRsIlR7KtLZysFii1Qdddfca5ZWYhJm/8zMY2NnSNTAYhzjB9JIZAQXGdvhvyOuDCXrqCvB1qOMGueNhfI2Q==
-X-Gm-Message-State: AOJu0YwvsH5yvrfclxdgSvd4kdbJHqyd2/wfZwjsABi01lzwGmd3kLGx
-	u48CGf9n7Nq97UcbRssRHHf6wqDLK5BeUgUAgGxAjKGiKGqaAYf4hpWM4+bXl+5aV4fAG3mgIvI
-	4tfwoD+0LcENbYNxrVKMTun4fpsRK2oFVqFdS
-X-Google-Smtp-Source: AGHT+IFaxXfvgMGaQqQrfx6l6wm45mGMVB40AypZPvgD2u24sPWZke6TU3DNIdrJaUHBpgEu+mazw+ENL8ObWHJtEy4=
-X-Received: by 2002:a05:6e02:2190:b0:36a:36e7:6bf8 with SMTP id
- j16-20020a056e02219000b0036a36e76bf8mr117545ila.15.1712899376701; Thu, 11 Apr
- 2024 22:22:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWmUo1a3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712900657; x=1744436657;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=t9IyVL79bJ8O2rJHXegBc6gcfFgf4W7Q52ai+x63gms=;
+  b=PWmUo1a3LTx+EAvExShndAmlfjHqxL8ZjPPzP0DyQjWD8GVyyTavlF1v
+   e9u90PlV3DibT9llfRU6zakUvlRexmtEYGWSqjyHfu7g/zp+Mew+wtlc3
+   4lgn9dKc13KnceB/mfRYDcslmgyudbY0xBjNuGr9DZfcqGCKUSYUorMPm
+   BZJRUInr50IW/Nooj1RNxmAQ8m9xT3BfF4utCBM4PkRNzPAcVAs/zd5/x
+   Gp/DU7EMlwdyqQHnHfRNLHUivjQZ3Qv01E325Zv66iO6f6EkFS3PhOOpk
+   QN+H0KFr5TNYXBwve/CdkOikySvjZKjC+Kx+9pK6Y40QrXnsTUWDLAacW
+   g==;
+X-CSE-ConnectionGUID: c5UXe7MkSV+oyZIAhhGW1w==
+X-CSE-MsgGUID: /bUfCvTJQPuRvEHIstZrBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8900269"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="8900269"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 22:44:16 -0700
+X-CSE-ConnectionGUID: Gis4aWxaStOcmdSKpzh2Pg==
+X-CSE-MsgGUID: eLxiMtO2SkuuciJo7EpFAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="52100678"
+Received: from xiongzha-mobl1.ccr.corp.intel.com (HELO [10.124.244.162]) ([10.124.244.162])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 22:44:12 -0700
+Message-ID: <efc9f54b-a145-4ff5-bb8a-84b9970bc51e@linux.intel.com>
+Date: Fri, 12 Apr 2024 13:44:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405070931.1231245-1-irogers@google.com> <20240405070931.1231245-2-irogers@google.com>
- <ZhP7VBvlSPrJKDP6@x1>
-In-Reply-To: <ZhP7VBvlSPrJKDP6@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Apr 2024 22:22:42 -0700
-Message-ID: <CAP-5=fVbhf_JgO9APwgOVyktazOAyEL-3vM2d-M4ropMDdYH2w@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf test: Display number of remaining tests
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 05/41] KVM: x86/pmu: Register PMI handler for
+ passthrough PMU
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
+ kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-6-xiong.y.zhang@linux.intel.com>
+ <Zhg0_B4ktNzQbWZZ@google.com>
+From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
+In-Reply-To: <Zhg0_B4ktNzQbWZZ@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Fri, Apr 05, 2024 at 12:09:31AM -0700, Ian Rogers wrote:
-> > Before polling or sleeping to wait for a test to complete, print out
-> > ": Running (<num> remaining)" where the number of remaining tests is
-> > determined by iterating over the remaining tests and seeing which
-> > return true for check_if_command_finished. After the delay, erase the
-> > line and either update it with the new number of remaining tests, or
-> > print the test's result. This allows a user to know a test is running
-> > and in parallel mode (default) how many of the tests are waiting to
-> > complete. If color mode is disabled then avoid displaying the
-> > "Running" message.
->
-> Tested and applied, great improvement!
 
-And I think it is broken. Specifically I think the nohang waitpid can
-cause the later read of the stdout/err pipe to fail. We may need to
-drain the files before checking. I suspect this as I've seen an
-increase test fails where the verbose output shows nothing. The only
-remedy for that in the current code would be to run the tests
-sequentially, so we should probably back this out for now.
 
-Thanks,
-Ian
-
-> - Arnaldo
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
-> >  tools/perf/util/color.h         |  1 +
-> >  2 files changed, 53 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index 73f53b02f733..15b8e8e32749 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -238,7 +238,10 @@ static int run_test_child(struct child_process *pr=
-ocess)
-> >       return -err;
-> >  }
-> >
-> > -static int print_test_result(struct test_suite *t, int i, int subtest,=
- int result, int width)
-> > +#define TEST_RUNNING -3
-> > +
-> > +static int print_test_result(struct test_suite *t, int i, int subtest,=
- int result, int width,
-> > +                          int remaining)
-> >  {
-> >       if (has_subtests(t)) {
-> >               int subw =3D width > 2 ? width - 2 : width;
-> > @@ -248,6 +251,9 @@ static int print_test_result(struct test_suite *t, =
-int i, int subtest, int resul
-> >               pr_info("%3d: %-*s:", i + 1, width, test_description(t, s=
-ubtest));
-> >
-> >       switch (result) {
-> > +     case TEST_RUNNING:
-> > +             color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d re=
-maining)\n", remaining);
-> > +             break;
-> >       case TEST_OK:
-> >               pr_info(" Ok\n");
-> >               break;
-> > @@ -269,13 +275,15 @@ static int print_test_result(struct test_suite *t=
-, int i, int subtest, int resul
-> >       return 0;
-> >  }
-> >
-> > -static int finish_test(struct child_test *child_test, int width)
-> > +static int finish_test(struct child_test **child_tests, int running_te=
-st, int child_test_num,
-> > +                    int width)
-> >  {
-> > +     struct child_test *child_test =3D child_tests[running_test];
-> >       struct test_suite *t =3D child_test->test;
-> >       int i =3D child_test->test_num;
-> >       int subi =3D child_test->subtest;
-> >       int err =3D child_test->process.err;
-> > -     bool err_done =3D err <=3D 0;
-> > +     bool err_done =3D false;
-> >       struct strbuf err_output =3D STRBUF_INIT;
-> >       int ret;
-> >
-> > @@ -290,7 +298,7 @@ static int finish_test(struct child_test *child_tes=
-t, int width)
-> >        * Busy loop reading from the child's stdout/stderr that are set =
-to be
-> >        * non-blocking until EOF.
-> >        */
-> > -     if (!err_done)
-> > +     if (err > 0)
-> >               fcntl(err, F_SETFL, O_NONBLOCK);
-> >       if (verbose > 1) {
-> >               if (has_subtests(t))
-> > @@ -304,29 +312,48 @@ static int finish_test(struct child_test *child_t=
-est, int width)
-> >                         .events =3D POLLIN | POLLERR | POLLHUP | POLLNV=
-AL,
-> >                       },
-> >               };
-> > -             char buf[512];
-> > -             ssize_t len;
-> > -
-> > -             /* Poll to avoid excessive spinning, timeout set for 100m=
-s. */
-> > -             poll(pfds, ARRAY_SIZE(pfds), /*timeout=3D*/100);
-> > -             if (!err_done && pfds[0].revents) {
-> > -                     errno =3D 0;
-> > -                     len =3D read(err, buf, sizeof(buf) - 1);
-> > -
-> > -                     if (len <=3D 0) {
-> > -                             err_done =3D errno !=3D EAGAIN;
-> > -                     } else {
-> > -                             buf[len] =3D '\0';
-> > -                             if (verbose > 1)
-> > -                                     fprintf(stdout, "%s", buf);
-> > -                             else
-> > +             if (perf_use_color_default) {
-> > +                     int tests_in_progress =3D running_test;
-> > +
-> > +                     for (int y =3D running_test; y < child_test_num; =
-y++) {
-> > +                             if (check_if_command_finished(&child_test=
-s[y]->process))
-> > +                                     tests_in_progress++;
-> > +                     }
-> > +                     print_test_result(t, i, subi, TEST_RUNNING, width=
-,
-> > +                                       child_test_num - tests_in_progr=
-ess);
-> > +             }
-> > +
-> > +             err_done =3D true;
-> > +             if (err <=3D 0) {
-> > +                     /* No child stderr to poll, sleep for 10ms for ch=
-ild to complete. */
-> > +                     usleep(10 * 1000);
-> > +             } else {
-> > +                     /* Poll to avoid excessive spinning, timeout set =
-for 100ms. */
-> > +                     poll(pfds, ARRAY_SIZE(pfds), /*timeout=3D*/100);
-> > +                     if (pfds[0].revents) {
-> > +                             char buf[512];
-> > +                             ssize_t len;
-> > +
-> > +                             len =3D read(err, buf, sizeof(buf) - 1);
-> > +
-> > +                             if (len > 0) {
-> > +                                     err_done =3D false;
-> > +                                     buf[len] =3D '\0';
-> >                                       strbuf_addstr(&err_output, buf);
-> > +                             }
-> >                       }
-> >               }
-> > +             if (err_done)
-> > +                     err_done =3D check_if_command_finished(&child_tes=
-t->process);
-> > +
-> > +             if (perf_use_color_default) {
-> > +                     /* Erase "Running (.. remaining)" line printed be=
-fore poll/sleep. */
-> > +                     fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-> > +             }
-> >       }
-> >       /* Clean up child process. */
-> >       ret =3D finish_command(&child_test->process);
-> > -     if (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL) {
-> > +     if (verbose > 1 || (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL)) {
-> >               /* Add header for test that was skipped above. */
-> >               if (has_subtests(t))
-> >                       pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_d=
-escription(t, subi));
-> > @@ -335,7 +362,7 @@ static int finish_test(struct child_test *child_tes=
-t, int width)
-> >               fprintf(stderr, "%s", err_output.buf);
-> >       }
-> >       strbuf_release(&err_output);
-> > -     print_test_result(t, i, subi, ret, width);
-> > +     print_test_result(t, i, subi, ret, width, /*remaining=3D*/0);
-> >       if (err > 0)
-> >               close(err);
-> >       return 0;
-> > @@ -351,7 +378,7 @@ static int start_test(struct test_suite *test, int =
-i, int subi, struct child_tes
-> >               pr_debug("--- start ---\n");
-> >               err =3D test_function(test, subi)(test, subi);
-> >               pr_debug("---- end ----\n");
-> > -             print_test_result(test, i, subi, err, width);
-> > +             print_test_result(test, i, subi, err, width, /*remaining=
-=3D*/0);
-> >               return 0;
-> >       }
-> >
-> > @@ -376,7 +403,7 @@ static int start_test(struct test_suite *test, int =
-i, int subi, struct child_tes
-> >       err =3D start_command(&(*child)->process);
-> >       if (err || !sequential)
-> >               return  err;
-> > -     return finish_test(*child, width);
-> > +     return finish_test(child, /*running_test=3D*/0, /*child_test_num=
-=3D*/1, width);
-> >  }
-> >
-> >  #define for_each_test(j, k, t)                                       \
-> > @@ -461,7 +488,7 @@ static int __cmd_test(int argc, const char *argv[],=
- struct intlist *skiplist)
-> >       }
-> >       for (i =3D 0; i < child_test_num; i++) {
-> >               if (!sequential) {
-> > -                     int ret  =3D finish_test(child_tests[i], width);
-> > +                     int ret  =3D finish_test(child_tests, i, child_te=
-st_num, width);
-> >
-> >                       if (ret)
-> >                               return ret;
-> > diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
-> > index 01f7bed21c9b..4b9f8d5d4439 100644
-> > --- a/tools/perf/util/color.h
-> > +++ b/tools/perf/util/color.h
-> > @@ -22,6 +22,7 @@
-> >  #define MIN_GREEN    0.5
-> >  #define MIN_RED              5.0
-> >
-> > +#define PERF_COLOR_DELETE_LINE       "\033[A\33[2K\r"
-> >  /*
-> >   * This variable stores the value of color.ui
-> >   */
-> > --
-> > 2.44.0.478.gd926399ef9-goog
+On 4/12/2024 3:07 AM, Sean Christopherson wrote:
+> On Fri, Jan 26, 2024, Xiong Zhang wrote:
+>> From: Xiong Zhang <xiong.y.zhang@intel.com>
+>>
+>> Add function to register/unregister PMI handler at KVM module
+>> initialization and destroy time. This allows the host PMU with passthough
+>> capability enabled switch PMI handler at PMU context switch time.
+>>
+>> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  arch/x86/kvm/x86.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 2c924075f6f1..4432e736129f 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -10611,6 +10611,18 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
+>>  }
+>>  EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+>>  
+>> +void kvm_passthrough_pmu_handler(void)
+> 
+> s/pmu/pmi, and this needs a verb.  Maybe kvm_handle_guest_pmi()?  Definitely
+> open to other names.
+kvm_handle_guest_pmi() is ok. 
+> 
+>> +{
+>> +	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
+>> +
+>> +	if (!vcpu) {
+>> +		pr_warn_once("%s: no running vcpu found!\n", __func__);
+> 
+> Unless I misunderstand the code, this can/should be a full WARN_ON_ONCE.  If a
+> PMI skids all the way past vcpu_put(), we've got big problems.
+yes, it is big problems and user should be noticed.
+>  
+>> +		return;
+>> +	}
+>> +
+>> +	kvm_make_request(KVM_REQ_PMI, vcpu);
+>> +}
+>> +
+>>  /*
+>>   * Called within kvm->srcu read side.
+>>   * Returns 1 to let vcpu_run() continue the guest execution loop without
+>> @@ -13815,6 +13827,7 @@ static int __init kvm_x86_init(void)
+>>  {
+>>  	kvm_mmu_x86_module_init();
+>>  	mitigate_smt_rsb &= boot_cpu_has_bug(X86_BUG_SMT_RSB) && cpu_smt_possible();
+>> +	kvm_set_vpmu_handler(kvm_passthrough_pmu_handler);
+> 
+> Hmm, a few patches late, but the "kvm" scope is weird.  This calls a core x86
+> function, not a KVM function.
+> 
+> And to reduce exports and copy+paste, what about something like this?
+> 
+> void x86_set_kvm_irq_handler(u8 vector, void (*handler)(void))
+> {
+> 	if (!handler)
+> 		handler = dummy_handler;
+> 
+> 	if (vector == POSTED_INTR_WAKEUP_VECTOR)
+> 		kvm_posted_intr_wakeup_handler = handler;
+> 	else if (vector == KVM_GUEST_PMI_VECTOR)
+> 		kvm_guest_pmi_handler = handler;
+> 	else
+> 		WARN_ON_ONCE(1);
+> 
+> 	if (handler == dummy_handler)
+> 		synchronize_rcu();
+> }
+> EXPORT_SYMBOL_GPL(x86_set_kvm_irq_handler);
+Good suggestion. Follow it in next version.
