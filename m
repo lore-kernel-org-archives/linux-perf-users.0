@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A6714EC4E;
-	Fri, 12 Apr 2024 21:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5611509BC;
+	Fri, 12 Apr 2024 21:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712956093; cv=none; b=WpwC124fvgXd9YuXppTe+XT9uRMGSFyDmVWBf5pvkTsumQVbgk2DHQvOZya8tTp3o7YNEEwV4GIh/icK3/uKgFJI5zd4hkeCfSY/Q39W0daB17R3ft0xkCww17xvPQd0LF6w/fuDKMy35Whxup9Krdi8BV4ul9LyAU7MEAyQ1oM=
+	t=1712956094; cv=none; b=B7QUD9LJBtwHLWTo2xwEXczHaSPWyrjeQgZe5KRBLGp1SQZa7pif5413JmIt//J2STTzSIz8jsrL6T7AVVGSFMigo94doTzhGK8pQLZoxtc1K10uAgPvYcuRt9FNQpEggcqqZEmKdPAg/xkQDJYKGUzVix68HrS1Days4fhfVqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712956093; c=relaxed/simple;
-	bh=jrGEwUkQrx0gWiHEFipxTmPDR21ywI4PC3wG+b+Tglc=;
+	s=arc-20240116; t=1712956094; c=relaxed/simple;
+	bh=V5KLu8trmUCEspTvQ7KsyT2WAjK8jQQIxMfMXLVO6oU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hHJqjubTCAthj6hzn3NP2PlXS53luZnCROyVS6d1hWUIUUg4K0bH5UbvM4Bm/ytNojRSobIcpc0m8GZ/yj+BdjJdFGHHO3mqaw7E8L/6qgRGo64qE2YwfIYCOyGTZJqZ6SqSAI+IFWgFIE0GcUrQKPWiK3o0JcJFVy36dXJkzBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k61d9ZKb; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=rTdSkg8wArn44Zggrvm5JiX/BPgWt+z6IZJ6odJUQspUBvXyEAJVE98Lvtw+2PCWrjoDlJ22kimePXxcf4tTrW3q315MEUr2k+M9TB5+X+ubAQ/Mq6UwJsF5XgDrKa4Rlm5EF8yTJZMejUjMw+Y6+7Clr1Dfe9FUWij8WhuE9XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=domLGK0B; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k61d9ZKb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="domLGK0B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712956092; x=1744492092;
+  t=1712956093; x=1744492093;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jrGEwUkQrx0gWiHEFipxTmPDR21ywI4PC3wG+b+Tglc=;
-  b=k61d9ZKbUjJdpKlh7bq8P4VEfvyV4c32/l+XIvoJ4XiUAXWGJkr/Cy9P
-   SmnPXi4xDhD5miBknU7PZyUj8UZOhFgIKgX55m75y5VX38rJJ9wVS32oI
-   bwNsT3zS6qfsmA3XdXec4SjqaxDG5RJaa/PfTc3fmFMtG0le0wwX/fVyl
-   v87/Xdd78Qn0J3S4Lk9yr5jAIcd8Zyqq/qyTwTAzLX5HJs84Tjz0eEuZ4
-   KI/wAFSVwWPF2imqg9L6E5zr9znGFjsL+Zhx0d2HlsvIip44wPB5OHQ1t
-   RYiVboTdUnJjRH7ufe3vWY3Hz9Enea9D1D81kEZgeO+kPIfEUU4gQm2ON
-   g==;
-X-CSE-ConnectionGUID: 9Yi/SYetSkGEpv/WMgRknQ==
-X-CSE-MsgGUID: m8b1BOHpQS6rdHjoXd1GWw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19575427"
+  bh=V5KLu8trmUCEspTvQ7KsyT2WAjK8jQQIxMfMXLVO6oU=;
+  b=domLGK0B8i1ndl5ubLT+Bc12u/fEJVYuqvMa+tAEWJuu2q0/zj/4CRqE
+   26LEx5JAyQCTcQmLB+mm+so04Qraht3ARv5O0tlkLXOJ7+3rMnh8nhnVb
+   OdZoWWiRftI44SR240JwCA9ZKKCuqeuHlCzvOdtvvzmPxccF0b5wgJM+f
+   jA2IqaXjVgrGljCTAMZ/3yNSl/u6LkcxpOJtFREK9CQd4m6V7BQB3jBVQ
+   Z2+Fs7W7CnmO5Bbnq0N714x2Ro6VzM8OuwQQ6Hx+uWJ26hQu0iIQpt0U8
+   TVP7cEu2EEp5G81+zO8PrtJU+vAWc62bPA/FliUHJ0HI8HMF5EVi6diOX
+   Q==;
+X-CSE-ConnectionGUID: EBEpOOC8Qs6Eg09N28Kb2w==
+X-CSE-MsgGUID: xZRvo+KwSR218HqlfXF8fg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19575447"
 X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="19575427"
+   d="scan'208";a="19575447"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 14:08:09 -0700
-X-CSE-ConnectionGUID: 1U/+mOOrTwGgQ+dR2NwowQ==
-X-CSE-MsgGUID: 4/3GmXmaSQmHJWBSV9TONQ==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 14:08:11 -0700
+X-CSE-ConnectionGUID: XECMUHdWTwKJlOWtbSem2g==
+X-CSE-MsgGUID: Y/wT9ZQCTKSK4DolA0AWLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="21772069"
+   d="scan'208";a="21772082"
 Received: from b49691a74b80.jf.intel.com ([10.165.54.183])
-  by orviesa006.jf.intel.com with ESMTP; 12 Apr 2024 14:08:08 -0700
+  by orviesa006.jf.intel.com with ESMTP; 12 Apr 2024 14:08:09 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Ian Rogers <irogers@google.com>,
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v5 02/16] perf stat: Add basic functions for the hardware aware grouping
-Date: Fri, 12 Apr 2024 14:07:42 -0700
-Message-ID: <20240412210756.309828-3-weilin.wang@intel.com>
+Subject: [RFC PATCH v5 04/16] find_bit: add _find_last_and_bit() to support finding the most significant set bit
+Date: Fri, 12 Apr 2024 14:07:44 -0700
+Message-ID: <20240412210756.309828-5-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240412210756.309828-1-weilin.wang@intel.com>
 References: <20240412210756.309828-1-weilin.wang@intel.com>
@@ -75,273 +75,103 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Add the first set of functions for the hardware aware grouping method. Function
-hw_aware_parse_groups() is the entry point of this metric grouping method.  It
-does metric grouping on a combined list of events and will create a list of
-grouping strings as final results of the grouping method. These grouping strings
-will be used in the same manner as existing metric grouping process.
+This function is required for more efficient PMU counter assignment.
 
-This method will fall back to normal grouping when hardware aware grouping
-return with err so that perf stat still executes and returns with correct
-result.
+When we use bitmap to log available PMU counters and counters that support a
+given event, we want to find a most significant set bit so that we could
+starting assigning counters with larger index first. This is helpful
+because counters with smaller indexes usually are more generic and
+support more events.
 
+Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 ---
- tools/perf/util/metricgroup.c | 217 +++++++++++++++++++++++++++++++++-
- 1 file changed, 216 insertions(+), 1 deletion(-)
+ tools/include/linux/find.h | 18 ++++++++++++++++++
+ tools/lib/find_bit.c       | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 11613450725a..8047f03b2b1f 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -159,6 +159,14 @@ struct metric {
- 	struct evlist *evlist;
- };
+diff --git a/tools/include/linux/find.h b/tools/include/linux/find.h
+index 38c0a542b0e2..fce336ec2b96 100644
+--- a/tools/include/linux/find.h
++++ b/tools/include/linux/find.h
+@@ -18,6 +18,8 @@ extern unsigned long _find_first_bit(const unsigned long *addr, unsigned long si
+ extern unsigned long _find_first_and_bit(const unsigned long *addr1,
+ 					 const unsigned long *addr2, unsigned long size);
+ extern unsigned long _find_first_zero_bit(const unsigned long *addr, unsigned long size);
++extern unsigned long _find_last_and_bit(const unsigned long *addr1,
++					 const unsigned long *addr2, unsigned long size);
  
-+/**
-+ * Each group is one node in the group string list.
-+ */
-+struct metricgroup__group_strs {
-+	struct list_head nd;
-+	struct strbuf grouping_str;
-+};
-+
- static void metric__watchdog_constraint_hint(const char *name, bool foot)
- {
- 	static bool violate_nmi_constraint;
-@@ -1432,6 +1440,101 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- 	return ret;
- }
- 
-+/**
-+ * hw_aware_build_grouping - Build event groupings by reading counter
-+ * requirement of the events and counter available on the system from
-+ * pmu-events.
-+ * @ctx: the event identifiers parsed from metrics.
-+ * @groupings: header to the list of final event grouping.
-+ * @modifier: any modifiers added to the events.
-+ */
-+static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
-+				  struct list_head *groupings __maybe_unused,
-+				  const char *modifier __maybe_unused)
-+{
-+	int ret = 0;
-+
-+	pr_debug("This is a placeholder\n");
-+	return ret;
-+}
-+
-+static void group_str_free(struct metricgroup__group_strs *g)
-+{
-+	if (!g)
-+		return;
-+
-+	strbuf_release(&g->grouping_str);
-+	free(g);
-+}
-+
-+static void metricgroup__free_grouping_strs(struct list_head
-+					   *grouping_strs)
-+{
-+	struct metricgroup__group_strs *g, *tmp;
-+
-+	list_for_each_entry_safe(g, tmp, grouping_strs, nd) {
-+		list_del_init(&g->nd);
-+		group_str_free(g);
-+	}
-+}
-+
-+/**
-+ * hw_aware_parse_ids - Build the event string for the ids and parse them
-+ * creating an evlist. The encoded metric_ids are decoded. Events are placed
-+ * into groups based on event counter requirements and counter availabilities of
-+ * the system.
-+ * @metric_no_merge: is metric sharing explicitly disabled.
-+ * @fake_pmu: used when testing metrics not supported by the current CPU.
-+ * @ids: the event identifiers parsed from a metric.
-+ * @modifier: any modifiers added to the events.
-+ * @out_evlist: the created list of events.
-+ */
-+static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
-+			     struct expr_parse_ctx *ids, const char *modifier,
-+			     struct evlist **out_evlist)
-+{
-+	struct parse_events_error parse_error;
-+	struct evlist *parsed_evlist;
-+	LIST_HEAD(groupings);
-+	struct metricgroup__group_strs *group;
-+	int ret;
-+
-+	*out_evlist = NULL;
-+	ret = hw_aware_build_grouping(ids, &groupings, modifier);
-+	if (ret) {
-+		metricgroup__free_grouping_strs(&groupings);
-+		return ret;
-+	}
-+
-+	parsed_evlist = evlist__new();
-+	if (!parsed_evlist) {
-+		ret = -ENOMEM;
-+		goto err_out;
-+	}
-+	list_for_each_entry(group, &groupings, nd) {
-+		struct strbuf *events = &group->grouping_str;
-+
-+		pr_debug("Parsing metric events '%s'\n", events->buf);
-+		parse_events_error__init(&parse_error);
-+		ret = __parse_events(parsed_evlist, events->buf, /*pmu_filter=*/NULL,
-+				    &parse_error, fake_pmu, /*warn_if_reordered=*/false);
-+		if (ret) {
-+			parse_events_error__print(&parse_error, events->buf);
-+			goto err_out;
-+		}
-+		ret = decode_all_metric_ids(parsed_evlist, modifier);
-+		if (ret)
-+			goto err_out;
-+	}
-+	*out_evlist = parsed_evlist;
-+	parsed_evlist = NULL;
-+err_out:
-+	parse_events_error__exit(&parse_error);
-+	evlist__delete(parsed_evlist);
-+	metricgroup__free_grouping_strs(&groupings);
-+	return ret;
-+}
-+
+ #ifndef find_next_bit
  /**
-  * parse_ids - Build the event string for the ids and parse them creating an
-  *             evlist. The encoded metric_ids are decoded.
-@@ -1520,6 +1623,113 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	return ret;
+@@ -174,4 +176,20 @@ unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size)
  }
+ #endif
  
-+static int hw_aware_parse_groups(struct evlist *perf_evlist,
-+				const char *pmu, const char *str,
-+				bool metric_no_threshold,
-+				const char *user_requested_cpu_list,
-+				bool system_wide,
-+				struct perf_pmu *fake_pmu,
-+				struct rblist *metric_events_list,
-+				const struct pmu_metrics_table *table)
++#ifndef find_last_and_bit
++static inline
++unsigned long find_last_and_bit(const unsigned long *addr1,
++				const unsigned long *addr2,
++				unsigned long size)
 +{
-+	struct evlist *combined_evlist = NULL;
-+	LIST_HEAD(metric_list);
-+	struct metric *m;
-+	int ret;
-+	bool metric_no_group = false;
-+	bool metric_no_merge = false;
++	if (small_const_nbits(size)) {
++		unsigned long val = *addr1 & *addr2 & GENMASK(size - 1, 0);
 +
-+	if (metric_events_list->nr_entries == 0)
-+		metricgroup__rblist_init(metric_events_list);
-+	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
-+					   user_requested_cpu_list,
-+					   system_wide, &metric_list, table);
-+	if (ret)
-+		goto out;
-+
-+	/* Sort metrics from largest to smallest. */
-+	list_sort(NULL, &metric_list, metric_list_cmp);
-+
-+	if (!metric_no_merge) {
-+		struct expr_parse_ctx *combined = NULL;
-+
-+		ret = build_combined_expr_ctx(&metric_list, &combined);
-+
-+		if (!ret && combined && hashmap__size(combined->ids)) {
-+			ret = hw_aware_parse_ids(fake_pmu, combined,
-+						/*modifier=*/NULL,
-+						&combined_evlist);
-+		}
-+
-+		if (combined)
-+			expr__ctx_free(combined);
-+		if (ret)
-+			goto out;
++		return val ? __fls(val) : size;
 +	}
 +
-+	list_for_each_entry(m, &metric_list, nd) {
-+		struct metric_expr *expr;
-+		struct metric_event *me;
-+		struct evsel **metric_events;
-+
-+		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
-+					 combined_evlist, &metric_events);
-+		if (ret) {
-+			pr_debug("Cannot resolve IDs for %s: %s\n",
-+				m->metric_name, m->metric_expr);
-+			goto out;
-+		}
-+
-+		me = metricgroup__lookup(metric_events_list, metric_events[0], true);
-+
-+		expr = malloc(sizeof(struct metric_expr));
-+		if (!expr) {
-+			ret = -ENOMEM;
-+			free(metric_events);
-+			goto out;
-+		}
-+
-+		expr->metric_refs = m->metric_refs;
-+		m->metric_refs = NULL;
-+		expr->metric_expr = m->metric_expr;
-+		if (m->modifier) {
-+			char *tmp;
-+
-+			if (asprintf(&tmp, "%s:%s", m->metric_name, m->modifier) < 0)
-+				expr->metric_name = NULL;
-+			else
-+				expr->metric_name = tmp;
-+		} else {
-+			expr->metric_name = strdup(m->metric_name);
-+		}
-+
-+		if (!expr->metric_name) {
-+			ret = -ENOMEM;
-+			free(metric_events);
-+			goto out;
-+		}
-+		expr->metric_threshold = m->metric_threshold;
-+		expr->metric_unit = m->metric_unit;
-+		expr->metric_events = metric_events;
-+		expr->runtime = m->pctx->sctx.runtime;
-+		list_add(&expr->nd, &me->head);
-+	}
-+
-+	if (combined_evlist) {
-+		evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
-+		evlist__delete(combined_evlist);
-+	}
-+
-+	list_for_each_entry(m, &metric_list, nd) {
-+		if (m->evlist)
-+			evlist__splice_list_tail(perf_evlist, &m->evlist->core.entries);
-+	}
-+
-+out:
-+	metricgroup__free_metrics(&metric_list);
-+	return ret;
++	return _find_last_and_bit(addr1, addr2, size);
 +}
++#endif
 +
- static int parse_groups(struct evlist *perf_evlist,
- 			const char *pmu, const char *str,
- 			bool metric_no_group,
-@@ -1698,10 +1908,15 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 	if (!table)
- 		return -EINVAL;
- 	if (hardware_aware_grouping) {
-+		int ret;
- 		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
-+		ret = hw_aware_parse_groups(perf_evlist, pmu, str,
-+			    metric_no_threshold, user_requested_cpu_list, system_wide,
-+			    /*fake_pmu=*/NULL, metric_events, table);
-+		if (!ret)
-+			return 0;
- 	}
+ #endif /*__LINUX_FIND_H_ */
+diff --git a/tools/lib/find_bit.c b/tools/lib/find_bit.c
+index 6a3dc167d30e..a84817d80c46 100644
+--- a/tools/lib/find_bit.c
++++ b/tools/lib/find_bit.c
+@@ -67,6 +67,27 @@ out:										\
+ 	sz;									\
+ })
  
--
- 	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
- 			    metric_no_threshold, user_requested_cpu_list, system_wide,
- 			    /*fake_pmu=*/NULL, metric_events, table);
++/*
++ * Common helper for find_bit() function family
++ * @FETCH: The expression that fetches and pre-processes each word of bitmap(s)
++ * @MUNGE: The expression that post-processes a word containing found bit (may be empty)
++ * @size: The bitmap size in bits
++ */
++#define FIND_LAST_BIT(FETCH, MUNGE, size)					\
++({										\
++	unsigned long idx, val, sz = (size);					\
++										\
++	for (idx = ((size - 1) / BITS_PER_LONG); idx >= 0; idx--) {			\
++		val = (FETCH);							\
++		if (val) {							\
++			sz = min(idx * BITS_PER_LONG + __fls(MUNGE(val)), sz);	\
++			break;							\
++		}								\
++	}									\
++										\
++	sz;									\
++})
++
+ #ifndef find_first_bit
+ /*
+  * Find the first set bit in a memory region.
+@@ -121,3 +142,15 @@ unsigned long _find_next_zero_bit(const unsigned long *addr, unsigned long nbits
+ 	return FIND_NEXT_BIT(~addr[idx], /* nop */, nbits, start);
+ }
+ #endif
++
++#ifndef find_last_and_bit
++/*
++ * Find the last set bit in two memory regions.
++ */
++unsigned long _find_last_and_bit(const unsigned long *addr1,
++				  const unsigned long *addr2,
++				  unsigned long size)
++{
++	return FIND_LAST_BIT(addr1[idx] & addr2[idx], /* nop */, size);
++}
++#endif
 -- 
 2.42.0
 
