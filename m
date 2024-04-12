@@ -1,83 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112BA145333;
-	Fri, 12 Apr 2024 15:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13023139CE4
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 16:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712934107; cv=none; b=S04JxTHls8YtJnCCVnomxL9LK/EYQF2D4o2zF4237fYxSjlEocY7OaBBHORSbYFk411adht+Up0jl8wgHQZxiwf2/c3FYRBGonJCubcNlTN5qikN6kWM2oyuNGqRTMAVheb9zwvcguCLj4CAq2rJSb7B1GOosqp05te6N7cT7iI=
+	t=1712937717; cv=none; b=J35SizdlX5N7MxEnBZfORpw4vZidsPsJxLj/6x0aSxY6jXFY9btUIEl1/atl30JpWXbeaNewD6AI9I7AcRZzIz6IsLfRY9Bhh6yQsfiP3swjsNSd//5+tCpowfflQHjL2OYnV2gWEYMpSoQnBTk27gBpuOXnRHC6EuD6qvZ5eRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712934107; c=relaxed/simple;
-	bh=g07M7yc8kYh3zRKK1iY+krBO5+7cUmhQyw/ZFdMq8cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXWZXdAjzBg9paLj4kgyDAsckZIlqpT2E6bCazRP6wwmUhVI0NX7MEm7R3FLv/eypMKDO8O4L4j3eMDEDk4xkorJQNTu7UQfOLaOfMj4E8SSDaHajEvaXFiCuPTctwdgbghp3ALYPNBQ4eC0RXaZXmZQbJjTGJ14qg2DfEcmPgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7V7gCFu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712937717; c=relaxed/simple;
+	bh=29mMxzABJNu2s6sXXHWuTqJmU9ZiVLQYln8kPDantDM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ObhB8xTr1nvZt/qkLlPbcGwH9ZUV6XbvutAatGfUCoIV9PbMcvXWs6dIniWxbZEGVBgIeJkmHYn79P578GiyTzFhh9+cG17vyVFelbxswkCxyn0AbGpCTeTf5OSvBi6tXhWR1SOUCx1fY5nWsdzySvPmt/Lk3GCKEx0q5Q3WWtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xv8SKoQu; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7V7gCFu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4961DC113CC;
-	Fri, 12 Apr 2024 15:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712934106;
-	bh=g07M7yc8kYh3zRKK1iY+krBO5+7cUmhQyw/ZFdMq8cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N7V7gCFurKvzNIYjIChC2uSv6vjjlgWNopsQAtmkyS+1eoGqOvjIpBkHg2u2Rpwxn
-	 ZsFbS5IyCEAkoY9B5L/ssNVDc5p2FGgd74BenOWltOFAUgVbXquJPLEv/FT+a1xV1R
-	 nYO6UQqHkg/9xRJ2BvxhMn65d/JGfCQiSZD1SVfhWhoBx09k4576drKqB2rSE6VhtM
-	 L21jllWoNqllhPpM5ejC/DQySylvPz3ypdi7bPCcJG5U/rZqKmf6Omgn1Fuf7LiW1H
-	 xnDWtOoQEtR5A5LkcoGsz8SyNJgFSIju+9U1mY5Za3BkX4I79nXkJxJq5J3EpYvHZo
-	 6LdbPAY+kl79w==
-Date: Fri, 12 Apr 2024 12:01:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf test: Display number of remaining tests
-Message-ID: <ZhlM19baK_P0zREj@x1>
-References: <20240405070931.1231245-1-irogers@google.com>
- <20240405070931.1231245-2-irogers@google.com>
- <ZhP7VBvlSPrJKDP6@x1>
- <CAP-5=fVbhf_JgO9APwgOVyktazOAyEL-3vM2d-M4ropMDdYH2w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xv8SKoQu"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2f7048a7fso1025743a91.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 09:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712937714; x=1713542514; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7zE2NMeREY9M0RzVWCwQFXSSfNx2GjxIaqj3+nSSE88=;
+        b=Xv8SKoQuY/mTjeQyYKDLH/lyGjpzQM1s2vyQFMUcc9Fgk7LIEVxFZmCc2GHJNro/1Y
+         z3iwG2NxaEFVdgEZVwgphJTR+zPnu5F+kIdv87w4XZwpEDp/XPMWanc0d+yT2hFQxzGZ
+         eXQmkVHJGvcIikUyLSfpnxewE1WXsuFf+ILmjaEM8iCtSFppU+ZD9Sx3zEtTk4RrKDdm
+         Nq5FQp0Qk3sQ72qD6f6llk1A3Av2t1qht/PDS9W6FGiGdGdRTvgP8MazmUYeRSb05Nzr
+         V7hNr3Th1junatKzNhdmg9bsdcL2i3gvWjfBE+UAb/P5+5Z3fiziiXwpJcbwVP7VgO5g
+         UaTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712937714; x=1713542514;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7zE2NMeREY9M0RzVWCwQFXSSfNx2GjxIaqj3+nSSE88=;
+        b=UAIwjiNg/Io7tCqDJEp36RWY25lyI8oqXqLil/xaAjHa5rJenqkvau1/zkuRtw/05v
+         s9FDs9nVM3yYMq3xmlABmwq2u9uWzWWfwOFEy/Ay4RacM+yWtXbTFbaznpuUJGi3La86
+         avMwkhh5cC4aOzIVyRQ0DE6kX6WBNm0JYPlDNM8LxhaAv8ULchwn5HtuVTLq0JJnOvNB
+         R8i3ArC6ve4QdtEE4On/mV4YZreaBghxf8a/oHxej4GgDRX3HodT43B/hxHUtITFIG7p
+         69i+EpI0rr8FAyys/27a34HEVXLCg93n58vr+bWm2Lk0mQO+7c0fPBgJXe1bf1q60Vd2
+         Vgeg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3+mS/w2OxCAO+oqEVL4TOqycy6UXZCkz9sXCLqqQqVv2QhVqrFoDoJHvkFw5S47PrdhtL5tq5KtJTj2bIf8g4bLqqYG7NIEtmo704551rig==
+X-Gm-Message-State: AOJu0YwkZVU9lMqcpdafArDMBjM62XcRv5c8oCfeLY4pJ1sjQ8v+nhxL
+	jEVQNyt2WrbGKEAGIJVLgkcjQxxyNIsUBiVSe7v4oEK7IidIQB1KEDwuOf4Haou/E2O2kC3jqeq
+	kUQ==
+X-Google-Smtp-Source: AGHT+IFKD4Hv8wNoDvr4Y5aQffHL1eNGOeIZjolKkjhO23bzQ9t+IKJIElrdebVXil7KaicTN70CogUiCbU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:66cf:b0:2a5:227f:dd7c with SMTP id
+ z15-20020a17090a66cf00b002a5227fdd7cmr8569pjl.1.1712937714332; Fri, 12 Apr
+ 2024 09:01:54 -0700 (PDT)
+Date: Fri, 12 Apr 2024 09:01:52 -0700
+In-Reply-To: <CALMp9eR6-7va0XUbEYFNVtGdEzmWbAr9pXhLgSL=f9dJyAso7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVbhf_JgO9APwgOVyktazOAyEL-3vM2d-M4ropMDdYH2w@mail.gmail.com>
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-19-xiong.y.zhang@linux.intel.com> <ZhhUyk2uAXqG7GEd@google.com>
+ <CALMp9eR6-7va0XUbEYFNVtGdEzmWbAr9pXhLgSL=f9dJyAso7Q@mail.gmail.com>
+Message-ID: <Zhla8NGvQgzhkclx@google.com>
+Subject: Re: [RFC PATCH 18/41] KVM: x86/pmu: Intercept full-width GP counter
+ MSRs by checking with perf capabilities
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
+	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
+	Xiong Zhang <xiong.y.zhang@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024 at 10:22:42PM -0700, Ian Rogers wrote:
-> On Mon, Apr 8, 2024 at 7:12 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Thu, Apr 11, 2024, Jim Mattson wrote:
+> On Thu, Apr 11, 2024 at 2:23=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
 > >
-> > On Fri, Apr 05, 2024 at 12:09:31AM -0700, Ian Rogers wrote:
-> > > Before polling or sleeping to wait for a test to complete, print out
-> > > ": Running (<num> remaining)" where the number of remaining tests is
-> > > determined by iterating over the remaining tests and seeing which
-> > > return true for check_if_command_finished. After the delay, erase the
-> > > line and either update it with the new number of remaining tests, or
-> > > print the test's result. This allows a user to know a test is running
-> > > and in parallel mode (default) how many of the tests are waiting to
-> > > complete. If color mode is disabled then avoid displaying the
-> > > "Running" message.
+> > On Fri, Jan 26, 2024, Xiong Zhang wrote:
+> > > From: Mingwei Zhang <mizhang@google.com>
+> > >
+> > > Intercept full-width GP counter MSRs in passthrough PMU if guest does=
+ not
+> > > have the capability to write in full-width. In addition, opportunisti=
+cally
+> > > add a warning if non-full-width counter MSRs are also intercepted, in=
+ which
+> > > case it is a clear mistake.
+> > >
+> > > Co-developed-by: Xiong Zhang <xiong.y.zhang@intel.com>
+> > > Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+> > > Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/pmu_intel.c | 10 +++++++++-
+> > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_inte=
+l.c
+> > > index 7f6cabb2c378..49df154fbb5b 100644
+> > > --- a/arch/x86/kvm/vmx/pmu_intel.c
+> > > +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> > > @@ -429,6 +429,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vc=
+pu, struct msr_data *msr_info)
+> > >       default:
+> > >               if ((pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) |=
+|
+> > >                   (pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+> > > +                     if (is_passthrough_pmu_enabled(vcpu) &&
+> > > +                         !(msr & MSR_PMC_FULL_WIDTH_BIT) &&
+> > > +                         !msr_info->host_initiated) {
+> > > +                             pr_warn_once("passthrough PMU never int=
+ercepts non-full-width PMU counters\n");
+> > > +                             return 1;
 > >
-> > Tested and applied, great improvement!
-> 
-> And I think it is broken. Specifically I think the nohang waitpid can
-> cause the later read of the stdout/err pipe to fail. We may need to
-> drain the files before checking. I suspect this as I've seen an
-> increase test fails where the verbose output shows nothing. The only
-> remedy for that in the current code would be to run the tests
-> sequentially, so we should probably back this out for now.
+> > This is broken, KVM must be prepared to handle WRMSR (and RDMSR and RDP=
+MC) that
+> > come in through the emulator.
+>=20
+> Don't tell me that we are still supporting CPUs that don't have
+> "unrestricted guest"! Sigh.
 
-Removing it then,
+Heh, KVM still supports CPUs without VMX virtual NMIs :-)
 
-- Arnaldo
+Practically speaking, if we want to eliminate things like emulated WRMSR/RD=
+MSR,
+a Kconfig to build a reduced emulator would be the way to go.  But while a =
+reduced
+emulator would be nice for host security, I don't think it would buy us muc=
+h from
+a code perspective, since KVM still needs to handle host userspace MSR acce=
+sses.
+
+E.g. KVM could have conditional sanity checks for MSRs that are supposed to=
+ be
+passed through, but unless a reduced emulator is a hard requirement for pas=
+sthrough
+PMUs, we'd still need the code to handle the emulated accesses.  And even i=
+f a
+reduced emulator were a hard requirement, I'd still push for a WARN-and-con=
+tinue
+approach, not a "inject a bogus #GP because KVM screwed up" approach.
