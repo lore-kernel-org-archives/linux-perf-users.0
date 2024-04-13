@@ -1,110 +1,183 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2059.outbound.protection.outlook.com [40.107.237.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FBA2135A
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Apr 2024 14:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713017811; cv=none; b=nOU9j+9u2/UXo16UNrCIpQCol+c4DtH1falCRZj721SAa0NCdfoaV58BqARyQPBFi1b+MGztNn9gr7Q2zi5889U19D2NcTaZBWF/+bWuHWZq/zRywbeM6Sz8l4M5kzksS7nvdimfNKwufI0TszQcax/y9XjvzoTw4pI+qb7OAqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713017811; c=relaxed/simple;
-	bh=DU50FXhrCuqhtNLOaapUXMuCslN3deTrvJGkJumTsUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U/BJ3VDPpjtGmmiMUMhdRBYZ6eDtyLHJzyuPGGtou0uS8xhYb6AK9ldhESTzT/+qrn2ry1g8ZI8IMKqGPkwjR1UwQGTFsIA5BdsfbElaXvlZQI5azOVqMu7pCE6RJdekOcUHhn+xUT0IgGGtqbNXbJJXutu9QEbZw9tC212Q6sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=cAPy4kkf; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BAB4F20A;
+	Sat, 13 Apr 2024 20:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713038886; cv=fail; b=sacb96EtupCf/Q56CGVErXPPfYva3MLIoyHm7MPKXe5o0orF9hthdGvD4RXd1s6kTFqt2m9cb6znFE25uox3vxIwC5rJlVV7dNYmZVjs9CUBkkK0IDYerx4hiBU/X+RWjfdxdMC7P9f0bdsvPaBRQF4RLePnrW2Nn5fL6d3HkjI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713038886; c=relaxed/simple;
+	bh=HNNzN3334tX/pU3zEVAjlWFi1Ge7jvyKR0KtNp1OsAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ofzWirSLUuxR+mkot1sGQVvBTSTX2Cubp+c+wrUhT54kKuEI/0B9yBkMuFFr9blZWbV0nftHLjJbHXT1fRW5IysXZ3gokd50fdzrLq/cixNwRO1xyzN5nwOzl2B7N7V08IEBDqAJHiLiG3Sy4Ct5ojRUcDgm1PlRYFDZaTM0lRI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YtkWpABM; arc=fail smtp.client-ip=40.107.237.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="cAPy4kkf"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc742543119so1680361276.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 13 Apr 2024 07:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1713017809; x=1713622609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wDrdykoIXMbP7phUYiJI1yePs0EFYaz2XrXDwzySQjw=;
-        b=cAPy4kkfSUmZR+hXckSUlPaaef5IwNiFk1XkRTaHmRByL/XdYZzAVkZQw3fQ2RkU/H
-         PDsFtC1QBrJ9aFBk8g878ctQYK/V6YLzMLkGl0Bqrmka7nOk6KnPPPSK9Y+/W5bSPOsu
-         OIUwymznFCGbP2wHqXfzNSAtBsk0cx7S885WCO1ru/X2bHU3PpZmG+3AMw8wNkDIu8QJ
-         QaxuE71FaXyggY+CpM3JqIe77nuRMXEts1Msn9AqGrANKZSrW94MYnYaQJJ3s8BRTcR7
-         fjd+LFixychMnKqi8syz/vjfg2/8v/WobLdfYLEIB423mgOOYi5x1r3Rnd8OWWVEIZts
-         7f3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713017809; x=1713622609;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wDrdykoIXMbP7phUYiJI1yePs0EFYaz2XrXDwzySQjw=;
-        b=Ioa5MMa6w3KZwr1Fqu8XjvDepRKjoWNvdvDgfZlP78AO702P6yhTGeGe7P81R9G2Hu
-         DV/fmDheNW6ZD1VJAyPjCPR93eadbkE25fovQXG/QHfcA6eLDqF+Xju126dLTL7W1xyO
-         w4Jj6tuEhQSD9CbhOrwuWdd/+OkYFNX8ncA+qlHHfutCQxf+WdXLevBn/5R0hitb4Woq
-         2Bj9WLRrcbvASneN2Isg2C2KzRez/LXu3rm1RpaEUkWvb07l0091XR/wi1ePlVIp68ir
-         JKaaij9L+9gPIbw7zJKtevMPt1r08OFF7S1XXhZyvV0k8voiKl6P7QCcQG0+dCG1Ma+y
-         Fing==
-X-Forwarded-Encrypted: i=1; AJvYcCXi8URtuJBpqDcZ0J1NbOcseVObdZ9pS6vp5LlSM2l5VWme4wcfb7elg3zrtG7gg//HG44VlGV2vBZUu0aWBu8HQHw+qij96fWoTMQndJXvyQ==
-X-Gm-Message-State: AOJu0YxPZx46K/nSdjZOjlqkTVoSrwU4dUbZdddW3e3tb7dpoTnHCNz9
-	WMF8flA1a8bQJ307OB1xN6HW/fV3kw6AP11dO8KgOBSXFwXe16wpHD1W5G1dxQ==
-X-Google-Smtp-Source: AGHT+IEPuFA7BoJq94Q7691/uH1K4Hr0sbggqPd6G24r2jhNxtEzpxxCYcjtl26dmMUD1ygx7+PSww==
-X-Received: by 2002:a5b:890:0:b0:dc7:4460:878a with SMTP id e16-20020a5b0890000000b00dc74460878amr4899160ybq.3.1713017809304;
-        Sat, 13 Apr 2024 07:16:49 -0700 (PDT)
-Received: from ip-172-31-11-157.us-east-2.compute.internal (ec2-3-145-99-109.us-east-2.compute.amazonaws.com. [3.145.99.109])
-        by smtp.googlemail.com with ESMTPSA id v5-20020a254805000000b00dcdb6934617sm1193349yba.62.2024.04.13.07.16.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Apr 2024 07:16:48 -0700 (PDT)
-From: Kyle Huey <me@kylehuey.com>
-X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
-To: Kyle Huey <khuey@kylehuey.com>,
-	linux-kernel@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rodgers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Robert O'Callahan <robert@ocallahan.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 2/3] perf/ring_buffer: Trigger IO signals for watermark_wakeup
-Date: Sat, 13 Apr 2024 07:16:18 -0700
-Message-Id: <20240413141618.4160-3-khuey@kylehuey.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240413141618.4160-1-khuey@kylehuey.com>
-References: <20240413141618.4160-1-khuey@kylehuey.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YtkWpABM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j8WuDCbX66hoJbEa46MaN65oRrqhNUby6oAamMBXdNECD+Q59zYhCCgzP7H/xdqWH8vFzx3p8o3a2epxFU9W8NCns7TSgBX5D6qiXtTd9/r1oDSlC/2m7t3IKdjS8t19JODXcrXx1wkKom43uDadTgv25CQfMUETOQz1dcAcf4c9aBrV7N4EhGhOJxbYP1w8bw4iJ+ilfLuo1MX9aILv0xYaZ0vYLqchY2O9Rij8+PQXGCccoudHsVKiUEU9GmvEeMv4j5vOFY5doXT85TfJaAgxHT808ReTWjmZC1jK3yvRJVLKNEQ+7tiRu1CxU2kplSHgwVe9P/LlsffYf3sK4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Ldy4aGEadHWsLGVGxixwC5Xmy2B/Sn2gi1wsIlA9SU=;
+ b=Da6YMRIVZO465D4FtfVtCRK95c/jRORMYs0cGjimzDW9Jp1f2xdr8crlah0f2FzjtMnp3we4/zJwrnhKrsIWXVznKnhHar3SSxdAJuTIGgd9FrtGgAa2z/DrHtWPqnsui7B9pBwj1fMLhhj4JurwtgWfyrdeL9P0v/K3m7McHuqz0nVCf8bgzQCjGbw/19obdEaFdofE7f7Zcu9Lp5uoyskCfbtIldaHzhNE82h+zblNNGF8dQ/SsA+cBME4GjOfHuWoIzWIYrnyp9rIFhrf+LIJr0H5jfe5djvO5il8F1+J8ATvLYVbDNxK8N2VdO8WalKi8qOIpYDULf1ZuoH4Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Ldy4aGEadHWsLGVGxixwC5Xmy2B/Sn2gi1wsIlA9SU=;
+ b=YtkWpABMS/AR9OW1eZo36RHZPgUsbLCreM+F1KcnV8GQ2QFG7cNXMlb5Pec01dEuhKHKejfelddquUVOLRuqYV5Yy0kME3I+C/BMZQD8H2BtNKpY2U3gHntE6qPE8I0QksztK6QgFIdpQK5kUAgBxEO2E5YBJD0ERHTEyEDMKR1QghBcjRlhRjydIhzCmip4818DjiC3JyaznjIZgsonFToRThxKhmyRE/FXNC5/sSujeiANmYKyYPyk5aBh4Xhh2p8vNzf+vBTfzrg3Zv86MM056pbpJIkLY+OEYDwpn/cRKgyP69gVUruGnxKDAq5mCAGGA4iNShI47zZeddNzaw==
+Received: from SA0PR11CA0034.namprd11.prod.outlook.com (2603:10b6:806:d0::9)
+ by CY5PR12MB6647.namprd12.prod.outlook.com (2603:10b6:930:40::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Sat, 13 Apr
+ 2024 20:07:59 +0000
+Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
+ (2603:10b6:806:d0:cafe::60) by SA0PR11CA0034.outlook.office365.com
+ (2603:10b6:806:d0::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.31 via Frontend
+ Transport; Sat, 13 Apr 2024 20:07:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Sat, 13 Apr 2024 20:07:59 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Sat, 13 Apr
+ 2024 13:07:53 -0700
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Sat, 13 Apr
+ 2024 13:07:52 -0700
+Message-ID: <24b88e53-a1fe-4fba-a7b5-ffcbeba88a73@nvidia.com>
+Date: Sat, 13 Apr 2024 13:07:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, "Mike
+ Rapoport" <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, Peter Xu
+	<peterx@redhat.com>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+	<linux-sh@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<x86@kernel.org>
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <20240402125516.223131-2-david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|CY5PR12MB6647:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40dcf203-1e71-41f9-509f-08dc5bf56ae6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/Yh8kiGrxSEYZAQRKZ4+LFpmEH/MXvcK7Bd6ZaKz5mXR7hSl3pBC9OcSHtRPRLv68jtBcL9wDJRMrFW3BwZegnfwQ8Da65eoEJppmnIDnCcY/xfsHHyNWwtEoA/p6HNwQZtQ13xxNzzKQuMFn/ESRAS4fp6g/6oIsgOknsu+EISPCQA21IiTdonAk9nJbN2ndwv/l7DlutS3tZ4MZjoVssLon/GRUlB5D8Wwl5/q+4CocXjkIQa1QLF4eYj9RuIe0lycJrwFKsUEEnVz5u/8VEoaaOYoqxAp4ytevAFWDvKqt4PneEbKWQWBTzyJrlqv9bquDur6v4/jbEH1ujo71HwxFXRIshg8A7jL2mWRitO1fM9v5pZVAdaRN6XwtLwaqxOBVuxCbxC5eer25cFzLWYbB7TNGTHZC+AdBUgwyD6ltsH4a0hy3d2pyWsL3nybbuNzwslnhaMNRlkSqKDeb3Sorm6mmBS3fc7Hnm0gUdI85AiqR9fFvHkmxZKcXZoq1jAtZM3Jp+7dq5sUFwB3xzIweBzh0hb0QiQVjhE+34A5rLvlExI3Oiil5qCoVDIyPtsnfpUgQY3/hyHFGagnlS5FEuvRulIh0PW6Nl31NgPJLTjQDiPTLoW0aBBDldsm3am/hrsyS1p9aXn4WO1vH/EnPrbFTvfADdXyakOf49ffZWIOy8i49rBsuSBMQduj21y0LEmmCdyNXwOuB2Brs+E7O5p5EGgNGV3Nclobg/Z/3GPHxZXIW6eyRlWTzKvj
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2024 20:07:59.6800
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40dcf203-1e71-41f9-509f-08dc5bf56ae6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636C.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6647
 
-perf_output_wakeup() already marks the perf event fd available for polling.
-Trigger IO signals with FASYNC too.
+On 4/2/24 5:55 AM, David Hildenbrand wrote:
+> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+> all relevant internal functions to start with "gup_fast", to make it
+> clearer that this is not ordinary GUP. The current mixture of
+> "lockless", "gup" and "gup_fast" is confusing.
+> 
+> Further, avoid the term "huge" when talking about a "leaf" -- for
+> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+> stays.
+> 
+> What remains is the "external" interface:
+> * get_user_pages_fast_only()
+> * get_user_pages_fast()
+> * pin_user_pages_fast()
+> 
+> The high-level internal functions for GUP-fast (+slow fallback) are now:
+> * internal_get_user_pages_fast() -> gup_fast_fallback()
+> * lockless_pages_from_mm() -> gup_fast()
+> 
+> The basic GUP-fast walker functions:
+> * gup_pgd_range() -> gup_fast_pgd_range()
+> * gup_p4d_range() -> gup_fast_p4d_range()
+> * gup_pud_range() -> gup_fast_pud_range()
+> * gup_pmd_range() -> gup_fast_pmd_range()
+> * gup_pte_range() -> gup_fast_pte_range()
+> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+> * gup_huge_pud()  -> gup_fast_pud_leaf()
+> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
 
-Signed-off-by: Kyle Huey <khuey@kylehuey.com>
----
- kernel/events/ring_buffer.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This is my favorite cleanup of 2024 so far. The above mix was confusing
+even if one worked on this file all day long--you constantly have to
+translate from function name, to "is this fast or slow?". whew.
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 60ed43d1c29e..4013408ce012 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -22,6 +22,10 @@ static void perf_output_wakeup(struct perf_output_handle *handle)
- 	atomic_set(&handle->rb->poll, EPOLLIN);
- 
- 	handle->event->pending_wakeup = 1;
-+
-+	if (*perf_event_fasync(handle->event) && !handle->event->pending_kill)
-+		handle->event->pending_kill = POLL_IN;
-+
- 	irq_work_queue(&handle->event->pending_irq);
- }
- 
+
+> 
+> The weird hugepd stuff:
+> * gup_huge_pd() -> gup_fast_hugepd()
+> * gup_hugepte() -> gup_fast_hugepte()
+> 
+> The weird devmap stuff:
+> * __gup_device_huge_pud() -> gup_fast_devmap_pud_leaf()
+> * __gup_device_huge_pmd   -> gup_fast_devmap_pmd_leaf()
+> * __gup_device_huge()     -> gup_fast_devmap_leaf()
+> * undo_dev_pagemap()      -> gup_fast_undo_dev_pagemap()
+> 
+> Helper functions:
+> * unpin_user_pages_lockless() -> gup_fast_unpin_user_pages()
+> * gup_fast_folio_allowed() is already properly named
+> * gup_fast_permitted() is already properly named
+> 
+> With "gup_fast()", we now even have a function that is referred to in
+> comment in mm/mmu_gather.c.
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   mm/gup.c | 205 ++++++++++++++++++++++++++++---------------------------
+>   1 file changed, 103 insertions(+), 102 deletions(-)
+> 
+
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
 -- 
-2.34.1
+John Hubbard
+NVIDIA
 
