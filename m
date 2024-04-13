@@ -1,75 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B782D7A8;
-	Sat, 13 Apr 2024 12:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC87745977
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Apr 2024 14:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713012540; cv=none; b=m3em2SsIgtH+LHHL/KPGRbzye84Nz9LkFDEBmuvZs1Dj+VDkwWmVCYyp4d2SuVbk14bYuQqVtmfed304GidJCiD+MDLWJJFIgI5YWGnE2+opcdrPbM8SQk4n50VEa/Y02p/JMOpw/v9FgECzaFf+ZpmN1UH+AR8NX7UYjRg/ZXw=
+	t=1713017794; cv=none; b=Saxce7sUX90nbF+stw7KzRftFFv0vlPNxlf7KUQtfHhLBcgh7PYX79Tbt9lzoOx7LRGJSsOtUDF9l1Qaximo8/ruQR3Z2qi79MHNkMLsn3bSKMWICRJtZ/xzIo8ZO5Un8CoJkZld/YRL7SQt7L/miEaMsAxlDTGA2glP7J8PUUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713012540; c=relaxed/simple;
-	bh=rQ7XFjYmCo15plBiewfhM9yUrSUu3tJha6ndkwlxQ8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hxrhxhc0rZS1XWNfVIKa3aLXJiWjlYLg3+ZlRFFac+2yCeZ2sCKV2JlBCGePvdKMJMHAVx1k/lBZgNTGmtBoPmkjBaA1taXVqqZkfGWklGY7sIY7iw9ia7INWwTbFgau5QRELAVPRv+vRboRximD6aqG4fXTxpYG2C6cHy7XDnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1B9FC113CD;
-	Sat, 13 Apr 2024 12:48:58 +0000 (UTC)
-Date: Sat, 13 Apr 2024 08:48:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
- aahringo@redhat.com, dcook@linux.microsoft.com, Josh Poimboeuf
- <jpoimboe@redhat.com>
-Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
-Message-ID: <20240413084857.147c6f40@rorschach.local.home>
-In-Reply-To: <20240413105338.GD40213@noisy.programming.kicks-ass.net>
-References: <20240412001732.475-1-beaub@linux.microsoft.com>
-	<20240412071245.GD30852@noisy.programming.kicks-ass.net>
-	<20240412163724.GB467-beaub@linux.microsoft.com>
-	<20240413105338.GD40213@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1713017794; c=relaxed/simple;
+	bh=dtcXlJarwcAh738y46KpVauFfDZzs+CPG9CoF31We34=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iFWv4YxRO06WsCMiYscKcwC9KEo+3CIacVAj5ik1W2wryxrbzvXjMJzPwCNnGl/38Nx0s/tc35ji+aDdp53AGNUHZAd+1p4xiMPIIDEJ+GfkmP0IHQtciQZkmZShvBY34UI0Yq7Hf1ZT+s3E7s8ZmBUpLh7eZjFPbDK7ewMj/yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=Nu2bsjxV; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="Nu2bsjxV"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso1777669276.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 13 Apr 2024 07:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google; t=1713017791; x=1713622591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wlVoXtYOUZbgedQGH68sMA7/TKjo/LarRqMzSUO0lI8=;
+        b=Nu2bsjxVqTg/ziqOueDSd91dHssNR9yH/ZebKAPCUg2QODI4KC4Pzbzw9M6/uLPM0e
+         W7YTVxWBO4rp2+nsL5PGCmxHGjkTA0u61oCYTsTfNj2Rhi3L959+2Im1yZsJlbfNDrOa
+         PMsGYXn2p7DiTgi3Rc19eo26VE5+z30pxR1QiFGKcmkoRLo0fYtfA+Fnhb90j6Q2gslY
+         zjbRoZ+kYS6oPWwPZwXLgceEXIqownbnI2Dh/xZ/7h4I6A2jmHUG20iTO2RjNC/LHQPO
+         zS9rXQbjckRziA9xewB0UoT5wFoWDXLc3htDDGW+RWD0PejiOnGqlqwl/HGFv/37Y9zQ
+         4aHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713017791; x=1713622591;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wlVoXtYOUZbgedQGH68sMA7/TKjo/LarRqMzSUO0lI8=;
+        b=RrxuB7iPlKO++QzCPB3keX0eyjj2IBtKf+ChBaf3eN0pM5L/QBr1nJXvlr46NUQ/3r
+         oCf+1vRImotrm7yI9KHLPg4JvyNfrRMyAZOyWZA/KSqgexEwcNViit4kg8oghKJWmlsX
+         F/eDgAuku0QmOxvh+76BxliSnT78XmBHx4WCIOPE9SDWUzhuEG8RZadvKUU8e0Owad+j
+         uIVCDP8Ux/3FP1jI5fAa4shMKOJqU7jx9kZcV9u1sEBPtW7Ah9Gdf1w1IvmoSeS8MIcj
+         TWE8ntfoUjhYc9ZS4tsWre6wG0tB+Q/1dSzo9mWAlTr+Z4hLCBNZu5EeZZEq1zsUTFjM
+         D9DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/WNHT/SwVcayeG/48AZ0bDWz5rDCURE63b3dpx4g+HF8o7bT79FKltgyyd9ihmRNZnfJSS4YjziHfu06ZIlfk37B0GElrQNFmG8RNguL/KA==
+X-Gm-Message-State: AOJu0YxfvFxQvoCJShKX9RPfUHsNRwP1TRrdEueN1vHGTcs7VnB71XYL
+	TMdkb7DfgO1Y6aWKh7/+r3IueOXQ1nNENGXQNHDq9UCY+eqK6eo8GylXI0ZS2g==
+X-Google-Smtp-Source: AGHT+IHfzpuJoLkZ5tVYHvUeMheeAQWCbrYbrG2Pq0evod13mRpefIayqHQkJwSzDH+nNCGjp5Q6RQ==
+X-Received: by 2002:a25:8083:0:b0:dc6:bd4c:b119 with SMTP id n3-20020a258083000000b00dc6bd4cb119mr5325358ybk.55.1713017791674;
+        Sat, 13 Apr 2024 07:16:31 -0700 (PDT)
+Received: from ip-172-31-11-157.us-east-2.compute.internal (ec2-3-145-99-109.us-east-2.compute.amazonaws.com. [3.145.99.109])
+        by smtp.googlemail.com with ESMTPSA id v5-20020a254805000000b00dcdb6934617sm1193349yba.62.2024.04.13.07.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Apr 2024 07:16:31 -0700 (PDT)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rodgers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Robert O'Callahan <robert@ocallahan.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 1/3] perf: Move perf_event_fasync() to perf_event.h
+Date: Sat, 13 Apr 2024 07:16:16 -0700
+Message-Id: <20240413141618.4160-2-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240413141618.4160-1-khuey@kylehuey.com>
+References: <20240413141618.4160-1-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 13 Apr 2024 12:53:38 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+This will allow it to be called from perf_output_wakeup().
 
-> On Fri, Apr 12, 2024 at 09:37:24AM -0700, Beau Belgrave wrote:
-> 
-> > > Anyway, since we typically run stuff from NMI context, accessing user
-> > > data is 'interesting'. As such I would really like to make this work
-> > > depend on the call-graph rework that pushes all the user access bits
-> > > into return-to-user.  
-> > 
-> > Cool, I assume that's the SFRAME work? Are there pointers to work I
-> > could look at and think about what a rebase looks like? Or do you have
-> > someone in mind I should work with for this?  
-> 
-> I've been offline for a little while and still need to catch up with
-> things myself.
-> 
-> Josh was working on that when I dropped off IIRC, I'm not entirely sure
-> where things are at currently (and there is no way I can ever hope to
-> process the backlog).
-> 
-> Anybody know where we are with that?
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+---
+ include/linux/perf_event.h | 8 ++++++++
+ kernel/events/core.c       | 8 --------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-It's still very much on my RADAR, but with layoffs and such, my
-priorities have unfortunately changed. I'm hoping to start helping out
-in the near future though (in a month or two).
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 13a2b05cc431..4924bae0a015 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1680,6 +1680,14 @@ perf_event_addr_filters(struct perf_event *event)
+ 	return ifh;
+ }
+ 
++static inline struct fasync_struct **perf_event_fasync(struct perf_event *event)
++{
++	/* only the parent has fasync state */
++	if (event->parent)
++		event = event->parent;
++	return &event->fasync;
++}
++
+ extern void perf_event_addr_filters_sync(struct perf_event *event);
+ extern void perf_report_aux_output_id(struct perf_event *event, u64 hw_id);
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cd88d1e89eb8..7358b11f9003 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6684,14 +6684,6 @@ static const struct file_operations perf_fops = {
+  * to user-space before waking everybody up.
+  */
+ 
+-static inline struct fasync_struct **perf_event_fasync(struct perf_event *event)
+-{
+-	/* only the parent has fasync state */
+-	if (event->parent)
+-		event = event->parent;
+-	return &event->fasync;
+-}
+-
+ void perf_event_wakeup(struct perf_event *event)
+ {
+ 	ring_buffer_wakeup(event);
+-- 
+2.34.1
 
-Josh was working on it, but I think he got pulled off onto other
-priorities too :-p
-
--- Steve
