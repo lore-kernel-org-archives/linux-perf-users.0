@@ -1,163 +1,137 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7161B7F4
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Apr 2024 04:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4898E4C65;
+	Sat, 13 Apr 2024 04:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712981298; cv=none; b=YfBH3gfkOrQQbB0g79kMnExkAxQFbGVYxpfhHTUQroX7zLZHUW6UueoKTnZbxkKgh6hnO8zfpAof2+gTs19Bs2uTu9W19TXK0bxNhmw5jBBM3x5R2bgDRoS61zYO4TrfJCkWprMSqUmP/ctcL4BRx2rvm9hpdaIWsO2BIzzjrOA=
+	t=1712981588; cv=none; b=BASXKdJAgBX7gPZUS/YvvJ+nSmdijUIdlz/GLG4CopRBj5Rb5FcwGfbNNca6me1TytHW4vGicx3ahVnP/gGzyVFlgQcr2nenbnzKTYqKR3Hu8OioqlPK+yktQHFFyaN8ioMAzMNSSMd1cD8ZLH0/u7ihYcoqyQIRpypD8VXnLls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712981298; c=relaxed/simple;
-	bh=psg6T4xGQd7JrMIyC4K0Af0EDOUtPx/yuI+ni4g9NhA=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=uSWaIWPPYTbOovNwrRJuqcb8pCQzv+ZM7QKbWF3f6AmPgLT0WtyiNQRgYl9rynPkN1W6ZRRxBHcTNMMVhjbQfFibTYUEN0mPcqPsLmZf6CGKy9V/w6c882h5v20oflNFM7py9UyLA2IBMXqmm3ZN+TgKe3l14a2HHbv0Dov2qLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jnlUx/Vm; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1712981588; c=relaxed/simple;
+	bh=P0ICQc6p95hpk0kk9xF4xUigjuVNicJgP60eXiKynkY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sqM1EnMixZ+XrfHSHFLiXooBArjKLlbKBRhqB8ORx1lU3q9axn34tFu/NiZ9brWmWH61VUm0ccy9DLhD2Q29yJGEiksL8RbMAcB1/wMwNl7wcy/MgK7ROnB1WXzvJSot78pYKwmKuJHquHuvR9trGLzLcIXhFHMOp/+4jpk9Yrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afRqM0fW; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jnlUx/Vm"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cc00203faso28621597b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Apr 2024 21:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712981295; x=1713586095; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1vfm6D8vbfikeYPBREDbfZMw+ntrB8izme+ZrPR5K4g=;
-        b=jnlUx/Vm7xS7cK4wn4FmWlBvrQFc5piwalUmAgG1dqtNq0WTj4YpOjbOxndfw3wrPq
-         vITcySn76KJoMfUkrQXbdtCEWJ8/OCADAjD+88bgkoekN3oEwOP96tJ/mJLWKq77590b
-         qYq+7xPxHRsMB44GdMvPYiEXCelRuuLCXPbXEbhCdenJWZkELpfbNqvfJJy9LQWtuSnK
-         E1RAgtBBNaF6RaQDiKFGHcQhNxcKFzKj3aQAFyTHVCaT+MWINNode5xt/+TYELo7QTbP
-         P0EeLlBWVnyHGT5YKvkHcL+ApFjo4/dlV0qkFheDz8QCffDA8rqzhxJYLBgqnDQdEAJZ
-         +onA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712981295; x=1713586095;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1vfm6D8vbfikeYPBREDbfZMw+ntrB8izme+ZrPR5K4g=;
-        b=fxKi/8NkPlDRxNulo+AxnqzNJoqkVhntUd9a1xqC3ATa4fJur15Uwj1JN23TRXJ+XR
-         ilTeNZF7EHfZcDMIWMdoq/BeTBWcIjlBH9t8mj+scq6ZgFv9MABMN1uiu+MGAgEJYjvZ
-         xn4m3vCs5quhlptTKIsmqyn5aMKqWmuVFAJpPQkySbKx6sMfB3xQdzEHaWHzamBJp4Wy
-         +zScv1/9YzsKJMG0EkbA60+yYChnjkRZZUr2ZlN6cwbwaDAjfvAK3Nj99gV3Qtvhf033
-         wECU3kMfyekjCxOnte1JYMLE8N7w08cvhCE+LxDecmBYXmVUcp248Pl9hL+cRw2MSg/U
-         toBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUEsXH25xGbbU5J7TdvWlhRPp+Kbgn7guqpG8Z0MiaDrLLk3BDvqDcm+bLn5UZpV/ClyX8hsBt7ApvU0Q3na+/l1BxMds+wN+PewcWmy8uBw==
-X-Gm-Message-State: AOJu0Yy/ahLxG9I4dFSjY10iS2VMRxaKtYYTnumUOtnycZhi9CYcH06U
-	1CsB05clOfMWDOMngL4uk8qUfZDeuYw8XJaEynQFOw2/JWnApXq+cF5vlaL5V8g5XDhH63sOlpI
-	U4Fhoow==
-X-Google-Smtp-Source: AGHT+IGc68h3ITmPYl/wBrgeY+RnGa0UfYbf173Yk6snhK1Y/ir4lgI2FATkpMn60saSN8j3ruRp60tnjfKQ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bcbe:4239:4b57:df45])
- (user=irogers job=sendgmr) by 2002:a81:49c7:0:b0:615:4295:2871 with SMTP id
- w190-20020a8149c7000000b0061542952871mr1016283ywa.7.1712981295572; Fri, 12
- Apr 2024 21:08:15 -0700 (PDT)
-Date: Fri, 12 Apr 2024 21:08:12 -0700
-Message-Id: <20240413040812.4042051-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afRqM0fW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712981587; x=1744517587;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=P0ICQc6p95hpk0kk9xF4xUigjuVNicJgP60eXiKynkY=;
+  b=afRqM0fWsJQgmi5Oy1As1em3bC16MChi20KdSZUkjKRH34Ft69AGkq71
+   N4aRZR4la0RoBBSP+w3sDWwYdNt4dJWKYGMT+HhYXZAiRi5+tOD2EtyiA
+   ky2x4ii8fBKWedy8SUNZDZH7n4OglrYq4DBbMcAlVbFDHOFQI5cAiBsmj
+   SVElpc1NDOmJgQrNMv5oCtDd8R7/GnwRJwS9rMvoLCy7b505YwPFWOTZR
+   GDFjYDLhERLt60PGWSD+4jKobw2hdfAVnElMHfFlU2+qN6qXrUPVHyUUj
+   9D4nDfarxt4qt12rNOEVpUnlsE6YgCt1aTqsJBwdmcxzXJm2+98EX0jCh
+   Q==;
+X-CSE-ConnectionGUID: bSnRlzrNQb6rs5D7yJqWVw==
+X-CSE-MsgGUID: 8TgulaYtReOCQPgX8V/BWw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19867301"
+X-IronPort-AV: E=Sophos;i="6.07,198,1708416000"; 
+   d="scan'208";a="19867301"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 21:13:06 -0700
+X-CSE-ConnectionGUID: Psw8T3LDSSWfdBZZA4W4yw==
+X-CSE-MsgGUID: 2ienEDwhR0+oRB6avL5SMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,198,1708416000"; 
+   d="scan'208";a="26213713"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 21:13:01 -0700
+Message-ID: <e0fe15f6-993c-45ec-aea2-531a055fb0cd@linux.intel.com>
+Date: Sat, 13 Apr 2024 12:12:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-Subject: [RFC PATCH v1] perf pmu: Assume sysfs events are always lowercase
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 37/41] KVM: x86/pmu: Allow writing to fixed counter
+ selector if counter is exposed
+To: Sean Christopherson <seanjc@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
+ kan.liang@intel.com, zhenyuw@linux.intel.com, jmattson@google.com,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-38-xiong.y.zhang@linux.intel.com>
+ <ZhheJUWRhCmmYa_F@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZhheJUWRhCmmYa_F@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Perf event names aren't case sensitive. For sysfs events the entire
-directory of events is read then iterated comparing names in a case
-insensitive way, most often to see if an event is present.
 
-Consider:
-$ perf stat -e inst_retired.any true
+On 4/12/2024 6:03 AM, Sean Christopherson wrote:
+> On Fri, Jan 26, 2024, Xiong Zhang wrote:
+>> From: Mingwei Zhang <mizhang@google.com>
+>>
+>> Allow writing to fixed counter selector if counter is exposed. If this
+>> fixed counter is filtered out, this counter won't be enabled on HW.
+>>
+>> Passthrough PMU implements the context switch at VM Enter/Exit boundary the
+>> guest value cannot be directly written to HW since the HW PMU is owned by
+>> the host. Introduce a new field fixed_ctr_ctrl_hw in kvm_pmu to cache the
+>> guest value.  which will be assigne to HW at PMU context restore.
+>>
+>> Since passthrough PMU intercept writes to fixed counter selector, there is
+>> no need to read the value at pmu context save, but still clear the fix
+>> counter ctrl MSR and counters when switching out to host PMU.
+>>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>   arch/x86/include/asm/kvm_host.h |  1 +
+>>   arch/x86/kvm/vmx/pmu_intel.c    | 28 ++++++++++++++++++++++++----
+>>   2 files changed, 25 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index fd1c69371dbf..b02688ed74f7 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -527,6 +527,7 @@ struct kvm_pmu {
+>>   	unsigned nr_arch_fixed_counters;
+>>   	unsigned available_event_types;
+>>   	u64 fixed_ctr_ctrl;
+>> +	u64 fixed_ctr_ctrl_hw;
+>>   	u64 fixed_ctr_ctrl_mask;
+> Before introduce more fields, can someone please send a patch/series to rename
+> the _mask fields?  AFAIK, they all should be e.g. fixed_ctr_ctrl_rsvd, or something
+> to that effect.
 
-The event inst_retired.any may be present in any PMU, so every PMU's
-sysfs events are loaded and then searched with strcasecmp to see if
-any match. This event is only present on the cpu PMU as a json event
-so a lot of events were loaded from sysfs unnecessarily just to prove
-an event didn't exist there.
+Yeah, I remember I ever said to cook a patch to rename all these _mask 
+fields. I would do it now.
 
-This change avoids loading all the events by assuming sysfs event
-names are always lowercase. It then uses file exists and only loads
-the events when the desired event is present.
 
-For the example above, the number of openat calls measured by perf
-trace on a tigerlake laptop goes from 325 down to 255. The reduction
-will be larger for machines with many PMUs, particularly replicated
-uncore PMUs.
-
-Make pmu_aliases_parse early return when aliases are loaded, ensure
-the function is called before all uses of the aliases list.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ab30f22eaf10..ce72c99e4f61 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -425,9 +425,16 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
- {
- 	struct perf_pmu_alias *alias;
- 
--	if (load && !pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
-+	if (load && !pmu->sysfs_aliases_loaded) {
-+		char event_file_name[FILENAME_MAX + 8];
- 
-+		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
-+		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+			event_file_name[i] = tolower(event_file_name[i]);
-+
-+		if (perf_pmu__file_exists(pmu, event_file_name))
-+			pmu_aliases_parse(pmu);
-+	}
- 	list_for_each_entry(alias, &pmu->aliases, list) {
- 		if (!strcasecmp(alias->name, name))
- 			return alias;
-@@ -605,6 +612,9 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
- 	size_t len;
- 	int fd, dir_fd;
- 
-+	if (pmu->sysfs_aliases_loaded)
-+		return 0;
-+
- 	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
- 	if (!len)
- 		return 0;
-@@ -1689,9 +1699,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- {
- 	size_t nr;
- 
--	if (!pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
--
-+	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases;
- 
- 	if (pmu->cpu_aliases_added)
-@@ -1750,6 +1758,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	struct strbuf sb;
- 
- 	strbuf_init(&sb, /*hint=*/ 0);
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -2154,6 +2163,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	if (!pmu)
- 		return NULL;
- 
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		struct perf_event_attr attr = {.config = 0,};
--- 
-2.44.0.683.g7961c838ac-goog
-
+>
+> Because I think we should avoid reinventing the naming wheel, and use "shadow"
+> instead of "hw", because KVM developers already know what "shadow" means.  But
+> "mask" also has very specific meaning for shadowed fields.  That, and "mask" is
+> a freaking awful name in the first place.
+>
+>>   	u64 global_ctrl;
+>>   	u64 global_status;
+>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>> index 713c2a7c7f07..93cfb86c1292 100644
+>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>> @@ -68,6 +68,25 @@ static int fixed_pmc_events[] = {
+>>   	[2] = PSEUDO_ARCH_REFERENCE_CYCLES,
+>>   };
+>>   
+>> +static void reprogram_fixed_counters_in_passthrough_pmu(struct kvm_pmu *pmu, u64 data)
+> We need to come up with shorter names, this ain't Java.  :-)  Heh, that can be
+> another argument for "mediated", it saves three characters.
+>
+> And somewhat related, kernel style is <scope>_<blah>, i.e.
+>
+> static void mediated_pmu_reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
