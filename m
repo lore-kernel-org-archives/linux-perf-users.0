@@ -1,165 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F4B3DBB7;
-	Sat, 13 Apr 2024 09:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9983E474;
+	Sat, 13 Apr 2024 10:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713002189; cv=none; b=dNznbpcJ5iZs5l+Cik4vKLdHuBLqxBNH4tZzD2C7HJxzN0tQNEBEWwFixIQu79RwnrK9hbVCnB4FaOHpSPe+xr6ZDrgJ52rw+4YSTK30dQeVKfEkLzC4mnjC63qW3ri3FfXgdnwizveCHGthe92JcF2xZ5twOpER3NuQRdLp+VY=
+	t=1713005638; cv=none; b=Bu8ZuyTDb9C/rvGXo+SftwBO6zXZRSt2ftSybtdy0tSxFwrUdioMNUXdjfEVu96G8oIjPfq4ukdZb22RmIMszvgGFtbelc+2/K8chU3hMOZoc/371z2gnUMZ4m3fxd30rstlkxbliqnpKM6O9ZUVzBw5PSASnV1Z+btWUJnuQgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713002189; c=relaxed/simple;
-	bh=QDdFeOtdYZxjp46RxGOVjOsa4iTVpoIZG/FPIUq7PkU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4sb9BW3qRClr6agh2lOEc+GAWDMbBtdlx5PmfUjlVAuvD6YKQoFn9CuJfcESE+aYsJLN3ZK4NsGqku47mN4dWdTvbgvPruaSZpu3wOUYr5UG6wVEp43cieghAV2zGliEDhPZPVMKjb00GpIaObQAXTRS8P6zHIHFMSHtylKVp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFZQ2ioQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713005638; c=relaxed/simple;
+	bh=J/I69OHPYRW3oenSHCI4V2tqpjIkZ2xEoS0CcFpA8jM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGpDNameZyNJ0AIXX4XKtEu7DoUQtZ4Kmpv52CMtFzDKgtP3F5fS2ccT14Fbskexk4sMNW1hxq8U8U2qAZAcZ1rMkWOOhIiZ2uoQC43XviPxqWn1XXdixGOvJH5NGsGq0s4TPloUZ30fE6ZYooy68V6pDU9DFj+xbM+XhhFtzf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZfhvQYmY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFZQ2ioQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB85C4AF55;
-	Sat, 13 Apr 2024 09:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713002188;
-	bh=QDdFeOtdYZxjp46RxGOVjOsa4iTVpoIZG/FPIUq7PkU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mFZQ2ioQYI4SPEajzb0CoDJ+DBpEtqV/6Z/BFQ4PKiYU1objwuCL1h0YEV5wVvaaV
-	 CStVGbxbg2PLEvUpiruu3vkH/y4cM4+cyaR6uTFrqiuCgSAt4YmdU+kQNO4mhteYE5
-	 q333pUGrVdvWTX2jJozMVr1WfreRxN9CZWgNdxAf4RoHKNGu901fhZ7/hHch++3d1I
-	 m2eFAZSX3y2YCFXBDOjGGbQYp+igVsDeuNqTryAXEm0o7f2cHg2zXaMLKr1soTFZ2j
-	 ofMp5Ohw4rwS2q0YaHgiHwMQ7+YkitOG5MjuKApjtCEFb8HYoNf/A99GWK9EyWwGw/
-	 8+Y5NXUY8UrNA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rva7W-0047Ih-AA;
-	Sat, 13 Apr 2024 10:56:26 +0100
-Date: Sat, 13 Apr 2024 10:56:25 +0100
-Message-ID: <86h6g5si0m.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Will Deacon <will@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZfhvQYmY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EtZCvz9OOwHhF+AnRS3IqhTk9IyXCEDTR32VzQ0riNg=; b=ZfhvQYmY2cyVPFtNeMwj7Ssg7y
+	QZYW3DWdLN4jyoKEJb1AfrjkPp65YCjtz8ziDa6lnb+0LIwSFwI96PF5aRDn1HTIbBsaNIa6slIsA
+	AkbKD8TA4qE0VpXDW/zo5cYZAy0kUitgOOJReJqsOzxWkoaWS5Cx1AaPLNdYFb0s1T81cGtQ+//DR
+	NxgwByjXNiLNWw1FEiXJSbn34diSGNtX36MefxbosGuJsUZbMHicSNxYpf538VEE5awY82WYoy51f
+	MDw7w4jVyNZGb86RNk/JbAN/cmIQhvQbMLyMp7GBrkwVIh8SKvUqVe55U4d9r8npyfwqxzrz/+gRl
+	2dj5qvSQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rvb0t-0000000BFWj-16F7;
+	Sat, 13 Apr 2024 10:53:39 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E750930057A; Sat, 13 Apr 2024 12:53:38 +0200 (CEST)
+Date: Sat, 13 Apr 2024 12:53:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-In-Reply-To: <ZhlLHtfeSHk9gRRO@google.com>
-References: <20240405115815.3226315-1-pbonzini@redhat.com>
-	<20240405115815.3226315-2-pbonzini@redhat.com>
-	<20240412104408.GA27645@willie-the-truck>
-	<86jzl2sovz.wl-maz@kernel.org>
-	<ZhlLHtfeSHk9gRRO@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
+	aahringo@redhat.com, dcook@linux.microsoft.com,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+Message-ID: <20240413105338.GD40213@noisy.programming.kicks-ass.net>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+ <20240412163724.GB467-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: seanjc@google.com, will@kernel.org, pbonzini@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oliver.upton@linux.dev, zhaotianrui@loongson.cn, maobibo@loongson.cn, tsbogend@alpha.franken.de, npiggin@gmail.com, anup@brainfault.org, atishp@atishpatra.org, akpm@linux-foundation.org, david@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412163724.GB467-beaub@linux.microsoft.com>
 
-On Fri, 12 Apr 2024 15:54:22 +0100,
-Sean Christopherson <seanjc@google.com> wrote:
+On Fri, Apr 12, 2024 at 09:37:24AM -0700, Beau Belgrave wrote:
+
+> > Anyway, since we typically run stuff from NMI context, accessing user
+> > data is 'interesting'. As such I would really like to make this work
+> > depend on the call-graph rework that pushes all the user access bits
+> > into return-to-user.
 > 
-> On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > > Also, if you're in the business of hacking the MMU notifier code, it
-> > > would be really great to change the .clear_flush_young() callback so
-> > > that the architecture could handle the TLB invalidation. At the moment,
-> > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > > being set by kvm_handle_hva_range(), whereas we could do a much
-> > > lighter-weight and targetted TLBI in the architecture page-table code
-> > > when we actually update the ptes for small ranges.
-> > 
-> > Indeed, and I was looking at this earlier this week as it has a pretty
-> > devastating effect with NV (it blows the shadow S2 for that VMID, with
-> > costly consequences).
-> > 
-> > In general, it feels like the TLB invalidation should stay with the
-> > code that deals with the page tables, as it has a pretty good idea of
-> > what needs to be invalidated and how -- specially on architectures
-> > that have a HW-broadcast facility like arm64.
-> 
-> Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-> straightforward solution would be to let architectures override flush_on_ret,
-> but I would prefer something like the below as x86 can also utilize a range-based
-> flush when running as a nested hypervisor.
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index ff0a20565f90..b65116294efe 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -601,6 +601,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
->         struct kvm_gfn_range gfn_range;
->         struct kvm_memory_slot *slot;
->         struct kvm_memslots *slots;
-> +       bool need_flush = false;
->         int i, idx;
->  
->         if (WARN_ON_ONCE(range->end <= range->start))
-> @@ -653,10 +654,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
->                                         break;
->                         }
->                         r.ret |= range->handler(kvm, &gfn_range);
-> +
-> +                       /*
-> +                        * Use a precise gfn-based TLB flush when possible, as
-> +                        * most mmu_notifier events affect a small-ish range.
-> +                        * Fall back to a full TLB flush if the gfn-based flush
-> +                        * fails, and don't bother trying the gfn-based flush
-> +                        * if a full flush is already pending.
-> +                        */
-> +                       if (range->flush_on_ret && !need_flush && r.ret &&
-> +                           kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start
-> +                                                            gfn_range.end - gfn_range.start + 1))
-> +                               need_flush = true;
->                 }
->         }
->  
-> -       if (range->flush_on_ret && r.ret)
-> +       if (need_flush)
->                 kvm_flush_remote_tlbs(kvm);
->  
->         if (r.found_memslot)
+> Cool, I assume that's the SFRAME work? Are there pointers to work I
+> could look at and think about what a rebase looks like? Or do you have
+> someone in mind I should work with for this?
 
-I think this works for us on HW that has range invalidation, which
-would already be a positive move.
+I've been offline for a little while and still need to catch up with
+things myself.
 
-For the lesser HW that isn't range capable, it also gives the
-opportunity to perform the iteration ourselves or go for the nuclear
-option if the range is larger than some arbitrary constant (though
-this is additional work).
+Josh was working on that when I dropped off IIRC, I'm not entirely sure
+where things are at currently (and there is no way I can ever hope to
+process the backlog).
 
-But this still considers the whole range as being affected by
-range->handler(). It'd be interesting to try and see whether more
-precise tracking is (or isn't) generally beneficial.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Anybody know where we are with that?
