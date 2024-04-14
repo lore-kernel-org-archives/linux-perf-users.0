@@ -1,135 +1,119 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2078.outbound.protection.outlook.com [40.107.102.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8976B548E6;
-	Sat, 13 Apr 2024 20:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713039155; cv=fail; b=pNI607GHOgMBkA+yH5z7zSXquCNKr/P8JhPe/gRjYNJS7MelXcZt6o1TwdE56gwr7SbxsQigtzXczNNMmmKb6jp8aJE/YR1wXHX7e0rvVXMKE5X7zSMX3n8CbAAVBtwG41AT+ks0XTKXV2vkD/h5I5xQC2Jol/le9HhjNcdS7vM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713039155; c=relaxed/simple;
-	bh=VUOES4TS/NFTFhKly25Qx2YekhUp/wBZqIgUIb4dJ+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GuhoZqU38Ds2h4Q/05PITBcv+dtp0PYJyVx0qrzB2m8uTTDMwc67XMgYTtYwLlrhYDB6Hj0TKPmYzz5EK/ggxtDIdH5/uuB3+yaFOs2OHc7TjU6tGgXywUjzo4b8KN9MOoEAS9y0zzfvJfAa0rtxJBqqSBgUs3nl4QhV9pf2zNE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ccn8w4ht; arc=fail smtp.client-ip=40.107.102.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C9623B1;
+	Sun, 14 Apr 2024 11:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713094900; cv=none; b=dcAg7rw03RSO0vgsgnVhYbWxdbCVLMvrKRWPMVSfSCIewlM8rAcnqwMRXuHJklvzIM0I+pLyvyqZP19KbmLhAz9Lz6hhPakdXILnwahv4BBNQ3Ll7QfYpsXWVe8XQlk3QLZfp+zV4CjcJAbnHcMEMEeYlFSpy7I6Kv4Vr526ZVw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713094900; c=relaxed/simple;
+	bh=EZn6yYKuPAbbBUTgvhkM1XRueowJIMNL6Uc2yk7bXLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YSr1n/G2IKVH1yYDUYDpLm43T5YwiEKZZgn0caGNrgNA+3AkbA09FfWx48eOBOcDAzmTxJjx6NeNCTnkcjd9w+y+4/t3GH/ZjT3yi36DpDp/dCK2fjA9ss5KEnAlCAvPwy9i2b6DtD/7HhC96CaCcqonqLYu34jSQvbg74RzMGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmZJn/Wy; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ccn8w4ht"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HUEVyDVbrG8K+tLel9BNv4Z5t63FwSTOmz+g+XXdF8mjM/zzhgrwCmTsqhQdDqif/zfjsZT6o58CD3M0jyJ5fM25mIXbWV06EhBpaLpcKhxMpdGu2m19xAK5KqQmxY1hRo1f6V+mi6q+17JdrrSf9y7ayMN4l0OWVM4A31QRtSWv4Q/15PYcQrURtMGw2OnxfBcZKqyD1HvdcjPhxUtofn6K7Wi4HrjXO5nsGpUn4RNnhyEFjM+0fe+eGnotL3X9KHrgFVuxouMfv8ncM6JyDV+mPoBdF/mAqxQR6U/3vBdn5Vsg8LYsk1CwBW4jF6bbXlSyp/zpXJV9MZBtLF52KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w1dU1IB96tlkruBZtXgTUb+RzON86jsl2WlPUA31/EM=;
- b=Bn0zXH4tziyPmaKbZkrgs9omZ8WiZVlS1tKnS88lGIQ5OhIYNtLuXGEJ+DSY7MsAOprAj4XY1VY0gla24gPXQ0IlgwJHBJFCUfi4Wrfbiw+ADsCICmuJPlMaIbzpZsPGdHiPz0wWfF90syl0NuD4YC2id8Bg1ZvpXwH2kX8Duao8nSHorLGOk+NikIvavOxG9P5XTYDtfu0mfL1+gG754/Hs0nLsdb5L72HcesEDsny82syyTbaxhWiyIs4F3LvRx+z38zFadI6nUehkvOOSt2nkNZ0tQr1RYs+oYKeJ2OKcm3Das3hKGZqYKRJ9/l7XjxSktmIZx1X3xqpyi0G78w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w1dU1IB96tlkruBZtXgTUb+RzON86jsl2WlPUA31/EM=;
- b=ccn8w4hthDc8Um+YTEHRtzpYLIj2iYVXP551udB3zmidxNG36Q42KWV0ppUerXx+rDn2G5rGN09ubudDFuDajew1LJTFsuW7+/vHh6fqxLyPP0QyRludIEQ1znk7sLxSYCEIai2q6U02AyP1qthy6vBGE2i7npR3Eqj390J/lD7/03mVJEb9w6E1+cdxBOofpW34x4G3Fdxzz9RneVnwF+YNNzHDh0swIhpevHLIFaXn/K5yv7+I9mjSKtuuYD8pER+miLlCOi6KVDtRx1H9G3PybhAd1IaoQiGmAXxA1vfrZTi8U1NvmVfTqgS7oiKJPo8hyRT8hfwOFftD1ltlRA==
-Received: from CH2PR02CA0030.namprd02.prod.outlook.com (2603:10b6:610:4e::40)
- by SJ2PR12MB7918.namprd12.prod.outlook.com (2603:10b6:a03:4cc::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Sat, 13 Apr
- 2024 20:12:28 +0000
-Received: from CH2PEPF00000147.namprd02.prod.outlook.com
- (2603:10b6:610:4e:cafe::6a) by CH2PR02CA0030.outlook.office365.com
- (2603:10b6:610:4e::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.31 via Frontend
- Transport; Sat, 13 Apr 2024 20:12:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH2PEPF00000147.mail.protection.outlook.com (10.167.244.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Sat, 13 Apr 2024 20:12:27 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Sat, 13 Apr
- 2024 13:12:14 -0700
-Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Sat, 13 Apr
- 2024 13:12:13 -0700
-Message-ID: <d495cdde-71e9-4476-acbb-5afe05229ca1@nvidia.com>
-Date: Sat, 13 Apr 2024 13:12:13 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmZJn/Wy"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41804f10c68so9589035e9.3;
+        Sun, 14 Apr 2024 04:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713094897; x=1713699697; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZNPrvH/uFX737faIwrBH9u4ApwKYKRw6XwNvCWgpcCk=;
+        b=HmZJn/Wy9napSD2cpFhSIAdGdedHS99fHXsCpQHgHK7LLyF+MFOWYGEZtqcBYJFr1j
+         KDYv4YlsF5NsR1gaZkQwj0nnIz15+LnsHpzhLzDjt2z55T6/I40s/z1QoO17REamRpkO
+         j6XCHl6jiGk8S9IPcB9cawcM5iQU8zW/dcGEoZ9vrHAchoHVha5XKVOC2LpwXAGHDzlO
+         p3qMcuLqPSLnW6oq6jJq8ybNVzc+xpxGXd4sU/WtqFxaVgHQs7tTH2Lqexb3pd//4Emo
+         dvgja5tnng6kRL3SqusF/hXjEvNzQdrKYmekMiUIouG7WWE7/i/FF7Z0rxUpm77h9gie
+         qRng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713094897; x=1713699697;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZNPrvH/uFX737faIwrBH9u4ApwKYKRw6XwNvCWgpcCk=;
+        b=wej5rorZN8CC7bXfVmVXkw42UBKTgg2CG0tN+GftP5s4kDIb+ryCyrUaY8ALKZWW36
+         FmZZdwr34/toeFYHM+upUGCTklLRrt9d40X2WsD66LT6qGm8F1P3HP8DkB+dAAyZVGmj
+         0aCg+hsdMxNKj1vn/5J8JY6ySpcnXPFQQ7rDte5htUTQsAm09Yec1PqFgYf2tqv6lncx
+         9SwihutMDnM0aSnAEa/4YTFWHu51xkVfdO/utdFbSsBBrts+cWvoGpkL1bhh1PzhhsoA
+         LOu1dG19rZGDKnya64k2Ub1rP3bQgjbgOUuYE6tt7S//6DQZXYpZW3bqqlx7NfVYQmBE
+         1sbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnACq44Y1qphjB/8/An4GEHDWNyMZpHDBx6vRqmo6poS37SZQisZHU1osoXIxM8pKHinpHh4sBAVaoZfdX8A9bst7oir9oqkwRzv1lboLJdaJBu+D950xiuqXfddV9gQV+
+X-Gm-Message-State: AOJu0Yz7XBWmXK6Cn0nVHgHVe6seDdMUsiEd6jo3DUtcTrD1XWzKMVjP
+	xQX73XmfBRxFM+Gwy/TeGTTm53OhCp8/Knq3D6d928Q/Br5aGSs=
+X-Google-Smtp-Source: AGHT+IHs6RhKe0Y4tGvcMZrslfWyJRVTebp0xInWZK0eUAtOK4pAEIxVzZS+wR3KWrQ4pydWlFfcLg==
+X-Received: by 2002:a05:600c:4f89:b0:413:f80f:9f9 with SMTP id n9-20020a05600c4f8900b00413f80f09f9mr4984699wmq.25.1713094897423;
+        Sun, 14 Apr 2024 04:41:37 -0700 (PDT)
+Received: from p183 ([46.53.253.158])
+        by smtp.gmail.com with ESMTPSA id ay8-20020a05600c1e0800b004181c91d1dcsm5753154wmb.18.2024.04.14.04.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Apr 2024 04:41:36 -0700 (PDT)
+Date: Sun, 14 Apr 2024 14:41:34 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
+Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
+	james.clark@arm.com, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linaro.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Chenyuan Mi <cymi20@fudan.edu.cn>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Georg =?utf-8?Q?M=C3=BCller?= <georgmueller@gmx.net>,
+	Liam Howlett <liam.howlett@oracle.com>, bpf@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from
+ different CU"
+Message-ID: <2d7a896b-bbee-4285-9b2b-3edfab6797d3@p183>
+References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
+ <d0dc91b6-98ee-4ddd-b0a9-ba74e1b6c85f@p183>
+ <f57685aa-fdbf-4625-900b-d612ffb747f3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] mm: use "GUP-fast" instead "fast GUP" in remaining
- comments
-To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
-CC: <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, "Mike
- Rapoport" <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, Peter Xu
-	<peterx@redhat.com>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linux-mips@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-	<linux-sh@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<x86@kernel.org>
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-4-david@redhat.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20240402125516.223131-4-david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000147:EE_|SJ2PR12MB7918:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0aaa0a6-70c6-472c-e044-08dc5bf60abf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MjNVtL4LM6YK6isq4wiC8G4q8ELWNqm50rFIV6H+AkQtPk+GNTw1bypC5EjFciw0xtsNof2pxnozwmce5kJhp/UKNGsBchZdVd57/QS3woqC9fpotDv8P+94mug9Qf8sZK8laLf1JDgSbzCi5zTiKMN/k4+uqV+wEkI9OEsegekIJXERp4onv3JmvZGJwEh1NVivpGH6lTzllKAnK/xnEacIOgtAODTrv0AdzAzyF9ds0wG/RndBT+dJI1xQzJ0E9+NhOyM/jJAzNKmRzKchsEE3dTMroOA7el2vmvBvx2JB6qy21uRQeNNivbmCVZH7jkr6HvyI1JjiEYb9XfLnc023Q0V1r6qQkxB7J2q7vAi9V57pNTfjqwVnguB5TlqwZ+hE4p7q7aqolWpHtjZEOLDyGmPAuavVXib7XqXKjG3Xh6DFUOxLSIvVNJ0Zev4v17HsRH0/UlyMIh/X1djxTtymLetHYnTv50FYvUWayq4Y0S3mwe9J6WE17YBbZCklEmiTKgcvuZ1Gc33DjkjdSrdMT30eG0/T6p4YtcWU3n/WZUNnsRiwuFxHicp8MsLNN9aXbMOa2CUM0/1G+nloeyJ44xMZB0/FBVOaCyAxZeMn8o2vOmMT4DUOcPykhKwQyJ81uQq3WBLkfVr+6HWpsuJhKqSLfPCpBLTNC24e0gnSvqPkm387Me51zAyx+uC0oeFRFtx4kqrgAiWY0zDLntM4WVVzD2Yw/grQJCLhM+s1mY8b6mRGtqVG6+U8buR9
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2024 20:12:27.8478
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0aaa0a6-70c6-472c-e044-08dc5bf60abf
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000147.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7918
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f57685aa-fdbf-4625-900b-d612ffb747f3@arm.com>
 
-On 4/2/24 5:55 AM, David Hildenbrand wrote:
-> Let's fixup the remaining comments to consistently call that thing
-> "GUP-fast". With this change, we consistently call it "GUP-fast".
+On Thu, Apr 11, 2024 at 05:40:04PM +0530, Chaitanya S Prakash wrote:
 > 
-> Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->   mm/filemap.c    | 2 +-
->   mm/khugepaged.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+> On 4/9/24 11:02, Alexey Dobriyan wrote:
+> > On Mon, Apr 08, 2024 at 11:52:22AM +0530, Chaitanya S Prakash wrote:
+> > > - Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
+> > > - Delete ends_with() and replace its usage with str_has_suffix()
+> > > - Delete strstarts() from tools/include/linux/string.h and replace its
+> > >    usage with str_has_prefix()
+> > It should be the other way: starts_with is normal in userspace.
+> > C++, Python, Java, C# all have it. JavaScript too!
+> 
+> This is done in accordance with Ian's comments on V1 of this patch
+> series. Please find the link to the same below.
 
-Yes, everything is changed over now, confirmed.
+Yes, but str_has_suffix() doesn't make sense in the wider context.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> https://lore.kernel.org/all/CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com/
 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+	The naming ends_with makes sense but there is also strstarts and
+	str_has_prefix, perhaps str_has_suffix would be the most consistent
+	and intention revealing name?
