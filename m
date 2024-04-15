@@ -1,179 +1,87 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471812839D
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 17:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CFE15572F
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 18:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713203695; cv=none; b=IBUsW5A8HJADEayG7+gV+kD1P8oCEj/FDieFZBIwAmS2dfrPcNc1tceFa/2JsrnrlnAL/6+dY3vEtZtHHkVMHI7NfU0wUa5Ew9k1bx3wKQ6Z8jC35DvGexBCf0sSqtkaa4MEcWi5qSdELY0gSZSRHds8+hyg/MrHsDb6hvn06Wc=
+	t=1713207021; cv=none; b=NzsmYeMpwg438l+Jt9l0H4/6g/7fHwZDYxvKeewHkhlIPX63/3TaiS4xGI1ghcnOBUHduYzMc3AWCQmrl1UzcQvEdKoJMHju6Vq8Jts7ub1YjLWDVZ5tX/G8v5agf5qjlGXN7YaR5NGcXWmPH9AWeN+RGOeM9jx6n65SGowuTEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713203695; c=relaxed/simple;
-	bh=Wr/pDR3d/zKmmnQccwLePNG5XdVvSksoQYryiRcRuKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kzf+VFmPov+NvoRRix7ktDwheKVmq0sTfLsQH5+/kYlJReRkRp6PFchWp+69ZcoqlAingeGoVG2GQCBMlF7mYc1HTlOE2y48fgr1A2C4/z4Tbm/XVijzkq6Hxc11KIv34/0iEcwoYKIQ0hegwwtD+KJtBpVVutIwQEhJM0s5Zqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wzuL4wO7; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713207021; c=relaxed/simple;
+	bh=Ba8DIEAj9L20L35qU4d/IfJBZB22z9BdkIrA/sX3Izw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=fUf8yJ+3kMBRMpmmmxnnoYbHdpzb3gIZPlWu0dWoJXEyiny9q5KvwwaGdHH+0l2C/IyUxNMW5SGXqRLYa+xs2g386jyjMulPT3vyd4M/+f6QcHhFYKWuQ3G+pBIt/5OP2/m6Kmza31mdcE4TMcwyXbbuOl9hS8culG3obk1LL5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O31qmyW7; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wzuL4wO7"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2da888330b2so24578011fa.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 10:54:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O31qmyW7"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2348116ceb0so939723fac.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 11:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713203692; x=1713808492; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=igNYJ1pXewB6u5NzWIC4GeGY+3kLjUQqImaU0uTKues=;
-        b=wzuL4wO7SvIb9fYmQlgYKC1GZYZ1jTAlcOHvwfjDLD8pfOjeBdKD/els/eaAi4IXYI
-         fs4nPZW9/lrhCT/egvAGGuouuasq6jWlVZDG8evznD+6d4N+sth5tAoY/ifMBVipg3VK
-         raDcOrSciN3gtdIA2Y4tZBDu4cCZQ0Fgxo/A2dNOQ25mgpZv4F9Dk/SkUOHpuJkZk3l+
-         resMrYqLCooXCqgOE6jvOJpbbruMrYr5x+wpbJlCaDdjQ1pUpEun1eD9ctH2BirICWZu
-         kj1f1/7bxkWH5/8UHGF+lfQC16ogM0lGQwEB6mS+oUt+HXkmcRAZsCpnjGokY+2rI+69
-         rXTg==
+        d=gmail.com; s=20230601; t=1713207019; x=1713811819; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ba8DIEAj9L20L35qU4d/IfJBZB22z9BdkIrA/sX3Izw=;
+        b=O31qmyW70i8TqHFbIH/Onkh3ZNtXwrUAXI8sDz3dhavcTvara5hf18h/HpOmBnkiA3
+         qDFifCskwBmsNAHOUdCAY/oWNTzIV5V+JsMCv0p2S4opcgLY+IjmHzTkuwqf93jwvZC+
+         pst8SJ6knojO2mPEK0tGvz9shu3uJ+NQRJEqRg4gt2AgbrYjyft/Ap8kxInJY5d86xMN
+         EFeBWg/cc/iUnXBs7ZK1h/3SpiJsFNB+7cZjbvR056UqlEoQWhWjupMNFj6dekhJjp56
+         EapEnTuWb5va0zBDGFnOHnYbxN8HJDbIVTSsyL0pnE0oMvYmlblHjP2KWVkoctMQO2DU
+         oxIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713203692; x=1713808492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=igNYJ1pXewB6u5NzWIC4GeGY+3kLjUQqImaU0uTKues=;
-        b=WNR1iAzcTzs+9N+FrA3LO+LrTIaLewVAqwt2Fi7EP1Wz0j9LqoYlpzDBt2jXLiorJc
-         W9TmK9u2X6lN05c3fYyUvC6ng6YqKz7Id0v7Reutua32U4Bc/02RJOAaJGCtTU6pQOjV
-         lQflbPOirDsT1fIWrEl5CxD6UYlHBZISfuK2jIO3eT2rFvyrtWDB5xZMPL5a/gmP0/1Q
-         DZmJKS2RiHgifraLIpvuYAE9dy6V/kHbtskVBILrDEEJAx2d/mPPA5BR+OXRRT0ZLXZ1
-         gLGXFn30VAEpOPumSHXJi+skTJitbitAIekFdnB96LiR3D7sGLX61zd5bUzgSl6JBR0c
-         AdTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmSXIZZOxs8mM0XdsrrOD8suJ5USqxyMkSXZXn7YLSoWt4JuWq7/lD5f3R5ANV2g6Qx8+7wRI/gEdALxdXGjcsxuip2qTTKzuA1nF2OJM1vA==
-X-Gm-Message-State: AOJu0YwoRqfTWZ65GT/Nhfl+6ZpHm3MTZgdiPIwobpylRag1OjJG67SW
-	jn4p9UFi+QToby+3fuqfbKZybkUQUxLTSyx5LqhhPQWzwZnY2KfL3qGgb83qLw3u1UT0UDEQQ0f
-	NahSOfGeymGHc9GLUNFvE2gfZhilS1pdzPMWp
-X-Google-Smtp-Source: AGHT+IEGZ/QSN12QZ3Kvtifco1R7sEnyXPpjjrkwzoC0qp0JYVVV1PbYsE8fokyGM6XWM+LBozUeUxtGGTYsfAcg+5w=
-X-Received: by 2002:a05:651c:623:b0:2da:16fd:5c9b with SMTP id
- k35-20020a05651c062300b002da16fd5c9bmr7081458lje.9.1713203691518; Mon, 15 Apr
- 2024 10:54:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713207019; x=1713811819;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ba8DIEAj9L20L35qU4d/IfJBZB22z9BdkIrA/sX3Izw=;
+        b=VZwfBwUIkyRmUkow7urxFAEm/qfoah9K1JRnWU25yuSSaRZqy3c5DxH/8tsPdGWHYD
+         5dQri5drGqSwk0Aj1i0vDHmSmeV/Qu/qSPQJVSZOS9fj+KLO60HcQL1CDDAEvOUDZrci
+         wB6qXctremirhdZLTkJDoljYbpqgGvcf+V7eT0iXlyKkTU5eq1jtnTGwFuEFtbx0ZnyC
+         5JRKfmQ6GiE+1PCdzKglPZePtK5FndF+InNPANT7AC+6Tb45zQcXjwSLjVNIRar0IkIy
+         kOnxZPj7FTvHIR52tIMZ98fBoC6XsfR04HotSQQcgvH8VC5KAWHSavIV0Y4WweBdWpNn
+         Rjzg==
+X-Gm-Message-State: AOJu0Yymj023cY9z6DEGiOh5Gx/XNCnhfaQlEzSrGwyRNbrYKLXCN8+3
+	4TtvBP18zWnNuuJifnwoRwMit7mMvGHt73wJiiG6ZIJWM+dppa+5MQ2FO8ZajU0blnEYFZw9Az4
+	2skilfC4nKxDpSnSxMNp/cw3HuoTbFy4i
+X-Google-Smtp-Source: AGHT+IFfsue3XkB6FAMrZygWfblJN/k8lJKnQftU89hW/UbyfUKdJ24Kw+/caKdxJKEfrdVKvsI9O5i1ykheifnie7U=
+X-Received: by 2002:a05:6871:5893:b0:233:5570:a2c6 with SMTP id
+ ok19-20020a056871589300b002335570a2c6mr12803913oac.12.1713207018922; Mon, 15
+ Apr 2024 11:50:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
- <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com> <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
-In-Reply-To: <Zh1mKoHJcj22rKy8@google.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 15 Apr 2024 10:54:15 -0700
-Message-ID: <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+From: Alan Egerton <eggyal@gmail.com>
+Date: Mon, 15 Apr 2024 19:50:08 +0100
+Message-ID: <CA+phaecbKJXE56ExeJUA5c2=tc3m3p8iNefuqyjs9P3kOn_aWg@mail.gmail.com>
+Subject: Percentages reported by `perf stat --hybrid-merge`
+To: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024 at 10:38=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
->
-> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
-> > On Mon, Apr 15, 2024 at 3:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.in=
-tel.com> wrote:
-> > > On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
-> > > > On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linu=
-x.intel.com> wrote:
-> > > >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed=
- counters.
-> > > >>>> Considering this case, Guest uses GP counter 2, but Host doesn't=
- use it. So
-> > > >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would=
- be enabled
-> > > >>>> unexpectedly on host later since Host perf always enable all val=
-idate bits
-> > > >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
-> > > >>>>
-> > > >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
-> > > >>>>
-> > > >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking c=
-ounter
-> > > >>> values to the host? NO. Not in cloud usage.
-> > > >> No, this place is clearing the guest counter value instead of host
-> > > >> counter value. Host always has method to see guest value in a norm=
-al VM
-> > > >> if he want. I don't see its necessity, it's just a overkill and
-> > > >> introduce extra overhead to write MSRs.
-> > > >>
-> > > > I am curious how the perf subsystem solves the problem? Does perf
-> > > > subsystem in the host only scrubbing the selector but not the count=
-er
-> > > > value when doing the context switch?
-> > >
-> > > When context switch happens, perf code would schedule out the old eve=
-nts
-> > > and schedule in the new events. When scheduling out, the ENABLE bit o=
-f
-> > > EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
-> > > and PMCx MSRs would be overwritten with new event's attr.config and
-> > > sample_period separately.  Of course, these is only for the case when
-> > > there are new events to be programmed on the PMC. If no new events, t=
-he
-> > > PMCx MSR would keep stall value and won't be cleared.
-> > >
-> > > Anyway, I don't see any reason that PMCx MSR must be cleared.
-> > >
-> >
-> > I don't have a strong opinion on the upstream version. But since both
-> > the mediated vPMU and perf are clients of PMU HW, leaving PMC values
-> > uncleared when transition out of the vPMU boundary is leaking info
-> > technically.
->
-> I'm not objecting to ensuring guest PMCs can't be read by any entity that=
-'s not
-> in the guest's TCB, which is what I would consider a true leak.  I'm obje=
-cting
-> to blindly clearing all PMCs, and more specifically objecting to *KVM* cl=
-earing
-> PMCs when saving guest state without coordinating with perf in any way.
->
-> I am ok if we start with (or default to) a "safe" implementation that zer=
-oes all
-> PMCs when switching to host context, but I want KVM and perf to work toge=
-ther to
-> do the context switches, e.g. so that we don't end up with code where KVM=
- writes
-> to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
+Hi,
 
-I am fully aligned with you on this.
+I'm struggling to understand the intended semantics of the percentage
+field in `--hybrid-merge` results.
 
->
-> One my biggest complaints with the current vPMU code is that the roles an=
-d
-> responsibilities between KVM and perf are poorly defined, which leads to =
-suboptimal
-> and hard to maintain code.
->
-> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak =
-guest
-> state to userspace processes that have RDPMC permissions, as the PMCs mig=
-ht not
-> be dirty from perf's perspective (see perf_clear_dirty_counters()).
->
-> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes=
- the
-> overall code brittle because it's not clear whether KVM _needs_ to clear =
-PMCs,
-> or if KVM is just being paranoid.
+I'm looking at both the `instructions` and `cycles` counters on an
+Apple M1 Ultra (so 4 "apple_icestorm_pmu" cores and 16
+"apple_firestorm_pmu" cores), but with `--hybrid-merge` the
+percentages consistently read `80.00` (which curiously is the
+proportion of cores that are firestorm) instead of `100.00` as I had
+expected.
 
-So once this rolls out, perf and vPMU are clients directly to PMU HW.
-Faithful cleaning (blind cleaning) has to be the baseline
-implementation, until both clients agree to a "deal" between them.
-Currently, there is no such deal, but I believe we could have one via
-future discussion.
+Whilst I see the following mentioned in the manual, I can't quite grok
+how it applies:
 
-Thanks.
--Mingwei
+> perf-stat reports the scaled counts for hybrid event and with a percentag=
+e displayed. The percentage is the event=E2=80=99s running time/enabling ti=
+me.
+
+Could someone possibly explain why my 100% expectation was wrong and
+how the percentage is actually calculated?
+
+Many thanks,
+Alan
