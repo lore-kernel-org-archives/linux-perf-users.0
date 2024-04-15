@@ -1,195 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7523312C46D
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 17:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471812839D
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 17:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713202921; cv=none; b=ggYrj/HG5uokuxOg/FZ3JLpYjPsthr+wVmWlu9BdQLHmAvj0q+KDU3xs5mOgMiHre0Qq+HyMoGnKnRDOFSnlquIu77QZEucas4/mRW9lN2VTLImZl6PE5uv215XDzDWhKJJ8mp87k4eShhCKfYbeMT6OxzEq+t27srTAkzSj4WE=
+	t=1713203695; cv=none; b=IBUsW5A8HJADEayG7+gV+kD1P8oCEj/FDieFZBIwAmS2dfrPcNc1tceFa/2JsrnrlnAL/6+dY3vEtZtHHkVMHI7NfU0wUa5Ew9k1bx3wKQ6Z8jC35DvGexBCf0sSqtkaa4MEcWi5qSdELY0gSZSRHds8+hyg/MrHsDb6hvn06Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713202921; c=relaxed/simple;
-	bh=/YDQ0WxJJklkc+rlfzPXrJClvoOkdo9oLL2pvc+03GA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3J8P4cG83ht85OwC+VAl9oIq9vXUvMDeprws/uXe+juIP+lrhJUMJhNFd7t3qh8/VY2PJRjSrEE198bljYhPPNou54+APkA4Kn80UzcANVOgnhPjszVlAKIu23UemDGv4aHQUfYH6fnR1Q5F5vDheYbGQJ7TK/FECbN2irSPCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgA6E1mn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713203695; c=relaxed/simple;
+	bh=Wr/pDR3d/zKmmnQccwLePNG5XdVvSksoQYryiRcRuKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kzf+VFmPov+NvoRRix7ktDwheKVmq0sTfLsQH5+/kYlJReRkRp6PFchWp+69ZcoqlAingeGoVG2GQCBMlF7mYc1HTlOE2y48fgr1A2C4/z4Tbm/XVijzkq6Hxc11KIv34/0iEcwoYKIQ0hegwwtD+KJtBpVVutIwQEhJM0s5Zqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wzuL4wO7; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgA6E1mn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD040C113CC;
-	Mon, 15 Apr 2024 17:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713202921;
-	bh=/YDQ0WxJJklkc+rlfzPXrJClvoOkdo9oLL2pvc+03GA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VgA6E1mnSUxfxETXp+6NaPzZ/yK7QotQ4ElAkGQAE/1tfr3t034fEQFZsWphTMetG
-	 FmxY/e8+74lTl0h4v2hSEo5Z5FWZbcFUow4QbUxGWnZVgLd7af1zFzmpNyDUl3p8LF
-	 vBXHIyMLXj3ZWjbo0wNwwpIsjT6cRPsmxnVeEKFQNmMEfbzLxlB3kG/EzT4UHtwwuW
-	 IP2gMwQKpPxPYoN6iNZXbZkIICfnZwg+y1RGV+2c05jJ1/XOEHlH7OPAjhIG1OGxtg
-	 SSNrC8N0CXbEgJ8GtNdR9z7NhXRH2RWXRFH6SOJk5ZMZdRY49kjkan6KDs7KYAnaT0
-	 2NIzjX5BsRlHA==
-Date: Mon, 15 Apr 2024 14:41:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com
-Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
- stat
-Message-ID: <Zh1m5jSuhmMkT951@x1>
-References: <ZhgpWkUAto8nzvle@x1>
- <20240415094220.11639-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wzuL4wO7"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2da888330b2so24578011fa.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 10:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713203692; x=1713808492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=igNYJ1pXewB6u5NzWIC4GeGY+3kLjUQqImaU0uTKues=;
+        b=wzuL4wO7SvIb9fYmQlgYKC1GZYZ1jTAlcOHvwfjDLD8pfOjeBdKD/els/eaAi4IXYI
+         fs4nPZW9/lrhCT/egvAGGuouuasq6jWlVZDG8evznD+6d4N+sth5tAoY/ifMBVipg3VK
+         raDcOrSciN3gtdIA2Y4tZBDu4cCZQ0Fgxo/A2dNOQ25mgpZv4F9Dk/SkUOHpuJkZk3l+
+         resMrYqLCooXCqgOE6jvOJpbbruMrYr5x+wpbJlCaDdjQ1pUpEun1eD9ctH2BirICWZu
+         kj1f1/7bxkWH5/8UHGF+lfQC16ogM0lGQwEB6mS+oUt+HXkmcRAZsCpnjGokY+2rI+69
+         rXTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713203692; x=1713808492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igNYJ1pXewB6u5NzWIC4GeGY+3kLjUQqImaU0uTKues=;
+        b=WNR1iAzcTzs+9N+FrA3LO+LrTIaLewVAqwt2Fi7EP1Wz0j9LqoYlpzDBt2jXLiorJc
+         W9TmK9u2X6lN05c3fYyUvC6ng6YqKz7Id0v7Reutua32U4Bc/02RJOAaJGCtTU6pQOjV
+         lQflbPOirDsT1fIWrEl5CxD6UYlHBZISfuK2jIO3eT2rFvyrtWDB5xZMPL5a/gmP0/1Q
+         DZmJKS2RiHgifraLIpvuYAE9dy6V/kHbtskVBILrDEEJAx2d/mPPA5BR+OXRRT0ZLXZ1
+         gLGXFn30VAEpOPumSHXJi+skTJitbitAIekFdnB96LiR3D7sGLX61zd5bUzgSl6JBR0c
+         AdTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmSXIZZOxs8mM0XdsrrOD8suJ5USqxyMkSXZXn7YLSoWt4JuWq7/lD5f3R5ANV2g6Qx8+7wRI/gEdALxdXGjcsxuip2qTTKzuA1nF2OJM1vA==
+X-Gm-Message-State: AOJu0YwoRqfTWZ65GT/Nhfl+6ZpHm3MTZgdiPIwobpylRag1OjJG67SW
+	jn4p9UFi+QToby+3fuqfbKZybkUQUxLTSyx5LqhhPQWzwZnY2KfL3qGgb83qLw3u1UT0UDEQQ0f
+	NahSOfGeymGHc9GLUNFvE2gfZhilS1pdzPMWp
+X-Google-Smtp-Source: AGHT+IEGZ/QSN12QZ3Kvtifco1R7sEnyXPpjjrkwzoC0qp0JYVVV1PbYsE8fokyGM6XWM+LBozUeUxtGGTYsfAcg+5w=
+X-Received: by 2002:a05:651c:623:b0:2da:16fd:5c9b with SMTP id
+ k35-20020a05651c062300b002da16fd5c9bmr7081458lje.9.1713203691518; Mon, 15 Apr
+ 2024 10:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240415094220.11639-1-vmolnaro@redhat.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
+ <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com> <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com>
+In-Reply-To: <Zh1mKoHJcj22rKy8@google.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 15 Apr 2024 10:54:15 -0700
+Message-ID: <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
+	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024 at 11:42:20AM +0200, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
-> 
-> With the upstream MR !3916 of commit a381bd3615de6 ('powerpc/hv-gpci:
+On Mon, Apr 15, 2024 at 10:38=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
+>
+> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+> > On Mon, Apr 15, 2024 at 3:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.in=
+tel.com> wrote:
+> > > On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
+> > > > On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linu=
+x.intel.com> wrote:
+> > > >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed=
+ counters.
+> > > >>>> Considering this case, Guest uses GP counter 2, but Host doesn't=
+ use it. So
+> > > >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would=
+ be enabled
+> > > >>>> unexpectedly on host later since Host perf always enable all val=
+idate bits
+> > > >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
+> > > >>>>
+> > > >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
+> > > >>>>
+> > > >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking c=
+ounter
+> > > >>> values to the host? NO. Not in cloud usage.
+> > > >> No, this place is clearing the guest counter value instead of host
+> > > >> counter value. Host always has method to see guest value in a norm=
+al VM
+> > > >> if he want. I don't see its necessity, it's just a overkill and
+> > > >> introduce extra overhead to write MSRs.
+> > > >>
+> > > > I am curious how the perf subsystem solves the problem? Does perf
+> > > > subsystem in the host only scrubbing the selector but not the count=
+er
+> > > > value when doing the context switch?
+> > >
+> > > When context switch happens, perf code would schedule out the old eve=
+nts
+> > > and schedule in the new events. When scheduling out, the ENABLE bit o=
+f
+> > > EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
+> > > and PMCx MSRs would be overwritten with new event's attr.config and
+> > > sample_period separately.  Of course, these is only for the case when
+> > > there are new events to be programmed on the PMC. If no new events, t=
+he
+> > > PMCx MSR would keep stall value and won't be cleared.
+> > >
+> > > Anyway, I don't see any reason that PMCx MSR must be cleared.
+> > >
+> >
+> > I don't have a strong opinion on the upstream version. But since both
+> > the mediated vPMU and perf are clients of PMU HW, leaving PMC values
+> > uncleared when transition out of the vPMU boundary is leaking info
+> > technically.
+>
+> I'm not objecting to ensuring guest PMCs can't be read by any entity that=
+'s not
+> in the guest's TCB, which is what I would consider a true leak.  I'm obje=
+cting
+> to blindly clearing all PMCs, and more specifically objecting to *KVM* cl=
+earing
+> PMCs when saving guest state without coordinating with perf in any way.
+>
+> I am ok if we start with (or default to) a "safe" implementation that zer=
+oes all
+> PMCs when switching to host context, but I want KVM and perf to work toge=
+ther to
+> do the context switches, e.g. so that we don't end up with code where KVM=
+ writes
+> to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
 
-I'm still not finding this commit upstream:
+I am fully aligned with you on this.
 
-⬢[acme@toolbox perf-tools-next]$ git remote update torvalds
-Fetching torvalds
-remote: Enumerating objects: 298, done.
-remote: Counting objects: 100% (173/173), done.
-remote: Compressing objects: 100% (18/18), done.
-remote: Total 298 (delta 156), reused 168 (delta 155), pack-reused 125
-Receiving objects: 100% (298/298), 208.17 KiB | 859.00 KiB/s, done.
-Resolving deltas: 100% (213/213), completed with 71 local objects.
-From git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
-   586b5dfb51b962c1..0bbac3facb5d6cc0  master     -> torvalds/master
- * [new tag]                           v6.9-rc4   -> v6.9-rc4
-⬢[acme@toolbox perf-tools-next]$ git show a381bd3615de6
-fatal: ambiguous argument 'a381bd3615de6': unknown revision or path not in the working tree.
-Use '--' to separate paths from revisions, like this:
-'git <command> [<revision>...] -- [<file>...]'
-⬢[acme@toolbox perf-tools-next]$
+>
+> One my biggest complaints with the current vPMU code is that the roles an=
+d
+> responsibilities between KVM and perf are poorly defined, which leads to =
+suboptimal
+> and hard to maintain code.
+>
+> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak =
+guest
+> state to userspace processes that have RDPMC permissions, as the PMCs mig=
+ht not
+> be dirty from perf's perspective (see perf_clear_dirty_counters()).
+>
+> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes=
+ the
+> overall code brittle because it's not clear whether KVM _needs_ to clear =
+PMCs,
+> or if KVM is just being paranoid.
 
-⬢[acme@toolbox perf-tools-next]$
+So once this rolls out, perf and vPMU are clients directly to PMU HW.
+Faithful cleaning (blind cleaning) has to be the baseline
+implementation, until both clients agree to a "deal" between them.
+Currently, there is no such deal, but I believe we could have one via
+future discussion.
 
-IS this one:
-
-⬢[acme@toolbox perf-tools-next]$ git log | grep "Fix the H_GET_PERF_COUNTER_INFO hcall return value checks"
-      powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-    powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-^C
-⬢[acme@toolbox perf-tools-next]$
-
-⬢[acme@toolbox perf-tools-next]$ git log | grep -B4 "Fix the H_GET_PERF_COUNTER_INFO hcall return value checks"
-      powerpc/fsl: Fix mfpmr build errors with newer binutils
-      powerpc/64s: Use .machine power4 around dcbt
-      powerpc/64s: Move dcbt/dcbtst sequence into a macro
-      powerpc/mm: Code cleanup for __hash_page_thp
-      powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
---
-commit ad86d7ee43b22aa2ed60fb982ae94b285c1be671
-Author: Kajol Jain <kjain@linux.ibm.com>
-Date:   Thu Feb 29 17:58:47 2024 +0530
-
-    powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks
-^C
-⬢[acme@toolbox perf-tools-next]$
-
-I think it is, now looking at
-https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
-I see the reference to ad86d7ee43b22aa2ed60fb982ae94b285c1be671
-
-I'm replacing this:
-
-> With the upstream MR !3916 of commit a381bd3615de6 ('powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks')
-
-with:
-
-> With the upstream MR !3916 of commit ad86d7ee43b22aa2 ("powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks")
-
-Ok?
-
-- Arnaldo
-
-> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
-> stat for hv_gpci events without required permission set returns an
-> error value of -1 to differentiate the output from the unsupported
-> events. The stat_all_pmu test was designed in a way, that if any
-> command exits with a non-zero value the test exits with an error
-> value without any information provided due to the 'set -e' option.
-> 
-> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
-> event causes failure after the MR as the zero return value was required.
-> The issue propagated upstream as the list of the files that affected perf
-> did not cover the changed files and was updated after the issue was
-> discovered. It was caught by CKI testing where it was triaged to stop
-> blocking further MRs, as most of the powerpc machines do not support
-> some of the hv_gpci events.
-> 
-> Remove the 'set -e' option from the test and rework the test case to log
-> the status of the event for better maintainability. Instead of exiting
-> immediately after 'perf stat' ends with a non-zero value, check the
-> return value and output of the 'perf stat' command with the appropriate action.
-> 
-> Link to the MR !3916 of commit a381bd3615de6:
-> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
-> 
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> ---
->  tools/perf/tests/shell/stat_all_pmu.sh | 36 ++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-> index c77955419173..d9f0d2100baa 100755
-> --- a/tools/perf/tests/shell/stat_all_pmu.sh
-> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
-> @@ -2,21 +2,35 @@
->  # perf all PMU test
->  # SPDX-License-Identifier: GPL-2.0
->  
-> -set -e
->  
->  # Test all PMU events; however exclude parametrized ones (name contains '?')
->  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
-> -  echo "Testing $p"
-> -  result=$(perf stat -e "$p" true 2>&1)
-> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
-> -    # We failed to see the event and it is supported. Possibly the workload was
-> -    # too small so retry with something longer.
-> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
-> -    if ! echo "$result" | grep -q "$p" ; then
-> -      echo "Event '$p' not printed in:"
-> -      echo "$result"
-> -      exit 1
-> +  echo -n "Testing event '$p' -- "
-> +  stat_output=$(perf stat -e "$p" true 2>&1)
-> +  stat_result=$?
-> +  if echo "$stat_output" | grep -q "$p"; then
-> +    # return value 0 if counters gets printed either if the event is supported or not
-> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
-> +        echo "supported"
-> +    elif [ $stat_result -eq 0 ]; then
-> +        echo "not supported"
-> +    # return value 255 when the required pemission for the event is not set
-> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
-> +        echo "no permission to enable"
-> +    # return value 129 when trying to run 'perf stat' with a non-existent event
-> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
-> +        echo "Fail: Bad event name"
-> +        echo "$stat_output"
-> +        exit 1
-> +    else
-> +        echo "Fail: Unknown return value $stat_result"
-> +        echo "$stat_output"
-> +        exit 1
->      fi
-> +  else
-> +      echo "Fail: Event '$p' not printed in:"
-> +      echo "$stat_output"
-> +      exit 1
->    fi
->  done
->  
-> -- 
-> 2.43.0
-> 
+Thanks.
+-Mingwei
