@@ -1,281 +1,179 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2047.outbound.protection.outlook.com [40.107.15.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13306112
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 06:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713161217; cv=none; b=fwFGXwXMAi/jYB3tPIoP0/ScUTkox0ub1n9P8+t2g7CJ5vNzq1L8yIoBtU1BAni9b1nAJPc+LjGyBGpRBgrn/y9vGFMkE8phCj6Ilj0QjlwqmsJerXE7z5H2LwxmGtVf/U6C9z84ySVY1rAKrn/UcsT5hHfVjQVpP1qfsAdMFz0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713161217; c=relaxed/simple;
-	bh=3EAFvzTo5E1mM9qXtkWc8kM9COIu5o/1Z/0f/58YETo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jtieeiMHzgSR/nN824JWAUWMzT08kZLfCgfKYiGjDKbz+TOd0jG+YHtEGmUAdmQ2W7lxELsSPlGjcxa1q0VaVtTbzCBtrdPuUeZJMnnhMH9T3TtMtY90+AImttxfs4YhHBwR/JpgrhVrT8UpIZ/oEsU9aHaoJ8Y8rV75MDT1Keo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a+aSBhI9; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F64DD2FA;
+	Mon, 15 Apr 2024 06:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713161570; cv=fail; b=YYQQccq0N2VC2+Xl65DSEq5sOYUlfQV7gQFimi8j56uQFy21BnTrhLg/+rz0gO2/GbrB5SsGcIUIoOkKVLJw2bLwZOPdxAUOijT+0txF332IO2r2IbBgmaLmTAlkSZypUBc8lerhGF2X/ypTDsjuCGq01iyDJ+txQQuq74eZDR4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713161570; c=relaxed/simple;
+	bh=FjDHMwAEwMqytUk4+7m93rMUHIEnC4B+M1oNf/r6cTI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=URdL3wwHzYX3nBWFhkewvFAnnQTRmxMEy/u9TsDX4ktYVVwHlhBpJ418MeVQxpRZkPkZ46mHd+EMd8qUjPHQ21y4AJWGPGeRA5WTkAK34gF7YWimZ7ZNYcWvzq8bHSxXdA12EjkWhcjzCqI/6r/iU9QmMyKOFy5CdPrZ7lulHlU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Pogd6jBD; arc=fail smtp.client-ip=40.107.15.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+aSBhI9"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so4439680a12.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Apr 2024 23:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713161214; x=1713766014; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oMah3Z+s/W6m3gGpZYndkJ0SsrEXyOIm46Gptw1+MBQ=;
-        b=a+aSBhI9DR3wfhJ9rpaB83gdIMJReqMLlM+xyfr3ANAnkZ8Xff1kQGSVTQTban++rA
-         c4OeJgzboECgdN/BKw7oedi+3AusuBAuqFwKJE2SWyvdzE1yv/4FB7IU1vmFBAoLw4tl
-         Ayynl1X8V+2bjkF6IaoH+1JInAMQH0eAC/RB5hHgXubaziRh8K+2+jTantbkDcF3MmxN
-         k6VLmAMyrtlVG5t4Y8ye5gK84ZiOzdBrKn95wt57RnnyP9ey53f7kGIjepyWw8mkSo76
-         898WDU//p0//E7tjZ1jaAXSaIMl/yAJ7VFnZwI41CZPveMvHtlF8NOFBy6+hqYvzP1t4
-         JHgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713161214; x=1713766014;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oMah3Z+s/W6m3gGpZYndkJ0SsrEXyOIm46Gptw1+MBQ=;
-        b=sa6n56L6JNa4VUQqqR22KQW+IyQsgn8r/4T7YEdQWcEjlK+jLPBrhJrlh5JxXxlG+W
-         jMXLwAcYOaYRU4OR8aosQvbdriKuRWPCd/r695i99vPQuhpDRARs68nMNCjM+WmpWROH
-         qhwoHGo1GKDaWeoS9O5XtNw57WNKGPPzGDmA3ByhVQi9Dmt0VTAQZ3U6IIsaic8TCU6Z
-         Y8V0My0K/FLEWsp99wZ2S4gygZUlBi154bjhzNhcigahxZ8kr8VMvbib0mIro4OvaoAk
-         alO/1MTGqPatJOuGDDkkMu+Z9scaFBpKcj1k0iksyhzOeA8to3cZdmmrYEXNSc6sSaT3
-         WiNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPYyuFM73USJaiA2FM2ZMkYZEYRdqCvY/zQHXoyOgbLdPrccaFl1wCxpIeMOflAsWmwGmjdcMxTFCBhVJK0qnMNSL0ilsFAS1KgIygnI8mCA==
-X-Gm-Message-State: AOJu0YypohI5rjjOJ9tGX9kPHZG1bYNghq10t+2QIGgM75Z2g45RQFsn
-	QVd/1dGFm9sIbGKE28A+v7DUQyZCAeIed0X/2ccdawgaMzGzwc5OhbeRQ7GqvXZZuOzm6vHXcEf
-	VaqP0Dy9Se9kYuKOpjjISb9E3rPFJAfChTJOI
-X-Google-Smtp-Source: AGHT+IHJAqbWPW2717RHqDNgb5rrvvCaP9K8UNMsM2be7EeoZcszVgwUYcSsaHg32Lh2LwEcCGXqDDSzueTz6HKpMlk=
-X-Received: by 2002:a17:906:752:b0:a52:3adc:b779 with SMTP id
- z18-20020a170906075200b00a523adcb779mr6933768ejb.17.1713161213799; Sun, 14
- Apr 2024 23:06:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Pogd6jBD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IKhWsFZse1Nw7Q0rZrOJz1loTd0VubuIAYgRLtdQmIOq+4D9ybyTYUgVqZtXLga5Nn6w2sc38a2EMfMevn0umnySorwlErh/lordlxGp+cOyWd5POYCVPKylPYAozEaEEYBm+sQOPhkD9uIOu3+zehCwbbpWYpFqCqyyBp9DVbShV8FY0c4Hq77LKsjWe6rrEKKuwvb1upmrd0cv+iCHme2cjbqIIXw4FQjUs76uRl54I/pKA2aYOyKAYRef1lS7g+v0zX7dqfs8k4bp0gXU2mtGDcplzbf7vshEYUr3ngL7F9bjat9+0Z5ZIhfbGBfr2BZdn4IOEweQfkAUq13xcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U4zqsUVbNUyuD1Uu/jGRWGhWbFLjo/W3QFC3VUWV5AQ=;
+ b=D8po42r5QqKcI80StuQjaNGTEDuFmnFUfBZ19xoY1k6+RLtWraznjTfJ4kKIsCn4ZlrpLuB4Y3Cw3A7q0rvqeEFfO2hhMYoBVMoGbY7NDrU99c/PpmNafTksMsnN6Cib2FZ1Vsha3AV/mksLG6+KecrXHHH7VeiJrLcgzkeLCIVWku6aPDUbztS2VdhwNli+MLaQ1LrP8qP2pIFlHIuuyt8GZmRkj6L3J0n7OhFAqluTmyfKFu8DgbvrtwGzVVgZ+k+HFcFxz7LfI93LkDSOBYtpNfLA2c8r2jfGcYwXkc/9d7jIkk1Fzwh25BLDQezbuj5RNww0lgn0OqxePOL6wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U4zqsUVbNUyuD1Uu/jGRWGhWbFLjo/W3QFC3VUWV5AQ=;
+ b=Pogd6jBDsqcV5F7a6kSdbPcznORyz1EDAsMHZ1RWMv9eXnI3PvQQE3OtC/IlLtUiiZ94muv+XTvDHWIQyo34iLobs52Xj3gbteC66GiZZd7ChHd97OJIG1F//T5QvxPLYfG8HiITWI20REur8pJ8BrO6uZ20Y/HfT8nZbd55VTE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by PA1PR04MB10117.eurprd04.prod.outlook.com (2603:10a6:102:454::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.43; Mon, 15 Apr
+ 2024 06:12:45 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::8d2f:ac7e:966a:2f5f]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::8d2f:ac7e:966a:2f5f%6]) with mapi id 15.20.7452.046; Mon, 15 Apr 2024
+ 06:12:45 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: frank.li@nxp.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	john.g.garry@oracle.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com
+Cc: mike.leach@linaro.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v10 1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
+Date: Mon, 15 Apr 2024 14:13:13 +0800
+Message-Id: <20240415061320.3948707-1-xu.yang_2@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0034.apcprd02.prod.outlook.com
+ (2603:1096:3:18::22) To DU2PR04MB8822.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
- <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
-In-Reply-To: <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Sun, 14 Apr 2024 23:06:17 -0700
-Message-ID: <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|PA1PR04MB10117:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37fdaf6f-0206-466f-bc66-08dc5d1310ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	X1jTtVPTIm+Tk3izL1Rh9samVxstjC5x8BTIr0XQSeLd2m3zH0jvFZc7raMcOX52TVs3G03+jI2vDfpQqFUtEs/M6EYEgqGOAz+3PlXF9kfn6Hdu7tWJZ+FRnWHRSeUXoY7fomKPTVCPtMF08xuVCxt0J2RerrykViIMMY+0bnRPHwym3kyw5/JIZoT1HcMOpo/LeTUA+ywRzW8G1nlmvDZVpF4aRjDszZGn2gasUwdFM70whUKqhEs46mHe4abeRUDlLW+jK1tg+t+AsCzqwS30/KGhbN8ybHH9Mn/WbGxA0mLMMyXNFcoqO5Z9dZyYZ71ALYa11d3BYWASVuwvyoJ32ORKD0mli7tgNaab2MYVWgxXTsLis0yFbVQxYuqinYQzndp+hPuThw0g2HoG8d45BNg6hgk6DyyGCNkBiBFRpbudVyMKbVVlrU/6lrPBkEGTsny73He9Rr1e3bcwxvfHvwOpnwWLGLPCsYFZn7V4aIs4R2Km5llswFOxY/c2Lq7uV5fRzc8T50siL6THKgCVRX1xUMqjSKOegIPeUqwMP3kubhgT0HWYGXGHN/KnkePnFmZu/MbUJqnpeC6dkbRd6Z5lAF2HBFQPcU/FM2ubzWcs04kwrzQfDwwa5aW7I8KcsLsMrPbskU5QUYeXyxYPBW/+kqW0DTnNZcEgrOAXg6TehjGYOh9XrQmNPw155C5MrYoqubTF3wWIT44lZnJZnXJFrSO+lnlvg7D37kE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(376005)(7416005)(1800799015)(366007)(38350700005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?A8UElxr1RznmLE2IyqqdOHv91P2kKFlUqVmV1RL6VfJEeVxgHas7CV39fCCS?=
+ =?us-ascii?Q?iqmBBCdS72Yr1uM/nhAFA0ItgO36ItzBda6tFp7vPhTavlsEFnai8xfxx8Kk?=
+ =?us-ascii?Q?9Ygy8aN3CprrSMwGALVc8qHFVhyIUet0HqZkkJ+0ygkQtA7JyDHR3nkJntjN?=
+ =?us-ascii?Q?DO3nHnIKJoLKWiKgLXZ3dQUCqYd8A2VrpASh/T0HYevGdwuGDotzjOIDX3e9?=
+ =?us-ascii?Q?YGscjhNmh/6J6IyhsPQ8S4HVp+ccF5oTWax3PXfOYVYCj8EjFgdPaKMlJr4T?=
+ =?us-ascii?Q?iPpzsxxSoNGaUWYVsat8IaPpwhIplUagpDQKgfnfNvpt18ZyMIh7M/Lf8WO/?=
+ =?us-ascii?Q?RHN6Ushai9vHDAEOYey/HJh8sj4hr3zzttV/LyLyKWBAhZaTiRZb4Wafh5qB?=
+ =?us-ascii?Q?LMqkDLUvwW6lOVUZLXThnCH641RAQiiaNUA5cRWnr2IVOS9RS1RRw9/CG6vO?=
+ =?us-ascii?Q?KEJwMCabQV8w0PE3aA+pJ2mUAw4Nj5k/dZSlcHzAfphmVAYHjhpa8UYXus7M?=
+ =?us-ascii?Q?tdCqnzU+dQVgslb0qarX0DFT4yLNZWbmDwTBJP1D0creJmaWPAv8jEPEycQL?=
+ =?us-ascii?Q?yPkn1XLSaeEOLQpKqx9Qoj3+TBhhIPPcAhUWVfwyrJYsAE/Zc3OIzVECKRyf?=
+ =?us-ascii?Q?R0TN+ZAtQCnECtBA4TLzRjxF4TJmmD3mkJ2CnGeaVqYUf8l/pnFyJpwD45c8?=
+ =?us-ascii?Q?9zKdApu7Mrx1JR8BMd0rbiL3gk8GrzC7iiTpImYdw4AIRciKvw1/1UKOeBdq?=
+ =?us-ascii?Q?7CxYMJYBNEe3e/+mh4smWAq9YgVVRJ8BP8Egf9s613FP6XDprzw6MFVJtXYC?=
+ =?us-ascii?Q?WRmS78VRuEy4ddhih5NN6JWFh2i9cRVylGbK/YgexLL47gcgoPxgrnuB28Ny?=
+ =?us-ascii?Q?DR4E3oDpshkWm/qJ5pep9HesMmroRjM8GxjQFcCGa5VpU6Wzt3EdoUMhUjwG?=
+ =?us-ascii?Q?vMEMpm/eWW5Su428k0OtUI+MuPNKoSa/dwvU7c/+jMpPiiPPbfyt8AEhs6UX?=
+ =?us-ascii?Q?cqB8lvgrFN7TN1KVnQnaqMipZEvIbYgi6/x2RUENtwhDpj7ltk0sY1Xcge8S?=
+ =?us-ascii?Q?hKv5uKJMXCKKT/eI20p0oP6Dw+8hDKydPO6BhJISRsvbX2JT99AxE0F5a358?=
+ =?us-ascii?Q?ZAUdUKZXTiMJ+raJ1Nb/gXEzKEv8cUwI5MX41Z9/WmfSGjLPqU7hTZ18whmv?=
+ =?us-ascii?Q?MXpLCaccVl8TnGHgUZ82eBy5q8b4iZ7iC4zZM4oF2yDcbqY/UEYrCd+w9DLW?=
+ =?us-ascii?Q?ibMX1hnuZZLe2Hx1y4vDCb8D/ubA+EqJlILE64pLQnN3q9u3S7nlNhY1irDj?=
+ =?us-ascii?Q?KdvZ+G5dsKiyPy7nS+mGVZ49XvYCO4A1kyyME8nFpm6xYPd+jI/+kK68dJ7u?=
+ =?us-ascii?Q?hB+V830HUgfFig5pv0Wwoqp6nRPTfVyTY+Xy5NuZ4cW196+Q8WdjL1TG1Jw0?=
+ =?us-ascii?Q?+B8D6oNc1nQL4Jm9FHqa3Egys8kfnu0Ez/X492nHlhKUqyEBE9czLR/X/VK9?=
+ =?us-ascii?Q?JnOQLIJ4afeoKrsZRrdBRUyUxlYYgZ1d4XwMPs6JYfYEk3IBdlRE+RwtmeHZ?=
+ =?us-ascii?Q?SstG+Yv0ldCCDrnXmX0u77gcKYV0nOfETJUjqssu?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37fdaf6f-0206-466f-bc66-08dc5d1310ce
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 06:12:45.1026
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 25s+uzwmkENGdoIidTtkHK6I4kEz2OQZQThg+X292z9qHFyxU/WPPDgTU+emVnMuEQmiSVPAl+wQ8Z4TJyehEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10117
 
-On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 4/13/2024 11:34 AM, Mingwei Zhang wrote:
-> > On Sat, Apr 13, 2024, Mi, Dapeng wrote:
-> >> On 4/12/2024 5:44 AM, Sean Christopherson wrote:
-> >>> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> >>>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>>>
-> >>>> Implement the save/restore of PMU state for pasthrough PMU in Intel.=
- In
-> >>>> passthrough mode, KVM owns exclusively the PMU HW when control flow =
-goes to
-> >>>> the scope of passthrough PMU. Thus, KVM needs to save the host PMU s=
-tate
-> >>>> and gains the full HW PMU ownership. On the contrary, host regains t=
-he
-> >>>> ownership of PMU HW from KVM when control flow leaves the scope of
-> >>>> passthrough PMU.
-> >>>>
-> >>>> Implement PMU context switches for Intel CPUs and opptunistically us=
-e
-> >>>> rdpmcl() instead of rdmsrl() when reading counters since the former =
-has
-> >>>> lower latency in Intel CPUs.
-> >>>>
-> >>>> Co-developed-by: Mingwei Zhang <mizhang@google.com>
-> >>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>>> ---
-> >>>>    arch/x86/kvm/vmx/pmu_intel.c | 73 +++++++++++++++++++++++++++++++=
-+++++
-> >>>>    1 file changed, 73 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_int=
-el.c
-> >>>> index 0d58fe7d243e..f79bebe7093d 100644
-> >>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> >>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> >>>> @@ -823,10 +823,83 @@ void intel_passthrough_pmu_msrs(struct kvm_vcp=
-u *vcpu)
-> >>>>    static void intel_save_pmu_context(struct kvm_vcpu *vcpu)
-> >>> I would prefer there be a "guest" in there somewhere, e.g. intel_save=
-_guest_pmu_context().
-> >> Yeah. It looks clearer.
-> >>>>    {
-> >>>> +  struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
-> >>>> +  struct kvm_pmc *pmc;
-> >>>> +  u32 i;
-> >>>> +
-> >>>> +  if (pmu->version !=3D 2) {
-> >>>> +          pr_warn("only PerfMon v2 is supported for passthrough PMU=
-");
-> >>>> +          return;
-> >>>> +  }
-> >>>> +
-> >>>> +  /* Global ctrl register is already saved at VM-exit. */
-> >>>> +  rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
-> >>>> +  /* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. *=
-/
-> >>>> +  if (pmu->global_status)
-> >>>> +          wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status)=
-;
-> >>>> +
-> >>>> +  for (i =3D 0; i < pmu->nr_arch_gp_counters; i++) {
-> >>>> +          pmc =3D &pmu->gp_counters[i];
-> >>>> +          rdpmcl(i, pmc->counter);
-> >>>> +          rdmsrl(i + MSR_ARCH_PERFMON_EVENTSEL0, pmc->eventsel);
-> >>>> +          /*
-> >>>> +           * Clear hardware PERFMON_EVENTSELx and its counter to av=
-oid
-> >>>> +           * leakage and also avoid this guest GP counter get accid=
-entally
-> >>>> +           * enabled during host running when host enable global ct=
-rl.
-> >>>> +           */
-> >>>> +          if (pmc->eventsel)
-> >>>> +                  wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, 0);
-> >>>> +          if (pmc->counter)
-> >>>> +                  wrmsrl(MSR_IA32_PMC0 + i, 0);
-> >>> This doesn't make much sense.  The kernel already has full access to =
-the guest,
-> >>> I don't see what is gained by zeroing out the MSRs just to hide them =
-from perf.
-> >> It's necessary to clear the EVENTSELx MSRs for both GP and fixed count=
-ers.
-> >> Considering this case, Guest uses GP counter 2, but Host doesn't use i=
-t. So
-> >> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would be en=
-abled
-> >> unexpectedly on host later since Host perf always enable all validate =
-bits
-> >> in PERF_GLOBAL_CTRL MSR. That would cause issues.
-> >>
-> >> Yeah,  the clearing for PMCx MSR should be unnecessary .
-> >>
-> > Why is clearing for PMCx MSR unnecessary? Do we want to leaking counter
-> > values to the host? NO. Not in cloud usage.
->
-> No, this place is clearing the guest counter value instead of host
-> counter value. Host always has method to see guest value in a normal VM
-> if he want. I don't see its necessity, it's just a overkill and
-> introduce extra overhead to write MSRs.
->
+i.MX95 has a DDR pmu. This will add a compatible for it.
 
-I am curious how the perf subsystem solves the problem? Does perf
-subsystem in the host only scrubbing the selector but not the counter
-value when doing the context switch?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 
->
-> >
-> > Please make changes to this patch with **extreme** caution.
-> >
-> > According to our past experience, if there is a bug somewhere,
-> > there is a catch here (normally).
-> >
-> > Thanks.
-> > -Mingwei
-> >>> Similarly, if perf enables a counter if PERF_GLOBAL_CTRL without firs=
-t restoring
-> >>> the event selector, we gots problems.
-> >>>
-> >>> Same thing for the fixed counters below.  Can't this just be?
-> >>>
-> >>>     for (i =3D 0; i < pmu->nr_arch_gp_counters; i++)
-> >>>             rdpmcl(i, pmu->gp_counters[i].counter);
-> >>>
-> >>>     for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++)
-> >>>             rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i,
-> >>>                    pmu->fixed_counters[i].counter);
-> >>>
-> >>>> +  }
-> >>>> +
-> >>>> +  rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> >>>> +  /*
-> >>>> +   * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage=
- and
-> >>>> +   * also avoid these guest fixed counters get accidentially enable=
-d
-> >>>> +   * during host running when host enable global ctrl.
-> >>>> +   */
-> >>>> +  if (pmu->fixed_ctr_ctrl)
-> >>>> +          wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
-> >>>> +  for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++) {
-> >>>> +          pmc =3D &pmu->fixed_counters[i];
-> >>>> +          rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i, pmc->counter);
-> >>>> +          if (pmc->counter)
-> >>>> +                  wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, 0);
-> >>>> +  }
-> >>>>    }
-> >>>>    static void intel_restore_pmu_context(struct kvm_vcpu *vcpu)
-> >>>>    {
-> >>>> +  struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
-> >>>> +  struct kvm_pmc *pmc;
-> >>>> +  u64 global_status;
-> >>>> +  int i;
-> >>>> +
-> >>>> +  if (pmu->version !=3D 2) {
-> >>>> +          pr_warn("only PerfMon v2 is supported for passthrough PMU=
-");
-> >>>> +          return;
-> >>>> +  }
-> >>>> +
-> >>>> +  /* Clear host global_ctrl and global_status MSR if non-zero. */
-> >>>> +  wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> >>> Why?  PERF_GLOBAL_CTRL will be auto-loaded at VM-Enter, why do it now=
-?
-> >> As previous comments say, host perf always enable all counters in
-> >> PERF_GLOBAL_CTRL by default. The reason to clear PERF_GLOBAL_CTRL here=
- is to
-> >> ensure all counters in disabled state and the later counter manipulati=
-on
-> >> (writing MSR) won't cause any race condition or unexpected behavior on=
- HW.
-> >>
-> >>
-> >>>> +  rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> >>>> +  if (global_status)
-> >>>> +          wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status);
-> >>> This seems especially silly, isn't the full MSR being written below? =
- Or am I
-> >>> misunderstanding how these things work?
-> >> I think Jim's comment has already explain why we need to do this.
-> >>
-> >>>> +  wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
-> >>>> +
-> >>>> +  for (i =3D 0; i < pmu->nr_arch_gp_counters; i++) {
-> >>>> +          pmc =3D &pmu->gp_counters[i];
-> >>>> +          wrmsrl(MSR_IA32_PMC0 + i, pmc->counter);
-> >>>> +          wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, pmc->eventsel);
-> >>>> +  }
-> >>>> +
-> >>>> +  wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> >>>> +  for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++) {
-> >>>> +          pmc =3D &pmu->fixed_counters[i];
-> >>>> +          wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, pmc->counter);
-> >>>> +  }
-> >>>>    }
-> >>>>    struct kvm_pmu_ops intel_pmu_ops __initdata =3D {
-> >>>> --
-> >>>> 2.34.1
-> >>>>
+---
+Changes in v2:
+ - no changes
+Changes in v3:
+ - let imx95 compatilbe with imx93
+Changes in v4:
+ - add Acked-by tag
+Changes in v5:
+ - no changes
+Changes in v6:
+ - no changes
+Changes in v7:
+ - no changes
+Changes in v8:
+ - no changes
+Changes in v9:
+ - no changes
+Changes in v10:
+ - no changes
+---
+ Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+index 6c96a4204e5d..37e8b98f2cdc 100644
+--- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+@@ -30,6 +30,9 @@ properties:
+       - items:
+           - const: fsl,imx8dxl-ddr-pmu
+           - const: fsl,imx8-ddr-pmu
++      - items:
++          - const: fsl,imx95-ddr-pmu
++          - const: fsl,imx93-ddr-pmu
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
+
