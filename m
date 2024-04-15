@@ -1,131 +1,144 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7639182C6C
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 17:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3582C7E;
+	Mon, 15 Apr 2024 17:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200634; cv=none; b=XXWn8HoymnlabEBsuJhWS699AMOjAE2+OfDDsmqywyWnu2OzCxUH7v8GphQ37ybBuM+sPTPFB+aqzZqzhjFTjECBAxm7ErITVe9Tz+euKU9IFKO6/TANHb4tfaw3M3CryBFeArhNn4TjuQyJE45BPT3QMYWiWbYoosaDZCOSPc8=
+	t=1713202539; cv=none; b=m+PqZ8jjUVhVWP0UuAepGeMWHPZ4zGXYblRCHcZVdqyeHmoXYGDAz1P55CuUwmijNGd/K8KrU8o/n1T0zxuCAfm3af4If9tG/dBTnBDnTKkKcvvZ3ECq/7O8xfHZDIcdpiaXZm2H/8NSiCmKU3QCM8nVm+vpMKTcSPUf8kfwnsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200634; c=relaxed/simple;
-	bh=irgloZCVTvzuDkYp0ohKwo1sf7N8wth+rz+R9T7PAmU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IU4rX+ZcPdFI6+ObL/rXQyvH47gJYrvhOQWMJjCYEPmunIGM1Px8ZaLla7FlP6FCDRXZdlhR82FlrVOjOfwKjFzL7mH9SglaUnlJvsPwQc6OilWMzgCmgDl/0NEmj9KtasMEVAoBDtv5s5PkLTWzBiaIvQLXV3VWZNUMd7YI5rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kdQBDfA1; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713202539; c=relaxed/simple;
+	bh=+mDx52s9ABbP+qylPDjlEdQbUbUBCGmkdgYzyLRZEsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqeNeb/Z19YIaPnZaa6lP5S/kM9ifYZxEJ6rAH7AL7A+V4BaleeEjAEFZKzfdTiO+0i3I74mmMQ+4GunAPFDYIaxEGo3kAqm0S1bT0bM3l2Wz9DL7Pv1nFOwvAt4iYkoDOZdKwPOpmo69ZnGw9d5nQIvhDPqe9rUoNGDUFs/MeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZRh5BP4; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdQBDfA1"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ed596d8713so1527105b3a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 10:03:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZRh5BP4"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ecff85b21cso494643b3a.1;
+        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713200633; x=1713805433; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zfqt/NgDwjKFxB5AgyRPdEKVaYoxBURY78UkNYsrqoM=;
-        b=kdQBDfA1YoD5eV5hZLFaW6lCUFn8xarhRyy1/AEzHDIaJElIy6gvxKCvJ8JNCXu6ei
-         Kj7wNPfr4plDTbXyJ7g/lwiAKSWlxTV0on0Ad15kCXiS5NPPeZ1TeSdBA54D7k46L7FK
-         lTUh8sJKVLevWb6+6gVYBAIhJ9D0mWkb5RUCsiiEdKMXRvOlMe6sjdq2bGwAjk12Cjju
-         aTJwMH5Etf8T1lL3LK6m3+uevFPoTAQ/03BifcaNIWh4IQ2BGaWQnAoi+a2uNNL43VKS
-         YJ2f5Czo2LoYtJkZ4DZFGVhfFZTu1bKzGuKoxX4iLYbVfyvD+/5lmgcmV1ngILr6pzoh
-         tErw==
+        d=gmail.com; s=20230601; t=1713202537; x=1713807337; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
+        b=OZRh5BP45gs7u13Xk0gSprV0+Z7z6T13T2rmRTsg1AOar+YqX9mYPrruGPrLyvoq2P
+         /s7oPyW+pT588hzUNo83NAckQ+ubiE7df5Bk3bpFleAXuTLqVLtE6s2kMJRVFQh53t8i
+         9xFgzPQ3HsdLb7LQTQe+/qnsIrxlK0J/DeSqe6+0Sda7IIf/1oYwqUcc7HYX2tpJLMyI
+         xCAdwkxyRYaFoRexbp79lkoWNtjEwVy8AH3Rc03PgIpx7V/IuLoTYboG4DY0zLPJ2+iQ
+         qlI7gh3z2WKfbzCbRNA5rL5XgOP3ThjotzKdNe3PJBS4fezf1CB9FuPBhIyDJJyx+C2p
+         /7IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713200633; x=1713805433;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zfqt/NgDwjKFxB5AgyRPdEKVaYoxBURY78UkNYsrqoM=;
-        b=Jhjckjzac4xVHTl9kdbVRSM7bX8kyU3KG4s5jlnPDtqGUyvLATrL+z2uwi4Nxn5uyl
-         yesiq9gbhVxKxcvRuuoqSkZ3FNIgorD395pg3NOR1OaJooQgDPndIvuLs+dIg847LqgT
-         hSceGGYycLc7N1n2H2wOwwK5BVkE3bimUiNWkZWjaGpiaHcbzzrQkOTwR3QwagTnJeSC
-         KWRP/duKNKRGV7wmtLdbxbePFAsQeuiNChVtb1lq146XOJerLlpnRgAKPypm8s7XCW0i
-         XmfSBx6Ht7NCcISFcI+BCE/6+BwyUbpi2WhTdqgflI8S/Y+ZQX3JK8myBecgNldEMnKn
-         PyIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVz0OXkueFELEBchN7LvPUPLm4HczDlVgSObHUiq12Gv0JTvI8MYHGs1uIXG2HDI1VW6U0OOjld+zFKfw2en3hnHXWHs86tPFPokXamCr7tLQ==
-X-Gm-Message-State: AOJu0YxyGDqMTYGO2elknAYqjE393lP48ccFqWwGPlbQVQEWzzCcBYBn
-	RsEWsdOOyABdI6kSAIB8RCqbh2p7RKYsu8xMoDiVM93u1jLT4X3+Wavfwr8UWV5T3cQFnXVtcbQ
-	zSw==
-X-Google-Smtp-Source: AGHT+IGA4ztkhkZCfS7682EU3T6gUsIsEcYhQEyC6yG3styg4+lnibMOlTTY3gI+fKNitZWoNIXkz2MBC8E=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:9399:b0:6ec:f266:d214 with SMTP id
- ka25-20020a056a00939900b006ecf266d214mr254346pfb.4.1713200632756; Mon, 15 Apr
- 2024 10:03:52 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:03:51 -0700
-In-Reply-To: <86h6g5si0m.wl-maz@kernel.org>
+        d=1e100.net; s=20230601; t=1713202537; x=1713807337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
+        b=lA5IPzMBRucgtJTKCxuALZ/u3Rmhuxu/AimODy3e1heYLQnDtMtbAE62LcFn7WTjfh
+         f64eB5NMu/u5JkoTjZYZ4vcB0SYn90v5ld1l41TxX41bggnlt3WuusiBQjc9PtwDh8uJ
+         23GNwcGsEdAL3wfZhpGbpq2hb04xZPOnFW/XFqbWnVvonWDr3qonPJlvh4JFFvIaQhJ0
+         ywWv8b96QWWISmVn9uHktffLo2ftzxS/nbYC7sd80faQbCLbbjn3sg7Oj8fjVE2uzXl3
+         LRrDE7l02+QOShGB/MIzlZyRvCl9TZXPW2cEKpkwvHvFh/8NmBB4T1vKGwubBt9UJ93f
+         v11w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+1ebhUs4LbpqqqEF5LvUXgaRis44eUC6Cpp0aIwP12Qh5KAPirmVVkQKq14fTrEj7Z00+rNI2f1tOz4nG8T9jGwGdo5BWg76vVUp+mpJ3ztlcD3DjfxdeflbFhNZ19bzMhImMZ+9KN58tcLD8u/rdGJRRMYPhWIye91VWGUur0v85xZrk4t+mIQuchsM52uawzsfu7KxU6o1B8z1CztMRCtEPCudWcZsLWmp1
+X-Gm-Message-State: AOJu0Yws6C4neanW3YH9iIygAcri4vSuqC2Y8bDEU/LxIsLnRAbCJhB3
+	iS2r77EznTPzeQTlMWueON1mCI6abT+iUqxfzAP3U/QNfRG1deKs
+X-Google-Smtp-Source: AGHT+IG6NKLoYgtNA0zwWTzkP8WTGQd4qLXhWBTEEVWaqnnI2QLPzr1rMVeOMKwzxaqVx/1yQ3sSow==
+X-Received: by 2002:a05:6a20:2590:b0:1a9:a31a:1b69 with SMTP id k16-20020a056a20259000b001a9a31a1b69mr13640576pzd.6.1713202537217;
+        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id t6-20020a056a00138600b006ecef9e9615sm7456833pfg.200.2024.04.15.10.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 10:35:36 -0700 (PDT)
+Date: Tue, 16 Apr 2024 01:35:31 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 04/17] lib min_heap: Add type safe interface
+Message-ID: <Zh1lY8EFyE943+89@visitorckw-System-Product-Name>
+References: <20240406164727.577914-1-visitorckw@gmail.com>
+ <20240406164727.577914-5-visitorckw@gmail.com>
+ <20240412073017.GE30852@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
-Message-ID: <Zh1d94Pl6gneVoDd@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412073017.GE30852@noisy.programming.kicks-ass.net>
 
-On Sat, Apr 13, 2024, Marc Zyngier wrote:
-> On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
-> > 
-> > On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > > > Also, if you're in the business of hacking the MMU notifier code, it
-> > > > would be really great to change the .clear_flush_young() callback so
-> > > > that the architecture could handle the TLB invalidation. At the moment,
-> > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > > > being set by kvm_handle_hva_range(), whereas we could do a much
-> > > > lighter-weight and targetted TLBI in the architecture page-table code
-> > > > when we actually update the ptes for small ranges.
-> > > 
-> > > Indeed, and I was looking at this earlier this week as it has a pretty
-> > > devastating effect with NV (it blows the shadow S2 for that VMID, with
-> > > costly consequences).
-> > > 
-> > > In general, it feels like the TLB invalidation should stay with the
-> > > code that deals with the page tables, as it has a pretty good idea of
-> > > what needs to be invalidated and how -- specially on architectures
-> > > that have a HW-broadcast facility like arm64.
-> > 
-> > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-> > straightforward solution would be to let architectures override flush_on_ret,
-> > but I would prefer something like the below as x86 can also utilize a range-based
-> > flush when running as a nested hypervisor.
-
-...
-
-> I think this works for us on HW that has range invalidation, which
-> would already be a positive move.
+On Fri, Apr 12, 2024 at 09:30:17AM +0200, Peter Zijlstra wrote:
+> On Sun, Apr 07, 2024 at 12:47:14AM +0800, Kuan-Wei Chiu wrote:
 > 
-> For the lesser HW that isn't range capable, it also gives the
-> opportunity to perform the iteration ourselves or go for the nuclear
-> option if the range is larger than some arbitrary constant (though
-> this is additional work).
+> > -struct min_heap {
+> > -	void *data;
+> > -	int nr;
+> > -	int size;
+> > -};
+> > +#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
+> > +struct _name {	\
+> > +	int nr;	\
+> > +	int size;	\
+> > +	_type *data;	\
+> > +	_type preallocated[_nr];	\
+> > +}
 > 
-> But this still considers the whole range as being affected by
-> range->handler(). It'd be interesting to try and see whether more
-> precise tracking is (or isn't) generally beneficial.
+> 
+> > @@ -3738,7 +3739,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+> >  	struct perf_cpu_context *cpuctx = NULL;
+> >  	/* Space for per CPU and/or any CPU event iterators. */
+> >  	struct perf_event *itrs[2];
+> > -	struct min_heap event_heap;
+> > +	struct perf_event_min_heap event_heap;
+> >  	struct perf_event **evt;
+> >  	int ret;
+> >  
+> > @@ -3747,11 +3748,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+> >  
+> >  	if (!ctx->task) {
+> >  		cpuctx = this_cpu_ptr(&perf_cpu_context);
+> > -		event_heap = (struct min_heap){
+> > -			.data = cpuctx->heap,
+> > -			.nr = 0,
+> > -			.size = cpuctx->heap_size,
+> > -		};
+> > +		event_heap.data = cpuctx->heap;
+> > +		event_heap.nr = 0;
+> > +		event_heap.size = cpuctx->heap_size;
+> >  
+> >  		lockdep_assert_held(&cpuctx->ctx.lock);
+> >  
+> > @@ -3760,11 +3759,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
+> >  			css = &cpuctx->cgrp->css;
+> >  #endif
+> >  	} else {
+> > -		event_heap = (struct min_heap){
+> > -			.data = itrs,
+> > -			.nr = 0,
+> > -			.size = ARRAY_SIZE(itrs),
+> > -		};
+> > +		event_heap.data = itrs;
+> > +		event_heap.nr = 0;
+> > +		event_heap.size = ARRAY_SIZE(itrs);
+> >  		/* Events not within a CPU context may be on any CPU. */
+> >  		__heap_add(&event_heap, perf_event_groups_first(groups, -1, pmu, NULL));
+> >  	}
+> 
+> Not too happy about these. If you ever add more fields they will go
+> uninitialized. Why not keep the existing form and fix the struct name?
 
-I assume the idea would be to let arch code do single-page invalidations of
-stage-2 entries for each gfn?
+Sorry for the late reply. I'm traveling.
+I'll change that back in v4.
 
-Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
-doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
-provides an instruction to do broadcast invalidations, but it takes a virtual
-address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
-a guest virtual address, but it's a moot point because KVM doen't have the guest
-virtual address, and if it's a host virtual address, there would need to be valid
-mappings in the host page tables for it to work, which KVM can't guarantee.
+Regards,
+Kuan-Wei
