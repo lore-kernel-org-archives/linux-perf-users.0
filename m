@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83FE374F5
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 06:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F227E383A2
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 06:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713163010; cv=none; b=oDX61/HLguEe3eZMJfb7X6p/AxwNJkEZoHxDzwlr/1CRAhcgjARbet8gNvhcFzbS/nJxdU9y8KUkvPMW98KeKgdeAF8QVXxl7xWFD8jCL/T/GdmQj5LqOwWsNuqp6o678cvn85J/xXh5FHwcQ1HuiaEqYUaFHESi0qg51XXHQ7o=
+	t=1713163012; cv=none; b=su+0Dh1go+N3FImgbhCWxPnHNpOeb9oU7VKDW5/6d2I4Ks8dRHv6DNIQrbBIgWApzdi26kFAUpR3gbGj7K9kCuz8UjgHGpJ0v0VJpXpz5HDieDgyUWky7stjoU3hRPEN0TseBeJqS1fxf7VevRkcrNJ5GaN/Tr8avCc1mEEfRV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713163010; c=relaxed/simple;
-	bh=yRXdGKWgYrAy4QEN4utAId08JcclyUD6POZY54MLD3g=;
+	s=arc-20240116; t=1713163012; c=relaxed/simple;
+	bh=YnUF3ceBTuEWLeyH8vOqzQm1Yqq/JnFb2jhfnx6s9QU=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=rob1BLU/h4OXSk0GSeuBkS3SxnZ8L/sbmddJCc85Ko+GOO/nB5TO/hbc1kRDmRSzlQ7+KSWP/mhgCUejgvg16czTMMjSrFdw7x6NjQUCdR43p0e1KGez4zCVw8p1qSDpqlbIiX0dykGnctj5NWBm5JGLqiTPQaGTfroAnVI+mAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jDzBHwiA; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=eAzVDG5SknwDqBbJL6IRwmUMlQLyiDT8SAc5knxr29yxT22ZF8s+QD0dE2xkpnyQQMIGD9JJkIh2WJYAPav9S7vAyvucUOMZZOP9VQzkoRHxyRPZGaWNi3WBGkxGoPqEgdjzPauwA5iUD4SPBhxkQXlXxOftut1AihpHhD6FvOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LE1BPs3L; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jDzBHwiA"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61ab00d8a2eso16367047b3.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Apr 2024 23:36:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LE1BPs3L"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcd1779adbeso4758327276.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 14 Apr 2024 23:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713163007; x=1713767807; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1713163010; x=1713767810; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=t6u9K3gcjLrMHLCFAhYLG4bnVQmGcLUFFxbpFKDU6RA=;
-        b=jDzBHwiAOkRQskyS5zSTKTDjRWNAisWGYxkQYiJHclJSKc6s5nkq5mcNDw5yP+/sEB
-         BFWqiKD9XbxK8gyJCu1tFIf2sZnqE7Es9jS5YcsEe2qkgfHKFQoadiV1PQ5SA0q6bG9y
-         r5rusuuE+q77qkwkTm5Z5I9xn4WYjvUPmSfw94d/lsAa+fUaMNMPYWOV+vfhl5OWsIsx
-         JzdHvJQl90399wtcKZhgQAgk2lEkXwjZ9UpGJLac+AAqkMtu7j0Nr+I4xz3TCiPHPs3P
-         HRTA9Gveyg1N5b+eyYT7rR2SPQ/jXtaxBuMaAUx2BfyL5ANmiVX7J921CG7Xf8RXF939
-         zasw==
+        bh=SsM8Y1cj6kmrsHpwiXYtXKur/DOQuLkG4gE86ZL8CEk=;
+        b=LE1BPs3LcUYqEEl7YNf0MJSUzYbOnMtITFXjBs0w/nJE4yjQuInhXMvMerZjwquSkA
+         NzX3yJwHs29EN8taGYBGLrELzTH0Kf15s2wO96zuSMMbOkZESkJyFV8rx+WaahyXYT4s
+         nSqAyZySXkYbvjHkSQ+gcej82kbT3h88QPEtmqa0ymaaBLXCAfgkyD66Y/2rjcB+wI1W
+         GBCHKu5luo+nuIw61j6J1P9AeKWcgR8x2AhYaUjKBxbr7YvL1GiW9Uw6pYMUzhX0OSOW
+         47XT7fDOJ0BB1EniV6eEEGXl6KnDp8oZwL8qBXdwfA77OKE4R007+Bs6HFyPwcAjHOnf
+         CCDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713163007; x=1713767807;
+        d=1e100.net; s=20230601; t=1713163010; x=1713767810;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t6u9K3gcjLrMHLCFAhYLG4bnVQmGcLUFFxbpFKDU6RA=;
-        b=Fv1d7mP1xyzZW0tC9AfCfa5P8dvAPthTOFzNMNBRbf+WFbWOd8PFmLFLRj4WylIHni
-         yEa5+ok0aTkfB+3TEksNOYOvDc4uJYZHBQcJ9kgegXFQVHSF3GzSGYVr2wJkpDwQGq2L
-         i/6sWVtZXH1/tmZc7aAgE8hYa6QqINu8i02HJI069hq7Pw/PLKEO9/W51ky9rFhachTx
-         o09SjNTUD/RnTpu736EFBHdp48fC425NJ3FGtDfdkSzduHiHJG7xUK0EFKruTKcag1Nw
-         7LDJMf6NRxLKhbpkpRK3THyTLQ9G8Rf1MQzaAmN2M5+YDhS5jXjKZYaWc1Ci/1uRy2GA
-         j/Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtkFa5wYJrzxfztiGchBmwgL77FrbZbTKaQa4+VeVVGLYsHIeK79fHS1LfQpXjOJzYUljVeo1bsQOXw7MGYBiGOapGkoLIwGzyjGYJdgQ0nw==
-X-Gm-Message-State: AOJu0YyC1KFUrh/gil0qAPJWG0VnqUEIIsCCIcyTagnBMk1Xc9A2Stur
-	grxIj7xXfUt6gZxSUy1cniN/AhRLnzhXnJ14sr+4RI2fituAFohPJhcV7iHZ0wn9EuVlEhDKUkh
-	vkfpM4g==
-X-Google-Smtp-Source: AGHT+IG8RJ4TxbVqnYh/ZFFdHmJfxbpZPCmfmXJfgiLHBndDiPsUAFRcqUnZUMNnHTZLEpylkDO/67CKESCA
+        bh=SsM8Y1cj6kmrsHpwiXYtXKur/DOQuLkG4gE86ZL8CEk=;
+        b=Cp/RJUVpcOLlG4NRs3ygGq69FcAVL5leoSS8Zumryeogf4Yiv6dAwXXKfhQZt6JR25
+         vIuyFIL28+zubKUZRPrDW+ba0D3KbR3JkKvbqd3yaPd+IJajNg2vHfC/tS+t1g2bfniC
+         QLXt1galOydl/WqGHqRBYat9Y/FKzSi7zxAR1U5SbNmWI84vw3W5Yp5ho1OcIqpmORJd
+         6eBILM1NjHpR38PlUbe+3ovOJ80R6LxBHenQ9VnmNO++JiI42aatNJ4wlUnxF8HrPzX/
+         eOarzq/Z9z/zJjtLD/H83t/81aHpkZbvociXw0GujgJflhJDvQxSZPUr1XoMrGCOUk0L
+         uThg==
+X-Forwarded-Encrypted: i=1; AJvYcCXw3Wlt+HsuAc9GHUULKE5SMAYr8T8C/6VtMyQhfSr8y6xebEfs8BQvDwgRh1uO0N9IvfsVvKGQCe2I7Z7CZucg3b6euqe5pv5Ona78JrYkJA==
+X-Gm-Message-State: AOJu0Ywc0YLehVfUe7cj/U4Gd8JARGfdu79YfEoh0zucDwhlWI24WEzK
+	CWSVJSFLcQoAyWTAXAm4a4/n1XXNpL1kq5HtrXycnkMFebjUd/9GumwEpiIQ4sGHZlPvV4aWG4e
+	XrGbUkw==
+X-Google-Smtp-Source: AGHT+IGgmCtdEtZrTu/VTbHRcGxy01TSWSnKf6exxI0DVUKXLBA7LgeFtUQlO61tu+Bc2rAGxXCSISNxPEr+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f304:d776:d707:4b57])
- (user=irogers job=sendgmr) by 2002:a05:690c:64c7:b0:61a:c98c:c2a3 with SMTP
- id ht7-20020a05690c64c700b0061ac98cc2a3mr623165ywb.10.1713163007703; Sun, 14
- Apr 2024 23:36:47 -0700 (PDT)
-Date: Sun, 14 Apr 2024 23:36:24 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1549:b0:dc6:dfd9:d431 with SMTP
+ id r9-20020a056902154900b00dc6dfd9d431mr2983582ybu.1.1713163009901; Sun, 14
+ Apr 2024 23:36:49 -0700 (PDT)
+Date: Sun, 14 Apr 2024 23:36:25 -0700
 In-Reply-To: <20240415063626.453987-1-irogers@google.com>
-Message-Id: <20240415063626.453987-8-irogers@google.com>
+Message-Id: <20240415063626.453987-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240415063626.453987-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-Subject: [PATCH v1 7/9] perf parse-events: Handle PE_TERM_HW in name_or_raw
+Subject: [PATCH v1 8/9] perf parse-events: Constify parse_events_add_numeric
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,70 +73,112 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Beeman Strong <beeman@rivosinc.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid duplicate logic for name_or_raw and PE_TERM_HW by having a rule
-to turn PE_TERM_HW into a name_or_raw.
+Allow the term list to be const so that other functions can pass const
+term lists. Add const as necessary to called functions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.y | 31 +++++--------------------------
- 1 file changed, 5 insertions(+), 26 deletions(-)
+ tools/perf/util/parse-events.c | 20 +++++++++++---------
+ tools/perf/util/parse-events.h |  2 +-
+ 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 14175eee9489..bb9bee5c8a2b 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -605,6 +605,11 @@ event_term
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f711ad9b18f0..50c4012c737e 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -34,7 +34,8 @@
+ #ifdef PARSER_DEBUG
+ extern int parse_events_debug;
+ #endif
+-static int get_config_terms(struct parse_events_terms *head_config, struct list_head *head_terms);
++static int get_config_terms(const struct parse_events_terms *head_config,
++			    struct list_head *head_terms);
+ static int parse_events_terms__copy(const struct parse_events_terms *src,
+ 				    struct parse_events_terms *dest);
+ 
+@@ -154,7 +155,7 @@ const char *event_type(int type)
+ 	return "unknown";
  }
  
- name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
-+|
-+PE_TERM_HW
-+{
-+	$$ = $1.str;
-+}
+-static char *get_config_str(struct parse_events_terms *head_terms,
++static char *get_config_str(const struct parse_events_terms *head_terms,
+ 			    enum parse_events__term_type type_term)
+ {
+ 	struct parse_events_term *term;
+@@ -169,12 +170,12 @@ static char *get_config_str(struct parse_events_terms *head_terms,
+ 	return NULL;
+ }
  
- event_term:
- PE_RAW
-@@ -646,20 +651,6 @@ name_or_raw '=' PE_VALUE
- 	$$ = term;
- }
- |
--name_or_raw '=' PE_TERM_HW
--{
--	struct parse_events_term *term;
--	int err = parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
--					 $1, $3.str, &@1, &@3);
--
--	if (err) {
--		free($1);
--		free($3.str);
--		PE_ABORT(err);
--	}
--	$$ = term;
--}
--|
- PE_LEGACY_CACHE
+-static char *get_config_metric_id(struct parse_events_terms *head_terms)
++static char *get_config_metric_id(const struct parse_events_terms *head_terms)
  {
- 	struct parse_events_term *term;
-@@ -712,18 +703,6 @@ PE_TERM '=' name_or_raw
- 	$$ = term;
+ 	return get_config_str(head_terms, PARSE_EVENTS__TERM_TYPE_METRIC_ID);
  }
- |
--PE_TERM '=' PE_TERM_HW
--{
--	struct parse_events_term *term;
--	int err = parse_events_term__str(&term, $1, /*config=*/NULL, $3.str, &@1, &@3);
--
--	if (err) {
--		free($3.str);
--		PE_ABORT(err);
--	}
--	$$ = term;
--}
--|
- PE_TERM '=' PE_TERM
+ 
+-static char *get_config_name(struct parse_events_terms *head_terms)
++static char *get_config_name(const struct parse_events_terms *head_terms)
  {
- 	struct parse_events_term *term;
+ 	return get_config_str(head_terms, PARSE_EVENTS__TERM_TYPE_NAME);
+ }
+@@ -358,7 +359,7 @@ static int config_term_common(struct perf_event_attr *attr,
+ 			      struct parse_events_term *term,
+ 			      struct parse_events_error *err);
+ static int config_attr(struct perf_event_attr *attr,
+-		       struct parse_events_terms *head,
++		       const struct parse_events_terms *head,
+ 		       struct parse_events_error *err,
+ 		       config_term_func_t config_term);
+ 
+@@ -1107,7 +1108,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
+ #endif
+ 
+ static int config_attr(struct perf_event_attr *attr,
+-		       struct parse_events_terms *head,
++		       const struct parse_events_terms *head,
+ 		       struct parse_events_error *err,
+ 		       config_term_func_t config_term)
+ {
+@@ -1120,7 +1121,8 @@ static int config_attr(struct perf_event_attr *attr,
+ 	return 0;
+ }
+ 
+-static int get_config_terms(struct parse_events_terms *head_config, struct list_head *head_terms)
++static int get_config_terms(const struct parse_events_terms *head_config,
++			    struct list_head *head_terms)
+ {
+ #define ADD_CONFIG_TERM(__type, __weak)				\
+ 	struct evsel_config_term *__t;			\
+@@ -1324,7 +1326,7 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
+ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+ 				struct list_head *list,
+ 				struct perf_pmu *pmu, u32 type, u32 extended_type,
+-				u64 config, struct parse_events_terms *head_config)
++				u64 config, const struct parse_events_terms *head_config)
+ {
+ 	struct perf_event_attr attr;
+ 	LIST_HEAD(config_terms);
+@@ -1360,7 +1362,7 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 			     struct list_head *list,
+ 			     u32 type, u64 config,
+-			     struct parse_events_terms *head_config,
++			     const struct parse_events_terms *head_config,
+ 			     bool wildcard)
+ {
+ 	struct perf_pmu *pmu = NULL;
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index db47913e54bc..5005782766e9 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -196,7 +196,7 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
+ int parse_events_add_numeric(struct parse_events_state *parse_state,
+ 			     struct list_head *list,
+ 			     u32 type, u64 config,
+-			     struct parse_events_terms *head_config,
++			     const struct parse_events_terms *head_config,
+ 			     bool wildcard);
+ int parse_events_add_tool(struct parse_events_state *parse_state,
+ 			  struct list_head *list,
 -- 
 2.44.0.683.g7961c838ac-goog
 
