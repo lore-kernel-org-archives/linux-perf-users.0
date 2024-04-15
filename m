@@ -1,144 +1,160 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3582C7E;
-	Mon, 15 Apr 2024 17:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD4F82D93
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 17:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713202539; cv=none; b=m+PqZ8jjUVhVWP0UuAepGeMWHPZ4zGXYblRCHcZVdqyeHmoXYGDAz1P55CuUwmijNGd/K8KrU8o/n1T0zxuCAfm3af4If9tG/dBTnBDnTKkKcvvZ3ECq/7O8xfHZDIcdpiaXZm2H/8NSiCmKU3QCM8nVm+vpMKTcSPUf8kfwnsI=
+	t=1713202734; cv=none; b=PF46se05SD5mfG1lMuBXGHyLQInPkKlg2Cr0GJ2qIXZkE+T+pRGMnpHHuhlFu09/H58ggfyXanW+qx66sDrwMP3BA7Cjv0VPhcgWcZLEAREq57v+SCuOpVufFx7B1LlmMpU3oRs03pNM8m4nAyh6mzfKy6lrksAKniXdGd6Zcd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713202539; c=relaxed/simple;
-	bh=+mDx52s9ABbP+qylPDjlEdQbUbUBCGmkdgYzyLRZEsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fqeNeb/Z19YIaPnZaa6lP5S/kM9ifYZxEJ6rAH7AL7A+V4BaleeEjAEFZKzfdTiO+0i3I74mmMQ+4GunAPFDYIaxEGo3kAqm0S1bT0bM3l2Wz9DL7Pv1nFOwvAt4iYkoDOZdKwPOpmo69ZnGw9d5nQIvhDPqe9rUoNGDUFs/MeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZRh5BP4; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713202734; c=relaxed/simple;
+	bh=L22n2kCvTPK9XcI/4uS/HsKJEBXwSpUSzpEaXjfZhzc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WtSCkbY0F4CfNROCwt3HwtjDwHpw4ZXHjvluZLc9EFbOJx/iytkQeDcuaT+AISBw2KWOWXnP+en8De8xouWtYxNId+L9vgThi83L4UYTLwGgfh3XbuWF7hOlGQwFPKFsXwXMxcy28Ji9FHk0TCSbbf+kpLU+WDGANfrrdrcAAco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rdhugJFe; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZRh5BP4"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ecff85b21cso494643b3a.1;
-        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rdhugJFe"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso2463763a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 10:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713202537; x=1713807337; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
-        b=OZRh5BP45gs7u13Xk0gSprV0+Z7z6T13T2rmRTsg1AOar+YqX9mYPrruGPrLyvoq2P
-         /s7oPyW+pT588hzUNo83NAckQ+ubiE7df5Bk3bpFleAXuTLqVLtE6s2kMJRVFQh53t8i
-         9xFgzPQ3HsdLb7LQTQe+/qnsIrxlK0J/DeSqe6+0Sda7IIf/1oYwqUcc7HYX2tpJLMyI
-         xCAdwkxyRYaFoRexbp79lkoWNtjEwVy8AH3Rc03PgIpx7V/IuLoTYboG4DY0zLPJ2+iQ
-         qlI7gh3z2WKfbzCbRNA5rL5XgOP3ThjotzKdNe3PJBS4fezf1CB9FuPBhIyDJJyx+C2p
-         /7IQ==
+        d=google.com; s=20230601; t=1713202733; x=1713807533; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uwFH+Sl4Dup9217t0rj3A5vCbDNAQn+qKOR55rnIiUg=;
+        b=rdhugJFevZpZvqqEI2o7hkRH8s11SqSNQDRaL2dCmtSe3DOB6CfNJPWC+8Y4fCqYXO
+         kZ/GZiRLaReJT5We0T5oP9RR9rBRrAEG9si5a8F06fZc0w/fGL+bZ4EST15mh5oH5QwB
+         KCJ0DKZr8zdohqjZoCVjiKlzxwWHRDH7qflSrUiym0dT22Y3UUs7NLE4aK+ws98AaKkz
+         aYmedL7OFJNOZ2wv5/rFz70U5aHRNDQRUPJB0Lr4y9cxYIPcQc+cEf5FEsnSDkO1t/Gl
+         hFhtLa0hZnL2+8MJiIUJdus7YlCyNJ76RyJ9pIFcN9t5n9iLliu630TiIJAXi9pfmEzo
+         0h9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713202537; x=1713807337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
-        b=lA5IPzMBRucgtJTKCxuALZ/u3Rmhuxu/AimODy3e1heYLQnDtMtbAE62LcFn7WTjfh
-         f64eB5NMu/u5JkoTjZYZ4vcB0SYn90v5ld1l41TxX41bggnlt3WuusiBQjc9PtwDh8uJ
-         23GNwcGsEdAL3wfZhpGbpq2hb04xZPOnFW/XFqbWnVvonWDr3qonPJlvh4JFFvIaQhJ0
-         ywWv8b96QWWISmVn9uHktffLo2ftzxS/nbYC7sd80faQbCLbbjn3sg7Oj8fjVE2uzXl3
-         LRrDE7l02+QOShGB/MIzlZyRvCl9TZXPW2cEKpkwvHvFh/8NmBB4T1vKGwubBt9UJ93f
-         v11w==
-X-Forwarded-Encrypted: i=1; AJvYcCW+1ebhUs4LbpqqqEF5LvUXgaRis44eUC6Cpp0aIwP12Qh5KAPirmVVkQKq14fTrEj7Z00+rNI2f1tOz4nG8T9jGwGdo5BWg76vVUp+mpJ3ztlcD3DjfxdeflbFhNZ19bzMhImMZ+9KN58tcLD8u/rdGJRRMYPhWIye91VWGUur0v85xZrk4t+mIQuchsM52uawzsfu7KxU6o1B8z1CztMRCtEPCudWcZsLWmp1
-X-Gm-Message-State: AOJu0Yws6C4neanW3YH9iIygAcri4vSuqC2Y8bDEU/LxIsLnRAbCJhB3
-	iS2r77EznTPzeQTlMWueON1mCI6abT+iUqxfzAP3U/QNfRG1deKs
-X-Google-Smtp-Source: AGHT+IG6NKLoYgtNA0zwWTzkP8WTGQd4qLXhWBTEEVWaqnnI2QLPzr1rMVeOMKwzxaqVx/1yQ3sSow==
-X-Received: by 2002:a05:6a20:2590:b0:1a9:a31a:1b69 with SMTP id k16-20020a056a20259000b001a9a31a1b69mr13640576pzd.6.1713202537217;
-        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id t6-20020a056a00138600b006ecef9e9615sm7456833pfg.200.2024.04.15.10.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:35:36 -0700 (PDT)
-Date: Tue, 16 Apr 2024 01:35:31 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 04/17] lib min_heap: Add type safe interface
-Message-ID: <Zh1lY8EFyE943+89@visitorckw-System-Product-Name>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
- <20240406164727.577914-5-visitorckw@gmail.com>
- <20240412073017.GE30852@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1713202733; x=1713807533;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uwFH+Sl4Dup9217t0rj3A5vCbDNAQn+qKOR55rnIiUg=;
+        b=WBJFvEAd/7mT7ceZANEIHC13AUM8ahESISffRTubh5GtLX9GgMLDpUwycBy538H+qd
+         HOZk4YubQnBu/KcJ2Y5nJGgXu6yZhx2+7fZiAp9FlR9ebRDQbk7JuBLWj1jSvnyYNM19
+         EeP838QnHl8ww69nc/CrGgtlwXP1th4MnQQVVVy0Z0W4EiSxLbmlCh8fhWTHcKcw65Nc
+         J1r1MvCylKd1+fTGkep268POSOyiU5RXbw6bxOjMgmGQ98d2kTUiTE50LfLiUiC8YgI1
+         fBaTD73gCSB7Gd5kYVLe+9IMB8DNPrB9VJAOlobyS4BX/oLMddSbD8Jn0E5yLWfuOBx0
+         Mrwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtC+r8HLNWjI3F3Ur405NcxBqwHT2ke0GRQ+puGtIyFJztPIUWoByKa402j3e3nUJ9e2JBgz4A/iPc9BkyLd72x9CGmgvtZiSDbRvEet94lg==
+X-Gm-Message-State: AOJu0YyA7k89SsvA/wxbgTf75U1zM2GKL5wT43xKoRtnitHaeykLACqB
+	QEfPejnScB0uQbtOwrWSux5MWKlFhLfWhWiXDlgfc99NSMe0r5FoIle4ZefAV1pt/XslDXbvYC3
+	PIA==
+X-Google-Smtp-Source: AGHT+IFAloId2SLtV6JoxGQKYTsCZiTDpJiD55pzS4mF16K+I7cTwNvT5DGemB+vk09A1vwo4FoBOBPhjLY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:6fc3:0:b0:5dc:4a5f:a5ee with SMTP id
+ k186-20020a636fc3000000b005dc4a5fa5eemr844pgc.1.1713202732233; Mon, 15 Apr
+ 2024 10:38:52 -0700 (PDT)
+Date: Mon, 15 Apr 2024 10:38:50 -0700
+In-Reply-To: <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412073017.GE30852@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
+ <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com> <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+Message-ID: <Zh1mKoHJcj22rKy8@google.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
+	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 12, 2024 at 09:30:17AM +0200, Peter Zijlstra wrote:
-> On Sun, Apr 07, 2024 at 12:47:14AM +0800, Kuan-Wei Chiu wrote:
-> 
-> > -struct min_heap {
-> > -	void *data;
-> > -	int nr;
-> > -	int size;
-> > -};
-> > +#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
-> > +struct _name {	\
-> > +	int nr;	\
-> > +	int size;	\
-> > +	_type *data;	\
-> > +	_type preallocated[_nr];	\
-> > +}
-> 
-> 
-> > @@ -3738,7 +3739,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  	struct perf_cpu_context *cpuctx = NULL;
-> >  	/* Space for per CPU and/or any CPU event iterators. */
-> >  	struct perf_event *itrs[2];
-> > -	struct min_heap event_heap;
-> > +	struct perf_event_min_heap event_heap;
-> >  	struct perf_event **evt;
-> >  	int ret;
-> >  
-> > @@ -3747,11 +3748,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  
-> >  	if (!ctx->task) {
-> >  		cpuctx = this_cpu_ptr(&perf_cpu_context);
-> > -		event_heap = (struct min_heap){
-> > -			.data = cpuctx->heap,
-> > -			.nr = 0,
-> > -			.size = cpuctx->heap_size,
-> > -		};
-> > +		event_heap.data = cpuctx->heap;
-> > +		event_heap.nr = 0;
-> > +		event_heap.size = cpuctx->heap_size;
-> >  
-> >  		lockdep_assert_held(&cpuctx->ctx.lock);
-> >  
-> > @@ -3760,11 +3759,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  			css = &cpuctx->cgrp->css;
-> >  #endif
-> >  	} else {
-> > -		event_heap = (struct min_heap){
-> > -			.data = itrs,
-> > -			.nr = 0,
-> > -			.size = ARRAY_SIZE(itrs),
-> > -		};
-> > +		event_heap.data = itrs;
-> > +		event_heap.nr = 0;
-> > +		event_heap.size = ARRAY_SIZE(itrs);
-> >  		/* Events not within a CPU context may be on any CPU. */
-> >  		__heap_add(&event_heap, perf_event_groups_first(groups, -1, pmu, NULL));
-> >  	}
-> 
-> Not too happy about these. If you ever add more fields they will go
-> uninitialized. Why not keep the existing form and fix the struct name?
+On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+> On Mon, Apr 15, 2024 at 3:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.inte=
+l.com> wrote:
+> > On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
+> > > On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.=
+intel.com> wrote:
+> > >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed c=
+ounters.
+> > >>>> Considering this case, Guest uses GP counter 2, but Host doesn't u=
+se it. So
+> > >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would b=
+e enabled
+> > >>>> unexpectedly on host later since Host perf always enable all valid=
+ate bits
+> > >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
+> > >>>>
+> > >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
+> > >>>>
+> > >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking cou=
+nter
+> > >>> values to the host? NO. Not in cloud usage.
+> > >> No, this place is clearing the guest counter value instead of host
+> > >> counter value. Host always has method to see guest value in a normal=
+ VM
+> > >> if he want. I don't see its necessity, it's just a overkill and
+> > >> introduce extra overhead to write MSRs.
+> > >>
+> > > I am curious how the perf subsystem solves the problem? Does perf
+> > > subsystem in the host only scrubbing the selector but not the counter
+> > > value when doing the context switch?
+> >
+> > When context switch happens, perf code would schedule out the old event=
+s
+> > and schedule in the new events. When scheduling out, the ENABLE bit of
+> > EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
+> > and PMCx MSRs would be overwritten with new event's attr.config and
+> > sample_period separately.  Of course, these is only for the case when
+> > there are new events to be programmed on the PMC. If no new events, the
+> > PMCx MSR would keep stall value and won't be cleared.
+> >
+> > Anyway, I don't see any reason that PMCx MSR must be cleared.
+> >
+>=20
+> I don't have a strong opinion on the upstream version. But since both
+> the mediated vPMU and perf are clients of PMU HW, leaving PMC values
+> uncleared when transition out of the vPMU boundary is leaking info
+> technically.
 
-Sorry for the late reply. I'm traveling.
-I'll change that back in v4.
+I'm not objecting to ensuring guest PMCs can't be read by any entity that's=
+ not
+in the guest's TCB, which is what I would consider a true leak.  I'm object=
+ing
+to blindly clearing all PMCs, and more specifically objecting to *KVM* clea=
+ring
+PMCs when saving guest state without coordinating with perf in any way.
 
-Regards,
-Kuan-Wei
+I am ok if we start with (or default to) a "safe" implementation that zeroe=
+s all
+PMCs when switching to host context, but I want KVM and perf to work togeth=
+er to
+do the context switches, e.g. so that we don't end up with code where KVM w=
+rites
+to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
+
+One my biggest complaints with the current vPMU code is that the roles and
+responsibilities between KVM and perf are poorly defined, which leads to su=
+boptimal
+and hard to maintain code.
+
+Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak gu=
+est
+state to userspace processes that have RDPMC permissions, as the PMCs might=
+ not
+be dirty from perf's perspective (see perf_clear_dirty_counters()).
+
+Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes t=
+he
+overall code brittle because it's not clear whether KVM _needs_ to clear PM=
+Cs,
+or if KVM is just being paranoid.
