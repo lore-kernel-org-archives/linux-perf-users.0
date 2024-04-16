@@ -1,127 +1,204 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E43313AA31
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 22:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98F817BA6
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 03:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713221146; cv=none; b=mY6o+4BvzawGwc2dI2xIRN39XTJqiZQjxLru7XRPf0FGeN3sfdaDy8QGOip+YpHVElgwJcRVhVuBJpF6z9YDfQ6+HqsOpU1bYsohBhNZY93UFNhCgYErXn9hYCu7FndxDnxQnUgZeZ/jVapjawDMnI06BE2jemo2TKOehlkzpBs=
+	t=1713239107; cv=none; b=RpkKREv5teJ9JYanDWYLCNlqeoSUVkjRJ8Z6yKBsGK3ZQIOssk4I9mvrQqAeUQI1AXgtovHvCsx4erK95v3EAGKL8vVU3GBomcjvYnUmtdPcPzVFpGl1vr/aQRni+2++NRInXSGIEsS1DLBsA1h8BxO8aX2f7zbNWBmFTsFTnps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713221146; c=relaxed/simple;
-	bh=NdkNiga89MPA5JtPx7h8+p/Mmvr1IGbB5uTLd53WSKM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WrFwuggBxst+xmrhcgIMgfPLcnZ9Pk/MyMWvl2wTE7lIJlS2ftmMvI43RQELDNpzbEtU0BAbNee687bIsn6kWvsqtYQzIwD+qdBM6AktE+SWXKfWmKfjGFXOb1xOn2tVZ5jBcnerSGjxrSqBFTOorfTx6jqupbfQHQbZzaKmxEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N8o3MDkP; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713239107; c=relaxed/simple;
+	bh=rtTj0lpweW3pLEkP0wMSlU8QXFMSyiSZmPuuup9Nu7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d94wMztYouNOQE0X/uqSJ0j/ItKpwozjh/agn5NeZXDyQ8Y22ed9Dr9w8BnzUOK4P07KT7nYYyF4rtdRCm5U8OiLp9y+KcIoqxFuuY9ZkZE8BWgdP1K4VgVMoZRbvXvPZLbf8US4pbVrvpXMkqUi6js5jDlmadVrKBt1o8f8iWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Za2WycaK; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8o3MDkP"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cd041665bso63857967b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 15:45:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Za2WycaK"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36aff02f998so14849195ab.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 20:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713221144; x=1713825944; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AcLghFDaZvqvUFg0UJfSdHpX3MrK3jZqKyMZa6gZF4M=;
-        b=N8o3MDkPDxJcREVd15RAHsp4rkFb76HEKiJf8II4sSJLClaOYVmT/CXuVfcsbpO2nh
-         UVjmHITd3wGLlyTIc86y9vwaZIrn4EnSf2tl6ltX6BEtp1mTqglpDVPvv0JAvVdZE2kU
-         8TFZBzxrwZbLMcHyCdFKEaQmjd7mJXcFs38UJHLDZftYEFOwZxudVpVbxQnwgKunCaUn
-         SHVbMKalO5n6iXUSw5Ge5HvxaHs6LTSmArRjRxkBhnrAmbdlXxNNuetKVKxQ/pVRqoT/
-         Ld+4PbvGQw8LqgTNyikksTx2QwMO4jiS6nhk0dF8BhrNYvL/IEmaWBDSM/CFa9DlJU1Q
-         5ayA==
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1713239103; x=1713843903; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GjVNvZt22r+EWb4gHg+TxC04BE92vOXLHjn3wNYwKN4=;
+        b=Za2WycaK3pBL14/FWKVRfpHN4xYiAKN/3KwT06D/CZEDPB6+o8U0dKOxF2d3s15LqY
+         5ieZ6ko6OU5aWQIV6a1m6xa3qbBeLdCdBd2uPQET7TlyV/wIVRIdwtI9Siu8U41bfbbc
+         /XdeLN4JojYgIT45wAWUGs4aNbNFY0dnbOEITIQEmY3lPPnjCnj3396o0XhXclauuZQw
+         NvQuqxk9xlj/aTRIPAJlq36BuNDDHFFggn1Omg3O0FHenGZrWNDfpe1s0VJLPwoxiCFM
+         9uHq52IYx98WztBwH6B+jU3+hFs+SX5/vb6K1DS5ykDwukDNTxW7C0Uw9PO+V5X1qSkf
+         U1iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713221144; x=1713825944;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AcLghFDaZvqvUFg0UJfSdHpX3MrK3jZqKyMZa6gZF4M=;
-        b=n0i9gBnU5Gccqe1UkeraINspBNE8HeMLHVuRfBihMU5q1QFTD1A1RWtIYg+3IvHDJ3
-         247jqM4A4ybbQVmT1r1B5rSYCmecWDCItmzy9PWL+wmZmhP89vqNffc8mhSngSMmKlO3
-         CDLjPzor1D2S3DwnPIlveqaNGWXzHy2bZAQ4D94SaAdAVOmQE40R5NtFUf03Wx4RzzTG
-         tXoU4FQdESWcR0zk4Fpt6Pu+EvGBlbUZZwdSo98KfC4jHsOChLc7pbogKnqm0sRtFEpG
-         xwyH2xUqlB/fJDA81vGWs3Z/bp+Y5Qn+XmMnqWLBHGsBjCSiXOB8YjvZKHsrHQsTSx5s
-         vUvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmT5VZ8s+xvheNT4igTcmU2b/c8CCNOliOqLA8IiEpULpnOs3asK/PioQ9ksm/oL/ooLnvWQdlLotbfbSKwzAFQi3tDfX+VcMBKqZRytK0BQ==
-X-Gm-Message-State: AOJu0Yw5Xvks2rASTMdX1ohUu0FI5vQEi+roIZ/cTdxVGyacDWlme9vf
-	y40Wr/LTxCwlXj10jgeqyE+f+vDIZtxzDbuTzmzBTVXtLnLbjSd6eR0kaGxBgm5mvaMqDZPBLRW
-	spg==
-X-Google-Smtp-Source: AGHT+IHIupi0Fg0bltpgOwUNtSrEqGQTtyEncw+MiPr4mUztOCh+pX1opwxL4LzkeINH0sJ4gYv4zQX3IEw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:eace:0:b0:61a:d9f8:e397 with SMTP id
- t197-20020a0deace000000b0061ad9f8e397mr721563ywe.3.1713221144309; Mon, 15 Apr
- 2024 15:45:44 -0700 (PDT)
-Date: Mon, 15 Apr 2024 15:45:42 -0700
-In-Reply-To: <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1713239103; x=1713843903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GjVNvZt22r+EWb4gHg+TxC04BE92vOXLHjn3wNYwKN4=;
+        b=KHzK+epxS+s9/JaJHnZVYPT7oq4LrJC+tv778AF07nSwSQqbrNVvwMETmqCHxBebIF
+         PmPvfUIagfC2YEXHsL0HqjDH8TwmqCc9ZeUYrlPHuVur9Ff4vd8vn+2Bq960DkCX6eui
+         BM+JCQYhKwJ7LWqLyE1WsTIL+7DoBx0OV70AZ2W42f9zFCtvdJo9/okoqA4UV9a8x1KM
+         TO9LSo155+OFlWRwd9MzGTftsZB2uOCgET/on7IK6WcuFKbc7fuOMDzTSRp+Z9zFIUKq
+         8VCPP2k28CSK93sD4OwGEKUOMNRi/cUhwXGBrtr2XpyVage8gV23OE1nARd7ayMZtBUl
+         Kd9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUM2fP+f4mj7o31EhqG1uDXbUlZtZEcy1wXOSv4/hQ03sxYLzwfF0kP4lDTRPNBXy2HiMORMhXEFMDrfVL4Ska4tDBSfO7aNFyL+JIz9zVA0Q==
+X-Gm-Message-State: AOJu0YzmGhIp+Kc0OD6N59ysGJEtBcKNFgAgnqJo2vJdkZ85Cml2E4SZ
+	HmLk4FTWci0w5jpAw6F/idEnpnIdoSOyTwyr0Vo9LI3zDRo1J6sbbZufAgua7u0nq+QC0ojzWIe
+	jXdnkbCwTKw77VKFMCJCT5n4ssfAsEmA0XeBzrg==
+X-Google-Smtp-Source: AGHT+IFEdx6IwRBvg4lNdFx2fXV/SWpM2kkTaLW4RM2l5CIWFBgkJACESXjv1JNdZwpHPIEff6N3sNB/wyIhY+32lZw=
+X-Received: by 2002:a05:6e02:1a0f:b0:36b:46b:133b with SMTP id
+ s15-20020a056e021a0f00b0036b046b133bmr14616355ild.13.1713239103552; Mon, 15
+ Apr 2024 20:45:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-24-xiong.y.zhang@linux.intel.com>
- <ZhhZush_VOEnimuw@google.com> <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com> <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com> <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
-Message-ID: <Zh2uFkfH8BA23lm0@google.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240415031131.23443-1-liangshenlin@eswincomputing.com> <20240415031131.23443-2-liangshenlin@eswincomputing.com>
+In-Reply-To: <20240415031131.23443-2-liangshenlin@eswincomputing.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Tue, 16 Apr 2024 09:14:51 +0530
+Message-ID: <CAAhSdy1D9x4GJVrXJMzzqU-2iYLxduSHeRvxezmeBTQhgcruJQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] RISCV: KVM: add tracepoints for entry and exit events
+To: Shenlin Liang <liangshenlin@eswincomputing.com>
+Cc: atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024, Mingwei Zhang wrote:
-> On Mon, Apr 15, 2024 at 10:38=E2=80=AFAM Sean Christopherson <seanjc@goog=
-le.com> wrote:
-> > One my biggest complaints with the current vPMU code is that the roles =
-and
-> > responsibilities between KVM and perf are poorly defined, which leads t=
-o suboptimal
-> > and hard to maintain code.
-> >
-> > Case in point, I'm pretty sure leaving guest values in PMCs _would_ lea=
-k guest
-> > state to userspace processes that have RDPMC permissions, as the PMCs m=
-ight not
-> > be dirty from perf's perspective (see perf_clear_dirty_counters()).
-> >
-> > Blindly clearing PMCs in KVM "solves" that problem, but in doing so mak=
-es the
-> > overall code brittle because it's not clear whether KVM _needs_ to clea=
-r PMCs,
-> > or if KVM is just being paranoid.
->=20
-> So once this rolls out, perf and vPMU are clients directly to PMU HW.
+On Mon, Apr 15, 2024 at 8:45=E2=80=AFAM Shenlin Liang
+<liangshenlin@eswincomputing.com> wrote:
+>
+> Like other architectures, RISCV KVM also needs to add these event
+> tracepoints to count the number of times kvm guest entry/exit.
+>
+> Signed-off-by: Shenlin Liang <liangshenlin@eswincomputing.com>
 
-I don't think this is a statement we want to make, as it opens a discussion
-that we won't win.  Nor do I think it's one we *need* to make.  KVM doesn't=
- need
-to be on equal footing with perf in terms of owning/managing PMU hardware, =
-KVM
-just needs a few APIs to allow faithfully and accurately virtualizing a gue=
-st PMU.
+LGTM.
 
-> Faithful cleaning (blind cleaning) has to be the baseline
-> implementation, until both clients agree to a "deal" between them.
-> Currently, there is no such deal, but I believe we could have one via
-> future discussion.
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-What I am saying is that there needs to be a "deal" in place before this co=
-de
-is merged.  It doesn't need to be anything fancy, e.g. perf can still pave =
-over
-PMCs it doesn't immediately load, as opposed to using cpu_hw_events.dirty t=
-o lazily
-do the clearing.  But perf and KVM need to work together from the get go, i=
-.e. I
-don't want KVM doing something without regard to what perf does, and vice v=
-ersa.
+Regards,
+Anup
+
+> ---
+>  arch/riscv/kvm/trace.h | 67 ++++++++++++++++++++++++++++++++++++++++++
+>  arch/riscv/kvm/vcpu.c  |  7 +++++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 arch/riscv/kvm/trace.h
+>
+> diff --git a/arch/riscv/kvm/trace.h b/arch/riscv/kvm/trace.h
+> new file mode 100644
+> index 000000000000..3d54175d805c
+> --- /dev/null
+> +++ b/arch/riscv/kvm/trace.h
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Tracepoints for RISC-V KVM
+> + *
+> + * Copyright 2024 Beijing ESWIN Computing Technology Co., Ltd.
+> + *
+> + */
+> +#if !defined(_TRACE_KVM_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_KVM_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM kvm
+> +
+> +TRACE_EVENT(kvm_entry,
+> +       TP_PROTO(struct kvm_vcpu *vcpu),
+> +       TP_ARGS(vcpu),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(unsigned long, pc)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->pc     =3D vcpu->arch.guest_context.sepc;
+> +       ),
+> +
+> +       TP_printk("PC: 0x016%lx", __entry->pc)
+> +);
+> +
+> +TRACE_EVENT(kvm_exit,
+> +       TP_PROTO(struct kvm_cpu_trap *trap),
+> +       TP_ARGS(trap),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(unsigned long, sepc)
+> +               __field(unsigned long, scause)
+> +               __field(unsigned long, stval)
+> +               __field(unsigned long, htval)
+> +               __field(unsigned long, htinst)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->sepc           =3D trap->sepc;
+> +               __entry->scause         =3D trap->scause;
+> +               __entry->stval          =3D trap->stval;
+> +               __entry->htval          =3D trap->htval;
+> +               __entry->htinst         =3D trap->htinst;
+> +       ),
+> +
+> +       TP_printk("SEPC:0x%lx, SCAUSE:0x%lx, STVAL:0x%lx, HTVAL:0x%lx, HT=
+INST:0x%lx",
+> +               __entry->sepc,
+> +               __entry->scause,
+> +               __entry->stval,
+> +               __entry->htval,
+> +               __entry->htinst)
+> +);
+> +
+> +#endif /* _TRACE_RSICV_KVM_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index b5ca9f2e98ac..f4e27004ceb8 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -21,6 +21,9 @@
+>  #include <asm/cacheflush.h>
+>  #include <asm/kvm_vcpu_vector.h>
+>
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> +
+>  const struct _kvm_stats_desc kvm_vcpu_stats_desc[] =3D {
+>         KVM_GENERIC_VCPU_STATS(),
+>         STATS_DESC_COUNTER(VCPU, ecall_exit_stat),
+> @@ -782,6 +785,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>                  */
+>                 kvm_riscv_local_tlb_sanitize(vcpu);
+>
+> +               trace_kvm_entry(vcpu);
+> +
+>                 guest_timing_enter_irqoff();
+>
+>                 kvm_riscv_vcpu_enter_exit(vcpu);
+> @@ -820,6 +825,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>
+>                 local_irq_enable();
+>
+> +               trace_kvm_exit(&trap);
+> +
+>                 preempt_enable();
+>
+>                 kvm_vcpu_srcu_read_lock(vcpu);
+> --
+> 2.37.2
+>
