@@ -1,170 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850CE11720;
-	Tue, 16 Apr 2024 05:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AEC3BBF1
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 06:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713245670; cv=none; b=Lg8yP7AFt/yrXcoYyopi95R+x65UTd7CiyXcHewwlGr5WfxZt7JAtc2cx14fQTKabmwta1KhuloI8WNyvk6Z76BsvBw/CxIYMcd+Is5rDxutkVhUQFRArhiVKVh6p3XyGJLFLEMx4rdKdlCoxaECli8xKNKgAGwz/ilYxrC8wv0=
+	t=1713248146; cv=none; b=ra2xu5s16JyMBMMcvwNhydsAw9s2yu1JYgOi2yLMBvGFXDgxuQBzBqTuVtqx0luaUam470sMNAVar/J262w8a2AGdGn02uxKtOl59u2Lk4bGrC+nTLoZpfPiCBmBUVgNhDsoVllQLWMWbmJtUDyhkyqr8z3PX7DkQ+tOI+JktsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713245670; c=relaxed/simple;
-	bh=kzqpX5pisSA0RMcIWuJDckngNn3ETsX1+xRIIt6hxSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bi5br6OilCfjXEjWccH8Exvt/jBS1TXhDEglUj8d1te733uSNJeAPSK1N4SMHva6jOe6c0IBZwLihmro75WqewEgV037Xe7XjmYKrH0fhQm53cy3j0BuKDFow69Yw+p+EY2BnR4FkCSO2Wq8R5loLjjAOpWhmCww47R1P/91lPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D9V+0Cju; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713248146; c=relaxed/simple;
+	bh=4jPYXab6p6VLgWMH/RuxotfZX+DXM3OFg+TT8Arejkc=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=EFFC3FwJSMY8Jdyyw0FinU4TxZ/Q9RrZFoOmSeT0JaUTjWDbDpt5QCnOixEQ9thb/aWHHC5nGBl2Lvo3+rAFKRehdB6lVGEl0rS/q7JRUFpNubucvkCvgSipUM+S2x7hSP6IidDH1RGpk9cpVsglKEWwfWrhJY8wjSyaGmSdVIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QU8zkirR; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D9V+0Cju"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713245669; x=1744781669;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kzqpX5pisSA0RMcIWuJDckngNn3ETsX1+xRIIt6hxSc=;
-  b=D9V+0CjuqeXOwW7abvZlf0HPAiiYlG+Gn1mkYkrTOUyTs0c3A+lTmE6f
-   hCSFQxRP18YSjYcWuz1fGN+6BMzW43tM+OYoj6S61qa4tEFfG6IvhTei1
-   uCDrpV8ypYpxQ+BVh9kE3EM9rb1j1+7j6ioeZbeUcTdJ/YrYfQi/1Tp9y
-   CzryJfrRe9VCxKMFuzJRcWweKN/Ym8Snmgqui3IrU+ltKcr409zXqxZTT
-   LUATMqo8sKYIE8qpxBT73KozrYBDc950F/stpeQVGLP2j2S6QTLpVYU72
-   5tXezf4KFMOW54SREmZffzbDbP2jr4VbKZbjwDgW9pP/auFC8q31Lgf6m
-   Q==;
-X-CSE-ConnectionGUID: bp11ffVLSp6Flp61qhPF4Q==
-X-CSE-MsgGUID: mL9wRkw/T5GxEaXu1OJ0zA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="9217857"
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="9217857"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:34:27 -0700
-X-CSE-ConnectionGUID: m6n7iNoyThqdyNYIr9nF7A==
-X-CSE-MsgGUID: IV4WrLTeRgaMvvY208Uxrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="22615794"
-Received: from unknown (HELO [10.238.128.139]) ([10.238.128.139])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:34:23 -0700
-Message-ID: <998fd76f-2bd9-4492-bf2e-e8cd981df67f@linux.intel.com>
-Date: Tue, 16 Apr 2024 13:34:20 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QU8zkirR"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-610b96c8ca2so67231287b3.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Apr 2024 23:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713248144; x=1713852944; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1L5nQxmaIBseTv3eUkvLYgl4v+fhf+bdZ7bLGNPrKqs=;
+        b=QU8zkirRLFa/J+XFgK13oEFZ9QTZcG8t9yzs/QfYgDX/9SxvIUPyuGMs2shh1hWZV+
+         FPNcFgp33pl6sYaLd4GiQSmLugE9vNK4+/zpZycJm4R/qL6C9XGaQL48zCTBbsYu4/tZ
+         rSCrkmpkQy4CikqLIvFXX3BpOWTyYwG/LM6ZxfRz1afbVouUgIxzv+gVCnPdxVFlDE51
+         pPOEhLratWiTWncNs7e6ItAZnnmcD7CT4KC85dx6dR2nWPp78eOt9vzVrJN59VHTHfir
+         1eCPh3xw0/+W0LtFVrFSKwRLr6L13JZ9C7Dmi5cYTamRXx/0rg1rDZOC4Jvxme1l40+U
+         uXpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713248144; x=1713852944;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1L5nQxmaIBseTv3eUkvLYgl4v+fhf+bdZ7bLGNPrKqs=;
+        b=AlUhqPZuOcGTKzMtiYT9MtuviVxcp0+tNu0OD1fnyXvKFqiFhj87FjqF7ID/PMnT8g
+         2S8CB6xAyDyTBCQtyfVT5nbcZz/l/PKhEYX4ng9J3MPWJQ/6DCF//Np9YmP82h0LMJ4r
+         yyHL1tbK5QYjG2vigy78GXSGnBjtc5IXwYl3bdyYlzXIBX+dUaeu+7jRrf/4p9r+Rv+a
+         1B4RmeXUcBcAheD9RXq0E0BihfKNQwn1wC2EM/aWj757k+uUJmDO8AZlh4qZYxh0cokO
+         i9hB5H0uyGxM/uimQuaeFT+b7hQiLvbzn/NImXn18+ZBz86RuJbi67ox7u7Fd2b0/0Bm
+         f7Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv9N6AqTR7uAHx62E9uG1xnvlH6PH+SeutZlAIf6zNktKfwCeviEKvFDf2mMogW7Ov8UBn2yZXB5W57h/jocdnVJmXii/vrdbP1AIfy7JCmg==
+X-Gm-Message-State: AOJu0YxfsdoR0KRGUEOocg294H+Vs2M0ZL6+uFUJh1BcXkbTTuuecQT0
+	kS48rDJTkpDgNoJcp+b4W0lXbLeZfdwutGWF1jcru0OFfMsjhIm8QeiIZxqTtf8PxvLWz8k77c+
+	QmVKs0A==
+X-Google-Smtp-Source: AGHT+IEA3B55PHeFnorQTRTaPmQGXFGj867ryFo0kz7N/R3DDO6sXqkF9UwTo2cE7HmZ5sd27AE/abgmLPXz
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:30c8:f541:acad:b4f7])
+ (user=irogers job=sendgmr) by 2002:a0d:d74e:0:b0:611:747a:daac with SMTP id
+ z75-20020a0dd74e000000b00611747adaacmr3417811ywd.0.1713248144106; Mon, 15 Apr
+ 2024 23:15:44 -0700 (PDT)
+Date: Mon, 15 Apr 2024 23:15:16 -0700
+Message-Id: <20240416061533.921723-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
- kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
- <ZhgmrczGpccfU-cI@google.com>
- <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
- <ZhmIrQQVgblrhCZs@google.com>
- <2342a4e2-2834-48e2-8403-f0050481e59e@linux.intel.com>
- <ab2953b7-18fd-4b4c-a83b-ab243e2a21e1@linux.intel.com>
-Content-Language: en-US
-From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
-In-Reply-To: <ab2953b7-18fd-4b4c-a83b-ab243e2a21e1@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Subject: [PATCH v2 00/16] Consistently prefer sysfs/json events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	Beeman Strong <beeman@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
+As discussed in:
+https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.com/
+preferring sysfs/json events consistently (with or without a given
+PMU) will enable RISC-V's hope to customize legacy events in the perf
+tool.
 
+Some minor clean-up is performed on the way.
 
-On 4/16/2024 12:03 AM, Liang, Kan wrote:
-> 
-> 
-> On 2024-04-12 4:56 p.m., Liang, Kan wrote:
->>> What if perf had a global knob to enable/disable mediate PMU support?  Then when
->>> KVM is loaded with enable_mediated_true, call into perf to (a) check that there
->>> are no existing !exclude_guest events (this part could be optional), and (b) set
->>> the global knob to reject all new !exclude_guest events (for the core PMU?).
->>>
->>> Hmm, or probably better, do it at VM creation.  That has the advantage of playing
->>> nice with CONFIG_KVM=y (perf could reject the enabling without completely breaking
->>> KVM), and not causing problems if KVM is auto-probed but the user doesn't actually
->>> want to run VMs.
->> I think it should be doable, and may simplify the perf implementation.
->> (The check in the schedule stage should not be necessary anymore.)
->>
->> With this, something like NMI watchdog should fail the VM creation. The
->> user should either disable the NMI watchdog or use a replacement.
->>
->> Thanks,
->> Kan
->>> E.g. (very roughly)
->>>
->>> int x86_perf_get_mediated_pmu(void)
->>> {
->>> 	if (refcount_inc_not_zero(...))
->>> 		return 0;
->>>
->>> 	if (<system wide events>)
->>> 		return -EBUSY;
->>>
->>> 	<slow path with locking>
->>> }
->>>
->>> void x86_perf_put_mediated_pmu(void)
->>> {
->>> 	if (!refcount_dec_and_test(...))
->>> 		return;
->>>
->>> 	<slow path with locking>
->>> }
-> 
-> 
-> I think the locking should include the refcount check and system wide
-> event check as well.
-> It should be possible that two VMs are created very close.
-> The second creation may mistakenly return 0 if there is no lock.
-> 
-> I plan to do something as below (not test yet).
-> 
-> +/*
-> + * Currently invoked at VM creation to
-> + * - Check whether there are existing !exclude_guest system wide events
-> + *   of PMU with PERF_PMU_CAP_MEDIATED_VPMU
-> + * - Set nr_mediated_pmu to prevent !exclude_guest event creation on
-> + *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
-> + *
-> + * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
-> + * still owns all the PMU resources.
-> + */
-> +int x86_perf_get_mediated_pmu(void)
-> +{
-> +	int ret = 0;
-> +	mutex_lock(&perf_mediated_pmu_mutex);
-> +	if (refcount_inc_not_zero(&nr_mediated_pmu_vms))
-> +		goto end;
-> +
-> +	if (atomic_read(&nr_include_guest_events)) {
-> +		ret = -EBUSY;
-> +		goto end;
-> +	}
-> +	refcount_inc(&nr_mediated_pmu_vms);
-> +end:
-> +	mutex_unlock(&perf_mediated_pmu_mutex);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(x86_perf_get_mediated_pmu);
-> +
-> +void x86_perf_put_mediated_pmu(void)
-> +{
-> +	mutex_lock(&perf_mediated_pmu_mutex);
-> +	refcount_dec(&nr_mediated_pmu_vms);
-> +	mutex_unlock(&perf_mediated_pmu_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(x86_perf_put_mediated_pmu);
-> 
-> 
-> Thanks,
-> Kan
-x86_perf_get_mediated_pmu() is called at vm_create(), x86_perf_put_mediated_pmu() is called at vm_destroy(), then system wide perf events without exclude_guest=1 can not be created during the whole vm life cycle (where nr_mediated_pmu_vms > 0 always), do I understand and use the interface correctly ?
+v2. Additional cleanup particularly adding better error messages. Fix
+    some line length issues on the earlier patches.
 
-thanks
+Ian Rogers (16):
+  perf parse-events: Factor out '<event_or_pmu>/.../' parsing
+  perf parse-events: Directly pass PMU to parse_events_add_pmu
+  perf parse-events: Avoid copying an empty list
+  perf pmu: Refactor perf_pmu__match
+  perf tests parse-events: Use branches rather than cache-references
+  perf parse-events: Legacy cache names on all PMUs and lower priority
+  perf parse-events: Handle PE_TERM_HW in name_or_raw
+  perf parse-events: Constify parse_events_add_numeric
+  perf parse-events: Prefer sysfs/json hardware events over legacy
+  perf parse-events: Inline parse_events_update_lists
+  perf parse-events: Improve error message for bad numbers
+  perf parse-events: Inline parse_events_evlist_error
+  perf parse-events: Improvements to modifier parsing
+  perf parse-event: Constify event_symbol arrays
+  perf parse-events: Minor grouping tidy up
+  perf parse-events: Tidy the setting of the default event name
+
+ tools/perf/tests/parse-events.c |   6 +-
+ tools/perf/util/parse-events.c  | 482 ++++++++++++++++----------------
+ tools/perf/util/parse-events.h  |  49 ++--
+ tools/perf/util/parse-events.l  | 196 +++++++++----
+ tools/perf/util/parse-events.y  | 261 +++++++----------
+ tools/perf/util/pmu.c           |  27 +-
+ tools/perf/util/pmu.h           |   2 +-
+ 7 files changed, 540 insertions(+), 483 deletions(-)
+
+-- 
+2.44.0.683.g7961c838ac-goog
+
