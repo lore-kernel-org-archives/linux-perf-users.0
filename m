@@ -1,74 +1,80 @@
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6871642B
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 04:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673A91642B
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 04:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713243362; cv=none; b=M80yf0TTWMLNcbFopmb536wt7toPZsteLqbCqlW6e+TPu+JuSWl/ZT+F/HeEQwLSBgtJYx3qZNuBcWGrFndkF0FW0I83B1KMz4ilk+JMe+lq/yl783WARJhtZ0h/OOAIl0Y+GlTeofOwQocFbs8gP+rbZdgVtYety6oo+ylik50=
+	t=1713243372; cv=none; b=r9lD2d2+9MsFdkb1SdIcvN0hil6qNUoyaskxcQSGax6uQMGITssH40avFtzgM6IuHOSMyhbB6k7zP/G1XFkJNLCpP3M+WL2vqp1v/dwQU2b15fKUIXbs89nf5eJVr0hZDg1BScbOl7xh0IHyNOi0UJ5IrfRK3Z/w5e+fM/f05yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713243362; c=relaxed/simple;
-	bh=KjxeqFpOqPzC89GWz+nJ1VQmrEmfEYGmq7pPsLrBIHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cG2Ko9S8Ec7DRpyma3DIFB+hywvq4wKy2UTU/abgQQpASazLyJ48Dj5AQOsCpumWvWRlLRUjiFNdUG1onAWaL6efTjYSOj1YYZv6bwuPc7KY2NfYNPb/txzO0GLKIbnIo7DXuoWPxe49kgJ8IPupC0JiQ9vpky1uZkCaIB6YQmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=secretsauce.net; spf=pass smtp.mailfrom=secretsauce.net; dkim=pass (2048-bit key) header.d=secretsauce.net header.i=@secretsauce.net header.b=VS03fy00; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AN7yAvxd; arc=none smtp.client-ip=64.147.123.148
+	s=arc-20240116; t=1713243372; c=relaxed/simple;
+	bh=2TWe1UNhpYvuf5j0SyF5coluYqJTMzWLeUysaN7s6FE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lvzPSh6oYQ+iY7RLELDcu8cvse7zhFmi73NfugqHc2L7JmgmJ/NoTY97nn4zmNEbV6ZxvidKbXyX5J7kMfTw9xbRBmPo73HQoHOoFeqjP2zxPCFqKqrM5aw3mjnO54/Crb/LglYD8GKBN3ezMPye6I9Wh8CBRHM8zvyRd4clvkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=secretsauce.net; spf=pass smtp.mailfrom=secretsauce.net; dkim=pass (2048-bit key) header.d=secretsauce.net header.i=@secretsauce.net header.b=jkzjPxPk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YsT58xEl; arc=none smtp.client-ip=64.147.123.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=secretsauce.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secretsauce.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=secretsauce.net header.i=@secretsauce.net header.b="VS03fy00";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AN7yAvxd"
+	dkim=pass (2048-bit key) header.d=secretsauce.net header.i=@secretsauce.net header.b="jkzjPxPk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YsT58xEl"
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.west.internal (Postfix) with ESMTP id 0E5331C00172;
-	Tue, 16 Apr 2024 00:55:58 -0400 (EDT)
+	by mailfhigh.west.internal (Postfix) with ESMTP id 9604D1800098;
+	Tue, 16 Apr 2024 00:56:08 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 16 Apr 2024 00:55:59 -0400
+  by compute1.internal (MEProxy); Tue, 16 Apr 2024 00:56:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secretsauce.net;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm1; t=1713243358; x=1713329758; bh=jgrz6C9254
-	o4JqtvtB0/k3oHtmo1rdR/fN0yo3BSxdk=; b=VS03fy00iB6kGsMCAWCdJU+By0
-	eLqe6oB66UScrw9jRSrU86X7BAVkjbgi5kD/yv15Ecdh/pYFkWeeR/s7wg7+vkgy
-	nrZ/NbADS+/KXsd8Rtq+OdtAd1OuhDdjr1PoIb2E6FnXT2QaNOw+KXi/c/fxtpVh
-	RAUd3aGhklFAO8F+UPoPcTAAlqNlyE+axUhwz9lDTY2XmVCnmSC0PNQLQ2NvEKzG
-	SM3RKRjVjUZEPq3CxQtG6r+SFjcMy8x+P5RYfWDy8QWG6yOE9ZUm0a6mGdfzG1Ow
-	HyPGDaNCc87lUKqhzp/30wMibxRofe9AqjWOUtHlEV1StotKjI2BQhBuBa2g==
+	:from:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1713243368; x=
+	1713329768; bh=hJh6th9/C3UUAGnE7ZPlgNykPTHu/mKpm+LSnHt8N60=; b=j
+	kzjPxPkCk2zbCJE1uHTsf/f6SvAoxSJHczUWXvtatMNop4XS6TiEfWxZ1dodR9PG
+	ZBnS6sqN/FoN8n6loNdA1pDcbOqTqCpx5tWGLRGcj6wp57Sm+sB9KWkeX6lNT3F8
+	NjkbgcPmpFAHYBUfkqJqpbPepW+zTxHsO+sZfryfH2Ksp+dCAvcj4g9mP3moF38R
+	9xQ5lJf1EyWKgHxVRo7gBlWHfhPbQJo4tusfajLqu4kEhf/Yyu2Expg3/uFcl2rv
+	v2U97UuH5S7/u+cvEiY/N2LWw4afzfiVWrfSggLntWs8eDaC9j+0XUbCTNZlaGfW
+	nuq8EzInkVe2jXJEd3HQw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1713243358; x=1713329758; bh=jgrz6C9254o4JqtvtB0/k3oHtmo1
-	rdR/fN0yo3BSxdk=; b=AN7yAvxdo5aLeMVg2euuZ0ypGvd/ZEs6mvkoatbpgUR9
-	qaIm9kl9O4bx9AOV3eEA99U+1jQHKuP1Q0tcrfaxctuD0wSCJOzqhY6BuHxAS2rO
-	kdE37c6K1eatmvhftVIMh2VWQZY9DuQsdCsVnb8w4pY5QXXnko487sRohtk1M/7R
-	eTM0MIjm5lCCfU6BqL/pJDGjRpeJQmzbzXHiLwFoIuPeedGut6cHU3c2ekEIvHKr
-	1s2gPyAzYPATYUc1loghusawliHMlMuw+IOKZvYxcKa35WApMmziXqU+LflRZp/Q
-	0PNq1nk4Nyk33aYcdyqtFgdR6odWvJQKPMI7cB56qA==
-X-ME-Sender: <xms:3gQeZp0oFaGzZBZTmmQjNmEMEC-ozPEMRXFLcZd1Rpk_9hDGrAlGvw>
-    <xme:3gQeZgF1MXeZ40APvGBqnOcIgLy0EWFym0079HG8NC01pXwc4bZLNJLnOLiFGZXmq
-    vw5fLkGytWhUIhb>
-X-ME-Received: <xmr:3gQeZp4PeuEPD84YX6PeP41Ta_a-igjiDGW8BTihkhgrFjdmPaWWLYil>
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1713243368; x=
+	1713329768; bh=hJh6th9/C3UUAGnE7ZPlgNykPTHu/mKpm+LSnHt8N60=; b=Y
+	sT58xElDE6G/48yaVHZVeV7HLg69vJmc2onxAqoc48ASYbBV/upq21dDfNpC6laa
+	ul/I+hkdMsQFgLRB8l1WX2cjSr0MKARYiLYcYciB3jE5H1zWFEKWnuLHkP8wbhtM
+	a+rGB52VkEfkp+UrPDfpRkOR/XYf304TJlnxYaUz2a5E16rlSHsdcGEsRLxVj6jt
+	gkQVbYItgi+tIX9Rq2p6NqweGKjnIbb5Gb1P278xMTSCs1nMVA6perB/ubDIvk3S
+	wseYe4gaKyRW3ZM5EhrXYcAMAe//EwSZv7cM/OrEYY3HSlelcJpCfMAxaAbzPW2c
+	nG6aGJy7joRODcEQEC/Rg==
+X-ME-Sender: <xms:6AQeZmjVuwjBcGIjJ9iBLnQ-cZygLVxFq8GeTGtktgUyaYy0qw1JTg>
+    <xme:6AQeZnBpi60cNaDc5kh6sRm4P3Qcg0l7wuSsIaEZ8_h54iansP2vireGS5Jmpc01L
+    93EtY9Xm9p8r5is>
+X-ME-Received: <xmr:6AQeZuHctm9qN5VW1uxwjaXebUXTwe03NDTenxRCMd-9YX4FEzD76-pd>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejfedgkeelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeffihhmrgcumfhoghgrnhcuoeguihhmrgesshgvtghrvghtshgr
-    uhgtvgdrnhgvtheqnecuggftrfgrthhtvghrnheptdehkeejffehjefhvefgtefhgeeiie
-    duvdejgfekgffggeeiudejjedtleelgfejnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepughimhgrsehsvggtrhgvthhsrghutggvrdhnvght
-X-ME-Proxy: <xmx:3gQeZm0GjFk2BCAZK8CrGfcq1-593ymDYXIDhd4mv9XCYJ-0SJClrw>
-    <xmx:3gQeZsFuJJ2aHrltH8-JDo0Fe3JL_VFxS7eQpk2CgInBUbnB7UfXEg>
-    <xmx:3gQeZn8q15x2OADNnapYDwfRBCobHkZOPO6FbCRP_0On1WxQkjnvFQ>
-    <xmx:3gQeZpnDfNkK_09SRBMHRQDK1HS46KC4C1H4k_bShfQ2iJjurA32AQ>
-    <xmx:3gQeZhQzLIDOQH8T-6dETJ-AoqQbFxQeIBY9qDVcGgjpqVe1l-8cqqa9>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpeffihhmrgcumfhoghgrnhcuoeguihhmrgesshgvtghrvght
+    shgruhgtvgdrnhgvtheqnecuggftrfgrthhtvghrnhepfefggfejudetheeiveehudfghf
+    ehieekhfevvdfhhfekleeftdekuddutefhhfeknecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomhepughimhgrsehsvggtrhgvthhsrghutggvrdhnvg
+    ht
+X-ME-Proxy: <xmx:6AQeZvSdnd3UHIbjbrPi9O1PlSo5RnM1XF1daKYL_V3WnxmwDBqR2w>
+    <xmx:6AQeZjw9OWmycwBxB9KvYxtNd22vD1wWRG6wyLwxXBL04YkW8rufWw>
+    <xmx:6AQeZt6WmTZeRCFC0Cy7OCXsBtCoyOMEw5yV9PSECI5ezqNaVg2Lhw>
+    <xmx:6AQeZgxCNkgudWdB_kCO-7asYHyK-5eIkii-h71iJ1R715dy3V2ItA>
+    <xmx:6AQeZu814PcSWZCh3jrSq7pKnjIPHWM4pYRmb5HQe1Vg_Yw9jVclrZIk>
 Feedback-ID: i3e8042a0:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 16 Apr 2024 00:55:58 -0400 (EDT)
+ 16 Apr 2024 00:56:07 -0400 (EDT)
 From: Dima Kogan <dima@secretsauce.net>
 To: linux-perf-users@vger.kernel.org
 Cc: Dima Kogan <dima@secretsauce.net>
-Subject: [PATCH 0/2] Better error messages for 'perf probe --add'
-Date: Mon, 15 Apr 2024 21:55:09 -0700
-Message-ID: <20240416045533.162692-1-dima@secretsauce.net>
+Subject: [PATCH 1/2] perf probe-event: un-hardcoded sizeof(buf)
+Date: Mon, 15 Apr 2024 21:55:10 -0700
+Message-ID: <20240416045533.162692-2-dima@secretsauce.net>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240416045533.162692-1-dima@secretsauce.net>
+References: <20240416045533.162692-1-dima@secretsauce.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,59 +83,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi.
+In several places we had
 
-I tried to add some userspace probes to some C++ code, and got this:
+  char buf[64];
+  ...
+  snprintf(buf, 64, ...);
 
-  $ sudo perf probe -x tst --add _ZN.....
-  Error: Failed to add events.
+This patch changes it to
 
-Note the completely non-useful error message. The issue is that the C++ symbol
-mangling can create very loooong symbol names, causing perf to try to use very
-long probe names by default, causing this problem. It took a little while to
-figure this out, and a better error message would have helped, hence these
-patches.
+  char buf[64];
+  ...
+  snprintf(buf, sizeof(buf), ...);
 
-To reproduce, here's a tst.cc:
+so the "64" is only stated once
 
-  #include <stdio.h>
+Signed-off-by: Dima Kogan <dima@secretsauce.net>
+---
+ tools/perf/util/probe-event.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  namespace n1111111111111111111111111111111111111111111111111111111111111111 {
-      namespace n2222222222222222222222222222222222222222222222222222222222222222 {
-
-          void f(void)
-          {
-              printf("f()\n");
-          }
-      }
-  }
-
-  int main(void)
-  {
-      n1111111111111111111111111111111111111111111111111111111111111111::n2222222222222222222222222222222222222222222222222222222222222222::f();
-      n1111111111111111111111111111111111111111111111111111111111111111::n2222222222222222222222222222222222222222222222222222222222222222::f();
-      return 0;
-  }
-
-I then
-
-  g++ -g -o tst tst.cc
-
-and
-
-  sudo perf probe -x ~/tmp/tst --add _ZN65n111111111111111111111111111111111111111111111111111111111111111165n22222222222222222222222222222222222222222222222222222222222222221fEv
-
-After the patch a better error message results, and the workaround is clear:
-
-  sudo perf probe -x ~/tmp/tst --add probe=_ZN65n111111111111111111111111111111111111111111111111111111111111111165n22222222222222222222222222222222222222222222222222222222222222221fEv
-
-Dima Kogan (2):
-  perf probe-event: un-hardcoded sizeof(buf)
-  perf probe-event: better error message for a too-long probe name
-
- tools/perf/util/probe-event.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index a1a796043691..b9f678c3be4d 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -235,7 +235,7 @@ static int convert_exec_to_group(const char *exec, char **result)
+ 		}
+ 	}
+ 
+-	ret = e_snprintf(buf, 64, "%s_%s", PERFPROBE_GROUP, ptr1);
++	ret = e_snprintf(buf, sizeof(buf), "%s_%s", PERFPROBE_GROUP, ptr1);
+ 	if (ret < 0)
+ 		goto out;
+ 
+@@ -2867,7 +2867,7 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
+ 		group = PERFPROBE_GROUP;
+ 
+ 	/* Get an unused new event name */
+-	ret = get_new_event_name(buf, 64, event, namelist,
++	ret = get_new_event_name(buf, sizeof(buf), event, namelist,
+ 				 tev->point.retprobe, allow_suffix);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.42.0
 
