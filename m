@@ -1,112 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C59130A64
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 15:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168D742055
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 17:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713282386; cv=none; b=K8smB1AmS2DKveOsSVg19NNPHINOIyPWp1Lsb+UvN+xNSYo0Hl83yscsgMIzQHP7DdUrro1M7E2/bcKoOfWx62DaiK1A0/EdU8YbFWSFcahpArIb5RnOfUBrIyT07aZOsADfoKk3ErwOC5ZLW5GWHHoGwnMG0iBFDRfyC9fnRQU=
+	t=1713286834; cv=none; b=ByXPukpF0iVuwiDm9iYLz3MBU59aGHVmbh1EPIuJvl2w4wYf7/dw2XG/e1vICP6HjgpB6DiEjxCPW2MLAtOM/OtjSI5360DeeET11fXNQdRXemoNsCEk1l6at8wPm+262EvztfC3Rwgnncz9o4MF9D6i6hHnERM035oIHBt4xQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713282386; c=relaxed/simple;
-	bh=AhdtaZWqIeA8iS+tyS5Hw968uwsIh4kZ+QDKXpq7TTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lFTKq+cp/3ehciKdyhc3cHH+GM8pC1xY3NCb0AeULg4V+xSuXpuiXwh4FO0VLJ541QSChlquY+a/n6vGYAljpR2alfiyY0zFkp3J2LeG31vBuFigqalIq/kDw++lTunNygCI3k8QQ/7oXPDpsz3+oA+9bS999Md/ZrTRXUDC81I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3Bfpgj4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713286834; c=relaxed/simple;
+	bh=eWS4hkOA9c5MUyVViK475t1qOR4HpPha6Nk9Zap1JUk=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=QQ1CvTDolNIuNSYNFXxWZ8UYgHoNc1N7ps9aHMhrCQmBfIYBuzvkCcf6q69/J4CRlH/XSF4031r4xpjyM3yqv8ae8zPdrI2ChjpkH3MPa84CP/A5PH0vVeVwnpbB2TkamdvdE5XIkNUuV9HHqxIPAZKBBcG9GeOiE3i4/7NAttk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oiKTdV94; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3Bfpgj4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F15C113CE;
-	Tue, 16 Apr 2024 15:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713282385;
-	bh=AhdtaZWqIeA8iS+tyS5Hw968uwsIh4kZ+QDKXpq7TTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3Bfpgj4jtP5em+Es5xQCmWkYv0IAVJ0P7Se4m94hbICpoNwhc/nD1P26lpuATTWR
-	 MsQy9foxwjwlKyellvN70HRA5qzsA+bYkeGLC2+MO09gvb2kpfb/FqrdkGikz7ck4J
-	 fNCPubV60cqeH1XU+nucxbJWJFcmcyB0pq/yy77v1guueFEpLy0w8Jtymetluj+TJE
-	 srUY6cv2PAAfl8ooQd1IasnZCkTekpU0IMvFK9IbUTcS7LCb0A3ISi1CWYKAvX0zkm
-	 27Bu5HELTrn0IpOJjVGM5wAvYbe1amM+aiDj/r/6EwCRWAzUCup2KjHEiOsO5aYJQa
-	 ifADGXgHOPS7w==
-Date: Tue, 16 Apr 2024 12:46:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Dima Kogan <dima@secretsauce.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/2] Better error messages for 'perf probe --add'
-Message-ID: <Zh6dT13FfgdHuMql@x1>
-References: <20240416045533.162692-1-dima@secretsauce.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oiKTdV94"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso8067991276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 10:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713286832; x=1713891632; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VHZ+4taa5ZmMf/oaE74yETbEavJXLOGjMfJKJZgW7D8=;
+        b=oiKTdV94ypRqlClyB5jW9fNE0/2SdIhV1hIsbvIxY4/CpRtN/CdmX2YP43Y5fjeQDh
+         PLA52JwZt5oOyAl6PIwj6vxhXp7+hKCe+yBKPgTv7hvZ68kA9dtgoeEQRJxPzVbtJgNV
+         sAtFf2ONwIHnGAWaDcxgPvDW7ngvBMO8ORhcBQReZ7SXyH5gFwM5EWGggytRPXz/J3Fy
+         7Ht3EX7uH3x2aKqmumm2yrQ4P/T5+Y+3iFfVxKDIyTNHb8+VrxtH4nv8bQSaDwVPpVWP
+         Rh6dv/w0rXaNV0R1meo+anAGBBcc8OkjRRnNVMHULGgFlVu40DoK2mvrq7bIpd4VNkWL
+         euKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713286832; x=1713891632;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VHZ+4taa5ZmMf/oaE74yETbEavJXLOGjMfJKJZgW7D8=;
+        b=sXFjTruC4/7goPIeB02bj0gCJ3HoOfL6/TQ2OS0+Aqvd+HOhyN/7weY6s3a8T0Pgqg
+         Om3B3qoew8jDO/V2G1qTX/pBmc/NcX77pLGyj0kLUTks5r6fhoThn1fxagex5yMJZfwu
+         UXgpMIIuYJMoS1i/xtMdcItg9uQQ23/+hMxSdpv3n4dpACLGWPDxj2aKjKgQGGpM5t87
+         IahpwfQF/anc9f9E2YsBnXae33JL/cMcVUJlwVOkdS6dISLJmm2QGWC3EZk1+I/j92Hn
+         aEi7wavJKZIl+JMtyVBiwK7PNjkx5J96Qox7q8efDCxRggwZC2TNm5VZawuzjOXhzRKV
+         428Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXmRrU14GrSMVPdywc5V9rjegkIThX8oXBRb51suJe27sMAzvZCs5FsSgLU+I/iZHkWp37xWazbWsfKl/ftKQD56J0GSPyVwWiFUDII3Fo2ww==
+X-Gm-Message-State: AOJu0YzxNBiaDUyn7ZmEDeWE65v9nxttdFnULwQW9y485JFlPF7FOs3J
+	4rRVdhqPYHcH5DU+uMrNqyiCBSZUIe1SWbeBupnJs7xA4ne4YGOtgVx3LWGaY5NPYAQTqCn3nbB
+	LcJE7pg==
+X-Google-Smtp-Source: AGHT+IHpba/rJhzl9JMKIitpVKqKH62dhmqQWuSYivFdu9/ee66XNw1Ii34iQvnlkzNQhtlYgsX0ePwTqV64
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:30c8:f541:acad:b4f7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:120e:b0:dcd:88e9:e508 with SMTP
+ id s14-20020a056902120e00b00dcd88e9e508mr4322514ybu.5.1713286832038; Tue, 16
+ Apr 2024 10:00:32 -0700 (PDT)
+Date: Tue, 16 Apr 2024 10:00:13 -0700
+Message-Id: <20240416170014.985191-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416045533.162692-1-dima@secretsauce.net>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Subject: [PATCH v1 1/2] perf docs: Document bpf event modifier
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Song Liu <song@kernel.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 15, 2024 at 09:55:09PM -0700, Dima Kogan wrote:
-> Hi.
-> 
-> I tried to add some userspace probes to some C++ code, and got this:
-> 
->   $ sudo perf probe -x tst --add _ZN.....
->   Error: Failed to add events.
+Document that 'b' is used as a modifier to make an event use a BPF
+counter.
 
-Both patches look great, Masami, can I have your Acked-by?
+Fixes: 01bd8efcec44 ("perf stat: Introduce ':b' modifier")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-list.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you find other cases where the error messages can be improved, feel
-free to send us, please CC Masami, as I'm doing now.
-
-Thanks!
-
-- Rrnaldo
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 3b12595193c9..6bf2468f59d3 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -71,6 +71,7 @@ counted. The following modifiers exist:
+  D - pin the event to the PMU
+  W - group is weak and will fallback to non-group if not schedulable,
+  e - group or event are exclusive and do not share the PMU
++ b - use BPF aggregration (see perf stat --bpf-counters)
  
-> Note the completely non-useful error message. The issue is that the C++ symbol
-> mangling can create very loooong symbol names, causing perf to try to use very
-> long probe names by default, causing this problem. It took a little while to
-> figure this out, and a better error message would have helped, hence these
-> patches.
-> 
-> To reproduce, here's a tst.cc:
-> 
->   #include <stdio.h>
-> 
->   namespace n1111111111111111111111111111111111111111111111111111111111111111 {
->       namespace n2222222222222222222222222222222222222222222222222222222222222222 {
-> 
->           void f(void)
->           {
->               printf("f()\n");
->           }
->       }
->   }
-> 
->   int main(void)
->   {
->       n1111111111111111111111111111111111111111111111111111111111111111::n2222222222222222222222222222222222222222222222222222222222222222::f();
->       n1111111111111111111111111111111111111111111111111111111111111111::n2222222222222222222222222222222222222222222222222222222222222222::f();
->       return 0;
->   }
-> 
-> I then
-> 
->   g++ -g -o tst tst.cc
-> 
-> and
-> 
->   sudo perf probe -x ~/tmp/tst --add _ZN65n111111111111111111111111111111111111111111111111111111111111111165n22222222222222222222222222222222222222222222222222222222222222221fEv
-> 
-> After the patch a better error message results, and the workaround is clear:
-> 
->   sudo perf probe -x ~/tmp/tst --add probe=_ZN65n111111111111111111111111111111111111111111111111111111111111111165n22222222222222222222222222222222222222222222222222222222222222221fEv
-> 
-> Dima Kogan (2):
->   perf probe-event: un-hardcoded sizeof(buf)
->   perf probe-event: better error message for a too-long probe name
-> 
->  tools/perf/util/probe-event.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.42.0
-> 
+ The 'p' modifier can be used for specifying how precise the instruction
+ address should be. The 'p' modifier can be specified multiple times:
+-- 
+2.44.0.683.g7961c838ac-goog
+
