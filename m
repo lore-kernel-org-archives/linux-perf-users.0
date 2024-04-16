@@ -1,182 +1,134 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C04F13280C
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 17:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF5B134405;
+	Tue, 16 Apr 2024 18:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713286836; cv=none; b=OFi+aV8PdE6p2xi7f5jkymX/AYl5rWmHymb9cThIgkKLQKmel8UskeLWnxvGuMrdOH5nzqgtWuwne9XQDsGVCI2AEgpPP5WelD8Mho8wC50WQFMNDTD2SyARz5baDj1q2zAj778gfT00npPIZ25sbdESKNGjya72kndW2uaIsFI=
+	t=1713290574; cv=none; b=Y3p5+Y2vvADz3ocC1TxJYOhcIF1yKBStYU6A0TPUB5gnvsPTw0tH1i++jVbONn/wCO1CwuFnyb5gP5p5CIqYjXvgTrpYIoz/U8EWqoiyDse5SKmutRVORpkKAYL0F8IZBeB6KxNeE1/WmrpPwwI2f5E7CfujO36MGwQwqZLGi9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713286836; c=relaxed/simple;
-	bh=3azWwaKDy7OkYK9A/N5tN+0dZsIUgmKW69mfQHRw+84=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=aasnQgqi+nN7hWdrXIlt1NJmpJY6Pi/doXMV5G6wZsh0IRHZ35oOql79tPTcOoECyslZOPbS12+yGrcnK1FsR1Z3gbzF6dXtEFpgYJjSDHUUyk59+9lB7vP5Nl2MapjE7wgPUtLHHLMO7GoNKgIXrexcNO9IFlxZw7EVMxXfXz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=owrHO8Qr; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1713290574; c=relaxed/simple;
+	bh=RGobAnthjkgsb/QzuzeMGs8pm1LeGhwCVTyS3CsT0Qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YtLOfg7SlvZiw7SLTnUrVOWtf0eWWLHVGXM/8nmDP76Bo2FkLZNZADoELtNIH6vHL2isIMaq2XJFEICQPyAg9s97jWcU9Q88fX6+WTqtdNh6ilEKmUT6kHavQ1RweGFtwRG0KTCZgtkrNycSn6IcV6RF2KzpLbhi/VLoKx+kOHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aaKd75up; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="owrHO8Qr"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc746178515so7255583276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 10:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713286834; x=1713891634; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gbNmO/QFS90hYQDF1r8HedKXiPrYZk/5X6GpWU+pA5c=;
-        b=owrHO8Qr22XZD2IHadek7+8L74//qALlDJnrgYshOpWstWQeBNjcTnabgdayeaKKmj
-         Efc2QyUzDVr4T/lws8wvhVdRpC3NsRUi9yvfs/8pdb1j7lsGcwyY2LLRL4XvvKJPQ/s3
-         c/6E1Cj03Cx6YvLw8s26Yzyfkga/Mf0TqS8r1TOTXZdgJjAJkt539KGozZaQc3AYvsBW
-         sTj5nGcvhlQ6hMf+vAvymQHRF9Ry5puxUZHtVAEJZPB4hG/2vgdfw5fbwPqb9lMx1AHO
-         IyUtGAuqfIIjbK9756vWFpTo9C2Bm2lX8nB34FpbOfmLhHqTD8IuhWnStKZ+SWXBMssU
-         LdEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713286834; x=1713891634;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbNmO/QFS90hYQDF1r8HedKXiPrYZk/5X6GpWU+pA5c=;
-        b=RTB7J2oABZ8fnaeWu6WDw2mEyxBeH6mFtNHXdhIbAOhUEFvpTknPkWakeRaAAmo74V
-         U4wpp9BrY2nUch+XiuIrwdoSv56U9rSt7SiIjhsfOBVVwlYY7MAd07QDKahWl5kFfyLf
-         xVabDTNSIv+Ywg4gqVnt/Tj9YjkNEZW78Ok4wY53DYccH5efMY9DWxiHEPyH8hWIjmLp
-         ZpOFY05MsnMoAN5tTUAHNZ5p3NNBcIIN9ojMyW/WSSY8+2wNH6Ukw/ZGbIZ0m9T2ITqF
-         zdHHbcx52d7eGCGcziwrDYQ8SNJyUL2iOs89QW0cPBCq659qQEWHgwZ8+Cfx+6ecbYBB
-         sF7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPtN9Mz7Qd6MKxDBlXOR8r88ou7woYhMvrDovD9o6sHwcq9C3QHUeIGwlbkxWvBRfYFeGXqwxA+5eicMSeYRPPTtnsA/MJ3ThMRJsz+oTctw==
-X-Gm-Message-State: AOJu0YwjIAAjLUA+Hm2IiSs/wtAiO4TGerlAtc+G8C6Oz9rCWmXz1J9d
-	5X1oiqyN7OGJ6MC6AQp8B4xUkvYzIwzao0cs9HnqBYNp8Dlgpnq8M8a3yffeGOwyVh2AGKqseAn
-	CiYxgdw==
-X-Google-Smtp-Source: AGHT+IG8Yp5pxeh8BkvzQbDZZGXurtoM83UNZeLc4jlw+B1QTQ7IUSLyyyBZgMoIMefNj3PHuVs4AgR3BorK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:30c8:f541:acad:b4f7])
- (user=irogers job=sendgmr) by 2002:a25:addf:0:b0:dd9:1db5:8348 with SMTP id
- d31-20020a25addf000000b00dd91db58348mr3962354ybe.8.1713286834339; Tue, 16 Apr
- 2024 10:00:34 -0700 (PDT)
-Date: Tue, 16 Apr 2024 10:00:14 -0700
-In-Reply-To: <20240416170014.985191-1-irogers@google.com>
-Message-Id: <20240416170014.985191-2-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aaKd75up"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713290573; x=1744826573;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RGobAnthjkgsb/QzuzeMGs8pm1LeGhwCVTyS3CsT0Qo=;
+  b=aaKd75upi/K+6pDjCRzh7nt+arqPqhJDkENHlWeRrQo+61ivaSNUg7yk
+   5V2bHavWGyPT/+haOKHjn87FMQkS8a5hCFaichSVCy/s5NPEvtenaSdMQ
+   jdlcgRJiSK9gAr+VAi1HG7CBv0AFjk9WN4yajTrHBUilIfDXVLnOg31el
+   oVyPLwOYiALA/TMA+v0UuLIQn+3hQApJIFA8jlNb9Uz8uQC/wGajFAQUp
+   0yZc7ZgdRGebSWKXffid8xyXuwZr39KsPvneeOtr82cb8ekzH/4bs0GiV
+   jvWVN0Z/u8g2U4IqePK8fSgSevLg6fnPPEkaxD+gb5x5mf183W9ufW/+j
+   A==;
+X-CSE-ConnectionGUID: s+hj1Wd5Q9+WrHXDP73pWg==
+X-CSE-MsgGUID: CMVVbtEqSRy96DFBsokpEA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8919455"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="8919455"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:02:51 -0700
+X-CSE-ConnectionGUID: CzZ0kg0PQoSYEmRkCRwOgw==
+X-CSE-MsgGUID: eBu4AKCaTcm/ARo6DiMKeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22821944"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orviesa007.jf.intel.com with ESMTP; 16 Apr 2024 11:02:52 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: irogers@google.com,
+	mpetlan@redhat.com,
+	eranian@google.com,
+	ak@linux.intel.com,
+	Kan Liang <kan.liang@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [RESEND PATCH] perf/x86/intel/uncore: Fix the bits of the CHA extended umask for SPR
+Date: Tue, 16 Apr 2024 11:01:45 -0700
+Message-Id: <20240416180145.2309913-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240416170014.985191-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-Subject: [PATCH v1 2/2] perf test bpf-counters: Add test for BPF event modifier
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Song Liu <song@kernel.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Refactor test to better enable sharing of logic, to give an idea of
-progress and introduce test functions. Add test of measuring both
-cycles and cycles:b simultaneously.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+The perf stat errors out with UNC_CHA_TOR_INSERTS.IA_HIT_CXL_ACC_LOCAL
+event.
+
+ $perf stat -e uncore_cha_55/event=0x35,umask=0x10c0008101/ -a -- ls
+    event syntax error: '..0x35,umask=0x10c0008101/'
+                                      \___ Bad event or PMU
+
+The definition of the CHA umask is config:8-15,32-55, which is 32bit.
+However, the umask of the event is bigger than 32bit.
+This is an error in the original uncore spec.
+
+Add a new umask_ext5 for the new CHA umask range.
+
+Fixes: 949b11381f81 ("perf/x86/intel/uncore: Add Sapphire Rapids server CHA support")
+Closes: https://lore.kernel.org/linux-perf-users/alpine.LRH.2.20.2401300733310.11354@Diego/
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
 ---
- tools/perf/tests/shell/stat_bpf_counters.sh | 75 ++++++++++++++-------
- 1 file changed, 52 insertions(+), 23 deletions(-)
+ arch/x86/events/intel/uncore_snbep.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 2d9209874774..61f8149d854e 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -4,21 +4,59 @@
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index a96496bef678..7924f315269a 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -461,6 +461,7 @@
+ #define SPR_UBOX_DID				0x3250
  
- set -e
+ /* SPR CHA */
++#define SPR_CHA_EVENT_MASK_EXT			0xffffffff
+ #define SPR_CHA_PMON_CTL_TID_EN			(1 << 16)
+ #define SPR_CHA_PMON_EVENT_MASK			(SNBEP_PMON_RAW_EVENT_MASK | \
+ 						 SPR_CHA_PMON_CTL_TID_EN)
+@@ -477,6 +478,7 @@ DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8-15,32-43,45-55");
+ DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
+ DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
+ DEFINE_UNCORE_FORMAT_ATTR(umask_ext4, umask, "config:8-15,32-55");
++DEFINE_UNCORE_FORMAT_ATTR(umask_ext5, umask, "config:8-15,32-63");
+ DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
+ DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
+ DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
+@@ -5957,7 +5959,7 @@ static struct intel_uncore_ops spr_uncore_chabox_ops = {
  
-+workload="perf bench sched messaging -g 1 -l 100 -t"
-+
- # check whether $2 is within +/- 20% of $1
- compare_number()
- {
--       first_num=$1
--       second_num=$2
--
--       # upper bound is first_num * 120%
--       upper=$(expr $first_num + $first_num / 5 )
--       # lower bound is first_num * 80%
--       lower=$(expr $first_num - $first_num / 5 )
--
--       if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
--               echo "The difference between $first_num and $second_num are greater than 20%."
--               exit 1
--       fi
-+	first_num=$1
-+	second_num=$2
-+
-+	# upper bound is first_num * 120%
-+	upper=$(expr $first_num + $first_num / 5 )
-+	# lower bound is first_num * 80%
-+	lower=$(expr $first_num - $first_num / 5 )
-+
-+	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
-+		echo "The difference between $first_num and $second_num are greater than 20%."
-+		exit 1
-+	fi
-+}
-+
-+check_counts()
-+{
-+	base_cycles=$1
-+	bpf_cycles=$2
-+
-+	if [ "$base_cycles" = "<not" ]; then
-+		echo "Skipping: cycles event not counted"
-+		exit 2
-+	fi
-+	if [ "$bpf_cycles" = "<not" ]; then
-+		echo "Failed: cycles not counted with --bpf-counters"
-+		exit 1
-+	fi
-+}
-+
-+test_bpf_counters()
-+{
-+	printf "Testing --bpf-counters "
-+	base_cycles=$(perf stat --no-big-num -e cycles -- $workload 2>&1 | awk '/cycles/ {print $1}')
-+	bpf_cycles=$(perf stat --no-big-num --bpf-counters -e cycles -- $workload  2>&1 | awk '/cycles/ {print $1}')
-+	check_counts $base_cycles $bpf_cycles
-+	compare_number $base_cycles $bpf_cycles
-+	echo "[Success]"
-+}
-+
-+test_bpf_modifier()
-+{
-+	printf "Testing bpf event modifier "
-+	stat_output=$(perf stat --no-big-num -e cycles/name=base_cycles/,cycles/name=bpf_cycles/b -- $workload 2>&1)
-+	base_cycles=$(echo "$stat_output"| awk '/base_cycles/ {print $1}')
-+	bpf_cycles=$(echo "$stat_output"| awk '/bpf_cycles/ {print $1}')
-+	check_counts $base_cycles $bpf_cycles
-+	compare_number $base_cycles $bpf_cycles
-+	echo "[Success]"
- }
- 
- # skip if --bpf-counters is not supported
-@@ -30,16 +68,7 @@ if ! perf stat -e cycles --bpf-counters true > /dev/null 2>&1; then
- 	exit 2
- fi
- 
--base_cycles=$(perf stat --no-big-num -e cycles -- perf bench sched messaging -g 1 -l 100 -t 2>&1 | awk '/cycles/ {print $1}')
--if [ "$base_cycles" = "<not" ]; then
--	echo "Skipping: cycles event not counted"
--	exit 2
--fi
--bpf_cycles=$(perf stat --no-big-num --bpf-counters -e cycles -- perf bench sched messaging -g 1 -l 100 -t 2>&1 | awk '/cycles/ {print $1}')
--if [ "$bpf_cycles" = "<not" ]; then
--	echo "Failed: cycles not counted with --bpf-counters"
--	exit 1
--fi
-+test_bpf_counters
-+test_bpf_modifier
- 
--compare_number $base_cycles $bpf_cycles
- exit 0
+ static struct attribute *spr_uncore_cha_formats_attr[] = {
+ 	&format_attr_event.attr,
+-	&format_attr_umask_ext4.attr,
++	&format_attr_umask_ext5.attr,
+ 	&format_attr_tid_en2.attr,
+ 	&format_attr_edge.attr,
+ 	&format_attr_inv.attr,
+@@ -5993,7 +5995,7 @@ ATTRIBUTE_GROUPS(uncore_alias);
+ static struct intel_uncore_type spr_uncore_chabox = {
+ 	.name			= "cha",
+ 	.event_mask		= SPR_CHA_PMON_EVENT_MASK,
+-	.event_mask_ext		= SPR_RAW_EVENT_MASK_EXT,
++	.event_mask_ext		= SPR_CHA_EVENT_MASK_EXT,
+ 	.num_shared_regs	= 1,
+ 	.constraints		= skx_uncore_chabox_constraints,
+ 	.ops			= &spr_uncore_chabox_ops,
 -- 
-2.44.0.683.g7961c838ac-goog
+2.35.1
 
