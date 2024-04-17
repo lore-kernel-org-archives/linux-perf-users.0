@@ -1,104 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287A11482E0;
-	Wed, 17 Apr 2024 15:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9261487C6;
+	Wed, 17 Apr 2024 15:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713369109; cv=none; b=NpfTrVVyLSDIeaXtNAR2LA6BD1Amw4ClrWO9koOBAWj9MXBYdm8WQlSZCOWRVwraq4dyW5T4sX7Skozr3lYO32drrS90ZB1FFdUqvFJE2bDHquOl+8VAfWBat9dTOlPm/eBmGndCYHmuEkZ+g3jlJeHSczzjtio6EdnOd23Hp7c=
+	t=1713369559; cv=none; b=ch5DLE2d4LYU8Uo2O4ofBIMxX8JqAQfhqMMd/TUzEFs/348JHRMNsLkEd4K1x2BrLdYItlu7R08ZSHxhRd4+y5nBIIrWrzOSev5teb6cVGk4vtdgZMw1zzW3X/ENXjFKmFcI1GGpVKIS2ZcYsMpjt/VBZgw7NrruqFN4WomUSvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713369109; c=relaxed/simple;
-	bh=WLarpyYIWWkkchcEU9ZfUR3cQ8pEaw4tJ/8AER+TFKk=;
+	s=arc-20240116; t=1713369559; c=relaxed/simple;
+	bh=UZiJOhiexQp0bZizQPTKAWHNiRbtg+8aXN8vVVHAyTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=us/NL64U7tti9TK2hA/YwhExcItP0Q9IziJNWWq7UNlR5NPE3wvmXznqSFYnCBEsCVAejLvrWTDfCPemc3BBwLQekp0lzZQ2kxrrTU/sajvyFGlXspjm9cxbSjSFMwlQzzLiZVyav28fDaJ/mfIjc36Yt9p9yyFv4TseIgHKpvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8956/kW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=owUPk2HXdRKuJ3xBvJBb0QEnCRtStKJqK6u5lWju0MRQfi7OXiErPtGJtc8xkRll5xYQS9hTNLknwiMlrh9dzUz1oy0psZPiXFwZirQ2ZpThh42QqZ4HBliLiKwCeSgdptcQPopJhh26N+C0kwMc3hpJwKhJYVAk1Wb394S6MME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rL+H5lBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8956/kW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF1FC072AA;
-	Wed, 17 Apr 2024 15:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rL+H5lBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65873C2BD11;
+	Wed, 17 Apr 2024 15:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713369108;
-	bh=WLarpyYIWWkkchcEU9ZfUR3cQ8pEaw4tJ/8AER+TFKk=;
+	s=k20201202; t=1713369558;
+	bh=UZiJOhiexQp0bZizQPTKAWHNiRbtg+8aXN8vVVHAyTk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X8956/kWgEy3matkA3uhP5tLIBv/of2FydJ4VmB+tierc5whIG7Oqb4ZHSb3jiu8j
-	 Ag7bo6Fumapa1dMDJdWiZpoUmdF/Le46cewurhe3QgMnGsxbOF23lDEYecDp7wNxQe
-	 ptZfPNxcR6yBm7Aq7oyCK/tLT62TUupFkYgPaiYW1bDe/FnFAk/sRE7Cafe0mkhrYb
-	 7LEkgwmhQsO41Y3o8zyCQJDDhZVKG5GkSyWk5d+VL5oqUgdQqjKYQOhqYDu0h+P0Vk
-	 nbqazQrKW+CB+/eBjA554zLLXTHe4ZLVHVeRk8JmVxcZ31NTEq08LxCHOB7WWEkuQH
-	 MM6fhU3TGfqEQ==
-Date: Wed, 17 Apr 2024 12:51:45 -0300
+	b=rL+H5lBs4TZGMqDH1ZjnQFpDjbQUWqKY3vSv9FtLbLusG/j0bPhVUj750XeNpd4KC
+	 /xtzekKpiwXBiRb410H0JcwFWxS4AuzSgclt8RgBSk8N5lS1jJnFM95PjnSGygz7PG
+	 SYJdvG07hcqHo3aQj008Jv/klLYQauj19mV1sSEvvpjYL5bg8Z3x4Xw0mIYX4H6Z69
+	 cfvEq184UwO48YATqgmpbx8xT5kyWqtPxtvCOayF0HfI3dNDMq/0hkx/tQvjg+/Lvq
+	 9NAkKr++ZQ6cAUML0ZIe8Ofct1rBrWrHeBGGQ3CKDzPuc2TvgBz9BaUUe1YTPFFuqa
+	 2iVpA7ckmrCdQ==
+Date: Wed, 17 Apr 2024 12:59:15 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] perf vendor events arm64: AmpereOne/AmpereOneX: Mark
- L1D_CACHE_INVAL impacted by errata
-Message-ID: <Zh_wEU6bdshoD2aO@x1>
-References: <20240408214022.541839-1-ilkka@os.amperecomputing.com>
- <3df74a0a-6778-43c4-a8c2-70d71c324f6a@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: cp0613@linux.alibaba.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
+	aou@eecs.berkeley.edu, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] tools/perf: Fix compiling with libelf on rv32
+Message-ID: <Zh_x0_VSO72xyaer@x1>
+References: <20240415095532.4930-1-cp0613@linux.alibaba.com>
+ <CAP-5=fWZSPTtk+UjssH4Mhw11CAP0-jZcZAbCesdqrVCnZbu2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3df74a0a-6778-43c4-a8c2-70d71c324f6a@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWZSPTtk+UjssH4Mhw11CAP0-jZcZAbCesdqrVCnZbu2Q@mail.gmail.com>
 
-On Tue, Apr 09, 2024 at 02:33:18PM +0100, James Clark wrote:
-> On 08/04/2024 22:40, Ilkka Koskinen wrote:
-> > L1D_CACHE_INVAL overcounts in certain situations. See AC03_CPU_41 and
-> > AC04_CPU_1 for more details. Mark the event impacted by the errata.
-> > 
-> > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> > ---
-> >  tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json  | 4 +++-
-> >  tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json | 4 +++-
-> >  2 files changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> > index 7a2b7b200f14..ac75f12e27bf 100644
-> > --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> > +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
-> > @@ -9,7 +9,9 @@
-> >          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
-> >      },
-> >      {
-> > -        "ArchStdEvent": "L1D_CACHE_INVAL"
-> > +        "ArchStdEvent": "L1D_CACHE_INVAL",
-> > +        "Errata": "Errata AC03_CPU_41",
-> > +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
-> >      },
-> >      {
-> >          "ArchStdEvent": "L1D_TLB_REFILL_RD"
-> > diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> > index c50d8e930b05..f4bfe7083a6b 100644
-> > --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> > +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
-> > @@ -9,7 +9,9 @@
-> >          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
-> >      },
-> >      {
-> > -        "ArchStdEvent": "L1D_CACHE_INVAL"
-> > +        "ArchStdEvent": "L1D_CACHE_INVAL",
-> > +        "Errata": "Errata AC04_CPU_1",
-> > +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
-> >      },
-> >      {
-> >          "ArchStdEvent": "L1D_TLB_REFILL_RD"
- 
-> Reviewed-by: James Clark <james.clark@arm.com>
+On Tue, Apr 16, 2024 at 08:04:55AM -0700, Ian Rogers wrote:
+> On Mon, Apr 15, 2024 at 2:57 AM <cp0613@linux.alibaba.com> wrote:
+> >
+> > From: Chen Pei <cp0613@linux.alibaba.com>
+> >
+> > When cross-compiling perf with libelf, the following error occurred:
+> >
+> >         In file included from tests/genelf.c:14:
+> >         tests/../util/genelf.h:50:2: error: #error "unsupported architecture"
+> >         50 | #error "unsupported architecture"
+> >                 |  ^~~~~
+> >         tests/../util/genelf.h:59:5: warning: "GEN_ELF_CLASS" is not defined, evaluates to 0 [-Wundef]
+> >         59 | #if GEN_ELF_CLASS == ELFCLASS64
+> >
+> > Fix this by adding GEN-ELF-ARCH and GEN-ELF-CLASS definitions for rv32.
+> >
+> > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied to perf-tools-next,
 
