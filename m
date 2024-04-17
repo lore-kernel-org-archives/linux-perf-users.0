@@ -1,71 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9261487C6;
-	Wed, 17 Apr 2024 15:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6571F1487E2;
+	Wed, 17 Apr 2024 16:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713369559; cv=none; b=ch5DLE2d4LYU8Uo2O4ofBIMxX8JqAQfhqMMd/TUzEFs/348JHRMNsLkEd4K1x2BrLdYItlu7R08ZSHxhRd4+y5nBIIrWrzOSev5teb6cVGk4vtdgZMw1zzW3X/ENXjFKmFcI1GGpVKIS2ZcYsMpjt/VBZgw7NrruqFN4WomUSvk=
+	t=1713370537; cv=none; b=LF4xZ0b0wqVjgiVErIZ0cS+iLEPmzusjKsw2MI49gGEFfXWh/oEGbBh8K5q+gHX4XfMxjL87wnxnirzl/th8pTTVv18KpYobuiB2ELWD/uZ0GmBTQ8Xv6CQUI380jSmTV7NoUwpbTcqqhv9OGKSQaG9qFr/zh34k8qiVtXYJ2B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713369559; c=relaxed/simple;
-	bh=UZiJOhiexQp0bZizQPTKAWHNiRbtg+8aXN8vVVHAyTk=;
+	s=arc-20240116; t=1713370537; c=relaxed/simple;
+	bh=FTzmG7MPyh44PqEdk5C7BCbIh1HKSVVdYFoDXul9zXo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owUPk2HXdRKuJ3xBvJBb0QEnCRtStKJqK6u5lWju0MRQfi7OXiErPtGJtc8xkRll5xYQS9hTNLknwiMlrh9dzUz1oy0psZPiXFwZirQ2ZpThh42QqZ4HBliLiKwCeSgdptcQPopJhh26N+C0kwMc3hpJwKhJYVAk1Wb394S6MME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rL+H5lBs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=erxSDky6oJhoEMR+aM5Xra2ujpWNDw5H925w4JW+OJKHmcBDjtFXczQSZOUxJGdDHk+kmK++rWB/KQCBgw7lA8zJRdtYZdkEuBcnD79T34bhAg+Y56que4t50HRgdvkpHFpUlCvg39V81ubgmdyU7J9GbJnwR2SMLIXj+/t853E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4yCazdG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rL+H5lBs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65873C2BD11;
-	Wed, 17 Apr 2024 15:59:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4yCazdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FDA6C072AA;
+	Wed, 17 Apr 2024 16:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713369558;
-	bh=UZiJOhiexQp0bZizQPTKAWHNiRbtg+8aXN8vVVHAyTk=;
+	s=k20201202; t=1713370536;
+	bh=FTzmG7MPyh44PqEdk5C7BCbIh1HKSVVdYFoDXul9zXo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rL+H5lBs4TZGMqDH1ZjnQFpDjbQUWqKY3vSv9FtLbLusG/j0bPhVUj750XeNpd4KC
-	 /xtzekKpiwXBiRb410H0JcwFWxS4AuzSgclt8RgBSk8N5lS1jJnFM95PjnSGygz7PG
-	 SYJdvG07hcqHo3aQj008Jv/klLYQauj19mV1sSEvvpjYL5bg8Z3x4Xw0mIYX4H6Z69
-	 cfvEq184UwO48YATqgmpbx8xT5kyWqtPxtvCOayF0HfI3dNDMq/0hkx/tQvjg+/Lvq
-	 9NAkKr++ZQ6cAUML0ZIe8Ofct1rBrWrHeBGGQ3CKDzPuc2TvgBz9BaUUe1YTPFFuqa
-	 2iVpA7ckmrCdQ==
-Date: Wed, 17 Apr 2024 12:59:15 -0300
+	b=K4yCazdGVtfBCjw8wIQJhHOx9X8gjbUTqm4NTsff6F+5rsMIhth6BK/sGLfu43Gk6
+	 lJ011ARgfnxYojR/y86+K0q05tGYTGvUV2KyMQWP00Lnu4pNKcbrdYJPWTC6/QUyE0
+	 xtdA/vyTDZ9R7jnEZL61wfx8UStwZwWr/WIadeC4hon79+bkk8BcYq+N46YVyXIheW
+	 +Qm92vbyG2duolQ9RIHp0rr/fGDEjAvTK7jHUHfEtYj2wrg9r4tkhj0gVFeYGjtolr
+	 3Heyb9pFOU7Xf9RtmyTpM6ut68keRoVigGHBUvd0hWw9MOzxApzWf4TdNxloGW5Edc
+	 XPFe0g7i9LAvg==
+Date: Wed, 17 Apr 2024 13:15:33 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: cp0613@linux.alibaba.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] tools/perf: Fix compiling with libelf on rv32
-Message-ID: <Zh_x0_VSO72xyaer@x1>
-References: <20240415095532.4930-1-cp0613@linux.alibaba.com>
- <CAP-5=fWZSPTtk+UjssH4Mhw11CAP0-jZcZAbCesdqrVCnZbu2Q@mail.gmail.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	Mike Leach <mike.leach@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf test: Increase buffer size for Coresight basic tests
+Message-ID: <Zh_1pR9nK1d-bivl@x1>
+References: <20240326113749.257250-1-james.clark@arm.com>
+ <5a4023aa-af9b-48d2-84f3-a0b9b30dc54e@arm.com>
+ <7f5c32dd-edc6-4b53-9cdd-780756f5536c@arm.com>
+ <369b29bf-66d8-4876-ae0c-a35f3c46973e@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWZSPTtk+UjssH4Mhw11CAP0-jZcZAbCesdqrVCnZbu2Q@mail.gmail.com>
+In-Reply-To: <369b29bf-66d8-4876-ae0c-a35f3c46973e@arm.com>
 
-On Tue, Apr 16, 2024 at 08:04:55AM -0700, Ian Rogers wrote:
-> On Mon, Apr 15, 2024 at 2:57 AM <cp0613@linux.alibaba.com> wrote:
-> >
-> > From: Chen Pei <cp0613@linux.alibaba.com>
-> >
-> > When cross-compiling perf with libelf, the following error occurred:
-> >
-> >         In file included from tests/genelf.c:14:
-> >         tests/../util/genelf.h:50:2: error: #error "unsupported architecture"
-> >         50 | #error "unsupported architecture"
-> >                 |  ^~~~~
-> >         tests/../util/genelf.h:59:5: warning: "GEN_ELF_CLASS" is not defined, evaluates to 0 [-Wundef]
-> >         59 | #if GEN_ELF_CLASS == ELFCLASS64
-> >
-> > Fix this by adding GEN-ELF-ARCH and GEN-ELF-CLASS definitions for rv32.
-> >
-> > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+On Mon, Apr 15, 2024 at 01:55:25PM +0530, Anshuman Khandual wrote:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> On 4/12/24 13:52, James Clark wrote:
+> > 
+> > 
+> > On 12/04/2024 08:04, Anshuman Khandual wrote:
+> >>
+> >>
+> >> On 3/26/24 17:07, James Clark wrote:
+> >>> These tests record in a mode that includes kernel trace but look for
+> >>> samples of a userspace process. This makes them sensitive to any kernel
+> >>> compilation options that increase the amount of time spent in the
+> >>> kernel. If the trace buffer is completely filled before userspace is
+> >>> reached then the test will fail. Double the buffer size to fix this.
+> >>
+> >> This is a valid concern to address, but just wondering how did we arrive
+> >> at the conclusion that doubling the buffer size i.e making that 8M will
+> >> solve the problem positively for vast number of kerne build scenarios ?
+> >>
+> > 
+> > Nobody else has reported anything yet, if it happens again we can always
+> > increase it again if that is what the issue is. I had most of the kernel
+> > debugging stuff turned on like memory debugging etc, which is probably
+> > why I ran into it and 8MB fixed it for me. So I'm not sure if there is
+> > much more that could be added.
+> 
+> Makes sense,
+> 
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
 Thanks, applied to perf-tools-next,
 
