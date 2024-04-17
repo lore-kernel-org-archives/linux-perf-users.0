@@ -1,171 +1,395 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86791E888;
-	Wed, 17 Apr 2024 03:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D2741C7C
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 04:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713326242; cv=none; b=QEOjJALqwRIS3/wYcNJS8Og9GjxRrXNxyPh9GH+GrjpZghmDpJlc/ESdCIJy1Ti6W6cAKUrNMbMQGyEmGiA+xoHwjvGBMZH49mb2NExR7s9n5+F8kYNEirqt5VJo9ihkaZ+CL503XTCXVdg3gaN//JuAyg5e7FJqRXRw+xgS3Zg=
+	t=1713329815; cv=none; b=QKyIMij8owjiWZTerwsmwoeiJJPoPNouAAQvqgfiC+Z/oi2QKc4aHW7vaYYliDyUkw3KCQNnfkSIWGYaovZrTJE4dMt/220WNRw//9HX+wWaatdVkmZjWWrzd8vLXThRzn1+GPBP4m16+Ha5BIxIYRZIVqRHhuY24WAGpSKIVLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713326242; c=relaxed/simple;
-	bh=wii6+rVTqhTSBdS8cUxVrVBgMqOcNLARz3i+uByjOt8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=boPrnmGYsUl28sTs4r9Vtm+WS0wpr9DEBDGIWlprabL7eCk5QSme1ZEHSIgGvXtS7u3izDSPYJsl8nfH4Xy5Rd3zlC0HHbFVvVSXq2ELT62i2M++kyReR/eZxJOzYFL9pntugklyuWjoBeX1teuW5tJJAEYZh3mwtSqw8WZS0DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK6YH67Hmz4f3tNZ;
-	Wed, 17 Apr 2024 11:57:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BEA361A0175;
-	Wed, 17 Apr 2024 11:57:16 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RGaSB9mzMnFKA--.65099S6;
-	Wed, 17 Apr 2024 11:57:16 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH RESEND v2 2/2] perf/core: Fix incorrected time diff in tick adjust period
-Date: Wed, 17 Apr 2024 11:54:46 +0000
-Message-Id: <20240417115446.2908769-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
-References: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1713329815; c=relaxed/simple;
+	bh=HVJ30EI2F2FVi6Vbxg1qzWyTIMq4I7etSIzQ9CPMTMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n98u576XFkQk7ZEMumAAicSOSz13nOtgNEeXamFCcHCvtyC8MoM3Xhbw0Zd8rUkQlnVWtidlK+EMg7wWyAoeoneupIk38cJxydVRl48Sr3gb9CLPpX2+xTWZpsgufr9sMM938CTyJxSccxKaXzYSeg53tMKo4/kdCZS2EoUHGJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C5m9b/Q0; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5m9b/Q0"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-434b5abbb0dso167351cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 21:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713329812; x=1713934612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuiJNOjgRGEpyv3czbw2vs/NzvxTDjs1htLv2AkhpOE=;
+        b=C5m9b/Q0g6ENzBsjbZeHR4mPH7q6t22QCuXv+9f07fcL6B4MmIkTMmCBFP5SThsWuY
+         ZMsp4SBuKfhwwIjxdVnqm5Hj7hi5f44lqFZrmZ5hIWwFADSDuWeTjCPirOgOalEjkJDY
+         xH3ebOs82Dk+O0u1hPot+o6BortFmcFobcw/JIXOq2/k2YT8o7zJV5bUCyB5+hFoEXA5
+         fYT1VW7ZwQL375W3qa9H6MZN/JU0nSOM+ugeqOAItOENKPnOcCQtSR0mS3MeOcnUTcQK
+         85X1TcJxCuSTmmRRH40Dnzp298to5ho+QmgloWnKGPIrxn3xIqKRl89HZw50D316kHvV
+         VBGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713329812; x=1713934612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SuiJNOjgRGEpyv3czbw2vs/NzvxTDjs1htLv2AkhpOE=;
+        b=uza/y90XArofjssr175FfPpWvh1vWfLFGD1XocLqTxM2w9rLc8MuMheGarsInz3nrg
+         WHZ1pe2JoqeD7OTPCIZLxUohYsAXjQDbT9dCjTVXFjpZNxXrlyoyOTePbKqtajZmlmbu
+         sX3FPjkyYEoDipguRdT7BWLQzAXkVJvt1IxrSXYf3y+HxufcVwy0g02ir0NmeEhgH4Eq
+         NDUZyGF9US5EzPulyuwyVvihhq4clEh1anMS+FXDjwHX7LChZg9U6YwzE8tWuB/DMk/Y
+         DdzGfYyIIYK1wRAGEawFiGfcabJcI4glW363MKIssuiUbkVtq2g83DDg6mlt62cJhP68
+         TMnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpY3fhvbkaAq7jAMtNjsY7S32vXhGQP8dOQkzff2xCqq7ynhduDXW+OOEAuJpvTgi10qyyF1yihfJoWKnTjsC5ECSPATu4WUZ6/6q0P5RLHg==
+X-Gm-Message-State: AOJu0YypT7JYxDJweeHmIr9y972VItLi5GQC0mTpSsf3vVBbiOZ/RAqI
+	3oD/bgUpUdQP0/HbA+b0uq6UBA/kkLtfiyGx0xmd1r+Zb3sZRwZ+vS+2EgPKG9qOnXaqzCv9Y8k
+	8Wacw90g5vi9kgnTnfYnUGBtGsFYCvrbLQbv6
+X-Google-Smtp-Source: AGHT+IGnRohLq08HBxYlkAcNsoCp3wqsuWwi3PRRN/pKQiuda3vNQAu3niMMmVCCH9TEhG/URfOxqwgtg+YcNvvNA+c=
+X-Received: by 2002:ac8:46d0:0:b0:437:6a96:e519 with SMTP id
+ h16-20020ac846d0000000b004376a96e519mr105989qto.0.1713329812081; Tue, 16 Apr
+ 2024 21:56:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RGaSB9mzMnFKA--.65099S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4xCw4xuF4UCFWDZrykGrg_yoWrXF1rpr
-	Wvyr13KFsrtF1j9wnYkFyrWry5Ww48Aan8G348Cw48Aw1fWr9xJF1kKF1UGF98CFZrZFyI
-	y3s0gw43tFWUtaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUpj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
-	0E87I2jVAFwI0_Jryl82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2
-	F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjx
-	v20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2
-	z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2
-	xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5V
-	A0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_JF0_
-	Jw1l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxAqzxv26xkF7I0En4kS14
-	v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtV
-	W8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7s
-	RERRR3UUUUU==
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+References: <20240412210756.309828-1-weilin.wang@intel.com> <20240412210756.309828-3-weilin.wang@intel.com>
+In-Reply-To: <20240412210756.309828-3-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Apr 2024 21:56:38 -0700
+Message-ID: <CAP-5=fUTHPu_vaNyeaq9uDwf7Hq79khFZymFJK2w39k-9RdutQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 02/16] perf stat: Add basic functions for the
+ hardware aware grouping
+To: weilin.wang@intel.com
+Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adrian found that there is a probability that the number of samples
-is small, which is caused by the unreasonable large sampling period.
+On Fri, Apr 12, 2024 at 2:08=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> Add the first set of functions for the hardware aware grouping method. Fu=
+nction
+> hw_aware_parse_groups() is the entry point of this metric grouping method=
+.  It
+> does metric grouping on a combined list of events and will create a list =
+of
+> grouping strings as final results of the grouping method. These grouping =
+strings
+> will be used in the same manner as existing metric grouping process.
+>
+> This method will fall back to normal grouping when hardware aware groupin=
+g
+> return with err so that perf stat still executes and returns with correct
+> result.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 
- # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
- # perf script
- ...
- test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
- ...
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-It seems that the Timer Interrupts is not coming every TICK_NSEC when
-system is idle. For example, counter increase n during 2 * TICK_NSEC,
-and it call perf_adjust_period using n and TICK_NSEC, so the final period
-we calculated will be bigger than expected one. What's more, if the
-the overflow time is larger than 2 * TICK_NSEC we cannot tune the period
-using __perf_event_account_interrupt. To fix this problem, perf can
-calculate the tick interval by itself.
+> ---
+>  tools/perf/util/metricgroup.c | 217 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 216 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 11613450725a..8047f03b2b1f 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -159,6 +159,14 @@ struct metric {
+>         struct evlist *evlist;
+>  };
+>
+> +/**
+> + * Each group is one node in the group string list.
+> + */
+> +struct metricgroup__group_strs {
+> +       struct list_head nd;
+> +       struct strbuf grouping_str;
+> +};
+> +
+>  static void metric__watchdog_constraint_hint(const char *name, bool foot=
+)
+>  {
+>         static bool violate_nmi_constraint;
+> @@ -1432,6 +1440,101 @@ static int build_combined_expr_ctx(const struct l=
+ist_head *metric_list,
+>         return ret;
+>  }
+>
+> +/**
+> + * hw_aware_build_grouping - Build event groupings by reading counter
+> + * requirement of the events and counter available on the system from
+> + * pmu-events.
+> + * @ctx: the event identifiers parsed from metrics.
+> + * @groupings: header to the list of final event grouping.
+> + * @modifier: any modifiers added to the events.
+> + */
+> +static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_un=
+used,
+> +                                 struct list_head *groupings __maybe_unu=
+sed,
+> +                                 const char *modifier __maybe_unused)
+> +{
+> +       int ret =3D 0;
+> +
+> +       pr_debug("This is a placeholder\n");
+> +       return ret;
+> +}
+> +
+> +static void group_str_free(struct metricgroup__group_strs *g)
+> +{
+> +       if (!g)
+> +               return;
+> +
+> +       strbuf_release(&g->grouping_str);
+> +       free(g);
+> +}
+> +
+> +static void metricgroup__free_grouping_strs(struct list_head
+> +                                          *grouping_strs)
+> +{
+> +       struct metricgroup__group_strs *g, *tmp;
+> +
+> +       list_for_each_entry_safe(g, tmp, grouping_strs, nd) {
+> +               list_del_init(&g->nd);
+> +               group_str_free(g);
+> +       }
+> +}
+> +
+> +/**
+> + * hw_aware_parse_ids - Build the event string for the ids and parse the=
+m
+> + * creating an evlist. The encoded metric_ids are decoded. Events are pl=
+aced
+> + * into groups based on event counter requirements and counter availabil=
+ities of
+> + * the system.
+> + * @metric_no_merge: is metric sharing explicitly disabled.
+> + * @fake_pmu: used when testing metrics not supported by the current CPU=
+.
+> + * @ids: the event identifiers parsed from a metric.
+> + * @modifier: any modifiers added to the events.
+> + * @out_evlist: the created list of events.
+> + */
+> +static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+> +                            struct expr_parse_ctx *ids, const char *modi=
+fier,
+> +                            struct evlist **out_evlist)
+> +{
+> +       struct parse_events_error parse_error;
+> +       struct evlist *parsed_evlist;
+> +       LIST_HEAD(groupings);
+> +       struct metricgroup__group_strs *group;
+> +       int ret;
+> +
+> +       *out_evlist =3D NULL;
+> +       ret =3D hw_aware_build_grouping(ids, &groupings, modifier);
+> +       if (ret) {
+> +               metricgroup__free_grouping_strs(&groupings);
+> +               return ret;
+> +       }
+> +
+> +       parsed_evlist =3D evlist__new();
+> +       if (!parsed_evlist) {
+> +               ret =3D -ENOMEM;
+> +               goto err_out;
+> +       }
+> +       list_for_each_entry(group, &groupings, nd) {
+> +               struct strbuf *events =3D &group->grouping_str;
+> +
+> +               pr_debug("Parsing metric events '%s'\n", events->buf);
+> +               parse_events_error__init(&parse_error);
+> +               ret =3D __parse_events(parsed_evlist, events->buf, /*pmu_=
+filter=3D*/NULL,
+> +                                   &parse_error, fake_pmu, /*warn_if_reo=
+rdered=3D*/false);
+> +               if (ret) {
+> +                       parse_events_error__print(&parse_error, events->b=
+uf);
+> +                       goto err_out;
+> +               }
+> +               ret =3D decode_all_metric_ids(parsed_evlist, modifier);
+> +               if (ret)
+> +                       goto err_out;
+> +       }
+> +       *out_evlist =3D parsed_evlist;
+> +       parsed_evlist =3D NULL;
+> +err_out:
+> +       parse_events_error__exit(&parse_error);
+> +       evlist__delete(parsed_evlist);
+> +       metricgroup__free_grouping_strs(&groupings);
+> +       return ret;
+> +}
+> +
+>  /**
+>   * parse_ids - Build the event string for the ids and parse them creatin=
+g an
+>   *             evlist. The encoded metric_ids are decoded.
+> @@ -1520,6 +1623,113 @@ static int parse_ids(bool metric_no_merge, struct=
+ perf_pmu *fake_pmu,
+>         return ret;
+>  }
+>
+> +static int hw_aware_parse_groups(struct evlist *perf_evlist,
+> +                               const char *pmu, const char *str,
+> +                               bool metric_no_threshold,
+> +                               const char *user_requested_cpu_list,
+> +                               bool system_wide,
+> +                               struct perf_pmu *fake_pmu,
+> +                               struct rblist *metric_events_list,
+> +                               const struct pmu_metrics_table *table)
+> +{
+> +       struct evlist *combined_evlist =3D NULL;
+> +       LIST_HEAD(metric_list);
+> +       struct metric *m;
+> +       int ret;
+> +       bool metric_no_group =3D false;
+> +       bool metric_no_merge =3D false;
+> +
+> +       if (metric_events_list->nr_entries =3D=3D 0)
+> +               metricgroup__rblist_init(metric_events_list);
+> +       ret =3D metricgroup__add_metric_list(pmu, str, metric_no_group, m=
+etric_no_threshold,
+> +                                          user_requested_cpu_list,
+> +                                          system_wide, &metric_list, tab=
+le);
+> +       if (ret)
+> +               goto out;
+> +
+> +       /* Sort metrics from largest to smallest. */
+> +       list_sort(NULL, &metric_list, metric_list_cmp);
+> +
+> +       if (!metric_no_merge) {
+> +               struct expr_parse_ctx *combined =3D NULL;
+> +
+> +               ret =3D build_combined_expr_ctx(&metric_list, &combined);
+> +
+> +               if (!ret && combined && hashmap__size(combined->ids)) {
+> +                       ret =3D hw_aware_parse_ids(fake_pmu, combined,
+> +                                               /*modifier=3D*/NULL,
+> +                                               &combined_evlist);
+> +               }
+> +
+> +               if (combined)
+> +                       expr__ctx_free(combined);
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +
+> +       list_for_each_entry(m, &metric_list, nd) {
+> +               struct metric_expr *expr;
+> +               struct metric_event *me;
+> +               struct evsel **metric_events;
+> +
+> +               ret =3D setup_metric_events(fake_pmu ? "all" : m->pmu, m-=
+>pctx->ids,
+> +                                        combined_evlist, &metric_events)=
+;
+> +               if (ret) {
+> +                       pr_debug("Cannot resolve IDs for %s: %s\n",
+> +                               m->metric_name, m->metric_expr);
+> +                       goto out;
+> +               }
+> +
+> +               me =3D metricgroup__lookup(metric_events_list, metric_eve=
+nts[0], true);
+> +
+> +               expr =3D malloc(sizeof(struct metric_expr));
+> +               if (!expr) {
+> +                       ret =3D -ENOMEM;
+> +                       free(metric_events);
+> +                       goto out;
+> +               }
+> +
+> +               expr->metric_refs =3D m->metric_refs;
+> +               m->metric_refs =3D NULL;
+> +               expr->metric_expr =3D m->metric_expr;
+> +               if (m->modifier) {
+> +                       char *tmp;
+> +
+> +                       if (asprintf(&tmp, "%s:%s", m->metric_name, m->mo=
+difier) < 0)
+> +                               expr->metric_name =3D NULL;
+> +                       else
+> +                               expr->metric_name =3D tmp;
+> +               } else {
+> +                       expr->metric_name =3D strdup(m->metric_name);
+> +               }
+> +
+> +               if (!expr->metric_name) {
+> +                       ret =3D -ENOMEM;
+> +                       free(metric_events);
+> +                       goto out;
+> +               }
+> +               expr->metric_threshold =3D m->metric_threshold;
+> +               expr->metric_unit =3D m->metric_unit;
+> +               expr->metric_events =3D metric_events;
+> +               expr->runtime =3D m->pctx->sctx.runtime;
+> +               list_add(&expr->nd, &me->head);
+> +       }
+> +
+> +       if (combined_evlist) {
+> +               evlist__splice_list_tail(perf_evlist, &combined_evlist->c=
+ore.entries);
+> +               evlist__delete(combined_evlist);
+> +       }
+> +
+> +       list_for_each_entry(m, &metric_list, nd) {
+> +               if (m->evlist)
+> +                       evlist__splice_list_tail(perf_evlist, &m->evlist-=
+>core.entries);
+> +       }
+> +
+> +out:
+> +       metricgroup__free_metrics(&metric_list);
+> +       return ret;
+> +}
+> +
+>  static int parse_groups(struct evlist *perf_evlist,
+>                         const char *pmu, const char *str,
+>                         bool metric_no_group,
+> @@ -1698,10 +1908,15 @@ int metricgroup__parse_groups(struct evlist *perf=
+_evlist,
+>         if (!table)
+>                 return -EINVAL;
+>         if (hardware_aware_grouping) {
+> +               int ret;
 
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 3 deletions(-)
+nit: there should be a '\n' between variables and code,
+scripts/checkpatch.pl sould catch this.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index afb028c54f33..2708f1d0692c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -265,6 +265,7 @@ struct hw_perf_event {
- 	 * State for freq target events, see __perf_event_overflow() and
- 	 * perf_adjust_freq_unthr_context().
- 	 */
-+	u64				freq_tick_stamp;
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
- #endif
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cad50d3439f1..0f2025d631aa 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4112,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- {
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
--	u64 now, period = TICK_NSEC;
-+	u64 now, period, tick_stamp;
- 	s64 delta;
- 
- 	/*
-@@ -4151,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 */
- 		event->pmu->stop(event, PERF_EF_UPDATE);
- 
-+		tick_stamp = perf_clock();
-+		period = tick_stamp - hwc->freq_tick_stamp;
-+		hwc->freq_tick_stamp = tick_stamp;
-+
- 		now = local64_read(&event->count);
- 		delta = now - hwc->freq_count_stamp;
- 		hwc->freq_count_stamp = now;
-@@ -4162,8 +4166,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 * to perf_adjust_period() to avoid stopping it
- 		 * twice.
- 		 */
--		if (delta > 0)
--			perf_adjust_period(event, period, delta, false);
-+		if (delta > 0) {
-+			/*
-+			 * we skip first tick adjust period
-+			 */
-+			if (likely(period != tick_stamp))
-+				perf_adjust_period(event, period, delta, false);
-+		}
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
- 	next:
--- 
-2.34.1
+>                 pr_debug("Use hardware aware grouping instead of traditio=
+nal metric grouping method\n");
+> +               ret =3D hw_aware_parse_groups(perf_evlist, pmu, str,
+> +                           metric_no_threshold, user_requested_cpu_list,=
+ system_wide,
+> +                           /*fake_pmu=3D*/NULL, metric_events, table);
+> +               if (!ret)
+> +                       return 0;
+>         }
+>
+> -
 
+nit: unneeded whitespace change.
+
+Thanks,
+Ian
+
+>         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
+c_no_merge,
+>                             metric_no_threshold, user_requested_cpu_list,=
+ system_wide,
+>                             /*fake_pmu=3D*/NULL, metric_events, table);
+> --
+> 2.42.0
+>
