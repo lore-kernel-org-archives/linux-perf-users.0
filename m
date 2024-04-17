@@ -1,222 +1,81 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031410976
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 03:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853FE10976;
+	Wed, 17 Apr 2024 03:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713325776; cv=none; b=ZQ4C/tDqi3ieZlmMvc/dgKnDWiuMNAtoil25XOHdKlMkaqZ/MRbu7ENnirgwA/7t+sO65eH6SX8biJ1bT3ers01uNUCHWdhr/jhVLIq7e1+z2k53DaYlBRgDNd2S1WTck88Z8qUQmOB6AE4nAc/GHg1e+ukqkpnHjVSGtLy/zg0=
+	t=1713326240; cv=none; b=amrjSwbbu99tIztGJvPP9YKQK6hcVZahGXjt7b5kf+QfkW6YtmPgFlt9qg7c3hrqZt5vwpbpBLjleLVYnOgFfO7DSJtwA4QuyMauxwtF9zWVGnZ39Gt95v8/Gd6npsKqDXJGV780DA/tKCW21MKSKM1Ezg30ZvpdEJuSIPpjjMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713325776; c=relaxed/simple;
-	bh=2f3KgQ6HSPeWp8Dic8AieWtnuWDA1AAlDkV/vxItVPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s43RB2kpPoQp50Y36Bstdf2J5GxByfOzDNXoxAN6173TYElwVKQo3X3vgvgkNQJW4n6+NrcZ0rkr5lmzwpHot02enBCiyTdOoT+rgk5IQ9xAsgFXMK9cDaCm9dii4vEjGArEMDwyyqo2cJ3z2/p0WBEDGncACWujUECOfZNgS6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gVaL4Xn6; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gVaL4Xn6"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-436ed871225so129011cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 20:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713325773; x=1713930573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bxpmdQK2lwVyxL8e1b8aoJ9nIIIANWvbSN9Lr6HQTc=;
-        b=gVaL4Xn6yLpLbXwwwVCcf/AMbu5v7V24TpqdEOLPr9eQ5vPgzTRsVzE4fJ1Hyjxpgs
-         aDOq/zCKv1Ov1y25q8HR+bi+50Z7bDk62viJcZEwe1vxZL2SFaF3qna9hCgc+vHdfYgY
-         WrAnwsTr947xwzTF/c69gET48LA9oRCviYCVuaJUaNEKSFwEF34iL5dsKUhGHmRl3AmN
-         OnJ8NqFJ20m4lBz2F/w1yoSUXhnN/HuecNAKfnpJg03a65/afZW7I6KrnlZrxU4KLp4F
-         FeVT6KHgLH8QXmNpDGuS5oUMgl+5KmhTJdYhvIVgtdwz4HUYkAvMD5NupJCc6yLX+sqk
-         kSKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713325773; x=1713930573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5bxpmdQK2lwVyxL8e1b8aoJ9nIIIANWvbSN9Lr6HQTc=;
-        b=tu4mNzspVanRP50f/kNbxJpRQCrSAmjCh8OZb7kbNJ4UA1dS4Se8XgP6utHtz2X3pO
-         VW6XwO+zOCjGdP8JJ207FJJh2Yn4YDJ+0TS3z2UWRGI+H7MiI1LWp8BYVrGqjV52Ez53
-         +LXaE6QVHsqVcDhUdqSu7V3cOClYKJc0lACOnQHKEt2AF1ab7wIEswdLu58YC7VjsAbX
-         LGD+zY9IYaFzcpHXRssBB93FiNWDLf8SSTvVBIh4fP+eXG5qRzX8YpHl8TWPlNpkaasu
-         TmZLaQGXCsD3Z0ZEH8MBmY6CF5efzYfI+K6AQ6/cYNTaqCLVhbZJYOwKskR/WqTNvCjv
-         R0Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCUXvWfibVS2uMKyLCatrzym3PYrxHfGiZZkXojZVtY39U8UG5EZmp5mWHY9LovNKDaVgWoxkRNlICAr2cCHEiGM5d5zFVNTBdZFetOWhKppJg==
-X-Gm-Message-State: AOJu0Yx5yn4epXVlvjJYhDHGETft9V1baj1VqeNvNt4UD2uUgo2IJo08
-	3WI7GJneVAowLP57Bowciri/4pnoDbWnTutHvx40eQCrKrYzf04BcnrZG8+mUUMB8AP938eCBUn
-	e7AGJ+/c/o3NJdnNlI3jf/+iJs+kQqZD4vLsG
-X-Google-Smtp-Source: AGHT+IHuNJ8z5JTBH+m9cwerVxFHFAq31vSDuEvn+yGPUsVZb08jaCrxfaV8BELCaBuHZrfVnz4ZOEUQlAkXuHoAnNA=
-X-Received: by 2002:a05:622a:1b8d:b0:436:be6b:7156 with SMTP id
- bp13-20020a05622a1b8d00b00436be6b7156mr97668qtb.11.1713325772550; Tue, 16 Apr
- 2024 20:49:32 -0700 (PDT)
+	s=arc-20240116; t=1713326240; c=relaxed/simple;
+	bh=yGNctuQHUcCDXPl8MG3Yqguf16BmQ/shTe6xOPNkLMw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cfaB7jlLV0oXJ59FtBitsxMrYzXxY7suJt8OusmfafiGqyocGY+xRXYVi62iPG/yukhf2/8ZvpBsMnkdY1DRK00M9wiaMuc1tmkhsf9y90/LVH9L6/iUMyETCDV0RKyZDjjO9aX8MOtOcf+8zOJOPMwKIKwLeDB1pReM/j7GP6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK6YG1vrdz4f3nTt;
+	Wed, 17 Apr 2024 11:57:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2DD551A0572;
+	Wed, 17 Apr 2024 11:57:15 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6RGaSB9mzMnFKA--.65099S4;
+	Wed, 17 Apr 2024 11:57:14 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH RESEND v2 0/2] Fix small negative period being ignored
+Date: Wed, 17 Apr 2024 11:54:44 +0000
+Message-Id: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412210756.309828-1-weilin.wang@intel.com> <20240412210756.309828-2-weilin.wang@intel.com>
-In-Reply-To: <20240412210756.309828-2-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 16 Apr 2024 20:49:21 -0700
-Message-ID: <CAP-5=fWNREXxROJhKC2T+Oaw+PBjM=VYdpm_eiaCgc1DLnbm3A@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 01/16] perf stat: Add new field in stat_config to
- enable hardware aware grouping.
-To: weilin.wang@intel.com
-Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX6RGaSB9mzMnFKA--.65099S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO27AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JF
+	v_Gryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AK
+	xVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	AFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x2
+	0xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15Mc
+	Ij6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l
+	F7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7V
+	AKI48JMxAqzxv262kKe7AKxVWUXVWUAwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2Iq
+	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
+	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
+	xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j
+	6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRR-eOUUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-On Fri, Apr 12, 2024 at 2:08=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Hardware counter and event information could be used to help creating eve=
-nt
-> groups that better utilize hardware counters and improve multiplexing.
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/builtin-stat.c     | 5 +++++
->  tools/perf/util/metricgroup.c | 5 +++++
->  tools/perf/util/metricgroup.h | 1 +
->  tools/perf/util/stat.h        | 1 +
->  4 files changed, 12 insertions(+)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 6bba1a89d030..c4a5f0984295 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2106,6 +2106,7 @@ static int add_default_attributes(void)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> +                                               stat_config.hardware_awar=
-e_grouping,
->                                                 &stat_config.metric_event=
-s);
->         }
->
-> @@ -2139,6 +2140,7 @@ static int add_default_attributes(void)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> +                                               stat_config.hardware_awar=
-e_grouping,
->                                                 &stat_config.metric_event=
-s);
->         }
->
-> @@ -2173,6 +2175,7 @@ static int add_default_attributes(void)
->                                                 /*metric_no_threshold=3D*=
-/true,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> +                                               stat_config.hardware_awar=
-e_grouping,
->                                                 &stat_config.metric_event=
-s) < 0)
->                         return -1;
->         }
-> @@ -2214,6 +2217,7 @@ static int add_default_attributes(void)
->                                                         /*metric_no_thres=
-hold=3D*/true,
->                                                         stat_config.user_=
-requested_cpu_list,
->                                                         stat_config.syste=
-m_wide,
-> +                                                       stat_config.hardw=
-are_aware_grouping,
->                                                         &stat_config.metr=
-ic_events) < 0)
->                                 return -1;
->
-> @@ -2748,6 +2752,7 @@ int cmd_stat(int argc, const char **argv)
->                                                 stat_config.metric_no_thr=
-eshold,
->                                                 stat_config.user_requeste=
-d_cpu_list,
->                                                 stat_config.system_wide,
-> +                                               stat_config.hardware_awar=
-e_grouping,
->                                                 &stat_config.metric_event=
-s);
->
->                 zfree(&metrics);
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 79ef6095ab28..11613450725a 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1690,12 +1690,17 @@ int metricgroup__parse_groups(struct evlist *perf=
-_evlist,
->                               bool metric_no_threshold,
->                               const char *user_requested_cpu_list,
->                               bool system_wide,
-> +                             bool hardware_aware_grouping,
->                               struct rblist *metric_events)
->  {
->         const struct pmu_metrics_table *table =3D pmu_metrics_table__find=
-();
->
->         if (!table)
->                 return -EINVAL;
-> +       if (hardware_aware_grouping) {
-> +               pr_debug("Use hardware aware grouping instead of traditio=
-nal metric grouping method\n");
-> +       }
+v1 -> v2:
+1. Add reviewed by for perf/core: Fix small negative period being ignored
+2. Add perf/core: Fix incorrected time diff in tick adjust period
 
-nit: single line if statements shouldn't have curlies:
-https://www.kernel.org/doc/html/v6.8/process/coding-style.html#placing-brac=
-es-and-spaces
+Luo Gengkun (2):
+  perf/core: Fix small negative period being ignored
+  perf/core: Fix incorrected time diff in tick adjust period
 
-Thanks,
-Ian
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 21 +++++++++++++++++----
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-> +
->
->         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
-c_no_merge,
->                             metric_no_threshold, user_requested_cpu_list,=
- system_wide,
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index d5325c6ec8e1..779f6ede1b51 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -77,6 +77,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlis=
-t,
->                               bool metric_no_threshold,
->                               const char *user_requested_cpu_list,
->                               bool system_wide,
-> +                             bool hardware_aware_grouping,
->                               struct rblist *metric_events);
->  int metricgroup__parse_groups_test(struct evlist *evlist,
->                                    const struct pmu_metrics_table *table,
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index d6e5c8787ba2..fd7a187551bd 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -87,6 +87,7 @@ struct perf_stat_config {
->         bool                     metric_no_group;
->         bool                     metric_no_merge;
->         bool                     metric_no_threshold;
-> +       bool                     hardware_aware_grouping;
->         bool                     stop_read_counter;
->         bool                     iostat_run;
->         char                     *user_requested_cpu_list;
-> --
-> 2.42.0
->
+-- 
+2.34.1
+
