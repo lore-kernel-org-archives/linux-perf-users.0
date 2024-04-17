@@ -1,143 +1,220 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CB538DEC
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 14:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E547140E29;
+	Wed, 17 Apr 2024 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713365445; cv=none; b=izWAx0g70X9YQcymAjU6AgzffXrPAX1e4WEekbjEyrVL90YLqsvuYelqnpQZO1PC6MRWiu7OvqOvSMtVd7r0y8ItF8ZvjGDG/GUBNtvsrQbvtsf55qciQ4Z4b07LnleFSEWBOoCiktX1MHE4gfFv5a+m5JpTqqa5sYWoN+2DnS4=
+	t=1713367705; cv=none; b=BOZlH3vSEUeIzinjC0SKypbNpTGaQIY5uORweiITd7pGsyCjXt7/hAyfVIyu8IdReDSD0+A6bEOiJuaauNEsbsGRsWYIMsCO9s8mqurI8cM3dJKjluUEnkSosbT5ORapMs411g3ECHHVvJxwH89V8rVu7DEgCbnU4BJ6bby/EXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713365445; c=relaxed/simple;
-	bh=3xQjIKuzza23PA8iMmF/ZaihPTYzQa4id/sKfn3o+Hk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rkNpvOu7rVWdGYPEYKCOYKhgIMAeMWZ0EkdMCM+zWgfBNDRs62B1RrC/e3VNh2PnjZWCkXYX/o70OpS+zUXnW+Ty6vM8gYfW6G7XjzAuV1P3TAMyYKSgAGZvcsJVMKkCKuNA+th1/iiO2G0ocuMaRXOv3glYrvA4HcfAagikYdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O6oY5ILm; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713367705; c=relaxed/simple;
+	bh=DW3I9GoVYzSlEMTLuU0jyORDXqMAP0u2EdSKwSWXNhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rDBwqOU9+HAZGMzVxERCFbDOMoxynsUU+cIsUgvi1/bBfRxSvmg/ppbLh9yqunR4spWTxJomCr//jP+hlpCNwBV1NXOT/PbebhAMDAeMbyj43azKMQJdAY2hvEG0TAvHjopNaTAnFuh0gMpsf3HXDc0qPPx531ML91StEqaRFao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HiAbzuLT; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O6oY5ILm"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e3c89f3d32so221165ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 07:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713365443; x=1713970243; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rxj80oam7Il+91X8ofj6LPJmgE1D5E+WVqYl1M/aFRo=;
-        b=O6oY5ILmgiqKuEE6iElybv2Ub9WHKOEhLmXEmwUOaX5zfBnjiDrRYHLiAKDNMoz6co
-         e25zKESy77M6a/uxtxaBGAyTnJ7suprR/puZL3FScnbwnYebEnh9zH7OmK5Mp3P/zf48
-         3X2U/LxOdgyacu26zOqARLxhWZQBVShE5i1omT/noNt2EHV0ufnLw3Td6NLy1zsDejPz
-         HT23jtuo63UUulEqbt2Ab6qeXeMWbcXhh+fl2X2iWFWZfvpQGSVgIG6gg3LdLG5zaPQR
-         4QzDTWWRhe/rh9xFGQyV2f9onxwO7TL2ucjco4R/fUOl+56FyC7mvxupB4o1WARt43z9
-         CRsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713365443; x=1713970243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rxj80oam7Il+91X8ofj6LPJmgE1D5E+WVqYl1M/aFRo=;
-        b=uzV494sVNo3oYsIyw3GrQoq5gRV5+9PydtFgiI1ncHEo8xTR2spuub5kmFDIuqT8yJ
-         HHunbcRVWRm5SJ1P6oX5cM+8amJQxviXH/2rWpi6AY6N111fqMc9VYSulMwKRZ4Sdg+c
-         fs7pT7rWMxlTAtFSfnZ8hGo8jPhw15hkbIpSsQT1h2Loyh30gDNcmYqs9cpTTo7DnP4L
-         wP43HLEhzpn1jVd9snq5k2acAaMQoEtWKUV9j7ypaKz+G3L11/E42R37WxPb+iI0+1Yk
-         mqqHMYvFu23qyXD9FohRpIxEIkd3AFkvsB1NOIgAVCSuaLpyd+m3APVlgbTL4KG5uoIj
-         nbaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVC1o/4iCCgcSU7B4rm8wEu58qLgJxqCvbDPAT/CMKPzjYEvjIVh5y+Ym6yDnUJDtjqpiq4lmMcHMCIdXCFQna83EcLX6LcKOcKOQuGI/ThLw==
-X-Gm-Message-State: AOJu0YzvTq9fgf1soSdebxIL8/unRe71ZR4tFeCTXMxAyt5iRXRuqtqs
-	/Scf/UnKHEtrMPr82KBJIu14fNWQxhLzACWnu5XLBazq2kc1pyBHMoavrQ7uG+/k6n/PBOrOxvn
-	chxClkoCA0nSKgTIMmL2QGL/eR8rmO0LyVlHF
-X-Google-Smtp-Source: AGHT+IGHxKwu98YvospB91+YQLFfAJMnppT/6GTQ5TqAb0PWkruGOWlmlwOEwP83YxDHUDlUQUZTDwY8gkvcPDj3jKI=
-X-Received: by 2002:a17:903:42c6:b0:1e3:d23a:2d5e with SMTP id
- jy6-20020a17090342c600b001e3d23a2d5emr196816plb.21.1713365442847; Wed, 17 Apr
- 2024 07:50:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HiAbzuLT"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HF2XIa022980;
+	Wed, 17 Apr 2024 15:28:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=zAU0vRCOwSbovtMECRQap2vSgOqXnbXeo2+zCEfUK+w=;
+ b=HiAbzuLT8RE07UGwkIUjqiwKfEE15g75I1zWNU3Wwayj/CMwuiqcB5uCC3PLmUYEmBpE
+ AtLQ3FgZNpMnula1CZ8M3oRianvLRktuoq6RGzOlnx8YjownLCFIEudavfiw9cY5A3P1
+ kV3BFtc7NOd/tYKe6bFUE6Uc7HN5vi4TlEAy+C3CH7YUUZLtKQhK0xexV3XliA1nl8Vi
+ xq3/FbTm1ATInk2hIUXpgr+ImsXoiM4LiiG0irHkpqTpOSLsdLsfA/UI+94r/QXErO7A
+ tRagm7woItth5lDkzhfVOYXjV08DGCL5vhjdI8MsljuDZ93312FmhYHMGjAUcqpqkQ9V rA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgqd025x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:28:08 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HFS75A000695;
+	Wed, 17 Apr 2024 15:28:07 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgqd0235-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:28:07 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43HEF9F2018212;
+	Wed, 17 Apr 2024 15:25:38 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg4ctdf4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:25:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HFPXew50987316
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Apr 2024 15:25:35 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49FE22004B;
+	Wed, 17 Apr 2024 15:25:33 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 600B620043;
+	Wed, 17 Apr 2024 15:25:26 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.36.38])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Apr 2024 15:25:26 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        acme@redhat.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vineethr@linux.ibm.com
+Subject: [PATCH] perf sched map: Add command-name option to filter the output map
+Date: Wed, 17 Apr 2024 20:55:21 +0530
+Message-ID: <20240417152521.80340-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEkJfYO9Heg9s5b=v23fb12S3LH=3oyUDLFWhba4nYTXL98CQg@mail.gmail.com>
-In-Reply-To: <CAEkJfYO9Heg9s5b=v23fb12S3LH=3oyUDLFWhba4nYTXL98CQg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 17 Apr 2024 07:50:27 -0700
-Message-ID: <CAP-5=fVKp8o8uYEydJEE++ORtiVgxHVYYrQW5aPNoX2AiHbq3Q@mail.gmail.com>
-Subject: Re: [Linux kernel bug] WARNING in free_event
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	adrian.hunter@intel.com, jolsa@kernel.org, alexander.shishkin@linux.intel.com, 
-	mark.rutland@arm.com, namhyung@kernel.org, acme@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com, 
-	zqq0103.hey@gmail.com, Frederic Weisbecker <frederic@kernel.org>, haifeng.xu@shopee.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0hCcYBIlLnzVcwT2slL7yQSC-tRhR0rk
+X-Proofpoint-ORIG-GUID: J4fkubprsoucha22FsBHO7ktq7gB7NC5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_12,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404170107
 
-On Wed, Apr 17, 2024 at 6:38=E2=80=AFAM Sam Sun <samsun1006219@gmail.com> w=
-rote:
->
-> Dear developers and maintainers,
->
-> We encountered a kernel warning in the function free_event() while
-> using our modified syzkaller. It was tested on the latest upstream
-> linux(6.9-rc4). C repro and kernel config are attached to this email.
-> Kernel dump log is listed below.
-> ```
+By default, perf sched map prints sched-in events for all the tasks
+which may not be required all the time as it prints lot of symbols
+and rows to the terminal.
 
-Thank you for the report, unfortunately there have also been similar
-reports and some possibly related fixes posted:
-https://lore.kernel.org/linux-perf-users/CAP-5=3DfUa+-Tj2b_hxk96Qg5=3DQu7jY=
-HgHREbsmBa2ZmuF-X9QaA@mail.gmail.com/
-https://lore.kernel.org/lkml/20240329235812.18917-1-frederic@kernel.org/
-https://lore.kernel.org/lkml/20240410035506.599192-1-haifeng.xu@shopee.com/
+With --command-name option, one could specify the specific command
+for which the map has to be shown. This would help in analyzing the
+CPU usage patterns easier for that specific command. Since multiple
+PID's might have the same command name, using command-name filter
+would be more useful for debugging.
 
-Thanks,
-Ian
+For other tasks, instead of printing the symbol, ** is printed and
+the same . is used to represent idle. ** is used instead of symbol
+for other tasks because it helps in clear visualization of command
+of interest and secondly the symbol itself doesn't mean anything
+because the sched-in of that symbol will not be printed(first sched-in
+contains pid and the corresponding symbol).
 
-> ------------[ cut here ]------------
-> unexpected event refcount: 2; ptr=3Dffff88801931e0c0
-> WARNING: CPU: 0 PID: 8082 at kernel/events/core.c:5254
-> free_event+0xa3/0xc0 kernel/events/core.c:5254
-> Modules linked in:
-> CPU: 0 PID: 8082 Comm: syz-executor381 Not tainted 6.7.0-rc7 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.13.0-1ubuntu1.1 04/01/2014
-> RIP: 0010:free_event+0xa3/0xc0 kernel/events/core.c:5254
-> Code: b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 25 48 8b
-> b5 38 02 00 00 48 89 ea 48 c7 c7 c0 38 b7 8a e8 6e 30 9e ff 90 <0f> 0b
-> 90 90 5d 41 5c 41 5d e9 bf 45 d7 ff 4c 89 ef e8 d7 e9 2b 00
-> RSP: 0018:ffffc9000176f9e8 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff814c00fa
-> RDX: ffff888063d919c0 RSI: ffffffff814c0107 RDI: 0000000000000001
-> RBP: ffff88801931e0c0 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000002
-> R13: ffff88801931e2f8 R14: ffff88801931e3a0 R15: ffff88801931e0c0
-> FS:  0000000000000000(0000) GS:ffff888044200000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000008 CR3: 000000000cd78000 CR4: 0000000000750ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  perf_event_release_kernel+0x5d4/0x8f0 kernel/events/core.c:5421
->  perf_release+0x37/0x50 kernel/events/core.c:5442
->  __fput+0x282/0xbb0 fs/file_table.c:394
->  task_work_run+0x168/0x260 kernel/task_work.c:180
->  exit_task_work include/linux/task_work.h:38 [inline]
->  do_exit+0xaf0/0x2a40 kernel/exit.c:869
->  do_group_exit+0xd4/0x2a0 kernel/exit.c:1018
->  get_signal+0x243c/0x2630 kernel/signal.c:2904
->  arch_do_signal_or_restart+0x81/0x7d0 arch/x86/kernel/signal.c:309
->  exit_to_user_mode_loop kernel/entry/common.c:168 [inline]
->  exit_to_user_mode_prepare+0x121/0x240 kernel/entry/common.c:204
->  __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
->  syscall_exit_to_user_mode+0x1e/0x60 kernel/entry/common.c:296
->  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
->  </TASK>
-> ```
-> If you have any questions, please contact us.
-> Reported by: Yue Sun <samsun1006219@gmail.com>
-> Reported by: xingwei lee <xrivendell7@gmail.com>
->
-> Best Regards,
-> Yue
+6.8.0
+======
+  *A0                   213864.670142 secs A0 => migration/0:18
+  *.                    213864.670148 secs .  => swapper:0
+   .  *B0               213864.670217 secs B0 => migration/1:21
+   .  *.                213864.670223 secs
+   .   .  *C0           213864.670247 secs C0 => migration/2:26
+   .   .  *.            213864.670252 secs
+
+6.8.0 + patch (--command-name = schbench)
+=============
+   **  .   ** *A0       213864.671055 secs A0 => schbench:104834
+  *B0  .   .   A0       213864.671156 secs B0 => schbench:104835
+  *C0  .   .   A0       213864.671187 secs C0 => schbench:104836
+  *D0  .   .   A0       213864.671219 secs D0 => schbench:104837
+  *E0  .   .   A0       213864.671250 secs E0 => schbench:104838
+   E0  .  *D0  A0
+
+This helps in visualizing how a benchmark like schbench is spread over
+the available cpus while also knowing which cpus are idle(.) and which
+are not(**). This will be more useful as number of CPUs increase.
+
+Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+---
+ tools/perf/Documentation/perf-sched.txt |  4 ++++
+ tools/perf/builtin-sched.c              | 17 ++++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 5fbe42bd599b..b04a37560935 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -94,6 +94,10 @@ OPTIONS for 'perf sched map'
+ --color-pids::
+ 	Highlight the given pids.
+ 
++--command-name::
++	Map output only for the given command name.
++	(** indicates other tasks while . is idle).
++
+ OPTIONS for 'perf sched timehist'
+ ---------------------------------
+ -k::
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 0fce7d8986c0..e60836da53e5 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -156,6 +156,7 @@ struct perf_sched_map {
+ 	const char		*color_pids_str;
+ 	struct perf_cpu_map	*color_cpus;
+ 	const char		*color_cpus_str;
++	const char		*command;
+ 	struct perf_cpu_map	*cpus;
+ 	const char		*cpus_str;
+ };
+@@ -1594,8 +1595,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 
+ 	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+ 
+-	printf("  ");
+-
+ 	new_shortname = 0;
+ 	if (!tr->shortname[0]) {
+ 		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+@@ -1605,7 +1604,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 			 */
+ 			tr->shortname[0] = '.';
+ 			tr->shortname[1] = ' ';
+-		} else {
++		} else if (!sched->map.command || !strcmp(thread__comm_str(sched_in),
++								sched->map.command)) {
+ 			tr->shortname[0] = sched->next_shortname1;
+ 			tr->shortname[1] = sched->next_shortname2;
+ 
+@@ -1618,10 +1618,18 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 				else
+ 					sched->next_shortname2 = '0';
+ 			}
++		} else {
++			tr->shortname[0] = '*';
++			tr->shortname[1] = '*';
+ 		}
+ 		new_shortname = 1;
+ 	}
+ 
++	if (sched->map.command && strcmp(thread__comm_str(sched_in), sched->map.command))
++		goto skip;
++
++	printf("  ");
++
+ 	for (i = 0; i < cpus_nr; i++) {
+ 		struct perf_cpu cpu = {
+ 			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+@@ -1678,6 +1686,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ out:
+ 	color_fprintf(stdout, color, "\n");
+ 
++skip:
+ 	thread__put(sched_in);
+ 
+ 	return 0;
+@@ -3560,6 +3569,8 @@ int cmd_sched(int argc, const char **argv)
+                     "highlight given CPUs in map"),
+ 	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
+                     "display given CPUs in map"),
++	OPT_STRING(0, "command-name", &sched.map.command, "command",
++		"map output only for the given command name"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 	const struct option timehist_options[] = {
+-- 
+2.39.1
+
