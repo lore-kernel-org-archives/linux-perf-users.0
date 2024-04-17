@@ -1,142 +1,222 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B33811
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 00:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031410976
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 03:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713313510; cv=none; b=OnwHgpSHO5gHvjHd0CdLf2L1uQiox8sta/Tnb7TkHfvdwAQaUZVINY4j/9f7L5Vzb9l8kGH0mWyIAdc339YEiq5aFH+r3zdWRalzroJpi+CiIM2Oz9pzGBWDys4bBJDQ4GS2LBeHlZh/nvTvlguJ107+TLoRpLZvggy10a8V3Rs=
+	t=1713325776; cv=none; b=ZQ4C/tDqi3ieZlmMvc/dgKnDWiuMNAtoil25XOHdKlMkaqZ/MRbu7ENnirgwA/7t+sO65eH6SX8biJ1bT3ers01uNUCHWdhr/jhVLIq7e1+z2k53DaYlBRgDNd2S1WTck88Z8qUQmOB6AE4nAc/GHg1e+ukqkpnHjVSGtLy/zg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713313510; c=relaxed/simple;
-	bh=Rh0Xk5SOWgUhEYkDCx1Ih3fJwkSpqZ2vOp0lA0MHWwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=o0UDveJW/J9idveGYrZ2yUgjjCpT6cvGz/5RgiTDu6qYYnWc8iqCLuRqvAkocDNEUvtsoq0uaSdNIEg/wJFjPyyW6qUKyWVj4T8egF1RUIs4HUyoC+1jjq+dYMkpyg7o63diM6GWX/lD3TVs8cn0kHQeBQO8D3Hc8aTYWV4CfGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=cM+T9akk; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713325776; c=relaxed/simple;
+	bh=2f3KgQ6HSPeWp8Dic8AieWtnuWDA1AAlDkV/vxItVPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s43RB2kpPoQp50Y36Bstdf2J5GxByfOzDNXoxAN6173TYElwVKQo3X3vgvgkNQJW4n6+NrcZ0rkr5lmzwpHot02enBCiyTdOoT+rgk5IQ9xAsgFXMK9cDaCm9dii4vEjGArEMDwyyqo2cJ3z2/p0WBEDGncACWujUECOfZNgS6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gVaL4Xn6; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="cM+T9akk"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3043970a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 17:25:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gVaL4Xn6"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-436ed871225so129011cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Apr 2024 20:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713313508; x=1713918308; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yUu9r75IkkkPMJX8JtgPk9s/mlLbxcj8MCkbLeGGpmg=;
-        b=cM+T9akkTLdGr6P4CwMEaI3wC+DwudHkkTorB3cYyEiDSFhKdzlvEssT0MKCFKICwP
-         9x9zDEvZI3Ev6H7LuMrjUWy1hDPvy23g5At85VPXB0POcWsIcEFI8tryJk9XBmPj79+M
-         XeasO3QSNwGz6YJ8F1Dgso6oNugWGBJcSmEWbgt4cX/GaakCDiGQBkmtMe12QifUo+9h
-         JKCQxEIVZ4KHlfktVHpNx/i8etcZQfrkCbhhaFZEfdGJf218/usTZ1p+oxtupw9dUvpv
-         fs3GO4JdnRxSTXnL/aK+0b/6IyQowCMTlHTPp9wyOOsU+GAu+lGR2fCml5IAnCy9yIpx
-         VXVA==
+        d=google.com; s=20230601; t=1713325773; x=1713930573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bxpmdQK2lwVyxL8e1b8aoJ9nIIIANWvbSN9Lr6HQTc=;
+        b=gVaL4Xn6yLpLbXwwwVCcf/AMbu5v7V24TpqdEOLPr9eQ5vPgzTRsVzE4fJ1Hyjxpgs
+         aDOq/zCKv1Ov1y25q8HR+bi+50Z7bDk62viJcZEwe1vxZL2SFaF3qna9hCgc+vHdfYgY
+         WrAnwsTr947xwzTF/c69gET48LA9oRCviYCVuaJUaNEKSFwEF34iL5dsKUhGHmRl3AmN
+         OnJ8NqFJ20m4lBz2F/w1yoSUXhnN/HuecNAKfnpJg03a65/afZW7I6KrnlZrxU4KLp4F
+         FeVT6KHgLH8QXmNpDGuS5oUMgl+5KmhTJdYhvIVgtdwz4HUYkAvMD5NupJCc6yLX+sqk
+         kSKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713313508; x=1713918308;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yUu9r75IkkkPMJX8JtgPk9s/mlLbxcj8MCkbLeGGpmg=;
-        b=bCYBkxm3bXoSyP2oLrxFvXGmCehicV0qcJbL/9IzKUFr0MWsD0SmkTUyIpzopFLWZe
-         YcKDlqLFYGAkAV8O+NAs/ZBQU44BqDY09OZITJEszMfKwA3mldeAOYM4K3pQN4QQsAFz
-         QFnBfQBLmH2OuUOGTvsht8bJ/1reMACU78UgYdWgCn/86Vt5C+cr4aJSjK5EDfnU/jaE
-         JnMVIJleQhgm3OdLwt3pZIm9qj8FS9pOq3eSjYPHJtznQZbKORIdnNH8SK/IxZCpHf5z
-         4r7l+JQq4mOGWA+3HrL2rl0eB9K9n1OoMsbm6ska1lxZlB0imHD/btp1whDycqfJKYEZ
-         ZGCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpQ8xyheJ60+mpGBCv5cArPfLTT9N0ztxWi2iqoY1Plz65BmkSixGSVtMkeKLd9XXfti9Bm8MUJN+8z/b+U7QLxLv/HhR74JViMzTuaSAteg==
-X-Gm-Message-State: AOJu0YwvCmjs62SOoRZvSgKl7RXgEzIG1AmlLqHO9KgXQsFpB6ke0ArB
-	AffHX6u6+GHgr9ISR2JsLyaDSclq0/Q5SkHqJFQcwARGXoGJS5A/rWSBgqPvmsA=
-X-Google-Smtp-Source: AGHT+IEjAhZVEZYdLBhENvub7H3p131EKgJJzeOWPQQXzU8sWnGpkTKyBYXR/NYgQcPVm7q8baUaNA==
-X-Received: by 2002:a05:6a20:d492:b0:1a9:cd84:2f31 with SMTP id im18-20020a056a20d49200b001a9cd842f31mr13414753pzb.58.1713313508368;
-        Tue, 16 Apr 2024 17:25:08 -0700 (PDT)
-Received: from [172.16.0.69] (c-67-188-2-18.hsd1.ca.comcast.net. [67.188.2.18])
-        by smtp.gmail.com with ESMTPSA id f12-20020a170902684c00b001e3d2314f3csm10574125pln.141.2024.04.16.17.25.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 17:25:08 -0700 (PDT)
-Message-ID: <aceaaeba-61cb-44fa-8639-e30a86ef8cd8@rivosinc.com>
-Date: Tue, 16 Apr 2024 17:25:06 -0700
+        d=1e100.net; s=20230601; t=1713325773; x=1713930573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5bxpmdQK2lwVyxL8e1b8aoJ9nIIIANWvbSN9Lr6HQTc=;
+        b=tu4mNzspVanRP50f/kNbxJpRQCrSAmjCh8OZb7kbNJ4UA1dS4Se8XgP6utHtz2X3pO
+         VW6XwO+zOCjGdP8JJ207FJJh2Yn4YDJ+0TS3z2UWRGI+H7MiI1LWp8BYVrGqjV52Ez53
+         +LXaE6QVHsqVcDhUdqSu7V3cOClYKJc0lACOnQHKEt2AF1ab7wIEswdLu58YC7VjsAbX
+         LGD+zY9IYaFzcpHXRssBB93FiNWDLf8SSTvVBIh4fP+eXG5qRzX8YpHl8TWPlNpkaasu
+         TmZLaQGXCsD3Z0ZEH8MBmY6CF5efzYfI+K6AQ6/cYNTaqCLVhbZJYOwKskR/WqTNvCjv
+         R0Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUXvWfibVS2uMKyLCatrzym3PYrxHfGiZZkXojZVtY39U8UG5EZmp5mWHY9LovNKDaVgWoxkRNlICAr2cCHEiGM5d5zFVNTBdZFetOWhKppJg==
+X-Gm-Message-State: AOJu0Yx5yn4epXVlvjJYhDHGETft9V1baj1VqeNvNt4UD2uUgo2IJo08
+	3WI7GJneVAowLP57Bowciri/4pnoDbWnTutHvx40eQCrKrYzf04BcnrZG8+mUUMB8AP938eCBUn
+	e7AGJ+/c/o3NJdnNlI3jf/+iJs+kQqZD4vLsG
+X-Google-Smtp-Source: AGHT+IHuNJ8z5JTBH+m9cwerVxFHFAq31vSDuEvn+yGPUsVZb08jaCrxfaV8BELCaBuHZrfVnz4ZOEUQlAkXuHoAnNA=
+X-Received: by 2002:a05:622a:1b8d:b0:436:be6b:7156 with SMTP id
+ bp13-20020a05622a1b8d00b00436be6b7156mr97668qtb.11.1713325772550; Tue, 16 Apr
+ 2024 20:49:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] perf kvm: Add kvm stat support on riscv
-Content-Language: en-US
-To: Shenlin Liang <liangshenlin@eswincomputing.com>, anup@brainfault.org,
- atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
-References: <20240415031131.23443-1-liangshenlin@eswincomputing.com>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20240415031131.23443-1-liangshenlin@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240412210756.309828-1-weilin.wang@intel.com> <20240412210756.309828-2-weilin.wang@intel.com>
+In-Reply-To: <20240412210756.309828-2-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Apr 2024 20:49:21 -0700
+Message-ID: <CAP-5=fWNREXxROJhKC2T+Oaw+PBjM=VYdpm_eiaCgc1DLnbm3A@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 01/16] perf stat: Add new field in stat_config to
+ enable hardware aware grouping.
+To: weilin.wang@intel.com
+Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
+	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/14/24 20:11, Shenlin Liang wrote:
-> Changes from v1->v2:
-> - Rebased on Linux 6.9-rc3.
-> 
-> 'perf kvm stat report/record' generates a statistical analysis of KVM
-> events and can be used to analyze guest exit reasons. This patch tries
-> to add stat support on riscv.
-> 
-> Map the return value of trace_kvm_exit() to the specific cause of the
-> exception, and export it to userspace.
-> 
-> It records on two available KVM tracepoints for riscv: "kvm:kvm_entry"
-> and "kvm:kvm_exit", and reports statistical data which includes events
-> handles time, samples, and so on.
-> 
-> Simple tests go below:
-> 
-> # ./perf kvm record -e "kvm:kvm_entry" -e "kvm:kvm_exit"
-> Lowering default frequency rate from 4000 to 2500.
-> Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
-> [ perf record: Woken up 18 times to write data ]
-> [ perf record: Captured and wrote 5.433 MB perf.data.guest (62519 samples)
-> 
+On Fri, Apr 12, 2024 at 2:08=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> Hardware counter and event information could be used to help creating eve=
+nt
+> groups that better utilize hardware counters and improve multiplexing.
+>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/builtin-stat.c     | 5 +++++
+>  tools/perf/util/metricgroup.c | 5 +++++
+>  tools/perf/util/metricgroup.h | 1 +
+>  tools/perf/util/stat.h        | 1 +
+>  4 files changed, 12 insertions(+)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 6bba1a89d030..c4a5f0984295 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2106,6 +2106,7 @@ static int add_default_attributes(void)
+>                                                 stat_config.metric_no_thr=
+eshold,
+>                                                 stat_config.user_requeste=
+d_cpu_list,
+>                                                 stat_config.system_wide,
+> +                                               stat_config.hardware_awar=
+e_grouping,
+>                                                 &stat_config.metric_event=
+s);
+>         }
+>
+> @@ -2139,6 +2140,7 @@ static int add_default_attributes(void)
+>                                                 stat_config.metric_no_thr=
+eshold,
+>                                                 stat_config.user_requeste=
+d_cpu_list,
+>                                                 stat_config.system_wide,
+> +                                               stat_config.hardware_awar=
+e_grouping,
+>                                                 &stat_config.metric_event=
+s);
+>         }
+>
+> @@ -2173,6 +2175,7 @@ static int add_default_attributes(void)
+>                                                 /*metric_no_threshold=3D*=
+/true,
+>                                                 stat_config.user_requeste=
+d_cpu_list,
+>                                                 stat_config.system_wide,
+> +                                               stat_config.hardware_awar=
+e_grouping,
+>                                                 &stat_config.metric_event=
+s) < 0)
+>                         return -1;
+>         }
+> @@ -2214,6 +2217,7 @@ static int add_default_attributes(void)
+>                                                         /*metric_no_thres=
+hold=3D*/true,
+>                                                         stat_config.user_=
+requested_cpu_list,
+>                                                         stat_config.syste=
+m_wide,
+> +                                                       stat_config.hardw=
+are_aware_grouping,
+>                                                         &stat_config.metr=
+ic_events) < 0)
+>                                 return -1;
+>
+> @@ -2748,6 +2752,7 @@ int cmd_stat(int argc, const char **argv)
+>                                                 stat_config.metric_no_thr=
+eshold,
+>                                                 stat_config.user_requeste=
+d_cpu_list,
+>                                                 stat_config.system_wide,
+> +                                               stat_config.hardware_awar=
+e_grouping,
+>                                                 &stat_config.metric_event=
+s);
+>
+>                 zfree(&metrics);
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 79ef6095ab28..11613450725a 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1690,12 +1690,17 @@ int metricgroup__parse_groups(struct evlist *perf=
+_evlist,
+>                               bool metric_no_threshold,
+>                               const char *user_requested_cpu_list,
+>                               bool system_wide,
+> +                             bool hardware_aware_grouping,
+>                               struct rblist *metric_events)
+>  {
+>         const struct pmu_metrics_table *table =3D pmu_metrics_table__find=
+();
+>
+>         if (!table)
+>                 return -EINVAL;
+> +       if (hardware_aware_grouping) {
+> +               pr_debug("Use hardware aware grouping instead of traditio=
+nal metric grouping method\n");
+> +       }
 
-I want to test these patches but couldn't build a perf for RISC-V with 
-libtraceevent enabled. It fails with pkg-config dependencies when I 
-tried to build it (both via buildroot and directly from kernel source).
+nit: single line if statements shouldn't have curlies:
+https://www.kernel.org/doc/html/v6.8/process/coding-style.html#placing-brac=
+es-and-spaces
 
-> # ./perf kvm report
-> 31K kvm:kvm_entry
-> 31K kvm:kvm_exit
-> 
-> # ./perf kvm stat record -a
-> [ perf record: Woken up 3 times to write data ]
-> [ perf record: Captured and wrote 8.502 MB perf.data.guest (99338 samples) ]
-> 
-> # ./perf kvm stat report --event=vmexit
-> Event name                Samples   Sample%    Time (ns)     Time%   Max Time (ns)   Min Time (ns)  Mean Time (ns)
-> STORE_GUEST_PAGE_FAULT     26968     54.00%    2003031800    40.00%     3361400         27600          74274
-> LOAD_GUEST_PAGE_FAULT      17645     35.00%    1153338100    23.00%     2513400         30800          65363
-> VIRTUAL_INST_FAULT         1247      2.00%     340820800     6.00%      1190800         43300          273312
-> INST_GUEST_PAGE_FAULT      1128      2.00%     340645800     6.00%      2123200         30200          301990
-> SUPERVISOR_SYSCALL         1019      2.00%     245989900     4.00%      1851500         29300          241403
-> LOAD_ACCESS                986       1.00%     671556200     13.00%     4180200         100700         681091
-> INST_ACCESS                655       1.00%     170054800     3.00%      1808300         54600          259625
-> HYPERVISOR_SYSCALL         21        0.00%     4276400       0.00%      716500          116000         203638
-> 
-> Shenlin Liang (2):
->    RISCV: KVM: add tracepoints for entry and exit events
->    perf kvm/riscv: Port perf kvm stat to RISC-V
-> 
->   arch/riscv/kvm/trace.h                        | 67 ++++++++++++++++
->   arch/riscv/kvm/vcpu.c                         |  7 ++
->   tools/perf/arch/riscv/Makefile                |  1 +
->   tools/perf/arch/riscv/util/Build              |  1 +
->   tools/perf/arch/riscv/util/kvm-stat.c         | 78 +++++++++++++++++++
->   .../arch/riscv/util/riscv_exception_types.h   | 41 ++++++++++
->   6 files changed, 195 insertions(+)
->   create mode 100644 arch/riscv/kvm/trace.h
->   create mode 100644 tools/perf/arch/riscv/util/kvm-stat.c
->   create mode 100644 tools/perf/arch/riscv/util/riscv_exception_types.h
-> 
+Thanks,
+Ian
 
+> +
+>
+>         return parse_groups(perf_evlist, pmu, str, metric_no_group, metri=
+c_no_merge,
+>                             metric_no_threshold, user_requested_cpu_list,=
+ system_wide,
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index d5325c6ec8e1..779f6ede1b51 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -77,6 +77,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlis=
+t,
+>                               bool metric_no_threshold,
+>                               const char *user_requested_cpu_list,
+>                               bool system_wide,
+> +                             bool hardware_aware_grouping,
+>                               struct rblist *metric_events);
+>  int metricgroup__parse_groups_test(struct evlist *evlist,
+>                                    const struct pmu_metrics_table *table,
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index d6e5c8787ba2..fd7a187551bd 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -87,6 +87,7 @@ struct perf_stat_config {
+>         bool                     metric_no_group;
+>         bool                     metric_no_merge;
+>         bool                     metric_no_threshold;
+> +       bool                     hardware_aware_grouping;
+>         bool                     stop_read_counter;
+>         bool                     iostat_run;
+>         char                     *user_requested_cpu_list;
+> --
+> 2.42.0
+>
