@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E79D16E860;
-	Thu, 18 Apr 2024 14:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC486FB0;
+	Thu, 18 Apr 2024 14:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713450665; cv=none; b=oAVtUftmUPoruHLYonTb8R2DlQZk6Ytd4K1Sm8YN4aa8i4NRe3E5F1pLre31v60fy+zvMD/t9QW+DlpMZ/WSwx954PUeY9DtlivyOWxQWqeBaIm9i83gSd4dz8o3ad+7fAp970n+gW8n3+4QZN2ORtUG+Xs+chEDSeKJZDOU+y0=
+	t=1713450909; cv=none; b=UncDFQnzT9OYz3iVNQ+CSp0tz3+xqrSEmgIKpvBRa5gg4HGmBChp7xu2G5JZ8wApVy5phqa/13RsDV7ALyrpFm2m95WxJhg2xFc1LPx6YD3ILiaqLJM6Wlf1SCU6ExjDtWpZwZc/czBoZaOnV2l2gwqOtMZLlhp6sdkyq4QhmoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713450665; c=relaxed/simple;
-	bh=JNWOYInEppemZQhyMubvU6G/hY2DOYhQpgoRO85vT90=;
+	s=arc-20240116; t=1713450909; c=relaxed/simple;
+	bh=OEXF5v2Z/Fz6GXadkZnudB6JdYfvV5Jh7Dv77dnNqH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnPXnQu2bCG1ughM2a3xmBGd8Fkh2c/gsPjEfmRRwMim+4FHiZG4Vh9c5CGS6/x5wTKP/iqaSXhk0bG13Nh25ixmk0Lg98vp/sqmEIFlrXvOvaFT6dg3KrZLZD4Je7ribk0pMb9bsdOinCzdabX5UaP51OAP+XW1L1Hat2D38Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/gEZ6Da; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BxhEyfhD5jq93iSLZDGNGW/rnAjTe3e4YafN0gt4PuJCtN+yA8Wf3E6qrl5Cn/bOfZkwpo8AOogHfwJacqs/F9IPj9U4yk3HGAdVGjBfQl76kHCjFWqldsdASxojiHT/a5QwdnnZgI4HZ2opxnNdI9Bz8tkGn1zUWTr+5S+tRb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLFS+Kvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/gEZ6Da"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1793FC113CC;
-	Thu, 18 Apr 2024 14:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLFS+Kvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DEC113CC;
+	Thu, 18 Apr 2024 14:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713450664;
-	bh=JNWOYInEppemZQhyMubvU6G/hY2DOYhQpgoRO85vT90=;
+	s=k20201202; t=1713450908;
+	bh=OEXF5v2Z/Fz6GXadkZnudB6JdYfvV5Jh7Dv77dnNqH0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U/gEZ6DaX909LOqPE6dfWYYOZfN/XmXB1cqg+/hZoHbGJu5ftjO3zN2w3IRaIlRJg
-	 GxYs7gDvzWaf/5QGMAdWXRatI+nncjiifGvTYVcoc62/Of0jxYZPlF37mseqoLHJQr
-	 8plTVWBoe+t8HveKXBzNUoMT0Hcox4ACsm8Pv6ARJMfA+yFLXwaL3pkmx1m5gcm07B
-	 qzCJWYoTInasE297lrtEvAQl3aUYWGhKQcFUxWlG8DvAQP9Qby1RkweRRPAPCBAv6g
-	 6jX01K9kqf5dN0QKR+WPLvSqnBIxnTYAgazrl5IaIQeRMMaV06h3Bsqvc/3nV2AqXl
-	 gv2k+8tvpP0Jw==
-Date: Thu, 18 Apr 2024 11:31:01 -0300
+	b=CLFS+KvfC4yz42/ZvPtVa1JR+3VpF1SnyRmcsg79sL9c9Mh1+7odVb3yanDzLBIaZ
+	 lG/qW1+t8HN49kq0flP7g/KJw5jsU16ZYt5m+j2jKYdYcbi+99J8xzq1/9YEGwW1cb
+	 o6pYCHkpsFH9DPn6J3ZrELrEfCn5566dKM1dEPct22EkP1RoVe2t1LUDJ7sAlMU1rp
+	 +huprQEG8wwFf7hKW0z0zQbnmomN9MFf0rsHUem0Q+c8Ouaiti+I3edb0IRHWaD59Y
+	 QkfmXS+E9P2PrfhtZ2G5nTMVBz5Z67458aT5o7kItN1sAgZqvPh/PiW/BrgyIaUyjk
+	 3UEI5NvykCdHw==
+Date: Thu, 18 Apr 2024 11:35:05 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Changbin Du <changbin.du@huawei.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,49 +36,82 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf trace beauty: Always show mprotect prot even
- though PROT_NONE
-Message-ID: <ZiEupQ_PDlA_3Lo4@x1>
+Subject: Re: [PATCH 1/4] perf trace beauty: Fix statx flags printing
+Message-ID: <ZiEvmabmIxTjDLeb@x1>
 References: <20240418131304.3188385-1-changbin.du@huawei.com>
- <20240418131304.3188385-5-changbin.du@huawei.com>
+ <20240418131304.3188385-2-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240418131304.3188385-5-changbin.du@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240418131304.3188385-2-changbin.du@huawei.com>
 
-On Thu, Apr 18, 2024 at 09:13:04PM +0800, Changbin Du wrote:
-> Do not omit the flags even though it is PROT_NONE.
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  tools/perf/builtin-trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 349550b02f79..7f936f1b5519 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1042,7 +1042,7 @@ static const struct syscall_fmt syscall_fmts[] = {
->  		   [4] = { .scnprintf = SCA_MOVE_MOUNT_FLAGS, /* flags */ }, }, },
->  	{ .name	    = "mprotect",
->  	  .arg = { [0] = { .scnprintf = SCA_HEX,	/* start */ },
-> -		   [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ }, }, },
-> +		   [2] = { .scnprintf = SCA_MMAP_PROT, .show_zero = true, /* prot */ }, }, },
+On Thu, Apr 18, 2024 at 09:13:01PM +0800, Changbin Du wrote:
+> Missed a string specifier '%s' in format string.
 
+Humm, what branch should this be applied to? I ask because:
 
-So since syscall_arg__scnprintf_mmap_prot() special cases 0 to print
-NONE for prot... Ok, I'll expand a bit the commit log message _and_ the
-syscall_fmts entry for mprotect.
+⬢[acme@toolbox perf-tools-next]$ git log --oneline tools/perf/trace/beauty/statx.c
+f122b3d6d179455e perf beauty: Introduce scrape script for the 'statx' syscall 'mask' argument
+3d6cfbaf279ddec9 perf beauty: Introduce scrape script for various fs syscalls 'flags' arguments
+a672af9139a843eb tools headers: Remove almost unused copy of uapi/stat.h, add few conditional defines
+6652830c87be8446 perf beauty: Use the system linux/fcntl.h instead of a copy from the kernel
+690811f0128eb603 tools headers uapi: Sync linux/stat.h with the kernel sources to pick STATX_MNT_ID_UNIQUE
+49c75d30b0078d30 tools headers uapi: Sync linux/stat.h with the kernel sources
+5d33cbfedb51f732 perf beauty: Add support to STATX_MNT_ID in the 'statx' syscall 'mask' argument
+c65c83ffe9045901 perf trace: Allow asking for not suppressing common string prefixes
+794f594e0c3be619 perf beauty: Switch from GPL v2.0 to LGPL v2.1
+fd5cead23f546973 (tag: perf-core-for-mingo-4.12-20170331) perf trace: Beautify statx syscall 'flag' and 'mask' arguments
+⬢[acme@toolbox perf-tools-next]$
+
+⬢[acme@toolbox perf-tools-next]$ tools/perf/trace/beauty/statx_mask.sh 
+static const char *statx_mask[] = {
+	[ilog2(0x00000001) + 1] = "TYPE",
+	[ilog2(0x00000002) + 1] = "MODE",
+	[ilog2(0x00000004) + 1] = "NLINK",
+	[ilog2(0x00000008) + 1] = "UID",
+	[ilog2(0x00000010) + 1] = "GID",
+	[ilog2(0x00000020) + 1] = "ATIME",
+	[ilog2(0x00000040) + 1] = "MTIME",
+	[ilog2(0x00000080) + 1] = "CTIME",
+	[ilog2(0x00000100) + 1] = "INO",
+	[ilog2(0x00000200) + 1] = "SIZE",
+	[ilog2(0x00000400) + 1] = "BLOCKS",
+	[ilog2(0x00000800) + 1] = "BTIME",
+	[ilog2(0x00001000) + 1] = "MNT_ID",
+	[ilog2(0x00002000) + 1] = "DIOALIGN",
+	[ilog2(0x00004000) + 1] = "MNT_ID_UNIQUE",
+};
+⬢[acme@toolbox perf-tools-next]$
+
+Can you please try with what is in
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git,
+branch perf-tools-next?
 
 - Arnaldo
-
->  	{ .name	    = "mq_unlink",
->  	  .arg = { [0] = { .scnprintf = SCA_FILENAME, /* u_name */ }, }, },
->  	{ .name	    = "mremap",	    .hexret = true,
+ 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> ---
+>  tools/perf/trace/beauty/statx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/trace/beauty/statx.c b/tools/perf/trace/beauty/statx.c
+> index dc5943a6352d..c61f2be53bda 100644
+> --- a/tools/perf/trace/beauty/statx.c
+> +++ b/tools/perf/trace/beauty/statx.c
+> @@ -21,7 +21,7 @@ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_
+>  		return scnprintf(bf, size, "%s%s", show_prefix ? "AT_STATX_" : "", "SYNC_AS_STAT");
+>  #define	P_FLAG(n) \
+>  	if (flags & AT_##n) { \
+> -		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+> +		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+>  		flags &= ~AT_##n; \
+>  	}
+>  
 > -- 
 > 2.34.1
