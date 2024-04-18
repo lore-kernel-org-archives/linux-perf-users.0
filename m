@@ -1,180 +1,159 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA2976029
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 08:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A916715B544;
+	Thu, 18 Apr 2024 10:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713427467; cv=none; b=KNxec5aTCPHPZ+9/WRpE1Snz6fN5tf22+zeJA+u1x22s2LN+JATOAWTaLLatRzhU+Jw3n/yGlzdXxl+x9vYVfmKx8sUPl7hbMaMUfHkQ3StzfQ6B1N00tcSBAd2mD9nzwXJefnD6bJ+PXEVqK29B7mbmmFy29XJ2i/fecYMkI1g=
+	t=1713434583; cv=none; b=OlcertYLWEAIRnsWmgyJAPyjXs6d1st6B46eg0qxqIcSq1V8eZ97hhLK3MVIzviT9NTCZrbqsSxTYZ8Qp+ofXJfN0SOYg8ZJs6PpmqqQeenL6ir/I5oAI298ePpU2sMmTFL8XzvMj7lZxPijPoM19UkCd3quMX4C/fNbCVn6cIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713427467; c=relaxed/simple;
-	bh=1o9rk/9Y1uvF7bt2JH2DYucjT8lV3Z4x4ZAgLxPAtgA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tINw3jXWqkSoU0lIEdTTTbt9FltX3sVt0TbsQ0JQygupEf62P4Xf0FZAsTVobKhDFY+w/x8Qn6rci16xCV4QUsIzV0xtgnQUAjLLSynT52U6zYNQziH9vVPl0nVX2vHiMsSsVbaQHVj0PKW+hK0drafvoXAxdXxXsoAaKgb+X0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=kw7fB9Wg; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1713434583; c=relaxed/simple;
+	bh=oJZpk3DWNO5wv+DUjDMVAC4Zkf2sFQ01Zacpn3wqjfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOL/6mm/sw4QC5HWB5QvnjlZVgcmXUhPIY3YA6Ltqp1b6886v9FDVi3IGB1/3OpTfEPLzeRVZ3YT++8UHk4MUw5QC04prKJ8JPSCuyOFg8IxSD3h8L+sALf1UyyCmyeHX9pq8hxFmw62+WCa0g8DsTrlTlD1VriQ9z7LxU7JgTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDej8SDt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="kw7fB9Wg"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e50a04c317so3462885ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 01:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1713427461; x=1714032261; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tdE+GDd+xVW4HcGRxvURM0o1zWYdLwzdL6kLxqb0OOE=;
-        b=kw7fB9WgcPTGlwH1vRZz1dhlgAi9CMf8FB/hR2BYxGpxsTI+DKXBEssm6e9prgkzr2
-         AxWDmJ6ouBhQuMiNQSATVi208veH2eS3GL5Sb1tiE3B7DrBl9DzR6p22p3rxB3EF7l/6
-         mm5Du75YtfKYGH1Je0Jv+MR7QAV/93zQ5jkSZa+gv5BTBhUy5dVOWrH7lAUFwDcBf+CC
-         ptZ2TlCwprAk/I3QhZXAwQrhB30wFth2Jd9xJzKBpZOlQGZ5vPv8yvsUK1kJ+4l5B0jd
-         Zz6W+Oz4F1ei5xdaGk7AmF1cyLIHBJbF5FkgWu6R8uuWmUxcHEkH5Uw1mg6oH0tUZsjC
-         v2Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713427461; x=1714032261;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tdE+GDd+xVW4HcGRxvURM0o1zWYdLwzdL6kLxqb0OOE=;
-        b=iQESKM84V+Cu85gR1C4FWHbIOStZi4QgrM3577zAUNyY7MUKrZXZq1dVSz20elXAwP
-         9lat7B86BILB62Rl/E3tAcxTvHXlQCv7c+nbngLSzdQW5PVRbqhgPz2QoGCIKkCgg8F8
-         9JhlusB+bUeX/jMnRM8boYziEnQRcqIkxzOtPaPK2ae4TRH72GqzA3Iof5Oov37Zeifk
-         nVoPg5snMpC+52lb3c6yTFL2WXi4Y5ZHWW8EsKke2nc4Vx1oZ+mRokUB9tZGAnIQ7SXH
-         fLiCw/aGZaG0mL4sqsjzz+JQnP08xG0EMnHd3A6Xd3/jLk5O2cUDrOqxffNlsxqdozf6
-         kZOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnZHSEkg+gVIc6HSkvjQUcCTdXauc4LBtfd+JWrIjWW7mW9Q1tyQyxd8ufqulJOJAroEjU0yTirvLI8SI+niO2KnHyj1clTIJcTfJW9SjSkQ==
-X-Gm-Message-State: AOJu0Ywh3epFzjVkTpWIWgE6idjCm+0X8HyaHs+ZwrFs4NarHBOIHNdI
-	tkWlcTxqIXfQqGJeoHWOaH6oZ2j8NLupAgW24MYRIumGDVa1O4do9kK22aUOBBHJ04GB3UIhCmN
-	R+40=
-X-Google-Smtp-Source: AGHT+IEVugnR4wQy3I7IsKSPqj56bRVcNeKJEd48cjBH9S/PJegBr7JV09EX4I1+mt3R1Ae7rPc3eQ==
-X-Received: by 2002:a17:902:7683:b0:1e2:a9f2:2abc with SMTP id m3-20020a170902768300b001e2a9f22abcmr2138579pll.23.1713427461594;
-        Thu, 18 Apr 2024 01:04:21 -0700 (PDT)
-Received: from localhost.localdomain ([101.127.248.173])
-        by smtp.gmail.com with ESMTPSA id kr15-20020a170903080f00b001db3361bc1dsm905627plb.102.2024.04.18.01.04.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 01:04:21 -0700 (PDT)
-From: Haifeng Xu <haifeng.xu@shopee.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	frederic@kernel.org
-Cc: acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: [PATCH v2] perf/core: Fix missing wakeup when waiting for context reference
-Date: Thu, 18 Apr 2024 08:03:56 +0000
-Message-Id: <20240418080356.21639-1-haifeng.xu@shopee.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDej8SDt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA97AC113CC;
+	Thu, 18 Apr 2024 10:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713434583;
+	bh=oJZpk3DWNO5wv+DUjDMVAC4Zkf2sFQ01Zacpn3wqjfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NDej8SDtUt5weJEfMTWMYDsk0C9grc5BIS0elzQp/JwJlpeUzU7OhaDdu7SGOq2Ld
+	 Siay2liwSonD5dNuVeJPfVXpQoOKp5r94o7v+p5Y0Ql8YEWjzPBKqLSPR6MPeQDKrf
+	 r3LmXvdnElMCi9OVwbHVHcQ5l/zezrgvHJ8k/8xMAzM4gRAlGF+Wrh6I3rc1QoCNnc
+	 tObkRQiikDaPAn7EKXzkzgth0Zv/G9b/Af7RbulsAA/y6S7UhELChJoNtp2dRev+62
+	 idljm85v4sib6f4CtBBO5bJxxnKdz5ISgUyv2HCoUz9EOdu03YbBOpKEGqNcgrn7Vu
+	 SfV7qIM50+uTw==
+Date: Thu, 18 Apr 2024 12:03:00 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Haifeng Xu <haifeng.xu@shopee.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf/core: Fix missing wakeup when waiting for
+ context reference
+Message-ID: <ZiDv1P5AHj7+E7cW@lothringen>
+References: <20240418080356.21639-1-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418080356.21639-1-haifeng.xu@shopee.com>
 
-In our production environment, we found many hung tasks which are
-blocked for more than 18 hours. Their call traces are like this:
+On Thu, Apr 18, 2024 at 08:03:56AM +0000, Haifeng Xu wrote:
+> In our production environment, we found many hung tasks which are
+> blocked for more than 18 hours. Their call traces are like this:
+> 
+> [346278.191038] __schedule+0x2d8/0x890
+> [346278.191046] schedule+0x4e/0xb0
+> [346278.191049] perf_event_free_task+0x220/0x270
+> [346278.191056] ? init_wait_var_entry+0x50/0x50
+> [346278.191060] copy_process+0x663/0x18d0
+> [346278.191068] kernel_clone+0x9d/0x3d0
+> [346278.191072] __do_sys_clone+0x5d/0x80
+> [346278.191076] __x64_sys_clone+0x25/0x30
+> [346278.191079] do_syscall_64+0x5c/0xc0
+> [346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
+> [346278.191086] ? do_syscall_64+0x69/0xc0
+> [346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
+> [346278.191092] ? irqentry_exit+0x19/0x30
+> [346278.191095] ? exc_page_fault+0x89/0x160
+> [346278.191097] ? asm_exc_page_fault+0x8/0x30
+> [346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+> 
+> The task was waiting for the refcount become to 1, but from the vmcore,
+> we found the refcount has already been 1. It seems that the task didn't
+> get woken up by perf_event_release_kernel() and got stuck forever. The
+> below scenario may cause the problem.
+> 
+> Thread A					Thread B
+> ...						...
+> perf_event_free_task				perf_event_release_kernel
+> 						   ...
+> 						   acquire event->child_mutex
+> 						   ...
+> 						   get_ctx
+>    ...						   release event->child_mutex
+>    acquire ctx->mutex
+>    ...
+>    perf_free_event (acquire/release event->child_mutex)
+>    ...
+>    release ctx->mutex
+>    wait_var_event
+> 						   acquire ctx->mutex
+> 						   acquire event->child_mutex
+> 						   # move existing events to free_list
+> 						   release event->child_mutex
+> 						   release ctx->mutex
+> 						   put_ctx
+> ...						...
+> 
+> In this case, all events of the ctx have been freed, so we couldn't
+> find the ctx in free_list and Thread A will miss the wakeup. It's thus
+> necessary to add a wakeup after dropping the reference.
+> 
+> Fixes: 1cf8dfe8a661 ("perf/core: Fix race between close() and fork()")
+> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-[346278.191038] __schedule+0x2d8/0x890
-[346278.191046] schedule+0x4e/0xb0
-[346278.191049] perf_event_free_task+0x220/0x270
-[346278.191056] ? init_wait_var_entry+0x50/0x50
-[346278.191060] copy_process+0x663/0x18d0
-[346278.191068] kernel_clone+0x9d/0x3d0
-[346278.191072] __do_sys_clone+0x5d/0x80
-[346278.191076] __x64_sys_clone+0x25/0x30
-[346278.191079] do_syscall_64+0x5c/0xc0
-[346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
-[346278.191086] ? do_syscall_64+0x69/0xc0
-[346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
-[346278.191092] ? irqentry_exit+0x19/0x30
-[346278.191095] ? exc_page_fault+0x89/0x160
-[346278.191097] ? asm_exc_page_fault+0x8/0x30
-[346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+Hint: always ask before putting someone else's Signed-off-by tag ;-)
+And anyway you don't need it here.
 
-The task was waiting for the refcount become to 1, but from the vmcore,
-we found the refcount has already been 1. It seems that the task didn't
-get woken up by perf_event_release_kernel() and got stuck forever. The
-below scenario may cause the problem.
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-Thread A					Thread B
-...						...
-perf_event_free_task				perf_event_release_kernel
-						   ...
-						   acquire event->child_mutex
-						   ...
-						   get_ctx
-   ...						   release event->child_mutex
-   acquire ctx->mutex
-   ...
-   perf_free_event (acquire/release event->child_mutex)
-   ...
-   release ctx->mutex
-   wait_var_event
-						   acquire ctx->mutex
-						   acquire event->child_mutex
-						   # move existing events to free_list
-						   release event->child_mutex
-						   release ctx->mutex
-						   put_ctx
-...						...
 
-In this case, all events of the ctx have been freed, so we couldn't
-find the ctx in free_list and Thread A will miss the wakeup. It's thus
-necessary to add a wakeup after dropping the reference.
-
-Fixes: 1cf8dfe8a661 ("perf/core: Fix race between close() and fork()")
-Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
-Changes since v1
-- Add the fixed tag.
-- Simplify v1's patch. (Frederic)
----
- kernel/events/core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4f0c45ab8d7d..15c35070db6a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5340,6 +5340,7 @@ int perf_event_release_kernel(struct perf_event *event)
- again:
- 	mutex_lock(&event->child_mutex);
- 	list_for_each_entry(child, &event->child_list, child_list) {
-+		void *var = NULL;
- 
- 		/*
- 		 * Cannot change, child events are not migrated, see the
-@@ -5380,11 +5381,23 @@ int perf_event_release_kernel(struct perf_event *event)
- 			 * this can't be the last reference.
- 			 */
- 			put_event(event);
-+		} else {
-+			var = &ctx->refcount;
- 		}
- 
- 		mutex_unlock(&event->child_mutex);
- 		mutex_unlock(&ctx->mutex);
- 		put_ctx(ctx);
-+
-+		if (var) {
-+			/*
-+			 * If perf_event_free_task() has deleted all events from the
-+			 * ctx while the child_mutex got released above, make sure to
-+			 * notify about the preceding put_ctx().
-+			 */
-+			smp_mb(); /* pairs with wait_var_event() */
-+			wake_up_var(var);
-+		}
- 		goto again;
- 	}
- 	mutex_unlock(&event->child_mutex);
--- 
-2.25.1
-
+> ---
+> Changes since v1
+> - Add the fixed tag.
+> - Simplify v1's patch. (Frederic)
+> ---
+>  kernel/events/core.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4f0c45ab8d7d..15c35070db6a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5340,6 +5340,7 @@ int perf_event_release_kernel(struct perf_event *event)
+>  again:
+>  	mutex_lock(&event->child_mutex);
+>  	list_for_each_entry(child, &event->child_list, child_list) {
+> +		void *var = NULL;
+>  
+>  		/*
+>  		 * Cannot change, child events are not migrated, see the
+> @@ -5380,11 +5381,23 @@ int perf_event_release_kernel(struct perf_event *event)
+>  			 * this can't be the last reference.
+>  			 */
+>  			put_event(event);
+> +		} else {
+> +			var = &ctx->refcount;
+>  		}
+>  
+>  		mutex_unlock(&event->child_mutex);
+>  		mutex_unlock(&ctx->mutex);
+>  		put_ctx(ctx);
+> +
+> +		if (var) {
+> +			/*
+> +			 * If perf_event_free_task() has deleted all events from the
+> +			 * ctx while the child_mutex got released above, make sure to
+> +			 * notify about the preceding put_ctx().
+> +			 */
+> +			smp_mb(); /* pairs with wait_var_event() */
+> +			wake_up_var(var);
+> +		}
+>  		goto again;
+>  	}
+>  	mutex_unlock(&event->child_mutex);
+> -- 
+> 2.25.1
+> 
