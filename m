@@ -1,197 +1,231 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD611836EE
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 20:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EF6181BB4
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 21:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713473167; cv=none; b=tm2bDfMZiqPbzdCXGHTd3CUjsx8tOMFKLZmuU6bBxwpsiFDxMEQTTzJpV/M5EAK+iaFGhunxrDEC7cXTWSl6Luj/4BF5VNkHmhdyLgKCke6dNy4jO9TSSsqv8iTJPtLb73IgzqhKbdIsEZvbuU2VWIdky4NzbTAhbaEZnkaOv8s=
+	t=1713474468; cv=none; b=dIpGB2Cyjple/ySFAKQE6pa9lj7WMRyM7kkS5j+dp1HtmrbG34M5iO9Aq0s4I/wXMJ04k43/IzLmiuzzBQoVaRMFKvBbyHnVru+F4WtAeTiREqZDR8PkOiOwRYTaXG9SlVgIamhiCCpJN57wGl/QBZSp0sxpy7Jo62s0t1Ne6vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713473167; c=relaxed/simple;
-	bh=HMVi7br3BVBav1YEFm3hGbVBKQuo4jcCj8gERVq5mRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p7DYxj6vZNpbuAqoqFl5fhQz3a80RP6ut90F27ZFYjzPZ+R8HICnyNi9vRV+XuBh2TTB8GFO0UfvGb41a4kUVLxmOyAgMSJvHHMWX6NyRelP6AVPtUYd3pcjrYhGWU+BdLhEvffW/S5VbteaegR/2tndn1T4AZyq5qvPlUSq0x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JdH5bB/L; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1713474468; c=relaxed/simple;
+	bh=Al81Wp+BoxuxKClZlHKjCIreDgKIXroUMDGs1QrF9Ko=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Aswq9hoHOt6lXgm/IJcyfMtIs1NV4bh2wCs0O87zCTkl6oOnEl2S8WgEGnPNDstxbJVzJWBKptY3usGy2nQ7VRqxiELRwbXOrtjGFb0aMmr8xVJcHwfr28Al1jwnb8XZXpg6yk03Z0gSCCm0NXM11urkinOZLSLB0lUkJFHTfFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vi4EFwlF; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JdH5bB/L"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e651a9f3ffso8960455ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 13:46:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vi4EFwlF"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e44f82ff9cso14885ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 14:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713473165; x=1714077965; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NAMRKO5ZJMAgar9h9RnJOh/Wa8p7zabMhMg01dIRGOg=;
-        b=JdH5bB/LtWsQ8gpygCvhWh+bg2ci8KwLNDdR08ZBJmHIRs2pseOZh1D+tG57AJUvzX
-         dPJbsDO4P4m0lHrHZMefPaLcFJulBSeM+VIqQPAulLFiEwylLqX+6K6ksoOclnAT/iOs
-         nGpPYsw6vKJ9IEwflZF+FlhJpCX1hxxib8hKDBOV3NvAY+hNHKFa9hib+xbaRpNNDSes
-         fXQvNZY3+W4Y4S84EcKPcwLDJnC0PYuSEtDkyqRgKVIrrVSyzMK9wU6whMsvcmsnhtJl
-         57JWx2Onw6HxGFv8PxcIp8tWSvQxgsFlZiHuqwPT5aYG7QlakmHxKj15Ob6gYiPUbjG1
-         62tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713473165; x=1714077965;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1713474466; x=1714079266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NAMRKO5ZJMAgar9h9RnJOh/Wa8p7zabMhMg01dIRGOg=;
-        b=r9ZOYUyoYjCvEKuY71M3Xmktke+Qi5PvwIu5Io/5Bcbom5BrHatc8J4nhmtlytR+TD
-         6RiA3WZJ6ohRzR7SyNQ8SRAUTZOWoUDQzCo8OF8jlBEP4gz4KvvV7NXpJp1bVswYrvDe
-         pS3k2H3EV97Qx6NZu66cp8dY2ehzfLHegEvLDjGRzbRRet4wor5gRDPYSoQjYUbdesos
-         9/QpZRHY2xGEs1NN0RRsph/YWCHwSLuZX0XAkEVGCGUgX7hPu8hNlP3nZKL8xMSTzJ7C
-         NkpVQtW+ac2zeSDroUh0vBvQ8iY/N/KHqMRacxIOJ4Noox3251rmiGBEIQakdv/T05Cr
-         q2Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWwbQXqxDV9aUBkdnRbSGU4acHXzm6WAWwDx1e8xQn4NpIPGzthFE3QxkXo3LlWMc9OjYq2s+7jvy5d9Z429omSX5l+gmdYZUF2of8t3kLhw==
-X-Gm-Message-State: AOJu0YwMryPdEPHtiLDPclHMWaKaZVF446zBni+jTgJNycVHcbA2q+g7
-	nutt6SCf+ak0BIgyRXS7EPdTWw24cRlGqjIWSoTXzx+CJLU7lhj5AP4BIFsyCw==
-X-Google-Smtp-Source: AGHT+IE6CmWwjk53jvURZMn2e6RsrDhXbrmpgr8uKqK7f4ECwf5qlnvF3BLnuP+6gnpYzXORmkclsw==
-X-Received: by 2002:a17:90b:3696:b0:2a5:3438:a31b with SMTP id mj22-20020a17090b369600b002a53438a31bmr284502pjb.37.1713473164448;
-        Thu, 18 Apr 2024 13:46:04 -0700 (PDT)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id iq2-20020a17090afb4200b002a9f707ec45sm3611970pjb.11.2024.04.18.13.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 13:46:03 -0700 (PDT)
-Date: Thu, 18 Apr 2024 20:46:00 +0000
-From: Mingwei Zhang <mizhang@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
-	dapeng1.mi@linux.intel.com, jmattson@google.com,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com,
-	eranian@google.com, irogers@google.com, samantha.alt@intel.com,
-	like.xu.linux@gmail.com, chao.gao@intel.com
-Subject: Re: [RFC PATCH 00/41] KVM: x86/pmu: Introduce passthrough vPM
-Message-ID: <ZiGGiOspm6N-vIta@google.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <ZhgX6BStTh05OfEd@google.com>
+        bh=AJVJe5DYIGKiqAkh914q9HNHt4cBXtTHQHGV+XEJwYc=;
+        b=Vi4EFwlFM28ybRcnmn6VX/igBn/i4iP7gH0VzlPArBTFNtYthliIkagoM3eWVr5wNL
+         dKIjpw0+Rqi2dsxdLFQKAsisbWf6iF7yl3X9OmLAlKqvHy4Eqa35086Y3SQJJ8gI8Uwb
+         C/93Nf8YvmCRiLE8jFT2yxFu+RuQ2BPz+XRCPvPtc7RZuDJ3SYu5P50izSJVwk501uYO
+         ATv6gmV/8Mx2s+3DdMBQikwxa1RRMSFuQ6dFLm/xMC1TGQ+w0+IvNtgd1yO+ZUECxquz
+         EXqcuLqFaWz6m9XPvfIwUkaed0opc/HfsG8YyMHeSaRtdVHn6c5TVh7wdY7lceVlepDK
+         jbQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713474466; x=1714079266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AJVJe5DYIGKiqAkh914q9HNHt4cBXtTHQHGV+XEJwYc=;
+        b=dCW75KbvAHdCtHLRUnZXgTz01lPNe/B1EjOfBSCKCI7FsFRIv9sJjqStPG7yqAMpWv
+         3YXrFmG3Weise+qh/Ez60ERAEu+rZTHcmsA9M/ttdit0O7yEuqQDYOec4sSA5urbjBlo
+         5gASdRSsseiONW1W1lBvWokReDeTG81yyh2E9xRm+QwxiFfIAFlRuNB3yc4WU/SNpVcV
+         uBfl99wCQBHzrKMOObRF1DfCZJZJrveDVNiNQiTZ3c+5dPFxa578WyhWMOz73Ptq9aTr
+         4VjTtCP5tft0tCg2VeMoKioWFr7G11Md49L/Y1HgcGk5VxXbQe9SqawS3N393LNIfHLf
+         f5dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWqnqenMq6geDthBQ76VR4yvKxtpw6B6bn1pdCdlGCAVHZgeL7jzZKSYMeSwTH8Fl4rtM3u5iObDW8dcWqzp/PEWUN0j4HzpS/YQNhcgnWqw==
+X-Gm-Message-State: AOJu0YyaF/NIuF7N8xJRg177AJt2irVg2MRxxZUG3YWyeIJW53z4U2nD
+	B0cTjJWzuEv2ZtYA4LhVyWDhbWlQllHOhox9Ef7i+SzwRlQTEjsUQ9EEU42pt1BycthKO21XJ2c
+	DtMaa/mbhv8M/StPpbO9Au4aioEmVZ5Hm2ra4
+X-Google-Smtp-Source: AGHT+IGllCxp65eQfyYK3/aoRyDs6LzYbT60FkRzl2fi4BM0xmIMleEppw8pZ1EJkTt6eSUC/kh6f8ZA8Pc/FzTdMig=
+X-Received: by 2002:a17:902:680c:b0:1e3:cb9b:d29c with SMTP id
+ h12-20020a170902680c00b001e3cb9bd29cmr15441plk.23.1713474465710; Thu, 18 Apr
+ 2024 14:07:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhgX6BStTh05OfEd@google.com>
+References: <20240416061533.921723-1-irogers@google.com> <20240416061533.921723-12-irogers@google.com>
+ <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
+In-Reply-To: <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 18 Apr 2024 14:07:31 -0700
+Message-ID: <CAP-5=fXkn-nFTqGEqBYt6NUvoXU7OyLJeSCnWdD3taLHyK-xtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for bad numbers
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	Beeman Strong <beeman@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024, Sean Christopherson wrote:
-> <bikeshed>
-> 
-> I think we should call this a mediated PMU, not a passthrough PMU.  KVM still
-> emulates the control plane (controls and event selectors), while the data is
-> fully passed through (counters).
-> 
-> </bikeshed>
-Sean,
+On Thu, Apr 18, 2024 at 1:27=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2024-04-16 2:15 a.m., Ian Rogers wrote:
+> > Use the error handler from the parse_state to give a more informative
+> > error message.
+> >
+> > Before:
+> > ```
+> > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
+> > event syntax error: 'cycles/period=3D99999999999999999999/'
+> >                                   \___ parser error
+> > Run 'perf list' for a list of valid events
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >     -e, --event <event>   event selector. use 'perf list' to list avail=
+able events
+> > ```
+> >
+> > After:
+> > ```
+> > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
+> > event syntax error: 'cycles/period=3D99999999999999999999/'
+> >                                   \___ parser error
+> >
+> > event syntax error: '..les/period=3D99999999999999999999/'
+> >                                   \___ Bad base 10 number "999999999999=
+99999999"
+>
+>
+> It seems the patch only works for decimal?
+>
+> ./perf stat -e 'cycles/period=3D0xaaaaaaaaaaaaaaaaaaaaaa/' true
+> event syntax error: '..les/period=3D0xaaaaaaaaaaaaaaaaaaaaaa/'
+>                                    \___ parser error
+>  Run 'perf list' for a list of valid events
+>
+>   Usage: perf stat [<options>] [<command>]
+>
+>      -e, --event <event>   event selector. use 'perf list' to list
+> available events
+>
+> Thanks,
+> Kan
 
-I feel "mediated PMU" seems to be a little bit off the ..., no? In
-KVM, almost all of features are mediated. In our specific case, the
-legacy PMU is mediated by KVM and perf subsystem on the host. In new
-design, it is mediated by KVM only.
+Right, for hexadecimal we say the number of digits is at most 16, so
+when you exceed this the token is no longer recognized. It just
+becomes input that can't be parsed, hence parser error. Doing this
+means we can simplify other strtoull checks, but I agree having a
+better error message for hexadecimal would be good. Let's do it as
+follow up.
 
-We intercept the control plan in current design, but the only thing
-we do is the event filtering. No fancy code change to emulate the control
-registers. So, it is still a passthrough logic.
+Thanks,
+Ian
 
-In some (rare) business cases, I think maybe we could fully passthrough
-the control plan as well. For instance, sole-tenant machine, or
-full-machine VM + full offload. In case if there is a cpu errata, KVM
-can force vmexit and dynamically intercept the selectors on all vcpus
-with filters checked. It is not supported in current RFC, but maybe
-doable in later versions.
-
-With the above, I wonder if we can still use passthrough PMU for
-simplicity? But no strong opinion if you really want to keep this name.
-I would have to take some time to convince myself.
-
-Thanks.
--Mingwei
-> 
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> 
-> > 1. host system wide / QEMU events handling during VM running
-> >    At VM-entry, all the host perf events which use host x86 PMU will be
-> >    stopped. These events with attr.exclude_guest = 1 will be stopped here
-> >    and re-started after vm-exit. These events without attr.exclude_guest=1
-> >    will be in error state, and they cannot recovery into active state even
-> >    if the guest stops running. This impacts host perf a lot and request
-> >    host system wide perf events have attr.exclude_guest=1.
-> > 
-> >    This requests QEMU Process's perf event with attr.exclude_guest=1 also.
-> > 
-> >    During VM running, perf event creation for system wide and QEMU
-> >    process without attr.exclude_guest=1 fail with -EBUSY. 
-> > 
-> > 2. NMI watchdog
-> >    the perf event for NMI watchdog is a system wide cpu pinned event, it
-> >    will be stopped also during vm running, but it doesn't have
-> >    attr.exclude_guest=1, we add it in this RFC. But this still means NMI
-> >    watchdog loses function during VM running.
-> > 
-> >    Two candidates exist for replacing perf event of NMI watchdog:
-> >    a. Buddy hardlock detector[3] may be not reliable to replace perf event.
-> >    b. HPET-based hardlock detector [4] isn't in the upstream kernel.
-> 
-> I think the simplest solution is to allow mediated PMU usage if and only if
-> the NMI watchdog is disabled.  Then whether or not the host replaces the NMI
-> watchdog with something else becomes an orthogonal discussion, i.e. not KVM's
-> problem to solve.
-> 
-> > 3. Dedicated kvm_pmi_vector
-> >    In emulated vPMU, host PMI handler notify KVM to inject a virtual
-> >    PMI into guest when physical PMI belongs to guest counter. If the
-> >    same mechanism is used in passthrough vPMU and PMI skid exists
-> >    which cause physical PMI belonging to guest happens after VM-exit,
-> >    then the host PMI handler couldn't identify this PMI belongs to
-> >    host or guest.
-> >    So this RFC uses a dedicated kvm_pmi_vector, PMI belonging to guest
-> >    has this vector only. The PMI belonging to host still has an NMI
-> >    vector.
-> > 
-> >    Without considering PMI skid especially for AMD, the host NMI vector
-> >    could be used for guest PMI also, this method is simpler and doesn't
-> 
-> I don't see how multiplexing NMIs between guest and host is simpler.  At best,
-> the complexity is a wash, just in different locations, and I highly doubt it's
-> a wash.  AFAIK, there is no way to precisely know that an NMI came in via the
-> LVTPC.
-> 
-> E.g. if an IPI NMI arrives before the host's PMU is loaded, confusion may ensue.
-> SVM has the luxury of running with GIF=0, but that simply isn't an option on VMX.
-> 
-> >    need x86 subsystem to reserve the dedicated kvm_pmi_vector, and we
-> >    didn't meet the skid PMI issue on modern Intel processors.
-> > 
-> > 4. per-VM passthrough mode configuration
-> >    Current RFC uses a KVM module enable_passthrough_pmu RO parameter,
-> >    it decides vPMU is passthrough mode or emulated mode at kvm module
-> >    load time.
-> >    Do we need the capability of per-VM passthrough mode configuration?
-> >    So an admin can launch some non-passthrough VM and profile these
-> >    non-passthrough VMs in host, but admin still cannot profile all
-> >    the VMs once passthrough VM existence. This means passthrough vPMU
-> >    and emulated vPMU mix on one platform, it has challenges to implement.
-> >    As the commit message in commit 0011, the main challenge is 
-> >    passthrough vPMU and emulated vPMU have different vPMU features, this
-> >    ends up with two different values for kvm_cap.supported_perf_cap, which
-> >    is initialized at module load time. To support it, more refactor is
-> >    needed.
-> 
-> I have no objection to an all-or-nothing setup.  I'd honestly love to rip out the
-> existing vPMU support entirely, but that's probably not be realistic, at least not
-> in the near future.
-> 
-> > Remain Works
-> > ===
-> > 1. To reduce passthrough vPMU overhead, optimize the PMU context switch.
-> 
-> Before this gets out of its "RFC" phase, I would at least like line of sight to
-> a more optimized switch.  I 100% agree that starting with a conservative
-> implementation is the way to go, and the kernel absolutely needs to be able to
-> profile KVM itself (and everything KVM calls into), i.e. _always_ keeping the
-> guest PMU loaded for the entirety of KVM_RUN isn't a viable option.
-> 
-> But I also don't want to get into a situation where can't figure out a clean,
-> robust way to do the optimized context switch without needing (another) massive
-> rewrite.
+> > Run 'perf list' for a list of valid events
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >     -e, --event <event>   event selector. use 'perf list' to list avail=
+able events
+> > ```
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.l | 40 ++++++++++++++++++++--------------
+> >  1 file changed, 24 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
+nts.l
+> > index 6fe37003ab7b..0cd68c9f0d4f 100644
+> > --- a/tools/perf/util/parse-events.l
+> > +++ b/tools/perf/util/parse-events.l
+> > @@ -18,26 +18,34 @@
+> >
+> >  char *parse_events_get_text(yyscan_t yyscanner);
+> >  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
+> > +int parse_events_get_column(yyscan_t yyscanner);
+> > +int parse_events_get_leng(yyscan_t yyscanner);
+> >
+> > -static int __value(YYSTYPE *yylval, char *str, int base, int token)
+> > +static int get_column(yyscan_t scanner)
+> >  {
+> > -     u64 num;
+> > -
+> > -     errno =3D 0;
+> > -     num =3D strtoull(str, NULL, base);
+> > -     if (errno)
+> > -             return PE_ERROR;
+> > -
+> > -     yylval->num =3D num;
+> > -     return token;
+> > +     return parse_events_get_column(scanner) - parse_events_get_leng(s=
+canner);
+> >  }
+> >
+> > -static int value(yyscan_t scanner, int base)
+> > +static int value(struct parse_events_state *parse_state, yyscan_t scan=
+ner, int base)
+> >  {
+> >       YYSTYPE *yylval =3D parse_events_get_lval(scanner);
+> >       char *text =3D parse_events_get_text(scanner);
+> > +     u64 num;
+> >
+> > -     return __value(yylval, text, base, PE_VALUE);
+> > +     errno =3D 0;
+> > +     num =3D strtoull(text, NULL, base);
+> > +     if (errno) {
+> > +             struct parse_events_error *error =3D parse_state->error;
+> > +             char *help =3D NULL;
+> > +
+> > +             if (asprintf(&help, "Bad base %d number \"%s\"", base, te=
+xt) > 0)
+> > +                     parse_events_error__handle(error, get_column(scan=
+ner), help , NULL);
+> > +
+> > +             return PE_ERROR;
+> > +     }
+> > +
+> > +     yylval->num =3D num;
+> > +     return PE_VALUE;
+> >  }
+> >
+> >  static int str(yyscan_t scanner, int token)
+> > @@ -283,8 +291,8 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); =
+}
+> >        */
+> >  "/"/{digit}          { return PE_BP_SLASH; }
+> >  "/"/{non_digit}              { BEGIN(config); return '/'; }
+> > -{num_dec}            { return value(yyscanner, 10); }
+> > -{num_hex}            { return value(yyscanner, 16); }
+> > +{num_dec}            { return value(_parse_state, yyscanner, 10); }
+> > +{num_hex}            { return value(_parse_state, yyscanner, 16); }
+> >       /*
+> >        * We need to separate 'mem:' scanner part, in order to get speci=
+fic
+> >        * modifier bits parsed out. Otherwise we would need to handle PE=
+_NAME
+> > @@ -330,8 +338,8 @@ cgroup-switches                                   {=
+ return sym(yyscanner, PERF_COUNT_SW_CGROUP_SWITCHES); }
+> >  {lc_type}-{lc_op_result}-{lc_op_result}      { return str(yyscanner, P=
+E_LEGACY_CACHE); }
+> >  mem:                 { BEGIN(mem); return PE_PREFIX_MEM; }
+> >  r{num_raw_hex}               { return str(yyscanner, PE_RAW); }
+> > -{num_dec}            { return value(yyscanner, 10); }
+> > -{num_hex}            { return value(yyscanner, 16); }
+> > +{num_dec}            { return value(_parse_state, yyscanner, 10); }
+> > +{num_hex}            { return value(_parse_state, yyscanner, 16); }
+> >
+> >  {modifier_event}     { return str(yyscanner, PE_MODIFIER_EVENT); }
+> >  {name}                       { return str(yyscanner, PE_NAME); }
