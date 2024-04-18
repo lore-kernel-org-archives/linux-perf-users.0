@@ -1,269 +1,207 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B63B181BB2
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 19:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B974503A;
+	Thu, 18 Apr 2024 20:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470011; cv=none; b=uBtn+e0pvFbOWy1cats/MgTqKliFt5PGTPlJIMQz1yOWVkJa4M2zDJ89u3F1YNKUMPW8gpRVztgAjLzPu63Ry3ByBmNOQsF8i7QKGeMqlwVTJd8+nQNUMewKKrjQ8+fYcoIjmsVSNIu4Rn1buJUL2Tu4rvSpAXi1L5W6e2sdroU=
+	t=1713472059; cv=none; b=FnY2xdqyMVSwNBCD8y8uwjUaBe+jPR+vOgocUQ+7Ecl8L4p5iPLbzcf8Z122BdY9dN7ziE6kfUA0BcX4P4Z8WNQy/k2/kcFb+F8z6onqUHRl2m5lkb1cvUmHgISA922HwDmxUjgi6V6AkCKuAhuKmEB0jmiKz3Ctd+ofGpc9cvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470011; c=relaxed/simple;
-	bh=il+9bbj7Kl9RhDUwHRlD6PElXcZpj4hshubhhFULYxI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=be3qMrl4lLHPvYdlk+26n8rCmeUQdNiv65x25iEVeRGvizswKiko5HMBp4Bh8lET0qmSdDisaioQcUruMdOdvUFM7bqeWUZR3H/CsdzdAUJ7lEyph8rw6ObC+uIx3PTG9qC7PW5Oh4qmjoFJ/stncqJP4QoGGPbqMDMclYtU3Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YZ1pWEwS; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713472059; c=relaxed/simple;
+	bh=56WvnS3f709B7K9RPGkczORnhOF3uY6m2yAEXZgpwNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pBj8/UsfuRco4p+L70HFWhjxzilwLvcL0r/QdBalCi74F0m/MHfzMoX7g7PLmNjD2CPDGEaPydY/bTgB5BCa2wwuQ9EgzLbZM/V6N0Z3fg9/oLJj/V/XL63aBMRjGb3CEfwA7/pIKq9dhqKAjDx2TWbCDoClOZXjYrAYu6v5xtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IVWE9koW; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YZ1pWEwS"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61ab173fe00so24923127b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 12:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713470008; x=1714074808; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
-        b=YZ1pWEwSwKfzg29f9CqfdwlDzesejVg5BnUVEIHZzcqRbanwhqMfZiiymZMMlSolTP
-         yDUM8GypdJ86L4YlWlGhM3mKp/o8JN9UfuoNWuXVZh/peYJwZcFq7mlR6GTKMsrZaFyG
-         mpNUhhYJgN8v+v7wKuGQUHCLjP+XANOb6wlBrWPglMl5rE13W7eO2ZFiFMWHB7fv+i0L
-         CBHqkmzCUUqZ1ociyNy+YaP1rIT5swURz1a2JJtNfV8vJY+8BiCBSMSZ2+j7MgXwDlGM
-         VNdnNStKxdzrd07anmf+8UtlCC+fS2TeftumhDxZuNeoF1+7D3tEP+fLPfFnqcKcqGcw
-         MsiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713470008; x=1714074808;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
-        b=CbLZkDYYSYbOpi2HsvQEp3UcSodl57EIwrLtRuvOI8ndrlJIr74fJwhUlJfiOf34xz
-         LVO9FsPXwlPWVkia/DoDlxHdHzJGOULbfRtZ9/5MsP6IxaXQxLVCvWwfP+iYI/uyPU1Q
-         4vvFm7rnaXxsb5aLPAkMZhQr4slNA2rdVlBVXAKi6y22rHISA1rFbUPJfzc41ngTu6Ra
-         o13CeDtg9G8eQsfkwT7vwXkSsFxFcjKkWKRu4DLzb+s3Mnl1MJgUsxaAjMMzP6jEoSUh
-         JQXIOl8SW0g/1Ypj8A6CA0UfkS1GvT6rdWG80TrVzkTFq2dfa53lfnr20xExqj/cBWUl
-         2Vzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxdbh5UoVnZ7jXVJaXaJvjB1eehf9ABC/guOYC1jeWiIIYgCDZ9IsnLeG98TXUNXB62FFaPaHVd6YfCFDXRkWu+PJ8UfHCu9asNO1Dln4oLA==
-X-Gm-Message-State: AOJu0YwsvdtOSWN3EsFDafLt8/JaUR0/4oHmFvHwVIeEaD+bqZpDxm/I
-	AXsxg8sKxSNEkvLYZGS+dTbmF7AnzAR4PRiatFjmoTjFMkOsRW8fWMMWY7mb/arbhil56v0YYnP
-	70Q==
-X-Google-Smtp-Source: AGHT+IGGyn2/Eis9yr5uvFbHSsNr+5jpucEC9aioMrlcMqw+x+tJjikMNMKUFalz9faFMmsjcJGmE2MmVtI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:d9d3:0:b0:618:9044:4f8b with SMTP id
- b202-20020a0dd9d3000000b0061890444f8bmr785538ywe.7.1713470008510; Thu, 18 Apr
- 2024 12:53:28 -0700 (PDT)
-Date: Thu, 18 Apr 2024 12:53:26 -0700
-In-Reply-To: <20240418141932.GA1855@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IVWE9koW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713472058; x=1745008058;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=56WvnS3f709B7K9RPGkczORnhOF3uY6m2yAEXZgpwNA=;
+  b=IVWE9koWD0uyIs6RnHA1/iziVe8vTygbJ/6eUzIbs7T7gJi/xpw+ci16
+   I4wpVo5b1Q1lc4981iBPXHyvetScOZFcG4wXL/Qv+wsqD3THLmt3uI0hx
+   ROFUNh/gz+EdxcRAWoqKPTkRkCLYfJtBpcCPhywRBbNF7D44KxjWBfPxF
+   7qtk4u9UgDH/bycm/5HHopK9ZeAZsZi1XFXq5FZ5xgeVX8e0MTpEmSl+m
+   DlLZMQR1/y5pkQr5oUuR4qU9xobF5yCYGlAeBSXIYyK/fzhn8f9WjRG9U
+   rTfH/x+SR5aMunS0hGCwpgNzxKHROz4SusAv9qjW66lFa0uIEQPYjWRDW
+   A==;
+X-CSE-ConnectionGUID: BvQpMSHzSSW7vqubRI53kg==
+X-CSE-MsgGUID: GXxCJSkPRb6XSVys8DGBVQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="31527990"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="31527990"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 13:27:37 -0700
+X-CSE-ConnectionGUID: 91hlfWN5QMq+K6lQWIka8w==
+X-CSE-MsgGUID: O8kBm9WASfypw0PIe+8ARg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23728689"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 13:27:36 -0700
+Received: from [10.212.69.180] (kliang2-mobl1.ccr.corp.intel.com [10.212.69.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id A2B38206DFDC;
+	Thu, 18 Apr 2024 13:27:34 -0700 (PDT)
+Message-ID: <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
+Date: Thu, 18 Apr 2024 16:27:33 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
- <Zh1d94Pl6gneVoDd@google.com> <20240418141932.GA1855@willie-the-truck>
-Message-ID: <ZiF6NgGYLSsPNEOg@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for bad
+ numbers
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
+ Beeman Strong <beeman@rivosinc.com>
+References: <20240416061533.921723-1-irogers@google.com>
+ <20240416061533.921723-12-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240416061533.921723-12-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 18, 2024, Will Deacon wrote:
-> On Mon, Apr 15, 2024 at 10:03:51AM -0700, Sean Christopherson wrote:
-> > On Sat, Apr 13, 2024, Marc Zyngier wrote:
-> > > On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
-> > > > 
-> > > > On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> > > > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > > > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > > > > > Also, if you're in the business of hacking the MMU notifier code, it
-> > > > > > would be really great to change the .clear_flush_young() callback so
-> > > > > > that the architecture could handle the TLB invalidation. At the moment,
-> > > > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > > > > > being set by kvm_handle_hva_range(), whereas we could do a much
-> > > > > > lighter-weight and targetted TLBI in the architecture page-table code
-> > > > > > when we actually update the ptes for small ranges.
-> > > > > 
-> > > > > Indeed, and I was looking at this earlier this week as it has a pretty
-> > > > > devastating effect with NV (it blows the shadow S2 for that VMID, with
-> > > > > costly consequences).
-> > > > > 
-> > > > > In general, it feels like the TLB invalidation should stay with the
-> > > > > code that deals with the page tables, as it has a pretty good idea of
-> > > > > what needs to be invalidated and how -- specially on architectures
-> > > > > that have a HW-broadcast facility like arm64.
-> > > > 
-> > > > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-> > > > straightforward solution would be to let architectures override flush_on_ret,
-> > > > but I would prefer something like the below as x86 can also utilize a range-based
-> > > > flush when running as a nested hypervisor.
-> > 
-> > ...
-> > 
-> > > I think this works for us on HW that has range invalidation, which
-> > > would already be a positive move.
-> > > 
-> > > For the lesser HW that isn't range capable, it also gives the
-> > > opportunity to perform the iteration ourselves or go for the nuclear
-> > > option if the range is larger than some arbitrary constant (though
-> > > this is additional work).
-> > > 
-> > > But this still considers the whole range as being affected by
-> > > range->handler(). It'd be interesting to try and see whether more
-> > > precise tracking is (or isn't) generally beneficial.
-> > 
-> > I assume the idea would be to let arch code do single-page invalidations of
-> > stage-2 entries for each gfn?
+
+
+On 2024-04-16 2:15 a.m., Ian Rogers wrote:
+> Use the error handler from the parse_state to give a more informative
+> error message.
 > 
-> Right, as it's the only code which knows which ptes actually ended up
-> being aged.
+> Before:
+> ```
+> $ perf stat -e 'cycles/period=99999999999999999999/' true
+> event syntax error: 'cycles/period=99999999999999999999/'
+>                                   \___ parser error
+> Run 'perf list' for a list of valid events
 > 
-> > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
-> > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
-> > provides an instruction to do broadcast invalidations, but it takes a virtual
-> > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
-> > a guest virtual address, but it's a moot point because KVM doen't have the guest
-> > virtual address, and if it's a host virtual address, there would need to be valid
-> > mappings in the host page tables for it to work, which KVM can't guarantee.
+>  Usage: perf stat [<options>] [<command>]
 > 
-> Ah, so it sounds like it would need to be an arch opt-in then.
+>     -e, --event <event>   event selector. use 'perf list' to list available events
+> ```
+> 
+> After:
+> ```
+> $ perf stat -e 'cycles/period=99999999999999999999/' true
+> event syntax error: 'cycles/period=99999999999999999999/'
+>                                   \___ parser error
+> 
+> event syntax error: '..les/period=99999999999999999999/'
+>                                   \___ Bad base 10 number "99999999999999999999"
 
-Even if x86 (or some other arch code) could use the precise tracking, I think it
-would make sense to have the behavior be arch specific.  Adding infrastructure
-to get information from arch code, only to turn around and give it back to arch
-code would be odd.
 
-Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
-the best/easiest solution would be to let arm64 opt out of the common TLB flush
-when a SPTE is made young.
+It seems the patch only works for decimal?
 
-With the range-based flushing bundled in, this?
+./perf stat -e 'cycles/period=0xaaaaaaaaaaaaaaaaaaaaaa/' true
+event syntax error: '..les/period=0xaaaaaaaaaaaaaaaaaaaaaa/'
+                                   \___ parser error
+ Run 'perf list' for a list of valid events
 
----
- include/linux/kvm_host.h |  2 ++
- virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
- 2 files changed, 27 insertions(+), 15 deletions(-)
+  Usage: perf stat [<options>] [<command>]
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index afbc99264ffa..8fe5f5e16919 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
- extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
- 
- #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
-+int kvm_arch_flush_tlb_if_young(void);
-+
- static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
- {
- 	if (unlikely(kvm->mmu_invalidate_in_progress))
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 38b498669ef9..5ebef8ef239c 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -595,6 +595,11 @@ static void kvm_null_fn(void)
- }
- #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
- 
-+int __weak kvm_arch_flush_tlb_if_young(void)
-+{
-+	return true;
-+}
-+
- /* Iterate over each memslot intersecting [start, last] (inclusive) range */
- #define kvm_for_each_memslot_in_hva_range(node, slots, start, last)	     \
- 	for (node = interval_tree_iter_first(&slots->hva_tree, start, last); \
-@@ -611,6 +616,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 	struct kvm_gfn_range gfn_range;
- 	struct kvm_memory_slot *slot;
- 	struct kvm_memslots *slots;
-+	bool need_flush = false;
- 	int i, idx;
- 
- 	if (WARN_ON_ONCE(range->end <= range->start))
-@@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 					break;
- 			}
- 			r.ret |= range->handler(kvm, &gfn_range);
-+
-+		       /*
-+			* Use a precise gfn-based TLB flush when possible, as
-+			* most mmu_notifier events affect a small-ish range.
-+			* Fall back to a full TLB flush if the gfn-based flush
-+			* fails, and don't bother trying the gfn-based flush
-+			* if a full flush is already pending.
-+			*/
-+		       if (range->flush_on_ret && !need_flush && r.ret &&
-+			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
-+							    gfn_range.end - gfn_range.start + 1))
-+			       need_flush = true;
- 		}
- 	}
- 
--	if (range->flush_on_ret && r.ret)
-+	if (need_flush)
- 		kvm_flush_remote_tlbs(kvm);
- 
- 	if (r.found_memslot)
-@@ -680,7 +698,8 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 						unsigned long start,
- 						unsigned long end,
--						gfn_handler_t handler)
-+						gfn_handler_t handler,
-+						bool flush_on_ret)
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	const struct kvm_mmu_notifier_range range = {
-@@ -688,7 +707,7 @@ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 		.end		= end,
- 		.handler	= handler,
- 		.on_lock	= (void *)kvm_null_fn,
--		.flush_on_ret	= true,
-+		.flush_on_ret	= flush_on_ret,
- 		.may_block	= false,
- 	};
- 
-@@ -700,17 +719,7 @@ static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn
- 							 unsigned long end,
- 							 gfn_handler_t handler)
- {
--	struct kvm *kvm = mmu_notifier_to_kvm(mn);
--	const struct kvm_mmu_notifier_range range = {
--		.start		= start,
--		.end		= end,
--		.handler	= handler,
--		.on_lock	= (void *)kvm_null_fn,
--		.flush_on_ret	= false,
--		.may_block	= false,
--	};
--
--	return __kvm_handle_hva_range(kvm, &range).ret;
-+	return kvm_handle_hva_range(mn, start, end, handler, false);
- }
- 
- void kvm_mmu_invalidate_begin(struct kvm *kvm)
-@@ -876,7 +885,8 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
- {
- 	trace_kvm_age_hva(start, end);
- 
--	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn);
-+	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn,
-+				    kvm_arch_flush_tlb_if_young());
- }
- 
- static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
+     -e, --event <event>   event selector. use 'perf list' to list
+available events
 
-base-commit: eae53272c8ad4e7ed2bbb11bd0456eb5b0484f0c
--- 
+Thanks,
+Kan
 
+> Run 'perf list' for a list of valid events
+> 
+>  Usage: perf stat [<options>] [<command>]
+> 
+>     -e, --event <event>   event selector. use 'perf list' to list available events
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events.l | 40 ++++++++++++++++++++--------------
+>  1 file changed, 24 insertions(+), 16 deletions(-)
+> 
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index 6fe37003ab7b..0cd68c9f0d4f 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -18,26 +18,34 @@
+>  
+>  char *parse_events_get_text(yyscan_t yyscanner);
+>  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
+> +int parse_events_get_column(yyscan_t yyscanner);
+> +int parse_events_get_leng(yyscan_t yyscanner);
+>  
+> -static int __value(YYSTYPE *yylval, char *str, int base, int token)
+> +static int get_column(yyscan_t scanner)
+>  {
+> -	u64 num;
+> -
+> -	errno = 0;
+> -	num = strtoull(str, NULL, base);
+> -	if (errno)
+> -		return PE_ERROR;
+> -
+> -	yylval->num = num;
+> -	return token;
+> +	return parse_events_get_column(scanner) - parse_events_get_leng(scanner);
+>  }
+>  
+> -static int value(yyscan_t scanner, int base)
+> +static int value(struct parse_events_state *parse_state, yyscan_t scanner, int base)
+>  {
+>  	YYSTYPE *yylval = parse_events_get_lval(scanner);
+>  	char *text = parse_events_get_text(scanner);
+> +	u64 num;
+>  
+> -	return __value(yylval, text, base, PE_VALUE);
+> +	errno = 0;
+> +	num = strtoull(text, NULL, base);
+> +	if (errno) {
+> +		struct parse_events_error *error = parse_state->error;
+> +		char *help = NULL;
+> +
+> +		if (asprintf(&help, "Bad base %d number \"%s\"", base, text) > 0)
+> +			parse_events_error__handle(error, get_column(scanner), help , NULL);
+> +
+> +		return PE_ERROR;
+> +	}
+> +
+> +	yylval->num = num;
+> +	return PE_VALUE;
+>  }
+>  
+>  static int str(yyscan_t scanner, int token)
+> @@ -283,8 +291,8 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
+>  	 */
+>  "/"/{digit}		{ return PE_BP_SLASH; }
+>  "/"/{non_digit}		{ BEGIN(config); return '/'; }
+> -{num_dec}		{ return value(yyscanner, 10); }
+> -{num_hex}		{ return value(yyscanner, 16); }
+> +{num_dec}		{ return value(_parse_state, yyscanner, 10); }
+> +{num_hex}		{ return value(_parse_state, yyscanner, 16); }
+>  	/*
+>  	 * We need to separate 'mem:' scanner part, in order to get specific
+>  	 * modifier bits parsed out. Otherwise we would need to handle PE_NAME
+> @@ -330,8 +338,8 @@ cgroup-switches					{ return sym(yyscanner, PERF_COUNT_SW_CGROUP_SWITCHES); }
+>  {lc_type}-{lc_op_result}-{lc_op_result}	{ return str(yyscanner, PE_LEGACY_CACHE); }
+>  mem:			{ BEGIN(mem); return PE_PREFIX_MEM; }
+>  r{num_raw_hex}		{ return str(yyscanner, PE_RAW); }
+> -{num_dec}		{ return value(yyscanner, 10); }
+> -{num_hex}		{ return value(yyscanner, 16); }
+> +{num_dec}		{ return value(_parse_state, yyscanner, 10); }
+> +{num_hex}		{ return value(_parse_state, yyscanner, 16); }
+>  
+>  {modifier_event}	{ return str(yyscanner, PE_MODIFIER_EVENT); }
+>  {name}			{ return str(yyscanner, PE_NAME); }
