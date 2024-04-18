@@ -1,141 +1,94 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC4F194C8E
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 21:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC68139855;
+	Thu, 18 Apr 2024 22:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713477279; cv=none; b=YWumEgRwZDt9d4wlwi7UbnKPXxngtJye1oieuUdwX7sDSAK2Movij/bgtFztmupWxtE+TWvj+UC/8nf3OgDnitxZcGZS2HwKA/M2kQ6ftlFfJPPlIAlywN8HRu3FqrB2+eD9B1Zfhp0mx3XpGPVCJU+BrMb4g/rcHDeqXhibqjA=
+	t=1713480798; cv=none; b=d3iKtg8+xMSu0JwU5kBL1sPJ9gQ30jktCMmWI52tSe+Y/Q5o6t1e93HbrlUliYxZW7TBeQJMg/tkNKIWKf4rFrC2eMtNE0B741332iluyH73UWab15sddr5jcVgKHHRZKaiC5k4BzaVwFGMFKrh/E8a5uITscQ0rzk5tRQ9Q5Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713477279; c=relaxed/simple;
-	bh=/fIZnrTgxkprElJlF6zWXgMXsg0CVEGbxuta0DCFlM4=;
+	s=arc-20240116; t=1713480798; c=relaxed/simple;
+	bh=HFF4ul5e2v3wwoR8XKGER96ZYBoacAgLz1f7S8OlMp4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KIBVZJWcDlfqXfRpLC9VY0/EsKcHOoY5rDrDus2Z3JwrVoaaFfMIYQeXkmn4zU+KBQklPtv+rjWdojhQEL4qseJx3cVuNAuZFMtPGk28Z1myiIaY0m2ELuq7WezIJ/g9msLeUu98QsQEapdW+EIztozEdKrmrlNKN06w60/oSfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X9CCQAGP; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYqbQzkm5NNUyWjxRZSVHFoxp0+Q5ShhGYhVqPXIwUC922y4Cc0tvcgE0gDbndi3vubwwRwiSTqG3+Q2+4MY2IvSCd/HtqDQjbUoFlN673BYa9Xp7+u1jxf9fWDE52lsRtvRDUSNdJSMnmr3PtcH/Z4vdwInrudcv/DQp7xf67Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2f1SG8l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9CCQAGP"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed04c91c46so1390776b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 14:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713477277; x=1714082077; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UzoUB/DlZEEpnQQocpp8LNj0cC4Hbh3hYFeNjb1gymQ=;
-        b=X9CCQAGPZ99SN2MkP9S6gDKVi6ocby6DNLHtZcj6MwvEp1nmeacQZb++EMmDCHE9+W
-         aOvPUB4UsnBY0lgm7Zr7IlzW1DKehF5DXMEEMvXGFzYiquQWqHxaQen37pQB8PqD4T7N
-         7PaE8vS0VkI31dEtGCbF3lUZeUvQ8kQ2r3ZOmmYyuEJXqI+04C5SRJiVk8fF+HTyFeDm
-         h/kK/06ygZ+cPhZm5RBpMPsMZWf50zSVeEVOv9qlX7rD3Pj/gIyAGjjNDHxyQ8mNy+qV
-         KAHXfbwEsbEBJJI8GKuoDyNPL2wJmeePkJKyP5NELwmOIWWbtjKgynB8UyjEgHdSuJqN
-         /xNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713477277; x=1714082077;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UzoUB/DlZEEpnQQocpp8LNj0cC4Hbh3hYFeNjb1gymQ=;
-        b=qSEmSVSxYPH83AXro/BS+qbLKkFj4ReBPrRLJ734vyd4RDZNNydPhfDwBUpx5DGeLx
-         tMvMl0Xv8Oy60Y12zKSiXamt5+H7HiEmIp8ghhhB7k/UHbJAiUQ9J0DyT87hfTA3/dI5
-         7VO6lwljcHnssUpiH0+WcwpjyxD0xy3zniAjvwCV7trU1XxYe7OvvOAIMvwJlYJOJaKr
-         865xhoNBwSd0SM+dzuWU9acKUP5dL0/2/LERlFs0GlO2ZwQB7xQ5E6dttNPCsezIuz6L
-         uaN/qaBQfreU8DFn0++fGeow7seo8tJ6HR4rcE/LQzaRLQE6Go3olz7/ZI1TH/NMmfpy
-         Bkyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWL8XIxD3lbuK9WsnX0+fLYn2sQx3ZH3TK61zYmBOMbS0tkpBRltKVBsjjkZ0ZHPrGS+F7TnZTAq+B3v+lnSkLqUCfiQ0CF1YR9RJwzK8VIPg==
-X-Gm-Message-State: AOJu0Yxo0o4Wd3wHTr7sHVY3K1RF2lYTe3tnkcSZ2wYc+64SG2/xXXIu
-	93hP0qbYC4TxcG3nWICPJf96tNxmkxSL9Ye+3illrjDlPiUJS7Sse0btB65VTg==
-X-Google-Smtp-Source: AGHT+IE3z+8bNqqr4xeyAId229RXIQ3OirfWY3drhqnoI012Iq7hg1mMY9eY9ZzsD1VRqnMYJE/4/g==
-X-Received: by 2002:a05:6a00:2e8f:b0:6ea:86f2:24fb with SMTP id fd15-20020a056a002e8f00b006ea86f224fbmr541761pfb.25.1713477276564;
-        Thu, 18 Apr 2024 14:54:36 -0700 (PDT)
-Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id z8-20020a056a00240800b006ecf6417a9bsm1970815pfh.29.2024.04.18.14.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 14:54:35 -0700 (PDT)
-Date: Thu, 18 Apr 2024 21:54:32 +0000
-From: Mingwei Zhang <mizhang@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
-	dapeng1.mi@linux.intel.com, jmattson@google.com,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com,
-	eranian@google.com, irogers@google.com, samantha.alt@intel.com,
-	like.xu.linux@gmail.com, chao.gao@intel.com
-Subject: Re: [RFC PATCH 40/41] KVM: x86/pmu: Separate passthrough PMU logic
- in set/get_msr() from non-passthrough vPMU
-Message-ID: <ZiGWmCgu8fGZHULu@google.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-41-xiong.y.zhang@linux.intel.com>
- <ZhhvyhdvF-1LZNlu@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2f1SG8l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A93C113CC;
+	Thu, 18 Apr 2024 22:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713480797;
+	bh=HFF4ul5e2v3wwoR8XKGER96ZYBoacAgLz1f7S8OlMp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D2f1SG8lCa6blXcpsdIZTtO0+7BojWCA9IOcR05QReQ4ZVGaXCVUm0oJNkbBgr+8X
+	 1ig+1scVjgZYKkw0Ak33XcuhRrdGzXI18rDJ5IehHxyv53jwGmMK2X/t6ZLM6RqUTw
+	 PulWa7VN+97ABrIMFnuI3YnFyMPNQyrxLFRWm4pWi3781Sagm9DrSBSHU/XpC/iLyk
+	 F2ilZgbYAZNLV2e5TOo30I3cYc7uf8xtzStU37d1aal3uxM9rA+IwnzdzzeBDjmPie
+	 qfbjjhiL/v/iMK+wLue5QcjY+BFKMP/JA2Z+zlp5laT4+th1/+zuDFxaab7TuNZAF+
+	 wZvGplm/Xep8Q==
+Date: Thu, 18 Apr 2024 15:53:14 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
+	aahringo@redhat.com, dcook@linux.microsoft.com,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+Message-ID: <20240418225314.rbg7qwszbsvezz76@treble>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+ <20240412163724.GB467-beaub@linux.microsoft.com>
+ <20240413105338.GD40213@noisy.programming.kicks-ass.net>
+ <20240413084857.147c6f40@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZhhvyhdvF-1LZNlu@google.com>
+In-Reply-To: <20240413084857.147c6f40@rorschach.local.home>
 
-On Thu, Apr 11, 2024, Sean Christopherson wrote:
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > From: Mingwei Zhang <mizhang@google.com>
-> > 
-> > Separate passthrough PMU logic from non-passthrough vPMU code. There are
-> > two places in passthrough vPMU when set/get_msr() may call into the
-> > existing non-passthrough vPMU code: 1) set/get counters; 2) set global_ctrl
-> > MSR.
-> > 
-> > In the former case, non-passthrough vPMU will call into
-> > pmc_{read,write}_counter() which wires to the perf API. Update these
-> > functions to avoid the perf API invocation.
-> > 
-> > The 2nd case is where global_ctrl MSR writes invokes reprogram_counters()
-> > which will invokes the non-passthrough PMU logic. So use pmu->passthrough
-> > flag to wrap out the call.
-> > 
-> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> > ---
-> >  arch/x86/kvm/pmu.c |  4 +++-
-> >  arch/x86/kvm/pmu.h | 10 +++++++++-
-> >  2 files changed, 12 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > index 9e62e96fe48a..de653a67ba93 100644
-> > --- a/arch/x86/kvm/pmu.c
-> > +++ b/arch/x86/kvm/pmu.c
-> > @@ -652,7 +652,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >  		if (pmu->global_ctrl != data) {
-> >  			diff = pmu->global_ctrl ^ data;
-> >  			pmu->global_ctrl = data;
-> > -			reprogram_counters(pmu, diff);
-> > +			/* Passthrough vPMU never reprogram counters. */
-> > +			if (!pmu->passthrough)
+On Sat, Apr 13, 2024 at 08:48:57AM -0400, Steven Rostedt wrote:
+> On Sat, 13 Apr 2024 12:53:38 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> This should probably be handled in reprogram_counters(), otherwise we'll be
-> playing whack-a-mole, e.g. this misses MSR_IA32_PEBS_ENABLE, which benign, but
-> only because PEBS isn't yet supported.
+> > On Fri, Apr 12, 2024 at 09:37:24AM -0700, Beau Belgrave wrote:
+> > 
+> > > > Anyway, since we typically run stuff from NMI context, accessing user
+> > > > data is 'interesting'. As such I would really like to make this work
+> > > > depend on the call-graph rework that pushes all the user access bits
+> > > > into return-to-user.  
+> > > 
+> > > Cool, I assume that's the SFRAME work? Are there pointers to work I
+> > > could look at and think about what a rebase looks like? Or do you have
+> > > someone in mind I should work with for this?  
+> > 
+> > I've been offline for a little while and still need to catch up with
+> > things myself.
+> > 
+> > Josh was working on that when I dropped off IIRC, I'm not entirely sure
+> > where things are at currently (and there is no way I can ever hope to
+> > process the backlog).
+> > 
+> > Anybody know where we are with that?
 > 
-> > +				reprogram_counters(pmu, diff);
-> >  		}
-> >  		break;
-> >  	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-> > diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> > index 0fc37a06fe48..ab8d4a8e58a8 100644
-> > --- a/arch/x86/kvm/pmu.h
-> > +++ b/arch/x86/kvm/pmu.h
-> > @@ -70,6 +70,9 @@ static inline u64 pmc_read_counter(struct kvm_pmc *pmc)
-> >  	u64 counter, enabled, running;
-> >  
-> >  	counter = pmc->counter;
-> > +	if (pmc_to_pmu(pmc)->passthrough)
-> > +		return counter & pmc_bitmask(pmc);
+> It's still very much on my RADAR, but with layoffs and such, my
+> priorities have unfortunately changed. I'm hoping to start helping out
+> in the near future though (in a month or two).
 > 
-> Won't perf_event always be NULL for mediated counters?  I.e. this can be dropped,
-> I think.
+> Josh was working on it, but I think he got pulled off onto other
+> priorities too :-p
 
-yeah. I double checked and seems when perf_event == NULL, the logic is
-correct. If so, we can drop that.
+Yeah, this is still a priority for me and I hope to get back to it over
+the next few weeks (crosses fingers).
 
-Thanks.
--Mingwei
+-- 
+Josh
