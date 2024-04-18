@@ -1,219 +1,269 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AB4184117
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 19:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B63B181BB2
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 19:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469764; cv=none; b=VTG3UGpkh1iCNqANOJFT0Ro7sYZP7I/C+wmKiqrqghSwHkhuwyfNLPZSI+4Pawnae+GoSGyJT7H3iIHtyvLNty6Te7cqwNPRcM8rr0H5TpeDpYkSHmaA3cLrKTQCAHDoCbbWZB+x0llHiMSPl3L45fhrK+p4iFXsLq27XQP+UxI=
+	t=1713470011; cv=none; b=uBtn+e0pvFbOWy1cats/MgTqKliFt5PGTPlJIMQz1yOWVkJa4M2zDJ89u3F1YNKUMPW8gpRVztgAjLzPu63Ry3ByBmNOQsF8i7QKGeMqlwVTJd8+nQNUMewKKrjQ8+fYcoIjmsVSNIu4Rn1buJUL2Tu4rvSpAXi1L5W6e2sdroU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713469764; c=relaxed/simple;
-	bh=z19mW6qTZfZbfrbyLqR6xWcNYaNFAHqFswaD+QTI1Mk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MoGnYSAOYosmQiOBVbLqF5bHy1ulvRP3A4lh0Mgvwxk6Zc1sIRZqeGoI30xZed+Nygul+tfVbgtw+yGvqS5zZnbDcZtMajJfNMbEDAfKbeDXatn2Fxn1JA1L9oMP2KhQOTXYgEztGFtYgDTE9dWoPLQfj/GDEUAKoI4IIeBoLZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7da41da873bso50341739f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 12:49:22 -0700 (PDT)
+	s=arc-20240116; t=1713470011; c=relaxed/simple;
+	bh=il+9bbj7Kl9RhDUwHRlD6PElXcZpj4hshubhhFULYxI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=be3qMrl4lLHPvYdlk+26n8rCmeUQdNiv65x25iEVeRGvizswKiko5HMBp4Bh8lET0qmSdDisaioQcUruMdOdvUFM7bqeWUZR3H/CsdzdAUJ7lEyph8rw6ObC+uIx3PTG9qC7PW5Oh4qmjoFJ/stncqJP4QoGGPbqMDMclYtU3Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YZ1pWEwS; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YZ1pWEwS"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61ab173fe00so24923127b3.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 12:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713470008; x=1714074808; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
+        b=YZ1pWEwSwKfzg29f9CqfdwlDzesejVg5BnUVEIHZzcqRbanwhqMfZiiymZMMlSolTP
+         yDUM8GypdJ86L4YlWlGhM3mKp/o8JN9UfuoNWuXVZh/peYJwZcFq7mlR6GTKMsrZaFyG
+         mpNUhhYJgN8v+v7wKuGQUHCLjP+XANOb6wlBrWPglMl5rE13W7eO2ZFiFMWHB7fv+i0L
+         CBHqkmzCUUqZ1ociyNy+YaP1rIT5swURz1a2JJtNfV8vJY+8BiCBSMSZ2+j7MgXwDlGM
+         VNdnNStKxdzrd07anmf+8UtlCC+fS2TeftumhDxZuNeoF1+7D3tEP+fLPfFnqcKcqGcw
+         MsiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713469762; x=1714074562;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lx2lfu92VvlIcFboRX1aSCjCk1LvRsraXbwJor+JgDQ=;
-        b=Bbp8YGwcQpOIgFi/9X5XWQ2pimBtqCiCDdtu6ZX7sOwiXbcHBa4GXfKzLbpx5UwstC
-         MHCGIEkDHzxYIgaM1AzGH7fqBy+sNbS0x9ozPj3/F8nx+GQkcJP0mnvwT1KHKDG81PzN
-         9/7IjgAuoyqsz3v02iXWLucHfNFFBd0HSpLfr2Is5lXzGi5kHF0PAwbXsp2BsbHocU6v
-         6M0CmVJtbhziwh4Kw/92Zrfbb0Fz7iVNhp+2IhyY7FCRiroGJfjzJq3X7Tw6CSYACay4
-         boaFmTAwkSKDYtiaxRQpTDonZNSZIT/GxZ+LIFOKZW7bP/MUMQFiav+Eq2utIcE0MdFf
-         ZF/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWqxj8VuepHVhHb2MCSbbswP8kYIGZYAo0j21veY7AQzYqZ7jMIte6nnLll0S6GY4kG0a4aWfy5KWaeOUGLswJq3AE127UgCCc7oONF+sQIcA==
-X-Gm-Message-State: AOJu0YxG3iTnZCoJJNcpXl8DVJRCx9o4o3vTOFlHxMiMDD03SOOh1f5S
-	zGbs58/gw/rGa3v1sENhCXaNudfGHo1ydvbQDyjOSGJIQIX1GJooE1yiJbwhjTIT3vOeEO7f1Ph
-	922/BdStMqoOhgGkeDFRm+XGAlZUBCxLh3mgCwPP7PJoMMAqKWqedK4w=
-X-Google-Smtp-Source: AGHT+IH7qEWStHARNkfjepKJJvCl717mn6Sf/GDHsz0AauSM3xT4RTr5N9918wgnz1EwOEAKPksUQn2IpOuDHiY2UJ4J1WtxY3Tg
+        d=1e100.net; s=20230601; t=1713470008; x=1714074808;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
+        b=CbLZkDYYSYbOpi2HsvQEp3UcSodl57EIwrLtRuvOI8ndrlJIr74fJwhUlJfiOf34xz
+         LVO9FsPXwlPWVkia/DoDlxHdHzJGOULbfRtZ9/5MsP6IxaXQxLVCvWwfP+iYI/uyPU1Q
+         4vvFm7rnaXxsb5aLPAkMZhQr4slNA2rdVlBVXAKi6y22rHISA1rFbUPJfzc41ngTu6Ra
+         o13CeDtg9G8eQsfkwT7vwXkSsFxFcjKkWKRu4DLzb+s3Mnl1MJgUsxaAjMMzP6jEoSUh
+         JQXIOl8SW0g/1Ypj8A6CA0UfkS1GvT6rdWG80TrVzkTFq2dfa53lfnr20xExqj/cBWUl
+         2Vzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxdbh5UoVnZ7jXVJaXaJvjB1eehf9ABC/guOYC1jeWiIIYgCDZ9IsnLeG98TXUNXB62FFaPaHVd6YfCFDXRkWu+PJ8UfHCu9asNO1Dln4oLA==
+X-Gm-Message-State: AOJu0YwsvdtOSWN3EsFDafLt8/JaUR0/4oHmFvHwVIeEaD+bqZpDxm/I
+	AXsxg8sKxSNEkvLYZGS+dTbmF7AnzAR4PRiatFjmoTjFMkOsRW8fWMMWY7mb/arbhil56v0YYnP
+	70Q==
+X-Google-Smtp-Source: AGHT+IGGyn2/Eis9yr5uvFbHSsNr+5jpucEC9aioMrlcMqw+x+tJjikMNMKUFalz9faFMmsjcJGmE2MmVtI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:d9d3:0:b0:618:9044:4f8b with SMTP id
+ b202-20020a0dd9d3000000b0061890444f8bmr785538ywe.7.1713470008510; Thu, 18 Apr
+ 2024 12:53:28 -0700 (PDT)
+Date: Thu, 18 Apr 2024 12:53:26 -0700
+In-Reply-To: <20240418141932.GA1855@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8726:b0:482:fcbc:c131 with SMTP id
- iw38-20020a056638872600b00482fcbcc131mr252814jab.0.1713469761924; Thu, 18 Apr
- 2024 12:49:21 -0700 (PDT)
-Date: Thu, 18 Apr 2024 12:49:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007e3fd2061664443e@google.com>
-Subject: [syzbot] [perf?] WARNING: suspicious RCU usage in __schedule (2)
-From: syzbot <syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
+ <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
+ <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
+ <Zh1d94Pl6gneVoDd@google.com> <20240418141932.GA1855@willie-the-truck>
+Message-ID: <ZiF6NgGYLSsPNEOg@google.com>
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+From: Sean Christopherson <seanjc@google.com>
+To: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Hello,
+On Thu, Apr 18, 2024, Will Deacon wrote:
+> On Mon, Apr 15, 2024 at 10:03:51AM -0700, Sean Christopherson wrote:
+> > On Sat, Apr 13, 2024, Marc Zyngier wrote:
+> > > On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
+> > > > 
+> > > > On Fri, Apr 12, 2024, Marc Zyngier wrote:
+> > > > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
+> > > > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
+> > > > > > Also, if you're in the business of hacking the MMU notifier code, it
+> > > > > > would be really great to change the .clear_flush_young() callback so
+> > > > > > that the architecture could handle the TLB invalidation. At the moment,
+> > > > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
+> > > > > > being set by kvm_handle_hva_range(), whereas we could do a much
+> > > > > > lighter-weight and targetted TLBI in the architecture page-table code
+> > > > > > when we actually update the ptes for small ranges.
+> > > > > 
+> > > > > Indeed, and I was looking at this earlier this week as it has a pretty
+> > > > > devastating effect with NV (it blows the shadow S2 for that VMID, with
+> > > > > costly consequences).
+> > > > > 
+> > > > > In general, it feels like the TLB invalidation should stay with the
+> > > > > code that deals with the page tables, as it has a pretty good idea of
+> > > > > what needs to be invalidated and how -- specially on architectures
+> > > > > that have a HW-broadcast facility like arm64.
+> > > > 
+> > > > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
+> > > > straightforward solution would be to let architectures override flush_on_ret,
+> > > > but I would prefer something like the below as x86 can also utilize a range-based
+> > > > flush when running as a nested hypervisor.
+> > 
+> > ...
+> > 
+> > > I think this works for us on HW that has range invalidation, which
+> > > would already be a positive move.
+> > > 
+> > > For the lesser HW that isn't range capable, it also gives the
+> > > opportunity to perform the iteration ourselves or go for the nuclear
+> > > option if the range is larger than some arbitrary constant (though
+> > > this is additional work).
+> > > 
+> > > But this still considers the whole range as being affected by
+> > > range->handler(). It'd be interesting to try and see whether more
+> > > precise tracking is (or isn't) generally beneficial.
+> > 
+> > I assume the idea would be to let arch code do single-page invalidations of
+> > stage-2 entries for each gfn?
+> 
+> Right, as it's the only code which knows which ptes actually ended up
+> being aged.
+> 
+> > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
+> > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
+> > provides an instruction to do broadcast invalidations, but it takes a virtual
+> > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
+> > a guest virtual address, but it's a moot point because KVM doen't have the guest
+> > virtual address, and if it's a host virtual address, there would need to be valid
+> > mappings in the host page tables for it to work, which KVM can't guarantee.
+> 
+> Ah, so it sounds like it would need to be an arch opt-in then.
 
-syzbot found the following issue on:
+Even if x86 (or some other arch code) could use the precise tracking, I think it
+would make sense to have the behavior be arch specific.  Adding infrastructure
+to get information from arch code, only to turn around and give it back to arch
+code would be odd.
 
-HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1348ceb3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=ae891a39094db8049d6c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
+the best/easiest solution would be to let arm64 opt out of the common TLB flush
+when a SPTE is made young.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-bh read-side critical section!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.4/5285:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
-
-stack backtrace:
-CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x23b/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
- preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
- trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
- graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
- mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
- mark_usage kernel/locking/lockdep.c:4587 [inline]
- __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f1ad6e7de69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
- </TASK>
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-sched read-side critical section!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.4/5285:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
-
-stack backtrace:
-CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x28a/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
- preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
- trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
- graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
- mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
- mark_usage kernel/locking/lockdep.c:4587 [inline]
- __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f1ad6e7de69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
- </TASK>
-
+With the range-based flushing bundled in, this?
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/linux/kvm_host.h |  2 ++
+ virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
+ 2 files changed, 27 insertions(+), 15 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index afbc99264ffa..8fe5f5e16919 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
+ extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
+ 
+ #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
++int kvm_arch_flush_tlb_if_young(void);
++
+ static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
+ {
+ 	if (unlikely(kvm->mmu_invalidate_in_progress))
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 38b498669ef9..5ebef8ef239c 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -595,6 +595,11 @@ static void kvm_null_fn(void)
+ }
+ #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
+ 
++int __weak kvm_arch_flush_tlb_if_young(void)
++{
++	return true;
++}
++
+ /* Iterate over each memslot intersecting [start, last] (inclusive) range */
+ #define kvm_for_each_memslot_in_hva_range(node, slots, start, last)	     \
+ 	for (node = interval_tree_iter_first(&slots->hva_tree, start, last); \
+@@ -611,6 +616,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
+ 	struct kvm_gfn_range gfn_range;
+ 	struct kvm_memory_slot *slot;
+ 	struct kvm_memslots *slots;
++	bool need_flush = false;
+ 	int i, idx;
+ 
+ 	if (WARN_ON_ONCE(range->end <= range->start))
+@@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
+ 					break;
+ 			}
+ 			r.ret |= range->handler(kvm, &gfn_range);
++
++		       /*
++			* Use a precise gfn-based TLB flush when possible, as
++			* most mmu_notifier events affect a small-ish range.
++			* Fall back to a full TLB flush if the gfn-based flush
++			* fails, and don't bother trying the gfn-based flush
++			* if a full flush is already pending.
++			*/
++		       if (range->flush_on_ret && !need_flush && r.ret &&
++			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
++							    gfn_range.end - gfn_range.start + 1))
++			       need_flush = true;
+ 		}
+ 	}
+ 
+-	if (range->flush_on_ret && r.ret)
++	if (need_flush)
+ 		kvm_flush_remote_tlbs(kvm);
+ 
+ 	if (r.found_memslot)
+@@ -680,7 +698,8 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
+ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
+ 						unsigned long start,
+ 						unsigned long end,
+-						gfn_handler_t handler)
++						gfn_handler_t handler,
++						bool flush_on_ret)
+ {
+ 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
+ 	const struct kvm_mmu_notifier_range range = {
+@@ -688,7 +707,7 @@ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
+ 		.end		= end,
+ 		.handler	= handler,
+ 		.on_lock	= (void *)kvm_null_fn,
+-		.flush_on_ret	= true,
++		.flush_on_ret	= flush_on_ret,
+ 		.may_block	= false,
+ 	};
+ 
+@@ -700,17 +719,7 @@ static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn
+ 							 unsigned long end,
+ 							 gfn_handler_t handler)
+ {
+-	struct kvm *kvm = mmu_notifier_to_kvm(mn);
+-	const struct kvm_mmu_notifier_range range = {
+-		.start		= start,
+-		.end		= end,
+-		.handler	= handler,
+-		.on_lock	= (void *)kvm_null_fn,
+-		.flush_on_ret	= false,
+-		.may_block	= false,
+-	};
+-
+-	return __kvm_handle_hva_range(kvm, &range).ret;
++	return kvm_handle_hva_range(mn, start, end, handler, false);
+ }
+ 
+ void kvm_mmu_invalidate_begin(struct kvm *kvm)
+@@ -876,7 +885,8 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
+ {
+ 	trace_kvm_age_hva(start, end);
+ 
+-	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn);
++	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn,
++				    kvm_arch_flush_tlb_if_young());
+ }
+ 
+ static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+base-commit: eae53272c8ad4e7ed2bbb11bd0456eb5b0484f0c
+-- 
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
