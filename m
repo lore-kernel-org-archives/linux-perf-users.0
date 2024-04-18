@@ -1,231 +1,196 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EF6181BB4
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 21:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E91171E75
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 21:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713474468; cv=none; b=dIpGB2Cyjple/ySFAKQE6pa9lj7WMRyM7kkS5j+dp1HtmrbG34M5iO9Aq0s4I/wXMJ04k43/IzLmiuzzBQoVaRMFKvBbyHnVru+F4WtAeTiREqZDR8PkOiOwRYTaXG9SlVgIamhiCCpJN57wGl/QBZSp0sxpy7Jo62s0t1Ne6vs=
+	t=1713475285; cv=none; b=jTi1Ck2rGOdRuPgE8b+OOTEa16GdqSzZo14fE7tbUtxoAkXIomr92A+2dKy5wodsKwMG3qbkePxjtWgj+SI/owmy3bJ2G0wTmxGBgzz+5pLA0ZJ8Nl7m6HhGMoT8AJ21fbnrzSwo7WHol4VaAi9m55zJCm1dr7eGCyu/6oPy87o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713474468; c=relaxed/simple;
-	bh=Al81Wp+BoxuxKClZlHKjCIreDgKIXroUMDGs1QrF9Ko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Aswq9hoHOt6lXgm/IJcyfMtIs1NV4bh2wCs0O87zCTkl6oOnEl2S8WgEGnPNDstxbJVzJWBKptY3usGy2nQ7VRqxiELRwbXOrtjGFb0aMmr8xVJcHwfr28Al1jwnb8XZXpg6yk03Z0gSCCm0NXM11urkinOZLSLB0lUkJFHTfFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vi4EFwlF; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1713475285; c=relaxed/simple;
+	bh=y2QgvTIQc5YxNGACMLJ77qipzbYe9QndhuNBBIXYMJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gtq0PXQUeMJCeS84ZPl7o7UPSYJs3eyDG5xHjwdXqGZ50SKFVgkbGJ6gibG3RU3LdiDlizJuvhdaYFarXB6wibojGTeplctgyzAE/5tLaTzqofo+w+UGzsbqsd7oGLse89ZusRJy93HFOh0F6YS7s+AI3uuseli7qeSLBIdgLoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m0Fe3erW; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vi4EFwlF"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e44f82ff9cso14885ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 14:07:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m0Fe3erW"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e3f6f03594so11631815ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 14:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713474466; x=1714079266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AJVJe5DYIGKiqAkh914q9HNHt4cBXtTHQHGV+XEJwYc=;
-        b=Vi4EFwlFM28ybRcnmn6VX/igBn/i4iP7gH0VzlPArBTFNtYthliIkagoM3eWVr5wNL
-         dKIjpw0+Rqi2dsxdLFQKAsisbWf6iF7yl3X9OmLAlKqvHy4Eqa35086Y3SQJJ8gI8Uwb
-         C/93Nf8YvmCRiLE8jFT2yxFu+RuQ2BPz+XRCPvPtc7RZuDJ3SYu5P50izSJVwk501uYO
-         ATv6gmV/8Mx2s+3DdMBQikwxa1RRMSFuQ6dFLm/xMC1TGQ+w0+IvNtgd1yO+ZUECxquz
-         EXqcuLqFaWz6m9XPvfIwUkaed0opc/HfsG8YyMHeSaRtdVHn6c5TVh7wdY7lceVlepDK
-         jbQA==
+        d=google.com; s=20230601; t=1713475284; x=1714080084; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5sgNP1y4Gb7YIm3QO4qpq0MpsRY6PlbBal0iGG5g8TU=;
+        b=m0Fe3erW80A0CZwax3+DZGtrz17LHgBCbAF3txTrP0Mp+hUTAyi28mDkbR3ZwgTYuu
+         2zpZJp+DWq9V/9gQS55SPHJtB3d+m3pkATKeQoATbOyqVOrD5CejTJnBRx4au/u0PybW
+         60r3Mwrohm1pJ15h2nPfR7ZQE4NjnK/PlIO9AD23WqML7lj6fk0Zgcqsw4J/K+eIcUBI
+         JmUvRuFES2nMRnLyMo8lCyQTNb5xv9i+pkUgutzfLj/oji8LN6OEmmZ+MapcGSy7G5GM
+         5z0GXL3ihzmz7EpK4BnG+whlkQwBaZWnsi1VtlSvqH8nKDyg9VDKOZXczQCvyEnf95qm
+         xmIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713474466; x=1714079266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AJVJe5DYIGKiqAkh914q9HNHt4cBXtTHQHGV+XEJwYc=;
-        b=dCW75KbvAHdCtHLRUnZXgTz01lPNe/B1EjOfBSCKCI7FsFRIv9sJjqStPG7yqAMpWv
-         3YXrFmG3Weise+qh/Ez60ERAEu+rZTHcmsA9M/ttdit0O7yEuqQDYOec4sSA5urbjBlo
-         5gASdRSsseiONW1W1lBvWokReDeTG81yyh2E9xRm+QwxiFfIAFlRuNB3yc4WU/SNpVcV
-         uBfl99wCQBHzrKMOObRF1DfCZJZJrveDVNiNQiTZ3c+5dPFxa578WyhWMOz73Ptq9aTr
-         4VjTtCP5tft0tCg2VeMoKioWFr7G11Md49L/Y1HgcGk5VxXbQe9SqawS3N393LNIfHLf
-         f5dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWqnqenMq6geDthBQ76VR4yvKxtpw6B6bn1pdCdlGCAVHZgeL7jzZKSYMeSwTH8Fl4rtM3u5iObDW8dcWqzp/PEWUN0j4HzpS/YQNhcgnWqw==
-X-Gm-Message-State: AOJu0YyaF/NIuF7N8xJRg177AJt2irVg2MRxxZUG3YWyeIJW53z4U2nD
-	B0cTjJWzuEv2ZtYA4LhVyWDhbWlQllHOhox9Ef7i+SzwRlQTEjsUQ9EEU42pt1BycthKO21XJ2c
-	DtMaa/mbhv8M/StPpbO9Au4aioEmVZ5Hm2ra4
-X-Google-Smtp-Source: AGHT+IGllCxp65eQfyYK3/aoRyDs6LzYbT60FkRzl2fi4BM0xmIMleEppw8pZ1EJkTt6eSUC/kh6f8ZA8Pc/FzTdMig=
-X-Received: by 2002:a17:902:680c:b0:1e3:cb9b:d29c with SMTP id
- h12-20020a170902680c00b001e3cb9bd29cmr15441plk.23.1713474465710; Thu, 18 Apr
- 2024 14:07:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713475284; x=1714080084;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5sgNP1y4Gb7YIm3QO4qpq0MpsRY6PlbBal0iGG5g8TU=;
+        b=gsBhhRMdlshXVDhdOCLzMywA9nCriIsHX7NQ7bOg3dBAzfZI3k5DjCoVlLir3jc3UK
+         LnDOjel1CLtOsDISicnjn5oWGiU8AQc+52F6yocHPr+S9yjQbQ2n7kI7mbEcJSojBAlj
+         7CJKTnYpAYIWNq1cGqQeILT7Ptwr/PipmzQBeKbtNA7EarjsHWOSDd3Xx8XyunDJl7oT
+         j9fhR8HfPt7Dz/CNzfK5uRio5yMkbZU64jAIIk51uv01PVBd/8oyUDZBX+Pjiw4LqTM4
+         Daq4EAo9IyX8SSUV4qb6wTaPC2za5lpf5uSN9UQr9HOdVoSsDKDevhPo3241lrU3efNd
+         gb3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWm0jmNZmAdfhyqUtc5BWDPZ5jnU9tZ17RP29T0hGxbV7sUwKrisqFr4WJWGvYt8dINyYvc32K1lNAz0qiie86tQIrJxi3wi4u3JJVu3XwCZQ==
+X-Gm-Message-State: AOJu0YzorZhAdv3I52jlfgWitGkxfyHa2P7m7UljvkUJf/9CL/SjZ3SA
+	JbEzJVzACnQEZOH7thxNrW4Ct62L9Kf1iq6DKwhGDMwSySBNBagj3VR2KXxOCA==
+X-Google-Smtp-Source: AGHT+IGX5dXWK+/OuDV3SnGTkiNhOLMg+CP/zOhDyYHin5mNvqs8Y6muo/1+IDVrLzHgXecxX918Dw==
+X-Received: by 2002:a17:902:6b42:b0:1e4:4ade:f504 with SMTP id g2-20020a1709026b4200b001e44adef504mr248052plt.46.1713475283392;
+        Thu, 18 Apr 2024 14:21:23 -0700 (PDT)
+Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902a38600b001e79072ee58sm2028346pla.62.2024.04.18.14.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 14:21:22 -0700 (PDT)
+Date: Thu, 18 Apr 2024 21:21:18 +0000
+From: Mingwei Zhang <mizhang@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+	jmattson@google.com, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com,
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of
+ PMU state for Intel CPU
+Message-ID: <ZiGOzkLhQm57EPlx@google.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-24-xiong.y.zhang@linux.intel.com>
+ <ZhhZush_VOEnimuw@google.com>
+ <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
+ <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
+ <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
+ <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416061533.921723-1-irogers@google.com> <20240416061533.921723-12-irogers@google.com>
- <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
-In-Reply-To: <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 18 Apr 2024 14:07:31 -0700
-Message-ID: <CAP-5=fXkn-nFTqGEqBYt6NUvoXU7OyLJeSCnWdD3taLHyK-xtQ@mail.gmail.com>
-Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for bad numbers
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
-	Beeman Strong <beeman@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zh1mKoHJcj22rKy8@google.com>
 
-On Thu, Apr 18, 2024 at 1:27=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-04-16 2:15 a.m., Ian Rogers wrote:
-> > Use the error handler from the parse_state to give a more informative
-> > error message.
-> >
-> > Before:
-> > ```
-> > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
-> > event syntax error: 'cycles/period=3D99999999999999999999/'
-> >                                   \___ parser error
-> > Run 'perf list' for a list of valid events
-> >
-> >  Usage: perf stat [<options>] [<command>]
-> >
-> >     -e, --event <event>   event selector. use 'perf list' to list avail=
-able events
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
-> > event syntax error: 'cycles/period=3D99999999999999999999/'
-> >                                   \___ parser error
-> >
-> > event syntax error: '..les/period=3D99999999999999999999/'
-> >                                   \___ Bad base 10 number "999999999999=
-99999999"
->
->
-> It seems the patch only works for decimal?
->
-> ./perf stat -e 'cycles/period=3D0xaaaaaaaaaaaaaaaaaaaaaa/' true
-> event syntax error: '..les/period=3D0xaaaaaaaaaaaaaaaaaaaaaa/'
->                                    \___ parser error
->  Run 'perf list' for a list of valid events
->
->   Usage: perf stat [<options>] [<command>]
->
->      -e, --event <event>   event selector. use 'perf list' to list
-> available events
->
-> Thanks,
-> Kan
+On Mon, Apr 15, 2024, Sean Christopherson wrote:
+> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+> > On Mon, Apr 15, 2024 at 3:04 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+> > > On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
+> > > > On Fri, Apr 12, 2024 at 9:25 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+> > > >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed counters.
+> > > >>>> Considering this case, Guest uses GP counter 2, but Host doesn't use it. So
+> > > >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would be enabled
+> > > >>>> unexpectedly on host later since Host perf always enable all validate bits
+> > > >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
+> > > >>>>
+> > > >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
+> > > >>>>
+> > > >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking counter
+> > > >>> values to the host? NO. Not in cloud usage.
+> > > >> No, this place is clearing the guest counter value instead of host
+> > > >> counter value. Host always has method to see guest value in a normal VM
+> > > >> if he want. I don't see its necessity, it's just a overkill and
+> > > >> introduce extra overhead to write MSRs.
+> > > >>
+> > > > I am curious how the perf subsystem solves the problem? Does perf
+> > > > subsystem in the host only scrubbing the selector but not the counter
+> > > > value when doing the context switch?
+> > >
+> > > When context switch happens, perf code would schedule out the old events
+> > > and schedule in the new events. When scheduling out, the ENABLE bit of
+> > > EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
+> > > and PMCx MSRs would be overwritten with new event's attr.config and
+> > > sample_period separately.  Of course, these is only for the case when
+> > > there are new events to be programmed on the PMC. If no new events, the
+> > > PMCx MSR would keep stall value and won't be cleared.
+> > >
+> > > Anyway, I don't see any reason that PMCx MSR must be cleared.
+> > >
+> > 
+> > I don't have a strong opinion on the upstream version. But since both
+> > the mediated vPMU and perf are clients of PMU HW, leaving PMC values
+> > uncleared when transition out of the vPMU boundary is leaking info
+> > technically.
+> 
+> I'm not objecting to ensuring guest PMCs can't be read by any entity that's not
+> in the guest's TCB, which is what I would consider a true leak.  I'm objecting
+> to blindly clearing all PMCs, and more specifically objecting to *KVM* clearing
+> PMCs when saving guest state without coordinating with perf in any way.
 
-Right, for hexadecimal we say the number of digits is at most 16, so
-when you exceed this the token is no longer recognized. It just
-becomes input that can't be parsed, hence parser error. Doing this
-means we can simplify other strtoull checks, but I agree having a
-better error message for hexadecimal would be good. Let's do it as
-follow up.
+Agree. blindly clearing PMCs is the basic implementation. I am thinking
+about what coordination between perf and KVM as well.
 
-Thanks,
-Ian
+> 
+> I am ok if we start with (or default to) a "safe" implementation that zeroes all
+> PMCs when switching to host context, but I want KVM and perf to work together to
+> do the context switches, e.g. so that we don't end up with code where KVM writes
+> to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
 
-> > Run 'perf list' for a list of valid events
-> >
-> >  Usage: perf stat [<options>] [<command>]
-> >
-> >     -e, --event <event>   event selector. use 'perf list' to list avail=
-able events
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/parse-events.l | 40 ++++++++++++++++++++--------------
-> >  1 file changed, 24 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
-nts.l
-> > index 6fe37003ab7b..0cd68c9f0d4f 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -18,26 +18,34 @@
-> >
-> >  char *parse_events_get_text(yyscan_t yyscanner);
-> >  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
-> > +int parse_events_get_column(yyscan_t yyscanner);
-> > +int parse_events_get_leng(yyscan_t yyscanner);
-> >
-> > -static int __value(YYSTYPE *yylval, char *str, int base, int token)
-> > +static int get_column(yyscan_t scanner)
-> >  {
-> > -     u64 num;
-> > -
-> > -     errno =3D 0;
-> > -     num =3D strtoull(str, NULL, base);
-> > -     if (errno)
-> > -             return PE_ERROR;
-> > -
-> > -     yylval->num =3D num;
-> > -     return token;
-> > +     return parse_events_get_column(scanner) - parse_events_get_leng(s=
-canner);
-> >  }
-> >
-> > -static int value(yyscan_t scanner, int base)
-> > +static int value(struct parse_events_state *parse_state, yyscan_t scan=
-ner, int base)
-> >  {
-> >       YYSTYPE *yylval =3D parse_events_get_lval(scanner);
-> >       char *text =3D parse_events_get_text(scanner);
-> > +     u64 num;
-> >
-> > -     return __value(yylval, text, base, PE_VALUE);
-> > +     errno =3D 0;
-> > +     num =3D strtoull(text, NULL, base);
-> > +     if (errno) {
-> > +             struct parse_events_error *error =3D parse_state->error;
-> > +             char *help =3D NULL;
-> > +
-> > +             if (asprintf(&help, "Bad base %d number \"%s\"", base, te=
-xt) > 0)
-> > +                     parse_events_error__handle(error, get_column(scan=
-ner), help , NULL);
-> > +
-> > +             return PE_ERROR;
-> > +     }
-> > +
-> > +     yylval->num =3D num;
-> > +     return PE_VALUE;
-> >  }
-> >
-> >  static int str(yyscan_t scanner, int token)
-> > @@ -283,8 +291,8 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); =
-}
-> >        */
-> >  "/"/{digit}          { return PE_BP_SLASH; }
-> >  "/"/{non_digit}              { BEGIN(config); return '/'; }
-> > -{num_dec}            { return value(yyscanner, 10); }
-> > -{num_hex}            { return value(yyscanner, 16); }
-> > +{num_dec}            { return value(_parse_state, yyscanner, 10); }
-> > +{num_hex}            { return value(_parse_state, yyscanner, 16); }
-> >       /*
-> >        * We need to separate 'mem:' scanner part, in order to get speci=
-fic
-> >        * modifier bits parsed out. Otherwise we would need to handle PE=
-_NAME
-> > @@ -330,8 +338,8 @@ cgroup-switches                                   {=
- return sym(yyscanner, PERF_COUNT_SW_CGROUP_SWITCHES); }
-> >  {lc_type}-{lc_op_result}-{lc_op_result}      { return str(yyscanner, P=
-E_LEGACY_CACHE); }
-> >  mem:                 { BEGIN(mem); return PE_PREFIX_MEM; }
-> >  r{num_raw_hex}               { return str(yyscanner, PE_RAW); }
-> > -{num_dec}            { return value(yyscanner, 10); }
-> > -{num_hex}            { return value(yyscanner, 16); }
-> > +{num_dec}            { return value(_parse_state, yyscanner, 10); }
-> > +{num_hex}            { return value(_parse_state, yyscanner, 16); }
-> >
-> >  {modifier_event}     { return str(yyscanner, PE_MODIFIER_EVENT); }
-> >  {name}                       { return str(yyscanner, PE_NAME); }
+Sure. Point taken.
+> 
+> One my biggest complaints with the current vPMU code is that the roles and
+> responsibilities between KVM and perf are poorly defined, which leads to suboptimal
+> and hard to maintain code.
+
+Right.
+> 
+> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak guest
+> state to userspace processes that have RDPMC permissions, as the PMCs might not
+> be dirty from perf's perspective (see perf_clear_dirty_counters()).
+> 
+
+ah. This is a good point.
+
+		switch_mm_irqs_off() =>
+		cr4_update_pce_mm() =>
+		/*
+		 * Clear the existing dirty counters to
+		 * prevent the leak for an RDPMC task.
+		 */
+		perf_clear_dirty_counters()
+
+So perf does clear dirty counter values on process context switch. This
+is nice to know.
+
+perf_clear_dirty_counters() clear the counter values according to
+cpuc->dirty except for those assigned counters.
+
+> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes the
+> overall code brittle because it's not clear whether KVM _needs_ to clear PMCs,
+> or if KVM is just being paranoid.
+
+There is a difference between KVM and perf subsystem on PMU context
+switch. The latter has the notion of "perf_events", while the former
+currently does not. It is quite hard for KVM to know which counters are
+really "in use".
+
+Another point I want to raise up to you is that, KVM PMU context switch
+and Perf PMU context switch happens at different timing:
+
+ - The former is a context switch between guest/host state of the same
+   process, happening at VM-enter/exit boundary.
+ - The latter is a context switch beteen two host-level processes.
+ - The former happens before the latter.
+ - Current design has no PMC partitioning between host/guest due to
+   arch limitation.
+
+From the above, I feel that it might be impossible to combine them or to
+add coordination? Unless we do the KVM PMU context switch at vcpu loop
+boundary...
+
+Thanks.
+-Mingwei
