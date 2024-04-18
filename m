@@ -1,229 +1,207 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6BE3A1B6
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 03:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7295B2E3F7
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 07:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713410778; cv=none; b=Eji291v1twtWkVZ8Bk6D3cXyqBU7mlFBsTE/VndooAVnjShJnsdENHcqI0QizH0B+V3SQKcq6LHBREQ/8naaKEzwYSRlFicXCQ3zxRUyOuzkaSLcTtMwUCnlyer8ZO0NH9tKsQ0kmcFlBNwT7rOQaTU77UivMJFST3vMXz8CiQw=
+	t=1713424016; cv=none; b=gs5rDcHyEQiOOeW8zxT3kuorDtxuEzA+hd7y/saSm3JrvwRxLYMgUQyP37R25pelzC0tSu0Xsi8eu9Jf00j/hcfkM9mZKLUoKp/nCtSfU31V8Hfs+LJY1mtjuEEwixZGJq9c03232vdA6EvIMM9VU8MB0miM/CpPD2ZlpZJZKtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713410778; c=relaxed/simple;
-	bh=KNfQStDglR7kPEh2jWKZCSvCebnvLHoecf23uDfOkIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oNogtX63VBIUVZeCIsXtCQyS5RnHS1IZmFORFqH2jRqRpGLYdYL0NV4he15hpp8dzX5DjAwude/EWTzk2ve5Wg6xvg5MpCGdCtxdjKa90phiBAchUtHXYkGJhCXLH0fh3jjHGX4xYqEBA6LmSRIEqx+xHjoTX/o5qDRwUutWxBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=QivVdbs3; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1713424016; c=relaxed/simple;
+	bh=/1xMua14uhUSHh0fRLAmFDiiD+dWLDPXTYsDUFoNfQE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ReWQC1rCswbMguuRm4j3EpNJgNprkeeV+UJs+F8y/wNeoYE6LHFEe/Om8KgWpx+YgQMGWO2B4W14HiN1SyZbyFIxTambhLmEPX+WSgYLENcQPMTaN1s9qfnkrL2zxRa41wv+9garPTip6PPpI5kDhgiipItQmX1FhCvnbeu8kbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Juejmes/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="QivVdbs3"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e0bec01232so3695845ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Apr 2024 20:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1713410775; x=1714015575; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QFTAjtM3f8h+Urx2x//CqQOtFkuR1kgk8D12m9A+m5E=;
-        b=QivVdbs3jDqRolAfz6Q8Z8+phVwTOLrSDQdfxO1xTkreply9ROnzzklBuDAOBESiox
-         mIUNlORcw0eD+VHORKjePy89AI9/dxUzj/Lof3ESqW1CQ5BLy3SYH5Prup1zTHiYbxyG
-         XEWkoqj2agEvIItvTTzYgkTcErta7sCDrbRJ1JhopVK+76fIlBah1fksqJcpLVsO29RC
-         OrAAA9hYKT0Y95XNyEaJu0Mt1wySGL8Fo97WswPxdz/jjLhQbYLxeGiE6n6BzvyKFQRc
-         cZQMhUK/nkOjoNUSKF8k56Mr8YKF6lOOn2RT8AEDL7DN8PZzUXwGJjJyaxKTCd5JLZLq
-         I/HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713410775; x=1714015575;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QFTAjtM3f8h+Urx2x//CqQOtFkuR1kgk8D12m9A+m5E=;
-        b=XoznUlIeZ1UrcwAbJGbY3AjbSMPGCRp0levFHMb7PI4fhDhmldp4m3EFJyZWnMx80p
-         XM1sel5dMo2EfQ+2WMWTiG2rDugKvpW2Y+y8tQZQLS5iQ+vdUuDVOAz/J4V9CcaLqiUs
-         MAHHKFsca9V++XZnvBxIemCvwBF8tcgQy0AHh20smay6sw5hwCrP8XHFbrhmsAdjlEjY
-         IkhA5+Z0SCUXFLw7xB/fdKPzqLZ1xC4x+Hkp3UcQ4Pt7Vm4eK8CQgve8gbRxKEVBOP7o
-         DCZuj6xCeaBQGzXqX3qwy6804KCdLP5b6Xn7CqNczenOvzWOpyYk5C8XO4mBThDXvorr
-         B4jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUv6P2+otMd2e5quhXlw5xThAtbTvoQ81JP2xJOIHqtfFEN3IC+b5/LvaJXsPNsALDNpO3nfyPcDp+Zp4v5aQRlQXSdbrWdfRWpncdktBHxRw==
-X-Gm-Message-State: AOJu0Yz1H3snMqTOSqgnPvIFQmfzEDtwGny4OW2R9/EBM6f0cNW5lW1C
-	6NsRV2cfvG16jG+feFYKHzAGuIdEeQk+boT1iAwgKcnrhCF7h3Qn8t9qC6CI7j8=
-X-Google-Smtp-Source: AGHT+IHHs5IjKp87EK4YTz1xuPnPct23eqJRVDf4bTtBn9ITzGm07U0YTYlE6ZFnP/DL8vhc5dygSw==
-X-Received: by 2002:a17:902:700c:b0:1e5:28cd:4ef9 with SMTP id y12-20020a170902700c00b001e528cd4ef9mr1436753plk.30.1713410775232;
-        Wed, 17 Apr 2024 20:26:15 -0700 (PDT)
-Received: from [10.54.24.115] (static-ip-148-99-134-202.rev.dyxnet.com. [202.134.99.148])
-        by smtp.gmail.com with ESMTPSA id w9-20020a1709026f0900b001e20be11688sm410256plk.229.2024.04.17.20.26.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 20:26:14 -0700 (PDT)
-Message-ID: <6af2cb1b-4d93-4fd4-a5f5-0fdf2ae9d759@shopee.com>
-Date: Thu, 18 Apr 2024 11:26:09 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Juejmes/"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43I6bUjC016797;
+	Thu, 18 Apr 2024 07:06:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=1v12Ne9qoJKceKBv4snVq5wOGJpsGDQVrcodfxT3XCA=;
+ b=Juejmes/+KMCzev/0t9ujzNljzE5xaajuvQYdn9t9qVjeWdZOKiOouDNu5c29viRL4of
+ bsIQ8UWj8LHPgoxtYPZ+KDD4cUO9Wm6dFKHbH57fhbHR81fQQW7x2zygljsBqgRwIgOq
+ tof/Vfb4eZJY6vP4rzelrLPCGAqE64OI0I2/7cx/eGzDwyfj30Vjo2T7+pXNSUV6f1+e
+ s94qFZtdKJs25bFx7hNZB79yeavhVF1OiFzzes6PlaUEVd7V1+Ym0/SHJdKgU+er/AGk
+ pFKANbk6/Z3rcuT4NLu6xsM6WYlJEteqcuT4AVj2tKtMgEaXb9XjGfhUfBQEXoS5O0qp WA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjxdhr29a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 07:06:47 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43I76luT017725;
+	Thu, 18 Apr 2024 07:06:47 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjxdhr297-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 07:06:47 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43I4Ene9023572;
+	Thu, 18 Apr 2024 07:06:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cp98d7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 07:06:45 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43I76fmV33751570
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Apr 2024 07:06:44 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3E4E20049;
+	Thu, 18 Apr 2024 07:06:41 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 063E02004E;
+	Thu, 18 Apr 2024 07:06:40 +0000 (GMT)
+Received: from [9.171.66.178] (unknown [9.171.66.178])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Apr 2024 07:06:39 +0000 (GMT)
+Message-ID: <5f64efa3-f0c3-4b3e-bd65-479fea375751@linux.ibm.com>
+Date: Thu, 18 Apr 2024 12:36:37 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Ian Rogers <irogers@google.com>, Veronika Molnarova
+ <vmolnaro@redhat.com>,
+        linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>
+References: <ZhgpWkUAto8nzvle@x1> <20240415094220.11639-1-vmolnaro@redhat.com>
+ <Zh6MUJAGDEHxsAL_@x1>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <Zh6MUJAGDEHxsAL_@x1>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HokkB_YREYfJaNiYaqcA7BrYNtSQ9OEV
+X-Proofpoint-ORIG-GUID: T1KnC_6YMEttbJoUF4m4bCNGDM3YrSGb
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/core: Fix missing wakeup when waiting for context
- reference
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240410035506.599192-1-haifeng.xu@shopee.com>
- <Zh_8FpT10qoE-x1u@localhost.localdomain>
-From: Haifeng Xu <haifeng.xu@shopee.com>
-In-Reply-To: <Zh_8FpT10qoE-x1u@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_05,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404180049
 
 
 
-On 2024/4/18 00:43, Frederic Weisbecker wrote:
-> Le Wed, Apr 10, 2024 at 03:55:06AM +0000, Haifeng Xu a écrit :
->> In our production environment, we found many hung tasks which are
->> blocked for more than 18 hours. Their call traces are like this:
+On 4/16/24 20:03, Arnaldo Carvalho de Melo wrote:
+> On Mon, Apr 15, 2024 at 11:42:20AM +0200, vmolnaro@redhat.com wrote:
+>> From: Veronika Molnarova <vmolnaro@redhat.com>
 >>
->> [346278.191038] __schedule+0x2d8/0x890
->> [346278.191046] schedule+0x4e/0xb0
->> [346278.191049] perf_event_free_task+0x220/0x270
->> [346278.191056] ? init_wait_var_entry+0x50/0x50
->> [346278.191060] copy_process+0x663/0x18d0
->> [346278.191068] kernel_clone+0x9d/0x3d0
->> [346278.191072] __do_sys_clone+0x5d/0x80
->> [346278.191076] __x64_sys_clone+0x25/0x30
->> [346278.191079] do_syscall_64+0x5c/0xc0
->> [346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
->> [346278.191086] ? do_syscall_64+0x69/0xc0
->> [346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
->> [346278.191092] ? irqentry_exit+0x19/0x30
->> [346278.191095] ? exc_page_fault+0x89/0x160
->> [346278.191097] ? asm_exc_page_fault+0x8/0x30
->> [346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+>> With the upstream MR !3916 of commit a381bd3615de6 ('powerpc/hv-gpci:
+>> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
+> 
+> Athira/Kajol,
+> 
+> 	I don't have access to such machines, since you did work on this
+> area, could you please take a look and maybe test it?
+> 
+> 	The upstream patch mentioned is in fact:
+> 
+>   ad86d7ee43b22aa2 ("powerpc/hv-gpci: Fix the H_GET_PERF_COUNTER_INFO hcall return value checks")
+> 
+> Thanks,
+> 
+> - Arnaldo
+
+Hi Arnaldo,
+ Sure we will review and test the patch.
+
+Thanks,
+Kajol Jain
+> 
+>> stat for hv_gpci events without required permission set returns an
+>> error value of -1 to differentiate the output from the unsupported
+>> events. The stat_all_pmu test was designed in a way, that if any
+>> command exits with a non-zero value the test exits with an error
+>> value without any information provided due to the 'set -e' option.
 >>
->> The task was waiting for the refcount become to 1, but from the vmcore,
->> we found the refcount has already been 1. It seems that the task didn't
->> get woken up by perf_event_release_kernel() and got stuck forever. The
->> below scenario may cause the problem.
+>> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
+>> event causes failure after the MR as the zero return value was required.
+>> The issue propagated upstream as the list of the files that affected perf
+>> did not cover the changed files and was updated after the issue was
+>> discovered. It was caught by CKI testing where it was triaged to stop
+>> blocking further MRs, as most of the powerpc machines do not support
+>> some of the hv_gpci events.
 >>
->> Thread A					Thread B
->> ...						...
->> perf_event_free_task				perf_event_release_kernel
->> 						   ...
->> 						   acquire event->child_mutex
->> 						   ...
->> 						   get_ctx
->>    ...						   release event->child_mutex
->>    acquire ctx->mutex
->>    ...
->>    perf_free_event (acquire/release event->child_mutex)
->>    ...
->>    release ctx->mutex
->>    wait_var_event
->> 						   acquire ctx->mutex
->> 						   acquire event->mutex
->> 						   # move existing events to free_list
->> 						   release event->child_mutex
->> 						   release ctx->mutex
->> 						   put_ctx
->> ...						...
+>> Remove the 'set -e' option from the test and rework the test case to log
+>> the status of the event for better maintainability. Instead of exiting
+>> immediately after 'perf stat' ends with a non-zero value, check the
+>> return value and output of the 'perf stat' command with the appropriate action.
 >>
->> In this case, all events of the ctx have been freed, so we couldn't
->> find the ctx in free_list and Thread A will miss the wakeup. It's thus
->> necessary to add a wakeup after dropping the reference.
+>> Link to the MR !3916 of commit a381bd3615de6:
+>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
 >>
->> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 >> ---
->>  kernel/events/core.c | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
+>>  tools/perf/tests/shell/stat_all_pmu.sh | 36 ++++++++++++++++++--------
+>>  1 file changed, 25 insertions(+), 11 deletions(-)
 >>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 4f0c45ab8d7d..01dfe715f09e 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -5340,6 +5340,8 @@ int perf_event_release_kernel(struct perf_event *event)
->>  again:
->>  	mutex_lock(&event->child_mutex);
->>  	list_for_each_entry(child, &event->child_list, child_list) {
->> +		void *var;
->> +		bool freed = false;
+>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+>> index c77955419173..d9f0d2100baa 100755
+>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+>> @@ -2,21 +2,35 @@
+>>  # perf all PMU test
+>>  # SPDX-License-Identifier: GPL-2.0
 >>  
->>  		/*
->>  		 * Cannot change, child events are not migrated, see the
->> @@ -5380,11 +5382,25 @@ int perf_event_release_kernel(struct perf_event *event)
->>  			 * this can't be the last reference.
->>  			 */
->>  			put_event(event);
->> +		} else {
->> +			freed = true;
->> +			var = &ctx->refcount;
->>  		}
+>> -set -e
 >>  
->>  		mutex_unlock(&event->child_mutex);
->>  		mutex_unlock(&ctx->mutex);
->>  		put_ctx(ctx);
->> +
->> +		if (freed) {
->> +			/*
->> +			 * perf_event_free_task() delete all events of the ctx and
->> +			 * there is no event of the ctx in free_list. It may step
->> +			 * into wait_var_event() before decrement the refcount. So
->> +			 * we should add a wakeup here.
->> +			 */
->> +			smp_mb(); /* pairs with wait_var_event() */
->> +			wake_up_var(var);
->> +		}
->>  		goto again;
-> 
-> Good catch!
-> 
-> How about the following slightly simplified version?
-
-Yes. I'll send next verion with your suggestions and add:
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 724e6d7e128f..4082d0161b2b 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -5365,6 +5365,7 @@ int perf_event_release_kernel(struct perf_event *event)
->  again:
->  	mutex_lock(&event->child_mutex);
->  	list_for_each_entry(child, &event->child_list, child_list) {
-> +		void *var = NULL;
->  
->  		/*
->  		 * Cannot change, child events are not migrated, see the
-> @@ -5405,11 +5406,23 @@ int perf_event_release_kernel(struct perf_event *event)
->  			 * this can't be the last reference.
->  			 */
->  			put_event(event);
-> +		} else {
-> +			var = &ctx->refcount;
->  		}
->  
->  		mutex_unlock(&event->child_mutex);
->  		mutex_unlock(&ctx->mutex);
->  		put_ctx(ctx);
-> +
-> +		if (var) {
-> +			/*
-> +			 * If perf_event_free_task() has deleted all events from the
-> +			 * ctx while the child_mutex got released above, make sure to
-> +			 * notify about the preceding put_ctx().
-> +			 */
-> +			smp_mb(); /* pairs with wait_var_event() */
-> +			wake_up_var(var);
-> +		}
->  		goto again;
->  	}
->  	mutex_unlock(&event->child_mutex);
-> 
-> 
-> 
->>  	}
->>  	mutex_unlock(&event->child_mutex);
+>>  # Test all PMU events; however exclude parametrized ones (name contains '?')
+>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+>> -  echo "Testing $p"
+>> -  result=$(perf stat -e "$p" true 2>&1)
+>> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+>> -    # We failed to see the event and it is supported. Possibly the workload was
+>> -    # too small so retry with something longer.
+>> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>> -    if ! echo "$result" | grep -q "$p" ; then
+>> -      echo "Event '$p' not printed in:"
+>> -      echo "$result"
+>> -      exit 1
+>> +  echo -n "Testing event '$p' -- "
+>> +  stat_output=$(perf stat -e "$p" true 2>&1)
+>> +  stat_result=$?
+>> +  if echo "$stat_output" | grep -q "$p"; then
+>> +    # return value 0 if counters gets printed either if the event is supported or not
+>> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+>> +        echo "supported"
+>> +    elif [ $stat_result -eq 0 ]; then
+>> +        echo "not supported"
+>> +    # return value 255 when the required pemission for the event is not set
+>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+>> +        echo "no permission to enable"
+>> +    # return value 129 when trying to run 'perf stat' with a non-existent event
+>> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+>> +        echo "Fail: Bad event name"
+>> +        echo "$stat_output"
+>> +        exit 1
+>> +    else
+>> +        echo "Fail: Unknown return value $stat_result"
+>> +        echo "$stat_output"
+>> +        exit 1
+>>      fi
+>> +  else
+>> +      echo "Fail: Event '$p' not printed in:"
+>> +      echo "$stat_output"
+>> +      exit 1
+>>    fi
+>>  done
+>>  
 >> -- 
->> 2.25.1
+>> 2.43.0
 >>
->>
+> 
