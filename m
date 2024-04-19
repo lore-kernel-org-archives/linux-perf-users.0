@@ -1,269 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B37384;
-	Fri, 19 Apr 2024 00:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECECD65C;
+	Fri, 19 Apr 2024 01:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713487425; cv=none; b=Y2xFmxCQoxxNtOFirAY2wXx9GNfaXeHxir9tsCpXEuOP+VPZ+ye9+h9Y0BZz9t5hfUp2AIEedwJ12RMJeCJnYmeO5TcDtalDn9nTI/flXkKS1pobcFvrY1tyVmhyK0R2biToGTgOLcgVcpa0zshuK5oPPG6R2s4blDG/qS9XjhQ=
+	t=1713488567; cv=none; b=b/iFpJn1mtUGMnBaZqnuWYvKErljOlUxmu+3zpwifFvI8YhG9eBE6dIU7QZgZF9Wa3kOvO/3RBFi8qBRNSQIF8ut+0Avbs0r6hZRPSAY1yQiKMoqfMth6x3luDb5+FkQop/hlR/WmaSMcCkJmCyOD8CoKrotR83DHaiGyDwPb9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713487425; c=relaxed/simple;
-	bh=hsYDhhbMEyQVSXstrp6LV8xMvFfmD+7c/VAqe7lXUMo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YH90DFOslWdqImzwNW93Cm/R9LZwIeW6OSZv2mxMuDQ+iB04QSTTQmWTFaT1BKsh8XXYU84xjqG+msCwdyqSwQfyN6K2V4IESGZMXp/8bJsfbIyXvLlmT1IVg8ei/9ksq/biwsHCAeIkfJxs7jcSt5CMGeouzPkbsgxAvxf0ozw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qh2QOhZj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713488567; c=relaxed/simple;
+	bh=aqDmFCv9VB0RMFUJFXbc+HwuGl8Pjhp8r57WddbrwdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AoLDqbreBG7gXW63Ir9F7JNGemOy/orgWE3NtQfFk9iX59Rd8FvY/9pWC3LybyNqSfvFQaCbQTV1XHc/tKg5wef7nuHnf81sjXoz2oEfCkMCmeZcnFlUg52kr8fCVFVOq/AvrUwp6pHFZ/pt0tLcMIkiT1KZ6hvDMm2brZb6pWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AbFKx6Xo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qh2QOhZj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBCC5C113CC;
-	Fri, 19 Apr 2024 00:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713487424;
-	bh=hsYDhhbMEyQVSXstrp6LV8xMvFfmD+7c/VAqe7lXUMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qh2QOhZjKyVjxTAZKfClDtQtTOUnnIqyqKK17mHoq4w3M6zJfh4yLnD6ITSRRGDK3
-	 7eIpnM4ERdTtKVd0P429/Ynu4NpbH+2FSi5x3uaw2UO5CAmrJSGnX4dijqifqtxSdv
-	 yINIIAJrtKPqZNH4YIQR069V+47Xdc51boruRVTRd8jBdhFoc06p7uElH8XV2ptSui
-	 aJo8QmHG8wEuWGNSXXSgUi5WXurQdlgTiJ3D7geaGe8ssgQ8mJKZGksfl673Hvoi24
-	 upnD8uAv3jmEguYs/rbdifo3bRxMH/UAN1gOlgVtK2/Rs66DhJjX55HA+LYUzZGvhC
-	 tkUgl9G4a2yhw==
-Date: Fri, 19 Apr 2024 09:43:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
- rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, linux-trace-kernel@vger.kernel.org, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240419094338.5c1cc590399078fad6422a05@kernel.org>
-In-Reply-To: <u6rrbsrjxpu43re5vb5o6vzvpxoto42wq47av3hagge6mfjsaj@25pujxi7z3u7>
-References: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-	<CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
-	<20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
-	<54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-	<20240328091841.ce9cc613db375536de843cfb@kernel.org>
-	<CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-	<CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
-	<20240330093631.72273967ba818cb16aeb58b6@kernel.org>
-	<lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
-	<20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
-	<u6rrbsrjxpu43re5vb5o6vzvpxoto42wq47av3hagge6mfjsaj@25pujxi7z3u7>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AbFKx6Xo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713488566; x=1745024566;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aqDmFCv9VB0RMFUJFXbc+HwuGl8Pjhp8r57WddbrwdE=;
+  b=AbFKx6Xowv2FehVcJcB2lFZ7JartKLvxn4iERa1kAabPOGNke7PfRWsa
+   b4CLuRRZQS1Zx9FT7ANP8dJgfp+4aqjixWDAG3YTsmDyvpwn49If6QWqU
+   Ek+teG6xvMDzqp1eRebDFtwtpZWGP/1zdKpTC31yoy82QKdo9Wbe9INLn
+   8Fn/Ei7re5rNF0W153u+QW2CnIQ2Ss4ykTwq8EkQIixRUqV3Df06y6m7u
+   k7ShsVDOx4Egai1aXyaz298G/sjkgTfZ/+eitfM+UQ4jtVpi20Fbdfjx6
+   bKMPZALd9+3yqHJZdoUTGSDfDQgyEVh3wsL7E7tzglO35DWEB9kgyVuPR
+   w==;
+X-CSE-ConnectionGUID: 5ST7AJ58TqGLtDAkn2GkTw==
+X-CSE-MsgGUID: vajuflyaQtq2lX+uCiyfzw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12016724"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="12016724"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 18:02:45 -0700
+X-CSE-ConnectionGUID: +aHBtE5WRkGi2CB1vWzMAA==
+X-CSE-MsgGUID: Ip2kdL9oShO+adwp40ko/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27943753"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 18:02:40 -0700
+Message-ID: <de34d944-4d39-4525-9e1e-8ad47a8a4d6e@linux.intel.com>
+Date: Fri, 19 Apr 2024 09:02:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Thu, 18 Apr 2024 12:10:59 +0100
-Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
-
-> Hi Masami,
-> 
-> > > > OK, then I'll push this to for-next at this moment.
-> > > > Please share if you have a good idea for the batch interface which can be
-> > > > backported. I guess it should involve updating userspace changes too.
-> > > 
-> > > Did you (or anyone else) need anything more from me on this one so that it
-> > > can be pushed? I provided some benchmark numbers but happy to provide
-> > > anything else that may be required.
-> > 
-> > Yeah, if you can update with the result, it looks better to me.
-> > Or, can I update the description?
-> 
-> Just checking if you need me to do anything on this so that it can be
-> pushed to for-next? Would be really great if we can get this in. Thanks
-> for all your help.
-
-Yes, other uprobe performance improvements[1][2] have the benchmark results,
-but this patch doesn't. If you update this with the benchmark results, it is
-helpful to me.
-
-[1] https://lore.kernel.org/all/20240318181728.2795838-3-andrii@kernel.org/
-[2] https://lore.kernel.org/all/20240318181728.2795838-4-andrii@kernel.org/
-
-Thank you,
-
-> 
-> Jon.
-> 
-> > 
-> > Thank you,
-> > 
-> > > 
-> > > Thanks!
-> > > 
-> > > Jon.
-> > > 
-> > > > 
-> > > > Thank you!
-> > > > 
-> > > > > >
-> > > > > > So I hope you can reconsider and accept improvements in this patch,
-> > > > > > while Jonathan will keep working on even better final solution.
-> > > > > > Thanks!
-> > > > > >
-> > > > > > > I look forward to your formalized results :)
-> > > > > > >
-> > > > > 
-> > > > > BTW, as part of BPF selftests, we have a multi-attach test for uprobes
-> > > > > and USDTs, reporting attach/detach timings:
-> > > > > $ sudo ./test_progs -v -t uprobe_multi_test/bench
-> > > > > bpf_testmod.ko is already unloaded.
-> > > > > Loading bpf_testmod.ko...
-> > > > > Successfully loaded bpf_testmod.ko.
-> > > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
-> > > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
-> > > > > test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
-> > > > > test_bench_attach_uprobe: attached in   0.120s
-> > > > > test_bench_attach_uprobe: detached in   0.092s
-> > > > > #400/5   uprobe_multi_test/bench_uprobe:OK
-> > > > > test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
-> > > > > test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
-> > > > > test_bench_attach_usdt:PASS:usdt_count 0 nsec
-> > > > > test_bench_attach_usdt: attached in   0.124s
-> > > > > test_bench_attach_usdt: detached in   0.064s
-> > > > > #400/6   uprobe_multi_test/bench_usdt:OK
-> > > > > #400     uprobe_multi_test:OK
-> > > > > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > > > > Successfully unloaded bpf_testmod.ko.
-> > > > > 
-> > > > > So it should be easy for Jonathan to validate his changes with this.
-> > > > > 
-> > > > > > > Thank you,
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Jon.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > Thank you,
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > > > > > > > will depend on how much lock contention happens.
-> > > > > > > > > > >
-> > > > > > > > > > > Thank you,
-> > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > > > > > > > >
-> > > > > > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > > > > > > > ---
-> > > > > > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > > > > > > > >
-> > > > > > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > > > > > > > --- a/kernel/events/uprobes.c
-> > > > > > > > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > > > > > > > > >   */
-> > > > > > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > > > > > > > >
-> > > > > > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > > > > > > > > >
-> > > > > > > > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > > > > > > > >  /* serialize uprobe->pending_list */
-> > > > > > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > > > > > > > > >  {
-> > > > > > > > > > > >       struct uprobe *uprobe;
-> > > > > > > > > > > >
-> > > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > > >
-> > > > > > > > > > > >       return uprobe;
-> > > > > > > > > > > >  }
-> > > > > > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > > > > > > > > >  {
-> > > > > > > > > > > >       struct uprobe *u;
-> > > > > > > > > > > >
-> > > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > > > >       u = __insert_uprobe(uprobe);
-> > > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > > > >
-> > > > > > > > > > > >       return u;
-> > > > > > > > > > > >  }
-> > > > > > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > > > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > > > > > > > >               return;
-> > > > > > > > > > > >
-> > > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > > > > > > > > >       put_uprobe(uprobe);
-> > > > > > > > > > > >  }
-> > > > > > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > > > >
-> > > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > > > >       if (n) {
-> > > > > > > > > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > > > >                       get_uprobe(u);
-> > > > > > > > > > > >               }
-> > > > > > > > > > > >       }
-> > > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > > >  }
-> > > > > > > > > > > >
-> > > > > > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > > > >
-> > > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > > >
-> > > > > > > > > > > >       return !!n;
-> > > > > > > > > > > >  }
-> > > > > > > > > > > > --
-> > > > > > > > > > > > 2.43.0
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > --
-> > > > > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > --
-> > > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > >
-> > > > > > >
-> > > > > > > --
-> > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > 
-> > > > 
-> > > > -- 
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-24-xiong.y.zhang@linux.intel.com>
+ <ZhhZush_VOEnimuw@google.com>
+ <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
+ <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
+ <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
+ <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com> <ZiGOzkLhQm57EPlx@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZiGOzkLhQm57EPlx@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 4/19/2024 5:21 AM, Mingwei Zhang wrote:
+> On Mon, Apr 15, 2024, Sean Christopherson wrote:
+>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+>>> On Mon, Apr 15, 2024 at 3:04 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>>> On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
+>>>>> On Fri, Apr 12, 2024 at 9:25 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>>>>>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed counters.
+>>>>>>>> Considering this case, Guest uses GP counter 2, but Host doesn't use it. So
+>>>>>>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would be enabled
+>>>>>>>> unexpectedly on host later since Host perf always enable all validate bits
+>>>>>>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
+>>>>>>>>
+>>>>>>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
+>>>>>>>>
+>>>>>>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking counter
+>>>>>>> values to the host? NO. Not in cloud usage.
+>>>>>> No, this place is clearing the guest counter value instead of host
+>>>>>> counter value. Host always has method to see guest value in a normal VM
+>>>>>> if he want. I don't see its necessity, it's just a overkill and
+>>>>>> introduce extra overhead to write MSRs.
+>>>>>>
+>>>>> I am curious how the perf subsystem solves the problem? Does perf
+>>>>> subsystem in the host only scrubbing the selector but not the counter
+>>>>> value when doing the context switch?
+>>>> When context switch happens, perf code would schedule out the old events
+>>>> and schedule in the new events. When scheduling out, the ENABLE bit of
+>>>> EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
+>>>> and PMCx MSRs would be overwritten with new event's attr.config and
+>>>> sample_period separately.  Of course, these is only for the case when
+>>>> there are new events to be programmed on the PMC. If no new events, the
+>>>> PMCx MSR would keep stall value and won't be cleared.
+>>>>
+>>>> Anyway, I don't see any reason that PMCx MSR must be cleared.
+>>>>
+>>> I don't have a strong opinion on the upstream version. But since both
+>>> the mediated vPMU and perf are clients of PMU HW, leaving PMC values
+>>> uncleared when transition out of the vPMU boundary is leaking info
+>>> technically.
+>> I'm not objecting to ensuring guest PMCs can't be read by any entity that's not
+>> in the guest's TCB, which is what I would consider a true leak.  I'm objecting
+>> to blindly clearing all PMCs, and more specifically objecting to *KVM* clearing
+>> PMCs when saving guest state without coordinating with perf in any way.
+> Agree. blindly clearing PMCs is the basic implementation. I am thinking
+> about what coordination between perf and KVM as well.
+>
+>> I am ok if we start with (or default to) a "safe" implementation that zeroes all
+>> PMCs when switching to host context, but I want KVM and perf to work together to
+>> do the context switches, e.g. so that we don't end up with code where KVM writes
+>> to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
+> Sure. Point taken.
+>> One my biggest complaints with the current vPMU code is that the roles and
+>> responsibilities between KVM and perf are poorly defined, which leads to suboptimal
+>> and hard to maintain code.
+> Right.
+>> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak guest
+>> state to userspace processes that have RDPMC permissions, as the PMCs might not
+>> be dirty from perf's perspective (see perf_clear_dirty_counters()).
+>>
+> ah. This is a good point.
+>
+> 		switch_mm_irqs_off() =>
+> 		cr4_update_pce_mm() =>
+> 		/*
+> 		 * Clear the existing dirty counters to
+> 		 * prevent the leak for an RDPMC task.
+> 		 */
+> 		perf_clear_dirty_counters()
+>
+> So perf does clear dirty counter values on process context switch. This
+> is nice to know.
+>
+> perf_clear_dirty_counters() clear the counter values according to
+> cpuc->dirty except for those assigned counters.
+>
+>> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes the
+>> overall code brittle because it's not clear whether KVM _needs_ to clear PMCs,
+>> or if KVM is just being paranoid.
+> There is a difference between KVM and perf subsystem on PMU context
+> switch. The latter has the notion of "perf_events", while the former
+> currently does not. It is quite hard for KVM to know which counters are
+> really "in use".
+>
+> Another point I want to raise up to you is that, KVM PMU context switch
+> and Perf PMU context switch happens at different timing:
+>
+>   - The former is a context switch between guest/host state of the same
+>     process, happening at VM-enter/exit boundary.
+>   - The latter is a context switch beteen two host-level processes.
+>   - The former happens before the latter.
+>   - Current design has no PMC partitioning between host/guest due to
+>     arch limitation.
+>
+>  From the above, I feel that it might be impossible to combine them or to
+> add coordination? Unless we do the KVM PMU context switch at vcpu loop
+> boundary...
+
+It seems there are two ways to clear the PMCx MSRs.
+
+a) KVM clears these guest only used counters' PMCx MSRs when VM exits 
+and saving the guest MSRs. This can be seen as a portion of the next 
+step optimization that only guest used MSRs are saved and restored. It 
+would avoid to save/restore unnecessary MSR and decrease the performance 
+impact.
+
+b) Perf subsystem clears these guest used MSRs, but perf system doesn't 
+know which MSRs are touched by guest, KVM has to provide a API to tell 
+perf subsystem the information. Another issue is that perf does the 
+clearing in task context switch. It may be too late, user can get the 
+guest counter value via rdpmc instruction as long as the vCPU process is 
+allowed to use rdpmc from user space.
+
+We had an internal rough talk on this, It seems the option 1 is the 
+better one which looks simpler and has clearer boundary. We would 
+implement it together with the optimization mentioned in option 1.
+
+
+>
+> Thanks.
+> -Mingwei
+>
