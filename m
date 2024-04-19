@@ -1,689 +1,114 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307ACC8DD
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 06:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1182F5A;
+	Fri, 19 Apr 2024 07:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713507755; cv=none; b=fEIP9PNIeqxVWyC7H55dXRpaVvdxb2gXkJ8z7DNTnfRcwLUXfsIGmH1qw62WiJdSE+/HfGbZiTwzfHa9ltULKIxBQSvTBOKiFdm7/27EgdbOvWe2pTS1IUpFh2XbL5VJhlNqSAE80qaTiBHtojG5gK0xI9XNz5zblaaPPtRH1n4=
+	t=1713510634; cv=none; b=jnRDiVp3S8qQLZvByijuZDPBMCqeOAQWcYiWn2E7hg6DOqgIRxJDZBEK0Z1U8Pl0lKxpop8Ge4Cv51QvTCcQ/K72WSlu/zZUTwy82Sg6VSRmx/CNBSV2G8GKey0awbapZCx9vVdMWcGdw7/zrAO/2wcqpVkC+uVmynlUAwDvtjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713507755; c=relaxed/simple;
-	bh=IKq6kKpYxQNQOiztjaJiLJb/Gw02MGrfhHR94xStGEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QnjmVhE9qA7t6kEX+tY/ivHFFdv2U3hiT/5hg4++yqY1hWke3UYDKYYPAGqgSmRZ5hh+/rRdh5As8sFpExOdzdL1m5iQXPhrSwb880dl9eqK5YLF6EXO957eUWe0NPHF/rTnXlW6nQCHpzQL7rp++b73qvTPYBQj7zH7ueUebjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rmdOMnWd; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713510634; c=relaxed/simple;
+	bh=Kqn7LNaN5JHoWAHbn+aM97vUX0p0GiFCyO+Q9MrQ76k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QzaG61P5vWCECTJWGtUiY5wD2TmDUQAieaDIYkWJxfm5by2jE9nGcACSuQF/tp3vhsOWZJwvkyy/ekhEqN/H+Iak3PSxIXxJQJLcHQ4ocm7tsgfv1pGs9DGI9+VgxBAC4Q+80JbIrBqeDW0w8J8WKtHmeucHiCdGNXsQqcJCJJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZuKtkSW; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmdOMnWd"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-434b5abbb0dso157461cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Apr 2024 23:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713507751; x=1714112551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5DJQiWaC946xoBV83e/CuzUpiC08XaA6Db/7lyPjZ8=;
-        b=rmdOMnWdRLwjUSRmjrtt0PLz9T/mZFDuB/nxbV2G5tD9rfF2tg/jMkHHM07L8Ytu8d
-         LYsf+JcknV3Ozu2oqGWAtHyPBCtK41jbOomljSknpNMhjix706WQTrZZAXFgjAzCAQL8
-         auj1dF2I3tKLd/rRs6R6c0/ek50qJbMaOjMruo3YZsDFb3D2DETF2L6EsYqgl5EXDFki
-         LD1iS2Hzqy4qan/oeF7mYRAl9V5sMbOc0v/h6eTxJ+uZWY5ns4MwqKCx2j4oOM7X0tM5
-         F1d5gKVWJtOOziJDRNJBi+cnXFxRR8LlLfBEzjPub+xP6Sk1HV7leexNJe+FELrqd2hX
-         Wr5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713507751; x=1714112551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5DJQiWaC946xoBV83e/CuzUpiC08XaA6Db/7lyPjZ8=;
-        b=q/f0z8Hd8kiPPxORFL0z8pFWEunm+SEjaQhYWGnbEHGW+hrf2lrkbOd0lBFBwGhZr2
-         IJm8L8O90MW/CQfVdYcy6+Z9k3RTygr6MmM7mt0iGLDsiOlL7ZLlYUM3NZQz7/bHN/hA
-         ZaPLWdyJNddJC9KYYq3foXXwVtExLfhMTNPhOR0tmIa1mTW/n9il5tXQLcHkAgAZUQo/
-         AH723e2/KspDacZvzlesqZPh88rzDYobMl2U9Fb41USBawsHgbxCHPpAj76vXVEO237z
-         lk72pjOxRP1I47DLuf0MyQaOhvCuY6hi7SRddO+E8EET0FVs6cAzAHFLi5pUu7zNTKrs
-         m5QA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuoFRh2BwpK9Hw8XAy5xDsEje008f+M0XlW3HgxL/vvm/jhYQmrL1Ib3L4OeTJnG90DPIQp/P9d3KS+pSgoWYE7iVz3khPohwe4BdZ4GKYkA==
-X-Gm-Message-State: AOJu0YzhmSWzFlVRTj5755KxnocOzBR/40pT4GO8a5/Nt2PjDwmoS9lJ
-	U81ntxiN3sAmhhKVjo0vdZ/4LkQ5rQHtdQ4Q+vUXtA4WRBBzZBVbVWt45aluCMpmIlp4A4QSMHH
-	6L131+/LrxTCMq+Da3028q0ZMPC+rhfogkYtl
-X-Google-Smtp-Source: AGHT+IENV2HEZCn2LqbsJxRcCDznXxeH7z8V4If10jpgSw5wWwDWNX0+BrOqw4akRra4KlLXGnxfubGbL44SASaMpIU=
-X-Received: by 2002:a05:622a:1aa2:b0:437:87f9:21cd with SMTP id
- s34-20020a05622a1aa200b0043787f921cdmr190046qtc.16.1713507750715; Thu, 18 Apr
- 2024 23:22:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZuKtkSW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713510633; x=1745046633;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Kqn7LNaN5JHoWAHbn+aM97vUX0p0GiFCyO+Q9MrQ76k=;
+  b=WZuKtkSWuncy1f9aWnpNHwn+sNoVU0zXtbCN+LvSx4fwlccZDSY9YajJ
+   +W4+iabxEyPc+3U/2sCW8lknKIlECrR8DeIyBvOj6DQaI6lkpWXyH562s
+   DifpWWlK24+cErIwfDOwWiMHudWssW4gE6Am0OzNBKanchm8ztgjWXfLM
+   wcbeg1SrMFmQWgpN2CgEbz4mnxPli91x6MpbGvbw2S0Ay9iFJXixH3JY6
+   kBj2WcSTsqIMb0Tapazgxj5UjsHKCrfSR6R3Iq+cDGNxJrOueZTWqUgS+
+   HDePBPLJ2fD+8GvOb13b5NpGH18zBrsyl2InQCoSpkbmT6oXKHzHZJr9K
+   A==;
+X-CSE-ConnectionGUID: H2Viq3FkQnCL7EEBECWOUg==
+X-CSE-MsgGUID: HfmShP1HSnmUUixg3EKRjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="26611854"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="26611854"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:10:31 -0700
+X-CSE-ConnectionGUID: a5B9ZiWgTmGGIRbVtofWkw==
+X-CSE-MsgGUID: orzIaouMSdaYjc/egMLKOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="54451860"
+Received: from lxia1-mobl2.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.254.214.225])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 00:10:27 -0700
+From: Zhang Rui <rui.zhang@intel.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ak@linux.intel.com,
+	kan.liang@linux.intel.com
+Subject: [PATCH 1/3] perf/x86/intel/cstate: Fix Alderlake/Raptorlake/Meteorlake
+Date: Fri, 19 Apr 2024 15:10:17 +0800
+Message-Id: <20240419071019.1103953-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416061533.921723-1-irogers@google.com> <20240416061533.921723-14-irogers@google.com>
- <e8147f53-1930-44d8-abb8-fee460ec355f@linux.intel.com>
-In-Reply-To: <e8147f53-1930-44d8-abb8-fee460ec355f@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 18 Apr 2024 23:22:18 -0700
-Message-ID: <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
-Subject: Re: [PATCH v2 13/16] perf parse-events: Improvements to modifier parsing
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
-	Beeman Strong <beeman@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 1:32=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-04-16 2:15 a.m., Ian Rogers wrote:
-> > Use a struct/bitmap rather than a copied string from lexer.
-> >
-> > In lexer give improved error message when too many precise flags are
-> > given or repeated modifiers.
-> >
-> > Before:
-> > ```
-> > $ perf stat -e 'cycles:kuk' true
-> > event syntax error: 'cycles:kuk'
-> >                             \___ Bad modifier
-> > ...
-> > $ perf stat -e 'cycles:pppp' true
-> > event syntax error: 'cycles:pppp'
-> >                             \___ Bad modifier
-> > ...
-> > $ perf stat -e '{instructions:p,cycles:pp}:pp' -a true
-> > event syntax error: '..cycles:pp}:pp'
-> >                                   \___ Bad modifier
-> > ...
-> > ```
-> > After:
-> > ```
-> > $ perf stat -e 'cycles:kuk' true
-> > event syntax error: 'cycles:kuk'
-> >                               \___ Duplicate modifier 'k' (kernel)
-> > ...
-> > $ perf stat -e 'cycles:pppp' true
-> > event syntax error: 'cycles:pppp'
-> >                                \___ Maximum precise value is 3
-> > ...
-> > $ perf stat -e '{instructions:p,cycles:pp}:pp' true
-> > event syntax error: '..cycles:pp}:pp'
-> >                                   \___ Maximum combined precise value i=
-s 3, adding precision to "cycles:pp"
-> > ...
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/parse-events.c | 250 ++++++++++++---------------------
-> >  tools/perf/util/parse-events.h |  23 ++-
-> >  tools/perf/util/parse-events.l |  75 +++++++++-
-> >  tools/perf/util/parse-events.y |  28 +---
-> >  4 files changed, 194 insertions(+), 182 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index ebada37ef98a..3ab533d0e653 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1700,12 +1700,6 @@ int parse_events_multi_pmu_add_or_add_pmu(struct=
- parse_events_state *parse_state
-> >       return -EINVAL;
-> >  }
-> >
-> > -int parse_events__modifier_group(struct list_head *list,
-> > -                              char *event_mod)
-> > -{
-> > -     return parse_events__modifier_event(list, event_mod, true);
-> > -}
-> > -
-> >  void parse_events__set_leader(char *name, struct list_head *list)
-> >  {
-> >       struct evsel *leader;
-> > @@ -1720,183 +1714,125 @@ void parse_events__set_leader(char *name, str=
-uct list_head *list)
-> >       leader->group_name =3D name;
-> >  }
-> >
-> > -struct event_modifier {
-> > -     int eu;
-> > -     int ek;
-> > -     int eh;
-> > -     int eH;
-> > -     int eG;
-> > -     int eI;
-> > -     int precise;
-> > -     int precise_max;
-> > -     int exclude_GH;
-> > -     int sample_read;
-> > -     int pinned;
-> > -     int weak;
-> > -     int exclusive;
-> > -     int bpf_counter;
-> > -};
-> > +static int parse_events__modifier_list(struct parse_events_state *pars=
-e_state,
-> > +                                    YYLTYPE *loc,
-> > +                                    struct list_head *list,
-> > +                                    struct parse_events_modifier mod,
-> > +                                    bool group)
-> > +{
-> > +     struct evsel *evsel;
-> >
-> > -static int get_event_modifier(struct event_modifier *mod, char *str,
-> > -                            struct evsel *evsel)
-> > -{
-> > -     int eu =3D evsel ? evsel->core.attr.exclude_user : 0;
-> > -     int ek =3D evsel ? evsel->core.attr.exclude_kernel : 0;
-> > -     int eh =3D evsel ? evsel->core.attr.exclude_hv : 0;
-> > -     int eH =3D evsel ? evsel->core.attr.exclude_host : 0;
-> > -     int eG =3D evsel ? evsel->core.attr.exclude_guest : 0;
-> > -     int eI =3D evsel ? evsel->core.attr.exclude_idle : 0;
-> > -     int precise =3D evsel ? evsel->core.attr.precise_ip : 0;
-> > -     int precise_max =3D 0;
-> > -     int sample_read =3D 0;
-> > -     int pinned =3D evsel ? evsel->core.attr.pinned : 0;
-> > -     int exclusive =3D evsel ? evsel->core.attr.exclusive : 0;
-> > -
-> > -     int exclude =3D eu | ek | eh;
-> > -     int exclude_GH =3D evsel ? evsel->exclude_GH : 0;
-> > -     int weak =3D 0;
-> > -     int bpf_counter =3D 0;
-> > -
-> > -     memset(mod, 0, sizeof(*mod));
-> > -
-> > -     while (*str) {
-> > -             if (*str =3D=3D 'u') {
-> > +     if (!group && mod.weak) {
-> > +             parse_events_error__handle(parse_state->error, loc->first=
-_column,
-> > +                                        strdup("Weak modifier is for u=
-se with groups"), NULL);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     __evlist__for_each_entry(list, evsel) {
-> > +             /* Translate modifiers into the equivalent evsel excludes=
-. */
-> > +             int eu =3D group ? evsel->core.attr.exclude_user : 0;
-> > +             int ek =3D group ? evsel->core.attr.exclude_kernel : 0;
-> > +             int eh =3D group ? evsel->core.attr.exclude_hv : 0;
-> > +             int eH =3D group ? evsel->core.attr.exclude_host : 0;
-> > +             int eG =3D group ? evsel->core.attr.exclude_guest : 0;
-> > +             int exclude =3D eu | ek | eh;
-> > +             int exclude_GH =3D group ? evsel->exclude_GH : 0;
-> > +
-> > +             if (mod.precise) {
-> > +                     /* use of precise requires exclude_guest */
-> > +                     eG =3D 1;
-> > +             }
-> > +             if (mod.user) {
-> >                       if (!exclude)
-> >                               exclude =3D eu =3D ek =3D eh =3D 1;
-> >                       if (!exclude_GH && !perf_guest)
-> >                               eG =3D 1;
-> >                       eu =3D 0;
-> > -             } else if (*str =3D=3D 'k') {
-> > +             }
-> > +             if (mod.kernel) {
-> >                       if (!exclude)
-> >                               exclude =3D eu =3D ek =3D eh =3D 1;
-> >                       ek =3D 0;
-> > -             } else if (*str =3D=3D 'h') {
-> > +             }
-> > +             if (mod.hypervisor) {
-> >                       if (!exclude)
-> >                               exclude =3D eu =3D ek =3D eh =3D 1;
-> >                       eh =3D 0;
-> > -             } else if (*str =3D=3D 'G') {
-> > +             }
-> > +             if (mod.guest) {
-> >                       if (!exclude_GH)
-> >                               exclude_GH =3D eG =3D eH =3D 1;
-> >                       eG =3D 0;
-> > -             } else if (*str =3D=3D 'H') {
-> > +             }
-> > +             if (mod.host) {
-> >                       if (!exclude_GH)
-> >                               exclude_GH =3D eG =3D eH =3D 1;
-> >                       eH =3D 0;
-> > -             } else if (*str =3D=3D 'I') {
-> > -                     eI =3D 1;
-> > -             } else if (*str =3D=3D 'p') {
-> > -                     precise++;
-> > -                     /* use of precise requires exclude_guest */
-> > -                     if (!exclude_GH)
-> > -                             eG =3D 1;
-> > -             } else if (*str =3D=3D 'P') {
-> > -                     precise_max =3D 1;
-> > -             } else if (*str =3D=3D 'S') {
-> > -                     sample_read =3D 1;
-> > -             } else if (*str =3D=3D 'D') {
-> > -                     pinned =3D 1;
-> > -             } else if (*str =3D=3D 'e') {
-> > -                     exclusive =3D 1;
-> > -             } else if (*str =3D=3D 'W') {
-> > -                     weak =3D 1;
-> > -             } else if (*str =3D=3D 'b') {
-> > -                     bpf_counter =3D 1;
-> > -             } else
-> > -                     break;
-> > -
-> > -             ++str;
-> > +             }
-> > +             evsel->core.attr.exclude_user   =3D eu;
-> > +             evsel->core.attr.exclude_kernel =3D ek;
-> > +             evsel->core.attr.exclude_hv     =3D eh;
-> > +             evsel->core.attr.exclude_host   =3D eH;
-> > +             evsel->core.attr.exclude_guest  =3D eG;
-> > +             evsel->exclude_GH               =3D exclude_GH;
-> > +
-> > +             /* Simple modifiers copied to the evsel. */
-> > +             if (mod.precise) {
-> > +                     u8 precise =3D evsel->core.attr.precise_ip + mod.=
-precise;
-> > +                     /*
-> > +                      * precise ip:
-> > +                      *
-> > +                      *  0 - SAMPLE_IP can have arbitrary skid
-> > +                      *  1 - SAMPLE_IP must have constant skid
-> > +                      *  2 - SAMPLE_IP requested to have 0 skid
-> > +                      *  3 - SAMPLE_IP must have 0 skid
-> > +                      *
-> > +                      *  See also PERF_RECORD_MISC_EXACT_IP
-> > +                      */
-> > +                     if (precise > 3) {
->
-> The pmu_max_precise() should return the max precise the current kernel
-> supports. It checks the /sys/devices/cpu/caps/max_precise.
->
-> I think we should use that value rather than hard code it to 3.
+The spec changes after the patch submitted and PC7/PC9 are removed from
+Alderlake and later client platforms.
 
-I'll add an extra patch to do that. I'm a bit concerned it may break
-event parsing on platforms not supporting max_precise of 3.
+Remove PC7/PC9 support in cstate PMU.
 
-Thanks,
-Ian
+Fixes: d0ca946bcf84 ("perf/x86/cstate: Add Alder Lake CPU support")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ arch/x86/events/intel/cstate.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-> Thanks,
-> Kan
->
-> > +                             char *help;
-> > +
-> > +                             if (asprintf(&help,
-> > +                                          "Maximum combined precise va=
-lue is 3, adding precision to \"%s\"",
-> > +                                          evsel__name(evsel)) > 0) {
-> > +                                     parse_events_error__handle(parse_=
-state->error,
-> > +                                                                loc->f=
-irst_column,
-> > +                                                                help, =
-NULL);
-> > +                             }
-> > +                             return -EINVAL;
-> > +                     }
-> > +                     evsel->core.attr.precise_ip =3D precise;
-> > +             }
-> > +             if (mod.precise_max)
-> > +                     evsel->precise_max =3D 1;
-> > +             if (mod.non_idle)
-> > +                     evsel->core.attr.exclude_idle =3D 1;
-> > +             if (mod.sample_read)
-> > +                     evsel->sample_read =3D 1;
-> > +             if (mod.pinned && evsel__is_group_leader(evsel))
-> > +                     evsel->core.attr.pinned =3D 1;
-> > +             if (mod.exclusive && evsel__is_group_leader(evsel))
-> > +                     evsel->core.attr.exclusive =3D 1;
-> > +             if (mod.weak)
-> > +                     evsel->weak_group =3D true;
-> > +             if (mod.bpf)
-> > +                     evsel->bpf_counter =3D true;
-> >       }
-> > -
-> > -     /*
-> > -      * precise ip:
-> > -      *
-> > -      *  0 - SAMPLE_IP can have arbitrary skid
-> > -      *  1 - SAMPLE_IP must have constant skid
-> > -      *  2 - SAMPLE_IP requested to have 0 skid
-> > -      *  3 - SAMPLE_IP must have 0 skid
-> > -      *
-> > -      *  See also PERF_RECORD_MISC_EXACT_IP
-> > -      */
-> > -     if (precise > 3)
-> > -             return -EINVAL;
-> > -
-> > -     mod->eu =3D eu;
-> > -     mod->ek =3D ek;
-> > -     mod->eh =3D eh;
-> > -     mod->eH =3D eH;
-> > -     mod->eG =3D eG;
-> > -     mod->eI =3D eI;
-> > -     mod->precise =3D precise;
-> > -     mod->precise_max =3D precise_max;
-> > -     mod->exclude_GH =3D exclude_GH;
-> > -     mod->sample_read =3D sample_read;
-> > -     mod->pinned =3D pinned;
-> > -     mod->weak =3D weak;
-> > -     mod->bpf_counter =3D bpf_counter;
-> > -     mod->exclusive =3D exclusive;
-> > -
-> >       return 0;
-> >  }
-> >
-> > -/*
-> > - * Basic modifier sanity check to validate it contains only one
-> > - * instance of any modifier (apart from 'p') present.
-> > - */
-> > -static int check_modifier(char *str)
-> > +int parse_events__modifier_group(struct parse_events_state *parse_stat=
-e, void *loc,
-> > +                              struct list_head *list,
-> > +                              struct parse_events_modifier mod)
-> >  {
-> > -     char *p =3D str;
-> > -
-> > -     /* The sizeof includes 0 byte as well. */
-> > -     if (strlen(str) > (sizeof("ukhGHpppPSDIWeb") - 1))
-> > -             return -1;
-> > -
-> > -     while (*p) {
-> > -             if (*p !=3D 'p' && strchr(p + 1, *p))
-> > -                     return -1;
-> > -             p++;
-> > -     }
-> > -
-> > -     return 0;
-> > +     return parse_events__modifier_list(parse_state, loc, list, mod, /=
-*group=3D*/true);
-> >  }
-> >
-> > -int parse_events__modifier_event(struct list_head *list, char *str, bo=
-ol add)
-> > +int parse_events__modifier_event(struct parse_events_state *parse_stat=
-e, void *loc,
-> > +                              struct list_head *list,
-> > +                              struct parse_events_modifier mod)
-> >  {
-> > -     struct evsel *evsel;
-> > -     struct event_modifier mod;
-> > -
-> > -     if (str =3D=3D NULL)
-> > -             return 0;
-> > -
-> > -     if (check_modifier(str))
-> > -             return -EINVAL;
-> > -
-> > -     if (!add && get_event_modifier(&mod, str, NULL))
-> > -             return -EINVAL;
-> > -
-> > -     __evlist__for_each_entry(list, evsel) {
-> > -             if (add && get_event_modifier(&mod, str, evsel))
-> > -                     return -EINVAL;
-> > -
-> > -             evsel->core.attr.exclude_user   =3D mod.eu;
-> > -             evsel->core.attr.exclude_kernel =3D mod.ek;
-> > -             evsel->core.attr.exclude_hv     =3D mod.eh;
-> > -             evsel->core.attr.precise_ip     =3D mod.precise;
-> > -             evsel->core.attr.exclude_host   =3D mod.eH;
-> > -             evsel->core.attr.exclude_guest  =3D mod.eG;
-> > -             evsel->core.attr.exclude_idle   =3D mod.eI;
-> > -             evsel->exclude_GH          =3D mod.exclude_GH;
-> > -             evsel->sample_read         =3D mod.sample_read;
-> > -             evsel->precise_max         =3D mod.precise_max;
-> > -             evsel->weak_group          =3D mod.weak;
-> > -             evsel->bpf_counter         =3D mod.bpf_counter;
-> > -
-> > -             if (evsel__is_group_leader(evsel)) {
-> > -                     evsel->core.attr.pinned =3D mod.pinned;
-> > -                     evsel->core.attr.exclusive =3D mod.exclusive;
-> > -             }
-> > -     }
-> > -
-> > -     return 0;
-> > +     return parse_events__modifier_list(parse_state, loc, list, mod, /=
-*group=3D*/false);
-> >  }
-> >
-> >  int parse_events_name(struct list_head *list, const char *name)
-> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
-nts.h
-> > index 290ae6c72ec5..f104faef1a78 100644
-> > --- a/tools/perf/util/parse-events.h
-> > +++ b/tools/perf/util/parse-events.h
-> > @@ -186,8 +186,27 @@ void parse_events_terms__init(struct parse_events_=
-terms *terms);
-> >  void parse_events_terms__exit(struct parse_events_terms *terms);
-> >  int parse_events_terms(struct parse_events_terms *terms, const char *s=
-tr, FILE *input);
-> >  int parse_events_terms__to_strbuf(const struct parse_events_terms *ter=
-ms, struct strbuf *sb);
-> > -int parse_events__modifier_event(struct list_head *list, char *str, bo=
-ol add);
-> > -int parse_events__modifier_group(struct list_head *list, char *event_m=
-od);
-> > +
-> > +struct parse_events_modifier {
-> > +     u8 precise;     /* Number of repeated 'p' for precision. */
-> > +     bool precise_max : 1;   /* 'P' */
-> > +     bool non_idle : 1;      /* 'I' */
-> > +     bool sample_read : 1;   /* 'S' */
-> > +     bool pinned : 1;        /* 'D' */
-> > +     bool exclusive : 1;     /* 'e' */
-> > +     bool weak : 1;          /* 'W' */
-> > +     bool bpf : 1;           /* 'b' */
-> > +     bool user : 1;          /* 'u' */
-> > +     bool kernel : 1;        /* 'k' */
-> > +     bool hypervisor : 1;    /* 'h' */
-> > +     bool guest : 1;         /* 'G' */
-> > +     bool host : 1;          /* 'H' */
-> > +};
-> > +
-> > +int parse_events__modifier_event(struct parse_events_state *parse_stat=
-e, void *loc,
-> > +                              struct list_head *list, struct parse_eve=
-nts_modifier mod);
-> > +int parse_events__modifier_group(struct parse_events_state *parse_stat=
-e, void *loc,
-> > +                              struct list_head *list, struct parse_eve=
-nts_modifier mod);
-> >  int parse_events_name(struct list_head *list, const char *name);
-> >  int parse_events_add_tracepoint(struct list_head *list, int *idx,
-> >                               const char *sys, const char *event,
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
-nts.l
-> > index 0cd68c9f0d4f..4aaf0c53d9b6 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -142,6 +142,77 @@ static int hw(yyscan_t scanner, int config)
-> >       return PE_TERM_HW;
-> >  }
-> >
-> > +static void modifiers_error(struct parse_events_state *parse_state, yy=
-scan_t scanner,
-> > +                         int pos, char mod_char, const char *mod_name)
-> > +{
-> > +     struct parse_events_error *error =3D parse_state->error;
-> > +     char *help =3D NULL;
-> > +
-> > +     if (asprintf(&help, "Duplicate modifier '%c' (%s)", mod_char, mod=
-_name) > 0)
-> > +             parse_events_error__handle(error, get_column(scanner) + p=
-os, help , NULL);
-> > +}
-> > +
-> > +static int modifiers(struct parse_events_state *parse_state, yyscan_t =
-scanner)
-> > +{
-> > +     YYSTYPE *yylval =3D parse_events_get_lval(scanner);
-> > +     char *text =3D parse_events_get_text(scanner);
-> > +     struct parse_events_modifier mod =3D { .precise =3D 0, };
-> > +
-> > +     for (size_t i =3D 0, n =3D strlen(text); i < n; i++) {
-> > +#define CASE(c, field)                                                =
-       \
-> > +             case c:                                                 \
-> > +                     if (mod.field) {                                \
-> > +                             modifiers_error(parse_state, scanner, i, =
-c, #field); \
-> > +                             return PE_ERROR;                        \
-> > +                     }                                               \
-> > +                     mod.field =3D true;                              =
- \
-> > +                     break
-> > +
-> > +             switch (text[i]) {
-> > +             CASE('u', user);
-> > +             CASE('k', kernel);
-> > +             CASE('h', hypervisor);
-> > +             CASE('I', non_idle);
-> > +             CASE('G', guest);
-> > +             CASE('H', host);
-> > +             case 'p':
-> > +                     mod.precise++;
-> > +                     /*
-> > +                      * precise ip:
-> > +                      *
-> > +                      *  0 - SAMPLE_IP can have arbitrary skid
-> > +                      *  1 - SAMPLE_IP must have constant skid
-> > +                      *  2 - SAMPLE_IP requested to have 0 skid
-> > +                      *  3 - SAMPLE_IP must have 0 skid
-> > +                      *
-> > +                      *  See also PERF_RECORD_MISC_EXACT_IP
-> > +                      */
-> > +                     if (mod.precise > 3) {
-> > +                             struct parse_events_error *error =3D pars=
-e_state->error;
-> > +                             char *help =3D strdup("Maximum precise va=
-lue is 3");
-> > +
-> > +                             if (help) {
-> > +                                     parse_events_error__handle(error,=
- get_column(scanner) + i,
-> > +                                                                help ,=
- NULL);
-> > +                             }
-> > +                             return PE_ERROR;
-> > +                     }
-> > +                     break;
-> > +             CASE('P', precise_max);
-> > +             CASE('S', sample_read);
-> > +             CASE('D', pinned);
-> > +             CASE('W', weak);
-> > +             CASE('e', exclusive);
-> > +             CASE('b', bpf);
-> > +             default:
-> > +                     return PE_ERROR;
-> > +             }
-> > +#undef CASE
-> > +     }
-> > +     yylval->mod =3D mod;
-> > +     return PE_MODIFIER_EVENT;
-> > +}
-> > +
-> >  #define YY_USER_ACTION                                       \
-> >  do {                                                 \
-> >       yylloc->last_column  =3D yylloc->first_column;    \
-> > @@ -174,7 +245,7 @@ drv_cfg_term      [a-zA-Z0-9_\.]+(=3D[a-zA-Z0-9_*?\=
-.:]+)?
-> >   * If you add a modifier you need to update check_modifier().
-> >   * Also, the letters in modifier_event must not be in modifier_bp.
-> >   */
-> > -modifier_event       [ukhpPGHSDIWeb]+
-> > +modifier_event       [ukhpPGHSDIWeb]{1,15}
-> >  modifier_bp  [rwx]{1,3}
-> >  lc_type      (L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruc=
-tion|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|=
-bpu|btb|bpc|node)
-> >  lc_op_result (load|loads|read|store|stores|write|prefetch|prefetches|s=
-peculative-read|speculative-load|refs|Reference|ops|access|misses|miss)
-> > @@ -341,7 +412,7 @@ r{num_raw_hex}            { return str(yyscanner, P=
-E_RAW); }
-> >  {num_dec}            { return value(_parse_state, yyscanner, 10); }
-> >  {num_hex}            { return value(_parse_state, yyscanner, 16); }
-> >
-> > -{modifier_event}     { return str(yyscanner, PE_MODIFIER_EVENT); }
-> > +{modifier_event}     { return modifiers(_parse_state, yyscanner); }
-> >  {name}                       { return str(yyscanner, PE_NAME); }
-> >  {name_tag}           { return str(yyscanner, PE_NAME); }
-> >  "/"                  { BEGIN(config); return '/'; }
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
-nts.y
-> > index 2c4817e126c1..79f254189be6 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -68,11 +68,11 @@ static void free_list_evsel(struct list_head* list_=
-evsel)
-> >  %type <num> PE_VALUE
-> >  %type <num> PE_VALUE_SYM_SW
-> >  %type <num> PE_VALUE_SYM_TOOL
-> > +%type <mod> PE_MODIFIER_EVENT
-> >  %type <term_type> PE_TERM
-> >  %type <str> PE_RAW
-> >  %type <str> PE_NAME
-> >  %type <str> PE_LEGACY_CACHE
-> > -%type <str> PE_MODIFIER_EVENT
-> >  %type <str> PE_MODIFIER_BP
-> >  %type <str> PE_EVENT_NAME
-> >  %type <str> PE_DRV_CFG_TERM
-> > @@ -110,6 +110,7 @@ static void free_list_evsel(struct list_head* list_=
-evsel)
-> >  {
-> >       char *str;
-> >       u64 num;
-> > +     struct parse_events_modifier mod;
-> >       enum parse_events__term_type term_type;
-> >       struct list_head *list_evsel;
-> >       struct parse_events_terms *list_terms;
-> > @@ -175,20 +176,13 @@ event
-> >  group:
-> >  group_def ':' PE_MODIFIER_EVENT
-> >  {
-> > +     /* Apply the modifier to the events in the group_def. */
-> >       struct list_head *list =3D $1;
-> >       int err;
-> >
-> > -     err =3D parse_events__modifier_group(list, $3);
-> > -     free($3);
-> > -     if (err) {
-> > -             struct parse_events_state *parse_state =3D _parse_state;
-> > -             struct parse_events_error *error =3D parse_state->error;
-> > -
-> > -             parse_events_error__handle(error, @3.first_column,
-> > -                                        strdup("Bad modifier"), NULL);
-> > -             free_list_evsel(list);
-> > +     err =3D parse_events__modifier_group(_parse_state, &@3, list, $3)=
-;
-> > +     if (err)
-> >               YYABORT;
-> > -     }
-> >       $$ =3D list;
-> >  }
-> >  |
-> > @@ -238,17 +232,9 @@ event_name PE_MODIFIER_EVENT
-> >        * (there could be more events added for multiple tracepoint
-> >        * definitions via '*?'.
-> >        */
-> > -     err =3D parse_events__modifier_event(list, $2, false);
-> > -     free($2);
-> > -     if (err) {
-> > -             struct parse_events_state *parse_state =3D _parse_state;
-> > -             struct parse_events_error *error =3D parse_state->error;
-> > -
-> > -             parse_events_error__handle(error, @2.first_column,
-> > -                                        strdup("Bad modifier"), NULL);
-> > -             free_list_evsel(list);
-> > +     err =3D parse_events__modifier_event(_parse_state, &@2, list, $2)=
-;
-> > +     if (err)
-> >               YYABORT;
-> > -     }
-> >       $$ =3D list;
-> >  }
-> >  |
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 326c8cd5aa2d..b304430ba64a 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -81,7 +81,7 @@
+  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
+  *			       perf code: 0x03
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,CNL,
+- *						KBL,CML,ICL,TGL,RKL,ADL,RPL,MTL
++ *						KBL,CML,ICL,TGL,RKL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C8_RESIDENCY:  Package C8 Residency Counter.
+  *			       perf code: 0x04
+@@ -90,8 +90,7 @@
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C9_RESIDENCY:  Package C9 Residency Counter.
+  *			       perf code: 0x05
+- *			       Available model: HSW ULT,KBL,CNL,CML,ICL,TGL,RKL,
+- *						ADL,RPL,MTL
++ *			       Available model: HSW ULT,KBL,CNL,CML,ICL,TGL,RKL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+@@ -642,9 +641,7 @@ static const struct cstate_model adl_cstates __initconst = {
+ 	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C3_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C6_RES) |
+-				  BIT(PERF_CSTATE_PKG_C7_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C8_RES) |
+-				  BIT(PERF_CSTATE_PKG_C9_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C10_RES),
+ };
+ 
+-- 
+2.34.1
+
