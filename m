@@ -1,166 +1,567 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEC013BC08
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 19:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C242EA23;
+	Fri, 19 Apr 2024 19:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713554066; cv=none; b=ZmsA4fW3qWJzZ/CxO1gQz7m7qg6Rys2YGoSDbeqU6tyl+PWDUgOu9omxqa6A8b77kp2U2Y0Dq5APnsc3PdwpzwNSW8ON5LBtCAG3LumtN06toSpd6mrAoK0x2yuOF0r6mr+GKFYcv7MPPDfx9c9lWrruPjeShYz+WXb+6epTcjI=
+	t=1713555439; cv=none; b=DfQg4dLO1dkE/i0k6R6VkrvzmxI1yCZcLRwmXvRs07ZqVV9YgOAiBhyEFOZsobiDkPNCvo0QDjuFmoYHPgYX3o3OtXJwgXsIJHBYzgb6hkggqhuWA3yI5g67spFW1VMuhN7Xx56rBaayTsLu1tyP1kKqkHuCNN/pwJ2waGBQ9aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713554066; c=relaxed/simple;
-	bh=ghHRvfsnLZoBuD+thj2tzA2nIrRJDK62IHkGCKIFt9A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xp/ENG26a+w2AjzLyjohdnz73C+g63Ot9/8eUsWPiugqfD2lhyUc7qGPJ+31tu7n1mclhtEiKSBlnt72NUuHzYtgzMMhifeClm1N2Z/ooR/Y8Bn/p2pf1PQpdCoa6YuBc66Yl9baTEmlRCXQfOv8t6ZSZ5ijqkhSRmM/4krCAGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Phyt+OmO; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713555439; c=relaxed/simple;
+	bh=A9cF8+qPoGkGUlM0Tsk5gyzSNwz4d8CWKiq4YwLBxfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ExcC5jEBO1NE62D/3DGAJ2Omxy/zWz3VhrK2WiA5qIOteEvq0LlE/Zdow0UnHMU7gsGK0VqhszQJRKVOwcu3obuc4gKOet8WDihcrCJfFGZGljITV2x3SDPy7fftRc6YMTX2Et2CcyCZ4+Vjls/eZqpC4algWMKwzC5M82e4/ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FkEa3T9N; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Phyt+OmO"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de45daf49deso4937261276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 12:14:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713554064; x=1714158864; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxyLjfyND/X0CfR1qvIubJS+urbDCxyrK24QGGBvcRg=;
-        b=Phyt+OmOLRhTdZkGxZSe2A7lyD8q0bdQAvdmS0mUtCeCjk/hEm+PpA70c7g9yvOR+9
-         NcvK1QiLKQJJDu1IVCizbI3tFm3Ttq83m7aHboMwtXJMJUnsA/ZTXz9GY6RcCAQe1G4R
-         ltj3kBgL73AE0WbAKKB/NTeHlfZy3nWGmIViEAvV7/SJWTj7z77jzH8jdyvNqrf4YuG0
-         2aXk+90jUYDyMMMGJSM9GTFpWginoX2BH99C8G3qHT5xYkb8wSOyfscR50xbefu1Ckcx
-         3thmYxD8qDOl+Iyaah8Z2PGvMijJSwbf067mBjDmQCZz9adnirJPAcZxptWV3VkIKNn+
-         BiJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713554064; x=1714158864;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxyLjfyND/X0CfR1qvIubJS+urbDCxyrK24QGGBvcRg=;
-        b=gDEijBRPatHRLTZSbAGGK3gNvNfzVKj/OYiWoWasNGS0+BV6ZXdu/qjrqVMHX+Snfe
-         UmmsEt/PgcaH85nqyv4mMj4YRNZvoy9xXYh5A/dwqteffJ7IPtM7noVhYdi249C3ljxw
-         u63kavGwHR7PuDhcv+bnrNokqImrygttgC6dcQ+0EcVLTIbAw8wWo0GmSn3DFN7POe6B
-         quq6nRWkxv3fd71c1lpB5ZppN762i6u/2ItkksRmSdZDrf32Q48mNFR8xNfl0467Jkyz
-         0jzG3klRR9Lhf5T8KY6NCJkti3WQHuxNGp0ouZg3gjvYIh6LWxRaUPoBHYl0z4CQ4UlX
-         9OPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbQ3jiqtDuzPjG8VIlP4WEEyJTD27y8kw1EGrwUP/6aMK1Ew6Xj4vi/3mn4wbd/AQNt0oZcdjVxEKaFcXv7rngXFXpACpfHP8tqbRKAaoong==
-X-Gm-Message-State: AOJu0YzO19Yv0eJhqJRLy9QmjaobONE/paXHyVdwdibCpe1rD9TLLhQc
-	HvKrS0JWmYK+6ZBkfY3Lxfh5/4siejCkVqkAM/KjLaKHjNoxobio6/OEnv002u4V0x9C1Z/IuwB
-	37w==
-X-Google-Smtp-Source: AGHT+IGVgn8Gf0JE3BoAkURXxw8LyhcDmWzr3Q2r8XR7+A5tBJUam6WylNWXRK1YN/QeAIyjeaEID9m1Od4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:c01:b0:dcd:b431:7f5b with SMTP id
- fs1-20020a0569020c0100b00dcdb4317f5bmr824560ybb.0.1713554064161; Fri, 19 Apr
- 2024 12:14:24 -0700 (PDT)
-Date: Fri, 19 Apr 2024 12:14:22 -0700
-In-Reply-To: <ZiGGiOspm6N-vIta@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FkEa3T9N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713555437; x=1745091437;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=A9cF8+qPoGkGUlM0Tsk5gyzSNwz4d8CWKiq4YwLBxfc=;
+  b=FkEa3T9NJVqiZL1wMunSxvcKmYe9/f07LuWiQyaldSejTLDiEExkb+6p
+   QLkMsI7cL8R9gf4Eez1lgZSIbaSelGjDN/+FSIyNhbzC65RBUcLsK6QLY
+   dahTLvOEi0kjQBGKOXQnfVkNCsalVw9MWXyvtQ5XpujBT1NxGlLPU19e5
+   LUTcIlKVAyjg1lXy3A3bBRXdzWImwY+rFSYpV9rsag3yt1BpeVMePydj4
+   CuN2zPZXWScNGViDC5NrH2Yt9SmELZmZmxNty52LxvoIkKy4pPOrKJOMR
+   NpqEnyVUdJLaZ/OnWxYr3S8lTEaPLsNAVOh4sSXLzJDmQmXpSL+vQO7bN
+   A==;
+X-CSE-ConnectionGUID: ZV7KbckUQM2lioeQCnopFA==
+X-CSE-MsgGUID: Z8kFKsMNQp6zQRs7OMf4fQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="12965047"
+X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
+   d="scan'208";a="12965047"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 12:37:16 -0700
+X-CSE-ConnectionGUID: 74YC2/UDSumrLkTudLKmEw==
+X-CSE-MsgGUID: rZeXRy7LTtyi5/Q2oNcf3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
+   d="scan'208";a="23867224"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 12:37:16 -0700
+Received: from [10.212.13.6] (kliang2-mobl1.ccr.corp.intel.com [10.212.13.6])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 81F85206DFDC;
+	Fri, 19 Apr 2024 12:37:12 -0700 (PDT)
+Message-ID: <931b2a52-74ec-4094-962c-31237fafb803@linux.intel.com>
+Date: Fri, 19 Apr 2024 15:37:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <ZhgX6BStTh05OfEd@google.com> <ZiGGiOspm6N-vIta@google.com>
-Message-ID: <ZiLCjutwO6XIQp5Z@google.com>
-Subject: Re: [RFC PATCH 00/41] KVM: x86/pmu: Introduce passthrough vPM
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	dapeng1.mi@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/12] perf jevents: Add load event json to verify and
+ allow fallbacks
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ John Garry <john.g.garry@oracle.com>, Jing Zhang
+ <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+ Kajol Jain <kjain@linux.ibm.com>, Sandipan Das <sandipan.das@amd.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Perry Taylor
+ <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang
+ <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>,
+ Stephane Eranian <eranian@google.com>
+References: <20240314055051.1960527-1-irogers@google.com>
+ <20240314055051.1960527-13-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240314055051.1960527-13-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 18, 2024, Mingwei Zhang wrote:
-> On Thu, Apr 11, 2024, Sean Christopherson wrote:
-> > <bikeshed>
-> > 
-> > I think we should call this a mediated PMU, not a passthrough PMU.  KVM still
-> > emulates the control plane (controls and event selectors), while the data is
-> > fully passed through (counters).
-> > 
-> > </bikeshed>
-> Sean,
+
+
+On 2024-03-14 1:50 a.m., Ian Rogers wrote:
+> Add a LoadEvents function that loads all event json files in a
+> directory. In the Event constructor ensure all events are defined in
+> the event json except for legacy events like "cycles". If the initial
+> event isn't found then legacy_event1 is used, and if that isn't found
+> legacy_event2 is used. This allows a single Event to have multiple
+> event names as models will often rename the same event over time. If
+> the event doesn't exist an exception is raised.
 > 
-> I feel "mediated PMU" seems to be a little bit off the ..., no? In
-> KVM, almost all of features are mediated. In our specific case, the
-> legacy PMU is mediated by KVM and perf subsystem on the host. In new
-> design, it is mediated by KVM only.
+> So that references to metrics can be added, add the MetricRef
+> class. This doesn't validate as an event name and so provides an
+> escape hatch for metrics to refer to each other.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/Build            | 12 ++--
+>  tools/perf/pmu-events/amd_metrics.py   |  6 +-
+>  tools/perf/pmu-events/arm64_metrics.py |  6 +-
+>  tools/perf/pmu-events/intel_metrics.py |  6 +-
+>  tools/perf/pmu-events/metric.py        | 77 +++++++++++++++++++++++++-
+>  5 files changed, 95 insertions(+), 12 deletions(-)
+>
 
-Currently, at a feature level, I mentally bin things into two rough categories
-in KVM:
+make fails.
 
- 1. Virtualized - Guest state is loaded into hardware, or hardware supports
-                  running with both host and guest state (e.g. TSC scaling), and
-                  the guest has full read/write access to its state while running.
+  GEN     pmu-events/arch/arm64/arm/cortex-a710/extra-metricgroups.json
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+  GEN     pmu-events/arch/arm64/arm/cortex-a73/extra-metrics.json
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/branch.json <-
+pmu-events/arch/arm64/arm/cortex-a75/branch.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/bus.json <-
+pmu-events/arch/arm64/arm/cortex-a75/bus.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/cache.json <-
+pmu-events/arch/arm64/arm/cortex-a75/cache.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/etm.json <-
+pmu-events/arch/arm64/arm/cortex-a75/etm.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/exception.json <-
+pmu-events/arch/arm64/arm/cortex-a75/exception.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/instruction.json
+<- pmu-events/arch/arm64/arm/cortex-a75/instruction.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/memory.json <-
+pmu-events/arch/arm64/arm/cortex-a75/memory.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/mmu.json <-
+pmu-events/arch/arm64/arm/cortex-a75/mmu.json dependency dropped.
+make[3]: Circular pmu-events/arch/arm64/arm/cortex-a75/pipeline.json <-
+pmu-events/arch/arm64/arm/cortex-a75/pipeline.json dependency dropped.
+  GEN     pmu-events/arch/arm64/arm/cortex-a73/extra-metricgroups.json
+make[3]: *** [pmu-events/Build:58:
+pmu-events/arch/arm64/arm/cortex-a57-a72/extra-metrics.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a57-a72/extra-metrics.json'
+make[3]: *** Waiting for unfinished jobs....
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+make[3]: *** [pmu-events/Build:58:
+pmu-events/arch/arm64/arm/cortex-a65-e1/extra-metrics.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a65-e1/extra-metrics.json'
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+make[3]: *** [pmu-events/Build:62:
+pmu-events/arch/arm64/arm/cortex-a57-a72/extra-metricgroups.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a57-a72/extra-metricgroups.json'
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+make[3]: *** [pmu-events/Build:62:
+pmu-events/arch/arm64/arm/cortex-a65-e1/extra-metricgroups.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a65-e1/extra-metricgroups.json'
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+    for x in json.load(open(f"{directory}/{filename}")):
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 43, in <module>
+    main()
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/arm64_metrics.py",
+line 35, in main
+    LoadEvents(directory)
+  File
+"/home/kan/tmp/perf-tools-next-test/tools/perf/pmu-events/metric.py",
+line 26, in LoadEvents
+    for x in json.load(open(f"{directory}/{filename}")):
+  File "/usr/lib64/python3.10/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/usr/lib64/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib64/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib64/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+make[3]: *** [pmu-events/Build:62:
+pmu-events/arch/arm64/arm/cortex-a710/extra-metricgroups.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a710/extra-metricgroups.json'
+make[3]: *** [pmu-events/Build:58:
+pmu-events/arch/arm64/arm/cortex-a710/extra-metrics.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a710/extra-metrics.json'
+make[3]: *** [pmu-events/Build:62:
+pmu-events/arch/arm64/arm/cortex-a73/extra-metricgroups.json] Error 1
+make[3]: *** Deleting file
+'pmu-events/arch/arm64/arm/cortex-a73/extra-metricgroups.json'
+make[2]: *** [Makefile.perf:730: pmu-events/pmu-events-in.o] Error 2
+make[1]: *** [Makefile.perf:264: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
 
- 2. Emulated    - Guest state is never loaded into hardware, and instead the 
-                  feature/state is emulated in software.
 
-There is no "Passthrough" because that's (mostly) covered by my Virtualized
-definition.   And because I also think of passthrough as being about *assets*,
-not about the features themselves.
- 
-They are far from perfect definitions, e.g. individual assets can be passed through,
-virtualized by hardware, or emulated in software.  But for the most part, I think
-classifying features as virtualized vs. emulated works well, as it helps reason
-about the expected behavior and performance of a feature.
+Thanks,
+Kan
 
-E.g. for some virtualized features, certain assets may need to be explicitly passed
-through, e.g. access to x2APIC MSRs for APICv.  But APICv itself still falls
-into the virtualized category, e.g. the "real" APIC state isn't passed through
-to the guest.
-
-If KVM didn't already have a PMU implementation to deal with, this wouldn't be
-an issue, e.g. we'd just add "enable_pmu" and I'd mentally bin it into the
-virtualized category.  But we need to distinguish between the two PMU models,
-and using "enable_virtualized_pmu" would be comically confusing for users. :-)
-
-And because this is user visible, I would like to come up with a name that (some)
-KVM users will already be familiar with, i.e. will have some chance of intuitively
-understand without having to go read docs.
-
-Which is why I proposed "mediated"; what we are proposing for the PMU is similar
-to the "mediated device" concepts in VFIO.  And I also think "mediated" is a good
-fit in general, e.g. this becomes my third classification:
-
- 3. Mediated    - Guest is context switched at VM-Enter/VM-Exit, i.e. is loaded
-                  into hardware, but the guest does NOT have full read/write access
-                  to the feature.
-
-But my main motiviation for using "mediated" really is that I hope that it will
-help KVM users grok the basic gist of the design without having to read and
-understand KVM documentation, because there is already existing terminology in
-the broader KVM space.
-
-> We intercept the control plan in current design, but the only thing
-> we do is the event filtering. No fancy code change to emulate the control
-> registers. So, it is still a passthrough logic.
-
-It's not though.  Passthrough very specifically means the guest has unfettered
-access to some asset, and/or KVM does no filtering/adjustments whatseover.
-
-"Direct" is similar, e.g. KVM's uses "direct" in MMU context to refer to addresses
-that don't require KVM to intervene and translate.  E.g. entire MMUs can be direct,
-but individual shadow pages can also be direct (no corresponding guest PTE to
-translate).
-
-For this flavor of PMU, it's not full passthrough or direct.  Some assets are
-passed through, e.g. PMCs, but others are not.  
-
-> In some (rare) business cases, I think maybe we could fully passthrough
-> the control plan as well. For instance, sole-tenant machine, or
-> full-machine VM + full offload. In case if there is a cpu errata, KVM
-> can force vmexit and dynamically intercept the selectors on all vcpus
-> with filters checked. It is not supported in current RFC, but maybe
-> doable in later versions.
-
-Heh, that's an argument for using something other than "passthrough", because if
-we ever do support such a use case, we'd end up with enable_fully_passthrough_pmu,
-or in the spirit of KVM shortlogs, really_passthrough_pmu :-)
-
-Though I think even then I would vote for "enable_dedicated_pmu", or something
-along those lines, purely to avoid overloading "passthrough", i.e. to try to use
-passhtrough strictly when talking about assets, not features.  And because unless
-we can also passthrough LVTPC, it still wouldn't be a complete passthrough of the
-PMU as KVM would be emulating PMIs.
+> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> index e2db33577707..a2c5c04e5c46 100644
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+> @@ -42,11 +42,11 @@ ZEN_METRICGROUPS = $(foreach x,$(ZENS),$(OUTPUT)$(x)/extra-metricgroups.json)
+>  
+>  $(ZEN_METRICS): pmu-events/amd_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call model_name,$@) pmu-events/arch > $@
+>  
+>  $(ZEN_METRICGROUPS): pmu-events/amd_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) pmu-events/arch > $@
+>  
+>  # Generate ARM Json
+>  ARMS = $(shell ls -d pmu-events/arch/arm64/arm/*)
+> @@ -55,11 +55,11 @@ ARM_METRICGROUPS = $(foreach x,$(ARMS),$(OUTPUT)$(x)/extra-metricgroups.json)
+>  
+>  $(ARM_METRICS): pmu-events/arm64_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call vendor_name,$@) $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call vendor_name,$@) $(call model_name,$@) pmu-events/arch > $@
+>  
+>  $(ARM_METRICGROUPS): pmu-events/arm64_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call vendor_name,$@) $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call vendor_name,$@) $(call model_name,$@) pmu-events/arch > $@
+>  
+>  # Generate Intel Json
+>  INTELS = $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
+> @@ -68,11 +68,11 @@ INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json
+>  
+>  $(INTEL_METRICS): pmu-events/intel_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< $(call model_name,$@) pmu-events/arch > $@
+>  
+>  $(INTEL_METRICGROUPS): pmu-events/intel_metrics.py
+>  	$(call rule_mkdir)
+> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) arch > $@
+> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $< -metricgroups $(call model_name,$@) pmu-events/arch > $@
+>  
+>  GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON)) \
+>              $(ZEN_METRICS) $(ZEN_METRICGROUPS) \
+> diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
+> index 7ab2ee4fdb17..4f728e7aae4a 100755
+> --- a/tools/perf/pmu-events/amd_metrics.py
+> +++ b/tools/perf/pmu-events/amd_metrics.py
+> @@ -1,6 +1,7 @@
+>  #!/usr/bin/env python3
+>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, MetricGroup)
+> +from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+> +                    MetricGroup)
+>  import argparse
+>  import json
+>  import os
+> @@ -27,6 +28,9 @@ def main() -> None:
+>    )
+>    _args = parser.parse_args()
+>  
+> +  directory = f"{_args.events_path}/x86/{_args.model}/"
+> +  LoadEvents(directory)
+> +
+>    all_metrics = MetricGroup("",[])
+>  
+>    if _args.metricgroups:
+> diff --git a/tools/perf/pmu-events/arm64_metrics.py b/tools/perf/pmu-events/arm64_metrics.py
+> index a9f0e6bc751b..c9aa2d827a82 100755
+> --- a/tools/perf/pmu-events/arm64_metrics.py
+> +++ b/tools/perf/pmu-events/arm64_metrics.py
+> @@ -1,6 +1,7 @@
+>  #!/usr/bin/env python3
+>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, MetricGroup)
+> +from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+> +                    MetricGroup)
+>  import argparse
+>  import json
+>  import os
+> @@ -30,6 +31,9 @@ def main() -> None:
+>  
+>    all_metrics = MetricGroup("",[])
+>  
+> +  directory = f"{_args.events_path}/arm64/{_args.vendor}/{_args.model}/"
+> +  LoadEvents(directory)
+> +
+>    if _args.metricgroups:
+>      print(JsonEncodeMetricGroupDescriptions(all_metrics))
+>    else:
+> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+> index f004c27640d2..04a19d05c6c1 100755
+> --- a/tools/perf/pmu-events/intel_metrics.py
+> +++ b/tools/perf/pmu-events/intel_metrics.py
+> @@ -1,6 +1,7 @@
+>  #!/usr/bin/env python3
+>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> -from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, MetricGroup)
+> +from metric import (JsonEncodeMetric, JsonEncodeMetricGroupDescriptions, LoadEvents,
+> +                    MetricGroup)
+>  import argparse
+>  import json
+>  import os
+> @@ -27,6 +28,9 @@ def main() -> None:
+>    )
+>    _args = parser.parse_args()
+>  
+> +  directory = f"{_args.events_path}/x86/{_args.model}/"
+> +  LoadEvents(directory)
+> +
+>    all_metrics = MetricGroup("",[])
+>  
+>    if _args.metricgroups:
+> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+> index dd8fd06940e6..03312cd6d491 100644
+> --- a/tools/perf/pmu-events/metric.py
+> +++ b/tools/perf/pmu-events/metric.py
+> @@ -3,10 +3,50 @@
+>  import ast
+>  import decimal
+>  import json
+> +import os
+>  import re
+>  from enum import Enum
+>  from typing import Dict, List, Optional, Set, Tuple, Union
+>  
+> +all_events = set()
+> +
+> +def LoadEvents(directory: str) -> None:
+> +  """Populate a global set of all known events for the purpose of validating Event names"""
+> +  global all_events
+> +  all_events = {
+> +      "context\-switches",
+> +      "cycles",
+> +      "duration_time",
+> +      "instructions",
+> +      "l2_itlb_misses",
+> +  }
+> +  for file in os.listdir(os.fsencode(directory)):
+> +    filename = os.fsdecode(file)
+> +    if filename.endswith(".json"):
+> +      for x in json.load(open(f"{directory}/{filename}")):
+> +        if "EventName" in x:
+> +          all_events.add(x["EventName"])
+> +        elif "ArchStdEvent" in x:
+> +          all_events.add(x["ArchStdEvent"])
+> +
+> +
+> +def CheckEvent(name: str) -> bool:
+> +  """Check the event name exists in the set of all loaded events"""
+> +  global all_events
+> +  if len(all_events) == 0:
+> +    # No events loaded so assume any event is good.
+> +    return True
+> +
+> +  if ':' in name:
+> +    # Remove trailing modifier.
+> +    name = name[:name.find(':')]
+> +  elif '/' in name:
+> +    # Name could begin with a PMU or an event, for now assume it is good.
+> +    return True
+> +
+> +  return name in all_events
+> +
+> +
+>  class MetricConstraint(Enum):
+>    GROUPED_EVENTS = 0
+>    NO_GROUP_EVENTS = 1
+> @@ -317,9 +357,18 @@ def _FixEscapes(s: str) -> str:
+>  class Event(Expression):
+>    """An event in an expression."""
+>  
+> -  def __init__(self, name: str, legacy_name: str = ''):
+> -    self.name = _FixEscapes(name)
+> -    self.legacy_name = _FixEscapes(legacy_name)
+> +  def __init__(self, *args: str):
+> +    error = ""
+> +    for name in args:
+> +      if CheckEvent(name):
+> +        self.name = _FixEscapes(name)
+> +        return
+> +      if error:
+> +        error += " or " + name
+> +      else:
+> +        error = name
+> +    global all_events
+> +    raise Exception(f"No event {error} in:\n{all_events}")
+>  
+>    def ToPerfJson(self):
+>      result = re.sub('/', '@', self.name)
+> @@ -338,6 +387,28 @@ class Event(Expression):
+>      return self
+>  
+>  
+> +class MetricRef(Expression):
+> +  """A metric reference in an expression."""
+> +
+> +  def __init__(self, name: str):
+> +    self.name = _FixEscapes(name)
+> +
+> +  def ToPerfJson(self):
+> +    return self.name
+> +
+> +  def ToPython(self):
+> +    return f'MetricRef(r"{self.name}")'
+> +
+> +  def Simplify(self) -> Expression:
+> +    return self
+> +
+> +  def Equals(self, other: Expression) -> bool:
+> +    return isinstance(other, MetricRef) and self.name == other.name
+> +
+> +  def Substitute(self, name: str, expression: Expression) -> Expression:
+> +    return self
+> +
+> +
+>  class Constant(Expression):
+>    """A constant within the expression tree."""
+>  
