@@ -1,212 +1,166 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2060.outbound.protection.outlook.com [40.107.20.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F5C13C909;
-	Fri, 19 Apr 2024 18:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713551915; cv=fail; b=HEF3DUGRAFWt4/ODTnsRPblltxrYB/dot4t2clPYWMx3WHa+onoD14HwW5TqKMdnr8FLQEfrW7AgPLE1Mf5CS/TeDNb3wBrOa7FJJwEcjxlO8iX0IbPQXS2aNnJSBFCGrbUThu/bKWPGxsfnL6ZuSFyaZ0AkGLcfPHrZOw/DmiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713551915; c=relaxed/simple;
-	bh=HRjgMCDM4ga+ViVPQn7/kzgBs3O1Pc9TQtPgLvEhRp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PtOtVwlzefQnu49T8LzqxQMO7q/8sLwxfmTSuzEfAjQ7Hqxr8NyEGPMqqm4tsN8Bvvd91wL+DScHUnjHgP/0OTc6v4871Xbj8dq3PES/Pf6z53h2SU2EWDJobliK1SGJldCW66/D5Fq7TkWBa5k9ndUCVBC7mDOrXzx/vQ/fDRQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=g/ridY8u; arc=fail smtp.client-ip=40.107.20.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEC013BC08
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 19:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713554066; cv=none; b=ZmsA4fW3qWJzZ/CxO1gQz7m7qg6Rys2YGoSDbeqU6tyl+PWDUgOu9omxqa6A8b77kp2U2Y0Dq5APnsc3PdwpzwNSW8ON5LBtCAG3LumtN06toSpd6mrAoK0x2yuOF0r6mr+GKFYcv7MPPDfx9c9lWrruPjeShYz+WXb+6epTcjI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713554066; c=relaxed/simple;
+	bh=ghHRvfsnLZoBuD+thj2tzA2nIrRJDK62IHkGCKIFt9A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Xp/ENG26a+w2AjzLyjohdnz73C+g63Ot9/8eUsWPiugqfD2lhyUc7qGPJ+31tu7n1mclhtEiKSBlnt72NUuHzYtgzMMhifeClm1N2Z/ooR/Y8Bn/p2pf1PQpdCoa6YuBc66Yl9baTEmlRCXQfOv8t6ZSZ5ijqkhSRmM/4krCAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Phyt+OmO; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g/ridY8u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+oucWl/Ifl2MNAcKwtDajtlns+pXBDKJ29hate6lUk8bn9uaQS5hObrhR8fqaOryUP7TO8TauMwxH+FJOC/uod0iuzV9QEpZfvumqxZfkqHKCgu9u1Rjy1l6xqI3bg3ms3Qtdufgd2YxkjoGIBggcGxYvLhJlF/J/VfTdCMbfkeVay/OvMl2EzsyCOnCFVLxxiLNKLPfqf+/PdQDWWaKzkibbOYB6Wyl6k0gcbFGeYlnqfcihY02tukbuzCQMMQnttN8eXW+JRNYukphgoiA/QoAhKNwSiSmou82lee87YCdPTvqxiaPG473rRVoipsah8y0u7R+FHgUDRUj/UqHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4/2UhnmaK3y6QZh0QO8hueIS6EiXDjLHTN3CgRa62uA=;
- b=g8SF74B3gWcWtGKn5BI0gk7fVSvt8+q+LWmR7pQ3QRAiQiCyUF+gtKREZsuHKmCEL7mwQoh0gh0Z9lonOD9Ek2rH4D/fvmUprOmegkWj2xtU/JRVPusElv1MdDot2VwmmrXEBky+4tXjNiA9Zvlqmh0lCdjsQzzNp8rBS4Fhc2I0rumu4eet9DP0H+JVs6upivL4iMGod8VvinNBzQqHkppS5PXh+Jdif7IQxgzbvseS69LS6ZZWHMPcsNjxAZIcxZiNgdeAuuorvXjTfs4ttzEYfq5EQrZ7Tefkg+sPBAu6jDMkiF0dAQj5cPZZSbVKJwXKJWC/J7xSwjLYqsEFeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4/2UhnmaK3y6QZh0QO8hueIS6EiXDjLHTN3CgRa62uA=;
- b=g/ridY8u+VwtYFBn5qisM49VQ/MwLdtpuIeGtuOhf18vvCAvkjbYmuu4hYzUhSVh3ceQuM+DuvEuAZL+7YIA2UuAS11BD0+9VpJ3a+FGMp2Eg4sdqAduFREXW2F9wRxaduLxk+dlNDcXJCiBD8TU7D6CYZwRycn+lkv7NWCBDcI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM7PR04MB7127.eurprd04.prod.outlook.com (2603:10a6:20b:113::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 18:38:29 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7472.037; Fri, 19 Apr 2024
- 18:38:29 +0000
-Date: Fri, 19 Apr 2024 14:38:19 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Will Deacon <will@kernel.org>
-Cc: Xu Yang <xu.yang_2@nxp.com>, mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, mike.leach@linaro.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v10 3/8] perf: imx_perf: let the driver manage the
- counter usage rather the user
-Message-ID: <ZiK6G3aM+K92lq0w@lizhi-Precision-Tower-5810>
-References: <20240415061320.3948707-1-xu.yang_2@nxp.com>
- <20240415061320.3948707-3-xu.yang_2@nxp.com>
- <20240419154913.GA3983@willie-the-truck>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419154913.GA3983@willie-the-truck>
-X-ClientProxiedBy: SJ0PR13CA0063.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Phyt+OmO"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de45daf49deso4937261276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 12:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713554064; x=1714158864; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxyLjfyND/X0CfR1qvIubJS+urbDCxyrK24QGGBvcRg=;
+        b=Phyt+OmOLRhTdZkGxZSe2A7lyD8q0bdQAvdmS0mUtCeCjk/hEm+PpA70c7g9yvOR+9
+         NcvK1QiLKQJJDu1IVCizbI3tFm3Ttq83m7aHboMwtXJMJUnsA/ZTXz9GY6RcCAQe1G4R
+         ltj3kBgL73AE0WbAKKB/NTeHlfZy3nWGmIViEAvV7/SJWTj7z77jzH8jdyvNqrf4YuG0
+         2aXk+90jUYDyMMMGJSM9GTFpWginoX2BH99C8G3qHT5xYkb8wSOyfscR50xbefu1Ckcx
+         3thmYxD8qDOl+Iyaah8Z2PGvMijJSwbf067mBjDmQCZz9adnirJPAcZxptWV3VkIKNn+
+         BiJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713554064; x=1714158864;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxyLjfyND/X0CfR1qvIubJS+urbDCxyrK24QGGBvcRg=;
+        b=gDEijBRPatHRLTZSbAGGK3gNvNfzVKj/OYiWoWasNGS0+BV6ZXdu/qjrqVMHX+Snfe
+         UmmsEt/PgcaH85nqyv4mMj4YRNZvoy9xXYh5A/dwqteffJ7IPtM7noVhYdi249C3ljxw
+         u63kavGwHR7PuDhcv+bnrNokqImrygttgC6dcQ+0EcVLTIbAw8wWo0GmSn3DFN7POe6B
+         quq6nRWkxv3fd71c1lpB5ZppN762i6u/2ItkksRmSdZDrf32Q48mNFR8xNfl0467Jkyz
+         0jzG3klRR9Lhf5T8KY6NCJkti3WQHuxNGp0ouZg3gjvYIh6LWxRaUPoBHYl0z4CQ4UlX
+         9OPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbQ3jiqtDuzPjG8VIlP4WEEyJTD27y8kw1EGrwUP/6aMK1Ew6Xj4vi/3mn4wbd/AQNt0oZcdjVxEKaFcXv7rngXFXpACpfHP8tqbRKAaoong==
+X-Gm-Message-State: AOJu0YzO19Yv0eJhqJRLy9QmjaobONE/paXHyVdwdibCpe1rD9TLLhQc
+	HvKrS0JWmYK+6ZBkfY3Lxfh5/4siejCkVqkAM/KjLaKHjNoxobio6/OEnv002u4V0x9C1Z/IuwB
+	37w==
+X-Google-Smtp-Source: AGHT+IGVgn8Gf0JE3BoAkURXxw8LyhcDmWzr3Q2r8XR7+A5tBJUam6WylNWXRK1YN/QeAIyjeaEID9m1Od4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:c01:b0:dcd:b431:7f5b with SMTP id
+ fs1-20020a0569020c0100b00dcdb4317f5bmr824560ybb.0.1713554064161; Fri, 19 Apr
+ 2024 12:14:24 -0700 (PDT)
+Date: Fri, 19 Apr 2024 12:14:22 -0700
+In-Reply-To: <ZiGGiOspm6N-vIta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7127:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d8e2442-e847-4381-72b4-08dc609fe854
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gZmbppELz9Zw/QQJuqpNlwiltLPKjdiuF6KdZCrb8PndNoq3OiU2SLiDcYaF?=
- =?us-ascii?Q?ajHuuVE+68NEAW/BnFlmHLsRcKH9fMCZyxeGzS4fe+cWsyHZgo6R/dfnthG5?=
- =?us-ascii?Q?U7NbmasIVP0A2VP/U2dy8BbLhEn9YI9ewjcEeFFgTgLSAdnaCOeXDscbo3Zg?=
- =?us-ascii?Q?2zRAm6Is3zJXc0xcWkwknMy1RAAahMZzlXnlUXyCYlufwKArMQ6sf2l0rndz?=
- =?us-ascii?Q?8o+0l7EaMcT7oAD1AtHT4okzmIeEHZP5xnP5s4JZ2SY2b96uerClnIH5bKHl?=
- =?us-ascii?Q?R8NAvd1fN8CIdUpDGzZYtIH7r/sfQ9Jbf9ttm2h+54w/kCxVSN0O4qgWMvfS?=
- =?us-ascii?Q?zmLZTnHGVmVCixbxX8w+6yYAL9cV/Y7btptEiSaWXiLcbDVpO3rq0Pg5DGz1?=
- =?us-ascii?Q?78GbScspkAbDkRXwyJgQGQjH6s3KmXXa0giQZ3SgU50tyYRdUxdH7OsqaebG?=
- =?us-ascii?Q?kT6dVaMEmhvduz9L9s6K27fTcyzhRsIqqNPztwJ+HyxaexA6qR7PVbH73RTt?=
- =?us-ascii?Q?m1Pj8lCqBW97UDDIDwn4Rd0QHGIaiTvig1I5QoUvgepbR/LaumCTibw+NRoP?=
- =?us-ascii?Q?k/NtPXKpG67yy4fyUE7h9V6K3GDhpSfk+3YmeqOKhxDW753+vDAd3Ne5GnBC?=
- =?us-ascii?Q?ItP7lhToRyrDY5bXfXeRDnVUcDeTyABhTLepA+yNWNdvzZ+jfs2+EyEfXfAX?=
- =?us-ascii?Q?M8sD4DYgvHkAnBEKeGA7TwcTw7RKg6VWk5cUg234P3Lmj7xXSyrApjVQd8jM?=
- =?us-ascii?Q?J23eRbH4N/Pz4Ljzj60no2JwxU6snShzTHXCoFadSOaUlBrpqwIA6llsloNX?=
- =?us-ascii?Q?tO4bzLmcsupV4vCAT6uSs4lm6rofKJop2usR41NcBurXslbk1B34kM/qNA4x?=
- =?us-ascii?Q?6Xr30WdU1n2avy3aHY+aa5zEWjHunGFLdHDMl7JItDwkyINHIpaH2Qq/dGhn?=
- =?us-ascii?Q?rV+KYpi5mFXhNb4t9kB577+nWjOdmTFImv/5f0ibg2z/ddvb+U6wHUruXAAw?=
- =?us-ascii?Q?r23eB2CxDkFKHxKB3PDznB667mXkes8NOERKpIlN35EKVSGq2/Oy+qFY9LCq?=
- =?us-ascii?Q?W/eUizWojd2Xwq3bTeIOyPsu62xDRE6RR0WQT5yK+LIrc7VAYtVnB398sRKX?=
- =?us-ascii?Q?M8QUVbp2LLStYWRlO1AKuc7kiLntNEVnn5eFyeKPmkWN2f0IFoCzQC/6RduV?=
- =?us-ascii?Q?hQqU5sfVRFOxWiLomQg/kJhpoisE9cnRb4/LKtB5P2Njx/G5yTpNDstO6jQV?=
- =?us-ascii?Q?tAuTANvHVWzvRT7xcVJLs5AG6jSQFpgPRZ4/qwfq/aNEmKgj5z38sK4xRuwV?=
- =?us-ascii?Q?/k8F85lDuxErscmCLRmgY2NRZZvb8O4eozLTax7DfiQafg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(7416005)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aeEilhOQ8um4mv1MsN5dEZk6rv+FsR1y7lrYi40FARa2If9nW858eZmDZdvK?=
- =?us-ascii?Q?2/X6gNcF+8S+XVviXsXh9bdzgm97Y0Xz98C4JpSo5PyEOIIhNgkOIFBqZyld?=
- =?us-ascii?Q?PizMaE1X3JFBcAd3p8oBy0caz+vW4lurgDUph+WDOyjdQDDweGlD1ipYcdMu?=
- =?us-ascii?Q?JbpdoHtHlBI5gCQ/ZTG6v0GIs8o0iBkg6yft3tHMVJe2Nl5GxDiYEpJLgL2k?=
- =?us-ascii?Q?RS5TuxWwBJmQOod5vRSlV8AB6mRbweSJ6FQ/Q9crBUmYjVwIFx+qSPuS9tT8?=
- =?us-ascii?Q?CzDb+e+H+Vs+XVRieAAR3bqXIm7ALceFtMCgLR8+oLgBZ4wfTpzAZZRLzvJn?=
- =?us-ascii?Q?hQYk0g7yPsjmdx/DLBKaxYwRG2CPxQ4tpD8QtDm+rGtuI1LV0FYIJ7It8vDD?=
- =?us-ascii?Q?ACR/hXQcHwqbsoYnsMVhiLQeuRFcVLDPQcisphqujP8YBLPui80xsJcJ4y7i?=
- =?us-ascii?Q?usN0Pe6kWSdqxdRbQr2eOfF9NoEuw5gvjFOUnAnSuWM/OkjR77sJ6SNTokz0?=
- =?us-ascii?Q?fo4j0H0F7qwvy2uHjtROaSBt23JHbemHq8C6EWoJNxCE9NNOODTeWI5Z49Cf?=
- =?us-ascii?Q?ImgeftpSnBep77T3C5Ga9FnPVEmcuzG72dMOYdDmC6pCk7kntmLTXekKaoNn?=
- =?us-ascii?Q?9d+dvE8ZiBWvIBNHZAPxXjc7UAj2ijnStel4AS97Kex8dJyR472/IWwvtxQQ?=
- =?us-ascii?Q?AlNcOTTuZk95BALs5Uj7CpuslUdEV+qnW0GG2KJgZhl8SUnfJHhs+J+Lkq2r?=
- =?us-ascii?Q?pEthvWSDYGeGKfmDkwK6zvgTlcaoFjuJAMZ5uesC+wNbyxAN7PwVu0RZ8Sny?=
- =?us-ascii?Q?mzLus8m//uNSFiWiuDb9SQcC1QTE4mkOpks9Vbw6cGX1AnW6dm4vRbi5qbP8?=
- =?us-ascii?Q?fuShjyBb00m3d5nWuRSyBesSGPomO7LBBNe9rtxxO/u3ut/Cs5G3nxF8+9yu?=
- =?us-ascii?Q?qwkVqKvGj3IB6WjL2bmUGqkaqAI6fPwYZ5MtGq7f7/nnp/YDMfzLkgCSgGit?=
- =?us-ascii?Q?9ojlQ+ZyyritiPVAMVSww44mApFFMuFiW1xdaa0FujhsIYekhNS89E2mxD66?=
- =?us-ascii?Q?bRu8kqKGcLPBYl+XlXK/Dam96xcnMqIY7M745i08S4KIYL4N3+nWmbeY7yrd?=
- =?us-ascii?Q?Bww6TnmP6R3V1gbzFehFHwnAQAhyV9u5OKVR9Bmxf6txCZBnkU5edNYkRwpT?=
- =?us-ascii?Q?YGDwk9nXeOHFQ2JUJ7Kbjx/YPcph84/T7ryNUx4Gp/N04CUvnjTZSZUZB0Az?=
- =?us-ascii?Q?8hBgU9L6UjI6Y+PtgaIr4DaMCw/MerqXUdL33qavmi9zDYq8pYpyXMUni4Es?=
- =?us-ascii?Q?YUiBJLHoGwxfKldL9t70XGqxSBtjgy5p67AReIoNydvMW9xLT1FeKTTy6e66?=
- =?us-ascii?Q?gOYsCxQtVSOtUypRFtSH02/oDGDrdZLw+xlNI2TeIjYyIMOY6nB6iIG+UuGr?=
- =?us-ascii?Q?Ii45fEgasd8Fb3viNzhIPzAqsMuMpsJAPtiQP2Ay63hP+rCGZGrjmmIqMdAt?=
- =?us-ascii?Q?KFFP1TahrPS4q/o3gWIjg058UXffzDZr5BHffWAFMS6fQwqbfMo83drr8mkU?=
- =?us-ascii?Q?NC3S0n6ysttMx//VrCxNmkxaX73s5HGo/3a2tcif?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d8e2442-e847-4381-72b4-08dc609fe854
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:38:29.5142
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MMi5nErwqjmukm+ZdiGYjvMyJKYB4ZuQn/8nersTKFyDZ32lASiBHecLWoeC13jj9bQxf8pVH7hPSIO+i6eEHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7127
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <ZhgX6BStTh05OfEd@google.com> <ZiGGiOspm6N-vIta@google.com>
+Message-ID: <ZiLCjutwO6XIQp5Z@google.com>
+Subject: Re: [RFC PATCH 00/41] KVM: x86/pmu: Introduce passthrough vPM
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
+	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Apr 19, 2024 at 04:49:13PM +0100, Will Deacon wrote:
-> On Mon, Apr 15, 2024 at 02:13:15PM +0800, Xu Yang wrote:
-> > In current design, the user of perf app needs to input counter ID to count
-> > events. However, this is not user-friendly since the user needs to lookup
-> > the map table to find the counter. Instead of letting the user to input
-> > the counter, let this driver to manage the counters in this patch.
+On Thu, Apr 18, 2024, Mingwei Zhang wrote:
+> On Thu, Apr 11, 2024, Sean Christopherson wrote:
+> > <bikeshed>
 > > 
-> > This will be implemented by:
-> >  1. allocate counter 0 for cycle event.
-> >  2. find unused counter from 1-10 for reference events.
-> >  3. allocate specific counter for counter-specific events.
+> > I think we should call this a mediated PMU, not a passthrough PMU.  KVM still
+> > emulates the control plane (controls and event selectors), while the data is
+> > fully passed through (counters).
 > > 
-> > In this patch, counter attr will be kept for back-compatible but all the
-> > value passed down by counter=<n> will be ignored. To mark counter-specific
-> > events, counter ID will be encoded into perf_pmu_events_attr.id.
-> > 
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > 
-> > ---
-> > Changes in v6:
-> >  - new patch
-> > Changes in v7:
-> >  - no changes
-> > Changes in v8:
-> >  - add Rb tag
-> > Changes in v9:
-> >  - keep 'counter' attr for back-compatible
-> > Changes in v10:
-> >  - add some explanation about 'counter' attr in commit message
-> > ---
-> >  drivers/perf/fsl_imx9_ddr_perf.c | 168 ++++++++++++++++++-------------
-> >  1 file changed, 100 insertions(+), 68 deletions(-)
+> > </bikeshed>
+> Sean,
 > 
-> [...]
-> 
-> > @@ -245,8 +249,8 @@ static const struct attribute_group ddr_perf_events_attr_group = {
-> >  	.attrs = ddr_perf_events_attrs,
-> >  };
-> >  
-> > -PMU_FORMAT_ATTR(event, "config:0-7");
-> > -PMU_FORMAT_ATTR(counter, "config:8-15");
-> > +PMU_FORMAT_ATTR(event, "config:0-15");
-> > +PMU_FORMAT_ATTR(counter, "config:16-23");
-> 
-> Although these mappings are advertised in sysfs, I don't think we can
-> change them because userspace could be relying on them. I also can't
-> find any examples of other PMU drivers in the kernel changing these
-> mappings after being merged, so please keep tthem the same.
-> 
-> If you need to expand the properties to be 16-bit, then you'll need to
-> split them into 2x8-bit fields.
+> I feel "mediated PMU" seems to be a little bit off the ..., no? In
+> KVM, almost all of features are mediated. In our specific case, the
+> legacy PMU is mediated by KVM and perf subsystem on the host. In new
+> design, it is mediated by KVM only.
 
-I just see tools/perf/tests/pmu.c: { "krava01", "config:0-1,62-63\n", }
-So I supposed "config:" supported below format
+Currently, at a feature level, I mentally bin things into two rough categories
+in KVM:
 
-PMU_FORMAT_ATTR(event, "config:0-7,16-19");
+ 1. Virtualized - Guest state is loaded into hardware, or hardware supports
+                  running with both host and guest state (e.g. TSC scaling), and
+                  the guest has full read/write access to its state while running.
 
-I just want to confim with you because I have not found other perf driver
-using such format yet.
+ 2. Emulated    - Guest state is never loaded into hardware, and instead the 
+                  feature/state is emulated in software.
 
-Frank
+There is no "Passthrough" because that's (mostly) covered by my Virtualized
+definition.   And because I also think of passthrough as being about *assets*,
+not about the features themselves.
+ 
+They are far from perfect definitions, e.g. individual assets can be passed through,
+virtualized by hardware, or emulated in software.  But for the most part, I think
+classifying features as virtualized vs. emulated works well, as it helps reason
+about the expected behavior and performance of a feature.
 
-> 
-> Will
+E.g. for some virtualized features, certain assets may need to be explicitly passed
+through, e.g. access to x2APIC MSRs for APICv.  But APICv itself still falls
+into the virtualized category, e.g. the "real" APIC state isn't passed through
+to the guest.
+
+If KVM didn't already have a PMU implementation to deal with, this wouldn't be
+an issue, e.g. we'd just add "enable_pmu" and I'd mentally bin it into the
+virtualized category.  But we need to distinguish between the two PMU models,
+and using "enable_virtualized_pmu" would be comically confusing for users. :-)
+
+And because this is user visible, I would like to come up with a name that (some)
+KVM users will already be familiar with, i.e. will have some chance of intuitively
+understand without having to go read docs.
+
+Which is why I proposed "mediated"; what we are proposing for the PMU is similar
+to the "mediated device" concepts in VFIO.  And I also think "mediated" is a good
+fit in general, e.g. this becomes my third classification:
+
+ 3. Mediated    - Guest is context switched at VM-Enter/VM-Exit, i.e. is loaded
+                  into hardware, but the guest does NOT have full read/write access
+                  to the feature.
+
+But my main motiviation for using "mediated" really is that I hope that it will
+help KVM users grok the basic gist of the design without having to read and
+understand KVM documentation, because there is already existing terminology in
+the broader KVM space.
+
+> We intercept the control plan in current design, but the only thing
+> we do is the event filtering. No fancy code change to emulate the control
+> registers. So, it is still a passthrough logic.
+
+It's not though.  Passthrough very specifically means the guest has unfettered
+access to some asset, and/or KVM does no filtering/adjustments whatseover.
+
+"Direct" is similar, e.g. KVM's uses "direct" in MMU context to refer to addresses
+that don't require KVM to intervene and translate.  E.g. entire MMUs can be direct,
+but individual shadow pages can also be direct (no corresponding guest PTE to
+translate).
+
+For this flavor of PMU, it's not full passthrough or direct.  Some assets are
+passed through, e.g. PMCs, but others are not.  
+
+> In some (rare) business cases, I think maybe we could fully passthrough
+> the control plan as well. For instance, sole-tenant machine, or
+> full-machine VM + full offload. In case if there is a cpu errata, KVM
+> can force vmexit and dynamically intercept the selectors on all vcpus
+> with filters checked. It is not supported in current RFC, but maybe
+> doable in later versions.
+
+Heh, that's an argument for using something other than "passthrough", because if
+we ever do support such a use case, we'd end up with enable_fully_passthrough_pmu,
+or in the spirit of KVM shortlogs, really_passthrough_pmu :-)
+
+Though I think even then I would vote for "enable_dedicated_pmu", or something
+along those lines, purely to avoid overloading "passthrough", i.e. to try to use
+passhtrough strictly when talking about assets, not features.  And because unless
+we can also passthrough LVTPC, it still wouldn't be a complete passthrough of the
+PMU as KVM would be emulating PMIs.
