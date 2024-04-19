@@ -1,105 +1,119 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719F812DD90
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 13:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9339185C62
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 14:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535091; cv=none; b=YINF0jPkXOsYFHY8G8W7JWTQbxel4KoFEWCODocNmdc7QXcHqRUyAwDde/URHAUilUQirpKdQTogRp36N/MtSY5jl6rm41exHkB0WPMZcRqYlb7AhFjjyNIS0NCDdemoKZcN5NjvIkHHvLLJUBwUqu5k4dJFrLPa4jFI4Pw17Mk=
+	t=1713536676; cv=none; b=u9058+qFphJIeNTa1VVHY8aiAErLOd8Vg8t08rcrxkrmv1hiDw/1mVou/sIU0/0P3RS9zNSwHn8YzWx8RKU2d0ljhnOOxjtOQU4En5fa6HEx0ObYsnqSigTSq6xXQUUWPtpTx3QwfqEXnEJF1oxlzdz0etJ6aeqnaI1j/Bf7bKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535091; c=relaxed/simple;
-	bh=gKtJtEltb2GnPLMyuxs+G7n5EiHdmrtpBSJFJerWnT0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Pt/+tg0vD0iMYAsmVekgBSV2oXR++VrttKfrpPrwu7amIc0CKUMKiPhhpOVcKB4QPPDCEBAlAKMyKF0zL8nS04qu0z3Nl7A0GSeMJh7/wJEoLmHjdjGr+E0EQlT49pmwwSz5cjDQGe3Gwa4C7vSxgsN4J7capsaHAQnBrHDiWBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mRlK2Ozk; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713536676; c=relaxed/simple;
+	bh=UGmvmYZQO1s/rOOEhPlSw35L4z315gaH5cVBwdtDIyE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bPXmyB4SJlcruQyoFP24i0wPFIa3wBZMd5WHw7IHuUj8IUWskSO//3OxMrLKC7YxSZuKXFwiUeuN7kuhX+xhnlXyySjHbd7Se62bXsSQX6yK9//Fe56+il2sIRZW1JnTSnqtNXgb6FYjMcyN34lIW1dvwyqxFd9zIQu0EMWpWX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJKgGRpX; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRlK2Ozk"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de45daf49deso4296602276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 06:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713535088; x=1714139888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgrnEQ6mmP0jFk5Zb1SZY9boKJybsIIVble8n571sqI=;
-        b=mRlK2OzkuCq05+LZ6E5NEHj0g7bbqBqXyiw5zvOi0650htfNDK/xcglrJEONnshNq3
-         RAXI+oelN0PRLcdYSG+4zJWj5Qj5CBp+/AvPbL75WEDb28f1b/vBFJESveRYjsBtonuV
-         6Drn/gFl76UCFwd+THW35DDFtxg1LLTDK/EVb8+cNedWfQ1aT7E0h0ehChwzJ1qGeyLd
-         aoL+6WmsQoGrsbAxulbqCHsC4T8xOmamYs02X28bpDHbyssO1+2CK/YcMMqi+VgS4S3h
-         WoqIHzO4si2L4Bt0bXtdA6Y+u6dKFOPx0RoNMfULHtspL7n2dg+IMQeWze1L3oa4iL3m
-         G2VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535088; x=1714139888;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgrnEQ6mmP0jFk5Zb1SZY9boKJybsIIVble8n571sqI=;
-        b=baZUlzYZRzNapvoYQC4E1fLWvZvCWEg3mEsIVqc55ci7dUv1+1HG0KCUFBAqBV8vXd
-         ZtLYwSKYQSZ41/fS/GpgQWhg2q0+9XLdb2pZpxkj85/y8SgM2IX0tr9ccjSrkLaLL5DA
-         F9j4+S/SaOR6Aj2mO48m7Y9uRDjTE9czRBbBBeqG1LqOu41ZiuXr+5o8Ex6716eaj+X+
-         XjFuBx7Xo6gEXGFZYIX1GLYcyYKmFL4Y/vZRCOUmlfS1hE8RoNE44yO9mGEgH20J2brL
-         CzNJVh1fstJ8HZsMI4awOBF1pxQkQsMgnrU0yFSeOaavrgi+t2e+ku4zX1n4LUjrAWbO
-         5rvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVQrGH4kuf73VC0ZUTazhlhnEKQG3Fd/Iw3a/aJHzFYpSd8P50+Ni9rNAzhezkl3tAEHu+d69+L7eVzfV+/tah5+YBGFf15bt8nM/Y+ICEwA==
-X-Gm-Message-State: AOJu0YzHbne2PxRrsXJlg2Ty92zJk0OJmUfpye7ZQ8RbPUlDbvRrsiqP
-	U49CnBCuIMDVZ7xf9gI5dOwpErRPyc0EdNIlv8RMx50cP3hzM7jT8h+KARl466qSUT1ir4KXBMq
-	F/w==
-X-Google-Smtp-Source: AGHT+IGomtDJcb51lvQMFTT5YaGoxW/vZTzkUSuhiTLoa8vZxcxiKEVXH4dmB1G1pZ9i7NSp+ryn6A1areA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:ad8d:0:b0:dc6:e5d3:5f03 with SMTP id
- z13-20020a25ad8d000000b00dc6e5d35f03mr543024ybi.4.1713535088599; Fri, 19 Apr
- 2024 06:58:08 -0700 (PDT)
-Date: Fri, 19 Apr 2024 06:58:06 -0700
-In-Reply-To: <20240419112432.GB2972@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJKgGRpX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713536674; x=1745072674;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=UGmvmYZQO1s/rOOEhPlSw35L4z315gaH5cVBwdtDIyE=;
+  b=UJKgGRpXrfuZiQQfmuGGJl4kpbw+fdevA3NaR9pYEi3bWcCxohxC92i+
+   71g4k20UkZrWP6LOw/XueoiIxvfIQBF2qkGvGVtb8MJTuUC8lPsd1TyBp
+   SUfSE89e4HyQGU3/fn5+dsbz8EaUI7XgoIg2Lsqp4aeEZGyo7Nrv6C0qU
+   cZTHPMjSWO1mMkL8Bv4pQFRsgMQymH6iU0/CGSPnoqcHi1F6Tihxi2bX3
+   BB606V4b0Vcbk5GXc0x0H6NwVLp2bxig/6QLz3T62BkF3iu6Z4ekg0ocl
+   UAImua+u1Vfljn3ElEklDPhmKCc2R7LtlrzXnPoxuW+HclnAZLsadDaBD
+   g==;
+X-CSE-ConnectionGUID: YeMZVk6rRry5TlwQ4seVJg==
+X-CSE-MsgGUID: gJ6DGgAoQCO5kjJHHPSFJw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="9005253"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="9005253"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 07:24:34 -0700
+X-CSE-ConnectionGUID: DKlvi/xvSYadJlRfjX0y8Q==
+X-CSE-MsgGUID: 7mBz50RHQNup1qmEbee4iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23788516"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by orviesa006.jf.intel.com with ESMTP; 19 Apr 2024 07:24:34 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id 93E99301773; Fri, 19 Apr 2024 07:24:33 -0700 (PDT)
+From: Andi Kleen <ak@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org 
+Subject: Re: [PATCH v2 05/13] x86/irq: Reserve a per CPU IDT vector for
+ posted MSIs
+In-Reply-To: <87jzkuxaqv.ffs@tglx> (Thomas Gleixner's message of "Fri, 19 Apr
+	2024 06:00:24 +0200")
+References: <87jzkuxaqv.ffs@tglx>
+Date: Fri, 19 Apr 2024 07:24:33 -0700
+Message-ID: <875xwdbfby.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
- <Zh1d94Pl6gneVoDd@google.com> <20240418141932.GA1855@willie-the-truck>
- <ZiF6NgGYLSsPNEOg@google.com> <20240419112432.GB2972@willie-the-truck>
-Message-ID: <ZiJ4bqrBUPM0E8iq@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, Apr 19, 2024, Will Deacon wrote:
-> > @@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
-> >  					break;
-> >  			}
-> >  			r.ret |= range->handler(kvm, &gfn_range);
-> > +
-> > +		       /*
-> > +			* Use a precise gfn-based TLB flush when possible, as
-> > +			* most mmu_notifier events affect a small-ish range.
-> > +			* Fall back to a full TLB flush if the gfn-based flush
-> > +			* fails, and don't bother trying the gfn-based flush
-> > +			* if a full flush is already pending.
-> > +			*/
-> > +		       if (range->flush_on_ret && !need_flush && r.ret &&
-> > +			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
-> > +							    gfn_range.end - gfn_range.start + 1))
-> 
-> What's that '+ 1' needed for here?
+Thomas Gleixner <tglx@linutronix.de> writes:
 
- (a) To see if you're paying attention.
- (b) Because more is always better.
- (c) Because math is hard.
- (d) Because I haven't tested this.
- (e) Both (c) and (d).
+Dropping CC of a bazillion people and adding Arnaldo who owns perf trace
+which has the vector decoding code.
+
+> On Mon, Apr 15 2024 at 13:43, Jacob Pan wrote:
+>> On Mon, 15 Apr 2024 11:53:58 -0700, Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+>>> On Thu, 11 Apr 2024 18:51:14 +0200, Thomas Gleixner <tglx@linutronix.de> wrote:
+>>> > If we really care then we do it proper for _all_ of them. Something like
+>>> > the uncompiled below. There is certainly a smarter way to do the build
+>>> > thing, but my kbuild foo is rusty.  
+>>> I too had the concern of the wasting system vectors, but did not know how
+>>> to fix it. But now your code below works well. Tested without KVM in
+>>> .config to show the gaps:
+>>> 
+>>> In VECTOR IRQ domain.
+>>> 
+>>> BEFORE:
+>>> System: 46: 0-31,50,235-236,244,246-255
+>>> 
+>>> AFTER:
+>>> System: 46: 0-31,50,241-242,245-255
+>>> 
+>>> The only gap is MANAGED_IRQ_SHUTDOWN_VECTOR(243), which is expected on a
+>>> running system.
+>>> 
+>>> Verified in irqvectors.s: .ascii "->MANAGED_IRQ_SHUTDOWN_VECTOR $243
+>>> 
+>>> POSTED MSI/first system vector moved up from 235 to 241 for this case.
+>>> 
+>>> Will try to let tools/arch/x86/include/asm/irq_vectors.h also use it
+>>> instead of manually copy over each time. Any suggestions greatly
+>>> appreciated.
+>>>
+>> On a second thought, if we make system IRQ vector determined at compile
+>> time based on different CONFIG options, will it break userspace tools such
+>> as perf? More importantly the rule of not breaking userspace.
+>
+> tools/arch/x86/include/asm/irq_vectors.h is only used to generate the
+> list of system vectors for pretty output. And your change already broke
+> that.
+>
+> The obvious solution to that is to expose that list in sysfs for
+> consumption by perf.
+>
+> But we don't have to do any of that right away. It's an orthogonal
+> issue. Just waste the extra system vector to start with and then we can
+> add the compile time dependend change on top if we really care about
+> gaining back the vectors.
+>
+> Thanks,
+>
+>         tglx
