@@ -1,110 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FA28565E
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Apr 2024 13:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD5126F11;
+	Fri, 19 Apr 2024 13:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713532168; cv=none; b=uzua4m5+5hXOf7Tm0r0EPcvGJbpGvpX7EJ+e7gOruZ1yxN/ra7dq142qri6BzXE243xL0Zg1ElnxkbcSm4EVRO0hDmNTIKWaTGDeKRhEIi/a0/h2JcO/tUKfRFvh+IZ+LlntlVkYmtrkYg3+gtY1YnbZhGJfyk8pyGoAI7NTuak=
+	t=1713532859; cv=none; b=QRqjo3u/AbBUSLPl3RIyIhPxntX+86M9TQPGFTHOhgrEPQJvBjpX5hyoZ6iNFSpn5+IgGpuQV6crNZ7d9dd+9g6izJ9/j6HUeVP+P3anhaANJYJ/mnOLdx5xB125VeI3ZJZARSgsdgSAQgj6QSUR8/Qll4tN5BHxeZBfZOsks2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713532168; c=relaxed/simple;
-	bh=G0YsJ5+r9qxGqxH+OhCG0NB07frLTlVTsIoh8Br23/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=upGQ7Vt/1fONY8d1IhRm271jQxkC5J2CIZ6kATGln5K/pGQdEYcMBWMtWKfc7qpLF6gZ1rIYF4F98Q3kH8G9+Fs8ahWLdiSizAi6QZ5LMje1osNMgPpcgyJteWhs6If8Hv4LQFwK3QRfy7RL8f9HfcQnuSHKU+/9v+D8LUnxggM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pX7IN1Lu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713532859; c=relaxed/simple;
+	bh=9AoVEv+4aXGan7HuUBUV61T8VtGyQUi1t/MC18wWiQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hnnC3Ay12EU9fuMsLU7YY31kxHbYpVeBXnY8ow/PWZNopnPsworogvAAltaSRFmFZ5Jn9MswliKIJa5acnCUfFQr/XfXBRiLuXgN+l601SEMI54EqLPkSirHnGgcmcXp3kjyNqNvcuuB4iQ9Wf3DO18vUJ7dsC8FpAphnIYh+ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eUyP2S1h; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pX7IN1Lu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1223FC072AA;
-	Fri, 19 Apr 2024 13:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713532167;
-	bh=G0YsJ5+r9qxGqxH+OhCG0NB07frLTlVTsIoh8Br23/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pX7IN1LuSfFC66h8/wP/Pb2pXJEit5IGHKbz2sSECqnbrRYnudoGQzxArvW4o8ET2
-	 dE0LcoP9AExqxwyfIL7jSI4pby4dKLcx2KJ5+GCxfRQx/C5hIZ7bYA9ugv8beSsAAm
-	 KXk6tfoT6AJw6gd5pSDb+JI35NCBIHxU6YVXGPAge66/pX5Iq1fe8ckG1u0ERB6l2r
-	 5KKT901h7WetOfGOGjCPdu3bYmjsVdGRJWLk4ADzPLo2j1A8L+SMu+mqNIMfqHvbCO
-	 Dfeb7cbeFi4dcwMP+8tkDnFIeB7RdPHVwZn1Z/8guJ2HlrR1aNJ30Mw92+ewsRbv/X
-	 y8/q5AMc80GMA==
-Date: Fri, 19 Apr 2024 14:09:21 +0100
-From: Will Deacon <will@kernel.org>
-To: chenqiwu <qiwuchen55@gmail.com>
-Cc: catalin.marinas@arm.com, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, kaleshsingh@google.com,
-	ardb@kernel.org, alexander.shishkin@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	chenqiwu <qiwu.chen@transsion.com>
-Subject: Re: [RESEND v3] arm64: Add USER_STACKTRACE support
-Message-ID: <20240419130921.GA3148@willie-the-truck>
-References: <20231219022229.10230-1-qiwu.chen@transsion.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eUyP2S1h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713532858; x=1745068858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9AoVEv+4aXGan7HuUBUV61T8VtGyQUi1t/MC18wWiQM=;
+  b=eUyP2S1hVE3ApD2/fhOFBCjqlHaXhRwlEMcD2cYPHrUEAdGdxjXGk1CK
+   79zqmefhOafVPs7GO10vYBCdQxk6fNXd/ngz4i+2SVd8qjVpdNSccUWLQ
+   owCyrroIjrK+Q21eYtF1oyPAMb42Zyy7ldu1Px34AicmLhhvXRKbdrT5W
+   +rQ6YR3cnXsPohsDwIesq5/WFSFtyaFPk/eY5aMdxPuaWfpkckDrG/8nX
+   vZxCKnsBXxq0DIYi1dXw4ykA4JmICA+M5i7vxGGRpizMcsdLcmnC8O8ZA
+   k+AkXnUXUfzbgatawc4fBBW/uZJmpvuEkZIFf4TXeOQACTCM9NnaPgxee
+   g==;
+X-CSE-ConnectionGUID: HbiP/61BQ8yrtfbfW1AQuw==
+X-CSE-MsgGUID: KkSMrnRCS4uQDPw+PCr35w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="20524384"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="20524384"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:20:58 -0700
+X-CSE-ConnectionGUID: l1Ba9EzxSTqRx/qsd0wjTw==
+X-CSE-MsgGUID: sRof6H5HReWc4pDZ+Zd1fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27793667"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:20:57 -0700
+Received: from [10.212.13.6] (dojung-mobl.amr.corp.intel.com [10.212.13.6])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 9E8E8206DFDC;
+	Fri, 19 Apr 2024 06:20:54 -0700 (PDT)
+Message-ID: <7df3ff63-a421-42cc-bcaa-b0254ff6a0e8@linux.intel.com>
+Date: Fri, 19 Apr 2024 09:20:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231219022229.10230-1-qiwu.chen@transsion.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/16] perf parse-events: Improvements to modifier
+ parsing
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
+ Beeman Strong <beeman@rivosinc.com>
+References: <20240416061533.921723-1-irogers@google.com>
+ <20240416061533.921723-14-irogers@google.com>
+ <e8147f53-1930-44d8-abb8-fee460ec355f@linux.intel.com>
+ <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fVXv_gsoq5L08gaEJvU1E8xoihc3-L4taA+bPHyOJfgqw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 19, 2023 at 10:22:29AM +0800, chenqiwu wrote:
-> Currently, userstacktrace is unsupported for ftrace and uprobe
-> tracers on arm64. This patch uses the perf_callchain_user() code
-> as blueprint to implement the arch_stack_walk_user() which add
-> userstacktrace support on arm64.
-> Meanwhile, we can use arch_stack_walk_user() to simplify the
-> implementation of perf_callchain_user().
-> This patch is tested pass with ftrace, uprobe and perf tracers
-> profiling userstacktrace cases.
-> 
-> changes in v3:
->   - update perf_callchain_user() to use arch_stack_walk_user()
->     and delete the redundant code as Mark's suggestion in v2.
->   - update the commit message.
-> 
-> Tested-by: chenqiwu <qiwu.chen@transsion.com>
-> Signed-off-by: chenqiwu <qiwu.chen@transsion.com>
-> ---
->  arch/arm64/Kconfig                 |   1 +
->  arch/arm64/kernel/perf_callchain.c | 118 +---------------------------
->  arch/arm64/kernel/stacktrace.c     | 120 +++++++++++++++++++++++++++++
->  3 files changed, 125 insertions(+), 114 deletions(-)
 
-This mostly looks good to me, with one potential issue:
 
-> @@ -107,35 +25,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  		return;
->  	}
->  
-> -	perf_callchain_store(entry, regs->pc);
-> -
-> -	if (!compat_user_mode(regs)) {
-> -		/* AARCH64 mode */
-> -		struct frame_tail __user *tail;
-> -
-> -		tail = (struct frame_tail __user *)regs->regs[29];
-> -
-> -		while (entry->nr < entry->max_stack &&
+On 2024-04-19 2:22 a.m., Ian Rogers wrote:
+>>> +             /* Simple modifiers copied to the evsel. */
+>>> +             if (mod.precise) {
+>>> +                     u8 precise = evsel->core.attr.precise_ip + mod.precise;
+>>> +                     /*
+>>> +                      * precise ip:
+>>> +                      *
+>>> +                      *  0 - SAMPLE_IP can have arbitrary skid
+>>> +                      *  1 - SAMPLE_IP must have constant skid
+>>> +                      *  2 - SAMPLE_IP requested to have 0 skid
+>>> +                      *  3 - SAMPLE_IP must have 0 skid
+>>> +                      *
+>>> +                      *  See also PERF_RECORD_MISC_EXACT_IP
+>>> +                      */
+>>> +                     if (precise > 3) {
+>> The pmu_max_precise() should return the max precise the current kernel
+>> supports. It checks the /sys/devices/cpu/caps/max_precise.
+>>
+>> I think we should use that value rather than hard code it to 3.
+> I'll add an extra patch to do that. I'm a bit concerned it may break
+> event parsing on platforms not supporting max_precise of 3.
 
-The old code is checking entry->nr against entry->max_stack here...
+The kernel already rejects the precise_ip > max_precise (using the same
+x86_pmu_max_precise()). It should be fine to apply the same logic in the
+tool.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/events/core.c#n566
 
-> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> +					const struct pt_regs *regs)
-> +{
-> +	if (!consume_entry(cookie, regs->pc))
-> +		return;
-> +
-> +	if (!compat_user_mode(regs)) {
-> +		/* AARCH64 mode */
-> +		struct frame_tail __user *tail;
-> +
-> +		tail = (struct frame_tail __user *)regs->regs[29];
-> +		while (tail && !((unsigned long)tail & 0x7))
-> +			tail = unwind_user_frame(tail, cookie, consume_entry);
+Will the extra patch be sent separately?
 
-... but it looks like you've dropped that with the rework. Why is that ok?
-
-Will
+Thanks,
+Kan
