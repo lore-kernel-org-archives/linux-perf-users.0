@@ -1,121 +1,367 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2654C138E;
-	Fri, 19 Apr 2024 01:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC977EC2;
+	Fri, 19 Apr 2024 02:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713490718; cv=none; b=itTRhCZwqsJuo89wH9UBMAtvW+dipMoYYBbYawjYLl7ud/xz48YW5FP0d+x0uB1w9hGbAIOPCdmveVAg26wvp9cv/cjlvFYoaHIVkgP2p+XJ0ovgDwOG8RZzlI8OZaJgdhnp/qLt6wgft4a6u7cqnGUZUMQ+WQiAWND7HOtNrmo=
+	t=1713494100; cv=none; b=eDCJNoVAvM+alcRqNaLlVP90p0qh5QiyqxEU/f8I4Xn+ZdUCLx7t5lxBlMXD1Y2lr5Q7MSoLk3xNaoqUYzIvI8zUyjJq05aofWTn0c6dFUG8GLM22ljzLZJNZiH7y8DYDKwmtyEp8naq7BdF5W+95mS5uRtmY4tJEphAWSqDHNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713490718; c=relaxed/simple;
-	bh=O0KLYIEzxMcIIttGgaRtxvAquHTK9nmonkyI4Cv0x3k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JaaLXjGZBcVoPIHkmOfnqi25W7EF3V1agFXTbf8+RwL35Gsk7I7jDGqw8O1ejO60JwhhhhiEgmSDi5P+roBco80z7BkQG0YmZNchw7zEeEUQkKhNVLCSs+KEcYDkaoH4G8PWrQ6aTnbJwdz9+kRAv9w3x82eDLiGcXEOV3X330M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VLHMH3ZZHz1HBt5;
-	Fri, 19 Apr 2024 09:37:31 +0800 (CST)
-Received: from kwepemd200012.china.huawei.com (unknown [7.221.188.145])
-	by mail.maildlp.com (Postfix) with ESMTPS id F2A121A016C;
-	Fri, 19 Apr 2024 09:38:26 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd200012.china.huawei.com (7.221.188.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 19 Apr 2024 09:38:26 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.028;
- Fri, 19 Apr 2024 09:38:26 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] perf trace beauty: Fix statx flags printing
-Thread-Topic: [PATCH 1/4] perf trace beauty: Fix statx flags printing
-Thread-Index: AQHakZIsrFTudbCQNUaYtvy2Kt0s7LFtkfSAgAE/Y4A=
-Date: Fri, 19 Apr 2024 01:38:26 +0000
-Message-ID: <9dee50c53fcc4dcb97722ddc22a5cdc5@huawei.com>
-References: <20240418131304.3188385-1-changbin.du@huawei.com>
- <20240418131304.3188385-2-changbin.du@huawei.com> <ZiEvmabmIxTjDLeb@x1>
-In-Reply-To: <ZiEvmabmIxTjDLeb@x1>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.028)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CCC7FB01A6968A4194ABE0EAEEFC94F5@huawei.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1713494100; c=relaxed/simple;
+	bh=yvM8HF7cnA2nA+GphFhM2X2UQDN3BhWtVkoFXB7geUo=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=B1MuMpimCJ6z8W7oV+cClHPSww3vspK3musQyyp2dwF1YQHGxCtv4hzUhR/U38JYlXJnAbQz2/4csr/QZILIqKWmsddwHyLpeBMswFMnBEGMPL8H1Qk8yru8NVNMa7cOMqH+kopmFTjwIY1f/n1MHyAQn1XgMz/TqFAjBepa4rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8Cx2uhO2CFmzJkpAA--.9058S3;
+	Fri, 19 Apr 2024 10:34:54 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPs9I2CFm6sR_AA--.45636S3;
+	Fri, 19 Apr 2024 10:34:51 +0800 (CST)
+Subject: Re: [PATCH v3] perf kvm: Add kvm-stat for loongarch64
+From: maobibo <maobibo@loongson.cn>
+To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Ian Rogers <irogers@google.com>
+References: <20240411121047.2005033-1-maobibo@loongson.cn>
+Message-ID: <aa343349-b04f-3b04-330e-ee1df3021690@loongson.cn>
+Date: Fri, 19 Apr 2024 10:34:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20240411121047.2005033-1-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxPs9I2CFm6sR_AA--.45636S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKFW5tw45WF1DAF4kJr1kJFc_yoWfZrWkpF
+	WjyrnxKr4rJF17Cwn7AFn093Z8Jw4xuFyjga47XrW7AFsxZr9rGa1IqFnxGFyayw4kJF40
+	9w1F9w40kFW8JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
 
-T24gVGh1LCBBcHIgMTgsIDIwMjQgYXQgMTE6MzU6MDVBTSAtMDMwMCwgQXJuYWxkbyBDYXJ2YWxo
-byBkZSBNZWxvIHdyb3RlOg0KPiBPbiBUaHUsIEFwciAxOCwgMjAyNCBhdCAwOToxMzowMVBNICsw
-ODAwLCBDaGFuZ2JpbiBEdSB3cm90ZToNCj4gPiBNaXNzZWQgYSBzdHJpbmcgc3BlY2lmaWVyICcl
-cycgaW4gZm9ybWF0IHN0cmluZy4NCj4gDQo+IEh1bW0sIHdoYXQgYnJhbmNoIHNob3VsZCB0aGlz
-IGJlIGFwcGxpZWQgdG8/IEkgYXNrIGJlY2F1c2U6DQo+IA0KPiDirKJbYWNtZUB0b29sYm94IHBl
-cmYtdG9vbHMtbmV4dF0kIGdpdCBsb2cgLS1vbmVsaW5lIHRvb2xzL3BlcmYvdHJhY2UvYmVhdXR5
-L3N0YXR4LmMNCj4gZjEyMmIzZDZkMTc5NDU1ZSBwZXJmIGJlYXV0eTogSW50cm9kdWNlIHNjcmFw
-ZSBzY3JpcHQgZm9yIHRoZSAnc3RhdHgnIHN5c2NhbGwgJ21hc2snIGFyZ3VtZW50DQo+IDNkNmNm
-YmFmMjc5ZGRlYzkgcGVyZiBiZWF1dHk6IEludHJvZHVjZSBzY3JhcGUgc2NyaXB0IGZvciB2YXJp
-b3VzIGZzIHN5c2NhbGxzICdmbGFncycgYXJndW1lbnRzDQo+IGE2NzJhZjkxMzlhODQzZWIgdG9v
-bHMgaGVhZGVyczogUmVtb3ZlIGFsbW9zdCB1bnVzZWQgY29weSBvZiB1YXBpL3N0YXQuaCwgYWRk
-IGZldyBjb25kaXRpb25hbCBkZWZpbmVzDQo+IDY2NTI4MzBjODdiZTg0NDYgcGVyZiBiZWF1dHk6
-IFVzZSB0aGUgc3lzdGVtIGxpbnV4L2ZjbnRsLmggaW5zdGVhZCBvZiBhIGNvcHkgZnJvbSB0aGUg
-a2VybmVsDQo+IDY5MDgxMWYwMTI4ZWI2MDMgdG9vbHMgaGVhZGVycyB1YXBpOiBTeW5jIGxpbnV4
-L3N0YXQuaCB3aXRoIHRoZSBrZXJuZWwgc291cmNlcyB0byBwaWNrIFNUQVRYX01OVF9JRF9VTklR
-VUUNCj4gNDljNzVkMzBiMDA3OGQzMCB0b29scyBoZWFkZXJzIHVhcGk6IFN5bmMgbGludXgvc3Rh
-dC5oIHdpdGggdGhlIGtlcm5lbCBzb3VyY2VzDQo+IDVkMzNjYmZlZGI1MWY3MzIgcGVyZiBiZWF1
-dHk6IEFkZCBzdXBwb3J0IHRvIFNUQVRYX01OVF9JRCBpbiB0aGUgJ3N0YXR4JyBzeXNjYWxsICdt
-YXNrJyBhcmd1bWVudA0KPiBjNjVjODNmZmU5MDQ1OTAxIHBlcmYgdHJhY2U6IEFsbG93IGFza2lu
-ZyBmb3Igbm90IHN1cHByZXNzaW5nIGNvbW1vbiBzdHJpbmcgcHJlZml4ZXMNCj4gNzk0ZjU5NGUw
-YzNiZTYxOSBwZXJmIGJlYXV0eTogU3dpdGNoIGZyb20gR1BMIHYyLjAgdG8gTEdQTCB2Mi4xDQo+
-IGZkNWNlYWQyM2Y1NDY5NzMgKHRhZzogcGVyZi1jb3JlLWZvci1taW5nby00LjEyLTIwMTcwMzMx
-KSBwZXJmIHRyYWNlOiBCZWF1dGlmeSBzdGF0eCBzeXNjYWxsICdmbGFnJyBhbmQgJ21hc2snIGFy
-Z3VtZW50cw0KPiDirKJbYWNtZUB0b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kDQo+IA0KPiDirKJb
-YWNtZUB0b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kIHRvb2xzL3BlcmYvdHJhY2UvYmVhdXR5L3N0
-YXR4X21hc2suc2ggDQo+IHN0YXRpYyBjb25zdCBjaGFyICpzdGF0eF9tYXNrW10gPSB7DQo+IAlb
-aWxvZzIoMHgwMDAwMDAwMSkgKyAxXSA9ICJUWVBFIiwNCj4gCVtpbG9nMigweDAwMDAwMDAyKSAr
-IDFdID0gIk1PREUiLA0KPiAJW2lsb2cyKDB4MDAwMDAwMDQpICsgMV0gPSAiTkxJTksiLA0KPiAJ
-W2lsb2cyKDB4MDAwMDAwMDgpICsgMV0gPSAiVUlEIiwNCj4gCVtpbG9nMigweDAwMDAwMDEwKSAr
-IDFdID0gIkdJRCIsDQo+IAlbaWxvZzIoMHgwMDAwMDAyMCkgKyAxXSA9ICJBVElNRSIsDQo+IAlb
-aWxvZzIoMHgwMDAwMDA0MCkgKyAxXSA9ICJNVElNRSIsDQo+IAlbaWxvZzIoMHgwMDAwMDA4MCkg
-KyAxXSA9ICJDVElNRSIsDQo+IAlbaWxvZzIoMHgwMDAwMDEwMCkgKyAxXSA9ICJJTk8iLA0KPiAJ
-W2lsb2cyKDB4MDAwMDAyMDApICsgMV0gPSAiU0laRSIsDQo+IAlbaWxvZzIoMHgwMDAwMDQwMCkg
-KyAxXSA9ICJCTE9DS1MiLA0KPiAJW2lsb2cyKDB4MDAwMDA4MDApICsgMV0gPSAiQlRJTUUiLA0K
-PiAJW2lsb2cyKDB4MDAwMDEwMDApICsgMV0gPSAiTU5UX0lEIiwNCj4gCVtpbG9nMigweDAwMDAy
-MDAwKSArIDFdID0gIkRJT0FMSUdOIiwNCj4gCVtpbG9nMigweDAwMDA0MDAwKSArIDFdID0gIk1O
-VF9JRF9VTklRVUUiLA0KPiB9Ow0KPiDirKJbYWNtZUB0b29sYm94IHBlcmYtdG9vbHMtbmV4dF0k
-DQo+IA0KPiBDYW4geW91IHBsZWFzZSB0cnkgd2l0aCB3aGF0IGlzIGluDQo+IGh0dHBzOi8vZ2l0
-Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3BlcmYvcGVyZi10b29scy1uZXh0
-LmdpdCwNCj4gYnJhbmNoIHBlcmYtdG9vbHMtbmV4dD8NCj4gDQpObyBwcm9ibGVtLCBsZXQgbWUg
-cmViYXNlIG9uIHBlcmYtdG9vbHMtbmV4dC4gVGhpcyBwYXRjaHNldCB3YXMgY3JlYXRlZCBvbg0K
-bWFpbmxpbmUuDQoNCj4gLSBBcm5hbGRvDQo+ICANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGFuZ2Jp
-biBEdSA8Y2hhbmdiaW4uZHVAaHVhd2VpLmNvbT4NCj4gPiAtLS0NCj4gPiAgdG9vbHMvcGVyZi90
-cmFjZS9iZWF1dHkvc3RhdHguYyB8IDIgKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYv
-dHJhY2UvYmVhdXR5L3N0YXR4LmMgYi90b29scy9wZXJmL3RyYWNlL2JlYXV0eS9zdGF0eC5jDQo+
-ID4gaW5kZXggZGM1OTQzYTYzNTJkLi5jNjFmMmJlNTNiZGEgMTAwNjQ0DQo+ID4gLS0tIGEvdG9v
-bHMvcGVyZi90cmFjZS9iZWF1dHkvc3RhdHguYw0KPiA+ICsrKyBiL3Rvb2xzL3BlcmYvdHJhY2Uv
-YmVhdXR5L3N0YXR4LmMNCj4gPiBAQCAtMjEsNyArMjEsNyBAQCBzaXplX3Qgc3lzY2FsbF9hcmdf
-X3NjbnByaW50Zl9zdGF0eF9mbGFncyhjaGFyICpiZiwgc2l6ZV90IHNpemUsIHN0cnVjdCBzeXNj
-YWxsXw0KPiA+ICAJCXJldHVybiBzY25wcmludGYoYmYsIHNpemUsICIlcyVzIiwgc2hvd19wcmVm
-aXggPyAiQVRfU1RBVFhfIiA6ICIiLCAiU1lOQ19BU19TVEFUIik7DQo+ID4gICNkZWZpbmUJUF9G
-TEFHKG4pIFwNCj4gPiAgCWlmIChmbGFncyAmIEFUXyMjbikgeyBcDQo+ID4gLQkJcHJpbnRlZCAr
-PSBzY25wcmludGYoYmYgKyBwcmludGVkLCBzaXplIC0gcHJpbnRlZCwgIiVzJXMiLCBwcmludGVk
-ID8gInwiIDogIiIsIHNob3dfcHJlZml4ID8gcHJlZml4IDogIiIsICNuKTsgXA0KPiA+ICsJCXBy
-aW50ZWQgKz0gc2NucHJpbnRmKGJmICsgcHJpbnRlZCwgc2l6ZSAtIHByaW50ZWQsICIlcyVzJXMi
-LCBwcmludGVkID8gInwiIDogIiIsIHNob3dfcHJlZml4ID8gcHJlZml4IDogIiIsICNuKTsgXA0K
-PiA+ICAJCWZsYWdzICY9IH5BVF8jI247IFwNCj4gPiAgCX0NCj4gPiAgDQo+ID4gLS0gDQo+ID4g
-Mi4zNC4xDQo+IA0KDQotLSANCkNoZWVycywNCkNoYW5nYmluIER1DQo=
+slightly ping...
+
+On 2024/4/11 下午8:10, Bibo Mao wrote:
+> Add support for 'perf kvm stat' on loongarch64 platform, now only
+> kvm exit event is supported.
+> 
+> Here is example output about "perf kvm --host stat report" command
+> 
+>     Event name   Samples   Sample%     Time (ns)   Time%   Mean Time (ns)
+>      Mem store     83969    51.00%     625697070   8.00%             7451
+>       Mem read     37641    22.00%     112485730   1.00%             2988
+>      Interrupt     15542     9.00%      20620190   0.00%             1326
+>          Iocsr     15207     9.00%      94296190   1.00%             6200
+>      Hypercall      4873     2.00%      12265280   0.00%             2516
+>           Idle      3713     2.00%    6322055860  87.00%          1702681
+>            FPU      1819     1.00%       2750300   0.00%             1511
+>         Ifecth       502     0.00%       1341740   0.00%             2672
+>     Mem modify       324     0.00%        602240   0.00%             1858
+>         Cpucfg        55     0.00%         77610   0.00%             1411
+>            Csr        12     0.00%         19690   0.00%             1640
+>           LASX         3     0.00%          4870   0.00%             1623
+>            LSX         2     0.00%          2100   0.00%             1050
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v2 --- v3:
+>    1. Add NULL check with cpuid in function get_cpuid()
+>    2. Add example output from /proc/cpuinfo before function get_cpuid()
+> v1 --- v2:
+>    1. Add child_ops for kvm exit event, split kvm:kvm_exit_gspr events
+> into cpucfg/csr/iocsr/idle child events by decoding detailed gspr
+> instruction.
+>    2. Remove some exception code type which does not happen in current
+> kvm implementation, such as meomry NR/NX/priviledge exception.
+> ---
+>   tools/perf/arch/loongarch/Makefile        |   1 +
+>   tools/perf/arch/loongarch/util/Build      |   2 +
+>   tools/perf/arch/loongarch/util/header.c   |  88 ++++++++++++++
+>   tools/perf/arch/loongarch/util/kvm-stat.c | 135 ++++++++++++++++++++++
+>   4 files changed, 226 insertions(+)
+>   create mode 100644 tools/perf/arch/loongarch/util/header.c
+>   create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
+> 
+> diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+> index 3992a67a87d9..c89d6bb6b184 100644
+> --- a/tools/perf/arch/loongarch/Makefile
+> +++ b/tools/perf/arch/loongarch/Makefile
+> @@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS := 1
+>   endif
+>   PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+>   PERF_HAVE_JITDUMP := 1
+> +HAVE_KVM_STAT_SUPPORT := 1
+>   
+>   #
+>   # Syscall table generation for perf
+> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+> index d776125a2d06..b12d374d7096 100644
+> --- a/tools/perf/arch/loongarch/util/Build
+> +++ b/tools/perf/arch/loongarch/util/Build
+> @@ -1,5 +1,7 @@
+> +perf-y += header.o
+>   perf-y += perf_regs.o
+>   
+>   perf-$(CONFIG_DWARF)     += dwarf-regs.o
+>   perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+>   perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> +perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+> diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
+> new file mode 100644
+> index 000000000000..a4ed732b49c6
+> --- /dev/null
+> +++ b/tools/perf/arch/loongarch/util/header.c
+> @@ -0,0 +1,88 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Implementation of get_cpuid().
+> + *
+> + * Author: Nikita Shubin <n.shubin@yadro.com>
+> + */
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <api/fs/fs.h>
+> +#include <errno.h>
+> +#include "util/debug.h"
+> +#include "util/header.h"
+> +
+> +/*
+> + * Output example from /proc/cpuinfo
+> + *   CPU Family              : Loongson-64bit
+> + *   Model Name              : Loongson-3C5000
+> + *   CPU Revision            : 0x11
+> + */
+> +#define CPUINFO_MODEL	"Model Name"
+> +#define CPUINFO		"/proc/cpuinfo"
+> +static char *_get_field(const char *line)
+> +{
+> +	char *line2, *nl;
+> +
+> +	line2 = strrchr(line, ' ');
+> +	if (!line2)
+> +		return NULL;
+> +
+> +	line2++;
+> +	nl = strrchr(line, '\n');
+> +	if (!nl)
+> +		return NULL;
+> +
+> +	return strndup(line2, nl - line2);
+> +}
+> +
+> +static char *__get_cpuid(void)
+> +{
+> +	char *line, *model, *cpuid;
+> +	unsigned long line_sz;
+> +	FILE *file;
+> +
+> +	file = fopen(CPUINFO, "r");
+> +	if (file == NULL)
+> +		return cpuid;
+> +
+> +	line = model = cpuid = NULL;
+> +	while (getline(&line, &line_sz, file) != -1) {
+> +		if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL)))
+> +			continue;
+> +
+> +		model = _get_field(line);
+> +		if (!model)
+> +			goto free;
+> +		break;
+> +	}
+> +
+> +	if (model && (asprintf(&cpuid, "%s", model) < 0))
+> +		cpuid = NULL;
+> +
+> +free:
+> +	fclose(file);
+> +	free(model);
+> +	return cpuid;
+> +}
+> +
+> +int get_cpuid(char *buffer, size_t sz)
+> +{
+> +	char *cpuid = __get_cpuid();
+> +	int ret = 0;
+> +
+> +	if (!cpuid)
+> +		return EINVAL;
+> +
+> +	if (sz >= strlen(cpuid))
+> +		scnprintf(buffer, sz, "%s", cpuid);
+> +	else
+> +		ret = ENOBUFS;
+> +	free(cpuid);
+> +	return ret;
+> +}
+> +
+> +char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+> +{
+> +	return __get_cpuid();
+> +}
+> diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/arch/loongarch/util/kvm-stat.c
+> new file mode 100644
+> index 000000000000..cc50adb0835a
+> --- /dev/null
+> +++ b/tools/perf/arch/loongarch/util/kvm-stat.c
+> @@ -0,0 +1,135 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <errno.h>
+> +#include <memory.h>
+> +#include <errno.h>
+> +#include "util/kvm-stat.h"
+> +#include "util/parse-events.h"
+> +#include "util/debug.h"
+> +#include "util/evsel.h"
+> +#include "util/evlist.h"
+> +#include "util/pmus.h"
+> +
+> +#define LOONGARCH_EXCEPTION_INT		0
+> +#define LOONGARCH_EXCEPTION_PIL		1
+> +#define LOONGARCH_EXCEPTION_PIS		2
+> +#define LOONGARCH_EXCEPTION_PIF		3
+> +#define LOONGARCH_EXCEPTION_PME		4
+> +#define LOONGARCH_EXCEPTION_FPD		15
+> +#define LOONGARCH_EXCEPTION_SXD		16
+> +#define LOONGARCH_EXCEPTION_ASXD	17
+> +#define LOONGARCH_EXCEPTION_GSPR	22
+> +#define  LOONGARCH_EXCEPTION_CPUCFG	100
+> +#define  LOONGARCH_EXCEPTION_CSR	101
+> +#define  LOONGARCH_EXCEPTION_IOCSR	102
+> +#define  LOONGARCH_EXCEPTION_IDLE	103
+> +#define  LOONGARCH_EXCEPTION_OTHERS	104
+> +#define LOONGARCH_EXCEPTION_HVC		23
+> +
+> +#define loongarch_exception_type				\
+> +	{LOONGARCH_EXCEPTION_INT,  "Interrupt" },		\
+> +	{LOONGARCH_EXCEPTION_PIL,  "Mem read" },		\
+> +	{LOONGARCH_EXCEPTION_PIS,  "Mem store" },		\
+> +	{LOONGARCH_EXCEPTION_PIF,  "Ifecth" },			\
+> +	{LOONGARCH_EXCEPTION_PME,  "Mem modify" },		\
+> +	{LOONGARCH_EXCEPTION_FPD,  "FPU" },			\
+> +	{LOONGARCH_EXCEPTION_SXD,  "LSX" },			\
+> +	{LOONGARCH_EXCEPTION_ASXD, "LASX" },			\
+> +	{LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },		\
+> +	{LOONGARCH_EXCEPTION_HVC,  "Hypercall" },		\
+> +	{LOONGARCH_EXCEPTION_CPUCFG, "Cpucfg" },		\
+> +	{LOONGARCH_EXCEPTION_CSR,    "Csr" },			\
+> +	{LOONGARCH_EXCEPTION_IOCSR,  "Iocsr" },			\
+> +	{LOONGARCH_EXCEPTION_IDLE,   "Idle" },			\
+> +	{LOONGARCH_EXCEPTION_OTHERS, "Others" }
+> +
+> +define_exit_reasons_table(loongarch_exit_reasons, loongarch_exception_type);
+> +
+> +const char *vcpu_id_str = "vcpu_id";
+> +const char *kvm_exit_reason = "reason";
+> +const char *kvm_entry_trace = "kvm:kvm_enter";
+> +const char *kvm_reenter_trace = "kvm:kvm_reenter";
+> +const char *kvm_exit_trace = "kvm:kvm_exit";
+> +const char *kvm_events_tp[] = {
+> +	"kvm:kvm_enter",
+> +	"kvm:kvm_reenter",
+> +	"kvm:kvm_exit",
+> +	"kvm:kvm_exit_gspr",
+> +	NULL,
+> +};
+> +
+> +static bool event_end(struct evsel *evsel,
+> +		struct perf_sample *sample __maybe_unused,
+> +		struct event_key *key __maybe_unused)
+> +{
+> +	/*
+> +	 * LoongArch kvm is different with other architectures
+> +	 *
+> +	 * There is kvm:kvm_reenter or kvm:kvm_enter event adjacent with
+> +	 * kvm:kvm_exit event.
+> +	 *   kvm:kvm_reenter means returning to guest immediately
+> +	 *   kvm:kvm_enter   means returning to vmm and then to guest
+> +	 */
+> +	return evsel__name_is(evsel, kvm_entry_trace) ||
+> +		evsel__name_is(evsel, kvm_reenter_trace);
+> +}
+> +
+> +static void event_gspr_get_key(struct evsel *evsel,
+> +			struct perf_sample *sample,
+> +			struct event_key *key)
+> +{
+> +	unsigned int insn;
+> +
+> +	key->key = LOONGARCH_EXCEPTION_OTHERS;
+> +	insn = evsel__intval(evsel, sample, "inst_word");
+> +	switch (insn >> 24) {
+> +	case 0:
+> +		/* cpucfg inst trap */
+> +		if ((insn >> 10) == 0x1b)
+> +			key->key = LOONGARCH_EXCEPTION_CPUCFG;
+> +		break;
+> +	case 4:
+> +		/* csr inst trap */
+> +		key->key = LOONGARCH_EXCEPTION_CSR;
+> +		break;
+> +	case 6:
+> +		/* iocsr inst trap */
+> +		if ((insn >> 15) == 0xc90)
+> +			key->key = LOONGARCH_EXCEPTION_IOCSR;
+> +		else if ((insn >> 15) == 0xc91)
+> +			/* idle inst trap */
+> +			key->key = LOONGARCH_EXCEPTION_IDLE;
+> +		break;
+> +	default:
+> +		key->key = LOONGARCH_EXCEPTION_OTHERS;
+> +		break;
+> +	}
+> +}
+> +
+> +static struct child_event_ops child_events[] = {
+> +	{ .name = "kvm:kvm_exit_gspr", .get_key = event_gspr_get_key },
+> +	{ NULL, NULL },
+> +};
+> +
+> +static struct kvm_events_ops exit_events = {
+> +	.is_begin_event = exit_event_begin,
+> +	.is_end_event = event_end,
+> +	.child_ops = child_events,
+> +	.decode_key = exit_event_decode_key,
+> +	.name = "VM-EXIT"
+> +};
+> +
+> +struct kvm_reg_events_ops kvm_reg_events_ops[] = {
+> +	{ .name	= "vmexit", .ops = &exit_events, },
+> +	{ NULL, NULL },
+> +};
+> +
+> +const char * const kvm_skip_events[] = {
+> +	NULL,
+> +};
+> +
+> +int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
+> +{
+> +	kvm->exit_reasons_isa = "loongarch64";
+> +	kvm->exit_reasons = loongarch_exit_reasons;
+> +	return 0;
+> +}
+> 
+> base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
+> 
+
