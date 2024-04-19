@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188A18624B;
-	Fri, 19 Apr 2024 13:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F8612AAFD;
+	Fri, 19 Apr 2024 13:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713533375; cv=none; b=fVToMUSWXOz8C2UPnIUxip0qajkOxukYJGLyHS5HBKX12HqayhmVL2MUNcPuFNqrtKXC5PARdHvc7A34rECAhT4FaenrwUBY/zK2xPSQ4sflZ/CqwiEjlx2IFKR6B4T2FYWlEwYjF73YKiZJhTE2zWxIugh2RXuBJ2T8AIcdeJI=
+	t=1713534895; cv=none; b=gUWBjBh/OJmmur3fexFX+d8vjPD3SMwsY4hX4qoGuNTn1FVizozaFZv1abZ2vi+vBl1uG6WUEQMjFxvcFtTkwmVdc33Rd8nByUcSa7pYI25waJdzZ2Lt3EjI6dMJl2GHnK9I8koIo+qRyJh3crZYi6U87mZAzG8WRZ8E4Yz24D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713533375; c=relaxed/simple;
-	bh=xqswkRP7xC0Owgm1HP3Ch7pzBLg7hHvhZLq55WlfYmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kF4xM79n4cYPRfveKJuyvetD3jKDMQMrn3VFuAUAdqDgg++3gaWCvjMR0YIVGjER2HNn5r6uolaLAtsdxk2ic3dgZRYdOaOYzgVR8wH3B35idC2FMg/QDVn6inSJ3tuxr51dc2dgHf8VlvR11x0YAi/KYwXn2TRWtLgXv4KuSG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/YqfsUo; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1713534895; c=relaxed/simple;
+	bh=QCLGtnkSFVFP1qWH///9S/RvYON05jeWdCb3oDr+b3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DChjwUAVyO2G1KqgDso+9D04U+uu/FwrKKqyhSgce3FuySMOPGNGMaKbTE9g/BxXC0zIQ43RFwFUE1UwTQANrt57lEkVcEXW5oCnNHjeoRANfejkBhhzbrYCvBWh9y2WQlVXJEU0oAm60M+O0TyxbZ1c449TiT8xapsAGCXRiPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RBHMynGm; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/YqfsUo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RBHMynGm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713533374; x=1745069374;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xqswkRP7xC0Owgm1HP3Ch7pzBLg7hHvhZLq55WlfYmA=;
-  b=G/YqfsUobzZuKErbVGvkMQL7qWJtwsgCXUFmQ7UZXtROPqJKv8Zj6uHU
-   ujR0NB6OT/elaoz5gPk6YSldABNndzP6gtk2OphUfaxDxW5lnL0CvAbUn
-   5uStNIHe5vmZf3U/wKhmyKH+qpKjmYEMd0hwbPWn6kGe0jTG1W4JX2xly
-   s9jqw2lwWAfYnkDvIjEAcjBQtOjtzAUxUIoD7yQJMgfjQO+6JQ21hZO7Z
-   ijIC0fQFhPg9EoZpDK1x36Z9ePpVuCQszTUpjm4IC951NwTikIjS83Uil
-   at+ZON89h5KBMJFTmJjj3uHVn6rKp4drDnrBD1LJ0/cfUu/f4IvP4Sq8c
-   w==;
-X-CSE-ConnectionGUID: wvmv7zS/QRqsBwevIzrJhg==
-X-CSE-MsgGUID: me4/i6M7S92W8vJeE6bNxA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="34532021"
+  t=1713534893; x=1745070893;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=QCLGtnkSFVFP1qWH///9S/RvYON05jeWdCb3oDr+b3s=;
+  b=RBHMynGmVVT0gCIHVevcIuuvg5qbLWucNE4IvjptYxWcb4IB7q/kNj6j
+   AHU5b4hsSA2nS5ar8usx+OColcXa8tnxlQOseyQhv3bogrgVjLb6L73Sx
+   j3LNpYlJf3ZzEVSQNAuPczm3b3SOd2770gKOi9mECD92mN4kdtM8J2CJe
+   YXsd8nA3xQFTpJdWgjGbV10E7euhuHOhhpTQgxb87mNXvaI1XvXtbXG5y
+   5h7f7LHs4ek11Xu2FScPM8eDuOLiG2jT2J4DfrpkncU7o1n4C+d+CGIV0
+   9dYTDdzIcQTOMpoerg/L/iHb6FlBdOEhoC9vV108CwG900fo77zUZuBxa
+   A==;
+X-CSE-ConnectionGUID: EptBvppTQpeJvw4mBVMKNA==
+X-CSE-MsgGUID: hYFejNttQuq4DHU07648Zw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="12917029"
 X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="34532021"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:29:33 -0700
-X-CSE-ConnectionGUID: 0uQgHtY/QgmveFusb3jeJg==
-X-CSE-MsgGUID: Tld8xbNRRUC14a6jfp668A==
+   d="scan'208";a="12917029"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:54:52 -0700
+X-CSE-ConnectionGUID: EHGXZ2iKRxOOctN5BAubUg==
+X-CSE-MsgGUID: +lJRY5p4RGCtjRVNSqDWoA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="27986170"
+   d="scan'208";a="54540968"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:29:33 -0700
-Received: from [10.212.13.6] (dojung-mobl.amr.corp.intel.com [10.212.13.6])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:54:52 -0700
+Received: from [10.212.13.6] (kliang2-mobl1.ccr.corp.intel.com [10.212.13.6])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9E16F206DFDC;
-	Fri, 19 Apr 2024 06:29:30 -0700 (PDT)
-Message-ID: <7a576651-6780-41a5-ac69-46ce299367b5@linux.intel.com>
-Date: Fri, 19 Apr 2024 09:29:29 -0400
+	by linux.intel.com (Postfix) with ESMTPS id 151E7206DFDC;
+	Fri, 19 Apr 2024 06:54:49 -0700 (PDT)
+Message-ID: <c68bf005-af20-4995-86d5-a62e171763e3@linux.intel.com>
+Date: Fri, 19 Apr 2024 09:54:48 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,176 +58,63 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for bad
- numbers
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
+Subject: Re: [PATCH v1] perf test: Avoid hard coded metrics in stat std output
+ test
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
- Beeman Strong <beeman@rivosinc.com>
-References: <20240416061533.921723-1-irogers@google.com>
- <20240416061533.921723-12-irogers@google.com>
- <ac8835f8-0ea5-4f28-941c-aa43f0da92fd@linux.intel.com>
- <CAP-5=fXkn-nFTqGEqBYt6NUvoXU7OyLJeSCnWdD3taLHyK-xtQ@mail.gmail.com>
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240417183219.1208493-1-irogers@google.com>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fXkn-nFTqGEqBYt6NUvoXU7OyLJeSCnWdD3taLHyK-xtQ@mail.gmail.com>
+In-Reply-To: <20240417183219.1208493-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2024-04-18 5:07 p.m., Ian Rogers wrote:
-> On Thu, Apr 18, 2024 at 1:27 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-04-16 2:15 a.m., Ian Rogers wrote:
->>> Use the error handler from the parse_state to give a more informative
->>> error message.
->>>
->>> Before:
->>> ```
->>> $ perf stat -e 'cycles/period=99999999999999999999/' true
->>> event syntax error: 'cycles/period=99999999999999999999/'
->>>                                   \___ parser error
->>> Run 'perf list' for a list of valid events
->>>
->>>  Usage: perf stat [<options>] [<command>]
->>>
->>>     -e, --event <event>   event selector. use 'perf list' to list available events
->>> ```
->>>
->>> After:
->>> ```
->>> $ perf stat -e 'cycles/period=99999999999999999999/' true
->>> event syntax error: 'cycles/period=99999999999999999999/'
->>>                                   \___ parser error
->>>
->>> event syntax error: '..les/period=99999999999999999999/'
->>>                                   \___ Bad base 10 number "99999999999999999999"
->>
->>
->> It seems the patch only works for decimal?
->>
->> ./perf stat -e 'cycles/period=0xaaaaaaaaaaaaaaaaaaaaaa/' true
->> event syntax error: '..les/period=0xaaaaaaaaaaaaaaaaaaaaaa/'
->>                                    \___ parser error
->>  Run 'perf list' for a list of valid events
->>
->>   Usage: perf stat [<options>] [<command>]
->>
->>      -e, --event <event>   event selector. use 'perf list' to list
->> available events
->>
->> Thanks,
->> Kan
+On 2024-04-17 2:32 p.m., Ian Rogers wrote:
+> Hard coded metric names fail on ARM testing.
 > 
-> Right, for hexadecimal we say the number of digits is at most 16, so
-> when you exceed this the token is no longer recognized. It just
-> becomes input that can't be parsed, hence parser error. Doing this
-> means we can simplify other strtoull checks, but I agree having a
-> better error message for hexadecimal would be good. Let's do it as
-> follow up.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/shell/stat+std_output.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
+> index cbf2894b2c84..845f83213855 100755
+> --- a/tools/perf/tests/shell/stat+std_output.sh
+> +++ b/tools/perf/tests/shell/stat+std_output.sh
+> @@ -13,7 +13,7 @@ stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
+>  
+>  event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
+>  event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "frontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of all branches")
+> -skip_metric=("stalled cycles per insn" "tma_" "retiring" "frontend_bound" "bad_speculation" "backend_bound")
+> +skip_metric=($(perf list --raw Default 2> /dev/null))
 
-OK. There is already a warning. It's fine to provide a follow-up for a
-better error message later.
+
+The "perf list --raw Default" only gives the topdown metrics.
+The "stalled cycles per insn" is not covered.
+The check should skip the line of "stalled cycles per insn" as well.
+
+     3,856,436,920 stalled-cycles-frontend   #   74.09% frontend cycles idle
+     1,600,790,871 stalled-cycles-backend    #   30.75% backend  cycles idle
+     2,603,501,247 instructions              #    0.50  insns per cycle
+                                             #    1.48  stalled cycles
+per insn
+       484,357,498 branches                  #  283.455 M/sec
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c#n24
+
+The newer Intel CPU doesn't have the stalled-cycles-* events. But it
+seems power and older x86 CPU have the events.
 
 Thanks,
 Kan
 
-> 
-> Thanks,
-> Ian
-> 
->>> Run 'perf list' for a list of valid events
->>>
->>>  Usage: perf stat [<options>] [<command>]
->>>
->>>     -e, --event <event>   event selector. use 'perf list' to list available events
->>> ```
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/parse-events.l | 40 ++++++++++++++++++++--------------
->>>  1 file changed, 24 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
->>> index 6fe37003ab7b..0cd68c9f0d4f 100644
->>> --- a/tools/perf/util/parse-events.l
->>> +++ b/tools/perf/util/parse-events.l
->>> @@ -18,26 +18,34 @@
->>>
->>>  char *parse_events_get_text(yyscan_t yyscanner);
->>>  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
->>> +int parse_events_get_column(yyscan_t yyscanner);
->>> +int parse_events_get_leng(yyscan_t yyscanner);
->>>
->>> -static int __value(YYSTYPE *yylval, char *str, int base, int token)
->>> +static int get_column(yyscan_t scanner)
->>>  {
->>> -     u64 num;
->>> -
->>> -     errno = 0;
->>> -     num = strtoull(str, NULL, base);
->>> -     if (errno)
->>> -             return PE_ERROR;
->>> -
->>> -     yylval->num = num;
->>> -     return token;
->>> +     return parse_events_get_column(scanner) - parse_events_get_leng(scanner);
->>>  }
->>>
->>> -static int value(yyscan_t scanner, int base)
->>> +static int value(struct parse_events_state *parse_state, yyscan_t scanner, int base)
->>>  {
->>>       YYSTYPE *yylval = parse_events_get_lval(scanner);
->>>       char *text = parse_events_get_text(scanner);
->>> +     u64 num;
->>>
->>> -     return __value(yylval, text, base, PE_VALUE);
->>> +     errno = 0;
->>> +     num = strtoull(text, NULL, base);
->>> +     if (errno) {
->>> +             struct parse_events_error *error = parse_state->error;
->>> +             char *help = NULL;
->>> +
->>> +             if (asprintf(&help, "Bad base %d number \"%s\"", base, text) > 0)
->>> +                     parse_events_error__handle(error, get_column(scanner), help , NULL);
->>> +
->>> +             return PE_ERROR;
->>> +     }
->>> +
->>> +     yylval->num = num;
->>> +     return PE_VALUE;
->>>  }
->>>
->>>  static int str(yyscan_t scanner, int token)
->>> @@ -283,8 +291,8 @@ r0x{num_raw_hex}  { return str(yyscanner, PE_RAW); }
->>>        */
->>>  "/"/{digit}          { return PE_BP_SLASH; }
->>>  "/"/{non_digit}              { BEGIN(config); return '/'; }
->>> -{num_dec}            { return value(yyscanner, 10); }
->>> -{num_hex}            { return value(yyscanner, 16); }
->>> +{num_dec}            { return value(_parse_state, yyscanner, 10); }
->>> +{num_hex}            { return value(_parse_state, yyscanner, 16); }
->>>       /*
->>>        * We need to separate 'mem:' scanner part, in order to get specific
->>>        * modifier bits parsed out. Otherwise we would need to handle PE_NAME
->>> @@ -330,8 +338,8 @@ cgroup-switches                                   { return sym(yyscanner, PERF_COUNT_SW_CGROUP_SWITCHES); }
->>>  {lc_type}-{lc_op_result}-{lc_op_result}      { return str(yyscanner, PE_LEGACY_CACHE); }
->>>  mem:                 { BEGIN(mem); return PE_PREFIX_MEM; }
->>>  r{num_raw_hex}               { return str(yyscanner, PE_RAW); }
->>> -{num_dec}            { return value(yyscanner, 10); }
->>> -{num_hex}            { return value(yyscanner, 16); }
->>> +{num_dec}            { return value(_parse_state, yyscanner, 10); }
->>> +{num_hex}            { return value(_parse_state, yyscanner, 16); }
->>>
->>>  {modifier_event}     { return str(yyscanner, PE_MODIFIER_EVENT); }
->>>  {name}                       { return str(yyscanner, PE_NAME); }
-> 
+>  
+>  cleanup() {
+>    rm -f "${stat_output}"
