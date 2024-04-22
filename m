@@ -1,134 +1,257 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577872F2D;
-	Mon, 22 Apr 2024 02:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57882502BE
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 07:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713752072; cv=none; b=QbXA1eRZuh/Kjn0zBDvpKJaKpopBcjg7JeoL9N5pJV/D70c1CrGqGDqKJC2szHAbppQucVJLFZHyVil/APAwV0lhEe6D9xB2AjMmiKQbKClJy15BF0ej4qNoA8ClSWoHPWkG9kThpI45glFgvn1POBOlb6xzffX+oTtNc+nsr7w=
+	t=1713770424; cv=none; b=GSqfj2zDd8HZBCXcjXRyTXnBR/OrW9bPPABbAHaTAptvnD7DtgkX1IEzHSG2HxKksRxxnSh8YWmwUzm4ObzelOg7W9UpkE8GWhDt1l8dy1ExWk26hSNobmwBYlOjGsdrbZZXMzciECkROqQ6vKJr/ggcuvZdb5reQyCNmsFUbDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713752072; c=relaxed/simple;
-	bh=6H+7xt2iNnE7kHtM2+NfnHVy0wCagkXB/VcEwCoXFFo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=N6SWLiU3ocoNi7Kf6oq5B5WI5nGU83aYhtXzta73Cj/aGeH5Dm+7szdyy8kXoIpnymWPypUjZNFVKSOeNddWpdLy0EOpNGjQcAxaDS4ZoQTD+6V505IHXBV9ipkoy/oXzKRSz6s5QkA1+pVxngs9V5qGLjArH0JPxz8EZLEqLBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8Bxnuv+xyVm8H0AAA--.1644S3;
-	Mon, 22 Apr 2024 10:14:22 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd76xyVmQNAAAA--.3779S3;
-	Mon, 22 Apr 2024 10:14:20 +0800 (CST)
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <20240126085444.324918-24-xiong.y.zhang@linux.intel.com>
- <ZhhZush_VOEnimuw@google.com>
- <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
- <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
- <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
-Date: Mon, 22 Apr 2024 10:14:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1713770424; c=relaxed/simple;
+	bh=AdeJsEOAMTzJhFDgYYiZ8pdUbJ+2r4M99cV0iDb0+/Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jqstP7+jUMbxz+0n86XjVdxWOCoKO5/Kpi1Wraui/nUD0rhr9rhZ/XqcQv42dwmfiVha3J6OVS9EPIvevuXX3tCkIN58BCc9CsHctvLeU/GqhMNlNCuoDVBOQwFdOE7TJnQ5HtggIPxdbxWT28UgKbG1KXKZ/KTyPHfjFYeVGYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dad65e5613so36028039f.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 00:20:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713770421; x=1714375221;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vpqmMgJ4ByfxvbvXjjLlWRhuBbXpK1CMz74bsVfUqlo=;
+        b=p1x1YL3MnQYv42pj8y0UBfuZSEv8j7LXlglbYIzwENRJqKVpWE3BVebjYfbcVNooNK
+         g9QnlWAMWcZLtEYsl62/SzGcHy2x0NAh9PgF+27UeKiStBxujAmi84a1HciK1GpQkyK8
+         2hcydXCS/mEevSh1909jNVw4l6wRuX86Dt1pE0TMP3uDVFu07Tg93q4FHjL8g7EURzY9
+         FDkSECHoXkgsKy/Qdygl2pEE0/wJof5j4KHJgGlM0OqTOPufZ0HHbtkb9r0MM+S2D/9C
+         zmhoe3cO6BRPmoc+FgOjepR7CNZnmEj2JkEz5JuxFTh4UwVNP4gKjHrhkvwwxMI5EXJp
+         z1dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW80vC6zPBbhNn0uKz7x6LnDHeWd43roinEtSwWLk5CCHqe/6QIpjfK8QDOE4/YKZsj8MntsBsRSv0MEJ469ozwalqg19iRG94Q+dfI5g8hbQ==
+X-Gm-Message-State: AOJu0Yx6ga2JvUMZsx3iEaY2yT7hDlVnnxE0b4x2IAbqqHTbUtnA8Hk/
+	VXPKZr3yinBNUhpfF2cXUL2L5AvHmc+tIBkG8U1EKL7Ezbk0wCKRJK/jMxp+uxPDWdlsBj4U28O
+	nM/W8WkvsaqTEWtq3lyxZyuT4mZZ4IgU5C1r+HlEUN1xGloyy6TjO3XA=
+X-Google-Smtp-Source: AGHT+IEGzQ2fabO43dVcI23npLwNId3Wgfcu9nvXu4uiGEmhLXqn5h4zeuGCbfGQ3lmzeHQOuEHPRaSENCVHWh63Euq15e4s9dR9
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zh2uFkfH8BA23lm0@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd76xyVmQNAAAA--.3779S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFW3JrW7CF1rCr4rGF1xWFX_yoW5XF1DpF
-	Wj9F1jyr4DJrWxAw1Iqa18AFySkFZ7GFWYgr1vqay5Aa98uF98Zr1UKrW3CF15uw4xKa42
-	vrW0qasxG3ZIyacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2-VyUUUUU
+X-Received: by 2002:a05:6638:1652:b0:485:4f60:6017 with SMTP id
+ a18-20020a056638165200b004854f606017mr84759jat.6.1713770421576; Mon, 22 Apr
+ 2024 00:20:21 -0700 (PDT)
+Date: Mon, 22 Apr 2024 00:20:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003470d30616aa450a@google.com>
+Subject: [syzbot] [perf?] BUG: using __this_cpu_add() in preemptible code in graph_lock
+From: syzbot <syzbot+60761fc6ef65e4f00974@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=10755af5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=60761fc6ef65e4f00974
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+60761fc6ef65e4f00974@syzkaller.appspotmail.com
+
+BUG: using __this_cpu_add() in preemptible [00000000] code: syz-executor.3/9981
+caller is __pv_queued_spin_lock_slowpath+0x945/0xc60 kernel/locking/qspinlock.c:565
+CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ check_preemption_disabled+0x10e/0x120 lib/smp_processor_id.c:49
+ __pv_queued_spin_lock_slowpath+0x945/0xc60 kernel/locking/qspinlock.c:565
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
+ graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
+ mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
+ __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
+ bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
+ reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
+ register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
+ hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
+ perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
+ perf_init_event kernel/events/core.c:11738 [inline]
+ perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
+ __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
+ __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f4f88a7dea9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
+ </TASK>
+
+=============================
+WARNING: suspicious RCU usage
+6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
+-----------------------------
+kernel/sched/core.c:5982 Illegal context switch in RCU-bh read-side critical section!
+
+other info that might help us debug this:
 
 
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor.3/9981:
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
 
-On 2024/4/16 上午6:45, Sean Christopherson wrote:
-> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
->> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson <seanjc@google.com> wrote:
->>> One my biggest complaints with the current vPMU code is that the roles and
->>> responsibilities between KVM and perf are poorly defined, which leads to suboptimal
->>> and hard to maintain code.
->>>
->>> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak guest
->>> state to userspace processes that have RDPMC permissions, as the PMCs might not
->>> be dirty from perf's perspective (see perf_clear_dirty_counters()).
->>>
->>> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes the
->>> overall code brittle because it's not clear whether KVM _needs_ to clear PMCs,
->>> or if KVM is just being paranoid.
->>
->> So once this rolls out, perf and vPMU are clients directly to PMU HW.
-> 
-> I don't think this is a statement we want to make, as it opens a discussion
-> that we won't win.  Nor do I think it's one we *need* to make.  KVM doesn't need
-> to be on equal footing with perf in terms of owning/managing PMU hardware, KVM
-> just needs a few APIs to allow faithfully and accurately virtualizing a guest PMU.
-> 
->> Faithful cleaning (blind cleaning) has to be the baseline
->> implementation, until both clients agree to a "deal" between them.
->> Currently, there is no such deal, but I believe we could have one via
->> future discussion.
-> 
-> What I am saying is that there needs to be a "deal" in place before this code
-> is merged.  It doesn't need to be anything fancy, e.g. perf can still pave over
-> PMCs it doesn't immediately load, as opposed to using cpu_hw_events.dirty to lazily
-> do the clearing.  But perf and KVM need to work together from the get go, ie. I
-> don't want KVM doing something without regard to what perf does, and vice versa.
-> 
-There is similar issue on LoongArch vPMU where vm can directly pmu 
-hardware and pmu hw is shard with guest and host. Besides context switch 
-there are other places where perf core will access pmu hw, such as tick 
-timer/hrtimer/ipi function call, and KVM can only intercept context switch.
+stack backtrace:
+CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
+ schedule_debug kernel/sched/core.c:5982 [inline]
+ __schedule+0x23b/0x4a20 kernel/sched/core.c:6629
+ preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6915
+ preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6939
+ preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:12
+ unwind_next_frame+0x2124/0x2a00 arch/x86/kernel/unwind_orc.c:672
+ __unwind_start+0x641/0x7c0 arch/x86/kernel/unwind_orc.c:760
+ unwind_start arch/x86/include/asm/unwind.h:64 [inline]
+ arch_stack_walk+0x103/0x1b0 arch/x86/kernel/stacktrace.c:24
+ stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
+ save_trace+0x5a/0xb40 kernel/locking/lockdep.c:582
+ mark_lock+0x1d3/0x350 kernel/locking/lockdep.c:4673
+ __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
+ bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
+ reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
+ register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
+ hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
+ perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
+ perf_init_event kernel/events/core.c:11738 [inline]
+ perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
+ __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
+ __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f4f88a7dea9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
+ </TASK>
 
-Can we add callback handler in structure kvm_guest_cbs?  just like this:
-@@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks 
-kvm_guest_cbs = {
-         .state                  = kvm_guest_state,
-         .get_ip                 = kvm_guest_get_ip,
-         .handle_intel_pt_intr   = NULL,
-+       .lose_pmu               = kvm_guest_lose_pmu,
-  };
+=============================
+WARNING: suspicious RCU usage
+6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
+-----------------------------
+kernel/sched/core.c:5982 Illegal context switch in RCU-sched read-side critical section!
 
-By the way, I do not know should the callback handler be triggered in 
-perf core or detailed pmu hw driver. From ARM pmu hw driver, it is 
-triggered in pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
-but I think it will be better if it is done in perf core.
+other info that might help us debug this:
 
-Regards
-Bibo Mao
 
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor.3/9981:
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
+
+stack backtrace:
+CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
+ schedule_debug kernel/sched/core.c:5982 [inline]
+ __schedule+0x28a/0x4a20 kernel/sched/core.c:6629
+ preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6915
+ preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6939
+ preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:12
+ unwind_next_frame+0x2124/0x2a00 arch/x86/kernel/unwind_orc.c:672
+ __unwind_start+0x641/0x7c0 arch/x86/kernel/unwind_orc.c:760
+ unwind_start arch/x86/include/asm/unwind.h:64 [inline]
+ arch_stack_walk+0x103/0x1b0 arch/x86/kernel/stacktrace.c:24
+ stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
+ save_trace+0x5a/0xb40 kernel/locking/lockdep.c:582
+ mark_lock+0x1d3/0x350 kernel/locking/lockdep.c:4673
+ __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
+ bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
+ reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
+ register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
+ hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
+ perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
+ perf_init_event kernel/events/core.c:11738 [inline]
+ perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
+ __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
+ __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f4f88a7dea9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
