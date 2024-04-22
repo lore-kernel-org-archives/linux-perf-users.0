@@ -1,53 +1,54 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AE9155307;
-	Mon, 22 Apr 2024 19:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC43F154432;
+	Mon, 22 Apr 2024 19:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713813033; cv=none; b=P4zgLNT6S7QjFL6ymFrS3BIEg3UtYcthEaarmdMr46VgYKpH0mw3EOIa7s/XrRsqFqrT3Yo0xLFo6zQ/UjmbwsUn4avE9akFnoY7YfroUo9BOqVet09tdwhuHH5WH675nQZWcgped0O8MSnTANzCS2JSS74Y1UzRK9JpYGelmuI=
+	t=1713813203; cv=none; b=Z2/DJkg0ur5NzNxt3lbQh0SnYsc18bdGYdiSWmH+BDt9UEVuGi34UiXH8YDgve+VpKVSdUxk5N75g2X8nZugfzkMZk1/Qm+msXFFmaXCVKWvtOw5jP/WcON+g9NavlDvDZ/N0THfAXzyS/iCu1LAqG9LdTuW+/VkLYZvB+TsCIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713813033; c=relaxed/simple;
-	bh=rJvNMMHsO9zI75ghumCSbMliEXPSfFf/Qdfo1bBdBNw=;
+	s=arc-20240116; t=1713813203; c=relaxed/simple;
+	bh=n3vvI5G4jLdBOt6Q70+4BFyCFpg5vWoLy3HN5IdjI8A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PwnbDGIROWp2O+aSQftOpAPFm05qQeDgVsOqW40jaXoqhuo2DezwX6SXz7PQlu5HytIZUA4ort/kIdj2kV8Wb3H0u1XzX3spsOfjOELEDJxpT/Bnp0PD+LrbZmofsX7w77LMS7CtkbJi3qwmlqZ+eCSLqPKQ1W6mOQ06ABaNHeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+	 To:Cc:Content-Type; b=Qq5NPgzRpquX5L4mcSbtROVDRKu2UZYGJpPWPZ3BLhI/uGEUn7I6D3WTFLwYFzk11bJDeOTbbrBRK5oomXxXAvnGGyVpqn74/AKsxqkv914TT5g40mOUOA5KH7Xd2OAZ9OmZ4AhH6gpq57GQbFox1+KFOelO0IYAxBWS+6v7vlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7e128b1ba75so980274241.3;
-        Mon, 22 Apr 2024 12:10:31 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-47a1a2c4c7cso708327137.2;
+        Mon, 22 Apr 2024 12:13:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713813031; x=1714417831;
+        d=1e100.net; s=20230601; t=1713813201; x=1714418001;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FT090QG4mPbWzxLW5ioWJKU6VIVek0mS/v6uLtJKrhY=;
-        b=xLzcQ/NiGORsxb2ZPUaVv1w9ATf9uEktUoG2bo9MkpKNBoeikfk64CLDNQlPQA4wId
-         0BG15IpUArg+GWSUhHoqTyH2dOyLUOhmjSDzYAYLatU84+z1MekM2dM7Z9qfioRdyG6T
-         5oLU2iYGREdOWMQwmIMY2hcqo6QJYvLBcrlhbGDtQF6f6ZmkyFOLIob2lpYlpHMCGx2j
-         xsrBPvofsu3118myiW3c6ZFnnaC0sJFdEgxsHj34HIlUDEIXzItC39zFOgEb6PKGpgf8
-         PS3qzVcryO3wqN4CG/kJ+kMB8xLW0+uAbpX/OF9M7SPBKEqmKpa0NBWI7dmGPvztn3Db
-         OBHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAk2SG9yeCRtVgPyA6yG/E+OVyZMd6xiR9wU/gGAjdL7VEpxf+CPnTSTWqpJK3o1N02wpo2jWTm5Jm+qjOcvLwbTLwOLUYEXRHtI+e27NyJ43lyNTWuguQYO9kAqeTMzj8mRntz2MY/a2JtO5yUA==
-X-Gm-Message-State: AOJu0YzHQABw4/gxJZseeIFaOSbDENMNr4id9k1XxcXrl/9E6vcrzLxP
-	rlLtIo9jSH8tG2ae/0U0u8fINkq+1DdO6JWd37Aw++yYGNJGXeIenf/PcWjdnsvpUGvJ9g4l1IY
-	CtO1X+UoWdrLdnMnGpFUUTkpzvXo=
-X-Google-Smtp-Source: AGHT+IHyHQTsUzROmqN6jnX/24w46La9WBiStlAq0xOe5OA9QNeAcfTayUuiYweOgOQTpr6p0ouM4uwoD4CughfZ5ak=
-X-Received: by 2002:a05:6122:318b:b0:4d4:15d2:8b3b with SMTP id
- ch11-20020a056122318b00b004d415d28b3bmr12316812vkb.9.1713813030859; Mon, 22
- Apr 2024 12:10:30 -0700 (PDT)
+        bh=n3vvI5G4jLdBOt6Q70+4BFyCFpg5vWoLy3HN5IdjI8A=;
+        b=erU26spRavHaTcSu3glp8TrTlowQt2+f6PBNB0EGoAryMi9hLItRBqaI6a9GHdOoV7
+         Ya7ipKYSYin24A+cVCVzINXA+dRkZkPkVUkRnus66U69ny+lK7AxGRw3t+YTfJ33D+qG
+         Zm2luALcxTPSIdtm7M7aYdEmCOWJ+OCZ2kHA9+KGixdZtIidMxcVFvrs9Ysr+QGzZYJE
+         GCrI0uqmRkZFE1KryhcTcgecC3r0fv7b/78rQ/xfOgLtLjDnV4QLpTVKnxuR4m41KKtc
+         V676yaEMINjs3IFf/HaT5Yzwmo+T1vyoFSJ/iXw6d2wAlfq88eNveJHczjexPTpasJxR
+         6QaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBhIhO3RudXUaGdUUFHqoLLk7jV/AbLrFY6bWaUhUXE5YdSqLkLZD3L1C0Nls0oXGEcoYmp6/ezR0ZpWLub0wLa971mGsvuR8lxHsZwKt3DsyseucS8E69kqPBbyY2eDG7upwiD8ejDKRc9TJasw==
+X-Gm-Message-State: AOJu0YyPifj944jDGpP8zHx4vW4oduYCp+GGEumy8EYZheMuUz7QKapC
+	rqqNwWIopXSMGT5FuzIOYx6jsxwMs+BL8oOoJq7rgVuAnvFIk/mBGTh7JFUyw3GHuRs0UsDp9NQ
+	NxQjVSOSVXtJYit7DozxsjKcW6Vw=
+X-Google-Smtp-Source: AGHT+IHzMoRwL7tNF4U0exFnj4qhqVFp1TwzqvLicf2SXHFukBKRhyno6rOPz7ISBXLkG5AzkXhuCswHl5LSR+mOW2A=
+X-Received: by 2002:a67:efc3:0:b0:47b:9290:f903 with SMTP id
+ s3-20020a67efc3000000b0047b9290f903mr7592305vsp.35.1713813200897; Mon, 22 Apr
+ 2024 12:13:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402214436.1409476-1-weilin.wang@intel.com>
-In-Reply-To: <20240402214436.1409476-1-weilin.wang@intel.com>
+References: <20240402214436.1409476-1-weilin.wang@intel.com> <20240402214436.1409476-2-weilin.wang@intel.com>
+In-Reply-To: <20240402214436.1409476-2-weilin.wang@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 22 Apr 2024 12:10:18 -0700
-Message-ID: <CAM9d7cj2EbxWVLHU3XPf_F2OzWRVRfSV2TghNA+h8noDztrasQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v7 0/6] TPEBS counting mode support
+Date: Mon, 22 Apr 2024 12:13:08 -0700
+Message-ID: <CAM9d7chDxsiNNTPyrJA44miMh3DJRWemp_a03YFdE5bC_k1vGQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v7 1/6] perf stat: Parse and find tpebs events when
+ parsing metrics to prepare for perf record sampling
 To: weilin.wang@intel.com
 Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -59,55 +60,22 @@ Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Weilin,
-
 On Tue, Apr 2, 2024 at 2:45=E2=80=AFPM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> Changes in v7:
-> - Update code and comments for better code quality [Namhyung]
-> - Add a separate commit for perf data [Namhyung]
-> - Update retire latency print function to improve alignment [Namhyung]
->
-> v6: https://lore.kernel.org/all/20240329191224.1046866-1-weilin.wang@inte=
-l.com/
+> Metrics that use tpebs values would use the R as retire_latency modifier =
+in
 
-In general, I think you need to explain what exactly TPEBS is and why
-you want to do this for TPEBS.  Maybe somewhere in the documentation.
+Can you please add this to documentation so that others can refer?
+I'm not sure if we have a doc for the JSON metric format.
 
 Thanks,
 Namhyung
 
+
+> formulas. We put all these events into a list and pass the list to perf
+> record to collect their retire latency value.
 >
-> Weilin Wang (6):
->   perf stat: Parse and find tpebs events when parsing metrics to prepare
->     for perf record sampling
->   perf data: Allow to use given fd in data->file.fd
->   perf stat: Fork and launch perf record when perf stat needs to get
->     retire latency value for a metric.
->   perf stat: Add retire latency values into the expr_parse_ctx to
->     prepare for final metric calculation
->   perf stat: Add retire latency print functions to print out at the very
->     end of print out
->   perf vendor events intel: Add MTL metric json files
->
->  tools/perf/builtin-stat.c                     |  249 +-
->  .../arch/x86/meteorlake/metricgroups.json     |  127 +
->  .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
->  tools/perf/util/data.c                        |    7 +-
->  tools/perf/util/metricgroup.c                 |   87 +-
->  tools/perf/util/metricgroup.h                 |   22 +-
->  tools/perf/util/stat-display.c                |   69 +
->  tools/perf/util/stat-shadow.c                 |   19 +
->  tools/perf/util/stat.h                        |    4 +
->  9 files changed, 3115 insertions(+), 20 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroup=
-s.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics=
-.json
->
-> --
-> 2.43.0
->
->
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
