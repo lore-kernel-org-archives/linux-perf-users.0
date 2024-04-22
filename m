@@ -1,118 +1,153 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A7D50246;
-	Mon, 22 Apr 2024 08:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C4143AC1;
+	Mon, 22 Apr 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774552; cv=none; b=OBvMe1u9mpJuhx40j+oK/8czlCsD0xFQG7AZZIG574nYEy6ky09VtNY4Bw3iO3wSGllkg7fEEKeErhf9diqziutk91KCawkA1AN/OyQGL0AZE0lttydRY26VEWQnZDchvjHdcVVcNdVZ+Q+9pEVV0SKcDXW3F/ba2S5CuclFTnc=
+	t=1713774910; cv=none; b=nusKbvGHkRxr5+qDjvOF8sGqgiSxnC9H3oC6/ypf9m3AhAt7j9U7Lbm+XNFl1AAHrz/i6XVRQ/+wCkqOvxXmJM1hYP5RjWeojDl2HiefWS5UchnKh9N2+1BnGrcuXXkynLOSeGeqejz08yPAt98DarfmCi8yXVgNN6a6//vN7es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774552; c=relaxed/simple;
-	bh=zTjKFa9ufsEGRtTe1qCOiuLYhpnykAwM1b+hG7FfP9w=;
-	h=Date:From:To:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=YNmtec46RlM7+lYdZcsZKjj8XxSZUYAvIfhsBFlax+c1/9ETdTB7T5aaPf6f404O6RUVTkHdWIaG5a9AlJLF4UF6p4cK3P7P+jooSGnMzolJz7a4geg087aLFZ7Tm60BuShyZoOH9s1+6pA8mfbBLC1L0wdAJz3Mtz9zaxQY1U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from liangshenlin$eswincomputing.com ( [10.12.96.90] ) by
- ajax-webmail-app2 (Coremail) ; Mon, 22 Apr 2024 16:27:10 +0800 (GMT+08:00)
-Date: Mon, 22 Apr 2024 16:27:10 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Shenlin Liang" <liangshenlin@eswincomputing.com>
-To: atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org, atishp@rivosinc.com
-Subject: Re: [PATCH v2 0/2] perf kvm: Add kvm stat support on riscv
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT6.0.3 build 20220420(169d3f8c)
- Copyright (c) 2002-2024 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <aceaaeba-61cb-44fa-8639-e30a86ef8cd8@rivosinc.com>
-References: <20240415031131.23443-1-liangshenlin@eswincomputing.com>
- <aceaaeba-61cb-44fa-8639-e30a86ef8cd8@rivosinc.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1713774910; c=relaxed/simple;
+	bh=uVhWNiAMfNDp/b9IeuNVtP5nn6HBNzCWGB9iGqhdiLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ILvtZmLsPKUmIauehg2JCXXTGxUDM2+BH2s6NO4VHxTr/NyDNoUV/6GBOzZ6CWQUb3JXhZbMncv1yFEf+wuX83M5E2vO8MsKjdLzu6M3iIwzdYjGMLnZsUC3meaYxdlF3ubDhT1OVUxh4KEZ9eNh6kkGZ5C3TnyXAzuo8xt4Oag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjWP4Yiz; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjWP4Yiz"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e3f17c64daso26481355ad.3;
+        Mon, 22 Apr 2024 01:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713774909; x=1714379709; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4Ld606VREySuBvvbpoJ4lVHq8DXsMyZcPtIwiLYOTw=;
+        b=kjWP4Yiz2EBD3GRaet7sOsWuZErYMbFyxhjsVNz46vqbo5C/2GacSyZf6k+hbfBftE
+         6t3FyjSjvsZnaOkb1G9CwYbIZPlKnXgKc02eETrPTsbeAv0KWt3MuxXrDAMzXmU9SbFB
+         DBLijBmi/JibXSgirIU/XIznJh0yPxjPx+enEyvR/+VverAszD1vxwdvSRUm/+LWUuOG
+         nHZB0HOFKSpPAg/niBO3IrGQteYWESiQ2FbuM8dkzziEbAmQekc4v+EsVzqlPfmZh+V+
+         xWomRIscjB8ivsdRjzafu4YwH/C8J6fhFfqLsuV+gvJWIj65dPv7TZf0zkbKJJR69/Bx
+         34UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713774909; x=1714379709;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n4Ld606VREySuBvvbpoJ4lVHq8DXsMyZcPtIwiLYOTw=;
+        b=Odi0B8Lreh5+ZcpSBciFchuPD43tsWDotCSUlOxOndYpCxGg2+uex9eNl2wXldo2TL
+         2Xfb3kCJatPRmxuaoCtyzHI2jBlraNRjrkkWEGXQONH03+I4kUphUegkt1wlvPmr5iwA
+         GoIy4R5blbyu7kIERaKBfXgKOp40pYdyIFmh4wYcymFatSr84RZsNaOU9HY/ijeHVOUA
+         T+E73UMeBZ4C0D5x3D2TZC3AniAHvms3gr6MzHyLg88eX0/atZwqaVFPCuW4wRwUq7n4
+         89MUQpp3yjCRSddH2AwY6RcVYJaFvfy2PSc8IiWRK3Hy/5XjGcJdgE7JqHQdrNEDl6qg
+         e77g==
+X-Forwarded-Encrypted: i=1; AJvYcCWiilymlqtcYFsYNqkSFfZV5/C2Q6rdYWrYd48o16k7nVBm/EBJsO/LH7rFIe18FDvHuwGqw+qEoPx3nJ94J09eEMwRbWQPpALB7ygsxyx/s03PygRxxOcj4fJjgd0nk3vWd7uYqM+mEoSWpjCeqRBtzQ2hn6+b6EgJUu88xdz9V6mHyg==
+X-Gm-Message-State: AOJu0Yz2XxICgHqA9ntrpcSMTUw8fi4DElGJOaZ8mVt/fA3FxM4n8JGc
+	uAdkh/21G3Y2bDTAN7TIz4WigdWve+Ky6uMQ93rTBsqEoIlFwPBHmfqgNN4Hdr9nK7Li
+X-Google-Smtp-Source: AGHT+IHAM+B3vkuSrRZbI+vYXFaboYToWCWzZAQS5VJoVl1yPN3R5w3lVdzvmfsZZ6DwIqWgJOZoPA==
+X-Received: by 2002:a17:903:11c5:b0:1e2:a5b3:e7 with SMTP id q5-20020a17090311c500b001e2a5b300e7mr10243897plh.58.1713774908758;
+        Mon, 22 Apr 2024 01:35:08 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.236])
+        by smtp.gmail.com with ESMTPSA id f1-20020a170902ab8100b001e4881fbec8sm7544792plr.36.2024.04.22.01.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 01:35:08 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	zegao2021@gmail.com,
+	leo.yan@linux.dev,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1 0/4] Dump off-cpu samples directly
+Date: Mon, 22 Apr 2024 16:35:10 +0800
+Message-ID: <20240422083510.1928419-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <35896859.387e.18f04ea87b1.Coremail.liangshenlin@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgAnOrxeHyZmbhAIAA--.5206W
-X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/1tbiAQEPDGYk3U
-	gl0wACsg
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
 
-SGkgQXRpc2gsCgpJIGFzc3VtZSB0aGF0IHlvdSBhcmUgY3Jvc3MgYnVpbGRpbmcgaXQgb24gWDg2
-LiBZb3UgbmVlZCB0byBidWlsZCBhIHBrZy1jb25maWctcmlzY3Y2NCBmaXJzdC4gT3IgZ2V0IGEg
-ZGViIGZpbGUgZnJvbSBbMV0gaWYgeW91IGFyZSBidWlkaW5nIG9uIFVidW50dS4KSW5zdGVhZCBv
-ZiBjcm9zcyBidWlsZGluZywgaXQgaXMgcmVjb21tZW5kZWQgdG8gYnVpbGQgaXQgbmF0aXZlbHku
-CgpCVFcsIHBsZWFzZSB0ZXN0IHdpdGggVjMgd2hpY2ggSSBzZW50IHRvZGF5LgoKWzFdIGh0dHBz
-Oi8vYW5zd2Vycy5sYXVuY2hwYWQubmV0L35jaS10cmFpbi1wcGEtc2VydmljZS8rYXJjaGl2ZS91
-YnVudHUvMzcxOS1kZWxldGVkcHBhLytidWlsZC8xNjgyMzg2Mi8rZmlsZXMvcGtnLWNvbmZpZy1y
-aXNjdjY0LWxpbnV4LWdudV83LjQuMC0xdWJ1bnR1MS4zX2FtZDY0LmRlYgoKVGhhbmtzLgoKU2hl
-bmxpbgoKPiAKPiBPbiA0LzE0LzI0IDIwOjExLCBTaGVubGluIExpYW5nIHdyb3RlOgo+ID4gQ2hh
-bmdlcyBmcm9tIHYxLT52MjoKPiA+IC0gUmViYXNlZCBvbiBMaW51eCA2LjktcmMzLgo+ID4gCj4g
-PiAncGVyZiBrdm0gc3RhdCByZXBvcnQvcmVjb3JkJyBnZW5lcmF0ZXMgYSBzdGF0aXN0aWNhbCBh
-bmFseXNpcyBvZiBLVk0KPiA+IGV2ZW50cyBhbmQgY2FuIGJlIHVzZWQgdG8gYW5hbHl6ZSBndWVz
-dCBleGl0IHJlYXNvbnMuIFRoaXMgcGF0Y2ggdHJpZXMKPiA+IHRvIGFkZCBzdGF0IHN1cHBvcnQg
-b24gcmlzY3YuCj4gPiAKPiA+IE1hcCB0aGUgcmV0dXJuIHZhbHVlIG9mIHRyYWNlX2t2bV9leGl0
-KCkgdG8gdGhlIHNwZWNpZmljIGNhdXNlIG9mIHRoZQo+ID4gZXhjZXB0aW9uLCBhbmQgZXhwb3J0
-IGl0IHRvIHVzZXJzcGFjZS4KPiA+IAo+ID4gSXQgcmVjb3JkcyBvbiB0d28gYXZhaWxhYmxlIEtW
-TSB0cmFjZXBvaW50cyBmb3IgcmlzY3Y6ICJrdm06a3ZtX2VudHJ5Igo+ID4gYW5kICJrdm06a3Zt
-X2V4aXQiLCBhbmQgcmVwb3J0cyBzdGF0aXN0aWNhbCBkYXRhIHdoaWNoIGluY2x1ZGVzIGV2ZW50
-cwo+ID4gaGFuZGxlcyB0aW1lLCBzYW1wbGVzLCBhbmQgc28gb24uCj4gPiAKPiA+IFNpbXBsZSB0
-ZXN0cyBnbyBiZWxvdzoKPiA+IAo+ID4gIyAuL3BlcmYga3ZtIHJlY29yZCAtZSAia3ZtOmt2bV9l
-bnRyeSIgLWUgImt2bTprdm1fZXhpdCIKPiA+IExvd2VyaW5nIGRlZmF1bHQgZnJlcXVlbmN5IHJh
-dGUgZnJvbSA0MDAwIHRvIDI1MDAuCj4gPiBQbGVhc2UgY29uc2lkZXIgdHdlYWtpbmcgL3Byb2Mv
-c3lzL2tlcm5lbC9wZXJmX2V2ZW50X21heF9zYW1wbGVfcmF0ZS4KPiA+IFsgcGVyZiByZWNvcmQ6
-IFdva2VuIHVwIDE4IHRpbWVzIHRvIHdyaXRlIGRhdGEgXQo+ID4gWyBwZXJmIHJlY29yZDogQ2Fw
-dHVyZWQgYW5kIHdyb3RlIDUuNDMzIE1CIHBlcmYuZGF0YS5ndWVzdCAoNjI1MTkgc2FtcGxlcykK
-PiA+IAo+IAo+IEkgd2FudCB0byB0ZXN0IHRoZXNlIHBhdGNoZXMgYnV0IGNvdWxkbid0IGJ1aWxk
-IGEgcGVyZiBmb3IgUklTQy1WIHdpdGggCj4gbGlidHJhY2VldmVudCBlbmFibGVkLiBJdCBmYWls
-cyB3aXRoIHBrZy1jb25maWcgZGVwZW5kZW5jaWVzIHdoZW4gSSAKPiB0cmllZCB0byBidWlsZCBp
-dCAoYm90aCB2aWEgYnVpbGRyb290IGFuZCBkaXJlY3RseSBmcm9tIGtlcm5lbCBzb3VyY2UpLgo+
-IAo+ID4gIyAuL3BlcmYga3ZtIHJlcG9ydAo+ID4gMzFLIGt2bTprdm1fZW50cnkKPiA+IDMxSyBr
-dm06a3ZtX2V4aXQKPiA+IAo+ID4gIyAuL3BlcmYga3ZtIHN0YXQgcmVjb3JkIC1hCj4gPiBbIHBl
-cmYgcmVjb3JkOiBXb2tlbiB1cCAzIHRpbWVzIHRvIHdyaXRlIGRhdGEgXQo+ID4gWyBwZXJmIHJl
-Y29yZDogQ2FwdHVyZWQgYW5kIHdyb3RlIDguNTAyIE1CIHBlcmYuZGF0YS5ndWVzdCAoOTkzMzgg
-c2FtcGxlcykgXQo+ID4gCj4gPiAjIC4vcGVyZiBrdm0gc3RhdCByZXBvcnQgLS1ldmVudD12bWV4
-aXQKPiA+IEV2ZW50IG5hbWUgICAgICAgICAgICAgICAgU2FtcGxlcyAgIFNhbXBsZSUgICAgVGlt
-ZSAobnMpICAgICBUaW1lJSAgIE1heCBUaW1lIChucykgICBNaW4gVGltZSAobnMpICBNZWFuIFRp
-bWUgKG5zKQo+ID4gU1RPUkVfR1VFU1RfUEFHRV9GQVVMVCAgICAgMjY5NjggICAgIDU0LjAwJSAg
-ICAyMDAzMDMxODAwICAgIDQwLjAwJSAgICAgMzM2MTQwMCAgICAgICAgIDI3NjAwICAgICAgICAg
-IDc0Mjc0Cj4gPiBMT0FEX0dVRVNUX1BBR0VfRkFVTFQgICAgICAxNzY0NSAgICAgMzUuMDAlICAg
-IDExNTMzMzgxMDAgICAgMjMuMDAlICAgICAyNTEzNDAwICAgICAgICAgMzA4MDAgICAgICAgICAg
-NjUzNjMKPiA+IFZJUlRVQUxfSU5TVF9GQVVMVCAgICAgICAgIDEyNDcgICAgICAyLjAwJSAgICAg
-MzQwODIwODAwICAgICA2LjAwJSAgICAgIDExOTA4MDAgICAgICAgICA0MzMwMCAgICAgICAgICAy
-NzMzMTIKPiA+IElOU1RfR1VFU1RfUEFHRV9GQVVMVCAgICAgIDExMjggICAgICAyLjAwJSAgICAg
-MzQwNjQ1ODAwICAgICA2LjAwJSAgICAgIDIxMjMyMDAgICAgICAgICAzMDIwMCAgICAgICAgICAz
-MDE5OTAKPiA+IFNVUEVSVklTT1JfU1lTQ0FMTCAgICAgICAgIDEwMTkgICAgICAyLjAwJSAgICAg
-MjQ1OTg5OTAwICAgICA0LjAwJSAgICAgIDE4NTE1MDAgICAgICAgICAyOTMwMCAgICAgICAgICAy
-NDE0MDMKPiA+IExPQURfQUNDRVNTICAgICAgICAgICAgICAgIDk4NiAgICAgICAxLjAwJSAgICAg
-NjcxNTU2MjAwICAgICAxMy4wMCUgICAgIDQxODAyMDAgICAgICAgICAxMDA3MDAgICAgICAgICA2
-ODEwOTEKPiA+IElOU1RfQUNDRVNTICAgICAgICAgICAgICAgIDY1NSAgICAgICAxLjAwJSAgICAg
-MTcwMDU0ODAwICAgICAzLjAwJSAgICAgIDE4MDgzMDAgICAgICAgICA1NDYwMCAgICAgICAgICAy
-NTk2MjUKPiA+IEhZUEVSVklTT1JfU1lTQ0FMTCAgICAgICAgIDIxICAgICAgICAwLjAwJSAgICAg
-NDI3NjQwMCAgICAgICAwLjAwJSAgICAgIDcxNjUwMCAgICAgICAgICAxMTYwMDAgICAgICAgICAy
-MDM2MzgKPiA+IAo+ID4gU2hlbmxpbiBMaWFuZyAoMik6Cj4gPiAgICBSSVNDVjogS1ZNOiBhZGQg
-dHJhY2Vwb2ludHMgZm9yIGVudHJ5IGFuZCBleGl0IGV2ZW50cwo+ID4gICAgcGVyZiBrdm0vcmlz
-Y3Y6IFBvcnQgcGVyZiBrdm0gc3RhdCB0byBSSVNDLVYKPiA+IAo+ID4gICBhcmNoL3Jpc2N2L2t2
-bS90cmFjZS5oICAgICAgICAgICAgICAgICAgICAgICAgfCA2NyArKysrKysrKysrKysrKysrCj4g
-PiAgIGFyY2gvcmlzY3Yva3ZtL3ZjcHUuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICA3ICsr
-Cj4gPiAgIHRvb2xzL3BlcmYvYXJjaC9yaXNjdi9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAx
-ICsKPiA+ICAgdG9vbHMvcGVyZi9hcmNoL3Jpc2N2L3V0aWwvQnVpbGQgICAgICAgICAgICAgIHwg
-IDEgKwo+ID4gICB0b29scy9wZXJmL2FyY2gvcmlzY3YvdXRpbC9rdm0tc3RhdC5jICAgICAgICAg
-fCA3OCArKysrKysrKysrKysrKysrKysrCj4gPiAgIC4uLi9hcmNoL3Jpc2N2L3V0aWwvcmlzY3Zf
-ZXhjZXB0aW9uX3R5cGVzLmggICB8IDQxICsrKysrKysrKysKPiA+ICAgNiBmaWxlcyBjaGFuZ2Vk
-LCAxOTUgaW5zZXJ0aW9ucygrKQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9yaXNjdi9r
-dm0vdHJhY2UuaAo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9hcmNoL3Jpc2N2
-L3V0aWwva3ZtLXN0YXQuYwo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9hcmNo
-L3Jpc2N2L3V0aWwvcmlzY3ZfZXhjZXB0aW9uX3R5cGVzLmgKPiA+IAo=
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. Also, samples
+are stored in large BPF maps which contain all the stack traces and
+accumulated off-cpu time, but they are eventually going to fill up after
+running for an extensive period. This patch fixes those problems by dumping
+samples directly into perf ring buffer, and dispatching those samples to the
+correct format.
+
+Before, off-cpu samples are after regular samples
+
+```
+         swapper       0 [000] 963432.136150:    2812933    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963432.637911:    4932876    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [001] 963432.798072:    6273398    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963433.541152:    5279005    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+sh 1410180 [000] 18446744069.414584:    2528851 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+
+
+sh 1410185 [000] 18446744069.414584:    2314223 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+
+
+awk 1409644 [000] 18446744069.414584:     191785 offcpu-time: 
+	    702609d03681 read+0x11 (/usr/lib/libc.so.6)
+	          4a02a4 [unknown] ([unknown])
+```
+
+After, regular samples(cycles:P) and off-cpu(offcpu-time) samples are
+collected simultaneously:
+
+```
+upowerd     741 [000] 963757.428701:     297848 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+      irq/9-acpi      56 [000] 963757.429116:    8760875    cycles:P:  ffffffffb779849f acpi_os_read_port+0x2f ([kernel.kallsyms])
+upowerd     741 [000] 963757.429172:     459522 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+         swapper       0 [002] 963757.434529:    5759904    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+perf 1419260 [000] 963757.434550: 1001012116 offcpu-time: 
+	    7274e5d190bf __poll+0x4f (/usr/lib/libc.so.6)
+	    591acfc5daf0 perf_evlist__poll+0x24 (/root/hw/perf-tools-next/tools/perf/perf)
+	    591acfb1ca50 perf_evlist__poll_thread+0x160 (/root/hw/perf-tools-next/tools/perf/perf)
+	    7274e5ca955a [unknown] (/usr/lib/libc.so.6)
+```
+
+Here's a simple flowchart:
+
+[parse_event (sample type: PERF_SAMPLE_RAW)] --> [config (bind fds,
+sample_id, sample_type)] --> [off_cpu_strip (sample type: PERF_SAMPLE_RAW)] -->
+[record_done(hooks off_cpu_finish)] --> [change_type(sample type: OFFCPU_SAMPLE_TYPES)]
+
+
+---
+
+ tools/perf/builtin-record.c             |  98 ++++++++++++++++++++--
+ tools/perf/tests/shell/record_offcpu.sh |  29 -------
+ tools/perf/util/bpf_off_cpu.c           | 245 +++++++++++++++++++++++++------------------------------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c  | 163 +++++++++++++++++++++++++++++-------
+ tools/perf/util/evsel.c                 |   8 --
+ tools/perf/util/off_cpu.h               |  14 +++-
+ tools/perf/util/perf-hooks-list.h       |   1 +
+ 7 files changed, 347 insertions(+), 211 deletions(-)
+
+-- 
+2.44.0
