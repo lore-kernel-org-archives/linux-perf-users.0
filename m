@@ -1,67 +1,110 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFF91553AD
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 20:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C5D1C68D;
+	Mon, 22 Apr 2024 20:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713817237; cv=none; b=KR6/HBruzkjXCh/DL7h2OnAmo6JxcCRS/9ND/zk4X/BxJhkmN7BdLBbk/u5j5lr+gfwPK34iXGU8FcoVWsCbOuJEbsn+WBLVNxFXgf/eJ4woq7ThkoVW7feyKUuNsKsjvF3zyEhXb3kf+oFbLLssrusC3NBeGTQoFILfE3kuKR0=
+	t=1713819318; cv=none; b=Hb1NJdXhkhBDC4UDSbW021PH58WsqllW+QARIVF925QyxrCxJMBim5mU1zMoG4R7I+RQRU48P9tKzDMOQ4BGcdz7mWlLjG1BMCOSq9itwEzi7KuQxtQ+LnNDNeRCZiXByXzM3ilG/PH8PdiZDUoNLuXVyZqNud/+r0M63mZtbIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713817237; c=relaxed/simple;
-	bh=tB4j3Mp1cAbAPzA7/QjfWJaHulMX9TPibSa9gTEbIbw=;
+	s=arc-20240116; t=1713819318; c=relaxed/simple;
+	bh=zOJayybj5bm2pTJSI0p6yN4sVWz2Z2kuEJqDXj404O4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsLE7XY21ZfhlBMVGjhYFA5Q3j+YR0Ew5XG8h55xXxVDtbnoAF9qJ+c8rK85tRBlX4+xWlCdRLhHRHrqnp8aeIFttcGH1cpqi7ThXSWbXoDduElzq88sDGSL7SKPUeqY2tNnlK7G/Ib7nPSs4TvOzEeWAdWQi6ss4tNC2Os/BB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uQePScF2; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1+4PBN3XKuRW6lxCbS8UR3OIhgsHBu/rQaDjwyg+N1VI+kXsZ8D9l+CIb/DnvpOEjaVRbeAImsSYk1yQFdQ/EH+nvlP+qmcSpujfRzC9fypAiH2JDifsljgls1XxhoXoOnJeXCftLWGleKNDGJtNwu5Uk5ZL+0RUHHClbKtOIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYhbbKXu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uQePScF2"
-Date: Mon, 22 Apr 2024 16:20:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713817234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5RG8Ru3lhWn45ANoWDq3cq77hbBwMzq6GTS3tURq8Wo=;
-	b=uQePScF2xaCNayfHvN64HjSAdSMcLDdhKvjoFTZmqhwGG2g0Jkx6fWZ1g964VvWbejPnhE
-	chFx2UEJnZNQMFh4stRdMHwcs2VFVtMhpsm5n/5T9QrwMT3PoHsG+USG/ZgoQokZ4pEk/r
-	Pr7mR4uih1x7UhF4jRH5+kHb2m4YPVU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
-	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
-Message-ID: <asgiyolfhg2sfwarkrexbcx3y6mborcxklnncz4cn2g6ffubku@vhoumzvwdpzp>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYhbbKXu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC64C113CC;
+	Mon, 22 Apr 2024 20:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713819318;
+	bh=zOJayybj5bm2pTJSI0p6yN4sVWz2Z2kuEJqDXj404O4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uYhbbKXu7jdLBINWaEFTHBD/uCrZDgA4cgyaXvHRb+qyaD3gMsMLS2RbyCG1wDMQE
+	 t4FooY18pGI0j1YPxkI5mWUSCASCC+B2L2xRAiepYsVBw9sFlsOrBpWnaOJpjeb0GA
+	 j8GlenStbonuWp/ducEx6UEa2+4eccGV1VHUG92G3CuGqG/4TQD1Q+ui4Sq0O+NOLj
+	 a1BYJMtwa0NidptbKm2L+vSXPUPidni41j0uRAn0J4MCEVeH3PTi5oCcNFlCOuqMqB
+	 nyCTKiFvA5t/5kLIXyoGQJLOfPY8dbfFrjG9JYikWmqskBxIS/onQDaXpiliCnoZsR
+	 DaL48nfu4sbuA==
+Date: Mon, 22 Apr 2024 17:55:15 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	Changbin Du <changbin.du@huawei.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Li Dong <lidong@vivo.com>, Paran Lee <p4ranlee@gmail.com>,
+	elfring@users.sourceforge.net,
+	Markus Elfring <Markus.Elfring@web.de>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Chengen Du <chengen.du@canonical.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] dso/dsos memory savings and clean up
+Message-ID: <ZibOs-_ASLcZrnFa@x1>
+References: <20240410064214.2755936-1-irogers@google.com>
+ <ZhgvE7i9HGGar1eX@x1>
+ <CAM9d7chWBv14hD4huuoas4ncZaziuTnHi_JvieKqrLZF9fDpPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240406164727.577914-1-visitorckw@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chWBv14hD4huuoas4ncZaziuTnHi_JvieKqrLZF9fDpPw@mail.gmail.com>
 
-On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
-> This patch series focuses on several adjustments related to heap
-> implementation. Firstly, a type-safe interface has been added to the
-> min_heap, along with the introduction of several new functions to
-> enhance its functionality. Additionally, the heap implementation for
-> bcache and bcachefs has been replaced with the generic min_heap
-> implementation from include/linux. Furthermore, several typos have been
-> corrected.
+On Mon, Apr 22, 2024 at 01:06:46PM -0700, Namhyung Kim wrote:
+> On Thu, Apr 11, 2024 at 11:42 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Tue, Apr 09, 2024 at 11:42:02PM -0700, Ian Rogers wrote:
+> > > 12 more patches from:
+> > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+> > > a near half year old adventure in trying to lower perf's dynamic
+> > > memory use. Bits like the memory overhead of opendir are on the
+> > > sidelines for now, too much fighting over how
+> > > distributions/C-libraries present getdents. These changes are more
+> > > good old fashioned replace an rb-tree with a sorted array and add
+> > > reference count tracking.
+> > >
+> > > The changes migrate dsos code, the collection of dso structs, more
+> > > into the dsos.c/dsos.h files. As with maps and threads, this is done
+> > > so the internals can be changed - replacing a linked list (for fast
+> > > iteration) and an rb-tree (for fast finds) with a lazily sorted
+> > > array. The complexity of operations remain roughly the same, although
+> > > iterating an array is likely faster than iterating a linked list, the
+> > > memory usage is at least reduce by half.
+> >
+> > Got the first 5 patches, would be nice if more people could review it,
+> > I'll try and get back to is soon.
 > 
-> Previous discussion with Kent Overstreet:
-> https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
+> For the series:
 > 
-> Regards,
-> Kuan-Wei
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-We need to get this into -next, where are you at with v4?
+It is not applying right now, I've just merged with torvalds/master and
+I'm running build tests now, will push to tmp.perf-tools-next right now.
+
+- Arnaldo
