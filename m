@@ -1,257 +1,154 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57882502BE
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 07:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436324DA14;
+	Mon, 22 Apr 2024 08:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713770424; cv=none; b=GSqfj2zDd8HZBCXcjXRyTXnBR/OrW9bPPABbAHaTAptvnD7DtgkX1IEzHSG2HxKksRxxnSh8YWmwUzm4ObzelOg7W9UpkE8GWhDt1l8dy1ExWk26hSNobmwBYlOjGsdrbZZXMzciECkROqQ6vKJr/ggcuvZdb5reQyCNmsFUbDE=
+	t=1713773151; cv=none; b=N/m3EPQI+vuXx8c+kJkfzJoxEvXYybpXHcjQQFW0RYhAfcn9rrFK3a03WNszq30RGkGBVkPP4FLZYWEagfFxAqa/5SVPcoMoUMaGwLWYwskQg7C9K2FkjpyyjaYKd5Nwfb3F1Nx1rJQXIDlnNYtV/EyxdUxwUzs7lZ4cjuUjqa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713770424; c=relaxed/simple;
-	bh=AdeJsEOAMTzJhFDgYYiZ8pdUbJ+2r4M99cV0iDb0+/Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jqstP7+jUMbxz+0n86XjVdxWOCoKO5/Kpi1Wraui/nUD0rhr9rhZ/XqcQv42dwmfiVha3J6OVS9EPIvevuXX3tCkIN58BCc9CsHctvLeU/GqhMNlNCuoDVBOQwFdOE7TJnQ5HtggIPxdbxWT28UgKbG1KXKZ/KTyPHfjFYeVGYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dad65e5613so36028039f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 00:20:22 -0700 (PDT)
+	s=arc-20240116; t=1713773151; c=relaxed/simple;
+	bh=uVhWNiAMfNDp/b9IeuNVtP5nn6HBNzCWGB9iGqhdiLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FXunZ4KAyASMoCy779s19i2FZ0/t4+n0VKgyowdv1gEI7SF7za0zZiEOZqEIqfkllPAKcfeN7MuwN/Lxm52+QstO7XEq7tpBfAJueHGIANrDM7o0nNrhSFhNuvq8ve4NFUrS76TZkZxbkNswtXwkQzD+tBXuHL1VQ1xKAXbMUxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MF7bhdrP; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MF7bhdrP"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso2029237a12.3;
+        Mon, 22 Apr 2024 01:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713773145; x=1714377945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4Ld606VREySuBvvbpoJ4lVHq8DXsMyZcPtIwiLYOTw=;
+        b=MF7bhdrPeokn4GStVp0kMvzij6sYL1TjycWWydWwa/0Kyrqn0S82/TdAYMYCrX0osH
+         e+R0rzaoYTm9uKc8UtfXO9tkrmu5WYItDqCVEKZnZxyfImcnhSZuDHa1zcu12ebVuptR
+         G9dG0vpblcnUqayclS6rpSNTR8amifIruAEG/MvqbSGpKJToEKVQ2uGqxFEzm2ZtNPlM
+         YDAQHhlp4Cw0WUi5tGAVFyasev6/xU2jXpKdbyPiNbI5mBzuv8/ROjmTZvy+wXOq1xmc
+         JwReEN8QPVmt27COsOPPRA9oUSnPABAi5jtTUc4EPSUvHwxOcWsTa4hLX9HSCpnzOBeH
+         8wow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713770421; x=1714375221;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vpqmMgJ4ByfxvbvXjjLlWRhuBbXpK1CMz74bsVfUqlo=;
-        b=p1x1YL3MnQYv42pj8y0UBfuZSEv8j7LXlglbYIzwENRJqKVpWE3BVebjYfbcVNooNK
-         g9QnlWAMWcZLtEYsl62/SzGcHy2x0NAh9PgF+27UeKiStBxujAmi84a1HciK1GpQkyK8
-         2hcydXCS/mEevSh1909jNVw4l6wRuX86Dt1pE0TMP3uDVFu07Tg93q4FHjL8g7EURzY9
-         FDkSECHoXkgsKy/Qdygl2pEE0/wJof5j4KHJgGlM0OqTOPufZ0HHbtkb9r0MM+S2D/9C
-         zmhoe3cO6BRPmoc+FgOjepR7CNZnmEj2JkEz5JuxFTh4UwVNP4gKjHrhkvwwxMI5EXJp
-         z1dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW80vC6zPBbhNn0uKz7x6LnDHeWd43roinEtSwWLk5CCHqe/6QIpjfK8QDOE4/YKZsj8MntsBsRSv0MEJ469ozwalqg19iRG94Q+dfI5g8hbQ==
-X-Gm-Message-State: AOJu0Yx6ga2JvUMZsx3iEaY2yT7hDlVnnxE0b4x2IAbqqHTbUtnA8Hk/
-	VXPKZr3yinBNUhpfF2cXUL2L5AvHmc+tIBkG8U1EKL7Ezbk0wCKRJK/jMxp+uxPDWdlsBj4U28O
-	nM/W8WkvsaqTEWtq3lyxZyuT4mZZ4IgU5C1r+HlEUN1xGloyy6TjO3XA=
-X-Google-Smtp-Source: AGHT+IEGzQ2fabO43dVcI23npLwNId3Wgfcu9nvXu4uiGEmhLXqn5h4zeuGCbfGQ3lmzeHQOuEHPRaSENCVHWh63Euq15e4s9dR9
+        d=1e100.net; s=20230601; t=1713773145; x=1714377945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n4Ld606VREySuBvvbpoJ4lVHq8DXsMyZcPtIwiLYOTw=;
+        b=h54rXPMKLzs858zt0qQXy8AgcsRrEzDKoe4RARUEc6SSrrd1Wu3EeoAHM6OTPh4arW
+         Em+qWbNvpIXzGZCrOlXxBbnyHZnzY5IE25J9w4Ij57I5bdS6ZGE0nPYCJJp1k7d0BbgF
+         dz7mnlDFrq1m+yUQKBN2aE3kaLxu/1HG4xOa59i5aPUJGxv/69b2FWPt38V5ftdJtjjf
+         g8h3HI9wGpYHfbQ9O1oXQCkIyMwB2hPh+iKtfqw2TXdp8ffmAsdptaVkCniW/kZVxOw8
+         gY274oF9Hb83yrL8h6laZj4ciSWJ7Jsko+/cs8XhQFQpJMc7HVZCSLosz8yaPuIYsP8h
+         H30Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXz7IB7oY7tpeFaRpcJv6fyxPHdYlfy57bzXgaRlSRDUg5XH+TngTe19GCcBsYMuV9iaJv/aOGo4Z+t2e38BOFfaJdqec7BC96y1Hdg8uVFs+pKKJy4iQy2qL9hMUWu3Xlt5jZ+RcCQE8KB0i8JsSlTTqNlIr6kSkf0WQBPsc1S2ScDzg==
+X-Gm-Message-State: AOJu0YzlVWD1cRZzg4BcEIzCXT+ejo7ytt1nO5omcyoMm81BFgZvN58V
+	Lch0lBIKpMh1mWA4TCkTvNKdDRIAHbOwKESOpCMENfWpjknWRT4N
+X-Google-Smtp-Source: AGHT+IEr8/+66snntLRMzZCUO90S81JePpMsCeL3w66lbO0RkfdaeGJVZyZq3gBfQDbdCvcKx9Y4Sg==
+X-Received: by 2002:a05:6a20:244d:b0:1aa:8442:21ba with SMTP id t13-20020a056a20244d00b001aa844221bamr10148312pzc.21.1713773145406;
+        Mon, 22 Apr 2024 01:05:45 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.236])
+        by smtp.gmail.com with ESMTPSA id fv4-20020a056a00618400b006e64ddfa71asm7468208pfb.170.2024.04.22.01.05.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 01:05:44 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	yangjihong1@huawei.com,
+	zegao2021@gmail.com,
+	leo.yan@linux.dev,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1 0/4] Dump off-cpu samples directly
+Date: Mon, 22 Apr 2024 16:05:52 +0800
+Message-ID: <20240422080552.1913893-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1652:b0:485:4f60:6017 with SMTP id
- a18-20020a056638165200b004854f606017mr84759jat.6.1713770421576; Mon, 22 Apr
- 2024 00:20:21 -0700 (PDT)
-Date: Mon, 22 Apr 2024 00:20:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003470d30616aa450a@google.com>
-Subject: [syzbot] [perf?] BUG: using __this_cpu_add() in preemptible code in graph_lock
-From: syzbot <syzbot+60761fc6ef65e4f00974@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
 
-syzbot found the following issue on:
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. Also, samples
+are stored in large BPF maps which contain all the stack traces and
+accumulated off-cpu time, but they are eventually going to fill up after
+running for an extensive period. This patch fixes those problems by dumping
+samples directly into perf ring buffer, and dispatching those samples to the
+correct format.
 
-HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=10755af5180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=60761fc6ef65e4f00974
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Before, off-cpu samples are after regular samples
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+60761fc6ef65e4f00974@syzkaller.appspotmail.com
-
-BUG: using __this_cpu_add() in preemptible [00000000] code: syz-executor.3/9981
-caller is __pv_queued_spin_lock_slowpath+0x945/0xc60 kernel/locking/qspinlock.c:565
-CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- check_preemption_disabled+0x10e/0x120 lib/smp_processor_id.c:49
- __pv_queued_spin_lock_slowpath+0x945/0xc60 kernel/locking/qspinlock.c:565
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
- graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
- mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
- __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f4f88a7dea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
- </TASK>
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-bh read-side critical section!
-
-other info that might help us debug this:
+```
+         swapper       0 [000] 963432.136150:    2812933    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963432.637911:    4932876    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [001] 963432.798072:    6273398    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+         swapper       0 [000] 963433.541152:    5279005    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+sh 1410180 [000] 18446744069.414584:    2528851 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
 
 
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.3/9981:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
-
-stack backtrace:
-CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x23b/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6915
- preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6939
- preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:12
- unwind_next_frame+0x2124/0x2a00 arch/x86/kernel/unwind_orc.c:672
- __unwind_start+0x641/0x7c0 arch/x86/kernel/unwind_orc.c:760
- unwind_start arch/x86/include/asm/unwind.h:64 [inline]
- arch_stack_walk+0x103/0x1b0 arch/x86/kernel/stacktrace.c:24
- stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
- save_trace+0x5a/0xb40 kernel/locking/lockdep.c:582
- mark_lock+0x1d3/0x350 kernel/locking/lockdep.c:4673
- __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f4f88a7dea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
- </TASK>
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-sched read-side critical section!
-
-other info that might help us debug this:
+sh 1410185 [000] 18446744069.414584:    2314223 offcpu-time: 
+	    7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
 
 
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.3/9981:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
+awk 1409644 [000] 18446744069.414584:     191785 offcpu-time: 
+	    702609d03681 read+0x11 (/usr/lib/libc.so.6)
+	          4a02a4 [unknown] ([unknown])
+```
 
-stack backtrace:
-CPU: 0 PID: 9981 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x28a/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6915
- preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6939
- preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:12
- unwind_next_frame+0x2124/0x2a00 arch/x86/kernel/unwind_orc.c:672
- __unwind_start+0x641/0x7c0 arch/x86/kernel/unwind_orc.c:760
- unwind_start arch/x86/include/asm/unwind.h:64 [inline]
- arch_stack_walk+0x103/0x1b0 arch/x86/kernel/stacktrace.c:24
- stack_trace_save+0x118/0x1d0 kernel/stacktrace.c:122
- save_trace+0x5a/0xb40 kernel/locking/lockdep.c:582
- mark_lock+0x1d3/0x350 kernel/locking/lockdep.c:4673
- __lock_acquire+0x116e/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f4f88a7dea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f4f897950c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f4f88babf80 RCX: 00007f4f88a7dea9
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f4f88aca4a4 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f4f88babf80 R15: 00007fffadfb1b08
- </TASK>
+After, regular samples(cycles:P) and off-cpu(offcpu-time) samples are
+collected simultaneously:
+
+```
+upowerd     741 [000] 963757.428701:     297848 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+      irq/9-acpi      56 [000] 963757.429116:    8760875    cycles:P:  ffffffffb779849f acpi_os_read_port+0x2f ([kernel.kallsyms])
+upowerd     741 [000] 963757.429172:     459522 offcpu-time: 
+	    72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+
+
+         swapper       0 [002] 963757.434529:    5759904    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+perf 1419260 [000] 963757.434550: 1001012116 offcpu-time: 
+	    7274e5d190bf __poll+0x4f (/usr/lib/libc.so.6)
+	    591acfc5daf0 perf_evlist__poll+0x24 (/root/hw/perf-tools-next/tools/perf/perf)
+	    591acfb1ca50 perf_evlist__poll_thread+0x160 (/root/hw/perf-tools-next/tools/perf/perf)
+	    7274e5ca955a [unknown] (/usr/lib/libc.so.6)
+```
+
+Here's a simple flowchart:
+
+[parse_event (sample type: PERF_SAMPLE_RAW)] --> [config (bind fds,
+sample_id, sample_type)] --> [off_cpu_strip (sample type: PERF_SAMPLE_RAW)] -->
+[record_done(hooks off_cpu_finish)] --> [change_type(sample type: OFFCPU_SAMPLE_TYPES)]
 
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ tools/perf/builtin-record.c             |  98 ++++++++++++++++++++--
+ tools/perf/tests/shell/record_offcpu.sh |  29 -------
+ tools/perf/util/bpf_off_cpu.c           | 245 +++++++++++++++++++++++++------------------------------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c  | 163 +++++++++++++++++++++++++++++-------
+ tools/perf/util/evsel.c                 |   8 --
+ tools/perf/util/off_cpu.h               |  14 +++-
+ tools/perf/util/perf-hooks-list.h       |   1 +
+ 7 files changed, 347 insertions(+), 211 deletions(-)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+2.44.0
