@@ -1,52 +1,53 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835E7153837;
-	Mon, 22 Apr 2024 19:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266271553B8;
+	Mon, 22 Apr 2024 20:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713815717; cv=none; b=ZzKBtdeeuC2yWpP5+J4GpJT+P26DlPFc8GgldlPjj1P95+luKMK3Z2sCkfKjthQcUdgBJCDUOaAXjGtj2pasPQhg18OA654V2W4vMWwAl8lKwHzgNkNd0IyfPSk5IDtMufH8nBDBPHTujy/DApw4SGHRSoDIOGZhTjEQ5VosXZI=
+	t=1713816137; cv=none; b=P+IPnDUWWVsdlOq30MqvXQy31p7yMiB0cPNQbP53yoV1aGluSkhaO9i8owDz58JwKe++UIXWN10WO1+SPVCyejCsEQ5z5FDSE7QiI1ZijNrCic/Fs5NP+XL7/tvIgbece2+sWt277I7zsAQESZyAIovLHREqQZryJOilxXbYfCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713815717; c=relaxed/simple;
-	bh=dbUuQjU2jGCOnAG004o8j90d7W0DvjwGFjx2+mLeMFA=;
+	s=arc-20240116; t=1713816137; c=relaxed/simple;
+	bh=kyPGFrRjogg7eballx/psAJp/i0GSsb1eEhvh4VJrCE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NB4o+/JZ/Zyv5gAXJJCfolP46WnN+GhRdGPxdczEQSqXlvncbwIPRNirmntxQ2cQJKgGXfQ+XOolRRx/uQNjAPvWUQbb08hmV1SyAwk9kcDXzWP1vdQylNzbSayy2QksbzHKNZLsoCgG51pqx/33xiih0g9aKZjscoHZZ8dg72M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+	 To:Cc:Content-Type; b=jykpOEAxS+CEis6Zfk1ngJNVGek7I9liI0m/LwE0+KNfnZ2OHuRubrmDLK5c6Ma1hYP8NGAuJywaH9G5tUPzHAzEgwxcidI8kMm2Wh428+KUDiX2hxyCgpJFLWldtFp16PwI9WpsRaSqutZHplAzGKO2rHOqYrONHiYRPBmA4ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ac9b225a91so2424607a91.2;
-        Mon, 22 Apr 2024 12:55:16 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a484f772e2so3144650a91.3;
+        Mon, 22 Apr 2024 13:02:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713815716; x=1714420516;
+        d=1e100.net; s=20230601; t=1713816135; x=1714420935;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ROr3UNU3503DzaF7LIBVFzJGvqS0DJu8N802BmfVcVQ=;
-        b=MDsl0UF5rOcEOHyiQwZqpZt5viID8h3fmjTsWrmgE+aIv51mj2ayRgJGj+8B0oEMkv
-         j/QrP0Tg4z3WCFlmkyt9n/vQhDxDespTp1C1HjbyXVDJO877f+7HI1CvNEDEVN5ACzKP
-         vBLhaBIEqNN2X3/pUs8ytfu0XyvH+qLjNO5XLYDc+l5M6vo+haC+uGceYw7ITluHNSbP
-         ufH5J1G6bC/1jifrDguqk+wJIJEK1hbzcep6TcbaaugBR2TAA7m4HGYPfobgvXcWMVO/
-         gxFV9USeuj78uCCNIu7ZMAumN2q8GeMs9FrSP5R0cbulzP9oOTpPhK30McpSz1KCI0z6
-         trgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbu03YyLvhnaNzESDgdy1l304FqRSfs54fkmbgdhaJM9W/Hsmf5PpWTh8RYOrp270rDGFK/yW96EOu8MccQGaQZ/XgzgQejHAsK15tVzMOmUrb20/C+T4x8/6lZ/nQkkyTGuDQ5rZ4kgUG7XnXYg==
-X-Gm-Message-State: AOJu0YyKvhFqCoF7ghU6MF72XiEaymoXyJTywNEu3e86lAhX3J7+sioc
-	JgUkhxlGQk9WO5NEv56VROZIALWRzMasfZ8W/fqd6od8YXLiK3nmzCNFKkhEDwPfmOUIWZ++AGF
-	T/boeMSZq3olnXbEJ+UBRYAuviFI=
-X-Google-Smtp-Source: AGHT+IG6z15TUuvvPYi53KHEEF+i40ILOSTC+cq9bm+aAOEo4+1cXpj0Lhot9aVlAh+RMtD4ohsDA3wViKH6kMCw/r8=
-X-Received: by 2002:a17:90b:24d:b0:2a7:7cae:8ec9 with SMTP id
- fz13-20020a17090b024d00b002a77cae8ec9mr8940854pjb.7.1713815715629; Mon, 22
- Apr 2024 12:55:15 -0700 (PDT)
+        bh=ZJ75A/8OgSdYaiyjnSCmItzI6PsJdpDOfLZO1MOPoYU=;
+        b=d65JgKJzbo19p0HPeYAfJNHALO7gcnhlCetPQvUMzatIw326wgPAYPKWsavwJbu707
+         Qamb4y1MocHo/S2Yr9pnLFTkfg77L+mberTs4YuLS9onDWIE9HcgYJfy9VWXr8PaNit4
+         3lZlJzynLoiXUpjpT5d6Jb/ad5RdgR1qF5p8sgXy2m5+NwxtqeIfpTr4ywXS54Lc5mQO
+         mc35NhUpqjHsnao8OxNL1Vt4UdiES7CegMW2e+IDiiy6rtZHIVkUnV7NTFQWm3yZugKu
+         DosacvsdgBJswriE53Swupb4Y/Xa30BMoqw8/cwgHSncUAgY17QzScRIxexeGhyXwBt4
+         SXOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx0hue7sqQ7fTLb5aYfNdSRBMeGi67Pl5KmYoHnjqW/M6B28tQIOdQfE5ZqVFeyO8GSISILy9s5FCa6k4GUSuKJJOCo2PANicoXBFNInVbjMXAmfhbLaQANHiCw4j9nNATZlfkMLSRQ2LH5nNSBQ==
+X-Gm-Message-State: AOJu0YxEaOnludd3SB2Q6A2YjOvTjSo2On4uHZ5dXtCfaP1KwlnIr+ZI
+	pn/6EojBoa3+Rra/QGOh8xBroyvLiwJmKEF4rRNMrusqSVmlOvPVf/08cxB9yM1PtovFW6mrP3i
+	A3zSzsasm+qBlKrLHaAucxHPkoX8=
+X-Google-Smtp-Source: AGHT+IFkhhcTygRUy6jT95qwF2UikiLCSDJAzMDTRrm38muiu30modTYEthg0Srg7IW0nAWhZEasHhtwpgISC1wz1Pc=
+X-Received: by 2002:a17:90b:3781:b0:2ae:9138:6d8e with SMTP id
+ mz1-20020a17090b378100b002ae91386d8emr517966pjb.16.1713816135335; Mon, 22 Apr
+ 2024 13:02:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402214436.1409476-1-weilin.wang@intel.com> <20240402214436.1409476-6-weilin.wang@intel.com>
-In-Reply-To: <20240402214436.1409476-6-weilin.wang@intel.com>
+References: <20240402214436.1409476-1-weilin.wang@intel.com>
+ <20240402214436.1409476-6-weilin.wang@intel.com> <CAM9d7ciKUYAdu97O3p5VRYGjXwvOv+4kgERXKM6mjr6OUbRQZA@mail.gmail.com>
+In-Reply-To: <CAM9d7ciKUYAdu97O3p5VRYGjXwvOv+4kgERXKM6mjr6OUbRQZA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 22 Apr 2024 12:55:04 -0700
-Message-ID: <CAM9d7ciKUYAdu97O3p5VRYGjXwvOv+4kgERXKM6mjr6OUbRQZA@mail.gmail.com>
+Date: Mon, 22 Apr 2024 13:02:04 -0700
+Message-ID: <CAM9d7cjUkGFfbdWSxzs5tkLHdctjux1jGV0P_J9YsGP3QmWNOw@mail.gmail.com>
 Subject: Re: [RFC PATCH v7 5/6] perf stat: Add retire latency print functions
  to print out at the very end of print out
 To: weilin.wang@intel.com
@@ -60,49 +61,49 @@ Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 2, 2024 at 2:46=E2=80=AFPM <weilin.wang@intel.com> wrote:
+On Mon, Apr 22, 2024 at 12:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> From: Weilin Wang <weilin.wang@intel.com>
+> On Tue, Apr 2, 2024 at 2:46=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> >
+> > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > Add print out functions so that users could read retire latency values.
+> >
+> > Example output:
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> >             25,717      MEM_INST_RETIRED.SPLIT_STORES    #      2.2 %  =
+tma_split_stores
+> >         28,365,080      CPU_CLK_UNHALTED.THREAD
+> >              24.00      MEM_INST_RETIRED.SPLIT_STORES:p  #       96    =
+    4
+> >
+> >        2.054365083 seconds time elapsed
+> >
+> > This output of retire latency data is in format:
+> >  <val> <event-name> # <sum> <count>.
 >
-> Add print out functions so that users could read retire latency values.
+> Nop, please follow the perf stat output format.  It'd be
 >
-> Example output:
+>   <sum> <event-name> # ...
 >
->  Performance counter stats for 'system wide':
+> Hmm.. maybe you don't need this at all as it'll have the event
+> anyway (probably without the 'p' modifier like in the example
+> above).
 >
->             25,717      MEM_INST_RETIRED.SPLIT_STORES    #      2.2 %  tm=
-a_split_stores
->         28,365,080      CPU_CLK_UNHALTED.THREAD
->              24.00      MEM_INST_RETIRED.SPLIT_STORES:p  #       96      =
-  4
+> Then I think you can just add a metric value saying the average
+> latency in the comment area.
 >
->        2.054365083 seconds time elapsed
+>   Performance counter stats for 'system wide':
 >
-> This output of retire latency data is in format:
->  <val> <event-name> # <sum> <count>.
+>              25,717      MEM_INST_RETIRED.SPLIT_STORES    #      2.2 %
+>  tma_split_stores
+>                                                                      #
+>      24.0  average latency
 
-Nop, please follow the perf stat output format.  It'd be
-
-  <sum> <event-name> # ...
-
-Hmm.. maybe you don't need this at all as it'll have the event
-anyway (probably without the 'p' modifier like in the example
-above).
-
-Then I think you can just add a metric value saying the average
-latency in the comment area.
-
-  Performance counter stats for 'system wide':
-
-             25,717      MEM_INST_RETIRED.SPLIT_STORES    #      2.2 %
- tma_split_stores
-                                                                     #
-     24.0  average latency
-       28,365,080      CPU_CLK_UNHALTED.THREAD
+Sorry for the line wrapping.  They should be in the same line.
 
 Thanks,
 Namhyung
-
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
