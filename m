@@ -1,252 +1,309 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D47C502B4;
-	Mon, 22 Apr 2024 10:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D344205E38;
+	Mon, 22 Apr 2024 10:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781393; cv=none; b=ALMW5MdE6V19A6BXC0gQ+ndVh26Gq3z8H/Exme6q5UhkiEUL5npz/AbtAUNGilJmPQb/Z4wd3M+/iJAbVU/RhyRxyVdJlsNTzIdnr6F9cRGi8Lj9qeNwPx/Hnvx4TcdnkJC4fzRSJaXgENFonCee5PQ5teOAszpysBeBXP0M5+E=
+	t=1713782980; cv=none; b=YVJZ3hi/xzasyPxW3g8+7zsuZt+ybbfRRSHmqSQhPVp5hslYSDJ614TcqWEfNPyySuikUmj+apkW9lRxyqyAyIfprIPmzeU1v2lL0xndv5D17K7xhgYH2UpTW1WZm+Vk+QU699QzDfRCzOloqZwgAVjslVUfRfKOUZvPykZYSlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713781393; c=relaxed/simple;
-	bh=QACik+ECjepFvlXsO5FWqcRtqhT4t/QMq9LNj2MY5lU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QvPCkv0BncL10Z5JIlFyiz9GrgFGJHohtxJOzfneGP4ePmuMKsKqpmHjDVJs6LUt9hsIRh34ZP7x8eOeaz60DDakDis3EG69OP6ED9FF0kWKz6KJprjRMgkq9S8RKtrpJ4lSTjFbteQ2f6Sg+BVUbqhMWXJGBbUdAr0s65WDb1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JtOTQ4X1; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtOTQ4X1"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e78970853so8406672a12.0;
-        Mon, 22 Apr 2024 03:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713781389; x=1714386189; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+TuEnSNBvG4LALxdWczKP5/WDkU6BbBaAYrjVgiYqpE=;
-        b=JtOTQ4X1xBnCU7oL4BvI80XZa0dXGgVzEeP80BDCejlmCVpg6SdOB7+oowgA9TswOU
-         2T9dOLQhu9sw0E63kUvn2i3T22v/uN2nFtvaSIVwEsipY2gzuyzCYOiVey8el8QKBhBd
-         b1NDut8bQtL/36LqogrOzfD6okZjIZOO45//gnvWOj4VHht2+pVkHEZ8o0c76kNpNSx1
-         GCEavhBdUfxlMbI0PPjGEh2PqPdGRnWuXGcpylwe0/HYgU4j7mhZf3WDROAB+5ItisRN
-         OtmBkrty93LVbXs/UmyKdafZ7p3QclzpGWgaUnJcE6LWAjVCWhhbJxxP/sQByxOzch0G
-         gjlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713781389; x=1714386189;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+TuEnSNBvG4LALxdWczKP5/WDkU6BbBaAYrjVgiYqpE=;
-        b=l8JwsmBMvGGZQVxQLFKEqg/xyc9CAIwE/onOALJGk03Se414bpoCh4R8/xovsjhZHJ
-         8+kEmNT2ehiqnQIeEcXTSl7xDYibH3rRubgrKqLs4JgR8eS/CQpLxpE8XhwzxCczGM9K
-         /Hdpfq6YU0n5Fwo8KIAOzrvbxqnwsXzCKJXz5TcdmDLFzJgyx25nPXTfCOfVrflzUgb5
-         16ZmwAIhI02LCssk9s9DjUbxOxRnYDWrgfZ1LWUgUYVW/y7BjBeAxwwEIpqWil+0+qaN
-         iGpePsR8J/PJkPDVkCPTSHIQg4WBahK6IlvwIFzBkCj5Z3m4sLwkJvJqT0MBRHyFJLgT
-         N3/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWVqhXzhxz1SjG1oecXO7JNJ39NtrkveodYNT2j82wApaziWGdHAFmptzMT262slSVB0xkXsCnYA6e7eEb4Xqp4oq4/fWIOyujnhDkYInqjKtCRRTjT9y2UEWZlzhXIPi+VSDZVogNtb0KfSTCe0nc9Q22ZNVr5TdObTpCj48/+Tm7k4w==
-X-Gm-Message-State: AOJu0YzycUoD1YZtZiHkHFfcRgiVvBXTjh6tW7/uw4JHKFghLe+BiuSP
-	Xro8WbX9bUy2rCYMLdvnZmOHXcq1elEvME0EQYYKdgfo4YWjX3mZzN9EUC/z
-X-Google-Smtp-Source: AGHT+IF7rbqhx80I4EcakWBm7ROU4Kg4/+HimK9++ICv5C+Ejf5itzhFGpIaBsywmcfeJlXae9yA8g==
-X-Received: by 2002:a17:907:7d9f:b0:a55:b2c1:7eba with SMTP id oz31-20020a1709077d9f00b00a55b2c17ebamr3054896ejc.18.1713781389250;
-        Mon, 22 Apr 2024 03:23:09 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-001.fbsv.net. [2a03:2880:30ff:1::face:b00c])
-        by smtp.gmail.com with ESMTPSA id v16-20020a170906b01000b00a522c69f28asm5575548ejy.216.2024.04.22.03.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 03:23:08 -0700 (PDT)
-From: Jonathan Haslam <jonathan.haslam@gmail.com>
-To: linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org
-Cc: jonathan.haslam@gmail.com,
-	andrii@kernel.org,
-	bpf@vger.kernel.org,
-	rostedt@goodmis.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	s=arc-20240116; t=1713782980; c=relaxed/simple;
+	bh=V3JVLUQkKZ0ClwbpVUKwOrj3hNFz5KqPyYqlIjHSMP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iOO00uRc6E2pI5JN9HPIr6FQ7A+2Gffgj8CHnZCRHSHOu/RlQOqAXccL1NI2euwBvm+Ie2dTLVfrWglZaANZD0iZ3j9cJ7jWnGxtVxKbWNDM+0x5V1Ui8CqiaO7fVmzpjF0WGajzW/1Ne3qVsBpZw+Rn3Tz+t3WQjeiEbt8K3Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3697339;
+	Mon, 22 Apr 2024 03:50:05 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DFF13F7BD;
+	Mon, 22 Apr 2024 03:49:35 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: ak@linux.intel.com,
+	will@kernel.org,
+	james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] uprobes: reduce contention on uprobes_tree access
-Date: Mon, 22 Apr 2024 03:23:05 -0700
-Message-ID: <20240422102306.6026-1-jonathan.haslam@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [RFC PATCH v2 0/4] A mechanism for efficient support for per-function metrics
+Date: Mon, 22 Apr 2024 11:49:25 +0100
+Message-ID: <20240422104929.264241-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Active uprobes are stored in an RB tree and accesses to this tree are
-dominated by read operations. Currently these accesses are serialized by
-a spinlock but this leads to enormous contention when large numbers of
-threads are executing active probes.
+I've been working on an approach to supporting per-function metrics for
+aarch64 cores. The basic idea is to extend a plain periodic sampling
+profiler as follows:
 
-This patch converts the spinlock used to serialize access to the
-uprobes_tree RB tree into a reader-writer spinlock. This lock type
-aligns naturally with the overwhelmingly read-only nature of the tree
-usage here. Although the addition of reader-writer spinlocks are
-discouraged [0], this fix is proposed as an interim solution while an
-RCU based approach is implemented (that work is in a nascent form). This
-fix also has the benefit of being trivial, self contained and therefore
-simple to backport.
+ * Periodically sample one or more counters as needed for the chosen
+   set of metrics.
+ * Record a sample count for each symbol so as to identify hot
+   functions.
+ * Accumulate counter totals for each of the counters in each of the
+   metrics.
+ * Apply some filtering to the PMU values to improve attributability.
 
-We have used a uprobe benchmark from the BPF selftests [1] to estimate
-the improvements. Each block of results below show 1 line per execution
-of the benchmark ("the "Summary" line) and each line is a run with one
-more thread added - a thread is a "producer". The lines are edited to
-remove extraneous output.
+So far, this can be achieved without any further modifications to perf
+tools or the kernel. However, using the sample period that might
+typically be used for a plain periodic sampling statistical profiler
+(for example once every millisecond) leads to poor results. Such an
+approach gives you a reasonable estimation of where the profiled
+application is spending time for relatively low overhead, but the
+PMU counters cannot easily be attributed to a single function as the
+window over which they are collected is too large. A modern CPU may
+execute many millions of instructions over many thousands of functions
+within 1mS window. With this approach, the per-function metrics tend
+to trend to some average value across the top N functions in the
+profile.
 
-The tests were executed with this driver script:
+In order to improve the attributability of the PMU counters, it is
+desirable to shorten the sampling window to something small enough that
+it fits within the execution time of a typical single function; for
+example a few hundred cycles. This can be achieved with perf, by
+reducing the sample period, for example by sampling the CPU cycle
+counter with `period=<window>`. With this change, it is possible to
+collect seemingly reasonable per-function metrics on aarch64.
 
-for num_threads in {1..20}
-do
-  sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
-done
+There are at least three major concerns with this approach:
 
-SPINLOCK (BEFORE)
-==================
-Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
-Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
-Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
-Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
-Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
-Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
-Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
-Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
-Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
-Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
-Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
-Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
-Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
-Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
-Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
-Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
-Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
-Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
-Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
+ * A short sample window is not guaranteed to cover a single function.
+ * For speculatively executing, out of order cores, can the results be
+   accurately attributed to a give function or the given sample window?
+ * The overhead of sampling every few hundred cycles is very high.
 
-RW SPINLOCK (AFTER)
-===================
-Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
-Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
-Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
-Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
-Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
-Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
-Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
-Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
-Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
-Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
-Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
-Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
-Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
-Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
-Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
-Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
-Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
-Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
-Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
-Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
+This patch set does not attempt to address the first point directly; it
+is possible to detect cases where the sample window starts in one symbol
+and ends in another by comparing the two symbols. In the post-processing
+script provided at the bottom of this message, the approach is to
+discard the PMU counts for any given sample if the start and end symbols
+are not matched. In order to avoid biasing the overall results against
+small functions, the script will still increment the "number of samples"
+count for the sampled symbol so that the relative rank of that function
+remains correct despite the PMU data being discarded.
+It is possible for a this approach to fail, for example if the start
+and end of the window fall within the same function, with a sufficiently
+short call-return occurring between the two. On Arm systems, the
+BR_RETURN_RETIRED or BR_RETURN_SPEC PMU counter could be used to detect
+such cases, or a tool could just accept such misattribution on the basis
+that folding the cost of a very small leaf function into its caller may
+be more useful than discarding the data entirely.
 
-The numbers in parenthesis give averaged throughput per thread which is
-of greatest interest here as a measure of scalability. Improvements are
-in the order of 22 - 68% with this particular benchmark (mean = 43%).
+The patch set also cannot address the second concern. Where alternative,
+more precises mechanisms are available, it is likely preferable to use
+those. However, in many cases, such as across the vast majority of Arm
+CPUs, the PMU is the only available mechanism, and in this context, and
+in the context of a statistical sampling profiler, it is intended that
+this approach ought to give representative/actionable metrics rather
+than absolutely precise metrics.
 
-V2:
- - Updated commit message to include benchmark results.
+This patch set focuses on improving the capture and processing overhead.
 
-[0] https://docs.kernel.org/locking/spinlocks.html
-[1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
+There are several reasons why the high overhead is undesirable:
 
-Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
----
- kernel/events/uprobes.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+  * PMU counter overflow typically causes an interrupt into the kernel;
+    this affects program runtime, and can affect things like branch
+    prediction, cache locality and so on which can skew the metrics.
+  * The very high sample rate produces significant amounts of data.
+    Depending on the configuration of the profiling session and machine,
+    it is easily possible to produce many orders of magnitude more data
+    which is costly for tools to post-process and increases the chance
+    of data loss. This is especially relevant on larger core count
+    systems where it is very easy to produce massive recordings.
+    Whilst the kernel will throttle such a configuration,
+    which helps to mitigate a large portion of the bandwidth and capture
+    overhead, it is not something that can be controlled for on a per
+    event basis, or for non-root users, and because throttling is
+    controlled as a percentage of time its affects vary from machine to
+    machine. AIUI throttling may also produce an uneven temporal
+    distribution of samples. Finally, whilst throttling does a good job
+    at reducing the overall amount of data produced, it still leads to
+    much larger captures than with this method; typically I have
+    observed 1-2 orders of magnitude larger captures.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index e4834d23e1d1..8ae0eefc3a34 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-  */
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
- 
--static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- 
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
- 	struct uprobe *uprobe;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	uprobe = __find_uprobe(inode, offset);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return uprobe;
- }
-@@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
- {
- 	struct uprobe *u;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	u = __insert_uprobe(uprobe);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 
- 	return u;
- }
-@@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
- 	if (WARN_ON(!uprobe_is_active(uprobe)))
- 		return;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
- }
-@@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
- 	if (n) {
- 		for (t = n; t; t = rb_prev(t)) {
-@@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
- 			get_uprobe(u);
- 		}
- 	}
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- }
- 
- /* @vma contains reference counter, not the probed instruction. */
-@@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return !!n;
- }
--- 
-2.43.0
+In order to mitigate this high overhead, this patch set proposes a cheap
+mechanism to decouple the sample window (time over which events are
+counted) from the sample period (time between interesting samples).
+This patch set modifies perf core to support alternating between two
+sample_period values, providing a simple and inexpensive way for tools
+to separate out the sample period and the sample window. It is expected
+to be used with the cycle counter event, alternating between a long and
+short period and subsequently discarding the counter data for samples
+with the long period. The combined long and short period gives the
+overall sampling period, and the short sample period gives the sample
+window. The symbol taken from the sample at the end of the long period
+can be used by tools to ensure correct attribution as described
+previously. The cycle counter is recommended as it provides fair
+temporal distribution of samples as would be required for the
+per-symbol sample count mentioned previously, and because the PMU can
+be programmed to overflow after a sufficiently short window (which may
+not be possible with software timer, for example). This patch does not
+restrict to only the cycle counter, it is possible there could be other
+novel uses based on different events, or more appropriate counters on
+other architectures. This patch set does not modify or otherwise disable
+the kernel's existing throttling behaviour; if a configuration is given
+that would lead high CPU usage, then throttling still occurs.
+
+To test this I have developed a simple `perf script` based python
+script. For a limited set of Arm PMU events it will post process a
+`perf record`-ing and generate a table of metrics. Along side this I
+have developed a benchmark application that rotates through a sequence
+of different classes of behaviour that can be detected by the Arm PMU
+(eg. mispredicts, cache misses, different instruction mixes). The path
+through the benchmark can be rotated after each iteration so as to
+ensure the results don't land on some lucky harmonic with the sample
+period. The script can be used with and without this patch allowing
+comparison of the results. Testing was on Juno (A53+A57), N1SDP,
+Gravaton 2 and 3. In addition this approach has been applied to a few
+of Arm's tools projects and has correctly identified improvements and
+regressions.
+
+Headline results from testing indicate that ~300 cycles sample window
+gives good results with or without this patch. Typical output on N1SDP
+for the provided benchmark when run as:
+
+    perf record -T --sample-cpu --call-graph fp,4 --user-callchains \
+        -k CLOCK_MONOTONIC_RAW \
+        -e '{cycles/period=999700,alt-period=300/,instructions,branch-misses,cache-references,cache-misses}:uS' \
+        benchmark 0 1
+
+    perf script -s generate-function-metrics.py -- -s discard
+
+Looks like (reformatted for email brevity):
+
+    Symbol              #     CPI   BM/KI  CM/KI  %CM   %CY   %I    %BM   %L1DA  %L1DM
+    fp_divider_stalls   6553   4.9   0.0     0.0   0.0  41.8  22.9   0.1   0.6    0.0
+    int_divider_stalls  4741   3.5   0.0     0.0   1.1  28.3  21.5   0.1   1.9    0.2
+    isb                 3414  20.1   0.2     0.0   0.4  17.6   2.3   0.1   0.8    0.0
+    branch_mispredicts  1234   1.1  33.0     0.0   0.0   6.1  15.2  99.0  71.6    0.1
+    double_to_int        694   0.5   0.0     0.0   0.6   3.4  19.1   0.1   1.2    0.1
+    nops                 417   0.3   0.2     0.0   2.8   1.9  18.3   0.6   0.4    0.1
+    dcache_miss          185   3.6   0.4   184.7  53.8   0.7   0.5   0.0  18.4   99.1
+
+(CPI = Cycles/Instruction, BM/KI = Branch Misses per 1000 Instruction,
+ CM/KI = Cache Misses per 1000 Instruction, %CM = Percent of Cache
+ accesses that miss, %CY = Percentage of total cycles, %I = Percentage
+ of total instructions, %BM = Percentage of total branch mispredicts,
+ %L1DA = Percentage of total cache accesses, %L1DM = Percentage of total
+ cache misses)
+
+When the patch is used, the resulting `perf.data` files are typically
+between 25-50x smaller than without, and take ~25x less time for the
+python script to post-process. For example, running the following:
+
+    perf record -i -vvv -e '{cycles/period=1000000/,instructions}:uS' benchmark 0 1
+    perf record -i -vvv -e '{cycles/period=1000/,instructions}:uS' benchmark 0 1
+    perf record -i -vvv -e '{cycles/period=300/,instructions}:uS' benchmark 0 1
+
+produces captures on N1SDP (Neoverse-N1) of the following sizes:
+
+    * period=1000000: 2.601 MB perf.data (55780 samples), script time = 0m0.362s
+    * period=1000: 283.749 MB perf.data (6162932 samples), script time = 0m33.100s
+    * period=300: 304.281 MB perf.data (6614182 samples), script time = 0m35.826s
+
+The "script time" is the user time from running "time perf script -s generate-function-metrics.py"
+on the recording. Similar processing times were observed for "time perf report --stdio|cat"
+as well.
+
+By comparison, with the patch active:
+
+    perf record -i -vvv -e '{cycles/period=999700,alt-period=300/,instructions}:uS' benchmark 0 1
+
+produces 4.923 MB perf.data (107512 samples), and script time = 0m0.578s.
+Which is as expected ~2x the size and ~2x the number of samples as per
+the period=1000000 recording. When compared to the period=300 recording,
+the results from the provided post-processing script are (within margin
+of error) the same, but the data file is ~62x smaller. The same affect
+is seen for the post-processing script runtime.
+
+Notably, without the patch enable, L1D cache miss rates are often higher
+than with, which we attribute to increased impact on the cache that
+trapping into the kernel every 300 cycles has.
+
+These results are given with `perf_cpu_time_max_percent=25`. When tested
+with `perf_cpu_time_max_percent=100` the size and time comparisons are
+more significant. Disabling throttling did not lead to obvious
+improvements in the collected metrics, suggesting that the sampling
+approach is sufficient to collect representative metrics.
+
+Cursory testing on a Xeon(R) W-2145 with a 300 *instruction* sample
+window (with and without the patch) suggests this approach would work
+for some counters. Calculating branch miss rates for example appears to
+be correct when used with the instruction counter as the sampling event,
+or at least this approach correctly identifies which functions in the
+test benchmark are prone to poor predictability. On the other hand the
+combination cycle and instructions counter does not appear to sample
+correctly as a pair. With something like
+
+    perf record -e '{cycles/period=999700,alt-period=300/,instructions}:uS' ... benchmark
+
+I often see very large CPI, the same affect is observed without the
+patch enabled. No idea whats going on there, so any insight welcome...
+
+This patch modifies the perf_event_attr and introduces an additional
+field called `alternative_sample_period` to configure the behaviour.
+Setting a non-zero value to this field activates this feature (so long
+
+A copy of the post-processing script and test benchmark source are
+available at
+https://github.com/ARM-software/gator/tree/prototypes/strobing/prototypes/strobing-patches/test-script
+
+(Note that the script its self has a dependency on
+https://lore.kernel.org/linux-perf-users/20240123103137.1890779-1-ben.gainey@arm.com/
+but that patch is now part of v6.9-rc1).
+
+
+Changes since v1:
+ - Rebased on v6.9-rc1.
+ - Refactored from arm_pmu based extension to core feature
+ - Added the ability to jitter the sample window based on feedback
+   from Andi Kleen.
+ - Modified perf tool to parse the "alt-period" and "alt-period-jitter"
+   terms in the event specification.
+
+
+Ben Gainey (4):
+  perf: Allow periodic events to alternate between two sample periods
+  perf: Allow adding fixed random jitter to the alternate sampling
+    period
+  tools/perf: Modify event parser to support alt-period term
+  tools/perf: Modify event parser to support alt-period-jitter term
+
+ include/linux/perf_event.h                    |  5 ++
+ include/uapi/linux/perf_event.h               |  6 ++-
+ kernel/events/core.c                          | 48 +++++++++++++++++++
+ tools/include/uapi/linux/perf_event.h         |  6 ++-
+ tools/perf/tests/attr.c                       |  2 +
+ tools/perf/tests/attr.py                      |  2 +
+ tools/perf/tests/attr/base-record             |  4 +-
+ tools/perf/tests/attr/base-record-spe         |  2 +
+ tools/perf/tests/attr/base-stat               |  4 +-
+ tools/perf/tests/attr/system-wide-dummy       |  4 +-
+ .../attr/test-record-alt-period-jitter-term   | 12 +++++
+ .../tests/attr/test-record-alt-period-term    | 11 +++++
+ tools/perf/tests/attr/test-record-dummy-C0    |  4 +-
+ tools/perf/util/parse-events.c                | 30 ++++++++++++
+ tools/perf/util/parse-events.h                |  4 +-
+ tools/perf/util/parse-events.l                |  2 +
+ tools/perf/util/perf_event_attr_fprintf.c     |  1 +
+ 17 files changed, 140 insertions(+), 7 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-alt-period-jitter-term
+ create mode 100644 tools/perf/tests/attr/test-record-alt-period-term
+
+--
+2.44.0
 
