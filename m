@@ -1,235 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFBE152180;
-	Mon, 22 Apr 2024 15:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDE21534E2
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799361; cv=none; b=BVuc+cTNms2lOpHRe1TjvFAzobvCXMtvCANZMQ99pMuUR8/hoyGGFVqOLmRh2252kGJ0ZCJIONIfgIQBIJk90NExcQlLyqOjQcuQDi0JBGTDXoj994eWCwrAqopi0ZLubaSNpZWgSnVllruqcwfW8Kb6Ca/p4YplDTahyO2o1cU=
+	t=1713800553; cv=none; b=DIOmiV3Tlgsoee/TKo0D2hFg8qsPW8Kx/NVy4MRKQ6rkO8v/zaVaV/Ci0bBezne/BgZqkx7qMdgNrIJ8mAeikqubCYB9k6VaHR67PEUod5lCxwrNESOmpmt+Bmep2VQWpCI3P0YFy5AuZt0+IZB0mVOCoBOwhxlZRev6OPwPl5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799361; c=relaxed/simple;
-	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Jv1HrTsSu3nCVhbKnfkoMG0tYiPWOv+S+Ih19fQlyoo/Xt8as2ZB9jvqRWOqGvOPIC2Q7QmLVrT/foytkrk1b8j1rluK9sRseKxPIxN5AsgEAYih7nctWiRmDUMnQWv99ysXQ6kXjTvgi9/42D5oQn2KdCgzauFcLGz9jeiYgz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Y9gaGb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713800553; c=relaxed/simple;
+	bh=tXjSwVBeGb/Eb0FtFwqpwFwRnMr6GKOhM4c8ow2qQ9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRyBg2VgscKLavQaWsWixHN67ETipLRr64qnUiq3abEjOaJcuaKHSDslxvirPPnFsGDzAMp+M74q979cTjWBiyU+3gMIeLLqfy1DTR+z96uZ0fGNzRyuCw/9Qoi7r8lfqjstH5BRjkSpLI2raHzAdzyWC0paYObtgRsUGZ5CHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PPYY8eI1; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Y9gaGb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE60CC113CC;
-	Mon, 22 Apr 2024 15:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713799360;
-	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=t4Y9gaGbcPig7Mdz+LEqNoPlC4cnjArOJwRu5PaTXNJM863eIgFwMZcNkZH2wD+xf
-	 kANHiNvsMwpyRee3B8kJFco0aLqPEj9cnwQ7bvQnl+Onc9cuuTAlN0EBqoYqG4GD1K
-	 Uq06fxqySyGqrw4bTCBBz3lxoCwSwvQ+w/Moka8jk6OisDm8TCmV1HFjPVLnqP3mM2
-	 m4DDvLwuDzyNTM3J4scNNiWJPH+u8HOSTYu7nSEa5MMiqTWBXnRO0Jt6kvr5vllvh8
-	 IiXT6yl9ZpmaE5gviSwAwoRJg9AYQFB9plw4gCzSY3pG/zlcO4UnIqAWMR7XdTop3i
-	 7X6EKYTKe0ZfQ==
-Date: Tue, 23 Apr 2024 00:22:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonathan Haslam <jonathan.haslam@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
- bpf@vger.kernel.org, rostedt@goodmis.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240423002234.6104df82cb3f96c9d485d5b1@kernel.org>
-In-Reply-To: <20240422102306.6026-1-jonathan.haslam@gmail.com>
-References: <20240422102306.6026-1-jonathan.haslam@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PPYY8eI1"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-43989e6ca42so430521cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 08:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713800550; x=1714405350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LWWbUhCinHZ4pRRDKlPFXeIrr7YidOY2PqyCtNwxyA=;
+        b=PPYY8eI1S3O8scbt6x/Zx50IcR/bxB1i8qTziTZ2FJwijamJTwQNKWJSkXCi2HglH0
+         Lsk5sAAXOxKDVhZ/cGjPpGv3iIMbDYjQXsKziJX5ZySsBwe/wpIddI1L8qovi63gJpLQ
+         EmC9eJXp+yVA8SVwth+RhQNDuFZqWMHU5MiYpiv391y8mGeEgmJSAibPA6CRHd+DQxJY
+         zA0Thf1llvmHvZB2gXZRKGnwTG6Tq37zby+kd71UYqG4C2f56PujYbsln1b4tzR1ojBt
+         VhKREBjN/LeepQpNl8RFpoobhiW7i6K7JH8q+sramtnacV1xK/1X6V3pVq1C2dsePtAn
+         oXCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713800550; x=1714405350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5LWWbUhCinHZ4pRRDKlPFXeIrr7YidOY2PqyCtNwxyA=;
+        b=qr0wajQjS7eKbRclk4t32l5Rl5eao705Enlk/SY8y7St8fmvhBOrTDxL5v17sD6rVy
+         etHHhHnl6pA5INjglNPjuu12IFrg8GcZc91MoVGqOQc0lgeHlMHGABAK0isLe9iTqKcY
+         kyt811kHnCRJuHHa2ony0BC2vnAakV4jjzhTm+VwnI9SOLxWj6XVmZsMW3yCGj0H9pXT
+         VaLBNSpT7p416uUxTox9w6fPUgGhz2/Rk6C6Z3HrTG3fhucwsL13X+G6TeyhOmATDt3K
+         VgTYd9VZdPa/ao4b4tQXhaqPkmsQ2n9Gy8sNGWksaxMFNt68LXIYym8WMaleCLO19l/6
+         kMiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsRKBs9uwN3mu21gzYngAj+uT91CKb4k5jXSVWNf9z6zzVEQ+EgPPyDsXvlm2DiZksgxpSEEAFgnBAB/i/j24qQdWzDZAxefobg+VGNzkqpg==
+X-Gm-Message-State: AOJu0YyGHLMB/K4qZSz7PvrXCgx5YDwf5+R6cpEWSc8dStHcw+L3711D
+	E28kCDu5jDVOrZwsA3mG77uz9rfERrE5Kfp8a2+wsrL2YezMMlHoW0ZzYhgdpdgsAfLFS+ea/TO
+	M0QaiEausWtl7eWCy6GG1xB54XIeIvH/pLTB+
+X-Google-Smtp-Source: AGHT+IGqGSjYwcJiVDgalrNn9TAUZdU5fgYKsr64wzHajwJV8/cKH1NAZTOsWkwmjf3FzaLTTq7w5Jmo5xwj/l8huMk=
+X-Received: by 2002:ac8:5885:0:b0:437:c4ae:f3b4 with SMTP id
+ t5-20020ac85885000000b00437c4aef3b4mr542257qta.26.1713800549734; Mon, 22 Apr
+ 2024 08:42:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20240403164818.3431325-1-irogers@google.com> <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+In-Reply-To: <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 22 Apr 2024 08:42:17 -0700
+Message-ID: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Apr 2024 03:23:05 -0700
-Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+On Mon, Apr 22, 2024 at 4:51=E2=80=AFAM Veronika Molnarova <vmolnaro@redhat=
+.com> wrote:
+>
+> Hi Ian,
+>
+> On Wed, Apr 3, 2024 at 6:48=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>>
+>> Previously "set -e" meant any non-zero exit code from perf stat would
+>> cause a test failure. As a non-zero exit happens when there aren't
+>> sufficient permissions, check for this case and make the exit code
+>> 2/skip for it.
+>>
+>> Signed-off-by: Ian Rogers <irogers@google.com>
+>> ---
+>>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+>>  1 file changed, 22 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/per=
+f/tests/shell/stat_all_metricgroups.sh
+>> index 55ef9c9ded2d..d6db192b9f18 100755
+>> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+>> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+>> @@ -1,9 +1,7 @@
+>> -#!/bin/sh
+>> +#!/bin/bash
+>>  # perf all metricgroups test
+>>  # SPDX-License-Identifier: GPL-2.0
+>>
+>> -set -e
+>> -
+>>  ParanoidAndNotRoot()
+>>  {
+>>    [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoi=
+d)" -gt $1 ]
+>> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+>>  then
+>>    system_wide_flag=3D""
+>>  fi
+>> -
+>> +err=3D0
+>>  for m in $(perf list --raw-dump metricgroups)
+>>  do
+>>    echo "Testing $m"
+>> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+>> +  result=3D$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+>> +  result_err=3D$?
+>> +  if [[ $result_err -gt 0 ]]
+>> +  then
+>> +    if [[ "$result" =3D~ \
+>> +          "Access to performance monitoring and observability operation=
+s is limited" ]]
+>> +    then
+>> +      echo "Permission failure"
+>> +      echo $result
+>> +      if [[ $err -eq 0 ]]
+>> +      then
+>> +        err=3D2 # Skip
+>> +      fi
+>> +    else
+>> +      echo "Metric group $m failed"
+>> +      echo $result
+>> +      err=3D1 # Fail
+>> +    fi
+>> +  fi
+>>  done
+>>
+>> -exit 0
+>> +exit $err
+>> --
+>> 2.44.0.478.gd926399ef9-goog
+>>
+>>
+>
+> The patch looks good and thanks for taking care of it.
+>
+> Just wanted to check what is the desired outcome for metric groups
+> with events that are invalid in per-thread mode causing the test to fail.
+>
+> ```
+> $ ./stat_all_metricgroups.sh
+> Testing smi
+> Metric group smi failed
+> Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide w=
+ith '-a'.
+> ```
+>
+> Wouldn't it be better if in these cases the test would result in skip ins=
+tead of fail?
 
-> Active uprobes are stored in an RB tree and accesses to this tree are
-> dominated by read operations. Currently these accesses are serialized by
-> a spinlock but this leads to enormous contention when large numbers of
-> threads are executing active probes.
-> 
-> This patch converts the spinlock used to serialize access to the
-> uprobes_tree RB tree into a reader-writer spinlock. This lock type
-> aligns naturally with the overwhelmingly read-only nature of the tree
-> usage here. Although the addition of reader-writer spinlocks are
-> discouraged [0], this fix is proposed as an interim solution while an
-> RCU based approach is implemented (that work is in a nascent form). This
-> fix also has the benefit of being trivial, self contained and therefore
-> simple to backport.
-> 
-> We have used a uprobe benchmark from the BPF selftests [1] to estimate
-> the improvements. Each block of results below show 1 line per execution
-> of the benchmark ("the "Summary" line) and each line is a run with one
-> more thread added - a thread is a "producer". The lines are edited to
-> remove extraneous output.
-> 
-> The tests were executed with this driver script:
-> 
-> for num_threads in {1..20}
-> do
->   sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
-> done
-> 
-> SPINLOCK (BEFORE)
-> ==================
-> Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
-> Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
-> Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
-> Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
-> Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
-> Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
-> Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
-> Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
-> Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
-> Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
-> Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
-> Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
-> Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
-> Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
-> Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
-> Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
-> Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
-> Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
-> Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
-> 
-> RW SPINLOCK (AFTER)
-> ===================
-> Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
-> Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
-> Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
-> Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
-> Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
-> Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
-> Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
-> Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
-> Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
-> Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
-> Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
-> Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
-> Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
-> Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
-> Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
-> Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
-> Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
-> Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
-> Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
-> Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
-> 
-> The numbers in parenthesis give averaged throughput per thread which is
-> of greatest interest here as a measure of scalability. Improvements are
-> in the order of 22 - 68% with this particular benchmark (mean = 43%).
-> 
-> V2:
->  - Updated commit message to include benchmark results.
-> 
-> [0] https://docs.kernel.org/locking/spinlocks.html
-> [1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
+Hi Veronika,
 
-Thanks for update! This looks good to me.
-Let me pick this for probes/for-next.
+I agree that fail isn't best here. I'm wondering:
 
-Thank you,
+ - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
+the count on a context switch? The implementation is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/arch/x86/events/msr.c?h=3Dperf-tools-next#n234
+There's clearly something going on as pperf appears to have other restricti=
+ons:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/arch/x86/events/msr.c?h=3Dperf-tools-next#n115
+I'm wondering if aggregation is working right if these counters are
+more than per hyperthread (I'm guessing why the restrictions exist).
 
-> 
-> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> ---
->  kernel/events/uprobes.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index e4834d23e1d1..8ae0eefc3a34 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
->   */
->  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
->  
-> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
->  
->  #define UPROBES_HASH_SZ	13
->  /* serialize uprobe->pending_list */
-> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
->  {
->  	struct uprobe *uprobe;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	uprobe = __find_uprobe(inode, offset);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return uprobe;
->  }
-> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
->  {
->  	struct uprobe *u;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	u = __insert_uprobe(uprobe);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  
->  	return u;
->  }
-> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
->  	if (WARN_ON(!uprobe_is_active(uprobe)))
->  		return;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	rb_erase(&uprobe->rb_node, &uprobes_tree);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
->  	put_uprobe(uprobe);
->  }
-> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
->  	if (n) {
->  		for (t = n; t; t = rb_prev(t)) {
-> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
->  			get_uprobe(u);
->  		}
->  	}
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  }
->  
->  /* @vma contains reference counter, not the probed instruction. */
-> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return !!n;
->  }
-> -- 
-> 2.43.0
-> 
+ - the tool error message is doing pretty good. In the test I guess we
+can spot the per-thread error and turn the fail to a skip. It's a
+shame to bucket things as skip, but it seems easier than listing
+metrics in the test or spotting particular events.
 
+I can do a v2 to add this.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Ian
+
+> Thanks,
+> Veronika
+>
