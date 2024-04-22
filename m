@@ -1,270 +1,261 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCBCF146A93;
-	Mon, 22 Apr 2024 10:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9500C146A67;
+	Mon, 22 Apr 2024 11:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713782988; cv=none; b=OFIBz1ya+8ptsO/zyVxOD9dUoFe9asye86GVzp4f9R/E2p7iciQngPkeZ7HV1hz/wLGNb6oOcnn4vfeeN6QCgBoGf1F2jKKa/9YtIASmyQR/iKppZBcQcFLtCMF35R/cePY3K3h0dlfFJE5kUKpKpH8PYlQDvz4znsvYVqwauTw=
+	t=1713785979; cv=none; b=rS0nsBz0X1MHccL53It/MOsRekoCFVC+KTsHoAgQzRFZWahAFOFLTCjygagUhrmDOvcU2vCGmeBIyI8fowWzps39LxDgJNLmDtlUcCmkldyCd9JLd+vH/20grSSPcH0nY/j6+/H/G92ASpUTIed4/nepwQQTv/8LiLdlI3oH8NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713782988; c=relaxed/simple;
-	bh=On1b5DkttpFIhWrjyN3UO9TvEDQ5gy9BpjHBe0K+pQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fFip90dsTT+ZKmXfpdMvMWUW6WlIZ6u1EcwRc/sZu9lfbMMKYpyZpX7QKSUVT0kj7j9s30F4mwY4MccKit4WM0fNeZE5CR8svaKvH8nlZpvdET3EulV1F8L7Ndsb4hZttpLdVQKErhabnwWMkpoMujBiB8gSaI3oCINWcwAt17M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99FDC339;
-	Mon, 22 Apr 2024 03:50:14 -0700 (PDT)
-Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 49DFC3F7BD;
-	Mon, 22 Apr 2024 03:49:44 -0700 (PDT)
-From: Ben Gainey <ben.gainey@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: ak@linux.intel.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [RFC PATCH v2 4/4] tools/perf: Modify event parser to support alt-period-jitter term
-Date: Mon, 22 Apr 2024 11:49:29 +0100
-Message-ID: <20240422104929.264241-5-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240422104929.264241-1-ben.gainey@arm.com>
-References: <20240422104929.264241-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1713785979; c=relaxed/simple;
+	bh=ulsfSAEl7LBwePnfRAal8I6cQlsR0G+iMdbsnGnkwM8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/ajusAnHHX1NXqQyJ57Sf1MuYb0oSyrWJ1eSeOLus9fMC47iLF8W9RtuwJ2yQYLfsKLRSpYV5Rr+iP5ZOZ/pJpObCRtpYKcZCE9TmrCKDXHzsrZBGdNRpNMtAhFLyjvJTzrRZD+naySNvgVvLPR9zZKeJNXniS4YwPkQtt8AI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgEvNY8/; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgEvNY8/"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-34b1e35155aso702983f8f.3;
+        Mon, 22 Apr 2024 04:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713785976; x=1714390776; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aJ9yQshLsZ6lvoWpjUZb+c8ATqrhPEYy3PtHw/SC4co=;
+        b=CgEvNY8//ZyAveamdUFJ90Nus3p2L+j2AdeFGfHuCtDvbsgT4pKOUGFqadYmTL3TXQ
+         jEXb/mUu2NSVU48k9SUd/CEvGlZ+UJtRfedFICsqsY9ZgJsmq65A47qreebe6u16PFJa
+         dMPOtCiw48ZfubIzupe3ulr+wWazryE+Q9zw2ZxRUe4kgOpEm5wBvQEersC3SQjZ90bo
+         KidDt9uRKOujqSL+gvVJXhnUKirrljqgUgqQ5rvu3zeLCkg8jFJyDHbjS1mhTwwrntnE
+         koz7yO0CoIo7GmJM7C7JXy2r+gQfU8dY2s9sfk20tbihmse4JdN6PQcc7DZSMTRsAcB9
+         qSDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713785976; x=1714390776;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aJ9yQshLsZ6lvoWpjUZb+c8ATqrhPEYy3PtHw/SC4co=;
+        b=DjQVPYfPKiBlxDkKWQTkfyhv3V1r/+cm2r5IrQSKihd+UQ/gQDYBS38+Q/lMC0Lg/M
+         kJmvbWhpnLIqzKFDrk+sfb7tUxM1EuWOCbccU8bJcaTXpFBS4iQXLlMZgtbSNewIrcPh
+         yP74qyr/Fu1N06ajR132k0unI50Wb2t4YJPerz+6rHdUdLhEtn7xZKCOVa/a5OQ02UiL
+         UuUcnjfIWcSQjpsoYQP8hfPUPt3gBhl1+QYhpyVtXafF9rYDrxmCWkisxdqB/VG5zFqa
+         94SOI5PnPzKrhG7rHZgf0KTjhJiU3IFWdEsLBhcncJoQq35gQJPGfortE6NsV7WIJUdm
+         oKlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXK2vscBsDTI24S58gA3Tu9UsPB1RZqZwSGNx3vTkJZDElPuYg+tnD+sRtRtlXVV1D5eSStmzlq+RrJto7Iy10Ac2F0ECHJm6E3Beuepi5gqPeR5MCIYPAxJ6vS58k2Ao0Jv7Fr5F/w5iVwaVKZNZyXVOo1sOfjC58UHaSTHE0xU4fw1Q==
+X-Gm-Message-State: AOJu0Yw1cUqyHpJLzLRufe+GZQR0c0E/KkHyGVfhAwuTSXeb+uH6yii0
+	h51U0M/hv2JpIDzPT4ZOTodvk1/3QOplOLKtfqaWVINihSbEub7B
+X-Google-Smtp-Source: AGHT+IETX/3Lo779iTOd02lH4mu0GSF9AVTJKi6GM6wHxnVUA3usTw72yxk2ggywg7ebJStbnepGCg==
+X-Received: by 2002:a5d:4ec1:0:b0:34a:e798:29fc with SMTP id s1-20020a5d4ec1000000b0034ae79829fcmr3474651wrv.52.1713785975586;
+        Mon, 22 Apr 2024 04:39:35 -0700 (PDT)
+Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
+        by smtp.gmail.com with ESMTPSA id h1-20020a5d5481000000b003437a76565asm11759544wrv.25.2024.04.22.04.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 04:39:35 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 22 Apr 2024 13:39:32 +0200
+To: Jonathan Haslam <jonathan.haslam@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: reduce contention on uprobes_tree access
+Message-ID: <ZiZMdLIK55q3EvMP@krava>
+References: <20240422102306.6026-1-jonathan.haslam@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240422102306.6026-1-jonathan.haslam@gmail.com>
 
-parse-events is modified, adding the "alt-period-jitter" term which
-can be used to enable random jitter of the alternative sample
-period.
+On Mon, Apr 22, 2024 at 03:23:05AM -0700, Jonathan Haslam wrote:
+> Active uprobes are stored in an RB tree and accesses to this tree are
+> dominated by read operations. Currently these accesses are serialized by
+> a spinlock but this leads to enormous contention when large numbers of
+> threads are executing active probes.
+> 
+> This patch converts the spinlock used to serialize access to the
+> uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> aligns naturally with the overwhelmingly read-only nature of the tree
+> usage here. Although the addition of reader-writer spinlocks are
+> discouraged [0], this fix is proposed as an interim solution while an
+> RCU based approach is implemented (that work is in a nascent form). This
+> fix also has the benefit of being trivial, self contained and therefore
+> simple to backport.
+> 
+> We have used a uprobe benchmark from the BPF selftests [1] to estimate
+> the improvements. Each block of results below show 1 line per execution
+> of the benchmark ("the "Summary" line) and each line is a run with one
+> more thread added - a thread is a "producer". The lines are edited to
+> remove extraneous output.
+> 
+> The tests were executed with this driver script:
+> 
+> for num_threads in {1..20}
+> do
+>   sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
+> done
+> 
+> SPINLOCK (BEFORE)
+> ==================
+> Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
+> Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
+> Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
+> Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
+> Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
+> Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
+> Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
+> Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
+> Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
+> Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
+> Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
+> Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
+> Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
+> Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
+> Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
+> Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
+> Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
+> Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
+> Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
+> 
+> RW SPINLOCK (AFTER)
+> ===================
+> Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
+> Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
+> Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
+> Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
+> Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
+> Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
+> Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
+> Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
+> Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
+> Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
+> Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
+> Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
+> Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
+> Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
+> Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
+> Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
+> Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
+> Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
+> Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
+> Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- tools/include/uapi/linux/perf_event.h             |  3 ++-
- tools/perf/tests/attr.c                           |  1 +
- tools/perf/tests/attr.py                          |  1 +
- tools/perf/tests/attr/base-record                 |  3 ++-
- tools/perf/tests/attr/base-record-spe             |  3 ++-
- tools/perf/tests/attr/base-stat                   |  1 +
- tools/perf/tests/attr/system-wide-dummy           |  1 +
- .../tests/attr/test-record-alt-period-jitter-term | 12 ++++++++++++
- tools/perf/tests/attr/test-record-dummy-C0        |  1 +
- tools/perf/util/parse-events.c                    | 15 +++++++++++++++
- tools/perf/util/parse-events.h                    |  3 ++-
- tools/perf/util/parse-events.l                    |  1 +
- 12 files changed, 41 insertions(+), 4 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-alt-period-jitter-term
+nice, I'm assuming Masami will take this one.. in any case:
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 5c1701d091cf..dd3697a4b300 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -461,7 +461,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				jitter_alternate_period : 1, /* add a limited amount of jitter on each alternate period */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
-index 956b58c7ba8f..7fb5d1d0b0ab 100644
---- a/tools/perf/tests/attr.c
-+++ b/tools/perf/tests/attr.c
-@@ -140,6 +140,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
- 	WRITE_ASS(sample_regs_user,   "llu");
- 	WRITE_ASS(sample_stack_user,  PRIu32);
- 	WRITE_ASS(alternative_sample_period,  "llu");
-+	WRITE_ASS(jitter_alternate_period,  "d");
- 
- 	fclose(file);
- 	return 0;
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index 75c4527393f9..ecab8e69418f 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -92,6 +92,7 @@ class Event(dict):
-         'sample_regs_user',
-         'sample_stack_user',
-         'alternative_sample_period',
-+        'jitter_alternate_period',
-     ]
- 
-     def add(self, data):
-diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-index 403de2e2c891..39a7228612c2 100644
---- a/tools/perf/tests/attr/base-record
-+++ b/tools/perf/tests/attr/base-record
-@@ -39,4 +39,5 @@ config2=0
- branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
--alternative_sample_period=0
-\ No newline at end of file
-+alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/base-record-spe b/tools/perf/tests/attr/base-record-spe
-index db528d7d8b73..b228cd98cfa1 100644
---- a/tools/perf/tests/attr/base-record-spe
-+++ b/tools/perf/tests/attr/base-record-spe
-@@ -38,4 +38,5 @@ config2=*
- branch_sample_type=*
- sample_regs_user=*
- sample_stack_user=*
--alternative_sample_period=0
-\ No newline at end of file
-+alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
-index 27ef0fa1386f..d9057d780262 100644
---- a/tools/perf/tests/attr/base-stat
-+++ b/tools/perf/tests/attr/base-stat
-@@ -40,3 +40,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-index 5c4d2a60931d..4d80542c3a68 100644
---- a/tools/perf/tests/attr/system-wide-dummy
-+++ b/tools/perf/tests/attr/system-wide-dummy
-@@ -51,3 +51,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/tests/attr/test-record-alt-period-jitter-term b/tools/perf/tests/attr/test-record-alt-period-jitter-term
-new file mode 100644
-index 000000000000..65f7c06c26e9
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-alt-period-jitter-term
-@@ -0,0 +1,12 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -e cycles/period=3,alt-period=2,jitter_alternate_period/ -- kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-10:base-record]
-+sample_period=3
-+alternative_sample_period=2
-+jitter_alternate_period=1
-+
-+freq=0
-+sample_type=7
-\ No newline at end of file
-diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/attr/test-record-dummy-C0
-index d4f0546e02b6..0f3360c35a5e 100644
---- a/tools/perf/tests/attr/test-record-dummy-C0
-+++ b/tools/perf/tests/attr/test-record-dummy-C0
-@@ -54,3 +54,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- alternative_sample_period=0
-+jitter_alternate_period=0
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d516d84fa1ee..9821e3cd26a4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -774,6 +774,7 @@ static const char *config_term_name(enum parse_events__term_type term_type)
- 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
- 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
- 		[PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD]	= "alt-period",
-+		[PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER]	= "alt-period-jitter",
- 	};
- 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
- 		return "unknown term";
-@@ -803,6 +804,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
- 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
- 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
- 	case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
- 		return true;
- 	case PARSE_EVENTS__TERM_TYPE_USER:
-@@ -957,6 +959,16 @@ do {									   \
- 		}
- 		attr->alternative_sample_period = term->val.num;
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
-+		CHECK_TYPE_VAL(NUM);
-+		if ((unsigned int)term->val.num > 1) {
-+			parse_events_error__handle(err, term->err_val,
-+						strdup("expected 0 or 1"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		attr->jitter_alternate_period = (term->val.num != 0);
-+		break;
- 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
- 	case PARSE_EVENTS__TERM_TYPE_USER:
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-@@ -1084,6 +1096,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 	case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 	default:
- 		if (err) {
- 			parse_events_error__handle(err, term->err_term,
-@@ -1215,6 +1228,7 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 		default:
- 			break;
- 		}
-@@ -1269,6 +1283,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER:
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 06e7ce8a29ef..2b02c5a6a5f3 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -80,7 +80,8 @@ enum parse_events__term_type {
- 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
- 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
- 	PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD,
--#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD + 1)
-+	PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER,
-+#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER + 1)
- };
- 
- struct parse_events_term {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 312a4f1837b9..f5587dff596c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -247,6 +247,7 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
- alt-period		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_ALT_SAMPLE_PERIOD); }
-+alt-period-jitter	{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_ALT_PERIOD_JITTER); }
- cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
- stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
- stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
--- 
-2.44.0
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+thanks,
+jirka
+
+> 
+> The numbers in parenthesis give averaged throughput per thread which is
+> of greatest interest here as a measure of scalability. Improvements are
+> in the order of 22 - 68% with this particular benchmark (mean = 43%).
+> 
+> V2:
+>  - Updated commit message to include benchmark results.
+> 
+> [0] https://docs.kernel.org/locking/spinlocks.html
+> [1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> 
+> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> ---
+>  kernel/events/uprobes.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index e4834d23e1d1..8ae0eefc3a34 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+>   */
+>  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+>  
+> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+>  
+>  #define UPROBES_HASH_SZ	13
+>  /* serialize uprobe->pending_list */
+> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+>  {
+>  	struct uprobe *uprobe;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	uprobe = __find_uprobe(inode, offset);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return uprobe;
+>  }
+> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+>  {
+>  	struct uprobe *u;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	u = __insert_uprobe(uprobe);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  
+>  	return u;
+>  }
+> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+>  	if (WARN_ON(!uprobe_is_active(uprobe)))
+>  		return;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	write_lock(&uprobes_treelock);
+>  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> -	spin_unlock(&uprobes_treelock);
+> +	write_unlock(&uprobes_treelock);
+>  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+>  	put_uprobe(uprobe);
+>  }
+> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+>  	if (n) {
+>  		for (t = n; t; t = rb_prev(t)) {
+> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+>  			get_uprobe(u);
+>  		}
+>  	}
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  }
+>  
+>  /* @vma contains reference counter, not the probed instruction. */
+> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+>  	min = vaddr_to_offset(vma, start);
+>  	max = min + (end - start) - 1;
+>  
+> -	spin_lock(&uprobes_treelock);
+> +	read_lock(&uprobes_treelock);
+>  	n = find_node_in_range(inode, min, max);
+> -	spin_unlock(&uprobes_treelock);
+> +	read_unlock(&uprobes_treelock);
+>  
+>  	return !!n;
+>  }
+> -- 
+> 2.43.0
+> 
