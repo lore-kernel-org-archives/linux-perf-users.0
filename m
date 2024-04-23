@@ -1,283 +1,106 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66059320E;
-	Tue, 23 Apr 2024 08:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517B021345;
+	Tue, 23 Apr 2024 09:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713862316; cv=none; b=sghzWt8FgXP3yLOGDPxC3utcpFbX/aPP42kKlSEb0InTY/3mBhz6wICxVrSRYBmMVzqzySTEzn9kCcNOGdSZC2uxdVt7PDSBLBgXlf6aB8EDyJ0zyUEjM54bXRoEo+9lnP6nVMb+Tg48BbGRkVXhKi7biaJPk4HoWYDG3CHgjPs=
+	t=1713864933; cv=none; b=bvAwTymFBc/41gGU41T6AQAnK8QSIObJeaSsDX44uVquJuPQO4HDFWSrH/WyyrlbQ9YeD2tNLxI0eP5FcTnSCI2Lkn7i7FtXmayh6sgZNDNpoVEj8gP0tiCUoaHDBFROQEii59ibx5ieyWMN6QbfmohMg3fi8f9lbw7XM9o3vhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713862316; c=relaxed/simple;
-	bh=0U+dC9aMBDCYgJXVzEBscSIeQ03/FPKDhOX4Neg2/sk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AxTb0HZp+PfKuEKxV3tTxYnRZ5SPtLez1U4MTz088jP6YcUdKF5xAfZzl5LA66F5xedXiMGnU2Ntr0dV/NZSuiG2W1s6yalY5N80JVGUDcFQXt1+9H4jk6KyqyiOe68VKqnn8ZGvjjHbpQiiIc0Yz6GKM2DG2TxtimZqthZi8AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxV_Cididm7kMBAA--.7536S3;
-	Tue, 23 Apr 2024 16:51:47 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxTN6ddidmdykCAA--.9087S3;
-	Tue, 23 Apr 2024 16:51:43 +0800 (CST)
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
- <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
- <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com>
- <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com>
- <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
- <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
- <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <86d1f6d1-197a-ecd9-3349-a64da9ea9789@loongson.cn>
- <729c4b30-163c-4115-a380-14ece533a8b9@linux.intel.com>
- <CAL715W+BpyX3EeKr=3ipMH8W30wmhMkxg2Fx2OET9cvQ480cgg@mail.gmail.com>
- <46a889c4-b104-487e-be3e-7f4b57c0b339@linux.intel.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <f45f44e3-7888-7c45-edce-359bca2ef903@loongson.cn>
-Date: Tue, 23 Apr 2024 16:51:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1713864933; c=relaxed/simple;
+	bh=lmZDN1auKETKyKSuC5BzhmI7ealw0CEjcswaHx2FnzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wd45Yb6VLbn5UEDgpGYpbp1i1Gus8zXZD7PFfH1MjLcQKTGoLJU8L/tZeOcVEXS7q/WFze9W1NvcGFfeJfrlkCE8ObZsJP1FgkvKhFa2d8VmZ+jeQ+SvxdUe2JWxo3lU0pKrIiY9y7dVX5KFvgwrIph0U+LPA/ggcF6Bv+SOwaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aBYT+9p1; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBYT+9p1"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2aa0f3625aeso892242a91.1;
+        Tue, 23 Apr 2024 02:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713864930; x=1714469730; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oPmiyJcchVI8HLZhgn5CHh5M2cAjQnCFOUQBbNrRH7o=;
+        b=aBYT+9p1YN9vqbo3GjxujTWfoIfCbV+ZN0fnHsZsBQMkpu8ufZPRS8I58ahJgQbn1t
+         cRxVdM5eb5TsvnvFskbT9OUcdVK6jezRmRnLzwXeOCErAkAoKRFEEWE7ziYtRKJy7f2b
+         g3JMNGFqYeuR8TH6J+s167h1eMudVlFGKjYFzvImksmV+875D/Vz4TjjE1igEEcPYGV7
+         74BB6agGZbWARQaR4PymYfFzGc5oO9O35K21PUUiG0MPuJdBBFjR2HhViAZ5w5weO8nS
+         oxd1wSUg1/rm0ZkLdq/EaCGTXpcR6r6ioVYA6eE1osCk8pqQSVtb9+sGSopRl0McZb+d
+         lZTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713864930; x=1714469730;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPmiyJcchVI8HLZhgn5CHh5M2cAjQnCFOUQBbNrRH7o=;
+        b=vtCX8jUqR074A3Q8Rgf/FrDOF0ew1ST4Of4G1GWtJeUBmPRfWZRZZM2sJ7FTVxt/6S
+         0ncRmrXq+E1/ilre+8b6G7bgmWqTDI5EiuRXQotcJgmoTY5i3Xf1zhZkGr3xw9pZiNnZ
+         FjdKhdXLsPkF5jqralOd4labThv117o5a9mDbfx0gdT8nfX+fbGzSj3CDTyZL+4k0RYN
+         ZEbvaw9PDLPQXb2yYcDMd9pq5fUu9ib28y9+iGqfLAE8lSPzFiIpcWxu/TjMIZETw9dw
+         TmvNcF0KbIQUPrp3SbXucbXuOzA0w86G6l0kWHukIbCXp9OmU5XGK2MYSf2VBo4d2zfJ
+         dFGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYQlKjT66i4dJibo+hK5PSwDOeovbvh2VpbCobjemnboAae+o+r19zw+Iu4lPOrw0RBnAXVI1Xb2xeQzlLko84zAnBXdVd8RBWjeB5ZIJkRI1pyr/1AgyMn6aUz8KDSHQplAJHZSjuPDlKyVJsu1JEBuiQ/KAHYso6t5tClvCeu+aUKcG0ox7dq7OnEFJbhWFjjnQ1v+9Mc2xNBgWkaWFSzelLU/4rER3V9Hnd
+X-Gm-Message-State: AOJu0YxjLQt47BxnCngTwUam/tKkQONO+dxF/fRZ3k90uySmeIev1m9H
+	EX/H5sVV64z5pem2Ggc503YZF/TmpmQKHrdraboeeKIizNDQ10+X
+X-Google-Smtp-Source: AGHT+IFareQ3oNnnfoiJvzFkOIOjDeBgcWDV4pURl0CaslgJ7AnZPPu6SxQPxRszdJm0n18LAg9KWw==
+X-Received: by 2002:aa7:838f:0:b0:6f0:6d93:2089 with SMTP id u15-20020aa7838f000000b006f06d932089mr15098329pfm.1.1713864930443;
+        Tue, 23 Apr 2024 02:35:30 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id fq5-20020a056a0060c500b006ed2709ada6sm9204624pfb.65.2024.04.23.02.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 02:35:28 -0700 (PDT)
+Date: Tue, 23 Apr 2024 17:35:21 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
+Message-ID: <ZieA2aabHr7vF2a4@visitorckw-System-Product-Name>
+References: <20240406164727.577914-1-visitorckw@gmail.com>
+ <asgiyolfhg2sfwarkrexbcx3y6mborcxklnncz4cn2g6ffubku@vhoumzvwdpzp>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <46a889c4-b104-487e-be3e-7f4b57c0b339@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxTN6ddidmdykCAA--.9087S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JF4kuF1UAw4xAF1UGw4UAwc_yoWfuFWxpr
-	WUAF1UKr4UJr1UAw1Utw1UXF1UKry7Jr1UXr1DJr1UAr1qvr1rJr1UtryUCF1UGr1xGr1j
-	qr4Utry7XryUArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8loGP
-	UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <asgiyolfhg2sfwarkrexbcx3y6mborcxklnncz4cn2g6ffubku@vhoumzvwdpzp>
 
+On Mon, Apr 22, 2024 at 04:20:28PM -0400, Kent Overstreet wrote:
+> On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
+> > This patch series focuses on several adjustments related to heap
+> > implementation. Firstly, a type-safe interface has been added to the
+> > min_heap, along with the introduction of several new functions to
+> > enhance its functionality. Additionally, the heap implementation for
+> > bcache and bcachefs has been replaced with the generic min_heap
+> > implementation from include/linux. Furthermore, several typos have been
+> > corrected.
+> > 
+> > Previous discussion with Kent Overstreet:
+> > https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
+> > 
+> > Regards,
+> > Kuan-Wei
+> 
+> We need to get this into -next, where are you at with v4?
 
+Apologies for the delay; I've just returned from a long trip to Seattle
+where I attended the Open Source Summit. After reviewing the bcachefs
+CI testing results for v3, it appears that my patch has caused some
+Kernel panic and soft lockup issues in bcachefs. However, I haven't
+been able to reproduce these problems in my qemu testing environment,
+so I'm unsure where I went wrong to cause these errors.
 
-On 2024/4/23 下午4:24, Mi, Dapeng wrote:
-> 
-> On 4/23/2024 3:10 PM, Mingwei Zhang wrote:
->> On Mon, Apr 22, 2024 at 11:45 PM Mi, Dapeng 
->> <dapeng1.mi@linux.intel.com> wrote:
->>>
->>> On 4/23/2024 2:08 PM, maobibo wrote:
->>>>
->>>> On 2024/4/23 下午12:23, Mingwei Zhang wrote:
->>>>> On Mon, Apr 22, 2024 at 8:55 PM maobibo <maobibo@loongson.cn> wrote:
->>>>>>
->>>>>>
->>>>>> On 2024/4/23 上午11:13, Mi, Dapeng wrote:
->>>>>>> On 4/23/2024 10:53 AM, maobibo wrote:
->>>>>>>>
->>>>>>>> On 2024/4/23 上午10:44, Mi, Dapeng wrote:
->>>>>>>>> On 4/23/2024 9:01 AM, maobibo wrote:
->>>>>>>>>>
->>>>>>>>>> On 2024/4/23 上午1:01, Sean Christopherson wrote:
->>>>>>>>>>> On Mon, Apr 22, 2024, maobibo wrote:
->>>>>>>>>>>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
->>>>>>>>>>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
->>>>>>>>>>>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson
->>>>>>>>>>>>>> <seanjc@google.com> wrote:
->>>>>>>>>>>>>>> One my biggest complaints with the current vPMU code is that
->>>>>>>>>>>>>>> the roles and
->>>>>>>>>>>>>>> responsibilities between KVM and perf are poorly defined,
->>>>>>>>>>>>>>> which
->>>>>>>>>>>>>>> leads to suboptimal
->>>>>>>>>>>>>>> and hard to maintain code.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs
->>>>>>>>>>>>>>> _would_ leak guest
->>>>>>>>>>>>>>> state to userspace processes that have RDPMC permissions, as
->>>>>>>>>>>>>>> the PMCs might not
->>>>>>>>>>>>>>> be dirty from perf's perspective (see
->>>>>>>>>>>>>>> perf_clear_dirty_counters()).
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in
->>>>>>>>>>>>>>> doing so makes the
->>>>>>>>>>>>>>> overall code brittle because it's not clear whether KVM
->>>>>>>>>>>>>>> _needs_
->>>>>>>>>>>>>>> to clear PMCs,
->>>>>>>>>>>>>>> or if KVM is just being paranoid.
->>>>>>>>>>>>>> So once this rolls out, perf and vPMU are clients directly to
->>>>>>>>>>>>>> PMU HW.
->>>>>>>>>>>>> I don't think this is a statement we want to make, as it 
->>>>>>>>>>>>> opens a
->>>>>>>>>>>>> discussion
->>>>>>>>>>>>> that we won't win.  Nor do I think it's one we *need* to make.
->>>>>>>>>>>>> KVM doesn't need
->>>>>>>>>>>>> to be on equal footing with perf in terms of 
->>>>>>>>>>>>> owning/managing PMU
->>>>>>>>>>>>> hardware, KVM
->>>>>>>>>>>>> just needs a few APIs to allow faithfully and accurately
->>>>>>>>>>>>> virtualizing a guest PMU.
->>>>>>>>>>>>>
->>>>>>>>>>>>>> Faithful cleaning (blind cleaning) has to be the baseline
->>>>>>>>>>>>>> implementation, until both clients agree to a "deal" between
->>>>>>>>>>>>>> them.
->>>>>>>>>>>>>> Currently, there is no such deal, but I believe we could have
->>>>>>>>>>>>>> one via
->>>>>>>>>>>>>> future discussion.
->>>>>>>>>>>>> What I am saying is that there needs to be a "deal" in place
->>>>>>>>>>>>> before this code
->>>>>>>>>>>>> is merged.  It doesn't need to be anything fancy, e.g. perf 
->>>>>>>>>>>>> can
->>>>>>>>>>>>> still pave over
->>>>>>>>>>>>> PMCs it doesn't immediately load, as opposed to using
->>>>>>>>>>>>> cpu_hw_events.dirty to lazily
->>>>>>>>>>>>> do the clearing.  But perf and KVM need to work together from
->>>>>>>>>>>>> the
->>>>>>>>>>>>> get go, ie. I
->>>>>>>>>>>>> don't want KVM doing something without regard to what perf 
->>>>>>>>>>>>> does,
->>>>>>>>>>>>> and vice versa.
->>>>>>>>>>>>>
->>>>>>>>>>>> There is similar issue on LoongArch vPMU where vm can directly
->>>>>>>>>>>> pmu
->>>>>>>>>>>> hardware
->>>>>>>>>>>> and pmu hw is shard with guest and host. Besides context switch
->>>>>>>>>>>> there are
->>>>>>>>>>>> other places where perf core will access pmu hw, such as tick
->>>>>>>>>>>> timer/hrtimer/ipi function call, and KVM can only intercept
->>>>>>>>>>>> context switch.
->>>>>>>>>>> Two questions:
->>>>>>>>>>>
->>>>>>>>>>>     1) Can KVM prevent the guest from accessing the PMU?
->>>>>>>>>>>
->>>>>>>>>>>     2) If so, KVM can grant partial access to the PMU, or is 
->>>>>>>>>>> it all
->>>>>>>>>>> or nothing?
->>>>>>>>>>>
->>>>>>>>>>> If the answer to both questions is "yes", then it sounds like
->>>>>>>>>>> LoongArch *requires*
->>>>>>>>>>> mediated/passthrough support in order to virtualize its PMU.
->>>>>>>>>> Hi Sean,
->>>>>>>>>>
->>>>>>>>>> Thank for your quick response.
->>>>>>>>>>
->>>>>>>>>> yes, kvm can prevent guest from accessing the PMU and grant 
->>>>>>>>>> partial
->>>>>>>>>> or all to access to the PMU. Only that if one pmu event is 
->>>>>>>>>> granted
->>>>>>>>>> to VM, host can not access this pmu event again. There must be 
->>>>>>>>>> pmu
->>>>>>>>>> event switch if host want to.
->>>>>>>>> PMU event is a software entity which won't be shared. did you
->>>>>>>>> mean if
->>>>>>>>> a PMU HW counter is granted to VM, then Host can't access the 
->>>>>>>>> PMU HW
->>>>>>>>> counter, right?
->>>>>>>> yes, if PMU HW counter/control is granted to VM. The value comes 
->>>>>>>> from
->>>>>>>> guest, and is not meaningful for host.  Host pmu core does not know
->>>>>>>> that it is granted to VM, host still think that it owns pmu.
->>>>>>> That's one issue this patchset tries to solve. Current new mediated
->>>>>>> x86
->>>>>>> vPMU framework doesn't allow Host or Guest own the PMU HW resource
->>>>>>> simultaneously. Only when there is no !exclude_guest event on host,
->>>>>>> guest is allowed to exclusively own the PMU HW resource.
->>>>>>>
->>>>>>>
->>>>>>>> Just like FPU register, it is shared by VM and host during 
->>>>>>>> different
->>>>>>>> time and it is lately switched. But if IPI or timer interrupt uses
->>>>>>>> FPU
->>>>>>>> register on host, there will be the same issue.
->>>>>>> I didn't fully get your point. When IPI or timer interrupt reach, a
->>>>>>> VM-exit is triggered to make CPU traps into host first and then the
->>>>>>> host
->>>>>> yes, it is.
->>>>> This is correct. And this is one of the points that we had debated
->>>>> internally whether we should do PMU context switch at vcpu loop
->>>>> boundary or VM Enter/exit boundary. (host-level) timer interrupt can
->>>>> force VM Exit, which I think happens every 4ms or 1ms, depending on
->>>>> configuration.
->>>>>
->>>>> One of the key reasons we currently propose this is because it is the
->>>>> same boundary as the legacy PMU, i.e., it would be simple to propose
->>>>> from the perf subsystem perspective.
->>>>>
->>>>> Performance wise, doing PMU context switch at vcpu boundary would be
->>>>> way better in general. But the downside is that perf sub-system lose
->>>>> the capability to profile majority of the KVM code (functions) when
->>>>> guest PMU is enabled.
->>>>>
->>>>>>> interrupt handler is called. Or are you complaining the executing
->>>>>>> sequence of switching guest PMU MSRs and these interrupt handler?
->>>>>> In our vPMU implementation, it is ok if vPMU is switched in vm exit
->>>>>> path, however there is problem if vPMU is switched during vcpu thread
->>>>>> sched-out/sched-in path since IPI/timer irq interrupt access pmu
->>>>>> register in host mode.
->>>>> Oh, the IPI/timer irq handler will access PMU registers? I thought
->>>>> only the host-level NMI handler will access the PMU MSRs since PMI is
->>>>> registered under NMI.
->>>>>
->>>>> In that case, you should disable  IRQ during vcpu context switch. For
->>>>> NMI, we prevent its handler from accessing the PMU registers. In
->>>>> particular, we use a per-cpu variable to guard that. So, the
->>>>> host-level PMI handler for perf sub-system will check the variable
->>>>> before proceeding.
->>>> perf core will access pmu hw in tick timer/hrtimer/ipi function call,
->>>> such as function perf_event_task_tick() is called in tick timer, there
->>>> are  event_function_call(event, __perf_event_xxx, &value) in file
->>>> kernel/events/core.c.
->>>>
->>>> https://lore.kernel.org/lkml/20240417065236.500011-1-gaosong@loongson.cn/T/#m15aeb79fdc9ce72dd5b374edd6acdcf7a9dafcf4 
->>>>
->>>>
->>> Just go through functions (not sure if all),  whether
->>> perf_event_task_tick() or the callbacks of event_function_call() would
->>> check the event->state first, if the event is in
->>> PERF_EVENT_STATE_INACTIVE, the PMU HW MSRs would not be touched really.
->>> In this new proposal, all host events with exclude_guest attribute would
->>> be put on PERF_EVENT_STATE_INACTIVE sate if guest own the PMU HW
->>> resource. So I think it's fine.
->>>
->> Is there any event in the host still having PERF_EVENT_STATE_ACTIVE?
->> If so, hmm, it will reach perf_pmu_disable(event->pmu), which will
->> access the global ctrl MSR.
-> 
-> I don't think there is any event with PERF_EVENT_STATE_ACTIVE state on 
-> host when guest owns the PMU HW resource.
-> 
-> In current solution, VM would fail to create if there is any system-wide 
-> event without exclude_guest attribute. If VM is created successfully and 
-> when vm-entry happens, the helper perf_guest_enter() would put all host 
-> events with exclude_guest attribute into PERF_EVENT_STATE_INACTIVE state 
-> and block host to create system-wide events without exclude_guest 
-> attribute.
-I do not know perf subsytem, Can the perf event state kept unchanged? 
-After VM enters, hw perf counter is allocated to VM.  HW counter 
-function for host should be stopped already. It seems that host perf 
-core needs not perceive VM enter/exit.
+Regards,
+Kuan-Wei
 
