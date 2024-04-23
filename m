@@ -1,299 +1,238 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E431CA9C
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 04:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6085168B8
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 04:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713846256; cv=none; b=af93QF1cFTv5+f8qjbJEKZOF2jUUgKq7JTa4fBMGc1kg1t0jcrmZiK0c6JcqlCx9fl2DHgiphwHYoIXRpV3c5X3BOPZuBvDO5stw5HecCiRh0TXwXS2NTsdR7L/nPR3KOOn09S/Q29+RJhXNmB7yY+Z3X/20q54ygR2cA2vBI68=
+	t=1713846382; cv=none; b=oxDpobagAGi5QlinpMfjFxfoSRkjIyplM6k035qRobumsKeVyb2hQGW3hOmqT3rn+bGAKfSCxMfckCAj9N89ldBhERdyeF4FKE7e0DoCY/2XC6GZEIXGob/7KKsEv0YH2q4Es9GOWbwlys+exTOgIP8KDSZbTEO1R6PaHbNvGTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713846256; c=relaxed/simple;
-	bh=d5MJ4e2a30eG+jDYKNT7mG9Gc/6eaI9RNoBEMPFEkhI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bp/s/QfFGBnxzB72GJEefy+WeZRAPQnwijZPFZrlRqbPez/SbPQFnNjzHbIo8Y/iZAG0SkFTzDqapzp89HER282hy7FTbLT6aiI9TLq7Ti5wIf7+77zpMlHMvlb9+H/xtpsPeSxLpUtZxBLGcaH6I9oRYwBC1M2abvBm+7CXlbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4D4xuL6R; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1713846382; c=relaxed/simple;
+	bh=LqnW6gujYHUf5oa5lOh/ef6cFvhhvGAk5ZFGJUs3I7s=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=E7eBk1fRUsy7UviB3NnXquWcr44TA6yp+GVoGH53Nuq0f/6aAii8azy2bUrWbuCnPlkJiYdAPCT/zFOc8iPoS5G3BBQdl7TCueP2Qjk5WaQuvuElACGJ17q3WNC7DWOIGp9TjnbfJvidviQrG/gOfBN7tGPsrhDANSZ9wQz1bvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RC0tUMUV; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4D4xuL6R"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a55b0213a0dso237923466b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 21:24:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RC0tUMUV"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61aecbcb990so99092697b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 21:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713846253; x=1714451053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5buiYtGazihCB3jxFyzdy4lm+my6nJSrcsNRV34lvg0=;
-        b=4D4xuL6RrYLKJ57dqdUwtENAhUfshdUvkani8En8wSqDPC0KoCmvI5pbPdReqeO/Y3
-         L6ugBUuH4yXYkeV1WTasxv6Hu5CwdabCypnv+rKWRAjDmMysqpMTZxn2gTUQqRP0Nb5F
-         frSFwcJcPwXYztG9qaV8PCcxT+ipd4wJea9rn6bMQMiWAvQXXugrQ0NSkyWsv6sPlHq6
-         2hgI4NpVDGo3iDRfvWHBmus/5V79Agsd1lTPQ0GUgCzQsQHoHcbuKSpeKqJOTouohybv
-         mu/5cto2ZZmiuufZNCSdnPaItJgr5t73FZ7mHE/FSxg8xDYG0Y1kDyTdkoWMzVZifzZq
-         4riQ==
+        d=google.com; s=20230601; t=1713846380; x=1714451180; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ragptW+RjDhGej+KK6swto1RnOpIQJkFpN4rX92hb68=;
+        b=RC0tUMUVChhftAmhqpP8ncTQ8bdCvu/ZztqOyKawVkRE6sXSaKRlBElf43oEi/KAqy
+         VnT+qzpOlJxzw00jgvax0VYz8Nhjox4EFYqGlrLO43CLeplz5fe4+zwrFO/8nSfIUys1
+         pHYaSY4qw0EqNkNFnksTswzcmjpqIUuTnJZ/4aoKApjTZOkvUVo2utBjXHJqar8xQUBc
+         hUBtJVYRq4ySWUhM1qulB9h8RbEw4hnHY7+haMd+42GgH08Zgy/s7bB8QoXIE8x3GsLg
+         0zcBB3i4y4UFcwYAzpA0gykx2LigfkjcIHfvxde8fLpAH/+2BjpuTTOvVG2At6ywqrV7
+         99JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713846253; x=1714451053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5buiYtGazihCB3jxFyzdy4lm+my6nJSrcsNRV34lvg0=;
-        b=TVLAI7evlk5xrQBXDrbk02yer8XoNIlvYustijEPtTn56ww7NqF3gsik6qjWpzktaS
-         kpDGs4rl8XzA2RBEY67SZFY6oLFe2OWHogSNFz5y9ZdNzidaagOfo/WUwpcThGsviE2m
-         f32NO3M+SKaTV0PT+sm5NOk1zihiYPOH0PCDhLKbjo+VXrlpcSaUd6JK2hzbvBD3z9Bl
-         +1TvmNEAKlFBJ+Q8s+PBYHe3MpFz15qQMGXwBa3z2dnklSWWIF9KgUQcIw4iG43aGXeU
-         LYkqG6hqsEZQKMNqGFcKnw3VAE3QWX94RsPSOtuMXngRZY/AL2wpzkpj07CPK2DxuPCp
-         RzSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxxburryrmv7b+qmIYgWVNRPGbfjmmNUdpKM53svck8NInTjJxpR74GwJANoi6LPWO0XBgypCFi2jw08a4Vb0wE/PEf9UY1echbNkm+rvZUw==
-X-Gm-Message-State: AOJu0YwbJLY6HOxZh7Ai1+F06+yj4KttnBM1APj4/ECUaRVjA0X9t0J0
-	5nrpHGiacMXYosK4tygpuFuwIUQ72Ek+f1JZXi3KxujaMxS/A2BggdXZMrM59DPFSF//KXyvarA
-	2Wx12Q2/W874n5qwFWoXGF6dLETmaypapIVJo
-X-Google-Smtp-Source: AGHT+IHdQXEwcHFSFhDGbTnONtQWhrAzJUB2mFSVSfODjnpVeSXfLG85RA6SDmD2hbWEVfwX2h852zzj28HGLIv+UH0=
-X-Received: by 2002:a17:906:4e82:b0:a55:b67a:c3ad with SMTP id
- v2-20020a1709064e8200b00a55b67ac3admr2904085eju.73.1713846252447; Mon, 22 Apr
- 2024 21:24:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713846380; x=1714451180;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ragptW+RjDhGej+KK6swto1RnOpIQJkFpN4rX92hb68=;
+        b=bM5y36OrTsWzg+QZ7/xUttvCD2AuKUmYnXldOUMsRXxSq3hHwNapzdZZvJE+4crJ6L
+         8a5LJOcZXwO8Wg4tAm8wh7hyRC35CN0ub6pD+iXBaywcgIWU8Xn+MXZPRiZ8gZD+jQ0M
+         A6lB0k/qVo2uNVrQdCVqhiii/AHlYSoc10aUax080/BnniYlNBJrPSrJ3QlpQlLsdpWn
+         +SflZscVrOGeoziF6QXXpn9e2k4bXnOsw5PYFZ8FoNvNc39pOt11tJZHN6Lab8BKnOzh
+         8Li2XZTNr3zByCpQBg64LSFTxBzzpIy3ajDuAq6RB/t0FMnfELMaya5TjCh75sJzlrEu
+         0PrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVshaOhl32+u1hOYwQBN7DKOAFNzv1xSKfaNDA4771QozPyvYki0d5+b3P+Jpj+BLnFaP8WRxDMUUv5/W1pqNphZ0x9HeYrSAm3AT+PULIkRA==
+X-Gm-Message-State: AOJu0YzTlJuPhS4NgMKdDmR3l79Ywv60klnRquYpMErW8Iajab9ijOGM
+	WC/9jrl1DzqYWpH7FbwBg44cM7hZQaNYlLoCffh8weU6vNZjSvsmwaqrwi2ERblq+a6S/DXTCzs
+	FAt3xOg==
+X-Google-Smtp-Source: AGHT+IHoEqmH0b1OtoMqYGx6VdCedgqxbhAr7NLfuRkKchEaULfvUGogUuPmRb7zrClxfhvMDSOx2OiWzsiM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4ca4:4d48:a7fe:d70c])
+ (user=irogers job=sendgmr) by 2002:a25:4e41:0:b0:de5:53a9:384a with SMTP id
+ c62-20020a254e41000000b00de553a9384amr181684ybb.13.1713846379874; Mon, 22 Apr
+ 2024 21:26:19 -0700 (PDT)
+Date: Mon, 22 Apr 2024 21:25:54 -0700
+Message-Id: <20240423042601.2009469-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com> <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com> <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com> <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com> <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com> <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com> <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
-In-Reply-To: <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 22 Apr 2024 21:23:35 -0700
-Message-ID: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: maobibo <maobibo@loongson.cn>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Sean Christopherson <seanjc@google.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, peterz@infradead.org, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, jmattson@google.com, 
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Subject: [PATCH v4 0/7] dso/dsos memory savings and clean up
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	nabijaczleweli@nabijaczleweli.xyz, Leo Yan <leo.yan@linux.dev>, 
+	Song Liu <song@kernel.org>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Ben Gainey <ben.gainey@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Yanteng Si <siyanteng@loongson.cn>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	Changbin Du <changbin.du@huawei.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Dima Kogan <dima@secretsauce.net>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Chengen Du <chengen.du@canonical.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 22, 2024 at 8:55=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/4/23 =E4=B8=8A=E5=8D=8811:13, Mi, Dapeng wrote:
-> >
-> > On 4/23/2024 10:53 AM, maobibo wrote:
-> >>
-> >>
-> >> On 2024/4/23 =E4=B8=8A=E5=8D=8810:44, Mi, Dapeng wrote:
-> >>>
-> >>> On 4/23/2024 9:01 AM, maobibo wrote:
-> >>>>
-> >>>>
-> >>>> On 2024/4/23 =E4=B8=8A=E5=8D=881:01, Sean Christopherson wrote:
-> >>>>> On Mon, Apr 22, 2024, maobibo wrote:
-> >>>>>> On 2024/4/16 =E4=B8=8A=E5=8D=886:45, Sean Christopherson wrote:
-> >>>>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
-> >>>>>>>> On Mon, Apr 15, 2024 at 10:38=E2=80=AFAM Sean Christopherson
-> >>>>>>>> <seanjc@google.com> wrote:
-> >>>>>>>>> One my biggest complaints with the current vPMU code is that
-> >>>>>>>>> the roles and
-> >>>>>>>>> responsibilities between KVM and perf are poorly defined, which
-> >>>>>>>>> leads to suboptimal
-> >>>>>>>>> and hard to maintain code.
-> >>>>>>>>>
-> >>>>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs
-> >>>>>>>>> _would_ leak guest
-> >>>>>>>>> state to userspace processes that have RDPMC permissions, as
-> >>>>>>>>> the PMCs might not
-> >>>>>>>>> be dirty from perf's perspective (see
-> >>>>>>>>> perf_clear_dirty_counters()).
-> >>>>>>>>>
-> >>>>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in
-> >>>>>>>>> doing so makes the
-> >>>>>>>>> overall code brittle because it's not clear whether KVM _needs_
-> >>>>>>>>> to clear PMCs,
-> >>>>>>>>> or if KVM is just being paranoid.
-> >>>>>>>>
-> >>>>>>>> So once this rolls out, perf and vPMU are clients directly to
-> >>>>>>>> PMU HW.
-> >>>>>>>
-> >>>>>>> I don't think this is a statement we want to make, as it opens a
-> >>>>>>> discussion
-> >>>>>>> that we won't win.  Nor do I think it's one we *need* to make.
-> >>>>>>> KVM doesn't need
-> >>>>>>> to be on equal footing with perf in terms of owning/managing PMU
-> >>>>>>> hardware, KVM
-> >>>>>>> just needs a few APIs to allow faithfully and accurately
-> >>>>>>> virtualizing a guest PMU.
-> >>>>>>>
-> >>>>>>>> Faithful cleaning (blind cleaning) has to be the baseline
-> >>>>>>>> implementation, until both clients agree to a "deal" between the=
-m.
-> >>>>>>>> Currently, there is no such deal, but I believe we could have
-> >>>>>>>> one via
-> >>>>>>>> future discussion.
-> >>>>>>>
-> >>>>>>> What I am saying is that there needs to be a "deal" in place
-> >>>>>>> before this code
-> >>>>>>> is merged.  It doesn't need to be anything fancy, e.g. perf can
-> >>>>>>> still pave over
-> >>>>>>> PMCs it doesn't immediately load, as opposed to using
-> >>>>>>> cpu_hw_events.dirty to lazily
-> >>>>>>> do the clearing.  But perf and KVM need to work together from the
-> >>>>>>> get go, ie. I
-> >>>>>>> don't want KVM doing something without regard to what perf does,
-> >>>>>>> and vice versa.
-> >>>>>>>
-> >>>>>> There is similar issue on LoongArch vPMU where vm can directly pmu
-> >>>>>> hardware
-> >>>>>> and pmu hw is shard with guest and host. Besides context switch
-> >>>>>> there are
-> >>>>>> other places where perf core will access pmu hw, such as tick
-> >>>>>> timer/hrtimer/ipi function call, and KVM can only intercept
-> >>>>>> context switch.
-> >>>>>
-> >>>>> Two questions:
-> >>>>>
-> >>>>>   1) Can KVM prevent the guest from accessing the PMU?
-> >>>>>
-> >>>>>   2) If so, KVM can grant partial access to the PMU, or is it all
-> >>>>> or nothing?
-> >>>>>
-> >>>>> If the answer to both questions is "yes", then it sounds like
-> >>>>> LoongArch *requires*
-> >>>>> mediated/passthrough support in order to virtualize its PMU.
-> >>>>
-> >>>> Hi Sean,
-> >>>>
-> >>>> Thank for your quick response.
-> >>>>
-> >>>> yes, kvm can prevent guest from accessing the PMU and grant partial
-> >>>> or all to access to the PMU. Only that if one pmu event is granted
-> >>>> to VM, host can not access this pmu event again. There must be pmu
-> >>>> event switch if host want to.
-> >>>
-> >>> PMU event is a software entity which won't be shared. did you mean if
-> >>> a PMU HW counter is granted to VM, then Host can't access the PMU HW
-> >>> counter, right?
-> >> yes, if PMU HW counter/control is granted to VM. The value comes from
-> >> guest, and is not meaningful for host.  Host pmu core does not know
-> >> that it is granted to VM, host still think that it owns pmu.
-> >
-> > That's one issue this patchset tries to solve. Current new mediated x86
-> > vPMU framework doesn't allow Host or Guest own the PMU HW resource
-> > simultaneously. Only when there is no !exclude_guest event on host,
-> > guest is allowed to exclusively own the PMU HW resource.
-> >
-> >
-> >>
-> >> Just like FPU register, it is shared by VM and host during different
-> >> time and it is lately switched. But if IPI or timer interrupt uses FPU
-> >> register on host, there will be the same issue.
-> >
-> > I didn't fully get your point. When IPI or timer interrupt reach, a
-> > VM-exit is triggered to make CPU traps into host first and then the hos=
-t
-> yes, it is.
+7 more patches from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+a near half year old adventure in trying to lower perf's dynamic
+memory use. Bits like the memory overhead of opendir are on the
+sidelines for now, too much fighting over how
+distributions/C-libraries present getdents. These changes are more
+good old fashioned replace an rb-tree with a sorted array and add
+reference count tracking.
 
-This is correct. And this is one of the points that we had debated
-internally whether we should do PMU context switch at vcpu loop
-boundary or VM Enter/exit boundary. (host-level) timer interrupt can
-force VM Exit, which I think happens every 4ms or 1ms, depending on
-configuration.
+The changes migrate dsos code, the collection of dso structs, more
+into the dsos.c/dsos.h files. As with maps and threads, this is done
+so the internals can be changed - replacing a linked list (for fast
+iteration) and an rb-tree (for fast finds) with a lazily sorted
+array. The complexity of operations remain roughly the same, although
+iterating an array is likely faster than iterating a linked list, the
+memory usage is at least reduce by half.
 
-One of the key reasons we currently propose this is because it is the
-same boundary as the legacy PMU, i.e., it would be simple to propose
-from the perf subsystem perspective.
+As fixing the memory usage necessitates changing operations like find,
+modify these operations so that they increment the reference count to
+avoid races like a find in dsos and a remove. Similarly tighten up
+lock usage so that operations working on dsos state hold the
+appropriate lock.
 
-Performance wise, doing PMU context switch at vcpu boundary would be
-way better in general. But the downside is that perf sub-system lose
-the capability to profile majority of the KVM code (functions) when
-guest PMU is enabled.
+Here are some questions (with answers) that I am expecting from reviewers:
 
->
-> > interrupt handler is called. Or are you complaining the executing
-> > sequence of switching guest PMU MSRs and these interrupt handler?
-> In our vPMU implementation, it is ok if vPMU is switched in vm exit
-> path, however there is problem if vPMU is switched during vcpu thread
-> sched-out/sched-in path since IPI/timer irq interrupt access pmu
-> register in host mode.
+ - Why not refactor dso with accessors first and then do the other things?
 
-Oh, the IPI/timer irq handler will access PMU registers? I thought
-only the host-level NMI handler will access the PMU MSRs since PMI is
-registered under NMI.
+My ambition with this change was to lower memory overhead not to
+particularly clean up and fix dso. Fixing the memory overhead, by
+refactoring and changing the internals, showed that locking discipline
+and reference counting discipline was lacking. The later changes try
+to fix these as a service to the community while I am changing the
+code and to also ensure that code is correct (more correct than it was
+wrt locking and reference counting than before the patches).
 
-In that case, you should disable  IRQ during vcpu context switch. For
-NMI, we prevent its handler from accessing the PMU registers. In
-particular, we use a per-cpu variable to guard that. So, the
-host-level PMI handler for perf sub-system will check the variable
-before proceeding.
+Reordering the patches to do the refactoring first will be a giant
+pain. It will merge conflict with every other patch in the series and
+is basically a request to reimplement everything from square 1. The
+only thing I'd have in my favor would be how the code should look at
+the end of the series, and reordering patches doesn't change the
+eventual outcome of applying the patches. Note also, were I to send
+the memory saving patches and then a week later send the API clean up
+and reference counting fix patches the patches would be merged in the
+order they are here. I've done my best, I know you may consider that
+I'm adding to your reviewing overhead but I've also got to think about
+the overhead to me.
 
->
-> In general it will be better if the switch is done in vcpu thread
-> sched-out/sched-in, else there is requirement to profile kvm
-> hypervisor.Even there is such requirement, it is only one option. In
-> most conditions, it will better if time of VM context exit is small.
->
-Performance wise, agree, but there will be debate on perf
-functionality loss at the host level.
+ - Please break apart this change...
 
-Maybe, (just maybe), it is possible to do PMU context switch at vcpu
-boundary normally, but doing it at VM Enter/Exit boundary when host is
-profiling KVM kernel module. So, dynamically adjusting PMU context
-switch location could be an option.
+The first changes are moving things, but when a broken API is spotted
+like the missing get on dsos__find I put it in a change to move the
+function and to add the missed get. Could this be two changes? Yes, it
+could. Does moving code materially change the behavior of the tool?
+No. I've done it in one patch to minimize churn and to some extent for
+my sanity. Such changes are less than 100 lines of code and all
+independently tested.
 
-> >
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>>
-> >>>>
-> >>>>>
-> >>>>>> Can we add callback handler in structure kvm_guest_cbs?  just like
-> >>>>>> this:
-> >>>>>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks
-> >>>>>> kvm_guest_cbs
-> >>>>>> =3D {
-> >>>>>>          .state                  =3D kvm_guest_state,
-> >>>>>>          .get_ip                 =3D kvm_guest_get_ip,
-> >>>>>>          .handle_intel_pt_intr   =3D NULL,
-> >>>>>> +       .lose_pmu               =3D kvm_guest_lose_pmu,
-> >>>>>>   };
-> >>>>>>
-> >>>>>> By the way, I do not know should the callback handler be triggered
-> >>>>>> in perf
-> >>>>>> core or detailed pmu hw driver. From ARM pmu hw driver, it is
-> >>>>>> triggered in
-> >>>>>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
-> >>>>>> but I think it will be better if it is done in perf core.
-> >>>>>
-> >>>>> I don't think we want to take the approach of perf and KVM guests
-> >>>>> "fighting" over
-> >>>>> the PMU.  That's effectively what we have today, and it's a mess
-> >>>>> for KVM because
-> >>>>> it's impossible to provide consistent, deterministic behavior for
-> >>>>> the guest.  And
-> >>>>> it's just as messy for perf, which ends up having wierd, cumbersome
-> >>>>> flows that
-> >>>>> exists purely to try to play nice with KVM.
-> >>>> With existing pmu core code, in tick timer interrupt or IPI function
-> >>>> call interrupt pmu hw may be accessed by host when VM is running and
-> >>>> pmu is already granted to guest. KVM can not intercept host
-> >>>> IPI/timer interrupt, there is no pmu context switch, there will be
-> >>>> problem.
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>
-> >>
->
+ - The logic in dso around short, long name and id with sorting is weird
+
+Yes, I've tried to make it less weird while retaining the existing
+behavior. It would be easy to make a series of patches just cleaning
+it up but I came here to save memory not change the dso API.
+
+ - Move the fixes in the 12th patch earlier.
+
+This is possible but then impossible to test with reference count
+checking. This does mean there are broken reference counts before the
+patch is applied, but this is generally already the case. Yes, some
+hypothetical person may decide to fork midway through this patch
+series and my order would mean they wouldn't have a fix. I've done my
+best while working within the bounds of my time and trying to avoid
+churn.
+
+v4. Rebases, dealing with merge conflicts, on tmp.perf-tools-next
+    dropping the merged:
+  perf dsos: Attempt to better abstract dsos internals
+  perf dsos: Tidy reference counting and locking
+  perf dsos: Add dsos__for_each_dso
+  perf dso: Move dso functions out of dsos
+  perf dsos: Switch more loops to dsos__for_each_dso
+
+v3. Rebases and drops merged "perf dso: Reorder variables to save
+    space in struct dso"
+
+v2. Rebases on top of tmp.perf-tools-next resolving merge conflicts.
+
+Ian Rogers (7):
+  perf dsos: Switch backing storage to array from rbtree/list
+  perf dsos: Remove __dsos__addnew
+  perf dsos: Remove __dsos__findnew_link_by_longname_id
+  perf dsos: Switch hand code to bsearch
+  perf dso: Add reference count checking and accessor functions
+  perf dso: Reference counting related fixes
+  perf dso: Use container_of to avoid a pointer in dso_data
+
+ tools/perf/builtin-annotate.c                 |   6 +-
+ tools/perf/builtin-buildid-cache.c            |   2 +-
+ tools/perf/builtin-buildid-list.c             |  18 +-
+ tools/perf/builtin-inject.c                   |  71 ++-
+ tools/perf/builtin-kallsyms.c                 |   2 +-
+ tools/perf/builtin-mem.c                      |   4 +-
+ tools/perf/builtin-report.c                   |   6 +-
+ tools/perf/builtin-script.c                   |   8 +-
+ tools/perf/builtin-top.c                      |   4 +-
+ tools/perf/builtin-trace.c                    |   2 +-
+ tools/perf/tests/code-reading.c               |   8 +-
+ tools/perf/tests/dso-data.c                   |  67 ++-
+ tools/perf/tests/hists_common.c               |   6 +-
+ tools/perf/tests/hists_cumulate.c             |   4 +-
+ tools/perf/tests/hists_output.c               |   2 +-
+ tools/perf/tests/maps.c                       |   4 +-
+ tools/perf/tests/symbols.c                    |   8 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |   6 +-
+ tools/perf/ui/browsers/annotate.c             |   6 +-
+ tools/perf/ui/browsers/hists.c                |   8 +-
+ tools/perf/ui/browsers/map.c                  |   4 +-
+ tools/perf/util/annotate-data.c               |  16 +-
+ tools/perf/util/annotate.c                    |  17 +-
+ tools/perf/util/auxtrace.c                    |   2 +-
+ tools/perf/util/block-info.c                  |   2 +-
+ tools/perf/util/bpf-event.c                   |   8 +-
+ tools/perf/util/build-id.c                    |  38 +-
+ tools/perf/util/callchain.c                   |   2 +-
+ tools/perf/util/data-convert-json.c           |   2 +-
+ tools/perf/util/db-export.c                   |   6 +-
+ tools/perf/util/disasm.c                      |  36 +-
+ tools/perf/util/dlfilter.c                    |  12 +-
+ tools/perf/util/dso.c                         | 429 ++++++++-------
+ tools/perf/util/dso.h                         | 500 ++++++++++++++++--
+ tools/perf/util/dsos.c                        | 286 +++++-----
+ tools/perf/util/dsos.h                        |  18 +-
+ tools/perf/util/event.c                       |   8 +-
+ tools/perf/util/header.c                      |   8 +-
+ tools/perf/util/hist.c                        |   4 +-
+ tools/perf/util/intel-pt.c                    |  22 +-
+ tools/perf/util/machine.c                     |  50 +-
+ tools/perf/util/map.c                         |  78 +--
+ tools/perf/util/maps.c                        |  14 +-
+ tools/perf/util/print_insn.c                  |   2 +-
+ tools/perf/util/probe-event.c                 |  25 +-
+ .../util/scripting-engines/trace-event-perl.c |   6 +-
+ .../scripting-engines/trace-event-python.c    |  21 +-
+ tools/perf/util/sort.c                        |  19 +-
+ tools/perf/util/srcline.c                     |  65 +--
+ tools/perf/util/symbol-elf.c                  | 145 +++--
+ tools/perf/util/symbol-minimal.c              |   4 +-
+ tools/perf/util/symbol.c                      | 186 +++----
+ tools/perf/util/symbol_fprintf.c              |   4 +-
+ tools/perf/util/synthetic-events.c            |  24 +-
+ tools/perf/util/thread.c                      |   4 +-
+ tools/perf/util/unwind-libunwind-local.c      |  18 +-
+ tools/perf/util/unwind-libunwind.c            |   2 +-
+ tools/perf/util/vdso.c                        |   8 +-
+ 58 files changed, 1407 insertions(+), 930 deletions(-)
+
+-- 
+2.44.0.769.g3c40516874-goog
+
