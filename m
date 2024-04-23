@@ -1,106 +1,163 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517B021345;
-	Tue, 23 Apr 2024 09:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71545DF0D;
+	Tue, 23 Apr 2024 09:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713864933; cv=none; b=bvAwTymFBc/41gGU41T6AQAnK8QSIObJeaSsDX44uVquJuPQO4HDFWSrH/WyyrlbQ9YeD2tNLxI0eP5FcTnSCI2Lkn7i7FtXmayh6sgZNDNpoVEj8gP0tiCUoaHDBFROQEii59ibx5ieyWMN6QbfmohMg3fi8f9lbw7XM9o3vhg=
+	t=1713866157; cv=none; b=OjeI4TUOuj3qkQvsYXE6/BL10KrXLThgdZmNFZMPYUz/wDykpMVE8aJV1QigHahLPlykNN6bItxvXDnL9SGV42CWn/EUJlWaTXdaJEgyNPM4h4TnEw/RMHk0nAvN3PEtxyfzUOM+V5tt/KO6fhSXReyfqEvhFjvSEbRSy+Lnguc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713864933; c=relaxed/simple;
-	bh=lmZDN1auKETKyKSuC5BzhmI7ealw0CEjcswaHx2FnzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wd45Yb6VLbn5UEDgpGYpbp1i1Gus8zXZD7PFfH1MjLcQKTGoLJU8L/tZeOcVEXS7q/WFze9W1NvcGFfeJfrlkCE8ObZsJP1FgkvKhFa2d8VmZ+jeQ+SvxdUe2JWxo3lU0pKrIiY9y7dVX5KFvgwrIph0U+LPA/ggcF6Bv+SOwaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aBYT+9p1; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBYT+9p1"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2aa0f3625aeso892242a91.1;
-        Tue, 23 Apr 2024 02:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713864930; x=1714469730; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oPmiyJcchVI8HLZhgn5CHh5M2cAjQnCFOUQBbNrRH7o=;
-        b=aBYT+9p1YN9vqbo3GjxujTWfoIfCbV+ZN0fnHsZsBQMkpu8ufZPRS8I58ahJgQbn1t
-         cRxVdM5eb5TsvnvFskbT9OUcdVK6jezRmRnLzwXeOCErAkAoKRFEEWE7ziYtRKJy7f2b
-         g3JMNGFqYeuR8TH6J+s167h1eMudVlFGKjYFzvImksmV+875D/Vz4TjjE1igEEcPYGV7
-         74BB6agGZbWARQaR4PymYfFzGc5oO9O35K21PUUiG0MPuJdBBFjR2HhViAZ5w5weO8nS
-         oxd1wSUg1/rm0ZkLdq/EaCGTXpcR6r6ioVYA6eE1osCk8pqQSVtb9+sGSopRl0McZb+d
-         lZTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713864930; x=1714469730;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oPmiyJcchVI8HLZhgn5CHh5M2cAjQnCFOUQBbNrRH7o=;
-        b=vtCX8jUqR074A3Q8Rgf/FrDOF0ew1ST4Of4G1GWtJeUBmPRfWZRZZM2sJ7FTVxt/6S
-         0ncRmrXq+E1/ilre+8b6G7bgmWqTDI5EiuRXQotcJgmoTY5i3Xf1zhZkGr3xw9pZiNnZ
-         FjdKhdXLsPkF5jqralOd4labThv117o5a9mDbfx0gdT8nfX+fbGzSj3CDTyZL+4k0RYN
-         ZEbvaw9PDLPQXb2yYcDMd9pq5fUu9ib28y9+iGqfLAE8lSPzFiIpcWxu/TjMIZETw9dw
-         TmvNcF0KbIQUPrp3SbXucbXuOzA0w86G6l0kWHukIbCXp9OmU5XGK2MYSf2VBo4d2zfJ
-         dFGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYQlKjT66i4dJibo+hK5PSwDOeovbvh2VpbCobjemnboAae+o+r19zw+Iu4lPOrw0RBnAXVI1Xb2xeQzlLko84zAnBXdVd8RBWjeB5ZIJkRI1pyr/1AgyMn6aUz8KDSHQplAJHZSjuPDlKyVJsu1JEBuiQ/KAHYso6t5tClvCeu+aUKcG0ox7dq7OnEFJbhWFjjnQ1v+9Mc2xNBgWkaWFSzelLU/4rER3V9Hnd
-X-Gm-Message-State: AOJu0YxjLQt47BxnCngTwUam/tKkQONO+dxF/fRZ3k90uySmeIev1m9H
-	EX/H5sVV64z5pem2Ggc503YZF/TmpmQKHrdraboeeKIizNDQ10+X
-X-Google-Smtp-Source: AGHT+IFareQ3oNnnfoiJvzFkOIOjDeBgcWDV4pURl0CaslgJ7AnZPPu6SxQPxRszdJm0n18LAg9KWw==
-X-Received: by 2002:aa7:838f:0:b0:6f0:6d93:2089 with SMTP id u15-20020aa7838f000000b006f06d932089mr15098329pfm.1.1713864930443;
-        Tue, 23 Apr 2024 02:35:30 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id fq5-20020a056a0060c500b006ed2709ada6sm9204624pfb.65.2024.04.23.02.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 02:35:28 -0700 (PDT)
-Date: Tue, 23 Apr 2024 17:35:21 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
-Message-ID: <ZieA2aabHr7vF2a4@visitorckw-System-Product-Name>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
- <asgiyolfhg2sfwarkrexbcx3y6mborcxklnncz4cn2g6ffubku@vhoumzvwdpzp>
+	s=arc-20240116; t=1713866157; c=relaxed/simple;
+	bh=0b4ffIoB+s5OkM8ToBVt2cHVP10AzJ57eNLzRntkYLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lFG+p+lDJFWsu9WUk26cd7mOMonp0c68NtNR5um3LHhIkYhSjJG5+7pWDlVxUUhzOPnaaYmjd7EoVKfdWRPwdoivqe+uDrCRbLNcWV7mPU6Lo1opjds2qvAYSvCpqgE52gUM+YxnK/IQ9bet2roa3/ygZ9ccP8cAaKr09oZe2Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5366339;
+	Tue, 23 Apr 2024 02:56:21 -0700 (PDT)
+Received: from [192.168.1.216] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E203F7BD;
+	Tue, 23 Apr 2024 02:55:50 -0700 (PDT)
+Message-ID: <e1bfb006-0226-4be4-9058-7c86da0e36e3@arm.com>
+Date: Tue, 23 Apr 2024 10:55:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <asgiyolfhg2sfwarkrexbcx3y6mborcxklnncz4cn2g6ffubku@vhoumzvwdpzp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 2/4] perf: Allow adding fixed random jitter to the
+ alternate sampling period
+To: Ben Gainey <Ben.Gainey@arm.com>
+Cc: "acme@kernel.org" <acme@kernel.org>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "ak@linux.intel.com" <ak@linux.intel.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>,
+ Mark Rutland <Mark.Rutland@arm.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+ "will@kernel.org" <will@kernel.org>, "irogers@google.com"
+ <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240422104929.264241-1-ben.gainey@arm.com>
+ <20240422104929.264241-3-ben.gainey@arm.com>
+ <1dd3692d-dd2c-428f-a7f7-e263d1d5e5c8@arm.com>
+ <50f8e635667f2c0b389f882bc3f881552ea77e68.camel@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <50f8e635667f2c0b389f882bc3f881552ea77e68.camel@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 04:20:28PM -0400, Kent Overstreet wrote:
-> On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
-> > This patch series focuses on several adjustments related to heap
-> > implementation. Firstly, a type-safe interface has been added to the
-> > min_heap, along with the introduction of several new functions to
-> > enhance its functionality. Additionally, the heap implementation for
-> > bcache and bcachefs has been replaced with the generic min_heap
-> > implementation from include/linux. Furthermore, several typos have been
-> > corrected.
-> > 
-> > Previous discussion with Kent Overstreet:
-> > https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
-> > 
-> > Regards,
-> > Kuan-Wei
+
+
+On 22/04/2024 15:40, Ben Gainey wrote:
+> On Mon, 2024-04-22 at 14:08 +0100, James Clark wrote:
+>>
+>>
+>> On 22/04/2024 11:49, Ben Gainey wrote:
+>>> This change modifies the core perf overflow handler, adding some
+>>> small
+>>> random jitter to each sample period whenever an event switches
+>>> between the
+>>> two alternate sample periods. A new flag is added to
+>>> perf_event_attr to
+>>> opt into this behaviour.
+>>>
+>>> This change follows the discussion in [1], where it is recognized
+>>> that it
+>>> may be possible for certain patterns of execution to end up with
+>>> biased
+>>> results.
+>>>
+>>> [1] https://lore.kernel.org/linux-perf-
+>>> users/Zc24eLqZycmIg3d2@tassilo/
+>>>
+>>> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+>>> ---
+>>>  include/uapi/linux/perf_event.h |  3 ++-
+>>>  kernel/events/core.c            | 11 ++++++++++-
+>>>  2 files changed, 12 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/uapi/linux/perf_event.h
+>>> b/include/uapi/linux/perf_event.h
+>>> index 5c1701d091cf..dd3697a4b300 100644
+>>> --- a/include/uapi/linux/perf_event.h
+>>> +++ b/include/uapi/linux/perf_event.h
+>>> @@ -461,7 +461,8 @@ struct perf_event_attr {
+>>>   inherit_thread :  1, /* children only inherit if cloned with
+>>> CLONE_THREAD */
+>>>   remove_on_exec :  1, /* event is removed from task on exec */
+>>>   sigtrap        :  1, /* send synchronous SIGTRAP on event */
+>>> - __reserved_1   : 26;
+>>> + jitter_alternate_period : 1, /* add a limited amount of jitter on
+>>> each alternate period */
+>>> + __reserved_1   : 25;
+>>>
+>>>   union {
+>>>   __u32 wakeup_events;   /* wakeup every n events */
+>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>> index 07f1f931e18e..079ae520e836 100644
+>>> --- a/kernel/events/core.c
+>>> +++ b/kernel/events/core.c
+>>> @@ -15,6 +15,7 @@
+>>>  #include <linux/idr.h>
+>>>  #include <linux/file.h>
+>>>  #include <linux/poll.h>
+>>> +#include <linux/random.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/hash.h>
+>>>  #include <linux/tick.h>
+>>> @@ -9546,6 +9547,8 @@ static inline bool sample_is_allowed(struct
+>>> perf_event *event, struct pt_regs *r
+>>>   return true;
+>>>  }
+>>>
+>>> +# define MAX_ALT_SAMPLE_PERIOD_JITTER 16
+>>> +
+>>
+>> Is 16 enough to make a difference with very large alternate periods?
+>> I'm
+>> wondering if it's worth making it customisable and instead of adding
+>> the
+>> boolean option add a 16 bit jitter field. Or the option could still
+>> be a
+>> boolean but the jitter value is some ratio of the alt sample period,
+>> like:
+>>
+>>   get_random_u32_below(max(16, alternative_sample_period >> 4))
+>>
 > 
-> We need to get this into -next, where are you at with v4?
+> I don't really have a strong opinion; in all my time I've never seen an
+> Arm PMU produce a precise and constant period anyway, so this may be
+> more useful in the case the architecture is able to support precise
+> sampling. In any case it's is likely to be specific to a particular
+> workload / configuration anyway.
+> 
+> The main downside I can see for making it configurable is that the
+> compiler cannot then optimise the get_random call as well as for a
+> constant, which may be undesirable on this code path.
+> 
+> 
 
-Apologies for the delay; I've just returned from a long trip to Seattle
-where I attended the Open Source Summit. After reviewing the bcachefs
-CI testing results for v3, it appears that my patch has caused some
-Kernel panic and soft lockup issues in bcachefs. However, I haven't
-been able to reproduce these problems in my qemu testing environment,
-so I'm unsure where I went wrong to cause these errors.
+Hmmm I see, I didn't expect get_random_u32_below() to have such
+different implementations depending on whether it was a constant or not.
+You don't have to remove the constant though, it could be:
 
-Regards,
-Kuan-Wei
+ get_random_u32() & (jitter_power_of_2_max - 1)
 
+If you're really worried about optimising this path, then generating the
+jitter with some rotate/xor/mask operation is probably much faster. I
+don't think the requirements are for it to actually be "random", but
+just something to perturb it, even a badly distributed random number
+would be fine.
+
+But also yes I don't have a particularly strong opinion either. Just
+that if someone does have a justification for a configurable value in
+the future, depending on how that's implemented it could make the new
+jitter boolean redundant which would be annoying.
