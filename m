@@ -1,132 +1,164 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3499F1BC30
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 20:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F3428E8;
+	Tue, 23 Apr 2024 01:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713819584; cv=none; b=pqstnbXkRkaCIFfAOn1xW1jtHJiiZrxRcRto2aAPgFv3Wfgh3KvwfgXs8JcK/uni5VAkKOmIbSBbSXmOGQQbxCdPavioUtckuUtDAH+Q0Ff89TK8SXfRtDsaYvt3gzBfqzzsOrqBgCUny45vb+jpahaNPn6APRi1TDWowoDLPkc=
+	t=1713834097; cv=none; b=r3UhUF0s4ykKPFtoc62HE/hbeppNccH6lLPGaNabrqxTUWO8M4oZGz015CMGyGBlRSX9SS+wSxucSKBRxPopwBRMqxp7Y75DHVKg1oBavwc9+iv5PRM47NJuKDn7/IvnPcTz9Q8MvryaTHev+iNc/gMZfVIZwsJA04ox0bg7xP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713819584; c=relaxed/simple;
-	bh=9DtxLkBqU8o+Vd60v8MnikP8aabry94GM1z7ZjGXJAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OaqFE9H7omNELf9XSfaeAwiIE3W40/VR/sFuQfEUovOmD+cPqjbt0LXiAF3Gs1J9se8guRwZQy0RHUJvBUdgboQLTdIZQw4UNPGF6QB/Zmfq1Hl0YDkdNGrkoPcPjYt0ChOYhIGBmZUAmb3t+lucGtE5kk5ufguglFGq2XQeR0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mbzWU88C; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbzWU88C"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-439b1c72676so39441cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 13:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713819582; x=1714424382; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DtxLkBqU8o+Vd60v8MnikP8aabry94GM1z7ZjGXJAA=;
-        b=mbzWU88CFNzYso5y3z5u0Y7gx+04dJRwteJm/Hx7ACnQ/V62GydtY5pYvdxn0tJE9j
-         J4dazF7HgDQ9euLkxTPEPc+vOF27vdPqiKmzaUnD4onpIlsXIXYOecG5km7ogSX3tjmw
-         WXXfnqC6OIKl77hqQHI/Abf42JvRBemo0s9xSgpzrKxqx/kSUTPPJTZDrJ53gAiDKtCJ
-         W/2mXwzO6zGIHiOnPAEoKLKAr1STrw46B0RXBM1HDkxwbIi2TRhpXSAXeEpWJi+b90+t
-         pF9U6pGLKCCZcrGOOCtiiAU3mE0nyaV/JSh5dHzBchvBsvuUtrHQrpCSVx9Vn86A+mPe
-         PVlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713819582; x=1714424382;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9DtxLkBqU8o+Vd60v8MnikP8aabry94GM1z7ZjGXJAA=;
-        b=XxnHE1tBzWwqrfXSUYgf2X6BqBJ/jR9n6qsTwKIixMHv/6BSIfOWnunoTO6aieKQpc
-         kPjI42m8IhJ9yeOU7VcLehrM6BN7oOo3oGyLrEUDgmCGcHc7bJ/u2YeC3Su+cm8oIQRQ
-         iE8HEQyRVLqXFay1ZA5beqi0xkNyc8+GMMe9QpaCz2IQAz5yWx7ymvnIiBe9OIqKpNim
-         lRkcMYhWck0FXg9AD00agYsyiramZ6kaMV7eU7OusoACIwx6mudt5DiNZIscGVxyfb63
-         CdNt2dc31EMIa0vhoSbEgB34kkWqI8VfCt0Orrwz+5acRNUJxZRh3Ifin2GGJdPFExX5
-         3d+w==
-X-Forwarded-Encrypted: i=1; AJvYcCV6kBCWC/a90gvXEK0p0qOiU3Urp3cUFJbBZzknEIDlNXDS5iFmxGhsMKjQUjqJPEvjqXBJOaJfBR3qE+eOnxiU83i4uUe98oAPI6ZkTMixww==
-X-Gm-Message-State: AOJu0Yy5BF6D5pIY/qppmtRh/M5WyoBi/Kys/YwLTiS6AgBzxyKXqkn1
-	NkfxDHVMMgRK9svjMWnTar6+D/IvgICSOlKnsh/aVpJMW1U/ZYOjgVCE10VJX32n3kNOoY/6S9q
-	j5iHTwTMfmgz+uir5SrUJoDr/fNWDerPspbHo
-X-Google-Smtp-Source: AGHT+IFWv3vY24WCXnrPQ0IXbKt//pYLn/SVsr2ulzPtbd7T/FKDLeYs0qIX73iBiD1osziDXA7eh7+i5RjT8f9m8Qw=
-X-Received: by 2002:ac8:748f:0:b0:437:6b79:c9ff with SMTP id
- v15-20020ac8748f000000b004376b79c9ffmr83042qtq.10.1713819581839; Mon, 22 Apr
- 2024 13:59:41 -0700 (PDT)
+	s=arc-20240116; t=1713834097; c=relaxed/simple;
+	bh=TdZudvDns2lFuZhynJtoo+sTQ97LiuD4HrUp0Xffd1Q=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jeNFOR1iqAchkAgvQqmSluqJgvMs8s1XPzY/goFfp1k90gW2pWCI+/C7Rad5j7HwQkSipzsiVT7jw+mo1UCmDnohS7FT2T6hr7c7rqC6LAB+oO0kppv+PhnbOLGBWx+Tst7MRXQ81mFB9LYXG00O03vyVQcXRTlD8PTNmoLi6DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8BxmPBnCCdmyBEBAA--.6479S3;
+	Tue, 23 Apr 2024 09:01:27 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvldiCCdme84BAA--.2668S3;
+	Tue, 23 Apr 2024 09:01:24 +0800 (CST)
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Dapeng Mi
+ <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com,
+ zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com,
+ samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
+References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
+ <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
+ <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
+ <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com>
+ <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
+ <Zh2uFkfH8BA23lm0@google.com>
+ <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
+ <ZiaX3H3YfrVh50cs@google.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+Date: Tue, 23 Apr 2024 09:01:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410064214.2755936-1-irogers@google.com> <ZhgvE7i9HGGar1eX@x1>
- <CAM9d7chWBv14hD4huuoas4ncZaziuTnHi_JvieKqrLZF9fDpPw@mail.gmail.com> <ZibOs-_ASLcZrnFa@x1>
-In-Reply-To: <ZibOs-_ASLcZrnFa@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 22 Apr 2024 13:59:27 -0700
-Message-ID: <CAP-5=fXwkrPuWBTedUxjc=2GyDwPsTA75RAyN+nj4iHSFozRwg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] dso/dsos memory savings and clean up
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ben Gainey <ben.gainey@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Anne Macedo <retpolanne@posteo.net>, 
-	Changbin Du <changbin.du@huawei.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Li Dong <lidong@vivo.com>, 
-	Paran Lee <p4ranlee@gmail.com>, elfring@users.sourceforge.net, 
-	Markus Elfring <Markus.Elfring@web.de>, Yang Jihong <yangjihong1@huawei.com>, 
-	Chengen Du <chengen.du@canonical.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZiaX3H3YfrVh50cs@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxvldiCCdme84BAA--.2668S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr1DtFWDAFy7Cw43CFy5KFX_yoWrAry5pa
+	yI9ayYkr4DJr4Iyw1Iqw48AFyYkrZ7Kr98Xw1ktayUAa90934rZr1UKrW3CFn8ur4xKa4j
+	vr4Ut3sxW3Z0yagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2-VyUUUUU
 
-On Mon, Apr 22, 2024 at 1:55=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Apr 22, 2024 at 01:06:46PM -0700, Namhyung Kim wrote:
-> > On Thu, Apr 11, 2024 at 11:42=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Tue, Apr 09, 2024 at 11:42:02PM -0700, Ian Rogers wrote:
-> > > > 12 more patches from:
-> > > > https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@googl=
-e.com/
-> > > > a near half year old adventure in trying to lower perf's dynamic
-> > > > memory use. Bits like the memory overhead of opendir are on the
-> > > > sidelines for now, too much fighting over how
-> > > > distributions/C-libraries present getdents. These changes are more
-> > > > good old fashioned replace an rb-tree with a sorted array and add
-> > > > reference count tracking.
-> > > >
-> > > > The changes migrate dsos code, the collection of dso structs, more
-> > > > into the dsos.c/dsos.h files. As with maps and threads, this is don=
-e
-> > > > so the internals can be changed - replacing a linked list (for fast
-> > > > iteration) and an rb-tree (for fast finds) with a lazily sorted
-> > > > array. The complexity of operations remain roughly the same, althou=
-gh
-> > > > iterating an array is likely faster than iterating a linked list, t=
-he
-> > > > memory usage is at least reduce by half.
-> > >
-> > > Got the first 5 patches, would be nice if more people could review it=
-,
-> > > I'll try and get back to is soon.
-> >
-> > For the series:
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> It is not applying right now, I've just merged with torvalds/master and
-> I'm running build tests now, will push to tmp.perf-tools-next right now.
 
-Ok, do you want me to rebase on tmp.perf-tools-next?
 
-Thanks,
-Ian
+On 2024/4/23 上午1:01, Sean Christopherson wrote:
+> On Mon, Apr 22, 2024, maobibo wrote:
+>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
+>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson <seanjc@google.com> wrote:
+>>>>> One my biggest complaints with the current vPMU code is that the roles and
+>>>>> responsibilities between KVM and perf are poorly defined, which leads to suboptimal
+>>>>> and hard to maintain code.
+>>>>>
+>>>>> Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak guest
+>>>>> state to userspace processes that have RDPMC permissions, as the PMCs might not
+>>>>> be dirty from perf's perspective (see perf_clear_dirty_counters()).
+>>>>>
+>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes the
+>>>>> overall code brittle because it's not clear whether KVM _needs_ to clear PMCs,
+>>>>> or if KVM is just being paranoid.
+>>>>
+>>>> So once this rolls out, perf and vPMU are clients directly to PMU HW.
+>>>
+>>> I don't think this is a statement we want to make, as it opens a discussion
+>>> that we won't win.  Nor do I think it's one we *need* to make.  KVM doesn't need
+>>> to be on equal footing with perf in terms of owning/managing PMU hardware, KVM
+>>> just needs a few APIs to allow faithfully and accurately virtualizing a guest PMU.
+>>>
+>>>> Faithful cleaning (blind cleaning) has to be the baseline
+>>>> implementation, until both clients agree to a "deal" between them.
+>>>> Currently, there is no such deal, but I believe we could have one via
+>>>> future discussion.
+>>>
+>>> What I am saying is that there needs to be a "deal" in place before this code
+>>> is merged.  It doesn't need to be anything fancy, e.g. perf can still pave over
+>>> PMCs it doesn't immediately load, as opposed to using cpu_hw_events.dirty to lazily
+>>> do the clearing.  But perf and KVM need to work together from the get go, ie. I
+>>> don't want KVM doing something without regard to what perf does, and vice versa.
+>>>
+>> There is similar issue on LoongArch vPMU where vm can directly pmu hardware
+>> and pmu hw is shard with guest and host. Besides context switch there are
+>> other places where perf core will access pmu hw, such as tick
+>> timer/hrtimer/ipi function call, and KVM can only intercept context switch.
+> 
+> Two questions:
+> 
+>   1) Can KVM prevent the guest from accessing the PMU?
+> 
+>   2) If so, KVM can grant partial access to the PMU, or is it all or nothing?
+> 
+> If the answer to both questions is "yes", then it sounds like LoongArch *requires*
+> mediated/passthrough support in order to virtualize its PMU.
 
-> - Arnaldo
+Hi Sean,
+
+Thank for your quick response.
+
+yes, kvm can prevent guest from accessing the PMU and grant partial or 
+all to access to the PMU. Only that if one pmu event is granted to VM, 
+host can not access this pmu event again. There must be pmu event switch 
+if host want to.
+
+> 
+>> Can we add callback handler in structure kvm_guest_cbs?  just like this:
+>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks kvm_guest_cbs
+>> = {
+>>          .state                  = kvm_guest_state,
+>>          .get_ip                 = kvm_guest_get_ip,
+>>          .handle_intel_pt_intr   = NULL,
+>> +       .lose_pmu               = kvm_guest_lose_pmu,
+>>   };
+>>
+>> By the way, I do not know should the callback handler be triggered in perf
+>> core or detailed pmu hw driver. From ARM pmu hw driver, it is triggered in
+>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
+>> but I think it will be better if it is done in perf core.
+> 
+> I don't think we want to take the approach of perf and KVM guests "fighting" over
+> the PMU.  That's effectively what we have today, and it's a mess for KVM because
+> it's impossible to provide consistent, deterministic behavior for the guest.  And
+> it's just as messy for perf, which ends up having wierd, cumbersome flows that
+> exists purely to try to play nice with KVM.
+With existing pmu core code, in tick timer interrupt or IPI function 
+call interrupt pmu hw may be accessed by host when VM is running and pmu 
+is already granted to guest. KVM can not intercept host IPI/timer 
+interrupt, there is no pmu context switch, there will be problem.
+
+Regards
+Bibo Mao
+
