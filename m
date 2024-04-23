@@ -1,91 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FAF6A03F;
-	Tue, 23 Apr 2024 14:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811BB5820E
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 15:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713882578; cv=none; b=ktmY2wNPeoDziwtbGNhfbL+/hMPPoXMJdP1KudQqiPRLWe8wkw+U+OlDBMOJHtkuvLXOCC2KR3Rbv1tF7V2R90q9r/WY2og7vZF0gawvgEU9upKrU1ZpG0h9e8jLNSs4vHehNXwIzi/HIHtPDQKLhK01EopVG212wVQbcqZZqM8=
+	t=1713885320; cv=none; b=lCm0EPna7gW5U+ua7fRtiu53F7KSndy1vsIhUCtpf7kCZHNJROEN1IUmpwbS7iSNd5Sz5ADTYVGhmVxDYO0VXee7aBS2FfgY8l9cuolrhvtPyPJTU+oJFs90ipx3LzLxk+6vm6WrmD1N92HHXfPuUR5XGhROMorepnMYYXfQLQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713882578; c=relaxed/simple;
-	bh=xQ5On1MfHWhx96e4Z1Z5UDJQiU3euinVrl+3ijimgTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mOHMnFinoSFzCOIgjez6gttE9XDH2wbzLsZVxVvWgb8Go1rwqt17G18v9Z6Ljzcee6mR1d5/hkALNQXZaYEkUFr2pFmkKdAL/lQSCpXnMWN5ktHW+9TThCxtvOb3okH0h8VO5kW+ixVM8mREOfP6AJRRIl9QW5a4aCBMEXek4R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8hwkZzp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713885320; c=relaxed/simple;
+	bh=0SenlblrjMqan5Pcbzcsf/FKyDn1lUZo9dEh2XP0Z9M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WYCp1txQsGIDSR35P7uxfR/eEhCqXnxDBc4C6u3eOc22d58rJ+ysd9hTR4SgQKDAwV1PKLGETwpO/yUGf4wt6ov0yCwVuDzxIXK5fSjSPV1szeA2upC7c1cNUExW+Lv5tVuUktPTtV+yh2zhQZth6qDyAx6Tm8Nzv6gtbxWZG+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4M4Wkov5; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8hwkZzp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52509C116B1;
-	Tue, 23 Apr 2024 14:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713882577;
-	bh=xQ5On1MfHWhx96e4Z1Z5UDJQiU3euinVrl+3ijimgTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j8hwkZzpzrXYUObGZB1ZEw8s8h7AP3O4N67s5E9Vj2HVW/BhOeLMpW4ttasmWvxDX
-	 XOTOsUciHHmdjhfDTIAED5BNajGZcgxVQVko5LaylcYjmZcneIfYZLBkyjINWfe+Lv
-	 ZkB3K6kjgQeyREGcLvoYSpT4g4zwR77TM9keCJP70To9Qmn04bttpfJrQorItndolH
-	 bHnIgZq42UyctCDj+9//7FD+RfmN+YQwTpRmgZM7Ks1fuBCwcCe0rEWQHuErs3lnpz
-	 GtZtdhMlm7icfilbcm/l3diqH7Mupuy/LEJfxydGx5BS8b9bjJeZ5M7WWwDHb2J9v2
-	 dLK0vCOVzSKMQ==
-Date: Tue, 23 Apr 2024 11:29:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	nabijaczleweli@nabijaczleweli.xyz, Leo Yan <leo.yan@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Changbin Du <changbin.du@huawei.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dima Kogan <dima@secretsauce.net>,
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
-	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Chengen Du <chengen.du@canonical.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] dso/dsos memory savings and clean up
-Message-ID: <ZifFzieU1w2SxIsq@x1>
-References: <20240423042601.2009469-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4M4Wkov5"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-434ffc2b520so208021cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 08:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713885318; x=1714490118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0SenlblrjMqan5Pcbzcsf/FKyDn1lUZo9dEh2XP0Z9M=;
+        b=4M4Wkov5iosIaAr9HxKN2h/003c0jT7Y+iLULrRPu4nm/4YQAiRaE7aJDSxx4izvyd
+         zeD6nnkXPNlSKZsNO7V5YMy5CJLIuD8kpkoX8y6lEtqNBjIIo8bC9F4xjtuIiyrdq3oo
+         1ohK8PDgaGetp6FN06v6MkkdwT5ximkM0o8EosKD/UxwkXvfkFWeP4FSna/bctIuRloJ
+         u2bIEj09rs7AIrD9YM5wywcqbNjy2gxCVncY5eRS0BvlseTOY/B1kYp4PVMiDYBjTbX3
+         L2O+NY8LnCXu0F3IEDESVL1dBa+HlZdNhlQ4uOZwmVYMa/YiFSEoQydLTR4PMAJ8m8qX
+         pAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713885318; x=1714490118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0SenlblrjMqan5Pcbzcsf/FKyDn1lUZo9dEh2XP0Z9M=;
+        b=lY0i558xkpx+PdfAP8oe9B+80pVf+Uep3gJc6Asgm0NSJOS4irLAqLOhG6FFD3EsHM
+         rAVqec5xEt9aKw3nn0v0znf5YajRzRplM/XgiQDZ8w1XQXwZKh5nLzQOM3rXGjWWO3p7
+         QVnXA+zHbtB2ArjbWKzP2QWchzQZKlDCY5Qm1fpau1U3GtJN+cDP5z//vK9/uOQTle7T
+         b20l3/whge5a8Wylf+L+mzMplKALwrBjVgD1XSBAH2cqJGzds1PkRbsQ+9xgHtD4CLFr
+         C0iDYPwghrBT0XvJVy2LxMQylsNe7SE4Zb74hhTbPq+M2+0ZhYcnd39P4bgdQUu2eU1p
+         GS4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWSdAFepc14cMJTC4CSDWH/32KLbTRUrSGCOfcjICX5jxtE7pjzB8ML/7zUZloS0sVahbFu0DjrCNMHf9ib12PXxpwCAaEs8p09wl0mpvJdoQ==
+X-Gm-Message-State: AOJu0YxH+CX0M9VwrILaoLRfNPC0roPNlv+ny31b2jUnbwa1osmzBGxe
+	j1YD1FyUqa68JPsskBKoNT5z1YQCvqwaaWhc7JIEqYU612f96RAdoEDfI4+OO0o55dWT6+nXRu9
+	Is6exsYK/1Ojk+5iJAsRo+/YHZmVSbsg9u5qC
+X-Google-Smtp-Source: AGHT+IEmDbvhgmJutRXxF3MJaFpsjAadibBlJZsxjSUIBJXhn/ms41LXrsgezlKX1Aj3ErOqxfZQYsmePxgCn9a7wgw=
+X-Received: by 2002:ac8:468d:0:b0:437:b3df:9ab9 with SMTP id
+ g13-20020ac8468d000000b00437b3df9ab9mr224998qto.23.1713885318312; Tue, 23 Apr
+ 2024 08:15:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423042601.2009469-1-irogers@google.com>
+References: <20240423031719.1941141-1-irogers@google.com> <c1c460ed-69c3-4fde-aa9b-be1051dae6ec@linux.ibm.com>
+In-Reply-To: <c1c460ed-69c3-4fde-aa9b-be1051dae6ec@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 23 Apr 2024 08:15:02 -0700
+Message-ID: <CAP-5=fVrQJiFtLeYQqkKACHo_3ez9NEadYLcqy-UKk4i5dHSqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Assume sysfs event names are always lowercase
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 22, 2024 at 09:25:54PM -0700, Ian Rogers wrote:
-> v4. Rebases, dealing with merge conflicts, on tmp.perf-tools-next
->     dropping the merged:
->   perf dsos: Attempt to better abstract dsos internals
->   perf dsos: Tidy reference counting and locking
->   perf dsos: Add dsos__for_each_dso
->   perf dso: Move dso functions out of dsos
->   perf dsos: Switch more loops to dsos__for_each_dso
+On Mon, Apr 22, 2024 at 11:53=E2=80=AFPM Thomas Richter <tmricht@linux.ibm.=
+com> wrote:
+>
+> On 4/23/24 05:17, Ian Rogers wrote:
+> > By assuming sysfs events are lower case, the case insensitive event
+> > parsing can probe for the existence of a file rather then loading all
+> > events in a directory. When the event is a json event like
+> > inst_retired.any on Intel, this reduces the number of openat calls on
+> > a Tigerlake laptop from 325 down to 255.
+> >
+>
+> Ian, sorry for the late reply.
+> On s390 the events in the sysfs tree are all upper case:
 
-I think Namyung acked the previous series, right? I'll check later. For
-now all is in tmp.perf-tools-next and going thru build tests.
+Yikes, sigh.. thanks for catching this :-)
+
+> [root@a35lp67 ~]# ls -l /sys/devices/cpum_cf/events/ | head -10
+> total 0
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 AES_BLOCKED_CYCLES
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 AES_BLOCKED_FUNCTIONS
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 AES_CYCLES
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 AES_FUNCTIONS
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 BCD_DFP_EXECUTION_SLOTS
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 CPU_CYCLES
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 CRSTE_1MB_WRITES
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 DCW_OFF_DRAWER
+> -r--r--r-- 1 root root 4096 Apr 17 14:47 DCW_OFF_DRAWER_MEMORY
+> [root@a35lp67 ~]#
+>
+> Same is true for all other PMUs (currently 5 and growing).
+>
+> Is there a branch to pull to try out the effect of your patch on s390?
+
+Sorry not, I think everything would break anyway. I'll extend what
+I've done so that event names can be lowercase or in shouty UPPERCASE.
 
 Thanks,
+Ian
 
-- Arnaldo
- 
-> v3. Rebases and drops merged "perf dso: Reorder variables to save
->     space in struct dso"
-> 
-> v2. Rebases on top of tmp.perf-tools-next resolving merge conflicts.
+> Thanks Thomas
+> --
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> IBM Deutschland Research & Development GmbH
+>
+> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+>
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+>
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
+>
