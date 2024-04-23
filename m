@@ -1,159 +1,253 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CAD219FC
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 03:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88332F5E;
+	Tue, 23 Apr 2024 03:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713842274; cv=none; b=svDJoZx8taFAXR8on2439eoh/ewR0cCsHWbVycKKJLYuJj7QDdiORfnXc9+DzrBUHXCvaRmJ3m12g7P6u190PYY8b1xEkBNr2tQGnHKiylcqjCtogQ4K3BOm8yCL7W8N+sh+GXwl38L17bPLJF9gNDxSKN999RzorU//WhDZcno=
+	t=1713842782; cv=none; b=Cpxl3V48KDRoUwLL3z1rWU18TwKd+RcztoMF2GmvPFYw9dWw0UEOPlfDNspjMTZiw1V1tDH3jAGGaaHuz4b0iNS6rI5IHiewU9O3m7+QK7xKPWOD7cASGXwevC2wTS9AudNPmeKfs24Sjod9Y1EEdetBCMn0M+S1DPauRB+rxXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713842274; c=relaxed/simple;
-	bh=SxEDWrn/lFxPOvag5N8wzuGUB1n1P7PWYBfiKXO1nAk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=d7/58ZlsX8YZsh9QZbDVgJYXSOm6hhXYwxRzP2Sv9jH6PmyCN97j5KYcytHvRDHlXLVrlyWDSk76hMwpWr/yeHpkATj8iPOUeLLoRjsMox0EWwKJTBdIN/8/44mAXSl+22goroJmidPipADHNU+Wq/hLJ4NvQMVc9co3bib9Mkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nTUgBxaQ; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nTUgBxaQ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6188040f3d2so109285167b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Apr 2024 20:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713842272; x=1714447072; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1gyJD4QoBqevKrIjKy2FdMgw5O7ztEDQh0P4WQSqqmY=;
-        b=nTUgBxaQJ+/GzAN0/Xr/hHl3/ukWu8P1T/KYH494ioXAqSnZKTkU9PJHcZnSXam7aa
-         ztoUzr3mnwYPzlBkxzXYmyRY8P1iYFz3p2Xll8Z8SLdHv4mXZ9Hmv+CoPzPxgSEt6euj
-         rRheFRx9eRb5gNxF4H5qOsE8KIYojKY97imF0dFrfjTWaLmRY4P8uJCVSr5kr/RLleiJ
-         iZgSOAUUTNX+9xkc1DUkf84Fdgy9DNDHWCxNOGWW8Yj1w67hvWoxbn6TXNUzbcSHoDII
-         hd1h5unYI3ZUq5iPCKu5Sf8x+0IyaMMpO3oXkGcmPAZ1L36XhPun84m0AC7pvSqYEDRJ
-         153w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713842272; x=1714447072;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1gyJD4QoBqevKrIjKy2FdMgw5O7ztEDQh0P4WQSqqmY=;
-        b=e/1LUkxLe7Ogo8jHNY8nd9X3IMypPwcN8iPZ69dN92ZX/1WMM/fWfKilWTFPR/BvaL
-         wm4lsjQN9jN6QkxYIR+Y3nkn4lV/ng4aCwwHkHKl2xKN3drXqVMOhuCWLrbqR9ClMXiI
-         47UUTImTGg0om7C2iO/6dbxzlgp78GRUjiE44QAgQ4OWADAskz2Nd4jbmJNDiv2NhoU7
-         a9YFDZWbSYyTw7rIUgvtXq+dAwAYfxdqnjJ5OIcngfuEyx6iUfiKIQTsPBm9hxM+TVn/
-         DRYZDk12J3+LzQLi1/oNs/Hu/KCOb/I2D5mZVrqREFFUs+vkHzRJDhpR2CaRN9LoEjNl
-         ymxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXi/jvgIfvLjNIzEst85VYhzadg1m5eIjn/mrOJLInOVruVxmpXAKOf4/K3GUT/vOyRC7mGbuagEKKbncDWM/9gv3NkfhfudRkBNyYSgoGdgA==
-X-Gm-Message-State: AOJu0Yzf1nvf1VmHPOlOH/jp5oyZaq4jt0Jq/hr4fXAUotdB+VS6ERZH
-	KD0M7Utr5V52buMMFyShh0kwHje1K4Wmc4f6Tis//rnXyVr/Oq73hPRSzck6FBp+8Qf8CysB665
-	y08LdVw==
-X-Google-Smtp-Source: AGHT+IHuIv06zsnCVJVN7pSt2E/XMUWzJTdljzRqLpOgrm3bi86g9DMQm+s3UK3S1GujsuF4MIsvc2q2G11B
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4ca4:4d48:a7fe:d70c])
- (user=irogers job=sendgmr) by 2002:a0d:efc1:0:b0:615:e53:1c1 with SMTP id
- y184-20020a0defc1000000b006150e5301c1mr3040732ywe.7.1713842271767; Mon, 22
- Apr 2024 20:17:51 -0700 (PDT)
-Date: Mon, 22 Apr 2024 20:17:19 -0700
-In-Reply-To: <20240423031719.1941141-1-irogers@google.com>
-Message-Id: <20240423031719.1941141-7-irogers@google.com>
+	s=arc-20240116; t=1713842782; c=relaxed/simple;
+	bh=CAJpcXGdqvr9FJJtpqAZjbO1UWsz5IjjJ1sxEz09kzM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=iNbyx7vLjtfcF1p8txr8sVSriBK8eywDUo3pzX6o/wekpHUeVuLdlKQpDGGoInXcg1tYsdQvSbEoXuUeMs+NS1RdC9T80okywXGWlcfG2c7T7EH8VVfKjlAuBRsiKHJoBa8SPNLRkZ3ttquytaMXBruz4kqfjoSMOonjd9/frAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8CxJvBXKidmVyUBAA--.6777S3;
+	Tue, 23 Apr 2024 11:26:15 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxut1UKidmN_ABAA--.8069S3;
+	Tue, 23 Apr 2024 11:26:14 +0800 (CST)
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
+ <Zhn9TGOiXxcV5Epx@google.com>
+ <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
+ <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
+ <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
+ <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+ <Zh1mKoHJcj22rKy8@google.com>
+ <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
+ <Zh2uFkfH8BA23lm0@google.com>
+ <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
+ <ZiaX3H3YfrVh50cs@google.com>
+ <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+ <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
+ <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
+ <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <5f27b793-b19e-d429-190c-1c20a6d1c649@loongson.cn>
+Date: Tue, 23 Apr 2024 11:26:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240423031719.1941141-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [PATCH v2 6/6] perf pmu: Assume sysfs events are always lowercase
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+In-Reply-To: <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxut1UKidmN_ABAA--.8069S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xr17XryfJFyUtFy3GryrXwc_yoWxZr17pF
+	WxAF4jkr4DJr10yw1Utw18JFyUtrWUJw1UXrn8tFyUA3909r1Fqr1UXryj9FyUWr48GF1j
+	qr4Ut347Zw1DAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4qg4DU
+	UUU
 
-Perf event names aren't case sensitive. For sysfs events the entire
-directory of events is read then iterated comparing names in a case
-insensitive way, most often to see if an event is present.
 
-Consider:
-$ perf stat -e inst_retired.any true
 
-The event inst_retired.any may be present in any PMU, so every PMU's
-sysfs events are loaded and then searched with strcasecmp to see if
-any match. This event is only present on the cpu PMU as a json event
-so a lot of events were loaded from sysfs unnecessarily just to prove
-an event didn't exist there.
+On 2024/4/23 上午11:13, Mi, Dapeng wrote:
+> 
+> On 4/23/2024 10:53 AM, maobibo wrote:
+>>
+>>
+>> On 2024/4/23 上午10:44, Mi, Dapeng wrote:
+>>>
+>>> On 4/23/2024 9:01 AM, maobibo wrote:
+>>>>
+>>>>
+>>>> On 2024/4/23 上午1:01, Sean Christopherson wrote:
+>>>>> On Mon, Apr 22, 2024, maobibo wrote:
+>>>>>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
+>>>>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
+>>>>>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson 
+>>>>>>>> <seanjc@google.com> wrote:
+>>>>>>>>> One my biggest complaints with the current vPMU code is that 
+>>>>>>>>> the roles and
+>>>>>>>>> responsibilities between KVM and perf are poorly defined, which 
+>>>>>>>>> leads to suboptimal
+>>>>>>>>> and hard to maintain code.
+>>>>>>>>>
+>>>>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs 
+>>>>>>>>> _would_ leak guest
+>>>>>>>>> state to userspace processes that have RDPMC permissions, as 
+>>>>>>>>> the PMCs might not
+>>>>>>>>> be dirty from perf's perspective (see 
+>>>>>>>>> perf_clear_dirty_counters()).
+>>>>>>>>>
+>>>>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in 
+>>>>>>>>> doing so makes the
+>>>>>>>>> overall code brittle because it's not clear whether KVM _needs_ 
+>>>>>>>>> to clear PMCs,
+>>>>>>>>> or if KVM is just being paranoid.
+>>>>>>>>
+>>>>>>>> So once this rolls out, perf and vPMU are clients directly to 
+>>>>>>>> PMU HW.
+>>>>>>>
+>>>>>>> I don't think this is a statement we want to make, as it opens a 
+>>>>>>> discussion
+>>>>>>> that we won't win.  Nor do I think it's one we *need* to make. 
+>>>>>>> KVM doesn't need
+>>>>>>> to be on equal footing with perf in terms of owning/managing PMU 
+>>>>>>> hardware, KVM
+>>>>>>> just needs a few APIs to allow faithfully and accurately 
+>>>>>>> virtualizing a guest PMU.
+>>>>>>>
+>>>>>>>> Faithful cleaning (blind cleaning) has to be the baseline
+>>>>>>>> implementation, until both clients agree to a "deal" between them.
+>>>>>>>> Currently, there is no such deal, but I believe we could have 
+>>>>>>>> one via
+>>>>>>>> future discussion.
+>>>>>>>
+>>>>>>> What I am saying is that there needs to be a "deal" in place 
+>>>>>>> before this code
+>>>>>>> is merged.  It doesn't need to be anything fancy, e.g. perf can 
+>>>>>>> still pave over
+>>>>>>> PMCs it doesn't immediately load, as opposed to using 
+>>>>>>> cpu_hw_events.dirty to lazily
+>>>>>>> do the clearing.  But perf and KVM need to work together from the 
+>>>>>>> get go, ie. I
+>>>>>>> don't want KVM doing something without regard to what perf does, 
+>>>>>>> and vice versa.
+>>>>>>>
+>>>>>> There is similar issue on LoongArch vPMU where vm can directly pmu 
+>>>>>> hardware
+>>>>>> and pmu hw is shard with guest and host. Besides context switch 
+>>>>>> there are
+>>>>>> other places where perf core will access pmu hw, such as tick
+>>>>>> timer/hrtimer/ipi function call, and KVM can only intercept 
+>>>>>> context switch.
+>>>>>
+>>>>> Two questions:
+>>>>>
+>>>>>   1) Can KVM prevent the guest from accessing the PMU?
+>>>>>
+>>>>>   2) If so, KVM can grant partial access to the PMU, or is it all 
+>>>>> or nothing?
+>>>>>
+>>>>> If the answer to both questions is "yes", then it sounds like 
+>>>>> LoongArch *requires*
+>>>>> mediated/passthrough support in order to virtualize its PMU.
+>>>>
+>>>> Hi Sean,
+>>>>
+>>>> Thank for your quick response.
+>>>>
+>>>> yes, kvm can prevent guest from accessing the PMU and grant partial 
+>>>> or all to access to the PMU. Only that if one pmu event is granted 
+>>>> to VM, host can not access this pmu event again. There must be pmu 
+>>>> event switch if host want to.
+>>>
+>>> PMU event is a software entity which won't be shared. did you mean if 
+>>> a PMU HW counter is granted to VM, then Host can't access the PMU HW 
+>>> counter, right?
+>> yes, if PMU HW counter/control is granted to VM. The value comes from 
+>> guest, and is not meaningful for host.  Host pmu core does not know 
+>> that it is granted to VM, host still think that it owns pmu.
+> 
+> That's one issue this patchset tries to solve. Current new mediated x86 
+> vPMU framework doesn't allow Host or Guest own the PMU HW resource 
+> simultaneously. Only when there is no !exclude_guest event on host, 
+> guest is allowed to exclusively own the PMU HW resource.
+> 
+> 
+>>
+>> Just like FPU register, it is shared by VM and host during different 
+>> time and it is lately switched. But if IPI or timer interrupt uses FPU 
+>> register on host, there will be the same issue.
+> 
+> I didn't fully get your point. When IPI or timer interrupt reach, a 
+> VM-exit is triggered to make CPU traps into host first and then the host 
+> interrupt handler is called. Or are you complaining the executing 
+> sequence of switching guest PMU MSRs and these interrupt handler?
+It is not necessary to save/restore PMU HW at every vm exit, it had 
+better be lately saved/restored, such as only when vcpu thread is 
+sched-out/sched-in, else the cost will be a little expensive.
 
-This change avoids loading all the events by assuming sysfs event
-names are always lowercase. It then uses file exists and only loads
-the events when the desired event is present.
+I know little about perf core. However there is PMU HW access in 
+interrupt mode. That means PMU HW access should be irq disabled in 
+general mode, else there may be nested PMU HW access. Is that true?
 
-For the example above, the number of openat calls measured by perf
-trace on a tigerlake laptop goes from 325 down to 255. The reduction
-will be larger for machines with many PMUs, particularly replicated
-uncore PMUs.
-
-Ensure pmu_aliases_parse is called before all uses of the aliases
-list, but remove some "pmu->sysfs_aliases_loaded" tests as they are
-now part of the function.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 40f3b5bd8260..88ce0aae2764 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -425,9 +425,16 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
- {
- 	struct perf_pmu_alias *alias;
- 
--	if (load && !pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
-+	if (load && !pmu->sysfs_aliases_loaded) {
-+		char event_file_name[FILENAME_MAX + 8];
- 
-+		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
-+		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+			event_file_name[i] = tolower(event_file_name[i]);
-+
-+		if (perf_pmu__file_exists(pmu, event_file_name))
-+			pmu_aliases_parse(pmu);
-+	}
- 	list_for_each_entry(alias, &pmu->aliases, list) {
- 		if (!strcasecmp(alias->name, name))
- 			return alias;
-@@ -1717,9 +1724,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- {
- 	size_t nr;
- 
--	if (!pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
--
-+	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases;
- 
- 	if (pmu->cpu_aliases_added)
-@@ -1778,6 +1783,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	struct strbuf sb;
- 
- 	strbuf_init(&sb, /*hint=*/ 0);
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -2182,6 +2188,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	if (!pmu)
- 		return NULL;
- 
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		struct perf_event_attr attr = {.config = 0,};
--- 
-2.44.0.769.g3c40516874-goog
+> 
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>>>
+>>>>>
+>>>>>> Can we add callback handler in structure kvm_guest_cbs?  just like 
+>>>>>> this:
+>>>>>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks 
+>>>>>> kvm_guest_cbs
+>>>>>> = {
+>>>>>>          .state                  = kvm_guest_state,
+>>>>>>          .get_ip                 = kvm_guest_get_ip,
+>>>>>>          .handle_intel_pt_intr   = NULL,
+>>>>>> +       .lose_pmu               = kvm_guest_lose_pmu,
+>>>>>>   };
+>>>>>>
+>>>>>> By the way, I do not know should the callback handler be triggered 
+>>>>>> in perf
+>>>>>> core or detailed pmu hw driver. From ARM pmu hw driver, it is 
+>>>>>> triggered in
+>>>>>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
+>>>>>> but I think it will be better if it is done in perf core.
+>>>>>
+>>>>> I don't think we want to take the approach of perf and KVM guests 
+>>>>> "fighting" over
+>>>>> the PMU.  That's effectively what we have today, and it's a mess 
+>>>>> for KVM because
+>>>>> it's impossible to provide consistent, deterministic behavior for 
+>>>>> the guest.  And
+>>>>> it's just as messy for perf, which ends up having wierd, cumbersome 
+>>>>> flows that
+>>>>> exists purely to try to play nice with KVM.
+>>>> With existing pmu core code, in tick timer interrupt or IPI function 
+>>>> call interrupt pmu hw may be accessed by host when VM is running and 
+>>>> pmu is already granted to guest. KVM can not intercept host 
+>>>> IPI/timer interrupt, there is no pmu context switch, there will be 
+>>>> problem.
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>
+>>
 
