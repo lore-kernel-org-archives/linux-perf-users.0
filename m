@@ -1,50 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFA746439;
-	Tue, 23 Apr 2024 06:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0270F24B28;
+	Tue, 23 Apr 2024 06:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713854720; cv=none; b=Pbdf0eVVZtOc5l6fzerCY7xVzh0nlh3wZv0u3/NG+JXGqWaAorEjGHGHr/wE3KdWoyD/grvworMyfWzCUCv7+SaeAKtk3a8r/x7VKg70Pgy3/uhqeyedyk+JMbovQ7x98vLS02HasFnlEsE4XYAsxu3p7hdeprQF9SAyhlEeseU=
+	t=1713855253; cv=none; b=m0sSKE5wEqR697zsIXVdNsUAiZnlpVKFLT3c9O/aTDxl12/2gMZ5xjYo7s1j75cnIbCP1vCgI/UhAKy8woNmfUy6RRUZrjp1HZhQxnDEKpSd7uiq+1kFJETCuysve/NOoWoSfdGPkHI9KHCm6ndq28qIBSzMCW5lfG+ShEHo2ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713854720; c=relaxed/simple;
-	bh=DEPPjMSr0NNohmGyPDCsf0o+mvFaAdnDggwUXqSrmpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nYkSjdhNhEWI0pgLYQgw64ZxX+ipoGPMtCI4Ka+3AgXP8dLMjhTdisrlxvqh2vd+VlMxHBlyR9w/POQRJyS/BFUrMJX15MnQhYjcvIyDGuJBUFttvFLWTcbvoOe+kgFKXkU8dBKHY8YHd5Lc9MvzNV9EjUL1YjGfRCrupAxCiH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jpsbg4su; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713855253; c=relaxed/simple;
+	bh=z2OhGkc9weQ5UHWYoCKHRx1ylQpGsYDYkX+OUC/X4dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BNSlDQLuN1AkY0sfUkPif7INAfNTNUoFXQxAMSXXrGbwKhLdpDKLVCxsx7f/s7sPXalgkWJYpr2k+nqA6WKhRzaYDUt6ovkV1YyuBEJryoSKvVapnp2eUpFg1HcWh3+hWp8mOypajTQKv/ixL4zGv0QJxc4WHqn8yOfpbsnuFfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=juBA2rPg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jpsbg4su"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713854718; x=1745390718;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DEPPjMSr0NNohmGyPDCsf0o+mvFaAdnDggwUXqSrmpc=;
-  b=Jpsbg4su7KlY5Y6da/9hWgb2lkPVpS86IOjYNIX927Sfjw3aWKpFVRFt
-   bKTqvmBc9xUgY4ej6sThhdx6BT0Z4Fq1z27fZOhiEJz8amADpKI0xpeNB
-   HRvXHaF7J/oKHrgBPmLS6QsEXkCv1cQvIclfJ5Co9N5x+5O3JLyxE4JW7
-   BbrebchRMWGzguCYJNMDLqU2ix1Q3d3jUbhRMm2vRti7u/jie2OLZKYyj
-   KddM20FVX2z+M9iWxU+82Jkv5jGLSgoQsc3ZNTjvnzqlt4vxaS2wgZyKn
-   QQyURz3h/dgvtuooCqdgiFDZW4KtuV2nPGOxWf/Rhz5Of8dQOSXrN2QWn
-   A==;
-X-CSE-ConnectionGUID: n8OAXoD1QYaTtDNwItw1HQ==
-X-CSE-MsgGUID: v+VWRRmiQp+2uDFLc4ziPw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9340114"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9340114"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 23:45:16 -0700
-X-CSE-ConnectionGUID: TQRhl9y5QLCDOebUXLGRzg==
-X-CSE-MsgGUID: TG6g8qmVTXKQ1ycLo4WV7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="47548574"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 23:45:11 -0700
-Message-ID: <729c4b30-163c-4115-a380-14ece533a8b9@linux.intel.com>
-Date: Tue, 23 Apr 2024 14:45:08 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="juBA2rPg"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43N5avwa014566;
+	Tue, 23 Apr 2024 06:53:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=kNDizAUq6M15vjj8var0LsymdUc1J25H+tgaeUr6B08=;
+ b=juBA2rPgoEbbna4DWIZKmnLW09kwO6C1V4vjLxa5e0taPVg2WCPxOqZW11vVC+R5jvCn
+ NWUQtUKqGMaCR4eokI+t+tqy5mJs/uExpzdXgOTKKtoIOkxYGmfeWm+gxMwE+p0c3eC2
+ lQwJhaxmAd8Hd9P0NGvkd60k77SxZc+zeK/IQwmn7fa0vBB/TvVjzv2Ccwkzpp+7mV2a
+ ETbCkIdTCk8Q4R7O0vo+FgG3ey/AvZkutcu0dYdM5FWDxAnBb5YapCipSjh3J2cmaave
+ 8DzeubkS0dZz2+53MhrNcg+lplUen00BAGIQeeyC6B4RsaIqsIfS8o7YzLX1jK34LLm0 pg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp6kn04qm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 06:53:53 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43N6rril010204;
+	Tue, 23 Apr 2024 06:53:53 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp6kn04qe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 06:53:53 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43N6cENZ029905;
+	Tue, 23 Apr 2024 06:53:52 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmr1tcc9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 06:53:52 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43N6rm9M48562638
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Apr 2024 06:53:50 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 70E8A20040;
+	Tue, 23 Apr 2024 06:53:48 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 13EC820043;
+	Tue, 23 Apr 2024 06:53:48 +0000 (GMT)
+Received: from [9.152.212.121] (unknown [9.152.212.121])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 23 Apr 2024 06:53:48 +0000 (GMT)
+Message-ID: <c1c460ed-69c3-4fde-aa9b-be1051dae6ec@linux.ibm.com>
+Date: Tue, 23 Apr 2024 08:53:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,290 +68,77 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: maobibo <maobibo@loongson.cn>, Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
- <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
- <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com>
- <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com>
- <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
- <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
- <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <86d1f6d1-197a-ecd9-3349-a64da9ea9789@loongson.cn>
+Subject: Re: [PATCH v2 0/6] Assume sysfs event names are always lowercase
+To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jing Zhang
+ <renyu.zj@linux.alibaba.com>,
+        James Clark <james.clark@arm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20240423031719.1941141-1-irogers@google.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <86d1f6d1-197a-ecd9-3349-a64da9ea9789@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20240423031719.1941141-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: C-sYB4OKvXvGGOCPFpTQ0yOXzy0WeFK-
+X-Proofpoint-ORIG-GUID: eqTvCTSzkt-rI3CgQxLWuUOx4C7Hfmvr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-23_04,2024-04-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0
+ clxscore=1011 phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404230019
 
+On 4/23/24 05:17, Ian Rogers wrote:
+> By assuming sysfs events are lower case, the case insensitive event
+> parsing can probe for the existence of a file rather then loading all
+> events in a directory. When the event is a json event like
+> inst_retired.any on Intel, this reduces the number of openat calls on
+> a Tigerlake laptop from 325 down to 255.
+> 
 
-On 4/23/2024 2:08 PM, maobibo wrote:
->
->
-> On 2024/4/23 下午12:23, Mingwei Zhang wrote:
->> On Mon, Apr 22, 2024 at 8:55 PM maobibo <maobibo@loongson.cn> wrote:
->>>
->>>
->>>
->>> On 2024/4/23 上午11:13, Mi, Dapeng wrote:
->>>>
->>>> On 4/23/2024 10:53 AM, maobibo wrote:
->>>>>
->>>>>
->>>>> On 2024/4/23 上午10:44, Mi, Dapeng wrote:
->>>>>>
->>>>>> On 4/23/2024 9:01 AM, maobibo wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2024/4/23 上午1:01, Sean Christopherson wrote:
->>>>>>>> On Mon, Apr 22, 2024, maobibo wrote:
->>>>>>>>> On 2024/4/16 上午6:45, Sean Christopherson wrote:
->>>>>>>>>> On Mon, Apr 15, 2024, Mingwei Zhang wrote:
->>>>>>>>>>> On Mon, Apr 15, 2024 at 10:38 AM Sean Christopherson
->>>>>>>>>>> <seanjc@google.com> wrote:
->>>>>>>>>>>> One my biggest complaints with the current vPMU code is that
->>>>>>>>>>>> the roles and
->>>>>>>>>>>> responsibilities between KVM and perf are poorly defined, 
->>>>>>>>>>>> which
->>>>>>>>>>>> leads to suboptimal
->>>>>>>>>>>> and hard to maintain code.
->>>>>>>>>>>>
->>>>>>>>>>>> Case in point, I'm pretty sure leaving guest values in PMCs
->>>>>>>>>>>> _would_ leak guest
->>>>>>>>>>>> state to userspace processes that have RDPMC permissions, as
->>>>>>>>>>>> the PMCs might not
->>>>>>>>>>>> be dirty from perf's perspective (see
->>>>>>>>>>>> perf_clear_dirty_counters()).
->>>>>>>>>>>>
->>>>>>>>>>>> Blindly clearing PMCs in KVM "solves" that problem, but in
->>>>>>>>>>>> doing so makes the
->>>>>>>>>>>> overall code brittle because it's not clear whether KVM 
->>>>>>>>>>>> _needs_
->>>>>>>>>>>> to clear PMCs,
->>>>>>>>>>>> or if KVM is just being paranoid.
->>>>>>>>>>>
->>>>>>>>>>> So once this rolls out, perf and vPMU are clients directly to
->>>>>>>>>>> PMU HW.
->>>>>>>>>>
->>>>>>>>>> I don't think this is a statement we want to make, as it opens a
->>>>>>>>>> discussion
->>>>>>>>>> that we won't win.  Nor do I think it's one we *need* to make.
->>>>>>>>>> KVM doesn't need
->>>>>>>>>> to be on equal footing with perf in terms of owning/managing PMU
->>>>>>>>>> hardware, KVM
->>>>>>>>>> just needs a few APIs to allow faithfully and accurately
->>>>>>>>>> virtualizing a guest PMU.
->>>>>>>>>>
->>>>>>>>>>> Faithful cleaning (blind cleaning) has to be the baseline
->>>>>>>>>>> implementation, until both clients agree to a "deal" between 
->>>>>>>>>>> them.
->>>>>>>>>>> Currently, there is no such deal, but I believe we could have
->>>>>>>>>>> one via
->>>>>>>>>>> future discussion.
->>>>>>>>>>
->>>>>>>>>> What I am saying is that there needs to be a "deal" in place
->>>>>>>>>> before this code
->>>>>>>>>> is merged.  It doesn't need to be anything fancy, e.g. perf can
->>>>>>>>>> still pave over
->>>>>>>>>> PMCs it doesn't immediately load, as opposed to using
->>>>>>>>>> cpu_hw_events.dirty to lazily
->>>>>>>>>> do the clearing.  But perf and KVM need to work together from 
->>>>>>>>>> the
->>>>>>>>>> get go, ie. I
->>>>>>>>>> don't want KVM doing something without regard to what perf does,
->>>>>>>>>> and vice versa.
->>>>>>>>>>
->>>>>>>>> There is similar issue on LoongArch vPMU where vm can directly 
->>>>>>>>> pmu
->>>>>>>>> hardware
->>>>>>>>> and pmu hw is shard with guest and host. Besides context switch
->>>>>>>>> there are
->>>>>>>>> other places where perf core will access pmu hw, such as tick
->>>>>>>>> timer/hrtimer/ipi function call, and KVM can only intercept
->>>>>>>>> context switch.
->>>>>>>>
->>>>>>>> Two questions:
->>>>>>>>
->>>>>>>>    1) Can KVM prevent the guest from accessing the PMU?
->>>>>>>>
->>>>>>>>    2) If so, KVM can grant partial access to the PMU, or is it all
->>>>>>>> or nothing?
->>>>>>>>
->>>>>>>> If the answer to both questions is "yes", then it sounds like
->>>>>>>> LoongArch *requires*
->>>>>>>> mediated/passthrough support in order to virtualize its PMU.
->>>>>>>
->>>>>>> Hi Sean,
->>>>>>>
->>>>>>> Thank for your quick response.
->>>>>>>
->>>>>>> yes, kvm can prevent guest from accessing the PMU and grant partial
->>>>>>> or all to access to the PMU. Only that if one pmu event is granted
->>>>>>> to VM, host can not access this pmu event again. There must be pmu
->>>>>>> event switch if host want to.
->>>>>>
->>>>>> PMU event is a software entity which won't be shared. did you 
->>>>>> mean if
->>>>>> a PMU HW counter is granted to VM, then Host can't access the PMU HW
->>>>>> counter, right?
->>>>> yes, if PMU HW counter/control is granted to VM. The value comes from
->>>>> guest, and is not meaningful for host.  Host pmu core does not know
->>>>> that it is granted to VM, host still think that it owns pmu.
->>>>
->>>> That's one issue this patchset tries to solve. Current new mediated 
->>>> x86
->>>> vPMU framework doesn't allow Host or Guest own the PMU HW resource
->>>> simultaneously. Only when there is no !exclude_guest event on host,
->>>> guest is allowed to exclusively own the PMU HW resource.
->>>>
->>>>
->>>>>
->>>>> Just like FPU register, it is shared by VM and host during different
->>>>> time and it is lately switched. But if IPI or timer interrupt uses 
->>>>> FPU
->>>>> register on host, there will be the same issue.
->>>>
->>>> I didn't fully get your point. When IPI or timer interrupt reach, a
->>>> VM-exit is triggered to make CPU traps into host first and then the 
->>>> host
->>> yes, it is.
->>
->> This is correct. And this is one of the points that we had debated
->> internally whether we should do PMU context switch at vcpu loop
->> boundary or VM Enter/exit boundary. (host-level) timer interrupt can
->> force VM Exit, which I think happens every 4ms or 1ms, depending on
->> configuration.
->>
->> One of the key reasons we currently propose this is because it is the
->> same boundary as the legacy PMU, i.e., it would be simple to propose
->> from the perf subsystem perspective.
->>
->> Performance wise, doing PMU context switch at vcpu boundary would be
->> way better in general. But the downside is that perf sub-system lose
->> the capability to profile majority of the KVM code (functions) when
->> guest PMU is enabled.
->>
->>>
->>>> interrupt handler is called. Or are you complaining the executing
->>>> sequence of switching guest PMU MSRs and these interrupt handler?
->>> In our vPMU implementation, it is ok if vPMU is switched in vm exit
->>> path, however there is problem if vPMU is switched during vcpu thread
->>> sched-out/sched-in path since IPI/timer irq interrupt access pmu
->>> register in host mode.
->>
->> Oh, the IPI/timer irq handler will access PMU registers? I thought
->> only the host-level NMI handler will access the PMU MSRs since PMI is
->> registered under NMI.
->>
->> In that case, you should disable  IRQ during vcpu context switch. For
->> NMI, we prevent its handler from accessing the PMU registers. In
->> particular, we use a per-cpu variable to guard that. So, the
->> host-level PMI handler for perf sub-system will check the variable
->> before proceeding.
->
-> perf core will access pmu hw in tick timer/hrtimer/ipi function call,
-> such as function perf_event_task_tick() is called in tick timer, there
-> are  event_function_call(event, __perf_event_xxx, &value) in file
-> kernel/events/core.c.
->
-> https://lore.kernel.org/lkml/20240417065236.500011-1-gaosong@loongson.cn/T/#m15aeb79fdc9ce72dd5b374edd6acdcf7a9dafcf4 
->
+Ian, sorry for the late reply.
+On s390 the events in the sysfs tree are all upper case:
 
-Just go through functions (not sure if all),  whether 
-perf_event_task_tick() or the callbacks of event_function_call() would 
-check the event->state first, if the event is in 
-PERF_EVENT_STATE_INACTIVE, the PMU HW MSRs would not be touched really. 
-In this new proposal, all host events with exclude_guest attribute would 
-be put on PERF_EVENT_STATE_INACTIVE sate if guest own the PMU HW 
-resource. So I think it's fine.
+[root@a35lp67 ~]# ls -l /sys/devices/cpum_cf/events/ | head -10
+total 0
+-r--r--r-- 1 root root 4096 Apr 17 14:47 AES_BLOCKED_CYCLES
+-r--r--r-- 1 root root 4096 Apr 17 14:47 AES_BLOCKED_FUNCTIONS
+-r--r--r-- 1 root root 4096 Apr 17 14:47 AES_CYCLES
+-r--r--r-- 1 root root 4096 Apr 17 14:47 AES_FUNCTIONS
+-r--r--r-- 1 root root 4096 Apr 17 14:47 BCD_DFP_EXECUTION_SLOTS
+-r--r--r-- 1 root root 4096 Apr 17 14:47 CPU_CYCLES
+-r--r--r-- 1 root root 4096 Apr 17 14:47 CRSTE_1MB_WRITES
+-r--r--r-- 1 root root 4096 Apr 17 14:47 DCW_OFF_DRAWER
+-r--r--r-- 1 root root 4096 Apr 17 14:47 DCW_OFF_DRAWER_MEMORY
+[root@a35lp67 ~]# 
 
+Same is true for all other PMUs (currently 5 and growing).
 
->
->
->>
->>>
->>> In general it will be better if the switch is done in vcpu thread
->>> sched-out/sched-in, else there is requirement to profile kvm
->>> hypervisor.Even there is such requirement, it is only one option. In
->>> most conditions, it will better if time of VM context exit is small.
->>>
->> Performance wise, agree, but there will be debate on perf
->> functionality loss at the host level.
->>
->> Maybe, (just maybe), it is possible to do PMU context switch at vcpu
->> boundary normally, but doing it at VM Enter/Exit boundary when host is
->> profiling KVM kernel module. So, dynamically adjusting PMU context
->> switch location could be an option.
->>
->>>>
->>>>
->>>>>
->>>>> Regards
->>>>> Bibo Mao
->>>>>>
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>>> Can we add callback handler in structure kvm_guest_cbs?  just 
->>>>>>>>> like
->>>>>>>>> this:
->>>>>>>>> @@ -6403,6 +6403,7 @@ static struct perf_guest_info_callbacks
->>>>>>>>> kvm_guest_cbs
->>>>>>>>> = {
->>>>>>>>>           .state                  = kvm_guest_state,
->>>>>>>>>           .get_ip                 = kvm_guest_get_ip,
->>>>>>>>>           .handle_intel_pt_intr   = NULL,
->>>>>>>>> +       .lose_pmu               = kvm_guest_lose_pmu,
->>>>>>>>>    };
->>>>>>>>>
->>>>>>>>> By the way, I do not know should the callback handler be 
->>>>>>>>> triggered
->>>>>>>>> in perf
->>>>>>>>> core or detailed pmu hw driver. From ARM pmu hw driver, it is
->>>>>>>>> triggered in
->>>>>>>>> pmu hw driver such as function kvm_vcpu_pmu_resync_el0,
->>>>>>>>> but I think it will be better if it is done in perf core.
->>>>>>>>
->>>>>>>> I don't think we want to take the approach of perf and KVM guests
->>>>>>>> "fighting" over
->>>>>>>> the PMU.  That's effectively what we have today, and it's a mess
->>>>>>>> for KVM because
->>>>>>>> it's impossible to provide consistent, deterministic behavior for
->>>>>>>> the guest.  And
->>>>>>>> it's just as messy for perf, which ends up having wierd, 
->>>>>>>> cumbersome
->>>>>>>> flows that
->>>>>>>> exists purely to try to play nice with KVM.
->>>>>>> With existing pmu core code, in tick timer interrupt or IPI 
->>>>>>> function
->>>>>>> call interrupt pmu hw may be accessed by host when VM is running 
->>>>>>> and
->>>>>>> pmu is already granted to guest. KVM can not intercept host
->>>>>>> IPI/timer interrupt, there is no pmu context switch, there will be
->>>>>>> problem.
->>>>>>>
->>>>>>> Regards
->>>>>>> Bibo Mao
->>>>>>>
->>>>>
->>>
->
->
+Is there a branch to pull to try out the effect of your patch on s390?
+
+Thanks Thomas
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
