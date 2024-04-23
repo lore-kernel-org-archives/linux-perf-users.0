@@ -1,163 +1,171 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71545DF0D;
-	Tue, 23 Apr 2024 09:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EBB22F11;
+	Tue, 23 Apr 2024 10:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713866157; cv=none; b=OjeI4TUOuj3qkQvsYXE6/BL10KrXLThgdZmNFZMPYUz/wDykpMVE8aJV1QigHahLPlykNN6bItxvXDnL9SGV42CWn/EUJlWaTXdaJEgyNPM4h4TnEw/RMHk0nAvN3PEtxyfzUOM+V5tt/KO6fhSXReyfqEvhFjvSEbRSy+Lnguc=
+	t=1713866757; cv=none; b=S9ZAbX28x4NpBKOlTQ22G/B1fGV45SadUoWyEoGcxz76A/oAn4lr/hia6jxrraf41TgxYT2IKUB/VMlI4WUqnl2EHkA8FEarm935tMvjyqA3pcp12jMrvz07FGI4e4JO0lJB/7H6KGggWJtjh4hG9y6t8+1UROA6hRn1oUImST8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713866157; c=relaxed/simple;
-	bh=0b4ffIoB+s5OkM8ToBVt2cHVP10AzJ57eNLzRntkYLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lFG+p+lDJFWsu9WUk26cd7mOMonp0c68NtNR5um3LHhIkYhSjJG5+7pWDlVxUUhzOPnaaYmjd7EoVKfdWRPwdoivqe+uDrCRbLNcWV7mPU6Lo1opjds2qvAYSvCpqgE52gUM+YxnK/IQ9bet2roa3/ygZ9ccP8cAaKr09oZe2Uo=
+	s=arc-20240116; t=1713866757; c=relaxed/simple;
+	bh=ksx5GILc+xmfeC9Tgn+bKUmmuj3WNfnkJowAv04MRLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XFsggrERGKgEh0UBEkt0zC12XZEycUR3T7EA0/YPqerNudl50LqRIKyZQ0ZVzePlUQa+qdcJBplzFjDv2iNTkkJg5DuH7XYtdFlTmykwvUtiPiHrbo1MZP77xua3ozOuZ8CJ6eO6fnlOdNMP0Z+lyFVWtdS08u9SRoM4tXBbRoQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5366339;
-	Tue, 23 Apr 2024 02:56:21 -0700 (PDT)
-Received: from [192.168.1.216] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E203F7BD;
-	Tue, 23 Apr 2024 02:55:50 -0700 (PDT)
-Message-ID: <e1bfb006-0226-4be4-9058-7c86da0e36e3@arm.com>
-Date: Tue, 23 Apr 2024 10:55:32 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6547A339;
+	Tue, 23 Apr 2024 03:06:19 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.21.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D2B23F7BD;
+	Tue, 23 Apr 2024 03:05:49 -0700 (PDT)
+Date: Tue, 23 Apr 2024 11:05:46 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Haifeng Xu <haifeng.xu@shopee.com>
+Cc: peterz@infradead.org, mingo@redhat.com, frederic@kernel.org,
+	acme@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf/core: Fix missing wakeup when waiting for
+ context reference
+Message-ID: <ZieH-g8fWn60z-ev@FVFF77S0Q05N>
+References: <20240418114209.22233-1-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/4] perf: Allow adding fixed random jitter to the
- alternate sampling period
-To: Ben Gainey <Ben.Gainey@arm.com>
-Cc: "acme@kernel.org" <acme@kernel.org>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "ak@linux.intel.com" <ak@linux.intel.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- Mark Rutland <Mark.Rutland@arm.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "will@kernel.org" <will@kernel.org>, "irogers@google.com"
- <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240422104929.264241-1-ben.gainey@arm.com>
- <20240422104929.264241-3-ben.gainey@arm.com>
- <1dd3692d-dd2c-428f-a7f7-e263d1d5e5c8@arm.com>
- <50f8e635667f2c0b389f882bc3f881552ea77e68.camel@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <50f8e635667f2c0b389f882bc3f881552ea77e68.camel@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418114209.22233-1-haifeng.xu@shopee.com>
 
-
-
-On 22/04/2024 15:40, Ben Gainey wrote:
-> On Mon, 2024-04-22 at 14:08 +0100, James Clark wrote:
->>
->>
->> On 22/04/2024 11:49, Ben Gainey wrote:
->>> This change modifies the core perf overflow handler, adding some
->>> small
->>> random jitter to each sample period whenever an event switches
->>> between the
->>> two alternate sample periods. A new flag is added to
->>> perf_event_attr to
->>> opt into this behaviour.
->>>
->>> This change follows the discussion in [1], where it is recognized
->>> that it
->>> may be possible for certain patterns of execution to end up with
->>> biased
->>> results.
->>>
->>> [1] https://lore.kernel.org/linux-perf-
->>> users/Zc24eLqZycmIg3d2@tassilo/
->>>
->>> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
->>> ---
->>>  include/uapi/linux/perf_event.h |  3 ++-
->>>  kernel/events/core.c            | 11 ++++++++++-
->>>  2 files changed, 12 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/include/uapi/linux/perf_event.h
->>> b/include/uapi/linux/perf_event.h
->>> index 5c1701d091cf..dd3697a4b300 100644
->>> --- a/include/uapi/linux/perf_event.h
->>> +++ b/include/uapi/linux/perf_event.h
->>> @@ -461,7 +461,8 @@ struct perf_event_attr {
->>>   inherit_thread :  1, /* children only inherit if cloned with
->>> CLONE_THREAD */
->>>   remove_on_exec :  1, /* event is removed from task on exec */
->>>   sigtrap        :  1, /* send synchronous SIGTRAP on event */
->>> - __reserved_1   : 26;
->>> + jitter_alternate_period : 1, /* add a limited amount of jitter on
->>> each alternate period */
->>> + __reserved_1   : 25;
->>>
->>>   union {
->>>   __u32 wakeup_events;   /* wakeup every n events */
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index 07f1f931e18e..079ae520e836 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -15,6 +15,7 @@
->>>  #include <linux/idr.h>
->>>  #include <linux/file.h>
->>>  #include <linux/poll.h>
->>> +#include <linux/random.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/hash.h>
->>>  #include <linux/tick.h>
->>> @@ -9546,6 +9547,8 @@ static inline bool sample_is_allowed(struct
->>> perf_event *event, struct pt_regs *r
->>>   return true;
->>>  }
->>>
->>> +# define MAX_ALT_SAMPLE_PERIOD_JITTER 16
->>> +
->>
->> Is 16 enough to make a difference with very large alternate periods?
->> I'm
->> wondering if it's worth making it customisable and instead of adding
->> the
->> boolean option add a 16 bit jitter field. Or the option could still
->> be a
->> boolean but the jitter value is some ratio of the alt sample period,
->> like:
->>
->>   get_random_u32_below(max(16, alternative_sample_period >> 4))
->>
+On Thu, Apr 18, 2024 at 11:42:09AM +0000, Haifeng Xu wrote:
+> In our production environment, we found many hung tasks which are
+> blocked for more than 18 hours. Their call traces are like this:
 > 
-> I don't really have a strong opinion; in all my time I've never seen an
-> Arm PMU produce a precise and constant period anyway, so this may be
-> more useful in the case the architecture is able to support precise
-> sampling. In any case it's is likely to be specific to a particular
-> workload / configuration anyway.
+> [346278.191038] __schedule+0x2d8/0x890
+> [346278.191046] schedule+0x4e/0xb0
+> [346278.191049] perf_event_free_task+0x220/0x270
+> [346278.191056] ? init_wait_var_entry+0x50/0x50
+> [346278.191060] copy_process+0x663/0x18d0
+> [346278.191068] kernel_clone+0x9d/0x3d0
+> [346278.191072] __do_sys_clone+0x5d/0x80
+> [346278.191076] __x64_sys_clone+0x25/0x30
+> [346278.191079] do_syscall_64+0x5c/0xc0
+> [346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
+> [346278.191086] ? do_syscall_64+0x69/0xc0
+> [346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
+> [346278.191092] ? irqentry_exit+0x19/0x30
+> [346278.191095] ? exc_page_fault+0x89/0x160
+> [346278.191097] ? asm_exc_page_fault+0x8/0x30
+> [346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
 > 
-> The main downside I can see for making it configurable is that the
-> compiler cannot then optimise the get_random call as well as for a
-> constant, which may be undesirable on this code path.
+> The task was waiting for the refcount become to 1, but from the vmcore,
+> we found the refcount has already been 1. It seems that the task didn't
+> get woken up by perf_event_release_kernel() and got stuck forever. The
+> below scenario may cause the problem.
 > 
+> Thread A					Thread B
+> ...						...
+> perf_event_free_task				perf_event_release_kernel
+> 						   ...
+> 						   acquire event->child_mutex
+> 						   ...
+> 						   get_ctx
+>    ...						   release event->child_mutex
+>    acquire ctx->mutex
+>    ...
+>    perf_free_event (acquire/release event->child_mutex)
+>    ...
+>    release ctx->mutex
+>    wait_var_event
+> 						   acquire ctx->mutex
+> 						   acquire event->child_mutex
+> 						   # move existing events to free_list
+> 						   release event->child_mutex
+> 						   release ctx->mutex
+> 						   put_ctx
+> ...						...
 > 
+> In this case, all events of the ctx have been freed, so we couldn't
+> find the ctx in free_list and Thread A will miss the wakeup. It's thus
+> necessary to add a wakeup after dropping the reference.
+> 
+> Fixes: 1cf8dfe8a661 ("perf/core: Fix race between close() and fork()")
+> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-Hmmm I see, I didn't expect get_random_u32_below() to have such
-different implementations depending on whether it was a constant or not.
-You don't have to remove the constant though, it could be:
+FWIW, this looks good to me, but I haven't yet been able to write a test to
+exercise this: perf_event_free_task() is only called if
+perf_event_init_context() fails or of copy_process() fails partway through, and
+while it should be possible to make the latter fail consistently by messing
+with cgroups, I haven't had the time to work all that out.
 
- get_random_u32() & (jitter_power_of_2_max - 1)
+So I think there's a reliable DoS here, but I haven't had the time to go write
+that myself. It would be nice if we actually had a test for this.
 
-If you're really worried about optimising this path, then generating the
-jitter with some rotate/xor/mask operation is probably much faster. I
-don't think the requirements are for it to actually be "random", but
-just something to perturb it, even a badly distributed random number
-would be fine.
+I reckon that in addition to the Fixes tag, this needs:
 
-But also yes I don't have a particularly strong opinion either. Just
-that if someone does have a justification for a configurable value in
-the future, depending on how that's implemented it could make the new
-jitter boolean redundant which would be annoying.
+Cc: stable@vger.kernel.org
+
+> ---
+> Changes since v1:
+> - Add the fixed tag.
+> - Simplify v1's patch. (Frederic)
+> 
+> Changes since v2:
+> - Use Reviewed-by tag instead of Signed-off-by tag.
+> ---
+>  kernel/events/core.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4f0c45ab8d7d..15c35070db6a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5340,6 +5340,7 @@ int perf_event_release_kernel(struct perf_event *event)
+>  again:
+>  	mutex_lock(&event->child_mutex);
+>  	list_for_each_entry(child, &event->child_list, child_list) {
+> +		void *var = NULL;
+>  
+>  		/*
+>  		 * Cannot change, child events are not migrated, see the
+> @@ -5380,11 +5381,23 @@ int perf_event_release_kernel(struct perf_event *event)
+>  			 * this can't be the last reference.
+>  			 */
+>  			put_event(event);
+> +		} else {
+> +			var = &ctx->refcount;
+>  		}
+>  
+>  		mutex_unlock(&event->child_mutex);
+>  		mutex_unlock(&ctx->mutex);
+>  		put_ctx(ctx);
+> +
+> +		if (var) {
+> +			/*
+> +			 * If perf_event_free_task() has deleted all events from the
+> +			 * ctx while the child_mutex got released above, make sure to
+> +			 * notify about the preceding put_ctx().
+> +			 */
+> +			smp_mb(); /* pairs with wait_var_event() */
+> +			wake_up_var(var);
+> +		}
+>  		goto again;
+>  	}
+>  	mutex_unlock(&event->child_mutex);
+
+I was a bit worrited that we're doing the wakeup with the event->child_mutex
+held; AFAICT that looks to be safe, but I'm not a scheduler expert.
+
+FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> -- 
+> 2.25.1
+> 
