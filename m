@@ -1,113 +1,94 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F47113D88A
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 17:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA751DDC5;
+	Tue, 23 Apr 2024 18:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713891816; cv=none; b=crgo/FO+sHtEj/x+ouEkfQaAFeDd6vw7OtOXzLmNTBv79M6y1TJZ2ILgdXsQithidPlGsmgHjGcoRpv7y46gYipwpgFmX6u+x+4elkqurrZHONUACAF8zFLwljZM8dZgVO5qLwm8Fw7aZfdJZyxklj14050KvIDxivFRfK5Tvs8=
+	t=1713897108; cv=none; b=na4g+41QcKKUfAUVIVfgS47Xqo5jjlr+WdTFRhS9vKR6s+5mQb7nBMLxbUPDiyj1X604PH0Vh9cxVnLkBSuH6OceENWw5B7DCxC7fxEsRhL7/x0cB+QCvMHW3y7I5V/XNtj+ySeyhr0cf2xY2Oen+mjYV9nH9mrTZQjPtxonWao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713891816; c=relaxed/simple;
-	bh=o9xoixdzamHVwV+JAQwhz22rzk+JkW3wBRWHkz/cgYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DBRroVd9rp6ZKMrzlQzRlPDInROUu5w13y8i6/svRUv6EIxwaf0KrZK+xBSGY4RPZwAwy9XkK5e6eJw3sn6DgbYc0M69giXGQ1bdelr5XwPIe/9CnSe4meGLB4pyoFpPFvZwU1xT8NDehSz38LAeOOBbGGlqkPQs3K7No53oU9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F9A9Z/82; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713897108; c=relaxed/simple;
+	bh=zCEHlyKJhhK4MvhJVSRGGSCDG0oxF0tC8ADUk82NkVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfRq5v77AOHR8aaGY6eV8O+t4obBkrmNNQ7UZr5mkx1KRud0on5EW8Th/1x6gZNv4CIsmrcPxMemhMvacMK0q4VuGTyc0tyiFQ6k3WkB1jtv5bpJZZWCSoec0Z418b+IwL4cLm2rxS+fXaHMUM/K6XuSCnm8GJ3Tp8SKroRPu+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WfiCVzYk; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9A9Z/82"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-344047ac7e4so41715f8f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Apr 2024 10:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713891813; x=1714496613; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o9xoixdzamHVwV+JAQwhz22rzk+JkW3wBRWHkz/cgYY=;
-        b=F9A9Z/82E+grWEq1Nbf+8OMZjwQPTDJz/AYZNtK+RcIGQn5NWlKChbu/dP+1y0MDCA
-         09n1XTTjTKQHJ7XWfhG0MQN2HcCXwZZVtudRzNUQ/VWrBLoIMGY3n9sCYTZ+/HoBf9t7
-         NsZbJcaD9ze4giTdDqgikcFjMZxAOXRvtcsNb81WEQJO/3dipBhwTOh0jBTMK/hj6lBH
-         A6Ipe9F2hBtepfYsG5MCoCjSRONxPkTz5eeT7QTC1RyyGtCigStC2wMcnw4gnxm6KJuf
-         oV5nOXK1TpSf/7svQ5y3cpA5ZD2H4N9qPfAUNv5+FDX13IWLbUIn+rx52FBIJm1TRvpg
-         kOYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713891813; x=1714496613;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o9xoixdzamHVwV+JAQwhz22rzk+JkW3wBRWHkz/cgYY=;
-        b=vx11hJAYbifmUxfUhgNACRAVitkomgWFmwFCsv0KFo7Cn2Nr7RYDzUdeHdBdhIV9cA
-         VLykXEiJT6zDgr83ksFUwh2G4WQprWoO0OwKyYXJjaadwjnqYHROoIpFJnJANtQopNX/
-         5wr7QY2I8ebLcroODNOd8jSLPlRwThfq0a72HVbnQD/401DbJYvA+7IsNBC1Iy9SCzS1
-         VIuc9Odg2YX/E/jfYj6IRgRyk8UvJCv4cZYGqBXZ7KcUWoPs7ypMRePYCbdc2UlQrpb3
-         3yRnRrU1PPU6jnA9miJKgk8MF04WEsvqvwiw9acsddqjLkk4w9EcZHpO9/j//RuOPxCf
-         SIWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAoEYvPJHuGU/tgaK49Umv7pLa7zC1njnH5qQDfMckbuQFEuycZw6jKEZ2ajcD2GHOFA3ExRZRGcD8lcZqror+b/ldayLBwWg0KzCFaAOGiw==
-X-Gm-Message-State: AOJu0YzqFvVeJ6F5AwM/GD+macbIYv/vLIsf+7vc6eK97/u+2o3lFumr
-	Ki2uOVPi4GY9SBMN7gzCNbMD35uQu7L5kN+uIEr1jRHM1CMFcVtNxvJhck6JWmDtmv3ADYGlQiK
-	+zPxUY5sJbXsIZT0xourN8jH9dQJW4EH7Sl3e
-X-Google-Smtp-Source: AGHT+IHkNk+eRVsCXG1cexWzRfPbNYzRNhOHlM1lYyYp2XznI9Zqbvc/UpodHOa8Ojb+grhpOphL2W5/WWE9y6NnIyA=
-X-Received: by 2002:a5d:5188:0:b0:34b:3e51:fe38 with SMTP id
- k8-20020a5d5188000000b0034b3e51fe38mr33455wrv.23.1713891813220; Tue, 23 Apr
- 2024 10:03:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WfiCVzYk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=Rogg05ztOu4aP2/pn8CD75vsgL5H5uwqaxXujjk6r6E=; b=WfiCVzYkyj37KGe/1NcuIa1Hgk
+	I9gAfHu6MCMw7NSXSor84TLrOU+mUG0ndyfzjVt0moZbaiRHo/8L+p3QYdcySteGNhcAPGJCKkoWj
+	g/687Hepcmtf5PZKpuZ7znbxvUnMDD43qnPnbu67zfXVJS8SML5AtXvgw73tSyJkv3Nhg5awIIQnq
+	1JNMkoOZN3LoUHS53IUhOaxE7wP++2K6T0ediCLJbAhO11cNq5v9xJzhveqww2JPt0aKNdvm5A/Y5
+	rB55b5NewsYDat/UO4lQuhE8Q3txZ3JjdTGVGjV+Hgo05PhOwNnuMGRbC0LVs1cOtEcnZeCVZdr0F
+	79Ap4ebA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzKvd-000000018V6-22Td;
+	Tue, 23 Apr 2024 18:31:41 +0000
+Date: Tue, 23 Apr 2024 11:31:41 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Joel Granados <j.granados@samsung.com>,
+	Kees Cook <keescook@chromium.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <Zif-jf8Takojtq7x@bombadil.infradead.org>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <Zhn9TGOiXxcV5Epx@google.com> <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com> <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com> <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com> <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com> <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com> <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com> <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
-In-Reply-To: <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Tue, 23 Apr 2024 10:02:55 -0700
-Message-ID: <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: maobibo <maobibo@loongson.cn>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Sean Christopherson <seanjc@google.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, peterz@infradead.org, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, jmattson@google.com, 
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-> >
-> > Maybe, (just maybe), it is possible to do PMU context switch at vcpu
-> > boundary normally, but doing it at VM Enter/Exit boundary when host is
-> > profiling KVM kernel module. So, dynamically adjusting PMU context
-> > switch location could be an option.
-> If there are two VMs with pmu enabled both, however host PMU is not
-> enabled. PMU context switch should be done in vcpu thread sched-out path.
->
-> If host pmu is used also, we can choose whether PMU switch should be
-> done in vm exit path or vcpu thread sched-out path.
->
+On Tue, Apr 23, 2024 at 09:54:35AM +0200, Thomas Weiﬂschuh wrote:
+> * Patch 1 is a bugfix for the stack_erasing sysctl handler
+> * Patches 2-10 change various helper functions throughout the kernel to
+>   be able to handle 'const ctl_table'.
+> * Patch 11 changes the signatures of all proc handlers through the tree.
+>   Some other signatures are also adapted, for details see the commit
+>   message.
+> 
+> Only patch 1 changes any code at all.
+> 
+> The series was compile-tested on top of next-20230423 for
+> i386, x86_64, arm, arm64, riscv, loongarch, s390 and m68k.
+> 
+> The series was split from my larger series sysctl-const series [0].
+> It only focusses on the proc_handlers but is an important step to be
+> able to move all static definitions of ctl_table into .rodata.
+> 
+> [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
 
-host PMU is always enabled, ie., Linux currently does not support KVM
-PMU running standalone. I guess what you mean is there are no active
-perf_events on the host side. Allowing a PMU context switch drifting
-from vm-enter/exit boundary to vcpu loop boundary by checking host
-side events might be a good option. We can keep the discussion, but I
-won't propose that in v2.
+Cover letters don't need SOBS we only use them for patches.
 
-I guess we are off topic. Sean's suggestion is that we should put
-"perf" and "kvm" together while doing the context switch. I think this
-is quite reasonable regardless of the PMU context switch location.
+But anyway:
 
-To execute this, I am thinking about adding a parameter or return
-value to perf_guest_enter() so that once it returns back to KVM, KVM
-gets to know which counters are active/inactive/cleared from the host
-side. Knowing that, KVM can do the context switch more efficiently.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Thanks.
--Mingwei
+  Luis
