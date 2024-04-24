@@ -1,101 +1,147 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865D3158D79;
-	Wed, 24 Apr 2024 09:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC64158200;
+	Wed, 24 Apr 2024 10:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713951792; cv=none; b=NvJ1ax9Zz5eYZNiEFIhxv6AZp7whoq8k7iMsf9ZuQWanY+2j4cHKOl1UqlAGofemfFh/iInmv7fyCM3o42myiJD43w11z4Q7pxPZSOhdcfKjlSo3kQLgQJfZVPd7oB0UTVHDYriFj5CYTU3pVCNyDO+bxJWUnE/V5rbYkQd06NI=
+	t=1713955154; cv=none; b=s6msQ5xRQX1nce5kL4NpYxV9P/vB3BObmTkW3X/2fX1XtyAkcZXTSebM1okrcnQbKeqCum+96Q4UoHV80iAMUEMEfiJU85ZhUtFFGh2EN0m2/njszfHIiuWWcA/bD7sUymGhS9lDIzeA2cgsO7z+SQZ1h4cWlbBGMkVm8ERcmsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713951792; c=relaxed/simple;
-	bh=/65etkBmGsEVLl5U3yOh0Ou1arON2z5fXAP3GvQqTuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mn85j7rB4j2BzifVYZJYIdwGej0Oo/237B1xe3Vl/Wh8PAyS44krbup4awEx8WcQTO9lkRWh6xw851hitEqkejHdDOnCdNDZV7S+aJrFC0lMYMqbxGUNinygTRnk2sUijRoZZFaoW+Di9hDIgtNBotQ6QApaiKhucRY/TClrPug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IrxaxZu0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713955154; c=relaxed/simple;
+	bh=ic4AO+Elm5/i8oez5wDqDP2r2b8pMbypBYplKYgzygI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SZA02+AaGquAo7W7fro//kWdMLLgmTA9SrBF7O3bQoTWdu89YVNhst/AHV0j+JuSAjuYMWUv8vNNTZZexeSM4WZg2Kq/I5CA+FNEM04D/7Qi8XpbnhgnqeGgnOAzRfa/WIu0O3iIoux2n84fLsA/L7uDlx7Tbb1uR3f4kNPachA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fDDUF+at; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IrxaxZu0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=4/+2atuMXw1YbIUIXPrW9e5nnOBu2ouFfOljApBRNMk=; b=IrxaxZu0mztblG5X2rVAHfhx5L
-	HKUiLnRYlZsRor4VDhGBuxb+hHebhQ6/592Hbh9nuaauKQVN6HRRurLS8RxOir2nAKIFxUR55d5ps
-	6Th5U79HakGLbeM5AiCdJMkgMsoy37ILuTAOxPrvSZ/emPKq4wHWGe+d02A/3julAdl7Ir3muO+bn
-	8m1vQG0MHOemDUvOk8OQiUXrXYLSgwy/Im8ewxI8lYuu6b1eJVctstYfURgnfOoyG4dJZXTsVOqvv
-	9YXi+tZkqvPhbgKIV0XCHqi3GA8XyVNHfuNmC19n3LF4ga66Ilw0H4nzI9JgmEP1lLHij708zRFo+
-	v3Sd9+XA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzZ9e-00000000dnn-1Rdk;
-	Wed, 24 Apr 2024 09:43:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 06D8E30040C; Wed, 24 Apr 2024 11:43:06 +0200 (CEST)
-Date: Wed, 24 Apr 2024 11:43:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marius Fleischer <fleischermarius@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller@googlegroups.com, harrisonmichaelgreen@gmail.com
-Subject: Re: possible deadlock in __perf_event_task_sched_in
-Message-ID: <20240424094305.GT40213@noisy.programming.kicks-ass.net>
-References: <CAJg=8jw=5vKSE8ibuim0uFKQq=sA3sWULqM5auqKNJCq0=kqGg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fDDUF+at"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713955153; x=1745491153;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=ic4AO+Elm5/i8oez5wDqDP2r2b8pMbypBYplKYgzygI=;
+  b=fDDUF+atF6wpWQKweEl1Ob2WMufZAAr5X2zxIX8d70x7SvSAInyZPC0l
+   Lb8uPobnriQyrq+i130VtKkAyKq4c3BXbQlUXrcf/rB7svAv8++5KNFrA
+   UWhHwXJX8nul6mcBVLGNrxzFqAdH81KI6B1zYYhA8HiYZd8/CouKP08Jq
+   yHw+SHnDzXU/3aIrAwko9NUKl3UXq8ho19OjHzXKepZ2Inw89D17AjAx0
+   3O0fcWO9RX0dkiDLNFtJK7ZaamaGs5CJcBqcUsQpGDZTlO7hESzRCaBwD
+   9ZfaYOD8PofBvG6LoC4m+0o8XkkUpKAnrVBWVZ7cmWgYKoF38aX3AOtMU
+   A==;
+X-CSE-ConnectionGUID: b6YIO8cVSiu7FYMJFZr5Kg==
+X-CSE-MsgGUID: mXAgrAz4Tgar1lcC4y2ejA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13365908"
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="13365908"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 03:39:13 -0700
+X-CSE-ConnectionGUID: VPP0IJMPTwuF3lfMsOqIUQ==
+X-CSE-MsgGUID: aNUltn0LQlGz7s8AbV4/RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
+   d="scan'208";a="24713014"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.46.54])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 03:39:07 -0700
+Message-ID: <1cb114be-9585-4f85-af9f-4bafb2d15d2a@intel.com>
+Date: Wed, 24 Apr 2024 13:39:02 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJg=8jw=5vKSE8ibuim0uFKQq=sA3sWULqM5auqKNJCq0=kqGg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 00/12] perf/core: Add ability for an event to "pause"
+ or "resume" AUX area tracing
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240208113127.22216-1-adrian.hunter@intel.com>
+ <52f3abd2-4f75-4147-bc7b-c98960d9494b@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <52f3abd2-4f75-4147-bc7b-c98960d9494b@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 11:44:27AM -0700, Marius Fleischer wrote:
-> Hi,
+On 11/04/24 15:02, Adrian Hunter wrote:
+> On 8/02/24 13:31, Adrian Hunter wrote:
+>> Hi
+>>
+>> Hardware traces, such as instruction traces, can produce a vast amount of
+>> trace data, so being able to reduce tracing to more specific circumstances
+>> can be useful.
+>>
+>> The ability to pause or resume tracing when another event happens, can do
+>> that.
+>>
+>> These patches add such a facilty and show how it would work for Intel
+>> Processor Trace.
+>>
+>> Maintainers of other AUX area tracing implementations are requested to
+>> consider if this is something they might employ and then whether or not
+>> the ABI would work for them.  Note, thank you to James Clark (ARM) for
+>> evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
+>> positively to the RFC.
+>>
+>> Changes to perf tools are now (since V4) fleshed out.
+>>
+>>
+>> Changes in V5:
+>>
+>>     perf/core: Add aux_pause, aux_resume, aux_start_paused
+>> 	Added James' Ack
+>>
+>>     perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+>> 	New patch
+>>
+>>     perf tools
+>> 	Added Ian's Ack
+>>
+>> Changes in V4:
+>>
+>>     perf/core: Add aux_pause, aux_resume, aux_start_paused
+>> 	Rename aux_output_cfg -> aux_action
+>> 	Reorder aux_action bits from:
+>> 		aux_pause, aux_resume, aux_start_paused
+>> 	to:
+>> 		aux_start_paused, aux_pause, aux_resume
+>> 	Fix aux_action bits __u64 -> __u32
+>>
+>>     coresight: Have a stab at support for pause / resume
+>> 	Dropped
+>>
+>>     perf tools
+>> 	All new patches
+>>
+>> Changes in RFC V3:
+>>
+>>     coresight: Have a stab at support for pause / resume
+>> 	'mode' -> 'flags' so it at least compiles
+>>
+>> Changes in RFC V2:
+>>
+>> 	Use ->stop() / ->start() instead of ->pause_resume()
+>> 	Move aux_start_paused bit into aux_output_cfg
+>> 	Tighten up when Intel PT pause / resume is allowed
+>> 	Add an example of how it might work for CoreSight
 > 
-> We would like to report the following bug which has been found by our
-> modified version of syzkaller.
+> Any more comments?
 > 
-> We found this report (https://lkml.org/lkml/2021/9/12/333) that seems
-> to have a similar but different stack trace. We are unable to tell,
-> though, whether it is the same cause. We’d be grateful for your
-> advice.
 
-This is just the printk thing sucks again. Some WARN/printk got tripped
-in a non-suitable context.
+Ping
 
-
->  _printk+0xba/0xed kernel/printk/printk.c:2299
->  ex_handler_msr.cold+0xb7/0x147 arch/x86/mm/extable.c:90
->  fixup_exception+0x973/0xbb0 arch/x86/mm/extable.c:187
->  __exc_general_protection arch/x86/kernel/traps.c:601 [inline]
->  exc_general_protection+0xed/0x2f0 arch/x86/kernel/traps.c:562
->  asm_exc_general_protection+0x22/0x30 arch/x86/include/asm/idtentry.h:562
-> RIP: 0010:__wrmsr arch/x86/include/asm/msr.h:103 [inline]
-> RIP: 0010:native_write_msr arch/x86/include/asm/msr.h:154 [inline]
-> RIP: 0010:wrmsrl arch/x86/include/asm/msr.h:271 [inline]
-> RIP: 0010:__x86_pmu_enable_event
-> arch/x86/events/intel/../perf_event.h:1120 [inline]
-> RIP: 0010:intel_pmu_enable_event+0x2d9/0xff0 arch/x86/events/intel/core.c:2694
-> Code: ea 03 49 81 cc 00 00 40 00 4d 21 f4 80 3c 02 00 0f 85 5b 0c 00
-> 00 44 8b ab 70 01 00 00 4c 89 e2 44 89 e0 48 c1 ea 20 44 89 e9 <0f> 30
-> 0f 1f 44 00 00 e8 1b 32 75 00 48 83 c4 20 5b 5d 41 5c 41 5d
-> RSP: 0018:ffffc900115af348 EFLAGS: 00010002
-> RAX: 0000000000530000 RBX: ffff888019dd6a50 RCX: 0000000000000188
-> RDX: 0000000000000002 RSI: ffffffff81029464 RDI: ffff888019dd6bc0
-> RBP: 0000000000000000 R08: 0000000000000001 R09: ffff888063e22ab7
-> R10: 0000000000000000 R11: 0000000000000001 R12: 0000000200530000
-> R13: 0000000000000188 R14: ffffffffffffffff R15: ffff888019dd6bb0
->  x86_pmu_start+0x1cc/0x270 arch/x86/events/core.c:1520
->  x86_pmu_enable+0x481/0xdf0 arch/x86/events/core.c:1337
->  perf_pmu_enable kernel/events/core.c:1243 [inline]
->  perf_pmu_enable kernel/events/core.c:1239 [inline]
-
-Most likely your VM is wonky and perf tries to poke an MSR that either
-doesn't exist or isn't emulated properly, who knows.
