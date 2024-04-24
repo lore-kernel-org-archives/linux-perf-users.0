@@ -1,197 +1,164 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0654F155A50;
-	Wed, 24 Apr 2024 22:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29181E86F;
+	Wed, 24 Apr 2024 22:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713998931; cv=none; b=I5Ngc9TKV9FWh926uZo8om2OAnRW6ae3GKd/pTuwXR2/BKSj5fQbMes0Zy9p+NO/bJEVuA9AcjPXacBoYRlpZVBM7dCs0wbjVqePp4xL5mawNzFko5iBpXCmsWtYUijtBooQogPXekZkqSC810BFcksegegSiNnJ+L//1OMdXns=
+	t=1713999433; cv=none; b=eupzBi7QvzE+jXXPcg0cmkWMfr3uagnhzENi6dEG5A6IEy1vfBd14YW83pGUlGSfnnVpr/u29V4WWmhc7IftO2ch4wvAsGKrTMFlU6ZnjI03lReJzaWxxKtnAWVaBxumjVZzl3X1+u2MDPv7aLanUeEyLrWknyHCH78a2lnDeTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713998931; c=relaxed/simple;
-	bh=HWJ0tXck9M+iSd+3nJJ3wQ8Ni904YFXQtl5/s+z+x/Y=;
+	s=arc-20240116; t=1713999433; c=relaxed/simple;
+	bh=lwbYYbsXsxGhuf73dizS9HwSfF5+RHFNMCGuUOEMxTs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AvF8iut72LmTa/riMeiQh9PBCG3HCixaHNUnyv0RtGt0Kk1JQET3YqoliOC2Z4pXgaIOkiUQuLgnLiVeAVrldetob/in4iXg7+D+TxOXwnxgADNZv4Paotp+wW2nE4PfaajEr3ydibs9d+kXcQlO5nJUHAAxmvFxTj9LoUVYq2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
+	 To:Cc:Content-Type; b=nDgRka9yI7h8Wx6HkueouTISUs57bTsSc6cpGUVmKY0oM/sHhNUtr3EByeGmbTrrBOD31J9KGoc7KCIgeObEylHvNCy6tQctyL1ntXjRW1cBvJ9BBgBkILGc9xnJ/3W3gSza/iWhma2qz9oA4dDj46ENT1XWaJAaZqLQqNkJNxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2a58209b159so360466a91.3;
-        Wed, 24 Apr 2024 15:48:49 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ab88634cfaso369769a91.0;
+        Wed, 24 Apr 2024 15:57:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713998929; x=1714603729;
+        d=1e100.net; s=20230601; t=1713999431; x=1714604231;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3+owEzSFWG5pFXPMumCZ4/vmcoV9pGQrrXPME2YLu4Y=;
-        b=dVc/3Hea8tIyT0BawA5mlkKD/YvzD6VANZ/w1woMnQBOwNEgynhMNx0DOLLixjRZQ1
-         Yi8ShI7BnEWvCUYvmyxE8qpj5sTtinYLZAXLGCWk83kIw94X7xi6MNJkI5aWBoRdQj7W
-         cPyxVzU+I3XOEVyzrqgmhlzP3BE2smHoN90uuJVM/96FICVYKtG76SILVHl45kK3opLA
-         kxAqen4hPJIS4KDnMjiVqVh2lUfdjhyW8dDvY7k/U5H4FUncEgIvEfoqxK9/F5zUPgTB
-         8Fr+qtF+71kGjx47UXrWiann9P2IuS3B4j0NSfFea1DO5muXvD3rF9TsOs0XtphgGm/f
-         9+nA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuH0U+bCmoVSmBY6ThA4/QjcjrKNGHBnJ6MVUAyfwOQjaVa7hWYxtk5wozl8dluB5BDZn2wTSBm/nfJZ7aPwajqHkWzmLTZMVWk1HLsigoZVGRZyQLJFg2X9X07Sy4VhGS0xTsSmOxR6LddlmpZQ==
-X-Gm-Message-State: AOJu0YxxMJ4z2/occEpwfX/mZAmd14hLM+yjMpc6N+dmlPdvBhSPgJ7C
-	7a7CY6noHKM7dDXdi088LKsiGcQ0KfQHxedYG7c6BiYpztqjuO33LrU49wggc2usEFDrB5tUgZu
-	/Ny8N8jEhJK6b6o0YsktarxHCwn16iA==
-X-Google-Smtp-Source: AGHT+IFaBv/6c7bT0MScbt+rbE18T1j/g7V487YpBTYUJeYKtkTeGT5QDXYadnfxvQYT6EYKYSjH7qsu2rOKD+wybZA=
-X-Received: by 2002:a17:90b:3e87:b0:2ae:b8df:89e7 with SMTP id
- rj7-20020a17090b3e8700b002aeb8df89e7mr4001520pjb.38.1713998929108; Wed, 24
- Apr 2024 15:48:49 -0700 (PDT)
+        bh=uzrWXePhPUiWACNXAmGYhUpfT1p86M5As1cmuIlv4Ac=;
+        b=b/+xAZUukfW7kxchLmzBjR11XAbufj2Z7E/4GoOO8/OIFzeakoMq/Ejqyn8v2kP8IF
+         fUbyE25BLWXQLyHIgsGiWST7MsANAZduXFz6mcogCTdmjXiH/HxZ4cJSVQpJQF5Exvlc
+         kIatI2IlrCMI2qfavnf9FnglIZfWJcmDyWpvaFuhzLfKov0uEpd0poYwnrF3sV72xPKC
+         pqWTHR1rXINCgL5JyG/9zNa3DFbX/opzNOYQpldkCPlTsfJ8K+bqa/yGc1TO5ZI5FKDH
+         i/1AZpN47Tf6MbT0h10fES2VWKaknaxUABZpKesVddqVOboTrHjfTeJ0uTB/B1514ZLG
+         RFZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgve+T1/0hnymFXppxS4Yb2higu8/Ztjm8HzrrJXI17Lr+ald6r49KXKw8lnP0gg7VWmct9os0mhtFVrwarVO7UHjaqvv7CBMjvPVbl1u1XaDQxmSf+JvJj6hGK+EF9z9qjeMB/MN6kqtuclu8FLSNiXlw5Ht7ws+ceybDT4aW7lQ56Q==
+X-Gm-Message-State: AOJu0Yw3Oi0KzacMt68snhJz/M3pVSIJ/GeXsxaQvzlpGGzkmcDlMLR/
+	TC40RyOdooM8DcjeFioroc17NRjJYn7Fb1M0ndLUPy0twB23yH+X3fFuSP63s6XFu6Pg8Sv1XVj
+	C8ZLQP7FEroV1kNCLXOeedreCZj0=
+X-Google-Smtp-Source: AGHT+IFRrbis0uqy/2CD0kwIlu5gblq93SIG+YoYnvbyRD4H07Pfm1cgyimWYJUENRLrNfLYbJtYySJK9WXohedY+DM=
+X-Received: by 2002:a17:90b:316:b0:2a5:24ab:1a94 with SMTP id
+ ay22-20020a17090b031600b002a524ab1a94mr3352838pjb.49.1713999431268; Wed, 24
+ Apr 2024 15:57:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424001231.849972-1-namhyung@kernel.org> <CAP-5=fWNWiuiLOKyNHYcuT9xmJkciUBodjCX1E_TRrTMMsM4uw@mail.gmail.com>
- <ZilzYDlzj7c1mQq4@x1>
-In-Reply-To: <ZilzYDlzj7c1mQq4@x1>
+References: <20240424024805.144759-1-howardchu95@gmail.com>
+ <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
+ <Zil1ZKc7mibs6ONQ@x1> <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 24 Apr 2024 15:48:37 -0700
-Message-ID: <CAM9d7cg0bKF7+BtmkFxnHtiUZcgCWNG7eMqDccrZnM92G78vdQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add a new test for perf annotate
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Date: Wed, 24 Apr 2024 15:57:00 -0700
+Message-ID: <CAM9d7cggak7qZcX7tFZvJ69H3cwEnWvNOnBsQrkFQkQVf+bUjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Howard Chu <howardchu95@gmail.com>, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 2:02=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Apr 24, 2024 at 3:19=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Wed, Apr 24, 2024 at 11:09:48AM -0700, Ian Rogers wrote:
-> > On Tue, Apr 23, 2024 at 5:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > Add a basic perf annotate test
-> > >
-> > >   $ ./perf test annotate -vv
-> > >    76: perf annotate basic tests:
-> > >   --- start ---
-> > >   test child forked, pid 846989
-> > >    fbcd0-fbd55 l noploop
-> > >   perf does have symbol 'noploop'
-> > >   Basic perf annotate test
-> > >            : 0     0xfbcd0 <noploop>:
-> > >       0.00 :   fbcd0:       pushq   %rbp
-> > >       0.00 :   fbcd1:       movq    %rsp, %rbp
-> > >       0.00 :   fbcd4:       pushq   %r12
-> > >       0.00 :   fbcd6:       pushq   %rbx
-> > >       0.00 :   fbcd7:       movl    $1, %ebx
-> > >       0.00 :   fbcdc:       subq    $0x10, %rsp
-> > >       0.00 :   fbce0:       movq    %fs:0x28, %rax
-> > >       0.00 :   fbce9:       movq    %rax, -0x18(%rbp)
-> > >       0.00 :   fbced:       xorl    %eax, %eax
-> > >       0.00 :   fbcef:       testl   %edi, %edi
-> > >       0.00 :   fbcf1:       jle     0xfbd04
-> > >       0.00 :   fbcf3:       movq    (%rsi), %rdi
-> > >       0.00 :   fbcf6:       movl    $0xa, %edx
-> > >       0.00 :   fbcfb:       xorl    %esi, %esi
-> > >       0.00 :   fbcfd:       callq   0x41920
-> > >       0.00 :   fbd02:       movl    %eax, %ebx
-> > >       0.00 :   fbd04:       leaq    -0x7b(%rip), %r12   # fbc90 <sigh=
-andler>
-> > >       0.00 :   fbd0b:       movl    $2, %edi
-> > >       0.00 :   fbd10:       movq    %r12, %rsi
-> > >       0.00 :   fbd13:       callq   0x40a00
-> > >       0.00 :   fbd18:       movl    $0xe, %edi
-> > >       0.00 :   fbd1d:       movq    %r12, %rsi
-> > >       0.00 :   fbd20:       callq   0x40a00
-> > >       0.00 :   fbd25:       movl    %ebx, %edi
-> > >       0.00 :   fbd27:       callq   0x407c0
-> > >       0.10 :   fbd2c:       movl    0x89785e(%rip), %eax        # 993=
-590 <done>
-> > >       0.00 :   fbd32:       testl   %eax, %eax
-> > >      99.90 :   fbd34:       je      0xfbd2c
-> > >       0.00 :   fbd36:       movq    -0x18(%rbp), %rax
-> > >       0.00 :   fbd3a:       subq    %fs:0x28, %rax
-> > >       0.00 :   fbd43:       jne     0xfbd50
-> > >       0.00 :   fbd45:       addq    $0x10, %rsp
-> > >       0.00 :   fbd49:       xorl    %eax, %eax
-> > >       0.00 :   fbd4b:       popq    %rbx
-> > >       0.00 :   fbd4c:       popq    %r12
-> > >       0.00 :   fbd4e:       popq    %rbp
-> > >       0.00 :   fbd4f:       retq
-> > >       0.00 :   fbd50:       callq   0x407e0
-> > >       0.00 :   fbcd0:       pushq   %rbp
-> > >       0.00 :   fbcd1:       movq    %rsp, %rbp
-> > >       0.00 :   fbcd4:       pushq   %r12
-> > >       0.00 :   fbcd0:  push   %rbp
-> > >       0.00 :   fbcd1:  mov    %rsp,%rbp
-> > >       0.00 :   fbcd4:  push   %r12
-> > >   Basic annotate test [Success]
-> > >   ---- end(0) ----
-> > >    76: perf annotate basic tests                                     =
-  : Ok
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> On Wed, Apr 24, 2024 at 2:11=E2=80=AFPM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > Looks good, thanks for this!
+> > On Wed, Apr 24, 2024 at 12:12:26PM -0700, Namhyung Kim wrote:
+> > > Hello,
+> > >
+> > > On Tue, Apr 23, 2024 at 7:46=E2=80=AFPM Howard Chu <howardchu95@gmail=
+.com> wrote:
+> > > >
+> > > > As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D2073=
+23
+> > > >
+> > > > Currently, off-cpu samples are dumped when perf record is exiting. =
+This
+> > > > results in off-cpu samples being after the regular samples. Also, s=
+amples
+> > > > are stored in large BPF maps which contain all the stack traces and
+> > > > accumulated off-cpu time, but they are eventually going to fill up =
+after
+> > > > running for an extensive period. This patch fixes those problems by=
+ dumping
+> > > > samples directly into perf ring buffer, and dispatching those sampl=
+es to the
+> > > > correct format.
+> > >
+> > > Thanks for working on this.
+> > >
+> > > But the problem of dumping all sched-switch events is that it can be
+> > > too frequent on loaded machines.  Copying many events to the buffer
+> > > can result in losing other records.  As perf report doesn't care abou=
+t
+> > > timing much, I decided to aggregate the result in a BPF map and dump
+> > > them at the end of the profiling session.
 > >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
->
-> Thanks! Applied, with the following changes to improve the error
-> reporting, please holler if you disagree:
+> > Should we try to adapt when there are too many context switches, i.e.
+> > the BPF program can notice that the interval from the last context
+> > switch is too small and then avoid adding samples, while if the interva=
+l
+> > is a long one then indeed this is a problem where the workload is
+> > waiting for a long time for something and we want to know what is that,
+> > and in that case capturing callchains is both desirable and not costly,
+> > no?
 
-LGTM!
+Sounds interesting.  Yeah we could make it adaptive based on the
+off-cpu time at the moment.
+
+> >
+> > The tool could then at the end produce one of two outputs: the most
+> > common reasons for being off cpu, or some sort of counter stating that
+> > there are way too many context switches?
+> >
+> > And perhaps we should think about what is best to have as a default, no=
+t
+> > to present just plain old cycles, but point out that the workload is
+> > most of the time waiting for IO, etc, i.e. the default should give
+> > interesting clues instead of expecting that the tool user knows all the
+> > possible knobs and try them in all sorts of combinations to then reach
+> > some conclusion.
+> >
+> > The default should use stuff that isn't that costly, thus not getting i=
+n
+> > the way of what is being observed, but at the same time look for common
+> > patterns, etc.
+> >
+> > - Arnaldo
+>
+> I really appreciate Howard doing this work!
+>
+> I wonder there are other cases where we want to synthesize events in
+> BPF, for example, we may have fast and slow memory on a system, we
+> could turn memory events on a system into either fast or slow ones in
+> BPF based on the memory accessed, so that fast/slow memory systems can
+> be simulated without access to hardware. This also feels like a perf
+> script type problem. Perhaps we can add something to the bpf-output
+> event so it can have multiple uses and not just off-cpu.
+>
+> To turn the bpf-output samples into off-cpu events there is a pass
+> added to the saving. I wonder if that can be more generic, like a save
+> time perf inject.
+>
+> I worry about dropping short samples we can create a property that
+> off-cpu time + on-cpu time !=3D wall clock time. Perhaps such short
+> things can get pushed into Namhyung's "at the end" approach while
+> longer things get samples. Perhaps we only do that when the frequency
+> is too great.
+
+Sounds good.  We might add an option to specify the threshold to
+determine whether to dump the data or to save it for later.  But ideally
+it should be able to find a good default.
+
+>
+> It would be nice to start landing this work so I'm wondering what the
+> minimal way to do that is. It seems putting behavior behind a flag is
+> a first step.
+
+Agreed!
 
 Thanks,
 Namhyung
-
->
-> diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/=
-annotate.sh
-> index 7820d13eebaef535..1db1e8113d9943a6 100755
-> --- a/tools/perf/tests/shell/annotate.sh
-> +++ b/tools/perf/tests/shell/annotate.sh
-> @@ -36,7 +36,7 @@ test_basic() {
->    echo "Basic perf annotate test"
->    if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
->    then
-> -    echo "Basic annotate [Failed record]"
-> +    echo "Basic annotate [Failed: perf record]"
->      err=3D1
->      return
->    fi
-> @@ -44,7 +44,7 @@ test_basic() {
->    # check if it has the target symbol
->    if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${testsym}"
->    then
-> -    echo "Basic annotate [Failed missing symbol]"
-> +    echo "Basic annotate [Failed: missing target symbol]"
->      err=3D1
->      return
->    fi
-> @@ -52,7 +52,7 @@ test_basic() {
->    # check if it has the disassembly lines
->    if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${disasm_rege=
-x}"
->    then
-> -    echo "Basic annotate [Failed missing disasm output]"
-> +    echo "Basic annotate [Failed: missing disasm output from default dis=
-assembler]"
->      err=3D1
->      return
->    fi
-> @@ -61,7 +61,7 @@ test_basic() {
->    if ! perf annotate -i "${perfdata}" "${testsym}" 2> /dev/null | \
->           grep -m 3 "${disasm_regex}"
->    then
-> -    echo "Basic annotate [Failed missing disasm output]"
-> +    echo "Basic annotate [Failed: missing disasm output when specifying =
-the target symbol]"
->      err=3D1
->      return
->    fi
-> @@ -70,7 +70,7 @@ test_basic() {
->    if ! perf annotate -i "${perfdata}" --objdump=3Dobjdump 2> /dev/null |=
- \
->           grep -m 3 "${disasm_regex}"
->    then
-> -    echo "Basic annotate [Failed missing disasm output from objdump]"
-> +    echo "Basic annotate [Failed: missing disasm output from non default=
- disassembler (using --objdump)]"
->      err=3D1
->      return
->    fi
