@@ -1,71 +1,42 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583E15DBD3
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 14:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719E1E4A9;
+	Wed, 24 Apr 2024 14:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713967908; cv=none; b=XYk6wajF+mQwADpfh0m7Q3wpLYbyyuT/IuE5UPAz1gjCyZoodCEaixJ/iaiEvEUXDoGhqr1SEtcRLFAsMYYDbp1fz6HhF8d+oU3F+q3/fW9XxAhiU/R2aY1gL9oACOZt1eJPpNzo7CGZW37VRj/Lq1L4Ns0ct35iY+jgiCX0NFk=
+	t=1713968111; cv=none; b=gsQIHjhVzufm+uGjBDD5K51wzJq0rmvBYkkJIRnb80JlwlvzTFgmzTw+COI8xN65pWAFef0s+xOi3TGcK3J+T421EE8Q0eCosoxQUPkn1ciBwQMmUjrW2myYd8ja6dCnZ4x1AkJl25VOu0BDBFyjh3xP4DticdkHzjvSzjQugrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713967908; c=relaxed/simple;
-	bh=UZAx2nJq6vqzAZwmr3EzvygwU/wfz0KU8NeBr38qNQ0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPV+KQQB1UiX215URP79XPaV0iaBjqUeKVoyT+JX/jRkkW3+s3sejE2yGqBrzlZgKFtl4idumfdlvcDlNJrhoQFjO4rKw5z4P025IaOJNK/74WvB5HICcfrRP/+QN998Hev845Yu1ML2B0DFj4OyZi2BhCEb6EDDfhw762vmXTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bBmExSPt; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713968111; c=relaxed/simple;
+	bh=HNbPj5ZyYt4Q8V+TnVsYN3A1lRAyvMw2Q3ZWnqGiNcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wchkw+Bvr/EyHBYmoRL70vdappVTZddYRqoO95qTl14K0LGzW4HS8Mjkcjxe4ROA9rrR3qpBXTbaEHhyEo5f3pAdDQqwTG5LG0WHNz7bUhjdJxtrm60eDV7aKExLap1h8fEEZfv2GcDAKhjnO5bYvx45FDRmHhU+V1KKnWm9tyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTnv4CCd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBmExSPt"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f0b9f943cbso4794841b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 07:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713967907; x=1714572707; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HfiemKXJi5pMLJ2Wia9A+4BjCX44VO8MUqVuxnh0Agc=;
-        b=bBmExSPtlhrVQPmDHXnTW1HttRMnVrH1SAmRQvnmxww5hC+h7bzIlIV+oqikmuQjuu
-         IkEIETv2FgotHxNbUfzkWUa8tSLzFsVt1qwkHdD/wTw//91WdIZ2xwY1mWYy4SEOhvh6
-         cqz6TggEldyKuMc4m8o5FMOXmidXHJkyhbavdShDtp5udjF4X4NVExx86j1xho0K4hJ7
-         s81jS3XQVEb8VTM/5KmzBeiZlIdeYGMo939IBiGHSGHY1Hxl+Pml07Ph+nU1tnTNMTrl
-         KRSfUJEjs4o2pupGageuhJi5CvrduypIhesEujz+Khea+auXJlgPMOAD+eLlDmLOxHmq
-         W2zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713967907; x=1714572707;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HfiemKXJi5pMLJ2Wia9A+4BjCX44VO8MUqVuxnh0Agc=;
-        b=Pmd1vj0DSqiyPusaBf7OgMTqYnTLnLFQ6j45og686Q3fU/kEmL6oU7U8WptZKRLZPF
-         e/jmA4WWP/9uxeX519PxHsvTm9fFy5d47Rf01Apr38sgs0iSwJPuZQHaR0/W4PUNYbVM
-         T8itplJER96T9eUEZxFU94nlypNiJJrw9BHsJmtYbI6qhTexrfqm2aaKSRLLydGQFlp/
-         wWD1/sGo2kaMSzSYKZyccc27Hl5eLYCHMuURIDvOLRRuU+lzui34ZeC+w6eGFn4zyZh2
-         +dPgZKRTmeVJ4VQPs8qgqNT6l9Swh5tvJUMrZmrY502WnrWqvC+MVp9epNWi7/BF8nVR
-         1IMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyIg8lDF+zR8BQCxlQwBMj0FobzUIS9wB7brC9XPz6NK4ztpvUDU9cBj+6w08ae0Zrw3To/+0jZZW2NUADz3Oted6PC4JXtpr13u1NmUpkyw==
-X-Gm-Message-State: AOJu0Yz8WL8Rd+IMJin/otGdrUYiKZVb+EGId105d79psfcyuvjtiCo0
-	NA31LoQynduL2ymMBvnGdEQ77qf1RCit9HfH9OQrHd99yhbf9cJ0
-X-Google-Smtp-Source: AGHT+IHJqBTsTkgXThBpzfpF1ZxOx7yc0dvsL7kplUOYeaVjzM0pjuiOIITL51O96TsfF/Dn1ssn1g==
-X-Received: by 2002:a05:6a21:4988:b0:1a7:a3ba:4252 with SMTP id ax8-20020a056a21498800b001a7a3ba4252mr2452448pzc.31.1713967906724;
-        Wed, 24 Apr 2024 07:11:46 -0700 (PDT)
-Received: from localhost ([36.155.101.137])
-        by smtp.gmail.com with ESMTPSA id fr9-20020a056a00810900b006ea8cc9250bsm11473122pfb.44.2024.04.24.07.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:11:46 -0700 (PDT)
-From: chenqiwu <qiwuchen55@gmail.com>
-X-Google-Original-From: chenqiwu <qiwu.chen@transsion.com>
-Date: Wed, 24 Apr 2024 22:11:35 +0800
-To: Will Deacon <will@kernel.org>
-Cc: chenqiwu <qiwuchen55@gmail.com>, catalin.marinas@arm.com,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-	adrian.hunter@intel.com, kaleshsingh@google.com, ardb@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RESEND v3] arm64: Add USER_STACKTRACE support
-Message-ID: <20240424141135.GA3664@rlk>
-References: <20231219022229.10230-1-qiwu.chen@transsion.com>
- <20240419130921.GA3148@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTnv4CCd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D386C2BD10;
+	Wed, 24 Apr 2024 14:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713968110;
+	bh=HNbPj5ZyYt4Q8V+TnVsYN3A1lRAyvMw2Q3ZWnqGiNcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XTnv4CCdOO4TGqdhQj4q+Q3Iad43fzw7mOkjyB75VJ/H5iLASLvgHE7s0WztzW3dC
+	 vPoiqYH0I+Fg8TQvaUWk8Dwqk+zlCkHUTSqzuq+WBOeHc41EPDIL3g3lySuVhrtvS9
+	 7HlHuvQAWedLnEz80attFMbuCqSFdNoCOUDg+mQfpuMEGhiogYxYKIRt0wu2Hz+n/4
+	 sWgNDClH4dQBn1VE1AkCg8ngMgZFJT0ttNBheJ66HRpMkzy1jJKnDU4pjax0qSZ1U6
+	 fn7QPph6DnY3xV1oRkU9P5JIJ/7LfazvX3oIbssSccpBxNoB3iJYYzYkcJC5+uDXzf
+	 3hPllp/Ks6WGg==
+Date: Wed, 24 Apr 2024 11:15:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V3] perf scripts python: Add a script to run instances of
+ perf script in parallel
+Message-ID: <ZikT69GIsijZajoI@x1>
+References: <20240423133248.10206-1-adrian.hunter@intel.com>
+ <ZihFYbdrnarNFWOd@tassilo>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,67 +45,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240419130921.GA3148@willie-the-truck>
+In-Reply-To: <ZihFYbdrnarNFWOd@tassilo>
 
-On Fri, Apr 19, 2024 at 02:09:21PM +0100, Will Deacon wrote:
-> On Tue, Dec 19, 2023 at 10:22:29AM +0800, chenqiwu wrote:
-> > Currently, userstacktrace is unsupported for ftrace and uprobe
-> > tracers on arm64. This patch uses the perf_callchain_user() code
-> > as blueprint to implement the arch_stack_walk_user() which add
-> > userstacktrace support on arm64.
-> > Meanwhile, we can use arch_stack_walk_user() to simplify the
-> > implementation of perf_callchain_user().
-> > This patch is tested pass with ftrace, uprobe and perf tracers
-> > profiling userstacktrace cases.
+On Tue, Apr 23, 2024 at 04:33:53PM -0700, Andi Kleen wrote:
+> On Tue, Apr 23, 2024 at 04:32:48PM +0300, Adrian Hunter wrote:
+> > Add a Python script to run a perf script command multiple times in
+> > parallel, using perf script options --cpu and --time so that each job
+> > processes a different chunk of the data.
 > > 
-> > changes in v3:
-> >   - update perf_callchain_user() to use arch_stack_walk_user()
-> >     and delete the redundant code as Mark's suggestion in v2.
-> >   - update the commit message.
+> > Extend perf script tests to test also the new script.
 > > 
-> > Tested-by: chenqiwu <qiwu.chen@transsion.com>
-> > Signed-off-by: chenqiwu <qiwu.chen@transsion.com>
-> > ---
-> >  arch/arm64/Kconfig                 |   1 +
-> >  arch/arm64/kernel/perf_callchain.c | 118 +---------------------------
-> >  arch/arm64/kernel/stacktrace.c     | 120 +++++++++++++++++++++++++++++
-> >  3 files changed, 125 insertions(+), 114 deletions(-)
+> > The script supports the use of normal perf script options like
+> >  --dlfilter and --script, so that the benefit of running parallel jobs
+> > naturally extends to them also. In addition, a command can be provided
+> > (refer --pipe-to option) to pipe standard output to a custom command.
+> > 
+> > Refer to the script's own help text at the end of the patch for more
+> > details.
+> > 
+> > The script is useful for Intel PT traces, that can be efficiently
+> > decoded by perf script when split by CPU and/or time ranges. Running
+> > jobs in parallel can decrease the overall decoding time.
+> > 
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> This mostly looks good to me, with one potential issue:
-> 
-> > @@ -107,35 +25,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
-> >  		return;
-> >  	}
-> >  
-> > -	perf_callchain_store(entry, regs->pc);
-> > -
-> > -	if (!compat_user_mode(regs)) {
-> > -		/* AARCH64 mode */
-> > -		struct frame_tail __user *tail;
-> > -
-> > -		tail = (struct frame_tail __user *)regs->regs[29];
-> > -
-> > -		while (entry->nr < entry->max_stack &&
-> 
-> The old code is checking entry->nr against entry->max_stack here...
-> 
-> > +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> > +					const struct pt_regs *regs)
-> > +{
-> > +	if (!consume_entry(cookie, regs->pc))
-> > +		return;
-> > +
-> > +	if (!compat_user_mode(regs)) {
-> > +		/* AARCH64 mode */
-> > +		struct frame_tail __user *tail;
-> > +
-> > +		tail = (struct frame_tail __user *)regs->regs[29];
-> > +		while (tail && !((unsigned long)tail & 0x7))
-> > +			tail = unwind_user_frame(tail, cookie, consume_entry);
-> 
-> ... but it looks like you've dropped that with the rework. Why is that ok?
-> 
-It's no necessary to check entry->nr in arch_stack_walk_user(), because the caller function
-stack_trace_save_user() registers the consume_entry callback for saving user stack traces into
-a storage array, checking entry->nr against entry->max_stack is put into stack_trace_consume_entry().
-Qiwu
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+
+Thanks, applied, and added a note on testing it using:
+
+      root@number:~# perf test -vv "perf script tests"
+       97: perf script tests:
+      <SNIP>
+      Starting: perf script --cpu=27 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
+      Finished: perf script --cpu=25 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
+      Finished: perf script --cpu=26 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
+      Finished: perf script --cpu=27 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
+      There are 28 jobs: 27 completed, 1 running 
+      Finished: perf script --cpu=24 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
+      There are 28 jobs: 28 completed, 0 running 
+      All jobs finished successfully                      
+      parallel-perf.py done
+      parallel-perf test [Success]
+      --- Cleaning up ---
+      ---- end(0) ----
+       97: perf script tests                                               : Ok
+      root@number:~#
+
+- Arnaldo
