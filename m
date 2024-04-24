@@ -1,88 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740EF3D0D5;
-	Tue, 23 Apr 2024 23:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DDE3D68;
+	Wed, 24 Apr 2024 00:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713915237; cv=none; b=FZCsXevuQA4keBLcbbSWlzfN3u3L40ylP/k9iv7Xa0vc2teilYHfrTz2fbUoOkEc0jGkWNW2oPoCHrC10u6Qrs4NeVE3rPHT+/+B+10a2Fzl67dZm6eycRgufKKzjbFJkhO7JESgVhgyQrwGBftk3ZTsBQFh8arWMW/vcPdI+dU=
+	t=1713917552; cv=none; b=NunQ9t4fJmlgiiecpHwrNY+XblmqBihFXVWnGavooPzwjlAKXRjezZlvxC2y7k3yMAAENGCxtoR8yPm6uFlISzXThF/TIDrGuVAzl5SqYBzy9dTJeqcQSV9hUYRplxf6I9j8KkOVL4fl4xttAc/ujNKIZhfhr1KyprS0zkPdHYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713915237; c=relaxed/simple;
-	bh=pZMvugS9OqaVXkiu1xLb3KyRdXtqZcAifDivlF02aAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTWk70mWPRijxRXvbXYFY1r6bk/32vb622lrYR4DbyuYeFaktq1/ryrC5qi595FjBnApTuo3sLXenpuyXLQeW9JRkeBKh7DCOvkO3dEJo7UGX+JC/jlVMYreE4PHVHjoTkAskQXyqill3Tat0brMPJTo/vIQaLORCk4okJKNr3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S4MudUzQ; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713917552; c=relaxed/simple;
+	bh=eBnFOgZH6lzpyVEaHACstUFnWetL3HCIbdh7soHcVqs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LKecOAnGfEF+lsCsLdUeVMS5lp1If8313w/kb7xvecS2l3SnYzZdoXunCn8rEWCozUk7wFkG1Nu8+3pVSOvyNjWW7bKFlUf+EjZhusxpEEMB4ozv/ln5BpH8/ZfJskbB0soQT8bhuQuxxyRpJtttFfMuypVwnJ/FxqyjKFmgiHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOqzAWEf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S4MudUzQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713915236; x=1745451236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pZMvugS9OqaVXkiu1xLb3KyRdXtqZcAifDivlF02aAE=;
-  b=S4MudUzQWJXA+mwTdIBps4Y3IiQjHDwEi7fGmMiqqYQORGa8MuqLh4ke
-   UsFwOShHxEdU4ktv4D922EhuM4AbgfCy7s7vYvqNg4NJgeFM4NlkdvI9U
-   il0LgBTljlPhQ7fAJi7Yfnk2ujiy/cg46q8SH7MC92aWoHu10rdzgdvHW
-   JdYWj+cRBzmpsirZ7nEQLfkt5fXSVhCYF1TlNuBFA/Z0NBPGMFiGEzD2C
-   LrHRpBLWgcsxvAOmxAbSAzStNGAeUmORUYbho7FfBq560jsLGd68A7R7x
-   PlXH5qfVD/VOuQcUvt3cxx5/cHghii1roTq3jc3GHcR4iychiTqthz94r
-   w==;
-X-CSE-ConnectionGUID: SMK2Vb+NRPaUpsmpTT69YQ==
-X-CSE-MsgGUID: j8Kk0zKfQE+cXxBs/S/1sQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34924752"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="34924752"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 16:33:55 -0700
-X-CSE-ConnectionGUID: lKHs73H4Q0Kq18x1X5IDHg==
-X-CSE-MsgGUID: p2Q1wPQ2TkCz/Uvxypdd9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="28966876"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 16:33:54 -0700
-Date: Tue, 23 Apr 2024 16:33:53 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOqzAWEf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21B3C116B1;
+	Wed, 24 Apr 2024 00:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713917552;
+	bh=eBnFOgZH6lzpyVEaHACstUFnWetL3HCIbdh7soHcVqs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WOqzAWEfp2w8qvvi0u0BsDNcAStGeA1LOJq4Cx7g8u2v+wHrpBwih3+Wq77yBCkBi
+	 8RW9BS32oho2U7dA0FpH9iu7KWSTLtO54adc4ZPVtul0i43+yiyI/MelUy/m8CYpHn
+	 9pWQ/1TTM5fy4/HFEqizhHQBBZ4qQTe94Zw0eEoZvE5znjJ2HTkvP4hb67sbfjTBf1
+	 DYubQ8Q0a0m6tDot54QcvkM4of4cFDWRpCvWDhafQF9LbklJ8+WQhJqL1FPOKxNJHZ
+	 k9Idm6fZVxTJ20Hrz3Ycuw98HlzfctESOH1NOszaN4Qzkj93BOSVDKBDD7i7UQ7rHW
+	 VdVvC/wO+OpkQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V3] perf scripts python: Add a script to run instances of
- perf script in parallel
-Message-ID: <ZihFYbdrnarNFWOd@tassilo>
-References: <20240423133248.10206-1-adrian.hunter@intel.com>
+Subject: [PATCH] perf test: Add a new test for perf annotate
+Date: Tue, 23 Apr 2024 17:12:31 -0700
+Message-ID: <20240424001231.849972-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423133248.10206-1-adrian.hunter@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 23, 2024 at 04:32:48PM +0300, Adrian Hunter wrote:
-> Add a Python script to run a perf script command multiple times in
-> parallel, using perf script options --cpu and --time so that each job
-> processes a different chunk of the data.
-> 
-> Extend perf script tests to test also the new script.
-> 
-> The script supports the use of normal perf script options like
->  --dlfilter and --script, so that the benefit of running parallel jobs
-> naturally extends to them also. In addition, a command can be provided
-> (refer --pipe-to option) to pipe standard output to a custom command.
-> 
-> Refer to the script's own help text at the end of the patch for more
-> details.
-> 
-> The script is useful for Intel PT traces, that can be efficiently
-> decoded by perf script when split by CPU and/or time ranges. Running
-> jobs in parallel can decrease the overall decoding time.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Add a basic perf annotate test
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+  $ ./perf test annotate -vv
+   76: perf annotate basic tests:
+  --- start ---
+  test child forked, pid 846989
+   fbcd0-fbd55 l noploop
+  perf does have symbol 'noploop'
+  Basic perf annotate test
+           : 0     0xfbcd0 <noploop>:
+      0.00 :   fbcd0:       pushq   %rbp
+      0.00 :   fbcd1:       movq    %rsp, %rbp
+      0.00 :   fbcd4:       pushq   %r12
+      0.00 :   fbcd6:       pushq   %rbx
+      0.00 :   fbcd7:       movl    $1, %ebx
+      0.00 :   fbcdc:       subq    $0x10, %rsp
+      0.00 :   fbce0:       movq    %fs:0x28, %rax
+      0.00 :   fbce9:       movq    %rax, -0x18(%rbp)
+      0.00 :   fbced:       xorl    %eax, %eax
+      0.00 :   fbcef:       testl   %edi, %edi
+      0.00 :   fbcf1:       jle     0xfbd04
+      0.00 :   fbcf3:       movq    (%rsi), %rdi
+      0.00 :   fbcf6:       movl    $0xa, %edx
+      0.00 :   fbcfb:       xorl    %esi, %esi
+      0.00 :   fbcfd:       callq   0x41920
+      0.00 :   fbd02:       movl    %eax, %ebx
+      0.00 :   fbd04:       leaq    -0x7b(%rip), %r12	# fbc90 <sighandler>
+      0.00 :   fbd0b:       movl    $2, %edi
+      0.00 :   fbd10:       movq    %r12, %rsi
+      0.00 :   fbd13:       callq   0x40a00
+      0.00 :   fbd18:       movl    $0xe, %edi
+      0.00 :   fbd1d:       movq    %r12, %rsi
+      0.00 :   fbd20:       callq   0x40a00
+      0.00 :   fbd25:       movl    %ebx, %edi
+      0.00 :   fbd27:       callq   0x407c0
+      0.10 :   fbd2c:       movl    0x89785e(%rip), %eax	# 993590 <done>
+      0.00 :   fbd32:       testl   %eax, %eax
+     99.90 :   fbd34:       je      0xfbd2c
+      0.00 :   fbd36:       movq    -0x18(%rbp), %rax
+      0.00 :   fbd3a:       subq    %fs:0x28, %rax
+      0.00 :   fbd43:       jne     0xfbd50
+      0.00 :   fbd45:       addq    $0x10, %rsp
+      0.00 :   fbd49:       xorl    %eax, %eax
+      0.00 :   fbd4b:       popq    %rbx
+      0.00 :   fbd4c:       popq    %r12
+      0.00 :   fbd4e:       popq    %rbp
+      0.00 :   fbd4f:       retq
+      0.00 :   fbd50:       callq   0x407e0
+      0.00 :   fbcd0:       pushq   %rbp
+      0.00 :   fbcd1:       movq    %rsp, %rbp
+      0.00 :   fbcd4:       pushq   %r12
+      0.00 :   fbcd0:  push   %rbp
+      0.00 :   fbcd1:  mov    %rsp,%rbp
+      0.00 :   fbcd4:  push   %r12
+  Basic annotate test [Success]
+  ---- end(0) ----
+   76: perf annotate basic tests                                       : Ok
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/shell/annotate.sh | 83 ++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100755 tools/perf/tests/shell/annotate.sh
+
+diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
+new file mode 100755
+index 000000000000..7820d13eebae
+--- /dev/null
++++ b/tools/perf/tests/shell/annotate.sh
+@@ -0,0 +1,83 @@
++#!/bin/sh
++# perf annotate basic tests
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++shelldir=$(dirname "$0")
++
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
++
++testsym="noploop"
++
++skip_test_missing_symbol ${testsym}
++
++err=0
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++testprog="perf test -w noploop"
++# disassembly format: "percent : offset: instruction (operands ...)"
++disasm_regex="[0-9]*\.[0-9]* *: *\w*: *\w*"
++
++cleanup() {
++  rm -rf "${perfdata}"
++  rm -rf "${perfdata}".old
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++test_basic() {
++  echo "Basic perf annotate test"
++  if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
++  then
++    echo "Basic annotate [Failed record]"
++    err=1
++    return
++  fi
++
++  # check if it has the target symbol
++  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${testsym}"
++  then
++    echo "Basic annotate [Failed missing symbol]"
++    err=1
++    return
++  fi
++
++  # check if it has the disassembly lines
++  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${disasm_regex}"
++  then
++    echo "Basic annotate [Failed missing disasm output]"
++    err=1
++    return
++  fi
++
++  # check again with a target symbol name
++  if ! perf annotate -i "${perfdata}" "${testsym}" 2> /dev/null | \
++	  grep -m 3 "${disasm_regex}"
++  then
++    echo "Basic annotate [Failed missing disasm output]"
++    err=1
++    return
++  fi
++
++  # check one more with external objdump tool (forced by --objdump option)
++  if ! perf annotate -i "${perfdata}" --objdump=objdump 2> /dev/null | \
++	  grep -m 3 "${disasm_regex}"
++  then
++    echo "Basic annotate [Failed missing disasm output from objdump]"
++    err=1
++    return
++  fi
++  echo "Basic annotate test [Success]"
++}
++
++test_basic
++
++cleanup
++exit $err
+-- 
+2.44.0.769.g3c40516874-goog
+
