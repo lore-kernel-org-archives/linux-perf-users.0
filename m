@@ -1,183 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D22B200133;
-	Wed, 24 Apr 2024 18:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690A8179BF;
+	Wed, 24 Apr 2024 18:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713982554; cv=none; b=QmfTAV4BNG+T6lhpbhPAz2aTa1TUB6M14IUUfOaR8GJ6FwGAeHusLiQFPZj61dlBueDeUV4sX1uTwMgMeBZith4HbCJO/TEQUdiYuAYyjZE/jvSxcvL4k04q0bj3n0wx9YDVDF2MsajnnXPYCmUqIVNanJNvWSOb+2jGkVcB/n8=
+	t=1713984592; cv=none; b=KWyof0badTgyVxuBmJB5l46Pe0eg3WGyVo94Xo84hjSl1jhKrt00ZT0fX/KHlVj47VR3wl7mMo0pXKyRBAsuE6TNbAg396kkF4PDers9lr7b3Tv25qhetohgsHZEJHH6CinZIQp1QVfNylQWfT19mPuaIfab/ZO98S3SHe6u89s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713982554; c=relaxed/simple;
-	bh=cqyzuAeGvuhZYodMb9AblLQW+gSz+JxsTr7KnJrT2no=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XDX5bqqSbuhwzG6xomvNtoTSBEEBPkuwXED9tEySujT8FcG6mPzKyaK8OHw1i9y6bgnG06lUZ5GDKgfRxbnfk02KlIldFIHODB9U3XXCIkeUtSQaCLPpCqKp7ZnPveFEwcu82/FciXjD/mXGp2O9N2dh+oyjEtg6DIMZ6sSjf0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IO96u5qG; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IO96u5qG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713982552; x=1745518552;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cqyzuAeGvuhZYodMb9AblLQW+gSz+JxsTr7KnJrT2no=;
-  b=IO96u5qGEU8ou99rBylwxCR9i7qzs/zYGSLfn3Dyj4q2onrAmjSSMfcg
-   b6iunNfRjyj+SDneHrjtgcIq3jf2QxvmsFbzUMZM3d5aV0JdMudDmcmTZ
-   K/GoII+G+UUNROOcbxmKhpYmbBuoOfr/x7qOYuxAFUmsQonMcNxAS6oRR
-   TlgD899KWRNpJVhWtjfkHTYN68yD1lyDfuvnbfsIz6lUYgEs3ShA4a+F/
-   BbfvLnSYGasB0NksLfSzkLwZhzHlEiq7nvvUtn9hfmr0UuUDqclA4qwgr
-   V+Sy8tSf9rcpVUrP/tQtKA5KYuJEoESmpktzRslFtqF1ihVXVImNSciMG
-   g==;
-X-CSE-ConnectionGUID: Xpg3ir11Q6W6LT0yEyVLpg==
-X-CSE-MsgGUID: WaCnQyvATGueyvp8SYSLyQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9756064"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="9756064"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:52 -0700
-X-CSE-ConnectionGUID: t9CQo1P9SQWV6lxhtd7B2w==
-X-CSE-MsgGUID: wkqUrdg7R5uzIjUmvw3Mvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="24751198"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:52 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 69/71] perf/x86/rapl: Switch to new Intel CPU model defines
-Date: Wed, 24 Apr 2024 11:15:51 -0700
-Message-ID: <20240424181551.42485-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240424181245.41141-1-tony.luck@intel.com>
-References: <20240424181245.41141-1-tony.luck@intel.com>
+	s=arc-20240116; t=1713984592; c=relaxed/simple;
+	bh=Se3HNVOOvek+2e5idqqauLlkJtRHfOv4B49/Rn+eoU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V5i3foWig1D+kbGjgMfmSIBBaxQ1TCjOeKR8sYY6VvmnfE+BRkgco2vdRsFxuRNggywsVTsi9raxXuzJZibatjmTqIkUdaHs4CQkziBEn3xucZr7ERKCgJDUYMY4kSoFs0LyUF1GhuN3YW9raJby0nuAXSTiME1f42SGEKgaPzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ac16b59fbeso219172a91.2;
+        Wed, 24 Apr 2024 11:49:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713984591; x=1714589391;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N5QHrMtqSSrREwVmCam6Iu7SXQsyGFb2T7UApJWOjbw=;
+        b=hdXH+6eRUWqt4S9ZJUJMi/JmSGYxOzDrlimpE48aDqmTCxmWI6D1YeOP0idz69wa/t
+         2c9TW23/XFhLoSx3CDX0Q8r3pXpUaRAEhghWc0sglIpWseCWgk/USR5baiw87knNRNIX
+         wBhe/FdurgN6FhYq4O41hR10AtUBbetuQEbYB5rfN2lq0NZ0IFYhhBo1FsEzko61L7xw
+         DQwxrcXkeBWgmrMv4PXTWOV5F1Rjq5leGh7e7FlBcswwYYknYGbaf5ceIldtiewMpl/Q
+         Tz7Im/LsGUz4ONrrvu9FeckkETymj2WAs2IAyCCB3U+62qZxyBc9EOoGES3biGnbTZfv
+         VMFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyV+Nh2lP7GiRAetY6a6IWA+RNc3eZrgAzX8RkufPq0kfiLGFGSFIcSJbNBnm0iI1lEZBZxFOlWRJB1grzNDMlhPNc+bbTd9S4rSBaZtainGN0CgWc9S84tRJ1fqoFIIwmG6XlPwYGVzMH3AZqAw==
+X-Gm-Message-State: AOJu0YwO7uggvEA5aDPmusmscPvMObOjz6F3ftaUDlF4jRj+pRwzYSyC
+	Gro5O95SMZAtFzRQnrjmwq10F9D1Y7+zMrrXIdgfg3/HIPQOwCwHQwrQ0yXs9nJfvqTcFys9LbE
+	CPMoq6UjfyNH3VMeeNoOb3XzfN+c=
+X-Google-Smtp-Source: AGHT+IGUPIxzbhLum73eJDckTInNE2O3Vkpmo9myMEHjCG92+nRSZMDJmM9DCtsBpAZy6F+UUl84ZirRayifOWVh8b4=
+X-Received: by 2002:a17:90a:4585:b0:2ad:e004:76e6 with SMTP id
+ v5-20020a17090a458500b002ade00476e6mr2986780pjg.7.1713984590588; Wed, 24 Apr
+ 2024 11:49:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240329191224.1046866-1-weilin.wang@intel.com>
+ <20240329191224.1046866-3-weilin.wang@intel.com> <CAM9d7cjBfTM2bjkrvN5XWcXJ=OyBOU06fBN=+eWnDSdP2dkD4A@mail.gmail.com>
+ <CO6PR11MB56351C2AB4BE15C5371E29C2EE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjORNS9h7v6p2fg8OXsZMpeBODzTSCQNZ5zAea-baFKNQ@mail.gmail.com>
+ <CO6PR11MB5635C7D8C91FEDA17EC4BCDEEE112@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7chSCQViX=VjgqdVn5un0J5MpGsGDGncUyY-K4=oPvvfQA@mail.gmail.com> <CO6PR11MB56359754A01778EA3EA53981EE102@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB56359754A01778EA3EA53981EE102@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 24 Apr 2024 11:49:38 -0700
+Message-ID: <CAM9d7cj2Zmd_FMBzf=H6K6jRmYLYuR6mpcyhC0_neTvur0=pyw@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-New CPU #defines encode vendor and family as well as model.
+On Wed, Apr 24, 2024 at 10:08=E2=80=AFAM Wang, Weilin <weilin.wang@intel.co=
+m> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Tuesday, April 23, 2024 4:06 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record =
+when
+> > perf stat needs to get retire latency value for a metric.
+> >
+> > On Tue, Apr 23, 2024 at 3:16=E2=80=AFPM Wang, Weilin <weilin.wang@intel=
+.com>
+> > wrote:
+> > > > > > > -static int __run_perf_record(void)
+> > > > > > > +static int __run_perf_record(const char **record_argv)
+> > > > > > >  {
+> > > > > > > +       int i =3D 0;
+> > > > > > > +       struct tpebs_event *e;
+> > > > > > > +
+> > > > > > >         pr_debug("Prepare perf record for retire_latency\n");
+> > > > > > > +
+> > > > > > > +       record_argv[i++] =3D "perf";
+> > > > > > > +       record_argv[i++] =3D "record";
+> > > > > > > +       record_argv[i++] =3D "-W";
+> > > > > > > +       record_argv[i++] =3D "--synth=3Dno";
+> > > > > > > +
+> > > > > > > +       if (stat_config.user_requested_cpu_list) {
+> > > > > > > +               record_argv[i++] =3D "-C";
+> > > > > > > +               record_argv[i++] =3D stat_config.user_request=
+ed_cpu_list;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       if (stat_config.system_wide)
+> > > > > > > +               record_argv[i++] =3D "-a";
+> > > > > > > +
+> > > > > > > +       if (!stat_config.system_wide
+> > > > && !stat_config.user_requested_cpu_list)
+> > > > > > {
+> > > > > > > +               pr_err("Require -a or -C option to run sampli=
+ng.\n");
+> > > > > > > +               return -ECANCELED;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       list_for_each_entry(e, &stat_config.tpebs_events, nd)=
+ {
+> > > > > > > +               record_argv[i++] =3D "-e";
+> > > > > > > +               record_argv[i++] =3D e->name;
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       record_argv[i++] =3D "-o";
+> > > > > > > +       record_argv[i++] =3D PERF_DATA;
+> > > > > > > +
+> > > > > > >         return 0;
+> > > > > > >  }
+> > > > > >
+> > > > > > Still I think it's weird it has 'perf record' in perf stat (des=
+pite the
+> > > > > > 'perf stat record').  If it's only Intel thing and we don't hav=
+e a plan
+> > > > > > to do the same on other arches, we can move it to the arch
+> > > > > > directory and keep the perf stat code simple.
+> > > > >
+> > > > > I'm not sure what is the proper way to solve this. And Ian mentio=
+ned
+> > > > > that put code in arch directory could potentially cause other bug=
+s.
+> > > > > So I'm wondering if we could keep this code here for now. I could=
+ work
+> > > > > on it later if we found it's better to be in arch directory.
+> > > >
+> > > > Maybe somewhere in the util/ and keep the main code minimal.
+> > > > IIUC it's only for very recent (or upcoming?) Intel CPUs and we
+> > > > don't have tests (hopefully can run on other arch/CPUs).
+> > > >
+> > > > So I don't think having it here would help fixing potential bugs.
+> > >
+> > > Do you mean by creating a new file in util/ to hold this code?
+> >
+> > Yeah, maybe util/intel-tpebs.c (if it's better than arch/x86/...) ?
+> >
+> > >
+> > > Yes, this feature is for very recent Intel CPUs. It should only be tr=
+iggered if
+> > > a metric uses event(s) that has the R modifier in the formula.
+> >
+> > Can we have a test with a fake metric so that we can test
+> > the code on non-(or old-)Intel machines?
+>
+> All the existing metrics in non-(or old-)Intel CPUs should work as usual.=
+ So I think
+> existing metric tests should work for it.
+>
+> If we want to add a fake metric uses the :R modifier for those platforms,=
+ the metric
+> should either fail (if the fake metric uses an event not exist on the tes=
+t platform) or
+> return all 0 retire latency data.
+>
+> So, I'm not quite sure what we want the fake metric to test for. Maybe we=
+ could
+> continue using existing metric tests to ensure all the defined metrics wo=
+rk correctly
+> in each machine under test?
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/events/rapl.c | 84 +++++++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 42 deletions(-)
+I think it's ok to return all 0 retire latency for fake tPEBS metrics.
+It's just to verify the background record + report logic works ok.
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index fb2b1961e5a3..45b62ef451aa 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -766,48 +766,48 @@ static struct rapl_model model_amd_hygon = {
- };
- 
- static const struct x86_cpu_id rapl_model_match[] __initconst = {
--	X86_MATCH_FEATURE(X86_FEATURE_RAPL,		&model_amd_hygon),
--	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&model_snb),
--	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&model_snbep),
--	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&model_snb),
--	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&model_snbep),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&model_knl),
--	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&model_knl),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&model_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&model_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,	&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&model_spr),
--	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&model_spr),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&model_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&model_skl),
-+	X86_MATCH_FEATURE(X86_FEATURE_RAPL,	&model_amd_hygon),
-+	X86_MATCH_VFM(INTEL_SANDYBRIDGE,	&model_snb),
-+	X86_MATCH_VFM(INTEL_SANDYBRIDGE_X,	&model_snbep),
-+	X86_MATCH_VFM(INTEL_IVYBRIDGE,		&model_snb),
-+	X86_MATCH_VFM(INTEL_IVYBRIDGE_X,	&model_snbep),
-+	X86_MATCH_VFM(INTEL_HASWELL,		&model_hsw),
-+	X86_MATCH_VFM(INTEL_HASWELL_X,		&model_hsx),
-+	X86_MATCH_VFM(INTEL_HASWELL_L,		&model_hsw),
-+	X86_MATCH_VFM(INTEL_HASWELL_G,		&model_hsw),
-+	X86_MATCH_VFM(INTEL_BROADWELL,		&model_hsw),
-+	X86_MATCH_VFM(INTEL_BROADWELL_G,	&model_hsw),
-+	X86_MATCH_VFM(INTEL_BROADWELL_X,	&model_hsx),
-+	X86_MATCH_VFM(INTEL_BROADWELL_D,	&model_hsx),
-+	X86_MATCH_VFM(INTEL_XEON_PHI_KNL,	&model_knl),
-+	X86_MATCH_VFM(INTEL_XEON_PHI_KNM,	&model_knl),
-+	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&model_skl),
-+	X86_MATCH_VFM(INTEL_SKYLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_SKYLAKE_X,		&model_hsx),
-+	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&model_skl),
-+	X86_MATCH_VFM(INTEL_KABYLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	&model_skl),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&model_hsw),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&model_hsw),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&model_hsw),
-+	X86_MATCH_VFM(INTEL_ICELAKE_L,		&model_skl),
-+	X86_MATCH_VFM(INTEL_ICELAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_ICELAKE_D,		&model_hsx),
-+	X86_MATCH_VFM(INTEL_ICELAKE_X,		&model_hsx),
-+	X86_MATCH_VFM(INTEL_COMETLAKE_L,	&model_skl),
-+	X86_MATCH_VFM(INTEL_COMETLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	&model_skl),
-+	X86_MATCH_VFM(INTEL_TIGERLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	&model_skl),
-+	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&model_skl),
-+	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&model_spr),
-+	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&model_spr),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&model_skl),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&model_skl),
-+	X86_MATCH_VFM(INTEL_METEORLAKE,		&model_skl),
-+	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&model_skl),
- 	{},
- };
- MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
--- 
-2.44.0
-
+Thanks,
+Namhyung
