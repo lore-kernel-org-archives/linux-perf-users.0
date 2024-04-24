@@ -1,94 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719E1E4A9;
-	Wed, 24 Apr 2024 14:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D407915ECE0;
+	Wed, 24 Apr 2024 14:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713968111; cv=none; b=gsQIHjhVzufm+uGjBDD5K51wzJq0rmvBYkkJIRnb80JlwlvzTFgmzTw+COI8xN65pWAFef0s+xOi3TGcK3J+T421EE8Q0eCosoxQUPkn1ciBwQMmUjrW2myYd8ja6dCnZ4x1AkJl25VOu0BDBFyjh3xP4DticdkHzjvSzjQugrE=
+	t=1713968533; cv=none; b=Ai9jQA35XlUwEFFWk5dBjgbavkMSxfsoa22InZkT7aV9c/VzivmUtkUv4W8XlpKmeJnFBxssTyGkSZ+jPD6KVAEglMGg8b+YT1ZpUjpIJTpKPy3XAcozR7WYxVD7AgeAONUeGSqtuxNjkIaF/rjlPb+cpwYmvaPLsEaYMStfTwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713968111; c=relaxed/simple;
-	bh=HNbPj5ZyYt4Q8V+TnVsYN3A1lRAyvMw2Q3ZWnqGiNcs=;
+	s=arc-20240116; t=1713968533; c=relaxed/simple;
+	bh=QZRJE5hVa7buLPtBvGZMtfK+GD2VOPSMNFvav2I9TOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wchkw+Bvr/EyHBYmoRL70vdappVTZddYRqoO95qTl14K0LGzW4HS8Mjkcjxe4ROA9rrR3qpBXTbaEHhyEo5f3pAdDQqwTG5LG0WHNz7bUhjdJxtrm60eDV7aKExLap1h8fEEZfv2GcDAKhjnO5bYvx45FDRmHhU+V1KKnWm9tyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTnv4CCd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjYz098R5lYuI1Fy05bP0DRgz2PtbY3VMg9UAwG7TjFeoTg0bE/AMmmVnC2VUf+XvyA5owDtLb6R1QyfNi/vytYVdUbc3OZlCaM00oyBsdxNgxhxt9S+zNgU68rHQTm7eE3T44UcRR51I3xqisXUu6RD4LIfwLMNHK8THMyRO90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8iHUpHq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTnv4CCd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D386C2BD10;
-	Wed, 24 Apr 2024 14:15:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8iHUpHq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E00C4AF0B;
+	Wed, 24 Apr 2024 14:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713968110;
-	bh=HNbPj5ZyYt4Q8V+TnVsYN3A1lRAyvMw2Q3ZWnqGiNcs=;
+	s=k20201202; t=1713968533;
+	bh=QZRJE5hVa7buLPtBvGZMtfK+GD2VOPSMNFvav2I9TOs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XTnv4CCdOO4TGqdhQj4q+Q3Iad43fzw7mOkjyB75VJ/H5iLASLvgHE7s0WztzW3dC
-	 vPoiqYH0I+Fg8TQvaUWk8Dwqk+zlCkHUTSqzuq+WBOeHc41EPDIL3g3lySuVhrtvS9
-	 7HlHuvQAWedLnEz80attFMbuCqSFdNoCOUDg+mQfpuMEGhiogYxYKIRt0wu2Hz+n/4
-	 sWgNDClH4dQBn1VE1AkCg8ngMgZFJT0ttNBheJ66HRpMkzy1jJKnDU4pjax0qSZ1U6
-	 fn7QPph6DnY3xV1oRkU9P5JIJ/7LfazvX3oIbssSccpBxNoB3iJYYzYkcJC5+uDXzf
-	 3hPllp/Ks6WGg==
-Date: Wed, 24 Apr 2024 11:15:07 -0300
+	b=e8iHUpHqJll+OXgjNeScGK2pnnmcVF2uMpeqF0Hamhjs47+NuXBy9cmyL2XOSvrX9
+	 tjqeLFQ9SmeOjKwfvSo9bxqWAWe2tVThu1e8aG4G2LafzLf4IddmsSn02V3tzczZAg
+	 4ycF0U9YFmWfpyJGInXlowcrsZWiLkS7Tknt3a5rm6vbm90geGr0xs8j8S3nqhhLDB
+	 rhAR/AHAcBSZWnU980ttdlnnWuFrkRaUzPUxzu5+WJdjpVZ9fwYTwC0UtZwIbFWZpk
+	 xeG9LEzSuggd6h4vZThEHmZqX92EEmOGayeO41WBPPrBA9a68VH8wZk753TWHf+buR
+	 r7b0QA4WUqm2A==
+Date: Wed, 24 Apr 2024 11:22:09 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V3] perf scripts python: Add a script to run instances of
- perf script in parallel
-Message-ID: <ZikT69GIsijZajoI@x1>
-References: <20240423133248.10206-1-adrian.hunter@intel.com>
- <ZihFYbdrnarNFWOd@tassilo>
+To: Ian Rogers <irogers@google.com>
+Cc: Veronika Molnarova <vmolnaro@redhat.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf tests shell kprobes: Add missing description as
+ used by 'perf test' output
+Message-ID: <ZikVkavNI221xroG@x1>
+References: <ZigRDKUGkcDqD-yW@x1>
+ <CAP-5=fV0sX2V5+yjTymzDFXakxZxFxKvokCOqobOFgZHn6eVsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZihFYbdrnarNFWOd@tassilo>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV0sX2V5+yjTymzDFXakxZxFxKvokCOqobOFgZHn6eVsw@mail.gmail.com>
 
-On Tue, Apr 23, 2024 at 04:33:53PM -0700, Andi Kleen wrote:
-> On Tue, Apr 23, 2024 at 04:32:48PM +0300, Adrian Hunter wrote:
-> > Add a Python script to run a perf script command multiple times in
-> > parallel, using perf script options --cpu and --time so that each job
-> > processes a different chunk of the data.
-> > 
-> > Extend perf script tests to test also the new script.
-> > 
-> > The script supports the use of normal perf script options like
-> >  --dlfilter and --script, so that the benefit of running parallel jobs
-> > naturally extends to them also. In addition, a command can be provided
-> > (refer --pipe-to option) to pipe standard output to a custom command.
-> > 
-> > Refer to the script's own help text at the end of the patch for more
-> > details.
-> > 
-> > The script is useful for Intel PT traces, that can be efficiently
-> > decoded by perf script when split by CPU and/or time ranges. Running
-> > jobs in parallel can decrease the overall decoding time.
-> > 
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+On Tue, Apr 23, 2024 at 02:48:00PM -0700, Ian Rogers wrote:
+> On Tue, Apr 23, 2024 at 12:50 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Before:
+> >
+> >   root@x1:~# perf test 76
+> >    76: SPDX-License-Identifier: GPL-2.0                                : Ok
+> >   root@x1:~#
+> >
+> > After:
+> >
+> >   root@x1:~# perf test 76
+> >    76: Add 'perf probe's, list and remove them.                        : Ok
+> >   root@x1:~#
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kajol Jain <kjain@linux.ibm.com>
+> > Cc: Michael Petlan <mpetlan@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Veronika Molnarova <vmolnaro@redhat.com>
+> > Link: https://lore.kernel.org/lkml/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied, and added a note on testing it using:
-
-      root@number:~# perf test -vv "perf script tests"
-       97: perf script tests:
-      <SNIP>
-      Starting: perf script --cpu=27 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
-      Finished: perf script --cpu=25 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
-      Finished: perf script --cpu=26 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
-      Finished: perf script --cpu=27 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
-      There are 28 jobs: 27 completed, 1 running 
-      Finished: perf script --cpu=24 -i /tmp/perf-test-script.T4MJDr0L6J/pp-perf.data
-      There are 28 jobs: 28 completed, 0 running 
-      All jobs finished successfully                      
-      parallel-perf.py done
-      parallel-perf test [Success]
-      --- Cleaning up ---
-      ---- end(0) ----
-       97: perf script tests                                               : Ok
-      root@number:~#
+Thanks, added to the cset.
 
 - Arnaldo
