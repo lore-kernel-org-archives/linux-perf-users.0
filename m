@@ -1,246 +1,243 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C71F15F406
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 18:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B01D179956;
+	Wed, 24 Apr 2024 18:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713982207; cv=none; b=VkSCNFy1hq/JB573Vd0mHHZh3trWdofKao/XrCAiyh92eFDQvN5Fn60U/lV6zKNZMEeP+9guXTRH/GPPv2ZoVgfrmA3vIxB7RUvz1bhtwalOJKTpfd6i1HWKnoOUUwnPxr2WyHjAXq/mDlycyKVy37xF8NYiWQsbFjf6OrDfTec=
+	t=1713982514; cv=none; b=X8cXwPQ718/T9YQMWlzhrL7o4Cs7JBD81ZulkrGUGyKzUchFO2iDz8rD8QQjop4aS3/t9QjcnjlbF4UG5XrHhimvc+A3rTXM3UQqrgdW2Bf5rc78SuC529ypGuUbSVGiCrXghHS/EWV2IXAzqbvKVAOQAn9aDWx8is+3hIsWovo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713982207; c=relaxed/simple;
-	bh=jW/Q55tFYbDjApVjeRiSYiCAMWJJXza1aMX93bHT510=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nnClXEcxmdkyNkSEdJTnWeerUXNtt82qgnDWFwVcN0/UpkxlcGLQfdXbIaZTHxkFyzkSiHT+a9ah2IqHgDkToHTyzPZ/ceoMvYVVzbxgYXzFuh45bwcIu9+iJp2uoi6T59RGT/8xCDYN3JQ6kkjpM5nz+LNwB01YVkqjuxIMBLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QW+Bi4CO; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713982514; c=relaxed/simple;
+	bh=t7s0Jb1VMCyYA/ZHcEyg4TQxW5ylNCaGqSLvy2930us=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bitogcSmCdBVDZgLOgNkGoyzdcDaKFNnwYabCZDXyax88vDEjSTbiit994Z9MjzwP1nrFo2x9wMk/XE+hm0qsT449bxr+e/lVli0RwepXUkiTqR4MQl1cY5wApWiGiPPUAwg524WA4Fo4moDqGOLN36Dt+Kb42wAp3sa4MCHmE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JK/Rq0F9; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QW+Bi4CO"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-434ffc2b520so17761cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 11:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713982203; x=1714587003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L0p7tew2agWpR4bqy2GNP4coWXMPXtcWBzHy2OtkeHU=;
-        b=QW+Bi4COtIuCXgUr7kZfIbEl0vXLBMhdIEEAmPplYqi0qOwCPfGKmDbOaag2M0YYEH
-         9TF/RpYP4mdani2KGWMD0LUuHwTEfoxQRSneoXgIwnE9e7LfTvxeSMutEEAzdw2g5nGC
-         Xv26mMqd5TtkyRGnJ/Q3cr0vuEQ/zVJEeV/TasgrOV193xIJ66aiGehjf4uOUy/uMuL/
-         uLKCKUqkdR0CibqQKXJ1LvWzz7sF3yLRf+e6JRlKHsCDp8cteW+0Hs6+8vXDvT5AwkDV
-         rrk77kL9LNj4Uf76SbGKUmRDHN9yL+0mvlsKWuf6PsDxA0Ysb29MOaDDYPqBfyPFYDQT
-         gK2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713982203; x=1714587003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L0p7tew2agWpR4bqy2GNP4coWXMPXtcWBzHy2OtkeHU=;
-        b=gAUQypG6w8BfEn5FxKfaMToQaEycVVN3ijzBvDtAgiKvIRDkLJEExY7g+yrgWnwyy8
-         VhS+8DrIcEe3u3KzOn5wWvzSYksMo50CwcDie4Zm1urJcSjUvQKkEZLho2VJVDCCjBAF
-         wT9ZUmC55A/DVzFJt20490YRQnExB4Td8cg8f8ds9tUoI0EBuC6R8OLaFznCOD+Q6VgM
-         qfWHdEa5AQwE+e/id/O7P75oZ2j6lCijCcVj86LirK66W/vYcDJoBeyPgnz0K/UcQJHR
-         M4ZxzxvRseFHnRGeitVek+FNVarBWD4xiaKj2/f1kJ99wLiIFZD0gOZn+Rb6e3aSMXlu
-         GlMw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1nmIwk0TVy5xNUgF9EdXR6gCz4s7i21GOYczkNlk0VZynRRIABA2H1jnqhUEpwSdtxabAXDcE5uXsLiy4a46N/Fw5Y5uaSm7D/L5dYFXdiA==
-X-Gm-Message-State: AOJu0Yw57nQSyOpGXbvbzhrh1hu7vtuzfK2RKPpIzdSaCr/YggpfciEN
-	B9KpUKeP3Q54olaOqzX9vNR6HVNFH0fjhHL/aBf6OU953ArDxHj8FjbxS36u0pUulFGZ0P0jpcU
-	Io2UfPFbZOtUrTtjnub2RMVSd7IDZzifvVgQL
-X-Google-Smtp-Source: AGHT+IEf1xK91w8EzNnQxjP/YvLQLVL0MX8bH38rlLCAsYIwB/Wz6ve1x9vMseOWLCGw26FrjLwHxWb/DuvT4Zwzs8U=
-X-Received: by 2002:ac8:134a:0:b0:437:8ba1:ee1 with SMTP id
- f10-20020ac8134a000000b004378ba10ee1mr9969qtj.5.1713982203329; Wed, 24 Apr
- 2024 11:10:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JK/Rq0F9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713982512; x=1745518512;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=t7s0Jb1VMCyYA/ZHcEyg4TQxW5ylNCaGqSLvy2930us=;
+  b=JK/Rq0F9kKq8v30AAzU4Am/tYmTPtM4x4KxfzmUS9mu4m1k7Sq4zFiba
+   jZZSTzDTT3OvMpf1EeytNnNK4cIWrb532VrPIekzVJOE6MceNKpr+Pv8J
+   wzPTrkp13vrrQGt+2Y7/nRm/8OO0P4xR1HxttpRg22+fwTzFWTmB2cg1+
+   bbgCiuG00zK4BDA94T6nNL4Br64b8V3e0nlDI0AOhPsOSkwZ5OAmhnZ0S
+   z9kRJhc29P44MhJ8tHt9kNqSqkK3MVmhhQEHm/1usZVoZ2ex7veHlCcJX
+   BUoy0Lc5rplTCQEaUWyc20glIq+paQwr/23VG/piVd8Mn6EkCcr6zmdVt
+   g==;
+X-CSE-ConnectionGUID: InGsnx7gTWyYE27DfF3I6g==
+X-CSE-MsgGUID: s1sOUNKARoewEzYcdMKOAQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9481853"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="9481853"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:14:59 -0700
+X-CSE-ConnectionGUID: 1eZXXoFyRTCzx5kHR1rL8g==
+X-CSE-MsgGUID: 0OuRsVzYS6Sr3lnf1mAjqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="29262635"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:14:59 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v4 18/71] perf/x86/intel/cstate: Switch to new Intel CPU model defines
+Date: Wed, 24 Apr 2024 11:14:59 -0700
+Message-ID: <20240424181459.41500-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240424181245.41141-1-tony.luck@intel.com>
+References: <20240424181245.41141-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424001231.849972-1-namhyung@kernel.org>
-In-Reply-To: <20240424001231.849972-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Apr 2024 11:09:48 -0700
-Message-ID: <CAP-5=fWNWiuiLOKyNHYcuT9xmJkciUBodjCX1E_TRrTMMsM4uw@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add a new test for perf annotate
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 23, 2024 at 5:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Add a basic perf annotate test
->
->   $ ./perf test annotate -vv
->    76: perf annotate basic tests:
->   --- start ---
->   test child forked, pid 846989
->    fbcd0-fbd55 l noploop
->   perf does have symbol 'noploop'
->   Basic perf annotate test
->            : 0     0xfbcd0 <noploop>:
->       0.00 :   fbcd0:       pushq   %rbp
->       0.00 :   fbcd1:       movq    %rsp, %rbp
->       0.00 :   fbcd4:       pushq   %r12
->       0.00 :   fbcd6:       pushq   %rbx
->       0.00 :   fbcd7:       movl    $1, %ebx
->       0.00 :   fbcdc:       subq    $0x10, %rsp
->       0.00 :   fbce0:       movq    %fs:0x28, %rax
->       0.00 :   fbce9:       movq    %rax, -0x18(%rbp)
->       0.00 :   fbced:       xorl    %eax, %eax
->       0.00 :   fbcef:       testl   %edi, %edi
->       0.00 :   fbcf1:       jle     0xfbd04
->       0.00 :   fbcf3:       movq    (%rsi), %rdi
->       0.00 :   fbcf6:       movl    $0xa, %edx
->       0.00 :   fbcfb:       xorl    %esi, %esi
->       0.00 :   fbcfd:       callq   0x41920
->       0.00 :   fbd02:       movl    %eax, %ebx
->       0.00 :   fbd04:       leaq    -0x7b(%rip), %r12   # fbc90 <sighandl=
-er>
->       0.00 :   fbd0b:       movl    $2, %edi
->       0.00 :   fbd10:       movq    %r12, %rsi
->       0.00 :   fbd13:       callq   0x40a00
->       0.00 :   fbd18:       movl    $0xe, %edi
->       0.00 :   fbd1d:       movq    %r12, %rsi
->       0.00 :   fbd20:       callq   0x40a00
->       0.00 :   fbd25:       movl    %ebx, %edi
->       0.00 :   fbd27:       callq   0x407c0
->       0.10 :   fbd2c:       movl    0x89785e(%rip), %eax        # 993590 =
-<done>
->       0.00 :   fbd32:       testl   %eax, %eax
->      99.90 :   fbd34:       je      0xfbd2c
->       0.00 :   fbd36:       movq    -0x18(%rbp), %rax
->       0.00 :   fbd3a:       subq    %fs:0x28, %rax
->       0.00 :   fbd43:       jne     0xfbd50
->       0.00 :   fbd45:       addq    $0x10, %rsp
->       0.00 :   fbd49:       xorl    %eax, %eax
->       0.00 :   fbd4b:       popq    %rbx
->       0.00 :   fbd4c:       popq    %r12
->       0.00 :   fbd4e:       popq    %rbp
->       0.00 :   fbd4f:       retq
->       0.00 :   fbd50:       callq   0x407e0
->       0.00 :   fbcd0:       pushq   %rbp
->       0.00 :   fbcd1:       movq    %rsp, %rbp
->       0.00 :   fbcd4:       pushq   %r12
->       0.00 :   fbcd0:  push   %rbp
->       0.00 :   fbcd1:  mov    %rsp,%rbp
->       0.00 :   fbcd4:  push   %r12
->   Basic annotate test [Success]
->   ---- end(0) ----
->    76: perf annotate basic tests                                       : =
-Ok
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+New CPU #defines encode vendor and family as well as model.
 
-Looks good, thanks for this!
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/events/intel/cstate.c | 144 ++++++++++++++++-----------------
+ 1 file changed, 72 insertions(+), 72 deletions(-)
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 326c8cd5aa2d..54eb142810fb 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -696,78 +696,78 @@ static const struct cstate_model srf_cstates __initconst = {
+ 
+ 
+ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+-	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM,		&nhm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EP,		&nhm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EX,		&nhm_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE,		&nhm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EP,		&nhm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EX,		&nhm_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&snb_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&snb_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&snb_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&hswult_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&slm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_D,	&slm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&slm_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&snb_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&snb_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&snb_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&hswult_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&hswult_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&hswult_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&hswult_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&cnl_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&knl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&knl_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&glm_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,	&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	&srf_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT,	&grr_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&icx_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&icx_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&icx_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&icx_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	&icx_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_D,	&icx_cstates),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&icl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&icl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&icl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&adl_cstates),
+-	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&adl_cstates),
++	X86_MATCH_VFM(INTEL_NEHALEM,		&nhm_cstates),
++	X86_MATCH_VFM(INTEL_NEHALEM_EP,		&nhm_cstates),
++	X86_MATCH_VFM(INTEL_NEHALEM_EX,		&nhm_cstates),
++
++	X86_MATCH_VFM(INTEL_WESTMERE,		&nhm_cstates),
++	X86_MATCH_VFM(INTEL_WESTMERE_EP,	&nhm_cstates),
++	X86_MATCH_VFM(INTEL_WESTMERE_EX,	&nhm_cstates),
++
++	X86_MATCH_VFM(INTEL_SANDYBRIDGE,	&snb_cstates),
++	X86_MATCH_VFM(INTEL_SANDYBRIDGE_X,	&snb_cstates),
++
++	X86_MATCH_VFM(INTEL_IVYBRIDGE,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_IVYBRIDGE_X,	&snb_cstates),
++
++	X86_MATCH_VFM(INTEL_HASWELL,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_HASWELL_X,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_HASWELL_G,		&snb_cstates),
++
++	X86_MATCH_VFM(INTEL_HASWELL_L,		&hswult_cstates),
++
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&slm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_D,	&slm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&slm_cstates),
++
++	X86_MATCH_VFM(INTEL_BROADWELL,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_BROADWELL_D,	&snb_cstates),
++	X86_MATCH_VFM(INTEL_BROADWELL_G,	&snb_cstates),
++	X86_MATCH_VFM(INTEL_BROADWELL_X,	&snb_cstates),
++
++	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_SKYLAKE,		&snb_cstates),
++	X86_MATCH_VFM(INTEL_SKYLAKE_X,		&snb_cstates),
++
++	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&hswult_cstates),
++	X86_MATCH_VFM(INTEL_KABYLAKE,		&hswult_cstates),
++	X86_MATCH_VFM(INTEL_COMETLAKE_L,	&hswult_cstates),
++	X86_MATCH_VFM(INTEL_COMETLAKE,		&hswult_cstates),
++
++	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	&cnl_cstates),
++
++	X86_MATCH_VFM(INTEL_XEON_PHI_KNL,	&knl_cstates),
++	X86_MATCH_VFM(INTEL_XEON_PHI_KNM,	&knl_cstates),
++
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT_D,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT_L,	&glm_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&adl_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	&srf_cstates),
++	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	&grr_cstates),
++
++	X86_MATCH_VFM(INTEL_ICELAKE_L,		&icl_cstates),
++	X86_MATCH_VFM(INTEL_ICELAKE,		&icl_cstates),
++	X86_MATCH_VFM(INTEL_ICELAKE_X,		&icx_cstates),
++	X86_MATCH_VFM(INTEL_ICELAKE_D,		&icx_cstates),
++	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&icx_cstates),
++	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&icx_cstates),
++	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	&icx_cstates),
++	X86_MATCH_VFM(INTEL_GRANITERAPIDS_D,	&icx_cstates),
++
++	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	&icl_cstates),
++	X86_MATCH_VFM(INTEL_TIGERLAKE,		&icl_cstates),
++	X86_MATCH_VFM(INTEL_ROCKETLAKE,		&icl_cstates),
++	X86_MATCH_VFM(INTEL_ALDERLAKE,		&adl_cstates),
++	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	&adl_cstates),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&adl_cstates),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&adl_cstates),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_cstates),
++	X86_MATCH_VFM(INTEL_METEORLAKE,		&adl_cstates),
++	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&adl_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+-- 
+2.44.0
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/tests/shell/annotate.sh | 83 ++++++++++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100755 tools/perf/tests/shell/annotate.sh
->
-> diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/=
-annotate.sh
-> new file mode 100755
-> index 000000000000..7820d13eebae
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/annotate.sh
-> @@ -0,0 +1,83 @@
-> +#!/bin/sh
-> +# perf annotate basic tests
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +shelldir=3D$(dirname "$0")
-> +
-> +# shellcheck source=3Dlib/perf_has_symbol.sh
-> +. "${shelldir}"/lib/perf_has_symbol.sh
-> +
-> +testsym=3D"noploop"
-> +
-> +skip_test_missing_symbol ${testsym}
-> +
-> +err=3D0
-> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +testprog=3D"perf test -w noploop"
-> +# disassembly format: "percent : offset: instruction (operands ...)"
-> +disasm_regex=3D"[0-9]*\.[0-9]* *: *\w*: *\w*"
-> +
-> +cleanup() {
-> +  rm -rf "${perfdata}"
-> +  rm -rf "${perfdata}".old
-> +
-> +  trap - EXIT TERM INT
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +test_basic() {
-> +  echo "Basic perf annotate test"
-> +  if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
-> +  then
-> +    echo "Basic annotate [Failed record]"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  # check if it has the target symbol
-> +  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${testsym}"
-> +  then
-> +    echo "Basic annotate [Failed missing symbol]"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  # check if it has the disassembly lines
-> +  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${disasm_rege=
-x}"
-> +  then
-> +    echo "Basic annotate [Failed missing disasm output]"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  # check again with a target symbol name
-> +  if ! perf annotate -i "${perfdata}" "${testsym}" 2> /dev/null | \
-> +         grep -m 3 "${disasm_regex}"
-> +  then
-> +    echo "Basic annotate [Failed missing disasm output]"
-> +    err=3D1
-> +    return
-> +  fi
-> +
-> +  # check one more with external objdump tool (forced by --objdump optio=
-n)
-> +  if ! perf annotate -i "${perfdata}" --objdump=3Dobjdump 2> /dev/null |=
- \
-> +         grep -m 3 "${disasm_regex}"
-> +  then
-> +    echo "Basic annotate [Failed missing disasm output from objdump]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  echo "Basic annotate test [Success]"
-> +}
-> +
-> +test_basic
-> +
-> +cleanup
-> +exit $err
-> --
-> 2.44.0.769.g3c40516874-goog
->
