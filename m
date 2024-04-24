@@ -1,125 +1,197 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D572F4405;
-	Wed, 24 Apr 2024 01:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EB6F9F7;
+	Wed, 24 Apr 2024 02:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713920831; cv=none; b=Lmu2eDHs7veRuUbqD0ag+kTR33XgaupjYXpa6W1ca0Xz47G/ffk+aSTui3fqxFcqMANWcJAysQ2zgB+faQYVUrgjc2Yt2OyaAoDgYXvgOrYWZqgaVuTGM7eoLHx6BZEVRMxAP4rqdhU3bng5Mefb+Bg+Zlw0FhhyfCSTA43+9WM=
+	t=1713926616; cv=none; b=rx2PbGUi/0GebdLWGFvGB6aA53RQTu8huPLwwRMgygRi3EsnfqzGGbui8QJeMPkiwqUGyWGwBB6e4qII3TN6DYUcgrmdfYDmW/Wj+91cGHI8gdUFm1QtIKttNHd0Rs2wpFbdltMOJSDWYQ+/Xy+V7h4Sb243d6VyxseyXuYua0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713920831; c=relaxed/simple;
-	bh=XfXXMQt8Cl+rmsVBbFAJBYBZoxRvVkARuTYt10dpAPI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=BKZqkqPnEwNGujFqBy9uk4qJfFKioEQTbDGkz4f3sA5LfDyIuqOAerpzpCR1pP0qtkjfgV3G+Erlrd31ryI3imUZTihucyi42xvJhWNYyqftJBGISn0EXbnsifqgXoYysofoskWt9g2AsuKnnESy+tN4BsXUnPLGdLVO3kSIQNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxmPA4Wyhm37EBAA--.9705S3;
-	Wed, 24 Apr 2024 09:07:04 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxjd41Wyhm_tkCAA--.12211S3;
-	Wed, 24 Apr 2024 09:07:04 +0800 (CST)
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com>
- <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
- <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
- <Zh1mKoHJcj22rKy8@google.com>
- <CAL715WJf6RdM3DQt995y4skw8LzTMk36Q2hDE34n3tVkkdtMMw@mail.gmail.com>
- <Zh2uFkfH8BA23lm0@google.com>
- <4d60384a-11e0-2f2b-a568-517b40c91b25@loongson.cn>
- <ZiaX3H3YfrVh50cs@google.com>
- <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
- <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
- <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
- <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <cd8a4fbb-a8a6-785d-f6e4-cc0f811fef84@loongson.cn>
-Date: Wed, 24 Apr 2024 09:07:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1713926616; c=relaxed/simple;
+	bh=X07JE13bwYp9ndIC30NnRn8SItpbd3Zk1lPQS3RHTrg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cx2CmZB1/FYsKXUotVjkOhYzdaXPozZiAQLMv7LZaHuzEmaR3kOgCMyOd5My7+zGJJMJAuTBe887JP+00EkY3J1kzxcyIvzXbEG3vmRSPmfJ6a6jOalfo0kmtEZqCCpYJFlVL+SaQYCudKY29jH2L07sPvF8C72wgYEHC3iEcRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VPNW10pKXzXl9Q;
+	Wed, 24 Apr 2024 10:39:57 +0800 (CST)
+Received: from kwepemd500012.china.huawei.com (unknown [7.221.188.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id 107ED1403D1;
+	Wed, 24 Apr 2024 10:43:26 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd500012.china.huawei.com (7.221.188.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 24 Apr 2024 10:43:25 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.028;
+ Wed, 24 Apr 2024 10:43:25 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] perf trace beauty: Always show param if show_zero
+ is set
+Thread-Topic: [PATCH v2 1/2] perf trace beauty: Always show param if show_zero
+ is set
+Thread-Index: AQHalSEPbci0v0XBjkWgl90QLSVND7F1y8oAgADsOoA=
+Date: Wed, 24 Apr 2024 02:43:25 +0000
+Message-ID: <1b548158ce844e239dbc1e42ceeb8d0a@huawei.com>
+References: <20240423015330.2206892-1-changbin.du@huawei.com>
+ <20240423015330.2206892-2-changbin.du@huawei.com> <ZigcEg1inS1JoSr5@x1>
+In-Reply-To: <ZigcEg1inS1JoSr5@x1>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.028)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B55AE6CB1F354F45A08874B57F72AE86@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxjd41Wyhm_tkCAA--.12211S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF4xZw1UAw18Jr15AF4rCrX_yoW8XFyxpF
-	WjqFyrur4kAa1UAw4I9a1rXFWYkrWxJw43WasruFWUGws8Wr9agF18KFyYkFy3ursxt340
-	qF4DtayxAa45XacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8qXdUUUUU
-	U==
+
+On Tue, Apr 23, 2024 at 05:37:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Apr 23, 2024 at 09:53:29AM +0800, Changbin Du wrote:
+> > For some parameters, it is best to also display them when they are 0,
+> > e.g. flags.
+>=20
+> Please provide examples of what you're changing, to understand your
+> change one has to know what are strarrays and what they handle in 'perf
+> trace', i.e. if the value is zero but the argument has a string array
+> associated, it probably will translate zero into some string.
+>=20
+How about only check the show_zero property? The field itself knows exactly=
+ what it
+wants.
+
+			if (val =3D=3D 0 &&
+			    !trace->show_zeros &&
+			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
+				continue;
+
+> So I did:
+>=20
+> root@x1:~# perf trace -e syscalls:sys_enter_mmap --filter prot=3D=3D0
+>      0.000 gnome-shell/2293 syscalls:sys_enter_mmap(addr: 0x10afec7e1000,=
+ len: 65536, flags: PRIVATE|FIXED|ANONYMOUS)
+> ^Croot@x1:~#
+>=20
+> And this is _before_ this patch, after this patch we get:
+>=20
+>=20
+> root@x1:~# perf trace -e syscalls:sys_enter_mmap --filter prot=3D=3D0
+>      0.000 Isolated Web C/25530 syscalls:sys_enter_mmap(addr: 0x7f27df529=
+000, len: 4096, flags: PRIVATE|FIXED|ANONYMOUS)
+>     40.267 DOM Worker/1105511 syscalls:sys_enter_mmap(addr: 0x1c9faec4800=
+0, len: 65536, flags: PRIVATE|FIXED|ANONYMOUS)
+>    270.145 firefox/3447 syscalls:sys_enter_mmap(addr: 0x7fa0ed343000, len=
+: 4096, flags: PRIVATE|FIXED|ANONYMOUS)
+>   2194.686 firefox/3447 syscalls:sys_enter_mmap(addr: 0x7fa0ed39f000, len=
+: 4096, flags: PRIVATE|FIXED|ANONYMOUS)
+>   2461.709 Isolated Web C/21794 syscalls:sys_enter_mmap(addr: 0x7fdc3e100=
+000, len: 1048576, flags: PRIVATE|FIXED|ANONYMOUS)
+>   4476.053 firefox/3447 syscalls:sys_enter_mmap(addr: 0x7fa0ed3a1000, len=
+: 4096, flags: PRIVATE|FIXED|ANONYMOUS)
+> ^Croot@x1:~#
+>=20
+It doesn't seem to be effective on your perf. Here is my example.
+
+Before: PROT_NONE is not shown.
+$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot=3D=3D0  -- ls
+     0.000 ls/2979231 syscalls:sys_enter_mmap(len: 4220888, flags: PRIVATE|=
+ANONYMOUS)
+
+After: PROT_NONE is displayed.
+$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot=3D=3D0  -- ls
+     0.000 ls/2975708 syscalls:sys_enter_mmap(len: 4220888, prot: NONE, fla=
+gs: PRIVATE|ANONYMOUS)
 
 
+> Because 'mmap's 'prot' is not set directly as an strarray, see:
+>=20
+>         { .name     =3D "mmap",       .hexret =3D true,
+> /* The standard mmap maps to old_mmap on s390x */
+> #if defined(__s390x__)
+>         .alias =3D "old_mmap",
+> #endif
+>           .arg =3D { [2] =3D { .scnprintf =3D SCA_MMAP_PROT,  /* prot */ =
+},
+>                    [3] =3D { .scnprintf =3D SCA_MMAP_FLAGS, /* flags */
+>                            .strtoul   =3D STUL_STRARRAY_FLAGS,
+>                            .parm      =3D &strarray__mmap_flags, },
+>                    [5] =3D { .scnprintf =3D SCA_HEX,        /* offset */ =
+}, }, },
+>=20
+> static size_t syscall_arg__scnprintf_mmap_prot(char *bf, size_t size, str=
+uct syscall_arg *arg)
+> {
+>         unsigned long prot =3D arg->val;
+>=20
+>         if (prot =3D=3D 0)
+>                 return scnprintf(bf, size, "%sNONE", arg->show_string_pre=
+fix ? strarray__mmap_prot.prefix : "");
+>=20
+>         return mmap__scnprintf_prot(prot, bf, size, arg->show_string_pref=
+ix);
+> }
+>=20
+> #define SCA_MMAP_PROT syscall_arg__scnprintf_mmap_prot
+>=20
+> So can you please provide an example that shows before/after your patch?
+>=20
+> - Arnaldo
+> =20
+> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> > ---
+> >  tools/perf/builtin-trace.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index e5fef39c34bf..a8407eee58a3 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2099,9 +2099,9 @@ static size_t syscall__scnprintf_args(struct sysc=
+all *sc, char *bf, size_t size,
+> >  			    !trace->show_zeros &&
+> >  			    !(sc->arg_fmt &&
+> >  			      (sc->arg_fmt[arg.idx].show_zero ||
+> > -			       sc->arg_fmt[arg.idx].scnprintf =3D=3D SCA_STRARRAY ||
+> > -			       sc->arg_fmt[arg.idx].scnprintf =3D=3D SCA_STRARRAYS) &&
+> > -			      sc->arg_fmt[arg.idx].parm))
+> > +			        ((sc->arg_fmt[arg.idx].scnprintf =3D=3D SCA_STRARRAY ||
+> > +			          sc->arg_fmt[arg.idx].scnprintf =3D=3D SCA_STRARRAYS) &&
+> > +			         sc->arg_fmt[arg.idx].parm))))
+> >  				continue;
+> > =20
+> >  			printed +=3D scnprintf(bf + printed, size - printed, "%s", printed =
+? ", " : "");
+> > @@ -2803,8 +2803,8 @@ static size_t trace__fprintf_tp_fields(struct tra=
+ce *trace, struct evsel *evsel,
+> >  		 */
+> >  		if (val =3D=3D 0 &&
+> >  		    !trace->show_zeros &&
+> > -		    !((arg->show_zero ||
+> > -		       arg->scnprintf =3D=3D SCA_STRARRAY ||
+> > +		    !arg->show_zero &&
+> > +		    !((arg->scnprintf =3D=3D SCA_STRARRAY ||
+> >  		       arg->scnprintf =3D=3D SCA_STRARRAYS) &&
+> >  		      arg->parm))
+> >  			continue;
+> > --=20
+> > 2.34.1
 
-On 2024/4/24 上午1:02, Mingwei Zhang wrote:
->>>
->>> Maybe, (just maybe), it is possible to do PMU context switch at vcpu
->>> boundary normally, but doing it at VM Enter/Exit boundary when host is
->>> profiling KVM kernel module. So, dynamically adjusting PMU context
->>> switch location could be an option.
->> If there are two VMs with pmu enabled both, however host PMU is not
->> enabled. PMU context switch should be done in vcpu thread sched-out path.
->>
->> If host pmu is used also, we can choose whether PMU switch should be
->> done in vm exit path or vcpu thread sched-out path.
->>
-> 
-> host PMU is always enabled, ie., Linux currently does not support KVM
-> PMU running standalone. I guess what you mean is there are no active
-> perf_events on the host side. Allowing a PMU context switch drifting
-> from vm-enter/exit boundary to vcpu loop boundary by checking host
-> side events might be a good option. We can keep the discussion, but I
-> won't propose that in v2.
-> 
-> I guess we are off topic. Sean's suggestion is that we should put
-> "perf" and "kvm" together while doing the context switch. I think this
-> is quite reasonable regardless of the PMU context switch location.
-> 
-> To execute this, I am thinking about adding a parameter or return
-> value to perf_guest_enter() so that once it returns back to KVM, KVM
-> gets to know which counters are active/inactive/cleared from the host
-> side. Knowing that, KVM can do the context switch more efficiently.
-yeap, that sounds great.
-
-Regards
-Bibo Mao
-
-> 
-> Thanks.
-> -Mingwei
-> 
-
+--=20
+Cheers,
+Changbin Du
