@@ -1,87 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D407915ECE0;
-	Wed, 24 Apr 2024 14:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4E715EFAD
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 15:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713968533; cv=none; b=Ai9jQA35XlUwEFFWk5dBjgbavkMSxfsoa22InZkT7aV9c/VzivmUtkUv4W8XlpKmeJnFBxssTyGkSZ+jPD6KVAEglMGg8b+YT1ZpUjpIJTpKPy3XAcozR7WYxVD7AgeAONUeGSqtuxNjkIaF/rjlPb+cpwYmvaPLsEaYMStfTwc=
+	t=1713970827; cv=none; b=eN04iAQIY85O2oDYRla7h+E19ady1Kc4ddH/q8DBMIFMpT/j06UZsF4AEFUFnzTRCmZangE/8YJckZzwh8xdysM0BpNqs3d5LNdAHBDREt8vAEomGgduUYimNv+wTGAUSReyKbDVC0Wtxi6iOGWsRSQpQfxiNsx5WNDZ+SvKuKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713968533; c=relaxed/simple;
-	bh=QZRJE5hVa7buLPtBvGZMtfK+GD2VOPSMNFvav2I9TOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bjYz098R5lYuI1Fy05bP0DRgz2PtbY3VMg9UAwG7TjFeoTg0bE/AMmmVnC2VUf+XvyA5owDtLb6R1QyfNi/vytYVdUbc3OZlCaM00oyBsdxNgxhxt9S+zNgU68rHQTm7eE3T44UcRR51I3xqisXUu6RD4LIfwLMNHK8THMyRO90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8iHUpHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713970827; c=relaxed/simple;
+	bh=m2kvDOjAcs0/fOGssqgm6z3aXoukHOTqP1RoSeztxz4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=B6qFqAXP7usaE3fsrq5U8DWixcThxX5U0bAIghzBkFi2zKq6ObvZc519NdX7LOzz9xhHRT2U3MuwOCIjwxtePd+yCoxE/hr37H2JOC+wNYPCWaRNo6C1d94jRoMP3qAjgShCuUM1AnmDbA5bR4wYE7GOaU9zN9rGN5GeqeyLgow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q64toCyl; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8iHUpHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E00C4AF0B;
-	Wed, 24 Apr 2024 14:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713968533;
-	bh=QZRJE5hVa7buLPtBvGZMtfK+GD2VOPSMNFvav2I9TOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e8iHUpHqJll+OXgjNeScGK2pnnmcVF2uMpeqF0Hamhjs47+NuXBy9cmyL2XOSvrX9
-	 tjqeLFQ9SmeOjKwfvSo9bxqWAWe2tVThu1e8aG4G2LafzLf4IddmsSn02V3tzczZAg
-	 4ycF0U9YFmWfpyJGInXlowcrsZWiLkS7Tknt3a5rm6vbm90geGr0xs8j8S3nqhhLDB
-	 rhAR/AHAcBSZWnU980ttdlnnWuFrkRaUzPUxzu5+WJdjpVZ9fwYTwC0UtZwIbFWZpk
-	 xeG9LEzSuggd6h4vZThEHmZqX92EEmOGayeO41WBPPrBA9a68VH8wZk753TWHf+buR
-	 r7b0QA4WUqm2A==
-Date: Wed, 24 Apr 2024 11:22:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Veronika Molnarova <vmolnaro@redhat.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf tests shell kprobes: Add missing description as
- used by 'perf test' output
-Message-ID: <ZikVkavNI221xroG@x1>
-References: <ZigRDKUGkcDqD-yW@x1>
- <CAP-5=fV0sX2V5+yjTymzDFXakxZxFxKvokCOqobOFgZHn6eVsw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q64toCyl"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so9888115276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 08:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713970825; x=1714575625; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iTow4IhQ+Q7ezsDpFxCw9QP7cHw66mii0qlTGERXHWI=;
+        b=q64toCyl3FC9eb9bdPgLikX+Tg+qejWAbhRj/hveXefzZhVP161I/nwDjJUk0BoR5Q
+         EjKiIr/GERKHwP2SqmpJbmzAsBwbyUI5bJhE66Bwrz42FYHViH8fBNjtRt/9TTo9eP3b
+         0aXnV4Ed87SttaL0ihb4IngpJE4PsSHQEp0Hn9Uyz5vWdP70pGi29sqkxvCJkGkOLjh3
+         EDiZvv/z8s1ccpQS9iMvlfoZonilL130jm8Qs+jRRnLWjdP998/M2+O5zSyONEFISBob
+         vP6sjh0hMY4Ihg1lSb01sVaLIV09s3ulOEYyXkXvshWNUTKTff1V7Un/FXYwO+kZYD/G
+         SCUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713970825; x=1714575625;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iTow4IhQ+Q7ezsDpFxCw9QP7cHw66mii0qlTGERXHWI=;
+        b=DHInL1k5gfYzDYYB+A/YNyJq4tXvJxly/ddLtMzZ5iwD8M8qxX7RGrr34WhZhehuC5
+         ZaWmSxO6369dQIxn3gJI9pZqRWZeVyj15WJcZRFf08uVOcyVOL0wy5ePfz39lvYSTYf2
+         mimUSyItIvab2xT9R8IrMeV9Zu7/TlEUtVg8umqDxuDf5FCC24TX0lbaWO9MqJwnUPe1
+         /2qoQLsVS1swNPY90amQMVMKVURb7d6m2bRRU3qffcY/GGOfKkMGEKl2oX/sukaeSHfe
+         N43lNq4vvJkJ2rKDvxO+66ivf0XWc9qymSCPVz15JLegbNLO3fZt6bqA+blrTnNRsXIG
+         buog==
+X-Forwarded-Encrypted: i=1; AJvYcCXInTenM/yFZVkhdr5ZJkDkFbxd1LNvtoovVRzreN/At4prVYng5l+GHX2JLNQjHaSJFthRyUNPaWfaFE7o3KjsCUSaDL6/7lxtF4NFwHV4Xw==
+X-Gm-Message-State: AOJu0YwERrdjrziEzMcDx/1Ka3r75GDZULGtMSlwXsw4OEKscM/Z13q7
+	hexLFNnziz/rifTx8cdJDriHdcO/oFPD4Vn8OyhSXg9pvD02nIyyXJEkMd4yXyXoKarokQax6hh
+	NvA==
+X-Google-Smtp-Source: AGHT+IFFD+SYfagl/TClvPMU0JQ850YCyw4YR2sbV6rmuRkaHu0K9DZ/AAPWyBohe3gIvA3eeokv75tdbZA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:ce12:0:b0:de5:1ea2:fc75 with SMTP id
+ x18-20020a25ce12000000b00de51ea2fc75mr219027ybe.7.1713970824986; Wed, 24 Apr
+ 2024 08:00:24 -0700 (PDT)
+Date: Wed, 24 Apr 2024 08:00:23 -0700
+In-Reply-To: <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV0sX2V5+yjTymzDFXakxZxFxKvokCOqobOFgZHn6eVsw@mail.gmail.com>
+Mime-Version: 1.0
+References: <ZiaX3H3YfrVh50cs@google.com> <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+ <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com> <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
+ <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com> <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
+ <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
+ <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn> <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
+ <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
+Message-ID: <Zikeh2eGjwzDbytu@google.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, maobibo <maobibo@loongson.cn>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, peterz@infradead.org, 
+	kan.liang@intel.com, zhenyuw@linux.intel.com, jmattson@google.com, 
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 23, 2024 at 02:48:00PM -0700, Ian Rogers wrote:
-> On Tue, Apr 23, 2024 at 12:50 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Before:
-> >
-> >   root@x1:~# perf test 76
-> >    76: SPDX-License-Identifier: GPL-2.0                                : Ok
-> >   root@x1:~#
-> >
-> > After:
-> >
-> >   root@x1:~# perf test 76
-> >    76: Add 'perf probe's, list and remove them.                        : Ok
-> >   root@x1:~#
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kajol Jain <kjain@linux.ibm.com>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Veronika Molnarova <vmolnaro@redhat.com>
-> > Link: https://lore.kernel.org/lkml/
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, Apr 24, 2024, Dapeng Mi wrote:
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> On 4/24/2024 1:02 AM, Mingwei Zhang wrote:
+> > > > Maybe, (just maybe), it is possible to do PMU context switch at vcpu
+> > > > boundary normally, but doing it at VM Enter/Exit boundary when host is
+> > > > profiling KVM kernel module. So, dynamically adjusting PMU context
+> > > > switch location could be an option.
+> > > If there are two VMs with pmu enabled both, however host PMU is not
+> > > enabled. PMU context switch should be done in vcpu thread sched-out path.
+> > > 
+> > > If host pmu is used also, we can choose whether PMU switch should be
+> > > done in vm exit path or vcpu thread sched-out path.
+> > > 
+> > host PMU is always enabled, ie., Linux currently does not support KVM
+> > PMU running standalone. I guess what you mean is there are no active
+> > perf_events on the host side. Allowing a PMU context switch drifting
+> > from vm-enter/exit boundary to vcpu loop boundary by checking host
+> > side events might be a good option. We can keep the discussion, but I
+> > won't propose that in v2.
+> 
+> I suspect if it's really doable to do this deferring. This still makes host
+> lose the most of capability to profile KVM. Per my understanding, most of
+> KVM overhead happens in the vcpu loop, exactly speaking in VM-exit handling.
+> We have no idea when host want to create perf event to profile KVM, it could
+> be at any time.
 
-Thanks, added to the cset.
+No, the idea is that KVM will load host PMU state asap, but only when host PMU
+state actually needs to be loaded, i.e. only when there are relevant host events.
 
-- Arnaldo
+If there are no host perf events, KVM keeps guest PMU state loaded for the entire
+KVM_RUN loop, i.e. provides optimal behavior for the guest.  But if a host perf
+events exists (or comes along), the KVM context switches PMU at VM-Enter/VM-Exit,
+i.e. lets the host profile almost all of KVM, at the cost of a degraded experience
+for the guest while host perf events are active.
+
+My original sketch: https://lore.kernel.org/all/ZR3eNtP5IVAHeFNC@google.com
