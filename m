@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830BA13B5A6;
-	Wed, 24 Apr 2024 21:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6229A156976;
+	Wed, 24 Apr 2024 21:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713992548; cv=none; b=JqFTQuP0sYFTJr4O659LsIDu90kE20S0/W+v4/xC6lupjm7TA6mNoquZVfj5VPV1bt1q8gNCVZpKYTJTLWwXqZFyq2PeEN6rVdApHd4H8a/1dsfV0Kr8jzxhrT+oJeAeJJ0fBAfaTpEasY44buiYyBLVi3KvsExdelxccvMmYro=
+	t=1713993065; cv=none; b=C1Vng6WLRaH02dHhiJ24dTyISstrgiddEkUv9/z1w9z6vJTFZWqHGurXEg9zTgpEbPq+drXWh9E412yjVx4A8lJBpa92MlW8asZ9g3cqx5eUVVWIqnLmtJI/rH1xOiAdGCt3c9O+9XLp4GrWT0/NiaANa8hIsXqOnME0O989ikg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713992548; c=relaxed/simple;
-	bh=duRefqYdkr7ZabzNDP6pQLWEXT6nQnCVmhZIfFwdaCA=;
+	s=arc-20240116; t=1713993065; c=relaxed/simple;
+	bh=ldOqrw1Va6ZZc6+oC/tGUjywY9xlTQi7kLbwUwTWTIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8+S74H6im4rVPXOVUWxUXyx039WT7VzFPy9oPKqXPUvQAHK/KExHyBtEiXTOI1U+8wWdKUkRfCMhQXeqcSXT9OV9TYpL6u/CfXucjddnqcQJ7w53joTOVTq2w7gpDCnbVwL2t2Z3w4oifF4V8v3qMIAkg6WpY8nnWtvD8PR67g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVBkV7CL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hp3qOH/UjtCc/Hw0dHF/GC0m4P4vUPphtC1nesZQdRi4b4+2Ug6KfjDeRFgBaijPOtJrprn1x6Y6LW0G+ZnpvL3ifCxdq+bXaN+Y0sAK/rsDi7TQFwn+xUBaEduFAYIHXPuYW70tA1MDk2WFl5edLvUnohyWaXQVblNtvHnIF34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MX2CG3+M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVBkV7CL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F1DC113CD;
-	Wed, 24 Apr 2024 21:02:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MX2CG3+M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94628C113CD;
+	Wed, 24 Apr 2024 21:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713992548;
-	bh=duRefqYdkr7ZabzNDP6pQLWEXT6nQnCVmhZIfFwdaCA=;
+	s=k20201202; t=1713993065;
+	bh=ldOqrw1Va6ZZc6+oC/tGUjywY9xlTQi7kLbwUwTWTIU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kVBkV7CLQZFxa6NTE7tHVgs/ThkR2bEBT8zgQdx/9q79ujwszX8DFByoU5WnzcM1t
-	 XB5EHK70Of8Uvz8boggvdQfqfpMfTUWZk+98IOvQEysCTFQuKDHPxWTLDkwK02fhc4
-	 9qNUEmAO2PJ9BSXQ4zsDkkhbIfqKvUEt0e3BgCCTOC21XxvaYvv9nq4o8AMVMUn4sc
-	 8bHpTdCDLige26I3fuVHoAMMX6EDeORgfN7Uiy5WugEbNZLFGYXN7mQHwkAc65r4eu
-	 dfJYKOI2bzjDlRfGJfNQr98TMXykLr55OlE4+xxManWqrfpapK5k3FupBwPZO0EyVv
-	 IuasSMlYLZinw==
-Date: Wed, 24 Apr 2024 18:02:24 -0300
+	b=MX2CG3+M9P46wClZ/HGk/NKz5AyOqXA3CcMaw1TH/5brWuCfOE/d9rixsae7LL1Bf
+	 8oftCnCahKocCRV1CksaTZ3m0ePphDD6N6V9bhCwgd3J4jC+HY/Ylzhp0GbNEIbXOV
+	 KpCJalbzPZsAbB4wVH6nKUKRgs1RuihqrwO0PZmgXkUmfXqFbCpfEATqMowRWLiWm6
+	 xaW0panam9mqQyu3TYcFbwSJ95g8tfwOwBmU3p1ZzB/uQV0C03H3b7/oKKgwHYnr4S
+	 FwI/6TGphwm+lSR708KqnwOWxfvj/3IgrVWvCtkP8/eLWkXbXEDloEb9ylz/ZRSbK+
+	 ftwwPBGs0IWDw==
+Date: Wed, 24 Apr 2024 18:11:00 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Add a new test for perf annotate
-Message-ID: <ZilzYDlzj7c1mQq4@x1>
-References: <20240424001231.849972-1-namhyung@kernel.org>
- <CAP-5=fWNWiuiLOKyNHYcuT9xmJkciUBodjCX1E_TRrTMMsM4uw@mail.gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, zegao2021@gmail.com, leo.yan@linux.dev,
+	ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
+Message-ID: <Zil1ZKc7mibs6ONQ@x1>
+References: <20240424024805.144759-1-howardchu95@gmail.com>
+ <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,124 +49,132 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWNWiuiLOKyNHYcuT9xmJkciUBodjCX1E_TRrTMMsM4uw@mail.gmail.com>
+In-Reply-To: <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
 
-On Wed, Apr 24, 2024 at 11:09:48AM -0700, Ian Rogers wrote:
-> On Tue, Apr 23, 2024 at 5:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Add a basic perf annotate test
-> >
-> >   $ ./perf test annotate -vv
-> >    76: perf annotate basic tests:
-> >   --- start ---
-> >   test child forked, pid 846989
-> >    fbcd0-fbd55 l noploop
-> >   perf does have symbol 'noploop'
-> >   Basic perf annotate test
-> >            : 0     0xfbcd0 <noploop>:
-> >       0.00 :   fbcd0:       pushq   %rbp
-> >       0.00 :   fbcd1:       movq    %rsp, %rbp
-> >       0.00 :   fbcd4:       pushq   %r12
-> >       0.00 :   fbcd6:       pushq   %rbx
-> >       0.00 :   fbcd7:       movl    $1, %ebx
-> >       0.00 :   fbcdc:       subq    $0x10, %rsp
-> >       0.00 :   fbce0:       movq    %fs:0x28, %rax
-> >       0.00 :   fbce9:       movq    %rax, -0x18(%rbp)
-> >       0.00 :   fbced:       xorl    %eax, %eax
-> >       0.00 :   fbcef:       testl   %edi, %edi
-> >       0.00 :   fbcf1:       jle     0xfbd04
-> >       0.00 :   fbcf3:       movq    (%rsi), %rdi
-> >       0.00 :   fbcf6:       movl    $0xa, %edx
-> >       0.00 :   fbcfb:       xorl    %esi, %esi
-> >       0.00 :   fbcfd:       callq   0x41920
-> >       0.00 :   fbd02:       movl    %eax, %ebx
-> >       0.00 :   fbd04:       leaq    -0x7b(%rip), %r12   # fbc90 <sighandler>
-> >       0.00 :   fbd0b:       movl    $2, %edi
-> >       0.00 :   fbd10:       movq    %r12, %rsi
-> >       0.00 :   fbd13:       callq   0x40a00
-> >       0.00 :   fbd18:       movl    $0xe, %edi
-> >       0.00 :   fbd1d:       movq    %r12, %rsi
-> >       0.00 :   fbd20:       callq   0x40a00
-> >       0.00 :   fbd25:       movl    %ebx, %edi
-> >       0.00 :   fbd27:       callq   0x407c0
-> >       0.10 :   fbd2c:       movl    0x89785e(%rip), %eax        # 993590 <done>
-> >       0.00 :   fbd32:       testl   %eax, %eax
-> >      99.90 :   fbd34:       je      0xfbd2c
-> >       0.00 :   fbd36:       movq    -0x18(%rbp), %rax
-> >       0.00 :   fbd3a:       subq    %fs:0x28, %rax
-> >       0.00 :   fbd43:       jne     0xfbd50
-> >       0.00 :   fbd45:       addq    $0x10, %rsp
-> >       0.00 :   fbd49:       xorl    %eax, %eax
-> >       0.00 :   fbd4b:       popq    %rbx
-> >       0.00 :   fbd4c:       popq    %r12
-> >       0.00 :   fbd4e:       popq    %rbp
-> >       0.00 :   fbd4f:       retq
-> >       0.00 :   fbd50:       callq   0x407e0
-> >       0.00 :   fbcd0:       pushq   %rbp
-> >       0.00 :   fbcd1:       movq    %rsp, %rbp
-> >       0.00 :   fbcd4:       pushq   %r12
-> >       0.00 :   fbcd0:  push   %rbp
-> >       0.00 :   fbcd1:  mov    %rsp,%rbp
-> >       0.00 :   fbcd4:  push   %r12
-> >   Basic annotate test [Success]
-> >   ---- end(0) ----
-> >    76: perf annotate basic tests                                       : Ok
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Wed, Apr 24, 2024 at 12:12:26PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> Looks good, thanks for this!
+> On Tue, Apr 23, 2024 at 7:46 PM Howard Chu <howardchu95@gmail.com> wrote:
+> >
+> > As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+> >
+> > Currently, off-cpu samples are dumped when perf record is exiting. This
+> > results in off-cpu samples being after the regular samples. Also, samples
+> > are stored in large BPF maps which contain all the stack traces and
+> > accumulated off-cpu time, but they are eventually going to fill up after
+> > running for an extensive period. This patch fixes those problems by dumping
+> > samples directly into perf ring buffer, and dispatching those samples to the
+> > correct format.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Thanks for working on this.
+> 
+> But the problem of dumping all sched-switch events is that it can be
+> too frequent on loaded machines.  Copying many events to the buffer
+> can result in losing other records.  As perf report doesn't care about
+> timing much, I decided to aggregate the result in a BPF map and dump
+> them at the end of the profiling session.
 
-Thanks! Applied, with the following changes to improve the error
-reporting, please holler if you disagree:
+Should we try to adapt when there are too many context switches, i.e.
+the BPF program can notice that the interval from the last context
+switch is too small and then avoid adding samples, while if the interval
+is a long one then indeed this is a problem where the workload is
+waiting for a long time for something and we want to know what is that,
+and in that case capturing callchains is both desirable and not costly,
+no?
 
-diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
-index 7820d13eebaef535..1db1e8113d9943a6 100755
---- a/tools/perf/tests/shell/annotate.sh
-+++ b/tools/perf/tests/shell/annotate.sh
-@@ -36,7 +36,7 @@ test_basic() {
-   echo "Basic perf annotate test"
-   if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
-   then
--    echo "Basic annotate [Failed record]"
-+    echo "Basic annotate [Failed: perf record]"
-     err=1
-     return
-   fi
-@@ -44,7 +44,7 @@ test_basic() {
-   # check if it has the target symbol
-   if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${testsym}"
-   then
--    echo "Basic annotate [Failed missing symbol]"
-+    echo "Basic annotate [Failed: missing target symbol]"
-     err=1
-     return
-   fi
-@@ -52,7 +52,7 @@ test_basic() {
-   # check if it has the disassembly lines
-   if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${disasm_regex}"
-   then
--    echo "Basic annotate [Failed missing disasm output]"
-+    echo "Basic annotate [Failed: missing disasm output from default disassembler]"
-     err=1
-     return
-   fi
-@@ -61,7 +61,7 @@ test_basic() {
-   if ! perf annotate -i "${perfdata}" "${testsym}" 2> /dev/null | \
- 	  grep -m 3 "${disasm_regex}"
-   then
--    echo "Basic annotate [Failed missing disasm output]"
-+    echo "Basic annotate [Failed: missing disasm output when specifying the target symbol]"
-     err=1
-     return
-   fi
-@@ -70,7 +70,7 @@ test_basic() {
-   if ! perf annotate -i "${perfdata}" --objdump=objdump 2> /dev/null | \
- 	  grep -m 3 "${disasm_regex}"
-   then
--    echo "Basic annotate [Failed missing disasm output from objdump]"
-+    echo "Basic annotate [Failed: missing disasm output from non default disassembler (using --objdump)]"
-     err=1
-     return
-   fi
+The tool could then at the end produce one of two outputs: the most
+common reasons for being off cpu, or some sort of counter stating that
+there are way too many context switches?
+
+And perhaps we should think about what is best to have as a default, not
+to present just plain old cycles, but point out that the workload is
+most of the time waiting for IO, etc, i.e. the default should give
+interesting clues instead of expecting that the tool user knows all the
+possible knobs and try them in all sorts of combinations to then reach
+some conclusion.
+
+The default should use stuff that isn't that costly, thus not getting in
+the way of what is being observed, but at the same time look for common
+patterns, etc.
+
+- Arnaldo
+ 
+> Maybe that's not a concern for you (or smaller systems).  Then I think
+> we can keep the original behavior and add a new option (I'm not good
+> at naming things, but maybe --off-cpu-sample?) to work differently
+> instead of removing the old behavior.
+> 
+> Thanks,
+> Namhyung
+> 
+> >
+> > Before, off-cpu samples are after regular samples
+> >
+> > ```
+> >          swapper       0 [000] 963432.136150:    2812933    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+> >          swapper       0 [000] 963432.637911:    4932876    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+> >          swapper       0 [001] 963432.798072:    6273398    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+> >          swapper       0 [000] 963433.541152:    5279005    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+> > sh 1410180 [000] 18446744069.414584:    2528851 offcpu-time:
+> >             7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+> >
+> >
+> > sh 1410185 [000] 18446744069.414584:    2314223 offcpu-time:
+> >             7837148e6e87 wait4+0x17 (/usr/lib/libc.so.6)
+> >
+> >
+> > awk 1409644 [000] 18446744069.414584:     191785 offcpu-time:
+> >             702609d03681 read+0x11 (/usr/lib/libc.so.6)
+> >                   4a02a4 [unknown] ([unknown])
+> > ```
+> >
+> >
+> > After, regular samples(cycles:P) and off-cpu(offcpu-time) samples are
+> > collected simultaneously:
+> >
+> > ```
+> > upowerd     741 [000] 963757.428701:     297848 offcpu-time:
+> >             72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+> >
+> >
+> >       irq/9-acpi      56 [000] 963757.429116:    8760875    cycles:P:  ffffffffb779849f acpi_os_read_port+0x2f ([kernel.kallsyms])
+> > upowerd     741 [000] 963757.429172:     459522 offcpu-time:
+> >             72b2da11e6bc read+0x4c (/usr/lib/libc.so.6)
+> >
+> >
+> >          swapper       0 [002] 963757.434529:    5759904    cycles:P:  ffffffffb7db1bc2 intel_idle+0x62 ([kernel.kallsyms])
+> > perf 1419260 [000] 963757.434550: 1001012116 offcpu-time:
+> >             7274e5d190bf __poll+0x4f (/usr/lib/libc.so.6)
+> >             591acfc5daf0 perf_evlist__poll+0x24 (/root/hw/perf-tools-next/tools/perf/perf)
+> >             591acfb1ca50 perf_evlist__poll_thread+0x160 (/root/hw/perf-tools-next/tools/perf/perf)
+> >             7274e5ca955a [unknown] (/usr/lib/libc.so.6)
+> > ```
+> >
+> > Here's a simple flowchart:
+> >
+> > [parse_event (sample type: PERF_SAMPLE_RAW)] --> [config (bind fds,
+> > sample_id, sample_type)] --> [off_cpu_strip (sample type: PERF_SAMPLE_RAW)] -->
+> > [record_done(hooks off_cpu_finish)] --> [prepare_parse(sample type: OFFCPU_SAMPLE_TYPES)]
+> >
+> > Changes in v2:
+> >  - Remove unnecessary comments.
+> >  - Rename function off_cpu_change_type to off_cpu_prepare_parse
+> >
+> > Howard Chu (4):
+> >   perf record off-cpu: Parse off-cpu event, change config location
+> >   perf record off-cpu: BPF perf_event_output on sched_switch
+> >   perf record off-cpu: extract off-cpu sample data from raw_data
+> >   perf record off-cpu: delete bound-to-fail test
+> >
+> >  tools/perf/builtin-record.c             |  98 +++++++++-
+> >  tools/perf/tests/shell/record_offcpu.sh |  29 ---
+> >  tools/perf/util/bpf_off_cpu.c           | 242 +++++++++++-------------
+> >  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 163 +++++++++++++---
+> >  tools/perf/util/evsel.c                 |   8 -
+> >  tools/perf/util/off_cpu.h               |  14 +-
+> >  tools/perf/util/perf-hooks-list.h       |   1 +
+> >  7 files changed, 344 insertions(+), 211 deletions(-)
+> >
+> > --
+> > 2.44.0
+> >
