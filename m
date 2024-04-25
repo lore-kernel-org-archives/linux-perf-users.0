@@ -1,240 +1,116 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE011534E6
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 20:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D89C18EAB;
+	Thu, 25 Apr 2024 20:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714076240; cv=none; b=P8VKFg6Uf/ptE5HGD1VpK4/9Reu53vcCMk0mRttb7P8QrbsOtU4ardiSaFPkAm/Zyu6DdwXgZSauZJ8SjSp/0fy/NPhj32+MZQARLiQ06agb5lFslUPvlbGzDWhBCELOi1W56eMjDH/bnYes44/iHeQFKm8DVri18HjgxsO2HRg=
+	t=1714077298; cv=none; b=YjbEIPA5ZQ3mGIn4jdMOZR4+KmHM+0oRUPUnWZlndMqz4cHzuTq4wbqEqyidD8Wo+gES6PwThNWpgy1vywzWZml8GTmNNOoDxpVeO54OF86YwWY8zYysI5rizDQGXGidhOtF2Tblp9A/ml/c+AENXNWw1WNowVwt/4NvLs+d6Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714076240; c=relaxed/simple;
-	bh=4BBDPsjN6dzEJ4giKnaR11KMRJazqH6XiUS8veZbFSM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xhnh/m7OVjXiCrt6883RP/m3gaIqnZmTP9S3e0JoTlR9w3RYJcFdeF7M5N0p4/uBfjyHNstHjoAwyEKhQnT+Vo7406d0MybhF0//wd1fErJtODJjzAFCMxtBQYHdzzzmERwZv9E051dy1dSwZSyAXecikFKzkVcDkY0w8KVve7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z/NUikNX; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714077298; c=relaxed/simple;
+	bh=bZqtcMhFx7TDPaIgrLqyfpl0/OfmMPAKopBgZDQprIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDTYRMm3ZJvyyo+JHX4346bHXwQk4zKH+Px/X2onJEJ5G1ZTJY86z5gwgO4Pk/C8HdqIMEKVQcbYl9VYu/L8H9xGbpqj2BAgVmHgk20Tn0rsKhomwQ+zr/X2wdCYjeJUrJTGjactRQqDGjQMSVbKVAG5nDnHLmEojx579uWTEWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Z+gqGa8P; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z/NUikNX"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a58be618a17so113934566b.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 13:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714076237; x=1714681037; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dMog2JZUZ8XbtVqoBAzMg/dsNmKbqiBjLxtU6d10Qw4=;
-        b=Z/NUikNXLNoK3TQtZK1qFP8vOt08KF6jSkM5UBR0TE0iIq6NRXahUIGoSOfOO5HuaY
-         pDAABTNq8Fk9l6RVZg/AWdREzGMCtvwjwa8z0FzsEkwu+LNDQAe+ubKzOS3uFYaMoWDc
-         kGauC6Hqalz6I1eVLjTq9T9TXBMiiorNCzGjTR5U6v5kkmBxFwpyQiCvZmCSFJXov3Q/
-         zxJOjEPRDhBSANYzEiBmrekrpjlWBn3EMJqlVbJuEMMo7j9HDviB6/ffnyIdYkqR2S0I
-         SkAXuD4SR2Z38lcelrF6uCGC/ecw9jVTKdW1zRTQAvqqZt0ICF92Y59G3FW/Z1U0IVEU
-         xpVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714076237; x=1714681037;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dMog2JZUZ8XbtVqoBAzMg/dsNmKbqiBjLxtU6d10Qw4=;
-        b=wvYcAQTMpP427XjXx+KxmZYuy0w3l0wSbfqtG6fruvY5fcoEeFswuXCSBp/oyfn+su
-         f1SYpIPUsMpGc2y7iNFFF7oRUajf8bwUbR+Kx2RKmAV1xETUS7ZsS/pIFITo7Qm5OwbD
-         UqfUe3i/TvAqA/O/vXawdNYQ49McSfD2W5XlSJ/3odFXBi7snAYMD6cRy0sX9OZLaU14
-         VEpqaNNV4jHVPR1Sb16yUmFaHjTAtDECwUpHi3v0Yi8iTLbugQdIO71Fp5ruJ5qxIVU2
-         ef1Jm8LQDiwMs0iK2MowsNH8PecQQcdkLeGw/DbZ6Jv+zMb++Q8f2fRjszLxyp1Y1qpT
-         GTiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUB5SXAdMRQ7nIjXT5lzW1pBvPCjzZWxD6jsBebHFk1PiBq2bPP4GCdB5xdMNp9DdasMysBmmsXpxyj14aeIgoQfH+ahOEwN3FodyteNnNXaw==
-X-Gm-Message-State: AOJu0YzkWM/Es+vznGiDdaitg7Yr28Gy3+ygzisWEmy+iWojkhPEaSw9
-	0Pa3XLJrZ90Vk7DI595WEOWhI7xzb9Z28JmuJT7KEEQd98cupXQ+Yy9mrPzC0hEHfcn/Dwctnfm
-	osBFbCewZyzhnfJVJW0SVeFnTqRa5J6mFLmt3
-X-Google-Smtp-Source: AGHT+IGnRLA6abhkAbzojY7edB/w0Ptxz2eulZ6XO0QV0FgG7Zk4Y0oBfqeQG+5YpJZSfDseca++A/86xOPGwOkUqqA=
-X-Received: by 2002:a17:906:6ce:b0:a58:7505:16ff with SMTP id
- v14-20020a17090606ce00b00a58750516ffmr456515ejb.64.1714076237097; Thu, 25 Apr
- 2024 13:17:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Z+gqGa8P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714077293;
+	bh=bZqtcMhFx7TDPaIgrLqyfpl0/OfmMPAKopBgZDQprIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z+gqGa8PD+3BrRxF+Exe+s/+n1FrcsSYPFeQUrvoT2UUvEiGsEXMDYuXjYQJDYiRJ
+	 9/0fJxtI2lDBLEHhkegO15rObvRhgIuWQMhE+D085PPIsVKHmI/z9Zz6qr7xUxUgOg
+	 gdOVIytSYg1zquf83mxdxD8VyvGj7mHBMGjmlG8k=
+Date: Thu, 25 Apr 2024 22:34:52 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <d11f875e-4fb5-46dd-a412-84818208c575@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <CGME20240425031241eucas1p1fb0790e0d03ccbe4fca2b5f6da83d6db@eucas1p1.samsung.com>
+ <20240424201234.3cc2b509@kernel.org>
+ <20240425110412.2n5d27smecfncsfa@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZiaX3H3YfrVh50cs@google.com> <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
- <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com> <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
- <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com> <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
- <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn> <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com> <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com> <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
-In-Reply-To: <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Thu, 25 Apr 2024 13:16:40 -0700
-Message-ID: <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Sean Christopherson <seanjc@google.com>, 
-	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240425110412.2n5d27smecfncsfa@joelS2.panther.com>
 
-On Thu, Apr 25, 2024 at 9:13=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-04-25 12:24 a.m., Mingwei Zhang wrote:
-> > On Wed, Apr 24, 2024 at 8:56=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
-tel.com> wrote:
-> >>
-> >>
-> >> On 4/24/2024 11:00 PM, Sean Christopherson wrote:
-> >>> On Wed, Apr 24, 2024, Dapeng Mi wrote:
-> >>>> On 4/24/2024 1:02 AM, Mingwei Zhang wrote:
-> >>>>>>> Maybe, (just maybe), it is possible to do PMU context switch at v=
-cpu
-> >>>>>>> boundary normally, but doing it at VM Enter/Exit boundary when ho=
-st is
-> >>>>>>> profiling KVM kernel module. So, dynamically adjusting PMU contex=
-t
-> >>>>>>> switch location could be an option.
-> >>>>>> If there are two VMs with pmu enabled both, however host PMU is no=
-t
-> >>>>>> enabled. PMU context switch should be done in vcpu thread sched-ou=
-t path.
-> >>>>>>
-> >>>>>> If host pmu is used also, we can choose whether PMU switch should =
-be
-> >>>>>> done in vm exit path or vcpu thread sched-out path.
-> >>>>>>
-> >>>>> host PMU is always enabled, ie., Linux currently does not support K=
-VM
-> >>>>> PMU running standalone. I guess what you mean is there are no activ=
-e
-> >>>>> perf_events on the host side. Allowing a PMU context switch driftin=
-g
-> >>>>> from vm-enter/exit boundary to vcpu loop boundary by checking host
-> >>>>> side events might be a good option. We can keep the discussion, but=
- I
-> >>>>> won't propose that in v2.
-> >>>> I suspect if it's really doable to do this deferring. This still mak=
-es host
-> >>>> lose the most of capability to profile KVM. Per my understanding, mo=
-st of
-> >>>> KVM overhead happens in the vcpu loop, exactly speaking in VM-exit h=
-andling.
-> >>>> We have no idea when host want to create perf event to profile KVM, =
-it could
-> >>>> be at any time.
-> >>> No, the idea is that KVM will load host PMU state asap, but only when=
- host PMU
-> >>> state actually needs to be loaded, i.e. only when there are relevant =
-host events.
-> >>>
-> >>> If there are no host perf events, KVM keeps guest PMU state loaded fo=
-r the entire
-> >>> KVM_RUN loop, i.e. provides optimal behavior for the guest.  But if a=
- host perf
-> >>> events exists (or comes along), the KVM context switches PMU at VM-En=
-ter/VM-Exit,
-> >>> i.e. lets the host profile almost all of KVM, at the cost of a degrad=
-ed experience
-> >>> for the guest while host perf events are active.
-> >>
-> >> I see. So KVM needs to provide a callback which needs to be called in
-> >> the IPI handler. The KVM callback needs to be called to switch PMU sta=
-te
-> >> before perf really enabling host event and touching PMU MSRs. And only
-> >> the perf event with exclude_guest attribute is allowed to create on
-> >> host. Thanks.
-> >
-> > Do we really need a KVM callback? I think that is one option.
-> >
-> > Immediately after VMEXIT, KVM will check whether there are "host perf
-> > events". If so, do the PMU context switch immediately. Otherwise, keep
-> > deferring the context switch to the end of vPMU loop.
-> >
-> > Detecting if there are "host perf events" would be interesting. The
-> > "host perf events" refer to the perf_events on the host that are
-> > active and assigned with HW counters and that are saved when context
-> > switching to the guest PMU. I think getting those events could be done
-> > by fetching the bitmaps in cpuc.
->
-> The cpuc is ARCH specific structure. I don't think it can be get in the
-> generic code. You probably have to implement ARCH specific functions to
-> fetch the bitmaps. It probably won't worth it.
->
-> You may check the pinned_groups and flexible_groups to understand if
-> there are host perf events which may be scheduled when VM-exit. But it
-> will not tell the idx of the counters which can only be got when the
-> host event is really scheduled.
->
-> > I have to look into the details. But
-> > at the time of VMEXIT, kvm should already have that information, so it
-> > can immediately decide whether to do the PMU context switch or not.
-> >
-> > oh, but when the control is executing within the run loop, a
-> > host-level profiling starts, say 'perf record -a ...', it will
-> > generate an IPI to all CPUs. Maybe that's when we need a callback so
-> > the KVM guest PMU context gets preempted for the host-level profiling.
-> > Gah..
-> >
-> > hmm, not a fan of that. That means the host can poke the guest PMU
-> > context at any time and cause higher overhead. But I admit it is much
-> > better than the current approach.
-> >
-> > The only thing is that: any command like 'perf record/stat -a' shot in
-> > dark corners of the host can preempt guest PMUs of _all_ running VMs.
-> > So, to alleviate that, maybe a module parameter that disables this
-> > "preemption" is possible? This should fit scenarios where we don't
-> > want guest PMU to be preempted outside of the vCPU loop?
-> >
->
-> It should not happen. For the current implementation, perf rejects all
-> the !exclude_guest system-wide event creation if a guest with the vPMU
-> is running.
-> However, it's possible to create an exclude_guest system-wide event at
-> any time. KVM cannot use the information from the VM-entry to decide if
-> there will be active perf events in the VM-exit.
+Hi Joel,
 
-Hmm, why not? If there is any exclude_guest system-wide event,
-perf_guest_enter() can return something to tell KVM "hey, some active
-host events are swapped out. they are originally in counter #2 and
-#3". If so, at the time when perf_guest_enter() returns, KVM will ack
-that and keep it in its pmu data structure.
+On 2024-04-25 13:04:12+0000, Joel Granados wrote:
+> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> > 
+> > Split this per subsystem, please.
+> It is tricky to do that because it changes the first argument (ctl*) to
+> const in the proc_handler function type defined in sysclt.h:
+> "
+> -typedef int proc_handler(struct ctl_table *ctl, int write, void *buffer,
+> +typedef int proc_handler(const struct ctl_table *ctl, int write, void *buffer,
+>                 size_t *lenp, loff_t *ppos);
+> "
+> This means that all the proc_handlers need to change at the same time.
+> 
+> However, there is an alternative way to do this that allows chunking. We
+> first define the proc_handler as a void pointer (casting it where it is
+> being used) [1]. Then we could do the constification by subsystem (like
+> Jakub proposes). Finally we can "revert the void pointer change so we
+> don't have one size fit all pointer as our proc_handler [2].
+> 
+> Here are some comments about the alternative:
+> 1. We would need to make the first argument const in all the derived
+>    proc_handlers [3] 
+> 2. There would be no undefined behavior for two reasons:
+>    2.1. There is no case where we change the first argument. We know
+>         this because there are no compile errors after we make it const.
+>    2.2. We would always go from non-const to const. This is the case
+>         because all the stuff that is unchanged in non-const.
+> 3. If the idea sticks, it should go into mainline as one patchset. I
+>    would not like to have a void* proc_handler in a kernel release.
+> 4. I think this is a "win/win" solution were the constification goes
+>    through and it is divided in such a way that it is reviewable.
+> 
+> I would really like to hear what ppl think about this "heretic"
+> alternative. @Thomas, @Luis, @Kees @Jakub?
 
-Now, when doing context switching back to host at just VMEXIT, KVM
-will check this data and see if host perf context has something active
-(of course, they are all exclude_guest events). If not, deferring the
-context switch to vcpu boundary. Otherwise, do the proper PMU context
-switching by respecting the occupied counter positions on the host
-side, i.e., avoid doubling the work on the KVM side.
+Thanks for that alternative, I'm not a big fan though.
 
-Kan, any suggestion on the above approach? Totally understand that
-there might be some difficulty, since perf subsystem works in several
-layers and obviously fetching low-level mapping is arch specific work.
-If that is difficult, we can split the work in two phases: 1) phase
-#1, just ask perf to tell kvm if there are active exclude_guest events
-swapped out; 2) phase #2, ask perf to tell their (low-level) counter
-indices.
+Besides the wonky syntax, Control Flow Integrity should trap on
+this construct. Functions are called through different pointers than
+their actual types which is exactly what CFI is meant to prevent.
 
-Thanks.
--Mingwei
+Maybe people find it easier to review when using
+"--word-diff" and/or "-U0" with git diff/show.
+There is really nothing going an besides adding a few "const"s.
 
->
-> The perf_guest_exit() will reload the host state. It's impossible to
-> save the guest state after that. We may need a KVM callback. So perf can
-> tell KVM whether to save the guest state before perf reloads the host sta=
-te.
->
-> Thanks,
-> Kan
-> >>
-> >>
-> >>>
-> >>> My original sketch: https://lore.kernel.org/all/ZR3eNtP5IVAHeFNC@goog=
-lecom
-> >
+But if the consensus prefers this solution, I'll be happy to adopt it.
+
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git/commit/?h=jag/constfy_treewide_alternative&id=4a383503b1ea650d4e12c1f5838974e879f5aa6f
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git/commit/?h=jag/constfy_treewide_alternative&id=a3be65973d27ec2933b9e81e1bec60be3a9b460d
+> [3] proc_dostring, proc_dobool, proc_dointvec....
+
+
+Thomas
