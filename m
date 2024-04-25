@@ -1,89 +1,155 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FC6CDA5;
-	Thu, 25 Apr 2024 07:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED386AE2;
+	Thu, 25 Apr 2024 10:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714029040; cv=none; b=uZlhU/LfITufdr6wUyubmn7V68w/ZlTtzgNBBFxXy8bUwO01JD1et/nSI0mp7VLDgueIne3fITim+YnlqFAhs+pEgdNN6rxk/Zj2zxO9lJq1zbr3218wWdisDtRsno2+CyirAzvAvpVOwdFPn2Nmhvjdz3kt18Hz7V5BGdSQI2o=
+	t=1714040250; cv=none; b=e1hI3dK+KJmyxARZip1812oUG2/aLJ4YVBjT8Z3ct42+HjLIIDmBfGWUjEN3GZ9qx83gkOKuAKVuKrsoF+aKArO5OjylQraUBvyALpv3A8pn4KegCuzQIoCKP/gdkJFEyhe9eIYo79aM2vxapDgY/evONbsPVgwYo40XM+27OaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714029040; c=relaxed/simple;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gieOt1pLr+D0qMK4OYcfBKCyFuFyZJ7Do7RWMt3ayutKnlctUSr2Giaov9NdiRm4Za70PQzA3qkWCBKWf1/H9AA4Nu5ldrBgQ/XdgGVcB+r1Ht+ee3gDsTp/K9jbn607DyqrWZKqMU3wvsVD4YOAM1Fwrm2yuESrIdV3F2KqHVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MmasBUph; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714040250; c=relaxed/simple;
+	bh=h6c/iz0/hGW+t/SoQR9KYo1rv6hXOZ73jgFdz1C30Eg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OJAtJfRDo/yT383R0QTvkecuANDMRtI0vvQ4rnBfLHFIc1WpTmcwZ8zu6mT9ky5hkgHyinOsl31OgALqq6oZ9l0jDLSkx0e53TRTuX3/YeVEN3EQzLVztyP9S+Tu4Rq0IC1UU++sp6HtH3w1I7PHLfb67Jsz+sCTuglZ9AC/NRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKZUmFgM; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MmasBUph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714029027;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MmasBUphC0hDmcDselWsqNDchcFNLbtyyIXYaTEfQv4BLOsVbY80KeyHb5BvHn9uV
-	 mXfX+53b9fklgAHnv4JHOlIL0SSIIXm5AmCALLJVlcCrmQacW/Cc+9xB5aBl8A7Dwb
-	 B9LRLV8RKBn3hp3tvoCofURazzoY7NMe3hrGTd84=
-Date: Thu, 25 Apr 2024 09:10:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
-	Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, 
-	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
-	linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKZUmFgM"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-571c2055cb1so129411a12.1;
+        Thu, 25 Apr 2024 03:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714040247; x=1714645047; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DyJz1NSu4FQMeQ6GqAUKmKYgFhAoaWe3Xjy6oxrQH3g=;
+        b=gKZUmFgMGrGL9wJM5bBEjPl2mIkywCPoNzMCyks9T9G19yeUK+7/iAKnkVN8BFRTXx
+         N8/rW0B0TUlSDc14jiWM3uoBK3qCSXAu2DW9O64MHNHyuT5TIDOc0DmW0XQxkEyYuTkW
+         kbXYgjUKnT2eShpe556tZocit0ki2NdoQooyy6t4aqmYEEgQjKUtrFyd767ZGICZQeVU
+         B55tMqkivnJlG0HB+4IsyVAhbdpHa6ZIAMIInSQ1NQFhZXK9Rme+I47gCfWWJdC6dYLN
+         xvSgcHgFqpHL6sAw7VhLmnI6LFVsh6WoX4QqlIz1NnBxudXc0yitLmf9CxoxAL5MUOIz
+         BDJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714040247; x=1714645047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DyJz1NSu4FQMeQ6GqAUKmKYgFhAoaWe3Xjy6oxrQH3g=;
+        b=qvQdltl/2rjI4uEhR9YYgsSRLmYgkIfOx0ejHlsG/x2Pb56eocKaJ6xFiZg0l5lF5E
+         Fv1R4TzwtHrPMLQkOfN8ZT7FyhTxF1IdY6FylydLgEn47Rg5ZrjKLaq9unwrt+WBMfS0
+         ZyNQ7iMVuldX8zdiF276t57eUcFUle5dfs8J9yQjSOCD6lXdTc+zesUVsqNsF9P5wKeV
+         flQJtO5R4lm9a4eysS6OGDUtkF97Q4TJl00n6KT6uabA/2aPy+2BPnvUJ52MS4kEeAP+
+         6/IcC4TPBtnG0RT+ifqU33liwSFCyn2gaHSwWfejI4Tg0S0QQSCyWnFccGk0ELilxNmu
+         XEjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSsgCsHd1CkS3l8MBpQHw7kHFQ4FUTWMyiZQ1kuntp2G2xtKLq7rGaenKYU7+273ZN23UoLTV/cManiSmkzoiIqm5O3EgeQkvdxDyPaJXJwsgtZI3EnNiIJ8KFAf/SQSa0h6Jp8vzG6kjPsfNOkw==
+X-Gm-Message-State: AOJu0YzYFa7zkF0t9RHdCzVvnmKvTrE4vIhb7fHkzllxqZX6+tQ+1PZ5
+	BuyD4/u7U6aREEnBSwToAIJ5fK5kx8oIgl3e9XhXSxEz7SAblHeU
+X-Google-Smtp-Source: AGHT+IHzh7byLYkIbZT7mCsZJfBxll0wUdqoiPtK+8RgpXjgOjRTYtS/oExSR5RMZXdmU0vLNUd5VQ==
+X-Received: by 2002:a50:cd93:0:b0:56e:2e4d:884e with SMTP id p19-20020a50cd93000000b0056e2e4d884emr4478808edi.0.1714040247031;
+        Thu, 25 Apr 2024 03:17:27 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id o9-20020aa7c7c9000000b005721127eefbsm4004600eds.17.2024.04.25.03.17.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 03:17:26 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] perf/x86/amd: Use try_cmpxchg() in events/amd/{un,}core.c
+Date: Thu, 25 Apr 2024 12:16:14 +0200
+Message-ID: <20240425101708.5025-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
-> 
-> Split this per subsystem, please.
+Replace this pattern in events/amd/{un,}core.c:
 
-Unfortunately this would introduce an enormous amount of code churn.
+    cmpxchg(*ptr, old, new) == old
 
-The function prototypes for each callback have to stay consistent.
-So a another callback member ("proc_handler_new") is needed and users
-would be migrated to it gradually.
+... with the simpler and faster:
 
-But then *all* definitions of "struct ctl_table" throughout the tree need to
-be touched.
-In contrast, the proposed series only needs to change the handler
-implementations, not their usage sites.
+    try_cmpxchg(*ptr, &old, new)
 
-There are many, many more usage sites than handler implementations.
+The x86 CMPXCHG instruction returns success in the ZF flag, so this change
+saves a compare after the CMPXCHG.
 
-Especially, as the majority of sysctl tables use the standard handlers
-(proc_dostring, proc_dobool, ...) and are not affected by the proposed
-aproach at all.
+No functional change intended.
 
-And then we would have introduced a new handler name "proc_handler_new"
-and maybe have to do the whole thing again to rename it back to
-the original and well-known "proc_handler".
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/events/amd/core.c   | 3 ++-
+ arch/x86/events/amd/uncore.c | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 1fc4ce44e743..c1b8aeff7bc0 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -433,7 +433,8 @@ static void __amd_put_nb_event_constraints(struct cpu_hw_events *cpuc,
+ 	 * when we come here
+ 	 */
+ 	for (i = 0; i < x86_pmu.num_counters; i++) {
+-		if (cmpxchg(nb->owners + i, event, NULL) == event)
++		struct perf_event *tmp = event;
++		if (try_cmpxchg(nb->owners + i, &tmp, NULL))
+ 			break;
+ 	}
+ }
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 4ccb8fa483e6..cac7c20d1aee 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -162,7 +162,8 @@ static int amd_uncore_add(struct perf_event *event, int flags)
+ 	/* if not, take the first available counter */
+ 	hwc->idx = -1;
+ 	for (i = 0; i < pmu->num_counters; i++) {
+-		if (cmpxchg(&ctx->events[i], NULL, event) == NULL) {
++		struct perf_event *tmp = NULL;
++		if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
+ 			hwc->idx = i;
+ 			break;
+ 		}
+@@ -196,7 +197,8 @@ static void amd_uncore_del(struct perf_event *event, int flags)
+ 	event->pmu->stop(event, PERF_EF_UPDATE);
+ 
+ 	for (i = 0; i < pmu->num_counters; i++) {
+-		if (cmpxchg(&ctx->events[i], event, NULL) == event)
++		struct perf_event *tmp = event;
++		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
+ 			break;
+ 	}
+ 
+-- 
+2.44.0
 
-Of course if somebody has a better aproach, I'm all ears.
-
-
-Thomas
