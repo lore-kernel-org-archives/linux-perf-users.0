@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59D5149C73;
-	Thu, 25 Apr 2024 13:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A1A149C67;
+	Thu, 25 Apr 2024 14:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053326; cv=none; b=tp+xp4ShrOgCoQpwiwmSNcxWbUL/33IhjMSRJmGKLf0bW+Ke4TrQhUOijWq85rMqfz0cAO+PbEB/E6Jm+vNlTBAoAA0qqKgxLCS5elG3782378oVY05qW3CVy7K6xaOTZFfF85s5Bz+uEtu/BELjOQWBC34e4d9OG4ZRSAfONHg=
+	t=1714053732; cv=none; b=qGeu4grdno7bpFTNcJvoXzmv+3d2udmJFsT1YWAVsNV2Lfgxi9VbZ0vQPNEgvHH8iG8mSNEGjbyvzvrLXGowoNbVvIfUdVqSGcu0B60T8n6HbHHkGLaMaMPs9hLP9sMXEo8FY1P64kUVzXTOOdwgssNxvx6yFnL1b7kEwezVa1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053326; c=relaxed/simple;
-	bh=ROcqMnqV+nJjqsheF2ChPdHkQI544tNby/JjgpSEVnI=;
+	s=arc-20240116; t=1714053732; c=relaxed/simple;
+	bh=DqKDPDUySoPXORwAqXe1B4HQ1YXnLVQ0qpjZYrw3o/Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NixoBE66+d9T1YZX6qq8RcgnRp/MLJkym1SoKE+mkj4/cVzpk+5rZUxk6CeW3+yrZQbqqaepFIbUt6AZMTCQ9ez5FYSrug/nBZ2L7ha6cgBMehWxRNZ1IkwUUN/IJ7kFILL1KZuR6rtKgqeFTuHmc63UbqD6D0scgqI9cN2YNdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAHC/YKX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eiITfrH2uThuc0HjOKnrsMmjIna5HGiJew2W3TGo+joCmPMO14UhHhkCg453ukAAq57Ar6oMjP9XydFtuVW+YyTPXM1Y3WcD8/qWe44qc/oFtM/DaaclrL4K6TMhW1QPxsp0mC+ctd2BGNYGVTszejStsQxKzQ++g3qukczT8Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGsqkNso; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAHC/YKX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9259C113CC;
-	Thu, 25 Apr 2024 13:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGsqkNso"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3504C113CC;
+	Thu, 25 Apr 2024 14:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714053326;
-	bh=ROcqMnqV+nJjqsheF2ChPdHkQI544tNby/JjgpSEVnI=;
+	s=k20201202; t=1714053731;
+	bh=DqKDPDUySoPXORwAqXe1B4HQ1YXnLVQ0qpjZYrw3o/Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bAHC/YKXdszQWpk+AGicRh+U1+NA/JtcnXwFQYxP1li1wiNiU4fxtEP2aFyz7zqSY
-	 0DHATOxyPvNBk+a3ZYsXFL3dSDGGWxdYKuQuB+SX051vZEfu7q8x2yZxK1/hOKiaTW
-	 0DdemU0F4vtjgr4+f42XWspN7B4k+vPKHSYbGnBouUeG1ylqYgsg4P/UZB5AKblgiV
-	 ViUdqlw6wLxKBnO9U/w8HAJq9lPWy9M/9k9xn9ff5IP8T7FJTr9vhhA+lO+poGc8DU
-	 ZHvURwcC/yGPyE0yzCWUfoJUUsVtIJUoDg0vdBjmkhb0AkhmBbJ2NVC2IR/Ufdg6rN
-	 rQDFhWRKG4YwQ==
-Date: Thu, 25 Apr 2024 10:55:21 -0300
+	b=UGsqkNsokOe2xC6Fyqe0dMBHKMyWAXt6nvmoVnUSUIAcbn0o0scNqoVJXGQvp9+kl
+	 /IyN+IMZ52aCbpjmYubh915efG8Gigbx0F1xJx+nnEWBLUvUgLOxLyGMUUmUWoZOxY
+	 LTSko+R85DzFxx91a4WVKuuILPxZqG6wXXyHIEPYpYVW6c6ai+f6F7GSG1petyjnyu
+	 bOlGMaVqirH9NYB7qRu3364NRAhkv5pnoemq1KWQqYLP5gHzOH8IdG7CefKsxcJtN4
+	 +FsBeU/uyZNgc4Fs7mz4P9ryJ61h/ODCTMvZsSaXUIo+IEECydN36FygplyihMqhoS
+	 y8kaj9XaFhUAA==
+Date: Thu, 25 Apr 2024 11:02:06 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -35,54 +35,62 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf annotate-data: Check annotation on perf report TUI
-Message-ID: <ZipgyUwHjjujlHsO@x1>
-References: <20240424230015.1054013-1-namhyung@kernel.org>
+Subject: Re: [PATCH 1/2] perf annotate: Fallback to objdump when capstone
+ fails
+Message-ID: <ZipiXhB21fgPM_xl@x1>
+References: <20240425005157.1104789-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424230015.1054013-1-namhyung@kernel.org>
+In-Reply-To: <20240425005157.1104789-1-namhyung@kernel.org>
 
-On Wed, Apr 24, 2024 at 04:00:15PM -0700, Namhyung Kim wrote:
-> As it removed the sample accounting for code when no symbol sort key is
-> given for perf report TUI, it might not allocate the annotated_source
-> yet.  Let's check if it's NULL first.
+On Wed, Apr 24, 2024 at 05:51:56PM -0700, Namhyung Kim wrote:
+> I found some cases that capstone failed to disassemble.  Probably my
+> capstone is an old version but anyway there's a chance it can fail.  And
+> then it silently stopped in the middle.  In my case, it didn't
+> understand "RDPKRU" instruction.
 > 
-> Fixes: 6cdd977ec24e1 ("perf report: Do not collect sample histogram unnecessarily")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Let's check if the capstone disassemble reached to the end of the
+> function.  And fallback to objdump if not.
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Picking it up into perf-tools-next:
-
-⬢[acme@toolbox perf-tools-next]$ git log torvalds/master.. perf-tools-next | grep 6cdd977ec24e1
-commit 6cdd977ec24e1538b35a08bde823a74b69e829f2
-⬢[acme@toolbox perf-tools-next]$ 
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
-
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/annotate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/disasm.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index dca2c08ab8c5..f5b6b5e5e757 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -906,7 +906,7 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
->  	if (parch)
->  		*parch = arch;
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 92937809be85..412101f2cf2a 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1542,6 +1542,20 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+>  		offset += insn[i].size;
+>  	}
 >  
-> -	if (!list_empty(&notes->src->source))
-> +	if (notes->src && !list_empty(&notes->src->source))
->  		return 0;
->  
->  	args.arch = arch;
+> +	/* It failed in the middle: probably due to unknown instructions */
+> +	if (offset != len) {
+> +		struct list_head *list = &notes->src->source;
+> +
+> +		/* Discard all lines and fallback to objdump */
+> +		while (!list_empty(list)) {
+> +			dl = list_first_entry(list, struct disasm_line, al.node);
+> +
+> +			list_del_init(&dl->al.node);
+> +			disasm_line__free(dl);
+> +		}
+> +		count = -1;
+> +	}
+> +
+>  out:
+>  	if (needs_cs_close)
+>  		cs_close(&handle);
 > -- 
 > 2.44.0.769.g3c40516874-goog
