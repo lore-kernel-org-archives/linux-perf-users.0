@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1F814A60A;
-	Thu, 25 Apr 2024 14:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2EF13328D;
+	Thu, 25 Apr 2024 14:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714054873; cv=none; b=U1bBJqyGwwpzc+whK/z2vyqHmToB+OdEdAHY0o80wLMO6VKD4GH8V63GEp1RgUc6CH4vJvv4A+/P0pRvZwVCZJlBGJpCcvNpw/xTirRXt+6SaZq5PL7ZyApPVomILSLXD0w7DI4bna/3iMDNw+fdrP/fsFEZlx6iGXjkfQkN9TQ=
+	t=1714056590; cv=none; b=usIfTDapLq9j4014L09GOBg61yY43B3r6uckZyKqU7tBuSqbfnDZL7G7ZZ38cHYONJ78T3Ukh404OdXJXNQOYl8JZWB0tA/DT69VAP9pZP8S2THHSv+geqwtJ8rSCzDsY5WeChZ3lzNLYCFXMnFKWp4vGbEzEDU36/Bf/5A1g5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714054873; c=relaxed/simple;
-	bh=v4Zk7cp/J5uIKp7aMsO/8WP6RRDSuoxJeMH6/h7FcWI=;
+	s=arc-20240116; t=1714056590; c=relaxed/simple;
+	bh=S4j43sOmzi/yE2O9yobieBlpo8nx80XmbizZ0kSyVEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AN7kKE9FqnjhwuWI2n4wiZke7ePrA9boDswMhuxLQ5qy1d0FCudtA4bCvckncRwaP28REfiP6WWS7400O7rEkEtX9jL7Ua6+yMLwfnUnRKoDBWaiyhpGwgG4EuJy2huS9z2CY5oOZOCOUJdGGaofURNrdPnAU+ph3vtqJTzHoi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzsyKvTm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJ21ZygnP8Bs1yhQ4XqhmWPNrf1/mK4mZEo1GJMDt0grl4yFK5h5m6DY3xahuqZroV6BHAyT1LP1mnYOSQtxZ/Lo/BjnjkV2ykGqFV6TS26olH4J44A6x8ak7Z0QlbsDXJEM2iIlh9TlBDcoag8cTbGdniQDO6hshq8RO/ZWU40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aM7BzCKf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzsyKvTm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2B7C113CC;
-	Thu, 25 Apr 2024 14:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aM7BzCKf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8239C113CC;
+	Thu, 25 Apr 2024 14:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714054873;
-	bh=v4Zk7cp/J5uIKp7aMsO/8WP6RRDSuoxJeMH6/h7FcWI=;
+	s=k20201202; t=1714056588;
+	bh=S4j43sOmzi/yE2O9yobieBlpo8nx80XmbizZ0kSyVEE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WzsyKvTmHwPQzRlLAIOkKY29XYfiuW/0qDmhR8I4Mabf9LqT3YFvdap7/N2MahDR1
-	 cu1zEjG4WYBnhI+9lZB6DK+immNjkaccNBjPaa7sBioyGFiNL608Y/Val2+iGqVCGv
-	 lx6c1ehaupDIloP7UiPjyAYj/91Xa+TIDINqisfIMJZH87KDRHRC357hStg7BdV8dL
-	 +M1dhojEpD9+jPTtZU8PhCHiPrAwUm4vV6pDeFqRZ6yDvzo9AMxcVdDDNVlNOTedg2
-	 8Np9c/oh0OAwXKfgMDNkhLfjN1U1YJeF5ik7ZcukktsPAvhsDZdiNfbown3+H3D27F
-	 v4R9Hb3TtPC9w==
-Date: Thu, 25 Apr 2024 11:21:08 -0300
+	b=aM7BzCKfjR0vLKsgJSg0svPXtMy3Pfdi7JVPuSeESlO7X1u8UvC85RMAv7isI2AVA
+	 kf8uJfqQqj9/SxbOiQQiMMv+kzrYz6OTSUlrQl3+UDrxYVu/gFnfKgV9dEEvV3fywK
+	 N94r9EaGHGz4P0e+kUQl8hu/CCeGOuuThK5NAOPjlG7W1jfnBUtWF3gpPc+36CuPhN
+	 mVFnSjDC3h22DAKsfv/Ao2u2GJDex4z2sPO+8qYJ3mnrYDFZQw23wKUn5gVuijPrhe
+	 ENEay6Pu3D6WiYLECqRGmb4Eqv/UddLFxBp534VWCxl/lOEU7A+RntxqwBd42haSHl
+	 V93Ses6xb9VCQ==
+Date: Thu, 25 Apr 2024 11:49:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, trivial@kernel.org
-Subject: Re: [PATCH] perf record: Fix comment misspellings
-Message-ID: <Zipm1B6qZ1NFANAc@x1>
-References: <20240425060427.1800663-1-howardchu95@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf annotate: Update dso binary type when try
+ build-id
+Message-ID: <ZiptiObJxYPeXqK_@x1>
+References: <20240425005157.1104789-1-namhyung@kernel.org>
+ <20240425005157.1104789-2-namhyung@kernel.org>
+ <Zipk0p08bxO7werD@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,55 +49,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240425060427.1800663-1-howardchu95@gmail.com>
+In-Reply-To: <Zipk0p08bxO7werD@x1>
 
-On Thu, Apr 25, 2024 at 02:04:27PM +0800, Howard Chu wrote:
-> Fix comment misspellings
-
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
+On Thu, Apr 25, 2024 at 11:12:40AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 24, 2024 at 05:51:57PM -0700, Namhyung Kim wrote:
+> > +++ b/tools/perf/util/disasm.c
+> > @@ -1156,6 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+> >  		mutex_unlock(&dso->lock);
+> > +	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
+> > +		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
+> >  	}
  
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/lib/perf/mmap.c       | 2 +-
->  tools/perf/builtin-record.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-> index 0c903c2372c9..c1a51d925e0e 100644
-> --- a/tools/lib/perf/mmap.c
-> +++ b/tools/lib/perf/mmap.c
-> @@ -279,7 +279,7 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map)
->  	if (!refcount_read(&map->refcnt))
->  		return NULL;
->  
-> -	/* non-overwirte doesn't pause the ringbuffer */
-> +	/* non-overwrite doesn't pause the ringbuffer */
->  	if (!map->overwrite)
->  		map->end = perf_mmap__read_head(map);
->  
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 3994adaf4607..34d103f4af57 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -332,7 +332,7 @@ static int record__aio_complete(struct mmap *md, struct aiocb *cblock)
->  	} else {
->  		/*
->  		 * aio write request may require restart with the
-> -		 * reminder if the kernel didn't write whole
-> +		 * remainder if the kernel didn't write whole
->  		 * chunk at once.
->  		 */
->  		rem_off = cblock->aio_offset + written;
-> @@ -402,7 +402,7 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
->  	 *
->  	 * Coping can be done in two steps in case the chunk of profiling data
->  	 * crosses the upper bound of the kernel buffer. In this case we first move
-> -	 * part of data from map->start till the upper bound and then the reminder
-> +	 * part of data from map->start till the upper bound and then the remainder
->  	 * from the beginning of the kernel buffer till the end of the data chunk.
->  	 */
->  
-> -- 
-> 2.44.0
+> Fixed up to take into account a recent patch by Ian that turned that
+> &dso->lock into dso__lock(dso):
+ 
+> +++ b/tools/perf/util/disasm.c
+> @@ -1156,6 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+>  			}
+>  		}
+>  		mutex_unlock(dso__lock(dso));
+> +	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
+> +		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
+>  	}
+
+Nah, I forgot some more stuff, this is what I have now:
+
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 2921b32357705a02..72aec8f61b944a7a 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1156,8 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 			}
+ 		}
+ 		mutex_unlock(dso__lock(dso));
+-	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
+-		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
++	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
++		dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
+ 	}
+ 
+ 	free(build_id_path);
