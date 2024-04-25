@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7B639AFD;
-	Thu, 25 Apr 2024 18:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D187C14F118;
+	Thu, 25 Apr 2024 18:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714071439; cv=none; b=BXn2EhJTO01WQBcChD7mdITFNdJjaqNSuxFXk0r9SyLp/CsHGfAYRxPcuCDWypdrm+5OJ0nYO8QXiIin/mGekfxTdaTvQ7rPJ8I0xmxFxXS5YwizG1MAv3SJrDZtAFqJK606WG3GjmEIJ7w18VOkxIde0LGvlPxTnlioO8Bt42g=
+	t=1714071535; cv=none; b=L7kED5D++cDotw8mIEf+/MmCKGkTM94tYDJe+P+9BvrYm1YQZRmoBeLN6gSx60+WTGYExanck803t1/doC2V/41RnHjJSWYnDDltlFxthKB2THA2R7p4am9jQS+7fcaEoP9HBgACJFXS5byIGm1HH0soePjTz0VATt0+o5dwolU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714071439; c=relaxed/simple;
-	bh=DR/cNmaTWBltOT5kSocGhLsohmj7ZxNGmrgCEc8e2ng=;
+	s=arc-20240116; t=1714071535; c=relaxed/simple;
+	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qy0Av0TflRK78KaxrPEmco1isfj7TIyDY0iIuvYJocXxq+HWm/vu2KWUQi4EaujefdZDT+ioSsJATsd3/xtlgc0YVwWBCfy8mjOwgGlw8wybmTWQXhL5X7JO2o51cM5NLkoxHbSvoanUIL7jERYTuW3yRJwNpe2jEB8sMeQHdJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+CVexLB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vc+7Nki6/Lb+jdWv4q+2PuQG+p30+TrqkcZ/4+gHXO0Y1p6OlA3ieCb95l9SnHdAgWqZIDxWJH56XLdCnZjZDqkmXPBj7/GEPQNXKq82hidHoIDKwGF1RxGYvHgLVsfuWDBR2xi4y3n//DoMHEiu20gA0OOph0v/T6fdUOddJ8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVHp0Iqo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+CVexLB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7C4C113CC;
-	Thu, 25 Apr 2024 18:57:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVHp0Iqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3084C113CC;
+	Thu, 25 Apr 2024 18:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714071439;
-	bh=DR/cNmaTWBltOT5kSocGhLsohmj7ZxNGmrgCEc8e2ng=;
+	s=k20201202; t=1714071535;
+	bh=4Sx4sYmGqoS09z606peTfqhN5qWJQdHwsKYaEAQY4ZI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p+CVexLBzIXepUF2cGGvJqSDrARB1iAyGZW7ZfZd4HBNreDUXh60lT3NsafiSn75X
-	 2//Gr4iMmguzeQRs57Ni3WfDTy3+TyJGPdgZvSBblBtt0Zd3ytxOT5/V1mQvXgj+kV
-	 w8nGvSqd1fOihnuIIbosiRLvKTjk1N7xnkyOSjYZ0LpdOZRzI9r7B2ITS2cmT4Qvmg
-	 r6hgm10pgOovokfWrFvOuQ6OdPUZ47WghX+GZ6kqLwYkxVIe1kmBblkvY7bMWhpRZ8
-	 eNz9IV/UaPRExnsQuCcSC/XSylLn73sIT4LtUYIz+m+lwY+BMPhLExO/IkxQ3MPgzo
-	 3wLJm1P7JCIkg==
-Date: Thu, 25 Apr 2024 15:57:14 -0300
+	b=fVHp0Iqo1nNOv0NlQqAY6MhJrIELR+vsYbhGImeZDbSWcT4lW+ZcU4UpL5S0hDyIc
+	 +1My9aExWwxuIsW7gwdJ9GtsfR2gTOYyrp6GgRn6FrhFzYGTmQOml2ZQOXmVayL1Tl
+	 n8/98w4QwClbVknf/1f0vjjSINn8ULQZFKw3+Vs/DrxuYcvDN3NwNydUeSYl7w8QWz
+	 GT5081UEmq4ev4W5jFHcMY7RqaAuD6SZ5cpdRBDgyGvwxlaUUBDfYlFKsOuJNOa9Or
+	 kUfYfwdTghRSosdcG3qHRaprxMU+Eddt+M4JDdDl64naVSkKybOkgLQ9+3Cqi7d+uO
+	 RJEX3JxoRGeSg==
+Date: Thu, 25 Apr 2024 15:58:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Veronika Molnarova <vmolnaro@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf annotate: Fix data type profiling on stdio
-Message-ID: <ZiqniieOFsFkwhAx@x1>
-References: <20240423020643.740029-1-namhyung@kernel.org>
- <CAP-5=fUjDdy1GQCq_Z96x=bMXrxmqKojnysYsOnjBvO_nufjsQ@mail.gmail.com>
- <CAM9d7cgDSnd_kZu5LRkNF-UgDX9L-3Po4f9idAYhmqtb8MhEdw@mail.gmail.com>
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+Message-ID: <Ziqn6nPtxHCc6RpR@x1>
+References: <20240403164818.3431325-1-irogers@google.com>
+ <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+ <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,33 +52,111 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cgDSnd_kZu5LRkNF-UgDX9L-3Po4f9idAYhmqtb8MhEdw@mail.gmail.com>
+In-Reply-To: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 
-On Tue, Apr 23, 2024 at 04:07:08PM -0700, Namhyung Kim wrote:
-> On Tue, Apr 23, 2024 at 9:57 AM Ian Rogers <irogers@google.com> wrote:
+On Mon, Apr 22, 2024 at 08:42:17AM -0700, Ian Rogers wrote:
+> On Mon, Apr 22, 2024 at 4:51 AM Veronika Molnarova <vmolnaro@redhat.com> wrote:
 > >
-> > On Mon, Apr 22, 2024 at 7:06 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > The loop in hists__find_annotations() never set the 'nd' pointer to NULL
-> > > and it makes stdio output repeating the last element forever.  I think
-> > > it doesn't set to NULL for TUI to prevent it from exiting unexpectedly.
-> > > But it should just set on stdio mode.
-> > >
-> > > Fixes: d001c7a7f473 ("perf annotate-data: Add hist_entry__annotate_data_tui()")
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > Hi Ian,
 > >
-> > Acked-by: Ian Rogers <irogers@google.com>
+> > On Wed, Apr 3, 2024 at 6:48 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> Previously "set -e" meant any non-zero exit code from perf stat would
+> >> cause a test failure. As a non-zero exit happens when there aren't
+> >> sufficient permissions, check for this case and make the exit code
+> >> 2/skip for it.
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> >> ---
+> >>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+> >>  1 file changed, 22 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> index 55ef9c9ded2d..d6db192b9f18 100755
+> >> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+> >> @@ -1,9 +1,7 @@
+> >> -#!/bin/sh
+> >> +#!/bin/bash
+> >>  # perf all metricgroups test
+> >>  # SPDX-License-Identifier: GPL-2.0
+> >>
+> >> -set -e
+> >> -
+> >>  ParanoidAndNotRoot()
+> >>  {
+> >>    [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+> >> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+> >>  then
+> >>    system_wide_flag=""
+> >>  fi
+> >> -
+> >> +err=0
+> >>  for m in $(perf list --raw-dump metricgroups)
+> >>  do
+> >>    echo "Testing $m"
+> >> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+> >> +  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+> >> +  result_err=$?
+> >> +  if [[ $result_err -gt 0 ]]
+> >> +  then
+> >> +    if [[ "$result" =~ \
+> >> +          "Access to performance monitoring and observability operations is limited" ]]
+> >> +    then
+> >> +      echo "Permission failure"
+> >> +      echo $result
+> >> +      if [[ $err -eq 0 ]]
+> >> +      then
+> >> +        err=2 # Skip
+> >> +      fi
+> >> +    else
+> >> +      echo "Metric group $m failed"
+> >> +      echo $result
+> >> +      err=1 # Fail
+> >> +    fi
+> >> +  fi
+> >>  done
+> >>
+> >> -exit 0
+> >> +exit $err
+> >> --
+> >> 2.44.0.478.gd926399ef9-goog
+> >>
+> >>
+> >
+> > The patch looks good and thanks for taking care of it.
+> >
+> > Just wanted to check what is the desired outcome for metric groups
+> > with events that are invalid in per-thread mode causing the test to fail.
+> >
+> > ```
+> > $ ./stat_all_metricgroups.sh
+> > Testing smi
+> > Metric group smi failed
+> > Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
+> > ```
+> >
+> > Wouldn't it be better if in these cases the test would result in skip instead of fail?
 > 
-> Thanks for your review!
+> Hi Veronika,
+> 
+> I agree that fail isn't best here. I'm wondering:
+> 
+>  - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
+> the count on a context switch? The implementation is here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n234
+> There's clearly something going on as pperf appears to have other restrictions:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n115
+> I'm wondering if aggregation is working right if these counters are
+> more than per hyperthread (I'm guessing why the restrictions exist).
+> 
+>  - the tool error message is doing pretty good. In the test I guess we
+> can spot the per-thread error and turn the fail to a skip. It's a
+> shame to bucket things as skip, but it seems easier than listing
+> metrics in the test or spotting particular events.
+> 
+> I can do a v2 to add this.
 
-Thanks, applied to perf-tools-next,
+Ok, I'll wait for v2 then.
 
 - Arnaldo
- 
-> >
-> > Should we have a test to cover things like this?
-> 
-> Ok, I'll try to add one for perf annotate.
-> 
-> Thanks,
-> Namhyung
