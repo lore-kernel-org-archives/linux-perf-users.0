@@ -1,127 +1,79 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB3D156230
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 22:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B49B156230;
+	Thu, 25 Apr 2024 23:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714084906; cv=none; b=s5+RlYWHQ/j4Eb0slu6dxQGUqg6g4lGSw+kyo6YgTWErvFrftjy+G6BrVQPtlJJt9vBXaxUmcHBZOqoYuCy6f9cuBZGIveK3ypfd33qQ9SjM4n4FExHJuuOh3qbxipYy89L8pXtXn6GSPmET9WcEv2H+CJlOUR7o1eMI3gKyq84=
+	t=1714087019; cv=none; b=I37wACBaJw00yTP9mbdWI2Hj0TmMjpnw8G1mgGUkrxQzLHUu2uUukiecui72blCOXYSYXFASCCHlAMil/76OB0mC6vNPGKvUm84T1o1+RRu3QWyxZtrn4u9c9632V3t5ApKCwmOH7GYQYvIqZiETA5Pq09gCsnjaTlzqdiZWa/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714084906; c=relaxed/simple;
-	bh=oxGSOLNPdfHpQYTSm/hGakG/iwIzMGgaLkQImWnGLjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Dwhin9fWI3i6pYmH3N0D05AnxUJQmdnjAj+jSDgMugit83QkpPAIeldpFJYEpj6tRDMMnNPFS1JNf6zSYDm7TlpRivbPHqAtl++ujtC+gwUBxw9W+BfQEhmCxM0oD+waWSlmclMe8vp9+suOHQ382DZldqmy+YRGJElPbfJKv34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zqcNn8Wb; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714087019; c=relaxed/simple;
+	bh=nvOjsG5VqPWXEiyRE20YY+xwf8zVmtXTntJ6G4y6H7Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vk7AQ5nAHSpG6lbW878NSpcUrQpmeRfYS0ZhP6+cylX0MhxamBheVPJtMwUPk+zSNlJucKgEMrppGUIa0MhDAVXlzRmyvEMAGtJSwPv2r4hgO/YCrxyYEmBxRTKyS3lqdxvNZIpat0MWDBIaXLt4PBwJM9adaIuHQf8SjJKgU/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Us0d8LYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zqcNn8Wb"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36b34effb04so18615ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 15:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714084904; x=1714689704; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=72dpbNrttk8py6uXjyBWtA37O8ks8mKcpQBV78r/mRQ=;
-        b=zqcNn8WbgapFYp7OIbXfY00lWEoDjKCVlbSWbb9/WuFhZRa0tN6H1/MkPM5c7MZYHH
-         VAA+rUAt3PmkyfG8AqM0AwYX12C3XoE/2StZLpKPNHKi6mQKxN/hgADPyV1b5nAPm0R4
-         kmPK2Q+c0gmby9u3pDfOT5ROzIdev7YWeAOIc4WdN6KbQu39vgxe2nvPsnhDr1O/XB0J
-         M5Rd7619QLCSsXblAhx2X4WwTIBI7I8MXOHVSWr80BZK5vhV2C7c8Pf3A4RvbkpwXB4T
-         2Y40GqBT3Q0gNCUZaWDprPPYCS1xVLV/ByST4oweDN8XJzxiYQ3Mw8bTpoCIAe0tQ+D2
-         ggYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714084904; x=1714689704;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=72dpbNrttk8py6uXjyBWtA37O8ks8mKcpQBV78r/mRQ=;
-        b=V5lAxNm+3rrxhji2zPuIWM2StyJ6iy1hQkAUYo6CbyZZsjs7TAtjYcdH9J5ICzW2qr
-         5LYE04dyt304nS2PTX0nPqEYSRqH5J0I8wotlGOHfXdDBib5adUsfDw85+xuAu6LKc/B
-         oWAEvxd8BdnXlfFcEdzN4kvM0c0gGoEgvzj2vjY8y0tL17npUcwfEXFvNhjakGTW7Wzr
-         yndntJVYBnT0g8G3QNyS/viS6cSaTVNieh2ul0P/lN5H1lgMmWsE2OCCIfV81NeQdtOY
-         LUUtWUrPb+mQRUMU9va5y6otMHO94NQNtz8DAlZ/j3BxGC/RGtCvpSMxCY3opqFeClu8
-         vp7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXudRBkDmj6hvqHlPx12TYAdwuuWgENm2bBgudIJp6luBHVRhMmjyWIpUwphnL0UnBMhFcukCoAFsTARau4m8igELXvj3FCn7W064EjecWr/w==
-X-Gm-Message-State: AOJu0Yw2El0j3BmzZV6xPz2juXIKoygo2OmRdKa1npDgvXjqCfYvPmoc
-	ZD5TB9XCwT3vo0dFVXLqrkwk1eT43GzjhJY44ykRrlXeRBauWCfzVTfh2c+QYhYDzuGUUhy8zKy
-	WpkgAiTsIMNGf2m/kh8EufusE6nnTVNND/X5J
-X-Google-Smtp-Source: AGHT+IHO5QqtzXcXeR2dvYokk9K4IIju2HkHxTqgaAiF7cgesnW2Bl6zjmMWkLdEddMASLs6OyUmdiVOsQlsZKcWDhc=
-X-Received: by 2002:a05:6e02:dee:b0:36c:19db:c567 with SMTP id
- m14-20020a056e020dee00b0036c19dbc567mr60918ilj.26.1714084904313; Thu, 25 Apr
- 2024 15:41:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Us0d8LYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F1FC113CC;
+	Thu, 25 Apr 2024 23:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714087019;
+	bh=nvOjsG5VqPWXEiyRE20YY+xwf8zVmtXTntJ6G4y6H7Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Us0d8LYI5olvRkRcs+ySMzvA7NvNkty+iIfcZzJuFzHG/C/Da0GjIJgZv/QJWpFe+
+	 DNm0CLQ12UyhSG7/50LDwEeUeKPoof0wjNb0v06RT7k6JhAvMcfIlQAMIk2XZk4sPu
+	 xdv5lOfYqpyOSuJajAaTJl/dy4N101PjIqcGn3x8vaDv6mjDySKNIcfc0pf9ipQLQC
+	 XQ4tis0Uf9pC9xr2kPoo5JtO4FmD4F0SJjGRR4v7Kowd9OPlchJbqbQ+HU9M2obKiE
+	 j+b0kgJfNPvQBB/VFWtDoBu9YKiEjcxfuiNaOMoNy0z00yqRANtmrAupWHV9/Q7Th9
+	 gGU6O4fOzZfFw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf report: Fix condition in sort__sym_cmp()
+Date: Thu, 25 Apr 2024 16:16:58 -0700
+Message-ID: <20240425231658.1201237-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425223406.471120-1-irogers@google.com>
-In-Reply-To: <20240425223406.471120-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 25 Apr 2024 15:41:30 -0700
-Message-ID: <CAP-5=fWryq6-W35ZyP4PAHJoJSA_7d2YV7zTG3vuL+WGa=_Mmw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/3] Retirement latency perf stat support
-To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
-	Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Dmitrii Dolgov <9erthalion6@gmail.com>, Song Liu <song@kernel.org>, 
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 3:34=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Support 'R' as a retirement latency modifier on events. When present
-> the evsel will fork perf record and perf report commands, parsing the
-> perf report output as the count value. The intent is to do something
-> similar to Weilin's series:
-> https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.c=
-om/
->
-> While the 'R' and the retirement latency are Intel specific, in the
-> future I can imagine more evsel like commands that require child
-> processes. We can make the logic more generic at that point.
->
-> The code is untested on hardware that supports retirement latency, and
-> with metrics with retirement latency in them. The record is also of
-> sleep and various things need tweaking but I think v1 is good enough
-> for people to give input.
->
-> The first patch stops opening a dummy event for tool events. I came
-> across this while looking into the issue and we can likely just pick
-> it first. I kept it in the series for cleanliness sake.
->
-> The code has benefitted greatly from Weilin's work and Namhyung's
-> great review input.
+It's expected that both hist entries are in the same hists when
+comparing two.  But the current code in the function checks one without
+dso sort key and other with the key.  This would make the condition true
+in any case.
 
-I forgot to mention this is based on the tmp.perf-tools-next branch
-due to the recent parse events clean ups that have already landed
-there:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/lo=
-g/?h=3Dtmp.perf-tools-next
+I guess the intention of the original commit was to add '!' for the
+right side too.  But as it should be the same, let's just remove it.
 
-Thanks,
-Ian
+Fixes: 69849fc5d2119 ("perf hists: Move sort__has_dso into struct perf_hpp_list")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/sort.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Ian Rogers (3):
->   perf evsel: Don't open tool events
->   perf parse-events: Add a retirement latency modifier
->   perf evsel: Add retirement latency event support
->
->  tools/perf/util/evsel.c        | 186 ++++++++++++++++++++++++++++++++-
->  tools/perf/util/evsel.h        |   4 +
->  tools/perf/util/parse-events.c |   2 +
->  tools/perf/util/parse-events.h |   1 +
->  tools/perf/util/parse-events.l |   3 +-
->  5 files changed, 192 insertions(+), 4 deletions(-)
->
-> --
-> 2.44.0.769.g3c40516874-goog
->
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 704664e5b4ea..af845d0d418d 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -333,7 +333,7 @@ sort__sym_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	 * comparing symbol address alone is not enough since it's a
+ 	 * relative address within a dso.
+ 	 */
+-	if (!hists__has(left->hists, dso) || hists__has(right->hists, dso)) {
++	if (!hists__has(left->hists, dso)) {
+ 		ret = sort__dso_cmp(left, right);
+ 		if (ret != 0)
+ 			return ret;
+-- 
+2.44.0.769.g3c40516874-goog
+
