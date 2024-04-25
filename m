@@ -1,110 +1,124 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107F617984
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 03:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96892381BD;
+	Thu, 25 Apr 2024 03:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714015119; cv=none; b=aumCEEPiuDrzgGFeOaYJf48SG9AmA/7I5oqIudekuwJ8JKnR6LhSsm32N4kycJRtjPRUOqbW34HJwVOFFY3w5JYXEi5vZRlQRuI09aAa3RuADAc/Vd6Kk4JKNqzvnKwoz6Sqiv8nCv/6Wm2ea+Zq1seGOMFLv+go8IjMyeaTfjY=
+	t=1714017359; cv=none; b=KJPCYvPWGwY54mm08dyQORtcQZYyq7IQmmaOJWd018RWu+NCAftNGMOz6Qp41oPdOpATxlkJAZ4Zhqd0ZXL+gyPf6p4KOXS4fROhWDr6QRvYqQMCYK1H6QF0JrOoqwa9NQu4x+FRmyKhR7Cow1ZuMHaObxOR/HJvVLxX4NOSbpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714015119; c=relaxed/simple;
-	bh=Ns7Fo30/xpBBMDoCH6XFa8kXXTSy9aXlglwSRJUr1S4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bk6EQYsEImPePWJAiG5RhKXyGqb+Nt4DwCLswYvx8L9MRlBj6eOeIEdF+TB1XhVBTVQQDSTAw2cnLxLBWAKcpvOH3ysnyhARqk2hvaNg/b80q/EmJvskIjW2vhoUcesUacou+lg5/Pr0w2pVOu3C6tzVPU6VTVZrYahDRnr3Gac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GjOHtVYT; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714017359; c=relaxed/simple;
+	bh=lpblbahiz8bPblDm/1AOlijrM4+br6b34TjTLViMY4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hkwN3HBhBXN9bHSrfCMrPZNsT14fqXE9s4Q1VjJitzCF/zQvmnsk7LSs1bzZCXhsDmCOfa618GvQj2tCQ8XMzFr8TrzpVXiulTCxUNAxin70Z11ZF2ayaPi/bL1fYXGjY7JIYnGPxkLNHiCVWsxw8bAks27z3eChWuDzpocTDhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KlGh8pyd; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GjOHtVYT"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36b3738f01cso73915ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Apr 2024 20:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714015116; x=1714619916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPYiVyxMu3u5xOHBv4eVLhhrFMPrsWmts8AO796WRkI=;
-        b=GjOHtVYT1xniLQ9wjvVzxdDXqV5eK08Gc4QHHABtW9UFer34tOnrfAZfhsahNWDsUk
-         CZw4d9gMRi+4vXyOe/ZfqfrNxnhASnFCsGLygs1oycmJXQXzSBgNiGk0g8feKTArcSSZ
-         +mAwY9w/7U53NbtIDd5DSgEdpRUT60bEHSe+eZOX4JxFQ2X3x4H6BX8ebPlRDm7J7tFS
-         6FXUrYTD1EbwqHfTYoFyfyPKqH3Hgug15KatOauv4f9yWB2KXtMbEHqNhSGA4ihqkquG
-         SoRSWPvvk4wG9TYMD5GSTdzXz7uCOS1jFWnin22KRlThVhGJC0wGf2WyvPNYhhoJoq99
-         2/Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714015116; x=1714619916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pPYiVyxMu3u5xOHBv4eVLhhrFMPrsWmts8AO796WRkI=;
-        b=ssTRT5H/p3/bCtn+tw9WrVIr3xZ2XkakT1VcWqgqsgAie4nFpzu5kwJ82zYzXHMM8t
-         3/yZRDRTpxia9WjNmvJpdWyLNgvJzf1ndFcPF2QemhKd9PA4YnDyqSjjLsr0MIBRs7jL
-         X8tLEXT6WZJy+KeWe46b8mgSjx2c1Xaw7W0UGmsKp2PlCXlybsRD6H6YBNpJXpkCqPJ6
-         y3WpUZXKQci/Z+aHCNxIGEOjVc418xan9XmWO5WMiA5rPlT9t9AuESXHgOaUaWIOZZXT
-         KssLzxB0eob59Ugx6p+4Yc19Eu+pvA1A2/J6DE4yefb1ayucP+USRlVEFbq9sRsdLMVI
-         D4Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCZb2qZIx7erPVRRY8rsimgvrJEbsRD8P7ZhOCk6/leivgIafJMAUIL7vx8ULRW6lBhlXiGLJ8nS1kcJhMOFHsmrmABsvKR46aAPq4kHv7kg==
-X-Gm-Message-State: AOJu0Ywk4aDSGNbSrAU25DdNNhdE5MBQhLPjr5t6qj9ZoI9AUbygqdBx
-	dRUJbID5WWRAqUIn129IMftkjtRRkXc7/nMAgPX0UNgs7OthG6LnLd0hZqeFa19VVoW2Wh8ucoL
-	rKfhYYLCivKpBqBZi1BeJnYs7rk5KRL+Arl5IcAGc18YT332zDPc1
-X-Google-Smtp-Source: AGHT+IHF+CVLmAdpjL8XDaGa9FnoI/B07c0ipnHIB8jLOOAXa3rQAeDSGJB4Zy4e7sRp9tCchiO6pzYblkTQeU1g9WY=
-X-Received: by 2002:a05:6e02:68b:b0:36b:2eee:85c2 with SMTP id
- o11-20020a056e02068b00b0036b2eee85c2mr95258ils.15.1714015116024; Wed, 24 Apr
- 2024 20:18:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KlGh8pyd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714017358; x=1745553358;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lpblbahiz8bPblDm/1AOlijrM4+br6b34TjTLViMY4M=;
+  b=KlGh8pydX9JBqXNTkF/Qbxe0kJDFDttvFmo6/pG4Sr/Ch3awdEIXGvty
+   wXIwVpicwWYXr5FmxeAJh1P4gOuM78XKvMrqSRx1IYh3ZZ57zqZyKhF9u
+   O4yK36fZm/77Au/Ol9OqAFqRW+nHKfA4WdIMGLRGuXHBxphkiWdWiMSli
+   jU52zyHeXJkXJz7MdGIW2XRfPuBQPTN4rdZkabu/Z3Rk5F8piJYqKIuc1
+   uo0FplQzycs2pz1TVhiTKAv7Q6G2qsUyO1TjPV3AAkv224Nzxdih1gXEB
+   iboHKhguz3OBmGCuslB8VpzJm6JC5vs188BLcaEc0qzANVG1XP0o5234s
+   Q==;
+X-CSE-ConnectionGUID: 0RJn/3ZNSO+v3Orno+EFaw==
+X-CSE-MsgGUID: Kz2Bj+WzQS+4jBg0fVls0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="10215933"
+X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
+   d="scan'208";a="10215933"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 20:55:57 -0700
+X-CSE-ConnectionGUID: Rq8PEeZJRJ2aKqOraVbXLg==
+X-CSE-MsgGUID: WyTUdei7SX6gOfkKNXVeUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,228,1708416000"; 
+   d="scan'208";a="48174436"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 20:55:53 -0700
+Message-ID: <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
+Date: Thu, 25 Apr 2024 11:55:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424230015.1054013-1-namhyung@kernel.org>
-In-Reply-To: <20240424230015.1054013-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Apr 2024 20:18:24 -0700
-Message-ID: <CAP-5=fV5mgVqi2rEgV1hY0BSCZ_6dLKjc0Mp=EDxDirzmB9qPg@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate-data: Check annotation on perf report TUI
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <ZiaX3H3YfrVh50cs@google.com>
+ <d8f3497b-9f63-e30e-0c63-253908d40ac2@loongson.cn>
+ <d980dd10-e4c4-4774-b107-77b320cec9f9@linux.intel.com>
+ <b5e97aa1-7683-4eff-e1e3-58ac98a8d719@loongson.cn>
+ <1ec7a21c-71d0-4f3e-9fa3-3de8ca0f7315@linux.intel.com>
+ <5279eabc-ca46-ee1b-b80d-9a511ba90a36@loongson.cn>
+ <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
+ <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
+ <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
+ <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
+ <Zikeh2eGjwzDbytu@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <Zikeh2eGjwzDbytu@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 24, 2024 at 4:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> As it removed the sample accounting for code when no symbol sort key is
-> given for perf report TUI, it might not allocate the annotated_source
-> yet.  Let's check if it's NULL first.
->
-> Fixes: 6cdd977ec24e1 ("perf report: Do not collect sample histogram unnec=
-essarily")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On 4/24/2024 11:00 PM, Sean Christopherson wrote:
+> On Wed, Apr 24, 2024, Dapeng Mi wrote:
+>> On 4/24/2024 1:02 AM, Mingwei Zhang wrote:
+>>>>> Maybe, (just maybe), it is possible to do PMU context switch at vcpu
+>>>>> boundary normally, but doing it at VM Enter/Exit boundary when host is
+>>>>> profiling KVM kernel module. So, dynamically adjusting PMU context
+>>>>> switch location could be an option.
+>>>> If there are two VMs with pmu enabled both, however host PMU is not
+>>>> enabled. PMU context switch should be done in vcpu thread sched-out path.
+>>>>
+>>>> If host pmu is used also, we can choose whether PMU switch should be
+>>>> done in vm exit path or vcpu thread sched-out path.
+>>>>
+>>> host PMU is always enabled, ie., Linux currently does not support KVM
+>>> PMU running standalone. I guess what you mean is there are no active
+>>> perf_events on the host side. Allowing a PMU context switch drifting
+>>> from vm-enter/exit boundary to vcpu loop boundary by checking host
+>>> side events might be a good option. We can keep the discussion, but I
+>>> won't propose that in v2.
+>> I suspect if it's really doable to do this deferring. This still makes host
+>> lose the most of capability to profile KVM. Per my understanding, most of
+>> KVM overhead happens in the vcpu loop, exactly speaking in VM-exit handling.
+>> We have no idea when host want to create perf event to profile KVM, it could
+>> be at any time.
+> No, the idea is that KVM will load host PMU state asap, but only when host PMU
+> state actually needs to be loaded, i.e. only when there are relevant host events.
+>
+> If there are no host perf events, KVM keeps guest PMU state loaded for the entire
+> KVM_RUN loop, i.e. provides optimal behavior for the guest.  But if a host perf
+> events exists (or comes along), the KVM context switches PMU at VM-Enter/VM-Exit,
+> i.e. lets the host profile almost all of KVM, at the cost of a degraded experience
+> for the guest while host perf events are active.
 
-Thanks,
-Ian
+I see. So KVM needs to provide a callback which needs to be called in 
+the IPI handler. The KVM callback needs to be called to switch PMU state 
+before perf really enabling host event and touching PMU MSRs. And only 
+the perf event with exclude_guest attribute is allowed to create on 
+host. Thanks.
 
-> ---
->  tools/perf/util/annotate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
 >
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index dca2c08ab8c5..f5b6b5e5e757 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -906,7 +906,7 @@ int symbol__annotate(struct map_symbol *ms, struct ev=
-sel *evsel,
->         if (parch)
->                 *parch =3D arch;
->
-> -       if (!list_empty(&notes->src->source))
-> +       if (notes->src && !list_empty(&notes->src->source))
->                 return 0;
->
->         args.arch =3D arch;
-> --
-> 2.44.0.769.g3c40516874-goog
->
->
+> My original sketch: https://lore.kernel.org/all/ZR3eNtP5IVAHeFNC@google.com
