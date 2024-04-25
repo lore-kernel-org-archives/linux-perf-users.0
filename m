@@ -1,84 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C060D4C7B;
-	Thu, 25 Apr 2024 00:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F78F513;
+	Thu, 25 Apr 2024 03:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714006318; cv=none; b=tQAs8bktxQqRTMw+YrwW22NWkAWfOWZ4ZN8TUWURMY4oENCemrTv6n8+EKhk93Op7ySK4vj4kIpkSB1HjfJPnkE9H/f0/K7OqFYuJbxGLpox0gR/a7oTJde7wd4dvRtJ/fTBdbcQOOxQ9ga2gjOx+80efF4EVMZiN5ocW6/NJhU=
+	t=1714014757; cv=none; b=qLuhEiTxRwQPDgzZx8mQQch319DdTsLoxugQLQ/G3sZGZdQeTLhabJD950yCU1z9x2MDoVup7lO0SouBZblOz7lE3ub6Nr0MNrbltB38NdG6jaC1btQob7fFDqf3/1taIn4RVA3rfBjswLDu9Hes1X0bJ5iWIEtKJbdmaqPOFqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714006318; c=relaxed/simple;
-	bh=46mCUHG3XUnFa6d7tBAIJFcTt/fWfv/oNt7QX7k73LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gUjUySJOQI5axom585lMj7Abj6D4om+Xk6DkoZLSFz+7qjJG4TMm48CeJfPsA4RHMO0qvf3P31LBI4Qm5srF459t+8misHTlZ5us2ZPWmkzcmUOmoV2RBjXCk0eVAywwC8wCjHx9R6dfM1spMaMO07IkwJFWJfQEYY5RT8Wywyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwhqtkYT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714014757; c=relaxed/simple;
+	bh=Cc9/KJ14ILnwNdU8czLRH7creacZ14o3hne1jmTaNs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RsAbKdNp1mjCpTw7Guq/RC+smplDVwBwX1GiCMHzDvCSeMwaSHvw45y5qFh9NDn/XvUkQmS5r3Z87dljqRElzLc+FVU3IdOd0Z3OvcHIYskq8yLOBGR5a1bGkrHOO7r7cNUZvDgnCrS/Wg22ibqGQ/FqbhF+DmHZbrs1jCyzJGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PspTijnP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwhqtkYT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4375DC32782;
-	Thu, 25 Apr 2024 00:51:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PspTijnP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C57C113CD;
+	Thu, 25 Apr 2024 03:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714006318;
-	bh=46mCUHG3XUnFa6d7tBAIJFcTt/fWfv/oNt7QX7k73LM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZwhqtkYTiRSahlNP2D07Y1XWzeGXNos4PpGa+PxDJfLjtMaYAum7L+UxvtbpF/uXO
-	 rknaQpufh6ML83UzZ/AD0aeGWAhQbNdo3W/h6HXQ/BonexWKko9ULzMOou3QEr4RqD
-	 u6VlKmnC83gx5lktDkXjjloC3B1VePuIkROcHGdhdkuGD4bi6qUi9QQI9bd/QWuUaU
-	 hK2TH+6cSqJ/hFgCKfDXbSFXzchUD2Jrx5t4cJYJe5WCciUD7n+j3ket5IN37TKTc+
-	 BO+KZXsDTGF3tMcBe3SvdzSIzIueWfxTIqKI4hC3M7tzcSx29J91MxO5hG8Ki7wq+C
-	 qEluc2iFVA35g==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf annotate: Update dso binary type when try build-id
-Date: Wed, 24 Apr 2024 17:51:57 -0700
-Message-ID: <20240425005157.1104789-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-In-Reply-To: <20240425005157.1104789-1-namhyung@kernel.org>
-References: <20240425005157.1104789-1-namhyung@kernel.org>
+	s=k20201202; t=1714014756;
+	bh=Cc9/KJ14ILnwNdU8czLRH7creacZ14o3hne1jmTaNs0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PspTijnPTb4cLwKaUXaBK6lgKqrykqW7TnXryDjg7qy1V4DjZ9qYPfEzdMwJcLXmE
+	 2q4vN4nwJllD1z/pH7aACsx2p2ofCITa183q4xZiAclRBaq/82Q7A/KwffAzVOELei
+	 BATUW6SiIq4LeUt/sDYn/hnGKl2shhXeP1rwhzi0rZHTU/OxLjZRFcQA8QACF8kBTq
+	 Md3p5a2MNJIshoUuU+UOn1xH4LNXomCzxGby8JGUI0mSu2HkcgWhSAkP5pU+L9gZk0
+	 nFvpPG5wZraQmtC6JOcQTZn622/SbjwBkjxqFODHiN0ijyqtZ768dGuDQszSMnLkI8
+	 ayXyd+53H5Hzw==
+Date: Wed, 24 Apr 2024 20:12:34 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Joel Granados
+ <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, Eric Dumazet
+ <edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+ bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, kexec@lists.infradead.org,
+ linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
+ lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240424201234.3cc2b509@kernel.org>
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-dso__disassemble_filename() tries to get the filename for objdump (or
-capstone) using build-id.  But I found sometimes it didn't disassemble
-some functions.  It turned out that those functions belong to a dso
-which has no binary type set.  It seems it sets the binary type for some
-special files only - like kernel (kallsyms or kcore) or BPF images.  And
-there's a logic to skip dso with DSO_BINARY_TYPE__NOT_FOUND.
+On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Wei=C3=9Fschuh wrote:
+> The series was split from my larger series sysctl-const series [0].
+> It only focusses on the proc_handlers but is an important step to be
+> able to move all static definitions of ctl_table into .rodata.
 
-As it's checked the build-id cache linke, it should set the binary type
-as DSO_BINARY_TYPE__BUILD_ID_CACHE.
-
-Fixes: 873a83731f1c ("perf annotate: Skip DSOs not found")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/disasm.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 412101f2cf2a..6d1125e687b7 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -1156,6 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 			}
- 		}
- 		mutex_unlock(&dso->lock);
-+	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
-+		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
- 	}
- 
- 	free(build_id_path);
--- 
-2.44.0.769.g3c40516874-goog
-
+Split this per subsystem, please.
