@@ -1,124 +1,89 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB68A39FD3;
-	Thu, 25 Apr 2024 06:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FC6CDA5;
+	Thu, 25 Apr 2024 07:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714024972; cv=none; b=RjOhsFWK1dKEK1rbsJDFXqDgeeAzklJx4eJveFjhYusyb1RfWnBOnS5uAcdrVkcrEEWykhuNmM/Wng7iZf0boZxZljM/2EbS2T+qdh6yQAxYzHZhmsohrAEQhbBuC/rMX0tU+76Pj2nFF8s0qYUgwAJwYTs0dRcNiEGB3NdyRzE=
+	t=1714029040; cv=none; b=uZlhU/LfITufdr6wUyubmn7V68w/ZlTtzgNBBFxXy8bUwO01JD1et/nSI0mp7VLDgueIne3fITim+YnlqFAhs+pEgdNN6rxk/Zj2zxO9lJq1zbr3218wWdisDtRsno2+CyirAzvAvpVOwdFPn2Nmhvjdz3kt18Hz7V5BGdSQI2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714024972; c=relaxed/simple;
-	bh=sC0IelbYeJYIu+qeRy7j6jZ4kH6RMzf84bLgmSYcag8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KckBvXCYjEwFA1pCHHFfEXIsIPzWTXjXY+M1H00lSSWZZlzBogxDcR4ALWaGj4xdMsTVgDCjzQMqoaUM7E9tmb6fCyJW2Z5Ok5zRUiGb93veMEDauAd1OLsq/L+SXDDSnee1muAhcEBQXKWlpGWkGJ5JN1f32Fuem+uE896p2MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ShEoqoQw; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714029040; c=relaxed/simple;
+	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gieOt1pLr+D0qMK4OYcfBKCyFuFyZJ7Do7RWMt3ayutKnlctUSr2Giaov9NdiRm4Za70PQzA3qkWCBKWf1/H9AA4Nu5ldrBgQ/XdgGVcB+r1Ht+ee3gDsTp/K9jbn607DyqrWZKqMU3wvsVD4YOAM1Fwrm2yuESrIdV3F2KqHVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MmasBUph; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShEoqoQw"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f0b9f943cbso597926b3a.0;
-        Wed, 24 Apr 2024 23:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714024970; x=1714629770; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FTdEUJ7NZqvAT2gBeyJUpJaQhE398XmsjxeM6PTnkZY=;
-        b=ShEoqoQwRsDoWo7RGR2u7BoU8fvfABg26zldwvoEJib5xsm7JlnAIc/jAN1cJK6V6g
-         wF6QC8JwT0jgkFzzK8YvHf3ffATFinhr7KlKwOsgSBnR67/DvwyqT09hp8hEQcpXdcmc
-         aJkvHcm7dns/MiUJamnbrUOTDhypvPfpCqPfa+jxkohzZzAKFkTlrbmsRRJZofXdy/jj
-         56mN8gg0c4z04Xb9FvBpXbG5fbHmxEol4LrPrcXPPX68vn07b+xlSKHVd+kq6XBKnUei
-         GcVCIdsvtxtxHsaz3or9OayR25OepA4DsQ9CFcfoLNlEegFpWPY0qMyrhp2YZ+o/sxY7
-         QZrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714024970; x=1714629770;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FTdEUJ7NZqvAT2gBeyJUpJaQhE398XmsjxeM6PTnkZY=;
-        b=ayLCfkI3YJmqAaHT9FznjEJj/jnfFgCBKDc1sfL/FVrjAXZiFqULLV65kNutq1iTs1
-         bH52GBC8u43lEKRG6Hsfj436pT1F2QLhYsKnmOze3aB8rafDvRY5UbkI+yGoAjA/qQgy
-         r/zUI2Y0bHLALsAMqSpjWTw1VPLjeJ3fRGAbp296gJ1Ci4OGOwWJHr/mMe0Tv4kyfL0G
-         NnwQsB2/Y7GmMAi5nkeGRZ8jV35yrKqYgIYtm15o6ju+0oPnE5LO2LvGv3iiCig9X4jK
-         kI7t38w9T8Q2JbCrThnQ5vdKowagFjvM9wBFk2lbmm/KOtvPA9lzrwebld/aKwMCOkwR
-         Jr5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhjZHLgFSlRapXkcPBY36Lsth2tMhmfLgKgL2TU+axFQFrprvIBgtoJflF4+mHMumBZ1l7HB+Qq7fTikINE2PYbRlgg4Ynlb3HCH0zvIpD1lQczaSitk3f0svbYIapkLUie62ElXhPGIGGLmqN/Q==
-X-Gm-Message-State: AOJu0Yx878qumeuZqjb0gKWRx7UbKGn/n7MXOckbUa0qE9sTX6xKQIUB
-	T4uXD/vjh7kvAPlKOlEsbe9UsjxOJH4AZmXz8sgTnC+UyPuuolgd
-X-Google-Smtp-Source: AGHT+IE48rYcpwlz/npjcqGt64GIbI+VrEHs0XfecIpjAneEsL1ZMzBFdQZjZgdcdIoy+FiXSKJJog==
-X-Received: by 2002:a05:6a20:3c87:b0:1ad:7be1:a4a9 with SMTP id b7-20020a056a203c8700b001ad7be1a4a9mr5657957pzj.34.1714024970152;
-        Wed, 24 Apr 2024 23:02:50 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.49.143])
-        by smtp.gmail.com with ESMTPSA id o6-20020a1709026b0600b001eab1ea2165sm598760plk.201.2024.04.24.23.02.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 23:02:49 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	trivial@kernel.org
-Subject: [PATCH] perf record: Fix comment misspellings
-Date: Thu, 25 Apr 2024 14:04:27 +0800
-Message-ID: <20240425060427.1800663-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MmasBUph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714029027;
+	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MmasBUphC0hDmcDselWsqNDchcFNLbtyyIXYaTEfQv4BLOsVbY80KeyHb5BvHn9uV
+	 mXfX+53b9fklgAHnv4JHOlIL0SSIIXm5AmCALLJVlcCrmQacW/Cc+9xB5aBl8A7Dwb
+	 B9LRLV8RKBn3hp3tvoCofURazzoY7NMe3hrGTd84=
+Date: Thu, 25 Apr 2024 09:10:27 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, 
+	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
+	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
+	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
+	linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-Fix comment misspellings
+On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
+> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > The series was split from my larger series sysctl-const series [0].
+> > It only focusses on the proc_handlers but is an important step to be
+> > able to move all static definitions of ctl_table into .rodata.
+> 
+> Split this per subsystem, please.
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/lib/perf/mmap.c       | 2 +-
- tools/perf/builtin-record.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Unfortunately this would introduce an enormous amount of code churn.
 
-diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-index 0c903c2372c9..c1a51d925e0e 100644
---- a/tools/lib/perf/mmap.c
-+++ b/tools/lib/perf/mmap.c
-@@ -279,7 +279,7 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map)
- 	if (!refcount_read(&map->refcnt))
- 		return NULL;
- 
--	/* non-overwirte doesn't pause the ringbuffer */
-+	/* non-overwrite doesn't pause the ringbuffer */
- 	if (!map->overwrite)
- 		map->end = perf_mmap__read_head(map);
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 3994adaf4607..34d103f4af57 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -332,7 +332,7 @@ static int record__aio_complete(struct mmap *md, struct aiocb *cblock)
- 	} else {
- 		/*
- 		 * aio write request may require restart with the
--		 * reminder if the kernel didn't write whole
-+		 * remainder if the kernel didn't write whole
- 		 * chunk at once.
- 		 */
- 		rem_off = cblock->aio_offset + written;
-@@ -402,7 +402,7 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
- 	 *
- 	 * Coping can be done in two steps in case the chunk of profiling data
- 	 * crosses the upper bound of the kernel buffer. In this case we first move
--	 * part of data from map->start till the upper bound and then the reminder
-+	 * part of data from map->start till the upper bound and then the remainder
- 	 * from the beginning of the kernel buffer till the end of the data chunk.
- 	 */
- 
--- 
-2.44.0
+The function prototypes for each callback have to stay consistent.
+So a another callback member ("proc_handler_new") is needed and users
+would be migrated to it gradually.
 
+But then *all* definitions of "struct ctl_table" throughout the tree need to
+be touched.
+In contrast, the proposed series only needs to change the handler
+implementations, not their usage sites.
+
+There are many, many more usage sites than handler implementations.
+
+Especially, as the majority of sysctl tables use the standard handlers
+(proc_dostring, proc_dobool, ...) and are not affected by the proposed
+aproach at all.
+
+And then we would have introduced a new handler name "proc_handler_new"
+and maybe have to do the whole thing again to rename it back to
+the original and well-known "proc_handler".
+
+
+Of course if somebody has a better aproach, I'm all ears.
+
+
+Thomas
