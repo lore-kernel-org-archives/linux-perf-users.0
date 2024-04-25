@@ -1,67 +1,67 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD38156988
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 22:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB3D156230
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 22:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714084466; cv=none; b=X58tXPNYeO+5oUhb9lTvJR5qxhddaSODHEm4uTOL+uFhUSsk7TlCROFcJB6Z1SDz3rxfDoI9zWw4awiiImqkZCoSfaKvRO2chMvT4+BusLOoO9f2ts0l4vd5IzR0TtJlQb73o2E5ddjqEppIlm+cYvvQ7Vfoma79LX5JdjwmryI=
+	t=1714084906; cv=none; b=s5+RlYWHQ/j4Eb0slu6dxQGUqg6g4lGSw+kyo6YgTWErvFrftjy+G6BrVQPtlJJt9vBXaxUmcHBZOqoYuCy6f9cuBZGIveK3ypfd33qQ9SjM4n4FExHJuuOh3qbxipYy89L8pXtXn6GSPmET9WcEv2H+CJlOUR7o1eMI3gKyq84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714084466; c=relaxed/simple;
-	bh=ZSwI+yq5E5BN4AjdvtMRad6FLRDWGqvN6S1bQXrEnHk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=TBynZw+MsiDb20wIR7/mYWnyrz1rtU1Y0/mPfRESH+fK705cdOD0yLdMYjK811TIBD6GDo7vTZ5qZI5NWME8nX0WbEss8emUKj8ga3+uBTO/jI3VLZfauI4+tkIlJf1iS7Qq5+nIrbMbZuc/hgDC5IE7xoTpTCDnswxbnf65s34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G2J7S0Ld; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1714084906; c=relaxed/simple;
+	bh=oxGSOLNPdfHpQYTSm/hGakG/iwIzMGgaLkQImWnGLjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Dwhin9fWI3i6pYmH3N0D05AnxUJQmdnjAj+jSDgMugit83QkpPAIeldpFJYEpj6tRDMMnNPFS1JNf6zSYDm7TlpRivbPHqAtl++ujtC+gwUBxw9W+BfQEhmCxM0oD+waWSlmclMe8vp9+suOHQ382DZldqmy+YRGJElPbfJKv34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zqcNn8Wb; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G2J7S0Ld"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de5a378a948so601037276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 15:34:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zqcNn8Wb"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36b34effb04so18615ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 15:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714084462; x=1714689262; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8pr67K9okSqlKqRnt5D4jF0pSd06W4wTNqiSPTASJPI=;
-        b=G2J7S0LdC/2qf3MOFGuzqlAknAtlTuJBnkoVaPFabuPwTZhEpdceTI+qgKn88HsyAh
-         bKtAFvArxzQ5eqF5ut6hrLohy8itmXQcboELFMtpVZWFtapC930Jsm+04UoMDFP0FxVc
-         ougUP9gGVTmQwdxw4RhsgYjyR+VC6Ty5WWf6VCxNPC4xa5XcGyhTE6UBTdW0wB5Ja+Jo
-         uei/cJCJ+vzgtdvq0uDUhKjhjWf0iFneQpviNwTVC6sHKyfeCqQituIdc9V3kJvQwwIw
-         WK1DRUsFzniFxPTo8PTH3YtJ8NvB/sdkohoNLMH9MQOOkWMM5dOVJYqQHQFMok/JuL2r
-         H8tw==
+        d=google.com; s=20230601; t=1714084904; x=1714689704; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=72dpbNrttk8py6uXjyBWtA37O8ks8mKcpQBV78r/mRQ=;
+        b=zqcNn8WbgapFYp7OIbXfY00lWEoDjKCVlbSWbb9/WuFhZRa0tN6H1/MkPM5c7MZYHH
+         VAA+rUAt3PmkyfG8AqM0AwYX12C3XoE/2StZLpKPNHKi6mQKxN/hgADPyV1b5nAPm0R4
+         kmPK2Q+c0gmby9u3pDfOT5ROzIdev7YWeAOIc4WdN6KbQu39vgxe2nvPsnhDr1O/XB0J
+         M5Rd7619QLCSsXblAhx2X4WwTIBI7I8MXOHVSWr80BZK5vhV2C7c8Pf3A4RvbkpwXB4T
+         2Y40GqBT3Q0gNCUZaWDprPPYCS1xVLV/ByST4oweDN8XJzxiYQ3Mw8bTpoCIAe0tQ+D2
+         ggYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714084462; x=1714689262;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8pr67K9okSqlKqRnt5D4jF0pSd06W4wTNqiSPTASJPI=;
-        b=VoHvzHsLKCaHD0dqvZnaAwnlAC25AL0EvwRVUN3UPc4BefAmwPfpUgSitEbFOAk1Wi
-         QCX4Sl5Psl0hpk0KBZmz1EYkoARhmhz7N09+jRCWVuQrxMPgR8qIUNehN0/HE2tSp65K
-         vwl9FUW/8kqZKkglW7bkAGBogXWdvaajdI8tHZDV8yuJVPdcDkYgqQzkWpZFus5RZxUA
-         G6xIPilmX4qKlKpPgFjYCb0oLCnktWngmoLF0tVPuxc3wF4lNXXCONmbMZLnreHYEKVy
-         5p0XrtOQPDylYCZYV5OwSPOs6VhJq8SBG+DXvdm2rIc5gveoyxiij4i4hCm8/9wM72rM
-         VUwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWUQ9KshbFtaSL3RFYHSpVdIj06jvh4BnCP8Dd/jTrtzaHWjoVGHYdNYiPXSVYG4yXeJwzvcQQShjXBszMFYkNK9uuRW9nlPVbh2IkWoshSA==
-X-Gm-Message-State: AOJu0Yw5dzVANeXICouNhpaTrAZFd1Vlz1is0laTO73uU66p0VXmvqEG
-	NcvoOQrmJcTnoFSS3TRAE+/YJ72z4h8GXeYzG7/YiXDtLm3RxLfY+6H3hbhMzvQYl4Pe/poU32O
-	T7jR3qQ==
-X-Google-Smtp-Source: AGHT+IFtPTqMyFPlUEA83jO6S8cfsPVfGuW6p7qbvYx4galgmjpo6w0WgOMNmkHgVwvJb46mPDcrvhHnfULi
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8708:517d:aade:8c87])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b0c:b0:de5:78:34d2 with SMTP id
- fi12-20020a0569022b0c00b00de5007834d2mr115971ybb.6.1714084462481; Thu, 25 Apr
- 2024 15:34:22 -0700 (PDT)
-Date: Thu, 25 Apr 2024 15:34:06 -0700
-In-Reply-To: <20240425223406.471120-1-irogers@google.com>
-Message-Id: <20240425223406.471120-4-irogers@google.com>
+        d=1e100.net; s=20230601; t=1714084904; x=1714689704;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=72dpbNrttk8py6uXjyBWtA37O8ks8mKcpQBV78r/mRQ=;
+        b=V5lAxNm+3rrxhji2zPuIWM2StyJ6iy1hQkAUYo6CbyZZsjs7TAtjYcdH9J5ICzW2qr
+         5LYE04dyt304nS2PTX0nPqEYSRqH5J0I8wotlGOHfXdDBib5adUsfDw85+xuAu6LKc/B
+         oWAEvxd8BdnXlfFcEdzN4kvM0c0gGoEgvzj2vjY8y0tL17npUcwfEXFvNhjakGTW7Wzr
+         yndntJVYBnT0g8G3QNyS/viS6cSaTVNieh2ul0P/lN5H1lgMmWsE2OCCIfV81NeQdtOY
+         LUUtWUrPb+mQRUMU9va5y6otMHO94NQNtz8DAlZ/j3BxGC/RGtCvpSMxCY3opqFeClu8
+         vp7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXudRBkDmj6hvqHlPx12TYAdwuuWgENm2bBgudIJp6luBHVRhMmjyWIpUwphnL0UnBMhFcukCoAFsTARau4m8igELXvj3FCn7W064EjecWr/w==
+X-Gm-Message-State: AOJu0Yw2El0j3BmzZV6xPz2juXIKoygo2OmRdKa1npDgvXjqCfYvPmoc
+	ZD5TB9XCwT3vo0dFVXLqrkwk1eT43GzjhJY44ykRrlXeRBauWCfzVTfh2c+QYhYDzuGUUhy8zKy
+	WpkgAiTsIMNGf2m/kh8EufusE6nnTVNND/X5J
+X-Google-Smtp-Source: AGHT+IHO5QqtzXcXeR2dvYokk9K4IIju2HkHxTqgaAiF7cgesnW2Bl6zjmMWkLdEddMASLs6OyUmdiVOsQlsZKcWDhc=
+X-Received: by 2002:a05:6e02:dee:b0:36c:19db:c567 with SMTP id
+ m14-20020a056e020dee00b0036c19dbc567mr60918ilj.26.1714084904313; Thu, 25 Apr
+ 2024 15:41:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 References: <20240425223406.471120-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [RFC PATCH v1 3/3] perf evsel: Add retirement latency event support
+In-Reply-To: <20240425223406.471120-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
+Date: Thu, 25 Apr 2024 15:41:30 -0700
+Message-ID: <CAP-5=fWryq6-W35ZyP4PAHJoJSA_7d2YV7zTG3vuL+WGa=_Mmw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/3] Retirement latency perf stat support
 To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
@@ -73,268 +73,55 @@ To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>,
 	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a retirement latency event is processed it sets a flag on the
-evsel. This change makes it so that when the flag is set evsel
-opening, reading and exiting report values from child perf record and
-perf report processes.
+On Thu, Apr 25, 2024 at 3:34=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Support 'R' as a retirement latency modifier on events. When present
+> the evsel will fork perf record and perf report commands, parsing the
+> perf report output as the count value. The intent is to do something
+> similar to Weilin's series:
+> https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.c=
+om/
+>
+> While the 'R' and the retirement latency are Intel specific, in the
+> future I can imagine more evsel like commands that require child
+> processes. We can make the logic more generic at that point.
+>
+> The code is untested on hardware that supports retirement latency, and
+> with metrics with retirement latency in them. The record is also of
+> sleep and various things need tweaking but I think v1 is good enough
+> for people to give input.
+>
+> The first patch stops opening a dummy event for tool events. I came
+> across this while looking into the issue and we can likely just pick
+> it first. I kept it in the series for cleanliness sake.
+>
+> The code has benefitted greatly from Weilin's work and Namhyung's
+> great review input.
 
-Something similar was suggested by Namhyung Kim in:
-https://lore.kernel.org/lkml/CAM9d7cgdQQn5GYB7t++xuoMdeqPXiEkkcop69+rD06RAnu9-EQ@mail.gmail.com/
+I forgot to mention this is based on the tmp.perf-tools-next branch
+due to the recent parse events clean ups that have already landed
+there:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/lo=
+g/?h=3Dtmp.perf-tools-next
 
-This is trying to add support for retirement latency directly in
-events rather than through metric changes, as suggested by Weilin Wang in:
-https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.com/
----
- tools/perf/util/evsel.c | 181 +++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/evsel.h |   3 +
- 2 files changed, 181 insertions(+), 3 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2743d40665ff..3f0b4326bac6 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -56,6 +56,7 @@
- #include <internal/xyarray.h>
- #include <internal/lib.h>
- #include <internal/threadmap.h>
-+#include <subcmd/run-command.h>
- 
- #include <linux/ctype.h>
- 
-@@ -491,6 +492,156 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
- }
- #endif
- 
-+static int evsel__start_retire_latency_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-+					  int cpu_map_idx)
-+{
-+	char buf[16];
-+	int pipefd[2];
-+	int err, i, event_len;
-+	struct perf_cpu cpu = perf_cpu_map__cpu(cpus, cpu_map_idx);
-+	struct child_process *child_record =
-+		xyarray__entry(evsel->children, cpu_map_idx, 0);
-+	struct child_process *child_report =
-+		xyarray__entry(evsel->children, cpu_map_idx, 1);
-+	char *event = strdup(evsel__name(evsel));
-+	// TODO: the dummy event also won't be used, but there's no option to disable.
-+	const char *record_argv[15] = {
-+		[0] = "perf",
-+		[1] = "record",
-+		[2] = "--synth=no",
-+		[3] = "-W",
-+		[4] = "-o",
-+		[5] = "-",
-+		[6] = "-e",
-+	};
-+	const char *report_argv[] = {
-+		[0] = "perf",
-+		[1] = "report",
-+		[2] = "-i",
-+		[3] = "-",
-+		[4] = "-q",
-+		[5] = "-F",
-+		[6] = "weight1",
-+		NULL,
-+	};
-+
-+	if (!event)
-+		return -ENOMEM;
-+
-+	// Remove the R from the modifiers.
-+	event_len = strlen(event);
-+	if (event[event_len - 1] == 'R' && event[event_len - 2] == ':') {
-+		event[strlen(event) - 2] = '\0';
-+	} else if (event[event_len - 1] == 'R' && event[event_len - 2] == '/') {
-+		event[strlen(event) - 1] = '\0';
-+	} else {
-+		for (i = event_len - 1; i > 0; i--) {
-+			if (event[i] == 'R') {
-+				for (int j = i + 1; j < event_len; j++)
-+					event[i] = event[j];
-+				event[strlen(event) - 1] = '\0';
-+				break;
-+			}
-+		}
-+		if (i == 0)
-+			pr_err("Expected retired latency 'R'\n");
-+	}
-+
-+	i = 7;
-+	record_argv[i++] = event;
-+	if (verbose) {
-+		record_argv[i++] = verbose > 1 ? "-vv" : "-v";
-+	}
-+	if (cpu.cpu >= 0) {
-+		record_argv[i++] = "-C";
-+		snprintf(buf, sizeof(buf), "%d", cpu.cpu);
-+		record_argv[i++] = buf;
-+	} else {
-+		record_argv[i++] = "-a";
-+	}
-+	record_argv[i++] = "sleep";
-+	// TODO: interval and support for different periods.
-+	record_argv[i++] = "0.1";
-+
-+	if (pipe(pipefd) < 0) {
-+		free(event);
-+		return -errno;
-+	}
-+
-+	child_record->argv = record_argv;
-+	child_record->pid = -1;
-+	child_record->no_stdin = 1;
-+	if (verbose)
-+		child_record->err = fileno(stderr);
-+	else
-+		child_record->no_stderr = 1;
-+	child_record->out = pipefd[1];
-+	err = start_command(child_record);
-+	free(event);
-+	if (err)
-+		return err;
-+
-+	child_report->argv = report_argv;
-+	child_report->pid = -1;
-+	if (verbose)
-+		child_report->err = fileno(stderr);
-+	else
-+		child_report->no_stderr = 1;
-+	child_report->in = pipefd[0];
-+	child_report->out = -1;
-+	return start_command(child_report);
-+}
-+
-+static int evsel__finish_retire_latency_cpu(struct evsel *evsel, int cpu_map_idx)
-+{
-+	struct child_process *child_record =
-+		xyarray__entry(evsel->children, cpu_map_idx, 0);
-+	struct child_process *child_report =
-+		xyarray__entry(evsel->children, cpu_map_idx, 1);
-+
-+	finish_command(child_record);
-+	finish_command(child_report);
-+	return 0;
-+}
-+
-+static int evsel__read_retire_latency(struct evsel *evsel, int cpu_map_idx, int thread)
-+{
-+	struct child_process *child_report = xyarray__entry(evsel->children, cpu_map_idx, 1);
-+	struct perf_counts_values *count = perf_counts(evsel->counts, cpu_map_idx, thread);
-+	char buf[256];
-+	int err;
-+
-+	err = read(child_report->out, buf, sizeof(buf));
-+	if (err < 0 || strlen(buf) == 0)
-+		return -1;
-+
-+	count->val = atoll(buf);
-+	count->ena = 1;
-+	count->run = 1;
-+	count->id = 0;
-+	count->lost = 0;
-+
-+	err = evsel__finish_retire_latency_cpu(evsel, cpu_map_idx);
-+	if (err)
-+		return err;
-+
-+	/* Restart the counter. */
-+	return evsel__start_retire_latency_cpu(evsel, evsel->core.cpus, cpu_map_idx);
-+}
-+
-+static int evsel__finish_retire_latency(struct evsel *evsel)
-+{
-+	int idx;
-+
-+	perf_cpu_map__for_each_idx(idx, evsel->core.cpus) {
-+		int err = evsel__finish_retire_latency_cpu(evsel, idx);
-+
-+		if (err)
-+			return err;
-+	}
-+	return 0;
-+}
-+
- const char *const evsel__hw_names[PERF_COUNT_HW_MAX] = {
- 	"cycles",
- 	"instructions",
-@@ -1463,6 +1614,10 @@ static void evsel__free_config_terms(struct evsel *evsel)
- 
- void evsel__exit(struct evsel *evsel)
- {
-+	if (evsel->children) {
-+		evsel__finish_retire_latency(evsel);
-+		zfree(&evsel->children);
-+	}
- 	assert(list_empty(&evsel->core.node));
- 	assert(evsel->evlist == NULL);
- 	bpf_counter__destroy(evsel);
-@@ -1602,9 +1757,10 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
- 
- int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
- {
--	u64 read_format = evsel->core.attr.read_format;
-+	if (evsel->retire_lat)
-+		return evsel__read_retire_latency(evsel, cpu_map_idx, thread);
- 
--	if (read_format & PERF_FORMAT_GROUP)
-+	if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
- 		return evsel__read_group(evsel, cpu_map_idx, thread);
- 
- 	return evsel__read_one(evsel, cpu_map_idx, thread);
-@@ -1819,10 +1975,22 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		threads = empty_thread_map;
- 	}
- 
--	if (evsel->core.fd == NULL &&
-+	if (!evsel->retire_lat && evsel->core.fd == NULL &&
- 	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
- 		return -ENOMEM;
- 
-+	if (evsel->retire_lat && evsel->children == NULL) {
-+		/*
-+		 * Use ylen of 2, [0] is the record and [1] is the report
-+		 * command. Currently retirement latency doesn't support
-+		 * per-thread mode.
-+		 */
-+		evsel->children = xyarray__new(perf_cpu_map__nr(cpus), /*ylen=*/2,
-+					sizeof(struct child_process));
-+		if (!evsel->children)
-+			return -ENOMEM;
-+	}
-+
- 	evsel->open_flags = PERF_FLAG_FD_CLOEXEC;
- 	if (evsel->cgrp)
- 		evsel->open_flags |= PERF_FLAG_PID_CGROUP;
-@@ -2033,6 +2201,13 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
- 
-+		if (evsel->retire_lat) {
-+			err = evsel__start_retire_latency_cpu(evsel, cpus, idx);
-+			if (err)
-+				return err;
-+			continue;
-+		}
-+
- 		for (thread = 0; thread < nthreads; thread++) {
- 			int fd, group_fd;
- retry_open:
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index e6726587e1bc..ab7c10e7f063 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -171,6 +171,9 @@ struct evsel {
- 
- 	/* for missing_features */
- 	struct perf_pmu		*pmu;
-+
-+	/* Used for retire_lat child process. */
-+	struct xyarray *children;
- };
- 
- struct perf_missing_features {
--- 
-2.44.0.769.g3c40516874-goog
-
+> Ian Rogers (3):
+>   perf evsel: Don't open tool events
+>   perf parse-events: Add a retirement latency modifier
+>   perf evsel: Add retirement latency event support
+>
+>  tools/perf/util/evsel.c        | 186 ++++++++++++++++++++++++++++++++-
+>  tools/perf/util/evsel.h        |   4 +
+>  tools/perf/util/parse-events.c |   2 +
+>  tools/perf/util/parse-events.h |   1 +
+>  tools/perf/util/parse-events.l |   3 +-
+>  5 files changed, 192 insertions(+), 4 deletions(-)
+>
+> --
+> 2.44.0.769.g3c40516874-goog
+>
