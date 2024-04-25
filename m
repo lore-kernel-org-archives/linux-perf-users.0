@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A1A149C67;
-	Thu, 25 Apr 2024 14:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9492149E18;
+	Thu, 25 Apr 2024 14:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714053732; cv=none; b=qGeu4grdno7bpFTNcJvoXzmv+3d2udmJFsT1YWAVsNV2Lfgxi9VbZ0vQPNEgvHH8iG8mSNEGjbyvzvrLXGowoNbVvIfUdVqSGcu0B60T8n6HbHHkGLaMaMPs9hLP9sMXEo8FY1P64kUVzXTOOdwgssNxvx6yFnL1b7kEwezVa1s=
+	t=1714053781; cv=none; b=JeIwYjVFXA7TxUHKJIb6Vcc+W8/8nX/kHvwbKprSd4nq0+0mrywg1/8BgHNXRvM8emefpgHvp2PaRve5wwArWWbDfhxQ5FxXdS5wT/6NBGnQddnj3JMTYxt9s9i9FPCk3lJ9Bq/WarY/c496vjJ7yBzROILwuR3CRtzkFUJyaIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714053732; c=relaxed/simple;
-	bh=DqKDPDUySoPXORwAqXe1B4HQ1YXnLVQ0qpjZYrw3o/Q=;
+	s=arc-20240116; t=1714053781; c=relaxed/simple;
+	bh=ILvhGO1VsJHi02UTnDRo93FjUfCcr+5j1zrCi7PVrnU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiITfrH2uThuc0HjOKnrsMmjIna5HGiJew2W3TGo+joCmPMO14UhHhkCg453ukAAq57Ar6oMjP9XydFtuVW+YyTPXM1Y3WcD8/qWe44qc/oFtM/DaaclrL4K6TMhW1QPxsp0mC+ctd2BGNYGVTszejStsQxKzQ++g3qukczT8Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGsqkNso; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbj3uAOJzvIwGtNSx40hl8zsvwsOSNeFiMxCBEUNiKwqwBHK1VdFi/tDsRnEeWODeG+KoNlPYY1UeBUWVxS8opfVpxP6jAHytC1U+rhUwoMNCHONekJE5TLiK9V2r5n4rRlUJJLTzaVafgpS4zf0r5Tcu3ZW5fbZlcNXUVhuv+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUmKFK5+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGsqkNso"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3504C113CC;
-	Thu, 25 Apr 2024 14:02:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUmKFK5+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CA5C3277B;
+	Thu, 25 Apr 2024 14:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714053731;
-	bh=DqKDPDUySoPXORwAqXe1B4HQ1YXnLVQ0qpjZYrw3o/Q=;
+	s=k20201202; t=1714053781;
+	bh=ILvhGO1VsJHi02UTnDRo93FjUfCcr+5j1zrCi7PVrnU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UGsqkNsokOe2xC6Fyqe0dMBHKMyWAXt6nvmoVnUSUIAcbn0o0scNqoVJXGQvp9+kl
-	 /IyN+IMZ52aCbpjmYubh915efG8Gigbx0F1xJx+nnEWBLUvUgLOxLyGMUUmUWoZOxY
-	 LTSko+R85DzFxx91a4WVKuuILPxZqG6wXXyHIEPYpYVW6c6ai+f6F7GSG1petyjnyu
-	 bOlGMaVqirH9NYB7qRu3364NRAhkv5pnoemq1KWQqYLP5gHzOH8IdG7CefKsxcJtN4
-	 +FsBeU/uyZNgc4Fs7mz4P9ryJ61h/ODCTMvZsSaXUIo+IEECydN36FygplyihMqhoS
-	 y8kaj9XaFhUAA==
-Date: Thu, 25 Apr 2024 11:02:06 -0300
+	b=MUmKFK5+D30BpDLy4QRzJT0M9fOo5C3u+1sA80IKgp3O+MwEZMamX+35MloptqbZP
+	 Musz3DGloPC7J1/oQ9yI/1mU9/gQtt45J2/tn6r6D8hknvP2Z938RKkqZhZg0w0QK6
+	 YxOgzgNoHHlKUrQGs416+ddv3evyhIHmbr3QDHq2U/vUL2Z23J+X4C7pfmBdXAY1C2
+	 uHjs+EpZT9sGHVxWSM0XoGiLf/U4+VpmMrnYgMO64X8n52MXotZyrXc7cmFpf7UAPe
+	 9pbu4kYcn40VRL8Dmic4YsnpjfMsKPANiUwUPm96APeYtgK5HQOUhe5iy7NMwvgIhc
+	 AUe4mkBnfLp8g==
+Date: Thu, 25 Apr 2024 11:02:57 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -37,7 +37,7 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH 1/2] perf annotate: Fallback to objdump when capstone
  fails
-Message-ID: <ZipiXhB21fgPM_xl@x1>
+Message-ID: <ZipikatJMzfP0xTN@x1>
 References: <20240425005157.1104789-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -45,8 +45,9 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20240425005157.1104789-1-namhyung@kernel.org>
 
 On Wed, Apr 24, 2024 at 05:51:56PM -0700, Namhyung Kim wrote:
@@ -58,9 +59,24 @@ On Wed, Apr 24, 2024 at 05:51:56PM -0700, Namhyung Kim wrote:
 > Let's check if the capstone disassemble reached to the end of the
 > function.  And fallback to objdump if not.
 
-Thanks, applied to perf-tools-next,
+Humm:
 
-- Arnaldo
+⬢[acme@toolbox perf-tools-next]$        git am ./20240424_namhyung_perf_annotate_fallback_to_objdump_when_capstone_fails.mbx
+Applying: perf annotate: Fallback to objdump when capstone fails
+Applying: perf annotate: Update dso binary type when try build-id
+error: patch failed: tools/perf/util/disasm.c:1156
+error: tools/perf/util/disasm.c: patch does not apply
+Patch failed at 0002 perf annotate: Update dso binary type when try build-id
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+⬢[acme@toolbox perf-tools-next]$ git am --abort
+⬢[acme@toolbox perf-tools-next]$
+
+checking...
+
+- Arnado
  
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
