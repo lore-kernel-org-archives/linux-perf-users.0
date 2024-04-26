@@ -1,144 +1,328 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70BD15ECE9
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 17:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9771649DA
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 17:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152497; cv=none; b=UX+pOTV/Hs4XpXYp4ZxwryGedXacaKNVypDDTCMu7x3RXSyxiE59AQdpAEekPxDRCfzDraofElLSpooGERhECfTTZz2Iom/WYBvxRvOOIPwroM/RKZmwUgJ+Jlb+8G0Yzg0VlN3rqvQJv268YVYZD9sg6a7hWIowbT+KV1u2TEg=
+	t=1714152519; cv=none; b=pk3uAlBVUNzatmyCQYCwL5jj85aU3q1qKxuFMZYsKNLMwfmFUO+uhj6WAuPj5sOC0jCo2MYfbrxZd1RxL+4TdIMgEqMyv9nuvUfWEqcq8SWUWZs1RoQ8V6jgkPFbLZVQlZ8VEsgfTYNUlHG0Zllt2iipzLJQ9Wq6Q6P1eXqb06o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152497; c=relaxed/simple;
-	bh=VGNC3FuUBoY4XLfaPkzu73wiRNiQjMii3/Pcgyeoeas=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=iBM3B85YIvOUvRC/jgaV5mYTD95YWxlAQGjKOOKLxh4Nkd2S8n7SY4KCFU6sHxIHYvw98K0delnXyVLVc3EXoJUEqvQI4drItkWpFydqktYtJZiKRcw6ottzfxhdQVHOhwrCj2ysaZ8UkjHhwYTD+YZ26iFB6GtgE2foj4oBK7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=bw24h3lc; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1714152519; c=relaxed/simple;
+	bh=lUQ9lWBLKeg3L0+VFu19yPJOKbBf4DRp2XdW9ZemSGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HrN0kwbO74E0tDtpPRRKCoiGOUJbayDRv3BmFpkeJFxrJFf3zjQAcGSm1gDdD+Io3h/sPd3MSCJ76iKpXAPhx+cgr6KnSMqSCMWS29WPN7spEr+xHE4CTe+VWu0X8UHI8rhA7rG4H0cFTbr8NvXHNPAWmaD4Bz+sR/qw00CdnMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gLBI32XC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="bw24h3lc"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1877665a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 10:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1714152494; x=1714757294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jVaQO4aOOoD5HFv/yuXIkEx3ckF+ESud5GzmK3URHMk=;
-        b=bw24h3lc2dTa9Rt1uIh95D1cTFppfiSKMi11IXIzRCE9AInKdioU9mHMC/7WxNPhqD
-         bX2PO4rM6IXBWqiFTBVQmhTWtGjsvzfF7KCPH8VrOB38nOduML9c43aVT7RXthR2ncUj
-         l0b1VqmvkfuruELygOEDSzSsesVYc0yjtvPELqPl8DhM3UmWZXYJSj6T95ne4ooZL41a
-         G0bUkr5EyCHbYuCKMV/bqkPMvu6Mi5lTiv7QcqlhdJLhzLsdF8znKanWmwovSNp3ajia
-         JOpIF49TgX1OfSjxlv5UnyfZeaaCiWOUTvvA030cKWXh9hzhvw34CH+R0uKDELh75nlh
-         Z1QA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLBI32XC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714152516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sF1k7r79nP6D0Cz0V006l7HqgddaXC4/DaqrC5xv5NE=;
+	b=gLBI32XCsucmoKY05BxsHvvkqRMRjn0V+4EtVcDbUdNXMGt5GXbcrf7G+07PKUs9Wg6ABv
+	rC1JlN3BymaQ3h90Qyhpr+XcJddv8GRMnigw9Mt18qfe/CCUDN5nCjYCUGPkua1uI/V/bY
+	SOXQMzRxurNOUk23whBHQa3hhMmPG00=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-370-FrN1I0CuMcq2Ty3kHr0rTA-1; Fri, 26 Apr 2024 13:28:34 -0400
+X-MC-Unique: FrN1I0CuMcq2Ty3kHr0rTA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-41a370b6acdso10513695e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 10:28:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714152494; x=1714757294;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jVaQO4aOOoD5HFv/yuXIkEx3ckF+ESud5GzmK3URHMk=;
-        b=hfBus2Ob2zRqjg8IHNH5ivSKImLjKDevXITUhD6a5UjxwlemxRStCs8r3vVWIqisKr
-         ld2uSYCeYnAS+LzhFGvuiAx8GBAHDYEOt/CzwPEOajYP9He45/cBXwVEGipWrVO8qMzn
-         QbG8l1c3S4pQImXBPw+CkZ5uZloovYHAWqwO5tSA5uML05RyTpifkI7FnrbcWjamBoow
-         E2mOU7mgsPkKK8oMBgoa+1+/S7zzFdKMN4756b+seHlRXcpfT71lHHT67u+RuqyHyRFr
-         zfb72fiCPLfq8765wrROsNbXWtUMmr/8h7wOqdECv2GQfPqJqQ78vQeREEz2EUw+X0U3
-         9O2w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8JUMO7Y7cvRZPWBwf00poCRUYm8m/nTGOpgReFF74JRmPAjdJOMMspsTs2ge1A0z/TpN1FOC+klfQAe/J7S15Y2TULpSvwfMwQInFVG/xjg==
-X-Gm-Message-State: AOJu0Yxj9/RmGXajxyoZz6bFZONp4r7I/jrTgRuVpQqq9/oNqGnVHfhF
-	gPxOgWElRVBk/XP8Xq4/KGkmN1vtJnphGFAkdPWpHar+cPw2fvgEUo9JSbPvTek=
-X-Google-Smtp-Source: AGHT+IF5ZhmO7eX8nkSZYElD9vu5AkgvriEyIvfRabLVo+Eb+eHgs+Ia3e9odQQKRsC00z8QgP072g==
-X-Received: by 2002:a05:6a20:43a9:b0:1aa:5b05:7926 with SMTP id i41-20020a056a2043a900b001aa5b057926mr4853573pzl.39.1714152493907;
-        Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id fm8-20020a056a002f8800b006ed059cdf02sm15099295pfb.116.2024.04.26.10.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
-Date: Fri, 26 Apr 2024 10:28:13 -0700 (PDT)
-X-Google-Original-Date: Fri, 26 Apr 2024 10:28:08 PDT (-0700)
-Subject:     Re: [PATCH 1/2] perf daemon: Fix the warning about time_t
-In-Reply-To: <20240305120501.1785084-2-ben717@andestech.com>
-CC: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-  Mark Rutland <mark.rutland@arm.com>, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
-  adrian.hunter@intel.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-  dylan@andestech.com, tim609@andestech.com, ben717@andestech.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: ben717@andestech.com
-Message-ID: <mhng-8fa791ba-8c58-44c9-a4fd-f40ab808042b@palmer-ri-x1c9>
+        d=1e100.net; s=20230601; t=1714152514; x=1714757314;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sF1k7r79nP6D0Cz0V006l7HqgddaXC4/DaqrC5xv5NE=;
+        b=hspx1v/EoM3lwVzY9ToJzkrUlxyOVJ1CdLp539CtH4ZNBQmr2OHcddaMBYBE6AAaHE
+         nVfK3VIli7QVBvKqOR/bwHJB8Ggy/jvDgQkb4Uw1TN+gMTtLI8YYmy4KIqR3JL3EUXfh
+         +0eFMIIlQrnzqh0WJvL+4ozgPZ2b8f/wPm7A4EreBrkifknfZ/Leg8ONKUa9RPsGp9Si
+         ZGSckcebMMD+YDEkE1mKxP/Uf30oBSsMPWsFYFslpFPs9ZDYYMvR9f5xzD9m5AMQL+OJ
+         BPXQTjbcYipwW1GAmp/otEvPbhjR2ZJsjaib0n+2HjNv47+sBXGqlmpREGJEfyPpDzpt
+         UnbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXypfBO7ivslWWBHoORk1DEjRa0EhhoxHsTLpErorTrxuZbo1Ym+njGsPjM6FKZcdWXxHmMsnjhkyYgmj8CFUO36LF5BWt7a6Fl2ijxo/OgUg==
+X-Gm-Message-State: AOJu0YwQAW6aoPYpVMdcUGDgZ0Ayh/xk0NDaH0YO3HRFNwNTdvQC+JEG
+	rKuwNrCzJ2Iuq61gyTjfl8WQ4LAvWWlG0tJFNfE/KCcBr7e0xtceiJdF2FBbcXn4GI9tarb+T1o
+	biVHYWEk2vQM6KiIZKdLwUxKWMozWoJAu+wocF5bq5QmJaMwY2zSBrdjLvf3/x7CuUW0=
+X-Received: by 2002:a05:600c:4fd2:b0:418:969b:cb46 with SMTP id o18-20020a05600c4fd200b00418969bcb46mr2080070wmq.28.1714152513694;
+        Fri, 26 Apr 2024 10:28:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEr4IlE/4F2UM1XSXE5SI2ZMlVXBg8Azkjc4erF1BNEBHpvYYzXnx8PODT9MvcqXOUbLgfoug==
+X-Received: by 2002:a05:600c:4fd2:b0:418:969b:cb46 with SMTP id o18-20020a05600c4fd200b00418969bcb46mr2080052wmq.28.1714152513165;
+        Fri, 26 Apr 2024 10:28:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
+        by smtp.gmail.com with ESMTPSA id cm14-20020a5d5f4e000000b0034c3885df9asm3080559wrb.76.2024.04.26.10.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 10:28:32 -0700 (PDT)
+Message-ID: <8b42a24d-caf0-46ef-9e15-0f88d47d2f21@redhat.com>
+Date: Fri, 26 Apr 2024 19:28:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com> <Ziuv2jLY1wgBITiP@x1n>
+ <ZivScN8-Uoi9eye8@x1n>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZivScN8-Uoi9eye8@x1n>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 05 Mar 2024 04:05:00 PST (-0800), ben717@andestech.com wrote:
-> In the 32-bit platform, the size of time_t is still 64 bits. Thus, use
-> PRIu64 to resolve the format problem.
->
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  tools/perf/builtin-daemon.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> index 83954af36753..0b6ffd51c475 100644
-> --- a/tools/perf/builtin-daemon.c
-> +++ b/tools/perf/builtin-daemon.c
-> @@ -23,6 +23,7 @@
->  #include <sys/signalfd.h>
->  #include <sys/wait.h>
->  #include <poll.h>
-> +#include <inttypes.h>
->  #include "builtin.h"
->  #include "perf.h"
->  #include "debug.h"
-> @@ -688,7 +689,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
->  			/* lock */
->  			csv_sep, daemon->base, "lock");
->
-> -		fprintf(out, "%c%lu",
-> +		fprintf(out, "%c%" PRIu64 "",
->  			/* session up time */
->  			csv_sep, (curr - daemon->start) / 60);
->
-> @@ -700,7 +701,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
->  				daemon->base, SESSION_OUTPUT);
->  			fprintf(out, "  lock:    %s/lock\n",
->  				daemon->base);
-> -			fprintf(out, "  up:      %lu minutes\n",
-> +			fprintf(out, "  up:      %" PRIu64 " minutes\n",
->  				(curr - daemon->start) / 60);
->  		}
->  	}
-> @@ -727,7 +728,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
->  				/* session ack */
->  				csv_sep, session->base, SESSION_ACK);
->
-> -			fprintf(out, "%c%lu",
-> +			fprintf(out, "%c%" PRIu64 "",
->  				/* session up time */
->  				csv_sep, (curr - session->start) / 60);
->
-> @@ -745,7 +746,7 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
->  				session->base, SESSION_CONTROL);
->  			fprintf(out, "  ack:     %s/%s\n",
->  				session->base, SESSION_ACK);
-> -			fprintf(out, "  up:      %lu minutes\n",
-> +			fprintf(out, "  up:      %" PRIu64 " minutes\n",
->  				(curr - session->start) / 60);
->  		}
->  	}
+On 26.04.24 18:12, Peter Xu wrote:
+> On Fri, Apr 26, 2024 at 09:44:58AM -0400, Peter Xu wrote:
+>> On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
+>>> On 02.04.24 14:55, David Hildenbrand wrote:
+>>>> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+>>>> all relevant internal functions to start with "gup_fast", to make it
+>>>> clearer that this is not ordinary GUP. The current mixture of
+>>>> "lockless", "gup" and "gup_fast" is confusing.
+>>>>
+>>>> Further, avoid the term "huge" when talking about a "leaf" -- for
+>>>> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+>>>> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+>>>> stays.
+>>>>
+>>>> What remains is the "external" interface:
+>>>> * get_user_pages_fast_only()
+>>>> * get_user_pages_fast()
+>>>> * pin_user_pages_fast()
+>>>>
+>>>> The high-level internal functions for GUP-fast (+slow fallback) are now:
+>>>> * internal_get_user_pages_fast() -> gup_fast_fallback()
+>>>> * lockless_pages_from_mm() -> gup_fast()
+>>>>
+>>>> The basic GUP-fast walker functions:
+>>>> * gup_pgd_range() -> gup_fast_pgd_range()
+>>>> * gup_p4d_range() -> gup_fast_p4d_range()
+>>>> * gup_pud_range() -> gup_fast_pud_range()
+>>>> * gup_pmd_range() -> gup_fast_pmd_range()
+>>>> * gup_pte_range() -> gup_fast_pte_range()
+>>>> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+>>>> * gup_huge_pud()  -> gup_fast_pud_leaf()
+>>>> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
+>>>>
+>>>> The weird hugepd stuff:
+>>>> * gup_huge_pd() -> gup_fast_hugepd()
+>>>> * gup_hugepte() -> gup_fast_hugepte()
+>>>
+>>> I just realized that we end up calling these from follow_hugepd() as well.
+>>> And something seems to be off, because gup_fast_hugepd() won't have the VMA
+>>> even in the slow-GUP case to pass it to gup_must_unshare().
+>>>
+>>> So these are GUP-fast functions and the terminology seem correct. But the
+>>> usage from follow_hugepd() is questionable,
+>>>
+>>> commit a12083d721d703f985f4403d6b333cc449f838f6
+>>> Author: Peter Xu <peterx@redhat.com>
+>>> Date:   Wed Mar 27 11:23:31 2024 -0400
+>>>
+>>>      mm/gup: handle hugepd for follow_page()
+>>>
+>>>
+>>> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
+>>> can be leveraged", which doesn't look quite true just staring the the
+>>> gup_must_unshare() call where we don't pass the VMA. Also,
+>>> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
+>>> slow GUP ...
+>>
+>> Yes it's not needed, just doesn't look worthwhile to put another helper on
+>> top just for this.  I mentioned this in the commit message here:
+>>
+>>    There's something not needed for follow page, for example, gup_hugepte()
+>>    tries to detect pgtable entry change which will never happen with slow
+>>    gup (which has the pgtable lock held), but that's not a problem to check.
+>>
+>>>
+>>> @Peter, any insights?
+>>
+>> However I think we should pass vma in for sure, I guess I overlooked that,
+>> and it didn't expose in my tests too as I probably missed ./cow.
+>>
+>> I'll prepare a separate patch on top of this series and the gup-fast rename
+>> patches (I saw this one just reached mm-stable), and I'll see whether I can
+>> test it too if I can find a Power system fast enough.  I'll probably drop
+>> the "fast" in the hugepd function names too.
+> 
 
-Sorry I missed this earlier, but IIUC this one is actually incorrect: on 
-most 32-bit platforms time_t is 32 bits, it was later extended to 64 
-bits.  RISC-V is special because the work to make time_t 64-bit had 
-started when we submitted the port, so we just jumped straight to the 
-legacy-free uABI (after some headaches).
+For the missing VMA parameter, the cow.c test might not trigger it. We never need the VMA to make
+a pinning decision for anonymous memory. We'll trigger an unsharing fault, get an exclusive anonymous page
+and can continue.
 
-So IIUC this would introduce a warning for some other targets.  Either 
-way I shouldn't have picked it up as it's not a RISC-V patch (this is a 
-generic perf file), so I'm going to drop it from fixes.
+We need the VMA in gup_must_unshare(), when long-term pinning a file hugetlb page. I *think*
+the gup_longterm.c selftest should trigger that, especially:
 
-Sorry for the confusion!
+# [RUN] R/O longterm GUP-fast pin in MAP_SHARED file mapping ... with memfd hugetlb (2048 kB)
+...
+# [RUN] R/O longterm GUP-fast pin in MAP_SHARED file mapping ... with memfd hugetlb (1048576 kB)
+
+
+We need a MAP_SHARED page where the PTE is R/O that we want to long-term pin R/O.
+I don't remember from the top of my head if the test here might have a R/W-mapped
+folio. If so, we could extend it to cover that.
+
+> Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
+> 
+>    # ./cow  | grep -B1 "not ok"
+>    # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+>    not ok 161 No leak from parent into child
+>    --
+>    # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
+>    not ok 215 No leak from parent into child
+>    --
+>    # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
+>    not ok 269 No leak from child into parent
+>    --
+>    # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
+>    not ok 323 No leak from child into parent
+> 
+> And it looks like it was always failing.. perhaps since the start?  We
+
+Yes!
+
+commit 7dad331be7816103eba8c12caeb88fbd3599c0b9
+Author: David Hildenbrand <david@redhat.com>
+Date:   Tue Sep 27 13:01:17 2022 +0200
+
+     selftests/vm: anon_cow: hugetlb tests
+     
+     Let's run all existing test cases with all hugetlb sizes we're able to
+     detect.
+     
+     Note that some tests cases still fail. This will, for example, be fixed
+     once vmsplice properly uses FOLL_PIN instead of FOLL_GET for pinning.
+     With 2 MiB and 1 GiB hugetlb on x86_64, the expected failures are:
+     
+      # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+      not ok 23 No leak from parent into child
+      # [RUN] vmsplice() + unmap in child ... with hugetlb (1048576 kB)
+      not ok 24 No leak from parent into child
+      # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
+      not ok 35 No leak from child into parent
+      # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (1048576 kB)
+      not ok 36 No leak from child into parent
+      # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
+      not ok 47 No leak from child into parent
+      # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (1048576 kB)
+      not ok 48 No leak from child into parent
+     
+
+As it keeps confusing people (until somebody cares enough to fix vmsplice), I already
+thought about just disabling the test and adding a comment why it happens and
+why nobody cares.
+
+> didn't do the same on hugetlb v.s. normal anon from that regard on the
+> vmsplice() fix.
+> 
+> I drafted a patch to allow refcount>1 detection as the same, then all tests
+> pass for me, as below.
+> 
+> David, I'd like to double check with you before I post anything: is that
+> your intention to do so when working on the R/O pinning or not?
+
+Here certainly the "if it's easy it would already have done" principle applies. :)
+
+The issue is the following: hugetlb pages are scarce resources that cannot usually
+be overcommitted. For ordinary memory, we don't care if we COW in some corner case
+because there is an unexpected reference. You temporarily consume an additional page
+that gets freed as soon as the unexpected reference is dropped.
+
+For hugetlb, it is problematic. Assume you have reserved a single 1 GiB hugetlb page
+and your process uses that in a MAP_PRIVATE mapping. Then it calls fork() and the
+child quits immediately.
+
+If you decide to COW, you would need a second hugetlb page, which we don't have, so
+you have to crash the program.
+
+And in hugetlb it's extremely easy to not get folio_ref_count() == 1:
+
+hugetlb_fault() will do a folio_get(folio) before calling hugetlb_wp()!
+
+... so you essentially always copy.
+
+
+At that point I walked away from that, letting vmsplice() be fixed at some point. Dave
+Howells was close at some point IIRC ...
+
+I had some ideas about retrying until the other reference is gone (which cannot be a
+longterm GUP pin), but as vmsplice essentially does without FOLL_PIN|FOLL_LONGTERM,
+it's quit hopeless to resolve that as long as vmsplice holds longterm references the wrong
+way.
+
+---
+
+One could argue that fork() with hugetlb and MAP_PRIVATE is stupid and fragile: assume
+your child MM is torn down deferred, and will unmap the hugetlb page deferred. Or assume
+you access the page concurrently with fork(). You'd have to COW and crash the program.
+BUT, there is a horribly ugly hack in hugetlb COW code where you *steal* the page form
+the child program and crash your child. I'm not making that up, it's horrible.
+
+-- 
+Cheers,
+
+David / dhildenb
+
