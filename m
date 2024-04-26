@@ -1,191 +1,135 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99934156F38
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D392614535A;
+	Fri, 26 Apr 2024 17:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714149959; cv=none; b=WG4nE5UHZW27eeT0O2c/+UFUdYvRBbgPdm24rzOO65jd7ykL1IB+Gjda1gyQ8dvWugQK0fEiuf028Is6yBjGpnMX0cDgfCWuQCkC1OmP7kQn3Wp+3yyJ2EefrwEyOvu+52XgExo3Y3D7KoETefqzdSj6K3cexaLeTVXZmEpEhhM=
+	t=1714152131; cv=none; b=hIp0DUqyhcSluTS6n2p1OqPmAq+w1mA4Yj5CgGIf0KqlVtaQSfLZooCUT/1KddZAWBxrWlsIsD1wYdJePMwebL7t0RuA7N7Trpo2PXySnvo5lSWdtGoKEvJ4i3fJqKsUA0QX+LGcO82oN1hkbQ13lk9z2CxBaLyEH0j6XEoutJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714149959; c=relaxed/simple;
-	bh=TsW6GTHiTQeGY0lIhBtmL90amY6atH1W3WIzWx9xDaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KUQjIIK4OQJoK1P/wWV5oML9FhtHjBVv1oOO39DLWj5OBkcFi66TyuMtoG5aAE0YnYhFuS+rDtwU/qB2LaJdX1MDLlno1O9Ex1nihx5qNuY6i4FLIYiuXg3b774T4Cu4IrNempsjymmA/s9GGRQmMQYalmlpAY3Bcf9QHB4ZUTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CBcpbqUk; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714152131; c=relaxed/simple;
+	bh=BWsnsw0Y2vYzWBVbJSlDfqZkcVg9U/T28RLM6RdsjlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qs6JNZrFMa26QO3RPJSvo/6xkG9E7OruTpA0xoJAbt9NCDifCHB1ouctxS7IW66KUiRUTKBHd6fhCCzs4GLVaqf94rngr0HodFuBFoYoAcksqJO+2mZ3jHUZlkqtmHXhFFyGr2FwfSUSjlgk0yJEnu5r+XFBCmSGzqpuH9S51Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nNtTyUIq; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CBcpbqUk"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36b3738f01cso3275ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714149957; x=1714754757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iH10hcFVd/zxNn6ShOQRCsj816hnsyk+v3ag974TenE=;
-        b=CBcpbqUkHKS1wCF/NeGv3oIaLT/+3cN+2XIfK1lxAbDerS7fXtC0b6w9DdVaX8PrQ2
-         7NUG2WZ2Eh6wZ8myoe+TsbVu8r/sEXTnrzjfvmJIObUEiMUBFncPhEfr/HuKNCN5szHb
-         ImXiiOoAJ96GJDu2vGR4T1OxDlXZ2J5ghm/zDTDGEYaEl+QeGLdwk0bCK4Ee77IfRo2J
-         IlUdhNyrBw0c/jtI3aZQO53qAdjuISDgc+zdLvwpbQoI8BeR+hk886kWSiIvWpFzFSl7
-         F0PmpY3i6SbRgIsLcbah2t6MDdygBUlnoC6LwCddhKH8z0Qfji6YBgRkefPRrnM4fJUl
-         +6Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714149957; x=1714754757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iH10hcFVd/zxNn6ShOQRCsj816hnsyk+v3ag974TenE=;
-        b=b1hRjx+8k+nGAp8vzY3td9vpY1pAKh37cygDPDGL7rH5s86TPyQ1KMUpZc41YNPHsE
-         tqQXOY1+MTNI5pfk0OohISWAPTGoS36z1mBJlRo5f3YIRAETGePkCZZqLi3DkBOQI5eY
-         6qcnI/VfZgVlpILVHMdw3R2DvNhxWe3ALSv7HCK4U0rpk03vpyJtaqnYLVXDN+ntIKIl
-         OB8E9yEk86FJLSN0ad31fsXGh1CoNNLewrRHyTt/ICfYtH+wRB6+QRb66A9xgzC6FhoN
-         6s+8ELC5h0f8nL8Q8JyK0MOHDJJq3sZCl9+niS46E5k03lA65WHhDzWMEO0jICamuPTT
-         pgrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxPQNaOxJB3/NhnTfKmr2+MdVoPO5ZSQCiLZlwbl53Ht0sWeTlLB9ZN+4yWdbKeYtHt3UHl2AEea62iZh43WqY3ZH+izFQkUlguKfMq+gS3A==
-X-Gm-Message-State: AOJu0YxTuldyw+S5OmrMXZ5gW4Mhu1sYWSp9Sx0M3/nJVbI4Sc6N+dBU
-	kOi1kpyJ0O7NQSHxNJT5G4pi9xWatnLck9WlaGrVtkSJbh10pGJFk8aIBqXyr1vaxF4ohib24VP
-	vuXgy1r8SyO7iY34HwIyMwKYHVdMimbbFvEZq
-X-Google-Smtp-Source: AGHT+IGyqiUHq+bsq/fcDLWIZFYHRSRwpnnauY5KJb3XD469uS70sYP9EhJoE2ZqedpHAuLk5QeNwVmENstOTUvQIIw=
-X-Received: by 2002:a05:6e02:13f0:b0:36c:3046:a6ef with SMTP id
- w16-20020a056e0213f000b0036c3046a6efmr283307ilj.12.1714149956436; Fri, 26 Apr
- 2024 09:45:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nNtTyUIq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714152129; x=1745688129;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=BWsnsw0Y2vYzWBVbJSlDfqZkcVg9U/T28RLM6RdsjlY=;
+  b=nNtTyUIqdWc618KxTKR81PwAp4o6PfYHG++3t+yApoxhdouPvfbRYDsj
+   YM4astVr8iVPC5GrZ9Bg1afRDeXTKaxce+TdzzexhrY0bm1OW/UM6KH0e
+   pkJxRvZga/Pe2uwTqfWA+wWUnOLKTnQ93wsuplSJgparnps7abi2tg5gu
+   GRaoXwl7ZwoeA7RjONA2ZvJZBglEWU3AClEkPx7j/FXPWb38bqaOrF8/o
+   d0+wdIJPQoC9NYjQcz+A/uGXh3b7VXJItXpDyzRJ5w5niOgMnJQ8dEGpi
+   ZEOYG8whHJJEz7GYZY6PP+jGK+xk4GdvAfSV23rpjYShMTuMaMvObbU2o
+   A==;
+X-CSE-ConnectionGUID: zsqce/8RRpO4jMFd1kl2oA==
+X-CSE-MsgGUID: vM2x273GT5SxvXPVHE9d+Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="10059704"
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="10059704"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 10:22:09 -0700
+X-CSE-ConnectionGUID: BuvLi/vnQwqoMfUUeqh/IA==
+X-CSE-MsgGUID: vIP5Ay7jTamKPKcYco2Sog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="25983330"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 10:22:09 -0700
+Received: from [10.212.113.23] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.23])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id E0F9F20B5739;
+	Fri, 26 Apr 2024 10:22:06 -0700 (PDT)
+Message-ID: <53dfaeae-b4eb-479e-938f-d0022c4f2416@linux.intel.com>
+Date: Fri, 26 Apr 2024 13:22:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301174711.2646944-1-irogers@google.com> <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
- <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
-In-Reply-To: <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 26 Apr 2024 09:45:42 -0700
-Message-ID: <CAP-5=fWk6hMWMy93QgRAWUowRk5LNEkqRVa3u4h0fPRXyE-y+Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 0/3] Retirement latency perf stat support
+To: Ian Rogers <irogers@google.com>, weilin.wang@intel.com,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Ze Gao <zegao2021@gmail.com>, Leo Yan <leo.yan@linux.dev>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Dmitrii Dolgov
+ <9erthalion6@gmail.com>, Song Liu <song@kernel.org>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240425223406.471120-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240425223406.471120-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 26, 2024 at 8:42=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
+
+
+On 2024-04-25 6:34 p.m., Ian Rogers wrote:
+> Support 'R' as a retirement latency modifier on events. When present
+> the evsel will fork perf record and perf report commands, parsing the
+> perf report output as the count value. The intent is to do something
+> similar to Weilin's series:
+> https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.com/
+> 
+> While the 'R' and the retirement latency are Intel specific, in the
+> future I can imagine more evsel like commands that require child
+> processes. We can make the logic more generic at that point.
 >
-> On 26/04/24 18:06, James Clark wrote:
-> >
-> >
-> > On 01/03/2024 17:47, Ian Rogers wrote:
-> >> Switch from running tests sequentially to running in parallel by
-> >> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
-> >> '--sequential'.
-> >>
-> >> On an 8 core tigerlake an address sanitizer run time changes from:
-> >> 326.54user 622.73system 6:59.91elapsed 226%CPU
-> >> to:
-> >> 973.02user 583.98system 3:01.17elapsed 859%CPU
-> >>
-> >> So over twice as fast, saving 4 minutes.
-> >>
-> >
-> > Apologies for not replying earlier before this was applied. But IMO thi=
-s
-> > isn't a good default. Tests that use things like exclusive PMUs
-> > (Coresight for example) can never pass when run in parallel.
->
-> Yes, that is an issue for Intel PT also.
 
-Right, Arnaldo and I discussed this and the safe thing to do for now
-is to keep the default at serial - ie revert this change.
+I think in generic what we want is the weight/latency information of the
+event. 'W' is already occupied by the weak group. Maybe 'L' is a more
+generic name than 'R'. With the event modifier, perf collects and report
+the weight/latency information of the event in a perf stat command.
 
-My longer term concern is that basically means people won't use
-parallel testing and we'll bitrot in places like synthesis where it's
-easy to make naive assumptions that say /proc won't be changing.
+Not just changing the evsel, I think a proper output is still required.
+It's possible that an end user can use it without metrics. E.g.,
+perf stat -e cycles,instructions:L
+A possible generic output maybe
 
-We have these tests set up for continuous testing in my team, and as
-part of that set up each test is run independently to maximize
-parallelism. This means the exclusive PMU thing does make the tests
-flaky so it would be nice to have the tests address this, either by
-skipping or busy waiting (only when the error code from the PMU is
-busy, up to some maximum time period).
-
-> >
-> > For CI it's arguable whether you'd want to trade stability for speed.
-> > And for interactive sessions there was already the --parallel option
-> > which was easy to add and have it in your bash history.
-> >
-> > Now we've changed the default, any CI will need to be updated to add
-> > --sequential if it wants all the tests to pass.
->
-> Same here.
->
-> >                                                 Maybe we could do some
-> > hack and gate it on interactive vs non interactive sessions, but that
-> > might be getting too clever. (Or a "don't run in parallel" flag on
-> > certain tests)
->
-> Perhaps more attention is needed for the tests that take so long.
-> For example, maybe they could do things in parallel.
-
-This is true for the tool in general. The problem is a lack of good
-abstractions. Probably the easiest candidate for this are the shell
-tests.
-
-> Also -F option doesn't seem to work.
->
-> $ tools/perf/perf test -F
-> Couldn't find a vmlinux that matches the kernel running on this machine, =
-skipping test
->   1: vmlinux symtab matches kallsyms                                 : Sk=
-ip
->   2: Detect openat syscall event                                     : Ok
->   3: Detect openat syscall event on all cpus                         : Ok
->   4.1: Read samples using the mmap interface                         : Ok
->   4.2: User space counter reading of instructions                    : Ok
->   4.3: User space counter reading of cycles                          : Ok
->   5: Test data source output                                         : Ok
-> WARNING: event 'numpmu' not valid (bits 16-17,20,22 of config '6530160' n=
-ot supported by kernel)!
->   6.1: Test event parsing                                            : Ok
->   6.2: Parsing of all PMU events from sysfs                          : Ok
-> WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by =
-kernel)!
->   6.3: Parsing of given PMU events from sysfs                        : Ok
->   6.4: Parsing of aliased events from sysfs                          : Sk=
-ip (no aliases in sysfs)
->   6.5: Parsing of aliased events                                     : Ok
->   6.6: Parsing of terms (event modifiers)                            : Ok
->   7: Simple expression parser                                        : Ok
->   8: PERF_RECORD_* events & perf_sample fields                       : Ok
->   9: Parse perf pmu format                                           : Ok
->  10.1: PMU event table sanity                                        : Ok
->  10.2: PMU event map aliases                                         : Ok
-> failed: recursion detected for M1
-> failed: recursion detected for M2
-> failed: recursion detected for M3
-> Not grouping metric tma_memory_fence's events.
-> Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constrain=
-t:
->     echo 0 > /proc/sys/kernel/nmi_watchdog
->     perf stat ...
->     echo 1 > /proc/sys/kernel/nmi_watchdog
-> Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constrain=
-t:
->     echo 0 > /proc/sys/kernel/nmi_watchdog
->     perf stat ...
->     echo 1 > /proc/sys/kernel/nmi_watchdog
-> ...
-> ^C
-
-Not working meaning the errors are going to stderr? The issue is that
-pr_err will write to stderr regardless of the verbosity setting and
-some tests deliberately induce errors. We could use debug_set_file
- to set the output to /dev/null, but that could hide trouble. -F
-usually means your debugging so we've not cared in the past.
+1,931,099,931	cycles
+  801,826,458	instructions	# Avg Weight1 1000
+				# Avg Weight2 800
+				# Avg Weight3 500
 
 Thanks,
-Ian
+Kan
+
+> The code is untested on hardware that supports retirement latency, and
+> with metrics with retirement latency in them. The record is also of
+> sleep and various things need tweaking but I think v1 is good enough
+> for people to give input.
+> 
+> The first patch stops opening a dummy event for tool events. I came
+> across this while looking into the issue and we can likely just pick
+> it first. I kept it in the series for cleanliness sake.
+> 
+> The code has benefitted greatly from Weilin's work and Namhyung's
+> great review input.
+> 
+> Ian Rogers (3):
+>   perf evsel: Don't open tool events
+>   perf parse-events: Add a retirement latency modifier
+>   perf evsel: Add retirement latency event support
+> 
+>  tools/perf/util/evsel.c        | 186 ++++++++++++++++++++++++++++++++-
+>  tools/perf/util/evsel.h        |   4 +
+>  tools/perf/util/parse-events.c |   2 +
+>  tools/perf/util/parse-events.h |   1 +
+>  tools/perf/util/parse-events.l |   3 +-
+>  5 files changed, 192 insertions(+), 4 deletions(-)
+> 
