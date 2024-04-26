@@ -1,227 +1,212 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50F415625E
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA991DFED
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147970; cv=none; b=K2oOyDcJaZ8rn+Am4Wc8+p0gJxeQGlH0r2zkz9dpT0736JoOtnaDb/Mclk7hSR6I4mtqqwirVQ80i3XhuTbGLOcBDCDKQ7h7l3EGipKYAB4WgM7JGkg2YXZMMGCs4FHNg18duSfnpUDEur+2lOHZybx3Z6twbvGGBYYnBtg7xeI=
+	t=1714148370; cv=none; b=rmPx5eBk89UD24D8E58cT97SQiN9g1o4w5v7xtTYKanb5isiNc6snEfDN49mjkYGSx5Md/ZohmVPhgfBG80DqQKy2+XCQuxneNJR1TsJsduZOmomfGVeBNDVnSgxojp8Pv7bAkk0nEnS/CVq/ergxyqe6/r7TYfuef/Gv/xttlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147970; c=relaxed/simple;
-	bh=VHk3yV3ykPgBDTFB6jGO3B/kKnE4mwuV8+QA4otgjj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJCcRwFiA5/jK0CG2aY4QtgLPRo4S/fwAnUDyeGjQtYNZ2CKAsBLnWuXQ2TvhMDuMy5bE8I6iE7bnONsKHsoLmVw5XMWWl8ospQVbGq6ks/36FsMfFZaPw5cAHvT3gYW7RqDGRhpS3fYbU5iyN6L2UYwaPD2tA4Klw9isrb8Afo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iaVBsi9+; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1714148370; c=relaxed/simple;
+	bh=4QFqX4QBtTqoCyMIO/8nv8uuWNRJi7BYyGqBUXQgakg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=II+hjiEaJVFkYCe3rcPKyvmL/lHzwBpbbf3EIE3QddmWrX13hkBzEsId8oZyKB0KK/H9kPmv7cXQoZO5634EZq5QwDTIZpB232gTyw+66UxEInIIZEi/1fXA55Lb9dLHx4W/sxcatt3DUzExjjgpjp2B5TaPuEgXiiQ643iYOj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OXG9p7UP; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaVBsi9+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OXG9p7UP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714147964;
+	s=mimecast20190719; t=1714148367;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
-	b=iaVBsi9+KvAPRxFNS7Tpx2ZfTKHOwWJXU8AR5ITqSqRR1neFprAUhkGAWqITtivyad7jyz
-	wUdKxC1jXCM+keMcB0kWSmQV9WwfgfXFxEvbBOHRH4WD9VYWqzMRDkfiDq77AqN3QHPy+B
-	aVsdPHVQgN3Of9mzpMc6Vj7bR9Yvhk0=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ez7yerILzbpqQkPHyDJaqbADBySTif5n7nWe5G1jFEY=;
+	b=OXG9p7UPc9kACga7qhALqmMRyryEyKXKe2b2cqIXGTFUFrBHpz2oYDKxLVMCVlfPbzMPMT
+	lVplfH7cFQkZqd7cLUY2jQ/TkodHaOkKxaQB7PMtC5UjCh53q63YRj9leTKe/z61a4Nzqg
+	FRRY+95QhQRtKuqqgRjoFShsHrQIyLk=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-rej8YiANPoWfeZpgxMKbwg-1; Fri, 26 Apr 2024 12:12:42 -0400
-X-MC-Unique: rej8YiANPoWfeZpgxMKbwg-1
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso516307a34.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:12:42 -0700 (PDT)
+ us-mta-646-bBpMLmD9NxaJ0cgfUCNAuw-1; Fri, 26 Apr 2024 12:19:26 -0400
+X-MC-Unique: bBpMLmD9NxaJ0cgfUCNAuw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d883dab079so21670951fa.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:19:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714147962; x=1714752762;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
-        b=NpeDV8ZOqJOtS6+Ag0nHqxq8UDOU0cnUMaqtitDwgnudsu+jdM/XE0/cy62fpXAvnN
-         CQDq53Xj+5AgTsWGGnDpzcPx2T2c7l7UKoq6MjQalmrcxuN69aL84D4l+g6tMrL0tz8J
-         hXNoIc3f6UpEYfqHPS3dcefIdkxTC5I2+sillh0Fsuc30lUY6bD/3jKKqW5M/SvHGl3M
-         Tj+ubckRl8g+AL9hT1liZHkKKC2Gp9+olCurELLB7R8BOTTP5rbrEP4Vwctem/oa1rGO
-         g27V8i2Dxgfqq3tlLmQQmsBuUZKSFDrQ47FmeiT1kOGRA4Znjj+XEdJDZROjFU3L2TiT
-         4x2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgWH4vFko4YspYMY/Ils2YL47DeXdgLreg5VyI6tJAfm8LtHqEGtHz7O7hxnHk+lEzsjc5m61n+EyzYAwbE71znp41RdbyRAEQ5+Df3nvpXg==
-X-Gm-Message-State: AOJu0YxTvhqImDng8jEr45CpFfwJUbmjSjbMdpkcEpzzcIhbDVcvTZuB
-	1DBEz5Lim+jGTk9xWymw44w+r7bXkMD5hcjMg6pBhAsToMNWHH3VryEXm+ow5kDNynk60de2MUZ
-	Uc0d3QF32136sOxt2i3waXmgs7q8eswao9ZvDrAcAlfnGcZNBEOlOjXHC8JjxmHYmilY=
-X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125235oal.1.1714147961420;
-        Fri, 26 Apr 2024 09:12:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKK09FSsz1w18C9O+QSKywaneNtUpj/aPvoeb+SOH3u9egTJYXPSkxUgqSN3BOrRHAMYNm3w==
-X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125169oal.1.1714147960484;
-        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id m6-20020ac807c6000000b00434fd7d6d00sm8007149qth.2.2024.04.26.09.12.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
-Date: Fri, 26 Apr 2024 12:12:32 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-Message-ID: <ZivScN8-Uoi9eye8@x1n>
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
- <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
- <Ziuv2jLY1wgBITiP@x1n>
+        d=1e100.net; s=20230601; t=1714148365; x=1714753165;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ez7yerILzbpqQkPHyDJaqbADBySTif5n7nWe5G1jFEY=;
+        b=sI062XtqXXo3Bjgyt3dXibLLNfEquNaoa/z0d56/+eJbuQ38xNDJZOwLRSGAyJIAiK
+         hfSFZHoYjuc5KmEzf027OXAbfxpvfFep6X3dTwd7kB/lXNOq+RjFq6d++gGRPDiJDx5s
+         MYTE4l814+cV1iU1T9f1SbsLOXf0vwrXeOji0OM8ICX/MGuog2kehbOfw0rjbDo1T4PO
+         gv/l8XG1J7P3NpHeWicFSvMfZAdaxWGjy699ErQZ6Bmdq9K5FDjO14wLLXhGwCEF23yo
+         Y/3emCwD3TsUp/SJwScCZgotnBZy+w+ujpaKvlq8AVuGSMALIk1ucB0kGbMMLgnF6NV7
+         rhkQ==
+X-Gm-Message-State: AOJu0Yygk/qus7VjaeW00KkECr3ezRwyri3TIbKQmLVe2ja4/MAGmOVb
+	k4NH6FgGnXncwurkpNdHuXaPNtOSPS++BBLB6P7IG2w7nFm8g1yCzcU7jGLxqHfpMAfGo1Lvdr4
+	SKQ5aiEayAKPG4yRMN2LbnJiGdjD5epgpO8dBgRovA54dmF9xLY3erIYiwQ+g8N2oUcE=
+X-Received: by 2002:a05:651c:1a13:b0:2df:7d44:d784 with SMTP id by19-20020a05651c1a1300b002df7d44d784mr1463270ljb.3.1714148364419;
+        Fri, 26 Apr 2024 09:19:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFgQbhSc+KMqnRx7iTeRtsXx/Kjb6r0W5/RYMbptHYh+otDizaZVQ8fTDYmGr+ZrLnsXrzWSA==
+X-Received: by 2002:a05:651c:1a13:b0:2df:7d44:d784 with SMTP id by19-20020a05651c1a1300b002df7d44d784mr1463252ljb.3.1714148364030;
+        Fri, 26 Apr 2024 09:19:24 -0700 (PDT)
+Received: from [192.168.137.117] (2254069205.kn.vutbr.cz. [147.229.196.16])
+        by smtp.gmail.com with ESMTPSA id q15-20020a05600c46cf00b00416e2c8b290sm35431576wmo.1.2024.04.26.09.19.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 09:19:23 -0700 (PDT)
+Message-ID: <f453ba56-b847-4555-8ca4-3fa68a22456b@redhat.com>
+Date: Fri, 26 Apr 2024 18:19:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Ziuv2jLY1wgBITiP@x1n>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+ mpetlan@redhat.com
+References: <20240409130240.13973-1-vmolnaro@redhat.com>
+ <CAP-5=fVzs9832tK9nrxL++DZXwNV0eLmMwtd4ZNqkp4b512UHQ@mail.gmail.com>
+From: Veronika Molnarova <vmolnaro@redhat.com>
+In-Reply-To: <CAP-5=fVzs9832tK9nrxL++DZXwNV0eLmMwtd4ZNqkp4b512UHQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 09:44:58AM -0400, Peter Xu wrote:
-> On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
-> > On 02.04.24 14:55, David Hildenbrand wrote:
-> > > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> > > all relevant internal functions to start with "gup_fast", to make it
-> > > clearer that this is not ordinary GUP. The current mixture of
-> > > "lockless", "gup" and "gup_fast" is confusing.
-> > > 
-> > > Further, avoid the term "huge" when talking about a "leaf" -- for
-> > > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> > > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> > > stays.
-> > > 
-> > > What remains is the "external" interface:
-> > > * get_user_pages_fast_only()
-> > > * get_user_pages_fast()
-> > > * pin_user_pages_fast()
-> > > 
-> > > The high-level internal functions for GUP-fast (+slow fallback) are now:
-> > > * internal_get_user_pages_fast() -> gup_fast_fallback()
-> > > * lockless_pages_from_mm() -> gup_fast()
-> > > 
-> > > The basic GUP-fast walker functions:
-> > > * gup_pgd_range() -> gup_fast_pgd_range()
-> > > * gup_p4d_range() -> gup_fast_p4d_range()
-> > > * gup_pud_range() -> gup_fast_pud_range()
-> > > * gup_pmd_range() -> gup_fast_pmd_range()
-> > > * gup_pte_range() -> gup_fast_pte_range()
-> > > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> > > * gup_huge_pud()  -> gup_fast_pud_leaf()
-> > > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> > > 
-> > > The weird hugepd stuff:
-> > > * gup_huge_pd() -> gup_fast_hugepd()
-> > > * gup_hugepte() -> gup_fast_hugepte()
-> > 
-> > I just realized that we end up calling these from follow_hugepd() as well.
-> > And something seems to be off, because gup_fast_hugepd() won't have the VMA
-> > even in the slow-GUP case to pass it to gup_must_unshare().
-> > 
-> > So these are GUP-fast functions and the terminology seem correct. But the
-> > usage from follow_hugepd() is questionable,
-> > 
-> > commit a12083d721d703f985f4403d6b333cc449f838f6
-> > Author: Peter Xu <peterx@redhat.com>
-> > Date:   Wed Mar 27 11:23:31 2024 -0400
-> > 
-> >     mm/gup: handle hugepd for follow_page()
-> > 
-> > 
-> > states "With previous refactors on fast-gup gup_huge_pd(), most of the code
-> > can be leveraged", which doesn't look quite true just staring the the
-> > gup_must_unshare() call where we don't pass the VMA. Also,
-> > "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
-> > slow GUP ...
+Hi Ian,
+
+Thanks for looking at this, will check the problem with busy PMUs and add your proposition.
+
+Best,
+Veronika
+
+On 4/16/24 17:03, Ian Rogers wrote:
+> On Tue, Apr 9, 2024 at 6:03 AM <vmolnaro@redhat.com> wrote:
+>>
+>> From: Veronika Molnarova <vmolnaro@redhat.com>
+>>
+>> With the MR a381bd3615de6 ('powerpc/hv-gpci: Fix the
+>> H_GET_PERF_COUNTER_INFO hcall return value checks') the perf stat for
+>> hv_gpci events without required permission set returns an error value
+>> of -1 to differentiate the output from the unsupported events. The
+>> stat_all_pmu test, however, exits immediately if any command exits with
+>> a non-zero value due to 'set -e' option.
+>>
+>> Remove the 'set -e' option from the test and rework the test case to log
+>> the status of the event for better maintainability. Instead of exiting
+>> immediately after 'perf stat' ends with a non-zero value, check the
+>> return value and output of the 'perf stat' command with appriopriate action.
 > 
-> Yes it's not needed, just doesn't look worthwhile to put another helper on
-> top just for this.  I mentioned this in the commit message here:
+> nit: s/appriopriate/appropriate/
 > 
->   There's something not needed for follow page, for example, gup_hugepte()
->   tries to detect pgtable entry change which will never happen with slow
->   gup (which has the pgtable lock held), but that's not a problem to check.
+> There was a similar issue with metric groups that should be on its way
+> to landing:
+> https://lore.kernel.org/lkml/20240403164818.3431325-1-irogers@google.com/
 > 
-> > 
-> > @Peter, any insights?
+>> ---
+>>  tools/perf/tests/shell/stat_all_pmu.sh | 36 ++++++++++++++++++--------
+>>  1 file changed, 25 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+>> index c77955419173..d9f0d2100baa 100755
+>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+>> @@ -2,21 +2,35 @@
+>>  # perf all PMU test
+>>  # SPDX-License-Identifier: GPL-2.0
+>>
+>> -set -e
+>>
+>>  # Test all PMU events; however exclude parametrized ones (name contains '?')
+>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+>> -  echo "Testing $p"
+>> -  result=$(perf stat -e "$p" true 2>&1)
+>> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+>> -    # We failed to see the event and it is supported. Possibly the workload was
+>> -    # too small so retry with something longer.
+>> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>> -    if ! echo "$result" | grep -q "$p" ; then
+>> -      echo "Event '$p' not printed in:"
+>> -      echo "$result"
+>> -      exit 1
+>> +  echo -n "Testing event '$p' -- "
+>> +  stat_output=$(perf stat -e "$p" true 2>&1)
+>> +  stat_result=$?
+>> +  if echo "$stat_output" | grep -q "$p"; then
+>> +    # return value 0 if counters gets printed either if the event is supported or not
+>> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+>> +        echo "supported"
+>> +    elif [ $stat_result -eq 0 ]; then
+>> +        echo "not supported"
+>> +    # return value 255 when the required pemission for the event is not set
 > 
-> However I think we should pass vma in for sure, I guess I overlooked that,
-> and it didn't expose in my tests too as I probably missed ./cow.
+> nit: s/pemission/permission/
 > 
-> I'll prepare a separate patch on top of this series and the gup-fast rename
-> patches (I saw this one just reached mm-stable), and I'll see whether I can
-> test it too if I can find a Power system fast enough.  I'll probably drop
-> the "fast" in the hugepd function names too.
-
-Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
-
-  # ./cow  | grep -B1 "not ok"
-  # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
-  not ok 161 No leak from parent into child
-  --
-  # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
-  not ok 215 No leak from parent into child
-  --
-  # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
-  not ok 269 No leak from child into parent
-  --
-  # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
-  not ok 323 No leak from child into parent
-
-And it looks like it was always failing.. perhaps since the start?  We
-didn't do the same on hugetlb v.s. normal anon from that regard on the
-vmsplice() fix.
-
-I drafted a patch to allow refcount>1 detection as the same, then all tests
-pass for me, as below.
-
-David, I'd like to double check with you before I post anything: is that
-your intention to do so when working on the R/O pinning or not?
-
-Thanks,
-
-=========
-From 7300c249738dadda1457c755b597c1551dfe8dc6 Mon Sep 17 00:00:00 2001
-From: Peter Xu <peterx@redhat.com>
-Date: Fri, 26 Apr 2024 11:41:12 -0400
-Subject: [PATCH] mm/hugetlb: Fix vmsplice case on memory leak once more
-
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/hugetlb.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 417fc5cdb6ee..1ca102013561 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5961,10 +5961,13 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
- 
- retry_avoidcopy:
- 	/*
--	 * If no-one else is actually using this page, we're the exclusive
--	 * owner and can reuse this page.
-+	 * If the page is marked exlusively owned (e.g. longterm pinned),
-+	 * we can reuse it.  Otherwise if no-one else is using this page,
-+	 * we can savely set the exclusive bit and reuse it.
- 	 */
--	if (folio_mapcount(old_folio) == 1 && folio_test_anon(old_folio)) {
-+	if (folio_test_anon(old_folio) &&
-+	    (PageAnonExclusive(&old_folio->page) ||
-+	     folio_ref_count(old_folio) == 1)) {
- 		if (!PageAnonExclusive(&old_folio->page)) {
- 			folio_move_anon_rmap(old_folio, vma);
- 			SetPageAnonExclusive(&old_folio->page);
--- 
-2.44.0
-
-
--- 
-Peter Xu
+>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+>> +        echo "no permission to enable"
+>> +    # return value 129 when trying to run 'perf stat' with a non-existent event
+>> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+>> +        echo "Fail: Bad event name"
+>> +        echo "$stat_output"
+>> +        exit 1
+> 
+> Something we've been seeing with parallel testing is getting busy
+> PMUs. The error looks like:
+> ```
+> $ sudo bash -c "perf stat -e intel_bts// -a sleep 1; echo $?" & sudo
+> bash -c "perf stat -e intel_bts// -a sleep 1; echo $?"
+> [2] 953102
+> Error:
+> The sys_perf_event_open() syscall returned with 16 (Device or resource
+> busy) for event (intel_bts//).
+> /bin/dmesg | grep -i perf may provide additional information.
+> 
+> 255
+> 
+> Performance counter stats for 'system wide':
+> 
+>     <not counted>      intel_bts//
+>                         (0.00%)
+> 
+>       1.002334792 seconds time elapsed
+> 
+> 0
+> [2]+  Done                    sudo bash -c "perf stat -e intel_bts//
+> -a sleep 1; echo $?"
+> ```
+> 
+> To avoid failing for this we probably need something like:
+> ```
+>    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q
+> "Device or resource busy"; then
+>        echo "device busy"
+> ```
+> It'd be great if you could add this.
+> 
+> Thanks,
+> Ian
+> 
+>> +    else
+>> +        echo "Fail: Unknown return value $stat_result"
+>> +        echo "$stat_output"
+>> +        exit 1
+>>      fi
+>> +  else
+>> +      echo "Fail: Event '$p' not printed in:"
+>> +      echo "$stat_output"
+>> +      exit 1
+>>    fi
+>>  done
+>>
+>> --
+>> 2.43.0
+>>
+>>
+> 
 
