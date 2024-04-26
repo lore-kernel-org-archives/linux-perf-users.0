@@ -1,190 +1,344 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F9364;
-	Fri, 26 Apr 2024 00:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58C8EBB;
+	Fri, 26 Apr 2024 01:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714090473; cv=none; b=SAYWmPpeXKFaFwMwRIyTYFZF8LacUQB6uiEyJl3cPeap/wHXzBFGgPC9UHhAsSTPrwfDmnLs2+IVE5orzrGuwnN+7qzpIs3DcW/D3yzJkFMO5I6adRKKk6vm2sQZTusGnnqNda5MCoCKQnH9Y7wBUdOZomdtrPmr5DY99gTxOpg=
+	t=1714095757; cv=none; b=ph7383hJzITYeyZ+nB0ZR5iEV5oJcnAT5SO6H6i/MRtX5pq/UC/ConAHzRQ1fzaGFHF/MEup3zZOwE7oe64O7hnw11hI3cGZWoiF6xirWLhy/Y7Yr3TtQKUsvTmi+0gOCxPIybwyS17GwzjTk6Dgftpz3p3RwU5CaxaTF26gaUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714090473; c=relaxed/simple;
-	bh=BNlz4p2+5Fzq2Xhe9VHkNPnVhu1O/EhyxSF3fvihfqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIccf6wCVQ+Hv6XjO5NQ5uRAOsStR83VEwBr3B/ji0ezGQwlWpRFkdwy9NWZ6eNFTjUptq83jtvfpYAMWLIKV4DmGQoOXfwhVvNcIdneoEUHmGM7dKwJU+XfVBbSwo91yTg839Jwf/rlXvHlSDlTvDRKhRoiVRYkQ06091u11Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmIrrAPJ; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1714095757; c=relaxed/simple;
+	bh=PIxJSimy8O3ep3aN3r4eMxDk8FfqaOofl0bf6g9FHxk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oQ8XGA5hTv0/rMf/SxgFOpajFI1BKS61jgqQ86JRUT8eGIte/rpYBXfWbyrKbYQ61RzesUv+X2mEkbQUvGeR4711vV6YVmz31H1G8EQwSC9M4X+vKoO9CIYOJ+y55IbSeWJ5bQxnhauoOcOahP8QYHVAUf0c76TRYOrSVrdiNJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2j7qadx; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmIrrAPJ"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a2d37b8c4fso376350a91.1;
-        Thu, 25 Apr 2024 17:14:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2j7qadx"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so1204496a91.0;
+        Thu, 25 Apr 2024 18:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714090471; x=1714695271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SunWQ9HwSBJxyYvtsaZOJFSGcbd0R6AuBnmBsgWqMEg=;
-        b=LmIrrAPJ0S9CeYUZtoDl1JDMAS/eCBukVS1N24OHOWFmzGoItNHVuw1hLKT+djx+aU
-         eNBHzwFeW+xJRw3ddsTHAAgvhvTMuJqsmcwN/g4Al6oMAKya/qXr6QcOB0X3rvxd+Glf
-         y/UFdYM6wUWU3giWdfJYQnuwxDvpLuWFOdIFphIdyACltAAaD0kQojUvNI9qiiqmIYWK
-         axhzQr1DhA7I0msN3IitOwvuMdiWg6NzBof9RDlOjBH8GueM2NdBNS38XdkZl/arQmZS
-         SPv9Tl4qW6MSRLY4Dzv/vIdtzWh5NGkIBqk9u0VcjD/5KO4UOYd2Di4ZcDRClvKN1BMz
-         kJ2g==
+        d=gmail.com; s=20230601; t=1714095755; x=1714700555; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XPVbpFUgykpXukVgH5RPq+94XG4ziHc5dIXEKcV3NXM=;
+        b=D2j7qadxzy7trVV9lVHpIAd16jgFJWlFoAj88ay69a8dGQQVRoKaixMIX3l986+ZK4
+         OfWCEBOK6+w/5fXYRY5ly2yCNXwXLdRYDDzJrZhMcZJeNk8vqu0ql64HaM4M/1KwTNj2
+         vBQQX8x/PjqYF/pjbuyt9lR3X5aThdIPtrnhuueSdV3gdzpgkxEhxukgvfEe9rv6JlW2
+         N1bSTvOCYbzesAcPINO1G4jiKQw6BU2zNV2/puU/J6kjokNWPGU18iGP93UVW7rx+/Bw
+         onouEB4OtgXgyl8KMJK5vp4/tYHPlFETsydqj0llOM58gO/au5xxBIuAEp9F8b23yawb
+         LPCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714090471; x=1714695271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SunWQ9HwSBJxyYvtsaZOJFSGcbd0R6AuBnmBsgWqMEg=;
-        b=AP1x2bXaoC/rhz8LItYKY1vfOyKEr8/c+sgNtv2RRXszNRiyYg9St9LPZp/ym5nHdt
-         Qu0StSmH3ZepEGX1Uay/6Ip1jIACCo7NWnUOReNucWeddEC2MM0Xb9V4HT/STcb0owhP
-         zki37ygAee/kXxRK7TmHf+MW5PxGSUqKHhpOJkMVNT7OM0MrDxbYcRHA0EE/MQJvG4HS
-         fntYgXpTzXVQPh4LmxLMg170FM25XmODt6TGv64+rubKGMGGmL+AdNF9py8R66mxEpR6
-         AaloB6mfCbEUh3nWFtJRUgh8CIwwNQOjgcvctqVQ4Z27jEwnxSH1QTcOtw73bvVlXKnL
-         SN+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwfqdMN/XB3MClvy9EJiYImP7GUvRf8V0p1QRqz+Z/7ZqboR/1MeULnclVcGTDZdeWMytyweHE2PU3tN8+28KcY1D5umwTkImRY6+wLDvvcI0gZNwu1WlCakFe9W4K6H4cXCxaLf1pN8czQWEpUqlVNcaUl0VXg4j3UeeWokjm8IRUkU91S9X4tFwWOWu1yG+d2u4pHIGNCplpAI9xZdhJHZNnJNwv/4DLbqb/
-X-Gm-Message-State: AOJu0Ywxsl6pPknSHuzfHZ1oaCPjH1zwVtoIwzSt5OE8PY7U3JelhMe4
-	pgCZVEaAw4G30q8/QV+RSYWHnSSR72l180YUtbw8qjUsJzGbCpra
-X-Google-Smtp-Source: AGHT+IFhfYJmlZYX3JCY6d+4vobjo7z2a69ChmkVLT1hXUmpPBdCX2AmDP1EgXQSKYYW9pR9OczIEQ==
-X-Received: by 2002:a05:6a00:880f:b0:6ec:ef1c:5c55 with SMTP id ho15-20020a056a00880f00b006ecef1c5c55mr1525090pfb.2.1714090471464;
-        Thu, 25 Apr 2024 17:14:31 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id gm8-20020a056a00640800b006e740d23674sm14228279pfb.140.2024.04.25.17.14.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 17:14:30 -0700 (PDT)
-Date: Fri, 26 Apr 2024 08:14:25 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, colyli@suse.de,
-	msakai@redhat.com, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org,
-	bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 00/16] treewide: Refactor heap related implementation
-Message-ID: <Zirx4fCA8C6/hz8m@visitorckw-System-Product-Name>
-References: <20240425141826.840077-1-visitorckw@gmail.com>
- <txga7kntgxylhmxqkzs3rdgmnjai2ftlstdezltkapdctn3ju6@ndyytejfyoc2>
+        d=1e100.net; s=20230601; t=1714095755; x=1714700555;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XPVbpFUgykpXukVgH5RPq+94XG4ziHc5dIXEKcV3NXM=;
+        b=Y7OugSvXSMwJichD8I04hmxOlJZ7T2SxkUSPHqo4+CmVSx6KI8D9S8m+GFsXF/LEie
+         euHAuPqSCOLW+P2ckmMZ5TodH32J6XScYCIipW4i31J72MVXPb1vd/yWZ8vGIL40I6/l
+         RLGnTDGCxwMAbEGMUTOzjmw1LepQX34eekRLn5DN00CmAJTMtvgYR6Z0iI6Kfa0DGyUv
+         Sa020MHWhkw7rd/9/kWy9zXlT6eNdLRxg53lR3+jFRuNBy1sH1LzoL5Ip0vezFQPbjw1
+         eEXbYcfjc+ok+28sKHPIhBU0dQXecJPL8gKkjZkJEiVPavCqy/q2RynM19/7jytulQxE
+         rJoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjbg2hKiT8UWbxG4YnB1XQNTvhfj2de8ZGDM0LklVDl2k0MyklZELhT9BPkNNKRAp6wktC1Y4+RqsWmCveTmkbNKR8zC04sKzgUctFxanvGFFdVjESzKsf7WQ8YVM85Uwy9sMkrXTG5PrZTEeyeYbRsdZ0mdZIr/nHwXDstnGo4ckgAW99gA==
+X-Gm-Message-State: AOJu0YztML3Czgbk84QmbRJVFauE8C7jzBXbcrV+gTceSzYJdFceh5T+
+	b5Cakx/kDKqD9I7M9nSAboT/rDjUkyAphCU9/UuX9q8kVXsfuO6KFgF2ClcFLXmOMlAd0kUIlvf
+	8NrmiQqU627DPSfE3WxPuGxOqQg4=
+X-Google-Smtp-Source: AGHT+IF58aLHIDR4qSLnTb8yshqq5gvV1RdUXVE9ijfp6qxPGovExU5vDJXBKvxXVf5fJyFpUfb1gMpq+BveBnvQ1oo=
+X-Received: by 2002:a17:90a:e2cd:b0:2ac:8198:848b with SMTP id
+ fr13-20020a17090ae2cd00b002ac8198848bmr1604970pjb.18.1714095754860; Thu, 25
+ Apr 2024 18:42:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <txga7kntgxylhmxqkzs3rdgmnjai2ftlstdezltkapdctn3ju6@ndyytejfyoc2>
+From: lee bruce <xrivendell7@gmail.com>
+Date: Fri, 26 Apr 2024 09:42:23 +0800
+Message-ID: <CABOYnLyTrBQdqWyrQRTJKt-ZzoGSVe7o2qQ0cC3KgX8KoQasUQ@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] BUG: using __this_cpu_add() in preemptible code
+ in graph_lock
+To: syzbot+60761fc6ef65e4f00974@syzkaller.appspotmail.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	yue sun <samsun1006219@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 25, 2024 at 04:54:54PM -0400, Kent Overstreet wrote:
-> Hey Stephen, I think this is ready for -next.
-> 
-> https://github.com/visitorckw/linux.git refactor-heap-v4
-> 
-> Kuan, please add my acked-by to the bcachefs patch as well.
-> 
-Acked-by tag has been added to the repository mentioned above and
-pushed out.
+Hello, I reproduced this bug.
 
-Regards,
-Kuan-Wei
-> 
-> On Thu, Apr 25, 2024 at 10:18:10PM +0800, Kuan-Wei Chiu wrote:
-> > This patch series focuses on several adjustments related to heap
-> > implementation. Firstly, a type-safe interface has been added to the
-> > min_heap, along with the introduction of several new functions to
-> > enhance its functionality. Additionally, the heap implementation for
-> > bcache and bcachefs has been replaced with the generic min_heap
-> > implementation from include/linux. Furthermore, several typos have been
-> > corrected.
-> > 
-> > Previous discussion with Kent Overstreet:
-> > https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
-> > 
-> > Regards,
-> > Kuan-Wei
-> > 
-> > ---
-> > 
-> > You can preview this patch series on the 'refactor-heap-v4' branch of
-> > the repository at the following link:
-> > 
-> > https://github.com/visitorckw/linux.git
-> > 
-> > Changes in v4:
-> > - Change struct initializations to use designated initializers.
-> > - Replace memcpy() with func->swp() in heap_del() due to issues with
-> >   set_backpointer in bcachefs when setting idx.
-> > - Fix an error in ec_stripes_heap_swap() where
-> >   ec_stripes_heap_set_backpointer() should be called after swapping.
-> > 
-> > Changes in v3:
-> > - Avoid heap->heap.nr to eliminate the nested types.
-> > - Add MIN_HEAP_PREALLOCATED macro for preallocating some elements.
-> > - Use min_heap_sift_up() in min_heap_push().
-> > - Fix a bug in heap_del() where we should copy the last element to
-> >   'data + idx * element_size' instead of 'data'.
-> > - Add testcases for heap_del().
-> > - Fix bugs in bcache/bcachefs patches where the parameter types in
-> >   some compare functions should have been 'type **', but were
-> >   mistakenly written as 'type *'.
-> > 
-> > Changes in v2:
-> > - Add attribute __always_unused to the compare and swap functions
-> >   that do not use the args parameter.
-> > - Rename min_heapify() to min_heap_sift_down().
-> > - Update lib/test_min_heap.c to use min_heap_init().
-> > - Refine the commit message for bcache and bcachefs.
-> > - Adjust the order of patches in the patch series.
-> > 
-> > Link to v3: https://lore.kernel.org/20240406164727.577914-1-visitorckw@gmail.com
-> > Link to v2: https://lore.kernel.org/20240320145417.336208-1-visitorckw@gmail.com
-> > Link to v1: https://lkml.kernel.org/20240319180005.246930-1-visitorckw@gmail.com
-> > 
-> > Kuan-Wei Chiu (16):
-> >   perf/core: Fix several typos
-> >   bcache: Fix typo
-> >   bcachefs: Fix typo
-> >   lib min_heap: Add type safe interface
-> >   lib min_heap: Add min_heap_init()
-> >   lib min_heap: Add min_heap_peek()
-> >   lib min_heap: Add min_heap_full()
-> >   lib min_heap: Add args for min_heap_callbacks
-> >   lib min_heap: Add min_heap_sift_up()
-> >   lib min_heap: Add min_heap_del()
-> >   lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
-> >     values
-> >   lib min_heap: Rename min_heapify() to min_heap_sift_down()
-> >   lib min_heap: Update min_heap_push() to use min_heap_sift_up()
-> >   lib/test_min_heap: Add test for heap_del()
-> >   bcache: Remove heap-related macros and switch to generic min_heap
-> >   bcachefs: Remove heap-related macros and switch to generic min_heap
-> > 
-> >  drivers/md/bcache/alloc.c      |  64 ++++++++---
-> >  drivers/md/bcache/bcache.h     |   2 +-
-> >  drivers/md/bcache/bset.c       |  84 ++++++++++-----
-> >  drivers/md/bcache/bset.h       |  14 +--
-> >  drivers/md/bcache/btree.c      |  17 ++-
-> >  drivers/md/bcache/extents.c    |  53 ++++++----
-> >  drivers/md/bcache/movinggc.c   |  41 +++++--
-> >  drivers/md/bcache/sysfs.c      |   2 +
-> >  drivers/md/bcache/util.c       |   2 +-
-> >  drivers/md/bcache/util.h       |  67 +-----------
-> >  drivers/md/bcache/writeback.c  |   3 +
-> >  drivers/md/dm-vdo/repair.c     |  19 ++--
-> >  drivers/md/dm-vdo/slab-depot.c |  14 +--
-> >  fs/bcachefs/clock.c            |  43 ++++++--
-> >  fs/bcachefs/clock_types.h      |   2 +-
-> >  fs/bcachefs/ec.c               |  76 ++++++++-----
-> >  fs/bcachefs/ec_types.h         |   2 +-
-> >  fs/bcachefs/util.c             |   2 +-
-> >  fs/bcachefs/util.h             | 118 +--------------------
-> >  include/linux/min_heap.h       | 188 +++++++++++++++++++++++++--------
-> >  kernel/events/core.c           |  29 ++---
-> >  lib/test_min_heap.c            |  75 +++++++++----
-> >  22 files changed, 522 insertions(+), 395 deletions(-)
-> > 
-> > -- 
-> > 2.34.1
-> > 
+If you fix this issue, please add the following tag to the commit:
+Reported-by: xingwei lee <xrivendell7@gmail.com>
+Reported-by: yue sun <samsun1006219@gmail.com>
+
+I use the same kernel as syzbot instance:
+https://syzkaller.appspot.com/bug?extid=60761fc6ef65e4f00974
+Kernel Commit: bpf 443574b033876c85a35de4c65c14f7fe092222b2
+Kernel Config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=6fb1be60a193d440
+
+=* repro.c =*
+#define _GNU_SOURCE
+
+#include <dirent.h>
+#include <endian.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/prctl.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+
+#ifndef __NR_bpf
+#define __NR_bpf 321
+#endif
+
+static void sleep_ms(uint64_t ms) {
+   usleep(ms * 1000);
+}
+
+static uint64_t current_time_ms(void) {
+   struct timespec ts;
+   if (clock_gettime(CLOCK_MONOTONIC, &ts))
+       exit(1);
+   return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+}
+
+static bool write_file(const char* file, const char* what, ...) {
+   char buf[1024];
+   va_list args;
+   va_start(args, what);
+   vsnprintf(buf, sizeof(buf), what, args);
+   va_end(args);
+   buf[sizeof(buf) - 1] = 0;
+   int len = strlen(buf);
+   int fd = open(file, O_WRONLY | O_CLOEXEC);
+   if (fd == -1)
+       return false;
+   if (write(fd, buf, len) != len) {
+       int err = errno;
+       close(fd);
+       errno = err;
+       return false;
+   }
+   close(fd);
+   return true;
+}
+
+static void kill_and_wait(int pid, int* status) {
+   kill(-pid, SIGKILL);
+   kill(pid, SIGKILL);
+   for (int i = 0; i < 100; i++) {
+       if (waitpid(-1, status, WNOHANG | __WALL) == pid)
+           return;
+       usleep(1000);
+   }
+   DIR* dir = opendir("/sys/fs/fuse/connections");
+   if (dir) {
+       for (;;) {
+           struct dirent* ent = readdir(dir);
+           if (!ent)
+               break;
+           if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+               continue;
+           char abort[300];
+           snprintf(abort, sizeof(abort), "/sys/fs/fuse/connections/%s/abort",
+                            ent->d_name);
+           int fd = open(abort, O_WRONLY);
+           if (fd == -1) {
+               continue;
+           }
+           if (write(fd, abort, 1) < 0) {
+           }
+           close(fd);
+       }
+       closedir(dir);
+   } else {
+   }
+   while (waitpid(-1, status, __WALL) != pid) {
+   }
+}
+
+static void setup_test() {
+   prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
+   setpgrp();
+   write_file("/proc/self/oom_score_adj", "1000");
+}
+
+static void execute_one(void);
+
+#define WAIT_FLAGS __WALL
+
+static void loop(void) {
+   int iter = 0;
+   for (;; iter++) {
+       int pid = fork();
+       if (pid < 0)
+           exit(1);
+       if (pid == 0) {
+           setup_test();
+           execute_one();
+           exit(0);
+       }
+       int status = 0;
+       uint64_t start = current_time_ms();
+       for (;;) {
+           if (waitpid(-1, &status, WNOHANG | WAIT_FLAGS) == pid)
+               break;
+           sleep_ms(1);
+           if (current_time_ms() - start < 5000)
+               continue;
+           kill_and_wait(pid, &status);
+           break;
+       }
+   }
+}
+
+uint64_t r[2] = {0xffffffffffffffff, 0xffffffffffffffff};
+
+void execute_one(void) {
+   intptr_t res = 0;
+   *(uint32_t*)0x200009c0 = 0x12;
+   *(uint32_t*)0x200009c4 = 4;
+   *(uint32_t*)0x200009c8 = 8;
+   *(uint32_t*)0x200009cc = 8;
+   *(uint32_t*)0x200009d0 = 0;
+   *(uint32_t*)0x200009d4 = -1;
+   *(uint32_t*)0x200009d8 = 0;
+   memset((void*)0x200009dc, 0, 16);
+   *(uint32_t*)0x200009ec = 0;
+   *(uint32_t*)0x200009f0 = -1;
+   *(uint32_t*)0x200009f4 = 0;
+   *(uint32_t*)0x200009f8 = 0;
+   *(uint32_t*)0x200009fc = 0;
+   *(uint64_t*)0x20000a00 = 0;
+   res = syscall(__NR_bpf, /*cmd=*/0ul, /*arg=*/0x200009c0ul, /*size=*/0x48ul);
+   if (res != -1)
+       r[0] = res;
+   *(uint32_t*)0x200000c0 = 0;
+   *(uint32_t*)0x200000c4 = 0xc;
+   *(uint64_t*)0x200000c8 = 0x20000440;
+   memcpy((void*)0x20000440,
+
+"\x18\x00\x00\x00\xa9\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x18"
+                "\x11\x00\x00",
+                20);
+   *(uint32_t*)0x20000454 = r[0];
+   memcpy((void*)0x20000458,
+
+"\x00\x00\x00\x00\x00\x00\x00\x00\xb7\x08\x00\x00\x00\x00\x00\x00\x7b"
+
+"\x8a\xf8\xff\x00\x00\x00\x00\xbf\xa2\x00\x00\x00\x00\x00\x00\x07\x02"
+
+"\x00\x00\xf8\xff\xff\xff\xb7\x03\x00\x00\x08\x00\x00\x00\xb7\x04\x00"
+                "\x00\x00\x00\x00\x00\x85\x00\x00\x00\x03\x00\x00\x00\x95",
+                65);
+   *(uint64_t*)0x200000d0 = 0;
+   *(uint32_t*)0x200000d8 = 0;
+   *(uint32_t*)0x200000dc = 0;
+   *(uint64_t*)0x200000e0 = 0;
+   *(uint32_t*)0x200000e8 = 0;
+   *(uint32_t*)0x200000ec = 0;
+   memset((void*)0x200000f0, 0, 16);
+   *(uint32_t*)0x20000100 = 0;
+   *(uint32_t*)0x20000104 = 0;
+   *(uint32_t*)0x20000108 = -1;
+   *(uint32_t*)0x2000010c = 0;
+   *(uint64_t*)0x20000110 = 0;
+   *(uint32_t*)0x20000118 = 0;
+   *(uint32_t*)0x2000011c = 0;
+   *(uint64_t*)0x20000120 = 0;
+   *(uint32_t*)0x20000128 = 0;
+   *(uint32_t*)0x2000012c = 0;
+   *(uint32_t*)0x20000130 = 0;
+   *(uint32_t*)0x20000134 = 0;
+   *(uint64_t*)0x20000138 = 0;
+   *(uint64_t*)0x20000140 = 0;
+   *(uint32_t*)0x20000148 = 0;
+   *(uint32_t*)0x2000014c = 0;
+   syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x200000c0ul, /*size=*/0x90ul);
+   *(uint32_t*)0x200000c0 = 0x11;
+   *(uint32_t*)0x200000c4 = 0xc;
+   *(uint64_t*)0x200000c8 = 0x20000440;
+   *(uint64_t*)0x200000d0 = 0x20000240;
+   memcpy((void*)0x20000240, "GPL\000", 4);
+   *(uint32_t*)0x200000d8 = 0;
+   *(uint32_t*)0x200000dc = 0;
+   *(uint64_t*)0x200000e0 = 0;
+   *(uint32_t*)0x200000e8 = 0;
+   *(uint32_t*)0x200000ec = 0;
+   memset((void*)0x200000f0, 0, 16);
+   *(uint32_t*)0x20000100 = 0;
+   *(uint32_t*)0x20000104 = 0;
+   *(uint32_t*)0x20000108 = -1;
+   *(uint32_t*)0x2000010c = 0;
+   *(uint64_t*)0x20000110 = 0;
+   *(uint32_t*)0x20000118 = 0;
+   *(uint32_t*)0x2000011c = 0;
+   *(uint64_t*)0x20000120 = 0;
+   *(uint32_t*)0x20000128 = 0;
+   *(uint32_t*)0x2000012c = 0;
+   *(uint32_t*)0x20000130 = 0;
+   *(uint32_t*)0x20000134 = 0;
+   *(uint64_t*)0x20000138 = 0;
+   *(uint64_t*)0x20000140 = 0;
+   *(uint32_t*)0x20000148 = 0;
+   *(uint32_t*)0x2000014c = 0;
+   res = syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x200000c0ul, /*size=*/0x90ul);
+   if (res != -1)
+       r[1] = res;
+   *(uint64_t*)0x20000180 = 0x20000080;
+   memcpy((void*)0x20000080, "contention_end\000", 15);
+   *(uint32_t*)0x20000188 = r[1];
+   syscall(__NR_bpf, /*cmd=*/0x11ul, /*arg=*/0x20000180ul, /*size=*/0x10ul);
+}
+int main(void) {
+   syscall(__NR_mmap, /*addr=*/0x1ffff000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+                   /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/
+0x32ul, /*fd=*/-1,
+                   /*offset=*/0ul);
+   syscall(__NR_mmap, /*addr=*/0x20000000ul, /*len=*/0x1000000ul,
+                   /*prot=PROT_WRITE|PROT_READ|PROT_EXEC*/ 7ul,
+                   /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/
+0x32ul, /*fd=*/-1,
+                   /*offset=*/0ul);
+   syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
+                   /*flags=MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE*/
+0x32ul, /*fd=*/-1,
+                   /*offset=*/0ul);
+   loop();
+   return 0;
+}
+
+
+=* repro.txt =*
+r0 = bpf$MAP_CREATE(0x0, &(0x7f00000009c0)=@base={0x12, 0x4, 0x8, 0x8}, 0x48)
+bpf$PROG_LOAD(0x5, &(0x7f00000000c0)={0x0, 0xc,
+&(0x7f0000000440)=ANY=[@ANYBLOB="18000000a9000000000000000200000018110000",
+@ANYRES32=r0, @ANYBLOB="0000000000000000b7080000000000007b8af8ff00000000bfa200000000000007020000f8ffffffb703000008000000b704000000000000850000000300000095"],
+0x0, 0x0, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, 0x0, 0xffffffffffffffff,
+0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, 0x90)
+r1 = bpf$PROG_LOAD(0x5, &(0x7f00000000c0)={0x11, 0xc,
+&(0x7f0000000440)=ANY=[], &(0x7f0000000240)='GPL\x00', 0x0, 0x0, 0x0,
+0x0, 0x0, '\x00', 0x0, 0x0, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0,
+0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, 0x90)
+bpf$BPF_RAW_TRACEPOINT_OPEN(0x11,
+&(0x7f0000000180)={&(0x7f0000000080)='contention_end\x00', r1}, 0x10)
+
+and see also in
+https://gist.github.com/xrivendell7/db53a0e46672f13acc6797e8d99729d3
+
+I hope it helps.
+Best regards
+xingwei lee
