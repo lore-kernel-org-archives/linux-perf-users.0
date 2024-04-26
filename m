@@ -1,164 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5971448E7
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 13:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A1152DE6;
+	Fri, 26 Apr 2024 13:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139106; cv=none; b=HHESYRqZ/3oe1TaMWRaZXD0wfmyH/uuxNOvNJxmEl32w0zPMGyOo0+wqR0TUxF3W79v2gLTdqGYsWyS3PdWCbcVcoxZ7YkxNLYOn8PS6KJYWaS01hC+cC1VPLP+aazxu0rqBPuGgopY31w2SmE0NKSZgb8rlaBxti1O8m6sC8O0=
+	t=1714139646; cv=none; b=qiXr+/Vtyvw3ek/7lAzlGnVv8SG1+RW8PYQxOXz6e3s/4Nfu7SCYdEjxlS8s77QDrHfA6VLN0vjbimgsvvT6asmIp3g9Rn2gSWtlR15Y+NkXQhsRaAtgCB8IxG4kc4IqHepH1YsdipxvDGgJ207nSYik4bBMOV6xHQKI/zb6jGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139106; c=relaxed/simple;
-	bh=/wyjt9d4AZ8Mo8vzASxA6mAa3oblPdVQKxM3OHzZLF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTY14G5b/fzAIDrVbQMQiLgESci2sBlFUbo0C6ZJqqrh7J2zfsX9mMlWkdshxvDBYw0BXm0QriFa1Pm/0xRn25RaCSSsS7RoYJR/1L7LCu7JUd8zcHNBuZBGVHk0dkRrSxNCGVjNrgoI2I27x9rLzJl+HdSY92NMNsEfzs+4d9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnQJ1dJI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714139646; c=relaxed/simple;
+	bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkaXUNESLAYFmvfMpiGWBxU2wDa/hYMSiEqFnS4X1vkRQGsdAay3OFStVAo9Rfb8QWYa2CgBH+cqbGzKqSqDO7tAr493Tj1t+vPP5EyX3jPOuCufDjvhJo/I6IN/rMSXe0wFfQmG8H7Tk5HopXq3Iq/vBvv3Q0lNHseSa8TOYg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bajOi7Q0; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnQJ1dJI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714139104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
-	b=AnQJ1dJI3MtJ+7I0tkcWnraRJUBm9MW1uPpoAEPQpP6czxDrPrFfY2kGvbxe30YS501/Gb
-	PSLgnbiOQZ/7zQJxoekoEhYqIxC3Za3r1Srf5f+U0V+3uinJqwqRjSzCEDqUXtxMa4WzCo
-	R83vtPBuT6SQIbOeXPccWXoDQIHCLVo=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-346-yaeZjBHpPS2q-PWAX-trnw-1; Fri, 26 Apr 2024 09:45:02 -0400
-X-MC-Unique: yaeZjBHpPS2q-PWAX-trnw-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso477073a34.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 06:45:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139102; x=1714743902;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
-        b=uLz+CqYgcKUuwzoLnq24/qzp4EcvRwqX0rvxe/UwV2mDeCfadkCV6xk1cDWAQEF6N9
-         ywyXFTXO0ohmAe46iPzxXZr9goL51bzUw1Sd4DELyKrZjst+k+fkUQjPAVwPft5MLIGE
-         fN3wdx3MYaAg29p8Lnp3YG397YIa73TcvDzrEzukj4ifLai2dtOhNI/SaEanlRENTx6V
-         J/j9H1G0L91fttFBIqxswl2/lKWUtRhA2EImIqj6Cw1z/HOWy8awr+w/VBzkPXHZBovf
-         DS3Fa0tKAyDMK108/Sbp02uvKQns/HfrzM5idFaTMgmkOe1JBRauLrXg1tPO7QV5XTV/
-         WVyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUf4vnFRclYkrvPCFV/ZV4ML/5nXLvzNqhfMj8M8Da+vpTf3u6sWErhytqnQLRpXisrIBsUBhiVmTicWcqnfksrWMLHuVQheXKL4HEH81lBcg==
-X-Gm-Message-State: AOJu0YzMJrqd7KT0oI4TI5hGDBe2rhenbE7FiO9KNYQNKO3ssY7UCWyf
-	CQaxhBLEYeMb4dFtbj+2GwvSOokcIsYAgsCF+NODQQ6TBpHwRvmpAPsylmNbwPDV8vDVoLXn3z9
-	vx0+lo2H/Hau5ukkHlZPMX0pJ7mADotIN1qisD3RjCR5TIPJnTdqlRg3FCDK8+LnZaC4=
-X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101403oik.3.1714139101676;
-        Fri, 26 Apr 2024 06:45:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGzrxrCF28uWDRUo6q+zp4qFvioOS0q1e4hOagwn8iRvVD4UFCuaQuTxLkqj/Vp49yVezlG5g==
-X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101360oik.3.1714139100964;
-        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id w9-20020a0ca809000000b00696b1050be8sm6864026qva.133.2024.04.26.06.44.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
-Date: Fri, 26 Apr 2024 09:44:58 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
-Message-ID: <Ziuv2jLY1wgBITiP@x1n>
-References: <20240402125516.223131-1-david@redhat.com>
- <20240402125516.223131-2-david@redhat.com>
- <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bajOi7Q0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714139645; x=1745675645;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
+  b=bajOi7Q0pcSyNXuFFJt6aHiTZhvwXd/6138yMkwPEAZMLehxCGvF1P5Q
+   1JRXG8ezTqOZk1LnmdcpYzJ7D/WIBQ4UNJdTvv0jDid0vo7Afg6eIiTua
+   ECQPXZ1K96H4lRJxjkbN5F1VFE+kJJVHOpulv6BeQfQ8T2c6sUal//NF4
+   3ENpqmD0Zg1g0vnu4OzkuBBdaeAWOb37OdyU9K3xUfxPx9hGbKGY3vcpC
+   //oxjug7nDKf3wc/KC+LLzkxMAVMXJn8TYUbjXk7ru4tn8XFlgbjINgt/
+   rTd9ei0V/o+3SkBgB16nv4KxzezcC2tljrnLwi47FjuJ4phSRx3hscLYt
+   Q==;
+X-CSE-ConnectionGUID: /pONWJr7SPOXzCDZXDflzA==
+X-CSE-MsgGUID: dnlJfU6PSamyKeeCFrFXAA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="21279808"
+X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
+   d="scan'208";a="21279808"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
+X-CSE-ConnectionGUID: 1kOa4ofjSCepnR1fziNLxw==
+X-CSE-MsgGUID: 3vqCDBAgR12hvaQWf3DXlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
+   d="scan'208";a="25428927"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
+Received: from [10.212.113.23] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.23])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1632C20B8CF1;
+	Fri, 26 Apr 2024 06:54:00 -0700 (PDT)
+Message-ID: <a55aca0f-47b0-4c0a-b4dc-089018bd9419@linux.intel.com>
+Date: Fri, 26 Apr 2024 09:53:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Dapeng Mi
+ <dapeng1.mi@linux.intel.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
+ <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
+ <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
+ <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
+ <Zikeh2eGjwzDbytu@google.com>
+ <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
+ <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
+ <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+ <ZirPGnSDUzD-iWwc@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ZirPGnSDUzD-iWwc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
-> On 02.04.24 14:55, David Hildenbrand wrote:
-> > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> > all relevant internal functions to start with "gup_fast", to make it
-> > clearer that this is not ordinary GUP. The current mixture of
-> > "lockless", "gup" and "gup_fast" is confusing.
-> > 
-> > Further, avoid the term "huge" when talking about a "leaf" -- for
-> > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> > stays.
-> > 
-> > What remains is the "external" interface:
-> > * get_user_pages_fast_only()
-> > * get_user_pages_fast()
-> > * pin_user_pages_fast()
-> > 
-> > The high-level internal functions for GUP-fast (+slow fallback) are now:
-> > * internal_get_user_pages_fast() -> gup_fast_fallback()
-> > * lockless_pages_from_mm() -> gup_fast()
-> > 
-> > The basic GUP-fast walker functions:
-> > * gup_pgd_range() -> gup_fast_pgd_range()
-> > * gup_p4d_range() -> gup_fast_p4d_range()
-> > * gup_pud_range() -> gup_fast_pud_range()
-> > * gup_pmd_range() -> gup_fast_pmd_range()
-> > * gup_pte_range() -> gup_fast_pte_range()
-> > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> > * gup_huge_pud()  -> gup_fast_pud_leaf()
-> > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> > 
-> > The weird hugepd stuff:
-> > * gup_huge_pd() -> gup_fast_hugepd()
-> > * gup_hugepte() -> gup_fast_hugepte()
-> 
-> I just realized that we end up calling these from follow_hugepd() as well.
-> And something seems to be off, because gup_fast_hugepd() won't have the VMA
-> even in the slow-GUP case to pass it to gup_must_unshare().
-> 
-> So these are GUP-fast functions and the terminology seem correct. But the
-> usage from follow_hugepd() is questionable,
-> 
-> commit a12083d721d703f985f4403d6b333cc449f838f6
-> Author: Peter Xu <peterx@redhat.com>
-> Date:   Wed Mar 27 11:23:31 2024 -0400
-> 
->     mm/gup: handle hugepd for follow_page()
-> 
-> 
-> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
-> can be leveraged", which doesn't look quite true just staring the the
-> gup_must_unshare() call where we don't pass the VMA. Also,
-> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
-> slow GUP ...
 
-Yes it's not needed, just doesn't look worthwhile to put another helper on
-top just for this.  I mentioned this in the commit message here:
 
-  There's something not needed for follow page, for example, gup_hugepte()
-  tries to detect pgtable entry change which will never happen with slow
-  gup (which has the pgtable lock held), but that's not a problem to check.
-
+On 2024-04-25 5:46 p.m., Sean Christopherson wrote:
+> On Thu, Apr 25, 2024, Kan Liang wrote:
+>> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
+>>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>> It should not happen. For the current implementation, perf rejects all
+>>>> the !exclude_guest system-wide event creation if a guest with the vPMU
+>>>> is running.
+>>>> However, it's possible to create an exclude_guest system-wide event at
+>>>> any time. KVM cannot use the information from the VM-entry to decide if
+>>>> there will be active perf events in the VM-exit.
+>>>
+>>> Hmm, why not? If there is any exclude_guest system-wide event,
+>>> perf_guest_enter() can return something to tell KVM "hey, some active
+>>> host events are swapped out. they are originally in counter #2 and
+>>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
+>>> that and keep it in its pmu data structure.
+>>
+>> I think it's possible that someone creates !exclude_guest event after
 > 
-> @Peter, any insights?
+> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
+> where it rejects exclude_guest=0 events.
+>
 
-However I think we should pass vma in for sure, I guess I overlooked that,
-and it didn't expose in my tests too as I probably missed ./cow.
+Right.
 
-I'll prepare a separate patch on top of this series and the gup-fast rename
-patches (I saw this one just reached mm-stable), and I'll see whether I can
-test it too if I can find a Power system fast enough.  I'll probably drop
-the "fast" in the hugepd function names too.
+>> the perf_guest_enter(). The stale information is saved in the KVM. Perf
+>> will schedule the event in the next perf_guest_exit(). KVM will not know it.
+> 
+> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
+> is what I had in mind when I suggested a callback in my sketch:
+> 
+>  :  D. Add a perf callback that is invoked from IRQ context when perf wants to
+>  :     configure a new PMU-based events, *before* actually programming the MSRs,
+>  :     and have KVM's callback put the guest PMU state
+> 
+> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
+> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
+> into KVM.
+
+Yes, a callback should be required. I think it should be done right
+before switching back to the host perf events, so there are an accurate
+active event list.
 
 Thanks,
-
--- 
-Peter Xu
-
+Kan
