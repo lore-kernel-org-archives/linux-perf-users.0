@@ -1,56 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A1152DE6;
-	Fri, 26 Apr 2024 13:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE28B1465A1;
+	Fri, 26 Apr 2024 14:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139646; cv=none; b=qiXr+/Vtyvw3ek/7lAzlGnVv8SG1+RW8PYQxOXz6e3s/4Nfu7SCYdEjxlS8s77QDrHfA6VLN0vjbimgsvvT6asmIp3g9Rn2gSWtlR15Y+NkXQhsRaAtgCB8IxG4kc4IqHepH1YsdipxvDGgJ207nSYik4bBMOV6xHQKI/zb6jGg=
+	t=1714140598; cv=none; b=LX/Gj8arHHsryGYWs8cfTVE1/BPCxVoxEiOUalqcF/mEQxmvJIgGoCc5W8mgGuh2ZCU4x9RJncqbzt6g+INBYHG6vmuL8aljQdyfjU0ni85gjKNtGbwmqBQPRvdknRhE2wsZ5YeORxJiYYG3yStqgeQEm5nkLqlh4BjVJNW7A/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139646; c=relaxed/simple;
-	bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
+	s=arc-20240116; t=1714140598; c=relaxed/simple;
+	bh=q++yybLMckKLiXK6TTH8gaSYPe98nTrzO/fuv8VXCPM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IkaXUNESLAYFmvfMpiGWBxU2wDa/hYMSiEqFnS4X1vkRQGsdAay3OFStVAo9Rfb8QWYa2CgBH+cqbGzKqSqDO7tAr493Tj1t+vPP5EyX3jPOuCufDjvhJo/I6IN/rMSXe0wFfQmG8H7Tk5HopXq3Iq/vBvv3Q0lNHseSa8TOYg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bajOi7Q0; arc=none smtp.client-ip=192.198.163.10
+	 In-Reply-To:Content-Type; b=EioW7paoFJQ8AR3LDomEfFoCTq7JFlGzvdJUQc8QFPiLMZwtZ+JBXTcbM514MAx3DnhH0weKvFKtj6lR1em+1n6MH9UWEXfixinephyrbZbqxa47nZ509hTp0Yj8wc9Tze/PzRIvaQMRkmkbsaLQBOq9yBPfeJeAHVmy4bS4bdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVvtQU/m; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bajOi7Q0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVvtQU/m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714139645; x=1745675645;
+  t=1714140597; x=1745676597;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
-  b=bajOi7Q0pcSyNXuFFJt6aHiTZhvwXd/6138yMkwPEAZMLehxCGvF1P5Q
-   1JRXG8ezTqOZk1LnmdcpYzJ7D/WIBQ4UNJdTvv0jDid0vo7Afg6eIiTua
-   ECQPXZ1K96H4lRJxjkbN5F1VFE+kJJVHOpulv6BeQfQ8T2c6sUal//NF4
-   3ENpqmD0Zg1g0vnu4OzkuBBdaeAWOb37OdyU9K3xUfxPx9hGbKGY3vcpC
-   //oxjug7nDKf3wc/KC+LLzkxMAVMXJn8TYUbjXk7ru4tn8XFlgbjINgt/
-   rTd9ei0V/o+3SkBgB16nv4KxzezcC2tljrnLwi47FjuJ4phSRx3hscLYt
-   Q==;
-X-CSE-ConnectionGUID: /pONWJr7SPOXzCDZXDflzA==
-X-CSE-MsgGUID: dnlJfU6PSamyKeeCFrFXAA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="21279808"
+  bh=q++yybLMckKLiXK6TTH8gaSYPe98nTrzO/fuv8VXCPM=;
+  b=mVvtQU/mXuJhvsK9W1eT5qfhI6CO1QMTtMGNnhyWArxjh+In96lryitC
+   xUAPKePSjod9g+kfzHM9eqH6Ehrcg0L+EgQRuU5yWL5IkDUGppfaxN6yg
+   Ca61e9yp3JTEAT03eqUKgROaR5sdBBdW4uB0J05Ha/UnK7qg2Dn8Rgw/K
+   igsInT7BTeL9D1a5fepdzrIBpzoUXyUWYnR7SvkJ7ryY/MAZ++ZO2ZpDk
+   EzLtHuSUwOce8J/AN32Twu8hL7z7Ihweib4YtTU0iT+orlbKkYc7Dc6FU
+   vVlYMNzSQVnQmxSCDsjNHXAjaG2+baySZSCa2OcX19Ic/jMll5TfJsIt7
+   g==;
+X-CSE-ConnectionGUID: Y8STL22nSoig5MytvzUK+g==
+X-CSE-MsgGUID: k0H0Y4C1Q8a355cKfJJSlQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="21282381"
 X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="21279808"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
-X-CSE-ConnectionGUID: 1kOa4ofjSCepnR1fziNLxw==
-X-CSE-MsgGUID: 3vqCDBAgR12hvaQWf3DXlw==
+   d="scan'208";a="21282381"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 07:09:56 -0700
+X-CSE-ConnectionGUID: RGO9JhZIT1y4czepxixcvQ==
+X-CSE-MsgGUID: VGNph+ncSXCpNsNkns787w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25428927"
+   d="scan'208";a="62908642"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 07:09:56 -0700
 Received: from [10.212.113.23] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.23])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 1632C20B8CF1;
-	Fri, 26 Apr 2024 06:54:00 -0700 (PDT)
-Message-ID: <a55aca0f-47b0-4c0a-b4dc-089018bd9419@linux.intel.com>
-Date: Fri, 26 Apr 2024 09:53:59 -0400
+	by linux.intel.com (Postfix) with ESMTPS id B65FB20B5739;
+	Fri, 26 Apr 2024 07:09:53 -0700 (PDT)
+Message-ID: <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
+Date: Fri, 26 Apr 2024 10:09:52 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,9 +60,9 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
  state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Dapeng Mi
- <dapeng1.mi@linux.intel.com>, maobibo <maobibo@loongson.cn>,
+To: Mingwei Zhang <mizhang@google.com>,
+ "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>, maobibo <maobibo@loongson.cn>,
  Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
  peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
  jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -80,56 +80,113 @@ References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
  <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
  <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
  <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
+ <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZirPGnSDUzD-iWwc@google.com>
+In-Reply-To: <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2024-04-25 5:46 p.m., Sean Christopherson wrote:
-> On Thu, Apr 25, 2024, Kan Liang wrote:
->> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
->>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>> It should not happen. For the current implementation, perf rejects all
->>>> the !exclude_guest system-wide event creation if a guest with the vPMU
->>>> is running.
->>>> However, it's possible to create an exclude_guest system-wide event at
->>>> any time. KVM cannot use the information from the VM-entry to decide if
->>>> there will be active perf events in the VM-exit.
+On 2024-04-25 11:12 p.m., Mingwei Zhang wrote:
+>>>> the perf_guest_enter(). The stale information is saved in the KVM. Perf
+>>>> will schedule the event in the next perf_guest_exit(). KVM will not know it.
+>>> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
+>>> is what I had in mind when I suggested a callback in my sketch:
 >>>
->>> Hmm, why not? If there is any exclude_guest system-wide event,
->>> perf_guest_enter() can return something to tell KVM "hey, some active
->>> host events are swapped out. they are originally in counter #2 and
->>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
->>> that and keep it in its pmu data structure.
+>>>   :  D. Add a perf callback that is invoked from IRQ context when perf wants to
+>>>   :     configure a new PMU-based events, *before* actually programming the MSRs,
+>>>   :     and have KVM's callback put the guest PMU state
 >>
->> I think it's possible that someone creates !exclude_guest event after
+>> when host creates a perf event with exclude_guest attribute which is
+>> used to profile KVM/VMM user space, the vCPU process could work at three
+>> places.
+>>
+>> 1. in guest state (non-root mode)
+>>
+>> 2. inside vcpu-loop
+>>
+>> 3. outside vcpu-loop
+>>
+>> Since the PMU state has already been switched to host state, we don't
+>> need to consider the case 3 and only care about cases 1 and 2.
+>>
+>> when host creates a perf event with exclude_guest attribute to profile
+>> KVM/VMM user space,  an IPI is triggered to enable the perf event
+>> eventually like the following code shows.
+>>
+>> event_function_call(event, __perf_event_enable, NULL);
+>>
+>> For case 1,  a vm-exit is triggered and KVM starts to process the
+>> vm-exit and then run IPI irq handler, exactly speaking
+>> __perf_event_enable() to enable the perf event.
+>>
+>> For case 2, the IPI irq handler would preempt the vcpu-loop and call
+>> __perf_event_enable() to enable the perf event.
+>>
+>> So IMO KVM just needs to provide a callback to switch guest/host PMU
+>> state, and __perf_event_enable() calls this callback before really
+>> touching PMU MSRs.
+> ok, in this case, do we still need KVM to query perf if there are
+> active exclude_guest events? yes? Because there is an ordering issue.
+> The above suggests that the host-level perf profiling comes when a VM
+> is already running, there is an IPI that can invoke the callback and
+> trigger preemption. In this case, KVM should switch the context from
+> guest to host. What if it is the other way around, ie., host-level
+> profiling runs first and then VM runs?
 > 
-> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
-> where it rejects exclude_guest=0 events.
->
+> In this case, just before entering the vcpu loop, kvm should check
+> whether there is an active host event and save that into a pmu data
+> structure. 
 
-Right.
+KVM doesn't need to save/restore the host state. Host perf has the
+information and will reload the values whenever the host events are
+rescheduled. But I think KVM should clear the registers used by the host
+to prevent the value leaks to the guest.
 
->> the perf_guest_enter(). The stale information is saved in the KVM. Perf
->> will schedule the event in the next perf_guest_exit(). KVM will not know it.
+> If none, do the context switch early (so that KVM saves a
+> huge amount of unnecessary PMU context switches in the future).
+> Otherwise, keep the host PMU context until vm-enter. At the time of
+> vm-exit, do the check again using the data stored in pmu structure. If
+> there is an active event do the context switch to the host PMU,
+> otherwise defer that until exiting the vcpu loop. Of course, in the
+> meantime, if there is any perf profiling started causing the IPI, the
+> irq handler calls the callback, preempting the guest PMU context. If
+> that happens, at the time of exiting the vcpu boundary, PMU context
+> switch is skipped since it is already done. Of course, note that the
+> irq could come at any time, so the PMU context switch in all 4
+> locations need to check the state flag (and skip the context switch if
+> needed).
 > 
-> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
-> is what I had in mind when I suggested a callback in my sketch:
+> So this requires vcpu->pmu has two pieces of state information: 1) the
+> flag similar to TIF_NEED_FPU_LOAD; 2) host perf context info (phase #1
+> just a boolean; phase #2, bitmap of occupied counters).
 > 
->  :  D. Add a perf callback that is invoked from IRQ context when perf wants to
->  :     configure a new PMU-based events, *before* actually programming the MSRs,
->  :     and have KVM's callback put the guest PMU state
+> This is a non-trivial optimization on the PMU context switch. I am
+> thinking about splitting them into the following phases:
 > 
-> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
-> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
-> into KVM.
+> 1) lazy PMU context switch, i.e., wait until the guest touches PMU MSR
+> for the 1st time.
+> 2) fast PMU context switch on KVM side, i.e., KVM checking event
+> selector value (enable/disable) and selectively switch PMU state
+> (reducing rd/wr msrs)
+> 3) dynamic PMU context boundary, ie., KVM can dynamically choose PMU
+> context switch boundary depending on existing active host-level
+> events.
+> 3.1) more accurate dynamic PMU context switch, ie., KVM checking
+> host-level counter position and further reduces the number of msr
+> accesses.
+> 4) guest PMU context preemption, i.e., any new host-level perf
+> profiling can immediately preempt the guest PMU in the vcpu loop
+> (instead of waiting for the next PMU context switch in KVM).
 
-Yes, a callback should be required. I think it should be done right
-before switching back to the host perf events, so there are an accurate
-active event list.
+I'm not quit sure about the 4.
+The new host-level perf must be an exclude_guest event. It should not be
+scheduled when a guest is using the PMU. Why do we want to preempt the
+guest PMU? The current implementation in perf doesn't schedule any
+exclude_guest events when a guest is running.
 
 Thanks,
 Kan
