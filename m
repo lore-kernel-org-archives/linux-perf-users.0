@@ -1,233 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E248469D
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99934156F38
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714149062; cv=none; b=Hf3YU1HjMrlJobQ/V27kBRu4KROOD5Mg1uJXL0SL69QMHW2lXUmud/PRifk+HHjfIQyx2g/DVRZJ68hojamemXIt2hKRMi3JJgEY/q699J0kJWozzdItA4yrtV38OBw69nS/uKBxr6xRGN/Etrou35kKukTe8E42rP1FCU3EBZE=
+	t=1714149959; cv=none; b=WG4nE5UHZW27eeT0O2c/+UFUdYvRBbgPdm24rzOO65jd7ykL1IB+Gjda1gyQ8dvWugQK0fEiuf028Is6yBjGpnMX0cDgfCWuQCkC1OmP7kQn3Wp+3yyJ2EefrwEyOvu+52XgExo3Y3D7KoETefqzdSj6K3cexaLeTVXZmEpEhhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714149062; c=relaxed/simple;
-	bh=/8k54WJjLXl0Ohgcov1tDkRVE3ju+AV5WfFnQsTwUMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWS17C14OZZ2k6Uo/S5pciZCV8aUcOegfajxxOE/EBxHxXHaDvPEBHiX8rA75sU5ALM+Rd+fwofV+26PAlP6vrFkoP9fAM/O2Cun7kZntQ8wSzgFZ+CeJcWDFkoFVaq326dASwCLTym3o7gZyDe5PavPzBpuAgYy1wCsfXTudio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RA2lkBGW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714149959; c=relaxed/simple;
+	bh=TsW6GTHiTQeGY0lIhBtmL90amY6atH1W3WIzWx9xDaA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KUQjIIK4OQJoK1P/wWV5oML9FhtHjBVv1oOO39DLWj5OBkcFi66TyuMtoG5aAE0YnYhFuS+rDtwU/qB2LaJdX1MDLlno1O9Ex1nihx5qNuY6i4FLIYiuXg3b774T4Cu4IrNempsjymmA/s9GGRQmMQYalmlpAY3Bcf9QHB4ZUTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CBcpbqUk; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RA2lkBGW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714149059;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rpjTUxc+qWA0Y4qZUddNdAIcrkox+wko/HZ0g50xBTo=;
-	b=RA2lkBGWZ7AUOkBufWCWAIrjS6d6gsUzXrFFHL+S4/inFPLZSsI3uw2iDGma1DC3vRvhUC
-	QPI1/NAMRTZsvRn47t8wxlS4JD+Doi522V6AdZ2CIJBTE+MrGYk3PEH7Xh/72Ku5VW6Spv
-	qxeGe6twMd+NfiE4bgviJ0v6K2mbgT8=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-HFDYv_hEMzitHBGdRgohJA-1; Fri, 26 Apr 2024 12:30:57 -0400
-X-MC-Unique: HFDYv_hEMzitHBGdRgohJA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-343e54fc19bso1239871f8f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:30:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CBcpbqUk"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36b3738f01cso3275ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714149957; x=1714754757; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iH10hcFVd/zxNn6ShOQRCsj816hnsyk+v3ag974TenE=;
+        b=CBcpbqUkHKS1wCF/NeGv3oIaLT/+3cN+2XIfK1lxAbDerS7fXtC0b6w9DdVaX8PrQ2
+         7NUG2WZ2Eh6wZ8myoe+TsbVu8r/sEXTnrzjfvmJIObUEiMUBFncPhEfr/HuKNCN5szHb
+         ImXiiOoAJ96GJDu2vGR4T1OxDlXZ2J5ghm/zDTDGEYaEl+QeGLdwk0bCK4Ee77IfRo2J
+         IlUdhNyrBw0c/jtI3aZQO53qAdjuISDgc+zdLvwpbQoI8BeR+hk886kWSiIvWpFzFSl7
+         F0PmpY3i6SbRgIsLcbah2t6MDdygBUlnoC6LwCddhKH8z0Qfji6YBgRkefPRrnM4fJUl
+         +6Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714149056; x=1714753856;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rpjTUxc+qWA0Y4qZUddNdAIcrkox+wko/HZ0g50xBTo=;
-        b=ORCzxi3/hoi8d3CKZCnRQTJrOJJoOXUJx//gLDkl2kat8vKnfRXvxpewRY7lLr3Qsk
-         WwRYSYmG8wt8Lp2ND30Zgw9DvovD58BS6o6Oqg19Pehn/PAN3s5tyiU18t9IBLng+HlH
-         704tL3UddVq+cd87d9Je+ybI0NeV9I1F9oKvjYTWzUEHgijJm532wG+Tk2XikNfqBlpP
-         pTkppf9f1P4jCo6VQMdUUR6GFOI5be2Apl/6QmBasCdWUu5slvdmogLL8cp+nFaWUqL9
-         w6DL6AlNykqNFYG88pqFYNcuXftnvaLjcS3zuNOCnf+7KvsO2yGZHJ+djXlDpR+cAn7T
-         u9pw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rt041wbsLPPdbEqo9aGZ/Tw5+LaLzHqxINlQjliwy8zWNn0w2P3vHoQG6Wfvy/6muFIfKhvx4YmswJNUjCKzPiI8SkjiAX+3D+ZZbbkcHw==
-X-Gm-Message-State: AOJu0YzHcQSVLhwT7q3eh2B1mcUYB/0N7cwbPUmQoPDwtz1FLDDMv8ZT
-	b0F3xAb+u8pf/ShDkH+SKEaoF/ij0HXiBT/sWi1kfmfTUBWh42lmqZVb/5UpqliEY8iIIXJx0m/
-	PDRPVHH+NzChKm/nairfKIdixTp5977hjdo982HGR/9fxXcJUo3pE+q2RdCAySY6OaUja/0/OBX
-	Iibw==
-X-Received: by 2002:a5d:68ca:0:b0:343:a6fc:b2e8 with SMTP id p10-20020a5d68ca000000b00343a6fcb2e8mr62718wrw.26.1714149056089;
-        Fri, 26 Apr 2024 09:30:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmjsoBTMU6pCcdTt3oPFA1D/zUO5nyuIvI1Qw7CNBBKnvS7pzGg9gU9XshdIHt96lcgDf9mw==
-X-Received: by 2002:a5d:68ca:0:b0:343:a6fc:b2e8 with SMTP id p10-20020a5d68ca000000b00343a6fcb2e8mr62698wrw.26.1714149055734;
-        Fri, 26 Apr 2024 09:30:55 -0700 (PDT)
-Received: from [192.168.137.117] (2254069205.kn.vutbr.cz. [147.229.196.16])
-        by smtp.gmail.com with ESMTPSA id s7-20020a5d5107000000b0034c61e211a5sm1651726wrt.63.2024.04.26.09.30.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 09:30:55 -0700 (PDT)
-Message-ID: <0db3b460-2520-4dbb-8864-458b3139566f@redhat.com>
-Date: Fri, 26 Apr 2024 18:30:52 +0200
+        d=1e100.net; s=20230601; t=1714149957; x=1714754757;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iH10hcFVd/zxNn6ShOQRCsj816hnsyk+v3ag974TenE=;
+        b=b1hRjx+8k+nGAp8vzY3td9vpY1pAKh37cygDPDGL7rH5s86TPyQ1KMUpZc41YNPHsE
+         tqQXOY1+MTNI5pfk0OohISWAPTGoS36z1mBJlRo5f3YIRAETGePkCZZqLi3DkBOQI5eY
+         6qcnI/VfZgVlpILVHMdw3R2DvNhxWe3ALSv7HCK4U0rpk03vpyJtaqnYLVXDN+ntIKIl
+         OB8E9yEk86FJLSN0ad31fsXGh1CoNNLewrRHyTt/ICfYtH+wRB6+QRb66A9xgzC6FhoN
+         6s+8ELC5h0f8nL8Q8JyK0MOHDJJq3sZCl9+niS46E5k03lA65WHhDzWMEO0jICamuPTT
+         pgrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxPQNaOxJB3/NhnTfKmr2+MdVoPO5ZSQCiLZlwbl53Ht0sWeTlLB9ZN+4yWdbKeYtHt3UHl2AEea62iZh43WqY3ZH+izFQkUlguKfMq+gS3A==
+X-Gm-Message-State: AOJu0YxTuldyw+S5OmrMXZ5gW4Mhu1sYWSp9Sx0M3/nJVbI4Sc6N+dBU
+	kOi1kpyJ0O7NQSHxNJT5G4pi9xWatnLck9WlaGrVtkSJbh10pGJFk8aIBqXyr1vaxF4ohib24VP
+	vuXgy1r8SyO7iY34HwIyMwKYHVdMimbbFvEZq
+X-Google-Smtp-Source: AGHT+IGyqiUHq+bsq/fcDLWIZFYHRSRwpnnauY5KJb3XD469uS70sYP9EhJoE2ZqedpHAuLk5QeNwVmENstOTUvQIIw=
+X-Received: by 2002:a05:6e02:13f0:b0:36c:3046:a6ef with SMTP id
+ w16-20020a056e0213f000b0036c3046a6efmr283307ilj.12.1714149956436; Fri, 26 Apr
+ 2024 09:45:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
- stat
-Content-Language: en-US
-To: kajoljain <kjain@linux.ibm.com>, linux-perf-users@vger.kernel.org,
- acme@kernel.org, acme@redhat.com
-Cc: mpetlan@redhat.com
-References: <ZhgpWkUAto8nzvle@x1> <20240415094220.11639-1-vmolnaro@redhat.com>
- <89dfc623-e583-437f-812f-d2a40dc42611@linux.ibm.com>
-From: Veronika Molnarova <vmolnaro@redhat.com>
-In-Reply-To: <89dfc623-e583-437f-812f-d2a40dc42611@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240301174711.2646944-1-irogers@google.com> <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
+ <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
+In-Reply-To: <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 26 Apr 2024 09:45:42 -0700
+Message-ID: <CAP-5=fWk6hMWMy93QgRAWUowRk5LNEkqRVa3u4h0fPRXyE-y+Q@mail.gmail.com>
+Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jain,
+On Fri, Apr 26, 2024 at 8:42=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 26/04/24 18:06, James Clark wrote:
+> >
+> >
+> > On 01/03/2024 17:47, Ian Rogers wrote:
+> >> Switch from running tests sequentially to running in parallel by
+> >> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
+> >> '--sequential'.
+> >>
+> >> On an 8 core tigerlake an address sanitizer run time changes from:
+> >> 326.54user 622.73system 6:59.91elapsed 226%CPU
+> >> to:
+> >> 973.02user 583.98system 3:01.17elapsed 859%CPU
+> >>
+> >> So over twice as fast, saving 4 minutes.
+> >>
+> >
+> > Apologies for not replying earlier before this was applied. But IMO thi=
+s
+> > isn't a good default. Tests that use things like exclusive PMUs
+> > (Coresight for example) can never pass when run in parallel.
+>
+> Yes, that is an issue for Intel PT also.
 
-Thanks for letting me know, there was just some typo fixed in the comment upstream,
-which caused it to fail. Will fix the patch, also add Ian's suggestion and 
-resend it shortly.
+Right, Arnaldo and I discussed this and the safe thing to do for now
+is to keep the default at serial - ie revert this change.
+
+My longer term concern is that basically means people won't use
+parallel testing and we'll bitrot in places like synthesis where it's
+easy to make naive assumptions that say /proc won't be changing.
+
+We have these tests set up for continuous testing in my team, and as
+part of that set up each test is run independently to maximize
+parallelism. This means the exclusive PMU thing does make the tests
+flaky so it would be nice to have the tests address this, either by
+skipping or busy waiting (only when the error code from the PMU is
+busy, up to some maximum time period).
+
+> >
+> > For CI it's arguable whether you'd want to trade stability for speed.
+> > And for interactive sessions there was already the --parallel option
+> > which was easy to add and have it in your bash history.
+> >
+> > Now we've changed the default, any CI will need to be updated to add
+> > --sequential if it wants all the tests to pass.
+>
+> Same here.
+>
+> >                                                 Maybe we could do some
+> > hack and gate it on interactive vs non interactive sessions, but that
+> > might be getting too clever. (Or a "don't run in parallel" flag on
+> > certain tests)
+>
+> Perhaps more attention is needed for the tests that take so long.
+> For example, maybe they could do things in parallel.
+
+This is true for the tool in general. The problem is a lack of good
+abstractions. Probably the easiest candidate for this are the shell
+tests.
+
+> Also -F option doesn't seem to work.
+>
+> $ tools/perf/perf test -F
+> Couldn't find a vmlinux that matches the kernel running on this machine, =
+skipping test
+>   1: vmlinux symtab matches kallsyms                                 : Sk=
+ip
+>   2: Detect openat syscall event                                     : Ok
+>   3: Detect openat syscall event on all cpus                         : Ok
+>   4.1: Read samples using the mmap interface                         : Ok
+>   4.2: User space counter reading of instructions                    : Ok
+>   4.3: User space counter reading of cycles                          : Ok
+>   5: Test data source output                                         : Ok
+> WARNING: event 'numpmu' not valid (bits 16-17,20,22 of config '6530160' n=
+ot supported by kernel)!
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Parsing of all PMU events from sysfs                          : Ok
+> WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by =
+kernel)!
+>   6.3: Parsing of given PMU events from sysfs                        : Ok
+>   6.4: Parsing of aliased events from sysfs                          : Sk=
+ip (no aliases in sysfs)
+>   6.5: Parsing of aliased events                                     : Ok
+>   6.6: Parsing of terms (event modifiers)                            : Ok
+>   7: Simple expression parser                                        : Ok
+>   8: PERF_RECORD_* events & perf_sample fields                       : Ok
+>   9: Parse perf pmu format                                           : Ok
+>  10.1: PMU event table sanity                                        : Ok
+>  10.2: PMU event map aliases                                         : Ok
+> failed: recursion detected for M1
+> failed: recursion detected for M2
+> failed: recursion detected for M3
+> Not grouping metric tma_memory_fence's events.
+> Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constrain=
+t:
+>     echo 0 > /proc/sys/kernel/nmi_watchdog
+>     perf stat ...
+>     echo 1 > /proc/sys/kernel/nmi_watchdog
+> Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constrain=
+t:
+>     echo 0 > /proc/sys/kernel/nmi_watchdog
+>     perf stat ...
+>     echo 1 > /proc/sys/kernel/nmi_watchdog
+> ...
+> ^C
+
+Not working meaning the errors are going to stderr? The issue is that
+pr_err will write to stderr regardless of the verbosity setting and
+some tests deliberately induce errors. We could use debug_set_file
+ to set the output to /dev/null, but that could hide trouble. -F
+usually means your debugging so we've not cared in the past.
 
 Thanks,
-Veronika
-
-On 4/23/24 10:01, kajoljain wrote:
-> Hi Veronika,
->    I was trying to test this patch. But I am not able to apply this
-> patch cleanly on both upstream and acme's tmp.perf-tools-next branch.
-> 
-> error: patch failed: tools/perf/tests/shell/stat_all_pmu.sh:2
-> error: tools/perf/tests/shell/stat_all_pmu.sh: patch does not apply
-> 
-> Can you check that part, but since its simple change I added it manually
-> and could test the patch.
-> 
-> Patch looks fine to me. I tested it by disabling hv-gpci events in HMC
-> 
-> Without patch changes:
-> 
-> localhost:/dev/shm/linux/tools/perf # ./perf test 95 -vv
->  95: perf all PMU test:
-> --- start ---
-> test child forked, pid 2234
-> ---
-> Testing cpu/stalled-cycles-frontend/
-> Testing
-> hv_gpci/system_hypervisor_times_time_spent_managing_partitions_over_entitlement/
-> ---- end(-1) ----
->  95: perf all PMU test                                               :
-> FAILED!
-> 
-> with patch changes:
-> 
-> Testing event
-> 'hv_gpci/system_hypervisor_times_time_spent_managing_partitions_over_entitlement/'
-> -- no permission to enable
-> Testing event
-> 'hv_gpci/system_hypervisor_times_time_spent_on_system_management/' -- no
-> permission to enable
-> Testing event
-> 'hv_gpci/system_hypervisor_times_time_spent_processing_virtual_processor_timers/'
-> -- no permission to enable
-> Testing event
-> 'hv_gpci/system_hypervisor_times_time_spent_to_dispatch_virtual_processors/'
-> -- no permission to enable
-> Testing event
-> 'hv_gpci/system_tlbie_count_and_time_time_spent_issuing_tlbies/' -- no
-> permission to enable
-> Testing event
-> 'hv_gpci/system_tlbie_count_and_time_tlbie_instructions_issued/' -- no
-> permission to enable
-> Testing event 'pm_br_mpred_cmpl' -- supported
-> 
-> On 4/15/24 15:12, vmolnaro@redhat.com wrote:
->> From: Veronika Molnarova <vmolnaro@redhat.com>
->>
->> With the upstream MR !3916 of commit a381bd3615de6 ('powerpc/hv-gpci:
->> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
->> stat for hv_gpci events without required permission set returns an
->> error value of -1 to differentiate the output from the unsupported
->> events. The stat_all_pmu test was designed in a way, that if any
->> command exits with a non-zero value the test exits with an error
->> value without any information provided due to the 'set -e' option.
->>
->> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
->> event causes failure after the MR as the zero return value was required.
->> The issue propagated upstream as the list of the files that affected perf
->> did not cover the changed files and was updated after the issue was
->> discovered. It was caught by CKI testing where it was triaged to stop
->> blocking further MRs, as most of the powerpc machines do not support
->> some of the hv_gpci events.
->>
->> Remove the 'set -e' option from the test and rework the test case to log
->> the status of the event for better maintainability. Instead of exiting
->> immediately after 'perf stat' ends with a non-zero value, check the
->> return value and output of the 'perf stat' command with the appropriate action.
->>
->> Link to the MR !3916 of commit a381bd3615de6:
->> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
->>
->> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
->> ---
->>  tools/perf/tests/shell/stat_all_pmu.sh | 36 ++++++++++++++++++--------
->>  1 file changed, 25 insertions(+), 11 deletions(-)
->>
->> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
->> index c77955419173..d9f0d2100baa 100755
->> --- a/tools/perf/tests/shell/stat_all_pmu.sh
->> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
->> @@ -2,21 +2,35 @@
->>  # perf all PMU test
->>  # SPDX-License-Identifier: GPL-2.0
->>  
->> -set -e
-> 
-> It will create extra blank line can you remove that. Also make sure to
-> test the patch with checkpatch script to avoid any format issue.
-> 
-> Thanks,
-> Kajol Jain
-> 
->>  
->>  # Test all PMU events; however exclude parametrized ones (name contains '?')
->>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
->> -  echo "Testing $p"
->> -  result=$(perf stat -e "$p" true 2>&1)
->> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
->> -    # We failed to see the event and it is supported. Possibly the workload was
->> -    # too small so retry with something longer.
->> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
->> -    if ! echo "$result" | grep -q "$p" ; then
->> -      echo "Event '$p' not printed in:"
->> -      echo "$result"
->> -      exit 1
->> +  echo -n "Testing event '$p' -- "
->> +  stat_output=$(perf stat -e "$p" true 2>&1)
->> +  stat_result=$?
->> +  if echo "$stat_output" | grep -q "$p"; then
->> +    # return value 0 if counters gets printed either if the event is supported or not
->> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
->> +        echo "supported"
->> +    elif [ $stat_result -eq 0 ]; then
->> +        echo "not supported"
->> +    # return value 255 when the required pemission for the event is not set
->> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
->> +        echo "no permission to enable"
->> +    # return value 129 when trying to run 'perf stat' with a non-existent event
->> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
->> +        echo "Fail: Bad event name"
->> +        echo "$stat_output"
->> +        exit 1
->> +    else
->> +        echo "Fail: Unknown return value $stat_result"
->> +        echo "$stat_output"
->> +        exit 1
->>      fi
->> +  else
->> +      echo "Fail: Event '$p' not printed in:"
->> +      echo "$stat_output"
->> +      exit 1
->>    fi
->>  done
->>  
-> 
-
+Ian
