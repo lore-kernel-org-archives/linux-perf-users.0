@@ -1,115 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DF82A1B0;
-	Fri, 26 Apr 2024 12:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5971448E7
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 13:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714135691; cv=none; b=A/GXBHD9FLeMw1ShOLaWZwefA/aGG9oUiE03/k/E0KfZqb5K1urBHJrwN1ZUG9Vc7u9HuiA7l13n3IQsh6qCLQOeQJixAGz1XAYlgfpqTxi93qcpURD9OhrdJsGEA9GxezcBkHvdmB75P60RBY7XJu/8gWoyAFqdlWxIe19s0Yg=
+	t=1714139106; cv=none; b=HHESYRqZ/3oe1TaMWRaZXD0wfmyH/uuxNOvNJxmEl32w0zPMGyOo0+wqR0TUxF3W79v2gLTdqGYsWyS3PdWCbcVcoxZ7YkxNLYOn8PS6KJYWaS01hC+cC1VPLP+aazxu0rqBPuGgopY31w2SmE0NKSZgb8rlaBxti1O8m6sC8O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714135691; c=relaxed/simple;
-	bh=FOzFFi+msUeLXNfbb70s5KkbOCz2J/1lKkGOcbc75Vg=;
+	s=arc-20240116; t=1714139106; c=relaxed/simple;
+	bh=/wyjt9d4AZ8Mo8vzASxA6mAa3oblPdVQKxM3OHzZLF8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J12L6kqaunsCcTPCUvpN9XxVLfSdFS6uDUHbR71ypR71JHEkRew0NM0il3tTQ67OOEsuaFrSqLCP3EcZHg+V/2Xe1uNcHK5skQmrTsypXusvhceHBfrryMqywSgAY7131ldhe+Ark7ak4V6dH++0QMMDCE+7XgP1ZORIdMvEOsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecWCkYsd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTY14G5b/fzAIDrVbQMQiLgESci2sBlFUbo0C6ZJqqrh7J2zfsX9mMlWkdshxvDBYw0BXm0QriFa1Pm/0xRn25RaCSSsS7RoYJR/1L7LCu7JUd8zcHNBuZBGVHk0dkRrSxNCGVjNrgoI2I27x9rLzJl+HdSY92NMNsEfzs+4d9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnQJ1dJI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecWCkYsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA065C113CD;
-	Fri, 26 Apr 2024 12:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714135691;
-	bh=FOzFFi+msUeLXNfbb70s5KkbOCz2J/1lKkGOcbc75Vg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ecWCkYsduNjS49+qSQh1C9PfkhcSQEE6IyK+p7RSLiL63G45KfKhpPKyvSIAMjfNp
-	 Gphe2ZSFIxP6ouvibgmzqnhI2l2AT85SgrbTll+xnmIXCKGoPKi9VGqT5PO8G8I8QV
-	 9PiSZxvQCmC1dHV38z8xHJpo3QWWvYuAlwPYpXDD/BvlbUM0DIMU4JMbGS648KyHJE
-	 iM4z5I98bkBIEq57JQT+iJlyMC+oFV0IfXIun0yMJmN6MF7yLsbKYbkcNjS44f2wuY
-	 r+gKvc6AmRFZ7ieo2sgIyfLbRwrEl827SQjo+9u3QL9K9lHdDNkYTdNdOn3VYRqkrZ
-	 vAiqgGO+oHm3A==
-Date: Fri, 26 Apr 2024 09:48:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V3] perf scripts python: Add a script to run instances of
- perf script in parallel
-Message-ID: <ZiuiiFdPhJIrjI7k@x1>
-References: <20240423133248.10206-1-adrian.hunter@intel.com>
- <ZihFYbdrnarNFWOd@tassilo>
- <ZikT69GIsijZajoI@x1>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnQJ1dJI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714139104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
+	b=AnQJ1dJI3MtJ+7I0tkcWnraRJUBm9MW1uPpoAEPQpP6czxDrPrFfY2kGvbxe30YS501/Gb
+	PSLgnbiOQZ/7zQJxoekoEhYqIxC3Za3r1Srf5f+U0V+3uinJqwqRjSzCEDqUXtxMa4WzCo
+	R83vtPBuT6SQIbOeXPccWXoDQIHCLVo=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-346-yaeZjBHpPS2q-PWAX-trnw-1; Fri, 26 Apr 2024 09:45:02 -0400
+X-MC-Unique: yaeZjBHpPS2q-PWAX-trnw-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso477073a34.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 06:45:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714139102; x=1714743902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uF1kPlR2Ck3Z44kTNMrT7zanJ3tMGvooilBaXGx0yJc=;
+        b=uLz+CqYgcKUuwzoLnq24/qzp4EcvRwqX0rvxe/UwV2mDeCfadkCV6xk1cDWAQEF6N9
+         ywyXFTXO0ohmAe46iPzxXZr9goL51bzUw1Sd4DELyKrZjst+k+fkUQjPAVwPft5MLIGE
+         fN3wdx3MYaAg29p8Lnp3YG397YIa73TcvDzrEzukj4ifLai2dtOhNI/SaEanlRENTx6V
+         J/j9H1G0L91fttFBIqxswl2/lKWUtRhA2EImIqj6Cw1z/HOWy8awr+w/VBzkPXHZBovf
+         DS3Fa0tKAyDMK108/Sbp02uvKQns/HfrzM5idFaTMgmkOe1JBRauLrXg1tPO7QV5XTV/
+         WVyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUf4vnFRclYkrvPCFV/ZV4ML/5nXLvzNqhfMj8M8Da+vpTf3u6sWErhytqnQLRpXisrIBsUBhiVmTicWcqnfksrWMLHuVQheXKL4HEH81lBcg==
+X-Gm-Message-State: AOJu0YzMJrqd7KT0oI4TI5hGDBe2rhenbE7FiO9KNYQNKO3ssY7UCWyf
+	CQaxhBLEYeMb4dFtbj+2GwvSOokcIsYAgsCF+NODQQ6TBpHwRvmpAPsylmNbwPDV8vDVoLXn3z9
+	vx0+lo2H/Hau5ukkHlZPMX0pJ7mADotIN1qisD3RjCR5TIPJnTdqlRg3FCDK8+LnZaC4=
+X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101403oik.3.1714139101676;
+        Fri, 26 Apr 2024 06:45:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzrxrCF28uWDRUo6q+zp4qFvioOS0q1e4hOagwn8iRvVD4UFCuaQuTxLkqj/Vp49yVezlG5g==
+X-Received: by 2002:a05:6808:d53:b0:3c5:f29a:5fda with SMTP id w19-20020a0568080d5300b003c5f29a5fdamr3101360oik.3.1714139100964;
+        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id w9-20020a0ca809000000b00696b1050be8sm6864026qva.133.2024.04.26.06.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 06:45:00 -0700 (PDT)
+Date: Fri, 26 Apr 2024 09:44:58 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+Message-ID: <Ziuv2jLY1wgBITiP@x1n>
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZikT69GIsijZajoI@x1>
+In-Reply-To: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
 
-On Wed, Apr 24, 2024 at 11:15:11AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Apr 23, 2024 at 04:33:53PM -0700, Andi Kleen wrote:
-> > On Tue, Apr 23, 2024 at 04:32:48PM +0300, Adrian Hunter wrote:
-> > > The script is useful for Intel PT traces, that can be efficiently
-> > > decoded by perf script when split by CPU and/or time ranges. Running
-> > > jobs in parallel can decrease the overall decoding time.
+On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
+> On 02.04.24 14:55, David Hildenbrand wrote:
+> > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+> > all relevant internal functions to start with "gup_fast", to make it
+> > clearer that this is not ordinary GUP. The current mixture of
+> > "lockless", "gup" and "gup_fast" is confusing.
+> > 
+> > Further, avoid the term "huge" when talking about a "leaf" -- for
+> > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+> > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+> > stays.
+> > 
+> > What remains is the "external" interface:
+> > * get_user_pages_fast_only()
+> > * get_user_pages_fast()
+> > * pin_user_pages_fast()
+> > 
+> > The high-level internal functions for GUP-fast (+slow fallback) are now:
+> > * internal_get_user_pages_fast() -> gup_fast_fallback()
+> > * lockless_pages_from_mm() -> gup_fast()
+> > 
+> > The basic GUP-fast walker functions:
+> > * gup_pgd_range() -> gup_fast_pgd_range()
+> > * gup_p4d_range() -> gup_fast_p4d_range()
+> > * gup_pud_range() -> gup_fast_pud_range()
+> > * gup_pmd_range() -> gup_fast_pmd_range()
+> > * gup_pte_range() -> gup_fast_pte_range()
+> > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+> > * gup_huge_pud()  -> gup_fast_pud_leaf()
+> > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
+> > 
+> > The weird hugepd stuff:
+> > * gup_huge_pd() -> gup_fast_hugepd()
+> > * gup_hugepte() -> gup_fast_hugepte()
+> 
+> I just realized that we end up calling these from follow_hugepd() as well.
+> And something seems to be off, because gup_fast_hugepd() won't have the VMA
+> even in the slow-GUP case to pass it to gup_must_unshare().
+> 
+> So these are GUP-fast functions and the terminology seem correct. But the
+> usage from follow_hugepd() is questionable,
+> 
+> commit a12083d721d703f985f4403d6b333cc449f838f6
+> Author: Peter Xu <peterx@redhat.com>
+> Date:   Wed Mar 27 11:23:31 2024 -0400
+> 
+>     mm/gup: handle hugepd for follow_page()
+> 
+> 
+> states "With previous refactors on fast-gup gup_huge_pd(), most of the code
+> can be leveraged", which doesn't look quite true just staring the the
+> gup_must_unshare() call where we don't pass the VMA. Also,
+> "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
+> slow GUP ...
 
-> > > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Yes it's not needed, just doesn't look worthwhile to put another helper on
+top just for this.  I mentioned this in the commit message here:
 
-> > Reviewed-by: Andi Kleen <ak@linux.intel.com>
+  There's something not needed for follow page, for example, gup_hugepte()
+  tries to detect pgtable entry change which will never happen with slow
+  gup (which has the pgtable lock held), but that's not a problem to check.
 
-> Thanks, applied, and added a note on testing it using:
+> 
+> @Peter, any insights?
 
-Plus this, please check.
+However I think we should pass vma in for sure, I guess I overlooked that,
+and it didn't expose in my tests too as I probably missed ./cow.
 
-Committer testing:
+I'll prepare a separate patch on top of this series and the gup-fast rename
+patches (I saw this one just reached mm-stable), and I'll see whether I can
+test it too if I can find a Power system fast enough.  I'll probably drop
+the "fast" in the hugepd function names too.
 
-  Ian reported that shellcheck found some issues, I installed it as there
-  are no warnings about it not being available, but when available it
-  fails the build with:
+Thanks,
 
-    TEST    /tmp/build/perf-tools-next/tests/shell/script.sh.shellcheck_log
-    CC      /tmp/build/perf-tools-next/util/header.o
-
-  In tests/shell/script.sh line 20:
-                  rm -rf "${temp_dir}/"*
-                         ^-------------^ SC2115 (warning): Use "${var:?}" to ensure this never expands to /* .
-
-
-  In tests/shell/script.sh line 83:
-          output1_dir="${temp_dir}/output1"
-          ^---------^ SC2034 (warning): output1_dir appears unused. Verify use (or export if used externally).
-
-
-  In tests/shell/script.sh line 84:
-          output2_dir="${temp_dir}/output2"
-          ^---------^ SC2034 (warning): output2_dir appears unused. Verify use (or export if used externally).
-
-
-  In tests/shell/script.sh line 86:
-          python3 "${pp}" -o "${output_dir}" --jobs 4 --verbose -- perf script -i "${perf_data}"
-                              ^-----------^ SC2154 (warning): output_dir is referenced but not assigned (did you mean 'output1_dir'?).
-
-  For more information:
-    https://www.shellcheck.net/wiki/SC2034 -- output1_dir appears unused. Verif...
-    https://www.shellcheck.net/wiki/SC2115 -- Use "${var:?}" to ensure this nev...
-    https://www.shellcheck.net/wiki/SC2154 -- output_dir is referenced but not ...
-
-Did these fixes:
-
-  -               rm -rf "${temp_dir}/"*
-  +               rm -rf "${temp_dir:?}/"*
-
-And:
-
-   @@ -83,8 +83,8 @@ test_parallel_perf()
-          output1_dir="${temp_dir}/output1"
-          output2_dir="${temp_dir}/output2"
-          perf record -o "${perf_data}" --sample-cpu uname
-  -       python3 "${pp}" -o "${output_dir}" --jobs 4 --verbose -- perf script -i "${perf_data}"
-  -       python3 "${pp}" -o "${output_dir}" --jobs 4 --verbose --per-cpu -- perf script -i "${perf_data}"
-  +       python3 "${pp}" -o "${output1_dir}" --jobs 4 --verbose -- perf script -i "${perf_data}"
-  +       python3 "${pp}" -o "${output2_dir}" --jobs 4 --verbose --per-cpu -- perf script -i "${perf_data}"
+-- 
+Peter Xu
 
