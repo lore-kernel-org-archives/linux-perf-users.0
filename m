@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2512414900B;
-	Fri, 26 Apr 2024 15:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCA9149018;
+	Fri, 26 Apr 2024 15:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714143996; cv=none; b=d/1L6GdNNiYfIL04KhO3rZOHCsLKyGUIupmVBgc9SGmyvgJ87S28RYcagO4H/pbS6JiobrgdhjM4fTQtc1ElS/aBK3yQRvEcYM8mne9PBvdub3E47/FfW0ccTcLMbl4nWgN0a5xT0zwXKMkDH+ZW47qXPtCmHhmzDmqB1jmr+J4=
+	t=1714144084; cv=none; b=ltJzUWNJg35iTcvQIkuk5a7MR6s6nTZtLfAFGdL+omZtSFYu8sFXYCk+BFO6mrGUl0WAmVzZge5Cq4YFdeoMW7ADM3ekOXY8ooYNuQ/HFBH5ThryR5BOQG5wIG7w9KjoGRLtnGBxI1UKyEP/rHWYK7DoVkQJSiMIRnmMKQLuoEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714143996; c=relaxed/simple;
-	bh=LNCspRv71TcIP3ZbJ/TMAX90WJJx42Sm7l811YLKB4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=hUE1+WyENVgS8He6/f2htAGr+Gxdq9PFsQtKGycvi0R0YP8k/GhtzaDqCYA+M/IkXNOoYr00riEyY4eacb4kq9Q3JfsTcvDZFACD25csJMWyrLEQPL0vsXWrH+Izja4784/2OwrarmBfkohjFcQVeh1WVJ449ez8PejqtqOxuLU=
+	s=arc-20240116; t=1714144084; c=relaxed/simple;
+	bh=uLgzTLdOyl35giOTcWBj09wMqWIlQXtQzl5b9SWWQ+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n11nyjJB//kh/72hcr2qHnOTN3U75iv5Yjan7iE83qlxvwEnGAf47rlbVqLwyEWBekmniaH2w0pn64sesC0xjrqgfXVuvZyTq9H5DJrOaMiBoobr655xjb+jeoY/g/cTmf6mcprR/xM3HPdOFPqQRgJadVfnKMRMJ0bpBxWAujY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 460FD1007;
-	Fri, 26 Apr 2024 08:07:02 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59A241007;
+	Fri, 26 Apr 2024 08:08:30 -0700 (PDT)
 Received: from [192.168.1.216] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C09AC3F73F;
-	Fri, 26 Apr 2024 08:06:31 -0700 (PDT)
-Message-ID: <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
-Date: Fri, 26 Apr 2024 16:06:29 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9811B3F73F;
+	Fri, 26 Apr 2024 08:07:58 -0700 (PDT)
+Message-ID: <b2c02eb9-0940-4770-a4b7-22d2af8078db@arm.com>
+Date: Fri, 26 Apr 2024 16:07:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,52 +27,37 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
-To: Ian Rogers <irogers@google.com>
-References: <20240301174711.2646944-1-irogers@google.com>
+Subject: Re: [PATCH V2 0/2] Fix Coresight instruction synthesis logic
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Tanmay Jagdale <tanmay@marvell.com>
+Cc: john.g.garry@oracle.com, will@kernel.org, mike.leach@linaro.org,
+ leo.yan@linux.dev, suzuki.poulose@arm.com, peterz@infradead.org,
+ mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com,
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com
+References: <20240404180731.7006-1-tanmay@marvell.com> <Ziqm0QYfGbYjF6xh@x1>
 Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240301174711.2646944-1-irogers@google.com>
+In-Reply-To: <Ziqm0QYfGbYjF6xh@x1>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 01/03/2024 17:47, Ian Rogers wrote:
-> Switch from running tests sequentially to running in parallel by
-> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
-> '--sequential'.
+On 25/04/2024 19:54, Arnaldo Carvalho de Melo wrote:
+> On Thu, Apr 04, 2024 at 11:37:29PM +0530, Tanmay Jagdale wrote:
+>> When we use perf to catpure Coresight trace and generate instruction
+>> trace using 'perf script', we get the following output:
+>>
+>> # perf record -e cs_etm/@tmc_etr0/ -C 9 taskset -c 9 sleep 1
+>> # perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent
 > 
-> On an 8 core tigerlake an address sanitizer run time changes from:
-> 326.54user 622.73system 6:59.91elapsed 226%CPU
-> to:
-> 973.02user 583.98system 3:01.17elapsed 859%CPU
+> Applies cleanly, can some Coresight people review this and provide a
+> Reviewed-by?
 > 
-> So over twice as fast, saving 4 minutes.
+> Thanks!
 > 
 
-Apologies for not replying earlier before this was applied. But IMO this
-isn't a good default. Tests that use things like exclusive PMUs
-(Coresight for example) can never pass when run in parallel.
-
-For CI it's arguable whether you'd want to trade stability for speed.
-And for interactive sessions there was already the --parallel option
-which was easy to add and have it in your bash history.
-
-Now we've changed the default, any CI will need to be updated to add
---sequential if it wants all the tests to pass. Maybe we could do some
-hack and gate it on interactive vs non interactive sessions, but that
-might be getting too clever. (Or a "don't run in parallel" flag on
-certain tests)
-
-
-Thanks
-James
-
+Reviewed-by: James Clark <james.clark@arm.com>
