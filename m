@@ -1,250 +1,194 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5C47FB
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 04:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D14210FF
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 07:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714106848; cv=none; b=I+F3itIYex0aUWh507uPi99LKnwoiEW7NUNew8Pi92+GdJDE9D2qWT9zJNsj6EeVAezJNQhnQG4lT9TZ+kob74hQaNEjQzq/BV471ZCMmSktAHxWo1iWc5IEawmaouqni9zuJOQFIJqLMbunvvP8LyTZq8453IDQwWjXAmvJF3U=
+	t=1714115945; cv=none; b=O0OfxQ+fny+LUCGo38bR1UYI0Nyg1N1IzCD4T/ULKNO24q8MExeNuinusiMsevE9lT5F9MHSMLnO9O8eOe3mZ2EyDG/VHttJNNGwaD4c7Bx3s7E4zYOG8r1u7BbL6Rruoeq71y7bPrErUKi9mE1GnXPxHMHurbMllBbFjCLMLJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714106848; c=relaxed/simple;
-	bh=qFZS8Xx/TeXHzdjwyYI3GI/SHkQZTua5k7xNUURsfIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lAnKYEHnw82/+pN0xEzI6vE4RtR/E/of0h/JwbYki9JfCkvFZdgfizgAVHHXzhO9PlfLr1+z8whf4lHKrgPi0edjJ6EslGCdPJ9swjxpLFZ90x4istR4JMcBgvXnfrLaiAaU30pxB+V5jr4UcdLF7oLM/TbJ0azp+qXirQ81H/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aYbejN4G; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714115945; c=relaxed/simple;
+	bh=/IQdzt/FX7EnCChiCGBQqy1tgXqmr3oy/j/ZaYq1k/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X11xTxfk1VG5mRPKJLaa6gsxPoIaFpGIt8q93f4Y3hCWeSxk/TLKLRBX+ZOgS/XBywnR6ItbIH18m1nGYvVrhrqRN4ur5tkAcoClr+YTXBUWb/AP+1Uiqu6bATEThbbXdHrtLbMy21e0KT54zdDzstGwjysXkzl5Hy8F+tPcH8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ej3N+GeH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aYbejN4G"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51b2f105829so2246622e87.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Apr 2024 21:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714106845; x=1714711645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6xNG5kAKIWrMQdy9hX6H8VEwA1kEtA0fkEb+j2LDJiI=;
-        b=aYbejN4GSimBgOGSCDV3tXlil7RneVumwSceogVecCaXklAN0L+dp4JXHkJAQkSB2W
-         JJNEviE2wWw9doh9Y0GYNL1yubEM+fD1VwCkMn1huMqYaevQrThGjqc+6ExnCxDQw/pK
-         WZ0JR8jC1HdSITH2Q/Wm54DMCF6Te1/51YVXV/hYv2UhXL/AQT60JL/t8ihomxGI4is+
-         wg+EspKtKWBENBTBnql+UWKkkXHBjFjJfNDGahosuoI+hEK63pwJ6EVj/HwvYsqyeD9C
-         A5gjcDHXzSJg4WZbjJHJ7tqUjLY9EzkmvgfFik78dXlxWmNZJ3Wf0X4t1vm5ooXbjkuE
-         vyIg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ej3N+GeH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714115941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+ui6jDL8G61kFh00hFF389OEWlO0ttAKpE3pTUl0yoI=;
+	b=ej3N+GeHxFh+t2m95xlSzYMuHOdo0NyiJCKBLlAbi3SeRqYghfYyEb83yvOsuPhEidPrqP
+	rNbB6GuxQVqO1DaJyu1wpwzG3uGNp676bBunvkWJjLfUcBgkcQBscNP/RHEj4o7FONR/C+
+	GpP9/8QeBQ0sb98W2x4grFaUN0Mdxdk=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-_v86gEqkOjeqHgDoZm56bw-1; Fri, 26 Apr 2024 03:17:51 -0400
+X-MC-Unique: _v86gEqkOjeqHgDoZm56bw-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ded4efd0a3so14105481fa.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 00:17:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714106845; x=1714711645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6xNG5kAKIWrMQdy9hX6H8VEwA1kEtA0fkEb+j2LDJiI=;
-        b=RkaMz2KRq01C7poeYfXBw/1qsShmS/VeYPOLMKODCsjQKXJrl/EwPV382WtEMGnEgI
-         5BohPx5bca14SQM50mJDOKU5BZY8MpvvEK4PIT4Eti9cMwx2UJtlHbXZcH0RZCaY70Pb
-         YbuCfJHGJ1n8xdPyxnBcKu39Ys41dmdCGSfC1UubL+spbq+TzcP3zjVXlKcOH2vLWGzf
-         Wtx0bXaniYCv5iLQY2u2uNmLi1L8kcxFYy6SCzTMS0GqRLJBFFEphn/YJmxGdx51S0Z7
-         0N7xbl1A0sd6831T53TQ4G2oOLLuyYsM+ZjU5bBewqbiN0+m/QdZdgqOEk4Ts2WBSwPn
-         C+Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJAUODEsUEDBHZR7NnY+9wcymTwRj1CBoRhBPMmJe8qf209ryGrbzW9lYJlVomAnZd7RELfBseDU+fESOnQKNZ19+/SCqS39K/47s4agiFdA==
-X-Gm-Message-State: AOJu0YycZkdOWgHaKhTzjDTBP4xhPMYuRH/x4KVnQV6FobarPF2WbKPq
-	DlvnPpkF2pyG2fnWeIaPWjNnN2XLwtNN6RbSvkg7D4HNJUcBxQXzIuOQJyYQFQylz/B6lfNRnpf
-	4Z4w4LFocQtGrKmMwu8tLxc3pKmKFJGRYAa3R
-X-Google-Smtp-Source: AGHT+IHYLcM0oC3rvLhAw7AimABtScQQcJz6qsvPoydJB6AXdW25Yrj/AhfnCgHMDKCFE5Uns7HbM1d7zzklSQS1Fbw=
-X-Received: by 2002:a05:6512:ac1:b0:51c:cc1b:a8f6 with SMTP id
- n1-20020a0565120ac100b0051ccc1ba8f6mr118103lfu.20.1714106844513; Thu, 25 Apr
- 2024 21:47:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714115870; x=1714720670;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+ui6jDL8G61kFh00hFF389OEWlO0ttAKpE3pTUl0yoI=;
+        b=PtzHQ6qgstOul4GAeJEYr9RJe+JJbp8Hb5z7Mt5QdWHS2eOD3xbt5XI+jSW2X/3NOq
+         24KURa1ZRicWd5+HcxvuSBx/l/IDNZThiL94yDQsE5ReWoNBdfARQQmeNF7fu0j0/+5R
+         JTnCozpWgcbh20Mj5aaCdaDMPNtu8odM1kfpJB86Djn9BrJoufSsCYt0Tog773rmCpwN
+         msDIkp/FaAuBkxwSw8p2pBI+A1kdcFm1Th087qk7HOCMXyZfV0C46NgWj+KN6sKoYWOd
+         6a8ycQSAUleJY25mQg5juvynsR98PxkSr0DK/DVnCaTo7P6e4AU+kEgwIffHr8u7oK5t
+         Vn8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVh1Sp0hxr++f58ZuNXpxnKiMEx+4wMD6rwHsjMPcsHqvSSCOGejNzS7YjfFQCyk2fOrR7IuRx5eY1UQeCSmJ5ukzEADbSv80d4/Y2sIrVupQ==
+X-Gm-Message-State: AOJu0Yw9zOs08dAg24nvGls5b6tMFKf1cUy0KOG8A8y7jG4AWHImIHze
+	J3ethP5kxgIpiXwW7MBSiR78x9/3xDQh9L+TgCijVa2a7or0nna85bENenpqsTp+4sgNPUisN5f
+	tS36237CdqpG8bLuAM6Dv9JFGdUbo19OUvs4LhLCbVTWEQ47VrgsS+SB1qCjSt/sc0I8=
+X-Received: by 2002:a05:651c:19a9:b0:2df:6eb1:c501 with SMTP id bx41-20020a05651c19a900b002df6eb1c501mr383315ljb.11.1714115870001;
+        Fri, 26 Apr 2024 00:17:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG24EL02T0x+m1JovGDBMONyU/2x7/q4VtFLKKFSWeomSG6lLj/kueLfpyifkJIct6xZaSxcg==
+X-Received: by 2002:a05:651c:19a9:b0:2df:6eb1:c501 with SMTP id bx41-20020a05651c19a900b002df6eb1c501mr383278ljb.11.1714115869533;
+        Fri, 26 Apr 2024 00:17:49 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6100:20f2:6848:5b74:ca82? (p200300cbc726610020f268485b74ca82.dip0.t-ipconnect.de. [2003:cb:c726:6100:20f2:6848:5b74:ca82])
+        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b00416b163e52bsm33354825wmq.14.2024.04.26.00.17.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 00:17:49 -0700 (PDT)
+Message-ID: <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+Date: Fri, 26 Apr 2024 09:17:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn> <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com> <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com> <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com> <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com> <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com> <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <c96330d1-9750-4b65-8465-1b6f46bc11ba@linux.intel.com>
-In-Reply-To: <c96330d1-9750-4b65-8465-1b6f46bc11ba@linux.intel.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Thu, 25 Apr 2024 21:46:47 -0700
-Message-ID: <CAL715WKOPBG+G-hTDNw7S12uRMOP=3JgcYcys2xbKWrQVrXyDQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+To: linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ x86@kernel.org
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240402125516.223131-2-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 25, 2024 at 9:03=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 4/26/2024 11:12 AM, Mingwei Zhang wrote:
-> > On Thu, Apr 25, 2024 at 6:46=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
-tel.com> wrote:
-> >>
-> >> On 4/26/2024 5:46 AM, Sean Christopherson wrote:
-> >>> On Thu, Apr 25, 2024, Kan Liang wrote:
-> >>>> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
-> >>>>> On Thu, Apr 25, 2024 at 9:13=E2=80=AFAM Liang, Kan <kan.liang@linux=
-.intel.com> wrote:
-> >>>>>> It should not happen. For the current implementation, perf rejects=
- all
-> >>>>>> the !exclude_guest system-wide event creation if a guest with the =
-vPMU
-> >>>>>> is running.
-> >>>>>> However, it's possible to create an exclude_guest system-wide even=
-t at
-> >>>>>> any time. KVM cannot use the information from the VM-entry to deci=
-de if
-> >>>>>> there will be active perf events in the VM-exit.
-> >>>>> Hmm, why not? If there is any exclude_guest system-wide event,
-> >>>>> perf_guest_enter() can return something to tell KVM "hey, some acti=
-ve
-> >>>>> host events are swapped out. they are originally in counter #2 and
-> >>>>> #3". If so, at the time when perf_guest_enter() returns, KVM will a=
-ck
-> >>>>> that and keep it in its pmu data structure.
-> >>>> I think it's possible that someone creates !exclude_guest event afte=
-r
-> >>> I assume you mean an exclude_guest=3D1 event?  Because perf should be=
- in a state
-> >>> where it rejects exclude_guest=3D0 events.
-> >> Suppose should be exclude_guest=3D1 event, the perf event without
-> >> exclude_guest attribute would be blocked to create in the v2 patches
-> >> which we are working on.
-> >>
-> >>
-> >>>> the perf_guest_enter(). The stale information is saved in the KVM. P=
-erf
-> >>>> will schedule the event in the next perf_guest_exit(). KVM will not =
-know it.
-> >>> Ya, the creation of an event on a CPU that currently has guest PMU st=
-ate loaded
-> >>> is what I had in mind when I suggested a callback in my sketch:
-> >>>
-> >>>    :  D. Add a perf callback that is invoked from IRQ context when pe=
-rf wants to
-> >>>    :     configure a new PMU-based events, *before* actually programm=
-ing the MSRs,
-> >>>    :     and have KVM's callback put the guest PMU state
-> >>
-> >> when host creates a perf event with exclude_guest attribute which is
-> >> used to profile KVM/VMM user space, the vCPU process could work at thr=
-ee
-> >> places.
-> >>
-> >> 1. in guest state (non-root mode)
-> >>
-> >> 2. inside vcpu-loop
-> >>
-> >> 3. outside vcpu-loop
-> >>
-> >> Since the PMU state has already been switched to host state, we don't
-> >> need to consider the case 3 and only care about cases 1 and 2.
-> >>
-> >> when host creates a perf event with exclude_guest attribute to profile
-> >> KVM/VMM user space,  an IPI is triggered to enable the perf event
-> >> eventually like the following code shows.
-> >>
-> >> event_function_call(event, __perf_event_enable, NULL);
-> >>
-> >> For case 1,  a vm-exit is triggered and KVM starts to process the
-> >> vm-exit and then run IPI irq handler, exactly speaking
-> >> __perf_event_enable() to enable the perf event.
-> >>
-> >> For case 2, the IPI irq handler would preempt the vcpu-loop and call
-> >> __perf_event_enable() to enable the perf event.
-> >>
-> >> So IMO KVM just needs to provide a callback to switch guest/host PMU
-> >> state, and __perf_event_enable() calls this callback before really
-> >> touching PMU MSRs.
-> > ok, in this case, do we still need KVM to query perf if there are
-> > active exclude_guest events? yes? Because there is an ordering issue.
-> > The above suggests that the host-level perf profiling comes when a VM
-> > is already running, there is an IPI that can invoke the callback and
-> > trigger preemption. In this case, KVM should switch the context from
-> > guest to host. What if it is the other way around, ie., host-level
-> > profiling runs first and then VM runs?
-> >
-> > In this case, just before entering the vcpu loop, kvm should check
-> > whether there is an active host event and save that into a pmu data
-> > structure. If none, do the context switch early (so that KVM saves a
-> > huge amount of unnecessary PMU context switches in the future).
-> > Otherwise, keep the host PMU context until vm-enter. At the time of
-> > vm-exit, do the check again using the data stored in pmu structure. If
-> > there is an active event do the context switch to the host PMU,
-> > otherwise defer that until exiting the vcpu loop. Of course, in the
-> > meantime, if there is any perf profiling started causing the IPI, the
-> > irq handler calls the callback, preempting the guest PMU context. If
-> > that happens, at the time of exiting the vcpu boundary, PMU context
-> > switch is skipped since it is already done. Of course, note that the
-> > irq could come at any time, so the PMU context switch in all 4
-> > locations need to check the state flag (and skip the context switch if
-> > needed).
-> >
-> > So this requires vcpu->pmu has two pieces of state information: 1) the
-> > flag similar to TIF_NEED_FPU_LOAD; 2) host perf context info (phase #1
-> > just a boolean; phase #2, bitmap of occupied counters).
->
-> I still had no chance to look at the details about vFPU implementation,
-> currently I have no idea what we need exactly on vPMU side, a flag or a
-> callback. Anyway, that's just implementation details, we can look at it
-> when starting to implement it.
+On 02.04.24 14:55, David Hildenbrand wrote:
+> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+> all relevant internal functions to start with "gup_fast", to make it
+> clearer that this is not ordinary GUP. The current mixture of
+> "lockless", "gup" and "gup_fast" is confusing.
+> 
+> Further, avoid the term "huge" when talking about a "leaf" -- for
+> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+> stays.
+> 
+> What remains is the "external" interface:
+> * get_user_pages_fast_only()
+> * get_user_pages_fast()
+> * pin_user_pages_fast()
+> 
+> The high-level internal functions for GUP-fast (+slow fallback) are now:
+> * internal_get_user_pages_fast() -> gup_fast_fallback()
+> * lockless_pages_from_mm() -> gup_fast()
+> 
+> The basic GUP-fast walker functions:
+> * gup_pgd_range() -> gup_fast_pgd_range()
+> * gup_p4d_range() -> gup_fast_p4d_range()
+> * gup_pud_range() -> gup_fast_pud_range()
+> * gup_pmd_range() -> gup_fast_pmd_range()
+> * gup_pte_range() -> gup_fast_pte_range()
+> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+> * gup_huge_pud()  -> gup_fast_pud_leaf()
+> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
+> 
+> The weird hugepd stuff:
+> * gup_huge_pd() -> gup_fast_hugepd()
+> * gup_hugepte() -> gup_fast_hugepte()
 
-I think both. The flag helps to decide whether the context switch has
-already been done. The callback will always trigger the context
-switch, but the context switch code should always check if the switch
-has already been done.
+I just realized that we end up calling these from follow_hugepd() as 
+well. And something seems to be off, because gup_fast_hugepd() won't 
+have the VMA even in the slow-GUP case to pass it to gup_must_unshare().
 
-FPU context switch is similar but slightly different. That is done at
-the host-level context switch boundary and even crossing that boundary
-as long as the next process/thread is not using FPU and/or not going
-back to userspace. I don't think we want to defer it that far.
-Instead, the PMU context switch should still happen within the range
-of KVM.
+So these are GUP-fast functions and the terminology seem correct. But 
+the usage from follow_hugepd() is questionable,
 
->
-> >
-> > This is a non-trivial optimization on the PMU context switch. I am
-> > thinking about splitting them into the following phases:
-> >
-> > 1) lazy PMU context switch, i.e., wait until the guest touches PMU MSR
-> > for the 1st time.
-> > 2) fast PMU context switch on KVM side, i.e., KVM checking event
-> > selector value (enable/disable) and selectively switch PMU state
-> > (reducing rd/wr msrs)
-> > 3) dynamic PMU context boundary, ie., KVM can dynamically choose PMU
-> > context switch boundary depending on existing active host-level
-> > events.
-> > 3.1) more accurate dynamic PMU context switch, ie., KVM checking
-> > host-level counter position and further reduces the number of msr
-> > accesses.
-> > 4) guest PMU context preemption, i.e., any new host-level perf
-> > profiling can immediately preempt the guest PMU in the vcpu loop
-> > (instead of waiting for the next PMU context switch in KVM).
->
-> Great! we have a whole clear picture about the optimization right now.
-> BTW, the optimization 1 and 2 are already on our original to-do list. We
-> plan to do it after RFC v2 is ready.
->
+commit a12083d721d703f985f4403d6b333cc449f838f6
+Author: Peter Xu <peterx@redhat.com>
+Date:   Wed Mar 27 11:23:31 2024 -0400
 
-I am going to summarize that into a design doc. It has been 50 emails
-in this thread. I am sure no one has the patience to read our garbage
-unless they are involved at the very beginning :)
+     mm/gup: handle hugepd for follow_page()
 
-Any of the implementations are very welcome. 1) and 2) are low hanging
-fruit and we can finish that quickly after v2. 3-4 is error prone and
-needs further discussions so let's not rush for that.
 
-On the other hand, how do we test this is the question we need to think abo=
-ut.
+states "With previous refactors on fast-gup gup_huge_pd(), most of the 
+code can be leveraged", which doesn't look quite true just staring the 
+the gup_must_unshare() call where we don't pass the VMA. Also, 
+"unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense 
+for slow GUP ...
 
-Thanks.
--Mingwei
+@Peter, any insights?
+
+-- 
+Cheers,
+
+David / dhildenb
+
