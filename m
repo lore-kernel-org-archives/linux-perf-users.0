@@ -1,152 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6669B152511;
-	Fri, 26 Apr 2024 15:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50F415625E
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 16:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146174; cv=none; b=MuwE7Z0PWiM0xkERbOhmFjYdpCTLa8L1d7kGgu/YgN22uxt5SPdwLGrE/AEflKiphbly5RBB+kNGkv6Yasr+XsfHfTrQffYxFDqSxE8gmQMFklqYrlktMjqUVUfArkdOtJ2Meqllyz3V17V5jxqNDnscwIBq8hZfrrdfE4YTpvw=
+	t=1714147970; cv=none; b=K2oOyDcJaZ8rn+Am4Wc8+p0gJxeQGlH0r2zkz9dpT0736JoOtnaDb/Mclk7hSR6I4mtqqwirVQ80i3XhuTbGLOcBDCDKQ7h7l3EGipKYAB4WgM7JGkg2YXZMMGCs4FHNg18duSfnpUDEur+2lOHZybx3Z6twbvGGBYYnBtg7xeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146174; c=relaxed/simple;
-	bh=ueeUrsIiAG14vTTLhDQ1O9R7Z7uj5nbKhdqR2+RXD98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E2sFQxrmJgnc3vuumLn8lY7GgCkWetOsTjP+VEXr84qJljGj3I2/ql/mECGFYx0aLBWB5K0jGWWUx0j/RcOWwPZ4sB4OzOZkaSrZnh8yixbzvB1Rty900qXngz+aCDppc+p9uhKPwGcWRnPjEMU1sANmlIuG/o+pnY/aB8EFGQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DBA/Tvqu; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714147970; c=relaxed/simple;
+	bh=VHk3yV3ykPgBDTFB6jGO3B/kKnE4mwuV8+QA4otgjj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sJCcRwFiA5/jK0CG2aY4QtgLPRo4S/fwAnUDyeGjQtYNZ2CKAsBLnWuXQ2TvhMDuMy5bE8I6iE7bnONsKHsoLmVw5XMWWl8ospQVbGq6ks/36FsMfFZaPw5cAHvT3gYW7RqDGRhpS3fYbU5iyN6L2UYwaPD2tA4Klw9isrb8Afo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iaVBsi9+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DBA/Tvqu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714146172; x=1745682172;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ueeUrsIiAG14vTTLhDQ1O9R7Z7uj5nbKhdqR2+RXD98=;
-  b=DBA/TvquccgGRDMzYst8CugXYbBCj1pURNAVzFS89QlQp29G/ph3ia5s
-   HWZue20rWNhYXULkFM49QNtpiGw7LIsmqyN7AtUnt1A0lEc9YQOGxzIgU
-   /aojzH83/MtRQg7NwbcyE7TqGhhh/SBACeu6y4RdksI9HBqZKlzn6wEug
-   sIQ3Y8+VjxwPbeEMBvD/oWKqCkB3izLE/JVPGNfJBYQxTvHxikZXEGEPd
-   +3UhlJ/lWD0QN7IVC+FOH+jUzJxmrd7cvo1e7GFd/Q6FnQ6apylyqu6d2
-   9Z82o9ffRG43GjZKpNZKxihnhCykrZuKaPe26ftZk6wKuNE0dRYiYocp4
-   g==;
-X-CSE-ConnectionGUID: Jd7O79KaTa6niekOw/4ezA==
-X-CSE-MsgGUID: LyOF454PQPO4iUykURwdEQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="20496907"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="20496907"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:51 -0700
-X-CSE-ConnectionGUID: kHMK1tv9RcOh0Or3oQbuQQ==
-X-CSE-MsgGUID: wBEdFSLiQmW3uQJOUb62fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="25533130"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.48.22])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:49 -0700
-Message-ID: <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
-Date: Fri, 26 Apr 2024 18:42:42 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaVBsi9+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714147964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
+	b=iaVBsi9+KvAPRxFNS7Tpx2ZfTKHOwWJXU8AR5ITqSqRR1neFprAUhkGAWqITtivyad7jyz
+	wUdKxC1jXCM+keMcB0kWSmQV9WwfgfXFxEvbBOHRH4WD9VYWqzMRDkfiDq77AqN3QHPy+B
+	aVsdPHVQgN3Of9mzpMc6Vj7bR9Yvhk0=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-34-rej8YiANPoWfeZpgxMKbwg-1; Fri, 26 Apr 2024 12:12:42 -0400
+X-MC-Unique: rej8YiANPoWfeZpgxMKbwg-1
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6eba7dc8f1eso516307a34.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 09:12:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714147962; x=1714752762;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eYUqEa4yY2qzSFoFdIvLcLWvg/98iZ7Cq/Vjg2cb5Pg=;
+        b=NpeDV8ZOqJOtS6+Ag0nHqxq8UDOU0cnUMaqtitDwgnudsu+jdM/XE0/cy62fpXAvnN
+         CQDq53Xj+5AgTsWGGnDpzcPx2T2c7l7UKoq6MjQalmrcxuN69aL84D4l+g6tMrL0tz8J
+         hXNoIc3f6UpEYfqHPS3dcefIdkxTC5I2+sillh0Fsuc30lUY6bD/3jKKqW5M/SvHGl3M
+         Tj+ubckRl8g+AL9hT1liZHkKKC2Gp9+olCurELLB7R8BOTTP5rbrEP4Vwctem/oa1rGO
+         g27V8i2Dxgfqq3tlLmQQmsBuUZKSFDrQ47FmeiT1kOGRA4Znjj+XEdJDZROjFU3L2TiT
+         4x2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVgWH4vFko4YspYMY/Ils2YL47DeXdgLreg5VyI6tJAfm8LtHqEGtHz7O7hxnHk+lEzsjc5m61n+EyzYAwbE71znp41RdbyRAEQ5+Df3nvpXg==
+X-Gm-Message-State: AOJu0YxTvhqImDng8jEr45CpFfwJUbmjSjbMdpkcEpzzcIhbDVcvTZuB
+	1DBEz5Lim+jGTk9xWymw44w+r7bXkMD5hcjMg6pBhAsToMNWHH3VryEXm+ow5kDNynk60de2MUZ
+	Uc0d3QF32136sOxt2i3waXmgs7q8eswao9ZvDrAcAlfnGcZNBEOlOjXHC8JjxmHYmilY=
+X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125235oal.1.1714147961420;
+        Fri, 26 Apr 2024 09:12:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKK09FSsz1w18C9O+QSKywaneNtUpj/aPvoeb+SOH3u9egTJYXPSkxUgqSN3BOrRHAMYNm3w==
+X-Received: by 2002:a05:6870:a40f:b0:235:3e97:ed24 with SMTP id m15-20020a056870a40f00b002353e97ed24mr3125169oal.1.1714147960484;
+        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id m6-20020ac807c6000000b00434fd7d6d00sm8007149qth.2.2024.04.26.09.12.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 09:12:40 -0700 (PDT)
+Date: Fri, 26 Apr 2024 12:12:32 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+Message-ID: <ZivScN8-Uoi9eye8@x1n>
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com>
+ <Ziuv2jLY1wgBITiP@x1n>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
-To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240301174711.2646944-1-irogers@google.com>
- <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Ziuv2jLY1wgBITiP@x1n>
 
-On 26/04/24 18:06, James Clark wrote:
+On Fri, Apr 26, 2024 at 09:44:58AM -0400, Peter Xu wrote:
+> On Fri, Apr 26, 2024 at 09:17:47AM +0200, David Hildenbrand wrote:
+> > On 02.04.24 14:55, David Hildenbrand wrote:
+> > > Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
+> > > all relevant internal functions to start with "gup_fast", to make it
+> > > clearer that this is not ordinary GUP. The current mixture of
+> > > "lockless", "gup" and "gup_fast" is confusing.
+> > > 
+> > > Further, avoid the term "huge" when talking about a "leaf" -- for
+> > > example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
+> > > "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
+> > > stays.
+> > > 
+> > > What remains is the "external" interface:
+> > > * get_user_pages_fast_only()
+> > > * get_user_pages_fast()
+> > > * pin_user_pages_fast()
+> > > 
+> > > The high-level internal functions for GUP-fast (+slow fallback) are now:
+> > > * internal_get_user_pages_fast() -> gup_fast_fallback()
+> > > * lockless_pages_from_mm() -> gup_fast()
+> > > 
+> > > The basic GUP-fast walker functions:
+> > > * gup_pgd_range() -> gup_fast_pgd_range()
+> > > * gup_p4d_range() -> gup_fast_p4d_range()
+> > > * gup_pud_range() -> gup_fast_pud_range()
+> > > * gup_pmd_range() -> gup_fast_pmd_range()
+> > > * gup_pte_range() -> gup_fast_pte_range()
+> > > * gup_huge_pgd()  -> gup_fast_pgd_leaf()
+> > > * gup_huge_pud()  -> gup_fast_pud_leaf()
+> > > * gup_huge_pmd()  -> gup_fast_pmd_leaf()
+> > > 
+> > > The weird hugepd stuff:
+> > > * gup_huge_pd() -> gup_fast_hugepd()
+> > > * gup_hugepte() -> gup_fast_hugepte()
+> > 
+> > I just realized that we end up calling these from follow_hugepd() as well.
+> > And something seems to be off, because gup_fast_hugepd() won't have the VMA
+> > even in the slow-GUP case to pass it to gup_must_unshare().
+> > 
+> > So these are GUP-fast functions and the terminology seem correct. But the
+> > usage from follow_hugepd() is questionable,
+> > 
+> > commit a12083d721d703f985f4403d6b333cc449f838f6
+> > Author: Peter Xu <peterx@redhat.com>
+> > Date:   Wed Mar 27 11:23:31 2024 -0400
+> > 
+> >     mm/gup: handle hugepd for follow_page()
+> > 
+> > 
+> > states "With previous refactors on fast-gup gup_huge_pd(), most of the code
+> > can be leveraged", which doesn't look quite true just staring the the
+> > gup_must_unshare() call where we don't pass the VMA. Also,
+> > "unlikely(pte_val(pte) != pte_val(ptep_get(ptep)" doesn't make any sense for
+> > slow GUP ...
 > 
+> Yes it's not needed, just doesn't look worthwhile to put another helper on
+> top just for this.  I mentioned this in the commit message here:
 > 
-> On 01/03/2024 17:47, Ian Rogers wrote:
->> Switch from running tests sequentially to running in parallel by
->> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
->> '--sequential'.
->>
->> On an 8 core tigerlake an address sanitizer run time changes from:
->> 326.54user 622.73system 6:59.91elapsed 226%CPU
->> to:
->> 973.02user 583.98system 3:01.17elapsed 859%CPU
->>
->> So over twice as fast, saving 4 minutes.
->>
+>   There's something not needed for follow page, for example, gup_hugepte()
+>   tries to detect pgtable entry change which will never happen with slow
+>   gup (which has the pgtable lock held), but that's not a problem to check.
 > 
-> Apologies for not replying earlier before this was applied. But IMO this
-> isn't a good default. Tests that use things like exclusive PMUs
-> (Coresight for example) can never pass when run in parallel.
-
-Yes, that is an issue for Intel PT also.
-
+> > 
+> > @Peter, any insights?
 > 
-> For CI it's arguable whether you'd want to trade stability for speed.
-> And for interactive sessions there was already the --parallel option
-> which was easy to add and have it in your bash history.
+> However I think we should pass vma in for sure, I guess I overlooked that,
+> and it didn't expose in my tests too as I probably missed ./cow.
 > 
-> Now we've changed the default, any CI will need to be updated to add
-> --sequential if it wants all the tests to pass.
+> I'll prepare a separate patch on top of this series and the gup-fast rename
+> patches (I saw this one just reached mm-stable), and I'll see whether I can
+> test it too if I can find a Power system fast enough.  I'll probably drop
+> the "fast" in the hugepd function names too.
 
-Same here.
+Hmm, so when I enable 2M hugetlb I found ./cow is even failing on x86.
 
->                                                 Maybe we could do some
-> hack and gate it on interactive vs non interactive sessions, but that
-> might be getting too clever. (Or a "don't run in parallel" flag on
-> certain tests)
+  # ./cow  | grep -B1 "not ok"
+  # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+  not ok 161 No leak from parent into child
+  --
+  # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with hugetlb (2048 kB)
+  not ok 215 No leak from parent into child
+  --
+  # [RUN] vmsplice() before fork(), unmap in parent after fork() ... with hugetlb (2048 kB)
+  not ok 269 No leak from child into parent
+  --
+  # [RUN] vmsplice() + unmap in parent after fork() ... with hugetlb (2048 kB)
+  not ok 323 No leak from child into parent
 
-Perhaps more attention is needed for the tests that take so long.
-For example, maybe they could do things in parallel.
+And it looks like it was always failing.. perhaps since the start?  We
+didn't do the same on hugetlb v.s. normal anon from that regard on the
+vmsplice() fix.
 
-Also -F option doesn't seem to work.
+I drafted a patch to allow refcount>1 detection as the same, then all tests
+pass for me, as below.
 
-$ tools/perf/perf test -F
-Couldn't find a vmlinux that matches the kernel running on this machine, skipping test
-  1: vmlinux symtab matches kallsyms                                 : Skip
-  2: Detect openat syscall event                                     : Ok
-  3: Detect openat syscall event on all cpus                         : Ok
-  4.1: Read samples using the mmap interface                         : Ok
-  4.2: User space counter reading of instructions                    : Ok
-  4.3: User space counter reading of cycles                          : Ok
-  5: Test data source output                                         : Ok
-WARNING: event 'numpmu' not valid (bits 16-17,20,22 of config '6530160' not supported by kernel)!
-  6.1: Test event parsing                                            : Ok
-  6.2: Parsing of all PMU events from sysfs                          : Ok
-WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-  6.3: Parsing of given PMU events from sysfs                        : Ok
-  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-  6.5: Parsing of aliased events                                     : Ok
-  6.6: Parsing of terms (event modifiers)                            : Ok
-  7: Simple expression parser                                        : Ok
-  8: PERF_RECORD_* events & perf_sample fields                       : Ok
-  9: Parse perf pmu format                                           : Ok
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
-failed: recursion detected for M1
-failed: recursion detected for M2
-failed: recursion detected for M3
-Not grouping metric tma_memory_fence's events.
-Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
-    echo 0 > /proc/sys/kernel/nmi_watchdog
-    perf stat ...
-    echo 1 > /proc/sys/kernel/nmi_watchdog
-Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
-    echo 0 > /proc/sys/kernel/nmi_watchdog
-    perf stat ...
-    echo 1 > /proc/sys/kernel/nmi_watchdog
-...
-^C
+David, I'd like to double check with you before I post anything: is that
+your intention to do so when working on the R/O pinning or not?
 
+Thanks,
+
+=========
+From 7300c249738dadda1457c755b597c1551dfe8dc6 Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Fri, 26 Apr 2024 11:41:12 -0400
+Subject: [PATCH] mm/hugetlb: Fix vmsplice case on memory leak once more
+
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/hugetlb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 417fc5cdb6ee..1ca102013561 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5961,10 +5961,13 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+ 
+ retry_avoidcopy:
+ 	/*
+-	 * If no-one else is actually using this page, we're the exclusive
+-	 * owner and can reuse this page.
++	 * If the page is marked exlusively owned (e.g. longterm pinned),
++	 * we can reuse it.  Otherwise if no-one else is using this page,
++	 * we can savely set the exclusive bit and reuse it.
+ 	 */
+-	if (folio_mapcount(old_folio) == 1 && folio_test_anon(old_folio)) {
++	if (folio_test_anon(old_folio) &&
++	    (PageAnonExclusive(&old_folio->page) ||
++	     folio_ref_count(old_folio) == 1)) {
+ 		if (!PageAnonExclusive(&old_folio->page)) {
+ 			folio_move_anon_rmap(old_folio, vma);
+ 			SetPageAnonExclusive(&old_folio->page);
+-- 
+2.44.0
+
+
+-- 
+Peter Xu
 
