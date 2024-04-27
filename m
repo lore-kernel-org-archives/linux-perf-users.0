@@ -1,141 +1,180 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD063A1D3
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 03:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A158C40856
+	for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 06:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714187123; cv=none; b=m7hCODMW6TWisP22u4Q7AShwVdE3lLIAp46e8UFCtyWP3LzD2Ge4wQmpueyGtPAxqusj/WV7HUfRa5maVfK+EeNMON3uTQBfopHhXk3mKj6nlWZX/vPoUoiFtXtudLeUNdhv6q/eUCQXbjjrIdjKEB5OBUHnsh0OZxqJwB0bHvc=
+	t=1714201114; cv=none; b=OhUq6mnpS7Sy8TiOH0JqG8A5asAwsNz5WCq9qG6hRDmids/Ruve18nXFmvNy/56aaYshzGwKnYJrm6FsUqkcmGEwYJ+AKAHowFwWzTIzEvTbuXHq1C+WN3fS3DOkZ37dbCF483zqT5Kk54F6CqlFQ3cTXFyIHEdbKZROZ3yVgZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714187123; c=relaxed/simple;
-	bh=cha9/ffLclacPVD18t3NcfWoJYtnsmNrKw5+kqwJzek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YBn1SaRWjMI7y6Mtkk7LHA7RNyJ1f9gbASzfZLa+SKajVhHGWR89GOyhA2OnW5xWHRWQwlBw3+5KNvcN2+iyey8mGcd4woZUt3w17irrg5XI+LNbODyyWUTSNoON5Rp4D5dr5VKRQVCV4mTTHD/8hnCYslP55McPLndl4OH3HkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=voTlGHY6; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714201114; c=relaxed/simple;
+	bh=UPPr/8qTEGrmJrBQ4GEgVe1GQbTkosFOeiwNu8hqyw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H+VA0JSElZ9XMg4JvSE7sEq3rU0rxQS/VZXfdAylFRAmcIoqZVaxsVFlzG7cX3fXW5OrlPqcg/R14rF6WLOk2AsYcwzZB1IbhHhN1lqsOsjjSFIiJG7VTjs1KWuhKP9nmffunXjozCjyVLKKbEMmpjs2FpayQWV14qDaXdbMUuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JtsNUqjx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="voTlGHY6"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51c077cfc09so3273117e87.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 20:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714187120; x=1714791920; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
-        b=voTlGHY6WNTRPZ9TfTButMeOuMUwcNq5SxdPYKrglGQUsUvzcGUUbGHg5tNjo5Oldm
-         z3Do2cIXWc0N4G0ogEAh2PqNlhVBOpQuXvesYHWlBkUDW28XNwYh7jumUCeR+5YyWDBn
-         FzDB1AbuEXZdS3mwxpQwRVUBZX5yCkN9o7eJDsEE/hSRAI5/N32SLzRKVqgH2yQAsoUS
-         ofG8gkthNoRAgcP5PQjmKOgHxciOsT0OT5Mxxv8E54CJiBZ0cKczfh8CUrYWjovIqi85
-         KR90oxrD+0rvylNqHD4ZHTNeGJrni037tpSceMkDcjEA2HRKAFG5ke8oTNQPDSy2fMzm
-         l0hA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JtsNUqjx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714201111;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WaayyB5+KIq70nS1uvbPulsfWrN99w7sHvHilb0dDfw=;
+	b=JtsNUqjxaCAuouyuQ+pxKsu/JJcPGhPKocWYlQCwBqbyv2bp8JlVijZrLwJ1E/mi3WDCcM
+	qvbDQi74V1o4Pittwy9fB8l3gqWHBnnRh8Tlr7X1mjaRQ3NbZGh1huhV+UaxmauBDQn5RV
+	GaymmEVk2+0OAlswzQ0ecXcF2OO6Dwk=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-81-y1L5VqNSNi6ir3Aj-0gBPA-1; Sat, 27 Apr 2024 02:58:30 -0400
+X-MC-Unique: y1L5VqNSNi6ir3Aj-0gBPA-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2dfd7e27503so1053351fa.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 23:58:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714187120; x=1714791920;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
-        b=Bndf0DxYjF7gulCe03w15bMzX2uCfgZE8Ah6QwV+n6MDZgMptRbQkjG+w4M1iDoYl3
-         cY4f1YouOVjxx1LhA1hjJAgCjrT4vOGBmRNmwoPFYJB5RPx8LoX6XWLIadIrKKpWec0H
-         SminZznVtzYeUiFWBsuVN+6IGemgz/UxQSA0seZQ7B3qB/kUmMA1TuoqUcpw/CSQRrd+
-         ypqAtCupYHrRnq2ZTqBoNB+obzFoYs0lleT2JC5c8uxzACamO6PkWMh/JOeLwnFFcJtN
-         HTEzQ4fLQcJvW14yPB+kfhrGVSMZnvSyYO9h7yw620Q4o+8Ur4HgY5V9wylqlTkd9vo9
-         2Wbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGNTrllzx1UzfhwT2+Ha3S/cEcnO1BwOilQ3IC+EYzh7rh51cEAhikpzZ7o+GUMuVdoBQC2RgcWvMca6HEH9ePwOzVmfF6Wkz+NctpaE940g==
-X-Gm-Message-State: AOJu0YyFPe3CSFFSEXBIRU4/JJFq0qP9Cf/OHVTL5arNDKs0xYwiGmSw
-	6otXoA5uyc41XRlRRz1ZM7PQzpk9WHB+PLHumITpDyibV8/peRdqmReOvKnfbr6rr3vWXC2+mXi
-	iGTqqLDNkfaL14H6Zh15mnq+TT6N92OxY0dIS
-X-Google-Smtp-Source: AGHT+IH7ZrbbxcIWFPMbr/gIXjFP4VCMqRaA2i6I0HFIVTbw9MBdGrgRXfr/4EcW+YlMTOtyvboEK6FX9s4UKILqlag=
-X-Received: by 2002:a05:6512:684:b0:518:17ad:a6e0 with SMTP id
- t4-20020a056512068400b0051817ada6e0mr2933668lfe.51.1714187119584; Fri, 26 Apr
- 2024 20:05:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714201108; x=1714805908;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WaayyB5+KIq70nS1uvbPulsfWrN99w7sHvHilb0dDfw=;
+        b=TMc1CukWXeiacZ045JVKAm5xi2/QTlHxXeIO1+VfAlqhfGBIiqttRM6ZKCLHfmzqO9
+         qg7IVG3NTdAskAUINAsTAqoLd+ajNjtftADEBTUfX5qIhlj+2FYz+cWqBXULYUKqAQvL
+         AUiXbvsw5+FWOZd8ihW/O7y4Vi+UkfoZ1NxP+U7aEpY7jOMnFCDKFApk0KaBza/W2Occ
+         a8IvycjWE8c+jVtgd2xeFQXCLf1tzTR8FJsKZJUm9HJX/2I9ihH6kbQ3gOPjMzmV3cj+
+         Xq0DYK0t01NOi9R/1R6p9tUI+W49DrHuHFsofGGhVG/8Iq+qIad3j3j/nhWRjtcMWdN8
+         De8g==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Gppj+Qitp1ep+OhlIKPPcvloa5SEFIw7ym87xPWOB9mVMGBBudeb9RdqGBo44Pk4PiMjdoj7OS8i8IStUUvTkhvK7J2asF6C62Gd18Cefg==
+X-Gm-Message-State: AOJu0Yw4vpvI6IuKBV83FuTVHybOuenWvqmOfPwFan3xFqenSWHCX1JY
+	jULzOKN5Ek26wPKm9JZk2vN+6B1tUMhzmvDWpOzwvfGUKiUD3PqIfYckoYWTp5FwshwV3nPUBa2
+	GWNGnqfSv0JcfUNw2ef5ysNZeKiG8v7XNgR+YhTqS9MBrXQ8ZmFwBWqYNkW5mPeElj/4=
+X-Received: by 2002:a2e:b05a:0:b0:2d7:1a30:e881 with SMTP id d26-20020a2eb05a000000b002d71a30e881mr2669433ljl.12.1714201108502;
+        Fri, 26 Apr 2024 23:58:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHV7CVKxHNJ2Tho7t1H+f7+YxLYlrHEqtgE9fAP/Lf/BXSoGK0VQ6f5eOXpT5KJ+va9EthlOQ==
+X-Received: by 2002:a2e:b05a:0:b0:2d7:1a30:e881 with SMTP id d26-20020a2eb05a000000b002d71a30e881mr2669415ljl.12.1714201108080;
+        Fri, 26 Apr 2024 23:58:28 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c731:9c00:2aaa:88a4:e41d:65ba? (p200300cbc7319c002aaa88a4e41d65ba.dip0.t-ipconnect.de. [2003:cb:c731:9c00:2aaa:88a4:e41d:65ba])
+        by smtp.gmail.com with ESMTPSA id bd12-20020a05600c1f0c00b0041b6f63f42esm6081579wmb.48.2024.04.26.23.58.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 23:58:27 -0700 (PDT)
+Message-ID: <0a9ebdaa-9346-49f4-b568-d0dce72d3108@redhat.com>
+Date: Sat, 27 Apr 2024 08:58:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com> <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com> <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com> <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
- <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
-In-Reply-To: <ZiwEoZDIg8l7-uid@google.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Fri, 26 Apr 2024 20:04:42 -0700
-Message-ID: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] mm/gup: consistently name GUP-fast functions
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org
+References: <20240402125516.223131-1-david@redhat.com>
+ <20240402125516.223131-2-david@redhat.com>
+ <e685c532-8330-4a57-bc08-c67845e0c352@redhat.com> <Ziuv2jLY1wgBITiP@x1n>
+ <ZivScN8-Uoi9eye8@x1n> <8b42a24d-caf0-46ef-9e15-0f88d47d2f21@redhat.com>
+ <Ziwal-SucIye3hPM@x1n> <fb3bd167-748a-4548-a94f-9194443c0bc3@redhat.com>
+ <ZiwjhkTTRG1ZjyLf@x1n>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZiwjhkTTRG1ZjyLf@x1n>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 26, 2024 at 12:46=E2=80=AFPM Sean Christopherson <seanjc@google=
-.com> wrote:
->
-> On Fri, Apr 26, 2024, Kan Liang wrote:
-> > > Optimization 4
-> > > allows the host side to immediately profiling this part instead of
-> > > waiting for vcpu to reach to PMU context switch locations. Doing so
-> > > will generate more accurate results.
-> >
-> > If so, I think the 4 is a must to have. Otherwise, it wouldn't honer th=
-e
-> > definition of the exclude_guest. Without 4, it brings some random blind
-> > spots, right?
->
-> +1, I view it as a hard requirement.  It's not an optimization, it's abou=
-t
-> accuracy and functional correctness.
+On 26.04.24 23:58, Peter Xu wrote:
+> On Fri, Apr 26, 2024 at 11:33:08PM +0200, David Hildenbrand wrote:
+>> I raised this topic in the past, and IMHO we either (a) never should have
+>> added COW support; or (b) added COW support by using ordinary anonymous
+>> memory (hey, partial mappings of hugetlb pages! ;) ).
+>>
+>> After all, COW is an optimization to speed up fork and defer copying. It
+>> relies on memory overcommit, but that doesn't really apply to hugetlb, so we
+>> fake it ...
+> 
+> Good summary.
+> 
+>>
+>> One easy ABI break I had in mind was to simply *not* allow COW-sharing of
+>> anon hugetlb folios; for example, simply don't copy the page into the child.
+>> Chances are there are not really a lot of child processes that would fail
+>> ... but likely we would break *something*. So there is no easy way out :(
+> 
+> Right, not easy.  The thing is this is one spot out of many of the
+> specialties, it also may or may not be worthwhile to have dedicated time
+> while nobody yet has a problem with it.  It might be easier to start with
+> v2, even though that's also hard to nail everything properly - the
+> challenge can come from different angles.
+> 
+> Thanks for the sharings, helpful.  I'll go ahead with the Power fix on
+> hugepd putting this aside.
 
-Well. Does it have to be a _hard_ requirement? no? The irq handler
-triggered by "perf record -a" could just inject a "state". Instead of
-immediately preempting the guest PMU context, perf subsystem could
-allow KVM defer the context switch when it reaches the next PMU
-context switch location.
+Yes, hopefully we already do have a test case for that. When writing 
+gup_longterm.c I was more focusing on memfd vs. ordinary file systems 
+("filesystem type") than how it's mapped into the page tables.
 
-This is the same as the preemption kernel logic. Do you want me to
-stop the work immediately? Yes (if you enable preemption), or No, let
-me finish my job and get to the scheduling point.
+> 
+> I hope that before the end of this year, whatever I'll fix can go away, by
+> removing hugepd completely from Linux.  For now that may or may not be as
+> smooth, so we'd better still fix it.
 
-Implementing this might be more difficult to debug. That's my real
-concern. If we do not enable preemption, the PMU context switch will
-only happen at the 2 pairs of locations. If we enable preemption, it
-could happen at any time.
+Crossing fingers, I'm annoyed whenever I stumble over it :)
 
->
-> What _is_ an optimization is keeping guest state loaded while KVM is in i=
-ts
-> run loop, i.e. initial mediated/passthrough PMU support could land upstre=
-am with
-> unconditional switches at entry/exit.  The performance of KVM would likel=
-y be
-> unacceptable for any production use cases, but that would give us motivat=
-ion to
-> finish the job, and it doesn't result in random, hard to diagnose issues =
-for
-> userspace.
+-- 
+Cheers,
 
-That's true. I agree with that.
+David / dhildenb
 
->
-> > > Do we want to preempt that? I think it depends. For regular cloud
-> > > usage, we don't. But for any other usages where we want to prioritize
-> > > KVM/VMM profiling over guest vPMU, it is useful.
-> > >
-> > > My current opinion is that optimization 4 is something nice to have.
-> > > But we should allow people to turn it off just like we could choose t=
-o
-> > > disable preempt kernel.
-> >
-> > The exclude_guest means everything but the guest. I don't see a reason
-> > why people want to turn it off and get some random blind spots.
