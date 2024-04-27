@@ -1,132 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB9C39ACD;
-	Sat, 27 Apr 2024 01:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD063A1D3
+	for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 03:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714181794; cv=none; b=o4EcUbJ9Cl3SU3UEbEgwKzKtH7VS3piFurM89qPLzzRfsdrJXoyi6UA+d0EhX6Z3DmVhUbdoSmw0hwLd5BnZzAk+IxOaoGapVGatVFhITC45RPAqlK4JUxIQsEaGwqmJLWnlbcksQqZFzT5JD/fc+RfWnaKatGGmihB2+2jPXS4=
+	t=1714187123; cv=none; b=m7hCODMW6TWisP22u4Q7AShwVdE3lLIAp46e8UFCtyWP3LzD2Ge4wQmpueyGtPAxqusj/WV7HUfRa5maVfK+EeNMON3uTQBfopHhXk3mKj6nlWZX/vPoUoiFtXtudLeUNdhv6q/eUCQXbjjrIdjKEB5OBUHnsh0OZxqJwB0bHvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714181794; c=relaxed/simple;
-	bh=BudDBwyhpbKB2aXRILMYhmtkIAgfvk+c5Frdnp906+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bR4rSk/vJEg+HyBoBVg9mCba8GqFh8e3Wdcergl1h+5+rsXEH4U8/FK0ObNLqblRDsT7CvBb5xz5hyv4Jh+9tBmxU4AKPxU68JLLX5iTYdQVzaaxTaKub/uEcUTQKq7CmdM6tdkUD4tV1v871FI9QBKKkZKu29yoBH0c9rQcdhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAczzvLx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714187123; c=relaxed/simple;
+	bh=cha9/ffLclacPVD18t3NcfWoJYtnsmNrKw5+kqwJzek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YBn1SaRWjMI7y6Mtkk7LHA7RNyJ1f9gbASzfZLa+SKajVhHGWR89GOyhA2OnW5xWHRWQwlBw3+5KNvcN2+iyey8mGcd4woZUt3w17irrg5XI+LNbODyyWUTSNoON5Rp4D5dr5VKRQVCV4mTTHD/8hnCYslP55McPLndl4OH3HkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=voTlGHY6; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAczzvLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87305C113CD;
-	Sat, 27 Apr 2024 01:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714181793;
-	bh=BudDBwyhpbKB2aXRILMYhmtkIAgfvk+c5Frdnp906+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bAczzvLxktMk2sNSoo93ELqiK0WpdVjXHWFX5MYD6Te6nQIYcl4u4gla7J1WcuZj0
-	 uZwHewL5qVsdGKol73/RPbnlGh61otqebH/NveTsr7oS/MgHKuuOb/W+ng/XOndfj1
-	 qTUq+LKWhTkihocBzatd1QE2VbEVyRybRvrpCjuzmrpgbOt2gfN+6dhBT6QeARXCfO
-	 c1+9LHKdeZNrLw9OfTE36RxWtUrVPsWtoszO8vj7y4hLBywZpa60vp7+cZPDrIIjTU
-	 ThuCumqPMEAc2Iv5YyzPNgeVJt8oBkbKTDMiJTytSrP3BWfFC3J4AJnXlnScFTpbXM
-	 ZtBntmIGvouDA==
-Date: Fri, 26 Apr 2024 22:36:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
-	Beeman Strong <beeman@rivosinc.com>
-Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for
- bad numbers
-Message-ID: <ZixWn-ZCBpwH_2xp@x1>
-References: <20240416061533.921723-1-irogers@google.com>
- <20240416061533.921723-12-irogers@google.com>
- <ZixWfypP4FtKgv0F@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="voTlGHY6"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51c077cfc09so3273117e87.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Apr 2024 20:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714187120; x=1714791920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
+        b=voTlGHY6WNTRPZ9TfTButMeOuMUwcNq5SxdPYKrglGQUsUvzcGUUbGHg5tNjo5Oldm
+         z3Do2cIXWc0N4G0ogEAh2PqNlhVBOpQuXvesYHWlBkUDW28XNwYh7jumUCeR+5YyWDBn
+         FzDB1AbuEXZdS3mwxpQwRVUBZX5yCkN9o7eJDsEE/hSRAI5/N32SLzRKVqgH2yQAsoUS
+         ofG8gkthNoRAgcP5PQjmKOgHxciOsT0OT5Mxxv8E54CJiBZ0cKczfh8CUrYWjovIqi85
+         KR90oxrD+0rvylNqHD4ZHTNeGJrni037tpSceMkDcjEA2HRKAFG5ke8oTNQPDSy2fMzm
+         l0hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714187120; x=1714791920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
+        b=Bndf0DxYjF7gulCe03w15bMzX2uCfgZE8Ah6QwV+n6MDZgMptRbQkjG+w4M1iDoYl3
+         cY4f1YouOVjxx1LhA1hjJAgCjrT4vOGBmRNmwoPFYJB5RPx8LoX6XWLIadIrKKpWec0H
+         SminZznVtzYeUiFWBsuVN+6IGemgz/UxQSA0seZQ7B3qB/kUmMA1TuoqUcpw/CSQRrd+
+         ypqAtCupYHrRnq2ZTqBoNB+obzFoYs0lleT2JC5c8uxzACamO6PkWMh/JOeLwnFFcJtN
+         HTEzQ4fLQcJvW14yPB+kfhrGVSMZnvSyYO9h7yw620Q4o+8Ur4HgY5V9wylqlTkd9vo9
+         2Wbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGNTrllzx1UzfhwT2+Ha3S/cEcnO1BwOilQ3IC+EYzh7rh51cEAhikpzZ7o+GUMuVdoBQC2RgcWvMca6HEH9ePwOzVmfF6Wkz+NctpaE940g==
+X-Gm-Message-State: AOJu0YyFPe3CSFFSEXBIRU4/JJFq0qP9Cf/OHVTL5arNDKs0xYwiGmSw
+	6otXoA5uyc41XRlRRz1ZM7PQzpk9WHB+PLHumITpDyibV8/peRdqmReOvKnfbr6rr3vWXC2+mXi
+	iGTqqLDNkfaL14H6Zh15mnq+TT6N92OxY0dIS
+X-Google-Smtp-Source: AGHT+IH7ZrbbxcIWFPMbr/gIXjFP4VCMqRaA2i6I0HFIVTbw9MBdGrgRXfr/4EcW+YlMTOtyvboEK6FX9s4UKILqlag=
+X-Received: by 2002:a05:6512:684:b0:518:17ad:a6e0 with SMTP id
+ t4-20020a056512068400b0051817ada6e0mr2933668lfe.51.1714187119584; Fri, 26 Apr
+ 2024 20:05:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZixWfypP4FtKgv0F@x1>
+References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com> <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com> <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com> <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
+In-Reply-To: <ZiwEoZDIg8l7-uid@google.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Fri, 26 Apr 2024 20:04:42 -0700
+Message-ID: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 26, 2024 at 10:36:02PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Apr 15, 2024 at 11:15:27PM -0700, Ian Rogers wrote:
-> > Use the error handler from the parse_state to give a more informative
-> > error message.
-> > 
-> > Before:
-> > ```
-> > $ perf stat -e 'cycles/period=99999999999999999999/' true
-> > event syntax error: 'cycles/period=99999999999999999999/'
-> >                                   \___ parser error
-> > Run 'perf list' for a list of valid events
-> > 
-> >  Usage: perf stat [<options>] [<command>]
-> > 
-> >     -e, --event <event>   event selector. use 'perf list' to list available events
-> > ```
-> > 
-> > After:
-> > ```
-> > $ perf stat -e 'cycles/period=99999999999999999999/' true
-> > event syntax error: 'cycles/period=99999999999999999999/'
-> >                                   \___ parser error
-> > 
-> 
-> This ended up in perf-tools-next, will have to look at what this problem
-> is:
-> 
->    9    11.46 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-17) (GCC) 
->      yy_size_t parse_events_get_leng (yyscan_t yyscanner );
->                ^~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
->      int parse_events_get_leng(yyscan_t yyscanner);
->          ^~~~~~~~~~~~~~~~~~~~~
->      yy_size_t parse_events_get_leng  (yyscan_t yyscanner)
->                ^~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
->      int parse_events_get_leng(yyscan_t yyscanner);
->          ^~~~~~~~~~~~~~~~~~~~~
->     make[3]: *** [util] Error 2
-> 
-> 
-> Unsure if this will appear on the radar on other distros, maybe this is
-> just something that pops up with older distros...
-> 
-> Ran out of time today...
+On Fri, Apr 26, 2024 at 12:46=E2=80=AFPM Sean Christopherson <seanjc@google=
+.com> wrote:
+>
+> On Fri, Apr 26, 2024, Kan Liang wrote:
+> > > Optimization 4
+> > > allows the host side to immediately profiling this part instead of
+> > > waiting for vcpu to reach to PMU context switch locations. Doing so
+> > > will generate more accurate results.
+> >
+> > If so, I think the 4 is a must to have. Otherwise, it wouldn't honer th=
+e
+> > definition of the exclude_guest. Without 4, it brings some random blind
+> > spots, right?
+>
+> +1, I view it as a hard requirement.  It's not an optimization, it's abou=
+t
+> accuracy and functional correctness.
 
-Context:
+Well. Does it have to be a _hard_ requirement? no? The irq handler
+triggered by "perf record -a" could just inject a "state". Instead of
+immediately preempting the guest PMU context, perf subsystem could
+allow KVM defer the context switch when it reaches the next PMU
+context switch location.
 
-perfbuilder@number:~$ export BUILD_TARBALL=http://192.168.86.42/perf/perf-6.9.0-rc5.tar.xz
-perfbuilder@number:~$ time dm
-   1   102.33 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-20) , clang version 16.0.6 (Red Hat 16.0.6-2.module_el8.9.0+3621+df7f7146) flex 2.6.1
-   2   102.44 almalinux:9                   : Ok   gcc (GCC) 11.4.1 20230605 (Red Hat 11.4.1-2) , clang version 16.0.6 (Red Hat 16.0.6-1.el9) flex 2.6.4
-   3   124.34 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1 flex 2.6.4
-   4   109.42 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
-   5    90.08 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
-   6    84.85 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
-   7    94.18 alpine:3.19                   : Ok   gcc (Alpine 13.2.1_git20231014) 13.2.1 20231014 , Alpine clang version 17.0.5 flex 2.6.4
-   8    95.45 alpine:edge                   : Ok   gcc (Alpine 13.2.1_git20240309) 13.2.1 20240309 , Alpine clang version 17.0.6 flex 2.6.4
-   9    11.46 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-17) (GCC) 
-     yy_size_t parse_events_get_leng (yyscan_t yyscanner );
-               ^~~~~~~~~~~~~~~~~~~~~
-    util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
-     int parse_events_get_leng(yyscan_t yyscanner);
-         ^~~~~~~~~~~~~~~~~~~~~
-     yy_size_t parse_events_get_leng  (yyscan_t yyscanner)
-               ^~~~~~~~~~~~~~~~~~~~~
-    util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
-     int parse_events_get_leng(yyscan_t yyscanner);
-         ^~~~~~~~~~~~~~~~~~~~~
-    make[3]: *** [util] Error 2
-  10    88.41 amazonlinux:2023              : Ok   gcc (GCC) 11.4.1 20230605 (Red Hat 11.4.1-2) , clang version 15.0.7 (Amazon Linux 15.0.7-3.amzn2023.0.1) flex 2.6.4
-  11    89.72 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
-  12   115.65 archlinux:base                : Ok   gcc (GCC) 13.2.1 20230801 , clang version 17.0.6 flex 2.6.4
-  13    93.87 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-21) , clang version 17.0.6 (Red Hat 17.0.6-1.module_el8+767+9fa966b8) flex 2.6.1
+This is the same as the preemption kernel logic. Do you want me to
+stop the work immediately? Yes (if you enable preemption), or No, let
+me finish my job and get to the scheduling point.
+
+Implementing this might be more difficult to debug. That's my real
+concern. If we do not enable preemption, the PMU context switch will
+only happen at the 2 pairs of locations. If we enable preemption, it
+could happen at any time.
+
+>
+> What _is_ an optimization is keeping guest state loaded while KVM is in i=
+ts
+> run loop, i.e. initial mediated/passthrough PMU support could land upstre=
+am with
+> unconditional switches at entry/exit.  The performance of KVM would likel=
+y be
+> unacceptable for any production use cases, but that would give us motivat=
+ion to
+> finish the job, and it doesn't result in random, hard to diagnose issues =
+for
+> userspace.
+
+That's true. I agree with that.
+
+>
+> > > Do we want to preempt that? I think it depends. For regular cloud
+> > > usage, we don't. But for any other usages where we want to prioritize
+> > > KVM/VMM profiling over guest vPMU, it is useful.
+> > >
+> > > My current opinion is that optimization 4 is something nice to have.
+> > > But we should allow people to turn it off just like we could choose t=
+o
+> > > disable preempt kernel.
+> >
+> > The exclude_guest means everything but the guest. I don't see a reason
+> > why people want to turn it off and get some random blind spots.
