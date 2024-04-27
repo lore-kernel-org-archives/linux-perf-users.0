@@ -1,97 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B0525777;
-	Sat, 27 Apr 2024 01:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9670629409;
+	Sat, 27 Apr 2024 01:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714180167; cv=none; b=R3iuUVhdQgyoTE+vGZGut1QPhdOlrBxHEqVN4qMFk+AGCTCr1p0SySDJTjoM/S0wlU9Qj8ruunpY0CD+aUCaj/lEIHnuOV8uHi1tQ1tzXTVOs2R0nHxbiEaG2ilRgj6eHIDkMEG7Nnkjs8yI8GpzQd/98LYz2iyMTnV1GlQ3A68=
+	t=1714181762; cv=none; b=j0oN+MVezT/h5nL5NVxgimxaasAtB2u6mcy9YQisAc4TCpWIw257/Tc6DhaW+nnkMGnKcjWN8/uGkbP6QcT4MgWfRI0etiYpIgAsG8feRvSjTJjA7o5mlpsnJgrLsFaQO+rDFnAkhOi2CyzOd51QkFQrPFRLJ4jdhNi0H7zbkuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714180167; c=relaxed/simple;
-	bh=5FyjjO3qI7vbvED0B+ufM1OwjTuy4FUUKvu2jkUC8Mk=;
+	s=arc-20240116; t=1714181762; c=relaxed/simple;
+	bh=FgfvRvIIdKg5M8VTG3GygY/t5MgGGpquPipWcwa1BbY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9XRy/suoCMyvZf2dVsOjB4jDuDPSJxlsKMJZDJzr1C+3C+dHNgzB4G1fgSEh+08lJgDKMEZkhEyzhf2TjrVclhRC0iDnAXvNsrgnIoh5OFN3AML8NuR7/tTsKV1eRN8I4gyrvZHLu5YojVziTQmv+GspPOcgCbhrFeKQx9pOps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpZDc5iP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=t+48JnWoMarxgQuLl/RV6ZF38S7Zg8irtvAngLh92yFJNCXxhTT9xBDnZaa5PlhdXF0hCWzuyGdoChS3/zu3kw8guOxxsHc69msP+LMQ8CUifzdRdoB1aiPvliUUK+ptcPjp5jHpLWxHU/+cBy9cLixF2q8W05h/8rJXOZDnLGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crPCgKfT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpZDc5iP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574C8C113CD;
-	Sat, 27 Apr 2024 01:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crPCgKfT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C975BC113CD;
+	Sat, 27 Apr 2024 01:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714180166;
-	bh=5FyjjO3qI7vbvED0B+ufM1OwjTuy4FUUKvu2jkUC8Mk=;
+	s=k20201202; t=1714181762;
+	bh=FgfvRvIIdKg5M8VTG3GygY/t5MgGGpquPipWcwa1BbY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UpZDc5iPFzgWaK3TksswV2zJtpSYA08GGt+Noe7CDPoWDJjEgx/2TtebKgiJTGWWS
-	 QZ9YrdtdXwIhrVdL+Sqegl+T9vug5YMSYLyBMcvkGHy8909xIA6waJW7TjhVSYH5Qw
-	 jHCuf2jl5l7gRFlJjhE1Csur7ony81mnev1zV2DWZm2s2ow8jeqGcffC32ugmW7HOj
-	 ne30QdnrdWVkTEGD/59iXq5fwvE9i1ZsqwAvS7RNUKSxnsUCgOcoLyAfmg3vQ84Coi
-	 +YFoZu3kOsNoE8bHBM0nrM3mCu4ikN04DK/ySAjQhlybogh4jY6l4NXSV/vh9U1JVl
-	 666sD/fMDvcQw==
-Date: Fri, 26 Apr 2024 22:09:23 -0300
+	b=crPCgKfTrZI69WjN8uB5eiXzpb46kN+36v9HtC11O3fsfXHLHCxx4LumYSIVXGZpT
+	 GFChac4esj36x6sTMDjqAysyEJsaPuTEWkvtMccXpAwwU2Yh4ruGaPZGnI6HxnewQ/
+	 4dG4NxFuN2z88eMrNpP8EYtaBiUiWizerlJcCqv18uLVpMpU/8g16sknhT9VI/24Ak
+	 Bn7vtTKjfPi8C9KApCmf86JnFIDRAamOCKfy9dkblIZz+ZUA0//6+pxHIh2L3fBbVm
+	 em9eaZqR8Re8l806rzxaBfTFvzK9UVPHTY9YCJgEp2XqpNaxm6v6aom0dn0Dh31pAu
+	 vg7ungBkC2sTg==
+Date: Fri, 26 Apr 2024 22:35:59 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf annotate: Update dso binary type when try
- build-id
-Message-ID: <ZixQQ_vKtmtvYSjS@x1>
-References: <20240425005157.1104789-1-namhyung@kernel.org>
- <20240425005157.1104789-2-namhyung@kernel.org>
- <Zipk0p08bxO7werD@x1>
- <ZiptiObJxYPeXqK_@x1>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org,
+	Beeman Strong <beeman@rivosinc.com>
+Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for
+ bad numbers
+Message-ID: <ZixWfypP4FtKgv0F@x1>
+References: <20240416061533.921723-1-irogers@google.com>
+ <20240416061533.921723-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZiptiObJxYPeXqK_@x1>
+In-Reply-To: <20240416061533.921723-12-irogers@google.com>
 
-On Thu, Apr 25, 2024 at 11:49:49AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Apr 25, 2024 at 11:12:40AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Apr 24, 2024 at 05:51:57PM -0700, Namhyung Kim wrote:
-> > > +++ b/tools/perf/util/disasm.c
-> > > @@ -1156,6 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
-> > >  		mutex_unlock(&dso->lock);
-> > > +	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
-> > > +		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
-> > >  	}
->  
-> > Fixed up to take into account a recent patch by Ian that turned that
-> > &dso->lock into dso__lock(dso):
->  
-> > +++ b/tools/perf/util/disasm.c
-> > @@ -1156,6 +1156,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
-> >  			}
-> >  		}
-> >  		mutex_unlock(dso__lock(dso));
-> > +	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
-> > +		dso->binary_type = DSO_BINARY_TYPE__BUILD_ID_CACHE;
-> >  	}
+On Mon, Apr 15, 2024 at 11:15:27PM -0700, Ian Rogers wrote:
+> Use the error handler from the parse_state to give a more informative
+> error message.
 > 
-> Nah, I forgot some more stuff, this is what I have now:
+> Before:
+> ```
+> $ perf stat -e 'cycles/period=99999999999999999999/' true
+> event syntax error: 'cycles/period=99999999999999999999/'
+>                                   \___ parser error
+> Run 'perf list' for a list of valid events
+> 
+>  Usage: perf stat [<options>] [<command>]
+> 
+>     -e, --event <event>   event selector. use 'perf list' to list available events
+> ```
+> 
+> After:
+> ```
+> $ perf stat -e 'cycles/period=99999999999999999999/' true
+> event syntax error: 'cycles/period=99999999999999999999/'
+>                                   \___ parser error
+> 
 
-Nah², I had to remove all these:
+This ended up in perf-tools-next, will have to look at what this problem
+is:
 
-pick a58b4da77b40920f perf dsos: Switch backing storage to array from rbtree/list 
-pick 7d91cefd1fb63068 perf dsos: Remove __dsos__addnew()
-pick 80c3ccf05199dbb6 perf dsos: Remove __dsos__findnew_link_by_longname_id()
-pick af3f8dea24f47802 perf dsos: Switch hand code to bsearch()
-pick 7537b92b48318834 perf dso: Add reference count checking and accessor functions
-pick 9bd7c6fe8de22b37 perf dso: Reference counting related fixes
-pick 4de57b46a0cb2027 perf dso: Use container_of() to avoid a pointer in 'struct dso_data'
+   9    11.46 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-17) (GCC) 
+     yy_size_t parse_events_get_leng (yyscan_t yyscanner );
+               ^~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
+     int parse_events_get_leng(yyscan_t yyscanner);
+         ^~~~~~~~~~~~~~~~~~~~~
+     yy_size_t parse_events_get_leng  (yyscan_t yyscanner)
+               ^~~~~~~~~~~~~~~~~~~~~
+    util/parse-events.l:22:5: note: previous declaration of 'parse_events_get_leng' was here
+     int parse_events_get_leng(yyscan_t yyscanner);
+         ^~~~~~~~~~~~~~~~~~~~~
+    make[3]: *** [util] Error 2
 
-Due to a bisect that pointed "perf dsos: Switch backing storage to array
-from rbtree/list" as the one where:
 
- 
-root@x1:~# perf test "kernel lock contention analysis test"
- 87: kernel lock contention analysis test                            : FAILED!
+Unsure if this will appear on the radar on other distros, maybe this is
+just something that pops up with older distros...
+
+Ran out of time today...
 
 - Arnaldo
