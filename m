@@ -1,137 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60764A;
-	Sun, 28 Apr 2024 00:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D131215C9;
+	Sun, 28 Apr 2024 03:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714265939; cv=none; b=RA9CjTt3uN75CaSoqnv3xinM8auaMK7SInkM/ZX3fR94BeiF86oSXXZUXksHFlTHtYdRWqCShCBGRD6HLe2oEqnoEVrqu9v5C5zS/jeLm3MpeW2qLMbrEGfuVTDP4roeW5T7mBn6Eh66PgrlHXEjUAey9E3iVMkrtPcfvWdGWDg=
+	t=1714273822; cv=none; b=iRWc+NNHmlLX/CAzantTx+PXxSVpsGRUD9rCHd34QwZwIOIxo++yKIb32AQ/gqF8YRBp3aDl5vRns3/Ck2NZbC0Oa8nOmd7MydZjsdUZshGIFil2M1yVPIscRmmEEK6+e7KViHzqMs3aOGQdimwku+aLCTNr9HHj+K4MrK/0WfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714265939; c=relaxed/simple;
-	bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oJEjg8UYblshmzYK868Gw7Opr1YlKw+UXhQFJO3Jb2mJgEwVHGD80XET0WxGT1cGTn6V/N4YKUt6tJdgLDEwvSodrH8HF+nRoCqK3L8pzUe0w5u9//u/OL53D4O3i0nn7LdBRClnNENjS45q4xSYqZR369MTbh8vqKX9lNNkdwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZbkQ2qu; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZbkQ2qu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714265938; x=1745801938;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
-  b=WZbkQ2qunJKXyRHUKZ5cF2TwWCiNvHhfjzXsTYu1gilfOP2HKOQQlbV5
-   +aZFtsr95MX4pGP5QCyB7/oXXOgZWCb0yV2MPIY5ZLqzTM1CrjwYhltLz
-   OviE7Yag7zTuCtxc06Z6OmlO8bYP61oSu25IeStQ1HfVHlU1lJbArbvQH
-   HSm/vJBVXuUoe4AdS+INvfMKWKMlXOJ7zg0WRcJTk5TrvV1MJqN8BDspf
-   Y9TaQ6/33NBidnDlqLdUSyVmicwHAoWLF7Tukruo6LJtfvGoO8zNpkCW0
-   7MpvANHuym5OQXdd9z/rgBC7rW7ZxxKkfZO6qOiQfF0lZvI1tv6sNnAaT
-   g==;
-X-CSE-ConnectionGUID: c7P+zrYJRPeoG3GMLCd9+g==
-X-CSE-MsgGUID: KLLNWMcZTyuAv3FY7qv+1A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9827167"
-X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
-   d="scan'208";a="9827167"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:57 -0700
-X-CSE-ConnectionGUID: 1ADNkzFRT7KuUnFBhO/zJg==
-X-CSE-MsgGUID: fFQsozLAQF6AxccK77EbFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
-   d="scan'208";a="25642447"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:53 -0700
-Message-ID: <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com>
-Date: Sun, 28 Apr 2024 08:58:50 +0800
+	s=arc-20240116; t=1714273822; c=relaxed/simple;
+	bh=zRjS4HniSyauajIjylYLbXjWxv2s24OoOrQ1SnYwpBE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DyUFuho54VKt+HTcU3ujrepJtDMhkuNubBYZqmp0fuUXFsylQyXmBWoSBOsUQq0J8N1C46gBq7QuE5uSiGor7shcKm0Hkn8o60GuwscB6OC7urQJ3d5CKs5Kcn3Jcjcm+eXlSV3jhUC/9kjQCap5bhn0GqWfX3q0oT/SY5BmDDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VRrwc0YD4zvQ62;
+	Sun, 28 Apr 2024 11:07:12 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FFA518007C;
+	Sun, 28 Apr 2024 11:10:18 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sun, 28 Apr 2024 11:10:17 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
+ Du <changbin.du@huawei.com>
+Subject: [PATCH v3 1/2] perf trace beauty: Always show param if show_zero is set
+Date: Sun, 28 Apr 2024 11:10:07 +0800
+Message-ID: <20240428031008.1535765-2-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240428031008.1535765-1-changbin.du@huawei.com>
+References: <20240428031008.1535765-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
- <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
- <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
- <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
- <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com>
- <ZiwEoZDIg8l7-uid@google.com>
- <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
+For some parameters, it is best to also display them when they are 0,
+e.g. flags.
 
-On 4/27/2024 11:04 AM, Mingwei Zhang wrote:
-> On Fri, Apr 26, 2024 at 12:46 PM Sean Christopherson <seanjc@google.com> wrote:
->> On Fri, Apr 26, 2024, Kan Liang wrote:
->>>> Optimization 4
->>>> allows the host side to immediately profiling this part instead of
->>>> waiting for vcpu to reach to PMU context switch locations. Doing so
->>>> will generate more accurate results.
->>> If so, I think the 4 is a must to have. Otherwise, it wouldn't honer the
->>> definition of the exclude_guest. Without 4, it brings some random blind
->>> spots, right?
->> +1, I view it as a hard requirement.  It's not an optimization, it's about
->> accuracy and functional correctness.
-> Well. Does it have to be a _hard_ requirement? no? The irq handler
-> triggered by "perf record -a" could just inject a "state". Instead of
-> immediately preempting the guest PMU context, perf subsystem could
-> allow KVM defer the context switch when it reaches the next PMU
-> context switch location.
->
-> This is the same as the preemption kernel logic. Do you want me to
-> stop the work immediately? Yes (if you enable preemption), or No, let
-> me finish my job and get to the scheduling point.
->
-> Implementing this might be more difficult to debug. That's my real
-> concern. If we do not enable preemption, the PMU context switch will
-> only happen at the 2 pairs of locations. If we enable preemption, it
-> could happen at any time.
+Here we only check the show_zero property and let arg printer handle
+special cases.
 
-IMO I don't prefer to add a switch to enable/disable the preemption. I 
-think current implementation is already complicated enough and 
-unnecessary to introduce an new parameter to confuse users. Furthermore, 
-the switch could introduce an uncertainty and may mislead the perf user 
-to read the perf stats incorrectly.  As for debug, it won't bring any 
-difference as long as no host event is created.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/builtin-trace.c | 29 +++++++----------------------
+ 1 file changed, 7 insertions(+), 22 deletions(-)
 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e5fef39c34bf..915dcd258002 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2091,17 +2091,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			val = syscall_arg_fmt__mask_val(&sc->arg_fmt[arg.idx], &arg, val);
+ 
+ 			/*
+- 			 * Suppress this argument if its value is zero and
+- 			 * and we don't have a string associated in an
+- 			 * strarray for it.
+- 			 */
+-			if (val == 0 &&
+-			    !trace->show_zeros &&
+-			    !(sc->arg_fmt &&
+-			      (sc->arg_fmt[arg.idx].show_zero ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAY ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAYS) &&
+-			      sc->arg_fmt[arg.idx].parm))
++			 * Suppress this argument if its value is zero and show_zero
++			 * property isn't set.
++			 */
++			if (val == 0 && !trace->show_zeros &&
++			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
+ 				continue;
+ 
+ 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+@@ -2796,17 +2790,8 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		 */
+ 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
+ 
+-		/*
+-		 * Suppress this argument if its value is zero and
+-		 * we don't have a string associated in an
+-		 * strarray for it.
+-		 */
+-		if (val == 0 &&
+-		    !trace->show_zeros &&
+-		    !((arg->show_zero ||
+-		       arg->scnprintf == SCA_STRARRAY ||
+-		       arg->scnprintf == SCA_STRARRAYS) &&
+-		      arg->parm))
++		/* Suppress this argument if its value is zero and show_zero property isn't set. */
++		if (val == 0 && !trace->show_zeros && !arg->show_zero)
+ 			continue;
+ 
+ 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+-- 
+2.34.1
 
->
->> What _is_ an optimization is keeping guest state loaded while KVM is in its
->> run loop, i.e. initial mediated/passthrough PMU support could land upstream with
->> unconditional switches at entry/exit.  The performance of KVM would likely be
->> unacceptable for any production use cases, but that would give us motivation to
->> finish the job, and it doesn't result in random, hard to diagnose issues for
->> userspace.
-> That's true. I agree with that.
->
->>>> Do we want to preempt that? I think it depends. For regular cloud
->>>> usage, we don't. But for any other usages where we want to prioritize
->>>> KVM/VMM profiling over guest vPMU, it is useful.
->>>>
->>>> My current opinion is that optimization 4 is something nice to have.
->>>> But we should allow people to turn it off just like we could choose to
->>>> disable preempt kernel.
->>> The exclude_guest means everything but the guest. I don't see a reason
->>> why people want to turn it off and get some random blind spots.
