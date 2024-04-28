@@ -1,189 +1,137 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3DB1DA53
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 22:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60764A;
+	Sun, 28 Apr 2024 00:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714255518; cv=none; b=SqsMYMxf7ORXvWFqEjFpJ4S3ytnDruCcsqyqNMumLEDgmC1kpn2EYKMi7sSoD8YpUD9t3xM8y7+FJf0FjkBJFCIcFjeZsnw70Hv+wmD+RbhMqozeY5h4fUzq4XPSkpIVd84Bdi/No0oQXHxrAB/kgAC2/16Khd0ibZJAqlAu5lo=
+	t=1714265939; cv=none; b=RA9CjTt3uN75CaSoqnv3xinM8auaMK7SInkM/ZX3fR94BeiF86oSXXZUXksHFlTHtYdRWqCShCBGRD6HLe2oEqnoEVrqu9v5C5zS/jeLm3MpeW2qLMbrEGfuVTDP4roeW5T7mBn6Eh66PgrlHXEjUAey9E3iVMkrtPcfvWdGWDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714255518; c=relaxed/simple;
-	bh=dL4ZiQXnuAbCs7nRZSmWKa0wsJGikLg3kAIMUDVMbJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YUJ8o7ds7EmkNZ28pP05W9I2fokZU89WqUj3O/hAzR/W/8DTf3+rG+YtURSvYkEwEFm0J1LczYqdcPEl87Tn4DS9T97OVaMhuvWMQ0dRhzunZ+eGYIYSl27hUFei2fl2m3UcqO9uWv/DPbXSCuRYkddU1ZCZR4iRu4RdioCdd+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lzCrTV7t; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714265939; c=relaxed/simple;
+	bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJEjg8UYblshmzYK868Gw7Opr1YlKw+UXhQFJO3Jb2mJgEwVHGD80XET0WxGT1cGTn6V/N4YKUt6tJdgLDEwvSodrH8HF+nRoCqK3L8pzUe0w5u9//u/OL53D4O3i0nn7LdBRClnNENjS45q4xSYqZR369MTbh8vqKX9lNNkdwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZbkQ2qu; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lzCrTV7t"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36b3738f01cso131915ab.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 15:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714255515; x=1714860315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ev2ja+lSmiOzY64QoBLLWUXCoL4iQJQ9t2WV8bOp35Q=;
-        b=lzCrTV7tx+S+YY8j2c3WLhJ0MIBL1KIYXRAeBPSNFSRpgdFue2ZzHvRkyfsOtk6jRw
-         Bu/BHoHjk/q9R1lN9Ft9W0JIdBo3B5EujiR8VBdw9Qkf7BdfiDQaqthKTmWraCqLzPFc
-         s60sT2LaZ1UCRC4UK0ezxh7zuSvmoHkcgXCe3nNPPsqkuXBLkoaOKPhYWHrV5rz9B5hX
-         xkyJKobH4ha2Xqonci5hPdowEQKII7yzIDQtjCSr6ia6pvQ4vkn8kxaHaKjmgpo0fY4P
-         wUSiGWbW8tpR/Ps0wU/1Dovskya9Fz4pUS+Z9VUhDMVWvHIoPUt1qfKpeyzlxpwj24tx
-         PMHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714255515; x=1714860315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ev2ja+lSmiOzY64QoBLLWUXCoL4iQJQ9t2WV8bOp35Q=;
-        b=ql8G8+iHgOeTnIumkfcF13YpJeilN6In2QGtVWa+k9mo6stFro04wyFUhqvzwyQnq4
-         1Jc34l3AIe9KO5CzCBwp0irw0dFNlPRp1yReOXiPhFngLchlbmsu0HbTG+SI++XtcUZ8
-         Gu5pfxKNB6MSK/iKkWrzxEAAUCurtKa4/gGhysyP8g3zwPTuwJehi+llKvyMBKPVr/Fb
-         jau8uoXlUK5vBwxts4PdlkZejk4jzD+IuHqVXiXqbFLj86CR5MMHTR/MM62YPkRFUr1s
-         cDfWcERAqHr9FZ2caKX1xV58t0eJITmKWwx3zk+tgf37SBHUYMvJyfezRGXjnOz0IkWE
-         H0aA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ043BjIVV7MfHqOMVnMeUNmeMDJS+LPeTXTTZJdzK6CIor+FuV3gXtHiugn5/oCCmis7SOBDlIx9+0QGSHqLvZy32DiTNlFGrykfxLIg8Cw==
-X-Gm-Message-State: AOJu0YwWEdJXLsiBpNaOuQ/cwnmxVSEF3DAcHx6iU6RT5pPzdatdc3GH
-	L8R+yx1GrWMxGEGwo/jZla81aUv2BKLNrOotCVMb2oP6uPeB++AEytOmyObOM964FkNJJ5j8ZVL
-	55/62DOdUmBDDA+LCs1sIus2btmscn2iXdTvW
-X-Google-Smtp-Source: AGHT+IEO3FABo7bJtP1TZzhuy5KcTdsQQuF8Ot6ogc+4XIRMXJdBlJnjK+wLjTHicCMFRokmznKYolzRrUz6TLlZywU=
-X-Received: by 2002:a92:cb52:0:b0:36c:38c9:c1ab with SMTP id
- f18-20020a92cb52000000b0036c38c9c1abmr210173ilq.26.1714255515191; Sat, 27 Apr
- 2024 15:05:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZbkQ2qu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714265938; x=1745801938;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
+  b=WZbkQ2qunJKXyRHUKZ5cF2TwWCiNvHhfjzXsTYu1gilfOP2HKOQQlbV5
+   +aZFtsr95MX4pGP5QCyB7/oXXOgZWCb0yV2MPIY5ZLqzTM1CrjwYhltLz
+   OviE7Yag7zTuCtxc06Z6OmlO8bYP61oSu25IeStQ1HfVHlU1lJbArbvQH
+   HSm/vJBVXuUoe4AdS+INvfMKWKMlXOJ7zg0WRcJTk5TrvV1MJqN8BDspf
+   Y9TaQ6/33NBidnDlqLdUSyVmicwHAoWLF7Tukruo6LJtfvGoO8zNpkCW0
+   7MpvANHuym5OQXdd9z/rgBC7rW7ZxxKkfZO6qOiQfF0lZvI1tv6sNnAaT
+   g==;
+X-CSE-ConnectionGUID: c7P+zrYJRPeoG3GMLCd9+g==
+X-CSE-MsgGUID: KLLNWMcZTyuAv3FY7qv+1A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9827167"
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="9827167"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:57 -0700
+X-CSE-ConnectionGUID: 1ADNkzFRT7KuUnFBhO/zJg==
+X-CSE-MsgGUID: fFQsozLAQF6AxccK77EbFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="25642447"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:53 -0700
+Message-ID: <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com>
+Date: Sun, 28 Apr 2024 08:58:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416061533.921723-1-irogers@google.com> <20240416061533.921723-12-irogers@google.com>
- <ZixWfypP4FtKgv0F@x1> <ZixWn-ZCBpwH_2xp@x1>
-In-Reply-To: <ZixWn-ZCBpwH_2xp@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 27 Apr 2024 15:05:01 -0700
-Message-ID: <CAP-5=fW-j03Rg9LyJqGJvU9w2Sm5hA+OcOAD=BCUbswKUh7yoA@mail.gmail.com>
-Subject: Re: [PATCH v2 11/16] perf parse-events: Improve error message for bad numbers
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
-	Beeman Strong <beeman@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
+ <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+ <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
+ <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
+ <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com>
+ <ZiwEoZDIg8l7-uid@google.com>
+ <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 6:36=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Fri, Apr 26, 2024 at 10:36:02PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Apr 15, 2024 at 11:15:27PM -0700, Ian Rogers wrote:
-> > > Use the error handler from the parse_state to give a more informative
-> > > error message.
-> > >
-> > > Before:
-> > > ```
-> > > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
-> > > event syntax error: 'cycles/period=3D99999999999999999999/'
-> > >                                   \___ parser error
-> > > Run 'perf list' for a list of valid events
-> > >
-> > >  Usage: perf stat [<options>] [<command>]
-> > >
-> > >     -e, --event <event>   event selector. use 'perf list' to list ava=
-ilable events
-> > > ```
-> > >
-> > > After:
-> > > ```
-> > > $ perf stat -e 'cycles/period=3D99999999999999999999/' true
-> > > event syntax error: 'cycles/period=3D99999999999999999999/'
-> > >                                   \___ parser error
-> > >
-> >
-> > This ended up in perf-tools-next, will have to look at what this proble=
-m
-> > is:
-> >
-> >    9    11.46 amazonlinux:2                 : FAIL gcc version 7.3.1 20=
-180712 (Red Hat 7.3.1-17) (GCC)
-> >      yy_size_t parse_events_get_leng (yyscan_t yyscanner );
-> >                ^~~~~~~~~~~~~~~~~~~~~
-> >     util/parse-events.l:22:5: note: previous declaration of 'parse_even=
-ts_get_leng' was here
-> >      int parse_events_get_leng(yyscan_t yyscanner);
-> >          ^~~~~~~~~~~~~~~~~~~~~
-> >      yy_size_t parse_events_get_leng  (yyscan_t yyscanner)
-> >                ^~~~~~~~~~~~~~~~~~~~~
-> >     util/parse-events.l:22:5: note: previous declaration of 'parse_even=
-ts_get_leng' was here
-> >      int parse_events_get_leng(yyscan_t yyscanner);
-> >          ^~~~~~~~~~~~~~~~~~~~~
-> >     make[3]: *** [util] Error 2
-> >
-> >
-> > Unsure if this will appear on the radar on other distros, maybe this is
-> > just something that pops up with older distros...
-> >
-> > Ran out of time today...
->
-> Context:
->
-> perfbuilder@number:~$ export BUILD_TARBALL=3Dhttp://192.168.86.42/perf/pe=
-rf-6.9.0-rc5.tar.xz
-> perfbuilder@number:~$ time dm
->    1   102.33 almalinux:8                   : Ok   gcc (GCC) 8.5.0 202105=
-14 (Red Hat 8.5.0-20) , clang version 16.0.6 (Red Hat 16.0.6-2.module_el8.9=
-.0+3621+df7f7146) flex 2.6.1
->    2   102.44 almalinux:9                   : Ok   gcc (GCC) 11.4.1 20230=
-605 (Red Hat 11.4.1-2) , clang version 16.0.6 (Red Hat 16.0.6-1.el9) flex 2=
-.6.4
->    3   124.34 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git=
-20211027) 10.3.1 20211027 , Alpine clang version 12.0.1 flex 2.6.4
->    4   109.42 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git=
-20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
->    5    90.08 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git=
-20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
->    6    84.85 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git=
-20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
->    7    94.18 alpine:3.19                   : Ok   gcc (Alpine 13.2.1_git=
-20231014) 13.2.1 20231014 , Alpine clang version 17.0.5 flex 2.6.4
->    8    95.45 alpine:edge                   : Ok   gcc (Alpine 13.2.1_git=
-20240309) 13.2.1 20240309 , Alpine clang version 17.0.6 flex 2.6.4
->    9    11.46 amazonlinux:2                 : FAIL gcc version 7.3.1 2018=
-0712 (Red Hat 7.3.1-17) (GCC)
->      yy_size_t parse_events_get_leng (yyscan_t yyscanner );
->                ^~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.l:22:5: note: previous declaration of 'parse_events=
-_get_leng' was here
->      int parse_events_get_leng(yyscan_t yyscanner);
->          ^~~~~~~~~~~~~~~~~~~~~
->      yy_size_t parse_events_get_leng  (yyscan_t yyscanner)
->                ^~~~~~~~~~~~~~~~~~~~~
->     util/parse-events.l:22:5: note: previous declaration of 'parse_events=
-_get_leng' was here
->      int parse_events_get_leng(yyscan_t yyscanner);
->          ^~~~~~~~~~~~~~~~~~~~~
->     make[3]: *** [util] Error 2
->   10    88.41 amazonlinux:2023              : Ok   gcc (GCC) 11.4.1 20230=
-605 (Red Hat 11.4.1-2) , clang version 15.0.7 (Amazon Linux 15.0.7-3.amzn20=
-23.0.1) flex 2.6.4
->   11    89.72 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221=
-121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn20=
-23.0.2) flex 2.6.4
->   12   115.65 archlinux:base                : Ok   gcc (GCC) 13.2.1 20230=
-801 , clang version 17.0.6 flex 2.6.4
->   13    93.87 centos:stream                 : Ok   gcc (GCC) 8.5.0 202105=
-14 (Red Hat 8.5.0-21) , clang version 17.0.6 (Red Hat 17.0.6-1.module_el8+7=
-67+9fa966b8) flex 2.6.1
 
-Did RedHat do value add on flex output? yyget_leng is documented to
-have an int return type:
-https://github.com/westes/flex/blob/master/doc/flex.texi#L4613
-This patch just adds a forward declaration in order to use it in a
-helper function.
+On 4/27/2024 11:04 AM, Mingwei Zhang wrote:
+> On Fri, Apr 26, 2024 at 12:46 PM Sean Christopherson <seanjc@google.com> wrote:
+>> On Fri, Apr 26, 2024, Kan Liang wrote:
+>>>> Optimization 4
+>>>> allows the host side to immediately profiling this part instead of
+>>>> waiting for vcpu to reach to PMU context switch locations. Doing so
+>>>> will generate more accurate results.
+>>> If so, I think the 4 is a must to have. Otherwise, it wouldn't honer the
+>>> definition of the exclude_guest. Without 4, it brings some random blind
+>>> spots, right?
+>> +1, I view it as a hard requirement.  It's not an optimization, it's about
+>> accuracy and functional correctness.
+> Well. Does it have to be a _hard_ requirement? no? The irq handler
+> triggered by "perf record -a" could just inject a "state". Instead of
+> immediately preempting the guest PMU context, perf subsystem could
+> allow KVM defer the context switch when it reaches the next PMU
+> context switch location.
+>
+> This is the same as the preemption kernel logic. Do you want me to
+> stop the work immediately? Yes (if you enable preemption), or No, let
+> me finish my job and get to the scheduling point.
+>
+> Implementing this might be more difficult to debug. That's my real
+> concern. If we do not enable preemption, the PMU context switch will
+> only happen at the 2 pairs of locations. If we enable preemption, it
+> could happen at any time.
 
-Thanks,
-Ian
+IMO I don't prefer to add a switch to enable/disable the preemption. I 
+think current implementation is already complicated enough and 
+unnecessary to introduce an new parameter to confuse users. Furthermore, 
+the switch could introduce an uncertainty and may mislead the perf user 
+to read the perf stats incorrectly.  As for debug, it won't bring any 
+difference as long as no host event is created.
+
+
+>
+>> What _is_ an optimization is keeping guest state loaded while KVM is in its
+>> run loop, i.e. initial mediated/passthrough PMU support could land upstream with
+>> unconditional switches at entry/exit.  The performance of KVM would likely be
+>> unacceptable for any production use cases, but that would give us motivation to
+>> finish the job, and it doesn't result in random, hard to diagnose issues for
+>> userspace.
+> That's true. I agree with that.
+>
+>>>> Do we want to preempt that? I think it depends. For regular cloud
+>>>> usage, we don't. But for any other usages where we want to prioritize
+>>>> KVM/VMM profiling over guest vPMU, it is useful.
+>>>>
+>>>> My current opinion is that optimization 4 is something nice to have.
+>>>> But we should allow people to turn it off just like we could choose to
+>>>> disable preempt kernel.
+>>> The exclude_guest means everything but the guest. I don't see a reason
+>>> why people want to turn it off and get some random blind spots.
