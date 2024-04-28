@@ -1,103 +1,117 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11438BFC;
-	Sun, 28 Apr 2024 03:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6072A10E5
+	for <linux-perf-users@vger.kernel.org>; Sun, 28 Apr 2024 05:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714273830; cv=none; b=Y5tfveqi/j91mybssbhMjomC7DHeZyaKWyP5bJ6aD0MNW8CJ3meUyqumix32NwAFu2c91TofWM0pkrmFDJjHCjUbDRXrVmVTy+H7BnjlAoQxSCjGC3KIWTYO9KGsUsM8ao0VrkjltEGPcLGXBXgTdkZifGUpg8RnIchbTxCUkaM=
+	t=1714282582; cv=none; b=m7/g/mOrSm1TW+aAwYusIC5GOwbPwCSQj72u4X6Y0Zx/DamA3/iuZAgli0LK3MKetOZQ/LPIUSqWKzsVEjxpNys6N/n/zqIPKfLGi/fY27g4c3redhYCcSkaRm5s2vqVQA6GCxa7YPshi4s++pfGMTVKgp8GtCxDW4szNzOPTXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714273830; c=relaxed/simple;
-	bh=Xkb858840JSpgt73J/+K8NkWTXhVSsceTUY+W6NiCQk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XbMUhPJprTxSog3bukld70zeAj6ShYnVW+aO+6Syo1hqgQmNd7W6mrhkW2enA9x3MeQq7xRb+PkwO6numLz6X4+4rGWyOwAh0Dwj28aEZJOPHLLYgICnXGFuUu+rivfjcwor8hbSf6ELk0hQK2kU1pNDWQipztfuZg5Hb0/dWuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VRryx2PCtzccF1;
-	Sun, 28 Apr 2024 11:09:13 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D0FB180080;
-	Sun, 28 Apr 2024 11:10:19 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Sun, 28 Apr 2024 11:10:18 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
- Du <changbin.du@huawei.com>
-Subject: [PATCH v3 2/2] perf trace beauty: Always show mmap prot even though PROT_NONE
-Date: Sun, 28 Apr 2024 11:10:08 +0800
-Message-ID: <20240428031008.1535765-3-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240428031008.1535765-1-changbin.du@huawei.com>
-References: <20240428031008.1535765-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1714282582; c=relaxed/simple;
+	bh=NFU1j9REnnJnHP9rU0qINEtrlKmkOP2nR4Z7xM3qTzY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=nmXe55b7uy1QmzrhyAoOrJX/16wCIS7QUenRSCIjM6TYGu2lXL2awi5Xy5DZlwEm7KdsBj6w9AGEG7u7MzigJOMp5geSTu+yNLEckxU5loY8NOnmo82Ui1mQ/R6qZytGsAfjHkNxAazmTJmaUr1GBWIVR9oiZcpETZ525G5cIoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VjUKM5Rd; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VjUKM5Rd"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de465062289so7293770276.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 Apr 2024 22:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714282580; x=1714887380; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=F5UONr62/BtTjFsEWsO6NhiyjPYCMJsSpwuIBi8shds=;
+        b=VjUKM5RdYC+JuffF5tG5W8bHB4lLYT/GmXOEmbSQL6+RFK6zofN0fgMuBK9Q5nQwYG
+         QFoiXZ3ceBVatJCJ1TC+Mq9BSsoUP8VZQR6nm8evyr4Ip7aLWheWy8y+LnOhQnG3CK3i
+         QO+EtmYnK4UnsoOdPo2QlSobCkaiCOuRMM0O2IvTiPQN5LI5kKdHoYlhHvczk86OVItt
+         V55h7jFDg6djPn+DanMY7l8LPKzAB4Nlg4bE7zkxTe5x60wPCw/XL9jUwoyaJzrXmUts
+         BuHTs2xHMWbT7qC9sJg35bBsgx8uEOYlMbbvHTi5+TYVjKNYABpo0JeSj59XI5+fcTLE
+         5loQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714282580; x=1714887380;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F5UONr62/BtTjFsEWsO6NhiyjPYCMJsSpwuIBi8shds=;
+        b=oSnbEtPy4ZRHGgBVVBQdhmfrvGgz6EhjnOFiAO8PBp0x+dzXpvf1WTT50IZPDd6dwb
+         BoFylC1fSbfbz0gNGtaaPCTI0eSWXh+XiaCFzxzmnc8AtKGMlS6/jHDwQrUYBFvHk5Ge
+         C16zMu3WiBZi/w0CX+KXmepUL990k7zR9A705B8Gsd3ObQJm+RK2m8yHzQtm9ME7uF2U
+         6qoaqJqyqbMML6A/1r2XYHapOg0QUTmm/zgoN4xA67hW6vvcTmFt01T/e0vFVTNKyqkp
+         ptEtzFELSTK9C/XJ1rlTxvJFS3Fu+d8anVlSjeLqjubqBMaLmvEtp+8NVZW/uy2XEKHE
+         s09Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWj42EbsqEvfwE9mJicQLTjHgwST9fUSjvd2lx6EiA4oBUVIdYZXNhv+j5h/3KoKsAR2ayUVMvPxR6RsPlKl8z7KaLL20/BoABFNy63Fvj+ag==
+X-Gm-Message-State: AOJu0Yy+BL8xVyGoc/HvGhhN2kDh8gcjx8Mc385GM/m1SgdlowYPtvSQ
+	gSKtiTRzqs6TNuonunhAAKyaXdTrUASMC9Fy2sSIYYhYze8AEkAh50h6vjoBUts00cqWBEFI7yr
+	Zi5GkhA==
+X-Google-Smtp-Source: AGHT+IHnIqnyqOgG5wxLpKKGc0nBRCSWmDN48/SGCvVP7YH14n7K1dyVj/TAGmLMLknF4zCi/jqrnVM9edAg
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:eaaa:2f79:c83c:9def])
+ (user=irogers job=sendgmr) by 2002:a05:6902:2b03:b0:de4:845b:8f08 with SMTP
+ id fi3-20020a0569022b0300b00de4845b8f08mr2249715ybb.2.1714282580394; Sat, 27
+ Apr 2024 22:36:20 -0700 (PDT)
+Date: Sat, 27 Apr 2024 22:36:12 -0700
+Message-Id: <20240428053616.1125891-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd100011.china.huawei.com (7.221.188.204)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Subject: [RFC PATCH v2 0/3] Retirement latency perf stat support
+From: Ian Rogers <irogers@google.com>
+To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ze Gao <zegao2021@gmail.com>, 
+	Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Dmitrii Dolgov <9erthalion6@gmail.com>, Song Liu <song@kernel.org>, 
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-PROT_NONE is also useful information, so do not omit the mmap prot even
-though it is 0. syscall_arg__scnprintf_mmap_prot() could print PROT_NONE
-for prot 0.
+Support 'R' as a retirement latency modifier on events. When present
+the evsel will fork perf record and perf report commands, parsing the
+perf report output as the count value. The intent is to do something
+similar to Weilin's series:
+https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.com/
 
-Before: PROT_NONE is not shown.
-$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot==0  -- ls
-     0.000 ls/2979231 syscalls:sys_enter_mmap(len: 4220888, flags: PRIVATE|ANONYMOUS)
+While the 'R' and the retirement latency are Intel specific, in the
+future I can imagine more evsel like commands that require child
+processes. We can make the logic more generic at that point.
 
-After: PROT_NONE is displayed.
-$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot==0  -- ls
-     0.000 ls/2975708 syscalls:sys_enter_mmap(len: 4220888, prot: NONE, flags: PRIVATE|ANONYMOUS)
+The code is untested on hardware that supports retirement latency, and
+with metrics with retirement latency in them. The record is also of
+sleep and various things need tweaking but I think v1 is good enough
+for people to give input.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/builtin-trace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The first patch refactors tool events. I came across various issues
+while looking into the issue and we can likely just pick it first. I
+kept it in the series for cleanliness sake.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 915dcd258002..919a462a7cb5 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1033,7 +1033,7 @@ static const struct syscall_fmt syscall_fmts[] = {
- #if defined(__s390x__)
- 	.alias = "old_mmap",
- #endif
--	  .arg = { [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ },
-+	  .arg = { [2] = { .scnprintf = SCA_MMAP_PROT, .show_zero = true, /* prot */ },
- 		   [3] = { .scnprintf = SCA_MMAP_FLAGS,	/* flags */
- 			   .strtoul   = STUL_STRARRAY_FLAGS,
- 			   .parm      = &strarray__mmap_flags, },
-@@ -1050,7 +1050,7 @@ static const struct syscall_fmt syscall_fmts[] = {
- 		   [4] = { .scnprintf = SCA_MOVE_MOUNT_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "mprotect",
- 	  .arg = { [0] = { .scnprintf = SCA_HEX,	/* start */ },
--		   [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ }, }, },
-+		   [2] = { .scnprintf = SCA_MMAP_PROT, .show_zero = true, /* prot */ }, }, },
- 	{ .name	    = "mq_unlink",
- 	  .arg = { [0] = { .scnprintf = SCA_FILENAME, /* u_name */ }, }, },
- 	{ .name	    = "mremap",	    .hexret = true,
-@@ -1084,7 +1084,7 @@ static const struct syscall_fmt syscall_fmts[] = {
- 	  .arg = { [0] = { .scnprintf = SCA_INT,	/* key */ }, }, },
- 	{ .name	    = "pkey_mprotect",
- 	  .arg = { [0] = { .scnprintf = SCA_HEX,	/* start */ },
--		   [2] = { .scnprintf = SCA_MMAP_PROT,	/* prot */ },
-+		   [2] = { .scnprintf = SCA_MMAP_PROT, .show_zero = true, /* prot */ },
- 		   [3] = { .scnprintf = SCA_INT,	/* pkey */ }, }, },
- 	{ .name	    = "poll", .timeout = true, },
- 	{ .name	    = "ppoll", .timeout = true, },
+The code has benefitted greatly from Weilin's work and Namhyung's
+great review input.
+
+v2. Better refactor tool events to support interval mode and more.
+    Switch "weight1" to "retire_lat" in perf report command.
+    Ensure max precision 'P' is enabled on the perf record command.
+    Kill the perf record at read but keep sleep 0.1.
+    Fix issues around perf record of tool and retirement latency events.
+
+Ian Rogers (3):
+  perf evsel: Refactor tool events
+  perf parse-events: Add a retirement latency modifier
+  perf evsel: Add retirement latency event support
+
+ tools/perf/builtin-stat.c      |  74 +++---
+ tools/perf/util/evsel.c        | 409 ++++++++++++++++++++++++++++++++-
+ tools/perf/util/evsel.h        |  10 +
+ tools/perf/util/parse-events.c |   2 +
+ tools/perf/util/parse-events.h |   1 +
+ tools/perf/util/parse-events.l |   3 +-
+ 6 files changed, 453 insertions(+), 46 deletions(-)
+
 -- 
-2.34.1
+2.44.0.769.g3c40516874-goog
 
