@@ -1,56 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC08C2C6;
-	Mon, 29 Apr 2024 13:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50497F489
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 14:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714396128; cv=none; b=h+poRy0Hh7Rk+ojoLneMXg+Mx9odiAn5LM5UM0OH5Hgw5qWkGHIN8qQR4DPfsYRqWyvqNet1aGhuuTjZkhkqRwRQFmifYXI8JaNOE+RkLET0jscLNcUqWt3MFk3lIhz3x/T+VJ/I2eJhpnFRPXrwGUPON0+RekJotiiePUzPHt4=
+	t=1714402156; cv=none; b=aj7i5AQk5cNe6LcEZB9snoBOAx3MBlDO3FKUlMneW5ROsu8Z5kMk1Xlyf2ZIgTui5IrVTia/2fHrCKr0IurzyR5zyvfOfcCM2+uY7PxbuS6QZ2BgA7MZWMQ8+gUmU+6O5sfFdds0ZIlKRk2DVGxOpRwRzfKVBaXHHa2rnRwc5GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714396128; c=relaxed/simple;
-	bh=h/k+QXiqSs9/NGwWZ9VrWj0RyO1ZNwAX2jIDUWeJ//s=;
+	s=arc-20240116; t=1714402156; c=relaxed/simple;
+	bh=qbx3g2uO4NtPZWIwOS5yFnSJoc348ZYf9636NTByQkk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iBMiEIg9sppFmHwkUMxnnVTg1AmVp2wIuFGdwI5C3rooJtQTLa9GD1THoHtp2/bb3I0qGxYYP+F+oGudAksT4HaApPOX/fDySRV+ggwJ3v5iyUx2xXp08SR3kJVpDziHMcDPA2X9IId2pM8u8llpmS8ZdqK2Dg06PM8lBIqkOlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUta8Edg; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=GkPDOKgJoeY+ZMM9/AX3TANdQWjrMPMZTs80+C/k+VG4H7V15cbepaGRF+Zys24oo8epL70TsNIJYxIVo6kFyVlX5bMkAZLfjsNimXL7ClDBe9z3rT1n9kQFF9Kh3BejV2Wy3lGeYS3nfah/gFV2o93tN2Bw5IXi4h9AgC3Mne4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0OvokBL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUta8Edg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714396127; x=1745932127;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h/k+QXiqSs9/NGwWZ9VrWj0RyO1ZNwAX2jIDUWeJ//s=;
-  b=dUta8EdgXPDedFUh1dEn18K+zbpMWsg7NiSCg8B5X/s+a6DvV6xlb7Yr
-   RWdti8K4EoKElWUlEkk41DkbzILauDfrASHiQJTRB3mjSK+sRaOOn2aUr
-   VJ+du1vQpI2q807tLJR+OTIf52BLuUtUY7ndT4mmXNAoKI7NI7gD7KKzL
-   SAvmzjoc9YgCwYBiRJRh9BO3BD5gsdlO/4jPKD2MJPPByKTQsKDHOzols
-   nQU5cl43lv7Wf7Qk5ZWa+CngDZgKadLuKyy54Q2ne/xx0Dlo0XtVf8cUv
-   Ep3dYhTEzcBLT5Tbi0L/GqbybcjMzEoCUci8NsZrSrpKI5QE04oBMVsDg
-   A==;
-X-CSE-ConnectionGUID: d1mmrVxlTcmS6fPvk5KAMQ==
-X-CSE-MsgGUID: jeui67zPRRCVGXaGYIoplA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="13840570"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="13840570"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:08:46 -0700
-X-CSE-ConnectionGUID: 8oTf2g0rRwu8qkcwHrQnqA==
-X-CSE-MsgGUID: VOAb7zO/RFKVe+CSmynZPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="25976696"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:08:47 -0700
-Received: from [10.212.16.233] (kliang2-mobl1.ccr.corp.intel.com [10.212.16.233])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9E06420B5739;
-	Mon, 29 Apr 2024 06:08:43 -0700 (PDT)
-Message-ID: <4bd55385-0c8e-4989-95be-37862b564dea@linux.intel.com>
-Date: Mon, 29 Apr 2024 09:08:42 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0OvokBL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714402153;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ln/XYC+oZQnfVYR5P0D9/Emt3rXI9LSotRmevRcvOCg=;
+	b=M0OvokBLX4zHmBL9JcCVUBYoq2I1og0I0hgH29M2+KKhdqWWTOeKj9UraXkY6XlYZu/DKa
+	nBHlSBZecuJi932Gmwhjdja8jeVQ7aGH5WBKlNPPNeJCcb21Lt//rJaJDd3BlG5etyF15d
+	HbKRezRfA02RbUwB4DWuXj/LaNDZ4OU=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-321-BbDXR4lbNVa3KtV_UkS2iw-1; Mon, 29 Apr 2024 10:49:11 -0400
+X-MC-Unique: BbDXR4lbNVa3KtV_UkS2iw-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d855c0362bso36433121fa.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 07:49:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714402148; x=1715006948;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ln/XYC+oZQnfVYR5P0D9/Emt3rXI9LSotRmevRcvOCg=;
+        b=goh0b60mCRNlEdjkwhblrCkJ/TvLbpywkx/I/UO908ghvUnot8Fqa+FN4HVBTJH5aD
+         ak1ELBKPWgrIWveapp0uuktTUU17Kva6gL59oyQZbyvhQFd97emnPrlKa3DYBTu3nXaq
+         qw5hH+BuROeD2WgmIL9Ro1SFdCpGRMdDqaAjSYso7xYUz7kmntDzA+OWWnAfcWPJiG8T
+         uQA4FbPf+xVLaha+n6Nn6Cq5V7nXiNyGgW/EBH0BMacwTJnXhw8nT6Iw5xKW2ch3PXf/
+         CWYsQZIQkBX6OyTAKYTJve9VTBqzrZxeU0vzOP3bdvMxRgDS8DU4kETKmaYZAnWtmwoV
+         vFhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXowf7QZDezo3rrFpxPt505pkfZbM/rGDe0gKTq7yJ8JWVkv3S1U3eCmdF5V4orCEvM1Fk0opft8RYVmt8J3A/lH6faOfmxQ1DlM4rlIbOqlQ==
+X-Gm-Message-State: AOJu0YzNgio/5GeHhLbpqfxfj757pXKkn6LnYnYRski01RlNQ09jUDmF
+	PFbTtcc/s4y6XVKRSw15MfEzx8TyKb0WpTjfCSkwkjy8fmS6Lkd8+uwzWfHKZ1850Ji3cYAWd4/
+	C0wwRPBcwgS3mZXUbaICUYgTkbLjxe4B0zyPjcqiLLaiJUU2WhIYIinz7mTLkpwaO2bppGKrb5i
+	jWCw==
+X-Received: by 2002:a2e:b784:0:b0:2d6:f698:7ecf with SMTP id n4-20020a2eb784000000b002d6f6987ecfmr6551743ljo.9.1714402148486;
+        Mon, 29 Apr 2024 07:49:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmc8CiffHQ8rr9HITicLFmdCuNdR9QemMlGJgkMoITet/yNpu8SIZA6hGAQ/I4C1coGiBGvQ==
+X-Received: by 2002:a2e:b784:0:b0:2d6:f698:7ecf with SMTP id n4-20020a2eb784000000b002d6f6987ecfmr6551721ljo.9.1714402148125;
+        Mon, 29 Apr 2024 07:49:08 -0700 (PDT)
+Received: from [192.168.1.27] (adsl-dyn164.78-99-35.t-com.sk. [78.99.35.164])
+        by smtp.gmail.com with ESMTPSA id t15-20020adfeb8f000000b00349ff2e0345sm29841286wrn.70.2024.04.29.07.49.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 07:49:07 -0700 (PDT)
+Message-ID: <ce24cf21-422f-45fe-838e-1e36858b93be@redhat.com>
+Date: Mon, 29 Apr 2024 16:49:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,99 +68,148 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
- <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
- <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
- <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
- <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com>
- <ZiwEoZDIg8l7-uid@google.com>
- <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240403164818.3431325-1-irogers@google.com>
+ <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
+ <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+From: Veronika Molnarova <vmolnaro@redhat.com>
+In-Reply-To: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 2024-04-26 11:04 p.m., Mingwei Zhang wrote:
-> On Fri, Apr 26, 2024 at 12:46 PM Sean Christopherson <seanjc@google.com> wrote:
+On 4/22/24 17:42, Ian Rogers wrote:
+> On Mon, Apr 22, 2024 at 4:51 AM Veronika Molnarova <vmolnaro@redhat.com> wrote:
 >>
->> On Fri, Apr 26, 2024, Kan Liang wrote:
->>>> Optimization 4
->>>> allows the host side to immediately profiling this part instead of
->>>> waiting for vcpu to reach to PMU context switch locations. Doing so
->>>> will generate more accurate results.
+>> Hi Ian,
+>>
+>> On Wed, Apr 3, 2024 at 6:48 PM Ian Rogers <irogers@google.com> wrote:
 >>>
->>> If so, I think the 4 is a must to have. Otherwise, it wouldn't honer the
->>> definition of the exclude_guest. Without 4, it brings some random blind
->>> spots, right?
+>>> Previously "set -e" meant any non-zero exit code from perf stat would
+>>> cause a test failure. As a non-zero exit happens when there aren't
+>>> sufficient permissions, check for this case and make the exit code
+>>> 2/skip for it.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
+>>>  1 file changed, 22 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+>>> index 55ef9c9ded2d..d6db192b9f18 100755
+>>> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
+>>> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+>>> @@ -1,9 +1,7 @@
+>>> -#!/bin/sh
+>>> +#!/bin/bash
+>>>  # perf all metricgroups test
+>>>  # SPDX-License-Identifier: GPL-2.0
+>>>
+>>> -set -e
+>>> -
+>>>  ParanoidAndNotRoot()
+>>>  {
+>>>    [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+>>> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
+>>>  then
+>>>    system_wide_flag=""
+>>>  fi
+>>> -
+>>> +err=0
+>>>  for m in $(perf list --raw-dump metricgroups)
+>>>  do
+>>>    echo "Testing $m"
+>>> -  perf stat -M "$m" $system_wide_flag sleep 0.01
+>>> +  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
+>>> +  result_err=$?
+>>> +  if [[ $result_err -gt 0 ]]
+>>> +  then
+>>> +    if [[ "$result" =~ \
+>>> +          "Access to performance monitoring and observability operations is limited" ]]
+>>> +    then
+>>> +      echo "Permission failure"
+>>> +      echo $result
+>>> +      if [[ $err -eq 0 ]]
+>>> +      then
+>>> +        err=2 # Skip
+>>> +      fi
+>>> +    else
+>>> +      echo "Metric group $m failed"
+>>> +      echo $result
+>>> +      err=1 # Fail
+>>> +    fi
+>>> +  fi
+>>>  done
+>>>
+>>> -exit 0
+>>> +exit $err
+>>> --
+>>> 2.44.0.478.gd926399ef9-goog
+>>>
+>>>
 >>
->> +1, I view it as a hard requirement.  It's not an optimization, it's about
->> accuracy and functional correctness.
+>> The patch looks good and thanks for taking care of it.
+>>
+>> Just wanted to check what is the desired outcome for metric groups
+>> with events that are invalid in per-thread mode causing the test to fail.
+>>
+>> ```
+>> $ ./stat_all_metricgroups.sh
+>> Testing smi
+>> Metric group smi failed
+>> Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
+>> ```
+>>
+>> Wouldn't it be better if in these cases the test would result in skip instead of fail?
 > 
-> Well. Does it have to be a _hard_ requirement? no? The irq handler
-> triggered by "perf record -a" could just inject a "state". Instead of
-> immediately preempting the guest PMU context, perf subsystem could
-> allow KVM defer the context switch when it reaches the next PMU
-> context switch location.
-
-It depends on what is the upcoming PMU context switch location.
-If it's the upcoming VM-exit/entry, the defer should be fine. Because
-it's a exclude_guest event, nothing should be counted when a VM is running.
-If it's the upcoming vCPU boundary, no. I think there may be several
-VM-exit/entry before the upcoming vCPU switch. We may lose some results.
+> Hi Veronika,
 > 
-> This is the same as the preemption kernel logic. Do you want me to
-> stop the work immediately? Yes (if you enable preemption), or No, let
-> me finish my job and get to the scheduling point.
+> I agree that fail isn't best here. I'm wondering:
+> 
+>  - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
+> the count on a context switch? The implementation is here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n234
+> There's clearly something going on as pperf appears to have other restrictions:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n115
+> I'm wondering if aggregation is working right if these counters are
+> more than per hyperthread (I'm guessing why the restrictions exist).
+> 
 
-I don't think it's necessary. Just make sure that the counters are
-scheduled in the upcoming VM-exit/entry boundary should be fine.
+Hi Ian,
+
+I am not really sure why the msr/smi/ does not support per-thread mode but
+I encountered multiple instances of events that aren't supported in per-thread
+mode during testing. Generally, we cannot be sure that there won't be such event,
+whether the msr/smi event should be able to handle per-thread mode is another
+question.
+
+Thanks for checking it out and would be great if you could add it to v2.
 
 Thanks,
-Kan
+Veronika 
+
+>  - the tool error message is doing pretty good. In the test I guess we
+> can spot the per-thread error and turn the fail to a skip. It's a
+> shame to bucket things as skip, but it seems easier than listing
+> metrics in the test or spotting particular events.
 > 
-> Implementing this might be more difficult to debug. That's my real
-> concern. If we do not enable preemption, the PMU context switch will
-> only happen at the 2 pairs of locations. If we enable preemption, it
-> could happen at any time.
+> I can do a v2 to add this.
 > 
+> Thanks,
+> Ian
+> 
+>> Thanks,
+>> Veronika
 >>
->> What _is_ an optimization is keeping guest state loaded while KVM is in its
->> run loop, i.e. initial mediated/passthrough PMU support could land upstream with
->> unconditional switches at entry/exit.  The performance of KVM would likely be
->> unacceptable for any production use cases, but that would give us motivation to
->> finish the job, and it doesn't result in random, hard to diagnose issues for
->> userspace.
 > 
-> That's true. I agree with that.
-> 
->>
->>>> Do we want to preempt that? I think it depends. For regular cloud
->>>> usage, we don't. But for any other usages where we want to prioritize
->>>> KVM/VMM profiling over guest vPMU, it is useful.
->>>>
->>>> My current opinion is that optimization 4 is something nice to have.
->>>> But we should allow people to turn it off just like we could choose to
->>>> disable preempt kernel.
->>>
->>> The exclude_guest means everything but the guest. I don't see a reason
->>> why people want to turn it off and get some random blind spots.
-> 
+
