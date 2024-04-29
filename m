@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E0F1411E7
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA031420A3
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420963; cv=none; b=grzFhT+ajnpW8tnrZ2XoMROJgGa5wnq54r9QoivHxkFVgz33a8wNlf5lg7yCZNWcDgTGECvuSK18JV9q1Gv6fiYvm5hRVJGEH65DbWVnF88dcb7dfONJe0qxLPh+So6iyJdqzFrQFKT0RrEh5DVhu46cD1RHQzMjlV5kqq3LuXQ=
+	t=1714420966; cv=none; b=EdaEvsTjjUOD8xyeDZDuYc3ji5cEHqtklvmeVtYwUF9cGyhQe3HUEYR0uN4mdTY0xL5ZusfjCZ3pTPwIgkBp2leQwX4vhIy5zNlXdqbh7WD0Cd+TLAvUR2WX+5gOrfcC4Mi/xP4leC8TAL8AgJMBVcsc4qk0hKpA0tD0vgkDDDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420963; c=relaxed/simple;
-	bh=BSADm/2St2RzD/ArABRW7n8F/sOX5AJupKxZq1RwerQ=;
+	s=arc-20240116; t=1714420966; c=relaxed/simple;
+	bh=r6Q0nzWd1ZDsObAExwG1cgxL3ocuqsKb/0LPlEHr6oo=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=szPssrJU+eEQE2OVFQrc9d51C1PXc95v82+Y71HVrqicIhubZ062IfY1JTa7EqpHZ3DOzWaOSQNMOQ/712gbUzjTm0lXwFasxzvZ9i8zSKcIMDI9NIfqGsJhZDpn+xbvgGKTmjpKR4nwdaYmtf/Gor8cFHFFNJHM3Eks/+nc6a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZPQgllPT; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=RQXTm4HePSAM0C+8WxLh2cBYqFNlvKWuJTg7Pcr4Wt2IH4ww0CR5LhKu6klMRkvczmukey8a9/6QK6Ifc/scZE1f/JKlvpgGd2+ZgAMBxq6EEWEHrikfVIHiB9sNuO+w0uCClSfJMnD/y8sdOU1o+T0Ur5G7J5hyVwx7WyKL3Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ovhFGgAX; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZPQgllPT"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61ab7fc5651so80163607b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 13:02:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ovhFGgAX"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de59e612376so7277958276.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 13:02:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714420960; x=1715025760; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714420963; x=1715025763; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=guh8O4YIfp8ysMStU/pCY+FOTLUwi/avvI0eH709Ct4=;
-        b=ZPQgllPTC/vbo1pVkLD4y00ol4uFZnbh5Em2UtlY/ze3LdVrouLU5YCzzsceDGsj2h
-         mkjYO+h2FXSMMMceXEXlXRh1T7P7Q/186F846yl+o8ES7c1VMYgH2us8uhBjc1iqK9x4
-         mpwgdbrMEE2GoVtPAf8Yzzd6CzvJeZh2zdih2iNnXrwYvGoeXJeouMLcypw7BQwCed6x
-         h2jBG2q2BkWE6shYN0rteXgSYScH0IfduRwLqqUScB6gY2MHdFVHXvlZS1lc0Aosm2Qv
-         dx+/CNxw8W2pYyCqaJfdku7egmjMUmFpLDVh9jTa+EwzmQ0zw0a1uhZMXeCCg06yAOuY
-         Mwhg==
+        bh=PG3MsFbzKXuMYVhzdetV6dfQOniDDSPTL8GyKyGGWq0=;
+        b=ovhFGgAX6TmrLu2MF3CS/BJ0x3w+AdBj1m/zWBec2ruFTX1dXO4KnoA+pwOzYoWhmS
+         DF5YSp4VFwW/FmgBbREGuLN0fsFahJPpBINbOnFEo0AMeOt+Hpez2STWWp2lhOWNU18D
+         wpjaDMvwyrgdDwbrEXMVEIFNh5fLbn7R2ZHmUIzbolPY6uYFgpfKFX9UA5rskDIoJguq
+         pkKuXUQrIMR3dU3RlQ+fmj6CdHtUWOuzVx5HBV7lk6mO5A9W0xt5UqeIOhFw5YWBPjP+
+         SOnhGvXxyI4dTx6q7KCmjMymXiUiObvMu+UAzUarLdnnZ7Ks1v9PktLxiwd+C9H32Eyo
+         LNOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420960; x=1715025760;
+        d=1e100.net; s=20230601; t=1714420963; x=1715025763;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=guh8O4YIfp8ysMStU/pCY+FOTLUwi/avvI0eH709Ct4=;
-        b=uShEvX67+jyZcaewi4dRuBPRD7opZZqmATzrFnQRTrTMVPXSggMPkMf1BoJqJwF/Hq
-         vkMofyGiXnRtxeL+REo4aRS28mg8FzpcUD/yUDW6dQQE2b7LlO2tBp91NedajpihilLz
-         ItqXCCViTRzhb2Ei5DRn3CK+11JFgbYfKAggnoG4GtmbIRkV2tDXXJc4WSQl1MCDp43X
-         rrlMblk9rdSYQx6Infj5MELdzsAL48SFLGhSUftExpAEZTrxsyCA7PwzhX/TnhkRPxm/
-         zH/rlfoaY+N2lg9CN1iudjVaiyNMonZ+VN5g81nHCDVuNh2EVyIxdjpgyhPMSJAdIbdu
-         Ow8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXxvsjzu37M+PCSXamer0FKHEauf2siV8PcGur7pN02gbpvvZY+Rz7fBvsCpJ2pGRekrT4VsUuGo+Se7LNJu0K3PEl/cexfsdXwYdsxnJn7+w==
-X-Gm-Message-State: AOJu0YzdnzkbsCngHzU60ytUx4pdbhQ0Vmq08z3frTYsQuiewpuNv467
-	CYbkpVusx5OrH2mQRRxp9Hir/2iua/pUPFTX6vUjOjvUux3/mrkS/pdfaNditLDaduhv4KEQWt5
-	vZwKbAQ==
-X-Google-Smtp-Source: AGHT+IHsWxlUWy6g/QWt0+iDzcjMhkg6SD3jd20yeYftef7GWrhyIwD1a8Pu4G93AtwEugDgPe8iE8WWE4kS
+        bh=PG3MsFbzKXuMYVhzdetV6dfQOniDDSPTL8GyKyGGWq0=;
+        b=p8Gz8lJHXdFoB47oYUsBMV5i2QNsIrwEA1wpK4Z0L1puIZIvXX89rwpYefumIAp84k
+         JZ4bOMIeNhq0dO22kSl7xb926Fk26+I+pfEtxQ7fuRFXoS7OOOpNZDUBp/hJ7JUQHWIn
+         C2cZFOMF4Ob1H+o7L0mTJ3JTDk05NVN5m0AIApyKKv6tJhQ/VUsWZcrffox0mH6MhYOO
+         hHJ2wYYrH6ohd5K48l28q7rWHL92SjcLQqQ/HLqj0p1wX2fMqZZk2LjEhNxo01wuprQz
+         vkdxQf8+qu4udPHc5wh6c+1UemNdNftcZ4QCFUuquFIBeyiFGjz7p0Pnngbu+W3+8jhH
+         ucrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVP/z0K/9oa0/KjH1SmJy4Kr4EmkJDL8762dSjhqLnzFGDxWLCTfRYOfFxnPbsI1ctqI30WXErfrk4fTu67zI/qHPLxDtLgLDCDrblA0OBNNg==
+X-Gm-Message-State: AOJu0YzN7lXAOL2P7tEktWjsjzOeWSdOjr41MvH6OtPyCuaucbnL2E5+
+	5AJARv2job466KwDN3tGuc3CVtsSdem9+yF7WN8x//jQZBDVUfo7Ze1uR27IKGFcdpUu3SbpS9w
+	xZEd7xg==
+X-Google-Smtp-Source: AGHT+IH7v18SP6SyNvViyH58YP8Uh+9qXPeg/EpSjD89cxZN5TRvsLnjH+Am76ywHnuHqGFQl4RUJD7Y7rZS
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:c137:aa10:25e1:8f1e])
- (user=irogers job=sendgmr) by 2002:a81:91d5:0:b0:61b:7dd6:1b24 with SMTP id
- i204-20020a8191d5000000b0061b7dd61b24mr3035436ywg.8.1714420960342; Mon, 29
- Apr 2024 13:02:40 -0700 (PDT)
-Date: Mon, 29 Apr 2024 13:02:20 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ea44:0:b0:de5:53f2:f614 with SMTP id
+ o4-20020a25ea44000000b00de553f2f614mr66567ybe.12.1714420962772; Mon, 29 Apr
+ 2024 13:02:42 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:02:21 -0700
 In-Reply-To: <20240429200225.1271876-1-irogers@google.com>
-Message-Id: <20240429200225.1271876-2-irogers@google.com>
+Message-Id: <20240429200225.1271876-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240429200225.1271876-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [PATCH v3 1/6] perf test pmu-events: Make it clearer that pmu-events
- tests json events
+Subject: [PATCH v3 2/6] perf Document: Sysfs event names must be lower or
+ upper case
 From: Ian Rogers <irogers@google.com>
 To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -75,25 +75,31 @@ To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add json to the test name.
+To avoid directory scans in perf it is going to be assumed that sysfs
+event names are either lower or upper case.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ABI/testing/sysfs-bus-event_source-devices-events       | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 47a7c3277540..7b2c34462fcb 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -1105,6 +1105,6 @@ static struct test_case pmu_events_tests[] = {
- };
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
+index 77de58d03822..e7efeab2ee83 100644
+--- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
+@@ -37,6 +37,12 @@ Description:	Per-pmu performance monitoring events specific to the running syste
+ 		performance monitoring event supported by the <pmu>. The name
+ 		of the file is the name of the event.
  
- struct test_suite suite__pmu_events = {
--	.desc = "PMU events",
-+	.desc = "PMU json event tests",
- 	.test_cases = pmu_events_tests,
- };
++		As performance monitoring event names are case
++		insensitive in the perf tool, the perf tool only looks
++		for lower or upper case event names in sysfs to avoid
++		scanning the directory. It is therefore required the
++		name of the event here is either lower or upper case.
++
+ 		File contents:
+ 
+ 			<term>[=<value>][,<term>[=<value>]]...
 -- 
 2.44.0.769.g3c40516874-goog
 
