@@ -1,130 +1,168 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC3B85643;
-	Mon, 29 Apr 2024 16:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029738662A
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 17:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714408747; cv=none; b=XNNKzQrICafHqpZ2Nl7LrzJL6v0LZVWTjYC+izgllaMqfoWCjiNzB207KvZZmH5WifCFcWug47HSpWAFzaniEqtDnYI8T0jcMu+kihiyx/c2A8L1xI8Fzt8c8v1gRIeqfML0L+1WSx9J+tNJbBk/48qVcDv59GELHZdChV+scMs=
+	t=1714411087; cv=none; b=pag9pN/zLLDhid5JyeTndrY25nMk2IKsGNwxZr/IxxAXk7GoTYeD2jMSU0WQ7uKK4v968phRDjEN/B0EbHctk76d8M/0esmLTygfDnkK9lUENqw1+g/vH8kNJISeiyiqspOSfL/rC+ta3AA+WRFkCprTDW8pRZBHG0X7+g+YjWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714408747; c=relaxed/simple;
-	bh=zJC2jHdtvNuoh/7+wUOUQfN1zCwoKCDjYiEpvNDhnkU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ebFims5TvqHPOR/ZYlSsTTvaq1q8PSxJ5c8ekY1dXUaO3VY7NAOKFjhqGgeYitnnr9dL+Fsq/CT6bGjcrqWf2Pnc256d7ZOf1EZFMck4Aftt9EnNJIBtBqioirP/jaFz0FQM4Ufy8kHHIxmE8+Comde1SWGf//Yy7kHUipzrsX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mvaB+GUP; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714411087; c=relaxed/simple;
+	bh=qWnvkovjN0ozqbXF/oi4B7/RPRSQlKRASO5y4VDl8Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RqyCom8wdNehdPyaJYFU1//zt+aBie4QGhNIzP3wriyR3+qkONlXo8q07FHb3lM2r595JR4iPXtC+XkvEyVJmMbjI3G0pzGERpEFmBSuxMWsl55nuhMQtuOKHISCGC5d3VKs+GKuN6o/1Keodn/MO5DVMplNI3fj6v8vK9ywCgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OsZGsOFi; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvaB+GUP"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5709cb80b03so4755722a12.2;
-        Mon, 29 Apr 2024 09:39:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsZGsOFi"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f07de6ab93so4351921b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 10:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714408744; x=1715013544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8ZupKM3UqZOUqxG1rrXLoiAhRVggO/mf0Y0hq1+ePE=;
-        b=mvaB+GUP7LTLkjmadIhkg4NwG/5fD6+NgXB/o6iN2YKpPT0NBU1Q6PQ6eZ238pfSLq
-         Kzkz69KW0S3qLX2rlI8LM+q7oApeK6wJ88XV9BTRwTfvPW3hCy/8kl2FQiUfw78uPd4+
-         +6PXMXKqE2E+imTCEfuC+d1PzLyPRjpP8DODpjUYABslZJspAGcGfl3qPoa36mVjzA4j
-         jYjkoe6We6Be7sr7ai2WxFYzD2dEcN8nmYtGzRaMDhlUz6iSnTrToPL+fUEyPFATW2gP
-         kArmqBPlpXr7xDCA29JZu4pPda5H/wSzeLiL9ITmfBYQ+v0n5hiZ7NOW1V3FtBjk4qo/
-         rOYQ==
+        d=chromium.org; s=google; t=1714411085; x=1715015885; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Hd/wdvdADW+smZoeTYyFDi1rtzHcyz1g8xNiBj96c8=;
+        b=OsZGsOFiPCGntUzBHC54nROZSMu/FO2UlLJ2JnFI4YZKjLidJKCP9FlZIWN8fq+0qM
+         QvTKCvHEhK/8xl/ofsigdGypjgWxIjIVWyqzc4CfpuP19bZJUs37WUmXlqPq+Dh8G+0g
+         hSwqr7O/Oi7GhHmXLVPU14q/wDX9lOVLQkWio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714408744; x=1715013544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T8ZupKM3UqZOUqxG1rrXLoiAhRVggO/mf0Y0hq1+ePE=;
-        b=OKCDoylh4uEw5uYc4ibuFvNMDoApq5foFDCRZPjE4HCiW5Q3Z4Jia50TVzHp+ACeeb
-         OoPbidNT015qllN5zXDKgvU7aQw0d0rr8RqNFXzhPUnol2ySP5gUeJbuznxHPxKk2VSd
-         vIhFUb/zIiv+gJAC5PcFU7SFml96RzLbuE0Gmsv56+AsBzMAJbk2a44npoMI5pzJt/7j
-         WSATy39GVqmg6QlcLBAHgYcNMtsEhYKV+K5kmNlYUpa1DGWWP8S5ETBu/S+qMpD0sxfY
-         OMncduy74ReEP0XEVtw2bJW41aVkYNIvWDnZX/uvWDyzYasSEbapiyHgN9L6PWGm86t5
-         jbPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWm03LVTVVUHOlBs7L2egoECpapSIHI9eicpZYqHFuAU7LGGssx/talP15xqIEbeb60bMnYQO4C77Lln+M50ZCk+Y4tkAtF5AKgoRnoqYCE3SrmNIiuXTytvjNwTTTqh91ZASGHG+32SSUORn5Trw==
-X-Gm-Message-State: AOJu0Yzn8+zDU0lUIHmfS4X/0fKhU86fZZM2kPOxOkb6uBDAb2i/9o4l
-	WcioSZPA7ubRNTb8gVF0Fbv/0tTpcYLEGKribCr9BK5h/JrozNk0y07E7sxfO0wSuwpADGqWn4O
-	C9DtYDATGsiJbbAez1HgcHP44snQ=
-X-Google-Smtp-Source: AGHT+IFutqemErmK6ODXh6FUWRCGYBPCk1mNrXK+yjEdyK8mnXK+phIySKy9xjTvq8PMb7B1wAhD65ZJhyDztQrc2pw=
-X-Received: by 2002:a50:d602:0:b0:570:5b3d:91f with SMTP id
- x2-20020a50d602000000b005705b3d091fmr140668edi.23.1714408744009; Mon, 29 Apr
- 2024 09:39:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714411085; x=1715015885;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Hd/wdvdADW+smZoeTYyFDi1rtzHcyz1g8xNiBj96c8=;
+        b=Erg0tOBUYapCLa24LR78RhqsSiXsujAh45XdELf5VPdHwElv087HpDBfnx7796TAvz
+         5ZLR+90Rm648aCYLx0H+/pv9eK/EJ1GiOORjJICs/EL0mL1RTVzfgjCYYk9pCYRxdc+C
+         8B8hZl81zg4x++UH+ufLTA/LSYpf3IcXm6EosJMQwk8pJ80ulp8VvtRTpT0hUpzEK7bJ
+         OuJznlegHINOrpFaT5/tV7Azmv1GaweXMsrqhGcBgOR04/ewf8ZpFfF6JSweBHRfMYuD
+         OYVGL5TvYpvsVdt/9+UzvDk4SbhAgYUAIpZVIWAlV0HST4TGMYJ+rksg4tOugRq1qY9D
+         q3Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNfV1kPOY2zFdzUdayb+qTDQXtyCIO8d3XfmhDL6phKRLzEtReD6cUvCMXESVrP3bxt2Nk7SlQ7kLBkAntEKJUb5MlTjB8dOs1o+/oY/LtIg==
+X-Gm-Message-State: AOJu0Yx6chP/d6twk1pP9w+QwnmF0FAcA18oKEHJF0wPDCURWYUTFfaT
+	Mx4dHjJOdBVcaJElhOHb9VmM/1uNWZCC36WlEcVZv+G4kphv5qKtyWgUg8ZI9g==
+X-Google-Smtp-Source: AGHT+IE9C63YQJERIQ6wskzU4nO9p3NnPb2ovyYO3ig5u2YdgvqNsBYsWG/giRuAHKr64kV5bbKq/A==
+X-Received: by 2002:a05:6a20:9187:b0:1a7:52fa:7d6b with SMTP id v7-20020a056a20918700b001a752fa7d6bmr13417202pzd.43.1714411085239;
+        Mon, 29 Apr 2024 10:18:05 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id a8-20020aa78648000000b006eade394613sm19515196pfo.198.2024.04.29.10.18.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 10:18:04 -0700 (PDT)
+Date: Mon, 29 Apr 2024 10:18:03 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/intel/uncore: Prefer struct_size over open
+ coded arithmetic
+Message-ID: <202404291013.B21EADD4F@keescook>
+References: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJg=8jw=5vKSE8ibuim0uFKQq=sA3sWULqM5auqKNJCq0=kqGg@mail.gmail.com>
- <20240424094305.GT40213@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240424094305.GT40213@noisy.programming.kicks-ass.net>
-From: Marius Fleischer <fleischermarius@gmail.com>
-Date: Mon, 29 Apr 2024 09:38:52 -0700
-Message-ID: <CAJg=8jxS+omJP-HeBUNEgh-avEGQuCisPcX2knRiucppQTNAdw@mail.gmail.com>
-Subject: Re: possible deadlock in __perf_event_task_sched_in
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller@googlegroups.com, 
-	harrisonmichaelgreen@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-Hi Peter,
+On Sat, Mar 30, 2024 at 03:32:59PM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> As the "box" variable is a pointer to "struct intel_uncore_box" and
+> this structure ends in a flexible array:
+> 
+> struct intel_uncore_box {
+> 	[...]
+> 	struct intel_uncore_extra_reg shared_regs[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc_node() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Hi,
+> 
+> The Coccinelle script used to detect this code pattern is the following:
+> 
+> virtual report
+> 
+> @rule1@
+> type t1;
+> type t2;
+> identifier i0;
+> identifier i1;
+> identifier i2;
+> identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+> position p1;
+> @@
+> 
+> i0 = sizeof(t1) + sizeof(t2) * i1;
+> ...
+> i2 = ALLOC@p1(..., i0, ...);
+> 
+> @script:python depends on report@
+> p1 << rule1.p1;
+> @@
+> 
+> msg = "WARNING: verify allocation on line %s" % (p1[0].line)
+> coccilib.report.print_report(p1[0],msg)
+> 
+> Regards,
+> Erick
+> ---
+>  arch/x86/events/intel/uncore.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 258e2cdf28fa..ce756d24c370 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -350,12 +350,11 @@ static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
+>  static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
+>  						 int node)
+>  {
+> -	int i, size, numshared = type->num_shared_regs ;
+> +	int i, numshared = type->num_shared_regs;
+>  	struct intel_uncore_box *box;
+>  
+> -	size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+> -
+> -	box = kzalloc_node(size, GFP_KERNEL, node);
+> +	box = kzalloc_node(struct_size(box, shared_regs, numshared), GFP_KERNEL,
+> +			   node);
+>  	if (!box)
+>  		return NULL;
 
-Thanks for taking the time to explain this issue!
+Thanks, yes, this looks correct to me.
 
-Wishing you a nice day!
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Best,
-Marius
+Peter and Ingo, you seem to traditionally take these changes (via -tip)?
+Can you please pick this up?
 
-On Wed, 24 Apr 2024 at 02:43, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Apr 22, 2024 at 11:44:27AM -0700, Marius Fleischer wrote:
-> > Hi,
-> >
-> > We would like to report the following bug which has been found by our
-> > modified version of syzkaller.
-> >
-> > We found this report (https://lkml.org/lkml/2021/9/12/333) that seems
-> > to have a similar but different stack trace. We are unable to tell,
-> > though, whether it is the same cause. We=E2=80=99d be grateful for your
-> > advice.
->
-> This is just the printk thing sucks again. Some WARN/printk got tripped
-> in a non-suitable context.
->
->
-> >  _printk+0xba/0xed kernel/printk/printk.c:2299
-> >  ex_handler_msr.cold+0xb7/0x147 arch/x86/mm/extable.c:90
-> >  fixup_exception+0x973/0xbb0 arch/x86/mm/extable.c:187
-> >  __exc_general_protection arch/x86/kernel/traps.c:601 [inline]
-> >  exc_general_protection+0xed/0x2f0 arch/x86/kernel/traps.c:562
-> >  asm_exc_general_protection+0x22/0x30 arch/x86/include/asm/idtentry.h:5=
-62
-> > RIP: 0010:__wrmsr arch/x86/include/asm/msr.h:103 [inline]
-> > RIP: 0010:native_write_msr arch/x86/include/asm/msr.h:154 [inline]
-> > RIP: 0010:wrmsrl arch/x86/include/asm/msr.h:271 [inline]
-> > RIP: 0010:__x86_pmu_enable_event
-> > arch/x86/events/intel/../perf_event.h:1120 [inline]
-> > RIP: 0010:intel_pmu_enable_event+0x2d9/0xff0 arch/x86/events/intel/core=
-.c:2694
-> > Code: ea 03 49 81 cc 00 00 40 00 4d 21 f4 80 3c 02 00 0f 85 5b 0c 00
-> > 00 44 8b ab 70 01 00 00 4c 89 e2 44 89 e0 48 c1 ea 20 44 89 e9 <0f> 30
-> > 0f 1f 44 00 00 e8 1b 32 75 00 48 83 c4 20 5b 5d 41 5c 41 5d
-> > RSP: 0018:ffffc900115af348 EFLAGS: 00010002
-> > RAX: 0000000000530000 RBX: ffff888019dd6a50 RCX: 0000000000000188
-> > RDX: 0000000000000002 RSI: ffffffff81029464 RDI: ffff888019dd6bc0
-> > RBP: 0000000000000000 R08: 0000000000000001 R09: ffff888063e22ab7
-> > R10: 0000000000000000 R11: 0000000000000001 R12: 0000000200530000
-> > R13: 0000000000000188 R14: ffffffffffffffff R15: ffff888019dd6bb0
-> >  x86_pmu_start+0x1cc/0x270 arch/x86/events/core.c:1520
-> >  x86_pmu_enable+0x481/0xdf0 arch/x86/events/core.c:1337
-> >  perf_pmu_enable kernel/events/core.c:1243 [inline]
-> >  perf_pmu_enable kernel/events/core.c:1239 [inline]
->
-> Most likely your VM is wonky and perf tries to poke an MSR that either
-> doesn't exist or isn't emulated properly, who knows.
+-- 
+Kees Cook
