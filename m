@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3DD7D401;
-	Mon, 29 Apr 2024 15:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408887F47F;
+	Mon, 29 Apr 2024 15:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714404308; cv=none; b=KTu1VUTOTEdTMeIh0XaOChXvSbzhkpHayWH8Gp0xUsc+sFURc9SeeKGlpZz0IF2G5Rn/Li/CzhLOL+kJ3tZIcRVGcidCVQ3HTHEcVWx7ZhzfyObbSJMc7v+Z/mWNnvVoc+ftKOoxgckRq6Y5M0GkOSmuepMXeFd1mwNyobE8CTY=
+	t=1714404315; cv=none; b=RGcTQN6HwyAeTx+nJFMh/p3Z6xWtOjxrIaSGVs2Y6FsaSG6X35iCFt7zYaW3sJBMg6/9OCpvOE/yqe1ShfBCUMDxJiibJkgJJeXcNiaYpI+kfQbopB50nPk9ZCqODvRsAoOnCJkrcGEMTCvlnEqTj9IQp0mqxUmHg/3KYCUqg/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714404308; c=relaxed/simple;
-	bh=Sxd33KiG9+gJUUvksdzaB/jwCr/v4z1JBmUQqr5Egxg=;
+	s=arc-20240116; t=1714404315; c=relaxed/simple;
+	bh=sm6064Bqet1eOmS0TqKwrcwdWOQr3OcLRlyALF1Vs0k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XtHFLY5EbZLFfJa1ZUzlhuEH+YM/5KX0fB79zixpYKgFI3UVHoX1mTpSsgkwhfy/13YtRii22DsqNGq/sgFd834ceilGfBEULDf87aRY1MOiYgoBUv1ea6bDNydggyKw9uaLQHuN2SEe9PPQKOZCRRidG9C7oMrNxYDEd6r7H0M=
+	 MIME-Version; b=lO45AlBCvydMR29CXn5NeFIQHDmMMH1lTnJm2lUj1vT+UwOosk3/gbUz0vUITVMx6idbJlyn1UaGlw8tUgCszPtplskzuykTKHuiXTGyX7qmOiQU7PTFRQzAjVuBLvyI7YotKG1L7FfT1H3f8Y66qbXfaMW84dlg9LLMj5UdQfw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE4EC339;
-	Mon, 29 Apr 2024 08:25:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F1FEDA7;
+	Mon, 29 Apr 2024 08:25:40 -0700 (PDT)
 Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F18F73F793;
-	Mon, 29 Apr 2024 08:25:02 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 942DC3F793;
+	Mon, 29 Apr 2024 08:25:10 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	gankulkarni@os.amperecomputing.com,
@@ -43,9 +43,9 @@ Cc: James Clark <james.clark@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 11/17] coresight: Expose map argument in trace ID API
-Date: Mon, 29 Apr 2024 16:21:56 +0100
-Message-Id: <20240429152207.479221-12-james.clark@arm.com>
+Subject: [PATCH 11/17] coresight: Expose map arugment in trace ID API
+Date: Mon, 29 Apr 2024 16:21:57 +0100
+Message-Id: <20240429152207.479221-13-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240429152207.479221-1-james.clark@arm.com>
 References: <20240429152207.479221-1-james.clark@arm.com>
@@ -57,11 +57,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The trace ID API is currently hard coded to always use the global map.
-The functions that take the map as an argument aren't currently public.
-Make them public so that Perf mode can pass in its own maps. At the
-moment all usages are still hard coded to use the global map, but now
-on the caller side.
+...
 
 System ID functions are unchanged because they will always use the
 default map.
@@ -122,7 +118,7 @@ index 9d5c1391ffb1..4149e7675ceb 100644
  
  static int etm_enable_perf(struct coresight_device *csdev,
 diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index a0bdfabddbc6..f32c8cd7742d 100644
+index c2ca4a02dfce..562ef6cb72d8 100644
 --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
 +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
 @@ -241,7 +241,8 @@ int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
