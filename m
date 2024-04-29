@@ -1,215 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50497F489
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 14:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC299745C5;
+	Mon, 29 Apr 2024 15:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714402156; cv=none; b=aj7i5AQk5cNe6LcEZB9snoBOAx3MBlDO3FKUlMneW5ROsu8Z5kMk1Xlyf2ZIgTui5IrVTia/2fHrCKr0IurzyR5zyvfOfcCM2+uY7PxbuS6QZ2BgA7MZWMQ8+gUmU+6O5sfFdds0ZIlKRk2DVGxOpRwRzfKVBaXHHa2rnRwc5GI=
+	t=1714404219; cv=none; b=ubjW7wZmNfGPSm9ETZ7Qa/K90kpzbT5VMsVKcfQ30gzFA0ni6YcMI93wgGCytQuSh0qKq1gq9T4PhHsFhy9iioLHVQQezGXGv9cF5OF/IQZVsRD6xJuyGqGiTmyevQN9hOKw6SUcDuNcT5ut2OAUkoATkZhLNqnWYX9YOR+SmOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714402156; c=relaxed/simple;
-	bh=qbx3g2uO4NtPZWIwOS5yFnSJoc348ZYf9636NTByQkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GkPDOKgJoeY+ZMM9/AX3TANdQWjrMPMZTs80+C/k+VG4H7V15cbepaGRF+Zys24oo8epL70TsNIJYxIVo6kFyVlX5bMkAZLfjsNimXL7ClDBe9z3rT1n9kQFF9Kh3BejV2Wy3lGeYS3nfah/gFV2o93tN2Bw5IXi4h9AgC3Mne4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0OvokBL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0OvokBL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714402153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ln/XYC+oZQnfVYR5P0D9/Emt3rXI9LSotRmevRcvOCg=;
-	b=M0OvokBLX4zHmBL9JcCVUBYoq2I1og0I0hgH29M2+KKhdqWWTOeKj9UraXkY6XlYZu/DKa
-	nBHlSBZecuJi932Gmwhjdja8jeVQ7aGH5WBKlNPPNeJCcb21Lt//rJaJDd3BlG5etyF15d
-	HbKRezRfA02RbUwB4DWuXj/LaNDZ4OU=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-321-BbDXR4lbNVa3KtV_UkS2iw-1; Mon, 29 Apr 2024 10:49:11 -0400
-X-MC-Unique: BbDXR4lbNVa3KtV_UkS2iw-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d855c0362bso36433121fa.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 07:49:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714402148; x=1715006948;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ln/XYC+oZQnfVYR5P0D9/Emt3rXI9LSotRmevRcvOCg=;
-        b=goh0b60mCRNlEdjkwhblrCkJ/TvLbpywkx/I/UO908ghvUnot8Fqa+FN4HVBTJH5aD
-         ak1ELBKPWgrIWveapp0uuktTUU17Kva6gL59oyQZbyvhQFd97emnPrlKa3DYBTu3nXaq
-         qw5hH+BuROeD2WgmIL9Ro1SFdCpGRMdDqaAjSYso7xYUz7kmntDzA+OWWnAfcWPJiG8T
-         uQA4FbPf+xVLaha+n6Nn6Cq5V7nXiNyGgW/EBH0BMacwTJnXhw8nT6Iw5xKW2ch3PXf/
-         CWYsQZIQkBX6OyTAKYTJve9VTBqzrZxeU0vzOP3bdvMxRgDS8DU4kETKmaYZAnWtmwoV
-         vFhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXowf7QZDezo3rrFpxPt505pkfZbM/rGDe0gKTq7yJ8JWVkv3S1U3eCmdF5V4orCEvM1Fk0opft8RYVmt8J3A/lH6faOfmxQ1DlM4rlIbOqlQ==
-X-Gm-Message-State: AOJu0YzNgio/5GeHhLbpqfxfj757pXKkn6LnYnYRski01RlNQ09jUDmF
-	PFbTtcc/s4y6XVKRSw15MfEzx8TyKb0WpTjfCSkwkjy8fmS6Lkd8+uwzWfHKZ1850Ji3cYAWd4/
-	C0wwRPBcwgS3mZXUbaICUYgTkbLjxe4B0zyPjcqiLLaiJUU2WhIYIinz7mTLkpwaO2bppGKrb5i
-	jWCw==
-X-Received: by 2002:a2e:b784:0:b0:2d6:f698:7ecf with SMTP id n4-20020a2eb784000000b002d6f6987ecfmr6551743ljo.9.1714402148486;
-        Mon, 29 Apr 2024 07:49:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmc8CiffHQ8rr9HITicLFmdCuNdR9QemMlGJgkMoITet/yNpu8SIZA6hGAQ/I4C1coGiBGvQ==
-X-Received: by 2002:a2e:b784:0:b0:2d6:f698:7ecf with SMTP id n4-20020a2eb784000000b002d6f6987ecfmr6551721ljo.9.1714402148125;
-        Mon, 29 Apr 2024 07:49:08 -0700 (PDT)
-Received: from [192.168.1.27] (adsl-dyn164.78-99-35.t-com.sk. [78.99.35.164])
-        by smtp.gmail.com with ESMTPSA id t15-20020adfeb8f000000b00349ff2e0345sm29841286wrn.70.2024.04.29.07.49.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 07:49:07 -0700 (PDT)
-Message-ID: <ce24cf21-422f-45fe-838e-1e36858b93be@redhat.com>
-Date: Mon, 29 Apr 2024 16:49:06 +0200
+	s=arc-20240116; t=1714404219; c=relaxed/simple;
+	bh=T97eXiCoo8c2wzSk/75hX1LVypK0OF869Y6KpZyXIaU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hOppTAivQoQXZTh6w2JACBn8XLNPNbytXqQDYhu29gifxyAjYSrFqW3XRyCichF2sT8UUmj547VDLzd9dcQysEzvSZGnWLy2zHoS6piRFisY8ZQ1w6HS0bNWnaP1lJbL56Ot35bLzjhVcUwI7irkPQOUo4Dx4IO+wo+8DGg9Efc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AD4F2F4;
+	Mon, 29 Apr 2024 08:24:02 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9B823F793;
+	Mon, 29 Apr 2024 08:23:32 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	gankulkarni@os.amperecomputing.com,
+	scclevenger@os.amperecomputing.com,
+	coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	mike.leach@linaro.org
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 00/17] coresight: Use per-sink trace ID maps for Perf sessions
+Date: Mon, 29 Apr 2024 16:21:45 +0100
+Message-Id: <20240429152207.479221-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test: Be more tolerant of metricgroup failures
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240403164818.3431325-1-irogers@google.com>
- <CAGa8GX5MhP3FUhafN5QivHaE3Fg+p5MgvTq3SW6MQy4NeZ1sYQ@mail.gmail.com>
- <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
-Content-Language: en-US
-From: Veronika Molnarova <vmolnaro@redhat.com>
-In-Reply-To: <CAP-5=fU_EvN-bSjwbWMP8R+WyG-jeAQ1p4ziyejy2FCH0kgYig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+as long as there are fewer than that many ETMs connected to each sink.
+
+Each sink owns its own trace ID map, and any Perf session connecting to
+that sink will allocate from it, even if the sink is currently in use by
+other users. This is similar to the existing behavior where the dynamic
+trace IDs are constant as long as there is any concurrent Perf session
+active. It's not completely optimal because slightly more IDs will be
+used than necessary, but the optimal solution involves tracking the PIDs
+of each session and allocating ID maps based on the session owner. This
+is difficult to do with the combination of per-thread and per-cpu modes
+and some scheduling issues. The complexity of this isn't likely to worth
+it because even with multiple users they'd just see a difference in the
+ordering of ID allocations rather than hitting any limits (unless the
+hardware does have too many ETMs connected to one sink).
+
+Per-thread mode works but only until there are any overlapping IDs, at
+which point Perf will error out. Both per-thread mode and sysfs mode are
+left to future changes, but both can be added on top of this initial
+implementation and only sysfs mode requires further driver changes.
+
+The HW_ID version field hasn't been bumped in order to not break Perf
+which already has an error condition for other values of that field.
+Instead a new minor version has been added which signifies that there
+are new fields but the old fields are backwards compatible.
 
 
-On 4/22/24 17:42, Ian Rogers wrote:
-> On Mon, Apr 22, 2024 at 4:51 AM Veronika Molnarova <vmolnaro@redhat.com> wrote:
->>
->> Hi Ian,
->>
->> On Wed, Apr 3, 2024 at 6:48 PM Ian Rogers <irogers@google.com> wrote:
->>>
->>> Previously "set -e" meant any non-zero exit code from perf stat would
->>> cause a test failure. As a non-zero exit happens when there aren't
->>> sufficient permissions, check for this case and make the exit code
->>> 2/skip for it.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  .../perf/tests/shell/stat_all_metricgroups.sh | 28 +++++++++++++++----
->>>  1 file changed, 22 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
->>> index 55ef9c9ded2d..d6db192b9f18 100755
->>> --- a/tools/perf/tests/shell/stat_all_metricgroups.sh
->>> +++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
->>> @@ -1,9 +1,7 @@
->>> -#!/bin/sh
->>> +#!/bin/bash
->>>  # perf all metricgroups test
->>>  # SPDX-License-Identifier: GPL-2.0
->>>
->>> -set -e
->>> -
->>>  ParanoidAndNotRoot()
->>>  {
->>>    [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
->>> @@ -14,11 +12,29 @@ if ParanoidAndNotRoot 0
->>>  then
->>>    system_wide_flag=""
->>>  fi
->>> -
->>> +err=0
->>>  for m in $(perf list --raw-dump metricgroups)
->>>  do
->>>    echo "Testing $m"
->>> -  perf stat -M "$m" $system_wide_flag sleep 0.01
->>> +  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
->>> +  result_err=$?
->>> +  if [[ $result_err -gt 0 ]]
->>> +  then
->>> +    if [[ "$result" =~ \
->>> +          "Access to performance monitoring and observability operations is limited" ]]
->>> +    then
->>> +      echo "Permission failure"
->>> +      echo $result
->>> +      if [[ $err -eq 0 ]]
->>> +      then
->>> +        err=2 # Skip
->>> +      fi
->>> +    else
->>> +      echo "Metric group $m failed"
->>> +      echo $result
->>> +      err=1 # Fail
->>> +    fi
->>> +  fi
->>>  done
->>>
->>> -exit 0
->>> +exit $err
->>> --
->>> 2.44.0.478.gd926399ef9-goog
->>>
->>>
->>
->> The patch looks good and thanks for taking care of it.
->>
->> Just wanted to check what is the desired outcome for metric groups
->> with events that are invalid in per-thread mode causing the test to fail.
->>
->> ```
->> $ ./stat_all_metricgroups.sh
->> Testing smi
->> Metric group smi failed
->> Error: Invalid event (msr/smi/u) in per-thread mode, enable system wide with '-a'.
->> ```
->>
->> Wouldn't it be better if in these cases the test would result in skip instead of fail?
-> 
-> Hi Veronika,
-> 
-> I agree that fail isn't best here. I'm wondering:
-> 
->  - why doesn't msr/smi/ support per-thread mode? Can't we save/restore
-> the count on a context switch? The implementation is here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n234
-> There's clearly something going on as pperf appears to have other restrictions:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/msr.c?h=perf-tools-next#n115
-> I'm wondering if aggregation is working right if these counters are
-> more than per hyperthread (I'm guessing why the restrictions exist).
-> 
+James Clark (17):
+  perf cs-etm: Print error for new PERF_RECORD_AUX_OUTPUT_HW_ID versions
+  perf auxtrace: Allow number of queues to be specified
+  perf: cs-etm: Create decoders after both AUX and HW_ID search passes
+  perf: cs-etm: Allocate queues for all CPUs
+  perf: cs-etm: Move traceid_list to each queue
+  perf: cs-etm: Create decoders based on the trace ID mappings
+  perf: cs-etm: Support version 0.1 of HW_ID packets
+  coresight: Remove unused stubs
+  coresight: Clarify comments around the PID of the sink owner
+  coresight: Move struct coresight_trace_id_map to common header
+  coresight: Expose map argument in trace ID API
+  coresight: Make CPU id map a property of a trace ID map
+  coresight: Pass trace ID map into source enable
+  coresight: Use per-sink trace ID maps for Perf sessions
+  coresight: Remove pending trace ID release mechanism
+  coresight: Re-emit trace IDs when the sink changes in per-thread mode
+  coresight: Emit HW_IDs for all ETMs that are using the sink
 
-Hi Ian,
+ drivers/hwtracing/coresight/coresight-core.c  |  10 +
+ drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  82 ++-
+ .../hwtracing/coresight/coresight-etm-perf.h  |  20 +-
+ .../coresight/coresight-etm3x-core.c          |  14 +-
+ .../coresight/coresight-etm4x-core.c          |  14 +-
+ drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
+ drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
+ drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
+ drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
+ .../hwtracing/coresight/coresight-trace-id.c  | 107 +--
+ .../hwtracing/coresight/coresight-trace-id.h  |  57 +-
+ include/linux/coresight-pmu.h                 |  17 +-
+ include/linux/coresight.h                     |  20 +-
+ tools/include/linux/coresight-pmu.h           |  17 +-
+ tools/perf/util/auxtrace.c                    |   9 +-
+ tools/perf/util/auxtrace.h                    |   1 +
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  28 +-
+ tools/perf/util/cs-etm.c                      | 617 ++++++++++++------
+ tools/perf/util/cs-etm.h                      |   2 +-
+ 21 files changed, 633 insertions(+), 404 deletions(-)
 
-I am not really sure why the msr/smi/ does not support per-thread mode but
-I encountered multiple instances of events that aren't supported in per-thread
-mode during testing. Generally, we cannot be sure that there won't be such event,
-whether the msr/smi event should be able to handle per-thread mode is another
-question.
-
-Thanks for checking it out and would be great if you could add it to v2.
-
-Thanks,
-Veronika 
-
->  - the tool error message is doing pretty good. In the test I guess we
-> can spot the per-thread error and turn the fail to a skip. It's a
-> shame to bucket things as skip, but it seems easier than listing
-> metrics in the test or spotting particular events.
-> 
-> I can do a v2 to add this.
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Veronika
->>
-> 
+-- 
+2.34.1
 
