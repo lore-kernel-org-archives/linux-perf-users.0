@@ -1,174 +1,157 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3936A146A7F
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C56412880A;
+	Mon, 29 Apr 2024 20:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420974; cv=none; b=efm+6oh7o0c3Ul05sYU1i46epAlyien2m43uvjhG5t6AW//w6Cl22VHm2ideIdifRCblcE0PTN+S7vD5Cth5Hv9d+46VOB11WI2rXVgOcUHn08Qf5VWF+bYyxZrlCLI+gEztm05pcZbWcuu3WhjjiS052T7TxIX2b5xPhFQh0PE=
+	t=1714423699; cv=none; b=KTf5zUdEovqXcDna7lvjLZ16mx/amamgsJnyMgrmWl9VAf6RYVUnvuvX5XopuBgsEpIfx+0AB9GOUJI0Yg9skn5JooWA4AUZk3bcPiZA+cn2YP//Jo2yX2JQ84tWmt6fTJyvxp8ID+0kZEF9qk5Dj3VTKitni+nFgyrEWfG2NF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420974; c=relaxed/simple;
-	bh=Unxtsgv9pMjovJEC2q3+izNqU1jvDayjR6yTMLvqpEc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=moXajjcXs9n8rOTtf4PxYt7sa4ptDoAlPd3734yCWCWLjwqfYSddTPWppcOoHvaDlTprTmFqplgY+lFaylB6Ci8EcPZnJQtv2erh6Umiz4UiFlzKcgsF1a7klalFOJzBx3tRwv29O/ygd2mZVeLRpYqNL9G5WNxtxNBq1oVdqRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jyCg1iCF; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1714423699; c=relaxed/simple;
+	bh=hi9jHuX0t+MiyHdv6bvpydi3NtTh3mzwnyovDtOhWfM=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=VLZGfyUsUVe6ggY24WDDxQCpG+Z5NQuA0ErwZ7nqGGbDAtKSrJyjooQ0JqGcOlYVz4rOZSzpcMleJmSrNZv4rFiLvbfyqoCjlLyAqX13lBLqQ+12BlBe/DO+SP3SIKzEbuz3YYdcTmJHdZ1PxVvX/dVukiqpS5ODcgvlmaEPHu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=NFT4EKyb; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jyCg1iCF"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be8f9ca09so859017b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 13:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714420972; x=1715025772; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNfu8Xy7Q56dzltFDRS+tQNs0guv+YCXtYt4P68p4eQ=;
-        b=jyCg1iCFJC+rXZABCEfXaVW54lDhrlfHLxgtPNayFNAElh35jD4CicQSUVjvwxxwl4
-         7Nbnf+OuApgqu5OOKhG6tofS9aQzeCunz6LtIKf6Ax5tMcND6u3Fod7WWakMrRqEPVL4
-         JxDSneHO6ag2Od98jzvwC+SYt+Ho9DJihTnOBSckGcN4lMf1Aw1WcV6u4jx9nCynECqB
-         t8eQ1R7YI5ck6oqijst4wG7mJYk0seEqLMuBlDojwq72OiAoWx9iinCibGhocNH1FvpN
-         m8jmFj2ap3Hs/zCPcWoG7+acebLS0NzZSDmkq/c27moeDWXkKz6D7IyfbNmbCSZ3sOLo
-         r4yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420972; x=1715025772;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNfu8Xy7Q56dzltFDRS+tQNs0guv+YCXtYt4P68p4eQ=;
-        b=jSnqbdZcWYWKFfdlM5uvQ6K8UjuVkRZQr67dFIz7UhJTz8FxP55+6WXUlKPBwp8l2H
-         8zjdVcoIclmsCVJa+I4v7SAO9Ww30xo6UrhR28X1EdhOhrT+f4Z6wKGEmpeuw+FmJNan
-         w+9x630EYmQ/pYcqC62tAiiKzvzr9UxCjJWpr7J4OVILTknJdSJI0Bl0rYbl42m8eQgE
-         CG7nJon+6vd0q4tiLzYwCQY0hKuhmF54vwWP5t5ahTNJsS5gAKgBvI4zYLHK/08ZxYim
-         EBILzheNd9GXcEoWQdI2Vfzj2r06F61m+F6zW9xhCuDP1nIyYAZD5jODBlpitLHZ+ZFB
-         Jlag==
-X-Forwarded-Encrypted: i=1; AJvYcCV+hyZuDrukKHGjAEE31SvfaVsTU0qU9zZezul8Uq64Z+6vwdDxCEiXXdYnHA0CS9UGGOAplUTc6TBWpB1nn2O8pFl84q6A2Oi5sQXxp5/EqQ==
-X-Gm-Message-State: AOJu0YxboWhcHMGs4sAaSOcfJ8S3Fw6Rldb54mHOmmRzfTscupGTAcNo
-	y+QsW9Dd6WjP84olG4WtB13C4/fpDRNCSTWbleOcp/ER0xBkALhIYxKCf9SmgZC3XlYL8JUgFUw
-	W1qXxVw==
-X-Google-Smtp-Source: AGHT+IGsVhZGsNjKtERvwq/fiWI1kJ9TCPCN8BzaO5p7q3MXouSFdqmTCi5SbWmF4ilVx8kgfLeJYQulq5YF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:c137:aa10:25e1:8f1e])
- (user=irogers job=sendgmr) by 2002:a0d:dd81:0:b0:618:9007:a15d with SMTP id
- g123-20020a0ddd81000000b006189007a15dmr3201802ywe.9.1714420972132; Mon, 29
- Apr 2024 13:02:52 -0700 (PDT)
-Date: Mon, 29 Apr 2024 13:02:25 -0700
-In-Reply-To: <20240429200225.1271876-1-irogers@google.com>
-Message-Id: <20240429200225.1271876-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="NFT4EKyb"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 1XussKoaLoeci1XussY2eu; Mon, 29 Apr 2024 22:48:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714423687;
+	bh=2tkIHRgbihugbvQSDrnZucCqwWRA089i99j5eTq3fo4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=NFT4EKyb8uYCTdvhnoUA2B48EVqoeOgNJHp/FkjJY7eUqfcHVw5aFI8d0rgqgI9Z0
+	 4pOznp7iJq0E6E/zRrdpYP774Bf0z+yUPo94apXItBZblnlWsxW8wPqTrDzpQ0dxTS
+	 zq8Dp7NA0NHS+jEtV/VwMorBFZqk5ErBM4YEMWhTXUCUpo7XAE2k/yYMOEPSwANeps
+	 q72ShUELnyuUv2UoT4DUw40vJtVNFKXlkGsq7r6p8JpiS+yV3+YjMEJ1adZaUlZikL
+	 WU1XHWTz1ch0uhJDDoqknfchxLXOBfpL9TQgb9qTuC2+HxF0GwSo5qOm6jWg14qAdT
+	 /s7dm3fN0f1jA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 29 Apr 2024 22:48:07 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <95484936-3f63-45ab-8b60-179508c159fb@wanadoo.fr>
+Date: Mon, 29 Apr 2024 22:48:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240429200225.1271876-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [PATCH v3 6/6] perf pmu: Assume sysfs events are always the same case
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf/x86/amd/uncore: Use kcalloc*() instead of
+ kzalloc*()
+References: <PAXPR02MB7248F46DEFA47E79677481B18B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Erick Archer <erick.archer@outlook.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Justin Stitt <justinstitt@google.com>
+Cc: x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <PAXPR02MB7248F46DEFA47E79677481B18B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Perf event names aren't case sensitive. For sysfs events the entire
-directory of events is read then iterated comparing names in a case
-insensitive way, most often to see if an event is present.
+Le 27/04/2024 à 18:45, Erick Archer a écrit :
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
+> 
+> Here the multiplication is obviously safe. However, using kcalloc*()
+> is more appropriate [2] and improves readability. This patch has no
+> effect on runtime behavior.
+> 
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Changes in v3:
+> - Update the commit message to better explain the changes.
+> - Rebase against linux-next.
+> 
+> Changes in v2:
+> - Add the "Reviewed-by:" tag.
+> - Rebase against linux-next.
+> 
+> Previous versions:
+> v1 -> https://lore.kernel.org/linux-hardening/20240116125813.3754-1-erick.archer@gmx.com
+> v2 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com
+> 
+> Hi,
+> 
+> This is a new try. In the v2 version Ingo explained that this change
+> is nonsense since kzalloc() is a perfectly usable interface and there
+> is no real overflow here.
+> 
+> Anyway, if we have the 2-factor form of the allocator, I think it is
+> a good practice to use it.
+> 
+> In this version I have updated the commit message to explain that
+> the code is obviusly safe in contrast with the last version where the
+> impression was given that there was a real overlow bug.
+> 
+> I hope this patch can be applied this time.
+> 
+> Regards,
+> Erick
+> ---
+>   arch/x86/events/amd/uncore.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 4ccb8fa483e6..61c0a2114183 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   				goto fail;
+>   
+>   			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>   						    GFP_KERNEL, node);
 
-Consider:
-$ perf stat -e inst_retired.any true
+Hi,
 
-The event inst_retired.any may be present in any PMU, so every PMU's
-sysfs events are loaded and then searched with strcasecmp to see if
-any match. This event is only present on the cpu PMU as a json event
-so a lot of events were loaded from sysfs unnecessarily just to prove
-an event didn't exist there.
+not related to your patch, but amd_uncore_ctx looks like a good 
+candidate for a flexible array.
 
-This change avoids loading all the events by assuming sysfs event
-names are always either lower or uppercase. It uses file exists and
-only loads the events when the desired event is present.
+This would simplify allocation/freeing of the memory.
 
-For the example above, the number of openat calls measured by perf
-trace on a tigerlake laptop goes from 325 down to 255. The reduction
-will be larger for machines with many PMUs, particularly replicated
-uncore PMUs.
+struct amd_uncore_ctx {
+	int refcnt;
+	int cpu;
+	struct hlist_node node;
+	struct perf_event *events[];
+};
 
-Ensure pmu_aliases_parse is called before all uses of the aliases
-list, but remove some "pmu->sysfs_aliases_loaded" tests as they are
-now part of the function.
+Just my 2c,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+CJ
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7849be4bfea1..7275076e6d83 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -425,9 +425,30 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
- {
- 	struct perf_pmu_alias *alias;
- 
--	if (load && !pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
-+	if (load && !pmu->sysfs_aliases_loaded) {
-+		bool has_sysfs_event;
-+		char event_file_name[FILENAME_MAX + 8];
- 
-+		/*
-+		 * Test if alias/event 'name' exists in the PMU's sysfs/events
-+		 * directory. If not skip parsing the sysfs aliases. Syfs event
-+		 * name must be all lower or all upper case.
-+		 */
-+		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
-+		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+			event_file_name[i] = tolower(event_file_name[i]);
-+
-+		has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		if (!has_sysfs_event) {
-+			for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+				event_file_name[i] = toupper(event_file_name[i]);
-+
-+			has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		}
-+		if (has_sysfs_event)
-+			pmu_aliases_parse(pmu);
-+
-+	}
- 	list_for_each_entry(alias, &pmu->aliases, list) {
- 		if (!strcasecmp(alias->name, name))
- 			return alias;
-@@ -1717,9 +1738,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- {
- 	size_t nr;
- 
--	if (!pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
--
-+	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases;
- 
- 	if (pmu->cpu_aliases_added)
-@@ -1778,6 +1797,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	struct strbuf sb;
- 
- 	strbuf_init(&sb, /*hint=*/ 0);
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -2193,6 +2213,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	if (!pmu)
- 		return NULL;
- 
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		struct perf_event_attr attr = {.config = 0,};
--- 
-2.44.0.769.g3c40516874-goog
+>   			if (!curr->events) {
+>   				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   		uncore->num_pmus += group_num_pmus[gid];
+>   	}
+>   
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>   			       GFP_KERNEL);
+>   	if (!uncore->pmus) {
+>   		uncore->num_pmus = 0;
 
