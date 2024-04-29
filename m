@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2EF1E888;
-	Mon, 29 Apr 2024 22:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9594085945;
+	Mon, 29 Apr 2024 23:37:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714431460; cv=none; b=tV2H1OfK50FMZm0Fn4HsytjLCJ4y61Zj2hve1sjsDM7PZfAITYks3965PhHQO2HdFWKeBBzvnuzEP0rFJ/3127ssV/r1pMkiBYesn1Rt3NX3wW/mU72FSTodIjsxVadNqSX9cpXcTU4ryEDUkvlhyTAKaFsmYyfsM3G7uB54xN0=
+	t=1714433828; cv=none; b=Oy66IbQppxczs4q/D/V2WzmQsMM8S4QXhxfFLJeitSuwVgi5XKUwn4J3ZcpbWz9Tb07J+Mi1KrhE3+qqUz+Pr1w+hux5gfLFEaRSZWWLjAMrxoslQz/2HkccLDNPKvfZHj5ZqsvN5wUTSdNBH9oy4wrpQrrCFkIYbuvhqhE6oJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714431460; c=relaxed/simple;
-	bh=WIYeIyuZMEic4wS0TYk6SanQeD6+R01+KLorHb/LgME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d5GDpLqgkWn7dDi7pZVXtTeNYu5N5vLDcjMPFHX2aWRJJpgBNIQsM6aMH23nFw93FEy0bleWqyXA4G+8KHkMnXnBeQfPe2HWTxz8ZkSE2ErwqGHTMUEdvjehvLwW3Sr8a3RMlNz/DbNJ2QuGgynu5oNt1WnQ03LHRA+PuIoyeZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUinoZIO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714433828; c=relaxed/simple;
+	bh=8Izqy6wmN7d6G+VKdDnydx8YVjPo7ETQXmEV8pw8ae0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SE7itYD4BUEAIbcszcXugFRoKMN+dyyKEkr2QR2kiQOthpN76ySv90AIMjpttVDxkEqzos/+QajUlx98z3Ze6mXhR3ISQcvsba7x5dCzaXYAgvwEFzDNnkiNgiYKsEY7FDMNvHX/0u/jD9kAWAMiS6T1RdA7FX12EScyQFvYwtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSEkZM6h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUinoZIO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D4BC113CD;
-	Mon, 29 Apr 2024 22:57:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSEkZM6h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D189C113CD;
+	Mon, 29 Apr 2024 23:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714431459;
-	bh=WIYeIyuZMEic4wS0TYk6SanQeD6+R01+KLorHb/LgME=;
+	s=k20201202; t=1714433828;
+	bh=8Izqy6wmN7d6G+VKdDnydx8YVjPo7ETQXmEV8pw8ae0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=FUinoZIOtEWv0U80gEnwGYCB2S4xw8/q9RAT8i2Tr5YapZIIaH9P6tRkDa78gHKAO
-	 xPkgYHLhBYnvtqn5uHSDJTsTM/usXe9tDi3vNE6C7/x1Aom5HghDXF89ttbFvJmKeE
-	 wjUODox83ePCmtnwHxsxt4Yx3fDiID5RwOd4vswRZHiCutwsRP1MWqkIc54S3NBqLR
-	 FEBgt7u3cDh9gNCW1GuFp8mpmZR0njgO/yHE/cUY2NolHLkFaQlICG5wOb/MUtm768
-	 hjAJSIIVops1kh7wnbMwUffHVSC8PHSyt07J+hJekB+RvJAlRY3QdocClZFyR3CgDt
-	 UQ7qoP7MIFEJQ==
+	b=BSEkZM6hPsYKjtpV1/E7dgKyuSPi4LQmjP2FoDwk5M+OyvdSY/poOi5ooOKoML1Q0
+	 5fMlTsYcdlaUVZne6EJqfD26BAEdxlyhK3CEb/q/UN9EdGSoBndNeCnBiVIrIpnmq6
+	 E1lE9ORzUIspHIRLvE6PvkeAr10xPXHimM+zVgtuFav49JH8B9TMVyaITTcYU2F63y
+	 YrRIFEW1gw3VyQA8xkBhjxY00VHHJXwrE08coHuy1+3LMqWuKzaeO8vBdfnpNiovmd
+	 rLPTcjORtoVkeqt442RD8UUSbySOCgPgvdGWZHOEwM1QmeCFy2dIDZuMirBHeFkm5s
+	 QlGGbA34UESlg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,9 +35,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf maps: Remove check_invariants() from maps__lock()
-Date: Mon, 29 Apr 2024 15:57:38 -0700
-Message-ID: <20240429225738.1491791-1-namhyung@kernel.org>
+Subject: [PATCH v2] tools lib subcmd: Show parent options in help
+Date: Mon, 29 Apr 2024 16:37:07 -0700
+Message-ID: <20240429233707.1511175-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -47,115 +47,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I found that the debug build was a lot slowed down by the maps lock code
-since it checks the invariants whenever it gets the pointer to the lock.
-This means it checks twice the invariants before and after the access.
+I've just realized that help message in a subcommand didn't show one
+in the parent command.  Since the option parser understands the parent,
+display code should do the same.  For example, `perf ftrace latency -h`
+should show options in the `perf ftrace` command too.
 
-Instead, let's move the checking code within the lock area but after any
-modification and remove it from the read paths.  This would remove (more
-than) the half of the maps lock overhead.
+Before:
 
-The time for perf report with a huge data file (200k+ of MMAP2 events).
+  $ perf ftrace latency -h
 
-  Non-debug     Before      After
-  ---------   --------   --------
-     2m 43s     6m 45s     4m 21s
+   Usage: perf ftrace [<options>] [<command>]
+      or: perf ftrace [<options>] -- [<command>] [<options>]
+      or: perf ftrace {trace|latency} [<options>] [<command>]
+      or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
+
+      -b, --use-bpf         Use BPF to measure function latency
+      -n, --use-nsec        Use nano-second histogram
+      -T, --trace-funcs <func>
+                            Show latency of given function
+
+After:
+
+  $ perf ftrace latency -h
+
+   Usage: perf ftrace [<options>] [<command>]
+      or: perf ftrace [<options>] -- [<command>] [<options>]
+      or: perf ftrace {trace|latency} [<options>] [<command>]
+      or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
+
+      -a, --all-cpus        System-wide collection from all CPUs
+      -b, --use-bpf         Use BPF to measure function latency
+      -C, --cpu <cpu>       List of cpus to monitor
+      -n, --use-nsec        Use nano-second histogram
+      -p, --pid <pid>       Trace on existing process id
+      -T, --trace-funcs <func>
+                            Show latency of given function
+      -v, --verbose         Be more verbose
+          --tid <tid>       Trace on existing thread id (exclusive to --pid)
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/maps.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+*v2: remove goto and add comments  (Ian)
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 725300896f38..61eb742d91e3 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -211,11 +211,6 @@ void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libun
+ tools/lib/subcmd/parse-options.c | 36 +++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
+
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 9fa75943f2ed..eb896d30545b 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -806,18 +806,30 @@ static int option__cmp(const void *va, const void *vb)
  
- static struct rw_semaphore *maps__lock(struct maps *maps)
+ static struct option *options__order(const struct option *opts)
  {
--	/*
--	 * When the lock is acquired or released the maps invariants should
--	 * hold.
--	 */
--	check_invariants(maps);
- 	return &RC_CHK_ACCESS(maps)->lock;
- }
- 
-@@ -358,6 +353,7 @@ static int map__strcmp(const void *a, const void *b)
- static int maps__sort_by_name(struct maps *maps)
- {
- 	int err = 0;
+-	int nr_opts = 0, nr_group = 0, len;
+-	const struct option *o = opts;
+-	struct option *opt, *ordered, *group;
+-
+-	for (o = opts; o->type != OPTION_END; o++)
+-		++nr_opts;
+-
+-	len = sizeof(*o) * (nr_opts + 1);
+-	ordered = malloc(len);
+-	if (!ordered)
+-		goto out;
+-	memcpy(ordered, opts, len);
++	int nr_opts = 0, nr_group = 0, nr_parent = 0, len;
++	const struct option *o, *p = opts;
++	struct option *opt, *ordered = NULL, *group;
 +
- 	down_write(maps__lock(maps));
- 	if (!maps__maps_by_name_sorted(maps)) {
- 		struct map **maps_by_name = maps__maps_by_name(maps);
-@@ -384,6 +380,7 @@ static int maps__sort_by_name(struct maps *maps)
- 			maps__set_maps_by_name_sorted(maps, true);
- 		}
- 	}
-+	check_invariants(maps);
- 	up_write(maps__lock(maps));
- 	return err;
- }
-@@ -502,6 +499,7 @@ int maps__insert(struct maps *maps, struct map *map)
- 
- 	down_write(maps__lock(maps));
- 	ret = __maps__insert(maps, map);
-+	check_invariants(maps);
- 	up_write(maps__lock(maps));
- 	return ret;
- }
-@@ -536,6 +534,7 @@ void maps__remove(struct maps *maps, struct map *map)
- {
- 	down_write(maps__lock(maps));
- 	__maps__remove(maps, map);
-+	check_invariants(maps);
- 	up_write(maps__lock(maps));
- }
- 
-@@ -602,6 +601,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
- 		else
- 			i++;
- 	}
-+	check_invariants(maps);
- 	up_write(maps__lock(maps));
- }
- 
-@@ -942,6 +942,8 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
- 			map__put(new);
- 		}
- 	}
-+	check_invariants(dest);
++	/* flatten the options that have parents */
++	for (p = opts; p != NULL; p = o->parent) {
++		for (o = p; o->type != OPTION_END; o++)
++			++nr_opts;
 +
- 	up_read(maps__lock(parent));
- 	up_write(maps__lock(dest));
- 	return err;
-@@ -1097,6 +1099,7 @@ void maps__fixup_end(struct maps *maps)
- 		map__set_end(maps_by_address[n - 1], ~0ULL);
- 
- 	RC_CHK_ACCESS(maps)->ends_broken = false;
-+	check_invariants(maps);
- 
- 	up_write(maps__lock(maps));
- }
-@@ -1147,6 +1150,8 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
- 		/* No overlap so regular insert suffices. */
- 		int ret = __maps__insert(kmaps, new_map);
++		/*
++		 * the length is given by the number of options plus a null
++		 * terminator for the last loop iteration.
++		 */
++		len = sizeof(*o) * (nr_opts + !o->parent);
++		group = realloc(ordered, len);
++		if (!group)
++			goto out;
++		ordered = group;
++		memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_parent));
 +
-+		check_invariants(kmaps);
- 		up_write(maps__lock(kmaps));
- 		return ret;
- 	}
-@@ -1184,6 +1189,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 		map__zput(kmaps_maps_by_address[i]);
++		nr_parent = nr_opts;
++	}
++	/* copy the last OPTION_END */
++	memcpy(&ordered[nr_opts], o, sizeof(*o));
  
- 	free(kmaps_maps_by_address);
-+	check_invariants(kmaps);
- 	up_write(maps__lock(kmaps));
- 	return 0;
- }
+ 	/* sort each option group individually */
+ 	for (opt = group = ordered; opt->type != OPTION_END; opt++) {
 -- 
 2.44.0.769.g3c40516874-goog
 
