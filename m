@@ -1,123 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5296617756
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 08:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7CEAC2;
+	Mon, 29 Apr 2024 09:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714381057; cv=none; b=f3R/AqfVCKujTIxbpNa+eUxxbLRAogP3h7SqDw/oJhhkfPYYmDW+c6TO7cshZgTN33fDPZeBGPR5M4g3XPphUgG6Gb+8QzdPbjvIs1NGmQ5IWfaur2vU+2F4mLFhhrKuM6PdnHorlmvRzPyuw6eP5q+kP8SJPXCwkimUz9UT4VI=
+	t=1714384117; cv=none; b=et4LcncpJLClI7XZP4GAY+YrXhU0IHVny5ZndivIfXoSyUhm6Hkt/CUAfqnqm0Z6znZoV8X6zMD14tvTY8JTmiGBBFsHkd9UjrdvOjfynNrR/HOa5UV2IsdowUSPQ5dVQBGBU7Hq1wCfSa7hgDrvtKJA7Dza6oJ+7e0xCUPEQic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714381057; c=relaxed/simple;
-	bh=luk3lnPBR/yejRDS8J/t+B60aT0TiAGGLiAkGpijOsU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sBftCVmTfjzxuEzP3waoRVKizAlqPUxd6rcrxtfG4JcPzHyx3f21JrZ10FZf/AncAZABoToNTUep1sLv4itqiPmyYjuMTQkN+CUni1wmEPuAFdSao1Tx5Ad5pyQyJFugpKJ/ZpZebJXFV6ySZXytoYf26FVAa1MCvvJpRh6OZUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y/KFWyMN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714384117; c=relaxed/simple;
+	bh=eOQoFD2Q1RfOcsu5iO/K4iGBJCStR6G+ZsM+imLU3t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHlOSVCRZv8lmIgFhso1S12E/Dr61l2VU/aTPZf4gjg2fg+HXs0HnJQf/w1h9/a4dnOXS3tpyNZdknwiuh9Ggl2X/4VYA8IOnvWPl808vjn6iEsau1aV0ouD5tDMq/vTMpV5BZ9+HbJFmaUJl4ISFay+mBBHXH4aUdTwTQF6/Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kg9UUvOf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/KFWyMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714381055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ojv0KKuScOmjHuLArsayBA9l9YZbscqtGMetvNF24Lw=;
-	b=Y/KFWyMNESCMvJ+4HZq7qnzZPynn5qmhxDGoIyoMhEMQn1E+TArzqNpkv0ztsLjvg6rSkN
-	MBFB1hXpJx7s+7oJQv8e2AiWS/5farwUNZoiri4xZNy2Icp0odjkC3u9Np5f3YQKdLw4/V
-	0WBeeqRLY5yjzWVnk4QY2g2YFx+Ws6E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-395-hJ8e8PMROnqWqHFGZffG2g-1; Mon, 29 Apr 2024 04:57:31 -0400
-X-MC-Unique: hJ8e8PMROnqWqHFGZffG2g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F09FC830E76;
-	Mon, 29 Apr 2024 08:57:30 +0000 (UTC)
-Received: from telekom.ip.com (unknown [10.45.225.237])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D332D5C772;
-	Mon, 29 Apr 2024 08:57:29 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com
-Subject: [PATCH v2] perf test record.sh: Raise limit of open file descriptors
-Date: Mon, 29 Apr 2024 10:53:07 +0200
-Message-ID: <20240429085721.10122-1-vmolnaro@redhat.com>
-In-Reply-To: <ZiqoWj3f-P3ChlWa@x1>
-References: <ZiqoWj3f-P3ChlWa@x1>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kg9UUvOf"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43T9WcRr023175;
+	Mon, 29 Apr 2024 09:47:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=Kn2/uMMJ4m7IZDO8WlgsPqO7vUsAlVouDdMvBgTuG6Q=;
+ b=Kg9UUvOfIY+q0ndE7ZECmZZUdA61ZCkJRFtD9wLCjYzo6fe8LGiqgmj/OaQd5I/iEeGT
+ h1W12UFRvhBs0Ojrxq2EVahg4SwzhBVbMh+nl7Xnt0KphpPc+1K4uJnLB1ltR+O9/J8Y
+ xH2aBPNbeoLf7rIVjTmAK85pN4JRaPC9PScCooRYa7ChiJY29YfixJaL//aFd9303wQR
+ GZQxdsEVeB2nF62y0IT3RUjuxSeOIjIAGLlEpPQHiihzSala+ltUzs1I4eJF+yCxcsu9
+ xwGFkZf6AwHS79UZe7yymFDc9jL+Zte2Za8lJWgzOlYfHYZrwUSEHHijG4bCs204Im4A kw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Apr 2024 09:47:55 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43T9ltmx016519;
+	Mon, 29 Apr 2024 09:47:55 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Apr 2024 09:47:54 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43T7DaXf001450;
+	Mon, 29 Apr 2024 09:47:53 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbptppem-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Apr 2024 09:47:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43T9loYx26542522
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Apr 2024 09:47:52 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0556520040;
+	Mon, 29 Apr 2024 09:47:50 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B4E6220043;
+	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
+Received: from osiris (unknown [9.171.12.101])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
+Date: Mon, 29 Apr 2024 11:47:47 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+        Joel Granados <j.granados@samsung.com>,
+        Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>,
+        Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        bridge@lists.linux.dev, lvs-devel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
+        apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 11/11] sysctl: treewide: constify the ctl_table
+ argument of handlers
+Message-ID: <20240429094747.29046-G-hca@linux.ibm.com>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dsJabyKjD5wmo-a4UVf9qexuuOQkOoCK
+X-Proofpoint-GUID: 7SlQVN0HjcUbQBl5eVSaH1VEy2oE_0-m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-29_07,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404290061
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Tue, Apr 23, 2024 at 09:54:46AM +0200, Thomas Weiﬂschuh wrote:
+> Adapt the proc_hander function signature to make it clear that handlers
+> are not supposed to modify their ctl_table argument.
+> 
+> This is a prerequisite to moving the static ctl_table structs into
+> rodata.
+> By migrating all handlers at once a lengthy transition can be avoided.
+> 
+> The patch was mostly generated by coccinelle with the following script:
+> 
+>     @@
+>     identifier func, ctl, write, buffer, lenp, ppos;
+>     @@
+> 
+>     int func(
+>     - struct ctl_table *ctl,
+>     + const struct ctl_table *ctl,
+>       int write, void *buffer, size_t *lenp, loff_t *ppos)
+>     { ... }
+> 
+> In addition to the scripted changes some other changes are done:
+> 
+> * the typedef proc_handler is adapted
+> 
+> * the prototypes of non-static handler are adapted
+> 
+> * kernel/seccomp.c:{read,write}_actions_logged() and
+>   kernel/watchdog.c:proc_watchdog_common() are adapted as they need to
+>   adapted together with the handlers for type-consistency reasons
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
 
-Subtest for system-wide record with '--threads=cpu' option fails due
-to a limit of open file descriptors on systems with 128 or more CPUs
-as the default limit is set to 1024.
+...
 
-The number of open file descriptors should be slightly above
-nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
-which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
-16*nmb_cpus for the test.
+>  arch/s390/appldata/appldata_base.c        | 10 ++---
+>  arch/s390/kernel/debug.c                  |  2 +-
+>  arch/s390/kernel/topology.c               |  2 +-
+>  arch/s390/mm/cmm.c                        |  6 +--
 
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
-Reworked the patch as the testfile has already changed since the patch
-was sent causing the applying to fail, now applying upstream without
-problems.
- tools/perf/tests/shell/record.sh | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 3d1a7759a7b2..344c0e40ebe8 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -21,6 +21,15 @@ testprog="perf test -w thloop"
- cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
- br_cntr_file="/caps/branch_counter_nr"
- br_cntr_output="branch stack counters"
-+default_fd_limit=$(ulimit -n)
-+# With option --threads=cpu the number of open file descriptors should be
-+# equal to sum of:    nmb_cpus * nmb_events (2+dummy),
-+#                     nmb_threads for perf.data.n (equal to nmb_cpus) and
-+#                     2*nmb_cpus of pipes = 4*nmb_cpus (each pipe has 2 ends)
-+# All together it needs 8*nmb_cpus file descriptors plus some are also used
-+# outside of testing, thus raising the limit to 16*nmb_cpus
-+min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
-+
- 
- cleanup() {
-   rm -rf "${perfdata}"
-@@ -190,11 +199,19 @@ test_branch_counter() {
-   echo "Basic branch counter test [Success]"
- }
- 
-+# raise the limit of file descriptors to minimum
-+if [[ $default_fd_limit -lt $min_fd_limit ]]; then
-+       ulimit -n $min_fd_limit
-+fi
-+
- test_per_thread
- test_register_capture
- test_system_wide
- test_workload
- test_branch_counter
- 
-+# restore the default value
-+ulimit -n $default_fd_limit
-+
- cleanup
- exit $err
--- 
-2.43.0
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
