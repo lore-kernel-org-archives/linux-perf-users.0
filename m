@@ -1,207 +1,180 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A0127E2A
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 18:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDC413AA27
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 18:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714414987; cv=none; b=caMpAfxcihID46CR/qF0vqxLcQI2bYOFaIdDdEZ+dCGvy9L3r6uEBJ5hcl8h1NbElJ61tif2viViXQ+9qzXZYJOtzEqV0RRRHkplzLL3jsUTb9Dh46ls323g3lNpYzu8aJK+zJHEp5uX/4m+5lk46u84NahSNjdZdxPzAMZ41us=
+	t=1714416386; cv=none; b=rUcxHv4kcLt7hAW1kUOB86NLqQ9fTVRU0luSTqCXQTDFib9nBFsI2mtCEUlqphiBU3pvGA4ZjJEFZ0ToHMq7tk83gXx7/Qf4FlqctF+uq0OuwZZYcLjL5l8v8d4I94yv6uGAK4pInZxmFmGpYp9Ls4qttEk9mjz2ORyjkRwbUyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714414987; c=relaxed/simple;
-	bh=elCn1xDYIWV/yQGs+Ku+pblyY+MO1I2njlCPaJ/lBlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTnzLuXoolaMOMuphG0OSdnWZYKDv5RMczRAksyS7Vgx1gudow/TMQC812+0/sKtatIO2CMfTHwYjKbnDraRqglXV/Vh79Vlo7pJy2z3R7bdpwKaxyVJePyG430u1fLgpDKoJRFYdI1J/mIjpoleHGxvEaFYfdT5amQTk9Sfiec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RLQaNY0T; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714416386; c=relaxed/simple;
+	bh=6uTTt0xsMfuVzjMKqkCH0gjwhFQ2avhuuVM4OafhzkE=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=m4dJyMoWL3HqQjvWc71CuhmmGXQV4/bb4dCHIId3AkoaC5QsoYjbT5cNyaVS25x1K2jy1actwHf8x5oRAvL4c9dCUi0YqXxZCn/SmDpzzphIhs21h9YQ41H9/44hagQk7861/VyMzlJTTZdqfingnY+KKmR7BedXbi4bJyPF/FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AtcLxt/l; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RLQaNY0T"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso4324605b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 11:23:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtcLxt/l"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-ddaf165a8d9so7849686276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 11:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714414985; x=1715019785; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wWcILGwRFtnD9QNVIhxXnveoA5tb5jtwzo4UtHN4I1M=;
-        b=RLQaNY0TDyXF3atqhrbQ8rv55o9tI3o3v9odzjAJUvk8FAKvD1IwMjsKxAXAQ77pwa
-         VMQBbxkUMfwrCZz799fWG91Fb5cBvgrmg9UjemJlAVZ+69S8444VFKs3l9OfVkwbp/ZB
-         pdutqM73XdscKUMj5lDXt0tc7tvThDb+9s+hY=
+        d=google.com; s=20230601; t=1714416384; x=1715021184; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oSCw02zU0xlj3oJMiPK9ug/zZBXgwAdEBami/HcNOOo=;
+        b=AtcLxt/l6jGuxgHNeS9Q9UH71zxzDm9U2mkRwP0lCSRQKtllRY5U/Ie5k0RNQRUUgX
+         F5Fu7M7jn11J3kmNuwywItaNQnnnvA/5CTMiHGXTkGNfpkPOsgLs43vOlUKNnREqeazz
+         6NWmcb4JnM4J8cVHMsoHQ/7dxDGWw3P90x5Mi2IylwwhL7H4CxNI1a/H1PdSwUJcxt3b
+         1gvWebJehVolFWdZjfjYzZQz37i+XId+IlLhKS5fbLOQ+HHmvQx3Un1efbUd9j2yzKXq
+         0fKBAjKQ5r+wg1QP/FHeqmp69wHOacc9ih6RnXOZuu/S1SD8xtaaqZKp7msfaEAeFeN2
+         XPQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714414985; x=1715019785;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wWcILGwRFtnD9QNVIhxXnveoA5tb5jtwzo4UtHN4I1M=;
-        b=QDCyBaIitVD/F3IFYTw7Ev/OzMN2gNsMoBsu3X/TwEzQYDYuxg82Qo+98JtO8q/kH6
-         wRv1JMDvBNkYDz682MPko4Z/BSYtpIG9K5Bg/na15sg+ACVanY6R37JDH5009VibwOip
-         ufIWL+RUMDVfBiJEF3cHWJCF5cZ45VC7MNUoaQTtz8Ss1TCORtF6gNwKinLG7CP8lyFG
-         Fm/eNnji2kKAJbyBR8h8GLpBtAIiljaLNiseMlL38b8hzX9c8w97QlFboUxoths+4I+T
-         Ki1pv4pLGiQ8T6bX28TPFUH0cCbH5XMSh46uTzmRLeifCjWZR2ge2aCD9zeqRMkaFTQC
-         Tv7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyJXgCesqMXVVlSItvAkbVvNqa8KYziI+2khDSd2eTFzNIjdgz8oNVD9QD2TYdEHm5cG8zxanHSMYbX3kmY7pn0YHYSz+xJEj3BvWqVwfbfQ==
-X-Gm-Message-State: AOJu0YwVF250IY8DOGVjMfH+aCN2fBcXaNBu5LQCxZu2vgTzqhUpM3MQ
-	BzvnTLP4CpNdtrPpQlc7cm/csIR0grxh+EqYY/tLy9zCy6h+248+MN2naWNiBQ==
-X-Google-Smtp-Source: AGHT+IFz0eTj9zdDKI5T7BR0RE+lI1T8J94+vxaU7th74r2GtVz0bYGeFjBtUDFL9A5MjbnDcRYdSw==
-X-Received: by 2002:a05:6a20:d494:b0:1a7:2e17:efd3 with SMTP id im20-20020a056a20d49400b001a72e17efd3mr17942155pzb.5.1714414985305;
-        Mon, 29 Apr 2024 11:23:05 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n7-20020aa79847000000b006f0c0b6eee8sm17843241pfq.185.2024.04.29.11.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 11:23:04 -0700 (PDT)
-Date: Mon, 29 Apr 2024 11:23:03 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202404291119.43630D7@keescook>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1714416384; x=1715021184;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oSCw02zU0xlj3oJMiPK9ug/zZBXgwAdEBami/HcNOOo=;
+        b=MhZu+NDsFQdQmmuZ9A+OStQdSJAs4OGYH0L7PT7OxYgXt6A0eRNYH0W6x+izflYzFS
+         aQIYMOyYt1VRTyLZTLUsUc8GjHgITUGjaVMbmvubVRMFixOJ2mB3o2UDezlv5Dsl4iJl
+         RVegu+Kq5du6Vc2HCtJb4k2XxHYP275EQ4hIWGY1ftLGqLd/lSpFBXdefGxrCT/PC4zH
+         JktgIWpj+KGBT2OASg9HMLm+5VVk35gvoVuJ5d3h/nLCY9IIX/iw7TCYSe8rYihNdtnr
+         JwH7DoPzgef4kse0Cdty5TuR1Bf234QlKWV7VFO05qZnZIcfixt3zSComqDl1LdVV4Td
+         BwDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtDzZQR+zupp+WXY6hyVhRLyXxNzA79Ct6Yt2bsLumfTS/I6Xs+P/jHxWFiLY6+K+5/6MLdhV9+QWueydIQXvgWR9SJYoxrOuGDo+t2JbEQQ==
+X-Gm-Message-State: AOJu0Yznpm0Ep/jknVSUvG1Mo8wehvERkU4ZpkmxfjmeBYo2HhPYXSv1
+	XtdxfJajWCRHdzzN0oaCVGQm1Iy1NEJLeD0p/j/R33TlV6DworR5ki7CJzkuqIBwRUhs4EiwUZz
+	yQ5sxkQ==
+X-Google-Smtp-Source: AGHT+IF2ls8b53sMctq/5AaFnsXtJj7VlNZ8T3m834/TelYpiBHscXYdmmhDWFaVxirycZengZqeommiCf5l
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:c137:aa10:25e1:8f1e])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1106:b0:dcc:8be2:7cb0 with SMTP
+ id o6-20020a056902110600b00dcc8be27cb0mr1236562ybu.0.1714416384297; Mon, 29
+ Apr 2024 11:46:24 -0700 (PDT)
+Date: Mon, 29 Apr 2024 11:46:07 -0700
+Message-Id: <20240429184614.1224041-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Subject: [PATCH v5 0/7] dso/dsos memory savings and clean up
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	nabijaczleweli@nabijaczleweli.xyz, Leo Yan <leo.yan@linux.dev>, 
+	Song Liu <song@kernel.org>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Ben Gainey <ben.gainey@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Yanteng Si <siyanteng@loongson.cn>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	Changbin Du <changbin.du@huawei.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Dima Kogan <dima@secretsauce.net>, zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Yang Jihong <yangjihong1@huawei.com>, 
+	Chengen Du <chengen.du@canonical.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
-> 
-> As the "rb" variable is a pointer to "struct perf_buffer" and this
-> structure ends in a flexible array:
-> 
-> struct perf_buffer {
-> 	[...]
-        int                             nr_pages;       /* nr of data pages  */
-	...
-> 	void	*data_pages[];
-> };
+7 more patches from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+a near half year old adventure in trying to lower perf's dynamic
+memory use. Bits like the memory overhead of opendir are on the
+sidelines for now, too much fighting over how
+distributions/C-libraries present getdents. These changes are more
+good old fashioned replace an rb-tree with a sorted array and add
+reference count tracking.
 
-This should gain __counted_by(nr_pages) with a little refactoring.
+The changes migrate dsos code, the collection of dso structs, more
+into the dsos.c/dsos.h files. As with maps and threads, this is done
+so the internals can be changed - replacing a linked list (for fast
+iteration) and an rb-tree (for fast finds) with a lazily sorted
+array. The complexity of operations remain roughly the same, although
+iterating an array is likely faster than iterating a linked list, the
+memory usage is at least reduced by half.
 
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the calculation "size + count * size" in
-> the kzalloc_node() functions.
-> 
-> In the "rb_alloc" function defined in the else branch of the macro
-> 
->  #ifndef CONFIG_PERF_USE_VMALLOC
-> 
-> the count in the struct_size helper is the literal "1" since only one
-> pointer to void is allocated. Also, remove the "size" variable as it
-> is no longer needed.
-> 
-> This way, the code is more readable and safer.
-> 
-> This code was detected with the help of Coccinelle, and audited and
-> modified manually.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
-> Hi,
-> 
-> The Coccinelle script used to detect this code pattern is the following:
-> 
-> virtual report
-> 
-> @rule1@
-> type t1;
-> type t2;
-> identifier i0;
-> identifier i1;
-> identifier i2;
-> identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
-> position p1;
-> @@
-> 
-> i0 = sizeof(t1)
-> ...
-> i0 += sizeof(t2) * i1;
-> ...
-> i2 = ALLOC@p1(..., i0, ...);
-> 
-> @script:python depends on report@
-> p1 << rule1.p1;
-> @@
-> 
-> msg = "WARNING: verify allocation on line %s" % (p1[0].line)
-> coccilib.report.print_report(p1[0],msg)
-> 
-> Regards,
-> Erick
-> ---
->  kernel/events/ring_buffer.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 4013408ce012..e68b02a56382 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
->  	unsigned long size;
->  	int i, node;
->  
-> -	size = sizeof(struct perf_buffer);
-> -	size += nr_pages * sizeof(void *);
-> -
-> +	size = struct_size(rb, data_pages, nr_pages);
->  	if (order_base_2(size) > PAGE_SHIFT+MAX_PAGE_ORDER)
->  		goto fail;
+As fixing the memory usage necessitates changing operations like find,
+modify these operations so that they increment the reference count to
+avoid races like a find in dsos and a remove. Similarly tighten up
+lock usage so that operations working on dsos state hold the
+appropriate lock. Note, since this series is partially applied in the
+perf-tools-next tree currently some memory leaks have been introduced.
 
-This looks good. Continuing...
+v5. Rebase, adding use of accessors to dso as necessary. Previous
+    versions were all rebases or dropping merged patches.
 
-        node = (cpu == -1) ? cpu : cpu_to_node(cpu);
-        rb = kzalloc_node(size, GFP_KERNEL, node);
-        if (!rb)
-                goto fail;
+Ian Rogers (7):
+  perf dsos: Switch backing storage to array from rbtree/list
+  perf dsos: Remove __dsos__addnew
+  perf dsos: Remove __dsos__findnew_link_by_longname_id
+  perf dsos: Switch hand code to bsearch
+  perf dso: Add reference count checking and accessor functions
+  perf dso: Reference counting related fixes
+  perf dso: Use container_of to avoid a pointer in dso_data
 
-then move this line up from below the array-writing loop:
-
-        rb->nr_pages = nr_pages;
-
-
->  
-> @@ -916,15 +914,11 @@ void rb_free(struct perf_buffer *rb)
->  struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
->  {
->  	struct perf_buffer *rb;
-> -	unsigned long size;
->  	void *all_buf;
->  	int node;
->  
-> -	size = sizeof(struct perf_buffer);
-> -	size += sizeof(void *);
-> -
->  	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
-> -	rb = kzalloc_node(size, GFP_KERNEL, node);
-> +	rb = kzalloc_node(struct_size(rb, data_pages, 1), GFP_KERNEL, node);
->  	if (!rb)
->  		goto fail;
-
-Same move here:
-
-        rb->nr_pages = nr_pages;
-
-Otherwise, yes, looks good!
-
--Kees
+ tools/perf/builtin-annotate.c                 |   6 +-
+ tools/perf/builtin-buildid-cache.c            |   2 +-
+ tools/perf/builtin-buildid-list.c             |  18 +-
+ tools/perf/builtin-inject.c                   |  71 ++-
+ tools/perf/builtin-kallsyms.c                 |   2 +-
+ tools/perf/builtin-mem.c                      |   4 +-
+ tools/perf/builtin-report.c                   |   6 +-
+ tools/perf/builtin-script.c                   |   8 +-
+ tools/perf/builtin-top.c                      |   4 +-
+ tools/perf/builtin-trace.c                    |   2 +-
+ tools/perf/tests/code-reading.c               |   8 +-
+ tools/perf/tests/dso-data.c                   |  67 ++-
+ tools/perf/tests/hists_common.c               |   6 +-
+ tools/perf/tests/hists_cumulate.c             |   4 +-
+ tools/perf/tests/hists_output.c               |   2 +-
+ tools/perf/tests/maps.c                       |   4 +-
+ tools/perf/tests/symbols.c                    |   8 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |   6 +-
+ tools/perf/ui/browsers/annotate.c             |   6 +-
+ tools/perf/ui/browsers/hists.c                |   8 +-
+ tools/perf/ui/browsers/map.c                  |   4 +-
+ tools/perf/util/annotate-data.c               |  16 +-
+ tools/perf/util/annotate.c                    |  17 +-
+ tools/perf/util/auxtrace.c                    |   2 +-
+ tools/perf/util/block-info.c                  |   2 +-
+ tools/perf/util/bpf-event.c                   |   8 +-
+ tools/perf/util/build-id.c                    |  38 +-
+ tools/perf/util/callchain.c                   |   2 +-
+ tools/perf/util/data-convert-json.c           |   2 +-
+ tools/perf/util/db-export.c                   |   6 +-
+ tools/perf/util/disasm.c                      |  40 +-
+ tools/perf/util/dlfilter.c                    |  12 +-
+ tools/perf/util/dso.c                         | 429 ++++++++-------
+ tools/perf/util/dso.h                         | 500 ++++++++++++++++--
+ tools/perf/util/dsos.c                        | 286 +++++-----
+ tools/perf/util/dsos.h                        |  18 +-
+ tools/perf/util/event.c                       |   8 +-
+ tools/perf/util/header.c                      |   8 +-
+ tools/perf/util/hist.c                        |   4 +-
+ tools/perf/util/intel-pt.c                    |  22 +-
+ tools/perf/util/machine.c                     |  50 +-
+ tools/perf/util/map.c                         |  78 +--
+ tools/perf/util/maps.c                        |  14 +-
+ tools/perf/util/print_insn.c                  |   2 +-
+ tools/perf/util/probe-event.c                 |  25 +-
+ .../util/scripting-engines/trace-event-perl.c |   6 +-
+ .../scripting-engines/trace-event-python.c    |  21 +-
+ tools/perf/util/sort.c                        |  19 +-
+ tools/perf/util/srcline.c                     |  65 +--
+ tools/perf/util/symbol-elf.c                  | 145 +++--
+ tools/perf/util/symbol-minimal.c              |   4 +-
+ tools/perf/util/symbol.c                      | 186 +++----
+ tools/perf/util/symbol_fprintf.c              |   4 +-
+ tools/perf/util/synthetic-events.c            |  24 +-
+ tools/perf/util/thread.c                      |   4 +-
+ tools/perf/util/unwind-libunwind-local.c      |  18 +-
+ tools/perf/util/unwind-libunwind.c            |   2 +-
+ tools/perf/util/vdso.c                        |   8 +-
+ 58 files changed, 1409 insertions(+), 932 deletions(-)
 
 -- 
-Kees Cook
+2.44.0.769.g3c40516874-goog
+
