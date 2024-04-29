@@ -1,90 +1,161 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB2A17798F;
-	Mon, 29 Apr 2024 22:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2EF1E888;
+	Mon, 29 Apr 2024 22:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714428380; cv=none; b=OLBEyHACJdmgheSCYUuKBJ+Y1RailB3SKOuvGeShQgZMwOmp7t4LrHUEAlCwKDPZAIEAAUFNJ+NH+CNUslGkOV7oyRhn3dzZG4ItUvcx22kOrjpA5Clho9goPLsbqzZmFuO+hk7ZcDtEqOPgrghpBkQclL4TaSoKFkRGzsa8Tec=
+	t=1714431460; cv=none; b=tV2H1OfK50FMZm0Fn4HsytjLCJ4y61Zj2hve1sjsDM7PZfAITYks3965PhHQO2HdFWKeBBzvnuzEP0rFJ/3127ssV/r1pMkiBYesn1Rt3NX3wW/mU72FSTodIjsxVadNqSX9cpXcTU4ryEDUkvlhyTAKaFsmYyfsM3G7uB54xN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714428380; c=relaxed/simple;
-	bh=5dBBhWZySXo4xegH3vOIihKR7dTAWvBByCdDrLrAt9Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ffCMFR+xSddf2zRb2U6mrwTIyxPBRF7u3OJjYgFhdrpLEBCJnVXhlBxPVF7mMqC46dKbFuSRR8O/z5DWSfxdCPHHF494BJibMz3XeFBakGLCwCVGUrzE+7di4II7fz5eJvS59R6pEZzK+ndHtHC3h7n4UWXfy0G2jA8Lm5XaLnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7ee32c48f42so1956376241.0;
-        Mon, 29 Apr 2024 15:06:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714428378; x=1715033178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ibIJzCmwwnGDq7816A1xv5l0I73x7QtEVchHgbiU7WQ=;
-        b=bUIE/BoipsaW1Fus0ECBxe36GM54TShqwDVJ8ITVyeqWBcLdO0Nv+6LfwuxOHuDlPi
-         UM0R7HJ0njWAj0fVxEobUV5qbhnP3ocKLwxK5SDomqJ26LzBsEKp/6MTBNMuyoeJXGSy
-         PM7PRCYM9atUifHqp52NpObRA1QU7UvU5HEuVnksijid9taOI0NiWMIgIhJ80rJvbIzK
-         IH44ZJSwqL2MomDkwJ5wcmNMRrS6BBavChTW4KtWGYYcQJnGt6/gWywYjWgD/lgOOxcJ
-         QNafpJFTsuEGj0s6Ud22THcYrzJQaP0VmQf2woUkwZ1UsJCjs8mfKZbc+daMTK0EDEUa
-         rMkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUawDaor0qPCYpF82AnA9Tx6JGbD1Yjq+S8gyljA95np6QHupZiyCV2W7oc7y2jAC8UeS520NPGuvnynajrruQYIo91rpKszRQHymThwdZn3gaUVlI2t65KBicwg5l64jMv4/zaMAQQyLlDYMojlCUdRRbFvKFrzqMmP1G/8IwZpEAAqA==
-X-Gm-Message-State: AOJu0YxMiOeiYMbyt7bIU1nTGkjl5WThGa9F7TSVh5zvaRRefSPPHMDk
-	7RY8b9APqwaJ0ueYM/+Ucwo4aqm61LpdfBrpy0WEYly8buHcVq5Ium69LHB/MUDDPLozVfKVYhc
-	gzhcl6Zh+4rzcmVrUsgWWF1BgROE=
-X-Google-Smtp-Source: AGHT+IEq8BooOI6utZ4uLzHFMGEcw+s8BKXMKuvaCeXvj6AimgGWhJTYzn3FlxPazMO0Uz+0r07vxJwNzJm9v8STdZ4=
-X-Received: by 2002:a05:6122:369f:b0:4c0:24e6:f49d with SMTP id
- ec31-20020a056122369f00b004c024e6f49dmr13138369vkb.1.1714428377792; Mon, 29
- Apr 2024 15:06:17 -0700 (PDT)
+	s=arc-20240116; t=1714431460; c=relaxed/simple;
+	bh=WIYeIyuZMEic4wS0TYk6SanQeD6+R01+KLorHb/LgME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d5GDpLqgkWn7dDi7pZVXtTeNYu5N5vLDcjMPFHX2aWRJJpgBNIQsM6aMH23nFw93FEy0bleWqyXA4G+8KHkMnXnBeQfPe2HWTxz8ZkSE2ErwqGHTMUEdvjehvLwW3Sr8a3RMlNz/DbNJ2QuGgynu5oNt1WnQ03LHRA+PuIoyeZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUinoZIO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUinoZIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D4BC113CD;
+	Mon, 29 Apr 2024 22:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714431459;
+	bh=WIYeIyuZMEic4wS0TYk6SanQeD6+R01+KLorHb/LgME=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FUinoZIOtEWv0U80gEnwGYCB2S4xw8/q9RAT8i2Tr5YapZIIaH9P6tRkDa78gHKAO
+	 xPkgYHLhBYnvtqn5uHSDJTsTM/usXe9tDi3vNE6C7/x1Aom5HghDXF89ttbFvJmKeE
+	 wjUODox83ePCmtnwHxsxt4Yx3fDiID5RwOd4vswRZHiCutwsRP1MWqkIc54S3NBqLR
+	 FEBgt7u3cDh9gNCW1GuFp8mpmZR0njgO/yHE/cUY2NolHLkFaQlICG5wOb/MUtm768
+	 hjAJSIIVops1kh7wnbMwUffHVSC8PHSyt07J+hJekB+RvJAlRY3QdocClZFyR3CgDt
+	 UQ7qoP7MIFEJQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf maps: Remove check_invariants() from maps__lock()
+Date: Mon, 29 Apr 2024 15:57:38 -0700
+Message-ID: <20240429225738.1491791-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240422083645.1930939-1-howardchu95@gmail.com> <Zi_slOlsZBjTbNIH@x1>
-In-Reply-To: <Zi_slOlsZBjTbNIH@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 29 Apr 2024 15:06:05 -0700
-Message-ID: <CAM9d7cjFYPPusN+yGEHe5B5hwPoiLqXj=Q0DqjBaZR9gTAADTg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] perf record: Dump off-cpu samples directly
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 29, 2024 at 11:53=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Apr 22, 2024 at 04:36:45PM +0800, Howard Chu wrote:
-> > Parse off-cpu events using parse_event(). Change the placement of
-> > record__config_off_cpu to after record__open because we need to write
-> > mmapped fds into BPF's perf_event_array map, also, write
-> > sample_id/sample_type into BPF. In record__pushfn and record__aio_pushf=
-n,
-> > handle off-cpu samples using off_cpu_strip. This is because the off-cpu
-> > samples that we want to write to perf.data is in off-cpu samples' raw_d=
-ata
-> > section:
->
-> Hey,
->
->         This lacks a cover letter and the chainig of patches so that b4
-> can fetch the series.
->
->         Also all 5 patches have the same summary and different
-> descriptions and contents, can you please rework the patch series, using
-> 'git format-patch', and make the description reflect what each patch is
-> doing?
+I found that the debug build was a lot slowed down by the maps lock code
+since it checks the invariants whenever it gets the pointer to the lock.
+This means it checks twice the invariants before and after the access.
 
-He already sent out v2.
+Instead, let's move the checking code within the lock area but after any
+modification and remove it from the read paths.  This would remove (more
+than) the half of the maps lock overhead.
 
-Thanks,
-Namhyung
+The time for perf report with a huge data file (200k+ of MMAP2 events).
 
-https://lore.kernel.org/r/20240424024805.144759-1-howardchu95@gmail.com/
+  Non-debug     Before      After
+  ---------   --------   --------
+     2m 43s     6m 45s     4m 21s
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/maps.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 725300896f38..61eb742d91e3 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -211,11 +211,6 @@ void maps__set_unwind_libunwind_ops(struct maps *maps, const struct unwind_libun
+ 
+ static struct rw_semaphore *maps__lock(struct maps *maps)
+ {
+-	/*
+-	 * When the lock is acquired or released the maps invariants should
+-	 * hold.
+-	 */
+-	check_invariants(maps);
+ 	return &RC_CHK_ACCESS(maps)->lock;
+ }
+ 
+@@ -358,6 +353,7 @@ static int map__strcmp(const void *a, const void *b)
+ static int maps__sort_by_name(struct maps *maps)
+ {
+ 	int err = 0;
++
+ 	down_write(maps__lock(maps));
+ 	if (!maps__maps_by_name_sorted(maps)) {
+ 		struct map **maps_by_name = maps__maps_by_name(maps);
+@@ -384,6 +380,7 @@ static int maps__sort_by_name(struct maps *maps)
+ 			maps__set_maps_by_name_sorted(maps, true);
+ 		}
+ 	}
++	check_invariants(maps);
+ 	up_write(maps__lock(maps));
+ 	return err;
+ }
+@@ -502,6 +499,7 @@ int maps__insert(struct maps *maps, struct map *map)
+ 
+ 	down_write(maps__lock(maps));
+ 	ret = __maps__insert(maps, map);
++	check_invariants(maps);
+ 	up_write(maps__lock(maps));
+ 	return ret;
+ }
+@@ -536,6 +534,7 @@ void maps__remove(struct maps *maps, struct map *map)
+ {
+ 	down_write(maps__lock(maps));
+ 	__maps__remove(maps, map);
++	check_invariants(maps);
+ 	up_write(maps__lock(maps));
+ }
+ 
+@@ -602,6 +601,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ 		else
+ 			i++;
+ 	}
++	check_invariants(maps);
+ 	up_write(maps__lock(maps));
+ }
+ 
+@@ -942,6 +942,8 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
+ 			map__put(new);
+ 		}
+ 	}
++	check_invariants(dest);
++
+ 	up_read(maps__lock(parent));
+ 	up_write(maps__lock(dest));
+ 	return err;
+@@ -1097,6 +1099,7 @@ void maps__fixup_end(struct maps *maps)
+ 		map__set_end(maps_by_address[n - 1], ~0ULL);
+ 
+ 	RC_CHK_ACCESS(maps)->ends_broken = false;
++	check_invariants(maps);
+ 
+ 	up_write(maps__lock(maps));
+ }
+@@ -1147,6 +1150,8 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
+ 		/* No overlap so regular insert suffices. */
+ 		int ret = __maps__insert(kmaps, new_map);
++
++		check_invariants(kmaps);
+ 		up_write(maps__lock(kmaps));
+ 		return ret;
+ 	}
+@@ -1184,6 +1189,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 		map__zput(kmaps_maps_by_address[i]);
+ 
+ 	free(kmaps_maps_by_address);
++	check_invariants(kmaps);
+ 	up_write(maps__lock(kmaps));
+ 	return 0;
+ }
+-- 
+2.44.0.769.g3c40516874-goog
+
