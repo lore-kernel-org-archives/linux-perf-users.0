@@ -1,107 +1,141 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1C310799
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 03:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E120B18030;
+	Tue, 30 Apr 2024 06:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714448460; cv=none; b=UvwDR/Ts7SIp91kRaxiruv0EKh85iqir9ItWGP+8EjyJu+ZiMwGFJUqR2emv0b+gfWMw4ZftAf2WzFB3iQacLonq+MRXi0tbtDnnJ0UPPhTtYCv329CpYSvxV6vXbSgn2nwdgD5l94JOYj1phIg7F0WAgg4cfplSzezqm025phE=
+	t=1714459025; cv=none; b=GkcsF0YGp6eyKMaLKihHCfdUpJ+Ir7+mRudoatsZZ3Yrh36eNaHyd4y/QQBO6DfFFhBO0eXnm8EZM5qJrqaL3zKrgnNsfXzcKohlMqTKMtVngVae8JvlUqOoUAGIRh8XHieY29bp6WIu4Ehmaipav2UOADLXL2syi3t1TCMx2aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714448460; c=relaxed/simple;
-	bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hWKgy27wg5huyYqPgaY4M+Yy6N/4JRZTHsKfmsEhbN9zMC87LnUckddzYU/tZ6H109auxQO3Upm5Cj7PqBWDhBIHeW2mpwxrdZOn3nQc3m7W0lJqPaAZjNL+WIakoj4WWiVr5xcrT8WjNWUoXHMOkBqgTvO4sD4X+MGtYcGvqzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EQ6k+sJb; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714459025; c=relaxed/simple;
+	bh=KGo6hIvlY2DFfXRayOwhLfEDabosAECVdBp2tiThtkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNTPE4gT7vHOZLPd8PwO76bt6+vO5A5uKyEagq/op592y8plSs8Mc8ETd6yiwngDt5cNXGqTCYU9EBpOdiP5o/KuGiuIpgy7k5MXWMNJujxJXeQWndem2NTnxhnkFEEquzmF16ZkbqHA+qsgU6PVI5qL/4XV6TkJNI9e27GHjJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPnWd5/x; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EQ6k+sJb"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e8fcb0b860so63765ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714448458; x=1715053258; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
-        b=EQ6k+sJbfTUipiOvv+LTveIdLcvy5xhVqSyJnZqFU+uKJkc/uBDzACKobC56M+g9u/
-         pm1a95ljsbbAK4sphz2pPkEhwAuCB5R6RmVJzPmUuRCRYhglRAZSHncF5GrqaWAc3Cxn
-         Bm4kJuwK89mUJ++5+mr5++Fb8rlTUgo18jNkc+gKgw+9OiOZkxFHRMe35A3flcRHfurM
-         s+TGMrmQfDFqvH5j4Tq9hG2Zt6vTjWpSoc/xQ+PNGe673M+egtLaNLwXcot3iH1GjQt5
-         aBRahfJhI3oZNdmwbn8mdIOmyzvtcXm90uV6lLGgFrDRHeu9RI2XTkrz5K0nv4NErsoJ
-         6WWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714448458; x=1715053258;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
-        b=rLMFjF/xhiuq0UfKdZzh6UpLqmniDE0PTpzhvgYrd07En81EGus3qoVpdqVAnrq4vG
-         MWLOfz1IjGyv4PgWIYfCI+c0h8MKJzvVbTdxJjiJ/icKFhFfsK2P732ZsJo3k7LGrTzy
-         8GrKxlJt7ToF/H4b/Xj5EsFFBSatbAc85D7FNjyMuph5AvkVPxtZl33FsZ8QdfIkDCZ2
-         u6rKZrsO99wQcTFjSRiN3F5yQBTedJmatfXmwfQ6+YYBRVhWjFXc/QKMMHHkewOZyOKE
-         CJ44XsNRU45JFfonJst41ltai+eXr0r3vrV0E7ZAFwTQzJBZ8An+lkumzZxP33sjxbPG
-         SSvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVngUY4Fc0O0TGUNMoNjwSDJU5MkneVl6Mo/DCKqlE6p3eqOwuHEswiP8uESReBoy/VUSJldrcYZmtWuYrKT4qa1paeC36BL4vPIvugNgoL8w==
-X-Gm-Message-State: AOJu0YxtxxMp+LyxcHdfbPFhFv8vWxbShiHRDEzwo81ugQZVqqEF/0cq
-	o0IhdR1MKmG1iZktxZwJnXVf7+Q+ZrlWvyG06u8OooNxigtWvrhMJGRB9+UA/yY2X8+zdKDZxQ4
-	jLdwvMlxfMOzerhon80IFOlBzSVg/1vFBPekG
-X-Google-Smtp-Source: AGHT+IFOKp6IbuJXMVwCwvy9B4FMcOUU7Ohar+bPXibgNEKIrHt2Xjq6lZ5uTOSGPc/ULMfM/M9MDhn/YulZPxH0XMU=
-X-Received: by 2002:a17:902:c404:b0:1e0:c571:d652 with SMTP id
- k4-20020a170902c40400b001e0c571d652mr90602plk.1.1714448457985; Mon, 29 Apr
- 2024 20:40:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPnWd5/x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714459024; x=1745995024;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KGo6hIvlY2DFfXRayOwhLfEDabosAECVdBp2tiThtkc=;
+  b=dPnWd5/xeYkPlqxRHYfq0ExU1qCfMTDM84c7I1GonJSy+PuOXOIcwQxE
+   Qw0CmqTGxmPXCoAu1SosSmCpPfWID7+Krn8Xy6nu+iuykHTEWnz3uFd5G
+   8jT2mKuC9+nU054yhcos3jd3YeaahZLrb2T+bGAzKurXpr36okRX7ulIS
+   1W2J9wEZ1oh9GSYNqUM69ZPxjOhatgJM9PJzf2/Qpfa7Y/F+jc+B2HL05
+   z3ZPMUGQnVejPq4O1+olotS2oVnr7gWYKgq/YSckxlY3Ial57tIZe1Avm
+   /fZioxOKlvEBvBgROlF0kH/cm6f/wbjjHL6LMC61rMTmA1XW01KJQik9u
+   w==;
+X-CSE-ConnectionGUID: SgMZENu0SwaZsTGMeNxM2g==
+X-CSE-MsgGUID: O6Vl92QJR2ab17VoNjb3Mg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10316006"
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="10316006"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 23:37:03 -0700
+X-CSE-ConnectionGUID: kgMW4csVRV6x1K/Yr6uucg==
+X-CSE-MsgGUID: 8JTDsJIoQByUwUenbUVmng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="26973237"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.27])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 23:36:53 -0700
+Message-ID: <a9b176c7-60e8-4793-a056-4ad9219fbe32@intel.com>
+Date: Tue, 30 Apr 2024 09:36:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <80f723d230744bc299044cfd4f8c4d92@shmbx06.spreadtrum.com> <20240429214321.GB125@debian-dev>
-In-Reply-To: <20240429214321.GB125@debian-dev>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 Apr 2024 20:40:46 -0700
-Message-ID: <CAP-5=fUdVHu6a8TLi_HYOZv3Ur_Sr4nvx92rkSaxxKJummPzKw@mail.gmail.com>
-Subject: Re: Question about using the perf c2c in UMA system
-To: Leo Yan <leo.yan@linux.dev>
-Cc: "?????? (Baisheng Gao)" <baisheng.gao@unisoc.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"???? (Hao_hao Wang)" <Hao_hao.Wang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/17] perf auxtrace: Allow number of queues to be
+ specified
+To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
+ coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <20240429152207.479221-3-james.clark@arm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240429152207.479221-3-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 29, 2024 at 2:43=E2=80=AFPM Leo Yan <leo.yan@linux.dev> wrote:
->
-> Hi Baisheng,
->
-> On Mon, Apr 08, 2024 at 10:52:59AM +0000, ?????? (Baisheng Gao) wrote:
-> > Hi linux-perf-users,
-> >
-> > My perf tool version is 6.6, and I compiled it to run on an Android sys=
-tem.
-> > The problem is:
-> >
-> > # ./perf c2c report
-> > Failed setup nodes
-> >
-> > According to the articles on the Internet, it seems that the perf c2c i=
-s only supported
-> > in NUMA system. However, the cache false sharing does not exist only in=
- NUMA, and
-> > the UMA system has also the problem. So I wonder how to support perf c2=
-c in UMA.
->
-> The log above is related with parsing NUMA nodes, but this doesn't
-> mean 'perf c2c' must run on NUMA system. My understanding is both
-> x86_64 (memory event) and Arm64 (SPE) support 'perf c2c' not only on
-> NUMA.
+On 29/04/24 18:21, James Clark wrote:
+> Currently it's only possible to initialize with the default number of
+> queues and then use auxtrace_queues__add_event() to grow the array. But
+> that's problematic if you don't have a real event to pass into that
+> function yet.
+> 
+> The queues hold a void *priv member to store custom state, and for
+> Coresight we want to create decoders upfront before receiving data, so
+> add a new function that allows pre-allocating queues. One reason to do
+> this is because we might need to store metadata (HW_ID events) that
+> effects other queues, but never actually receive auxtrace data on that
+> queue.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-The lack of SPE on most ARM hardware really is a pain. Can we add a
-better error message to make it clearer to users that they need a
-neoverse CPU? :-)
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks,
-Ian
+> ---
+>  tools/perf/util/auxtrace.c | 9 +++++++--
+>  tools/perf/util/auxtrace.h | 1 +
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 3684e6009b63..563b6c4fca31 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -218,15 +218,20 @@ static struct auxtrace_queue *auxtrace_alloc_queue_array(unsigned int nr_queues)
+>  	return queue_array;
+>  }
+>  
+> -int auxtrace_queues__init(struct auxtrace_queues *queues)
+> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues)
+>  {
+> -	queues->nr_queues = AUXTRACE_INIT_NR_QUEUES;
+> +	queues->nr_queues = nr_queues;
+>  	queues->queue_array = auxtrace_alloc_queue_array(queues->nr_queues);
+>  	if (!queues->queue_array)
+>  		return -ENOMEM;
+>  	return 0;
+>  }
+>  
+> +int auxtrace_queues__init(struct auxtrace_queues *queues)
+> +{
+> +	return auxtrace_queues__init_nr(queues, AUXTRACE_INIT_NR_QUEUES);
+> +}
+> +
+>  static int auxtrace_queues__grow(struct auxtrace_queues *queues,
+>  				 unsigned int new_nr_queues)
+>  {
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 55702215a82d..8a6ec9565835 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -521,6 +521,7 @@ int auxtrace_mmap__read_snapshot(struct mmap *map,
+>  				 struct perf_tool *tool, process_auxtrace_t fn,
+>  				 size_t snapshot_size);
+>  
+> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues);
+>  int auxtrace_queues__init(struct auxtrace_queues *queues);
+>  int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+>  			       struct perf_session *session,
 
-> Thanks,
-> Leo
->
