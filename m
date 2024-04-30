@@ -1,45 +1,52 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3DA199E88
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 19:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913141C0DD6
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 19:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714505580; cv=none; b=W6LFovmuw+vHSrGpNwOc+AzwUSbczk98bkrZEkkKAm3uRsNswye8drTnXDlUhsCZZEwV6WgLBZkBXhH/ZntTo9/NSJ6YKMFb04klOUco0Ba+NQ3DH5LPRr+1TtfpnxUAIAxaD2/OVIbrK+NkA+RggkmqhSy8Y5ed4I6qVx+EjsA=
+	t=1714506691; cv=none; b=mMX92nso7vzwFuIegNV5fORU+6I/XXSEghm/UFh9LR014xiqUDirw+yvAXN7jTvFyZOPLJJJKKo2Cn8nwSvI4A3bu1cdMYwYRj9WKkC61WO99CDmtD7cZZoR45YzeBfXanFTEfWiNR+Lp8A1Cny015Qgji5Y0G8fFoCOVFOVXwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714505580; c=relaxed/simple;
-	bh=ZQ1oMUBTwxcdIs4FlFp86Z2Y3cV91YhkLRluiKVg8/g=;
+	s=arc-20240116; t=1714506691; c=relaxed/simple;
+	bh=UaWvjoeb7IZoqPjtDztFt9cR9SgGUbKqNmmeR3hoe0E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mYTfIdNyu35VX/UFxHEsD4K5gY2HdBUghvBgu9a1MvKUekNbb6qBU3F430GPa4BLd9z3mmqxhzU5WmDw2aCaAYXyKxWBwRipXY6BUP/EOPIvyB2+GjEDNPjKhY2sLkWUzOf8v+rftYpCY7ZA/JmFgu2YMVQFBfyq1Vf/ZiG5h5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l/aQPeGJ; arc=none smtp.client-ip=95.215.58.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=sViH1FOesyDBdXfagKZw+kXDCH4Z97/+oPDgHNRhKrg4Ha0ZDje0PhvMxEgEjIpAaQXVXnn43dP0D3+Cho3dPrq+IN/mG8QgCujI9EJlh2bGGfmOj0w7nkuEAwDm18ajwAnHC4BHfJdJC6z23qTa2e7uX1ErFkzoXRVANeXElU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lVj8mn6u; arc=none smtp.client-ip=91.218.175.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l/aQPeGJ"
-Date: Wed, 1 May 2024 03:32:50 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lVj8mn6u"
+Date: Wed, 1 May 2024 03:51:24 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714505575;
+	t=1714506687;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fQjnNv6XDcUqIkBYRrAmMHtnhjRpNuJYdDVXg1pXxdg=;
-	b=l/aQPeGJ21VVxyJLdBYErtmi9log3P/u+1nn9OCBSg7onyHC1CQbnuOYbk82K2dAWzIZVB
-	4ZBXDToyIryxI4q1Q+u5J0jfDXsXhaqfabFnJKvNn/Yxhv/Hm3y74ozs1DozJmNA1SJS+1
-	bXnPe3yiqST037rznLlii2/LUpooTRI=
+	bh=ghnc7A+qj4DHw76Zc4PmkMS/7KxAwj/kz5TlaQ90WZI=;
+	b=lVj8mn6ue9G0BSVmk14Q+jPSoq2w3ywceBLRrdQrxNI6hh143C5M4hONAgoZ1Tenwfa7jv
+	x3OBEdOgt1d0Krs44Hruq1VeMnmIXJRBftrk6lj/9QH7xQmgLHTCmrGV9JgojeaJlhbEbH
+	+K0IGz0MeHhX28uYqptwDflPnT+eOys=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Leo Yan <leo.yan@linux.dev>
 To: James Clark <james.clark@arm.com>
-Cc: Ian Rogers <irogers@google.com>,
-	"?????? (Baisheng Gao)" <baisheng.gao@unisoc.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"???? (Hao_hao Wang)" <Hao_hao.Wang@unisoc.com>
-Subject: Re: Question about using the perf c2c in UMA system
-Message-ID: <20240430193250.GC125@debian-dev>
-References: <80f723d230744bc299044cfd4f8c4d92@shmbx06.spreadtrum.com>
- <20240429214321.GB125@debian-dev>
- <CAP-5=fUdVHu6a8TLi_HYOZv3Ur_Sr4nvx92rkSaxxKJummPzKw@mail.gmail.com>
- <40bd4bb1-a2fa-4173-aea8-8ccd3ca23df3@arm.com>
+Cc: linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf cs-etm: Improve version detection and error
+ reporting
+Message-ID: <20240430195124.GD125@debian-dev>
+References: <20240430133221.250811-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,55 +55,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40bd4bb1-a2fa-4173-aea8-8ccd3ca23df3@arm.com>
+In-Reply-To: <20240430133221.250811-1-james.clark@arm.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 30, 2024 at 03:36:02PM +0100, James Clark wrote:
-
-[...]
-
-> >> On Mon, Apr 08, 2024 at 10:52:59AM +0000, ?????? (Baisheng Gao) wrote:
-> >>> Hi linux-perf-users,
-> >>>
-> >>> My perf tool version is 6.6, and I compiled it to run on an Android system.
-> >>> The problem is:
-> >>>
-> >>> # ./perf c2c report
-> >>> Failed setup nodes
-> >>>
-> >>> According to the articles on the Internet, it seems that the perf c2c is only supported
-> >>> in NUMA system. However, the cache false sharing does not exist only in NUMA, and
-> >>> the UMA system has also the problem. So I wonder how to support perf c2c in UMA.
-> >>
-> >> The log above is related with parsing NUMA nodes, but this doesn't
-> >> mean 'perf c2c' must run on NUMA system. My understanding is both
-> >> x86_64 (memory event) and Arm64 (SPE) support 'perf c2c' not only on
-> >> NUMA.
-> > 
-> > The lack of SPE on most ARM hardware really is a pain. Can we add a
-> > better error message to make it clearer to users that they need a
-> > neoverse CPU? :-)
-
-We cannot stick to Arm Neoverse CPUs as Arm SPE is supported on more CPU
-variants. On the other hand, I think we need to dynamically detect CPU
-feature for SPE to replace current code for binding specific CPU
-variants.
-
-> This issue seems to be about report rather than record, so I'm assuming
-> that the record worked and SPE is present.
-
-Yes, this issue is for the report command.
-
-@Baisheng, do you mind to share the steps for reproduce this issue or
-drop the perf data file with me? Sorry if I missed your sharing.
-
-> Having said that, the error message for no SPE isn't great, but it's not
-> that bad either:
+On Tue, Apr 30, 2024 at 02:32:21PM +0100, James Clark wrote:
+> When the config validation functions are warning about ETMv3, they do it
+> based on "not ETMv4". If the drivers aren't all loaded or the hardware
+> doesn't support Coresight it will appear as "not ETMv4" and then Perf
+> will print the error message "... not supported in ETMv3 ..." which is
+> wrong and confusing.
 > 
->   $ perf c2c record
->   failed: no PMU supports the memory events
+> cs_etm_is_etmv4() is also misnamed because it also returns true for
+> ETE because ETE has a superset of the ETMv4 metadata files. Although
+> this was always done in the correct order so it wasn't a bug.
+> 
+> Improve all this by making a single get version function which also
+> handles not present as a separate case. Change the ETMv3 error message
+> to only print when ETMv3 is detected, and add a new error message for
+> the not present case.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-This is better than nothing ;-) I will check a bit for a better log.
-
-Thanks,
-Leo
+Reviewed-by: Leo Yan <leo.yan@linux.dev>
