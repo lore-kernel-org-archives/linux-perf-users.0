@@ -1,221 +1,83 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F28B17167A;
-	Tue, 30 Apr 2024 13:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98944152781
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 14:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483977; cv=none; b=rKdg9Fpucsx14uE8ns4WdEpph44uYQF+mh5V3FCmKdvENLjX1mfmwMxwc7ySXvKWZZZOIkjVzCafPpvd3NlthDZYHxXDmd9cELPLTvs9NkoeVcJuQR80vbtiROuretUCpZmfRsoKwF0yubUyn8bFN6WsYHt89CIuUBNHCgfXpyw=
+	t=1714487768; cv=none; b=kWvTlxPefymtyacccyCZPIOYW2mwMx3WOnJ/DnowFo9JQmsTnkmym2QNI6Q/TSqd+drfktwfZCrWLZSolH5SeDDpK6pvd+fxOCqr/9It3719Z0fgDlHwkHVJAv3gdaV3b/h8HpV50xclD64rxqKK6B6UvFfjSsnl9H37Ik3+rVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483977; c=relaxed/simple;
-	bh=zhZKdf7+QHmsXg6+Mf83SxIaH1CGfxqSn5wfEF/J79Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miAAuMCn3FbkXtvK7tJj4Z/B5bvOODZ6dLMIc/nBpZsiIQF7vfACHIqChajLG3Wdktk3VneGPa8Soc28Ar0s+K6a3lDyReO/rtWozQFkDzb7iWM4SIU7HbPmhi/JSsH4XToSR9baMBzgk46K6baF6FXvu0WgyWOBenhek/w5Yjg=
+	s=arc-20240116; t=1714487768; c=relaxed/simple;
+	bh=9dqN/aRWuNLVid6/A9CDN4qIxnMtFET3MrRfW067klg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nkw6S1/gUTElBDuTlgaAo87qK2ZY5RKnJrJ4eyorABfyF1drQx/DC3z9D9uJq/KDMcvq6o4Ut4UNcsvAClOrjxrsfZ5YvnhKghn11DJolDhXxzIdHbmR7d6H44BJm+KyUbfFusDpYfhb23EKMa4tfNnCFiXal6AO92S0GXRVXow=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4364A2F4;
-	Tue, 30 Apr 2024 06:33:21 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F9C63F793;
-	Tue, 30 Apr 2024 06:32:52 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	coresight@lists.linaro.org
-Cc: James Clark <james.clark@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf cs-etm: Improve version detection and error reporting
-Date: Tue, 30 Apr 2024 14:32:21 +0100
-Message-Id: <20240430133221.250811-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 419EE339;
+	Tue, 30 Apr 2024 07:36:32 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 679683F793;
+	Tue, 30 Apr 2024 07:36:04 -0700 (PDT)
+Message-ID: <40bd4bb1-a2fa-4173-aea8-8ccd3ca23df3@arm.com>
+Date: Tue, 30 Apr 2024 15:36:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Question about using the perf c2c in UMA system
+To: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linux.dev>
+Cc: "?????? (Baisheng Gao)" <baisheng.gao@unisoc.com>,
+ "jolsa@kernel.org" <jolsa@kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "???? (Hao_hao Wang)" <Hao_hao.Wang@unisoc.com>
+References: <80f723d230744bc299044cfd4f8c4d92@shmbx06.spreadtrum.com>
+ <20240429214321.GB125@debian-dev>
+ <CAP-5=fUdVHu6a8TLi_HYOZv3Ur_Sr4nvx92rkSaxxKJummPzKw@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fUdVHu6a8TLi_HYOZv3Ur_Sr4nvx92rkSaxxKJummPzKw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When the config validation functions are warning about ETMv3, they do it
-based on "not ETMv4". If the drivers aren't all loaded or the hardware
-doesn't support Coresight it will appear as "not ETMv4" and then Perf
-will print the error message "... not supported in ETMv3 ..." which is
-wrong and confusing.
 
-cs_etm_is_etmv4() is also misnamed because it also returns true for
-ETE because ETE has a superset of the ETMv4 metadata files. Although
-this was always done in the correct order so it wasn't a bug.
 
-Improve all this by making a single get version function which also
-handles not present as a separate case. Change the ETMv3 error message
-to only print when ETMv3 is detected, and add a new error message for
-the not present case.
+On 30/04/2024 04:40, Ian Rogers wrote:
+> On Mon, Apr 29, 2024 at 2:43 PM Leo Yan <leo.yan@linux.dev> wrote:
+>>
+>> Hi Baisheng,
+>>
+>> On Mon, Apr 08, 2024 at 10:52:59AM +0000, ?????? (Baisheng Gao) wrote:
+>>> Hi linux-perf-users,
+>>>
+>>> My perf tool version is 6.6, and I compiled it to run on an Android system.
+>>> The problem is:
+>>>
+>>> # ./perf c2c report
+>>> Failed setup nodes
+>>>
+>>> According to the articles on the Internet, it seems that the perf c2c is only supported
+>>> in NUMA system. However, the cache false sharing does not exist only in NUMA, and
+>>> the UMA system has also the problem. So I wonder how to support perf c2c in UMA.
+>>
+>> The log above is related with parsing NUMA nodes, but this doesn't
+>> mean 'perf c2c' must run on NUMA system. My understanding is both
+>> x86_64 (memory event) and Arm64 (SPE) support 'perf c2c' not only on
+>> NUMA.
+> 
+> The lack of SPE on most ARM hardware really is a pain. Can we add a
+> better error message to make it clearer to users that they need a
+> neoverse CPU? :-)
+> 
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/arch/arm/util/cs-etm.c | 64 +++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 16 deletions(-)
+This issue seems to be about report rather than record, so I'm assuming
+that the record worked and SPE is present.
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 07be32d99805..2763c6758b91 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -66,9 +66,25 @@ static const char * const metadata_ete_ro[] = {
- 	[CS_ETE_TS_SOURCE]		= "ts_source",
- };
- 
--static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
-+enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
-+
-+static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
-+				       const char *file);
- static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu);
- 
-+static enum cs_etm_version cs_etm_get_version(struct auxtrace_record *itr,
-+					      int cpu)
-+{
-+	if (cs_etm_is_ete(itr, cpu))
-+		return CS_ETE;
-+	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]))
-+		return CS_ETMV4;
-+	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv3_ro[CS_ETM_ETMCCER]))
-+		return CS_ETMV3;
-+
-+	return CS_NOT_PRESENT;
-+}
-+
- static int cs_etm_validate_context_id(struct auxtrace_record *itr,
- 				      struct evsel *evsel, int cpu)
- {
-@@ -87,7 +103,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
- 		return 0;
- 
- 	/* Not supported in etmv3 */
--	if (!cs_etm_is_etmv4(itr, cpu)) {
-+	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
- 		pr_err("%s: contextid not supported in ETMv3, disable with %s/contextid=0/\n",
- 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
- 		return -EINVAL;
-@@ -154,7 +170,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
- 	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
- 		return 0;
- 
--	if (!cs_etm_is_etmv4(itr, cpu)) {
-+	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
- 		pr_err("%s: timestamp not supported in ETMv3, disable with %s/timestamp=0/\n",
- 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
- 		return -EINVAL;
-@@ -218,6 +234,11 @@ static int cs_etm_validate_config(struct auxtrace_record *itr,
- 	}
- 
- 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
-+		if (cs_etm_get_version(itr, cpu.cpu) == CS_NOT_PRESENT) {
-+			pr_err("%s: Not found on CPU %d. Check hardware and firmware support and that all Coresight drivers are loaded\n",
-+			       CORESIGHT_ETM_PMU_NAME, cpu.cpu);
-+			return -EINVAL;
-+		}
- 		err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
- 		if (err)
- 			break;
-@@ -548,13 +569,13 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 		/* Event can be "any" CPU so count all online CPUs. */
- 		intersect_cpus = perf_cpu_map__new_online_cpus();
- 	}
-+	/* Count number of each type of ETM. Don't count if that CPU has CS_NOT_PRESENT. */
- 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
--		if (cs_etm_is_ete(itr, cpu.cpu))
--			ete++;
--		else if (cs_etm_is_etmv4(itr, cpu.cpu))
--			etmv4++;
--		else
--			etmv3++;
-+		enum cs_etm_version v = cs_etm_get_version(itr, cpu.cpu);
-+
-+		ete   += v == CS_ETE;
-+		etmv4 += v == CS_ETMV4;
-+		etmv3 += v == CS_ETMV3;
- 	}
- 	perf_cpu_map__put(intersect_cpus);
- 
-@@ -564,7 +585,8 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 	       (etmv3 * CS_ETMV3_PRIV_SIZE));
- }
- 
--static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
-+static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
-+				       const char *file)
- {
- 	bool ret = false;
- 	char path[PATH_MAX];
-@@ -574,9 +596,7 @@ static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
- 			container_of(itr, struct cs_etm_recording, itr);
- 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
- 
--	/* Take any of the RO files for ETMv4 and see if it present */
--	snprintf(path, PATH_MAX, "cpu%d/%s",
--		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
-+	snprintf(path, PATH_MAX, "cpu%d/%s", cpu, file);
- 	scan = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
- 
- 	/* The file was read successfully, we have a winner */
-@@ -735,21 +755,26 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
- 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
- 
- 	/* first see what kind of tracer this cpu is affined to */
--	if (cs_etm_is_ete(itr, cpu)) {
-+	switch (cs_etm_get_version(itr, cpu)) {
-+	case CS_ETE:
- 		magic = __perf_cs_ete_magic;
- 		cs_etm_save_ete_header(&info->priv[*offset], itr, cpu);
- 
- 		/* How much space was used */
- 		increment = CS_ETE_PRIV_MAX;
- 		nr_trc_params = CS_ETE_PRIV_MAX - CS_ETM_COMMON_BLK_MAX_V1;
--	} else if (cs_etm_is_etmv4(itr, cpu)) {
-+		break;
-+
-+	case CS_ETMV4:
- 		magic = __perf_cs_etmv4_magic;
- 		cs_etm_save_etmv4_header(&info->priv[*offset], itr, cpu);
- 
- 		/* How much space was used */
- 		increment = CS_ETMV4_PRIV_MAX;
- 		nr_trc_params = CS_ETMV4_PRIV_MAX - CS_ETMV4_TRCCONFIGR;
--	} else {
-+		break;
-+
-+	case CS_ETMV3:
- 		magic = __perf_cs_etmv3_magic;
- 		/* Get configuration register */
- 		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
-@@ -767,6 +792,13 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
- 		/* How much space was used */
- 		increment = CS_ETM_PRIV_MAX;
- 		nr_trc_params = CS_ETM_PRIV_MAX - CS_ETM_ETMCR;
-+		break;
-+
-+	default:
-+	case CS_NOT_PRESENT:
-+		/* Unreachable, CPUs already validated in cs_etm_validate_config() */
-+		assert(true);
-+		return;
- 	}
- 
- 	/* Build generic header portion */
--- 
-2.34.1
+Having said that, the error message for no SPE isn't great, but it's not
+that bad either:
+
+  $ perf c2c record
+  failed: no PMU supports the memory events
 
