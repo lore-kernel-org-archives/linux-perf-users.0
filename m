@@ -1,57 +1,59 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FCD127B68;
-	Tue, 30 Apr 2024 09:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57ED12836D;
+	Tue, 30 Apr 2024 09:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468520; cv=none; b=KkXPciJILt7US24TFu7aQ0+ypOcywrkwOKSqpfOiVn+sPdAhaD9UQ02xwvYxfdYSyBz4R8561A1DoTGZcZa3LoKedK02lFOtEKhYxO3bJ6QOdg65wbPAgoI3H5/hgVL5/AjdZgEZVTQC+wQ3hvcjopP988GM9PH96cNsr0URJoY=
+	t=1714468730; cv=none; b=oRZdp9b8BNfTwuGc4lGdeX0i3xhdBjdGnojSt1qgdrazL5J5iowd62MIrI45kGAYf0aasE8f/5qwz/qJg3n0jWgEh1fKqmg2fVcG+hXrUZyUwd/wwBfCdryAU0gugoP63oTAm3yxkk/8nfV5d5/JqW4dzzivBDGeqhC73N3p8+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468520; c=relaxed/simple;
-	bh=A5/HDxwcKe1CPVTAY+cgDukpdoaBFZ/fMspZPwQu9PA=;
+	s=arc-20240116; t=1714468730; c=relaxed/simple;
+	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBZ1DLx3W9wag4CJlNOIqzbIGoz6/hLFSXX0Oscsse+SJ/wSbahaNNJ7mv+jghissMx10XIvOg9BefSGURHBKkQGEvzSOxy1lMIf/EBs/Tn7KgLQN1Ki6ORbNb93aIcJQe4Cv7Dbvzy/neKu7qvHmxmbpBl0Lbad7TjyepjVVCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QezeMGZb; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2i0wi9HsbThNaa6E8108lFUxIZH7AkfvJ19QPpYWi1tWG7cjpQSSej9C2KpK8th+Fqg3zoS9PdsZF6++hVq2FcDD6ryeqfP73C5v1cTwRgnjeI46b96xxNWEKA+wKztpRUw7p4wWNdaJjFoQJzOr0Xtnavr6FHFc5LmpNR22g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Vn8aMbTO; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QezeMGZb"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vn8aMbTO"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=A5/HDxwcKe1CPVTAY+cgDukpdoaBFZ/fMspZPwQu9PA=; b=QezeMGZbL/2NWH6nP0/grm30hL
-	jMekjRq2qFRUCFMRCVKslzxjAbg9qKxnPhvTx49CL9iwrEZkwp43xFyQ0hHRqjVecoKP32EYhnlYA
-	F7dLnahlYnkHPvtIlVuNduOC/6DiIs0YE0BNWfCwjHkGa3Iepoi9C6AD95I5r4h1/DGRvLsrycMOj
-	XhG0q9cRd0XBlsKJ/npaieP0mBo/2iId1P1fa5DvQPM2vivUKoCsHcxz4syC9vcHK4oPuzkLS4zf0
-	Se759pCqFVTnwp1pXJJWiexcYhQ4XC/Lfhh/wVX2XZtGeCfqZ5RPr4C6k/6Bbbi7gZfurl8CVIIxS
-	ne8E90VA==;
+	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=; b=Vn8aMbTOd8x2KVdzx4zx502abC
+	0ktMguPbT3STkiJJH+4+777WbgZ65KoqqWsk2WT/EuE9hUlfueqcxjDFMQ7+J8wJyDotHw30CVIOc
+	RCqa8aB4lB2dfZ/WR273ADnGoXUuKd1HlgqZTFk90YCigUys4LbTLX1kTzOFAYvljtp/SWvbqluW9
+	/qaf7TSHDeEqR9NJ58xrV2OKocqbZ4zuCeDK0PIZS+R5BRPxjBxBzYVJNr8ucIIAcNmeG+nutSnqD
+	tSgP166iVlyEUahURv+90me2NJ/BpEAnkg03NRU2o1IGia0t3H+HGspAwh5ra0/Y3qfvoU7knzLN/
+	tIxHbq3Q==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1jZo-0000000Gsl8-2RdT;
-	Tue, 30 Apr 2024 09:15:07 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s1jdB-0000000ETrS-2ro4;
+	Tue, 30 Apr 2024 09:18:33 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3F7AD300684; Tue, 30 Apr 2024 11:15:04 +0200 (CEST)
-Date: Tue, 30 Apr 2024 11:15:04 +0200
+	id 5C0DB300684; Tue, 30 Apr 2024 11:18:33 +0200 (CEST)
+Date: Tue, 30 Apr 2024 11:18:33 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
+To: Kees Cook <keescook@chromium.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Erick Archer <erick.archer@outlook.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Subject: Re: [PATCH] perf/x86/intel/uncore: Prefer struct_size over open
+ coded arithmetic
+Message-ID: <20240430091833.GD40213@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202404291013.B21EADD4F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,11 +62,13 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <202404291013.B21EADD4F@keescook>
 
-On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
+On Mon, Apr 29, 2024 at 10:18:03AM -0700, Kees Cook wrote:
 
-So personally I detest struct_size() because I can never remember wtf it
-does, whereas the code it replaces is simple and straight forward :/
+> Peter and Ingo, you seem to traditionally take these changes (via -tip)?
+> Can you please pick this up?
+
+I have been explicitly not taking these things for perf and sched for a
+while now. As I wrote in that other mail, I detest struct_size(), it
+obfuscates code for no real benefit afaict.
