@@ -1,283 +1,218 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268017556B
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 16:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802AC1802CB
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 17:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714494173; cv=none; b=srhvwluYZnGr5yctjakHI47BrYBoESpDDzgwcEtnX7qsiwtfkhUUU/TalDKyqltf+qlWPpBFnkopcwepwWTzU5N03Na21hzwWBpEAf2+i0nKvCCsaK1bFbXpWvz9vCa3EGwhoSDmxspR7gX80Sw83rxW4/wbTmgwqF/NBHFVSZ0=
+	t=1714499210; cv=none; b=OQYjZsgRuMXfM/FKFYKsJvrz5jTmsUgiHly666/AsGWrTJ3ITCCqvRhodrnmN+R0YxxplewgzRNt2tLPtlFraRPPstwSBFPMOcHkPOR+jZnm73x0apWSjrYq0bezuxKeKB7xsza3OOfwEw8luhzGWwH/Pq1Zi/pyQepfnuTmPho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714494173; c=relaxed/simple;
-	bh=L1w1/51e9DaD4SOZkZNtb26qg3oa8sZRGBr0x071Hsk=;
+	s=arc-20240116; t=1714499210; c=relaxed/simple;
+	bh=W6ac2L3mZw4udeI+hS8Q578eVio2S4J4DCWerOSFsdo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTYhfw/uDE8lryC2bSGy/rou+5k6ismF3wxIuoh/o+UN0v7cjRJZISGZtaXLLlzzVVXTa3zWqK319iez78vJq76vFtA3PYTRbtcdNPfS/9nV1NFTWntdbIBx+cQvjoHbkZl+wVP0ARQWbO4ij/inIxfqKJyvpmhzlJxv29etX/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eNw5lnTr; arc=none smtp.client-ip=209.85.160.181
+	 To:Cc:Content-Type; b=ACcK1lFHMUhr9upx087sBxYJN7bpMItv5ScBW0F9QQuYdcal11d0DnHA0OdL2W+EnFKr5nutuDyqQ1gUkZQfMJOmI6TKYOF6R+eUx4n8YaY0qnRHr7C/HzYRGfSFbTjFHDSbJp7MlHGg/sykod2q3Cc1VCqlfldB+Pt5c4I2gmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zEpKEwI2; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eNw5lnTr"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-439b1c72676so500821cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 09:22:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zEpKEwI2"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ec76185cb3so13665ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 10:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714494170; x=1715098970; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714499208; x=1715104008; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7Pr68tC7zaGFrL1IgvXTGlK5jZYArtgYfkp+AHywlPE=;
-        b=eNw5lnTr7AcRKNCMMTOyj/NhOwlwUTlR4VN829d8WFhMFoAXEbkERV5hYUaYG/CheX
-         PSqpQ5IM3WD5jQ/BBce34mMy1FnBkn+sBZmQt/vcVoPokjIuIZhCSa2/k2+PyY4WtwE/
-         q88yqgJgMjj9s4QGiqepThsIgrQ9gcuvCVxce2y15HnlG0g0Fc1IXOFKIRiSvOVMGnH4
-         s85+E8JH1o4ZuP2ej7+mreTn6Lhew++mDbL9n3hfpfdJ9vP04oaM0Cv1IvzFQA9WH+Cb
-         dEaNolCGLj9hbWhYlqVwMg+WblUl78ValJT8G143LbAutmhweWo4LsmAhoGCHW7fLJJq
-         jcBw==
+        bh=xpKTfqnj3CRiS2xW53PmZnJhP8tb/+iKK2ylukjJ2nA=;
+        b=zEpKEwI2smD7gPPOnK+tKrCCnl/4RghSoWR3OFCfWC3IbvARhRSHh571bYPoXH80zQ
+         ocwcaAm+yAUtTjPbt+yCyGGkwV1T4Hc6AO07gJLw++RF4cMOzTMVGlm7M8Q8AvPZFQKo
+         2zCx01PHb4use5jQj1yPmM0BSL6uwdsSYYR9ToK9TWUfgXnr3O8NsdtclMjlzhLBjxGi
+         7Rdguk4ztbux3VHot+2t2jQj7uAROHuug6SoY0g609wa5c+4cmKv631vjl464n30A4KL
+         LOkLemGjL+5iFeE9IC1xAzZORZjyIzISSMz6DhgzLqC3xdX+743W6Q0U/E0r6Lbmxxkr
+         jZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714494170; x=1715098970;
+        d=1e100.net; s=20230601; t=1714499208; x=1715104008;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7Pr68tC7zaGFrL1IgvXTGlK5jZYArtgYfkp+AHywlPE=;
-        b=vpTEB03i0baxEWP5ei6wBjTtMZU+xaSbOlD+aDRQebIAhrFr0YdLAz8wH2sRfKbfiy
-         HuJmcZ6Ov20h+MM2DozDCiey7Nu39AzwQL9L1fO+w/Vn5RpgVrQDO7lJynjWuNQEtryV
-         f3vQlceYcluN6q3uUTJw77Zi9NQGbX6PPMdovMTe9NL1QMEWnwAe1E54l2zbQEOCFdnA
-         oEzNreuQ3WjA2QH/XTcWEV/tZ88uKlg3lGom731oi3I0N9CKWBfsu/lFpeC07AebyWMf
-         gCBpnFYCTxSCiwTcWrjd+mPdPr2xay3lFAcdnb8j1LMR1mMVC2qof82dX4SExNzq0ITi
-         qIvw==
-X-Gm-Message-State: AOJu0YyFbd4eThjen2Q+Aah1DWok0q1pBdlnjmi4JXe6nVXwuqsohA6k
-	LotyVRscT3MMBqQSHWYgbi7HQnOuaPruC7GW0Ftdi70DCZ0HR6bvTvioxALtUY/TH6+neu4bFB7
-	GDDhGd05ZN0r45ldz1oElWk71HeczolPC6jZe
-X-Google-Smtp-Source: AGHT+IFCF3vKEt4TJM9yBhBKm8gDP3afbD+7AEIwxVWJPwwXoyno5TCahTqki5z+L/9mDdkcURdaQ6z7k5li08Xz++I=
-X-Received: by 2002:a05:622a:4e8b:b0:437:b572:6d with SMTP id
- dj11-20020a05622a4e8b00b00437b572006dmr328934qtb.21.1714494170121; Tue, 30
- Apr 2024 09:22:50 -0700 (PDT)
+        bh=xpKTfqnj3CRiS2xW53PmZnJhP8tb/+iKK2ylukjJ2nA=;
+        b=drahNHa3jnCFdFgdpgPY7Q7lGOIwaDVXNKZQptTkicYbqbFQ598DWi3X3y91Vp+Dqi
+         wuA5hWfEKPxYqrqfiXrmOP3DzBZ6vsSEIk198n+kBIFewPiVvLk647NflKlYQQGPiWGB
+         ArNtZA/2kKmqSfG7ge0CehD/qKj6RPbiKwfXg8VkS7e2r8c57/jiQnhHXK7nGhD0gp3f
+         /LwMpeoHMy1Urub2J0AnNSjRmwC1exj7GsjkbcbqsEVWpLtFwGGKGFqRQerbhhh0gK0s
+         qWNdFkS2BBUHdKwiTBHL8csnttnB5UHoyZ3FZAeA8ds1LyfIdP8eyesFMhsK7tR4BC2w
+         eC2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUv4sGClTy30j8mh9B6rbQIsM/+uVPwnehc5O3YGZqCIouBhJKa/2wq7GC4CfUtjEBLrCZPQ13nHpAnLeYRTHYbds5Dt6RF7fslqy3fXTWQvw==
+X-Gm-Message-State: AOJu0YxgA02+h/1zYTW8E5TrPt+aqdx11syIhSeEouOrVJqml9ZgL7Fk
+	MMB/U6CGZm2PShKNaOx2zTSPpS1ZQ/A1QdVpnlkSLkhCkC0CrZ7Ry6TttVdSQtzyusZ3UiNUlIO
+	iUyQUqoGLdhqeJD2HrQnhvAx/quPX+WgyWRft
+X-Google-Smtp-Source: AGHT+IFbyctZTE3ocM/KnKMqXJyAPzaowBmvVYTZB+Fm5ndNLyaw/qpXsJEGqTfrvOfbceanRdPBjgs69jnBlceSW7k=
+X-Received: by 2002:a17:902:f642:b0:1eb:7899:ada9 with SMTP id
+ m2-20020a170902f64200b001eb7899ada9mr4738plg.26.1714499207555; Tue, 30 Apr
+ 2024 10:46:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430133221.250811-1-james.clark@arm.com>
-In-Reply-To: <20240430133221.250811-1-james.clark@arm.com>
+References: <20240314063000.2139877-1-yangjihong@bytedance.com> <CAP-5=fV--O=QB8To+cbR=C06JzPqBFLFYTc1oh9gJZwBQ3BE=w@mail.gmail.com>
+In-Reply-To: <CAP-5=fV--O=QB8To+cbR=C06JzPqBFLFYTc1oh9gJZwBQ3BE=w@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 Apr 2024 09:22:38 -0700
-Message-ID: <CAP-5=fX2NMSE1ThznMnNo0ne7FuaxMuDGEaCieWGxZotB8XODg@mail.gmail.com>
-Subject: Re: [PATCH] perf cs-etm: Improve version detection and error reporting
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, coresight@lists.linaro.org, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Tue, 30 Apr 2024 10:46:32 -0700
+Message-ID: <CAP-5=fXJAu8OO_Gaw45Hx3uq6N8VQBNFhqcUy3Zm2vKT-TDSOQ@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Add LIBTRACEEVENT_DIR build option
+To: Yang Jihong <yangjihong@bytedance.com>, 
+	Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 6:32=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Sat, Mar 23, 2024 at 12:07=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> When the config validation functions are warning about ETMv3, they do it
-> based on "not ETMv4". If the drivers aren't all loaded or the hardware
-> doesn't support Coresight it will appear as "not ETMv4" and then Perf
-> will print the error message "... not supported in ETMv3 ..." which is
-> wrong and confusing.
+> On Wed, Mar 13, 2024 at 11:30=E2=80=AFPM Yang Jihong <yangjihong@bytedanc=
+e.com> wrote:
+> >
+> > Currently, when libtraceevent is not linked,
+> > perf does not support tracepoint:
+> >
+> >   # ./perf record -e sched:sched_switch -a sleep 10
+> >   event syntax error: 'sched:sched_switch'
+> >                        \___ unsupported tracepoint
+> >
+> >   libtraceevent is necessary for tracepoint support
+> >   Run 'perf list' for a list of valid events
+> >
+> >    Usage: perf record [<options>] [<command>]
+> >       or: perf record [<options>] -- <command> [<options>]
+> >
+> >       -e, --event <event>   event selector. use 'perf list' to list ava=
+ilable events
+> >
+> > For cross-compilation scenario, library may not be installed in the def=
+ault
+> > system path. Based on the above requirements, add LIBTRACEEVENT_DIR bui=
+ld
+> > option to support specifying path of libtraceevent.
+> >
+> > Example:
+> >
+> >   1. Cross compile libtraceevent
+> >   # cd /opt/libtraceevent
+> >   # CROSS_COMPILE=3Daarch64-linux-gnu- make
+> >
+> >   2. Cross compile perf
+> >   # cd tool/perf
+> >   # make VF=3D1 ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- NO_LIBE=
+LF=3D1 LDFLAGS=3D--static LIBTRACEEVENT_DIR=3D/opt/libtraceevent
+> >   <SNIP>
+> >   Auto-detecting system features:
+> >   <SNIP>
+> >   ...                       LIBTRACEEVENT_DIR: /opt/libtraceevent
+> >
+> > Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 >
-> cs_etm_is_etmv4() is also misnamed because it also returns true for
-> ETE because ETE has a superset of the ETMv4 metadata files. Although
-> this was always done in the correct order so it wasn't a bug.
+> This all looks good to me, thanks!
 >
-> Improve all this by making a single get version function which also
-> handles not present as a separate case. Change the ETMv3 error message
-> to only print when ETMv3 is detected, and add a new error message for
-> the not present case.
+> Reviewed-by: Ian Rogers <irogers@google.com>
 >
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c | 64 +++++++++++++++++++++++--------
->  1 file changed, 48 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util=
-/cs-etm.c
-> index 07be32d99805..2763c6758b91 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -66,9 +66,25 @@ static const char * const metadata_ete_ro[] =3D {
->         [CS_ETE_TS_SOURCE]              =3D "ts_source",
->  };
->
-> -static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
-> +enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
-> +
-> +static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu=
-,
-> +                                      const char *file);
->  static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu);
->
-> +static enum cs_etm_version cs_etm_get_version(struct auxtrace_record *it=
-r,
-> +                                             int cpu)
+> > ---
+> >  tools/perf/Makefile.config | 20 ++++++++++++++++----
+> >  1 file changed, 16 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 1fe8df97fe88..7783479de691 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -182,6 +182,16 @@ endif
+> >  FEATURE_CHECK_CFLAGS-libzstd :=3D $(LIBZSTD_CFLAGS)
+> >  FEATURE_CHECK_LDFLAGS-libzstd :=3D $(LIBZSTD_LDFLAGS)
+> >
+> > +# for linking with debug library, run like:
+> > +# make DEBUG=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent/
+> > +TRACEEVENTLIBS :=3D -ltraceevent
+> > +ifdef LIBTRACEEVENT_DIR
+> > +  LIBTRACEEVENT_CFLAGS  :=3D -I$(LIBTRACEEVENT_DIR)/include
+> > +  LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
+> > +endif
 
-nit: perhaps use "struct perf_cpu" rather than "int cpu" for a little
-bit of type safety. Fwiw, most of the tool uses an index into a CPU
-map but then have labelled that index "cpu" which is confusing
-particularly in the uncore case, whilst a perf_cpu is never an index.
+I'm finding to test a libtraceevent asan build on a system that has
+libtraceevent installed, I need to carry this change:
+```
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 7f1e016a9253..b356520d8291 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -187,7 +187,7 @@ FEATURE_CHECK_LDFLAGS-libzstd :=3D $(LIBZSTD_LDFLAGS)
+TRACEEVENTLIBS :=3D -ltraceevent
+ifdef LIBTRACEEVENT_DIR
+  LIBTRACEEVENT_CFLAGS  :=3D -I$(LIBTRACEEVENT_DIR)/include
+-  LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
++  LIBTRACEEVENT_LDFLAGS :=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib64
+endif
+FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
+FEATURE_CHECK_LDFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_LDFLAGS)
+$(TRACEEVENTLIBS)
+```
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I'm not sure how to make this something that'll work well with cross
+compilation, etc.
 
 Thanks,
 Ian
 
-> +{
-> +       if (cs_etm_is_ete(itr, cpu))
-> +               return CS_ETE;
-> +       else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv4_ro[CS_E=
-TMV4_TRCIDR0]))
-> +               return CS_ETMV4;
-> +       else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv3_ro[CS_E=
-TM_ETMCCER]))
-> +               return CS_ETMV3;
-> +
-> +       return CS_NOT_PRESENT;
-> +}
-> +
->  static int cs_etm_validate_context_id(struct auxtrace_record *itr,
->                                       struct evsel *evsel, int cpu)
->  {
-> @@ -87,7 +103,7 @@ static int cs_etm_validate_context_id(struct auxtrace_=
-record *itr,
->                 return 0;
->
->         /* Not supported in etmv3 */
-> -       if (!cs_etm_is_etmv4(itr, cpu)) {
-> +       if (cs_etm_get_version(itr, cpu) =3D=3D CS_ETMV3) {
->                 pr_err("%s: contextid not supported in ETMv3, disable wit=
-h %s/contextid=3D0/\n",
->                        CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
->                 return -EINVAL;
-> @@ -154,7 +170,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_=
-record *itr,
->               perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
->                 return 0;
->
-> -       if (!cs_etm_is_etmv4(itr, cpu)) {
-> +       if (cs_etm_get_version(itr, cpu) =3D=3D CS_ETMV3) {
->                 pr_err("%s: timestamp not supported in ETMv3, disable wit=
-h %s/timestamp=3D0/\n",
->                        CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
->                 return -EINVAL;
-> @@ -218,6 +234,11 @@ static int cs_etm_validate_config(struct auxtrace_re=
-cord *itr,
->         }
->
->         perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
-> +               if (cs_etm_get_version(itr, cpu.cpu) =3D=3D CS_NOT_PRESEN=
-T) {
-> +                       pr_err("%s: Not found on CPU %d. Check hardware a=
-nd firmware support and that all Coresight drivers are loaded\n",
-> +                              CORESIGHT_ETM_PMU_NAME, cpu.cpu);
-> +                       return -EINVAL;
-> +               }
->                 err =3D cs_etm_validate_context_id(itr, evsel, cpu.cpu);
->                 if (err)
->                         break;
-> @@ -548,13 +569,13 @@ cs_etm_info_priv_size(struct auxtrace_record *itr _=
-_maybe_unused,
->                 /* Event can be "any" CPU so count all online CPUs. */
->                 intersect_cpus =3D perf_cpu_map__new_online_cpus();
->         }
-> +       /* Count number of each type of ETM. Don't count if that CPU has =
-CS_NOT_PRESENT. */
->         perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
-> -               if (cs_etm_is_ete(itr, cpu.cpu))
-> -                       ete++;
-> -               else if (cs_etm_is_etmv4(itr, cpu.cpu))
-> -                       etmv4++;
-> -               else
-> -                       etmv3++;
-> +               enum cs_etm_version v =3D cs_etm_get_version(itr, cpu.cpu=
-);
-> +
-> +               ete   +=3D v =3D=3D CS_ETE;
-> +               etmv4 +=3D v =3D=3D CS_ETMV4;
-> +               etmv3 +=3D v =3D=3D CS_ETMV3;
->         }
->         perf_cpu_map__put(intersect_cpus);
->
-> @@ -564,7 +585,8 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __m=
-aybe_unused,
->                (etmv3 * CS_ETMV3_PRIV_SIZE));
->  }
->
-> -static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
-> +static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu=
-,
-> +                                      const char *file)
->  {
->         bool ret =3D false;
->         char path[PATH_MAX];
-> @@ -574,9 +596,7 @@ static bool cs_etm_is_etmv4(struct auxtrace_record *i=
-tr, int cpu)
->                         container_of(itr, struct cs_etm_recording, itr);
->         struct perf_pmu *cs_etm_pmu =3D ptr->cs_etm_pmu;
->
-> -       /* Take any of the RO files for ETMv4 and see if it present */
-> -       snprintf(path, PATH_MAX, "cpu%d/%s",
-> -                cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
-> +       snprintf(path, PATH_MAX, "cpu%d/%s", cpu, file);
->         scan =3D perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
->
->         /* The file was read successfully, we have a winner */
-> @@ -735,21 +755,26 @@ static void cs_etm_get_metadata(int cpu, u32 *offse=
-t,
->         struct perf_pmu *cs_etm_pmu =3D ptr->cs_etm_pmu;
->
->         /* first see what kind of tracer this cpu is affined to */
-> -       if (cs_etm_is_ete(itr, cpu)) {
-> +       switch (cs_etm_get_version(itr, cpu)) {
-> +       case CS_ETE:
->                 magic =3D __perf_cs_ete_magic;
->                 cs_etm_save_ete_header(&info->priv[*offset], itr, cpu);
->
->                 /* How much space was used */
->                 increment =3D CS_ETE_PRIV_MAX;
->                 nr_trc_params =3D CS_ETE_PRIV_MAX - CS_ETM_COMMON_BLK_MAX=
-_V1;
-> -       } else if (cs_etm_is_etmv4(itr, cpu)) {
-> +               break;
-> +
-> +       case CS_ETMV4:
->                 magic =3D __perf_cs_etmv4_magic;
->                 cs_etm_save_etmv4_header(&info->priv[*offset], itr, cpu);
->
->                 /* How much space was used */
->                 increment =3D CS_ETMV4_PRIV_MAX;
->                 nr_trc_params =3D CS_ETMV4_PRIV_MAX - CS_ETMV4_TRCCONFIGR=
-;
-> -       } else {
-> +               break;
-> +
-> +       case CS_ETMV3:
->                 magic =3D __perf_cs_etmv3_magic;
->                 /* Get configuration register */
->                 info->priv[*offset + CS_ETM_ETMCR] =3D cs_etm_get_config(=
-itr);
-> @@ -767,6 +792,13 @@ static void cs_etm_get_metadata(int cpu, u32 *offset=
-,
->                 /* How much space was used */
->                 increment =3D CS_ETM_PRIV_MAX;
->                 nr_trc_params =3D CS_ETM_PRIV_MAX - CS_ETM_ETMCR;
-> +               break;
-> +
-> +       default:
-> +       case CS_NOT_PRESENT:
-> +               /* Unreachable, CPUs already validated in cs_etm_validate=
-_config() */
-> +               assert(true);
-> +               return;
->         }
->
->         /* Build generic header portion */
-> --
-> 2.34.1
->
+> > +FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
+> > +FEATURE_CHECK_LDFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_LDFLAGS) $(TR=
+ACEEVENTLIBS)
+> > +
+> >  FEATURE_CHECK_CFLAGS-bpf =3D -I. -I$(srctree)/tools/include -I$(srctre=
+e)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+> >  # include ARCH specific config
+> >  -include $(src-perf)/arch/$(SRCARCH)/Makefile
+> > @@ -1165,9 +1175,10 @@ endif
+> >  ifneq ($(NO_LIBTRACEEVENT),1)
+> >    $(call feature_check,libtraceevent)
+> >    ifeq ($(feature-libtraceevent), 1)
+> > -    CFLAGS +=3D -DHAVE_LIBTRACEEVENT
+> > -    EXTLIBS +=3D -ltraceevent
+> > -    LIBTRACEEVENT_VERSION :=3D $(shell $(PKG_CONFIG) --modversion libt=
+raceevent)
+> > +    CFLAGS +=3D -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
+> > +    LDFLAGS +=3D $(LIBTRACEEVENT_LDFLAGS)
+> > +    EXTLIBS +=3D ${TRACEEVENTLIBS}
+> > +    LIBTRACEEVENT_VERSION :=3D $(shell PKG_CONFIG_PATH=3D$(LIBTRACEEVE=
+NT_DIR) $(PKG_CONFIG) --modversion libtraceevent)
+> >      LIBTRACEEVENT_VERSION_1 :=3D $(word 1, $(subst ., ,$(LIBTRACEEVENT=
+_VERSION)))
+> >      LIBTRACEEVENT_VERSION_2 :=3D $(word 2, $(subst ., ,$(LIBTRACEEVENT=
+_VERSION)))
+> >      LIBTRACEEVENT_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEEVENT=
+_VERSION)))
+> > @@ -1175,7 +1186,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+> >      CFLAGS +=3D -DLIBTRACEEVENT_VERSION=3D$(LIBTRACEEVENT_VERSION_CPP)
+> >      $(call detected,CONFIG_LIBTRACEEVENT)
+> >    else
+> > -    $(error ERROR: libtraceevent is missing. Please install libtraceev=
+ent-dev/libtraceevent-devel or build with NO_LIBTRACEEVENT=3D1)
+> > +    $(error ERROR: libtraceevent is missing. Please install libtraceev=
+ent-dev/libtraceevent-devel and/or set LIBTRACEEVENT_DIR or build with NO_L=
+IBTRACEEVENT=3D1)
+> >    endif
+> >
+> >    $(call feature_check,libtracefs)
+> > @@ -1301,6 +1312,7 @@ ifeq ($(VF),1)
+> >    $(call print_var,LIBUNWIND_DIR)
+> >    $(call print_var,LIBDW_DIR)
+> >    $(call print_var,JDIR)
+> > +  $(call print_var,LIBTRACEEVENT_DIR)
+> >
+> >    ifeq ($(dwarf-post-unwind),1)
+> >      $(call feature_print_text,"DWARF post unwind library", $(dwarf-pos=
+t-unwind-text)) $(info $(MSG))
+> > --
+> > 2.25.1
+> >
