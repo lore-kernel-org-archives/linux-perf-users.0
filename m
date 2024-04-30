@@ -1,74 +1,154 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57ED12836D;
-	Tue, 30 Apr 2024 09:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950E412C46B
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 10:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468730; cv=none; b=oRZdp9b8BNfTwuGc4lGdeX0i3xhdBjdGnojSt1qgdrazL5J5iowd62MIrI45kGAYf0aasE8f/5qwz/qJg3n0jWgEh1fKqmg2fVcG+hXrUZyUwd/wwBfCdryAU0gugoP63oTAm3yxkk/8nfV5d5/JqW4dzzivBDGeqhC73N3p8+8=
+	t=1714474174; cv=none; b=aY4fhEd/byn1FgBl4w15oW2ZiwKwFRRLCbQ90iXhV7PGz5Uu21Nc9kf3Ze0URhi5kFCtgLE+kl+MxXyI0oYjxmFvELNjuHhih3v5+HSdyV1k5Ms2YKOWk6L2+1sSU6fe90yXjk+R96uewH9k0d5/6RiUW9DBsgUfovZA5iU8s5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468730; c=relaxed/simple;
-	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2i0wi9HsbThNaa6E8108lFUxIZH7AkfvJ19QPpYWi1tWG7cjpQSSej9C2KpK8th+Fqg3zoS9PdsZF6++hVq2FcDD6ryeqfP73C5v1cTwRgnjeI46b96xxNWEKA+wKztpRUw7p4wWNdaJjFoQJzOr0Xtnavr6FHFc5LmpNR22g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Vn8aMbTO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vn8aMbTO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=; b=Vn8aMbTOd8x2KVdzx4zx502abC
-	0ktMguPbT3STkiJJH+4+777WbgZ65KoqqWsk2WT/EuE9hUlfueqcxjDFMQ7+J8wJyDotHw30CVIOc
-	RCqa8aB4lB2dfZ/WR273ADnGoXUuKd1HlgqZTFk90YCigUys4LbTLX1kTzOFAYvljtp/SWvbqluW9
-	/qaf7TSHDeEqR9NJ58xrV2OKocqbZ4zuCeDK0PIZS+R5BRPxjBxBzYVJNr8ucIIAcNmeG+nutSnqD
-	tSgP166iVlyEUahURv+90me2NJ/BpEAnkg03NRU2o1IGia0t3H+HGspAwh5ra0/Y3qfvoU7knzLN/
-	tIxHbq3Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1jdB-0000000ETrS-2ro4;
-	Tue, 30 Apr 2024 09:18:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5C0DB300684; Tue, 30 Apr 2024 11:18:33 +0200 (CEST)
-Date: Tue, 30 Apr 2024 11:18:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Erick Archer <erick.archer@outlook.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/intel/uncore: Prefer struct_size over open
- coded arithmetic
-Message-ID: <20240430091833.GD40213@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202404291013.B21EADD4F@keescook>
+	s=arc-20240116; t=1714474174; c=relaxed/simple;
+	bh=rg7Ir/JwmVTjrliKbX84vWYg+XqEFJCSeIOZ8yghe/0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UEmV0X2tlxFET1K456ZFWXe46/pbMrAoN8ZOAEMey5dvK14/g1B2TwBrRfcjPjnmrAwFFjdNxVEYTpOnEkzFhkWtlnBVIlzbfIYhPqF6NH7lCPSG1v/+k+SZjcXfdM6Z4WaCvrsudyKenprIO0kmT76WjTqaJPI/Iib6/PHmcD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7decf9533a3so162191039f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 03:49:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714474172; x=1715078972;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L5kpd8aa6Rw6Tv6ELMLEFAJfgughcDa8xDxAee/jbg0=;
+        b=EflEK+sI5gWB06Ixc5i5DM0ngvGZhHIDK03DAO4I8gJs07SYin9ZZaRlfX+aVFnXBs
+         KJ6MrFX7u38PbCDQHaocFYQPnh80wbDOCIQj7Zw4zhTA6vhkNzZ1qPQc2cTO9f0t702I
+         czFXkhDKr84Gcphv9rKPfxvr/BdDAO7He26+EmEVzVuB/0zpDk2uSunElk0WxHkOQEdz
+         fHrld4ZhY/jqguNP9WyiOvaX3wOo4zZ0DkmrQyI3P3SP32zeKRKRbxLUtGjWEKB4dIAQ
+         fCP27yOpAOL3g4nCcWn4xvbRWCdg8tXuc7cDzGlALo6lpFogCyKGnVchMj+iBaRkcY5R
+         Q8Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXALbF/3GS/wqb9V0jWgk3zBHbOIcl5XHcU4CsnKhuaioCAOxFBGdQOB/DBo+jFrmnYHhleoq9/3DGVixUqCNjl0M/uXYdb1TXir9qDRHCGuA==
+X-Gm-Message-State: AOJu0Yw0mbwPvAa9VOPIwBODlbV7qiscijreYGshg2rBmMI2vPOhI4O3
+	Ndo+hAzxmHbBSBLpUA39tLUmUyS15DxtiFchsutR/R/hQ52aYxFhSvHLJmPVEa0ufD6sQaLPl0q
+	/fiMOYq7nFbbMLuwy8c2e4AAyTwN+DtoktEHKSnpx3G1vCQIGVG3qDNo=
+X-Google-Smtp-Source: AGHT+IEanKNOfl9IZZvqvNS0s274g8HAyqp36SXPNlICm0pE2TEOTyW9lHiolcRIMxHXUHPsL3VEVXY7N89APsr7tbNvJZhGu56D
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404291013.B21EADD4F@keescook>
+X-Received: by 2002:a05:6602:6422:b0:7d9:b860:3e54 with SMTP id
+ gn34-20020a056602642200b007d9b8603e54mr55948iob.2.1714474171892; Tue, 30 Apr
+ 2024 03:49:31 -0700 (PDT)
+Date: Tue, 30 Apr 2024 03:49:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fe324606174e1f9e@google.com>
+Subject: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
+From: syzbot <syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 29, 2024 at 10:18:03AM -0700, Kees Cook wrote:
+Hello,
 
-> Peter and Ingo, you seem to traditionally take these changes (via -tip)?
-> Can you please pick this up?
+syzbot found the following issue on:
 
-I have been explicitly not taking these things for perf and sched for a
-while now. As I wrote in that other mail, I detest struct_size(), it
-obfuscates code for no real benefit afaict.
+HEAD commit:    c942a0cd3603 Merge tag 'for_linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ef0aef180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=545d4b3e07d6ccbc
+dashboard link: https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c4d490980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138bf96b180000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-c942a0cd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/02773b27b0d3/vmlinux-c942a0cd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/669bed7ebf5d/bzImage-c942a0cd.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
+
+=============================
+WARNING: suspicious RCU usage
+6.9.0-rc5-syzkaller-00159-gc942a0cd3603 #0 Not tainted
+-----------------------------
+kernel/events/callchain.c:161 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor305/5180:
+ #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: rcu_read_lock_trace include/linux/rcupdate_trace.h:57 [inline]
+ #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: bpf_prog_test_run_syscall+0x345/0x770 net/bpf/test_run.c:1508
+
+stack backtrace:
+CPU: 3 PID: 5180 Comm: syz-executor305 Not tainted 6.9.0-rc5-syzkaller-00159-gc942a0cd3603 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:114
+ lockdep_rcu_suspicious+0x20b/0x3b0 kernel/locking/lockdep.c:6712
+ get_callchain_entry+0x274/0x3f0 kernel/events/callchain.c:161
+ get_perf_callchain+0xdc/0x5a0 kernel/events/callchain.c:187
+ __bpf_get_stack+0x4d9/0x700 kernel/bpf/stackmap.c:435
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1985 [inline]
+ bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1975
+ ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
+ __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ bpf_prog_run_pin_on_cpu include/linux/filter.h:681 [inline]
+ bpf_prog_test_run_syscall+0x3ae/0x770 net/bpf/test_run.c:1509
+ bpf_prog_test_run kernel/bpf/syscall.c:4269 [inline]
+ __sys_bpf+0xd56/0x4b40 kernel/bpf/syscall.c:5678
+ __do_sys_bpf kernel/bpf/syscall.c:5767 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5765 [inline]
+ __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5765
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f54610dc669
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff4b9fae08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007fff4b9fafd8 RCX: 00007f54610dc669
+RDX: 000000000000000c RSI: 00000000200004c0 RDI: 000000000000000a
+RBP: 00007f546114f610 R08: 00007fff4b9fafd8 R09: 00007fff4b9fafd8
+R10: 00007fff4b9fafd8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff4b9fafc8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
