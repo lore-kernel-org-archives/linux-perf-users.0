@@ -1,184 +1,107 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31069DDA6
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 03:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1C310799
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 03:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714448212; cv=none; b=FE4H+iE3ON+rs/myIne0Xx8iNjR1LYJbOY68EjLA7JxGyDjKjaz3GZOUHndFGuQGz+M81dMYW6rAIGj906T66TSLqXTw6wgFfR9u+W7u7TnOvo1YceTOYOtmqsv3+JjIojAoARMGpw4CXrirDeyU18PQRV0PH/Senti5qYtJu3o=
+	t=1714448460; cv=none; b=UvwDR/Ts7SIp91kRaxiruv0EKh85iqir9ItWGP+8EjyJu+ZiMwGFJUqR2emv0b+gfWMw4ZftAf2WzFB3iQacLonq+MRXi0tbtDnnJ0UPPhTtYCv329CpYSvxV6vXbSgn2nwdgD5l94JOYj1phIg7F0WAgg4cfplSzezqm025phE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714448212; c=relaxed/simple;
-	bh=zBq1LHiQVLgDn8WCXIPPZegxnFwBTySh9wmNs5lQQA8=;
+	s=arc-20240116; t=1714448460; c=relaxed/simple;
+	bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TOHRhwQ1TYzGgjPnMUSxEL1Jrbo0ZHSbnT1E17lAcjAsZ6CKvH84I98Eo/A8qBb9WwQ+L8xjtWndKIP9rApg4NPDvYz+py0VuBCqp21AVD+CwH6YbV9kmfk7fwHqbxyOvQ0q/IqrClE44MIEaygGh8cVZ9unj4NQ8lI2rLG+7jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GzVrh3VS; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=hWKgy27wg5huyYqPgaY4M+Yy6N/4JRZTHsKfmsEhbN9zMC87LnUckddzYU/tZ6H109auxQO3Upm5Cj7PqBWDhBIHeW2mpwxrdZOn3nQc3m7W0lJqPaAZjNL+WIakoj4WWiVr5xcrT8WjNWUoXHMOkBqgTvO4sD4X+MGtYcGvqzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EQ6k+sJb; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GzVrh3VS"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ec182ab287so61705ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:36:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EQ6k+sJb"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e8fcb0b860so63765ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Apr 2024 20:40:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714448210; x=1715053010; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714448458; x=1715053258; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BkrtyRv2EBwxmmqvBQQh1p4PP//wdMb/rRAhkXpumuM=;
-        b=GzVrh3VS0bHBnl+32T+sVKIeKiqRT5797ThoU9X3OFdxaum10ZbmP/0j4mAJDzb4g6
-         FMyqyXktRwzvxHiR6eIjK2sTr5eaZddK970eYljC3bHZwk9gTjGMrO1DlOXSgGfKG/aQ
-         SjaG+v1yVpoaEv3ZbhnU4fLE+n6UAdv+zz9tp9B2mtWP6enMArSwT2zR/HG+NCY6C310
-         P87SFBa64RfMHUocDyK9mNo72RU+d7SGhkPmzwxt1kWqh15pbt3DT23xrg7cjaBP+e36
-         pE+ky4Y5oGa9E/sJ9/QdgfyDpdBT84VZ9iaCtK25/zUAdtL3+ZR2l9rs11ipRn8jNii1
-         HXyw==
+        bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
+        b=EQ6k+sJbfTUipiOvv+LTveIdLcvy5xhVqSyJnZqFU+uKJkc/uBDzACKobC56M+g9u/
+         pm1a95ljsbbAK4sphz2pPkEhwAuCB5R6RmVJzPmUuRCRYhglRAZSHncF5GrqaWAc3Cxn
+         Bm4kJuwK89mUJ++5+mr5++Fb8rlTUgo18jNkc+gKgw+9OiOZkxFHRMe35A3flcRHfurM
+         s+TGMrmQfDFqvH5j4Tq9hG2Zt6vTjWpSoc/xQ+PNGe673M+egtLaNLwXcot3iH1GjQt5
+         aBRahfJhI3oZNdmwbn8mdIOmyzvtcXm90uV6lLGgFrDRHeu9RI2XTkrz5K0nv4NErsoJ
+         6WWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714448210; x=1715053010;
+        d=1e100.net; s=20230601; t=1714448458; x=1715053258;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BkrtyRv2EBwxmmqvBQQh1p4PP//wdMb/rRAhkXpumuM=;
-        b=RqwNE8M79QwTj2zLSHcKo2+MT5hgsqZkYbhXAKgH8eQehx52FbMC0jvFNJe9EnsFA9
-         QfANR22Hk3mXlbvEh5SZYd+xlMMfWjSq3HRDDmD5x3CKBD7hmxhmYRVOaGV0BeHu8AlR
-         jm93w7PtmHl3N9m7G9POi+WddnPMW2i3dX+8pp7dM64LBRTLq+SIFxVkScPqIeGwSUJT
-         rmjmXCh14z9Xeqpab7uyO/OTx7MJ+/8U9y2+lRmZTVhlybETonYA7iLK46t38mXpw2JV
-         Rcvv+hXGGuasbzUafaINw9qX0Bde2bHPc4B3xpkThd0sIMjq6FdO5FRRgu1chW3GLaiV
-         cAQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZMngEth5HyWTxiU1AY31kBewRmLm9UCCbjKU2mle76Eg916EaZ8Ct4oh6KUZ6d186Nbn9IylUh/v1Xe4PNE8KVZpAzyOL/o8ICbRWm/yBew==
-X-Gm-Message-State: AOJu0Yzv8PxB1GXQPXaCL9ooeSGES2Lf2vZmMBt4KKmF/RQdx+94Iayq
-	+8UBCDqS6vD53zf1YARnuozns0L7CwOx8orTWYrzET/aFypbf2a0L8tYZ+T494+6lKVCM5CAu1b
-	44qPgK/EVTN1p0VxTQEVXwgU2FeWXZ5riLVc9
-X-Google-Smtp-Source: AGHT+IFjgB5d/cluocj38XNvLS2lFgJH2RwV1hbfZaFXHLYTLK65bWNgayIaDdQ3T9jL5Wf9d9jj9ZbTN+WAaTslrrM=
-X-Received: by 2002:a17:902:e551:b0:1e6:3ff9:edf7 with SMTP id
- n17-20020a170902e55100b001e63ff9edf7mr139796plf.10.1714448210110; Mon, 29 Apr
- 2024 20:36:50 -0700 (PDT)
+        bh=Qp44ONuj8/RC8FVxYOU6sZS4U2Am8Z7QeUTc/MM1oxo=;
+        b=rLMFjF/xhiuq0UfKdZzh6UpLqmniDE0PTpzhvgYrd07En81EGus3qoVpdqVAnrq4vG
+         MWLOfz1IjGyv4PgWIYfCI+c0h8MKJzvVbTdxJjiJ/icKFhFfsK2P732ZsJo3k7LGrTzy
+         8GrKxlJt7ToF/H4b/Xj5EsFFBSatbAc85D7FNjyMuph5AvkVPxtZl33FsZ8QdfIkDCZ2
+         u6rKZrsO99wQcTFjSRiN3F5yQBTedJmatfXmwfQ6+YYBRVhWjFXc/QKMMHHkewOZyOKE
+         CJ44XsNRU45JFfonJst41ltai+eXr0r3vrV0E7ZAFwTQzJBZ8An+lkumzZxP33sjxbPG
+         SSvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVngUY4Fc0O0TGUNMoNjwSDJU5MkneVl6Mo/DCKqlE6p3eqOwuHEswiP8uESReBoy/VUSJldrcYZmtWuYrKT4qa1paeC36BL4vPIvugNgoL8w==
+X-Gm-Message-State: AOJu0YxtxxMp+LyxcHdfbPFhFv8vWxbShiHRDEzwo81ugQZVqqEF/0cq
+	o0IhdR1MKmG1iZktxZwJnXVf7+Q+ZrlWvyG06u8OooNxigtWvrhMJGRB9+UA/yY2X8+zdKDZxQ4
+	jLdwvMlxfMOzerhon80IFOlBzSVg/1vFBPekG
+X-Google-Smtp-Source: AGHT+IFOKp6IbuJXMVwCwvy9B4FMcOUU7Ohar+bPXibgNEKIrHt2Xjq6lZ5uTOSGPc/ULMfM/M9MDhn/YulZPxH0XMU=
+X-Received: by 2002:a17:902:c404:b0:1e0:c571:d652 with SMTP id
+ k4-20020a170902c40400b001e0c571d652mr90602plk.1.1714448457985; Mon, 29 Apr
+ 2024 20:40:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429233707.1511175-1-namhyung@kernel.org>
-In-Reply-To: <20240429233707.1511175-1-namhyung@kernel.org>
+References: <80f723d230744bc299044cfd4f8c4d92@shmbx06.spreadtrum.com> <20240429214321.GB125@debian-dev>
+In-Reply-To: <20240429214321.GB125@debian-dev>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 Apr 2024 20:36:38 -0700
-Message-ID: <CAP-5=fWWML91BsOfF1wvJcDFPG4=S_b3cTe_gza6GDQyWYjksA@mail.gmail.com>
-Subject: Re: [PATCH v2] tools lib subcmd: Show parent options in help
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Date: Mon, 29 Apr 2024 20:40:46 -0700
+Message-ID: <CAP-5=fUdVHu6a8TLi_HYOZv3Ur_Sr4nvx92rkSaxxKJummPzKw@mail.gmail.com>
+Subject: Re: Question about using the perf c2c in UMA system
+To: Leo Yan <leo.yan@linux.dev>
+Cc: "?????? (Baisheng Gao)" <baisheng.gao@unisoc.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"???? (Hao_hao Wang)" <Hao_hao.Wang@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2024 at 4:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Mon, Apr 29, 2024 at 2:43=E2=80=AFPM Leo Yan <leo.yan@linux.dev> wrote:
 >
-> I've just realized that help message in a subcommand didn't show one
-> in the parent command.  Since the option parser understands the parent,
-> display code should do the same.  For example, `perf ftrace latency -h`
-> should show options in the `perf ftrace` command too.
+> Hi Baisheng,
 >
-> Before:
+> On Mon, Apr 08, 2024 at 10:52:59AM +0000, ?????? (Baisheng Gao) wrote:
+> > Hi linux-perf-users,
+> >
+> > My perf tool version is 6.6, and I compiled it to run on an Android sys=
+tem.
+> > The problem is:
+> >
+> > # ./perf c2c report
+> > Failed setup nodes
+> >
+> > According to the articles on the Internet, it seems that the perf c2c i=
+s only supported
+> > in NUMA system. However, the cache false sharing does not exist only in=
+ NUMA, and
+> > the UMA system has also the problem. So I wonder how to support perf c2=
+c in UMA.
 >
->   $ perf ftrace latency -h
->
->    Usage: perf ftrace [<options>] [<command>]
->       or: perf ftrace [<options>] -- [<command>] [<options>]
->       or: perf ftrace {trace|latency} [<options>] [<command>]
->       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<option=
-s>]
->
->       -b, --use-bpf         Use BPF to measure function latency
->       -n, --use-nsec        Use nano-second histogram
->       -T, --trace-funcs <func>
->                             Show latency of given function
->
-> After:
->
->   $ perf ftrace latency -h
->
->    Usage: perf ftrace [<options>] [<command>]
->       or: perf ftrace [<options>] -- [<command>] [<options>]
->       or: perf ftrace {trace|latency} [<options>] [<command>]
->       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<option=
-s>]
->
->       -a, --all-cpus        System-wide collection from all CPUs
->       -b, --use-bpf         Use BPF to measure function latency
->       -C, --cpu <cpu>       List of cpus to monitor
->       -n, --use-nsec        Use nano-second histogram
->       -p, --pid <pid>       Trace on existing process id
->       -T, --trace-funcs <func>
->                             Show latency of given function
->       -v, --verbose         Be more verbose
->           --tid <tid>       Trace on existing thread id (exclusive to --p=
-id)
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> The log above is related with parsing NUMA nodes, but this doesn't
+> mean 'perf c2c' must run on NUMA system. My understanding is both
+> x86_64 (memory event) and Arm64 (SPE) support 'perf c2c' not only on
+> NUMA.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The lack of SPE on most ARM hardware really is a pain. Can we add a
+better error message to make it clearer to users that they need a
+neoverse CPU? :-)
 
 Thanks,
 Ian
 
-> ---
-> *v2: remove goto and add comments  (Ian)
->
->  tools/lib/subcmd/parse-options.c | 36 +++++++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 12 deletions(-)
->
-> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-op=
-tions.c
-> index 9fa75943f2ed..eb896d30545b 100644
-> --- a/tools/lib/subcmd/parse-options.c
-> +++ b/tools/lib/subcmd/parse-options.c
-> @@ -806,18 +806,30 @@ static int option__cmp(const void *va, const void *=
-vb)
->
->  static struct option *options__order(const struct option *opts)
->  {
-> -       int nr_opts =3D 0, nr_group =3D 0, len;
-> -       const struct option *o =3D opts;
-> -       struct option *opt, *ordered, *group;
-> -
-> -       for (o =3D opts; o->type !=3D OPTION_END; o++)
-> -               ++nr_opts;
-> -
-> -       len =3D sizeof(*o) * (nr_opts + 1);
-> -       ordered =3D malloc(len);
-> -       if (!ordered)
-> -               goto out;
-> -       memcpy(ordered, opts, len);
-> +       int nr_opts =3D 0, nr_group =3D 0, nr_parent =3D 0, len;
-> +       const struct option *o, *p =3D opts;
-> +       struct option *opt, *ordered =3D NULL, *group;
-> +
-> +       /* flatten the options that have parents */
-> +       for (p =3D opts; p !=3D NULL; p =3D o->parent) {
-> +               for (o =3D p; o->type !=3D OPTION_END; o++)
-> +                       ++nr_opts;
-> +
-> +               /*
-> +                * the length is given by the number of options plus a nu=
-ll
-> +                * terminator for the last loop iteration.
-> +                */
-> +               len =3D sizeof(*o) * (nr_opts + !o->parent);
-> +               group =3D realloc(ordered, len);
-> +               if (!group)
-> +                       goto out;
-> +               ordered =3D group;
-> +               memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr=
-_parent));
-> +
-> +               nr_parent =3D nr_opts;
-> +       }
-> +       /* copy the last OPTION_END */
-> +       memcpy(&ordered[nr_opts], o, sizeof(*o));
->
->         /* sort each option group individually */
->         for (opt =3D group =3D ordered; opt->type !=3D OPTION_END; opt++)=
- {
-> --
-> 2.44.0.769.g3c40516874-goog
+> Thanks,
+> Leo
 >
