@@ -1,154 +1,221 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950E412C46B
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 10:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F28B17167A;
+	Tue, 30 Apr 2024 13:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714474174; cv=none; b=aY4fhEd/byn1FgBl4w15oW2ZiwKwFRRLCbQ90iXhV7PGz5Uu21Nc9kf3Ze0URhi5kFCtgLE+kl+MxXyI0oYjxmFvELNjuHhih3v5+HSdyV1k5Ms2YKOWk6L2+1sSU6fe90yXjk+R96uewH9k0d5/6RiUW9DBsgUfovZA5iU8s5s=
+	t=1714483977; cv=none; b=rKdg9Fpucsx14uE8ns4WdEpph44uYQF+mh5V3FCmKdvENLjX1mfmwMxwc7ySXvKWZZZOIkjVzCafPpvd3NlthDZYHxXDmd9cELPLTvs9NkoeVcJuQR80vbtiROuretUCpZmfRsoKwF0yubUyn8bFN6WsYHt89CIuUBNHCgfXpyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714474174; c=relaxed/simple;
-	bh=rg7Ir/JwmVTjrliKbX84vWYg+XqEFJCSeIOZ8yghe/0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UEmV0X2tlxFET1K456ZFWXe46/pbMrAoN8ZOAEMey5dvK14/g1B2TwBrRfcjPjnmrAwFFjdNxVEYTpOnEkzFhkWtlnBVIlzbfIYhPqF6NH7lCPSG1v/+k+SZjcXfdM6Z4WaCvrsudyKenprIO0kmT76WjTqaJPI/Iib6/PHmcD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7decf9533a3so162191039f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Apr 2024 03:49:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714474172; x=1715078972;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L5kpd8aa6Rw6Tv6ELMLEFAJfgughcDa8xDxAee/jbg0=;
-        b=EflEK+sI5gWB06Ixc5i5DM0ngvGZhHIDK03DAO4I8gJs07SYin9ZZaRlfX+aVFnXBs
-         KJ6MrFX7u38PbCDQHaocFYQPnh80wbDOCIQj7Zw4zhTA6vhkNzZ1qPQc2cTO9f0t702I
-         czFXkhDKr84Gcphv9rKPfxvr/BdDAO7He26+EmEVzVuB/0zpDk2uSunElk0WxHkOQEdz
-         fHrld4ZhY/jqguNP9WyiOvaX3wOo4zZ0DkmrQyI3P3SP32zeKRKRbxLUtGjWEKB4dIAQ
-         fCP27yOpAOL3g4nCcWn4xvbRWCdg8tXuc7cDzGlALo6lpFogCyKGnVchMj+iBaRkcY5R
-         Q8Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCXALbF/3GS/wqb9V0jWgk3zBHbOIcl5XHcU4CsnKhuaioCAOxFBGdQOB/DBo+jFrmnYHhleoq9/3DGVixUqCNjl0M/uXYdb1TXir9qDRHCGuA==
-X-Gm-Message-State: AOJu0Yw0mbwPvAa9VOPIwBODlbV7qiscijreYGshg2rBmMI2vPOhI4O3
-	Ndo+hAzxmHbBSBLpUA39tLUmUyS15DxtiFchsutR/R/hQ52aYxFhSvHLJmPVEa0ufD6sQaLPl0q
-	/fiMOYq7nFbbMLuwy8c2e4AAyTwN+DtoktEHKSnpx3G1vCQIGVG3qDNo=
-X-Google-Smtp-Source: AGHT+IEanKNOfl9IZZvqvNS0s274g8HAyqp36SXPNlICm0pE2TEOTyW9lHiolcRIMxHXUHPsL3VEVXY7N89APsr7tbNvJZhGu56D
+	s=arc-20240116; t=1714483977; c=relaxed/simple;
+	bh=zhZKdf7+QHmsXg6+Mf83SxIaH1CGfxqSn5wfEF/J79Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miAAuMCn3FbkXtvK7tJj4Z/B5bvOODZ6dLMIc/nBpZsiIQF7vfACHIqChajLG3Wdktk3VneGPa8Soc28Ar0s+K6a3lDyReO/rtWozQFkDzb7iWM4SIU7HbPmhi/JSsH4XToSR9baMBzgk46K6baF6FXvu0WgyWOBenhek/w5Yjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4364A2F4;
+	Tue, 30 Apr 2024 06:33:21 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F9C63F793;
+	Tue, 30 Apr 2024 06:32:52 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	coresight@lists.linaro.org
+Cc: James Clark <james.clark@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf cs-etm: Improve version detection and error reporting
+Date: Tue, 30 Apr 2024 14:32:21 +0100
+Message-Id: <20240430133221.250811-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6422:b0:7d9:b860:3e54 with SMTP id
- gn34-20020a056602642200b007d9b8603e54mr55948iob.2.1714474171892; Tue, 30 Apr
- 2024 03:49:31 -0700 (PDT)
-Date: Tue, 30 Apr 2024 03:49:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fe324606174e1f9e@google.com>
-Subject: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
-From: syzbot <syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+When the config validation functions are warning about ETMv3, they do it
+based on "not ETMv4". If the drivers aren't all loaded or the hardware
+doesn't support Coresight it will appear as "not ETMv4" and then Perf
+will print the error message "... not supported in ETMv3 ..." which is
+wrong and confusing.
 
-syzbot found the following issue on:
+cs_etm_is_etmv4() is also misnamed because it also returns true for
+ETE because ETE has a superset of the ETMv4 metadata files. Although
+this was always done in the correct order so it wasn't a bug.
 
-HEAD commit:    c942a0cd3603 Merge tag 'for_linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ef0aef180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=545d4b3e07d6ccbc
-dashboard link: https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c4d490980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138bf96b180000
+Improve all this by making a single get version function which also
+handles not present as a separate case. Change the ETMv3 error message
+to only print when ETMv3 is detected, and add a new error message for
+the not present case.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-c942a0cd.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/02773b27b0d3/vmlinux-c942a0cd.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/669bed7ebf5d/bzImage-c942a0cd.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.9.0-rc5-syzkaller-00159-gc942a0cd3603 #0 Not tainted
------------------------------
-kernel/events/callchain.c:161 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor305/5180:
- #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: rcu_read_lock_trace include/linux/rcupdate_trace.h:57 [inline]
- #0: ffffffff8d7b04c0 (rcu_read_lock_trace){....}-{0:0}, at: bpf_prog_test_run_syscall+0x345/0x770 net/bpf/test_run.c:1508
-
-stack backtrace:
-CPU: 3 PID: 5180 Comm: syz-executor305 Not tainted 6.9.0-rc5-syzkaller-00159-gc942a0cd3603 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:114
- lockdep_rcu_suspicious+0x20b/0x3b0 kernel/locking/lockdep.c:6712
- get_callchain_entry+0x274/0x3f0 kernel/events/callchain.c:161
- get_perf_callchain+0xdc/0x5a0 kernel/events/callchain.c:187
- __bpf_get_stack+0x4d9/0x700 kernel/bpf/stackmap.c:435
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1985 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1975
- ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
- __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
- bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
- __bpf_prog_run include/linux/filter.h:657 [inline]
- bpf_prog_run include/linux/filter.h:664 [inline]
- bpf_prog_run_pin_on_cpu include/linux/filter.h:681 [inline]
- bpf_prog_test_run_syscall+0x3ae/0x770 net/bpf/test_run.c:1509
- bpf_prog_test_run kernel/bpf/syscall.c:4269 [inline]
- __sys_bpf+0xd56/0x4b40 kernel/bpf/syscall.c:5678
- __do_sys_bpf kernel/bpf/syscall.c:5767 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5765 [inline]
- __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5765
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f54610dc669
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff4b9fae08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007fff4b9fafd8 RCX: 00007f54610dc669
-RDX: 000000000000000c RSI: 00000000200004c0 RDI: 000000000000000a
-RBP: 00007f546114f610 R08: 00007fff4b9fafd8 R09: 00007fff4b9fafd8
-R10: 00007fff4b9fafd8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007fff4b9fafc8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
+Signed-off-by: James Clark <james.clark@arm.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/perf/arch/arm/util/cs-etm.c | 64 +++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 16 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 07be32d99805..2763c6758b91 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -66,9 +66,25 @@ static const char * const metadata_ete_ro[] = {
+ 	[CS_ETE_TS_SOURCE]		= "ts_source",
+ };
+ 
+-static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
++enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
++
++static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
++				       const char *file);
+ static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu);
+ 
++static enum cs_etm_version cs_etm_get_version(struct auxtrace_record *itr,
++					      int cpu)
++{
++	if (cs_etm_is_ete(itr, cpu))
++		return CS_ETE;
++	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]))
++		return CS_ETMV4;
++	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv3_ro[CS_ETM_ETMCCER]))
++		return CS_ETMV3;
++
++	return CS_NOT_PRESENT;
++}
++
+ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 				      struct evsel *evsel, int cpu)
+ {
+@@ -87,7 +103,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 		return 0;
+ 
+ 	/* Not supported in etmv3 */
+-	if (!cs_etm_is_etmv4(itr, cpu)) {
++	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
+ 		pr_err("%s: contextid not supported in ETMv3, disable with %s/contextid=0/\n",
+ 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 		return -EINVAL;
+@@ -154,7 +170,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+ 	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
+ 		return 0;
+ 
+-	if (!cs_etm_is_etmv4(itr, cpu)) {
++	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
+ 		pr_err("%s: timestamp not supported in ETMv3, disable with %s/timestamp=0/\n",
+ 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 		return -EINVAL;
+@@ -218,6 +234,11 @@ static int cs_etm_validate_config(struct auxtrace_record *itr,
+ 	}
+ 
+ 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
++		if (cs_etm_get_version(itr, cpu.cpu) == CS_NOT_PRESENT) {
++			pr_err("%s: Not found on CPU %d. Check hardware and firmware support and that all Coresight drivers are loaded\n",
++			       CORESIGHT_ETM_PMU_NAME, cpu.cpu);
++			return -EINVAL;
++		}
+ 		err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+ 		if (err)
+ 			break;
+@@ -548,13 +569,13 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 		/* Event can be "any" CPU so count all online CPUs. */
+ 		intersect_cpus = perf_cpu_map__new_online_cpus();
+ 	}
++	/* Count number of each type of ETM. Don't count if that CPU has CS_NOT_PRESENT. */
+ 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+-		if (cs_etm_is_ete(itr, cpu.cpu))
+-			ete++;
+-		else if (cs_etm_is_etmv4(itr, cpu.cpu))
+-			etmv4++;
+-		else
+-			etmv3++;
++		enum cs_etm_version v = cs_etm_get_version(itr, cpu.cpu);
++
++		ete   += v == CS_ETE;
++		etmv4 += v == CS_ETMV4;
++		etmv3 += v == CS_ETMV3;
+ 	}
+ 	perf_cpu_map__put(intersect_cpus);
+ 
+@@ -564,7 +585,8 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 	       (etmv3 * CS_ETMV3_PRIV_SIZE));
+ }
+ 
+-static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
++static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
++				       const char *file)
+ {
+ 	bool ret = false;
+ 	char path[PATH_MAX];
+@@ -574,9 +596,7 @@ static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
+ 			container_of(itr, struct cs_etm_recording, itr);
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+ 
+-	/* Take any of the RO files for ETMv4 and see if it present */
+-	snprintf(path, PATH_MAX, "cpu%d/%s",
+-		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
++	snprintf(path, PATH_MAX, "cpu%d/%s", cpu, file);
+ 	scan = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+ 
+ 	/* The file was read successfully, we have a winner */
+@@ -735,21 +755,26 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+ 
+ 	/* first see what kind of tracer this cpu is affined to */
+-	if (cs_etm_is_ete(itr, cpu)) {
++	switch (cs_etm_get_version(itr, cpu)) {
++	case CS_ETE:
+ 		magic = __perf_cs_ete_magic;
+ 		cs_etm_save_ete_header(&info->priv[*offset], itr, cpu);
+ 
+ 		/* How much space was used */
+ 		increment = CS_ETE_PRIV_MAX;
+ 		nr_trc_params = CS_ETE_PRIV_MAX - CS_ETM_COMMON_BLK_MAX_V1;
+-	} else if (cs_etm_is_etmv4(itr, cpu)) {
++		break;
++
++	case CS_ETMV4:
+ 		magic = __perf_cs_etmv4_magic;
+ 		cs_etm_save_etmv4_header(&info->priv[*offset], itr, cpu);
+ 
+ 		/* How much space was used */
+ 		increment = CS_ETMV4_PRIV_MAX;
+ 		nr_trc_params = CS_ETMV4_PRIV_MAX - CS_ETMV4_TRCCONFIGR;
+-	} else {
++		break;
++
++	case CS_ETMV3:
+ 		magic = __perf_cs_etmv3_magic;
+ 		/* Get configuration register */
+ 		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
+@@ -767,6 +792,13 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+ 		/* How much space was used */
+ 		increment = CS_ETM_PRIV_MAX;
+ 		nr_trc_params = CS_ETM_PRIV_MAX - CS_ETM_ETMCR;
++		break;
++
++	default:
++	case CS_NOT_PRESENT:
++		/* Unreachable, CPUs already validated in cs_etm_validate_config() */
++		assert(true);
++		return;
+ 	}
+ 
+ 	/* Build generic header portion */
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
