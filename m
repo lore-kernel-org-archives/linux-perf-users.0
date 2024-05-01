@@ -1,93 +1,200 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346E21635CA
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 20:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAE942AB3
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 20:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594905; cv=none; b=TlK83BA5XE3bCZuxi76Vv4Zmozl20NMfQ5mqYEcF5DFe0wSZhOXR4Jr8CIKLqVKGou8uzjHApSmsnmMErMEw8M6SIH/r409m6dK/EEGZcOgN/2UoaYTKw6KUQULk2Ab1h5dC0q3+mmFFg6/5VXhrbBplVaOW6V7iBq+mX2W/B/c=
+	t=1714595796; cv=none; b=TCSxr7FBmgS6kHXEoeTj8uyO68u2NoSk+PKSyeyJ2MFNwCKwZotO64orZA2nwo5r0IaepWb14qTgNT/WU4GV03l5dDzwpFItxOAV+/IXxZ9CN9YVFrXYve8y72jLjEmnSR0GJpHsLDrpbv+l7LrBpbCWI07M6cWbDQSBCjlqa5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594905; c=relaxed/simple;
-	bh=nPUrAToma1+IWJyW4NorUHWTJxgN7XpkT+ZRrxLkDoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CaTUsDoITPL/rRo1ZgSxdqRnrW+Wc4BGzR1A1w7kB2NTrcdOq0+bg8w3zojGy2l0KTArDkoSIqb8avVdNfAKbAeFivP7MF1lYIihjqP4wo6pWdNJVbAwnymLp30KKvqIwcZjb/P0MCHsP+SuNyD4soxCYaeGa6oerBvPvVs7TLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R6lC+wyy; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714595796; c=relaxed/simple;
+	bh=CZ+1HcLUExAb6ySEYUXpONpcatEAnu4JCOSJlhyZEdM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HIXU4TUA/DuD5509oZG9r5LlDIPQTzJgBYOY8nbzFMCe0co9b6AwulqU6y0OgrePUOplqKnYe54fs/KUoPm8h4YiNFiXScypcahrSRfRZzeIbhfjaz58cHT2vdqkvPWmycGgy9G1+twXFDm4AxasR7021ur5CzJjOMNm47T3cpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FohSaX+p; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6lC+wyy"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6eff2be3b33so6609580b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 13:21:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FohSaX+p"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61beaa137acso42001207b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 13:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714594903; x=1715199703; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
-        b=R6lC+wyyKGv555bfAgjGaVAhVKeXMz7DYH5NnAacO7JbE3z4cYvgn7VrA7W78G9SBC
-         S7iBlI75R5bcbxhAp/NRCcdjk5sPlNqJlXepxjuhYdqashwgMIqfeWXynm6eKpV590fm
-         yZNlK1OerSDiXNTARj6eGB6JQvl7NcJ1kAGF4=
+        d=google.com; s=20230601; t=1714595794; x=1715200594; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HoqEk2d89pzrIsVW2yhRLPcbk87IRHxiIo5sAWdVlus=;
+        b=FohSaX+p/gHXG6zLC8UucV9GzTAS0UZhiUvlDqpzByYy1Zvgcwssn+9grHZKlR77Qa
+         6LSskw99w2flR3zqLaSJMDm7fuY345NcOHueq/kerme/INHe5zi2c3A5X5LuRouiU78i
+         qen/axYlgVB6hAeoatHlbdUUQIFnJu/8bCyN+Nyu8Po+nBBlhiNR9S+qngexNabD7DGQ
+         LondwNsjvJOJIHxKYFxF3FJrsl7CGYeK8i8APiXJpo5Mh8XFI5mh9Mn2v7liL0oZztz4
+         5l0dyXNOJ1+UNMUpD4c9mM3uWs+A9dqm6AYlBE7F0j1xkRWwC3dtD/vH1MFl06a1BIV0
+         ssEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594903; x=1715199703;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
-        b=TNrMWrO8+WG/2kPnfrbI+TZj3rdnauUDSgb8sLIevghXSAEznqEdUcMmLtWLQreVOu
-         vZjh0vM6XA6WO+T0P5rtYxWdE4gmE3xB1bBQlNrGvUX10ymqJkbWwdzY4c0xbbnkEuQV
-         +q8HpFWYviohbqossBSDApXktj3lMQ35yl1z6XEELeHKEPFP932Jm8mp+VZ7ARl+DHzW
-         p+RfwNshDB927PA3gN6GgghvFsQMbMtX25fFzSDpUsDFIz1CsFXGlb/sJvu4l+JJouQx
-         UuzNliQ9DdTV6pAQinQIOXxDe0NSfkeaapRs0x3NqCsD7dBR0sHWESAA2119o3BKGHE9
-         AS0g==
-X-Forwarded-Encrypted: i=1; AJvYcCX7OFkUomjYNGhEwoeKatjQBE9AG6xNCg5kugzHKZEKv6AOpMSdOZo1eoj0ym9bzKzddW5vxgSc31V47YmyYwiPdhs2pkNF5gktTwDQAwJ0OA==
-X-Gm-Message-State: AOJu0YxJhjEl7Unn5EqkZW7w0hMjIN5KCoK7coRg2VJIm+lUbs3oEDmc
-	yqf6PCvJxGAW/m+fASxZhtwmQgJW9VuHOW1bUs7GPjMGUAj0IOGaBJp/HrDJGw==
-X-Google-Smtp-Source: AGHT+IGyvJ8Fbk39B3YR+oN/YqBuq3FvOn0WZU33SvV3xChl0KcHhy12+GnrIWpDME/qQK5QKb0o9w==
-X-Received: by 2002:a05:6a20:9f88:b0:1aa:5b05:7926 with SMTP id mm8-20020a056a209f8800b001aa5b057926mr4987182pzb.39.1714594903411;
-        Wed, 01 May 2024 13:21:43 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r13-20020aa79ecd000000b006ed045af796sm22947779pfq.88.2024.05.01.13.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 13:21:43 -0700 (PDT)
-Date: Wed, 1 May 2024 13:21:42 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202405011317.AF41B94B@keescook>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1714595794; x=1715200594;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HoqEk2d89pzrIsVW2yhRLPcbk87IRHxiIo5sAWdVlus=;
+        b=Dg8JpOOE0Qr94aAutiaD8ETHgf/HNzgdl9Dq6nzmCEwIi2KsArTZcXSsqaMqagMoJM
+         ycrGFiAK5bjIzZRfctg2S059nAe4Pgq7+hMAiIHutqezZK6klGhwGpJX4i+ft/l50hON
+         /9ZlTkRrUHzJvJe49KScwsXa7fnXVS7xlnTWwWR/PQC/PEp5dXkQ1KpGWDVX2cIUbBhQ
+         OE8MTvmamOiWVXoVm46sgQu9JobB198AcpEeMUgsD9KJsDAKL7a0QszmsbkGcTR16tmF
+         +MfpZZpFw2Bi1nCrgoZ9L1EhcypA/3EyvtpQ/FX4P2Y79RqYyIa65MZYPBKpWHPEReRJ
+         iLaA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Owkg8qAF2Ybar3TlA5PI8/TLUXbXojrwW8eT/uv+1V2I3M2nskMksL8/niB69aKKJjsp3x7eiSN0W55xI/f6s6vVJJ9nxacB9eQBnxHhlA==
+X-Gm-Message-State: AOJu0Ywafe9AisaOUovoyfTnMKQ94Tu8iLn8iQUb+fXEFMFjG1zgu/04
+	HFu8PY/v4WvW+0DeD720ZY/s4wztori8f8ojavuiHsfO9ck0+rB7bSv3R3dnGihYI0+V2p7nAYK
+	Ndw==
+X-Google-Smtp-Source: AGHT+IGBl505/z0XBb88u3lR/7JlRlWZqwWbuFXHJgVFCCMMlH1u96V0iZ5bQhdv/H411OBPpCC2caAJc9I=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:4fc5:0:b0:61b:982:4da0 with SMTP id
+ d188-20020a814fc5000000b0061b09824da0mr825560ywb.0.1714595793888; Wed, 01 May
+ 2024 13:36:33 -0700 (PDT)
+Date: Wed, 1 May 2024 13:36:32 -0700
+In-Reply-To: <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
+ <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+ <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com> <CAL715WKm0X9NJxq8SNGD5EJomzY4DDSiwLb1wMMgcgHqeZ64BA@mail.gmail.com>
+ <Zi_cle1-5SZK2558@google.com> <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
+Message-ID: <ZjKn0HKKJrWTT4E8@google.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1][2].
-> 
-> So personally I detest struct_size() because I can never remember wtf it
-> does, whereas the code it replaces is simple and straight forward :/
+On Wed, May 01, 2024, Mingwei Zhang wrote:
+> On Mon, Apr 29, 2024 at 10:44=E2=80=AFAM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+> >
+> > On Sat, Apr 27, 2024, Mingwei Zhang wrote:
+> > > That's ok. It is about opinions and brainstorming. Adding a parameter
+> > > to disable preemption is from the cloud usage perspective. The
+> > > conflict of opinions is which one you prioritize: guest PMU or the
+> > > host PMU? If you stand on the guest vPMU usage perspective, do you
+> > > want anyone on the host to shoot a profiling command and generate
+> > > turbulence? no. If you stand on the host PMU perspective and you want
+> > > to profile VMM/KVM, you definitely want accuracy and no delay at all.
+> >
+> > Hard no from me.  Attempting to support two fundamentally different mod=
+els means
+> > twice the maintenance burden.  The *best* case scenario is that usage i=
+s roughly
+> > a 50/50 spit.  The worst case scenario is that the majority of users fa=
+vor one
+> > model over the other, thus resulting in extremely limited tested of the=
+ minority
+> > model.
+> >
+> > KVM already has this problem with scheduler preemption models, and it's=
+ painful.
+> > The overwhelming majority of KVM users run non-preemptible kernels, and=
+ so our
+> > test coverage for preemtible kernels is abysmal.
+> >
+> > E.g. the TDP MMU effectively had a fatal flaw with preemptible kernels =
+that went
+> > unnoticed for many kernel releases[*], until _another_ bug introduced w=
+ith dynamic
+> > preemption models resulted in users running code that was supposed to b=
+e specific
+> > to preemtible kernels.
+> >
+> > [* https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@pro=
+xmox.com
+> >
+>=20
+> I hear your voice, Sean.
+>=20
+> In our cloud, we have a host-level profiling going on for all cores
+> periodically. It will be profiling X seconds every Y minute. Having
+> the host-level profiling using exclude_guest is fine, but stopping the
+> host-level profiling is a no no. Tweaking the X and Y is theoretically
+> possible, but highly likely out of the scope of virtualization. Now,
+> some of the VMs might be actively using vPMU at the same time. How can
+> we properly ensure the guest vPMU has consistent performance? Instead
+> of letting the VM suffer from the high overhead of PMU for X seconds
+> of every Y minute?
+>=20
+> Any thought/help is appreciated. I see the logic of having preemption
+> there for correctness of the profiling on the host level. Doing this,
+> however, negatively impacts the above business usage.
+>=20
+> One of the things on top of the mind is that: there seems to be no way
+> for the perf subsystem to express this: "no, your host-level profiling
+> is not interested in profiling the KVM_RUN loop when our guest vPMU is
+> actively running".
 
-Sure, new APIs can involved a learning curve. If we can all handle
-container_of(), we can deal with struct_size(). :)
+For good reason, IMO.  The KVM_RUN loop can reach _far_ outside of KVM, esp=
+ecially
+when IRQs and NMIs are involved.  I don't think anyone can reasonably say t=
+hat
+profiling is never interested in what happens while a task in KVM_RUN.  E.g=
+. if
+there's a bottleneck in some memory allocation flow that happens to be trig=
+gered
+in the greater KVM_RUN loop, that's something we'd want to show up in our p=
+rofiling
+data.
 
--- 
-Kees Cook
+And if our systems our properly configured, for VMs with a mediated/passthr=
+ough
+PMU, 99.99999% of their associated pCPU's time should be spent in KVM_RUN. =
+ If
+that's our reality, what's the point of profiling if KVM_RUN is out of scop=
+e?
+
+We could make the context switching logic more sophisticated, e.g. trigger =
+a
+context switch when control leaves KVM, a la the ASI concepts, but that's a=
+ll but
+guaranteed to be overkill, and would have a very high maintenance cost.
+
+But we can likely get what we want (low observed overhead from the guest) w=
+hile
+still context switching PMU state in vcpu_enter_guest().  KVM already handl=
+es the
+hottest VM-Exit reasons in its fastpath, i.e without triggering a PMU conte=
+xt
+switch.  For a variety of reason, I think we should be more aggressive and =
+handle
+more VM-Exits in the fastpath, e.g. I can't think of any reason KVM can't h=
+andle
+fast page faults in the fastpath.
+
+If we handle that overwhelming majority of VM-Exits in the fastpath when th=
+e guest
+is already booted, e.g. when vCPUs aren't taking a high number of "slow" VM=
+-Exits,
+then the fact that slow VM-Exits trigger a PMU context switch should be a n=
+on-issue,
+because taking a slow exit would be a rare operation.
+
+I.e. rather than solving the overhead problem by moving around the context =
+switch
+logic, solve the problem by moving KVM code inside the "guest PMU" section.=
+  It's
+essentially a different way of doing the same thing, with the critical diff=
+erence
+being that only hand-selected flows are excluded from profiling, i.e. only =
+the
+flows that need to be blazing fast and should be uninteresting from a profi=
+ling
+perspective are excluded.
