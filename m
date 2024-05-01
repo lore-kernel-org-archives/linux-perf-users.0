@@ -1,470 +1,238 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C20B8F6E;
-	Tue, 30 Apr 2024 21:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714510824; cv=none; b=J/GJ0ub136G/HBxiDyPkJit+GZV0NscIkOJSAbFbbsoE3lCFCtx1iJrhCj8sZcqWh0U41DvUtwrUlDm3bCdTyglwndGuBXN/vl0UHc6Uc/LB5GLfLP+MpUQuUlJ+N59E5lzhTuXSZdp8i+t86Zg+XFL0Lb6J++271qZCh1e05Ps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714510824; c=relaxed/simple;
-	bh=zcbNgeImiQt8aRUifDGN4mFMrkWlHNmzjSo4AxTlRqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XRkWU9B1xRcc5CgBNprTX214cpYuYpNiHeOtvtWI8dhGe7nSEwgO6F1A7eCM/79QiJKMTH4ItEGPKt/oT7wDjUuw8PMKnVQuKmSvLEONPST4BtWFhE0w7gF1e/bE9D0/yffrvXumDgn3voV0gx2z+JRk6xm02WySLKB3iGF4BRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso4539669a12.0;
-        Tue, 30 Apr 2024 14:00:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714510822; x=1715115622;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4iKBByVjl8fozaqhR11zT2eh308X82b/Cs/F6vPGSKU=;
-        b=OMMwmrJp6c+tu/Jya9SGAtNUhjbuC85euMCy9c2ZnjTLXke+z8WtwmhohnsYx5sEr5
-         IzJzCZduDvmArJxDQD35vstnFjZDgtKImcAC+Ek9QMvA8oxDuQRfxHS/BIt4fEAkWIJI
-         OmGIRe9YNlQFCe6xtVODlOn5UFVHcdL7jrK00eDTS++1MwBSQNl8eJKxrdwigK1V7PAQ
-         VAbqepFUXV9hcnUYugYcqggC2FRPkRO7Yw0XqQy6wDNpJYtSRquQCR+Uq0eVmNokIXNl
-         1xZ8tgwiTcqMDrlTvOjUuBClFzweA0XBY5D+YshCYA6ZdIVV2z4CHMWw3Lncz+pDDRTX
-         uuvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXI1xRqSF8VPpoKSDX6yUVSEG+vs+VubcWeqauFoK/jduutIjYrrX82vANYacBUJCUkqWqicGzCvpMfyfzx3ynZBH8Ey4DljTTN4CVJE177PzGskVdpqx9HerVCZ1GDoj0162EK/2hWdBJpMllYqA==
-X-Gm-Message-State: AOJu0Yw0WfqoR5jeP10ZW93RB+ROLLps/LfxkDomyYC2IaFFv7Skd9Qd
-	slrn6LWsmmFAzWbiD2Zfbb3e2hBNoDYiGLbqSaIiOP7GjSwn90hAxBG5KPfEjwd4VCuBKPnrPwW
-	TYuGyaS0ZioR/8QbG7vd5hFcRz0s=
-X-Google-Smtp-Source: AGHT+IFMOM//Pe1ySWf1xdgbZLWkFEyTF0/Q2dEiIvS9SSAADa8Qupj63Yj5pfecMaFZP51tO4t7eoNKYx21+EWe38M=
-X-Received: by 2002:a17:90b:50cc:b0:2ad:da23:da0b with SMTP id
- sb12-20020a17090b50cc00b002adda23da0bmr738146pjb.34.1714510821219; Tue, 30
- Apr 2024 14:00:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957FC1C69A;
+	Wed,  1 May 2024 03:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714532765; cv=fail; b=B3bX01RG+2nZxuzoQj34o+YL0z9/Cc12K6GZtsUSAzL6gFee1J1olTddcn9g0YsM0I+3Ievos1hz89hF+8ej73WrXfRar9ZjpQoGNIKohmVYsCEZpnL3VYl5zsxOZ5UYOtgizZ+verukgsFDgLnfIt6ul4iLNDR0E4amGrn3yMk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714532765; c=relaxed/simple;
+	bh=se2hJaxnve73FOTvKaHCBGd55UYmvGpwj4xodEn5PuI=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MElNjeCk0DpElBcOJYJh0Vk2Gn2H1Wnj673FWBwx8vT0+BG29AqxyXsYPC3ag26AM794IstQQ7xSgdzkz5Z7GNgiS3DdpuC0wn8Ycrn7WmAgOM10SSMwmUUSt2UQgPoFyJd3+vwoPAwl7dv4U+VGfd0G1wMkj2/RTefFyyuN+NQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyZ3XRFW; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyZ3XRFW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714532762; x=1746068762;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=se2hJaxnve73FOTvKaHCBGd55UYmvGpwj4xodEn5PuI=;
+  b=iyZ3XRFWZAbCr+WBLkamj430MmaTwRwV2xOb3c8eeik07O2lcTWS6/sE
+   wqbf5DWMey6dNbJtccCJRe8x+d14TdPbGluc4/JhFAkjTRUdEFBA+uX0l
+   tRyS6+CNeBE1KAWcWJlO/I1Oo3oGSOctrmE/XGJXrlFwEaxxToe7YNagl
+   nVmZ6cAaw8Ggq9W8ky4X6hoSyFqSXME+LORUAppSRZMWexbyU0Co6Y67y
+   wjsz+pHaWeBa4865KlIkEx7jU9kAFNsWDBmQhGYkJMDgN51j0bknjUH+f
+   vO4yfMAnnkP9bzT4y8iSIOveSxhqXCLlggKmIFaPWl6YX2dq0zGzIcgjh
+   A==;
+X-CSE-ConnectionGUID: i2n/NNxrR06Y8SEXrb/zWg==
+X-CSE-MsgGUID: STcaSFfMR0GURbjsAuV0Bg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="21415295"
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="21415295"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 20:06:02 -0700
+X-CSE-ConnectionGUID: KQ0zDjR8T5GVr9/KP8qamA==
+X-CSE-MsgGUID: zXteodrsSjyoKN7d2tHjlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="57844389"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Apr 2024 20:06:02 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Apr 2024 20:06:01 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Apr 2024 20:06:01 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 30 Apr 2024 20:06:01 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Apr 2024 20:06:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PQOz94IVXbzlw0T/DGe4Il4ey5Jg+TpDO2+47reBvnZYlPKE746J3UumSEX3FdjJ6PgbCVj24amRliqYYjyy1iirFJSoo96OkBWR0clXEiFRjpzh/C/FFSAgpMzbGZOVYc3zqi2do+dNKTvvIT6rlOD1AUTSC0U61p9qV1TpXZIkbYycqYUgYE8fMZkItV96BJI9NKAfLne2g7i5NO8+kH6NJi0zP2+W0lE3yMystSd65aM6EgggwYnuBuz1/AWS9MLIioEjesGMIYo7/i/ndLSDlvNiaMJL/gIrwVWYP3F7cHXaN3+LBj1sSNblYfmxBqteJHdiCZQfbFdYBNbfpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XVWdrXygftYMo00oNeiI1lGfNYxkGW2c12IfQnP5aoE=;
+ b=g8DBpaighih3YWU/UA6Pa/Xyk9U20XRddWDm+e1BMa1dXAY8JtRa702JXVuSQrVRrda0LWOa5okGsN0j3AUgjvT/D6k7dwYPd5PfDCxotwtEpkl/YBvfkqpTHBaQCsqTncPaBmuTTKzXEjSNIeI99vlqlV+TGVuEOfxqoMsr+jl2Bzy2l4gWoRKcqx9/uNb0EqXzua3Fz5oMII44e90oJymIjxGtt7r91xUpx0TVpD3JiLCxYJEL5DY++teUnna6Jg8poHoUL8N2CDk49iWy2eklTQXXOPcxn/ReSy0GPCxi4d40VulCip32myMFt3aG7L+73bG2o8fOy4trt7lDEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN6PR11MB3230.namprd11.prod.outlook.com (2603:10b6:805:b8::29)
+ by CH3PR11MB7250.namprd11.prod.outlook.com (2603:10b6:610:149::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Wed, 1 May
+ 2024 03:05:58 +0000
+Received: from SN6PR11MB3230.namprd11.prod.outlook.com
+ ([fe80::35d6:c016:dbf5:478e]) by SN6PR11MB3230.namprd11.prod.outlook.com
+ ([fe80::35d6:c016:dbf5:478e%7]) with mapi id 15.20.7519.031; Wed, 1 May 2024
+ 03:05:58 +0000
+Date: Wed, 1 May 2024 11:05:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Bjorn
+ Helgaas" <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	<rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark
+	<james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC: <oe-kbuild-all@lists.linux.dev>, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v3 4/6] perf test pmu: Add an eagerly loaded event test
+Message-ID: <ZjGxifxFjsVfaAdH@rli9-mobl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240429200225.1271876-5-irogers@google.com>
+X-ClientProxiedBy: SG2PR04CA0174.apcprd04.prod.outlook.com (2603:1096:4::36)
+ To SN6PR11MB3230.namprd11.prod.outlook.com (2603:10b6:805:b8::29)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240428053616.1125891-1-irogers@google.com> <20240428053616.1125891-4-irogers@google.com>
- <CAM9d7cgzTsfk3C+dTN80f5FhB1rmfturjuUUwvSTeUvny5eWKw@mail.gmail.com> <CAP-5=fU-XaA=NB8hpWZjUcUrP5D96rKqSJ5SW2a4BX6k+606_Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fU-XaA=NB8hpWZjUcUrP5D96rKqSJ5SW2a4BX6k+606_Q@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 30 Apr 2024 14:00:10 -0700
-Message-ID: <CAM9d7chsHcA4v=gthyD79aPyhsFhOXZs1-c8+J1Sc7JWG_9oAg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] perf evsel: Add retirement latency event support
-To: Ian Rogers <irogers@google.com>
-Cc: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ze Gao <zegao2021@gmail.com>, Leo Yan <leo.yan@linux.dev>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
-	Song Liu <song@kernel.org>, James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3230:EE_|CH3PR11MB7250:EE_
+X-MS-Office365-Filtering-Correlation-Id: b48ac8e9-21cf-4c2a-2ede-08dc698b9f7f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015|921011;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?H9FbdNgeyfjm5nMJwXh0Vj4c9DDJNeCHZ1xmR2cq7l7gUBIaYw1Xz78Z6iwH?=
+ =?us-ascii?Q?hizyfSXatuBURcHbBc3wrCWNQUMQMTxjJ4VdOUa560MmpYppATml+of9TDU5?=
+ =?us-ascii?Q?zYO1JKPeCEVk+UvbpeDzQAg1fEnGaUDcwuxz1+MmbcCBoMizECex83OcFwZM?=
+ =?us-ascii?Q?mFR0cvvk+42YU/14b4fUwiX1mK5x4vA2AQq2KUf9Esg7LtVfUoLAqzxdlMCw?=
+ =?us-ascii?Q?9mEnroqeCmm9vZSzL44xcV7SuvZ8zBa34MmUQsJD0aPsyjN0rtxLnZPvEW4M?=
+ =?us-ascii?Q?tsFhUFnRY9U6jH91TpMTRlYm6rwbGLvBK0a7zrivLD97amgeFASTuDL7ZQNf?=
+ =?us-ascii?Q?X52fQ/6+y1OZSckNDRsUz65Y7RiYdsKPkE0G8ka88W4asG7w/ZSoKK+lMFVY?=
+ =?us-ascii?Q?xWCMxi0zgaFFbWhClI5g7Zl+VQjCNulSPbMPL67Dq4BkumiWg0u/7YFsVt/Y?=
+ =?us-ascii?Q?Iq/VNlgM1b7vY1Tcma3Hut/M37LdK27xkV85+AGTlaCUNDp4XkHG5IlXVYxz?=
+ =?us-ascii?Q?Sd37EqxSk3CGCfy9J6i43+u42DaezL5tNgPJFTZ/Kzop+P2XxN7MwKY9eD+6?=
+ =?us-ascii?Q?PL4YDKsttM92Hc3M8jn9V+xaYWCL1soDsKcXjNcRi8T8DwwFNznEfwHwT9JU?=
+ =?us-ascii?Q?qSesVt4Ca431bDuMymxL+kUTWhy+aBc9MdJvEY5H3dMY7PpQfWXWG4c5gcYu?=
+ =?us-ascii?Q?W2HH/gaqoBo7akUnhRBHbXxC1FeGaVw84y5aGrFc/I7Y6gBVfyxYYphePyi2?=
+ =?us-ascii?Q?4NvbNitcUKjvCGa52uZibFaa3UgNmzLCf/nCNXZCxwwDWypEeUa3UmFb317M?=
+ =?us-ascii?Q?msnY+gTbhvxdZ+S8/oanekE/Z+SxSK0933N253m4qFlPl4IWl+yU7pQBzRBD?=
+ =?us-ascii?Q?oVqWIWV56Tut7JPypF05NCeWAQq7uDRNVlCW9BRRLvuqtTCPyWlbgRW0kbPZ?=
+ =?us-ascii?Q?Wyhtt1KWQw5sZxCXmgYnrIFrWLIle+fKzhHiSVtwIIfX1GpOFW0OnE6nmTWE?=
+ =?us-ascii?Q?El+W0Vewn/pxkVxjl3/oXIQmhxV40/xZT8P31WVCemcuO+s9WATyKyqSbC6W?=
+ =?us-ascii?Q?zxgjysbAYMYe0gwA5tkFt9odxYzG1wac+mZ49PScUY958Q+K142hCfahwOIv?=
+ =?us-ascii?Q?ui1aEP2ZQPW91v9be0UKM/Zzx08sXe5u58pkv2UsywlkSfQ9dXbUiJoFQJ+B?=
+ =?us-ascii?Q?NOYI7J8mbDIhecUWvRpo/Dcfj7mbuoap+vOvpsNoy76kBikcK+CI15k7gzDE?=
+ =?us-ascii?Q?uF5cEO3V7cWQE1wigSmbM+ZXm1ifpITbv95jbpAX/A=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3230.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2ZytXwsaiqopljkgWKVQJo4FOZpU4ggNHgHyJPsri+p+ZujZ1+l7eNHstIUw?=
+ =?us-ascii?Q?QyNlgxcfJAZ9ZXJtMDkgXnGGCDj0kCNmhrO1Zf359ycztAoydV41IKYWXveY?=
+ =?us-ascii?Q?dvtiMkUippmDJpa3FslBKA37vNaYmgwfChfW0MU6jq6fyaGLR7mYNpmZhqy5?=
+ =?us-ascii?Q?81pbBphMOZta/kKj65q2ascsv0R+QIRezbLcaHU/b++cBzHpcPpo5MorbLOL?=
+ =?us-ascii?Q?BljlwOnVG6ze8Cd1IQBaRM4GOjYyHFcyQQ4N+yXyJTQRidRXtTQ/BU7ynEXI?=
+ =?us-ascii?Q?H7myDfR6ZeZqxfGFQ0WZXA3GoHDxPY/UdMvtENmbbCPjbiJjhvAE+zprgviO?=
+ =?us-ascii?Q?QGS2p300xcmdz6ED5d5LcTCmfSdOYX2sbz4s6dD/0OVC/tO3EWUlt+WCsasc?=
+ =?us-ascii?Q?wOf/e3pqXGGbHI/0ivUbFiUicr0zR7Pr5FETsE6a4ohlG4Kd7NCamBzVSNQi?=
+ =?us-ascii?Q?ePdNtqHig9doknzn4DTvDM4OoTtfKrpk+x6FDAeeZBgsk50ZpZpZbu+3B7uw?=
+ =?us-ascii?Q?tNECNEPaCg4TZjHr1wLPL6/F4CmuTLjXL3HGy5T+lK5TSuHddUEVY9Ivb+wD?=
+ =?us-ascii?Q?g0E8C08JbBNMoPzrokSirJel5Vu+3Dp8C2DU2sxiZnXDAYIm+ZAag529cZr5?=
+ =?us-ascii?Q?DldsN2Mls4Ym8jNX/jxYKBNDJtECTbHqjgTa2ybc/FR1Q5JGbBEuV81gfoCw?=
+ =?us-ascii?Q?4b50lK1ejUN770v7mgcMlx3+DD6PTOekYbqHIJQfg/M10sMEn+jiBOBdVF5n?=
+ =?us-ascii?Q?DHi37Vu1p7Um41QL7SJ5iXRtI+fqyGZFHblAwVxbEg/1vewQyVMGK+/rMmkp?=
+ =?us-ascii?Q?HGQKqCw15x6oHqV0vmq3UtiwM0GU6r164U1rpAiMYedOKxQ3h/xge4sHucmX?=
+ =?us-ascii?Q?e9XhtmHLue3o6EeLZQKJZNh9c4bzJF/CnHiQzFBUV3hLyjaZ77xd2hGOFy+c?=
+ =?us-ascii?Q?5IJTwxE2a4Q+58fLtH4sCzGQVwTITNwma9hixVEzxVrthLTHnEsNyi2DfiMZ?=
+ =?us-ascii?Q?StJ685CaJrmrlyZhCaHJXQ9cErYQhrj7LnsH2ucDfr2RRsa+i8sjVSEPDdhj?=
+ =?us-ascii?Q?/rkm/spXwyxQfocxKEeqiRggDkAX4tFPdWlNob6ENg4la5/7iQ3Qovd4zdl5?=
+ =?us-ascii?Q?54PqropoLCEkhoEt3q9VC/WlS5BfH6z/TszPTBcKn4mSJ9XpglNajFf8z5lF?=
+ =?us-ascii?Q?OVTX6xPNyM1PwaWTIy36xB7vQBogT1iU0d421rkNz4SwAa7z5qLaH4sB41mX?=
+ =?us-ascii?Q?jQ/s9r4gG+b4+B7Lxra+VV0aLI4q5slKcLohckna+8hTZePXZ29iPC24DeJn?=
+ =?us-ascii?Q?7x2MbSBCmQwTCRscp6u2BKIRPcYEXHR0v3qOJdkBTkW659Hu0r+PzncTgL1S?=
+ =?us-ascii?Q?JoCW2qIqIhlcZR3rW5x+0rMwTECCgCsLQnqbwpJ6h/k3ZN5c4D12lYvRCDVR?=
+ =?us-ascii?Q?SgfKaohtwZIAKOFUHaGt/AfG9nqeGQViSDbOqUCaMDslT0xvmhVSRiXTRCqE?=
+ =?us-ascii?Q?Lt6PXDCqadLhGg3ukrPqOi5gTHnQ/GSP+KavEUxWrTwV5lvFNz510gxfsuoK?=
+ =?us-ascii?Q?E5q/UBxhLVm2v/Ar7Sp+OV6haiQ4Hcj5xIZFblih0IrOO7SJZVQQJBPXI563?=
+ =?us-ascii?Q?/g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b48ac8e9-21cf-4c2a-2ede-08dc698b9f7f
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3230.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 03:05:58.1711
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Dv/ODdCXbfZf8lf+1t2zC2rqM2UaFXrvtvmPwdC9NJNVk7fiOoo1HdppBYlAJPgUEJGctUPqtRfw8KWHeN9hg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7250
+X-OriginatorOrg: intel.com
 
-On Mon, Apr 29, 2024 at 8:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Apr 29, 2024 at 2:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Sat, Apr 27, 2024 at 10:36=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > When a retirement latency event is processed it sets a flag on the
-> > > evsel. This change makes it so that when the flag is set evsel
-> > > opening, reading and exiting report values from child perf record and
-> > > perf report processes.
-> > >
-> > > Something similar was suggested by Namhyung Kim in:
-> > > https://lore.kernel.org/lkml/CAM9d7cgdQQn5GYB7t++xuoMdeqPXiEkkcop69+r=
-D06RAnu9-EQ@mail.gmail.com/
-> > >
-> > > This is trying to add support for retirement latency directly in
-> > > events rather than through metric changes, as suggested by Weilin Wan=
-g in:
-> > > https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@int=
-el.com/
-> >
-> > This seems to create perf record + report pair for each R event
-> > while Weilin's patch handled multiple events at once.
->
-> Some issues with this change:
->  -  perf stat treats any SIGCHLD to the parent as the workload
-> completing. Properly supporting child processes means perhaps using
-> sigaction and detecting the child process that terminates. As
-> evsel__read_counter sends a kill it triggers the SIGCHLD that ends
-> perf stat and thereby breaking interval mode.
+Hi Ian,
 
-Right, the interval mode is tricky to support.
+kernel test robot noticed the following build errors:
 
->  - there's a pair of processes per-CPU so that per-CPU mode is
-> supported. Ideally we'd start a single process and read every CPU in
-> that process in one go, then the evsel__read_counter code would read
-> each CPU's count at once.
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v6.9-rc6 next-20240430]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Also if there're more than one events.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-test-pmu-events-Make-it-clearer-that-pmu-events-tests-json-events/20240430-040959
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20240429200225.1271876-5-irogers%40google.com
+patch subject: [PATCH v3 4/6] perf test pmu: Add an eagerly loaded event test
+:::::: branch date: 23 hours ago
+:::::: commit date: 23 hours ago
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240501/202405010256.1BDkfF0K-lkp@intel.com/reproduce)
 
->  - record/report restarts happen on each evsel__read_counter as there
-> doesn't seem to be enough functionality in control-fds to  do a
-> periodic dumping.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/r/202405010256.1BDkfF0K-lkp@intel.com/
 
-Hmm.. maybe something like perf top.
+Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
+http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
 
->  - the evsel__open_cpu has a "sleep 0.1" workload to avoid gathering
-> too many samples and overloading the perf report process.
+All errors (new ones prefixed by >>):
 
-Yeah, maybe with a lower frequency too.
+     PERF_VERSION = 6.9.rc5.gea45a6cddbea
+   tests/pmu.c: In function 'test_pmu_get':
+   tests/pmu.c:89:9: error: ignoring return value of 'write' declared with attribute 'warn_unused_result' [-Werror=unused-result]
+      89 |         write(file, "9999\n", 5);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   tests/pmu.c:128:9: error: ignoring return value of 'write' declared with attribute 'warn_unused_result' [-Werror=unused-result]
+     128 |         write(file, test_event, strlen(test_event));
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   tests/pmu.c: In function 'test__pmu_events':
+>> tests/pmu.c:241:16: error: 'ret' may be used uninitialized [-Werror=maybe-uninitialized]
+     241 |         return ret;
+         |                ^~~
+   tests/pmu.c:198:13: note: 'ret' was declared here
+     198 |         int ret;
+         |             ^~~
+   cc1: all warnings being treated as errors
+   make[7]: *** [tools/build/Makefile.build:106: tools/perf/tests/pmu.o] Error 1
+   make[7]: *** Waiting for unfinished jobs....
+   make[6]: *** [tools/build/Makefile.build:158: tests] Error 2
+   make[6]: *** Waiting for unfinished jobs....
+   make[5]: *** [Makefile.perf:727: tools/perf/perf-in.o] Error 2
+   make[5]: *** Waiting for unfinished jobs....
+   make[4]: *** [Makefile.perf:264: sub-make] Error 2
+   make[3]: *** [Makefile:70: all] Error 2
 
->  - there's no way to disable the dummy event in perf record, even
-> though all we want is one field out of retirement latency samples.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-Right, in this case we don't care about the sideband events.
-
->
-> Given fixing all of these would be a lot of work, I think it is
-> similar or less work to just directly read the retirement latency from
-> events in perf stat. Making perf stat allow events that have a
-> sampling buffer is troublesome not least as the mmaps are associated
-> with the evlist:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/perf/util/evlist.h#n65
-> and so the evlist code assumes every evsel is sampling.
->
-> Given all of this, I think these patches are a quick way to add the
-> retirement latency support and then proper sampling support in `perf
-> stat` can be worked on next to lower the overhead.
-
-Ok, one more thing I asked to Weilin is documentation.
-I don't think we all clearly understand what is TPEBS and
-why do want to do this stuff.  Writing down the situation
-would help others (including future me) understand the
-problem and current solution.
-
-Thanks,
-Namhyung
-
-
->
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/evsel.c | 186 ++++++++++++++++++++++++++++++++++++++=
-+-
-> > >  tools/perf/util/evsel.h |   3 +
-> > >  2 files changed, 188 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index a0a8aee7d6b9..17c123cddde3 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -22,6 +22,7 @@
-> > >  #include <sys/resource.h>
-> > >  #include <sys/types.h>
-> > >  #include <dirent.h>
-> > > +#include <signal.h>
-> > >  #include <stdlib.h>
-> > >  #include <perf/evsel.h>
-> > >  #include "asm/bug.h"
-> > > @@ -58,6 +59,7 @@
-> > >  #include <internal/xyarray.h>
-> > >  #include <internal/lib.h>
-> > >  #include <internal/threadmap.h>
-> > > +#include <subcmd/run-command.h>
-> > >
-> > >  #include <linux/ctype.h>
-> > >
-> > > @@ -493,6 +495,162 @@ struct evsel *evsel__newtp_idx(const char *sys,=
- const char *name, int idx)
-> > >  }
-> > >  #endif
-> > >
-> > > +static int evsel__start_retire_latency_cpu(struct evsel *evsel, stru=
-ct perf_cpu_map *cpus,
-> > > +                                         int cpu_map_idx)
-> > > +{
-> > > +       char buf[16];
-> > > +       int pipefd[2];
-> > > +       int err, i;
-> > > +       struct perf_cpu cpu =3D perf_cpu_map__cpu(cpus, cpu_map_idx);
-> > > +       struct child_process *child_record =3D
-> > > +               xyarray__entry(evsel->children, cpu_map_idx, 0);
-> > > +       struct child_process *child_report =3D
-> > > +               xyarray__entry(evsel->children, cpu_map_idx, 1);
-> > > +       char *event =3D strdup(evsel__name(evsel));
-> > > +       /* TODO: the dummy event also won't be used, but there's no o=
-ption to disable. */
-> > > +       const char *record_argv[15] =3D {
-> > > +               [0] =3D "perf",
-> > > +               [1] =3D "record",
-> > > +               [2] =3D "--synth=3Dno",
-> > > +               [3] =3D "--no-bpf-event",
-> > > +               [4] =3D "-W",
-> > > +               [5] =3D "-o",
-> > > +               [6] =3D "-",
-> > > +               [7] =3D "-e",
-> > > +       };
-> > > +       const char *report_argv[] =3D {
-> > > +               [0] =3D "perf",
-> > > +               [1] =3D "report",
-> > > +               [2] =3D "-i",
-> > > +               [3] =3D "-",
-> > > +               [4] =3D "-q",
-> > > +               [5] =3D "-F",
-> > > +               [6] =3D "retire_lat",
-> > > +               NULL,
-> > > +       };
-> > > +
-> > > +       if (evsel->core.attr.sample_period) /* no sampling */
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (!event)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       /* Change the R modifier to the maximum precision one. */
-> > > +       for (i =3D strlen(event) - 1; i > 0; i--) {
-> > > +               if (event[i] =3D=3D 'R')
-> > > +                       break;
-> > > +               if (event[i] =3D=3D ':' || event[i] =3D=3D '/')
-> > > +                       i =3D 0;
-> > > +       }
-> > > +       if (i <=3D 0) {
-> > > +               pr_err("Expected retired latency 'R'\n");
-> > > +               return -EINVAL;
-> > > +       }
-> > > +       event[i] =3D 'P';
-> > > +
-> > > +       i =3D 8;
-> > > +       record_argv[i++] =3D event;
-> > > +       if (verbose) {
-> > > +               record_argv[i++] =3D verbose > 1 ? "-vv" : "-v";
-> > > +       }
-> > > +       if (cpu.cpu >=3D 0) {
-> > > +               record_argv[i++] =3D "-C";
-> > > +               snprintf(buf, sizeof(buf), "%d", cpu.cpu);
-> > > +               record_argv[i++] =3D buf;
-> > > +       } else {
-> > > +               record_argv[i++] =3D "-a";
-> > > +       }
-> > > +       /* TODO: use something like the control fds to control perf r=
-ecord behavior. */
-> > > +       record_argv[i++] =3D "sleep";
-> > > +       record_argv[i++] =3D "0.1";
-> >
-> > This might be too short and the record process can exit
-> > before perf report (but I guess it's fine when using a pipe).
-> > Also I'm not sure if it's ok to get the retire latency of 100 ms
-> > regardless of the execution of the given workload.
->
-> Ack. As said above, I think the correct longer term thing is to remove
-> the forked processes.
->
-> > > +
-> > > +       if (pipe(pipefd) < 0) {
-> > > +               free(event);
-> > > +               return -errno;
-> > > +       }
-> > > +
-> > > +       child_record->argv =3D record_argv;
-> > > +       child_record->pid =3D -1;
-> > > +       child_record->no_stdin =3D 1;
-> > > +       if (verbose)
-> > > +               child_record->err =3D fileno(stderr);
-> > > +       else
-> > > +               child_record->no_stderr =3D 1;
-> > > +       child_record->out =3D pipefd[1];
-> > > +       err =3D start_command(child_record);
-> > > +       free(event);
-> > > +       if (err)
-> > > +               return err;
-> > > +
-> > > +       child_report->argv =3D report_argv;
-> > > +       child_report->pid =3D -1;
-> > > +       if (verbose)
-> > > +               child_report->err =3D fileno(stderr);
-> > > +       else
-> > > +               child_report->no_stderr =3D 1;
-> > > +       child_report->in =3D pipefd[0];
-> > > +       child_report->out =3D -1;
-> > > +       return start_command(child_report);
-> > > +}
-> > > +
-> > > +static int evsel__finish_retire_latency_cpu(struct evsel *evsel, int=
- cpu_map_idx)
-> > > +{
-> > > +       struct child_process *child_record =3D
-> > > +               xyarray__entry(evsel->children, cpu_map_idx, 0);
-> > > +       struct child_process *child_report =3D
-> > > +               xyarray__entry(evsel->children, cpu_map_idx, 1);
-> > > +
-> > > +       if (child_record->pid > 0)
-> > > +               finish_command(child_record);
-> > > +       if (child_report->pid > 0)
-> > > +               finish_command(child_report);
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static int evsel__read_retire_latency(struct evsel *evsel, int cpu_m=
-ap_idx, int thread)
-> > > +{
-> > > +       struct child_process *child_record =3D xyarray__entry(evsel->=
-children, cpu_map_idx, 0);
-> > > +       struct child_process *child_report =3D xyarray__entry(evsel->=
-children, cpu_map_idx, 1);
-> > > +       struct perf_counts_values *count =3D perf_counts(evsel->count=
-s, cpu_map_idx, thread);
-> > > +       char buf[256];
-> > > +       int err;
-> > > +
-> > > +       kill(child_record->pid, SIGTERM);
-> > > +       err =3D read(child_report->out, buf, sizeof(buf));
-> > > +       if (err < 0 || strlen(buf) =3D=3D 0)
-> > > +               return -1;
-> > > +
-> > > +       count->val =3D atoll(buf);
-> > > +       count->ena =3D 1;
-> > > +       count->run =3D 1;
-> > > +       count->id =3D 0;
-> > > +       count->lost =3D 0;
-> > > +
-> > > +       /*
-> > > +        * TODO: The SIGCHLD from the children exiting will cause int=
-erval mode
-> > > +        *       to stop, use the control fd to avoid this.
-> > > +        */
-> > > +       err =3D evsel__finish_retire_latency_cpu(evsel, cpu_map_idx);
-> > > +       if (err)
-> > > +               return err;
-> > > +
-> > > +       /* Restart the counter. */
-> > > +       return evsel__start_retire_latency_cpu(evsel, evsel->core.cpu=
-s, cpu_map_idx);
-> >
-> > Is this for the interval mode?  Then I think it's better to move the
-> > logic there and let this code just do the 'read'.
->
-> For encapsulation's sake I'm trying to make it so that we don't put
-> event reading logic into perf stat. perf stat just makes
-> counters/evsels and asks the code to read them. Behind the scenes we
-> do things like this, reading /proc for tool events, potentially other
-> things for hwmon, etc. We should be able to update event parsing and
-> evsel and from this get support for a new counter type - is my hope.
->
-> >
-> > > +}
-> > > +
-> > > +static int evsel__finish_retire_latency(struct evsel *evsel)
-> > > +{
-> > > +       int idx;
-> > > +
-> > > +       perf_cpu_map__for_each_idx(idx, evsel->core.cpus) {
-> > > +               int err =3D evsel__finish_retire_latency_cpu(evsel, i=
-dx);
-> > > +
-> > > +               if (err)
-> > > +                       return err;
-> > > +       }
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  const char *const evsel__hw_names[PERF_COUNT_HW_MAX] =3D {
-> > >         "cycles",
-> > >         "instructions",
-> > > @@ -1465,6 +1623,10 @@ static void evsel__free_config_terms(struct ev=
-sel *evsel)
-> > >
-> > >  void evsel__exit(struct evsel *evsel)
-> > >  {
-> > > +       if (evsel->children) {
-> > > +               evsel__finish_retire_latency(evsel);
-> > > +               zfree(&evsel->children);
-> >
-> > You'd better call xyarray__delete() and set it to NULL.
->
-> Okay.
->
-> Thanks,
-> Ian
->
-> > Thanks,
-> > Namhyung
-> >
-> > > +       }
-> > >         assert(list_empty(&evsel->core.node));
-> > >         assert(evsel->evlist =3D=3D NULL);
-> > >         bpf_counter__destroy(evsel);
-> > > @@ -1778,6 +1940,9 @@ int evsel__read_counter(struct evsel *evsel, in=
-t cpu_map_idx, int thread)
-> > >         if (evsel__is_tool(evsel))
-> > >                 return evsel__read_tool(evsel, cpu_map_idx, thread);
-> > >
-> > > +       if (evsel->retire_lat)
-> > > +               return evsel__read_retire_latency(evsel, cpu_map_idx,=
- thread);
-> > > +
-> > >         if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
-> > >                 return evsel__read_group(evsel, cpu_map_idx, thread);
-> > >
-> > > @@ -1993,10 +2158,22 @@ static int __evsel__prepare_open(struct evsel=
- *evsel, struct perf_cpu_map *cpus,
-> > >                 threads =3D empty_thread_map;
-> > >         }
-> > >
-> > > -       if (evsel->core.fd =3D=3D NULL &&
-> > > +       if (!evsel->retire_lat && evsel->core.fd =3D=3D NULL &&
-> > >             perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus)=
-, nthreads) < 0)
-> > >                 return -ENOMEM;
-> > >
-> > > +       if (evsel->retire_lat && evsel->children =3D=3D NULL) {
-> > > +               /*
-> > > +                * Use ylen of 2, [0] is the record and [1] is the re=
-port
-> > > +                * command. Currently retirement latency doesn't supp=
-ort
-> > > +                * per-thread mode.
-> > > +                */
-> > > +               evsel->children =3D xyarray__new(perf_cpu_map__nr(cpu=
-s), /*ylen=3D*/2,
-> > > +                                       sizeof(struct child_process))=
-;
-> > > +               if (!evsel->children)
-> > > +                       return -ENOMEM;
-> > > +       }
-> > > +
-> > >         evsel->open_flags =3D PERF_FLAG_FD_CLOEXEC;
-> > >         if (evsel->cgrp)
-> > >                 evsel->open_flags |=3D PERF_FLAG_PID_CGROUP;
-> > > @@ -2209,6 +2386,13 @@ static int evsel__open_cpu(struct evsel *evsel=
-, struct perf_cpu_map *cpus,
-> > >
-> > >         for (idx =3D start_cpu_map_idx; idx < end_cpu_map_idx; idx++)=
- {
-> > >
-> > > +               if (evsel->retire_lat) {
-> > > +                       err =3D evsel__start_retire_latency_cpu(evsel=
-, cpus, idx);
-> > > +                       if (err)
-> > > +                               goto out_close;
-> > > +                       continue;
-> > > +               }
-> > > +
-> > >                 for (thread =3D 0; thread < nthreads; thread++) {
-> > >                         int fd, group_fd;
-> > >  retry_open:
-> > > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > > index bd8e84954e34..3c0806436e64 100644
-> > > --- a/tools/perf/util/evsel.h
-> > > +++ b/tools/perf/util/evsel.h
-> > > @@ -177,6 +177,9 @@ struct evsel {
-> > >         __u64 start_time;
-> > >         /* Is the tool's fd for /proc/pid/stat or /proc/stat. */
-> > >         bool pid_stat;
-> > > +
-> > > +       /* Used for retire_lat child process. */
-> > > +       struct xyarray *children;
-> > >  };
-> > >
-> > >  struct perf_missing_features {
-> > > --
-> > > 2.44.0.769.g3c40516874-goog
-> > >
