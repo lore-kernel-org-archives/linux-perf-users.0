@@ -1,66 +1,66 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E60548CE0
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 11:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F1D5E22C
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 11:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714561663; cv=none; b=kixD1mFJNi2v6JEFygK+d/y9fRlIwvxF+utZB4JKrGspru+qPC+kTXk+HoQ6xIW1zFFXfRdKYJeEovvdU+QIFUHo29aWTw3aVOog6xpeVdxBfLW9aFWurnj7Br641uiyXUrMdyLXV4QD/K0zA9mGOEWSKIJjM1GgmNstuyE5PM0=
+	t=1714561894; cv=none; b=sTK+7Pp5fZkxl0eK88nXLWziT7nCZYdm96FZfJX8V6K6lA6iWNHaURHrh3uGi/iYuWXw8Xj0l1BhyH5MDwnTNqyF36w3pqGRL6Q6FEKyB+QiRW8ZzNHAfxxB+tc7TvrYlgK4OWJMuQqbHD1Y4z08G+VIGilnpMK678isNVpeCK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714561663; c=relaxed/simple;
-	bh=PFvDOMRHeF4ceqtT1HoG5CTMOEV3p5eFI81RRqSaeRE=;
+	s=arc-20240116; t=1714561894; c=relaxed/simple;
+	bh=rP7uH6p9WSfZPD4zUjuFPD5EEQc4lxYWqVD/vJwLfNw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rDtjB0RcZfBeDPUxgTDHzgPJmkdJtxpXcosKXUoV7kwwTbWgjj8wjlMAM3cwGgtx9gnq0R9nlVaLPd50bHKQ75qZq3hPjWPPfIKGJruKAgA3IEP4QOobg3ZVIlP+eU/tvDyXUQTJuZ+QPc9pAR9y6o/k3bSPVYoeKfLAZglfrEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B08lNSqO; arc=none smtp.client-ip=209.85.210.172
+	 To:Cc:Content-Type; b=YgnAu57G9y7OXkjH+iruFBAnL/zMxt0uzOPv11nNY0cZ90DDDhSH4z9nw5k7XA4coeF9KX/gPT3MyQ5a8VjNQiJkQzQl4AD5uvsh5RzF3a34L393NCo2HHZB/0RRN4WQIdP6ugXyp1sZSUFUsWC0UmRMlzAjueucxYBkodB7Bo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hPoyMt32; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B08lNSqO"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso3689901b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 04:07:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hPoyMt32"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso3738077a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 04:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714561660; x=1715166460; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714561893; x=1715166693; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ek5F3YPIQaz7pVJGDrpZC6fIvMvYFFyBjkRJozj7mhk=;
-        b=B08lNSqORCad23SG44rFFpG4gqe3jaITrZ3AG2hQ8xd6+9b3KwQc5XT2dU+g8f4dsj
-         5eJWFBMNshAiz04IUZeIhJy87m5GAMx+bxMFXiC1GuAAtp6T4m/o9Awu+rKCo06jWSBL
-         1iP0rIqF/FQX0bMlkgvPoY1zTUMeYETMCF0v6VcTV/6QLTXKKX5ek0YMVszrENtYjYIl
-         HuWgJzEm4wTR/o7JRmATlhKLA2lDnE0KIq40jcb/9nnRU54w1DqyOJwR4KIgCyaU6tfT
-         TGasvGS1NhgK7h/xlTkeN6R7TO3rDgHAuSiv9HD3m5gxBYrdFXfSGN3gJvDtu4xTXTls
-         Eeng==
+        bh=BZZTUr02OpFJNJ7PY9o47700VYpg5n+dM1vcCgaaNjM=;
+        b=hPoyMt32QOT5dJckUKqav76+lbTkweH8adoewKYEQJUYPX7fH8npfKgTV8QM6BEtdl
+         sGrYlYQCTLXLudT0RH4Ioc27zeNfkpPIadLaJHFr/yNAknd+6mSQiKhrwN6ZEA7j6ddM
+         mWE7xqE4rsiS/fKr9ziqMaSdz1HKV9pApggUpFtD9ZZ4qYcsUiaKlXmZVkMnz/S0U1SS
+         x8U35cy1pIWVJ8r3ShlTnNeGxjP6TMnkdfGO6Na1RUG0VehH2OxW+WUAg1aU1NKDIHbq
+         IrDjvyXrQA+7nQfx4pphq2iW177lhN5ME43ZaEU0TxGMziXD8yV5BZZ8TZbkXCEQGXnj
+         buxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714561660; x=1715166460;
+        d=1e100.net; s=20230601; t=1714561893; x=1715166693;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ek5F3YPIQaz7pVJGDrpZC6fIvMvYFFyBjkRJozj7mhk=;
-        b=wwVihOTk0MAz3PyHYWiPG+0W67BLdVYNrIQxccviyiihGOv81eyLrt7ZUmAgRpACNU
-         vzhlivkYGOiPuSrbBqV63ekpgSf+OzFhUxKDMymd9Hoe5HhlN7OUQ1z1lPY4mdfLpC4q
-         w75r3hU7e5gjLafbS/oe7Y+Mz4Y+I0Ih95exyIso4VhZ3fprbOrk3KH3Dle5Viwt0si2
-         xNtaMQz/mbJKpBbklG3OAdLwlsOvHWBFqciFh6CumrmFQQqrC2iX1qfpYcSHiE42cRtf
-         Cg0/7joXfrH9Z9CEgj1LnPMI/Ls6GA0kCXX91toD59gICYBVPqkQSrMgSEgUrHIZ50k7
-         eXxQ==
-X-Gm-Message-State: AOJu0YxUFIZb8uvnN9qZ1c1WMpuW9jrezd5zU9eswaEnZZAi1PmgQV9M
-	uMV++h3oTYUZdmP+MmA8UIO4/Odp+3GvCHYx42QyuShyWPEjnzGo5DeajH3uUJM9EyNctkHViUp
-	JuFM1oqSYK2hAwI+7u2RCkR0X8bgC96nrkbkVrw==
-X-Google-Smtp-Source: AGHT+IE/tyinAuqC8y5bBreMEgtKVRNCzWBS/7la0SOC/SOUmFsQmilGpTeNNFJve+JepEwqeq9sMzFbKUfoY4RzIdo=
-X-Received: by 2002:a05:6a20:3213:b0:1a9:c757:a22d with SMTP id
- hl19-20020a056a20321300b001a9c757a22dmr2167796pzc.14.1714561659976; Wed, 01
- May 2024 04:07:39 -0700 (PDT)
+        bh=BZZTUr02OpFJNJ7PY9o47700VYpg5n+dM1vcCgaaNjM=;
+        b=e/jhxIW+19SjiefTcY+NySUm5zIPBvPgbtqEIYLgEzdZULMYp0vW1IBdKreDZA1639
+         LCTy+ARzeLI92nqADQzEDcD7JwP4rsuGQvh/LtFssz8FNBOm/H3Ge9pXV5dE9aMtCDj5
+         XVrVbJdbckI63gxdUc29pMC6twWc9aDzc7QeTOSJK0sUtZQitX84tApbHku0u1bbfFJ7
+         lueVLUzBAjy15k9mhIcM3bfZvWv8o90g0z2xMEH2Ic3JhtBg6KSZYzw444tXIVOEQDxD
+         Jg2mxEMsBJpSXeWQZQEJVjyHjBUKAQnb1IeSiNI0/KyMcn89II/v1VjC5SpQvPTe1AnA
+         haYA==
+X-Gm-Message-State: AOJu0YzAJI6QLeDhKLUwTpcRIeFSS/8yFQd9clPenHtcmz6eGlvAvOmJ
+	Vl/B/TmYJIvzip4/IGGq+A33dEek2oguE0y9PA6MoLyAjxX55OazR2kddEu79YFS/PEMY/LjVkD
+	Dol9BwJnlBX2kKa3RZUnp10M9OyA6Cr0YUgAkwQ==
+X-Google-Smtp-Source: AGHT+IHme+tbaissSNWWxihi7iBWbnHX1ITaUYwIqqsZ/hS87/ki1ILDQ1EHmGWbPiULm7pY0uK6xANN1WfW/TaXyVQ=
+X-Received: by 2002:a17:90b:388f:b0:2b2:812e:1d8c with SMTP id
+ mu15-20020a17090b388f00b002b2812e1d8cmr1795234pjb.2.1714561892566; Wed, 01
+ May 2024 04:11:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429152207.479221-1-james.clark@arm.com> <20240429152207.479221-10-james.clark@arm.com>
-In-Reply-To: <20240429152207.479221-10-james.clark@arm.com>
+References: <20240429152207.479221-1-james.clark@arm.com> <20240429152207.479221-11-james.clark@arm.com>
+In-Reply-To: <20240429152207.479221-11-james.clark@arm.com>
 From: Mike Leach <mike.leach@linaro.org>
-Date: Wed, 1 May 2024 12:07:29 +0100
-Message-ID: <CAJ9a7Vgvdjz9peyDzRzAJ3DDGFfjVD0dNXgcJ7b+g-WvCwZ1QQ@mail.gmail.com>
-Subject: Re: [PATCH 09/17] coresight: Clarify comments around the PID of the
- sink owner
+Date: Wed, 1 May 2024 12:11:21 +0100
+Message-ID: <CAJ9a7VghkeaJ8e-mEZKodicQ++QyW_SKfacsPPsfQb2PiT6H0w@mail.gmail.com>
+Subject: Re: [PATCH 10/17] coresight: Move struct coresight_trace_id_map to
+ common header
 To: James Clark <james.clark@arm.com>
 Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com, 
 	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org, 
@@ -78,63 +78,99 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Mon, 29 Apr 2024 at 16:24, James Clark <james.clark@arm.com> wrote:
 >
-> "Process being monitored" and "pid of the process to monitor" imply that
-> this would be the same PID if there were two sessions targeting the same
-> process. But this is actually the PID of the process that did the Perf
-> event open call, rather than the target of the session. So update the
-> comments to make this clearer.
+> The trace ID maps will need to be created and stored by the core and
+> Perf code so move the definition up to the common header.
 >
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
->  drivers/hwtracing/coresight/coresight-tmc.h     | 5 +++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
+>  .../hwtracing/coresight/coresight-trace-id.c  |  1 +
+>  .../hwtracing/coresight/coresight-trace-id.h  | 19 -------------------
+>  include/linux/coresight.h                     | 18 ++++++++++++++++++
+>  3 files changed, 19 insertions(+), 19 deletions(-)
 >
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index e75428fa1592..8962fc27d04f 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -36,7 +36,8 @@ struct etr_buf_hw {
->   * etr_perf_buffer - Perf buffer used for ETR
->   * @drvdata            - The ETR drvdaga this buffer has been allocated for.
->   * @etr_buf            - Actual buffer used by the ETR
-> - * @pid                        - The PID this etr_perf_buffer belongs to.
-> + * @pid                        - The PID of the session owner that etr_perf_buffer
-> + *                       belongs to.
->   * @snaphost           - Perf session mode
->   * @nr_pages           - Number of pages in the ring buffer.
->   * @pages              - Array of Pages in the ring buffer.
-> @@ -1662,7 +1663,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
->                 goto unlock_out;
->         }
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> index af5b4ef59cea..19005b5b4dc4 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2022, Linaro Limited, All rights reserved.
+>   * Author: Mike Leach <mike.leach@linaro.org>
+>   */
+> +#include <linux/coresight.h>
+>  #include <linux/coresight-pmu.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/kernel.h>
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> index 3797777d367e..49438a96fcc6 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -32,10 +32,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/types.h>
 >
-> -       /* Get a handle on the pid of the process to monitor */
-> +       /* Get a handle on the pid of the session owner */
->         pid = etr_perf->pid;
+> -
+> -/* architecturally we have 128 IDs some of which are reserved */
+> -#define CORESIGHT_TRACE_IDS_MAX 128
+> -
+>  /* ID 0 is reserved */
+>  #define CORESIGHT_TRACE_ID_RES_0 0
 >
->         /* Do not proceed if this device is associated with another session */
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-> index c77763b49de0..2671926be62a 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc.h
-> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
-> @@ -171,8 +171,9 @@ struct etr_buf {
->   * @csdev:     component vitals needed by the framework.
->   * @miscdev:   specifics to handle "/dev/xyz.tmc" entry.
->   * @spinlock:  only one at a time pls.
-> - * @pid:       Process ID of the process being monitored by the session
-> - *             that is using this component.
-> + * @pid:       Process ID of the process that owns the session that is using
-> + *             this component. For example this would be the pid of the Perf
-> + *             process.
->   * @buf:       Snapshot of the trace data for ETF/ETB.
->   * @etr_buf:   details of buffer used in TMC-ETR
->   * @len:       size of the available trace for ETF/ETB.
+> @@ -46,21 +42,6 @@
+>  #define IS_VALID_CS_TRACE_ID(id)       \
+>         ((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
+>
+> -/**
+> - * Trace ID map.
+> - *
+> - * @used_ids:  Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> - *             Initialised so that the reserved IDs are permanently marked as
+> - *             in use.
+> - * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+> - *               yet marked as available, to allow re-allocation to the same
+> - *               CPU during a perf session.
+> - */
+> -struct coresight_trace_id_map {
+> -       DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+> -       DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> -};
+> -
+>  /* Allocate and release IDs for a single default trace ID map */
+>
+>  /**
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index f09ace92176e..c16c61a8411d 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -218,6 +218,24 @@ struct coresight_sysfs_link {
+>         const char *target_name;
+>  };
+>
+> +/* architecturally we have 128 IDs some of which are reserved */
+> +#define CORESIGHT_TRACE_IDS_MAX 128
+> +
+> +/**
+> + * Trace ID map.
+> + *
+> + * @used_ids:  Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> + *             Initialised so that the reserved IDs are permanently marked as
+> + *             in use.
+> + * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+> + *               yet marked as available, to allow re-allocation to the same
+> + *               CPU during a perf session.
+> + */
+> +struct coresight_trace_id_map {
+> +       DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+> +       DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> +};
+> +
+>  /**
+>   * struct coresight_device - representation of a device as used by the framework
+>   * @pdata:     Platform data with device connections associated to this device.
 > --
 > 2.34.1
 >
 
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
-
 -- 
 Mike Leach
 Principal Engineer, ARM Ltd.
