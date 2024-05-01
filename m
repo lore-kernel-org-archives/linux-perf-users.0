@@ -1,102 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE1F5024E;
-	Wed,  1 May 2024 18:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2192B1607B4;
+	Wed,  1 May 2024 19:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714586429; cv=none; b=kpze8KVtXJTtd3fLyoUjE+W5souMCVp3REkYnHzsIVK/E7k34854p8VZRJXgoKnlyzOHSWzyh8AAX3ECxVvn1Y2iEQPduepyE9R5CCx6gtvT4+ve7asz6RjQzTBfBjJb2fpySfDJYt4FcqVlxP7Z+grbw7C+asb5jcHyin9ZrMs=
+	t=1714592811; cv=none; b=MGKZNeHXW5GV4YX50ZpfvTlecxcJemmk6E/fFiFYIdQaL8gt+RuZ3tDsysYTY7gnmXGTnNlh+b4gcb1mXuhVG4nILSflZMe9mlY/7U+LYuLmKTJuR7sUjJDR+xV2sD9o0EUQ2UAlEg1ZqFdlj3tJtBrLNnP+HM4HGODADAKlPR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714586429; c=relaxed/simple;
-	bh=k+dIFqMwQZ2aUiDi9ejc2u8LVegSYH+CS+A6rMZQZao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gc3T49NwV1U7JMS6tKx6kyuB3QvNQvFTKHDrKzrkFy+4OwCUe82vzWLVfQEpj29ExH+hglhe7urPL05AyQd/2BS0xok+yP1P3hvlOyCN9OqWvENyqJfemWPlQLAyu8YuRQBG3bE2q012hR9L6FwbJ8Td0Dl9qO39CrsuVfdFbho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l2U3kks0; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l2U3kks0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714586427; x=1746122427;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=k+dIFqMwQZ2aUiDi9ejc2u8LVegSYH+CS+A6rMZQZao=;
-  b=l2U3kks0iRB8jYGQG3x1sKgp6MHMsY3puPxNm32woUFqaanu2KzTzTEa
-   UOr0SSlP7ikiSC0miQ2L0e5bFSHON/9I2ua93ajkNMbeOdt45vRF0G29u
-   /Zxn9BYyrnKph7JmXOGCmZZ6X4sSPfNYyQTiwdlOPpareCWccBto+OOEY
-   QwJEk36pJSEYrp5QCBfYtrBhZEopkipFbQrkVFrKAW6XATg9Nn0pk5RPb
-   AYWA/SKdKM+WCMVR9KuUUbXodMbXQwMrJT63CCl/o3dkSkE6Nf602DzLn
-   hUxHQcC9gnuuTWhdlE+wCYHxqT8K+ljZqPeBAw4LuJodqAidnkJuWbo+H
-   A==;
-X-CSE-ConnectionGUID: zNTOMlCdTUywh+crgY7l9w==
-X-CSE-MsgGUID: WTeGrNNvRHqeb2hDMKNH/Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10454627"
-X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="10454627"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 11:00:26 -0700
-X-CSE-ConnectionGUID: 6yvooRm2TD+Bsr9luSpjyg==
-X-CSE-MsgGUID: ykIbpHkiRSai8G40A9GwMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="26817144"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 11:00:26 -0700
-Received: from [10.212.96.143] (kliang2-mobl1.ccr.corp.intel.com [10.212.96.143])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 2AD8620B5739;
-	Wed,  1 May 2024 11:00:23 -0700 (PDT)
-Message-ID: <e1aae0a8-fcd8-42ea-81b2-0f95c9d7cc2b@linux.intel.com>
-Date: Wed, 1 May 2024 14:00:21 -0400
+	s=arc-20240116; t=1714592811; c=relaxed/simple;
+	bh=UXLxZiwO9j4G9yblpoqhCe1Fedph3TfzSAiBDi6VnF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jCh6gD4bIEVgGuFldffvbXKyFdwCteaZ+ElYKJxYP3ZZAu3ELH6vRQbBVcqL5EIzkKw8Phy8dBWJQSNAXkdc+aJV50HmacQzM0I+NBNlNm60wauhl/IIPgp15SzXI1ZfUQyfDMfpxnUI6ATzgpeCMN9JgV5tfAZRV7y+etqoZ9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2b273cbbdfdso1693188a91.1;
+        Wed, 01 May 2024 12:46:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714592809; x=1715197609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=am9dpPV5imiX1yoIG8XzwmO0kyg9MHdmsXivnnyrnxI=;
+        b=Ctgt8FwXqAvKIBNC0OtBS3Y3Cwu/f1vdPQN7m6J1UMKuUJ+eocuBaxt7HiFfp/m3GB
+         WyfzV6uG1WH7jOw6IfcgICgsO/OLmMXDrU6/yS0DZeUHwnDXK4xGuj5X8isML4Ut0dpW
+         KoFs87pVCRdbmgI5/DiKaorNFGx+Gak9wzAI374jHWnerx/DwR3oB2ZCCW3DgJxArG9N
+         lC1+AK5UbdFWDvfMmORFQ6cbzGWWSvwaagkCu1JDPMh7BI6xtyJye5LtmSUbafrJ02No
+         YS3rmIS6QntrmjGS4+tQHFGf01Q9Ax6UBdInxqrbIPlLKVO6b6WatuZAHWKS1/557Sla
+         Kr0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUrIXj39/aFjOfTlRPJjzX2pWPYEpzIbvlNBTkElF4omrLo2iXYhkW4knartOu75u5oRrwO+nIoxP5zHXtP0cDJbdrfti6YR+QSlKQh7tnnIxLQ/Nx4rhjRU1wCgm2VL+ym4g52BATapaHZqqaNtw==
+X-Gm-Message-State: AOJu0YxWSnJrYqY5Sxi9euZSpZESwa6CaKSRry0U1BWC2c/xkkpi60PK
+	8G2Aw1MH0am+yWAjOH1MWASIgvAjtuMqCCOi8Z6pfeLsZL7FIjJlRhbxof5SuMS6wytrkZdnHop
+	2Rfe6FA2+4l/wtDzNHWjw6QddFLBWkw==
+X-Google-Smtp-Source: AGHT+IFb5Tk2f/ZK+6gQtWBcIg9Q1zkVzgWYqCuDhWC67Jv+IVN72ZxjRKz5eOfAABzhSsA41X3tpzSvsvpFP0GbniM=
+X-Received: by 2002:a17:90a:f3cc:b0:29b:b5a4:c040 with SMTP id
+ ha12-20020a17090af3cc00b0029bb5a4c040mr3352447pjb.46.1714592809181; Wed, 01
+ May 2024 12:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
- <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
- <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
- <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com>
- <ZiwEoZDIg8l7-uid@google.com>
- <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
- <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com>
- <CAL715WKm0X9NJxq8SNGD5EJomzY4DDSiwLb1wMMgcgHqeZ64BA@mail.gmail.com>
- <Zi_cle1-5SZK2558@google.com>
- <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240430184156.1824083-1-irogers@google.com>
+In-Reply-To: <20240430184156.1824083-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 1 May 2024 12:46:38 -0700
+Message-ID: <CAM9d7chFv38q+a9m_OE-dP1aSUpvd35tM1V7DA_t756O6hrTUA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf lock: More strdup argument freeing
+To: Ian Rogers <irogers@google.com>
+Cc: zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 30, 2024 at 11:42=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Leak sanitizer complains about the strdup-ed arguments not being
+> freed. rec_argv is reordered and duplicates inserted, meaning making
+> all its contents strdup-ed and freeing them all leads to double frees
+> or leaks. Add an extra array to track strup-ed arguments and free
+> them. This makes address sanitier running `perf test` "kernel lock
+> contention analysis test" memory leak free.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-lock.c | 44 +++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 18 deletions(-)
+>
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 230461280e45..26c059397cdf 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -2230,10 +2230,11 @@ static int __cmd_record(int argc, const char **ar=
+gv)
+>         const char *callgraph_args[] =3D {
+>                 "--call-graph", "fp," __stringify(CONTENTION_STACK_DEPTH)=
+,
+>         };
+> -       unsigned int rec_argc, i, j, ret;
+> +       unsigned int rec_argc, i, j, dups =3D 0, ret;
+>         unsigned int nr_tracepoints;
+>         unsigned int nr_callgraph_args =3D 0;
+>         const char **rec_argv;
+> +       char **to_free;
+>         bool has_lock_stat =3D true;
+>
+>         for (i =3D 0; i < ARRAY_SIZE(lock_tracepoints); i++) {
+> @@ -2270,28 +2271,25 @@ static int __cmd_record(int argc, const char **ar=
+gv)
+>         /* factor of 2 is for -e in front of each tracepoint */
+>         rec_argc +=3D 2 * nr_tracepoints;
+>
+> -       rec_argv =3D calloc(rec_argc + 1, sizeof(char *));
+> +       rec_argv =3D calloc(rec_argc + 1, sizeof(*rec_argv));
+>         if (!rec_argv)
+>                 return -ENOMEM;
+>
+> -       for (i =3D 0; i < ARRAY_SIZE(record_args); i++)
+> -               rec_argv[i] =3D strdup(record_args[i]);
+> -
+> -       for (j =3D 0; j < nr_tracepoints; j++) {
+> -               const char *ev_name;
+> +       to_free =3D calloc(rec_argc, sizeof(*to_free));
+> +       if (!to_free)
+> +               return -ENOMEM;
 
+Need to free rec_argv.  'goto out' would be fine.
 
-On 2024-05-01 1:43 p.m., Mingwei Zhang wrote:
-> One of the things on top of the mind is that: there seems to be no way
-> for the perf subsystem to express this: "no, your host-level profiling
-> is not interested in profiling the KVM_RUN loop when our guest vPMU is
-> actively running".
+>
+> -               if (has_lock_stat)
+> -                       ev_name =3D strdup(lock_tracepoints[j].name);
+> -               else
+> -                       ev_name =3D strdup(contention_tracepoints[j].name=
+);
+> -
+> -               if (!ev_name) {
+> -                       free(rec_argv);
+> -                       return -ENOMEM;
+> -               }
+>
+> +       for (i =3D 0; i < ARRAY_SIZE(record_args);) {
+> +               to_free[dups] =3D strdup(record_args[i]);
+> +               rec_argv[i++] =3D to_free[dups++];
+> +       }
+> +       for (j =3D 0; j < nr_tracepoints; j++) {
+> +               to_free[dups] =3D strdup(has_lock_stat
+> +                                      ? lock_tracepoints[j].name
+> +                                      : contention_tracepoints[j].name);
+>                 rec_argv[i++] =3D "-e";
+> -               rec_argv[i++] =3D ev_name;
+> +               rec_argv[i++] =3D to_free[dups++];
 
-exclude_hv? Although it seems the option is not well supported on X86
-for now.
+Now I'm curious why we copy the string in the first place.
+Maybe not needed..?
 
 Thanks,
-Kan
+Namhyung
+
+
+>         }
+>
+>         for (j =3D 0; j < nr_callgraph_args; j++, i++)
+> @@ -2302,7 +2300,17 @@ static int __cmd_record(int argc, const char **arg=
+v)
+>
+>         BUG_ON(i !=3D rec_argc);
+>
+> -       ret =3D cmd_record(i, rec_argv);
+> +       for (i =3D 0; i < dups; i++) {
+> +               if (to_free[i] =3D=3D NULL) {
+> +                       ret =3D -ENOMEM;
+> +                       goto out;
+> +               }
+> +       }
+> +       ret =3D cmd_record(rec_argc, rec_argv);
+> +out:
+> +       for (i =3D 0; i < dups; i++)
+> +               zfree(&to_free[i]);
+> +       free(to_free);
+>         free(rec_argv);
+>         return ret;
+>  }
+> --
+> 2.45.0.rc0.197.gbae5840b3b-goog
+>
