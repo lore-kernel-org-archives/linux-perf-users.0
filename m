@@ -1,138 +1,255 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2065.outbound.protection.outlook.com [40.92.90.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055DD182DF;
-	Wed,  1 May 2024 17:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714584210; cv=fail; b=nkR9685iOXgKyU+1K7Qx84kSCLEq5FXon4eWgvOQG/nsqEkvYXO3lCgN2pW5RBd22VNFiF4HurBJrgGi8sQMI3p629TJ62jdQ9fL+ckvoYcCuTasO6czCj335VM2nfp4bGjXX6Syy4pWFJKXibu5tzFEU5B9auB1C/XMFX4r0PE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714584210; c=relaxed/simple;
-	bh=TmwpVJ99AIxirytNYCVxO7YZB0W1wc2eGI5rruDJ2xE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Tom6UWJyucz4I5DKgY4/x5bwRt2KmB3naCZG3LqrM7m9x1tvZrBZNqhgpAPGSXAehmm54s+XLM6F6Vre+wmVfye+xP7231RC0xfafYvmaq1t6B/NWdnwGn9ajy/2d6vrWEROsBuPAnWE6Hj7BA7rZAVQEWqQSi+5w1yoGWl1bjI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Yc6/UG44; arc=fail smtp.client-ip=40.92.90.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201F513665D
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 17:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714585480; cv=none; b=OSRqGTon7f+yPt+dKtk4pa2HYzDBwCC7/2nAOQe/NKzgSmztJTWjjq482ZMkXouY9ZmfDjlK6iS/Ppw637bBJlgi9PqV0LvRzFptcxyY3OKTVCAzGSISLafK0wtAeAQSaj2Z6Oy2EHlELr746pyxGGS65Le0QyT8uV95lCdpW7c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714585480; c=relaxed/simple;
+	bh=v3enCvAplcrQ4cwOxDbhFJqukTTawzuTb94s+VDDEG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lfc3/D/+wDPHVVeIfDmjk9S+Vu6EWw60U+pAtvWMbmrzgkawTrbvjKZFjSOJzxeHAisRGTpFnzjm8obP1PqojlcDnggME1Z3WHVh65RR/qVTwhzOqSFlnEz/Hn9yatB6kgUlKm3OKat9rQFHAxO+QhhZxFdpMqIi3pSYQx0Enr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KJ/tdbuA; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Yc6/UG44"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jk5nqF4TYAcejJfkfcPJgv20wBbKo/LbxxmdwzMIqgaOTAdfCuNBN3Tfx5PMPbPCFZV6oKJ+lJXNEjtHnJgY7j4I8XJgn9EaTQh9mb39pKJDEY6a6BwDWGTHSVkdQu8MH2PMs9aQPRy1pa7b3kR2A4euIg/UCUPOMxkK/Br+euDFbf0eJv9TohDSGRl7TVaslpQQRelc355rGAPTAInuqtRopmH2i9DdLVuVbDoD0H6SuHqPdQe9ZUb42xU/J1sj4puwyDw7ciqlyp0zrQ+PNllhcrlS3kb/Y0hEoq57S3KXhOUez3RoHwmhykhOOEg52lkT7qRBEetcBPJ8gFKLEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5L5iVfIZf/D47VfmLbuMnFPYH+LR66by4sa0YNzq1sA=;
- b=TosY+m0z7wftZ6hIFct0IkTItx7WUn815T3Zb4hmTFe1XeHzESU8DU+1LQsZRcnfQ5dI6V89W53+bNSyHake2DJP44wfSG8PwMCBLB5Lp9WIfb1zHleEjSY5bsHu9dVmn71QkFE4sNeQ1BnyxvrmPbbbMRqrV3lbXyRYV2WJFv/1pHL7y/coaAiF5/ntYNgR+GoueM4XAxhQb2SndHRMwuJp1hFxk5IOUhr8m+1fWAwkIKMH5b7k8kRKBe53Kd2qiNfcY4jGFRD1SoYlxoOn+DnlxygMLpD7RIQGIWngwndCNlzxSoJBEGalRLQt03L9UHQ6eEyntNaQ6YH9FKOVDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5L5iVfIZf/D47VfmLbuMnFPYH+LR66by4sa0YNzq1sA=;
- b=Yc6/UG44hgBDad2slc8NC5vlFKkJICHScTGhxUTakJSAtPWsVXXxSGVBh2gbbSokzsVodRJx2Fx4MdB3pCeP6Bx2yfyHgO+8pIyh1XWUG9Q6OBAbJ/0MWRG8NLYrx27VabdG29aDchyX8iTn+rL5hRXbLBb0I8gsuV2Oc7v3bXIWOXAcI3DKMd+z/ovsWVO2tEvPgL12jiPCJJ7neXkWfen/Qk57Wb0Vn/MCsWG+Cm7bHcSi88JheYIpqX3Yp5h9qWM3JiwL/KaIN0c74GwhxZBYCqccLz5m15Tndxjyq94t44fAF7NvGkr0BdbohVkGjFy5a/VJZWWRZn39zLsQJg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by PAWPR02MB10396.eurprd02.prod.outlook.com (2603:10a6:102:343::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Wed, 1 May
- 2024 17:23:26 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7519.035; Wed, 1 May 2024
- 17:23:26 +0000
-Date: Wed, 1 May 2024 19:23:23 +0200
-From: Erick Archer <erick.archer@outlook.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID:
- <AS8PR02MB7237ACFC7FF6858CF3C513238B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240430091504.GC40213@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
-X-TMN: [IrwAPLolCBEFwVCyn/bJdR0iM8sjJ/QS]
-X-ClientProxiedBy: MA2P292CA0023.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::18)
- To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID: <20240501172323.GB2735@titan>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KJ/tdbuA"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a559b919303so900038166b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 10:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714585476; x=1715190276; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k4IV5MUpcWstax6ntK82tb+sL5JFIt+jl6TpQDKHYAY=;
+        b=KJ/tdbuADaCz4crloVoTX94jcQM+1tZ4wO6NmrGraFZFOu7DIv2s9+lH/FLJjrNVxv
+         2zytiW86b1K6wLFQn1nwViioeWcI4PTDCJkcjZX1eq+9ET6snFHYHcyKsA8fONhcgfPE
+         LMQysJ3FD8Ukm48RTh9acYTfz8BnTOObS5EnRN4HlZH9++D5uTeM4jye467cCmGBgm8N
+         h0GJMKrOsXsaZ3K+jS1k6j0iC/wgfXuKf/AE+cZ9IPIkYMJ8WDw/yEmvHaKTAxQ6w0ux
+         si31Nh4NV3QBpsVGgJ4AbFdaLZN6Q/3y+ooMNzJatNoGyZv6L0qDB8zQ2SpHIonCYQ18
+         v9VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714585476; x=1715190276;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4IV5MUpcWstax6ntK82tb+sL5JFIt+jl6TpQDKHYAY=;
+        b=lpbKNTptEOOIRX1lotC24qB83XOeIfDN0Yqw9ikPzEKpLMUjAGFQ4vcZZ5lrbkfyP/
+         /SerOA4HV0/F9zjdSMwpuopsNGdFY/STO34SyJowj42P/29yR7wUBS9gSOoCeBXYBKsi
+         PraiczePiRi3hPvSckbSOklSDLcaEV5sPsD1yE7PWh0sEXmL7J4mrkxYl8cETymDl1r5
+         2pW5sg+uqwaGwsjDbQAuKAT+0sFCLxEz6muKybXsw7wzOcxgpmHaceMXlnLSj0SHdDc/
+         ugxgVKvKMXAXUBYW8mJDiljp8rJgJryix0NjmTOvCiTw9YBXTzke+7GZhSa8BYEHsWO3
+         MRLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVo3bkIX2aclLOI/WHQhIy/WrVDATlQTkQFpL96OJ6h5y3qANRcKpCxc+cI6qpcAu8RsJwzTU94fShuPMU2nyhsQaWxMlaT0VQ7oWW3vT/zUg==
+X-Gm-Message-State: AOJu0YxiMXpVM1dOwCJDVCbZp7+vCJK49DHqB4W+4KKCrzGU6QiCYA7w
+	tbzp8SJ7UGpxBFK54gz91wHcsIqfJSbEXTV8LwlciFUJENknhQdqU4jdD7+iN50vm4YYClC215A
+	L8jNAMm/oE/Ih3S3+9tv4bQ9fMm9bwL5cGYo47N2PUk226DE6JQ==
+X-Google-Smtp-Source: AGHT+IEdVVrTb7Zgs76FxcoRst8fi50Xits/93UMcuS3YKQMepe35H6XK3g97W1kPj+TBrSHq/3jFIHOcy+3gL+GTq0=
+X-Received: by 2002:a17:907:9850:b0:a55:59e6:13f5 with SMTP id
+ jj16-20020a170907985000b00a5559e613f5mr2475844ejc.26.1714585475945; Wed, 01
+ May 2024 10:44:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PAWPR02MB10396:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5710c5d1-425a-49af-855f-08dc6a036915
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	ZKTkosxtt3VSbkee5kqeFfwRjOWTEhx2lYpmmg76VAKQL1pcfuWBstUR+GnCcwiLU80HvqRvsp/PhJftcCub8BXtaEksc7zY0vjVTgjT/7UVG0ALgnYeJSsSlRSXPi6DMVBxXnXgYRqjuWksr2z5H/Tg/0Zm//YqIVpfXGtUifrOZXIQLA/ePOI2tbGKLUtC+1S5CtCD6m/VfnqNu5hRuCqxnq5X3Ifi6UtrNlATdoNlwRBVzh/6QwYp8Hj6QBxv8CqW4AfzInWTtPNNAJGtBZ1LJM7EYq9ntYmsz2XRjysw+IPCkuQn06hMqsfQC5QuBM7HZjl1HrV+Fg5E9w43NgQQpWJpRMQvB/DLNKgwrPrgEitmwdXFLKxALzXNDMdIkECjSMO1NyeEJGcqMDP8LUM7aWliW0rjSq8IJxJL5A5F9REVMdoBxXThL/c9AgB0Y9odqJ492FFDv1HivDHjdYlkBZLttlDjY9c+DZAr4INt/5oWdtIaH9Vq8hBzA83G2ORctCtSHIsUxfy60Ijuzx/vPisnrjiD12tl1Vlj0ZpkIPaR5EUIgaObQ75nOTljEEJkI2keNScSnMIxlO3i1Rj/Int6bki6yAqRHACuVJHzCu099sINzlkPJijwq3aY
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nYMQwuQIzz+RlBg4w1nIGtR42aDB2hJzX2o/nq1Jz3oP+IGooXKuBdmTcVtd?=
- =?us-ascii?Q?je4drHKJSrlMWEMLlBGdQhq5KhDlQ4VzsX0kw3cyXJ7JnRnJBPCwgowGAzpJ?=
- =?us-ascii?Q?sAowHOBkfqmkvwmpgxXF21Qrgg5lD0w26JWHbZ/TDjFMc5AXj0MdPEhPFHEe?=
- =?us-ascii?Q?QD0oVFAO3a6mmO2AT9/DhnllwKqMR+egKrqoAnSohWuexlb2RRO1YRZK40tt?=
- =?us-ascii?Q?WNWc/pBSYJLw76JAVhLVlZG8fLxdaLl/myvhIulu4bp6o7ApCfFbEifYWC82?=
- =?us-ascii?Q?/ar6A6RVMrSphBDpGohFL+rRv3mKZQOAilccG8oWI1vTVZi7xBVr4F9Px9TH?=
- =?us-ascii?Q?WIyhsNIn1gjXiSpdog9cGB5TSNvoZfSKPbfFjJvI3WxypRd9rmO4UYz8W6WI?=
- =?us-ascii?Q?0ENC1VGQA/ngIfgSwr1JSCRJI4AF8uBJQnmK/qfRj226UouSCrFb5YUs/2Hr?=
- =?us-ascii?Q?z7BwrEJewDtFVMBZ/mivllJXES7TlynSxiPV9XxFIionMv0GyvWGYn9UtcrM?=
- =?us-ascii?Q?mE3gO6zgBD3SNgGI53wZS5mIdoldhzd9ITCMrFvPvpqavdLtoGqOxmvrZdJr?=
- =?us-ascii?Q?OYH4UxCsD5Hs5/2A05kZb2rXf+3oTWxyUgyJZOnGVyhww6vzTZ3AKqhMX96/?=
- =?us-ascii?Q?MZUXlZDH7hEV2nJvofKrFfUBGxQ3ZU80eW4WEN/GsZpl4HuCUPGhDJAuyNk5?=
- =?us-ascii?Q?IP23CDC9V//8DoIdFgF1ngXfGHxlI34xTJerf+KGFxfDntiK4ew4AFPAQ/Ak?=
- =?us-ascii?Q?HYbu1ebRfLEVo5MkCv4nuBC9Kbd2g3K4iRzSlHa4fKBBuozY0MuKuxXqu9xT?=
- =?us-ascii?Q?LwT/+n2Abfk89CwdKooFfvWgyYljuPf/3rkRMDJeZuib6U0JsxgGfya+9tfM?=
- =?us-ascii?Q?sHlEj/xhmFPWYXKZ6WbTDLwpL8zEAHrwBl0FS6ECvPP0uuKwzFoTpw+fmTCi?=
- =?us-ascii?Q?JmfG8UJI91G2UW/TJYwbV+kR+bgvbU0lh/WnEkGh2yt9J/ZJsLn5JbuXueod?=
- =?us-ascii?Q?DTrpbMyvRFnCBEe/LCLeUQGFd4hkyKOzuuY18Uks54R3P3PaXuwykQgvuD+2?=
- =?us-ascii?Q?O3b6FtadbipDSk0yEuONQDCrScopxMUgT5609YV/wqQxVJ5b67EtuJorJ8UF?=
- =?us-ascii?Q?ELAtkn4gOLVBtkfGS7C79cscR8Ax2xD8Jeuc9dqr48w4KP6P7UqfmblVyr3n?=
- =?us-ascii?Q?/bMjjul6DvqHtaqFwVFzBV06KzVH8v8zYk3aizOxIDP+G3HblhxKGGpew/D5?=
- =?us-ascii?Q?MaA6GxclkQ64sNLkziho?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5710c5d1-425a-49af-855f-08dc6a036915
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 17:23:26.1737
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB10396
+References: <ZirPGnSDUzD-iWwc@google.com> <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
+ <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
+ <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+ <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com> <CAL715WKm0X9NJxq8SNGD5EJomzY4DDSiwLb1wMMgcgHqeZ64BA@mail.gmail.com>
+ <Zi_cle1-5SZK2558@google.com>
+In-Reply-To: <Zi_cle1-5SZK2558@google.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Wed, 1 May 2024 10:43:58 -0700
+Message-ID: <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1][2].
-> 
-> So personally I detest struct_size() because I can never remember wtf it
-> does, whereas the code it replaces is simple and straight forward :/
+On Mon, Apr 29, 2024 at 10:44=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
+>
+> On Sat, Apr 27, 2024, Mingwei Zhang wrote:
+> > On Sat, Apr 27, 2024 at 5:59=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
+tel.com> wrote:
+> > >
+> > >
+> > > On 4/27/2024 11:04 AM, Mingwei Zhang wrote:
+> > > > On Fri, Apr 26, 2024 at 12:46=E2=80=AFPM Sean Christopherson <seanj=
+c@google.com> wrote:
+> > > >> On Fri, Apr 26, 2024, Kan Liang wrote:
+> > > >>>> Optimization 4
+> > > >>>> allows the host side to immediately profiling this part instead =
+of
+> > > >>>> waiting for vcpu to reach to PMU context switch locations. Doing=
+ so
+> > > >>>> will generate more accurate results.
+> > > >>> If so, I think the 4 is a must to have. Otherwise, it wouldn't ho=
+ner the
+> > > >>> definition of the exclude_guest. Without 4, it brings some random=
+ blind
+> > > >>> spots, right?
+> > > >> +1, I view it as a hard requirement.  It's not an optimization, it=
+'s about
+> > > >> accuracy and functional correctness.
+> > > > Well. Does it have to be a _hard_ requirement? no?
+>
+> Assuming I understand how perf_event_open() works, which may be a fairly =
+big
+> assumption, for me, yes, this is a hard requirement.
+>
+> > > > The irq handler triggered by "perf record -a" could just inject a
+> > > > "state". Instead of immediately preempting the guest PMU context, p=
+erf
+> > > > subsystem could allow KVM defer the context switch when it reaches =
+the
+> > > > next PMU context switch location.
+>
+> FWIW, forcefully interrupting the guest isn't a hard requirement, but pra=
+ctically
+> speaking I think that will yield the simplest, most robust implementation=
+.
+>
+> > > > This is the same as the preemption kernel logic. Do you want me to
+> > > > stop the work immediately? Yes (if you enable preemption), or No, l=
+et
+> > > > me finish my job and get to the scheduling point.
+>
+> Not really.  Task scheduling is by its nature completely exclusive, i.e. =
+it's
+> not possible to concurrently run multiple tasks on a single logical CPU. =
+ Given
+> a single CPU, to run task B, task A _must_ be scheduled out.
+>
+> That is not the case here.  Profiling the host with exclude_guest=3D1 isn=
+'t mutually
+> exclusive with the guest using the PMU.  There's obviously the additional=
+ overhead
+> of switching PMU context, but the two uses themselves are not mutually ex=
+clusive.
+>
+> And more importantly, perf_event_open() already has well-established ABI =
+where it
+> can install events across CPUs.  And when perf_event_open() returns, user=
+space can
+> rely on the event being active and counting (assuming it wasn't disabled =
+by default).
+>
+> > > > Implementing this might be more difficult to debug. That's my real
+> > > > concern. If we do not enable preemption, the PMU context switch wil=
+l
+> > > > only happen at the 2 pairs of locations. If we enable preemption, i=
+t
+> > > > could happen at any time.
+>
+> Yes and no.  I agree that swapping guest/host state from IRQ context coul=
+d lead
+> to hard to debug issues, but NOT doing so could also lead to hard to debu=
+g issues.
+> And even worse, those issues would likely be unique to specific kernel an=
+d/or
+> system configurations.
+>
+> E.g. userspace creates an event, but sometimes it randomly doesn't count =
+correctly.
+> Is the problem simply that it took a while for KVM to get to a scheduling=
+ point,
+> or is there a race lurking?  And what happens if the vCPU is the only run=
+nable task
+> on its pCPU, i.e. never gets scheduled out?
+>
+> Mix in all of the possible preemption and scheduler models, and other sou=
+rces of
+> forced rescheduling, e.g. RCU, and the number of factors to account for b=
+ecomes
+> quite terrifying.
+>
+> > > IMO I don't prefer to add a switch to enable/disable the preemption. =
+I
+> > > think current implementation is already complicated enough and
+> > > unnecessary to introduce an new parameter to confuse users. Furthermo=
+re,
+> > > the switch could introduce an uncertainty and may mislead the perf us=
+er
+> > > to read the perf stats incorrectly.
+>
+> +1000.
+>
+> > > As for debug, it won't bring any difference as long as no host event =
+is created.
+> > >
+> > That's ok. It is about opinions and brainstorming. Adding a parameter
+> > to disable preemption is from the cloud usage perspective. The
+> > conflict of opinions is which one you prioritize: guest PMU or the
+> > host PMU? If you stand on the guest vPMU usage perspective, do you
+> > want anyone on the host to shoot a profiling command and generate
+> > turbulence? no. If you stand on the host PMU perspective and you want
+> > to profile VMM/KVM, you definitely want accuracy and no delay at all.
+>
+> Hard no from me.  Attempting to support two fundamentally different model=
+s means
+> twice the maintenance burden.  The *best* case scenario is that usage is =
+roughly
+> a 50/50 spit.  The worst case scenario is that the majority of users favo=
+r one
+> model over the other, thus resulting in extremely limited tested of the m=
+inority
+> model.
+>
+> KVM already has this problem with scheduler preemption models, and it's p=
+ainful.
+> The overwhelming majority of KVM users run non-preemptible kernels, and s=
+o our
+> test coverage for preemtible kernels is abysmal.
+>
+> E.g. the TDP MMU effectively had a fatal flaw with preemptible kernels th=
+at went
+> unnoticed for many kernel releases[*], until _another_ bug introduced wit=
+h dynamic
+> preemption models resulted in users running code that was supposed to be =
+specific
+> to preemtible kernels.
+>
+> [* https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxm=
+ox.com
+>
 
-Ok, I accept what you say. Anyway, I think it's a matter of preference ;)
+I hear your voice, Sean.
 
-If I prepare a patch with the changes suggested by Kees to gain coverage
-of the __counted_by attribute, will it have a chance of being accepted?
+In our cloud, we have a host-level profiling going on for all cores
+periodically. It will be profiling X seconds every Y minute. Having
+the host-level profiling using exclude_guest is fine, but stopping the
+host-level profiling is a no no. Tweaking the X and Y is theoretically
+possible, but highly likely out of the scope of virtualization. Now,
+some of the VMs might be actively using vPMU at the same time. How can
+we properly ensure the guest vPMU has consistent performance? Instead
+of letting the VM suffer from the high overhead of PMU for X seconds
+of every Y minute?
 
-Are there any guidelines related to this attribute, such as in the case
-of the struct_size() helper?
+Any thought/help is appreciated. I see the logic of having preemption
+there for correctness of the profiling on the host level. Doing this,
+however, negatively impacts the above business usage.
 
-Regards,
-Erick
+One of the things on top of the mind is that: there seems to be no way
+for the perf subsystem to express this: "no, your host-level profiling
+is not interested in profiling the KVM_RUN loop when our guest vPMU is
+actively running".
+
+Thanks.
+-Mingwei
+
+-Mingwei
