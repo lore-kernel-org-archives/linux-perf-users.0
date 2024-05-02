@@ -1,502 +1,150 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85B17107A
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 18:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F6016FF2B;
+	Thu,  2 May 2024 18:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714673440; cv=none; b=mCF4QWbHEBOWcI3Laf7OsbSpvrqx8sZsO/oeBdiakVCagWlCGv1aiNNPFLdalTjYBtqaoyVFEKnkk0yJKyXqo3FGPNB68NCkKRRE9vQKMcSFh+b+fS8v8mNOqPjwGI/fUrUfOEs5E61/iq1JC3Dl4bsixzYxgO8faJtxQ2mJ04M=
+	t=1714673705; cv=none; b=gBLHwoOd9sumAw0v35mcTLHEEct21/YdYzFg1mn568gKFY71fHtWGjiZLPjNTfG5asNoeGhrwxkf6FxAb7L26/w7yX7zPE02YpYYdevjiq3zyEDZGk6v2b6ReRmWuu6ljmgCmp3YtmGPn+r8UAVI6B3e6jcKBzUri9eeuXNUOPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714673440; c=relaxed/simple;
-	bh=AcnmsWUVf9xLPrnw47a0KF7R6rwSZZwi3yfcAeEYBoM=;
+	s=arc-20240116; t=1714673705; c=relaxed/simple;
+	bh=ZA92IXsc0X3IgFWFWIxdK48Y8F36zabbvP6VZiHZCog=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KG41NuYQafRcbDRKHnomU1M3KMSarT7TaUzcgrHICGzqS7i4J4ezervadyq5CkCan8KbU8BXRFEzLHhxpHCfWvgME2aoRVn93H7oQmxoEe5urkkRFGpCns/LxahI38zVCTSZuIKZo6+R7rdPtGW0vlGLsYAEndEbedJKgYwVXlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+1iyiT8; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+1iyiT8"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-439b1c72676so64081cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 11:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714673437; x=1715278237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Op4gNRXry59h7+j/49DFpIw3hUOH2bKFP8OCK+0oJVg=;
-        b=b+1iyiT8D2C1byUzQVaPpbUtGFt873eNI1SpIHglxfbXcSY/FRXTJJ6aKZKQ932WOO
-         A03jK6zM787itHBjZ1QZQRGc1K7+OIP8qKpbf/Jrzuyst4a3y5fWLQhSUhxqV8zeNff7
-         TA+L9BjVt2mLxGsmbL6K9wDQ/1kzf9BVVihHizEULoLqgRyDg3kyVDPJcHgc5MhOlsfl
-         raLASO9BwtHXCm5OfrqRlIHPYVsgg8teW4h0cn2H+alLoFb3F884djglGBfRqaSlV9lU
-         2Ffd4z1WvWiCHo9u5rVgqWZNZF3B5c2dtZ8iFZ5QLwk/AjE2QLa3MxIyeCE6pZCsAWcz
-         Am/g==
+	 To:Cc:Content-Type; b=AsYIMekkiDmPtItxkeLHK2udJeI8olDZMmOQTPmeuOymHUnv476TcTuw+VnNFMHQzaSTHV0a6sdOf9MEBuhHp5Td+CmTUfmkBm2iLFXroaJujYKUWzLwHNb5ZBmzvCo5j/cw5MZvbgm/vI1bzQPs5pi9Fzd5Vy9ONiIwXYUJnPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ad8fb779d2so6652876a91.0;
+        Thu, 02 May 2024 11:15:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714673437; x=1715278237;
+        d=1e100.net; s=20230601; t=1714673702; x=1715278502;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Op4gNRXry59h7+j/49DFpIw3hUOH2bKFP8OCK+0oJVg=;
-        b=hc9vt5S9BFCn0BNWfVPaX1zEXldKVmSP7/QC/AYqL6biIZJmfcu5yRcw9aauwmZQXF
-         7gEiBVATcmS9Q/5Bjp6jl4mhMS1mhEPnuI+5eE6Gv8AaXPrUgRT3jEgR2Ez3ghtFXwIP
-         x34uhGlBM0gaSqyogBgpv9mas8K+hrbWMcyuKiBJuHpSYou3hc7YdPJtT3zRWJa09Xjt
-         seOBQCky+7Wi1h4YU+xVuI+gNNLCY5KplfXbL4VXGJ4+Ry1T4KHQCCB2jKJefW+aWrPc
-         eqHHwF8oEaUe1MyQPFPrFmnMTerZWE4i9UEf4nIMyfGVnNtJhO2KBB0RhVN38R2LnUL/
-         xs3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqn88NjHFeW5oOGD4ycKhegdRRggP2nPcwKVUSBq3hyYMwUFabgJRJRq6dT+2fy0/AD3eVJNWwfv8Noi8y6x3/YH+HWWkICi62BdqSfpllag==
-X-Gm-Message-State: AOJu0YzUmr2nixMUsuTr1wV1qwnxbS8jkIGHzmcl8mBQl67sfWizWY6e
-	MuXyo7oy6yeczvo/HT8geGiOIDFenYngAN2+7g6b+gDr4KpuRhjGUcGgYDbTEXYiCxxvm8ATZUV
-	eKGQbDsKdL4gGeL/57mi6/W71dAq5u5gh3Kk+
-X-Google-Smtp-Source: AGHT+IEOmEYefU1KrK/38Dg4v//I6kIhkNaNjJ5s7D/q1f0E3fn55QC6u3qit4RAHuumrO5p+JDaANRIeHLszPs4ZYI=
-X-Received: by 2002:ac8:594b:0:b0:43a:bcee:eaa2 with SMTP id
- d75a77b69052e-43cd71b0f37mr178961cf.20.1714673437396; Thu, 02 May 2024
- 11:10:37 -0700 (PDT)
+        bh=jX8aKvbafhGbnZvdnKVSz/mpn0msgf30qB56G9DbOhQ=;
+        b=m4AjLkZwcMEUaEJbiLcPW1I+HhN0n2AOr6yG+CcY3vfEVAdEzRmE8mEZ8mVxH8U0YK
+         k0nFWjZwjBP3E6zM7tV8paMAjsqphVwLMms1USEZEPG1/124N+WPznxmUQzSi/CJYcHo
+         oyj0JDJaSXiU1/myBStaFnvsdvLnELwJ9A3PuYI7FeTzzAARtmAQNp1T3Z7vopjAHO8v
+         ieuEd+9zvc9Zx0IMgfpabOQN6GazsHmV9O5ly2GfWe9IWmBKa2cuykoXkWyF385VL5tc
+         KcUXnGHUHIqjF41fcdnprcnxWxiPn/+2nMubKzzuYTLeSps2eAavs2y+pU4bo8EzNEmA
+         2XvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWo27RR0zZTWIScnoaM3ytUsXFWFvsJRQxreKCm9LN71b0xHjd0wZBvLLuMkVgW+EXb7Tx+sDl8kAbZ7KIbAaPM+jq5m5XE9ZoFzkC0JoweyB9iSN9r9XgZ/dIGcBGW/pfhfOZFuz1EjHnOdMlKgQ==
+X-Gm-Message-State: AOJu0YyJTxM0pWx6gbb9PmgcPc3nxFK9VYup92Bjct1Xt4M+VRbF1Rl7
+	qc0cCxQDVOM2ge52daL2325wIu4Kqs+66HhpRk9dVl0SdTRwvChXJNvyMXK0Fxdh1bCs6B07LdZ
+	mIIiN6p6bedzfpHFzbMHtw/HVxdI=
+X-Google-Smtp-Source: AGHT+IHavTkVVIrzDWL1qUo+gBIJUOmiH9xgSYf34ilpJN5TlE5NU3ymJCXRyeLNnhZFgJIIC6yItiB9cR3pPMlffSQ=
+X-Received: by 2002:a17:90a:c697:b0:2b2:32c2:44b4 with SMTP id
+ n23-20020a17090ac69700b002b232c244b4mr635207pjt.10.1714673702312; Thu, 02 May
+ 2024 11:15:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502105853.5338-1-adrian.hunter@intel.com> <20240502105853.5338-6-adrian.hunter@intel.com>
-In-Reply-To: <20240502105853.5338-6-adrian.hunter@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 May 2024 11:10:25 -0700
-Message-ID: <CAP-5=fX4UxekyxkaX8EH8UcAXe-JAdXRTCguWmTJ8mARg64h-Q@mail.gmail.com>
-Subject: Re: [PATCH 05/10] x86/insn: Add support for REX2 prefix to the
- instruction decoder logic
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-kernel@vger.kernel.org, "Chang S. Bae" <chang.seok.bae@intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nikolay Borisov <nik.borisov@suse.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	linux-perf-users@vger.kernel.org
+References: <20240502060011.1838090-1-namhyung@kernel.org> <20240502060011.1838090-5-namhyung@kernel.org>
+ <ZjOdkHraWXZIuSy_@x1>
+In-Reply-To: <ZjOdkHraWXZIuSy_@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 2 May 2024 11:14:50 -0700
+Message-ID: <CAM9d7cg_YL1x8YfJ5+7+o+0dccFJJxUye8L_FLrgdGeAh81LBA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] perf annotate-data: Check memory access with two registers
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 2, 2024 at 3:59=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
-om> wrote:
+On Thu, May 2, 2024 at 7:05=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> Intel Advanced Performance Extensions (APX) uses a new 2-byte prefix name=
-d
-> REX2 to select extended general purpose registers (EGPRs) i.e. r16 to r31=
-.
+> On Wed, May 01, 2024 at 11:00:09PM -0700, Namhyung Kim wrote:
+> > The following instruction pattern is used to access a global variable.
+> >
+> >   mov     $0x231c0, %rax
+> >   movsql  %edi, %rcx
+> >   mov     -0x7dc94ae0(,%rcx,8), %rcx
+> >   cmpl    $0x0, 0xa60(%rcx,%rax,1)     <<<--- here
+> >
+> > The first instruction set the address of the per-cpu variable (here, it
+> > is 'runqueus' of struct rq).  The second instruction seems like a cpu
 >
-> The REX2 prefix is effectively an extended version of the REX prefix.
+> You mean 'runqueues', i.e. this one:
 >
-> REX2 and EVEX are also used with PUSH/POP instructions to provide a
-> Push-Pop Acceleration (PPX) hint. With PPX hints, a CPU will attempt to
-> fast-forward register data between matching PUSH and POP instructions.
+> kernel/sched/core.c
+> DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
 >
-> REX2 is valid only with opcodes in maps 0 and 1. Similar extension for
-> other maps is provided by the EVEX prefix, covered in a separate patch.
->
-> Some opcodes in maps 0 and 1 are reserved under REX2. One of these is use=
-d
-> for a new 64-bit absolute direct jump instruction JMPABS.
->
-> Refer to the Intel Advanced Performance Extensions (Intel APX) Architectu=
-re
-> Specification for details.
->
-> Define a code value for the REX2 prefix (INAT_PFX_REX2), and add attribut=
-e
-> flags for opcodes reserved under REX2 (INAT_NO_REX2) and to identify
-> opcodes (only JMPABS) that require a mandatory REX2 prefix
-> (INAT_REX2_VARIANT).
->
-> Amend logic to read the REX2 prefix and get the opcode attribute for the
-> map number (0 or 1) encoded in the REX2 prefix.
->
-> Amend the awk script that generates the attribute tables from the opcode
-> map, to recognise "REX2" as attribute INAT_PFX_REX2, and "(!REX2)"
-> as attribute INAT_NO_REX2, and "(REX2)" as attribute INAT_REX2_VARIANT.
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  arch/x86/include/asm/inat.h                | 11 +++++++++-
->  arch/x86/include/asm/insn.h                | 25 ++++++++++++++++++----
->  arch/x86/lib/insn.c                        | 25 ++++++++++++++++++++++
->  arch/x86/tools/gen-insn-attr-x86.awk       | 11 +++++++++-
->  tools/arch/x86/include/asm/inat.h          | 11 +++++++++-
->  tools/arch/x86/include/asm/insn.h          | 25 ++++++++++++++++++----
->  tools/arch/x86/lib/insn.c                  | 25 ++++++++++++++++++++++
->  tools/arch/x86/tools/gen-insn-attr-x86.awk | 11 +++++++++-
->  8 files changed, 132 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/include/asm/inat.h b/arch/x86/include/asm/inat.h
-> index b56c5741581a..1331bdd39a23 100644
-> --- a/arch/x86/include/asm/inat.h
-> +++ b/arch/x86/include/asm/inat.h
-> @@ -35,6 +35,8 @@
->  #define INAT_PFX_VEX2  13      /* 2-bytes VEX prefix */
->  #define INAT_PFX_VEX3  14      /* 3-bytes VEX prefix */
->  #define INAT_PFX_EVEX  15      /* EVEX prefix */
-> +/* x86-64 REX2 prefix */
-> +#define INAT_PFX_REX2  16      /* 0xD5 */
->
->  #define INAT_LSTPFX_MAX        3
->  #define INAT_LGCPFX_MAX        11
-> @@ -50,7 +52,7 @@
->
->  /* Legacy prefix */
->  #define INAT_PFX_OFFS  0
-> -#define INAT_PFX_BITS  4
-> +#define INAT_PFX_BITS  5
->  #define INAT_PFX_MAX    ((1 << INAT_PFX_BITS) - 1)
->  #define INAT_PFX_MASK  (INAT_PFX_MAX << INAT_PFX_OFFS)
->  /* Escape opcodes */
-> @@ -77,6 +79,8 @@
->  #define INAT_VEXOK     (1 << (INAT_FLAG_OFFS + 5))
->  #define INAT_VEXONLY   (1 << (INAT_FLAG_OFFS + 6))
->  #define INAT_EVEXONLY  (1 << (INAT_FLAG_OFFS + 7))
-> +#define INAT_NO_REX2   (1 << (INAT_FLAG_OFFS + 8))
-> +#define INAT_REX2_VARIANT      (1 << (INAT_FLAG_OFFS + 9))
->  /* Attribute making macros for attribute tables */
->  #define INAT_MAKE_PREFIX(pfx)  (pfx << INAT_PFX_OFFS)
->  #define INAT_MAKE_ESCAPE(esc)  (esc << INAT_ESC_OFFS)
-> @@ -128,6 +132,11 @@ static inline int inat_is_rex_prefix(insn_attr_t att=
-r)
->         return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX;
->  }
->
-> +static inline int inat_is_rex2_prefix(insn_attr_t attr)
-> +{
-> +       return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX2;
-> +}
-> +
->  static inline int inat_last_prefix_id(insn_attr_t attr)
->  {
->         if ((attr & INAT_PFX_MASK) > INAT_LSTPFX_MAX)
-> diff --git a/arch/x86/include/asm/insn.h b/arch/x86/include/asm/insn.h
-> index 1b29f58f730f..95249ec1f24e 100644
-> --- a/arch/x86/include/asm/insn.h
-> +++ b/arch/x86/include/asm/insn.h
-> @@ -112,10 +112,15 @@ struct insn {
->  #define X86_SIB_INDEX(sib) (((sib) & 0x38) >> 3)
->  #define X86_SIB_BASE(sib) ((sib) & 0x07)
->
-> -#define X86_REX_W(rex) ((rex) & 8)
-> -#define X86_REX_R(rex) ((rex) & 4)
-> -#define X86_REX_X(rex) ((rex) & 2)
-> -#define X86_REX_B(rex) ((rex) & 1)
-> +#define X86_REX2_M(rex) ((rex) & 0x80) /* REX2 M0 */
-> +#define X86_REX2_R(rex) ((rex) & 0x40) /* REX2 R4 */
-> +#define X86_REX2_X(rex) ((rex) & 0x20) /* REX2 X4 */
-> +#define X86_REX2_B(rex) ((rex) & 0x10) /* REX2 B4 */
-> +
-> +#define X86_REX_W(rex) ((rex) & 8)     /* REX or REX2 W */
-> +#define X86_REX_R(rex) ((rex) & 4)     /* REX or REX2 R3 */
-> +#define X86_REX_X(rex) ((rex) & 2)     /* REX or REX2 X3 */
-> +#define X86_REX_B(rex) ((rex) & 1)     /* REX or REX2 B3 */
->
->  /* VEX bit flags  */
->  #define X86_VEX_W(vex) ((vex) & 0x80)  /* VEX3 Byte2 */
-> @@ -161,6 +166,18 @@ static inline void insn_get_attribute(struct insn *i=
-nsn)
->  /* Instruction uses RIP-relative addressing */
->  extern int insn_rip_relative(struct insn *insn);
->
-> +static inline int insn_is_rex2(struct insn *insn)
-> +{
-> +       if (!insn->prefixes.got)
-> +               insn_get_prefixes(insn);
-> +       return insn->rex_prefix.nbytes =3D=3D 2;
+> ?
 
-It'd be nice to capture that a rex2 prefix is by definition 2 bytes.
-Playing devil's advocate, if there were a REX and a REX2 prefix,
-couldn't rex_prefix.nbytes be 3? I'm wondering about other prefix
-combinations that may confuse this logic, maybe someone dreams up
-doing this for say alignment reasons like "rep ret".
+Right, sorry for the typo.
+
+>
+> But that 0xa60 would be in an alignment hole, at least in:
+>
+> $ pahole --hex rq | egrep 0xa40 -A12
+>         struct mm_struct *         prev_mm;              /* 0xa40   0x8 *=
+/
+>         unsigned int               clock_update_flags;   /* 0xa48   0x4 *=
+/
+>
+>         /* XXX 4 bytes hole, try to pack */
+>
+>         u64                        clock;                /* 0xa50   0x8 *=
+/
+>
+>         /* XXX 40 bytes hole, try to pack */
+>
+>         /* --- cacheline 42 boundary (2688 bytes) --- */
+>         u64                        clock_task __attribute__((__aligned__(=
+64))); /* 0xa80   0x8 */
+>         u64                        clock_pelt;           /* 0xa88   0x8 *=
+/
+>         long unsigned int          lost_idle_time;       /* 0xa90   0x8 *=
+/
+> $ uname -a
+> Linux toolbox 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16=
+:50:39 UTC 2024 x86_64 GNU/Linux
+> $
+
+This would be different on kernel version, config and
+other changes like backports or local modifications.
+
+On my system, it was cpu_stop_work.arg.
+
+$ pahole --hex rq | grep 0xa40 -C1
+    /* --- cacheline 41 boundary (2624 bytes) --- */
+    struct cpu_stop_work       active_balance_work;  /* 0xa40  0x30 */
+    int                        cpu;                  /* 0xa70   0x4 */
+
+$ pahole --hex cpu_stop_work
+struct cpu_stop_work {
+    struct list_head           list;                 /*     0  0x10 */
+    cpu_stop_fn_t              fn;                   /*  0x10   0x8 */
+    long unsigned int          caller;               /*  0x18   0x8 */
+    void *                     arg;                  /*  0x20   0x8 */
+    struct cpu_stop_done *     done;                 /*  0x28   0x8 */
+
+    /* size: 48, cachelines: 1, members: 5 */
+    /* last cacheline: 48 bytes */
+};
+
+
+>
+> The paragraph then reads:
+>
+> ----
+> The first instruction set the address of the per-cpu variable (here, it
+> is 'runqueues' of type 'struct rq').  The second instruction seems like
+> a cpu number of the per-cpu base.  The third instruction get the base
+> offset of per-cpu area for that cpu.  The last instruction compares the
+> value of the per-cpu variable at the offset of 0xa60.
+> ----
+>
+> Ok?
+
+Yep, looks good.
 
 Thanks,
-Ian
-
-> +}
-> +
-> +static inline insn_byte_t insn_rex2_m_bit(struct insn *insn)
-> +{
-> +       return X86_REX2_M(insn->rex_prefix.bytes[1]);
-> +}
-> +
->  static inline int insn_is_avx(struct insn *insn)
->  {
->         if (!insn->prefixes.got)
-> diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
-> index 1bb155a0955b..6126ddc6e5f5 100644
-> --- a/arch/x86/lib/insn.c
-> +++ b/arch/x86/lib/insn.c
-> @@ -185,6 +185,17 @@ int insn_get_prefixes(struct insn *insn)
->                         if (X86_REX_W(b))
->                                 /* REX.W overrides opnd_size */
->                                 insn->opnd_bytes =3D 8;
-> +               } else if (inat_is_rex2_prefix(attr)) {
-> +                       insn_set_byte(&insn->rex_prefix, 0, b);
-> +                       b =3D peek_nbyte_next(insn_byte_t, insn, 1);
-> +                       insn_set_byte(&insn->rex_prefix, 1, b);
-> +                       insn->rex_prefix.nbytes =3D 2;
-> +                       insn->next_byte +=3D 2;
-> +                       if (X86_REX_W(b))
-> +                               /* REX.W overrides opnd_size */
-> +                               insn->opnd_bytes =3D 8;
-> +                       insn->rex_prefix.got =3D 1;
-> +                       goto vex_end;
->                 }
->         }
->         insn->rex_prefix.got =3D 1;
-> @@ -294,6 +305,20 @@ int insn_get_opcode(struct insn *insn)
->                 goto end;
->         }
->
-> +       /* Check if there is REX2 prefix or not */
-> +       if (insn_is_rex2(insn)) {
-> +               if (insn_rex2_m_bit(insn)) {
-> +                       /* map 1 is escape 0x0f */
-> +                       insn_attr_t esc_attr =3D inat_get_opcode_attribut=
-e(0x0f);
-> +
-> +                       pfx_id =3D insn_last_prefix_id(insn);
-> +                       insn->attr =3D inat_get_escape_attribute(op, pfx_=
-id, esc_attr);
-> +               } else {
-> +                       insn->attr =3D inat_get_opcode_attribute(op);
-> +               }
-> +               goto end;
-> +       }
-> +
->         insn->attr =3D inat_get_opcode_attribute(op);
->         while (inat_is_escape(insn->attr)) {
->                 /* Get escaped opcode */
-> diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-in=
-sn-attr-x86.awk
-> index af38469afd14..3f43aa7d8fef 100644
-> --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -64,7 +64,9 @@ BEGIN {
->
->         modrm_expr =3D "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
->         force64_expr =3D "\\([df]64\\)"
-> -       rex_expr =3D "^REX(\\.[XRWB]+)*"
-> +       rex_expr =3D "^((REX(\\.[XRWB]+)+)|(REX$))"
-> +       rex2_expr =3D "\\(REX2\\)"
-> +       no_rex2_expr =3D "\\(!REX2\\)"
->         fpu_expr =3D "^ESC" # TODO
->
->         lprefix1_expr =3D "\\((66|!F3)\\)"
-> @@ -99,6 +101,7 @@ BEGIN {
->         prefix_num["VEX+1byte"] =3D "INAT_PFX_VEX2"
->         prefix_num["VEX+2byte"] =3D "INAT_PFX_VEX3"
->         prefix_num["EVEX"] =3D "INAT_PFX_EVEX"
-> +       prefix_num["REX2"] =3D "INAT_PFX_REX2"
->
->         clear_vars()
->  }
-> @@ -314,6 +317,10 @@ function convert_operands(count,opnd,       i,j,imm,=
-mod)
->                 if (match(ext, force64_expr))
->                         flags =3D add_flags(flags, "INAT_FORCE64")
->
-> +               # check REX2 not allowed
-> +               if (match(ext, no_rex2_expr))
-> +                       flags =3D add_flags(flags, "INAT_NO_REX2")
-> +
->                 # check REX prefix
->                 if (match(opcode, rex_expr))
->                         flags =3D add_flags(flags, "INAT_MAKE_PREFIX(INAT=
-_PFX_REX)")
-> @@ -351,6 +358,8 @@ function convert_operands(count,opnd,       i,j,imm,m=
-od)
->                         lptable3[idx] =3D add_flags(lptable3[idx],flags)
->                         variant =3D "INAT_VARIANT"
->                 }
-> +               if (match(ext, rex2_expr))
-> +                       table[idx] =3D add_flags(table[idx], "INAT_REX2_V=
-ARIANT")
->                 if (!match(ext, lprefix_expr)){
->                         table[idx] =3D add_flags(table[idx],flags)
->                 }
-> diff --git a/tools/arch/x86/include/asm/inat.h b/tools/arch/x86/include/a=
-sm/inat.h
-> index a61051400311..2e65312cae52 100644
-> --- a/tools/arch/x86/include/asm/inat.h
-> +++ b/tools/arch/x86/include/asm/inat.h
-> @@ -35,6 +35,8 @@
->  #define INAT_PFX_VEX2  13      /* 2-bytes VEX prefix */
->  #define INAT_PFX_VEX3  14      /* 3-bytes VEX prefix */
->  #define INAT_PFX_EVEX  15      /* EVEX prefix */
-> +/* x86-64 REX2 prefix */
-> +#define INAT_PFX_REX2  16      /* 0xD5 */
->
->  #define INAT_LSTPFX_MAX        3
->  #define INAT_LGCPFX_MAX        11
-> @@ -50,7 +52,7 @@
->
->  /* Legacy prefix */
->  #define INAT_PFX_OFFS  0
-> -#define INAT_PFX_BITS  4
-> +#define INAT_PFX_BITS  5
->  #define INAT_PFX_MAX    ((1 << INAT_PFX_BITS) - 1)
->  #define INAT_PFX_MASK  (INAT_PFX_MAX << INAT_PFX_OFFS)
->  /* Escape opcodes */
-> @@ -77,6 +79,8 @@
->  #define INAT_VEXOK     (1 << (INAT_FLAG_OFFS + 5))
->  #define INAT_VEXONLY   (1 << (INAT_FLAG_OFFS + 6))
->  #define INAT_EVEXONLY  (1 << (INAT_FLAG_OFFS + 7))
-> +#define INAT_NO_REX2   (1 << (INAT_FLAG_OFFS + 8))
-> +#define INAT_REX2_VARIANT      (1 << (INAT_FLAG_OFFS + 9))
->  /* Attribute making macros for attribute tables */
->  #define INAT_MAKE_PREFIX(pfx)  (pfx << INAT_PFX_OFFS)
->  #define INAT_MAKE_ESCAPE(esc)  (esc << INAT_ESC_OFFS)
-> @@ -128,6 +132,11 @@ static inline int inat_is_rex_prefix(insn_attr_t att=
-r)
->         return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX;
->  }
->
-> +static inline int inat_is_rex2_prefix(insn_attr_t attr)
-> +{
-> +       return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX2;
-> +}
-> +
->  static inline int inat_last_prefix_id(insn_attr_t attr)
->  {
->         if ((attr & INAT_PFX_MASK) > INAT_LSTPFX_MAX)
-> diff --git a/tools/arch/x86/include/asm/insn.h b/tools/arch/x86/include/a=
-sm/insn.h
-> index 65c0d9ce1e29..1a7e8fc4d75a 100644
-> --- a/tools/arch/x86/include/asm/insn.h
-> +++ b/tools/arch/x86/include/asm/insn.h
-> @@ -112,10 +112,15 @@ struct insn {
->  #define X86_SIB_INDEX(sib) (((sib) & 0x38) >> 3)
->  #define X86_SIB_BASE(sib) ((sib) & 0x07)
->
-> -#define X86_REX_W(rex) ((rex) & 8)
-> -#define X86_REX_R(rex) ((rex) & 4)
-> -#define X86_REX_X(rex) ((rex) & 2)
-> -#define X86_REX_B(rex) ((rex) & 1)
-> +#define X86_REX2_M(rex) ((rex) & 0x80) /* REX2 M0 */
-> +#define X86_REX2_R(rex) ((rex) & 0x40) /* REX2 R4 */
-> +#define X86_REX2_X(rex) ((rex) & 0x20) /* REX2 X4 */
-> +#define X86_REX2_B(rex) ((rex) & 0x10) /* REX2 B4 */
-> +
-> +#define X86_REX_W(rex) ((rex) & 8)     /* REX or REX2 W */
-> +#define X86_REX_R(rex) ((rex) & 4)     /* REX or REX2 R3 */
-> +#define X86_REX_X(rex) ((rex) & 2)     /* REX or REX2 X3 */
-> +#define X86_REX_B(rex) ((rex) & 1)     /* REX or REX2 B3 */
->
->  /* VEX bit flags  */
->  #define X86_VEX_W(vex) ((vex) & 0x80)  /* VEX3 Byte2 */
-> @@ -161,6 +166,18 @@ static inline void insn_get_attribute(struct insn *i=
-nsn)
->  /* Instruction uses RIP-relative addressing */
->  extern int insn_rip_relative(struct insn *insn);
->
-> +static inline int insn_is_rex2(struct insn *insn)
-> +{
-> +       if (!insn->prefixes.got)
-> +               insn_get_prefixes(insn);
-> +       return insn->rex_prefix.nbytes =3D=3D 2;
-> +}
-> +
-> +static inline insn_byte_t insn_rex2_m_bit(struct insn *insn)
-> +{
-> +       return X86_REX2_M(insn->rex_prefix.bytes[1]);
-> +}
-> +
->  static inline int insn_is_avx(struct insn *insn)
->  {
->         if (!insn->prefixes.got)
-> diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
-> index ada4b4a79dd4..f761adeb8e8c 100644
-> --- a/tools/arch/x86/lib/insn.c
-> +++ b/tools/arch/x86/lib/insn.c
-> @@ -185,6 +185,17 @@ int insn_get_prefixes(struct insn *insn)
->                         if (X86_REX_W(b))
->                                 /* REX.W overrides opnd_size */
->                                 insn->opnd_bytes =3D 8;
-> +               } else if (inat_is_rex2_prefix(attr)) {
-> +                       insn_set_byte(&insn->rex_prefix, 0, b);
-> +                       b =3D peek_nbyte_next(insn_byte_t, insn, 1);
-> +                       insn_set_byte(&insn->rex_prefix, 1, b);
-> +                       insn->rex_prefix.nbytes =3D 2;
-> +                       insn->next_byte +=3D 2;
-> +                       if (X86_REX_W(b))
-> +                               /* REX.W overrides opnd_size */
-> +                               insn->opnd_bytes =3D 8;
-> +                       insn->rex_prefix.got =3D 1;
-> +                       goto vex_end;
->                 }
->         }
->         insn->rex_prefix.got =3D 1;
-> @@ -294,6 +305,20 @@ int insn_get_opcode(struct insn *insn)
->                 goto end;
->         }
->
-> +       /* Check if there is REX2 prefix or not */
-> +       if (insn_is_rex2(insn)) {
-> +               if (insn_rex2_m_bit(insn)) {
-> +                       /* map 1 is escape 0x0f */
-> +                       insn_attr_t esc_attr =3D inat_get_opcode_attribut=
-e(0x0f);
-> +
-> +                       pfx_id =3D insn_last_prefix_id(insn);
-> +                       insn->attr =3D inat_get_escape_attribute(op, pfx_=
-id, esc_attr);
-> +               } else {
-> +                       insn->attr =3D inat_get_opcode_attribute(op);
-> +               }
-> +               goto end;
-> +       }
-> +
->         insn->attr =3D inat_get_opcode_attribute(op);
->         while (inat_is_escape(insn->attr)) {
->                 /* Get escaped opcode */
-> diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/=
-tools/gen-insn-attr-x86.awk
-> index af38469afd14..3f43aa7d8fef 100644
-> --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -64,7 +64,9 @@ BEGIN {
->
->         modrm_expr =3D "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
->         force64_expr =3D "\\([df]64\\)"
-> -       rex_expr =3D "^REX(\\.[XRWB]+)*"
-> +       rex_expr =3D "^((REX(\\.[XRWB]+)+)|(REX$))"
-> +       rex2_expr =3D "\\(REX2\\)"
-> +       no_rex2_expr =3D "\\(!REX2\\)"
->         fpu_expr =3D "^ESC" # TODO
->
->         lprefix1_expr =3D "\\((66|!F3)\\)"
-> @@ -99,6 +101,7 @@ BEGIN {
->         prefix_num["VEX+1byte"] =3D "INAT_PFX_VEX2"
->         prefix_num["VEX+2byte"] =3D "INAT_PFX_VEX3"
->         prefix_num["EVEX"] =3D "INAT_PFX_EVEX"
-> +       prefix_num["REX2"] =3D "INAT_PFX_REX2"
->
->         clear_vars()
->  }
-> @@ -314,6 +317,10 @@ function convert_operands(count,opnd,       i,j,imm,=
-mod)
->                 if (match(ext, force64_expr))
->                         flags =3D add_flags(flags, "INAT_FORCE64")
->
-> +               # check REX2 not allowed
-> +               if (match(ext, no_rex2_expr))
-> +                       flags =3D add_flags(flags, "INAT_NO_REX2")
-> +
->                 # check REX prefix
->                 if (match(opcode, rex_expr))
->                         flags =3D add_flags(flags, "INAT_MAKE_PREFIX(INAT=
-_PFX_REX)")
-> @@ -351,6 +358,8 @@ function convert_operands(count,opnd,       i,j,imm,m=
-od)
->                         lptable3[idx] =3D add_flags(lptable3[idx],flags)
->                         variant =3D "INAT_VARIANT"
->                 }
-> +               if (match(ext, rex2_expr))
-> +                       table[idx] =3D add_flags(table[idx], "INAT_REX2_V=
-ARIANT")
->                 if (!match(ext, lprefix_expr)){
->                         table[idx] =3D add_flags(table[idx],flags)
->                 }
-> --
-> 2.34.1
->
+Namhyung
