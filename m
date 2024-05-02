@@ -1,129 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFE9524D4;
-	Thu,  2 May 2024 09:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C118153365;
+	Thu,  2 May 2024 09:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641315; cv=none; b=oUNQ5D7mVmDMnCSdpZ8wnnqm/ouM1ce055UC1aZAm6yCnvHXNfs4yD5F4CXrtUlM5b9P6kcN/mQIurf8WRF+V/t3C9Hi/kwcnWroycGmz05rwVxv7fKTIx0lOfScQMXUVWerCxwXUR8JVUwBeKCgrFmGlP8PrQrfJYg/UsfrzVM=
+	t=1714641528; cv=none; b=Fe0G4Yb93A6THyOKFHjUCqlirgkFB5puMmGFmRZ0VWrLsHBpooSAj+gYuWEsVSY6Z6zhruSyZrDZx3ycQkNcam/QTQT9T1JpKFzPekT4augF16rRp/G3qYPpJe/qzC7VXGIqiJEBj4uXaRC+E2weqblZoKJHZgrKww4HkJbhVX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641315; c=relaxed/simple;
-	bh=V+fMi3wAVPt94aZ1od5h3gV+HlEfxFhPy0HJtK9h5wY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nEjlmwSdTIWvssf/EQTBht0yAFZFSvOndcN0nnbUft8ucJ2RdM0/oF5PCNT4s2/NXi6iRHUd72eZavbM7/LEOA33rUWRwgGvisk4+4nFg2Zj51CCIPZNY/CT/6tAhBZR86s6FgliiDycOs2GOsC6e0f3oup0uiphxR8Kf6jJxBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9834B2F4;
-	Thu,  2 May 2024 02:15:38 -0700 (PDT)
-Received: from dsg-hive-n1sdp-01.cambridge.arm.com (dsg-hive-n1sdp-01.cambridge.arm.com [10.2.3.10])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AB9823F71E;
-	Thu,  2 May 2024 02:15:11 -0700 (PDT)
-From: Nick Forrington <nick.forrington@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Nick Forrington <nick.forrington@arm.com>,
+	s=arc-20240116; t=1714641528; c=relaxed/simple;
+	bh=I7p1RdtGOFI//Ur2G0I4lDz0SGt6YQnyFeR6Ar+LrsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+DmB0mjyxiK5Q75t8hdL1SGqQcswyJZpoLHulqC0wCrYBU2yAw65wGHy2o1+zx/5x+FSR5DiJ00HCY0f6XxgJ8vQznISp5cdJ9rs0sXmc6c3TfFNBmcYVywopIbx1nX2KTJBmSO6t5jFrIaZYy6+jJUx0XKRW74n0JPcKXwL/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uFQggjpZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uFQggjpZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YTpMwMX+qpj6Q/bcMYzijVjSwnah9GpAyoqUNT5p8FE=; b=uFQggjpZFaHyRheUPJ/kajtRrJ
+	camcEqM/4pLauiKQOWKzIw1iT5fbw+MXhwWL7BezQNa+6f0RMP8EzuUV6yU+jjvBAaVXgIb6/AFUs
+	9F/68m45s3ecnvnIooOwxg0lCZlVFXCxxHlvTBwGUTCSEYHyXfEn5s8L1F+MOn33vVtyw4Y9R9cdg
+	ybPOuzhOxVG8t+8/c8JyM5lNw2TwVa0G0SUuMbJsk9LfFS3kWh2Cs0ffjoMbfS0QBqhpagjg6MZp0
+	5pKlVxu5Xw8HW5TniqLT+UuUUjWqs3JEH7cu1Yfnc0Fp5miS1M+N3a3uVPsxxMIIaJlRpQuiNr1Wk
+	AH/wktrQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2SaL-00000001Kdw-2O0D;
+	Thu, 02 May 2024 09:18:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3B94A30057A; Thu,  2 May 2024 11:18:37 +0200 (CEST)
+Date: Thu, 2 May 2024 11:18:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v2 1/1] perf lock info: Display both map and thread by default
-Date: Thu,  2 May 2024 09:14:45 +0000
-Message-ID: <20240502091446.3037-2-nick.forrington@arm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502091446.3037-1-nick.forrington@arm.com>
-References: <20240502091446.3037-1-nick.forrington@arm.com>
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <20240502091837.GA30852@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+ <202405011317.AF41B94B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202405011317.AF41B94B@keescook>
 
-Change "perf lock info" argument handling to:
+On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
+> On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > > This is an effort to get rid of all multiplications from allocation
+> > > functions in order to prevent integer overflows [1][2].
+> > 
+> > So personally I detest struct_size() because I can never remember wtf it
+> > does, whereas the code it replaces is simple and straight forward :/
+> 
+> Sure, new APIs can involved a learning curve. If we can all handle
+> container_of(), we can deal with struct_size(). :)
 
-Display both map and thread info (rather than an error) when neither are
-specified.
+containre_of() is actually *much* shorter than typing it all out. Which
+is a benefit.
 
-Display both map and thread info (rather than just thread info) when
-both are requested.
-
-Signed-off-by: Nick Forrington <nick.forrington@arm.com>
----
- tools/perf/Documentation/perf-lock.txt |  4 ++--
- tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
- 2 files changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-index f5938d616d75..57a940399de0 100644
---- a/tools/perf/Documentation/perf-lock.txt
-+++ b/tools/perf/Documentation/perf-lock.txt
-@@ -111,11 +111,11 @@ INFO OPTIONS
- 
- -t::
- --threads::
--	dump thread list in perf.data
-+	dump only the thread list in perf.data
- 
- -m::
- --map::
--	dump map of lock instances (address:name table)
-+	dump only the map of lock instances (address:name table)
- 
- 
- CONTENTION OPTIONS
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 230461280e45..86c68c39aac0 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1483,11 +1483,16 @@ static int dump_info(void)
- 
- 	if (info_threads)
- 		dump_threads();
--	else if (info_map)
-+
-+	if (info_map) {
-+		if (info_threads)
-+			fputc('\n', lock_output);
- 		dump_map();
--	else {
-+	}
-+
-+	if (!info_threads && !info_map) {
- 		rc = -1;
--		pr_err("Unknown type of information\n");
-+		pr_err("No lock info specified\n");
- 	}
- 
- 	return rc;
-@@ -2578,9 +2583,9 @@ int cmd_lock(int argc, const char **argv)
- 
- 	const struct option info_options[] = {
- 	OPT_BOOLEAN('t', "threads", &info_threads,
--		    "dump thread list in perf.data"),
-+		    "dump only the thread list in perf.data"),
- 	OPT_BOOLEAN('m', "map", &info_map,
--		    "map of lock instances (address:name table)"),
-+		    "dump only the map of lock instances (address:name table)"),
- 	OPT_PARENT(lock_options)
- 	};
- 
-@@ -2694,6 +2699,13 @@ int cmd_lock(int argc, const char **argv)
- 			if (argc)
- 				usage_with_options(info_usage, info_options);
- 		}
-+
-+		/* If neither threads nor map requested, display both */
-+		if (!info_threads && !info_map) {
-+			info_threads = true;
-+			info_map = true;
-+		}
-+
- 		/* recycling report_lock_ops */
- 		trace_handler = &report_lock_ops;
- 		rc = __cmd_report(true);
--- 
-2.44.0
-
+struct_size() not so much. That's just obfuscation for obfuscation's
+sake.
