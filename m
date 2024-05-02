@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C235208A0
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 04:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477F11B966
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 04:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714622501; cv=none; b=XC1Cwluxq/2gE4PixCRj9l+ALn87YOt4/xOjnRI1gNi1rOaZiymcUU9ZY47qALdfp4KwbBzi4TpafMIENqxPQ5Wzek7jdh6QObC8YTYo7AiZZKXY/yL1Ng8eJZP1VwZjsHBlwGjqsUEyR16FETdXdLUGIBZ/9FP1ciEOzOcMg+s=
+	t=1714622502; cv=none; b=WyiGvtnxX2hmqaIlvM3IBFkYWK8yhAO0SAoIV3OsKXhDJK0c3jc4JFAitXIjvFCu4iqn8O/iNx0A0QFSyN556EdysBe6K75rE5eEkvGEe4ZeJi8ykwuU8p8eVR9q1xkdMFPX62SaHelAkv4bFsX5aTWFsMqUwNNYSc97NwK6Eiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714622501; c=relaxed/simple;
-	bh=rPW19hYSO7RGqRfHddBDviu6GP9SvPkIiu2QRpiXrYs=;
+	s=arc-20240116; t=1714622502; c=relaxed/simple;
+	bh=D5OMauP5AuCov1guhgbdWScnCkzXcr/I299bo8RBj6k=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=Hh8o5s41qJv9qgfN9ym6dmqhNDME7lf8E12c5Czxr/M1zzaJXmXOvjKAYTIUwNko2rk5OtKoi3+dHNwdgsKFj6vLVZMPbmL37TSp6w5RT6MHKXCSDAhKGb+mQXFqku75PDiLz6wCZOwtom6PW+whKsxPzKz1qUWKN5cEuFeFyPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LUvpiH+H; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=hXgFEvGvNeysYZpLDKlXUjGqD5jeLM7pC7E1gtCbJYxnVN83Tpxn/6oQ/qLnjb3OpLDwxTCHtxyTVY5ktkZ39hnGK07ag67yKLEooz1k2IZKSKqz3eHtC7Y4Ha8zY54hlm6+sc9jNZuDG1bFs8RJAmS+EC1Jze+GbQbNbFK+/fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HdfEWEtL; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LUvpiH+H"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de57643041bso12478656276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 21:01:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HdfEWEtL"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b028ae5easo144563417b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 21:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714622498; x=1715227298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714622500; x=1715227300; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UFIWOY8jDJKM4dfzjBXMQ4LXTpCjbhELgrhO1onJTMY=;
-        b=LUvpiH+HcK9ZI9a91oxmdEkOAfGQFf+vUt0JIUyKUjDGpVtHHl5WViRiwxmsuw8zIp
-         dngPyPWLN5JDI4QSb5pMuSx55N3YvYEdWpurvFKy3HnVl8ByUAAFvvyU3tvVRBc15oMt
-         gu+s6CEPJlpQRwrBChXL6CmoyYCYxNHdzXLutZKKdbGg46LY77vGZv0zjCYec3JXs9sh
-         jeGglF5MCPB2Dm9VtfhNqBQW1CoQh7fUSNdzrjcyLmdRCvmL5BZ8FJnIJWAwpGbF9ixV
-         SDMMhRhec/fZ5JSD7iUUf3GpblqpVlsiALunoFfc/71p8/oX1EgKmOOvyh4dPUTk9w8U
-         Dj3Q==
+        bh=zj5k9BmjFkiNlgtOsdr7K0ZIJlrTlzid/tiIdg6PkY0=;
+        b=HdfEWEtLlPXV3FxXI7abed8OOsYp1973dsOjNct52Zz/LHUiwz4HfBvg1oMywk2hBM
+         ya3nis1Oy6X9wkcPFzJ4yfFnvYo6ayAZpRJLf1nRlrjf+0bhWOSD7sR6RtDubrj2LzD0
+         slIt5aDhRxZGjM4Pqa+W/aAHJYp0sBFyzbaMqQXpvFITNLqeibEVW/HATrYANePdFcbl
+         UiGUFwJeARn+p6kK4Tp5JKWPCYNp8QmwE4WrjDG2YKQ1YdhWpuufRuk4G2YxmBRbJT1O
+         +rEauZ19QuhTzXrF4y3hGNomxNDiCz6xZBPB14rBgW+VR3fL3zzhpUXBIP8fwVzRreCG
+         eweQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714622498; x=1715227298;
+        d=1e100.net; s=20230601; t=1714622500; x=1715227300;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UFIWOY8jDJKM4dfzjBXMQ4LXTpCjbhELgrhO1onJTMY=;
-        b=SEb3T4HNx/aNZhtOpRI+7djefpKWd2I00TUeNSQR4VBBdEUO2XbPW5kCvchZdVtjT9
-         a9xUYjPSZjq/7k1R92ld6Lq15zXDTceX5Bwoifh8IxbOhHTYFVPeyirVoqycZu4PXkk+
-         lM9aU8oD/0V32pCMYOEbMD+VYmhUnM7phKObRoFpCYlW1uCCVA3o6OjZtk3DiOm93utT
-         6xEbM51vKTaltXnZLJE879zX2Wty3UbJwWgIevKYEcyZsu9OIlHzO0HTgolMLEBNSdNS
-         6U5js0XBRzuWHUdHNdzadpnmaIQgH4VCYztkAf/JMP95KPMDKa0+9NtyPui3kRkIJqZx
-         y6EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnmi4pX6PdWjWCjhWnl7cVa4C0R/c9n3AUyKulBxY3/Sz8CwKh2e8gbHtK+blqRjCUXVilhQhjKtayg/wVH4HJAVS4cozPe0s3WLu6DsgqBw==
-X-Gm-Message-State: AOJu0Yz9nbgY/xKk5idQTYHZj0MRUkK1QyjZDGZKxPgpAQevpuSp9qZx
-	zr+Z1jmqLANHgWot6s45zC0H1uRXWE82Ti2QXxOJ3X/Slj7pLUTeWMD95h/p6mbkRF69UtXaWhs
-	TbAnHPg==
-X-Google-Smtp-Source: AGHT+IF+BCS1WL6IjGsHkPhZ8CbpaPJ2nTkMIy3woz0Zcz7J/MVsxiPZF/itdvVYOFpasehpF7RysnrtOjdB
+        bh=zj5k9BmjFkiNlgtOsdr7K0ZIJlrTlzid/tiIdg6PkY0=;
+        b=H45cGAzf34QZsYLkbEQ6kRBODSjT8xvYA8ACu9WnawCHz7eZiSE+vpNHHJ/i97T78I
+         ywKCOp3T6SIjTRIXL3DJtVMQcXBErXnYqD84G0iCH8aKY/kO6MaSAko2q5iyOVkdNkLI
+         EavRdYralRyxDqjxPJ9BQi+i+7lUPCu1iAGQJm/xeatsDKT0DG2Hhvb1U6djYkwgCe0n
+         kFzYZ7P2ttA1z5bhK87tcSShpz4CPL8iEMzbhz8FQyHSEc+Rb6SxkFhl50szLw4YYIk5
+         KxVKZwlDqe3W/Z6G5dnbsbwm+qY2kxv1D9pvUmhPXchr2dnZxfBmMxx1lxeLjeoIL3f/
+         zgYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB/zAl+w7ZeUdC/PXHPxxQjwOiXgpOeri7iK1gP5VF/6BaSMdrx7fGN2eo7DtZF0KNU5ln6VV7yqSa6f0igpNzEGwuj0PvT+Bg7LuEFtoZ1w==
+X-Gm-Message-State: AOJu0Yz+8iI/JRTT8K3hRJ6rExSf+icxb3PeHcPzhFmciQO0/fZabVIp
+	urDV+rrwjIDnFHe2YporxhFt8awLU8wJ3GUp5KBaP3YXGsqykY+bkNpunJV/wd02u8oS2TiZkJU
+	jk4Z3DA==
+X-Google-Smtp-Source: AGHT+IGy993J8GFdln8sE7kiQrkDZ93nSMDEZ7PwjE7ki+RPa1Jf/e3JPjs+s3pUexiz3atQA+nO6NsljxC2
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:53b9:bbda:1daa:17d3])
- (user=irogers job=sendgmr) by 2002:a05:6902:1081:b0:dc9:c54e:c5eb with SMTP
- id v1-20020a056902108100b00dc9c54ec5ebmr236712ybu.7.1714622498221; Wed, 01
- May 2024 21:01:38 -0700 (PDT)
-Date: Wed,  1 May 2024 21:01:09 -0700
+ (user=irogers job=sendgmr) by 2002:a81:5296:0:b0:61a:d355:168f with SMTP id
+ g144-20020a815296000000b0061ad355168fmr210922ywb.5.1714622500327; Wed, 01 May
+ 2024 21:01:40 -0700 (PDT)
+Date: Wed,  1 May 2024 21:01:10 -0700
 In-Reply-To: <20240502040112.2111157-1-irogers@google.com>
-Message-Id: <20240502040112.2111157-4-irogers@google.com>
+Message-Id: <20240502040112.2111157-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240502040112.2111157-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-Subject: [PATCH v4 3/6] perf test pmu: Refactor format test and exposed test APIs
+Subject: [PATCH v4 4/6] perf test pmu: Add an eagerly loaded event test
 From: Ian Rogers <irogers@google.com>
 To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -74,536 +74,240 @@ To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In tests/pmu.c, make a common utility that creates a PMU in mkdtemp
-directory and uses regular PMU parsing logic to load that PMU. Formats
-must still be eagerly loaded as by default the PMU code assumes
-devices are going to be in sysfs. In util/pmu.[ch], hide
-perf_pmu__format_parse but add the eager argument to perf_pmu__lookup
-called by perf_pmus__add_test_pmu. Later patches will eagerly load
-other non-sysfs files when eager loading is enabled.
-
-In tests/pmu.c, rather than manually constructing a list of term
-arguments, just use the term parsing code from a string.
-
-Add more comments and debug logging.
+Allow events/aliases to be eagerly loaded for a PMU. Factor out the
+pmu_aliases_parse to allow this. Parse a test event and check it
+configures the attribute as expected. There is overlap with the
+parse-events tests, but this test is done with a PMU created in a temp
+directory and doesn't rely on PMUs in sysfs.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu.c         | 319 ++++++++++++++++-----------------
- tools/perf/util/parse-events.c |   2 +-
- tools/perf/util/parse-events.h |   2 +-
- tools/perf/util/pmu.c          |  11 +-
- tools/perf/util/pmu.h          |   4 +-
- tools/perf/util/pmus.c         |  16 +-
- tools/perf/util/pmus.h         |   2 +
- 7 files changed, 177 insertions(+), 179 deletions(-)
+ tools/perf/tests/pmu.c | 77 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.c  | 69 +++++++++++++++++++++++++------------
+ 2 files changed, 125 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 8f18127d876a..424ebdb0f09d 100644
+index 424ebdb0f09d..6e18a4c447ce 100644
 --- a/tools/perf/tests/pmu.c
 +++ b/tools/perf/tests/pmu.c
-@@ -2,203 +2,186 @@
+@@ -1,4 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "evlist.h"
++#include "evsel.h"
  #include "parse-events.h"
  #include "pmu.h"
  #include "tests.h"
-+#include "debug.h"
- #include <errno.h>
- #include <fcntl.h>
- #include <stdio.h>
--#include <linux/kernel.h>
--#include <linux/limits.h>
--#include <linux/zalloc.h>
--
--/* Simulated format definitions. */
--static struct test_format {
--	const char *name;
--	const char *value;
--} test_formats[] = {
--	{ "krava01", "config:0-1,62-63\n", },
--	{ "krava02", "config:10-17\n", },
--	{ "krava03", "config:5\n", },
--	{ "krava11", "config1:0,2,4,6,8,20-28\n", },
--	{ "krava12", "config1:63\n", },
--	{ "krava13", "config1:45-47\n", },
--	{ "krava21", "config2:0-3,10-13,20-23,30-33,40-43,50-53,60-63\n", },
--	{ "krava22", "config2:8,18,48,58\n", },
--	{ "krava23", "config2:28-29,38\n", },
--};
--
--/* Simulated users input. */
--static struct parse_events_term test_terms[] = {
--	{
--		.config    = "krava01",
--		.val.num   = 15,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava02",
--		.val.num   = 170,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava03",
--		.val.num   = 1,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava11",
--		.val.num   = 27,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava12",
--		.val.num   = 1,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava13",
--		.val.num   = 2,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava21",
--		.val.num   = 119,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava22",
--		.val.num   = 11,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--	{
--		.config    = "krava23",
--		.val.num   = 2,
--		.type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
--		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
--	},
--};
--
--/*
-- * Prepare format directory data, exported by kernel
-- * at /sys/bus/event_source/devices/<dev>/format.
-- */
--static char *test_format_dir_get(char *dir, size_t sz)
--{
--	unsigned int i;
--
--	snprintf(dir, sz, "/tmp/perf-pmu-test-format-XXXXXX");
--	if (!mkdtemp(dir))
--		return NULL;
--
--	for (i = 0; i < ARRAY_SIZE(test_formats); i++) {
--		char name[PATH_MAX];
--		struct test_format *format = &test_formats[i];
--		FILE *file;
--
--		scnprintf(name, PATH_MAX, "%s/%s", dir, format->name);
--
--		file = fopen(name, "w");
--		if (!file)
--			return NULL;
--
--		if (1 != fwrite(format->value, strlen(format->value), 1, file))
--			break;
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sys/stat.h>
- 
--		fclose(file);
--	}
--
--	return dir;
--}
-+/* Fake PMUs created in temp directory. */
-+static LIST_HEAD(test_pmus);
- 
--/* Cleanup format directory. */
--static int test_format_dir_put(char *dir)
-+/* Cleanup test PMU directory. */
-+static int test_pmu_put(const char *dir, struct perf_pmu *pmu)
- {
- 	char buf[PATH_MAX + 20];
-+	int ret;
- 
--	snprintf(buf, sizeof(buf), "rm -f %s/*\n", dir);
--	if (system(buf))
--		return -1;
-+	if (scnprintf(buf, sizeof(buf), "rm -fr %s", dir) < 0) {
-+		pr_err("Failure to set up buffer for \"%s\"\n", dir);
-+		return -EINVAL;
-+	}
-+	ret = system(buf);
-+	if (ret)
-+		pr_err("Failure to \"%s\"\n", buf);
- 
--	snprintf(buf, sizeof(buf), "rmdir %s\n", dir);
--	return system(buf);
-+	list_del(&pmu->list);
-+	perf_pmu__delete(pmu);
-+	return ret;
- }
- 
--static void add_test_terms(struct parse_events_terms *terms)
-+/*
-+ * Prepare test PMU directory data, normally exported by kernel at
-+ * /sys/bus/event_source/devices/<pmu>/. Give as input a buffer to hold the file
-+ * path, the result is PMU loaded using that directory.
-+ */
-+static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- {
--	unsigned int i;
-+	/* Simulated format definitions. */
-+	const struct test_format {
-+		const char *name;
-+		const char *value;
-+	} test_formats[] = {
-+		{ "krava01", "config:0-1,62-63\n", },
-+		{ "krava02", "config:10-17\n", },
-+		{ "krava03", "config:5\n", },
-+		{ "krava11", "config1:0,2,4,6,8,20-28\n", },
-+		{ "krava12", "config1:63\n", },
-+		{ "krava13", "config1:45-47\n", },
-+		{ "krava21", "config2:0-3,10-13,20-23,30-33,40-43,50-53,60-63\n", },
-+		{ "krava22", "config2:8,18,48,58\n", },
-+		{ "krava23", "config2:28-29,38\n", },
-+	};
-+	char name[PATH_MAX];
-+	int dirfd, file;
-+	struct perf_pmu *pmu = NULL;
-+	ssize_t len;
+@@ -54,6 +56,9 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
+ 		{ "krava22", "config2:8,18,48,58\n", },
+ 		{ "krava23", "config2:28-29,38\n", },
+ 	};
++	const char *test_event = "krava01=15,krava02=170,krava03=1,krava11=27,krava12=1,"
++		"krava13=2,krava21=119,krava22=11,krava23=2\n";
 +
-+	/* Create equivalent of sysfs mount point. */
-+	scnprintf(dir, sz, "/tmp/perf-pmu-test-XXXXXX");
-+	if (!mkdtemp(dir)) {
-+		pr_err("mkdtemp failed\n");
-+		dir[0] = '\0';
-+		return NULL;
-+	}
-+	dirfd = open(dir, O_DIRECTORY);
-+	if (dirfd < 0) {
-+		pr_err("Failed to open test directory \"%s\"\n", dir);
-+		goto err_out;
-+	}
+ 	char name[PATH_MAX];
+ 	int dirfd, file;
+ 	struct perf_pmu *pmu = NULL;
+@@ -116,6 +121,24 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
+ 		close(file);
+ 	}
  
--	for (i = 0; i < ARRAY_SIZE(test_terms); i++) {
--		struct parse_events_term *clone;
-+	/* Create the test PMU directory and give it a perf_event_attr type number. */
-+	if (mkdirat(dirfd, "perf-pmu-test", 0755) < 0) {
-+		pr_err("Failed to mkdir PMU directory\n");
++	/* Create test event. */
++	if (mkdirat(dirfd, "perf-pmu-test/events", 0755) < 0) {
++		pr_err("Failed to mkdir PMU events directory\n");
 +		goto err_out;
 +	}
-+	file = openat(dirfd, "perf-pmu-test/type", O_WRONLY | O_CREAT, 0600);
++	file = openat(dirfd, "perf-pmu-test/events/test-event", O_WRONLY | O_CREAT, 0600);
 +	if (!file) {
 +		pr_err("Failed to open for writing file \"type\"\n");
 +		goto err_out;
 +	}
-+	len = strlen("9999");
-+	if (write(file, "9999\n", len) < len) {
++	len = strlen(test_event);
++	if (write(file, test_event, len) < len) {
 +		close(file);
-+		pr_err("Failed to write to 'type' file\n");
++		pr_err("Failed to write to 'test-event' file\n");
 +		goto err_out;
 +	}
 +	close(file);
- 
--		parse_events_term__clone(&clone, &test_terms[i]);
--		list_add_tail(&clone->list, &terms->terms);
-+	/* Create format directory and files. */
-+	if (mkdirat(dirfd, "perf-pmu-test/format", 0755) < 0) {
-+		pr_err("Failed to mkdir PMU format directory\n)");
-+		goto err_out;
- 	}
-+	for (size_t i = 0; i < ARRAY_SIZE(test_formats); i++) {
-+		const struct test_format *format = &test_formats[i];
 +
-+		if (scnprintf(name, PATH_MAX, "perf-pmu-test/format/%s", format->name) < 0) {
-+			pr_err("Failure to set up path for \"%s\"\n", format->name);
-+			goto err_out;
-+		}
-+		file = openat(dirfd, name, O_WRONLY | O_CREAT, 0600);
-+		if (!file) {
-+			pr_err("Failed to open for writing file \"%s\"\n", name);
-+			goto err_out;
-+		}
-+
-+		if (write(file, format->value, strlen(format->value)) < 0) {
-+			pr_err("Failed to write to file \"%s\"\n", name);
-+			close(file);
-+			goto err_out;
-+		}
-+		close(file);
-+	}
-+
-+	/* Make the PMU reading the files created above. */
-+	pmu = perf_pmus__add_test_pmu(dirfd, "perf-pmu-test");
-+	if (!pmu)
-+		pr_err("Test PMU creation failed\n");
-+
-+err_out:
-+	if (!pmu)
-+		test_pmu_put(dir, pmu);
-+	if (dirfd >= 0)
-+		close(dirfd);
-+	return pmu;
- }
- 
--static int test__pmu(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	char dir[PATH_MAX];
--	char *format;
--	struct parse_events_terms terms;
- 	struct perf_event_attr attr;
--	struct perf_pmu *pmu;
--	int fd;
--	int ret;
-+	struct parse_events_terms terms;
-+	int ret = TEST_FAIL;
-+	struct perf_pmu *pmu = test_pmu_get(dir, sizeof(dir));
- 
--	parse_events_terms__init(&terms);
--	add_test_terms(&terms);
--	pmu = zalloc(sizeof(*pmu));
--	if (!pmu) {
--		parse_events_terms__exit(&terms);
--		return -ENOMEM;
--	}
-+	if (!pmu)
-+		return TEST_FAIL;
- 
--	INIT_LIST_HEAD(&pmu->format);
--	INIT_LIST_HEAD(&pmu->aliases);
--	INIT_LIST_HEAD(&pmu->caps);
--	format = test_format_dir_get(dir, sizeof(dir));
--	if (!format) {
--		free(pmu);
--		parse_events_terms__exit(&terms);
--		return -EINVAL;
-+	parse_events_terms__init(&terms);
-+	if (parse_events_terms(&terms,
-+				"krava01=15,krava02=170,krava03=1,krava11=27,krava12=1,"
-+				"krava13=2,krava21=119,krava22=11,krava23=2",
-+				NULL)) {
-+		pr_err("Term parsing failed\n");
-+		goto err_out;
- 	}
- 
- 	memset(&attr, 0, sizeof(attr));
--
--	fd = open(format, O_DIRECTORY);
--	if (fd < 0) {
--		ret = fd;
--		goto out;
-+	ret = perf_pmu__config_terms(pmu, &attr, &terms, /*zero=*/false, /*err=*/NULL);
-+	if (ret) {
-+		pr_err("perf_pmu__config_terms failed");
-+		goto err_out;
- 	}
- 
--	pmu->name = strdup("perf-pmu-test");
--	ret = perf_pmu__format_parse(pmu, fd, /*eager_load=*/true);
--	if (ret)
--		goto out;
-+	if (attr.config  != 0xc00000000002a823) {
-+		pr_err("Unexpected config value %llx\n", attr.config);
-+		goto err_out;
-+	}
-+	if (attr.config1 != 0x8000400000000145) {
-+		pr_err("Unexpected config1 value %llx\n", attr.config1);
-+		goto err_out;
-+	}
-+	if (attr.config2 != 0x0400000020041d07) {
-+		pr_err("Unexpected config2 value %llx\n", attr.config2);
-+		goto err_out;
-+	}
- 
--	ret = perf_pmu__config_terms(pmu, &attr, &terms, /*zero=*/false, /*err=*/NULL);
--	if (ret)
--		goto out;
--
--	ret = -EINVAL;
--	if (attr.config  != 0xc00000000002a823)
--		goto out;
--	if (attr.config1 != 0x8000400000000145)
--		goto out;
--	if (attr.config2 != 0x0400000020041d07)
--		goto out;
--
--	ret = 0;
--out:
--	test_format_dir_put(format);
--	perf_pmu__delete(pmu);
-+	ret = TEST_OK;
-+err_out:
- 	parse_events_terms__exit(&terms);
-+	test_pmu_put(dir, pmu);
+ 	/* Make the PMU reading the files created above. */
+ 	pmu = perf_pmus__add_test_pmu(dirfd, "perf-pmu-test");
+ 	if (!pmu)
+@@ -176,8 +199,62 @@ static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest
  	return ret;
  }
  
--DEFINE_SUITE("Parse perf pmu format", pmu);
-+static struct test_case tests__pmu[] = {
-+	TEST_CASE("Parsing with PMU format directory", pmu_format),
-+	{	.name = NULL, }
-+};
++static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++{
++	char dir[PATH_MAX];
++	struct parse_events_error err;
++	struct evlist *evlist;
++	struct evsel *evsel;
++	struct perf_event_attr *attr;
++	int ret;
++	struct perf_pmu *pmu = test_pmu_get(dir, sizeof(dir));
++	const char *event = "perf-pmu-test/test-event/";
 +
-+struct test_suite suite__pmu = {
-+	.desc = "Sysfs PMU tests",
-+	.test_cases = tests__pmu,
-+};
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 0f308b4db2b9..2b9ede311c31 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2585,7 +2585,7 @@ int parse_events_term__term(struct parse_events_term **term,
- }
++
++	if (!pmu)
++		return TEST_FAIL;
++
++	evlist = evlist__new();
++	if (evlist == NULL) {
++		pr_err("Failed allocation");
++		goto err_out;
++	}
++	parse_events_error__init(&err);
++	ret = parse_events(evlist, event, &err);
++	if (ret) {
++		pr_debug("failed to parse event '%s', err %d\n", event, ret);
++		parse_events_error__print(&err, event);
++		ret = TEST_FAIL;
++		if (parse_events_error__contains(&err, "can't access trace events"))
++			ret = TEST_SKIP;
++		goto err_out;
++	}
++	evsel = evlist__first(evlist);
++	attr = &evsel->core.attr;
++	if (attr->config  != 0xc00000000002a823) {
++		pr_err("Unexpected config value %llx\n", attr->config);
++		goto err_out;
++	}
++	if (attr->config1 != 0x8000400000000145) {
++		pr_err("Unexpected config1 value %llx\n", attr->config1);
++		goto err_out;
++	}
++	if (attr->config2 != 0x0400000020041d07) {
++		pr_err("Unexpected config2 value %llx\n", attr->config2);
++		goto err_out;
++	}
++
++	ret = TEST_OK;
++err_out:
++	parse_events_error__exit(&err);
++	evlist__delete(evlist);
++	test_pmu_put(dir, pmu);
++	return ret;
++}
++
+ static struct test_case tests__pmu[] = {
+ 	TEST_CASE("Parsing with PMU format directory", pmu_format),
++	TEST_CASE("Parsing with PMU event", pmu_events),
+ 	{	.name = NULL, }
+ };
  
- int parse_events_term__clone(struct parse_events_term **new,
--			     struct parse_events_term *term)
-+			     const struct parse_events_term *term)
- {
- 	char *str;
- 	struct parse_events_term temp = *term;
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 5695308efab9..e7ac1f13376d 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -178,7 +178,7 @@ int parse_events_term__term(struct parse_events_term **term,
- 			    enum parse_events__term_type term_rhs,
- 			    void *loc_term, void *loc_val);
- int parse_events_term__clone(struct parse_events_term **new,
--			     struct parse_events_term *term);
-+			     const struct parse_events_term *term);
- void parse_events_term__delete(struct parse_events_term *term);
- 
- void parse_events_terms__delete(struct parse_events_terms *terms);
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 74dd5bd49d9a..fbbc535ed93f 100644
+index fbbc535ed93f..7849be4bfea1 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -182,7 +182,7 @@ static void perf_pmu_format__load(const struct perf_pmu *pmu, struct perf_pmu_fo
-  * Parse & process all the sysfs attributes located under
-  * the directory specified in 'dir' parameter.
+@@ -597,33 +597,18 @@ static inline bool pmu_alias_info_file(const char *name)
+  * Reading the pmu event aliases definition, which should be located at:
+  * /sys/bus/event_source/devices/<dev>/events as sysfs group attributes.
   */
--int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load)
-+static int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load)
+-static int pmu_aliases_parse(struct perf_pmu *pmu)
++static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
  {
+-	char path[PATH_MAX];
  	struct dirent *evt_ent;
- 	DIR *format_dir;
-@@ -232,7 +232,7 @@ int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load)
-  * located at:
-  * /sys/bus/event_source/devices/<dev>/format as sysfs group attributes.
-  */
--static int pmu_format(struct perf_pmu *pmu, int dirfd, const char *name)
-+static int pmu_format(struct perf_pmu *pmu, int dirfd, const char *name, bool eager_load)
- {
- 	int fd;
+ 	DIR *event_dir;
+-	size_t len;
+-	int fd, dir_fd;
  
-@@ -241,7 +241,7 @@ static int pmu_format(struct perf_pmu *pmu, int dirfd, const char *name)
- 		return 0;
+-	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
+-	if (!len)
+-		return 0;
+-	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
+-
+-	dir_fd = open(path, O_DIRECTORY);
+-	if (dir_fd == -1) {
+-		pmu->sysfs_aliases_loaded = true;
+-		return 0;
+-	}
+-
+-	event_dir = fdopendir(dir_fd);
+-	if (!event_dir){
+-		close (dir_fd);
++	event_dir = fdopendir(events_dir_fd);
++	if (!event_dir)
+ 		return -EINVAL;
+-	}
  
- 	/* it'll close the fd */
--	if (perf_pmu__format_parse(pmu, fd, /*eager_load=*/false))
-+	if (perf_pmu__format_parse(pmu, fd, eager_load))
- 		return -1;
+ 	while ((evt_ent = readdir(event_dir))) {
+ 		char *name = evt_ent->d_name;
++		int fd;
+ 		FILE *file;
  
+ 		if (!strcmp(name, ".") || !strcmp(name, ".."))
+@@ -635,7 +620,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
+ 		if (pmu_alias_info_file(name))
+ 			continue;
+ 
+-		fd = openat(dir_fd, name, O_RDONLY);
++		fd = openat(events_dir_fd, name, O_RDONLY);
+ 		if (fd == -1) {
+ 			pr_debug("Cannot open %s\n", name);
+ 			continue;
+@@ -653,11 +638,50 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
+ 	}
+ 
+ 	closedir(event_dir);
+-	close (dir_fd);
+ 	pmu->sysfs_aliases_loaded = true;
  	return 0;
-@@ -994,7 +994,8 @@ perf_pmu__arch_init(struct perf_pmu *pmu)
- 		pmu->mem_events = perf_mem_events;
  }
  
--struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *name)
-+struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *name,
-+				  bool eager_load)
- {
- 	struct perf_pmu *pmu;
- 	__u32 type;
-@@ -1023,7 +1024,7 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	 * type value and format definitions. Load both right
- 	 * now.
- 	 */
--	if (pmu_format(pmu, dirfd, name))
-+	if (pmu_format(pmu, dirfd, name, eager_load))
- 		goto err;
- 
- 	pmu->is_core = is_pmu_core(name);
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 93d03bd3ecbe..561716aa2b25 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -214,7 +214,6 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_
- 			  struct parse_events_error *err);
- int perf_pmu__find_event(struct perf_pmu *pmu, const char *event, void *state, pmu_event_callback cb);
- 
--int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load);
- void perf_pmu_format__set_value(void *format, int config, unsigned long *bits);
- bool perf_pmu__has_format(const struct perf_pmu *pmu, const char *name);
- int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_callback cb);
-@@ -272,7 +271,8 @@ int perf_pmu__pathname_scnprintf(char *buf, size_t size,
- int perf_pmu__event_source_devices_fd(void);
- int perf_pmu__pathname_fd(int dirfd, const char *pmu_name, const char *filename, int flags);
- 
--struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name);
-+struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char *lookup_name,
-+				  bool eager_load);
- struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head *core_pmus);
- void perf_pmu__delete(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__find_core_pmu(void);
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 2fd369e45832..b9b4c5eb5002 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -124,7 +124,8 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 		return NULL;
- 
- 	dirfd = perf_pmu__event_source_devices_fd();
--	pmu = perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
-+	pmu = perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name,
-+			       /*eager_load=*/false);
- 	close(dirfd);
- 
- 	if (!pmu) {
-@@ -159,7 +160,8 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	if (core_pmu && read_sysfs_core_pmus)
- 		return NULL;
- 
--	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
-+	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name,
-+				/*eager_load=*/false);
- }
- 
- static int pmus_cmp(void *priv __maybe_unused,
-@@ -696,3 +698,13 @@ struct perf_pmu *perf_pmus__find_core_pmu(void)
- {
- 	return perf_pmus__scan_core(NULL);
- }
-+
-+struct perf_pmu *perf_pmus__add_test_pmu(int test_sysfs_dirfd, const char *name)
++static int pmu_aliases_parse(struct perf_pmu *pmu)
 +{
-+	/*
-+	 * Some PMU functions read from the sysfs mount point, so care is
-+	 * needed, hence passing the eager_load flag to load things like the
-+	 * format files.
-+	 */
-+	return perf_pmu__lookup(&other_pmus, test_sysfs_dirfd, name, /*eager_load=*/true);
-+}
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index eec599d8aebd..9d4ded80b8e9 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -24,4 +24,6 @@ int perf_pmus__num_core_pmus(void);
- bool perf_pmus__supports_extended_type(void);
- char *perf_pmus__default_pmu_name(void);
- 
-+struct perf_pmu *perf_pmus__add_test_pmu(int test_sysfs_dirfd, const char *name);
++	char path[PATH_MAX];
++	size_t len;
++	int events_dir_fd, ret;
 +
- #endif /* __PMUS_H */
++	if (pmu->sysfs_aliases_loaded)
++		return 0;
++
++	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	if (!len)
++		return 0;
++	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
++
++	events_dir_fd = open(path, O_DIRECTORY);
++	if (events_dir_fd == -1) {
++		pmu->sysfs_aliases_loaded = true;
++		return 0;
++	}
++	ret = __pmu_aliases_parse(pmu, events_dir_fd);
++	close(events_dir_fd);
++	return ret;
++}
++
++static int pmu_aliases_parse_eager(struct perf_pmu *pmu, int sysfs_fd)
++{
++	char path[FILENAME_MAX + 7];
++	int ret, events_dir_fd;
++
++	scnprintf(path, sizeof(path), "%s/events", pmu->name);
++	events_dir_fd = openat(sysfs_fd, path, O_DIRECTORY, 0);
++	if (events_dir_fd == -1) {
++		pmu->sysfs_aliases_loaded = true;
++		return 0;
++	}
++	ret = __pmu_aliases_parse(pmu, events_dir_fd);
++	close(events_dir_fd);
++	return ret;
++}
++
+ static int pmu_alias_terms(struct perf_pmu_alias *alias, int err_loc, struct list_head *terms)
+ {
+ 	struct parse_events_term *term, *cloned;
+@@ -1042,6 +1066,9 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+ 
+ 	perf_pmu__arch_init(pmu);
+ 
++	if (eager_load)
++		pmu_aliases_parse_eager(pmu, dirfd);
++
+ 	return pmu;
+ err:
+ 	zfree(&pmu->name);
 -- 
 2.45.0.rc0.197.gbae5840b3b-goog
 
