@@ -1,86 +1,166 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB1C16F90C;
-	Thu,  2 May 2024 18:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC5515E80D;
+	Thu,  2 May 2024 18:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714674210; cv=none; b=bm6/JxYtdP+twv3jMFlSjsZMNlztC49SIGSA53c7KHbcvaWnul8cX86B5dhQybU568VldpmIt3iNGSJw+h1n22nlhdGi80ceiGWNoGvDld/oSAFJSLh/bGx0FOoHaq4Il6B91WulkfWRGMqm+NrumxEgMNaEfGqPsn7qin6hPcY=
+	t=1714674754; cv=none; b=u+un0dZEBvZQg0RD2KKqNEbYsyLfI0ziR5iwP3bBAkJR1w7hxnGcIYxFI+kwGpU+wLs+R24ZV0S8fZTPgkj/7tLk2s7IC1VJeT64d7YrE47nUSFLd4leHje31mkTHAMoz5YF8qYXVaYXNLm9h5Fo2WZCgCrwdF73Mh0IaAsTfAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714674210; c=relaxed/simple;
-	bh=UGRIpdQuVWv7frbkKdg//Yw72g2vdPMaZMx+CTeZA7Q=;
+	s=arc-20240116; t=1714674754; c=relaxed/simple;
+	bh=wk4Ngof6yU26+Asb22aYLpemVSazW1dXkLAq0tYukyA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U1s68lvaKWo29FE0Y99ZWXw1wv68b3ITCD2zUOyoQk3Lg7miRb/9eAgSnz6UDeC/kcYzY8dScd2FyLy0vc2WkJoyUhcEI3J/yh8LDrVVLFbRNLrQCbPd9//FvJ14R5b7QQDWa5jL49K45FX7/6POP/ei/w95P3oapCWc98xqzaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
+	 To:Cc:Content-Type; b=a0KO0QTIYUYwoBrONqmCZKSFEBwu6CPk1v8SD/skkxp08E2rzYz9Gf+f5ONJPkB24QGKNmEk74iFxuKnpmCooDQ9gDZWLlcds7kSTYGpXFTmEcNv92g2FXQaJ9O7vdOcN3RygWQWCKiMZ5of+NgTdtvSuyCG8V5vvUDjsHPz6cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2b12b52fbe0so3548749a91.0;
-        Thu, 02 May 2024 11:23:28 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c70d8bb618so3734742b6e.2;
+        Thu, 02 May 2024 11:32:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714674208; x=1715279008;
+        d=1e100.net; s=20230601; t=1714674752; x=1715279552;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z1FoMHQWOMW5NazguqbdJ2vyAEy94LpT4il8LmHAdf8=;
-        b=Vv+tblQPphPNQZu4JiAO80/I7tVWW0m/6wW2qhw4WUUrWQW5UC5KL8foFfVb0l9pMc
-         1LpvQOVNGvF7QO1utv5s3/HCg6pUBhA/GtrCZd0EISvxlXytkOXMBgWEghNzNMDsY1W6
-         WrqjWPvnvwqXhjmMkgiohzttocvTfd6XWnBWRgJEf4Xe3oZrAH5Tw1zWLfCkLOgCwo3y
-         eS9NIn8aFsq720QAINTOdAAL4JAXzmj4c5xasANdxMMZYPuvHNaY2zJ9Au1J81RBRUo0
-         VoHsxg32cIlbCxkYXeSTcE3LzIFMDp+MCu/Eq5UuxLkOTymtG9xpokk7VW6ZQZZbnZBE
-         J7JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWV3CqLja085+3ntb5x1qyyyqSpEi/p7ma01VGsb8RMH8+qU/LuCiVFIijd1T1XvCha5fNhAfPJBsKN+kgA506BX7+Lqee5Sbg9y660JRUWc2TMCrSjhH4sWGhNYqEI+s47johEmem8w/5IYiiA7w==
-X-Gm-Message-State: AOJu0YxncASIPiz0Oj20MQfrSaLXFvIYACQhA/sDltrqJG1a7zzx0Cx1
-	WaiKHPi/dr3UYtcCCYJsr+/QF/xYk19Hm0IPjoAERhPXJP+07+ymy3uG/+R/eCq4/Ng8BxQ01se
-	Z9z4p0yFwDu9jvY/Z6cf6cPnZT4PKdg==
-X-Google-Smtp-Source: AGHT+IELvn8wMGkyO0TmuNlmN7KfVwK+kTxu3XsielbSKO95n8QHjx2WS0argpa0lMn8GfQSKW8GZ+DdqhMJsnLap5M=
-X-Received: by 2002:a17:90b:1089:b0:2b1:9fa4:16fd with SMTP id
- gj9-20020a17090b108900b002b19fa416fdmr629131pjb.4.1714674208317; Thu, 02 May
- 2024 11:23:28 -0700 (PDT)
+        bh=8DNylzW5XAts2CCwACCkXw9O6Z2hKXG+ML4plDdKHJg=;
+        b=nDxC1P20Fx8AIuWafP4h9Xal3t2Y7xq7xaIINuxQk43N3S9tQvTw5r65OvIGGVSCVC
+         dll4d78CrtWzqYoylQh+3VDpPUM0FY/h0brvirxdFaxkEFe+eKzqTdDKythQ2KQHNcCt
+         gB4m8NiOsjHaGvH/rhJ6r7Cm4MwCfdecHmczhonOwAP1Zyovn+/YSIKYyVu/Zb72qXMq
+         VmPiuYw81/k37kU+dPmk5+A+0OHu6JzN96j5GtsXqTr6MP5SPIPwekbiE1Ltp5foAYsn
+         XsW3x+93LIYhsByKuugZ/OqbTcC5u6mU7DyecmfPnjFdB8l1W/AUZkREhi9R00j8MAzs
+         YJAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDr/Z8ZQYHmgCq1s5cEsmoxKwPJ3Ww8S4aKYXHMzDsRiAcUutfUPQZtUWYMbdWHMRZjI+2xhcSJ7UterdJvVoy7dq+nxdkKL7RJLGqp/9rdg==
+X-Gm-Message-State: AOJu0YyZXyY1Zt3yQXhUSupomMwsOrSy42Mg+xPeztg5oj0WMFipIYiY
+	bTY79prKD6CBAb4KLNXj00mxmo2AxkfHZgCXcUIeCQkreTB088wYEr8r78o610obKtb9/upi/pP
+	B8i7HrKhirWVy1wBVsFIuor87iSY=
+X-Google-Smtp-Source: AGHT+IGLb0E0X/4J0Cv8NxiR82lpQ+dcjQLL8nIs3sBdcTV/hSXSw8TZDnyDXD/IIYtETvHtFH9mY9soHTtrqH5rvyQ=
+X-Received: by 2002:a54:438f:0:b0:3c8:47a3:3cb6 with SMTP id
+ u15-20020a54438f000000b003c847a33cb6mr762553oiv.21.1714674752158; Thu, 02 May
+ 2024 11:32:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502060011.1838090-1-namhyung@kernel.org> <20240502060011.1838090-3-namhyung@kernel.org>
- <ZjOaFS7_vEojFnUZ@x1>
-In-Reply-To: <ZjOaFS7_vEojFnUZ@x1>
+References: <20240502091446.3037-1-nick.forrington@arm.com> <20240502091446.3037-2-nick.forrington@arm.com>
+In-Reply-To: <20240502091446.3037-2-nick.forrington@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 2 May 2024 11:23:17 -0700
-Message-ID: <CAM9d7chGYy9X=3=iRwocUWJurXPGd0WZaE=yr8U1JkrLcaUrow@mail.gmail.com>
-Subject: Re: [PATCH 2/6] perf annotate-data: Collect global variables in advance
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Date: Thu, 2 May 2024 11:32:20 -0700
+Message-ID: <CAM9d7cjWDwg1nQPL4qDKHi59pmhrZq8+c8GhsgAT72cLUv_i2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] perf lock info: Display both map and thread by default
+To: Nick Forrington <nick.forrington@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 2, 2024 at 6:50=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Wed, May 01, 2024 at 11:00:07PM -0700, Namhyung Kim wrote:
-> > Currently it looks up global variables from the current CU using addres=
-s
-> > and name.  But it sometimes fails to find a variable as the variable ca=
-n
-> > come from a different CU - but it's still strange it failed to find a
-> > declaration for some reason.
-> >
-> > Anyway, it can collect all global variables from all CU once and then
-> > lookup them later on.  This slightly improves the success rate of my
-> > test data set.
->
-> It would be interesting you could provide examples from your test data
-> set, i.e. after this patch these extra global variables were considered
-> in the test results, with some tool output, etc.
->
-> This would help intersested parties to reproduce your results,
-> validate the end result, etc.
+Hello,
 
-Hmm.. ok.  I'll try to find public data that I can share.
-But it's just a perf data file recorded with perf mem.
+On Thu, May 2, 2024 at 2:15=E2=80=AFAM Nick Forrington <nick.forrington@arm=
+.com> wrote:
+>
+> Change "perf lock info" argument handling to:
+>
+> Display both map and thread info (rather than an error) when neither are
+> specified.
+>
+> Display both map and thread info (rather than just thread info) when
+> both are requested.
+>
+> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+> ---
+>  tools/perf/Documentation/perf-lock.txt |  4 ++--
+>  tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
+>  2 files changed, 19 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
+ation/perf-lock.txt
+> index f5938d616d75..57a940399de0 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -111,11 +111,11 @@ INFO OPTIONS
+>
+>  -t::
+>  --threads::
+> -       dump thread list in perf.data
+> +       dump only the thread list in perf.data
+>
+>  -m::
+>  --map::
+> -       dump map of lock instances (address:name table)
+> +       dump only the map of lock instances (address:name table)
+
+But your change allows both thread and map info to be printed, right?
+
+>
+>
+>  CONTENTION OPTIONS
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 230461280e45..86c68c39aac0 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -1483,11 +1483,16 @@ static int dump_info(void)
+>
+>         if (info_threads)
+>                 dump_threads();
+> -       else if (info_map)
+> +
+> +       if (info_map) {
+> +               if (info_threads)
+> +                       fputc('\n', lock_output);
+>                 dump_map();
+> -       else {
+> +       }
+> +
+> +       if (!info_threads && !info_map) {
+>                 rc =3D -1;
+> -               pr_err("Unknown type of information\n");
+> +               pr_err("No lock info specified\n");
+>         }
+
+I guess you made this condition impossible.
+
+>
+>         return rc;
+> @@ -2578,9 +2583,9 @@ int cmd_lock(int argc, const char **argv)
+>
+>         const struct option info_options[] =3D {
+>         OPT_BOOLEAN('t', "threads", &info_threads,
+> -                   "dump thread list in perf.data"),
+> +                   "dump only the thread list in perf.data"),
+>         OPT_BOOLEAN('m', "map", &info_map,
+> -                   "map of lock instances (address:name table)"),
+> +                   "dump only the map of lock instances (address:name ta=
+ble)"),
+
+Ditto, I think we can drop the 'only' part.
 
 Thanks,
 Namhyung
+
+
+>         OPT_PARENT(lock_options)
+>         };
+>
+> @@ -2694,6 +2699,13 @@ int cmd_lock(int argc, const char **argv)
+>                         if (argc)
+>                                 usage_with_options(info_usage, info_optio=
+ns);
+>                 }
+> +
+> +               /* If neither threads nor map requested, display both */
+> +               if (!info_threads && !info_map) {
+> +                       info_threads =3D true;
+> +                       info_map =3D true;
+> +               }
+> +
+>                 /* recycling report_lock_ops */
+>                 trace_handler =3D &report_lock_ops;
+>                 rc =3D __cmd_report(true);
+> --
+> 2.44.0
+>
+>
