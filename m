@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7AB152788;
-	Thu,  2 May 2024 13:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEF1219F6;
+	Thu,  2 May 2024 13:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714657279; cv=none; b=bSEJ2/Xs+MsErb9NvXbeJYbSg7TxDHCLBezB1x0xV8hpKK3McCRcSrmmSQKQ22c7Ht+Ovk9DvzMs9jXLiphF1f9Om1zFGADgUhcBfLm2on5KIyGseDpwEQDeHnhWgmQ8eUTBAGaNSFepFIrX5c0n5M+lg1g2cdESXBtUBxHOGEk=
+	t=1714657818; cv=none; b=DddzT/4aXbD9AGTCjFg0B3H3SypnHAZ6st13X8DSVSfHYsVx9J97rfo/lVztxq7fBDb63lD2nsi5NXbKFlSym32+KXi4OBn0RimoHvqbZ+HyOXju/QDwV+Ha5fai52Bkvy3beYoexSsNoB+aAkuVLPtSdmGENP8FIzC1Gv/Mpoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714657279; c=relaxed/simple;
-	bh=CB+xRmbja8EXL2V6uPyB90ifTgbYsPJUyRnMDAgzen0=;
+	s=arc-20240116; t=1714657818; c=relaxed/simple;
+	bh=CnVtUj//jjfGpdXeVZA+hatKTZhYD0wcuPbPNXJPn/Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OkBKiPbpu1x6DNxLaTX7DRjawkRJK+//8kPxvlefm/7KsfFxCaFBj3IivWEcYTtIMO1E6DXjpbSSfjbzu7wt4UU9wdUG2CsOdTFwLXuwETeT3mUdQlU9tW9WNtPfhlnIC8jXRalxLBu5iaWcQOdESMBiFtj8hjuy2LjJ4e1vYbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxMQhdE6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yp+mqCn4WOXWKcgy9CH3eplBMYb0GK5Ha+x+dAKhQ4jH+AOyh7y6vTtzY6IpGBSLC0pme2wg2ylItl9PV8KCxQ8cMNyo2qZOP8ZSkDrB7edndCIBAxBl+HoMYWk7vbl4Uc3sVA8+w9eewp1fh71DyJXG8avJ/BLxzHJnt0XsH8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcMM+n2H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxMQhdE6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A493C113CC;
-	Thu,  2 May 2024 13:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcMM+n2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791EFC113CC;
+	Thu,  2 May 2024 13:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714657279;
-	bh=CB+xRmbja8EXL2V6uPyB90ifTgbYsPJUyRnMDAgzen0=;
+	s=k20201202; t=1714657818;
+	bh=CnVtUj//jjfGpdXeVZA+hatKTZhYD0wcuPbPNXJPn/Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GxMQhdE6fxDDDeXHNEVhG/nWF27GTuWmheQfrezBZxUygIOCDKvERrK41LZCkyhfR
-	 YfiJo1VT00HqbBXg2EmUiyeg8TcFADnR6cFjV7Cx28PlcQQ0BxPBnLjq5EWrm26mMw
-	 B5M+o5BFiknDVT3s/oC/yUHHPyrEqtIA0+o9gAqP3R/NeqxWhUrshsbXIXXL6iWVKp
-	 uMHof4bugJQW8JAqdU0xVnyoP9LJhaYJSiLAIDuvFVFxPPo2xohv22WqaeAR1GHocg
-	 1uweJlqVtVXkW+5jlI5pqZlW+obLTj1sFKTx5L1QfWWi7IxC9dMBPrjrgGUShKEpmm
-	 VyPHgslI7gT/w==
-Date: Thu, 2 May 2024 10:41:14 -0300
+	b=AcMM+n2HtzRjjLn1JuoPxqNa4/bX+u/BXmbrECRET3J81DWgR/+mJlBRZAx5lp1jJ
+	 ta32APyATg1FnCqBV+Cd8S8AoCKeN9EtaMiYVMsrKCkYV5kd0a42XYeDJCbkqGpG2v
+	 dU9nTBUN1vGlONpfIxVId3PH6g0HJbMkI8PS913/Ol2c0MywNtYTz8/RAyxN6w+ypQ
+	 i0KtGXhdJqxjx0FM3NGQf+oGrHYedqfZr0xxgeL5Cgxf3iiuXLTrGoDUElZNlGl6pB
+	 y7j4oF3mJfpAou0PPmpkwAuFnMWZ4mCGzSQ9G07XxdLZYFEvdae0bZQbObXU0GyrND
+	 CKvWYtmdLhHKQ==
+Date: Thu, 2 May 2024 10:50:13 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-kernel@vger.kernel.org, "Chang S. Bae" <chang.seok.bae@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 02/10] x86/insn: Fix PUSH instruction in x86 instruction
- decoder opcode map
-Message-ID: <ZjOX-mE_CUOisltJ@x1>
-References: <20240502105853.5338-1-adrian.hunter@intel.com>
- <20240502105853.5338-3-adrian.hunter@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/6] perf annotate-data: Collect global variables in
+ advance
+Message-ID: <ZjOaFS7_vEojFnUZ@x1>
+References: <20240502060011.1838090-1-namhyung@kernel.org>
+ <20240502060011.1838090-3-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,101 +48,122 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240502105853.5338-3-adrian.hunter@intel.com>
+In-Reply-To: <20240502060011.1838090-3-namhyung@kernel.org>
 
-On Thu, May 02, 2024 at 01:58:45PM +0300, Adrian Hunter wrote:
-> The x86 instruction decoder is used not only for decoding kernel
-> instructions. It is also used by perf uprobes (user space probes) and by
-> perf tools Intel Processor Trace decoding. Consequently, it needs to
-> support instructions executed by user space also.
+On Wed, May 01, 2024 at 11:00:07PM -0700, Namhyung Kim wrote:
+> Currently it looks up global variables from the current CU using address
+> and name.  But it sometimes fails to find a variable as the variable can
+> come from a different CU - but it's still strange it failed to find a
+> declaration for some reason.
+> 
+> Anyway, it can collect all global variables from all CU once and then
+> lookup them later on.  This slightly improves the success rate of my
+> test data set.
 
-I wonder if we should do it this way, i.e. updating both tools/ and
-kernel source code in the same patch.
+It would be interesting you could provide examples from your test data
+set, i.e. after this patch these extra global variables were considered
+in the test results, with some tool output, etc.
 
-I think the best is to update the kernel bits, then, after that is
-merged, do the tooling part.
-
-To avoid possible, yet unlikely, clashes in linux-next, for instance.
+This would help intersested parties to reproduce your results,
+validate the end result, etc.
 
 - Arnaldo
  
-> Opcode 0x68 PUSH instruction is currently defined as 64-bit operand size
-> only i.e. (d64). That was based on Intel SDM Opcode Map. However that is
-> contradicted by the Instruction Set Reference section for PUSH in the
-> same manual.
-> 
-> Remove 64-bit operand size only annotation from opcode 0x68 PUSH
-> instruction.
-> 
-> Example:
-> 
->   $ cat pushw.s
->   .global  _start
->   .text
->   _start:
->           pushw   $0x1234
->           mov     $0x1,%eax   # system call number (sys_exit)
->           int     $0x80
->   $ as -o pushw.o pushw.s
->   $ ld -s -o pushw pushw.o
->   $ objdump -d pushw | tail -4
->   0000000000401000 <.text>:
->     401000:       66 68 34 12             pushw  $0x1234
->     401004:       b8 01 00 00 00          mov    $0x1,%eax
->     401009:       cd 80                   int    $0x80
->   $ perf record -e intel_pt//u ./pushw
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.014 MB perf.data ]
-> 
->  Before:
-> 
->   $ perf script --insn-trace=disasm
->   Warning:
->   1 instruction trace errors
->            pushw   10349 [000] 10586.869237014:            401000 [unknown] (/home/ahunter/git/misc/rtit-tests/pushw)           pushw $0x1234
->            pushw   10349 [000] 10586.869237014:            401006 [unknown] (/home/ahunter/git/misc/rtit-tests/pushw)           addb %al, (%rax)
->            pushw   10349 [000] 10586.869237014:            401008 [unknown] (/home/ahunter/git/misc/rtit-tests/pushw)           addb %cl, %ch
->            pushw   10349 [000] 10586.869237014:            40100a [unknown] (/home/ahunter/git/misc/rtit-tests/pushw)           addb $0x2e, (%rax)
->    instruction trace error type 1 time 10586.869237224 cpu 0 pid 10349 tid 10349 ip 0x40100d code 6: Trace doesn't match instruction
-> 
->  After:
-> 
->   $ perf script --insn-trace=disasm
->              pushw   10349 [000] 10586.869237014:            401000 [unknown] (./pushw)           pushw $0x1234
->              pushw   10349 [000] 10586.869237014:            401004 [unknown] (./pushw)           movl $1, %eax
-> 
-> Fixes: eb13296cfaf6 ("x86: Instruction decoder API")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  arch/x86/lib/x86-opcode-map.txt       | 2 +-
->  tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  tools/perf/util/annotate-data.c | 57 +++++++++++++++++++++++++++++++--
+>  1 file changed, 55 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-> index c94988d5130d..4ea2e6adb477 100644
-> --- a/arch/x86/lib/x86-opcode-map.txt
-> +++ b/arch/x86/lib/x86-opcode-map.txt
-> @@ -148,7 +148,7 @@ AVXcode:
->  65: SEG=GS (Prefix)
->  66: Operand-Size (Prefix)
->  67: Address-Size (Prefix)
-> -68: PUSH Iz (d64)
-> +68: PUSH Iz
->  69: IMUL Gv,Ev,Iz
->  6a: PUSH Ib (d64)
->  6b: IMUL Gv,Ev,Ib
-> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-> index c94988d5130d..4ea2e6adb477 100644
-> --- a/tools/arch/x86/lib/x86-opcode-map.txt
-> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
-> @@ -148,7 +148,7 @@ AVXcode:
->  65: SEG=GS (Prefix)
->  66: Operand-Size (Prefix)
->  67: Address-Size (Prefix)
-> -68: PUSH Iz (d64)
-> +68: PUSH Iz
->  69: IMUL Gv,Ev,Iz
->  6a: PUSH Ib (d64)
->  6b: IMUL Gv,Ev,Ib
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 12d5faff3b7a..4dd0911904f2 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -28,6 +28,8 @@
+>  /* register number of the stack pointer */
+>  #define X86_REG_SP 7
+>  
+> +static void delete_var_types(struct die_var_type *var_types);
+> +
+>  enum type_state_kind {
+>  	TSR_KIND_INVALID = 0,
+>  	TSR_KIND_TYPE,
+> @@ -557,8 +559,8 @@ static bool global_var__add(struct data_loc_info *dloc, u64 addr,
+>  	if (gvar == NULL)
+>  		return false;
+>  
+> -	gvar->name = strdup(name);
+> -	if (gvar->name == NULL) {
+> +	gvar->name = name ? strdup(name) : NULL;
+> +	if (name && gvar->name == NULL) {
+>  		free(gvar);
+>  		return false;
+>  	}
+> @@ -612,6 +614,53 @@ static bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
+>  	return true;
+>  }
+>  
+> +static void global_var__collect(struct data_loc_info *dloc)
+> +{
+> +	Dwarf *dwarf = dloc->di->dbg;
+> +	Dwarf_Off off, next_off;
+> +	Dwarf_Die cu_die, type_die;
+> +	size_t header_size;
+> +
+> +	/* Iterate all CU and collect global variables that have no location in a register. */
+> +	off = 0;
+> +	while (dwarf_nextcu(dwarf, off, &next_off, &header_size,
+> +			    NULL, NULL, NULL) == 0) {
+> +		struct die_var_type *var_types = NULL;
+> +		struct die_var_type *pos;
+> +
+> +		if (dwarf_offdie(dwarf, off + header_size, &cu_die) == NULL) {
+> +			off = next_off;
+> +			continue;
+> +		}
+> +
+> +		die_collect_global_vars(&cu_die, &var_types);
+> +
+> +		for (pos = var_types; pos; pos = pos->next) {
+> +			const char *var_name = NULL;
+> +			int var_offset = 0;
+> +
+> +			if (pos->reg != -1)
+> +				continue;
+> +
+> +			if (!dwarf_offdie(dwarf, pos->die_off, &type_die))
+> +				continue;
+> +
+> +			if (!get_global_var_info(dloc, pos->addr, &var_name,
+> +						 &var_offset))
+> +				continue;
+> +
+> +			if (var_offset != 0)
+> +				continue;
+> +
+> +			global_var__add(dloc, pos->addr, var_name, &type_die);
+> +		}
+> +
+> +		delete_var_types(var_types);
+> +
+> +		off = next_off;
+> +	}
+> +}
+> +
+>  static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+>  				u64 ip, u64 var_addr, int *var_offset,
+>  				Dwarf_Die *type_die)
+> @@ -620,8 +669,12 @@ static bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+>  	int offset;
+>  	const char *var_name = NULL;
+>  	struct global_var_entry *gvar;
+> +	struct dso *dso = map__dso(dloc->ms->map);
+>  	Dwarf_Die var_die;
+>  
+> +	if (RB_EMPTY_ROOT(&dso->global_vars))
+> +		global_var__collect(dloc);
+> +
+>  	gvar = global_var__find(dloc, var_addr);
+>  	if (gvar) {
+>  		if (!dwarf_offdie(dloc->di->dbg, gvar->die_offset, type_die))
 > -- 
-> 2.34.1
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
