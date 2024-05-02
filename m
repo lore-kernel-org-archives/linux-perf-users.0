@@ -1,328 +1,502 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBFE16FF44;
-	Thu,  2 May 2024 17:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85B17107A
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 18:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714672662; cv=none; b=EPMbT6Iq48duban5m0jOFgGyMzCoWQZ8MQZMVnpXix8MIC56xx4epq+DQmMb6KBBf5kGqUDW5eob4oLgWQwreylNNZIHdcWY4Xx4QNnL81gSM/MqCU/nZeOsicBWInT4ni5nDle2Wh4NMUdzp6XnJhfW9qetLYlwTe1j0ZGOFq8=
+	t=1714673440; cv=none; b=mCF4QWbHEBOWcI3Laf7OsbSpvrqx8sZsO/oeBdiakVCagWlCGv1aiNNPFLdalTjYBtqaoyVFEKnkk0yJKyXqo3FGPNB68NCkKRRE9vQKMcSFh+b+fS8v8mNOqPjwGI/fUrUfOEs5E61/iq1JC3Dl4bsixzYxgO8faJtxQ2mJ04M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714672662; c=relaxed/simple;
-	bh=SprQzZ+S9ZE0ocMgFX+Om3A97tqY8iIu2YvgwbQYV+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fMkSPG1Z36PihjPxITNXaH5xZDEnVjI6630dm+Xkl50YjWhA+VZYUKTIqsO/RSKKl1CJmUDZHMbc6QFcbNnvLeHPh/uIpHQOYTDs511ogwIpJBy4dONywzgoD+QVuX2q5gCSMCdbvdZzmiG+FFqEyDx5Uqdd+bD7F+uOoYah1eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/kZG/R/; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714673440; c=relaxed/simple;
+	bh=AcnmsWUVf9xLPrnw47a0KF7R6rwSZZwi3yfcAeEYBoM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KG41NuYQafRcbDRKHnomU1M3KMSarT7TaUzcgrHICGzqS7i4J4ezervadyq5CkCan8KbU8BXRFEzLHhxpHCfWvgME2aoRVn93H7oQmxoEe5urkkRFGpCns/LxahI38zVCTSZuIKZo6+R7rdPtGW0vlGLsYAEndEbedJKgYwVXlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b+1iyiT8; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/kZG/R/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714672661; x=1746208661;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=SprQzZ+S9ZE0ocMgFX+Om3A97tqY8iIu2YvgwbQYV+U=;
-  b=i/kZG/R/M+fhBFq5OSDOXTcY1w0o6Iv/Op5wu3Kcae6i4xkuqaMR3XBQ
-   3XH0tHjlpw6Tegf5OIzJP44bQb//xAcRIezrr/upqsX46p7VQOL4URHyW
-   oNlc+pUWb7fddDa+H03oQOQMDX27Wc8QrTsh+uef3sW5KJss0Iya5RSC+
-   ehWKYOEKuiHcNRTwDCOFhSCtZckuaX71IsX7dmaykMj8M+0W4MUb77yN6
-   k8NFDvG8f0KoRV5a2ZDCNnhsMnJR8SpCP0HD4lHLsKO6lo36q3rgNQXUX
-   PIOYrtZalykYbvbv+pGii6oZFWae/GMNDFR+jp4m59N0SgcqJsRkcehKD
-   w==;
-X-CSE-ConnectionGUID: NECZizo9TAif3hE1PRbVCg==
-X-CSE-MsgGUID: XxenbgaoS6ucLTfNqkgTVQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="21011706"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="21011706"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:57:40 -0700
-X-CSE-ConnectionGUID: q2hgHsGtSOSZ1Vz8eTTrMQ==
-X-CSE-MsgGUID: msCKMrMXSWahigYm4SqnhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="31869275"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:57:40 -0700
-Received: from [10.213.161.211] (kliang2-mobl1.ccr.corp.intel.com [10.213.161.211])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D841220B5739;
-	Thu,  2 May 2024 10:57:37 -0700 (PDT)
-Message-ID: <487907c6-3c77-410a-aabd-201273110e1a@linux.intel.com>
-Date: Thu, 2 May 2024 13:57:36 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b+1iyiT8"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-439b1c72676so64081cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 11:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714673437; x=1715278237; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Op4gNRXry59h7+j/49DFpIw3hUOH2bKFP8OCK+0oJVg=;
+        b=b+1iyiT8D2C1byUzQVaPpbUtGFt873eNI1SpIHglxfbXcSY/FRXTJJ6aKZKQ932WOO
+         A03jK6zM787itHBjZ1QZQRGc1K7+OIP8qKpbf/Jrzuyst4a3y5fWLQhSUhxqV8zeNff7
+         TA+L9BjVt2mLxGsmbL6K9wDQ/1kzf9BVVihHizEULoLqgRyDg3kyVDPJcHgc5MhOlsfl
+         raLASO9BwtHXCm5OfrqRlIHPYVsgg8teW4h0cn2H+alLoFb3F884djglGBfRqaSlV9lU
+         2Ffd4z1WvWiCHo9u5rVgqWZNZF3B5c2dtZ8iFZ5QLwk/AjE2QLa3MxIyeCE6pZCsAWcz
+         Am/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714673437; x=1715278237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Op4gNRXry59h7+j/49DFpIw3hUOH2bKFP8OCK+0oJVg=;
+        b=hc9vt5S9BFCn0BNWfVPaX1zEXldKVmSP7/QC/AYqL6biIZJmfcu5yRcw9aauwmZQXF
+         7gEiBVATcmS9Q/5Bjp6jl4mhMS1mhEPnuI+5eE6Gv8AaXPrUgRT3jEgR2Ez3ghtFXwIP
+         x34uhGlBM0gaSqyogBgpv9mas8K+hrbWMcyuKiBJuHpSYou3hc7YdPJtT3zRWJa09Xjt
+         seOBQCky+7Wi1h4YU+xVuI+gNNLCY5KplfXbL4VXGJ4+Ry1T4KHQCCB2jKJefW+aWrPc
+         eqHHwF8oEaUe1MyQPFPrFmnMTerZWE4i9UEf4nIMyfGVnNtJhO2KBB0RhVN38R2LnUL/
+         xs3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXqn88NjHFeW5oOGD4ycKhegdRRggP2nPcwKVUSBq3hyYMwUFabgJRJRq6dT+2fy0/AD3eVJNWwfv8Noi8y6x3/YH+HWWkICi62BdqSfpllag==
+X-Gm-Message-State: AOJu0YzUmr2nixMUsuTr1wV1qwnxbS8jkIGHzmcl8mBQl67sfWizWY6e
+	MuXyo7oy6yeczvo/HT8geGiOIDFenYngAN2+7g6b+gDr4KpuRhjGUcGgYDbTEXYiCxxvm8ATZUV
+	eKGQbDsKdL4gGeL/57mi6/W71dAq5u5gh3Kk+
+X-Google-Smtp-Source: AGHT+IEOmEYefU1KrK/38Dg4v//I6kIhkNaNjJ5s7D/q1f0E3fn55QC6u3qit4RAHuumrO5p+JDaANRIeHLszPs4ZYI=
+X-Received: by 2002:ac8:594b:0:b0:43a:bcee:eaa2 with SMTP id
+ d75a77b69052e-43cd71b0f37mr178961cf.20.1714673437396; Thu, 02 May 2024
+ 11:10:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] perf test pmu: Add an eagerly loaded event test
-To: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240502040112.2111157-1-irogers@google.com>
- <20240502040112.2111157-5-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240502040112.2111157-5-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240502105853.5338-1-adrian.hunter@intel.com> <20240502105853.5338-6-adrian.hunter@intel.com>
+In-Reply-To: <20240502105853.5338-6-adrian.hunter@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 2 May 2024 11:10:25 -0700
+Message-ID: <CAP-5=fX4UxekyxkaX8EH8UcAXe-JAdXRTCguWmTJ8mARg64h-Q@mail.gmail.com>
+Subject: Re: [PATCH 05/10] x86/insn: Add support for REX2 prefix to the
+ instruction decoder logic
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-kernel@vger.kernel.org, "Chang S. Bae" <chang.seok.bae@intel.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nikolay Borisov <nik.borisov@suse.com>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2024-05-02 12:01 a.m., Ian Rogers wrote:
-> Allow events/aliases to be eagerly loaded for a PMU. Factor out the
-> pmu_aliases_parse to allow this. Parse a test event and check it
-> configures the attribute as expected. There is overlap with the
-> parse-events tests, but this test is done with a PMU created in a temp
-> directory and doesn't rely on PMUs in sysfs.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Thu, May 2, 2024 at 3:59=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
+om> wrote:
+>
+> Intel Advanced Performance Extensions (APX) uses a new 2-byte prefix name=
+d
+> REX2 to select extended general purpose registers (EGPRs) i.e. r16 to r31=
+.
+>
+> The REX2 prefix is effectively an extended version of the REX prefix.
+>
+> REX2 and EVEX are also used with PUSH/POP instructions to provide a
+> Push-Pop Acceleration (PPX) hint. With PPX hints, a CPU will attempt to
+> fast-forward register data between matching PUSH and POP instructions.
+>
+> REX2 is valid only with opcodes in maps 0 and 1. Similar extension for
+> other maps is provided by the EVEX prefix, covered in a separate patch.
+>
+> Some opcodes in maps 0 and 1 are reserved under REX2. One of these is use=
+d
+> for a new 64-bit absolute direct jump instruction JMPABS.
+>
+> Refer to the Intel Advanced Performance Extensions (Intel APX) Architectu=
+re
+> Specification for details.
+>
+> Define a code value for the REX2 prefix (INAT_PFX_REX2), and add attribut=
+e
+> flags for opcodes reserved under REX2 (INAT_NO_REX2) and to identify
+> opcodes (only JMPABS) that require a mandatory REX2 prefix
+> (INAT_REX2_VARIANT).
+>
+> Amend logic to read the REX2 prefix and get the opcode attribute for the
+> map number (0 or 1) encoded in the REX2 prefix.
+>
+> Amend the awk script that generates the attribute tables from the opcode
+> map, to recognise "REX2" as attribute INAT_PFX_REX2, and "(!REX2)"
+> as attribute INAT_NO_REX2, and "(REX2)" as attribute INAT_REX2_VARIANT.
+>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  tools/perf/tests/pmu.c | 77 ++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/pmu.c  | 69 +++++++++++++++++++++++++------------
->  2 files changed, 125 insertions(+), 21 deletions(-)
-> 
-> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> index 424ebdb0f09d..6e18a4c447ce 100644
-> --- a/tools/perf/tests/pmu.c
-> +++ b/tools/perf/tests/pmu.c
-> @@ -1,4 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include "evlist.h"
-> +#include "evsel.h"
->  #include "parse-events.h"
->  #include "pmu.h"
->  #include "tests.h"
-> @@ -54,6 +56,9 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
->  		{ "krava22", "config2:8,18,48,58\n", },
->  		{ "krava23", "config2:28-29,38\n", },
->  	};
-> +	const char *test_event = "krava01=15,krava02=170,krava03=1,krava11=27,krava12=1,"
-> +		"krava13=2,krava21=119,krava22=11,krava23=2\n";
-> +
->  	char name[PATH_MAX];
->  	int dirfd, file;
->  	struct perf_pmu *pmu = NULL;
-> @@ -116,6 +121,24 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
->  		close(file);
->  	}
->  
-> +	/* Create test event. */
-> +	if (mkdirat(dirfd, "perf-pmu-test/events", 0755) < 0) {
-> +		pr_err("Failed to mkdir PMU events directory\n");
-> +		goto err_out;
-> +	}
-> +	file = openat(dirfd, "perf-pmu-test/events/test-event", O_WRONLY | O_CREAT, 0600);
-> +	if (!file) {
-> +		pr_err("Failed to open for writing file \"type\"\n");
-> +		goto err_out;
-> +	}
-> +	len = strlen(test_event);
-> +	if (write(file, test_event, len) < len) {
-> +		close(file);
-> +		pr_err("Failed to write to 'test-event' file\n");
-> +		goto err_out;
-> +	}
-> +	close(file);
-> +
->  	/* Make the PMU reading the files created above. */
->  	pmu = perf_pmus__add_test_pmu(dirfd, "perf-pmu-test");
->  	if (!pmu)
-> @@ -176,8 +199,62 @@ static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest
->  	return ret;
+>  arch/x86/include/asm/inat.h                | 11 +++++++++-
+>  arch/x86/include/asm/insn.h                | 25 ++++++++++++++++++----
+>  arch/x86/lib/insn.c                        | 25 ++++++++++++++++++++++
+>  arch/x86/tools/gen-insn-attr-x86.awk       | 11 +++++++++-
+>  tools/arch/x86/include/asm/inat.h          | 11 +++++++++-
+>  tools/arch/x86/include/asm/insn.h          | 25 ++++++++++++++++++----
+>  tools/arch/x86/lib/insn.c                  | 25 ++++++++++++++++++++++
+>  tools/arch/x86/tools/gen-insn-attr-x86.awk | 11 +++++++++-
+>  8 files changed, 132 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/inat.h b/arch/x86/include/asm/inat.h
+> index b56c5741581a..1331bdd39a23 100644
+> --- a/arch/x86/include/asm/inat.h
+> +++ b/arch/x86/include/asm/inat.h
+> @@ -35,6 +35,8 @@
+>  #define INAT_PFX_VEX2  13      /* 2-bytes VEX prefix */
+>  #define INAT_PFX_VEX3  14      /* 3-bytes VEX prefix */
+>  #define INAT_PFX_EVEX  15      /* EVEX prefix */
+> +/* x86-64 REX2 prefix */
+> +#define INAT_PFX_REX2  16      /* 0xD5 */
+>
+>  #define INAT_LSTPFX_MAX        3
+>  #define INAT_LGCPFX_MAX        11
+> @@ -50,7 +52,7 @@
+>
+>  /* Legacy prefix */
+>  #define INAT_PFX_OFFS  0
+> -#define INAT_PFX_BITS  4
+> +#define INAT_PFX_BITS  5
+>  #define INAT_PFX_MAX    ((1 << INAT_PFX_BITS) - 1)
+>  #define INAT_PFX_MASK  (INAT_PFX_MAX << INAT_PFX_OFFS)
+>  /* Escape opcodes */
+> @@ -77,6 +79,8 @@
+>  #define INAT_VEXOK     (1 << (INAT_FLAG_OFFS + 5))
+>  #define INAT_VEXONLY   (1 << (INAT_FLAG_OFFS + 6))
+>  #define INAT_EVEXONLY  (1 << (INAT_FLAG_OFFS + 7))
+> +#define INAT_NO_REX2   (1 << (INAT_FLAG_OFFS + 8))
+> +#define INAT_REX2_VARIANT      (1 << (INAT_FLAG_OFFS + 9))
+>  /* Attribute making macros for attribute tables */
+>  #define INAT_MAKE_PREFIX(pfx)  (pfx << INAT_PFX_OFFS)
+>  #define INAT_MAKE_ESCAPE(esc)  (esc << INAT_ESC_OFFS)
+> @@ -128,6 +132,11 @@ static inline int inat_is_rex_prefix(insn_attr_t att=
+r)
+>         return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX;
 >  }
->  
-> +static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+>
+> +static inline int inat_is_rex2_prefix(insn_attr_t attr)
 > +{
-> +	char dir[PATH_MAX];
-> +	struct parse_events_error err;
-> +	struct evlist *evlist;
-> +	struct evsel *evsel;
-> +	struct perf_event_attr *attr;
-> +	int ret;
-> +	struct perf_pmu *pmu = test_pmu_get(dir, sizeof(dir));
-> +	const char *event = "perf-pmu-test/test-event/";
+> +       return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX2;
+> +}
 > +
+>  static inline int inat_last_prefix_id(insn_attr_t attr)
+>  {
+>         if ((attr & INAT_PFX_MASK) > INAT_LSTPFX_MAX)
+> diff --git a/arch/x86/include/asm/insn.h b/arch/x86/include/asm/insn.h
+> index 1b29f58f730f..95249ec1f24e 100644
+> --- a/arch/x86/include/asm/insn.h
+> +++ b/arch/x86/include/asm/insn.h
+> @@ -112,10 +112,15 @@ struct insn {
+>  #define X86_SIB_INDEX(sib) (((sib) & 0x38) >> 3)
+>  #define X86_SIB_BASE(sib) ((sib) & 0x07)
+>
+> -#define X86_REX_W(rex) ((rex) & 8)
+> -#define X86_REX_R(rex) ((rex) & 4)
+> -#define X86_REX_X(rex) ((rex) & 2)
+> -#define X86_REX_B(rex) ((rex) & 1)
+> +#define X86_REX2_M(rex) ((rex) & 0x80) /* REX2 M0 */
+> +#define X86_REX2_R(rex) ((rex) & 0x40) /* REX2 R4 */
+> +#define X86_REX2_X(rex) ((rex) & 0x20) /* REX2 X4 */
+> +#define X86_REX2_B(rex) ((rex) & 0x10) /* REX2 B4 */
 > +
-> +	if (!pmu)
-> +		return TEST_FAIL;
-> +
-> +	evlist = evlist__new();
-> +	if (evlist == NULL) {
-> +		pr_err("Failed allocation");
-> +		goto err_out;
-> +	}
-> +	parse_events_error__init(&err);
-> +	ret = parse_events(evlist, event, &err);
-> +	if (ret) {
-> +		pr_debug("failed to parse event '%s', err %d\n", event, ret);
-> +		parse_events_error__print(&err, event);
-> +		ret = TEST_FAIL;
-> +		if (parse_events_error__contains(&err, "can't access trace events"))
-> +			ret = TEST_SKIP;
-> +		goto err_out;
-> +	}
-> +	evsel = evlist__first(evlist);
-> +	attr = &evsel->core.attr;
-> +	if (attr->config  != 0xc00000000002a823) {
-> +		pr_err("Unexpected config value %llx\n", attr->config);
-> +		goto err_out;
-> +	}
-> +	if (attr->config1 != 0x8000400000000145) {
-> +		pr_err("Unexpected config1 value %llx\n", attr->config1);
-> +		goto err_out;
-> +	}
-> +	if (attr->config2 != 0x0400000020041d07) {
-> +		pr_err("Unexpected config2 value %llx\n", attr->config2);
-> +		goto err_out;
-> +	}
-> +
-> +	ret = TEST_OK;
-> +err_out:
-> +	parse_events_error__exit(&err);
-> +	evlist__delete(evlist);
-> +	test_pmu_put(dir, pmu);
-> +	return ret;
+> +#define X86_REX_W(rex) ((rex) & 8)     /* REX or REX2 W */
+> +#define X86_REX_R(rex) ((rex) & 4)     /* REX or REX2 R3 */
+> +#define X86_REX_X(rex) ((rex) & 2)     /* REX or REX2 X3 */
+> +#define X86_REX_B(rex) ((rex) & 1)     /* REX or REX2 B3 */
+>
+>  /* VEX bit flags  */
+>  #define X86_VEX_W(vex) ((vex) & 0x80)  /* VEX3 Byte2 */
+> @@ -161,6 +166,18 @@ static inline void insn_get_attribute(struct insn *i=
+nsn)
+>  /* Instruction uses RIP-relative addressing */
+>  extern int insn_rip_relative(struct insn *insn);
+>
+> +static inline int insn_is_rex2(struct insn *insn)
+> +{
+> +       if (!insn->prefixes.got)
+> +               insn_get_prefixes(insn);
+> +       return insn->rex_prefix.nbytes =3D=3D 2;
 
-Got a warning when I compile the patch.
-
-tests/pmu.c: In function ‘test__pmu_events’:
-tests/pmu.c:257:16: error: ‘ret’ may be used uninitialized in this
-function [-Werror=maybe-uninitialized]
-  257 |         return ret;
-      |                ^~~
+It'd be nice to capture that a rex2 prefix is by definition 2 bytes.
+Playing devil's advocate, if there were a REX and a REX2 prefix,
+couldn't rex_prefix.nbytes be 3? I'm wondering about other prefix
+combinations that may confuse this logic, maybe someone dreams up
+doing this for say alignment reasons like "rep ret".
 
 Thanks,
-Kan
+Ian
 
 > +}
 > +
->  static struct test_case tests__pmu[] = {
->  	TEST_CASE("Parsing with PMU format directory", pmu_format),
-> +	TEST_CASE("Parsing with PMU event", pmu_events),
->  	{	.name = NULL, }
->  };
->  
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index fbbc535ed93f..7849be4bfea1 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -597,33 +597,18 @@ static inline bool pmu_alias_info_file(const char *name)
->   * Reading the pmu event aliases definition, which should be located at:
->   * /sys/bus/event_source/devices/<dev>/events as sysfs group attributes.
->   */
-> -static int pmu_aliases_parse(struct perf_pmu *pmu)
-> +static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
+> +static inline insn_byte_t insn_rex2_m_bit(struct insn *insn)
+> +{
+> +       return X86_REX2_M(insn->rex_prefix.bytes[1]);
+> +}
+> +
+>  static inline int insn_is_avx(struct insn *insn)
 >  {
-> -	char path[PATH_MAX];
->  	struct dirent *evt_ent;
->  	DIR *event_dir;
-> -	size_t len;
-> -	int fd, dir_fd;
->  
-> -	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-> -	if (!len)
-> -		return 0;
-> -	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
-> -
-> -	dir_fd = open(path, O_DIRECTORY);
-> -	if (dir_fd == -1) {
-> -		pmu->sysfs_aliases_loaded = true;
-> -		return 0;
-> -	}
-> -
-> -	event_dir = fdopendir(dir_fd);
-> -	if (!event_dir){
-> -		close (dir_fd);
-> +	event_dir = fdopendir(events_dir_fd);
-> +	if (!event_dir)
->  		return -EINVAL;
-> -	}
->  
->  	while ((evt_ent = readdir(event_dir))) {
->  		char *name = evt_ent->d_name;
-> +		int fd;
->  		FILE *file;
->  
->  		if (!strcmp(name, ".") || !strcmp(name, ".."))
-> @@ -635,7 +620,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
->  		if (pmu_alias_info_file(name))
->  			continue;
->  
-> -		fd = openat(dir_fd, name, O_RDONLY);
-> +		fd = openat(events_dir_fd, name, O_RDONLY);
->  		if (fd == -1) {
->  			pr_debug("Cannot open %s\n", name);
->  			continue;
-> @@ -653,11 +638,50 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
->  	}
->  
->  	closedir(event_dir);
-> -	close (dir_fd);
->  	pmu->sysfs_aliases_loaded = true;
->  	return 0;
+>         if (!insn->prefixes.got)
+> diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
+> index 1bb155a0955b..6126ddc6e5f5 100644
+> --- a/arch/x86/lib/insn.c
+> +++ b/arch/x86/lib/insn.c
+> @@ -185,6 +185,17 @@ int insn_get_prefixes(struct insn *insn)
+>                         if (X86_REX_W(b))
+>                                 /* REX.W overrides opnd_size */
+>                                 insn->opnd_bytes =3D 8;
+> +               } else if (inat_is_rex2_prefix(attr)) {
+> +                       insn_set_byte(&insn->rex_prefix, 0, b);
+> +                       b =3D peek_nbyte_next(insn_byte_t, insn, 1);
+> +                       insn_set_byte(&insn->rex_prefix, 1, b);
+> +                       insn->rex_prefix.nbytes =3D 2;
+> +                       insn->next_byte +=3D 2;
+> +                       if (X86_REX_W(b))
+> +                               /* REX.W overrides opnd_size */
+> +                               insn->opnd_bytes =3D 8;
+> +                       insn->rex_prefix.got =3D 1;
+> +                       goto vex_end;
+>                 }
+>         }
+>         insn->rex_prefix.got =3D 1;
+> @@ -294,6 +305,20 @@ int insn_get_opcode(struct insn *insn)
+>                 goto end;
+>         }
+>
+> +       /* Check if there is REX2 prefix or not */
+> +       if (insn_is_rex2(insn)) {
+> +               if (insn_rex2_m_bit(insn)) {
+> +                       /* map 1 is escape 0x0f */
+> +                       insn_attr_t esc_attr =3D inat_get_opcode_attribut=
+e(0x0f);
+> +
+> +                       pfx_id =3D insn_last_prefix_id(insn);
+> +                       insn->attr =3D inat_get_escape_attribute(op, pfx_=
+id, esc_attr);
+> +               } else {
+> +                       insn->attr =3D inat_get_opcode_attribute(op);
+> +               }
+> +               goto end;
+> +       }
+> +
+>         insn->attr =3D inat_get_opcode_attribute(op);
+>         while (inat_is_escape(insn->attr)) {
+>                 /* Get escaped opcode */
+> diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-in=
+sn-attr-x86.awk
+> index af38469afd14..3f43aa7d8fef 100644
+> --- a/arch/x86/tools/gen-insn-attr-x86.awk
+> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
+> @@ -64,7 +64,9 @@ BEGIN {
+>
+>         modrm_expr =3D "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
+>         force64_expr =3D "\\([df]64\\)"
+> -       rex_expr =3D "^REX(\\.[XRWB]+)*"
+> +       rex_expr =3D "^((REX(\\.[XRWB]+)+)|(REX$))"
+> +       rex2_expr =3D "\\(REX2\\)"
+> +       no_rex2_expr =3D "\\(!REX2\\)"
+>         fpu_expr =3D "^ESC" # TODO
+>
+>         lprefix1_expr =3D "\\((66|!F3)\\)"
+> @@ -99,6 +101,7 @@ BEGIN {
+>         prefix_num["VEX+1byte"] =3D "INAT_PFX_VEX2"
+>         prefix_num["VEX+2byte"] =3D "INAT_PFX_VEX3"
+>         prefix_num["EVEX"] =3D "INAT_PFX_EVEX"
+> +       prefix_num["REX2"] =3D "INAT_PFX_REX2"
+>
+>         clear_vars()
 >  }
->  
-> +static int pmu_aliases_parse(struct perf_pmu *pmu)
+> @@ -314,6 +317,10 @@ function convert_operands(count,opnd,       i,j,imm,=
+mod)
+>                 if (match(ext, force64_expr))
+>                         flags =3D add_flags(flags, "INAT_FORCE64")
+>
+> +               # check REX2 not allowed
+> +               if (match(ext, no_rex2_expr))
+> +                       flags =3D add_flags(flags, "INAT_NO_REX2")
+> +
+>                 # check REX prefix
+>                 if (match(opcode, rex_expr))
+>                         flags =3D add_flags(flags, "INAT_MAKE_PREFIX(INAT=
+_PFX_REX)")
+> @@ -351,6 +358,8 @@ function convert_operands(count,opnd,       i,j,imm,m=
+od)
+>                         lptable3[idx] =3D add_flags(lptable3[idx],flags)
+>                         variant =3D "INAT_VARIANT"
+>                 }
+> +               if (match(ext, rex2_expr))
+> +                       table[idx] =3D add_flags(table[idx], "INAT_REX2_V=
+ARIANT")
+>                 if (!match(ext, lprefix_expr)){
+>                         table[idx] =3D add_flags(table[idx],flags)
+>                 }
+> diff --git a/tools/arch/x86/include/asm/inat.h b/tools/arch/x86/include/a=
+sm/inat.h
+> index a61051400311..2e65312cae52 100644
+> --- a/tools/arch/x86/include/asm/inat.h
+> +++ b/tools/arch/x86/include/asm/inat.h
+> @@ -35,6 +35,8 @@
+>  #define INAT_PFX_VEX2  13      /* 2-bytes VEX prefix */
+>  #define INAT_PFX_VEX3  14      /* 3-bytes VEX prefix */
+>  #define INAT_PFX_EVEX  15      /* EVEX prefix */
+> +/* x86-64 REX2 prefix */
+> +#define INAT_PFX_REX2  16      /* 0xD5 */
+>
+>  #define INAT_LSTPFX_MAX        3
+>  #define INAT_LGCPFX_MAX        11
+> @@ -50,7 +52,7 @@
+>
+>  /* Legacy prefix */
+>  #define INAT_PFX_OFFS  0
+> -#define INAT_PFX_BITS  4
+> +#define INAT_PFX_BITS  5
+>  #define INAT_PFX_MAX    ((1 << INAT_PFX_BITS) - 1)
+>  #define INAT_PFX_MASK  (INAT_PFX_MAX << INAT_PFX_OFFS)
+>  /* Escape opcodes */
+> @@ -77,6 +79,8 @@
+>  #define INAT_VEXOK     (1 << (INAT_FLAG_OFFS + 5))
+>  #define INAT_VEXONLY   (1 << (INAT_FLAG_OFFS + 6))
+>  #define INAT_EVEXONLY  (1 << (INAT_FLAG_OFFS + 7))
+> +#define INAT_NO_REX2   (1 << (INAT_FLAG_OFFS + 8))
+> +#define INAT_REX2_VARIANT      (1 << (INAT_FLAG_OFFS + 9))
+>  /* Attribute making macros for attribute tables */
+>  #define INAT_MAKE_PREFIX(pfx)  (pfx << INAT_PFX_OFFS)
+>  #define INAT_MAKE_ESCAPE(esc)  (esc << INAT_ESC_OFFS)
+> @@ -128,6 +132,11 @@ static inline int inat_is_rex_prefix(insn_attr_t att=
+r)
+>         return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX;
+>  }
+>
+> +static inline int inat_is_rex2_prefix(insn_attr_t attr)
 > +{
-> +	char path[PATH_MAX];
-> +	size_t len;
-> +	int events_dir_fd, ret;
-> +
-> +	if (pmu->sysfs_aliases_loaded)
-> +		return 0;
-> +
-> +	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-> +	if (!len)
-> +		return 0;
-> +	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
-> +
-> +	events_dir_fd = open(path, O_DIRECTORY);
-> +	if (events_dir_fd == -1) {
-> +		pmu->sysfs_aliases_loaded = true;
-> +		return 0;
-> +	}
-> +	ret = __pmu_aliases_parse(pmu, events_dir_fd);
-> +	close(events_dir_fd);
-> +	return ret;
+> +       return (attr & INAT_PFX_MASK) =3D=3D INAT_PFX_REX2;
 > +}
 > +
-> +static int pmu_aliases_parse_eager(struct perf_pmu *pmu, int sysfs_fd)
-> +{
-> +	char path[FILENAME_MAX + 7];
-> +	int ret, events_dir_fd;
-> +
-> +	scnprintf(path, sizeof(path), "%s/events", pmu->name);
-> +	events_dir_fd = openat(sysfs_fd, path, O_DIRECTORY, 0);
-> +	if (events_dir_fd == -1) {
-> +		pmu->sysfs_aliases_loaded = true;
-> +		return 0;
-> +	}
-> +	ret = __pmu_aliases_parse(pmu, events_dir_fd);
-> +	close(events_dir_fd);
-> +	return ret;
-> +}
-> +
->  static int pmu_alias_terms(struct perf_pmu_alias *alias, int err_loc, struct list_head *terms)
+>  static inline int inat_last_prefix_id(insn_attr_t attr)
 >  {
->  	struct parse_events_term *term, *cloned;
-> @@ -1042,6 +1066,9 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
->  
->  	perf_pmu__arch_init(pmu);
->  
-> +	if (eager_load)
-> +		pmu_aliases_parse_eager(pmu, dirfd);
+>         if ((attr & INAT_PFX_MASK) > INAT_LSTPFX_MAX)
+> diff --git a/tools/arch/x86/include/asm/insn.h b/tools/arch/x86/include/a=
+sm/insn.h
+> index 65c0d9ce1e29..1a7e8fc4d75a 100644
+> --- a/tools/arch/x86/include/asm/insn.h
+> +++ b/tools/arch/x86/include/asm/insn.h
+> @@ -112,10 +112,15 @@ struct insn {
+>  #define X86_SIB_INDEX(sib) (((sib) & 0x38) >> 3)
+>  #define X86_SIB_BASE(sib) ((sib) & 0x07)
+>
+> -#define X86_REX_W(rex) ((rex) & 8)
+> -#define X86_REX_R(rex) ((rex) & 4)
+> -#define X86_REX_X(rex) ((rex) & 2)
+> -#define X86_REX_B(rex) ((rex) & 1)
+> +#define X86_REX2_M(rex) ((rex) & 0x80) /* REX2 M0 */
+> +#define X86_REX2_R(rex) ((rex) & 0x40) /* REX2 R4 */
+> +#define X86_REX2_X(rex) ((rex) & 0x20) /* REX2 X4 */
+> +#define X86_REX2_B(rex) ((rex) & 0x10) /* REX2 B4 */
 > +
->  	return pmu;
->  err:
->  	zfree(&pmu->name);
+> +#define X86_REX_W(rex) ((rex) & 8)     /* REX or REX2 W */
+> +#define X86_REX_R(rex) ((rex) & 4)     /* REX or REX2 R3 */
+> +#define X86_REX_X(rex) ((rex) & 2)     /* REX or REX2 X3 */
+> +#define X86_REX_B(rex) ((rex) & 1)     /* REX or REX2 B3 */
+>
+>  /* VEX bit flags  */
+>  #define X86_VEX_W(vex) ((vex) & 0x80)  /* VEX3 Byte2 */
+> @@ -161,6 +166,18 @@ static inline void insn_get_attribute(struct insn *i=
+nsn)
+>  /* Instruction uses RIP-relative addressing */
+>  extern int insn_rip_relative(struct insn *insn);
+>
+> +static inline int insn_is_rex2(struct insn *insn)
+> +{
+> +       if (!insn->prefixes.got)
+> +               insn_get_prefixes(insn);
+> +       return insn->rex_prefix.nbytes =3D=3D 2;
+> +}
+> +
+> +static inline insn_byte_t insn_rex2_m_bit(struct insn *insn)
+> +{
+> +       return X86_REX2_M(insn->rex_prefix.bytes[1]);
+> +}
+> +
+>  static inline int insn_is_avx(struct insn *insn)
+>  {
+>         if (!insn->prefixes.got)
+> diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+> index ada4b4a79dd4..f761adeb8e8c 100644
+> --- a/tools/arch/x86/lib/insn.c
+> +++ b/tools/arch/x86/lib/insn.c
+> @@ -185,6 +185,17 @@ int insn_get_prefixes(struct insn *insn)
+>                         if (X86_REX_W(b))
+>                                 /* REX.W overrides opnd_size */
+>                                 insn->opnd_bytes =3D 8;
+> +               } else if (inat_is_rex2_prefix(attr)) {
+> +                       insn_set_byte(&insn->rex_prefix, 0, b);
+> +                       b =3D peek_nbyte_next(insn_byte_t, insn, 1);
+> +                       insn_set_byte(&insn->rex_prefix, 1, b);
+> +                       insn->rex_prefix.nbytes =3D 2;
+> +                       insn->next_byte +=3D 2;
+> +                       if (X86_REX_W(b))
+> +                               /* REX.W overrides opnd_size */
+> +                               insn->opnd_bytes =3D 8;
+> +                       insn->rex_prefix.got =3D 1;
+> +                       goto vex_end;
+>                 }
+>         }
+>         insn->rex_prefix.got =3D 1;
+> @@ -294,6 +305,20 @@ int insn_get_opcode(struct insn *insn)
+>                 goto end;
+>         }
+>
+> +       /* Check if there is REX2 prefix or not */
+> +       if (insn_is_rex2(insn)) {
+> +               if (insn_rex2_m_bit(insn)) {
+> +                       /* map 1 is escape 0x0f */
+> +                       insn_attr_t esc_attr =3D inat_get_opcode_attribut=
+e(0x0f);
+> +
+> +                       pfx_id =3D insn_last_prefix_id(insn);
+> +                       insn->attr =3D inat_get_escape_attribute(op, pfx_=
+id, esc_attr);
+> +               } else {
+> +                       insn->attr =3D inat_get_opcode_attribute(op);
+> +               }
+> +               goto end;
+> +       }
+> +
+>         insn->attr =3D inat_get_opcode_attribute(op);
+>         while (inat_is_escape(insn->attr)) {
+>                 /* Get escaped opcode */
+> diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/=
+tools/gen-insn-attr-x86.awk
+> index af38469afd14..3f43aa7d8fef 100644
+> --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> @@ -64,7 +64,9 @@ BEGIN {
+>
+>         modrm_expr =3D "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
+>         force64_expr =3D "\\([df]64\\)"
+> -       rex_expr =3D "^REX(\\.[XRWB]+)*"
+> +       rex_expr =3D "^((REX(\\.[XRWB]+)+)|(REX$))"
+> +       rex2_expr =3D "\\(REX2\\)"
+> +       no_rex2_expr =3D "\\(!REX2\\)"
+>         fpu_expr =3D "^ESC" # TODO
+>
+>         lprefix1_expr =3D "\\((66|!F3)\\)"
+> @@ -99,6 +101,7 @@ BEGIN {
+>         prefix_num["VEX+1byte"] =3D "INAT_PFX_VEX2"
+>         prefix_num["VEX+2byte"] =3D "INAT_PFX_VEX3"
+>         prefix_num["EVEX"] =3D "INAT_PFX_EVEX"
+> +       prefix_num["REX2"] =3D "INAT_PFX_REX2"
+>
+>         clear_vars()
+>  }
+> @@ -314,6 +317,10 @@ function convert_operands(count,opnd,       i,j,imm,=
+mod)
+>                 if (match(ext, force64_expr))
+>                         flags =3D add_flags(flags, "INAT_FORCE64")
+>
+> +               # check REX2 not allowed
+> +               if (match(ext, no_rex2_expr))
+> +                       flags =3D add_flags(flags, "INAT_NO_REX2")
+> +
+>                 # check REX prefix
+>                 if (match(opcode, rex_expr))
+>                         flags =3D add_flags(flags, "INAT_MAKE_PREFIX(INAT=
+_PFX_REX)")
+> @@ -351,6 +358,8 @@ function convert_operands(count,opnd,       i,j,imm,m=
+od)
+>                         lptable3[idx] =3D add_flags(lptable3[idx],flags)
+>                         variant =3D "INAT_VARIANT"
+>                 }
+> +               if (match(ext, rex2_expr))
+> +                       table[idx] =3D add_flags(table[idx], "INAT_REX2_V=
+ARIANT")
+>                 if (!match(ext, lprefix_expr)){
+>                         table[idx] =3D add_flags(table[idx],flags)
+>                 }
+> --
+> 2.34.1
+>
