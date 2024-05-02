@@ -1,174 +1,82 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C931F224F2
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 04:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513D81CAB3;
+	Thu,  2 May 2024 06:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714622507; cv=none; b=UfbBiLaQ62gqAbgL5OVulRrdLmZcmbtb3nmJoX6Ahd9f6kZfv+Inurb9nEGDglsYhFLaT+ExdLfw16jq0FjWWZuUVrOlr17MDexK5d2j9jU+J/UCaZ/w8WqFfxzFJ976ZvdIPqh533xXOB0Vb9LHlvCcrMkrTYVjlHW9KNJGvyg=
+	t=1714629613; cv=none; b=WE2d3xtcrFENtHV2IyHjNxRhemmTAL+6vkA3S0GeStzRYV3Zq825Kk5H4kaSTju3Eqa9Ej/m9/+6pyxkdcxIECQ9Z7IDY1UivAm6wPb6mU1zNtW7kw/FJqkKGjlN95YpX9w1WWedjGrSfkzDfyz3X3fCl0KgcqS3Pe/pPlD/+wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714622507; c=relaxed/simple;
-	bh=LoJaLXnrm+cg8gCQVbKrK6hyShTPLrxvjEHVqlnkjD4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=kr1/6k3/ZfS5EgLiMb7FV21a/dRepTPcwF5fcZwqOj4clglwTcQq8ItZgd89JgKGroAk20DawSj/rzw/YTFXXNqWItcoGVx2Ae/LqdqzWLKz/gYkDra/nz3NZgony+WEtH7HYlWRPJFNAmc8rcA+Dw9YNVXT1DYWXj4UTgIDeP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pbg8y/w1; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1714629613; c=relaxed/simple;
+	bh=IXs2m0Z9B4ZLED76OzsFAyfEm21c5zbXn+r+RNAH7p4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UWWAEu99dpStoNu1lLo89CkgWUBs9NxmlKHK6A0UI7xMe0E0NCrkRWnmWn2lLzUgbv23XXys88qddbghmn363eZSMJUDEE8+rubGynziUauJe++IYMqaEFgLqg86jCq6G6q+7ESFRyoi7Uht0CS7vm39ZyG4EZYGzr5SUl/jdUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaTWrmYa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pbg8y/w1"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61bea0ca5e2so49206287b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 21:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714622505; x=1715227305; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K/IDkFm8YQdijjzsBD7Gmtx7FjqcThxAwNDMqnP0dcc=;
-        b=Pbg8y/w1NbWBRnrNdLzSHe+8ev5OFroRA2HhlerOQE87xcqN+Nhf7hRUn8Ch1a9Rjn
-         Js6tEGHPCvFjram0B1YhozGZ/P3IqTa29iACJ4jT4GibRYaQG2UqAmxLjzRCC80ApjGH
-         DdjkzKZ+WW4ZnHadak2AWVTgx6euE3Bl56mbYPTRnAvYUUuHAN1uLV4dxsq433zhIUju
-         o934dIFrjaXCrZpJQkvsirl6lLAP6AP+VUZbTQCnPvXca+pR4EqpPxBUgxPOiTgGGYY/
-         5qvzxU+nBfU9rxtLRZcDGFwLSYpD3/MTU4ZphFRPcDvQK8PUKHZokyHUxwiU9hcJuBhT
-         aLAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714622505; x=1715227305;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K/IDkFm8YQdijjzsBD7Gmtx7FjqcThxAwNDMqnP0dcc=;
-        b=tQQCcm5HIBQserzeI0cl+l5ZSjGnMGrdYZALH8GmXatZbqHYLL5oqsD9o7qXVBNYso
-         dlUW9du/MoJkALLhp65hBaPJkiQnNtaBWbR4ppX83HNR7coRau2GC5nNoZwKCsIxDK8+
-         ztRVhxY/VYI9Dv1eTOQA2gwiPADXrT1d7T7v/kjag0ZY4d2B2Dr23jgmnQvYoPZCLBQF
-         cYCp/L5/+7rZXtdkuJX80/U9kLJ0LDWtd1IapxAIp524Ffhpbkwso+Vt8vnAZ4+CXwxU
-         q+/7hMEqnPKwlGdmIe0/MS+kxjFl9oXwLhMBYt3e9klHCjWuIvkqQnaGGKhsVYVTfq2H
-         rBDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgDO8CCm5BTWh/xgJuKhXgGzBWB8YztaYk5phXZX1cst0U1UYnKcyu7QaTawswRiv2mbrI5hRhRxjgreZ8+3asjh8nfSFqz23+/GO4wSGiRQ==
-X-Gm-Message-State: AOJu0YzgaJcnwHXADe1r7LiiNLCkMS1d99+u7khott9tAT7J+oWSLbUe
-	66YifAg71zBX15dBJNGWTD+HE1LjIoW/lePGhAYUwFrB9ZFDpu7MNp+I7PXs7TBvfYOfIHPKevm
-	NxZbudw==
-X-Google-Smtp-Source: AGHT+IG9tEfOjT0Eqpu9vPzzzQYNyox7AbGmb0IH8fHWMXswZ+Y7bTVgg5flv7C0k5tYmnCX3kAUVqz3wCb6
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:53b9:bbda:1daa:17d3])
- (user=irogers job=sendgmr) by 2002:a05:690c:b1b:b0:611:2c40:e8d0 with SMTP id
- cj27-20020a05690c0b1b00b006112c40e8d0mr1109843ywb.3.1714622504797; Wed, 01
- May 2024 21:01:44 -0700 (PDT)
-Date: Wed,  1 May 2024 21:01:12 -0700
-In-Reply-To: <20240502040112.2111157-1-irogers@google.com>
-Message-Id: <20240502040112.2111157-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaTWrmYa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C5A5C116B1;
+	Thu,  2 May 2024 06:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714629612;
+	bh=IXs2m0Z9B4ZLED76OzsFAyfEm21c5zbXn+r+RNAH7p4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TaTWrmYaGxWmMYuQ/o0Shf3my25Y+Z57Km/NCDRy+40y/5aJ2As53BrzFid09gzcA
+	 G+Jy715v6Kj8vQwsCOPZwmagEwKbDwKO6Thg+Sop8nVlAgqaCPZ4RY4Q5aagncOGVk
+	 jegOwfbqVh0Vo/BuR5uM30prW3PKLy5PmlEZKQN6Hf56Hh3hRVBwXyia/wJJNA8Wwm
+	 WZNVdz+2D12a/hbTlgeHB7GKAK07R9gTxJNBojfmTSZ1VvB5niizSMeb4sUYYy0MNq
+	 PQEAGga5HZOjJ1as5V7Evz+qSRMirY91McjDNQrNoX/KBW5LHCsVfO3vR8owUGBdam
+	 8jHEscuHKzE8Q==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCHSET 0/6] perf annotate-data: Small updates in the data type profiling (v1)
+Date: Wed,  1 May 2024 23:00:05 -0700
+Message-ID: <20240502060011.1838090-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240502040112.2111157-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-Subject: [PATCH v4 6/6] perf pmu: Assume sysfs events are always the same case
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Perf event names aren't case sensitive. For sysfs events the entire
-directory of events is read then iterated comparing names in a case
-insensitive way, most often to see if an event is present.
+Hello,
 
-Consider:
-$ perf stat -e inst_retired.any true
+This is a mix of bug fixes and optimization in the data type profiling.
 
-The event inst_retired.any may be present in any PMU, so every PMU's
-sysfs events are loaded and then searched with strcasecmp to see if
-any match. This event is only present on the cpu PMU as a json event
-so a lot of events were loaded from sysfs unnecessarily just to prove
-an event didn't exist there.
+Firstly it now caches global variables and looks them up by address later.
+This will be good for performance as well as improves the success rates
+because some variables are defined in a separate file (compile unit) and
+has no info in the call site for some reason.
 
-This change avoids loading all the events by assuming sysfs event
-names are always either lower or uppercase. It uses file exists and
-only loads the events when the desired event is present.
+Also it properly checks instructions that use more than one register for
+a memory access like x86 SIB addressing.  And check the type of stack
+variables correctly and discard constant values (without type info).
 
-For the example above, the number of openat calls measured by perf
-trace on a tigerlake laptop goes from 325 down to 255. The reduction
-will be larger for machines with many PMUs, particularly replicated
-uncore PMUs.
+Thanks,
+Namhyung
 
-Ensure pmu_aliases_parse is called before all uses of the aliases
-list, but remove some "pmu->sysfs_aliases_loaded" tests as they are
-now part of the function.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+Namhyung Kim (6):
+  perf dwarf-aux: Add die_collect_global_vars()
+  perf annotate-data: Collect global variables in advance
+  perf annotate-data: Handle direct global variable access
+  perf annotate-data: Check memory access with two registers
+  perf annotate-data: Handle multi regs in find_data_type_block()
+  perf annotate-data: Check kind of stack variables
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7849be4bfea1..b3b072feef02 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -425,9 +425,30 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
- {
- 	struct perf_pmu_alias *alias;
- 
--	if (load && !pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
-+	if (load && !pmu->sysfs_aliases_loaded) {
-+		bool has_sysfs_event;
-+		char event_file_name[FILENAME_MAX + 8];
- 
-+		/*
-+		 * Test if alias/event 'name' exists in the PMU's sysfs/events
-+		 * directory. If not skip parsing the sysfs aliases. Sysfs event
-+		 * name must be all lower or all upper case.
-+		 */
-+		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
-+		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+			event_file_name[i] = tolower(event_file_name[i]);
-+
-+		has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		if (!has_sysfs_event) {
-+			for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+				event_file_name[i] = toupper(event_file_name[i]);
-+
-+			has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		}
-+		if (has_sysfs_event)
-+			pmu_aliases_parse(pmu);
-+
-+	}
- 	list_for_each_entry(alias, &pmu->aliases, list) {
- 		if (!strcasecmp(alias->name, name))
- 			return alias;
-@@ -1717,9 +1738,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- {
- 	size_t nr;
- 
--	if (!pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
--
-+	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases;
- 
- 	if (pmu->cpu_aliases_added)
-@@ -1778,6 +1797,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	struct strbuf sb;
- 
- 	strbuf_init(&sb, /*hint=*/ 0);
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -2193,6 +2213,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	if (!pmu)
- 		return NULL;
- 
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		struct perf_event_attr attr = {.config = 0,};
+ tools/perf/util/annotate-data.c | 157 ++++++++++++++++++++++++++------
+ tools/perf/util/dwarf-aux.c     |  62 +++++++++++++
+ tools/perf/util/dwarf-aux.h     |   8 ++
+ 3 files changed, 197 insertions(+), 30 deletions(-)
+
 -- 
-2.45.0.rc0.197.gbae5840b3b-goog
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
