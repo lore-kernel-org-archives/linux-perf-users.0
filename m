@@ -1,200 +1,263 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAE942AB3
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 May 2024 20:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B985632
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 00:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714595796; cv=none; b=TCSxr7FBmgS6kHXEoeTj8uyO68u2NoSk+PKSyeyJ2MFNwCKwZotO64orZA2nwo5r0IaepWb14qTgNT/WU4GV03l5dDzwpFItxOAV+/IXxZ9CN9YVFrXYve8y72jLjEmnSR0GJpHsLDrpbv+l7LrBpbCWI07M6cWbDQSBCjlqa5I=
+	t=1714608369; cv=none; b=MI/I9OQIic0S7LMSip9uH/MNrPEmhGdUhij//WaBejoal2T6ciz+JcDMwkq+UceYM+XzMTYyLvj8Xyof3jS2L2VlJFqTkcHgivdQTJjgrBsyDSH0ryP8PsOE3Gv2aT9RlcRMXn99ItozkhSa87T4bPMoO6/gI3/eq3FLoKxNKFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714595796; c=relaxed/simple;
-	bh=CZ+1HcLUExAb6ySEYUXpONpcatEAnu4JCOSJlhyZEdM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HIXU4TUA/DuD5509oZG9r5LlDIPQTzJgBYOY8nbzFMCe0co9b6AwulqU6y0OgrePUOplqKnYe54fs/KUoPm8h4YiNFiXScypcahrSRfRZzeIbhfjaz58cHT2vdqkvPWmycGgy9G1+twXFDm4AxasR7021ur5CzJjOMNm47T3cpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FohSaX+p; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1714608369; c=relaxed/simple;
+	bh=ydHrqPxoGeEttPy9dZN+F3NvpxP2IRhfrRzA30wOWp4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M2RWgKmdQLlkU7V7I4fsDlVqnj2GSg3qWly3U/+bIP6FRSYhRW9acacQl54Q0HFL5Z4pYcATDO2+EjaDbG8guxRTnmXVm4Dy71EL8fApAvlbQYwJ1dWQjwaCRg6tsNg7dEDFmdEdt1PU9JB1zuwcTX1/4F6hK50zX5dwTLgL3uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2BhoMKOl; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FohSaX+p"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61beaa137acso42001207b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 13:36:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2BhoMKOl"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be4b79115so63934347b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 17:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714595794; x=1715200594; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HoqEk2d89pzrIsVW2yhRLPcbk87IRHxiIo5sAWdVlus=;
-        b=FohSaX+p/gHXG6zLC8UucV9GzTAS0UZhiUvlDqpzByYy1Zvgcwssn+9grHZKlR77Qa
-         6LSskw99w2flR3zqLaSJMDm7fuY345NcOHueq/kerme/INHe5zi2c3A5X5LuRouiU78i
-         qen/axYlgVB6hAeoatHlbdUUQIFnJu/8bCyN+Nyu8Po+nBBlhiNR9S+qngexNabD7DGQ
-         LondwNsjvJOJIHxKYFxF3FJrsl7CGYeK8i8APiXJpo5Mh8XFI5mh9Mn2v7liL0oZztz4
-         5l0dyXNOJ1+UNMUpD4c9mM3uWs+A9dqm6AYlBE7F0j1xkRWwC3dtD/vH1MFl06a1BIV0
-         ssEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714595794; x=1715200594;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+        d=google.com; s=20230601; t=1714608365; x=1715213165; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HoqEk2d89pzrIsVW2yhRLPcbk87IRHxiIo5sAWdVlus=;
-        b=Dg8JpOOE0Qr94aAutiaD8ETHgf/HNzgdl9Dq6nzmCEwIi2KsArTZcXSsqaMqagMoJM
-         ycrGFiAK5bjIzZRfctg2S059nAe4Pgq7+hMAiIHutqezZK6klGhwGpJX4i+ft/l50hON
-         /9ZlTkRrUHzJvJe49KScwsXa7fnXVS7xlnTWwWR/PQC/PEp5dXkQ1KpGWDVX2cIUbBhQ
-         OE8MTvmamOiWVXoVm46sgQu9JobB198AcpEeMUgsD9KJsDAKL7a0QszmsbkGcTR16tmF
-         +MfpZZpFw2Bi1nCrgoZ9L1EhcypA/3EyvtpQ/FX4P2Y79RqYyIa65MZYPBKpWHPEReRJ
-         iLaA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Owkg8qAF2Ybar3TlA5PI8/TLUXbXojrwW8eT/uv+1V2I3M2nskMksL8/niB69aKKJjsp3x7eiSN0W55xI/f6s6vVJJ9nxacB9eQBnxHhlA==
-X-Gm-Message-State: AOJu0Ywafe9AisaOUovoyfTnMKQ94Tu8iLn8iQUb+fXEFMFjG1zgu/04
-	HFu8PY/v4WvW+0DeD720ZY/s4wztori8f8ojavuiHsfO9ck0+rB7bSv3R3dnGihYI0+V2p7nAYK
-	Ndw==
-X-Google-Smtp-Source: AGHT+IGBl505/z0XBb88u3lR/7JlRlWZqwWbuFXHJgVFCCMMlH1u96V0iZ5bQhdv/H411OBPpCC2caAJc9I=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:4fc5:0:b0:61b:982:4da0 with SMTP id
- d188-20020a814fc5000000b0061b09824da0mr825560ywb.0.1714595793888; Wed, 01 May
- 2024 13:36:33 -0700 (PDT)
-Date: Wed, 1 May 2024 13:36:32 -0700
-In-Reply-To: <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
+        bh=eQRSP9X13w24BKs2qzwk/bhbNErXynjf0Rfm5l0EiQA=;
+        b=2BhoMKOlvY3p9M6TME3JwxugtGNr6trMq4TgKLQv+e1DkPSfMV9vBk3E7u/ByfgcxU
+         bLL1X+7fnF9V8273P7PNKplWPufgxEX3xJC3NRSJTqRq+juNJ9HNtKJxKpPcOvuQZFhY
+         UpzKaE1YB7tRAf6AxJpNuQWiC3dHSrPdaBR5jilUEcUPa4JS6RvKP4XtAUx0W4jmJvM2
+         0zaF8O88aLxB+feiyVUgnyfmUPklWkIq1sUZoXVqxDHTw/Ev2sdD2iykTCBCEevpHnI4
+         I4W+61R+H8cWqxQeX4sNQk2sb3tal/BuO+hiKmNCJAnePXqNFdEF9a8FanRVDPBT5n6Q
+         D1pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714608365; x=1715213165;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eQRSP9X13w24BKs2qzwk/bhbNErXynjf0Rfm5l0EiQA=;
+        b=GbW9WlrQ69odNKyPiGt88gcBg0rkMKPRzhMmtPG/AVPJAjnhQEX35hnuGaAUmup9Za
+         tZGykpZcemNwcFSeeKwhZHsx8UbeLJQVtrOA+B9Q9V4WJYcQuwPPhy84e/Z2UrnSkpL5
+         FAPWWETr7zWD6faTIxl2ZyIAaQTOqjdh5zjMcpbND+qviVdZ30xw+CDkt5pVnYMWHDHS
+         oeZjkEiOFHBc5NrRZ/GbmwiM5033s0Ac1gQkYIbOZBIHCRKHv8sVjCXnkXM195SAGvFU
+         x/Zbr9foco+pRiuXas/UT1+lmxRrLP/+0kxUj2ZRzJSWRvxvGInMX3Foke9Xq57vKIsE
+         b++w==
+X-Gm-Message-State: AOJu0Ywp3WJZcu8bcfbuspcG110zCtTnsMLx2wjZxkAiJlFczR4LlULL
+	wIb4Vb0Vg7TeZ6IKHCGqZFZNDCJUtlRytkz6f5S6+2/TyqndD0bxqjfisN22I9ewyihCYYk9cSh
+	b
+X-Google-Smtp-Source: AGHT+IHP8OVULzYdZ/+rNjnenXdxVIu1A6L0kGwRCEVIBzk82Mkash/Yy6qJdq3lu7WrFTxM4xr0U9dwA+c=
+X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:a80f:b677:9355:6ccc])
+ (user=yabinc job=sendgmr) by 2002:a05:6902:708:b0:dd9:1702:4837 with SMTP id
+ k8-20020a056902070800b00dd917024837mr1190112ybt.3.1714608365414; Wed, 01 May
+ 2024 17:06:05 -0700 (PDT)
+Date: Wed,  1 May 2024 17:06:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
- <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
- <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
- <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
- <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com> <CAL715WKm0X9NJxq8SNGD5EJomzY4DDSiwLb1wMMgcgHqeZ64BA@mail.gmail.com>
- <Zi_cle1-5SZK2558@google.com> <CAL715WJbYNqm2SXiTgqWHs34DtRfdFE7Hx48X_4ASHyQXeaPzA@mail.gmail.com>
-Message-ID: <ZjKn0HKKJrWTT4E8@google.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+Message-ID: <20240502000602.753861-1-yabinc@google.com>
+Subject: [PATCH v2] perf/core: Save raw sample data conditionally based on
+ sample type
+From: Yabin Cui <yabinc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 01, 2024, Mingwei Zhang wrote:
-> On Mon, Apr 29, 2024 at 10:44=E2=80=AFAM Sean Christopherson <seanjc@goog=
-le.com> wrote:
-> >
-> > On Sat, Apr 27, 2024, Mingwei Zhang wrote:
-> > > That's ok. It is about opinions and brainstorming. Adding a parameter
-> > > to disable preemption is from the cloud usage perspective. The
-> > > conflict of opinions is which one you prioritize: guest PMU or the
-> > > host PMU? If you stand on the guest vPMU usage perspective, do you
-> > > want anyone on the host to shoot a profiling command and generate
-> > > turbulence? no. If you stand on the host PMU perspective and you want
-> > > to profile VMM/KVM, you definitely want accuracy and no delay at all.
-> >
-> > Hard no from me.  Attempting to support two fundamentally different mod=
-els means
-> > twice the maintenance burden.  The *best* case scenario is that usage i=
-s roughly
-> > a 50/50 spit.  The worst case scenario is that the majority of users fa=
-vor one
-> > model over the other, thus resulting in extremely limited tested of the=
- minority
-> > model.
-> >
-> > KVM already has this problem with scheduler preemption models, and it's=
- painful.
-> > The overwhelming majority of KVM users run non-preemptible kernels, and=
- so our
-> > test coverage for preemtible kernels is abysmal.
-> >
-> > E.g. the TDP MMU effectively had a fatal flaw with preemptible kernels =
-that went
-> > unnoticed for many kernel releases[*], until _another_ bug introduced w=
-ith dynamic
-> > preemption models resulted in users running code that was supposed to b=
-e specific
-> > to preemtible kernels.
-> >
-> > [* https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@pro=
-xmox.com
-> >
->=20
-> I hear your voice, Sean.
->=20
-> In our cloud, we have a host-level profiling going on for all cores
-> periodically. It will be profiling X seconds every Y minute. Having
-> the host-level profiling using exclude_guest is fine, but stopping the
-> host-level profiling is a no no. Tweaking the X and Y is theoretically
-> possible, but highly likely out of the scope of virtualization. Now,
-> some of the VMs might be actively using vPMU at the same time. How can
-> we properly ensure the guest vPMU has consistent performance? Instead
-> of letting the VM suffer from the high overhead of PMU for X seconds
-> of every Y minute?
->=20
-> Any thought/help is appreciated. I see the logic of having preemption
-> there for correctness of the profiling on the host level. Doing this,
-> however, negatively impacts the above business usage.
->=20
-> One of the things on top of the mind is that: there seems to be no way
-> for the perf subsystem to express this: "no, your host-level profiling
-> is not interested in profiling the KVM_RUN loop when our guest vPMU is
-> actively running".
+Currently, space for raw sample data is always allocated within sample
+records for both BPF output and tracepoint events. This leads to unused
+space in sample records when raw sample data is not requested.
 
-For good reason, IMO.  The KVM_RUN loop can reach _far_ outside of KVM, esp=
-ecially
-when IRQs and NMIs are involved.  I don't think anyone can reasonably say t=
-hat
-profiling is never interested in what happens while a task in KVM_RUN.  E.g=
-. if
-there's a bottleneck in some memory allocation flow that happens to be trig=
-gered
-in the greater KVM_RUN loop, that's something we'd want to show up in our p=
-rofiling
-data.
+This patch checks sample type of an event before saving raw sample data
+in both BPF output and tracepoint event handling logic. Raw sample data
+will only be saved if explicitly requested, reducing overhead when it
+is not needed.
 
-And if our systems our properly configured, for VMs with a mediated/passthr=
-ough
-PMU, 99.99999% of their associated pCPU's time should be spent in KVM_RUN. =
- If
-that's our reality, what's the point of profiling if KVM_RUN is out of scop=
-e?
+Fixes: 0a9081cf0a11 ("perf/core: Add perf_sample_save_raw_data() helper")
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
 
-We could make the context switching logic more sophisticated, e.g. trigger =
-a
-context switch when control leaves KVM, a la the ASI concepts, but that's a=
-ll but
-guaranteed to be overkill, and would have a very high maintenance cost.
+Changes since v1:
+ - Check event->attr.sample_type & PERF_SAMPLE_RAW before
+   calling perf_sample_save_raw_data().
+ - Subject has been changed to reflect the change of solution.
 
-But we can likely get what we want (low observed overhead from the guest) w=
-hile
-still context switching PMU state in vcpu_enter_guest().  KVM already handl=
-es the
-hottest VM-Exit reasons in its fastpath, i.e without triggering a PMU conte=
-xt
-switch.  For a variety of reason, I think we should be more aggressive and =
-handle
-more VM-Exits in the fastpath, e.g. I can't think of any reason KVM can't h=
-andle
-fast page faults in the fastpath.
+Original commit message from v1:
+perf/core: Trim dyn_size if raw data is absent
 
-If we handle that overwhelming majority of VM-Exits in the fastpath when th=
-e guest
-is already booted, e.g. when vCPUs aren't taking a high number of "slow" VM=
--Exits,
-then the fact that slow VM-Exits trigger a PMU context switch should be a n=
-on-issue,
-because taking a slow exit would be a rare operation.
+ kernel/events/core.c     | 37 ++++++++++++++++++++-----------------
+ kernel/trace/bpf_trace.c | 12 +++++++-----
+ 2 files changed, 27 insertions(+), 22 deletions(-)
 
-I.e. rather than solving the overhead problem by moving around the context =
-switch
-logic, solve the problem by moving KVM code inside the "guest PMU" section.=
-  It's
-essentially a different way of doing the same thing, with the critical diff=
-erence
-being that only hand-selected flows are excluded from profiling, i.e. only =
-the
-flows that need to be blazing fast and should be uninteresting from a profi=
-ling
-perspective are excluded.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 724e6d7e128f..dc5f3147feef 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10120,9 +10120,9 @@ static struct pmu perf_tracepoint = {
+ };
+ 
+ static int perf_tp_filter_match(struct perf_event *event,
+-				struct perf_sample_data *data)
++				struct perf_raw_record *raw)
+ {
+-	void *record = data->raw->frag.data;
++	void *record = raw->frag.data;
+ 
+ 	/* only top level events have filters set */
+ 	if (event->parent)
+@@ -10134,7 +10134,7 @@ static int perf_tp_filter_match(struct perf_event *event,
+ }
+ 
+ static int perf_tp_event_match(struct perf_event *event,
+-				struct perf_sample_data *data,
++				struct perf_raw_record *raw,
+ 				struct pt_regs *regs)
+ {
+ 	if (event->hw.state & PERF_HES_STOPPED)
+@@ -10145,7 +10145,7 @@ static int perf_tp_event_match(struct perf_event *event,
+ 	if (event->attr.exclude_kernel && !user_mode(regs))
+ 		return 0;
+ 
+-	if (!perf_tp_filter_match(event, data))
++	if (!perf_tp_filter_match(event, raw))
+ 		return 0;
+ 
+ 	return 1;
+@@ -10171,6 +10171,7 @@ EXPORT_SYMBOL_GPL(perf_trace_run_bpf_submit);
+ static void __perf_tp_event_target_task(u64 count, void *record,
+ 					struct pt_regs *regs,
+ 					struct perf_sample_data *data,
++					struct perf_raw_record *raw,
+ 					struct perf_event *event)
+ {
+ 	struct trace_entry *entry = record;
+@@ -10180,13 +10181,18 @@ static void __perf_tp_event_target_task(u64 count, void *record,
+ 	/* Cannot deliver synchronous signal to other task. */
+ 	if (event->attr.sigtrap)
+ 		return;
+-	if (perf_tp_event_match(event, data, regs))
++	if (perf_tp_event_match(event, raw, regs)) {
++		perf_sample_data_init(data, 0, 0);
++		if (event->attr.sample_type & PERF_SAMPLE_RAW)
++			perf_sample_save_raw_data(data, raw);
+ 		perf_swevent_event(event, count, data, regs);
++	}
+ }
+ 
+ static void perf_tp_event_target_task(u64 count, void *record,
+ 				      struct pt_regs *regs,
+ 				      struct perf_sample_data *data,
++				      struct perf_raw_record *raw,
+ 				      struct perf_event_context *ctx)
+ {
+ 	unsigned int cpu = smp_processor_id();
+@@ -10194,15 +10200,15 @@ static void perf_tp_event_target_task(u64 count, void *record,
+ 	struct perf_event *event, *sibling;
+ 
+ 	perf_event_groups_for_cpu_pmu(event, &ctx->pinned_groups, cpu, pmu) {
+-		__perf_tp_event_target_task(count, record, regs, data, event);
++		__perf_tp_event_target_task(count, record, regs, data, raw, event);
+ 		for_each_sibling_event(sibling, event)
+-			__perf_tp_event_target_task(count, record, regs, data, sibling);
++			__perf_tp_event_target_task(count, record, regs, data, raw, sibling);
+ 	}
+ 
+ 	perf_event_groups_for_cpu_pmu(event, &ctx->flexible_groups, cpu, pmu) {
+-		__perf_tp_event_target_task(count, record, regs, data, event);
++		__perf_tp_event_target_task(count, record, regs, data, raw, event);
+ 		for_each_sibling_event(sibling, event)
+-			__perf_tp_event_target_task(count, record, regs, data, sibling);
++			__perf_tp_event_target_task(count, record, regs, data, raw, sibling);
+ 	}
+ }
+ 
+@@ -10220,15 +10226,10 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
+ 		},
+ 	};
+ 
+-	perf_sample_data_init(&data, 0, 0);
+-	perf_sample_save_raw_data(&data, &raw);
+-
+ 	perf_trace_buf_update(record, event_type);
+ 
+ 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
+-		if (perf_tp_event_match(event, &data, regs)) {
+-			perf_swevent_event(event, count, &data, regs);
+-
++		if (perf_tp_event_match(event, &raw, regs)) {
+ 			/*
+ 			 * Here use the same on-stack perf_sample_data,
+ 			 * some members in data are event-specific and
+@@ -10238,7 +10239,9 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
+ 			 * because data->sample_flags is set.
+ 			 */
+ 			perf_sample_data_init(&data, 0, 0);
+-			perf_sample_save_raw_data(&data, &raw);
++			if (event->attr.sample_type & PERF_SAMPLE_RAW)
++				perf_sample_save_raw_data(&data, &raw);
++			perf_swevent_event(event, count, &data, regs);
+ 		}
+ 	}
+ 
+@@ -10255,7 +10258,7 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
+ 			goto unlock;
+ 
+ 		raw_spin_lock(&ctx->lock);
+-		perf_tp_event_target_task(count, record, regs, &data, ctx);
++		perf_tp_event_target_task(count, record, regs, &data, &raw, ctx);
+ 		raw_spin_unlock(&ctx->lock);
+ unlock:
+ 		rcu_read_unlock();
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 9dc605f08a23..4b3ff71b4c0a 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -620,7 +620,8 @@ static const struct bpf_func_proto bpf_perf_event_read_value_proto = {
+ 
+ static __always_inline u64
+ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
+-			u64 flags, struct perf_sample_data *sd)
++			u64 flags, struct perf_raw_record *raw,
++			struct perf_sample_data *sd)
+ {
+ 	struct bpf_array *array = container_of(map, struct bpf_array, map);
+ 	unsigned int cpu = smp_processor_id();
+@@ -645,6 +646,9 @@ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
+ 	if (unlikely(event->oncpu != cpu))
+ 		return -EOPNOTSUPP;
+ 
++	if (event->attr.sample_type & PERF_SAMPLE_RAW)
++		perf_sample_save_raw_data(sd, raw);
++
+ 	return perf_event_output(event, sd, regs);
+ }
+ 
+@@ -688,9 +692,8 @@ BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
+ 	}
+ 
+ 	perf_sample_data_init(sd, 0, 0);
+-	perf_sample_save_raw_data(sd, &raw);
+ 
+-	err = __bpf_perf_event_output(regs, map, flags, sd);
++	err = __bpf_perf_event_output(regs, map, flags, &raw, sd);
+ out:
+ 	this_cpu_dec(bpf_trace_nest_level);
+ 	preempt_enable();
+@@ -749,9 +752,8 @@ u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
+ 
+ 	perf_fetch_caller_regs(regs);
+ 	perf_sample_data_init(sd, 0, 0);
+-	perf_sample_save_raw_data(sd, &raw);
+ 
+-	ret = __bpf_perf_event_output(regs, map, flags, sd);
++	ret = __bpf_perf_event_output(regs, map, flags, &raw, sd);
+ out:
+ 	this_cpu_dec(bpf_event_output_nest_level);
+ 	preempt_enable();
+-- 
+2.45.0.rc0.197.gbae5840b3b-goog
+
