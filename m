@@ -1,136 +1,86 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339C171E71
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 18:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB1C16F90C;
+	Thu,  2 May 2024 18:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714673978; cv=none; b=SXwLKES6OxlbXAgfzANu7OtACBiY97//olzyNEn44wyD1aI96s8fFGTGopnOPk9yhyU0FA5TBQBzkge4K8bgtPxf2FaeN/hItEJwX3Rg5Sd070ELI5/M142auDMqvUJPZ9tCazPKZZJQRNVzwe9JUtrx5TgJbV2Az7WwkDdu7Us=
+	t=1714674210; cv=none; b=bm6/JxYtdP+twv3jMFlSjsZMNlztC49SIGSA53c7KHbcvaWnul8cX86B5dhQybU568VldpmIt3iNGSJw+h1n22nlhdGi80ceiGWNoGvDld/oSAFJSLh/bGx0FOoHaq4Il6B91WulkfWRGMqm+NrumxEgMNaEfGqPsn7qin6hPcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714673978; c=relaxed/simple;
-	bh=SYlCpBOfXAeKSxneS/U6YkJ45rTbrFjuiWOa01qQagE=;
+	s=arc-20240116; t=1714674210; c=relaxed/simple;
+	bh=UGRIpdQuVWv7frbkKdg//Yw72g2vdPMaZMx+CTeZA7Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R54IR8ZlkMGFJUMF6x9uOEwx75CRbe+KCqvvyuA7uh2qgerc03/6qt98KtacvNlla+cBB5cduSWH4M6fGEmxVEX+fNyNMEZXydoPXryUbjbzfJgZKbrcVhU6b6rc8manm0f5rLpQLMJrUGhI8GvmpkfTaypMlCxO/WzzSx5n/i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CpIWYF5Y; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CpIWYF5Y"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ec76185cb3so28325ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 11:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714673976; x=1715278776; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Usd3Q8JoS3orjgW7FWjnn2VBZ/CfthnIjfJDew/zyxI=;
-        b=CpIWYF5Y/Brka7t/Sy/JHGiqEX9mD8oiJIvzHR95Otpqs4EU7gLjz1RtzaQGnPqV7T
-         +iQY+8b/ktYPy8k76bVI+iBpkSWrgxNy9nFDwhKfm9uyiJ3h7xItTJUlpTsg8RjwrIns
-         GLbjUDEAn6/UzYBvDFGGd6CONzVLjQBuoSfhMJHFK23Awtlbvx0nAxQoyKcpE2AaZrMF
-         AzHvN1qxgCMVW+/iqEcp75c+m3ewmeJC7nJt0ncqNUqokLRLZKzchlO0cAcwCNArA0BA
-         aIYv5KtAWckPF+/xQb85Li14aUB+7LjUAVohjvknLLB6WlgztVJkhjTcvJIp7ysh6F1c
-         mPvw==
+	 To:Cc:Content-Type; b=U1s68lvaKWo29FE0Y99ZWXw1wv68b3ITCD2zUOyoQk3Lg7miRb/9eAgSnz6UDeC/kcYzY8dScd2FyLy0vc2WkJoyUhcEI3J/yh8LDrVVLFbRNLrQCbPd9//FvJ14R5b7QQDWa5jL49K45FX7/6POP/ei/w95P3oapCWc98xqzaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2b12b52fbe0so3548749a91.0;
+        Thu, 02 May 2024 11:23:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714673976; x=1715278776;
+        d=1e100.net; s=20230601; t=1714674208; x=1715279008;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Usd3Q8JoS3orjgW7FWjnn2VBZ/CfthnIjfJDew/zyxI=;
-        b=fwFWc49Z/J03my/t5eV8wUOiBTBSo/dPUNht98FRjoNgr9gUWxcieKkUjfigjFvLEJ
-         Bu4y9hYcRcPk7f4u++8yVy1WVr6WGTqwwIsyphIyiaHo6I00EcV925t2O0ajc7VQ5XOe
-         SFj93FY4bgG6TfqhQK+hzKVzU/uO/ualVxiDqw37dE5osYrt1A6NausZtwqr6V2FHiCv
-         7oPdwWfqM7f1pgJmNDLXjgwp3Q8fiYI9uNdvPIRawbsgQKF+fQhrGM3C57om+NXoc7YY
-         tRkXL3GAot0WfIAGc7WoZn+jfqFSx1uq7hcTpxBwv8pAGxMS0HZqkxnB2T355/t4ruLG
-         nj1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW2R0OHvzVlDolKbX3yAIv+ahBCSPVf8tShMTFgcaE0Pi4aI/o/A4I/T76m2LWpEVIDU6QotkQnghGInNG7hBLIgroxrDpaswmnmTCqk+CMqA==
-X-Gm-Message-State: AOJu0YyKmP3JA9W1nAnpwsl17gxmNKKjFPqgbxrcVcismPZdlo8tQu5N
-	UX8DwaBN9Eqe2ZiZVLpMkbQ5v0gzLu6YrO9mXfu5oqLSPesekaKITPQl6FYHYhX1ckjLGCCVE99
-	6cutfYcbdnpbZIZyv93Z2SmeGCeAb7uHZEd2s
-X-Google-Smtp-Source: AGHT+IH0EzMNHk7bY5qnvmw3tjRb6LSjW0gHXrp3JWHywZhQZVhmVPBhPu9rdb+1xmlGrY05htX1Cc5WKJQ/kpPdSi4=
-X-Received: by 2002:a17:903:2286:b0:1e5:5c7a:6a4e with SMTP id
- d9443c01a7336-1ed2c6f6957mr231985ad.2.1714673976198; Thu, 02 May 2024
- 11:19:36 -0700 (PDT)
+        bh=Z1FoMHQWOMW5NazguqbdJ2vyAEy94LpT4il8LmHAdf8=;
+        b=Vv+tblQPphPNQZu4JiAO80/I7tVWW0m/6wW2qhw4WUUrWQW5UC5KL8foFfVb0l9pMc
+         1LpvQOVNGvF7QO1utv5s3/HCg6pUBhA/GtrCZd0EISvxlXytkOXMBgWEghNzNMDsY1W6
+         WrqjWPvnvwqXhjmMkgiohzttocvTfd6XWnBWRgJEf4Xe3oZrAH5Tw1zWLfCkLOgCwo3y
+         eS9NIn8aFsq720QAINTOdAAL4JAXzmj4c5xasANdxMMZYPuvHNaY2zJ9Au1J81RBRUo0
+         VoHsxg32cIlbCxkYXeSTcE3LzIFMDp+MCu/Eq5UuxLkOTymtG9xpokk7VW6ZQZZbnZBE
+         J7JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV3CqLja085+3ntb5x1qyyyqSpEi/p7ma01VGsb8RMH8+qU/LuCiVFIijd1T1XvCha5fNhAfPJBsKN+kgA506BX7+Lqee5Sbg9y660JRUWc2TMCrSjhH4sWGhNYqEI+s47johEmem8w/5IYiiA7w==
+X-Gm-Message-State: AOJu0YxncASIPiz0Oj20MQfrSaLXFvIYACQhA/sDltrqJG1a7zzx0Cx1
+	WaiKHPi/dr3UYtcCCYJsr+/QF/xYk19Hm0IPjoAERhPXJP+07+ymy3uG/+R/eCq4/Ng8BxQ01se
+	Z9z4p0yFwDu9jvY/Z6cf6cPnZT4PKdg==
+X-Google-Smtp-Source: AGHT+IELvn8wMGkyO0TmuNlmN7KfVwK+kTxu3XsielbSKO95n8QHjx2WS0argpa0lMn8GfQSKW8GZ+DdqhMJsnLap5M=
+X-Received: by 2002:a17:90b:1089:b0:2b1:9fa4:16fd with SMTP id
+ gj9-20020a17090b108900b002b19fa416fdmr629131pjb.4.1714674208317; Thu, 02 May
+ 2024 11:23:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502040112.2111157-1-irogers@google.com> <78a63434-c7b8-4ada-b59f-b6dd547b5b63@linux.intel.com>
-In-Reply-To: <78a63434-c7b8-4ada-b59f-b6dd547b5b63@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 May 2024 11:19:24 -0700
-Message-ID: <CAP-5=fX9k91KRiXK18LHKoqTgwYvU3PB1qtfUWuMoPY4Xfffrw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] Assume sysfs event names are always the same case
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240502060011.1838090-1-namhyung@kernel.org> <20240502060011.1838090-3-namhyung@kernel.org>
+ <ZjOaFS7_vEojFnUZ@x1>
+In-Reply-To: <ZjOaFS7_vEojFnUZ@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 2 May 2024 11:23:17 -0700
+Message-ID: <CAM9d7chGYy9X=3=iRwocUWJurXPGd0WZaE=yr8U1JkrLcaUrow@mail.gmail.com>
+Subject: Re: [PATCH 2/6] perf annotate-data: Collect global variables in advance
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 2, 2024 at 11:15=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
+On Thu, May 2, 2024 at 6:50=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
+> On Wed, May 01, 2024 at 11:00:07PM -0700, Namhyung Kim wrote:
+> > Currently it looks up global variables from the current CU using addres=
+s
+> > and name.  But it sometimes fails to find a variable as the variable ca=
+n
+> > come from a different CU - but it's still strange it failed to find a
+> > declaration for some reason.
+> >
+> > Anyway, it can collect all global variables from all CU once and then
+> > lookup them later on.  This slightly improves the success rate of my
+> > test data set.
 >
+> It would be interesting you could provide examples from your test data
+> set, i.e. after this patch these extra global variables were considered
+> in the test results, with some tool output, etc.
 >
-> On 2024-05-02 12:01 a.m., Ian Rogers wrote:
-> > By assuming sysfs events are either upper or lower case, the case
-> > insensitive event parsing can probe for the existence of files rather
-> > then loading all events in a directory. When the event is a json event
-> > like inst_retired.any on Intel, this reduces the number of openat
-> > calls on a Tigerlake laptop from 325 down to 255.
-> >
-> > v1 sent as an RFC:
-> >     https://lore.kernel.org/lkml/20240413040812.4042051-1-irogers@googl=
-e.com/
-> >
-> > v2: addresses review feedback from Kan Liang, by updating
-> >     documentation and adding tests.
-> >
-> > v3: incorporate feedback from Thomas Richter <tmricht@linux.ibm.com>
-> >     that s390 event names are all upper case. Do a lower case probe
-> >     then an upper case probe, make documentation and tests also agree.
-> >
-> > v4: add checks to write (kernel test robot) and fix a typo.
-> >
-> > Ian Rogers (6):
-> >   perf test pmu-events: Make it clearer that pmu-events tests json
-> >     events
-> >   perf Document: Sysfs event names must be lower or upper case
-> >   perf test pmu: Refactor format test and exposed test APIs
-> >   perf test pmu: Add an eagerly loaded event test
-> >   perf test pmu: Test all sysfs PMU event names are the same case
-> >   perf pmu: Assume sysfs events are always the same case
-> >
-> >  .../sysfs-bus-event_source-devices-events     |   6 +
-> >  tools/perf/tests/pmu-events.c                 |   2 +-
-> >  tools/perf/tests/pmu.c                        | 468 ++++++++++++------
-> >  tools/perf/util/parse-events.c                |   2 +-
-> >  tools/perf/util/parse-events.h                |   2 +-
-> >  tools/perf/util/pmu.c                         | 111 +++--
-> >  tools/perf/util/pmu.h                         |   4 +-
-> >  tools/perf/util/pmus.c                        |  16 +-
-> >  tools/perf/util/pmus.h                        |   2 +
-> >  9 files changed, 416 insertions(+), 197 deletions(-)
-> >
->
-> Except the warning for the uninitialized 'ret', the rest looks good to me=
-.
+> This would help intersested parties to reproduce your results,
+> validate the end result, etc.
 
-Thanks Kan, I'll hunt that down to fix in v5 and add your reviewed-by.
-Would be awesome to get Thomas or someone else's s390 thumbs up. The
-differences between v3 to v5 should be very minor, so I'd accept a
-check on any of them :-)
+Hmm.. ok.  I'll try to find public data that I can share.
+But it's just a perf data file recorded with perf mem.
 
-Ian
-
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->
-> Thanks,
-> Kan
+Thanks,
+Namhyung
