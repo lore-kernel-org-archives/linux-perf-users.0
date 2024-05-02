@@ -1,47 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A9C36AFE;
-	Thu,  2 May 2024 06:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4D0524D4;
+	Thu,  2 May 2024 09:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714629616; cv=none; b=XRQywEQcnbZcTlY+BnwepoJZFxpt6qYd3qDwmI9zhmbn5A9N/nLQRTTwSooIlHHaPmKY6Q/paqEXQDcU5mT0RUt1DQ+YwRpTyjviuZojyhboKeMcXGhwXUBcUa4k6YszaNEOJ7qyWksGMLWM2MMHnZWRnHtVVesU5557Hw5KW+w=
+	t=1714641311; cv=none; b=EitXEjO2KWSghV62T+FwAk/cUkgpBUq0cwf355LrYUKWYL1tNLuihwpAUPAZF5OO7lM6eW4WJMeFl0hp1h8DojDRaRGgiAPDDAQtA1y/Oe68NdpUWwcjBFmTDl5WVVHY3aghCQsdnu3/U4LMAK/tsQ8bohgDlfLYIYEjMZwr3ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714629616; c=relaxed/simple;
-	bh=wBhNx/ENJ3dtDGzKbOpBhB0k32mIboB/9iNKvY4VhfM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cM1Ow5beb7dNMbXmVOtzdWG+ju13aoggIW+wunG7cF2BPdj8ffHdcK7csp/mgs78mNHvm4uhOtj2460/VRhhvmGMsiEoDweV3+SfTugYaqtNyMQs95yr4ngMyv+OtOOiVp4nNQl8/roGzBw/4ehLOGdIDNl1WbjZP/PT0e7iyyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hs5/Y1gp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hs5/Y1gp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0E4C4AF51;
-	Thu,  2 May 2024 06:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714629615;
-	bh=wBhNx/ENJ3dtDGzKbOpBhB0k32mIboB/9iNKvY4VhfM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hs5/Y1gpP3uEtaJBKNPkmeW54B0HZW29fmbLYQfgRdTIzAlU7pwW5SYG/ob3egHyH
-	 gXmEt7gK/0KqbWJZuWM5FFiglpXX4ajDpzzhlJI976gdpCh8LZGKxYCyu+3qFb53Ah
-	 GNCOSziTp/RR80ifewaD9o6rjkLPzZvr0UGYeUVus9lMv5jOSNowvgTwI9WDNgtIL8
-	 OfU16zQwbIkxo0WpKdQ/W9axKErlQyoGuinKDK63TOyLLqgQArVx9UOpA8UXqJf1qy
-	 bkYuz4uSF9hfUBEjXKd5v0+18n6SQIkMFNaFud5kOXFGx/vk9aKHqQY9Hij/5Zols8
-	 KFv90TiSXgUfg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	s=arc-20240116; t=1714641311; c=relaxed/simple;
+	bh=nVP7nBF0pVr37MYjs2kfu9gN3RzhtanHSJ8hO8bCN00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bp6Sqfxhx6QDER+twJ+71pwhHLIoIncj+goLpunX+Nqnvj0FjoNmEUS0rqnYqZ6MUO2M3SAB8d9JJ5a35wP3lpMAQ7uB1ehwPDvDfSwoSbmEd1FEYR6LZVo58ljYwE4+wluk5Y4uPCMa3JDGIiKSa+/TdBa3On3LyICr+Mu5Om8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E742F4;
+	Thu,  2 May 2024 02:15:33 -0700 (PDT)
+Received: from dsg-hive-n1sdp-01.cambridge.arm.com (dsg-hive-n1sdp-01.cambridge.arm.com [10.2.3.10])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B60853F71E;
+	Thu,  2 May 2024 02:15:06 -0700 (PDT)
+From: Nick Forrington <nick.forrington@arm.com>
+To: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/6] perf annotate-data: Check kind of stack variables
-Date: Wed,  1 May 2024 23:00:11 -0700
-Message-ID: <20240502060011.1838090-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240502060011.1838090-1-namhyung@kernel.org>
-References: <20240502060011.1838090-1-namhyung@kernel.org>
+Cc: Nick Forrington <nick.forrington@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH v2 0/1] Perf lock improvements
+Date: Thu,  2 May 2024 09:14:44 +0000
+Message-ID: <20240502091446.3037-1-nick.forrington@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,73 +39,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I sometimes see ("unknown type") in the result and it was because it
-didn't check the type of stack variables properly during the instruction
-tracking.  The stack can carry constant values (without type info) and
-if the target instruction is accessing the stack location, it resulted
-in the "unknown type".
-
-Maybe we could pick one of integer types for the constant, but it
-doesn't really mean anything useful.  Let's just drop the stack slot if
-it doesn't have a valid type info.
-
-Here's an example how it got the unknown type.
-Note that 0xffffff48 = -0xb8.
-  -----------------------------------------------------------
-  find data type for 0xffffff48(reg6) at ...
-  CU for ...
-  frame base: cfa=0 fbreg=6
-  scope: [2/2] (die:11cb97f)
-  bb: [37 - 3a]
-  var [37] reg15 type='int' size=0x4 (die:0x1180633)
-  bb: [40 - 4b]
-  mov [40] imm=0x1 -> reg13
-  var [45] reg8 type='sigset_t*' size=0x8 (die:0x11a39ee)
-  mov [45] imm=0x1 -> reg2                     <---  here reg2 has a constant
-  bb: [215 - 237]
-  mov [218] reg2 -> -0xb8(stack) constant      <---  and save it to the stack
-  mov [225] reg13 -> -0xc4(stack) constant
-  call [22f] find_task_by_vgpid
-  call [22f] return -> reg0 type='struct task_struct*' size=0x8 (die:0x11881e8)
-  bb: [5c8 - 5cf]
-  bb: [2fb - 302]
-  mov [2fb] -0xc4(stack) -> reg13 constant
-  bb: [13b - 14d]
-  mov [143] 0xd50(reg3) -> reg5 type='struct task_struct*' size=0x8 (die:0xa31f3c)
-  bb: [153 - 153]
-  chk [153] reg6 offset=0xffffff48 ok=0 kind=0 fbreg    <--- access here
-  found by insn track: 0xffffff48(reg6) type-offset=0
-   type='G<EF>^K<F6><AF>U' size=0 (die:0xffffffffffffffff)
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Improvement to command line handling for perf lock info.
 ---
- tools/perf/util/annotate-data.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+v1: https://lore.kernel.org/all/20231031120526.11502-1-nick.forrington@arm.com/
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 68fe7999f033..2c98813f95cd 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1314,6 +1314,9 @@ static int check_matching_type(struct type_state *state,
- 			return -1;
- 		}
- 
-+		if (stack->kind != TSR_KIND_TYPE)
-+			return 0;
-+
- 		*type_die = stack->type;
- 		/* Update the type offset from the start of slot */
- 		dloc->type_offset -= stack->offset;
-@@ -1343,6 +1346,9 @@ static int check_matching_type(struct type_state *state,
- 			return -1;
- 		}
- 
-+		if (stack->kind != TSR_KIND_TYPE)
-+			return 0;
-+
- 		*type_die = stack->type;
- 		/* Update the type offset from the start of slot */
- 		dloc->type_offset -= fboff + stack->offset;
+v2:
+* Drop previous "perf lock report: Restore aggregation by caller by
+  default" patch. Not required for newly collected data with LOCKDEP
+  tracepoints.
+* Display map and thread info (rather than an error) when neither or
+  both of --map and --thread are specified.
+
+Nick Forrington (1):
+  perf lock info: Display both map and thread by default
+
+ tools/perf/Documentation/perf-lock.txt |  4 ++--
+ tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.44.0
 
