@@ -1,146 +1,114 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283357E9
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 00:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2BF18E20
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 04:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714608638; cv=none; b=G9PNbLdRHj52wGALHLCpBrQXN5Zc3oOdYKL4QHq1ezGAIrcVCa199uh3NI1rhkQF1qW4ieaT51vIQZCg8ZRH+acY9L4gjhxGICu4WsDEt3+HBlZYmEhIV6vDb/hMs5ltrlGt8eCgiHEADmmPRoreOjfY6SMgGKtUPjpFSqFyG6M=
+	t=1714622494; cv=none; b=bSvbRR7ZAKfKaWa+rmpWzg8YnIlx+QUQcVam0TLHgG47tg18/FAzhHCpNcy1KAsRYbKf99MVvFOA96zOAZn89cigipP6wXyHkEfYX7YzT6JeT9gnaGlAOAsSKuB6WNDjyz360oLnAhsw3/mysrAQSSsVV6z26y4T/JpBhAHuWHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714608638; c=relaxed/simple;
-	bh=ovshN1wx0a96KhMF9SL4r+sZ/ZF7IW6XTXVoM6eCEcU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UsOi17LcAJ7VFB1CIJMzrLvhkVQYVY/GPzQRVtZVElWz2VLZ5goQ4Mp0Gx2UmVp0bCzhBOn35q/RKiRSiMX/yRMuwf+8+QiwljO0hjWI8uvOoIRFSpjtEPGO4dhvBdRSvtNzOVGFwsJFsLCKSFyycOzRz6mw/uA5XeBu1bP+J8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vUdWpZ4a; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1714622494; c=relaxed/simple;
+	bh=37j/Z0B+XnloIjgIcP2R6qgOY6ShZO2LUmAQ9rdLv7o=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=oU26xclJqpBmYfc5VfCswM4FtFH4e/ZfeL55sm8zn/+JWIVGfG7WhMAFU0vR2Y0eeib/81IwAw0cApRu2u3c7gafbou9gxGr1flEgHE5rAFgYQDlkMkOqf/Ng/EHyDhk06t6vuLrn9LOU05eRx3VuJTxi02hjU/DhhL6UIgg+rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y0ubfWNj; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vUdWpZ4a"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572afdee2a8so4103a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 17:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y0ubfWNj"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be8f7ed6eso18840947b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 May 2024 21:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714608635; x=1715213435; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HwZn/EUbFT2DPFnhsId0ig3pCxb4PHt3FC6NZeLlmsQ=;
-        b=vUdWpZ4a8UQBFUrAOStD4Ajn8XzyBJNzDrlovrNNtJx0WQScXzKY8dbr2EFujfWjA2
-         iAuKKnZJkdAuuq6/92NwdGel3JtXBfJj+K4PgVLW6d2HQqpoDeEVxJMfPjgF/QMnV+UR
-         zzc/siVPKn7LjGR1xpUAapcvex8oxEBbs14rnAjTLtSXL/E0j6k9kGhjmZFCpyuCROxE
-         AoKVD/Ko0gEJzlW1UkqWJh+4XbyMGJWzHzZdhFFSZGlsBcYNeLCyxIojAcEwiGvbTQjd
-         u2pkD1G1qMNaYmIrfZYD6e7OI+CocRqX/FA/WGUeWa7UD2T6qWfcnqYb3YmRVHY0Mf4P
-         Tleg==
+        d=google.com; s=20230601; t=1714622491; x=1715227291; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m4VDeNJAoZaS4Xs4WRhklAjJjfZZqn8kn9XarE54odw=;
+        b=y0ubfWNjASQagDitG6ZmkKZKJiEMKJN2enAWLPpxtC01j/6S1yhZBWchJqszM+v7j4
+         C/cXg33D+E1f4//yci8cjs7khMifiCMfHI29Xtq6b+ZTV4VqM18DsjlZKkTOiwo2NPpL
+         ZEdSC0/0Tf0hprL9slYyd2YUU7qwe3Lshd1BwquGH80RA6Iz15aWee7ecTgtKg47B09V
+         FvrwuCFldzgKpd/wcPNIMJXv4SnNlDfl8mnw/t9Kqy41GKt+eBpOfboVfIIPtd6ULswk
+         IS7s8J5X8FOTGYIP5bWpV1c7sPhLYKF7/p7ckIlCECEcqh2zRVha97DSHqE5lNLTKWd8
+         ztHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714608635; x=1715213435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HwZn/EUbFT2DPFnhsId0ig3pCxb4PHt3FC6NZeLlmsQ=;
-        b=Q7OUVn19G2QiSO6UGaeF5OO9BdWJpftTflTs3mbfPUc/Jl9pjtlMFres4gcmpPr/YP
-         9Yy+1BVXl8dlHwXCebVZ8bvQw0EDFwtwRT+ogOA9PYmEjT0o81mwHD4oMVvJudTFxF3k
-         0ldykELob02rtFf17NLG4EFErIXNzTDjObYucqkCKewhQYZo+iR5xZqEOk0skOsQJlEq
-         OOXHwkXPaMwc6jCuBUVUzHhNhvshM2DZHLFmOHksS+R5Bq2rZwOZbfUBaFJgwWFBtQIo
-         7xEBDuqDZmJfPJCQhIhtjiQ2KLRuRJd5IEsXc9knARl5G9oYBZ+H1nnxu8CLQ/pP8VPt
-         l43A==
-X-Forwarded-Encrypted: i=1; AJvYcCXAUBPHMvIHVOP4Q0iqY52KtMUN6nMi6dpnNTc2W2H2OsmqebNIpTF6M1vVPPZpwzfSV02fWqGwTfYcLV7qQzmNonpZtEftkKpR/7kOUKy9lg==
-X-Gm-Message-State: AOJu0Yxq7trEdCGdEyifrCOcJcwT3rZovAkl/KczD4H5+gKBY1ZnFMET
-	4ygNVKDhazoiZAaCFPIMEwtYKbDME9TcJOGtlS46x3PUVOSTV08dJrGmtu9Z/nwhGWEIm6om2gJ
-	gHpXzVqjIy2ObNeq9XSXRh3DU4SyYHFcL6+k=
-X-Google-Smtp-Source: AGHT+IGXxESh50ssJnC6i1zqM0O1KLj5H6YYS74AtopmqIJoZqReo1GbCyMQD/hmHR26LkVeojEGMSE0nGet60ValFE=
-X-Received: by 2002:a05:6402:1206:b0:572:57d8:4516 with SMTP id
- 4fb4d7f45d1cf-572bb76b9d6mr84865a12.2.1714608635272; Wed, 01 May 2024
- 17:10:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714622491; x=1715227291;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m4VDeNJAoZaS4Xs4WRhklAjJjfZZqn8kn9XarE54odw=;
+        b=ZZX4QSqW0C9zIAY3rSRVwt514ut7w1XWQCT4b+gLI5O6IkuxCJmGY3NYOivMSY/t2O
+         Mc7ZpZ3Vm1jnc2z1KGp/c5elu3VTJXQua5LR4fpmSfngKloacXRKuZv0KqQaePhDsgaA
+         JO7AyGd2EqentFJH0j22j0ZwFQSTEO2u+uzgX2XFiVQB7ekslxkedwR2Rk3mDgOzwENr
+         DNQ2/IYS8I3FLKdUCLF4x6bkR43eA6NEiY8iRu1U1h195VxUuzn7IyiQjNq/5WAhhhiC
+         kDsO2q5HRSzPflwr0JbKEcOIZwJaER9Rnm5vPEh5xUnijH6qfKOfc60dXQY237ETNKTg
+         Qvpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyeKrbd0rBc8RfWKhHU0Z1R6FF2GJvCf5IDS/99il03GlUvQ+LV797PjQ3GWUzzU8U2dfTVxmfVFONnVnVfzxb+BO0gM7ma+cLA99HL7pBVA==
+X-Gm-Message-State: AOJu0YzKvziCTYx7r7xYILDFYsLK9kiiYTynj/wjUliuIUnhcdzXe+ke
+	G+iTbPMMA4YvwvOIuLyOdmwQFkjJDNbQPaNM0YcJAV5RO0B1gzWjLU9lpERHrg39c0x51vvhYxS
+	/pl/qjg==
+X-Google-Smtp-Source: AGHT+IFq47a1+HUIL9gjy9nk8sbcRRxfuJtc3btqJfIm+Yz6izu0eLOiC4O5aefoRZdX/lBTLZYP+14GruPQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:53b9:bbda:1daa:17d3])
+ (user=irogers job=sendgmr) by 2002:a0d:ea0d:0:b0:61b:32dc:881d with SMTP id
+ t13-20020a0dea0d000000b0061b32dc881dmr414597ywe.3.1714622490822; Wed, 01 May
+ 2024 21:01:30 -0700 (PDT)
+Date: Wed,  1 May 2024 21:01:06 -0700
+Message-Id: <20240502040112.2111157-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240425220509.1751260-1-yabinc@google.com> <CAM9d7cjQQ3AU7LFXYHEYukwSB9CvFQPtSzg3anfVg=maCP56AA@mail.gmail.com>
-In-Reply-To: <CAM9d7cjQQ3AU7LFXYHEYukwSB9CvFQPtSzg3anfVg=maCP56AA@mail.gmail.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Wed, 1 May 2024 17:10:23 -0700
-Message-ID: <CALJ9ZPP-6bB4f4UP0Ydtsfty-PMRti_MqjZz5uazDXjuFtQsRQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: Trim dyn_size if raw data is absent
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+Subject: [PATCH v4 0/6] Assume sysfs event names are always the same case
+From: Ian Rogers <irogers@google.com>
+To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf <bpf@vger.kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
+	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Namyung,
+By assuming sysfs events are either upper or lower case, the case
+insensitive event parsing can probe for the existence of files rather
+then loading all events in a directory. When the event is a json event
+like inst_retired.any on Intel, this reduces the number of openat
+calls on a Tigerlake laptop from 325 down to 255.
 
-Thanks for reviewing the patch! Fixing the callsites is a better idea.
-I have sent a v2 patch with name [PATCH v2] perf/core: Save raw sample
-data conditionally based on sample type.
-Rejecting tracepoint events without PERF_SAMPLE_RAW will break my use
-case in Android. So I hope we don't do that.
+v1 sent as an RFC:
+    https://lore.kernel.org/lkml/20240413040812.4042051-1-irogers@google.com/
 
-Thanks,
-Yabin
+v2: addresses review feedback from Kan Liang, by updating
+    documentation and adding tests.
 
+v3: incorporate feedback from Thomas Richter <tmricht@linux.ibm.com>
+    that s390 event names are all upper case. Do a lower case probe
+    then an upper case probe, make documentation and tests also agree.
 
+v4: add checks to write (kernel test robot) and fix a typo.
 
+Ian Rogers (6):
+  perf test pmu-events: Make it clearer that pmu-events tests json
+    events
+  perf Document: Sysfs event names must be lower or upper case
+  perf test pmu: Refactor format test and exposed test APIs
+  perf test pmu: Add an eagerly loaded event test
+  perf test pmu: Test all sysfs PMU event names are the same case
+  perf pmu: Assume sysfs events are always the same case
 
+ .../sysfs-bus-event_source-devices-events     |   6 +
+ tools/perf/tests/pmu-events.c                 |   2 +-
+ tools/perf/tests/pmu.c                        | 468 ++++++++++++------
+ tools/perf/util/parse-events.c                |   2 +-
+ tools/perf/util/parse-events.h                |   2 +-
+ tools/perf/util/pmu.c                         | 111 +++--
+ tools/perf/util/pmu.h                         |   4 +-
+ tools/perf/util/pmus.c                        |  16 +-
+ tools/perf/util/pmus.h                        |   2 +
+ 9 files changed, 416 insertions(+), 197 deletions(-)
 
+-- 
+2.45.0.rc0.197.gbae5840b3b-goog
 
-On Mon, Apr 29, 2024 at 2:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello Yabin,
->
-> CC-ing the bpf list.
->
-> On Thu, Apr 25, 2024 at 3:05=E2=80=AFPM Yabin Cui <yabinc@google.com> wro=
-te:
-> >
-> > Currently, perf_tp_event() always allocates space for raw sample data,
-> > even when the PERF_SAMPLE_RAW flag is not set. This leads to unused
-> > spaces within generated sample records.
-> >
-> > This patch reduces dyn_size when PERF_SAMPLE_RAW is not present,
-> > ensuring sample records use only the necessary amount of space.
->
-> Right, it seems bpf-output and tracepoint events set the flags without
-> checking PERF_SAMPLE_RAW.  Can you fix the callsites instead?
-> Or we can add perf_event argument to perf_sample_save_raw_data()
-> and check the flag inside.
->
-> We might reject the output data when it's not opened with the flag.
-> But I'm afraid it might break some existing BPF programs.
->
-> Thanks,
-> Namhyung
->
-> >
-> > Fixes: 0a9081cf0a11 ("perf/core: Add perf_sample_save_raw_data() helper=
-")
-> > Signed-off-by: Yabin Cui <yabinc@google.com>
-> > ---
-> >  kernel/events/core.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 724e6d7e128f..d68ecdc264d3 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -7688,6 +7688,10 @@ void perf_prepare_sample(struct perf_sample_data=
- *data,
-> >                 data->raw =3D NULL;
-> >                 data->dyn_size +=3D sizeof(u64);
-> >                 data->sample_flags |=3D PERF_SAMPLE_RAW;
-> > +       } else if ((data->sample_flags & ~sample_type) & PERF_SAMPLE_RA=
-W) {
-> > +               data->dyn_size -=3D data->raw->size + sizeof(u32);
-> > +               data->raw =3D NULL;
-> > +               data->sample_flags &=3D ~PERF_SAMPLE_RAW;
-> >         }
-> >
-> >         if (filtered_sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> > --
-> > 2.44.0.769.g3c40516874-goog
-> >
