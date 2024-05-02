@@ -1,106 +1,328 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FA022EF0
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 16:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBFE16FF44;
+	Thu,  2 May 2024 17:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667693; cv=none; b=QKOXAfDSqB+DtOIbjVw9rjT2F+PtM8k8bipHwsEDH8HG1Vzw6zS3CCciYC3vC6UNHGsf4GP2uZHxoGjIHsDRGorKdX3gRZ9e2JgSs5dWCLd8tcumg4GzzJ+NHQ4zUTBHD4nFFFpw/autk6QDZ1Ymyzkoy4lU6+oBEUxVCwusqVI=
+	t=1714672662; cv=none; b=EPMbT6Iq48duban5m0jOFgGyMzCoWQZ8MQZMVnpXix8MIC56xx4epq+DQmMb6KBBf5kGqUDW5eob4oLgWQwreylNNZIHdcWY4Xx4QNnL81gSM/MqCU/nZeOsicBWInT4ni5nDle2Wh4NMUdzp6XnJhfW9qetLYlwTe1j0ZGOFq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667693; c=relaxed/simple;
-	bh=jrSH2V7P12JWwZ6nyVI64M5FJoPI6SANAXibqtFo+ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NUEvnubxo/1aa+k1zTURKxKCnqhuqJTAm4A/dqp5MJ3EUOmUCQhJ1ruj+Y1X7IpbhzjEr9+IgD1FUh25lUQv0/GN6o10BAdaF7PF5aC6wQBZmvmVfNA9TUfiCVFmCiwu8FG65jTonhb9c+9tFRhYe05d7pRkTXonwrYHoIT04qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoCgW5c6; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714672662; c=relaxed/simple;
+	bh=SprQzZ+S9ZE0ocMgFX+Om3A97tqY8iIu2YvgwbQYV+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fMkSPG1Z36PihjPxITNXaH5xZDEnVjI6630dm+Xkl50YjWhA+VZYUKTIqsO/RSKKl1CJmUDZHMbc6QFcbNnvLeHPh/uIpHQOYTDs511ogwIpJBy4dONywzgoD+QVuX2q5gCSMCdbvdZzmiG+FFqEyDx5Uqdd+bD7F+uOoYah1eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/kZG/R/; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoCgW5c6"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51f3a49ff7dso891270e87.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 09:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714667690; x=1715272490; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j69fnkw73Jj/8uwUv3zymb+61FtNr7hRBA50kByEZ3o=;
-        b=OoCgW5c6o6qTNkVpjzUMXYADQKvN0as8XYKrtt2Sj6sfBQYdQs1guqu5UVBIuEIjcc
-         JQcHiaTPnXdlzltVTPko9IAxwzdsJgJMsabXtmhWhig4RbswJ/BMVxa6kiLpY7/rMPJz
-         z8yWFw+fk0wkLe6qkiDcF8McYVl0sDID7YlyVqLV2nxi4f8RjbFsVrDIjj88xHRC9htP
-         VUMh7vYm17hR1J2oZzput1oIgNg2OOktUJf3XAA1xHgnobgwaoMHrfkVR5KBCIckJLIe
-         yWFNJSBbJ/qUdn+cG1NUkXnE63h+TF7YmnFJFCAbZOJzntUubamapUeLbVlp/Vt3tfqE
-         gTlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714667690; x=1715272490;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j69fnkw73Jj/8uwUv3zymb+61FtNr7hRBA50kByEZ3o=;
-        b=jgjBwiI0Gxzh/cJ18XWGuklKIpsjU0uvFbtvTUMGZJpD9Y101dnMM72G8gSbzRO7r/
-         73vKouC00o6V2pWen/KFpCy3Eb+hJp+MMR89KEqPoR0K9iOszuHFuxHSYFQ3bDVh3xSE
-         HJlDP6XpXqYvD77YKD8iSTiB7NPfIxDK4ugkII63jbQ+pBdVa63bG2dXNbO441bqzIkG
-         Hop7rZ979kB1YlZLrlOu69GI1MJxWBmCCNijFYxdBizUK+IBJ2OkZM87BGOsOHQfTwoU
-         pBzgoGhwDcEI9l1BmqFmyvYknIs7Y9fUik3DW2BiYG6nPFCn8ZMEzZmvG2t0nPK6QtwV
-         wgNQ==
-X-Gm-Message-State: AOJu0Yw9B2XBI0ssEtYq0/SvlzIaYFYLSf3mIqFKaXGe0mL1GNca+0ms
-	QIp91WwH7Q3GNIJ9OwxxwkchgTyCi2vLCO+OBbIb7Cc/2590JRI=
-X-Google-Smtp-Source: AGHT+IGibzDkKJPOjL8Z/XgsxPgpKbTpmwdSUXHF5ZX5GT7/tY1cOmRTYbCm7lEwaIYaGeK/TvUBAA==
-X-Received: by 2002:ac2:5e81:0:b0:51d:9ac6:568 with SMTP id b1-20020ac25e81000000b0051d9ac60568mr218870lfq.36.1714667689179;
-        Thu, 02 May 2024 09:34:49 -0700 (PDT)
-Received: from octinomon.home (182.179.147.147.dyn.plus.net. [147.147.179.182])
-        by smtp.gmail.com with ESMTPSA id p20-20020a05600c469400b0041bc41287cesm2491285wmo.16.2024.05.02.09.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 09:34:48 -0700 (PDT)
-Date: Thu, 2 May 2024 17:34:46 +0100
-From: Jules Bashizi Irenge <jbi.octave@gmail.com>
-To: David Laight <David.Laight@aculab.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Message-ID: <ZjPApuDc0gL9Pchm@octinomon.home>
-References: <Zi57-TMgU19puaQM@octinomon.home>
- <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/kZG/R/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714672661; x=1746208661;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=SprQzZ+S9ZE0ocMgFX+Om3A97tqY8iIu2YvgwbQYV+U=;
+  b=i/kZG/R/M+fhBFq5OSDOXTcY1w0o6Iv/Op5wu3Kcae6i4xkuqaMR3XBQ
+   3XH0tHjlpw6Tegf5OIzJP44bQb//xAcRIezrr/upqsX46p7VQOL4URHyW
+   oNlc+pUWb7fddDa+H03oQOQMDX27Wc8QrTsh+uef3sW5KJss0Iya5RSC+
+   ehWKYOEKuiHcNRTwDCOFhSCtZckuaX71IsX7dmaykMj8M+0W4MUb77yN6
+   k8NFDvG8f0KoRV5a2ZDCNnhsMnJR8SpCP0HD4lHLsKO6lo36q3rgNQXUX
+   PIOYrtZalykYbvbv+pGii6oZFWae/GMNDFR+jp4m59N0SgcqJsRkcehKD
+   w==;
+X-CSE-ConnectionGUID: NECZizo9TAif3hE1PRbVCg==
+X-CSE-MsgGUID: XxenbgaoS6ucLTfNqkgTVQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="21011706"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="21011706"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:57:40 -0700
+X-CSE-ConnectionGUID: q2hgHsGtSOSZ1Vz8eTTrMQ==
+X-CSE-MsgGUID: msCKMrMXSWahigYm4SqnhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="31869275"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:57:40 -0700
+Received: from [10.213.161.211] (kliang2-mobl1.ccr.corp.intel.com [10.213.161.211])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D841220B5739;
+	Thu,  2 May 2024 10:57:37 -0700 (PDT)
+Message-ID: <487907c6-3c77-410a-aabd-201273110e1a@linux.intel.com>
+Date: Thu, 2 May 2024 13:57:36 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/6] perf test pmu: Add an eagerly loaded event test
+To: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
+ Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240502040112.2111157-1-irogers@google.com>
+ <20240502040112.2111157-5-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240502040112.2111157-5-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 02, 2024 at 04:25:58PM +0000, David Laight wrote:
-> From: Jules Irenge <jbi.octave@gmail.com>
-> > Sent: 28 April 2024 17:40
-> > 
-> > do_div() truncates a u64 divisor to 32 bit.
-> > This can lead to non-zero being truncated to zero for division.
-> > 
-> > Fix coccinelle warning
-> > WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead
-> > 
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> > ---
-> >  arch/x86/events/amd/power.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
-> > index 37d5b380516e..ff003c1a645b 100644
-> > --- a/arch/x86/events/amd/power.c
-> > +++ b/arch/x86/events/amd/power.c
-> > @@ -64,7 +64,7 @@ static void event_update(struct perf_event *event)
-> >  	delta *= cpu_pwr_sample_ratio * 1000;
-> >  	tdelta = new_ptsc - prev_ptsc;
-> > 
-> > -	do_div(delta, tdelta);
-> > +	div64_u64(delta, tdelta);
-> 
-> Nak - you've not tested it.
-> 
-> 	David
-> 
-No, I later realised it's for 32bit here. It may be very expensive for
-a 32bit.
-I think I got it wrong here.
 
-Thanks for reply.
-Jules
+
+On 2024-05-02 12:01 a.m., Ian Rogers wrote:
+> Allow events/aliases to be eagerly loaded for a PMU. Factor out the
+> pmu_aliases_parse to allow this. Parse a test event and check it
+> configures the attribute as expected. There is overlap with the
+> parse-events tests, but this test is done with a PMU created in a temp
+> directory and doesn't rely on PMUs in sysfs.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/pmu.c | 77 ++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/pmu.c  | 69 +++++++++++++++++++++++++------------
+>  2 files changed, 125 insertions(+), 21 deletions(-)
+> 
+> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+> index 424ebdb0f09d..6e18a4c447ce 100644
+> --- a/tools/perf/tests/pmu.c
+> +++ b/tools/perf/tests/pmu.c
+> @@ -1,4 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include "evlist.h"
+> +#include "evsel.h"
+>  #include "parse-events.h"
+>  #include "pmu.h"
+>  #include "tests.h"
+> @@ -54,6 +56,9 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
+>  		{ "krava22", "config2:8,18,48,58\n", },
+>  		{ "krava23", "config2:28-29,38\n", },
+>  	};
+> +	const char *test_event = "krava01=15,krava02=170,krava03=1,krava11=27,krava12=1,"
+> +		"krava13=2,krava21=119,krava22=11,krava23=2\n";
+> +
+>  	char name[PATH_MAX];
+>  	int dirfd, file;
+>  	struct perf_pmu *pmu = NULL;
+> @@ -116,6 +121,24 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
+>  		close(file);
+>  	}
+>  
+> +	/* Create test event. */
+> +	if (mkdirat(dirfd, "perf-pmu-test/events", 0755) < 0) {
+> +		pr_err("Failed to mkdir PMU events directory\n");
+> +		goto err_out;
+> +	}
+> +	file = openat(dirfd, "perf-pmu-test/events/test-event", O_WRONLY | O_CREAT, 0600);
+> +	if (!file) {
+> +		pr_err("Failed to open for writing file \"type\"\n");
+> +		goto err_out;
+> +	}
+> +	len = strlen(test_event);
+> +	if (write(file, test_event, len) < len) {
+> +		close(file);
+> +		pr_err("Failed to write to 'test-event' file\n");
+> +		goto err_out;
+> +	}
+> +	close(file);
+> +
+>  	/* Make the PMU reading the files created above. */
+>  	pmu = perf_pmus__add_test_pmu(dirfd, "perf-pmu-test");
+>  	if (!pmu)
+> @@ -176,8 +199,62 @@ static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest
+>  	return ret;
+>  }
+>  
+> +static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+> +{
+> +	char dir[PATH_MAX];
+> +	struct parse_events_error err;
+> +	struct evlist *evlist;
+> +	struct evsel *evsel;
+> +	struct perf_event_attr *attr;
+> +	int ret;
+> +	struct perf_pmu *pmu = test_pmu_get(dir, sizeof(dir));
+> +	const char *event = "perf-pmu-test/test-event/";
+> +
+> +
+> +	if (!pmu)
+> +		return TEST_FAIL;
+> +
+> +	evlist = evlist__new();
+> +	if (evlist == NULL) {
+> +		pr_err("Failed allocation");
+> +		goto err_out;
+> +	}
+> +	parse_events_error__init(&err);
+> +	ret = parse_events(evlist, event, &err);
+> +	if (ret) {
+> +		pr_debug("failed to parse event '%s', err %d\n", event, ret);
+> +		parse_events_error__print(&err, event);
+> +		ret = TEST_FAIL;
+> +		if (parse_events_error__contains(&err, "can't access trace events"))
+> +			ret = TEST_SKIP;
+> +		goto err_out;
+> +	}
+> +	evsel = evlist__first(evlist);
+> +	attr = &evsel->core.attr;
+> +	if (attr->config  != 0xc00000000002a823) {
+> +		pr_err("Unexpected config value %llx\n", attr->config);
+> +		goto err_out;
+> +	}
+> +	if (attr->config1 != 0x8000400000000145) {
+> +		pr_err("Unexpected config1 value %llx\n", attr->config1);
+> +		goto err_out;
+> +	}
+> +	if (attr->config2 != 0x0400000020041d07) {
+> +		pr_err("Unexpected config2 value %llx\n", attr->config2);
+> +		goto err_out;
+> +	}
+> +
+> +	ret = TEST_OK;
+> +err_out:
+> +	parse_events_error__exit(&err);
+> +	evlist__delete(evlist);
+> +	test_pmu_put(dir, pmu);
+> +	return ret;
+
+Got a warning when I compile the patch.
+
+tests/pmu.c: In function ‘test__pmu_events’:
+tests/pmu.c:257:16: error: ‘ret’ may be used uninitialized in this
+function [-Werror=maybe-uninitialized]
+  257 |         return ret;
+      |                ^~~
+
+Thanks,
+Kan
+
+> +}
+> +
+>  static struct test_case tests__pmu[] = {
+>  	TEST_CASE("Parsing with PMU format directory", pmu_format),
+> +	TEST_CASE("Parsing with PMU event", pmu_events),
+>  	{	.name = NULL, }
+>  };
+>  
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index fbbc535ed93f..7849be4bfea1 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -597,33 +597,18 @@ static inline bool pmu_alias_info_file(const char *name)
+>   * Reading the pmu event aliases definition, which should be located at:
+>   * /sys/bus/event_source/devices/<dev>/events as sysfs group attributes.
+>   */
+> -static int pmu_aliases_parse(struct perf_pmu *pmu)
+> +static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
+>  {
+> -	char path[PATH_MAX];
+>  	struct dirent *evt_ent;
+>  	DIR *event_dir;
+> -	size_t len;
+> -	int fd, dir_fd;
+>  
+> -	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
+> -	if (!len)
+> -		return 0;
+> -	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
+> -
+> -	dir_fd = open(path, O_DIRECTORY);
+> -	if (dir_fd == -1) {
+> -		pmu->sysfs_aliases_loaded = true;
+> -		return 0;
+> -	}
+> -
+> -	event_dir = fdopendir(dir_fd);
+> -	if (!event_dir){
+> -		close (dir_fd);
+> +	event_dir = fdopendir(events_dir_fd);
+> +	if (!event_dir)
+>  		return -EINVAL;
+> -	}
+>  
+>  	while ((evt_ent = readdir(event_dir))) {
+>  		char *name = evt_ent->d_name;
+> +		int fd;
+>  		FILE *file;
+>  
+>  		if (!strcmp(name, ".") || !strcmp(name, ".."))
+> @@ -635,7 +620,7 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
+>  		if (pmu_alias_info_file(name))
+>  			continue;
+>  
+> -		fd = openat(dir_fd, name, O_RDONLY);
+> +		fd = openat(events_dir_fd, name, O_RDONLY);
+>  		if (fd == -1) {
+>  			pr_debug("Cannot open %s\n", name);
+>  			continue;
+> @@ -653,11 +638,50 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
+>  	}
+>  
+>  	closedir(event_dir);
+> -	close (dir_fd);
+>  	pmu->sysfs_aliases_loaded = true;
+>  	return 0;
+>  }
+>  
+> +static int pmu_aliases_parse(struct perf_pmu *pmu)
+> +{
+> +	char path[PATH_MAX];
+> +	size_t len;
+> +	int events_dir_fd, ret;
+> +
+> +	if (pmu->sysfs_aliases_loaded)
+> +		return 0;
+> +
+> +	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
+> +	if (!len)
+> +		return 0;
+> +	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
+> +
+> +	events_dir_fd = open(path, O_DIRECTORY);
+> +	if (events_dir_fd == -1) {
+> +		pmu->sysfs_aliases_loaded = true;
+> +		return 0;
+> +	}
+> +	ret = __pmu_aliases_parse(pmu, events_dir_fd);
+> +	close(events_dir_fd);
+> +	return ret;
+> +}
+> +
+> +static int pmu_aliases_parse_eager(struct perf_pmu *pmu, int sysfs_fd)
+> +{
+> +	char path[FILENAME_MAX + 7];
+> +	int ret, events_dir_fd;
+> +
+> +	scnprintf(path, sizeof(path), "%s/events", pmu->name);
+> +	events_dir_fd = openat(sysfs_fd, path, O_DIRECTORY, 0);
+> +	if (events_dir_fd == -1) {
+> +		pmu->sysfs_aliases_loaded = true;
+> +		return 0;
+> +	}
+> +	ret = __pmu_aliases_parse(pmu, events_dir_fd);
+> +	close(events_dir_fd);
+> +	return ret;
+> +}
+> +
+>  static int pmu_alias_terms(struct perf_pmu_alias *alias, int err_loc, struct list_head *terms)
+>  {
+>  	struct parse_events_term *term, *cloned;
+> @@ -1042,6 +1066,9 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+>  
+>  	perf_pmu__arch_init(pmu);
+>  
+> +	if (eager_load)
+> +		pmu_aliases_parse_eager(pmu, dirfd);
+> +
+>  	return pmu;
+>  err:
+>  	zfree(&pmu->name);
