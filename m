@@ -1,108 +1,137 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0857C87
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 22:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974FA8462
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 23:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714690539; cv=none; b=iyYr5P20ojEseM4oeYkSU5OdW/ZJ0dJ8oEcIFkr+YnkDZfvW/qkWmg9ZPb7s8GqDS/ubTKcD+KaAavvHpadudAkQOcW9lY3ApUVkqSxhMmkD/yWhqbhsIxX0yx9CXHqeHEQsCyJ5q1S/EdY9q7T956q/r+1Xk9PKU+OmYmsjQNI=
+	t=1714690802; cv=none; b=kruwL86BGRFv6pIGQdt4udjhp5kaRxFyFAyqBKRBSZwNHlg7iWdZZpGTf4ME1pw8PxLsl2ZBSt/M31/mcq2Wy+lWFZ44LDpJxCMTMSO5eQ+DyD7Ep26jx8tQd6UE/RGpdJEzWmLzbe3hGGmYjwgF3S1+q0tcavH3p4ops/YLoAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714690539; c=relaxed/simple;
-	bh=jdAiCkqZVm00u5Mpkujq7LizhSxkgvjQSLxjSmd+0FA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NNk98A+vgfFcde99wJo/bX3QsIE5Vgjxhekpcp3xa2dAyMlCfixmCQ5mB41fXGhnQ+vTg++rAJi4QXrMeKW+h+YDo819nG7xfO0bBdVs+NzrqZIR/aUoGEM86q4gbLscBqFmxzfZbECzGo47lgcwsaGcwM2xFJK29pzgcoXYA/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lbq9Zoo5; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714690802; c=relaxed/simple;
+	bh=oJ2B3xWnyMsG3znWjYEqNMQOOuCTKjRZIDwsdrKa4EM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rWwU4OIk0wfPirUteVB8ohdowk/j/YZ8y5NCo8nRXwOoP3XGcSDrza74GOiHiByKOzBLgolr78uzXvV5vtzSS7AXnvOJDCaUeCUUPTys8a5PuOEXNe8+FbXpQn6QkPxDuCeIzU32cihs+/8k/OYByfgdWtrRYpDADBVBqQKFKEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dgiNmpvI; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lbq9Zoo5"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f43015b763so894163b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 15:55:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dgiNmpvI"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34dc8d3fbf1so1554945f8f.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 16:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714690537; x=1715295337; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CVZTpe/CdBBd4zno1lRIevv+TY5Lijp2ynWtx6BFty4=;
-        b=Lbq9Zoo5ADuUvFCZS6aZyFRnbZNe/xhaxiwCetCzf+SPd6d0pcGtz3C5AdBpBU500c
-         zYVHM3DDMHk/OzmdJrYJ3hGkN02AzUwbE1v/2qiR9ynwW1HbxohOZuyC+0TsERKI1Eb1
-         Bz1xkH9ygggoGOh6zCdmBFE4zpmB5vZ31od50=
+        d=linux-foundation.org; s=google; t=1714690799; x=1715295599; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DtPekKLO5uWz03wcMhz4ZUHzEKah4IbGaG0Ir6OHM8M=;
+        b=dgiNmpvIw0GdhYmpq5jy4m5suhcDIPq2xv7MZtSqtI5UN+8MsylSwT8Atug2kA9XLE
+         bfJyYcNtzAUruGA0Ml12CqWNwIriREe1zynHCV6H80nhscGXA2JoHMTvH9SnX4CJ2QVG
+         fxGUIQgO+HqhZ9a2acnWaI49NwErG6qBM4ObI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714690537; x=1715295337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CVZTpe/CdBBd4zno1lRIevv+TY5Lijp2ynWtx6BFty4=;
-        b=sQAZh4xG9fsPZE9IWxF3jER92GPnnH0qp3YuE0d0HTeWp6iYZ0NnqFfb1L+nJQu5ot
-         lQM9bt5gf/MDb/nZVI7tGiN8tfiPXQkuyPAPphCjW+f3oFcvM5nZLOm7T8eNGuWiyqZK
-         J0YEBvjt9w9Uyz7xkHZArJEmqD2lcvmRNvJIhUdC4ODFGeJMaeQm9cguLmpaAnKy5g1+
-         9Rm4D2jvIXFk8Y/9ssakM32ZAZfEy6giUQiEXsGr6kb6IDkPDXyMRctOl+m8wPcIGx3U
-         2GTAjb44FrGOCGbxqpDoMmGYhLRKjNcwswv2p7S+vhnSDF14xFgiB5eEArsIelW9HGv/
-         1SRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWL7W6BI+j0mfxAOyhR4r+JIW5V8Fjj1bxsxYmVsEfiwheh26poC+Fmp78IpMxjX/QAFMKnmdPZGxzYM8uBJfzK9L2O8UH/rfjgBKznIWkmsQ==
-X-Gm-Message-State: AOJu0YwczcTrwk7yar+U+0Qu8mW/Mbv6uR0OE5mSeEv28cOIr3uePLnD
-	1OabbkxNF29yohgfBmmYfXljKmBlS6kxRiy89QQiSyuZJ4CeJeivr7gzFaeoHA==
-X-Google-Smtp-Source: AGHT+IE3eOeOzKAoJovEuP0RnaA3tq2hqa/aT1L12pQ6aR7WKuRKsLt1bl+kuCC94IGtD86XBl1D8w==
-X-Received: by 2002:a17:902:fd50:b0:1e0:c0b9:589e with SMTP id mq16-20020a170902fd5000b001e0c0b9589emr4838945plb.25.1714690537346;
-        Thu, 02 May 2024 15:55:37 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z14-20020a170903018e00b001ecb2179da6sm1877090plg.56.2024.05.02.15.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 15:55:37 -0700 (PDT)
-Date: Thu, 2 May 2024 15:55:36 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202405021552.5C000EA@keescook>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240430091504.GC40213@noisy.programming.kicks-ass.net>
- <202405011317.AF41B94B@keescook>
- <20240502091837.GA30852@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1714690799; x=1715295599;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DtPekKLO5uWz03wcMhz4ZUHzEKah4IbGaG0Ir6OHM8M=;
+        b=Ucd3yb8ExvGGbiRMCwK9cyFXym9sk8SqHj/gjvLsEHIyqauyc4ORmkkqHDP8MglTf9
+         YRe0Ji87nYUBN6fJTWNU24PKHlnICorh8ddC7anT07Wx6U+DOHpYJFY6qQj5pC42yAHX
+         dSPocrAc7fDYeK+GllMnpPidAfFYH8WnXegCAzbRy3+SKiR/BuI0wMh3p45outDIp4Mt
+         skRP9RaOFZJhGCEUS23f/j7NpA8eQK8DoL05yMb5f31VqRKC9QdSUjbq892tC50hyks+
+         q96dBxGhYx6VuBQ7gjTuT01Yb5vLLxHA+QExELV+trTjcIvWwenCALuTr5JAm/A+FMzs
+         6g6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVM/zb7udUDvJ8LTHNN3Idxn6VEiZjnCkqvESttIJz7aKfd8OhuZL+UBnW7lV6gqKF88BmoSswTd+P7D6WXFGQGRaBoZGoVty/8th3n+Vh6Nw==
+X-Gm-Message-State: AOJu0YyV4YsdQc0GdBTDDDADwciHwtKQVybB26t8rqUHgTIVdAW5RVLz
+	zcNdV4aSVCbFG9J5UYyoNovsoJf1buuJg9e1jpl/uJH1FubJdUUB1OT+psjOcV2jogD9b6xZDM+
+	R36aXMQ==
+X-Google-Smtp-Source: AGHT+IFvNSSa//LXMQQmCaIsfh0/NxCCXXyn0Sw8KUWi3DR3xvNqs3D1LdHEUHEp8PVKQcSvwQDYwA==
+X-Received: by 2002:a5d:4207:0:b0:349:d7dd:9e4d with SMTP id n7-20020a5d4207000000b00349d7dd9e4dmr764077wrq.48.1714690798651;
+        Thu, 02 May 2024 15:59:58 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id j18-20020a170906279200b00a46a2779475sm1022159ejc.101.2024.05.02.15.59.58
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 15:59:58 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a51addddbd4so1002486166b.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 15:59:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsLGBOevCJ1Zf3eYs2K62L5HabXFQdbBuZ9uFUludh6K35sSlyx/+GvArwNf/85lsIN2nOqjhUBZEMFvzpDX/wD+CgAunUSN3E1iVhSiHFrw==
+X-Received: by 2002:a17:906:448:b0:a58:cd39:d154 with SMTP id
+ e8-20020a170906044800b00a58cd39d154mr504767eja.11.1714690797825; Thu, 02 May
+ 2024 15:59:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502091837.GA30852@noisy.programming.kicks-ass.net>
+References: <Zi57-TMgU19puaQM@octinomon.home> <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+ <ZjPApuDc0gL9Pchm@octinomon.home> <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+In-Reply-To: <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 2 May 2024 15:59:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+Message-ID: <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+To: David Laight <David.Laight@aculab.com>
+Cc: Jules Bashizi Irenge <jbi.octave@gmail.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 02, 2024 at 11:18:37AM +0200, Peter Zijlstra wrote:
-> On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
-> > On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
-> > > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> > > > This is an effort to get rid of all multiplications from allocation
-> > > > functions in order to prevent integer overflows [1][2].
-> > > 
-> > > So personally I detest struct_size() because I can never remember wtf it
-> > > does, whereas the code it replaces is simple and straight forward :/
-> > 
-> > Sure, new APIs can involved a learning curve. If we can all handle
-> > container_of(), we can deal with struct_size(). :)
-> 
-> containre_of() is actually *much* shorter than typing it all out. Which
-> is a benefit.
-> 
-> struct_size() not so much. That's just obfuscation for obfuscation's
-> sake.
+On Thu, 2 May 2024 at 15:19, David Laight <David.Laight@aculab.com> wrote:
+>
+> Somewhen it must have got changed from a simple asm wrapper for divl.
 
-It's really not -- it's making sure that the calculation is semantically
-sane: all the right things are being used for the struct size calculation
-and things can't "drift", if types change, flex array changes, etc. It's
-both a code robustness improvement and a wrap-around stopping improvement.
+It's never been a simple wrapper for divl. For the simple reason that
+'divl' doesn't do a full 64/32 divide returning a full 64-bit result.
 
--- 
-Kees Cook
+'divl' takes a 64-bit input, but only works if the whole result *fits*
+in 32 bits.
+
+If it doesn't, you need to do two divl instructions (the first to
+reduce the range).
+
+I think the only real change to do_div() has been to make it notice
+the constant power-of-two divides and turning them into shifts/masks.
+I'm not sure when that was done, and too lazy to check.
+
+> So maybe just supporting 64bit divide wouldn't be that expensive??
+
+A 64/64 divide is *much* more expensive than a 74/32 divide that does
+(potentially) two 'divl' instructions to get a 64/32 division.
+
+Go look at lib/math/div64.c and the mess that generates. We're talking
+bit scanning instructions, several multiples and 64-bit additions and
+subtractions, some shifts, etc etc. And that's in *addition* to the
+two divides. It's no longer inlinable.
+
+And yes, none of that is relevant on modern hardware, but the
+corollary to that is that on the old hardware where this *is*
+relevant, even the multiplies were 10+ cycles, and the bit scan
+reverse (that the full 64-bit divide thing uses) was 20-70 cycles.
+
+So a full 64/64 divide is cheap these days on 64-bit architectures,
+but is really bad on those old CPUs.
+
+In fact, the reason do_div() exists in the first place is that gcc has
+historically not understood that (maybe it does now - didn't check),
+and would force the full 64/64 divide.
+
+This is in contrast to the 32/32 divide that gcc does fine, which is
+why you have that
+
+                        __upper = __high % (__base);            \
+                        __high = __high / (__base);             \
+
+which gcc will just turn into a single divl on its own.
+
+That said, I agree that the "if (__high)" could always have been "if
+(__high >= __base)".
+
+It probably doesn't matter all that much, but div_u64_rem() randomly
+gets that right (same function conceptually, different calling
+conventions, different way to split the 64 bit value into two 32-bit
+ones).
+
+And if you don't care about the remainder, just use "div_u64()" which
+has even simpler calling convention (on 32-bit x86 it's the same code
+as div_u64_rem, the remainder just gets thrown away).
+
+             Linus
