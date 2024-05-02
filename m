@@ -1,142 +1,108 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BA257C94
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 22:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0857C87
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 22:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714689111; cv=none; b=Dq530Ur4UKrrZpiZGmQ9F1u3osR6lcP76XamXLTlNWwuFdieqc1d5/AHEl7m9D5qFNMt8p6LmZAbKZrOtiukNdbAmGPoIOo4wiION16jShocJ5kZqjWoOInhcNhSncnLUfzte4Z0CKuSYweUti8/2oJzUx7XesdFLdy+j6HDEdQ=
+	t=1714690539; cv=none; b=iyYr5P20ojEseM4oeYkSU5OdW/ZJ0dJ8oEcIFkr+YnkDZfvW/qkWmg9ZPb7s8GqDS/ubTKcD+KaAavvHpadudAkQOcW9lY3ApUVkqSxhMmkD/yWhqbhsIxX0yx9CXHqeHEQsCyJ5q1S/EdY9q7T956q/r+1Xk9PKU+OmYmsjQNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714689111; c=relaxed/simple;
-	bh=mVhefkMKYAgbzew8H9zwdvpcck6nt+d0ii0oo+fk8MY=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=U3Rezs9PX9gljj/mBBGpRRGktb1NoZh7Os3k7idVoGdcrZr7IRQ3F/ceDWk6QKb0QC2/IlSCUwS/nJt9Fx1k0j5paE4Oqs9L2JxwP+9Ndky7JH82eBEY8+mEH5ywm4pMA3XTDGR6EQPzGfwSxD3ugha10cgA6Oeiew6Ll/68lqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zco1UODU; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1714690539; c=relaxed/simple;
+	bh=jdAiCkqZVm00u5Mpkujq7LizhSxkgvjQSLxjSmd+0FA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNk98A+vgfFcde99wJo/bX3QsIE5Vgjxhekpcp3xa2dAyMlCfixmCQ5mB41fXGhnQ+vTg++rAJi4QXrMeKW+h+YDo819nG7xfO0bBdVs+NzrqZIR/aUoGEM86q4gbLscBqFmxzfZbECzGo47lgcwsaGcwM2xFJK29pzgcoXYA/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lbq9Zoo5; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zco1UODU"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61510f72bb3so174204227b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 15:31:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lbq9Zoo5"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f43015b763so894163b3a.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 15:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714689109; x=1715293909; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=D9BlVLjpP7oToPEloTg+EP74LvtZdSlc3EOCbIFaf28=;
-        b=Zco1UODUtmQjINKK1ayFk5w/Lz6/sySujiFOSzaSGo5O/GNlzjoFEshkRtoxrm8T9b
-         fFq2M+6a3Iw2CVuGmcjrdil/RNq8XueAPc0wthWV949fDEDTfhin12XPejRiASPPXqL0
-         VSgs7YyNun1/0SMYwzspfDhXEUnzECfW7b1KCWiPo+LMQH7T14yfXZNg2K94afGsvY/8
-         Nd/w/vmadayaEbuk2GIKOJDTnZJJdb/HHVmbikq0Q357C7EKKVWLbCO8O9nn6Q4+5TEN
-         CsxqKhrBVOvULerUJ/hAqIcmmWKCm6OVZTjJy98RtLFHqun9Dxw2EZnAHEZuemxazg8j
-         1xqQ==
+        d=chromium.org; s=google; t=1714690537; x=1715295337; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CVZTpe/CdBBd4zno1lRIevv+TY5Lijp2ynWtx6BFty4=;
+        b=Lbq9Zoo5ADuUvFCZS6aZyFRnbZNe/xhaxiwCetCzf+SPd6d0pcGtz3C5AdBpBU500c
+         zYVHM3DDMHk/OzmdJrYJ3hGkN02AzUwbE1v/2qiR9ynwW1HbxohOZuyC+0TsERKI1Eb1
+         Bz1xkH9ygggoGOh6zCdmBFE4zpmB5vZ31od50=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714689109; x=1715293909;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D9BlVLjpP7oToPEloTg+EP74LvtZdSlc3EOCbIFaf28=;
-        b=Uhs3llBPMJUhWBtb149oOT6m329wHgtahdlkaKw1uYlwnIu/DK/s8XyCakX9MUWJQK
-         EU76F3ioQZcFysrH3lPVsSw8hrcPrhhcOP5eKcCj6uL/XRUfwZ/wy4s2o9bmx3PBMjCq
-         3IiEJGTIwAKzWszJOftgngnhFeVSsyk9ishJjQuIaCjY3c39F5RGgXojB0/isijOLSWH
-         JwcGT7N9ca6gEArWQJ7byCo9mubwU6ZH8DqHf8GkPWhYFYdUSXkN+QWC+5BBcFPyYech
-         5TRABMjGj4I8CamgOS3ZxJUdab8yruuLW/y0A9Bt8eyQ/0sqbdzuchfzwgYUNbkLOs4b
-         BM+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVa66r0+3FUjSvryODomHc/dWj/Q1l5TMbNbCFw10EXMx64qQkYes2YXu7V/w+2790fBVjF8aClsVO7UhHyp8GlF/ejRKMC6xcKZATRHikYUQ==
-X-Gm-Message-State: AOJu0YwawelHaERW4buPVEvKKTIzmfJVNCiXK7rVu1JqQvm5XepYNVzW
-	qRK+CkZ/Ud0K5QKiYv1QTfnX0MeoddEQaE+mmotjgmKJeFkT96Zn/Z5M36V72FCYBDml+zNGz3H
-	8enr8bQ==
-X-Google-Smtp-Source: AGHT+IF4e2VbqkN2jjNWKDDm3Gcln7ovSliebeDlmk9dm6IpKVCKWNcrpc6+GmqKSfIrd1hZK2lR4tHdmIyq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:deba:378d:2d3a:2641])
- (user=irogers job=sendgmr) by 2002:a0d:d78b:0:b0:61b:e15c:2b84 with SMTP id
- z133-20020a0dd78b000000b0061be15c2b84mr187197ywd.6.1714689109242; Thu, 02 May
- 2024 15:31:49 -0700 (PDT)
-Date: Thu,  2 May 2024 15:31:15 -0700
-Message-Id: <20240502223115.2357499-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1714690537; x=1715295337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CVZTpe/CdBBd4zno1lRIevv+TY5Lijp2ynWtx6BFty4=;
+        b=sQAZh4xG9fsPZE9IWxF3jER92GPnnH0qp3YuE0d0HTeWp6iYZ0NnqFfb1L+nJQu5ot
+         lQM9bt5gf/MDb/nZVI7tGiN8tfiPXQkuyPAPphCjW+f3oFcvM5nZLOm7T8eNGuWiyqZK
+         J0YEBvjt9w9Uyz7xkHZArJEmqD2lcvmRNvJIhUdC4ODFGeJMaeQm9cguLmpaAnKy5g1+
+         9Rm4D2jvIXFk8Y/9ssakM32ZAZfEy6giUQiEXsGr6kb6IDkPDXyMRctOl+m8wPcIGx3U
+         2GTAjb44FrGOCGbxqpDoMmGYhLRKjNcwswv2p7S+vhnSDF14xFgiB5eEArsIelW9HGv/
+         1SRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWL7W6BI+j0mfxAOyhR4r+JIW5V8Fjj1bxsxYmVsEfiwheh26poC+Fmp78IpMxjX/QAFMKnmdPZGxzYM8uBJfzK9L2O8UH/rfjgBKznIWkmsQ==
+X-Gm-Message-State: AOJu0YwczcTrwk7yar+U+0Qu8mW/Mbv6uR0OE5mSeEv28cOIr3uePLnD
+	1OabbkxNF29yohgfBmmYfXljKmBlS6kxRiy89QQiSyuZJ4CeJeivr7gzFaeoHA==
+X-Google-Smtp-Source: AGHT+IE3eOeOzKAoJovEuP0RnaA3tq2hqa/aT1L12pQ6aR7WKuRKsLt1bl+kuCC94IGtD86XBl1D8w==
+X-Received: by 2002:a17:902:fd50:b0:1e0:c0b9:589e with SMTP id mq16-20020a170902fd5000b001e0c0b9589emr4838945plb.25.1714690537346;
+        Thu, 02 May 2024 15:55:37 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z14-20020a170903018e00b001ecb2179da6sm1877090plg.56.2024.05.02.15.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 15:55:37 -0700 (PDT)
+Date: Thu, 2 May 2024 15:55:36 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405021552.5C000EA@keescook>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+ <202405011317.AF41B94B@keescook>
+ <20240502091837.GA30852@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v2] perf test: Be more tolerant of metricgroup failures
-From: Ian Rogers <irogers@google.com>
-To: Veronika Molnarova <vmolnaro@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502091837.GA30852@noisy.programming.kicks-ass.net>
 
-Previously "set -e" meant any non-zero exit code from perf stat would
-cause a test failure. As a non-zero exit happens when there aren't
-sufficient permissions, check for this case and make the exit code
-2/skip for it.
+On Thu, May 02, 2024 at 11:18:37AM +0200, Peter Zijlstra wrote:
+> On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
+> > On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> > > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > > > This is an effort to get rid of all multiplications from allocation
+> > > > functions in order to prevent integer overflows [1][2].
+> > > 
+> > > So personally I detest struct_size() because I can never remember wtf it
+> > > does, whereas the code it replaces is simple and straight forward :/
+> > 
+> > Sure, new APIs can involved a learning curve. If we can all handle
+> > container_of(), we can deal with struct_size(). :)
+> 
+> containre_of() is actually *much* shorter than typing it all out. Which
+> is a benefit.
+> 
+> struct_size() not so much. That's just obfuscation for obfuscation's
+> sake.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v2. Add skip if event mode isn't valid in per-thread mode. Suggested
-    by Veronika Molnarova <vmolnaro@redhat.com>.
----
- .../perf/tests/shell/stat_all_metricgroups.sh | 36 +++++++++++++++----
- 1 file changed, 30 insertions(+), 6 deletions(-)
+It's really not -- it's making sure that the calculation is semantically
+sane: all the right things are being used for the struct size calculation
+and things can't "drift", if types change, flex array changes, etc. It's
+both a code robustness improvement and a wrap-around stopping improvement.
 
-diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
-index 55ef9c9ded2d..c6d61a4ac3e7 100755
---- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-+++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-@@ -1,9 +1,7 @@
--#!/bin/sh
-+#!/bin/bash
- # perf all metricgroups test
- # SPDX-License-Identifier: GPL-2.0
- 
--set -e
--
- ParanoidAndNotRoot()
- {
-   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-@@ -14,11 +12,37 @@ if ParanoidAndNotRoot 0
- then
-   system_wide_flag=""
- fi
--
-+err=0
- for m in $(perf list --raw-dump metricgroups)
- do
-   echo "Testing $m"
--  perf stat -M "$m" $system_wide_flag sleep 0.01
-+  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
-+  result_err=$?
-+  if [[ $result_err -gt 0 ]]
-+  then
-+    if [[ "$result" =~ \
-+          "Access to performance monitoring and observability operations is limited" ]]
-+    then
-+      echo "Permission failure"
-+      echo $result
-+      if [[ $err -eq 0 ]]
-+      then
-+        err=2 # Skip
-+      fi
-+    elif [[ "$result" =~ "in per-thread mode, enable system wide" ]]
-+    then
-+      echo "Permissions - need system wide mode"
-+      echo $result
-+      if [[ $err -eq 0 ]]
-+      then
-+        err=2 # Skip
-+      fi
-+    else
-+      echo "Metric group $m failed"
-+      echo $result
-+      err=1 # Fail
-+    fi
-+  fi
- done
- 
--exit 0
-+exit $err
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+Kees Cook
