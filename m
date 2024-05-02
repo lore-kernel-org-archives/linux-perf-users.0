@@ -1,139 +1,142 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16D157C87
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 22:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BA257C94
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 May 2024 22:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714688363; cv=none; b=smfZEGsHdqqPWU9/fyMSwhLc7XFKRAtyUwQTilVPnaX+VR+7N5UmFx/v+XWGjterHLsrAOY2Dkwampcw/hxFWM+HHQnvMk9+tkGbhAmJlRU/GStZ4eevSBZR0yKLzG0WFc9re8OEoIbsF4AoXWWAub0SF99DCTg7Q25763M380c=
+	t=1714689111; cv=none; b=Dq530Ur4UKrrZpiZGmQ9F1u3osR6lcP76XamXLTlNWwuFdieqc1d5/AHEl7m9D5qFNMt8p6LmZAbKZrOtiukNdbAmGPoIOo4wiION16jShocJ5kZqjWoOInhcNhSncnLUfzte4Z0CKuSYweUti8/2oJzUx7XesdFLdy+j6HDEdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714688363; c=relaxed/simple;
-	bh=bO2bSzZYg5eVuybM909I31iOjzvb3I+nSIW9JIdFhUY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=HfIZSVLeOgKQrII9oDSrbDISuctPEuVLCmcyFZcVMKjECdw/Za9aVfBBpcyAXfDUNXoCaTWySf4D7DBwSlvoiS34A6jAfaSTDMIzSJrvH7q29U/8UPZzntwRvXZgC4W5HDnogcu9aZBdaIBo73R4sLCeQ3SBRuBJ4wRe3LhfLrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-254-5Vt6L_CMNO2wOuNp_wGOOQ-1; Thu, 02 May 2024 23:19:11 +0100
-X-MC-Unique: 5Vt6L_CMNO2wOuNp_wGOOQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 2 May
- 2024 23:18:44 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 2 May 2024 23:18:44 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jules Bashizi Irenge' <jbi.octave@gmail.com>
-CC: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	'Linus Torvalds' <torvalds@linux-foundation.org>
-Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0A==
-Date: Thu, 2 May 2024 22:18:44 +0000
-Message-ID: <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
-References: <Zi57-TMgU19puaQM@octinomon.home>
- <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home>
-In-Reply-To: <ZjPApuDc0gL9Pchm@octinomon.home>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1714689111; c=relaxed/simple;
+	bh=mVhefkMKYAgbzew8H9zwdvpcck6nt+d0ii0oo+fk8MY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=U3Rezs9PX9gljj/mBBGpRRGktb1NoZh7Os3k7idVoGdcrZr7IRQ3F/ceDWk6QKb0QC2/IlSCUwS/nJt9Fx1k0j5paE4Oqs9L2JxwP+9Ndky7JH82eBEY8+mEH5ywm4pMA3XTDGR6EQPzGfwSxD3ugha10cgA6Oeiew6Ll/68lqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zco1UODU; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zco1UODU"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61510f72bb3so174204227b3.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 15:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714689109; x=1715293909; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D9BlVLjpP7oToPEloTg+EP74LvtZdSlc3EOCbIFaf28=;
+        b=Zco1UODUtmQjINKK1ayFk5w/Lz6/sySujiFOSzaSGo5O/GNlzjoFEshkRtoxrm8T9b
+         fFq2M+6a3Iw2CVuGmcjrdil/RNq8XueAPc0wthWV949fDEDTfhin12XPejRiASPPXqL0
+         VSgs7YyNun1/0SMYwzspfDhXEUnzECfW7b1KCWiPo+LMQH7T14yfXZNg2K94afGsvY/8
+         Nd/w/vmadayaEbuk2GIKOJDTnZJJdb/HHVmbikq0Q357C7EKKVWLbCO8O9nn6Q4+5TEN
+         CsxqKhrBVOvULerUJ/hAqIcmmWKCm6OVZTjJy98RtLFHqun9Dxw2EZnAHEZuemxazg8j
+         1xqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714689109; x=1715293909;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D9BlVLjpP7oToPEloTg+EP74LvtZdSlc3EOCbIFaf28=;
+        b=Uhs3llBPMJUhWBtb149oOT6m329wHgtahdlkaKw1uYlwnIu/DK/s8XyCakX9MUWJQK
+         EU76F3ioQZcFysrH3lPVsSw8hrcPrhhcOP5eKcCj6uL/XRUfwZ/wy4s2o9bmx3PBMjCq
+         3IiEJGTIwAKzWszJOftgngnhFeVSsyk9ishJjQuIaCjY3c39F5RGgXojB0/isijOLSWH
+         JwcGT7N9ca6gEArWQJ7byCo9mubwU6ZH8DqHf8GkPWhYFYdUSXkN+QWC+5BBcFPyYech
+         5TRABMjGj4I8CamgOS3ZxJUdab8yruuLW/y0A9Bt8eyQ/0sqbdzuchfzwgYUNbkLOs4b
+         BM+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVa66r0+3FUjSvryODomHc/dWj/Q1l5TMbNbCFw10EXMx64qQkYes2YXu7V/w+2790fBVjF8aClsVO7UhHyp8GlF/ejRKMC6xcKZATRHikYUQ==
+X-Gm-Message-State: AOJu0YwawelHaERW4buPVEvKKTIzmfJVNCiXK7rVu1JqQvm5XepYNVzW
+	qRK+CkZ/Ud0K5QKiYv1QTfnX0MeoddEQaE+mmotjgmKJeFkT96Zn/Z5M36V72FCYBDml+zNGz3H
+	8enr8bQ==
+X-Google-Smtp-Source: AGHT+IF4e2VbqkN2jjNWKDDm3Gcln7ovSliebeDlmk9dm6IpKVCKWNcrpc6+GmqKSfIrd1hZK2lR4tHdmIyq
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:deba:378d:2d3a:2641])
+ (user=irogers job=sendgmr) by 2002:a0d:d78b:0:b0:61b:e15c:2b84 with SMTP id
+ z133-20020a0dd78b000000b0061be15c2b84mr187197ywd.6.1714689109242; Thu, 02 May
+ 2024 15:31:49 -0700 (PDT)
+Date: Thu,  2 May 2024 15:31:15 -0700
+Message-Id: <20240502223115.2357499-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v2] perf test: Be more tolerant of metricgroup failures
+From: Ian Rogers <irogers@google.com>
+To: Veronika Molnarova <vmolnaro@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> > > -=09do_div(delta, tdelta);
-> > > +=09div64_u64(delta, tdelta);
-> >
-> > Nak - you've not tested it.
-> >
-> > =09David
-> >
-> No, I later realised it's for 32bit here. It may be very expensive for
-> a 32bit.
-> I think I got it wrong here.
+Previously "set -e" meant any non-zero exit code from perf stat would
+cause a test failure. As a non-zero exit happens when there aren't
+sufficient permissions, check for this case and make the exit code
+2/skip for it.
 
-You've missed the main issue.
-do_div(a, b) sets 'a =3D a / b' and returns 'a % b'.
-div64_u64(a, b) returns 'a / b'.
-They are not direct substitutes.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2. Add skip if event mode isn't valid in per-thread mode. Suggested
+    by Veronika Molnarova <vmolnaro@redhat.com>.
+---
+ .../perf/tests/shell/stat_all_metricgroups.sh | 36 +++++++++++++++----
+ 1 file changed, 30 insertions(+), 6 deletions(-)
 
-For x86 (32 bit - does anyone care are more??) do_div is defined as:
-
-/*
- * do_div() is NOT a C function. It wants to return
- * two values (the quotient and the remainder), but
- * since that doesn't work very well in C, what it
- * does is:
- *
- * - modifies the 64-bit dividend _in_place_
- * - returns the 32-bit remainder
- *
- * This ends up being the most efficient "calling
- * convention" on x86.
- */
-#define do_div(n, base)=09=09=09=09=09=09\
-({=09=09=09=09=09=09=09=09\
-=09unsigned long __upper, __low, __high, __mod, __base;=09\
-=09__base =3D (base);=09=09=09=09=09\
-=09if (__builtin_constant_p(__base) && is_power_of_2(__base)) { \
-=09=09__mod =3D n & (__base - 1);=09=09=09\
-=09=09n >>=3D ilog2(__base);=09=09=09=09\
-=09} else {=09=09=09=09=09=09\
-=09=09asm("" : "=3Da" (__low), "=3Dd" (__high) : "A" (n));\
-=09=09__upper =3D __high;=09=09=09=09\
-=09=09if (__high) {=09=09=09=09=09\
-=09=09=09__upper =3D __high % (__base);=09=09\
-=09=09=09__high =3D __high / (__base);=09=09\
-=09=09}=09=09=09=09=09=09\
-=09=09asm("divl %2" : "=3Da" (__low), "=3Dd" (__mod)=09\
-=09=09=09: "rm" (__base), "0" (__low), "1" (__upper));=09\
-=09=09asm("" : "=3DA" (n) : "a" (__low), "d" (__high));=09\
-=09}=09=09=09=09=09=09=09\
-=09__mod;=09=09=09=09=09=09=09\
-})
-
-Somewhen it must have got changed from a simple asm wrapper for divl.
-(And the test in the middle should be '__high > __base' to avoid
-a division that is guaranteed to return zero.)
-
-I'm also not at all sure what happens when divide gets speculatively
-executed - there is a fair chance it has to complete.
-So that extra check for returning 64bit quotients may be move
-expensive that you might think.
-(Although x86 will fault if the quotient would overflow - not ideal.)
-
-I do wonder how much more it would cost to check the high 32bits
-of a 64bit 'base' for being zero in a full 64x64 divide?
-Any 'full software' 64bit divide function is going to do that anyway.
-
-For 32bit it should be possible to do an inline 32x32 divide if
-both 64bit values are only 32bit and an out of line call otherwise.
-Although that might need to be built into gcc (at least for
-architectures where the modulus isn't free) since gcc detects
-when code does a/b and a%b and will only do one divide.
-
-So maybe just supporting 64bit divide wouldn't be that expensive??
-
-(Although there is a fubar on risc-v where even 'q =3D a / b'
-'r =3D a - q * b' gets converted to 'r =3D a % b' and two slow
-divides.)
-
-=09David
-
+diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+index 55ef9c9ded2d..c6d61a4ac3e7 100755
+--- a/tools/perf/tests/shell/stat_all_metricgroups.sh
++++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+@@ -1,9 +1,7 @@
+-#!/bin/sh
++#!/bin/bash
+ # perf all metricgroups test
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-set -e
 -
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+ ParanoidAndNotRoot()
+ {
+   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+@@ -14,11 +12,37 @@ if ParanoidAndNotRoot 0
+ then
+   system_wide_flag=""
+ fi
+-
++err=0
+ for m in $(perf list --raw-dump metricgroups)
+ do
+   echo "Testing $m"
+-  perf stat -M "$m" $system_wide_flag sleep 0.01
++  result=$(perf stat -M "$m" $system_wide_flag sleep 0.01 2>&1)
++  result_err=$?
++  if [[ $result_err -gt 0 ]]
++  then
++    if [[ "$result" =~ \
++          "Access to performance monitoring and observability operations is limited" ]]
++    then
++      echo "Permission failure"
++      echo $result
++      if [[ $err -eq 0 ]]
++      then
++        err=2 # Skip
++      fi
++    elif [[ "$result" =~ "in per-thread mode, enable system wide" ]]
++    then
++      echo "Permissions - need system wide mode"
++      echo $result
++      if [[ $err -eq 0 ]]
++      then
++        err=2 # Skip
++      fi
++    else
++      echo "Metric group $m failed"
++      echo $result
++      err=1 # Fail
++    fi
++  fi
+ done
+ 
+-exit 0
++exit $err
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
