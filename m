@@ -1,95 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4147659B56;
-	Thu,  2 May 2024 19:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7429117BA0;
+	Thu,  2 May 2024 19:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714677092; cv=none; b=rMme2Ju635T0IUjoSiylfg2B57LGgXXPaum0wQ12WVdAnh06hjtFGJ7s+YuPi1cvpK5/uwYPzbVWrxKAn6LDkGK+tbPrzeS6a+hrSC6m5/sZ6AoFQiEmpUqjc3O8GGz7HhiOfZnarVSDBBPRasHQEVFMqJpUL5GH2xJMyubywYs=
+	t=1714678767; cv=none; b=RdJy7geOuqFaGO+ysPJLoVqCkRMQ1bzfkGn4mjm2dq9PAXEExzU9MMLBzs68WXPOktzXBJTBdsRPmEh1Kko9jts5dVR/g/2jrcoPeNCnsjl37jc8AFk7fvnNvsSbCZvKwo2ya0gOn+AOujpNZ5+PXIZ/56t78pSn4c4tparqjRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714677092; c=relaxed/simple;
-	bh=2qrWzJQe18l9LseF6v6TDvXLVsNFZ07hmBA1OvCRqf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=esl//mfy1TzmM7/A1UvwIc/4gMoZFvxJK6iboqOWtmrMGbp7xHqqgglFf9+iP3HCZTTMEdS/YB1bv2rT+D3mYE0WBR3Rx6o7rObQV6wtpXVDQy60xfI7zhrrJQLBDSGyW+X1YPiw6IQdk3UXFczoXmyzoU64lVk2NX0nZx7u8mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g7INwTzP; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714678767; c=relaxed/simple;
+	bh=JsVdQSR88vIGJ/32DmR5jle3XfAotEofYnypCmvfJrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W1DTNOcW6BDmte9yQdukVfe7fnwiFDDoSZpRieIyF6HndlF/2MNdXQPI5bkoUX0z8WGtHa4pvFGuNKrFXeUeVhmenE6crfO9xYArtMzndqGhwMPj+tghrBNxzRsLNpMDItDqabdTCYgAHt/Q2Bqyt39N1ALWVQ/8f1Pzwa0y+e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNTV1uS8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7INwTzP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714677091; x=1746213091;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2qrWzJQe18l9LseF6v6TDvXLVsNFZ07hmBA1OvCRqf4=;
-  b=g7INwTzPMac9Fac2BPgYA5bRhz+EnPwUn50slIl7PBesnwKqeuWlcAIm
-   G1IkiWonubugKffePXy2St8gUx8TPfGK38/QWf3n0vw99zwvbHFs7/E7k
-   VNh5eeYw78RlXbJTS5amqCgL1imGFUE8PABYgjYDwOUTnzTpWXKUztudj
-   4uMRiQQSr6DutvfWmqmrm3GJeViA7Ru4JN/isV7qRg0PymtGhGdoBiR0R
-   tOFmnxJhvwB28MN2gPQdTjCCfE8tDnLfUSIRiNxrc8vROjo/73XRE/TtS
-   thtqqjph/ZzR0MpBYszcPgMFyDeMa0BOPtUlttnjih+xBSERJKvTtATM8
-   w==;
-X-CSE-ConnectionGUID: xfV+QQSyTyGMuf7fh8HYxw==
-X-CSE-MsgGUID: rAD04/T0R6KCKucKimTGGw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10628804"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10628804"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 12:11:30 -0700
-X-CSE-ConnectionGUID: wW8kAQMeRISNLh+M+iXxwQ==
-X-CSE-MsgGUID: RrCNsgiZSFOWQexB0cKfqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27275345"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.136])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 12:11:25 -0700
-Message-ID: <8c29642d-9e1e-46a8-83b5-03019e151807@intel.com>
-Date: Thu, 2 May 2024 22:11:19 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNTV1uS8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89595C113CC;
+	Thu,  2 May 2024 19:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714678766;
+	bh=JsVdQSR88vIGJ/32DmR5jle3XfAotEofYnypCmvfJrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rNTV1uS8YgYJtg3/KHDnznPQGzshJLpPohlxoZ1nkZmtzhgmtgwQUZwr7wzpHcXJZ
+	 5i3KGoA7GWjC958p8J0QgFz51QuUQ8pvYKrhmJNaLPDDT3EVSOK/gjSRCXmxAAJWJA
+	 BND8ZMVtXlX8bkLOE4l0RFfBC+30AWL6PAkPfpWYoH5MpaOKCTG3m5W5p17zznnFPb
+	 TLEZdgHrrZfjd1VyhJxKyUuysvFcW4LNHRHE1Fn8eL5x1AB1dz9JYv89A9gvowx/Ev
+	 s/QQT8yaTUcpr987qQD7OV7+nFk4aGgT0MmT/jLs8hp4w1rRGPYvffOr+YRXPWs464
+	 og/7malu7HnqA==
+Date: Thu, 2 May 2024 16:38:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf maps: Remove check_invariants() from maps__lock()
+Message-ID: <ZjPrpnX1XqyOHQku@x1>
+References: <20240429225738.1491791-1-namhyung@kernel.org>
+ <CAP-5=fWeFyihQNMEJ2BQpm6hmNBmPuwFk3rGgVh+jV0mKd7myg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] x86/insn: Fix PUSH instruction in x86 instruction
- decoder opcode map
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "Chang S. Bae" <chang.seok.bae@intel.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Nikolay Borisov <nik.borisov@suse.com>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-References: <20240502105853.5338-1-adrian.hunter@intel.com>
- <20240502105853.5338-3-adrian.hunter@intel.com> <ZjOX-mE_CUOisltJ@x1>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZjOX-mE_CUOisltJ@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWeFyihQNMEJ2BQpm6hmNBmPuwFk3rGgVh+jV0mKd7myg@mail.gmail.com>
 
-On 2/05/24 16:41, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 02, 2024 at 01:58:45PM +0300, Adrian Hunter wrote:
->> The x86 instruction decoder is used not only for decoding kernel
->> instructions. It is also used by perf uprobes (user space probes) and by
->> perf tools Intel Processor Trace decoding. Consequently, it needs to
->> support instructions executed by user space also.
+On Mon, Apr 29, 2024 at 07:09:54PM -0700, Ian Rogers wrote:
+> On Mon, Apr 29, 2024 at 3:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > I found that the debug build was a lot slowed down by the maps lock code
+> > since it checks the invariants whenever it gets the pointer to the lock.
+> > This means it checks twice the invariants before and after the access.
+> >
+> > Instead, let's move the checking code within the lock area but after any
+> > modification and remove it from the read paths.  This would remove (more
+> > than) the half of the maps lock overhead.
+> >
+> > The time for perf report with a huge data file (200k+ of MMAP2 events).
+> >
+> >   Non-debug     Before      After
+> >   ---------   --------   --------
+> >      2m 43s     6m 45s     4m 21s
+
+Yeah, I had a debug build to check the size of 'struct hist_entry' with
+pahole and noticed that invariant checking in 'perf top'.
+
+> Thanks Namhyung, I think the change makes sense. There is an issue
+> that a user of a map may mutate it in a way that breaks the maps
+> sorting, symbol code would be a likely culprit of such a thing. A fix
+> for such a breakage would be to just set the unsorted flag on maps.
+> We'd be less likely to spot such an issue after this change, but it is
+> simple enough to add the function call when needed. Another option
+> would be to add another make flag like PARSER_DEBUG for these kind of,
+> "be paranoid," type things. Anyway, let's try to fix those problems
+> when they exist.
 > 
-> I wonder if we should do it this way, i.e. updating both tools/ and
-> kernel source code in the same patch.
-> 
-> I think the best is to update the kernel bits, then, after that is
-> merged, do the tooling part.
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-For objtool purposes, it might be better to do both at the same time.
+Thanks, applied to perf-tools-next,
 
-> 
-> To avoid possible, yet unlikely, clashes in linux-next, for instance.
-
-Always gonna find out about clashes at some point.
-
+- Arnaldo
