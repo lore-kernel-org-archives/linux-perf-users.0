@@ -1,124 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D04C157E62;
-	Fri,  3 May 2024 20:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4265C158D86;
+	Fri,  3 May 2024 20:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714767672; cv=none; b=t6xDIwKc/SkavF2x1K81DtpE7bktwgtBIbh9kdpxcSTpkPm0lBanYwz8HlTChZVagQTJBM1iUnNrhUVq5b31gUBRuHehE+7OP5cNbK2OAwz0eyPVgVxMjw/unZUAHchIJmOh/tzHz/w6m1CzfXIk4/Frdls6NfR4OmhFbJzNqb0=
+	t=1714767835; cv=none; b=kzJAUKDgS9h/dqjCaJGesIndT4SoIjUUlMuluR013VoMCB47oMLm6YEtREPRYs11mmgB2nOhOurCT/nyzQcZ4IN6sc+IAvEoPka2agpeyEZH70JV2J9FUebsGStk4luZg23MPWnYSruQB+Y0Z62ckuxVuITfBGfeNqZcBZcNeg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714767672; c=relaxed/simple;
-	bh=ybKkS+1yGYkf7MFehjLArh675WknPQu5/9lQl5Hso90=;
+	s=arc-20240116; t=1714767835; c=relaxed/simple;
+	bh=VHK2aYXQsjwUVWEy+15TxeXXA9tATJmF9VCn5bK+xlo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfjhAeUcS0Mk2xSS5m1QvI7GtLm1Rplu21ElFT3kSMP4ntO+m8FU65Zn5Q2SLzwDfg7Ty0f1IFBkewdLNzXXFQvvHfCjL+fNPIEZ+2OJWHj1OvdwDwJ0kKkCKVj60gJkyMf4TnjIpB6UW/l15yc8nabwBhs9BBBm8JqdIlCXBFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrUd5XS8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CG6pBmPoXa7B2DoyMHla1kBOE/yK59plQujvRNdDEG3jAqbhNMJGvgoZ7uw2lKTgZqb4mtYpG2xs4RraxvGxEbBdoXNNhWfG2r9rMd1D0mH6zKT2MNxS9+L45snIMRDOIMOW34rdeTPJhPoJGFm/ZwxNTdNLy/t3insfY0kynHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3znZihv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrUd5XS8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058C7C116B1;
-	Fri,  3 May 2024 20:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3znZihv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CAD8C116B1;
+	Fri,  3 May 2024 20:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714767671;
-	bh=ybKkS+1yGYkf7MFehjLArh675WknPQu5/9lQl5Hso90=;
+	s=k20201202; t=1714767834;
+	bh=VHK2aYXQsjwUVWEy+15TxeXXA9tATJmF9VCn5bK+xlo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OrUd5XS8OGzs8O+Z0BXHye0IFQANFQqvVkAGISHp6VQsdCuX146vOsckPdr8KJ/IT
-	 Ji9z3Jruw8RbHT8f4SjhonjFJxAoTlFtooUI9Q//8ZmSLdUUE7OJqTMzCMwNTmaIem
-	 i1srsf1JCnS6lOcamUIu1StficWnJLokgQtU9Cwp4GJorqji69fYmk/KN1PNXURw52
-	 jaExLfk0ol8Qk2YSUQwLMG/Z6WHRzNBAfKk57p/iZRyTa3cSsEM6/h9wZSCScqpBA/
-	 6wx1StqU+TvpRJ6gvHUDaGwXnnWCeb42nA4NYPlNHK9kmKn9gLjqCt2784H+fNLwn7
-	 x3u9pjrQvVdbQ==
-Date: Fri, 3 May 2024 17:21:08 -0300
+	b=M3znZihvBOZCe+Su1jHeQ4Usj4NM8suZd89dcBJWo8tt5kYIE9olqRolnGuImWyyv
+	 fhE8F72lrnZsrreBH4pXIxIvUCOqvVgxeGTV+6VXcASG1fL6cbANzlu8mI5ObU0lRY
+	 pIw6V9c7Os3iZtCGUAnUMYZ99XchqPuoW3v8sNLkv/eLQkJ0qdI87sa8sZVaIHSp/Y
+	 BmnUfO1ppzA5rYy+PuN7MKTuBJPR7XKNU4v2pmNpV4i9NsjQCj8F/nCNhgdLMZIN5O
+	 z3JGzsb4A6I1+lSH8Ovyun6au29I2oiXNMQgtDB1CONeU0J3WmI+fvLy0Os5gwL78Y
+	 d6sR9BBQQ6WDA==
+Date: Fri, 3 May 2024 17:23:51 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
+	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+	suzuki.poulose@arm.com, mike.leach@linaro.org,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	nabijaczleweli@nabijaczleweli.xyz, Leo Yan <leo.yan@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Changbin Du <changbin.du@huawei.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dima Kogan <dima@secretsauce.net>,
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
-	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	Chengen Du <chengen.du@canonical.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/7] perf dsos: Switch backing storage to array from
- rbtree/list
-Message-ID: <ZjVHNB7pTKKWERFn@x1>
-References: <20240429184614.1224041-1-irogers@google.com>
- <20240429184614.1224041-2-irogers@google.com>
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 00/17] coresight: Use per-sink trace ID maps for Perf
+ sessions
+Message-ID: <ZjVH118DtAdZKo2v@x1>
+References: <20240429152207.479221-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240429184614.1224041-2-irogers@google.com>
+In-Reply-To: <20240429152207.479221-1-james.clark@arm.com>
 
-On Mon, Apr 29, 2024 at 11:46:08AM -0700, Ian Rogers wrote:
-> DSOs were held on a list for fast iteration and in an rbtree for fast
-> finds. Switch to using a lazily sorted array where iteration is just
-> iterating through the array and binary searches are the same
-> complexity as searching the rbtree. The find may need to sort the
-> array first which does increase the complexity, but add operations
-> have lower complexity and overall the complexity should remain about
-> the same.
+On Mon, Apr 29, 2024 at 04:21:45PM +0100, James Clark wrote:
+> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+> as long as there are fewer than that many ETMs connected to each sink.
+> 
+> Each sink owns its own trace ID map, and any Perf session connecting to
+> that sink will allocate from it, even if the sink is currently in use by
+> other users. This is similar to the existing behavior where the dynamic
+> trace IDs are constant as long as there is any concurrent Perf session
+> active. It's not completely optimal because slightly more IDs will be
+> used than necessary, but the optimal solution involves tracking the PIDs
+> of each session and allocating ID maps based on the session owner. This
+> is difficult to do with the combination of per-thread and per-cpu modes
+> and some scheduling issues. The complexity of this isn't likely to worth
+> it because even with multiple users they'd just see a difference in the
+> ordering of ID allocations rather than hitting any limits (unless the
+> hardware does have too many ETMs connected to one sink).
+> 
+> Per-thread mode works but only until there are any overlapping IDs, at
+> which point Perf will error out. Both per-thread mode and sysfs mode are
+> left to future changes, but both can be added on top of this initial
+> implementation and only sysfs mode requires further driver changes.
+> 
+> The HW_ID version field hasn't been bumped in order to not break Perf
+> which already has an error condition for other values of that field.
+> Instead a new minor version has been added which signifies that there
+> are new fields but the old fields are backwards compatible.
 
-With just this first one applied:
-
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -10
-325557715f1d8593 (HEAD) perf dsos: Switch backing storage to array from rbtree/list
-7b6dd7a923281a7c perf pmu: Assume sysfs events are always the same case
-6debc5aa326fa2ee perf test pmu: Test all sysfs PMU event names are the same case
-18eb2ca8c18f0612 perf test pmu: Add an eagerly loaded event test
-aa1551f299ba414c perf test pmu: Refactor format test and exposed test APIs
-785623ee855e893d perf Document: Sysfs event names must be lower or upper case
-97c48ea8ff1cd70f perf test pmu-events: Make it clearer that pmu-events tests JSON events
-3cdd98b42d212160 (x1/perf-tools-next) perf maps: Remove check_invariants() from maps__lock()
-e3123079b906dc2e perf cs-etm: Improve version detection and error reporting
-bc5e0e1b93565e37 perf cs-etm: Remove repeated fetches of the ETM PMU
-⬢[acme@toolbox perf-tools-next]$
-
-root@number:~# perf -v
-perf version 6.9.rc5.g325557715f1d
-root@number:~# perf probe -l
-DSO [kernel.kallsyms] is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/hid/hid-sensor-hub.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/hid/uhid.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/net/tun.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/fs/overlayfs/overlay.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/net/bluetooth/rfcomm/rfcomm.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/input/misc/uinput.ko.xz is still in rbtree when being deleted!
-DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/sound/core/seq/snd-seq-dummy.ko.xz is still in rbtree when being deleted!
-<SNIP a lot of other modules, probably all of them>
-
-Then with:
-
-65e1e704f37916a0 (HEAD -> perf-tools-next) perf dsos: Switch hand code to bsearch
-64377d6b7d5f9a71 perf dsos: Remove __dsos__findnew_link_by_longname_id
-8e773b8be95aff66 perf dsos: Remove __dsos__addnew
-b1d064fc9b912ece perf dsos: Switch backing storage to array from rbtree/list
-
-applied it continues like that, the next patch in line isn't applying.
-
-I'll push what I have to tmp.perf-tools-next.
+I guess I can pick the tooling part now, right? Further reviewing would
+be nice tho.
 
 - Arnaldo
