@@ -1,106 +1,94 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2CF1CAA1;
-	Thu,  2 May 2024 23:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4FE57C97
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 May 2024 04:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714692493; cv=none; b=OKqubrttKE6xz/TW5otNEwxuCZ0n6CAhJy8yYc5pUBwNDXwyVIJCymhXLryUmQYl3rMZvhKKOnuz1oyD0B+wd5fhi7MV5JMZ3oq+2hfmtybqYH07TRA/gBuA/2qog5C+68E4PAc2+zkutIiRmYjKOr8ArsLccyfqp9Ng6NTf2mQ=
+	t=1714708851; cv=none; b=JAseSz6tBXBbSGtDG6y+NsI25rzQWyDSgIDfnnfmwxydbyY2HG3dT0xt+oTrlv0jgVoGqxO/gqbJk7xfLwGmjVm11vKihjTpQibYbdIANzHq7E5uhDZJ1xeuUZZCW2AUem0D/O+835DOBoALGrm5ODlCjBaptTUB3yphwwJdQJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714692493; c=relaxed/simple;
-	bh=b6o52TjdzdCt4jSSKwghb4/NyW7Kt0gS4Op5y8cytcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dugvBm9HegTD1eOr+2GcN3W4iU7YUZKWR+jPDZvqE7HHTNDHUX/45NwA7GtdtDevXSuLNYLVHe4Uh0/m4m8oi/nTtzLv3UdgWrLdl/3VGzUrCwao6fNrcwMazjLYeamPAPLAsDUbw4lj9ykIk/0pH3Kd8poMa3pxJl/0kcROdQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2b43490e0e2so147894a91.2;
-        Thu, 02 May 2024 16:28:11 -0700 (PDT)
+	s=arc-20240116; t=1714708851; c=relaxed/simple;
+	bh=dxd0KtYZuDHQD4ZtOLTNNbqSEgwTqHeGuFqN832PcuQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OaUUkh6vv+WX1JwyA865NZA/QUUMp9vM19oH5qKl7EtREzFTbHBDtQZUOBzCn4f9KJJZAGs3kStZs1VqQgHwZsY6DO4bZ0IFORYuf2AWB+oEd6QhuY7O0szJ3dvb9D2ftzFQVKHVCsPH25sGzrfcYLnmmTamFmDDzDq2DnFHwy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U8QyAd9a; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U8QyAd9a"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-436ed871225so149301cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 May 2024 21:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714708849; x=1715313649; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dxd0KtYZuDHQD4ZtOLTNNbqSEgwTqHeGuFqN832PcuQ=;
+        b=U8QyAd9aWmpbOan2jabc4vmh4JBarZElDfnl85kyfO/9FWmGXBJyxZ683yZyWgB5IO
+         FvexBK1sMbPCBo5YwhDYR8rRxjKXLNeYgsLOHx+D3worzZGD3POfVzLGq+yn04zPOy60
+         5dpqcQX2JwzZVOGd4Do4Bp0aU3pCoyCpemH5U4+k6FpMijWTcDfy3kYAVLRMqImQoV42
+         QdXID8WyiNzhnjR2fl8c4bP96FqEDNzhPryOhm03HnBC3L27L/6SatRqOfHaK2Cy+VRT
+         f1UGQnIcEwFsDjM4EF/Pivy8tvppojtD9JdxtdUv7H0Ovf5VOqs0mGozCLYsgR9AwEyE
+         laNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714692491; x=1715297291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HPejxyFKU1Zh3kN9Scg088bpLLbAnsYPfIC5g4m7D1E=;
-        b=Ep11gXlMojryXhsHIteQC9ZFW8BgNCeZ+Q3LMydryKQkCx9jY5COasOp61q6weITpe
-         yddrP0lSR4bDv5w64y4QUJNXtSiZ3Lb7FhMU1kmk5uLVBI6Vpuqqgiv24rHHt7k6sO6q
-         WY2qOKgI2UbimkSLaQl/KEuB7sSWYFqgM/CBqds8P40Z0F4oYibM+tZtpuYn8Mlb2VZ0
-         3BV/cqXB53cdhMp7NKeakJkO3veBNY8Z5sclpmZEzi9oBccAVoha1QKjr2Ryu6sDyA9v
-         EdfGxTtX/SmZUza4f+1eEyV6OgSO8jnpmqjngpRMAbzDZkIQImsPs2rvVycikWD1giuT
-         J6vA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0KZ+BXR2aCNI56gzaVAj2oNC8DHq6XMmZVq1sk6rTXUlTbDWtaCLnz5SPysgGZGvhBS1crR02/7QMEeg/8ZPc4XMZX0KF/7Six1IyfoGzK1JQUAdkWf7yql9dR/zwWkT5yYYJHsAIK+VNW15ifg==
-X-Gm-Message-State: AOJu0YyY44FIpUSgZs52LLci6awqp5cS6IisDMdAs4Nz7M2QHGR4GKyS
-	fVK2lIHBwI6DWg1E8hzMs2JaDzN7PlWMPdy016hAOeWyGcdcVwkVGm62tOwOcQsPfjZI2ivDfw6
-	RNwDS0DQWhHL1VutHUk4LXx3GRW4=
-X-Google-Smtp-Source: AGHT+IGCfFayYnMJu50+R6ypYEmLWC90DGrdLB1SJVicZ0gOaO0Ww9JBcpPMRwWuybiMLiWOpNVphhDBzI5/UlBk9GA=
-X-Received: by 2002:a17:90a:ea08:b0:2ae:7f27:82cd with SMTP id
- w8-20020a17090aea0800b002ae7f2782cdmr1274067pjy.7.1714692491345; Thu, 02 May
- 2024 16:28:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714708849; x=1715313649;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dxd0KtYZuDHQD4ZtOLTNNbqSEgwTqHeGuFqN832PcuQ=;
+        b=UQulIzEkWD2qLdvDCugkwcUUt0xskN5bW/OcPzTLJvWsqCkf+Y/dchHfGE2m+yTbd+
+         nxzoSZ8EiMW0KMTdMRUyLe10o0sPRFmsJtoC5fMK+cBYfMV9PePFSgLbWak+fZLDdeH7
+         gpWCZSJP8HrWQqF9jarGbWubCU/bbY3A4TrTxb/YA3nH/3wrM2OhvdQ2jAjny8vwMlqg
+         AfPiiyvr3uzHbGFndKITIyjUhCV33HiFLvQQ8MSjI+OLDQ+UzzUVr0fNV8PT6TRNW30h
+         nB+I3rG8ynuLC4p/2m+miNuv6wfLoBov5H5B6iw2SJeqxcgdt1caT+j6oA4+DzbzMxX7
+         yjng==
+X-Gm-Message-State: AOJu0YyFZSM2PSbTpyS6pIaPDxI7ReqpRU8hRUBagd2I5RYa9kRqfwP5
+	5mXUVLrkFvcLQ4ZSODTOjCfimPqNs6nWX97pSOOZHW7IisGHGpby5H/gtbdaWFDv/rp51YXIZlG
+	jGxbF08Pr1PBjIYq4FTjvadECYdsmSefzdF1nTVq0DMvlW6IopXcFwdo=
+X-Google-Smtp-Source: AGHT+IFVfnBWDxxlrneerSPGXZd11uilHqDDTtTWMHsfheTRGjqgSm5mmzMMB/nd4NtHnwndRdyNnWBQKv9NTps+K9I=
+X-Received: by 2002:a05:622a:180c:b0:43a:f821:5b17 with SMTP id
+ d75a77b69052e-43cdbdb0c68mr1157471cf.3.1714708848612; Thu, 02 May 2024
+ 21:00:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502060011.1838090-1-namhyung@kernel.org> <20240502060011.1838090-3-namhyung@kernel.org>
- <ZjOaFS7_vEojFnUZ@x1> <CAM9d7chGYy9X=3=iRwocUWJurXPGd0WZaE=yr8U1JkrLcaUrow@mail.gmail.com>
-In-Reply-To: <CAM9d7chGYy9X=3=iRwocUWJurXPGd0WZaE=yr8U1JkrLcaUrow@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 2 May 2024 16:28:00 -0700
-Message-ID: <CAM9d7cgQn48sq-mF42sqSAkUeO_n=a7Jcs+J1zV+YzCuGLj7uQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] perf annotate-data: Collect global variables in advance
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 2 May 2024 21:00:37 -0700
+Message-ID: <CAP-5=fW2-pbOek68wjrEB+G=kzDmo3oPYuFj7iheouTMiaz5rQ@mail.gmail.com>
+Subject: GSoC 2024 contributor news - restarting office hours
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc: chu howard <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 2, 2024 at 11:23=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, May 2, 2024 at 6:50=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ker=
-nel.org> wrote:
-> >
-> > On Wed, May 01, 2024 at 11:00:07PM -0700, Namhyung Kim wrote:
-> > > Currently it looks up global variables from the current CU using addr=
-ess
-> > > and name.  But it sometimes fails to find a variable as the variable =
-can
-> > > come from a different CU - but it's still strange it failed to find a
-> > > declaration for some reason.
-> > >
-> > > Anyway, it can collect all global variables from all CU once and then
-> > > lookup them later on.  This slightly improves the success rate of my
-> > > test data set.
-> >
-> > It would be interesting you could provide examples from your test data
-> > set, i.e. after this patch these extra global variables were considered
-> > in the test results, with some tool output, etc.
+Dear all,
 
-Here's the example:
+We were really excited and grateful for all of the Google
+Summer-of-Code (GSoC) applicants received this year. It was the most
+applicants for GSoC and the most we've ever received for Linux perf
+tools as part of the Linux foundation. Given the number of applicants,
+organizers held proposals to a high bar and we're sorry for all those
+who applied but failed to get a spot - we tried to argue for more
+spots. You are of course welcome to contribute to Linux perf outside
+of GSoC and everyone is here to help with that. Thank you for the
+contributions you've already made!
 
-Before
------------------------------------------------------------
-find data type for 0x6014(PC) at entry_SYSCALL_64+0x7
-CU for arch/x86/entry/entry_64.S (die:0x85e1d)
-no variable found
+We are excited to say that Howard Chu's proposal on perf trace and BTF
+for GSoC was accepted. The GSoC program officially starts on May 27th
+and now is a community bonding period [1].
 
-After
------------------------------------------------------------
-find data type for 0x6014(PC) at entry_SYSCALL_64+0x7
-CU for arch/x86/entry/entry_64.S (die:0x85e1d)
-found by addr=3D0x6014 type_offset=3D0x14
- type=3D'struct tss_struct' size=3D0x5000 (die:0x74dbe1)
-
-It was asm code so it doesn't have the type info in the CU.
-With this change it can see the type (from a different CU).
-It seems we have a per-cpu variable called cpu_tss_rw at
-address 0x6000.
-
-  $ nm vmlinux | grep 6000 | grep tss
-  0000000000006000 D cpu_tss_rw
+In the past to allow an open interaction with everyone in the project
+we've held weekly office hours/syncs with GSoC contributors. The
+office hours have often had wider discussions on perf event topics. It
+is difficult to pick a time/date for the office hours so if people
+have thoughts on organization then we'd love to know. Perhaps we can
+alternate time slots, or have more than one. I previously did a google
+forms survey and a timezone convenient to Europe was selected, but
+then we had very little attendance from people in that timezone.
+Somewhat selfishly this time I'd like a time slot that is convenient
+to the mentors and Howard.
 
 Thanks,
-Namhyung
+Ian
+
+[1] https://developers.google.com/open-source/gsoc/timeline
