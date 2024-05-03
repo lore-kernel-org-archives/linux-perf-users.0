@@ -1,45 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC2D57CAF
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 May 2024 13:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1415444E;
+	Fri,  3 May 2024 14:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714741695; cv=none; b=PmXEFI0RYNzxFfUfv/HLYJ8XyII3hZpi3GKSz2ixcSskZL99wYl2GOfBWz3XOZHpvMG0eA9Q7GOzdbGvPWvTNDWRhv3WG9kYp1pwX5W4MTbOT4k2gk0xES6JLFIhFGE2/6N1MSDf/pSYgyzytWIRsVFU1+FAqtERfHPRNideqkI=
+	t=1714745385; cv=none; b=mUVWfdVt0zYaR0o2/SbDplsl3eIToZqAKv+V/l2tox9igjNvNhu+YAjaf2+P4MUCwHgCM+BXRW1fvxmc2bckq1D2TW1uElLHlBiRqqtsP58W8hwu+a4nok4u5MmGUqCX33zQUrnNGkxMWqHUh7iJNJ2B2nvMqmI1lDR6LBR4Pxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714741695; c=relaxed/simple;
-	bh=4UdNEYFwFzTPZWMT3rkYKsaF/Kmv6wUwSmEqp4s0JKQ=;
+	s=arc-20240116; t=1714745385; c=relaxed/simple;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i9K2kTyK2Md2+kq5WP3xYsWuPSidaiJboOTR4PUbkrWAV6NkTpB3PxgCYZEUch2WEuUaLItfDngKiY/6xbw6qOs1WhumO8BRm69IngONmTeg81MRgY7k6aiRw67/IcfY1bzh7ZiByysV+7yoeNq/WWko52DfDWz0mQBeCpBdWhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCoA0FZq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCdPlKyCDCaJhJaOwA2p1JSxq4VuaZLqvkDZ1bf5bPxs0s+fVuu+J0ErRRJkTUSueX9Ozh8KROPOdICNpBkkA0BfOXwwJ1uBH/IrSLWigC6wpebd33UiFahRV/Z+4aHBbfG/UsiIoZw2Vs6tTQ0nRUb/EjIJuxDYXdq9/FKLSJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KM4XIarb; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCoA0FZq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A24BC116B1;
-	Fri,  3 May 2024 13:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714741695;
-	bh=4UdNEYFwFzTPZWMT3rkYKsaF/Kmv6wUwSmEqp4s0JKQ=;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KM4XIarb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714745381;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cCoA0FZq+h/tzyoUU3scphjETM71272U0q6uYgm2DwotsIjGNgVrImG+G+wPwJO+x
-	 zHaLmqRwpSzRFGB4hQBzIZfheE0UP1szXktMz6PrBdWD4fiYtNxyFH4p4AzL/y75Q9
-	 hqXrvrzZVJesx9Dm64Wky3m/1Sqt0mTYhwXo/GftHrXEBw5HK2qjv2vRbqx38COC2q
-	 BoL5vsAXGEDFrYpwy0ZPgLRT//2nQIOsk/mE8pkI13dAoPwHSQRI0JFR5kLWh1foMI
-	 ptizH9Ctkgf0VK2kUZfDFxFoPWzjQOq54nz4GL+9O0i8JSA4dfu4qP/LkgbsGl7mx+
-	 7qLqRw5k5rehA==
-Date: Fri, 3 May 2024 14:08:09 +0100
-From: Will Deacon <will@kernel.org>
-To: chenqiwu <qiwuchen55@gmail.com>
-Cc: catalin.marinas@arm.com, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, kaleshsingh@google.com,
-	ardb@kernel.org, alexander.shishkin@linux.intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RESEND v3] arm64: Add USER_STACKTRACE support
-Message-ID: <20240503130808.GB18392@willie-the-truck>
-References: <20231219022229.10230-1-qiwu.chen@transsion.com>
- <20240419130921.GA3148@willie-the-truck>
- <20240424141135.GA3664@rlk>
+	b=KM4XIarbWLiqP+rTdHhYP4ADp2FfBPZJESIvebE/x46r3wpaPNaKYYJ8DjRuiR4XK
+	 lgnUuJtE42KneR0ACxiqLQ5uJD/S7BK84VwhVwYe9egEdoAzvtQwKV4FeMNTpP6GjL
+	 22eK/o3npUywdzgLbvtpx7d4AZBFjdzVsbPnc49I=
+Date: Fri, 3 May 2024 16:09:40 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <4cda5d2d-dd92-44ef-9e7b-7b780ec795ab@t-8ch.de>
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+ <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,76 +51,176 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240424141135.GA3664@rlk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 
-On Wed, Apr 24, 2024 at 10:11:35PM +0800, chenqiwu wrote:
-> On Fri, Apr 19, 2024 at 02:09:21PM +0100, Will Deacon wrote:
-> > On Tue, Dec 19, 2023 at 10:22:29AM +0800, chenqiwu wrote:
-> > > Currently, userstacktrace is unsupported for ftrace and uprobe
-> > > tracers on arm64. This patch uses the perf_callchain_user() code
-> > > as blueprint to implement the arch_stack_walk_user() which add
-> > > userstacktrace support on arm64.
-> > > Meanwhile, we can use arch_stack_walk_user() to simplify the
-> > > implementation of perf_callchain_user().
-> > > This patch is tested pass with ftrace, uprobe and perf tracers
-> > > profiling userstacktrace cases.
-> > > 
-> > > changes in v3:
-> > >   - update perf_callchain_user() to use arch_stack_walk_user()
-> > >     and delete the redundant code as Mark's suggestion in v2.
-> > >   - update the commit message.
-> > > 
-> > > Tested-by: chenqiwu <qiwu.chen@transsion.com>
-> > > Signed-off-by: chenqiwu <qiwu.chen@transsion.com>
-> > > ---
-> > >  arch/arm64/Kconfig                 |   1 +
-> > >  arch/arm64/kernel/perf_callchain.c | 118 +---------------------------
-> > >  arch/arm64/kernel/stacktrace.c     | 120 +++++++++++++++++++++++++++++
-> > >  3 files changed, 125 insertions(+), 114 deletions(-)
-> > 
-> > This mostly looks good to me, with one potential issue:
-> > 
-> > > @@ -107,35 +25,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
-> > >  		return;
-> > >  	}
-> > >  
-> > > -	perf_callchain_store(entry, regs->pc);
-> > > -
-> > > -	if (!compat_user_mode(regs)) {
-> > > -		/* AARCH64 mode */
-> > > -		struct frame_tail __user *tail;
-> > > -
-> > > -		tail = (struct frame_tail __user *)regs->regs[29];
-> > > -
-> > > -		while (entry->nr < entry->max_stack &&
-> > 
-> > The old code is checking entry->nr against entry->max_stack here...
-> > 
-> > > +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> > > +					const struct pt_regs *regs)
-> > > +{
-> > > +	if (!consume_entry(cookie, regs->pc))
-> > > +		return;
-> > > +
-> > > +	if (!compat_user_mode(regs)) {
-> > > +		/* AARCH64 mode */
-> > > +		struct frame_tail __user *tail;
-> > > +
-> > > +		tail = (struct frame_tail __user *)regs->regs[29];
-> > > +		while (tail && !((unsigned long)tail & 0x7))
-> > > +			tail = unwind_user_frame(tail, cookie, consume_entry);
-> > 
-> > ... but it looks like you've dropped that with the rework. Why is that ok?
-> > 
-> It's no necessary to check entry->nr in arch_stack_walk_user(), because
-> the caller function stack_trace_save_user() registers the consume_entry
-> callback for saving user stack traces into a storage array, checking
-> entry->nr against entry->max_stack is put into
-> stack_trace_consume_entry().
+Hey Joel,
 
-Gotcha, and in the case of perf that same checking is done by
-perf_callchain_store() for which we now check the return value.
+On 2024-05-03 11:03:32+0000, Joel Granados wrote:
+> Here is my feedback for your outstanding constification patches [1] and [2].
 
-Will
+Thanks!
 
+> # You need to split the patch
+> The answer that you got from Jakub in the network subsystem is very clear and
+> baring a change of heart from the network folks, this will go in as but as a
+> split patchset. Please split it considering the following:
+> 1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+>    miscellaneous that includes whatever does not fit into the others.
+> 2. Consider that this might take several releases.
+> 3. Consider the following sufix for the interim function name "_const". Like in
+>    kfree_const. Please not "_new".
+
+Ack. "_new" was an intentionally unacceptable placeholder.
+
+> 4. Please publish the final result somewhere. This is important so someone can
+>    take over in case you need to stop.
+
+Will do. Both for each single series and a combination of all of them.
+
+> 5. Consistently mention the motivation in your cover letters. I specify more
+>    further down in "#Motivation".
+> 6. Also mention that this is part of a bigger effort (like you did in your
+>    original cover letters). I would include [3,4,5,6]
+> 7. Include a way to show what made it into .rodata. I specify more further down
+>    in "#Show the move".
+> 
+> # Motivation
+> As I read it, the motivation for these constification efforts are:
+> 1. It provides increased safety: Having things in .rodata section reduces the
+>    attack surface. This is especially relevant for structures that have function
+>    pointers (like ctl_table); having these in .rodata means that these pointers
+>    always point to the "intended" function and cannot be changed.
+> 2. Compiler optimizations: This was just a comment in the patchsets that I have
+>    mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+>    have to do with enhancing locality for the data in .rodata? Do you have other
+>    specific optimizations in mind?
+
+I don't know about anything that would make it faster.
+It's more about safety and transmission of intent to API users,
+especially callback implementers.
+
+> 3. Readability: because it is easier to know up-front that data is not supposed
+>    to change or its obvious that a function is re-entrant. Actually a lot of the
+>    readability reasons is about knowing things "up-front".
+> As we move forward with the constification in sysctl, please include a more
+> detailed motivation in all your cover letters. This helps maintainers (that
+> don't have the context) understand what you are trying to do. It does not need
+> to be my three points, but it should be more than just "put things into
+> .rodata". Please tell me if I have missed anything in the motivation.
+
+Will do.
+
+> # Show the move
+> I created [8] because there is no easy way to validate which objects made it
+> into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+> .rodata than I expected (the results are in [9]) Why is that? Is it something
+> that has not been posted to the lists yet? 
+
+Constifying the APIs only *allows* the actual table to be constified
+themselves.
+Then each table definition will have to be touched and "const" added.
+
+See patches 17 and 18 in [7] for two examples.
+
+Some tables in net/ are already "const" as the static definitions are
+never registered themselves but only their copies are.
+
+This seems to explain your findings.
+
+> Best
+
+Thanks!
+
+> [1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
+> [2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net
+> [3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+>     https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org
+> [4] [PATCH v2 00/19] backlight: Constify lcd_ops
+>     https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa82b07bc6@kernel.org
+> [5] [PATCH 1/4] iommu: constify pointer to bus_type
+>     https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski@linaro.org
+> [6] [PATCH 00/29] const xattr tables
+>     https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+> [7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> [8]
+
+[snip]
+
+> [9]
+>     section: .rodata                obj_name : kern_table
+>     section: .rodata                obj_name : sysctl_mount_point
+>     section: .rodata                obj_name : addrconf_sysctl
+>     section: .rodata                obj_name : ax25_param_table
+>     section: .rodata                obj_name : mpls_table
+>     section: .rodata                obj_name : mpls_dev_table
+>     section: .data          obj_name : sld_sysctls
+>     section: .data          obj_name : kern_panic_table
+>     section: .data          obj_name : kern_exit_table
+>     section: .data          obj_name : vm_table
+>     section: .data          obj_name : signal_debug_table
+>     section: .data          obj_name : usermodehelper_table
+>     section: .data          obj_name : kern_reboot_table
+>     section: .data          obj_name : user_table
+>     section: .bss           obj_name : sched_core_sysctls
+>     section: .data          obj_name : sched_fair_sysctls
+>     section: .data          obj_name : sched_rt_sysctls
+>     section: .data          obj_name : sched_dl_sysctls
+>     section: .data          obj_name : printk_sysctls
+>     section: .data          obj_name : pid_ns_ctl_table_vm
+>     section: .data          obj_name : seccomp_sysctl_table
+>     section: .data          obj_name : uts_kern_table
+>     section: .data          obj_name : vm_oom_kill_table
+>     section: .data          obj_name : vm_page_writeback_sysctls
+>     section: .data          obj_name : page_alloc_sysctl_table
+>     section: .data          obj_name : hugetlb_table
+>     section: .data          obj_name : fs_stat_sysctls
+>     section: .data          obj_name : fs_exec_sysctls
+>     section: .data          obj_name : fs_pipe_sysctls
+>     section: .data          obj_name : namei_sysctls
+>     section: .data          obj_name : fs_dcache_sysctls
+>     section: .data          obj_name : inodes_sysctls
+>     section: .data          obj_name : fs_namespace_sysctls
+>     section: .data          obj_name : dnotify_sysctls
+>     section: .data          obj_name : inotify_table
+>     section: .data          obj_name : epoll_table
+>     section: .data          obj_name : aio_sysctls
+>     section: .data          obj_name : locks_sysctls
+>     section: .data          obj_name : coredump_sysctls
+>     section: .data          obj_name : fs_shared_sysctls
+>     section: .data          obj_name : fs_dqstats_table
+>     section: .data          obj_name : root_table
+>     section: .data          obj_name : pty_table
+>     section: .data          obj_name : xfs_table
+>     section: .data          obj_name : ipc_sysctls
+>     section: .data          obj_name : key_sysctls
+>     section: .data          obj_name : kernel_io_uring_disabled_table
+>     section: .data          obj_name : tty_table
+>     section: .data          obj_name : random_table
+>     section: .data          obj_name : scsi_table
+>     section: .data          obj_name : iwcm_ctl_table
+>     section: .data          obj_name : net_core_table
+>     section: .data          obj_name : netns_core_table
+>     section: .bss           obj_name : nf_log_sysctl_table
+>     section: .data          obj_name : nf_log_sysctl_ftable
+>     section: .data          obj_name : vs_vars
+>     section: .data          obj_name : vs_vars_table
+>     section: .data          obj_name : ipv4_route_netns_table
+>     section: .data          obj_name : ipv4_route_table
+>     section: .data          obj_name : ip4_frags_ns_ctl_table
+>     section: .data          obj_name : ip4_frags_ctl_table
+>     section: .data          obj_name : ctl_forward_entry
+>     section: .data          obj_name : ipv4_table
+>     section: .data          obj_name : ipv4_net_table
+>     section: .data          obj_name : unix_table
+>     section: .data          obj_name : ipv6_route_table_template
+>     section: .data          obj_name : ipv6_icmp_table_template
+>     section: .data          obj_name : ip6_frags_ns_ctl_table
+>     section: .data          obj_name : ip6_frags_ctl_table
+>     section: .data          obj_name : ipv6_table_template
+>     section: .data          obj_name : ipv6_rotable
+>     section: .data          obj_name : sctp_net_table
+>     section: .data          obj_name : sctp_table
+>     section: .data          obj_name : smc_table
+>     section: .data          obj_name : lowpan_frags_ns_ctl_table
+>     section: .data          obj_name : lowpan_frags_ctl_table
