@@ -1,226 +1,224 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1415444E;
-	Fri,  3 May 2024 14:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877576FB8;
+	Fri,  3 May 2024 14:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714745385; cv=none; b=mUVWfdVt0zYaR0o2/SbDplsl3eIToZqAKv+V/l2tox9igjNvNhu+YAjaf2+P4MUCwHgCM+BXRW1fvxmc2bckq1D2TW1uElLHlBiRqqtsP58W8hwu+a4nok4u5MmGUqCX33zQUrnNGkxMWqHUh7iJNJ2B2nvMqmI1lDR6LBR4Pxs=
+	t=1714746697; cv=none; b=e/EvlKw0bJ9txgS1So3HcXb8fFn/1TyaHJwhXkzOdK/DDwOEmE5VASNT7zNiJO94SdLl6rPkN+aaHM2r0esjKBodf/ASXRqLkeGbSerqZwfBebXO8mzwcUbVRTt5AILphyMlG5MwiP7fKpjmGspOU5+77NZ5RNHr7cgr+tpVbf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714745385; c=relaxed/simple;
-	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCdPlKyCDCaJhJaOwA2p1JSxq4VuaZLqvkDZ1bf5bPxs0s+fVuu+J0ErRRJkTUSueX9Ozh8KROPOdICNpBkkA0BfOXwwJ1uBH/IrSLWigC6wpebd33UiFahRV/Z+4aHBbfG/UsiIoZw2Vs6tTQ0nRUb/EjIJuxDYXdq9/FKLSJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KM4XIarb; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KM4XIarb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714745381;
-	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KM4XIarbWLiqP+rTdHhYP4ADp2FfBPZJESIvebE/x46r3wpaPNaKYYJ8DjRuiR4XK
-	 lgnUuJtE42KneR0ACxiqLQ5uJD/S7BK84VwhVwYe9egEdoAzvtQwKV4FeMNTpP6GjL
-	 22eK/o3npUywdzgLbvtpx7d4AZBFjdzVsbPnc49I=
-Date: Fri, 3 May 2024 16:09:40 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <4cda5d2d-dd92-44ef-9e7b-7b780ec795ab@t-8ch.de>
-References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
- <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
+	s=arc-20240116; t=1714746697; c=relaxed/simple;
+	bh=pdlDifNfOWVyf0LbavLtSHKGdmUjQ1u1E01Vx1fRvKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c6WHsHS/t1xFXOBzcHKN2CXPNm4LXoqK55JMQdlt7BGT7hDvSM90+5o3oF43RKLXzx5h/e8OFHuehf9YKD2crnBiY/Io0G9HGIzeAQRIZuKQANMcEdXgrxY93LWJpCMuGk4S05eNu7v36WjAaY5lNGEXXZC+KcqidCMk2Oh2WiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D57313D5;
+	Fri,  3 May 2024 07:32:00 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0B43F73F;
+	Fri,  3 May 2024 07:31:31 -0700 (PDT)
+Message-ID: <f40bd864-1c3d-49ab-b552-e9cd6ba92b3c@arm.com>
+Date: Fri, 3 May 2024 15:31:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/17] coresight: Use per-sink trace ID maps for Perf
+ sessions
+To: Mike Leach <mike.leach@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
+ scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+ suzuki.poulose@arm.com,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <20240429152207.479221-16-james.clark@arm.com>
+ <CAJ9a7VicoyFAh1m+0wcEdKan_whfXP6cb7GBZvBXCukfyugjgg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAJ9a7VicoyFAh1m+0wcEdKan_whfXP6cb7GBZvBXCukfyugjgg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hey Joel,
 
-On 2024-05-03 11:03:32+0000, Joel Granados wrote:
-> Here is my feedback for your outstanding constification patches [1] and [2].
 
-Thanks!
-
-> # You need to split the patch
-> The answer that you got from Jakub in the network subsystem is very clear and
-> baring a change of heart from the network folks, this will go in as but as a
-> split patchset. Please split it considering the following:
-> 1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
->    miscellaneous that includes whatever does not fit into the others.
-> 2. Consider that this might take several releases.
-> 3. Consider the following sufix for the interim function name "_const". Like in
->    kfree_const. Please not "_new".
-
-Ack. "_new" was an intentionally unacceptable placeholder.
-
-> 4. Please publish the final result somewhere. This is important so someone can
->    take over in case you need to stop.
-
-Will do. Both for each single series and a combination of all of them.
-
-> 5. Consistently mention the motivation in your cover letters. I specify more
->    further down in "#Motivation".
-> 6. Also mention that this is part of a bigger effort (like you did in your
->    original cover letters). I would include [3,4,5,6]
-> 7. Include a way to show what made it into .rodata. I specify more further down
->    in "#Show the move".
+On 03/05/2024 10:43, Mike Leach wrote:
+> Hi James
 > 
-> # Motivation
-> As I read it, the motivation for these constification efforts are:
-> 1. It provides increased safety: Having things in .rodata section reduces the
->    attack surface. This is especially relevant for structures that have function
->    pointers (like ctl_table); having these in .rodata means that these pointers
->    always point to the "intended" function and cannot be changed.
-> 2. Compiler optimizations: This was just a comment in the patchsets that I have
->    mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
->    have to do with enhancing locality for the data in .rodata? Do you have other
->    specific optimizations in mind?
-
-I don't know about anything that would make it faster.
-It's more about safety and transmission of intent to API users,
-especially callback implementers.
-
-> 3. Readability: because it is easier to know up-front that data is not supposed
->    to change or its obvious that a function is re-entrant. Actually a lot of the
->    readability reasons is about knowing things "up-front".
-> As we move forward with the constification in sysctl, please include a more
-> detailed motivation in all your cover letters. This helps maintainers (that
-> don't have the context) understand what you are trying to do. It does not need
-> to be my three points, but it should be more than just "put things into
-> .rodata". Please tell me if I have missed anything in the motivation.
-
-Will do.
-
-> # Show the move
-> I created [8] because there is no easy way to validate which objects made it
-> into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
-> .rodata than I expected (the results are in [9]) Why is that? Is it something
-> that has not been posted to the lists yet? 
-
-Constifying the APIs only *allows* the actual table to be constified
-themselves.
-Then each table definition will have to be touched and "const" added.
-
-See patches 17 and 18 in [7] for two examples.
-
-Some tables in net/ are already "const" as the static definitions are
-never registered themselves but only their copies are.
-
-This seems to explain your findings.
-
-> Best
-
-Thanks!
-
-> [1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
-> [2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net
-> [3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
->     https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org
-> [4] [PATCH v2 00/19] backlight: Constify lcd_ops
->     https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa82b07bc6@kernel.org
-> [5] [PATCH 1/4] iommu: constify pointer to bus_type
->     https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski@linaro.org
-> [6] [PATCH 00/29] const xattr tables
->     https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
-> [7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> On Mon, 29 Apr 2024 at 16:25, James Clark <james.clark@arm.com> wrote:
+>>
+>> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+>> as long as there are fewer than that many ETMs connected to each sink.
+>>
+>> Each sink owns its own trace ID map, and any Perf session connecting to
+>> that sink will allocate from it, even if the sink is currently in use by
+>> other users. This is similar to the existing behavior where the dynamic
+>> trace IDs are constant as long as there is any concurrent Perf session
+>> active. It's not completely optimal because slightly more IDs will be
+>> used than necessary, but the optimal solution involves tracking the PIDs
+>> of each session and allocating ID maps based on the session owner. This
+>> is difficult to do with the combination of per-thread and per-cpu modes
+>> and some scheduling issues. The complexity of this isn't likely to worth
+>> it because even with multiple users they'd just see a difference in the
+>> ordering of ID allocations rather than hitting any limits (unless the
+>> hardware does have too many ETMs connected to one sink).
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  drivers/hwtracing/coresight/coresight-core.c     | 10 ++++++++++
+>>  drivers/hwtracing/coresight/coresight-etm-perf.c | 15 ++++++++-------
+>>  include/linux/coresight.h                        |  1 +
+>>  3 files changed, 19 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+>> index 9fc6f6b863e0..d1adff467670 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -902,6 +902,7 @@ static void coresight_device_release(struct device *dev)
+>>         struct coresight_device *csdev = to_coresight_device(dev);
+>>
+>>         fwnode_handle_put(csdev->dev.fwnode);
+>> +       free_percpu(csdev->perf_id_map.cpu_map);
+>>         kfree(csdev);
+>>  }
+>>
+>> @@ -1159,6 +1160,14 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+>>         csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
+>>         dev_set_name(&csdev->dev, "%s", desc->name);
+>>
+>> +       if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+>> +           csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+>> +               csdev->perf_id_map.cpu_map = alloc_percpu(atomic_t);
+>> +               if (!csdev->perf_id_map.cpu_map) {
+>> +                       ret = -ENOMEM;
+>> +                       goto err_out;
+>> +               }
+>> +       }
+>>         /*
+>>          * Make sure the device registration and the connection fixup
+>>          * are synchronised, so that we don't see uninitialised devices
+>> @@ -1216,6 +1225,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+>>  err_out:
+>>         /* Cleanup the connection information */
+>>         coresight_release_platform_data(NULL, desc->dev, desc->pdata);
+>> +       kfree(csdev);
+>>         return ERR_PTR(ret);
+>>  }
+>>  EXPORT_SYMBOL_GPL(coresight_register);
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> index 177cecae38d9..86ca1a9d09a7 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> @@ -229,10 +229,13 @@ static void free_event_data(struct work_struct *work)
+>>                 struct list_head **ppath;
+>>
+>>                 ppath = etm_event_cpu_path_ptr(event_data, cpu);
+>> -               if (!(IS_ERR_OR_NULL(*ppath)))
+>> +               if (!(IS_ERR_OR_NULL(*ppath))) {
+>> +                       struct coresight_device *sink = coresight_get_sink(*ppath);
+>> +
+>> +                       coresight_trace_id_put_cpu_id(cpu, &sink->perf_id_map);
+>>                         coresight_release_path(*ppath);
+>> +               }
+>>                 *ppath = NULL;
+>> -               coresight_trace_id_put_cpu_id(cpu, coresight_trace_id_map_default());
+>>         }
+>>
+>>         /* mark perf event as done for trace id allocator */
+>> @@ -401,8 +404,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>>                 }
+>>
+>>                 /* ensure we can allocate a trace ID for this CPU */
+>> -               trace_id = coresight_trace_id_get_cpu_id(cpu,
+>> -                                                        coresight_trace_id_map_default());
+>> +               trace_id = coresight_trace_id_get_cpu_id(cpu, &sink->perf_id_map);
+>>                 if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+>>                         cpumask_clear_cpu(cpu, mask);
+>>                         coresight_release_path(path);
+>> @@ -497,7 +499,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>>
+>>         /* Finally enable the tracer */
+>>         if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF,
+>> -                                     coresight_trace_id_map_default()))
+>> +                                     &sink->perf_id_map))
+>>                 goto fail_disable_path;
+>>
+>>         /*
+>> @@ -509,8 +511,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>>                 hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+>>                                    CS_AUX_HW_ID_CURR_VERSION);
+>>                 hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+>> -                                   coresight_trace_id_read_cpu_id(cpu,
+>> -                                               coresight_trace_id_map_default()));
+>> +                                   coresight_trace_id_read_cpu_id(cpu, &sink->perf_id_map));
+>>                 perf_report_aux_output_id(event, hw_id);
+>>         }
+>>
+>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+>> index 3a678e5425dc..8c4c1860c76b 100644
+>> --- a/include/linux/coresight.h
+>> +++ b/include/linux/coresight.h
+>> @@ -290,6 +290,7 @@ struct coresight_device {
+>>         bool sysfs_sink_activated;
+>>         struct dev_ext_attribute *ea;
+>>         struct coresight_device *def_sink;
+>> +       struct coresight_trace_id_map perf_id_map;
 > 
-> [8]
+> perhaps this should be sink_id_map? At some point sysfs may use is and
+> naming is sink... is more consistent with other sink attributes in the
+> structure.
+> 
 
-[snip]
+When we implement this for sysfs I was thinking sysfs would use its own
+per-sink map. One reason is that the global map might be used if the
+sink is in use by a system source (which allocate their IDs on probe).
+Resulting in something like this:
 
-> [9]
->     section: .rodata                obj_name : kern_table
->     section: .rodata                obj_name : sysctl_mount_point
->     section: .rodata                obj_name : addrconf_sysctl
->     section: .rodata                obj_name : ax25_param_table
->     section: .rodata                obj_name : mpls_table
->     section: .rodata                obj_name : mpls_dev_table
->     section: .data          obj_name : sld_sysctls
->     section: .data          obj_name : kern_panic_table
->     section: .data          obj_name : kern_exit_table
->     section: .data          obj_name : vm_table
->     section: .data          obj_name : signal_debug_table
->     section: .data          obj_name : usermodehelper_table
->     section: .data          obj_name : kern_reboot_table
->     section: .data          obj_name : user_table
->     section: .bss           obj_name : sched_core_sysctls
->     section: .data          obj_name : sched_fair_sysctls
->     section: .data          obj_name : sched_rt_sysctls
->     section: .data          obj_name : sched_dl_sysctls
->     section: .data          obj_name : printk_sysctls
->     section: .data          obj_name : pid_ns_ctl_table_vm
->     section: .data          obj_name : seccomp_sysctl_table
->     section: .data          obj_name : uts_kern_table
->     section: .data          obj_name : vm_oom_kill_table
->     section: .data          obj_name : vm_page_writeback_sysctls
->     section: .data          obj_name : page_alloc_sysctl_table
->     section: .data          obj_name : hugetlb_table
->     section: .data          obj_name : fs_stat_sysctls
->     section: .data          obj_name : fs_exec_sysctls
->     section: .data          obj_name : fs_pipe_sysctls
->     section: .data          obj_name : namei_sysctls
->     section: .data          obj_name : fs_dcache_sysctls
->     section: .data          obj_name : inodes_sysctls
->     section: .data          obj_name : fs_namespace_sysctls
->     section: .data          obj_name : dnotify_sysctls
->     section: .data          obj_name : inotify_table
->     section: .data          obj_name : epoll_table
->     section: .data          obj_name : aio_sysctls
->     section: .data          obj_name : locks_sysctls
->     section: .data          obj_name : coredump_sysctls
->     section: .data          obj_name : fs_shared_sysctls
->     section: .data          obj_name : fs_dqstats_table
->     section: .data          obj_name : root_table
->     section: .data          obj_name : pty_table
->     section: .data          obj_name : xfs_table
->     section: .data          obj_name : ipc_sysctls
->     section: .data          obj_name : key_sysctls
->     section: .data          obj_name : kernel_io_uring_disabled_table
->     section: .data          obj_name : tty_table
->     section: .data          obj_name : random_table
->     section: .data          obj_name : scsi_table
->     section: .data          obj_name : iwcm_ctl_table
->     section: .data          obj_name : net_core_table
->     section: .data          obj_name : netns_core_table
->     section: .bss           obj_name : nf_log_sysctl_table
->     section: .data          obj_name : nf_log_sysctl_ftable
->     section: .data          obj_name : vs_vars
->     section: .data          obj_name : vs_vars_table
->     section: .data          obj_name : ipv4_route_netns_table
->     section: .data          obj_name : ipv4_route_table
->     section: .data          obj_name : ip4_frags_ns_ctl_table
->     section: .data          obj_name : ip4_frags_ctl_table
->     section: .data          obj_name : ctl_forward_entry
->     section: .data          obj_name : ipv4_table
->     section: .data          obj_name : ipv4_net_table
->     section: .data          obj_name : unix_table
->     section: .data          obj_name : ipv6_route_table_template
->     section: .data          obj_name : ipv6_icmp_table_template
->     section: .data          obj_name : ip6_frags_ns_ctl_table
->     section: .data          obj_name : ip6_frags_ctl_table
->     section: .data          obj_name : ipv6_table_template
->     section: .data          obj_name : ipv6_rotable
->     section: .data          obj_name : sctp_net_table
->     section: .data          obj_name : sctp_table
->     section: .data          obj_name : smc_table
->     section: .data          obj_name : lowpan_frags_ns_ctl_table
->     section: .data          obj_name : lowpan_frags_ctl_table
+  struct coresight_trace_id_map perf_id_map;
+  struct coresight_trace_id_map sysfs_id_map;
+  struct coresight_trace_id_map *sysfs_id_map_in_use;
+
+syfs_id_map_in_use could either be &sysfs_id_map or
+coresight_trace_id_map_default()
+
+If sysfs did share the same map as Perf, the sink would have to have
+some kind of mechanism of saving and restoring the mappings depending on
+who was currently using the sink. At that point just storing two
+versions of the mappings is easier. I believe there are some scenarios
+for concurrent sysfs and Perf sessions that don't fail immediately, but
+that one will get -EBUSY when trying to use the sink, until the other
+session ends, at which point the other mappings need to be ready to use
+immediately.
+
+Also sysfs might either use the per-sink map or the global map depending
+on the ordering of when the IDs were allocated or if a system source is
+used at the same time, which means sysfs needs to use a reference to a map.
+
+We could also change system sources so that they only allocate IDs when
+the ID is read, rather than on probe. That might remove some of the
+above issues, but maybe not all of them because you can always read the
+ID before enabling the sink, at which point you have no choice but to
+use the global map.
+
+>>         /* sysfs links between components */
+>>         int nr_links;
+>>         bool has_conns_grp;
+>> --
+>> 2.34.1
+>>
+> 
+> Mike
+> 
