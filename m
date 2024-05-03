@@ -1,147 +1,389 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7731465BF;
-	Fri,  3 May 2024 07:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714720675; cv=fail; b=d1r8pKBOh90n090+UA4HaOwN0zK0YKByTe4lVOFUy0XGGyKySmBRebGSxHb7NKu3n+98Pe3D50w4R/rFFY2LKzbou/ma8q5/3Nlt0/euKBdznH/+9GLS9UwGv9UWAEljNUM8mnmXwknMamdJm65nooTshoSDGhJ05umE1P289CQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714720675; c=relaxed/simple;
-	bh=UvMy+IBmUeBT7WHELUtCmgLyXENzc0yGbg7bSzc0jDY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gaIIbgPNylJZ+D99gFvVfshAVOt+VPyqG604uau3oVwdyGkUon0FWCMh+OMwAJ+th0F1QjjNcJjYlTctUchBMv6gyvOZvPdqacxTshMHJIMK2TjLuz8Jmrgc4wGmha4+29SkRsCz6XyjFRVtk8emIL6Wxy19mnjfQtuv5DWvzKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kYFRIao6; arc=fail smtp.client-ip=40.107.223.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0F214F62;
+	Fri,  3 May 2024 09:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714727029; cv=none; b=TDRL4EknNrGXbQ6QjtvmwpCKLyslIu7ZAmooBe+3ewAu4NtSHr2sykMGt9gdhj9zwYRhcfVH0VW5E3hWkfFuU9lP3PpAufU4knwCr451STs+P+h9Uw6FoAzVRUtBhJFEH5JlOB9sGXJqfoUv5Dfn50FH9VfyZILCDIgLKD30yWM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714727029; c=relaxed/simple;
+	bh=H4OwBwwEJLoUrKgErNPAJ4aWKXfqp1/GW2h+1cPY6mY=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=LELIdvB94u4VG7Xl+VUb+dOAlJzdIImPOiWg1ONIISGco6uNrDnbtN5vQuS2LAJ/NRfJUIRebhYvF6BE23O6h6qdT/UUemv/kqLLeDooaSN6kwrjugPZgWSH3yX8qfUt6xL4WSNKVgbgrCFU8Y2NquZSNlxFAkDNfVMKlyJMboY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hNizHVdn; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kYFRIao6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fzsi2qhUW7vPG+3kufyDX+fghMt+cbanhVQybaboMomuqTLHkJdYMQJWzWBAAI7e7D11WWSa+OLHV7e+MVx5dBn+wLA9Ua8HrVO661hONqVUqAtVIcd0ixejVo1GOiUuQZam3jg3eEeE2YRkPYEzMApGb+HMRKUNCBzAhOiqfHa7OdwKM3iEjNY7Y02r1mwfPFWmkxxJfZAsnjZH2i5UIZPjBgn5BuXp9qLzxEdj4Dsimxn//JaaLH52rn2VsZ2oMUJ/iJjfU3rtixjYqHGkWDw3IH59ig+CdvzSorb5wpTzHYMgCa4rGe0Q/t9+QymkWqTJqvmfR9SzRd4nHmK0bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KfvQaX1XMrbDPkspLboR1t0Mo8W6CXkPezqj28176pg=;
- b=ZTb7qDNTci6grxn6lgumI8jrCKwkUtoc3B7HQlEo+qdrvAdskt1snNVrm6U7RYHVhFXg3STBtxzMxv55Ve+XXnMyOfl1aOXbKi+j9shAcSKUWP/yjVUnJ5+d3PbMrrKzEBbpLTGQjIMPZvto/G6Gwf96izE7yV7DSglw+kp3eQHM/1A4GJsm2N5Dgd5UH25Cr6QPq5JK5FcG40509AMss/KE/RJdLclUH/8dv0z/uKrCifokgMdiYHmrQ6wEpckzIWqiLz+YBjhn+CFSaxhSRMYgHNofCJnYNPBiPDF4cZ9Unl+jRZxXkIAUIk1jKrvCz2BYJtONMsWFG6sjELgzbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KfvQaX1XMrbDPkspLboR1t0Mo8W6CXkPezqj28176pg=;
- b=kYFRIao6jO8BPRjwAfzklt+0AXE4V5XG8Sns4g3Tnv5tf9REmQJ+S0oGr/zN7Ob7RGq9/pyx2Slp0RjAVcNGVLUSQiBcOwibDqgljGqR6q+i6cca3+FEX60c7iBYDeVMiizJrnes3XGPuEcfO6/W4czgi2OExUy68vFwYTLlbcI=
-Received: from DM6PR02CA0161.namprd02.prod.outlook.com (2603:10b6:5:332::28)
- by PH7PR12MB6857.namprd12.prod.outlook.com (2603:10b6:510:1af::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Fri, 3 May
- 2024 07:17:51 +0000
-Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
- (2603:10b6:5:332:cafe::f8) by DM6PR02CA0161.outlook.office365.com
- (2603:10b6:5:332::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.32 via Frontend
- Transport; Fri, 3 May 2024 07:17:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Fri, 3 May 2024 07:17:45 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 3 May
- 2024 02:17:41 -0500
-From: Sandipan Das <sandipan.das@amd.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <eranian@google.com>,
-	<ravi.bangoria@amd.com>, <ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v2 4/4] perf vendor events amd: Add Zen 5 mapping
-Date: Fri, 3 May 2024 12:46:22 +0530
-Message-ID: <862a6b683755601725f9081897a850127d085ace.1714717230.git.sandipan.das@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1714717230.git.sandipan.das@amd.com>
-References: <cover.1714717230.git.sandipan.das@amd.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hNizHVdn"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1714727018;
+	bh=5DfAXm0BybfL0wB90HdoJ2+ecXzl3T3phLFwP9QlX+o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hNizHVdn9K9XbhBNhn1nDSO/5KZUNj2XoxMSsTacSd3jPs0o0drSRiC4H6bkslwSW
+	 B/QSvO9HwlzhFW4zaHFyGSJ5H6nnh83o7MAyLAhqznaRM1mK98m5CnfxgNvbZnC8qx
+	 hsrB//hR8ZhJR5rlu9tY5Zsijl1EM085ggZXO+JQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240503090338eucas1p1622ca105c87c20c6bbe96b62943fe717~L7yNnz7IW1025710257eucas1p1p;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 2A.F6.09624.A68A4366; Fri,  3
+	May 2024 10:03:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0~L7yM6N_nm1858018580eucas1p1z;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240503090337eusmtrp2e33e44757c1c281d7e60e444934cfff9~L7yM4xFdH1141911419eusmtrp2R;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-4f-6634a86abd4b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id DB.59.08810.968A4366; Fri,  3
+	May 2024 10:03:37 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eusmtip245d74ecfb1a665d8dac0f5363231e909~L7yMjDsdX1588515885eusmtip2r;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from localhost (106.210.248.112) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Fri, 3 May 2024 10:03:36 +0100
+Date: Fri, 3 May 2024 11:03:32 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|PH7PR12MB6857:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85dabf8b-e8f8-4cf2-cd13-08dc6b4121a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|7416005|1800799015|36860700004|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fzR+RXSurpRgYn5WfjDwWg5Gm/UHNrvFoYSiXtn3WCWCgR85ayuS3kTmYbrF?=
- =?us-ascii?Q?O2VP4Tu+5r98xZDlIRGK0jBnZ1Zv1dIvHIEk4CAdqg7eGSj8PXKnOW7Uih6E?=
- =?us-ascii?Q?p47992KCVxOhRrxMclHxPBbTe3NMtJHgpNZhtX7Nf7YN0mLPNLGZXMR+1TF9?=
- =?us-ascii?Q?NUpT43m8ZCLRyGedO0IXyAFat4Z/4sybqbGsY7i93cGCS+9nAk/g2rwF4ZE3?=
- =?us-ascii?Q?oUnPMKXl0xlpmi3Wu3rsE+ung7XXf/ubpCLLyct2p9fW0hc+RWEd5kcCyNRR?=
- =?us-ascii?Q?t3nJTD20Zv+6hRhVr1x5fhK+hPztDZtsDGEnEFEn5/WW4mjnrhCHpsfSWZZk?=
- =?us-ascii?Q?qQnUwEWEaFERqOtnwUiQ1Vbl4dcCmWdS0ehVLDz4rrK9QoBRgS8JlnXs9kxK?=
- =?us-ascii?Q?UoFaSjbdtxJtuSCjXAPF2Ggbuqke3+Obaba2YyPRyf+EnlFDzYkozUEw/Two?=
- =?us-ascii?Q?5wr44vLi0RZaFvkWATifZ0wTnW0KCjI5/ceZ1l13ZR0lsnhflnij8BQd1Mz9?=
- =?us-ascii?Q?iAsyNrDRR2zDv9F0u7sXY6+EN5V+eAz7Lo1C9DNLGfwobVN9duu4YfiHpyiw?=
- =?us-ascii?Q?1YIBxZ5E3HlzCQNlDe3eSVO76NFhwOgi+MgTxzFzvB8SROvFE19HXP20HBxy?=
- =?us-ascii?Q?WkrSwWE58n/7RKwbDjuu0Mk7taMEICH9Hy1L6Je9vPBuFJXZyQSSLuGao/nj?=
- =?us-ascii?Q?xjA1vtE+zhF0L+S3WMqmz5upSIjLqcIuaORYMOqRK1kr7Cmoqd5KqaZuCo94?=
- =?us-ascii?Q?O4+b4z6B3J9gc0rCrRga3ANB0UEZjM0YP1y/qZsrTF0U4eNu4sWpC3h6MfIm?=
- =?us-ascii?Q?PnbUGj3WsSWQ29TDy6ndp1rfClSuGynByFUjezE253oe9fmawmjgjCpPmmq9?=
- =?us-ascii?Q?4ZNWOja8UhlFUlzJU4u1ZygWUki4sS9v5Tze660pSS60SO9g7FS9BIYN5sb+?=
- =?us-ascii?Q?6JsuXV+Zlo5HYiZJuU/p+tYDirzb8k7OW5+uRVQzXx3uUzJ67YqXx0x8Sth6?=
- =?us-ascii?Q?aldBi0aiqF4dRm7mvDKv6juwSSxgGaawLOtQOJN1MUFWG3OPLZ8NV7IfdGKb?=
- =?us-ascii?Q?7SKIzsMXce7GCfdsh+74wm5ItokyNRpwELjnXeW3YQ1brpYiFXj0Qxcc+d+e?=
- =?us-ascii?Q?4+sKueNZMVhTAQmVLAYfMkrKYUErnlrbFVhGMw2a613ijjR/C7sAeg9+Sspe?=
- =?us-ascii?Q?Q84K9TaMwf/3ruM/6AwKlFGezFnDGS+5AywWKjMhiD38TkKvdA1VbDG8hE52?=
- =?us-ascii?Q?295/4eF+w+64sesbIr2YvZUi8TF9odgiRUD961UXW+72oE5h5F/6F6CoW2qw?=
- =?us-ascii?Q?gtVaKgoqTtpH6Fq5pb7PWioyzbxECoxGe+KjAVNgdBSl9BVWa0XZaDqlQYTg?=
- =?us-ascii?Q?n2L951DE/RsBW/DtFEUrQcjvfv9i?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 07:17:45.9609
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85dabf8b-e8f8-4cf2-cd13-08dc6b4121a5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6857
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="pu6elde4hy573vso"
+Content-Disposition: inline
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VSfUxTVxzNfe/1vVe24mvp5AZkZIiayIcQWbzZKrC4Px4hM5PMLPLHRjOe
+	4KBFW2DqdOJEFHBbBVEpX2UiMnDFFKhURLFjRcABG8SgwzI+SkBwQIsCq8Isj80l++/8fuec
+	e8+5uTQueUh60fuUqZxKKU/2I90Io2WxK+jzqrC9IUNmD3TcohMgR2sbiYyXcjH0wnQKR/UW
+	K0A2yzCF7uUqUFPnUwwZRu4L0M3mdgKV1i4C1HujmETWq8sC1NPSKUB9DXoCjZm/IZDRkUki
+	TfkJHNl0kwI0c2aYRK21vxDoxvNGCjkXxjDknF8SoBNldhz1a2wAWXRrkUbfQaCuOocg0oct
+	yviVYDu+h6zOkMYaqrNJ1mDPo9i6imPseF0hYLsvlgP2fv8gwT5x3sXYnsopknUY3mS/y7VQ
+	H4pi3WTxXPK+dE61JTzOLdFp+53cX/Txwe7BnRmgKzIHCGnIhME7lmtkDnCjJUwVgCPTdwA/
+	zAE4N/ktcKkkjAPAWze/ygH0iuPHOU9ecwXAyXsj+L+a8Uev80Q9gDWjfwhcBMH4w7qJbMyF
+	SSYQdk8NrBikjAz+8MxBuTDOFFCw6HqcC3swcbD+cv7KxSImElr1TQSPxbC9cJRwhcCZg3Bo
+	IZaH3vDKEu1SCJkPYFbFNMEXWw9br5dQPD4KO+ofYq5okJlxg+bZUcAT78MzDXwcyHjAx231
+	q4Z1cNlUtmrIB/D20gzFDzUAVh5/ivGqd2Fm3+iq4z1o7X4A+Bdyh/1PxHwvd5hnvIDzaxE8
+	nSXh1RthjXWK0ID12v80075qpn3VTLtyTiDUNdnJ/60DYGX5JM7j7VCvnyZ0gKoGnlyaWpHA
+	qUOV3BfBarlCnaZMCP4sRWEAL79851KbvRGUPJ4NNgOMBmbg/9I8fK2mB3gRyhQl5ycVBeRv
+	3SsRxcsPHeZUKZ+q0pI5tRl404Sfp2hDvC8nYRLkqVwSx+3nVP+wGC30ysDSCwPswc2nK7SJ
+	u46EjoZI18i6djc81wszz+8oGTq/uaSpb+sBQ4nBMeAYxCxHt/w82WOq0J9rEAu/jL1Iz8dE
+	ptnz9kTQittJBedyNeiyqSV5g8mnWi3rLDwy5/A1/8aG9RbtpDZVuTuXo7F37k6cahf31Ebs
+	ic4wmiOTZLNXLxXj0nZpcdCScxf3SX/42fbyRXHjuvE3os5ub342sM2my/bxpeThu/Heqbe8
+	s5ix0sAHZTXzh4YOX1g4kBdi++kYFYSZQv862TlRUNsijSqNDjhpWBO+rFnruWnbeNzbSoX7
+	xhfuMfiOMLEs97WCr4MiokI+umV8FAPT/0xs809K9SPUifLQzbhKLf8bTKfE620EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsVy+t/xe7qZK0zSDH7sl7VoPLaA1eLzkeNs
+	FtsWdzNZ/N3Zzmyx5dg9Rounxx6xW5zpzrXYffork8Wmx9dYLfbsPcliMW/9T0aLy7vmsFnc
+	W/Of1eLCgdOsFle2rmOxeHaol8Vi2+cWNosJC5uZLZ4ueM1q8aHnEZvFkfVnWSx2/dnBbvH7
+	xzMmi9/f/7FaNM//xGxxY8JTRotjC8QsJqw7xWJxbvNnVgdZj9kNF1k8Ti2S8FiwqdRj06pO
+	No9Nnyaxe2xeUu/xYvNMRo/zMxYyely7cZ/F4+3vE0weF5a9YfP4vEnOo7/7GHsAb5SeTVF+
+	aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexpz+v0wFM8Mr
+	Ph6+xNrAeMahi5GDQ0LARGLtF/EuRi4OIYGljBI3+n6ydDFyAsVlJDZ+ucoKYQtL/LnWxQZR
+	9JFR4tebn8wQzhZGietnD4F1sAioSGx+2ckEYrMJ6Eicf3OHGcQWEbCRWPntMzuIzSwwlV1i
+	9vYEEFtYIEFiy9LJjCA2r4CDxL11u1kghi5glJjevhYqIShxcuYTFpBTmQXKJN7fNoYwpSWW
+	/+MAqeAU8JVoW/Ie6mhliSPb57JD2LUSn/8+Y5zAKDwLyaBZCINmIQyaBXablsSNfy+ZMIS1
+	JZYtfM0MYdtKrFv3nmUBI/sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwHS37djPzTsY5736
+	qHeIkYmD8RCjClDnow2rLzBKseTl56UqifBqTzZOE+JNSaysSi3Kjy8qzUktPsRoCgzDicxS
+	osn5wEScVxJvaGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXANH3uY4E0
+	2xYBo9Mirv0ldwM2JeXqPak55K24q+zrxBohrh2WGfamDnIvAq2vLWOefW1xx/xL/75ENCX9
+	vqot8bXk/BKxn6F9nTImM+a53WtI2Xgg3tez4H/e1kWOlx5e8/WsP/e1yuuIcl/Z/wLbadY8
+	KiufaMxeF5jCvf62Uu03kYK5wRGfjrzc92dKt2DT2pBb3qeD5d7cEz/wpqLi2sLZNb+7lkZM
+	n+Ie5awmssqS9+w9mbNLU2RnBT5VsBSSrBRo3iWV/Wb3rR8mMzi+2SzRU5f6N7MyzCXp4P/d
+	yaIWaeGfHbVicn6JfVP4Uf55nj6jjUNn7tegOU2nuZ60PNqZxc/sn/6VMT1xt32vEktxRqKh
+	FnNRcSIAsZFFMwwEAAA=
+X-CMS-MailID: 20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0
+X-Msg-Generator: CA
+X-RootMTR: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+	<20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 
-Add a regular expression in the map file so that appropriate JSON event
-files are used for AMD Zen 5 processors belonging to Family 1Ah.
+--pu6elde4hy573vso
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv | 1 +
- 1 file changed, 1 insertion(+)
+Hey Thomas
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index c372e3594a69..c9891630be10 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -40,3 +40,4 @@ AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
- AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
- AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
- AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen4,core
-+AuthenticAMD-26-[[:xdigit:]]+,v1,amdzen5,core
--- 
-2.34.1
+Here is my feedback for your outstanding constification patches [1] and [2].
 
+# You need to split the patch
+The answer that you got from Jakub in the network subsystem is very clear a=
+nd
+baring a change of heart from the network folks, this will go in as but as a
+split patchset. Please split it considering the following:
+1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+   miscellaneous that includes whatever does not fit into the others.
+2. Consider that this might take several releases.
+3. Consider the following sufix for the interim function name "_const". Lik=
+e in
+   kfree_const. Please not "_new".
+4. Please publish the final result somewhere. This is important so someone =
+can
+   take over in case you need to stop.
+5. Consistently mention the motivation in your cover letters. I specify more
+   further down in "#Motivation".
+6. Also mention that this is part of a bigger effort (like you did in your
+   original cover letters). I would include [3,4,5,6]
+7. Include a way to show what made it into .rodata. I specify more further =
+down
+   in "#Show the move".
+
+# Motivation
+As I read it, the motivation for these constification efforts are:
+1. It provides increased safety: Having things in .rodata section reduces t=
+he
+   attack surface. This is especially relevant for structures that have fun=
+ction
+   pointers (like ctl_table); having these in .rodata means that these poin=
+ters
+   always point to the "intended" function and cannot be changed.
+2. Compiler optimizations: This was just a comment in the patchsets that I =
+have
+   mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+   have to do with enhancing locality for the data in .rodata? Do you have =
+other
+   specific optimizations in mind?
+3. Readability: because it is easier to know up-front that data is not supp=
+osed
+   to change or its obvious that a function is re-entrant. Actually a lot o=
+f the
+   readability reasons is about knowing things "up-front".
+As we move forward with the constification in sysctl, please include a more
+detailed motivation in all your cover letters. This helps maintainers (that
+don't have the context) understand what you are trying to do. It does not n=
+eed
+to be my three points, but it should be more than just "put things into
+=2Erodata". Please tell me if I have missed anything in the motivation.
+
+# Show the move
+I created [8] because there is no easy way to validate which objects made it
+into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+=2Erodata than I expected (the results are in [9]) Why is that? Is it somet=
+hing
+that has not been posted to the lists yet?=20
+
+Best
+
+[1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb8=
+36e2@weissschuh.net/
+[2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012ab=
+c31311@weissschuh.net
+[3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+    https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@=
+kernel.org
+[4] [PATCH v2 00/19] backlight: Constify lcd_ops
+    https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa8=
+2b07bc6@kernel.org
+[5] [PATCH 1/4] iommu: constify pointer to bus_type
+    https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski=
+@linaro.org
+[6] [PATCH 00/29] const xattr tables
+    https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+[7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@wei=
+ssschuh.net/
+
+[8]
+    #!/usr/bin/python3
+
+    import subprocess
+    import re
+
+    def exec_cmd( cmd ):
+        try:
+            result =3D subprocess.run(cmd, shell=3DTrue, text=3DTrue, check=
+=3DTrue, capture_output=3DTrue)
+            output_lines =3D result.stdout.splitlines()
+            return output_lines
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+    def remove_tokens_re(lines, regex_patterns, uniq =3D True):
+        filtered_lines =3D []
+        seen_lines =3D set()
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            for regex in regexes:
+                line =3D regex.sub('', line)  # Replace matches with empty =
+string
+
+            if uniq:
+                if line not in seen_lines:
+                    seen_lines.add(line)
+                    filtered_lines.append(line)
+            else:
+                    filtered_lines.append(line)
+
+        return filtered_lines
+
+    def filter_in_lines(lines, regex_patterns):
+        filtered_lines =3D []
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            if any(regex.search(line) for regex in regexes):
+                filtered_lines.append(line)
+
+        return filtered_lines
+
+    cmd =3D "git grep 'static \(const \)\?struct ctl_table '"
+    regex_patterns =3D ['[\}]*;$', ' =3D \{', '\[.*\]', '.*\.(c|h):[ \t]*st=
+atic (const )?struct ctl_table ']
+    ctl_table_structs =3D remove_tokens_re(exec_cmd( cmd ), regex_patterns)
+
+    cmd =3D "readelf -X -Ws build/vmlinux"
+    regex_patterns =3D ['.*OBJECT.*']
+    output_lines =3D filter_in_lines(exec_cmd( cmd ), regex_patterns);
+
+    regex_patterns =3D ['^.*OBJECT', '[ \t]+[A-Z]+[ \t]+[A-Z]+.*\(.*\)[ \t]=
++']
+    obj_elems =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    regex_patterns =3D ['^.*\(', '\)[ ]+.*$']
+    sec_names =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    for i in range(len(sec_names)):
+        obj_name =3D obj_elems[i]
+        if obj_name in ctl_table_structs:
+            print ("section: {}\t\tobj_name : {}". format(sec_names[i], obj=
+_name))
+
+[9]
+    section: .rodata                obj_name : kern_table
+    section: .rodata                obj_name : sysctl_mount_point
+    section: .rodata                obj_name : addrconf_sysctl
+    section: .rodata                obj_name : ax25_param_table
+    section: .rodata                obj_name : mpls_table
+    section: .rodata                obj_name : mpls_dev_table
+    section: .data          obj_name : sld_sysctls
+    section: .data          obj_name : kern_panic_table
+    section: .data          obj_name : kern_exit_table
+    section: .data          obj_name : vm_table
+    section: .data          obj_name : signal_debug_table
+    section: .data          obj_name : usermodehelper_table
+    section: .data          obj_name : kern_reboot_table
+    section: .data          obj_name : user_table
+    section: .bss           obj_name : sched_core_sysctls
+    section: .data          obj_name : sched_fair_sysctls
+    section: .data          obj_name : sched_rt_sysctls
+    section: .data          obj_name : sched_dl_sysctls
+    section: .data          obj_name : printk_sysctls
+    section: .data          obj_name : pid_ns_ctl_table_vm
+    section: .data          obj_name : seccomp_sysctl_table
+    section: .data          obj_name : uts_kern_table
+    section: .data          obj_name : vm_oom_kill_table
+    section: .data          obj_name : vm_page_writeback_sysctls
+    section: .data          obj_name : page_alloc_sysctl_table
+    section: .data          obj_name : hugetlb_table
+    section: .data          obj_name : fs_stat_sysctls
+    section: .data          obj_name : fs_exec_sysctls
+    section: .data          obj_name : fs_pipe_sysctls
+    section: .data          obj_name : namei_sysctls
+    section: .data          obj_name : fs_dcache_sysctls
+    section: .data          obj_name : inodes_sysctls
+    section: .data          obj_name : fs_namespace_sysctls
+    section: .data          obj_name : dnotify_sysctls
+    section: .data          obj_name : inotify_table
+    section: .data          obj_name : epoll_table
+    section: .data          obj_name : aio_sysctls
+    section: .data          obj_name : locks_sysctls
+    section: .data          obj_name : coredump_sysctls
+    section: .data          obj_name : fs_shared_sysctls
+    section: .data          obj_name : fs_dqstats_table
+    section: .data          obj_name : root_table
+    section: .data          obj_name : pty_table
+    section: .data          obj_name : xfs_table
+    section: .data          obj_name : ipc_sysctls
+    section: .data          obj_name : key_sysctls
+    section: .data          obj_name : kernel_io_uring_disabled_table
+    section: .data          obj_name : tty_table
+    section: .data          obj_name : random_table
+    section: .data          obj_name : scsi_table
+    section: .data          obj_name : iwcm_ctl_table
+    section: .data          obj_name : net_core_table
+    section: .data          obj_name : netns_core_table
+    section: .bss           obj_name : nf_log_sysctl_table
+    section: .data          obj_name : nf_log_sysctl_ftable
+    section: .data          obj_name : vs_vars
+    section: .data          obj_name : vs_vars_table
+    section: .data          obj_name : ipv4_route_netns_table
+    section: .data          obj_name : ipv4_route_table
+    section: .data          obj_name : ip4_frags_ns_ctl_table
+    section: .data          obj_name : ip4_frags_ctl_table
+    section: .data          obj_name : ctl_forward_entry
+    section: .data          obj_name : ipv4_table
+    section: .data          obj_name : ipv4_net_table
+    section: .data          obj_name : unix_table
+    section: .data          obj_name : ipv6_route_table_template
+    section: .data          obj_name : ipv6_icmp_table_template
+    section: .data          obj_name : ip6_frags_ns_ctl_table
+    section: .data          obj_name : ip6_frags_ctl_table
+    section: .data          obj_name : ipv6_table_template
+    section: .data          obj_name : ipv6_rotable
+    section: .data          obj_name : sctp_net_table
+    section: .data          obj_name : sctp_table
+    section: .data          obj_name : smc_table
+    section: .data          obj_name : lowpan_frags_ns_ctl_table
+    section: .data          obj_name : lowpan_frags_ctl_table
+
+--
+
+Joel Granados
+
+--pu6elde4hy573vso
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY0qGMACgkQupfNUreW
+QU9meQwAhSiWxhtL9djecqOkREsAyj1iIrA1uEV4NTghMsTyhC1r83HyDUEWGOJo
+fTZ8jrYwxeDy9qnd5vC+hEYgx/tBWXv+79vssjd28m2Mn4DogQlWABKsPJlPw/8R
+IB9dau7hME9YLSiZQaKoL8DuqnQ4jvdN/zvWcuYHl2s/jF+qzsI3DT4Dy98S1Sr8
+63rSYg/sulLme7ov/3gAQ3ceSPYlLRUfYdWLlGkUYT2iIjcBIybKotaKGkERq8xL
+Z2PcPpWj15gYh6Ewd0GL7AMq2M/dSGYYxPIbv0Mnjpe5AV5HzGZ06MUg4Tt11p1z
+5Fchr0Hg24b2UYcx4mjbsDCy/OyF2oA8cjjj79ODXcgpsVxWX8GZdcFh/gNmsPw5
+dKZyo4v1ZSvDmu8uDCcaV92GLelxc2YfGHYEfbE+hhJR0YaAukrL8mfqPJIanYv+
+zzIuChlVlLB5xoY0CT3XgLo8NJrc/ERnY8JibAauNNLQvTjHV/tbd0UknFQQC4XL
+gDaMqz5j
+=1R4C
+-----END PGP SIGNATURE-----
+
+--pu6elde4hy573vso--
