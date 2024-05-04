@@ -1,182 +1,151 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE78E537FF
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 May 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EBA77F08;
+	Sat,  4 May 2024 18:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714846508; cv=none; b=GslWsC9/QAz03B88LABqkDiNwV31DkC05RfBCZFgpOQyYWBwEV0TnsdUWMWug3MCL3p7PljVqEFqDwaBAhW2e8RB9hfbUwTKI/HrfPQQHUCzsN+NzBgLOQRjGZODCkrT+PWPXGu2yu0i/TOVJsnOunEA3LETIkweBAJvi/eJCMk=
+	t=1714847222; cv=none; b=Nhj3hNO0nkU0NLfHtwEbtl2YL7wYk6QA4dORd0q/L0IsNpM56Z7930xD+vt5S0W+TfPMSAp9GNLa36pU10FwCdUfFofvLBMooXm0C4KGkYIfuaSS0L7mSTzJZuSZlXxkc0vNA2HZWh2BwNNsyDXkxYvBDISMDp/X7fm7eXh7Ydg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714846508; c=relaxed/simple;
-	bh=l1rRfCu9fWy1AZLn+bm87szwb+ZlyN23APuoSSDYtHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mZL9xgnJj3Zvt9zb2b3T+qNpfALa4FomkMStEi/9mS/E2/G8PlHFht/M+4Vi4P1XnxpUwGbOpTQk3ZV+igLqToRZqv4Z+pengppTmgiF5rHWp10+NpUf3MFv63LEDsCSodvrYzlODkB/twEilEE/RNWpJTCkajxnOU74Kyqj89Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0VYhgTmP; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714847222; c=relaxed/simple;
+	bh=T8RL3GJ2WYtqHOh0klj9cA7pEI84E1fR8OclwOfdXAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8YSy5xktHBSiTW6PA25zPkWQt6wjdEwl8gvbtC1GT+F/dvH1Psv3gf9sL99l+GBgTVyfbu2k8YbKrwikAWgtxKl7b2T+4wzbUoPjg0rzoVO60Aui9mqqJHNraflLineXzil3G7Pa0aJvgyxpHLD4iF1l1ZxwURHUcLuOkrIOFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNlCvUbr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0VYhgTmP"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-439b1c72676so240161cf.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 04 May 2024 11:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714846506; x=1715451306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l1rRfCu9fWy1AZLn+bm87szwb+ZlyN23APuoSSDYtHM=;
-        b=0VYhgTmPdxqHMw98LDIksY4rlmnAtwociV5y8B06GLLiNBDJam+mD7Rvn+5QUMna3Z
-         tAgIorcluGPy8/Fjkyflc3dTSfcYaWOWpI1FMzaHSStKEYB0dsZvaB0FXZUPTR+WO+St
-         PtsCiK9yg9lQDlnmZ1bXz5Q3RGg7LX40EGRDd9pQKSbyjWNzwznIOdVBgp8rWCpyZqe3
-         6m7ZmzSrDYEtswnsJaCIQ5BR4/fBoEu3QMOAQMzkqVirBbb+gmvEtxoJ8h6BilghIegP
-         KLTL85e4aAkLn89UK/QvUd6hoaJeyxnWZ+FFpmsTLuKAOxbQld4AxkbX09J5aEHDuNti
-         3jTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714846506; x=1715451306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l1rRfCu9fWy1AZLn+bm87szwb+ZlyN23APuoSSDYtHM=;
-        b=RvRdVS1DXLx+df+2sCiogSACsPVQ+GIO+9Zp4kz3BPVVGS4n0jn0nabRA9RFiT3P3s
-         +pTcqrtuA+SS3Mxjum4ulyBsbJqDQO8SYCiD+bggCbndS4D7iYzPB+tZSFXy0fuWnABB
-         3ALbiCyX71QZDqAvTrCUYBAzVjFzPGvnkFGk6vHIa/91leqzeIUuGsSRxMCOGO2bNlH+
-         uonNt4qEHLk+3/qTI9uFmcXmCU+UZZ+ZXz3ukwFhYjhF8YF7SbDblrpKc+sHqysW7Xol
-         laTYlto0yDow5+m7kXcaQJek/DrD2sPUzEqBh1uiVipL2P3wMjVW/K1im8Q8cI1omd/q
-         ywQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5L72FZDDxXzQj1ejUh4rbSCkCwI3OHh6PazwgQ6PJcVQyLPHUQb6MyapFUViMaisCI/GujVKKNhvZwCh9ZWbFGfwZQL4I5G3BvIP/0s4e4A==
-X-Gm-Message-State: AOJu0YxVDpTAJPHlkBLb65P7TNNyUmjZnFHoWB5YwSj1YnWg4QVOfuf8
-	Uwdd358tEDLx4gEIEEVi478NVsC7tQVVQeBs0sPueOByaLrlV4BWViaNroC31apLR4auQUkuppi
-	YBDrczrsu0s/knQd2EgakI8chJH4GuSyXF/jO
-X-Google-Smtp-Source: AGHT+IEsI9UYVEQRNLElq3aTlhUXa6WUUqlFDkh1jI3lwlUuAKTRw8gnvZa4Sp/y1hF1OkgsDx0Xz7PuvsIawX92Q9g=
-X-Received: by 2002:a05:622a:130d:b0:43a:c9a0:6dae with SMTP id
- d75a77b69052e-43d087968d9mr1437001cf.13.1714846505411; Sat, 04 May 2024
- 11:15:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNlCvUbr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF97C072AA;
+	Sat,  4 May 2024 18:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714847222;
+	bh=T8RL3GJ2WYtqHOh0klj9cA7pEI84E1fR8OclwOfdXAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RNlCvUbrXvpZHxaA4dRj5dKMw3aulDKkFCI3qfiKbUZc21tH9gKQSivWi1Pb6O/Zb
+	 slz6pe8aXO5u4BVB+Gws6jsgCWiTn0ls1EPGTn5yzBiC+lOfwXlaH6a+jaWYCX6eDg
+	 681eQZVh4AajR/Ly6IGAW9feldHVpVdpcexgHnsVKWK4OfLXE+hyqOLQCwSPedVT2z
+	 SrcqB2x0oj8rraScmtK/VkCR4oWmirR/6rvvQo3tkpCp1Ltfqr8xUf9VAbJc5+e+d6
+	 qFsYO7d5F/7jAupWZkIR08ayKubZYYsy7OEEJTevZexojOS9T5/o69jYcuFGPt37h1
+	 h+9HSNBU6DX/w==
+Date: Sat, 4 May 2024 15:26:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/6] perf annotate-data: Check memory access with two
+ registers
+Message-ID: <ZjZ98gLSmr0qXih2@x1>
+References: <20240502060011.1838090-1-namhyung@kernel.org>
+ <20240502060011.1838090-5-namhyung@kernel.org>
+ <ZjOdkHraWXZIuSy_@x1>
+ <CAM9d7cg_YL1x8YfJ5+7+o+0dccFJJxUye8L_FLrgdGeAh81LBA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429184614.1224041-1-irogers@google.com> <20240429184614.1224041-2-irogers@google.com>
- <ZjVHNB7pTKKWERFn@x1>
-In-Reply-To: <ZjVHNB7pTKKWERFn@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 4 May 2024 11:14:52 -0700
-Message-ID: <CAP-5=fXE6-atL+FdCdD529eqyveWUqgR6QbJgzvGy=5xR_TBRg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] perf dsos: Switch backing storage to array from rbtree/list
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, nabijaczleweli@nabijaczleweli.xyz, 
-	Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ben Gainey <ben.gainey@arm.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, Changbin Du <changbin.du@huawei.com>, 
-	Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Dima Kogan <dima@secretsauce.net>, 
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Li Dong <lidong@vivo.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Yang Jihong <yangjihong1@huawei.com>, Chengen Du <chengen.du@canonical.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cg_YL1x8YfJ5+7+o+0dccFJJxUye8L_FLrgdGeAh81LBA@mail.gmail.com>
 
-On Fri, May 3, 2024 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Mon, Apr 29, 2024 at 11:46:08AM -0700, Ian Rogers wrote:
-> > DSOs were held on a list for fast iteration and in an rbtree for fast
-> > finds. Switch to using a lazily sorted array where iteration is just
-> > iterating through the array and binary searches are the same
-> > complexity as searching the rbtree. The find may need to sort the
-> > array first which does increase the complexity, but add operations
-> > have lower complexity and overall the complexity should remain about
-> > the same.
->
-> With just this first one applied:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git log --oneline -10
-> 325557715f1d8593 (HEAD) perf dsos: Switch backing storage to array from r=
-btree/list
-> 7b6dd7a923281a7c perf pmu: Assume sysfs events are always the same case
-> 6debc5aa326fa2ee perf test pmu: Test all sysfs PMU event names are the sa=
-me case
-> 18eb2ca8c18f0612 perf test pmu: Add an eagerly loaded event test
-> aa1551f299ba414c perf test pmu: Refactor format test and exposed test API=
-s
-> 785623ee855e893d perf Document: Sysfs event names must be lower or upper =
-case
-> 97c48ea8ff1cd70f perf test pmu-events: Make it clearer that pmu-events te=
-sts JSON events
-> 3cdd98b42d212160 (x1/perf-tools-next) perf maps: Remove check_invariants(=
-) from maps__lock()
-> e3123079b906dc2e perf cs-etm: Improve version detection and error reporti=
-ng
-> bc5e0e1b93565e37 perf cs-etm: Remove repeated fetches of the ETM PMU
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> root@number:~# perf -v
-> perf version 6.9.rc5.g325557715f1d
-> root@number:~# perf probe -l
-> DSO [kernel.kallsyms] is still in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/hid/hid-sensor-hub.=
-ko.xz is still in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/hid/uhid.ko.xz is s=
-till in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/net/tun.ko.xz is st=
-ill in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/fs/overlayfs/overlay.ko.xz =
-is still in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/net/bluetooth/rfcomm/rfcomm=
-.ko.xz is still in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/drivers/input/misc/uinput.k=
-o.xz is still in rbtree when being deleted!
-> DSO /lib/modules/6.8.7-200.fc39.x86_64/kernel/sound/core/seq/snd-seq-dumm=
-y.ko.xz is still in rbtree when being deleted!
-> <SNIP a lot of other modules, probably all of them>
+On Thu, May 02, 2024 at 11:14:50AM -0700, Namhyung Kim wrote:
+> On Thu, May 2, 2024 at 7:05 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > On Wed, May 01, 2024 at 11:00:09PM -0700, Namhyung Kim wrote:
+> > > The following instruction pattern is used to access a global variable.
+> > >
+> > >   mov     $0x231c0, %rax
+> > >   movsql  %edi, %rcx
+> > >   mov     -0x7dc94ae0(,%rcx,8), %rcx
+> > >   cmpl    $0x0, 0xa60(%rcx,%rax,1)     <<<--- here
+> > >
+> > > The first instruction set the address of the per-cpu variable (here, it
+> > > is 'runqueus' of struct rq).  The second instruction seems like a cpu
+> >
+> > You mean 'runqueues', i.e. this one:
+> >
+> > kernel/sched/core.c
+> > DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+> >
+> > ?
+> 
+> Right, sorry for the typo.
+> 
+> >
+> > But that 0xa60 would be in an alignment hole, at least in:
+> >
+> > $ pahole --hex rq | egrep 0xa40 -A12
+> >         struct mm_struct *         prev_mm;              /* 0xa40   0x8 */
+> >         unsigned int               clock_update_flags;   /* 0xa48   0x4 */
+> >
+> >         /* XXX 4 bytes hole, try to pack */
+> >
+> >         u64                        clock;                /* 0xa50   0x8 */
+> >
+> >         /* XXX 40 bytes hole, try to pack */
+> >
+> >         /* --- cacheline 42 boundary (2688 bytes) --- */
+> >         u64                        clock_task __attribute__((__aligned__(64))); /* 0xa80   0x8 */
+> >         u64                        clock_pelt;           /* 0xa88   0x8 */
+> >         long unsigned int          lost_idle_time;       /* 0xa90   0x8 */
+> > $ uname -a
+> > Linux toolbox 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
+> > $
+> 
+> This would be different on kernel version, config and
+> other changes like backports or local modifications.
+> 
+> On my system, it was cpu_stop_work.arg.
 
+Sure, so please include the pahole output for the data that lead you to
+the conclusions in the explanation for the results obtained, so that we
+can have a better mental map of all the pieces and thus get convinced of
+the results and have a way to try to reproduce it in our systems.
 
-Right, we don't have a test on this and this motivates the addition of
-reference count checking on DSO in the later patches. With the series
-applied, fixing the rebase issue, I see:
+In the future we will be grateful to this effort when looking back at
+these patches :-)
 
-$ git log --oneline
-eabe5dd91331 (HEAD) perf dso: Use container_of to avoid a pointer in dso_da=
-ta
-fd47ec98a05c perf dso: Reference counting related fixes
-962af2d2b092 perf dso: Add reference count checking and accessor functions
-48664a9a6ca4 perf dsos: Switch hand code to bsearch
-ae7a9854dabd perf dsos: Remove __dsos__findnew_link_by_longname_id
-e616a6b3739d perf dsos: Remove __dsos__addnew
-e789368716dd perf dsos: Switch backing storage to array from rbtree/list
-7b6dd7a92328 (ptn/tmp.perf-tools-next, ptn/perf-tools-next) perf pmu:
-Assume sysfs events are always the same case
-...
-$ sudo /tmp/perf/perf -v
-perf version 6.9.rc5.geabe5dd91331
-$ sudo /tmp/perf/perf probe -l
-$
+Thanks for all your work in these features!
 
-I'll see if I can find a fix to backport before sending a new series
-to work around the 2 line rebase conflict.
-
-Thanks,
-Ian
-
->
-> Then with:
->
-> 65e1e704f37916a0 (HEAD -> perf-tools-next) perf dsos: Switch hand code to=
- bsearch
-> 64377d6b7d5f9a71 perf dsos: Remove __dsos__findnew_link_by_longname_id
-> 8e773b8be95aff66 perf dsos: Remove __dsos__addnew
-> b1d064fc9b912ece perf dsos: Switch backing storage to array from rbtree/l=
-ist
->
-> applied it continues like that, the next patch in line isn't applying.
->
-> I'll push what I have to tmp.perf-tools-next.
->
-> - Arnaldo
+- Arnaldo
+ 
+> $ pahole --hex rq | grep 0xa40 -C1
+>     /* --- cacheline 41 boundary (2624 bytes) --- */
+>     struct cpu_stop_work       active_balance_work;  /* 0xa40  0x30 */
+>     int                        cpu;                  /* 0xa70   0x4 */
+> 
+> $ pahole --hex cpu_stop_work
+> struct cpu_stop_work {
+>     struct list_head           list;                 /*     0  0x10 */
+>     cpu_stop_fn_t              fn;                   /*  0x10   0x8 */
+>     long unsigned int          caller;               /*  0x18   0x8 */
+>     void *                     arg;                  /*  0x20   0x8 */
+>     struct cpu_stop_done *     done;                 /*  0x28   0x8 */
+> 
+>     /* size: 48, cachelines: 1, members: 5 */
+>     /* last cacheline: 48 bytes */
+> };
+> 
+> 
+> >
+> > The paragraph then reads:
+> >
+> > ----
+> > The first instruction set the address of the per-cpu variable (here, it
+> > is 'runqueues' of type 'struct rq').  The second instruction seems like
+> > a cpu number of the per-cpu base.  The third instruction get the base
+> > offset of per-cpu area for that cpu.  The last instruction compares the
+> > value of the per-cpu variable at the offset of 0xa60.
+> > ----
+> >
+> > Ok?
+> 
+> Yep, looks good.
+> 
+> Thanks,
+> Namhyung
