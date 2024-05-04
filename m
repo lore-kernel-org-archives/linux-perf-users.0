@@ -1,261 +1,180 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2068.outbound.protection.outlook.com [40.107.95.68])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2107.outbound.protection.outlook.com [40.92.74.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DA9AD2D;
-	Sat,  4 May 2024 04:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E913FE5D;
+	Sat,  4 May 2024 17:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.107
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714795808; cv=fail; b=MsqK+uhGVWCoM6BQOv0JQmmSy4IjChi3eD2iEtCjkcLukpNpraAKNEBcu1aDpDa/BmaXyELVOsxKeStKqPYTszjL/tYmu9jHoVjBBQhTKOmNh2KaT4sVt9Wu+NZebFofq6aLabAS1iwVDr31hxzRApbc+hzajGIA74M5ZE6Xozs=
+	t=1714843316; cv=fail; b=YlxF9VFMdAOQfdEbBi7lfM4O2Lq9foUrv0zyw6yF3m1EhGlhykVJBvx/GeC82EAARVQ/pI7M6gQ7lROrzXhRzBGRQympKz4fmD4S1aHMH3tbHF8ZF94mv1S9LfmDbEenNQ3wjvUkQFN/Q4vQzougrSC6sfAclQIKrQwHXVFkicU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714795808; c=relaxed/simple;
-	bh=T6LqmC8KjubqCKBRcwvfF/f0uQKDI/yjfdkab4z2p6I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VjOd1vFo5G4aQNmJneRPPvPixevyoQ14gFH9CMxWp1x9uVhHR9REb6aGq8pHVocyDpKgOOaDPyd4VPMpCNvcAJguZsUttVPnVg9nxvcrk7lQPp47St8fHzBPin3DDBLMI2nC3JjpUxEZY5qaeYHMyVTpgRAAOAgevZJNm7bjei8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=urEKxfxZ; arc=fail smtp.client-ip=40.107.95.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1714843316; c=relaxed/simple;
+	bh=YqJVksLZ+8UoQ/HDX0wsCn2zbUBOn3bgNxiFMksPUZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=e+eZUIW3XPQeQ8VfHadtBlVv0DVb+jCPTbL5y3OAzThp2GbfcEvaPDlV5IpUgp99Vg83v9gn4wgHCVnkFU4WABqXCZ62v0tbUgRlJD3mxk5Sdm3FeL1Oc6Q32ARs0vgqmgtfQlsg0BCHMhTKwX2G8SOpoYWxEZ8cBYDXIDHjdYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=TW2tg1vG; arc=fail smtp.client-ip=40.92.74.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="urEKxfxZ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="TW2tg1vG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B1NktpEZdBHbf5QI+G6RXP8+DejFW/J5mVIFQjksEQjaIT+8n/8LQbC2WCGscpu5ZmPEYjZJaq/f3w0U4p3p47b1gdKeYFUlnna4TDb/wKA247atfcrezSkcW+0Cst7Y4HFi/WRW0opuLyi838cwqBzJGtr6JhJzq+RGhC9zp/gMHfGcUeewaPsqMsT5iO5dFKRP/uqPW/reiqklKF4Fcx3m2gkG6SK+2mWGGHqHC3dzEfKVUxsExBgHYxDBcInrvH8H1NZkCqwQyXg9oCDFcrb9mi4DOocUy5LiS17vTvT+GK/uDH2LZLmsNHwHCKlpheiY+Q9ExpBvdVhKLgDmvg==
+ b=CqquoLCt1convXt/zOmSjS1NpixgQ3yIFWByyFuJkyHXy3p9sZKQosm3+TIu9vLO5QV44xb8KzmyAkyeddp1ASx92qh7IHnsANx3HdFuQa9WByq2TftVnDhcNn15Ea5EbVsspVvG8zZfMqJwiVklGY7N17VkyZc1gwIRN+zXZ3LK16FBunlu2tAOOZHA13IobeEjFo6wozF16slsW94vskardgazBkE9SUbylguNPwPorJnc9xklFk0ZZxLX2nmj1cS3WLe3miwxJR0MZNQzk5x71MjieuQK3pc+LkixImvgMY7u0Mw2oyh6mRdoc+4/95VRZ3pmdWz9luNKlNE3kQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DyNjBkinITYKq6JTnZa6yDwIkidf0Wg7TqqPqWiBmtk=;
- b=k5hDf4wGxR0YgUW9db2kR0gi3VplqbaJCbGVuhgasz72H//GMhGa7UmJr8AuVov1CiN9bERLZX3tix++cpbLRAeQFTrQlkOuKfxK6oA/B/GNii0ZNu6AAoSAoYqxuMl4khpTCPFBO8kBAIVBDc9vrnNSmVQJlxjLvUZwTJkFwjrRIIk3JghFeaKGeTdWzDlxU3z/y1gnV7Mw68Ji70DG3PXk7qAQ8ckrQWEUJL7NAyjR6qpV5c3BknmQVAMki2dIUsQyc72wJCBw5Be3H4Ge4z150bP4xNYWWf8sUhP5M+Ig1omMm8f27TtKboluwWmh5+jgZaoxBeDgIbtjNEByZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=FINE5lZZEWc6u05QaNWmqAMGgi+03fyaT3p6ddJD3xM=;
+ b=IS7WONAKayd1C5vCYUgiy0fLFqzGP7NI6rThwcO3ZjKt8o8SSmqwd6hsoKuh8J6uiGb8VGxDREEbIf9snCpQww13buMvB8c4Kkc/6BwNj45h4WZoBTIr6GbT75iwhzyG72a+uRhJA8FVuo/FU+OkuTWqYQ7OyisJOxYpmV3NiyBodGYuQ7m+GvuFixydc1O2EPmI951K9+FruNZWOAbC6ak2/KpT4HSl2jl/rhEqAPJqj5xMUBNT4R54LArQ843L5Et93QduiesQRVF6J2TlsCQtgl/SBTLeLPUyXjgqO9fJC4t6Wkp4b1oi9mjKTK8BN0L5dp+GC2sTVGJqkXp9ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DyNjBkinITYKq6JTnZa6yDwIkidf0Wg7TqqPqWiBmtk=;
- b=urEKxfxZGgBu9mdsgbA0bBHk6wMMxvsHlTcsuTP2PNmA3LbNbq2QYv3/CIZrRWFbXXATmFEzA5DJj0DHB6cqnbreTR4BtKGCtgvbhZO8MUfYiV0rXC/AEK5T9IEQ8VPqI1abKVPXwJwLsxbwoTrOpTKiANGsY0Md/mI+6rjm8hU=
-Received: from SA1P222CA0128.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c2::10)
- by LV3PR12MB9331.namprd12.prod.outlook.com (2603:10b6:408:219::21) with
+ bh=FINE5lZZEWc6u05QaNWmqAMGgi+03fyaT3p6ddJD3xM=;
+ b=TW2tg1vGfh4/VWLUPy47CJx6sk970IWV7cFrTYAJxZ7CucUEAE/XsbopJnHq3waGvqKwXfFAelwHFlCRSES6e5cvdxolXz+dg1cVuZFKykeoPYBLkaL+D2UhlMN4524qQad1XlHDKpE/9UbURfvHUA31VzkIirkF/Dtnk/cOWHeKgItOgdXRcnkUWoPOlbyElkSqD3Gh8Wr9DMDA6+Hlrl/PnfevwTbbn85tDo4y+AHoZjCJjWarwnoFKry7DoHQwKAEUfnD/p3zSkQ0VIZ+06kXqtua1sNSFvRQXbP+eKC9M/U8U0CpZMakYPELXKUsLYyKbOKMoYuDOIInTLaHkw==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by DB9PR02MB6716.eurprd02.prod.outlook.com (2603:10a6:10:216::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Sat, 4 May
- 2024 04:09:58 +0000
-Received: from SA2PEPF00001509.namprd04.prod.outlook.com
- (2603:10b6:806:3c2:cafe::41) by SA1P222CA0128.outlook.office365.com
- (2603:10b6:806:3c2::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36 via Frontend
- Transport; Sat, 4 May 2024 04:09:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001509.mail.protection.outlook.com (10.167.242.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Sat, 4 May 2024 04:09:57 +0000
-Received: from BLR-L-DUGWEKAR.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 3 May
- 2024 23:09:52 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <ananth.narayan@amd.com>,
-	<gautham.shenoy@amd.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<sandipan.das@amd.com>, <alexander.shishkin@linux.intel.com>,
-	<irogers@google.com>, <gustavoars@kernel.org>, <kprateek.nayak@amd.com>,
-	<ravi.bangoria@amd.com>, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Subject: [PATCH v2 2/2] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-Date: Sat, 4 May 2024 09:39:35 +0530
-Message-ID: <20240504040935.123007-1-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZjS0Uio+nvZLLmyb@gmail.com>
-References: <ZjS0Uio+nvZLLmyb@gmail.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.39; Sat, 4 May
+ 2024 17:21:51 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.036; Sat, 4 May 2024
+ 17:21:51 +0000
+Date: Sat, 4 May 2024 19:21:48 +0200
+From: Erick Archer <erick.archer@outlook.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID:
+ <AS8PR02MB7237E1240937477D0D6F57AB8B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+ <202405011317.AF41B94B@keescook>
+ <20240502091837.GA30852@noisy.programming.kicks-ass.net>
+ <202405021552.5C000EA@keescook>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202405021552.5C000EA@keescook>
+X-TMN: [n50IFuc7oitF9F8R20Tqs3CNL81BMjWv]
+X-ClientProxiedBy: MA2P292CA0019.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::17)
+ To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID: <20240504172148.GB3490@titan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001509:EE_|LV3PR12MB9331:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92376844-4f1b-467d-acf1-08dc6bf00fb8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB9PR02MB6716:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd7fba74-f48d-47e6-f17c-08dc6c5eaf9e
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|7416005|1800799015|36860700004|82310400017|376005;
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|56899024|1710799017;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HkZHZseHRRea8nVMiBQvFVOY+GnRWjmd3sb9bkGlnUa/8Uh4ZOsztWTgWHd1?=
- =?us-ascii?Q?M0eISjkJm+gXvomtXcFVT8FX5GQoUuJeMTj7WDkWfS0s/KiKIJpJ6Wudy5xo?=
- =?us-ascii?Q?41liyzV9GvzTeLDSXrejDA1il1CtXWNv3OxjwAfthSR8KIarx7ZK+j4OcNOJ?=
- =?us-ascii?Q?tNntiLa2XD7PspzMVdj1yso+G3OALfgMXIY5hwO+P3hrChKYd6iS4qMgSw4d?=
- =?us-ascii?Q?WYIDh1KaYHjsBYb3V9LMrm/O1x2B61XtkzPLesUYoOgTl5kCkMd0OSKF/GNF?=
- =?us-ascii?Q?8Sks8vhL2cGJHYmz7rVz9Q3FtuFcztaNZpy5pYC3okruYXvKQwdPOAq7YvFh?=
- =?us-ascii?Q?2FPCzga/0UM4dT32zHbNEIvWEv0z0CDnu+aL/6O1A1iTFOPsIJpu/+JtO8T3?=
- =?us-ascii?Q?Oc4H9lZuEtjh7JJZmmP0OFiIl9CBGEPxh5hoTdurawZ3kZyV1fyVUCThLd0s?=
- =?us-ascii?Q?VwSvUWx6zDlJ+EJ2dI7TqWNHjlgLhkrkG8e5qUxPJaVQIKHASDMAJsokDksY?=
- =?us-ascii?Q?mJehclBN4w4vPn6DnsmbgrcQcrACZ695CeLEUvM88Me7X7xkErVJort1tW6/?=
- =?us-ascii?Q?wofuU7pyIZZq0dJC8hfZ4pIuMkX9OUgwap/pdcz2u/d07CkWsHamZqHYMg77?=
- =?us-ascii?Q?ZUGJkAo6VIaMsFCc18LidUNs7zPDIKnem6addxGEhO7n6rzLTyVddbRwtN/i?=
- =?us-ascii?Q?7BlVkLRjKIJCD3nED2nJgFcg4cXLJbWRyOiBRICZCbWwIEBPFAOgir4N2Vso?=
- =?us-ascii?Q?ZixPNci+VmIMCkDx8ugt7WQjHsK4qdvU8tx2Yp4VRQIZzWyQOr6TAfb813lO?=
- =?us-ascii?Q?XNTCdKdweviT/DxI05R1yljO9akHQD7EKXSMul/H9zaHt3iYULdNBCM85e0g?=
- =?us-ascii?Q?OCM54G4RAd7jGPEEPEDMy7kHYRb2V++E0y/0gbjiOBoziGa6FAhn4wd9ME1p?=
- =?us-ascii?Q?XxT7x+hPc3+pNRAiRegu03XMkJaukzylCPbY5XQBZojUqmxnLomZSOua3gVR?=
- =?us-ascii?Q?e/xsGE3KrM/Y/JYjpcTf7/9hle5iZ6AwJFPtpaH7X1wRXq8EySV7oe3BCs8E?=
- =?us-ascii?Q?vsXPHcIs5BMcrsGDvCR30uqi9Pyj5d/e0gqZzFYi8xCTw161s9K+Wr/ctwW6?=
- =?us-ascii?Q?oq/cNWF/ONc7BjftwlfixRG35BTOiS461WAkF2OPs/DbYANGCP+L73sBYnQM?=
- =?us-ascii?Q?FBUfSiBX5Ryxig082M0+dsXcDmCHfIJZ1SU7XM9SGZMnwg+YqyCP/UvJ8bVD?=
- =?us-ascii?Q?tRfxtCWn0J+dQbzRwhsCTjNaIhCPJCs5mir87WrHQa+2JioEzB1fgqHdyWtn?=
- =?us-ascii?Q?uVXUHSJI3U851twvyIzWiXE1zCppYLNcTOhRVARZu+a7cN1J5RX/cJPF3VAc?=
- =?us-ascii?Q?52NYcGvYfBykeXRPDydrt8LwsRUF?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(36860700004)(82310400017)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2024 04:09:57.9070
+	Mq/Q6UKXU7XQqC0r/7h+2R9/+ZlSW0sEdoo5x54+MMA0h0a7JxD06r1W8xZH9pGuYnZCLb7TfTc9E51FZoMiOhZ2Hl5vhIo+wIzTy61g8CRbNkMBu5y1c9TvdkkosFl7441ArUtC08hsq2+xi+ORhVe5BSSEu6sLomm99iW+FTorGgIHYVz9FeWPawofP1T2y6MuVhETkS5+4DmsSImP/kty1T8PwK3ofuad+djhw/0uUTaVyjW+nqL1HBru3cpnpBVrc2GDnOCqXoUZ5nrtbe4+m4SubwFRWoxrBIGMOVsSwzqXWS8KcAWIzyKe8gVYvFxiaArOooRRtUoSu53WYdrBhgtOydZQRqZAim//mBuwlUpL4Q+UawVVQe7FVhSxRZWYrOE31FwCHPhNcJJVEnUpUQJzD4wOhdndI/XO44rcQLCq1aeNyMl8A9CWy1KLLYMH72z9WtwxZI4qDiLRNzimwgIG6cvm+CfxmcNj25+nwNnWKTubxfhyyQjrdvOkX+JeZrFikTHzleXAiWYjoqnxFYNnHKnK12q6X6ls8EQXr0z2KQPVkDAu122+DE72dNLV6iw4VicN8Jql55nq733g1Gd0YsX3/OXQ4ZrIWixZb6uZh6ZOi4G88xLzsrADL9uRK4teqJbOPEC+hN8/XNpz2qcPHa0coZaApamld7s=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qQfS5W3zWnt2WaUdUiuYYjk8pjeEyQjc6hG+9c40mdD9vYkMEwOg3acQP2QZ?=
+ =?us-ascii?Q?d5SY1jjrE9hpMK8lWAVsAmhR404mX9DEqKQ9+Q8D06Rq5jKmGwX83iasHz4d?=
+ =?us-ascii?Q?CzVmsLQJErX87w1mRjvhRjUFoRRvivB/jn7TGI8HrtZVox744fxXLvLeNIp3?=
+ =?us-ascii?Q?fXfT2NJxi1JhElFm/GMJmJmFHFGfSDF0Ou3F3Vww7Oj9foCO/bvazftKfamq?=
+ =?us-ascii?Q?0ir4imnWGfDXuYvGsKL8f4rDuM57qoUdtW/0N/nxYOXGkjIu95mz5YiJQgke?=
+ =?us-ascii?Q?VpDN3Lzuz2cHcD5EVn+2DmZqH1+cEFDfzY1KOsj1O4XPhxFe+E6UeAdoXaR+?=
+ =?us-ascii?Q?05bbWk04y7jSY/J3hfg9YGqlVhJaObYIT7Iv59sQKRfexvnEFQ8w2edomuxr?=
+ =?us-ascii?Q?aIDrNUWhNFFDycMh3Bt0gTcrMPG08N2evp54KYvI/KTgoeehvdckovuGlKyU?=
+ =?us-ascii?Q?+DvP6JLPIXY0RxKz3j57vkZ3LpDqRTuDqEdQweQThmIE7ZCnbP1GDNzSz/WW?=
+ =?us-ascii?Q?2Y0/NQhqVu3HY2OfBxzkYP1JM3sF9ns7//K44EhOSIzy0o8+uJs0yi0b3r86?=
+ =?us-ascii?Q?Qb4mZzliXeV1JYfk3xYOeiridBbMKqnKzc2ECYbLlgtK4zypsWK9sxuf4IRG?=
+ =?us-ascii?Q?+XrVvEu9FPJQ7vxYlv6yEDHfckLyeXR0jl0547ktBzCzR7/rW9q51UsyvFdw?=
+ =?us-ascii?Q?UJLkasHMGuEFAJQ8mbXuxbD+uOyUqGms63hd0+iOv0a1mbi/T2oUF3cTXK7+?=
+ =?us-ascii?Q?mOhEpjXM/zRKJuA9MVeDCAAj/HJWvotV6coFpVsp4Ywy/YtO76IT8DtyXd4Y?=
+ =?us-ascii?Q?TD8uEBbj3ze46N9Ab80p+oDVsi2gRXU3pPrd5/CJI9gOdB5wTKanauACQDHg?=
+ =?us-ascii?Q?vJmMM2P3K8JmOjTWfi9BiM2jfJxf8rXlRqAeOo1SgioSp/wEjJY7ISOCGlTh?=
+ =?us-ascii?Q?6/9laiTyZR7AQD9Nwaucw3KNO3OQ6AgC6DyEDHfmuyzES6absxnmeRUKNwvr?=
+ =?us-ascii?Q?vSzHd8aIxkc3SCGkHGDDx7wYbqNu8SpkHtWG4AsFijGHxJJQfHCIlDzTnEEJ?=
+ =?us-ascii?Q?+WuERPTKITQCgfMZtTVQlKD9xuPiEnFtV5f7ac0Exw5JM/yW5ouIZvxtcorJ?=
+ =?us-ascii?Q?ifxmpEg+I8flf6qeVQ9YxHqZAW3k8PHpLOnUoWuFlvNfwIWZPKlAOZM21yNz?=
+ =?us-ascii?Q?OU0g27JJ0qTqMjVslk4avA/aaGCq31wvqySoWnKQMT3j/qJx18WwsIvnvIVu?=
+ =?us-ascii?Q?wWCBJoCIOWpbg6ygfcmm?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd7fba74-f48d-47e6-f17c-08dc6c5eaf9e
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2024 17:21:51.1248
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92376844-4f1b-467d-acf1-08dc6bf00fb8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001509.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9331
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB6716
 
-After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
-on AMD processors that support extended CPUID leaf 0x80000026, the
-topology_die_cpumask() and topology_logical_die_id() macros, no longer 
-return the package cpumask and package id, instead they return the CCD 
-(Core Complex Die) mask and id respectively. This leads to the energy-pkg 
-event scope to be modified to CCD instead of package.
+On Thu, May 02, 2024 at 03:55:36PM -0700, Kees Cook wrote:
+> On Thu, May 02, 2024 at 11:18:37AM +0200, Peter Zijlstra wrote:
+> > On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
+> > > On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> > > > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > > > > This is an effort to get rid of all multiplications from allocation
+> > > > > functions in order to prevent integer overflows [1][2].
+> > > > 
+> > > > So personally I detest struct_size() because I can never remember wtf it
+> > > > does, whereas the code it replaces is simple and straight forward :/
+> > > 
+> > > Sure, new APIs can involved a learning curve. If we can all handle
+> > > container_of(), we can deal with struct_size(). :)
+> > 
+> > containre_of() is actually *much* shorter than typing it all out. Which
+> > is a benefit.
+> > 
+> > struct_size() not so much. That's just obfuscation for obfuscation's
+> > sake.
 
-Replacing these macros with their package counterparts fixes the
-energy-pkg event for AMD CPUs.
+I do not agree with this.
+> 
+> It's really not -- it's making sure that the calculation is semantically
+> sane: all the right things are being used for the struct size calculation
+> and things can't "drift", if types change, flex array changes, etc. It's
+> both a code robustness improvement and a wrap-around stopping improvement.
+> 
 
-However due to the difference between the scope of energy-pkg event for 
-Intel and AMD CPUs, we have to replace these macros conditionally only for
-AMD CPUs.
+Also, in the "Deprecated Interfaces, Language Features, Attributes, and
+Conventions" [1] it says verbatim:
 
-On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+   Another common case to avoid is calculating the size of a structure
+   with a trailing array of others structures, as in:
 
-Before:
-$ cat /sys/devices/power/cpumask
-0,8,16,24,32,40,48,56,64,72,80,88.
+   header = kzalloc(sizeof(*header) + count * sizeof(*header->item),
+                    GFP_KERNEL);
 
-The expected cpumask here is supposed to be just "0", as it is a package 
-scope event, only one CPU will be collecting the event for all the CPUs in 
-the package.
+   Instead, use the helper:
 
-After:
-$ cat /sys/devices/power/cpumask
-0
+   header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
 
-Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
----
-v1->v2:
-* Fix the const qualifier discarded error (kernel test bot)
-* Change the cpumask variable name from cpumask to rapl_pmu_cpumask
----
- arch/x86/events/rapl.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+Therefore, if there is a convention to follow, we should not make an
+exception. Moreover, struct_size is widely used in the kernel and
+widely accepted. Also makes the code safer.
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 46e673585560..d77bf7959a43 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -102,6 +102,10 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
- 	.event_str	= str,							\
- };
- 
-+#define rapl_pmu_is_pkg_scope()				\
-+	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
-+	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-+
- struct rapl_pmu {
- 	raw_spinlock_t		lock;
- 	int			n_active;
-@@ -139,9 +143,21 @@ static unsigned int rapl_cntr_mask;
- static u64 rapl_timer_ms;
- static struct perf_msr *rapl_msrs;
- 
-+static inline unsigned int get_rapl_pmu_idx(int cpu)
-+{
-+	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
-+					 topology_logical_die_id(cpu);
-+}
-+
-+static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
-+{
-+	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
-+					 topology_die_cpumask(cpu);
-+}
-+
- static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
- {
--	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
-+	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
- 
- 	/*
- 	 * The unsigned check also catches the '-1' return value for non
-@@ -542,6 +558,7 @@ static struct perf_msr amd_rapl_msrs[] = {
- 
- static int rapl_cpu_offline(unsigned int cpu)
- {
-+	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
- 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
- 	int target;
- 
-@@ -551,7 +568,7 @@ static int rapl_cpu_offline(unsigned int cpu)
- 
- 	pmu->cpu = -1;
- 	/* Find a new cpu to collect rapl events */
--	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
-+	target = cpumask_any_but(rapl_pmu_cpumask, cpu);
- 
- 	/* Migrate rapl events to the new target */
- 	if (target < nr_cpu_ids) {
-@@ -564,6 +581,8 @@ static int rapl_cpu_offline(unsigned int cpu)
- 
- static int rapl_cpu_online(unsigned int cpu)
- {
-+	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
-+	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
- 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
- 	int target;
- 
-@@ -578,14 +597,14 @@ static int rapl_cpu_online(unsigned int cpu)
- 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
- 		rapl_hrtimer_init(pmu);
- 
--		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
-+		rapl_pmus->pmus[rapl_pmu_idx] = pmu;
- 	}
- 
- 	/*
- 	 * Check if there is an online cpu in the package which collects rapl
- 	 * events already.
- 	 */
--	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
-+	target = cpumask_any_and(&rapl_cpu_mask, rapl_pmu_cpumask);
- 	if (target < nr_cpu_ids)
- 		return 0;
- 
-@@ -676,6 +695,9 @@ static int __init init_rapl_pmus(void)
- {
- 	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
- 
-+	if (rapl_pmu_is_pkg_scope())
-+		nr_rapl_pmu = topology_max_packages();
-+
- 	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
- 	if (!rapl_pmus)
- 		return -ENOMEM;
--- 
-2.34.1
+So, I will send a new patch with the changes Kees proposed and I
+hope that it will be the first step in the adoption of struct_size
+in the perf and sched subsystems ;)
 
+Regards,
+Erick
+
+[1] https://docs.kernel.org/process/deprecated.html
+
+> -- 
+> Kees Cook
