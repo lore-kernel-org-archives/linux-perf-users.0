@@ -1,108 +1,89 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3511BF3F;
-	Sat,  4 May 2024 21:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76792594
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 May 2024 22:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714859851; cv=none; b=HtzxmgfjqPZYNOb0RBpKht5b5X9JAM6RBp1t/ost+fNUJjGwnexsz350oIEtvIgaLPTGnGqvLEofK/eiiDkzvWFKDeOpqj19ym7u71+39+ipMrM6Dtmb/Hk8sJ9Hoq4Qw8S1Wqa2YRhl1xEBWZYCBRVnTuDjcxYKPfpEwBHQcOg=
+	t=1714863244; cv=none; b=ftgRadGki4CNDYWdBdqCEA1SuEOO4ebyz9emnly2ibwRDopR3iq/bUDHlHAc6VcC9ozbWJyZTM9XnSGSuf6YjCBlxC145EysTGnaEPbq+/DS91hAqoWI5atMlqb8T0nT/9NlH+/0cyFkNx86v4t8A4UVGCKnsYSFo6CkcCemHGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714859851; c=relaxed/simple;
-	bh=vLhwg+h7aqyOdPk697HtOoy0/FFWZ8axXimFiJyfjJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U0kpI8Cf68Et428rEnPi/Ev0nCFji/tf1evvjb8wXimUxvmfwbct5mlZEcOHasqym60qoxSKlzYEV1RodL77CHuIUCbpK0LDR2g6Gr++ACw+6FvD5/b8gxyAPELd2fAMzqpvVdGO/qrt4kwDEZQJnGH8RDFACoNLX+DL8vdEPbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnnZkh41; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnnZkh41"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5e42b4bbfa4so411289a12.1;
-        Sat, 04 May 2024 14:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714859849; x=1715464649; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vr0WzAgqZQ7xcLK1USPbgE8wMONw4Q1nntWbGT+4brc=;
-        b=RnnZkh419q7BCQB7MBKpaZGAv2bouKzEs5pCqu6VCjHummD4ejAH8bL4+qXIMqpke1
-         CmVkgCVns3yV/qtIouBLER5v2Um8LrTtRC1J9Z5cRiw7NHIjSGyOf9zjsDDLaqmW0Atv
-         Cl2ZkCR4RI9gQOay8nRL4d43fSJGKPxzkAsKIu2tTIvCYVKyLmFB1ZJrFrNKVQqP4NcU
-         H7kNDhbgccxIRnIe3MRSQsxegDtMVb/3gJTeNzLUnvZKFy74PmEpatAUojq/5s1RIQ2Z
-         Vrukq5EJ0h54OXrYdqEUv77lziPPAnXMYnNUB+0vX7TomY1o/YIy5bOE2JjX5LopILzZ
-         u6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714859849; x=1715464649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vr0WzAgqZQ7xcLK1USPbgE8wMONw4Q1nntWbGT+4brc=;
-        b=VeBZpGt0cCcY2Y+JvuTVdzCaQ9zkg0cxpVhu093ZNl+DoV8vyhExarW+0S98yWAI1B
-         2iHBaqRumue2k5LHvfqvYW9o+8Sn0x83mxcvpmJlng366LLXgHL6jDb2+oTqfk0Live8
-         vk4ASOcoZ2Nah3s0X2lC7BnUfRUqMUYE+jp6veBJjHaCoXYMawKFOYinDoooV1zbiAsB
-         n3xzwSa6KSZKRycgG8PTIPqTH/g+Y/YG/VsebLjbjEkoZmiDYSHz02Ki6n7eAq1Kl3h8
-         QmhktYAtU5zgQgxf0Jg2yE/cPcnaHTh09ZCvMSmf+TaSfgvKSsBiwvHhEBne3fTafU+p
-         TNiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVayopG9EMBAhcruqe4rLLnCxQiUlBcwJ0dUTBJbw+djBiEewlyMR5XJOcnFlTxc92ML1AvAbLTemIk0vh1/W4VWJqdL1ZQSIDlsbiyfMIG9oZRWhk2xGwHdle0NJmDMXvqkZ4qJTuPtJaSRh18omHKixy/IeLdQBfMhrmEFCXWujvc5GTqBYri1/6NgC7xrF6c4elZn9f93RjxhetAdj4pBKY=
-X-Gm-Message-State: AOJu0YxVcQI3cASLzVeu/haEnVDCiWVXKI7bLbDhLMmxcXICy2J/G0bq
-	IWprJOErbicuCVWrJCKVx5CY3vFa86/VQCBH2qGG9EH1m/bFu6KfV7P2gaFYCehCk80ePCvMaKB
-	lJoynLlllsMJ29+L2h1euLjMkGNw=
-X-Google-Smtp-Source: AGHT+IFMx/po3MCuNgrp19VrE6Egvrp/t8LN5+yMt2RDi+MxC38dpPZiE3MXHhcWc5dPeAVfnEvpPaDHz/ahAu3kBsc=
-X-Received: by 2002:a05:6a20:d80b:b0:1ad:6c5:4ea1 with SMTP id
- iv11-20020a056a20d80b00b001ad06c54ea1mr8771367pzb.41.1714859849188; Sat, 04
- May 2024 14:57:29 -0700 (PDT)
+	s=arc-20240116; t=1714863244; c=relaxed/simple;
+	bh=bseckNg7zBGJYlxy5yz6BMDMettR3MW6r3wiSIAEruo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=kIk2kk8Q7X+/HCYE1NRoogOM5TDY9yiq1QWKJK4MZF2eeWqC6yDXWks8hQwx/trj/L+TtQ4BgiwIx9eGdttceTdoOZYdH61yYlq6rePum8jU629p1tdaSXQ8qP9P3Zj6cJPnNm9i8QhvZEIAywiY0ChS6cL0ay3Uyd4T1nlTWeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-43-6HxiMJNaP-m-9LSIHjw09w-1; Sat, 04 May 2024 23:53:51 +0100
+X-MC-Unique: 6HxiMJNaP-m-9LSIHjw09w-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 4 May
+ 2024 23:53:20 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 4 May 2024 23:53:20 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>
+CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3A=
+Date: Sat, 4 May 2024 22:53:19 +0000
+Message-ID: <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
+References: <Zi57-TMgU19puaQM@octinomon.home>
+ <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+ <ZjPApuDc0gL9Pchm@octinomon.home>
+ <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+ <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+In-Reply-To: <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
- <2024050404-rectify-romp-4fdb@gregkh>
-In-Reply-To: <2024050404-rectify-romp-4fdb@gregkh>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Sat, 4 May 2024 14:57:17 -0700
-Message-ID: <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
- /proc/<pid>/maps APIs
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-perf-use." <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Sat, May 4, 2024 at 8:29=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote:
-> > Implement a simple tool/benchmark for comparing address "resolution"
-> > logic based on textual /proc/<pid>/maps interface and new binary
-> > ioctl-based PROCFS_PROCMAP_QUERY command.
->
-> Of course an artificial benchmark of "read a whole file" vs. "a tiny
-> ioctl" is going to be different, but step back and show how this is
-> going to be used in the real world overall.  Pounding on this file is
-> not a normal operation, right?
->
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDMgTWF5IDIwMjQgMDA6MDANCj4gDQo+IE9u
+IFRodSwgMiBNYXkgMjAyNCBhdCAxNToxOSwgRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
+bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBTb21ld2hlbiBpdCBtdXN0IGhhdmUgZ290IGNoYW5n
+ZWQgZnJvbSBhIHNpbXBsZSBhc20gd3JhcHBlciBmb3IgZGl2bC4NCj4gDQo+IEl0J3MgbmV2ZXIg
+YmVlbiBhIHNpbXBsZSB3cmFwcGVyIGZvciBkaXZsLiBGb3IgdGhlIHNpbXBsZSByZWFzb24gdGhh
+dA0KPiAnZGl2bCcgZG9lc24ndCBkbyBhIGZ1bGwgNjQvMzIgZGl2aWRlIHJldHVybmluZyBhIGZ1
+bGwgNjQtYml0IHJlc3VsdC4NCg0KSSdkIHRob3VnaHQgKGJlZm9yZSBJJ2QgbG9va2VkKSB0aGF0
+IGl0IG9ubHkgcmV0dXJuZWQgYSAzMmJpdCByZXN1bHQuDQpBZnRlciBhbGwgdGhhdCBpcyB3aGF0
+IGEgbG90IG9mIGNvZGUgd2FudHMuDQoNCkkgd2FzIHRoaW5raW5nIG9mIHNvbWV0aGluZyBsaWtl
+IChzZWUgaHR0cHM6Ly9nb2Rib2x0Lm9yZy96L2g4b2o3aDRzZCk6DQoNCiNkZWZpbmUgZGl2dShh
+LCBiKSAoeyBcDQogICAgdTY0IF9hID0gYSwgX2IgPSBiLCBfcTsgXA0KICAgIHUzMiBfYWxvID0g
+X2EsIF9ibG8gPSBfYjsgXA0KICAgIHUzMiBfYWhpID0gX2EgPj4gMzIsIF9iaGkgPSBfYiA+PiAz
+MjsgXA0KICAgIGlmIChfYmhpKSB7IFwNCiAgICAgICAgX3EgPSBkaXY2NChfYSwgX2IpOyBcDQog
+ICAgfSBlbHNlIHsgXA0KICAgICAgICB1MzIgX3FoaSA9IDA7IFwNCiAgICAgICAgaWYgKF9haGkg
+Pj0gX2JsbykgeyBcDQogICAgICAgICAgICBfcWhpID0gX2FoaSAvIF9ibG87IFwNCiAgICAgICAg
+ICAgIF9haGkgPSBfYWhpICUgX2JsbzsgXA0KICAgICAgICB9IFwNCiAgICAgICAgYXNtKCAiZGl2
+bCAlMiIgOiAiK2EiIChfYWxvKSwgIitkIiAoX2FoaSkgOiAiciIgKF9ibG8pKTsgXA0KICAgICAg
+ICBhc20oICIiIDogIj1BIiAoX3EpIDogImEiIChfYWxvKSwgImQiIChfcWhpKSk7IFwNCiAgICB9
+IFwNCiAgICBfcTsgXA0KfSkNCg0KV2hpY2ggd2lsbCBjYWxsIG91dCBmb3IgYSBsYXJnZSBkaXZp
+c29yLCBidXQgd2lsbCBkbyBpbmxpbmVkIGRpdmlkZXMNCm90aGVyd2lzZSAtIHNvIGlzIHJlYXNv
+bmFibHkgc2FuZSB3aGF0ZXZlciB0aGUgdHlwZXMgKGV2ZW4gMzIgYnkgMzIpLg0KTW9kZXJuIGdj
+Yy9jbGFuZyBhbHNvIHRyYWNrcyB2YWx1ZXMgKHRvIHNvbWUgZXh0ZW50KSBzbyB3aWxsIGRldGVj
+dA0KX2FoaSBhbmQgX2JoaSBiZWluZyBjb21waWxlLXRpbWUgemVybyBldmVuIGlmIHRoZSB0eXBl
+cyBhcmUgNjRiaXQuDQoNCkkndmUgaWdub3JlZCB0aGUgcmVtYWluZGVyIGZvciBjbGFyaXR5Lg0K
+QnV0IEknZCBhZGQgYSAndTY0ICpyZW0nIHBhcmFtZXRlciBhbmQgZG8gYSBjb21waWxlLXRpbWUg
+TlVMTCBjaGVjay4NCg0KRm9ydHVuYXRlbHkgdGhlIGtlcm5lbCBkb2Vzbid0IGxldCBnY2MgdXNl
+IHRoZSB4bW0gcmVnc2l0ZXJzLg0KSXQgaGFzIGEgbmFzdHkgaGFiaXQgb2YgYmxvYXRpbmcgdGhl
+IGNvZGUgYnkgdHJ5aW5nIHRvIHVzZSB0aGVtDQpmb3IgNjRiaXQgaW50ZWdlcnMuDQoNCglEYXZp
+ZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQg
+RmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4
+NiAoV2FsZXMpDQo=
 
-It's not artificial at all. It's *exactly* what, say, blazesym library
-is doing (see [0], it's Rust and part of the overall library API, I
-think C code in this patch is way easier to follow for someone not
-familiar with implementation of blazesym, but both implementations are
-doing exactly the same sequence of steps). You can do it even less
-efficiently by parsing the whole file, building an in-memory lookup
-table, then looking up addresses one by one. But that's even slower
-and more memory-hungry. So I didn't even bother implementing that, it
-would put /proc/<pid>/maps at even more disadvantage.
-
-Other applications that deal with stack traces (including perf) would
-be doing one of those two approaches, depending on circumstances and
-level of sophistication of code (and sensitivity to performance).
-
-  [0] https://github.com/libbpf/blazesym/blob/ee9b48a80c0b4499118a1e8e5d901=
-cddb2b33ab1/src/normalize/user.rs#L193
-
-> thanks,
->
-> greg k-h
