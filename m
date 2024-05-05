@@ -1,39 +1,40 @@
 Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563161096F;
-	Sun,  5 May 2024 11:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E771012B6C;
+	Sun,  5 May 2024 11:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714907670; cv=none; b=dSduynOa7wiTLrSZaOkEVqiZlv6tLjHet2h/i30ipMFopOShDRK54JVJ4N4/c87L9cNvi9eGAhCSRw13Sivzw5nLl+/K1h44u7ktUDE1lrs0+e3jo3yDVDUbG3ff7nlyKS54fVx5yuFc5G7hxM3Zb6VAY/dugXjqO+diAJ3iVJw=
+	t=1714907671; cv=none; b=iK5MpA1cvg+C3mHRgy4N6sqKTgD0ilLT5oXDosij9kcAxkvPN4uM/30KZcgUEREPteJL+FILXwFrAedTnDDcZRAfq4xsLKthX62iTCBPEgZ83lE759pGx5eECe8gDQ19CP8k1kGXR8GOw3SNKip9dvNLefLAuBDu0kVUBNywfsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714907670; c=relaxed/simple;
-	bh=9eAXx8y5d8kDhI6LAXR0fz77K7tCB+kZ9tgT5yKzOe4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Uj75wYBZ/MANQBbstFjzk6qzYWM/2TArca2l0UYH/CCOZktn73n3kq3hJJ2fX8R/bojNoc8y0i1p71+17+WrzgzIHt5i/bqLo6UrlQb3vsy9un5gW5U9iOjc+uZ7WglbFEJ9ajYzKYJUNqs+FqI/299q1qu8NPtB+376dRtQ24Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=qf0Gs6tE; arc=none smtp.client-ip=62.210.214.84
+	s=arc-20240116; t=1714907671; c=relaxed/simple;
+	bh=xKnBTCxnt5rlmVlrpPihx0UXzUvVRUUzCiDejy13t0E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Vocr+ZJtjXkJwfPt17Y9Iz+YiU1Ci2mUKHatsCulKYINqlAnWsNdnH9Pso5Bbin+uwxpdi6yTZ/PNiQhwoD7oNFJ8Myk+RK6H2DlBqIEihQt+hnDNLrTLGG435H2FUWRRMUSX+D/p1EAosBuAGm4DBfnGr9zlwqVWhKRbRN0pUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=HXteSmh1; arc=none smtp.client-ip=62.210.214.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="qf0Gs6tE"
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="HXteSmh1"
 Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id AC5C214C2DB;
-	Sun,  5 May 2024 13:14:15 +0200 (CEST)
+	by submarine.notk.org (Postfix) with ESMTPS id 6326C14C2DE;
+	Sun,  5 May 2024 13:14:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1714907659;
+	s=2; t=1714907667;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4LHR19hAFTP2QYCStLYSuCHVAdmTGJHkSdXxe3Jnvj8=;
-	b=qf0Gs6tEJbxr+ECx26CXin6ca2rLkO+gHjNsltw0Rt+uhwodyBvCxNJ89W+qBSdLnPwdMI
-	OT/VS2Xxd1Xv7yJ1/5RofZDUmDSWYQfqXqj8QzqEQFVOwt61gYV0WiS8fm6kYqLvHzRBzw
-	B2YBHzu7IBQ/m1uGJmk0XaDwaoJlBYumGnDgj07Clj3YU34BgO5mmqsu3TgMkwut77c+MC
-	Fb6MNuWlnhgVagaog6yjatbBE+ycGAvxbgl40xyImydYQqF9AgNCvz9xeP5FA1rC+f4N5g
-	TtJMb+PPYHd3AlrfPi33WnoaAjBeT+KXcVYiiARsnfJO+srOvdDlinyeQc3XJg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iKbH9oEqAm9I5NHPxq8nJr2oLH8flpN/ZtGXaQSeqZQ=;
+	b=HXteSmh1JntxcCesRQRXbEQPzP8ARQSjY8nvhssf4dEGQmhLh6AQYcmOMZzNKVttuu7pze
+	cRZcSA+d82CUJP3Uc9eA6cYt4iAyxJ3HEbA46FFmfJE3JgoiVtz4aXtxd8Z+9REkiZ485f
+	2NgmpEhGH9zDYZ7iukqT5AVEU6EvH1gBJKvNz0Bm6a6UqUaIEP5XAGWy8CnfWU2sDvqAea
+	r14JqdI2G0Doh7mdj12TrSf+/ewJNXKKU0WSKF+asZRPDu8LhhUHTHN+cHcw7V25bc6DzF
+	Sy7rGxR98pSstPzoUfroAim8bheqX8VRcORTWPQOEkwkl2yWvBAVScJkt+BUew==
 Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 679dde65;
+	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 32b789c4;
 	Sun, 5 May 2024 11:14:12 +0000 (UTC)
 From: Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH v2 0/3] perf probe: Allow names to start with digits
-Date: Sun, 05 May 2024 20:13:56 +0900
-Message-Id: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
+Date: Sun, 05 May 2024 20:13:59 +0900
+Subject: [PATCH v2 3/3] perf parse: Allow names to start with digits
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,9 +43,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPRpN2YC/23MQQqDMBCF4avIrJsSY2JoV96jSKnJGIeCkYnYF
- sndm7ru8n/wvh0SMmGCa7UD40aJ4lxCnSpw02MOKMiXBiWVllpasSCPd0+BVmGV1mYw6IdWQTk
- sjCO9D+zWl54orZE/h73Vv/Uvs9VCCmPRNda1TXPRnYseX4zueY4coM85fwG2KTm8qAAAAA==
+Message-Id: <20240505-perf_digit-v2-3-6ece307fdaad@codewreck.org>
+References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
+In-Reply-To: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
  Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
@@ -54,69 +55,80 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dominique Martinet <asmadeus@codewreck.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1913;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1769;
  i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=9eAXx8y5d8kDhI6LAXR0fz77K7tCB+kZ9tgT5yKzOe4=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmN2n/IyRsM+n+wtwdIZ8pvgEFgsboo3ARADr2j
- N1XDpfVPd2JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjdp/wAKCRCrTpvsapjm
- cMefD/4oJILrvU8XdYUq7zmeVntt8buSR6LvaaqCczEds/xjlCHtdFnQv6sZ2ZbhDZc9rM3Ules
- V0gDnm8rchvFIvDP2LmZfWUS0TSIc9sV3Rk6pSiM2E/RTh7pP/m11pQ6CnQO/F0nXYKzd9vuoc9
- UoPxklQ+7ZQtNGpTz3thKcSyMDJ9CbxXBOFUoka2+gZDsuPFvQQM0ykXAb1x9wGwamosyzOi+xC
- Q9Q9kVtWQ+vX6S9IBMVmZBMATE0mJt7JulYFJ2LASNMnAnVzd/MUhTwVcipQZsKUsf3n9+EC1Q4
- MmtkNTH0lzcqlbPFG7p6Udkcax2GVg7D90mfJYAl8U47iIFDvbQshwVJ8fXSj4NowJ3PYybDhZg
- Fsmoh0i2d8iPwFOZNdQaxU0r2t27pJGf3giZ80fa/oDdGv38XOCaHWa6vbAOh5bSTZNdHlwQ3HG
- OXcTg/j7FCzQI31RqkvoYZ/rcXNf+HjBnFphtzMNH5wHgtjCeyEuVt13ZSlvrSdW6dT/eB0NuBq
- 0DQjIyb45APb/jnIiyXZWGAvnwBiQML7AJA6EQkWqdAWyARTtDmfrESVGCKrXRJzr/3hVmI+BiK
- ICezt8cV9i/E7uRWk4hfk1/jK168M/2/4m/+LF5Pp7pNceHxZPt7GIlgfYWc2ooJbsx9ihKOro7
- M+pRnEnhjGqu/TQ==
+ bh=xKnBTCxnt5rlmVlrpPihx0UXzUvVRUUzCiDejy13t0E=;
+ b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmN2oDVJM7LJl9HF5S6HxBR2ccQNvyzGhy8aGv8
+ UHj480KYc2JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjdqAwAKCRCrTpvsapjm
+ cAFSD/47tK7VTcnW0HNnFkX+F8PJj4kYKJC7wEQ7oqOMTctVgA5NKVzSQ8QR5RoOmzd9lGrl3ca
+ RfQd3RKH4B+2F9QC/xfVrSEexUJZBLCevj+9m350EcqKcU0v3+iKZChrkauRBmU42RsEWeukoSX
+ rsHAYSo5NDT1xrZLk2AN5iYO0wHK4CHT2+MKcjD1xokR/sQItgUdU+tE4n+Uci+TfsNk96jl6NV
+ sdNo0bwekQuiGhAWuiVCaQ+B0DspOPwdYun2tX9J4jB0e5ilMoOKolvWXuVihfILdSV89v1T5G3
+ CoP6hFRmOwWLku3wnrVwoYcMo6ZRvYyfvhJJyqyF2PheWoTzhtBiCBR+9pP74vrj/oqlgX3fASi
+ OEYpd2rZEuOEpya7V+ng6TlEJejsqektG+hsu+k8f684w//cbbXrHRphdereFIWixmwkuuptIC4
+ 16yHFM32Wx+bMNzpu6Z1gqIB1xl++v1ArN/GMq0kXOmhWOvW9DSWhNhqQnRZQH89dsLYVYfIktg
+ oIc/6LX/7k/QoFVEFojFoCMC8brXwJUPgcifHJ21EirZhYMxjNkpLcB+VA3OxflFbysKkTTJ2mj
+ PjC3mvXnSlenxumEhV97klUd609TrmoQldDqdEwO8n1zjVukFqIQBkwXC3o5viBQkKnHg/4Mux3
+ 429FgpW3kWOjVPw==
 X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
  fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-This is a rebase of the patch orginally sent almost two years ago here:
-https://lkml.kernel.org/r/20220612061508.1449636-1-asmadeus@codewreck.org
+Tracepoints can start with digits, although we don't have many of these:
 
-At the time I was asked to add tests, and Jiri whipped up something to
-make the test pass even for probes that don't exist on most systems but
-that ended up never being formatted or sent... I asked what happened of
-it and got asked to send it myself, but obviously also totally forget
-about it myself until I needed it again now.
+$ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
+net/mac802154/trace.h
+53:TRACE_EVENT(802154_drv_return_int,
+...
 
-I've taken the diff from that thread, adapted it a little bit to the
-current master branch and checked things still fall in place -- I didn't
-see any obvious problem.
+net/ieee802154/trace.h
+66:TRACE_EVENT(802154_rdev_add_virtual_intf,
+...
 
-Thanks!
+include/trace/events/9p.h
+124:TRACE_EVENT(9p_client_req,
+...
+
+Just allow names to start with digits too so e.g. perf trace -e '9p:*'
+works
 
 Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 ---
-Changes in v2:
-- update Jiri's email in commit tags
-- (not a change, but after being brain-dead and Ian helpful
-reply I'm confirming patch 3/3 works as expected)
-- Link to v1: https://lore.kernel.org/r/20240407-perf_digit-v1-0-57ec37c63394@codewreck.org
+ tools/perf/tests/parse-events.c | 5 +++++
+ tools/perf/util/parse-events.l  | 4 ++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
----
-Dominique Martinet (3):
-      perf parse-events: pass parse_state to add_tracepoint
-      perf parse-events: Add new 'fake_tp' parameter for tests
-      perf parse: Allow names to start with digits
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index ef056e8740fe..6cf055dd5c09 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2280,6 +2280,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__checkevent_breakpoint_2_events,
+ 		/* 3 */
+ 	},
++	{
++		.name = "9p:9p_client_req",
++		.check = test__checkevent_tracepoint,
++		/* 4 */
++	},
+ };
+ 
+ static const struct evlist_test test__events_pmu[] = {
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index e86c45675e1d..c36f8dbf593a 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -158,8 +158,8 @@ event		[^,{}/]+
+ num_dec		[0-9]+
+ num_hex		0x[a-fA-F0-9]{1,16}
+ num_raw_hex	[a-fA-F0-9]{1,16}
+-name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
+-name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
++name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
++name_tag	[\'][a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
+ name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
+ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+ /*
 
- tools/perf/tests/parse-events.c | 11 +++++++++--
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/evlist.c        |  3 ++-
- tools/perf/util/evsel.c         | 20 +++++++++++++-------
- tools/perf/util/evsel.h         |  4 ++--
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  | 38 +++++++++++++++++++++++---------------
- tools/perf/util/parse-events.h  |  9 ++++++---
- tools/perf/util/parse-events.l  |  4 ++--
- tools/perf/util/parse-events.y  |  2 +-
- 10 files changed, 61 insertions(+), 35 deletions(-)
----
-base-commit: 7367539ad4b0f8f9b396baf02110962333719a48
-change-id: 20240407-perf_digit-72445b5edb62
-
-Best regards,
 -- 
-Dominique Martinet | Asmadeus
+2.44.0
 
