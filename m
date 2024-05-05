@@ -1,118 +1,140 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013EF57C9A
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 May 2024 19:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9E56D1A8;
+	Sun,  5 May 2024 20:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714937941; cv=none; b=CECrUmlo9Pg1bBvYBId+ybqAryNmk2hiiVzyzchiYQlzIxinJdeXH3ffCNZyW+HljQqp+nHYm14KuDDxv85ZodMs4oJPYfq3cd8LwuU2sl7JwNnIU+1zQNxdvrYff6B0odo0t2gmbLXiMdqqdd52dV2+0rOA8cAlK0Kjag0OKhU=
+	t=1714940933; cv=none; b=I7KB4qm9mnS1/uZ6lrwj7MdydxENAzilmk8Ibi27LsR5Sz/KbvCWEw3nelFWqVcNhoiDzLDWvlk0mB2BKET9aJZN8Tyty8V3IAFsBh6b6eH44qB2HkfvdWWsHVRe8zwQF9OknKS09gK/Ps1ViF9nAfUEEwkJ34AsPK5mk8/zSFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714937941; c=relaxed/simple;
-	bh=J0qHFlM7HLtOXw4vwEKvg2Jz79uQL2s3cEeY7pVH0us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oxdEC5jNmvBsQekdFvto0gT+irYEJebzrkOiIV9QSnNsIlbn3JpUWVLz44J7lEwg+m1dXJqQQejMzES9cP7oZFiqayrITJCpCxJsoxc75DJAfJ2B4Tz7fLJUeB07klw211eGm/zMGym5vLZdxekwM/2OJpC4ytMyClLzA8wnCwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PCKPsXY/; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PCKPsXY/"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f45104ef0so1308390e87.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 12:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1714937937; x=1715542737; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDTMrcQdVfEBIW2E49sGipUfFmsmqU9bmOg1aSZaoeY=;
-        b=PCKPsXY/QcFajWjOVPu8QCCuRqMOsiqAuSYUpMynMZmNOAvyRuKO6n61Ok6V5p1Tj5
-         BWjMvfWfnrOmScI7B6FGZuMtuuSqyzwSlFsoZGqCaHnCmRmmV4paNjpMw7+APCxXMED5
-         CXIffbvGrBw0AGuAlInKd3Hbx6RMYKQ2RqS/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714937937; x=1715542737;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KDTMrcQdVfEBIW2E49sGipUfFmsmqU9bmOg1aSZaoeY=;
-        b=gTFbxtVKghMqzcXA25jayREqVZ7Bk5FCUJ2dedD55jyf7rNtTHQvn61aq5aIRKeoOx
-         JLV0cv7wIG238VOC24+AaOJI1vLY55uoHQba5QXBagoZP/VNdl/cfdavsd7maYIc46eP
-         EJd2eycwBFBsEULzw/baQ+RnRgHWdj0pDEl79vETTfncVNgsNvZ+3oAnp/2uY1e1hRxe
-         +QHen4ls/JWOOHiBX/03VHF6NXNJBgzR8UwwZUizEBIprBvWXkCvCZroz6kudpLgFg0j
-         5lvqdVYGgi4PwSnUA+pxr1lOUSoX+U2pNdccSpal2B1U1L2Z16KwtdZKjAcYe3eMwRdR
-         xkYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/LMzyynIYcCLdoP3S0ORu5M1tq30PPLMcQ20cPIX5c+5qoV21FZdR/zdNd7R862MnNR35v++Cpm7vyOSbqgBpMJZ5wLU83w70sum1whq96Q==
-X-Gm-Message-State: AOJu0Yz7xJlfVjF7kqsMuKROOhp0AoLpIWAhSiqtSeWRzsIU9Ql5mfFc
-	qQg6LyU2eQ3TFMCjLmVTRc5XaUreXtuQdanRjmVubvNCPcKHUCNFsImis4QA0Cgv89X5cqjPhPE
-	ixyPlmQ==
-X-Google-Smtp-Source: AGHT+IFUUPNjZq7lm8ygKPcLsUcxF/PWxpDZm3O+GeIhr09AJAH9XlzeopUdv47b3aWYOK0uF6CdTw==
-X-Received: by 2002:a05:6512:61c:b0:51f:3fea:cbce with SMTP id b28-20020a056512061c00b0051f3feacbcemr5826130lfe.51.1714937936826;
-        Sun, 05 May 2024 12:38:56 -0700 (PDT)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id l12-20020a1709066b8c00b00a59c0ecd559sm1154741ejr.112.2024.05.05.12.38.55
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 May 2024 12:38:55 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59a0e4b773so274455866b.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 12:38:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVwfXEHFLw6znKOTtagIRYf2G40a7ASb2dDY+TY1fE3SAq6dyqcqzSS+4n0e2loz6a/SY0tsObaIaoc8UKdrQasUSCoepLP44KhQTe/Wpu6tQ==
-X-Received: by 2002:a17:906:2b84:b0:a59:a5c3:819e with SMTP id
- m4-20020a1709062b8400b00a59a5c3819emr2765418ejg.11.1714937935374; Sun, 05 May
- 2024 12:38:55 -0700 (PDT)
+	s=arc-20240116; t=1714940933; c=relaxed/simple;
+	bh=uESbJ3gRnZBQpJ7WWb9YkLM+GSeZA1GW9OYoZk1ZIRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CGabTcdwGx3pL1LzBbP98dQN/qFefrtC14M1a0NxkWVZk1ScUzEgFMJIzF48p7cIFC1hen5jOFz5lSh54HIknsZrswl2f4hDuklgeMR+v49ahuiGwD0w6lws5+TtvDz4Ouax/YybhJT7w0SGZrhU8a4HCTBldSZei0MTrIPv0Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 698F51007;
+	Sun,  5 May 2024 13:29:10 -0700 (PDT)
+Received: from PF4Q20KV.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 305723F793;
+	Sun,  5 May 2024 13:28:42 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	James Clark <james.clark@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] perf maps: Process kcore maps in order
+Date: Sun,  5 May 2024 21:28:05 +0100
+Message-Id: <20240505202805.583253-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zi57-TMgU19puaQM@octinomon.home> <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home> <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
- <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com> <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
-In-Reply-To: <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 5 May 2024 12:38:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
-Message-ID: <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-To: David Laight <David.Laight@aculab.com>
-Cc: Jules Bashizi Irenge <jbi.octave@gmail.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 4 May 2024 at 15:53, David Laight <David.Laight@aculab.com> wrote:
->
-> I was thinking of something like (see https://godbolt.org/z/h8oj7h4sd):
->  [...]
-> Which will call out for a large divisor, but will do inlined divides
-> otherwise - so is reasonably sane whatever the types
+On Arm64, after enabling the 'DEBUG=1' build option, the tool exits
+abnormally:
 
-No. This is not sane.
+  # ./perf report --itrace=Zi10ibT
+  # perf: util/maps.c:42: check_invariants: Assertion `map__end(prev) <= map__start(map) || map__start(prev) == map__start(map)' failed.
+    Aborted
 
-Once you have a callout, you might as well do it all entirely out of
-line. You've messed up your register state and instruction scheduling
-opportunities, and the advantage of inlining part of the computation
-is basically almost entirely gone.
+The details for causing this error are described in below.
 
-And the thing is, if you do a 64-by-64 divide, then you just do it.
-Gcc will create that disgusting out-of-line code for you.
+Firstly, machine__get_running_kernel_start() calculates the delta
+between the '_stext' symbol and the '_edata' symbol for the kernel map,
+alongside with eBPF maps:
 
-BUT IT SUCKS.
+  DSO              | Start address      | End address
+  -----------------+--------------------+--------------------
+  kernel.kallsyms    0xffff800080000000   0xffff800082229200
+  bpf_prog           0xffff800082545aac   0xffff800082545c94
+  ...
 
-We don 't do stupid things in the kernel. We basically never need the
-64-by-64 divide. The reason we have "do_div()" and friends is EXATCLY
-THAT - to catch the "oh, you did something stuipid, just fix it".
+Then, the perf tool retrieves kcore maps:
 
-Yes, we do divide 64-bit entities even on 32-bit hosts, but 99% of the
-time the range of the divisor is basically always limited, and gcc
-sadly does not understand that that case matters.
+  Kcore maps       | Start address      | End address
+  -----------------+--------------------+--------------------
+  kcore_text         0xffff800080000000   0xffff8000822f0000
+  vmalloc            0xffff800080000000   0xfffffdffbf800000
+  ...
 
-So stop arguing for 64-by-64 divides. They are so rare as to not
-exist, and WE DO NOT WANT TO POLLUTE THE NORMAL CASE WITH THAT UNUSUAL
-SPECIAL CASE.
+Finally, the function dso__load_kcore() extends the kernel maps based on
+the retrieved kcore info. Since it uses the inverted order for
+processing the kcore maps, it extends maps for the vmalloc region prior
+to the 'kcore_text' map:
 
-No, the do_div() API isn't wonderful, and it comes from the fact that
-it basically uses the "inline asm" API model, which is not a function
-call, but an in-out parameter one.  That API was a mistake, but
-whatever.
+  DSO              | Start address      | End address
+  -----------------+--------------------+--------------------
+  kernel.kallsyms    0xffff800080000000   0xffff800082229200
+  kernel.kallsyms    0xffff800082229200   0xffff800082545aac -> Extended for vmalloc region
+  bpf_prog           0xffff800082545aac   0xffff800082545c94
+  ...
 
-But importantly, the mistake was *NOT* that it doesn't handle a full
-64-by-64 divide. Not 30 years ago, and not today.
+  DSO              | Start address      | End address
+  -----------------+--------------------+--------------------
+  kernel.kallsyms    0xffff800080000000   0xffff8000822f0000 -> Updated for kcore_text map
+  kernel.kallsyms    0xffff800082229200   0xffff800082545aac
+  bpf_prog           0xffff800082545aac   0xffff800082545c94
+  ...
 
-                     Linus
+As result, the two maps [0xffff800080000000..0xffff8000822f0000) and
+[0xffff800082229200..0xffff800082545aac) are overlapping and triggers
+failure.
+
+The current code processes kcore maps in inverted order. To fix it, this
+patch adds kcore maps in the tail of list, afterwards these maps will be
+processed in the order. Therefore, the kernel text section can be
+processed prior to handling the vmalloc region, which avoids using the
+inaccurate kernel text size when extending maps with the vmalloc region.
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/util/symbol.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 9ebdb8e13c0b..e15d70845488 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1266,7 +1266,24 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+ 	map__set_end(list_node->map, map__start(list_node->map) + len);
+ 	map__set_pgoff(list_node->map, pgoff);
+ 
+-	list_add(&list_node->node, &md->maps);
++	/*
++	 * Kcore maps are ordered with:
++	 *   [_text.._end): Kernel text section
++	 *   [VMALLOC_START..VMALLOC_END): vmalloc
++	 *   ...
++	 *
++	 * On Arm64, the '_text' and 'VMALLOC_START' are the same values
++	 * but VMALLOC_END (~124TiB) is much bigger then the text end
++	 * address. So '_text' region is the subset of the vmalloc region.
++	 *
++	 * Afterwards, when dso__load_kcore() adjusts kernel maps, we must
++	 * process the kernel text size prior to handling vmalloc region.
++	 * This can avoid to using any inaccurate kernel text size when
++	 * extending maps with vmalloc region. For this reason, here it
++	 * always adds kcore maps to the tail of list to make sure the
++	 * sequential handling is in order.
++	 */
++	list_add_tail(&list_node->node, &md->maps);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
+
