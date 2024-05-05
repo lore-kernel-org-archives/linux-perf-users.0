@@ -1,297 +1,260 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFD814A84;
-	Sun,  5 May 2024 11:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714907673; cv=none; b=AGaulBvV7YLg2N7yxYV2MUXazoB7NUOo2qI0LZbA7q4qVjKyfRxwZHeyO9aS3ZMEyJ/l8mVFAGzt6wDQxtCDjL6lPCnTww+0WbO7FM99+3/pFlSmHu/Z4Oi0cqa+I7BqRm217SWXPKZiNBRa1bthSJHY01WB2g4UIGK0stFokyM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714907673; c=relaxed/simple;
-	bh=JnlCDmRuutK/KzCo+rcyudV22smr9ryS2UjA5s2k2eg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GA91eQ8l+YOnCvSpLKhlEh4F+lhFt8kN1fmiDEgQ5puNO10rOMXVnWQGD0T2R2/XvYjN2O1PHByzccwQbFFXXmSRKikleHk1QORWu2e0UfO7pdGN5HH2WCmS5SdyENr9uxA5qMtsWRpyiZ1L5tYcp4mG0APmxckNoqTCXTi7gMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=weErkWGL; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04olkn2048.outbound.protection.outlook.com [40.92.75.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB4208CA;
+	Sun,  5 May 2024 14:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.75.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714918576; cv=fail; b=nHYjKY/fbzUkm78gVw6xFvtfjvOFw1NG66bv/kL9F2ZYchPEn/Rgzv6+1XQStTmyO8G/gE7W+7T3nPZc12KEBEVjPiJtgqn8v0ekxEoDObZL2CvQm3MQe7O89HevGKJJPy13Wdb02tqDOk9zN0w7np5SGm+4pGcq5ZHpztyALxU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714918576; c=relaxed/simple;
+	bh=Rq03aMB0ZF1s4d8P71rdrOD9Hw1HRSrazVwdc6RiUxw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=aISIw3OPrJ2d/4/d8vVLW2cBV5/RaeJA2ojPnWjZ01m3sKvkao0dLQVrP+Qy006K44EwaOiKLApoQz+q4D1OpifSHtiBnZc6p0e1sTHHddFbVjKzasi0R6vPDEcQ/X/bSR6KYlKOjt55MQKecyo68RjJ1HjAi7339dKk/av5lYI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mj17Zf9B; arc=fail smtp.client-ip=40.92.75.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="weErkWGL"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 00DBA14C2DD;
-	Sun,  5 May 2024 13:14:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1714907664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tpo+09nwmv+KYpQer08XkkTaUsvh9qO4C4ZH9XHLgc=;
-	b=weErkWGLkv2gh0SVhAYTEyTO3fRq7cyK5W8PvvqtazOPsVjj7QzYZC0TcREbjRvQpMrvJX
-	8SxnlM3a9kCtRSb0Niy2FAjTZvzXUAZ0KeyllrllR63+vlR/gfJOVPgS8xhi66jJ012bXZ
-	rfMmvmMWgdL0BdeXDbaUPvHQ06UeZBEWakXliThPZolBMgVWPvJ7D7Z7yQgJ2PVT/zw6GZ
-	al6qOk9mIM8PbnvaViQvXnpe5lSIo9Fgy2y77uinw7JiramOuVaTW4HupzmRJlEw1yf8Ld
-	7aJYCmE4yYp9atGC0tx7s1C6AtrVvjlgqqRs7ezpLXGQZKTHum2VPo+3ZKWZNw==
-Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 2edb31da;
-	Sun, 5 May 2024 11:14:12 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Sun, 05 May 2024 20:13:58 +0900
-Subject: [PATCH v2 2/3] perf parse-events: Add new 'fake_tp' parameter for
- tests
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mj17Zf9B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HR2JZT4q0ECeomnA2L6rKLDDrzejLUlfZvLIoKHfdB6/udF0xp6w0d897Gp1hekLD7C9IJ+AAb9L0fAUNV3GtIymo5cYHEeQ06HbjCOsyAwYzqZtIWAQTtGF4U2hJFr8iLhMHHk9EaUikD+mTUV1OEmFv+jCUfEt1r3sfGHCqp5AiIdL6wZ6ek48okYF5uIEPNzEMFiEQGYCQuZfAR/AKvV1YfSFHFpr3XGm671RBm0Zym9xTh1/92XbsgoTpRhG8LsBwJ0IhMrGq1llA/6VSMmz8IEhjDgsOqU+ugRTEBRzBxzRjxZ0kUlxXPTunGM77yHsDFPTdBgEa57J/hztAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rIi5Dj8newoAsX2e0SmyQqcOFSFVvNz56kOOQPl3FH0=;
+ b=DSyDNXpUTBf2LpdAnF9PpCaiTk+d9xLgy2cd+s4v9TWBnMm8vak6833ZepKnMtO2rCTBJCA/3oYbW757TelllpbCyxMCpSUBjAyhnLQlvbkivoOLQAtv7nzXZ63NVBUqyvL63tle2ShzT4ZPf2ToRaEPEiM1Y0vXGCgMkdYu7B1VCjFBl7i+D/in2U+ScWeVqFijqXG4eZ0xtuO0OmpKc8Gcyi2p1RagBbDsI+bbV5QqzQNG0nXa+fWCNpW9YBonIPY104zwwoZeTn6MJorz55ieSa4NhsbwObVinFSs5VYFSsatsZh9EkT92vmJbfdK+Ykr/h851m9bhWtE2dnyuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rIi5Dj8newoAsX2e0SmyQqcOFSFVvNz56kOOQPl3FH0=;
+ b=mj17Zf9BxrrFLKl1FlU5XqMrzN5vHN7Uh7gLFaDkKPz5smcDjHGT/vcp6X+Ii8XPM3DDWFiCWHt0/YdqEojWeVMRxuVJDU9bKr0aTIThHIQpl9iYUEYIiYyy+oDi2eM95S1n7pDbqLF3uM+5tGJNegqy1UprISq9BVy4S/q0ctlAWTWBCrrFBjf9G/duEWHedF/uMJfoOfB8PnrPQ3VYhK+1D+1UqCSVwDwAEOOHBJP8jIAaU/NSm5mWLHk11islv9DBH5aXoKv2W1GY2BkqOdwPX0DNoUGbrPR/tGdcoc9+3N2Dy/+wq6sb1nMVsgzn5eUyZQ9knRUTNzXI4+0b9Q==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by PAVPR02MB9746.eurprd02.prod.outlook.com (2603:10a6:102:314::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.39; Sun, 5 May
+ 2024 14:16:11 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.036; Sun, 5 May 2024
+ 14:16:11 +0000
+From: Erick Archer <erick.archer@outlook.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded arithmetic
+Date: Sun,  5 May 2024 16:15:53 +0200
+Message-ID:
+ <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [8tXJnD8xcTHch++rYm9YlvPNNCIcNidI]
+X-ClientProxiedBy: MA2P292CA0001.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:1::17) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID:
+ <20240505141553.14446-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240505-perf_digit-v2-2-6ece307fdaad@codewreck.org>
-References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
-In-Reply-To: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8985;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=JnlCDmRuutK/KzCo+rcyudV22smr9ryS2UjA5s2k2eg=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmN2oDEmljyYCHhaiLY64emzyN0yTXYXCZvV9DT
- 9/31pg6q+qJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjdqAwAKCRCrTpvsapjm
- cJOeD/4ka/vs1LKPPnlc4GRNvkkgJhUXcu9OmQSMsv0FraCv0dT67K7Kxpy6LR1D0BSuUlXVtmM
- Y1qq22yRGfEozEz5eGiu7ClmnieWZVd0rEMSBJQZd+wBfNWnvh+A8GjWXyopjq3ZeUrDvih2SY9
- zjZNKoiFSyADIgR+2XtQA3qyoo7oQpoZp7JYXQ3MivNtQh1NrzhpcW5rUJagxTgn4oehwc67yw9
- yEuFbjgKrXF9Bb7i8/W/iOfXE8TqFAljSyP/01dIdcQ13Jk7BO/KtgI35jGNJLa8YrZTpAw9exY
- SVC9Myvzwfmg4WdZ3jlyE82KngO6rcEt1Kvq64SlTspuG6BnZUDM5PIbRr41MFr8ZdqSfP5AyNd
- Qr5TGoxZLRrZOydK/6nOBt4UJVNQP2muRO3PZkB6+RnawOEVYa8am9o+v5DCQ8/dnhAS9+y4t3u
- j/RngDpbTOTybN638P+NYWXJ+avklwgPs3lvrHE0nsRXY4XbJ63M7RQp+2VKOP+/5gq4YM7eXaW
- ogI4SmS+Cglubto2AC/ECXZI4zaBvDiHInB0dGbxF7+ZJ/s6zta+1fGkr1bBnjZx7FmtO5Al+bD
- GqaKtvrj602KsCgNMcFn2t3rO+MIe7IgDaCIa4OXJ5W61G6CKHxZ4yQ449UsdUsxPeVjRM/XLxx
- woQF6+pZ79iJG4g==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PAVPR02MB9746:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f0305b9-2309-4e11-0749-08dc6d0de9f6
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|1602099003|3412199016|440099019|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	QUchWPzsDXYy99HgrdJOy77tj0E/vU+OwOVSrhcEUF4EtMDQ/W+02ReIrClDrMWcghIEXcDn8+EIh36os3QTt6XLkIcoklpTDmQBNFJrJJnBGHGez7zDxj8Srhzp4aA1hS1nexrxz+NyPq4lbOk59f0X3vmTO9CYPn1nkKyyPkxDE+8zKxOOcxlHBVh6lyF3r0VWy+Kl9XaR2NWM0hCFrWv+VREs8aldyzZjs3uJ1tebgQJgaZ4aqiTA0lJ1raTG19g6+v5egxoO0AeAmkYwfAHwYw6LmiSQNQlpX1EDrTQ/54qnb++V1/NsvRT/8oFgl3ThlhisbOG7LpjSmxz8WMKzcnpkJVOAG4BAu6JOPQ3n63yDiNe4x9lx+tSF6QmeXexTLdjmjtoA0J6ZauT8FMg9JZkGCwRTriJ5YY0wC3bn12VWkPoW28Xn9TvHFcOuO/Wwz4Qqk2zCvr2AP47wcAk4EWS0I3kPDulm0uB03hHOKrBWAYcYUaPcOHdZAucJuClpnhiVAnKVG4e1UxQNhZUSf3FA048zhAGcGhfWAu4q5xMnuv9ppf7frjRp3ESseLUF6694doaxicj/wDhsALGH11A+sEY/qC/LwgkPtSEsssfsSxxuneB45e7APjzC5/gkBLrspZPmZa3yG1koOF3EZLpbF+dYzyrjOFtMxRUuOyMGHPcVrakTtrhxnsEnNUg35wMb7NuAd5SF2YsR3w==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fC6LUwK82FmpjXxq5BHpmS+TWW7yQiK8/AEMwUalQJAqVuF6zKtyYdu5NQt1?=
+ =?us-ascii?Q?7qW5s3iCZNMRMEX0620Ad4sY9WnBaFLI6fGpINGG6x3fqGFdiNb3BSPrVKEh?=
+ =?us-ascii?Q?qg5+FC6SUot30aap1HzgCHM9RlEGIFMi7MDR6C8PUnXFnGradfSH1+Th7Mg1?=
+ =?us-ascii?Q?20X413bo6WRHNL+z6HC4+J6L3boiCC4yuRDFlVeLBqoWMflhlbljsp3FN9Ea?=
+ =?us-ascii?Q?k8mSUFztUeUfK1vTAaYFCzyurN/CKA+2yBC3nDvCb8IQsvn7AfZwxuLHdMYP?=
+ =?us-ascii?Q?sxffa8USWBjfOtvdsNtI9VO0ExJVFVflEHmDNAq46Se+vMFVmuU4E69ut+19?=
+ =?us-ascii?Q?hF/JeadYnLyPvn/gDJYMtpjXh3E9VHUGCqXAM/yVEnJN4Ij5RNWRxAQL/HQj?=
+ =?us-ascii?Q?DKBhnztg5at0iPvHDsG8XSqBJyQq4RdgdwGtUQqKvjxxJq7y8n7ozktf3n2Z?=
+ =?us-ascii?Q?gh5RJQHIdFYDecX74Num/z+B5KNC0dujOpoKQzPnzyLvGazrqLeVpWb6zN7b?=
+ =?us-ascii?Q?mVhZ/sO0Yre8LZAb9UMMTh2NOQ6Xt4vjQ8HFGbCgb9syErUJVaRjOIZqvf2l?=
+ =?us-ascii?Q?rcMbNKsWcHlYm6mDD0eeS8zlRYJg7VjYoxqSqOt5xCCMT69NEJGltKRaGD+2?=
+ =?us-ascii?Q?Lt7U9ELvcDj/EupuyMKPZla2BI2bG/eBwZRosXSO1CHLvYUt28wtVUw5Vk5c?=
+ =?us-ascii?Q?cjH8MMO1c9UuK2Na+CoANpeIsynisDbKYegUBwkf009NC0bFdHdNApJ9Q//l?=
+ =?us-ascii?Q?5xUvzrkUWEJqUAwOs02P/foozhufnLrZwh9wEDGhL+TsjvCakX9g7wOZx5GU?=
+ =?us-ascii?Q?CoeakGXtcsSS6WqmiU/UCnetdgBtL8ceNMgCY2YHBWs20ZiUdr2M+l303dlp?=
+ =?us-ascii?Q?LDhdYwuFEkwMYqJtAcZSmoRl4Z8gcMZL+TwGtKYyufs2tG/nnhwJK7qjXMqM?=
+ =?us-ascii?Q?a7ogUzMQBbl8DHTaXIe0bFfJX9z5/O5MAZ3CM9pxaEDnUR4puNzb3ILzJ7lL?=
+ =?us-ascii?Q?HuX9O1Tc5LfkEx4FVMnDic3H9yePwO0ur1m4SlzZOsl45ZsY2x2qHS+FdeiP?=
+ =?us-ascii?Q?Y22nyk5Q4pQs0rmVqZabutVJGxAmA8KzDLf/1piCUUDvGHUQ2ZKwQ1xVDnNw?=
+ =?us-ascii?Q?WXR0wbBPmvyAax6XHefE/4a/3V7Z0glVjaYkon0wtWzV4kS0xRKNeZY0kQv4?=
+ =?us-ascii?Q?KhQP/JmzGJ/L25sMB1ydwtk0X8x0cljprDYvOCHq3Uf2M99QpMcCuTiA1vzZ?=
+ =?us-ascii?Q?POezy8UtpO1I9tFupXEu?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f0305b9-2309-4e11-0749-08dc6d0de9f6
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2024 14:16:11.0313
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9746
 
-The next commit will allow tracepoints starting with digits, but most
-systems do not have any available by default so tests should skip the
-actual "check if it exists in /sys/kernel/debug/tracing" step.
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1][2].
 
-In order to do that, add a new boolean flag specifying if we should
-actually "format" the probe or not.
+As the "rb" variable is a pointer to "struct perf_buffer" and this
+structure ends in a flexible array:
 
-Originally-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+struct perf_buffer {
+	[...]
+	void	*data_pages[];
+};
+
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the calculation "size + count * size" in
+the kzalloc_node() functions.
+
+In the "rb_alloc" function defined in the else branch of the macro
+
+ #ifndef CONFIG_PERF_USE_VMALLOC
+
+the count in the struct_size helper is the literal "1" since only one
+pointer to void is allocated. Also, remove the "size" variable as it
+is no longer needed.
+
+At the same time, prepare for the coming implementation by GCC and Clang
+of the __counted_by attribute. Flexible array members annotated with
+__counted_by can have their accesses bounds-checked at run-time via
+CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
+strcpy/memcpy-family functions). In this case, it is important to note
+that the logic needs a little refactoring to ensure that the "nr_pages"
+member is initialized before the first access to the flex array.
+
+In one case, it is only necessary to move the assignment before the
+array-writing loop while in the other case the assignment needs to be
+added.
+
+This way, the code is more safer.
+
+This code was detected with the help of Coccinelle, and audited and
+modified manually.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
- tools/perf/tests/parse-events.c |  6 ++++--
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/evlist.c        |  3 ++-
- tools/perf/util/evsel.c         | 20 +++++++++++++-------
- tools/perf/util/evsel.h         |  4 ++--
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  |  9 ++++++---
- tools/perf/util/parse-events.h  |  6 ++++--
- 8 files changed, 34 insertions(+), 19 deletions(-)
+Changes in v2:
+- Annotate "struct perf_buffer" with __counted_by() attribute (Kees Cook).
+- Refactor the logic to gain __counted_by() coverage (Kees Cook).
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index feb5727584d1..ef056e8740fe 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2504,7 +2504,8 @@ static int test_event(const struct evlist_test *e)
- 		return TEST_FAIL;
- 	}
- 	parse_events_error__init(&err);
--	ret = parse_events(evlist, e->name, &err);
-+	ret = __parse_events(evlist, e->name, /*pmu_filter=*/NULL, &err, /*fake_pmu=*/NULL,
-+			     /*warn_if_reordered=*/true, /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
- 		parse_events_error__print(&err, e->name);
-@@ -2532,7 +2533,8 @@ static int test_event_fake_pmu(const char *str)
- 
- 	parse_events_error__init(&err);
- 	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL, &err,
--			     &perf_pmu__fake, /*warn_if_reordered=*/true);
-+			     &perf_pmu__fake, /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n",
- 			 str, ret);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 47a7c3277540..0a1308d84e9e 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -842,7 +842,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 		*cur = '/';
- 
- 	ret = __parse_events(evlist, dup, /*pmu_filter=*/NULL, error, fake_pmu,
--			     /*warn_if_reordered=*/true);
-+			     /*warn_if_reordered=*/true, /*fake_tp=*/false);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 55a300a0977b..3a719edafc7a 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -298,7 +298,8 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
- #ifdef HAVE_LIBTRACEEVENT
- struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
- {
--	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0);
-+	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0,
-+					       /*format=*/true);
- 
- 	if (IS_ERR(evsel))
- 		return evsel;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3536404e9447..4f818ab6b662 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -452,7 +452,7 @@ struct evsel *evsel__clone(struct evsel *orig)
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
- #ifdef HAVE_LIBTRACEEVENT
--struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
-+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
- {
- 	struct evsel *evsel = zalloc(perf_evsel__object.size);
- 	int err = -ENOMEM;
-@@ -469,14 +469,20 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
- 		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
- 			goto out_free;
- 
--		evsel->tp_format = trace_event__tp_format(sys, name);
--		if (IS_ERR(evsel->tp_format)) {
--			err = PTR_ERR(evsel->tp_format);
--			goto out_free;
-+		event_attr_init(&attr);
-+
-+		if (format) {
-+			evsel->tp_format = trace_event__tp_format(sys, name);
-+			if (IS_ERR(evsel->tp_format)) {
-+				err = PTR_ERR(evsel->tp_format);
-+				goto out_free;
-+			}
-+			attr.config = evsel->tp_format->id;
-+		} else {
-+			attr.config = (__u64) -1;
- 		}
- 
--		event_attr_init(&attr);
--		attr.config = evsel->tp_format->id;
-+
- 		attr.sample_period = 1;
- 		evsel__init(evsel, &attr, idx);
- 	}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 517cff431de2..375a38e15cd9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -234,14 +234,14 @@ void free_config_terms(struct list_head *config_terms);
- 
- 
- #ifdef HAVE_LIBTRACEEVENT
--struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
-+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
- 
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
- static inline struct evsel *evsel__newtp(const char *sys, const char *name)
- {
--	return evsel__newtp_idx(sys, name, 0);
-+	return evsel__newtp_idx(sys, name, 0, true);
- }
- #endif
- 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 79ef6095ab28..c21f05f8f255 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1502,7 +1502,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
- 	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
--			     &parse_error, fake_pmu, /*warn_if_reordered=*/false);
-+			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
-+			     /*fake_tp=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6e8cba03f0ac..04508e07569d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -526,7 +526,8 @@ static int add_tracepoint(struct parse_events_state *parse_state,
- 			  struct parse_events_terms *head_config, void *loc_)
- {
- 	YYLTYPE *loc = loc_;
--	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++);
-+	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++,
-+					       !parse_state->fake_tp);
- 
- 	if (IS_ERR(evsel)) {
- 		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
-@@ -2126,7 +2127,7 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 
- int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
- 		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
--		   bool warn_if_reordered)
-+		   bool warn_if_reordered, bool fake_tp)
- {
- 	struct parse_events_state parse_state = {
- 		.list	  = LIST_HEAD_INIT(parse_state.list),
-@@ -2134,6 +2135,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 		.error	  = err,
- 		.stoken	  = PE_START_EVENTS,
- 		.fake_pmu = fake_pmu,
-+		.fake_tp  = fake_tp,
- 		.pmu_filter = pmu_filter,
- 		.match_legacy_cache_terms = true,
- 	};
-@@ -2343,7 +2345,8 @@ int parse_events_option(const struct option *opt, const char *str,
- 
- 	parse_events_error__init(&err);
- 	ret = __parse_events(*args->evlistp, str, args->pmu_filter, &err,
--			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
-+			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/false);
- 
- 	if (ret) {
- 		parse_events_error__print(&err, str);
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index fd55a154ceff..b985a821546b 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -32,14 +32,14 @@ int parse_events_option_new_evlist(const struct option *opt, const char *str, in
- __attribute__((nonnull(1, 2, 4)))
- int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
- 		   struct parse_events_error *error, struct perf_pmu *fake_pmu,
--		   bool warn_if_reordered);
-+		   bool warn_if_reordered, bool fake_tp);
- 
- __attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
- 	return __parse_events(evlist, str, /*pmu_filter=*/NULL, err, /*fake_pmu=*/NULL,
--			      /*warn_if_reordered=*/true);
-+			      /*warn_if_reordered=*/true, /*fake_tp=*/false);
- }
- 
- int parse_event(struct evlist *evlist, const char *str);
-@@ -152,6 +152,8 @@ struct parse_events_state {
- 	int			   stoken;
- 	/* Special fake PMU marker for testing. */
- 	struct perf_pmu		  *fake_pmu;
-+	/* Skip actual tracepoint processing for testing. */
-+	bool			   fake_tp;
- 	/* If non-null, when wildcard matching only match the given PMU. */
- 	const char		  *pmu_filter;
- 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
+Previous versions:
+v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com/
 
+Hi Peter,
+
+I know that you detest the struct_size() helper, however, as Kees
+explained in v1, this change improves the robustness of the code.
+Also, we will gain __counted_by() coverage.
+
+I hope this patch can be applied this time.
+
+Regards,
+Erick
+---
+ kernel/events/internal.h    |  2 +-
+ kernel/events/ring_buffer.c | 14 ++++----------
+ 2 files changed, 5 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 5150d5f84c03..dc8d39b01adb 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -55,7 +55,7 @@ struct perf_buffer {
+ 	void				*aux_priv;
+ 
+ 	struct perf_event_mmap_page	*user_page;
+-	void				*data_pages[];
++	void				*data_pages[] __counted_by(nr_pages);
+ };
+ 
+ extern void rb_free(struct perf_buffer *rb);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 4013408ce012..080537eff69f 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ 	unsigned long size;
+ 	int i, node;
+ 
+-	size = sizeof(struct perf_buffer);
+-	size += nr_pages * sizeof(void *);
+-
++	size = struct_size(rb, data_pages, nr_pages);
+ 	if (order_base_2(size) > PAGE_SHIFT+MAX_PAGE_ORDER)
+ 		goto fail;
+ 
+@@ -833,6 +831,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ 	if (!rb)
+ 		goto fail;
+ 
++	rb->nr_pages = nr_pages;
+ 	rb->user_page = perf_mmap_alloc_page(cpu);
+ 	if (!rb->user_page)
+ 		goto fail_user_page;
+@@ -843,8 +842,6 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ 			goto fail_data_pages;
+ 	}
+ 
+-	rb->nr_pages = nr_pages;
+-
+ 	ring_buffer_init(rb, watermark, flags);
+ 
+ 	return rb;
+@@ -916,18 +913,15 @@ void rb_free(struct perf_buffer *rb)
+ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ {
+ 	struct perf_buffer *rb;
+-	unsigned long size;
+ 	void *all_buf;
+ 	int node;
+ 
+-	size = sizeof(struct perf_buffer);
+-	size += sizeof(void *);
+-
+ 	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+-	rb = kzalloc_node(size, GFP_KERNEL, node);
++	rb = kzalloc_node(struct_size(rb, data_pages, 1), GFP_KERNEL, node);
+ 	if (!rb)
+ 		goto fail;
+ 
++	rb->nr_pages = nr_pages;
+ 	INIT_WORK(&rb->work, rb_free_work);
+ 
+ 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
 -- 
-2.44.0
+2.25.1
 
