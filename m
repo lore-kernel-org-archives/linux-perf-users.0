@@ -1,128 +1,122 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B565F1852
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 May 2024 05:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563161096F;
+	Sun,  5 May 2024 11:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714885793; cv=none; b=Zy8hkO+opivctD3GPrHAExslI2jwzBC2kRnJs9UcZsA4w0twhUKZPa/R4gmaMHAXDu0UD0j1ag95TpGqJnToCx1Ac03yS/Zchc1UwrnxqO+i9hdLEx/Lrpm+lbN7uBDlMbbMcLiJIZImbatXMP5PSxu2aIz8D1mNSB0VzZytd4g=
+	t=1714907670; cv=none; b=dSduynOa7wiTLrSZaOkEVqiZlv6tLjHet2h/i30ipMFopOShDRK54JVJ4N4/c87L9cNvi9eGAhCSRw13Sivzw5nLl+/K1h44u7ktUDE1lrs0+e3jo3yDVDUbG3ff7nlyKS54fVx5yuFc5G7hxM3Zb6VAY/dugXjqO+diAJ3iVJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714885793; c=relaxed/simple;
-	bh=olH7hQHHDHDp2bsomJmiSdHdXsNU4KXMYOJHnmgtMxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEQ1YbMrvruwBgrnmzAmAZYHXIuNdRuopgbI2I7A72ls+080fAN9YYTl3rrZqRobvywONRm7781Tbwqrr0gdDpVLuadK1tZuCvimQL0DTAmn6AYC3IhAaYgUVHN8ziYoPEWGVe+JuAzxaHhG/mukh2cwGy9gtx4YDDsbcej9ZDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mrn1xhBN; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714907670; c=relaxed/simple;
+	bh=9eAXx8y5d8kDhI6LAXR0fz77K7tCB+kZ9tgT5yKzOe4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Uj75wYBZ/MANQBbstFjzk6qzYWM/2TArca2l0UYH/CCOZktn73n3kq3hJJ2fX8R/bojNoc8y0i1p71+17+WrzgzIHt5i/bqLo6UrlQb3vsy9un5gW5U9iOjc+uZ7WglbFEJ9ajYzKYJUNqs+FqI/299q1qu8NPtB+376dRtQ24Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=qf0Gs6tE; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mrn1xhBN"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ec182ab287so96055ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 04 May 2024 22:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714885791; x=1715490591; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+LFEOHbhdT8xlmXAZ79el6d0XvgZNSArYbb5H09rUb4=;
-        b=Mrn1xhBNBqxCE5yPD5OVx+e8FNRV17ekqQA2aKdNnVNULq8zWnwENBgC+uQl92OwtH
-         N8CSJy84/hyjZZjR6nTlf5NZYZVbhQvn0/s2xcrqoxO6hcBF9TVX8NkzWKg8cm25W1+0
-         0boxYbJxSq21MoP1RTNS/2jad52AnDomuT+zNIfSYmC0RsvYFALNXf3ssOYQmEWycu/e
-         65ZT8SB/V25cyTrikHt5DWMwAVwYH6IyNvxza9ZVNbcMQw9AFRxRAhIG+o9VGHsv1vms
-         R1I7anqnYCubCZwrkOusYF3KwLWw5hEqWk5W3DxnebOzRvc3dshcmd4SvE+TLp67Rn1T
-         rG+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714885791; x=1715490591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+LFEOHbhdT8xlmXAZ79el6d0XvgZNSArYbb5H09rUb4=;
-        b=IJKlvXu4x09l38sKLWNtBvdNl/xiRY3S+RiioyuFZTfNnITfafiwBWnh3N7E6z6Jlm
-         wE85cxT/j4kNz02dx1qaYJ9z+bOO4Kg7UFnD/EYIuynhSaUlRef//N45zyWszTls9PNj
-         2bQwUzhQShItr9jMJLgR34/QdV4ipBQnYYBiik/TIJ1pAJOJR+lKy0JWbjVpHpuSRb6T
-         0CgkGg9LfxcBY01vI2xkaZysODSuznhzom/pyIQCspTxfew7SQZNDkzxJLj32j0Maobq
-         P5VnCDzTAj0SMKjUhX8bE/r7AaLTfPk0C4ATnLY8fOEc5FnMN7f504SRRIB0pXH6Nn95
-         J/dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAUn18yUCVbPPMnFovG1NZBxqJr6ij0VD19Rf3I6a3wQfd0iucA/AzRzidFw24rJUCeYKApRQzjFRY0FYJDJG2RbCIflBtgMOpWgUIfblR5g==
-X-Gm-Message-State: AOJu0YwNulfQ/wsKzKWOeG+ZrKV/Obis+ygv4cMP86YlbJl/nsc0+9H5
-	jgFFJZ3WP8QkGPVSNdI+XydpJwJGAscdp9QZ9Re7v1rcyPu4nowl5qrs9gnA2OonuuiYWuqnQ6q
-	UTuv/fu0eju8i+oSaDbnrsSVf/ElcJCk/ULtS
-X-Google-Smtp-Source: AGHT+IHGBa7tMMleiZKIyfq04qQxdw3xbaO8yY7nGHAFS1LwAn2FIimhO36Sml74NHR419/S58AeVS848bcSO81YVbs=
-X-Received: by 2002:a17:902:f789:b0:1e0:c571:d652 with SMTP id
- d9443c01a7336-1ed851171f3mr1404605ad.1.1714885790351; Sat, 04 May 2024
- 22:09:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="qf0Gs6tE"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id AC5C214C2DB;
+	Sun,  5 May 2024 13:14:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1714907659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4LHR19hAFTP2QYCStLYSuCHVAdmTGJHkSdXxe3Jnvj8=;
+	b=qf0Gs6tEJbxr+ECx26CXin6ca2rLkO+gHjNsltw0Rt+uhwodyBvCxNJ89W+qBSdLnPwdMI
+	OT/VS2Xxd1Xv7yJ1/5RofZDUmDSWYQfqXqj8QzqEQFVOwt61gYV0WiS8fm6kYqLvHzRBzw
+	B2YBHzu7IBQ/m1uGJmk0XaDwaoJlBYumGnDgj07Clj3YU34BgO5mmqsu3TgMkwut77c+MC
+	Fb6MNuWlnhgVagaog6yjatbBE+ycGAvxbgl40xyImydYQqF9AgNCvz9xeP5FA1rC+f4N5g
+	TtJMb+PPYHd3AlrfPi33WnoaAjBeT+KXcVYiiARsnfJO+srOvdDlinyeQc3XJg==
+Received: from [127.0.0.1] (localhost.lan [::1])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 679dde65;
+	Sun, 5 May 2024 11:14:12 +0000 (UTC)
+From: Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH v2 0/3] perf probe: Allow names to start with digits
+Date: Sun, 05 May 2024 20:13:56 +0900
+Message-Id: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
- <2024050404-rectify-romp-4fdb@gregkh> <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
-In-Reply-To: <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 4 May 2024 22:09:39 -0700
-Message-ID: <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
- /proc/<pid>/maps APIs
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPRpN2YC/23MQQqDMBCF4avIrJsSY2JoV96jSKnJGIeCkYnYF
+ sndm7ru8n/wvh0SMmGCa7UD40aJ4lxCnSpw02MOKMiXBiWVllpasSCPd0+BVmGV1mYw6IdWQTk
+ sjCO9D+zWl54orZE/h73Vv/Uvs9VCCmPRNda1TXPRnYseX4zueY4coM85fwG2KTm8qAAAAA==
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dominique Martinet <asmadeus@codewreck.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1913;
+ i=asmadeus@codewreck.org; h=from:subject:message-id;
+ bh=9eAXx8y5d8kDhI6LAXR0fz77K7tCB+kZ9tgT5yKzOe4=;
+ b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmN2n/IyRsM+n+wtwdIZ8pvgEFgsboo3ARADr2j
+ N1XDpfVPd2JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjdp/wAKCRCrTpvsapjm
+ cMefD/4oJILrvU8XdYUq7zmeVntt8buSR6LvaaqCczEds/xjlCHtdFnQv6sZ2ZbhDZc9rM3Ules
+ V0gDnm8rchvFIvDP2LmZfWUS0TSIc9sV3Rk6pSiM2E/RTh7pP/m11pQ6CnQO/F0nXYKzd9vuoc9
+ UoPxklQ+7ZQtNGpTz3thKcSyMDJ9CbxXBOFUoka2+gZDsuPFvQQM0ykXAb1x9wGwamosyzOi+xC
+ Q9Q9kVtWQ+vX6S9IBMVmZBMATE0mJt7JulYFJ2LASNMnAnVzd/MUhTwVcipQZsKUsf3n9+EC1Q4
+ MmtkNTH0lzcqlbPFG7p6Udkcax2GVg7D90mfJYAl8U47iIFDvbQshwVJ8fXSj4NowJ3PYybDhZg
+ Fsmoh0i2d8iPwFOZNdQaxU0r2t27pJGf3giZ80fa/oDdGv38XOCaHWa6vbAOh5bSTZNdHlwQ3HG
+ OXcTg/j7FCzQI31RqkvoYZ/rcXNf+HjBnFphtzMNH5wHgtjCeyEuVt13ZSlvrSdW6dT/eB0NuBq
+ 0DQjIyb45APb/jnIiyXZWGAvnwBiQML7AJA6EQkWqdAWyARTtDmfrESVGCKrXRJzr/3hVmI+BiK
+ ICezt8cV9i/E7uRWk4hfk1/jK168M/2/4m/+LF5Pp7pNceHxZPt7GIlgfYWc2ooJbsx9ihKOro7
+ M+pRnEnhjGqu/TQ==
+X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
+ fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-On Sat, May 4, 2024 at 2:57=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Sat, May 4, 2024 at 8:29=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
-> >
-> > On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote:
-> > > Implement a simple tool/benchmark for comparing address "resolution"
-> > > logic based on textual /proc/<pid>/maps interface and new binary
-> > > ioctl-based PROCFS_PROCMAP_QUERY command.
-> >
-> > Of course an artificial benchmark of "read a whole file" vs. "a tiny
-> > ioctl" is going to be different, but step back and show how this is
-> > going to be used in the real world overall.  Pounding on this file is
-> > not a normal operation, right?
-> >
->
-> It's not artificial at all. It's *exactly* what, say, blazesym library
-> is doing (see [0], it's Rust and part of the overall library API, I
-> think C code in this patch is way easier to follow for someone not
-> familiar with implementation of blazesym, but both implementations are
-> doing exactly the same sequence of steps). You can do it even less
-> efficiently by parsing the whole file, building an in-memory lookup
-> table, then looking up addresses one by one. But that's even slower
-> and more memory-hungry. So I didn't even bother implementing that, it
-> would put /proc/<pid>/maps at even more disadvantage.
->
-> Other applications that deal with stack traces (including perf) would
-> be doing one of those two approaches, depending on circumstances and
-> level of sophistication of code (and sensitivity to performance).
+This is a rebase of the patch orginally sent almost two years ago here:
+https://lkml.kernel.org/r/20220612061508.1449636-1-asmadeus@codewreck.org
 
-The code in perf doing this is here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/util/synthetic-events.c#n440
-The code is using the api/io.h code:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/lib/api/io.h
-Using perf to profile perf it was observed time was spent allocating
-buffers and locale related activities when using stdio, so io is a
-lighter weight alternative, albeit with more verbose code than fscanf.
-You could add this as an alternate /proc/<pid>/maps reader, we have a
-similar benchmark in `perf bench internals synthesize`.
+At the time I was asked to add tests, and Jiri whipped up something to
+make the test pass even for probes that don't exist on most systems but
+that ended up never being formatted or sent... I asked what happened of
+it and got asked to send it myself, but obviously also totally forget
+about it myself until I needed it again now.
 
-Thanks,
-Ian
+I've taken the diff from that thread, adapted it a little bit to the
+current master branch and checked things still fall in place -- I didn't
+see any obvious problem.
 
->   [0] https://github.com/libbpf/blazesym/blob/ee9b48a80c0b4499118a1e8e5d9=
-01cddb2b33ab1/src/normalize/user.rs#L193
->
-> > thanks,
-> >
-> > greg k-h
->
+Thanks!
+
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+---
+Changes in v2:
+- update Jiri's email in commit tags
+- (not a change, but after being brain-dead and Ian helpful
+reply I'm confirming patch 3/3 works as expected)
+- Link to v1: https://lore.kernel.org/r/20240407-perf_digit-v1-0-57ec37c63394@codewreck.org
+
+---
+Dominique Martinet (3):
+      perf parse-events: pass parse_state to add_tracepoint
+      perf parse-events: Add new 'fake_tp' parameter for tests
+      perf parse: Allow names to start with digits
+
+ tools/perf/tests/parse-events.c | 11 +++++++++--
+ tools/perf/tests/pmu-events.c   |  2 +-
+ tools/perf/util/evlist.c        |  3 ++-
+ tools/perf/util/evsel.c         | 20 +++++++++++++-------
+ tools/perf/util/evsel.h         |  4 ++--
+ tools/perf/util/metricgroup.c   |  3 ++-
+ tools/perf/util/parse-events.c  | 38 +++++++++++++++++++++++---------------
+ tools/perf/util/parse-events.h  |  9 ++++++---
+ tools/perf/util/parse-events.l  |  4 ++--
+ tools/perf/util/parse-events.y  |  2 +-
+ 10 files changed, 61 insertions(+), 35 deletions(-)
+---
+base-commit: 7367539ad4b0f8f9b396baf02110962333719a48
+change-id: 20240407-perf_digit-72445b5edb62
+
+Best regards,
+-- 
+Dominique Martinet | Asmadeus
+
