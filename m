@@ -1,57 +1,57 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A8C143891
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC006143C5F
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714973508; cv=none; b=JxM1xNw/WIVubTxSgu9hkJcEkCdnY/DFfPGQqD3g3PXd9QsMasVC+FVkaZ9JWv0P3NkQHt7I2jrtL0ncNXGlVIVjOfbyXTFeGnY9jnbph6joo3oEk2AOrWLpGxbDDC0KnCbwNfraoVvMHnszc8kNSfulHe8ZK9DMh2B2e90ydEY=
+	t=1714973509; cv=none; b=ZFWnKcpJPXYRgFgythq2JsTzFHXFGyIWyfiBi6poM8DJsn1jH+MuFCoHtDfu2kd2HElhXxts53Ru5kSrWX5CAefmUE+N1yPH6ym+vDIs6YU6BAh/hu41p4PP28obs/gEZBpIPU8kJOmNcMi3TLivNVQoVJr6HkIQrlbsXwmHVlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714973508; c=relaxed/simple;
-	bh=DgJ4EN+xMRdFH/4/6PHsC4fBVL3Naex6D2R86q5BLnQ=;
+	s=arc-20240116; t=1714973509; c=relaxed/simple;
+	bh=b/P/gkmdpkwdCe7Xv7Hg2B3zNjJs1cOBq5vflYDSvQc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ehP4mFt3kD2qsDFEvhKwzIQJ4MUhlMY1GOrP6CfXfD1UiO22DU80nD7Hj05PANHP599U0M87whnQYNTX9E0tmrXk3coaxREZjMa69cUjRYfSpSdS7Vt0WtH67zy380VThc+7d67QDZc0CqT8sHLoBsBFwEn/nUtxTy8iZ3BBcqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=McMoFHuZ; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=QNQ1YrXqz8TsMqO9T+OYiYsq5jSMDvFDZn3GYJRGwmH58LOBzg7taiX0NTa9uOHCoghXfq8i7dyLHlr1WtuLfKzepyjZNkCCApbMCAiXjiC3HH0iCS3n6stHHt1B/05i9mIy0dNFkvxM6nF/19EuFtsp17luOrcjrAXSUfrdl08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tc2QyGBr; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="McMoFHuZ"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6dbdcfd39so3359690276.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tc2QyGBr"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc693399655so2993785276.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714973505; x=1715578305; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714973507; x=1715578307; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6H04ZJ0rZ+UiGVgsYG099h9bSA0uf9CXiCVKmASq/Y=;
-        b=McMoFHuZmJrlfiZxjF/baSADfp9jgEPIRHrZKR5joq21vGxe+U9Wl9eh/nOky46dT5
-         1YL3RbXZ+etvPEKH8kHMe5ee5f5m+HauLzLzRPOKKyhJL3Wr3Ppy7ABySNpv9aZQ/38f
-         ovKfW7tiFK16nidWL+LI/tEMtD8EeOlmuXewx4+k+Yp7v1LKQAasCkuRAYOx8R4p13Eu
-         iA5HZiXFAEmpzvhK7Meb0+YFmzzgyDTjTec9i9uJEq3tj106EGQzWJfzkei1/jFYda9b
-         aicnHpsmSr9pd8Ar+bZjVoZBP7aynbnnvzaOaENl6yvReVnecSkqYMaHRWTPjCXymqD+
-         9Kmw==
+        bh=tX8Dgq5ewz02szpnrMWrF7pO4CEI9/6VrSnV9138ff8=;
+        b=Tc2QyGBrrlJ1U2Gs/ax8er3VbGvnZd3mvT8v5tKzIRJsVCTBf4kxyBUsZe2I+KtSeb
+         VRBgd6icB2XZE8jTdYepX+jepAb6c5aKtJhHu2YnQZsHF343BK3EmUZtYcPR9f8OPpmS
+         or9pKPuTKw1E53uFdFsBZTAwRHrhxuJKBfT/CXAjUeTkl8dJmUkLwVd7RbrzOXEIHiMG
+         jfKwz/xcZB/LEIlZynC13/tzbygUWbRYp4em5vxFb9fnubnHAUiyJf3nCPWGlkgNyCG+
+         627dQjPqbNAIdaxaycqc4m75wvflJlPjMtkVtGS6pDf78NwNehatMgBjLLmXpaXs7c/A
+         izuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714973505; x=1715578305;
+        d=1e100.net; s=20230601; t=1714973507; x=1715578307;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=n6H04ZJ0rZ+UiGVgsYG099h9bSA0uf9CXiCVKmASq/Y=;
-        b=S0hDhb5SXIE1d8kQtiDJExl2Fm6JLDcQ3cglWPUL59VkVt2mxbZ5CzBPkBelU/pIpo
-         /QcME6Ygw8WSOBSpMAhMHdVWqdzzLSis68rU879JImNQftxfREDm16ahAjgfijuvc/3h
-         kgHSJkxY11bkjFxLJPkCO8sWwkv1RJZvWNS0Gx1kYJyVKeYtI9D+Puj3D56a1kPXLTUH
-         hjAL5hvdzeMhSiknwXgWUWgLHi8wlV/YfBnV1fJf1NFYLSBiOfk2xhE5UPHv393tRzcw
-         kxh3/Wq+1S7jbW5BoCjSUQUM3F4BvePGvDxhAWHmQpg/eoC4iVvzxHFk6MDefEePO/4T
-         vnBA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5EZsBlD84ZbLr94P9/dZr+R1VXkPHrrWnV9DjkJMYHohKOftnSAXD/gFsTR8ghK5QVzxg2F36x81YPwEkmwC1gotKaRS9Ji60RKmqGVGZEA==
-X-Gm-Message-State: AOJu0YzgbsO/c7U2IIrIChsFeWAO/3HR000iXUeo/S1pjgHiuTEZknK2
-	xpfPEvGeFBdoSeWn39XZxFlBV3c693lAtjtx6ZNIXgIMoGmqDHeB83EE41Du9G/1qzqBZOWFxos
-	LzrrOcA==
-X-Google-Smtp-Source: AGHT+IEmLxPOoCJPiggLCMbYGTg3TFX0hbToInK1+lAcbfmdqB2YXkGuGmvR0MnJ99c7k9V04Ni2T4a/e+Gz
-X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a25:aa73:0:b0:de5:53a9:384a with SMTP id
- s106-20020a25aa73000000b00de553a9384amr2838673ybi.13.1714973504994; Sun, 05
- May 2024 22:31:44 -0700 (PDT)
+        bh=tX8Dgq5ewz02szpnrMWrF7pO4CEI9/6VrSnV9138ff8=;
+        b=J3pNPoC0WqQ+BuRCPzoxaoVwDLx4xVPZ4f4TqG5nJ7TV/Z8rXg1cuyvEpEF/Ukzzz9
+         aYsHBeK7mvxl4qADDY80Q8dMc3G8MwuhnmrNkp4KI8EyanrroNXRfp6AekK653qjxgQH
+         EL4TGe0stmmp8QAVtJAPa7YHZUirkb6LCvQGghWizteEl93Gdnu9cAqKS5wP0EOSYQOw
+         2TbE8GGwULm1RXP1sUIkqmkcxezI2B0viCj9M7BTp9LPn1PgA0TG7T/xqxIRcorg1VrC
+         MeRYSRrkNukRxmZq2gqhduHLHbKFScy/7kx5dptRp353yeq8IzfTyb+DqBwLHEALJvwA
+         4gSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwA+d/Xf7Q0DeAK6bfjLdqikrAxMrpPU/PrJYK/yjnyB9DgqgU0p1wUiwNayzXdL+jrXbomfRx7BHalNJEBYYR6vRyAGGz9QW8OeZltfaY2A==
+X-Gm-Message-State: AOJu0Yz7Ggc9dRCF18B5FpbctPeQWZ6PGeS88Wz8uceiUYPm27CAa+8W
+	whaF+jVixdDiGdyeraJghfJCEECRIvzpYz9hjvd7/VjXWBLR4EprhrMNRu6Fba4YCQIRTgsT99z
+	CwEdKEw==
+X-Google-Smtp-Source: AGHT+IG0dJqulSQCgFV/zhqyz9b6/M0NS8Knkq7ByoXipCtrR2cMK7wbJyY7hepfUVtSnQc1M0T72skWCOQc
+X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
+ job=sendgmr) by 2002:a05:6902:1502:b0:de4:c54c:6754 with SMTP id
+ q2-20020a056902150200b00de4c54c6754mr3292381ybu.3.1714973506891; Sun, 05 May
+ 2024 22:31:46 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon,  6 May 2024 05:30:06 +0000
+Date: Mon,  6 May 2024 05:30:07 +0000
 In-Reply-To: <20240506053020.3911940-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240506053020.3911940-1-mizhang@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240506053020.3911940-42-mizhang@google.com>
-Subject: [PATCH v2 41/54] KVM: x86/pmu: Introduce PMU operator for setting
- counter overflow
+Message-ID: <20240506053020.3911940-43-mizhang@google.com>
+Subject: [PATCH v2 42/54] KVM: x86/pmu: Implement emulated counter increment
+ for passthrough PMU
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,67 +78,125 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Introduce PMU operator for setting counter overflow. When emulating counter
-increment, multiple counters could overflow at the same time, i.e., during
-the execution of the same instruction. In passthrough PMU, having an PMU
-operator provides convenience to update the PMU global status in one shot
-with details hidden behind the vendor specific implementation.
+Implement emulated counter increment for passthrough PMU under KVM_REQ_PMU.
+Defer the counter increment to KVM_REQ_PMU handler because counter
+increment requests come from kvm_pmu_trigger_event() which can be triggered
+within the KVM_RUN inner loop or outside of the inner loop. This means the
+counter increment could happen before or after PMU context switch.
+
+So process counter increment in one place makes the implementation simple.
 
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/include/asm/kvm-x86-pmu-ops.h | 1 +
- arch/x86/kvm/pmu.h                     | 1 +
- arch/x86/kvm/vmx/pmu_intel.c           | 5 +++++
- 3 files changed, 7 insertions(+)
+ arch/x86/kvm/pmu.c | 50 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-index 72ca78df8d2b..bd5b118a5ce5 100644
---- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-@@ -28,6 +28,7 @@ KVM_X86_PMU_OP_OPTIONAL(passthrough_pmu_msrs)
- KVM_X86_PMU_OP_OPTIONAL(save_pmu_context)
- KVM_X86_PMU_OP_OPTIONAL(restore_pmu_context)
- KVM_X86_PMU_OP_OPTIONAL(incr_counter)
-+KVM_X86_PMU_OP_OPTIONAL(set_overflow)
- 
- #undef KVM_X86_PMU_OP
- #undef KVM_X86_PMU_OP_OPTIONAL
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 325f17673a00..78a7f0c5f3ba 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -45,6 +45,7 @@ struct kvm_pmu_ops {
- 	void (*save_pmu_context)(struct kvm_vcpu *vcpu);
- 	void (*restore_pmu_context)(struct kvm_vcpu *vcpu);
- 	bool (*incr_counter)(struct kvm_pmc *pmc);
-+	void (*set_overflow)(struct kvm_vcpu *vcpu);
- 
- 	const u64 EVENTSEL_EVENT;
- 	const int MAX_NR_GP_COUNTERS;
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 485bbccf503a..aac09eb9af0e 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -881,6 +881,10 @@ static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
- 	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index a12012a00c11..06e70f74559d 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -510,6 +510,18 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+ 				     eventsel & ARCH_PERFMON_EVENTSEL_INT);
  }
  
-+static void intel_set_overflow(struct kvm_vcpu *vcpu)
++static void kvm_pmu_handle_event_in_passthrough_pmu(struct kvm_vcpu *vcpu)
 +{
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++
++	static_call_cond(kvm_x86_pmu_set_overflow)(vcpu);
++
++	if (atomic64_read(&pmu->__reprogram_pmi)) {
++		kvm_make_request(KVM_REQ_PMI, vcpu);
++		atomic64_set(&pmu->__reprogram_pmi, 0ull);
++	}
 +}
 +
- struct kvm_pmu_ops intel_pmu_ops __initdata = {
- 	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
- 	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
-@@ -897,6 +901,7 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
- 	.save_pmu_context = intel_save_guest_pmu_context,
- 	.restore_pmu_context = intel_restore_guest_pmu_context,
- 	.incr_counter = intel_incr_counter,
-+	.set_overflow = intel_set_overflow,
- 	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
- 	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
- 	.MIN_NR_GP_COUNTERS = 1,
+ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+ {
+ 	DECLARE_BITMAP(bitmap, X86_PMC_IDX_MAX);
+@@ -517,6 +529,9 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+ 	struct kvm_pmc *pmc;
+ 	int bit;
+ 
++	if (is_passthrough_pmu_enabled(vcpu))
++		return kvm_pmu_handle_event_in_passthrough_pmu(vcpu);
++
+ 	bitmap_copy(bitmap, pmu->reprogram_pmi, X86_PMC_IDX_MAX);
+ 
+ 	/*
+@@ -848,6 +863,17 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu)
+ 	kvm_pmu_reset(vcpu);
+ }
+ 
++static void kvm_passthrough_pmu_incr_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
++{
++	if (static_call(kvm_x86_pmu_incr_counter)(pmc)) {
++		__set_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->global_status);
++		kvm_make_request(KVM_REQ_PMU, vcpu);
++
++		if (pmc->eventsel & ARCH_PERFMON_EVENTSEL_INT)
++			set_bit(pmc->idx, (unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
++	}
++}
++
+ static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
+ {
+ 	pmc->emulated_counter++;
+@@ -880,11 +906,13 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
+ 	return (static_call(kvm_x86_get_cpl)(pmc->vcpu) == 0) ? select_os : select_user;
+ }
+ 
+-void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
++static void __kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel,
++				    bool is_passthrough)
+ {
+ 	DECLARE_BITMAP(bitmap, X86_PMC_IDX_MAX);
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
++	bool is_pmc_allowed;
+ 	int i;
+ 
+ 	BUILD_BUG_ON(sizeof(pmu->global_ctrl) * BITS_PER_BYTE != X86_PMC_IDX_MAX);
+@@ -896,6 +924,12 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+ 		return;
+ 
+ 	kvm_for_each_pmc(pmu, pmc, i, bitmap) {
++		if (is_passthrough)
++			is_pmc_allowed = pmc_speculative_in_use(pmc) &&
++					 check_pmu_event_filter(pmc);
++		else
++			is_pmc_allowed = pmc_event_is_allowed(pmc);
++
+ 		/*
+ 		 * Ignore checks for edge detect (all events currently emulated
+ 		 * but KVM are always rising edges), pin control (unsupported
+@@ -911,12 +945,22 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+ 		 * could ignoring them, so do the simple thing for now.
+ 		 */
+ 		if (((pmc->eventsel ^ eventsel) & AMD64_RAW_EVENT_MASK_NB) ||
+-		    !pmc_event_is_allowed(pmc) || !cpl_is_matched(pmc))
++		    !is_pmc_allowed || !cpl_is_matched(pmc))
+ 			continue;
+ 
+-		kvm_pmu_incr_counter(pmc);
++		if (is_passthrough)
++			kvm_passthrough_pmu_incr_counter(vcpu, pmc);
++		else
++			kvm_pmu_incr_counter(pmc);
+ 	}
+ }
++
++void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
++{
++	bool is_passthrough = is_passthrough_pmu_enabled(vcpu);
++
++	__kvm_pmu_trigger_event(vcpu, eventsel, is_passthrough);
++}
+ EXPORT_SYMBOL_GPL(kvm_pmu_trigger_event);
+ 
+ static bool is_masked_filter_valid(const struct kvm_x86_pmu_event_filter *filter)
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
