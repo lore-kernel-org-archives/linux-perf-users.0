@@ -1,557 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (out-69.smtpout.orange.fr [193.252.22.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268AE1426F;
-	Mon,  6 May 2024 18:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7E28494;
+	Mon,  6 May 2024 18:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715021625; cv=none; b=jp0uhx/KUFsEUzbR9xC8sO31BuwScGRlnzIX9lPjY97LP2zaH2rGYOhEYMZVSO04mSwLPWQ0V/RRJvYOJuqrwd46ZGAffUFl6Pu63TEGnLGMJiULvKdO3Q5Fl9m1pT7JBuLBP/TgqMAsCJuIZhp48j1hAPushf8qiBSDxWvoYp0=
+	t=1715021869; cv=none; b=o4QnpTNC+WlIxrEUC1lgwCUOUJs/Pk5AqpouOwC2golW1cJ8jLzelVDtIDAtec3tO29DFxdDPGdetiU+b/oLZKeEulQgfxTI+B47ken9V48wQSEexC8x9e1TtF2+R+Je7d7zABSrIB/TJChyM5vSaxySqqq8BaDUiw2YH09abro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715021625; c=relaxed/simple;
-	bh=GZr+p5TBW31QQMQhi32NoIs4LnmnAqFcXLqfJ3ZnwXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L3PTJXci/BrmmCc5njrLeBklZ9sJf1n1jVmYrenJH+FeBiqM03G578pYIdQCdkUFIZKjtn9NdDor8PrWAyqHBFGbA8gDCAr0sLcWGj8HA+E79iogtUiPwdXb0lyQn0RqpM6/5ejJ45wh/89lhk2UWM8I+VPU/Ilnk1sYVKAYz6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4puEBak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715021869; c=relaxed/simple;
+	bh=GAhjzktko9OJNax9dYX89eovXWodEDQfe816vqcI7KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kZ0dZoNv1ACF1F53pDtIEFCXDZ1rtsdZ0ScWzLP4wj5FASNb2iS2P1PXwe7K6QDfqJmIn7RF6amYwopnbDCi6zVOBCLjH0UI/yqTWQyp3k/kflZ53Lb7j0l2JZbd7bm3RXE+aAoK/807MSKTcl54si4wATExYuiO6101y3KVWiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dGqovjk8; arc=none smtp.client-ip=193.252.22.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4puEBak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0382DC116B1;
-	Mon,  6 May 2024 18:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715021624;
-	bh=GZr+p5TBW31QQMQhi32NoIs4LnmnAqFcXLqfJ3ZnwXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e4puEBak3WAa1kzFEkJrSBSJU2y2u1NqdwQX9sOf7uFYjlQEh+ZITLfQklFNifYGb
-	 v96jmgBIGqU1+3jhHcV4a2khe4UP/dDmfqBe5MMO57OVvA05D5jNC+7W3ET4aw7hD5
-	 XyBrOKM4LNUMRN72+NGaf3f0BTWp5K1yAml1LhdJA+eJb2jdjRRBAVC95J8h7bk74h
-	 RDMGaVsAmThZSVg4xb0/KIIhQeo2UAEvAoY6B5OoY/8Zw20Wg5O6OaOPEPH/qSTWxj
-	 6ShriMWzn/ukTZDHxBDCSJaw/5p5zwtyhEc5P7OgbRYwe58+qxypLZOWmgk4Lx7HjC
-	 SLghAt1id7Q9g==
-Date: Mon, 6 May 2024 15:53:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org,
-	brauner@kernel.org, viro@zeniv.linux.org.uk,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-mm@kvack.org,
-	Daniel =?iso-8859-1?Q?M=FCller?= <deso@posteo.net>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 2/5] fs/procfs: implement efficient VMA querying API for
- /proc/<pid>/maps
-Message-ID: <ZjknNJSFcKaxGDS4@x1>
-References: <20240504003006.3303334-1-andrii@kernel.org>
- <20240504003006.3303334-3-andrii@kernel.org>
- <2024050439-janitor-scoff-be04@gregkh>
- <CAEf4BzZ6CaMrqRR1Rah7=HnTpU5-zw5HUnSH9NWCzAZZ55ZXFQ@mail.gmail.com>
- <ZjjiFnNRbwsMJ3Gj@x1>
- <CAM9d7cgvCB8CBFGhMB_-4tCm6+jzoPBNg4CR7AEyMNo8pF9QKg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dGqovjk8"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 4303s7MviME2z4303s0Gms; Mon, 06 May 2024 20:23:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1715019829;
+	bh=vwITn4CstTzZtAQHEM9ECl1VAD7MHWLyJIGr0JqDJWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dGqovjk8SpXn+6fzebG7jnal19Q9YCOe4fQ71SJ2pHcDylCc9zwstLn198z9fAnSc
+	 kGLiPW7zOmVLTimp1JWnQC1tfZZEMQzu33s73nO1THQfHx8dDoRKkG5+Cc9CChsFMb
+	 dVLXabdsyBl1aq89K9kkXBeV1W3COUGw9yuGrDNLG7l0zrKsY3+bUbrryxjpIw4kVC
+	 y/cB9NsqVfHOOBjbqphmRvNggJR0/CwzgC/rWrW169SeQvOL9DX7z9pc71BwJo3EFN
+	 klsXlnu3HhSfimK8QjXXheWEkyBwRsHCrKrdQ+sLzOZy9a+mEk4Ly5xI1kxctiuws9
+	 BfpUu8Q9rDsWg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 06 May 2024 20:23:49 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <b3509a36-1fbc-4311-853b-bb5e6d25f0ad@wanadoo.fr>
+Date: Mon, 6 May 2024 20:23:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+To: Kees Cook <keescook@chromium.org>, Erick Archer <erick.archer@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+References: <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <51a49bae-bd91-428e-b476-f862711453a0@wanadoo.fr>
+ <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202405060856.53AFAE4F22@keescook>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <202405060856.53AFAE4F22@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cgvCB8CBFGhMB_-4tCm6+jzoPBNg4CR7AEyMNo8pF9QKg@mail.gmail.com>
 
-On Mon, May 06, 2024 at 11:05:17AM -0700, Namhyung Kim wrote:
-> On Mon, May 6, 2024 at 6:58 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Sat, May 04, 2024 at 02:50:31PM -0700, Andrii Nakryiko wrote:
-> > > On Sat, May 4, 2024 at 8:28 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > On Fri, May 03, 2024 at 05:30:03PM -0700, Andrii Nakryiko wrote:
-> > > > > Note also, that fetching VMA name (e.g., backing file path, or special
-> > > > > hard-coded or user-provided names) is optional just like build ID. If
-> > > > > user sets vma_name_size to zero, kernel code won't attempt to retrieve
-> > > > > it, saving resources.
-
-> > > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-
-> > > > Where is the userspace code that uses this new api you have created?
-
-> > > So I added a faithful comparison of existing /proc/<pid>/maps vs new
-> > > ioctl() API to solve a common problem (as described above) in patch
-> > > #5. The plan is to put it in mentioned blazesym library at the very
-> > > least.
-> > >
-> > > I'm sure perf would benefit from this as well (cc'ed Arnaldo and
-> > > linux-perf-user), as they need to do stack symbolization as well.
- 
-> I think the general use case in perf is different.  This ioctl API is great
-> for live tracing of a single (or a small number of) process(es).  And
-> yes, perf tools have those tracing use cases too.  But I think the
-> major use case of perf tools is system-wide profiling.
- 
-> For system-wide profiling, you need to process samples of many
-> different processes at a high frequency.  Now perf record doesn't
-> process them and just save it for offline processing (well, it does
-> at the end to find out build-ID but it can be omitted).
-
-Since:
-
-  Author: Jiri Olsa <jolsa@kernel.org>
-  Date:   Mon Dec 14 11:54:49 2020 +0100
-  1ca6e80254141d26 ("perf tools: Store build id when available in PERF_RECORD_MMAP2 metadata events")
-
-We don't need to to process the events to find the build ids. I haven't
-checked if we still do it to find out which DSOs had hits, but we
-shouldn't need to do it for build-ids (unless they were not in memory
-when the kernel tried to stash them in the PERF_RECORD_MMAP2, which I
-haven't checked but IIRC is a possibility if that ELF part isn't in
-memory at the time we want to copy it).
-
-If we're still traversing it like that I guess we can have a knob and
-make it the default to not do that and instead create the perf.data
-build ID header table with all the build-ids we got from
-PERF_RECORD_MMAP2, a (slightly) bigger perf.data file but no event
-processing at the end of a 'perf record' session.
-
-> Doing it online is possible (like perf top) but it would add more
-> overhead during the profiling.  And we cannot move processing
-
-It comes in the PERF_RECORD_MMAP2, filled by the kernel.
-
-> or symbolization to the end of profiling because some (short-
-> lived) tasks can go away.
-
-right
- 
-> Also it should support perf report (offline) on data from a
-> different kernel or even a different machine.
-
-right
- 
-> So it saves the memory map of processes and symbolizes
-> the stack trace with it later.  Of course it needs to be updated
-> as the memory map changes and that's why it tracks mmap
-> or similar syscalls with PERF_RECORD_MMAP[2] records.
- 
-> A problem with this approach is to get the initial state of all
-> (or a target for non-system-wide mode) existing processes.
-> We call it synthesizing, and read /proc/PID/maps to generate
-> the mmap records.
- 
-> I think the below comment from Arnaldo talked about how
-> we can improve the synthesizing (which is sequential access
-> to proc maps) using BPF.
-
-Yes, I wonder how far Jiri went, Jiri?
-
-- Arnaldo
- 
-> Thanks,
-> Namhyung
+Le 06/05/2024 à 18:23, Kees Cook a écrit :
+> On Sun, May 05, 2024 at 07:31:24PM +0200, Erick Archer wrote:
+>> On Sun, May 05, 2024 at 05:24:55PM +0200, Christophe JAILLET wrote:
+>>> Le 05/05/2024 à 16:15, Erick Archer a écrit :
+>>>> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+>>>> index 4013408ce012..080537eff69f 100644
+>>>> --- a/kernel/events/ring_buffer.c
+>>>> +++ b/kernel/events/ring_buffer.c
+>>>> @@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>>>>    	unsigned long size;
+>>>
+>>> Hi,
+>>>
+>>> Should size be size_t?
+>>
+>> I'm sorry, but I don't have enough knowledge to answer this question.
+>> The "size" variable is used as a return value by struct_size and as
+>> a parameter to the order_base_2() and kzalloc_node() functions.
+> 
+> For Linux, size_t and unsigned long are the same (currently).
+> Pedantically, yes, this should be size_t, but it's the same.
+> 
+>> [...]
+>>> 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
+>>> 	if (!all_buf)
+>>> 		goto fail_all_buf;
+>>>
+>>> 	rb->user_page = all_buf;
+>>> 	rb->data_pages[0] = all_buf + PAGE_SIZE;
+>>> 	if (nr_pages) {					<--- here
+>>> 		rb->nr_pages = 1;			<---
+>>> 		rb->page_order = ilog2(nr_pages);
+>>> 	}
+>> [...]
+>> I think that we don't need to deal with the "nr_pages = 0" case
+>> since the flex array will always have a length of one.
+>>
+>> Kees, can you help us with this?
+> 
+> Agh, this code hurt my head for a while.
+> 
+> all_buf contains "nr_pages + 1" pages. all_buf gets attached to
+> rb->user_page, and then rb->data_pages[0] points to the second page in
+> all_buf... which means, I guess, that rb->data_pages does only have 1
+> entry.
+> 
+> However, the nr_pages == 0 case is weird. Currently, data_pages[0] will
+> still get set (which points ... off the end of all_buf). If we
+> unconditionally set rb->nr_pages to 1, we're changing the behavior. If
+> we _don't_ set rb->data_pages[0], we're changing the behavior, but I
+> think it's an invalid pointer anyway, so this is the safer change to
+> make. I suspect the right replacement is:
 > 
 > 
-> >
-> > At some point, when BPF iterators became a thing we thought about, IIRC
-> > Jiri did some experimentation, but I lost track, of using BPF to
-> > synthesize PERF_RECORD_MMAP2 records for pre-existing maps, the layout
-> > as in uapi/linux/perf_event.h:
-> >
-> >         /*
-> >          * The MMAP2 records are an augmented version of MMAP, they add
-> >          * maj, min, ino numbers to be used to uniquely identify each mapping
-> >          *
-> >          * struct {
-> >          *      struct perf_event_header        header;
-> >          *
-> >          *      u32                             pid, tid;
-> >          *      u64                             addr;
-> >          *      u64                             len;
-> >          *      u64                             pgoff;
-> >          *      union {
-> >          *              struct {
-> >          *                      u32             maj;
-> >          *                      u32             min;
-> >          *                      u64             ino;
-> >          *                      u64             ino_generation;
-> >          *              };
-> >          *              struct {
-> >          *                      u8              build_id_size;
-> >          *                      u8              __reserved_1;
-> >          *                      u16             __reserved_2;
-> >          *                      u8              build_id[20];
-> >          *              };
-> >          *      };
-> >          *      u32                             prot, flags;
-> >          *      char                            filename[];
-> >          *      struct sample_id                sample_id;
-> >          * };
-> >          */
-> >         PERF_RECORD_MMAP2                       = 10,
-> >
-> >  *   PERF_RECORD_MISC_MMAP_BUILD_ID      - PERF_RECORD_MMAP2 event
-> >
-> > As perf.data files can be used for many purposes we want them all, so we
-> > setup a meta data perf file descriptor to go on receiving the new mmaps
-> > while we read /proc/<pid>/maps, to reduce the chance of missing maps, do
-> > it in parallel, etc:
-> >
-> > ⬢[acme@toolbox perf-tools-next]$ perf record -h 'event synthesis'
-> >
-> >  Usage: perf record [<options>] [<command>]
-> >     or: perf record [<options>] -- <command> [<options>]
-> >
-> >         --num-thread-synthesize <n>
-> >                           number of threads to run for event synthesis
-> >         --synth <no|all|task|mmap|cgroup>
-> >                           Fine-tune event synthesis: default=all
-> >
-> > ⬢[acme@toolbox perf-tools-next]$
-> >
-> > For this specific initial synthesis of everything the plan, as mentioned
-> > about Jiri's experiments, was to use a BPF iterator to just feed the
-> > perf ring buffer with those events, that way userspace would just
-> > receive the usual records it gets when a new mmap is put in place, the
-> > BPF iterator would just feed the preexisting mmaps, as instructed via
-> > the perf_event_attr for the perf_event_open syscall.
-> >
-> > For people not wanting BPF, i.e. disabling it altogether in perf or
-> > disabling just BPF skels, then we would fallback to the current method,
-> > or to the one being discussed here when it becomes available.
-> >
-> > One thing to have in mind is for this iterator not to generate duplicate
-> > records for non-pre-existing mmaps, i.e. we would need some generation
-> > number that would be bumped when asking for such pre-existing maps
-> > PERF_RECORD_MMAP2 dumps.
-> >
-> > > It will be up to other similar projects to adopt this, but we'll
-> > > definitely get this into blazesym as it is actually a problem for the
-> >
-> > At some point looking at plugging blazesym somehow with perf may be
-> > something to consider, indeed.
-> >
-> > - Arnaldo
-> >
-> > > abovementioned Oculus use case. We already had to make a tradeoff (see
-> > > [2], this wasn't done just because we could, but it was requested by
-> > > Oculus customers) to cache the contents of /proc/<pid>/maps and run
-> > > the risk of missing some shared libraries that can be loaded later. It
-> > > would be great to not have to do this tradeoff, which this new API
-> > > would enable.
-> > >
-> > >   [2] https://github.com/libbpf/blazesym/commit/6b521314126b3ae6f2add43e93234b59fed48ccf
-> > >
-> > > >
-> > > > > ---
-> > > > >  fs/proc/task_mmu.c      | 165 ++++++++++++++++++++++++++++++++++++++++
-> > > > >  include/uapi/linux/fs.h |  32 ++++++++
-> > > > >  2 files changed, 197 insertions(+)
-> > > > >
-> > > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > > > > index 8e503a1635b7..cb7b1ff1a144 100644
-> > > > > --- a/fs/proc/task_mmu.c
-> > > > > +++ b/fs/proc/task_mmu.c
-> > > > > @@ -22,6 +22,7 @@
-> > > > >  #include <linux/pkeys.h>
-> > > > >  #include <linux/minmax.h>
-> > > > >  #include <linux/overflow.h>
-> > > > > +#include <linux/buildid.h>
-> > > > >
-> > > > >  #include <asm/elf.h>
-> > > > >  #include <asm/tlb.h>
-> > > > > @@ -375,11 +376,175 @@ static int pid_maps_open(struct inode *inode, struct file *file)
-> > > > >       return do_maps_open(inode, file, &proc_pid_maps_op);
-> > > > >  }
-> > > > >
-> > > > > +static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
-> > > > > +{
-> > > > > +     struct procfs_procmap_query karg;
-> > > > > +     struct vma_iterator iter;
-> > > > > +     struct vm_area_struct *vma;
-> > > > > +     struct mm_struct *mm;
-> > > > > +     const char *name = NULL;
-> > > > > +     char build_id_buf[BUILD_ID_SIZE_MAX], *name_buf = NULL;
-> > > > > +     __u64 usize;
-> > > > > +     int err;
-> > > > > +
-> > > > > +     if (copy_from_user(&usize, (void __user *)uarg, sizeof(usize)))
-> > > > > +             return -EFAULT;
-> > > > > +     if (usize > PAGE_SIZE)
-> > > >
-> > > > Nice, where did you document that?  And how is that portable given that
-> > > > PAGE_SIZE can be different on different systems?
-> > >
-> > > I'm happy to document everything, can you please help by pointing
-> > > where this documentation has to live?
-> > >
-> > > This is mostly fool-proofing, though, because the user has to pass
-> > > sizeof(struct procfs_procmap_query), which I don't see ever getting
-> > > close to even 4KB (not even saying about 64KB). This is just to
-> > > prevent copy_struct_from_user() below to do too much zero-checking.
-> > >
-> > > >
-> > > > and why aren't you checking the actual structure size instead?  You can
-> > > > easily run off the end here without knowing it.
-> > >
-> > > See copy_struct_from_user(), it does more checks. This is a helper
-> > > designed specifically to deal with use cases like this where kernel
-> > > struct size can change and user space might be newer or older.
-> > > copy_struct_from_user() has a nice documentation describing all these
-> > > nuances.
-> > >
-> > > >
-> > > > > +             return -E2BIG;
-> > > > > +     if (usize < offsetofend(struct procfs_procmap_query, query_addr))
-> > > > > +             return -EINVAL;
-> > > >
-> > > > Ok, so you have two checks?  How can the first one ever fail?
-> > >
-> > > Hmm.. If usize = 8, copy_from_user() won't fail, usize > PAGE_SIZE
-> > > won't fail, but this one will fail.
-> > >
-> > > The point of this check is that user has to specify at least first
-> > > three fields of procfs_procmap_query (size, query_flags, and
-> > > query_addr), because without those the query is meaningless.
-> > > >
-> > > >
-> > > > > +     err = copy_struct_from_user(&karg, sizeof(karg), uarg, usize);
-> > >
-> > > and this helper does more checks validating that the user either has a
-> > > shorter struct (and then zero-fills the rest of kernel-side struct) or
-> > > has longer (and then the longer part has to be zero filled). Do check
-> > > copy_struct_from_user() documentation, it's great.
-> > >
-> > > > > +     if (err)
-> > > > > +             return err;
-> > > > > +
-> > > > > +     if (karg.query_flags & ~PROCFS_PROCMAP_EXACT_OR_NEXT_VMA)
-> > > > > +             return -EINVAL;
-> > > > > +     if (!!karg.vma_name_size != !!karg.vma_name_addr)
-> > > > > +             return -EINVAL;
-> > > > > +     if (!!karg.build_id_size != !!karg.build_id_addr)
-> > > > > +             return -EINVAL;
-> > > >
-> > > > So you want values to be set, right?
-> > >
-> > > Either both should be set, or neither. It's ok for both size/addr
-> > > fields to be zero, in which case it indicates that the user doesn't
-> > > want this part of information (which is usually a bit more expensive
-> > > to get and might not be necessary for all the cases).
-> > >
-> > > >
-> > > > > +
-> > > > > +     mm = priv->mm;
-> > > > > +     if (!mm || !mmget_not_zero(mm))
-> > > > > +             return -ESRCH;
-> > > >
-> > > > What is this error for?  Where is this documentned?
-> > >
-> > > I copied it from existing /proc/<pid>/maps checks. I presume it's
-> > > guarding the case when mm might be already put. So if the process is
-> > > gone, but we have /proc/<pid>/maps file open?
-> > >
-> > > >
-> > > > > +     if (mmap_read_lock_killable(mm)) {
-> > > > > +             mmput(mm);
-> > > > > +             return -EINTR;
-> > > > > +     }
-> > > > > +
-> > > > > +     vma_iter_init(&iter, mm, karg.query_addr);
-> > > > > +     vma = vma_next(&iter);
-> > > > > +     if (!vma) {
-> > > > > +             err = -ENOENT;
-> > > > > +             goto out;
-> > > > > +     }
-> > > > > +     /* user wants covering VMA, not the closest next one */
-> > > > > +     if (!(karg.query_flags & PROCFS_PROCMAP_EXACT_OR_NEXT_VMA) &&
-> > > > > +         vma->vm_start > karg.query_addr) {
-> > > > > +             err = -ENOENT;
-> > > > > +             goto out;
-> > > > > +     }
-> > > > > +
-> > > > > +     karg.vma_start = vma->vm_start;
-> > > > > +     karg.vma_end = vma->vm_end;
-> > > > > +
-> > > > > +     if (vma->vm_file) {
-> > > > > +             const struct inode *inode = file_user_inode(vma->vm_file);
-> > > > > +
-> > > > > +             karg.vma_offset = ((__u64)vma->vm_pgoff) << PAGE_SHIFT;
-> > > > > +             karg.dev_major = MAJOR(inode->i_sb->s_dev);
-> > > > > +             karg.dev_minor = MINOR(inode->i_sb->s_dev);
-> > > >
-> > > > So the major/minor is that of the file superblock?  Why?
-> > >
-> > > Because inode number is unique only within given super block (and even
-> > > then it's more complicated, e.g., btrfs subvolumes add more headaches,
-> > > I believe). inode + dev maj/min is sometimes used for cache/reuse of
-> > > per-binary information (e.g., pre-processed DWARF information, which
-> > > is *very* expensive, so anything that allows to avoid doing this is
-> > > helpful).
-> > >
-> > > >
-> > > > > +             karg.inode = inode->i_ino;
-> > > >
-> > > > What is userspace going to do with this?
-> > > >
-> > >
-> > > See above.
-> > >
-> > > > > +     } else {
-> > > > > +             karg.vma_offset = 0;
-> > > > > +             karg.dev_major = 0;
-> > > > > +             karg.dev_minor = 0;
-> > > > > +             karg.inode = 0;
-> > > >
-> > > > Why not set everything to 0 up above at the beginning so you never miss
-> > > > anything, and you don't miss any holes accidentally in the future.
-> > > >
-> > >
-> > > Stylistic preference, I find this more explicit, but I don't care much
-> > > one way or another.
-> > >
-> > > > > +     }
-> > > > > +
-> > > > > +     karg.vma_flags = 0;
-> > > > > +     if (vma->vm_flags & VM_READ)
-> > > > > +             karg.vma_flags |= PROCFS_PROCMAP_VMA_READABLE;
-> > > > > +     if (vma->vm_flags & VM_WRITE)
-> > > > > +             karg.vma_flags |= PROCFS_PROCMAP_VMA_WRITABLE;
-> > > > > +     if (vma->vm_flags & VM_EXEC)
-> > > > > +             karg.vma_flags |= PROCFS_PROCMAP_VMA_EXECUTABLE;
-> > > > > +     if (vma->vm_flags & VM_MAYSHARE)
-> > > > > +             karg.vma_flags |= PROCFS_PROCMAP_VMA_SHARED;
-> > > > > +
-> > >
-> > > [...]
-> > >
-> > > > > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> > > > > index 45e4e64fd664..fe8924a8d916 100644
-> > > > > --- a/include/uapi/linux/fs.h
-> > > > > +++ b/include/uapi/linux/fs.h
-> > > > > @@ -393,4 +393,36 @@ struct pm_scan_arg {
-> > > > >       __u64 return_mask;
-> > > > >  };
-> > > > >
-> > > > > +/* /proc/<pid>/maps ioctl */
-> > > > > +#define PROCFS_IOCTL_MAGIC 0x9f
-> > > >
-> > > > Don't you need to document this in the proper place?
-> > >
-> > > I probably do, but I'm asking for help in knowing where. procfs is not
-> > > a typical area of kernel I'm working with, so any pointers are highly
-> > > appreciated.
-> > >
-> > > >
-> > > > > +#define PROCFS_PROCMAP_QUERY _IOWR(PROCFS_IOCTL_MAGIC, 1, struct procfs_procmap_query)
-> > > > > +
-> > > > > +enum procmap_query_flags {
-> > > > > +     PROCFS_PROCMAP_EXACT_OR_NEXT_VMA = 0x01,
-> > > > > +};
-> > > > > +
-> > > > > +enum procmap_vma_flags {
-> > > > > +     PROCFS_PROCMAP_VMA_READABLE = 0x01,
-> > > > > +     PROCFS_PROCMAP_VMA_WRITABLE = 0x02,
-> > > > > +     PROCFS_PROCMAP_VMA_EXECUTABLE = 0x04,
-> > > > > +     PROCFS_PROCMAP_VMA_SHARED = 0x08,
-> > > >
-> > > > Are these bits?  If so, please use the bit macro for it to make it
-> > > > obvious.
-> > > >
-> > >
-> > > Yes, they are. When I tried BIT(1), it didn't compile. I chose not to
-> > > add any extra #includes to this UAPI header, but I can figure out the
-> > > necessary dependency and do BIT(), I just didn't feel like BIT() adds
-> > > much here, tbh.
-> > >
-> > > > > +};
-> > > > > +
-> > > > > +struct procfs_procmap_query {
-> > > > > +     __u64 size;
-> > > > > +     __u64 query_flags;              /* in */
-> > > >
-> > > > Does this map to the procmap_vma_flags enum?  if so, please say so.
-> > >
-> > > no, procmap_query_flags, and yes, I will
-> > >
-> > > >
-> > > > > +     __u64 query_addr;               /* in */
-> > > > > +     __u64 vma_start;                /* out */
-> > > > > +     __u64 vma_end;                  /* out */
-> > > > > +     __u64 vma_flags;                /* out */
-> > > > > +     __u64 vma_offset;               /* out */
-> > > > > +     __u64 inode;                    /* out */
-> > > >
-> > > > What is the inode for, you have an inode for the file already, why give
-> > > > it another one?
-> > >
-> > > This is inode of vma's backing file, same as /proc/<pid>/maps' file
-> > > column. What inode of file do I already have here? You mean of
-> > > /proc/<pid>/maps itself? It's useless for the intended purposes.
-> > >
-> > > >
-> > > > > +     __u32 dev_major;                /* out */
-> > > > > +     __u32 dev_minor;                /* out */
-> > > >
-> > > > What is major/minor for?
-> > >
-> > > This is the same information as emitted by /proc/<pid>/maps,
-> > > identifies superblock of vma's backing file. As I mentioned above, it
-> > > can be used for caching per-file (i.e., per-ELF binary) information
-> > > (for example).
-> > >
-> > > >
-> > > > > +     __u32 vma_name_size;            /* in/out */
-> > > > > +     __u32 build_id_size;            /* in/out */
-> > > > > +     __u64 vma_name_addr;            /* in */
-> > > > > +     __u64 build_id_addr;            /* in */
-> > > >
-> > > > Why not document this all using kerneldoc above the structure?
-> > >
-> > > Yes, sorry, I slacked a bit on adding this upfront. I knew we'll be
-> > > figuring out the best place and approach, and so wanted to avoid
-> > > documentation churn.
-> > >
-> > > Would something like what we have for pm_scan_arg and pagemap APIs
-> > > work? I see it added a few simple descriptions for pm_scan_arg struct,
-> > > and there is Documentation/admin-guide/mm/pagemap.rst. Should I add
-> > > Documentation/admin-guide/mm/procmap.rst (admin-guide part feels off,
-> > > though)? Anyways, I'm hoping for pointers where all this should be
-> > > documented. Thank you!
-> > >
-> > > >
-> > > > anyway, I don't like ioctls, but there is a place for them, you just
-> > > > have to actually justify the use for them and not say "not efficient
-> > > > enough" as that normally isn't an issue overall.
-> > >
-> > > I've written a demo tool in patch #5 which performs real-world task:
-> > > mapping addresses to their VMAs (specifically calculating file offset,
-> > > finding vma_start + vma_end range to further access files from
-> > > /proc/<pid>/map_files/<start>-<end>). I did the implementation
-> > > faithfully, doing it in the most optimal way for both APIs. I showed
-> > > that for "typical" (it's hard to specify what typical is, of course,
-> > > too many variables) scenario (it was data collected on a real server
-> > > running real service, 30 seconds of process-specific stack traces were
-> > > captured, if I remember correctly). I showed that doing exactly the
-> > > same amount of work is ~35x times slower with /proc/<pid>/maps.
-> > >
-> > > Take another process, another set of addresses, another anything, and
-> > > the numbers will be different, but I think it gives the right idea.
-> > >
-> > > But I think we are overpivoting on text vs binary distinction here.
-> > > It's the more targeted querying of VMAs that's beneficial here. This
-> > > allows applications to not cache anything and just re-query when doing
-> > > periodic or continuous profiling (where addresses are coming in not as
-> > > one batch, as a sequence of batches extended in time).
-> > >
-> > > /proc/<pid>/maps, for all its usefulness, just can't provide this sort
-> > > of ability, as it wasn't designed to do that and is targeting
-> > > different use cases.
-> > >
-> > > And then, a new ability to request reliable (it's not 100% reliable
-> > > today, I'm going to address that as a follow up) build ID is *crucial*
-> > > for some scenarios. The mentioned Oculus use case, the need to fully
-> > > access underlying ELF binary just to get build ID is frowned upon. And
-> > > for a good reason. Profiler only needs build ID, which is no secret
-> > > and not sensitive information. This new (and binary, yes) API allows
-> > > to add this into an API without breaking any backwards compatibility.
-> > >
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> >
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 4013408ce012..7d638ce76799 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -916,15 +916,11 @@ void rb_free(struct perf_buffer *rb)
+>   struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>   {
+>   	struct perf_buffer *rb;
+> -	unsigned long size;
+>   	void *all_buf;
+>   	int node;
+>   
+> -	size = sizeof(struct perf_buffer);
+> -	size += sizeof(void *);
+> -
+>   	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+> -	rb = kzalloc_node(size, GFP_KERNEL, node);
+> +	rb = kzalloc_node(struct_size(rb, nr_pages, 1), GFP_KERNEL, node);
+>   	if (!rb)
+>   		goto fail;
+>   
+> @@ -935,9 +931,9 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>   		goto fail_all_buf;
+>   
+>   	rb->user_page = all_buf;
+> -	rb->data_pages[0] = all_buf + PAGE_SIZE;
+>   	if (nr_pages) {
+>   		rb->nr_pages = 1;
+> +		rb->data_pages[0] = all_buf + PAGE_SIZE;
+>   		rb->page_order = ilog2(nr_pages);
+>   	}
+
+This is also what make the most sense to me.
+
+CJ
+
+>   
+> 
+> 
+> Also, why does rb_alloc() take an "int" nr_pages? The only caller has an
+> unsigned long argument for nr_pages. Nothing checks for >INT_MAX that I
+> can find.
+> 
+
