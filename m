@@ -1,126 +1,111 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D26745D9
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 17:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08851586FE
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 17:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715016433; cv=none; b=JDB2QlsnOSOVAgtp+rT/Hup53+6unM9uu2gZx9aCLPMk8pofma249PsQMrw24Vjd/ZIP30trzc93l8zvAWGHgDOXxC3gOrx/jj/PAIXjYgOVZPNRZOnVds+gDfbWBZhm/MYdIslc7Dvovrq3PO+t1vwlOW/cg6E8aGWb09Y/WFQ=
+	t=1715017449; cv=none; b=esh7qliUrZSe1OnzWao+tUSrxJaeABHy392Okk9DQTWZL3e2YKCTb1k24R6YXdfBWVhw79ux5mfbNJ4J6XGf10wTi1bmlsVhnJDY/fKEwsmWnlTuPFNnHt6oXuPY0gK7QOp/t/+9MYo10YtUVtf1W16YhP7S1AEZundkOAm2pvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715016433; c=relaxed/simple;
-	bh=1Gz+ZMUxvzU8tbk2S61iJbkhzNgB92CniBSM5tVjyCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FVHy6oSKmkCkC1etHZNm+ST9x+qvtfgy+trxgJC9vpl4mnUSzyBmSkk4dMplURrLf/c0dz7WasIEnMEISm9dkA9VbHM3YlJqDMiPZNBMSaiLgqeS563XXcWY5ibk7jqmRPix+51vcegxqXmq42tAo7nfBQzxd819N4xBj2t63i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NMcDwJAI; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NMcDwJAI"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a59b178b75bso342542966b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 10:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715016430; x=1715621230; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=si93Y3nf4li8Vv75gH4hoc/QXj4YJDQ0lpKJdmZfJPY=;
-        b=NMcDwJAIgL/7pFN7DRqlzs4c1zKhj9Nfyfs7eX8oJO4xLTkIs05tf1NmIdL37WOGGW
-         uOH2WUzrrmYrecHsJ2wp7iXEbAPNZ1nQRlh5lRzYNHkPmfzIVrL8AVa6xDuuoCTjr2xc
-         3lJ93aBGRL4riv/KnMGTCRwViuUFWYZEAenOQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715016430; x=1715621230;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=si93Y3nf4li8Vv75gH4hoc/QXj4YJDQ0lpKJdmZfJPY=;
-        b=We/cfMQsY8CZjskjw2ZRUjbXyv605v1nT0y4i9jQZqpcf88EOKJ8GpB4rFsMaFRE5g
-         ZFJIfEwZ7bti7vS22jIlp/qdGnWAuUeLEkF00IZbIVEoNN1OCWa3arM7GapnC/FJiocW
-         HfEQaDImPcr5ee0MzkTForBmZ90OVdaUURrilCY3+OjaovMGrGdaZCYArTuQmOnQmSwD
-         5n7jFILRNK3m+k+gEkgr+0SxzgT7APrjB85wzBFLhcPFEpw3hWGjL2cobanVzztCo15z
-         4BK2mZZ1DsmFsp3EFyjf+3GM7u8oKtkabgWekVjtatIEOtRwB7sVVbuJs/4fbuR72eQ7
-         VkNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMoieqRFgEWE8aHquJ3GMHAn+z9lecUKsnoEQTxd4qAcNlZh+l0rvNypQdhoNMHkyFiU53n7t7C2vDgyBL3ckqpra4/L/i0YhWJtUZpd8pcg==
-X-Gm-Message-State: AOJu0YxqObnWdJGldrPeB+CuE0vkhm6F/chBbgrX6mIlAvgRmZhR//in
-	c0MqmgRhNK2Pa35xIlcdiHkLb5VMFMVAaxIahzlKOL1V7TlP8NJdV2Iw/Bk7VxUhWoSxqaqYyu0
-	Fp+iQtw==
-X-Google-Smtp-Source: AGHT+IGm8lbyWIGLK3md/LHQxYFtBU+yLZ6AFrCZwS/ck17hemoQmhVPGG3HAQv9FwFPhpGV9hd4zg==
-X-Received: by 2002:a17:907:7da6:b0:a59:ad15:6142 with SMTP id oz38-20020a1709077da600b00a59ad156142mr3914473ejc.77.1715016429726;
-        Mon, 06 May 2024 10:27:09 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id p25-20020a170906141900b00a55a5384986sm5453867ejc.24.2024.05.06.10.27.09
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 May 2024 10:27:09 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a599af16934so534075466b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 10:27:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXpmDHadHa+BFw9XCIDmvgGPuOpy4aAFpKiwKAWeIR3F1UzaP0IdSCJ2ZQsOBRNNea/ueCu0QagOcE+dWXm7AnD7A0Ov+S25MB6ZrsVXKesqg==
-X-Received: by 2002:a17:906:a159:b0:a58:e71d:d74 with SMTP id
- bu25-20020a170906a15900b00a58e71d0d74mr6566938ejb.13.1715016428860; Mon, 06
- May 2024 10:27:08 -0700 (PDT)
+	s=arc-20240116; t=1715017449; c=relaxed/simple;
+	bh=DqvtSvSi9hL1HjeZyF4VwrETVocwep7qyKq3r+NxR7s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=TVFgb1VVXO/Ob5GuINd343H/HKHXeX+J7YpOkYZWFj0wknN/ThyvclGuqkWz8EwuhwmL/Lpp+F04OA5lO66r8KgDbxv++lXjALIxFJ53UygphiEsz3TEHtYnOZTVf4YwMRiElQwRuA1Zra48RxFYTYeYY/C+2y9adFvQHXRYIoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-243-ZRA8JIPMOF-s-LGbncw-7g-1; Mon, 06 May 2024 18:44:04 +0100
+X-MC-Unique: ZRA8JIPMOF-s-LGbncw-7g-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 May
+ 2024 18:43:25 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 6 May 2024 18:43:25 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>
+CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3CAAVRfAIABXupwgAADIICAABjykA==
+Date: Mon, 6 May 2024 17:43:25 +0000
+Message-ID: <bd71228e767a4d589afe8fbda957b74f@AcuMS.aculab.com>
+References: <Zi57-TMgU19puaQM@octinomon.home>
+ <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+ <ZjPApuDc0gL9Pchm@octinomon.home>
+ <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+ <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+ <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
+ <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
+ <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
+ <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
+In-Reply-To: <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zi57-TMgU19puaQM@octinomon.home> <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home> <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
- <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
- <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com> <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
- <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com> <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
-In-Reply-To: <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 6 May 2024 10:26:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
-Message-ID: <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-To: David Laight <David.Laight@aculab.com>
-Cc: Jules Bashizi Irenge <jbi.octave@gmail.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Mon, 6 May 2024 at 09:45, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So we probably _should_ have made "do_div()" be a "64-by-long" divide.
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDYgTWF5IDIwMjQgMTc6NDYNCj4gDQo+IE9u
+IE1vbiwgNiBNYXkgMjAyNCBhdCAwOTo0MCwgRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
+bGFiLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gV2UgZG9uICd0IGRvIHN0dXBpZCB0aGluZ3Mg
+aW4gdGhlIGtlcm5lbC4gV2UgYmFzaWNhbGx5IG5ldmVyIG5lZWQgdGhlDQo+ID4gPiA2NC1ieS02
+NCBkaXZpZGUuDQo+ID4NCj4gPiBUaGVyZSBhcmUgMzgxIHJlZmVyZW5jZXMgdG8gZGl2NjRfdTY0
+KCkgc29tZSBvZiB0aGVtIGFyZSBqdXN0IHBsYWluIHN0dXBpZC4NCj4gPiBDb25zdGFudCBkaXZp
+c29ycyBvZiAxMDAgYW5kIDEwMDAgYW5kIGRpdjY0X3U2NCh4X25zICogMTAwLCB5X3VzICogMTAw
+MCkuDQo+IA0KPiBTYWRseSwgc29tZSBwZW9wZWwgd2lsbCBnZXQgdGhlIGNvbXBpbGUgZXJyb3Ig
+Zm9yICJ5b3UgY2FuJ3QgZG8gdGhhdCINCj4gYmVjYXVzZSB0aGV5IGRpZCBhIHJlZ3VsYXIgImEg
+PSBiIC8gYyIgYW5kIGdjYyBjcmVhdGVkIGEgbWVzcywgYW5kDQo+IHRoZW4gdGhleSBtaW5kbGVz
+c2x5IGp1c3QgcmVwbGFjZSBpdCB3aXRoIGRpdjY0X3U2NCIuDQoNCkEgYml0IGxpa2UgdGhlIG1p
+bmRsZXNzIG1pbl90KCkgLSBub3QgaGFyZCB0byBmaW5kOg0KCWxlbiA9IG1pbl90KHVuc2lnbmVk
+IGludCwgbGVuLCBzaXplb2YgKGludCkpOw0KCWlmIChsZW4gPCAwKQ0KCQlyZXR1cm4gLUVSQU5H
+RTsNCg0KPiA+IEJ1dCBzb21lb25lIHdyb3RlIGEgc2NyaXB0IHRoYXQgY29tcGxhaW5zIHRoYXQg
+aXMgYSBmdWxsIDY0Yml0IGRpdmlkZQ0KPiA+IG9uIDY0Yml0IHN5c3RlbXMgLSBzbyBzdWdnZXN0
+cyBkaXY2NF91NjQoKS4NCj4gDQo+IFllYWgsIHRoYXQncyB3ZWxsLWludGVudGlvbmVkLCBidXQg
+aXQgc2NyZXdzIHVwLg0KDQpUaGUgc3VnZ2VzdGlvbiBzaG91bGQgYmUgdG8gZG91YmxlIGNoZWNr
+IHRoZSBkb21haW4gb2YgdGhlIGRpdmlzb3IsDQphbmQgdGhlbiBjaGFuZ2UgdGhlIHR5cGUgdG8g
+dTMyLg0KDQo+IFRoZSByZWFzb24gaXMgdGhhdCAiZG9fZGl2KCkiIF9hbHdheXNfIGRvZXMgYSA2
+NC1ieS0zMiBkaXZpZGUsIGFuZA0KPiB0aGVuIGlmIHlvdSBoYXZlIGEgZGl2aXNvciB0aGF0IGlz
+ICJsb25nIiAod2hpY2ggaXMgaW5kZWVkIDMyIGJpdCBvbg0KPiAzMi1iaXQgYXJjaGl0ZWN0dXJl
+cyksIG5vdyBvbiA2NC1iaXQgYXJjaGl0ZWN0dXJlcyBpdCB0cnVuY2F0ZXMgd2hhdA0KPiBjYW4g
+YmUgYSA2NC1iaXQgdmFsdWUuDQo+IA0KPiBTbyB3ZSBwcm9iYWJseSBfc2hvdWxkXyBoYXZlIG1h
+ZGUgImRvX2RpdigpIiBiZSBhICI2NC1ieS1sb25nIiBkaXZpZGUuDQoNCk9yIGdvdCB0aHJvdWdo
+IHRoZSBrZXJuZWwgYW5kIGNoYW5nZSBsb3RzIG9mIHRoZSAnbG9uZycgdG8gJ3UzMicgOi0pDQpJ
+J20gc3VyZSBhIGxvdCBhcmUgdGhlcmUgYmVjYXVzZSBwZW9wbGUgd2VyZSBzY2FyZWQgaW50IG1p
+Z2h0IGJlIDE2Yml0Lg0KUGVyaGFwcyBNJCBnb3QgaXQgcmlnaHQgYnkgbGVhdmluZyAnbG9uZycg
+YXMgMzJiaXQgOi0pDQpCdXQgcmVhbGx5IHdoYXQgd2FzIHRoZSBsYXN0IDE2Yml0IFVuaXg/DQpJ
+IG5ldmVyIHVzZWQgSUNMJ3MgMjg2IHVuaXggcG9ydCAtIHRoYXQgbWlnaHQgaGF2ZSBiZWVuIDE2
+Yml0Lg0KQWxsIHRoZSAzODYgb25lcyB3ZXJlIDMyYml0LCBhcyB3YXMgdGhlIFZBWCAobmV2ZXIg
+dXNlZCBvbmUpLg0KU28gd2UncmUgbG9va2luZyBhdCAxOTcwJ3Mgc3lzdGVtcyBsaWtlIHRoZSBB
+VCZUIDNCMiBhbmQgREVDIHBkcC0xMS4NCkNlcnRhaW5seSBmYXIgYmVmb3JlIHlvdSdkIGV2ZW4g
+dGhvdWdoIG9mIExpbnV4Lg0KDQo+IE9uIGFjdHVhbCA2NC1iaXQgYXJjaGl0ZWN0dXJlcywgZG9p
+bmcgYSA2NC1idGkgZGl2aWRlIGlzIHR5cGljYWxseQ0KPiBmaW5lIChJIGNhbiBpbWFnaW5lIHNv
+bWUgYnJva2VuIGNhc2VzLCBidXQgbm90IGVub3VnaCB0byBjYXJlKS4NCg0KV2VsbCBJbnRlbCB4
+ODYgYWx3YXlzIHRha2UgdHdpY2UgYXMgbG9uZyBmb3IgdGhlIGZ1bGwgMTI4IGJ5IDY0IGRpdmlk
+ZQ0KdGhhbiB0aGUgNjQgYnkgMzIgb25lIChhbWQgaXMgdGhlIHNhbWUgc3BlZWQgaWYgdGhlIHZh
+bHVlcyBmaXQpLg0KU28gc2VsZWN0aW5nIGJldHdlZW4gdGhlIHR3byBkaXZpZGVzIG1heSBtYWtl
+IHNlbnNlLg0KT1RPSCB5b3UgcHJvYmFibHkgZG9uJ3Qgd2FudCB0byBzcGVjdWxhdGl2ZWx5IGV4
+ZWN1dGUgdGhlIHdyb25nIGRpdmlkZSEgDQoNCj4gVGhlIHdob2xlIHByb2JsZW0gaXMgYmVjYXVz
+ZSBvZiAzMi1iaXQgYXJjaGl0ZWN0dXJlcy4NCg0KSW5kZWVkLg0KQm90aCB4ODYgYW5kIG02OGsg
+aGF2ZSBhIDY0IGJ5IDMyIGRpdmlkZS4gSSdtIG5vdCB3aGV0aGVyIGFueSBvdGhlciBkby4NCk5p
+b3MtSUkgd29udCAoaXQgbWF5IG5vdCBldmVuIGhhdmUgZGl2aWRlKSwgcHJvYmFibHkgYWxsIE1J
+UFMgZGVyaXZhdGl2ZXMNCmFyZSB0aGUgc2FtZSAoaW5jbHVkaW5nIFJJU0MtVikuDQpUaGUgc3Vn
+Z2VzdGVkIGRpdmlkZSBmdW5jdGlvbiBpbiBteSBzcGFyYy0zMiBib29rIGlzIHNldmVyYWwgcGFn
+ZXMgbG9uZy4NCihRdWl0ZSB3aGF0IGRvZXMgdGhlIHRvIEktY2FjaGUgaXMgYW55LWJvZGllcyBn
+dWVzcy4pDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
+ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
+dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Actually, some of those conversions are just wrong and stupid, and
-didn't have 'long' divisors at all.
-
-And we do have "div64_ul()", although it's not used as widely as it could be.
-
-But I think we can do the reverse, and just teach "div64_u64()" to do
-what gcc should always have done, and look at the divisor range at
-compile-time.
-
-Something like this, perhaps:
-
-  /*
-   * Do a 64-by-64 divide using div64_ul / div64_long / div64_u64
-   * depending on type of divisor.
-   */
-  #define div64_u64_type(a,b) _Generic((b),     \
-        unsigned long: div64_ul(a,b),           \
-        long: div64_long(a,b),                  \
-        int: div64_long(a,b),                   \
-        default: div64_u64(a,b))
-
-  /* Is it zero without evaluating it? */
-  #define is_constant_zero(x) \
-        (__builtin_constant_p(x) && !(x))
-
-  /* This catches constants and compile-time ranges */
-  #define is_32_bit(x) \
-        is_constant_zero((x)>>16>>16)
-
-  /*
-   * Pick the right division helper based on
-   * value or type of the divisor
-   */
-  #define div64_u64(a,b) \
-        (is_32_bit(b) ? do_div64(a,b) : div64_u64_type(a,b))
-
-should now make div64_u64() do the right thing and avoid the 64-bit
-divide for relevant types (the signed type case makes it a bit less
-obvious, but whatever).
-
-               Linus
