@@ -1,111 +1,108 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08851586FE
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 17:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D081E157493
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 18:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715017449; cv=none; b=esh7qliUrZSe1OnzWao+tUSrxJaeABHy392Okk9DQTWZL3e2YKCTb1k24R6YXdfBWVhw79ux5mfbNJ4J6XGf10wTi1bmlsVhnJDY/fKEwsmWnlTuPFNnHt6oXuPY0gK7QOp/t/+9MYo10YtUVtf1W16YhP7S1AEZundkOAm2pvk=
+	t=1715018513; cv=none; b=McRQVw5gWbAuuu3PsxW+0GGxtq+ZM8Cm4WRhVs9jearklLqtRFvjJdecd67eqBu9nM5L2jw1niiNu7B3rS5Ftv/W40et7uLQnjDgzr2uj4C2SRvO11MOlO66Y9p1IHc1azGbjzsEjToznFBEK+ALY/DyoBtBHaKSjj4Yl6MTjyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715017449; c=relaxed/simple;
-	bh=DqvtSvSi9hL1HjeZyF4VwrETVocwep7qyKq3r+NxR7s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=TVFgb1VVXO/Ob5GuINd343H/HKHXeX+J7YpOkYZWFj0wknN/ThyvclGuqkWz8EwuhwmL/Lpp+F04OA5lO66r8KgDbxv++lXjALIxFJ53UygphiEsz3TEHtYnOZTVf4YwMRiElQwRuA1Zra48RxFYTYeYY/C+2y9adFvQHXRYIoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-243-ZRA8JIPMOF-s-LGbncw-7g-1; Mon, 06 May 2024 18:44:04 +0100
-X-MC-Unique: ZRA8JIPMOF-s-LGbncw-7g-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 May
- 2024 18:43:25 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 6 May 2024 18:43:25 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>
-CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3CAAVRfAIABXupwgAADIICAABjykA==
-Date: Mon, 6 May 2024 17:43:25 +0000
-Message-ID: <bd71228e767a4d589afe8fbda957b74f@AcuMS.aculab.com>
-References: <Zi57-TMgU19puaQM@octinomon.home>
- <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home>
- <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
- <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
- <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
- <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
- <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
- <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
-In-Reply-To: <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1715018513; c=relaxed/simple;
+	bh=j8Z7oAr4T/RVK6j3SDFulgi4NDpLrg8sogiffRXB6e4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=otdBJ+ajTTX9i9Enn8MPSPaRGCqj3eaoYH7PvcHPdpC8krp5m9NcLkpmpu8b0bx7Daw47r9YoOdSniSuQnRgX27Pcww0+ilItzATwiBiq9DlCs/h/TvGnsxXHd9XuNMiARD8ICoIuHxfBUUsJMM9gemaX71B5VIrvfzSaIzYK44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GYzbgBq0; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GYzbgBq0"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61bd64c9eadso41180977b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 11:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715018511; x=1715623311; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Hckve5lNnoWU91k19E5DrtO6+aB3SdYV2ufG0b9QIiw=;
+        b=GYzbgBq0CUh7mv00eV/hN0y1zvwgUiP/COI4VIZG8ZwEMLniCT6zksTNohOXptQ5cT
+         wfzc1QAlUozr0vmq2yZJ/0+gSVkosniVBbLSRJhUSuhl9ZSVLMnpBjJkRvp7WQn3ZZgD
+         lSiqiZVgeSTL1Y49xXCFq+/5YJg3BY64Ar9PAjuBdr0gcP3HNTc5NKDiwJlZ0r6qbLE8
+         BnMC0fulkneRyNqE62tHwHEA5vlzhyRYLQ252a4zFKO3faBj6cAXnLYqr5ssGa5N6lVo
+         obvRvQnLnOIbXgucgLF96zTHmpDYcBJS6BVUEzomPy4i/mSCDOeeEcrRsYMzm/oKQFo/
+         yXRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715018511; x=1715623311;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hckve5lNnoWU91k19E5DrtO6+aB3SdYV2ufG0b9QIiw=;
+        b=YjCfxDa+nuGCrHXsS1bPCGdIBqJ5B94psEUH1cT1aFwywAaN6JxKDqvz6yZlyqFH0G
+         Hc+g/eajtMVtGIDGRicDerVvfB4ovfTbqwWisnppx7Y4SwwFjF1sAmvE0nAA5DvTLuQE
+         tVyzQwo57ZCUKmCzBXhOX/gbosPsrbefA3qccFsog76zA8Fn/DmsUdmG86iZk7ufYZjV
+         RmXiTpFFlDYLzw9tKMoexfV1f1GGx8qjVp/dLRTvVZvf7IqlNNjQGZLp2CbF2OoI2JhB
+         rnZWqERF3Cl80rPWVqWkI+gmYu7koz5fsfwyQNDgzSct2q3EI1gq2Czje1fk5FwHxJ0a
+         pPmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHgZyR3kD2sVNa2y9IFp6rY1LvHRTvalsZefBD/bOWSb5lUBo8/xiXuvFgPQ/4OPQB7Qb4cbcr5CfPa5EukLtNhzBjm0T2wkkZc/f9KCINkw==
+X-Gm-Message-State: AOJu0YwIdzBdpgRIRv2dx8y3qWCN6UotIruz4WMtMvjjCq+tcykcVnNx
+	55ImQNirbjAN33YvJvyynCq0ecWP9jN/IshZ4EYNsa6EqahuQvakLKYZL5JrlYEFJiXTspCHwOi
+	svk9Oiw==
+X-Google-Smtp-Source: AGHT+IG3NCkA5GcJ1BRwj4DJ3132qCOi6Yk8/px2hKYaoO10eMAK/YabhDsirkl8KleNCntIW7iZiy7P1DE4
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:91df:9b7f:c8d8:409a])
+ (user=irogers job=sendgmr) by 2002:a81:498d:0:b0:61d:3304:c25e with SMTP id
+ w135-20020a81498d000000b0061d3304c25emr2878746ywa.7.1715018510893; Mon, 06
+ May 2024 11:01:50 -0700 (PDT)
+Date: Mon,  6 May 2024 11:01:00 -0700
+Message-Id: <20240506180104.485674-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v7 0/4] dso/dsos memory savings and clean up
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Changbin Du <changbin.du@huawei.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDYgTWF5IDIwMjQgMTc6NDYNCj4gDQo+IE9u
-IE1vbiwgNiBNYXkgMjAyNCBhdCAwOTo0MCwgRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
-bGFiLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gV2UgZG9uICd0IGRvIHN0dXBpZCB0aGluZ3Mg
-aW4gdGhlIGtlcm5lbC4gV2UgYmFzaWNhbGx5IG5ldmVyIG5lZWQgdGhlDQo+ID4gPiA2NC1ieS02
-NCBkaXZpZGUuDQo+ID4NCj4gPiBUaGVyZSBhcmUgMzgxIHJlZmVyZW5jZXMgdG8gZGl2NjRfdTY0
-KCkgc29tZSBvZiB0aGVtIGFyZSBqdXN0IHBsYWluIHN0dXBpZC4NCj4gPiBDb25zdGFudCBkaXZp
-c29ycyBvZiAxMDAgYW5kIDEwMDAgYW5kIGRpdjY0X3U2NCh4X25zICogMTAwLCB5X3VzICogMTAw
-MCkuDQo+IA0KPiBTYWRseSwgc29tZSBwZW9wZWwgd2lsbCBnZXQgdGhlIGNvbXBpbGUgZXJyb3Ig
-Zm9yICJ5b3UgY2FuJ3QgZG8gdGhhdCINCj4gYmVjYXVzZSB0aGV5IGRpZCBhIHJlZ3VsYXIgImEg
-PSBiIC8gYyIgYW5kIGdjYyBjcmVhdGVkIGEgbWVzcywgYW5kDQo+IHRoZW4gdGhleSBtaW5kbGVz
-c2x5IGp1c3QgcmVwbGFjZSBpdCB3aXRoIGRpdjY0X3U2NCIuDQoNCkEgYml0IGxpa2UgdGhlIG1p
-bmRsZXNzIG1pbl90KCkgLSBub3QgaGFyZCB0byBmaW5kOg0KCWxlbiA9IG1pbl90KHVuc2lnbmVk
-IGludCwgbGVuLCBzaXplb2YgKGludCkpOw0KCWlmIChsZW4gPCAwKQ0KCQlyZXR1cm4gLUVSQU5H
-RTsNCg0KPiA+IEJ1dCBzb21lb25lIHdyb3RlIGEgc2NyaXB0IHRoYXQgY29tcGxhaW5zIHRoYXQg
-aXMgYSBmdWxsIDY0Yml0IGRpdmlkZQ0KPiA+IG9uIDY0Yml0IHN5c3RlbXMgLSBzbyBzdWdnZXN0
-cyBkaXY2NF91NjQoKS4NCj4gDQo+IFllYWgsIHRoYXQncyB3ZWxsLWludGVudGlvbmVkLCBidXQg
-aXQgc2NyZXdzIHVwLg0KDQpUaGUgc3VnZ2VzdGlvbiBzaG91bGQgYmUgdG8gZG91YmxlIGNoZWNr
-IHRoZSBkb21haW4gb2YgdGhlIGRpdmlzb3IsDQphbmQgdGhlbiBjaGFuZ2UgdGhlIHR5cGUgdG8g
-dTMyLg0KDQo+IFRoZSByZWFzb24gaXMgdGhhdCAiZG9fZGl2KCkiIF9hbHdheXNfIGRvZXMgYSA2
-NC1ieS0zMiBkaXZpZGUsIGFuZA0KPiB0aGVuIGlmIHlvdSBoYXZlIGEgZGl2aXNvciB0aGF0IGlz
-ICJsb25nIiAod2hpY2ggaXMgaW5kZWVkIDMyIGJpdCBvbg0KPiAzMi1iaXQgYXJjaGl0ZWN0dXJl
-cyksIG5vdyBvbiA2NC1iaXQgYXJjaGl0ZWN0dXJlcyBpdCB0cnVuY2F0ZXMgd2hhdA0KPiBjYW4g
-YmUgYSA2NC1iaXQgdmFsdWUuDQo+IA0KPiBTbyB3ZSBwcm9iYWJseSBfc2hvdWxkXyBoYXZlIG1h
-ZGUgImRvX2RpdigpIiBiZSBhICI2NC1ieS1sb25nIiBkaXZpZGUuDQoNCk9yIGdvdCB0aHJvdWdo
-IHRoZSBrZXJuZWwgYW5kIGNoYW5nZSBsb3RzIG9mIHRoZSAnbG9uZycgdG8gJ3UzMicgOi0pDQpJ
-J20gc3VyZSBhIGxvdCBhcmUgdGhlcmUgYmVjYXVzZSBwZW9wbGUgd2VyZSBzY2FyZWQgaW50IG1p
-Z2h0IGJlIDE2Yml0Lg0KUGVyaGFwcyBNJCBnb3QgaXQgcmlnaHQgYnkgbGVhdmluZyAnbG9uZycg
-YXMgMzJiaXQgOi0pDQpCdXQgcmVhbGx5IHdoYXQgd2FzIHRoZSBsYXN0IDE2Yml0IFVuaXg/DQpJ
-IG5ldmVyIHVzZWQgSUNMJ3MgMjg2IHVuaXggcG9ydCAtIHRoYXQgbWlnaHQgaGF2ZSBiZWVuIDE2
-Yml0Lg0KQWxsIHRoZSAzODYgb25lcyB3ZXJlIDMyYml0LCBhcyB3YXMgdGhlIFZBWCAobmV2ZXIg
-dXNlZCBvbmUpLg0KU28gd2UncmUgbG9va2luZyBhdCAxOTcwJ3Mgc3lzdGVtcyBsaWtlIHRoZSBB
-VCZUIDNCMiBhbmQgREVDIHBkcC0xMS4NCkNlcnRhaW5seSBmYXIgYmVmb3JlIHlvdSdkIGV2ZW4g
-dGhvdWdoIG9mIExpbnV4Lg0KDQo+IE9uIGFjdHVhbCA2NC1iaXQgYXJjaGl0ZWN0dXJlcywgZG9p
-bmcgYSA2NC1idGkgZGl2aWRlIGlzIHR5cGljYWxseQ0KPiBmaW5lIChJIGNhbiBpbWFnaW5lIHNv
-bWUgYnJva2VuIGNhc2VzLCBidXQgbm90IGVub3VnaCB0byBjYXJlKS4NCg0KV2VsbCBJbnRlbCB4
-ODYgYWx3YXlzIHRha2UgdHdpY2UgYXMgbG9uZyBmb3IgdGhlIGZ1bGwgMTI4IGJ5IDY0IGRpdmlk
-ZQ0KdGhhbiB0aGUgNjQgYnkgMzIgb25lIChhbWQgaXMgdGhlIHNhbWUgc3BlZWQgaWYgdGhlIHZh
-bHVlcyBmaXQpLg0KU28gc2VsZWN0aW5nIGJldHdlZW4gdGhlIHR3byBkaXZpZGVzIG1heSBtYWtl
-IHNlbnNlLg0KT1RPSCB5b3UgcHJvYmFibHkgZG9uJ3Qgd2FudCB0byBzcGVjdWxhdGl2ZWx5IGV4
-ZWN1dGUgdGhlIHdyb25nIGRpdmlkZSEgDQoNCj4gVGhlIHdob2xlIHByb2JsZW0gaXMgYmVjYXVz
-ZSBvZiAzMi1iaXQgYXJjaGl0ZWN0dXJlcy4NCg0KSW5kZWVkLg0KQm90aCB4ODYgYW5kIG02OGsg
-aGF2ZSBhIDY0IGJ5IDMyIGRpdmlkZS4gSSdtIG5vdCB3aGV0aGVyIGFueSBvdGhlciBkby4NCk5p
-b3MtSUkgd29udCAoaXQgbWF5IG5vdCBldmVuIGhhdmUgZGl2aWRlKSwgcHJvYmFibHkgYWxsIE1J
-UFMgZGVyaXZhdGl2ZXMNCmFyZSB0aGUgc2FtZSAoaW5jbHVkaW5nIFJJU0MtVikuDQpUaGUgc3Vn
-Z2VzdGVkIGRpdmlkZSBmdW5jdGlvbiBpbiBteSBzcGFyYy0zMiBib29rIGlzIHNldmVyYWwgcGFn
-ZXMgbG9uZy4NCihRdWl0ZSB3aGF0IGRvZXMgdGhlIHRvIEktY2FjaGUgaXMgYW55LWJvZGllcyBn
-dWVzcy4pDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1s
-ZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJh
-dGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hopefully the final 4 more patches from:
+https://lore.kernel.org/lkml/20240202061532.1939474-1-irogers@google.com/
+a near half year old adventure in trying to lower perf's dynamic
+memory use. These final changes fix reference count issues, some
+introduced by making find returned a getted (+1) reference counted
+DSO. The last patch lowers the overhead using container_of rather than
+a pointer except when reference count checking - asserts maintain the
+validity of this.
+
+v5. Rebase, adding use of accessors to dso as necessary. Previous
+    versions were all rebases or dropping merged patches.
+
+v6. Rebase, move dsos__purge NULL assignment to dso->dsos to above
+    dso__put to avoid a warning reported by Arnaldo. This was part of
+    patch 5 in the v5 series.
+
+v7. Rebase dropping 5 merged patches. Break apart the fixes per
+    file. Tweak to the map dso logic as the else path was missing a
+    dso__get.
+
+Ian Rogers (4):
+  perf map: Add missing dso__put in map__new
+  perf symbol-elf: Ensure dso__put in machine__process_ksymbol_register
+  perf symbol-elf: dso__load_sym_internal reference count fixes
+  perf dso: Use container_of to avoid a pointer in dso_data
+
+ tools/perf/tests/dso-data.c  | 60 +++++++++++++++++-------------------
+ tools/perf/util/dso.c        | 16 +++++++++-
+ tools/perf/util/dso.h        |  2 ++
+ tools/perf/util/machine.c    |  6 ++--
+ tools/perf/util/map.c        |  1 +
+ tools/perf/util/symbol-elf.c | 51 +++++++++++++++---------------
+ 6 files changed, 75 insertions(+), 61 deletions(-)
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
