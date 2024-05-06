@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB08D142914
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB11142E66
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714973484; cv=none; b=d35zYp1CN8hYogJ1Uyh/VkjrKNqnMQ5wxuQWw0M5RtFmzL+kwXpJkJ8NvEQSihi8hGT/AZi3dlk7uz5XhF9DhiAhwIbPRG9mAjzqKfvptnx9xzQdUjSQ+4r3e4Fse5zvTg61vXa3Bp1DHLriAKsaMUjQ5WdVW0jiA7lvusqwcAs=
+	t=1714973486; cv=none; b=TP8FdTKsX9vnJlYZLcKHSqPBTGjHUuoPviciciyJIG3DCuhVD9AdnCcUSGs6Ipu6gp+JXQ8AOePa6apTfvUIDVQL1gRt4vCCG0qlQBV4q2U6m5RBklHBYDfTNMpRfLAzUZN9OTtF/FjCZgyar34wRDeenEVrKQ6A+FS9I3EirKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714973484; c=relaxed/simple;
-	bh=YTanXM05IHphvqbUN96UEZXYNv7KIGCnmEDrWyKzy6U=;
+	s=arc-20240116; t=1714973486; c=relaxed/simple;
+	bh=5YMfqv72qzaTfQfdtWNBLWJA7fSId5Bkt5xYFt59U/M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=H983pdybyocPvobGj017hJKzwc5+mcStHfoeipmXYspkMYQb5mIQNQdNLKJxL1djabq9ku7gm3BwSHB+72NhScTFtIfc/LM4DMV1fe0cAp4s9tt86dRqS6rErnC/R6QCyomh2ONTztGnnDAO+RBS+JGkMCriYhphDvkoKWPtj4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uNG5i3CT; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=Pk4qSycJP+GY8NfyMgVe5LMlEyuNcu7VTghAPgIB2gxG0ZJ16ilsiTyopJKnIU/sGNppxIZSLXQMCRed4VC8Fw9P0I4C2jD/JUltA7krW/xoHEzabbclmDDIQgY1dhiT3CEikiOZ6UUjXzLNOiXEpq59r1C7QluD0g+u+tO0w14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rzVyWjOT; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uNG5i3CT"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de74a2635e2so2902609276.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rzVyWjOT"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61c9e368833so42326387b3.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714973482; x=1715578282; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714973483; x=1715578283; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=0KnMSVPaPzVOvrVjlIbtuGaeyIlEpOBvjlGJeeiwtbA=;
-        b=uNG5i3CT+otFMO4RsRU5OCf3+wUwZGSvUM8AmqB4k9PaEBuRXjfaxY0AsSnZciwglf
-         VwrXYEmWz4JJ7mbyVcGJNX0/ZJ4B9f6G5Z2xHOmWNHWenmCbesavhMMhwR1d5QeQRPxX
-         n8cMbXtthiLVJFVUjJIXNzFI7/4rC60SeyFEASnvWVckP6g5n6SnDC9XTDy9ANxfNkex
-         o0jHG2NwMsuvJGXtDYuf6OdRg/9P5UDBdyYz6kocvJlEUHUl1j76nuJ9w1OJVcwYZ2Fi
-         KjmMbFxjlPONeSzbNX68LIB6xjJUQeu06ZhBS5GZKt6/lvrcwqTSdIl1M2Kq5KM/Wtnf
-         EY/w==
+        bh=Mc6dM/KRfbmzV7TiTWsp1WlioSM+lDrPoDXG/suaLDY=;
+        b=rzVyWjOTtro7RAUxwsQ26gBkNo1jq33brSVkURyrpxIZNf7QQ2nsPs2H2OHrGTV6K2
+         3Cf/hkLqRn9Tml93gEralvx6cZ2YYUTBMHE9xm6+98PqrnSOoGUBGVDgS9dRaG6Syatn
+         ASaBPL+8pbdPI86Qqm0UFsAaEJ0q2fuhOhXV7tMbQAuvsltPeBMFHpxeEumdyLkGEQIC
+         6WQGvLpgIft7mm21UA55zxryOAcc9D7ns/wW3RdR70x1LbvGrtONtxbnxPAaQ10qfgnV
+         JCc5nkdKkdsNxjlT7UVTf5VuT7R/R1/YtL7rN7906WyZHnDCeW6n3RKU0NLLUK4eYWOx
+         MK0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714973482; x=1715578282;
+        d=1e100.net; s=20230601; t=1714973483; x=1715578283;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0KnMSVPaPzVOvrVjlIbtuGaeyIlEpOBvjlGJeeiwtbA=;
-        b=g4B2ZoApB8SyQmBBqExmCZLL9wYeSwG1V5t2Rq091JE68j8ZZu5J/ZqwYPnUzdXlhU
-         HDBO71fPZKAdnAdlbNlwe3+Hl8uMFj7k5jhciYaNsV88KsP8mo7BBRSsPWM8y/nuW85B
-         AmxDTr9+gMETnI2/h73Ulg0weBB4vulMGDDo0AbEanCYuP94ymGB7/SwJUGA2R4uLbu1
-         5JPu+tJCVDMfwk3JTV+FFCp7vXUMGP74CTuOWfOkTUV024sZSjjpQGwbqTLsgrAVNqfo
-         BppeWj5b/IuZfhgopxXbHxVhOdNEOJcGhDeaWDQ7uNhXS6khxpu6+XIJvLhNJgW6EYas
-         7ctA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZax03x4CYItSlKAZgulauBEzyimxlbLNun5d0t7sc1H5cQy+PlbHNz2O/DS/sSmx4Ptn93ASEZ8wV9T3JXWp4pC8JtF3NJIq6Olu7+983kQ==
-X-Gm-Message-State: AOJu0Yz2cj/K0BGU7UYHRsrP5wfjUYWZhJs9JRVfcaL6MTYWW5SeTHf8
-	S8YZDj/elxk6zGOom5Js2XALsms0mVaF3f0cCXGEV8iBQwKzWeTE6KSbHhSn9jyQdUTs3iebV3G
-	5x+si+A==
-X-Google-Smtp-Source: AGHT+IEeW7oariaEikoFS2RDwOKYRXIhJVDZHIDcuv+ayFWKAyBnYxwVe5wEiIvDG0twVXqTPSuGrbNtT86X
-X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a05:6902:2b07:b0:de4:64c4:d90c with SMTP id
- fi7-20020a0569022b0700b00de464c4d90cmr1305649ybb.12.1714973481965; Sun, 05
- May 2024 22:31:21 -0700 (PDT)
+        bh=Mc6dM/KRfbmzV7TiTWsp1WlioSM+lDrPoDXG/suaLDY=;
+        b=jgUGzhTYIZSmxcmqNHCZdS7K77EIEOnCrhf3L2Jo1ohqm+HvIifJd6FM97jzUHK0LF
+         y75GMvLMKRPXvTfC2FNcwhrte5hSMlkxrt5RTP6WE6l1KAaVWk/gyhXHCDSN0Clo9yj2
+         6ujChO6dvcGrmrKrJtl+c8afD0qL739b2w1n6N8a5473ifK50EXreKIsDo/QdTcRrMwU
+         4rYI276W+ta3bDhzodJ2UGIzMfQAr55r5UpqliSvImQfAsKmuivct0Egd8Lsf9mMmUWy
+         W0hD4wsBCxg9ASphXE9euGjic46XWW2MozKbbQQgqMyBvdvjaoSsCRyt/6CYUt/LxIQn
+         NODQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+QdovCLStoXuykHcnqMP9qTgBBTO2wGaSN84P2tSxRTkzU6OTOSjFq9/cS3BDcuCNlSBaj0Gv6Og+e/3sxF8E+mjl9NN+X2DJdkV3jJbD8g==
+X-Gm-Message-State: AOJu0YyghagRgqhip7hBBpZwg8KiSV62F3NeIVAanuVggYGzE8z59GRx
+	b2tYJYVHpTJMTyWDT1+Ib7NtfI2ZmSVd3CEbAL9GcFAD5ITHeH5+E9/9okbBlEIQ/o725ROYHf3
+	MtdTayw==
+X-Google-Smtp-Source: AGHT+IETs0YA0w+4VQPrUxj7xsKiJp3CI+FRid4V2keXO9/T3f23XXMGMHTBpoC6GHKNwCC/gb/ArMkK1hYQ
+X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
+ job=sendgmr) by 2002:a0d:e284:0:b0:61b:e2eb:f05 with SMTP id
+ l126-20020a0de284000000b0061be2eb0f05mr2630035ywe.2.1714973483652; Sun, 05
+ May 2024 22:31:23 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon,  6 May 2024 05:29:54 +0000
+Date: Mon,  6 May 2024 05:29:55 +0000
 In-Reply-To: <20240506053020.3911940-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240506053020.3911940-1-mizhang@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240506053020.3911940-30-mizhang@google.com>
-Subject: [PATCH v2 29/54] KVM: x86/pmu: Introduce PMU operation prototypes for
- save/restore PMU context
+Message-ID: <20240506053020.3911940-31-mizhang@google.com>
+Subject: [PATCH v2 30/54] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,74 +78,155 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Plumb through kvm_pmu_ops with these two extra functions to allow pmu
-context switch.
+Implement the save/restore of PMU state for pasthrough PMU in Intel. In
+passthrough mode, KVM owns exclusively the PMU HW when control flow goes to
+the scope of passthrough PMU. Thus, KVM needs to save the host PMU state
+and gains the full HW PMU ownership. On the contrary, host regains the
+ownership of PMU HW from KVM when control flow leaves the scope of
+passthrough PMU.
 
+Implement PMU context switches for Intel CPUs and opptunistically use
+rdpmcl() instead of rdmsrl() when reading counters since the former has
+lower latency in Intel CPUs.
+
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/include/asm/kvm-x86-pmu-ops.h |  2 ++
- arch/x86/kvm/pmu.c                     | 14 ++++++++++++++
- arch/x86/kvm/pmu.h                     |  4 ++++
- 3 files changed, 20 insertions(+)
+ arch/x86/kvm/pmu.c           | 46 ++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/pmu_intel.c | 41 +++++++++++++++++++++++++++++++-
+ 2 files changed, 86 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-index 1b7876dcb3c3..1a848ba6a7a7 100644
---- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-@@ -25,6 +25,8 @@ KVM_X86_PMU_OP_OPTIONAL(reset)
- KVM_X86_PMU_OP_OPTIONAL(deliver_pmi)
- KVM_X86_PMU_OP_OPTIONAL(cleanup)
- KVM_X86_PMU_OP_OPTIONAL(passthrough_pmu_msrs)
-+KVM_X86_PMU_OP_OPTIONAL(save_pmu_context)
-+KVM_X86_PMU_OP_OPTIONAL(restore_pmu_context)
- 
- #undef KVM_X86_PMU_OP
- #undef KVM_X86_PMU_OP_OPTIONAL
 diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index e9047051489e..782b564bdf96 100644
+index 782b564bdf96..13197472e31d 100644
 --- a/arch/x86/kvm/pmu.c
 +++ b/arch/x86/kvm/pmu.c
-@@ -1065,3 +1065,17 @@ void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
+@@ -1068,14 +1068,60 @@ void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
+ 
+ void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
  {
- 	static_call_cond(kvm_x86_pmu_passthrough_pmu_msrs)(vcpu);
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct kvm_pmc *pmc;
++	u32 i;
++
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	static_call_cond(kvm_x86_pmu_save_pmu_context)(vcpu);
++
++	/*
++	 * Clear hardware selector MSR content and its counter to avoid
++	 * leakage and also avoid this guest GP counter get accidentally
++	 * enabled during host running when host enable global ctrl.
++	 */
++	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
++		pmc = &pmu->gp_counters[i];
++		rdmsrl(pmc->msr_counter, pmc->counter);
++		rdmsrl(pmc->msr_eventsel, pmc->eventsel);
++		if (pmc->counter)
++			wrmsrl(pmc->msr_counter, 0);
++		if (pmc->eventsel)
++			wrmsrl(pmc->msr_eventsel, 0);
++	}
++
++	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
++		pmc = &pmu->fixed_counters[i];
++		rdmsrl(pmc->msr_counter, pmc->counter);
++		if (pmc->counter)
++			wrmsrl(pmc->msr_counter, 0);
++	}
  }
+ 
+ void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct kvm_pmc *pmc;
++	int i;
 +
-+void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
++
++	/*
++	 * No need to zero out unexposed GP/fixed counters/selectors since RDPMC
++	 * in this case will be intercepted. Accessing to these counters and
++	 * selectors will cause #GP in the guest.
++	 */
++	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
++		pmc = &pmu->gp_counters[i];
++		wrmsrl(pmc->msr_counter, pmc->counter);
++		wrmsrl(pmc->msr_eventsel, pmu->gp_counters[i].eventsel);
++	}
++
++	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
++		pmc = &pmu->fixed_counters[i];
++		wrmsrl(pmc->msr_counter, pmc->counter);
++	}
+ }
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 7852ba25a240..a23cf9ca224e 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -572,7 +572,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+-		pmu->fixed_counters[i].msr_eventsel = MSR_CORE_PERF_FIXED_CTR_CTRL;
++		pmu->fixed_counters[i].msr_eventsel = 0;
+ 		pmu->fixed_counters[i].msr_counter = MSR_CORE_PERF_FIXED_CTR0 + i;
+ 	}
+ }
+@@ -799,6 +799,43 @@ static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
+ 	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
+ }
+ 
++static void intel_save_guest_pmu_context(struct kvm_vcpu *vcpu)
 +{
-+	lockdep_assert_irqs_disabled();
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
 +
-+	static_call_cond(kvm_x86_pmu_save_pmu_context)(vcpu);
++	/* Global ctrl register is already saved at VM-exit. */
++	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
++	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
++	if (pmu->global_status)
++		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
++
++	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
++	/*
++	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
++	 * also avoid these guest fixed counters get accidentially enabled
++	 * during host running when host enable global ctrl.
++	 */
++	if (pmu->fixed_ctr_ctrl)
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
 +}
 +
-+void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
++static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
 +{
-+	lockdep_assert_irqs_disabled();
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	u64 global_status, toggle;
 +
-+	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
++	/* Clear host global_ctrl MSR if non-zero. */
++	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
++	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
++	toggle = pmu->global_status ^ global_status;
++	if (global_status & toggle)
++		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
++	if (pmu->global_status & toggle)
++		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
++
++	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
 +}
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 63f876557716..8bd4b79e363f 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -42,6 +42,8 @@ struct kvm_pmu_ops {
- 	void (*cleanup)(struct kvm_vcpu *vcpu);
- 	bool (*is_rdpmc_passthru_allowed)(struct kvm_vcpu *vcpu);
- 	void (*passthrough_pmu_msrs)(struct kvm_vcpu *vcpu);
-+	void (*save_pmu_context)(struct kvm_vcpu *vcpu);
-+	void (*restore_pmu_context)(struct kvm_vcpu *vcpu);
- 
- 	const u64 EVENTSEL_EVENT;
- 	const int MAX_NR_GP_COUNTERS;
-@@ -294,6 +296,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
- void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel);
- bool kvm_pmu_check_rdpmc_passthrough(struct kvm_vcpu *vcpu);
- void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu);
-+void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu);
-+void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- 
++
+ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+ 	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
+ 	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
+@@ -812,6 +849,8 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+ 	.cleanup = intel_pmu_cleanup,
+ 	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
+ 	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
++	.save_pmu_context = intel_save_guest_pmu_context,
++	.restore_pmu_context = intel_restore_guest_pmu_context,
+ 	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
+ 	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
+ 	.MIN_NR_GP_COUNTERS = 1,
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
