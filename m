@@ -1,41 +1,44 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9E56D1A8;
-	Sun,  5 May 2024 20:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C921FB5;
+	Mon,  6 May 2024 00:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714940933; cv=none; b=I7KB4qm9mnS1/uZ6lrwj7MdydxENAzilmk8Ibi27LsR5Sz/KbvCWEw3nelFWqVcNhoiDzLDWvlk0mB2BKET9aJZN8Tyty8V3IAFsBh6b6eH44qB2HkfvdWWsHVRe8zwQF9OknKS09gK/Ps1ViF9nAfUEEwkJ34AsPK5mk8/zSFA=
+	t=1714956034; cv=none; b=YlZhxPkHHfY+OIQSXhHW3xz97920etkGvc7bSxogKqDb3TAaVt1r5S6KQzQiz1pARTCAHBYYA3ZfnqKCKDSLd2NlsQCYLnUvyVY/eStjM2HzZ+ubW5Okx1yYO8ZqI0OUeg3wL2yWDnDdKdV4fY9N6cH2ONKRgustimxMb94pA90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714940933; c=relaxed/simple;
-	bh=uESbJ3gRnZBQpJ7WWb9YkLM+GSeZA1GW9OYoZk1ZIRY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CGabTcdwGx3pL1LzBbP98dQN/qFefrtC14M1a0NxkWVZk1ScUzEgFMJIzF48p7cIFC1hen5jOFz5lSh54HIknsZrswl2f4hDuklgeMR+v49ahuiGwD0w6lws5+TtvDz4Ouax/YybhJT7w0SGZrhU8a4HCTBldSZei0MTrIPv0Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 698F51007;
-	Sun,  5 May 2024 13:29:10 -0700 (PDT)
-Received: from PF4Q20KV.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 305723F793;
-	Sun,  5 May 2024 13:28:42 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] perf maps: Process kcore maps in order
-Date: Sun,  5 May 2024 21:28:05 +0100
-Message-Id: <20240505202805.583253-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1714956034; c=relaxed/simple;
+	bh=Zm6ll3FEAXahkq1OIN9xIIhtasqCrGYzDDOCbIaZh7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bgKYGT6mfhDNZqqCvaJTbTyiBkXkRcY0tpBVOdCnIgZwpFB/z11ZWDUicb93v5fb99pZ0aYhbDUgzRLG+2HOazEJ7B2x3nH/ER8buR+Fn3NERVGtTlG37dkyg/2Zg0kUxt3DzBklMpy3ktAl1wdjm851QoPuCzvAa35HsB9Plqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=qlYKp4u+; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="qlYKp4u+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=e0tx6Bela2CqZ7OGR87TCeW+BT6kGw+m9pXjhCP7LkU=; b=qlYKp4u+sBvV8taZ
+	7AArr51PjRktN7xJ8xP9WpQ2kp2P+tApXRWgOJP8EIaNp3XHBIf2S6jDQTVu9muUQl/F99NIPl6HP
+	79ipq37FIamYPQxR2/QhxOlHa5YLh8g0Z7fppXjHBfQ1CpqreboZ+nNOqR/ZBqNdyUQMpcq+rGO6w
+	sfjesmdZ/G3vDzAcs36jGbnkPDveEgwYBqaTSH3WhmEsi3tHRPhBi5zXKazfop0EbSFZpZ+jXk+Vb
+	20EImGfeS1Y3zUAaqdPReSQwu5LRv5+jLy6d5ds+8u/6QcETNYHUHALmbEXMXKYVFwKHPAKop4IJ0
+	X6Y7pA1lRfE4+GS5JQ==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1s3mOt-004pfV-0c;
+	Mon, 06 May 2024 00:40:15 +0000
+From: linux@treblig.org
+To: jolsa@kernel.org,
+	peterz@infradead.org
+Cc: linux-perf-users@vger.kernel.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] perf/x86/cstate: Remove unused struct 'perf_cstate_msr'
+Date: Mon,  6 May 2024 01:40:09 +0100
+Message-ID: <20240506004009.770451-1-linux@treblig.org>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,97 +47,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Arm64, after enabling the 'DEBUG=1' build option, the tool exits
-abnormally:
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-  # ./perf report --itrace=Zi10ibT
-  # perf: util/maps.c:42: check_invariants: Assertion `map__end(prev) <= map__start(map) || map__start(prev) == map__start(map)' failed.
-    Aborted
+This looks like it's unused since
+Commit 8f2a28c5859b ("perf/x86/cstate: Use new probe function")
 
-The details for causing this error are described in below.
-
-Firstly, machine__get_running_kernel_start() calculates the delta
-between the '_stext' symbol and the '_edata' symbol for the kernel map,
-alongside with eBPF maps:
-
-  DSO              | Start address      | End address
-  -----------------+--------------------+--------------------
-  kernel.kallsyms    0xffff800080000000   0xffff800082229200
-  bpf_prog           0xffff800082545aac   0xffff800082545c94
-  ...
-
-Then, the perf tool retrieves kcore maps:
-
-  Kcore maps       | Start address      | End address
-  -----------------+--------------------+--------------------
-  kcore_text         0xffff800080000000   0xffff8000822f0000
-  vmalloc            0xffff800080000000   0xfffffdffbf800000
-  ...
-
-Finally, the function dso__load_kcore() extends the kernel maps based on
-the retrieved kcore info. Since it uses the inverted order for
-processing the kcore maps, it extends maps for the vmalloc region prior
-to the 'kcore_text' map:
-
-  DSO              | Start address      | End address
-  -----------------+--------------------+--------------------
-  kernel.kallsyms    0xffff800080000000   0xffff800082229200
-  kernel.kallsyms    0xffff800082229200   0xffff800082545aac -> Extended for vmalloc region
-  bpf_prog           0xffff800082545aac   0xffff800082545c94
-  ...
-
-  DSO              | Start address      | End address
-  -----------------+--------------------+--------------------
-  kernel.kallsyms    0xffff800080000000   0xffff8000822f0000 -> Updated for kcore_text map
-  kernel.kallsyms    0xffff800082229200   0xffff800082545aac
-  bpf_prog           0xffff800082545aac   0xffff800082545c94
-  ...
-
-As result, the two maps [0xffff800080000000..0xffff8000822f0000) and
-[0xffff800082229200..0xffff800082545aac) are overlapping and triggers
-failure.
-
-The current code processes kcore maps in inverted order. To fix it, this
-patch adds kcore maps in the tail of list, afterwards these maps will be
-processed in the order. Therefore, the kernel text section can be
-processed prior to handling the vmalloc region, which avoids using the
-inaccurate kernel text size when extending maps with the vmalloc region.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- tools/perf/util/symbol.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/cstate.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 9ebdb8e13c0b..e15d70845488 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1266,7 +1266,24 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- 	map__set_end(list_node->map, map__start(list_node->map) + len);
- 	map__set_pgoff(list_node->map, pgoff);
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 326c8cd5aa2d2..dcf3f152a2a64 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -143,12 +143,6 @@ struct cstate_model {
+ #define SLM_PKG_C6_USE_C7_MSR	(1UL << 0)
+ #define KNL_CORE_C6_MSR		(1UL << 1)
  
--	list_add(&list_node->node, &md->maps);
-+	/*
-+	 * Kcore maps are ordered with:
-+	 *   [_text.._end): Kernel text section
-+	 *   [VMALLOC_START..VMALLOC_END): vmalloc
-+	 *   ...
-+	 *
-+	 * On Arm64, the '_text' and 'VMALLOC_START' are the same values
-+	 * but VMALLOC_END (~124TiB) is much bigger then the text end
-+	 * address. So '_text' region is the subset of the vmalloc region.
-+	 *
-+	 * Afterwards, when dso__load_kcore() adjusts kernel maps, we must
-+	 * process the kernel text size prior to handling vmalloc region.
-+	 * This can avoid to using any inaccurate kernel text size when
-+	 * extending maps with vmalloc region. For this reason, here it
-+	 * always adds kcore maps to the tail of list to make sure the
-+	 * sequential handling is in order.
-+	 */
-+	list_add_tail(&list_node->node, &md->maps);
- 
- 	return 0;
- }
+-struct perf_cstate_msr {
+-	u64	msr;
+-	struct	perf_pmu_events_attr *attr;
+-};
+-
+-
+ /* cstate_core PMU */
+ static struct pmu cstate_core_pmu;
+ static bool has_cstate_core;
 -- 
-2.43.0
+2.45.0
 
