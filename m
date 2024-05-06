@@ -1,140 +1,188 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284E98494;
-	Mon,  6 May 2024 18:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2370F1DFF3;
+	Mon,  6 May 2024 18:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715020369; cv=none; b=UgS80VrlrRASO0Wg27rVvssNvZVmBomDoSjmmCX+EiPIliVJTMzK2e5Z1teaB4K8oTgXdlIrtJ7P7S5bBhLWq1xd6hBozKg7H0r6VD6+P4AGT4Q3ZEV0Gme9cy1sOY3RV+lnJrqK09YZMVFhs7se82qxzvA7sqyjAvlsU/cRNgU=
+	t=1715020518; cv=none; b=tAPe083QD5qvX+udonFoNWDb0jIcDuQ+OeaneXGnTvdpeQbZCqhHMnWtqyTOzcIoMBlkooqDXr8EVhMRl/MiduUZPlAEMLmztgUGmUYDkuXYIVn7WYZx2tyUBg+oatZtvqdXEbzaYQKXiTDj4AvlNTjSAwDfsg5IrX8qTZz9DN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715020369; c=relaxed/simple;
-	bh=zK0tJtE8Qwifs0bj8uWzm4v/Ta1W+47RyvVvaGZ/ylE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ij+GlWgyFMw/FK3LXIRATOeJZWgA1xWibV41l/xVU0D4NQTNrconh+8oOIDppk4OWPdLcstx8+f2un0gQYXoQ5Qb2jxUabsdprUZ7NwhUGndKK3OmiF8Nsc3tuD+Oiv3MZTMIxgXw8bnrRU9PnMmKzho37AtQPj+cv+e01lxteU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEl2qo+L; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715020518; c=relaxed/simple;
+	bh=EJCEu4USxW35SOv0xkyQJk5zUcKRkgxxAOS7xwgdXZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B85nmq/TAy75qOhI4oKBI+GyXoNUWNzAAk+pUcJyL1xyKuhqa8t71h9DXoFrlmrjI0JkQkC644MgJitbw1K473g8aMBiDm+sIXOOB5LkMcDc65jWEfdOjamf7XE5PKUgPUx/1CzlW1CoCKY9PcqcCQO7cTrdECILpS2eAGQK4T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GS+ueUOR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEl2qo+L"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so2117511b3a.2;
-        Mon, 06 May 2024 11:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715020367; x=1715625167; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PCnGUjyDFMi8EW+NvbJBnt5l36BUMcYyNMVKvBRKCsU=;
-        b=jEl2qo+L4uSDAB1DQBEZgYRLl/FaHY26xlIxkdziPx9sAjb8EQ5h4L3Dde1kmA05ji
-         6YczsfiWkFWTEOG9BYFJRdE4r6FMAtRQgI7dnmXSGsIs5dev+/w0a95TuH+GlPPK54OM
-         SxpvNXdT4gjl00P2F/mVT31AunjEUmEOm0M+74XzHosos9BrvOaM+f5ixKR0p8vEiw80
-         xvETlBy+2vI1HottnVbkdoBcNBCZ4tqp0xkDyEPVb2M2fOMr9YzsugvO8pT0R6UQYaih
-         h2QtzMU3xomvA70uqGZQq5HvJiPJ46TUwRWLfo0PCtxENR4OItVQiiyvVehdg1WlgVUa
-         Cb8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715020367; x=1715625167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCnGUjyDFMi8EW+NvbJBnt5l36BUMcYyNMVKvBRKCsU=;
-        b=aYx22eI3Tp9O8wHYEwLPCQKOLlx5xVbtrM+HP1YUiRT5fw03wGuTWVHIYPSduMAmnN
-         6TD6W1G9X1l8z1cJJEHdms1A204RaAPBFPTPOnP14hLzTCVZ9Mi07J0FnUwD77fR4MDA
-         4MxjH+5hSdd5yIjheJUglM5mBGzrmcC0VkmQqSioaUL13zbJU5pZpaWmH/DdqITJLjcS
-         Uv+6UrRraWLzXcNfX2pZCHDM2fIcDVjRLqRWb7ONmxEjOUHqWEXfj1NVRT+MRqx3ZbU5
-         owkX8DKDrTqAQTOsWbY7jZGfBeM4LJI8dyShqQhTzIBKPcb/ukiT/f8LcFEj4pdyF0pt
-         cXTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbN2u5vD+9bCCIdNjae+J66MjSUHvRGORf6TXSWyAnZyOTpOWKneXlbT11lv/0bgBur2YCA/BtzLIBnZNkeiohFUX9bfvF5AF0pqijOOYo/y6NRSMZZaEL1M0nN1sW8XfuzRcBFyvqFOHTcx67zktK8trxXXU0ELyMFLRcWThI5s1diLRs9Su+nSL6Y06FHvpzOyRi2Ujy0UvmCGrUR82odDI=
-X-Gm-Message-State: AOJu0YyEsZZBwa4PWm2CKG7dA3oPqgu4Ge4fXAKmFvPE9wJzxiWBSqp6
-	AtMi+RDgZ6Ex1V/TsDKzEnnkNJPuD8W1Vs7AEwXliq0FUU8QQUcL0iGOO9236uhAEVfX4ky6DsC
-	48chFVfW24/VFMzb2h8lkNmbOqTbZEK+I
-X-Google-Smtp-Source: AGHT+IG3j78+ZZWbY8RuPjt4sUUymX2YmHn1yU88bJqyP4vfirxgCWiddw4JNF/BoBb32TkkOsr9N5Jk9j0lstDSQ7I=
-X-Received: by 2002:a05:6a20:43ac:b0:1af:66aa:783f with SMTP id
- i44-20020a056a2043ac00b001af66aa783fmr14502635pzl.30.1715020367293; Mon, 06
- May 2024 11:32:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GS+ueUOR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8426C116B1;
+	Mon,  6 May 2024 18:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715020517;
+	bh=EJCEu4USxW35SOv0xkyQJk5zUcKRkgxxAOS7xwgdXZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GS+ueUORs5m7YW+dTwpnmvxdpAIQQ5nUssdQlK4mzpOaGtdRPjrZOI2mklpXdHdWa
+	 HyNVT17rGI/5aikIvknUaOhC2onyCnVm9Hq5b5m3tYe3h40reCCWQKKnQuagXJO44C
+	 bIrxou/fvqiPdFUDx5YD6PwgdDxbaesw0wCd7VS2IYp4KVGq+hHSGWltj4pY/jn+lQ
+	 /EuYR8uJXDHU9CGcDRVtqH5BEmr2t76pOH+a/IU8x+Xu1z4wROLA5WDt42S3Sd7kVg
+	 Ed3v4okJqVlJ4FlBZK8IpEln5RQ5RriaKve3CJzy38L7b2ZGYUJto3103hwGzMSMmc
+	 xxZf6g9q/K5YQ==
+Date: Mon, 6 May 2024 15:35:13 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	nabijaczleweli@nabijaczleweli.xyz, Leo Yan <leo.yan@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Changbin Du <changbin.du@huawei.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dima Kogan <dima@secretsauce.net>,
+	zhaimingbing <zhaimingbing@cmss.chinamobile.com>,
+	Paran Lee <p4ranlee@gmail.com>, Li Dong <lidong@vivo.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Chengen Du <chengen.du@canonical.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 6/7] perf dso: Reference counting related fixes
+Message-ID: <Zjki4arHA6DifQ1n@x1>
+References: <20240504213803.218974-1-irogers@google.com>
+ <20240504213803.218974-7-irogers@google.com>
+ <Zjjsvah8TU_Yubdn@x1>
+ <CAP-5=fVi-qDAP1D+ZOgLD19Cp0K1yn13cgq65g3MuOFNoefc3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
- <2024050404-rectify-romp-4fdb@gregkh> <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
- <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
-In-Reply-To: <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 6 May 2024 11:32:35 -0700
-Message-ID: <CAEf4Bzab+sRQ8pzNYxh1BOgjhDF4yCkqcHxy5YZAyT-jef7Acw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
- /proc/<pid>/maps APIs
-To: Ian Rogers <irogers@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVi-qDAP1D+ZOgLD19Cp0K1yn13cgq65g3MuOFNoefc3Q@mail.gmail.com>
 
-On Sat, May 4, 2024 at 10:09=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sat, May 4, 2024 at 2:57=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, May 4, 2024 at 8:29=E2=80=AFAM Greg KH <gregkh@linuxfoundation.=
-org> wrote:
+On Mon, May 06, 2024 at 08:26:02AM -0700, Ian Rogers wrote:
+> On Mon, May 6, 2024 at 7:44 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Sat, May 04, 2024 at 02:38:02PM -0700, Ian Rogers wrote:
+> > > Ensure gets and puts are better aligned fixing reference couting
+> > > checking problems.
 > > >
-> > > On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote:
-> > > > Implement a simple tool/benchmark for comparing address "resolution=
-"
-> > > > logic based on textual /proc/<pid>/maps interface and new binary
-> > > > ioctl-based PROCFS_PROCMAP_QUERY command.
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/machine.c    |  4 +--
+> > >  tools/perf/util/map.c        |  1 +
+> > >  tools/perf/util/symbol-elf.c | 51 ++++++++++++++++++------------------
+> > >  3 files changed, 28 insertions(+), 28 deletions(-)
 > > >
-> > > Of course an artificial benchmark of "read a whole file" vs. "a tiny
-> > > ioctl" is going to be different, but step back and show how this is
-> > > going to be used in the real world overall.  Pounding on this file is
-> > > not a normal operation, right?
+> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > index 0b8fb14f5ff6..4a4541a2e887 100644
+> > > --- a/tools/perf/util/machine.c
+> > > +++ b/tools/perf/util/machine.c
+> > > @@ -683,7 +683,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> > >                                            struct perf_sample *sample __maybe_unused)
+> > >  {
+> > >       struct symbol *sym;
+> > > -     struct dso *dso;
+> > > +     struct dso *dso = NULL;
+> > >       struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+> > >       int err = 0;
 > > >
+> > > @@ -696,7 +696,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> > >               }
+> > >               dso__set_kernel(dso, DSO_SPACE__KERNEL);
+> > >               map = map__new2(0, dso);
+> > > -             dso__put(dso);
+> > >               if (!map) {
+> > >                       err = -ENOMEM;
+> > >                       goto out;
+> > > @@ -735,6 +734,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> > >       dso__insert_symbol(dso, sym);
+> > >  out:
+> > >       map__put(map);
+> > > +     dso__put(dso);
+> > >       return err;
+> > >  }
 > >
-> > It's not artificial at all. It's *exactly* what, say, blazesym library
-> > is doing (see [0], it's Rust and part of the overall library API, I
-> > think C code in this patch is way easier to follow for someone not
-> > familiar with implementation of blazesym, but both implementations are
-> > doing exactly the same sequence of steps). You can do it even less
-> > efficiently by parsing the whole file, building an in-memory lookup
-> > table, then looking up addresses one by one. But that's even slower
-> > and more memory-hungry. So I didn't even bother implementing that, it
-> > would put /proc/<pid>/maps at even more disadvantage.
+> > This seems to match the patch description, good, just aligning the puts
 > >
-> > Other applications that deal with stack traces (including perf) would
-> > be doing one of those two approaches, depending on circumstances and
-> > level of sophistication of code (and sensitivity to performance).
->
-> The code in perf doing this is here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/perf/util/synthetic-events.c#n440
-> The code is using the api/io.h code:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/lib/api/io.h
-> Using perf to profile perf it was observed time was spent allocating
-> buffers and locale related activities when using stdio, so io is a
-> lighter weight alternative, albeit with more verbose code than fscanf.
-> You could add this as an alternate /proc/<pid>/maps reader, we have a
-> similar benchmark in `perf bench internals synthesize`.
->
+> > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > > index 117c4bb78b35..e1d14936a60d 100644
+> > > --- a/tools/perf/util/map.c
+> > > +++ b/tools/perf/util/map.c
+> > > @@ -200,6 +200,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> > >                               dso__set_build_id(dso, dso__bid(header_bid_dso));
+> > >                               dso__set_header_build_id(dso, 1);
+> > >                       }
+> > > +                     dso__put(header_bid_dso);
+> > >               }
+> > >               dso__put(dso);
+> > >       }
+> >
+> > But this is a missing one, so not aligning, but fixing a separate issue,
+> > i.e. a missing put? Should go on a different patch, probably with a
+> > Fixes.
+> 
+> The Fixes would be for a patch in the series - albeit that we've spent
 
-If I add a new implementation using this ioctl() into
-perf_event__synthesize_mmap_events(), will it be tested from this
-`perf bench internals synthesize`? I'm not too familiar with perf code
-organization, sorry if it's a stupid question. If not, where exactly
-is the code that would be triggered from benchmark?
+Well, if it fixes something that got merged before, it should have the
+Fixes, please then have it in the patch fixing it:
 
-> Thanks,
-> Ian
->
-> >   [0] https://github.com/libbpf/blazesym/blob/ee9b48a80c0b4499118a1e8e5=
-d901cddb2b33ab1/src/normalize/user.rs#L193
-> >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
+Fixes: f649ed80f3cabbf1 ("perf dsos: Tidy reference counting and locking")
+
+> over half a year landing this and a month since that change landed:
+> https://lore.kernel.org/all/20240410064214.2755936-3-irogers@google.com/
+> The issue is that previously a find wouldn't do a get, so per the old
+> code no put is necessary. Gets were added to finds to cover the race
+> between a dso being returned from dsos and the item potentially being
+> removed from dsos.
+
+The last patch applied:
+
+⬢[acme@toolbox perf-tools-next]$ git log --oneline -1
+ee756ef7491eafd7 (HEAD -> perf-tools-next, perf-tools-next.korg/tmp.perf-tools-next) perf dso: Add reference count checking and accessor functions
+⬢[acme@toolbox perf-tools-next]$
+
+Needed this, which I applied and pushed to tmp.perf-tools-next:
+
+  util/symbol.c: In function ‘dso__load_bfd_symbols’:
+  util/symbol.c:1683:9: error: too few arguments to function ‘dso__set_adjust_symbols’
+   1683 |         dso__set_adjust_symbols(dso);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~
+  In file included from util/symbol.c:21:
+  util/dso.h:268:20: note: declared here
+    268 | static inline void dso__set_adjust_symbols(struct dso *dso, bool val)
+        |                    ^~~~~~~~~~~~~~~~~~~~~~~
+  make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:106: /tmp/tmp.ZWHbQftdN6/util/symbol.o] Error 1
+    MKDIR   /tmp/tmp.ZWHbQftdN6/tests/workloads/
+  make[6]: *** Waiting for unfinished jobs....
+
+This was updated:
+
+  -       symbols__fixup_end(&dso->symbols, false);
+  -       symbols__fixup_duplicate(&dso->symbols);
+  -       dso->adjust_symbols = 1;
+  +       symbols__fixup_end(dso__symbols(dso), false);
+  +       symbols__fixup_duplicate(dso__symbols(dso));
+  +       dso__set_adjust_symbols(dso);
+
+But not build tested with BUILD_NONDISTRO and libbfd devel files installed
+(binutils-devel on fedora), I noticed it using 'make -C tools/perf build-test'.
+
+Add the missing argument:
+
+   	symbols__fixup_end(dso__symbols(dso), false);
+   	symbols__fixup_duplicate(dso__symbols(dso));
+  -	dso__set_adjust_symbols(dso);
+  +	dso__set_adjust_symbols(dso, true);
