@@ -1,112 +1,109 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7AD1E4A6
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 16:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E027313DDD8
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 16:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715013621; cv=none; b=s7hKTRFRavo6MtY2F7dNCiREXCnAidEqpxHAvR9rUsJzcll5PRGPNWi9iQ3d61HbV1YplvCsHLhGSZBP+LNSlCy1V1AkGo0GENb8xTqtHCDU8wqr0K7DytFp9VlYwGNEdmV55ZOPR5DYXyOWP/1BRzlGGD1azNCisJsrAJ4UvAc=
+	t=1715013970; cv=none; b=lO6PI5pmhlaEjxs1tlO8o1Gr76zZl6DX5/ujM5ZVGVJhp+QQi3mZPcIDoZG3IrzrC6lQuJOKInXAridXct6Oz7Y03x7gSYHX2EgkaofsrZJNSYpuJ+zJIkEnlSwU4jbJJ4eYAe7mQWprrCVITrhEXQ8CsvIGHfoUA1FMa18l2yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715013621; c=relaxed/simple;
-	bh=ucELDPNatlRU71mDWhjsw//vbzlUTxosSYPrhngAvdI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=fPhLnNe2bmpy3m/nAXqQFg/ZpypR0TlDOTcLhyfqcwIpa43A+9OmSolxDPUFzsO+nmVj0YOP4GrvGUWSxnqxVvC10E+OKPCPRAFd0KbpYuzyon4FQdoOLNSfMHgxYPK+nifUKD0pFONX4JL4kov2uHr28qZniqXSij8JCtN85qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-131-hssn0c3wNJ-tT2peWui_oA-1; Mon, 06 May 2024 17:40:10 +0100
-X-MC-Unique: hssn0c3wNJ-tT2peWui_oA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 May
- 2024 17:39:31 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 6 May 2024 17:39:31 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>
-CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3CAAVRfAIABXupw
-Date: Mon, 6 May 2024 16:39:31 +0000
-Message-ID: <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
-References: <Zi57-TMgU19puaQM@octinomon.home>
- <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home>
- <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
- <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
- <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
- <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1715013970; c=relaxed/simple;
+	bh=IPgDnhSi8JDjmEcxm6sL+rpr4YZLmHEgFsyFZ7mqQvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W2f0XGzCmtLnBP/2JGRPAmZ/FC1Dfl2S9zhXg037Wyf4v0Vb3phN/iwcjYIuXuesAy4SR/oQMfBt4s/ZMS+Nnd5nswifN8PRVPyB0lsUiQO8APNT8B5ly9+RVTKyoth/3USpLyjuVOV0V/qTzAiiq1G93V2hUDWwM0gG5/x/tjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=D93NXnyv; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="D93NXnyv"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a52223e004dso447634766b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 09:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715013965; x=1715618765; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=agzKsGkt1CQMrqR/XE0sZ8vS82jWREq2dAikRnOmCts=;
+        b=D93NXnyvwLEAtiZndCYZ1lSaYHvXkzasGWJV9hAf/v/pKKtDZsXFOGCeHkbcUA8NeE
+         HZdM/CYqLHrCzR2ocMwBqN0eF0aZmraQDSy5jtiH9DrTEoVhJQMygxAJ5VX4nhraIEII
+         OPXf+GmOHc++/Y6DN4nZhe6GbX3sudgeYHETU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715013965; x=1715618765;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=agzKsGkt1CQMrqR/XE0sZ8vS82jWREq2dAikRnOmCts=;
+        b=C1ZPOAhwHisubN6Xyf4wdQv/Zx7M6cgGZQOVlg+njfWbgRuOpRYHwMH/z93ueoUwUi
+         2KipFvGrkIYoAO/tY7bXzfumhF1vM3CzaXxynQubHB9mUoKso/G6EluaZFVDkf+ecH7r
+         +b/cRvzK/fy7iCcVmyaXsDTSwTgKABycTWY2wnSCkIYKepJCaWx/SHcHaDPeAa1X8NVB
+         pSB+7TXZrL5YI3YFQ9ImGpg6u3zocTsIHO7iqw6rW2yq4z/rpvTZtbU1N0TEC2ZV2Vn8
+         OJyA2fpJaBxOwy8UHiTcHLtMgvQgv/vfff9RY7eTHefGKhiacty8DmfVqmSddCdwpTXA
+         B3cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlG7PKLOyB9yBNA6fmZ2jDS87vsdBvXtJ7o1Wvut84IgBhjsuarK86FqRkwF1Jd9CD+riRvk7Qe29JoMquJvz6de562dJIPkMRFQ0sOXtqCw==
+X-Gm-Message-State: AOJu0YxNVtTS04muPA2DSWoy+T4jWHipKN9UU7YRIyPgXOnrA9XND4mh
+	HcnU0/GB+QkTzL55R/HXgtvhQJYkj8+UGFTHONPH9vIr3+3g2MljsCg18YEI5Uav6pZadvjGQcJ
+	uwHmU7A==
+X-Google-Smtp-Source: AGHT+IFOVuzgXgaue1WXdz6igt1rVirCwBFierPRtK9Oc025dYTUOh1B76ZKODgyD+IMgki4VDJY0Q==
+X-Received: by 2002:a50:d55c:0:b0:56d:fc9f:cca0 with SMTP id f28-20020a50d55c000000b0056dfc9fcca0mr8785538edj.41.1715013965084;
+        Mon, 06 May 2024 09:46:05 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id fi24-20020a056402551800b005727dc26598sm5364715edb.13.2024.05.06.09.46.04
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 May 2024 09:46:04 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59b81d087aso420471266b.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 09:46:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW9Bz2IO8jyYb5jUJ+0CvHQRlSifHZNTrNUC7CZCjE4D9MRu/mztenGqdqRzEWDTCED4yR8GhuV2qskgFunLkBazbM5S1l3aNJfwKW47ySaAg==
+X-Received: by 2002:a17:906:2806:b0:a56:e555:3ea6 with SMTP id
+ r6-20020a170906280600b00a56e5553ea6mr8013781ejc.55.1715013963908; Mon, 06 May
+ 2024 09:46:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <Zi57-TMgU19puaQM@octinomon.home> <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+ <ZjPApuDc0gL9Pchm@octinomon.home> <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+ <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+ <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com> <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
+ <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
+In-Reply-To: <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 6 May 2024 09:45:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
+Message-ID: <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+To: David Laight <David.Laight@aculab.com>
+Cc: Jules Bashizi Irenge <jbi.octave@gmail.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDUgTWF5IDIwMjQgMjA6MzkNCj4gDQo+IE9u
-IFNhdCwgNCBNYXkgMjAyNCBhdCAxNTo1MywgRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
-bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBJIHdhcyB0aGlua2luZyBvZiBzb21ldGhpbmcgbGlr
-ZSAoc2VlIGh0dHBzOi8vZ29kYm9sdC5vcmcvei9oOG9qN2g0c2QpOg0KPiA+ICBbLi4uXQ0KPiA+
-IFdoaWNoIHdpbGwgY2FsbCBvdXQgZm9yIGEgbGFyZ2UgZGl2aXNvciwgYnV0IHdpbGwgZG8gaW5s
-aW5lZCBkaXZpZGVzDQo+ID4gb3RoZXJ3aXNlIC0gc28gaXMgcmVhc29uYWJseSBzYW5lIHdoYXRl
-dmVyIHRoZSB0eXBlcw0KPiANCj4gTm8uIFRoaXMgaXMgbm90IHNhbmUuDQo+IA0KPiBPbmNlIHlv
-dSBoYXZlIGEgY2FsbG91dCwgeW91IG1pZ2h0IGFzIHdlbGwgZG8gaXQgYWxsIGVudGlyZWx5IG91
-dCBvZg0KPiBsaW5lLiBZb3UndmUgbWVzc2VkIHVwIHlvdXIgcmVnaXN0ZXIgc3RhdGUgYW5kIGlu
-c3RydWN0aW9uIHNjaGVkdWxpbmcNCj4gb3Bwb3J0dW5pdGllcywgYW5kIHRoZSBhZHZhbnRhZ2Ug
-b2YgaW5saW5pbmcgcGFydCBvZiB0aGUgY29tcHV0YXRpb24NCj4gaXMgYmFzaWNhbGx5IGFsbW9z
-dCBlbnRpcmVseSBnb25lLg0KPiANCj4gQW5kIHRoZSB0aGluZyBpcywgaWYgeW91IGRvIGEgNjQt
-YnktNjQgZGl2aWRlLCB0aGVuIHlvdSBqdXN0IGRvIGl0Lg0KPiBHY2Mgd2lsbCBjcmVhdGUgdGhh
-dCBkaXNndXN0aW5nIG91dC1vZi1saW5lIGNvZGUgZm9yIHlvdS4NCj4gDQo+IEJVVCBJVCBTVUNL
-Uy4NCj4gDQo+IFdlIGRvbiAndCBkbyBzdHVwaWQgdGhpbmdzIGluIHRoZSBrZXJuZWwuIFdlIGJh
-c2ljYWxseSBuZXZlciBuZWVkIHRoZQ0KPiA2NC1ieS02NCBkaXZpZGUuDQoNClRoZXJlIGFyZSAz
-ODEgcmVmZXJlbmNlcyB0byBkaXY2NF91NjQoKSBzb21lIG9mIHRoZW0gYXJlIGp1c3QgcGxhaW4g
-c3R1cGlkLg0KQ29uc3RhbnQgZGl2aXNvcnMgb2YgMTAwIGFuZCAxMDAwIGFuZCBkaXY2NF91NjQo
-eF9ucyAqIDEwMCwgeV91cyAqIDEwMDApLg0KSGF2ZSBhIGxvb2sgOi0pDQoNCj4gVGhlIHJlYXNv
-biB3ZSBoYXZlICJkb19kaXYoKSIgYW5kIGZyaWVuZHMgaXMgRVhBVENMWQ0KPiBUSEFUIC0gdG8g
-Y2F0Y2ggdGhlICJvaCwgeW91IGRpZCBzb21ldGhpbmcgc3R1aXBpZCwganVzdCBmaXggaXQiLg0K
-PiANCj4gWWVzLCB3ZSBkbyBkaXZpZGUgNjQtYml0IGVudGl0aWVzIGV2ZW4gb24gMzItYml0IGhv
-c3RzLCBidXQgOTklIG9mIHRoZQ0KPiB0aW1lIHRoZSByYW5nZSBvZiB0aGUgZGl2aXNvciBpcyBi
-YXNpY2FsbHkgYWx3YXlzIGxpbWl0ZWQsIGFuZCBnY2MNCj4gc2FkbHkgZG9lcyBub3QgdW5kZXJz
-dGFuZCB0aGF0IHRoYXQgY2FzZSBtYXR0ZXJzLg0KDQpUaGUgcHJvYmxlbSBpcyB0aGF0IGNvZGUg
-ZG9lcyBkb19kaXYodTY0LCB1bnNpZ25lZCBsb25nKSAod2hpY2ggaXMgZmluZSkuDQpCdXQgc29t
-ZW9uZSB3cm90ZSBhIHNjcmlwdCB0aGF0IGNvbXBsYWlucyB0aGF0IGlzIGEgZnVsbCA2NGJpdCBk
-aXZpZGUNCm9uIDY0Yml0IHN5c3RlbXMgLSBzbyBzdWdnZXN0cyBkaXY2NF91NjQoKS4NClRoZXkg
-c29tZW9uZSB0aGlua3MgdGhleSBjYW4gZml4IGFuIGVhc3kgJ2J1ZycgYnkgZG9pbmcgdGhlIHN1
-YnN0aXR1dGlvbi4NCkV4Y2VwdCB0aGUgY29kZSB3YXMgZmluZSAoZHVlIHRvIHRoZSBkb21haW4g
-b2YgdGhlIGRpdmlzb3IpIGFuZCB0aGUNCm1vZGlmaWVkIGNvZGUgaXMgZW50aXJlbHkgYnJva2Vu
-IGR1ZSB0aGUgZGlmZmVyZW50IGNhbGxpbmcgY29udmVudGlvbnMuDQooTmV2ZXIgbWluZCB0aGF0
-IGl0IGlzIGxpa2VseSBzbG93IG9uIDMyYml0LikNCg0KZGl2NjRfdTY0KCkgcmVhbGx5IG5lZWRz
-IGEgJ211c3QgY2hlY2snIGF0dHJpYnV0ZS4NCg0KU28gdGhlIGlkZWEgd2FzIHRvIGlubGluZSBh
-IDY0eDMyIGRpdmlkZSBhbmQgZG8gYSBjYWxsIGZvciBhIDY0eDY0IG9uZS4NCkJ1dCBpbmNsdWRl
-IGFuIG9wdGltaXNhdGlvbiB0aGF0IGF2b2lkZWQgdGhlIGNhbGwgZm9yIGEgNjR4NjQgZGl2aWRl
-DQppZiAoYXQgcnVuIHRpbWUpIHRoZSBkaXZpc29yIHdhcyBvbmx5IDMyYml0Lg0KKEhvdyBtdWNo
-IGRvZXMgYSAncmV0JyBjb3N0IHRoZXNlIGRheXMgd2l0aCBhbGwgdGhlIG1pdGlnYXRpb25zPykN
-Cg0KQWRkaW5nICFfX2J1aWx0aW5fY29uc3RhbnRfcChfYmhpKSB0byB0aGUgY2hlY2sgZm9yIHRo
-ZSBjYWxsIHJlbW92ZXMNCnRoZSBydW4tdGltZSBjaGVjayAtIGJ1dCB3aWxsIHN0aWxsIGlubGlu
-ZSB1NjQvdTY0IGlmIHRoZSBjb21waWxlcg0Ka25vd3MgdGhlIGRpdmlzb3IgaXMgc21hbGwuDQoN
-CkdpdmVuIHBlb3BsZSB3b24ndCB1c2UgdGhlIHJpZ2h0IGZ1bmN0aW9uLCBvcHRpbWlzaW5nIGRp
-djY0X3U2NCgpDQpmb3IgZGl2aXNvcnMgdGhhdCBhcmUga25vd24gYXQgY29tcGlsZSB0aW1lIHRv
-IGJlIDMyYml0cyBoYXMNCnRvIG1ha2Ugc29tZSBzZW5zZS4NCg0KSSdtIHRyeWluZyB0byB0aGlu
-ayBob3cgdG8gZG8gYSBjb21waWxlIHRpbWUgTlVMTCB0ZXN0IGZvciB0aGUNCidwb2ludGVyIHRv
-IHJlbWFpbmRlcicgZm9yIGFuIGlubGluZSBmdW5jdGlvbi4NCk1heWJlIGlmICghX19idWlsdGlu
-X2NvbnN0X3AocikgfHwgKHIpKSAqKHIpID0gX3JlbTsgd2lsbCBEVFJULg0KVGhlbiBkaXY2NF91
-NjQoYSwgYikgY2FuIGJlIGRpdjY0X3UzMl9yZW0oYSwgYiwgTlVMTCkgd2l0aG91dA0KYW55IGlu
-bGluZWQgdmVyc2lvbiBjb250YWluaW5nIGFuIGFjdHVhbCBOVUxMIGNoZWNrLg0KDQoJRGF2aWQN
-Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
-cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
-KFdhbGVzKQ0K
+On Mon, 6 May 2024 at 09:40, David Laight <David.Laight@aculab.com> wrote:
+> >
+> > We don 't do stupid things in the kernel. We basically never need the
+> > 64-by-64 divide.
+>
+> There are 381 references to div64_u64() some of them are just plain stupid.
+> Constant divisors of 100 and 1000 and div64_u64(x_ns * 100, y_us * 1000).
 
+Sadly, some peopel will get the compile error for "you can't do that"
+because they did a regular "a = b / c" and gcc created a mess, and
+then they mindlessly just replace it with div64_u64".
+
+> But someone wrote a script that complains that is a full 64bit divide
+> on 64bit systems - so suggests div64_u64().
+
+Yeah, that's well-intentioned, but it screws up.
+
+The reason is that "do_div()" _always_ does a 64-by-32 divide, and
+then if you have a divisor that is "long" (which is indeed 32 bit on
+32-bit architectures), now on 64-bit architectures it truncates what
+can be a 64-bit value.
+
+So we probably _should_ have made "do_div()" be a "64-by-long" divide.
+
+On actual 64-bit architectures, doing a 64-bti divide is typically
+fine (I can imagine some broken cases, but not enough to care). The
+whole problem is because of 32-bit architectures.
+
+              Linus
