@@ -1,159 +1,181 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54492F2C;
-	Mon,  6 May 2024 15:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796E915623D
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 16:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715009724; cv=none; b=Li2FwmUKrMoSxwTjUhCigxKy4WfZApWm87HYl8h6paYDFfuUWLjv1eWPktybPmkoJZm3X3w917KVJC8xLXLFwQe0HBxaq6G11lNbR0sXQ7SCVsf5pRKaKsym5Iq5OQyit4ZM5BLFGzp5ZPWyU7zhk+OO7/Cb3PMRA/ZmBOEldqs=
+	t=1715012599; cv=none; b=d4s1QRn7Bl5mO5J0RBm92OMN493kG9yvPJvndd1O6vFc5dOkqlVPIqHsha1Z4OED6oDOvLV8JMlC3xT8UDGdrlhJav897RLo+xt34x891BAgKDkVltneFKPtkYE1LY0VohRl30T0c1cS1clp+qj+ddktvsSi4hqm+75rYP5SHCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715009724; c=relaxed/simple;
-	bh=lYo//rrrDUiDk8JLNxviUfme0TBZCo3Xp6SdmDV+nC8=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZKG/8wK0ziVQdIDJLZK4P/3K63QzXZRyZujNeEFoGSlNv58leshL05RybckVEOR+ErhAGfANhwFJrkX7qGwtYu3NBQG499PT2xWFeYOaIvCy9QOckdLy0IZrV3M+g07wQo71reUZ9p0STim0ROt08TJDsPsRMzavEsZLNNQtMVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qcVFe/CT; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1715012599; c=relaxed/simple;
+	bh=LmralNm+INcoHI7lRkYYhgaqtwLlW+YAk6+Qe8w60Hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJskzWLAAkypN3sCTJAJUU28DNItXquT0dG5dFgQzEgcGtb71US66IKAiPU7EO62PXLOAeyVqZRtHSOojP9WAUS1kbD2g9CQCYGU5373xYxA79NWMyCq5e28H/tTbeeY7mf1jbtiLer02kDo8oNXgUlccxw/jFQXi/UHgeULSZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gUomEPKJ; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qcVFe/CT"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446FIFGx023044;
-	Mon, 6 May 2024 15:35:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=wxmOj2iq91mLUwhozzjDt0aJ2qD+YW23qpVgADmcC5k=;
- b=qcVFe/CTxIKn/fDSWnfiZTORZY4fqWEzsFfoaht0HlqZzqyxPCxrHhybhhgKNfhC8g6L
- 26bQkUIJQDgyUiQU9yTyR2ARyB9LHPOhv+Axfyx+/rXbfrk8CTT23UvGTO8oa6hq6upa
- dBlTyUWHCgChxxZEGuw0a/sVPVVd5ULvmfXq8Qipke/Co19IV4xa/J9jlUWBwRTSkoKv
- ymprVxm/qnD1L36kD1TRK49B/onrOKjZw5i2ygN7vBmys06thlxOyHP6Q0YMQ8vc+zWd
- RbIXxb7SOID7fnszmhMd4y4zU878JgevgpOjsOiA5CV3BglMkQ8Er2oN7bBq5zS92ru5 sA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy1qp81jc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 15:35:03 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446FZ2m6017285;
-	Mon, 6 May 2024 15:35:03 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy1qp81j8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 15:35:02 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 446ELmPR013959;
-	Mon, 6 May 2024 15:35:02 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xx222r8c3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 15:35:01 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 446FYwO346596390
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 May 2024 15:35:00 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 436E52004B;
-	Mon,  6 May 2024 15:34:58 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 63FE720040;
-	Mon,  6 May 2024 15:34:57 +0000 (GMT)
-Received: from [9.179.19.152] (unknown [9.179.19.152])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 May 2024 15:34:57 +0000 (GMT)
-Message-ID: <9cc947ea-4d3d-4d60-8986-cd7c527b3508@linux.ibm.com>
-Date: Mon, 6 May 2024 17:34:57 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/6] Assume sysfs event names are always the same case
-To: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        James Clark <james.clark@arm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20240502213507.2339733-1-irogers@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20240502213507.2339733-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: VZqydJjZudOV_NROmu_vOh_5aqULOJpO
-X-Proofpoint-GUID: Ks5p9td3XSzu6y-EReEOVWPffqVps1p6
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gUomEPKJ"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso702687b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 09:23:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715012598; x=1715617398; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ko9WKImq7Hf52RsrSv/3I6aINHKA2FDCht5+ZvEf+MA=;
+        b=gUomEPKJ4SYFTitiegRtjuy6AfoMjBU8NzcRcGJiBeqLXinT/Bv8EwoWmblRGLnZs1
+         GXYvehrcOg6SPPMtRdL3e7D1xBTYJNOlOk/VcYnJFwA3nPwSSwFLmCVi0egHA/yYPGRz
+         w1TdeludKLaC2kwKW3qZaQZAQzlGxa0ZErvvY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715012598; x=1715617398;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ko9WKImq7Hf52RsrSv/3I6aINHKA2FDCht5+ZvEf+MA=;
+        b=KwzWCLpPsJ8CIlB9hXjlAd6Q/N8gxLREcexFyQpgZACjZyHYwQurRs05tYaAPVnWve
+         ZoXzwVm1Se8UEGitb7h3dtluZrpkX8hYn1CPp2GoBGFl4xcSqEQZTbG1kenMOPrpMNV9
+         DwE4EYbMQS8p4IE8OwFOB7BuBZIMERMpg/8TvDQYQtTl1B48p+kZPOAlqWaX/iOsRE1t
+         C1MwP/KhG4iTqdq+A+GBeheJDLc/JPdySQvH1aEGxoB0Xtvpd31z+p0ZS3YQwQpMwmy1
+         u+GJtgJuWShyGzXCN8Wek8ks9rVDS0Dkr1PDIBNhGpcG2vBM3Wx2l2JIXGwp2cCgUTnL
+         JcfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0b1WQec0q730OuiVjuNRDiAU8WYcVKVoY7zA+lOLYDToyhSeicsVGNkk/FvqZ3paXO9DniuTT7XHsrcymBN9HG4OHcRxgtgHxN3stTPow1Q==
+X-Gm-Message-State: AOJu0Yxv20e6yDJqA5xL1fBfsdbHSglvdBTtdlj+lGxaTePC01hgQUti
+	Ug/XhUVjhIJoRuRpUt8huP8Dt3sWkRjLByEnr5FReT0zYH7dqilmDarYLX+y/A==
+X-Google-Smtp-Source: AGHT+IHBKdEzGGuJeQi6vNrQbny3eObyZhGrzgxQ5sxwJNu3FZZ7PzBBOuu9uKfhxKRRkHIToQb5DA==
+X-Received: by 2002:a05:6a00:885:b0:6f4:179a:fa5 with SMTP id q5-20020a056a00088500b006f4179a0fa5mr12305611pfj.31.1715012597581;
+        Mon, 06 May 2024 09:23:17 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c26-20020aa781da000000b006e6b2ba1577sm7892362pfn.138.2024.05.06.09.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 09:23:17 -0700 (PDT)
+Date: Mon, 6 May 2024 09:23:15 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405060856.53AFAE4F22@keescook>
+References: <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <51a49bae-bd91-428e-b476-f862711453a0@wanadoo.fr>
+ <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_09,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060108
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On 5/2/24 23:35, Ian Rogers wrote:
-> By assuming sysfs events are either upper or lower case, the case
-> insensitive event parsing can probe for the existence of files rather
-> then loading all events in a directory. When the event is a json event
-> like inst_retired.any on Intel, this reduces the number of openat
-> calls on a Tigerlake laptop from 325 down to 255.
+On Sun, May 05, 2024 at 07:31:24PM +0200, Erick Archer wrote:
+> On Sun, May 05, 2024 at 05:24:55PM +0200, Christophe JAILLET wrote:
+> > Le 05/05/2024 ‡ 16:15, Erick Archer a Ècrit†:
+> > > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> > > index 4013408ce012..080537eff69f 100644
+> > > --- a/kernel/events/ring_buffer.c
+> > > +++ b/kernel/events/ring_buffer.c
+> > > @@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+> > >   	unsigned long size;
+> > 
+> > Hi,
+> > 
+> > Should size be size_t?
 > 
-> v1 sent as an RFC:
->     https://lore.kernel.org/lkml/20240413040812.4042051-1-irogers@google.com/
-> 
-> v2: addresses review feedback from Kan Liang, by updating
->     documentation and adding tests.
-> 
-> v3: incorporate feedback from Thomas Richter <tmricht@linux.ibm.com>
->     that s390 event names are all upper case. Do a lower case probe
->     then an upper case probe, make documentation and tests also agree.
-> 
-> v4: add checks to write (kernel test robot) and fix a typo.
-> 
-> v5: Add reviewed-by: Kan Liang and fix potential uninitialized use.
-> 
-> Ian Rogers (6):
->   perf test pmu-events: Make it clearer that pmu-events tests json
->     events
->   perf Document: Sysfs event names must be lower or upper case
->   perf test pmu: Refactor format test and exposed test APIs
->   perf test pmu: Add an eagerly loaded event test
->   perf test pmu: Test all sysfs PMU event names are the same case
->   perf pmu: Assume sysfs events are always the same case
-> 
->  .../sysfs-bus-event_source-devices-events     |   6 +
->  tools/perf/tests/pmu-events.c                 |   2 +-
->  tools/perf/tests/pmu.c                        | 467 ++++++++++++------
->  tools/perf/util/parse-events.c                |   2 +-
->  tools/perf/util/parse-events.h                |   2 +-
->  tools/perf/util/pmu.c                         | 111 +++--
->  tools/perf/util/pmu.h                         |   4 +-
->  tools/perf/util/pmus.c                        |  16 +-
->  tools/perf/util/pmus.h                        |   2 +
->  9 files changed, 415 insertions(+), 197 deletions(-)
-> 
+> I'm sorry, but I don't have enough knowledge to answer this question.
+> The "size" variable is used as a return value by struct_size and as
+> a parameter to the order_base_2() and kzalloc_node() functions.
 
-I run the perf test suite on s390 and it looks good!
+For Linux, size_t and unsigned long are the same (currently).
+Pedantically, yes, this should be size_t, but it's the same.
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> [...]
+> > 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
+> >	if (!all_buf)
+> >		goto fail_all_buf;
+> >
+> >	rb->user_page = all_buf;
+> >	rb->data_pages[0] = all_buf + PAGE_SIZE;
+> >	if (nr_pages) {					<--- here
+> >		rb->nr_pages = 1;			<---
+> >		rb->page_order = ilog2(nr_pages);
+> >	}
+> [...]
+> I think that we don't need to deal with the "nr_pages = 0" case
+> since the flex array will always have a length of one.
+> 
+> Kees, can you help us with this?
+
+Agh, this code hurt my head for a while.
+
+all_buf contains "nr_pages + 1" pages. all_buf gets attached to
+rb->user_page, and then rb->data_pages[0] points to the second page in
+all_buf... which means, I guess, that rb->data_pages does only have 1
+entry.
+
+However, the nr_pages == 0 case is weird. Currently, data_pages[0] will
+still get set (which points ... off the end of all_buf). If we
+unconditionally set rb->nr_pages to 1, we're changing the behavior. If
+we _don't_ set rb->data_pages[0], we're changing the behavior, but I
+think it's an invalid pointer anyway, so this is the safer change to
+make. I suspect the right replacement is:
+
+
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 4013408ce012..7d638ce76799 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -916,15 +916,11 @@ void rb_free(struct perf_buffer *rb)
+ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ {
+ 	struct perf_buffer *rb;
+-	unsigned long size;
+ 	void *all_buf;
+ 	int node;
+ 
+-	size = sizeof(struct perf_buffer);
+-	size += sizeof(void *);
+-
+ 	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+-	rb = kzalloc_node(size, GFP_KERNEL, node);
++	rb = kzalloc_node(struct_size(rb, nr_pages, 1), GFP_KERNEL, node);
+ 	if (!rb)
+ 		goto fail;
+ 
+@@ -935,9 +931,9 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+ 		goto fail_all_buf;
+ 
+ 	rb->user_page = all_buf;
+-	rb->data_pages[0] = all_buf + PAGE_SIZE;
+ 	if (nr_pages) {
+ 		rb->nr_pages = 1;
++		rb->data_pages[0] = all_buf + PAGE_SIZE;
+ 		rb->page_order = ilog2(nr_pages);
+ 	}
+ 
+
+
+Also, why does rb_alloc() take an "int" nr_pages? The only caller has an
+unsigned long argument for nr_pages. Nothing checks for >INT_MAX that I
+can find.
+
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Gesch√§ftsf√ºhrung: David Faller
-
-Sitz der Gesellschaft: B√∂blingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Kees Cook
