@@ -1,242 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8060941C62;
-	Mon,  6 May 2024 05:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190F7137747
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 08:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714974386; cv=none; b=aBTVY5GNFkxOC2L3AyTEbfAlbrvVlPphkTsjUFP1suWsPKUxUBkpGaHkf1btNNR2nxcivCoXysIIX/thu4m8R8v+sv9pkucsV9ni+6LKplau67/UOu+A7FDmMAKRvw+RYhOm695Z7Dx2TPk8uMgx8EEJhr4DxwTfoips3wJTg7A=
+	t=1714983421; cv=none; b=dS9TTb1wX79v9PahUdp4+Yqf8YttLTNsLZbE0iKavRfBXIZMIf4d6CJZzCt1JIXRAbTUk//TM4WpshtLj50khDikdDFmDVqhLWAlZJAu8CcDrc5NIQmBNVh+FWm+ilCEVIWBg67WHDml4RCOOlrwwMuQ+/S76I+CT9y085WjfGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714974386; c=relaxed/simple;
-	bh=G3Rm/SfaVnbjnF8EMG0aajYrCGOKPnQ/MzeOPmajXhY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=eMfDAibSFqX54uo/HA6jEutmHkWn/xSyuQlBtuKGO86ac98NN26cgF7JB1H1pbdYO5pKJ6mXOJaqS5dwB1WrrBir5fLaBTNSz76C05WCvT1VhDG7cPOih8m+lhXIK31Q6HFfnfXqfWSIlKzPrrLcfDur0ZJ2W5tCjXcRCIXLunM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjsZ2mgv; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714983421; c=relaxed/simple;
+	bh=nNY02W8+mwn4OfGfOk44xFpXhIwKsr2nKA7lZGKZsG8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iDHLiEmwr093789AK/heZtfQzzPqqi1J/0amzPQH0SL9fu5gifMiupQR0OzNzKUA/yFyA2gNoFCrfBijOvLLOm+2BADObQaMzdXY5Ienhc3lCx9paPLw9I8GT6k2P1MXlO9xeD8Z7bIjlafn+kiItc56qMbnDV/NHnPXpxiE2u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HkJv/CG0; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjsZ2mgv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714974385; x=1746510385;
-  h=message-id:date:mime-version:subject:from:to:references:
-   in-reply-to:content-transfer-encoding;
-  bh=G3Rm/SfaVnbjnF8EMG0aajYrCGOKPnQ/MzeOPmajXhY=;
-  b=PjsZ2mgvt8wFkqCipOg7XYannXMu77zgOS5H7inkfiZzmJpzbYzyQnSy
-   9++xsr8WXpGcRjYnrcE3hxefg46ur2McknqlU4nFqdbrDalg/PDaZWQ9d
-   IM0aTAbz6DMisbQnr4ak7hzxUsPwbQ48sQqQxAsgHqk0bEhlLmbhWrFV+
-   PkhAXvoQq0Ys1siac1Bd8bQm9Yu690M1yyNCZgrOhQXXHZCH3kmnHboSO
-   EOlgFeLSYegVmMTA/zeYXIIyzi/Kbz1Jh9P9EntkcNgPR04clbCrM6YYV
-   EwqIaUHdENexHNo21XX1d0FEZbqXZk2Cq0MVUY+bSUq8RTKoRwq2JVIRx
-   w==;
-X-CSE-ConnectionGUID: 8sHQMC7pRtaeoiRBZ24PXw==
-X-CSE-MsgGUID: SiU4AfwQS3aSByrc3gZLbg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="10630667"
-X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
-   d="scan'208";a="10630667"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 22:46:24 -0700
-X-CSE-ConnectionGUID: At6Hs516TQyhbiAIAp/6iA==
-X-CSE-MsgGUID: 9x27xTYpSjK+n4KMzr7xJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
-   d="scan'208";a="28566574"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.32.241])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 22:46:20 -0700
-Message-ID: <63c6162b-f336-46bf-9764-a5ae0327e1c8@intel.com>
-Date: Mon, 6 May 2024 08:46:18 +0300
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HkJv/CG0"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f44bcbaae7so1245827b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 May 2024 01:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1714983419; x=1715588219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gvU9L4BSNfi8J9xPmuApsxXdGaL41m0A1yNVgMIPbng=;
+        b=HkJv/CG02oxZEtZD/W8KMTbzZsDk6Y9WtURrLDOJm6X8rSQXRXyy/H/u4JaSfpkBnp
+         RYSvx0VRFoxbkhGRKZ6Gca1vT2Sfi9x8Ge9daj9hTzQ2UWQpJWFHMPXl916PHJW3Ev72
+         AW+cvp7Ic/teuvzs2geLZiMuJmBoOp5lEy5d3oOXoBdY4GVW6Mh/9Yb17WiLE3uPMHTA
+         sj8mnClAGIpYYsCmdp59Da0wf4k3sxnwjv4dex48K7VXp1u69umZ6/Y/9wOTg+dMOUWM
+         3NvkPaig7hNmNFyXRIyqyLIPchyxRzGD13A4O2ZBz1W2/TEx/6eZAutTQ1YcVM4a44vO
+         vSUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714983419; x=1715588219;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gvU9L4BSNfi8J9xPmuApsxXdGaL41m0A1yNVgMIPbng=;
+        b=xRn2zIC7TEL2GoCqZRwoFkisVWW9WZNEiHbIVG0elioqJxtA5fflfuUFOz60gNwu6y
+         xQGjzU7rNDFvvTPCEs3beAzEYgHlsh75yETCrhds+bwsoo69Hgv5g84flrXmALLIWLs/
+         MwnbgxZQzCAb6R8T+EFgfiIeDqWnFZXJP6Q6b4hLRrZ3KWSmFDlGp5Ngkx4uIUYmNKRo
+         bLR0Xq2Etomo3Zludo6yCBWIAlg4SAxBjIsDF8IFm69OQzpfFT3iDpPbkjP17pXsetT0
+         Jjix4dKfhu/HXSUN50g2nurkBn3nCtTncfhfdhL30NPQ7BWzA3xe/QT3lCCU08GpNmkA
+         pGNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZrO+JLPk6rCy/mH4GA7Wnv1K7ZYPh7gmhOigMeqcCbEYq6gm/SFVAWu7YhcJwg6f+NSWJBm22tiFDCUSJ/kARbRmpZ2efLs5riox0LrIp+Q==
+X-Gm-Message-State: AOJu0YyUYf7UhL3UNSFJgV2PmB1IFEvaL4yK4blpUQNTjdrACa2Jwdbv
+	MvX4ZqDqC2iMWYxvLwMxAlKVv1XgQoANXeciHWRW0bmurfZCJv2y6cRax6j+MVs=
+X-Google-Smtp-Source: AGHT+IGW8eT6SRaXkCrgeRnW1vIvfkEVxl3wfc/uQwrh3V9qr5G6UHREAarofkys5NkUg/e3G4pjrQ==
+X-Received: by 2002:a05:6a20:daa0:b0:1af:3cb0:f2db with SMTP id iy32-20020a056a20daa000b001af3cb0f2dbmr10034326pzb.33.1714983419414;
+        Mon, 06 May 2024 01:16:59 -0700 (PDT)
+Received: from ubuntu20.04 ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id t15-20020a170902e84f00b001db5fc51d71sm7735030plg.160.2024.05.06.01.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 01:16:58 -0700 (PDT)
+From: Yang Jihong <yangjihong@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yangjihong@bytedance.com
+Subject: [PATCH] perf build: Specify libtraceevent dir to rpath for asan/msan build
+Date: Mon,  6 May 2024 16:16:48 +0800
+Message-Id: <20240506081648.3890067-1-yangjihong@bytedance.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf maps: Process kcore maps in order
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240505202805.583253-1-leo.yan@arm.com>
- <d47346fc-51b4-4af5-a014-0bd6f3b7bae0@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <d47346fc-51b4-4af5-a014-0bd6f3b7bae0@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/05/24 08:43, Adrian Hunter wrote:
-> On 5/05/24 23:28, Leo Yan wrote:
->> On Arm64, after enabling the 'DEBUG=1' build option, the tool exits
->> abnormally:
->>
->>   # ./perf report --itrace=Zi10ibT
->>   # perf: util/maps.c:42: check_invariants: Assertion `map__end(prev) <= map__start(map) || map__start(prev) == map__start(map)' failed.
->>     Aborted
->>
->> The details for causing this error are described in below.
->>
->> Firstly, machine__get_running_kernel_start() calculates the delta
->> between the '_stext' symbol and the '_edata' symbol for the kernel map,
->> alongside with eBPF maps:
->>
->>   DSO              | Start address      | End address
->>   -----------------+--------------------+--------------------
->>   kernel.kallsyms    0xffff800080000000   0xffff800082229200
->>   bpf_prog           0xffff800082545aac   0xffff800082545c94
->>   ...
->>
->> Then, the perf tool retrieves kcore maps:
->>
->>   Kcore maps       | Start address      | End address
->>   -----------------+--------------------+--------------------
->>   kcore_text         0xffff800080000000   0xffff8000822f0000
->>   vmalloc            0xffff800080000000   0xfffffdffbf800000
->>   ...
->>
->> Finally, the function dso__load_kcore() extends the kernel maps based on
->> the retrieved kcore info. Since it uses the inverted order for
->> processing the kcore maps, it extends maps for the vmalloc region prior
->> to the 'kcore_text' map:
->>
->>   DSO              | Start address      | End address
->>   -----------------+--------------------+--------------------
->>   kernel.kallsyms    0xffff800080000000   0xffff800082229200
->>   kernel.kallsyms    0xffff800082229200   0xffff800082545aac -> Extended for vmalloc region
->>   bpf_prog           0xffff800082545aac   0xffff800082545c94
->>   ...
->>
->>   DSO              | Start address      | End address
->>   -----------------+--------------------+--------------------
->>   kernel.kallsyms    0xffff800080000000   0xffff8000822f0000 -> Updated for kcore_text map
->>   kernel.kallsyms    0xffff800082229200   0xffff800082545aac
->>   bpf_prog           0xffff800082545aac   0xffff800082545c94
->>   ...
->>
->> As result, the two maps [0xffff800080000000..0xffff8000822f0000) and
->> [0xffff800082229200..0xffff800082545aac) are overlapping and triggers
->> failure.
->>
->> The current code processes kcore maps in inverted order. To fix it, this
->> patch adds kcore maps in the tail of list, afterwards these maps will be
->> processed in the order. Therefore, the kernel text section can be
->> processed prior to handling the vmalloc region, which avoids using the
->> inaccurate kernel text size when extending maps with the vmalloc region.
->>
->> Signed-off-by: Leo Yan <leo.yan@arm.com>
->> ---
->>  tools/perf/util/symbol.c | 19 ++++++++++++++++++-
->>  1 file changed, 18 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
->> index 9ebdb8e13c0b..e15d70845488 100644
->> --- a/tools/perf/util/symbol.c
->> +++ b/tools/perf/util/symbol.c
->> @@ -1266,7 +1266,24 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
->>  	map__set_end(list_node->map, map__start(list_node->map) + len);
->>  	map__set_pgoff(list_node->map, pgoff);
->>  
->> -	list_add(&list_node->node, &md->maps);
->> +	/*
->> +	 * Kcore maps are ordered with:
->> +	 *   [_text.._end): Kernel text section
->> +	 *   [VMALLOC_START..VMALLOC_END): vmalloc
->> +	 *   ...
->> +	 *
->> +	 * On Arm64, the '_text' and 'VMALLOC_START' are the same values
->> +	 * but VMALLOC_END (~124TiB) is much bigger then the text end
->> +	 * address. So '_text' region is the subset of the vmalloc region.
->> +	 *
->> +	 * Afterwards, when dso__load_kcore() adjusts kernel maps, we must
->> +	 * process the kernel text size prior to handling vmalloc region.
->> +	 * This can avoid to using any inaccurate kernel text size when
->> +	 * extending maps with vmalloc region. For this reason, here it
->> +	 * always adds kcore maps to the tail of list to make sure the
->> +	 * sequential handling is in order.
->> +	 */
->> +	list_add_tail(&list_node->node, &md->maps);
-> 
-> This seems reasonable, but I wonder if it might be robust
-> and future proof to also process the main map first
-> e.g. totally untested:
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9ebdb8e13c0b..63bce45a5abb 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1365,16 +1365,15 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  	if (!replacement_map)
->  		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
->  
-> -	/* Add new maps */
-> +	/* Add replacement_map */
->  	while (!list_empty(&md.maps)) {
+perf built by asan/msan will not search for shared libraries in the
+-L directory. For cross-compilation, we assume that sanitizers is
+generally not enabled and add libtraceevent dir to rpath in a simple way.
 
-That will need to be:
+1. msan build
 
-	struct map_list_node *new_node;
-...
-	list_for_each_entry(new_node, &md.maps, node) {
+Before:
+  $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=memory -fsanitize-memory-track-origins" CC=clang CXX=clang++ HOSTCC=clang NO_LIBELF=1 BUILD_BPF_SKEL=0 NO_LIBPFM=1 LIBTRACEEVENT_DIR=/opt/libtraceevent
+  ...
+  $ /tmp/perf/perf
+  /tmp/perf/perf: error while loading shared libraries: libtraceevent.so.1: cannot open shared object file: No such file or directory
 
+After:
+  $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=memory -fsanitize-memory-track-origins" CC=clang CXX=clang++ HOSTCC=clang NO_LIBELF=1 BUILD_BPF_SKEL=0 NO_LIBPFM=1 LIBTRACEEVENT_DIR=/opt/libtraceevent
+  ...
+  $ /tmp/perf/perf --build-options
+  perf version 6.9.0-rc5
+  <SNIP>
+           libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+  <SNIP>
 
->  		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
->  		struct map *new_map = new_node->map;
->  
-> -		list_del_init(&new_node->node);
-> -
->  		if (RC_CHK_EQUAL(new_map, replacement_map)) {
->  			struct map *map_ref;
->  
-> +			list_del_init(&new_node->node);
->  			map__set_start(map, map__start(new_map));
->  			map__set_end(map, map__end(new_map));
->  			map__set_pgoff(map, map__pgoff(new_map));
-> @@ -1385,20 +1384,29 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  			err = maps__insert(kmaps, map_ref);
->  			map__put(map_ref);
->  			map__put(new_map);
-> +			free(new_node);
->  			if (err)
->  				goto out_err;
-> -		} else {
-> -			/*
-> -			 * Merge kcore map into existing maps,
-> -			 * and ensure that current maps (eBPF)
-> -			 * stay intact.
-> -			 */
-> -			if (maps__merge_in(kmaps, new_map)) {
-> -				err = -EINVAL;
-> -				goto out_err;
-> -			}
->  		}
-> +	}
-> +
-> +	/* Add new maps */
-> +	while (!list_empty(&md.maps)) {
-> +		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
-> +		struct map *new_map = new_node->map;
-> +
-> +		list_del_init(&new_node->node);
-> +
-> +		/*
-> +		 * Merge kcore map into existing maps,
-> +		 * and ensure that current maps (eBPF)
-> +		 * stay intact.
-> +		 */
-> +		if (maps__merge_in(kmaps, new_map))
-> +			err = -EINVAL;
->  		free(new_node);
-> +		if (err)
-> +			goto out_err;
->  	}
->  
->  	if (machine__is(machine, "x86_64")) {
-> 
-> 
+ 2. asan build
+
+Before:
+  $ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address' LIBTRACEEVENT_DIR=/opt/libtraceevent
+  ...
+  $ ./perf
+  ./perf: error while loading shared libraries: libtraceevent.so.1: cannot open shared object file: No such file or directory
+
+After:
+   $ make DEBUG=1 EXTRA_CFLAGS='-fno-omit-frame-pointer -fsanitize=address' LIBTRACEEVENT_DIR=/opt/libtraceevent
+   ...
+   $ ./perf --build-options
+   perf version 6.9.0-rc5
+   <SNIP>
+            libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+   <SNIP>
+
+Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+---
+ tools/perf/Makefile.config | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 7f1e016a9253..a9a923358604 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -188,6 +188,10 @@ TRACEEVENTLIBS := -ltraceevent
+ ifdef LIBTRACEEVENT_DIR
+   LIBTRACEEVENT_CFLAGS  := -I$(LIBTRACEEVENT_DIR)/include
+   LIBTRACEEVENT_LDFLAGS := -L$(LIBTRACEEVENT_DIR)/lib
++  # Specify rpath for asan/msan build. Generally, cross-compilation will not enable sanitizers.
++  ifeq ($(findstring -fsanitize=,${EXTRA_CFLAGS}),-fsanitize=)
++    LIBTRACEEVENT_LDFLAGS += -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
++  endif
+ endif
+ FEATURE_CHECK_CFLAGS-libtraceevent := $(LIBTRACEEVENT_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libtraceevent := $(LIBTRACEEVENT_LDFLAGS) $(TRACEEVENTLIBS)
+-- 
+2.25.1
 
