@@ -1,57 +1,57 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93CF142645
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E1514265C
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714973475; cv=none; b=Bz6sEexu7EAzb26iYyLpQsgjFSiHP406WzkmovLLxjZ7E/ID4VspKZxT0eU1QUYmOP2nrbEWJksNKUiy87oF7LYhN4OU8oeO2/PL4wxBWXD4AADWtqCKUwWeOOSoOdD1myMotrxxUaxN0pppy7gPirhgRmLMKBvhIP3KWiyqy2M=
+	t=1714973476; cv=none; b=BleV7O7IzmMs7bPs+Y+D0pYFSoBR+RceK2x+bl+SsESTE4T9ZI1HGqFqsCELsqa2OarG7a1f0DtNfi6kf4aWNZLGiIIRlZgVdssvQ8puxkc3RlpUYNlseGrxtYREGsfKdygNJbDuIPIFseTwlfx0obUa4BtZ59EjUqo53oHnU0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714973475; c=relaxed/simple;
-	bh=PQ8TZ4RdD/Jae2B0ivSZpwQfAobjsC7KWmCl3Fg01VE=;
+	s=arc-20240116; t=1714973476; c=relaxed/simple;
+	bh=UdZqWNqzeB0cg7wdvprRnRfsefRwp8AZHxDSSpJByyk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fK9vdrkmOu6dwKlW3vdAGCANFtIxyhHyteZhOVO/ZujuguJX44OIjgNFDNgPDqnf+8ppRva1y+0QuFnxucrF8neBWgmkYLL+dXBKP/UaQHjUHSuxqX3zm67CF558MGnuvpGC2cD5KP+QkJEn3l00Zgydl2D/JKYYcDgMxpVaX2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vEX0iRSM; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=FUy4p6Yc+zCl+dtBVVqWsLLLpEaqyKP3Z5XyvuNQSrkLN+Zfg4GSghiLAJR7eexoG3eh7pC+xAsY9qIarUtUFV+kB1KWR0pZvtQgZGGIxXdCCMzDNpFsqpSaRZrhVTBnhtWGjTIid06W428J6pPNtnsdpLi7BZNAU3TWcxW2Rrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gpyTb3/v; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vEX0iRSM"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-61c4c57e97bso2165848a12.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gpyTb3/v"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6089c86e4d9so1639805a12.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:31:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714973472; x=1715578272; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714973475; x=1715578275; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2/OcGHonEVRuBkvEWvgnmnK73UbAHSL5D04uHdACOo=;
-        b=vEX0iRSMdA8vFQNztsM9ZS+k8ip1J8/a9BBBJRbupJMgkS3UMbGcl6knpqoZVGn9RQ
-         pCDWhh41nGN1uWEIdp3GMT6H6w+Sw7Do7NFxKg4aDVytZqj5H9GEwNzaMemlwEWCnH/y
-         LzazANT+rUFIalas3KKl3/xkhbtTjNqAu/BSSGfPQdMcsU/jGq+FIzORcn2FTZ1xPPZG
-         sJqdQHxPDw2QPSGVunQ/y4PpoFjqEJKMW9GCe4BHZQ4wTtt3+XiGtxZpqrgeRMZWNZ9c
-         0q9hePGr9In8sXSmIAgU6iASXvJELn9ZHLrabUyeOOwVecxkYOH62wSFZP3bLlw7a+Va
-         4lQA==
+        bh=qGdTiGFpAD7t0Nw5YwyJJdyfP8r0jkD9X8gPcBU6XUM=;
+        b=gpyTb3/vGKExpVEOHOLRM75Y0RkY/svSThg2u31kT2zDNgIhZoLYQl2YJxtmDKFIUp
+         Sb++2e5TrziVHw+GSbvzJizP2AqBlxdABd+FfoVP/JeRT1wsMEHyjXaNXKXD/qT7Il+Y
+         OfduXIFssnFVaviA9984npl42wdBrVklRiVDuNCMAwbO3H3enZBvzirbc/r+f4jaYtLQ
+         PHoKMwvH+TNKzFp/r1fycTjzatl4oo8rrWBYWoxmLIYLyOQHPwdJJTTOWozQ/OEDzaWi
+         uqr4LC27wgfMATuygvEDmhqurmEhv2j0wKkghiF6XmOAdqkSBselKA5iTQlLJYMwugEp
+         d/uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714973472; x=1715578272;
+        d=1e100.net; s=20230601; t=1714973475; x=1715578275;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=o2/OcGHonEVRuBkvEWvgnmnK73UbAHSL5D04uHdACOo=;
-        b=C/nZlCvTz3i7ZTaAlMwBGmAwLqX0vqbqGcwSQVZV5/3Feqh3Wyp3uERftRYcZ2sXax
-         0smpPNBMV8MK8eLEJcf8hUwjETQH4FKmu9+I7Fk+g3yr3xtQ6jYq7jgQrtUP15hrU/4i
-         SK4zBKdNLCsoOqJcbqORI1Qg3bhj1ExSIwcLhXyjAtLIUIGsuL974OKgYxIhdkiTdWGi
-         eSNZnzOJg3DQOUoQEt96lQ2oO5G3XcBYE6JVhbUMlHtNZTB3Tj+YDyhCw3AAczsQDh0q
-         M+KSFMSB6/DY2MGrdyW1QlgRJOGUkIkmfMEKOhww+p/iB7ljMoyugECosIbIFdmAol7Q
-         uaFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrXydMWsB+SqeiEBi25HI7MXLhxulG/h5vByHzYLrkyAU7+P2JyzLtLgABkGb8YvgU5CfOcRGQh4UzZGknGq1bWkZt1+/oImHE9HI3l/w7kg==
-X-Gm-Message-State: AOJu0YxjAt4rFNRb8R7LGBRSrZbKA5/95cUVtczT56G1zwAA7oSnoU01
-	k09rZjW4yltjtP58HDwrCI25aKdDwyvIT7GQ01QPrqE2Ftx6p57bVGEzN/dbbMgckDArAQY5IrM
-	e8ohWCw==
-X-Google-Smtp-Source: AGHT+IGL7l6kwX5BiDLtsOcJyMOB8di78i9k/4OsIdwSa1KRjrJPvD3bfQxI+9zXl9CrQUBGBQlDp4NrzR3d
+        bh=qGdTiGFpAD7t0Nw5YwyJJdyfP8r0jkD9X8gPcBU6XUM=;
+        b=D3FHVcxePRYR8JU+Cypm0NGVwujhkfymgyNh9PqdXBJEGJgrZqtWQLc4pQwtXiS0BK
+         0j11NU8iv+i2ERJ6HRcbCF7UfUxaZ516ZEI7XII2hSFUJ4ijUiD2YRL9uSMvROUlXue3
+         GacBHpP+Pn8HGxWm9srZA2tjq4E4JufjtD/hfJ3s4XEfmzUnLXGdiIplubhdC1Ou/Ar8
+         UiYUuNuEqjHT2UwHmv3MvCByVe6NRb6EYdaxzhZWM1M9Zf9bScfeueRLuEeG2qjqvkMT
+         NUz4Va31Z4yk/2TNzgudC8+ule72/BWreSXpcd7c1NWu6H3Rhltdbszp/sUadcOGYE9O
+         JADA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgsnNg8aavMyymugPmd25jNrQJL+BDDnjasr/j1ZEFBBORMbAnjXdJKEoFr7TwhLrSu3VYMA0s3+WWFj3MjdN7O8aMVvub/rgL5Mt3KiLpHw==
+X-Gm-Message-State: AOJu0YyXWYukg+c5xolCmXOGKcNQR1TmZ9OLHi8RNghQOSLsMaYG2DSZ
+	jzyIIoGu0OBcHYPOdrweuEFEoakcnKTqABbUnYipDhQmuQeoMWjt5VLMZgjtotGkub3WNKEw/vT
+	J8btRYQ==
+X-Google-Smtp-Source: AGHT+IGYWQPb81CDVBWmWEGQFtP9vagQYnjfwuEIm4SVx6KL1RUYYJsKtF7tXLL/CuM31FXUTVspm/zuW71V
 X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a63:744a:0:b0:61a:da48:a5fd with SMTP id
- e10-20020a63744a000000b0061ada48a5fdmr24264pgn.6.1714973472106; Sun, 05 May
- 2024 22:31:12 -0700 (PDT)
+ job=sendgmr) by 2002:a63:921b:0:b0:5d8:bb0c:d28b with SMTP id
+ o27-20020a63921b000000b005d8bb0cd28bmr23023pgd.8.1714973474158; Sun, 05 May
+ 2024 22:31:14 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon,  6 May 2024 05:29:49 +0000
+Date: Mon,  6 May 2024 05:29:50 +0000
 In-Reply-To: <20240506053020.3911940-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240506053020.3911940-1-mizhang@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240506053020.3911940-25-mizhang@google.com>
-Subject: [PATCH v2 24/54] KVM: x86/pmu: Create a function prototype to disable
- MSR interception
+Message-ID: <20240506053020.3911940-26-mizhang@google.com>
+Subject: [PATCH v2 25/54] KVM: x86/pmu: Add intel_passthrough_pmu_msrs() to
+ pass-through PMU MSRs
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,78 +78,105 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add one extra pmu function prototype in kvm_pmu_ops to disable PMU MSR
-interception.
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Event selectors for GP counters and fixed counters control MSR are
+intercepted for the purpose of security, i.e., preventing guest from using
+unallowed events to steal information or take advantages of any CPU errata.
+
+Other than event selectors, disable PMU counter MSR interception specified
+in guest CPUID, counter MSR index outside of exported range will still be
+intercepted.
+
+Global registers like global_ctrl will passthrough only if pmu version is
+greater than 1.
+
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 ---
- arch/x86/include/asm/kvm-x86-pmu-ops.h | 1 +
- arch/x86/kvm/cpuid.c                   | 4 ++++
- arch/x86/kvm/pmu.c                     | 5 +++++
- arch/x86/kvm/pmu.h                     | 2 ++
- 4 files changed, 12 insertions(+)
+ arch/x86/kvm/cpuid.c         |  3 +--
+ arch/x86/kvm/vmx/pmu_intel.c | 47 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-index fd986d5146e4..1b7876dcb3c3 100644
---- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-@@ -24,6 +24,7 @@ KVM_X86_PMU_OP(is_rdpmc_passthru_allowed)
- KVM_X86_PMU_OP_OPTIONAL(reset)
- KVM_X86_PMU_OP_OPTIONAL(deliver_pmi)
- KVM_X86_PMU_OP_OPTIONAL(cleanup)
-+KVM_X86_PMU_OP_OPTIONAL(passthrough_pmu_msrs)
- 
- #undef KVM_X86_PMU_OP
- #undef KVM_X86_PMU_OP_OPTIONAL
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 77352a4abd87..b577ba649feb 100644
+index b577ba649feb..99e6cca67beb 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -381,6 +381,10 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
- 	vcpu->arch.reserved_gpa_bits = kvm_vcpu_reserved_gpa_bits_raw(vcpu);
+@@ -382,8 +382,7 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
  
  	kvm_pmu_refresh(vcpu);
-+
-+	if (is_passthrough_pmu_enabled(vcpu))
-+		kvm_pmu_passthrough_pmu_msrs(vcpu);
-+
+ 
+-	if (is_passthrough_pmu_enabled(vcpu))
+-		kvm_pmu_passthrough_pmu_msrs(vcpu);
++	kvm_pmu_passthrough_pmu_msrs(vcpu);
+ 
  	vcpu->arch.cr4_guest_rsvd_bits =
  	    __cr4_reserved_bits(guest_cpuid_has, vcpu);
- 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 3afefe4cf6e2..bd94f2d67f5c 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -1059,3 +1059,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
- 	kfree(filter);
- 	return r;
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index ed79cbba1edc..8e8d1f2aa5e5 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -740,6 +740,52 @@ static bool intel_is_rdpmc_passthru_allowed(struct kvm_vcpu *vcpu)
+ 	return true;
  }
-+
-+void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
+ 
++/*
++ * Setup PMU MSR interception for both mediated passthrough vPMU and legacy
++ * emulated vPMU. Note that this function is called after each time userspace
++ * set CPUID.
++ */
++static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
 +{
-+	static_call_cond(kvm_x86_pmu_passthrough_pmu_msrs)(vcpu);
++	bool msr_intercept = !is_passthrough_pmu_enabled(vcpu);
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	int i;
++
++	/*
++	 * Unexposed PMU MSRs are intercepted by default. However,
++	 * KVM_SET_CPUID{,2} may be invoked multiple times. To ensure MSR
++	 * interception is correct after each call of setting CPUID, explicitly
++	 * touch msr bitmap for each PMU MSR.
++	 */
++	for (i = 0; i < kvm_pmu_cap.num_counters_gp; i++) {
++		if (i >= pmu->nr_arch_gp_counters)
++			msr_intercept = true;
++		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, msr_intercept);
++		if (fw_writes_is_enabled(vcpu))
++			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, msr_intercept);
++		else
++			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, true);
++	}
++
++	msr_intercept = !is_passthrough_pmu_enabled(vcpu);
++	for (i = 0; i < kvm_pmu_cap.num_counters_fixed; i++) {
++		if (i >= pmu->nr_arch_fixed_counters)
++			msr_intercept = true;
++		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i, MSR_TYPE_RW, msr_intercept);
++	}
++
++	if (pmu->version > 1 && is_passthrough_pmu_enabled(vcpu) &&
++	    pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
++	    pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed)
++		msr_intercept = false;
++	else
++		msr_intercept = true;
++
++	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_STATUS, MSR_TYPE_RW, msr_intercept);
++	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_CTRL, MSR_TYPE_RW, msr_intercept);
++	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
 +}
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index e1af6d07b191..63f876557716 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -41,6 +41,7 @@ struct kvm_pmu_ops {
- 	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
- 	void (*cleanup)(struct kvm_vcpu *vcpu);
- 	bool (*is_rdpmc_passthru_allowed)(struct kvm_vcpu *vcpu);
-+	void (*passthrough_pmu_msrs)(struct kvm_vcpu *vcpu);
- 
- 	const u64 EVENTSEL_EVENT;
- 	const int MAX_NR_GP_COUNTERS;
-@@ -292,6 +293,7 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
- int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
- void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel);
- bool kvm_pmu_check_rdpmc_passthrough(struct kvm_vcpu *vcpu);
-+void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- 
++
+ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+ 	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
+ 	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
+@@ -752,6 +798,7 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+ 	.deliver_pmi = intel_pmu_deliver_pmi,
+ 	.cleanup = intel_pmu_cleanup,
+ 	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
++	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
+ 	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
+ 	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
+ 	.MIN_NR_GP_COUNTERS = 1,
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
