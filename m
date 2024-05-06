@@ -1,119 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BB641C73;
-	Mon,  6 May 2024 19:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6015B106
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 20:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715022995; cv=none; b=N3fb+B/+Km4TpQ5vOLKGDFfFPIhfEMRup0yVuFT6smVb4tak8AGtIaoMuJ9cIgiYDFF289WogBjbdy8zP78kNBW/ZrNO4PMEv6eA4+3frCWzsv4iOq1Ux+NIwEzLrURkCg7CDDI7m29WZqqcGQmTGZ3wOpv22cpOPFooFai//k0=
+	t=1715027187; cv=none; b=jMBocXGKBkubqv4ar1qWPv7e0Tgkv+wnMRexpuoKlZiAEvcMZkj6ZDuH8uPyNLMMTRsDqbGiHvKLeuT6VboiXT5r8OaaPUA98H1YqVsJlVdhgGs3e+YI8SFszAruBeAU5yeHWlHTtzHKbK/qia91kg6jGXAvflfEoCOT82SmORc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715022995; c=relaxed/simple;
-	bh=dM4RYK1HPhpiphlZExp0kEMnb2WuO6EBZsOrpdKmkeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBQ1z4dbznicDsR9AErtgKPqM/FFcQzqIwvmgXk8oeKdrGv7OqinjwUVloUiaCy+/wmDtMr6+zUIh13Xg2nwTpNz3yHSC+5jyO7m94m0lxMcgrKuo+Mo23+qb0dnUZzGA2Lyz7hnfYxVJfDrSCywPy2d16n3vPNOJVtinSB3Cpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p22adx8V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p22adx8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D687C116B1;
-	Mon,  6 May 2024 19:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715022994;
-	bh=dM4RYK1HPhpiphlZExp0kEMnb2WuO6EBZsOrpdKmkeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p22adx8VFW7ioiNw8e/ZClDpQeoamqBgo/VwXvYdTwee3MTcDB2ZePDbNbjAvc4T5
-	 NuGCLi+wL0GgrhzfHq6N9p0AFieqH32JaMVefOMxHrSdra4NOfhuWldsP15wD7WedX
-	 OoxyBdvnnMSyWkIrxg6rk0nv4igi/dCiaZeaQ+bQOQck7dkfETOlMAxrws+8WIhOOd
-	 nLYtWcMphLkM4rwdvbXR+Hmw03/ilUto8JVBQvKOp80RI7niKEEcz0NnYK2Z273oMa
-	 6dcJGaWJf31fdI2kMmlRNFbgcogQyWoXU+k2xg8smolJCa7JAMdHFNTCHIBc3s26we
-	 lN3Uzt6mOpauw==
-Date: Mon, 6 May 2024 16:16:03 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org,
-	brauner@kernel.org, viro@zeniv.linux.org.uk,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-mm@kvack.org,
-	Daniel =?iso-8859-1?Q?M=FCller?= <deso@posteo.net>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 2/5] fs/procfs: implement efficient VMA querying API for
- /proc/<pid>/maps
-Message-ID: <Zjksc3yqvkocS18M@x1>
-References: <20240504003006.3303334-1-andrii@kernel.org>
- <20240504003006.3303334-3-andrii@kernel.org>
- <2024050439-janitor-scoff-be04@gregkh>
- <CAEf4BzZ6CaMrqRR1Rah7=HnTpU5-zw5HUnSH9NWCzAZZ55ZXFQ@mail.gmail.com>
- <ZjjiFnNRbwsMJ3Gj@x1>
- <CAM9d7cgvCB8CBFGhMB_-4tCm6+jzoPBNg4CR7AEyMNo8pF9QKg@mail.gmail.com>
- <ZjknNJSFcKaxGDS4@x1>
+	s=arc-20240116; t=1715027187; c=relaxed/simple;
+	bh=DDEVdmd0kcLpzxPz3ifGRimSuneLJY7fGREA60OUpMg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=g0KdUyHNAKbWk1rb16U/RrTnOVnnASvFD9PoV0YEjOsSs8DTjE2xLKeBvEIfG9G/9As39bhD2cvwZkuPI4HBN9UFpIDgzpVcKflWT0/OfDK12G2BK1dIJOzftmBbRZ3tbLtqLJ+CWoo9QwQePJEy4imOCupr4d8wFnZci8ju9ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-15-6tKKbw7SM_6KGLbzgEL1Eg-1; Mon, 06 May 2024 21:26:23 +0100
+X-MC-Unique: 6tKKbw7SM_6KGLbzgEL1Eg-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 May
+ 2024 21:25:44 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 6 May 2024 21:25:44 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>
+CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3CAAVRfAIABXupwgAAfSaWAAAmBAA==
+Date: Mon, 6 May 2024 20:25:44 +0000
+Message-ID: <a0bdbe9832cc40e29cd63a71cec95fba@AcuMS.aculab.com>
+References: <Zi57-TMgU19puaQM@octinomon.home>
+ <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+ <ZjPApuDc0gL9Pchm@octinomon.home>
+ <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
+ <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
+ <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
+ <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
+ <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
+ <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
+ <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjknNJSFcKaxGDS4@x1>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Mon, May 06, 2024 at 03:53:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, May 06, 2024 at 11:05:17AM -0700, Namhyung Kim wrote:
-> > On Mon, May 6, 2024 at 6:58 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > On Sat, May 04, 2024 at 02:50:31PM -0700, Andrii Nakryiko wrote:
-> > > > On Sat, May 4, 2024 at 8:28 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > On Fri, May 03, 2024 at 05:30:03PM -0700, Andrii Nakryiko wrote:
-> > > > > > Note also, that fetching VMA name (e.g., backing file path, or special
-> > > > > > hard-coded or user-provided names) is optional just like build ID. If
-> > > > > > user sets vma_name_size to zero, kernel code won't attempt to retrieve
-> > > > > > it, saving resources.
-> 
-> > > > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> 
-> > > > > Where is the userspace code that uses this new api you have created?
-> 
-> > > > So I added a faithful comparison of existing /proc/<pid>/maps vs new
-> > > > ioctl() API to solve a common problem (as described above) in patch
-> > > > #5. The plan is to put it in mentioned blazesym library at the very
-> > > > least.
-> > > >
-> > > > I'm sure perf would benefit from this as well (cc'ed Arnaldo and
-> > > > linux-perf-user), as they need to do stack symbolization as well.
->  
-> > I think the general use case in perf is different.  This ioctl API is great
-> > for live tracing of a single (or a small number of) process(es).  And
-> > yes, perf tools have those tracing use cases too.  But I think the
-> > major use case of perf tools is system-wide profiling.
->  
-> > For system-wide profiling, you need to process samples of many
-> > different processes at a high frequency.  Now perf record doesn't
-> > process them and just save it for offline processing (well, it does
-> > at the end to find out build-ID but it can be omitted).
-> 
-> Since:
-> 
->   Author: Jiri Olsa <jolsa@kernel.org>
->   Date:   Mon Dec 14 11:54:49 2020 +0100
->   1ca6e80254141d26 ("perf tools: Store build id when available in PERF_RECORD_MMAP2 metadata events")
-> 
-> We don't need to to process the events to find the build ids. I haven't
-> checked if we still do it to find out which DSOs had hits, but we
-> shouldn't need to do it for build-ids (unless they were not in memory
-> when the kernel tried to stash them in the PERF_RECORD_MMAP2, which I
-> haven't checked but IIRC is a possibility if that ELF part isn't in
-> memory at the time we want to copy it).
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDYgTWF5IDIwMjQgMTg6MjcNCj4gDQo+IE9u
+IE1vbiwgNiBNYXkgMjAyNCBhdCAwOTo0NSwgTGludXMgVG9ydmFsZHMNCj4gPHRvcnZhbGRzQGxp
+bnV4LWZvdW5kYXRpb24ub3JnPiB3cm90ZToNCj4gPg0KPiA+IFNvIHdlIHByb2JhYmx5IF9zaG91
+bGRfIGhhdmUgbWFkZSAiZG9fZGl2KCkiIGJlIGEgIjY0LWJ5LWxvbmciIGRpdmlkZS4NCj4gDQo+
+IEFjdHVhbGx5LCBzb21lIG9mIHRob3NlIGNvbnZlcnNpb25zIGFyZSBqdXN0IHdyb25nIGFuZCBz
+dHVwaWQsIGFuZA0KPiBkaWRuJ3QgaGF2ZSAnbG9uZycgZGl2aXNvcnMgYXQgYWxsLg0KPiANCj4g
+QW5kIHdlIGRvIGhhdmUgImRpdjY0X3VsKCkiLCBhbHRob3VnaCBpdCdzIG5vdCB1c2VkIGFzIHdp
+ZGVseSBhcyBpdCBjb3VsZCBiZS4NCj4gDQo+IEJ1dCBJIHRoaW5rIHdlIGNhbiBkbyB0aGUgcmV2
+ZXJzZSwgYW5kIGp1c3QgdGVhY2ggImRpdjY0X3U2NCgpIiB0byBkbw0KPiB3aGF0IGdjYyBzaG91
+bGQgYWx3YXlzIGhhdmUgZG9uZSwgYW5kIGxvb2sgYXQgdGhlIGRpdmlzb3IgcmFuZ2UgYXQNCj4g
+Y29tcGlsZS10aW1lLg0KPiANCj4gU29tZXRoaW5nIGxpa2UgdGhpcywgcGVyaGFwczoNCj4gDQo+
+ICAgLyoNCj4gICAgKiBEbyBhIDY0LWJ5LTY0IGRpdmlkZSB1c2luZyBkaXY2NF91bCAvIGRpdjY0
+X2xvbmcgLyBkaXY2NF91NjQNCj4gICAgKiBkZXBlbmRpbmcgb24gdHlwZSBvZiBkaXZpc29yLg0K
+PiAgICAqLw0KPiAgICNkZWZpbmUgZGl2NjRfdTY0X3R5cGUoYSxiKSBfR2VuZXJpYygoYiksICAg
+ICBcDQo+ICAgICAgICAgdW5zaWduZWQgbG9uZzogZGl2NjRfdWwoYSxiKSwgICAgICAgICAgIFwN
+Cj4gICAgICAgICBsb25nOiBkaXY2NF9sb25nKGEsYiksICAgICAgICAgICAgICAgICAgXA0KPiAg
+ICAgICAgIGludDogZGl2NjRfbG9uZyhhLGIpLCAgICAgICAgICAgICAgICAgICBcDQo+ICAgICAg
+ICAgZGVmYXVsdDogZGl2NjRfdTY0KGEsYikpDQo+IA0KPiAgIC8qIElzIGl0IHplcm8gd2l0aG91
+dCBldmFsdWF0aW5nIGl0PyAqLw0KPiAgICNkZWZpbmUgaXNfY29uc3RhbnRfemVybyh4KSBcDQo+
+ICAgICAgICAgKF9fYnVpbHRpbl9jb25zdGFudF9wKHgpICYmICEoeCkpDQo+IA0KPiAgIC8qIFRo
+aXMgY2F0Y2hlcyBjb25zdGFudHMgYW5kIGNvbXBpbGUtdGltZSByYW5nZXMgKi8NCj4gICAjZGVm
+aW5lIGlzXzMyX2JpdCh4KSBcDQo+ICAgICAgICAgaXNfY29uc3RhbnRfemVybygoeCk+PjE2Pj4x
+NikNCj4gDQo+ICAgLyoNCj4gICAgKiBQaWNrIHRoZSByaWdodCBkaXZpc2lvbiBoZWxwZXIgYmFz
+ZWQgb24NCj4gICAgKiB2YWx1ZSBvciB0eXBlIG9mIHRoZSBkaXZpc29yDQo+ICAgICovDQo+ICAg
+I2RlZmluZSBkaXY2NF91NjQoYSxiKSBcDQo+ICAgICAgICAgKGlzXzMyX2JpdChiKSA/IGRvX2Rp
+djY0KGEsYikgOiBkaXY2NF91NjRfdHlwZShhLGIpKQ0KPiANCj4gc2hvdWxkIG5vdyBtYWtlIGRp
+djY0X3U2NCgpIGRvIHRoZSByaWdodCB0aGluZyBhbmQgYXZvaWQgdGhlIDY0LWJpdA0KPiBkaXZp
+ZGUgZm9yIHJlbGV2YW50IHR5cGVzICh0aGUgc2lnbmVkIHR5cGUgY2FzZSBtYWtlcyBpdCBhIGJp
+dCBsZXNzDQo+IG9idmlvdXMsIGJ1dCB3aGF0ZXZlcikuDQoNCkkgZG9uJ3QgdGhpbmsgdGhlcmUg
+YXJlIGFueSBzaWduZWQgZGl2aWRlcyB0byB3b3JyeSBhYm91dC4NClNpZ25lZCBkaXZpZGVzIGFy
+ZSBhbHNvIHRvbyBwYWluZnVsIHRvIHNvcnQgb3V0Lg0KWW91IGhhdmUgdG8gd29ycnkgYWJvdXQg
+YWxsIDQgcXVhZHJhbnRzLg0KDQpXaGljaCBpcyBwcmV0dHkgbXVjaCBleGFjdGx5IHdoYXQgSSBw
+cm9wb3NlZCA6LSkNCihhcGFydCBmcm9tIHRoZSBydW4tdGltZSBjaGVjayB0byBhdm9pZCBjYWxs
+aW5nIGRpdjY0X3U2NCgpLikNCkJ5IHRoZSB0aW1lIHlvdSd2ZSBkb25lIHRoZSBpc18zMl9iaXQo
+YikgeW91J3ZlIG9ubHkgZ290DQo2NCBiaXQgdmFsdWVzIGxlZnQgKHdlbGwgYW5kIDEyOCBidXQu
+Li4pLCB0aGV5IG1pZ2h0IGJlICdsb25nJw0Kb3IgJ2xvbmcgbG9uZycgb24gNjRiaXQgYnV0IHRo
+YXQgZG9lc24ndCBtYXR0ZXIuDQoNCkknbSBub3Qgc3VyZSBvZiB0aGUgYmVzdCB3YXkgdG8gcmV0
+dXJuIGEgcXVvdGllbnQgYW5kIHJlbWFpbmRlcg0Kb24gYSAzMmJpdCBzeXN0ZW0uDQpUaGUgJ3Vz
+ZXInIGFwaSBpcyBiZXN0IGFzOg0KCXF1b3RpZW50ID0gZGl2dV94eHgoZGl2aWRlbmQsIGRpdmlz
+b3IsICZxdW90aWVudCk7DQp3aGVyZSBkaXZpc29yIGFuZCBxdW90aWVudCBhcmUgdGhlIHNhbWUg
+dHlwZSBhbmQgcXVvdGllbnQNCm1pZ2h0IGJlIE5VTEwgLSBhbmQgbWlnaHQgYmUgc3VwcGxpZWQg
+YnkgYSB3cmFwcGVyLg0KDQpQZXJoYXBzIHNvbWV0aGluZyBsaWtlICh1bnRlc3RlZCk6DQojZGVm
+aW5lIGRpdjY0X3U2NF9yZW0oYSwgYiwgcmVtKSAoeyBcDQoJdHlwZW9mIChiKSBfcTsgXA0KCWlm
+IChpc18zMl9iaXQoYikpIHsgXA0KCQl1NjQgX3FfciA9IF9kaXZfdTY0X3UzMl9yZW0oYSwgYik7
+DQoJCWlmICghaXNfY29uc3RhbnRfemVybyhyZW0pKQ0KCQkJKnJlbSA9IF9xX3IgPj4gMzI7DQoJ
+CV9xID0gX3FfciAmIDB4ZmZmZmZmZmY7DQoJfSBlbHNlIHsgXA0KCQlfcSA9IF9kaXZ1NjRfdTY0
+X3JlbShhLCBiLCByZW0pOyBcDQoJfSBcDQoJX3E7IFwNCn0pDQoNClRoZW4geDg2IHdvdWxkIGhh
+dmUgYSAjZGVmaW5lL2lubGluZSBmb3IgX2Rpdl91MzJfcmVtKCkuDQpJIHN1c3BlY3QgdGhlICcq
+cmVtJyBuZWVkcyB0byBiZSAqKHR5cGVvZigmKGIpKXJlbQ0KYW5kIHNvbWV0aGluZyBsaWtlICgw
+ID8gJmIgOiByZW0pIGFkZGVkIHNvbWV3aGVyZS4NClBlcmhhcHMgKih0eXBlb2YoMCA/ICZiIDog
+cmVtKSkocmVtKSBEVFJUID8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-> If we're still traversing it like that I guess we can have a knob and
-> make it the default to not do that and instead create the perf.data
-> build ID header table with all the build-ids we got from
-> PERF_RECORD_MMAP2, a (slightly) bigger perf.data file but no event
-> processing at the end of a 'perf record' session.
-
-But then we don't process the PERF_RECORD_MMAP2 in 'perf record', it
-just goes on directly to the perf.data file :-\
-
-Humm, perhaps the sideband thread...
-
-- Arnaldo
