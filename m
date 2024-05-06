@@ -1,117 +1,231 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4FF144D36
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 05:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FC14642B;
+	Mon,  6 May 2024 05:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714973530; cv=none; b=qqJfk+mYLxFurr3zugN7ogX63gCMIMqBFiEXF+cudHPp8U0+c8qqd/VGckHbEqTyt4NAd0CdsVQBTOuYpuJ1cftwQtrYKKdzT23pQlGYbLz9iPjDqxBShHjicER1g6HR1REmpcnPtpasAHjgyImLr8WNWDTzxs8cF5hz3/wuXNE=
+	t=1714974189; cv=none; b=jExYLBRgz9QqeoFjcecRGaP0Ag9YdTilIzoUWV9dlxW3r9qIFxyP4MC224KAytpHqzbuoIP4NcyvNObpB2n/UhCc+kyovL0UBZ7QexfYjVLCBuyYJuiEvjsiu6uhIcUTz/YVTI/MgCSST3/3+ncBwtzoB+M61C9afAPV/Cg3iFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714973530; c=relaxed/simple;
-	bh=BVEc3GheAMrvPPEiSDpTNWaEswxhgD9hvN+mtoDq/PE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YIldMBDQ+E/3Ow6fAA/v308ms116PtPbd08i9b9jOwqILIWMH93A1xFH65dGu+Yo+9bxy/l8boxvNbi17Vez5eL/paZ5pdMYWf71fFNDO6hUEDiJPuk39XvJWK9FbJpq86rW3a1y45G/ToHUpt7JnLGpnSyxbeL1/gzLQw9SNOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N6fvUmSQ; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
+	s=arc-20240116; t=1714974189; c=relaxed/simple;
+	bh=WMJHwSO3L59g5E5FDZOj42F0Mf3EVp1etLOrQhyekTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MNn4qKreq1hYxMsGozQ/zFO2FHtA1UMzGEuy2oPLW8PaFiufZNDDV+ich9bkC6h4ygdvrNGU4vsjsWx/JqXmoj9ZM0BjVvwLZbBNXRqGBuffyY4XT1Hct2fVRMlgkLJlisXwqSjuwY00rdoeRnuTui6My9NQpLlA7nsjtejyap0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m0cfVJZ+; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N6fvUmSQ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2b38f8cac9dso2811501a91.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 May 2024 22:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714973528; x=1715578328; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=r0dMbpLuPkp27Z0NYeXAfwk+uuX6GzkvFCu4OKzkqfg=;
-        b=N6fvUmSQJpIJ9NdwabWFmQ08m2n8dwgniGZuQCGQmXt377YDWpFBmO1VGsBKljv3KV
-         xgUfBfNpY20u7vZ3eXUquxpTh6wwWnBUYjszn2mb5mydbMULMaFD/zDMZRkN8XNJh2vU
-         TgpkSXgE6lyFA3ehjuW3p+x+earEG7+SFjNxR3Dfctwr/oQepr9rkiYe4nLtRI+jlJ2N
-         EYVAPMJB4FaU7fSFC2sYOpEoUkvHkJ9eaexvcylENcL3LWYEUrOOAX0B5uXdIyFxf7gN
-         0TwvvKsITy+c1TOixU8Dz2tfnuJz5oYJoUZmNOsRjtVMpNEMu3dzGa4o9TjwTWcqRTP1
-         A39Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714973528; x=1715578328;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r0dMbpLuPkp27Z0NYeXAfwk+uuX6GzkvFCu4OKzkqfg=;
-        b=rTWPcJwSYG2SLjIB4MwEQhSkG0lfj6w+Znc3YV1A2eW6+GNay5RUKDM0cNvl/zuQGK
-         aFOFh6wbQCxWvHE+M9F8/97wUprmwuZCZVNH/q6j0in/yyQnBFRgvI22+keHpvpK49x1
-         DiUp/izNEBfMkMJafMgiSioDaPj2xEsu7qJmCvgq3rLvbTUOygyJ+hONuIzbhzJGvEt7
-         taYcPW+VNKL7v/F0u1yniMloO56gTn5ubUaCMsvLqMuMIe+gNWIheU9g8/LU1lvtbPyi
-         WM8bt9OjGySzSO6Id0FDcIW+DCBV9e7herqVx8bV3OUR3fHn3h1Sg5x4h5w3obi/QRGi
-         yYvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWppXJdpoJenoBGoEzopiZljAycNvFWZVUFCNOylBAu2mdHYeAMnwLif7oDq6yG7HHX0dSxRGSP/MaGMK9+ggvuMH2xumiSS4IvPoqvjjb9Wg==
-X-Gm-Message-State: AOJu0Yz2JHxL/RG3bXg0jint8eKC6sLis4GjTA71PbR9jW4IUN5LuZ3z
-	sscAKpMXcgopr6RAa6I/eHPueUg+bDGbQiY7xvRVaPEsNCsinobU/2S88SUpxfMhWULntvXeIbR
-	DhNdDvA==
-X-Google-Smtp-Source: AGHT+IHEVIsC3OzLcKPgw25unnky+n+wjQaLNtSetm/7/zKes1bE9kZoM4IWaLd7BdgQxrlqRoWjj60+LZyI
-X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a17:90a:9f83:b0:2b2:7ca7:a217 with SMTP id
- o3-20020a17090a9f8300b002b27ca7a217mr53260pjp.4.1714973528312; Sun, 05 May
- 2024 22:32:08 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon,  6 May 2024 05:30:19 +0000
-In-Reply-To: <20240506053020.3911940-1-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m0cfVJZ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714974187; x=1746510187;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=WMJHwSO3L59g5E5FDZOj42F0Mf3EVp1etLOrQhyekTg=;
+  b=m0cfVJZ+BIkSPlYUnlHe9rmtlZkzg9P/LKNb8JTQEpak2rohXmK8LDQt
+   Mcyd5ENIbxnIVVnEjnH0dw81LYb0QZT+wrIjvm62lR8UPRTQWouP+3rkR
+   hf34b7UdnblXlsUcxObG/MDOSWr55C6MzFTgBOWuYldgoiDhOuzqsVtYs
+   zI+7t7sd2IsRuXYa87Ifu5XvCPtayz6jsdmGUr8f3Qoe4xqOqayAaKvcl
+   jFuPEx2ks8hoOKrqKaiGGWsV53ICuuj4BtefaH+DQioxhsLkIK6JkUOeU
+   YdTesnxZ3GVbnhiidRR8hPbMy79LQO/X85SxDI+9ykIhxemVXD9CXTr75
+   w==;
+X-CSE-ConnectionGUID: 21OYnZfjTIuwn7n0657W3g==
+X-CSE-MsgGUID: 5RoM3dOlTleEjmcJ/n7XhQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="10546379"
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="10546379"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 22:43:06 -0700
+X-CSE-ConnectionGUID: 1Gd1gwXBQcu3UTXIobGjjQ==
+X-CSE-MsgGUID: 4RPKVBRbQJCfYt462k1xhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="59247291"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.32.241])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 22:43:03 -0700
+Message-ID: <d47346fc-51b4-4af5-a014-0bd6f3b7bae0@intel.com>
+Date: Mon, 6 May 2024 08:43:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240506053020.3911940-1-mizhang@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240506053020.3911940-55-mizhang@google.com>
-Subject: [PATCH v2 54/54] KVM: x86/pmu/svm: Wire up PMU filtering
- functionality for passthrough PMU
-From: Mingwei Zhang <mizhang@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mingwei Zhang <mizhang@google.com>, gce-passthrou-pmu-dev@google.com, 
-	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
-	Yanfei Xu <yanfei.xu@intel.com>, maobibo <maobibo@loongson.cn>, 
-	Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf maps: Process kcore maps in order
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240505202805.583253-1-leo.yan@arm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240505202805.583253-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Manali Shukla <manali.shukla@amd.com>
+On 5/05/24 23:28, Leo Yan wrote:
+> On Arm64, after enabling the 'DEBUG=1' build option, the tool exits
+> abnormally:
+> 
+>   # ./perf report --itrace=Zi10ibT
+>   # perf: util/maps.c:42: check_invariants: Assertion `map__end(prev) <= map__start(map) || map__start(prev) == map__start(map)' failed.
+>     Aborted
+> 
+> The details for causing this error are described in below.
+> 
+> Firstly, machine__get_running_kernel_start() calculates the delta
+> between the '_stext' symbol and the '_edata' symbol for the kernel map,
+> alongside with eBPF maps:
+> 
+>   DSO              | Start address      | End address
+>   -----------------+--------------------+--------------------
+>   kernel.kallsyms    0xffff800080000000   0xffff800082229200
+>   bpf_prog           0xffff800082545aac   0xffff800082545c94
+>   ...
+> 
+> Then, the perf tool retrieves kcore maps:
+> 
+>   Kcore maps       | Start address      | End address
+>   -----------------+--------------------+--------------------
+>   kcore_text         0xffff800080000000   0xffff8000822f0000
+>   vmalloc            0xffff800080000000   0xfffffdffbf800000
+>   ...
+> 
+> Finally, the function dso__load_kcore() extends the kernel maps based on
+> the retrieved kcore info. Since it uses the inverted order for
+> processing the kcore maps, it extends maps for the vmalloc region prior
+> to the 'kcore_text' map:
+> 
+>   DSO              | Start address      | End address
+>   -----------------+--------------------+--------------------
+>   kernel.kallsyms    0xffff800080000000   0xffff800082229200
+>   kernel.kallsyms    0xffff800082229200   0xffff800082545aac -> Extended for vmalloc region
+>   bpf_prog           0xffff800082545aac   0xffff800082545c94
+>   ...
+> 
+>   DSO              | Start address      | End address
+>   -----------------+--------------------+--------------------
+>   kernel.kallsyms    0xffff800080000000   0xffff8000822f0000 -> Updated for kcore_text map
+>   kernel.kallsyms    0xffff800082229200   0xffff800082545aac
+>   bpf_prog           0xffff800082545aac   0xffff800082545c94
+>   ...
+> 
+> As result, the two maps [0xffff800080000000..0xffff8000822f0000) and
+> [0xffff800082229200..0xffff800082545aac) are overlapping and triggers
+> failure.
+> 
+> The current code processes kcore maps in inverted order. To fix it, this
+> patch adds kcore maps in the tail of list, afterwards these maps will be
+> processed in the order. Therefore, the kernel text section can be
+> processed prior to handling the vmalloc region, which avoids using the
+> inaccurate kernel text size when extending maps with the vmalloc region.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/util/symbol.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 9ebdb8e13c0b..e15d70845488 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1266,7 +1266,24 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+>  	map__set_end(list_node->map, map__start(list_node->map) + len);
+>  	map__set_pgoff(list_node->map, pgoff);
+>  
+> -	list_add(&list_node->node, &md->maps);
+> +	/*
+> +	 * Kcore maps are ordered with:
+> +	 *   [_text.._end): Kernel text section
+> +	 *   [VMALLOC_START..VMALLOC_END): vmalloc
+> +	 *   ...
+> +	 *
+> +	 * On Arm64, the '_text' and 'VMALLOC_START' are the same values
+> +	 * but VMALLOC_END (~124TiB) is much bigger then the text end
+> +	 * address. So '_text' region is the subset of the vmalloc region.
+> +	 *
+> +	 * Afterwards, when dso__load_kcore() adjusts kernel maps, we must
+> +	 * process the kernel text size prior to handling vmalloc region.
+> +	 * This can avoid to using any inaccurate kernel text size when
+> +	 * extending maps with vmalloc region. For this reason, here it
+> +	 * always adds kcore maps to the tail of list to make sure the
+> +	 * sequential handling is in order.
+> +	 */
+> +	list_add_tail(&list_node->node, &md->maps);
 
-With the Passthrough PMU enabled, the PERF_CTLx MSRs (event selectors) are
-always intercepted and the event filter checking can be directly done
-inside amd_pmu_set_msr().
+This seems reasonable, but I wonder if it might be robust
+and future proof to also process the main map first
+e.g. totally untested:
 
-Add a check to allow writing to event selector for GP counters if and only
-if the event is allowed in filter.
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 9ebdb8e13c0b..63bce45a5abb 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1365,16 +1365,15 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	if (!replacement_map)
+ 		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
+ 
+-	/* Add new maps */
++	/* Add replacement_map */
+ 	while (!list_empty(&md.maps)) {
+ 		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
+ 		struct map *new_map = new_node->map;
+ 
+-		list_del_init(&new_node->node);
+-
+ 		if (RC_CHK_EQUAL(new_map, replacement_map)) {
+ 			struct map *map_ref;
+ 
++			list_del_init(&new_node->node);
+ 			map__set_start(map, map__start(new_map));
+ 			map__set_end(map, map__end(new_map));
+ 			map__set_pgoff(map, map__pgoff(new_map));
+@@ -1385,20 +1384,29 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 			err = maps__insert(kmaps, map_ref);
+ 			map__put(map_ref);
+ 			map__put(new_map);
++			free(new_node);
+ 			if (err)
+ 				goto out_err;
+-		} else {
+-			/*
+-			 * Merge kcore map into existing maps,
+-			 * and ensure that current maps (eBPF)
+-			 * stay intact.
+-			 */
+-			if (maps__merge_in(kmaps, new_map)) {
+-				err = -EINVAL;
+-				goto out_err;
+-			}
+ 		}
++	}
++
++	/* Add new maps */
++	while (!list_empty(&md.maps)) {
++		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
++		struct map *new_map = new_node->map;
++
++		list_del_init(&new_node->node);
++
++		/*
++		 * Merge kcore map into existing maps,
++		 * and ensure that current maps (eBPF)
++		 * stay intact.
++		 */
++		if (maps__merge_in(kmaps, new_map))
++			err = -EINVAL;
+ 		free(new_node);
++		if (err)
++			goto out_err;
+ 	}
+ 
+ 	if (machine__is(machine, "x86_64")) {
 
-Signed-off-by: Manali Shukla <manali.shukla@amd.com>
----
- arch/x86/kvm/svm/pmu.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index 9629a172aa1b..cb6d3bfdd588 100644
---- a/arch/x86/kvm/svm/pmu.c
-+++ b/arch/x86/kvm/svm/pmu.c
-@@ -166,6 +166,15 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (data != pmc->eventsel) {
- 			pmc->eventsel = data;
- 			if (is_passthrough_pmu_enabled(vcpu)) {
-+				if (!check_pmu_event_filter(pmc)) {
-+					/*
-+					 * When guest request an invalid event,
-+					 * stop the counter by clearing the
-+					 * event selector MSR.
-+					 */
-+					pmc->eventsel_hw = 0;
-+					return 0;
-+				}
- 				data &= ~AMD64_EVENTSEL_HOSTONLY;
- 				pmc->eventsel_hw = data | AMD64_EVENTSEL_GUESTONLY;
- 			} else {
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
 
