@@ -1,116 +1,227 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6015B106
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 May 2024 20:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92F32BAE5;
+	Mon,  6 May 2024 20:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715027187; cv=none; b=jMBocXGKBkubqv4ar1qWPv7e0Tgkv+wnMRexpuoKlZiAEvcMZkj6ZDuH8uPyNLMMTRsDqbGiHvKLeuT6VboiXT5r8OaaPUA98H1YqVsJlVdhgGs3e+YI8SFszAruBeAU5yeHWlHTtzHKbK/qia91kg6jGXAvflfEoCOT82SmORc=
+	t=1715027709; cv=none; b=AJNRT1ViOevta6dHtr175NdSncdytL6zRlGKd3U8wkaPShfw225AXQQOJZaTaG0tGUCvb1cVAfhLWbSvdLJzKgSum5+Pld4lsWROG25U+V0plqZwLpXGMlLsz7+vAAPHAflWSnTnHZYDv0mPqy9JatirSPSJxykYF7oXeIbbV1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715027187; c=relaxed/simple;
-	bh=DDEVdmd0kcLpzxPz3ifGRimSuneLJY7fGREA60OUpMg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=g0KdUyHNAKbWk1rb16U/RrTnOVnnASvFD9PoV0YEjOsSs8DTjE2xLKeBvEIfG9G/9As39bhD2cvwZkuPI4HBN9UFpIDgzpVcKflWT0/OfDK12G2BK1dIJOzftmBbRZ3tbLtqLJ+CWoo9QwQePJEy4imOCupr4d8wFnZci8ju9ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-15-6tKKbw7SM_6KGLbzgEL1Eg-1; Mon, 06 May 2024 21:26:23 +0100
-X-MC-Unique: 6tKKbw7SM_6KGLbzgEL1Eg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 May
- 2024 21:25:44 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 6 May 2024 21:25:44 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>
-CC: Jules Bashizi Irenge <jbi.octave@gmail.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
-Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A///xsQCAAGdE0IAABEeAgAMqc3CAAVRfAIABXupwgAAfSaWAAAmBAA==
-Date: Mon, 6 May 2024 20:25:44 +0000
-Message-ID: <a0bdbe9832cc40e29cd63a71cec95fba@AcuMS.aculab.com>
-References: <Zi57-TMgU19puaQM@octinomon.home>
- <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
- <ZjPApuDc0gL9Pchm@octinomon.home>
- <424d62cd084a4aaeb1067ee0af8e98ea@AcuMS.aculab.com>
- <CAHk-=whCS468impcODViZuWxhQSqi4mqFCo3wbrsb=1SB0CXUg@mail.gmail.com>
- <e909d487c4c3468f8f20c952fe46c89c@AcuMS.aculab.com>
- <CAHk-=wg8JOO9e4wAD11vKVndXsuzhVFw547x9nRXKyFS1QRkGA@mail.gmail.com>
- <264d983efe164f7d8e665fb7d330ad7a@AcuMS.aculab.com>
- <CAHk-=wh8=yVY5vJC0EgM8=-4FOFxA+0w-OoLsZDypjpjsB5www@mail.gmail.com>
- <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiGUkPz+9gN_uwOfg-VGP4Z5UBKe-xBrn3uHMtJ85UarA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1715027709; c=relaxed/simple;
+	bh=2J6q6pee6c+RhPyheJbTp0seb82usaTe/jFdcBygloQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhplaxM9XQDoMLKvo52awb1Ek94hsuiJXy9rstWQeisEnMX2OqezAXhIQy3exsfhZ7oiHMo+qAHu/9pZ9maUK4Q2g1zMNLxr0ODClkCjXp71yFnAgxkUHFKqpF1dLlvPHdmgQYGJhBfRHJ89eFFCER88cNrzkhwYPCXBCZiL/sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7Lo4B0F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7Lo4B0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BF0C116B1;
+	Mon,  6 May 2024 20:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715027709;
+	bh=2J6q6pee6c+RhPyheJbTp0seb82usaTe/jFdcBygloQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p7Lo4B0FSYjHcCM/Bsy/vgbwfnsYFN1u8xq6hhk1tF2raIeVRu7efrKPanTu5Yn1h
+	 NjYWiHho9RWdhZTBnQOG0SzTY39KDPg4/pP4ZqLZHde0Yyuc57THzyFOghopzYiHFw
+	 YrP8o9I3qyMKwCoLCbBdV4IpLTBIIaqLvf9C5CXzfQICcpBjWPG1/Vj0wbzfHnYpZd
+	 BAPA99lYtXDJGphEKGjdpGFOuCOmJkwTcTy1KaeDYermM33/4dFCg7eyUgXap8D/DE
+	 xJN6P0+FTiracyjBpkwN/6lWdk6nwb8ld2iO8wYsfPybc6wPjqGlBWMbd2tGLk0skj
+	 0OV6KwMUfMV8w==
+Date: Mon, 6 May 2024 17:35:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org, viro@zeniv.linux.org.uk,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-mm@kvack.org,
+	Daniel =?iso-8859-1?Q?M=FCller?= <deso@posteo.net>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 2/5] fs/procfs: implement efficient VMA querying API for
+ /proc/<pid>/maps
+Message-ID: <Zjk--KLSjdg2kpic@x1>
+References: <20240504003006.3303334-1-andrii@kernel.org>
+ <20240504003006.3303334-3-andrii@kernel.org>
+ <2024050439-janitor-scoff-be04@gregkh>
+ <CAEf4BzZ6CaMrqRR1Rah7=HnTpU5-zw5HUnSH9NWCzAZZ55ZXFQ@mail.gmail.com>
+ <ZjjiFnNRbwsMJ3Gj@x1>
+ <CAEf4BzZJPY0tfLtvFA4BpQr71wO7iz-1-q16cENOAbuT1EX_og@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZJPY0tfLtvFA4BpQr71wO7iz-1-q16cENOAbuT1EX_og@mail.gmail.com>
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDYgTWF5IDIwMjQgMTg6MjcNCj4gDQo+IE9u
-IE1vbiwgNiBNYXkgMjAyNCBhdCAwOTo0NSwgTGludXMgVG9ydmFsZHMNCj4gPHRvcnZhbGRzQGxp
-bnV4LWZvdW5kYXRpb24ub3JnPiB3cm90ZToNCj4gPg0KPiA+IFNvIHdlIHByb2JhYmx5IF9zaG91
-bGRfIGhhdmUgbWFkZSAiZG9fZGl2KCkiIGJlIGEgIjY0LWJ5LWxvbmciIGRpdmlkZS4NCj4gDQo+
-IEFjdHVhbGx5LCBzb21lIG9mIHRob3NlIGNvbnZlcnNpb25zIGFyZSBqdXN0IHdyb25nIGFuZCBz
-dHVwaWQsIGFuZA0KPiBkaWRuJ3QgaGF2ZSAnbG9uZycgZGl2aXNvcnMgYXQgYWxsLg0KPiANCj4g
-QW5kIHdlIGRvIGhhdmUgImRpdjY0X3VsKCkiLCBhbHRob3VnaCBpdCdzIG5vdCB1c2VkIGFzIHdp
-ZGVseSBhcyBpdCBjb3VsZCBiZS4NCj4gDQo+IEJ1dCBJIHRoaW5rIHdlIGNhbiBkbyB0aGUgcmV2
-ZXJzZSwgYW5kIGp1c3QgdGVhY2ggImRpdjY0X3U2NCgpIiB0byBkbw0KPiB3aGF0IGdjYyBzaG91
-bGQgYWx3YXlzIGhhdmUgZG9uZSwgYW5kIGxvb2sgYXQgdGhlIGRpdmlzb3IgcmFuZ2UgYXQNCj4g
-Y29tcGlsZS10aW1lLg0KPiANCj4gU29tZXRoaW5nIGxpa2UgdGhpcywgcGVyaGFwczoNCj4gDQo+
-ICAgLyoNCj4gICAgKiBEbyBhIDY0LWJ5LTY0IGRpdmlkZSB1c2luZyBkaXY2NF91bCAvIGRpdjY0
-X2xvbmcgLyBkaXY2NF91NjQNCj4gICAgKiBkZXBlbmRpbmcgb24gdHlwZSBvZiBkaXZpc29yLg0K
-PiAgICAqLw0KPiAgICNkZWZpbmUgZGl2NjRfdTY0X3R5cGUoYSxiKSBfR2VuZXJpYygoYiksICAg
-ICBcDQo+ICAgICAgICAgdW5zaWduZWQgbG9uZzogZGl2NjRfdWwoYSxiKSwgICAgICAgICAgIFwN
-Cj4gICAgICAgICBsb25nOiBkaXY2NF9sb25nKGEsYiksICAgICAgICAgICAgICAgICAgXA0KPiAg
-ICAgICAgIGludDogZGl2NjRfbG9uZyhhLGIpLCAgICAgICAgICAgICAgICAgICBcDQo+ICAgICAg
-ICAgZGVmYXVsdDogZGl2NjRfdTY0KGEsYikpDQo+IA0KPiAgIC8qIElzIGl0IHplcm8gd2l0aG91
-dCBldmFsdWF0aW5nIGl0PyAqLw0KPiAgICNkZWZpbmUgaXNfY29uc3RhbnRfemVybyh4KSBcDQo+
-ICAgICAgICAgKF9fYnVpbHRpbl9jb25zdGFudF9wKHgpICYmICEoeCkpDQo+IA0KPiAgIC8qIFRo
-aXMgY2F0Y2hlcyBjb25zdGFudHMgYW5kIGNvbXBpbGUtdGltZSByYW5nZXMgKi8NCj4gICAjZGVm
-aW5lIGlzXzMyX2JpdCh4KSBcDQo+ICAgICAgICAgaXNfY29uc3RhbnRfemVybygoeCk+PjE2Pj4x
-NikNCj4gDQo+ICAgLyoNCj4gICAgKiBQaWNrIHRoZSByaWdodCBkaXZpc2lvbiBoZWxwZXIgYmFz
-ZWQgb24NCj4gICAgKiB2YWx1ZSBvciB0eXBlIG9mIHRoZSBkaXZpc29yDQo+ICAgICovDQo+ICAg
-I2RlZmluZSBkaXY2NF91NjQoYSxiKSBcDQo+ICAgICAgICAgKGlzXzMyX2JpdChiKSA/IGRvX2Rp
-djY0KGEsYikgOiBkaXY2NF91NjRfdHlwZShhLGIpKQ0KPiANCj4gc2hvdWxkIG5vdyBtYWtlIGRp
-djY0X3U2NCgpIGRvIHRoZSByaWdodCB0aGluZyBhbmQgYXZvaWQgdGhlIDY0LWJpdA0KPiBkaXZp
-ZGUgZm9yIHJlbGV2YW50IHR5cGVzICh0aGUgc2lnbmVkIHR5cGUgY2FzZSBtYWtlcyBpdCBhIGJp
-dCBsZXNzDQo+IG9idmlvdXMsIGJ1dCB3aGF0ZXZlcikuDQoNCkkgZG9uJ3QgdGhpbmsgdGhlcmUg
-YXJlIGFueSBzaWduZWQgZGl2aWRlcyB0byB3b3JyeSBhYm91dC4NClNpZ25lZCBkaXZpZGVzIGFy
-ZSBhbHNvIHRvbyBwYWluZnVsIHRvIHNvcnQgb3V0Lg0KWW91IGhhdmUgdG8gd29ycnkgYWJvdXQg
-YWxsIDQgcXVhZHJhbnRzLg0KDQpXaGljaCBpcyBwcmV0dHkgbXVjaCBleGFjdGx5IHdoYXQgSSBw
-cm9wb3NlZCA6LSkNCihhcGFydCBmcm9tIHRoZSBydW4tdGltZSBjaGVjayB0byBhdm9pZCBjYWxs
-aW5nIGRpdjY0X3U2NCgpLikNCkJ5IHRoZSB0aW1lIHlvdSd2ZSBkb25lIHRoZSBpc18zMl9iaXQo
-YikgeW91J3ZlIG9ubHkgZ290DQo2NCBiaXQgdmFsdWVzIGxlZnQgKHdlbGwgYW5kIDEyOCBidXQu
-Li4pLCB0aGV5IG1pZ2h0IGJlICdsb25nJw0Kb3IgJ2xvbmcgbG9uZycgb24gNjRiaXQgYnV0IHRo
-YXQgZG9lc24ndCBtYXR0ZXIuDQoNCkknbSBub3Qgc3VyZSBvZiB0aGUgYmVzdCB3YXkgdG8gcmV0
-dXJuIGEgcXVvdGllbnQgYW5kIHJlbWFpbmRlcg0Kb24gYSAzMmJpdCBzeXN0ZW0uDQpUaGUgJ3Vz
-ZXInIGFwaSBpcyBiZXN0IGFzOg0KCXF1b3RpZW50ID0gZGl2dV94eHgoZGl2aWRlbmQsIGRpdmlz
-b3IsICZxdW90aWVudCk7DQp3aGVyZSBkaXZpc29yIGFuZCBxdW90aWVudCBhcmUgdGhlIHNhbWUg
-dHlwZSBhbmQgcXVvdGllbnQNCm1pZ2h0IGJlIE5VTEwgLSBhbmQgbWlnaHQgYmUgc3VwcGxpZWQg
-YnkgYSB3cmFwcGVyLg0KDQpQZXJoYXBzIHNvbWV0aGluZyBsaWtlICh1bnRlc3RlZCk6DQojZGVm
-aW5lIGRpdjY0X3U2NF9yZW0oYSwgYiwgcmVtKSAoeyBcDQoJdHlwZW9mIChiKSBfcTsgXA0KCWlm
-IChpc18zMl9iaXQoYikpIHsgXA0KCQl1NjQgX3FfciA9IF9kaXZfdTY0X3UzMl9yZW0oYSwgYik7
-DQoJCWlmICghaXNfY29uc3RhbnRfemVybyhyZW0pKQ0KCQkJKnJlbSA9IF9xX3IgPj4gMzI7DQoJ
-CV9xID0gX3FfciAmIDB4ZmZmZmZmZmY7DQoJfSBlbHNlIHsgXA0KCQlfcSA9IF9kaXZ1NjRfdTY0
-X3JlbShhLCBiLCByZW0pOyBcDQoJfSBcDQoJX3E7IFwNCn0pDQoNClRoZW4geDg2IHdvdWxkIGhh
-dmUgYSAjZGVmaW5lL2lubGluZSBmb3IgX2Rpdl91MzJfcmVtKCkuDQpJIHN1c3BlY3QgdGhlICcq
-cmVtJyBuZWVkcyB0byBiZSAqKHR5cGVvZigmKGIpKXJlbQ0KYW5kIHNvbWV0aGluZyBsaWtlICgw
-ID8gJmIgOiByZW0pIGFkZGVkIHNvbWV3aGVyZS4NClBlcmhhcHMgKih0eXBlb2YoMCA/ICZiIDog
-cmVtKSkocmVtKSBEVFJUID8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Mon, May 06, 2024 at 11:41:43AM -0700, Andrii Nakryiko wrote:
+> On Mon, May 6, 2024 at 6:58 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > On Sat, May 04, 2024 at 02:50:31PM -0700, Andrii Nakryiko wrote:
+> > > On Sat, May 4, 2024 at 8:28 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > On Fri, May 03, 2024 at 05:30:03PM -0700, Andrii Nakryiko wrote:
+> > > > > Note also, that fetching VMA name (e.g., backing file path, or special
+> > > > > hard-coded or user-provided names) is optional just like build ID. If
+> > > > > user sets vma_name_size to zero, kernel code won't attempt to retrieve
+> > > > > it, saving resources.
+> >
+> > > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> >
+> > > > Where is the userspace code that uses this new api you have created?
+> >
+> > > So I added a faithful comparison of existing /proc/<pid>/maps vs new
+> > > ioctl() API to solve a common problem (as described above) in patch
+> > > #5. The plan is to put it in mentioned blazesym library at the very
+> > > least.
+> > >
+> > > I'm sure perf would benefit from this as well (cc'ed Arnaldo and
+> > > linux-perf-user), as they need to do stack symbolization as well.
+> >
+> > At some point, when BPF iterators became a thing we thought about, IIRC
+> > Jiri did some experimentation, but I lost track, of using BPF to
+> > synthesize PERF_RECORD_MMAP2 records for pre-existing maps, the layout
+> > as in uapi/linux/perf_event.h:
+> >
+> >         /*
+> >          * The MMAP2 records are an augmented version of MMAP, they add
+> >          * maj, min, ino numbers to be used to uniquely identify each mapping
+> >          *
+> >          * struct {
+> >          *      struct perf_event_header        header;
+> >          *
+> >          *      u32                             pid, tid;
+> >          *      u64                             addr;
+> >          *      u64                             len;
+> >          *      u64                             pgoff;
+> >          *      union {
+> >          *              struct {
+> >          *                      u32             maj;
+> >          *                      u32             min;
+> >          *                      u64             ino;
+> >          *                      u64             ino_generation;
+> >          *              };
+> >          *              struct {
+> >          *                      u8              build_id_size;
+> >          *                      u8              __reserved_1;
+> >          *                      u16             __reserved_2;
+> >          *                      u8              build_id[20];
+> >          *              };
+> >          *      };
+> >          *      u32                             prot, flags;
+> >          *      char                            filename[];
+> >          *      struct sample_id                sample_id;
+> >          * };
+> >          */
+> >         PERF_RECORD_MMAP2                       = 10,
+> >
+> >  *   PERF_RECORD_MISC_MMAP_BUILD_ID      - PERF_RECORD_MMAP2 event
+> >
+> > As perf.data files can be used for many purposes we want them all, so we
+> 
+> ok, so because you want them all and you don't know which VMAs will be
+> useful or not, it's a different problem. BPF iterators will be faster
+> purely due to avoiding binary -> text -> binary conversion path, but
+> other than that you'll still retrieve all VMAs.
 
+But not using tons of syscalls to parse text data from /proc.
+ 
+> You can still do the same full VMA iteration with this new API, of
+> course, but advantages are probably smaller as you'll be retrieving a
+> full set of VMAs regardless (though it would be interesting to compare
+> anyways).
+
+sure, I can't see how it would be faster, but yeah, interesting to see
+what is the difference.
+ 
+> > setup a meta data perf file descriptor to go on receiving the new mmaps
+> > while we read /proc/<pid>/maps, to reduce the chance of missing maps, do
+> > it in parallel, etc:
+> >
+> > ⬢[acme@toolbox perf-tools-next]$ perf record -h 'event synthesis'
+> >
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
+> >
+> >         --num-thread-synthesize <n>
+> >                           number of threads to run for event synthesis
+> >         --synth <no|all|task|mmap|cgroup>
+> >                           Fine-tune event synthesis: default=all
+> >
+> > ⬢[acme@toolbox perf-tools-next]$
+> >
+> > For this specific initial synthesis of everything the plan, as mentioned
+> > about Jiri's experiments, was to use a BPF iterator to just feed the
+> > perf ring buffer with those events, that way userspace would just
+> > receive the usual records it gets when a new mmap is put in place, the
+> > BPF iterator would just feed the preexisting mmaps, as instructed via
+> > the perf_event_attr for the perf_event_open syscall.
+> >
+> > For people not wanting BPF, i.e. disabling it altogether in perf or
+> > disabling just BPF skels, then we would fallback to the current method,
+> > or to the one being discussed here when it becomes available.
+> >
+> > One thing to have in mind is for this iterator not to generate duplicate
+> > records for non-pre-existing mmaps, i.e. we would need some generation
+> > number that would be bumped when asking for such pre-existing maps
+> > PERF_RECORD_MMAP2 dumps.
+> 
+> Looking briefly at struct vm_area_struct, it doesn't seems like the
+> kernel maintains any sort of generation (at least not at
+> vm_area_struct level), so this would be nice to have, I'm sure, but
+
+Yeah, this would be something specific to the "retrieve me the list of
+VMAs" bulky thing, i.e. the kernel perf code (or the BPF that would
+generate the PERF_RECORD_MMAP2 records by using a BPF vma iterator)
+would bump the generation number and store it to the VMA in
+perf_event_mmap() so that the iterator doesn't consider it, as it is a
+new mmap that is being just sent to whoever is listening, and the perf
+tool that put in place the BPF program to iterate is listening.
+
+> isn't really related to adding this API. Once the kernel does have
+
+Well, perf wants to enumerate pre-existing mmaps _and_ after that
+finishes to know about new mmaps, so we need to know a way to avoid
+having the BPF program enumerating pre-existing maps sending
+PERF_RECORD_MMAP2 for maps perf already knows about via a regular
+PERF_RECORD_MMAP2 sent when a new mmap is put in place.
+
+So there is an overlap where perf (or any other tool wanting to
+enumerate all pre-existing maps and new ones) can receive info for the
+same map from the enumerator and from the existing mechanism generating
+PERF_RECORD_MMAP2 records.
+
+- Arnaldo
+
+> this "VMA generation" counter, it can be trivially added to this
+> binary interface (which can't be said about /proc/<pid>/maps,
+> unfortunately).
+> 
+> >
+> > > It will be up to other similar projects to adopt this, but we'll
+> > > definitely get this into blazesym as it is actually a problem for the
+> >
+> > At some point looking at plugging blazesym somehow with perf may be
+> > something to consider, indeed.
+> 
+> In the above I meant direct use of this new API in perf code itself,
+> but yes, blazesym is a generic library for symbolization that handles
+> ELF/DWARF/GSYM (and I believe more formats), so it indeed might make
+> sense to use it.
+> 
+> >
+> > - Arnaldo
+> >
+> > > abovementioned Oculus use case. We already had to make a tradeoff (see
+> > > [2], this wasn't done just because we could, but it was requested by
+> > > Oculus customers) to cache the contents of /proc/<pid>/maps and run
+> > > the risk of missing some shared libraries that can be loaded later. It
+> > > would be great to not have to do this tradeoff, which this new API
+> > > would enable.
+> > >
+> > >   [2] https://github.com/libbpf/blazesym/commit/6b521314126b3ae6f2add43e93234b59fed48ccf
+> > >
+> 
+> [...]
