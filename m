@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201EA16D33F;
-	Tue,  7 May 2024 14:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE0616D32E;
+	Tue,  7 May 2024 14:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091210; cv=none; b=Dw4pKPJ4l+r9xjCtHduNBzu241IrbY48vZsO2/sYMqU54/L5X/ZdxAqBnnG22hcpIR+XnDAbyxCQPXPWt+3l3KBEMF6Tn29DknVoy15PV52LOFRL9wTRWy7/hyySslE3hjKL+Tf7UvTGvZvhKjiKgwioPEako3HnxkSdnQ1Jqb0=
+	t=1715091213; cv=none; b=JLzbQVTh4g7WQ3NKCxqwxdaDs065pWALb3NcrpHnn46TL8f7zW1hEMaC7m7gjr6JU8MaQd30TR6TPAiYyD8iwz0XXinPoGx87xb8nXbMaeCoNZYNiVQDvOADKn7APmlna/rRj0hJ4mpgy/69UR/Zu3PvdX4UxJzD01CcSFoOw0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091210; c=relaxed/simple;
-	bh=inoTy0XjeXCVYFWYhXWKSmRMDG/2+bgKHRzwgIGvl9Y=;
+	s=arc-20240116; t=1715091213; c=relaxed/simple;
+	bh=j60Lp76p4GCMge0RHYRlaMeijthkr1haXgYWLgtV6oU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=duOZBVqt5uDD2GQckRnqVFmuRDZujORD09WVQkXRR6SR+0Rhv1q0fs8mgXRJSivYWFQy9cRRQOJXsxgTsnqrC7OIqzhlTvmTOuvXrWWjLuvNK0z/kN9m2/RU+jsVnZg9otd6/fYV6ziIVXEJv0cjXod8Uo7BGOFteaHThdYamVM=
+	 MIME-Version; b=IO6emxOByH9u6Q5Bv/0eVVneLeR4EvvE5zZhrGZjEQjwvBrQWX5lKm+K1NiJnZ1lzm7tgIPvC/W8JqbfmDYFmG+cpIePwm5T79L9sxKIz4g7HmFnF/RnNRRW941uNh54lfBHvrogx2HeOKft7rlosPJinhC4kD7u3/TNvLn2S+w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6BF153B;
-	Tue,  7 May 2024 07:13:37 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 498F51516;
+	Tue,  7 May 2024 07:13:33 -0700 (PDT)
 Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D7BF3F6A8;
-	Tue,  7 May 2024 07:13:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 687C93F6A8;
+	Tue,  7 May 2024 07:13:05 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	atrajeev@linux.vnet.ibm.com,
@@ -33,9 +33,9 @@ Cc: James Clark <james.clark@arm.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] perf symbols: Fix ownership of string in dso__load_vmlinux()
-Date: Tue,  7 May 2024 15:12:08 +0100
-Message-Id: <20240507141210.195939-5-james.clark@arm.com>
+Subject: [PATCH 3/4] perf symbols: Update kcore map before merging in remaining symbols
+Date: Tue,  7 May 2024 15:12:07 +0100
+Message-Id: <20240507141210.195939-4-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240507141210.195939-1-james.clark@arm.com>
 References: <20240507141210.195939-1-james.clark@arm.com>
@@ -47,73 +47,92 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The linked commit updated dso__load_vmlinux() to call
-dso__set_long_name() before loading the symbols. Loading the symbols may
-not succeed but dso__set_long_name() takes ownership of the string. The
-two callers of this function free the string themselves on failure
-cases, resulting in the following error:
+When loading kcore, the main vmlinux map is updated in the same loop
+that merges the remaining maps. If a map that overlaps is merged in
+before kcore, the list can become unsortable when the main map addresses
+are updated. This will later trigger the check_invariants() assert:
 
-  $ perf record -- ls
+  $ perf record
   $ perf report
 
-  free(): double free detected in tcache 2
+  util/maps.c:96: check_invariants: Assertion `map__end(prev) <=
+    map__start(map) || map__start(prev) == map__start(map)' failed.
+  Aborted
 
-Fix it by always taking ownership of the string, even on failure. This
-means the string is either freed at the very first early exit condition,
-or later when the dso is deleted or the long name is replaced. Now no
-special return value is needed to signify that the caller needs to
-free the string.
+Fix it by moving the main map update prior to the loop so that
+maps__merge_in() can split it if necessary.
 
-Fixes: e59fea47f83e ("perf symbols: Fix DSO kernel load and symbol process to correctly map DSO to its long_name, type and adjust_symbols")
+Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/util/symbol.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/util/symbol.c | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index e98dfe766da3..6a0900dcdfd3 100644
+index 2d95f22d713d..e98dfe766da3 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -1977,6 +1977,10 @@ int dso__load(struct dso *dso, struct map *map)
- 	return ret;
- }
- 
-+/*
-+ * Always takes ownership of vmlinux when vmlinux_allocated == true, even if
-+ * it returns an error.
-+ */
- int dso__load_vmlinux(struct dso *dso, struct map *map,
- 		      const char *vmlinux, bool vmlinux_allocated)
+@@ -1289,7 +1289,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
  {
-@@ -1995,8 +1999,11 @@ int dso__load_vmlinux(struct dso *dso, struct map *map,
- 	else
- 		symtab_type = DSO_BINARY_TYPE__VMLINUX;
+ 	struct maps *kmaps = map__kmaps(map);
+ 	struct kcore_mapfn_data md;
+-	struct map *replacement_map = NULL;
++	struct map *map_ref, *replacement_map = NULL;
+ 	struct machine *machine;
+ 	bool is_64_bit;
+ 	int err, fd;
+@@ -1367,6 +1367,24 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	if (!replacement_map)
+ 		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
  
--	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
-+	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type)) {
-+		if (vmlinux_allocated)
-+			free((char *) vmlinux);
- 		return -1;
-+	}
++	/*
++	 * Update addresses of vmlinux map. Re-insert it to ensure maps are
++	 * correctly ordered. Do this before using maps__merge_in() for the
++	 * remaining maps so vmlinux gets split if necessary.
++	 */
++	map_ref = map__get(map);
++	maps__remove(kmaps, map_ref);
++
++	map__set_start(map_ref, map__start(replacement_map));
++	map__set_end(map_ref, map__end(replacement_map));
++	map__set_pgoff(map_ref, map__pgoff(replacement_map));
++	map__set_mapping_type(map_ref, map__mapping_type(replacement_map));
++
++	err = maps__insert(kmaps, map_ref);
++	map__put(map_ref);
++	if (err)
++		goto out_err;
++
+ 	/* Add new maps */
+ 	while (!list_empty(&md.maps)) {
+ 		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
+@@ -1374,24 +1392,8 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
  
- 	/*
- 	 * dso__load_sym() may copy 'dso' which will result in the copies having
-@@ -2039,7 +2046,6 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
- 		err = dso__load_vmlinux(dso, map, filename, true);
- 		if (err > 0)
- 			goto out;
--		free(filename);
- 	}
- out:
- 	return err;
-@@ -2191,7 +2197,6 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
- 		err = dso__load_vmlinux(dso, map, filename, true);
- 		if (err > 0)
- 			return err;
--		free(filename);
- 	}
+ 		list_del_init(&new_node->node);
  
- 	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
+-		if (RC_CHK_EQUAL(new_map, replacement_map)) {
+-			struct map *map_ref;
+-
+-			/* Ensure maps are correctly ordered */
+-			map_ref = map__get(map);
+-			maps__remove(kmaps, map_ref);
+-
+-			map__set_start(map_ref, map__start(new_map));
+-			map__set_end(map_ref, map__end(new_map));
+-			map__set_pgoff(map_ref, map__pgoff(new_map));
+-			map__set_mapping_type(map_ref, map__mapping_type(new_map));
+-
+-			err = maps__insert(kmaps, map_ref);
+-			map__put(map_ref);
+-			map__put(new_map);
+-			if (err)
+-				goto out_err;
+-		} else {
++		/* skip if replacement_map, already inserted above */
++		if (!RC_CHK_EQUAL(new_map, replacement_map)) {
+ 			/*
+ 			 * Merge kcore map into existing maps,
+ 			 * and ensure that current maps (eBPF)
 -- 
 2.34.1
 
