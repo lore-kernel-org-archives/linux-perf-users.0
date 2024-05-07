@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88DE16EBE8
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F3916D9B5
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715106980; cv=none; b=WLjj9SnJPugbAhhi3C/digrirpgAua5dmFaEMRbg3pWrs8UySeEb6QodBmvjcskxVeU1f2awH7TM69MtnYc4cmwqxzcBWfSJrX30brEjPo6sDyGxAh9SOnkhE3Z4GV+b4Imu4AzGGqWmh1OrYW5BLqAJReG2BvLQHXJaaZIT1T0=
+	t=1715106984; cv=none; b=khM9qf376DJGWg1YU0aKg8NtzRnfjFi7eDehL3cK7+1B6/9hkjJTC0ZjUtqS4ODddjxamOTybcRIPSo+/Ww1NoI7uACU+poZb1LkcF6Kh4Xh7WlFPabPd/c1lf5pncYh82z3lsXrgvLeaJdia8Q/PNzioJpZp/6LPwCTK8Zmo0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715106980; c=relaxed/simple;
-	bh=gZJmDVMTmoK2/QwHo8/MRghD8LhtGoTrMfNAgjzgumw=;
+	s=arc-20240116; t=1715106984; c=relaxed/simple;
+	bh=31qEjfVLn/ROf3wIzcCsPP40NMhHeBUTuFO+eWfkcbI=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=azk7WT/0gFfXaoynF3E/oQwmwVVE0twIodQp9FqQQ0B6dRFYNaQyaxbz/fHKr1jOz1lW9bWy+767cCL6Swqaw970zFkdkGJ2Vwxpmw+DnQpmAKgJczfcObPXSKPZpsU0g3L8uPlnDl7ee2YkBhf7PqxwGckbO0gTWNa96mvx9Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NjIRpbSd; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=tWRIx4kShVyMBsjc7ILeqFPlaN8M55CyR1cT8WTw+Aqqyg1Ds4SZHvguG+e1b45rdr0pUdEt2bQdH/T1XgC/Q8mFyfGW7418Yrrzxlt7NI4YO65+euT7xaFqMLYvoSSvDAb76ne1UHJda2jIyARRIVRU8b2nBlJceu6TUxAZdSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=24inxVWY; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NjIRpbSd"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61e0c1f7169so596617b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="24inxVWY"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de603db5d6aso7221157276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715106978; x=1715711778; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715106980; x=1715711780; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4mOLkDwQHg5DuUlszkofmEYevyYYNPUsj80iyE8YhBY=;
-        b=NjIRpbSdR1s11QSCZ9OR03EPePUlWkLg0qSyMW/kzGzQQHLsXfiIc9xQt/aqopPf9Y
-         A0oxZtYEaT2+O9wPAMua2pBZ5xm7FqlZ8S1Hy442wc2uJ8d9CgKB3DJdx6SaCfSs5Mhh
-         sMrWXBod5CjnbcvVCczh3m56zxD4U7qAZ1d5/99OIX2JNtGGipDQa8yUXhtUUgTx2J5j
-         o6Enc8PjMX6zFi7ilCbv4BVioao1c6oVHe8gBqgSadt+UMpA0mK0m9/Z0VbrsiV6Vksz
-         ct+tvIgYsAM5JYG7aJ8ADqPNBovx5BIIqsmjrg8g09zZQo3mjUCci9EJimpC6ODlMTva
-         lHvA==
+        bh=xkcy47SUAl8Qk/1NuLP9UuoXgRoyNCsO/J4K5RjvMZc=;
+        b=24inxVWYzm6c74SJXjE3tu1WTN47MPzpEY3Z8viuBlJd1bFsfPtEaW6sNFEK0+ijp1
+         WGWS15pEEX9hOLPzi6OBz2wJal6bH8AicT5u3rI3yf6bwoYNeUkgrBjD9q5KclB78O+d
+         GFaqJqBOdGYeJ5dRp9qHeWcpUTy3iACWRPQku4x/okzfu6Kj8blSq12AL/fG8pVgkDBq
+         sdPIv/vIWeaQ7urk/VQzJJ9yYCOby+5SWqVSdEVD6JRNAc6kvdwPHUBt3JMGNGyLS/vm
+         ZBA+SfYrnlyql8OFFo6WfJXB6+W6wxPqZJZAWQxncfeFokpz6Ndwp1hDvre3lIvv/vRq
+         X2AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715106978; x=1715711778;
+        d=1e100.net; s=20230601; t=1715106980; x=1715711780;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4mOLkDwQHg5DuUlszkofmEYevyYYNPUsj80iyE8YhBY=;
-        b=ZFn+THbwlf8W/amK6ZfwSA51rJw6GByMvWh073pNdL2FKaDi11kIZrouCkCAgU4l91
-         cdewIO/kzLIPuEdsdhnZbosVhL3qGdf8Nl2aTCCeXOzIfWxD5bh4XnZagsGQ1Vmla3xK
-         GZj0nYXZ923YaVBJXRq5FL8SB1sfBQORVQC9pgH8TSNxNoj2aB0yVmVzRRHuT+tVDFUO
-         EfxbMK5dumG24sJYHBkZCVok4ZCKXExzbTymmUb8x5NjLfW13J8Rl04aeMvQbxcXClJ4
-         63DKUa9PWiiJr/CZ0U0niwudfEiIBXLTROVN2mfSgqsaFeJtTIyR2zUel/MtDkU5trYd
-         HYUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWACkpFQ71ayX424jRCfaCtVi8poH3w5Yz06h2EsQjZ6LvWmBGITz2Za6XuV+9d1pgEmgY6c6l85ViYJsjwyWkO7u6D/1UV20rlOV7k9SxV7w==
-X-Gm-Message-State: AOJu0Ywf5FKETUzeAYsmSU1P9qEu8MSJIYLySL18lRkVZ+OH8S6+X+Te
-	jZ2k5QXXh06NVRpPyrBiroIfne1ipAdHAkJjtCLlGUToWCa4EwZHsAlrd6YbKx2AGIOTquN3x4l
-	njDt88Q==
-X-Google-Smtp-Source: AGHT+IF7k6jfETAJRSfgXlCZKlwdpqG4TxcA438HTqYJw87OxWXq9iQeEZvbcppPqSViLuxdyxbo/HFfOGBt
+        bh=xkcy47SUAl8Qk/1NuLP9UuoXgRoyNCsO/J4K5RjvMZc=;
+        b=V8G7SHea7SgbPGxLOUcr54fMJ0wUR0LHhAGI8boJLXxpcMWz+nph+CIVwOOqw7knXe
+         Bp4k/mS75IYmFXUDjbNGYeZobqSrZ2xrE7jPsoNHW95A4PZlKa7+jNiJ0fN+5nvmmoos
+         0EwcnNjtikfMkEiQuamu1z0iLh0rG1L4dQEbOSdtsoiAHG9zydG82sEg4Vcvkm94tO+B
+         j2OSgCwvGZAvQMDTkL+uXk4bPerPt8S2pZXkixJ1ziqFI+k92BDvbK4WuqiH8paVf7IB
+         8lxaY8vg0KnAvBUJnSFeFHABNVc9YCrw4vd3UISzwCV1bvbwOoRViYMOJNiWXmpf4cA4
+         DZ4g==
+X-Forwarded-Encrypted: i=1; AJvYcCX/8myzPaWPA5AQmVKkJP/R8IjOtQGHCTB9ziAnb8Vco6GqrB9PztYJxJG4nF+4W1ElStGcBjNoBtAulE4wCpZZWe6C4zXBn38iL03dmdwYZQ==
+X-Gm-Message-State: AOJu0YxVKwOtKNLxr/I9o1/U3HD54P3BeW0gz8k++IdGLpNoGUnbBdkX
+	dNuGSNBOu9kv2SWCFPvJhs1SO+dtLMbL87yI1LcL2+2BC78yhpUuBxqJm6Qgu9NTOC0rf9jCmVw
+	nNZKZug==
+X-Google-Smtp-Source: AGHT+IGlMhZFA/hbu/l2BZqCLqXOoUAaHGH/wkUQZGCjT+6OtQcAz9YFlKU5BLtDRkbw/8FvMXBlreuwEKfs
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8095:fd7:9773:b1df])
- (user=irogers job=sendgmr) by 2002:a81:d203:0:b0:618:2ad1:a46f with SMTP id
- 00721157ae682-62076555c52mr8613587b3.2.1715106977741; Tue, 07 May 2024
- 11:36:17 -0700 (PDT)
-Date: Tue,  7 May 2024 11:35:43 -0700
+ (user=irogers job=sendgmr) by 2002:a25:9e11:0:b0:de5:1b63:9ee5 with SMTP id
+ 3f1490d57ef6-debb9da66d2mr118984276.7.1715106980236; Tue, 07 May 2024
+ 11:36:20 -0700 (PDT)
+Date: Tue,  7 May 2024 11:35:44 -0700
 In-Reply-To: <20240507183545.1236093-1-irogers@google.com>
-Message-Id: <20240507183545.1236093-7-irogers@google.com>
+Message-Id: <20240507183545.1236093-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240507183545.1236093-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 6/8] perf mem-info: Move mem-info out of mem-events and symbol
+Subject: [PATCH v1 7/8] perf mem-info: Add reference count checking
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,413 +77,672 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Move mem-info to its own header rather than having it split between
-mem-events and symbol.
+Add reference count checking and switch struct mem_info usage to use
+accessor functions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-c2c.c                      |  1 +
- tools/perf/builtin-report.c                   |  1 +
- tools/perf/builtin-script.c                   |  1 +
- tools/perf/tests/mem.c                        |  1 +
- tools/perf/util/Build                         |  1 +
- tools/perf/util/hist.c                        |  1 +
- tools/perf/util/machine.c                     |  1 +
- tools/perf/util/mem-events.c                  | 16 +++++-----
- tools/perf/util/mem-events.h                  | 29 +++++++------------
- tools/perf/util/mem-info.c                    | 28 ++++++++++++++++++
- tools/perf/util/mem-info.h                    | 28 ++++++++++++++++++
- .../scripting-engines/trace-event-python.c    |  1 +
- tools/perf/util/sort.c                        |  1 +
- tools/perf/util/symbol.c                      | 26 +----------------
- tools/perf/util/symbol.h                      | 12 --------
- 15 files changed, 85 insertions(+), 63 deletions(-)
- create mode 100644 tools/perf/util/mem-info.c
- create mode 100644 tools/perf/util/mem-info.h
+ tools/perf/builtin-c2c.c                      | 12 ++--
+ tools/perf/builtin-report.c                   |  2 +-
+ tools/perf/builtin-script.c                   | 11 ++-
+ tools/perf/tests/mem.c                        | 10 +--
+ tools/perf/util/hist.c                        | 26 +++----
+ tools/perf/util/machine.c                     |  6 +-
+ tools/perf/util/mem-events.c                  | 20 +++---
+ tools/perf/util/mem-info.c                    | 29 +++++---
+ tools/perf/util/mem-info.h                    | 28 +++++++-
+ .../scripting-engines/trace-event-python.c    | 11 ++-
+ tools/perf/util/sort.c                        | 68 +++++++++----------
+ 11 files changed, 135 insertions(+), 88 deletions(-)
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 1f1d17df9b9a..c624414b2285 100644
+index c624414b2285..c157bd31f2e5 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -38,6 +38,7 @@
- #include "ui/browsers/hists.h"
- #include "thread.h"
- #include "mem2node.h"
-+#include "mem-info.h"
- #include "symbol.h"
- #include "ui/ui.h"
- #include "ui/progress.h"
+@@ -530,7 +530,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
++		addr = cl_address(mem_info__daddr(he->mem_info)->addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -568,7 +568,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
++		addr = cl_offset(mem_info__daddr(he->mem_info)->al_addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -580,10 +580,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
++		l = cl_offset(mem_info__daddr(left->mem_info)->addr, chk_double_cl);
+ 
+ 	if (right->mem_info)
+-		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
++		r = cl_offset(mem_info__daddr(right->mem_info)->addr, chk_double_cl);
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -597,7 +597,7 @@ iaddr_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = he->mem_info->iaddr.addr;
++		addr = mem_info__iaddr(he->mem_info)->addr;
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -2593,7 +2593,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+ 	he = cl_browser->he;
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
++		addr = cl_address(mem_info__daddr(he->mem_info)->addr, chk_double_cl);
+ 
+ 	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+ 	return 0;
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index b5525f4f7090..6eb1d90b589f 100644
+index 6eb1d90b589f..0892b6e3e5e7 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -31,6 +31,7 @@
- #include "util/evsel.h"
- #include "util/evswitch.h"
- #include "util/header.h"
-+#include "util/mem-info.h"
- #include "util/session.h"
- #include "util/srcline.h"
- #include "util/tool.h"
+@@ -186,7 +186,7 @@ static int hist_iter__report_callback(struct hist_entry_iter *iter,
+ 
+ 	} else if (rep->mem_mode) {
+ 		mi = he->mem_info;
+-		err = addr_map_symbol__inc_samples(&mi->daddr, sample, evsel);
++		err = addr_map_symbol__inc_samples(mem_info__daddr(mi), sample, evsel);
+ 		if (err)
+ 			goto out;
+ 
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index f7c3c3868c3c..58af4f3aa592 100644
+index 58af4f3aa592..c16224b1fef3 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -32,6 +32,7 @@
- #include "util/time-utils.h"
- #include "util/path.h"
- #include "util/event.h"
-+#include "util/mem-info.h"
- #include "ui/ui.h"
- #include "print_binary.h"
- #include "print_insn.h"
+@@ -2051,13 +2051,18 @@ static int evlist__max_name_len(struct evlist *evlist)
+ 
+ static int data_src__fprintf(u64 data_src, FILE *fp)
+ {
+-	struct mem_info mi = { .data_src.val = data_src };
++	struct mem_info *mi = mem_info__new();
+ 	char decode[100];
+ 	char out[100];
+ 	static int maxlen;
+ 	int len;
+ 
+-	perf_script__meminfo_scnprintf(decode, 100, &mi);
++	if (!mi)
++		return -ENOMEM;
++
++	mem_info__data_src(mi)->val = data_src;
++	perf_script__meminfo_scnprintf(decode, 100, mi);
++	mem_info__put(mi);
+ 
+ 	len = scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode);
+ 	if (maxlen < len)
+@@ -2498,7 +2503,7 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+ 	evsel = evlist__last(*pevlist);
+ 
+ 	if (!evsel->priv) {
+-		if (scr->per_event_dump) { 
++		if (scr->per_event_dump) {
+ 			evsel->priv = evsel_script__new(evsel, scr->session->data);
+ 			if (!evsel->priv)
+ 				return -ENOMEM;
 diff --git a/tools/perf/tests/mem.c b/tools/perf/tests/mem.c
-index 56014ec7d49d..f694a60d8a73 100644
+index f694a60d8a73..cb3d749e157b 100644
 --- a/tools/perf/tests/mem.c
 +++ b/tools/perf/tests/mem.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util/map_symbol.h"
- #include "util/mem-events.h"
-+#include "util/mem-info.h"
- #include "util/symbol.h"
- #include "linux/perf_event.h"
- #include "util/debug.h"
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 292170a99ab6..da64efd8718f 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -141,6 +141,7 @@ perf-y += term.o
- perf-y += help-unknown-cmd.o
- perf-y += dlfilter.o
- perf-y += mem-events.o
-+perf-y += mem-info.o
- perf-y += vsprintf.o
- perf-y += units.o
- perf-y += time-utils.o
+@@ -13,12 +13,14 @@ static int check(union perf_mem_data_src data_src,
+ {
+ 	char out[100];
+ 	char failure[100];
+-	struct mem_info mi = { .data_src = data_src };
+-
++	struct mem_info *mi = mem_info__new();
+ 	int n;
+ 
+-	n = perf_mem__snp_scnprintf(out, sizeof out, &mi);
+-	n += perf_mem__lvl_scnprintf(out + n, sizeof out - n, &mi);
++	TEST_ASSERT_VAL("Memory allocation failed", mi);
++	*mem_info__data_src(mi) = data_src;
++	n = perf_mem__snp_scnprintf(out, sizeof out, mi);
++	n += perf_mem__lvl_scnprintf(out + n, sizeof out - n, mi);
++	mem_info__put(mi);
+ 	scnprintf(failure, sizeof failure, "unexpected %s", out);
+ 	TEST_ASSERT_VAL(failure, !strcmp(string, out));
+ 	return 0;
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index b8a508cd0b14..56453a02cdf4 100644
+index 56453a02cdf4..00814d42d5f1 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -9,6 +9,7 @@
- #include "map_symbol.h"
- #include "branch.h"
- #include "mem-events.h"
-+#include "mem-info.h"
- #include "session.h"
- #include "namespaces.h"
- #include "cgroup.h"
+@@ -154,8 +154,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	}
+ 
+ 	if (h->mem_info) {
+-		if (h->mem_info->daddr.ms.sym) {
+-			symlen = (int)h->mem_info->daddr.ms.sym->namelen + 4
++		if (mem_info__daddr(h->mem_info)->ms.sym) {
++			symlen = (int)mem_info__daddr(h->mem_info)->ms.sym->namelen + 4
+ 			       + unresolved_col_width + 2;
+ 			hists__new_col_len(hists, HISTC_MEM_DADDR_SYMBOL,
+ 					   symlen);
+@@ -169,8 +169,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 					   symlen);
+ 		}
+ 
+-		if (h->mem_info->iaddr.ms.sym) {
+-			symlen = (int)h->mem_info->iaddr.ms.sym->namelen + 4
++		if (mem_info__iaddr(h->mem_info)->ms.sym) {
++			symlen = (int)mem_info__iaddr(h->mem_info)->ms.sym->namelen + 4
+ 			       + unresolved_col_width + 2;
+ 			hists__new_col_len(hists, HISTC_MEM_IADDR_SYMBOL,
+ 					   symlen);
+@@ -180,8 +180,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 					   symlen);
+ 		}
+ 
+-		if (h->mem_info->daddr.ms.map) {
+-			symlen = dso__name_len(map__dso(h->mem_info->daddr.ms.map));
++		if (mem_info__daddr(h->mem_info)->ms.map) {
++			symlen = dso__name_len(map__dso(mem_info__daddr(h->mem_info)->ms.map));
+ 			hists__new_col_len(hists, HISTC_MEM_DADDR_DSO,
+ 					   symlen);
+ 		} else {
+@@ -477,8 +477,10 @@ static int hist_entry__init(struct hist_entry *he,
+ 	}
+ 
+ 	if (he->mem_info) {
+-		he->mem_info->iaddr.ms.map = map__get(he->mem_info->iaddr.ms.map);
+-		he->mem_info->daddr.ms.map = map__get(he->mem_info->daddr.ms.map);
++		mem_info__iaddr(he->mem_info)->ms.map =
++			map__get(mem_info__iaddr(he->mem_info)->ms.map);
++		mem_info__daddr(he->mem_info)->ms.map =
++			map__get(mem_info__daddr(he->mem_info)->ms.map);
+ 	}
+ 
+ 	if (hist_entry__has_callchains(he) && symbol_conf.use_callchain)
+@@ -526,8 +528,8 @@ static int hist_entry__init(struct hist_entry *he,
+ 		zfree(&he->branch_info);
+ 	}
+ 	if (he->mem_info) {
+-		map_symbol__exit(&he->mem_info->iaddr.ms);
+-		map_symbol__exit(&he->mem_info->daddr.ms);
++		map_symbol__exit(&mem_info__iaddr(he->mem_info)->ms);
++		map_symbol__exit(&mem_info__daddr(he->mem_info)->ms);
+ 	}
+ err:
+ 	map_symbol__exit(&he->ms);
+@@ -1336,8 +1338,8 @@ void hist_entry__delete(struct hist_entry *he)
+ 	}
+ 
+ 	if (he->mem_info) {
+-		map_symbol__exit(&he->mem_info->iaddr.ms);
+-		map_symbol__exit(&he->mem_info->daddr.ms);
++		map_symbol__exit(&mem_info__iaddr(he->mem_info)->ms);
++		map_symbol__exit(&mem_info__daddr(he->mem_info)->ms);
+ 		mem_info__zput(he->mem_info);
+ 	}
+ 
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index a3ff2ab154bd..d5a01ef92668 100644
+index d5a01ef92668..8477edefc299 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -16,6 +16,7 @@
- #include "map_symbol.h"
- #include "branch.h"
- #include "mem-events.h"
-+#include "mem-info.h"
- #include "path.h"
- #include "srcline.h"
- #include "symbol.h"
+@@ -2013,11 +2013,11 @@ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
+ 	if (!mi)
+ 		return NULL;
+ 
+-	ip__resolve_ams(al->thread, &mi->iaddr, sample->ip);
+-	ip__resolve_data(al->thread, al->cpumode, &mi->daddr,
++	ip__resolve_ams(al->thread, mem_info__iaddr(mi), sample->ip);
++	ip__resolve_data(al->thread, al->cpumode, mem_info__daddr(mi),
+ 			 sample->addr, sample->phys_addr,
+ 			 sample->data_page_size);
+-	mi->data_src.val = sample->data_src;
++	mem_info__data_src(mi)->val = sample->data_src;
+ 
+ 	return mi;
+ }
 diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 637cbd4a7bfb..f618a5ccc7af 100644
+index f618a5ccc7af..6dda47bb774f 100644
 --- a/tools/perf/util/mem-events.c
 +++ b/tools/perf/util/mem-events.c
-@@ -10,7 +10,9 @@
- #include <linux/kernel.h>
- #include "map_symbol.h"
- #include "mem-events.h"
-+#include "mem-info.h"
- #include "debug.h"
-+#include "evsel.h"
- #include "symbol.h"
- #include "pmu.h"
- #include "pmus.h"
-@@ -281,7 +283,7 @@ static const char * const tlb_access[] = {
- 	"Fault",
- };
+@@ -293,7 +293,7 @@ int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	out[0] = '\0';
  
--int perf_mem__tlb_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	size_t l = 0, i;
- 	u64 m = PERF_MEM_TLB_NA;
-@@ -359,7 +361,7 @@ static const char * const mem_hops[] = {
- 	"board",
- };
+ 	if (mem_info)
+-		m = mem_info->data_src.mem_dtlb;
++		m = mem_info__const_data_src(mem_info)->mem_dtlb;
  
--static int perf_mem__op_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+static int perf_mem__op_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	u64 op = PERF_MEM_LOCK_NA;
+ 	hit = m & PERF_MEM_TLB_HIT;
+ 	miss = m & PERF_MEM_TLB_MISS;
+@@ -367,7 +367,7 @@ static int perf_mem__op_scnprintf(char *out, size_t sz, const struct mem_info *m
  	int l;
-@@ -383,7 +385,7 @@ static int perf_mem__op_scnprintf(char *out, size_t sz, struct mem_info *mem_inf
- 	return l;
- }
  
--int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	union perf_mem_data_src data_src;
- 	int printed = 0;
-@@ -465,7 +467,7 @@ static const char * const snoopx_access[] = {
- 	"Peer",
- };
+ 	if (mem_info)
+-		op = mem_info->data_src.mem_op;
++		op = mem_info__const_data_src(mem_info)->mem_op;
  
--int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	size_t i, l = 0;
- 	u64 m = PERF_MEM_SNOOP_NA;
-@@ -507,7 +509,7 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 	return l;
- }
+ 	if (op & PERF_MEM_OP_NA)
+ 		l = scnprintf(out, sz, "N/A");
+@@ -400,7 +400,7 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	if (!mem_info)
+ 		goto na;
  
--int perf_mem__lck_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	u64 mask = PERF_MEM_LOCK_NA;
+-	data_src = mem_info->data_src;
++	data_src = *mem_info__const_data_src(mem_info);
+ 
+ 	if (data_src.mem_lvl & PERF_MEM_LVL_HIT)
+ 		memcpy(hit_miss, "hit", 3);
+@@ -476,7 +476,7 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	out[0] = '\0';
+ 
+ 	if (mem_info)
+-		m = mem_info->data_src.mem_snoop;
++		m = mem_info__const_data_src(mem_info)->mem_snoop;
+ 
+ 	for (i = 0; m && i < ARRAY_SIZE(snoop_access); i++, m >>= 1) {
+ 		if (!(m & 0x1))
+@@ -490,7 +490,7 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 
+ 	m = 0;
+ 	if (mem_info)
+-		m = mem_info->data_src.mem_snoopx;
++		m = mem_info__const_data_src(mem_info)->mem_snoopx;
+ 
+ 	for (i = 0; m && i < ARRAY_SIZE(snoopx_access); i++, m >>= 1) {
+ 		if (!(m & 0x1))
+@@ -515,7 +515,7 @@ int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
  	int l;
-@@ -525,7 +527,7 @@ int perf_mem__lck_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 	return l;
- }
  
--int perf_mem__blk_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
+ 	if (mem_info)
+-		mask = mem_info->data_src.mem_lock;
++		mask = mem_info__const_data_src(mem_info)->mem_lock;
+ 
+ 	if (mask & PERF_MEM_LOCK_NA)
+ 		l = scnprintf(out, sz, "N/A");
+@@ -536,7 +536,7 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	out[0] = '\0';
+ 
+ 	if (mem_info)
+-		mask = mem_info->data_src.mem_blk;
++		mask = mem_info__const_data_src(mem_info)->mem_blk;
+ 
+ 	if (!mask || (mask & PERF_MEM_BLK_NA)) {
+ 		l += scnprintf(out + l, sz - l, " N/A");
+@@ -572,8 +572,8 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
+ 
+ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi)
  {
- 	size_t l = 0;
- 	u64 mask = PERF_MEM_BLK_NA;
-@@ -548,7 +550,7 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
- 	return l;
- }
+-	union perf_mem_data_src *data_src = &mi->data_src;
+-	u64 daddr  = mi->daddr.addr;
++	union perf_mem_data_src *data_src = mem_info__data_src(mi);
++	u64 daddr  = mem_info__daddr(mi)->addr;
+ 	u64 op     = data_src->mem_op;
+ 	u64 lvl    = data_src->mem_lvl;
+ 	u64 snoop  = data_src->mem_snoop;
+@@ -700,7 +700,7 @@ do {				\
+ 		return -1;
+ 	}
  
--int perf_script__meminfo_scnprintf(char *out, size_t sz, struct mem_info *mem_info)
-+int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
- {
- 	int i = 0;
- 
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 15d5f0320d27..ca31014d7934 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -3,13 +3,7 @@
- #define __PERF_MEM_EVENTS_H
- 
- #include <stdbool.h>
--#include <stdint.h>
--#include <stdio.h>
- #include <linux/types.h>
--#include <linux/refcount.h>
--#include <linux/perf_event.h>
--#include "stat.h"
--#include "evsel.h"
- 
- struct perf_mem_event {
- 	bool		record;
-@@ -21,13 +15,6 @@ struct perf_mem_event {
- 	const char	*event_name;
- };
- 
--struct mem_info {
--	struct addr_map_symbol	iaddr;
--	struct addr_map_symbol	daddr;
--	union perf_mem_data_src	data_src;
--	refcount_t		refcnt;
--};
--
- enum {
- 	PERF_MEM_EVENTS__LOAD,
- 	PERF_MEM_EVENTS__STORE,
-@@ -35,6 +22,10 @@ enum {
- 	PERF_MEM_EVENTS__MAX,
- };
- 
-+struct evsel;
-+struct mem_info;
-+struct perf_pmu;
-+
- extern unsigned int perf_mem_events__loads_ldlat;
- extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
- 
-@@ -49,13 +40,13 @@ bool is_mem_loads_aux_event(struct evsel *leader);
- void perf_pmu__mem_events_list(struct perf_pmu *pmu);
- int perf_mem_events__record_args(const char **rec_argv, int *argv_nr);
- 
--int perf_mem__tlb_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
--int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
--int perf_mem__snp_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
--int perf_mem__lck_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
--int perf_mem__blk_scnprintf(char *out, size_t sz, struct mem_info *mem_info);
-+int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-+int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-+int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-+int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
-+int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
- 
--int perf_script__meminfo_scnprintf(char *bf, size_t size, struct mem_info *mem_info);
-+int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct mem_info *mem_info);
- 
- struct c2c_stats {
- 	u32	nr_entries;
+-	if (!mi->daddr.ms.map || !mi->iaddr.ms.map) {
++	if (!mem_info__daddr(mi)->ms.map || !mem_info__iaddr(mi)->ms.map) {
+ 		stats->nomap++;
+ 		return -1;
+ 	}
 diff --git a/tools/perf/util/mem-info.c b/tools/perf/util/mem-info.c
-new file mode 100644
-index 000000000000..ff0dfdb5369a
---- /dev/null
+index ff0dfdb5369a..27d67721a695 100644
+--- a/tools/perf/util/mem-info.c
 +++ b/tools/perf/util/mem-info.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/zalloc.h>
-+#include "mem-info.h"
-+
-+struct mem_info *mem_info__get(struct mem_info *mi)
-+{
-+	if (mi)
-+		refcount_inc(&mi->refcnt);
-+	return mi;
-+}
-+
-+void mem_info__put(struct mem_info *mi)
-+{
-+	if (mi && refcount_dec_and_test(&mi->refcnt)) {
-+		addr_map_symbol__exit(&mi->iaddr);
-+		addr_map_symbol__exit(&mi->daddr);
-+		free(mi);
-+	}
-+}
-+
-+struct mem_info *mem_info__new(void)
-+{
-+	struct mem_info *mi = zalloc(sizeof(*mi));
-+
-+	if (mi)
-+		refcount_set(&mi->refcnt, 1);
-+	return mi;
-+}
-diff --git a/tools/perf/util/mem-info.h b/tools/perf/util/mem-info.h
-new file mode 100644
-index 000000000000..bb7d8375d73c
---- /dev/null
-+++ b/tools/perf/util/mem-info.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_MEM_INFO_H
-+#define __PERF_MEM_INFO_H
-+
-+#include <linux/refcount.h>
-+#include <linux/perf_event.h>
-+#include "map_symbol.h"
-+
-+struct mem_info {
-+	struct addr_map_symbol	iaddr;
-+	struct addr_map_symbol	daddr;
-+	union perf_mem_data_src	data_src;
-+	refcount_t		refcnt;
-+};
-+
-+struct mem_info *mem_info__new(void);
-+struct mem_info *mem_info__get(struct mem_info *mi);
-+void   mem_info__put(struct mem_info *mi);
-+
-+static inline void __mem_info__zput(struct mem_info **mi)
-+{
-+	mem_info__put(*mi);
-+	*mi = NULL;
-+}
-+
-+#define mem_info__zput(mi) __mem_info__zput(&mi)
-+
-+#endif /* __PERF_MEM_INFO_H */
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index c2caa5720299..c77fe08a0545 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -45,6 +45,7 @@
- #include "../thread.h"
- #include "../comm.h"
- #include "../machine.h"
-+#include "../mem-info.h"
- #include "../db-export.h"
- #include "../thread-stack.h"
- #include "../trace-event.h"
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 704664e5b4ea..711ef69306f3 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -23,6 +23,7 @@
- #include "strlist.h"
- #include "strbuf.h"
- #include "mem-events.h"
-+#include "mem-info.h"
- #include "annotate.h"
- #include "annotate-data.h"
- #include "event.h"
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 7772a4d3e66c..eb3319baa1b5 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -27,6 +27,7 @@
- #include "symbol.h"
- #include "map_symbol.h"
- #include "mem-events.h"
-+#include "mem-info.h"
- #include "symsrc.h"
- #include "strlist.h"
- #include "intlist.h"
-@@ -2570,31 +2571,6 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
- 	return 0;
- }
+@@ -4,25 +4,32 @@
  
--struct mem_info *mem_info__get(struct mem_info *mi)
--{
+ struct mem_info *mem_info__get(struct mem_info *mi)
+ {
 -	if (mi)
 -		refcount_inc(&mi->refcnt);
 -	return mi;
--}
--
--void mem_info__put(struct mem_info *mi)
--{
++	struct mem_info *result;
++
++	if (RC_CHK_GET(result, mi))
++		refcount_inc(mem_info__refcnt(mi));
++
++	return result;
+ }
+ 
+ void mem_info__put(struct mem_info *mi)
+ {
 -	if (mi && refcount_dec_and_test(&mi->refcnt)) {
 -		addr_map_symbol__exit(&mi->iaddr);
 -		addr_map_symbol__exit(&mi->daddr);
 -		free(mi);
--	}
--}
--
--struct mem_info *mem_info__new(void)
--{
++	if (mi && refcount_dec_and_test(mem_info__refcnt(mi))) {
++		addr_map_symbol__exit(mem_info__iaddr(mi));
++		addr_map_symbol__exit(mem_info__daddr(mi));
++		RC_CHK_FREE(mi);
++	} else {
++		RC_CHK_PUT(mi);
+ 	}
+ }
+ 
+ struct mem_info *mem_info__new(void)
+ {
 -	struct mem_info *mi = zalloc(sizeof(*mi));
--
++	struct mem_info *result = NULL;
++	RC_STRUCT(mem_info) *mi = zalloc(sizeof(*mi));
++
++	if (ADD_RC_CHK(result, mi))
++		refcount_set(mem_info__refcnt(result), 1);
+ 
 -	if (mi)
 -		refcount_set(&mi->refcnt, 1);
 -	return mi;
--}
--
- /*
-  * Checks that user supplied symbol kernel files are accessible because
-  * the default mechanism for accessing elf files fails silently. i.e. if
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 071837ddce2a..3fb5d146d9b1 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -268,18 +268,6 @@ enum {
- 	SDT_NOTE_IDX_REFCTR,
- };
++	return result;
+ }
+diff --git a/tools/perf/util/mem-info.h b/tools/perf/util/mem-info.h
+index bb7d8375d73c..0f68e29f311b 100644
+--- a/tools/perf/util/mem-info.h
++++ b/tools/perf/util/mem-info.h
+@@ -4,9 +4,10 @@
  
--struct mem_info *mem_info__new(void);
--struct mem_info *mem_info__get(struct mem_info *mi);
--void   mem_info__put(struct mem_info *mi);
--
--static inline void __mem_info__zput(struct mem_info **mi)
--{
--	mem_info__put(*mi);
--	*mi = NULL;
--}
--
--#define mem_info__zput(mi) __mem_info__zput(&mi)
--
- int symbol__validate_sym_arguments(void);
+ #include <linux/refcount.h>
+ #include <linux/perf_event.h>
++#include <internal/rc_check.h>
+ #include "map_symbol.h"
  
- #endif /* __PERF_SYMBOL */
+-struct mem_info {
++DECLARE_RC_STRUCT(mem_info) {
+ 	struct addr_map_symbol	iaddr;
+ 	struct addr_map_symbol	daddr;
+ 	union perf_mem_data_src	data_src;
+@@ -25,4 +26,29 @@ static inline void __mem_info__zput(struct mem_info **mi)
+ 
+ #define mem_info__zput(mi) __mem_info__zput(&mi)
+ 
++static inline struct addr_map_symbol *mem_info__iaddr(struct mem_info *mi)
++{
++	return &RC_CHK_ACCESS(mi)->iaddr;
++}
++
++static inline struct addr_map_symbol *mem_info__daddr(struct mem_info *mi)
++{
++	return &RC_CHK_ACCESS(mi)->daddr;
++}
++
++static inline union perf_mem_data_src *mem_info__data_src(struct mem_info *mi)
++{
++	return &RC_CHK_ACCESS(mi)->data_src;
++}
++
++static inline const union perf_mem_data_src *mem_info__const_data_src(const struct mem_info *mi)
++{
++	return &RC_CHK_ACCESS(mi)->data_src;
++}
++
++static inline refcount_t *mem_info__refcnt(struct mem_info *mi)
++{
++	return &RC_CHK_ACCESS(mi)->refcnt;
++}
++
+ #endif /* __PERF_MEM_INFO_H */
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index c77fe08a0545..fb00f3ad6815 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -721,15 +721,20 @@ static void set_sample_read_in_dict(PyObject *dict_sample,
+ }
+ 
+ static void set_sample_datasrc_in_dict(PyObject *dict,
+-				       struct perf_sample *sample)
++				      struct perf_sample *sample)
+ {
+-	struct mem_info mi = { .data_src.val = sample->data_src };
++	struct mem_info *mi = mem_info__new();
+ 	char decode[100];
+ 
++	if (!mi)
++		Py_FatalError("couldn't create mem-info");
++
+ 	pydict_set_item_string_decref(dict, "datasrc",
+ 			PyLong_FromUnsignedLongLong(sample->data_src));
+ 
+-	perf_script__meminfo_scnprintf(decode, 100, &mi);
++	mem_info__data_src(mi)->val = sample->data_src;
++	perf_script__meminfo_scnprintf(decode, 100, mi);
++	mem_info__put(mi);
+ 
+ 	pydict_set_item_string_decref(dict, "datasrc_decode",
+ 			_PyUnicode_FromString(decode));
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 711ef69306f3..cd39ea972193 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1365,9 +1365,9 @@ sort__daddr_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = left->mem_info->daddr.addr;
++		l = mem_info__daddr(left->mem_info)->addr;
+ 	if (right->mem_info)
+-		r = right->mem_info->daddr.addr;
++		r = mem_info__daddr(right->mem_info)->addr;
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -1379,8 +1379,8 @@ static int hist_entry__daddr_snprintf(struct hist_entry *he, char *bf,
+ 	struct map_symbol *ms = NULL;
+ 
+ 	if (he->mem_info) {
+-		addr = he->mem_info->daddr.addr;
+-		ms = &he->mem_info->daddr.ms;
++		addr = mem_info__daddr(he->mem_info)->addr;
++		ms = &mem_info__daddr(he->mem_info)->ms;
+ 	}
+ 	return _hist_entry__sym_snprintf(ms, addr, he->level, bf, size, width);
+ }
+@@ -1391,9 +1391,9 @@ sort__iaddr_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = left->mem_info->iaddr.addr;
++		l = mem_info__iaddr(left->mem_info)->addr;
+ 	if (right->mem_info)
+-		r = right->mem_info->iaddr.addr;
++		r = mem_info__iaddr(right->mem_info)->addr;
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -1405,8 +1405,8 @@ static int hist_entry__iaddr_snprintf(struct hist_entry *he, char *bf,
+ 	struct map_symbol *ms = NULL;
+ 
+ 	if (he->mem_info) {
+-		addr = he->mem_info->iaddr.addr;
+-		ms   = &he->mem_info->iaddr.ms;
++		addr = mem_info__iaddr(he->mem_info)->addr;
++		ms   = &mem_info__iaddr(he->mem_info)->ms;
+ 	}
+ 	return _hist_entry__sym_snprintf(ms, addr, he->level, bf, size, width);
+ }
+@@ -1418,9 +1418,9 @@ sort__dso_daddr_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	struct map *map_r = NULL;
+ 
+ 	if (left->mem_info)
+-		map_l = left->mem_info->daddr.ms.map;
++		map_l = mem_info__daddr(left->mem_info)->ms.map;
+ 	if (right->mem_info)
+-		map_r = right->mem_info->daddr.ms.map;
++		map_r = mem_info__daddr(right->mem_info)->ms.map;
+ 
+ 	return _sort__dso_cmp(map_l, map_r);
+ }
+@@ -1431,7 +1431,7 @@ static int hist_entry__dso_daddr_snprintf(struct hist_entry *he, char *bf,
+ 	struct map *map = NULL;
+ 
+ 	if (he->mem_info)
+-		map = he->mem_info->daddr.ms.map;
++		map = mem_info__daddr(he->mem_info)->ms.map;
+ 
+ 	return _hist_entry__dso_snprintf(map, bf, size, width);
+ }
+@@ -1443,12 +1443,12 @@ sort__locked_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	union perf_mem_data_src data_src_r;
+ 
+ 	if (left->mem_info)
+-		data_src_l = left->mem_info->data_src;
++		data_src_l = *mem_info__data_src(left->mem_info);
+ 	else
+ 		data_src_l.mem_lock = PERF_MEM_LOCK_NA;
+ 
+ 	if (right->mem_info)
+-		data_src_r = right->mem_info->data_src;
++		data_src_r = *mem_info__data_src(right->mem_info);
+ 	else
+ 		data_src_r.mem_lock = PERF_MEM_LOCK_NA;
+ 
+@@ -1471,12 +1471,12 @@ sort__tlb_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	union perf_mem_data_src data_src_r;
+ 
+ 	if (left->mem_info)
+-		data_src_l = left->mem_info->data_src;
++		data_src_l = *mem_info__data_src(left->mem_info);
+ 	else
+ 		data_src_l.mem_dtlb = PERF_MEM_TLB_NA;
+ 
+ 	if (right->mem_info)
+-		data_src_r = right->mem_info->data_src;
++		data_src_r = *mem_info__data_src(right->mem_info);
+ 	else
+ 		data_src_r.mem_dtlb = PERF_MEM_TLB_NA;
+ 
+@@ -1499,12 +1499,12 @@ sort__lvl_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	union perf_mem_data_src data_src_r;
+ 
+ 	if (left->mem_info)
+-		data_src_l = left->mem_info->data_src;
++		data_src_l = *mem_info__data_src(left->mem_info);
+ 	else
+ 		data_src_l.mem_lvl = PERF_MEM_LVL_NA;
+ 
+ 	if (right->mem_info)
+-		data_src_r = right->mem_info->data_src;
++		data_src_r = *mem_info__data_src(right->mem_info);
+ 	else
+ 		data_src_r.mem_lvl = PERF_MEM_LVL_NA;
+ 
+@@ -1527,12 +1527,12 @@ sort__snoop_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	union perf_mem_data_src data_src_r;
+ 
+ 	if (left->mem_info)
+-		data_src_l = left->mem_info->data_src;
++		data_src_l = *mem_info__data_src(left->mem_info);
+ 	else
+ 		data_src_l.mem_snoop = PERF_MEM_SNOOP_NA;
+ 
+ 	if (right->mem_info)
+-		data_src_r = right->mem_info->data_src;
++		data_src_r = *mem_info__data_src(right->mem_info);
+ 	else
+ 		data_src_r.mem_snoop = PERF_MEM_SNOOP_NA;
+ 
+@@ -1563,8 +1563,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	if (left->cpumode > right->cpumode) return -1;
+ 	if (left->cpumode < right->cpumode) return 1;
+ 
+-	l_map = left->mem_info->daddr.ms.map;
+-	r_map = right->mem_info->daddr.ms.map;
++	l_map = mem_info__daddr(left->mem_info)->ms.map;
++	r_map = mem_info__daddr(right->mem_info)->ms.map;
+ 
+ 	/* if both are NULL, jump to sort on al_addr instead */
+ 	if (!l_map && !r_map)
+@@ -1599,8 +1599,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+ 
+ addr:
+ 	/* al_addr does all the right addr - start + offset calculations */
+-	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
+-	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
++	l = cl_address(mem_info__daddr(left->mem_info)->al_addr, chk_double_cl);
++	r = cl_address(mem_info__daddr(right->mem_info)->al_addr, chk_double_cl);
+ 
+ 	if (l > r) return -1;
+ 	if (l < r) return 1;
+@@ -1617,11 +1617,11 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+ 	char level = he->level;
+ 
+ 	if (he->mem_info) {
+-		struct map *map = he->mem_info->daddr.ms.map;
++		struct map *map = mem_info__daddr(he->mem_info)->ms.map;
+ 		struct dso *dso = map ? map__dso(map) : NULL;
+ 
+-		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+-		ms = &he->mem_info->daddr.ms;
++		addr = cl_address(mem_info__daddr(he->mem_info)->al_addr, chk_double_cl);
++		ms = &mem_info__daddr(he->mem_info)->ms;
+ 
+ 		/* print [s] for shared data mmaps */
+ 		if ((he->cpumode != PERF_RECORD_MISC_KERNEL) &&
+@@ -1806,12 +1806,12 @@ sort__blocked_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	union perf_mem_data_src data_src_r;
+ 
+ 	if (left->mem_info)
+-		data_src_l = left->mem_info->data_src;
++		data_src_l = *mem_info__data_src(left->mem_info);
+ 	else
+ 		data_src_l.mem_blk = PERF_MEM_BLK_NA;
+ 
+ 	if (right->mem_info)
+-		data_src_r = right->mem_info->data_src;
++		data_src_r = *mem_info__data_src(right->mem_info);
+ 	else
+ 		data_src_r.mem_blk = PERF_MEM_BLK_NA;
+ 
+@@ -1840,9 +1840,9 @@ sort__phys_daddr_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = left->mem_info->daddr.phys_addr;
++		l = mem_info__daddr(left->mem_info)->phys_addr;
+ 	if (right->mem_info)
+-		r = right->mem_info->daddr.phys_addr;
++		r = mem_info__daddr(right->mem_info)->phys_addr;
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -1854,7 +1854,7 @@ static int hist_entry__phys_daddr_snprintf(struct hist_entry *he, char *bf,
+ 	size_t ret = 0;
+ 	size_t len = BITS_PER_LONG / 4;
+ 
+-	addr = he->mem_info->daddr.phys_addr;
++	addr = mem_info__daddr(he->mem_info)->phys_addr;
+ 
+ 	ret += repsep_snprintf(bf + ret, size - ret, "[%c] ", he->level);
+ 
+@@ -1881,9 +1881,9 @@ sort__data_page_size_cmp(struct hist_entry *left, struct hist_entry *right)
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = left->mem_info->daddr.data_page_size;
++		l = mem_info__daddr(left->mem_info)->data_page_size;
+ 	if (right->mem_info)
+-		r = right->mem_info->daddr.data_page_size;
++		r = mem_info__daddr(right->mem_info)->data_page_size;
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -1894,7 +1894,7 @@ static int hist_entry__data_page_size_snprintf(struct hist_entry *he, char *bf,
+ 	char str[PAGE_SIZE_NAME_LEN];
+ 
+ 	return repsep_snprintf(bf, size, "%-*s", width,
+-			       get_page_size_name(he->mem_info->daddr.data_page_size, str));
++			get_page_size_name(mem_info__daddr(he->mem_info)->data_page_size, str));
+ }
+ 
+ struct sort_entry sort_mem_data_page_size = {
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
