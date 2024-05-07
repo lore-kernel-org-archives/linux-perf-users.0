@@ -1,299 +1,432 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED3D3E48F;
-	Tue,  7 May 2024 16:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E252FE570;
+	Tue,  7 May 2024 17:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099827; cv=none; b=QxdfuW7arm1sXLCyy7DqnUs3Yv+MU/DS8yxLVEtGGYHYuZJfaMfL+xHK8hfhSN8q3RfNPYrCCJAzAA0oMu5ZBBRoVJaUfFTogrOm3JyLkop7N7crnFYQHxMpR5rS/+o589h0BOL1eMy/rd6LaSk7hdHG+Zz1nED4KLFODicLp/E=
+	t=1715102966; cv=none; b=bKOADHRMcq5eu8csC2kWspXe0zs7yV9GByimna1/HeD+i9OWWS12vSCjPOKx602goDZDX+Bn2fh04n1eTbEx6zL079Ofj5fTwo+gDmtbklss3lLvgX0hh4e++tTsV63UL/Yzw61sYhqTbkpcwULxkyeLKlc4Gyid1/KJat2M7b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099827; c=relaxed/simple;
-	bh=qGfJvnfpxxK0Cnb6ZWI/3YT+WlFz4LPSpjpA2+r7j5w=;
+	s=arc-20240116; t=1715102966; c=relaxed/simple;
+	bh=KzuPLDxblRhUgWu+o7vgcddTvikSweClUNGQqmHG6HE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mKG6Jt5J44DO9UGxygcOiGCRgCA6GAe4evqjdQ+szyssJz+vLpDJ4lRKnrCm2lb3ANEtc9lfgc8L4GipD0kA78pIPME9dMmYegCno6XLiBCQw29ARF59eDsLUMhPHkq9+a9EXKrAXwAmUlg/jrq1jvlqqUMqG3ThZqrrAF4ZMD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HRUQJpYE; arc=none smtp.client-ip=209.85.215.175
+	 To:Cc:Content-Type; b=dIPEiJFmRKpKRlBwOsQ9gNyIFYQ+0/S5DzJayRKfo3UFq0FUDkhGfGubbPEUAwmrs5cnffpRAHCxISgcL+lxfPmKUD1pSN55yKq9bDjY09dK7vVqXSdbeoZF/8Psi5Ba1pynzCK+vvD6WArTtsxPybsEPbleVw3PSdHW7tf8INM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0S248o8; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRUQJpYE"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6001399f22bso2490251a12.0;
-        Tue, 07 May 2024 09:37:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0S248o8"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ed0abbf706so23793285ad.2;
+        Tue, 07 May 2024 10:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715099825; x=1715704625; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715102964; x=1715707764; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h4OwR2TgrDTiiCg6OQZ7l2+opI9M0Uh+nYNlleYZodA=;
-        b=HRUQJpYEOVWwbv92ztTsKj20wkRvBjaj70s6Kr+tHRFgOYHd1dwamdvo7oQ243zRph
-         7cSU3KQEWAyunpo4b55PPF6Vgn7fnLQatDHdYgGEMTtxhnkFHmOO2ibwn+PAoVpfX5Ix
-         spK4rnJvmLyzcmDpBStanPG3RYghP3voozGl4UkC4a/EgnGQZ32j8rkZ2kBOenZIpYl/
-         8QIK9gt7y7e960baYQI9zx2xgqb7KsUY19zXIKPSHbPZZilhCm8e/jgG5VxpH7xxjALm
-         8QD8B8VyODLpC9zpTRwmQ3cEFeu4/Tx1QivCOy3vIZ6nONCq4QQaeFBBpEM/w/SSUXdY
-         SeXw==
+        bh=DDZ21BfhcAiLJodQpjNC/6yMxF3ELBdQ20+IdAkrnMs=;
+        b=f0S248o8UneBtITuD4W0gmCstCm9rzwXoLqAvPYKoFmGia/rspGfGGsalO/UE32zNe
+         aWgRRhySV+D/xB8D9ylZ90bS1yPjPV5mPED5pKLc8V4ew0aed9dpiPrUPPbpk13sh+w5
+         8q9kdV51yPte/K9vDOsZhPkwvdjgM0sJvuCqp98C53G1h4+WuD5AeWXQ0Ix+y3zm84J9
+         N8OgbT3Fj+A6QNlplKrO4HLVDjAn8/RhPSDAf3OsHk2BCjpDNMTCWLnmmbWXtRoYYx1F
+         ECaVTPmeRHeNu5Fv/U5ltnYm/eqJ5hg1rZ4Qign49AU3/aMYDZHBQ9imLO3a2q7/Yw5y
+         beCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099825; x=1715704625;
+        d=1e100.net; s=20230601; t=1715102964; x=1715707764;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h4OwR2TgrDTiiCg6OQZ7l2+opI9M0Uh+nYNlleYZodA=;
-        b=aLGWJhoqBMKqkLH6qUfgyj9RInmzKeJQpY1KHRUNZ8Vl2iujcsHycCIgN2KwQOQfBN
-         +plpTsL4YC810fg1v2fCVIHtivG+TjdbFSyfCpWvADeCpcfL/v45BEBKAEnVfeEhTKD0
-         lrXvtforHtUoaQR0TQCsXHEJDPDCKCH7/JsWv6XHDP4ihGEU5ickh9OQh7LDeAhpCpI6
-         nM0IxMYbzN3jKbaFRG2167IKeCTIHDeZa9xtMpru9BhfHlbKz3s81YJtk+1w08rV4lSd
-         wf8IwpDNzR6KtxOeI/0sbvQld0su6YIMl51IBEyTB51MZmP8GHocELaKM6q/shZc9ZeC
-         oeBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeIRQQ/mqn2L8BblA09mmeSo34SyB3KYxvMrMWHAuAFwLArVjDRpBrS7W0egwuMiKdZVcwZBplEUbikBkfxRy8MCVMn2nwyM8QqNP8A1gYpMKThyTRR35zuU3tGZkCaTKGnP0HQmO/+ZY9po8kwKwx4XrHR9iWzOk1Ewxyh4E/CGLk/t+JKs0kWgCRSvegFgpuz8a0ot65oBtEklgL0BE77rA=
-X-Gm-Message-State: AOJu0Yx4Q5HR8962YA1WN8CJp6Tx7C/8C3giqpLtIsmr91+CJfdrVM58
-	Bc/4vyQx+uJOiXoNSF7eUNVpCMENmNK9T4DmyEi1wsZPPFtDWJjzYVh4HIMDQv6QzppnAtLG2hT
-	gQ0nvt1sQpZRoG3NuJdPhF63uzSk=
-X-Google-Smtp-Source: AGHT+IHJgrwGB4ntGMYQujEHAZAA3qer5jlfBLoOJ9WIa4Ibk405hMwVEWVotrCPoLmMIPRvDSQO5cKYoauW1OsRePs=
-X-Received: by 2002:a17:90a:d14f:b0:2b2:bccc:5681 with SMTP id
- 98e67ed59e1d1-2b6169e3210mr75104a91.33.1715099825278; Tue, 07 May 2024
- 09:37:05 -0700 (PDT)
+        bh=DDZ21BfhcAiLJodQpjNC/6yMxF3ELBdQ20+IdAkrnMs=;
+        b=OUZDqQy6cpoNTV9BikhVyCPTDHiWwFq4c32DOYq4H6X7aWvEm2WdBR9XEn+Y14OnH1
+         EbMwHdh6oXS+yLeWn9xsfsFby+QcZuXOASTdP1VvtsE0eq3PKw9ueoXRvcWTj+JWFiF+
+         xNeKGuVeHsA5n3qKpGmlYhwPvkyv5H4KN50+pS7wmvEk0KgjePffGUGdoo6BvbeJ6xON
+         ubLVELXEe3VBQpzYV8aUZL8r8uhhOBlRlarqVi/0K2YIMWS9MwozjXknl2z0hyTDA9SR
+         mkibpSaxtB+LpcT2IM5QlGqYDs/SfqfTBYwR0yYUulCwjyzaxczwmEy2RoCyntgpV3Yg
+         w4QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd5VTD8fg1mbtycQcehos2PKAxHwGzIw0jiPjgzY4H03IGCyw4gk3Tnf20YL91lNxuvai+2ZBsXFOkdDQU9kKn2bJlCKr18kcfHo95cyNqGcIrIKSL30Zibvw5uRAX07pt0wdjzT2jFCdljQ+NG2hR1j/YltZGADH4ptrgfmIDl4UkNF9Oq7Ujml16/AQqjyr0jljDI9ac1uYcQTYZuqIC4x0=
+X-Gm-Message-State: AOJu0YzVUtyIsPmieml8anT5W6pTOYdCLQ7tOKlLnLRBDHRFoj8Qft+/
+	BT8/A5uMA9sIbAGEwYEEbF8NUYqoIpa2ZaRMN0HAQoVvBn494Gje+lXJQhjl/KJHiNvcZWtYE3p
+	QecWuA49cFIWu3dDyrXODhsV9qRY=
+X-Google-Smtp-Source: AGHT+IHUyaZnlpJw7nJ4YjUhgV2JhTbjZvtjSBxEMvt+FIIIYjTcMP8F76B4Efs97DgOKIKE6zAI2tAIf1wA1Fy747o=
+X-Received: by 2002:a17:90a:588a:b0:2b3:28df:96b1 with SMTP id
+ 98e67ed59e1d1-2b61639ffb6mr268408a91.7.1715102964093; Tue, 07 May 2024
+ 10:29:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-3-andrii@kernel.org>
- <2024050439-janitor-scoff-be04@gregkh> <CAEf4BzZ6CaMrqRR1Rah7=HnTpU5-zw5HUnSH9NWCzAZZ55ZXFQ@mail.gmail.com>
- <ZjjiFnNRbwsMJ3Gj@x1> <CAEf4BzZJPY0tfLtvFA4BpQr71wO7iz-1-q16cENOAbuT1EX_og@mail.gmail.com>
- <Zjk--KLSjdg2kpic@x1>
-In-Reply-To: <Zjk--KLSjdg2kpic@x1>
+References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
+ <2024050404-rectify-romp-4fdb@gregkh> <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
+ <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
+ <CAEf4Bzab+sRQ8pzNYxh1BOgjhDF4yCkqcHxy5YZAyT-jef7Acw@mail.gmail.com>
+ <CAP-5=fXv59EmyM7FNnwAp0JjAZjtYhCj3b3FTH7KsHL=k8C6oQ@mail.gmail.com> <CAEf4BzbdGJzMuRgGJE72VFquXL37rS9Ti__wx4f_+kt3yetkEg@mail.gmail.com>
+In-Reply-To: <CAEf4BzbdGJzMuRgGJE72VFquXL37rS9Ti__wx4f_+kt3yetkEg@mail.gmail.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 7 May 2024 09:36:52 -0700
-Message-ID: <CAEf4BzZfOkw-mep-ox+1q29GTDoNeRAr0p6++7gEkCNn1Cph-g@mail.gmail.com>
-Subject: Re: [PATCH 2/5] fs/procfs: implement efficient VMA querying API for /proc/<pid>/maps
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
+Date: Tue, 7 May 2024 10:29:11 -0700
+Message-ID: <CAEf4BzYykUsN_Z92cXAh_9+fmN-bzr7xOEBe2v_5xDoXRhijmg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
+ /proc/<pid>/maps APIs
+To: Ian Rogers <irogers@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
 	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
 	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, =?UTF-8?Q?Daniel_M=C3=BCller?= <deso@posteo.net>, 
+	linux-mm@kvack.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	"linux-perf-use." <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 1:35=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+On Mon, May 6, 2024 at 10:06=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On Mon, May 06, 2024 at 11:41:43AM -0700, Andrii Nakryiko wrote:
-> > On Mon, May 6, 2024 at 6:58=E2=80=AFAM Arnaldo Carvalho de Melo <acme@k=
-ernel.org> wrote:
+> On Mon, May 6, 2024 at 11:43=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Mon, May 6, 2024 at 11:32=E2=80=AFAM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
 > > >
-> > > On Sat, May 04, 2024 at 02:50:31PM -0700, Andrii Nakryiko wrote:
-> > > > On Sat, May 4, 2024 at 8:28=E2=80=AFAM Greg KH <gregkh@linuxfoundat=
-ion.org> wrote:
-> > > > > On Fri, May 03, 2024 at 05:30:03PM -0700, Andrii Nakryiko wrote:
-> > > > > > Note also, that fetching VMA name (e.g., backing file path, or =
-special
-> > > > > > hard-coded or user-provided names) is optional just like build =
-ID. If
-> > > > > > user sets vma_name_size to zero, kernel code won't attempt to r=
-etrieve
-> > > > > > it, saving resources.
-> > >
-> > > > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > >
-> > > > > Where is the userspace code that uses this new api you have creat=
-ed?
-> > >
-> > > > So I added a faithful comparison of existing /proc/<pid>/maps vs ne=
-w
-> > > > ioctl() API to solve a common problem (as described above) in patch
-> > > > #5. The plan is to put it in mentioned blazesym library at the very
-> > > > least.
+> > > On Sat, May 4, 2024 at 10:09=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
 > > > >
-> > > > I'm sure perf would benefit from this as well (cc'ed Arnaldo and
-> > > > linux-perf-user), as they need to do stack symbolization as well.
-> > >
-> > > At some point, when BPF iterators became a thing we thought about, II=
-RC
-> > > Jiri did some experimentation, but I lost track, of using BPF to
-> > > synthesize PERF_RECORD_MMAP2 records for pre-existing maps, the layou=
+> > > > On Sat, May 4, 2024 at 2:57=E2=80=AFPM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > On Sat, May 4, 2024 at 8:29=E2=80=AFAM Greg KH <gregkh@linuxfound=
+ation.org> wrote:
+> > > > > >
+> > > > > > On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote=
+:
+> > > > > > > Implement a simple tool/benchmark for comparing address "reso=
+lution"
+> > > > > > > logic based on textual /proc/<pid>/maps interface and new bin=
+ary
+> > > > > > > ioctl-based PROCFS_PROCMAP_QUERY command.
+> > > > > >
+> > > > > > Of course an artificial benchmark of "read a whole file" vs. "a=
+ tiny
+> > > > > > ioctl" is going to be different, but step back and show how thi=
+s is
+> > > > > > going to be used in the real world overall.  Pounding on this f=
+ile is
+> > > > > > not a normal operation, right?
+> > > > > >
+> > > > >
+> > > > > It's not artificial at all. It's *exactly* what, say, blazesym li=
+brary
+> > > > > is doing (see [0], it's Rust and part of the overall library API,=
+ I
+> > > > > think C code in this patch is way easier to follow for someone no=
 t
-> > > as in uapi/linux/perf_event.h:
-> > >
-> > >         /*
-> > >          * The MMAP2 records are an augmented version of MMAP, they a=
-dd
-> > >          * maj, min, ino numbers to be used to uniquely identify each=
- mapping
-> > >          *
-> > >          * struct {
-> > >          *      struct perf_event_header        header;
-> > >          *
-> > >          *      u32                             pid, tid;
-> > >          *      u64                             addr;
-> > >          *      u64                             len;
-> > >          *      u64                             pgoff;
-> > >          *      union {
-> > >          *              struct {
-> > >          *                      u32             maj;
-> > >          *                      u32             min;
-> > >          *                      u64             ino;
-> > >          *                      u64             ino_generation;
-> > >          *              };
-> > >          *              struct {
-> > >          *                      u8              build_id_size;
-> > >          *                      u8              __reserved_1;
-> > >          *                      u16             __reserved_2;
-> > >          *                      u8              build_id[20];
-> > >          *              };
-> > >          *      };
-> > >          *      u32                             prot, flags;
-> > >          *      char                            filename[];
-> > >          *      struct sample_id                sample_id;
-> > >          * };
-> > >          */
-> > >         PERF_RECORD_MMAP2                       =3D 10,
-> > >
-> > >  *   PERF_RECORD_MISC_MMAP_BUILD_ID      - PERF_RECORD_MMAP2 event
-> > >
-> > > As perf.data files can be used for many purposes we want them all, so=
- we
-> >
-> > ok, so because you want them all and you don't know which VMAs will be
-> > useful or not, it's a different problem. BPF iterators will be faster
-> > purely due to avoiding binary -> text -> binary conversion path, but
-> > other than that you'll still retrieve all VMAs.
->
-> But not using tons of syscalls to parse text data from /proc.
-
-In terms of syscall *count* you win with 4KB text reads, there are
-fewer syscalls because of this 4KB-based batching. But the cost of
-syscall + amount of user-space processing is a different matter. My
-benchmark in perf (see patch #5 discussion) suggests that even with
-more ioctl() syscalls, perf would win here.
-
-But I also realized that what you really need (I think, correct me if
-I'm wrong) is only file-backed VMAs, because all the other ones are
-not that useful for symbolization. So I'm adding a minimal change to
-my code to allow the user to specify another query flag to only return
-file-backed VMAs. I'm going to try it with perf code and see how that
-helps. I'll post results in patch #5 thread, once I have them.
-
->
-> > You can still do the same full VMA iteration with this new API, of
-> > course, but advantages are probably smaller as you'll be retrieving a
-> > full set of VMAs regardless (though it would be interesting to compare
-> > anyways).
->
-> sure, I can't see how it would be faster, but yeah, interesting to see
-> what is the difference.
-
-see patch #5 thread, seems like it's still a bit faster
-
->
-> > > setup a meta data perf file descriptor to go on receiving the new mma=
-ps
-> > > while we read /proc/<pid>/maps, to reduce the chance of missing maps,=
- do
-> > > it in parallel, etc:
-> > >
-> > > =E2=AC=A2[acme@toolbox perf-tools-next]$ perf record -h 'event synthe=
-sis'
-> > >
-> > >  Usage: perf record [<options>] [<command>]
-> > >     or: perf record [<options>] -- <command> [<options>]
-> > >
-> > >         --num-thread-synthesize <n>
-> > >                           number of threads to run for event synthesi=
+> > > > > familiar with implementation of blazesym, but both implementation=
+s are
+> > > > > doing exactly the same sequence of steps). You can do it even les=
 s
-> > >         --synth <no|all|task|mmap|cgroup>
-> > >                           Fine-tune event synthesis: default=3Dall
+> > > > > efficiently by parsing the whole file, building an in-memory look=
+up
+> > > > > table, then looking up addresses one by one. But that's even slow=
+er
+> > > > > and more memory-hungry. So I didn't even bother implementing that=
+, it
+> > > > > would put /proc/<pid>/maps at even more disadvantage.
+> > > > >
+> > > > > Other applications that deal with stack traces (including perf) w=
+ould
+> > > > > be doing one of those two approaches, depending on circumstances =
+and
+> > > > > level of sophistication of code (and sensitivity to performance).
+> > > >
+> > > > The code in perf doing this is here:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/tools/perf/util/synthetic-events.c#n440
+> > > > The code is using the api/io.h code:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/tools/lib/api/io.h
+> > > > Using perf to profile perf it was observed time was spent allocatin=
+g
+> > > > buffers and locale related activities when using stdio, so io is a
+> > > > lighter weight alternative, albeit with more verbose code than fsca=
+nf.
+> > > > You could add this as an alternate /proc/<pid>/maps reader, we have=
+ a
+> > > > similar benchmark in `perf bench internals synthesize`.
+> > > >
 > > >
-> > > =E2=AC=A2[acme@toolbox perf-tools-next]$
-> > >
-> > > For this specific initial synthesis of everything the plan, as mentio=
-ned
-> > > about Jiri's experiments, was to use a BPF iterator to just feed the
-> > > perf ring buffer with those events, that way userspace would just
-> > > receive the usual records it gets when a new mmap is put in place, th=
+> > > If I add a new implementation using this ioctl() into
+> > > perf_event__synthesize_mmap_events(), will it be tested from this
+> > > `perf bench internals synthesize`? I'm not too familiar with perf cod=
 e
-> > > BPF iterator would just feed the preexisting mmaps, as instructed via
-> > > the perf_event_attr for the perf_event_open syscall.
-> > >
-> > > For people not wanting BPF, i.e. disabling it altogether in perf or
-> > > disabling just BPF skels, then we would fallback to the current metho=
-d,
-> > > or to the one being discussed here when it becomes available.
-> > >
-> > > One thing to have in mind is for this iterator not to generate duplic=
-ate
-> > > records for non-pre-existing mmaps, i.e. we would need some generatio=
-n
-> > > number that would be bumped when asking for such pre-existing maps
-> > > PERF_RECORD_MMAP2 dumps.
+> > > organization, sorry if it's a stupid question. If not, where exactly
+> > > is the code that would be triggered from benchmark?
 > >
-> > Looking briefly at struct vm_area_struct, it doesn't seems like the
-> > kernel maintains any sort of generation (at least not at
-> > vm_area_struct level), so this would be nice to have, I'm sure, but
+> > Yes it would be triggered :-)
 >
-> Yeah, this would be something specific to the "retrieve me the list of
-> VMAs" bulky thing, i.e. the kernel perf code (or the BPF that would
-> generate the PERF_RECORD_MMAP2 records by using a BPF vma iterator)
-> would bump the generation number and store it to the VMA in
-> perf_event_mmap() so that the iterator doesn't consider it, as it is a
-> new mmap that is being just sent to whoever is listening, and the perf
-> tool that put in place the BPF program to iterate is listening.
+> Ok, I don't exactly know how to interpret the results (and what the
+> benchmark is doing), but numbers don't seem to be worse. They actually
+> seem to be a bit better.
+>
+> I pushed my code that adds perf integration to [0]. That commit has
+> results, but I'll post them here (with invocation parameters).
+> perf-ioctl is the version with ioctl()-based implementation,
+> perf-parse is, logically, text-parsing version. Here are the results
+> (and see my notes below the results as well):
+>
+> TEXT-BASED
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> # ./perf-parse bench internals synthesize
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 80.311 usec (+- 0.077 usec)
+>   Average num. events: 32.000 (+- 0.000)
+>   Average time per event 2.510 usec
+>   Average data synthesis took: 84.429 usec (+- 0.066 usec)
+>   Average num. events: 179.000 (+- 0.000)
+>   Average time per event 0.472 usec
+>
+> # ./perf-parse bench internals synthesize
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 79.900 usec (+- 0.077 usec)
+>   Average num. events: 32.000 (+- 0.000)
+>   Average time per event 2.497 usec
+>   Average data synthesis took: 84.832 usec (+- 0.074 usec)
+>   Average num. events: 180.000 (+- 0.000)
+>   Average time per event 0.471 usec
+>
+> # ./perf-parse bench internals synthesize --mt -M 8
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of multi threaded perf event synthesis by
+> synthesizing events on CPU 0:
+>   Number of synthesis threads: 1
+>     Average synthesis took: 36338.100 usec (+- 406.091 usec)
+>     Average num. events: 14091.300 (+- 7.433)
+>     Average time per event 2.579 usec
+>   Number of synthesis threads: 2
+>     Average synthesis took: 37071.200 usec (+- 746.498 usec)
+>     Average num. events: 14085.900 (+- 1.900)
+>     Average time per event 2.632 usec
+>   Number of synthesis threads: 3
+>     Average synthesis took: 33932.300 usec (+- 626.861 usec)
+>     Average num. events: 14085.900 (+- 1.900)
+>     Average time per event 2.409 usec
+>   Number of synthesis threads: 4
+>     Average synthesis took: 33822.700 usec (+- 506.290 usec)
+>     Average num. events: 14099.200 (+- 8.761)
+>     Average time per event 2.399 usec
+>   Number of synthesis threads: 5
+>     Average synthesis took: 33348.200 usec (+- 389.771 usec)
+>     Average num. events: 14085.900 (+- 1.900)
+>     Average time per event 2.367 usec
+>   Number of synthesis threads: 6
+>     Average synthesis took: 33269.600 usec (+- 350.341 usec)
+>     Average num. events: 14084.000 (+- 0.000)
+>     Average time per event 2.362 usec
+>   Number of synthesis threads: 7
+>     Average synthesis took: 32663.900 usec (+- 338.870 usec)
+>     Average num. events: 14085.900 (+- 1.900)
+>     Average time per event 2.319 usec
+>   Number of synthesis threads: 8
+>     Average synthesis took: 32748.400 usec (+- 285.450 usec)
+>     Average num. events: 14085.900 (+- 1.900)
+>     Average time per event 2.325 usec
+>
+> IOCTL-BASED
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> # ./perf-ioctl bench internals synthesize
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 72.996 usec (+- 0.076 usec)
+>   Average num. events: 31.000 (+- 0.000)
+>   Average time per event 2.355 usec
+>   Average data synthesis took: 79.067 usec (+- 0.074 usec)
+>   Average num. events: 178.000 (+- 0.000)
+>   Average time per event 0.444 usec
+>
+> # ./perf-ioctl bench internals synthesize
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 73.921 usec (+- 0.073 usec)
+>   Average num. events: 31.000 (+- 0.000)
+>   Average time per event 2.385 usec
+>   Average data synthesis took: 80.545 usec (+- 0.070 usec)
+>   Average num. events: 178.000 (+- 0.000)
+>   Average time per event 0.453 usec
+>
+> # ./perf-ioctl bench internals synthesize --mt -M 8
+> # Running 'internals/synthesize' benchmark:
+> Computing performance of multi threaded perf event synthesis by
+> synthesizing events on CPU 0:
+>   Number of synthesis threads: 1
+>     Average synthesis took: 35609.500 usec (+- 428.576 usec)
+>     Average num. events: 14040.700 (+- 1.700)
+>     Average time per event 2.536 usec
+>   Number of synthesis threads: 2
+>     Average synthesis took: 34293.800 usec (+- 453.811 usec)
+>     Average num. events: 14040.700 (+- 1.700)
+>     Average time per event 2.442 usec
+>   Number of synthesis threads: 3
+>     Average synthesis took: 32385.200 usec (+- 363.106 usec)
+>     Average num. events: 14040.700 (+- 1.700)
+>     Average time per event 2.307 usec
+>   Number of synthesis threads: 4
+>     Average synthesis took: 33113.100 usec (+- 553.931 usec)
+>     Average num. events: 14054.500 (+- 11.469)
+>     Average time per event 2.356 usec
+>   Number of synthesis threads: 5
+>     Average synthesis took: 31600.600 usec (+- 297.349 usec)
+>     Average num. events: 14012.500 (+- 4.590)
+>     Average time per event 2.255 usec
+>   Number of synthesis threads: 6
+>     Average synthesis took: 32309.900 usec (+- 472.225 usec)
+>     Average num. events: 14004.000 (+- 0.000)
+>     Average time per event 2.307 usec
+>   Number of synthesis threads: 7
+>     Average synthesis took: 31400.100 usec (+- 206.261 usec)
+>     Average num. events: 14004.800 (+- 0.800)
+>     Average time per event 2.242 usec
+>   Number of synthesis threads: 8
+>     Average synthesis took: 31601.400 usec (+- 303.350 usec)
+>     Average num. events: 14005.700 (+- 1.700)
+>     Average time per event 2.256 usec
+>
+> I also double-checked (using strace) that it does what it is supposed
+> to do, and it seems like everything checks out. Here's text-based
+> strace log:
+>
+> openat(AT_FDCWD, "/proc/35876/task/35876/maps", O_RDONLY) =3D 3
+> read(3, "00400000-0040c000 r--p 00000000 "..., 8192) =3D 3997
+> read(3, "7f519d4d3000-7f519d516000 r--p 0"..., 8192) =3D 4025
+> read(3, "7f519dc3d000-7f519dc44000 r-xp 0"..., 8192) =3D 4048
+> read(3, "7f519dd2d000-7f519dd2f000 r--p 0"..., 8192) =3D 4017
+> read(3, "7f519dff6000-7f519dff8000 r--p 0"..., 8192) =3D 2744
+> read(3, "", 8192)                       =3D 0
+> close(3)                                =3D 0
+>
+>
+> BTW, note how the kernel doesn't serve more than 4KB of data, even
+> though perf provides 8KB buffer (that's to Greg's question about
+> optimizing using bigger buffers, I suspect without seq_file changes,
+> it won't work).
+>
+> And here's an abbreviated log for ioctl version, it has lots more (but
+> much faster) ioctl() syscalls, given it dumps everything:
+>
+> openat(AT_FDCWD, "/proc/36380/task/36380/maps", O_RDONLY) =3D 3
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D=
+ 0
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D=
+ 0
+>
+>  ... 195 ioctl() calls in total ...
+>
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D=
+ 0
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D=
+ 0
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D=
+ 0
+> ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50)
+> =3D -1 ENOENT (No such file or directory)
+> close(3)                                =3D 0
+>
+>
+> So, it's not the optimal usage of this API, and yet it's still better
+> (or at least not worse) than text-based API.
+>
 
-Ok, we went on *so many* tangents in emails on this patch set :) Seems
-like there are a bunch of perf-specific improvements possible which
-are completely irrelevant to the API I'm proposing. Let's please keep
-them separate (and you, perf folks, should propose them upstream),
-it's getting hard to see what this patch set is actually about with
-all the tangential emails.
+In another reply to Arnaldo on patch #2 I mentioned the idea of
+allowing to iterate only file-backed VMAs (as it seems like what
+symbolizers would only care about, but I might be wrong here). So I
+tried that quickly, given it's a trivial addition to my code. See
+results below (it is slightly faster, but not much, because most of
+VMAs in that benchmark seem to be indeed file-backed anyways), just
+for completeness. I'm not sure if that would be useful/used by perf,
+so please let me know.
 
+As I mentioned above, it's not radically faster in this perf
+benchmark, because we still request about 170 VMAs (vs ~195 if we
+iterate *all* of them), so not a big change. The ratio will vary
+depending on what the process is doing, of course. Anyways, just for
+completeness, I'm not sure if I have to add this "filter" to the
+actual implementation.
+
+# ./perf-filebacked bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 65.759 usec (+- 0.063 usec)
+  Average num. events: 30.000 (+- 0.000)
+  Average time per event 2.192 usec
+  Average data synthesis took: 73.840 usec (+- 0.080 usec)
+  Average num. events: 153.000 (+- 0.000)
+  Average time per event 0.483 usec
+
+# ./perf-filebacked bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 66.245 usec (+- 0.059 usec)
+  Average num. events: 30.000 (+- 0.000)
+  Average time per event 2.208 usec
+  Average data synthesis took: 70.627 usec (+- 0.074 usec)
+  Average num. events: 153.000 (+- 0.000)
+  Average time per event 0.462 usec
+
+# ./perf-filebacked bench internals synthesize --mt -M 8
+# Running 'internals/synthesize' benchmark:
+Computing performance of multi threaded perf event synthesis by
+synthesizing events on CPU 0:
+  Number of synthesis threads: 1
+    Average synthesis took: 33477.500 usec (+- 556.102 usec)
+    Average num. events: 10125.700 (+- 1.620)
+    Average time per event 3.306 usec
+  Number of synthesis threads: 2
+    Average synthesis took: 30473.700 usec (+- 221.933 usec)
+    Average num. events: 10127.000 (+- 0.000)
+    Average time per event 3.009 usec
+  Number of synthesis threads: 3
+    Average synthesis took: 29775.200 usec (+- 315.212 usec)
+    Average num. events: 10128.700 (+- 0.667)
+    Average time per event 2.940 usec
+  Number of synthesis threads: 4
+    Average synthesis took: 29477.100 usec (+- 621.258 usec)
+    Average num. events: 10129.000 (+- 0.000)
+    Average time per event 2.910 usec
+  Number of synthesis threads: 5
+    Average synthesis took: 29777.900 usec (+- 294.710 usec)
+    Average num. events: 10144.700 (+- 11.597)
+    Average time per event 2.935 usec
+  Number of synthesis threads: 6
+    Average synthesis took: 27774.700 usec (+- 357.569 usec)
+    Average num. events: 10158.500 (+- 14.710)
+    Average time per event 2.734 usec
+  Number of synthesis threads: 7
+    Average synthesis took: 27437.200 usec (+- 233.626 usec)
+    Average num. events: 10135.700 (+- 2.700)
+    Average time per event 2.707 usec
+  Number of synthesis threads: 8
+    Average synthesis took: 28784.600 usec (+- 477.630 usec)
+    Average num. events: 10133.000 (+- 0.000)
+    Average time per event 2.841 usec
+
+>   [0] https://github.com/anakryiko/linux/commit/0841fe675ed30f5605c5b228e=
+18f5612ea253b35
 >
-> > isn't really related to adding this API. Once the kernel does have
->
-> Well, perf wants to enumerate pre-existing mmaps _and_ after that
-> finishes to know about new mmaps, so we need to know a way to avoid
-> having the BPF program enumerating pre-existing maps sending
-> PERF_RECORD_MMAP2 for maps perf already knows about via a regular
-> PERF_RECORD_MMAP2 sent when a new mmap is put in place.
->
-> So there is an overlap where perf (or any other tool wanting to
-> enumerate all pre-existing maps and new ones) can receive info for the
-> same map from the enumerator and from the existing mechanism generating
-> PERF_RECORD_MMAP2 records.
->
-> - Arnaldo
->
-> > this "VMA generation" counter, it can be trivially added to this
-> > binary interface (which can't be said about /proc/<pid>/maps,
-> > unfortunately).
 > >
-> > >
-> > > > It will be up to other similar projects to adopt this, but we'll
-> > > > definitely get this into blazesym as it is actually a problem for t=
-he
-> > >
-> > > At some point looking at plugging blazesym somehow with perf may be
-> > > something to consider, indeed.
+> > Thanks,
+> > Ian
 > >
-> > In the above I meant direct use of this new API in perf code itself,
-> > but yes, blazesym is a generic library for symbolization that handles
-> > ELF/DWARF/GSYM (and I believe more formats), so it indeed might make
-> > sense to use it.
-> >
-> > >
-> > > - Arnaldo
-> > >
-> > > > abovementioned Oculus use case. We already had to make a tradeoff (=
-see
-> > > > [2], this wasn't done just because we could, but it was requested b=
-y
-> > > > Oculus customers) to cache the contents of /proc/<pid>/maps and run
-> > > > the risk of missing some shared libraries that can be loaded later.=
- It
-> > > > would be great to not have to do this tradeoff, which this new API
-> > > > would enable.
+> > > > Thanks,
+> > > > Ian
 > > > >
-> > > >   [2] https://github.com/libbpf/blazesym/commit/6b521314126b3ae6f2a=
-dd43e93234b59fed48ccf
-> > > >
-> >
-> > [...]
+> > > > >   [0] https://github.com/libbpf/blazesym/blob/ee9b48a80c0b4499118=
+a1e8e5d901cddb2b33ab1/src/normalize/user.rs#L193
+> > > > >
+> > > > > > thanks,
+> > > > > >
+> > > > > > greg k-h
+> > > > >
