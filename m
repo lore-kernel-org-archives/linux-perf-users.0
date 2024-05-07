@@ -1,57 +1,57 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879C616DEC0
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D1D16E869
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715106974; cv=none; b=Rsxnim6lbHuF8dAsHcCL0Z4cCEaJCjohY+lgHUPuKUtcUgJ7BKfGsZD13BgRTYrd+KRoc7i4LOARlBE/YYTQsJ6SMuuSMDp94iqVzFt5BoRzLRI4n5ppHTTpJYfMZ71A98Zhq5c1JByumkvsg8AldsTr1YNN/WJ1M480BpEwdxk=
+	t=1715106975; cv=none; b=tct9aOwGoiTkR5qqML7P2+FKfmU1jYQWQWZwMT6iLxzBs02X7hn2FP1qzZHtDd3bUC1nZTrZMwyf5vckA5k/HzBx68Hy9xJc0FXF1SMh/Mwb9flZCc5JQRfzutpwvIVLZZB8Ri4kRl7ylfrUI1UO5/lrlr2o3wJOLyN5+phCKAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715106974; c=relaxed/simple;
-	bh=e/wJkPb6Up6/3AXzG8MatkSdBcxmtGosq5+MGZvNwTg=;
+	s=arc-20240116; t=1715106975; c=relaxed/simple;
+	bh=1ZVRDSMy75ejf8D/9j8I5oq6yhZXUPDAiSppOkR/Qsc=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=UcyjCwfG0EgegFu/0qicoZUXnxNsARb/3z1he+qNieP03bKd7ZQxeN1sShuhF9SFg0kfraGVqUJVkrukZrdegTxTvXXgiPSok3Q70yCzkTqyv3BRVj+yBqdNtslZayRCU6/lQLrHbnmNcjn9zvUeOs/CpBdAJY3jV8K03gf6Wv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JpM5tV+P; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=eA0WaebO2+I1umo9cRhgo22Kbsu6X0ouiIr08IzBX19JeJcelxDp6qaGhSu/tcD80wjZkJ+kZRp0Mb8EXQMGcDAf1OwHJJquD3UKBqoYqRBnNBYVYDcWX68DslRo4CD8pPdnczJdErUj9yuL9OrJHcSJzzdQoL8MV/J5oTxib/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kKHdllpN; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpM5tV+P"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de468af2b73so7153881276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kKHdllpN"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de59ff8af0bso5351507276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715106970; x=1715711770; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715106973; x=1715711773; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GO0hb7v7nG6Id0cJK33WHU2z0Rs2/LAXioCEoSvIAik=;
-        b=JpM5tV+P3A+GurGJU8USFa2nRLFzOk6oI1bsorF+oNV500tuVNYYRgTsSWPecf3BoN
-         hiMTdWPIEHeaK3WF9LoEukIcToQB7o1OulAeS2raOGiRDNUftE/02r7S7aVn66RIzKJo
-         0DK4e5gkW38VO1Yz05VM3TT3N6o/+ZoQqDlEmTkdPvpbOHcQ5ey8Vz7tKraflNwzcb4y
-         UpFU1zqHyrqT8zkk0nigF+L5JDldqygvmpjRyAr9tU+duTUiqFV03IxHeg1KsegtKO5V
-         iLj7C92CnwsYlXeUiCALI0UWWK9xoj6SB8NMcDT0yyzfoUpof+EV6+46DnQfWg5dWtr8
-         PeCA==
+        bh=jsvhOcC7MBczoTzNxBUcoVKQW0Fceq86w32j6zIJUUE=;
+        b=kKHdllpNQnnWG3UMpszGXwtJYpDxl3hboiz+A6zwVVE/DIGpC54DmgHZ1JiKIORDeR
+         wmnVcHeEVQRRQj8RFzpIyiotPM22v+J0V69Vn1A2y64glWl5GDZrDPms9rER6Xus4dYS
+         hC090rCv+D6WvLBILJXnModyPAtc56OcMlyswMtqEhSFsU87i1rpmWTvkOL0c/psGdlf
+         H7tY6XqtkMMxP2iUROMeuNm1+QPzfcEEtidBokIB9O3jjn/J9+gVndXN5cQBIvKqV4jW
+         pJftE1M2cB9h4HYp90/g2r9HoRComOfOr43qUxJR8K3DyWaLMvSANRhlssXaKNQv2dmJ
+         k+kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715106970; x=1715711770;
+        d=1e100.net; s=20230601; t=1715106973; x=1715711773;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GO0hb7v7nG6Id0cJK33WHU2z0Rs2/LAXioCEoSvIAik=;
-        b=pnnF7jlhRbzMSbkU4Hrx/FRxxTF4BUmteRyr6vUIRboX8wPXn9fBMWffOvHQXFZVxe
-         cDFdrDQd+cunu8B336MG8CCiXruq/1digztAB2Xt900Avvpv5N/hUh3UkqusdljQ8abs
-         y90oZauKF9HoE4zRnYFV66LTOdvoXVW83dHCTHo5yAvOwG8pUa2vbujrlqdEKLVWaz42
-         /lBV/C9/TvhST/4HLjgHZzm5JQSfVeP9gv8ecfvs3dJSoRABWnDMWk131EChdDXeY4pC
-         tpCjcO4vt7ZKMyKli9NfKb/uDFwLkiqsc7AQz4k2Orka6RFrtxbFOJeuIRwKOM5bvCij
-         g3Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3tiNrPEHWw5/nYUypP24dP4FZHP+47R3HJvRcgL2wuHoh2mZD6Su2vDZHNk1BrCY8TqaKkuS3KRmU8PvleCocL9E2RMMeBDmOwy964UJBGw==
-X-Gm-Message-State: AOJu0YxPjUZFneVNJGnmDOTxBMncwxOfg6clznye2MHXk+NJux62H9sz
-	YP5YL+R+hSTBnYbtlckRtFjY/IG1Ipnh/cq8usi4pMd90CzgY16f4tFeAAKT14bKj918Tg14wwm
-	tmFmxZg==
-X-Google-Smtp-Source: AGHT+IH0+iGDT60xNzG68p+EHdgJrLMckET3iqNIC7831kCnZaCBN3MiSLXMejQERNtTr9eu3idrl3ZvXb4B
+        bh=jsvhOcC7MBczoTzNxBUcoVKQW0Fceq86w32j6zIJUUE=;
+        b=b8Pk8iWWwaH5EDRi13hn/WbNkE9yuZujMsHNXb+PA0qXjvve9aFSuXbTEc3qZL6HmH
+         eqNWR4CO/EWnyiuTzZEiueIF6HaMwuk7CCfaB3HeMaVbArcLukZiBEa2akZkQMbj4S2h
+         qL/lOqPd++q/QbU0HxgZjYAdDlkrOLa2hxjjKWf69gry1yGoaW+nlxqIV9TwXSoGekZJ
+         2rfEx+4sbCV8usuHuj5bEf4FmhHTief6AUPX2b5xNA5BnrWc4KFX0F9FbNq7sLiECezI
+         AX+NIMIACJJQ/sKCO/IQO2AAHtuDkTmBTHSfSa/zrxprQYcqC4BALlTaH0ojyJGNQvV9
+         vm2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQYVQAuMaTzXtJjNid79oxyVwyljjpAVnoCKweGN4ZBxYeIBoLkAnQxMeMOEGuoftOAl5pR5qiEFo6KvSbndSKw1FitqSRNINF39dHgCxtWw==
+X-Gm-Message-State: AOJu0YykF1e/KoEc2v79ERzl8kfKiCPscmWRZO+egsivRE+GXBIBmBhA
+	fxDyPWj9/ahvNyIEd8EMjfHGaRwK2HJLzVzFXL1tQXK+7HGhPpuP9fhRtnszCfTv/x4fJ5z/+PW
+	pcIXQoQ==
+X-Google-Smtp-Source: AGHT+IFCmv2nVWz91raNmYWeKeQFOBY+cKG6SR192KEBCq8V3FtHad2/q8sCavEWaklZgl6bmFCxn1CSji3V
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8095:fd7:9773:b1df])
- (user=irogers job=sendgmr) by 2002:a05:6902:100e:b0:dd9:1db5:8348 with SMTP
- id 3f1490d57ef6-debb9e41975mr129612276.8.1715106970500; Tue, 07 May 2024
- 11:36:10 -0700 (PDT)
-Date: Tue,  7 May 2024 11:35:40 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:100e:b0:de5:3003:4b64 with SMTP
+ id 3f1490d57ef6-debb9cd89d9mr54838276.1.1715106972741; Tue, 07 May 2024
+ 11:36:12 -0700 (PDT)
+Date: Tue,  7 May 2024 11:35:41 -0700
 In-Reply-To: <20240507183545.1236093-1-irogers@google.com>
-Message-Id: <20240507183545.1236093-4-irogers@google.com>
+Message-Id: <20240507183545.1236093-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240507183545.1236093-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 3/8] perf block-info: Remove unused refcount
+Subject: [PATCH v1 4/8] perf cpumap: Remove refcnt from cpu_aggr_map
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,123 +77,80 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-block_info__get has no callers so the refcount is only ever one. As
-such remove the reference counting logic and turn puts to deletes.
+It is assigned a value of 1 and never incremented. Remove and replace
+puts with delete.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/block-info.c | 22 +++++-----------------
- tools/perf/util/block-info.h | 15 +--------------
- tools/perf/util/hist.c       |  4 ++--
- 3 files changed, 8 insertions(+), 33 deletions(-)
+ tools/perf/builtin-stat.c | 16 +++-------------
+ tools/perf/util/cpumap.c  |  2 --
+ tools/perf/util/cpumap.h  |  2 --
+ 3 files changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 895ee8adf3b3..04068d48683f 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -43,26 +43,14 @@ static struct block_header_column {
- 	}
- };
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 65a3dd7ffac3..35f79b48e8dc 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1631,23 +1631,13 @@ static int perf_stat_init_aggr_mode(void)
  
--struct block_info *block_info__get(struct block_info *bi)
--{
--	if (bi)
--		refcount_inc(&bi->refcnt);
--	return bi;
+ static void cpu_aggr_map__delete(struct cpu_aggr_map *map)
+ {
+-	if (map) {
+-		WARN_ONCE(refcount_read(&map->refcnt) != 0,
+-			  "cpu_aggr_map refcnt unbalanced\n");
+-		free(map);
+-	}
 -}
 -
--void block_info__put(struct block_info *bi)
-+struct block_info *block_info__new(void)
- {
--	if (bi && refcount_dec_and_test(&bi->refcnt))
--		free(bi);
-+	return zalloc(sizeof(struct block_info));
+-static void cpu_aggr_map__put(struct cpu_aggr_map *map)
+-{
+-	if (map && refcount_dec_and_test(&map->refcnt))
+-		cpu_aggr_map__delete(map);
++	free(map);
  }
  
--struct block_info *block_info__new(void)
-+void block_info__delete(struct block_info *bi)
+ static void perf_stat__exit_aggr_mode(void)
  {
--	struct block_info *bi = zalloc(sizeof(*bi));
+-	cpu_aggr_map__put(stat_config.aggr_map);
+-	cpu_aggr_map__put(stat_config.cpus_aggr_map);
++	cpu_aggr_map__delete(stat_config.aggr_map);
++	cpu_aggr_map__delete(stat_config.cpus_aggr_map);
+ 	stat_config.aggr_map = NULL;
+ 	stat_config.cpus_aggr_map = NULL;
+ }
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 6a270d640acb..27094211edd8 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -180,8 +180,6 @@ struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
+ 		cpus->nr = nr;
+ 		for (i = 0; i < nr; i++)
+ 			cpus->map[i] = aggr_cpu_id__empty();
 -
--	if (bi)
--		refcount_set(&bi->refcnt, 1);
--	return bi;
-+	free(bi);
- }
+-		refcount_set(&cpus->refcnt, 1);
+ 	}
  
- int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
-@@ -148,7 +136,7 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
- 			he_block = hists__add_entry_block(&bh->block_hists,
- 							  &al, bi);
- 			if (!he_block) {
--				block_info__put(bi);
-+				block_info__delete(bi);
- 				return -1;
- 			}
- 		}
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index 96f53e89795e..0b9e1aad4c55 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -3,7 +3,6 @@
- #define __PERF_BLOCK_H
- 
- #include <linux/types.h>
+ 	return cpus;
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 26cf76c693f5..ee0f6139b04a 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -5,7 +5,6 @@
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <perf/cpumap.h>
 -#include <linux/refcount.h>
- #include "hist.h"
- #include "symbol.h"
- #include "sort.h"
-@@ -19,7 +18,6 @@ struct block_info {
- 	u64			total_cycles;
- 	int			num;
- 	int			num_aggr;
--	refcount_t		refcnt;
- };
  
- struct block_fmt {
-@@ -48,19 +46,8 @@ struct block_report {
- 	int			nr_fmts;
- };
+ /** Identify where counts are aggregated, -1 implies not to aggregate. */
+ struct aggr_cpu_id {
+@@ -37,7 +36,6 @@ struct aggr_cpu_id {
  
--struct block_hist;
--
- struct block_info *block_info__new(void);
--struct block_info *block_info__get(struct block_info *bi);
--void   block_info__put(struct block_info *bi);
--
--static inline void __block_info__zput(struct block_info **bi)
--{
--	block_info__put(*bi);
--	*bi = NULL;
--}
--
--#define block_info__zput(bi) __block_info__zput(&bi)
-+void block_info__delete(struct block_info *bi);
- 
- int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right);
- 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 55ea6afcc437..b8a508cd0b14 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -631,7 +631,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 			 */
- 			mem_info__zput(entry->mem_info);
- 
--			block_info__zput(entry->block_info);
-+			block_info__delete(entry->block_info);
- 
- 			kvm_info__zput(entry->kvm_info);
- 
-@@ -1341,7 +1341,7 @@ void hist_entry__delete(struct hist_entry *he)
- 	}
- 
- 	if (he->block_info)
--		block_info__zput(he->block_info);
-+		block_info__delete(he->block_info);
- 
- 	if (he->kvm_info)
- 		kvm_info__zput(he->kvm_info);
+ /** A collection of aggr_cpu_id values, the "built" version is sorted and uniqued. */
+ struct cpu_aggr_map {
+-	refcount_t refcnt;
+ 	/** Number of valid entries. */
+ 	int nr;
+ 	/** The entries. */
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
