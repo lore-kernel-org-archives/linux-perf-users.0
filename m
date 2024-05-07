@@ -1,38 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0A014D435;
-	Tue,  7 May 2024 08:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30E714D6EE;
+	Tue,  7 May 2024 09:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715072298; cv=none; b=D/zRPLtxg733m3G6WfR9mEvne/+HaCH4Uy1i6Db1B5i/50IKPBM7+IWVdstd2mVZvSvJxiCmg8rV3j+bo9r7igj9oaIU0DgTUXqthU8MTwb+NG2P4/Xs+PHXaAErKjcS2Qty8SHoVfYe6ywPlzuVcQe8qp8/w/bClSWW7FlhASs=
+	t=1715073454; cv=none; b=SGDpdSU3Ego/wrWDtOoj6CdJ4cKjzybswnIGObCIGiqXARETjyWjiJPdB16qTIbOc5dNlcaQ9zRaYH4o53OPU+zcPAfexd0gYFNOkI3t4Cd7XgZvwUUkqKEPD7svGgtQFqN/WFAqb5ixmIF+oQ4K0/TeUAMD21ZvhkzDbBM02bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715072298; c=relaxed/simple;
-	bh=E7Vhyallr/nX7BoTjU3TnBsTTfCzCvsx4+RbXuejgjE=;
+	s=arc-20240116; t=1715073454; c=relaxed/simple;
+	bh=a32cyfvlMh4aEtGJPyoYnXKfJiwuax3qOmYvgqm+4vo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C2nzr9iLxvSUV/OD/p7vToeY143XKp7dOIvbER+a0avDx3PgV2WG6yIlRnSsUlE3WxOtrjIfMZA/IcxMjrit7xWWF7Z/E34m8te7Cs9hc/3jBp32mm4UG+rM+HSqFo2H4tfIz3oOjENamzPNSWH0juwDaDVAkFw50SQPpMkIcok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bylM8dMV; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8AMITMIn+H2rzK1JAi+yYUoW/wGA31tVlQZ1GaRUN+vyzSDnEx5o0JPWSEIX5iwmxl/8jXrHmw59P9GP1s7cwxq4k6EEjPHhsMA9O8wTlX1PaeqILC8IZeKhCIw4/VgZLxfhiIz90FpPjQF+E2cvchLy6FMj5GQmPJHLCmbtkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k1NnmCQ1; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bylM8dMV"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k1NnmCQ1"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FbVHuQdp52sXEYW2SDNlui0R/3F7Zh9lqymf82Zw1XU=; b=bylM8dMVCkSiCedP8H2hI3Np16
-	ms5tLvx43SPcw5FmjH1ydjitx+wpUCt+7chu3AOETyoHIw09I6rIqAubpLF35dDO3vS71bfatVnhQ
-	5DD05Xv2Ngo27TVR5HU6OAjNQaAPQkGTlfxm3EusiXjIc0MUXbAImino/Xy85C8jKh52pL7Ou3WS3
-	j++qLsnnra9atRSGLkaop3cn6yFeH1/KlU4QlKk6dD8sho1XOQe2t96jCIKJZ1jhhVKhWuB2S3u2U
-	sASeuA66wG0620fzpAOGNRhB24iO9Do9AbEaedFF2zzuY9BiZW13sV+Kaugz8XGZTIZWYnynm4+/J
-	4yFXMj8w==;
+	bh=WC0BBrqC68QBx6s1vgNdV1KecXC354L3Y91PyPKtWuE=; b=k1NnmCQ1ocduc+hYb7yDRcJxuM
+	yQ1Q2CdW5mhhQ+8N3RQ++R+uw2TQohCYJn5j7EQolyYLA3JCJCkYdlJAxLi3qrV1y71503er4cOO7
+	XXyMgthxYmpo/zd52MMYExurC88LYFy3M5pWiXkTEuizOtPVsM/V/88aNpbGl7Gi467IHwJzzCapm
+	qaFcLBw2RQaeuIRMXcZeuNFq3c/9SwdeTUeO8PeMpdpgeBXKJrUzxi/X7OC7ytsL82VisnHY+Ka3h
+	1h47AhorahXzuQHjFVOrazEV43lcV+yVRCpEaSrKFDeWLeqrf4uDaVovh6382V66heH9ww3zl1GkR
+	lBSiwZjQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4GeG-0000000CsA2-1MPT;
-	Tue, 07 May 2024 08:58:08 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4GsY-000000022EK-3qjj;
+	Tue, 07 May 2024 09:15:02 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 03886300362; Tue,  7 May 2024 10:58:08 +0200 (CEST)
-Date: Tue, 7 May 2024 10:58:07 +0200
+	id 0BD353006AB; Tue,  7 May 2024 11:12:52 +0200 (CEST)
+Date: Tue, 7 May 2024 11:12:52 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Sean Christopherson <seanjc@google.com>,
@@ -51,10 +51,11 @@ Cc: Sean Christopherson <seanjc@google.com>,
 	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
 	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
 	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
-Message-ID: <20240507085807.GS40213@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 09/54] perf: core/x86: Register a new vector for KVM
+ GUEST PMI
+Message-ID: <20240507091252.GT40213@noisy.programming.kicks-ass.net>
 References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-8-mizhang@google.com>
+ <20240506053020.3911940-10-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,110 +64,26 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240506053020.3911940-8-mizhang@google.com>
+In-Reply-To: <20240506053020.3911940-10-mizhang@google.com>
 
-On Mon, May 06, 2024 at 05:29:32AM +0000, Mingwei Zhang wrote:
+On Mon, May 06, 2024 at 05:29:34AM +0000, Mingwei Zhang wrote:
 
-> @@ -5791,6 +5801,100 @@ void perf_put_mediated_pmu(void)
->  }
->  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->  
-> +static void perf_sched_out_exclude_guest(struct perf_event_context *ctx)
+> +void kvm_set_guest_pmi_handler(void (*handler)(void))
 > +{
-> +	struct perf_event_pmu_context *pmu_ctx;
-> +
-> +	update_context_time(ctx);
-> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
-> +		struct perf_event *event, *tmp;
-> +		struct pmu *pmu = pmu_ctx->pmu;
-> +
-> +		if (!(pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU))
-> +			continue;
-> +
-> +		perf_pmu_disable(pmu);
-> +
-> +		/*
-> +		 * All active events must be exclude_guest events.
-> +		 * See perf_get_mediated_pmu().
-> +		 * Unconditionally remove all active events.
-> +		 */
-> +		list_for_each_entry_safe(event, tmp, &pmu_ctx->pinned_active, active_list)
-> +			group_sched_out(event, pmu_ctx->ctx);
-> +
-> +		list_for_each_entry_safe(event, tmp, &pmu_ctx->flexible_active, active_list)
-> +			group_sched_out(event, pmu_ctx->ctx);
-> +
-> +		pmu_ctx->rotate_necessary = 0;
-> +
-> +		perf_pmu_enable(pmu);
+> +	if (handler) {
+> +		kvm_guest_pmi_handler = handler;
+> +	} else {
+> +		kvm_guest_pmi_handler = dummy_handler;
+> +		synchronize_rcu();
 > +	}
 > +}
-> +
-> +/* When entering a guest, schedule out all exclude_guest events. */
-> +void perf_guest_enter(void)
-> +{
-> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +
-> +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest))) {
-> +		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +		return;
-> +	}
-> +
-> +	perf_sched_out_exclude_guest(&cpuctx->ctx);
-> +	if (cpuctx->task_ctx)
-> +		perf_sched_out_exclude_guest(cpuctx->task_ctx);
-> +
-> +	__this_cpu_write(perf_in_guest, true);
-> +
-> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +}
-> +
-> +static void perf_sched_in_exclude_guest(struct perf_event_context *ctx)
-> +{
-> +	struct perf_event_pmu_context *pmu_ctx;
-> +
-> +	update_context_time(ctx);
-> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
-> +		struct pmu *pmu = pmu_ctx->pmu;
-> +
-> +		if (!(pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU))
-> +			continue;
-> +
-> +		perf_pmu_disable(pmu);
-> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
-> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
-> +		perf_pmu_enable(pmu);
-> +	}
-> +}
-> +
-> +void perf_guest_exit(void)
-> +{
-> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> +
-> +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest))) {
-> +		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +		return;
-> +	}
-> +
-> +	__this_cpu_write(perf_in_guest, false);
-> +
-> +	perf_sched_in_exclude_guest(&cpuctx->ctx);
-> +	if (cpuctx->task_ctx)
-> +		perf_sched_in_exclude_guest(cpuctx->task_ctx);
-> +
-> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> +}
+> +EXPORT_SYMBOL_GPL(kvm_set_guest_pmi_handler);
 
-Bah, this is a ton of copy-paste from the normal scheduling code with
-random changes. Why ?
+Just for my edification, after synchronize_rcu() nobody should observe
+the old handler, but what guarantees there's not still one running?
 
-Why can't this use ctx_sched_{in,out}() ? Surely the whole
-CAP_PASSTHROUGHT thing is but a flag away.
+I'm thinking the fact that these handlers run with IRQs disabled, and
+synchronize_rcu() also very much ensures all prior non-preempt sections
+are complete?
+
+
