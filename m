@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D1D16E869
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B216E861
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 18:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715106975; cv=none; b=tct9aOwGoiTkR5qqML7P2+FKfmU1jYQWQWZwMT6iLxzBs02X7hn2FP1qzZHtDd3bUC1nZTrZMwyf5vckA5k/HzBx68Hy9xJc0FXF1SMh/Mwb9flZCc5JQRfzutpwvIVLZZB8Ri4kRl7ylfrUI1UO5/lrlr2o3wJOLyN5+phCKAI=
+	t=1715106977; cv=none; b=CPqs+Ht+so84PhIzh2kH8flyCgGAXimJursv16xQ4OgXWyCoc06tAjqdZLyPZbkXQ1LzGijfavF8LrxB46KwHcO7IDMNJGtt5O2lszMmqfKI4IpAljqJjaGqeb33B3/FYvKSxdATorRCxMzUdHGrbfNtW8He1IvFR7zPQbabMF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715106975; c=relaxed/simple;
-	bh=1ZVRDSMy75ejf8D/9j8I5oq6yhZXUPDAiSppOkR/Qsc=;
+	s=arc-20240116; t=1715106977; c=relaxed/simple;
+	bh=GdnXBlmAE/ntKP2kVuNH3THPlufy55dC+LYYiErZWGg=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=eA0WaebO2+I1umo9cRhgo22Kbsu6X0ouiIr08IzBX19JeJcelxDp6qaGhSu/tcD80wjZkJ+kZRp0Mb8EXQMGcDAf1OwHJJquD3UKBqoYqRBnNBYVYDcWX68DslRo4CD8pPdnczJdErUj9yuL9OrJHcSJzzdQoL8MV/J5oTxib/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kKHdllpN; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=A1wePhm2HTIqYg1pgeLKjkgRtZhq2XmTkloN04E4NDSdhmGvYI2MTOH1gHRPpWJClITO5S/S3RQiQnAbLz/2WzsQYaiRrKb5suI79moTcNivMGruklZo0XZ7hwN2UmgSDiB8LW2qtm6prEzcfTwGrFds74GDDVUYec7xH5Ysk1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kB+S1fFg; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kKHdllpN"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de59ff8af0bso5351507276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kB+S1fFg"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61c9e368833so78738867b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 11:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715106973; x=1715711773; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715106975; x=1715711775; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jsvhOcC7MBczoTzNxBUcoVKQW0Fceq86w32j6zIJUUE=;
-        b=kKHdllpNQnnWG3UMpszGXwtJYpDxl3hboiz+A6zwVVE/DIGpC54DmgHZ1JiKIORDeR
-         wmnVcHeEVQRRQj8RFzpIyiotPM22v+J0V69Vn1A2y64glWl5GDZrDPms9rER6Xus4dYS
-         hC090rCv+D6WvLBILJXnModyPAtc56OcMlyswMtqEhSFsU87i1rpmWTvkOL0c/psGdlf
-         H7tY6XqtkMMxP2iUROMeuNm1+QPzfcEEtidBokIB9O3jjn/J9+gVndXN5cQBIvKqV4jW
-         pJftE1M2cB9h4HYp90/g2r9HoRComOfOr43qUxJR8K3DyWaLMvSANRhlssXaKNQv2dmJ
-         k+kw==
+        bh=Ms66x72omLOauhEObyEV3CdvhbmbYUxAmhVXEPvxa8o=;
+        b=kB+S1fFgjdrjl4vw4Hyydz9HgMpq3SO7w0Qc8kduok9XfcT6WLwrtMh8TyS3Du9PG8
+         eue9dgOAgHYmsMMr5S/QD5ndQ6652DAfq8A6LsRXJ0BHSAKdfFXHRPYTHhXXfwWhiJCp
+         itAqIQIjsCHWqIhXiFtkCtPbMXmd923St8Zhcn11BHNUdcv+gKH93cKYf6YDaO6KRneH
+         sTJ3XEXdEK1ag94zGx9V+NTLi2Nfn8DLWZm4Yg4r3ix2SKZwLZN135KlzTWs8t2foQW7
+         HsmccQWZEfJz1PkhWKh8wX6ag6oYPhaDrG8iVcjw2/pkRp0CvJbBrT8VD+PIRTaOU1Fb
+         k8Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715106973; x=1715711773;
+        d=1e100.net; s=20230601; t=1715106975; x=1715711775;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jsvhOcC7MBczoTzNxBUcoVKQW0Fceq86w32j6zIJUUE=;
-        b=b8Pk8iWWwaH5EDRi13hn/WbNkE9yuZujMsHNXb+PA0qXjvve9aFSuXbTEc3qZL6HmH
-         eqNWR4CO/EWnyiuTzZEiueIF6HaMwuk7CCfaB3HeMaVbArcLukZiBEa2akZkQMbj4S2h
-         qL/lOqPd++q/QbU0HxgZjYAdDlkrOLa2hxjjKWf69gry1yGoaW+nlxqIV9TwXSoGekZJ
-         2rfEx+4sbCV8usuHuj5bEf4FmhHTief6AUPX2b5xNA5BnrWc4KFX0F9FbNq7sLiECezI
-         AX+NIMIACJJQ/sKCO/IQO2AAHtuDkTmBTHSfSa/zrxprQYcqC4BALlTaH0ojyJGNQvV9
-         vm2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQYVQAuMaTzXtJjNid79oxyVwyljjpAVnoCKweGN4ZBxYeIBoLkAnQxMeMOEGuoftOAl5pR5qiEFo6KvSbndSKw1FitqSRNINF39dHgCxtWw==
-X-Gm-Message-State: AOJu0YykF1e/KoEc2v79ERzl8kfKiCPscmWRZO+egsivRE+GXBIBmBhA
-	fxDyPWj9/ahvNyIEd8EMjfHGaRwK2HJLzVzFXL1tQXK+7HGhPpuP9fhRtnszCfTv/x4fJ5z/+PW
-	pcIXQoQ==
-X-Google-Smtp-Source: AGHT+IFCmv2nVWz91raNmYWeKeQFOBY+cKG6SR192KEBCq8V3FtHad2/q8sCavEWaklZgl6bmFCxn1CSji3V
+        bh=Ms66x72omLOauhEObyEV3CdvhbmbYUxAmhVXEPvxa8o=;
+        b=ldqvpMOsimrJiZSO9HPTRHYVQkDUOCVvraw6kx81I4BNnCjdt3Sy/QCrTb4FvVVzRd
+         ffWQzkxAdmRRjo8a5pehvM05cI9nh4zz2/T0ZrqZGR6inbVBaXUOYsgyd6aCtUrLr1Dc
+         E1DO6TsD1FcAF6LJ3XScMPcpMEoZ4/Y5YCSjG+56vF7xPHY5it8xOgVV0gytH271L27K
+         oMEVI+Y2BbVFT4AngP2G/2WiL/r2Zp59P0/wF7Jk+0pxAsYFOTI8kV41a9CrBsMr+4Gb
+         q/++PW1jBubbIlP4gFUReMUpTf2VfTeZz7FRQ2uaSLXA+2wa+l0xXb0tVDsBSYdNj6bR
+         Bdgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNXmgZDc0GA2gRW0FI9UTQdvdjLtvaJk0k2TWJfo8vBnSwi8+CIWzo3lJiceFfL/G59Riq829aul7lz50b6reJ4+fEobtbTf+Hj5wB9uXtog==
+X-Gm-Message-State: AOJu0YzVAXwdPNfIJeMi3rB353lwc6dyrOde1a10SE/fMpVhDD2dYyUU
+	OjwMxSvNr28Gg7y9my9kvDz9NgyVNejqpMURD6otsd+QKUvU42nABx95KI4uj32uG0kDffvOm+4
+	fmfaU2Q==
+X-Google-Smtp-Source: AGHT+IH16GvFxGhrwVw9WdoofjsLZKY8qncsXUGb7ANehn5um8r0T3AOxjJ0h61G3bkWW9n6wgEUdS4unUVM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8095:fd7:9773:b1df])
- (user=irogers job=sendgmr) by 2002:a05:6902:100e:b0:de5:3003:4b64 with SMTP
- id 3f1490d57ef6-debb9cd89d9mr54838276.1.1715106972741; Tue, 07 May 2024
- 11:36:12 -0700 (PDT)
-Date: Tue,  7 May 2024 11:35:41 -0700
+ (user=irogers job=sendgmr) by 2002:a81:6d92:0:b0:61b:e2eb:f05 with SMTP id
+ 00721157ae682-62085a414ebmr1542497b3.2.1715106975262; Tue, 07 May 2024
+ 11:36:15 -0700 (PDT)
+Date: Tue,  7 May 2024 11:35:42 -0700
 In-Reply-To: <20240507183545.1236093-1-irogers@google.com>
-Message-Id: <20240507183545.1236093-5-irogers@google.com>
+Message-Id: <20240507183545.1236093-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240507183545.1236093-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 4/8] perf cpumap: Remove refcnt from cpu_aggr_map
+Subject: [PATCH v1 5/8] perf comm: Add reference count checking to comm_str
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,80 +77,278 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-It is assigned a value of 1 and never incremented. Remove and replace
-puts with delete.
+Reference count checking of an rbtree is troublesome as each pointer
+should have a reference, switch to using a sorted array. Remove an
+indirection by embedding the reference count with the string. Use
+pthread_once to safely initialize the comm_strs and reader writer
+mutex.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 16 +++-------------
- tools/perf/util/cpumap.c  |  2 --
- tools/perf/util/cpumap.h  |  2 --
- 3 files changed, 3 insertions(+), 17 deletions(-)
+ tools/perf/util/comm.c | 196 ++++++++++++++++++++++++++---------------
+ 1 file changed, 126 insertions(+), 70 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 65a3dd7ffac3..35f79b48e8dc 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1631,23 +1631,13 @@ static int perf_stat_init_aggr_mode(void)
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index afb8d4fd2644..1aa9a08e5b03 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -1,108 +1,164 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "comm.h"
+ #include <errno.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+ #include <string.h>
++#include <internal/rc_check.h>
+ #include <linux/refcount.h>
+-#include <linux/rbtree.h>
+ #include <linux/zalloc.h>
+ #include "rwsem.h"
  
- static void cpu_aggr_map__delete(struct cpu_aggr_map *map)
+-struct comm_str {
+-	char *str;
+-	struct rb_node rb_node;
++DECLARE_RC_STRUCT(comm_str) {
+ 	refcount_t refcnt;
++	char str[];
+ };
+ 
+-/* Should perhaps be moved to struct machine */
+-static struct rb_root comm_str_root;
+-static struct rw_semaphore comm_str_lock = {.lock = PTHREAD_RWLOCK_INITIALIZER,};
++static struct comm_strs {
++	struct rw_semaphore lock;
++	struct comm_str **strs;
++	int num_strs;
++	int capacity;
++} _comm_strs;
++
++static void comm_strs__init(void)
++{
++	init_rwsem(&_comm_strs.lock);
++	_comm_strs.capacity = 16;
++	_comm_strs.num_strs = 0;
++	_comm_strs.strs = calloc(16, sizeof(*_comm_strs.strs));
++}
++
++static struct comm_strs *comm_strs__get(void)
++{
++	static pthread_once_t comm_strs_type_once = PTHREAD_ONCE_INIT;
++
++	pthread_once(&comm_strs_type_once, comm_strs__init);
++
++	return &_comm_strs;
++}
++
++static refcount_t *comm_str__refcnt(struct comm_str *cs)
++{
++	return &RC_CHK_ACCESS(cs)->refcnt;
++}
++
++static const char *comm_str__str(const struct comm_str *cs)
++{
++	return &RC_CHK_ACCESS(cs)->str[0];
++}
+ 
+ static struct comm_str *comm_str__get(struct comm_str *cs)
  {
--	if (map) {
--		WARN_ONCE(refcount_read(&map->refcnt) != 0,
--			  "cpu_aggr_map refcnt unbalanced\n");
--		free(map);
--	}
--}
--
--static void cpu_aggr_map__put(struct cpu_aggr_map *map)
--{
--	if (map && refcount_dec_and_test(&map->refcnt))
--		cpu_aggr_map__delete(map);
-+	free(map);
+-	if (cs && refcount_inc_not_zero(&cs->refcnt))
+-		return cs;
++	struct comm_str *result;
++
++	if (RC_CHK_GET(result, cs))
++		refcount_inc_not_zero(comm_str__refcnt(cs));
+ 
+-	return NULL;
++	return result;
  }
  
- static void perf_stat__exit_aggr_mode(void)
+ static void comm_str__put(struct comm_str *cs)
  {
--	cpu_aggr_map__put(stat_config.aggr_map);
--	cpu_aggr_map__put(stat_config.cpus_aggr_map);
-+	cpu_aggr_map__delete(stat_config.aggr_map);
-+	cpu_aggr_map__delete(stat_config.cpus_aggr_map);
- 	stat_config.aggr_map = NULL;
- 	stat_config.cpus_aggr_map = NULL;
- }
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 6a270d640acb..27094211edd8 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -180,8 +180,6 @@ struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
- 		cpus->nr = nr;
- 		for (i = 0; i < nr; i++)
- 			cpus->map[i] = aggr_cpu_id__empty();
--
--		refcount_set(&cpus->refcnt, 1);
+-	if (cs && refcount_dec_and_test(&cs->refcnt)) {
+-		down_write(&comm_str_lock);
+-		rb_erase(&cs->rb_node, &comm_str_root);
+-		up_write(&comm_str_lock);
+-		zfree(&cs->str);
+-		free(cs);
++	if (cs && refcount_dec_and_test(comm_str__refcnt(cs))) {
++		struct comm_strs *comm_strs = comm_strs__get();
++		int i;
++
++		down_write(&comm_strs->lock);
++		for (i = 0; i < comm_strs->num_strs; i++) {
++			if (comm_strs->strs[i] == cs)
++				break;
++		}
++		for (; i < comm_strs->num_strs - 1; i++)
++			comm_strs->strs[i] = comm_strs->strs[i + 1];
++
++		comm_strs->num_strs--;
++		up_write(&comm_strs->lock);
++		RC_CHK_FREE(cs);
++	} else {
++		RC_CHK_PUT(cs);
  	}
+ }
  
- 	return cpus;
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 26cf76c693f5..ee0f6139b04a 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -5,7 +5,6 @@
- #include <stdbool.h>
- #include <stdio.h>
- #include <perf/cpumap.h>
--#include <linux/refcount.h>
+-static struct comm_str *comm_str__alloc(const char *str)
++static struct comm_str *comm_str__new(const char *str)
+ {
+-	struct comm_str *cs;
++	struct comm_str *result = NULL;
++	RC_STRUCT(comm_str) *cs;
  
- /** Identify where counts are aggregated, -1 implies not to aggregate. */
- struct aggr_cpu_id {
-@@ -37,7 +36,6 @@ struct aggr_cpu_id {
+-	cs = zalloc(sizeof(*cs));
+-	if (!cs)
+-		return NULL;
+-
+-	cs->str = strdup(str);
+-	if (!cs->str) {
+-		free(cs);
+-		return NULL;
++	cs = malloc(sizeof(*cs) + strlen(str) + 1);
++	if (ADD_RC_CHK(result, cs)) {
++		refcount_set(comm_str__refcnt(result), 1);
++		strcpy(&cs->str[0], str);
+ 	}
++	return result;
++}
  
- /** A collection of aggr_cpu_id values, the "built" version is sorted and uniqued. */
- struct cpu_aggr_map {
--	refcount_t refcnt;
- 	/** Number of valid entries. */
- 	int nr;
- 	/** The entries. */
+-	refcount_set(&cs->refcnt, 1);
++static int comm_str__cmp(const void *_lhs, const void *_rhs)
++{
++	const struct comm_str *lhs = *(const struct comm_str * const *)_lhs;
++	const struct comm_str *rhs = *(const struct comm_str * const *)_rhs;
+ 
+-	return cs;
++	return strcmp(comm_str__str(lhs), comm_str__str(rhs));
+ }
+ 
+-static
+-struct comm_str *__comm_str__findnew(const char *str, struct rb_root *root)
++static int comm_str__search(const void *_key, const void *_member)
+ {
+-	struct rb_node **p = &root->rb_node;
+-	struct rb_node *parent = NULL;
+-	struct comm_str *iter, *new;
+-	int cmp;
+-
+-	while (*p != NULL) {
+-		parent = *p;
+-		iter = rb_entry(parent, struct comm_str, rb_node);
+-
+-		/*
+-		 * If we race with comm_str__put, iter->refcnt is 0
+-		 * and it will be removed within comm_str__put call
+-		 * shortly, ignore it in this search.
+-		 */
+-		cmp = strcmp(str, iter->str);
+-		if (!cmp && comm_str__get(iter))
+-			return iter;
+-
+-		if (cmp < 0)
+-			p = &(*p)->rb_left;
+-		else
+-			p = &(*p)->rb_right;
+-	}
++	const char *key = _key;
++	const struct comm_str *member = *(const struct comm_str * const *)_member;
+ 
+-	new = comm_str__alloc(str);
+-	if (!new)
+-		return NULL;
++	return strcmp(key, comm_str__str(member));
++}
++
++static struct comm_str *__comm_strs__find(struct comm_strs *comm_strs, const char *str)
++{
++	struct comm_str **result;
+ 
+-	rb_link_node(&new->rb_node, parent, p);
+-	rb_insert_color(&new->rb_node, root);
++	result = bsearch(str, comm_strs->strs, comm_strs->num_strs, sizeof(struct comm_str *),
++			 comm_str__search);
+ 
+-	return new;
++	if (!result)
++		return NULL;
++
++	return comm_str__get(*result);
+ }
+ 
+-static struct comm_str *comm_str__findnew(const char *str, struct rb_root *root)
++static struct comm_str *comm_strs__findnew(const char *str)
+ {
+-	struct comm_str *cs;
++	struct comm_strs *comm_strs = comm_strs__get();
++	struct comm_str *result;
+ 
+-	down_write(&comm_str_lock);
+-	cs = __comm_str__findnew(str, root);
+-	up_write(&comm_str_lock);
++	if (!comm_strs)
++		return NULL;
+ 
+-	return cs;
++	down_read(&comm_strs->lock);
++	result = __comm_strs__find(comm_strs, str);
++	up_read(&comm_strs->lock);
++	if (result)
++		return result;
++
++	down_write(&comm_strs->lock);
++	result = __comm_strs__find(comm_strs, str);
++	if (!result) {
++		if (comm_strs->num_strs == comm_strs->capacity) {
++			struct comm_str **tmp;
++
++			tmp = reallocarray(comm_strs->strs,
++					   comm_strs->capacity + 16,
++					   sizeof(*comm_strs->strs));
++			if (!tmp) {
++				up_write(&comm_strs->lock);
++				return NULL;
++			}
++			comm_strs->strs = tmp;
++			comm_strs->capacity += 16;
++		}
++		result = comm_str__new(str);
++		if (result) {
++			comm_strs->strs[comm_strs->num_strs++] = result;
++			qsort(comm_strs->strs, comm_strs->num_strs, sizeof(struct comm_str *),
++			      comm_str__cmp);
++		}
++	}
++	up_write(&comm_strs->lock);
++	return result;
+ }
+ 
+ struct comm *comm__new(const char *str, u64 timestamp, bool exec)
+@@ -115,7 +171,7 @@ struct comm *comm__new(const char *str, u64 timestamp, bool exec)
+ 	comm->start = timestamp;
+ 	comm->exec = exec;
+ 
+-	comm->comm_str = comm_str__findnew(str, &comm_str_root);
++	comm->comm_str = comm_strs__findnew(str);
+ 	if (!comm->comm_str) {
+ 		free(comm);
+ 		return NULL;
+@@ -128,7 +184,7 @@ int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
+ {
+ 	struct comm_str *new, *old = comm->comm_str;
+ 
+-	new = comm_str__findnew(str, &comm_str_root);
++	new = comm_strs__findnew(str);
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+@@ -149,5 +205,5 @@ void comm__free(struct comm *comm)
+ 
+ const char *comm__str(const struct comm *comm)
+ {
+-	return comm->comm_str->str;
++	return comm_str__str(comm->comm_str);
+ }
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
