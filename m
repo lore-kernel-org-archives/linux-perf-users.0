@@ -1,73 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BA615FCF0;
-	Tue,  7 May 2024 14:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCC815FCFC;
+	Tue,  7 May 2024 14:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093580; cv=none; b=aYyywyqMCe4O/VjAzflFYHOt5cZ0rdU4PRmJuP4HwWjW1ilxcy6/J9tdlZ3PK2lgETpr+nF2b763OSH26D08PJfOSMoXTe1fREoMdtt8mKkqrkIWzZJinq33RF9xdvw3H5JNvZ+e9rxMUPz11C2/WxjChi+KZjVOAuqYP1MB2b4=
+	t=1715093669; cv=none; b=hQtj2XYPI3F8JC/ddJpde+8sHHJOFbGiFvhdWp5xEx3tGRzAcOUeMg6CSaG7UTqtsKRRu1alh4w/AeFsngtu+6ug9CU2WNKQ/2u1GpFyDskdpFkuDli2V+lXpNwIqEcm1tXcH4kvuydghyMgIe6T4rd4sLMzcnfnMtNCXwYCKnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093580; c=relaxed/simple;
-	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
+	s=arc-20240116; t=1715093669; c=relaxed/simple;
+	bh=Yskj674ZMF177lDIJTS3t2DCNKi8KbRLjMbjRBFCvDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jw6988NMg/jlYH/iJ3Z5OiM/L0q1Jvur3tBXNUQD0YfUtj6uuHMoGLAx3Gm1MnobHgYTcnPwY8Sj38rGqHN+VCeBsUTI5hlf+HNzIt7cyCNXuiPFwT/CgnBL9DZ11s2oog8NtggiYpFRZxnRjav4+5WxG4+H9ti3/Iuae/KMX70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvNPgBvv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/GDEwrU+twUo+OElnN9YxLiSF5I/gOeUjs+iwZ88b5aPhUhP9fsG6CNiUrx0+7xHwtJ0OLeXifrgaiyGcYKKNV1bFwXhpwh9z79AvJ/qd7Lz210NXIPoMgr9YNgMCgBZJxqcUkELk2sxEqc4umMYpidXBscZgmnbIotZvQjGbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maSV0SdS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvNPgBvv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B756BC4AF63;
-	Tue,  7 May 2024 14:52:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maSV0SdS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F295BC2BBFC;
+	Tue,  7 May 2024 14:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715093580;
-	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
+	s=k20201202; t=1715093668;
+	bh=Yskj674ZMF177lDIJTS3t2DCNKi8KbRLjMbjRBFCvDA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JvNPgBvvlZTMle2tmEciAGw4tri1AC80m9Gm4LuqqYzLzoD5yn/+U4w1lq0hVsEPN
-	 NuNmtC1elTWZev4XncK6IHzUFAxmbg4LwnEV2c9vAfCl5HJiireagp/Ej8oPJKGuul
-	 /6wHXPs9HT5lEn/+xwvxUOqeUwCCUpDzN95f5CsNZGT/7Chke0GafGBJQAcZez/uUq
-	 7poyjgcEqoT6wr6EBEJHitW+ROmlFfZzQBtREzVs2C9YM3212ZkdWRARw8oLHMVc5H
-	 OynWw14pkd5xCPEp01lHucmRHRS0CLawCT4nnn2ZQ71hfKMrdUUgBFHkFabTYqEwrO
-	 EdReYeVrSrymw==
-Date: Tue, 7 May 2024 11:52:57 -0300
+	b=maSV0SdSvYk9LCFNKcXLubAdxffaYIb9IBUOo8nvYgE/vbrjkokm7EXkhHi/46wbH
+	 jrQb/ujpzl8k+TDX13WUV9KSHBYjqxeSHtInzTDDQjjUwkWWWI+LB7snR8hLoGoDFf
+	 ArlNz1Nxtswsg3O23MwPQ1+TG9Pc9wg+oYxRH0rpSOnzLMlc4p/vM+7se4ojUb/PqK
+	 hgZQJY26vJkaiOlTKRJyE7iXXpXE4dw6Kr2vfGfjPLQp8dCuTyGJy74vz05Beh66ON
+	 X40v0Bpwp3eqBUIkjrIRDmOmuBIknqheXCQ4y6Ng1Rz+85tY+3YTaNWRKR33IxFFzE
+	 4gPD9fVMOzyIw==
+Date: Tue, 7 May 2024 11:54:25 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-	adrian.hunter@intel.com, irogers@google.com,
-	segher@kernel.crashing.org, christophe.leroy@csgroup.eu,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-	akanksha@linux.ibm.com
-Subject: Re: [PATCH V2 3/9] tools/perf: Fix a comment about multi_regs in
- extract_reg_offset function
-Message-ID: <ZjpASVk1GezAzDAG@x1>
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
- <20240506121906.76639-4-atrajeev@linux.vnet.ibm.com>
- <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org,
+	gankulkarni@os.amperecomputing.com,
+	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+	mike.leach@linaro.org
+Subject: Re: [PATCH 01/17] perf cs-etm: Print error for new
+ PERF_RECORD_AUX_OUTPUT_HW_ID versions
+Message-ID: <ZjpAoVEam4CQ96zC@x1>
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <20240429152207.479221-2-james.clark@arm.com>
+ <08bcd616-5006-45df-b8cc-45cf3a1dd762@arm.com>
+ <de635db0-6510-452f-91be-4fc5f7fdf671@arm.com>
+ <ecb16ad9-7c91-4cf6-ab7e-4b4b5be7165c@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
+In-Reply-To: <ecb16ad9-7c91-4cf6-ab7e-4b4b5be7165c@arm.com>
 
-On Mon, May 06, 2024 at 09:40:15PM -0700, Namhyung Kim wrote:
-> On Mon, May 6, 2024 at 5:19 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
-> >
-> > Fix a comment in function which explains how multi_regs field gets set
-> > for an instruction. In the example, "mov  %rsi, 8(%rbx,%rcx,4)", the
-> > comment mistakenly referred to "dst_multi_regs = 0". Correct it to use
-> > "src_multi_regs = 0"
-> >
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On Tue, May 07, 2024 at 04:27:25PM +0530, Anshuman Khandual wrote:
+> On 5/7/24 15:36, James Clark wrote:
+> > On 07/05/2024 04:47, Anshuman Khandual wrote:
+> >> On 4/29/24 20:51, James Clark wrote:
+> >>> The likely fix for this is to update Perf so print a helpful message.
+> >>>
+> >>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>> ---
+> >>>  tools/perf/util/cs-etm.c | 5 ++++-
+> >>>  1 file changed, 4 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> >>> index d65d7485886c..32818bd7cd17 100644
+> >>> --- a/tools/perf/util/cs-etm.c
+> >>> +++ b/tools/perf/util/cs-etm.c
+> >>> @@ -335,8 +335,11 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+> >>>  	trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+> >>>  
+> >>>  	/* check that we can handle this version */
+> >>> -	if (version > CS_AUX_HW_ID_CURR_VERSION)
+> >>> +	if (version > CS_AUX_HW_ID_CURR_VERSION) {
+> >>> +		pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID version %d not supported. Please update Perf.\n",
+> >>
+> >> Is not this bit misleading ? PERF_RECORD_AUX_OUTPUT_HW_ID is just the perf record
+> >> format identifier. The record version here, is derived from the platform specific
+> >> hardware ID information embedded in this perf record.
+> > 
+> > Not sure I follow what you mean here. 'version' is something that's
+> > output by the kernel. It's saved into a perf.data file, and if Perf
+> > can't handle version 2 for example, you need to update Perf.
+ 
+> Got it.
+ 
+> >> Should not this be just s/PERF_RECORD_AUX_OUTPUT_HW_ID/hardware ID/ instead ?
+> >>
+> > 
+> > It's just a way to go from the error message to the part of the code or
+> > docs that you need to look at. "hardware ID" wouldn't lead you anywhere
+> > so I don't think it would be useful.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Sure, fair enough.
 
-Cherry picked this one into perf-tools-next.
-
-Thanks,
+I'm taking this as an Acked-by, ok?
 
 - Arnaldo
