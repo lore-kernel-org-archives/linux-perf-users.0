@@ -1,118 +1,258 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395994A12;
-	Tue,  7 May 2024 04:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2867E26AF0;
+	Tue,  7 May 2024 04:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715055978; cv=none; b=lAyEDkMnoksNVWlA8L+ULlS7L9+wCZXWXmuRZBjUXPuFO6MzRlQ83bM18LaNBlji2WmLV1PssUzRZwe+dWUkQZt0Rwa93Fu3TsDB50P3LuPkjTE+ML9Z4Z5z24UsAYibjd+W+hbyyGW92SpJmU9lG0ah6HSLiVQOZwyyjOXtSZE=
+	t=1715056794; cv=none; b=uii9LiBGISEguINm4sP2BTMCwBXuydPX56fz9U2/0TmbKCoCzyE8KxdMruvqwGctBxa/0XdCRrO7hR9re0GDLnRabYaQGfmtcF1P05PWGhiDzesYRIHxFrVeMiaVLw3vpOwPqxecUmCYg6/DGouNb6rjxMax3Ays2oXW/xt1JZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715055978; c=relaxed/simple;
-	bh=pSBUf1dK/6EsyOZ7Wud4+U1Sfmzs2Lcwsbd1Oxjjb8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZVDBA66cyhwcDGReUUrMbTxusYDHYARW16UKSwgVPMvvTMy3ai0uOdZaTg/EjWLa8o8ci28wDyawKZotuu5YzPInxrlPKfDwkcHMPFdU20aHeY9hnJZ9t2YuyF0I8FGFGUaVYsSPd6X6QwK2eVeBDSkxIxIRtnenBsxPZTR6vrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB28D1042;
-	Mon,  6 May 2024 21:26:42 -0700 (PDT)
-Received: from [10.163.33.37] (unknown [10.163.33.37])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AD963F762;
-	Mon,  6 May 2024 21:26:08 -0700 (PDT)
-Message-ID: <9896e877-276e-4c43-9368-f13cf7f2b25d@arm.com>
-Date: Tue, 7 May 2024 09:56:13 +0530
+	s=arc-20240116; t=1715056794; c=relaxed/simple;
+	bh=PXcf8UdGLpgEAwJs/0k4TRl8KsNL6z/uYEZO1ZTMrK8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YeVLrULf8OjCakXRC1NhHPgP4dQpQXsXec95gSaz/t1aS0wKwPnAK9cQ4XG2hteiXC2J+jz8W/0WR9c8izlybnm42E8jA8UEzcbTwP7aeSEdHddCBg7ZHoxmHS4dHpHsW4OkgPcdwJRrg811JPqVSkQZWjbPGFakmUs7hb3aLjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso2281578a12.2;
+        Mon, 06 May 2024 21:39:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715056792; x=1715661592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4MKQ1m0cR5GXTfV3vrKrtXRNV5HtWIapOkkD1OPNVow=;
+        b=MhdimmUZiDhpOtSe0mb5jGbiYA4291VL0SuMnr3nbNqtdf0DL7Y9igh3tORo33+EPc
+         YoX6aMNqajGBbaJtjoRQNCAHbSmkKbn6mckOdiKn/f8onEM5gplT1ZpRQ3mJFOV2sW5Q
+         HLwfBBJGZ1RPW1HI5qXxJgd7Vwu/iDpsOL/Uz9itJjoDR4u1+1xZ8OEtfUl04K8tpVFr
+         z3JdNP7Ry2+FTbCa/ZkZ4UeGRvd0SXKKy1bid3xVdE/JWNmzs4GfZvLZAVZSmjOynoSG
+         gltMzq9VOvTfblWmiZlvwHSHiqKCmCJZ/jAH6OfVaDqQEJMoALkA2jM3eDToYM0AOMk7
+         K4cA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWdlT1QBgSjOpVVEAr94X0y6pXF/JE0tMyb88bxXf5ItpqjGXNRfB0zePmN5VHggIb/AQ7U6844G0jiYeS13odCk6cYUTecgOU0edGDPw0mO5MhfMvlQvM5/k6FWEXYGPZTifjo/7l7QbmCkpedw==
+X-Gm-Message-State: AOJu0YzJHS5aY02+l81Klfwxc/GX7y1XpoE+aOmMAeF+x5qYFLYI6iXS
+	Vjh2bAPzaUp8qdQch4+LuP8x258/1PAe/l6EZScnQV+a0BaDCTEI6WjvfaF+q8Ig/jbFLmScYU6
+	L183VFfG6Ws/WWcTG47rDsntRL1s=
+X-Google-Smtp-Source: AGHT+IEhW9HUanbWLcjSZcgHRFbiBKujsMANA8EaogR44KM6NRvbonmJQQ4kHJKv+YtTfKurtgeq2mgKWtfY3r+cEUE=
+X-Received: by 2002:a05:6a20:7348:b0:1a9:b4ed:a with SMTP id
+ v8-20020a056a20734800b001a9b4ed000amr16356223pzc.20.1715056792347; Mon, 06
+ May 2024 21:39:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/17] perf auxtrace: Allow number of queues to be
- specified
-Content-Language: en-US
-To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
- coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-3-james.clark@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240429152207.479221-3-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 6 May 2024 21:39:40 -0700
+Message-ID: <CAM9d7ci=AZFpcYy4=qwTYTTVhWd6g6HHHUuV2B53hS-t8SOCag@mail.gmail.com>
+Subject: Re: [PATCH V2 0/9] Add data type profiling support for powerpc
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	irogers@google.com, segher@kernel.crashing.org, christophe.leroy@csgroup.eu, 
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, 
+	linux-kernel@vger.kernel.org, akanksha@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
+On Mon, May 6, 2024 at 5:19=E2=80=AFAM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+> The patchset from Namhyung added support for data type profiling
+> in perf tool. This enabled support to associate PMU samples to data
+> types they refer using DWARF debug information. With the upstream
+> perf, currently it possible to run perf report or perf annotate to
+> view the data type information on x86.
+>
+> Initial patchset posted here had changes need to enable data type
+> profiling support for powerpc.
+>
+> https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup.=
+eu/T/
+>
+> Main change were:
+> 1. powerpc instruction nmemonic table to associate load/store
+> instructions with move_ops which is use to identify if instruction
+> is a memory access one.
+> 2. To get register number and access offset from the given
+> instruction, code uses fields from "struct arch" -> objump.
+> Added entry for powerpc here.
+> 3. A get_arch_regnum to return register number from the
+> register name string.
+>
+> But the apporach used in the initial patchset used parsing of
+> disassembled code which the current perf tool implementation does.
+>
+> Example: lwz     r10,0(r9)
+>
+> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+> registers names and offset. Also to find whether there is a memory
+> reference in the operands, "memory_ref_char" field of objdump is used.
+> For x86, "(" is used as memory_ref_char to tackle instructions of the
+> form "mov  (%rax), %rcx".
+>
+> In case of powerpc, not all instructions using "(" are the only memory
+> instructions. Example, above instruction can also be of extended form (X
+> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+> and extract the source/target registers, this patchset adds support to us=
+e
+> raw instruction. With raw instruction, macros are added to extract opcode
+> and register fields.
+>
+> Example representation using --show-raw-insn in objdump gives result:
+>
+> 38 01 81 e8     ld      r4,312(r1)
+>
+> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+> this translates to instruction form: "ld RT,DS(RA)" and binary code
+> as:
+> _____________________________________
+> | 58 |  RT  |  RA |      DS       | |
+> -------------------------------------
+> 0    6     11    16              30 31
+>
+> Patchset adds support to pick the opcode and reg fields from this
+> raw/binary instruction code. This approach came in from review comment
+> by Segher Boessenkool for the initial patchset.
+>
+> Apart from that, instruction tracking is enabled for powerpc and
+> support function is added to find variables defined as registers
+> Example, in powerpc, two registers are
+> defined to represent variable:
+> 1. r13: represents local_paca
+> register struct paca_struct *local_paca asm("r13");
+>
+> 2. r1: represents stack_pointer
+> register void *__stack_pointer asm("r1");
+>
+> These are handled in this patchset.
+>
+> - Patch 1 is to rearrange register state type structures to header file
+> so that it can referred from other arch specific files
+> - Patch 2 is to make instruction tracking as a callback to"struct arch"
+> so that it can be implemented by other archs easily and defined in arch
+> specific files
+> - Patch 3 is to fix a small comment
+> - Patch 4 adds support to capture and parse raw instruction in objdump
+> by keeping existing approach intact.
+> - Patch 5 update parameters for reg extract functions to use raw
+> instruction on powerpc
+> - Patch 6 and patch 7 handles instruction tracking for powerpc.
+> - Patch 8 and Patch 8 handles support to find global register variables
+>
+> With the current patchset:
+>
+>  ./perf record -a -e mem-loads sleep 1
+>  ./perf report -s type,typeoff --hierarchy --group --stdio
+>  ./perf annotate --data-type --insn-stat
+>
+> perf annotate logs:
+>
+> Annotate Instruction stats
+> total 562, ok 441 (78.5%), bad 121 (21.5%)
+>
+>   Name      :  Good   Bad
+> -----------------------------------------------------------
+>   ld        :   313    54
+>   lwz       :    51    32
+>   lbz       :    31     5
+>   ldx       :     6    21
+>   lhz       :    23     0
+>   lwa       :     4     3
+>   lwarx     :     5     0
+>   lwzx      :     2     2
+>   ldarx     :     3     0
+>   lwzu      :     2     0
+>   stdcx.    :     0     1
+>   nop       :     0     1
+>   ldu       :     1     0
+>   lbzx      :     0     1
+>   lwax      :     0     1
+>
+> perf report logs:
+>
+> # Samples: 1K of event 'mem-loads'
+> # Event count (approx.): 937238
+> #
+> # Overhead  Data Type  Data Type Offset
+> # ........  .........  ................
+> #
+>     48.81%  (unknown)  (unknown) +0 (no field)
+>     12.85%  long unsigned int  long unsigned int +0 (current_stack_pointe=
+r)
+>      4.68%  struct paca_struct  struct paca_struct +2312 (__current)
+>      4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
+>      2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
+>      2.64%  struct paca_struct  struct paca_struct +2808 (canary)
+>      2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
+>      1.41%  struct vm_fault  struct vm_fault +0 (vma)
+>      1.29%  struct task_struct  struct task_struct +276 (flags)
+>      1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
+>      1.00%  struct menu_device  struct menu_device +4 (tick_wakeup)
+>      0.90%  struct security_hook_list  struct security_hook_list +0 (list=
+.next)
+>      0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
+>      0.76%  struct rq  struct rq +2856 (cpu)
 
-On 4/29/24 20:51, James Clark wrote:
-> Currently it's only possible to initialize with the default number of
-> queues and then use auxtrace_queues__add_event() to grow the array. But
-> that's problematic if you don't have a real event to pass into that
-> function yet.
-> 
-> The queues hold a void *priv member to store custom state, and for
-> Coresight we want to create decoders upfront before receiving data, so
-> add a new function that allows pre-allocating queues. One reason to do
-> this is because we might need to store metadata (HW_ID events) that
-> effects other queues, but never actually receive auxtrace data on that
-> queue.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+Looks great!  I'm glad it worked on powerpc too.
+We still need to verify the returned type is properly annotated.
+But overall it looks really good, I will leave comments in reply.
 
-LGTM
+Thanks,
+Namhyung
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-
-> ---
->  tools/perf/util/auxtrace.c | 9 +++++++--
->  tools/perf/util/auxtrace.h | 1 +
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 3684e6009b63..563b6c4fca31 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -218,15 +218,20 @@ static struct auxtrace_queue *auxtrace_alloc_queue_array(unsigned int nr_queues)
->  	return queue_array;
->  }
->  
-> -int auxtrace_queues__init(struct auxtrace_queues *queues)
-> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues)
->  {
-> -	queues->nr_queues = AUXTRACE_INIT_NR_QUEUES;
-> +	queues->nr_queues = nr_queues;
->  	queues->queue_array = auxtrace_alloc_queue_array(queues->nr_queues);
->  	if (!queues->queue_array)
->  		return -ENOMEM;
->  	return 0;
->  }
->  
-> +int auxtrace_queues__init(struct auxtrace_queues *queues)
-> +{
-> +	return auxtrace_queues__init_nr(queues, AUXTRACE_INIT_NR_QUEUES);
-> +}
-> +
->  static int auxtrace_queues__grow(struct auxtrace_queues *queues,
->  				 unsigned int new_nr_queues)
->  {
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 55702215a82d..8a6ec9565835 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -521,6 +521,7 @@ int auxtrace_mmap__read_snapshot(struct mmap *map,
->  				 struct perf_tool *tool, process_auxtrace_t fn,
->  				 size_t snapshot_size);
->  
-> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues);
->  int auxtrace_queues__init(struct auxtrace_queues *queues);
->  int auxtrace_queues__add_event(struct auxtrace_queues *queues,
->  			       struct perf_session *session,
+>
+> Thanks
+> Athira Rajeev
+>
+> Changelog:
+> From v1->v2:
+> - Addressed suggestion from Christophe Leroy and Segher Boessenkool
+>   to use the binary code (raw insn) to fetch opcode, register and
+>   offset fields.
+> - Added support for instruction tracking in powerpc
+> - Find the register defined variables (r13 and r1 which points to
+>   local_paca and current_stack_pointer in powerpc)
+>
+> Athira Rajeev (9):
+>   tools/perf: Move the data structures related to register  type to
+>     header file
+>   tools/perf: Add "update_insn_state" callback function to handle arch
+>     specific instruction tracking
+>   tools/perf: Fix a comment about multi_regs in extract_reg_offset
+>     function
+>   tools/perf: Add support to capture and parse raw instruction in
+>     objdump
+>   tools/perf: Update parameters for reg extract functions to use raw
+>     instruction on powerpc
+>   tools/perf: Update instruction tracking for powerpc
+>   tools/perf: Update instruction tracking with add instruction
+>   tools/perf: Add support to find global register variables using
+>     find_data_type_global_reg
+>   tools/perf: Add support for global_die to capture name of variable in
+>     case of register defined variable
+>
+>  tools/include/linux/string.h                  |   2 +
+>  tools/lib/string.c                            |  13 +
+>  .../perf/arch/powerpc/annotate/instructions.c |  84 +++
+>  tools/perf/arch/powerpc/util/dwarf-regs.c     |  52 ++
+>  tools/perf/arch/x86/annotate/instructions.c   | 383 +++++++++++++
+>  tools/perf/util/annotate-data.c               | 519 +++---------------
+>  tools/perf/util/annotate-data.h               |  78 +++
+>  tools/perf/util/annotate.c                    |  32 +-
+>  tools/perf/util/annotate.h                    |   1 +
+>  tools/perf/util/disasm.c                      | 109 +++-
+>  tools/perf/util/disasm.h                      |  17 +-
+>  tools/perf/util/dwarf-aux.c                   |   1 +
+>  tools/perf/util/dwarf-aux.h                   |   1 +
+>  tools/perf/util/include/dwarf-regs.h          |  12 +
+>  tools/perf/util/sort.c                        |   7 +-
+>  15 files changed, 854 insertions(+), 457 deletions(-)
+>
+> --
+> 2.43.0
+>
