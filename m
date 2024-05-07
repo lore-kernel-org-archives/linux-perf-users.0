@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC8516C849;
-	Tue,  7 May 2024 14:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201EA16D33F;
+	Tue,  7 May 2024 14:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091204; cv=none; b=X9lldrCbSHcXsybgzwVxKUyKFABF/zu9jP/yCM/xUaMIdbGsFR+ya/I1qK9leckXl1vGFlltO3y70wRMHzEF3DOqrJgVeTVA621zppTFmk0AjAQ+6YPikZ+zmCFO3Gu3a9TpMTZdQSnE/i9sfB3xTn/l6c39yrRIGGxCt5zYDwI=
+	t=1715091210; cv=none; b=Dw4pKPJ4l+r9xjCtHduNBzu241IrbY48vZsO2/sYMqU54/L5X/ZdxAqBnnG22hcpIR+XnDAbyxCQPXPWt+3l3KBEMF6Tn29DknVoy15PV52LOFRL9wTRWy7/hyySslE3hjKL+Tf7UvTGvZvhKjiKgwioPEako3HnxkSdnQ1Jqb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091204; c=relaxed/simple;
-	bh=sE3X07S6/95vfe+bBwB2Qtkb4OMn+hxVPTR3EAq1XMs=;
+	s=arc-20240116; t=1715091210; c=relaxed/simple;
+	bh=inoTy0XjeXCVYFWYhXWKSmRMDG/2+bgKHRzwgIGvl9Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rF4M9F3yC2QuKs1kXB6DZHFsjUDxYv9b0jrieqi7KgIZMix1Qf/AFcsGhsACNw1M6g2OMWiun20qY6F2P5znXNumHAMmRIuxfClLL0VhwBEm43VbmRhCncfhncPaiFoR2AyA/oO+0vOguEqQxxS0Rd98LZD7ziaT2CFkIqQSLiY=
+	 MIME-Version; b=duOZBVqt5uDD2GQckRnqVFmuRDZujORD09WVQkXRR6SR+0Rhv1q0fs8mgXRJSivYWFQy9cRRQOJXsxgTsnqrC7OIqzhlTvmTOuvXrWWjLuvNK0z/kN9m2/RU+jsVnZg9otd6/fYV6ziIVXEJv0cjXod8Uo7BGOFteaHThdYamVM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 595341515;
-	Tue,  7 May 2024 07:13:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6BF153B;
+	Tue,  7 May 2024 07:13:37 -0700 (PDT)
 Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 78FCB3F6A8;
-	Tue,  7 May 2024 07:13:01 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D7BF3F6A8;
+	Tue,  7 May 2024 07:13:09 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	atrajeev@linux.vnet.ibm.com,
@@ -33,9 +33,9 @@ Cc: James Clark <james.clark@arm.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] perf maps: Re-use __maps__free_maps_by_name()
-Date: Tue,  7 May 2024 15:12:06 +0100
-Message-Id: <20240507141210.195939-3-james.clark@arm.com>
+Subject: [PATCH 4/4] perf symbols: Fix ownership of string in dso__load_vmlinux()
+Date: Tue,  7 May 2024 15:12:08 +0100
+Message-Id: <20240507141210.195939-5-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240507141210.195939-1-james.clark@arm.com>
 References: <20240507141210.195939-1-james.clark@arm.com>
@@ -47,66 +47,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-maps__merge_in() hard codes the steps to free the maps_by_name list. It
-seems to not map__put() each element before freeing, and it sets
-maps_by_name_sorted to true after freeing, which may be harmless but
-is inconsistent with maps__init() and other functions.
+The linked commit updated dso__load_vmlinux() to call
+dso__set_long_name() before loading the symbols. Loading the symbols may
+not succeed but dso__set_long_name() takes ownership of the string. The
+two callers of this function free the string themselves on failure
+cases, resulting in the following error:
 
-maps__maps_by_name_addr() is also quite hard to read because we already
-have maps__maps_by_name() and maps__maps_by_address(), but the function
-is only used in that place so delete it.
+  $ perf record -- ls
+  $ perf report
 
+  free(): double free detected in tcache 2
+
+Fix it by always taking ownership of the string, even on failure. This
+means the string is either freed at the very first early exit condition,
+or later when the dso is deleted or the long name is replaced. Now no
+special return value is needed to signify that the caller needs to
+free the string.
+
+Fixes: e59fea47f83e ("perf symbols: Fix DSO kernel load and symbol process to correctly map DSO to its long_name, type and adjust_symbols")
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/util/maps.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/util/symbol.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 61eb742d91e3..16b39db594f4 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -124,11 +124,6 @@ static void maps__set_maps_by_address(struct maps *maps, struct map **new)
- 
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index e98dfe766da3..6a0900dcdfd3 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1977,6 +1977,10 @@ int dso__load(struct dso *dso, struct map *map)
+ 	return ret;
  }
  
--static struct map ***maps__maps_by_name_addr(struct maps *maps)
--{
--	return &RC_CHK_ACCESS(maps)->maps_by_name;
--}
--
- static void maps__set_nr_maps_allocated(struct maps *maps, unsigned int nr_maps_allocated)
++/*
++ * Always takes ownership of vmlinux when vmlinux_allocated == true, even if
++ * it returns an error.
++ */
+ int dso__load_vmlinux(struct dso *dso, struct map *map,
+ 		      const char *vmlinux, bool vmlinux_allocated)
  {
- 	RC_CHK_ACCESS(maps)->nr_maps_allocated = nr_maps_allocated;
-@@ -284,6 +279,9 @@ void maps__put(struct maps *maps)
+@@ -1995,8 +1999,11 @@ int dso__load_vmlinux(struct dso *dso, struct map *map,
+ 	else
+ 		symtab_type = DSO_BINARY_TYPE__VMLINUX;
  
- static void __maps__free_maps_by_name(struct maps *maps)
- {
-+	if (!maps__maps_by_name(maps))
-+		return;
-+
+-	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
++	if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type)) {
++		if (vmlinux_allocated)
++			free((char *) vmlinux);
+ 		return -1;
++	}
+ 
  	/*
- 	 * Free everything to try to do it from the rbtree in the next search
- 	 */
-@@ -291,6 +289,9 @@ static void __maps__free_maps_by_name(struct maps *maps)
- 		map__put(maps__maps_by_name(maps)[i]);
- 
- 	zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
-+
-+	/* Consistent with maps__init(). When maps_by_name == NULL, maps_by_name_sorted == false */
-+	maps__set_maps_by_name_sorted(maps, false);
- }
- 
- static int map__start_cmp(const void *a, const void *b)
-@@ -1167,8 +1168,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 	 * dso__load_sym() may copy 'dso' which will result in the copies having
+@@ -2039,7 +2046,6 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
+ 		err = dso__load_vmlinux(dso, map, filename, true);
+ 		if (err > 0)
+ 			goto out;
+-		free(filename);
  	}
- 	maps__set_maps_by_address(kmaps, merged_maps_by_address);
- 	maps__set_maps_by_address_sorted(kmaps, true);
--	zfree(maps__maps_by_name_addr(kmaps));
--	maps__set_maps_by_name_sorted(kmaps, true);
-+	__maps__free_maps_by_name(kmaps);
- 	maps__set_nr_maps_allocated(kmaps, merged_nr_maps_allocated);
+ out:
+ 	return err;
+@@ -2191,7 +2197,6 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
+ 		err = dso__load_vmlinux(dso, map, filename, true);
+ 		if (err > 0)
+ 			return err;
+-		free(filename);
+ 	}
  
- 	/* Copy entries before the new_map that can't overlap. */
+ 	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
 -- 
 2.34.1
 
