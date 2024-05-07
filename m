@@ -1,108 +1,87 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7388F59;
-	Tue,  7 May 2024 03:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0117B642;
+	Tue,  7 May 2024 03:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715051754; cv=none; b=g8bHUxhCbVAVDx8PDR/SVg72SfqaaUUtiv5JOcadfXUoDXAMe059iXspvo3NjQVoPew/hdSfUKetUMoxPfxHszChCjpspgq+GY2zi2e8pGJRZSlMgLaA4BbIo+Jdac/95f0Ww3CNi4hcDe6M1rsOxcijQBDOmzD0oEw7eqYeibg=
+	t=1715053672; cv=none; b=kk8pMMwPcW7PGjcU670vL7gdKOvZhlT/65HNlWoPgDDXL/MwSN2wJqBSbaChdbZ1e5LZhhvkQJGtNVk3CHtmSHFwtoKu8zuN0W3dS7QQUUrW3WQLJJKiIS8bC9arjAXaJDsWxApf5rjpLrKito1scleom5WXlleS7ifpqGGVG38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715051754; c=relaxed/simple;
-	bh=AHH/m+ka+Qb6OnM3YwkZe2xFH0HDbhoI5R1oc5Qceuo=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QqiSWXd1MS+M6GoVbIId9mxzBaKT/9jyxZgqCJMj01d0V2JB71V7GWXdiz3rA7GeUap1KlJpLCYBGQQ3Mse7EAnJPxa0PmEcdsFy1ds1UksVNtsim279mmGJ9FZj4YRn25tYcJm8EcdjsJ8ajYODQ/NTfOK+z9Wej/mjvvlSUDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6WHK7QA; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6WHK7QA"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ee5235f5c9so8376175ad.2;
-        Mon, 06 May 2024 20:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715051752; x=1715656552; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ats4eFWKO0oX0tbMb50Cxd74w7mweIFzoDVzLRszzCc=;
-        b=C6WHK7QATNmjzUOJDOq9TYFLILoi7Uq8KPOYzgHAd9TsvlUmG1WoRZUiZUHfqaTPEF
-         GMVzs8UP1jfFvX/9RtiKFfJ8E4iOgyIT5M75SfuCJuwI0nYjXxkMZXXYjw9bCljUeNNC
-         KJ+oZQsF+LyEp1/NoIPOPBPFeoh3XoTKchyXCGD0eqASE+h/IzCnbH7qeQrWvF7X8MAT
-         5r88V25USzOWfg9R7awPxINUfYPuegfs9kvIFPH+I49dNPwxoF2fDvKINWn2DITuJPFB
-         mrB4wenJ5jKiEkIQNmi9CpAPfYHrZ6zzK/LqtlNW3kPzW+YfhofgtvblzfKVTKsgi7G4
-         Ivcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715051752; x=1715656552;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ats4eFWKO0oX0tbMb50Cxd74w7mweIFzoDVzLRszzCc=;
-        b=b7Frq4ispRZPMDiFK1VuPQIUMrC3zJ8M0gn7flFcgQz2FJmgbSk8uhWN+pNnxawCQf
-         4LowU1vuj3RBCHbZxTOtQEaYXCR2xBjRG/j2akK9w12LY6RNgxrumCUgZQXnLRoh0xPa
-         C+3CZhLQTekniyXv4k/YqFNab7ZdpJt5/ImzoEsMtjMpRJal/6A3s8kj2UZZ7lH0DT+G
-         xUvpQzLEKVcRlmOrYclsKTm60Z/D2slrvV3thX41NKC6k25xdDsf7qYgC8c8UUx3vIGH
-         VwyiS3RLpMWO7PbzmEXpGzjSa1lEjIHgRcICQaC1yev8t7tWIGVlfijEPm08eN+iqfcd
-         HJKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsv6GKwX6QywNl5KrW7rS6UpY+1ZOMTMk/a9I+9Fa3yntlCcJp7f8V4IwGclEOVZ2OwRo9S/C36f17A1eXPGx2nOph10B59mLJP+VPzSy3wxBw+BGI9jRjCDRWpNTFatavzXryNeeP5m0Fg9/uIw==
-X-Gm-Message-State: AOJu0Ywhp5XjOh/hpYmq9ej+MU7uGO+J7oa3OgFbMm2WESUb6llMOM8w
-	vK3OfbpDuYHwsZMv3YSrZfy9SRiYMZ6qc0WZoQIrl17s7jfI85jF+8rvYHLi
-X-Google-Smtp-Source: AGHT+IG2A7Jwj//hAc1nElH89NrAwUx4BwSm0mZH0KTXViKxK5NFUpOagyBjUz5F+wnlnOmp9CW0Ew==
-X-Received: by 2002:a17:903:11d0:b0:1e8:26e4:d089 with SMTP id q16-20020a17090311d000b001e826e4d089mr14805245plh.54.1715051752198;
-        Mon, 06 May 2024 20:15:52 -0700 (PDT)
-Received: from localhost ([187.19.173.21])
-        by smtp.gmail.com with ESMTPSA id i18-20020a170902c95200b001ecbc8137bbsm8970419pla.131.2024.05.06.20.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 20:15:51 -0700 (PDT)
-From: arnaldo.melo@gmail.com
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Tue, 7 May 2024 00:15:48 -0300
-To: Yang Jihong <yangjihong1@huawei.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf kwork: Use zfree() to avoid possibly accessing
- dangling pointers
-Message-ID: <Zjmc5EiN6zmWZj4r@x1>
+	s=arc-20240116; t=1715053672; c=relaxed/simple;
+	bh=kFOM3iy7Z7jag75KzlVF383Urq+3zzDGTWrSzDmdSmU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLmH0/q+lxiXyfNhNyz+DfK63v65KCRTGLnAHGnkWjL/+ApoVfQ0t+t4zinjarMkErJmxLTWpN+h6QXhYckBRFmLW6VupPt0ibjC2oCjM+bJAPcvh0LLOe8sky6tvh/6Nhl34UpS/zVcICjDCG/lJeIiyeNW7vkCAqDdV0lO4Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D56B106F;
+	Mon,  6 May 2024 20:48:09 -0700 (PDT)
+Received: from [10.163.33.37] (unknown [10.163.33.37])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21AB23F762;
+	Mon,  6 May 2024 20:47:34 -0700 (PDT)
+Message-ID: <08bcd616-5006-45df-b8cc-45cf3a1dd762@arm.com>
+Date: Tue, 7 May 2024 09:17:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/17] perf cs-etm: Print error for new
+ PERF_RECORD_AUX_OUTPUT_HW_ID versions
+To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
+ coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <20240429152207.479221-2-james.clark@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240429152207.479221-2-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When freeing a->b it is good practice to set a->b to NULL using
-zfree(&a->b) so that when we have a bug where a reference to a freed 'a'
-pointer is kept somewhere, we can more quickly cause a segfault if some
-code tries to use a->b.
 
-Convert one such case in the 'perf kwork' codebase.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Yang Jihong <yangjihong1@huawei.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-kwork.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/29/24 20:51, James Clark wrote:
+> The likely fix for this is to update Perf so print a helpful message.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/util/cs-etm.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index d65d7485886c..32818bd7cd17 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -335,8 +335,11 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+>  	trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+>  
+>  	/* check that we can handle this version */
+> -	if (version > CS_AUX_HW_ID_CURR_VERSION)
+> +	if (version > CS_AUX_HW_ID_CURR_VERSION) {
+> +		pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID version %d not supported. Please update Perf.\n",
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index 0092b9b39611d7e9..56e3f3a5e03a2d66 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -2230,7 +2230,7 @@ static int perf_kwork__top(struct perf_kwork *kwork)
- 	perf_kwork__top_report(kwork);
- 
- out:
--	free(kwork->top_stat.cpus_runtime);
-+	zfree(&kwork->top_stat.cpus_runtime);
- 	return ret;
- }
- 
--- 
-2.44.0
+Is not this bit misleading ? PERF_RECORD_AUX_OUTPUT_HW_ID is just the perf record
+format identifier. The record version here, is derived from the platform specific
+hardware ID information embedded in this perf record.
 
+Should not this be just s/PERF_RECORD_AUX_OUTPUT_HW_ID/hardware ID/ instead ?
+
+> +		       version);
+>  		return -EINVAL;
+> +	}
+>  
+>  	/* get access to the etm metadata */
+>  	etm = container_of(session->auxtrace, struct cs_etm_auxtrace, auxtrace);
