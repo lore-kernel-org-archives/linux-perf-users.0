@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C60D6BB20;
-	Tue,  7 May 2024 05:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EBB96E602;
+	Tue,  7 May 2024 06:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715061034; cv=none; b=MxS68HjrQgDcharyZPCauNmpXYNNx5YmW9zfNoilnMLTMoQ9kmLKoQX+cYsqbxImCmk/6dKAwXLTlYqY+al1aSK/8/ar6NMy2CXUVTCrr8LarRXlLfWeajubxFEV87FA+ol6me8ZlULVqmYFIpplPknp9t3unq1vox52g6PReVE=
+	t=1715061618; cv=none; b=EMZyk8NuksMG7LO30xEzT7NlxNAf1uKvXrMs86e0rdD8IDAi/6S9/rKLhufeTyCby72ik/RPsaejEYQHoXGc7nfhuIw1Mc805UAwLJjcFw9hL0eraJEwJN2kHwEDCz8hhj6SEp8EVUhr/XX4aJDiYscT1KedqGoQ/i2+gWght9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715061034; c=relaxed/simple;
-	bh=/W6dzYssMBIkOqmW8TDIbDK8oNlXxHa/fxO/udxGjWU=;
+	s=arc-20240116; t=1715061618; c=relaxed/simple;
+	bh=NoTu1cDaz5Vv906K626wxEwxNJv9Jn5/aGcFrxBl8Pg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c+lsBR5MI74hzIFYpqKBhlafeWl1bo5q4sgEfvtMJutwt+xIjXLYUxntgmFLYOq+ldTfxMFY45M116PP3lVKlhDP/6bc4xdj48f6E1IUh+tigujh4m6Zx0D0M96xgYTCoFuiZBPbHbpILsdgx9Y3AYxdkaJ0KO4YNP19x+ssmNA=
+	 In-Reply-To:Content-Type; b=K4VIg3oZ5jsPsGSXlCLMi+LubN7fGQvdnv7sj1gHG4y0dG5xRdxSxGbuqXFLAox3izPy7E/ZEvkL4huxLP5DtLg8qJVPSXxmxyvvTqQ9vaQJrVOr4OW17TcDuk9ewndLZ+Ymq0n9xpYAEVGZ3Z1rkSJBfZh4AAQLAQQ43BSzDNI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32A7F1042;
-	Mon,  6 May 2024 22:50:56 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE3661042;
+	Mon,  6 May 2024 23:00:40 -0700 (PDT)
 Received: from [10.163.37.41] (unknown [10.163.37.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06D393F587;
-	Mon,  6 May 2024 22:50:21 -0700 (PDT)
-Message-ID: <f6bcac4a-ba21-48dc-94f5-e1f1e1ac37a4@arm.com>
-Date: Tue, 7 May 2024 11:20:23 +0530
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 860323F587;
+	Mon,  6 May 2024 23:00:06 -0700 (PDT)
+Message-ID: <0875aac2-61cb-484a-bd7e-043c208f53c1@arm.com>
+Date: Tue, 7 May 2024 11:30:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,8 +27,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/17] coresight: Move struct coresight_trace_id_map to
- common header
+Subject: Re: [PATCH 11/17] coresight: Expose map argument in trace ID API
 Content-Language: en-US
 To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
  gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
@@ -45,103 +44,200 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-11-james.clark@arm.com>
+ <20240429152207.479221-12-james.clark@arm.com>
 From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240429152207.479221-11-james.clark@arm.com>
+In-Reply-To: <20240429152207.479221-12-james.clark@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 4/29/24 20:51, James Clark wrote:
-> The trace ID maps will need to be created and stored by the core and
-> Perf code so move the definition up to the common header.
+> The trace ID API is currently hard coded to always use the global map.
+> The functions that take the map as an argument aren't currently public.
+> Make them public so that Perf mode can pass in its own maps. At the
+> moment all usages are still hard coded to use the global map, but now
+> on the caller side.
+> 
+> System ID functions are unchanged because they will always use the
+> default map.
 > 
 > Signed-off-by: James Clark <james.clark@arm.com>
 
 Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
 > ---
->  .../hwtracing/coresight/coresight-trace-id.c  |  1 +
->  .../hwtracing/coresight/coresight-trace-id.h  | 19 -------------------
->  include/linux/coresight.h                     | 18 ++++++++++++++++++
->  3 files changed, 19 insertions(+), 19 deletions(-)
+>  .../hwtracing/coresight/coresight-etm-perf.c  |  5 +++--
+>  .../coresight/coresight-etm3x-core.c          |  5 +++--
+>  .../coresight/coresight-etm4x-core.c          |  5 +++--
+>  .../hwtracing/coresight/coresight-trace-id.c  | 22 +++++++------------
+>  .../hwtracing/coresight/coresight-trace-id.h  |  9 +++++---
+>  5 files changed, 23 insertions(+), 23 deletions(-)
 > 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index c0c60e6a1703..4afb9d29f355 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -232,7 +232,7 @@ static void free_event_data(struct work_struct *work)
+>  		if (!(IS_ERR_OR_NULL(*ppath)))
+>  			coresight_release_path(*ppath);
+>  		*ppath = NULL;
+> -		coresight_trace_id_put_cpu_id(cpu);
+> +		coresight_trace_id_put_cpu_id(cpu, coresight_trace_id_map_default());
+>  	}
+>  
+>  	/* mark perf event as done for trace id allocator */
+> @@ -401,7 +401,8 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>  		}
+>  
+>  		/* ensure we can allocate a trace ID for this CPU */
+> -		trace_id = coresight_trace_id_get_cpu_id(cpu);
+> +		trace_id = coresight_trace_id_get_cpu_id(cpu,
+> +							 coresight_trace_id_map_default());
+>  		if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+>  			cpumask_clear_cpu(cpu, mask);
+>  			coresight_release_path(path);
+> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> index 9d5c1391ffb1..4149e7675ceb 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> @@ -465,7 +465,8 @@ int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
+>  	 *
+>  	 * trace id function has its own lock
+>  	 */
+> -	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu);
+> +	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu,
+> +						 coresight_trace_id_map_default());
+>  	if (IS_VALID_CS_TRACE_ID(trace_id))
+>  		drvdata->traceid = (u8)trace_id;
+>  	else
+> @@ -477,7 +478,7 @@ int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
+>  
+>  void etm_release_trace_id(struct etm_drvdata *drvdata)
+>  {
+> -	coresight_trace_id_put_cpu_id(drvdata->cpu);
+> +	coresight_trace_id_put_cpu_id(drvdata->cpu, coresight_trace_id_map_default());
+>  }
+>  
+>  static int etm_enable_perf(struct coresight_device *csdev,
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index a0bdfabddbc6..f32c8cd7742d 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -241,7 +241,8 @@ int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
+>  	 * or return the one currently allocated.
+>  	 * The trace id function has its own lock
+>  	 */
+> -	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu);
+> +	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu,
+> +						 coresight_trace_id_map_default());
+>  	if (IS_VALID_CS_TRACE_ID(trace_id))
+>  		drvdata->trcid = (u8)trace_id;
+>  	else
+> @@ -253,7 +254,7 @@ int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
+>  
+>  void etm4_release_trace_id(struct etmv4_drvdata *drvdata)
+>  {
+> -	coresight_trace_id_put_cpu_id(drvdata->cpu);
+> +	coresight_trace_id_put_cpu_id(drvdata->cpu, coresight_trace_id_map_default());
+>  }
+>  
+>  struct etm4_enable_arg {
 > diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-> index af5b4ef59cea..19005b5b4dc4 100644
+> index 19005b5b4dc4..45ddd50d09a6 100644
 > --- a/drivers/hwtracing/coresight/coresight-trace-id.c
 > +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2022, Linaro Limited, All rights reserved.
->   * Author: Mike Leach <mike.leach@linaro.org>
->   */
-> +#include <linux/coresight.h>
->  #include <linux/coresight-pmu.h>
->  #include <linux/cpumask.h>
->  #include <linux/kernel.h>
+> @@ -12,7 +12,7 @@
+>  
+>  #include "coresight-trace-id.h"
+>  
+> -/* Default trace ID map. Used on systems that don't require per sink mappings */
+> +/* Default trace ID map. Used in sysfs mode and for system sources */
+>  static struct coresight_trace_id_map id_map_default;
+>  
+>  /* maintain a record of the mapping of IDs and pending releases per cpu */
+> @@ -152,7 +152,7 @@ static void coresight_trace_id_release_all_pending(void)
+>  	DUMP_ID_MAP(id_map);
+>  }
+>  
+> -static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+>  {
+>  	unsigned long flags;
+>  	int id;
+> @@ -195,8 +195,9 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
+>  	DUMP_ID_MAP(id_map);
+>  	return id;
+>  }
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+>  
+> -static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+>  {
+>  	unsigned long flags;
+>  	int id;
+> @@ -222,6 +223,7 @@ static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id
+>  	DUMP_ID_CPU(cpu, id);
+>  	DUMP_ID_MAP(id_map);
+>  }
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+>  
+>  static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *id_map)
+>  {
+> @@ -250,19 +252,11 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+>  	DUMP_ID_MAP(id_map);
+>  }
+>  
+> -/* API functions */
+> -
+> -int coresight_trace_id_get_cpu_id(int cpu)
+> -{
+> -	return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
+> -}
+> -EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+> -
+> -void coresight_trace_id_put_cpu_id(int cpu)
+> +struct coresight_trace_id_map *coresight_trace_id_map_default(void)
+>  {
+> -	coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
+> +	return &id_map_default;
+>  }
+> -EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_map_default);
+>  
+>  int coresight_trace_id_read_cpu_id(int cpu)
+>  {
 > diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-> index 3797777d367e..49438a96fcc6 100644
+> index 49438a96fcc6..54b9d8ed903b 100644
 > --- a/drivers/hwtracing/coresight/coresight-trace-id.h
 > +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-> @@ -32,10 +32,6 @@
->  #include <linux/bitops.h>
->  #include <linux/types.h>
->  
-> -
-> -/* architecturally we have 128 IDs some of which are reserved */
-> -#define CORESIGHT_TRACE_IDS_MAX 128
-> -
->  /* ID 0 is reserved */
->  #define CORESIGHT_TRACE_ID_RES_0 0
->  
-> @@ -46,21 +42,6 @@
+> @@ -42,7 +42,10 @@
 >  #define IS_VALID_CS_TRACE_ID(id)	\
 >  	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
 >  
-> -/**
-> - * Trace ID map.
-> - *
-> - * @used_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
-> - *		Initialised so that the reserved IDs are permanently marked as
-> - *		in use.
-> - * @pend_rel_ids: CPU IDs that have been released by the trace source but not
-> - *		  yet marked as available, to allow re-allocation to the same
-> - *		  CPU during a perf session.
-> - */
-> -struct coresight_trace_id_map {
-> -	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
-> -	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
-> -};
-> -
->  /* Allocate and release IDs for a single default trace ID map */
->  
->  /**
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index f09ace92176e..c16c61a8411d 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -218,6 +218,24 @@ struct coresight_sysfs_link {
->  	const char *target_name;
->  };
->  
-> +/* architecturally we have 128 IDs some of which are reserved */
-> +#define CORESIGHT_TRACE_IDS_MAX 128
-> +
+> -/* Allocate and release IDs for a single default trace ID map */
 > +/**
-> + * Trace ID map.
-> + *
-> + * @used_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
-> + *		Initialised so that the reserved IDs are permanently marked as
-> + *		in use.
-> + * @pend_rel_ids: CPU IDs that have been released by the trace source but not
-> + *		  yet marked as available, to allow re-allocation to the same
-> + *		  CPU during a perf session.
+> + * Get the global map that's used by sysfs
 > + */
-> +struct coresight_trace_id_map {
-> +	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
-> +	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
-> +};
-> +
+> +struct coresight_trace_id_map *coresight_trace_id_map_default(void);
+>  
 >  /**
->   * struct coresight_device - representation of a device as used by the framework
->   * @pdata:	Platform data with device connections associated to this device.
+>   * Read and optionally allocate a CoreSight trace ID and associate with a CPU.
+> @@ -57,7 +60,7 @@
+>   *
+>   * return: CoreSight trace ID or -EINVAL if allocation impossible.
+>   */
+> -int coresight_trace_id_get_cpu_id(int cpu);
+> +int coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
+>  
+>  /**
+>   * Release an allocated trace ID associated with the CPU.
+> @@ -70,7 +73,7 @@ int coresight_trace_id_get_cpu_id(int cpu);
+>   *
+>   * @cpu: The CPU index to release the associated trace ID.
+>   */
+> -void coresight_trace_id_put_cpu_id(int cpu);
+> +void coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map);
+>  
+>  /**
+>   * Read the current allocated CoreSight Trace ID value for the CPU.
