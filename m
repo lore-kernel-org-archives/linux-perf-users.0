@@ -1,138 +1,73 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE0616D32E;
-	Tue,  7 May 2024 14:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BA615FCF0;
+	Tue,  7 May 2024 14:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091213; cv=none; b=JLzbQVTh4g7WQ3NKCxqwxdaDs065pWALb3NcrpHnn46TL8f7zW1hEMaC7m7gjr6JU8MaQd30TR6TPAiYyD8iwz0XXinPoGx87xb8nXbMaeCoNZYNiVQDvOADKn7APmlna/rRj0hJ4mpgy/69UR/Zu3PvdX4UxJzD01CcSFoOw0k=
+	t=1715093580; cv=none; b=aYyywyqMCe4O/VjAzflFYHOt5cZ0rdU4PRmJuP4HwWjW1ilxcy6/J9tdlZ3PK2lgETpr+nF2b763OSH26D08PJfOSMoXTe1fREoMdtt8mKkqrkIWzZJinq33RF9xdvw3H5JNvZ+e9rxMUPz11C2/WxjChi+KZjVOAuqYP1MB2b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091213; c=relaxed/simple;
-	bh=j60Lp76p4GCMge0RHYRlaMeijthkr1haXgYWLgtV6oU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IO6emxOByH9u6Q5Bv/0eVVneLeR4EvvE5zZhrGZjEQjwvBrQWX5lKm+K1NiJnZ1lzm7tgIPvC/W8JqbfmDYFmG+cpIePwm5T79L9sxKIz4g7HmFnF/RnNRRW941uNh54lfBHvrogx2HeOKft7rlosPJinhC4kD7u3/TNvLn2S+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 498F51516;
-	Tue,  7 May 2024 07:13:33 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 687C93F6A8;
-	Tue,  7 May 2024 07:13:05 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	atrajeev@linux.vnet.ibm.com,
-	irogers@google.com
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] perf symbols: Update kcore map before merging in remaining symbols
-Date: Tue,  7 May 2024 15:12:07 +0100
-Message-Id: <20240507141210.195939-4-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240507141210.195939-1-james.clark@arm.com>
-References: <20240507141210.195939-1-james.clark@arm.com>
+	s=arc-20240116; t=1715093580; c=relaxed/simple;
+	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jw6988NMg/jlYH/iJ3Z5OiM/L0q1Jvur3tBXNUQD0YfUtj6uuHMoGLAx3Gm1MnobHgYTcnPwY8Sj38rGqHN+VCeBsUTI5hlf+HNzIt7cyCNXuiPFwT/CgnBL9DZ11s2oog8NtggiYpFRZxnRjav4+5WxG4+H9ti3/Iuae/KMX70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvNPgBvv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvNPgBvv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B756BC4AF63;
+	Tue,  7 May 2024 14:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715093580;
+	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JvNPgBvvlZTMle2tmEciAGw4tri1AC80m9Gm4LuqqYzLzoD5yn/+U4w1lq0hVsEPN
+	 NuNmtC1elTWZev4XncK6IHzUFAxmbg4LwnEV2c9vAfCl5HJiireagp/Ej8oPJKGuul
+	 /6wHXPs9HT5lEn/+xwvxUOqeUwCCUpDzN95f5CsNZGT/7Chke0GafGBJQAcZez/uUq
+	 7poyjgcEqoT6wr6EBEJHitW+ROmlFfZzQBtREzVs2C9YM3212ZkdWRARw8oLHMVc5H
+	 OynWw14pkd5xCPEp01lHucmRHRS0CLawCT4nnn2ZQ71hfKMrdUUgBFHkFabTYqEwrO
+	 EdReYeVrSrymw==
+Date: Tue, 7 May 2024 11:52:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+	adrian.hunter@intel.com, irogers@google.com,
+	segher@kernel.crashing.org, christophe.leroy@csgroup.eu,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+	akanksha@linux.ibm.com
+Subject: Re: [PATCH V2 3/9] tools/perf: Fix a comment about multi_regs in
+ extract_reg_offset function
+Message-ID: <ZjpASVk1GezAzDAG@x1>
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+ <20240506121906.76639-4-atrajeev@linux.vnet.ibm.com>
+ <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
 
-When loading kcore, the main vmlinux map is updated in the same loop
-that merges the remaining maps. If a map that overlaps is merged in
-before kcore, the list can become unsortable when the main map addresses
-are updated. This will later trigger the check_invariants() assert:
+On Mon, May 06, 2024 at 09:40:15PM -0700, Namhyung Kim wrote:
+> On Mon, May 6, 2024 at 5:19 AM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+> >
+> > Fix a comment in function which explains how multi_regs field gets set
+> > for an instruction. In the example, "mov  %rsi, 8(%rbx,%rcx,4)", the
+> > comment mistakenly referred to "dst_multi_regs = 0". Correct it to use
+> > "src_multi_regs = 0"
+> >
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-  $ perf record
-  $ perf report
+Cherry picked this one into perf-tools-next.
 
-  util/maps.c:96: check_invariants: Assertion `map__end(prev) <=
-    map__start(map) || map__start(prev) == map__start(map)' failed.
-  Aborted
+Thanks,
 
-Fix it by moving the main map update prior to the loop so that
-maps__merge_in() can split it if necessary.
-
-Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/symbol.c | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 2d95f22d713d..e98dfe766da3 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1289,7 +1289,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- {
- 	struct maps *kmaps = map__kmaps(map);
- 	struct kcore_mapfn_data md;
--	struct map *replacement_map = NULL;
-+	struct map *map_ref, *replacement_map = NULL;
- 	struct machine *machine;
- 	bool is_64_bit;
- 	int err, fd;
-@@ -1367,6 +1367,24 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 	if (!replacement_map)
- 		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
- 
-+	/*
-+	 * Update addresses of vmlinux map. Re-insert it to ensure maps are
-+	 * correctly ordered. Do this before using maps__merge_in() for the
-+	 * remaining maps so vmlinux gets split if necessary.
-+	 */
-+	map_ref = map__get(map);
-+	maps__remove(kmaps, map_ref);
-+
-+	map__set_start(map_ref, map__start(replacement_map));
-+	map__set_end(map_ref, map__end(replacement_map));
-+	map__set_pgoff(map_ref, map__pgoff(replacement_map));
-+	map__set_mapping_type(map_ref, map__mapping_type(replacement_map));
-+
-+	err = maps__insert(kmaps, map_ref);
-+	map__put(map_ref);
-+	if (err)
-+		goto out_err;
-+
- 	/* Add new maps */
- 	while (!list_empty(&md.maps)) {
- 		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
-@@ -1374,24 +1392,8 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 
- 		list_del_init(&new_node->node);
- 
--		if (RC_CHK_EQUAL(new_map, replacement_map)) {
--			struct map *map_ref;
--
--			/* Ensure maps are correctly ordered */
--			map_ref = map__get(map);
--			maps__remove(kmaps, map_ref);
--
--			map__set_start(map_ref, map__start(new_map));
--			map__set_end(map_ref, map__end(new_map));
--			map__set_pgoff(map_ref, map__pgoff(new_map));
--			map__set_mapping_type(map_ref, map__mapping_type(new_map));
--
--			err = maps__insert(kmaps, map_ref);
--			map__put(map_ref);
--			map__put(new_map);
--			if (err)
--				goto out_err;
--		} else {
-+		/* skip if replacement_map, already inserted above */
-+		if (!RC_CHK_EQUAL(new_map, replacement_map)) {
- 			/*
- 			 * Merge kcore map into existing maps,
- 			 * and ensure that current maps (eBPF)
--- 
-2.34.1
-
+- Arnaldo
