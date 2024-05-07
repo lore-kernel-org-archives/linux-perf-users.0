@@ -1,259 +1,191 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E645E7319F;
-	Tue,  7 May 2024 06:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715064397; cv=none; b=g59ZR3lvqX9hjtkDZzQisJ/Mk4Iv2LxoNguLobmSHpsmIfojr+ZHAglGYeyA4RnvaeorZRUUauo2fx3a0u/9/SKDyNdU7+e5FNLSmqxRjXOX4AkDWKxYJzfT7dDGCrvFLcXlSG/9GEIk2b07hPIsMecAAxjo3TGbA/8uR7qn8kE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715064397; c=relaxed/simple;
-	bh=hqReQ5y+AsWmoo2WxdBboHTU6paScop1RtA5OVQAZTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iJy8O9ZdRDVqHS8RJGAJEm9gFop5oIuYwMuDzNh9Jby/Hx9xdPGw+uTl3j2GpRZu2ZabE6aKYhEAEN5gfLPTGqN4t+kxj0S910GzUEG/RbtWENK03r57qYta/QuhhPHGTa9bqSm5qJLzizZqdXVsz09wWqoMThW6yo+gW08ABiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF670106F;
-	Mon,  6 May 2024 23:46:59 -0700 (PDT)
-Received: from [10.163.37.41] (unknown [10.163.37.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D1053F587;
-	Mon,  6 May 2024 23:46:25 -0700 (PDT)
-Message-ID: <1d2e50f0-d7d3-4392-8f2c-48eeb59d60c3@arm.com>
-Date: Tue, 7 May 2024 12:16:27 +0530
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF3F78C80;
+	Tue,  7 May 2024 06:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715064680; cv=fail; b=DS5cZ8fRKBVJO2L8sOD5itrFNrwjJKaDbfEynqyyfl87kH9dp0smnk7N/vGYancEqt+GNjma+iZGEqUU5tn3Ym4x9oE1AdbI+h76WXXY0I1IQaPpjlz1b8/TgBeeLFZDRqVq49eIcY0xkV8pbzadeBLNpWvnlBEb3pdmT7lH35I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715064680; c=relaxed/simple;
+	bh=1Dp0rj2DrTlLgwwVQwKLTLlnGy9rldBAuqR4G563msA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=URdJ1MPtHAqWbHGYU0UNjmmb5zwJPQ01SkgbdzjN28Z3Imv1IilQpTwNMMSk4JLeLGU3H/dFRr+BjSHLLfe4QYEpMRNiEasQtReahycXdAPfMR0VHIQCr6/D7GCMEgOqrjEzQDNEsXhHWMZ99PCyKhs7fDMl2PqvJ7lWCN4llGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=jQ3XW17S; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="jQ3XW17S"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446MrNaj017227;
+	Tue, 7 May 2024 06:50:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=PPS06212021; bh=FglXVag+D07sMukdmz
+	IeUeteF4/gtq3w2rdSmQmDIU8=; b=jQ3XW17S+rWe3k5unBFnv+GRhn8SS6aoHZ
+	vuhgnP0a3LZMwYQCEyiAgvtJ6KUa1OBPsXW3c3B+fSCpZMt3eB/A4T7XT7kjUHiJ
+	EThevmbi+rxJyRbTRZ53eH21NnC4jUMKFYGL+KE6DIjDZW5LW1hOah9dnluR0Aln
+	+tHqcuh8sLoDRTeut4ySqpBgzDU1UieS4aj4RUv5A45gusFWIKe3ndOugs3cwY8K
+	RBZrrdYjuffK3xwR1syWpJKHVAlLNqMmoitAylt416ylzRVcco+z9erDmILkhz1A
+	6OW49Qf0rOzlXxV/V4Gzqc+tQ5Buv4v0ZWsWv5r3YfTleURXHLQw==
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3xwc052h1g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 06:50:53 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TzaTMafchkoqiomNQogj7JCYBL4GPaD2Qyh3xGaOQrpjpxbMsrzTBmsU2L1GydO6SgVptrSv+14VC590bh9yDQ+5oNXxvtExs3+e42SL2KqwkzddqYlfY72xlPY807wSDpk6U4VYCBcqnQW9EukP3cq0iWfIuehF5EK5z8oB1UpSjEZ5de85otQkjNbP9rd1VdH7BTakF2xI69LdCnF5bRL7jM2SSbVXf3F18xMTIpBqkuAlP33kCfCkhCCjFqMKTdE+VkWGS6NxSwhq4BpaOSAHBAI3Us6ApIRW7cim/Qfz2h3IVNIPm6+CZU+NM59Wg9/vtoIO/0sdhbwCyDYBBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FglXVag+D07sMukdmzIeUeteF4/gtq3w2rdSmQmDIU8=;
+ b=jNxCOCM97t6OC71sy8pNcogsk0twsHDzBdo050XopzlFZO6prgU63y71ntDf2VyzjkgLlKVBSnxAMkhX5HajhDlmpefW73vk0SZzU++voMuZIUAOGg3Y8SgYNxB+dRvZl3G9znfQhbVHFDn6Sp7Yk9PgCfTVYJzQEWuSKmwT/FqW2zoIAD5IeJd3bRyJUJHOy0dz77tWMLCtJF68majhwS8qpQ3hKJqQnIjf1dRXWBJPVYNeYOzVOEyrW2YNz88vtiPcADL+80n7e7QjqrTFenQgD5jRLxPsyujxXwoR+rDLGgnkBt/Le/F3D7TL0bOBeK+6xuxQs57hqbcZtAMJow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from SA3PR11MB7527.namprd11.prod.outlook.com (2603:10b6:806:314::20)
+ by DM4PR11MB6019.namprd11.prod.outlook.com (2603:10b6:8:60::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7544.41; Tue, 7 May 2024 06:50:50 +0000
+Received: from SA3PR11MB7527.namprd11.prod.outlook.com
+ ([fe80::9135:7397:16e6:258c]) by SA3PR11MB7527.namprd11.prod.outlook.com
+ ([fe80::9135:7397:16e6:258c%3]) with mapi id 15.20.7544.036; Tue, 7 May 2024
+ 06:50:49 +0000
+From: He Zhe <zhe.he@windriver.com>
+To: namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com
+Cc: zhe.he@windriver.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf bench: Fix trap divide error of perf bench internals inject-build-id
+Date: Tue,  7 May 2024 14:50:26 +0800
+Message-Id: <20240507065026.2652929-1-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0047.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::15) To SA3PR11MB7527.namprd11.prod.outlook.com
+ (2603:10b6:806:314::20)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/17] coresight: Pass trace ID map into source enable
-Content-Language: en-US
-To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
- coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-15-james.clark@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240429152207.479221-15-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR11MB7527:EE_|DM4PR11MB6019:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05bac93f-ed66-4e3e-a275-08dc6e620737
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?nuBVVulkUsmSlbwSawQ/ao9FLVFkigFWbMeYrY9k7iSZHQIZJ/PR4h1SZ1XH?=
+ =?us-ascii?Q?ZUCPgwxWXDNXuSR2G+U8DgVvjT1/2Vsyk2KtVOqDpG8IERs1BIbq/Y0+OYJs?=
+ =?us-ascii?Q?T2D+fJRcBr6zfF4B1a6SXF2dPj8pydqApkct4doAIj71XPgSAXsTA2f8/d0n?=
+ =?us-ascii?Q?DrwILAzw8jtEFA2TLJ4z+fE7kYAT/9uNbmfpXRsbyrAE4BSzqOyyA9vqwbNG?=
+ =?us-ascii?Q?7ENcBSM1JcJQXa14tYsDM4ByqVTmmPsIfjrhBpJELbfde7flHNpE5QEV70eo?=
+ =?us-ascii?Q?C4Q5+CCh/hxu0UCClSy2FwFZrzaFtMFJNWIMQyEncd7kIYBxb1+TQIxB+4vg?=
+ =?us-ascii?Q?YbztiwGbcmxgHIWR9sg+Qyl7/fGrR2e0uFnXnWJ3SzciryQXunMS+qVtnA61?=
+ =?us-ascii?Q?50do3U8MBvtsY0Tto3GRrp1qicVK5S1G7V5ZCAkzax0lUDYV6rdyt01RE+nj?=
+ =?us-ascii?Q?jYtCFVcmWpqZBReJPfJfUkGTfChjLouFYB/1VS6MCOCxrPrmS77sjnzWN+A/?=
+ =?us-ascii?Q?+oKRaBd9IUu35+cKvZzs0R9wIeKBtZ5UA67zkULH7thO5bBfdJVjO4EPwkSk?=
+ =?us-ascii?Q?/fY3C3OoxLLHtXDkCpYgWmY+J6yYw0VjmgHItE/pH+pWmkVo51rF+B64S/yO?=
+ =?us-ascii?Q?kDtI1PZkJiNPdAZcF0R/UnGuAOq5GWtUIjoBCkyxGSF5zjyK775SfkFW6GFM?=
+ =?us-ascii?Q?xshJHxjyVUmJNrOXu8+UNLkEZiY7jv8WQiCqamQm06mdSSakEb1N/mgAWMLQ?=
+ =?us-ascii?Q?fZj71O6hP4qnBrNjeU4N7yfBCICIHjd+GtKj//LRxfeK0zKw9wPDm0HwS/9/?=
+ =?us-ascii?Q?wIBQFvhw0JlSaVfz2RJW/75FmQNHmvAKpbza84f2UdxL/SUpbVeo6yR37ghI?=
+ =?us-ascii?Q?B+xYrE4I9C0dtTru4NV4CwrVWiJ7f+l2ZOvAs54TL9k+3DQTL9b3PRHZsiEF?=
+ =?us-ascii?Q?l8Qhnciqun6aMm2BH5gUY5zYzkL4U6ipDkIRDqNr0UN84LeP7w66TX+TYc/3?=
+ =?us-ascii?Q?SqBARiF805uwFFBbruqJXcFqNCVhbOBlEeqysi/yZlQNOjPUNa/495/Mr4Mg?=
+ =?us-ascii?Q?63QHEdl6t9KjqKSfsmWgjA+sZBby2QEB/WqVvZr+xn6TDXXswDffbNHyyl12?=
+ =?us-ascii?Q?I3VFm0AYa4PMYrRLr8c0s5XBqjIwwD49daKTp1e6QX2rqrFl31sVSf0lzSGY?=
+ =?us-ascii?Q?5wzDCyPRXZWT/ibpIDBGtzHYrH680Elb1VZSiIoKSIjmaFVheZZFyG3xz0SB?=
+ =?us-ascii?Q?eWlrMVa3qJS8nixEy7rsb260wDVf2a/0VD/v+LI0YbuwVLCJXBaaU0ZhISg2?=
+ =?us-ascii?Q?v8EEdwBVDiVsT4lQPk6z79NeGqd2LrUO/lq7imEkcgZmAQ=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB7527.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?SY0GFv9QyjVFykE8k8r6Da7VhCcuwV2d7wJGKYiPgEzdtKipTHoJElqhKwER?=
+ =?us-ascii?Q?p1nS5q4pxKn1YPrG8wLcN0SPqBJ9LtrojQLGy/jDYAUlQxUvNGvVbKT8nQP/?=
+ =?us-ascii?Q?RAro9237Y2jAjE/oct+OKy7E6PgM81s70pfNqpBGrk2gTo8dhhAX4KFvYVwX?=
+ =?us-ascii?Q?FuJ4nXtrXLKurUDV/iqGlhXX1eP1qg0S9vXw6PPnC6USa2aE92/bFB0lZDOR?=
+ =?us-ascii?Q?D1ck7cJiKVrRarWzWg3jCgmmq8C3AK+20wc3bWQb61g2itTsk03aB/rItcnx?=
+ =?us-ascii?Q?H37coh+u7z3tq0dUVX8gQVysRtOErNQfjLXlxCOoEfJubOuoHUiRf1Bs/i83?=
+ =?us-ascii?Q?Pq5qDvZfc5hGyh5NjNZQwIWHV+9ttyEFsTofSe2qXMDHVuELpBxdrJ2/tDXi?=
+ =?us-ascii?Q?XSkIdFUdexeGmyJ5BOPR7ytGz5EE/d5e3tLg/S6emup8SlMj9SGYDuonLktX?=
+ =?us-ascii?Q?lVmpOJM1EOD7wk0soz2fxuzjf8LWHE36/j4tjUJ4lf7JZhnIP0SqeC868bif?=
+ =?us-ascii?Q?q/ERhllAW0MrtkIz7WiwUn+mgdwCZZiA0+gNlKg3C/8bJB7HmtC2mcMIrAV8?=
+ =?us-ascii?Q?ZRgwNEEqgAVbxOsGXsc7YfRtV+lHsJzITp8kLNhpwUhfeNF02hWDbzmhCoo6?=
+ =?us-ascii?Q?kKi1BIjS3Gou+OZnGhWZsOlmN5DhUUcFTQzUeTeGKXo7LtFCG7XhCtr+PT8g?=
+ =?us-ascii?Q?L2Saq8kPQkRdsNMpsj/E0MvwLp9PPP4QiVgvEHS5cU2+WiI5zRUyUJsThN55?=
+ =?us-ascii?Q?SBEPF/e0XM6Wr1A98D+4OYgE1bdIzPU21VBhyyySK7aup2ClrU2PejBpjZT4?=
+ =?us-ascii?Q?Rii1FNVAdejfqRrq7MajP4XjkmLVKvGPWmwHk9ksIzYYXTiX1F9ESrXnVAcg?=
+ =?us-ascii?Q?uMjujmOBmeSd5Ggrl0FBMZ+A067xU/avV4fMiIIQhSRxecGeicqr8VzOfgBB?=
+ =?us-ascii?Q?+ZyzaCYa2aRDrTKIHSoldkugUmVjWUm7rKTSBUF30jwAikf9koRIUF1eEtrU?=
+ =?us-ascii?Q?/AZ1Mvc+qTGbb4vSSc6YenUJ9500xr+UR30ZsZhfXInEvEGoA/MGIlhUgyUP?=
+ =?us-ascii?Q?QLW1lJVD2dtbBPblzPYA50RJl4QBxlzBLwJbtL0ICJ07TLosq0qBHo8H57Jz?=
+ =?us-ascii?Q?QWWWvBKZoMOcq7hd/OTQKBsrMsJEtRAvibfVZKYIr7xulZvgBKfKx4pNAmPI?=
+ =?us-ascii?Q?GMz+t0AguuXS/WD9F+Cr/br+qCl+k58SOr33U+yVntaXybJ21C5amhn7ldA6?=
+ =?us-ascii?Q?oGfY2aY1HxGjBuBBD5oRPfWyeZtG4uuTBlBW4KSyqLMU95+7fa00Hj9fschL?=
+ =?us-ascii?Q?R5zBYHiiB9q5hru5NVix2PhXynuAkP8ZLvrEff9TK7ToTIBreFEGCiacG4oh?=
+ =?us-ascii?Q?s2zs06O2t/MpXz+FVupayI09vO465dz2tklADCK7CVleda2q2wJf2B+eZVUU?=
+ =?us-ascii?Q?FIGMupC7h9LzxpgpO4Z3Hk/39QvF76lBmpnEsa+15I4Y6PF+89U3rQ6wy9oc?=
+ =?us-ascii?Q?tPAOfZk+Val+vNB8qGPBOVXHVhZZCfC50nQuTQZ6k9alRaiJ5kuKmlqMMqxs?=
+ =?us-ascii?Q?mDOIqQC20MJfunEhU96Ua1ZcD54RPSGfsWLZGuoO?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05bac93f-ed66-4e3e-a275-08dc6e620737
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB7527.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 06:50:49.0415
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1RgLr+tG+qPVwYVC+0+sAXKn/WU9fXD5cwOV4lGWm1cOaC613SYrxiG040BGWW3UqAckV02Vx8C8VbAUmjDdxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6019
+X-Proofpoint-ORIG-GUID: yXRIa_82cqGIDP4xKt32oqVefADkagrJ
+X-Proofpoint-GUID: yXRIa_82cqGIDP4xKt32oqVefADkagrJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_02,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2405070046
 
+perf bench internals inject-build-id suffers from the following error when
+only one DSO is collected.
 
+perf bench internals inject-build-id -v
+  Collected 1 DSOs
+traps: internals-injec[2305] trap divide error
+ip:557566ba6394 sp:7ffd4de97fe0 error:0 in perf[557566b2a000+23d000]
+  Build-id injection benchmark
+  Iteration #1
+Floating point exception
 
-On 4/29/24 20:51, James Clark wrote:
-> This will allow Perf mode to pass in per-sink maps. System sources
-> allocate IDs on probe so they don't use this and it's __maybe_unused.
+This patch removes the unnecessary minus one from the divisor which also
+corrects the randomization range.
 
-Right, makes sense.
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+ tools/perf/bench/inject-buildid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Sysfs mode also has the global map hard coded in various places, so pass
-> in NULL when enabling for sysfs. We could bubble the global map all the
-> way down to where it's used, but it wouldn't have any functional
-> difference, so it's probably not worth the code churn.
+diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
+index 49331743c743..a759eb2328be 100644
+--- a/tools/perf/bench/inject-buildid.c
++++ b/tools/perf/bench/inject-buildid.c
+@@ -362,7 +362,7 @@ static int inject_build_id(struct bench_data *data, u64 *max_rss)
+ 		return -1;
+ 
+ 	for (i = 0; i < nr_mmaps; i++) {
+-		int idx = rand() % (nr_dsos - 1);
++		int idx = rand() % nr_dsos;
+ 		struct bench_dso *dso = &dsos[idx];
+ 		u64 timestamp = rand() % 1000000;
+ 
+-- 
+2.25.1
 
-Agreed.
-
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-dummy.c      |  3 ++-
->  drivers/hwtracing/coresight/coresight-etm-perf.c   |  3 ++-
->  drivers/hwtracing/coresight/coresight-etm3x-core.c | 10 +++++-----
->  drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 +++++-----
->  drivers/hwtracing/coresight/coresight-stm.c        |  3 ++-
->  drivers/hwtracing/coresight/coresight-sysfs.c      |  3 ++-
->  drivers/hwtracing/coresight/coresight-tpdm.c       |  3 ++-
->  include/linux/coresight.h                          |  2 +-
->  8 files changed, 21 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
-> index ac70c0b491be..1f1b9ad160f6 100644
-> --- a/drivers/hwtracing/coresight/coresight-dummy.c
-> +++ b/drivers/hwtracing/coresight/coresight-dummy.c
-> @@ -21,7 +21,8 @@ DEFINE_CORESIGHT_DEVLIST(source_devs, "dummy_source");
->  DEFINE_CORESIGHT_DEVLIST(sink_devs, "dummy_sink");
->  
->  static int dummy_source_enable(struct coresight_device *csdev,
-> -			       struct perf_event *event, enum cs_mode mode)
-> +			       struct perf_event *event, enum cs_mode mode,
-> +			       __maybe_unused struct coresight_trace_id_map *id_map)
->  {
->  	dev_dbg(csdev->dev.parent, "Dummy source enabled\n");
->  
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 25f1f87c90d1..177cecae38d9 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -496,7 +496,8 @@ static void etm_event_start(struct perf_event *event, int flags)
->  		goto fail_end_stop;
->  
->  	/* Finally enable the tracer */
-> -	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
-> +	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF,
-> +				      coresight_trace_id_map_default()))
->  		goto fail_disable_path;
->  
->  	/*
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> index b21f5ad94e63..b310bdf19038 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> @@ -482,7 +482,8 @@ void etm_release_trace_id(struct etm_drvdata *drvdata)
->  }
->  
->  static int etm_enable_perf(struct coresight_device *csdev,
-> -			   struct perf_event *event)
-> +			   struct perf_event *event,
-> +			   struct coresight_trace_id_map *id_map)
->  {
->  	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->  	int trace_id;
-> @@ -501,8 +502,7 @@ static int etm_enable_perf(struct coresight_device *csdev,
->  	 * with perf locks - we know the ID cannot change until perf shuts down
->  	 * the session
->  	 */
-> -	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu,
-> -						  coresight_trace_id_map_default());
-> +	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu, id_map);
->  	if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->  		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
->  			dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> @@ -555,7 +555,7 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
->  }
->  
->  static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -		      enum cs_mode mode)
-> +		      enum cs_mode mode, struct coresight_trace_id_map *id_map)
->  {
->  	int ret;
->  	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> @@ -570,7 +570,7 @@ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
->  		ret = etm_enable_sysfs(csdev);
->  		break;
->  	case CS_MODE_PERF:
-> -		ret = etm_enable_perf(csdev, event);
-> +		ret = etm_enable_perf(csdev, event, id_map);
->  		break;
->  	default:
->  		ret = -EINVAL;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index d16d6efb26fa..02dbb6c4daf5 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -753,7 +753,8 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->  }
->  
->  static int etm4_enable_perf(struct coresight_device *csdev,
-> -			    struct perf_event *event)
-> +			    struct perf_event *event,
-> +			    struct coresight_trace_id_map *id_map)
->  {
->  	int ret = 0, trace_id;
->  	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> @@ -776,8 +777,7 @@ static int etm4_enable_perf(struct coresight_device *csdev,
->  	 * with perf locks - we know the ID cannot change until perf shuts down
->  	 * the session
->  	 */
-> -	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu,
-> -						  coresight_trace_id_map_default());
-> +	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu, id_map);
->  	if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->  		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
->  			dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> @@ -839,7 +839,7 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
->  }
->  
->  static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
-> -		       enum cs_mode mode)
-> +		       enum cs_mode mode, struct coresight_trace_id_map *id_map)
->  {
->  	int ret;
->  
-> @@ -853,7 +853,7 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
->  		ret = etm4_enable_sysfs(csdev);
->  		break;
->  	case CS_MODE_PERF:
-> -		ret = etm4_enable_perf(csdev, event);
-> +		ret = etm4_enable_perf(csdev, event, id_map);
->  		break;
->  	default:
->  		ret = -EINVAL;
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index e1c62820dfda..a80ad1de4c23 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -194,7 +194,8 @@ static void stm_enable_hw(struct stm_drvdata *drvdata)
->  }
->  
->  static int stm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -		      enum cs_mode mode)
-> +		      enum cs_mode mode,
-> +		      __maybe_unused struct coresight_trace_id_map *trace_id)
->  {
->  	struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->  
-> diff --git a/drivers/hwtracing/coresight/coresight-sysfs.c b/drivers/hwtracing/coresight/coresight-sysfs.c
-> index 1e67cc7758d7..a01c9e54e2ed 100644
-> --- a/drivers/hwtracing/coresight/coresight-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-sysfs.c
-> @@ -9,6 +9,7 @@
->  #include <linux/kernel.h>
->  
->  #include "coresight-priv.h"
-> +#include "coresight-trace-id.h"
->  
->  /*
->   * Use IDR to map the hash of the source's device name
-> @@ -63,7 +64,7 @@ static int coresight_enable_source_sysfs(struct coresight_device *csdev,
->  	 */
->  	lockdep_assert_held(&coresight_mutex);
->  	if (coresight_get_mode(csdev) != CS_MODE_SYSFS) {
-> -		ret = source_ops(csdev)->enable(csdev, data, mode);
-> +		ret = source_ops(csdev)->enable(csdev, data, mode, NULL);
->  		if (ret)
->  			return ret;
->  	}
-> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
-> index a9708ab0d488..0376ad326a2f 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpdm.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpdm.c
-> @@ -439,7 +439,8 @@ static void __tpdm_enable(struct tpdm_drvdata *drvdata)
->  }
->  
->  static int tpdm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -		       enum cs_mode mode)
-> +		       enum cs_mode mode,
-> +		       __maybe_unused struct coresight_trace_id_map *id_map)
->  {
->  	struct tpdm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->  
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 7d62b88bfb5c..3a678e5425dc 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -384,7 +384,7 @@ struct coresight_ops_link {
->  struct coresight_ops_source {
->  	int (*cpu_id)(struct coresight_device *csdev);
->  	int (*enable)(struct coresight_device *csdev, struct perf_event *event,
-> -		      enum cs_mode mode);
-> +		      enum cs_mode mode, struct coresight_trace_id_map *id_map);
->  	void (*disable)(struct coresight_device *csdev,
->  			struct perf_event *event);
->  };
-
-LGTM
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
