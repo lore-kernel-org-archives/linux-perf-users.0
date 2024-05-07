@@ -1,93 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D9413AA3C;
-	Tue,  7 May 2024 23:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749131A2C05;
+	Tue,  7 May 2024 23:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122865; cv=none; b=l/Hvjd6fqSb1qX/InDUYsEphvkxOW45Gses05T3RaXdYI2pNBJHSAbuULoW6NWjiFNyQXWOpPY7y4tSfCgxvv1DcWi2NYsU54D5E3AGPYBaIh6Kzlzu9FLY10qkiPl4UJcCL4puL9DnvQHWGnc1mZIPqXKaeh9Wj7EPs94QQndw=
+	t=1715126276; cv=none; b=eBmNx3rIAmWjLXAaxwKooylMs2jPrXG/9qU+R91s6qh99R5EFGe0qZqY0KJeThO3Z8DRmFhkhp0Xse+ATgilHnl/fEOyUJnSvlHCSa5S9aDJLVHcT618JhsM91odD4xfF6BF34MxtdIPHP0ZORZ74H3QHh7jfANe7bcR7A5b2gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715122865; c=relaxed/simple;
-	bh=HfHC/IKjd29RyVoUIyYS/IWsYCa94QbsfVMu+nM6rjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sguLiqkOlKaH5VDfBxGeOFJKUzT+phdA3PUJ7r2/EDD18l874esYtxIRLHC4RPxYwY6ulj9uZVTcipDU1Dr3NPRMqcVCLiohkIzl5AfQ3jNMNaGsCIASeafBd04Juqb703FvthwGcsGCjzuM+yGnqpo2UhVQwGbs1l6bgxt23L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjQtPh/w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715126276; c=relaxed/simple;
+	bh=u4y6bm9T98w2O0nxzxQv6wXthaTemHVgGjKBpl1iA6w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=O5ErDjH9+SO/W1x1YeOfgJpCBtEBmeq2Wf0G5HbvhKEkrDrSPl7RQETadFWLvSEkGsFJFTHYu/1bZ/8tRRblvCt/1aYYg369w1+ffH7UqKphlWWivZBGhdB6HBgNLOlo3kJqfIbcFVqDneMJ8/uVKxYaWt0OuWMiGpgQfEJe3/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROawISFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjQtPh/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C3FC4AF17;
-	Tue,  7 May 2024 23:01:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROawISFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A345C2BBFC;
+	Tue,  7 May 2024 23:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715122865;
-	bh=HfHC/IKjd29RyVoUIyYS/IWsYCa94QbsfVMu+nM6rjo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YjQtPh/wc73G9sIeF8iIwUWpChX14DizXYzxXkjx9qxQCCjFe+WiP/kQrfQZ/IsL1
-	 eh3fiXdmDZrUnu2OXNgtJe/dC4Y1GxbZvQqU+SMlKBScXef/KsVM4kok4Ug/aKW5RP
-	 WASWHgVYA3wnv0/AxPNbkM118Pp6EX2gOzLDhEUxAFi+Fk7QGSRAGaIcHHvK3MbvRF
-	 iD5pS3msY1DMcoIpOM10NxRbj8BrGkV8DfEybCNptzYIJ2t916KT/P+PQWEgujzG9O
-	 IiGYxVgQK6k2TljA3BMoLSn9ypiDo/kilRdcJJuXztpcHCbXLgWLKY//msoe/+1C+d
-	 75/SSiCpiJ8xQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Bibo Mao <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	chenhuacai@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 10/12] LoongArch: Lately init pmu after smp is online
-Date: Tue,  7 May 2024 19:00:12 -0400
-Message-ID: <20240507230031.391436-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507230031.391436-1-sashal@kernel.org>
-References: <20240507230031.391436-1-sashal@kernel.org>
+	s=k20201202; t=1715126276;
+	bh=u4y6bm9T98w2O0nxzxQv6wXthaTemHVgGjKBpl1iA6w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ROawISFcDVWDM6CB2v8B6Kf6rcPEdS68hDm1K4EQ6Ao2C8WGuvVDCBcBVlpx3nrP6
+	 CDdaUpYETWj26vVqx0ZJiB4x3jsXQ8kKi/9omhioCmpopL/kIiaYLVWMQkbVtlOBmA
+	 esDvDYxxkvVAS7mFjKqZlNlpQnEfabauWgEXeFtlpk6b0KXKQKAVPv0TUjL7cHgDVL
+	 Rc3evIbaVvvsW/zBvgNcT+2SCSgfaVDZoBVnnyEc8MF+C6HAwitVONt/rVKvw2vPG3
+	 Cws/IbXzJLhpzarrTYtCe3/snSPrm5+xtBbnGZ7PzmJrXEvWy4FTVJZgz977eSobT0
+	 HLQH1UpJFbr1A==
+Date: Wed, 8 May 2024 08:57:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
+ <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] perf dwarf-aux: Print array type name with "[]"
+Message-Id: <20240508085751.a1a5dbd31e1fa7d4e80cdd85@kernel.org>
+In-Reply-To: <20240507041338.2081775-1-namhyung@kernel.org>
+References: <20240507041338.2081775-1-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.90
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Bibo Mao <maobibo@loongson.cn>
+On Mon,  6 May 2024 21:13:38 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-[ Upstream commit f3334ebb8a2a1841c2824594dd992e66de19deb2 ]
+> It's confusing both pointers and arrays are printed as *.  Let's print
+> array types with [] so that we can identify them easily.  Although it's
+> interchangable, sometimes it can cause confusion with size like in the
+> below example.
+> 
+> Note that it is not the same with C syntax where it goes to the variable
+> names, but we want to have it in the type names (like in Go language).
+> 
+> Before:
+>   mov [20] 0x68(reg5) -> reg0 type='struct page**' size=0x80 (die:0x4e61d32)
+> 
+> After:
+>   mov [20] 0x68(reg5) -> reg0 type='struct page*[]' size=0x80 (die:0x4e61d32)
+> 
 
-There is an smp function call named reset_counters() to init PMU
-registers of every CPU in PMU initialization state. It requires that all
-CPUs are online. However there is an early_initcall() wrapper for the
-PMU init funciton init_hw_perf_events(), so that pmu init funciton is
-called in do_pre_smp_initcalls() which before function smp_init().
-Function reset_counters() cannot work on other CPUs since they haven't
-boot up still.
+Good improvement!
 
-Here replace the wrapper early_initcall() with pure_initcall(), so that
-the PMU init function is called after every cpu is online.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/kernel/perf_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you!
 
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 3a2edb157b65a..1563bf47f3e2c 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -884,4 +884,4 @@ static int __init init_hw_perf_events(void)
- 
- 	return 0;
- }
--early_initcall(init_hw_perf_events);
-+pure_initcall(init_hw_perf_events);
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index c0a492e65388..ec988f294497 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1110,8 +1110,10 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+>  	const char *tmp = "";
+>  
+>  	tag = dwarf_tag(type_die);
+> -	if (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)
+> +	if (tag == DW_TAG_pointer_type)
+>  		tmp = "*";
+> +	else if (tag == DW_TAG_array_type)
+> +		tmp = "[]";
+>  	else if (tag == DW_TAG_subroutine_type) {
+>  		/* Function pointer */
+>  		return strbuf_add(buf, "(function_type)", 15);
+> -- 
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
