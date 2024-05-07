@@ -1,57 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ADA18733E;
-	Tue,  7 May 2024 20:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93AF58AB8
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 21:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715115102; cv=none; b=UAgiXrob9CjW2pYXs+unwarTTYHXnrF4qy4oTSs8swsy4ouPpLEru65xoKc4i6wRd/iK6guDamB4tkAoD0yv4OigL8idpAahx8y/jvHDD9VVDIA+u5KypgeJ/KAJ20C9Mp34CiERTELtHEHX7zsbB2INDM6sJbhsUk7b8yBCC3E=
+	t=1715115717; cv=none; b=A2jWYGW0aNPUMqYnBk+t2XgZrZSZHUadpHV2KaiXiKFOKHXKt9Xi/zhqTWLue2RRFUEQnQThcAm4d6Nh75o2GKYQsdpSMGw4AFGj5GzPCR0EebQ5Gc4/gEBllN4mVsTZv9/QdlalwebrRKR9upwddBkrs3fNZsfSozxd3RlNRFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715115102; c=relaxed/simple;
-	bh=z/n9T5ppUUSRMEJ5Mi5N2EZQnWL+K906LwUS78beWj8=;
+	s=arc-20240116; t=1715115717; c=relaxed/simple;
+	bh=JiWno9R6/bTX27Lyw4lnPCe5j/IzJx7mLRUg0SFwwzA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDeyOww1EnrrOytuFk0cWoMH+0OYt8ZX0yPFIS1iZM1Mvg+eVB92mKWODkMLohjPpbSlWBMOPm6p4vwaDMhKv9W6468sEggxErBfF27IjkmIIpRV4K12ztrR6lM91SC4uo6O+dZWK1Pn36F00/rDd0HDFKfqTwYAi6mhv5slOEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kd4LdPFK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MXeTWJe1kQ0QOJYIsBaLwxuRckM3bApQQM/zvUEt/VgxmZ5ZmbyFD5KGO58d6G/gTwVFDuBRdvinnBjeThNQQcCSdHArL4WiV1RbeqkpwflB11xAoHfPSokZn93q1DYPI4/7uIaAO/w9O509NaD71Ea11aU9euQxfTevR9T6osA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LQxPkjUH; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kd4LdPFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09AAC2BBFC;
-	Tue,  7 May 2024 20:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715115101;
-	bh=z/n9T5ppUUSRMEJ5Mi5N2EZQnWL+K906LwUS78beWj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kd4LdPFKe3oIqgyV71D/y1+ZeZ2T9zcbP2X//BfPtTyQ8046hjQhjV03/zzahOOxl
-	 D0blwrUJhhVoHvzFg+KvUbIUGkF3gTRqusOJOcDM/Q1GPiLieVT2ZsS2ZV24s1RE/I
-	 G6joQ5CyKd9Kj/W3X7QC7QRK1JfjenEEETXnoUep4rm++G4UCj0ghQ3gvqkoL6qQ3O
-	 Ma+CGG0o+1Zt20he+L6ZJf5THtuIZH2Ma37bHRzvMcmQXnMq4qrISenf41iOcyKc0k
-	 UKpbLlWcgsrDH7VOweK2jAqnpIMS+ECTE3AVL176gKNtbtZLP7B/kpOSCWuXxBP2wy
-	 gylmsXfYPsxPA==
-Date: Tue, 7 May 2024 17:51:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LQxPkjUH"
+Date: Wed, 8 May 2024 05:01:51 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715115714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zZNs4tA7go3R/DMVxte1WF4G+JtqmyTgtWCsoCAO8/U=;
+	b=LQxPkjUHpSk5OiqLAHPQlApMHIdCDDWwHwWi5rhrQDv8xB+Zra1Sex3T5nBDL+Jlo5OC2f
+	UKTBXWUxiNGEY7cWSa+q1Uw1ZVV4yMiuXfMCUKT+E7eoJcRkl6AS+Rhe37TPYH/fbTdq6U
+	BDBhov3gOiz0f6H3vaLu2x9nDJyuWm8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leo Yan <leo.yan@linux.dev>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Clark <james.clark@arm.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Li Dong <lidong@vivo.com>,
-	Paran Lee <p4ranlee@gmail.com>, Ben Gainey <ben.gainey@arm.com>,
-	Andi Kleen <ak@linux.intel.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 0/8] Address/leak sanitizer clean ups
-Message-ID: <ZjqUWp9gcIKIy24y@x1>
-References: <20240507183545.1236093-1-irogers@google.com>
+	James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf maps: Process kcore maps in order
+Message-ID: <20240507210151.GB1384@debian-dev>
+References: <20240505202805.583253-1-leo.yan@arm.com>
+ <d47346fc-51b4-4af5-a014-0bd6f3b7bae0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,56 +50,146 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240507183545.1236093-1-irogers@google.com>
+In-Reply-To: <d47346fc-51b4-4af5-a014-0bd6f3b7bae0@intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 07, 2024 at 11:35:37AM -0700, Ian Rogers wrote:
-> Remove unnecessary reference counts for structs with no gets.  Add
-> reference count checking to comm_str and mem_info.  Fix memory leaks
-> and errors detected on "perf mem report" by address sanitizer and leak
-> sanitizer.
+Hi Adrian,
 
-Applied locally, doing build tests. Will soon go to tmp.perf-tools-next.
+On Mon, May 06, 2024 at 08:43:01AM +0300, Adrian Hunter wrote:
 
-- Arnaldo
- 
-> Ian Rogers (8):
->   perf ui browser: Don't save pointer to stack memory
->   perf annotate: Fix memory leak in annotated_source
->   perf block-info: Remove unused refcount
->   perf cpumap: Remove refcnt from cpu_aggr_map
->   perf comm: Add reference count checking to comm_str
->   perf mem-info: Move mem-info out of mem-events and symbol
->   perf mem-info: Add reference count checking
->   perf hist: Avoid hist_entry_iter mem_info memory leak
+[...]
+
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index 9ebdb8e13c0b..e15d70845488 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -1266,7 +1266,24 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+> >  	map__set_end(list_node->map, map__start(list_node->map) + len);
+> >  	map__set_pgoff(list_node->map, pgoff);
+> >  
+> > -	list_add(&list_node->node, &md->maps);
+> > +	/*
+> > +	 * Kcore maps are ordered with:
+> > +	 *   [_text.._end): Kernel text section
+> > +	 *   [VMALLOC_START..VMALLOC_END): vmalloc
+> > +	 *   ...
+> > +	 *
+> > +	 * On Arm64, the '_text' and 'VMALLOC_START' are the same values
+> > +	 * but VMALLOC_END (~124TiB) is much bigger then the text end
+> > +	 * address. So '_text' region is the subset of the vmalloc region.
+> > +	 *
+> > +	 * Afterwards, when dso__load_kcore() adjusts kernel maps, we must
+> > +	 * process the kernel text size prior to handling vmalloc region.
+> > +	 * This can avoid to using any inaccurate kernel text size when
+> > +	 * extending maps with vmalloc region. For this reason, here it
+> > +	 * always adds kcore maps to the tail of list to make sure the
+> > +	 * sequential handling is in order.
+> > +	 */
+> > +	list_add_tail(&list_node->node, &md->maps);
 > 
->  tools/perf/builtin-c2c.c                      |  13 +-
->  tools/perf/builtin-report.c                   |   3 +-
->  tools/perf/builtin-script.c                   |  12 +-
->  tools/perf/builtin-stat.c                     |  16 +-
->  tools/perf/tests/mem.c                        |  11 +-
->  tools/perf/ui/browser.c                       |   4 +-
->  tools/perf/ui/browser.h                       |   2 +-
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/annotate.c                    |   6 +
->  tools/perf/util/block-info.c                  |  22 +-
->  tools/perf/util/block-info.h                  |  15 +-
->  tools/perf/util/comm.c                        | 196 +++++++++++-------
->  tools/perf/util/cpumap.c                      |   2 -
->  tools/perf/util/cpumap.h                      |   2 -
->  tools/perf/util/hist.c                        |  62 +++---
->  tools/perf/util/hist.h                        |   8 +-
->  tools/perf/util/machine.c                     |   7 +-
->  tools/perf/util/mem-events.c                  |  36 ++--
->  tools/perf/util/mem-events.h                  |  29 +--
->  tools/perf/util/mem-info.c                    |  35 ++++
->  tools/perf/util/mem-info.h                    |  54 +++++
->  .../scripting-engines/trace-event-python.c    |  12 +-
->  tools/perf/util/sort.c                        |  69 +++---
->  tools/perf/util/symbol.c                      |  26 +--
->  tools/perf/util/symbol.h                      |  12 --
->  25 files changed, 370 insertions(+), 285 deletions(-)
->  create mode 100644 tools/perf/util/mem-info.c
->  create mode 100644 tools/perf/util/mem-info.h
+> This seems reasonable, but I wonder if it might be robust
+> and future proof to also process the main map first
+> e.g. totally untested:
+
+Makes sense for me, I verified your proposal with a minor improvment,
+please see the comment below.
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 9ebdb8e13c0b..63bce45a5abb 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1365,16 +1365,15 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+>  	if (!replacement_map)
+>  		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
+>  
+> -	/* Add new maps */
+> +	/* Add replacement_map */
+>  	while (!list_empty(&md.maps)) {
+
+For the replacement map, as we have located it in the list, here we
+don't need to iterate the whole kcore map list anymore. We can
+directly use the replacement map to update the passed map:
+
+        /* Update replacement_map */
+        if (replacement_map) {
+                struct map *map_ref;
+
+                list_del_init(&replacement_node->node);
+                map__set_start(map, map__start(replacement_map));
+                map__set_end(map, map__end(replacement_map));
+                map__set_pgoff(map, map__pgoff(replacement_map));
+                map__set_mapping_type(map, map__mapping_type(replacement_map));
+                /* Ensure maps are correctly ordered */
+                map_ref = map__get(map);
+                maps__remove(kmaps, map_ref);
+                err = maps__insert(kmaps, map_ref);
+                map__put(map_ref);
+                map__put(replacement_map);
+                if (err)
+                        goto out_err;
+                free(replacement_node);
+        }
+
+I also uploaded the verified change to https://termbin.com/rrfo.
+
+Please let me know if you would like to send a patch for this, or you
+want me to spin a new version. Either is fine for me.
+
+Thanks for review and suggestion!
+Leo
+
+>  		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
+>  		struct map *new_map = new_node->map;
+>  
+> -		list_del_init(&new_node->node);
+> -
+>  		if (RC_CHK_EQUAL(new_map, replacement_map)) {
+>  			struct map *map_ref;
+>  
+> +			list_del_init(&new_node->node);
+>  			map__set_start(map, map__start(new_map));
+>  			map__set_end(map, map__end(new_map));
+>  			map__set_pgoff(map, map__pgoff(new_map));
+> @@ -1385,20 +1384,29 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+>  			err = maps__insert(kmaps, map_ref);
+>  			map__put(map_ref);
+>  			map__put(new_map);
+> +			free(new_node);
+>  			if (err)
+>  				goto out_err;
+> -		} else {
+> -			/*
+> -			 * Merge kcore map into existing maps,
+> -			 * and ensure that current maps (eBPF)
+> -			 * stay intact.
+> -			 */
+> -			if (maps__merge_in(kmaps, new_map)) {
+> -				err = -EINVAL;
+> -				goto out_err;
+> -			}
+>  		}
+> +	}
+> +
+> +	/* Add new maps */
+> +	while (!list_empty(&md.maps)) {
+> +		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
+> +		struct map *new_map = new_node->map;
+> +
+> +		list_del_init(&new_node->node);
+> +
+> +		/*
+> +		 * Merge kcore map into existing maps,
+> +		 * and ensure that current maps (eBPF)
+> +		 * stay intact.
+> +		 */
+> +		if (maps__merge_in(kmaps, new_map))
+> +			err = -EINVAL;
+>  		free(new_node);
+> +		if (err)
+> +			goto out_err;
+>  	}
+>  
+>  	if (machine__is(machine, "x86_64")) {
 > 
-> -- 
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
+> 
+> 
