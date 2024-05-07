@@ -1,87 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0117B642;
-	Tue,  7 May 2024 03:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72E8A93C;
+	Tue,  7 May 2024 04:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715053672; cv=none; b=kk8pMMwPcW7PGjcU670vL7gdKOvZhlT/65HNlWoPgDDXL/MwSN2wJqBSbaChdbZ1e5LZhhvkQJGtNVk3CHtmSHFwtoKu8zuN0W3dS7QQUUrW3WQLJJKiIS8bC9arjAXaJDsWxApf5rjpLrKito1scleom5WXlleS7ifpqGGVG38=
+	t=1715055220; cv=none; b=cvSfamZGRUi5PCu1chdkzRr1mt61pT8K/f53R++AKch0FWJ5kw396omWgmwv82A3th/aLgCIinczYYReEXpDpLQ3b5RTQn85oNE1rMCedle0LFQXe4/goIla8dQKfitJbpj2pSo74QCm7DxAOfyI0RUuPe+AT1t1A3Ki8lMOsqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715053672; c=relaxed/simple;
-	bh=kFOM3iy7Z7jag75KzlVF383Urq+3zzDGTWrSzDmdSmU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TLmH0/q+lxiXyfNhNyz+DfK63v65KCRTGLnAHGnkWjL/+ApoVfQ0t+t4zinjarMkErJmxLTWpN+h6QXhYckBRFmLW6VupPt0ibjC2oCjM+bJAPcvh0LLOe8sky6tvh/6Nhl34UpS/zVcICjDCG/lJeIiyeNW7vkCAqDdV0lO4Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D56B106F;
-	Mon,  6 May 2024 20:48:09 -0700 (PDT)
-Received: from [10.163.33.37] (unknown [10.163.33.37])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21AB23F762;
-	Mon,  6 May 2024 20:47:34 -0700 (PDT)
-Message-ID: <08bcd616-5006-45df-b8cc-45cf3a1dd762@arm.com>
-Date: Tue, 7 May 2024 09:17:36 +0530
+	s=arc-20240116; t=1715055220; c=relaxed/simple;
+	bh=dN7X54J93eDiO9uLDsvJZ+5zjtYlYn/Su5NC4HEspTY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N2FPuZePUIha9YiQ5T1fcebUMN3sUHRUpvHjy6oyxb53tssbeV4qZdcDnsQNKkMcls+zVYWIAdlf6oim4/aXKL8Puj9zWxXEQF+lHnoFitaNLrOAteWCuiL3eH9+FjpTrT8BktahkMa7S2TIRNi47+3oJVBYqe1S3DvGf9jjEKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKvjkxGR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKvjkxGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D8FC2BBFC;
+	Tue,  7 May 2024 04:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715055220;
+	bh=dN7X54J93eDiO9uLDsvJZ+5zjtYlYn/Su5NC4HEspTY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aKvjkxGR1+4drcXwiFonJt7HTraV5UAJscPVqV7kT3M6KhyuBSvhVmG7HS40FUX79
+	 ielvzYYMD013TCwFzdLYy1gByxP8Tm+dhvuwAoxZOCAhAiSrVKXE/2a/7IpHODeO9j
+	 JIbzsH6WGmpnFbKjx7jXQPsk87g2uvzXJt6e6tNE14KdN++9csC8R1Phzl1vRrCtuy
+	 6e4CcxdsRW6WPgHH1/YZMH0IZ400KJfOk/RI7hGPePdyi2ADonOm0IcFmLjlG54HiU
+	 HnTu/suD+AbWV1sccl8wMbZBXVWvgTc/KwB8x9oIWjVAUPZlRn8QsZZSxIbCtmqojY
+	 SceIaTOBUZwBQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] perf dwarf-aux: Print array type name with "[]"
+Date: Mon,  6 May 2024 21:13:38 -0700
+Message-ID: <20240507041338.2081775-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/17] perf cs-etm: Print error for new
- PERF_RECORD_AUX_OUTPUT_HW_ID versions
-To: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
- gankulkarni@os.amperecomputing.com, scclevenger@os.amperecomputing.com,
- coresight@lists.linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-2-james.clark@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240429152207.479221-2-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+It's confusing both pointers and arrays are printed as *.  Let's print
+array types with [] so that we can identify them easily.  Although it's
+interchangable, sometimes it can cause confusion with size like in the
+below example.
 
+Note that it is not the same with C syntax where it goes to the variable
+names, but we want to have it in the type names (like in Go language).
 
-On 4/29/24 20:51, James Clark wrote:
-> The likely fix for this is to update Perf so print a helpful message.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/cs-etm.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index d65d7485886c..32818bd7cd17 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -335,8 +335,11 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
->  	trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
->  
->  	/* check that we can handle this version */
-> -	if (version > CS_AUX_HW_ID_CURR_VERSION)
-> +	if (version > CS_AUX_HW_ID_CURR_VERSION) {
-> +		pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID version %d not supported. Please update Perf.\n",
+Before:
+  mov [20] 0x68(reg5) -> reg0 type='struct page**' size=0x80 (die:0x4e61d32)
 
-Is not this bit misleading ? PERF_RECORD_AUX_OUTPUT_HW_ID is just the perf record
-format identifier. The record version here, is derived from the platform specific
-hardware ID information embedded in this perf record.
+After:
+  mov [20] 0x68(reg5) -> reg0 type='struct page*[]' size=0x80 (die:0x4e61d32)
 
-Should not this be just s/PERF_RECORD_AUX_OUTPUT_HW_ID/hardware ID/ instead ?
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> +		       version);
->  		return -EINVAL;
-> +	}
->  
->  	/* get access to the etm metadata */
->  	etm = container_of(session->auxtrace, struct cs_etm_auxtrace, auxtrace);
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index c0a492e65388..ec988f294497 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1110,8 +1110,10 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+ 	const char *tmp = "";
+ 
+ 	tag = dwarf_tag(type_die);
+-	if (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)
++	if (tag == DW_TAG_pointer_type)
+ 		tmp = "*";
++	else if (tag == DW_TAG_array_type)
++		tmp = "[]";
+ 	else if (tag == DW_TAG_subroutine_type) {
+ 		/* Function pointer */
+ 		return strbuf_add(buf, "(function_type)", 15);
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
