@@ -1,387 +1,338 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FF971B4C;
-	Tue,  7 May 2024 04:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3D6381C4;
+	Tue,  7 May 2024 05:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715057861; cv=none; b=E6+PQJZaEMS7PLHyawE58uPftmLjf8uxR4geppjrYvA5ZT0famHcx2yKkumPJtYy1R3A5Rmcj7bLMQBAZSBlfIm03kSRfv7ifv6SwoEDzbUcemE53xjE2s/62nBAuOXgw2AVviC8GOX1PTB6crg9WgWmzxn+1SesNH7DpAFGxsg=
+	t=1715058430; cv=none; b=RYjrclG1wDyzfk3bt+aL265L0u8mapEIYh/D3RtDbqcib3lthKl+x8EU4I1xttG7m+WI1/SxkT3i1rQryoIE9YBPbszxlnT9NFtoJKVTvbMnY3iJqfGtpm0XTM0KRNk6l3WdKp/d4vvJuIT3SGmGck3hfedJpzn1QgM5b6OibgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715057861; c=relaxed/simple;
-	bh=1ndGqnt0Yucv/TtBDYG6nGnM4UoIraHXey9EMNGl6ac=;
+	s=arc-20240116; t=1715058430; c=relaxed/simple;
+	bh=uWQxqjs6kfqAnNXz7BtR6USEjXO0E3uBp/EeYliL4HQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8w67swiNySsKcOlAHyHGlGnf/NmU3wxzBj5DqwaFkfmT+UGsn7+165sPr6JXofQLbHycyzTcsTfXGNfGLF4vJc7TyTcoAuQ0RzeL5eSVmHFiZ8o0qK9gL8FD2WFWob2XDnYjYvw8lAPz9glh8HdCWjrsgBTFCcAdCvO3XQODCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=gNLf0HgyqSisy3a0sUkir3UzgYjLZOLOLWU80hOp6wD7UZHaKxI41elTSEKSNlcZD+j+WcmfPl6b0FUwL2WmiozK3qJR0mqtHf0mVmj66TKby2D/bfzPzH18lJWAzd/05abBQMYc+h5KYphKAK5vrDSfUxSy3b2hFmN4z9j65+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HhvsX8Fn; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-60585faa69fso1714115a12.1;
-        Mon, 06 May 2024 21:57:38 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhvsX8Fn"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a2da57ab3aso2109131a91.3;
+        Mon, 06 May 2024 22:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715058428; x=1715663228; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D8vbZJ5UPiifYuspMMKBbXeF72Brhg4ICn1NMDsG3XQ=;
+        b=HhvsX8FnLmXAld2ITq6UoIYYvVP/4vl2/88nftgcGJpcW1C9YxIBvAxtpHFvddaLTL
+         L2JJkbo3GwV4bFrlUmhKyFerkN7Ee14r8WGiOSzfSeLEV1/PgqXxt3GCv81/+txv3EVl
+         Y0qzwf0HiYOmYFijblRcXy5+f3ja9y+Vy3UfBkzEJmfv608aJlpIMvyq03rOTJkbSghJ
+         mtKtj1EhoupWc+s/gEQcNoEnXUNn0kidtjtIvjW9yRhEny5u/J76wHKwB2kbXDTzWRkd
+         CLYHYKDpvlgij2gOdQg1rLHJg0TgdPvlp32yngDDUkbxNw6zIPQTjyVlUgWLxxcDPMWo
+         HA0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715057858; x=1715662658;
+        d=1e100.net; s=20230601; t=1715058428; x=1715663228;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=stzd46xkuc3HDoFga9LqxNKWgbIkvsfh9h+FPDMTTcg=;
-        b=tdN58cevMhsuZsXKpoASf/BQ+jBNKQaWRHNPwVx6nzgIXVCAJlAEyotSTn11KSWlra
-         iZtRz1c5dnwfRwCl7stkn8g7ELFREtpNCDga0L0kMDXMTjyouBNG3hRexZQgNZEeKEDl
-         CHYX0+NEa+hp07aBt0diMnvnRsimC7Br1z1hCQpVmTLJY2yjarlVN9B6kKUybzh5c4Xp
-         +hW/qqvXBTp7lAytBnR8inKTej8neJKFD/75ylTsgGTdjFPQPHERQcCApkdsPxNXj25K
-         88wLmIH62SIm7UunAp1A98D18KZAMo5oGLvMW+FbF5WtzmXvQ8tRMgrq9gBUcyOFD+Jy
-         nLOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTTXTHGWxENw+qPZqacNFVlPIcP1w/IWxphkA5lNnSjYHQ2CuYUNAk4G776gtQ9+8RuNovbvZ5OHJxdZ4Kj+TQmNAVuNtfHO0jvHEFGnvPWtsW3TRH32kQAdf1AOjBWx3RPHB91fntSaWs0RbtcQ==
-X-Gm-Message-State: AOJu0YxrecfoFz77VohT0/zkzj+gJHzex3PvRvvXW1CiulAIuGocQ6/d
-	EcQtnnWKJ4HszCJDWrz07C6Irzt2/ygywHA5A2ry6TU56jNV0LLxwHptVDrC8pr6xHifVeGBAej
-	KG9bnTyGGFTX73RXk6fiWNKwkp8E=
-X-Google-Smtp-Source: AGHT+IH2NF8/ctvHIcMuqKsanTtAceI5j8zU119ATbhXrxOC2Se2De+unE5jfahH1dbciqnk41/8L3uePUQtYbGiMic=
-X-Received: by 2002:a17:90a:b018:b0:2b2:da7:2c83 with SMTP id
- x24-20020a17090ab01800b002b20da72c83mr2473617pjq.4.1715057858240; Mon, 06 May
- 2024 21:57:38 -0700 (PDT)
+        bh=D8vbZJ5UPiifYuspMMKBbXeF72Brhg4ICn1NMDsG3XQ=;
+        b=KBqwV+fxl+7QzjIm2vZX2QUkBe6RmHP8UC+sCLKFyU6rtf8KVKN7yqxgB25ENrBQR4
+         SMP7DWX2zHusoWjMhWwbVE2M4Bfoyc5Y12a+sk4RcvogDidsWDR0tldTXm7DLuhduBK8
+         DixYzyQkJtjfEmwvpIpDobMgbuqO9gGdbMUaVlCa2QCks1uX84jshXvyso4vlJHpr8OV
+         +UEeUAylG+OHoBWaRWglA3Tow/RSZqL+1wtPv2HMmnvujOea9QwL70sDuJsILajuaCNN
+         JzbGpSRowGaFkzpV7MEBEqlYcGa1Zup5EF9mtoxHnCA58JOieseGRMZYnEhRiod20P3f
+         TBsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgt292lKAbUx6DpxjoVSEjkDBvPurDVFvIN3Nl9TwTH+00Zai+9MpVO4yCZ+Q1hR00YuUch40cLNN9GiFDKswEh3Zq3Vi1ppH5Sa5HUFLsI7/6KEHxDIdW5vSoqHm/DVcPSOBPUFk5GnjceVwFCrjP0YNkZI7ehxeVkTLPAJKE/XaiofYCsXWSYQu3E8mU4Sy74W/uKGXwggu+YRVEh5UBtQ4=
+X-Gm-Message-State: AOJu0YzoY8gPMFmgEIGTfr6CS2Ebk3uoLAR0zr8Uf9o2xTflxsPk5BuM
+	NZUqwzpyd45Ikquvxo7jsNyvC1kbqBBJhWLnclikxEwhGeHKeRQrL+xlqKG/A0+2M29Cg0cQ1NS
+	beT7wRThxcsVF1dRjLkN6DCvSnDk=
+X-Google-Smtp-Source: AGHT+IEB8vQbtVs+3K7IpXxE9aS+S0ebnjARauIth7zOTQsKYLVCTGe39Yqo8hcl7fuF+7QLXoq2DOEb7xuVPYELUqE=
+X-Received: by 2002:a17:90b:38c4:b0:2b4:e4d2:e6f0 with SMTP id
+ nn4-20020a17090b38c400b002b4e4d2e6f0mr3870255pjb.45.1715058428309; Mon, 06
+ May 2024 22:07:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com> <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 6 May 2024 21:57:27 -0700
-Message-ID: <CAM9d7ci1LDa7moT2qDr2qK+DTNLU6ZBkmROnbdozAjuQLQfNog@mail.gmail.com>
-Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
- instruction in objdump
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
-	irogers@google.com, segher@kernel.crashing.org, christophe.leroy@csgroup.eu, 
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, 
-	linux-kernel@vger.kernel.org, akanksha@linux.ibm.com
+References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
+ <2024050404-rectify-romp-4fdb@gregkh> <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
+ <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
+ <CAEf4Bzab+sRQ8pzNYxh1BOgjhDF4yCkqcHxy5YZAyT-jef7Acw@mail.gmail.com> <CAP-5=fXv59EmyM7FNnwAp0JjAZjtYhCj3b3FTH7KsHL=k8C6oQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXv59EmyM7FNnwAp0JjAZjtYhCj3b3FTH7KsHL=k8C6oQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 6 May 2024 22:06:56 -0700
+Message-ID: <CAEf4BzbdGJzMuRgGJE72VFquXL37rS9Ti__wx4f_+kt3yetkEg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
+ /proc/<pid>/maps APIs
+To: Ian Rogers <irogers@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 5:21=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Mon, May 6, 2024 at 11:43=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Add support to capture and parse raw instruction in objdump.
-> Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
-> with "objdump" while disassemble. Example from powerpc with this option
-> for an instruction address is:
+> On Mon, May 6, 2024 at 11:32=E2=80=AFAM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Sat, May 4, 2024 at 10:09=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Sat, May 4, 2024 at 2:57=E2=80=AFPM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > >
+> > > > On Sat, May 4, 2024 at 8:29=E2=80=AFAM Greg KH <gregkh@linuxfoundat=
+ion.org> wrote:
+> > > > >
+> > > > > On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote:
+> > > > > > Implement a simple tool/benchmark for comparing address "resolu=
+tion"
+> > > > > > logic based on textual /proc/<pid>/maps interface and new binar=
+y
+> > > > > > ioctl-based PROCFS_PROCMAP_QUERY command.
+> > > > >
+> > > > > Of course an artificial benchmark of "read a whole file" vs. "a t=
+iny
+> > > > > ioctl" is going to be different, but step back and show how this =
+is
+> > > > > going to be used in the real world overall.  Pounding on this fil=
+e is
+> > > > > not a normal operation, right?
+> > > > >
+> > > >
+> > > > It's not artificial at all. It's *exactly* what, say, blazesym libr=
+ary
+> > > > is doing (see [0], it's Rust and part of the overall library API, I
+> > > > think C code in this patch is way easier to follow for someone not
+> > > > familiar with implementation of blazesym, but both implementations =
+are
+> > > > doing exactly the same sequence of steps). You can do it even less
+> > > > efficiently by parsing the whole file, building an in-memory lookup
+> > > > table, then looking up addresses one by one. But that's even slower
+> > > > and more memory-hungry. So I didn't even bother implementing that, =
+it
+> > > > would put /proc/<pid>/maps at even more disadvantage.
+> > > >
+> > > > Other applications that deal with stack traces (including perf) wou=
+ld
+> > > > be doing one of those two approaches, depending on circumstances an=
+d
+> > > > level of sophistication of code (and sensitivity to performance).
+> > >
+> > > The code in perf doing this is here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/tools/perf/util/synthetic-events.c#n440
+> > > The code is using the api/io.h code:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/tools/lib/api/io.h
+> > > Using perf to profile perf it was observed time was spent allocating
+> > > buffers and locale related activities when using stdio, so io is a
+> > > lighter weight alternative, albeit with more verbose code than fscanf=
+.
+> > > You could add this as an alternate /proc/<pid>/maps reader, we have a
+> > > similar benchmark in `perf bench internals synthesize`.
+> > >
+> >
+> > If I add a new implementation using this ioctl() into
+> > perf_event__synthesize_mmap_events(), will it be tested from this
+> > `perf bench internals synthesize`? I'm not too familiar with perf code
+> > organization, sorry if it's a stupid question. If not, where exactly
+> > is the code that would be triggered from benchmark?
 >
-> Snippet from:
-> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --no-=
-show-raw-insn -C <vmlinux>
->
-> c0000000010224b4:       lwz     r10,0(r9)
->
-> This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> registers names and offset. Also to find whether there is a memory
-> reference in the operands, "memory_ref_char" field of objdump is used.
-> For x86, "(" is used as memory_ref_char to tackle instructions of the
-> form "mov  (%rax), %rcx".
->
-> In case of powerpc, not all instructions using "(" are the only memory
-> instructions. Example, above instruction can also be of extended form (X
-> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
-> and extract the source/target registers, patch adds support to use raw
-> instruction. With raw instruction, macros are added to extract opcode
-> and register fields.
->
-> "struct ins_operands" and "struct ins" is updated to carry opcode and
-> raw instruction binary code (raw_insn). Function "disasm_line__parse"
-> is updated to fill the raw instruction hex value and opcode in newly
-> added fields. There is no changes in existing code paths, which parses
-> the disassembled code. The architecture using the instruction name and
-> present approach is not altered. Since this approach targets powerpc,
-> the macro implementation is added for powerpc as of now.
->
-> Example:
-> representation using --show-raw-insn in objdump gives result:
->
-> 38 01 81 e8     ld      r4,312(r1)
->
-> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> this translates to instruction form: "ld RT,DS(RA)" and binary code
-> as:
-> _____________________________________
-> | 58 |  RT  |  RA |      DS       | |
-> -------------------------------------
-> 0    6     11    16              30 31
->
-> Function "disasm_line__parse" is updated to capture:
->
-> line:    38 01 81 e8     ld      r4,312(r1)
-> opcode and raw instruction "38 01 81 e8"
-> Raw instruction is used later to extract the reg/offset fields.
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/include/linux/string.h              |  2 +
->  tools/lib/string.c                        | 13 +++++++
->  tools/perf/arch/powerpc/util/dwarf-regs.c | 19 ++++++++++
->  tools/perf/util/disasm.c                  | 46 +++++++++++++++++++----
->  tools/perf/util/disasm.h                  |  6 +++
->  tools/perf/util/include/dwarf-regs.h      |  9 +++++
->  6 files changed, 88 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> index db5c99318c79..0acb1fc14e19 100644
-> --- a/tools/include/linux/string.h
-> +++ b/tools/include/linux/string.h
-> @@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char *);
->
->  extern char *strim(char *);
->
-> +extern void remove_spaces(char *s);
-> +
->  extern void *memchr_inv(const void *start, int c, size_t bytes);
->  #endif /* _TOOLS_LINUX_STRING_H_ */
-> diff --git a/tools/lib/string.c b/tools/lib/string.c
-> index 8b6892f959ab..21d273e69951 100644
-> --- a/tools/lib/string.c
-> +++ b/tools/lib/string.c
-> @@ -153,6 +153,19 @@ char *strim(char *s)
->         return skip_spaces(s);
->  }
->
-> +/*
-> + * remove_spaces - Removes whitespaces from @s
-> + */
-> +void remove_spaces(char *s)
-> +{
-> +       char *d =3D s;
-> +       do {
-> +               while (*d =3D=3D ' ') {
-> +                       ++d;
-> +               }
-> +       } while ((*s++ =3D *d++));
-> +}
-> +
->  /**
->   * strreplace - Replace all occurrences of character in string.
->   * @s: The string to operate on.
-> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/=
-powerpc/util/dwarf-regs.c
-> index 0c4f4caf53ac..e60a71fd846e 100644
-> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
-> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
-> @@ -98,3 +98,22 @@ int regs_query_register_offset(const char *name)
->                         return roff->ptregs_offset;
->         return -EINVAL;
->  }
-> +
-> +#define        PPC_OP(op)      (((op) >> 26) & 0x3F)
-> +#define PPC_RA(a)      (((a) >> 16) & 0x1f)
-> +#define PPC_RT(t)      (((t) >> 21) & 0x1f)
-> +
-> +int get_opcode_insn(unsigned int raw_insn)
-> +{
-> +       return PPC_OP(raw_insn);
-> +}
-> +
-> +int get_source_reg(unsigned int raw_insn)
-> +{
-> +       return PPC_RA(raw_insn);
-> +}
-> +
-> +int get_target_reg(unsigned int raw_insn)
-> +{
-> +       return PPC_RT(raw_insn);
-> +}
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 2de66a092cab..85692f73e78f 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -43,7 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, s=
-ize_t size,
->                            struct ins_operands *ops, int max_ins_name);
->
->  static void ins__sort(struct arch *arch);
-> -static int disasm_line__parse(char *line, const char **namep, char **raw=
-p);
-> +static int disasm_line__parse(char *line, const char **namep, char **raw=
-p, int *opcode, int *rawp_insn);
->
->  static __attribute__((constructor)) void symbol__init_regexpr(void)
->  {
-> @@ -512,7 +512,7 @@ static int lock__parse(struct arch *arch, struct ins_=
-operands *ops, struct map_s
->         if (ops->locked.ops =3D=3D NULL)
->                 return 0;
->
-> -       if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->loc=
-ked.ops->raw) < 0)
-> +       if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->loc=
-ked.ops->raw, &ops->locked.ins.opcode, &ops->locked.ops->raw_insn) < 0)
+> Yes it would be triggered :-)
 
-This line is too long.
+Ok, I don't exactly know how to interpret the results (and what the
+benchmark is doing), but numbers don't seem to be worse. They actually
+seem to be a bit better.
 
+I pushed my code that adds perf integration to [0]. That commit has
+results, but I'll post them here (with invocation parameters).
+perf-ioctl is the version with ioctl()-based implementation,
+perf-parse is, logically, text-parsing version. Here are the results
+(and see my notes below the results as well):
 
->                 goto out_free_ops;
->
->         ops->locked.ins.ops =3D ins__find(arch, ops->locked.ins.name);
-> @@ -815,11 +815,38 @@ static void disasm_line__init_ins(struct disasm_lin=
-e *dl, struct arch *arch, str
->                 dl->ins.ops =3D NULL;
->  }
->
-> -static int disasm_line__parse(char *line, const char **namep, char **raw=
-p)
-> +int __weak get_opcode_insn(unsigned int raw_insn __maybe_unused)
->  {
-> -       char tmp, *name =3D skip_spaces(line);
-> +       return -1;
-> +}
-> +
-> +int __weak get_source_reg(unsigned int raw_insn __maybe_unused)
-> +{
-> +       return -1;
-> +}
-> +
-> +int __weak get_target_reg(unsigned int raw_insn __maybe_unused)
-> +{
-> +       return -1;
-> +}
+TEXT-BASED
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-I prefer having conditional code with #ifdef rather than weak
-functions especially if it isn't needed for every arch.
+# ./perf-parse bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 80.311 usec (+- 0.077 usec)
+  Average num. events: 32.000 (+- 0.000)
+  Average time per event 2.510 usec
+  Average data synthesis took: 84.429 usec (+- 0.066 usec)
+  Average num. events: 179.000 (+- 0.000)
+  Average time per event 0.472 usec
 
-> +
-> +/*
-> + * Parses the objdump result captured with --show-raw-insn.
-> + * Example, objdump line from powerpc:
-> + * line:    38 01 81 e8     ld      r4,312(r1)
-> + * namep : ld
-> + * rawp  : "ld r4,312(r1)"
-> + * opcode: fetched from arch specific get_opcode_insn
-> + * rawp_insn: e8810138
-> + *
-> + * rawp_insn is used later to extract the reg/offset fields
-> + */
-> +static int disasm_line__parse(char *line, const char **namep, char **raw=
-p, int *opcode, int *rawp_insn)
-> +{
-> +       char tmp, *tmp_opcode, *name_opcode =3D skip_spaces(line);
-> +       char *name =3D skip_spaces(name_opcode + 11);
->
-> -       if (name[0] =3D=3D '\0')
-> +       if (name_opcode[0] =3D=3D '\0')
->                 return -1;
->
->         *rawp =3D name + 1;
-> @@ -829,13 +856,18 @@ static int disasm_line__parse(char *line, const cha=
-r **namep, char **rawp)
->
->         tmp =3D (*rawp)[0];
->         (*rawp)[0] =3D '\0';
-> +       tmp_opcode =3D strdup(name_opcode);
-> +       tmp_opcode[11] =3D '\0';
+# ./perf-parse bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 79.900 usec (+- 0.077 usec)
+  Average num. events: 32.000 (+- 0.000)
+  Average time per event 2.497 usec
+  Average data synthesis took: 84.832 usec (+- 0.074 usec)
+  Average num. events: 180.000 (+- 0.000)
+  Average time per event 0.471 usec
 
-Looks like powerpc specific.  Can we move it under arch check?
+# ./perf-parse bench internals synthesize --mt -M 8
+# Running 'internals/synthesize' benchmark:
+Computing performance of multi threaded perf event synthesis by
+synthesizing events on CPU 0:
+  Number of synthesis threads: 1
+    Average synthesis took: 36338.100 usec (+- 406.091 usec)
+    Average num. events: 14091.300 (+- 7.433)
+    Average time per event 2.579 usec
+  Number of synthesis threads: 2
+    Average synthesis took: 37071.200 usec (+- 746.498 usec)
+    Average num. events: 14085.900 (+- 1.900)
+    Average time per event 2.632 usec
+  Number of synthesis threads: 3
+    Average synthesis took: 33932.300 usec (+- 626.861 usec)
+    Average num. events: 14085.900 (+- 1.900)
+    Average time per event 2.409 usec
+  Number of synthesis threads: 4
+    Average synthesis took: 33822.700 usec (+- 506.290 usec)
+    Average num. events: 14099.200 (+- 8.761)
+    Average time per event 2.399 usec
+  Number of synthesis threads: 5
+    Average synthesis took: 33348.200 usec (+- 389.771 usec)
+    Average num. events: 14085.900 (+- 1.900)
+    Average time per event 2.367 usec
+  Number of synthesis threads: 6
+    Average synthesis took: 33269.600 usec (+- 350.341 usec)
+    Average num. events: 14084.000 (+- 0.000)
+    Average time per event 2.362 usec
+  Number of synthesis threads: 7
+    Average synthesis took: 32663.900 usec (+- 338.870 usec)
+    Average num. events: 14085.900 (+- 1.900)
+    Average time per event 2.319 usec
+  Number of synthesis threads: 8
+    Average synthesis took: 32748.400 usec (+- 285.450 usec)
+    Average num. events: 14085.900 (+- 1.900)
+    Average time per event 2.325 usec
 
+IOCTL-BASED
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# ./perf-ioctl bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 72.996 usec (+- 0.076 usec)
+  Average num. events: 31.000 (+- 0.000)
+  Average time per event 2.355 usec
+  Average data synthesis took: 79.067 usec (+- 0.074 usec)
+  Average num. events: 178.000 (+- 0.000)
+  Average time per event 0.444 usec
 
-> +       remove_spaces(tmp_opcode);
->         *namep =3D strdup(name);
-> +       *opcode =3D get_opcode_insn(be32_to_cpu(strtol(tmp_opcode, NULL, =
-16)));
+# ./perf-ioctl bench internals synthesize
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 73.921 usec (+- 0.073 usec)
+  Average num. events: 31.000 (+- 0.000)
+  Average time per event 2.385 usec
+  Average data synthesis took: 80.545 usec (+- 0.070 usec)
+  Average num. events: 178.000 (+- 0.000)
+  Average time per event 0.453 usec
 
-This as well.  Maybe we could have per-arch disasm_line__parse().
+# ./perf-ioctl bench internals synthesize --mt -M 8
+# Running 'internals/synthesize' benchmark:
+Computing performance of multi threaded perf event synthesis by
+synthesizing events on CPU 0:
+  Number of synthesis threads: 1
+    Average synthesis took: 35609.500 usec (+- 428.576 usec)
+    Average num. events: 14040.700 (+- 1.700)
+    Average time per event 2.536 usec
+  Number of synthesis threads: 2
+    Average synthesis took: 34293.800 usec (+- 453.811 usec)
+    Average num. events: 14040.700 (+- 1.700)
+    Average time per event 2.442 usec
+  Number of synthesis threads: 3
+    Average synthesis took: 32385.200 usec (+- 363.106 usec)
+    Average num. events: 14040.700 (+- 1.700)
+    Average time per event 2.307 usec
+  Number of synthesis threads: 4
+    Average synthesis took: 33113.100 usec (+- 553.931 usec)
+    Average num. events: 14054.500 (+- 11.469)
+    Average time per event 2.356 usec
+  Number of synthesis threads: 5
+    Average synthesis took: 31600.600 usec (+- 297.349 usec)
+    Average num. events: 14012.500 (+- 4.590)
+    Average time per event 2.255 usec
+  Number of synthesis threads: 6
+    Average synthesis took: 32309.900 usec (+- 472.225 usec)
+    Average num. events: 14004.000 (+- 0.000)
+    Average time per event 2.307 usec
+  Number of synthesis threads: 7
+    Average synthesis took: 31400.100 usec (+- 206.261 usec)
+    Average num. events: 14004.800 (+- 0.800)
+    Average time per event 2.242 usec
+  Number of synthesis threads: 8
+    Average synthesis took: 31601.400 usec (+- 303.350 usec)
+    Average num. events: 14005.700 (+- 1.700)
+    Average time per event 2.256 usec
 
->
->         if (*namep =3D=3D NULL)
->                 goto out;
->
->         (*rawp)[0] =3D tmp;
->         *rawp =3D strim(*rawp);
-> +       *rawp_insn =3D be32_to_cpu(strtol(tmp_opcode, NULL, 16));
->
->         return 0;
->
-> @@ -896,7 +928,7 @@ struct disasm_line *disasm_line__new(struct annotate_=
-args *args)
->                 goto out_delete;
->
->         if (args->offset !=3D -1) {
-> -               if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->o=
-ps.raw) < 0)
-> +               if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->o=
-ps.raw, &dl->ins.opcode, &dl->ops.raw_insn) < 0)
->                         goto out_free_line;
->
->                 disasm_line__init_ins(dl, args->arch, &args->ms);
-> @@ -1726,7 +1758,7 @@ int symbol__disassemble(struct symbol *sym, struct =
-annotate_args *args)
->                  map__rip_2objdump(map, sym->start),
->                  map__rip_2objdump(map, sym->end),
->                  opts->show_linenr ? "-l" : "",
-> -                opts->show_asm_raw ? "" : "--no-show-raw-insn",
-> +                opts->show_asm_raw ? "" : "--show-raw-insn",
+I also double-checked (using strace) that it does what it is supposed
+to do, and it seems like everything checks out. Here's text-based
+strace log:
 
-This is not what we want.  According to the man page of objdump
-the --show-raw-insn should be enabled by default.  So I think the
-default value prints nothing.  But if it's not the case on powerpc
-(maybe on x86 too?) we could add it in the positive case too and
-make powerpc init code reset the option.
-
-Thanks,
-Namhyung
+openat(AT_FDCWD, "/proc/35876/task/35876/maps", O_RDONLY) =3D 3
+read(3, "00400000-0040c000 r--p 00000000 "..., 8192) =3D 3997
+read(3, "7f519d4d3000-7f519d516000 r--p 0"..., 8192) =3D 4025
+read(3, "7f519dc3d000-7f519dc44000 r-xp 0"..., 8192) =3D 4048
+read(3, "7f519dd2d000-7f519dd2f000 r--p 0"..., 8192) =3D 4017
+read(3, "7f519dff6000-7f519dff8000 r--p 0"..., 8192) =3D 2744
+read(3, "", 8192)                       =3D 0
+close(3)                                =3D 0
 
 
->                  opts->annotate_src ? "-S" : "",
->                  opts->prefix ? "--prefix " : "",
->                  opts->prefix ? '"' : ' ',
-> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> index 718177fa4775..5c1520010ca7 100644
-> --- a/tools/perf/util/disasm.h
-> +++ b/tools/perf/util/disasm.h
-> @@ -43,14 +43,18 @@ struct arch {
+BTW, note how the kernel doesn't serve more than 4KB of data, even
+though perf provides 8KB buffer (that's to Greg's question about
+optimizing using bigger buffers, I suspect without seq_file changes,
+it won't work).
+
+And here's an abbreviated log for ioctl version, it has lots more (but
+much faster) ioctl() syscalls, given it dumps everything:
+
+openat(AT_FDCWD, "/proc/36380/task/36380/maps", O_RDONLY) =3D 3
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D 0
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D 0
+
+ ... 195 ioctl() calls in total ...
+
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D 0
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D 0
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50) =3D 0
+ioctl(3, _IOC(_IOC_READ|_IOC_WRITE, 0x9f, 0x1, 0x60), 0x7fff6b603d50)
+=3D -1 ENOENT (No such file or directory)
+close(3)                                =3D 0
+
+
+So, it's not the optimal usage of this API, and yet it's still better
+(or at least not worse) than text-based API.
+
+  [0] https://github.com/anakryiko/linux/commit/0841fe675ed30f5605c5b228e18=
+f5612ea253b35
+
 >
->  struct ins {
->         const char     *name;
-> +       int     opcode;
->         struct ins_ops *ops;
->  };
+> Thanks,
+> Ian
 >
->  struct ins_operands {
->         char    *raw;
-> +       int     raw_insn;
->         struct {
->                 char    *raw;
->                 char    *name;
-> +               int     opcode;
-> +               int     raw_insn;
->                 struct symbol *sym;
->                 u64     addr;
->                 s64     offset;
-> @@ -62,6 +66,8 @@ struct ins_operands {
->                 struct {
->                         char    *raw;
->                         char    *name;
-> +                       int     opcode;
-> +                       int     raw_insn;
->                         u64     addr;
->                         bool    multi_regs;
->                 } source;
-> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/inclu=
-de/dwarf-regs.h
-> index 01fb25a1150a..2a4e1e16e52c 100644
-> --- a/tools/perf/util/include/dwarf-regs.h
-> +++ b/tools/perf/util/include/dwarf-regs.h
-> @@ -31,6 +31,15 @@ static inline int get_dwarf_regnum(const char *name __=
-maybe_unused,
->  }
->  #endif
->
-> +/*
-> + * get_opcode_insn - Return opcode from raw instruction
-> + * get_source_reg - Return source reg from raw instruction
-> + * get_target_reg - Return target reg from raw instruction
-> + */
-> +int get_opcode_insn(unsigned int raw_insn);
-> +int get_source_reg(unsigned int raw_insn);
-> +int get_target_reg(unsigned int raw_insn);
-> +
->  #ifdef HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
->  /*
->   * Arch should support fetching the offset of a register in pt_regs
-> --
-> 2.43.0
->
+> > > Thanks,
+> > > Ian
+> > >
+> > > >   [0] https://github.com/libbpf/blazesym/blob/ee9b48a80c0b4499118a1=
+e8e5d901cddb2b33ab1/src/normalize/user.rs#L193
+> > > >
+> > > > > thanks,
+> > > > >
+> > > > > greg k-h
+> > > >
