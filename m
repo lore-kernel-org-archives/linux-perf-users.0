@@ -1,112 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230E46EB65;
-	Tue,  7 May 2024 21:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEBD847C;
+	Tue,  7 May 2024 21:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715116052; cv=none; b=iv6u9bdlNTN/SZCknEHf0Ivb3r6ROlxMAr62LybmJxbIztUGhJmbx8hPWiLq3yEZCmnDecH89L3qToe7ISzhPrnN8M9gSdJd2hpkGmcBz/iWxYI1vHjzRP5A6qc3TKc0WEcRjB7EsufaRL7+t7yRrL/fl5OIb5lv9iqOuUc36yk=
+	t=1715118018; cv=none; b=YHq5nyIO+K6tt6posKZppl9ZXhJzZcWos9chgwhz0BnOOaXTR+t9WyHKP6+1xJzZAAiZRNtWdqUyaGBXdCmlvJFWH5DAG9hgzN54P1IOlEhxr66KOSwVk2M4wscCs9mjRcPM5IGFII7saTTYIuwBMPOp2tHI5bbNXdEgp9j0D7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715116052; c=relaxed/simple;
-	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bGzEPq/PiZgj3Sv60NPYL1o2a4VRHCeIs8woOlWCsZZJShqUOZ6WQ9jB864XAdG01ZIb3DbkReu0szKebOq5sqV4XKkB/6bAl3sfQtoWJEbEsCtn1YPLIqhSrkVEGRFzh0faEfwOpvFCEMdZeAhuA9XkEnj2lXuTOP85Pb58g0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRar/O50; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715118018; c=relaxed/simple;
+	bh=D20Hto0XD3UdbZ9eo8sqaEakAD3D3xJxtg30AyqFdL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DjH/za2SIIoM3/QL4NbHUCbl0yCu/GrOqV/6lkyGd71rtDqUS22Dw8xXx9N6cE67ufLCTUDPxf4mU3+5a63uhfNpburEcc3d3gIhYMOsce58PQGhBIpVV1j9O05XpYy8eMGXUJKfyw8+u62nm24F0Mk0yWbwU0OuX4+pwrH2Q2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BshdbJqD; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRar/O50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A36C2BBFC;
-	Tue,  7 May 2024 21:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715116050;
-	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JRar/O50ZvQKN+7xk/G/FDvHxyqaReRGL5ZpbC7aLsA36ByRqjQtnamcnNiR7/03U
-	 do6YQFagyR+x3Y+Sw0spCnqH2O/z/Ys0q+9J8Dr86991ivYuoZNgESUtNstMJYI/Hj
-	 z+ea713knJ+yIw0fkiXkFLHQcY+rzHC8o04ew8Xqsk+gUP0Qr2emt1XZdiggJoq85v
-	 h95cP/YanIE9j4eQwPntPjoan/WzBDfyx6XX1a9QAmsk7nZu1mR1P7SX8aR/rAOwca
-	 Wx9javJMlil7LRIJwFAgSuWkwVzsUXT0yfsSzXPJh+UpuaV8cE8vonzh8aQs6CNU/3
-	 e7LdQuEoqDgTQ==
-Date: Tue, 7 May 2024 18:07:27 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Clark <james.clark@arm.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Li Dong <lidong@vivo.com>,
-	Paran Lee <p4ranlee@gmail.com>, Ben Gainey <ben.gainey@arm.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/8] perf ui browser: Don't save pointer to stack
- memory
-Message-ID: <ZjqYD-q7EqQW6hVE@x1>
-References: <20240507183545.1236093-1-irogers@google.com>
- <20240507183545.1236093-2-irogers@google.com>
- <ZjqNKPgWR7mBFaV4@x1>
- <ZjqNjrJ2ElrT11iB@x1>
- <CAP-5=fUsQwKsCi3us+dp-Tj+PayNPrYTqTQeo-YLbvSuOt1=9w@mail.gmail.com>
- <ZjqXa25BnFncJmw-@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BshdbJqD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715118017; x=1746654017;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=D20Hto0XD3UdbZ9eo8sqaEakAD3D3xJxtg30AyqFdL4=;
+  b=BshdbJqDXXR0GD0Bj9FIKK91wayjDS2HfsDNE7OZyCi/YkUZT+kSrldE
+   U9Fjz5tfOO+kGBsxRFDXZszeguPEM0t7wSTxqUPGDBqjnp9OeWTiH60VQ
+   VrcVFOtC+Mg7IirHuzkw1sNNVNF6Np4pGcDzgvIUvGwCRVVY7h/GcY8Gq
+   H6ATk29sku2gRkchfcPMpBMb3ja/zgGNtb1hQ6Y26YIBN6AVkUxX6QZKa
+   qSPWEUSusZKCFzz4vxZbhbAEcqZxw2g+mqwmtxVLM18bTGYXy9pCClJPq
+   hXYwMPxvcOQGvPIYl5rZrp8+KORameXH6Sn/4DNrwgDtHy+/OqjrTXGDn
+   g==;
+X-CSE-ConnectionGUID: c/SNDqcCRau9M/LgO6szDA==
+X-CSE-MsgGUID: YVlPe/SFQZmQoJguj2IsmA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11075454"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="11075454"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 14:40:16 -0700
+X-CSE-ConnectionGUID: jkXc046ETtetd+nqogpjcA==
+X-CSE-MsgGUID: CqxJUta2QbmxYjSKhZFigQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="29190963"
+Received: from soc-cp83kr3.jf.intel.com (HELO [10.24.10.59]) ([10.24.10.59])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 14:40:16 -0700
+Message-ID: <f49ebe98-c190-4767-bb0d-471776484fc8@intel.com>
+Date: Tue, 7 May 2024 14:40:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjqXa25BnFncJmw-@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/54] perf: x86: Add x86 function to switch PMI
+ handler
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-13-mizhang@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20240506053020.3911940-13-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 07, 2024 at 06:04:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, May 07, 2024 at 01:48:28PM -0700, Ian Rogers wrote:
-> > On Tue, May 7, 2024 at 1:22 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > >
-> > > On Tue, May 07, 2024 at 05:20:59PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Tue, May 07, 2024 at 11:35:38AM -0700, Ian Rogers wrote:
-> > > > > ui_browser__show is capturing the input title that is stack allocated
-> > > > > memory in hist_browser__run. Avoid a use after return by strdup-ing
-> > > > > the string.
-> > > >
-> > > > But everything happens in that context, i.e. hist_brower__run() will
-> > > > call ui_browser__ methods and then exit.
-> > > >
-> > > > We end up having browser->title pointing to returned stack memory
-> > > > (invalid) but there will be no references to it, no?
-> > > >
-> > > > If we return to hist_browser__run() we then call ui_browser__show
-> > > > passing a new title, for "live" stack memory, rinse repeat. Or have you
-> > > > noticed an actual use-after-"free"?
-> > >
-> > > And I'll take the patch, I'm just trying to figure it out if it fixed a
-> > > real bug or if it just makes the code more future proof, i.e. to avoid
-> > > us adding code that actually uses invalid stack memory.
-> > 
-> > My command line using tui is:
-> > $ sudo bash -c 'rm /tmp/asan.log*; export
-> > ASAN_OPTIONS="log_path=/tmp/asan.log"; /tmp/perf/perf mem record -a
-> > sleep 1; /tmp/perf/perf mem report'
-> > I then go to the perf annotate view and quit. This triggers the asan
-> > error (from the log file):
-> > ```
+
+
+On 5/5/2024 10:29 PM, Mingwei Zhang wrote:
+> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 > 
-> Thanks, it is indeed a bug, I'll keep that Fixes tag, people interested
-> in the full details can hopefully find this message going from the Link:
-> tag.
+> Add x86 specific function to switch PMI handler since passthrough PMU and host
+> PMU use different interrupt vectors.
+> 
+> x86_perf_guest_enter() switch PMU vector from NMI to KVM_GUEST_PMI_VECTOR,
+> and guest LVTPC_MASK value should be reflected onto HW to indicate whether
+> guest has cleared LVTPC_MASK or not, so guest lvt_pc is passed as parameter.
+> 
+> x86_perf_guest_exit() switch PMU vector from KVM_GUEST_PMI_VECTOR to NMI.
+> 
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/core.c            | 17 +++++++++++++++++
+>  arch/x86/include/asm/perf_event.h |  3 +++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 09050641ce5d..8167f2230d3a 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -701,6 +701,23 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+>  
+> +void x86_perf_guest_enter(u32 guest_lvtpc)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
+> +			       (guest_lvtpc & APIC_LVT_MASKED));
 
-Nah, I added your explanation to the cset log message.
-
-Thanks,
-
-- Arnaldo
+If CONFIG_KVM is not defined, KVM_GUEST_PMI_VECTOR is not available and
+it causes compiling error.
