@@ -1,118 +1,116 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C8E14E2FA
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 May 2024 09:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B8C14D703;
+	Tue,  7 May 2024 09:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073622; cv=none; b=NmF5v5rcVg2HbSDD1ESsNN4LS9aj8VBrVSJ0vtQG/Al4Rq1srZXBTlT5vQlG0z5nGjEWB6nYLFYCiBijQ4G840L8DSNyjYvTHw5tWkXN2e7lZIMcBYkH2V23acGEc9pfGSX+HQrCbNP0iN2QD9qqJs9RMi5yehf8KxOHn5DtqxY=
+	t=1715073770; cv=none; b=hoVPGHt5wXesB3sk/yKfUxl1kQNvbmrcwg+lbrKur+n41gsI+dZ30hIktuluk7ufaWjIy0kmCe0bS/kBsC4GdpTuESFxu+/Vy7R9WoXHHTgBLDAve0rak8vy4p7819DfgG/pafW4PG2v5NJSS2CAS61rDRaDJOeKcFjMITOS94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073622; c=relaxed/simple;
-	bh=wmfxCx98oiGEm0S2u+uUju/dQan/1Xv1qYRtUIqEhig=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WFP6sQ+ScMycUnNIcO7sEcRWVSwhs+kY4BhudMzGVefrcyyp83T0m1vTVk1yolc9qWGo9mwkU57VMgQ4RCoH6JBBJ/+Zh74HSJiaqrMoex67Jmh4hi20NGG/I7H97pfC7ZJeyiZWL6VNRzVdUFcP5zb3MAmTLKWONrLZx3aG8hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 44793eab098806
-	for <linux-perf-users@vger.kernel.org>; Tue, 7 May 2024 17:03:40 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 447931Cg098720;
-	Tue, 7 May 2024 17:03:01 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.190) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Tue, 7 May 2024
- 17:03:01 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <irogers@google.com>, <adrian.hunter@intel.com>,
-        Ben Zong-You Xie
-	<ben717@andestech.com>
-Subject: [PATCH v2] perf daemon: Fix the warning about time_t
-Date: Tue, 7 May 2024 17:02:41 +0800
-Message-ID: <20240507090241.3853998-1-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715073770; c=relaxed/simple;
+	bh=wdzCCOHmM3lGliUWgg+Zqbsr30m7nx+Bj7nwCmHejc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXjCIL58Ws0yMdQFudS3ow+nQZ41UDQ6RbHW1nVk9KHy8wZ/+mFUSPDkBJ2Q86Vd2nCbvBXYRbkWBNiP6/mS7aQIYUzCzBjOFLPITIgaVJftf3v/OjPyUVBkJhJdiOYCGirKo1BV0E7FbEP5t+2XIds69/z3TOBb9o728KIDyMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QmGG+5jt; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QmGG+5jt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2TUgL5QKLzrTGjBmSVBfkXnSIlm/MWgcenf2oxiy4q8=; b=QmGG+5jthMJWqTCmeQCJAscVOV
+	1LlciFAre6GUXRZUC3RF6ItJUUEEDKAtRHYRMA5BgbHU8e+AxFd/1iA+DhzbmtL2UReM/zwI58OKC
+	IaqR1K+YKQkfDBjFrmKcH0nUW+inD5O1a61lvEtsRHjyUnuyZbQcmWWoSm7w/4NcrqzYMF3+dp5js
+	XDsG2ZeRM111fxTopLgiiJGramLWYTV8fi2LHxAwpgAHDrPXDDCC1EsM+V0/4SF+jA8TNF+p/DMTc
+	Wx1u6okm0T+Iu44veAi8OX5ugRYSO52Qxtt1Ki1/CvhKsAqlXkBgTUHQhRlkbxXi5/0wvqmGahzd9
+	eODa9Cxw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4H21-0000000Cv4t-3aA5;
+	Tue, 07 May 2024 09:22:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 797333006AB; Tue,  7 May 2024 11:22:41 +0200 (CEST)
+Date: Tue, 7 May 2024 11:22:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 12/54] perf: x86: Add x86 function to switch PMI
+ handler
+Message-ID: <20240507092241.GV40213@noisy.programming.kicks-ass.net>
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-13-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 44793eab098806
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506053020.3911940-13-mizhang@google.com>
 
-On the 32-bit platform, the size of time_t is 32 bits or 64 bits according
-to the architecture. Therefore, use typecasting to resolve the warnings
-for some architectures, e.g. RISC-V.
+On Mon, May 06, 2024 at 05:29:37AM +0000, Mingwei Zhang wrote:
+> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> 
+> Add x86 specific function to switch PMI handler since passthrough PMU and host
+> PMU use different interrupt vectors.
+> 
+> x86_perf_guest_enter() switch PMU vector from NMI to KVM_GUEST_PMI_VECTOR,
+> and guest LVTPC_MASK value should be reflected onto HW to indicate whether
+> guest has cleared LVTPC_MASK or not, so guest lvt_pc is passed as parameter.
+> 
+> x86_perf_guest_exit() switch PMU vector from KVM_GUEST_PMI_VECTOR to NMI.
+> 
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/core.c            | 17 +++++++++++++++++
+>  arch/x86/include/asm/perf_event.h |  3 +++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 09050641ce5d..8167f2230d3a 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -701,6 +701,23 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+>  
+> +void x86_perf_guest_enter(u32 guest_lvtpc)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
+> +			       (guest_lvtpc & APIC_LVT_MASKED));
+> +}
+> +EXPORT_SYMBOL_GPL(x86_perf_guest_enter);
+> +
+> +void x86_perf_guest_exit(void)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +}
+> +EXPORT_SYMBOL_GPL(x86_perf_guest_exit);
 
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
----
+Urgghh... because it makes sense for this bare APIC write to be exported
+?!?
 
-v2: By Palmer's remind, patch v1 may introduce a warning for some
-    other targets. Thus, use typecasting instead.
- 
----
- tools/perf/builtin-daemon.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 83954af36753..cb04caa902e8 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -688,9 +688,10 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 			/* lock */
- 			csv_sep, daemon->base, "lock");
- 
--		fprintf(out, "%c%lu",
-+		fprintf(out, "%c%llu",
- 			/* session up time */
--			csv_sep, (curr - daemon->start) / 60);
-+			csv_sep,
-+			(unsigned long long)((curr - daemon->start) / 60));
- 
- 		fprintf(out, "\n");
- 	} else {
-@@ -700,8 +701,8 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				daemon->base, SESSION_OUTPUT);
- 			fprintf(out, "  lock:    %s/lock\n",
- 				daemon->base);
--			fprintf(out, "  up:      %lu minutes\n",
--				(curr - daemon->start) / 60);
-+			fprintf(out, "  up:      %llu minutes\n",
-+				(unsigned long long)((curr - daemon->start) / 60));
- 		}
- 	}
- 
-@@ -727,9 +728,10 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				/* session ack */
- 				csv_sep, session->base, SESSION_ACK);
- 
--			fprintf(out, "%c%lu",
-+			fprintf(out, "%c%llu",
- 				/* session up time */
--				csv_sep, (curr - session->start) / 60);
-+				csv_sep,
-+				(unsigned long long)((curr - session->start) / 60));
- 
- 			fprintf(out, "\n");
- 		} else {
-@@ -745,8 +747,8 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				session->base, SESSION_CONTROL);
- 			fprintf(out, "  ack:     %s/%s\n",
- 				session->base, SESSION_ACK);
--			fprintf(out, "  up:      %lu minutes\n",
--				(curr - session->start) / 60);
-+			fprintf(out, "  up:      %llu minutes\n",
-+				(unsigned long long)((curr - session->start) / 60));
- 		}
- 	}
- 
--- 
-2.34.1
-
+Can't this at the very least be hard tied to perf_guest_{enter,exit}() ?
