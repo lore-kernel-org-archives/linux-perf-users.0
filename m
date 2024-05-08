@@ -1,131 +1,186 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30501272B2
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 20:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAF4130E26
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 21:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715201110; cv=none; b=qjx8xuLtsTLYOe8sJI03w/qJR5TXQXN8yTm4IDqBMkWSCcGQMLVE0ia4x+Hnj66stPbblZ2UDdzgPwD/WJQKgVmgE1m1+S60unrNO49RfFab2A7e11WrQMtGOLm3ZkDtyXLzrYnqTadKQgbFdz69Q45ooclWce/3XRkV7Ocd3ME=
+	t=1715202312; cv=none; b=U3+y55hYiG9ITYHOKYr+07ZOgrBSSNBQ5gFaG51mYQPWhshmsLcS5R+RoLAeoXaQoE8GhKydIyw9gjb4aIUe8FxqY0Hb3fPlwVnRJQWQxrVqFVAik/pay8a9eqGppatOHAbbVJ0+13dzqCAni6RwSgzHnjJcf8jTB/6HvzberlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715201110; c=relaxed/simple;
-	bh=+TrNJxROO7MAmapZhWZcQZNsYA4TI5CqvlqU+QKwtRc=;
+	s=arc-20240116; t=1715202312; c=relaxed/simple;
+	bh=acPOrt5ygOuLSWdIDxURBep5aeWaEbWmyC8ArTfUIzc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fPP9zrDxN4ngFaNrdwac68yujQn5BUuXAXlhtv5ES9o5mSh3t3zPA+IaUhHCDbcy1FLEFA9PwZkwGLwlWP0LusxJoAGIeBnlEX6Ee1eVP+grQYMbcqp/v1D3vEMLp2gJMd17JlCgMDEyM7Jf5v4TOPyYR6jQgZYJGaF9FHDh2KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ue3R8+yk; arc=none smtp.client-ip=209.85.160.174
+	 To:Cc:Content-Type; b=aeMv9SwtoDcCycIUs+sPORZOqFIkoDlkprUfwoR9anfdjkFjsvPomsNusNqnsiA3S66zyp3jEK4bWjCbsbUYGIAMbrMdSJGHhJ62jwvM4mpVa9/c1VHS/LxRoxoGVdO1MyomXTiYuKlFz+07p/I/q/vXgOoCsft5G9EgZP57X54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UDcUjMP0; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ue3R8+yk"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43d361a2124so103201cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 13:45:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UDcUjMP0"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-43d361a2124so108861cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 14:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715201108; x=1715805908; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715202310; x=1715807110; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zrS4ra5r0MYUhXUqUrqqa9EFMt0orErlafYzq0uBTrk=;
-        b=ue3R8+ykxQxwIVBBXHeVPWoH87ZNdT/hr+LTTSkUo/19PVxv9yd1TzXh8//pQDM2vJ
-         /mJfLmuZw6jdZ95VbTYmD5Tz4SWyqxsXtKXQIEvRMiKm+EEu9y6OL6W3C5HBvO/eWFzj
-         77WNLXeFNduacSPmbMA9ekE8uFQIar0oZoZPx3DTR4PNABcaaQ+OtGJsefoQ+nnszFr9
-         UnIxc3mM93V5YcLXEVTfKVGNaavuRU4vDtPXS86oVUxAKydxSFnIIkgI22sVBqdMUuHZ
-         GjqPkAXslFyvRj4ClCuk2KMBG3sEgeZkE7MlFOroOmFk8R3saAQBtk1RdufPWqpOTRcS
-         np5Q==
+        bh=TacJSNF5BN2EAxFL9AKWhV4ZHViuaAA6IA2uXpBpZ4A=;
+        b=UDcUjMP059S0qfM8G0gPAy0b6NzzBjUSPK9O4x/hS2yTDamtlet9OEsRRdvhk3FmEq
+         3yQlh2UEMHQj+VktSu1KtOJAWCDPOAqppk9+MYj3VYYIrvXf+JpEDp72HPT+wH7uFq/t
+         Lfir/poV2aZp/tNF4qINkQUO9R8nVDQlSbCJ6/MLTkVAkfz8YZxTqE36PKZEFT3ky2Ny
+         xFuPxEpkmjt1wlLi4/9Atjxz8tvq1nPsfuPc9a6Prl4HpeD0df9H4fk+hTRTSRgM5bwI
+         /SxTZp7qjsoB/lHqz3r62E3dgbeCCheyYQAzvwHAMYzfYxwLDGW8vuZW0dqviEp1usGg
+         CGZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715201108; x=1715805908;
+        d=1e100.net; s=20230601; t=1715202310; x=1715807110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zrS4ra5r0MYUhXUqUrqqa9EFMt0orErlafYzq0uBTrk=;
-        b=sprBhxyHHb5gvfxRjY2DKL4xNzdxAAD1hWHtrMxg+HKrrs/ytz/8KxGRaPswh5H5FP
-         7s+bnoX/CHfTcK7PZraftFhcLL/3ecNBb8zEeeKdcw9i/d7NcaNxNoL91UOvzMLvfPZ1
-         Tn9pmW8y3o/SdTWMTdnFDolwUnLKxfcnfxBywuUn8Ol3Fz/vk4H/gDV1tX9wkOsAsOmc
-         p2Z/yeRPyHqNG9A2pUa9LuPJ05PCf4oMkcCioSv+GmzGD6nrDvaKDNzTDBUW6lTQgspa
-         GPb0mWyhxi+grqvRQd016fCOnN+9VTV3AKZp06IqInufaAxU15vHZZV3hhD6Y+kJx8UF
-         bzFA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Nf3aLdv6KVZGHEAGsP1hxvYbseYuE3ODxnCJx79AfvIPc8WD1AT+3NZF+Dm7+omA4nPvwTy54cA8zb9z/n/ST05nX21v4CL3dNjTWDTGuw==
-X-Gm-Message-State: AOJu0YzajMKb/MbMNazAWUe5dNr/gQyAaV5pH6ncWYL9k9TFYKTCmafa
-	0EmYhGlG61jPiRW8aHE6zt/tBdFSWZkHrbyISvVSzYjUuJX7weJONDQml2M2og1ArpUWIzz8BRP
-	WKIEfYyu2HMpTiZQgO+7FzTQY1D/kX4MvMjsC7Y4k4LDgNG5gRFjs4nw=
-X-Google-Smtp-Source: AGHT+IH78yrpGhaO2gSlcGlq7AlTg4g7/GluKLEv+bGcOc0UlkSZjbXsCjMz34xRnP6fjTUeWEdXGxDu/sVE+za7bsk=
-X-Received: by 2002:a05:622a:5786:b0:43a:b51c:46ca with SMTP id
- d75a77b69052e-43df483fa74mr51311cf.29.1715201107528; Wed, 08 May 2024
- 13:45:07 -0700 (PDT)
+        bh=TacJSNF5BN2EAxFL9AKWhV4ZHViuaAA6IA2uXpBpZ4A=;
+        b=BIeukYW4+VWGgAZZUjU9BXB9m+KA6+X2iSOJv1F7zkxg8g4fipR2SYBRmW7boHo8Ol
+         IJcRk9W/95m/TrGgQ/tbohoS7WghMOmPjN+PLxHS5bIBgey/BCC4WJEpPlETTUoZnPQM
+         GNYh9mko4xs8bM92hFaA47ozEB334bJ/kV5v1CG44kdyU2lLcEmmiLf7Bj24OObcUlp8
+         cOpeWPX5f7AFneXo9pDAhKiF3gI8jL2lO7mzrvTlYMFUtm0A+omr3Hfmzp23q9k8wLlc
+         pt6/zpKDDQVdqxcUtqrvzT//OeE6v1L/ay4VwsrAqXZYeBesL16Kbm0uqi/TbZZXAryt
+         lhLA==
+X-Gm-Message-State: AOJu0YwEaGFbbqqECDjfHP5jeQp/aBmq3Ygt/liB0w2IZQoEj0fiRUbZ
+	uwXJfUr4MbqHDIwfVj0MXemnVth1SWCingv1jsO1uydrz3Unk6hefgCEOkwVpPZoMeedThdTRDy
+	t6E48AHCkSufOwzIN5AMO/T9YX8yOMiemrGng
+X-Google-Smtp-Source: AGHT+IFvobua1lHMqFYihk7ouDMB2WgA/Rvw6k0MPR3M7p9JACNrEdSUwgrBMtK4o63XOSjNDnEJWOts6YT31OesJMU=
+X-Received: by 2002:ac8:6f1b:0:b0:43c:de95:6258 with SMTP id
+ d75a77b69052e-43defba092bmr1126521cf.18.1715202309981; Wed, 08 May 2024
+ 14:05:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjssGrj+abyC6mYP@gmail.com>
-In-Reply-To: <ZjssGrj+abyC6mYP@gmail.com>
+References: <20240508141458.439017-1-james.clark@arm.com>
+In-Reply-To: <20240508141458.439017-1-james.clark@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 13:44:52 -0700
-Message-ID: <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
-Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
- vmlinux.h. Stop.
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Date: Wed, 8 May 2024 14:04:58 -0700
+Message-ID: <CAP-5=fWMbLDmT8=h_He7+9V+ntTdg1+5hmSTm87VJsTy2m3Bag@mail.gmail.com>
+Subject: Re: [PATCH] perf dwarf-aux: Fix build with HAVE_DWARF_CFI_SUPPORT
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, leo.yan@linux.dev, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 8, 2024 at 12:39=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
-e:
+On Wed, May 8, 2024 at 7:15=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
 >
+> check_allowed_ops() is used from both HAVE_DWARF_GETLOCATIONS_SUPPORT
+> and HAVE_DWARF_CFI_SUPPORT sections, so move it into the right place so
+> that it's available when either are defined. This shows up when doing
+> a static cross compile for arm64:
 >
-> So I've been getting this perf build failure for some time:
+>   $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- LDFLAGS=3D"-stat=
+ic" \
+>     EXTRA_PERFLIBS=3D"-lexpat"
 >
->   kepler:~/tip/tools/perf> make clean
->   Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.=
-  Stop.
->   make: *** [Makefile:90: clean] Error 2
+>   util/dwarf-aux.c:1723:6: error: implicit declaration of function 'check=
+_allowed_ops'
 >
-> ... but if I clone a new repository, it works fine, until a point.
->
-> 'make clean' doesn't work - and 'make mrproper' in the main kernel
-> directory doesn't clean up properly.
->
-> Only if I do a brute-force:
->
->         rm -rf tools/
->         git checkout HEAD -f
->
-> does it get resolved.
->
-> The failure condition triggers if I Ctrl-C the following build a couple o=
-f
-> times, without it being finished:
->
->
->    cd tools/perf; make clean install
->    ...
->
->    LD      util/perf-in.o
->    LD      perf-in.o
->    CC      pmu-events/pmu-events.o
->  ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interrupt
->  make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interrupt
->  make[1]: *** [Makefile.perf:264: sub-make] Interrupt
->  make: *** [Makefile:113: install] Interrupt
->  kepler:~/tip> perfi
->  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h. =
- Stop.
->  make: *** [Makefile:90: clean] Error 2
+> Fixes: 55442cc2f22d ("perf dwarf-aux: Check allowed DWARF Ops")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-We have a checked-in vmlinux.h:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/bpf_skel/vmlinux/vmlinux.h?h=3Dperf-tools-next
-so this shouldn't have been a problem for a while. bpftool is no
-longer on that line:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/Makefile.perf?h=3Dperf-tools-next#n1149
-so I suspect if you use a newer tree then things will work.
+Reviewed-by: Ian Rogers <irogers@google.com>
+(eye-balled to see the #if problem exists and this is the correct fix)
 
 Thanks,
 Ian
 
-> Thanks,
+> ---
+>  tools/perf/util/dwarf-aux.c | 56 ++++++++++++++++++-------------------
+>  1 file changed, 28 insertions(+), 28 deletions(-)
 >
->         Ingo
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index c0a492e65388..c9584563cd56 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1215,6 +1215,34 @@ static int offset_from_dwarf_op(Dwarf_Op *op)
+>         }
+>         return -1;
+>  }
+> +
+> +static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
+> +{
+> +       /* The first op is checked separately */
+> +       ops++;
+> +       nops--;
+> +
+> +       /*
+> +        * It needs to make sure if the location expression matches to th=
+e given
+> +        * register and offset exactly.  Thus it rejects any complex expr=
+essions
+> +        * and only allows a few of selected operators that doesn't chang=
+e the
+> +        * location.
+> +        */
+> +       while (nops) {
+> +               switch (ops->atom) {
+> +               case DW_OP_stack_value:
+> +               case DW_OP_deref_size:
+> +               case DW_OP_deref:
+> +               case DW_OP_piece:
+> +                       break;
+> +               default:
+> +                       return false;
+> +               }
+> +               ops++;
+> +               nops--;
+> +       }
+> +       return true;
+> +}
+>  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT || HAVE_DWARF_CFI_SUPPORT */
+>
+>  #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
+> @@ -1395,34 +1423,6 @@ static bool match_var_offset(Dwarf_Die *die_mem, s=
+truct find_var_data *data,
+>         return true;
+>  }
+>
+> -static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
+> -{
+> -       /* The first op is checked separately */
+> -       ops++;
+> -       nops--;
+> -
+> -       /*
+> -        * It needs to make sure if the location expression matches to th=
+e given
+> -        * register and offset exactly.  Thus it rejects any complex expr=
+essions
+> -        * and only allows a few of selected operators that doesn't chang=
+e the
+> -        * location.
+> -        */
+> -       while (nops) {
+> -               switch (ops->atom) {
+> -               case DW_OP_stack_value:
+> -               case DW_OP_deref_size:
+> -               case DW_OP_deref:
+> -               case DW_OP_piece:
+> -                       break;
+> -               default:
+> -                       return false;
+> -               }
+> -               ops++;
+> -               nops--;
+> -       }
+> -       return true;
+> -}
+> -
+>  /* Only checks direct child DIEs in the given scope. */
+>  static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  {
+> --
+> 2.34.1
+>
