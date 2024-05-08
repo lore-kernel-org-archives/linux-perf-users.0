@@ -1,115 +1,89 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87F83612D;
-	Wed,  8 May 2024 07:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD662375F;
+	Wed,  8 May 2024 07:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715153953; cv=none; b=DNt15qnUt50TX85M0TAFoNOL8r+tbRu9H9hCIjqOSzqm1QmTYHG+AspOpELx5Z2clMuqYwIgVZLKH9bzFRv5dnUgOlgRkB9se5BfY9PyUhx0OqMktaZfeChBpNSijsfY2eT3++lkSRobw5bncN/DM2JQyrcW/YUPMyh0bXh1koo=
+	t=1715154786; cv=none; b=PYGRJD6LEXzfVGXKKf+Xyh6Klk7A+HulLc1CbP4HugXX6yYOMEr27vouaBN2z1uFzSN6abAq3bSch9gcXliL71niC6nVzZROY255gqQighA8tKRjqD65euScSDLMoAniNbQmwy2vOzzjjTHXASyEbyP5oOCEnf1YdZktk/huuds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715153953; c=relaxed/simple;
-	bh=f3LK0ObLAJurfNRZdpJ4wptu0daiM/YkDVKRX3RKV1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KP2NDvth4YP0c8BupXcDeNNNzYEaEZQr+4LCqlDQvY0autsrFKhngP6IsJci/ImuDGXVfwdxhthpuHeb2qQWAR1b5GJZarPx1MSGz2b2uzFusCAPS1FhicHBlHrH6RntO3T716fWInF6E+EdFw2CI9qXnUBO25s34KWDcU0CsK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+IoIWuH; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+IoIWuH"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f3761c96aso5193446e87.3;
-        Wed, 08 May 2024 00:39:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715153950; x=1715758750; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=HQn9AgRFMdHrqQQjouGtyxcYjF50ckhpwWQdA7LsrIo=;
-        b=Q+IoIWuHnRMmiDmQTcp8jyTlj6gIj2HIKxvYilxhTwWrpkTEZMaSnFUsWwouyp2XHw
-         N2+ml2E+xSN5Hx73KmkRhVWU/US07nnSw6JXxv20kEBV/VZW0weJmdSQ9lSSRecsF8Io
-         o06IPjMCyEp/ZHp02FqzfnGezqMNuvUdOHgwe6qRmjC/zEVDAt0+rv2QrSk4JhSM5Ih2
-         dzlBiRKj0WUHVe5+CZBO2kfCXQl2bMkfzn/dSaKL6/RSMs11jJWQZoIF8//IfC+PiyJQ
-         lhD0JBZ4F9gA+0LU+Q1TpSlZDAcBbJudKf1/70nzpJb4sdi7WMDKWp4+vFnLTy5luir1
-         we+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715153950; x=1715758750;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HQn9AgRFMdHrqQQjouGtyxcYjF50ckhpwWQdA7LsrIo=;
-        b=r8orGBLHyWifQ7WCMir0J/E7TtxaJxWqs+iySAnXr5w1aWTuukvGgTe84ekeI3ow9k
-         U/e4/VGklG9wtJrVWY3ixCC4CEJH6yG8EwteO09CMQFhyQQhLvH4vHnKsyX0C7uZHPgd
-         eVFp/eO6s1dwYi2Tt/5wDWqriZym4TylVzw0juiDeukACH5iWHB//jy79pVl35TBESYu
-         Wma9BdP3yc7xkgqjcQzZAOvk9jwLlqwWUt1yoajXuT1p+GLHty3YYpYIuxXq//ZpM/ct
-         2Q5tO0zN7gu8o0Q85vTB92Tvb2D4iyFhkLBKenmAeJadvwohmh9jHe1mkW/LHPudT9V0
-         ApPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/48CW23wr1d6O1ejm3Tq7+LfQTMZOwBR4bBaQ6kOc309Q4md4qQpf16KRQWo2V4nHXJhN8NSzyPzBrwUZ1Y0A7NLHONQ3gEBQoex3YF5UKi0qPgmTCnx8aUOTpOsLMK2yIn97VX0W96l1oUVmcw==
-X-Gm-Message-State: AOJu0YyXEL51cBqS/rDM1XmOk9tqc1nOgvyBzAlnHOxKaQPg4JTV2yi8
-	9aCUdAm3W0XnrYmORc8uGvG8+ObfmTK9qXsmmgMnBbHwJNcs5Pp9bN2Ns7yj
-X-Google-Smtp-Source: AGHT+IFpFo8eT1Te9z3lKdN3VNhEIZaSFYvju61jJNNZjUVEuLpM4ZukvEkmhQvpPaRHFMkzaPibIQ==
-X-Received: by 2002:a05:6512:3b28:b0:51d:1d42:3eef with SMTP id 2adb3069b0e04-5217c6673f2mr2056665e87.29.1715153949372;
-        Wed, 08 May 2024 00:39:09 -0700 (PDT)
-Received: from gmail.com (1F2EF402.unconfigured.pool.telekom.hu. [31.46.244.2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87c254bfsm12859855e9.17.2024.05.08.00.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 00:39:08 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 8 May 2024 09:39:06 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Makefile.perf:1149: *** Missing bpftool input for generating
- vmlinux.h.  Stop.
-Message-ID: <ZjssGrj+abyC6mYP@gmail.com>
+	s=arc-20240116; t=1715154786; c=relaxed/simple;
+	bh=2/OMdH6RI9ACcVmYMHGTGaQdO1YJfSC4XaASPUvEz40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n4Po4TkEEez2BCREk+0Gu/pBD6hmmj4uUBGGevCwVqTJ64pQyqz+ZcWM0EY50ZFRqM+NrOxJRmS3BCWl+X+sXO1KQhmhoPZXfjdqvk89VFc9S522sSHpft+aRCpywIFD2/PdmRh7z+zrCYvbqQjO7rm993lqHEhFUSw5pROATiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72E9B1063;
+	Wed,  8 May 2024 00:53:28 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2895A3F762;
+	Wed,  8 May 2024 00:53:01 -0700 (PDT)
+Message-ID: <a0c3641a-0b30-45d0-bb66-16d0d69dc176@arm.com>
+Date: Wed, 8 May 2024 08:52:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] perf maps/symbols: Various assert fixes
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com,
+ irogers@google.com, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
+References: <20240507141210.195939-1-james.clark@arm.com>
+ <ZjpEqyR74rl92jhb@x1> <ZjpE5KfP_Wm3fxNm@x1>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <ZjpE5KfP_Wm3fxNm@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-So I've been getting this perf build failure for some time:
 
-  kepler:~/tip/tools/perf> make clean
-  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.  Stop.
-  make: *** [Makefile:90: clean] Error 2
+On 07/05/2024 16:12, Arnaldo Carvalho de Melo wrote:
+> On Tue, May 07, 2024 at 12:11:42PM -0300, Arnaldo Carvalho de Melo wrote:
+>> On Tue, May 07, 2024 at 03:12:04PM +0100, James Clark wrote:
+>>> A few different asserts are hit when running perf report on minimal
+>>> Arm systems when kcore is used, or the .debug/ info can't be loaded or
+>>> /boot isn't mounted etc.
+>>>
+>>> These result in some less common paths being hit for resolving symbols
+>>> and things are done in an order that breaks some assumptions. I'm not
+>>> sure if we could do something to make the tests pick this up, but maybe
+>>> not easily if it would involve mocking the filesystem or even a specific
+>>> kernel. I tried a few different variations of --kcore and --vmlinux
+>>> arguments but ultimately I could only reproduce these issues by running
+>>> on specific kernels and root filesystems.
+>>
+>> Please consider adding Fixes tags so that we can help the work of
+>> backporters/stable?
+> 
+> Sorry, you already did it for the last two patches in the series, so you
+> couldn't find easily what were the csets that introduced the problems in
+> the first two patches?
+> 
+> - Arnaldo
 
-... but if I clone a new repository, it works fine, until a point.
+1,3 and 4 are all fixes and have tags. 2 is just a tidyup so I didn't
+add the tag. I probably should have explained that in the cover letter.
 
-'make clean' doesn't work - and 'make mrproper' in the main kernel 
-directory doesn't clean up properly.
-
-Only if I do a brute-force:
-
-	rm -rf tools/
-	git checkout HEAD -f
-
-does it get resolved.
-
-The failure condition triggers if I Ctrl-C the following build a couple of 
-times, without it being finished:
-
-
-   cd tools/perf; make clean install
-   ...
-
-   LD      util/perf-in.o
-   LD      perf-in.o
-   CC      pmu-events/pmu-events.o
- ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interrupt
- make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interrupt
- make[1]: *** [Makefile.perf:264: sub-make] Interrupt
- make: *** [Makefile:113: install] Interrupt
- kepler:~/tip> perfi
- Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.  Stop.
- make: *** [Makefile:90: clean] Error 2
-
-Thanks,
-
-	Ingo
+>>  
+>>> James Clark (4):
+>>>   perf symbols: Remove map from list before updating addresses
+>>>   perf maps: Re-use __maps__free_maps_by_name()
+>>>   perf symbols: Update kcore map before merging in remaining symbols
+>>>   perf symbols: Fix ownership of string in dso__load_vmlinux()
+>>>
+>>>  tools/perf/util/maps.c   | 14 ++++++------
+>>>  tools/perf/util/symbol.c | 49 ++++++++++++++++++++++++----------------
+>>>  2 files changed, 36 insertions(+), 27 deletions(-)
+>>>
+>>> -- 
+>>> 2.34.1
+> 
