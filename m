@@ -1,185 +1,118 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4160C393
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 23:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EEA52F6D
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 23:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715210345; cv=none; b=CKhrBld8hYSCJo5UielDMS3qwL9Q92wS9xOO8D6kPH2xlBy6LKsH+TmyT6r6g1cVZeeOvtvjcjT4EVyHcCgwx/oFL0793N+WzKWdhBTI2+JX/E/Mtm//XVXlh7MsJC1utkc/SzLiAIUNs2x2ZprZUVRtnGbbjd9mu83R1biaV9I=
+	t=1715211629; cv=none; b=tAAOweyOrGSgouXzaI7I45lBrg/9eKLIcYAJixTg2D3+efuqwdJe0hs9nGtlTAmRIKfQbei4z8WkMaSW0EQSNuuoL7R3hDFgI+2tjIQG3MD2e7q/P6jqSaVNHDHR+cfkuPwuIvkgFAUoe6lS8DrjYoZEwNkei0Mfy9VwOqY9bKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715210345; c=relaxed/simple;
-	bh=OiNB3/cDYuUdfUbV1+fECaBooWhKPWeutLbF3YpqoJM=;
+	s=arc-20240116; t=1715211629; c=relaxed/simple;
+	bh=+wtLczbdW/FxsW0T85EByS/LSghiVmxUEfbES7DYGDE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EsKL1Vr9BkOwKdlhuqwYQKB7EgvcPuQtQQ3MWfUckXwJYaDlhpVmDVTgxhCDjU7HB3dWw1m4GWHdDBLEFC3g8rgvUgcTUpgecgdnyLOUXNXFEg+87wDDyx7z5sP7UK2tqHHHTkjPsSdkYvB2hjGV2iBlgN/GzOXrxytf66AeuIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EpYyDBSi; arc=none smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=chhJPm7/1jvwZe5u6XWq1waHHxdNsFrfL1YFmccnBxgPhQ3jO/oU8/+UzUm5FRhuc4uwTnmCkjeyAWFVBE/LumNBJiYrPmSgu2JHuPW31PtP/v5boFQYg7Iy4On115sjs+AcaR4TY2EUwo9sZ+fFro3z0WU8aZJsYMygdIQiNEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2C6oBAML; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EpYyDBSi"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43d55133609so62561cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 16:19:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2C6oBAML"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-439b1c72676so94241cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 16:40:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715210343; x=1715815143; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715211626; x=1715816426; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MDBlHx5ATABpMS7xQNpK1O16Vnpbp53v+71gVmyOflY=;
-        b=EpYyDBSiF9pZydmON/AajAD2/ceVwM+PHAjM2a8RerOP95XFp/0hK1nIlQjmBYqlKk
-         9lGKdjHzdbUtMKKm7FGRCsKfWY9dJwmAh3Wb+lIcS8VbtZLS0dnZoIzl4GtMfImL1Tvo
-         fDtmvs2qjoR4c31IucrPNGH/z3hyzJS4kx3MeTY0oTyIElVaWqSTAfArN+S8yXiyxtAi
-         FeupDhHNckKqOOmCrj2C9sv+nvH7ViM9DI5Q2K1+qdhv0yReDKN8cWj1/aEzT1g3UU3t
-         pakBn7oArN13pvZhyyKGZgoYuOaWWXEXlJP1Sp+A+Y5wCtgCUeEIV0woRPg4sgRsMszf
-         7e+g==
+        bh=6jATuZPpZr2U9Ga/FPqShVFC6Jp9UCpaINafz+jyTdg=;
+        b=2C6oBAMLKFLjDyWQu95xlozNq2SrmzrLrPvjXVphkNrSmf7R7gyNzz3OBO7EStBSsv
+         MgrQ4aGqBiEgBhC45gdoos4kov3NzbcDv4Nq2clnIt6SqSlO+Ji676gyaGt7IuPkKIeX
+         351c/G9xg1ArAOHjcHg9sTYk+ZYMiJjXA3VYHsnvspCw5HUjR6L+iOiW5voGNyVjyXTm
+         moLBEAWn0NGGrmF4Z2nl9DPWZ3Lg69nMeO0BFid29L2RkToEX88wMxrB61Oq3C4LXMNM
+         FbHOvgMjtYw7pXNDMweIFrD0/xJf8IUQqXwpQFNALJLR8pvlDE+xr5wvipF2G7EYIsdD
+         Wu1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715210343; x=1715815143;
+        d=1e100.net; s=20230601; t=1715211626; x=1715816426;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MDBlHx5ATABpMS7xQNpK1O16Vnpbp53v+71gVmyOflY=;
-        b=OZFgDGdkQusLs+/whsWS1Z97tMWMias91AIC+fUgd7lHamiMbXHh5tn83aL8zxjmXx
-         6A8RtkU2S4D/4zuscH8NKdmDcaV9SDnTVYx0nnqYcci2SbtskV0Rf5pGF9gVBCBsxEh5
-         RpK0Ih8Y26LJoLDQdGLLcG7TqJZvZPLRr3qF9qKz0f/CMFhEPo+XI4VZsYEqCU8Dr79u
-         9fH19mjyYYU5i4ih91qoDLF0KiGFTiUlHkSXndanYc5dJfMJyaGJ7PFlZPhpwgQa3jhB
-         x+ITlow5W8kOK9pueCW7ZdDUkVK4JBqZlO7QbnHvlehCnHO/cpCB8Ry/zi7TE0gKOOJS
-         zOsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnHJU20mNtYFyPgYAQn0/NJrkj5p9rpTAaaF46sM2hHcY2mgAiPPFUKY63NxTIQnWFAtLvroPar7fgym9j2A55G59L0KuAZJANyxkMjX3Jlg==
-X-Gm-Message-State: AOJu0YwJwDOmrOuzXeC6+/cc1jCoi960MbGCgmLQarE97fCrG51pqiWT
-	ODO6LE/eQRLu39TAI37tYjwigDlDziks6y3EV1MVHG3X9MG+bUWsPuNLfOE75EtR3wcxtnfDaIE
-	o3lbo+8KWSV0d+SP6RyG9c0TkL67Xt1HXMlmR
-X-Google-Smtp-Source: AGHT+IHN6UkD/4Gv6PjBxfRZ8th4Maz5mHqvhrx6UR/Ga7ncyaOX4VpXz+Tyyem8Rz8SYvlZ4POD+mRRG+vjOv8gHEM=
-X-Received: by 2002:a05:622a:98d:b0:43a:b8f3:f079 with SMTP id
- d75a77b69052e-43defba1d13mr1557401cf.20.1715210343018; Wed, 08 May 2024
- 16:19:03 -0700 (PDT)
+        bh=6jATuZPpZr2U9Ga/FPqShVFC6Jp9UCpaINafz+jyTdg=;
+        b=W6zJpWx9KYAI47vliJmhV6ArXF/Kw+90R6nHG/51BcoDTB9p1ulXSehE5wrmxfi0Kv
+         DL5VktOCyC1hSprHpsYmxorvgqHucttKhMWsN8OQu315O38/SImydQd7S12jcyOcL/gm
+         Jc4IUG73XyjT2trwhf4zWOFf7j/NpXb15Qkloa6rvE+e/Xi7Vy2UG0n3xbRzUr3AeW6x
+         vde3ONSPfMv3E/Cepiaz6nJpwunx7Ex0tSaLGK1ThRosw4x7RktFHUYgasozc4I8uzop
+         Y/lJgMJ63+5Kwha3y51MTy+6zTTZwwFgp7e63tuqdQ1+9cC1y3MJq0GaHlTPWtb4xlW4
+         48RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJVIl59VSvdKbTiiJFxKHLVolmAygTU+LEltlp57G6v7kUYtyNg220FIEolT1zFCu7lyWhF7VhjQWyHCDoMXgQa6bN2NOkYii9HacKLaMbCg==
+X-Gm-Message-State: AOJu0YwQAde2i1lbUQxPzVvgk3D19KuNLZGeKB6aRp7z1NGdzqQC/NV5
+	/oUp5me9OE3gekarxuu5xxbOUsJFKVw849nZP54sQczpeyUxXCq7evNyS/VlNzQA+ic2wbum/W4
+	+0qArSkOnejaDWqHstmHbUUlXh0I8v/Qj8TIx69hMfpGvP46nKIoa
+X-Google-Smtp-Source: AGHT+IEzM/v17pOrH2E0AcDlysaONbJ9WV32yZgY4IdcqsgZEc5Rc57AmhGuXksMDKk2ok6tUH0P85eZgXr+e2WgwZw=
+X-Received: by 2002:a05:622a:2283:b0:43d:e9ce:63ad with SMTP id
+ d75a77b69052e-43deec6a98dmr1246531cf.0.1715211626478; Wed, 08 May 2024
+ 16:40:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506081648.3890067-1-yangjihong@bytedance.com>
-In-Reply-To: <20240506081648.3890067-1-yangjihong@bytedance.com>
+References: <ZjmcGobQ8E52EyjJ@x1>
+In-Reply-To: <ZjmcGobQ8E52EyjJ@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 16:18:51 -0700
-Message-ID: <CAP-5=fXYH4JnfQH98vPRttViBfYAWGA-aoGXO7q+R_Wt8AqFSw@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Specify libtraceevent dir to rpath for
- asan/msan build
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 8 May 2024 16:40:15 -0700
+Message-ID: <CAP-5=fVz8a29_k9-j4LnJdAoqiXAREwg9g+owx5WZ0LhgT7yTQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf callchain: Use zfree() to avoid possibly
+ accessing dangling pointers
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 1:17=E2=80=AFAM Yang Jihong <yangjihong@bytedance.co=
-m> wrote:
+On Mon, May 6, 2024 at 8:12=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> perf built by asan/msan will not search for shared libraries in the
-> -L directory. For cross-compilation, we assume that sanitizers is
-> generally not enabled and add libtraceevent dir to rpath in a simple way.
+> When freeing a->b it is good practice to set a->b to NULL using
+> zfree(&a->b) so that when we have a bug where a reference to a freed 'a'
+> pointer is kept somewhere, we can more quickly cause a segfault if some
+> code tries to use a->b.
 >
-> 1. msan build
+> Convert one such case in the callchain code.
 >
-> Before:
->   $ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g -fn=
-o-omit-frame-pointer -fsanitize=3Dmemory -fsanitize-memory-track-origins" C=
-C=3Dclang CXX=3Dclang++ HOSTCC=3Dclang NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0 NO_=
-LIBPFM=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent
->   ...
->   $ /tmp/perf/perf
->   /tmp/perf/perf: error while loading shared libraries: libtraceevent.so.=
-1: cannot open shared object file: No such file or directory
->
-> After:
->   $ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g -fn=
-o-omit-frame-pointer -fsanitize=3Dmemory -fsanitize-memory-track-origins" C=
-C=3Dclang CXX=3Dclang++ HOSTCC=3Dclang NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0 NO_=
-LIBPFM=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent
->   ...
->   $ /tmp/perf/perf --build-options
->   perf version 6.9.0-rc5
->   <SNIP>
->            libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
->   <SNIP>
->
->  2. asan build
->
-> Before:
->   $ make DEBUG=3D1 EXTRA_CFLAGS=3D'-fno-omit-frame-pointer -fsanitize=3Da=
-ddress' LIBTRACEEVENT_DIR=3D/opt/libtraceevent
->   ...
->   $ ./perf
->   ./perf: error while loading shared libraries: libtraceevent.so.1: canno=
-t open shared object file: No such file or directory
->
-> After:
->    $ make DEBUG=3D1 EXTRA_CFLAGS=3D'-fno-omit-frame-pointer -fsanitize=3D=
-address' LIBTRACEEVENT_DIR=3D/opt/libtraceevent
->    ...
->    $ ./perf --build-options
->    perf version 6.9.0-rc5
->    <SNIP>
->             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
->    <SNIP>
->
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
-> ---
->  tools/perf/Makefile.config | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 7f1e016a9253..a9a923358604 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -188,6 +188,10 @@ TRACEEVENTLIBS :=3D -ltraceevent
->  ifdef LIBTRACEEVENT_DIR
->    LIBTRACEEVENT_CFLAGS  :=3D -I$(LIBTRACEEVENT_DIR)/include
->    LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
-> +  # Specify rpath for asan/msan build. Generally, cross-compilation will=
- not enable sanitizers.
-> +  ifeq ($(findstring -fsanitize=3D,${EXTRA_CFLAGS}),-fsanitize=3D)
-> +    LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-> +  endif
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks for this! I found I need the following to make it work:
-```
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a9a923358604..bcf4ab292462 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -190,7 +190,11 @@ ifdef LIBTRACEEVENT_DIR
-  LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
-  # Specify rpath for asan/msan build. Generally, cross-compilation
-will not enable sanitizers.
-  ifeq ($(findstring -fsanitize=3D,${EXTRA_CFLAGS}),-fsanitize=3D)
--    LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-+    ifeq (${IS_64_BIT}, 1)
-+      LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib64
-+    else
-+      LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-+    endif
-  endif
-endif
-FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
-```
-
-My libtraceevent build command is:
-$ make EXTRA_CFLAGS=3D"-O0 -g -fsanitize=3Daddress" DESTDIR=3D~/libtrace in=
-stall
-and I build perf with:
-$ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g
--fno-omit-frame-pointer -fsanitize=3Daddress -Wno-error=3Dunused-function"
-LIBTRACEEVENT_DIR=3D~/libtrace/usr/local
-I'm checking which library is used with ldd.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
->  endif
->  FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
->  FEATURE_CHECK_LDFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_LDFLAGS) $(TRAC=
-EEVENTLIBS)
+> ---
+>  tools/perf/util/callchain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 68feed8718096f78..1730b852a947400f 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -606,7 +606,7 @@ fill_node(struct callchain_node *node, struct callcha=
+in_cursor *cursor)
+>                                         call->brtype_stat =3D zalloc(size=
+of(*call->brtype_stat));
+>                                         if (!call->brtype_stat) {
+>                                                 perror("not enough memory=
+ for the code path branch statistics");
+> -                                               free(call->brtype_stat);
+> +                                               zfree(&call->brtype_stat)=
+;
+>                                                 return -ENOMEM;
+>                                         }
+>                                 }
 > --
-> 2.25.1
+> 2.44.0
 >
