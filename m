@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A475F17BA5
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 03:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07981B809
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 03:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715140400; cv=none; b=fxMpUW5r6RVAXkvuYx0M+U3ZYv3n1fU2hWlGx9V4fPI7YRfWYaEuwWGiclVaRb1ZPjXZKgFG9jtDtL/9ZxM31F/9mFEFbuJMybWuRyl1cVb2gXoComtlif9wrkFese0N6oSRMzicgqMZ2TuOtrNgvVgW9gC9LrRJVgnj0x+ulwQ=
+	t=1715140402; cv=none; b=DyB9RGCCyCAK8rfP3a8tPpFNmIcJZ+NL58jmN3hjuuYzj/txggiC9utTrxF3Eqk4YeFCVxyOcrAMRsYIMngmGHdT4ICCCjOGewV7ZFyU04T2kJOhWG7hmZLDo4XZPTzmLNs2dwVzV6qy0RrJFqd+k5m4Ki3Vd2iUp4cB8uoUDv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715140400; c=relaxed/simple;
-	bh=1gjiKx8CEp6GLpjJeA3XOWVnAQEoANQb0FbmONXrbR0=;
+	s=arc-20240116; t=1715140402; c=relaxed/simple;
+	bh=PkE9IXfyXZEZClS9BF4vcd5Nh75l4NFqr0xzo5i+yl8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=qi15Hjvc9E8euZOnslhxWqK6nS9viJCmjK0ZOZsFb59k5yzm9aX69ll9i5g+06C46lhEbFpj3u+uG2CuVjCqg0Dv8Tz6rg9VK2NkuPpjH+nTgcrOm12jB6XwTPkcENHcBzGqpyjmAeFwU9p/4VU4nlnjajX7J2JspEvrqxAaojY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XXcuIzLu; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=fNi7I/Hs6KnnS107QHeNUO5JniEQsDrb5mErC23N5QCgkruenePlQKhcANRpl6ExRh0lNlq3Twt19pFqx9BknAdVgrX3MN7tuTZnC6FEGXI9cGBAC8dq8LyhFQrlNI+uXrQx78RTRiMhZWWKI18y3cWreFcY2m0s1I2hB9YC7Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3XEOkwvE; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XXcuIzLu"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de54be7066bso7241697276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 20:53:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3XEOkwvE"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bed763956so80590297b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 May 2024 20:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715140397; x=1715745197; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715140400; x=1715745200; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=evqEKyKRq93CW7bOGoBWyVHoXocBvIcKIjPummzTEM4=;
-        b=XXcuIzLuefo9G4WTw3U9XOiXLzmSa+pH4K2LfVLoD2KPMZgNp89verZ4PCuzFwnDCD
-         JKXQlVMhQF9xYpd8btLg0OG1nmQ6uPCBusyEwVq9Ykdfl2o1I7O+xbXnuxq/+MDhhua9
-         iVbxv6Oj8EGU91EpTlFpHur1eMSwGpV51dJ1rH46FAQdLKGh6Crg3DGO7ksx7KjHgsGf
-         orlbaZBODsmO1UKJzCLssfpI42CG2XbINZpHtS+z8KVAdc8n/uQEIXwLPqPv1Kj23QMo
-         S5Sd2CaxE7R5mGiyyAeDEW7fAOLqbrojY6JZP3FNW/sYxmaV2bgKdw3q9BMHkGh9cDaU
-         QFYQ==
+        bh=T9iBFcMYRLjKmNtSCKVfZQuec+4vBM7qEYaLGnQMh1Q=;
+        b=3XEOkwvEZuu8BWnxgUf9tbmWEEV7zqlQkXMWj0609iuJc22PdaMlbNUjOEoOalQJik
+         LCZ7vvbIDAi+CxoN9dm3pEYj486FGS8u7kfUxVDnjceuLnD0bF20rlI6IrGS0VjNfGSZ
+         Wnm7u5hz5oUbG2Bl0PLM4XG5O9LJtt+2aXsFVsKk2zpCBhVuu+pmToCrL4brUEVhJwzG
+         Sbti/bIy4wnoY3B54A20hsJkmVGF/51GKkKwsHMA6c/7c/DMIrmWU7cqioldqMDET1CL
+         Xxk6z0fe1mncODy1IcPOS0p+i+Pue5HP4TnCczVQM26cFeUG0lCZm/2Z/2DkQgFilvEh
+         XHhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715140397; x=1715745197;
+        d=1e100.net; s=20230601; t=1715140400; x=1715745200;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=evqEKyKRq93CW7bOGoBWyVHoXocBvIcKIjPummzTEM4=;
-        b=nmwyp/3tgK5U3lRnXYwxLmVmlWOXns63S3bQjqDh6/Xo/dxXLwvb1jN83gxU8xfStm
-         ovWa6dfjU8+yaiq5t2/Sk6A2/jJ6b6pC5tEfFuCtA2ART7WFmIZ5BwXrOMXAwLmpujaL
-         dZomwDzQIf7CrJLTA8eLxSp5MBIKvDIo7KxHOkPt0pERHrxuGk18ZN83NBJjjpfshcjk
-         Mb7bjqH41tCKv0nL16sSo9YLvup3ueeMsvDheAYQnOJQHsak9ksB3zaMYEGwjGjR+25c
-         +vl3rbwpfdXQ+AojadqOf+XyctdXGlN0kwB85+ZC3aiJGmf7nrIdwlMWAhsPBv0OxlCr
-         Prmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmQyGy39uO6ouHipU9bJs2syzgYAHpFMsJ5zszInk4GjfWItC4bYOGZW3AB+6rhXYDpzuTdXBowMYOA6qbr4MvE9gOjAj+1fqsTtFjLKAFAQ==
-X-Gm-Message-State: AOJu0YyBR3ze4PimBMTnsxw5X16M/Gd0F2yHcF24gzqZXT7/ind4Ulzo
-	wqIAGjr7EzVpZltqnOgyb7Qysggz9Kqjg2VMbCoHTy3K/Z2pJm9ZrfpkeqlQJUPGjDJLM72iF1x
-	W3Iy17A==
-X-Google-Smtp-Source: AGHT+IFFi6TPEZBiQZat0J8wPmQsKgf7WRxfdVdZ6yCN7mIOFkHcTAwrw61sUraFs85lMk8PIkUKfpdUg5AT
+        bh=T9iBFcMYRLjKmNtSCKVfZQuec+4vBM7qEYaLGnQMh1Q=;
+        b=fv6wAoGDEQScR3Q9fT9U+zFohQAYYutlyQnuWzDDH7scQzlsFgpyg3/4tPcOKgCqvp
+         6URtrGdaBSnYlYkBmUxi1w/2wPChI5y1CT+9kpzseHOL/CVBOtMKI8Wo7kC6oieWXB6B
+         oWJRUoU0zAKFP6GCo4/f9+7vouQ+RaMZacU4r8DY+e07MD3JDJ9UAs4F+fgL0Dg7A9lD
+         uSljrE0mlpZ02bg6f+Bac9Ko4J9Vd5jRD6A/6QesLZgP5hMDPOq1F7gKpEPreTxdbXZI
+         E3aBNvNkErJdfV4wcisOENAcaPis30Nn8jig2qeVV6fF6pXfcw9U68furFg0d7/uliZ0
+         8usg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtkigm/8w79SfPpNm6r1SYMPzLTfcIhwCaiZUUu6FTF+fktnlpUQSS88Auf4/kFZ4L82Z5c0dDfTrYrdXMSh5z0VMxaHa2uBTgP0ps1fwwdA==
+X-Gm-Message-State: AOJu0Yw3yofv4vmgjBn6ZZGZviYKp4APYUTAdDPJQVCEDU7nXehnUsG2
+	stGMFLNvJUDsbSh63bUZFhYUZHXCxgeq3g3Vh0CpX4jnmgdspgwxZasbd3lO211zgF1CXYAW49a
+	GRwY2yg==
+X-Google-Smtp-Source: AGHT+IEbnEA/r7BoFjsBedSpafR2wTGgrqS1AfAn8vl+1v8boeuvJ0jCqkgJ+FlT5VbqFtGmUa+pyGS+jfPj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:56f9:40dc:113f:ba3])
- (user=irogers job=sendgmr) by 2002:a05:6902:1083:b0:de5:5225:c3a4 with SMTP
- id 3f1490d57ef6-debb9d3d713mr439844276.7.1715140397650; Tue, 07 May 2024
- 20:53:17 -0700 (PDT)
-Date: Tue,  7 May 2024 20:53:00 -0700
+ (user=irogers job=sendgmr) by 2002:a81:4807:0:b0:61b:e1f6:2098 with SMTP id
+ 00721157ae682-62085a6966emr4506397b3.3.1715140399912; Tue, 07 May 2024
+ 20:53:19 -0700 (PDT)
+Date: Tue,  7 May 2024 20:53:01 -0700
 In-Reply-To: <20240508035301.1554434-1-irogers@google.com>
-Message-Id: <20240508035301.1554434-4-irogers@google.com>
+Message-Id: <20240508035301.1554434-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240508035301.1554434-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 3/4] perf report: Avoid segv in report__setup_sample_type
+Subject: [PATCH v1 4/4] perf thread: Fixes to thread__new
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,28 +72,60 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In some cases evsel->name is lazily initialized in evsel__name. If not
-initialized passing NULL to strstr leads to a segv.
+Freeing the thread on failure won't work with reference count
+checking, use thread__delete. Don't allocate the comm_str, use a stack
+allocation instead.
 
-Fixes: ccb17caecfbd ("perf report: Set PERF_SAMPLE_DATA_SRC bit for Arm SPE event")
+Fixes: f6005cafebab ("perf thread: Add reference count checking")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/thread.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 0892b6e3e5e7..69618fb0110b 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -429,7 +429,7 @@ static int report__setup_sample_type(struct report *rep)
- 		 * compatibility, set the bit if it's an old perf data file.
- 		 */
- 		evlist__for_each_entry(session->evlist, evsel) {
--			if (strstr(evsel->name, "arm_spe") &&
-+			if (strstr(evsel__name(evsel), "arm_spe") &&
- 				!(sample_type & PERF_SAMPLE_DATA_SRC)) {
- 				evsel->core.attr.sample_type |= PERF_SAMPLE_DATA_SRC;
- 				sample_type |= PERF_SAMPLE_DATA_SRC;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 0a473112f881..87c59aa9fe38 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -39,12 +39,13 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
+ 
+ struct thread *thread__new(pid_t pid, pid_t tid)
+ {
+-	char *comm_str;
+-	struct comm *comm;
+ 	RC_STRUCT(thread) *_thread = zalloc(sizeof(*_thread));
+ 	struct thread *thread;
+ 
+ 	if (ADD_RC_CHK(thread, _thread) != NULL) {
++		struct comm *comm;
++		char comm_str[32];
++
+ 		thread__set_pid(thread, pid);
+ 		thread__set_tid(thread, tid);
+ 		thread__set_ppid(thread, -1);
+@@ -56,13 +57,8 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		init_rwsem(thread__namespaces_lock(thread));
+ 		init_rwsem(thread__comm_lock(thread));
+ 
+-		comm_str = malloc(32);
+-		if (!comm_str)
+-			goto err_thread;
+-
+-		snprintf(comm_str, 32, ":%d", tid);
++		snprintf(comm_str, sizeof(comm_str), ":%d", tid);
+ 		comm = comm__new(comm_str, 0, false);
+-		free(comm_str);
+ 		if (!comm)
+ 			goto err_thread;
+ 
+@@ -76,7 +72,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 	return thread;
+ 
+ err_thread:
+-	free(thread);
++	thread__delete(thread);
+ 	return NULL;
+ }
+ 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
