@@ -1,66 +1,66 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D998E132803
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 22:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3D813328D
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 22:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715206004; cv=none; b=U/4BRwJiICJsTCEdubKjHC48mEeWZBmAdI/HH/nc/nnT/W3Ox8+KJ/oB3TY3YxA/Pnr9hsjmmB8oW0qssZDbWNwR/zI9kYvZFfDMfdlWCI+DdIuj6HRq30xJGW8z4//InmaQRMAFzRRrhyZNnwwoNaPwvxn2YFmRiEj+QKKc4tc=
+	t=1715206459; cv=none; b=Bquc61pYn77wzXoHIEB9oYMK0ieaVV+h6ptQ8WGfKQfGRsW0hrkMal4SBfVFTTwKt4Sb3YZEoDdQwtC7O8DkqGOX0nqVl5il1Y/rP0ni6N0w0be22lS0JmQGKTfkqe5E8hvDA68q7gDjPaf6XIUAKgq/t/l+KiQJcK3y4AWgeew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715206004; c=relaxed/simple;
-	bh=qOFm3ZKV69A7H4pqw5T6HTz2Dm7/9XTvjCo9AdNg4zo=;
+	s=arc-20240116; t=1715206459; c=relaxed/simple;
+	bh=SY3te0gY8EpEl5E689hBYo4WycQ2ACiXqT0tWFK/u1s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t5wpPkqNzL2MfPSYYnEhft7MybMNMkbdIULTUe7avXkG9zwZOPrwEL6YBj71ckzd8k6DFpBBospyImB0nOHE8lgCIT+S4K0zk/jBayCB9PRgLLtai1uEY3jdZuLkyZeDjcI56SQw3aYuAESwjMnF4cUc2EVROx0wEKaNPsk16yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eIwHpyNh; arc=none smtp.client-ip=209.85.160.171
+	 To:Cc:Content-Type; b=J4nANh1RcXeQPpZsXLFdW5mSx+rzqadSIhPd5rPvr66vbFc/QgTdJ8Xdr1OqkHwHzlIsIRx9PFitymzvvXO7L3xqzfvZT8+wv3Jk4uq3ogVd/IXzcij+E2MEEXDGg+scecXQ8HVvtZiYoRaZOcEAPLW1RD98VIwMwoVLlOs7bpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1nk+o4U; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIwHpyNh"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-439b1c72676so70221cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 15:06:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1nk+o4U"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso52355ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 15:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715206001; x=1715810801; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715206458; x=1715811258; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aldqJPzGArxjZEpKLgm9s+1EdgolTnnhV+Hb3JyH5UE=;
-        b=eIwHpyNhRTL5NTj3bT7NnoSy0UN08HsremfMJdvPQCKnbmWzcF9wZEkbV+64RpgzdH
-         V7WTEuhEJdcJYj11KAV7zkcDBl7dTKESywKH30Dho98Y5wnyagQXgh1ZBfZU7ZFUVRmB
-         voNyunxhwZHG7Ph5huuSgJqciQPCms8Qs6cb96L/3rfiHlAXkydy5midxUhg79NFOlDD
-         WMLxiA+SKQXXH5Jwvyd6vGtT4R1cNsCDJhkF+n0W1hGqxYw9UTNuKtTKJL4/QnAMhhqL
-         qJjajVE1uhdP3anXX/2CDX+CjRTUGKqh9n1sbIB/QbJYxu2SFB0AIvAq3pNEj4QuRSdH
-         emTw==
+        bh=Y+C4NWbW6e+o3FY/4yD/C5aK+kcXnZU1WPZD0Mhpw68=;
+        b=r1nk+o4USVy9oe7yUEF6LlzevnLOp8MzdIkrR/q+L8o8K8uWeZU2AJsD85nb3Xx8xP
+         hGmiV8KK8o/hyHQ70H08KzA+1YabNpBZmSG38rqnPcYIegz7228OxdiRMC2rTe4pscpk
+         RfD1OsdTGAPcybkNB1E0TYtG6CFv392Rpz1JmED0QiTSf9KUl0IXOD4/FYBM9A5dNrBb
+         X/yrK51O5ZPr/h1iv8tWJja0k1FilkPhxeh0k3iwmzQSD++MoaM4vH3SIryaOHQcc4TV
+         SsFzA4HXKMvDREco0JIZYNDqyxUHwTh7CfYfZfAcxkmir+kp2suDY55+dkB2vD6OCx6f
+         GkXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715206001; x=1715810801;
+        d=1e100.net; s=20230601; t=1715206458; x=1715811258;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aldqJPzGArxjZEpKLgm9s+1EdgolTnnhV+Hb3JyH5UE=;
-        b=VtZqYf4ZtBFJhswujmeltB+vSeQyfdQbsftBenu+LEGqDKcuuhyk6lh3k0+nC24V+q
-         IAFfZzhdvkz7NN+sm+SzUqJDH7uhFTpVO2P5rB5q6yuzyzrVZc8cv3zyCaD84QR0e2up
-         ipRcp+VzhFyqKIMmhiYUGvkt6/sBNCDN91FB8+qr8gCrtddrYj2rkfO2qJmZ3/D3Cvvd
-         /wqES1w0lP4k47Agzc6jVk2sJVLHBLmp7+Fj76I6a1sF7rdHRXzIyQqTEEEecUopBseG
-         J1NWpelbnVTAZl0OtP41pahwP4Ukis6B+rQszCh9j5y9XFtmX+Goy7PrYSlErApSYc8G
-         TfvA==
-X-Gm-Message-State: AOJu0Yw2adT8YMEL+XpBZieWaH6YP+XlGTPB6ydaXTWsKgkA35swe248
-	SyRDP4R/zyN/Lp1t3B9BOiZz093IdoCQ2cx8e6MBURqNgWwKjv1s9KdswFLPK2VczAhS13v9Oqv
-	Sq/vhwd03xbMeXFyFpoBBndZVdECwye7YEOAL
-X-Google-Smtp-Source: AGHT+IHslyE9ivhzwymqY1CNoCjqRPOBfG0hg1XUJ4EiUAR0wxVsaJBHAqH8bw3HTX1qf55o9V7mZbMPecatCwzAJQM=
-X-Received: by 2002:a05:622a:98d:b0:43a:e258:8fed with SMTP id
- d75a77b69052e-43def9611ccmr1330191cf.18.1715206000605; Wed, 08 May 2024
- 15:06:40 -0700 (PDT)
+        bh=Y+C4NWbW6e+o3FY/4yD/C5aK+kcXnZU1WPZD0Mhpw68=;
+        b=PVedBWUcPRq7Jw0sqkb9poNK3bp+KqCN1J0YxI7IqCYn3BSBt8uIPK6wVeHiAmoNAp
+         5TaPMGn3S8n2Xu0NKFTKdFgok64fp5hrbYi3kHLM++Mm7NZ/wqlkaUF9H4ecJ6+VuONu
+         HcX+ebGwCbVg5bKwnZD68KSGcXsOyDtvZm5C+HZ5XGKvDoYY2pROHlurO9ghAQb9BODO
+         nr6m7z1P9Noclr6xAQ1S++4OayncLaI2UChHAHZshks9WOhjBZS5HTZ3yAJSEZZ2hxN0
+         u3JjTiy2MDLjugsIX6EC1sxfJpK6Ty6YZH4v1rWIQH8iwXCW2IK6pVIZAtpI18qzsVWD
+         wOCg==
+X-Gm-Message-State: AOJu0Yy+3injr2SQn8GwiDy9qB+GBh7bOrDUjA2aAnIlB62T9xgKkNjc
+	pY0l8ITjv8ETRmtV47PBdOG2lfdwz1y5DwnkDnRLFDYv+sPlQE3YmkR4tLgJ7CZuCuH2LopTvI3
+	5EaqvPsImE1Wo0F3E827PCQ+R1js1xtYvqYj1
+X-Google-Smtp-Source: AGHT+IFp8koGJ5z9B2iYuRA1SjLPqE1fjH610M4HsbYYGGiU8xRXw3/oOjPyK1aeZTnnxlfQV4bGyWTVncicCz94LjI=
+X-Received: by 2002:a17:903:22cc:b0:1ea:963e:2e2d with SMTP id
+ d9443c01a7336-1ef01244e57mr775635ad.24.1715206457473; Wed, 08 May 2024
+ 15:14:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507141210.195939-1-james.clark@arm.com> <20240507141210.195939-3-james.clark@arm.com>
-In-Reply-To: <20240507141210.195939-3-james.clark@arm.com>
+References: <20240507141210.195939-1-james.clark@arm.com> <20240507141210.195939-5-james.clark@arm.com>
+In-Reply-To: <20240507141210.195939-5-james.clark@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 15:06:29 -0700
-Message-ID: <CAP-5=fUqaXWm0xFCoaFYzVkWVMD3Khtxu7au5natVvDVw+fvTQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf maps: Re-use __maps__free_maps_by_name()
+Date: Wed, 8 May 2024 15:14:06 -0700
+Message-ID: <CAP-5=fWJCfz6VPRC+A4pcsGYVBTv_ANis6kxByELVRiOWsPhxQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] perf symbols: Fix ownership of string in dso__load_vmlinux()
 To: James Clark <james.clark@arm.com>
 Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -75,81 +75,85 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, May 7, 2024 at 7:13=E2=80=AFAM James Clark <james.clark@arm.com> wr=
 ote:
 >
-> maps__merge_in() hard codes the steps to free the maps_by_name list. It
-> seems to not map__put() each element before freeing, and it sets
-> maps_by_name_sorted to true after freeing, which may be harmless but
-> is inconsistent with maps__init() and other functions.
+> The linked commit updated dso__load_vmlinux() to call
+> dso__set_long_name() before loading the symbols. Loading the symbols may
+> not succeed but dso__set_long_name() takes ownership of the string. The
+> two callers of this function free the string themselves on failure
+> cases, resulting in the following error:
 >
-> maps__maps_by_name_addr() is also quite hard to read because we already
-> have maps__maps_by_name() and maps__maps_by_address(), but the function
-> is only used in that place so delete it.
+>   $ perf record -- ls
+>   $ perf report
 >
+>   free(): double free detected in tcache 2
+>
+> Fix it by always taking ownership of the string, even on failure. This
+> means the string is either freed at the very first early exit condition,
+> or later when the dso is deleted or the long name is replaced. Now no
+> special return value is needed to signify that the caller needs to
+> free the string.
+>
+> Fixes: e59fea47f83e ("perf symbols: Fix DSO kernel load and symbol proces=
+s to correctly map DSO to its long_name, type and adjust_symbols")
 > Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/maps.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 61eb742d91e3..16b39db594f4 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -124,11 +124,6 @@ static void maps__set_maps_by_address(struct maps *m=
-aps, struct map **new)
->
->  }
->
-> -static struct map ***maps__maps_by_name_addr(struct maps *maps)
-> -{
-> -       return &RC_CHK_ACCESS(maps)->maps_by_name;
-> -}
-> -
->  static void maps__set_nr_maps_allocated(struct maps *maps, unsigned int =
-nr_maps_allocated)
->  {
->         RC_CHK_ACCESS(maps)->nr_maps_allocated =3D nr_maps_allocated;
-> @@ -284,6 +279,9 @@ void maps__put(struct maps *maps)
->
->  static void __maps__free_maps_by_name(struct maps *maps)
->  {
-> +       if (!maps__maps_by_name(maps))
-> +               return;
-> +
->         /*
->          * Free everything to try to do it from the rbtree in the next se=
-arch
-
-nit: this comment is stale, it should be maps_by_address rather than the rb=
-tree.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
->          */
-> @@ -291,6 +289,9 @@ static void __maps__free_maps_by_name(struct maps *ma=
-ps)
->                 map__put(maps__maps_by_name(maps)[i]);
+> ---
+>  tools/perf/util/symbol.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 >
->         zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
-> +
-> +       /* Consistent with maps__init(). When maps_by_name =3D=3D NULL, m=
-aps_by_name_sorted =3D=3D false */
-> +       maps__set_maps_by_name_sorted(maps, false);
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index e98dfe766da3..6a0900dcdfd3 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1977,6 +1977,10 @@ int dso__load(struct dso *dso, struct map *map)
+>         return ret;
 >  }
 >
->  static int map__start_cmp(const void *a, const void *b)
-> @@ -1167,8 +1168,7 @@ int maps__merge_in(struct maps *kmaps, struct map *=
-new_map)
->         }
->         maps__set_maps_by_address(kmaps, merged_maps_by_address);
->         maps__set_maps_by_address_sorted(kmaps, true);
-> -       zfree(maps__maps_by_name_addr(kmaps));
-> -       maps__set_maps_by_name_sorted(kmaps, true);
-> +       __maps__free_maps_by_name(kmaps);
->         maps__set_nr_maps_allocated(kmaps, merged_nr_maps_allocated);
+> +/*
+> + * Always takes ownership of vmlinux when vmlinux_allocated =3D=3D true,=
+ even if
+> + * it returns an error.
+> + */
+>  int dso__load_vmlinux(struct dso *dso, struct map *map,
+>                       const char *vmlinux, bool vmlinux_allocated)
+>  {
+> @@ -1995,8 +1999,11 @@ int dso__load_vmlinux(struct dso *dso, struct map =
+*map,
+>         else
+>                 symtab_type =3D DSO_BINARY_TYPE__VMLINUX;
 >
->         /* Copy entries before the new_map that can't overlap. */
+> -       if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
+> +       if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type)) {
+> +               if (vmlinux_allocated)
+> +                       free((char *) vmlinux);
+>                 return -1;
+> +       }
+>
+>         /*
+>          * dso__load_sym() may copy 'dso' which will result in the copies=
+ having
+> @@ -2039,7 +2046,6 @@ int dso__load_vmlinux_path(struct dso *dso, struct =
+map *map)
+>                 err =3D dso__load_vmlinux(dso, map, filename, true);
+>                 if (err > 0)
+>                         goto out;
+> -               free(filename);
+>         }
+>  out:
+>         return err;
+> @@ -2191,7 +2197,6 @@ static int dso__load_kernel_sym(struct dso *dso, st=
+ruct map *map)
+>                 err =3D dso__load_vmlinux(dso, map, filename, true);
+>                 if (err > 0)
+>                         return err;
+> -               free(filename);
+>         }
+>
+>         if (!symbol_conf.ignore_vmlinux && vmlinux_path !=3D NULL) {
 > --
 > 2.34.1
 >
