@@ -1,159 +1,373 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3D813328D
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 22:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB573130E4B
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 22:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715206459; cv=none; b=Bquc61pYn77wzXoHIEB9oYMK0ieaVV+h6ptQ8WGfKQfGRsW0hrkMal4SBfVFTTwKt4Sb3YZEoDdQwtC7O8DkqGOX0nqVl5il1Y/rP0ni6N0w0be22lS0JmQGKTfkqe5E8hvDA68q7gDjPaf6XIUAKgq/t/l+KiQJcK3y4AWgeew=
+	t=1715206901; cv=none; b=kXhZ47Pp+9VhH3zoldPvBRYPWT9tQgXUM77M9vhAawgvB8aXsTWLue6igJlBQNLJgrcgLkdA3m6DiHsbeST7IeBM07rU8zM1fT+ARZXnUyvspr+/DV64UD3cEbNdQZYACjc02jDiUTbGQCu7Ci4VrxwNcsBZJIF0PEg4+z7BOiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715206459; c=relaxed/simple;
-	bh=SY3te0gY8EpEl5E689hBYo4WycQ2ACiXqT0tWFK/u1s=;
+	s=arc-20240116; t=1715206901; c=relaxed/simple;
+	bh=H2KpMhF80GIGETn3XX8kZjXNq85AgpVFekFuevqybDw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J4nANh1RcXeQPpZsXLFdW5mSx+rzqadSIhPd5rPvr66vbFc/QgTdJ8Xdr1OqkHwHzlIsIRx9PFitymzvvXO7L3xqzfvZT8+wv3Jk4uq3ogVd/IXzcij+E2MEEXDGg+scecXQ8HVvtZiYoRaZOcEAPLW1RD98VIwMwoVLlOs7bpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1nk+o4U; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=SBWnApknxqFdmgUoxgw91EndivWeulqcWTFduymUx3YbfykTxX4lp20x/2jrXDpBrgV1V6d6xbKOgAO/vI12BIBQ+tppFoFKo/VxCRbcDtX+P5KycWoC5nfpyZd87K7a4aOwXCc7OAYL85IzMGJkxx+MGflahyiBIAA0H21f/l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o88AmM+n; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1nk+o4U"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso52355ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 15:14:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o88AmM+n"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-439b1c72676so75161cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 15:21:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715206458; x=1715811258; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715206899; x=1715811699; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y+C4NWbW6e+o3FY/4yD/C5aK+kcXnZU1WPZD0Mhpw68=;
-        b=r1nk+o4USVy9oe7yUEF6LlzevnLOp8MzdIkrR/q+L8o8K8uWeZU2AJsD85nb3Xx8xP
-         hGmiV8KK8o/hyHQ70H08KzA+1YabNpBZmSG38rqnPcYIegz7228OxdiRMC2rTe4pscpk
-         RfD1OsdTGAPcybkNB1E0TYtG6CFv392Rpz1JmED0QiTSf9KUl0IXOD4/FYBM9A5dNrBb
-         X/yrK51O5ZPr/h1iv8tWJja0k1FilkPhxeh0k3iwmzQSD++MoaM4vH3SIryaOHQcc4TV
-         SsFzA4HXKMvDREco0JIZYNDqyxUHwTh7CfYfZfAcxkmir+kp2suDY55+dkB2vD6OCx6f
-         GkXA==
+        bh=6CZ8vZSqgAjCulOPtJoC15yQK8wcTC6SOc5DNSet9Hk=;
+        b=o88AmM+nPogjuzR6qb+SMbV0lUkJDuI9ARaAY8FxxLJdnpCTI/fReZO00vwACJGpOw
+         crhwvDOtj82SUagN1JZE7H7tanyXENmS0N+BZ1vCaZZGKjKfR50aIN9vO6dfCmkAGweG
+         kdzNEdrwdv+DHcJHvUjw9j/RuK9zkEoM7SaT/Z1l3sKbnKdLpeM7210NjdFq923msi07
+         XgD3pnFdpwOqZbSr9yXsemVmbfuI4Yvt72ijT0xBzIP0J4Jwgl6ebkAW/L3IsOC5A6wI
+         MKOoo0KC/q+rL4cFlaXOjZgr7n5zWSg8reafzmmGpgFLm7sDQyTRfpdCCWk5HwkNFhsE
+         WWig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715206458; x=1715811258;
+        d=1e100.net; s=20230601; t=1715206899; x=1715811699;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y+C4NWbW6e+o3FY/4yD/C5aK+kcXnZU1WPZD0Mhpw68=;
-        b=PVedBWUcPRq7Jw0sqkb9poNK3bp+KqCN1J0YxI7IqCYn3BSBt8uIPK6wVeHiAmoNAp
-         5TaPMGn3S8n2Xu0NKFTKdFgok64fp5hrbYi3kHLM++Mm7NZ/wqlkaUF9H4ecJ6+VuONu
-         HcX+ebGwCbVg5bKwnZD68KSGcXsOyDtvZm5C+HZ5XGKvDoYY2pROHlurO9ghAQb9BODO
-         nr6m7z1P9Noclr6xAQ1S++4OayncLaI2UChHAHZshks9WOhjBZS5HTZ3yAJSEZZ2hxN0
-         u3JjTiy2MDLjugsIX6EC1sxfJpK6Ty6YZH4v1rWIQH8iwXCW2IK6pVIZAtpI18qzsVWD
-         wOCg==
-X-Gm-Message-State: AOJu0Yy+3injr2SQn8GwiDy9qB+GBh7bOrDUjA2aAnIlB62T9xgKkNjc
-	pY0l8ITjv8ETRmtV47PBdOG2lfdwz1y5DwnkDnRLFDYv+sPlQE3YmkR4tLgJ7CZuCuH2LopTvI3
-	5EaqvPsImE1Wo0F3E827PCQ+R1js1xtYvqYj1
-X-Google-Smtp-Source: AGHT+IFp8koGJ5z9B2iYuRA1SjLPqE1fjH610M4HsbYYGGiU8xRXw3/oOjPyK1aeZTnnxlfQV4bGyWTVncicCz94LjI=
-X-Received: by 2002:a17:903:22cc:b0:1ea:963e:2e2d with SMTP id
- d9443c01a7336-1ef01244e57mr775635ad.24.1715206457473; Wed, 08 May 2024
- 15:14:17 -0700 (PDT)
+        bh=6CZ8vZSqgAjCulOPtJoC15yQK8wcTC6SOc5DNSet9Hk=;
+        b=h7Njbfmwyxasgu0kAOfd8ehKN+AN1XSowDAzkBzhIY69Yur16+b5SeFfGhqGsjtGAE
+         eRxdB9jr5+6TtxkTPXqhuXbNmgibkE93ni4GxeCogkpuDYP5v54xFjh38SZFSp8K/YKB
+         8I1Iusjw4lVn7n8Ad2wqf8azGagHyr60KK+pwjiVqRe/JjU7SQecuG2UC3qrgN3pG4nT
+         aGKq5sPeaguaCH2NQuvrIxTC2JWPxSnZ42ItWXHm7L6Id10JooAFHVL6bx8nCGfXpI2I
+         z+ibAJnLG7yAYvlFHlJVCZr0pXvitniGszHdSbct6k+7+PtkPQh8C4gnfkHpo2+DzqUb
+         0StA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBcJ84232rBxXuWyDqYtQJ3/sTIZAtDjsnNloT++ieXjrUv1KzW6NMUEUjFy/77uIDZP2v5PHR+0axN7I3syqPK1GJL/Via74HL3WeYGxBwA==
+X-Gm-Message-State: AOJu0Yyw7Pd3jMHzhMVMC76nnghsclFomEiiUlgCgv05SA4sOQCyHmFJ
+	v/u5YHGKfb+G5kZ6rah4DHy4mV+FDYUMhzl+PK8TARHae0iRkJ0oJ6HZQXP3RFIoz0KfIWfRKxk
+	JBSB9Ohymw2UOPzIfC3OaN7zledfVe21Sie9s
+X-Google-Smtp-Source: AGHT+IHBhR+8rgW59oTMLsGWV9Mn9APAFjXnNiOMjJVs/omAB0Bu+jyHOJsiYuTm093WyjuDHkh7l5VFYybN9e4fXog=
+X-Received: by 2002:a05:622a:4a0d:b0:43a:db8d:4a22 with SMTP id
+ d75a77b69052e-43df44dcbdemr499461cf.11.1715206898434; Wed, 08 May 2024
+ 15:21:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507141210.195939-1-james.clark@arm.com> <20240507141210.195939-5-james.clark@arm.com>
-In-Reply-To: <20240507141210.195939-5-james.clark@arm.com>
+References: <20240508060427.417-1-ravi.bangoria@amd.com>
+In-Reply-To: <20240508060427.417-1-ravi.bangoria@amd.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 15:14:06 -0700
-Message-ID: <CAP-5=fWJCfz6VPRC+A4pcsGYVBTv_ANis6kxByELVRiOWsPhxQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf symbols: Fix ownership of string in dso__load_vmlinux()
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 8 May 2024 15:21:27 -0700
+Message-ID: <CAP-5=fX1r2RA1=2Bs4DmMGjrV0VD-kYGMCtt+E530rVihK+MxQ@mail.gmail.com>
+Subject: Re: [RFC 0/4] perf sched: Introduce schedstat tool
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, swapnil.sapkal@amd.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, rostedt@goodmis.org, 
+	vincent.guittot@linaro.org, bristot@redhat.com, adrian.hunter@intel.com, 
+	james.clark@arm.com, kan.liang@linux.intel.com, gautham.shenoy@amd.com, 
+	kprateek.nayak@amd.com, juri.lelli@redhat.com, yangjihong@bytedance.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 7, 2024 at 7:13=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
+On Tue, May 7, 2024 at 11:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
 >
-> The linked commit updated dso__load_vmlinux() to call
-> dso__set_long_name() before loading the symbols. Loading the symbols may
-> not succeed but dso__set_long_name() takes ownership of the string. The
-> two callers of this function free the string themselves on failure
-> cases, resulting in the following error:
+> MOTIVATION
+> ----------
 >
->   $ perf record -- ls
->   $ perf report
+> Existing `perf sched` is quite exhaustive and provides lot of insights
+> into scheduler behavior but it quickly becomes impractical to use for
+> long running or scheduler intensive workload. For ex, `perf sched record`
+> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+> generates huge 56G perf.data for which perf takes ~137 mins to prepare
+> and write it to disk [1].
 >
->   free(): double free detected in tcache 2
+> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+> and generates samples on a tracepoint hit, `perf sched schedstat record`
+> takes snapshot of the /proc/schedstat file before and after the workload,
+> i.e. there is zero interference on workload run. Also, it takes very
+> minimal time to parse /proc/schedstat, convert it into perf samples and
+> save those samples into perf.data file. Result perf.data file is much
+> smaller. So, overall `perf sched schedstat record` is much more light-
+> weight compare to `perf sched record`.
 >
-> Fix it by always taking ownership of the string, even on failure. This
-> means the string is either freed at the very first early exit condition,
-> or later when the dso is deleted or the long name is replaced. Now no
-> special return value is needed to signify that the caller needs to
-> free the string.
+> We, internally at AMD, have been using this (a variant of this, known as
+> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
+> of any scheduler code changes[3][4].
 >
-> Fixes: e59fea47f83e ("perf symbols: Fix DSO kernel load and symbol proces=
-s to correctly map DSO to its long_name, type and adjust_symbols")
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Please note that, this is not a replacement of perf sched record/report.
+> The intended users of the new tool are scheduler developers, not regular
+> users.
+>
+> USAGE
+> -----
+>
+>   # perf sched schedstat record
+>   # perf sched schedstat report
+>
+> Note: Although perf schedstat tool supports workload profiling syntax
+> (i.e. -- <workload> ), the recorded profile is still systemwide since
+> the /proc/schedstat is a systemwide file.
+>
+> HOW TO INTERPRET THE REPORT
+> ---------------------------
+>
+> The schedstat report starts with total time profiling was active in
+> terms of jiffies:
+>
+>   -----------------------------------------------------------------------=
+-----------------------------
+>   Time elapsed (in jiffies)                                  :       2453=
+7
+>   -----------------------------------------------------------------------=
+-----------------------------
+>
+> Next is cpu scheduling statistics. These are simple diffs of
+> /proc/schedstat cpu lines along with description. The report also
+> prints % relative to base stat.
+>
+> In the example below, schedule() left the cpu0 idle 98.19% of the time.
+> 16.54% of total try_to_wake_up() was to wakeup local cpu. And, the total
+> waittime by tasks on cpu0 is 0.49% of the total runtime by tasks on the
+> same cpu.
+>
+>   -----------------------------------------------------------------------=
+-----------------------------
+>   cpu:  cpu0
+>   -----------------------------------------------------------------------=
+-----------------------------
+>   sched_yield() count                                         :          =
+ 0
+>   Legacy counter can be ignored                               :          =
+ 0
+>   schedule() called                                           :       171=
+38
+>   schedule() left the processor idle                          :       168=
+27 ( 98.19% )
+>   try_to_wake_up() was called                                 :         5=
+08
+>   try_to_wake_up() was called to wake up the local cpu        :          =
+84 ( 16.54% )
+>   total runtime by tasks on this processor (in jiffies)       :  24089592=
+43
+>   total waittime by tasks on this processor (in jiffies)      :    117318=
+25 ( 0.49% )
+>   total timeslices run on this cpu                            :         3=
+11
+>   -----------------------------------------------------------------------=
+-----------------------------
+>
+> Next is load balancing statistics. For each of the sched domains
+> (eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
+> the following three categories:
+>
+>   1) Idle Load Balance: Load balancing performed on behalf of a long
+>                         idling cpu by some other cpu.
+>   2) Busy Load Balance: Load balancing performed when the cpu was busy.
+>   3) New Idle Balance : Load balancing performed when a cpu just became
+>                         idle.
+>
+> Under each of these three categories, schedstat report provides
+> different load balancing statistics. Along with direct stats, the
+> report also contains derived metrics prefixed with *. Example:
+>
+>   -----------------------------------------------------------------------=
+-----------------------------
+>   CPU 0 DOMAIN 0
+>   -----------------------------------------------------------------------=
+-----------------------------
+>   ------------------------------------------<Category idle>--------------=
+-----------------------------
+>   load_balance() count on cpu idle                                 :     =
+     50   $      490.74 $
+>   load_balance() found balanced on cpu idle                        :     =
+     42   $      584.21 $
+>   load_balance() move task failed on cpu idle                      :     =
+      8   $     3067.12 $
+>   imbalance sum on cpu idle                                        :     =
+      8
+>   pull_task() count on cpu idle                                    :     =
+      0
+>   pull_task() when target task was cache-hot on cpu idle           :     =
+      0
+>   load_balance() failed to find busier queue on cpu idle           :     =
+      0   $        0.00 $
+>   load_balance() failed to find busier group on cpu idle           :     =
+     42   $      584.21 $
+>   *load_balance() success count on cpu idle                        :     =
+      0
+>   *avg task pulled per successful lb attempt (cpu idle)            :     =
+   0.00
+>   ------------------------------------------<Category busy>--------------=
+-----------------------------
+>   load_balance() count on cpu busy                                 :     =
+      2   $    12268.50 $
+>   load_balance() found balanced on cpu busy                        :     =
+      2   $    12268.50 $
+>   load_balance() move task failed on cpu busy                      :     =
+      0   $        0.00 $
+>   imbalance sum on cpu busy                                        :     =
+      0
+>   pull_task() count on cpu busy                                    :     =
+      0
+>   pull_task() when target task was cache-hot on cpu busy           :     =
+      0
+>   load_balance() failed to find busier queue on cpu busy           :     =
+      0   $        0.00 $
+>   load_balance() failed to find busier group on cpu busy           :     =
+      1   $    24537.00 $
+>   *load_balance() success count on cpu busy                        :     =
+      0
+>   *avg task pulled per successful lb attempt (cpu busy)            :     =
+   0.00
+>   -----------------------------------------<Category newidle>------------=
+-----------------------------
+>   load_balance() count on cpu newly idle                           :     =
+    427   $       57.46 $
+>   load_balance() found balanced on cpu newly idle                  :     =
+    382   $       64.23 $
+>   load_balance() move task failed on cpu newly idle                :     =
+     45   $      545.27 $
+>   imbalance sum on cpu newly idle                                  :     =
+     48
+>   pull_task() count on cpu newly idle                              :     =
+      0
+>   pull_task() when target task was cache-hot on cpu newly idle     :     =
+      0
+>   load_balance() failed to find busier queue on cpu newly idle     :     =
+      0   $        0.00 $
+>   load_balance() failed to find busier group on cpu newly idle     :     =
+    382   $       64.23 $
+>   *load_balance() success count on cpu newly idle                  :     =
+      0
+>   *avg task pulled per successful lb attempt (cpu newly idle)      :     =
+   0.00
+>   -----------------------------------------------------------------------=
+-----------------------------
+>
+> Consider following line:
+>
+>   load_balance() found balanced on cpu newly idle                  :     =
+    382    $      64.23 $
+>
+> While profiling was active, the load-balancer found 382 times the load
+> needs to be balanced on a newly idle CPU 0. Following value encapsulated
+> inside $ is average jiffies between two events (24537 / 382 =3D 64.23).
+>
+> Next is active_load_balance() stats. alb did not trigger while I ran
+> a workload so it's all 0s.
+>
+>   ----------------------------------<Category active_load_balance()>-----=
+-----------------------------
+>   active_load_balance() count                                      :     =
+      0
+>   active_load_balance() move task failed                           :     =
+      0
+>   active_load_balance() successfully moved a task                  :     =
+      0
+>   -----------------------------------------------------------------------=
+-----------------------------
+>
+> Next are sched_balance_exec() and sched_balance_fork() stats. They are
+> not used but we kept it in RFC just for legacy purpose. Unless opposed,
+> we plan to remove them in next revision.
+>
+> Next is wakeup statistics. For every domain, the report also shows
+> task-wakeup statistics. Example:
+>
+>   --------------------------------------------<Wakeup Info>--------------=
+-----------------------------
+>   try_to_wake_up() awoke a task that last ran on a diff cpu       :      =
+ 12070
+>   try_to_wake_up() moved task because cache-cold on own cpu       :      =
+  3324
+>   try_to_wake_up() started passive balancing                      :      =
+     0
+>   -----------------------------------------------------------------------=
+-----------------------------
+>
+> Same set of stats are reported for each cpu and each domain level.
+>
+>
+> TODO:
+>  - This RFC series supports v15 layout of /proc/schedstat but v16 layout
+>    is already being pushed upstream. We are planning to include v16 as
+>    well in the next revision.
+>  - Currently schedstat tool provides statistics of only one run but we
+>    are planning to add `perf sched schedstat diff` which can compare
+>    the data of two different runs (possibly good and bad) and highlight
+>    where scheduler decisions are impacting workload performance.
+>  - perf sched schedstat records /proc/schedstat which is a cpu and domain
+>    level scheduler statistic. We are planning to add taskstat tool which
+>    reads task stats from procfs and generate scheduler statistic report
+>    at task granularity. this will probably a standalone tool, something
+>    like `perf sched taskstat record/report`.
+>  - /proc/schedstat shows cpumask in domain line to indicate a group of
+>    cpus that belong to the domain. Since we are not using domain<->cpumas=
+k
+>    data anywhere, we are not capturing it as part of perf sample. But we
+>    are planning to include it in the next revision.
+>  - We have tested the patch only on AMD machines, not on other platforms.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+This is great! Is it possible to add some basic shell script testing:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/shell?h=3Dperf-tools-next
+for the sake of coverage, other platform testing, etc. ?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/symbol.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>  - Some of the perf related features can be added to the schedstat sub-
+>    command as well: for ex, pipemode, -p <pid> option to profile running
+>    process etc. We are not planning to add TUI support however.
+>  - Code changes are for RFC and thus not optimal. Some of the places
+>    where code changes are not required for RFC are marked as /* FIXME */.
+>  - Documenting details about schedstat tool in perf-sched man page will
+>    also be done in next revision.
+>  - Checkpatch warnings are ignored for now.
 >
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index e98dfe766da3..6a0900dcdfd3 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1977,6 +1977,10 @@ int dso__load(struct dso *dso, struct map *map)
->         return ret;
->  }
+> Patches are prepared on perf-tools-next/perf-tools-next (37862d6fdced).
+> Although all changes are in tools/perf/, kernel is important since it's
+> using v15 of /proc/schedstat.
 >
-> +/*
-> + * Always takes ownership of vmlinux when vmlinux_allocated =3D=3D true,=
- even if
-> + * it returns an error.
-> + */
->  int dso__load_vmlinux(struct dso *dso, struct map *map,
->                       const char *vmlinux, bool vmlinux_allocated)
->  {
-> @@ -1995,8 +1999,11 @@ int dso__load_vmlinux(struct dso *dso, struct map =
-*map,
->         else
->                 symtab_type =3D DSO_BINARY_TYPE__VMLINUX;
+> [1] https://youtu.be/lg-9aG2ajA0?t=3D283
+> [2] https://github.com/AMDESE/sched-scoreboard
+> [3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd=
+.com/
+> [4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd=
+.com/
 >
-> -       if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type))
-> +       if (symsrc__init(&ss, dso, symfs_vmlinux, symtab_type)) {
-> +               if (vmlinux_allocated)
-> +                       free((char *) vmlinux);
->                 return -1;
-> +       }
+> Ravi Bangoria (2):
+>   perf sched: Make `struct perf_sched sched` a global variable
+>   perf sched: Add template code for schedstat subcommand
 >
->         /*
->          * dso__load_sym() may copy 'dso' which will result in the copies=
- having
-> @@ -2039,7 +2046,6 @@ int dso__load_vmlinux_path(struct dso *dso, struct =
-map *map)
->                 err =3D dso__load_vmlinux(dso, map, filename, true);
->                 if (err > 0)
->                         goto out;
-> -               free(filename);
->         }
->  out:
->         return err;
-> @@ -2191,7 +2197,6 @@ static int dso__load_kernel_sym(struct dso *dso, st=
-ruct map *map)
->                 err =3D dso__load_vmlinux(dso, map, filename, true);
->                 if (err > 0)
->                         return err;
-> -               free(filename);
->         }
+> Swapnil Sapkal (2):
+>   perf sched schedstat: Add record and rawdump support
+>   perf sched schedstat: Add support for report subcommand
 >
->         if (!symbol_conf.ignore_vmlinux && vmlinux_path !=3D NULL) {
+>  tools/lib/perf/Documentation/libperf.txt      |   2 +
+>  tools/lib/perf/Makefile                       |   2 +-
+>  tools/lib/perf/include/perf/event.h           |  37 ++
+>  .../lib/perf/include/perf/schedstat-cpu-v15.h |  22 +
+>  .../perf/include/perf/schedstat-domain-v15.h  | 121 ++++
+>  tools/perf/builtin-inject.c                   |   2 +
+>  tools/perf/builtin-sched.c                    | 558 ++++++++++++++++--
+>  tools/perf/util/event.c                       |  54 ++
+>  tools/perf/util/event.h                       |   2 +
+>  tools/perf/util/session.c                     |  44 ++
+>  tools/perf/util/synthetic-events.c            | 170 ++++++
+>  tools/perf/util/synthetic-events.h            |   4 +
+>  tools/perf/util/tool.h                        |   4 +-
+>  13 files changed, 965 insertions(+), 57 deletions(-)
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-cpu-v15.h
+>  create mode 100644 tools/lib/perf/include/perf/schedstat-domain-v15.h
+>
 > --
-> 2.34.1
+> 2.44.0
 >
