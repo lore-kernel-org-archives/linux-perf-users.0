@@ -1,136 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904611A2C15;
-	Wed,  8 May 2024 06:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87F83612D;
+	Wed,  8 May 2024 07:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715151521; cv=none; b=HRVtcIN7bk3JVXjS3VFDiOJNubBX/W+1RBv5BenMsu6U1MkteIwVVzHnasAyjYGIDXYajMd7wmfUNFSFMnKXXMe5NCyir1qkfWzWcpS9WYnDNEY2dLv98rtoTXPvlUEVpFIivV4mS9p/XCu2XHyPdGaUDTimX8+SQYUZPK1Gdu8=
+	t=1715153953; cv=none; b=DNt15qnUt50TX85M0TAFoNOL8r+tbRu9H9hCIjqOSzqm1QmTYHG+AspOpELx5Z2clMuqYwIgVZLKH9bzFRv5dnUgOlgRkB9se5BfY9PyUhx0OqMktaZfeChBpNSijsfY2eT3++lkSRobw5bncN/DM2JQyrcW/YUPMyh0bXh1koo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715151521; c=relaxed/simple;
-	bh=02pfMD/+H0cvQ+j9wplpH/CkaJ7KgYPMc+AIc8kLhhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ow7WNC5bqT3pzU7OObQwNuF88P7yQ78vwubrBqtsIUaPkfaUE6FSBSPN4OaXx6HEPXinQ0c+axcbsODXB1NHNGxLpguAIkr692ZTSiaTNeM3m0kG28MtW5a5AX5KpslVU9OdSY33WMxddNcRQSTzMfV47m3yFjj+9XcgYFlU/pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/Wq4DiB; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715153953; c=relaxed/simple;
+	bh=f3LK0ObLAJurfNRZdpJ4wptu0daiM/YkDVKRX3RKV1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KP2NDvth4YP0c8BupXcDeNNNzYEaEZQr+4LCqlDQvY0autsrFKhngP6IsJci/ImuDGXVfwdxhthpuHeb2qQWAR1b5GJZarPx1MSGz2b2uzFusCAPS1FhicHBlHrH6RntO3T716fWInF6E+EdFw2CI9qXnUBO25s34KWDcU0CsK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+IoIWuH; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/Wq4DiB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715151519; x=1746687519;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=02pfMD/+H0cvQ+j9wplpH/CkaJ7KgYPMc+AIc8kLhhk=;
-  b=K/Wq4DiBtZCotJ+QiNHPMOudeoJImXO8eDeFRDLPaa5Nrwc00IkM/wAt
-   BCaa3UkPVAsqDnSjK6StGRh4BFxLFFRx+8Wc80U5eMyXRy5e7tzmeemNH
-   vni4cNY9/3XzSPvGWyJFy9bD+PiPMx23nh6wQJ9jEYoHM9p1ryyFAy4RF
-   3zqM4JqGTbTRu/lSVDZH+yr1NxIH9+iamGo9gN1zZuRxAHh3IoYt4LxpZ
-   EruwrjJShdzEJLtqiyHmXJx1wPMQ69nfLYcRFVDFIESmZHHDPFlHToYKu
-   /QxTqeOo2KTAU6HdQ5ns4p0tpeKxzkqU+SpqqsTCiqys6QNZY8VwM2LBR
-   g==;
-X-CSE-ConnectionGUID: cfAc+qvtTGGpOIeQh2NVBA==
-X-CSE-MsgGUID: Tem6lO/ATnyuIjhaMsbA0Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="22144486"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="22144486"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 23:58:39 -0700
-X-CSE-ConnectionGUID: 0BkwCdbAQFyPZLF6xV6Bvg==
-X-CSE-MsgGUID: R0sjFcOkSfSkgaWarwRK7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="28760747"
-Received: from tiesheng-mobl.ccr.corp.intel.com (HELO [10.124.225.233]) ([10.124.225.233])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 23:58:34 -0700
-Message-ID: <34245468-00fc-49aa-951e-d7d786084d08@linux.intel.com>
-Date: Wed, 8 May 2024 14:58:30 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+IoIWuH"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f3761c96aso5193446e87.3;
+        Wed, 08 May 2024 00:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715153950; x=1715758750; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=HQn9AgRFMdHrqQQjouGtyxcYjF50ckhpwWQdA7LsrIo=;
+        b=Q+IoIWuHnRMmiDmQTcp8jyTlj6gIj2HIKxvYilxhTwWrpkTEZMaSnFUsWwouyp2XHw
+         N2+ml2E+xSN5Hx73KmkRhVWU/US07nnSw6JXxv20kEBV/VZW0weJmdSQ9lSSRecsF8Io
+         o06IPjMCyEp/ZHp02FqzfnGezqMNuvUdOHgwe6qRmjC/zEVDAt0+rv2QrSk4JhSM5Ih2
+         dzlBiRKj0WUHVe5+CZBO2kfCXQl2bMkfzn/dSaKL6/RSMs11jJWQZoIF8//IfC+PiyJQ
+         lhD0JBZ4F9gA+0LU+Q1TpSlZDAcBbJudKf1/70nzpJb4sdi7WMDKWp4+vFnLTy5luir1
+         we+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715153950; x=1715758750;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HQn9AgRFMdHrqQQjouGtyxcYjF50ckhpwWQdA7LsrIo=;
+        b=r8orGBLHyWifQ7WCMir0J/E7TtxaJxWqs+iySAnXr5w1aWTuukvGgTe84ekeI3ow9k
+         U/e4/VGklG9wtJrVWY3ixCC4CEJH6yG8EwteO09CMQFhyQQhLvH4vHnKsyX0C7uZHPgd
+         eVFp/eO6s1dwYi2Tt/5wDWqriZym4TylVzw0juiDeukACH5iWHB//jy79pVl35TBESYu
+         Wma9BdP3yc7xkgqjcQzZAOvk9jwLlqwWUt1yoajXuT1p+GLHty3YYpYIuxXq//ZpM/ct
+         2Q5tO0zN7gu8o0Q85vTB92Tvb2D4iyFhkLBKenmAeJadvwohmh9jHe1mkW/LHPudT9V0
+         ApPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/48CW23wr1d6O1ejm3Tq7+LfQTMZOwBR4bBaQ6kOc309Q4md4qQpf16KRQWo2V4nHXJhN8NSzyPzBrwUZ1Y0A7NLHONQ3gEBQoex3YF5UKi0qPgmTCnx8aUOTpOsLMK2yIn97VX0W96l1oUVmcw==
+X-Gm-Message-State: AOJu0YyXEL51cBqS/rDM1XmOk9tqc1nOgvyBzAlnHOxKaQPg4JTV2yi8
+	9aCUdAm3W0XnrYmORc8uGvG8+ObfmTK9qXsmmgMnBbHwJNcs5Pp9bN2Ns7yj
+X-Google-Smtp-Source: AGHT+IFpFo8eT1Te9z3lKdN3VNhEIZaSFYvju61jJNNZjUVEuLpM4ZukvEkmhQvpPaRHFMkzaPibIQ==
+X-Received: by 2002:a05:6512:3b28:b0:51d:1d42:3eef with SMTP id 2adb3069b0e04-5217c6673f2mr2056665e87.29.1715153949372;
+        Wed, 08 May 2024 00:39:09 -0700 (PDT)
+Received: from gmail.com (1F2EF402.unconfigured.pool.telekom.hu. [31.46.244.2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87c254bfsm12859855e9.17.2024.05.08.00.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 00:39:08 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 8 May 2024 09:39:06 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Makefile.perf:1149: *** Missing bpftool input for generating
+ vmlinux.h.  Stop.
+Message-ID: <ZjssGrj+abyC6mYP@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/54] perf: x86: Add x86 function to switch PMI
- handler
-To: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-13-mizhang@google.com>
- <20240507092241.GV40213@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
-In-Reply-To: <20240507092241.GV40213@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
+So I've been getting this perf build failure for some time:
 
-On 5/7/2024 5:22 PM, Peter Zijlstra wrote:
-> On Mon, May 06, 2024 at 05:29:37AM +0000, Mingwei Zhang wrote:
->> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->>
->> Add x86 specific function to switch PMI handler since passthrough PMU and host
->> PMU use different interrupt vectors.
->>
->> x86_perf_guest_enter() switch PMU vector from NMI to KVM_GUEST_PMI_VECTOR,
->> and guest LVTPC_MASK value should be reflected onto HW to indicate whether
->> guest has cleared LVTPC_MASK or not, so guest lvt_pc is passed as parameter.
->>
->> x86_perf_guest_exit() switch PMU vector from KVM_GUEST_PMI_VECTOR to NMI.
->>
->> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/core.c            | 17 +++++++++++++++++
->>  arch/x86/include/asm/perf_event.h |  3 +++
->>  2 files changed, 20 insertions(+)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 09050641ce5d..8167f2230d3a 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -701,6 +701,23 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
->>  }
->>  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
->>  
->> +void x86_perf_guest_enter(u32 guest_lvtpc)
->> +{
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
->> +			       (guest_lvtpc & APIC_LVT_MASKED));
->> +}
->> +EXPORT_SYMBOL_GPL(x86_perf_guest_enter);
->> +
->> +void x86_perf_guest_exit(void)
->> +{
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
->> +}
->> +EXPORT_SYMBOL_GPL(x86_perf_guest_exit);
-> 
-> Urgghh... because it makes sense for this bare APIC write to be exported
-> ?!?
-Usually KVM doesn't access HW except vmx directly and requests other
-components to access HW to avoid confliction, APIC_LVTPC is managed by x86
-perf driver, so I added two functions here and exported them.
-> 
-> Can't this at the very least be hard tied to perf_guest_{enter,exit}() ?
-> perf_guest_{enter, exit} is called from this function in another commit, I
-should merge that commit into this one according to your suggestion in
-other email.
+  kepler:~/tip/tools/perf> make clean
+  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.  Stop.
+  make: *** [Makefile:90: clean] Error 2
 
-thanks
+... but if I clone a new repository, it works fine, until a point.
+
+'make clean' doesn't work - and 'make mrproper' in the main kernel 
+directory doesn't clean up properly.
+
+Only if I do a brute-force:
+
+	rm -rf tools/
+	git checkout HEAD -f
+
+does it get resolved.
+
+The failure condition triggers if I Ctrl-C the following build a couple of 
+times, without it being finished:
+
+
+   cd tools/perf; make clean install
+   ...
+
+   LD      util/perf-in.o
+   LD      perf-in.o
+   CC      pmu-events/pmu-events.o
+ ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interrupt
+ make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interrupt
+ make[1]: *** [Makefile.perf:264: sub-make] Interrupt
+ make: *** [Makefile:113: install] Interrupt
+ kepler:~/tip> perfi
+ Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.  Stop.
+ make: *** [Makefile:90: clean] Error 2
+
+Thanks,
+
+	Ingo
