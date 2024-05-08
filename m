@@ -1,21 +1,21 @@
 Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2C4748F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF30540841;
 	Wed,  8 May 2024 23:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715209283; cv=none; b=ue3ROct4Ju/q0fGUD8/l69VN0Al+rs9E4zLWSJ/PjjNAfpB7O1p21S7mULHOViqm47fjG1saUqqnpkwYPFZd+hCfi4hSWb9ly8n/QVquL05Z3woEWrM5oyL1tGPAsitc2B5wn60OdDdCWEjCKvkesJFrNw9rMWQ56XFNM2qCgyc=
+	t=1715209284; cv=none; b=aSm8zUwqQhzEzPcyfnQKZgdFKEeqDTdMi4wwe76I1MDz0CWkVqsKqz/ZHrw88Cl9WtgJtjEhSolRDeyXayYIbowSOvIuZWDUaGA3zTqdEi7H40oyG/Y2jA61PppqtimDOhXpHcuUHk3SQpm5Y4G2W0a06638VA3TZe0bf87OznE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715209283; c=relaxed/simple;
-	bh=TtfXOhFRFK5MpCzNGj3p8LCvY1TKU+bo05T1Fk+ihMI=;
+	s=arc-20240116; t=1715209284; c=relaxed/simple;
+	bh=fN4ufz3Y1kRTbivEXYzNImgKWuIAekp2n+qBPkJublU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sXV3sR0YrELFvEpYidaim9oVeM6Z7kvq3RGYK9g4gNwiKGTrz9muNsftHOY9WKQwz4VUYK2HkKXhfEA1J2xQxNSqhLI4tufsehwDH2UzgCEWmfOYMjlM6d5J8epvdqybKYEA9oTMKL/dB72R4d73bCIRDGGFLaFOZSWVasJQ3jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=uOlade78; arc=none smtp.client-ip=62.210.214.84
+	 In-Reply-To:To:Cc; b=DD3d9egPytXDyLKkYmtKRmEQZLv+1T7I1YiYeikpn3bF6HBlUv21NI0BQc44SonRGHgn2U6E6nOH2kbpoVgpOQnl2FG8aZYve5aqZ7b5AxkbYI0FTpdZ6XAR57SBhAYwfDB0qaiuoRLrmvYKNvBXTzHd8P6cqDJU6DYLRd9hRsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=M1h1yV7k; arc=none smtp.client-ip=62.210.214.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="uOlade78"
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="M1h1yV7k"
 Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id B91C814C2DB;
+	by submarine.notk.org (Postfix) with ESMTPS id 268CE14C2DC;
 	Thu,  9 May 2024 01:01:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
 	s=2; t=1715209275;
@@ -23,19 +23,19 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b9BsOoVVLhm5a/uAQmoovTkJlw4FO44s5iAQuB67NKo=;
-	b=uOlade78pz7hJk5W6eH1odKzmdfCvgTPdqj1hp/1rBsQdO6FuVWwpsIO5YT/ekcwIUsFt4
-	aZmw4POXLysRLLt0Ifk15ZP9fXbBNy2dAtMFDGvmjC7fN/SoWkgVl+iBtHyuDUDP7bePpn
-	E1jWLYDn/0JR255ChxGkdCrBNj/tXkwcyf4lxY1YSrIS7MJjVg9PDfuR1aewp+NfLaBE65
-	rmublOpXLJo5GkMSEMu8//pfPu6ywA5C2aIvgOo3ipj5E46t6HSc1eZLlVvfrj1F6earXK
-	2Zs+21PU6mK+jQhGKH/1afrYR9SGuH2Fv2Zm6btijSm03Ue3dvtYrcZC/BGZew==
+	bh=5V9r1VV+2F+sgHWeR0/4ne1F1lK/DMZyCeDq+XDAAW8=;
+	b=M1h1yV7kGlEgfIbqvk0CI/TUmBLFwcYV/jH9ebaScX19gAdJt4EuzI0oeKPGszszKz0A6h
+	s/W9Njlbh1w7xM/JrxcmBz23i+T7/LFdl30WSsqs2zerGQ7XPm/ysbRoF2C54AXrbnAfwz
+	qRIojnvywVEKkda8gTZie7Oyf9uslHtHotMt+ce6z+4bKKJWZmL3rhRKWspNchFlDPB/eJ
+	R0F5PSmBLkHYxTDqdqCQB4lGpLAczfGuzGK/0vtj1HwESqNFoNIisFiuYZo2lI7MHh9kkH
+	DimcYk7Noi0RxETi+DJBfRGi1mVIkvEVMzOycVVTV5CtGA+VIpODtWA+39YkYQ==
 Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id e574cfbc;
+	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 574e4e52;
 	Wed, 8 May 2024 23:01:02 +0000 (UTC)
 From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Thu, 09 May 2024 08:00:45 +0900
-Subject: [PATCH v3 1/3] perf parse-events: pass parse_state to
- add_tracepoint
+Date: Thu, 09 May 2024 08:00:46 +0900
+Subject: [PATCH v3 2/3] perf parse-events: Add new 'fake_tp' parameter for
+ tests
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240509-perf_digit-v3-1-9036bf7898da@codewreck.org>
+Message-Id: <20240509-perf_digit-v3-2-9036bf7898da@codewreck.org>
 References: <20240509-perf_digit-v3-0-9036bf7898da@codewreck.org>
 In-Reply-To: <20240509-perf_digit-v3-0-9036bf7898da@codewreck.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -56,167 +56,242 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Dominique Martinet <asmadeus@codewreck.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6081;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9031;
  i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=TtfXOhFRFK5MpCzNGj3p8LCvY1TKU+bo05T1Fk+ihMI=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmPAQulnlzma4cAGBkIaxu0lZ0oXgHKD5yWgcdo
- ACCNRoC0h2JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjwELgAKCRCrTpvsapjm
- cHA4D/9neBqDSZRcZm1eGochwXnzHx2Et7h7stypOKj3zEQjj51tXgR16NQLWfY46RlpQJJA7WD
- ld0wkUD5vgAaVEdYSNybInc+1XKdn0Mo3mBcMlHXZet944Ugv4245DWWcmybcEdOHd5KUMejMVk
- Z7Paqme5poIIpx+Ld+/AoSVrc6/YpXMOf+Mi5VyLcPsejRQwjF2QpqeTP4RSnxLuWtsWmnWgxQ8
- DJV+HAquYeI+7QqlM6ybDSRNSsPdicp89zhleb810XZHoh5lI7W+N0O2rlmJ3VHIYXdKr5QyjaQ
- K/lb4zRo6u5A+bvThjoojS+6z+d2Tef2NUMLdaWG4egR5uxYObNdFfJWXcNrt7E96cS7ltR6VKb
- avkzjqbuhNTd4u/uD2e6rN/Y143F9RjBLMqLtcKMKXrfYaGzw3nXMjVsbueTlaM65UhOpyMkeVN
- lvUyixaa5lAVQaMpb1a74oK8siwJtAq7mCHIZFucdYoCP9vvW2mAC8QVCNKQZ6KBxCczIMD7xwd
- SnJswk/2qwtOs/nyu9EcgOVwOsPUL1e5HMG3B42zsfzP1FmO14DWkY6O1i5BNUC49Y3h2GE7Odh
- ZCgMa50n701Zz7xJ3X59PAGpnhqdrOk6r/hKObK62flAKAU8Quzf/9wkx59z5j9UKDooEux4usU
- VaK/il9S7oAjA+A==
+ bh=fN4ufz3Y1kRTbivEXYzNImgKWuIAekp2n+qBPkJublU=;
+ b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmPAQu7zwiqRAMUcEG82dGi90nqEPyKRnVLZN0e
+ rU763m/nOCJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjwELgAKCRCrTpvsapjm
+ cJlaEACdOkVrLKcq6E+3YRBXNHZgu7IU7KGc/FdGGIycrr1xWOpBRGn1kVl1ki9e32mhRXcqZq/
+ y5bEaSJRFBf1ROBcck1slOY4QvwTVe/zZJaVb/X9aEyp5IwYPetIy0I2lEoJ4P2SHXkRHtp7Pb0
+ Gy+IB2n7H6+VgdgXz2PwUpbVH8k5F66ATCSgnGNUGaXAqqKdfuuxfixuSymhooX+beXTCxEyX2V
+ OtnJWoPOJ6miRjTDXRqMOEfPqjUZ5KqCvUWEetfFjzk0pCGORn+9TZiUTisnwrFbsA3HJbrxTQ/
+ aqYhJwtNLrhCtyd6y8Ls8AfY6PQJ6Impdr4mWFjXFHppP1iLaC5pWKD2s82h1aqrKB033xd7AX6
+ F8YMG08cfSpXU7D1ubkz4BU8xwFUce2ZgejYu3UJCrqe6wcag36atsFrF4RK4aDJWQIlWjXso85
+ 71c9sgcI6fCOTJTqj3mhKQypgpzLNNDFAt6yaB3X1jHk4ls9avI+5QDFeenmkt5v7zHmvgmq822
+ L8N8kJwsfkuT2DpJPV3HduQrxMICubcqJTt+ggxo3fFfahEs/IoiWn4gM3fh+gEfoJ2LOagcFwc
+ 6F/JABnh2bSjjh8f8faku2p6ElgM8NLqGQYlgFExbL7baeBiZO2METedv7MujlAnZDI7uqM+7qm
+ iuZNy9Hdmb+ISWQ==
 X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
  fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-The next patch will add another flag to parse_state that we will want to
-pass to evsel__newtp_idx(), so pass the whole parse_state all the way
-down instead of giving only the index
+The next commit will allow tracepoints starting with digits, but most
+systems do not have any available by default so tests should skip the
+actual "check if it exists in /sys/kernel/debug/tracing" step.
+
+In order to do that, add a new boolean flag specifying if we should
+actually "format" the probe or not.
 
 Originally-by: Jiri Olsa <jolsa@kernel.org>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 ---
- tools/perf/util/parse-events.c | 31 ++++++++++++++++++-------------
- tools/perf/util/parse-events.h |  3 ++-
- tools/perf/util/parse-events.y |  2 +-
- 3 files changed, 21 insertions(+), 15 deletions(-)
+ tools/perf/tests/parse-events.c |  6 ++++--
+ tools/perf/tests/pmu-events.c   |  2 +-
+ tools/perf/util/evlist.c        |  3 ++-
+ tools/perf/util/evsel.c         | 20 +++++++++++++-------
+ tools/perf/util/evsel.h         |  4 ++--
+ tools/perf/util/metricgroup.c   |  3 ++-
+ tools/perf/util/parse-events.c  |  9 ++++++---
+ tools/perf/util/parse-events.h  |  6 ++++--
+ 8 files changed, 34 insertions(+), 19 deletions(-)
 
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 993e482f094c..c3b77570bb57 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2493,7 +2493,8 @@ static int test_event(const struct evlist_test *e)
+ 		return TEST_FAIL;
+ 	}
+ 	parse_events_error__init(&err);
+-	ret = parse_events(evlist, e->name, &err);
++	ret = __parse_events(evlist, e->name, /*pmu_filter=*/NULL, &err, /*fake_pmu=*/NULL,
++			     /*warn_if_reordered=*/true, /*fake_tp=*/true);
+ 	if (ret) {
+ 		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
+ 		parse_events_error__print(&err, e->name);
+@@ -2521,7 +2522,8 @@ static int test_event_fake_pmu(const char *str)
+ 
+ 	parse_events_error__init(&err);
+ 	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL, &err,
+-			     &perf_pmu__fake, /*warn_if_reordered=*/true);
++			     &perf_pmu__fake, /*warn_if_reordered=*/true,
++			     /*fake_tp=*/true);
+ 	if (ret) {
+ 		pr_debug("failed to parse event '%s', err %d\n",
+ 			 str, ret);
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index f39aadacd7a6..ff3e7bc0a77f 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -842,7 +842,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
+ 		*cur = '/';
+ 
+ 	ret = __parse_events(evlist, dup, /*pmu_filter=*/NULL, error, fake_pmu,
+-			     /*warn_if_reordered=*/true);
++			     /*warn_if_reordered=*/true, /*fake_tp=*/false);
+ 	free(dup);
+ 
+ 	evlist__delete(evlist);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 55a300a0977b..3a719edafc7a 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -298,7 +298,8 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
+ #ifdef HAVE_LIBTRACEEVENT
+ struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
+ {
+-	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0);
++	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0,
++					       /*format=*/true);
+ 
+ 	if (IS_ERR(evsel))
+ 		return evsel;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3536404e9447..4f818ab6b662 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -452,7 +452,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+  * Returns pointer with encoded error via <linux/err.h> interface.
+  */
+ #ifdef HAVE_LIBTRACEEVENT
+-struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
++struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
+ {
+ 	struct evsel *evsel = zalloc(perf_evsel__object.size);
+ 	int err = -ENOMEM;
+@@ -469,14 +469,20 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
+ 		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
+ 			goto out_free;
+ 
+-		evsel->tp_format = trace_event__tp_format(sys, name);
+-		if (IS_ERR(evsel->tp_format)) {
+-			err = PTR_ERR(evsel->tp_format);
+-			goto out_free;
++		event_attr_init(&attr);
++
++		if (format) {
++			evsel->tp_format = trace_event__tp_format(sys, name);
++			if (IS_ERR(evsel->tp_format)) {
++				err = PTR_ERR(evsel->tp_format);
++				goto out_free;
++			}
++			attr.config = evsel->tp_format->id;
++		} else {
++			attr.config = (__u64) -1;
+ 		}
+ 
+-		event_attr_init(&attr);
+-		attr.config = evsel->tp_format->id;
++
+ 		attr.sample_period = 1;
+ 		evsel__init(evsel, &attr, idx);
+ 	}
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 517cff431de2..375a38e15cd9 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -234,14 +234,14 @@ void free_config_terms(struct list_head *config_terms);
+ 
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+-struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
++struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
+ 
+ /*
+  * Returns pointer with encoded error via <linux/err.h> interface.
+  */
+ static inline struct evsel *evsel__newtp(const char *sys, const char *name)
+ {
+-	return evsel__newtp_idx(sys, name, 0);
++	return evsel__newtp_idx(sys, name, 0, true);
+ }
+ #endif
+ 
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 9be406524617..69f6a46402c3 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1502,7 +1502,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ 	pr_debug("Parsing metric events '%s'\n", events.buf);
+ 	parse_events_error__init(&parse_error);
+ 	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
+-			     &parse_error, fake_pmu, /*warn_if_reordered=*/false);
++			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
++			     /*fake_tp=*/false);
+ 	if (ret) {
+ 		parse_events_error__print(&parse_error, events.buf);
+ 		goto err_out;
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 2b9ede311c31..e6a2a80b02df 100644
+index e6a2a80b02df..30f958069076 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -543,13 +543,14 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 	parse_events_error__handle(e, column, strdup(str), strdup(help));
- }
- 
--static int add_tracepoint(struct list_head *list, int *idx,
-+static int add_tracepoint(struct parse_events_state *parse_state,
-+			  struct list_head *list,
- 			  const char *sys_name, const char *evt_name,
- 			  struct parse_events_error *err,
+@@ -550,7 +550,8 @@ static int add_tracepoint(struct parse_events_state *parse_state,
  			  struct parse_events_terms *head_config, void *loc_)
  {
  	YYLTYPE *loc = loc_;
--	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, (*idx)++);
-+	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++);
+-	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++);
++	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++,
++					       !parse_state->fake_tp);
  
  	if (IS_ERR(evsel)) {
  		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
-@@ -568,7 +569,8 @@ static int add_tracepoint(struct list_head *list, int *idx,
- 	return 0;
- }
+@@ -2135,7 +2136,7 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
  
--static int add_tracepoint_multi_event(struct list_head *list, int *idx,
-+static int add_tracepoint_multi_event(struct parse_events_state *parse_state,
-+				      struct list_head *list,
- 				      const char *sys_name, const char *evt_name,
- 				      struct parse_events_error *err,
- 				      struct parse_events_terms *head_config, YYLTYPE *loc)
-@@ -602,7 +604,7 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 
- 		found++;
- 
--		ret = add_tracepoint(list, idx, sys_name, evt_ent->d_name,
-+		ret = add_tracepoint(parse_state, list, sys_name, evt_ent->d_name,
- 				     err, head_config, loc);
- 	}
- 
-@@ -616,19 +618,21 @@ static int add_tracepoint_multi_event(struct list_head *list, int *idx,
- 	return ret;
- }
- 
--static int add_tracepoint_event(struct list_head *list, int *idx,
-+static int add_tracepoint_event(struct parse_events_state *parse_state,
-+				struct list_head *list,
- 				const char *sys_name, const char *evt_name,
- 				struct parse_events_error *err,
- 				struct parse_events_terms *head_config, YYLTYPE *loc)
+ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
+ 		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
+-		   bool warn_if_reordered)
++		   bool warn_if_reordered, bool fake_tp)
  {
- 	return strpbrk(evt_name, "*?") ?
--		add_tracepoint_multi_event(list, idx, sys_name, evt_name,
-+		add_tracepoint_multi_event(parse_state, list, sys_name, evt_name,
- 					   err, head_config, loc) :
--		add_tracepoint(list, idx, sys_name, evt_name,
-+		add_tracepoint(parse_state, list, sys_name, evt_name,
- 			       err, head_config, loc);
- }
+ 	struct parse_events_state parse_state = {
+ 		.list	  = LIST_HEAD_INIT(parse_state.list),
+@@ -2143,6 +2144,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
+ 		.error	  = err,
+ 		.stoken	  = PE_START_EVENTS,
+ 		.fake_pmu = fake_pmu,
++		.fake_tp  = fake_tp,
+ 		.pmu_filter = pmu_filter,
+ 		.match_legacy_cache_terms = true,
+ 	};
+@@ -2352,7 +2354,8 @@ int parse_events_option(const struct option *opt, const char *str,
  
--static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
-+static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
-+				    struct list_head *list,
- 				    const char *sys_name, const char *evt_name,
- 				    struct parse_events_error *err,
- 				    struct parse_events_terms *head_config, YYLTYPE *loc)
-@@ -654,7 +658,7 @@ static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
- 		if (!strglobmatch(events_ent->d_name, sys_name))
- 			continue;
+ 	parse_events_error__init(&err);
+ 	ret = __parse_events(*args->evlistp, str, args->pmu_filter, &err,
+-			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
++			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true,
++			     /*fake_tp=*/false);
  
--		ret = add_tracepoint_event(list, idx, events_ent->d_name,
-+		ret = add_tracepoint_event(parse_state, list, events_ent->d_name,
- 					   evt_name, err, head_config, loc);
- 	}
- 
-@@ -1291,7 +1295,8 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
- 	return 0;
- }
- 
--int parse_events_add_tracepoint(struct list_head *list, int *idx,
-+int parse_events_add_tracepoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
- 				const char *sys, const char *event,
- 				struct parse_events_error *err,
- 				struct parse_events_terms *head_config, void *loc_)
-@@ -1307,14 +1312,14 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
- 	}
- 
- 	if (strpbrk(sys, "*?"))
--		return add_tracepoint_multi_sys(list, idx, sys, event,
-+		return add_tracepoint_multi_sys(parse_state, list, sys, event,
- 						err, head_config, loc);
- 	else
--		return add_tracepoint_event(list, idx, sys, event,
-+		return add_tracepoint_event(parse_state, list, sys, event,
- 					    err, head_config, loc);
- #else
-+	(void)parse_state;
- 	(void)list;
--	(void)idx;
- 	(void)sys;
- 	(void)event;
- 	(void)head_config;
+ 	if (ret) {
+ 		parse_events_error__print(&err, str);
 diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index e7ac1f13376d..c06984bd3af8 100644
+index c06984bd3af8..f2baa69fff98 100644
 --- a/tools/perf/util/parse-events.h
 +++ b/tools/perf/util/parse-events.h
-@@ -208,7 +208,8 @@ int parse_events__modifier_event(struct parse_events_state *parse_state, void *l
- int parse_events__modifier_group(struct parse_events_state *parse_state, void *loc,
- 				 struct list_head *list, struct parse_events_modifier mod);
- int parse_events__set_default_name(struct list_head *list, char *name);
--int parse_events_add_tracepoint(struct list_head *list, int *idx,
-+int parse_events_add_tracepoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
- 				const char *sys, const char *event,
- 				struct parse_events_error *error,
- 				struct parse_events_terms *head_config, void *loc);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 68b3b06c7ff0..c94a3994177e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -497,7 +497,7 @@ tracepoint_name opt_event_config
- 	if (!list)
- 		YYNOMEM;
+@@ -32,14 +32,14 @@ int parse_events_option_new_evlist(const struct option *opt, const char *str, in
+ __attribute__((nonnull(1, 2, 4)))
+ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
+ 		   struct parse_events_error *error, struct perf_pmu *fake_pmu,
+-		   bool warn_if_reordered);
++		   bool warn_if_reordered, bool fake_tp);
  
--	err = parse_events_add_tracepoint(list, &parse_state->idx, $1.sys, $1.event,
-+	err = parse_events_add_tracepoint(parse_state, list, $1.sys, $1.event,
- 					error, $2, &@1);
+ __attribute__((nonnull(1, 2, 3)))
+ static inline int parse_events(struct evlist *evlist, const char *str,
+ 			       struct parse_events_error *err)
+ {
+ 	return __parse_events(evlist, str, /*pmu_filter=*/NULL, err, /*fake_pmu=*/NULL,
+-			      /*warn_if_reordered=*/true);
++			      /*warn_if_reordered=*/true, /*fake_tp=*/false);
+ }
  
- 	parse_events_terms__delete($2);
+ int parse_event(struct evlist *evlist, const char *str);
+@@ -152,6 +152,8 @@ struct parse_events_state {
+ 	int			   stoken;
+ 	/* Special fake PMU marker for testing. */
+ 	struct perf_pmu		  *fake_pmu;
++	/* Skip actual tracepoint processing for testing. */
++	bool			   fake_tp;
+ 	/* If non-null, when wildcard matching only match the given PMU. */
+ 	const char		  *pmu_filter;
+ 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
 
 -- 
 2.44.0
