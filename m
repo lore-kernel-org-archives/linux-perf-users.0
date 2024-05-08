@@ -1,164 +1,98 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5232F12C497;
-	Wed,  8 May 2024 21:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E995131BA5;
+	Wed,  8 May 2024 21:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203148; cv=none; b=fyVUyKs/J6nTIFuWnbNcPZ99OvrP07kF+fmmVouyWbdcFJ/KQwb2UTAksF//1vs38eR9k6QF7sFtIC+tTRBFmZ7Kgy04njOP9jY6wgcX3EM/d30oUrd64TtbSJlHysDSIIfoY2degE1ZqMmYeR20skEpDIQnyKCrlfb7cNAdHCY=
+	t=1715203571; cv=none; b=dhGIomptxp2MkyeKKYqCIGqY9DKFfZaz0aY2a8+5Cw9otM5WitTfhhE8kg6Z+GITndBW+eyNAbnTI0x58jsBYEwE0vuwXLfntgXec8xUXcPGD1QvXWm9yfYH4VnlthhY8Y58+Q4ChUUcXInjn6S7TBx7KnXRS3sqyVh23Aih/Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203148; c=relaxed/simple;
-	bh=LZaTxpcC6rDlaczxIBkXQsVl/n555uhdZA29kcRqL1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mAUuKL6tHMr7aPSxp3+YB5GLp01w05Ohi2ptsWiPPlqD2XdoOLUhG56HB/ngqMd/H1+siXBlEYIm9nrLeuiIF1TakaJo/KQeBsGADhzJmqwAUc0oKnrIYl3srwaugr0JVEgUJAIeCK66SGS/fknymmTPjoCYGv6R8NUQIo22loo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2b4348fa971so195600a91.1;
-        Wed, 08 May 2024 14:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715203147; x=1715807947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iH/sB0aLG2WmibnGzHehJ6oJYqkz2Fm71FR2/jk70jg=;
-        b=V8yVYeuGKmPnll8KVt5B9y3lMF3Aq1aFdoEFI2adltzpi9+s5iccPoAyIDMILrv408
-         vJTdxKvF7o0w080djTFdYdQq9X32j0Xz1yZJ1H2D+tRoULOf0PhYIQYnOVeX9Rs149Yp
-         Feim4IcmAlThBgAkb0vz8E+y0OOHbP8i/enwkeuCioSGnC6Ay2RIn1vfapvvtBKddVMa
-         tD9N2d1piVGQSDl2oKZhhcSaq1yL0w4RqBwFy/uXVP6G3Jl0+WM78swng9HquoleapoG
-         tF1XAqG9jgZp5Mkjax4mxlQpPR3+vdosewVO+E0YNHd1ve0DwyUKU8Hp1f6HmMF3OnCq
-         R24w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/OHNKjg9M1gl6iJ4HYBMUAkOkkyouqcPo0fgzjxGUqL+mAq2RoB38YdMaLBhK7pmkGB3soEJkAE9kQduIi9lGq/4iYGOk2HvncIKFeyt/5A==
-X-Gm-Message-State: AOJu0YxGo7N0iy3JcSa0uO2QcK9n1xOCUcN03kK7vFXsbMBXPOGw0mLi
-	tz2W0V6mXbhENAbBRV5/BzfuK3SIudeQMANO8FXskXyeErzZpEzS1ysduZ1nteCydvU1+gSoKwx
-	WC4YUI93xjqqwsREj+iLtFRklmUw=
-X-Google-Smtp-Source: AGHT+IH+t++T544tPgXHpsm0a1tOuiLQCQxEAsmohdvIVYxfAQt0ye/thNzXQuR0DBvAYffz/QdOdsHhrcWb0fzJRx8=
-X-Received: by 2002:a17:90b:358c:b0:2b4:39cd:250c with SMTP id
- 98e67ed59e1d1-2b6163a26d2mr3978862a91.8.1715203146579; Wed, 08 May 2024
- 14:19:06 -0700 (PDT)
+	s=arc-20240116; t=1715203571; c=relaxed/simple;
+	bh=jC4/tDWF+DXydkKwS4U4tonr/b7NgqdXz976VdA1gQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QhdrP1UxYjCcnJ43uSwQMahyVEHyD3HDg9mwmitR4KKsbMNbplrciNwtkjwLU7ns4iYtMVhNioXEKwSvo0OKIJGuTtnu2kApmvO2XLLGAF4KgZkriA7ye/UUc6AAefNjAcUgYhS2SrMBTWrc0mgn7bZfsSN8WIp3elwIUyzS48w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBbBi7iC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBbBi7iC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B91C2BD11;
+	Wed,  8 May 2024 21:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715203571;
+	bh=jC4/tDWF+DXydkKwS4U4tonr/b7NgqdXz976VdA1gQw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iBbBi7iCSjvumvPAFRmnIVnArDqj5xI5HxXKvnq91/VeCUZmyxxu13nioLy1MeiVq
+	 VRA4Bt9in7wFbXkhg74E9eLYnvp8Y92DLvAauwdEkt7LZmOlF8GGVOOk/EW5F4C8aQ
+	 f8hwuzzSX9g6Rou3v+u+SikOvoJu3MrlgXBWgkUOWbWs6bA661Qadwa/wJtQF9HG6/
+	 Up3T3h76j2Q8+XCCw0xuFLvY5/g62fTP16g8C7qRAXfcbxjiBlnD1cM4zEDWnq5yJo
+	 3Bq/w76pxM62dnxTVHCVs9X12kaol8M+CfiMGbPZ5K/GhrSV3kgayqe83bidMew8Mn
+	 MAnir3cFQugzA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH 0/4] Fix user stack traces captured from uprobes
+Date: Wed,  8 May 2024 14:26:01 -0700
+Message-ID: <20240508212605.4012172-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508134259.24413-1-nick.forrington@arm.com> <20240508134259.24413-2-nick.forrington@arm.com>
-In-Reply-To: <20240508134259.24413-2-nick.forrington@arm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 8 May 2024 14:18:54 -0700
-Message-ID: <CAM9d7ciQ5idMLWO51JrpNEbFtdtrgz3o0qashX5dL2y1d1MRyw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf lock info: Display both map and thread by default
-To: Nick Forrington <nick.forrington@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This patch set reports two issues with captured stack traces.
 
-On Wed, May 8, 2024 at 6:46=E2=80=AFAM Nick Forrington <nick.forrington@arm=
-.com> wrote:
->
-> Change "perf lock info" argument handling to:
->
-> Display both map and thread info (rather than an error) when neither are
-> specified.
->
-> Display both map and thread info (rather than just thread info) when
-> both are requested.
->
-> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
-> ---
->  tools/perf/Documentation/perf-lock.txt |  4 ++--
->  tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
->  2 files changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
-ation/perf-lock.txt
-> index f5938d616d75..57a940399de0 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -111,11 +111,11 @@ INFO OPTIONS
->
->  -t::
->  --threads::
-> -       dump thread list in perf.data
-> +       dump only the thread list in perf.data
->
->  -m::
->  --map::
-> -       dump map of lock instances (address:name table)
-> +       dump only the map of lock instances (address:name table)
->
->
->  CONTENTION OPTIONS
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 230461280e45..d0b8645487ad 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1483,11 +1483,16 @@ static int dump_info(void)
->
->         if (info_threads)
->                 dump_threads();
-> -       else if (info_map)
-> +
-> +       if (info_map) {
-> +               if (info_threads)
-> +                       fputc('\n', lock_output);
+First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+addresses in captured stack trace. This issue happens when there are pending
+return probes, for which kernel hijacks some of the return addresses on user
+stacks. The code is matching those special uretprobe trampoline addresses with
+the list of pending return probe instances and replaces them with actual
+return addresses.
 
-it seems you need pr_info("\n").  Where does lock_output come from?
+Second issue, which patch #3 is trying to fix with the help of heuristic, is
+having to do with capturing user stack traces in entry uprobes. At the very
+entrance to user function, frame pointer in rbp register is not yet setup, so
+actual caller return address is still pointed to by rsp. Patch is using
+a simple heuristic, looking for `push %rbp` instruction, to fetch this extra
+direct caller return address, before proceeding to unwind the stack using rbp.
 
+Consider this patch #3 an RFC, if there are better suggestions how this can be
+solved, I'd be happy to hear that.
 
->                 dump_map();
-> -       else {
-> +       }
-> +
-> +       if (!info_threads && !info_map) {
->                 rc =3D -1;
-> -               pr_err("Unknown type of information\n");
-> +               pr_err("No lock info specified\n");
->         }
+Patch #4 adds tests into BPF selftests, that validate that captured stack
+traces at various points is what we expect to get. This patch, while being BPF
+selftests, is isolated from any other BPF selftests changes and can go in
+through non-BPF tree without the risk of merge conflicts.
 
-I think we can remove this block now.
+Patches are based on latest linux-trace's probes/for-next branch.
 
-Thanks,
-Namhyung
+Andrii Nakryiko (4):
+  uprobes: rename get_trampoline_vaddr() and make it global
+  perf,uprobes: fix user stack traces in the presence of pending
+    uretprobes
+  perf,x86: avoid missing caller address in stack traces captured in
+    uprobe
+  selftests/bpf: add test validating uprobe/uretprobe stack traces
 
+ arch/x86/events/core.c                        |  20 ++
+ include/linux/uprobes.h                       |   3 +
+ kernel/events/callchain.c                     |  42 +++-
+ kernel/events/uprobes.c                       |  17 +-
+ .../bpf/prog_tests/uretprobe_stack.c          | 185 ++++++++++++++++++
+ .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+ 6 files changed, 359 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
 
->
->         return rc;
-> @@ -2578,9 +2583,9 @@ int cmd_lock(int argc, const char **argv)
->
->         const struct option info_options[] =3D {
->         OPT_BOOLEAN('t', "threads", &info_threads,
-> -                   "dump thread list in perf.data"),
-> +                   "dump the thread list in perf.data"),
->         OPT_BOOLEAN('m', "map", &info_map,
-> -                   "map of lock instances (address:name table)"),
-> +                   "dump the map of lock instances (address:name table)"=
-),
->         OPT_PARENT(lock_options)
->         };
->
-> @@ -2694,6 +2699,13 @@ int cmd_lock(int argc, const char **argv)
->                         if (argc)
->                                 usage_with_options(info_usage, info_optio=
-ns);
->                 }
-> +
-> +               /* If neither threads nor map requested, display both */
-> +               if (!info_threads && !info_map) {
-> +                       info_threads =3D true;
-> +                       info_map =3D true;
-> +               }
-> +
->                 /* recycling report_lock_ops */
->                 trace_handler =3D &report_lock_ops;
->                 rc =3D __cmd_report(true);
-> --
-> 2.44.0
->
->
+-- 
+2.43.0
+
