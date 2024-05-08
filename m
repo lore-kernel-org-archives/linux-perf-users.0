@@ -1,88 +1,164 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430E721373;
-	Wed,  8 May 2024 21:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5232F12C497;
+	Wed,  8 May 2024 21:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715202658; cv=none; b=BmGIf5a0GzRNX8Bgt8TQUmEyJWTEXNUWnNQ26CS5nc2T8jZgehVj4p0uhGK/KMmppD31y0V8UOv/cdqTQ5Df6bOiwx2wOuRKpFbK6DhSbha3cxpYAphywhHeFAYl1A41TpHldXfG4oatPxJVOziMF8RwDshQu+Y1+M7V5ezbJ/c=
+	t=1715203148; cv=none; b=fyVUyKs/J6nTIFuWnbNcPZ99OvrP07kF+fmmVouyWbdcFJ/KQwb2UTAksF//1vs38eR9k6QF7sFtIC+tTRBFmZ7Kgy04njOP9jY6wgcX3EM/d30oUrd64TtbSJlHysDSIIfoY2degE1ZqMmYeR20skEpDIQnyKCrlfb7cNAdHCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715202658; c=relaxed/simple;
-	bh=Rq0sgbSVKAF9f0zp2XsnYI13Zjl1Mao2IwDg3Lw3aSc=;
+	s=arc-20240116; t=1715203148; c=relaxed/simple;
+	bh=LZaTxpcC6rDlaczxIBkXQsVl/n555uhdZA29kcRqL1c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uwhfpGgBYGaOTORAXpRQlC6CDlF+Vmzgpe4V4P3avYRsaknWoJoCMayU+oPl5jN/YMj7zpdrUzCqW4+aEqFbceYnC8SoBd+OkQOiQt2fOH9TkNZXLGvihou3NWKMr1f8hYGTTdmNRF5dsWXWPfFw2s/2kUHAl9amYdTmj2LZXfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=mAUuKL6tHMr7aPSxp3+YB5GLp01w05Ohi2ptsWiPPlqD2XdoOLUhG56HB/ngqMd/H1+siXBlEYIm9nrLeuiIF1TakaJo/KQeBsGADhzJmqwAUc0oKnrIYl3srwaugr0JVEgUJAIeCK66SGS/fknymmTPjoCYGv6R8NUQIo22loo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2b3c711dfd3so194030a91.2;
-        Wed, 08 May 2024 14:10:57 -0700 (PDT)
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2b4348fa971so195600a91.1;
+        Wed, 08 May 2024 14:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715202656; x=1715807456;
+        d=1e100.net; s=20230601; t=1715203147; x=1715807947;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6imyIJTMo4xA0dmfwzlWT+Xdp+rxpa+6dL8UE1tHP98=;
-        b=ZmnzVEMS1Z+6Gi8jLXkoFgo3KoLr+5/FeKYOCxi40oxEPfDgaG3CB3qHZnJruXsmOL
-         AVCRAVThpEWOAVyE22OtAkblspt0ITGEDRrESC0IXNDN+WDHAB2PgbmEmA9TwrBRaDzV
-         UluzzZgHK/jfDDvxaOdBtKuHBEDsfZNUlHP6oFfMtrpWiK7Tx5XqELoeMdZyizkjw58h
-         81RZYHgsnhFDbvov+d5bOHeuHkrWZNnax6WbXTs5wMc8N4qMeu/KKA/HKwNZCASzqvVZ
-         EI22m5dTEmzGDOhY+mPX7Tvxl4ZsdJcwarfnFnhZpFyzyJxmpZ8qFmu6MyTKH/AlwOZT
-         lhsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuMq8tOpm7HnHuWekhW1iaWoET0O0C92N8BGSGZdufK7csXWSEDP7Yzs7DbZK4oYooOLNbb1ESdQOwPwjVozu82nHTKSgA4MIbvErnuUF+9asZhJSnXpzEX1Q0aHADAMeKDn3HOpICvSECphSYNg==
-X-Gm-Message-State: AOJu0YyGWRVNMjHjVHAj3ztgiTmyaHHrLlQ0/2Cw9iJ+d+8gsOy9taBl
-	PBkxX0hxNQ/l9W4uEmZ0d6mQO/Y95J/FgcPsRwrKPSawNLWIqopqiepP/G6wBDAy0UOkiH98VJJ
-	Zptxu8IydaXsbzM6oqmnR4H+6sYQ=
-X-Google-Smtp-Source: AGHT+IHF7osWwaB+EPlf7x9OJczyN/NXgIFzOdtLI1gg2tsvLXNsI4+heT5l3jY0MwuJDNnOMdgQeS/Rzzs+MxvsXSo=
-X-Received: by 2002:a17:90b:914:b0:2b2:c85f:aa0b with SMTP id
- 98e67ed59e1d1-2b616be62f6mr3738098a91.42.1715202656458; Wed, 08 May 2024
- 14:10:56 -0700 (PDT)
+        bh=iH/sB0aLG2WmibnGzHehJ6oJYqkz2Fm71FR2/jk70jg=;
+        b=V8yVYeuGKmPnll8KVt5B9y3lMF3Aq1aFdoEFI2adltzpi9+s5iccPoAyIDMILrv408
+         vJTdxKvF7o0w080djTFdYdQq9X32j0Xz1yZJ1H2D+tRoULOf0PhYIQYnOVeX9Rs149Yp
+         Feim4IcmAlThBgAkb0vz8E+y0OOHbP8i/enwkeuCioSGnC6Ay2RIn1vfapvvtBKddVMa
+         tD9N2d1piVGQSDl2oKZhhcSaq1yL0w4RqBwFy/uXVP6G3Jl0+WM78swng9HquoleapoG
+         tF1XAqG9jgZp5Mkjax4mxlQpPR3+vdosewVO+E0YNHd1ve0DwyUKU8Hp1f6HmMF3OnCq
+         R24w==
+X-Forwarded-Encrypted: i=1; AJvYcCW/OHNKjg9M1gl6iJ4HYBMUAkOkkyouqcPo0fgzjxGUqL+mAq2RoB38YdMaLBhK7pmkGB3soEJkAE9kQduIi9lGq/4iYGOk2HvncIKFeyt/5A==
+X-Gm-Message-State: AOJu0YxGo7N0iy3JcSa0uO2QcK9n1xOCUcN03kK7vFXsbMBXPOGw0mLi
+	tz2W0V6mXbhENAbBRV5/BzfuK3SIudeQMANO8FXskXyeErzZpEzS1ysduZ1nteCydvU1+gSoKwx
+	WC4YUI93xjqqwsREj+iLtFRklmUw=
+X-Google-Smtp-Source: AGHT+IH+t++T544tPgXHpsm0a1tOuiLQCQxEAsmohdvIVYxfAQt0ye/thNzXQuR0DBvAYffz/QdOdsHhrcWb0fzJRx8=
+X-Received: by 2002:a17:90b:358c:b0:2b4:39cd:250c with SMTP id
+ 98e67ed59e1d1-2b6163a26d2mr3978862a91.8.1715203146579; Wed, 08 May 2024
+ 14:19:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508141458.439017-1-james.clark@arm.com> <CAP-5=fWMbLDmT8=h_He7+9V+ntTdg1+5hmSTm87VJsTy2m3Bag@mail.gmail.com>
-In-Reply-To: <CAP-5=fWMbLDmT8=h_He7+9V+ntTdg1+5hmSTm87VJsTy2m3Bag@mail.gmail.com>
+References: <20240508134259.24413-1-nick.forrington@arm.com> <20240508134259.24413-2-nick.forrington@arm.com>
+In-Reply-To: <20240508134259.24413-2-nick.forrington@arm.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 8 May 2024 14:10:44 -0700
-Message-ID: <CAM9d7cgeWXB45WEwHLOazVKvq-e-34v2q-MikdjyweHP8b7tFg@mail.gmail.com>
-Subject: Re: [PATCH] perf dwarf-aux: Fix build with HAVE_DWARF_CFI_SUPPORT
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, 
-	leo.yan@linux.dev, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Wed, 8 May 2024 14:18:54 -0700
+Message-ID: <CAM9d7ciQ5idMLWO51JrpNEbFtdtrgz3o0qashX5dL2y1d1MRyw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf lock info: Display both map and thread by default
+To: Nick Forrington <nick.forrington@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 8, 2024 at 2:05=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Wed, May 8, 2024 at 7:15=E2=80=AFAM James Clark <james.clark@arm.com> =
-wrote:
-> >
-> > check_allowed_ops() is used from both HAVE_DWARF_GETLOCATIONS_SUPPORT
-> > and HAVE_DWARF_CFI_SUPPORT sections, so move it into the right place so
-> > that it's available when either are defined. This shows up when doing
-> > a static cross compile for arm64:
-> >
-> >   $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- LDFLAGS=3D"-st=
-atic" \
-> >     EXTRA_PERFLIBS=3D"-lexpat"
-> >
-> >   util/dwarf-aux.c:1723:6: error: implicit declaration of function 'che=
-ck_allowed_ops'
-> >
-> > Fixes: 55442cc2f22d ("perf dwarf-aux: Check allowed DWARF Ops")
-> > Signed-off-by: James Clark <james.clark@arm.com>
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> (eye-balled to see the #if problem exists and this is the correct fix)
+Hello,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Wed, May 8, 2024 at 6:46=E2=80=AFAM Nick Forrington <nick.forrington@arm=
+.com> wrote:
+>
+> Change "perf lock info" argument handling to:
+>
+> Display both map and thread info (rather than an error) when neither are
+> specified.
+>
+> Display both map and thread info (rather than just thread info) when
+> both are requested.
+>
+> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+> ---
+>  tools/perf/Documentation/perf-lock.txt |  4 ++--
+>  tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
+>  2 files changed, 19 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
+ation/perf-lock.txt
+> index f5938d616d75..57a940399de0 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -111,11 +111,11 @@ INFO OPTIONS
+>
+>  -t::
+>  --threads::
+> -       dump thread list in perf.data
+> +       dump only the thread list in perf.data
+>
+>  -m::
+>  --map::
+> -       dump map of lock instances (address:name table)
+> +       dump only the map of lock instances (address:name table)
+>
+>
+>  CONTENTION OPTIONS
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 230461280e45..d0b8645487ad 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -1483,11 +1483,16 @@ static int dump_info(void)
+>
+>         if (info_threads)
+>                 dump_threads();
+> -       else if (info_map)
+> +
+> +       if (info_map) {
+> +               if (info_threads)
+> +                       fputc('\n', lock_output);
+
+it seems you need pr_info("\n").  Where does lock_output come from?
+
+
+>                 dump_map();
+> -       else {
+> +       }
+> +
+> +       if (!info_threads && !info_map) {
+>                 rc =3D -1;
+> -               pr_err("Unknown type of information\n");
+> +               pr_err("No lock info specified\n");
+>         }
+
+I think we can remove this block now.
 
 Thanks,
 Namhyung
+
+
+>
+>         return rc;
+> @@ -2578,9 +2583,9 @@ int cmd_lock(int argc, const char **argv)
+>
+>         const struct option info_options[] =3D {
+>         OPT_BOOLEAN('t', "threads", &info_threads,
+> -                   "dump thread list in perf.data"),
+> +                   "dump the thread list in perf.data"),
+>         OPT_BOOLEAN('m', "map", &info_map,
+> -                   "map of lock instances (address:name table)"),
+> +                   "dump the map of lock instances (address:name table)"=
+),
+>         OPT_PARENT(lock_options)
+>         };
+>
+> @@ -2694,6 +2699,13 @@ int cmd_lock(int argc, const char **argv)
+>                         if (argc)
+>                                 usage_with_options(info_usage, info_optio=
+ns);
+>                 }
+> +
+> +               /* If neither threads nor map requested, display both */
+> +               if (!info_threads && !info_map) {
+> +                       info_threads =3D true;
+> +                       info_map =3D true;
+> +               }
+> +
+>                 /* recycling report_lock_ops */
+>                 trace_handler =3D &report_lock_ops;
+>                 rc =3D __cmd_report(true);
+> --
+> 2.44.0
+>
+>
