@@ -1,104 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749131A2C05;
-	Tue,  7 May 2024 23:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3375B387;
+	Wed,  8 May 2024 00:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715126276; cv=none; b=eBmNx3rIAmWjLXAaxwKooylMs2jPrXG/9qU+R91s6qh99R5EFGe0qZqY0KJeThO3Z8DRmFhkhp0Xse+ATgilHnl/fEOyUJnSvlHCSa5S9aDJLVHcT618JhsM91odD4xfF6BF34MxtdIPHP0ZORZ74H3QHh7jfANe7bcR7A5b2gI=
+	t=1715128578; cv=none; b=VWMe/2qy0XfljBL9d2n5YufX495cbhorKFGab3WxSSpymboUuk570BVtZ4FZJYrT/rWubUUKq4nDI6LUXqwVXa6hzWaXVlHXv2z3cCltrsyKabvilBIdgEWs4F3xGn0CL1rRJmvKSpMiCwtD8n2XVqK2MSsH5ynNLXehSV6FOts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715126276; c=relaxed/simple;
-	bh=u4y6bm9T98w2O0nxzxQv6wXthaTemHVgGjKBpl1iA6w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=O5ErDjH9+SO/W1x1YeOfgJpCBtEBmeq2Wf0G5HbvhKEkrDrSPl7RQETadFWLvSEkGsFJFTHYu/1bZ/8tRRblvCt/1aYYg369w1+ffH7UqKphlWWivZBGhdB6HBgNLOlo3kJqfIbcFVqDneMJ8/uVKxYaWt0OuWMiGpgQfEJe3/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROawISFc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715128578; c=relaxed/simple;
+	bh=yJK99pCXyuoTwOmUw90tjzeWFArr9+bCKIgZP+l1zPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJI6F6ffXlXzlSBgeWP5K6tY8OXmlgh0DkPRVWylYQumoI+zjOp2PJoPULSY3UFJ4fxyeUcqEhcf+HZHdjhHihqOm31JtR5xZkoeHDw7mhOAsMjCMmh0y9u8UD/cyQ/Vsb0EiSSbkdbceVcDQiKzgitzKise6cnRBxFUEKQ/4oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQ+H01xI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROawISFc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A345C2BBFC;
-	Tue,  7 May 2024 23:57:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQ+H01xI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F708C2BBFC;
+	Wed,  8 May 2024 00:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715126276;
-	bh=u4y6bm9T98w2O0nxzxQv6wXthaTemHVgGjKBpl1iA6w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ROawISFcDVWDM6CB2v8B6Kf6rcPEdS68hDm1K4EQ6Ao2C8WGuvVDCBcBVlpx3nrP6
-	 CDdaUpYETWj26vVqx0ZJiB4x3jsXQ8kKi/9omhioCmpopL/kIiaYLVWMQkbVtlOBmA
-	 esDvDYxxkvVAS7mFjKqZlNlpQnEfabauWgEXeFtlpk6b0KXKQKAVPv0TUjL7cHgDVL
-	 Rc3evIbaVvvsW/zBvgNcT+2SCSgfaVDZoBVnnyEc8MF+C6HAwitVONt/rVKvw2vPG3
-	 Cws/IbXzJLhpzarrTYtCe3/snSPrm5+xtBbnGZ7PzmJrXEvWy4FTVJZgz977eSobT0
-	 HLQH1UpJFbr1A==
-Date: Wed, 8 May 2024 08:57:51 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
- <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] perf dwarf-aux: Print array type name with "[]"
-Message-Id: <20240508085751.a1a5dbd31e1fa7d4e80cdd85@kernel.org>
-In-Reply-To: <20240507041338.2081775-1-namhyung@kernel.org>
-References: <20240507041338.2081775-1-namhyung@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1715128577;
+	bh=yJK99pCXyuoTwOmUw90tjzeWFArr9+bCKIgZP+l1zPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OQ+H01xIYPmmknJAvbU3bmScXIpz3vpyzx6ir2u7dmO/Xgg7CKerL+vni4NEyPiTa
+	 a8wiKTeyvMov2m0/C7+OGHAQaYNVL94XFGbCV3qMO/2+OypsUaEKmWahfa6OoMriHO
+	 JOTZzdn6I0qktdd5tcgoxdInIANGoqnVRC4z0sYX3nzUtnjbUu0Tbc5hQWGZCZfQvs
+	 wdi3Gt775bGtTmHcmn/2O3Jm8XyA3P3xzYbbkI0N0cEpl5vBNCEczBFRgUz1M+WrXE
+	 J3ISBLiQ9ZAWlzE0ACJvCZfU5xMQhMYF1U03doKVRPCFuIiN/n15sIq1WRbLmmd7Bm
+	 xWQOzJ05IHqSw==
+Date: Tue, 7 May 2024 21:36:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org, viro@zeniv.linux.org.uk,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-mm@kvack.org,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
+ /proc/<pid>/maps APIs
+Message-ID: <ZjrI_h7InWYdOBtD@x1>
+References: <20240504003006.3303334-6-andrii@kernel.org>
+ <2024050404-rectify-romp-4fdb@gregkh>
+ <CAEf4BzaUgGJVqw_yWOXASHManHQWGQV905Bd-wiaHj-mRob9gw@mail.gmail.com>
+ <CAP-5=fWPig8-CLLBJ_rb3D6eNAKVY7KX_n_HcpGqL7gfe-=XXg@mail.gmail.com>
+ <CAEf4Bzab+sRQ8pzNYxh1BOgjhDF4yCkqcHxy5YZAyT-jef7Acw@mail.gmail.com>
+ <CAP-5=fXv59EmyM7FNnwAp0JjAZjtYhCj3b3FTH7KsHL=k8C6oQ@mail.gmail.com>
+ <CAEf4BzbdGJzMuRgGJE72VFquXL37rS9Ti__wx4f_+kt3yetkEg@mail.gmail.com>
+ <CAEf4BzYykUsN_Z92cXAh_9+fmN-bzr7xOEBe2v_5xDoXRhijmg@mail.gmail.com>
+ <CAM9d7cg4ErddXRXJWg7sAgSY=wzej8e4SO6NhsXJNDj69DyqCw@mail.gmail.com>
+ <CAEf4BzZTRU9CGrcAysLKCCbjUvJZPFaLA122MVo_zKgk8pAUSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZTRU9CGrcAysLKCCbjUvJZPFaLA122MVo_zKgk8pAUSA@mail.gmail.com>
 
-On Mon,  6 May 2024 21:13:38 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, May 07, 2024 at 03:56:40PM -0700, Andrii Nakryiko wrote:
+> On Tue, May 7, 2024 at 3:27 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Tue, May 7, 2024 at 10:29 AM Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > In another reply to Arnaldo on patch #2 I mentioned the idea of
+> > > allowing to iterate only file-backed VMAs (as it seems like what
+> > > symbolizers would only care about, but I might be wrong here). So I
 
-> It's confusing both pointers and arrays are printed as *.  Let's print
-> array types with [] so that we can identify them easily.  Although it's
-> interchangable, sometimes it can cause confusion with size like in the
-> below example.
-> 
-> Note that it is not the same with C syntax where it goes to the variable
-> names, but we want to have it in the type names (like in Go language).
-> 
-> Before:
->   mov [20] 0x68(reg5) -> reg0 type='struct page**' size=0x80 (die:0x4e61d32)
-> 
-> After:
->   mov [20] 0x68(reg5) -> reg0 type='struct page*[]' size=0x80 (die:0x4e61d32)
-> 
+> > Yep, I think it's enough to get file-backed VMAs only.
+ 
+> Ok, I guess I'll keep this functionality for v2 then, it's a pretty
+> trivial extension to existing logic.
 
-Good improvement!
+Maps for JITed code, for isntance, aren't backed by files:
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+commit 578c03c86fadcc6fd7319ddf41dd4d1d88aab77a
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Thu Jan 16 10:49:31 2014 +0900
 
-Thank you!
+    perf symbols: Fix JIT symbol resolution on heap
+    
+    Gaurav reported that perf cannot profile JIT program if it executes the
+    code on heap.  This was because current map__new() only handle JIT on
+    anon mappings - extends it to handle no_dso (heap, stack) case too.
+    
+    This patch assumes JIT profiling only provides dynamic function symbols
+    so check the mapping type to distinguish the case.  It'd provide no
+    symbols for data mapping - if we need to support symbols on data
+    mappings later it should be changed.
+    
+    Reported-by: Gaurav Jain <gjain@fb.com>
+    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+    Tested-by: Gaurav Jain <gjain@fb.com>
 
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/dwarf-aux.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index c0a492e65388..ec988f294497 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1110,8 +1110,10 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
->  	const char *tmp = "";
->  
->  	tag = dwarf_tag(type_die);
-> -	if (tag == DW_TAG_array_type || tag == DW_TAG_pointer_type)
-> +	if (tag == DW_TAG_pointer_type)
->  		tmp = "*";
-> +	else if (tag == DW_TAG_array_type)
-> +		tmp = "[]";
->  	else if (tag == DW_TAG_subroutine_type) {
->  		/* Function pointer */
->  		return strbuf_add(buf, "(function_type)", 15);
-> -- 
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
-> 
+⬢[acme@toolbox perf-tools-next]$ git show 89365e6c9ad4c0e090e4c6a4b67a3ce319381d89
+commit 89365e6c9ad4c0e090e4c6a4b67a3ce319381d89
+Author: Andi Kleen <ak@linux.intel.com>
+Date:   Wed Apr 24 17:03:02 2013 -0700
 
+    perf tools: Handle JITed code in shared memory
+    
+    Need to check for /dev/zero.
+    
+    Most likely more strings are missing too.
+    
+    Signed-off-by: Andi Kleen <ak@linux.intel.com>
+    Link: http://lkml.kernel.org/r/1366848182-30449-1-git-send-email-andi@firstfloor.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 6fcb9de623401b8a..8bcdf9e54089acaf 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -21,6 +21,7 @@ const char *map_type__name[MAP__NR_TYPES] = {
+ static inline int is_anon_memory(const char *filename)
+ {
+        return !strcmp(filename, "//anon") ||
++              !strcmp(filename, "/dev/zero (deleted)") ||
+               !strcmp(filename, "/anon_hugepage (deleted)");
+ }
+
+etc.
+
+- Arnaldo
