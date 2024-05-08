@@ -1,118 +1,93 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B277B35F18
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 17:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9807654FAA;
+	Wed,  8 May 2024 18:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715188300; cv=none; b=sCGUqR89uyGN3I27Sf5lp0EUjqZy/62qxN/B/ibxG11eSjVB2WO+Qp85jsEVltoxTlh6kLkrpp0lm+0XhIvt9WKszFs00AB5zfoLQc4MX711PeFbW6cYsTkfVpDH/S/wDIBVAFVy5J08OMckZ0swuOAILTU50JkLJGhF9TROwds=
+	t=1715192890; cv=none; b=dihFrhMjJkU6a+n+Npm3fRM0ZNKyF3YNOxDFH4mgcVucRZGbOnBQv22KPt3MXG1ro1Z86X/TbZ9no3yIdVBkXVJlYPLAP3ISypZOuAUPHC095jFWeaLL2rVwVr++wBt/6HIT80S+qot4mtSYGICs1tB8Um0npDlhADxs6okbtRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715188300; c=relaxed/simple;
-	bh=3H2Ex21607oQUraLy4a6ZebeomrW6qImqDFNkYN7KH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hdW/B/ljd1F8YmV1XAVcCfguoE7zoTU9yZR5TRUsqMyJOg+ETq/+qxQ6PeA1wJ3570m0Q/nHBjiCM8noODBhPTQowV6BgqKlsjTmYr/cZ5gAyPbPE8Tgw61V2XVuTodJmR459TpPQIYyhCuvHLuruVreeNBJrAHdSonb3xNlfTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e/7av/64; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715192890; c=relaxed/simple;
+	bh=I3pkgfo8nvJpvZengN4XKNm18uahoQGeq70WkuA0SCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R+/ePcPslQLOHNHlikQg+uPE5AkoPnmNdN9fbl2jc2fkYLDyMGdkxqwRkdP82sxDoLMAZIM6nnWwZqjYLupLSdzYF3fdHKFaZhxNpLcbZSFlrqgtpbiCNDISs59oCXxg/zDA/Rxfwh75EoVbh+fEqiwUyDCiUsD/jIZ1b5uye+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=igQy+7/1; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e/7av/64"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f489e64eb3so18473b3a.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 10:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715188297; x=1715793097; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=e/7av/64Dcgf3OMhlc/3aG68Cv9i0FKAXx1yap6cSbdW0nsJbcNd95Yo1lRWM4CXEO
-         StJJA023SDun4hdxa5p+ZL91TWCTjhJqbT/I8537Y89y8wwXzIEuISflNf2v2IqVxAlb
-         rwDXFcNsSy0ds4FxqMQiDgXwqp7u78CH/UbW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715188297; x=1715793097;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=hBsugWxM2LT8Vg8P6nxG5PG154JEH2qYyxNCH3+3AbjkqPtd7fFmraAzYrTyWZzOA4
-         GEezxgdhSagUB2yVFosqR8eQ+HdHBc9SQnrgmVUoiUgBK8Abd1h/hwmFgih2/BTbpZye
-         Qr9tTvg1v4DFT1MwzBgNa3AjeAj0WgDGYBjQp4cPY6Kj9d2DIGewtC9GA3rSN2GII4K3
-         HTcRYm89Tyj8aPU8tssj092P94Lmys1tmKTp3mP87LAvK4d1ze27cf7ORZBtyhL95qnz
-         vIPCIim7rniF1BAVXsQ3oupjb30bxGerDuJ1J9YUWa23UaGn9HQEuipEk35DxQOD+Uhj
-         pYrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvm7ef6+WUlVwLzzSZ1gkEFl5VpnVuV0JwqP9kQZokf0OHQY0YQ32gf6HRlCtjyrNJRNYRZ6SoBHhD1LbF9RLmp9vBPgA3kHxXh90QUhUAqw==
-X-Gm-Message-State: AOJu0YyGqFcRnu1p6dGXZbEl7LwSgNVqcHsiXb0AfdxtUh6yhpyl2Wtf
-	/1aqO9h4vI6EOaLVWwJ4NCXZ7BP6XnMJY1iHFDOtQZtbYuEtlSmRYKwKnwW+7A==
-X-Google-Smtp-Source: AGHT+IHN8eeXE9OsgItxEKHR70nrrazwBAjav29jEzJB0wGGmdP+iVlP1VjtMYRBUjqpRzzzPBgYhQ==
-X-Received: by 2002:a05:6a20:c88b:b0:1a5:6a85:8ce9 with SMTP id adf61e73a8af0-1afc8d1b02amr3543639637.12.1715188296881;
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lp9-20020a056a003d4900b006f44ed124dfsm9245352pfb.160.2024.05.08.10.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
-Date: Wed, 8 May 2024 10:11:35 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <202405080959.104A73A914@keescook>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="igQy+7/1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715192888; x=1746728888;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=I3pkgfo8nvJpvZengN4XKNm18uahoQGeq70WkuA0SCg=;
+  b=igQy+7/1CzJo9Bof2j5q7T4wtog5V4foF3BhUErnnyiXdivbLCl1OLiS
+   TcyszutTTnWTqcGgd40R5MhwR6UtZZDIPlq86dvatFmdPUoQkBLwPoDUN
+   DtzbkmRLDg5g8ZzIVayBg0ok1Cpb076G5jP5gHBSl8AYhcYXRGmdvILZ0
+   99xQt3bn/xDRbYB2V/HKFbaX7U5SvmBD2l01I9wUtA0Fwz+9iI5In+Ev1
+   DQkbCJYcFho/CZEVh/2W18+o1CuTZ4ynRjoinDCMJ07sb76PlUeEKtVP2
+   OouMzwty8syfRQByH3vZkIQXtV614sqy5SXv1XwNOtN3gxAh7x67wn/Vy
+   g==;
+X-CSE-ConnectionGUID: TCVea47KQwu3vWiibcC21w==
+X-CSE-MsgGUID: X8hojD6sTRud9N09i+2KBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="11231439"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="11231439"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:28:08 -0700
+X-CSE-ConnectionGUID: /ArbksKxS466QMq7+rVEVQ==
+X-CSE-MsgGUID: 6pEYRgEqS5q+99pf18TJ+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="60142298"
+Received: from soc-cp83kr3.jf.intel.com (HELO [10.24.10.50]) ([10.24.10.50])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:28:07 -0700
+Message-ID: <8da387e4-0c44-4402-8103-fc232600cb02@intel.com>
+Date: Wed, 8 May 2024 11:28:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 42/54] KVM: x86/pmu: Implement emulated counter
+ increment for passthrough PMU
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-43-mizhang@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20240506053020.3911940-43-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
-> 
-> Split this per subsystem, please.
 
-I've done a few painful API transitions before, and I don't think the
-complexity of these changes needs a per-subsystem constification pass. I
-think this series is the right approach, but that patch 11 will need
-coordination with Linus. We regularly do system-wide prototype changes
-like this right at the end of the merge window before -rc1 comes out.
 
-The requirements are pretty simple: it needs to be a obvious changes
-(this certainly is) and as close to 100% mechanical as possible. I think
-patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-script and get nearly the same results, etc. And all the other changes
-need to have landed. This change also has no "silent failure" conditions:
-anything mismatched will immediately stand out.
+On 5/5/2024 10:30 PM, Mingwei Zhang wrote:
+> @@ -896,6 +924,12 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
+>  		return;
+>  
+>  	kvm_for_each_pmc(pmu, pmc, i, bitmap) {
+> +		if (is_passthrough)
+> +			is_pmc_allowed = pmc_speculative_in_use(pmc) &&
+> +					 check_pmu_event_filter(pmc);
+> +		else
+> +			is_pmc_allowed = pmc_event_is_allowed(pmc);
+> +
 
-So, have patches 1-10 go via their respective subsystems, and once all
-of those are in Linus's tree, send patch 11 as a stand-alone PR.
-
-(From patch 11, it looks like the seccomp read/write function changes
-could be split out? I'll do that now...)
-
--Kees
-
--- 
-Kees Cook
+Why don't need to check pmc_is_globally_enabled() in PMU passthrough
+case? Sorry if I missed something.
