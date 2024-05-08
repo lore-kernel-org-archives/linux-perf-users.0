@@ -1,407 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992FB130AF6;
-	Wed,  8 May 2024 21:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73BB3A1AB
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 21:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203585; cv=none; b=Uux7JpscFQJo7EkMxhyepmS7VKwS0KV3E/nMaQxKp2xGDk7lRHGuGWnTPxv3nOO2ygaKoySYWRAvmQL8rDHRQ/ItUYbBBzdWkMi7Zjrm1D7yOriLWem6Vfdeg80N6Ua9QmK80L+1sKqCmm78l4WRHBuxbKOUGh9Nz/0kEd5Cx0Y=
+	t=1715204250; cv=none; b=h1lWZXSRC1hz4NCgvdnaAeeI2H76c3f7zQA4GqkXPtDaUfq26JoUKwjNMn20f3leCgNktPcVEvG3168AK1ngOIpvn71sS3nekRpfMuUxS4WMuWsDc/5t77UDSojCI+l+J07OWhdWdC7ZmNcbzwkOgHmbZS00CjsIPfmYnsy8+Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203585; c=relaxed/simple;
-	bh=ki1+VYdxFSWKI78FFe8w0VMSWz/AqYegQbCtjt/2njc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ir5qfqYnBLj5f1BjoJP2Mas6O3wtvx+m6I03dfNAbRGrJ8bAHOGnH0KQt/wPoBlTDaX58L0MgzccDitRi7IfyLo9308iR/F2BQSsXqIbJcgx1PveQZNiXKo/NaEAcNXPAUCAPB7BTHD2ZqTV2USLdtonJk3Sny5QsNsebe7ms/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1nXPEYo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715204250; c=relaxed/simple;
+	bh=k+4tc+KwmnqhQyyFw7zD965SuJhq3cr3lh52uQiXmIY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ngqpQe6e7PDTy2cKK1TX5Pm9QkUX1UFH3l/4S5qBMPWteMSKhuKbRlLxGIS3TtPgcIxthIrpe2JG7Xig/AlY/nZVT2mQwu7dNqx6QQjLPBMvCD72E6RqOYZk1W7vfxoI7Kum4a2wHcD0nwoRHa31wC9f1iKDsqcd4REiH8+7FLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tnOJKQ6J; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1nXPEYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC832C113CC;
-	Wed,  8 May 2024 21:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715203584;
-	bh=ki1+VYdxFSWKI78FFe8w0VMSWz/AqYegQbCtjt/2njc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J1nXPEYo6SPyyUYQ3w3OfVaSsl1DgT1YBOzH/wEaTT3F6QEVGnKf+/SWi3SmLubTW
-	 nNIupLW+GaufeeeLq4owgE3bKg0hvoYGgt25rRU7t0O2hE5WcYn3ulKv/Z3i2vYr2d
-	 ttfHhwlW83T48m9oqpEqFjOYcq3utH7DmFckKMAcEG2YyWDvJvlPotX+nm7SjirPta
-	 bHX+PlD/vB/tKe6pAA1YzZ0e3ZMikyAlSW7Lzk98u7XE5PAuaeb5vygXddRRppY8Af
-	 +jdQGTEevv0hJFGqzG6cwGjrYsCgpUIL+fH4sjae3aOL5CearHy0FkG9yzRZ1i9mhI
-	 D2ymSdAgYZyCg==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: x86@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	bpf@vger.kernel.org,
-	rihams@fb.com,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH 4/4] selftests/bpf: add test validating uprobe/uretprobe stack traces
-Date: Wed,  8 May 2024 14:26:05 -0700
-Message-ID: <20240508212605.4012172-5-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240508212605.4012172-1-andrii@kernel.org>
-References: <20240508212605.4012172-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tnOJKQ6J"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43d361a2124so117851cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 14:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715204248; x=1715809048; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ydDQmhBL597XUhZAhAsSoGMq2Aqb+GmiKIr8rkv69AA=;
+        b=tnOJKQ6JX7AT/akWjDEQfgyfgN02JG39bMUsogOvrg1FCnIDgLBW8iFsCsUZbsjJ76
+         nALNA8tIw6EleU+B3uKAOriz4h4mi7m5rg3m2izVEmbqz5oL2OCQ575mZgTTrKpO0ojY
+         LoyPHvxvptVUOfA6/md+Gd5plkwM5idmPko9vAuGlwucqUy6lnwIvrMyw3hpbtCboBDl
+         i2hvAvQBpejJ6st4l/nMycnxLtunV7t0aqvofJ+4tkD0XZnUexzohTiRSx9shL/oCP9Q
+         +5/d+qSs0/d84HWrttXxDrklhUdWcR3s8sUrcv8l3SGP43Qe2pLW8D8S9g1vavuFYMom
+         2Rsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715204248; x=1715809048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ydDQmhBL597XUhZAhAsSoGMq2Aqb+GmiKIr8rkv69AA=;
+        b=kvwopQegyrjjWgXN1IYe3gYkP8rPc4iCoQSIaZjyF5v8acrD8hiwnVcRtHg+QXorS5
+         Xc+zoJOypO/0CtbglJh7xPcIRJaf2ctjpm782p3Hg4BstsPkBnoIg6dj88IsTY4iquJZ
+         Kxs8+wQKm/6Y+2zAZdw24jDDZMfvtoY9veVl9hw9YkWhiTGC7JJ7OC6/kQck4KQ4laI6
+         FlPqMU1ckcH2Q0gmexiAH9Hi5PT7tfHGFIaN4t7cXRv2nUNukDUgqKbyEeBB6oC37Cqf
+         eGuTUMho9S1Sxlf6TINAk+E8I4Do0b4Lk7XsOk9ScDn461fvp7oixONjC2nIIg9j1Kzp
+         BJEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUA8jKj+nzdwODxXKQH0ZmT+jFTH6A5FT3CRNJ5ApYMDSR2wR0T2ZjMb5YNFc6q9wqrNool0dFGN/u+Dlk8qx5brs8EpgT/Tz6+KOb3K1lBfQ==
+X-Gm-Message-State: AOJu0Yxg0j9YXgz/gIUZV8YsKYe0ztDdMfQ8+7m8hlkHYgOZvqGr0yGG
+	7emb9eeqlo11L3cATTaI5aMSW202a52cQmxSKHkgghm7fBtlOqBNHRr+2EFl9hAMnAZ2R3OdbBo
+	NzCCoYNgewi1xoBakVq+FZ1QnGI4nsKkDOZ2K
+X-Google-Smtp-Source: AGHT+IHyODFej2ggc3VFTiA+YFPclKrjBW8J8DzqpcSBbh3yZyBgiZXR3hh/wfA5Mm3leRfz8n0esXBnN2N8Iczt5OI=
+X-Received: by 2002:a05:622a:53c3:b0:439:ef72:75fb with SMTP id
+ d75a77b69052e-43df44da949mr267921cf.1.1715204247554; Wed, 08 May 2024
+ 14:37:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org> <20240505-perf_digit-v2-1-6ece307fdaad@codewreck.org>
+In-Reply-To: <20240505-perf_digit-v2-1-6ece307fdaad@codewreck.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 8 May 2024 14:37:16 -0700
+Message-ID: <CAP-5=fUmeyd3BR7njJEDQ-=qkpvLPMoQO-7De+3mqLaSOoZZxw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf parse-events: pass parse_state to add_tracepoint
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a set of tests to validate that stack traces captured from or in the
-presence of active uprobes and uretprobes are valid and complete.
+On Sun, May 5, 2024 at 4:14=E2=80=AFAM Dominique Martinet
+<asmadeus@codewreck.org> wrote:
+>
+> The next patch will add another flag to parse_state that we will want to
+> pass to evsel__nwetp_idx(), so pass the whole parse_state all the way
+> down instead of giving only the index
 
-For this we use BPF program that are installed either on entry or exit
-of user function, plus deep-nested USDT. One of target funtions
-(target_1) is recursive to generate two different entries in the stack
-trace for the same uprobe/uretprobe, testing potential edge conditions.
+Nit: evsel__newtp_idx typo
+Fwiw, I think the idx value is possibly something to be done away
+with. We renumber the evsels here:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n2077
 
-Without fixes in this patch set, we get something like this for one of
-the scenarios:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
- caller: 0x758fff - 0x7595ab
- target_1: 0x758fd5 - 0x758fff
- target_2: 0x758fca - 0x758fd5
- target_3: 0x758fbf - 0x758fca
- target_4: 0x758fb3 - 0x758fbf
- ENTRY #0: 0x758fb3 (in target_4)
- ENTRY #1: 0x758fd3 (in target_2)
- ENTRY #2: 0x758ffd (in target_1)
- ENTRY #3: 0x7fffffffe000
- ENTRY #4: 0x7fffffffe000
- ENTRY #5: 0x6f8f39
- ENTRY #6: 0x6fa6f0
- ENTRY #7: 0x7f403f229590
+Thanks,
+Ian
 
-Entry #3 and #4 (0x7fffffffe000) are uretprobe trampoline addresses
-which obscure actual target_1 and another target_1 invocations. Also
-note that between entry #0 and entry #1 we are missing an entry for
-target_3, which is fixed in patch #2.
-
-With all the fixes, we get desired full stack traces:
-
- caller: 0x758fff - 0x7595ab
- target_1: 0x758fd5 - 0x758fff
- target_2: 0x758fca - 0x758fd5
- target_3: 0x758fbf - 0x758fca
- target_4: 0x758fb3 - 0x758fbf
- ENTRY #0: 0x758fb7 (in target_4)
- ENTRY #1: 0x758fc8 (in target_3)
- ENTRY #2: 0x758fd3 (in target_2)
- ENTRY #3: 0x758ffd (in target_1)
- ENTRY #4: 0x758ff3 (in target_1)
- ENTRY #5: 0x75922c (in caller)
- ENTRY #6: 0x6f8f39
- ENTRY #7: 0x6fa6f0
- ENTRY #8: 0x7f986adc4cd0
-
-Now there is a logical and complete sequence of function calls.
-
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- .../bpf/prog_tests/uretprobe_stack.c          | 185 ++++++++++++++++++
- .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
- 2 files changed, 281 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
- create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c b/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
-new file mode 100644
-index 000000000000..2974553da6e5
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-+
-+#include <test_progs.h>
-+#include "uretprobe_stack.skel.h"
-+#include "../sdt.h"
-+
-+/* We set up target_1() -> target_2() -> target_3() -> target_4() -> USDT()
-+ * call chain, each being traced by our BPF program. On entry or return from
-+ * each target_*() we are capturing user stack trace and recording it in
-+ * global variable, so that user space part of the test can validate it.
-+ *
-+ * Note, we put each target function into a custom section to get those
-+ * __start_XXX/__stop_XXX symbols, generated by linker for us, which allow us
-+ * to know address range of those functions
-+ */
-+__attribute__((section("uprobe__target_4")))
-+__weak int target_4(void)
-+{
-+	STAP_PROBE1(uretprobe_stack, target, 42);
-+	return 42;
-+}
-+
-+extern const void *__start_uprobe__target_4;
-+extern const void *__stop_uprobe__target_4;
-+
-+__attribute__((section("uprobe__target_3")))
-+__weak int target_3(void)
-+{
-+	return target_4();
-+}
-+
-+extern const void *__start_uprobe__target_3;
-+extern const void *__stop_uprobe__target_3;
-+
-+__attribute__((section("uprobe__target_2")))
-+__weak int target_2(void)
-+{
-+	return target_3();
-+}
-+
-+extern const void *__start_uprobe__target_2;
-+extern const void *__stop_uprobe__target_2;
-+
-+__attribute__((section("uprobe__target_1")))
-+__weak int target_1(int depth)
-+{
-+	if (depth < 1)
-+		return 1 + target_1(depth + 1);
-+	else
-+		return target_2();
-+}
-+
-+extern const void *__start_uprobe__target_1;
-+extern const void *__stop_uprobe__target_1;
-+
-+extern const void *__start_uretprobe_stack_sec;
-+extern const void *__stop_uretprobe_stack_sec;
-+
-+struct range {
-+	long start;
-+	long stop;
-+};
-+
-+static struct range targets[] = {
-+	{}, /* we want target_1 to map to target[1], so need 1-based indexing */
-+	{ (long)&__start_uprobe__target_1, (long)&__stop_uprobe__target_1 },
-+	{ (long)&__start_uprobe__target_2, (long)&__stop_uprobe__target_2 },
-+	{ (long)&__start_uprobe__target_3, (long)&__stop_uprobe__target_3 },
-+	{ (long)&__start_uprobe__target_4, (long)&__stop_uprobe__target_4 },
-+};
-+
-+static struct range caller = {
-+	(long)&__start_uretprobe_stack_sec,
-+	(long)&__stop_uretprobe_stack_sec,
-+};
-+
-+static void validate_stack(__u64 *ips, int stack_len, int cnt, ...)
-+{
-+	int i, j;
-+	va_list args;
-+
-+	if (!ASSERT_GT(stack_len, 0, "stack_len"))
-+		return;
-+
-+	stack_len /= 8;
-+
-+	/* check if we have enough entries to satisfy test expectations */
-+	if (!ASSERT_GE(stack_len, cnt, "stack_len2"))
-+		return;
-+
-+	if (env.verbosity >= VERBOSE_NORMAL) {
-+		printf("caller: %#lx - %#lx\n", caller.start, caller.stop);
-+		for (i = 1; i < ARRAY_SIZE(targets); i++)
-+			printf("target_%d: %#lx - %#lx\n", i, targets[i].start, targets[i].stop);
-+		for (i = 0; i < stack_len; i++) {
-+			for (j = 1; j < ARRAY_SIZE(targets); j++) {
-+				if (ips[i] >= targets[j].start && ips[i] < targets[j].stop)
-+					break;
-+			}
-+			if (j < ARRAY_SIZE(targets)) { /* found target match */
-+				printf("ENTRY #%d: %#lx (in target_%d)\n", i, (long)ips[i], j);
-+			} else if (ips[i] >= caller.start && ips[i] < caller.stop) {
-+				printf("ENTRY #%d: %#lx (in caller)\n", i, (long)ips[i]);
-+			} else {
-+				printf("ENTRY #%d: %#lx\n", i, (long)ips[i]);
-+			}
-+		}
-+	}
-+
-+	va_start(args, cnt);
-+
-+	for (i = cnt - 1; i >= 0; i--) {
-+		/* most recent entry is the deepest target function */
-+		const struct range *t = va_arg(args, const struct range *);
-+
-+		ASSERT_GE(ips[i], t->start, "addr_start");
-+		ASSERT_LT(ips[i], t->stop, "addr_stop");
-+	}
-+
-+	va_end(args);
-+}
-+
-+__attribute__((section("uretprobe_stack_sec")))
-+void test_uretprobe_stack(void)
-+{
-+	LIBBPF_OPTS(bpf_uprobe_opts, uprobe_opts);
-+	struct uretprobe_stack *skel;
-+	int err;
-+
-+	skel = uretprobe_stack__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open"))
-+		return;
-+
-+	err = uretprobe_stack__attach(skel);
-+	if (!ASSERT_OK(err, "skel_attach"))
-+		goto cleanup;
-+
-+	/* trigger */
-+	ASSERT_EQ(target_1(0), 42 + 1, "trigger_return");
-+
-+	/*
-+	 * Stacks captured on ENTRY uprobes
-+	 */
-+
-+	/* (uprobe 1) target_1 in stack trace*/
-+	validate_stack(skel->bss->entry_stack1, skel->bss->entry1_len,
-+		       2, &caller, &targets[1]);
-+	/* (uprobe 1, recursed) */
-+	validate_stack(skel->bss->entry_stack1_recur, skel->bss->entry1_recur_len,
-+		       3, &caller, &targets[1], &targets[1]);
-+	/* (uprobe 2) caller -> target_1 -> target_1 -> target_2 */
-+	validate_stack(skel->bss->entry_stack2, skel->bss->entry2_len,
-+		       4, &caller, &targets[1], &targets[1], &targets[2]);
-+	/* (uprobe 3) */
-+	validate_stack(skel->bss->entry_stack3, skel->bss->entry3_len,
-+		       5, &caller, &targets[1], &targets[1], &targets[2], &targets[3]);
-+	/* (uprobe 4) caller -> target_1 -> target_1 -> target_2 -> target_3 -> target_4 */
-+	validate_stack(skel->bss->entry_stack4, skel->bss->entry4_len,
-+		       6, &caller, &targets[1], &targets[1], &targets[2], &targets[3], &targets[4]);
-+
-+	/* (USDT): full caller -> target_1 -> target_1 -> target_2 (uretprobed)
-+	 *              -> target_3 -> target_4 (uretprobes) chain
-+	 */
-+	validate_stack(skel->bss->usdt_stack, skel->bss->usdt_len,
-+		       6, &caller, &targets[1], &targets[1], &targets[2], &targets[3], &targets[4]);
-+
-+	/*
-+	 * Now stacks captured on the way out in EXIT uprobes
-+	 */
-+
-+	/* (uretprobe 4) everything up to target_4, but excluding it */
-+	validate_stack(skel->bss->exit_stack4, skel->bss->exit4_len,
-+		       5, &caller, &targets[1], &targets[1], &targets[2], &targets[3]);
-+	/* we didn't install uretprobes on target_2 and target_3 */
-+	/* (uretprobe 1, recur) first target_1 call only */
-+	validate_stack(skel->bss->exit_stack1_recur, skel->bss->exit1_recur_len,
-+		       2, &caller, &targets[1]);
-+	/* (uretprobe 1) just a caller in the stack trace */
-+	validate_stack(skel->bss->exit_stack1, skel->bss->exit1_len,
-+		       1, &caller);
-+
-+cleanup:
-+	uretprobe_stack__destroy(skel);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/uretprobe_stack.c b/tools/testing/selftests/bpf/progs/uretprobe_stack.c
-new file mode 100644
-index 000000000000..9fdcf396b8f4
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/uretprobe_stack.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-+#include <vmlinux.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/usdt.bpf.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+__u64 entry_stack1[32], exit_stack1[32];
-+__u64 entry_stack1_recur[32], exit_stack1_recur[32];
-+__u64 entry_stack2[32];
-+__u64 entry_stack3[32];
-+__u64 entry_stack4[32], exit_stack4[32];
-+__u64 usdt_stack[32];
-+
-+int entry1_len, exit1_len;
-+int entry1_recur_len, exit1_recur_len;
-+int entry2_len, exit2_len;
-+int entry3_len, exit3_len;
-+int entry4_len, exit4_len;
-+int usdt_len;
-+
-+#define SZ sizeof(usdt_stack)
-+
-+SEC("uprobe//proc/self/exe:target_1")
-+int BPF_UPROBE(uprobe_1)
-+{
-+	/* target_1 is recursive wit depth of 2, so we capture two separate
-+	 * stack traces, depending on which occurence it is
-+	 */
-+	static bool recur = false;
-+
-+	if (!recur)
-+		entry1_len = bpf_get_stack(ctx, &entry_stack1, SZ, BPF_F_USER_STACK);
-+	else
-+		entry1_recur_len = bpf_get_stack(ctx, &entry_stack1_recur, SZ, BPF_F_USER_STACK);
-+
-+	recur = true;
-+	return 0;
-+}
-+
-+SEC("uretprobe//proc/self/exe:target_1")
-+int BPF_URETPROBE(uretprobe_1)
-+{
-+	/* see above, target_1 is recursive */
-+	static bool recur = false;
-+
-+	/* NOTE: order of returns is reversed to order of entries */
-+	if (!recur)
-+		exit1_recur_len = bpf_get_stack(ctx, &exit_stack1_recur, SZ, BPF_F_USER_STACK);
-+	else
-+		exit1_len = bpf_get_stack(ctx, &exit_stack1, SZ, BPF_F_USER_STACK);
-+
-+	recur = true;
-+	return 0;
-+}
-+
-+SEC("uprobe//proc/self/exe:target_2")
-+int BPF_UPROBE(uprobe_2)
-+{
-+	entry2_len = bpf_get_stack(ctx, &entry_stack2, SZ, BPF_F_USER_STACK);
-+	return 0;
-+}
-+
-+/* no uretprobe for target_2 */
-+
-+SEC("uprobe//proc/self/exe:target_3")
-+int BPF_UPROBE(uprobe_3)
-+{
-+	entry3_len = bpf_get_stack(ctx, &entry_stack3, SZ, BPF_F_USER_STACK);
-+	return 0;
-+}
-+
-+/* no uretprobe for target_3 */
-+
-+SEC("uprobe//proc/self/exe:target_4")
-+int BPF_UPROBE(uprobe_4)
-+{
-+	entry4_len = bpf_get_stack(ctx, &entry_stack4, SZ, BPF_F_USER_STACK);
-+	return 0;
-+}
-+
-+SEC("uretprobe//proc/self/exe:target_4")
-+int BPF_URETPROBE(uretprobe_4)
-+{
-+	exit4_len = bpf_get_stack(ctx, &exit_stack4, SZ, BPF_F_USER_STACK);
-+	return 0;
-+}
-+
-+SEC("usdt//proc/self/exe:uretprobe_stack:target")
-+int BPF_USDT(usdt_probe)
-+{
-+	usdt_len = bpf_get_stack(ctx, &usdt_stack, SZ, BPF_F_USER_STACK);
-+	return 0;
-+}
--- 
-2.43.0
-
+> Originally-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+> ---
+>  tools/perf/util/parse-events.c | 31 ++++++++++++++++++-------------
+>  tools/perf/util/parse-events.h |  3 ++-
+>  tools/perf/util/parse-events.y |  2 +-
+>  3 files changed, 21 insertions(+), 15 deletions(-)
+>
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index 6f8b0fa17689..6e8cba03f0ac 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -519,13 +519,14 @@ static void tracepoint_error(struct parse_events_er=
+ror *e, int err,
+>         parse_events_error__handle(e, column, strdup(str), strdup(help));
+>  }
+>
+> -static int add_tracepoint(struct list_head *list, int *idx,
+> +static int add_tracepoint(struct parse_events_state *parse_state,
+> +                         struct list_head *list,
+>                           const char *sys_name, const char *evt_name,
+>                           struct parse_events_error *err,
+>                           struct parse_events_terms *head_config, void *l=
+oc_)
+>  {
+>         YYLTYPE *loc =3D loc_;
+> -       struct evsel *evsel =3D evsel__newtp_idx(sys_name, evt_name, (*id=
+x)++);
+> +       struct evsel *evsel =3D evsel__newtp_idx(sys_name, evt_name, pars=
+e_state->idx++);
+>
+>         if (IS_ERR(evsel)) {
+>                 tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name,=
+ loc->first_column);
+> @@ -544,7 +545,8 @@ static int add_tracepoint(struct list_head *list, int=
+ *idx,
+>         return 0;
+>  }
+>
+> -static int add_tracepoint_multi_event(struct list_head *list, int *idx,
+> +static int add_tracepoint_multi_event(struct parse_events_state *parse_s=
+tate,
+> +                                     struct list_head *list,
+>                                       const char *sys_name, const char *e=
+vt_name,
+>                                       struct parse_events_error *err,
+>                                       struct parse_events_terms *head_con=
+fig, YYLTYPE *loc)
+> @@ -578,7 +580,7 @@ static int add_tracepoint_multi_event(struct list_hea=
+d *list, int *idx,
+>
+>                 found++;
+>
+> -               ret =3D add_tracepoint(list, idx, sys_name, evt_ent->d_na=
+me,
+> +               ret =3D add_tracepoint(parse_state, list, sys_name, evt_e=
+nt->d_name,
+>                                      err, head_config, loc);
+>         }
+>
+> @@ -592,19 +594,21 @@ static int add_tracepoint_multi_event(struct list_h=
+ead *list, int *idx,
+>         return ret;
+>  }
+>
+> -static int add_tracepoint_event(struct list_head *list, int *idx,
+> +static int add_tracepoint_event(struct parse_events_state *parse_state,
+> +                               struct list_head *list,
+>                                 const char *sys_name, const char *evt_nam=
+e,
+>                                 struct parse_events_error *err,
+>                                 struct parse_events_terms *head_config, Y=
+YLTYPE *loc)
+>  {
+>         return strpbrk(evt_name, "*?") ?
+> -               add_tracepoint_multi_event(list, idx, sys_name, evt_name,
+> +               add_tracepoint_multi_event(parse_state, list, sys_name, e=
+vt_name,
+>                                            err, head_config, loc) :
+> -               add_tracepoint(list, idx, sys_name, evt_name,
+> +               add_tracepoint(parse_state, list, sys_name, evt_name,
+>                                err, head_config, loc);
+>  }
+>
+> -static int add_tracepoint_multi_sys(struct list_head *list, int *idx,
+> +static int add_tracepoint_multi_sys(struct parse_events_state *parse_sta=
+te,
+> +                                   struct list_head *list,
+>                                     const char *sys_name, const char *evt=
+_name,
+>                                     struct parse_events_error *err,
+>                                     struct parse_events_terms *head_confi=
+g, YYLTYPE *loc)
+> @@ -630,7 +634,7 @@ static int add_tracepoint_multi_sys(struct list_head =
+*list, int *idx,
+>                 if (!strglobmatch(events_ent->d_name, sys_name))
+>                         continue;
+>
+> -               ret =3D add_tracepoint_event(list, idx, events_ent->d_nam=
+e,
+> +               ret =3D add_tracepoint_event(parse_state, list, events_en=
+t->d_name,
+>                                            evt_name, err, head_config, lo=
+c);
+>         }
+>
+> @@ -1266,7 +1270,8 @@ static int get_config_chgs(struct perf_pmu *pmu, st=
+ruct parse_events_terms *head
+>         return 0;
+>  }
+>
+> -int parse_events_add_tracepoint(struct list_head *list, int *idx,
+> +int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+> +                               struct list_head *list,
+>                                 const char *sys, const char *event,
+>                                 struct parse_events_error *err,
+>                                 struct parse_events_terms *head_config, v=
+oid *loc_)
+> @@ -1282,14 +1287,14 @@ int parse_events_add_tracepoint(struct list_head =
+*list, int *idx,
+>         }
+>
+>         if (strpbrk(sys, "*?"))
+> -               return add_tracepoint_multi_sys(list, idx, sys, event,
+> +               return add_tracepoint_multi_sys(parse_state, list, sys, e=
+vent,
+>                                                 err, head_config, loc);
+>         else
+> -               return add_tracepoint_event(list, idx, sys, event,
+> +               return add_tracepoint_event(parse_state, list, sys, event=
+,
+>                                             err, head_config, loc);
+>  #else
+> +       (void)parse_state;
+>         (void)list;
+> -       (void)idx;
+>         (void)sys;
+>         (void)event;
+>         (void)head_config;
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-event=
+s.h
+> index 809359e8544e..fd55a154ceff 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -189,7 +189,8 @@ int parse_events_terms__to_strbuf(const struct parse_=
+events_terms *terms, struct
+>  int parse_events__modifier_event(struct list_head *list, char *str, bool=
+ add);
+>  int parse_events__modifier_group(struct list_head *list, char *event_mod=
+);
+>  int parse_events_name(struct list_head *list, const char *name);
+> -int parse_events_add_tracepoint(struct list_head *list, int *idx,
+> +int parse_events_add_tracepoint(struct parse_events_state *parse_state,
+> +                               struct list_head *list,
+>                                 const char *sys, const char *event,
+>                                 struct parse_events_error *error,
+>                                 struct parse_events_terms *head_config, v=
+oid *loc);
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
+s.y
+> index d70f5d84af92..0bab4263f8e3 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -537,7 +537,7 @@ tracepoint_name opt_event_config
+>         if (!list)
+>                 YYNOMEM;
+>
+> -       err =3D parse_events_add_tracepoint(list, &parse_state->idx, $1.s=
+ys, $1.event,
+> +       err =3D parse_events_add_tracepoint(parse_state, list, $1.sys, $1=
+.event,
+>                                         error, $2, &@1);
+>
+>         parse_events_terms__delete($2);
+>
+> --
+> 2.44.0
+>
