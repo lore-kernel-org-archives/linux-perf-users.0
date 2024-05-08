@@ -1,146 +1,109 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79F61332B5
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 May 2024 21:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBA738DF2;
+	Wed,  8 May 2024 21:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715204666; cv=none; b=Eb8lQbmf83SNjolHdUUm7Tn9AA4F2j0ibLUcdbxUndx1DrQJFMIThfACfeTeCz7GKR4wHADQJXMWoEl5gYsSZ9vUY78iqH5CUWlA0FvGQpojNF4MvZYvLwIhNrtGrTA7M5ioxNWPLerzk68fpHl1A3Pb3Loq34fEErrf0D9TEWs=
+	t=1715204893; cv=none; b=MmFDCYY68R/HIDCMyicAb+fgUcaSgVIEGjxIT1I7kIXKmsmKqhzDHoV3Y6iLJivGN1nyWytG6RRp0nzS4YETCuF1R8f9w7w/aFVhe+BURZSVSYix5auLqfowZ6FFtqZVoYRM141af+qrf4yUhHj1Emn8xVDx/EqrzMu1O2M9Auk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715204666; c=relaxed/simple;
-	bh=+GqhfbCWo1/rL5WMUZWC0dKWAFYfQARQY4h2Wx1maBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dVfVl0mRTd7/S0+TXeo0tNTaAeOH2kLu2mQV7ZfnVGjtwMX3xnk4YJ5akJ/PCeYBs/tigyavGZ8K9Ic8wDqO1tA7D4b8FuV1fFHA5kLZv2Usvfb4eBA4xGOjq4LF+6+70uo1DiDnRL38lvY9U83T44edIkUXnK2u8trFtSGzlIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p7LissJW; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715204893; c=relaxed/simple;
+	bh=Yplu8PkGhAUTWx6zGSpEd/x3mJqVx0M8Qy6LAVGi0Ds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=raY0CkCzFgU/Kv1n1MYdz7O/6afAsYNUYA+yFyoeOGoQImPWFdH3Td/1kuwPKphBSM1IkFj3CO7Nc/XZvyaNGb491F4+Ut8XVfrqDCj3bgZxvQqDEm+KBU6O4yIybpsfuX649xXPiSThmONF/2jjQ99UMMXwyLqjn4yENe5VMpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RTyjqf0v; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p7LissJW"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-43d361a2124so121531cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 14:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715204660; x=1715809460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WNz33LRukOuC2TAVQ91flMmJhD+luZs+qYkSeJGKPFs=;
-        b=p7LissJW2l94uE6++IZCGBm5cIuf+2Bq4sm0wKUNlGmpgkbqmhxNs1ljG+MUK2nAH8
-         /AtMnTiZ8GdU5CI4QFdNG1mCvk4zgPWtf7qqr4h+hEJUOjR0Arx/ZSATLskniHad657Y
-         cbSZyTwuSt0lZu5cBMu/Kda8R/a5NjZsVbJ8R+gl8SkYv1+xGg0opaOJI2QL4TU6lmjk
-         GCcewSBdfESwyJAOP1gUiUBpe7AS29Eicf49WWeFDIdlmN62DaZ+RHpk2ywWiP6YsHMn
-         h1aWkI+GFhAeivGgkg/ZvZsIElSd8UyzzunHiZ6i5AkUHWgs4MpfkjS4O4Lg8YoLFAXi
-         pwyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715204660; x=1715809460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WNz33LRukOuC2TAVQ91flMmJhD+luZs+qYkSeJGKPFs=;
-        b=A0KQEfYEeYBKBwTysc1Ncf55W5HxIBLRji/HFVZ8R90dLLGjSjFUxOwTngn4YoDlwl
-         P30bOCTOEZbNvSlrK6nQ8pYOPThUQwfyCeoKJVXDUG2kVkqUnTwEbX90idFTJ25E/Mg6
-         rzsqn1AiOCahoXgJITJgrlTmNBmfBhhxo3/9UISHD+ais3nzZEZAQRp4+UYppDg7ceix
-         MuRJqf+U5PdqP3sLu6tafck6SrS0u3rHMenhD3/VsvSktqMvA7TAIS2vD9qPjhZP7dOa
-         pJaG/B+Q78tBGoYym9mYcdCUJ+XIxyaZWnNIbHmmXiRQJgTU5NiiqD4EBNBVJRrS6tR7
-         QdsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgj3uqg+PrJg8fWK5zRFZ203MKYkMY4xEtfq0i8ntxii/XGNN2g+7vyxkIhUGLI4Muu4aVYM8zyqtuXGjW7oSME+ZR6N7mpdHltjNJoQWrIg==
-X-Gm-Message-State: AOJu0YwXtEv0PP3OcB05t9Xf5btsS7seX737i8ZXuxQUqV342Th6lfr6
-	HUghKQ5AXXsf4Kj0LPGh7+EZopYOPYDMFI1IAYAAaZ3VO24/0U1fHhYRdN2IEwoBV9QgLg5UhMa
-	Wqbh6bEaCAH2R3M1YHJstPg50IKrkZR2pdZI3
-X-Google-Smtp-Source: AGHT+IG4V8Ro6H7VLFiSiWMxVSXvKP2tZ5kz1hDy9s6imtx4QHxTmnCi3+YTDPOrrDiAYIGEDIZLIhogA0rDgA99sXo=
-X-Received: by 2002:ac8:6f1b:0:b0:43c:de95:6258 with SMTP id
- d75a77b69052e-43defba092bmr1278391cf.18.1715204659725; Wed, 08 May 2024
- 14:44:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RTyjqf0v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715204891; x=1746740891;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Yplu8PkGhAUTWx6zGSpEd/x3mJqVx0M8Qy6LAVGi0Ds=;
+  b=RTyjqf0vMDiavzIAD/C3Nxl79b4fso38rrnNzoOq5xRlirkNkU4SuA+y
+   E7H6RIZSMONs4XxzFJjQeV2P7NFD4+NSjkJ9iynzOjHwTXi0q7rpFAZ6j
+   kK7+hQi5T+2//NvydFFwOLKBDzDTvbcxyC12J1T21ucoWsa9ZenVqtNVG
+   auEEog4diIcu7oMS1n3uCb3ueuQ+iGlvfw2QGMY3M0eZJ5hxHRkihjLka
+   oMKEeuzAphDAe7M5Sw2+3Iu39VfmHwuEWTj962/U+gFTf89pd56Vk7pXu
+   u5Km7gamPPuuPok2HVMUZ7V66PHwHyLsVHvWc4vc50Mwj+hL88Ng6dTUq
+   A==;
+X-CSE-ConnectionGUID: vC33YPQmQKuOe4DcPeHIPw==
+X-CSE-MsgGUID: v4kiqk9BQEi108oBwnOj9w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="11219329"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="11219329"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 14:48:11 -0700
+X-CSE-ConnectionGUID: Wg+DWhXQSvaCH2ALLEGu3Q==
+X-CSE-MsgGUID: mXbtvMDCQOmZ//2m7XM+Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="28965661"
+Received: from soc-cp83kr3.jf.intel.com (HELO [10.24.10.50]) ([10.24.10.50])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 14:48:09 -0700
+Message-ID: <d19e06e7-ed97-4361-a628-014e5670cf22@intel.com>
+Date: Wed, 8 May 2024 14:48:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org> <20240505-perf_digit-v2-3-6ece307fdaad@codewreck.org>
-In-Reply-To: <20240505-perf_digit-v2-3-6ece307fdaad@codewreck.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 14:44:08 -0700
-Message-ID: <CAP-5=fWUm9X1_Yj_sqHQqCqfSpcrXsDggJRO+GN2jo=km-0bBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf parse: Allow names to start with digits
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 26/54] KVM: x86/pmu: Avoid legacy vPMU code when
+ accessing global_ctrl in passthrough vPMU
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-27-mizhang@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20240506053020.3911940-27-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 5, 2024 at 4:14=E2=80=AFAM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
->
-> Tracepoints can start with digits, although we don't have many of these:
->
-> $ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
-> net/mac802154/trace.h
-> 53:TRACE_EVENT(802154_drv_return_int,
-> ...
->
-> net/ieee802154/trace.h
-> 66:TRACE_EVENT(802154_rdev_add_virtual_intf,
-> ...
->
-> include/trace/events/9p.h
-> 124:TRACE_EVENT(9p_client_req,
-> ...
->
-> Just allow names to start with digits too so e.g. perf trace -e '9p:*'
-> works
->
-> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Tested-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
-
+On 5/5/2024 10:29 PM, Mingwei Zhang wrote:
+> Avoid calling into legacy/emulated vPMU logic such as reprogram_counters()
+> when passthrough vPMU is enabled. Note that even when passthrough vPMU is
+> enabled, global_ctrl may still be intercepted if guest VM only sees a
+> subset of the counters.
+> 
+> Suggested-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
 > ---
->  tools/perf/tests/parse-events.c | 5 +++++
->  tools/perf/util/parse-events.l  | 4 ++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index ef056e8740fe..6cf055dd5c09 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2280,6 +2280,11 @@ static const struct evlist_test test__events[] =3D=
- {
->                 .check =3D test__checkevent_breakpoint_2_events,
->                 /* 3 */
->         },
-> +       {
-> +               .name =3D "9p:9p_client_req",
-> +               .check =3D test__checkevent_tracepoint,
-> +               /* 4 */
-> +       },
->  };
->
->  static const struct evlist_test test__events_pmu[] =3D {
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-event=
-s.l
-> index e86c45675e1d..c36f8dbf593a 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -158,8 +158,8 @@ event               [^,{}/]+
->  num_dec                [0-9]+
->  num_hex                0x[a-fA-F0-9]{1,16}
->  num_raw_hex    [a-fA-F0-9]{1,16}
-> -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
-> -name_tag       [\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=3D]*[\']
-> +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
-> +name_tag       [\'][a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=3D]*[\']
->  name_minus     [a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
->  drv_cfg_term   [a-zA-Z0-9_\.]+(=3D[a-zA-Z0-9_*?\.:]+)?
->  /*
->
-> --
-> 2.44.0
->
+>  arch/x86/kvm/pmu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index bd94f2d67f5c..e9047051489e 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -713,7 +713,8 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		if (pmu->global_ctrl != data) {
+>  			diff = pmu->global_ctrl ^ data;
+>  			pmu->global_ctrl = data;
+> -			reprogram_counters(pmu, diff);
+> +			if (!is_passthrough_pmu_enabled(vcpu))
+> +				reprogram_counters(pmu, diff);
+
+Since in [PATCH 44/54], reprogram_counters() is effectively skipped in
+the passthrough case, is this patch still needed?
+
+>  		}
+>  		break;
+>  	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
