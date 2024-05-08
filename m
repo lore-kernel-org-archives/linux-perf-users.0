@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB6CE53389;
-	Wed,  8 May 2024 14:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A9DDDB2;
+	Wed,  8 May 2024 17:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715178007; cv=none; b=psiKO90iuF3kYmzTPbud6IfBPdhIv8XNDPF03aJoaUMTxr39tqBYVwSLs8SOqcIyqyNrxj4mCjGSwbD/R2HSlA/6t3aDI11Ka/WKRORL575qM6h52WpB2BZlQh/i8WT0AnrqtLjD0AzVsnnlkYLiEHb1Sy+zD/tPkO1O3lUR4jM=
+	t=1715187821; cv=none; b=Tuxl0RkyvDBXmTsfroIICKa0E8rbh71BF2bjyKO7O/xnTA7KKp5OEzCOhhcjQS0yLw3jrEv2+la2LlSyKnzSJwMmGtECx9NGS/qWmycYtvNyFqN4jlQUTZfTELjLTRzHidMoaWBEUL4boEfHzWEMs32UAf2vw/gcj4P26O5NGLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715178007; c=relaxed/simple;
-	bh=MywWnECT1IA57bzYsC62zZaCOfyYL9X9TzJpNmQ9Mkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GPqkejLz+H6/17So+kVvp+WDo0nxgWhFlEGpt+jS3OS68sdRUOhSWE8RGG5QkzUi9eZdBg3zirbEIuXSYyXI+ZSnZj8/0SGLVXG5KCM9LnJo7GfiYKS+TjOpPQIANluJSnK14q/MY21EGKMfeiVDdH8bkxuYkciYVyY715l6nYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 054B51007;
-	Wed,  8 May 2024 07:20:31 -0700 (PDT)
-Received: from [10.1.30.37] (PF4Q20KV.arm.com [10.1.30.37])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB5013F905;
-	Wed,  8 May 2024 07:20:03 -0700 (PDT)
-Message-ID: <0ab3a37a-f569-471f-b6a8-6e35959f568d@arm.com>
-Date: Wed, 8 May 2024 15:19:54 +0100
+	s=arc-20240116; t=1715187821; c=relaxed/simple;
+	bh=u+FDl3tH7RdzNgAMG/vr0jZH4Fdz2u+wV1+KsTqh1uM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=SsogKdBPUtnGVgPZ0hWheakLF2PzfiKI98uJm9D6+lyD6xGcG0lX60cFZ64mhGCOQ6a2/pL7Rrvt1XGG+fnrikYB02u+o2d9XMq86x8fvOMJf4SFNRn/IcmIx36fRwYGYR0kO0HyLqoQeLxa4eXbXM8HwhXq4j6qogWWSaAkWqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sPoUqj4s; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sPoUqj4s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715187771; x=1715792571; i=markus.elfring@web.de;
+	bh=AjnPyjnsrQDPJYZ9uhUAt6VHnSPdsHQWUWsa/Smbu2E=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sPoUqj4soztmQ7fatgrCape28SO9n8goudCMAKjg7u+XImp8dStpAehLDR/MgXR6
+	 haguGkkEHZh+EKDSnNUBbDhYc8CspXkpfidNj0S7TyzjMksL+IQldbx5qSMMqcSLP
+	 FMPy6Homya/3UQYgd5bgdQ5tn4cvqGXs4sFs/q20PG9uMyD4hliNkazEad/5uXtyp
+	 wyLl/yb8HavPMYA7RNTms8LnDxTEcNxj4+wdWSfX2Kac0Y1Ef4J7+4+FlLb/X2Nuu
+	 ABHgZOGnNNbrwNS3JVuobH2PfX0MQmQjyrS6fvxJxQ3aZma+A5Z0gZ7zfjSAj8w5r
+	 3eTDNpGQX6B0f7MNag==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MFayq-1rprls3eiE-00H5w9; Wed, 08
+ May 2024 19:02:50 +0200
+Message-ID: <4294f69b-a317-4f09-b775-52439e2ea6fc@web.de>
+Date: Wed, 8 May 2024 19:02:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,153 +42,51 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] perf symbols: Update kcore map before merging in
- remaining symbols
-To: James Clark <james.clark@arm.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com,
- irogers@google.com, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
+To: Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
-References: <20240507141210.195939-1-james.clark@arm.com>
- <20240507141210.195939-4-james.clark@arm.com>
- <CAM9d7cjYvMndUmSuwnE1ETwnu_6WrxQ4UzsNHHvo4SVR250L7A@mail.gmail.com>
- <16116798-52d6-4004-8514-9b81c789474f@arm.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <16116798-52d6-4004-8514-9b81c789474f@arm.com>
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Ian Rogers
+ <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+ James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240505202805.583253-1-leo.yan@arm.com>
+Subject: Re: [PATCH] perf maps: Process kcore maps in order
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240505202805.583253-1-leo.yan@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LKnRS7MuSAFl/he+bteY1QUAX2irvK6smzp2qbkyj/kinqwqi1h
+ uyyAA7lhXKQ8dzcgnzmhStr3IDlsazri2nVcIio+qU5tvQfBICx6crITmo1j6CkDuVAvKLB
+ WA1ezTunRPLbh44c96ZL73BpM+lbxtp1WtrTpjipWi1MarX3eCK2gn3Tjgu+T9qzkadlFcC
+ x6xERPm/oQeLX2dvLSfbw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qSMLRAMRP6o=;dv54UHQvXakuD/tl3CKU+TJdKIQ
+ MjUdd/DPFvsHI5t5Z/a9ZFZmNcSOwGpNcrYWkYwFbn6y6DUP/7CWv0v6ENrve711O6X3RmTpx
+ 3lh0/7dmMmAnZixj492qxd3y7EWs+563WYmD4EoRKyPWo53R2v3KH0kW+bdPqK0ip7KSkhC5X
+ KQzb9lB5WUc5d4LIqeyRgm3ZMUtE6Xa3KNFR4AHhev5OkMDeDey7dtOv8PLHfpTGXxwjKJ3XJ
+ lSD/2B8uMQcp8h61ywNoF3O2Z7xfwbUgKiYQqB4n+Ni44djPrCNTqTbwoJ5l8cv4m9jVqkEt+
+ vB+xIUjGC4Zw5wQRpoOaSrAQLLFk9cTeFGGInR+D/c794ucUjuRVDcJz6jdMfUWjT5xWynJgu
+ BqJ+F1H8iW/ruPCdDzJiKUwLayUNXmoOtc5w/9f7Kgjkh3Zoquv8AGwGsYRg3+wfO0Da/TfOs
+ HNYz0uM+datnl6gDzrKrurkaXV5+OWenf2TVWUQRP06fC+L6P9b+nHU5Pib0UHQRVirsba7QM
+ XKCvObBvAAtip+2NRJ4K7sBDrSn2oClvu/kpP7ste/UjqXsnItUg5f/213DyAcQO5M2rAlNvw
+ k4KBqbjy/9j3XyUtkNlQqvbZOErBcebq5XxV1ddsrbwGfcVTc9lKqjrVmFsP4pEwGgcpQfVog
+ DYtr08VEljzkQMTs/XmyplJSnHTFmqZULdyH6/5BHHIYlfMYt63zsA0drgb1wZj5KUcR16Mtj
+ aVkpH31CXuvmvzi1cWEx0cgq5+xbEZw02xKpbSEaQD5oYlR09r8TQc8VIMOuZi8EnpuT59+kT
+ 7Sj9dkTaCa2J86I8zzRor92VuqZC5BfVPU9g8wlN8p914=
 
-On 5/8/2024 10:14 AM, James Clark wrote:
+>                                                        =E2=80=A6 To fix =
+it, this
+> patch adds kcore maps in the tail of list, =E2=80=A6
 
-[...]
+* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D?
 
->> Looks like you and Leo are working on the same problem.
->>
->> https://lore.kernel.org/r/20240505202805.583253-1-leo.yan@arm.com/
->>
-> 
-> Oops I should have checked the list. It looks like we can still take his
-> fix as well though, with an updated comment.
+* Would you like to use imperative wordings for an improved changelog?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n94
 
-Sorry for duplicate work. I will resend my patch separately with refined
-comment, as suggested by Adrian.
-
-[...]
-
->>> @@ -1289,7 +1289,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->>>  {
->>>         struct maps *kmaps = map__kmaps(map);
->>>         struct kcore_mapfn_data md;
->>> -       struct map *replacement_map = NULL;
->>> +       struct map *map_ref, *replacement_map = NULL;
->>>         struct machine *machine;
->>>         bool is_64_bit;
->>>         int err, fd;
->>> @@ -1367,6 +1367,24 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->>>         if (!replacement_map)
->>>                 replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
-
-As the 'replacement' map is mainly used to adjust the kernel's sections
-between '_stext' and '_end', some arches might don't share the same issue with
-Arm64.  So it is a bit redundant for assignment 'replacement_map' if it is
-NULL, we can consider to remove the above two lines.
-
->>>
->>> +       /*
->>> +        * Update addresses of vmlinux map. Re-insert it to ensure maps are
->>> +        * correctly ordered. Do this before using maps__merge_in() for the
->>> +        * remaining maps so vmlinux gets split if necessary.
->>> +        */
->>> +       map_ref = map__get(map);
->>> +       maps__remove(kmaps, map_ref);
->>
->> A nitpick.  It'd be natural to use 'map' instead of 'map_ref'
->> (even if they are the same) since IIUC we want to remove
->> the old 'map' and update 'map_ref' then add it back.
->>
-> 
-> Using map makes sense, I can update that.
-> 
->>> +
->>> +       map__set_start(map_ref, map__start(replacement_map));
->>> +       map__set_end(map_ref, map__end(replacement_map));
->>> +       map__set_pgoff(map_ref, map__pgoff(replacement_map));
->>> +       map__set_mapping_type(map_ref, map__mapping_type(replacement_map));
->>
->> So here, replacement_map should not be NULL right?
->>
-> 
-> Yes it shouldn't be. It would only be NULL if md.maps is empty, but
-> there's already an exit condition for that above.
-> 
-> Some of the other code also assumes node->map is always set, so it can't
-> be NULL that way either.
-
-Thus, we can consider to check condition for 'replacement' map is NULL or not.
-
-    if (replacement_map) {
-	list_del_init(&new_node->node);
-
-	map_ref = map__get(map);
-	maps__remove(kmaps, map_ref);
-	...
-	map__put(new_map);
-	if (err)
-		goto out_err;
-	free(new_node);
-    }
-
-[...]
-
->>> @@ -1374,24 +1392,8 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->>>
->>>                 list_del_init(&new_node->node);
->>>
->>> -               if (RC_CHK_EQUAL(new_map, replacement_map)) {
->>> -                       struct map *map_ref;
->>> -
->>> -                       /* Ensure maps are correctly ordered */
->>> -                       map_ref = map__get(map);
->>> -                       maps__remove(kmaps, map_ref);
->>> -
->>> -                       map__set_start(map_ref, map__start(new_map));
->>> -                       map__set_end(map_ref, map__end(new_map));
->>> -                       map__set_pgoff(map_ref, map__pgoff(new_map));
->>> -                       map__set_mapping_type(map_ref, map__mapping_type(new_map));
->>> -
->>> -                       err = maps__insert(kmaps, map_ref);
->>> -                       map__put(map_ref);
->>> -                       map__put(new_map);
->>> -                       if (err)
->>> -                               goto out_err;
->>> -               } else {
->>> +               /* skip if replacement_map, already inserted above */
->>> +               if (!RC_CHK_EQUAL(new_map, replacement_map)) {
-
-With above change, we don't need check 'replacement_map' at here.
-
-Just extend a bit for considering a more clean fixing, we need to sort all
-ranges in 'md.maps', this would be benefit for two things:
-
-- We can fix up any map regions, not only limit to the 'replacement_map'. With
-  sorting maps in 'md.maps', we can totally remove the code for
-  'replacement_map'.
-- We can report the potential issue caused by overlapping in the first place
-  rather than the assert log in check_invariants(). This is easier for later
-  debugging.
-
-But current patch is good enough for me, I don't have strong opinion for this.
-
-Thanks,
-Leo
-
->>>                         /*
->>>                          * Merge kcore map into existing maps,
->>>                          * and ensure that current maps (eBPF)
->>> --
->>> 2.34.1
->>>
+Regards,
+Markus
