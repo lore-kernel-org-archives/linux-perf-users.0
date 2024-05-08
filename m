@@ -1,140 +1,179 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542D77BB0F;
-	Wed,  8 May 2024 14:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB6CE53389;
+	Wed,  8 May 2024 14:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715177753; cv=none; b=glOP3tW5mgZb6BkZNC9vuNtN/6UBeNMrxyX2KQWEq/Bpvm0FsYLb8d2yCee2fBWqafRN7AIcmAy5EOdhLYb/RWFw9hSxs3OJocVu3lnqGmzwKINU03gIBBa9SMtnF4XKaucDyvzAvfxgmfPWcR558kdvPSQbL/0xYpVrn/0DyCM=
+	t=1715178007; cv=none; b=psiKO90iuF3kYmzTPbud6IfBPdhIv8XNDPF03aJoaUMTxr39tqBYVwSLs8SOqcIyqyNrxj4mCjGSwbD/R2HSlA/6t3aDI11Ka/WKRORL575qM6h52WpB2BZlQh/i8WT0AnrqtLjD0AzVsnnlkYLiEHb1Sy+zD/tPkO1O3lUR4jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715177753; c=relaxed/simple;
-	bh=6A7Z1g12GoKK+DOAy2tHYcRQ25V+VaPQo8VdbUz1buI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nmOxJQO2agTFyVw1CmVsE/NNDprYEUaFo08ycCMKwF1Dbw4kFq65y8JlfyZRsc2xz63vNkj39ejwN2hy0SjBXFCbdchojbgkpXVGwvhnuun4M+h1AQMoebb/DXYzgqi09uBo0GVogI1eTqdOtRDSnlqGn6vhzU+yT+JxYDhwLC0=
+	s=arc-20240116; t=1715178007; c=relaxed/simple;
+	bh=MywWnECT1IA57bzYsC62zZaCOfyYL9X9TzJpNmQ9Mkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GPqkejLz+H6/17So+kVvp+WDo0nxgWhFlEGpt+jS3OS68sdRUOhSWE8RGG5QkzUi9eZdBg3zirbEIuXSYyXI+ZSnZj8/0SGLVXG5KCM9LnJo7GfiYKS+TjOpPQIANluJSnK14q/MY21EGKMfeiVDdH8bkxuYkciYVyY715l6nYg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44D201007;
-	Wed,  8 May 2024 07:16:16 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 943633F6A8;
-	Wed,  8 May 2024 07:15:48 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: leo.yan@linux.dev,
-	James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf dwarf-aux: Fix build with HAVE_DWARF_CFI_SUPPORT
-Date: Wed,  8 May 2024 15:14:57 +0100
-Message-Id: <20240508141458.439017-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 054B51007;
+	Wed,  8 May 2024 07:20:31 -0700 (PDT)
+Received: from [10.1.30.37] (PF4Q20KV.arm.com [10.1.30.37])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB5013F905;
+	Wed,  8 May 2024 07:20:03 -0700 (PDT)
+Message-ID: <0ab3a37a-f569-471f-b6a8-6e35959f568d@arm.com>
+Date: Wed, 8 May 2024 15:19:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] perf symbols: Update kcore map before merging in
+ remaining symbols
+To: James Clark <james.clark@arm.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.vnet.ibm.com,
+ irogers@google.com, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
+References: <20240507141210.195939-1-james.clark@arm.com>
+ <20240507141210.195939-4-james.clark@arm.com>
+ <CAM9d7cjYvMndUmSuwnE1ETwnu_6WrxQ4UzsNHHvo4SVR250L7A@mail.gmail.com>
+ <16116798-52d6-4004-8514-9b81c789474f@arm.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <16116798-52d6-4004-8514-9b81c789474f@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-check_allowed_ops() is used from both HAVE_DWARF_GETLOCATIONS_SUPPORT
-and HAVE_DWARF_CFI_SUPPORT sections, so move it into the right place so
-that it's available when either are defined. This shows up when doing
-a static cross compile for arm64:
+On 5/8/2024 10:14 AM, James Clark wrote:
 
-  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LDFLAGS="-static" \
-    EXTRA_PERFLIBS="-lexpat"
+[...]
 
-  util/dwarf-aux.c:1723:6: error: implicit declaration of function 'check_allowed_ops'
+>> Looks like you and Leo are working on the same problem.
+>>
+>> https://lore.kernel.org/r/20240505202805.583253-1-leo.yan@arm.com/
+>>
+> 
+> Oops I should have checked the list. It looks like we can still take his
+> fix as well though, with an updated comment.
 
-Fixes: 55442cc2f22d ("perf dwarf-aux: Check allowed DWARF Ops")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/dwarf-aux.c | 56 ++++++++++++++++++-------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+Sorry for duplicate work. I will resend my patch separately with refined
+comment, as suggested by Adrian.
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index c0a492e65388..c9584563cd56 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1215,6 +1215,34 @@ static int offset_from_dwarf_op(Dwarf_Op *op)
- 	}
- 	return -1;
- }
-+
-+static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
-+{
-+	/* The first op is checked separately */
-+	ops++;
-+	nops--;
-+
-+	/*
-+	 * It needs to make sure if the location expression matches to the given
-+	 * register and offset exactly.  Thus it rejects any complex expressions
-+	 * and only allows a few of selected operators that doesn't change the
-+	 * location.
-+	 */
-+	while (nops) {
-+		switch (ops->atom) {
-+		case DW_OP_stack_value:
-+		case DW_OP_deref_size:
-+		case DW_OP_deref:
-+		case DW_OP_piece:
-+			break;
-+		default:
-+			return false;
-+		}
-+		ops++;
-+		nops--;
-+	}
-+	return true;
-+}
- #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT || HAVE_DWARF_CFI_SUPPORT */
- 
- #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
-@@ -1395,34 +1423,6 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 	return true;
- }
- 
--static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
--{
--	/* The first op is checked separately */
--	ops++;
--	nops--;
--
--	/*
--	 * It needs to make sure if the location expression matches to the given
--	 * register and offset exactly.  Thus it rejects any complex expressions
--	 * and only allows a few of selected operators that doesn't change the
--	 * location.
--	 */
--	while (nops) {
--		switch (ops->atom) {
--		case DW_OP_stack_value:
--		case DW_OP_deref_size:
--		case DW_OP_deref:
--		case DW_OP_piece:
--			break;
--		default:
--			return false;
--		}
--		ops++;
--		nops--;
--	}
--	return true;
--}
--
- /* Only checks direct child DIEs in the given scope. */
- static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
- {
--- 
-2.34.1
+[...]
 
+>>> @@ -1289,7 +1289,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+>>>  {
+>>>         struct maps *kmaps = map__kmaps(map);
+>>>         struct kcore_mapfn_data md;
+>>> -       struct map *replacement_map = NULL;
+>>> +       struct map *map_ref, *replacement_map = NULL;
+>>>         struct machine *machine;
+>>>         bool is_64_bit;
+>>>         int err, fd;
+>>> @@ -1367,6 +1367,24 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+>>>         if (!replacement_map)
+>>>                 replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
+
+As the 'replacement' map is mainly used to adjust the kernel's sections
+between '_stext' and '_end', some arches might don't share the same issue with
+Arm64.  So it is a bit redundant for assignment 'replacement_map' if it is
+NULL, we can consider to remove the above two lines.
+
+>>>
+>>> +       /*
+>>> +        * Update addresses of vmlinux map. Re-insert it to ensure maps are
+>>> +        * correctly ordered. Do this before using maps__merge_in() for the
+>>> +        * remaining maps so vmlinux gets split if necessary.
+>>> +        */
+>>> +       map_ref = map__get(map);
+>>> +       maps__remove(kmaps, map_ref);
+>>
+>> A nitpick.  It'd be natural to use 'map' instead of 'map_ref'
+>> (even if they are the same) since IIUC we want to remove
+>> the old 'map' and update 'map_ref' then add it back.
+>>
+> 
+> Using map makes sense, I can update that.
+> 
+>>> +
+>>> +       map__set_start(map_ref, map__start(replacement_map));
+>>> +       map__set_end(map_ref, map__end(replacement_map));
+>>> +       map__set_pgoff(map_ref, map__pgoff(replacement_map));
+>>> +       map__set_mapping_type(map_ref, map__mapping_type(replacement_map));
+>>
+>> So here, replacement_map should not be NULL right?
+>>
+> 
+> Yes it shouldn't be. It would only be NULL if md.maps is empty, but
+> there's already an exit condition for that above.
+> 
+> Some of the other code also assumes node->map is always set, so it can't
+> be NULL that way either.
+
+Thus, we can consider to check condition for 'replacement' map is NULL or not.
+
+    if (replacement_map) {
+	list_del_init(&new_node->node);
+
+	map_ref = map__get(map);
+	maps__remove(kmaps, map_ref);
+	...
+	map__put(new_map);
+	if (err)
+		goto out_err;
+	free(new_node);
+    }
+
+[...]
+
+>>> @@ -1374,24 +1392,8 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+>>>
+>>>                 list_del_init(&new_node->node);
+>>>
+>>> -               if (RC_CHK_EQUAL(new_map, replacement_map)) {
+>>> -                       struct map *map_ref;
+>>> -
+>>> -                       /* Ensure maps are correctly ordered */
+>>> -                       map_ref = map__get(map);
+>>> -                       maps__remove(kmaps, map_ref);
+>>> -
+>>> -                       map__set_start(map_ref, map__start(new_map));
+>>> -                       map__set_end(map_ref, map__end(new_map));
+>>> -                       map__set_pgoff(map_ref, map__pgoff(new_map));
+>>> -                       map__set_mapping_type(map_ref, map__mapping_type(new_map));
+>>> -
+>>> -                       err = maps__insert(kmaps, map_ref);
+>>> -                       map__put(map_ref);
+>>> -                       map__put(new_map);
+>>> -                       if (err)
+>>> -                               goto out_err;
+>>> -               } else {
+>>> +               /* skip if replacement_map, already inserted above */
+>>> +               if (!RC_CHK_EQUAL(new_map, replacement_map)) {
+
+With above change, we don't need check 'replacement_map' at here.
+
+Just extend a bit for considering a more clean fixing, we need to sort all
+ranges in 'md.maps', this would be benefit for two things:
+
+- We can fix up any map regions, not only limit to the 'replacement_map'. With
+  sorting maps in 'md.maps', we can totally remove the code for
+  'replacement_map'.
+- We can report the potential issue caused by overlapping in the first place
+  rather than the assert log in check_invariants(). This is easier for later
+  debugging.
+
+But current patch is good enough for me, I don't have strong opinion for this.
+
+Thanks,
+Leo
+
+>>>                         /*
+>>>                          * Merge kcore map into existing maps,
+>>>                          * and ensure that current maps (eBPF)
+>>> --
+>>> 2.34.1
+>>>
