@@ -1,138 +1,106 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E4A12C47E;
-	Thu,  9 May 2024 22:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C5410A0D;
+	Thu,  9 May 2024 22:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715293513; cv=none; b=eQgPxqJA4wXML2jA+UkAhu6C51PXMSKNWt/GoRMxb9A3R8Wj7Y0pVm15Ebqx+Z3iFUeGJ6mWGzRjNq+CpeR/gdW5kc55zC4pK0kP0CYlIm1g6h6krhd9OLzZ06qZSjN1cCmE4ubPslesHRQW8tal1/cUQ0JHlYGxGuOTmoD6KTk=
+	t=1715294022; cv=none; b=kdVmsHXF9huohJ1M2IKz5TiHVMDRc6CoCBWsY3JYgl9zLXGKCHEdNlsPiiGrxGiWwNQzqjzER4720xENqEZUDpTM2PEPasJ+EcZwIQk30bmElfW9t/GtyaNPduZDNfG7/vj3/2R0GRpEk62BH9P/gbshwOzNluNImggYv3tfTY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715293513; c=relaxed/simple;
-	bh=h56rLLQESrP902jXQcvCJeyqu6wUr06tUtubRmHajaE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o8+rrOqXjsc8ythg87esTh6ijfORR1IucB5OTGLhQKiYYLv+xgsIpwAcBjJWaz4fdDGLPZtFxleR+mLXjiPk4xwBR7SFWNDpYk/qFt0Dwg8LbE4emzYxGfOaNu/kzn99iqKuMA90yhAvvelq9XPF6lu7gW5V9IiYTpLp+0v4nn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=NT7f51a6; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="NT7f51a6"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 4D90614C2DE;
-	Fri, 10 May 2024 00:25:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1715293510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uNIjf1loyxb2M+I7oQGgZ75djlDTOMb7Wgh8gotWQlg=;
-	b=NT7f51a669Q1xWKUlAwHqXzf10BzIc2BXVRYpVk1hkXdzOxQBXvBKTsHvE4Wf+I55J6VGg
-	pGXw5F7yjyR4XPhynyWahxCgKZ6gYUBKNOVW/kHykptPCfZ2g+OZdWR018qghds+gLcJCU
-	lEv1Yva9MMAip7000ZgKFnreSlpOqQE9Jk4GsVRn+t9OkFXm+EVxG49C8/n5rk5TFVmcu0
-	S/mVet5t6FSGDPKwqwNDUHyO8ApM4gbpUnzFJxOKaKBruWfhj78zSysqP6J8X7bhvrEVO5
-	tdopD9IGomvkKosQN10DaLNXxhqhCKZ9mFFnOXHiLbja/xiN+VAnJoOsEAKE5g==
-Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 48128612;
-	Thu, 9 May 2024 22:24:55 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Fri, 10 May 2024 07:24:32 +0900
-Subject: [PATCH v4 3/3] perf parse: Allow names to start with digits
+	s=arc-20240116; t=1715294022; c=relaxed/simple;
+	bh=uiPN+A9TYk8sL9k0FkSt+zGzCf+75RAq93wpeE8+KT0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=awtsOXWHxhQ/LDztlynYMU7Xffy9ZQaC7gj8PoURYRXQhSaqZaqwbAZn3uaEn4/ZyZpi8wPUFFegZOH4NGdiDS2mq4HMxTGNfK6xvteCWw8hdk/3xc+v7qrMrlVetDAkVWe2lDioPIYvdbZyQY73EMTW7J16cQGocX0wp7k+2ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso1015409a12.0;
+        Thu, 09 May 2024 15:33:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715294020; x=1715898820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xQMYI/Us6+hzUkBBoGt7mILopno4K42cldFrLm7Ole8=;
+        b=pFYOLDmd1ricNiWNo26/joyBO2LUzQtY2GCyXUBsxRCfnUzUuYZJYZ0HcnJEeUAA9f
+         7JeL4kyjwobXVChsKojX8x6HIXFJsZ06S7ALj5LGzzOQ/6nTxtOXtBmVkM/kNgfQ0ljK
+         X9sbL8ZdYeQOPAfL48sRwKO1pnWSibwj3QnlabyoRnj5qhCaMgGC5ShzStBLb4nDzR43
+         Z9Jh9i/wjxG/Nuci6RVeXyOoYhLqhigGaOy/CBmBmom6xydtbqIb/GAm50FbpIUdu4n2
+         HQY19BXBK+4+CaOuRCIupVg2Z2dvnTXGpHhOjZIFCVuCmjmCusNbJzAibWjI5+hZ1MwI
+         k/tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUULjslJO9VeG8btMwmxUBG30yKFa7VWhc6D/8QkqO8KzaF6piDOuAUtNSgSad/vzYG0+zerU0gJKQZcvD4hff3u3dAbwRfafqPi6dnCsIeE5Cf58L/6ap0ruvLofG4+ShLTu2A+ZOV+p/t9zXp8w==
+X-Gm-Message-State: AOJu0YzpFQywWa4uQ6HzOdDtF3IpSW1ryfwUSs26zUEv31ipnMFH1EvV
+	u2HmdCye1+Jrm26EgbFuQTTO+WKG9776imf52ZD0L6mlBHMwXAmNYsMFuYf+2jORj4xddTn12fb
+	dFF1jsFbokqr/5a/sInmM4tiDgng=
+X-Google-Smtp-Source: AGHT+IHvuueVji99pdughyRAG0wPNZRSaQ/8w4ql0gHBMtQoXDbm87RfF2DzS5fvDaaVufAa5hV1PEmxdoE5d0QzlE8=
+X-Received: by 2002:a17:90b:11d4:b0:2b4:3659:8709 with SMTP id
+ 98e67ed59e1d1-2b6ccc72f69mr976802a91.34.1715294020419; Thu, 09 May 2024
+ 15:33:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240510-perf_digit-v4-3-db1553f3233b@codewreck.org>
-References: <20240510-perf_digit-v4-0-db1553f3233b@codewreck.org>
-In-Reply-To: <20240510-perf_digit-v4-0-db1553f3233b@codewreck.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.14-dev-87f09
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1898;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=h56rLLQESrP902jXQcvCJeyqu6wUr06tUtubRmHajaE=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmPU02A3x5I47GCF6qJY1SarLV6TN2fNlWUVPIi
- b7JAnSBSpqJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZj1NNgAKCRCrTpvsapjm
- cDm+EACqY63dVNYYpQK7h6OGo9S1cdUVvpehtBBPLlUUriXr2zgb/UoHtKPWlHZj191S0KTi04K
- AwsLT9Esm4evNGvS41RbiodL+ROu5bHPfZ7WBN1VBVmlPwpLmCwL5oYZragfXz4FdNo4eCbkEoZ
- yQ+lSwwu2mR3zvcIs37MNpmBVAqC1XJktMhF3O84AM8+pNw1hajEBEnnImAv4YOBA54gK7JqRvu
- /mG5QO7jtQr9E85Zhx1A43OpTc4RdgMhaRULjVku8MnZ6glUWBSCIs97i2shk8AZUJXcQCnzebM
- BBZUq3i5oxNwsxvfyYth7G0d24iyITk67TOMe2aPcv8C7QuIWL5mn8CIbHHoSojDO9frhmGsOOe
- 8kjrzuiU+kImxS5nGuEclylpqm399MNWbXkT5QGsr932sgbmRftDVoeV5VJCWsxHjM83hyQZ7Qo
- NkYKdVLDe/WaoUFM96W5ax/cCNVlRXO1xTAp8zVVRKAPoyUDdc+1o44tvRieea0rLAY4Vfv691i
- JrcpFWtG+dxRj1tThGA0hhvYRm/qc68R0jXDbA/k0WCXFOp4dfJdFp61hmKb5EDShDDOUcFvivr
- 8kN1wVE/JXArIaP7wxIRvH68HkPtKVd/ukNMAhIb7qfSVGqOmO23DMDVE+lZ6M3S1FdDGW70eVl
- iLNFgltY2FJTC6Q==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+References: <20240508060427.417-1-ravi.bangoria@amd.com> <CAM9d7cgFKcHXeTXxax7GRCK__0U3HUnG3Ls09GpnD8FipyJk1A@mail.gmail.com>
+ <0689aa59-426e-2f37-dcc4-d79b1e89403c@amd.com>
+In-Reply-To: <0689aa59-426e-2f37-dcc4-d79b1e89403c@amd.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 9 May 2024 15:33:29 -0700
+Message-ID: <CAM9d7chvDczhMoOJFLz=MW0ojGm=Ex90CgHhfOsZuLre3vSE3g@mail.gmail.com>
+Subject: Re: [RFC 0/4] perf sched: Introduce schedstat tool
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	irogers@google.com, swapnil.sapkal@amd.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, rostedt@goodmis.org, 
+	vincent.guittot@linaro.org, bristot@redhat.com, adrian.hunter@intel.com, 
+	james.clark@arm.com, kan.liang@linux.intel.com, gautham.shenoy@amd.com, 
+	kprateek.nayak@amd.com, juri.lelli@redhat.com, yangjihong@bytedance.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tracepoints can start with digits, although we don't have many of these:
+On Wed, May 8, 2024 at 11:02=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
+>
+> >> USAGE
+> >> -----
+> >>
+> >>   # perf sched schedstat record
+> >>   # perf sched schedstat report
+> >
+> > Hmm. I think we can remove the duplication in 'sched'. :)
+>
+> You mean `perf sched stat record/report` ?
+>
+> > Given you are thinking of taskstat, how about making it
+> > 'cpustat' instead?
+>
+> Sure. How about:
+>
+>   # perf sched stat --cpu --task record
 
-$ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
-net/mac802154/trace.h
-53:TRACE_EVENT(802154_drv_return_int,
-...
+If you plan to support both cpu and task at the same time,
+then I'm ok with this.  But if they're mutually exclusive, then
+probably you want to have them as sub-commands.
 
-net/ieee802154/trace.h
-66:TRACE_EVENT(802154_rdev_add_virtual_intf,
-...
+Thanks,
+Namhyung
 
-include/trace/events/9p.h
-124:TRACE_EVENT(9p_client_req,
-...
 
-Just allow names to start with digits too so e.g. perf trace -e '9p:*'
-works
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Tested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
- tools/perf/tests/parse-events.c | 7 +++++++
- tools/perf/util/parse-events.l  | 4 ++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index c3b77570bb57..edc2adcf1bae 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2269,6 +2269,13 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_2_events,
- 		/* 3 */
- 	},
-+#ifdef HAVE_LIBTRACEEVENT
-+	{
-+		.name = "9p:9p_client_req",
-+		.check = test__checkevent_tracepoint,
-+		/* 4 */
-+	},
-+#endif
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 08ea2d845dc3..99d585d272e0 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -242,8 +242,8 @@ event		[^,{}/]+
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]{1,16}
- num_raw_hex	[a-fA-F0-9]{1,16}
--name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
--name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
-+name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
-+name_tag	[\'][a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
- /*
-
--- 
-2.44.0
-
+>   # perf sched stat report
+>
+> > Also I think it'd be easier if you also provide 'live' mode so that
+> > users can skip record + report steps and run the workload
+> > directly like uftrace does. :)
+> >
+> > Something like this
+> >
+> >   # perf sched cpustat  myworkload
+> >   (result here ...)
+>
+> Sure.
+>
+> Thanks for the feedback,
+> Ravi
