@@ -1,291 +1,115 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1F910979
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 02:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A189F85950;
+	Thu,  9 May 2024 02:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715220946; cv=none; b=rIfR+A6orXB+HoV2bwRd4SulOS2A6gWXz93Lo6a3OUy23J/KKkbf0+Cmr4ynRMpPiITtRIvnhUxhsBWNgzkedzU/SGtaljeCz4a1MXyPwOhZVrr2YyhuoY3AT5bHqSZoI9x2YfJIMvH7V4dbw5TwZsAhryQhwOYDQbaHnSYOiFA=
+	t=1715223513; cv=none; b=BnTilldn/fKA7E4tMjxvnGNroLbBYkGb0fKVHQeP94UVwhpXPUlVyLpKshsN+Z/bPviznpeZebV38vvbcvGuFNUpFJCmMHfzWtgc4fqlzNwHjEHd3f9FMw3TXU8g/v9g57Pg+we0PSl2FzPO7r8KB6HA9TP9tp+Z2DZoZMKJ8Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715220946; c=relaxed/simple;
-	bh=obqbFuCF0+EZFTfNgpkSG5EBGXrYr9QCD91ZqqrEax8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oYWB5oS1JO49QPeuOL/Vhkxs8ajQpkwKt3EumWmxhJF2CSP0NkQgtA32FCnLxzluC0csf4gS7P/svYTExGv0MLQB6Xt61OEPFhpkhgA7uQ9IPRPt83si7TsyTf4rYzhyfjmw824+JHhdDpjXUboVSQD0KIke5fCvhHfg73tU0ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ZPQrWKE/; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1715223513; c=relaxed/simple;
+	bh=scJgC0HkzGpJkHpFhkXum0CUoi2ERVSMaLYTkKCUkEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XUNOJlDqUWgzEdTwjOwq9jiOozmMqdFT73wpV+SDgiQbYuFNW/c1bf0QoGDF9szD3Rl7662MdCEEolcNMiTpq+KUcWHKcTBsfvm82JYQJhrTgCeHePYcTLD6vFuEDbPAchT5CCE66HNhuqogQ3qvcavam/n5S/EKzqf1C9Ahtbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWzberVg; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZPQrWKE/"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ec486198b6so2791375ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 19:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1715220944; x=1715825744; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8pIBduwe3RMg13/lORG0pNA6/JD6DG4hGUAT0C8H3lQ=;
-        b=ZPQrWKE/AktryksDEf6NfvzrSQ2ZoKFdbxSzE0FO4+1eQ1v1hnB7MBWiGMN3Psgeqg
-         LZZuy7VDbkDu7RI/DxFj7MJikr0JaMi/w7vd7BTPU9QjoZ4Fjb0jAYg6JRuDj48yksvR
-         bgOTM4UD6bAOUBDqLxuEKN37UEk6fOGz2O/5oqcPP7uHnSfYzVOKvT7kAvDeO23DM51h
-         sgCkkGEtN/VDvTGD/eRGbZVOTLuskyWhYh6JEG6r7A/zpuiVUFDqGf1ybtEQwjOaHDyy
-         KSd5aGWsmoM5qeusH/jGP/qik0hfzGIKFnvB2QaM2UHFycGOqSt33DI7KoQK2UsDnpgV
-         +QqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715220944; x=1715825744;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8pIBduwe3RMg13/lORG0pNA6/JD6DG4hGUAT0C8H3lQ=;
-        b=pW4Dzj0J8HS7LbW7SBCoBHhZIyfexasqHvszR+8V948ufSdRnc3eAVg0j5CME2TtBq
-         4mYivOusJaIMEJoz7gp9PXNh1kLzCAWTdUuCj5AOrkdT2PdtJlwrysmDrxo66IMVwSmP
-         iP9oXENLkkgjxbH/ElyZuaNSXwkIndXuFvbyo6IsIDiGQhUihnYzh2XgPZE4lqE6eVPZ
-         A7hFl6tq3aVRDbERr46mGWlQ2Erd6sq24RLjca+qXdKgzUZ25JNBR3QN4PGuCX11wBhm
-         aZpE0hBhFxd7xnhXkdez+XWdCz/DOLeyGJeNyU/T9ioxpfju54d1HbU23t4shQhiFVu8
-         h2WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4wM6tY8JoxbpcrGM/coXtwzFS31E6tHOYyCEPLHwwj80iU4BiUwEvWQnY91e0BEOTZRQXEddAmS/OIpusNhlwGRk1/nVSCulAZzVnByeicA==
-X-Gm-Message-State: AOJu0YxBxSiQcOXSyE3IlX98TOHx4rNa0k/6xWervXjpFNecgZLiXFXy
-	DlqjDnUAJcMtUD11iPDHePHPkFwbRw2DvQ8of7WEA1CKmouQAPwR5/PbtN9MXNQ=
-X-Google-Smtp-Source: AGHT+IEEZLq+IYfVUB25BnK6cFxTtDl2tlIs8mgbH7oOj7JJJBFEXPS2na9S266EWo8ZuqvpnLlIJA==
-X-Received: by 2002:a17:902:d4c7:b0:1e5:d021:cf02 with SMTP id d9443c01a7336-1eeb05976e4mr56002325ad.36.1715220944185;
-        Wed, 08 May 2024 19:15:44 -0700 (PDT)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d176fsm2339115ad.58.2024.05.08.19.15.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 19:15:43 -0700 (PDT)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Eric Lin <eric.lin@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH 7/7] perf vendor events riscv: Add SiFive P650 events
-Date: Wed,  8 May 2024 19:15:00 -0700
-Message-ID: <20240509021531.680920-8-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240509021531.680920-1-samuel.holland@sifive.com>
-References: <20240509021531.680920-1-samuel.holland@sifive.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWzberVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715223512; x=1746759512;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=scJgC0HkzGpJkHpFhkXum0CUoi2ERVSMaLYTkKCUkEU=;
+  b=PWzberVgzeMvVojLgIZe9FjUF+McXWBqBI7Elf6KL6bYUb7+0dqBDMmG
+   nmjxCNLZYbWcmi/M6p4UnffD3F+fDvCqPy8frUixhi/3kCCcDLmdBVaoc
+   2XZdQSVt6pZFouWYB8AfAQx0bpOEyltyTDLmMuOo5Gym0UE10LHnN4LI2
+   mrn4N5IhfdjFg47bD6hbMrcUjUPq6uRmGGWpbLrI47hx4rcqTtbE6Kwyv
+   GQS82F3EikS1rL3bf3OmhnI1EkPNhZigtN1EBhyJOwtVFuiQ1kS1Z7e8B
+   KSh1tGeUaaBgnwHqcYe6GAf23J+xuo5XvUB1i5gRRgtky5tnwcDsMGmqU
+   g==;
+X-CSE-ConnectionGUID: uk2Ne+w1SYWuc+bMDyDo8Q==
+X-CSE-MsgGUID: wt61SB3OQMeKZ/Ulx+NNpQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14934209"
+X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
+   d="scan'208";a="14934209"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 19:58:32 -0700
+X-CSE-ConnectionGUID: Bk+F0MIdQv68pDRA2TT90A==
+X-CSE-MsgGUID: Dtf65lEfRLOHOBebC1NsbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
+   d="scan'208";a="33626671"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 19:58:25 -0700
+Message-ID: <5e14e5bd-0125-4d56-953f-8ecdbe31668d@linux.intel.com>
+Date: Thu, 9 May 2024 10:58:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 26/54] KVM: x86/pmu: Avoid legacy vPMU code when
+ accessing global_ctrl in passthrough vPMU
+To: "Chen, Zide" <zide.chen@intel.com>, Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-27-mizhang@google.com>
+ <d19e06e7-ed97-4361-a628-014e5670cf22@intel.com>
+ <9b93c6bb-0182-4729-a935-2c05f1160a73@linux.intel.com>
+ <e7bc3989-154b-42cb-9a6b-83b395f5d0ee@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <e7bc3989-154b-42cb-9a6b-83b395f5d0ee@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Eric Lin <eric.lin@sifive.com>
 
-The SiFive Performance P650 core (including the vector-enabled P670 and
-area-optimized P450/P470 variants) updates the P550 microarchitecture.
-It brings in the debug, trace, and counter events from newer Bullet
-cores, and adds new events for iTLB and dTLB multi-hits.
-
-All other PMU events are unchanged from the P550 core.
-
-Signed-off-by: Eric Lin <eric.lin@sifive.com>
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
-
- tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
- .../p650/cycle-and-instruction-count.json     |  1 +
- .../arch/riscv/sifive/p650/firmware.json      |  1 +
- .../arch/riscv/sifive/p650/instruction.json   |  1 +
- .../arch/riscv/sifive/p650/memory.json        | 57 +++++++++++++++++
- .../arch/riscv/sifive/p650/microarch.json     | 62 +++++++++++++++++++
- .../arch/riscv/sifive/p650/watchpoint.json    |  1 +
- 7 files changed, 124 insertions(+)
- create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
- create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
- create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
- create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
- create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
-
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index a301e9dbfd5a..0a7e7dcc81be 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -18,6 +18,7 @@
- 0x489-0x8000000000000[1-9a-e]07-0x[78ac][[:xdigit:]]+,v1,sifive/bullet-07,core
- 0x489-0x8000000000000[1-9a-e]07-0xd[[:xdigit:]]+,v1,sifive/bullet-0d,core
- 0x489-0x8000000000000008-0x[[:xdigit:]]+,v1,sifive/p550,core
-+0x489-0x8000000000000[1-6]08-0x[9b][[:xdigit:]]+,v1,sifive/p650,core
- 0x5b7-0x0-0x0,v1,thead/c900-legacy,core
- 0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
- 0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
-new file mode 120000
-index 000000000000..ccd29278f61b
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
-@@ -0,0 +1 @@
-+../bullet-07/cycle-and-instruction-count.json
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
-new file mode 120000
-index 000000000000..34e5c2870eee
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
-@@ -0,0 +1 @@
-+../bullet/firmware.json
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
-new file mode 120000
-index 000000000000..62eacc2d7497
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
-@@ -0,0 +1 @@
-+../bullet/instruction.json
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
-new file mode 100644
-index 000000000000..f1431b339c7f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
-@@ -0,0 +1,57 @@
-+[
-+  {
-+    "EventName": "ICACHE_MISS",
-+    "EventCode": "0x102",
-+    "BriefDescription": "Counts instruction cache misses"
-+  },
-+  {
-+    "EventName": "DCACHE_MISS",
-+    "EventCode": "0x202",
-+    "BriefDescription": "Counts data cache misses"
-+  },
-+  {
-+    "EventName": "DCACHE_RELEASE",
-+    "EventCode": "0x402",
-+    "BriefDescription": "Counts writeback requests from the data cache"
-+  },
-+  {
-+    "EventName": "ITLB_MISS",
-+    "EventCode": "0x802",
-+    "BriefDescription": "Counts Instruction TLB misses caused by instruction address translation requests"
-+  },
-+  {
-+    "EventName": "DTLB_MISS",
-+    "EventCode": "0x1002",
-+    "BriefDescription": "Counts Data TLB misses caused by data address translation requests"
-+  },
-+  {
-+    "EventName": "UTLB_MISS",
-+    "EventCode": "0x2002",
-+    "BriefDescription": "Counts Unified TLB misses caused by address translation requests"
-+  },
-+  {
-+    "EventName": "UTLB_HIT",
-+    "EventCode": "0x4002",
-+    "BriefDescription": "Counts Unified TLB hits for address translation requests"
-+  },
-+  {
-+    "EventName": "PTE_CACHE_MISS",
-+    "EventCode": "0x8002",
-+    "BriefDescription": "Counts Page Table Entry cache misses"
-+  },
-+  {
-+    "EventName": "PTE_CACHE_HIT",
-+    "EventCode": "0x10002",
-+    "BriefDescription": "Counts Page Table Entry cache hits"
-+  },
-+  {
-+    "EventName": "ITLB_MULTI_HIT",
-+    "EventCode": "0x20002",
-+    "BriefDescription": "Counts Instruction TLB multi-hits"
-+  },
-+  {
-+    "EventName": "DTLB_MULTI_HIT",
-+    "EventCode": "0x40002",
-+    "BriefDescription": "Counts Data TLB multi-hits"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
-new file mode 100644
-index 000000000000..de8efd7b8b34
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
-@@ -0,0 +1,62 @@
-+[
-+  {
-+    "EventName": "ADDRESSGEN_INTERLOCK",
-+    "EventCode": "0x101",
-+    "BriefDescription": "Counts cycles with an address-generation interlock"
-+  },
-+  {
-+    "EventName": "LONGLATENCY_INTERLOCK",
-+    "EventCode": "0x201",
-+    "BriefDescription": "Counts cycles with a long-latency interlock"
-+  },
-+  {
-+    "EventName": "CSR_INTERLOCK",
-+    "EventCode": "0x401",
-+    "BriefDescription": "Counts cycles with a CSR interlock"
-+  },
-+  {
-+    "EventName": "ICACHE_BLOCKED",
-+    "EventCode": "0x801",
-+    "BriefDescription": "Counts cycles in which the instruction cache was not able to provide an instruction"
-+  },
-+  {
-+    "EventName": "DCACHE_BLOCKED",
-+    "EventCode": "0x1001",
-+    "BriefDescription": "Counts cycles in which the data cache blocked an instruction"
-+  },
-+  {
-+    "EventName": "BRANCH_DIRECTION_MISPREDICTION",
-+    "EventCode": "0x2001",
-+    "BriefDescription": "Counts mispredictions of conditional branch direction (taken/not taken)"
-+  },
-+  {
-+    "EventName": "BRANCH_TARGET_MISPREDICTION",
-+    "EventCode": "0x4001",
-+    "BriefDescription": "Counts mispredictions of the target PC of control-flow instructions"
-+  },
-+  {
-+    "EventName": "PIPELINE_FLUSH",
-+    "EventCode": "0x8001",
-+    "BriefDescription": "Counts flushes of the core pipeline. Common causes include fence.i and CSR accesses"
-+  },
-+  {
-+    "EventName": "REPLAY",
-+    "EventCode": "0x10001",
-+    "BriefDescription": "Counts instruction replays"
-+  },
-+  {
-+    "EventName": "INTEGER_MUL_DIV_INTERLOCK",
-+    "EventCode": "0x20001",
-+    "BriefDescription": "Counts cycles with a multiply or divide interlock"
-+  },
-+  {
-+    "EventName": "FP_INTERLOCK",
-+    "EventCode": "0x40001",
-+    "BriefDescription": "Counts cycles with a floating-point interlock"
-+  },
-+  {
-+    "EventName": "TRACE_STALL",
-+    "EventCode": "0x80001",
-+    "BriefDescription": "Counts cycles in which the core pipeline is stalled due to backpressure from the Trace Encoder"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json b/tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
-new file mode 120000
-index 000000000000..e88b98bfc5c8
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
-@@ -0,0 +1 @@
-+../bullet-07/watchpoint.json
-\ No newline at end of file
--- 
-2.44.0
-
+On 5/9/2024 9:29 AM, Chen, Zide wrote:
+>
+> On 5/8/2024 5:43 PM, Mi, Dapeng wrote:
+>> On 5/9/2024 5:48 AM, Chen, Zide wrote:
+>>> On 5/5/2024 10:29 PM, Mingwei Zhang wrote:
+>>>> Avoid calling into legacy/emulated vPMU logic such as reprogram_counters()
+>>>> when passthrough vPMU is enabled. Note that even when passthrough vPMU is
+>>>> enabled, global_ctrl may still be intercepted if guest VM only sees a
+>>>> subset of the counters.
+>>>>
+>>>> Suggested-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+>>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>>>> ---
+>>>>  arch/x86/kvm/pmu.c | 3 ++-
+>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>>>> index bd94f2d67f5c..e9047051489e 100644
+>>>> --- a/arch/x86/kvm/pmu.c
+>>>> +++ b/arch/x86/kvm/pmu.c
+>>>> @@ -713,7 +713,8 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>>>  		if (pmu->global_ctrl != data) {
+>>>>  			diff = pmu->global_ctrl ^ data;
+>>>>  			pmu->global_ctrl = data;
+>>>> -			reprogram_counters(pmu, diff);
+>>>> +			if (!is_passthrough_pmu_enabled(vcpu))
+>>>> +				reprogram_counters(pmu, diff);
+>>> Since in [PATCH 44/54], reprogram_counters() is effectively skipped in
+>>> the passthrough case, is this patch still needed?
+>> Zide, reprogram_counters() and reprogram_counter() are two different
+>> helpers. Both they need to be skipped in passthrough mode.
+> Yes, but this is talking about reprogram_counters() only.  passthrough
+> mode is being checked inside and outside the function call, which is
+> redundant.
+Oh, yes. I don't need this patch then.
