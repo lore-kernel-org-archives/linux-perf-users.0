@@ -1,101 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A371770E9;
-	Thu,  9 May 2024 18:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8372E770FB;
+	Thu,  9 May 2024 18:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715278957; cv=none; b=m5yM3c7f6HPQHxhZyMU1kRlKDzN5geYd/jJHUjT5ikoaSNdcgHtrLB8eOH96JA1LilCDwYv/DCwRY3XHZuWy1xXIHvr+Ez+koCdeOuo4hLu3GEjdzwyOSmf/oyQ+kytJdHPytZ90zIOWtrVPd2axRn8A6sAOlkay0TNWfbPMHYs=
+	t=1715279063; cv=none; b=BbqmqKd8WjKGvCTOGnma2Mb3SDnMbIkh7f2C1PelF9w3T0YqAXu2R7O8YpZfOry3W7/jtyKhduRp6mIxglUQibD3A/uL9hF4QHNVhWtCJuKeZZ9TsnBcJj7MbqdbMar1/9nUDWSTbYOv60GOzNYI6r1xHKy51yroGjJZUDK6Pgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715278957; c=relaxed/simple;
-	bh=jMd03m9y9hcSedZb9MgnwXrJphDXO+YD9iDPVE56dQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BdPFS7hyl+Y3eKZz/p/YQPHmtpVyZImwZ95VTQCR7Nli8soqSuma3+s53FW0/8c78Omal8NBm1E88L1H/QaLLzNO1VtBAxvLbhiJC2fm8UsfsOVPp3Xg9W9sqy1+/CjDkidE8XZqvu7kWOPjZRzJLhOLDBOuM6yselQlDVMtfDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsKlmE2a; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsKlmE2a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74C8C116B1;
-	Thu,  9 May 2024 18:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715278957;
-	bh=jMd03m9y9hcSedZb9MgnwXrJphDXO+YD9iDPVE56dQw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YsKlmE2aEV3lsraj2kterY3Irz7WtBt7qP9STqBtK5qe552R+gVsMi9EtGb+yuR7d
-	 jEw1fcnDaONUznVcjyLxAEMdkMruG65GVKb2g2gAJUNBDlcHPEZv4c9CRNOyC6mg+Q
-	 2lEW0N5fC7zrJzACKepfiMpLhwAJCPwQ3OQHDukm5HKOGlDTRpsIhqbVBcLqV2LDrT
-	 mVFZwtCSXPxlpkqpiZsX7PSNjK6xGL2N9h9ON4G+fwXhbqfaGC5Xa9GfLpXrw3pKVX
-	 3oXoHVzUVXuCYV0/yAlSUskMLx9xEculyU2v2ict2fijRXJ03JkFr/+7pSejtK9K/J
-	 zB+WtY1/PSBtQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf tools: Ignore deleted cgroups
-Date: Thu,  9 May 2024 11:22:35 -0700
-Message-ID: <20240509182235.2319599-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+	s=arc-20240116; t=1715279063; c=relaxed/simple;
+	bh=5Qo27+WGss6vpZfPHE6zXvgF9tWSHfs0qT0N/c77xwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y3T5jRf69GwNWxS6t/9ghhvYzt7odZBGXPuhYJs9S17WJynQMDu7Ldhg/iZp3euauREu/lJY9RaoD8E7w9e9cE/UPCmOFWMyJIWh6kVuhPRNUpiuDG793VlqWXUK7hrfT/IcwdV6Qq5ws9jzv/Nams4Uc5EJ/sm834G+/oc5A/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2a2d82537efso949984a91.2;
+        Thu, 09 May 2024 11:24:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715279062; x=1715883862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zKNW444OCrxlPgBeDO8oQQCjMSV87teux/IWGrH4YXY=;
+        b=lw38SU19s24rxNQO7vow3nrWOF1J0ssnGFrFzP2Z5ZISudwqn0IhqnzFVSg9/AVd8L
+         AW4dvyzMPIB49z2NlbzEmUxS7oHWtz3gnbveWvMcJVVJK8lW/gqdPhYjej7Eeay8G8e0
+         e1cn676192igqXCZ5sN+1PZAoCyyh7h/83nje+dqFKupJr9GuYH17cFhIIuoshdEOA9F
+         P/c0rvXQoWE1uBVAxv2RC6z7vPIyyUjNw42tGH+H/t/yqYot6dq8e6YRMTnZXUs9ge6Y
+         DbiN9ECI2+dR8MtEaMrIVTkAeoAjiBN3hDWPyL9/Yr3o2JglFArDWXRsd50xH6hs3+xX
+         2NrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNfwcY+4y74DZssQoSjEiiCHXhzhJqaN04K2ve6CDybYkCjS7riKAiVnA9FO23x9XQdffp5aurY1+GI7bdIvnHHlgthFzyY+h8xP9yf6cPFXZrTq1GVw+kMCgboEMMJ1ogPgNIYq5ESNmu5WGExA==
+X-Gm-Message-State: AOJu0YzVuqbybNHlng2Kyvzm3zbM2WB2hj3p98REZipioB0UT3KZQliD
+	ejLo/UjA5hR8gkjTlcnCT3Ikjbw+4o+4ABmQyGiI9jmWcwHC0iSO9Vcg5FlCzlMxV/3DgXtHjFu
+	xUFJsDFHTIQsh8sLpV1jHiPCr0CM=
+X-Google-Smtp-Source: AGHT+IGVwChJwQYvTdUiUEJ2+Vdnd/GheO3jnq9D1q4FcmEFE3GfMc/os7kOwhnzsI0nokZTkwOr01qL9ylMpG3TE1g=
+X-Received: by 2002:a17:90a:dc82:b0:2b5:6e92:1096 with SMTP id
+ 98e67ed59e1d1-2b6cc87abadmr251896a91.28.1715279061761; Thu, 09 May 2024
+ 11:24:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240509053123.1918093-1-irogers@google.com>
+In-Reply-To: <20240509053123.1918093-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 9 May 2024 11:24:10 -0700
+Message-ID: <CAM9d7cgvRO0niWKi8dVnaYU1Y0C2hWCYxdA+Yb1vObDdgK85Kg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf lock: Avoid memory leaks from strdup
+To: Ian Rogers <irogers@google.com>
+Cc: zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On a large system, cgroups can be created and deleted often.  That means
-there's a race between perf tools and cgroups when it gets the cgroup
-name and opens the cgroup.  I got a report that perf stat with many
-cgroups failed a quite often due to the missing cgroups on such a large
-machine.
+On Wed, May 8, 2024 at 10:31=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Leak sanitizer complains about the strdup-ed arguments not being freed
+> and given cmd_record doesn't modify the given strings, remove the
+> strdups.
+>
+> Original discussion in this patch:
+> https://lore.kernel.org/lkml/20240430184156.1824083-1-irogers@google.com/
+>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I think we can ignore such cgroups when expanding events and use id 0 if
-it fails to read the cgroup id.  IIUC 0 is not a vaild cgroup id so it
-won't update event counts for the failed cgroups.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_counter_cgroup.c | 5 ++---
- tools/perf/util/cgroup.c             | 4 +++-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+Thanks,
+Namhyung
 
-diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
-index 1c82377ed78b..ea29c372f339 100644
---- a/tools/perf/util/bpf_counter_cgroup.c
-+++ b/tools/perf/util/bpf_counter_cgroup.c
-@@ -136,9 +136,8 @@ static int bperf_load_program(struct evlist *evlist)
- 		cgrp = evsel->cgrp;
- 
- 		if (read_cgroup_id(cgrp) < 0) {
--			pr_err("Failed to get cgroup id\n");
--			err = -1;
--			goto out;
-+			pr_debug("Failed to get cgroup id for %s\n", cgrp->name);
-+			cgrp->id = 0;
- 		}
- 
- 		map_fd = bpf_map__fd(skel->maps.cgrp_idx);
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index fcb509058499..0f759dd96db7 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -465,9 +465,11 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
- 		name = cn->name + prefix_len;
- 		if (name[0] == '/' && name[1])
- 			name++;
-+
-+		/* the cgroup can go away in the meantime */
- 		cgrp = cgroup__new(name, open_cgroup);
- 		if (cgrp == NULL)
--			goto out_err;
-+			continue;
- 
- 		leader = NULL;
- 		evlist__for_each_entry(orig_list, pos) {
--- 
-2.45.0.118.g7fe29c98d7-goog
 
+> ---
+>  tools/perf/builtin-lock.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 230461280e45..7007d26fe654 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -2275,23 +2275,13 @@ static int __cmd_record(int argc, const char **ar=
+gv)
+>                 return -ENOMEM;
+>
+>         for (i =3D 0; i < ARRAY_SIZE(record_args); i++)
+> -               rec_argv[i] =3D strdup(record_args[i]);
+> +               rec_argv[i] =3D record_args[i];
+>
+>         for (j =3D 0; j < nr_tracepoints; j++) {
+> -               const char *ev_name;
+> -
+> -               if (has_lock_stat)
+> -                       ev_name =3D strdup(lock_tracepoints[j].name);
+> -               else
+> -                       ev_name =3D strdup(contention_tracepoints[j].name=
+);
+> -
+> -               if (!ev_name) {
+> -                       free(rec_argv);
+> -                       return -ENOMEM;
+> -               }
+> -
+>                 rec_argv[i++] =3D "-e";
+> -               rec_argv[i++] =3D ev_name;
+> +               rec_argv[i++] =3D has_lock_stat
+> +                       ? lock_tracepoints[j].name
+> +                       : contention_tracepoints[j].name;
+>         }
+>
+>         for (j =3D 0; j < nr_callgraph_args; j++, i++)
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
