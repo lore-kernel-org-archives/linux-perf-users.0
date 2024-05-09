@@ -1,57 +1,57 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB5410979
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 02:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90BD13C9B1
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 02:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715220936; cv=none; b=GyrZnyhP54oMGy5hQxw5umzhCjV25T12T15iIKstpTi7XHtOxFinEApifxE88yKaKMcdTl9jjzTWLcGRdO5Z9P1BRPwap/x+wx3tCm0rg9DLtadUILBRToj2qPNA9Ks31HPt+vhxsmaecNQy0YkmDKmSZXsvfF40J6MIFC78Fzc=
+	t=1715220938; cv=none; b=O+j6OZ0bVtz5ZIi/5O8MTfeqRXymIXe8QRDM1QtUn9xUh3AtmpAqwv9QBxyCWst19l7Bvysi2O3uSkQHYyCH90fnNQERm5fAFNSUGP4PttFv63JoyeoNCHVNuP25siMKnOgxrwCyAzk8fx9/xWWXQlqbDudPlSLdBOGPVnxHI7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715220936; c=relaxed/simple;
-	bh=cEBY9zNad/CbVuGio2649yYUayh6sDVpr/Fwie/CGc8=;
+	s=arc-20240116; t=1715220938; c=relaxed/simple;
+	bh=iE0nc+pqBlycu1/E1rcy7hCooSNparcn6B0FCvgq9hY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GmVPZ5OdaI3ii26k6TKHvGB3QiERFoyWdIbr4uL3dVQhSfexaTVgAHoDy1pUP+fKIQLz9+T6a1bsI098CfCrDarxFVRi5B/m6VbXwDTyVaUu74dxiITk2xFSA4QFyLgbAPhEvFXyyDnX69CSJMeeiCIA1BpOgVR8pVnOrS4Lk0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=T6SvkGKx; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=TOzLQbkgBB1sq/LfJnJugZpI6dLqwmqIX3r/fG+Jee77BdnEcCXdKk16eK3KW5avfdgnn1+etO2rRM3dAG+LjYPMlbkdHUuoB1HbVsxN/Y1dgloQ2JkyAbio3OZY14l1iGRo3v/mozsCN0rEYnsKdrSL92u2qsssH5ECc7WTSAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=jUdQ+t0Z; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="T6SvkGKx"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1edf506b216so2459325ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 19:15:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jUdQ+t0Z"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ec486198b6so2790625ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 19:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1715220934; x=1715825734; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1715220936; x=1715825736; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5/LxNtjaBbEya4wTYzu0ZSg1ZgQ6teLqCU1lCSZ0Jy4=;
-        b=T6SvkGKxt/e3Wq5eIrCHWoFpM9hBTc5CUzWdHwa32ypYKakVRAC3DdUzDOtJuebRnh
-         GybAVe3R6cF8t9nR6ZzqNCcUX46/a5baO4La73fEMku9TFCMtox2yllkw/egsPck9iQ1
-         r4pnKwuRIGLD7mb63bxdqzbIGMTZrKJc70gS66kQ1snSbd9wVZFIZwAHk2vj6ZfoUgqi
-         Z7AY7+rU7T50RrU5T6xZcvxvzHtraC3SeCaruFCsAxVK/sX11B/fxPQDclUbYv7lOK7f
-         coThIfF2RuVBW6VDFBggQGvWlo6ReWZOr+njHXVb/IB2a+6bo2x4hbZ4/n6ZoKWglrJo
-         qa/A==
+        bh=1w31VG7dFEHQi12OtWSwU5murL3FH6dEyF6pyBObg2Y=;
+        b=jUdQ+t0ZsiHCWNrqh0Ee7HYwoQ/qIWX594eQdBAntAb8JIq534CKKngJ72Gium+0E6
+         Tbem1rSvM0tsvAjTXlK4bTmFBkFYzFf/k0dVbMX/4pgTsby/0ckm5ixjm5BaTfsWCaHe
+         QuyCTN6k6N0pnKbOtRKb5lo46Py0wuV4GAaSfNwUTNtBWXMIwcOG62EyiB5DdCsoPG4E
+         hPSCYwMssi9zVrSmGcr8syNQElAAkZGcj+Pj/+sLVBMfTYqjtkHwps+3LndyA4tCDQKf
+         rKNJGJQMitXxObZN49lfNIYSqucOy9JeVAfA6Ab0Px5grdhwi3hgvA+Xfrw2SnvP9vvh
+         bVnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715220934; x=1715825734;
+        d=1e100.net; s=20230601; t=1715220936; x=1715825736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5/LxNtjaBbEya4wTYzu0ZSg1ZgQ6teLqCU1lCSZ0Jy4=;
-        b=PQNCkENbX4Wf3UKILlNo5BmCtKPJkNUoSVtklUnjEqd5k3Zt2ldojq/T7kSMbYzpmb
-         OkzXnywSJz5Tsx05Zv6sJI1ncrzlzv6rlOjHd7bnhXsHBYtNugkjvEasK1UAI0yrqK9n
-         UxrCCbMaIjvCsh5jlcQ/rVL93y5kWc24pRPfzMJnneWRTvdfjnn4W0xBYhDYLDkIAqDa
-         8a97+bimsqz+1++ZOvGth8D9YbHhJKJt0w+mVelW5/N7gchjeeG2W63AbNCQnhfy1Y9w
-         YlUOKsnlDhGH5jMPfQaWyDXBkHqLaQCPy835z1xfMoZNqjd/ThZc5gXv8zsnJLwQ1omU
-         lEwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKHJbW8ER4E8R2HjA8Oq7mTiQzg5S0fr3hZP57E193M0fJMboPSK2BNblEIrZCE+uA3vOh01/gMcIp6fmpoINouqdCi8DAqNpI5VcrJmxA1g==
-X-Gm-Message-State: AOJu0YxG+GRpKULhkBc9GoCmSdHEHkDNIA1FyI6rnGtv97bvYjrYPVk9
-	zHyJ+RRnP16dQmIvyS5TUbN3UC5WARyV8o4SVl0wR5wz8KfLVyO5DUIqG4EyO0g=
-X-Google-Smtp-Source: AGHT+IEUdYLF+SIrKnTybz5q+/qUgnD4Zn7N0xrM5xio8TfCy6F6RqUL0Lawo+zsRRgrUQlvnUoJwA==
-X-Received: by 2002:a17:902:bb17:b0:1e7:8d21:7fd7 with SMTP id d9443c01a7336-1eeb0594cf3mr41828135ad.28.1715220934604;
-        Wed, 08 May 2024 19:15:34 -0700 (PDT)
+        bh=1w31VG7dFEHQi12OtWSwU5murL3FH6dEyF6pyBObg2Y=;
+        b=V1YSMVBR+JiZoRhe2TF9uBfUJzQ5hq/XNpsYBiRz+jMbQYGcMIp9TnQZHRNRUZElO8
+         37zzQUVJiBaB/aNgZDO8Aan38RkQYRTyHDw0ATSzA7kmBhUsJMTsr0L+TetzPjtaRiRU
+         tDZTYluSl0V4R+pQqBP7rBjuV+ojtwS5sI8f0G2p3rTB5J11VSsFHFA9du1Gy7NMCuAe
+         eH1zfq4MbKdGWHINfI1MypwOXBdkFB647VOGK4k4+veNBG7gE6J/sxEflorpn5TPHjGg
+         pmMl3LnHKkt7sF0wTnApRNU55xweSshtKOgEQcphmAAY9nNXiHtlwVId0nE0qImUWuJc
+         QU1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVrjrN4jJUWAXadSjbFYiVlno1NE0Tzr1dFKgki3aRJtLxj9DXIdVQeZ3VG6OnVYBa1h73zYQbL+l/2lgacYyVb08A+QnNzhv8dsxGcgp66aw==
+X-Gm-Message-State: AOJu0Yxz0psUWggWocD2KfAqVTuW5zRDeKccUFpT2sY58vRSYSI3OWjr
+	q5w9GKfsJJ5Q87DdHzqmrAWu6ADRzY9nBPdoiZpSCQSvnA3YGaEHnG71mOoRftQ=
+X-Google-Smtp-Source: AGHT+IHTiaNofc4U3P/rwsUFxye22khX46ky/BlrMrvmBPV1NPQpIRm+fTnBzHzUfN8eU3mopldIaQ==
+X-Received: by 2002:a17:903:2410:b0:1e2:194a:3d22 with SMTP id d9443c01a7336-1eeb0597692mr50740855ad.32.1715220936117;
+        Wed, 08 May 2024 19:15:36 -0700 (PDT)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d176fsm2339115ad.58.2024.05.08.19.15.33
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d176fsm2339115ad.58.2024.05.08.19.15.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 19:15:34 -0700 (PDT)
+        Wed, 08 May 2024 19:15:35 -0700 (PDT)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -67,9 +67,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH 1/7] perf vendor events riscv: Rename U74 to Bullet
-Date: Wed,  8 May 2024 19:14:54 -0700
-Message-ID: <20240509021531.680920-2-samuel.holland@sifive.com>
+Subject: [PATCH 2/7] perf vendor events riscv: Remove leading zeroes
+Date: Wed,  8 May 2024 19:14:55 -0700
+Message-ID: <20240509021531.680920-3-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240509021531.680920-1-samuel.holland@sifive.com>
 References: <20240509021531.680920-1-samuel.holland@sifive.com>
@@ -81,54 +81,242 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This set of PMU event descriptions applies not only to the SiFive U74
-core configuration, but also to other SiFive cores that implement the
-Bullet microarchitecture (such as U64, P270, and X280). Rename the
-directory to be more generic.
+The EventCode field (as stored in the mhpmeventN CSRs) is actually 56
+bits wide, but there is no need to keep leading zeroes in the JSON
+files. Remove them to simplify review of the following change, which
+regenerates the files in a way that does not include leading zeroes.
+
+This change was performed automatically with `sed -i "s/0x0*/0x/"`.
 
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
- tools/perf/pmu-events/arch/riscv/mapfile.csv                    | 2 +-
- .../pmu-events/arch/riscv/sifive/{u74 => bullet}/firmware.json  | 0
- .../sifive/{u74/instructions.json => bullet/instruction.json}   | 0
- .../pmu-events/arch/riscv/sifive/{u74 => bullet}/memory.json    | 0
- .../pmu-events/arch/riscv/sifive/{u74 => bullet}/microarch.json | 0
- 5 files changed, 1 insertion(+), 1 deletion(-)
- rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/firmware.json (100%)
- rename tools/perf/pmu-events/arch/riscv/sifive/{u74/instructions.json => bullet/instruction.json} (100%)
- rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/memory.json (100%)
- rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/microarch.json (100%)
+ .../arch/riscv/sifive/bullet/instruction.json | 32 +++++++++----------
+ .../arch/riscv/sifive/bullet/memory.json      | 12 +++----
+ .../arch/riscv/sifive/bullet/microarch.json   | 22 ++++++-------
+ 3 files changed, 33 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index 3d3a809a5446..521f416b0006 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -14,7 +14,7 @@
- #
- #
- #MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
--0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-+0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/bullet,core
- 0x5b7-0x0-0x0,v1,thead/c900-legacy,core
- 0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
- 0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/firmware.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-rename to tools/perf/pmu-events/arch/riscv/sifive/bullet/firmware.json
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
-rename to tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
-rename to tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-rename to tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
+index 5eab718c9256..d5c370f70819 100644
+--- a/tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
++++ b/tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
+@@ -1,82 +1,82 @@
+ [
+   {
+     "EventName": "EXCEPTION_TAKEN",
+-    "EventCode": "0x0000100",
++    "EventCode": "0x100",
+     "BriefDescription": "Exception taken"
+   },
+   {
+     "EventName": "INTEGER_LOAD_RETIRED",
+-    "EventCode": "0x0000200",
++    "EventCode": "0x200",
+     "BriefDescription": "Integer load instruction retired"
+   },
+   {
+     "EventName": "INTEGER_STORE_RETIRED",
+-    "EventCode": "0x0000400",
++    "EventCode": "0x400",
+     "BriefDescription": "Integer store instruction retired"
+   },
+   {
+     "EventName": "ATOMIC_MEMORY_RETIRED",
+-    "EventCode": "0x0000800",
++    "EventCode": "0x800",
+     "BriefDescription": "Atomic memory operation retired"
+   },
+   {
+     "EventName": "SYSTEM_INSTRUCTION_RETIRED",
+-    "EventCode": "0x0001000",
++    "EventCode": "0x1000",
+     "BriefDescription": "System instruction retired"
+   },
+   {
+     "EventName": "INTEGER_ARITHMETIC_RETIRED",
+-    "EventCode": "0x0002000",
++    "EventCode": "0x2000",
+     "BriefDescription": "Integer arithmetic instruction retired"
+   },
+   {
+     "EventName": "CONDITIONAL_BRANCH_RETIRED",
+-    "EventCode": "0x0004000",
++    "EventCode": "0x4000",
+     "BriefDescription": "Conditional branch retired"
+   },
+   {
+     "EventName": "JAL_INSTRUCTION_RETIRED",
+-    "EventCode": "0x0008000",
++    "EventCode": "0x8000",
+     "BriefDescription": "JAL instruction retired"
+   },
+   {
+     "EventName": "JALR_INSTRUCTION_RETIRED",
+-    "EventCode": "0x0010000",
++    "EventCode": "0x10000",
+     "BriefDescription": "JALR instruction retired"
+   },
+   {
+     "EventName": "INTEGER_MULTIPLICATION_RETIRED",
+-    "EventCode": "0x0020000",
++    "EventCode": "0x20000",
+     "BriefDescription": "Integer multiplication instruction retired"
+   },
+   {
+     "EventName": "INTEGER_DIVISION_RETIRED",
+-    "EventCode": "0x0040000",
++    "EventCode": "0x40000",
+     "BriefDescription": "Integer division instruction retired"
+   },
+   {
+     "EventName": "FP_LOAD_RETIRED",
+-    "EventCode": "0x0080000",
++    "EventCode": "0x80000",
+     "BriefDescription": "Floating-point load instruction retired"
+   },
+   {
+     "EventName": "FP_STORE_RETIRED",
+-    "EventCode": "0x0100000",
++    "EventCode": "0x100000",
+     "BriefDescription": "Floating-point store instruction retired"
+   },
+   {
+     "EventName": "FP_ADDITION_RETIRED",
+-    "EventCode": "0x0200000",
++    "EventCode": "0x200000",
+     "BriefDescription": "Floating-point addition retired"
+   },
+   {
+     "EventName": "FP_MULTIPLICATION_RETIRED",
+-    "EventCode": "0x0400000",
++    "EventCode": "0x400000",
+     "BriefDescription": "Floating-point multiplication retired"
+   },
+   {
+     "EventName": "FP_FUSEDMADD_RETIRED",
+-    "EventCode": "0x0800000",
++    "EventCode": "0x800000",
+     "BriefDescription": "Floating-point fused multiply-add retired"
+   },
+   {
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
+index be1a46312ac3..ba3168f8a4cd 100644
+--- a/tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
++++ b/tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
+@@ -1,32 +1,32 @@
+ [
+   {
+     "EventName": "ICACHE_RETIRED",
+-    "EventCode": "0x0000102",
++    "EventCode": "0x102",
+     "BriefDescription": "Instruction cache miss"
+   },
+   {
+     "EventName": "DCACHE_MISS_MMIO_ACCESSES",
+-    "EventCode": "0x0000202",
++    "EventCode": "0x202",
+     "BriefDescription": "Data cache miss or memory-mapped I/O access"
+   },
+   {
+     "EventName": "DCACHE_WRITEBACK",
+-    "EventCode": "0x0000402",
++    "EventCode": "0x402",
+     "BriefDescription": "Data cache write-back"
+   },
+   {
+     "EventName": "INST_TLB_MISS",
+-    "EventCode": "0x0000802",
++    "EventCode": "0x802",
+     "BriefDescription": "Instruction TLB miss"
+   },
+   {
+     "EventName": "DATA_TLB_MISS",
+-    "EventCode": "0x0001002",
++    "EventCode": "0x1002",
+     "BriefDescription": "Data TLB miss"
+   },
+   {
+     "EventName": "UTLB_MISS",
+-    "EventCode": "0x0002002",
++    "EventCode": "0x2002",
+     "BriefDescription": "UTLB miss"
+   }
+ ]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json b/tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
+index 50ffa55418cb..8036e72fb0d4 100644
+--- a/tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
++++ b/tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
+@@ -1,57 +1,57 @@
+ [
+   {
+     "EventName": "ADDRESSGEN_INTERLOCK",
+-    "EventCode": "0x0000101",
++    "EventCode": "0x101",
+     "BriefDescription": "Address-generation interlock"
+   },
+   {
+     "EventName": "LONGLAT_INTERLOCK",
+-    "EventCode": "0x0000201",
++    "EventCode": "0x201",
+     "BriefDescription": "Long-latency interlock"
+   },
+   {
+     "EventName": "CSR_READ_INTERLOCK",
+-    "EventCode": "0x0000401",
++    "EventCode": "0x401",
+     "BriefDescription": "CSR read interlock"
+   },
+   {
+     "EventName": "ICACHE_ITIM_BUSY",
+-    "EventCode": "0x0000801",
++    "EventCode": "0x801",
+     "BriefDescription": "Instruction cache/ITIM busy"
+   },
+   {
+     "EventName": "DCACHE_DTIM_BUSY",
+-    "EventCode": "0x0001001",
++    "EventCode": "0x1001",
+     "BriefDescription": "Data cache/DTIM busy"
+   },
+   {
+     "EventName": "BRANCH_DIRECTION_MISPREDICTION",
+-    "EventCode": "0x0002001",
++    "EventCode": "0x2001",
+     "BriefDescription": "Branch direction misprediction"
+   },
+   {
+     "EventName": "BRANCH_TARGET_MISPREDICTION",
+-    "EventCode": "0x0004001",
++    "EventCode": "0x4001",
+     "BriefDescription": "Branch/jump target misprediction"
+   },
+   {
+     "EventName": "PIPE_FLUSH_CSR_WRITE",
+-    "EventCode": "0x0008001",
++    "EventCode": "0x8001",
+     "BriefDescription": "Pipeline flush from CSR write"
+   },
+   {
+     "EventName": "PIPE_FLUSH_OTHER_EVENT",
+-    "EventCode": "0x0010001",
++    "EventCode": "0x10001",
+     "BriefDescription": "Pipeline flush from other event"
+   },
+   {
+     "EventName": "INTEGER_MULTIPLICATION_INTERLOCK",
+-    "EventCode": "0x0020001",
++    "EventCode": "0x20001",
+     "BriefDescription": "Integer multiplication interlock"
+   },
+   {
+     "EventName": "FP_INTERLOCK",
+-    "EventCode": "0x0040001",
++    "EventCode": "0x40001",
+     "BriefDescription": "Floating-point interlock"
+   }
+ ]
+\ No newline at end of file
 -- 
 2.44.0
 
