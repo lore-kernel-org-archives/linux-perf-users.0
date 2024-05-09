@@ -1,129 +1,170 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860CD14A4F5;
-	Thu,  9 May 2024 09:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF55214AD26;
+	Thu,  9 May 2024 10:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715246426; cv=none; b=eBS+izAeQCHGigXUuMFP51N8lSF417Vl5UsL8GFsls9NCpc+ZgP0JMKgQ5D9drZ4k7/T46syzwsscpHhq9CFSgJyVQxAx9k3QZ+7Nfy/iUbCFRuoXY6bsBDp8UlKPwExVtXSbLovrZJdZsdi3Vn5QG+NZXnUFOKsFOF/Bw6xWJw=
+	t=1715248895; cv=none; b=uR+HpMWwgTBhvwi2YAm2DmLkdWINb789Oo6roSYu+ctgjJS5lXpSwR+FHtCuKZuoJLwo6prIBe92dykenlRTWYNKb/rHdbnNtx+3o/yaNVju2PltfKaowT1BIFqfWL7sKFHSDHkJDjn1fzd6kunSustBNsCRpGN3rmmmOlDUTAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715246426; c=relaxed/simple;
-	bh=5rpSr7Ybn4FuugiTBduCab0kHB71LSTX+pO9YxOqoTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvIWoroALlftPg3oJrCOPUdUog5xPOyMFo3Du8OlZRn2BrkxZv3KrxIHBU0Gk1Hthah/HJA74yqzFUDTRc4hb89vuhrfepWTk7MXAuCPZfafoJS08zJ9wI5hpmXsWaYnJgXJL6dHTAltG+0QZd2wQCi6qIZnO7c6lR5BLCKdb0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YphcUNl/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YphcUNl/"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44993kQI010776;
-	Thu, 9 May 2024 09:20:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=6ZQgaWALZN0CtOTRXnpZfUTg6hqELQ8osXjMUy+R0QM=;
- b=YphcUNl/msyenbtnuL8giUj1/AJOWu5KMlsOSoCm37bWR78g3ITIsmwKX4IIMHM2tPgc
- QdpUD0klmDyN03EhDavxmCVNp9XxcKTmUMvgUJ4oFKr6IR9e5uwtyTm+t5S9OAdfQLIr
- FNWZCUBNrjXn217wUP6g+o/JhU7GQx/QhGX+iJZMEs2QBge5Y2bXIuT+7BfPrrNYS8Hp
- EFN7+wZYjqvxLESOogRHZoQWEjIhpcuG0wMWwDXNLR7/hBKQCohC2i4XX6ffDStAIO8R
- EdE3XPQyFgZIWZU4R2XyGJzsiMK6tK+4DGoRVkSMaVHCJSd0CBQlAk0HPbL78gHtZrCH vQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0ugp80ys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 09:20:09 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4499HUMf030711;
-	Thu, 9 May 2024 09:20:09 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0ugp80yn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 09:20:09 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4498S4ED009823;
-	Thu, 9 May 2024 09:20:08 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xyshusy15-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 09:20:08 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4499K25E25428640
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 May 2024 09:20:04 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1E7A20040;
-	Thu,  9 May 2024 09:20:02 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9EFEF2004E;
-	Thu,  9 May 2024 09:19:59 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  9 May 2024 09:19:59 +0000 (GMT)
-Date: Thu, 9 May 2024 14:49:56 +0530
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf sched: Rename switches to count and add usage
- description, options for latency
-Message-ID: <3buy7zyybshlphybersfof2acjcbrpxllrcvobizwyse4356nd@7sp74wyxbbfc>
-References: <20240328090005.8321-1-vineethr@linux.ibm.com>
+	s=arc-20240116; t=1715248895; c=relaxed/simple;
+	bh=DB7SKalhIH+6stQ/0tcsYTdtbo7WaE+lMLBwruwT/Aw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f/aih5dNdiR5oJNCSiPafjFwOHEQjod00kfvM5G3Pcy4sNJEIygxiENOlYt+2jrfWzgX0H91NpyGBOPiw2122shP9ACICvTDZp0RwGenHNb5/buBjHsqcEoKH6IWcez8g7zHOeBbyQDOHlJRfrd/N7mwzYw6QiYqTbbPbRiZ3nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4B0D106F;
+	Thu,  9 May 2024 03:01:57 -0700 (PDT)
+Received: from [10.57.34.44] (unknown [10.57.34.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 655973F6A8;
+	Thu,  9 May 2024 03:01:30 -0700 (PDT)
+Message-ID: <45d28735-043f-43fd-bd2f-9dd8cb5259e8@arm.com>
+Date: Thu, 9 May 2024 11:01:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328090005.8321-1-vineethr@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3O8cVxwZCUAFIwm17-iVxCBqhTHU7hNF
-X-Proofpoint-ORIG-GUID: lDPzNrU9-GgNAV8nBMSv-DVGGoG2whAT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_04,2024-05-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- bulkscore=0 spamscore=0 priorityscore=1501 clxscore=1011
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2405010000 definitions=main-2405090059
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] perf lock info: Display both map and thread by
+ default
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20240508134259.24413-1-nick.forrington@arm.com>
+ <20240508134259.24413-2-nick.forrington@arm.com>
+ <CAM9d7ciQ5idMLWO51JrpNEbFtdtrgz3o0qashX5dL2y1d1MRyw@mail.gmail.com>
+Content-Language: en-US
+From: Nick Forrington <nick.forrington@arm.com>
+Organization: Arm
+In-Reply-To: <CAM9d7ciQ5idMLWO51JrpNEbFtdtrgz3o0qashX5dL2y1d1MRyw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello vineeth,
+Hello,
 
-On Thu, Mar 28, 2024 at 02:30:05PM +0530, Madadi Vineeth Reddy wrote:
-> Rename 'Switches' to 'Count' and document metrics shown for perf
-> sched latency output. Also add options possible with perf sched
-> latency.
-> 
-> Initially, after seeing the output of 'perf sched latency', the term
-> 'Switches' seemed like it's the number of context switches-in for a
-> particular task, but upon going through the code, it was observed that
-> it's actually keeping track of number of times a delay was calculated so
-> that it is used in calculation of the average delay.
-> 
-> Actually, the switches here is a subset of number of context switches-in
-> because there are some cases where the count is not incremented in
-> switch-in handler 'add_sched_in_event'. For example when a task is
-> switched-in while it's state is not ready to run(!= THREAD_WAIT_CPU).
-> 
-> commit d9340c1db3f5 ("perf sched: Display time in milliseconds, reorganize
-> output") changed it from the original count to switches.
-> 
-> So, renamed switches to count to make things a bit more clearer and
-> added the metrics description of latency in the document.
-> 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+On 08/05/2024 22:18, Namhyung Kim wrote:
+> Hello,
+>
+> On Wed, May 8, 2024 at 6:46 AM Nick Forrington <nick.forrington@arm.com> wrote:
+>> Change "perf lock info" argument handling to:
+>>
+>> Display both map and thread info (rather than an error) when neither are
+>> specified.
+>>
+>> Display both map and thread info (rather than just thread info) when
+>> both are requested.
+>>
+>> Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+>> ---
+>>   tools/perf/Documentation/perf-lock.txt |  4 ++--
+>>   tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
+>>   2 files changed, 19 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+>> index f5938d616d75..57a940399de0 100644
+>> --- a/tools/perf/Documentation/perf-lock.txt
+>> +++ b/tools/perf/Documentation/perf-lock.txt
+>> @@ -111,11 +111,11 @@ INFO OPTIONS
+>>
+>>   -t::
+>>   --threads::
+>> -       dump thread list in perf.data
+>> +       dump only the thread list in perf.data
+>>
+>>   -m::
+>>   --map::
+>> -       dump map of lock instances (address:name table)
+>> +       dump only the map of lock instances (address:name table)
+>>
+>>
+>>   CONTENTION OPTIONS
+>> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+>> index 230461280e45..d0b8645487ad 100644
+>> --- a/tools/perf/builtin-lock.c
+>> +++ b/tools/perf/builtin-lock.c
+>> @@ -1483,11 +1483,16 @@ static int dump_info(void)
+>>
+>>          if (info_threads)
+>>                  dump_threads();
+>> -       else if (info_map)
+>> +
+>> +       if (info_map) {
+>> +               if (info_threads)
+>> +                       fputc('\n', lock_output);
+> it seems you need pr_info("\n").  Where does lock_output come from?
 
-Makes sense to me. 'Switches' seems to be context switches, so it might
-be better kept as 'Count' only.
 
-Hence,
+It's a static FILE* that defaults to stderr.
 
-Reviewed-by: Aditya Gupta <adityag@linux.ibm.com>
+
+It's used by dump_threads and dump_map (via fprintf), so I think it 
+makes sense to use it for the output spacing between them?
+
+>
+>
+>>                  dump_map();
+>> -       else {
+>> +       }
+>> +
+>> +       if (!info_threads && !info_map) {
+>>                  rc = -1;
+>> -               pr_err("Unknown type of information\n");
+>> +               pr_err("No lock info specified\n");
+>>          }
+> I think we can remove this block now.
+
+
+The original error looked like a function input sanity check (rather 
+than for handling user input), so I kept it (even if it should no longer 
+be possible for a user to trigger it).
+
+
+Although I can remove it (or move it to the start of the function) if 
+you prefer.
+
 
 Thanks,
-Aditya Gupta
+Nick
 
+>
+> Thanks,
+> Namhyung
+>
+>
+>>          return rc;
+>> @@ -2578,9 +2583,9 @@ int cmd_lock(int argc, const char **argv)
+>>
+>>          const struct option info_options[] = {
+>>          OPT_BOOLEAN('t', "threads", &info_threads,
+>> -                   "dump thread list in perf.data"),
+>> +                   "dump the thread list in perf.data"),
+>>          OPT_BOOLEAN('m', "map", &info_map,
+>> -                   "map of lock instances (address:name table)"),
+>> +                   "dump the map of lock instances (address:name table)"),
+>>          OPT_PARENT(lock_options)
+>>          };
+>>
+>> @@ -2694,6 +2699,13 @@ int cmd_lock(int argc, const char **argv)
+>>                          if (argc)
+>>                                  usage_with_options(info_usage, info_options);
+>>                  }
+>> +
+>> +               /* If neither threads nor map requested, display both */
+>> +               if (!info_threads && !info_map) {
+>> +                       info_threads = true;
+>> +                       info_map = true;
+>> +               }
+>> +
+>>                  /* recycling report_lock_ops */
+>>                  trace_handler = &report_lock_ops;
+>>                  rc = __cmd_report(true);
+>> --
+>> 2.44.0
+>>
+>>
