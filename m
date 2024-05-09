@@ -1,109 +1,96 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B42B10E5
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 05:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9D214901B;
+	Thu,  9 May 2024 05:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715232028; cv=none; b=GFIwlzGPgdMYcyKa+R1lG/PqHmktVb/5UWU1b8h7tilP5gwr1TzJUHuNFvsxx/qMUcaytIg2GCWfoaA2OxBj4wk6nC74LSAWxG4hrSDwtq6BAVVZBBlpre72MabdDRo2F5UJHPFcmUK/LMwFM1DrExw7Xm1qEkRlsFUSQt57/FA=
+	t=1715232408; cv=none; b=giLiNdky+p7fV2C6Kll9l3xx+UGwoI+LsqaWkek5GGoU7s9Qy5qhyj1bbIZk1oOfSGIxNR6lZImz/TAejkMkceMAsvjlZFIuBmnRR6Eu1C4dlquryizERGA9eRpu2mSGCe4TlFwp8TUFT9HV/2Um3QGTieIKBzJladU/R+KEHkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715232028; c=relaxed/simple;
-	bh=fxzc03xiy1uRj7YT6k0EW66t2TRrHgW9AZuVwi1W1UI=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=OYEDGjq7wRLi0OORSD23QGI7RniwZBLoNbKfMZBl6Y9+OZyyPqwP0wpI2recWTvG/tHRVevA/9GXS70qKAg7Mx05tN2x2nB0LLrRH5eTL+PdVhhMReII50omxP11nLVednf3E7b9XspbAmTR1LuWkdeh+kqgMPzKVsL/tTl9HYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y0WKAU9y; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y0WKAU9y"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-ddaf2f115f2so781934276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 22:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715232026; x=1715836826; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cKR4JQSjtSVuxYtGmSkgtG2zpXYd/NDs31EyHZC9pAM=;
-        b=y0WKAU9yBtqi6G5lRbAkYEQJeO83TqM2p2QfrdYfJTS5QRUt6+2ElBrRBUzYirDj8A
-         9rAiECRSETXDW+URulonRdH1NrxDgeOa+CwizCgo4Z6oFC58ICgzP2H6yUdT0izPuhyW
-         nqa5GEdE814l6Hh7PEbFSdTuBue69pKCsVhVSeeaxENkkB2p6orLNawz+9f8LfHDLOKF
-         JbC+SBYaNn4xLapky2WYjIGvmJENGhGvG+hWzCn+i6s8rPEmrSVfgGBatkm9ZmZx7bFd
-         B1XdJVuwpB0YFpDeOHcGGuDKadUke0faZPksw9JFe1TUH+Vnw3eJ2QdzvStIJUa2jsQe
-         HTeg==
+	s=arc-20240116; t=1715232408; c=relaxed/simple;
+	bh=apyQisj0Vibf1irDRbxSoL5JY7lYjpi1CmS0djbCBBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cn2lKva8KZgD0zvysfq/B5l5mjhlnaYygY4gYjuXHPIu130LLNNfK07uiQ33szLjtsnLnmWyI93vwpusFptCnQc919JnPvFn4Vbl9shWQuKlqYbMqzywvGTtwHNpvNAbKtUxMV/FWNLtiN3QuJhymi9Ng8huKF5NwZCOyVSHksE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5dca1efad59so404616a12.2;
+        Wed, 08 May 2024 22:26:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715232026; x=1715836826;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cKR4JQSjtSVuxYtGmSkgtG2zpXYd/NDs31EyHZC9pAM=;
-        b=k0s6oPIv8dv3fGr8HlLoEMirBwIs6ni8fNv3OAeUEu6dr18RjJoBmsgSeTytwR/a0l
-         emhDBPhQjP1wCHC0pZy7pCZWWep1/0zCtX24Mma1tZGpdSjNYco1VIRd9rSHWkQS6I7u
-         flQUlLVQ2QBAoFvB3AIVsfwU8YE4+77MPmw4QkrlRVEj46wzayIulUKq1ETMcND7eWyW
-         G9vwAS3Wz3ORcJfj3FUeHryVUjkV5cKbgemJ3tG9r2GfAdYQcTt5yYE0P5Xkk1vlZUy3
-         aJw4VVQZ71ZVPjxsBT3xf92VfPaukaa3RwoT56eA4uAQomlAZxkgUzvoOPrrMyDSR3Wj
-         9aiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpY3S41xh7XFBYv6fLK2wfBBfHCRYO/BmGK+n5SqTykwirlwdVIfD6sBl2t80hOyTkMe0nlMmsoGSzxlMEeJys/zFEuHtEDdx9WDfIqpRJdg==
-X-Gm-Message-State: AOJu0YzkF1A5+vv9S/Hi1DgiN6N8qVVUFKkNsvgajUMg74rTF0OHd1MS
-	8wzBykgZ8Dg+QHbpV3Gjj6uwTzPCBiR/U8dQrDltcqWV+tAiaWtV1Pie4NstDZce8xhDEMeWnGS
-	0yh5Jaw==
-X-Google-Smtp-Source: AGHT+IG4Y8TIjUMmmkP4nU8Gpc4+QcZV+RmNconpozNnzphFTv2apI3oNMa36lTl9GXi5yU0kUH6hsWqD+56
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3887:270c:55a5:15aa])
- (user=irogers job=sendgmr) by 2002:a05:6902:f88:b0:deb:8bc4:e291 with SMTP id
- 3f1490d57ef6-debb9d9c0a2mr536998276.10.1715232026564; Wed, 08 May 2024
- 22:20:26 -0700 (PDT)
-Date: Wed,  8 May 2024 22:20:15 -0700
-Message-Id: <20240509052015.1914670-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1715232406; x=1715837206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lrwlnJmatzPnGEjiAIUfkh9F7RO/oJDpBLzuWh0F9Z4=;
+        b=tKNUsKpHRcsHBzTZxIfosf6givNsgwB/HF8FLfDmUwRcW3O/+DO9hcUIUISEgiNFBP
+         NUcrx9b/73sVxyS0v19U0m+IAJvXdeJTR3VPtYuwVat5vBLJcbKq13gLf1xEetkE600W
+         Vw6vI6txwr+ll2WVroHFFB3Uw1eHONUYVazJv81wUysoNyqgoiD0mmVFrKa81kBki68P
+         RqZAv2R+przs/yu+g8/BJw+9N3ffLk2RcyoSIiNh5Tmhz7Mxre+C+K6xWbMN29hEbYJI
+         P2vGVeX6GrilabEpUhDwoHIETSWIN2NqfrKy8qm7nfRBj0FVnLwRIT6A6sHIhyCXtn31
+         ZBqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxRpQNJjGeF2qHx121BTy286w1DIVvjK2v2a0+V5+tzpxlfAqRsKh4dw0iqlpAjaWG8vq3ybaLPWawQjjfGG/+ehcmT+5IgCJ9n8iOyu97hEColk/T/wHDxkd1VG/bG83QssRXeFZrcZxUBKmrkA==
+X-Gm-Message-State: AOJu0Yy/9dkQY53bkjbRr7E/vc+Pic+vTc6Sm6vxWQiqsZHZAhs4oemF
+	ug9ofLdpP661kJdzkm34hcvtOj2cqRhniM4IydAu9/XbOvKgQSuPWPLBeOiVgAJ1T+HWeZu3stx
+	qXeIA/uIORCfMQ2CIRnb2AA/APNw=
+X-Google-Smtp-Source: AGHT+IFALoTNFBYi7lMOsNvjNZn6QuUn5d2pMz+I8EBXl+8Hopgak1Sqdd4UgyFzAyAGhx+Q9L6K/5KfSqcDb9cUYJ8=
+X-Received: by 2002:a05:6a20:1019:b0:1af:cf63:3742 with SMTP id
+ adf61e73a8af0-1afcf633926mr2603619637.42.1715232406354; Wed, 08 May 2024
+ 22:26:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1] libsubcmd: Fix parse-options memory leak
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20240508035301.1554434-1-irogers@google.com> <20240508035301.1554434-2-irogers@google.com>
+In-Reply-To: <20240508035301.1554434-2-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 8 May 2024 22:26:35 -0700
+Message-ID: <CAM9d7cgw45sv2fLm8Yea_RgrOLswSPErwMORCBaeYVb=OXjnZQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] perf ui browser: Avoid segv on title
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linux.dev>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If a usage string is built in parse_options_subcommand, also free it.
+On Tue, May 7, 2024 at 8:53=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> If the title is NULL then it can lead to a segv.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/subcmd/parse-options.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Just out of curiosity, do you know where it sets to NULL?
 
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index 9fa75943f2ed..d943d78b787e 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -633,11 +633,10 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
- 			const char *const subcommands[], const char *usagestr[], int flags)
- {
- 	struct parse_opt_ctx_t ctx;
-+	char *buf = NULL;
- 
- 	/* build usage string if it's not provided */
- 	if (subcommands && !usagestr[0]) {
--		char *buf = NULL;
--
- 		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
- 
- 		for (int i = 0; subcommands[i]; i++) {
-@@ -679,7 +678,10 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
- 			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
- 		usage_with_options(usagestr, options);
- 	}
--
-+	if (buf) {
-+		usagestr[0] = NULL;
-+		free(buf);
-+	}
- 	return parse_options_end(&ctx);
- }
- 
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+Thanks,
+Namhyung
 
+>
+> Fixes: 769e6a1e15bd ("perf ui browser: Don't save pointer to stack memory=
+")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/ui/browser.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+> index c4cdf2ea69b7..19503e838738 100644
+> --- a/tools/perf/ui/browser.c
+> +++ b/tools/perf/ui/browser.c
+> @@ -203,7 +203,7 @@ void ui_browser__refresh_dimensions(struct ui_browser=
+ *browser)
+>  void ui_browser__handle_resize(struct ui_browser *browser)
+>  {
+>         ui__refresh_dimensions(false);
+> -       ui_browser__show(browser, browser->title, ui_helpline__current);
+> +       ui_browser__show(browser, browser->title ?: "", ui_helpline__curr=
+ent);
+>         ui_browser__refresh(browser);
+>  }
+>
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
