@@ -1,199 +1,294 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A889929A2;
-	Thu,  9 May 2024 20:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4400839E0
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 21:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715288123; cv=none; b=dCt0nkP/sV+rUuSlspF/icX8WL9oHG2u2oNWbuuLXUaDiMEEqTta6g54Lq2B7hiS6uc690TLeQn/sVKlVuUTs0eI0QMCtHCShvupEufFwMDZAYzSlCXN3q8hEhGjd14ybcF9JEbY+RRhsDYcH6QfHdOZiudhXq+P8iU1QC250QA=
+	t=1715288691; cv=none; b=PrgSj9YXgqjL/X1SNVbgqBrC7dts92gcayNPhV9xSe2Vutt9uMckhisgN3Teby67UP9fhDTbrVtBKtYnjpodiyIfFQUqnwxa/IOstJ849lO6LPpdwxmhqi5l2lBfCaFiLA5DWZ2RdGTr02xh5GRk8DTz7xPTbR9MItAAHpt7Erc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715288123; c=relaxed/simple;
-	bh=+z3b5cB5EyGsqbqTU1g9z3SO/tunSYPElHlQobnABqg=;
+	s=arc-20240116; t=1715288691; c=relaxed/simple;
+	bh=C2amn8/MjN0IM4RIO4S50Amv3j2rBOJd6EWDwyLABjA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KxCjd6Yvq3GYYa7EXiwr3LTez8hlqEOEZb+dcQBl9bQjFgBFmpRC9i0R7Wn32jPOSP08WzqsG2Bj4AsHbq2301ha5gJ09DviQ3def1mjiubMrfTEr5Pj8OqaS3AR9dvOoeC+rmKh/UdgU81/FXhSblbouCMDjBHcJElxn5eBUSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-61c4ebd0c99so886867a12.0;
-        Thu, 09 May 2024 13:55:21 -0700 (PDT)
+	 To:Cc:Content-Type; b=iia4EShFzaM68JzIpzy0yR+K7u3bSCg5xe3GA5Tnkedfrw85Bs2cMYmiHGWx43SpGCLFvzFY5U7nazs7gICgfGVgKuqPVdfVyx3dKigMnoBUwF7Ni6bZEmIsWt2/FGNT30EWX76Jh09XiH/nQPw+uob0x7eKqnaee+KfBSdZdLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yk+yL7yb; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yk+yL7yb"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-43dfe020675so109131cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 May 2024 14:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715288688; x=1715893488; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zasTy8CP2/aUCe8GaQUqPrWEeq4iZIR2Q40eyzR1FwA=;
+        b=yk+yL7ybHcGoz5oeAeJhNaTSMUUILZviIimfwuxMLi+/i0bTk1KJ16reHCoE1b38jD
+         85pMfJrqO01NV9PwoWTl7+XWmYeYucKe9qgWt/fj3+s/xTahAc0lTG6vAXfsG984KgOz
+         Cx9W99pfikb4CMnj5WlxkE1ZJwlJ5FtAkTGzxOjAhjnx+0pRE0icGgnmTnXav42RRfp5
+         7Gtm61EoRqZ5/IuYV25nJr0vIiMpXzsgOM3ulXuic3NBrrbZleiWRALNs2WtH8Rs0dK8
+         LcWOBIvoi99s+I2leNYn2umLzYlc0PNeL7FZiohaOGf94EefM2zeEGac+LJHi0ZXlmRo
+         yVRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715288121; x=1715892921;
+        d=1e100.net; s=20230601; t=1715288688; x=1715893488;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6SeDxTMUgi4LQzDaIf3nLrPy70uwzF3gPdETUheci2c=;
-        b=tDarZ46XqqG/J2CiASJK7GgslLGKwsX/WGGLboIEHQ+yAFf/JLeG+IIqTgXryWZOm6
-         YP8RyS7Kh84jNklaz8iWRfCE3hCQcsB3DK/sw6riyGBg10BhlGoHslNkZKXbA/6b30vM
-         dDDyfZL8oKXobyO148Ox5CcaXllGGD1h6OlYYCbMbrMiwCGJ5gYagdonlsDIdVoJaaMw
-         gP9Gwr2uyzvlUJZN5Ee1Wb8kF1f/tdjQIGY395kzEtjy4GXWdEj4Q2iCBlesJghrVSyh
-         AzjnOd3/uzuZDd5XEh6i8lzeV7dt/rqUSfUHK2NG9e+V+syemcXth8O2LwEBfako5HTS
-         /AzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYv9vDTykHQ9uTNuiz1N7PAw+hYDH0UdEHeCaVxXf76yLtwdIpX6YfDs2EIu728E6wyBfNe0B1MQN9b1JEEtJaQzBuPa+xwQFFI3ht3z+q4hHoagtCFakOlPBZPEaynxg2r6RlgYl3lJqK4PpoQ==
-X-Gm-Message-State: AOJu0Yx4F1r3vhjupCCmJveaGQn+hfS9i2zS/5sRZ96kcO/utCLC2e6z
-	aIZrinx2yNhm5/ViiPczfv9ULQNKrWOGhPWiZ4WJZ7rL39FVCxtBafU7C37EnJT2uwDMmOoKQ+q
-	jMBRL7c7v4esov+aBXp8iI8lkYxU=
-X-Google-Smtp-Source: AGHT+IGt7dUBfj7vMg0wI6ai8p0bGzNoXrhnZsLwOgnLclMfrb2jDrhK/Kigc+vuxjYxxWNl1dT8N/6AVYpASWN8wPY=
-X-Received: by 2002:a17:90a:db97:b0:2b2:7e94:4073 with SMTP id
- 98e67ed59e1d1-2b6cc76d73cmr727950a91.14.1715288121009; Thu, 09 May 2024
- 13:55:21 -0700 (PDT)
+        bh=zasTy8CP2/aUCe8GaQUqPrWEeq4iZIR2Q40eyzR1FwA=;
+        b=SBbU4yVb0OzwqsmWHlBsmVrsE4tem3pegb8bZlDB6y/uUxFS3eykgo4WzXpIVWw21I
+         ewx5Gqy+CuhUXrQqadkE9Vjc39BRUCG4WY18Mfs70Wkr6ybq8umKMe7tjWPjGN8l6boh
+         os4VdZ8hxDtm0TzfmkUGZ6nFQzCcmEwkVxxYamIAdawnIOrHav/y86AoMqacCwW84dhp
+         LxMKhQt5moCVenZjMaDohbsh7XYQkx+WXGiTM0IBJ6nlF8U5YKIqq6bgTbaUX+DgIL9e
+         QSbaTF1eCTrNmCMy6eirG1A3gJmcoTMFPXEF7/Rlp8iX3Hp1UTXLYhk6/Zt5s7ZqBeX/
+         gRsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdegjlfUcNFRrY2XwnoWwp2LrF0rBPEHcpLTusqL0vv6dSw2U2mo8rFBG1X5LMJLTn5Fa70Ss6OzbH7nEiHG9gqSX1gvb8wrL3Ex7XmIElQQ==
+X-Gm-Message-State: AOJu0Yx1InulIqiHzb8WyuVwnWxEgRw9poF4kKB4LtquHpDDlXyECBHI
+	lqAKUeMU28n9JDSpGOQSfVyUipae6HDeLUWdOvZS5xk//jQStigjYi0oHSlSkSA9Yl03mHj/BfR
+	c+a0DIeq9SypuyYoJGq4JxUlaSW9wiNjzGyA=
+X-Google-Smtp-Source: AGHT+IFqsgOT5Sqi/rvjdtFNKVETF+FGAJDzIhh0L7MAaIjIevIF3vvjDcaZTcL42uS/yzK+o79KstjQCZdjpG/x2ao=
+X-Received: by 2002:a05:622a:5190:b0:43a:b8f3:f079 with SMTP id
+ d75a77b69052e-43dfdd09fd1mr742981cf.20.1715288687602; Thu, 09 May 2024
+ 14:04:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
- <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com> <f2efdb9d-e636-4678-b492-83d3a28d8134@csgroup.eu>
- <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
-In-Reply-To: <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 9 May 2024 13:55:09 -0700
-Message-ID: <CAM9d7cjz-_6m7mPATeRETFudz8+u=JYw20Kn6WutEKZ2f6VUyg@mail.gmail.com>
-Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
- instruction in objdump
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Ian Rogers <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, 
-	"segher@kernel.crashing.org" <segher@kernel.crashing.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "maddy@linux.ibm.com" <maddy@linux.ibm.com>, 
-	"kjain@linux.ibm.com" <kjain@linux.ibm.com>, 
-	"disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+References: <20240502000602.753861-1-yabinc@google.com> <CAM9d7cj2WUdbXz1E4kQCYY=7tO+C9XXQidMJuQNp=WP6dudLkw@mail.gmail.com>
+ <CAM9d7cg0vCLf+X30PnmR9wcXT9+taXKntJoeAdWae+_G6mWjvw@mail.gmail.com>
+In-Reply-To: <CAM9d7cg0vCLf+X30PnmR9wcXT9+taXKntJoeAdWae+_G6mWjvw@mail.gmail.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Thu, 9 May 2024 14:04:31 -0700
+Message-ID: <CALJ9ZPPv6Yj6FrpLY9u0G_4y1Th8BzjM+eTsYJAhRViQuaSfRA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf/core: Save raw sample data conditionally based on
+ sample type
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 9, 2024 at 10:27=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
->
->
-> > On 7 May 2024, at 3:05=E2=80=AFPM, Christophe Leroy <christophe.leroy@c=
-sgroup.eu> wrote:
-> >
-> >
-> >
-> > Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
-> >> Add support to capture and parse raw instruction in objdump.
-> >
-> > What's the purpose of using 'objdump' for reading raw instructions ?
-> > Can't they be read directly without invoking 'objdump' ? It looks odd t=
-o
-> > me to use objdump to provide readable text and then parse it back.
->
-> Hi Christophe,
->
-> Thanks for your review comments.
->
-> Current implementation for data type profiling on X86 uses "objdump" tool=
- to get the disassembled code.
-> And then the objdump result lines are parsed to get the instruction name =
-and register fields. The initial patchset I posted to enable the data type =
-profiling feature in powerpc was using the same way by getting disassembled=
- code from objdump and parsing the disassembled lines. But in V2, we are in=
-troducing change for powerpc to use "raw instruction" and fetch opcode, reg=
- fields from the raw instruction.
->
-> I tried to explain below that current objdump uses option "--no-show-raw-=
-insn" which doesn't capture raw instruction.  So to capture raw instruction=
-, V2 patchset has changes to use default option "--show-raw-insn" and get t=
-he raw instruction [ for powerpc ] along with human readable annotation [ w=
-hich is used by other archs ]. Since perf tool already has objdump implemen=
-tation in place, I went in the direction to enhance it to use "--show-raw-i=
-nsn" for powerpc purpose.
->
-> But as you mentioned, we can directly read raw instruction without using =
-"objdump" tool.
-> perf has support to read object code. The dso open/read utilities and hel=
-per functions are already present in "util/dso.c" And "dso__data_read_offse=
-t" function reads data from dso file offset. We can use these functions and=
- I can make changes to directly read binary instruction without using objdu=
-mp.
->
-> Namhyung, Arnaldo, Christophe
-> Looking for your valuable feedback on this approach. Please suggest if th=
-is approach looks fine
+Thanks for reviewing the patch! I will update a v3 patch based on the comme=
+nts.
 
-Looks like you want to implement instruction decoding
-like in arch/x86/lib/{insn,inat}.c.  I think it's ok to do that
-but you need to decide which way is more convenient.
 
-Also it works on the struct disasm_line so you need to
-fill in the necessary info when not using objdump.  As
-long as it produces the same output I don't care much
-if you use objdump or not.  Actually it uses libcapstone
-to disassemble x86 instructions if possible.  Maybe you
-can use that on powerpc too.
-
-Thanks,
-Namhyung
-
+On Thu, May 9, 2024 at 12:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Another thought.
+>
+> On Thu, May 9, 2024 at 12:45=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, May 1, 2024 at 5:06=E2=80=AFPM Yabin Cui <yabinc@google.com> wr=
+ote:
+> > >
+> > > Currently, space for raw sample data is always allocated within sampl=
+e
+> > > records for both BPF output and tracepoint events. This leads to unus=
+ed
+> > > space in sample records when raw sample data is not requested.
+> >
+> > Oh, I thought it was ok because even if it sets _RAW bit in the
+> > data->sample_flags unconditionally, perf_prepare_sample() and
+> > perf_output_sample() checks the original event's attr->sample_type
+> > so the raw data won't be recorded.
+> >
+> > But I've realized that it increased data->dyn_size already. :(
+> > Which means the sample would have garbage at the end.
+> >
+> > I need to check if there are other places that made the same
+> > mistake for other sample types.
+> >
+> > >
+> > > This patch checks sample type of an event before saving raw sample da=
+ta
+> > > in both BPF output and tracepoint event handling logic. Raw sample da=
+ta
+> > > will only be saved if explicitly requested, reducing overhead when it
+> > > is not needed.
+> > >
+> > > Fixes: 0a9081cf0a11 ("perf/core: Add perf_sample_save_raw_data() help=
+er")
+> > > Signed-off-by: Yabin Cui <yabinc@google.com>
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks,
+> > Namhyung
+> >
+> > > ---
+> [SNIP]
+> > > @@ -10180,13 +10181,18 @@ static void __perf_tp_event_target_task(u64=
+ count, void *record,
+> > >         /* Cannot deliver synchronous signal to other task. */
+> > >         if (event->attr.sigtrap)
+> > >                 return;
+> > > -       if (perf_tp_event_match(event, data, regs))
+> > > +       if (perf_tp_event_match(event, raw, regs)) {
+> > > +               perf_sample_data_init(data, 0, 0);
+> > > +               if (event->attr.sample_type & PERF_SAMPLE_RAW)
+> > > +                       perf_sample_save_raw_data(data, raw);
+>
+> Hmm.. to prevent future mistakes, maybe we can move the
+> check into the perf_sample_save_raw_data() itself.
+>
+> And it'd be great if you could do the same for callchain
+> and brstack too. :)
+>
+> Thanks,
+> Namhyung
 >
 >
-> Thanks
-> Athira
-> >
-> >> Currently, the perf tool infrastructure uses "--no-show-raw-insn" opti=
-on
-> >> with "objdump" while disassemble. Example from powerpc with this optio=
-n
-> >> for an instruction address is:
-> >
-> > Yes and that makes sense because the purpose of objdump is to provide
-> > human readable annotations, not to perform automated analysis. Am I
-> > missing something ?
-> >
-> >>
-> >> Snippet from:
-> >> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --=
-no-show-raw-insn -C <vmlinux>
-> >>
-> >> c0000000010224b4: lwz     r10,0(r9)
-> >>
-> >> This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> >> registers names and offset. Also to find whether there is a memory
-> >> reference in the operands, "memory_ref_char" field of objdump is used.
-> >> For x86, "(" is used as memory_ref_char to tackle instructions of the
-> >> form "mov  (%rax), %rcx".
-> >>
-> >> In case of powerpc, not all instructions using "(" are the only memory
-> >> instructions. Example, above instruction can also be of extended form =
-(X
-> >> form) "lwzx r10,0,r19". Inorder to easy identify the instruction categ=
-ory
-> >> and extract the source/target registers, patch adds support to use raw
-> >> instruction. With raw instruction, macros are added to extract opcode
-> >> and register fields.
-> >>
-> >> "struct ins_operands" and "struct ins" is updated to carry opcode and
-> >> raw instruction binary code (raw_insn). Function "disasm_line__parse"
-> >> is updated to fill the raw instruction hex value and opcode in newly
-> >> added fields. There is no changes in existing code paths, which parses
-> >> the disassembled code. The architecture using the instruction name and
-> >> present approach is not altered. Since this approach targets powerpc,
-> >> the macro implementation is added for powerpc as of now.
-> >>
-> >> Example:
-> >> representation using --show-raw-insn in objdump gives result:
-> >>
-> >> 38 01 81 e8     ld      r4,312(r1)
-> >>
-> >> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> >> this translates to instruction form: "ld RT,DS(RA)" and binary code
-> >> as:
-> >> _____________________________________
-> >> | 58 |  RT  |  RA |      DS       | |
-> >> -------------------------------------
-> >> 0    6     11    16              30 31
-> >>
-> >> Function "disasm_line__parse" is updated to capture:
-> >>
-> >> line:    38 01 81 e8     ld      r4,312(r1)
-> >> opcode and raw instruction "38 01 81 e8"
-> >> Raw instruction is used later to extract the reg/offset fields.
-> >>
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >> ---
->
+> > >                 perf_swevent_event(event, count, data, regs);
+> > > +       }
+> > >  }
+> > >
+> > >  static void perf_tp_event_target_task(u64 count, void *record,
+> > >                                       struct pt_regs *regs,
+> > >                                       struct perf_sample_data *data,
+> > > +                                     struct perf_raw_record *raw,
+> > >                                       struct perf_event_context *ctx)
+> > >  {
+> > >         unsigned int cpu =3D smp_processor_id();
+> > > @@ -10194,15 +10200,15 @@ static void perf_tp_event_target_task(u64 c=
+ount, void *record,
+> > >         struct perf_event *event, *sibling;
+> > >
+> > >         perf_event_groups_for_cpu_pmu(event, &ctx->pinned_groups, cpu=
+, pmu) {
+> > > -               __perf_tp_event_target_task(count, record, regs, data=
+, event);
+> > > +               __perf_tp_event_target_task(count, record, regs, data=
+, raw, event);
+> > >                 for_each_sibling_event(sibling, event)
+> > > -                       __perf_tp_event_target_task(count, record, re=
+gs, data, sibling);
+> > > +                       __perf_tp_event_target_task(count, record, re=
+gs, data, raw, sibling);
+> > >         }
+> > >
+> > >         perf_event_groups_for_cpu_pmu(event, &ctx->flexible_groups, c=
+pu, pmu) {
+> > > -               __perf_tp_event_target_task(count, record, regs, data=
+, event);
+> > > +               __perf_tp_event_target_task(count, record, regs, data=
+, raw, event);
+> > >                 for_each_sibling_event(sibling, event)
+> > > -                       __perf_tp_event_target_task(count, record, re=
+gs, data, sibling);
+> > > +                       __perf_tp_event_target_task(count, record, re=
+gs, data, raw, sibling);
+> > >         }
+> > >  }
+> > >
+> > > @@ -10220,15 +10226,10 @@ void perf_tp_event(u16 event_type, u64 coun=
+t, void *record, int entry_size,
+> > >                 },
+> > >         };
+> > >
+> > > -       perf_sample_data_init(&data, 0, 0);
+> > > -       perf_sample_save_raw_data(&data, &raw);
+> > > -
+> > >         perf_trace_buf_update(record, event_type);
+> > >
+> > >         hlist_for_each_entry_rcu(event, head, hlist_entry) {
+> > > -               if (perf_tp_event_match(event, &data, regs)) {
+> > > -                       perf_swevent_event(event, count, &data, regs)=
+;
+> > > -
+> > > +               if (perf_tp_event_match(event, &raw, regs)) {
+> > >                         /*
+> > >                          * Here use the same on-stack perf_sample_dat=
+a,
+> > >                          * some members in data are event-specific an=
+d
+> > > @@ -10238,7 +10239,9 @@ void perf_tp_event(u16 event_type, u64 count,=
+ void *record, int entry_size,
+> > >                          * because data->sample_flags is set.
+> > >                          */
+> > >                         perf_sample_data_init(&data, 0, 0);
+> > > -                       perf_sample_save_raw_data(&data, &raw);
+> > > +                       if (event->attr.sample_type & PERF_SAMPLE_RAW=
+)
+> > > +                               perf_sample_save_raw_data(&data, &raw=
+);
+> > > +                       perf_swevent_event(event, count, &data, regs)=
+;
+> > >                 }
+> > >         }
+> > >
+> > > @@ -10255,7 +10258,7 @@ void perf_tp_event(u16 event_type, u64 count,=
+ void *record, int entry_size,
+> > >                         goto unlock;
+> > >
+> > >                 raw_spin_lock(&ctx->lock);
+> > > -               perf_tp_event_target_task(count, record, regs, &data,=
+ ctx);
+> > > +               perf_tp_event_target_task(count, record, regs, &data,=
+ &raw, ctx);
+> > >                 raw_spin_unlock(&ctx->lock);
+> > >  unlock:
+> > >                 rcu_read_unlock();
+> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > index 9dc605f08a23..4b3ff71b4c0a 100644
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -620,7 +620,8 @@ static const struct bpf_func_proto bpf_perf_event=
+_read_value_proto =3D {
+> > >
+> > >  static __always_inline u64
+> > >  __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
+> > > -                       u64 flags, struct perf_sample_data *sd)
+> > > +                       u64 flags, struct perf_raw_record *raw,
+> > > +                       struct perf_sample_data *sd)
+> > >  {
+> > >         struct bpf_array *array =3D container_of(map, struct bpf_arra=
+y, map);
+> > >         unsigned int cpu =3D smp_processor_id();
+> > > @@ -645,6 +646,9 @@ __bpf_perf_event_output(struct pt_regs *regs, str=
+uct bpf_map *map,
+> > >         if (unlikely(event->oncpu !=3D cpu))
+> > >                 return -EOPNOTSUPP;
+> > >
+> > > +       if (event->attr.sample_type & PERF_SAMPLE_RAW)
+> > > +               perf_sample_save_raw_data(sd, raw);
+> > > +
+> > >         return perf_event_output(event, sd, regs);
+> > >  }
+> > >
+> > > @@ -688,9 +692,8 @@ BPF_CALL_5(bpf_perf_event_output, struct pt_regs =
+*, regs, struct bpf_map *, map,
+> > >         }
+> > >
+> > >         perf_sample_data_init(sd, 0, 0);
+> > > -       perf_sample_save_raw_data(sd, &raw);
+> > >
+> > > -       err =3D __bpf_perf_event_output(regs, map, flags, sd);
+> > > +       err =3D __bpf_perf_event_output(regs, map, flags, &raw, sd);
+> > >  out:
+> > >         this_cpu_dec(bpf_trace_nest_level);
+> > >         preempt_enable();
+> > > @@ -749,9 +752,8 @@ u64 bpf_event_output(struct bpf_map *map, u64 fla=
+gs, void *meta, u64 meta_size,
+> > >
+> > >         perf_fetch_caller_regs(regs);
+> > >         perf_sample_data_init(sd, 0, 0);
+> > > -       perf_sample_save_raw_data(sd, &raw);
+> > >
+> > > -       ret =3D __bpf_perf_event_output(regs, map, flags, sd);
+> > > +       ret =3D __bpf_perf_event_output(regs, map, flags, &raw, sd);
+> > >  out:
+> > >         this_cpu_dec(bpf_event_output_nest_level);
+> > >         preempt_enable();
+> > > --
+> > > 2.45.0.rc0.197.gbae5840b3b-goog
+> > >
