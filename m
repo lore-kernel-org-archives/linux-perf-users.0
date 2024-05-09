@@ -1,339 +1,167 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9512086244;
-	Thu,  9 May 2024 21:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0584E84FB1;
+	Thu,  9 May 2024 21:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715289487; cv=none; b=DA/UpMdRGU/k66KtSTdHPdtQwfOZGr0vNX1fVseZhqEdH/OuWbMdz9INZgywbLMOKMRuyxZlv69bpMnKUWlbKjofwWB62u+xDKf0HZ3FirUlaHDDSnPar6hATXVcfPnBXV5XknWwviPR1mAIWN4iLSo/bQmiD0wegSI4H9ED5pg=
+	t=1715289719; cv=none; b=Iqs52Ci1x+6pmOcqfYTElEscbsjteyFQEDsVZrfhvEV68sYLxyAsoJKEfZSc1gxFrJQtHBPZNQhAaeqREeCk6y6WfRWyekIU6HomCAToJNzrF6EZrdtq/ld4acZ50p7RDO7h6h1922QlmACAK1UvhbXYsfnp7995q0FIJE3QuaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715289487; c=relaxed/simple;
-	bh=hglL0exCKjz/E+QzHIuBkoQgPJXIjr7oH1aPnKQ+0So=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e6huKjt71gEq9JGUeiZlhyth0PnlISeD8wm4GG9W/y57CBUn0PZYPItbpey6aNod1fSgY5I4+b/1hCO8W6SPGr4p8zlT2TmOuaI7hj2HeEBvHW2ZQ1EyLemnXpw2hdAnhjb+gogA9wNVWj/ijDXHk1hR0K3CLBWdKOZm2gg96as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=CKwN7ElF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1715289719; c=relaxed/simple;
+	bh=8NaOu27Ba2DQElXCBlj4VoleD/3dxECCUoAuTR9sKFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSb9fjg7xfQ9pcZA6zPXPO6N4ptC5lu2LM0eNucyDKjKtQf28UMMshzoAygbGL+PXMAgwDvxcfkSnnK++eBGVtbAXCn/T08o795o7EamDsE9/KoBe9r6q3OxAkzRZQQEDhMWhKIVnFtKtNwLSYgyYNz4J53tG1U85LhASI16aMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yu8nQ5Mi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CKwN7ElF"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 449KrevT275586
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 9 May 2024 13:53:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 449KrevT275586
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1715288027;
-	bh=OTVyo9YSZWN/DVt1cJEYkHWbfxp9X5uqNNbX2ey6OEQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CKwN7ElFF/6ssDeGIstMy8aredFlRF/gusg7Uh5E2XAChgJ684lIk4GhMrxnY9w4r
-	 lYDaNKbI06ZQMmynD0gY6iMlZtcYxsRZVwf+/h26QdCfZMtAEt3ckRCxc0HlLK27pe
-	 nXf/eSfAuThUu+9iol42fplC7KCKcUpXc6utAXKTmIGVelzjj/F4Aex+ey6Bwm4HNY
-	 ix44WZhLVHLgZuak4HH4YB/KwUFoMs6ZW8uzhbdphHSOCFSwmw2fC6N1pfwWkqjd6A
-	 BF28WLkvJlzbbr++9qd69Y7mXPyu4wf8mEF6M3DTGZz6jPA9u48vqUu/CSiaBDq7ky
-	 CLdsV0PD9pfMQ==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org
-Subject: [RESEND v1 2/3] x86/cpufeatures: Generate a feature mask header based on build config
-Date: Thu,  9 May 2024 13:53:39 -0700
-Message-ID: <20240509205340.275568-3-xin@zytor.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240509205340.275568-1-xin@zytor.com>
-References: <20240509205340.275568-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yu8nQ5Mi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C9CC116B1;
+	Thu,  9 May 2024 21:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715289718;
+	bh=8NaOu27Ba2DQElXCBlj4VoleD/3dxECCUoAuTR9sKFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yu8nQ5MiN7odJjnzNR2c3eKPT6s7qgplI70Ls9HuGzcyRqLCrE+6D4jn1U1IwWDfi
+	 o0F+b24A1yNq/pkvfpN8GoUFVNNVplYev8d2dm63z9r+bPUClT7mFKRLhAicfYrgiq
+	 UbjlliqVuaj6cVlZQXdNSJJ+UrgUyGvFVe/EPKW0k7OTJLF/Yy0/dv4mmEZ3hpAfCA
+	 a+VGUeWxFMepzOlEcAlNw78VOp/5H6TDcZaPtaUiNkRu8sg1w4EZu1flGUZYIkrdji
+	 S7sb2rvyGCzBcoXYe2s0Cw2AJ++P0IMqJbWW2OG3G+HibF3RZitMjXQp79OwatN5IS
+	 3mdaaMxIq0KHw==
+Date: Thu, 9 May 2024 18:21:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+	leo.yan@linux.dev, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf dwarf-aux: Fix build with HAVE_DWARF_CFI_SUPPORT
+Message-ID: <Zj0-c7Ac0qHkuLNt@x1>
+References: <20240508141458.439017-1-james.clark@arm.com>
+ <20240509101136.5b0e0f2bf8df640fc2e65624@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509101136.5b0e0f2bf8df640fc2e65624@kernel.org>
 
-From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+On Thu, May 09, 2024 at 10:11:36AM +0900, Masami Hiramatsu wrote:
+> On Wed,  8 May 2024 15:14:57 +0100
+> James Clark <james.clark@arm.com> wrote:
+> 
+> > check_allowed_ops() is used from both HAVE_DWARF_GETLOCATIONS_SUPPORT
+> > and HAVE_DWARF_CFI_SUPPORT sections, so move it into the right place so
+> > that it's available when either are defined. This shows up when doing
+> > a static cross compile for arm64:
+> > 
+> >   $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LDFLAGS="-static" \
+> >     EXTRA_PERFLIBS="-lexpat"
+> > 
+> >   util/dwarf-aux.c:1723:6: error: implicit declaration of function 'check_allowed_ops'
+> > 
+> 
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Thanks!
 
-Introduce an AWK script to auto-generate a header with required and
-disabled feature masks based on <asm/cpufeatures.h> and current build
-config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-simply add
+Thanks, applied to perf-tools-next,
 
-config X86_DISABLED_FEATURE_FRED
-	def_bool y
-	depends on !X86_FRED
-
-to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-feature disable flag, e.g., DISABLE_FRED.
-
-Besides, the generated required and disabled feature masks will be
-added to their corresponding CPU feature masks automatically.
-
-[ Xin: build integration improvements ]
-
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/Makefile                  |  17 ++++-
- arch/x86/boot/cpucheck.c           |   3 +-
- arch/x86/boot/cpuflags.c           |   1 -
- arch/x86/boot/mkcpustr.c           |   3 +-
- arch/x86/include/asm/Kbuild        |   1 +
- arch/x86/include/asm/cpufeature.h  |   1 +
- arch/x86/include/asm/cpufeatures.h |   8 ---
- arch/x86/kernel/verify_cpu.S       |   1 +
- arch/x86/tools/featuremasks.awk    | 108 +++++++++++++++++++++++++++++
- 9 files changed, 129 insertions(+), 14 deletions(-)
- create mode 100755 arch/x86/tools/featuremasks.awk
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 5ab93fcdd691..2a364fe0a5b4 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -241,9 +241,22 @@ archscripts: scripts_basic
- 	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
+- Arnaldo
  
- ###
--# Syscall table generation
-+# Feature masks header and syscall table generation
- 
--archheaders:
-+out := arch/x86/include/generated/asm
-+featuremasks_hdr := featuremasks.h
-+featuremasks_awk := $(srctree)/arch/x86/tools/featuremasks.awk
-+cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
-+quiet_cmd_gen_featuremasks = GEN     $@
-+      cmd_gen_featuremasks = $(AWK) -f $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
-+
-+$(out)/$(featuremasks_hdr): $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
-+	$(shell mkdir -p $(out))
-+	$(call if_changed,gen_featuremasks)
-+
-+targets += $(out)/$(featuremasks_hdr)
-+
-+archheaders: $(out)/$(featuremasks_hdr)
- 	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
- 
- ###
-diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
-index fed8d13ce252..49b982c4e932 100644
---- a/arch/x86/boot/cpucheck.c
-+++ b/arch/x86/boot/cpucheck.c
-@@ -22,10 +22,11 @@
- # include "boot.h"
- #endif
- #include <linux/types.h>
-+#include <asm/featuremasks.h>
- #include <asm/intel-family.h>
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
-+
- #include "string.h"
- #include "msr.h"
- 
-diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
-index d75237ba7ce9..0cabdacb2a2f 100644
---- a/arch/x86/boot/cpuflags.c
-+++ b/arch/x86/boot/cpuflags.c
-@@ -3,7 +3,6 @@
- #include "bitops.h"
- 
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
- #include "cpuflags.h"
- 
-diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
-index da0ccc5de538..b90110109675 100644
---- a/arch/x86/boot/mkcpustr.c
-+++ b/arch/x86/boot/mkcpustr.c
-@@ -12,8 +12,6 @@
- 
- #include <stdio.h>
- 
--#include "../include/asm/required-features.h"
--#include "../include/asm/disabled-features.h"
- #include "../include/asm/cpufeatures.h"
- #include "../include/asm/vmxfeatures.h"
- #include "../kernel/cpu/capflags.c"
-@@ -23,6 +21,7 @@ int main(void)
- 	int i, j;
- 	const char *str;
- 
-+	printf("#include <asm/featuremasks.h>\n\n");
- 	printf("static const char x86_cap_strs[] =\n");
- 
- 	for (i = 0; i < NCAPINTS; i++) {
-diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-index a192bdea69e2..29c3481f40fc 100644
---- a/arch/x86/include/asm/Kbuild
-+++ b/arch/x86/include/asm/Kbuild
-@@ -8,6 +8,7 @@ generated-y += syscalls_x32.h
- generated-y += unistd_32_ia32.h
- generated-y += unistd_64_x32.h
- generated-y += xen-hypercalls.h
-+generated-y += featuremasks.h
- 
- generic-y += early_ioremap.h
- generic-y += mcs_spinlock.h
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 0b9611da6c53..8332f596ba3c 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -9,6 +9,7 @@
- #include <asm/asm.h>
- #include <linux/bitops.h>
- #include <asm/alternative.h>
-+#include <asm/featuremasks.h>
- 
- enum cpuid_leafs
- {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 3c7434329661..05503448b94d 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
- /*
-  * Defines x86 CPU feature bits
-  */
-diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-index 1258a5872d12..3205cbb47b9c 100644
---- a/arch/x86/kernel/verify_cpu.S
-+++ b/arch/x86/kernel/verify_cpu.S
-@@ -29,6 +29,7 @@
-  */
- 
- #include <asm/cpufeatures.h>
-+#include <asm/featuremasks.h>
- #include <asm/msr-index.h>
- 
- SYM_FUNC_START_LOCAL(verify_cpu)
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-new file mode 100755
-index 000000000000..2af32c60fc76
---- /dev/null
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -0,0 +1,108 @@
-+#!/usr/bin/awk
-+#
-+# Convert cpufeatures.h to a list of compile-time masks
-+# Note: this blithly assumes that each word has at least one
-+# feature defined in it; if not, something else is wrong!
-+#
-+
-+BEGIN {
-+	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
-+	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
-+
-+	file = 0
-+}
-+
-+BEGINFILE {
-+	switch (++file) {
-+	case 1:			# cpufeatures.h
-+		FPAT = "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
-+		break;
-+	case 2:			# .config
-+		FPAT = "CONFIG_[A-Z0-9_]+|is not set|[yn]";
-+		break;
-+	}
-+}
-+
-+file == 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
-+$3 == "(" && $5 == "*" && $7 == "+" && $9 == ")" {
-+	nfeat = $4 * $6 + $8;
-+	feat = $2;
-+	sub(/^X86_FEATURE_/, "", feat);
-+	feats[nfeat] = feat;
-+}
-+file == 1 && $1 ~ /^#[ \t]*define$/ && $2 == "NCAPINTS" {
-+	ncapints = strtonum($3);
-+}
-+
-+file == 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
-+	on = ($2 == "y");
-+	printf "/* %s = %s (%d) */\n", $1, $2, on;
-+	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3) {
-+		printf "/* %s %s = %d */\n", fs[2], fs[3], on;
-+		featstat[fs[2], fs[3]] = on;
-+	}
-+}
-+
-+END {
-+	sets[1] = "REQUIRED";
-+	sets[2] = "DISABLED";
-+
-+	for (ns in sets) {
-+		s = sets[ns];
-+
-+		printf "/*\n";
-+		printf " * %s features:\n", s;
-+		printf " *\n";
-+		fstr = "";
-+		for (i = 0; i < ncapints; i++) {
-+			mask = 0;
-+			for (j = 0; j < 32; j++) {
-+				nfeat = i*32 + j;
-+				feat = feats[nfeat];
-+				if (feat) {
-+					st = !!featstat[s, feat];
-+					if (st) {
-+						nfstr = fstr " " feat;
-+						if (length(nfstr) > 72) {
-+							printf " *   %s\n", fstr;
-+							nfstr = " " feat;
-+						}
-+						fstr = nfstr;
-+					}
-+					mask += st * (2 ^ j);
-+				}
-+			}
-+			masks[i] = mask;
-+		}
-+		printf " *   %s\n */\n\n", fstr;
-+
-+		for (i = 0; i < ncapints; i++) {
-+			printf "#define %s_MASK%-3d 0x%08x\n", s, i, masks[i];
-+		}
-+
-+		printf "\n#define %s_MASKS ", s;
-+		pfx = "{";
-+		for (i = 0; i < ncapints; i++) {
-+			printf "%s \\\n\t%s_MASK_%d", pfx, s, i;
-+			pfx = ",";
-+		}
-+		printf " \\\n}\n\n";
-+
-+		printf "#define %s_FEATURE(x) \\\n", s;
-+		printf "\t((( ";
-+		for (i = 0; i < ncapints; i++) {
-+			if (masks[i]) {
-+				printf "\\\n\t\t((x) >> 5) == %2d ? %s_MASK%-3d : ", i, s, i;
-+			}
-+		}
-+		printf "0 \\\n";
-+		printf "\t) >> ((x) & 31)) & 1)\n\n";
-+
-+		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+	}
-+
-+	printf "#define SSE_MASK\t\\\n";
-+	printf "\t(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X86_FEATURE_XMM2 & 31))))\n\n";
-+
-+	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
-+}
--- 
-2.45.0
-
+> > Fixes: 55442cc2f22d ("perf dwarf-aux: Check allowed DWARF Ops")
+> > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >  tools/perf/util/dwarf-aux.c | 56 ++++++++++++++++++-------------------
+> >  1 file changed, 28 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index c0a492e65388..c9584563cd56 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -1215,6 +1215,34 @@ static int offset_from_dwarf_op(Dwarf_Op *op)
+> >  	}
+> >  	return -1;
+> >  }
+> > +
+> > +static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
+> > +{
+> > +	/* The first op is checked separately */
+> > +	ops++;
+> > +	nops--;
+> > +
+> > +	/*
+> > +	 * It needs to make sure if the location expression matches to the given
+> > +	 * register and offset exactly.  Thus it rejects any complex expressions
+> > +	 * and only allows a few of selected operators that doesn't change the
+> > +	 * location.
+> > +	 */
+> > +	while (nops) {
+> > +		switch (ops->atom) {
+> > +		case DW_OP_stack_value:
+> > +		case DW_OP_deref_size:
+> > +		case DW_OP_deref:
+> > +		case DW_OP_piece:
+> > +			break;
+> > +		default:
+> > +			return false;
+> > +		}
+> > +		ops++;
+> > +		nops--;
+> > +	}
+> > +	return true;
+> > +}
+> >  #endif /* HAVE_DWARF_GETLOCATIONS_SUPPORT || HAVE_DWARF_CFI_SUPPORT */
+> >  
+> >  #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
+> > @@ -1395,34 +1423,6 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+> >  	return true;
+> >  }
+> >  
+> > -static bool check_allowed_ops(Dwarf_Op *ops, size_t nops)
+> > -{
+> > -	/* The first op is checked separately */
+> > -	ops++;
+> > -	nops--;
+> > -
+> > -	/*
+> > -	 * It needs to make sure if the location expression matches to the given
+> > -	 * register and offset exactly.  Thus it rejects any complex expressions
+> > -	 * and only allows a few of selected operators that doesn't change the
+> > -	 * location.
+> > -	 */
+> > -	while (nops) {
+> > -		switch (ops->atom) {
+> > -		case DW_OP_stack_value:
+> > -		case DW_OP_deref_size:
+> > -		case DW_OP_deref:
+> > -		case DW_OP_piece:
+> > -			break;
+> > -		default:
+> > -			return false;
+> > -		}
+> > -		ops++;
+> > -		nops--;
+> > -	}
+> > -	return true;
+> > -}
+> > -
+> >  /* Only checks direct child DIEs in the given scope. */
+> >  static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+> >  {
+> > -- 
+> > 2.34.1
+> > 
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
