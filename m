@@ -1,117 +1,126 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B916B7E772
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 May 2024 06:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741922CA9;
+	Thu,  9 May 2024 07:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237010; cv=none; b=qA/K7Qu8I/dYpAbVEvC+n30PsE5rBYpTA7p1DdvY619+uOLvdq+xfRIQlfPS8+qtnYb1oTtXZ16bkC6diWcD+9B6LAriCRtm0YLU8qbApPyWb4OU7EwMQh/6+/0GoCiivjKm8EV8TNlDU+yN7GHmZNim47DGwzGMEn44lePy9cU=
+	t=1715239836; cv=none; b=rmzPOTja/g5qtmDgsMd/9ojQ3iUeEq4BpPv0RGJRfgOQGcNjfximKMXjDkYo4eB3vxgqTtQ0WX/zxGORN01zeXmkEW2ASkwBbg66IH2bqCG6lFbH3EjPGG5M5hNsmAOKsLv/92ZCzFq7CGfjc2d3mb6zeVcI0SbV/Kcyn64lmAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237010; c=relaxed/simple;
-	bh=/g14F37mirIOBKpZB7OIDBv6ttQWhutX0fPcpDZNFYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UDcjqDUcvkRLRitVXJ7I/FRPDjnHzVvLOOewMI8qVyCNO+TIIpCcBE/D3kt6edne/X3TkCX0uJ4GqVni1RAYimBmCE22xKEaiT96PzOc4fE/YdOV3t0NS9osWQsYgF5KHgpnVeIwC/cYly0rtP60dEVuATFGRIT3qEwZxZLx/aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W5vao0v+; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715239836; c=relaxed/simple;
+	bh=dvywxWombUI9APoz+VK+Sl0o4Zdu/VmMMBc/g1btFx0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mS/6iXMOPPC66izAMsbqQOnqOtVi1MfYVL/ffBof5YvswEDoXzOiWaxfkaE41Ln558VsUvowEa9ywNmWCz2PuQ52LTe7C0DugsM7PMyozZmg1bGKkAhPM1U/O7Fk3RdMOA464oWBP/D076AoXL8+MnfEjRw7E8a2KBdWe2UyFEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kT6CXIK4; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W5vao0v+"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-43ae23431fbso136971cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 May 2024 23:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715237007; x=1715841807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sfpm2g40k/3k+p/MIEAhjjOe3D3qfwBHw4FyzeD3fNs=;
-        b=W5vao0v+PFFJIUhTvJbBFx2EBc114KA9sro3DSmWhKwvg7TKnrPHz+f1TWESQrygpz
-         lKRZmkBdb8us/lDCihFMbxKdIFLRGyt0A7LfmERc3fwxn14PDYDxhK5dZqQBjUSMjk0B
-         BxGNZwnRtxJE1NVMeTTvyQvFlQejbLM4WEAexDS2kypl7sDQK5qpqXvz9WmV7+8khMGj
-         Q1MTwuzffnQIRC5iUNPiY0jHUjnf8pBQf44kgdjT/3xTUez8pHjldEedH6bYtG+aheZa
-         fyxlXtZpldc/HAlkdfH02YBYDWbxV0f9hwTDhDTJPUY1UQTwX9PWe+BJ6O0v5gcEjJ+7
-         VFGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237007; x=1715841807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sfpm2g40k/3k+p/MIEAhjjOe3D3qfwBHw4FyzeD3fNs=;
-        b=g1Qwjjp2DEP4qCDK8uj6sTJmpYE5uktsWDPlDSgoLcJpHRfeukwJjgf+NbgMHn2CfU
-         dzhENGjMgt1a5qrtJ0dq3FMuCzGXD+mAWYMs7YP45db/nEI+BvwUwMcuRWK8R5158KsY
-         B29CbIBaGzRP9nr82meKBOT5YkkQrK2kEUgOXOgxkWyZdEe2MfNfsd+51tm3Hp4tI0Yh
-         iKuCvKVu3z4M/ViGGX97MNJRCaE+viskLGcsix74DWCA/F2XvqAN2HNZe4VC5pWi5dr/
-         p41zcaso3Q9Kdluza4p0z37Ua4wfNCRBjRH376yOu2B1SdabxZ8Nk/ioXX0Fp56a9Kzk
-         QikQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXU4JqevM13Oz0qJvPkzo18WUCBQkqRLe+1PQyABHoe9DjJjO8jrDD8NPrZX2VLjRztVsFyljfOZSZlAz0H6Hj38mvCbiBM8UmJRrDP3M4vgA==
-X-Gm-Message-State: AOJu0YwBzzkJqNtveoST8mx6cUcIzJ55rynXfYbmZmPIIjRTBL42OICL
-	OgBUMmof4M0a5Nrk8c6mjAmPWe/8t+8sCbYIonuRJXF65iD+foH3NhLVqooSPClfp0khZkFDt0p
-	oLWhHzLIjIFREx1m1E0saiLTCZVmWat4t3FUY
-X-Google-Smtp-Source: AGHT+IGsUj70NyQXF2GEHvVoFbL0ZskwScPPIR/RezSyT5OTXl14Rd1FF+kOEXGundYuUuqa/z6LaxOUxKhBAp7MLTo=
-X-Received: by 2002:ac8:6f1b:0:b0:43d:e001:69bc with SMTP id
- d75a77b69052e-43df44f9033mr1699781cf.17.1715237006642; Wed, 08 May 2024
- 23:43:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kT6CXIK4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715239834; x=1746775834;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dvywxWombUI9APoz+VK+Sl0o4Zdu/VmMMBc/g1btFx0=;
+  b=kT6CXIK4GirFruSaKlcs60J7IpIYOSWWXO8VLA6rLSQaM4EuMfa+cfVl
+   dB/bCTFa3ryIhMbHWAWrNOU57IMRvW0MaM5Wg9Z0sGvmHso0Zb4TjyXyn
+   36IB5E+OnqyylkSFlp/HD9xJBTSmBjURKYXCjGInI7+bHLF6Zm7CCHb0u
+   PclUzJFKpe2nVkcgq4Fisd6AD7jhgUBZsjneDq4XZJ3Bx+JzY+NO3WOsR
+   mj9+reHpSriE+qLd8QvxUa0IpSxXFIfehGfoRpxlsOIL4m1oXSVN0dKHD
+   jYjHkxs4q7WekvfbqCCPfqgH5T/f57+/SCyKmx4X4uBsQgqFIw026wWVx
+   w==;
+X-CSE-ConnectionGUID: Z4zeweKOT+S5jl1NjM+lWA==
+X-CSE-MsgGUID: zrH1ywuDTfKeA2dUDtYKoQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="28655487"
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="28655487"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 00:30:33 -0700
+X-CSE-ConnectionGUID: j+SrG3lKRfq87nCVLp0dDQ==
+X-CSE-MsgGUID: b5kEwL0BRsiNCfn2BtNbkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="60021404"
+Received: from xiongzha-mobl1.ccr.corp.intel.com (HELO [10.124.225.233]) ([10.124.225.233])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 00:30:28 -0700
+Message-ID: <33425c96-96a9-4a5b-8a1b-9b1ebcba448c@linux.intel.com>
+Date: Thu, 9 May 2024 15:30:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjpBnkL2wO3QJa5W@x1>
-In-Reply-To: <ZjpBnkL2wO3QJa5W@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 23:43:15 -0700
-Message-ID: <CAP-5=fX3c60v=7dt+Nryd5KqvKMU8EXz-jJAvJ=p=S_N6hJjUw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf probe: Use zfree() to avoid possibly accessing
- dangling pointers
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/54] perf: x86: Add x86 function to switch PMI
+ handler
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-13-mizhang@google.com>
+ <20240507092241.GV40213@noisy.programming.kicks-ass.net>
+ <34245468-00fc-49aa-951e-d7d786084d08@linux.intel.com>
+ <20240508083707.GH30852@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
+In-Reply-To: <20240508083707.GH30852@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 7, 2024 at 7:58=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> When freeing a->b it is good practice to set a->b to NULL using
-> zfree(&a->b) so that when we have a bug where a reference to a freed 'a'
-> pointer is kept somewhere, we can more quickly cause a segfault if some
-> code tries to use a->b.
->
-> Convert one such case in the 'perf probe' codebase.
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> index 019fef8da6a8e60f..003a3bcebfdfc2d1 100644
-> --- a/tools/perf/builtin-probe.c
-> +++ b/tools/perf/builtin-probe.c
-> @@ -325,7 +325,7 @@ static void cleanup_params(void)
->         for (i =3D 0; i < params->nevents; i++)
->                 clear_perf_probe_event(params->events + i);
->         line_range__clear(&params->line_range);
-> -       free(params->target);
-> +       zfree(&params->target);
->         strfilter__delete(params->filter);
->         nsinfo__put(params->nsi);
->         zfree(&params);
 
-The change is fine but params is freed here, so the potential to read
-"->target" is small.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On 5/8/2024 4:37 PM, Peter Zijlstra wrote:
+> On Wed, May 08, 2024 at 02:58:30PM +0800, Zhang, Xiong Y wrote:
+>> On 5/7/2024 5:22 PM, Peter Zijlstra wrote:
+>>> On Mon, May 06, 2024 at 05:29:37AM +0000, Mingwei Zhang wrote:
+>>>> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> 
+>>>> +void x86_perf_guest_enter(u32 guest_lvtpc)
+>>>> +{
+>>>> +	lockdep_assert_irqs_disabled();
+>>>> +
+>>>> +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
+>>>> +			       (guest_lvtpc & APIC_LVT_MASKED));
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(x86_perf_guest_enter);
+>>>> +
+>>>> +void x86_perf_guest_exit(void)
+>>>> +{
+>>>> +	lockdep_assert_irqs_disabled();
+>>>> +
+>>>> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(x86_perf_guest_exit);
+>>>
+>>> Urgghh... because it makes sense for this bare APIC write to be exported
+>>> ?!?
+>> Usually KVM doesn't access HW except vmx directly and requests other
+>> components to access HW to avoid confliction, APIC_LVTPC is managed by x86
+>> perf driver, so I added two functions here and exported them.
+> 
+> Yes, I understand how you got here. But as with everything you export,
+> you should ask yourself, should I export this. The above
+> x86_perf_guest_enter() function allows any module to write random LVTPC
+> entries. That's not a good thing to export.
+Totally agree with your concern. Here KVM need to switch PMI vector at PMU
+context switch, export isn't good, could you kindly give guideline to
+design or improve such interface?
+I thought the following two method, but they are worse than this commit.
+1. Perf register notification to KVM, but this makes perf depends on KVM.
+2. KVM write APIC_LVTPC directly, but this needs x86 export apic_write().
 
-Thanks,
-Ian
-
-> --
-> 2.44.0
->
+thanks
+> 
+> I utterly detest how KVM is a module and ends up exporting a ton of
+> stuff that *really* should not be exported.
