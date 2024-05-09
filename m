@@ -1,115 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A189F85950;
-	Thu,  9 May 2024 02:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF391494B4;
+	Thu,  9 May 2024 05:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715223513; cv=none; b=BnTilldn/fKA7E4tMjxvnGNroLbBYkGb0fKVHQeP94UVwhpXPUlVyLpKshsN+Z/bPviznpeZebV38vvbcvGuFNUpFJCmMHfzWtgc4fqlzNwHjEHd3f9FMw3TXU8g/v9g57Pg+we0PSl2FzPO7r8KB6HA9TP9tp+Z2DZoZMKJ8Yc=
+	t=1715231303; cv=none; b=DS36HP3dghJwLOVfZsfHZje+x3yxUc+sl6jm0GSNQBBACkc0NndkE9bi7eMbT6qEe9IjWsBLN29Ub/q0Tc4IceBi/A6uvOszWhVvVm1odgcUi/kBnYRPYooMLsYRI2J2FTze0YNnpVJZeymKBj2NSOI5xP83m9xhHjgynxXqJfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715223513; c=relaxed/simple;
-	bh=scJgC0HkzGpJkHpFhkXum0CUoi2ERVSMaLYTkKCUkEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XUNOJlDqUWgzEdTwjOwq9jiOozmMqdFT73wpV+SDgiQbYuFNW/c1bf0QoGDF9szD3Rl7662MdCEEolcNMiTpq+KUcWHKcTBsfvm82JYQJhrTgCeHePYcTLD6vFuEDbPAchT5CCE66HNhuqogQ3qvcavam/n5S/EKzqf1C9Ahtbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWzberVg; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWzberVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715223512; x=1746759512;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=scJgC0HkzGpJkHpFhkXum0CUoi2ERVSMaLYTkKCUkEU=;
-  b=PWzberVgzeMvVojLgIZe9FjUF+McXWBqBI7Elf6KL6bYUb7+0dqBDMmG
-   nmjxCNLZYbWcmi/M6p4UnffD3F+fDvCqPy8frUixhi/3kCCcDLmdBVaoc
-   2XZdQSVt6pZFouWYB8AfAQx0bpOEyltyTDLmMuOo5Gym0UE10LHnN4LI2
-   mrn4N5IhfdjFg47bD6hbMrcUjUPq6uRmGGWpbLrI47hx4rcqTtbE6Kwyv
-   GQS82F3EikS1rL3bf3OmhnI1EkPNhZigtN1EBhyJOwtVFuiQ1kS1Z7e8B
-   KSh1tGeUaaBgnwHqcYe6GAf23J+xuo5XvUB1i5gRRgtky5tnwcDsMGmqU
-   g==;
-X-CSE-ConnectionGUID: uk2Ne+w1SYWuc+bMDyDo8Q==
-X-CSE-MsgGUID: wt61SB3OQMeKZ/Ulx+NNpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14934209"
-X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
-   d="scan'208";a="14934209"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 19:58:32 -0700
-X-CSE-ConnectionGUID: Bk+F0MIdQv68pDRA2TT90A==
-X-CSE-MsgGUID: Dtf65lEfRLOHOBebC1NsbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
-   d="scan'208";a="33626671"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 19:58:25 -0700
-Message-ID: <5e14e5bd-0125-4d56-953f-8ecdbe31668d@linux.intel.com>
-Date: Thu, 9 May 2024 10:58:21 +0800
+	s=arc-20240116; t=1715231303; c=relaxed/simple;
+	bh=YZYM2CEf8uF3eNWleBd8V23QDnmsujeg+l05B7XGpos=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nEpHdYfVhLHY2S413cFitaoSFcWWmr2t+/fhcAXnKC+iHlmlXK2YDyza69w9RbORwmnhet94uferbglhkgishiXFzmjq7LIxF1juGF9jCsGAtPTmKcMECZ16ZyciemhvKb8mSkaAfvtLSrOb9Afjw7zQIFLwp3LyEBVBCpQUMF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f453d2c5a1so484456b3a.2;
+        Wed, 08 May 2024 22:08:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715231301; x=1715836101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GwMe+/sDHvAVGtTIX3MapIIEfVLTv/14jv9BLJ1rN/g=;
+        b=fIK4A+tg0L+o7FTBy86+r9UE39wNtbCZ7gMdON+nxylFz3jjIDaaEJqJzY2w/FcAgl
+         lWeHbkBPxoHHOyPFCfLEAeScaUJZz43F29KI1mV0AIg+T6JmTX5dutN1eMwjNQRAYlNC
+         +PVlTXBs8pVNv9vNqGAabR+XLyJtQOioXnsWuZ5IC9QjMqF1KaPQ1Ntm/KzHqrQh21Ky
+         BQzwqFySDd1DZT99nGcaCFMPRURo98601HChpwfispKLO0VYmsI5siCQquv5o4r3bBdP
+         QHo3L2Nkz/CXK6gVp6xHXJLth9mX5URS3TLkcdYtj7Q3dkuyTSqCdiFz/M/KND0EWS+N
+         OGFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUT75mwEcBl0iXkSfke+0ivJaYA0QD0sPmKxisWPYkQCKEctAGnlr8GHZ4KFs/mAcVowpilarc692zDRyCSsYiZAGbfIjnj60FBGvKvF7TgKwrX5dOZH3FxQ7XOSDyyEr72QTEIlpfONQMNxYkAxA==
+X-Gm-Message-State: AOJu0Yxpc85qaRmMeQ6X9hrF/L4G/Y/ZF6ZFAWpfEC+RNF8uJtENl4S5
+	g6ANgwEgG7OBF6khZYWaNYbnx3sMUlGOGzHjIP7k5fcOBanc4OO9OKO45p8/n5H6/ggxMAaoEsS
+	uTHIcCHWF9oXuzpe285JcIADAuvQ=
+X-Google-Smtp-Source: AGHT+IFqm2U3yXtg/ZYc5/6d6UOHoDN7bEJnNOA970nvjSewNnc5HjBRr7m++V9HmQFJfrHNC9mngcmYUma/XowNJJc=
+X-Received: by 2002:a05:6a21:a108:b0:1a7:60d8:a6dd with SMTP id
+ adf61e73a8af0-1afc8dc8605mr5316420637.53.1715231301105; Wed, 08 May 2024
+ 22:08:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 26/54] KVM: x86/pmu: Avoid legacy vPMU code when
- accessing global_ctrl in passthrough vPMU
-To: "Chen, Zide" <zide.chen@intel.com>, Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-27-mizhang@google.com>
- <d19e06e7-ed97-4361-a628-014e5670cf22@intel.com>
- <9b93c6bb-0182-4729-a935-2c05f1160a73@linux.intel.com>
- <e7bc3989-154b-42cb-9a6b-83b395f5d0ee@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <e7bc3989-154b-42cb-9a6b-83b395f5d0ee@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240508060427.417-1-ravi.bangoria@amd.com>
+In-Reply-To: <20240508060427.417-1-ravi.bangoria@amd.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 8 May 2024 22:08:09 -0700
+Message-ID: <CAM9d7cgFKcHXeTXxax7GRCK__0U3HUnG3Ls09GpnD8FipyJk1A@mail.gmail.com>
+Subject: Re: [RFC 0/4] perf sched: Introduce schedstat tool
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	irogers@google.com, swapnil.sapkal@amd.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, rostedt@goodmis.org, 
+	vincent.guittot@linaro.org, bristot@redhat.com, adrian.hunter@intel.com, 
+	james.clark@arm.com, kan.liang@linux.intel.com, gautham.shenoy@amd.com, 
+	kprateek.nayak@amd.com, juri.lelli@redhat.com, yangjihong@bytedance.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Ravi,
 
-On 5/9/2024 9:29 AM, Chen, Zide wrote:
+On Tue, May 7, 2024 at 11:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
 >
-> On 5/8/2024 5:43 PM, Mi, Dapeng wrote:
->> On 5/9/2024 5:48 AM, Chen, Zide wrote:
->>> On 5/5/2024 10:29 PM, Mingwei Zhang wrote:
->>>> Avoid calling into legacy/emulated vPMU logic such as reprogram_counters()
->>>> when passthrough vPMU is enabled. Note that even when passthrough vPMU is
->>>> enabled, global_ctrl may still be intercepted if guest VM only sees a
->>>> subset of the counters.
->>>>
->>>> Suggested-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
->>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->>>> ---
->>>>  arch/x86/kvm/pmu.c | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>>> index bd94f2d67f5c..e9047051489e 100644
->>>> --- a/arch/x86/kvm/pmu.c
->>>> +++ b/arch/x86/kvm/pmu.c
->>>> @@ -713,7 +713,8 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>>>  		if (pmu->global_ctrl != data) {
->>>>  			diff = pmu->global_ctrl ^ data;
->>>>  			pmu->global_ctrl = data;
->>>> -			reprogram_counters(pmu, diff);
->>>> +			if (!is_passthrough_pmu_enabled(vcpu))
->>>> +				reprogram_counters(pmu, diff);
->>> Since in [PATCH 44/54], reprogram_counters() is effectively skipped in
->>> the passthrough case, is this patch still needed?
->> Zide, reprogram_counters() and reprogram_counter() are two different
->> helpers. Both they need to be skipped in passthrough mode.
-> Yes, but this is talking about reprogram_counters() only.  passthrough
-> mode is being checked inside and outside the function call, which is
-> redundant.
-Oh, yes. I don't need this patch then.
+> MOTIVATION
+> ----------
+>
+> Existing `perf sched` is quite exhaustive and provides lot of insights
+> into scheduler behavior but it quickly becomes impractical to use for
+> long running or scheduler intensive workload. For ex, `perf sched record`
+> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+> generates huge 56G perf.data for which perf takes ~137 mins to prepare
+> and write it to disk [1].
+
+Right, this is painful.
+
+>
+> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+> and generates samples on a tracepoint hit, `perf sched schedstat record`
+> takes snapshot of the /proc/schedstat file before and after the workload,
+> i.e. there is zero interference on workload run. Also, it takes very
+> minimal time to parse /proc/schedstat, convert it into perf samples and
+> save those samples into perf.data file. Result perf.data file is much
+> smaller. So, overall `perf sched schedstat record` is much more light-
+> weight compare to `perf sched record`.
+
+Nice work!
+
+>
+> We, internally at AMD, have been using this (a variant of this, known as
+> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
+> of any scheduler code changes[3][4].
+>
+> Please note that, this is not a replacement of perf sched record/report.
+> The intended users of the new tool are scheduler developers, not regular
+> users.
+
+Great, I think it's very useful.
+
+>
+> USAGE
+> -----
+>
+>   # perf sched schedstat record
+>   # perf sched schedstat report
+
+Hmm. I think we can remove the duplication in 'sched'. :)
+Given you are thinking of taskstat, how about making it
+'cpustat' instead?
+
+Also I think it'd be easier if you also provide 'live' mode so that
+users can skip record + report steps and run the workload
+directly like uftrace does. :)
+
+Something like this
+
+  # perf sched cpustat  myworkload
+  (result here ...)
+
+Thanks,
+Namhyung
+
+>
+> Note: Although perf schedstat tool supports workload profiling syntax
+> (i.e. -- <workload> ), the recorded profile is still systemwide since
+> the /proc/schedstat is a systemwide file.
