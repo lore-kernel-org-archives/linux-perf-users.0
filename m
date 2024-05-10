@@ -1,54 +1,54 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AFDDC3
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 00:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACDFC0E
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 00:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715299521; cv=none; b=Khhg2Pq51NiToAM0Xnbu6E9yfLuVZgD1dXTg/diONZOodx66Zjps1Qa/lWwjzAZzSValEQWE/QFv8Zhouqy7o9qhlSCyGEvD2yNbHqnm5j3DvrjfrPefNydlMmw0VRXgvSBPWtl+6aTvcIgWLPjriLrGQyrABiDRFjB9YpRFHjA=
+	t=1715299525; cv=none; b=NkgfGAJYb6vLfzKmagKgqF+gBrBBTBmemblOhTVy++1JJjyCzdbtbU65y3SC9xfFlDww8U4lgJyZpm++wsdXC4IWVNad4gU1rnoylEYMXkx1wIeqa3wdoz+GW2T+1O7rP7PWGn8rjKzx2KOHwd4gPxFfwxNj1pNuFuCd1DLMT34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715299521; c=relaxed/simple;
-	bh=xySRyI8fWJdGd1hvqSCkes+7dSi689oW4NVcWrWQsMc=;
+	s=arc-20240116; t=1715299525; c=relaxed/simple;
+	bh=cGpULC1B1HXkvRfCSn3TdeH+Xj5EwEpr4DGLnTg+pCQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j92DMkqgw3iDeALrMj7QZt6ig8nZ4fvK3qck2M+NX+3rNePEUVugD+GtbHPaBs63P0aNM77E4r6ftrJNvTp074MXwcCrABgnmb//NDwqlqoLtv08Hm5nGU3cWpeUv4Qb8YgGeT/+YF5+Kq8tJnTEIn3LAok+rZgIbUMqIQI5DtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XTKTDe4E; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=TGeg8i5G+TbkNBFDOPnZ9DhVM2XiZWB99ZZNa18zRUMsIQdE41aSrbRqJE/cQvO4g2DIi4LudMbrFBVsxcdVR3gGDLSCauXxIlDr+heC0f3XOEEz+zcK3iLH0sHCXWw1PN5Y5rZRauDhp8RKIb4Q5vns7H4JBx12uEzsvhZooBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1GtDOigs; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XTKTDe4E"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de8b6847956so3367337276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 May 2024 17:05:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1GtDOigs"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be325413eso18555307b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 May 2024 17:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715299519; x=1715904319; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715299523; x=1715904323; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v9grz5MJy3ZdpaUQrWKUMUhoIXt+TwKDu1fmP3H2Mh8=;
-        b=XTKTDe4EPTurS2SKwFqR7PkVU3LvxxYAbu/dK4qgaLimIGi2uGhPId6QkW30uWPen3
-         izqk7FUkKf2Gq4X2wtdBXyH/vbBFMKgNSaJa5Zw49q8TW4DlJBynlm2vXPq9IdVLGKBc
-         7An7SPQCVRcLD/VqCM6IpkfwRrKk/ijzi6/AixbBxj/HwfcqlZWs/I0E0tw2HVizMQ7k
-         sqI3blZk+9HtGCE5vOxzOZKJrWb65kq/qODReAEjTYyDbBnSg61200N+Z1y80NKxdcLM
-         w0CKwOkq63Jgkde3Jn2XyUS7ORgQrYPXSZyywLwJjnzmiWvnOcVOltG9khL+h0gP+asz
-         uj3A==
+        bh=ot0TEs4BvD2J9QyiZT5bC39KllHj7+HFnRVXvIw7CTU=;
+        b=1GtDOigsg5jSoXkWIBd0iOs/bvORgsA0dp9i8Pw9v6bPM3zeqJH0w94Q+/XodM3CT7
+         q4SX4sjCybMXUdaTjgNlRUFYBfpyDFNxHgKjaMpNFpU6UcWIj0Pm1wFbfeYtZA7cJpMH
+         jVuuTT6ZR5oSNuiDtBa98fqHK7zS2XPtiGlE70CPViVECq+MXsUrzx9aoFSD8ZW27y/z
+         EM4dSqKAyBbHM3wgnnMp3s13c5nRD0y3bBkzLaVm31jAfA4DDndWfP0rs08CNbAreTuh
+         EHL2HYRErZJB0+ZSLmJeBGAXXnwuZEyZAL97yB3hQoNG5Dsm9HEtUtcMxCIAUh6ZN7P3
+         7W8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715299519; x=1715904319;
+        d=1e100.net; s=20230601; t=1715299523; x=1715904323;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v9grz5MJy3ZdpaUQrWKUMUhoIXt+TwKDu1fmP3H2Mh8=;
-        b=pHeODr9WqFs3I4+InYRkxYGF/dcyTrBqvuHbTJy5d7YdBBkqAIj6fIZRLXXZKXgulU
-         qHGMYkLbR2EdPulewuNrhQr1udDP39FUBDGTnmFx0exItHJIwAMcT/y+NaQPUkm9iFu9
-         C4QavpP7o9zHv9btJ0xcDTAQOfhnHYGJa9FT9otNQjoZngWya1wrfJBuqzUSPCvhqCQM
-         9fY8Ca0KTq+P/hai2kQbbsEugpVgNejuMpCSfzQNimr2lQJlD4oLuRQr0PqiU3vbxj7B
-         jqthYo+mILEjGN0VbDsiqHWr6BNOVfZ2fJkdyJOZnp8Tt3vplQKB7FgO+UVRmFALnnoM
-         BOrQ==
-X-Gm-Message-State: AOJu0YyIYvlwfMqWkZJm8uK0MR/F02V3OqbIJphFuLoVNBMsCh44Baig
-	AVv+3d8D3a8eZvmsNrn9DxTIL8rjM2i0+yclNPSc7Ll0yciqyPB6FS7dWBdh6TJ1O1K9po3MGlo
-	v
-X-Google-Smtp-Source: AGHT+IF498/68RpmB4z9MHx6KskdlnzgbG1TZRc9f+jHckfKoi5UxYsNcH8Irswv450KU0mFxHjOCG/IrhI=
+        bh=ot0TEs4BvD2J9QyiZT5bC39KllHj7+HFnRVXvIw7CTU=;
+        b=dJJXdORAekxLAApHJTSiSYY276xkpbJpbNJewR4Py11XZvyOBagJ8/inQw/BmWtOri
+         OCjHUF9Z3vgYMRyn2yqd5p7VernpJQY/oyEUrCB76m3wlqJvyfOjll9zXoXEitbHNey2
+         uP15o1EnHSvvnD89xkjnRfFNayHBfbjv2lrFS6T4j2kk1vxg02hYouDDmFhaXjx46QIv
+         KtfIYdlO+wLwMdx6rSKAbvxTOhGNTe1/Zarf0gC9ENU5FCKazHkjAHyDmyWSFQZglNsV
+         7+yecCoss5COblI1vzGv2E6PRK1hNxAViqg3RgA/nzl2K2v9ukHrNclQxeMkP6HLnmAS
+         TVaA==
+X-Gm-Message-State: AOJu0YwNMlDUgHsokj84VQQ1Uo1ajr1sPMGV7JEX/ZvqDbP7Qyw9GJtn
+	exJNbadAs7sNoi5f+gpQNwF0IeKX/XrSJmKUfsXfDqoCS5SC79t/jCS4CypxUHfS+d4i9L/5eh4
+	R
+X-Google-Smtp-Source: AGHT+IEzy2h7K/VLaBZePrcCIRcOhw+P3u9Sa/loYEqzI4OLeWzMuuO/Li8UARzyxANE6fra/VW9xs+tfLs=
 X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:1b7d:8132:c198:e24f])
- (user=yabinc job=sendgmr) by 2002:a05:6902:2b03:b0:dd9:20c1:85b6 with SMTP id
- 3f1490d57ef6-dee4e48f302mr379961276.2.1715299518995; Thu, 09 May 2024
- 17:05:18 -0700 (PDT)
-Date: Thu,  9 May 2024 17:05:01 -0700
+ (user=yabinc job=sendgmr) by 2002:a05:690c:6904:b0:611:6f24:62b1 with SMTP id
+ 00721157ae682-622af7a98aamr3561297b3.1.1715299522736; Thu, 09 May 2024
+ 17:05:22 -0700 (PDT)
+Date: Thu,  9 May 2024 17:05:02 -0700
 In-Reply-To: <20240510000502.1257463-1-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240510000502.1257463-1-yabinc@google.com>
 X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240510000502.1257463-3-yabinc@google.com>
-Subject: [PATCH v3 2/3] perf: core: Check sample_type in perf_sample_save_callchain
+Message-ID: <20240510000502.1257463-4-yabinc@google.com>
+Subject: [PATCH v3 3/3] perf: core: Check sample_type in perf_sample_save_brstack
 From: Yabin Cui <yabinc@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,69 +70,74 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Check sample_type in perf_sample_save_callchain() to prevent
-saving callchain data when it isn't required.
+Check sample_type in perf_sample_save_brstack() to prevent
+saving branch stack data when it isn't required.
 
 Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Yabin Cui <yabinc@google.com>
 ---
- arch/x86/events/amd/ibs.c  | 3 +--
- arch/x86/events/intel/ds.c | 6 ++----
+ arch/x86/events/amd/core.c | 3 +--
+ arch/x86/events/core.c     | 3 +--
+ arch/x86/events/intel/ds.c | 3 +--
  include/linux/perf_event.h | 3 +++
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index c3a2f6f57770..f02939655b2a 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -1129,8 +1129,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	 * recorded as part of interrupt regs. Thus we need to use rip from
- 	 * interrupt regs while unwinding call stack.
- 	 */
--	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
--		perf_sample_save_callchain(&data, event, iregs);
-+	perf_sample_save_callchain(&data, event, iregs);
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 985ef3b47919..fb9bf3aa1b42 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -967,8 +967,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 		if (!x86_perf_event_set_period(event))
+ 			continue;
  
- 	throttle = perf_event_overflow(event, &data, &regs);
- out:
+-		if (has_branch_stack(event))
+-			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
++		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
+ 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			x86_pmu_stop(event, 0);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..ff5577315938 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1702,8 +1702,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 
+ 		perf_sample_data_init(&data, 0, event->hw.last_period);
+ 
+-		if (has_branch_stack(event))
+-			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
++		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
+ 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			x86_pmu_stop(event, 0);
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index e010bfed8417..c2b5585aa6d1 100644
+index c2b5585aa6d1..f25236ffa28f 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -1655,8 +1655,7 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 	 * previous PMI context or an (I)RET happened between the record and
- 	 * PMI.
- 	 */
--	if (sample_type & PERF_SAMPLE_CALLCHAIN)
--		perf_sample_save_callchain(data, event, iregs);
-+	perf_sample_save_callchain(data, event, iregs);
+@@ -1754,8 +1754,7 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
+ 	if (x86_pmu.intel_cap.pebs_format >= 3)
+ 		setup_pebs_time(event, data, pebs->tsc);
  
- 	/*
- 	 * We use the interrupt regs as a base because the PEBS record does not
-@@ -1823,8 +1822,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	 * previous PMI context or an (I)RET happened between the record and
- 	 * PMI.
- 	 */
--	if (sample_type & PERF_SAMPLE_CALLCHAIN)
--		perf_sample_save_callchain(data, event, iregs);
-+	perf_sample_save_callchain(data, event, iregs);
+-	if (has_branch_stack(event))
+-		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
++	perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
+ }
  
- 	*regs = *iregs;
- 	/* The ip in basic is EventingIP */
+ static void adaptive_pebs_save_regs(struct pt_regs *regs,
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 9fc55193ff99..8617815456b0 100644
+index 8617815456b0..8cff96782446 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -1232,6 +1232,9 @@ static inline void perf_sample_save_callchain(struct perf_sample_data *data,
+@@ -1276,6 +1276,9 @@ static inline void perf_sample_save_brstack(struct perf_sample_data *data,
  {
- 	int size = 1;
+ 	int size = sizeof(u64); /* nr */
  
-+	if (!(event->attr.sample_type & PERF_SAMPLE_CALLCHAIN))
++	if (!has_branch_stack(event))
 +		return;
 +
- 	data->callchain = perf_callchain(event, regs);
- 	size += data->callchain->nr;
- 
+ 	if (branch_sample_hw_index(event))
+ 		size += sizeof(u64);
+ 	size += brs->nr * sizeof(struct perf_branch_entry);
 -- 
 2.45.0.118.g7fe29c98d7-goog
 
