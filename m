@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF60495E5;
-	Fri, 10 May 2024 21:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F1C13B5A8;
+	Fri, 10 May 2024 21:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715375094; cv=none; b=TV2SAFwe7TZ3nsO1mOrWrcClrMpYYrPSpY2unZcs3BXPRTJ5XqK3eLjc4L4b4qDpkGIG9WovKswQNVGMa3hsMmKYYvGudLgmHKFyFkL+9ZT89Zz8PQViWWYoF5aSxMOX60Km3FCAcIzOmUazLFSlEHNpiGd3akrkrI3IfKIy8Fs=
+	t=1715375094; cv=none; b=L2d7HWduJogMrx7r0gFr+IeMD7r8qLbw/HuewHlo3c2g8yxQlfjNLPbJZNBlzsdSoGVu1rF7xk8g9irmOQeKyU04hnwzUpb1xioXb2S+Szswjsypu9SV5IB5PZUHwWwbUbzfB0KC3gZDpyWasXHJetF7Px98iLNkNTO9HfIdfyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715375094; c=relaxed/simple;
-	bh=MU37FOLAkBjme+LOgIz/PRnWHSatJ/V8u55IN2abFBs=;
+	bh=HBZIj1WAuQM5nC/b9RWGi6gCG6UEdmsr7b+HnD3F+1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g+sfnbNUPawo2/+hYZAYkKGSn6pukfxdSBkXpBcyGorownixjwjscuPe8byVzrIfgsJ3rOp+9S8w3crmnu+dsI875JIa7S5GSKTqwFG2JwVYMZwWYStmHp1KDGiTXPg0cbNE5MxomZ6gKGDzYxrB38aomZgljRLn6kk+NlFTo/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkJkQJbA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TDbhYzQdAYGZ6AK7h79LnhKqwXXJXSkelkSnU4A5CqMrJS1wQJdqMFnuNVdXY3JunrTQ1RVvd41rvrKdMo6K+mGUTwewkIuxI8fZhxFId3HTx7maqyUXRT7kCovkPXVVYhsO/jbvtBEoJwE3hMvSvrPWyeLuWeg4LxiPcT7SHlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dm1LHtwI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkJkQJbA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FAEC113CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dm1LHtwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0086CC32781;
 	Fri, 10 May 2024 21:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715375093;
-	bh=MU37FOLAkBjme+LOgIz/PRnWHSatJ/V8u55IN2abFBs=;
+	s=k20201202; t=1715375094;
+	bh=HBZIj1WAuQM5nC/b9RWGi6gCG6UEdmsr7b+HnD3F+1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OkJkQJbA64xgLpBfeHVQG7bNEOmkTisLXSyb/geo8JsMHbjTre2upgQtyYYdm1ofS
-	 bB+bOR7iqpV/Q2Z18b8/TgVOgM82zJ2neiwrGXHaIUz9X7zKGfQbtyQmmQ1V0GDK12
-	 Sz1CCWsQe2nKIJXT/FW6wyxnvWjXtcRXnERjslAZFaEqkBJnkXyk4sC6UlfQT/fiAc
-	 aRj/MBlQjrc89Lo5BONbQ75xmMbV+pe1+nW9Wgw25LEqC0Sk4C/vRY7slIVVe3F9EO
-	 css9242TqMCoP4TvjWNGJLb1Ib8uZ9dTX6O6/s6Qp6zwFnBSx6U9Jfit/sOoCQCFX6
-	 2PnNuCLOqyLKA==
+	b=dm1LHtwIJqJWUYZU/FM4z2YDihwqpiFG3uY4Z+EMVdi+48iNByqfb1A25NdIXLlyE
+	 NSpSw8JH9nca5my7b9OymwjfQn6bmNzplbyRRtbQurXFL/7N1xI9nOdM40sVjJG0nK
+	 OAhk3kGLOf/hh3liILX3YNNFq6LZ3qBa9vzzfYkGzJEuJvHyHN72VpHeDYnbSn1y5W
+	 958QUcpjnYwo1897xdtxMU3zh8ij8bcPKHRkeLzgHeMisHM+oFgEUafjw3L4pahj5l
+	 WzEfaueLku+xbqNATXeK7+EMsOv6KH38p7ci7vV9fohVNcH7rICGVXWrdhTwtEfjP8
+	 fbAfkpTynnj5Q==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,12 +36,13 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/2] perf annotate: Fix segfault on sample histogram
-Date: Fri, 10 May 2024 14:04:51 -0700
-Message-ID: <20240510210452.2449944-1-namhyung@kernel.org>
+Subject: [PATCH 2/2] perf annotate-data: Ensure the number of type histograms
+Date: Fri, 10 May 2024 14:04:52 -0700
+Message-ID: <20240510210452.2449944-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-In-Reply-To: <CAM9d7ci6Y98hkiN1+=Q=YgLQLL-GN+pTxQ1JjqA+Q1EMEi52+g@mail.gmail.com>
+In-Reply-To: <20240510210452.2449944-1-namhyung@kernel.org>
 References: <CAM9d7ci6Y98hkiN1+=Q=YgLQLL-GN+pTxQ1JjqA+Q1EMEi52+g@mail.gmail.com>
+ <20240510210452.2449944-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,35 +51,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A symbol can have no samples, then accessing annotated_source->samples
-hashmap will get a segfault.
+Arnaldo reported that there is a case where nr_histograms and histograms
+don't agree each other.  It ended up in a segfault trying to access NULL
+histograms array.  Let's make sure to update the nr_histograms when the
+histograms array is changed.
 
-Fixes: a3f7768bcf48 ("perf annotate: Fix memory leak in annotated_source")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/util/annotate-data.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 541988cf6e19..1451caf25e77 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -113,10 +113,11 @@ static __maybe_unused void annotated_source__delete(struct annotated_source *src
- 	if (src == NULL)
- 		return;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 57e7d4b3550b..965da6c0b542 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1800,7 +1800,6 @@ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_en
+ 	sz += sizeof(struct type_hist_entry) * adt->self.size;
  
--	hashmap__for_each_entry(src->samples, cur, bkt)
--		zfree(&cur->pvalue);
--
--	hashmap__free(src->samples);
-+	if (src->samples) {
-+		hashmap__for_each_entry(src->samples, cur, bkt)
-+			zfree(&cur->pvalue);
-+		hashmap__free(src->samples);
-+	}
- 	zfree(&src->histograms);
- 	free(src);
+ 	/* Allocate a table of pointers for each event */
+-	adt->nr_histograms = nr_entries;
+ 	adt->histograms = calloc(nr_entries, sizeof(*adt->histograms));
+ 	if (adt->histograms == NULL)
+ 		return -ENOMEM;
+@@ -1814,6 +1813,8 @@ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_en
+ 		if (adt->histograms[i] == NULL)
+ 			goto err;
+ 	}
++
++	adt->nr_histograms = nr_entries;
+ 	return 0;
+ 
+ err:
+@@ -1827,7 +1828,9 @@ static void delete_data_type_histograms(struct annotated_data_type *adt)
+ {
+ 	for (int i = 0; i < adt->nr_histograms; i++)
+ 		zfree(&(adt->histograms[i]));
++
+ 	zfree(&adt->histograms);
++	adt->nr_histograms = 0;
  }
+ 
+ void annotated_data_type__tree_delete(struct rb_root *root)
 -- 
 2.45.0.118.g7fe29c98d7-goog
 
