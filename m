@@ -1,109 +1,121 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C531D68F
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 18:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9959EAC0
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 19:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715364831; cv=none; b=jTLrHFtPT+7a76l07s5H99DMgBv7Wmf4SNabBsBlOvXvYI3kuTNgJhcKTDoDdcaqKoDDNPiJ0rsmSv1F+FI+DfWkfaBNX2IVJvbwNecSftEdHcRhvupR5PYK1SCeyn5yn4SJ9eDoDd6dAE+E3p9di9E0d0rl7OTbE4zsqiBsFHk=
+	t=1715368481; cv=none; b=sVFUu38uku05eVD6nYO/XVvT1xomGhMrRSIo2E75lYfq6I2mDApug30RZlHvKPFP6mMOYtrCeyl9wR0qdXWLx+Ar8HQdDlJpKcnRbX84sxfl9UtAsEUH4pTAA6gClxFLn0VlU2uaxCHY3mnvei6vgcKJOAIrs8ighZankywioYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715364831; c=relaxed/simple;
-	bh=t4K3aj+Qg+DY7iHNJVbgeEYoin9ImKEn5FRMCsBcwks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=G9eQC0AZPA5GpqV0YCCatU8nttADdAHsHzAhRTOFcsUlZ1j3BC+mNbMG7I1mOCO/6ch9YbG2G3qM8FWRCMwDz9Md2VwJRbPs6XKx+52g/1nWUUdpTX3dWWDrgRE5AdRC6NdAjcmd5g8BV+SFQMYeDZBwSM93qeq2di/zsGE1okc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b2Biy/VG; arc=none smtp.client-ip=209.85.160.171
+	s=arc-20240116; t=1715368481; c=relaxed/simple;
+	bh=lM7Ffa7a34WiHH98qjX1e31MHrDcWjJyEDQyUEnhRS8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=B6IFp5//YuQM3e4swtz7Ic1RGL7kwYdmaY0YpLVQLQEAhAzRajk7nhYDOayHsT2vlRQJP/1rkbndSffsoIFfdaibQU7vD0VJBaLwllvWg0vROXUM8+OmzMvHJzQA7hdiG0NNUCXCapfq8eg42QILRI20lsiLq68ReIN/VdPMKPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XFlNaoYV; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b2Biy/VG"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-439b1c72676so31611cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 11:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XFlNaoYV"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6ceade361so4897458276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 12:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715364829; x=1715969629; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awbg1hXHMBJgOYCrGAE0ipMK3UY/AVrGWhRCU4GMaY8=;
-        b=b2Biy/VGw50x3T3UuqP1/VVLjtSMd5YQ1qLUo1O0Q623UnL0BhjELKNs1f8K7+1oic
-         EY4FAxFlDjxEINmjbJLDQQUvx1O26yFKVkmdoj9BrMVluB2cdrOsZGxS3CGZjyZxtg/V
-         /kWumo9s0/jSEvTbTOwH4Z9Wl0sPYXg7xDaQQ7oYUuZ6H/q35la5V6wg9Sn2wm0QczUs
-         IArMVkkk1kGQ6qOaLeyCM89i0WStj/N0nHvLTY6kJclfSqKKZeyhufMSQTf2j4ejZZiA
-         WaY6rBCR87nZtzlWlpWpl0jfcG0uSyEBWLaQu1uBc/cKqrjmBmdegB9Hf2b/EaTmuqrB
-         59ug==
+        d=google.com; s=20230601; t=1715368479; x=1715973279; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EylM3vFA7lZulI4V1G3R5cUfH0kthc6cGsP9Vyzx3vo=;
+        b=XFlNaoYVzX9GjKEIbuq5Fy7cLywGJafcvsi6kKz8WNpklVpqdYtAGqbO7N4prS0sNF
+         XT4jN1+sRE+cwCeEVllNgQ2l83OR6DFtFiirFfVig9DU/iqPll339FfWKhPL/BMlmFky
+         ccskUr0N7ZHPkrl/ILuMx0WJ6VrCmpIVjDEh/+/M8pQB38gcDBsHPPbzGvbreqnu1tMN
+         OlEgCZjxSbDRzcv8VRo91CN0RH/6POcJKkkdHvI31afQL0/doGUQN/pe7uIpqjsH++TI
+         CpVCE96lXXbgfBXY4lRGrFe9D29yS0myaczzhUR3w9jJC/qOkBHBEeyhn1BWBZU8cE7v
+         noPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715364829; x=1715969629;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awbg1hXHMBJgOYCrGAE0ipMK3UY/AVrGWhRCU4GMaY8=;
-        b=TMbFqfaYDRI3DPvd+yXSwiGz/xqd/T2QrPTyYIclADTO19TfbUxMOBlv2enWmZM/c5
-         D8Ptn8YVLExnNpKVMrYh83V97ZEAf9d0MWN2K+JO6T7nYQViOY7+MHRS/mnNgHo4tjTO
-         E8dDatUN3EHcTlhxNAwpdyWq+QclHmpyR1ePOkgtewaJxgUVAEZf/Eu5IfLy8O6CaEfs
-         36b8JaiTcLboWN64aETUdGHxWKNv8pOsaNrYS92AuZGp88MgNzGsQiRSQW8LXBYTlX73
-         wNH0cThUAdh2iEHWkUnY7Lfx5K/9mX/1K6K7BtfzcIbcFSlt8fxaku30Om0M9cOFpIrm
-         s5BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVS19v3OVBzGnGrh0SEdwlA6yrt4xEfLjw72k5l8PM8VTK9dW6NwMXO2e6m4bvQEU9o6vRCEpVpxQX9a6hNbC1S94eWQuZ9jNG/TNvV8saxA==
-X-Gm-Message-State: AOJu0Yx1xdCw+j6vKaIB0ANQU952MWEzvKDOKKzKewu3mTnc1AatQJcC
-	8ENLLivwONTXYJE9dBF0fdK2gK8zaVYbmWW1DrH7b67pIhY44s3BZplxPsR+bIgYqTc0MKPAIrH
-	QFouX1akNpYSSp2D7asHsBMBud2WrE9YgLOnS
-X-Google-Smtp-Source: AGHT+IHed/SSXFd7UB/8BtmerloL3E1Jl/Hl2Ocgkk5LRBYR3cjzr2/OJ3RNL8woXCagYxNtcvof15fYxmywrF5Wk6c=
-X-Received: by 2002:a05:622a:5407:b0:43d:e9ce:63ad with SMTP id
- d75a77b69052e-43e09222ee6mr278621cf.0.1715364829085; Fri, 10 May 2024
- 11:13:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715368479; x=1715973279;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EylM3vFA7lZulI4V1G3R5cUfH0kthc6cGsP9Vyzx3vo=;
+        b=vkzz4mbtUGVP/pBiCKUvgUxdYdBZpwQl3oN65oLcSD5+0jlsS3ZBGghUSmI+znu/fF
+         zkwAc5wi9b2j1maWFzpo0fePZzFFN+HjecQ858xz57YEAl3HsUBwmFTSaoKPeXjJQMOs
+         UlghNzFwXMZa2WSiiESj2Efex0xY+a/RgyHHkZz4glh4QWNVgX6JjmITGM8oePi9vYSG
+         la4FV533IzlKjanzqMC7QefIXVb6Y/qQdkytTmYQrc+9NyStYiBW+zl0+owrYJhHPQ0M
+         p5sYB/fGfSSs5KVbpLyZFeHinYmg30IwpyXYfV0PDBm65QAqD7IHBHLwnr78f72C7AsR
+         H0dw==
+X-Gm-Message-State: AOJu0Yy7K3fd/NwEULgw4/kdxCCnOZYzU4gCaaVAHm0VG1qZu9uBQRG4
+	6e3ofdNpiFF0WQ7kIi/RKdqlEIk1TJdtn8UELZCL3sa8k0PbjeXZpQ7m/vs9ePm3osoLLIKc1pu
+	x
+X-Google-Smtp-Source: AGHT+IFayfrPaX7uaHZYOl6bplU+LYQx3Ktr5lITHr1i7FA2htt6wI5T6hzwgjkNUc0yOZw0xjOlsYU+OnQ=
+X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:d3a5:c745:caa1:83ed])
+ (user=yabinc job=sendgmr) by 2002:a05:6902:110e:b0:dcc:f01f:65e1 with SMTP id
+ 3f1490d57ef6-dee4f506107mr928748276.8.1715368478676; Fri, 10 May 2024
+ 12:14:38 -0700 (PDT)
+Date: Fri, 10 May 2024 12:14:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240505031624.299361-1-irogers@google.com>
-In-Reply-To: <20240505031624.299361-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 10 May 2024 11:13:36 -0700
-Message-ID: <CAP-5=fVSAQOXbSfpSLTVkWcZKGx+LqiuC_ZkCxnc0iPtyfrzvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
-To: Thomas Richter <tmricht@linux.ibm.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
-	Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240510191423.2297538-1-yabinc@google.com>
+Subject: [PATCH v4 0/3] perf/core: Check sample_type in sample data saving
+ helper functions
+From: Yabin Cui <yabinc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Stephane Eranian <eranian@google.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 4, 2024 at 8:16=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> The mrvl_ddr_pmu is uncore and has a hexadecimal address
-> suffix. Current PMU sorting/merging code assumes uncore PMU names
-> start with uncore_ and have a decimal suffix. Add support for
-> hexadecimal suffixes and add tests.
->
-> v3. Rebase and move tests from pmus.c to the existing pmu.c.
->
-> Ian Rogers (2):
->   perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
->   perf tests: Add some pmu core functionality tests
+Hello,
 
-Hi, these patches have been hanging around since March [1], it would
-be nice to either be landing them or getting feedback on what to fix.
+We use helper functions to save raw data, callchain and branch stack in
+perf_sample_data. These functions update perf_sample_data->dyn_size without
+checking event->attr.sample_type, which may result in unused space allocated in
+sample records. To prevent this from happening, this patchset enforces checking
+sample_type of an event in these helper functions.
 
 Thanks,
-Ian
+Yabin
 
-[1] https://lore.kernel.org/lkml/20240329064803.3058900-1-irogers@google.co=
-m/
 
->  tools/perf/tests/pmu.c | 95 ++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/pmu.c  |  4 +-
->  tools/perf/util/pmus.c | 53 ++++++++++++-----------
->  tools/perf/util/pmus.h |  7 +++-
->  4 files changed, 131 insertions(+), 28 deletions(-)
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
+Changes since v1:
+ - Check event->attr.sample_type & PERF_SAMPLE_RAW before
+   calling perf_sample_save_raw_data().
+ - Subject has been changed to reflect the change of solution.
+
+Changes since v2:
+ - Move sample_type check into perf_sample_save_raw_data().
+ - (New patch) Move sample_type check into perf_sample_save_callchain().
+ - (New patch) Move sample_type check into perf_sample_save_brstack().
+
+Changes since v3:
+ - Fix -Werror=implicit-function-declaration by moving has_branch_stack().
+
+Original commit message from v1:
+  perf/core: Trim dyn_size if raw data is absent
+
+Original commit message from v2/v3:
+  perf/core: Save raw sample data conditionally based on sample type
+
+Yabin Cui (3):
+  perf/core: Save raw sample data conditionally based on sample type
+  perf/core: Check sample_type in perf_sample_save_callchain
+  perf/core: Check sample_type in perf_sample_save_brstack
+
+ arch/s390/kernel/perf_cpum_cf.c    |  2 +-
+ arch/s390/kernel/perf_pai_crypto.c |  2 +-
+ arch/s390/kernel/perf_pai_ext.c    |  2 +-
+ arch/x86/events/amd/core.c         |  3 +--
+ arch/x86/events/amd/ibs.c          |  5 ++---
+ arch/x86/events/core.c             |  3 +--
+ arch/x86/events/intel/ds.c         |  9 +++-----
+ include/linux/perf_event.h         | 20 ++++++++++++-----
+ kernel/events/core.c               | 35 +++++++++++++++---------------
+ kernel/trace/bpf_trace.c           | 11 +++++-----
+ 10 files changed, 49 insertions(+), 43 deletions(-)
+
+-- 
+2.45.0.118.g7fe29c98d7-goog
+
