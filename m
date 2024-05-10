@@ -1,131 +1,178 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A1D13B591
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 21:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122711BDC8;
+	Fri, 10 May 2024 21:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715376470; cv=none; b=oqWeqB8RJePUcbOON4rJlymrV6Tb54C8w4unL4fWmPB9vOunBA5FZ/gt4ogHVgdHnkAK9gw2wWbi7GIK21RsUYS+pWpKNTyS5OMG0xuZF1MgHCO4x70hGmxmVeE31PvjeKgqeofkYomhAxMbzKiVEOxYiSvYYIIqJNjU1tb0T/U=
+	t=1715376611; cv=none; b=V4UqNVcfFjqSOe8CGkEi7lgKasbG3C+LYjCVkqH8ZyQSJ2/LZiI4ToA+1VAPs8GA9wtlgnkapE8GRet/Kf6+k1QEQaZGaMIRhntLNi8s9prYVS5wIIv7MRRRZID75t5Q8d7578rhSyQebUxVKuaQS6krWD2Qyp73n4iTRpKYUkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715376470; c=relaxed/simple;
-	bh=hb8r21bsZDeQ6IILpMa8J4jpgSC0HQY1iW+OfrfCDS4=;
+	s=arc-20240116; t=1715376611; c=relaxed/simple;
+	bh=eS1QIdyLTdFWFAB2PrpvAfGPAebgZ8VSah0rayF6MeI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1yAKXkHyFUJZMlyA9ske6rBSYz+a8WDPXDMXwD+Ko8JfH5xfD3pJP6//oJyEFRVeVFWOR+GJXXl00KMKwIvGuSGxOFiAibeOAlgHJ4l0u+TLyTcBWL7MuVAoTo9Sc7PHnRs11t0ch9ALpYbn+6/8Ci9HdkpjTnB+SeNDQjplvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TNvAbBlx; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TNvAbBlx"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43dfe020675so136921cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 May 2024 14:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715376468; x=1715981268; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5mKJDhvKiTqgTK80eZzW3APk5Ua5WfNa0sYKeeiCXcs=;
-        b=TNvAbBlxuTRKLa5wrg92RENelGxOmZ2QjrOZPDxhz3fc2lEQr1LwKnd9Ev3Ctwmike
-         VOnXtJiOUZ0fjctYqB95Ie2lw7DPsDtvQ3/3CNpGP9e+0AcyobVGTo/y+aYciTOKHfR9
-         jO+Cp2AeCcWMKllpLfQl1weSDsRK8aM3lKAMDl7rxTj+LpEuOAl6rjfyFJ1YnL0IN4iH
-         vTr7vTDl9Sq9iEWB28C8qu5ltvMlKDIS6jOCluKnq0vrzofR6ecI/IHS5Gc1AoEyAQQx
-         ayK7f5Z2E6xINU0b6sgMfWzfReDEkYkTBia6AqkFBW8GLWXX46EJJJwf9HULiQqOSKpl
-         m1aA==
+	 To:Cc:Content-Type; b=DVOMbY96HvfY0jetv/y+CY40lU4asbmSyqZ0r0WpzniUiNcGuUaTGuAtEg+JqmnmXVyxu6qSjTTrENGv2IUYhs+LIo2Ni6mH4xXX4Rf/C++YzBJosGLT0qfySOXyD2OWc6KruS1JW+O0y1cb9hzWgXEdbbCBiA48+P8OqLI1BmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2b36232fa48so1943598a91.1;
+        Fri, 10 May 2024 14:30:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715376468; x=1715981268;
+        d=1e100.net; s=20230601; t=1715376609; x=1715981409;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5mKJDhvKiTqgTK80eZzW3APk5Ua5WfNa0sYKeeiCXcs=;
-        b=wRvgr4avLCyuK0gpL6XzGf/fPuJlesaCbTIwTOYRM0jU41D2gPvilp8NaKmyJzJr6v
-         3oi/cVMi7CqxKjxD7Ct2rZwDZdbXJhYcnYTTRwLDuurJrDKgnjNRfB6xaYh4xJVsQCzs
-         Czsg7tJ92o0hCn3GccRKS7GwmtTe7qhoaPoq/N6Zod7cJ6uLK4knTSO0OkEwCXjfwfRU
-         K3DQijKwh0DS6bCCXuqn7YcxU/6DAgRvp9YGJlWyFDBuIJ35j9v8bSjO0FUvEcyN4pqS
-         JVu6IwgnW3VrUoGKeDTT3Y5rEElvW71UvX+/ihTp+QGZrnLlV6NEbalIjPKZ8h5RDT68
-         UZ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWrOwCFqWNh9WqOIalonxzCT+DfhMhxiEwR0vsaUZrE99t9Rkptk+M+Z0iv4iRGtdd5AO7ZU3kZdGPTjIbHoGQRRnDW2wZRQAXIFMzLgpYLYA==
-X-Gm-Message-State: AOJu0YwEogvuQZ6gBlrKc74Up8K8/Akl7UD5DQfsjytanccIXsZ6IYoY
-	TgfySVi8OM4EQ08ToUaBWYvMyuGKo/KckRZ/nC5JjG9ivYkRM0PVRh2I3yVrhI3HlIfaOly74ZX
-	ocK8et7pMpCIajfwiQeJ7MVIU7dn9Y7kphvEj
-X-Google-Smtp-Source: AGHT+IE3CmyCzNILFPd5LbQ1jqo8ih0ankzGWd6poIZZlX7bANdM4aQvLdCinf2ho8htV4sOnWDnh8nTLSto4kIBGV0=
-X-Received: by 2002:a05:622a:4286:b0:439:ef72:75fb with SMTP id
- d75a77b69052e-43e0a21e3c8mr133981cf.1.1715376467681; Fri, 10 May 2024
- 14:27:47 -0700 (PDT)
+        bh=VMAf5rKeg6w+VI/gIYLoiifCQecVQKRvthW/4/8BwYI=;
+        b=R5O/sUHHIYW/puUQkGVtrc9X+AkD8yk67JDKaV78ke35tW1LKwYaBh+AvsvqMnogVH
+         RssM/edkdBC0BsA65H57j186FbtnKzxx5qdqxTe8tVSA/FkjWdVpWdrBwfgk5voS8rL0
+         Cql2jEWEk22Vir1tqBGvpSQeDSabwJNf29TIb/vKCVGiN3mlHtM4k+/R4JmFwGORUVTn
+         ENp1+dTvB3qj2V0WTwBuFj35k6Z8Idj1ZcBA5CDCXjUfklqhekIw7/xol91ydKIpNhNM
+         msAKy+Lf7mctms0itQSzDTnTE1ZO1EyLmyuQmIrE935ysxMsdnODXfFfjQpgO/GwSBbr
+         azmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUD0ebiNAJrRg+goAfOkwdeEhKAKaEbc3Z9FNj0TZpj3ET5zxSita+Z97ic+isOTBu6OHsJdwltZC9tTX9m9XXVYv/P272QkqeAxahImhm3r0wqS0stBUyVWsYAN01hOpEYisL/82e5o8LJGqes5yGnAKb1vu8PG4wFSEvvNZ8lGTXDg==
+X-Gm-Message-State: AOJu0YyW5Xwp8n59q52xxJKzakjwT1+kxTWKaqrlZQ2kO0Fsw0SZX738
+	pNcdAUcY48ISxh3a7BYql+aqOw+YN2/YjRxNZTJHNXsjE943+Xfl4KSlLQTGpaVojrxWsK7CuBn
+	VCyE4ypCdn8CAzU8sZtZrRHSiVqE=
+X-Google-Smtp-Source: AGHT+IFZkbSenvkLhokyv4EMxK86TWp9XlqSlcLUgh3x5kwN3NGOIxUQGzTPrJdFy06QmvA9W3LCymPfU5Y4Ft3Wj+I=
+X-Received: by 2002:a17:90a:296:b0:2b3:463d:992b with SMTP id
+ 98e67ed59e1d1-2b6ccef6431mr3678869a91.42.1715376609286; Fri, 10 May 2024
+ 14:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM9d7ci6Y98hkiN1+=Q=YgLQLL-GN+pTxQ1JjqA+Q1EMEi52+g@mail.gmail.com>
- <20240510210452.2449944-1-namhyung@kernel.org> <20240510210452.2449944-2-namhyung@kernel.org>
-In-Reply-To: <20240510210452.2449944-2-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 10 May 2024 14:27:36 -0700
-Message-ID: <CAP-5=fUBQ=GdeQdB25GNtS_ijRxu42W+uz4p6kuykG-8iC1DdA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf annotate-data: Ensure the number of type histograms
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240510191423.2297538-1-yabinc@google.com> <20240510191423.2297538-4-yabinc@google.com>
+In-Reply-To: <20240510191423.2297538-4-yabinc@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 10 May 2024 14:29:58 -0700
+Message-ID: <CAM9d7chNz8-84m28q5qSLjUjZ=Ni1CA_JzbB_P+YJooLQd85YA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] perf/core: Check sample_type in perf_sample_save_brstack
+To: Yabin Cui <yabinc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 10, 2024 at 2:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Fri, May 10, 2024 at 12:14=E2=80=AFPM Yabin Cui <yabinc@google.com> wrot=
+e:
 >
-> Arnaldo reported that there is a case where nr_histograms and histograms
-> don't agree each other.  It ended up in a segfault trying to access NULL
-> histograms array.  Let's make sure to update the nr_histograms when the
-> histograms array is changed.
+> Check sample_type in perf_sample_save_brstack() to prevent
+> saving branch stack data when it isn't required.
 >
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Yabin Cui <yabinc@google.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+It seems powerpc has the similar bug, then you need this:
+
+Fixes: eb55b455ef9c ("perf/core: Add perf_sample_save_brstack() helper")
 
 Thanks,
-Ian
+Namhyung
 
 > ---
->  tools/perf/util/annotate-data.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  arch/x86/events/amd/core.c |  3 +--
+>  arch/x86/events/core.c     |  3 +--
+>  arch/x86/events/intel/ds.c |  3 +--
+>  include/linux/perf_event.h | 13 ++++++++-----
+>  4 files changed, 11 insertions(+), 11 deletions(-)
 >
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-d=
-ata.c
-> index 57e7d4b3550b..965da6c0b542 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1800,7 +1800,6 @@ static int alloc_data_type_histograms(struct annota=
-ted_data_type *adt, int nr_en
->         sz +=3D sizeof(struct type_hist_entry) * adt->self.size;
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 985ef3b47919..fb9bf3aa1b42 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -967,8 +967,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs=
+)
+>                 if (!x86_perf_event_set_period(event))
+>                         continue;
 >
->         /* Allocate a table of pointers for each event */
-> -       adt->nr_histograms =3D nr_entries;
->         adt->histograms =3D calloc(nr_entries, sizeof(*adt->histograms));
->         if (adt->histograms =3D=3D NULL)
->                 return -ENOMEM;
-> @@ -1814,6 +1813,8 @@ static int alloc_data_type_histograms(struct annota=
-ted_data_type *adt, int nr_en
->                 if (adt->histograms[i] =3D=3D NULL)
->                         goto err;
->         }
-> +
-> +       adt->nr_histograms =3D nr_entries;
->         return 0;
+> -               if (has_branch_stack(event))
+> -                       perf_sample_save_brstack(&data, event, &cpuc->lbr=
+_stack, NULL);
+> +               perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, =
+NULL);
 >
->  err:
-> @@ -1827,7 +1828,9 @@ static void delete_data_type_histograms(struct anno=
-tated_data_type *adt)
->  {
->         for (int i =3D 0; i < adt->nr_histograms; i++)
->                 zfree(&(adt->histograms[i]));
-> +
->         zfree(&adt->histograms);
-> +       adt->nr_histograms =3D 0;
+>                 if (perf_event_overflow(event, &data, regs))
+>                         x86_pmu_stop(event, 0);
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 5b0dd07b1ef1..ff5577315938 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1702,8 +1702,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+>
+>                 perf_sample_data_init(&data, 0, event->hw.last_period);
+>
+> -               if (has_branch_stack(event))
+> -                       perf_sample_save_brstack(&data, event, &cpuc->lbr=
+_stack, NULL);
+> +               perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, =
+NULL);
+>
+>                 if (perf_event_overflow(event, &data, regs))
+>                         x86_pmu_stop(event, 0);
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index c2b5585aa6d1..f25236ffa28f 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -1754,8 +1754,7 @@ static void setup_pebs_fixed_sample_data(struct per=
+f_event *event,
+>         if (x86_pmu.intel_cap.pebs_format >=3D 3)
+>                 setup_pebs_time(event, data, pebs->tsc);
+>
+> -       if (has_branch_stack(event))
+> -               perf_sample_save_brstack(data, event, &cpuc->lbr_stack, N=
+ULL);
+> +       perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
 >  }
 >
->  void annotated_data_type__tree_delete(struct rb_root *root)
+>  static void adaptive_pebs_save_regs(struct pt_regs *regs,
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 8617815456b0..ecfbe22ff299 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1269,6 +1269,11 @@ static inline void perf_sample_save_raw_data(struc=
+t perf_sample_data *data,
+>         data->sample_flags |=3D PERF_SAMPLE_RAW;
+>  }
+>
+> +static inline bool has_branch_stack(struct perf_event *event)
+> +{
+> +       return event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK;
+> +}
+> +
+>  static inline void perf_sample_save_brstack(struct perf_sample_data *dat=
+a,
+>                                             struct perf_event *event,
+>                                             struct perf_branch_stack *brs=
+,
+> @@ -1276,6 +1281,9 @@ static inline void perf_sample_save_brstack(struct =
+perf_sample_data *data,
+>  {
+>         int size =3D sizeof(u64); /* nr */
+>
+> +       if (!has_branch_stack(event))
+> +               return;
+> +
+>         if (branch_sample_hw_index(event))
+>                 size +=3D sizeof(u64);
+>         size +=3D brs->nr * sizeof(struct perf_branch_entry);
+> @@ -1665,11 +1673,6 @@ extern void perf_bp_event(struct perf_event *event=
+, void *data);
+>  # define perf_arch_bpf_user_pt_regs(regs) regs
+>  #endif
+>
+> -static inline bool has_branch_stack(struct perf_event *event)
+> -{
+> -       return event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK;
+> -}
+> -
+>  static inline bool needs_branch_stack(struct perf_event *event)
+>  {
+>         return event->attr.branch_sample_type !=3D 0;
 > --
 > 2.45.0.118.g7fe29c98d7-goog
 >
