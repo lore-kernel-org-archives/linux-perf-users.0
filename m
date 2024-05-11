@@ -1,113 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B424E38DD3;
-	Sat, 11 May 2024 15:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACEE57305;
+	Sat, 11 May 2024 15:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715442188; cv=none; b=P8WBgg+ljqDwHmbhPpC7cOHkizefJf6qn7TJtNAoEQZvtPrXnMfs8sg/sG3zmHw9UXWyhl/Ae1eo8hyn2DxYF1xWfD32eAqhekone6kaL5tnJ36MVSOi46wM78tB5DTqO4v7EwnZEDqz1whu0nknoJfQRCzk4xrQwqYy6qngLEc=
+	t=1715442544; cv=none; b=Qs//GCHTAmDWx3yQ4rp3qRKwLy0E2ZgQPCzE2Q98eonagZ6nL0UMxD/Rdd2Vo2FMR+fn9sn2LgLpS0HeRn/YSbGKgDOiwgui1dC0SH7NF/2umqRDM75w2z28mRk+8by1f/kspbfv8mRyoHKH3xZodYsVNcFO4S4lnWOQlXi6puw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715442188; c=relaxed/simple;
-	bh=XXaqHCJAzABGwZ2wMv/Kt7MKG+X9S9a1FPy02FlWTAY=;
+	s=arc-20240116; t=1715442544; c=relaxed/simple;
+	bh=Cm1dSG6MFIbUqrUXRgsTNAD+XiHdp/ahM5v138B4wow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbQFjgYd/Ym0rD5vl5ygpNrmbiUruHFWWC5AfVhU1YbE3kh3zO2bQD1/WgX5TTu71RPneL9H1xh1Jtc7q/58/HeuBC25UGjP2xNdghHx8t2mMfyC5p5MiyynhK4+YCZfMyH16Sb/5MJy/ncRCZ9Thu7Pz90FD2GLSZhti5krgOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTQfWTS1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfinXMnAZnKIi5aUGFvraas9VafG6Q7sLz3RGC5mUTkygA6QwRqNwQ8ejErysngznrnm1OIlVbi5ozWs9k+ukOo8nLgDa9Sn/56gxw3VbllBEtqBrlIhSHKW89N5mycUzb5zczKBdTb5tO3hqzzXUYmwTG8jqNksu93Yo4JuTMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwQeR67N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTQfWTS1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E861BC2BBFC;
-	Sat, 11 May 2024 15:43:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwQeR67N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6F3AC2BBFC;
+	Sat, 11 May 2024 15:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715442188;
-	bh=XXaqHCJAzABGwZ2wMv/Kt7MKG+X9S9a1FPy02FlWTAY=;
+	s=k20201202; t=1715442544;
+	bh=Cm1dSG6MFIbUqrUXRgsTNAD+XiHdp/ahM5v138B4wow=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTQfWTS1WL8RtJn8ViiE9QQ33xfj0QEUahYMpeiAdrn5gN7J6oTZ+1nwHs9jbKXTK
-	 Q5Pc0BOLu/E7ybOfETp1byuTaoIbVKEFcHzLKSp0+52U+rPem/VxWy4UAy6/3PlMud
-	 TtpDlKrpe7TdxGaJFabq9G37EuC4wvgrJScAU75hoQr1uAfydZqH0Ee/NvR2JU2/i3
-	 JUPfRDyM7ZQGj7ZONiUBZgXK9gJwLzVvaw1F73BAN1e8Whq1tV4IxFKHKz3+2Q5tf0
-	 cTUf0RwQEvBd/KxmRvAP66rFHmDJqpPj+UUOvnFXyvdD87xsRH+vtyP7jqF0d2y44G
-	 lvPFQ9PkgvBCw==
-Date: Sat, 11 May 2024 12:43:04 -0300
+	b=KwQeR67NSwanr/FdzIgRlmm3DJjber7CmXWuEUkHTrmU4QGkg8OKN8xWU4d51YblI
+	 FetJoqrP/9m9dDs13bd5XoA74bqqIdWEFEfHmKGkIjlELDzGinwuEJqndD8S0euzJH
+	 cEQRgcsqVC+SH9Ko+FrHCIRinqNj1nEKCeZrYXtrGaRaAsT3vmntzdsLWrCslkcME/
+	 wY5834wwRHPB/nof5JfQw4hVlUKtvLAwtATxdIETJt5k1VUOoB8V+9xbsEWeZ552a6
+	 JRQrr1hqclYxvObcNkS02PSRQlIGHqDXmSfSjb9b3heQ2hrCWcqhNAANDJubVu6fez
+	 FsmsXIcY1WqJQ==
+Date: Sat, 11 May 2024 12:49:00 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf annotate-data: Ensure the number of type
- histograms
-Message-ID: <Zj-SCPBJn673kgbr@x1>
-References: <CAM9d7ci6Y98hkiN1+=Q=YgLQLL-GN+pTxQ1JjqA+Q1EMEi52+g@mail.gmail.com>
- <20240510210452.2449944-1-namhyung@kernel.org>
- <20240510210452.2449944-2-namhyung@kernel.org>
- <CAP-5=fUBQ=GdeQdB25GNtS_ijRxu42W+uz4p6kuykG-8iC1DdA@mail.gmail.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Yicong Yang <yangyicong@hisilicon.com>, Kaige Ye <ye@kaige.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf stat: Don't display metric header for non-leader
+ uncore events
+Message-ID: <Zj-TbLTORdPRlyHC@x1>
+References: <20240510051309.2452468-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUBQ=GdeQdB25GNtS_ijRxu42W+uz4p6kuykG-8iC1DdA@mail.gmail.com>
+In-Reply-To: <20240510051309.2452468-1-irogers@google.com>
 
-On Fri, May 10, 2024 at 02:27:36PM -0700, Ian Rogers wrote:
-> On Fri, May 10, 2024 at 2:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Arnaldo reported that there is a case where nr_histograms and histograms
-> > don't agree each other.  It ended up in a segfault trying to access NULL
-> > histograms array.  Let's make sure to update the nr_histograms when the
-> > histograms array is changed.
-> >
-> > Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Thu, May 09, 2024 at 10:13:09PM -0700, Ian Rogers wrote:
+> Achieve this by skipping events that aren't metric leaders when
+> printing column headers and aggregation isn't disabled.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> The bug is long standing, the fixes tag is set to a refactor as that
+> is as far back as is reasonable to backport.
 
 Thanks, applied to perf-tools-next,
 
 - Arnaldo
  
-> Thanks,
-> Ian
+> Fixes: 088519f318be ("perf stat: Move the display functions to stat-display.c")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/stat-display.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> > ---
-> >  tools/perf/util/annotate-data.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> > index 57e7d4b3550b..965da6c0b542 100644
-> > --- a/tools/perf/util/annotate-data.c
-> > +++ b/tools/perf/util/annotate-data.c
-> > @@ -1800,7 +1800,6 @@ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_en
-> >         sz += sizeof(struct type_hist_entry) * adt->self.size;
-> >
-> >         /* Allocate a table of pointers for each event */
-> > -       adt->nr_histograms = nr_entries;
-> >         adt->histograms = calloc(nr_entries, sizeof(*adt->histograms));
-> >         if (adt->histograms == NULL)
-> >                 return -ENOMEM;
-> > @@ -1814,6 +1813,8 @@ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_en
-> >                 if (adt->histograms[i] == NULL)
-> >                         goto err;
-> >         }
-> > +
-> > +       adt->nr_histograms = nr_entries;
-> >         return 0;
-> >
-> >  err:
-> > @@ -1827,7 +1828,9 @@ static void delete_data_type_histograms(struct annotated_data_type *adt)
-> >  {
-> >         for (int i = 0; i < adt->nr_histograms; i++)
-> >                 zfree(&(adt->histograms[i]));
-> > +
-> >         zfree(&adt->histograms);
-> > +       adt->nr_histograms = 0;
-> >  }
-> >
-> >  void annotated_data_type__tree_delete(struct rb_root *root)
-> > --
-> > 2.45.0.118.g7fe29c98d7-goog
-> >
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index ea11e3437444..bb6bbb821b5a 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -1251,6 +1251,9 @@ static void print_metric_headers(struct perf_stat_config *config,
+>  
+>  	/* Print metrics headers only */
+>  	evlist__for_each_entry(evlist, counter) {
+> +		if (config->aggr_mode != AGGR_NONE && counter->metric_leader != counter)
+> +			continue;
+> +
+>  		os.evsel = counter;
+>  
+>  		perf_stat__print_shadow_stats(config, counter, 0,
+> -- 
+> 2.45.0.118.g7fe29c98d7-goog
