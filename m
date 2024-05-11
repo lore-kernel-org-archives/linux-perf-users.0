@@ -1,75 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DEB38DD3;
-	Sat, 11 May 2024 15:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A6D56472
+	for <linux-perf-users@vger.kernel.org>; Sat, 11 May 2024 15:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715442765; cv=none; b=RRl5eAuHgyJJ2AHjQtPugD1DQ3VLEq3FthF2f3KZMM9eiBy1wqaYcTcsUm3jJOyZdAnJ2LtYrJ517e44tOM7FYHLmjym9+NHFrkTQaW/AvM7oS6s8Ups/vw3UOk+YO2QxR5YZdo9mv1Hf/25c2HYsIDbwet9I8sLRG3hspXSuv4=
+	t=1715442817; cv=none; b=cGjYkQUT7K+N9bFw2YkvPCsTiKYI+PT89S9PVLbT2OrGq/XbEu3mV16LTQQaUxM+KgrZ27oHYj+paLGla1qo9KvYv5gDb44XKckNNAF4fJ/CZFGqvCmrxuku80EZ27hB49yBYOCFAMKf64x9AH8mEG5NLpfFf+Rgz3cNj2yAEHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715442765; c=relaxed/simple;
-	bh=I0ll1PT06G3pFgzR9h6/T/HxLGGQr8T4pG8CPzC9UV8=;
+	s=arc-20240116; t=1715442817; c=relaxed/simple;
+	bh=UR/VsrTdMlyPZLDRdN7JoKoF84p0t4BrgH/b0Ff6W2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jUN3evVF09PgMhnbD09fnuQwJV78+urz3w40SDwosc3YpfBCmo38iSkkhr4hnS0cKviKvXbL5r3r7QcU+NZ4k/ZvLrLXS2WrXZZjvR4NQqczFgScT38stI4wYJNICtWU6xB4rc5khWkeeyVGTOMlv60zZ1UVqHg12ZMqSm5c7nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lE8dwaKU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXLfB2fdjMYLvKzQLl45DlP324FXSrP0yuNWOJ7hfCcrsXa6OZJJrPxZIQcD4i7+bIBeBHyHP2JGFaFEIl/sm7S/R5Y4QnhR0enJ27QUWjesEGDp7MHx/xgWCr9+vD3wDtn0brOPf/7zVjrbuoe4RntG0PaR1dcAEzmkfWiDuRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQCZRjOZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lE8dwaKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF47C2BBFC;
-	Sat, 11 May 2024 15:52:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQCZRjOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8383C2BBFC;
+	Sat, 11 May 2024 15:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715442765;
-	bh=I0ll1PT06G3pFgzR9h6/T/HxLGGQr8T4pG8CPzC9UV8=;
+	s=k20201202; t=1715442817;
+	bh=UR/VsrTdMlyPZLDRdN7JoKoF84p0t4BrgH/b0Ff6W2M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lE8dwaKU6Nqbu5AEHC35mmB2RCIzmhM/2rLRy4HPELOyeaXqgD7vhpwRkKRDq6FWc
-	 X+sM7SKPzcgmdEvhusUd9zbr8F69KNk3/Q9wEHIx0R+Te3BvUGSXuYkP5O14GRFbC4
-	 QDTbdYCE/zT1QOGsTavq2aLCVHza2hA22F6LFC2G0c7KT7/sZYg/+EMBqWGdLiflGm
-	 cSWuHDy2wCeeU/+5oAXzI2Dz6kIaWEIi0evD1xHJHbRGUseJNcpP/UbDvwHdIBoYpt
-	 FI6MsmJ5AP300Z2Z0qJliZfLJkzR0dL7PkApXBJhXLDTy3kUoMK3nt5aQSTkYk2Vkf
-	 w6EMDPE/+GMaA==
-Date: Sat, 11 May 2024 12:52:41 -0300
+	b=TQCZRjOZEGrkz9vpUCJPTojbzl2lxjt3/1yPe4s419rz7erkQfnjOb+5Mk7dBt+BQ
+	 yc8kWmhgweFPZSndKM1HaL2K5qb3k8auRovB4ur9FzNtq9vEpi4IC3DhlHmPxwWKYB
+	 MkcBJqT3Fa6e+qEQZoRioGlb+9zBsrIuLTZZEHannVyqRGqeehjkooBG5AFKoqltAm
+	 00V4TqA+0UIdmLI3DU2cGE4xURNR16/yIC9q5Zii0eJ5aOQHHZpbId9B+ckSUSIWev
+	 afvdTd9xUo3/3q277A3TTchmoAjrmMCuOc9SoV9Kt4WznOkxJWJGEIGP351xosm+Ce
+	 3/BqRQyJqPwTg==
+Date: Sat, 11 May 2024 12:53:34 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Justin He <Justin.He@arm.com>, John Garry <john.g.garry@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <James.Clark@arm.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	nd <nd@arm.com>
-Subject: Re: [PATCH 2/2] perf pmu: Fix num_events calculation
-Message-ID: <Zj-USRLJIGIvj7iE@x1>
-References: <20240510024729.1075732-1-justin.he@arm.com>
- <20240510024729.1075732-3-justin.he@arm.com>
- <CAP-5=fVGD-pK1igABj0wiq6-KVM+Z4i7rnRhM=Vy7bFHW4pLQA@mail.gmail.com>
- <DBBPR08MB4538A157B81F2BBD2DD9E40DF7E72@DBBPR08MB4538.eurprd08.prod.outlook.com>
- <CAP-5=fWgGOWi_YedpQgdK2DnBvtRk-79GEhKMsTehcfOVtxLNA@mail.gmail.com>
- <CAP-5=fULL0KNWA_O0B3r4Q0DA2_FMk=rARhb=z8ySKzFyVwFyw@mail.gmail.com>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 0/7] perf vendor events riscv: Update SiFive CPU PMU
+ events
+Message-ID: <Zj-UfsmiG3GU4S88@x1>
+References: <20240509021531.680920-1-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fULL0KNWA_O0B3r4Q0DA2_FMk=rARhb=z8ySKzFyVwFyw@mail.gmail.com>
+In-Reply-To: <20240509021531.680920-1-samuel.holland@sifive.com>
 
-On Fri, May 10, 2024 at 05:50:29PM -0700, Ian Rogers wrote:
-> On Fri, May 10, 2024 at 1:41 PM Ian Rogers <irogers@google.com> wrote:
-> > As such the fix here is incomplete. There may be both sys json events
-> > (detected by PMU/id name) and CPU json events (detected by CPUID). I'm
-> > looking into a fix.
-> 
-> Patch sent:
-> https://lore.kernel.org/lkml/20240511003601.2666907-1-irogers@google.com/
+On Wed, May 08, 2024 at 07:14:53PM -0700, Samuel Holland wrote:
+> This series updates the PMU event JSON files to add support for newer
+> SiFive CPUs, including those used in the upcoming HiFive Premier P550
+> board. Since most changes are incremental, symbolic links are used when
+> a set of events is unchanged from the previous CPU series.
 
-I applied the patch to tmp.perf-tools-next, will go to perf-tools-next
-soon, would be good for Justin to test and provide a Tested-by.
+Ian, are you ok with this? Someone with such systems can provide some
+Tested-by?
 
 - Arnaldo
+ 
+> 
+> Eric Lin (5):
+>   perf vendor events riscv: Update SiFive Bullet events
+>   perf vendor events riscv: Add SiFive Bullet version 0x07 events
+>   perf vendor events riscv: Add SiFive Bullet version 0x0d events
+>   perf vendor events riscv: Add SiFive P550 events
+>   perf vendor events riscv: Add SiFive P650 events
+> 
+> Samuel Holland (2):
+>   perf vendor events riscv: Rename U74 to Bullet
+>   perf vendor events riscv: Remove leading zeroes
+> 
+>  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  6 +-
+>  .../cycle-and-instruction-count.json          | 12 +++
+>  .../arch/riscv/sifive/bullet-07/firmware.json |  1 +
+>  .../riscv/sifive/bullet-07/instruction.json   |  1 +
+>  .../arch/riscv/sifive/bullet-07/memory.json   |  1 +
+>  .../riscv/sifive/bullet-07/microarch.json     | 62 +++++++++++++
+>  .../riscv/sifive/bullet-07/watchpoint.json    | 42 +++++++++
+>  .../cycle-and-instruction-count.json          |  1 +
+>  .../arch/riscv/sifive/bullet-0d/firmware.json |  1 +
+>  .../riscv/sifive/bullet-0d/instruction.json   |  1 +
+>  .../arch/riscv/sifive/bullet-0d/memory.json   |  1 +
+>  .../riscv/sifive/bullet-0d/microarch.json     | 72 +++++++++++++++
+>  .../riscv/sifive/bullet-0d/watchpoint.json    |  1 +
+>  .../sifive/{u74 => bullet}/firmware.json      |  0
+>  .../arch/riscv/sifive/bullet/instruction.json | 92 +++++++++++++++++++
+>  .../arch/riscv/sifive/bullet/memory.json      | 32 +++++++
+>  .../arch/riscv/sifive/bullet/microarch.json   | 57 ++++++++++++
+>  .../arch/riscv/sifive/p550/firmware.json      |  1 +
+>  .../arch/riscv/sifive/p550/instruction.json   |  1 +
+>  .../arch/riscv/sifive/p550/memory.json        | 47 ++++++++++
+>  .../arch/riscv/sifive/p550/microarch.json     |  1 +
+>  .../p650/cycle-and-instruction-count.json     |  1 +
+>  .../arch/riscv/sifive/p650/firmware.json      |  1 +
+>  .../arch/riscv/sifive/p650/instruction.json   |  1 +
+>  .../arch/riscv/sifive/p650/memory.json        | 57 ++++++++++++
+>  .../arch/riscv/sifive/p650/microarch.json     | 62 +++++++++++++
+>  .../arch/riscv/sifive/p650/watchpoint.json    |  1 +
+>  .../arch/riscv/sifive/u74/instructions.json   | 92 -------------------
+>  .../arch/riscv/sifive/u74/memory.json         | 32 -------
+>  .../arch/riscv/sifive/u74/microarch.json      | 57 ------------
+>  30 files changed, 555 insertions(+), 182 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/cycle-and-instruction-count.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/firmware.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/instruction.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/microarch.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-07/watchpoint.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/cycle-and-instruction-count.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/firmware.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/instruction.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/microarch.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/bullet-0d/watchpoint.json
+>  rename tools/perf/pmu-events/arch/riscv/sifive/{u74 => bullet}/firmware.json (100%)
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/instruction.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/bullet/microarch.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/firmware.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/instruction.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p550/memory.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p550/microarch.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/cycle-and-instruction-count.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/firmware.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/instruction.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/riscv/sifive/p650/microarch.json
+>  create mode 120000 tools/perf/pmu-events/arch/riscv/sifive/p650/watchpoint.json
+>  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
+>  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json
+>  delete mode 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
+> 
+> -- 
+> 2.44.0
+> 
