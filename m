@@ -1,77 +1,58 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E881CD31
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 May 2024 20:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167A528FA
+	for <linux-perf-users@vger.kernel.org>; Sun, 12 May 2024 04:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715457895; cv=none; b=SvnEOnG3wg5KllW1WQ8TtMW0VwktNsXSpS4hmUWrwo2GQCkUedCDsnBOo59RN2NJo1JYNelAE1sRARzmIK0sDDH2c82P4VSjrRz8kpnlTD3V5K5c7YJeZYzuPlr5iDQ8hrydy1EDOFqLVAzItbSmiYw6lSNjRJpHQTFWBwQEXYk=
+	t=1715488896; cv=none; b=h+XyEfxNqyOARfCjyIeeW1AGYQnrXhJ6yzTdzvdnMsqiyE0rfFio4U1GeKOFQyl21Y6/h0ldMSiN1BFsE8wyNkvkd8G/tz/N9SNCsKyZWcUVm8MRv49T2JmeX21S2YQ+5bxPDH8xGd9ftMUt5BJrDofCMc5xorNDWASqzftOJPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715457895; c=relaxed/simple;
-	bh=m0PmhIZfGfLGxB7MdP6Q++k4AXvc2nOplWPxUyw2VLU=;
+	s=arc-20240116; t=1715488896; c=relaxed/simple;
+	bh=riWyyjz+iLmdkHfcgXuNaUyjBiBRD7zzd02QjL8p4Is=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gF5izX9HhDFVlzQYGF0/RlPJykfh+B5IwhSmo7ebwUXAAkORUaQTqsui5yOq0ck+WnZAhp4Bx9u2SkWaDHaGctdJLs/hwkPjTGe7zo5G9IC+1WQv245ruE0FMtQ2RIEYJJcNf1E5YGEXua6G42YHVgmbOH4IOjKaGCGZos6cUZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZDgbCTEl; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqEUzvlzuJLZBUPzxQllsamwQ5CBgaD+pRxU6k8guz0OpMfCNbgizGqRsgM7lwkCwv+46WZYv/ZT1KlbCEF8M2Z96ewmmRwqan0lRbN+LyDv3K3LWm58Nk2FyI9Yne+3fvQOkT5IDSZ8FLYJGwLXG4naP/lubBNBJOrNFWBmPG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WupqAw0L; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZDgbCTEl"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f44dc475f4so2591960b3a.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 May 2024 13:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715457892; x=1716062692; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bAxRPnoHPzaMqkCmlI5pbJkR9qG9/zkm1emY09MZiz8=;
-        b=ZDgbCTEl5MhaSUfST1waVCnlPi8WVwFpmMJY3cuHXP+W0Q+fVNBcanSOgyrum5uVi0
-         CLQ8ZrwK693xxvMu5UotmQ3baCfpZYhNFT5hRswwT88UYj5h12g+J/jRPjAitul0UqFE
-         Uj2eGeJ9B/PnR3aMXb+xzCZIS9XLV4FyUxVGI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715457892; x=1716062692;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bAxRPnoHPzaMqkCmlI5pbJkR9qG9/zkm1emY09MZiz8=;
-        b=Xf2S/1i+BsUDixylJ82ndwgf/hTmEsCedAlA6Nqqixpt6pQWqnRm+69mhl4D86k5pb
-         6Wj9qqRJKb/uK/LghRZZtST7lh2T9zfOfZOBeJJMcHd2ei+N92KEFdyhWwdV3TomujF5
-         uQ3xqbYIJjxPgK43WFZw5pn5wocNw94jze2xX3TD8N76bmwZPnIJNOJQjgLMU08+T1uK
-         EJlBgfE6nlo+PXcvJuhxlwOGazN41OdIfzLH3dvnMXIAVG/x4dMqmNubTwZqpX1ngXBB
-         vBmdE48KGGFmvbCUeHgcH8CWE1oAt3QF2Cju++3iA8dgLooxRETQrISNSU2rO258S4le
-         xfgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQkWc5HU0UpEbnKrgLw/E2rzYqIh//BJKW/PKqzn0CqMatoayjyKsm+JW6nGkxru8GWAAZ614OfGBqFgt0hw+Mv7S4vpKAiXp1bYAoISm6rw==
-X-Gm-Message-State: AOJu0Ywp6cM5IxKk4TIS5lRGY5ZR/85DFPYkSgf6yPWeI00Ac0gn2H3s
-	kolzjTeelM+ZObN0PYFr8bRy7EeW6mZiXNgcD3LsIfFOWlNK3x+sizUx0sA0hg==
-X-Google-Smtp-Source: AGHT+IEH64K5jd6mjFYb931Me09tBfbrb15HesgvKj7DyqJhBJRz3ZGnEZ6lTZAV58PL9Yzco/fyPA==
-X-Received: by 2002:a05:6a20:da83:b0:1ad:8755:976 with SMTP id adf61e73a8af0-1afde0b5aa7mr6858922637.13.1715457892419;
-        Sat, 11 May 2024 13:04:52 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b6d0b8c887sm3496640a91.21.2024.05.11.13.04.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 13:04:51 -0700 (PDT)
-Date: Sat, 11 May 2024 13:04:51 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd/uncore: Add flex array to struct
- amd_uncore_ctx
-Message-ID: <202405111304.6A390B9D@keescook>
-References: <AS8PR02MB7237E4848B44A5226BD3551C8BE02@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WupqAw0L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715488895; x=1747024895;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=riWyyjz+iLmdkHfcgXuNaUyjBiBRD7zzd02QjL8p4Is=;
+  b=WupqAw0LTb8jIwYNRIVm8NmBFPDeZHB25i2U6Y3DJ+AomPQU7g1mIF+j
+   800zNhYYHoPUhzSTJ8NwNapXcwf6YmtFt5OHrYje9577sSYuZTEG9+HDn
+   gDRmhRtVq9TfVARvlnL03JMHT6pGSAdpLqzXKea/6qcxdCIOll+iUTypn
+   2iF1kC1ten1kS6I4Q6JFsG5C2CSQL8gVwBLkEqIkW5ym6NgIkzxPd6MB2
+   v/7wrnCC6/jXuRDiFtIsCVQekM7GjV7dGVFhJI0CGngFdRKA12/GWlsMU
+   w/FyrhX3Y+Gi0i39rLoJYBB8tMDRYJDjZhJKZLC9f01GvwEW7eXa8Wpfe
+   Q==;
+X-CSE-ConnectionGUID: EBCmetR7QAWNupxGQXGF1A==
+X-CSE-MsgGUID: dGgnifT0QRaTtcrD4QkkVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11070"; a="11279588"
+X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
+   d="scan'208";a="11279588"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 21:41:34 -0700
+X-CSE-ConnectionGUID: UzlumjraQ0u4IZwTEjc7BA==
+X-CSE-MsgGUID: SNnz+7H9Q8icbInRUFPJtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
+   d="scan'208";a="29867206"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 21:41:34 -0700
+Date: Sat, 11 May 2024 21:41:29 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, adrian.hunter@intel.com
+Subject: Re: [PING] Re: [PATCH v2] perf, script: Minimize "not reaching
+ sample" for brstackinsn
+Message-ID: <ZkBIebCF0ZCJFYe8@tassilo>
+References: <20240229161828.386397-1-ak@linux.intel.com>
+ <ZjvhQbZhsda_kvy6@tassilo>
+ <Zj4zfpmJhbXGrqRS@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,55 +61,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237E4848B44A5226BD3551C8BE02@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <Zj4zfpmJhbXGrqRS@x1>
 
-On Sat, May 11, 2024 at 04:51:54PM +0200, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
+On Fri, May 10, 2024 at 11:47:26AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, May 08, 2024 at 01:32:01PM -0700, Andi Kleen wrote:
+> > Looks like this bug fix was never applied. Ping!
 > 
-> The "struct amd_uncore_ctx" can be refactored to use a flex array for
-> the "events" member. This way, the allocation/freeing of the memory can
-> be simplified.
-> 
-> Specifically, as the "curr" variable is a pointer to the amd_uncore_ctx
-> structure and it now ends up in a flexible array:
-> 
-> struct amd_uncore_ctx {
->         [...]
->         struct perf_event *events[];
-> };
-> 
-> the two-step allocation can be simplifief by using just one kzalloc_node
-> function and the struct_size() helper to do the arithmetic calculation
-> for the memory to be allocated.
-> 
-> This way, the code is more readable and safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
-> Hi,
-> 
-> This patch can be considered v4 of this other one [1]. However, since
-> the patch has completely changed due to the addition of the flex array,
-> I have decided to make a new series and remove the "Reviewed-by:" tag
-> by Gustavo A. R. Silva and Kees cook.
-> 
-> [1] https://lore.kernel.org/linux-hardening/PAXPR02MB7248F46DEFA47E79677481B18B152@PAXPR02MB7248.eurprd02.prod.outlook.com/
-> 
-> Thanks,
-> Erick
-> ---
->  arch/x86/events/amd/uncore.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+> There was a comment by Adrian, about adding a comment with some
+> explanation, may I add that to your patch while applying it?
 
-My favorite kind of patch: fewer lines, clearer code.
+Sure feel free to add anything.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+-Andi
 
--Kees
-
--- 
-Kees Cook
