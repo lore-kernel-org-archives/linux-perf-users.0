@@ -1,143 +1,88 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEDA1553AB
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 16:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0448208CE;
+	Mon, 13 May 2024 17:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715617391; cv=none; b=pvARPMs8S4+3qTTYAAKUdmeZ2D5qiSqyf3ze2Yk5TmmyEYT6LKquF2svLxR7sKDnwsZ2P85YgAlpwTQWXwgCLB2KDoUqNQOJRPD06r3NgY0WO1C/3iOOCqZwedkM4QQXT2U88jVsZzW2Cr+2rt1OnSLhJzQYtBejwQDIwBCAaaw=
+	t=1715620088; cv=none; b=uCovNo5hq5ShyRPd0sufTh7Az1iG/Bg6QLvg31Q8QRBKUgJTGm9PDLiAHwZleI7nLTKD1FGH9AnVywQgt02fd76gSTlV0yI7AeMEM7Lx7AfhKBzyZq3AWIvgGSw+wcDxAZTyLj/Wf9PMkHnXMvDj2ZAqu1h0d1Xg8nhYTh7CcR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715617391; c=relaxed/simple;
-	bh=1FpidKHpJ6tC6uWua0hdyTTUiPlb0a/PUWUSgSZ6jrA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Aef527b4OkaRYQOhlFvPGdTcW2GsgkjYUz/G6D6yKTaVlzSnwvw/hSUjxausBMPqe5yw8LWd0+tI1mD4KSeT37dizVwLBBgD4pAT97yw6/NpNiK9C8quchQNqwhJQWFAgTQsjLiFk/3uXt28tUbWib5tU48Q7o8tr2RZSfOGXVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OnqaZfKI; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnqaZfKI"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43dfa9a98d2so342141cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 09:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715617389; x=1716222189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/fwn6UKi/1K0IWQMLBiFsBG9j5cvRpV6hNPVdi/9PdU=;
-        b=OnqaZfKIANEkjcrAuRT54/MUPnM95qMIMwJ+WoSxjgZTtKGaS6ZUeMBWPKv8jnL6l6
-         ZpVpm8lrBieXii+xIHSk6heqpWkI987e8ycp2PkKe+KjUXdELcoZBSpL7PQDsNzeN9T9
-         88neQzSprnH4GsAVf6C+sxIqHTivj5NnLa7tGZZiHZm9ymlvYwGI4OmkF/uXWD1NWpeZ
-         0HrZjfpRgE4VpboLlDa+ffNvanSJ9PrkhG1zN95DGFvZVkWUyHZ7lJ2uIW9lP91lETqx
-         gqYCLXRB3euuN+kcj6drVbcBI5y3Gnsj92fr8CDV6G8MQCSJj4siRJGNm9fvwVRYum+w
-         pI+Q==
+	s=arc-20240116; t=1715620088; c=relaxed/simple;
+	bh=5w3t18fUZhPXGU1DdXrP+hf6z7XV9qftCg2rlMTls7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tS1j3GOQt1Kw1TedZeT7MnczSS9TErNwpknGEuUL5RzUPW8pMK72MkYQXjZ069W1fvUOo/p1Z7gYxwMlcynABDnikeUAObI4NUI630SxV8emRno+XrRI3k2c3FMQlp4LonFD6nWBOxAS5XPnoVBvVsuuj8YtB+OhakTkP4YpGis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f44bcbaae7so4138944b3a.2;
+        Mon, 13 May 2024 10:08:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715617389; x=1716222189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/fwn6UKi/1K0IWQMLBiFsBG9j5cvRpV6hNPVdi/9PdU=;
-        b=ky6YcJV0WWSMaEPPAeyMHuGV35lSglV67nix+nUUKRDkuEfahCd1fGOw6Q7VQRVM7Z
-         Sxh3HbEGnn5+sVvhjUdj4hyiplOoTDbrdd0rKUZJQvu4A4JCjQ/es2+Z/+ySK1j3gwL9
-         0amCJyTxpNLHhCK+rCLpC3xUqplAvCVHDCs4D0EcQs3SKtih+NA8uREHaccE4Xkj02YX
-         0ebZbliZgnTGRd3ukdc7V71UbwCwZ4oHNLm6eHlDkjhcZHL+HTjFIfaAwkgC4GZBcyp5
-         up8eHE8A4I6XKh/UAX7OHc9Jee1UO6wyQnGB2rZLbQ3wfcRLCisIDFQu1oWvZkMkNOby
-         GTNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwI9+dDkakIImGsRSUJHbm3Awlho455md2CzcBUkh420fQfjEKhvWkzdpP6Cu0LSHjn+BtHEO86AZbJC1m9bi3U42x3VOWohtXwcpZvo+YeA==
-X-Gm-Message-State: AOJu0YwvMAg4QZOfXpPJ43rJQncVXGjTYXdeIM5QLY2bKrNHLgcHfIMD
-	PLGD/AgM5YUBjg2av1rNiZFOV4nH44vHAV8lH6yVR0GZsqcdwyV1a6C6p8g/AXLCzN9EnhIxb6C
-	axudjNfKVSdsftILu64ZODg07WjqSelqvg16O
-X-Google-Smtp-Source: AGHT+IEN5gURnV/spOfCC6PRenvXXEfQixh++GvGxjfsy+XKRnlD1SHqctpBlOj0YTB0sRTHYkX2gGyvIHvTuKiSc2k=
-X-Received: by 2002:a05:622a:98f:b0:43c:554e:b81 with SMTP id
- d75a77b69052e-43e0a28c3c5mr5057731cf.23.1715617389221; Mon, 13 May 2024
- 09:23:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715620086; x=1716224886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=19v2OFHX5HNykaPKmmf/pQJmN9oKb4YnIwFLKnn8zuI=;
+        b=AhTGaLLNJwzO9CMgPhiGp9Z1XRlktWriL8Si4/NrENx0FH/q9M+B69XS6ryt8MDwk7
+         YLfunXfJ9/xkBO5dajqcF/WKhXkpH857njuUZbD+IuuN+sk68K1rsIWYZn69ThiANSF3
+         7GD53BlfQlWqyBu8lxBaLlIy/GRgOYTnZMqBqePnZn3TOjI0XiqJKVRTHc1K2HkAPHE2
+         GNy+yh8BwJ+tubv2UlLCDhn8IczuiEeBQIsqwxu7gFn0GObN6m7v7hPi8FX/pgwxzoVZ
+         A+ovHPzyxrpO4Hbs9094D3P4uayQ2zCOY9cU/tfsbCREzUIJp9NMZjd/tRzQNWjJJrAe
+         oVgg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1XRAfuz3s6Z5vmGIcuKd8pIXpLaGRrnqOn/cBPeGhDlkzhNsYbzM2fQUrNaekYFAALEmpwJqn2hb/MVR6WS0dnrj/1gGNirQMyKQAnJC+4Tnzrm7PJcMC7lMlJBO2zRkExRyU25qxD1GlxuYQFg==
+X-Gm-Message-State: AOJu0Ywxl352AnAi0N3IOhoXUVR2gW0DjTB7HrZGkqKtgeo/i4GDRIws
+	ysJBPdxFh00gLlIA8l4POEsbooSN/CS9TPosAms68r1dI7gmeeCL
+X-Google-Smtp-Source: AGHT+IFOofykO0WDr7isCvnHZmiW0wlTi8yaXitAeudIwuTRvMIKsCaIwDJM0r82yYawc5TXbxPvpw==
+X-Received: by 2002:a05:6a20:9c8e:b0:1af:d15a:6b60 with SMTP id adf61e73a8af0-1afde11bbafmr10903762637.28.1715620085968;
+        Mon, 13 May 2024 10:08:05 -0700 (PDT)
+Received: from gmail.com ([50.204.89.31])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340b767e59sm8002536a12.21.2024.05.13.10.08.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 10:08:05 -0700 (PDT)
+Date: Mon, 13 May 2024 18:07:53 +0100
+From: Breno Leitao <leitao@debian.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf list: Fix the --no-desc option
+Message-ID: <ZkJI6Q6KVKlzDgSQ@gmail.com>
+References: <20240508133518.3204221-1-leitao@debian.org>
+ <Zj-WE1aG7ihtevG3@x1>
+ <CAP-5=fXXYVgb4rnftaiTZTEniGOr5NnpfXJFNqX96GXP6=oTiA@mail.gmail.com>
+ <Zj-qIbUN2XFBnvP8@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502213507.2339733-1-irogers@google.com> <20240502213507.2339733-3-irogers@google.com>
- <fe41f9a7-5726-49d5-9bc6-70102d9680a1@infradead.org>
-In-Reply-To: <fe41f9a7-5726-49d5-9bc6-70102d9680a1@infradead.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 09:22:57 -0700
-Message-ID: <CAP-5=fWHrX5AgH8=62f3=a-SSqUACXX1rkDZJ-WV1RcNieeHFA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] perf Document: Sysfs event names must be lower or
- upper case
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zj-qIbUN2XFBnvP8@x1>
 
-On Sun, May 12, 2024 at 3:08=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
-> Hi,
->
-> On 5/2/24 2:35 PM, Ian Rogers wrote:
-> > To avoid directory scans in perf it is going to be assumed that sysfs
-> > event names are either lower or upper case.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > ---
-> >  .../ABI/testing/sysfs-bus-event_source-devices-events       | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-e=
-vents b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > index 77de58d03822..e7efeab2ee83 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > @@ -37,6 +37,12 @@ Description:       Per-pmu performance monitoring ev=
-ents specific to the running syste
-> >               performance monitoring event supported by the <pmu>. The =
-name
-> >               of the file is the name of the event.
-> >
-> > +             As performance monitoring event names are case
-> > +             insensitive in the perf tool, the perf tool only looks
-> > +             for lower or upper case event names in sysfs to avoid
-> > +             scanning the directory. It is therefore required the
-> > +             name of the event here is either lower or upper case.
-> > +
->
-> This is ambiguous to me. Is it clear to everyone else?
->
-> "for lower or upper case event names":
->
-> Is that a logical OR or an exclusive OR?
-> "AbC" contains lower case or upper case characters. :)
->
-> I think the code [static bool permitted_event_name()]
-> implements an exclusive OR.
-> The code also allows event names to contain numbers AFAICT.
-> The documentation doesn't mention this.
->
-> HTH.
->
-> >               File contents:
-> >
-> >                       <term>[=3D<value>][,<term>[=3D<value>]]...
+On Sat, May 11, 2024 at 02:25:53PM -0300, Arnaldo Carvalho de Melo wrote:
+> With Breno's patch the default doesn't change, --no-desc gets fixed but
+> --long-desc is broken:
+> 
+> perf list --long-desc
+> <SNIP>
+> cache:
+>   longest_lat_cache.miss
+>        [Counts the number of cacheable memory requests that miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
+>        [Counts the number of cacheable memory requests that miss in the Last Level Cache (LLC). Requests include demand loads,reads for ownership (RFO),instruction fetches and L1 HW
+>         prefetches. If the platform has an L3 cache,the LLC is the L3 cache,otherwise it is the L2 cache. Counts on a per core basis]
+> <SNIP>
 
-Sorry, this reads like a troll. Assuming good intentions, could you
-propose a fix in the form of a patch? When a word is made upper or
-lower case I believe it is generally assumed the operation applies to
-all characters within the word, but I'm happy to see ambiguity cleared
-up.
+Oh, both descriptions (long and "short") are being displayed. 
 
-Thanks,
-Ian
+> Thanks for asking the question, I'm dropping the patch, Breno, can you
+> try again?
 
-> --
-> #Randy
-> https://people.kernel.org/tglx/notes-about-netiquette
-> https://subspace.kernel.org/etiquette.html
+Sure, let me think about it and send a v2.
+
+Thanks!
