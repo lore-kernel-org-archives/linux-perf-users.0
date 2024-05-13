@@ -1,198 +1,203 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CEA374F5
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 17:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C3937700
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 18:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715623056; cv=none; b=FjpDTCB58nGn8tbxER4HCj4xEXTVA5VNh2AtCfO0OjdHKcd2CvuKZc+2eW8wvLAI5NDUTfMXvgb2IJB2rDDDJHj/NjItYhS7N+98JMDkHz9c8eVHusKqxxvzsrHo+5bCE1pu9QDQxYCGERpdaQszWFmmyf1qM+lTLRy4lk/7ZO4=
+	t=1715625112; cv=none; b=rGVnoF1DuecEciYKpOLLr3dOXYZYuZmM5RPi9B9wIaL454jcAK+zqTILfruEOaCuNaDbNA4DhPXaMz050YG72PeGagHjvXF2iZRYqg9FMm5MCiEaln7/ByPvowfYxblGG+Xl96+NFjbspqpBY31nXYo4WFW4e/5EzYqpG1aGbA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715623056; c=relaxed/simple;
-	bh=bgnQB6pDQ1o6NMmJUotHEuCPzygOqv3kv/whAgKaXYQ=;
+	s=arc-20240116; t=1715625112; c=relaxed/simple;
+	bh=3ZwAB8Y8ZUIyGagmA9bMT/46c3bkaZgO1OCbdjLIhQU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OM88/p+zwi/HsfL2GtfFfXNW6paWrB9kATduV/SsURu+XqII2G8VzOmCJlXiZAv63Nh3qtEPbuyXEUZNDu8t7+XbTrpTQ/U8WtC9oQXBqtgzAdITkLUxrlTKHHY/q89k8my/DPzQKbu5K0Tld3mqNkWgis3aMhuVuIvLpB0Ykhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z3/55x4T; arc=none smtp.client-ip=209.85.160.172
+	 To:Cc:Content-Type; b=QL+/S6SMtGIw8aBkeYDkV9ztFBo22lLQE2urh/Mqvi84iJFwZJrr0qeimW/YtRivvuJDOTOAzR1kLWJ6NC4zZ7TFzA4Ez28skX1732Ch42V/iglH5jKilM7oSjJWP8OI4t6QhdMAPDER0ra02gUo1SehpcHCtfbFqkA0mAPUPWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e7elEJH7; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3/55x4T"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-43e14f0bd75so209211cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 10:57:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7elEJH7"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-572a1b3d6baso20473a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 11:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715623054; x=1716227854; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715625107; x=1716229907; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LBCsqGYM5KicJoYZjjkcCVARmL8Eh32Kqb22e3nbOs0=;
-        b=Z3/55x4TgZOm/dwiEVhE5KgiaTDtUbxMrtzHlyjyXWMB16KV9JX2CRV6a4fWJFPTR4
-         pSyx7TUqI+CqIcNb6uINnlrWKBfVoVGwlG//fadiLbuzBMOyDMcE5Cp3cIIyydqZMDnZ
-         QjKgZ2pc4ts31i1mmxFktnAs7V3M8bAHHxpbvWs6HgrxNfjCNBQU0ZwjtPahIgF9n+KN
-         JT6SGL+B9YeCdpfnUVa/IwSztn3Rvyt8RTGkek2DpmVYYdmXOWCO8x8kTCQC76QltcGL
-         hirksxPJlVT0RdvsBc1UbHtV357FVKNUJETwOF0Cf19kaCYaz/6svhc4XVyoGKI9KYS8
-         Hunw==
+        bh=Dp4o1bBP9g8nSA2c4EpHf9/XklxFDXV2HdHmWJKkIqw=;
+        b=e7elEJH7NOwhPMOzmp2ISWNlOFIKZWQBH6O7f+CBhbdgjXHnDT53uh1VqoCJxStsxV
+         FLUdMPezoowxy5UPF4fY1DKDHalQPgNCH5kc3tmcjnK9AXGdQ4SNf/N/ENGIhmsy3mcX
+         wGPqDNgobmMVZzQaU6C1rAUf16YaQy29ZzCPpZI5LvdP7Zuj8zxuF4ojMtj/3KzUqrlI
+         YbYv0F1fC0D48FBi95iys9tTQPNT/fB7aEmdfLiTRQtCBTIi2zNntR0TZ/z9snMIfOPw
+         7mYccyYxVEzvQXWtcsHweUE8B5s6aKSgWfvxP6juK+3L/4MJ6dIbnhR6abjwntYhiU/F
+         LkLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715623054; x=1716227854;
+        d=1e100.net; s=20230601; t=1715625107; x=1716229907;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LBCsqGYM5KicJoYZjjkcCVARmL8Eh32Kqb22e3nbOs0=;
-        b=S0XNwTYNaPgqp9SMiHDAc+j8ty9ksm1G6EVU6ldsOyxBk8m3F3xLUhpFqDAVOXVzGb
-         Hqw7VHtd6GmC9rOlUPfVu/EgfJaERHIGiep/U8WLkLrzKJKW9C+ZxfCGafwhivQdMyq6
-         CWWSDD5r498n5mAc3DiU39zTC2DGImjh06GF1I5sWgEQox/Oc6xtNoJkJX38xaXa5e8k
-         19MAenXRS0rcyCD60akoGFefmfBld9cJ7bQDoPEeOvwh2jt1rA2I7/AOKJ5CNS7KC+Y1
-         9nZHuE3VEUEjhUc6t2PTrwLEndxgWNb9+NTEvCaw9+kPNcvyv0WNLSK9gyyRWFI/eTOI
-         Tjiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfxkQ5kcd04MEiNrD012x/hwuKx6yAU8c3L58ZccFThqQ4QQTZHG20QKbGi0fC6yD2Qez3VwygzScx4Dgqubii0ko8Rzsr3l/JmyPSBcCBfA==
-X-Gm-Message-State: AOJu0YxZ1HLxaHNSUrR4TUfydLmKSYoG82FoOfoNq4aHkUfzpe1Mab16
-	3jONT3oi4BJyWgJlvmSRawmxcaPQKPmatXIi9nvLak6cYuGqkYUXlJZkmBRseuVJuRH+bjw2ZY3
-	UED2vjdE27KcNIxOXfciIDs1VhQx7++/PmCCn
-X-Google-Smtp-Source: AGHT+IGV1CJCJRDtrd8AlAO7lzQmHi37OM/lEj/wh3mYpOPPwfuF5+C4ZSmUB0UGlCpCmiSWnyVdoFsyuOOEGt8u8dU=
-X-Received: by 2002:a05:622a:5a8c:b0:43a:db8d:4a22 with SMTP id
- d75a77b69052e-43e0a1c21aemr6639491cf.11.1715623053572; Mon, 13 May 2024
- 10:57:33 -0700 (PDT)
+        bh=Dp4o1bBP9g8nSA2c4EpHf9/XklxFDXV2HdHmWJKkIqw=;
+        b=wHJ6Oo2fJ649EYn+o4JDg3S/8uLZ9IN+oLa6LZ6r9pN8d05XZ9Wja2cVJFAqdcN4aT
+         hOJ782aU/sbfdYqHYlLJgP+igmPCVThXpE0KERSWkiAPk9YC8/hUy88SIL54QKLRzikN
+         2dLEIHiKy2ZokhlvnRjH2UaTLaP6vEWV1HYNFWGgVB5aNlqlP88Rsx/GqEka5rw4KxKG
+         gqupPflwQXloFp8Lt0+Wv7vKsALEU2GdKlvx0pmMS7MC+AViNDA/Fx1kNFq+EA3SXlDp
+         Jb983h36Zu4Dap4CCOeEfZdd5Sfri4316LAqJpGH6krqYlfH2Q1TAr12bbG8F2XzZmI8
+         ZCxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXM8JsxonE4jeKbXAHD1sCbDlEWwMVSeb813fUesNxw4cFOioFCVCKyr8EWyjOxj9WzeLFXChaOyBNJrp+Xlm9IoYPqL9WKrMVaYB3r25/xvQ==
+X-Gm-Message-State: AOJu0Ywce5qtFVJE0LMWh6k6KDHdRAAJxmmZAVDdHGmv402FA3xrD5Yg
+	m8twfsKAF/xbtWI0baJlN3CyvI8slZB0X56k53VYUyFaTGk+u7jKCX3g7xL4Sbd28WKi91VmAXS
+	C9SC2iOCDlebMLFsYAlzl8+5HTtnYTD7by0o=
+X-Google-Smtp-Source: AGHT+IFt9WAWEm8QsBb4sEg9CQQRW3buM/TQvs364N6oHJq9eMGxek+5D8VmJE/YX1MybjfvRdmV3Zq5jL/uB0Qx6C4=
+X-Received: by 2002:a50:cc0c:0:b0:572:9eec:774f with SMTP id
+ 4fb4d7f45d1cf-57421846490mr416314a12.0.1715625106955; Mon, 13 May 2024
+ 11:31:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506081648.3890067-1-yangjihong@bytedance.com>
- <CAP-5=fXYH4JnfQH98vPRttViBfYAWGA-aoGXO7q+R_Wt8AqFSw@mail.gmail.com> <a476b77f-4d7d-4dbb-b58f-cfc39c07e91e@bytedance.com>
-In-Reply-To: <a476b77f-4d7d-4dbb-b58f-cfc39c07e91e@bytedance.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 10:57:22 -0700
-Message-ID: <CAP-5=fU732_JAn6k24+NfbHReV9uFVSNztJn+g_u+yx94nbaZg@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Specify libtraceevent dir to rpath for
- asan/msan build
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240510191423.2297538-1-yabinc@google.com> <20240510191423.2297538-4-yabinc@google.com>
+ <CAM9d7chNz8-84m28q5qSLjUjZ=Ni1CA_JzbB_P+YJooLQd85YA@mail.gmail.com>
+In-Reply-To: <CAM9d7chNz8-84m28q5qSLjUjZ=Ni1CA_JzbB_P+YJooLQd85YA@mail.gmail.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Mon, 13 May 2024 11:31:34 -0700
+Message-ID: <CALJ9ZPP_2=X7XNQrLCV1pQUVH-pnHbW=Kz75ugSy+kda9Xwmpg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] perf/core: Check sample_type in perf_sample_save_brstack
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 12:53=E2=80=AFAM Yang Jihong <yangjihong@bytedance.=
-com> wrote:
+arch/powerpc/perf/core-book3s.c checks sample_type, see
+   if (event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK) {
+     ...
+     perf_sample_save_brstack(&data, event, &cpuhw->bhrb_stack, NULL);
+  }
+So I think we don't need the "fixes:" line.
+
+On Fri, May 10, 2024 at 2:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Hello,
->
-> On 5/9/24 07:18, Ian Rogers wrote:
-> > On Mon, May 6, 2024 at 1:17=E2=80=AFAM Yang Jihong <yangjihong@bytedanc=
-e.com> wrote:
-> >>
-> >> perf built by asan/msan will not search for shared libraries in the
-> >> -L directory. For cross-compilation, we assume that sanitizers is
-> >> generally not enabled and add libtraceevent dir to rpath in a simple w=
-ay.
-> >>
-> >> 1. msan build
-> >>
-> >> Before:
-> >>    $ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g=
- -fno-omit-frame-pointer -fsanitize=3Dmemory -fsanitize-memory-track-origin=
-s" CC=3Dclang CXX=3Dclang++ HOSTCC=3Dclang NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0=
- NO_LIBPFM=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent
-> >>    ...
-> >>    $ /tmp/perf/perf
-> >>    /tmp/perf/perf: error while loading shared libraries: libtraceevent=
-.so.1: cannot open shared object file: No such file or directory
-> >>
-> >> After:
-> >>    $ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g=
- -fno-omit-frame-pointer -fsanitize=3Dmemory -fsanitize-memory-track-origin=
-s" CC=3Dclang CXX=3Dclang++ HOSTCC=3Dclang NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0=
- NO_LIBPFM=3D1 LIBTRACEEVENT_DIR=3D/opt/libtraceevent
-> >>    ...
-> >>    $ /tmp/perf/perf --build-options
-> >>    perf version 6.9.0-rc5
-> >>    <SNIP>
-> >>             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> >>    <SNIP>
-> >>
-> >>   2. asan build
-> >>
-> >> Before:
-> >>    $ make DEBUG=3D1 EXTRA_CFLAGS=3D'-fno-omit-frame-pointer -fsanitize=
-=3Daddress' LIBTRACEEVENT_DIR=3D/opt/libtraceevent
-> >>    ...
-> >>    $ ./perf
-> >>    ./perf: error while loading shared libraries: libtraceevent.so.1: c=
-annot open shared object file: No such file or directory
-> >>
-> >> After:
-> >>     $ make DEBUG=3D1 EXTRA_CFLAGS=3D'-fno-omit-frame-pointer -fsanitiz=
-e=3Daddress' LIBTRACEEVENT_DIR=3D/opt/libtraceevent
-> >>     ...
-> >>     $ ./perf --build-options
-> >>     perf version 6.9.0-rc5
-> >>     <SNIP>
-> >>              libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> >>     <SNIP>
-> >>
-> >> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
-> >> ---
-> >>   tools/perf/Makefile.config | 4 ++++
-> >>   1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> >> index 7f1e016a9253..a9a923358604 100644
-> >> --- a/tools/perf/Makefile.config
-> >> +++ b/tools/perf/Makefile.config
-> >> @@ -188,6 +188,10 @@ TRACEEVENTLIBS :=3D -ltraceevent
-> >>   ifdef LIBTRACEEVENT_DIR
-> >>     LIBTRACEEVENT_CFLAGS  :=3D -I$(LIBTRACEEVENT_DIR)/include
-> >>     LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
-> >> +  # Specify rpath for asan/msan build. Generally, cross-compilation w=
-ill not enable sanitizers.
-> >> +  ifeq ($(findstring -fsanitize=3D,${EXTRA_CFLAGS}),-fsanitize=3D)
-> >> +    LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-> >> +  endif
+> On Fri, May 10, 2024 at 12:14=E2=80=AFPM Yabin Cui <yabinc@google.com> wr=
+ote:
 > >
-> > Thanks for this! I found I need the following to make it work:
-> > ```
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index a9a923358604..bcf4ab292462 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -190,7 +190,11 @@ ifdef LIBTRACEEVENT_DIR
-> >    LIBTRACEEVENT_LDFLAGS :=3D -L$(LIBTRACEEVENT_DIR)/lib
-> >    # Specify rpath for asan/msan build. Generally, cross-compilation
-> > will not enable sanitizers.
-> >    ifeq ($(findstring -fsanitize=3D,${EXTRA_CFLAGS}),-fsanitize=3D)
-> > -    LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-> > +    ifeq (${IS_64_BIT}, 1)
-> > +      LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib64
-> > +    else
-> > +      LIBTRACEEVENT_LDFLAGS +=3D -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-> > +    endif
-> >    endif
-> > endif
-> > FEATURE_CHECK_CFLAGS-libtraceevent :=3D $(LIBTRACEEVENT_CFLAGS)
-> > ```
+> > Check sample_type in perf_sample_save_brstack() to prevent
+> > saving branch stack data when it isn't required.
 > >
-> > My libtraceevent build command is:
-> > $ make EXTRA_CFLAGS=3D"-O0 -g -fsanitize=3Daddress" DESTDIR=3D~/libtrac=
-e install
-> My build environment only uses make, not make install, so the library
-> path is lib, not lib64, which leads to this difference.
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Yabin Cui <yabinc@google.com>
 >
->    # cd /opt/libtraceevent
->    # CROSS_COMPILE=3Daarch64-linux-gnu- make
+> It seems powerpc has the similar bug, then you need this:
 >
-> In order to be compatible with both situations, would it be better for
-> us to also add the lib64 path to -L and rpath?
->
-> I have sent the v2 version and added it to path2. Please help me see if
-> this solution is OK:
-> https://lore.kernel.org/all/20240513074910.1660373-1-yangjihong@bytedance=
-.com/
-
-That fixed the issue for me. Thanks!
-
-Ian
-
+> Fixes: eb55b455ef9c ("perf/core: Add perf_sample_save_brstack() helper")
 >
 > Thanks,
-> Yang
+> Namhyung
+>
+> > ---
+> >  arch/x86/events/amd/core.c |  3 +--
+> >  arch/x86/events/core.c     |  3 +--
+> >  arch/x86/events/intel/ds.c |  3 +--
+> >  include/linux/perf_event.h | 13 ++++++++-----
+> >  4 files changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> > index 985ef3b47919..fb9bf3aa1b42 100644
+> > --- a/arch/x86/events/amd/core.c
+> > +++ b/arch/x86/events/amd/core.c
+> > @@ -967,8 +967,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *re=
+gs)
+> >                 if (!x86_perf_event_set_period(event))
+> >                         continue;
+> >
+> > -               if (has_branch_stack(event))
+> > -                       perf_sample_save_brstack(&data, event, &cpuc->l=
+br_stack, NULL);
+> > +               perf_sample_save_brstack(&data, event, &cpuc->lbr_stack=
+, NULL);
+> >
+> >                 if (perf_event_overflow(event, &data, regs))
+> >                         x86_pmu_stop(event, 0);
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 5b0dd07b1ef1..ff5577315938 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -1702,8 +1702,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+> >
+> >                 perf_sample_data_init(&data, 0, event->hw.last_period);
+> >
+> > -               if (has_branch_stack(event))
+> > -                       perf_sample_save_brstack(&data, event, &cpuc->l=
+br_stack, NULL);
+> > +               perf_sample_save_brstack(&data, event, &cpuc->lbr_stack=
+, NULL);
+> >
+> >                 if (perf_event_overflow(event, &data, regs))
+> >                         x86_pmu_stop(event, 0);
+> > diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> > index c2b5585aa6d1..f25236ffa28f 100644
+> > --- a/arch/x86/events/intel/ds.c
+> > +++ b/arch/x86/events/intel/ds.c
+> > @@ -1754,8 +1754,7 @@ static void setup_pebs_fixed_sample_data(struct p=
+erf_event *event,
+> >         if (x86_pmu.intel_cap.pebs_format >=3D 3)
+> >                 setup_pebs_time(event, data, pebs->tsc);
+> >
+> > -       if (has_branch_stack(event))
+> > -               perf_sample_save_brstack(data, event, &cpuc->lbr_stack,=
+ NULL);
+> > +       perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
+> >  }
+> >
+> >  static void adaptive_pebs_save_regs(struct pt_regs *regs,
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index 8617815456b0..ecfbe22ff299 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -1269,6 +1269,11 @@ static inline void perf_sample_save_raw_data(str=
+uct perf_sample_data *data,
+> >         data->sample_flags |=3D PERF_SAMPLE_RAW;
+> >  }
+> >
+> > +static inline bool has_branch_stack(struct perf_event *event)
+> > +{
+> > +       return event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK;
+> > +}
+> > +
+> >  static inline void perf_sample_save_brstack(struct perf_sample_data *d=
+ata,
+> >                                             struct perf_event *event,
+> >                                             struct perf_branch_stack *b=
+rs,
+> > @@ -1276,6 +1281,9 @@ static inline void perf_sample_save_brstack(struc=
+t perf_sample_data *data,
+> >  {
+> >         int size =3D sizeof(u64); /* nr */
+> >
+> > +       if (!has_branch_stack(event))
+> > +               return;
+> > +
+> >         if (branch_sample_hw_index(event))
+> >                 size +=3D sizeof(u64);
+> >         size +=3D brs->nr * sizeof(struct perf_branch_entry);
+> > @@ -1665,11 +1673,6 @@ extern void perf_bp_event(struct perf_event *eve=
+nt, void *data);
+> >  # define perf_arch_bpf_user_pt_regs(regs) regs
+> >  #endif
+> >
+> > -static inline bool has_branch_stack(struct perf_event *event)
+> > -{
+> > -       return event->attr.sample_type & PERF_SAMPLE_BRANCH_STACK;
+> > -}
+> > -
+> >  static inline bool needs_branch_stack(struct perf_event *event)
+> >  {
+> >         return event->attr.branch_sample_type !=3D 0;
+> > --
+> > 2.45.0.118.g7fe29c98d7-goog
+> >
