@@ -1,347 +1,337 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B7E208A4
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 17:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE3620335
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 17:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715620768; cv=none; b=sdkwQY3x7jIw82kajbshbG9OxV1q89SFqJzRAsggBUxC7B3Aj7+caMyf8OfKzoU34XV9n3us9R8aMM1Sos2ll1GaY8JQtoGi1/2gnEfkWaE7F7AUGzWt7whtBdBX3OylOGlsYeqlmuJ1unMH+6pTR9/Jprz0BMH4MUgWITJlXgk=
+	t=1715621091; cv=none; b=t3xdO02LWK4WhendWWBY0E9OWgarlZoy9uiCZ2/EacXNKLFocuoQ3TOj4tjrUe1JCTASgP4D//p87q939nrtB2gacvBgdfHPZ6oxv40NMD6du40qDOI4OfgQAr3OdHT34HTrFFhGkBtOGXvFzOfuvJvsWE83rg16s9P2xhyny+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715620768; c=relaxed/simple;
-	bh=MJiVwiM18XryHUPJhid6EktmMnrxfcyKLI1aF/pSACw=;
+	s=arc-20240116; t=1715621091; c=relaxed/simple;
+	bh=3pCCV3pIsPwoou09ayGUsRpQ+iP6dj5L6mBLbBQ9JQQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ud9MVXRTyzeyboerkoaZWDBpTXFcK+lInY94A4ZNLH3rFiQbYfkHG4mYeRsinSkAvKmAdP/PiTss638XQ/XGHP48jom/nvxzMdDtqyNvMOw71vNbJxLwUhUz5a0H28YQTYEi9L6ObwEkOKWI2N9+z1gRPjdzB92K/PBZmMUfwPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2Ei9j5Wg; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=fJkr5ZEmT9NKY+nSZDK9Wnj05KDn8TMhUmNGQmQR0Gkq0X/Y8NlgL3mcd57eyTTMaDoeUwps6b1a0fa97W0HKx97u2+mBKgAks7PD9jDNX9HlxTb6a7j+Z4cAMYa9daYNZrj4Y3O/VrgrB0uTjdOvH4s8F1hnCa8WH37taljAew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KYRUGNgf; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2Ei9j5Wg"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36c6789b520so353745ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 10:19:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYRUGNgf"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36c670757aaso348355ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 10:24:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715620765; x=1716225565; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715621089; x=1716225889; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+0LcTyeTsxJaPnZ45cfiBgAVI9jES1Y4g+ohTkoWGUw=;
-        b=2Ei9j5Wg6O6/qB40/2aulFUIKXSQWn61xjUeF1fmhSS1aMrtu5QfaHTae9VZB2uY0Z
-         /z3sgGReAHsJnMC1avCOSFjaEr2AKchf/Ku3bGZD/txcPm1kZEsKu9cMZoXhDRJwf/nh
-         A5+rxzvBarfGhVJE6zfcjWtYTYkCPIr3kUdXHj+0tYYMGkHFtGjNWSdv2F9y2cte79QC
-         H4OM56RbvsczCHHlWVwkoD2LePrxAYuhEMOxB3h+1W84ekzJIoU8uh9BvVuSbUyKIlox
-         Ufo81MAKjO99hz/N3uqXsKuT94J3ZpgDjx8pCkWMBq7uswl2hcD0lxC5yb1pNDZSG7WM
-         cWUw==
+        bh=qoSzKwBP/fkvEwEnZHAw4cEPWyEmks1QbjVuSI/cVOk=;
+        b=KYRUGNgfjF2lNP2oYitbuLrhZ2bQkz7+sgZ7Z2Ro1SlwoBVJrZSPsJNiDIROfl82RG
+         Iab9yclJso43dSo87ddG09iZiO7YnYCnzVOjopXfIZpp9OOEky9toKdAt+CaTfdng6nC
+         55zaQ20LNcAnKvGBgIKyUXwP3DSH5Z2hsSBZrOeD6OQFByHqeKevazdHStdWypYFaveH
+         wf+zTHxf/ExZBNuyoAAq1RV+HmpNNjkMNJ5TvClvUOLCHZ1pupPUU/bww+gudR4pfOcc
+         /6LQGkCeZm69vioOdUM29TzWsg9AjF9h3sQDdeI4PIf1Xrt3Q3ZUyQVjD8yNG4ryo7qD
+         aMJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715620765; x=1716225565;
+        d=1e100.net; s=20230601; t=1715621089; x=1716225889;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+0LcTyeTsxJaPnZ45cfiBgAVI9jES1Y4g+ohTkoWGUw=;
-        b=IpOX5v3wGO91LxOjVTLAk+pECB8hZZOXroGI5xDIa1VR5AY4x6MUMWDhwIfPhR2I2o
-         ZC13w5CCg1IqOu77DLprkf3eMK7z9S7bqtYkFoT0FfLE7l1FrRCErpcizNQrAQbxI2dw
-         rteAgTnhKAGc+dk3X+REj9jHcOuFQ8kjcmlPBuLw6t7vPTc/7fSbNqIxW14KQY/zPdJd
-         2HVnZfIzJ4ERa17ZJTrr5AkPcdJPyDkiVvBCiSyY+a8u2axaoUz75u3cFt5YB1cV2xqD
-         SI+6P4SQQuImWMIKc7yaCGufix00IH9r9RO85zSazQDMRReZQFE1UN5pJWePLrLM0hyI
-         stXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkFhOElI1Lq86t8ho5aVjpkk0vAmaQo6nRkU2tWdJckfiHPDAnUQ0iwXPyTOtQVrgBCfzeDHKlw9jWIYBt/b7h+rCLlpM2aq3cTCRuYDQN9Q==
-X-Gm-Message-State: AOJu0YwHjSBv2P//NpaTOR5H3kziIUZb0kFwGb0BtVunesHLZTGUGYHI
-	+cJdVpTYXYBH8Aeyl+YYcpx1wkWqy2SOtaAYanE350Q6JYbXQ2UAqNq1ymvHdFNRd2yxdnb37oY
-	A9aeK/r5ylJlOWwC4qXeqUGt2f2NwIT8zngrd
-X-Google-Smtp-Source: AGHT+IHz250z2fsSfufWt35b1l38Vjd0Oami4jYQovh1cLlCfllpQsmtMEwp1o+6AyTLkjf+AYr8RDCjJC6mp5mdSQ4=
-X-Received: by 2002:a05:6e02:c71:b0:36c:5511:4a4a with SMTP id
- e9e14a558f8ab-36ccb8904ccmr4746675ab.6.1715620765372; Mon, 13 May 2024
- 10:19:25 -0700 (PDT)
+        bh=qoSzKwBP/fkvEwEnZHAw4cEPWyEmks1QbjVuSI/cVOk=;
+        b=ap/en8l9TmmW57nma+UCq5+/JRvCTpQGIjBr2P6nWFAweZemMnpbHJxnGsl2pECr/b
+         elX9RdIIXgkfLY6sXM4o0j9B7zCAOwzOQT53zsf/QMCbBSdZqERmeMLKw5MI7Ra747Fz
+         TCBaZubEQ8kpNHRg45gyJic1lXjf8c8+r3e7gkMWPXKOvZGfC7Xe9FgGkkmzHxbaMimW
+         OhtN4uKEdKIlxYtfn+HQCSYAyER7jAKH98pk+8a6jH2gxT7LEzAY3SDmAiC86im2Aw6O
+         94y7HXWiq/tbeU6aSruizFlWC1Ip4Ao0vYtLMhJbGTVOP6ZKYMyidIxNRCDWS8cFk26S
+         Hk7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXh9BluZkIylZgzeuZhmHUa4V7BlUhFZPeKdod/JIkH28nFGYUzN1jMbtWZaxORRxK2eiNdvAZ8zRbI9zzbyzG6viXmyrI9xPmfQ0n2+xIy6g==
+X-Gm-Message-State: AOJu0YypT1YlqBRee+Ybc9spbE1RYH614vVMZawZdG6uIF7nCoD51/W7
+	ETns3ZcoJBiMtP6iE9rPCPHv7LJVjVqY7M0L0Dq+QpSYNS+Yh/bGkFEt3XJ17jn1zE9HrWGfFb/
+	Sitqq3Uq+T1a44rpwN7yQrgYwmjfARXfyDIQ/
+X-Google-Smtp-Source: AGHT+IHYMU6jMsPSnXdaLeFXuYoMOdmfMivMi4lN+n7GoENybPVKoifn+Yb6ANHGycPGxZe62L1KTUIxRVVd8SHq6m4=
+X-Received: by 2002:a92:cb85:0:b0:36c:cb38:a30c with SMTP id
+ e9e14a558f8ab-36ccca86eb3mr4592855ab.11.1715621089034; Mon, 13 May 2024
+ 10:24:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240511003601.2666907-1-irogers@google.com> <DBBPR08MB4538FF1CC6CC1C3CD37FCF76F7E22@DBBPR08MB4538.eurprd08.prod.outlook.com>
-In-Reply-To: <DBBPR08MB4538FF1CC6CC1C3CD37FCF76F7E22@DBBPR08MB4538.eurprd08.prod.outlook.com>
+References: <ZjssGrj+abyC6mYP@gmail.com> <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
+ <ZkG4LWr7w11wQ/PR@gmail.com> <CAP-5=fVHrKcqwczoU1uMD4tP5DTVhfQ1T_hXnm_y5Ji3M6K_ag@mail.gmail.com>
+ <ZkJK3x3zQ9a4wp8E@gmail.com>
+In-Reply-To: <ZkJK3x3zQ9a4wp8E@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 10:19:13 -0700
-Message-ID: <CAP-5=fWqGvVZxjjEb5MvTNK6oJXheedkohFw4xx3z1N_Csvr_A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu: Count sys and cpuid json events separately
-To: Justin He <Justin.He@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <Mark.Rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <James.Clark@arm.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Garry <john.g.garry@oracle.com>
+Date: Mon, 13 May 2024 10:24:37 -0700
+Message-ID: <CAP-5=fUh+GoqERAF-qf8zx4kwq2uzwR2Ugop5XOkPexYGAqF3A@mail.gmail.com>
+Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
+ vmlinux.h. Stop.
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 12, 2024 at 7:22=E2=80=AFPM Justin He <Justin.He@arm.com> wrote=
-:
+On Mon, May 13, 2024 at 10:16=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Ian Rogers <irogers@google.com> wrote:
+>
+> > > Was this regression fix propagated to v6.9 in time?
+> >
+> > We switched to using the handwritten file in v6.4:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/tools/perf/util/bpf_skel/vmlinux.h?id=3Da887466562b425bd6183bf75b523c147=
+7c9fd22d
+>
+> So there must be some different regression then, as this is readily
+> reproducible for me on v6.9, as per the build log below - I simply
+> Ctrl-C-ed a build, and the next build results in:
+>
+>   kepler:~/tip/tools/perf> make clean install
+>   Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.=
+  Stop.
+>   make: *** [Makefile:90: clean] Error 2
+>   kepler:~/tip/tools/perf>
+>
+> Thanks,
+>
+>         Ingo
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D>
+> kepler:~/tip/tools/perf> make clean install
+>   CLEAN   x86
+>   CLEAN   libapi
+>   CLEAN   libbpf
+>   CLEAN   libsubcmd
+>   CLEAN   libsymbol
+>   CLEAN   libperf
+>   CLEAN   arm64-sysreg-defs
+>   CLEAN   fixdep
+>   CLEAN   feature-detect
+>   CLEAN   python
+>   CLEAN   bpf-skel
+>   CLEAN   coresight
+>   CLEAN   core-objs
+>   CLEAN   core-progs
+>   CLEAN   core-gen
+>   CLEAN   Documentation
+>   BUILD:   Doing 'make -j64' parallel build
+>   HOSTCC  fixdep.o
+>   HOSTLD  fixdep-in.o
+>   LINK    fixdep
+> Warning: Kernel ABI header differences:
+>   diff -u tools/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
+>   diff -u tools/include/linux/bits.h include/linux/bits.h
+>   diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/c=
+pufeatures.h
+>   diff -u tools/arch/x86/include/asm/irq_vectors.h arch/x86/include/asm/i=
+rq_vectors.h
+>   diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr=
+-index.h
+>   diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entr=
+y/syscalls/syscall_64.tbl
 >
 >
 >
-> > -----Original Message-----
-> > From: Ian Rogers <irogers@google.com>
-> > Sent: Saturday, May 11, 2024 8:36 AM
-> > To: Justin He <Justin.He@arm.com>; Peter Zijlstra <peterz@infradead.org=
->;
-> > Ingo Molnar <mingo@redhat.com>; Arnaldo Carvalho de Melo
-> > <acme@kernel.org>; Namhyung Kim <namhyung@kernel.org>; Mark Rutland
-> > <Mark.Rutland@arm.com>; Alexander Shishkin
-> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Ian=
- Rogers
-> > <irogers@google.com>; Adrian Hunter <adrian.hunter@intel.com>; Kan Lian=
-g
-> > <kan.liang@linux.intel.com>; James Clark <James.Clark@arm.com>;
-> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; John Ga=
-rry
-> > <john.g.garry@oracle.com>
-> > Subject: [PATCH v1] perf pmu: Count sys and cpuid json events separatel=
-y
-> >
-> > Sys events are eagerly loaded as each event has a compat option that ma=
-y mean
-> > the event is or isn't associated with the PMU. These shouldn't be count=
-ed as
-> > loaded_json_events as that is used for json events matching the CPUID t=
-hat may
-> > or may not have been loaded. The mismatch causes issues on ARM64 that u=
-ses
-> > sys events.
-> >
-> > Reported-by: Jia He <justin.he@arm.com>
-> > Closes:
-> > https://lore.kernel.org/lkml/20240510024729.1075732-1-justin.he@arm.com
-> > /
-> > Fixes: e6ff1eed3584 ("perf pmu: Lazily add JSON events")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmu.c | 70 ++++++++++++++++++++++++++++++-------------
-> >  tools/perf/util/pmu.h |  6 ++--
-> >  2 files changed, 53 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c index
-> > b3b072feef02..888ce9912275 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -36,6 +36,18 @@ struct perf_pmu perf_pmu__fake =3D {
-> >
-> >  #define UNIT_MAX_LEN 31 /* max length for event unit name */
-> >
-> > +enum event_source {
-> > +     /* An event loaded from /sys/devices/<pmu>/events. */
-> > +     EVENT_SRC_SYSFS,
-> > +     /* An event loaded from a CPUID matched json file. */
-> > +     EVENT_SRC_CPU_JSON,
-> > +     /*
-> > +      * An event loaded from a /sys/devices/<pmu>/identifier matched j=
-son
-> > +      * file.
-> > +      */
-> > +     EVENT_SRC_SYS_JSON,
-> > +};
-> > +
-> >  /**
-> >   * struct perf_pmu_alias - An event either read from sysfs or builtin =
-in
-> >   * pmu-events.c, created by parsing the pmu-events json files.
-> > @@ -521,7 +533,7 @@ static int update_alias(const struct pmu_event *pe,
-> >
-> >  static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
-> >                               const char *desc, const char *val, FILE *=
-val_fd,
-> > -                             const struct pmu_event *pe)
-> > +                             const struct pmu_event *pe, enum event_so=
-urce src)
-> >  {
-> >       struct perf_pmu_alias *alias;
-> >       int ret;
-> > @@ -574,25 +586,30 @@ static int perf_pmu__new_alias(struct perf_pmu
-> > *pmu, const char *name,
-> >               }
-> >               snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
-> >       }
-> > -     if (!pe) {
-> > -             /* Update an event from sysfs with json data. */
-> > -             struct update_alias_data data =3D {
-> > -                     .pmu =3D pmu,
-> > -                     .alias =3D alias,
-> > -             };
-> > -
-> > +     switch (src) {
-> > +     default:
-> > +     case EVENT_SRC_SYSFS:
-> >               alias->from_sysfs =3D true;
-> >               if (pmu->events_table) {
-> > +                     /* Update an event from sysfs with json data. */
-> > +                     struct update_alias_data data =3D {
-> > +                             .pmu =3D pmu,
-> > +                             .alias =3D alias,
-> > +                     };
-> >                       if (pmu_events_table__find_event(pmu->events_tabl=
-e, pmu,
-> > name,
-> >                                                        update_alias, &d=
-ata) =3D=3D 0)
-> > -                             pmu->loaded_json_aliases++;
-> > +                             pmu->cpu_json_aliases++;
-> >               }
-> > -     }
-> > -
-> > -     if (!pe)
-> >               pmu->sysfs_aliases++;
-> > -     else
-> > -             pmu->loaded_json_aliases++;
-> > +             break;
-> > +     case  EVENT_SRC_CPU_JSON:
-> > +             pmu->cpu_json_aliases++;
-> > +             break;
-> > +     case  EVENT_SRC_SYS_JSON:
-> > +             pmu->sys_json_aliases++;
-> > +             break;
-> > +
-> > +     }
-> >       list_add_tail(&alias->list, &pmu->aliases);
-> >       return 0;
-> >  }
-> > @@ -653,7 +670,8 @@ static int __pmu_aliases_parse(struct perf_pmu *pmu=
-,
-> > int events_dir_fd)
-> >               }
-> >
-> >               if (perf_pmu__new_alias(pmu, name, /*desc=3D*/ NULL,
-> > -                                     /*val=3D*/ NULL, file, /*pe=3D*/ =
-NULL) < 0)
-> > +                                     /*val=3D*/ NULL, file, /*pe=3D*/ =
-NULL,
-> > +                                     EVENT_SRC_SYSFS) < 0)
-> >                       pr_debug("Cannot set up %s\n", name);
-> >               fclose(file);
-> >       }
-> > @@ -946,7 +964,8 @@ static int pmu_add_cpu_aliases_map_callback(const
-> > struct pmu_event *pe,  {
-> >       struct perf_pmu *pmu =3D vdata;
-> >
-> > -     perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=
-=3D*/
-> > NULL, pe);
-> > +     perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=
-=3D*/
-> > NULL,
-> > +                         pe, EVENT_SRC_CPU_JSON);
-> >       return 0;
-> >  }
-> >
-> > @@ -981,13 +1000,14 @@ static int pmu_add_sys_aliases_iter_fn(const str=
-uct
-> > pmu_event *pe,
-> >               return 0;
-> >
-> >       if (pmu_uncore_alias_match(pe->pmu, pmu->name) &&
-> > -                     pmu_uncore_identifier_match(pe->compat, pmu->id))=
- {
-> > +         pmu_uncore_identifier_match(pe->compat, pmu->id)) {
-> >               perf_pmu__new_alias(pmu,
-> >                               pe->name,
-> >                               pe->desc,
-> >                               pe->event,
-> >                               /*val_fd=3D*/ NULL,
-> > -                             pe);
-> > +                             pe,
-> > +                             EVENT_SRC_SYS_JSON);
-> >       }
-> >
-> >       return 0;
-> > @@ -1082,6 +1102,12 @@ struct perf_pmu *perf_pmu__lookup(struct
-> > list_head *pmus, int dirfd, const char
-> >       pmu->max_precise =3D pmu_max_precise(dirfd, pmu);
-> >       pmu->alias_name =3D pmu_find_alias_name(pmu, dirfd);
-> >       pmu->events_table =3D perf_pmu__find_events_table(pmu);
-> > +     /*
-> > +      * Load the sys json events/aliases when loading the PMU as each =
-event
-> > +      * may have a different compat regular expression. We therefore c=
-an't
-> > +      * know the number of sys json events/aliases without computing t=
-he
-> > +      * regular expressions for them all.
-> > +      */
-> >       pmu_add_sys_aliases(pmu);
-> >       list_add_tail(&pmu->list, pmus);
-> >
-> > @@ -1739,12 +1765,14 @@ size_t perf_pmu__num_events(struct perf_pmu
-> > *pmu)
-> >       size_t nr;
-> >
-> >       pmu_aliases_parse(pmu);
-> > -     nr =3D pmu->sysfs_aliases;
-> > +     nr =3D pmu->sysfs_aliases + pmu->sys_json_aliases;;
 >
-> Nits: double ";", others lgtm.
 >
-> This fixes the error on the Arm N2 server:
-> Unexpected event smmuv3_pmcg_3f002/smmuv3_pmcg_3f002/transaction//
-> Unexpected event smmuv3_pmcg_3f042/smmuv3_pmcg_3f042/transaction//
-> Unexpected event smmuv3_pmcg_3f062/smmuv3_pmcg_3f062/transaction//
-> Unexpected event smmuv3_pmcg_3f402/smmuv3_pmcg_3f402/transaction//
-> Unexpected event smmuv3_pmcg_3f442/smmuv3_pmcg_3f442/transaction//
-> .....
+> Auto-detecting system features:
+> ...                                   dwarf: [ on  ]
+> ...                      dwarf_getlocations: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libbfd: [ on  ]
+> ...                          libbfd-buildid: [ on  ]
+> ...                                  libcap: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                               libunwind: [ on  ]
+> ...                      libdw-dwarf-unwind: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
 >
-> Please feel free to add
-> Tested-by: Jia He <justin.he@arm.com>
+>   GEN     common-cmds.h
+>   CC      perf-read-vdso32
+>   CC      perf-read-vdsox32
+>   CC      jvmti/libjvmti.o
+>   CC      dlfilters/dlfilter-test-api-v0.o
+>   CC      dlfilters/dlfilter-test-api-v2.o
+>   CC      jvmti/jvmti_agent.o
+>   CC      dlfilters/dlfilter-show-cycles.o
+>   CC      jvmti/libstring.o
+>   CC      jvmti/libctype.o
+>   GEN     /home/mingo/tip/tools/perf/arch/arm64/include/generated/asm/sys=
+reg-defs.h
+>   PERF_VERSION =3D 6.9.g16ae3bebb76c
+>   INSTALL /home/mingo/tip/tools/perf/libsubcmd/include/subcmd/exec-cmd.h
+>   INSTALL /home/mingo/tip/tools/perf/libsubcmd/include/subcmd/help.h
+>   INSTALL /home/mingo/tip/tools/perf/libsubcmd/include/subcmd/pager.h
+>   GEN     perf-archive
+>   GEN     perf-iostat
+>   INSTALL /home/mingo/tip/tools/perf/libsubcmd/include/subcmd/parse-optio=
+ns.h
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/exec-cmd.o
+>   INSTALL /home/mingo/tip/tools/perf/libsubcmd/include/subcmd/run-command=
+.h
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/help.o
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/pager.o
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/parse-options.o
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/run-command.o
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/sigchain.o
+>   CC      /home/mingo/tip/tools/perf/libsubcmd/subcmd-config.o
+>   INSTALL libsubcmd_headers
+>   GEN      doc.dep
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/cpu.h
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/debug.h
+>   INSTALL /home/mingo/tip/tools/perf/libsymbol/include/symbol/kallsyms.h
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/io.h
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/fd/array.h
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/bpf_perf.h
+>   LINK    dlfilters/dlfilter-show-cycles.so
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/fs/fs.h
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/core.h
+>   CC      /home/mingo/tip/tools/perf/libsymbol/kallsyms.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/cpumap.h
+>   INSTALL /home/mingo/tip/tools/perf/libapi/include/api/fs/tracing_path.h
+>   CC      /home/mingo/tip/tools/perf/libapi/cpu.o
+>   MKDIR   /home/mingo/tip/tools/perf/libapi/fd/
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/threadmap.h
+>   CC      /home/mingo/tip/tools/perf/libapi/debug.o
+>   CC      /home/mingo/tip/tools/perf/libperf/core.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/evlist.h
+>   MKDIR   /home/mingo/tip/tools/perf/libapi/fs/
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/evsel.h
+>   CC      /home/mingo/tip/tools/perf/libperf/cpumap.o
+>   CC      /home/mingo/tip/tools/perf/libapi/str_error_r.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/event.h
+>   MKDIR   /home/mingo/tip/tools/perf/libapi/fs/
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/perf/mmap.h
+>   CC      /home/mingo/tip/tools/perf/libperf/threadmap.o
+>   MKDIR   /home/mingo/tip/tools/perf/libapi/fs/
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/cpumap.h
+>   CC      /home/mingo/tip/tools/perf/libperf/evsel.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/evlist.h
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/evsel.h
+>   CC      /home/mingo/tip/tools/perf/libapi/fd/array.o
+>   CC      /home/mingo/tip/tools/perf/libperf/evlist.o
+>   CC      /home/mingo/tip/tools/perf/libapi/fs/fs.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/lib.h
+>   INSTALL libsymbol_headers
+>   CC      /home/mingo/tip/tools/perf/libperf/mmap.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/mmap.h
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/rc_check.h
+>   CC      /home/mingo/tip/tools/perf/libapi/fs/tracing_path.o
+>   INSTALL libapi_headers
+>   CC      /home/mingo/tip/tools/perf/libperf/zalloc.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/threadmap.h
+>   CC      /home/mingo/tip/tools/perf/libapi/fs/cgroup.o
+>   INSTALL /home/mingo/tip/tools/perf/libperf/include/internal/xyarray.h
+>   CC      /home/mingo/tip/tools/perf/libperf/xyarray.o
+>   CC      /home/mingo/tip/tools/perf/libperf/lib.o
+>   GEN     /home/mingo/tip/tools/perf/libbpf/bpf_helper_defs.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/libbpf.h
+>   INSTALL libperf_headers
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/btf.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/libbpf_common.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/libbpf_legacy.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf_helpers.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf_tracing.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf_endian.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf_core_read.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/skel_internal.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/libbpf_version.h
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/usdt.bpf.h
+>   LINK    dlfilters/dlfilter-test-api-v2.so
+>   LINK    dlfilters/dlfilter-test-api-v0.so
+>   LD      /home/mingo/tip/tools/perf/libapi/fd/libapi-in.o
+>   INSTALL /home/mingo/tip/tools/perf/libbpf/include/bpf/bpf_helper_defs.h
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   MKDIR   /home/mingo/tip/tools/perf/libbpf/staticobjs/
+>   INSTALL libbpf_headers
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/netlink.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/bpf.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/libbpf.o
+>   LD      /home/mingo/tip/tools/perf/libsymbol/libsymbol-in.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/btf.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/nlattr.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/libbpf_errno.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/str_error.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/bpf_prog_linfo.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/libbpf_probes.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/hashmap.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/btf_dump.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/ringbuf.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/strset.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/linker.o
+>   ASCIIDOC perf-annotate.xml
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/gen_loader.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/relo_core.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/usdt.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/zip.o
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/elf.o
+>   AR      /home/mingo/tip/tools/perf/libsymbol/libsymbol.a
+>   CC      /home/mingo/tip/tools/perf/libbpf/staticobjs/features.o
+>   LD      /home/mingo/tip/tools/perf/libapi/fs/libapi-in.o
+>   LD      /home/mingo/tip/tools/perf/libapi/libapi-in.o
+>   LD      /home/mingo/tip/tools/perf/libperf/libperf-in.o
+>   AR      /home/mingo/tip/tools/perf/libperf/libperf.a
+>   AR      /home/mingo/tip/tools/perf/libapi/libapi.a
+>   LD      jvmti/jvmti-in.o
+>   LINK    libperf-jvmti.so
+>   LD      /home/mingo/tip/tools/perf/libsubcmd/libsubcmd-in.o
+>   AR      /home/mingo/tip/tools/perf/libsubcmd/libsubcmd.a
+>   ASCIIDOC perf-archive.xml
+>   GEN     python/perf.cpython-311-x86_64-linux-gnu.so
+>   ASCIIDOC perf-arm-spe.xml
+>   ASCIIDOC perf-bench.xml
+>   ASCIIDOC perf-buildid-cache.xml
+>   ASCIIDOC perf-buildid-list.xml
+>   ASCIIDOC perf-c2c.xml
+>   ASCIIDOC perf-config.xml
+>   ASCIIDOC perf-daemon.xml
+>   ASCIIDOC perf-data.xml
+>   ASCIIDOC perf-diff.xml
+>   ASCIIDOC perf-dlfilter.xml
+> ^Cmake[2]: *** [Makefile.perf:1121: /home/mingo/tip/tools/perf/util/bpf_s=
+kel/.tmp/bootstrap/bpftool] Interrupt
+> make[4]: *** [/home/mingo/tip/tools/build/Makefile.build:105: /home/mingo=
+/tip/tools/perf/libbpf/staticobjs/libbpf.o] Interrupt
+> make[3]: *** [Makefile:157: /home/mingo/tip/tools/perf/libbpf/staticobjs/=
+libbpf-in.o] Interrupt
+> interrupted
+> make[2]: *** [Makefile.perf:868: /home/mingo/tip/tools/perf/libbpf/libbpf=
+.a] Interrupt
+> make[3]: *** [Makefile:275: perf-dlfilter.xml] Interrupt
+> make[3]: *** [Makefile:275: perf-diff.xml] Interrupt
+> make[2]: *** [Makefile.perf:1072: try-install-man] Interrupt
+> make[2]: *** [Makefile.perf:681: python/perf.cpython-311-x86_64-linux-gnu=
+.so] Interrupt
+> make[1]: *** [Makefile.perf:264: sub-make] Interrupt
+> make: *** [Makefile:113: install] Interrupt
+>
+> kepler:~/tip/tools/perf> make clean install
+> Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.  =
+Stop.
+> make: *** [Makefile:90: clean] Error 2
+> kepler:~/tip/tools/perf>
 
-Thanks Justin! I noticed Arnaldo has picked this up in the next tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
-mmit/?h=3Dperf-tools-next&id=3Dd9c5f5f94c2d356fdf3503f7fcaf254512bc032d
-Would be great to add the Tested-by and address the ;; issue, good catch :-=
-)
+Strange. I'll try to repro and update you.
 
+Thanks,
 Ian
-
-> --
-> Cheers,
-> Justin (Jia He)
-> >
-> >       if (pmu->cpu_aliases_added)
-> > -              nr +=3D pmu->loaded_json_aliases;
-> > +              nr +=3D pmu->cpu_json_aliases;
-> >       else if (pmu->events_table)
-> > -             nr +=3D pmu_events_table__num_events(pmu->events_table, p=
-mu) -
-> > pmu->loaded_json_aliases;
-> > +             nr +=3D pmu_events_table__num_events(pmu->events_table, p=
-mu) -
-> > pmu->cpu_json_aliases;
-> > +     else
-> > +             assert(pmu->cpu_json_aliases =3D=3D 0);
-> >
-> >       return pmu->selectable ? nr + 1 : nr;
-> >  }
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h index
-> > 561716aa2b25..b2d3fd291f02 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -123,8 +123,10 @@ struct perf_pmu {
-> >       const struct pmu_events_table *events_table;
-> >       /** @sysfs_aliases: Number of sysfs aliases loaded. */
-> >       uint32_t sysfs_aliases;
-> > -     /** @sysfs_aliases: Number of json event aliases loaded. */
-> > -     uint32_t loaded_json_aliases;
-> > +     /** @cpu_json_aliases: Number of json event aliases loaded specif=
-ic to the
-> > CPUID. */
-> > +     uint32_t cpu_json_aliases;
-> > +     /** @sys_json_aliases: Number of json event aliases loaded matchi=
-ng the
-> > PMU's identifier. */
-> > +     uint32_t sys_json_aliases;
-> >       /** @sysfs_aliases_loaded: Are sysfs aliases loaded from disk? */
-> >       bool sysfs_aliases_loaded;
-> >       /**
-> > --
-> > 2.45.0.118.g7fe29c98d7-goog
->
-> IMPORTANT NOTICE: The contents of this email and any attachments are conf=
-idential and may also be privileged. If you are not the intended recipient,=
- please notify the sender immediately and do not disclose the contents to a=
-ny other person, use it for any purpose, or store or copy the information i=
-n any medium. Thank you.
