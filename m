@@ -1,146 +1,147 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E75154427
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 15:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA4B179A3
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 15:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615331; cv=none; b=cOk3pFLt/XdJt91pO5mCpM2/SYxY5kohHkP0qzO9pMLbbP+S6/Wrsc0IotEHi6FwinJjOUs/71GrpFhWVIRhFzs/znpd/eY3xBjcQs5EZ6UutbbnCy15aHO//VbGXxua3CqQPFtzh9LWoXbu6NzPLh4I47ryy5Sue2adAgVOwbc=
+	t=1715615548; cv=none; b=syTUlKQY25fl1vJCnAgemlux0+aEnudwzJRWKKnHNPs2R1zOEdKrEoCAO0/w2XPHArt5thIEMTs3gxAdBZ3wPKBGOR9HbKycAusJyp4/vS0JNX3IvsCnbrNRdv7jFUX8Xi59UuEW3ZyQkr5KoIKJYhUH/fK5ntRfgKP9LbDzUss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615331; c=relaxed/simple;
-	bh=4PHST+75MmCsC59iF4Z7sYgddRT/S6IfMjcgvunmaa0=;
+	s=arc-20240116; t=1715615548; c=relaxed/simple;
+	bh=vkLE3ThAcRnXVsMhuA6mAajRU1E+VMOLAEmdSVnfxH4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FUeOiqvVn7Gk5uC0wiudSXiQvWhBWnI8bKtuIk4mS6CJOkBgbwsIjLl/OavGHsklzhS9oGCW5EQJrX8rGE26/D9TeZeIlITXaMFPreDilyVwAT4BGsNqxFtek2jvl0ovQUx3wAGGZfeEo7sPXHVi3RtQD0oZ/crPMpuiS8HI5e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N0OijpHl; arc=none smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=JhzOaDZqUaVLhLuQOZQcr0gae6TPQccYDvtRGi9oPD3LLT5o1LoL5eLw0l+MULDY8WqYK4qhyFdTyag2sgHSjmXwiAtbFSR1VSKEuXtTeVtkoeacIMI9E2rRPJS9cHJL/ccriHPI4m9LI3ahXIw213gWqEfYMr/keQ+rif03l6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F+MamYn0; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N0OijpHl"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso290215ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 08:48:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+MamYn0"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43dfe020675so808761cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 08:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715615329; x=1716220129; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715615546; x=1716220346; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yYQ0gjixSfurkzUiaxNduoPe4FC+QiIMjqkq94QKpYA=;
-        b=N0OijpHlS9ZaswLqjMNqSFLKS8TmbXrKgn0KxuuRM8aXSQz+C+UgQk87rXrEVbDVio
-         e8Q9ReewOpIO7cPS/8aC1TD3Js3wBQKslURx/5VuFwAwY8kLKQhC/raR/0tQhOFIppyO
-         BzE34TBvjVv5+s/0yDm9pDICNxW7OfwJACAKAy7swhalQE6H9QVfjKDqdCBCpLm7bUts
-         NK7w0TF9j3oAk/rd1bDUxxfb85zHlNr46OIEpnPK4R0mvIe8shlNH0mYO0VS2BLgJTNW
-         G2MllmdVjvc00favt/VWK+UFXbCD2volXSCwdcGYEMe2Gm7W0v+11PX6TZB7QBBYnrdo
-         92HQ==
+        bh=Ab6Pb1Zn+PdwPKJ9a5mXYGSOH8gBv7qhSD/WUjQgp8s=;
+        b=F+MamYn0MdnBJXObBkqQnXQ4RCnjFunhfr06c/0pUakX23/zt2o6zMXFOXgfAai8/G
+         7tkbfOsxfSlqOM8ssZscPPwqneKRuOJysSibWyAHqRn2jZt6fBjqYxrUpLTY0rNGXnjE
+         oNLQZrjUByafq+mHyvF66ceGWEMGaOOzGsWJiIZMhsUULSY+q2o2gymM/BCbvDajVjLT
+         GsoctfbaIZwGeYr5nItl9D1g4S/zz4bZLGWFCx1i6/uX0t98sA0UZd2/0u0rHoEmNv7h
+         96biPQ2zyShMr0Y8R9H3Tsm5HxKOL3ud+1KyMzeY/S9bpNj9JiNwK38kVVsOP9Xt+Ggg
+         UJEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715615329; x=1716220129;
+        d=1e100.net; s=20230601; t=1715615546; x=1716220346;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yYQ0gjixSfurkzUiaxNduoPe4FC+QiIMjqkq94QKpYA=;
-        b=Gne82huoZ5zsCeYNPYi+KyYnltyIkNBjYlTmr+u5XlEW9dxRRyi3Az/2AenpZfyNtA
-         55VZUBLLerVCYOywV47lODd5r8L4W4Yb8i6swn6qyk7a2frETme8r6u5xzChtdveJi6x
-         ijRAwRcSu9i15J7f81vK2/ySSzDziM1s9zLMNc5wdC05C//DQ02SWvSV+7CxG+8EHHHB
-         jL690uVwyxL44/dBluzOMSdoxlKpXl02GPvNzC90rdgyjaGQG4pz1y/xk2rymudB90X3
-         clpe6LI0thYOTR897qHe4rJefhIVLlq45Ln9+bzb6um6IHdIflDUtePTfkoKisXupj2l
-         uxLg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6E1b0dt7ygm1qGtwXIVOVCsTvA+xxz2qJ+TxTROVHOTG9uPidae6iS3gxBJ9pJ9kgr1GRsgu2yRGp9V0zTtMeg6uW5QVMa7ULuDB9OC2c7Q==
-X-Gm-Message-State: AOJu0Yzm0i0CAy+lQikc2M8nay8sp1uqThhZPRQK/kfQq+zuTg3YOrjw
-	VwSELoDLr1c3ELWWeK8WhXjdFTwlKGNBVD46841aoo4Q8KbY6cm43R0CPFHpdame99HWMHZjb0v
-	hG6jzHGhSqhdKwGsIFknxkJPhtd9BFpKrotsM
-X-Google-Smtp-Source: AGHT+IHFPeUwje6u46qQGp/yl62ewYxSbg8BroLP1qrZakkaZuri3+FL8GC0Bmy0hAkLluYgzs5xr2jZm4ojRCLZVhU=
-X-Received: by 2002:a17:903:298c:b0:1e9:4b4:907b with SMTP id
- d9443c01a7336-1f05f661701mr3954125ad.6.1715615328876; Mon, 13 May 2024
- 08:48:48 -0700 (PDT)
+        bh=Ab6Pb1Zn+PdwPKJ9a5mXYGSOH8gBv7qhSD/WUjQgp8s=;
+        b=hsjCjnVRKqDxWJHCK3KUt/jpDvvbcGJUrdJUTFPn7ETDZL/p4lrk5MmdGa2Z3iOWhz
+         bjgJQ9JM2U9VpVnAFK8E3rLLpxZS5tYUeEMqnDEt+3CWYN+BvCs1Vs9lPzM3PGN5i42g
+         w8WzK+V8b0eBSAuGbrfgu11F/gPh8z0QSIuLi/OzbXe0E6jw28DcEpzMxFUcNqF/739S
+         XalGy6olQ+E4ug3X2Bwa1wk/lRku4aRXto4MX0UshFrHQU+FFio3PtoNSaLg/N234ru4
+         nCzFoS1W//cRkhiQa/DmxcztDK1JJnZCk46L8mavaw/lswbxy4yRmGvksX36vvh0RDID
+         i+Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhRXG60zk8dHPXOWM1DUBerA3jItv/qdHl/arrrEI6VscNczJUPFaZRKuG8hIZaNZOTAH9XKEkM6xRxKhMOkC8qjKq6faYwNY+cZeBMLyhMA==
+X-Gm-Message-State: AOJu0Yy/TrkmoOX9SLTmw2m+1aq39/SKI7Jg7LKun4ndzRwntzDL6Qtg
+	KNIs3BnvtCJ14z5CmZJ9cSNiE7L8Zdpmm0p8R/5OfAyJtTBWfjHQ0Ef0HJgslFgP9qd38y5AM1E
+	yYKnfBm5UccjBLXNJB9YVknccdLWwVLIQWRLR
+X-Google-Smtp-Source: AGHT+IFfwR81J/neIzXou87W+GV66GTPQOziuMfR6JAYbFA1015p3P3pBkkVmrfr+CcMuqrdlZNaiXRao+YFaGuMwyw=
+X-Received: by 2002:a05:622a:a490:b0:43e:e09:d346 with SMTP id
+ d75a77b69052e-43e0e09d358mr2510511cf.5.1715615545425; Mon, 13 May 2024
+ 08:52:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240505031624.299361-1-irogers@google.com> <CAP-5=fVSAQOXbSfpSLTVkWcZKGx+LqiuC_ZkCxnc0iPtyfrzvQ@mail.gmail.com>
- <CAP-5=fXuneU6ockdzFcnLGqATKkEfvEuTa778Hj92rBmkbiS1w@mail.gmail.com> <34da7677-9c77-4efa-ae32-e0ef9a94013d@arm.com>
-In-Reply-To: <34da7677-9c77-4efa-ae32-e0ef9a94013d@arm.com>
+References: <ZjssGrj+abyC6mYP@gmail.com> <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
+ <ZkG4LWr7w11wQ/PR@gmail.com>
+In-Reply-To: <ZkG4LWr7w11wQ/PR@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 08:48:37 -0700
-Message-ID: <CAP-5=fWwVNB0194npwSkW2RM0t0wYLrMKxTMXJAaquBZXRZjoA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
-	Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Will Deacon <will@kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Tuan Phan <tuanphan@os.amperecomputing.com>
+Date: Mon, 13 May 2024 08:52:13 -0700
+Message-ID: <CAP-5=fVHrKcqwczoU1uMD4tP5DTVhfQ1T_hXnm_y5Ji3M6K_ag@mail.gmail.com>
+Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
+ vmlinux.h. Stop.
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 7:35=E2=80=AFAM Robin Murphy <robin.murphy@arm.com>=
- wrote:
+On Sun, May 12, 2024 at 11:50=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
 >
-> On 2024-05-10 8:15 pm, Ian Rogers wrote:
-> > On Fri, May 10, 2024 at 11:13=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> >>
-> >> On Sat, May 4, 2024 at 8:16=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> >>>
-> >>> The mrvl_ddr_pmu is uncore and has a hexadecimal address
-> >>> suffix. Current PMU sorting/merging code assumes uncore PMU names
-> >>> start with uncore_ and have a decimal suffix. Add support for
-> >>> hexadecimal suffixes and add tests.
-> >>>
-> >>> v3. Rebase and move tests from pmus.c to the existing pmu.c.
-> >>>
-> >>> Ian Rogers (2):
-> >>>    perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
-> >>>    perf tests: Add some pmu core functionality tests
-> >>
-> >> Hi, these patches have been hanging around since March [1], it would
-> >> be nice to either be landing them or getting feedback on what to fix.
-> >>
-> >> Thanks,
-> >> Ian
-> >>
-> >> [1] https://lore.kernel.org/lkml/20240329064803.3058900-1-irogers@goog=
-le.com/
+>
+> * Ian Rogers <irogers@google.com> wrote:
+>
+> > On Wed, May 8, 2024 at 12:39=E2=80=AFAM Ingo Molnar <mingo@kernel.org> =
+wrote:
+> > >
+> > >
+> > > So I've been getting this perf build failure for some time:
+> > >
+> > >   kepler:~/tip/tools/perf> make clean
+> > >   Makefile.perf:1149: *** Missing bpftool input for generating vmlinu=
+x.h.  Stop.
+> > >   make: *** [Makefile:90: clean] Error 2
+> > >
+> > > ... but if I clone a new repository, it works fine, until a point.
+> > >
+> > > 'make clean' doesn't work - and 'make mrproper' in the main kernel
+> > > directory doesn't clean up properly.
+> > >
+> > > Only if I do a brute-force:
+> > >
+> > >         rm -rf tools/
+> > >         git checkout HEAD -f
+> > >
+> > > does it get resolved.
+> > >
+> > > The failure condition triggers if I Ctrl-C the following build a coup=
+le of
+> > > times, without it being finished:
+> > >
+> > >
+> > >    cd tools/perf; make clean install
+> > >    ...
+> > >
+> > >    LD      util/perf-in.o
+> > >    LD      perf-in.o
+> > >    CC      pmu-events/pmu-events.o
+> > >  ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interr=
+upt
+> > >  make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interru=
+pt
+> > >  make[1]: *** [Makefile.perf:264: sub-make] Interrupt
+> > >  make: *** [Makefile:113: install] Interrupt
+> > >  kepler:~/tip> perfi
+> > >  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux=
+.h.  Stop.
+> > >  make: *** [Makefile:90: clean] Error 2
 > >
-> > +Tuan Phan, Robin Murphy
-> >
-> > Here is another PMU with the same suffix convention/issue:
+> > We have a checked-in vmlinux.h:
 > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/drivers/perf/arm_dmc620_pmu.c?h=3Dperf-tools-next#n706
+t/tree/tools/perf/util/bpf_skel/vmlinux/vmlinux.h?h=3Dperf-tools-next
+> > so this shouldn't have been a problem for a while. bpftool is no
+> > longer on that line:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n1149
+> > so I suspect if you use a newer tree then things will work.
 >
-> There are at least one or two more as well - certainly arm_smmuv3_pmu
-> which I think may have been where this pattern first started. Now that
-> we've finally done the right thing with the parent mechanism to provide
-> a user-visible relationship of PMU instances to their corresponding
-> Devicetree/ACPI devices, hopefully we can discourage any further use of
-> this rather clunky trick of using the MMIO address as an identifier in
-> the PMU name. However there's then also stuff like dwc_pcie_pmu which
-> encodes a PCI ID as a hex suffix, so understanding hex suffixes in
-> general might still be a reasonable idea for the tool, if the
-> alternative would be maintaining a list of specific prefixes (even if
-> that would be hoped to remain fairly small).
+> Was this regression fix propagated to v6.9 in time?
 
-Thanks Robin, the problem that Kan identified was that IBM s390 have a
-PMU called cpum_cf. So the _cf is a valid hex suffix. Maybe there
-needs to be a minimum hex suffix length to deal with this. We made the
-0x optional in perf "raw" events like `perf stat -e 'r12abcd'...` and
-now we have the problem that the word `read` is both quite a desirable
-perf event name and also a valid hex encoding. We prefer the event
-name if it exists, but we have to make the code more complex to deal
-with this. It would be nice if we were capturing the conventions in:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Doc=
-umentation/ABI/testing
-Like with the sysfs-bus-event_source-* files. I'll do a v4 of these
-changes and see if I can do something to document the suffixes, would
-be great to get an Acked-by/Tested-by.
+We switched to using the handwritten file in v6.4:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/t=
+ools/perf/util/bpf_skel/vmlinux.h?id=3Da887466562b425bd6183bf75b523c1477c9f=
+d22d
 
 Thanks,
 Ian
 
 > Thanks,
-> Robin.
+>
+>         Ingo
