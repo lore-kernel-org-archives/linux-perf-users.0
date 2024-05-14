@@ -1,37 +1,50 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACEC17FF;
-	Tue, 14 May 2024 05:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5183D1171D;
+	Tue, 14 May 2024 07:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715665256; cv=none; b=pzoAKQDO3i2bQlbpTj4dtFx969fOyNEA9anU6WTOiTJTO+LDxQ1VTLJIZOxnjXMcY1YM/QOqY+6l7fJrVzzgtYtic5Az338U7aQGZPKSkPZ04BVtfixFJHtgAtq3QKthOEkSSOqIHW+wxtf06LDWzlpD+G0sxF3FqYE3Cv42rO8=
+	t=1715672096; cv=none; b=t6hHmrMHSj6TKZWXb8PpBA9FkGfaFv8AK8v2M8KxxTZuArRBmHBBN3zHqz68yKT+i/F3NdAD4iGAUdKp1IAkBoKVWSBRIpgNn2lXCN7q8mvTeM3kXYFFB536ZCR8fts1tKSgBlfLbI6AUUdqic2PjisVS1T1+EBWOKK36W1/KwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715665256; c=relaxed/simple;
-	bh=Pu/7+bRXOsXzA1dbf5qN3S1loGmvxS5Xgd1PfNlSCcU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WwzrUvUH63QUk+Rq5IikQ/D4yIeL9byIM5iuvXaVEiEqny5RR8bVdU6tAhFQTChU6Oa4yTDysbxxJ0bGPhexCLGwziUix3y1GOHro4SgtlPNoBSiZZO5jbsqrmAq6xbvJV0wB0c8WjCCYa8F3TBGpFmtcys8vk6tuB1g+pWdvGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kSq4+5+4; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1715672096; c=relaxed/simple;
+	bh=TULusMh7T/SdxAZq8HnaEdWoBbssb9f1gBrF4iydUIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AHP2HMg9gXqGi9RtM89xCoGr3kehqNz4+NBaAkAUpHMKaGtypq7D9dMLCbbWdsaRB62m+I5xuNoep9mrNblvnxlhk0mirhxwfro7q24O2NTm00DCJ2t5aXhY9WxdTEoHNi3+vLKOAUIa7gGPZ7D28niyH2btpXU5yVbj0jAJTks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SU+YqhG4; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kSq4+5+4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=wGQ2BN7dODhp2l12BVwJ1rFeeAjNCfz9WxnSHzHK97I=; b=kSq4+5+4366RAk2fuBgmmgIpnf
-	T8K3mtJuQNBpm5J2SFdJnRaEbsRb1iUUYvlBfZ7JBTeg4gZjZqF+iOri+ozUL2nbyj8FIL/vWMEo/
-	/LeVcu5wr0pKjc5jBgBbOClyciPeeAi2e9gUzNMaAeyauLALMgxAze6KWZobUHo0hLY2LSQ218nCt
-	p/LBPBOC+htOB9rZTssNr14NOeu0bbxrplhEYtovXgjWmZMSLifprUh6bD78HsqvHY1q7nGJoanP2
-	zrfto5OZUPQRWiJxR5k6RuQ3qhRFo5Pj+iAMXL8xzeTGWmUV47BmU9ShjRPqUE73UwquARF1iz8wA
-	lzsQ7BFA==;
-Received: from [50.53.4.147] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s6ku6-0000000F3Q4-1p7E;
-	Tue, 14 May 2024 05:40:46 +0000
-Message-ID: <793876b1-fd4d-42ef-91e2-88b4a48794b7@infradead.org>
-Date: Mon, 13 May 2024 22:40:44 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SU+YqhG4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715672096; x=1747208096;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TULusMh7T/SdxAZq8HnaEdWoBbssb9f1gBrF4iydUIY=;
+  b=SU+YqhG4fJq4ZUbwrWBeXjYYJ4bsC5W1UINIE8j7eYnCRz8rtitofDsB
+   aHNneQLu9aG7UFufPs06MSZWYyxYd/b3J6+LqO9So6p6TORz6GuXmXAuL
+   xvSesINds2J7RxH4xkdensLW9opixY7qQhlpyVFK0KqCFZ7O7N7ZNhFa+
+   PrUjQj7kVK9hkYWbbU8d8AetpfQMvJym20wLFdjjyaPWRZkZnhx/7ytJh
+   clGZOCZVLBtmJqHEdHOp7TjbCwgI5w08W6K6MAJvLnX6m277siINTDoNn
+   ZDj3ns2aOPCXl8cf7dT04/rwb9+a9G7oeFusH1K1+OJqDsuVLVxUlD3xu
+   A==;
+X-CSE-ConnectionGUID: +r+bNhgoRHuc78cI8AEzsg==
+X-CSE-MsgGUID: I0oM94WpSvOAylbp8+cDtA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="22310152"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="22310152"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:34:54 -0700
+X-CSE-ConnectionGUID: EVHuThG7S4aiReU+5Lqd2A==
+X-CSE-MsgGUID: l6mWBjcDS7ah0BG/vcvIqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="30735478"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:33:08 -0700
+Message-ID: <f1d32929-c189-4c70-ba05-33224bdd5602@linux.intel.com>
+Date: Tue, 14 May 2024 15:33:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,86 +52,70 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1] perf Documentation: Describe the PMU naming
- convention
-To: Ian Rogers <irogers@google.com>,
- Tuan Phan <tuanphan@os.amperecomputing.com>,
- Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Bhaskara Budiredla <bbudiredla@marvell.com>,
- Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
- Stephane Eranian <eranian@google.com>
-References: <20240514005817.2902473-1-irogers@google.com>
+Subject: Re: [PATCH v2 27/54] KVM: x86/pmu: Exclude PMU MSRs in
+ vmx_get_passthrough_msr_slot()
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-28-mizhang@google.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240514005817.2902473-1-irogers@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240506053020.3911940-28-mizhang@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 5/13/24 5:58 PM, Ian Rogers wrote:
-> It is an existing convention to use suffixes with PMU names. Try to
-> capture that convention so that future PMU devices may adhere to it.
-> 
-> The name of the file and date within the file try to follow existing
-> conventions, particularly sysfs-bus-event_source-devices-events.
+On 5/6/2024 1:29 PM, Mingwei Zhang wrote:
+> Reject PMU MSRs interception explicitly in
+> vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+> specially handled in intel_passthrough_pmu_msrs().
+>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b/Documentation/ABI/testing/sysfs-bus-event_source-devices
-> new file mode 100644
-> index 000000000000..3f7e53e82de7
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
-> @@ -0,0 +1,24 @@
-> +What: /sys/bus/event_source/devices/<pmu>
-> +Date: 2014/02/24
-> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> +Description:	Performance Monitoring Unit (<pmu>)
-> +
+>  arch/x86/kvm/vmx/vmx.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index c9de7d2623b8..62b5913abdd6 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -164,7 +164,7 @@ module_param(enable_passthrough_pmu, bool, 0444);
+>  
+>  /*
+>   * List of MSRs that can be directly passed to the guest.
+> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
+>   */
+>  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+>  	MSR_IA32_SPEC_CTRL,
+> @@ -694,6 +694,13 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+>  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+>  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+>  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> +	case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
+> +	case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
+> +	case MSR_CORE_PERF_FIXED_CTR0 ... MSR_CORE_PERF_FIXED_CTR0 + 2:
 
-Mostly looks good to me. I prefer a small change (below).
+We'd better use helpers to get the maximum supported GP and fixed counter
+instead of magic numbers here. There are more GP and fixed counters in the
+future's Intel CPUs.
 
-> +		Each <pmu> directory, for a PMU device, is a name
-> +		optionally followed by an underscore and then either a
-> +		decimal or hexadecimal number. For example, cpu is a
-> +		PMU name without a suffix as is intel_bts,
-> +		uncore_imc_0 is a PMU name with a 0 numeric suffix,
-> +		ddr_pmu_87e1b0000000 is a PMU name with a hex
-> +		suffix. The hex suffix must be more than two
-> +		characters long to avoid ambiguity with PMUs like the
-> +		S390 cpum_cf.
-> +
-> +		Tools can treat PMUs with the same name that differ by
-> +		suffix as instances of the same PMU for the sake of,
-> +		for example, opening an event. For example, the PMUs
-> +		uncore_imc_free_running_0 and
-> +		uncore_imc_free_running_1 have an event data_read,
 
-s/,/;/
-or: s/,/./ and begin the next sentence with a capital letter.
-
-> +		opening the data_read event on a PMU specified as
-> +		uncore_imc_free_running should be treated as opening
-> +		the data_read event on PMU uncore_imc_free_running_0
-> +		and PMU uncore_imc_free_running_1.
-
-With that change, you may add:
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-thanks.
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+> +	case MSR_CORE_PERF_GLOBAL_STATUS:
+> +	case MSR_CORE_PERF_GLOBAL_CTRL:
+> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+> +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+>  		return -ENOENT;
+>  	}
+>  
