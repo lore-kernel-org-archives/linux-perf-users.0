@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5183D1171D;
-	Tue, 14 May 2024 07:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549810949;
+	Tue, 14 May 2024 08:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715672096; cv=none; b=t6hHmrMHSj6TKZWXb8PpBA9FkGfaFv8AK8v2M8KxxTZuArRBmHBBN3zHqz68yKT+i/F3NdAD4iGAUdKp1IAkBoKVWSBRIpgNn2lXCN7q8mvTeM3kXYFFB536ZCR8fts1tKSgBlfLbI6AUUdqic2PjisVS1T1+EBWOKK36W1/KwA=
+	t=1715674103; cv=none; b=TaGiKp4hgqwuAGilMLtUyCfPQdUhNeYLb28ddvVEwvIS41tdJaUc1pSBfIachELS9Er+Zpy/NyQjS19BbRlKjq1wZQhUP2tQCzlZNcqMYRp2pcLMPTjmQjqj8I2kZmdsnEzoxdOIa+hmgylq8nzje/mARwdoV+u2yajHBV5sThs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715672096; c=relaxed/simple;
-	bh=TULusMh7T/SdxAZq8HnaEdWoBbssb9f1gBrF4iydUIY=;
+	s=arc-20240116; t=1715674103; c=relaxed/simple;
+	bh=5WfZjxrYSw7zoXzdLkztv43J1D68SxBg97H0MZSYreQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AHP2HMg9gXqGi9RtM89xCoGr3kehqNz4+NBaAkAUpHMKaGtypq7D9dMLCbbWdsaRB62m+I5xuNoep9mrNblvnxlhk0mirhxwfro7q24O2NTm00DCJ2t5aXhY9WxdTEoHNi3+vLKOAUIa7gGPZ7D28niyH2btpXU5yVbj0jAJTks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SU+YqhG4; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=FowxKYhypj08BCqPGXgymMuLhKFs9SqPkAmi7+VPxrRgk4QzMQROIG3vwsp5ZEHIYjYSli3uu8umaN0qeX2lJfA5pO2oE9w54JnqRyuOyTtOjq9iZuOUJkw+o3OH+fhyYyN8D87wTnkBkJxni4tuhnHK7BRtmO3kPq5tY/jIAkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kh0x0zVB; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SU+YqhG4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kh0x0zVB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715672096; x=1747208096;
+  t=1715674102; x=1747210102;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=TULusMh7T/SdxAZq8HnaEdWoBbssb9f1gBrF4iydUIY=;
-  b=SU+YqhG4fJq4ZUbwrWBeXjYYJ4bsC5W1UINIE8j7eYnCRz8rtitofDsB
-   aHNneQLu9aG7UFufPs06MSZWYyxYd/b3J6+LqO9So6p6TORz6GuXmXAuL
-   xvSesINds2J7RxH4xkdensLW9opixY7qQhlpyVFK0KqCFZ7O7N7ZNhFa+
-   PrUjQj7kVK9hkYWbbU8d8AetpfQMvJym20wLFdjjyaPWRZkZnhx/7ytJh
-   clGZOCZVLBtmJqHEdHOp7TjbCwgI5w08W6K6MAJvLnX6m277siINTDoNn
-   ZDj3ns2aOPCXl8cf7dT04/rwb9+a9G7oeFusH1K1+OJqDsuVLVxUlD3xu
-   A==;
-X-CSE-ConnectionGUID: +r+bNhgoRHuc78cI8AEzsg==
-X-CSE-MsgGUID: I0oM94WpSvOAylbp8+cDtA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="22310152"
+  bh=5WfZjxrYSw7zoXzdLkztv43J1D68SxBg97H0MZSYreQ=;
+  b=Kh0x0zVBLb6mRPTQq8FfZebqvKTQpVnvG5CDncNbLhqQ00E06S1iiZ1i
+   oJ4U/DG/7m/N520m+BcnZgWymyiuTTA1Bxu0cxoE7t8IFnGfeu+SqPf+u
+   eHB9khSqcUWBv0hpdhtmRUhxhuiufpzevI2r1nnZHLjn6XwYOb3Vd2PRh
+   R5wkoYcQmneAyT9PoIU2IpJ0lDewGAukkK/cChuu0ojEbw13iKBt+vvxh
+   0KUs8x1wF7e1PV7oDC6wsF3Y5Ii7I5dbhr2FQDh5nW4/CbDN80LdOXw67
+   l/WUZWp/TwlJPSEooaApVwHkFxlFFwZ0TRHeKhakRDJPeSnADwm6plHO9
+   w==;
+X-CSE-ConnectionGUID: 5ODAVHnkSD2FVpdRh722AQ==
+X-CSE-MsgGUID: CK3ZzsHXQBeMs6Fb1FepTw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11586469"
 X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="22310152"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:34:54 -0700
-X-CSE-ConnectionGUID: EVHuThG7S4aiReU+5Lqd2A==
-X-CSE-MsgGUID: l6mWBjcDS7ah0BG/vcvIqw==
+   d="scan'208";a="11586469"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 01:08:21 -0700
+X-CSE-ConnectionGUID: IXGLHMD/Q4GuYScI6e7hmQ==
+X-CSE-MsgGUID: kksJ9NqFQ+yHVxnzPNncoA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="30735478"
+   d="scan'208";a="30618676"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:33:08 -0700
-Message-ID: <f1d32929-c189-4c70-ba05-33224bdd5602@linux.intel.com>
-Date: Tue, 14 May 2024 15:33:05 +0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 01:08:14 -0700
+Message-ID: <719d8331-331b-46b2-a2ff-fe5ff7fa4b5e@linux.intel.com>
+Date: Tue, 14 May 2024 16:08:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 27/54] KVM: x86/pmu: Exclude PMU MSRs in
- vmx_get_passthrough_msr_slot()
+Subject: Re: [PATCH v2 30/54] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
 To: Mingwei Zhang <mizhang@google.com>,
  Sean Christopherson <seanjc@google.com>, Paolo Bonzini
  <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
@@ -67,55 +67,181 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
  Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
  linux-perf-users@vger.kernel.org
 References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-28-mizhang@google.com>
+ <20240506053020.3911940-31-mizhang@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20240506053020.3911940-28-mizhang@google.com>
+In-Reply-To: <20240506053020.3911940-31-mizhang@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 On 5/6/2024 1:29 PM, Mingwei Zhang wrote:
-> Reject PMU MSRs interception explicitly in
-> vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
-> specially handled in intel_passthrough_pmu_msrs().
+> Implement the save/restore of PMU state for pasthrough PMU in Intel. In
+> passthrough mode, KVM owns exclusively the PMU HW when control flow goes to
+> the scope of passthrough PMU. Thus, KVM needs to save the host PMU state
+> and gains the full HW PMU ownership. On the contrary, host regains the
+> ownership of PMU HW from KVM when control flow leaves the scope of
+> passthrough PMU.
 >
+> Implement PMU context switches for Intel CPUs and opptunistically use
+> rdpmcl() instead of rdmsrl() when reading counters since the former has
+> lower latency in Intel CPUs.
+
+It looks rdpmcl() optimization is removed from this patch, right? The
+description is not identical with code.
+
+
+>
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+The commit tags doesn't follow the rules in Linux document, we need to
+change it in next version.
+
+https://docs.kernel.org/process/submitting-patches.html#:~:text=Co%2Ddeveloped%2Dby%3A%20states,work%20on%20a%20single%20patch.
+
 > ---
->  arch/x86/kvm/vmx/vmx.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  arch/x86/kvm/pmu.c           | 46 ++++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/vmx/pmu_intel.c | 41 +++++++++++++++++++++++++++++++-
+>  2 files changed, 86 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index c9de7d2623b8..62b5913abdd6 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -164,7 +164,7 @@ module_param(enable_passthrough_pmu, bool, 0444);
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 782b564bdf96..13197472e31d 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -1068,14 +1068,60 @@ void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
 >  
->  /*
->   * List of MSRs that can be directly passed to the guest.
-> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
-> + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
->   */
->  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
->  	MSR_IA32_SPEC_CTRL,
-> @@ -694,6 +694,13 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
->  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
->  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
->  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
-> +	case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
-> +	case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
-> +	case MSR_CORE_PERF_FIXED_CTR0 ... MSR_CORE_PERF_FIXED_CTR0 + 2:
+>  void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	struct kvm_pmc *pmc;
+> +	u32 i;
+> +
+>  	lockdep_assert_irqs_disabled();
+>  
+>  	static_call_cond(kvm_x86_pmu_save_pmu_context)(vcpu);
+> +
+> +	/*
+> +	 * Clear hardware selector MSR content and its counter to avoid
+> +	 * leakage and also avoid this guest GP counter get accidentally
+> +	 * enabled during host running when host enable global ctrl.
+> +	 */
+> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
+> +		pmc = &pmu->gp_counters[i];
+> +		rdmsrl(pmc->msr_counter, pmc->counter);
 
-We'd better use helpers to get the maximum supported GP and fixed counter
-instead of magic numbers here. There are more GP and fixed counters in the
-future's Intel CPUs.
+I understood we want to use common code to manipulate PMU MSRs as much as
+possible, but I don't think we should sacrifice performance. rdpmcl() has
+better performance than rdmsrl(). If AMD CPUs doesn't support rdpmc
+instruction, I think we should move this into vendor specific
+xxx_save/restore_pmu_context helpers().
 
 
-> +	case MSR_CORE_PERF_GLOBAL_STATUS:
-> +	case MSR_CORE_PERF_GLOBAL_CTRL:
-> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-> +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
->  		return -ENOENT;
+> +		rdmsrl(pmc->msr_eventsel, pmc->eventsel);
+> +		if (pmc->counter)
+> +			wrmsrl(pmc->msr_counter, 0);
+> +		if (pmc->eventsel)
+> +			wrmsrl(pmc->msr_eventsel, 0);
+> +	}
+> +
+> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+> +		pmc = &pmu->fixed_counters[i];
+> +		rdmsrl(pmc->msr_counter, pmc->counter);
+> +		if (pmc->counter)
+> +			wrmsrl(pmc->msr_counter, 0);
+> +	}
+>  }
+>  
+>  void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	struct kvm_pmc *pmc;
+> +	int i;
+> +
+>  	lockdep_assert_irqs_disabled();
+>  
+>  	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
+> +
+> +	/*
+> +	 * No need to zero out unexposed GP/fixed counters/selectors since RDPMC
+> +	 * in this case will be intercepted. Accessing to these counters and
+> +	 * selectors will cause #GP in the guest.
+> +	 */
+> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
+> +		pmc = &pmu->gp_counters[i];
+> +		wrmsrl(pmc->msr_counter, pmc->counter);
+> +		wrmsrl(pmc->msr_eventsel, pmu->gp_counters[i].eventsel);
+> +	}
+> +
+> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+> +		pmc = &pmu->fixed_counters[i];
+> +		wrmsrl(pmc->msr_counter, pmc->counter);
+> +	}
+>  }
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 7852ba25a240..a23cf9ca224e 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -572,7 +572,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
 >  	}
 >  
+>  	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+> -		pmu->fixed_counters[i].msr_eventsel = MSR_CORE_PERF_FIXED_CTR_CTRL;
+> +		pmu->fixed_counters[i].msr_eventsel = 0;
+Why to initialize msr_eventsel to 0 instead of the real MSR address here?
+>  		pmu->fixed_counters[i].msr_counter = MSR_CORE_PERF_FIXED_CTR0 + i;
+>  	}
+>  }
+> @@ -799,6 +799,43 @@ static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
+>  	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
+>  }
+>  
+> +static void intel_save_guest_pmu_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	/* Global ctrl register is already saved at VM-exit. */
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
+> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
+> +	if (pmu->global_status)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
+> +
+> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
+> +	/*
+> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
+> +	 * also avoid these guest fixed counters get accidentially enabled
+> +	 * during host running when host enable global ctrl.
+> +	 */
+> +	if (pmu->fixed_ctr_ctrl)
+> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
+> +}
+> +
+> +static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	u64 global_status, toggle;
+> +
+> +	/* Clear host global_ctrl MSR if non-zero. */
+> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
+> +	toggle = pmu->global_status ^ global_status;
+> +	if (global_status & toggle)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
+> +	if (pmu->global_status & toggle)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
+> +
+> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
+> +}
+> +
+>  struct kvm_pmu_ops intel_pmu_ops __initdata = {
+>  	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
+>  	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
+> @@ -812,6 +849,8 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+>  	.cleanup = intel_pmu_cleanup,
+>  	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
+>  	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
+> +	.save_pmu_context = intel_save_guest_pmu_context,
+> +	.restore_pmu_context = intel_restore_guest_pmu_context,
+>  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
+>  	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
+>  	.MIN_NR_GP_COUNTERS = 1,
