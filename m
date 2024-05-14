@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551A617F6
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 May 2024 00:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956EE1869
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 May 2024 00:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715645665; cv=none; b=YCzEPOpFwVVW0SDTiNI0ASIfE6qK9y1rF/+iz8+BmxsllAU2s/jvsmdLE4UTcd+e+3nwFJu7Bm6Tp1pHANoby+DH7mKLB9o7ToJT86sF4XVOPaFaTCFNJzljFyoR8NfKZ4/m1oYE0DgIa4zRAgEW4AavCpJ10GHJQZqm5dLO1p8=
+	t=1715645671; cv=none; b=NwgHKRonGG7WtkH9nssg+Z+/jY9c2gzhnCdxWydpARTwzCkwA9bTYYiMQNZIizmW4hT/fcK60n0wz2GzCEisNcrI7jrgdkdcaXv36AJF4SRGOiIClMj46zqChtcd5cXK+9ZznWhwAEYaGemR34+YgMNf5/wZfSN3yk2WTnbEok8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715645665; c=relaxed/simple;
-	bh=Q9ij4xWg7mDgY3wC/3BcIVhLqg29X2TIwwPIMkcdJE4=;
+	s=arc-20240116; t=1715645671; c=relaxed/simple;
+	bh=SBrw0mlZryE7xylBjlOJomhP4bSWNQippGud3TNQfaY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=VY9dP+q44pS/RQPRYNPw0RhzaywByM2Dd+ZDqQau0AorjYDOyZn46FKCaVAt2O1ucvZAyq9gDFKQy+I34CIOw3FnUk7MB69gqa/7jSJ6ZUKQ1WFiLhCiz/6RYmI5OBSUONOv/rAn6LbE4+A8ADsK/HoKu8OipQJfrt7OWneKGqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rGbezZGn; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=hKF1P+fF/oMsNpDKjb+sX8fLkCbwgZWGlAmXizFTryghZSnIDDBshzhU9A4JaLkCZyXfumF7VEBXyOph7MAvETgjuL6mOeNk9mV+cLhHvE1d1Zm1lFVKk9zoY2/E0b0ELMlNm84lcoyg+Dc/Pg2l0JJZkKxy5aTzTo/brUMEr2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E/vqW6+Y; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGbezZGn"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-622cd439764so42916697b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 17:14:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E/vqW6+Y"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be4b79115so96995127b3.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 May 2024 17:14:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715645662; x=1716250462; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715645668; x=1716250468; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8xwJdbGGW+Z7XAV8KPdTULv2HcS04UI63fKtEqifeow=;
-        b=rGbezZGny6RjkrEgxBQXbtrY6ZcJyVDfgUz2lcyN89v60mWlmFe/jKDU+VQecgEgrp
-         pVtgnOsk5+gaam8rsbcimL/U4/5ueBG5mPIYI+iEnrvFX+/g/TwrThtsU6V8oTdTWFoo
-         kXypCyxyNShCUXkohG/kCXfGpzqnzt9LDScmZ4wq1N1RODIQJxdU41oT51D8m+44e43w
-         7wiaCw7K4Pmi/u6VZtaXetFnwhy5rp4DvRulolKje5Nm1NAewCu9YhgyJ9ZzB9WGmwIZ
-         mAQN9UowWsm33cmTcxWUBV4nkmAydLZXyiB8fn9ZdUBpT2Vx8eqvWKsxaNVdUutRRPgc
-         GlrA==
+        bh=3ibaSSKUEQIFW2f5/BFmJXtUec1nP88z8Ady4qrNXWk=;
+        b=E/vqW6+Y6wXW04rouZNH/c1WmrzFTYqAS6k+dcSGAXATeN6oQtfuwpJYRsQkJwsRQd
+         UZ+cej8JOIUsAr7KAkYBTd+8aM0zHepVoCr2pFGOpCby/O+RZKH+4ltDr3F4U7YaaSxH
+         FjpaxbXDRfjm/SMH+aMf4TneC2Px4SUm/6L7M094TBPmP/cLCKuiQLfYdwTKUixNrueO
+         mnGIppPLODR4WQy+dpDYDrQC8i5A9o+hE31ux0Er1v+bA+uF0de7wm3OgveVCvF5vnhC
+         d16iGfSUntv+tho0jhf4uOPgrlgnYlK0XwwvUX3vc9Iq/LpFp/mN8kEMMMDrlJFO+NGh
+         n/2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715645662; x=1716250462;
+        d=1e100.net; s=20230601; t=1715645668; x=1716250468;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8xwJdbGGW+Z7XAV8KPdTULv2HcS04UI63fKtEqifeow=;
-        b=E92ffhkrfowutXx/NEXpORcHsBmr/42hRvycHAHdOBsxeMv5Fcs1eN8FTbWrHlHSvs
-         v/OvWxOr7N6wChiDR9IXIHW/dLI1/FwS6uBUuda5uTL383MCCupyoTrVxY4CwZrKuSUa
-         AUIYpM2NHKfLw3yc6YqdFc6yX22Gzk9JtzNsQGq1jLsNkpISiyHc1ohR2HSAdrT6UrZG
-         wCQGWN/TG6tOlBSkrKHYVn56FUuM1OB4ikp6DsDR24uaYG/aBFyHtME3f+rH+/LNt+Sb
-         V7vy0AICfc6SxTgA21hJFC97o7mBfg1nRJqtANue8VytFy/mZfLoIXv86T+FZJRVaqA7
-         wl8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWPq+rR3bgb/0acr2ddYB3FmXzBE8KbJh+aBebjdRaq/0s78VXTVCvY8ajjrX+nv02Vilc/E/3lZMXCajEVg2fu4n4QpD5mwC/14f/dpYx6+Q==
-X-Gm-Message-State: AOJu0YyusKGi0vRXgGPwTLwJR9PjMXaKaUG+F0CbtiOJi5nOxtFxxW3K
-	uDDr0wUFPWV/Wdhla3AZHlLgY2ff+DitgGEX4aTXmfaCdm7SMUcC2Qs9GMl9y1u/oBvS9jkLcUh
-	y5Gzo8Q==
-X-Google-Smtp-Source: AGHT+IHNdBQKwX2lqvKQWT0wLRq1Oa+OKSz7aHOjYSHao9LLLzLmASUgkeV+VcqmvERpR3UXbxe0cGqjiS0h
+        bh=3ibaSSKUEQIFW2f5/BFmJXtUec1nP88z8Ady4qrNXWk=;
+        b=dVeJIKF6kDVa4DYT0nfqLBho8Ih4zDPQHvIXSSVGhk7D2NziFrkuGBOg+0CtvacX/e
+         beZCSXi1zTo3zo1jSRO6iWeGdUokGLkfXg/JQiRNIXk0VfN82eLPedw4sJvuNun0CLKm
+         L/PTTvmVS9+dHTJ42fLrNaae16xet/YK9Mh9rmY+7APLRafmwZqInkG0Fidum8JJAp7G
+         t9iCDjYE+CZ+ud2LvW6aspF6qfW/dWZpTuCpT/uq+u6dy+voovQEShF4UW88vTTyt0i7
+         ZerSZacUrtkH1Fp22ei32qUlu9bDaLUEGomsixuDB4o4ZIO+POlC3ag5fWIG1qvWJMsp
+         reTw==
+X-Forwarded-Encrypted: i=1; AJvYcCURJblpZ8YmLLOb8KP5R42V2eDwU4HpNOcuaW0Mq6P2WR3e3JpRfn6jnVwhfk8qsOuCQjebbgZNpvJ8LOaj2yO+o8aJO3PFSjJaj0TY1spZoQ==
+X-Gm-Message-State: AOJu0Yw4XMcwJniWYManYnyNmWTpDUyb2F+izz6pC9UTVt/diNwrWMzn
+	yi4kmdsPGt+VjWHXI56xwcMazF2d9sBJycaWBoggIuJ+CMwlUzL2qVGqHy3zTlfmdNhJac5+EfS
+	8hv3qVg==
+X-Google-Smtp-Source: AGHT+IH3OxoUo+M6qhF1juRni/XNnOvR42UKjKaIcDCoZrqMh6XR1mCeBSC9VHaOMJ45AQmEhw/9VoCXg95j
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6e66:3031:b400:2dc8])
- (user=irogers job=sendgmr) by 2002:a05:690c:490d:b0:617:d650:11e2 with SMTP
- id 00721157ae682-622affbfd57mr30576877b3.3.1715645662360; Mon, 13 May 2024
- 17:14:22 -0700 (PDT)
-Date: Mon, 13 May 2024 17:13:58 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:6c87:b0:61b:e15c:2b84 with SMTP
+ id 00721157ae682-622afff942fmr31967487b3.6.1715645668705; Mon, 13 May 2024
+ 17:14:28 -0700 (PDT)
+Date: Mon, 13 May 2024 17:13:59 -0700
 In-Reply-To: <20240514001359.2882951-1-irogers@google.com>
-Message-Id: <20240514001359.2882951-2-irogers@google.com>
+Message-Id: <20240514001359.2882951-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240514001359.2882951-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v4 1/2] perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
+Subject: [PATCH v4 2/2] perf tests: Add some pmu core functionality tests
 From: Ian Rogers <irogers@google.com>
 To: Tuan Phan <tuanphan@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
 	Thomas Richter <tmricht@linux.ibm.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
@@ -75,218 +75,134 @@ To: Tuan Phan <tuanphan@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.
 	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The mrvl_ddr_pmu is uncore and has a hexadecimal address suffix while
-the previous PMU sorting/merging code assumes uncore PMU names start
-with uncore_ and have a decimal suffix. Because of the previous
-assumption it isn't possible to wildcard the mrvl_ddr_pmu.
-
-Modify pmu_name_len_no_suffix but also remove the suffix number out
-argument, this is because we don't know if a suffix number of say 100
-is in hexadecimal or decimal. As the only use of the suffix number is
-in comparisons, it is safe there to compare the values as hexadecimal.
-
-Only allow hexadecimal suffixes to be greater than length 2 (ie 3 or
-more) so that S390's cpum_cf PMU doesn't lose its suffix.
-
-Change the return type of pmu_name_len_no_suffix to size_t to
-workaround GCC incorrectly determining the result could be negative.
+Test behavior of PMU names and comparisons wrt suffixes using Intel
+uncore_cha, marvell mrvl_ddr_pmu and S390's cpum_cf as examples.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c  | 17 +++++------
- tools/perf/util/pmus.c | 67 ++++++++++++++++++++++++------------------
- tools/perf/util/pmus.h |  7 ++++-
- 3 files changed, 53 insertions(+), 38 deletions(-)
+ tools/perf/tests/pmu.c | 99 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 888ce9912275..f359354070fa 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1788,10 +1788,10 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	int pmu_name_len = skip_duplicate_pmus
--		? pmu_name_len_no_suffix(pmu->name, /*num=*/NULL)
--		: (int)strlen(pmu->name);
--	int used = snprintf(buf, len, "%.*s/%s", pmu_name_len, pmu->name, alias->name);
-+	size_t pmu_name_len = skip_duplicate_pmus
-+		? pmu_name_len_no_suffix(pmu->name)
-+		: strlen(pmu->name);
-+	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms.terms, list) {
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
-@@ -1828,13 +1828,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
--		size_t buf_used;
--		int pmu_name_len;
-+		size_t buf_used, pmu_name_len;
- 
- 		info.pmu_name = event->pmu_name ?: pmu->name;
- 		pmu_name_len = skip_duplicate_pmus
--			? pmu_name_len_no_suffix(info.pmu_name, /*num=*/NULL)
--			: (int)strlen(info.pmu_name);
-+			? pmu_name_len_no_suffix(info.pmu_name)
-+			: strlen(info.pmu_name);
- 		info.alias = NULL;
- 		if (event->desc) {
- 			info.name = event->name;
-@@ -1859,7 +1858,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		info.encoding_desc = buf + buf_used;
- 		parse_events_terms__to_strbuf(&event->terms, &sb);
- 		buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
--				"%.*s/%s/", pmu_name_len, info.pmu_name, sb.buf) + 1;
-+				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, sb.buf) + 1;
- 		info.topic = event->topic;
- 		info.str = sb.buf;
- 		info.deprecated = event->deprecated;
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b9b4c5eb5002..63b9cf9ccfa7 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -40,31 +40,52 @@ static bool read_sysfs_all_pmus;
- 
- static void pmu_read_sysfs(bool core_only);
- 
--int pmu_name_len_no_suffix(const char *str, unsigned long *num)
-+size_t pmu_name_len_no_suffix(const char *str)
- {
- 	int orig_len, len;
-+	bool has_hex_digits = false;
- 
- 	orig_len = len = strlen(str);
- 
--	/* Non-uncore PMUs have their full length, for example, i915. */
--	if (!strstarts(str, "uncore_"))
--		return len;
--
--	/*
--	 * Count trailing digits and '_', if '_{num}' suffix isn't present use
--	 * the full length.
--	 */
--	while (len > 0 && isdigit(str[len - 1]))
-+	/* Count trailing digits. */
-+	while (len > 0 && isxdigit(str[len - 1])) {
-+		if (!isdigit(str[len - 1]))
-+			has_hex_digits = true;
- 		len--;
-+	}
- 
- 	if (len > 0 && len != orig_len && str[len - 1] == '_') {
--		if (num)
--			*num = strtoul(&str[len], NULL, 10);
--		return len - 1;
-+		/*
-+		 * There is a '_{num}' suffix. For decimal suffixes any length
-+		 * will do, for hexadecimal ensure more than 2 hex digits so
-+		 * that S390's cpum_cf PMU doesn't match.
-+		 */
-+		if (!has_hex_digits || (orig_len - len) > 2)
-+			return len - 1;
- 	}
-+	/* Use the full length. */
- 	return orig_len;
+diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+index 06cc0e46cb28..cc88b5920c3e 100644
+--- a/tools/perf/tests/pmu.c
++++ b/tools/perf/tests/pmu.c
+@@ -3,6 +3,7 @@
+ #include "evsel.h"
+ #include "parse-events.h"
+ #include "pmu.h"
++#include "pmus.h"
+ #include "tests.h"
+ #include "debug.h"
+ #include "fncache.h"
+@@ -340,10 +341,108 @@ static int test__pmu_event_names(struct test_suite *test __maybe_unused,
+ 	return ret;
  }
  
-+int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name)
++static const char * const uncore_chas[] = {
++	"uncore_cha_0",
++	"uncore_cha_1",
++	"uncore_cha_2",
++	"uncore_cha_3",
++	"uncore_cha_4",
++	"uncore_cha_5",
++	"uncore_cha_6",
++	"uncore_cha_7",
++	"uncore_cha_8",
++	"uncore_cha_9",
++	"uncore_cha_10",
++	"uncore_cha_11",
++	"uncore_cha_12",
++	"uncore_cha_13",
++	"uncore_cha_14",
++	"uncore_cha_15",
++	"uncore_cha_16",
++	"uncore_cha_17",
++	"uncore_cha_18",
++	"uncore_cha_19",
++	"uncore_cha_20",
++	"uncore_cha_21",
++	"uncore_cha_22",
++	"uncore_cha_23",
++	"uncore_cha_24",
++	"uncore_cha_25",
++	"uncore_cha_26",
++	"uncore_cha_27",
++	"uncore_cha_28",
++	"uncore_cha_29",
++	"uncore_cha_30",
++	"uncore_cha_31",
++};
++
++static const char * const mrvl_ddrs[] = {
++	"mrvl_ddr_pmu_87e1b0000000",
++	"mrvl_ddr_pmu_87e1b1000000",
++	"mrvl_ddr_pmu_87e1b2000000",
++	"mrvl_ddr_pmu_87e1b3000000",
++	"mrvl_ddr_pmu_87e1b4000000",
++	"mrvl_ddr_pmu_87e1b5000000",
++	"mrvl_ddr_pmu_87e1b6000000",
++	"mrvl_ddr_pmu_87e1b7000000",
++	"mrvl_ddr_pmu_87e1b8000000",
++	"mrvl_ddr_pmu_87e1b9000000",
++	"mrvl_ddr_pmu_87e1ba000000",
++	"mrvl_ddr_pmu_87e1bb000000",
++	"mrvl_ddr_pmu_87e1bc000000",
++	"mrvl_ddr_pmu_87e1bd000000",
++	"mrvl_ddr_pmu_87e1be000000",
++	"mrvl_ddr_pmu_87e1bf000000",
++};
++
++static int test__name_len(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
 +{
-+	unsigned long lhs_num = 0, rhs_num = 0;
-+	size_t lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name);
-+	size_t rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name);
-+	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
-+			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
-+
-+	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
-+		return ret;
-+
-+	if (lhs_pmu_name_len + 1 < strlen(lhs_pmu_name))
-+		lhs_num = strtoul(&lhs_pmu_name[lhs_pmu_name_len + 1], NULL, 16);
-+	if (rhs_pmu_name_len + 1 < strlen(rhs_pmu_name))
-+		rhs_num = strtoul(&rhs_pmu_name[rhs_pmu_name_len + 1], NULL, 16);
-+
-+	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
++	TEST_ASSERT_VAL("cpu", pmu_name_len_no_suffix("cpu") == strlen("cpu"));
++	TEST_ASSERT_VAL("i915", pmu_name_len_no_suffix("i915") == strlen("i915"));
++	TEST_ASSERT_VAL("cpum_cf", pmu_name_len_no_suffix("cpum_cf") == strlen("cpum_cf"));
++	for (size_t i = 0; i < ARRAY_SIZE(uncore_chas); i++) {
++		TEST_ASSERT_VAL("Strips uncore_cha suffix",
++				pmu_name_len_no_suffix(uncore_chas[i]) ==
++				strlen("uncore_cha"));
++	}
++	for (size_t i = 0; i < ARRAY_SIZE(mrvl_ddrs); i++) {
++		TEST_ASSERT_VAL("Strips mrvl_ddr_pmu suffix",
++				pmu_name_len_no_suffix(mrvl_ddrs[i]) ==
++				strlen("mrvl_ddr_pmu"));
++	}
++	return TEST_OK;
 +}
 +
- void perf_pmus__destroy(void)
- {
- 	struct perf_pmu *pmu, *tmp;
-@@ -167,20 +188,10 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- static int pmus_cmp(void *priv __maybe_unused,
- 		    const struct list_head *lhs, const struct list_head *rhs)
- {
--	unsigned long lhs_num = 0, rhs_num = 0;
- 	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
- 	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
--	const char *lhs_pmu_name = lhs_pmu->name ?: "";
--	const char *rhs_pmu_name = rhs_pmu->name ?: "";
--	int lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name, &lhs_num);
--	int rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name, &rhs_num);
--	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
--			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
--
--	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
--		return ret;
- 
--	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
-+	return pmu_name_cmp(lhs_pmu->name ?: "", rhs_pmu->name ?: "");
- }
- 
- /* Add all pmus in sysfs to pmu list: */
-@@ -300,11 +311,11 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 		pmu_read_sysfs(/*core_only=*/false);
- 		pmu = list_prepare_entry(pmu, &core_pmus, list);
- 	} else
--		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", NULL);
-+		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 	if (use_core_pmus) {
- 		list_for_each_entry_continue(pmu, &core_pmus, list) {
--			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
-+			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 			if (last_pmu_name_len == pmu_name_len &&
- 			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-@@ -316,7 +327,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 		pmu = list_prepare_entry(pmu, &other_pmus, list);
- 	}
- 	list_for_each_entry_continue(pmu, &other_pmus, list) {
--		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
-+		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 		if (last_pmu_name_len == pmu_name_len &&
- 		    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
-@@ -566,7 +577,7 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
- 			.long_string = STRBUF_INIT,
- 			.num_formats = 0,
- 		};
--		int len = pmu_name_len_no_suffix(pmu->name, /*num=*/NULL);
-+		int len = pmu_name_len_no_suffix(pmu->name);
- 		const char *desc = "(see 'man perf-list' or 'man perf-record' on how to encode it)";
- 
- 		if (!pmu->is_core)
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 9d4ded80b8e9..fa6df53b52ab 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -2,10 +2,15 @@
- #ifndef __PMUS_H
- #define __PMUS_H
- 
-+#include <stdbool.h>
-+#include <linux/list.h>
++static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++{
++	TEST_ASSERT_EQUAL("cpu", pmu_name_cmp("cpu", "cpu"), 0);
++	TEST_ASSERT_EQUAL("i915", pmu_name_cmp("i915", "i915"), 0);
++	TEST_ASSERT_EQUAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_cf"), 0);
++	TEST_ASSERT_VAL("i915", pmu_name_cmp("cpu", "i915") < 0);
++	TEST_ASSERT_VAL("i915", pmu_name_cmp("i915", "cpu") > 0);
++	TEST_ASSERT_VAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_ce") > 0);
++	TEST_ASSERT_VAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_d0") < 0);
++	for (size_t i = 1; i < ARRAY_SIZE(uncore_chas); i++) {
++		TEST_ASSERT_VAL("uncore_cha suffixes ordered lt",
++				pmu_name_cmp(uncore_chas[i-1], uncore_chas[i]) < 0);
++		TEST_ASSERT_VAL("uncore_cha suffixes ordered gt",
++				pmu_name_cmp(uncore_chas[i], uncore_chas[i-1]) > 0);
++	}
++	for (size_t i = 1; i < ARRAY_SIZE(mrvl_ddrs); i++) {
++		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered lt",
++				pmu_name_cmp(mrvl_ddrs[i-1], mrvl_ddrs[i]) < 0);
++		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered gt",
++				pmu_name_cmp(mrvl_ddrs[i], mrvl_ddrs[i-1]) > 0);
++	}
++	return TEST_OK;
++}
 +
- struct perf_pmu;
- struct print_callbacks;
- 
--int pmu_name_len_no_suffix(const char *str, unsigned long *num);
-+size_t pmu_name_len_no_suffix(const char *str);
-+/* Exposed for testing only. */
-+int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name);
- 
- void perf_pmus__destroy(void);
+ static struct test_case tests__pmu[] = {
+ 	TEST_CASE("Parsing with PMU format directory", pmu_format),
+ 	TEST_CASE("Parsing with PMU event", pmu_events),
+ 	TEST_CASE("PMU event names", pmu_event_names),
++	TEST_CASE("PMU name combining", name_len),
++	TEST_CASE("PMU name comparison", name_cmp),
+ 	{	.name = NULL, }
+ };
  
 -- 
 2.45.0.118.g7fe29c98d7-goog
