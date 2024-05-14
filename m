@@ -1,247 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B549810949;
-	Tue, 14 May 2024 08:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDE31097B;
+	Tue, 14 May 2024 08:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715674103; cv=none; b=TaGiKp4hgqwuAGilMLtUyCfPQdUhNeYLb28ddvVEwvIS41tdJaUc1pSBfIachELS9Er+Zpy/NyQjS19BbRlKjq1wZQhUP2tQCzlZNcqMYRp2pcLMPTjmQjqj8I2kZmdsnEzoxdOIa+hmgylq8nzje/mARwdoV+u2yajHBV5sThs=
+	t=1715676139; cv=none; b=F0wzl9dXO4YzDvnNhkq/3AwK24I+wApGvX/Wr0v7Jwk9r3AbqxeXfOvoIRPzAMbJqM0cD+u69x3ddVSGgwJTMcpSq8WaadO3bq8NjImZNs8F44A0MsMPZ0dLBZS5AWJcKhZGKaQxMiIAo6ztmCadwVE5hklp6w5b5lYxRS0tiDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715674103; c=relaxed/simple;
-	bh=5WfZjxrYSw7zoXzdLkztv43J1D68SxBg97H0MZSYreQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FowxKYhypj08BCqPGXgymMuLhKFs9SqPkAmi7+VPxrRgk4QzMQROIG3vwsp5ZEHIYjYSli3uu8umaN0qeX2lJfA5pO2oE9w54JnqRyuOyTtOjq9iZuOUJkw+o3OH+fhyYyN8D87wTnkBkJxni4tuhnHK7BRtmO3kPq5tY/jIAkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kh0x0zVB; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715676139; c=relaxed/simple;
+	bh=1Q8a5Z18ALAPhprhT5LIOTCIVJQtLeVbMK0iySVFvAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FX13ZtvDXhBfWN016avB2v1pW/OGkhBXSAGPiG7NIyIrVajcnh0jWn2oojlc3pqybKvZz9NyD8L8qP6oyhoyRhtTJKi1jZHBsIb058UmhQ0B50+OeRffJnUGehcEXiBTEX8A+qApHfzUNaquci8fnVaNHouDlatiCK5qiaka9c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+3Zr/i/; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kh0x0zVB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715674102; x=1747210102;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5WfZjxrYSw7zoXzdLkztv43J1D68SxBg97H0MZSYreQ=;
-  b=Kh0x0zVBLb6mRPTQq8FfZebqvKTQpVnvG5CDncNbLhqQ00E06S1iiZ1i
-   oJ4U/DG/7m/N520m+BcnZgWymyiuTTA1Bxu0cxoE7t8IFnGfeu+SqPf+u
-   eHB9khSqcUWBv0hpdhtmRUhxhuiufpzevI2r1nnZHLjn6XwYOb3Vd2PRh
-   R5wkoYcQmneAyT9PoIU2IpJ0lDewGAukkK/cChuu0ojEbw13iKBt+vvxh
-   0KUs8x1wF7e1PV7oDC6wsF3Y5Ii7I5dbhr2FQDh5nW4/CbDN80LdOXw67
-   l/WUZWp/TwlJPSEooaApVwHkFxlFFwZ0TRHeKhakRDJPeSnADwm6plHO9
-   w==;
-X-CSE-ConnectionGUID: 5ODAVHnkSD2FVpdRh722AQ==
-X-CSE-MsgGUID: CK3ZzsHXQBeMs6Fb1FepTw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11586469"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="11586469"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 01:08:21 -0700
-X-CSE-ConnectionGUID: IXGLHMD/Q4GuYScI6e7hmQ==
-X-CSE-MsgGUID: kksJ9NqFQ+yHVxnzPNncoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="30618676"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 01:08:14 -0700
-Message-ID: <719d8331-331b-46b2-a2ff-fe5ff7fa4b5e@linux.intel.com>
-Date: Tue, 14 May 2024 16:08:11 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+3Zr/i/"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2b516b36acfso1393048a91.2;
+        Tue, 14 May 2024 01:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715676138; x=1716280938; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Js4BUNSWfE5GqATWlKw/AIzixsydTldCYIC+ryzPwtQ=;
+        b=V+3Zr/i/5DS65g/8KoxcCa5oMW2fMw0CLm/5WqsKWD3aHGSmzlg30XtY1u/xCUOYpl
+         Si7Cmj7kc0HkiuHcgsVrS43kq1lSsAzbrT3driS2k4fv17/oWtIxMkbHmnQoyFC5gQjG
+         ty+P7NP6lazYpA28IFiMB7if4/5DKJ7wUxK/4MVlKyAY+dGW1GHiPXdyEqalCzlYFIZt
+         b5yOvb4mY0b2/d0RLcIcnPPCQP3gUAM2PwjLFjdd2rbeg3cY8U80N8SiqxZGg0fyxU53
+         1IBdGPjH0qspXnH2rzMOU8Vy9KzLz0YbqNcjGJCz6XUt2jEY/lwbW6cfplyp6AfZNN/L
+         D+ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715676138; x=1716280938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Js4BUNSWfE5GqATWlKw/AIzixsydTldCYIC+ryzPwtQ=;
+        b=rbeBWujhP8pN0OpGtZnSKyfaD+3qtUD0mczSn+wjP0FGAF+RfkrzuhKnCyI5AS/MC8
+         EPHRkp0U7VFvAw/B1cyBuDto+rjuxxZlLaUHeJaqU4VbSEFj9PybkorjpGljFl5Epub5
+         QhqAkMS+VeA/dFr5JMhQBPF8X4oe+EzCD6X1otp2JMey3RxK0jO0YtrnrbZccmQmi9f0
+         fwcNAJ2q1Ny7yA217M5Y0xW3lPF39lMBPU42x32LBJLGg9KpYA2iObkIIa0aAoVUVc40
+         f7xoc9pyY71Hhqg8C1a91gtnmgKI3CsYtJLLAOGWzHTjigE5tQzMNoB7MKMtY7Ub5j90
+         NYsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTbby/zmyQbzJGV6lXEqyUDVB6cldyc4t0esDkJu5o0yzibTwztTJGRaI3N1EXnOyVxBz0CBecwXu8Zx2du9TuK08VIeiNhk9WQpYiRwT+OyRiKhZIiNjb39b/k6cWVWcoIFdc/opxMnpU3LLrt/I4ly8texmVzepDwtHcmZ2Vk+acmVip5uCdxSsJ5zTb5cW9HNIvawFPXRXnWyl3PiiuakyDmv6Sm1rf5WYn
+X-Gm-Message-State: AOJu0YzJJzWtoqVxdKp/tzgKdUlrSteQLxzLtQ5E40bFeuYloJ2b1Q4B
+	NANT6WZUSBHiLJh5mBSqFRLq6GvBf2Tw7pAGUp3g2jJMjF/12/xk
+X-Google-Smtp-Source: AGHT+IH4kRyXrCykJ3Dzb4hLqTyjLiHwbobj+9ip7Io2bJaePb+G2VRr/GHX1RuW09L7x7aUOrtPYQ==
+X-Received: by 2002:a17:903:2444:b0:1e2:c544:9bb0 with SMTP id d9443c01a7336-1ef433d37a2mr142421475ad.0.1715676137502;
+        Tue, 14 May 2024 01:42:17 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30f96sm92411045ad.179.2024.05.14.01.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 01:42:16 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: bfoster@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	bagasdotme@gmail.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v5 00/16] treewide: Refactor heap related implementation
+Date: Tue, 14 May 2024 16:41:53 +0800
+Message-Id: <20240514084209.556112-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 30/54] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-31-mizhang@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20240506053020.3911940-31-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This patch series focuses on several adjustments related to heap
+implementation. Firstly, a type-safe interface has been added to the
+min_heap, along with the introduction of several new functions to
+enhance its functionality. Additionally, the heap implementation for
+bcache and bcachefs has been replaced with the generic min_heap
+implementation from include/linux. Furthermore, several typos have been
+corrected.
 
-On 5/6/2024 1:29 PM, Mingwei Zhang wrote:
-> Implement the save/restore of PMU state for pasthrough PMU in Intel. In
-> passthrough mode, KVM owns exclusively the PMU HW when control flow goes to
-> the scope of passthrough PMU. Thus, KVM needs to save the host PMU state
-> and gains the full HW PMU ownership. On the contrary, host regains the
-> ownership of PMU HW from KVM when control flow leaves the scope of
-> passthrough PMU.
->
-> Implement PMU context switches for Intel CPUs and opptunistically use
-> rdpmcl() instead of rdmsrl() when reading counters since the former has
-> lower latency in Intel CPUs.
+Previous discussion with Kent Overstreet:
+https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
 
-It looks rdpmcl() optimization is removed from this patch, right? The
-description is not identical with code.
+Regards,
+Kuan-Wei
 
+---
 
->
-> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+You can preview this patch series on the 'refactor-heap' branch of
+the repository at the following link:
 
-The commit tags doesn't follow the rules in Linux document, we need to
-change it in next version.
+https://github.com/visitorckw/linux
 
-https://docs.kernel.org/process/submitting-patches.html#:~:text=Co%2Ddeveloped%2Dby%3A%20states,work%20on%20a%20single%20patch.
+Changes in v5:
+- Rebase on the block tree to resolve the conflict in bcache.
+- Fix missing initialization for heap data pointer in bcache's
+  bch_btree_node_read_done().
 
-> ---
->  arch/x86/kvm/pmu.c           | 46 ++++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/vmx/pmu_intel.c | 41 +++++++++++++++++++++++++++++++-
->  2 files changed, 86 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 782b564bdf96..13197472e31d 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -1068,14 +1068,60 @@ void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
->  
->  void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct kvm_pmc *pmc;
-> +	u32 i;
-> +
->  	lockdep_assert_irqs_disabled();
->  
->  	static_call_cond(kvm_x86_pmu_save_pmu_context)(vcpu);
-> +
-> +	/*
-> +	 * Clear hardware selector MSR content and its counter to avoid
-> +	 * leakage and also avoid this guest GP counter get accidentally
-> +	 * enabled during host running when host enable global ctrl.
-> +	 */
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		pmc = &pmu->gp_counters[i];
-> +		rdmsrl(pmc->msr_counter, pmc->counter);
+Changes in v4:
+- Change struct initializations to use designated initializers.
+- Replace memcpy() with func->swp() in heap_del() due to issues with
+  set_backpointer in bcachefs when setting idx.
+- Fix an error in ec_stripes_heap_swap() where
+  ec_stripes_heap_set_backpointer() should be called after swapping.
 
-I understood we want to use common code to manipulate PMU MSRs as much as
-possible, but I don't think we should sacrifice performance. rdpmcl() has
-better performance than rdmsrl(). If AMD CPUs doesn't support rdpmc
-instruction, I think we should move this into vendor specific
-xxx_save/restore_pmu_context helpers().
+Changes in v3:
+- Avoid heap->heap.nr to eliminate the nested types.
+- Add MIN_HEAP_PREALLOCATED macro for preallocating some elements.
+- Use min_heap_sift_up() in min_heap_push().
+- Fix a bug in heap_del() where we should copy the last element to
+  'data + idx * element_size' instead of 'data'.
+- Add testcases for heap_del().
+- Fix bugs in bcache/bcachefs patches where the parameter types in
+  some compare functions should have been 'type **', but were
+  mistakenly written as 'type *'.
 
+Changes in v2:
+- Add attribute __always_unused to the compare and swap functions
+  that do not use the args parameter.
+- Rename min_heapify() to min_heap_sift_down().
+- Update lib/test_min_heap.c to use min_heap_init().
+- Refine the commit message for bcache and bcachefs.
+- Adjust the order of patches in the patch series.
 
-> +		rdmsrl(pmc->msr_eventsel, pmc->eventsel);
-> +		if (pmc->counter)
-> +			wrmsrl(pmc->msr_counter, 0);
-> +		if (pmc->eventsel)
-> +			wrmsrl(pmc->msr_eventsel, 0);
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> +		pmc = &pmu->fixed_counters[i];
-> +		rdmsrl(pmc->msr_counter, pmc->counter);
-> +		if (pmc->counter)
-> +			wrmsrl(pmc->msr_counter, 0);
-> +	}
->  }
->  
->  void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct kvm_pmc *pmc;
-> +	int i;
-> +
->  	lockdep_assert_irqs_disabled();
->  
->  	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
-> +
-> +	/*
-> +	 * No need to zero out unexposed GP/fixed counters/selectors since RDPMC
-> +	 * in this case will be intercepted. Accessing to these counters and
-> +	 * selectors will cause #GP in the guest.
-> +	 */
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		pmc = &pmu->gp_counters[i];
-> +		wrmsrl(pmc->msr_counter, pmc->counter);
-> +		wrmsrl(pmc->msr_eventsel, pmu->gp_counters[i].eventsel);
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> +		pmc = &pmu->fixed_counters[i];
-> +		wrmsrl(pmc->msr_counter, pmc->counter);
-> +	}
->  }
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 7852ba25a240..a23cf9ca224e 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -572,7 +572,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->  	}
->  
->  	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> -		pmu->fixed_counters[i].msr_eventsel = MSR_CORE_PERF_FIXED_CTR_CTRL;
-> +		pmu->fixed_counters[i].msr_eventsel = 0;
-Why to initialize msr_eventsel to 0 instead of the real MSR address here?
->  		pmu->fixed_counters[i].msr_counter = MSR_CORE_PERF_FIXED_CTR0 + i;
->  	}
->  }
-> @@ -799,6 +799,43 @@ static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
->  	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
->  }
->  
-> +static void intel_save_guest_pmu_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	/* Global ctrl register is already saved at VM-exit. */
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
-> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
-> +	if (pmu->global_status)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
-> +
-> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> +	/*
-> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
-> +	 * also avoid these guest fixed counters get accidentially enabled
-> +	 * during host running when host enable global ctrl.
-> +	 */
-> +	if (pmu->fixed_ctr_ctrl)
-> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
-> +}
-> +
-> +static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	u64 global_status, toggle;
-> +
-> +	/* Clear host global_ctrl MSR if non-zero. */
-> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> +	toggle = pmu->global_status ^ global_status;
-> +	if (global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
-> +	if (pmu->global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
-> +
-> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> +}
-> +
->  struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
->  	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
-> @@ -812,6 +849,8 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.cleanup = intel_pmu_cleanup,
->  	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
->  	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
-> +	.save_pmu_context = intel_save_guest_pmu_context,
-> +	.restore_pmu_context = intel_restore_guest_pmu_context,
->  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
->  	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
->  	.MIN_NR_GP_COUNTERS = 1,
+Link to v4: https://lore.kernel.org/20240425141826.840077-1-visitorckw@gmail.com
+Link to v3: https://lore.kernel.org/20240406164727.577914-1-visitorckw@gmail.com
+Link to v2: https://lore.kernel.org/20240320145417.336208-1-visitorckw@gmail.com
+Link to v1: https://lkml.kernel.org/20240319180005.246930-1-visitorckw@gmail.com
+
+Kuan-Wei Chiu (16):
+  perf/core: Fix several typos
+  bcache: Fix typo
+  bcachefs: Fix typo
+  lib min_heap: Add type safe interface
+  lib min_heap: Add min_heap_init()
+  lib min_heap: Add min_heap_peek()
+  lib min_heap: Add min_heap_full()
+  lib min_heap: Add args for min_heap_callbacks
+  lib min_heap: Add min_heap_sift_up()
+  lib min_heap: Add min_heap_del()
+  lib min_heap: Update min_heap_push() and min_heap_pop() to return bool
+    values
+  lib min_heap: Rename min_heapify() to min_heap_sift_down()
+  lib min_heap: Update min_heap_push() to use min_heap_sift_up()
+  lib/test_min_heap: Add test for heap_del()
+  bcache: Remove heap-related macros and switch to generic min_heap
+  bcachefs: Remove heap-related macros and switch to generic min_heap
+
+ drivers/md/bcache/alloc.c      |  64 ++++++++---
+ drivers/md/bcache/bcache.h     |   2 +-
+ drivers/md/bcache/bset.c       | 124 ++++++++++++++--------
+ drivers/md/bcache/bset.h       |  40 +++----
+ drivers/md/bcache/btree.c      |  69 +++++++-----
+ drivers/md/bcache/extents.c    |  53 ++++++----
+ drivers/md/bcache/movinggc.c   |  41 +++++--
+ drivers/md/bcache/super.c      |   3 +-
+ drivers/md/bcache/sysfs.c      |   4 +-
+ drivers/md/bcache/util.c       |   2 +-
+ drivers/md/bcache/util.h       |  67 +-----------
+ drivers/md/bcache/writeback.c  |  13 ++-
+ drivers/md/dm-vdo/repair.c     |  19 ++--
+ drivers/md/dm-vdo/slab-depot.c |  14 +--
+ fs/bcachefs/clock.c            |  43 ++++++--
+ fs/bcachefs/clock_types.h      |   2 +-
+ fs/bcachefs/ec.c               |  76 ++++++++-----
+ fs/bcachefs/ec_types.h         |   2 +-
+ fs/bcachefs/util.c             |   2 +-
+ fs/bcachefs/util.h             | 118 +--------------------
+ include/linux/min_heap.h       | 188 +++++++++++++++++++++++++--------
+ kernel/events/core.c           |  29 ++---
+ lib/test_min_heap.c            |  75 +++++++++----
+ 23 files changed, 583 insertions(+), 467 deletions(-)
+
+-- 
+2.34.1
+
