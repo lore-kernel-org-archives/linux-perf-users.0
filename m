@@ -1,73 +1,49 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF344D5AB;
-	Wed, 15 May 2024 09:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F075A10B;
+	Wed, 15 May 2024 09:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715765161; cv=none; b=Nv7yL2ok5XnA8bCoQODROwhnWBHm0I6GIy+HKF3hDSpfwnpWC1g/xZ0bwCWTJEAWtLXxr5rdP4TGTt7xr/3KG3oChst2cv8sui/HzwkyLTLaOF4L2zYahGjaBpqB9FyQoI+sCqMV5LBMoN9ET5f4Fl/yoPoqzD+Zsf+zDn2FMug=
+	t=1715765428; cv=none; b=dx5cw02aL3w0aEFDKhctsSEUYHbojWY40kOocCFNFmV8puPjlf6OD0qE/q7SkUlWREQ6xVqby/7d0QAjAvx2T3dvfdrltjn3X5bnVb8MZ882w+49/AFW9dDCWUgG5DLRNMX3lX4yGeRSgtkxF6oI1CJDDLLfxzlpAqynwvyFuoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715765161; c=relaxed/simple;
-	bh=U537H0j/9PlQaC0LiL9fsVT4K5alZFkllM7ciYu/MeQ=;
+	s=arc-20240116; t=1715765428; c=relaxed/simple;
+	bh=Tj66QOsws4IxvrdU0JpgRnLKVnNodYuHADUzYQg+66M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C14nU+pTiDLxbj0/B8gV5PP/x9Q+ZBOPwS5Vr4IfKOHQG0OcBwxJLN4jBgM10WTT2RlUdjKtWM2faOuPY6w9+CvGReCb6ahsU9bbYsLZNJ8CXOuACvNe2Qe+dfhgKXdrvbjUWYzrspkVUWU4HWyjdwukEfxcozGSTQdEAgZaTWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lmIo/tLI; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fq1ODJgG0XEEEmXPwqrPO2b3QtfCXVoKZjrpdGtHzHSSo4s9dCJM+wnx/pKORnZhzdkLF0iePEN5LXf6duVLiDrMi7ZVlr3Ck9DQGzqK52D62PyoRzw3FGLoPufPYCoCGJCev1BzWq9yoeOYiD0AbVqccxHXO99vNYkYKfgBQ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LVbp1mOv; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmIo/tLI"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2b345894600so1470605a91.2;
-        Wed, 15 May 2024 02:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715765160; x=1716369960; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OPKfNooZp8Km8QQjbs+4OOukYiKVYt2UrV4I2QW6i4c=;
-        b=lmIo/tLIrvX2xWYXD60DzlGLY3GrSgRaVxAwdgCnj1P2IOWLCCbL6WN5vmuWBsk8fl
-         Gi255OD2MpDqcIRBS+zV8140QQA5Af6SlyjjBuyl2piJgtC4nv8QdI5Mk7OKxl3KNkMo
-         LJAJ6jfBAAAAv9h9vW7YsSukCQrOMxTCHlNEGRNsYN57nFqU0ndwAR5CuBw6HJiSbtn6
-         XPIliY9mfAZmIzV5Z79jZ7eYOxEPzfX8RZgJFDaYXRVf5peUPqErcF+VnYgwYMIAUSmj
-         V5MN6Rfu750gVP4w+pHw1BZedvMJNQHjwHwEOk1TNzQyMRzbqJDFPB+2yrM1WRdS+uCL
-         lubQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715765160; x=1716369960;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OPKfNooZp8Km8QQjbs+4OOukYiKVYt2UrV4I2QW6i4c=;
-        b=vZft5pflapvwPnq0Swi9eNdWkg3DAOCB6fATvDoZ0cfFsabsMkuV8ESlBuNC0EGlrU
-         R2jQ3iWiO51zdD50ltByVKQ4vafdaHm24DEx5Cci9XHiYDUDg+s3Zr7Ax37WPDbUU2pY
-         EQcLziqi5XSu98WzVj78TMd0LFHLRbHSkY+Q03gNcbjAEydU2ImuYl1LLeCUjy91kpdg
-         PVfop/PYyFGNbL6NDJ+mgOaLbyfs/ivu2t8B+9nZBd8or6LNdgdCrqmJHw+0NKI7RFOG
-         Ky8nkk6DkG454fi89O8YneTi3dKP8te4UXwxM8wz1rCjAue7ZE2685ImqHsmLlSCE2Ts
-         kwRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNXcRof4Z7LSAY1c/x/MSIRjuUq0BHHpMEej2bdOx8PITbSBFsnCF9eiZYrK1rvRteEsEl2QItKLNUBuFhZlmzluQlLFsLo1vDhu+3Ah/Isynsjz794iP/rhr+fcBmBw4T0lcUkTW3LCqj3KVeP5dMcTMwGzLKCnVFV68zTH0kqnZPegzEkHo6l9X/lBEmht4Zmq1cS9bmTMlG2DpztmBxUs+Wzh8A9oRBKMuP
-X-Gm-Message-State: AOJu0YwGtSNgb/jUa70xj0+8aknemstuov2hLB+9xpDgb9O8XR52LQko
-	Jm4ukdlt06wmfp/0Nr0JMEBlkviXPEMGF3WRQdRVtwqymxiVZD1c
-X-Google-Smtp-Source: AGHT+IF2x8/iHfJaxUooX4X3TGoGoXPwzr8yltF5Wclj64bedUjHLoWk82Et3XcILWR8yWtSNWfX5A==
-X-Received: by 2002:a17:902:cec6:b0:1eb:ac3c:e39f with SMTP id d9443c01a7336-1ef441b5da6mr178395365ad.6.1715765159464;
-        Wed, 15 May 2024 02:25:59 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d16dasm113812805ad.15.2024.05.15.02.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 02:25:58 -0700 (PDT)
-Date: Wed, 15 May 2024 17:25:54 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, bagasdotme@gmail.com,
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 11/16] lib min_heap: Update min_heap_push() and
- min_heap_pop() to return bool values
-Message-ID: <ZkR/ovACvPFqvFCv@visitorckw-System-Product-Name>
-References: <20240514084724.557100-1-visitorckw@gmail.com>
- <20240514084724.557100-12-visitorckw@gmail.com>
- <20240515083755.GB40213@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LVbp1mOv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0MPcX7Q/1GrJVBzBdzSF5faPHH2cy5MpHUFiB4Qhi+0=; b=LVbp1mOvPldd7Y47Jf81MpXL1t
+	4sF0IfM4NyulIId7t/h2d8yWSUd+479sMHyOUB7v4wAv4JvCSjfpxorNG/0DzSx03ZSipHz+L33ND
+	mBEloOzhXE2aYyl/pAC87+PaL7fF6X4bKlDR+rT40G4CR/8ag60cCwDDpkWty/40PgkdT+g5NVVcp
+	GWaov18XSvLmWiT5v5OmirGZgobiToFQI+dyVD9gEPQyXl5l+EQY+i/f+WNNBYICNfN92oyCr5HMW
+	KDGNUMsGg/BSuWtRHOUNLrXE7lH3doW+ZT+DRnSNJtNmJrr1kvCXc1D2ezBP1H4JvWlNhaeC9RdKQ
+	+fO1iicQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7Axk-000000053HL-1HvO;
+	Wed, 15 May 2024 09:30:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7ED5230068B; Wed, 15 May 2024 11:30:13 +0200 (CEST)
+Date: Wed, 15 May 2024 11:30:13 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org, Riham Selim <rihams@meta.com>
+Subject: Re: [PATCH 2/4] perf,uprobes: fix user stack traces in the presence
+ of pending uretprobes
+Message-ID: <20240515093013.GE40213@noisy.programming.kicks-ass.net>
+References: <20240508212605.4012172-1-andrii@kernel.org>
+ <20240508212605.4012172-3-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,89 +52,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240515083755.GB40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240508212605.4012172-3-andrii@kernel.org>
 
-On Wed, May 15, 2024 at 10:37:55AM +0200, Peter Zijlstra wrote:
-> On Tue, May 14, 2024 at 04:47:19PM +0800, Kuan-Wei Chiu wrote:
-> > Modify the min_heap_push() and min_heap_pop() to return a boolean
-> > value. They now return false when the operation fails and true when it
-> > succeeds.
-> 
-> But why ?!
+On Wed, May 08, 2024 at 02:26:03PM -0700, Andrii Nakryiko wrote:
 
-When handling failures of push/pop operations, although we could
-achieve the same effect by checking whether the heap is empty/full
-before push/pop, we have already performed such checks within the
-push/pop operations. Therefore, I believe directly using the result
-of the check as the return value will make the code written by the user
-more concise. This return value is used in subsequent patches for
-replacing the heap macro in bcache and bcachefs to determine if an
-error has occurred. The original heap macros in bcache and bcachefs
-also do the same thing.
+> +static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entry,
+> +					       int start_entry_idx)
+> +{
+> +#ifdef CONFIG_UPROBES
+> +	struct uprobe_task *utask = current->utask;
+> +	struct return_instance *ri;
+> +	__u64 *cur_ip, *last_ip, tramp_addr;
+> +
+> +	if (likely(!utask || !utask->return_instances))
+> +		return;
+> +
+> +	cur_ip = &entry->ip[start_entry_idx];
+> +	last_ip = &entry->ip[entry->nr - 1];
+> +	ri = utask->return_instances;
+> +	tramp_addr = uprobe_get_trampoline_vaddr();
+> +
+> +	/* If there are pending uretprobes for current thread, they are
 
-Regards,
-Kuan-Wei
-> 
-> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  include/linux/min_heap.h | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-> > index c94f9d303205..2d080f85ad0d 100644
-> > --- a/include/linux/min_heap.h
-> > +++ b/include/linux/min_heap.h
-> > @@ -147,18 +147,20 @@ void __min_heapify_all(min_heap_char *heap, size_t elem_size,
-> >  
-> >  /* Remove minimum element from the heap, O(log2(nr)). */
-> >  static __always_inline
-> > -void __min_heap_pop(min_heap_char *heap, size_t elem_size,
-> > +bool __min_heap_pop(min_heap_char *heap, size_t elem_size,
-> >  		const struct min_heap_callbacks *func, void *args)
-> >  {
-> >  	void *data = heap->data;
-> >  
-> >  	if (WARN_ONCE(heap->nr <= 0, "Popping an empty heap"))
-> > -		return;
-> > +		return false;
-> >  
-> >  	/* Place last element at the root (position 0) and then sift down. */
-> >  	heap->nr--;
-> >  	memcpy(data, data + (heap->nr * elem_size), elem_size);
-> >  	__min_heapify(heap, 0, elem_size, func, args);
-> > +
-> > +	return true;
-> >  }
-> >  
-> >  #define min_heap_pop(_heap, _func, _args)	\
-> > @@ -184,7 +186,7 @@ void __min_heap_pop_push(min_heap_char *heap,
-> >  
-> >  /* Push an element on to the heap, O(log2(nr)). */
-> >  static __always_inline
-> > -void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
-> > +bool __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
-> >  		const struct min_heap_callbacks *func, void *args)
-> >  {
-> >  	void *data = heap->data;
-> > @@ -192,7 +194,7 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
-> >  	int pos;
-> >  
-> >  	if (WARN_ONCE(heap->nr >= heap->size, "Pushing on a full heap"))
-> > -		return;
-> > +		return false;
-> >  
-> >  	/* Place at the end of data. */
-> >  	pos = heap->nr;
-> > @@ -207,6 +209,8 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
-> >  			break;
-> >  		func->swp(parent, child, args);
-> >  	}
-> > +
-> > +	return true;
-> >  }
-> >  
-> >  #define min_heap_push(_heap, _element, _func, _args)	\
-> > -- 
-> > 2.34.1
-> > 
+Comment style fail. Also 'for *the* current thread'.
+
+> +	 * recorded in a list inside utask->return_instances; each such
+> +	 * pending uretprobe replaces traced user function's return address on
+> +	 * the stack, so when stack trace is captured, instead of seeing
+> +	 * actual function's return address, we'll have one or many uretprobe
+> +	 * trampoline addresses in the stack trace, which are not helpful and
+> +	 * misleading to users.
+
+I would beg to differ, what if the uprobe is causing the performance
+issue?
+
+While I do think it makes sense to fix the unwind in the sense that we
+should be able to continue the unwind, I don't think it makes sense to
+completely hide the presence of uprobes.
+
+> +	 * So here we go over the pending list of uretprobes, and each
+> +	 * encountered trampoline address is replaced with actual return
+> +	 * address.
+> +	 */
+> +	while (ri && cur_ip <= last_ip) {
+> +		if (*cur_ip == tramp_addr) {
+> +			*cur_ip = ri->orig_ret_vaddr;
+> +			ri = ri->next;
+> +		}
+> +		cur_ip++;
+> +	}
+> +#endif
+> +}
