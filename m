@@ -1,110 +1,130 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE4B3A8E4
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 06:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3884F1E2;
+	Wed, 15 May 2024 08:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715753586; cv=none; b=V4eXr99S++iNsZKSEgOUtwWg5KEGQ/INRlt23VQ8j1G//FWZFtzxNHoP3dEtiYeO3urnCE5siUsRffCpxov2+QuVnR3ql5mlH6CGWzKI+w6Gxb7L6+mPnqiIh6ug/iBeaWPsTNG1q1N9NKnix/BexYQsnHfqnI1urYfsUtqQoWA=
+	t=1715762297; cv=none; b=TgZXhDPhB/gYtMTylpsNxoObW/TmiNLgqamujSMO9ZVaXvOHhMx8Z3E6uDISMBmCb1vQ5PQz6g9PxI6BrEiNMWsznfK7xo/T8h6mwZFrz1MvriZlno49pdOqh8B3hdR4uYmcOXSE6V89xFgGPpTrPrInlvp110puZDGB0D5pcCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715753586; c=relaxed/simple;
-	bh=woN60CSEL3yeZlojsxHPL/F4PGAMhm9ZAr4vWsJq9ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F5mSBTivqoXX+oZapAVo1yzQDx7QDYzEL28E+dQBUsH9O7MzFQFnl1EL+JEkb/FwiDtfhv8FGde37PAMhPzk/qGXueN2FFaACOWISAkCS9XeSkRYYnXNaQc65/5gz3ExhWnj8H/UTeHIYMyouySTEM0IbybnadbufzcPi9KmW1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o9UiGmk4; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715762297; c=relaxed/simple;
+	bh=Tpla7BbjcnmioeU0TB5vZhZhEFVFx+ygWRQ+4ZTjSs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+5uQmP7zj4SD2v9/0Sh2FfmsWVoeUfrRB//UB02K1sblLBLI1l+JkwSN9W6CMdNCtW9duOu3ROpbc3ka+HF14XU1L/68BmgTKoLcaH0D23q/0pOLs4vtkBJP4jMAp9excrbJhUR7smCs3+9ty7AwQBkO6HHqFiTYcb7IihhJ/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VC8ZzEVW; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9UiGmk4"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ee5f3123d8so619765ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 May 2024 23:13:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715753580; x=1716358380; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=woN60CSEL3yeZlojsxHPL/F4PGAMhm9ZAr4vWsJq9ps=;
-        b=o9UiGmk4ISrfSjbdalt/Iwt10Qxoa4I8SON+IKktbherpbLXduxREpylBHGNin5Pt8
-         VDSaSFdC52nvVwN6JQdbb+yBh41uP/hsUVhjG/7X/MZuUi1JvkH3LYylv3tFkfv/NKxS
-         3Sii7puJyH/iAFlP5nSkyo6zQuZbEIG1gl35c052iHY7G8bp254Nr6id2r1i0zNWhvQw
-         Opysr+4nlCaEaOPH9QsRXg4iP0e5LZgVyCT5KGxmiewwZyMigRX/pfAg7RBG06WDF3Us
-         rfjP+tbHvFETS31dzvu8jB2sZuEODEiSYguvwGdhUNmbOMYwVGoN5oHYX+SFDiVqQdAg
-         iPgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715753580; x=1716358380;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=woN60CSEL3yeZlojsxHPL/F4PGAMhm9ZAr4vWsJq9ps=;
-        b=QqDsx1uccMSCymeyHzqPrzy6SnnhYCcJuAoQ1xItJrSyQzjBt4s4ogI2O22lnDrahl
-         FvQ/dg/tSDMd01DnW8h5wu8Xx1da8Y2jbBj8/2ppizH6d3jCCXT0B9m7EvnmeTMk+/09
-         Ou832Fxlej0RLV4GWFBlT4WuuSjtFSbKumgexB6RXDrKQ5BnaspiJqvV0nHiBr69Fk/M
-         v7ovxQOYyk/aKPkbIUTgo/xMigJWxeqU7XRBght1FTterQZSPKuZwO9dul5IFS3xvUKS
-         kMBhv8dPEr8kLAX9PaLM5WkWKFxITwEoQo9is+4fsxZRDbU5Cl19h+XtBLQfPkeh186I
-         1big==
-X-Gm-Message-State: AOJu0YyFrPiRLOKZ4W8uhgSwqYxYHesuSI8qPIHZ9CNt4dp7IoYTAg8z
-	kR0GOCydVOKOABBzoe8li6VN36MkoxRVbv1GJ9taGc8X2/KM2S5qEHV2WaLZuy3HM18A75Wc1E9
-	XWJHnhfW9dq8f8eCZo1BP+RcIAl9wB9IIEZ9EU9T6gxZw7OGQfA==
-X-Google-Smtp-Source: AGHT+IE6WgvdtrIzadUR1fBM7ss6zcYUqFUKgUsUMyhyhovQXFeRtUBP/WuQg/k502boTL3AC+85GEu64ZgUgVZ46aw=
-X-Received: by 2002:a17:903:1111:b0:1e2:1955:1b1c with SMTP id
- d9443c01a7336-1f060c3099dmr8390945ad.27.1715753580084; Tue, 14 May 2024
- 23:13:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VC8ZzEVW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Keg0jiSN81Wa3nYaggknvxCwoJj5PEJrMVbonyZKJTw=; b=VC8ZzEVW7pcHbnf3lULvD3cxgN
+	VffP1SHapl/sAgpWcQPzagL8HPWl2CZaISZnehAXQ82tXyFpY9sc3b7/p6VKALiN+/LrwnIMP4RkC
+	MZNzovUkZBgJdk+tj32EjQunWtvsQpMZn/S6qt9NTfLDZh8S2Q4/I9iZbOpBEhQygIA5gkYnOFmom
+	fWyIRpAsJswXfRvuBRYyAcvAn25N7coAP4UyLnzrrKBihNTz7Bodow3MJJurHVN1p6InDTWCmTsdJ
+	I8Nlpkh9Psb98XRsZH1B30ZAlWsgZdlny3xaRngSLGIaid5sNAirBkKujgo3Hg7JTPrXxTv+mAb0K
+	r6d/nqZg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7A96-000000052j7-1pIs;
+	Wed, 15 May 2024 08:38:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 629AA30068B; Wed, 15 May 2024 10:37:55 +0200 (CEST)
+Date: Wed, 15 May 2024 10:37:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, bagasdotme@gmail.com,
+	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 11/16] lib min_heap: Update min_heap_push() and
+ min_heap_pop() to return bool values
+Message-ID: <20240515083755.GB40213@noisy.programming.kicks-ass.net>
+References: <20240514084724.557100-1-visitorckw@gmail.com>
+ <20240514084724.557100-12-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fW2-pbOek68wjrEB+G=kzDmo3oPYuFj7iheouTMiaz5rQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fW2-pbOek68wjrEB+G=kzDmo3oPYuFj7iheouTMiaz5rQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 14 May 2024 23:12:29 -0700
-Message-ID: <CAP-5=fV5BxH_VMLbumA76Z4jguMmkc9SgduUfWat3ssf_hTy6A@mail.gmail.com>
-Subject: Re: GSoC 2024 contributor news - restarting office hours
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Cc: chu howard <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514084724.557100-12-visitorckw@gmail.com>
 
-On Thu, May 2, 2024 at 9:00=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Dear all,
->
-> We were really excited and grateful for all of the Google
-> Summer-of-Code (GSoC) applicants received this year. It was the most
-> applicants for GSoC and the most we've ever received for Linux perf
-> tools as part of the Linux foundation. Given the number of applicants,
-> organizers held proposals to a high bar and we're sorry for all those
-> who applied but failed to get a spot - we tried to argue for more
-> spots. You are of course welcome to contribute to Linux perf outside
-> of GSoC and everyone is here to help with that. Thank you for the
-> contributions you've already made!
->
-> We are excited to say that Howard Chu's proposal on perf trace and BTF
-> for GSoC was accepted. The GSoC program officially starts on May 27th
-> and now is a community bonding period [1].
->
-> In the past to allow an open interaction with everyone in the project
-> we've held weekly office hours/syncs with GSoC contributors. The
-> office hours have often had wider discussions on perf event topics. It
-> is difficult to pick a time/date for the office hours so if people
-> have thoughts on organization then we'd love to know. Perhaps we can
-> alternate time slots, or have more than one. I previously did a google
-> forms survey and a timezone convenient to Europe was selected, but
-> then we had very little attendance from people in that timezone.
-> Somewhat selfishly this time I'd like a time slot that is convenient
-> to the mentors and Howard.
+On Tue, May 14, 2024 at 04:47:19PM +0800, Kuan-Wei Chiu wrote:
+> Modify the min_heap_push() and min_heap_pop() to return a boolean
+> value. They now return false when the operation fails and true when it
+> succeeds.
 
-Reminder that we're just under 2 weeks away from GSoC coding starting
-so we need to make a decision on a day/time to hold office hours - or
-multiple times if needs be.
+But why ?!
 
-Thanks,
-Ian
-
-> Thanks,
-> Ian
->
-> [1] https://developers.google.com/open-source/gsoc/timeline
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+>  include/linux/min_heap.h | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
+> index c94f9d303205..2d080f85ad0d 100644
+> --- a/include/linux/min_heap.h
+> +++ b/include/linux/min_heap.h
+> @@ -147,18 +147,20 @@ void __min_heapify_all(min_heap_char *heap, size_t elem_size,
+>  
+>  /* Remove minimum element from the heap, O(log2(nr)). */
+>  static __always_inline
+> -void __min_heap_pop(min_heap_char *heap, size_t elem_size,
+> +bool __min_heap_pop(min_heap_char *heap, size_t elem_size,
+>  		const struct min_heap_callbacks *func, void *args)
+>  {
+>  	void *data = heap->data;
+>  
+>  	if (WARN_ONCE(heap->nr <= 0, "Popping an empty heap"))
+> -		return;
+> +		return false;
+>  
+>  	/* Place last element at the root (position 0) and then sift down. */
+>  	heap->nr--;
+>  	memcpy(data, data + (heap->nr * elem_size), elem_size);
+>  	__min_heapify(heap, 0, elem_size, func, args);
+> +
+> +	return true;
+>  }
+>  
+>  #define min_heap_pop(_heap, _func, _args)	\
+> @@ -184,7 +186,7 @@ void __min_heap_pop_push(min_heap_char *heap,
+>  
+>  /* Push an element on to the heap, O(log2(nr)). */
+>  static __always_inline
+> -void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
+> +bool __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
+>  		const struct min_heap_callbacks *func, void *args)
+>  {
+>  	void *data = heap->data;
+> @@ -192,7 +194,7 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
+>  	int pos;
+>  
+>  	if (WARN_ONCE(heap->nr >= heap->size, "Pushing on a full heap"))
+> -		return;
+> +		return false;
+>  
+>  	/* Place at the end of data. */
+>  	pos = heap->nr;
+> @@ -207,6 +209,8 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
+>  			break;
+>  		func->swp(parent, child, args);
+>  	}
+> +
+> +	return true;
+>  }
+>  
+>  #define min_heap_push(_heap, _element, _func, _args)	\
+> -- 
+> 2.34.1
+> 
