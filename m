@@ -1,104 +1,126 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3760158DA0;
-	Wed, 15 May 2024 18:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A489E3219F
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 19:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715797696; cv=none; b=tHxwmbgU1m/wo6kazkgtXkbZ/YxzNiF5Toluczu+evDSy0CONeaou9E4TMdesqfM+Ldf73DNWgAZFSIEF8h2wh+j98rUHtOtuYa1p0uB9sS6CknfA/CKNinM5wsQnB6+S18i+BFIFghGDpuzSOD6QgMnggYZvXlU9/Y1HXTZ0Sg=
+	t=1715801782; cv=none; b=CDnaaOKpnbEhuJVoc/Z+8FRz4JIS9ZAJdBitr5Q8abP0aMEzXvQmhPmN75AEHOxwQIeZoLqL1/y6jcFz3R9hYvAtzMnKzXpJ0Yyrnwc1c7pfBaTaCQwLoWpjp4M/s+Ad9MOOyNem/5IyW5im7kArmt676vd2mvinN2roYLCE2uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715797696; c=relaxed/simple;
-	bh=hUZhXekL3czb/m0SA5YEhBv9lBYNkRRC/zAjd6jzNaI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=secOBWlC33L7vyDbCTwFkbW1X7T0C2amkktcfES76LgY71eThccKpqI+fnqS1N0XnVm0HNo3Mxfmc7Jx9yeK2HQfEKuAt5MXT/T7fXMN6camjLRjYVn5n66hwAXXw0QlNZQoxlySAxCJFZr6y6ei3gWj2WiNc27+818guzCOhfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=h8e6oT9x; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1715801782; c=relaxed/simple;
+	bh=rNcKdHemTqXp/jWokR6p4S2Gh19u1eDcI/Wkq5LI0TA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VUO46BiON6WG3iqamjeyVvwGc7xEfJ6j9ZYD9qNPReHVFFwzjjO/aj2AZ93PHLzn61ze+GmuJpQakt9HTZpKEYiBR5r8nlsOWhx0UdB0veEFflckAHujC2+Nv+/KahRCb1a9S2xMqk4C0eWo59GTee5o0IIzw0YemJquyqvomyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ymxpliUj; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h8e6oT9x"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44FHwoPv019778;
-	Wed, 15 May 2024 18:27:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=egK10wqwXb2fu+g1i/MZi3vjpY9NQX6hwN6M7fWN5jE=;
- b=h8e6oT9xQPO9aaX3ZcuvgmjQ1N33VfQcsJDGvmcBYAN1qdbOvwcSEkx4aFNzIdOQqaXA
- c21+EWhaA431tNa0Izbpkxk+0C69Cf0YJTJLFAuq30OhAZiNc+t31mRYajuKw0Ry88gV
- 9YvQ1PNR1sGzHMle3HvHPhqB5hc8T8O+ry9HoVL8zkubD3TJ3uZ7rj69r0/rNhYQsYb+
- RSY2RE+LhHP8aNAGGVXnwQrWbbvVxIJQOrqv35VEiE2aciFfDaMm4D5Xp4MBOLquXWlH
- xw46Jy4W0mPvoyJsYpNtwaLxZhcr4bxcKWP89KiyoZ7+chKxv7iaIr2XF7rt0UwR0MqX Sw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3t4fdrd3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 May 2024 18:27:53 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44FILG1Y000426;
-	Wed, 15 May 2024 18:27:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3y4fssgrbn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 May 2024 18:27:52 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44FIRpxg001892;
-	Wed, 15 May 2024 18:27:51 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3y4fssgrb6-1;
-	Wed, 15 May 2024 18:27:51 +0000
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-To: namhyung@kernel.org, acme@kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        samasth.norway.ananda@oracle.com
-Subject: [PATCH RESEND] perf test pmu: Fix file Leak in test_format_dir_get
-Date: Wed, 15 May 2024 11:27:50 -0700
-Message-ID: <20240515182750.489472-1-samasth.norway.ananda@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ymxpliUj"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627751b5411so10933167b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 12:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715801780; x=1716406580; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8mo40hi9HkXQPI0hPSG3MjEbNa63l8uDo/3AAaoaXZs=;
+        b=ymxpliUjau7tW/aFRnwLgbrFs8PjXmfpKYZDfIeE0ucSmv1YpIaaXAiL1kNxao/hag
+         NNZfL3pQ8KP8DpGDiF0yChRSHXMVcBBN6iwTdA6YJjHIiJvF7eR3UD5IDUY9v1Ld5H+9
+         EuNCBQz3xuKuOtBBBaoECw5Zcf9a6CEBH+ZJQmWX5hYGaW5ER684OQ9BZni3/d7WPzOb
+         gY/u2DsMWqhAcfFu6Lt+MFM9ilealcz2kw1b91tJau04V2ty+NOE6At5XeVKcXnB6R1o
+         OCywm1TjzVdJOo+fw47vcJ4r0aEMbHuX53hX2vicVRaYY1P8MSpFG+k2vMq4TaN21Yw+
+         T/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715801780; x=1716406580;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8mo40hi9HkXQPI0hPSG3MjEbNa63l8uDo/3AAaoaXZs=;
+        b=qElSpYhbIjTd1tSh01Ci+HydtVCRJldnWqZINl1bUkTADPfKDPIZOFO2alRD96KLbt
+         urB26hZDYUqTh7ivCRz56bAvkrms7xgPUX8nyFroaZTv9X0z53Onrtn01HLJAxWEmWzZ
+         2A5Kd/oodeyNlkfEbBVc9CkQh/ujKVs8hJXyBupf4xfMN/9y5aZP8yb9fg0OQRi9vCA7
+         i4wlpqMJ4KVeD0cMRenajH+FTqoO1Wa5n18UlD+qNLUjDSBJmGIGZmOa9JYKxv27/CxK
+         PsAOv+24CIkNZxJb98/MZFDHiD9Cf81XVTELw23ndYnAvMP2pdZ3SBXAjHNKjRBOPl2E
+         u9Jg==
+X-Gm-Message-State: AOJu0Yw52u5Wq0YuHUoRAG+ly48DaX3XwFZNKM0X37GZMJ1/UOQiaAn3
+	V7pi1hUvrXrsX7mdYhE8CCFHb1HE/YZzNRK+RolEq8NZl9YZq6BZB5wlClEHfSpjAoEY3uoxMrg
+	0
+X-Google-Smtp-Source: AGHT+IH0DGxH7FiS9IKB53lZ/iJkOvC68dQQh6DPRikcqpIYM9vqeJtrXJMVdVoglnHDpQsEeY8eJHhrmho=
+X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:6e4e:954d:1e49:f87c])
+ (user=yabinc job=sendgmr) by 2002:a05:690c:6f8c:b0:61b:ea12:d0b with SMTP id
+ 00721157ae682-622aff85f0cmr46339907b3.2.1715801779694; Wed, 15 May 2024
+ 12:36:19 -0700 (PDT)
+Date: Wed, 15 May 2024 12:36:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_11,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 spamscore=0 bulkscore=0 phishscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405150131
-X-Proofpoint-ORIG-GUID: AcnBaErCSbn2XednvMCck8PnKx0IUKBP
-X-Proofpoint-GUID: AcnBaErCSbn2XednvMCck8PnKx0IUKBP
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240515193610.2350456-1-yabinc@google.com>
+Subject: [PATCH v5 0/3] perf/core: Check sample_type in sample data saving
+ helper functions
+From: Yabin Cui <yabinc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-File is opened inside the for loop. But if the 'if' condition is
-successful then 'break' statement will be reached, exiting the
-'for' loop prior to reaching 'fclose'.
+Hello,
 
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
----
-Found this error through static analysis. This has only been compile
-tested.
----
- tools/perf/tests/pmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+We use helper functions to save raw data, callchain and branch stack in
+perf_sample_data. These functions update perf_sample_data->dyn_size without
+checking event->attr.sample_type, which may result in unused space
+allocated in sample records. To prevent this from happening, this patchset
+enforces checking sample_type of an event in these helper functions.
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 8f18127d876a..f751e6cb6ac0 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -106,8 +106,10 @@ static char *test_format_dir_get(char *dir, size_t sz)
- 		if (!file)
- 			return NULL;
- 
--		if (1 != fwrite(format->value, strlen(format->value), 1, file))
-+		if (1 != fwrite(format->value, strlen(format->value), 1, file)) {
-+			fclose(file);
- 			break;
-+		}
- 
- 		fclose(file);
- 	}
+Thanks,
+Yabin
+
+
+Changes since v1:
+ - Check event->attr.sample_type & PERF_SAMPLE_RAW before
+   calling perf_sample_save_raw_data().
+ - Subject has been changed to reflect the change of solution.
+
+Changes since v2:
+ - Move sample_type check into perf_sample_save_raw_data().
+ - (New patch) Move sample_type check into perf_sample_save_callchain().
+ - (New patch) Move sample_type check into perf_sample_save_brstack().
+
+Changes since v3:
+ - Fix -Werror=implicit-function-declaration by moving has_branch_stack().
+
+Changes since v4:
+ - Give a warning if data->sample_flags is already set when calling the
+   helper functions.
+
+Original commit message from v1:
+  perf/core: Trim dyn_size if raw data is absent
+
+Original commit message from v2/v3:
+  perf/core: Save raw sample data conditionally based on sample type
+
+
+Yabin Cui (3):
+  perf/core: Save raw sample data conditionally based on sample type
+  perf/core: Check sample_type in perf_sample_save_callchain
+  perf/core: Check sample_type in perf_sample_save_brstack
+
+ arch/s390/kernel/perf_cpum_cf.c    |  2 +-
+ arch/s390/kernel/perf_pai_crypto.c |  2 +-
+ arch/s390/kernel/perf_pai_ext.c    |  2 +-
+ arch/x86/events/amd/core.c         |  3 +--
+ arch/x86/events/amd/ibs.c          |  5 ++---
+ arch/x86/events/core.c             |  3 +--
+ arch/x86/events/intel/ds.c         |  9 +++-----
+ include/linux/perf_event.h         | 26 +++++++++++++++++-----
+ kernel/events/core.c               | 35 +++++++++++++++---------------
+ kernel/trace/bpf_trace.c           | 11 +++++-----
+ 10 files changed, 55 insertions(+), 43 deletions(-)
+
 -- 
-2.43.0
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
