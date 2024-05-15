@@ -1,209 +1,279 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FFC44368
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 06:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DEF3B1AC
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 06:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715752885; cv=none; b=VlwvAbMZrjav2/6GzDmYfmsmYTfiE8Q1k2qxkvT6DM4oNxVLu7CXEmCYr+WGBEG81c7V57M6LZ4aurUQNde6RsbZSe+DE6+NIHIsL9dPMh3maCR3Y2NhlfqEJ6dONwtBbVRfC1GDlo/XanBtFDIrSLc3lRYuP2ia2Wzb2F56nJ4=
+	t=1715753221; cv=none; b=sjYyZsAi0JeR05CpKwdMGm+S4BqlFQ+QrGosy9os72JIZem/n+xx6y4aM5GfkGGCxfgKhJc9Gp/tpH3TO0uYnSenl4GJGq0WLY7dv7NMi0rgsJ1JgnWF6gCgu9lvLGRJF0mIV6CAVF9fUqxPo1f2684aBHh8SZgNeqPo5z6hohA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715752885; c=relaxed/simple;
-	bh=SUmGhn7U8Bhn0LJUMjbbdvaJXGbSc6Bswuda7N7OrT4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=exhzXdaOwc/QYkLUaU9ut/i56SDB3LxDzFCBwvIU96L3wycxgOYc22R2WqAD41mkYMzmDdLQGNJbZihueQntGlwGzbLA39DlpalrYfvwnFkfqt/3JlX1UXscp03OE9gJD14bNSTJ+3OxwxbF1jtuNes71iDG//BEQyfIiIauVgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lHYXIAKo; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1715753221; c=relaxed/simple;
+	bh=kUL4zZYBA6Zz37ENPOn7eSbSBL2HQB6Dt7zdYhhamFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BtQ1IksZjV6rErwZ4myy3DR1wMuZYcNG/HNljd8HMMoA5t56BcwEDdeSjiznS8Lc9+4Pc92IK//lm0uMjdpkQBmsORTgqWG+rqyXEr/BQBq+D/u+Ofiju0yd8AYQkQkJQSj6H77ENmHdo9t5gW1WBnsfJ0ko6TpncUyL2UBnYlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5Q9dPtn; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lHYXIAKo"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be4b79115so123845947b3.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 May 2024 23:01:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5Q9dPtn"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43dfe020675so1814721cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 May 2024 23:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715752882; x=1716357682; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kbt3+oOgWiYhvdlIPoeQ0dzOgUp0iTplIsC7hc2pJ+U=;
-        b=lHYXIAKofUYWwYfcakeEYAxQphwSmk20PXmItI3ckRjKSnHFBmTuf5AjefUEpXkgYL
-         qmn3yw0+kX8kB6Abr1rPx98KsMNmskAf+xLlhLYlthqD6UavTQsmIcPs0XY3j0wnlRp3
-         lbodQzaj3ImeY1PCmCNBEazuYuef1CmisiCmjrlpwm6LcfvZaehxhtSemTVqk2XgWfVe
-         MeG2zQH8nnfKwagk/BLqaTDxszAtP774M6htaI8BXO64bJNgEfutnefJ3gvXss6/LbKG
-         KEGOV1AnE+qBgsDPkmBLSPenms3hbqLuM9irVIraX+/l2C2aMbTcHOOwY9BuOcr6IAHD
-         wcag==
+        d=google.com; s=20230601; t=1715753219; x=1716358019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sw46tNmLyy6/gqhuKbv79aER+4CQjoFXDtqPExJDGXQ=;
+        b=Z5Q9dPtniOh6Uq2JbA8QW55FIASwF+jIR6xza9a23e1XGBGV3P9UFx9aSlt0m9S8A2
+         0ib7VJwtu3pSsbvrnACx3crX3xF4hSS1NeodyFvdoQmmekZKWv8qU2KRJKaCBG3VMd1S
+         lBvWAqkIOddBcbrqNFpMsvVOBjv+Uyv+PA0LpIQ1f5yMQAQltuuN8uwIh479NOU0tUm/
+         3UgcT/LldOatiHXqz+90t0BqEdheiqQ5t2Nm976BY2IyrWdJONA1uY7HKUqSYdKbq3TY
+         oaSBfZ1l/imeXLctcVY3prPO25Fwwj8xXTaHbhnmxLG3rbEDTwFvV2dPBfXnyZAr7bJo
+         P+DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715752882; x=1716357682;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbt3+oOgWiYhvdlIPoeQ0dzOgUp0iTplIsC7hc2pJ+U=;
-        b=Dxcso6AXHTs4FO3csEbAiOWSfd9sGjf7BG8fA2uxAQ5sloQgqEHlyuB02RjbD6Ka64
-         ZEN9kDaSt9Ivai80cxfZrjqL957zabjDpfvuhyr+DPk0KdLBvyWgFpsOeE8IH0chNCYp
-         zfu1bQnlPOSFgRnu4Ri2jArOt6OH6qRIWrNZjyDOs0SyyDYNKimn40l4r+xR9meVuSPS
-         n5QHyHmBpGSFfCtoQ3zs205IUI/GlcnFbGRlbgX5XY6q+NZ+vhXZ1xTFv7eq1h6edh5R
-         hGxdRsOGKLA3S0ImxSNLRGIHLPFyC6ju72HG4bYk7KOOfj2Sw6rb5IZY1QirQNNTETm+
-         Us+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUf4/nZpgYMmVOk+swPmWP5KKR0XiPxAlihlDVfKVg4lI3NWcTZ8oXhZ0GysLAZw/bp9ewxTsyC2sUJGWtzCQwQzlOrUHTYZI8eC/2n8iuHgQ==
-X-Gm-Message-State: AOJu0YxY5MjGfMBVqBkl4M5PHW5BswIhLyyU9il7dNUdi+GNE7yIsGDv
-	UgzTArSPofMgQzdr78MnQBGHPig7RMyPtaGGG2QqYtOWMplqYqQS3KpHEvos2G7M6srmldKvSgm
-	85XQG4A==
-X-Google-Smtp-Source: AGHT+IEYbruynMzwQTf+H5YajmkeOApfArgyEh3Z0hkcdqCiUJOLMAgirPQdXuz0xbnoJkwoe34enSuu9/dP
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bac3:cca1:c362:572])
- (user=irogers job=sendgmr) by 2002:a05:6902:149:b0:de5:5225:c3a4 with SMTP id
- 3f1490d57ef6-dee4f304cb7mr3523816276.7.1715752882040; Tue, 14 May 2024
- 23:01:22 -0700 (PDT)
-Date: Tue, 14 May 2024 23:01:14 -0700
-In-Reply-To: <20240515060114.3268149-1-irogers@google.com>
-Message-Id: <20240515060114.3268149-3-irogers@google.com>
+        d=1e100.net; s=20230601; t=1715753219; x=1716358019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sw46tNmLyy6/gqhuKbv79aER+4CQjoFXDtqPExJDGXQ=;
+        b=R4OrZ2tFwoSt6pQi0o9zusStSKAMnIng9jUpRBmIqd2TvV10n2dcnF3TDUQgGwdVlv
+         q2D44X+NE3BhkqSUfGcdwiCBPtVLiWlI0jdD7rnhel+XdybCv2f3EQoZdqwbcqfNcBQf
+         r9AzHHGpW81X3fhg4vrDjTcMfiRiJCNzWH3wm/uAVBCBalrTCmuL622zppDKGv0c1f24
+         GBURNe5GoRf5GgYSLxb74B7lseDoZFK0OLWLs28GfWDiKo7IKBDcvmXDotfoPKgMW7Bg
+         fmKCET8hJ9A+zffLjKV23+WMr1VOMR32CTtjCANmO0cv5Uns8kcNfKWsh187WBst9Fjc
+         W+WA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPWKCnz+EZmFJwbrUjxkCEVdf4nLYNa4htOQqfTzUSZbF6Pk2zGZG6MtYGpIClXs4zDxnMg4GpRmmTuz1VinDI4bOuwKzqutIojKoPsfixqA==
+X-Gm-Message-State: AOJu0YwWR/MPPf5CPZ/E/eA3dO6ZtXJX6F5kYOWu6mf/6tloTi7lQ+GM
+	E2GFUo1WsQHI2BLkcDCTOwCLNm5CPDU9eZDxOVNeNBOKh8SznzHB7SRJXXt5qXnapJRjeCa7n5m
+	gu+V2QnviYoepEC6BouVIKd6+8N8lMPFY6/y1
+X-Google-Smtp-Source: AGHT+IGMu7jEqAfsDU1Uer1R6+MjwPSUeYmT6edhDvNSUzQjbN/bHVLcoORZTgm810sR6j/aC2DogtZJd7HemIH0eYk=
+X-Received: by 2002:a05:622a:2291:b0:437:986d:86f4 with SMTP id
+ d75a77b69052e-43e09555a24mr8295751cf.22.1715753218537; Tue, 14 May 2024
+ 23:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240515060114.3268149-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v6 2/2] perf tests: Add some pmu core functionality tests
+MIME-Version: 1.0
+References: <20240329191224.1046866-1-weilin.wang@intel.com>
+ <20240329191224.1046866-3-weilin.wang@intel.com> <CAM9d7cjBfTM2bjkrvN5XWcXJ=OyBOU06fBN=+eWnDSdP2dkD4A@mail.gmail.com>
+ <CO6PR11MB56351C2AB4BE15C5371E29C2EE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjORNS9h7v6p2fg8OXsZMpeBODzTSCQNZ5zAea-baFKNQ@mail.gmail.com>
+ <CO6PR11MB5635C7D8C91FEDA17EC4BCDEEE112@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7chSCQViX=VjgqdVn5un0J5MpGsGDGncUyY-K4=oPvvfQA@mail.gmail.com>
+ <CO6PR11MB56359754A01778EA3EA53981EE102@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cj2Zmd_FMBzf=H6K6jRmYLYuR6mpcyhC0_neTvur0=pyw@mail.gmail.com> <CO6PR11MB5635CC88D0855FA485C383A9EEEC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB5635CC88D0855FA485C383A9EEEC2@CO6PR11MB5635.namprd11.prod.outlook.com>
 From: Ian Rogers <irogers@google.com>
-To: Tuan Phan <tuanphan@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
-	Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Tue, 14 May 2024 23:06:47 -0700
+Message-ID: <CAP-5=fV_mco8cf4yf0VUTGnpNUmQx-VA0S8TpbekAa83c3u5WQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Stephane Eranian <eranian@google.com>
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Test behavior of PMU names and comparisons wrt suffixes using Intel
-uncore_cha, marvell mrvl_ddr_pmu and S390's cpum_cf as examples.
+On Tue, May 14, 2024 at 10:57=E2=80=AFPM Wang, Weilin <weilin.wang@intel.co=
+m> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Wednesday, April 24, 2024 11:50 AM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record =
+when
+> > perf stat needs to get retire latency value for a metric.
+> >
+> > On Wed, Apr 24, 2024 at 10:08=E2=80=AFAM Wang, Weilin <weilin.wang@inte=
+l.com>
+> > wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Namhyung Kim <namhyung@kernel.org>
+> > > > Sent: Tuesday, April 23, 2024 4:06 PM
+> > > > To: Wang, Weilin <weilin.wang@intel.com>
+> > > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Moln=
+ar
+> > > > <mingo@redhat.com>; Alexander Shishkin
+> > > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>;=
+ Hunter,
+> > > > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.=
+com>;
+> > > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Tay=
+lor,
+> > Perry
+> > > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>;
+> > Biggers,
+> > > > Caleb <caleb.biggers@intel.com>
+> > > > Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf rec=
+ord
+> > when
+> > > > perf stat needs to get retire latency value for a metric.
+> > > >
+> > > > On Tue, Apr 23, 2024 at 3:16=E2=80=AFPM Wang, Weilin <weilin.wang@i=
+ntel.com>
+> > > > wrote:
+> > > > > > > > > -static int __run_perf_record(void)
+> > > > > > > > > +static int __run_perf_record(const char **record_argv)
+> > > > > > > > >  {
+> > > > > > > > > +       int i =3D 0;
+> > > > > > > > > +       struct tpebs_event *e;
+> > > > > > > > > +
+> > > > > > > > >         pr_debug("Prepare perf record for retire_latency\=
+n");
+> > > > > > > > > +
+> > > > > > > > > +       record_argv[i++] =3D "perf";
+> > > > > > > > > +       record_argv[i++] =3D "record";
+> > > > > > > > > +       record_argv[i++] =3D "-W";
+> > > > > > > > > +       record_argv[i++] =3D "--synth=3Dno";
+> > > > > > > > > +
+> > > > > > > > > +       if (stat_config.user_requested_cpu_list) {
+> > > > > > > > > +               record_argv[i++] =3D "-C";
+> > > > > > > > > +               record_argv[i++] =3D stat_config.user_req=
+uested_cpu_list;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       if (stat_config.system_wide)
+> > > > > > > > > +               record_argv[i++] =3D "-a";
+> > > > > > > > > +
+> > > > > > > > > +       if (!stat_config.system_wide
+> > > > > > && !stat_config.user_requested_cpu_list)
+> > > > > > > > {
+> > > > > > > > > +               pr_err("Require -a or -C option to run sa=
+mpling.\n");
+> > > > > > > > > +               return -ECANCELED;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       list_for_each_entry(e, &stat_config.tpebs_events,=
+ nd) {
+> > > > > > > > > +               record_argv[i++] =3D "-e";
+> > > > > > > > > +               record_argv[i++] =3D e->name;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       record_argv[i++] =3D "-o";
+> > > > > > > > > +       record_argv[i++] =3D PERF_DATA;
+> > > > > > > > > +
+> > > > > > > > >         return 0;
+> > > > > > > > >  }
+> > > > > > > >
+> > > > > > > > Still I think it's weird it has 'perf record' in perf stat =
+(despite the
+> > > > > > > > 'perf stat record').  If it's only Intel thing and we don't=
+ have a plan
+> > > > > > > > to do the same on other arches, we can move it to the arch
+> > > > > > > > directory and keep the perf stat code simple.
+> > > > > > >
+> > > > > > > I'm not sure what is the proper way to solve this. And Ian me=
+ntioned
+> > > > > > > that put code in arch directory could potentially cause other=
+ bugs.
+> > > > > > > So I'm wondering if we could keep this code here for now. I c=
+ould
+> > work
+> > > > > > > on it later if we found it's better to be in arch directory.
+> > > > > >
+> > > > > > Maybe somewhere in the util/ and keep the main code minimal.
+> > > > > > IIUC it's only for very recent (or upcoming?) Intel CPUs and we
+> > > > > > don't have tests (hopefully can run on other arch/CPUs).
+> > > > > >
+> > > > > > So I don't think having it here would help fixing potential bug=
+s.
+> > > > >
+> > > > > Do you mean by creating a new file in util/ to hold this code?
+> > > >
+> > > > Yeah, maybe util/intel-tpebs.c (if it's better than arch/x86/...) ?
+> > > >
+> > > > >
+> > > > > Yes, this feature is for very recent Intel CPUs. It should only b=
+e triggered if
+> > > > > a metric uses event(s) that has the R modifier in the formula.
+> > > >
+> > > > Can we have a test with a fake metric so that we can test
+> > > > the code on non-(or old-)Intel machines?
+> > >
+> > > All the existing metrics in non-(or old-)Intel CPUs should work as us=
+ual. So I
+> > think
+> > > existing metric tests should work for it.
+> > >
+> > > If we want to add a fake metric uses the :R modifier for those platfo=
+rms, the
+> > metric
+> > > should either fail (if the fake metric uses an event not exist on the=
+ test
+> > platform) or
+> > > return all 0 retire latency data.
+> > >
+> > > So, I'm not quite sure what we want the fake metric to test for. Mayb=
+e we
+> > could
+> > > continue using existing metric tests to ensure all the defined metric=
+s work
+> > correctly
+> > > in each machine under test?
+> >
+> > I think it's ok to return all 0 retire latency for fake tPEBS metrics.
+> > It's just to verify the background record + report logic works ok.
+>
+> Hi Namhyung,
+>
+> After think more about how TPEBS and metrics work, I feel should discuss =
+more
+> about defining a fake TPEBS metric in unsupported platforms.
+> If we'd like a add fake metrics, where should we define and store these m=
+etrics?
+> Should we add this type of metrics for every platform? All the official m=
+etrics
+> we publish are defined by architect and stored in JSON files under separa=
+te
+> directories for each platform. I think it is not a good idea to place fak=
+e metrics
+> together with real metrics. Could you please let me know if there is any =
+other
+> method to define fake metrics for testing?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/pmu.c | 99 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+We do put fake events/metrics in the "test" arch:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 06cc0e46cb28..cc88b5920c3e 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -3,6 +3,7 @@
- #include "evsel.h"
- #include "parse-events.h"
- #include "pmu.h"
-+#include "pmus.h"
- #include "tests.h"
- #include "debug.h"
- #include "fncache.h"
-@@ -340,10 +341,108 @@ static int test__pmu_event_names(struct test_suite *test __maybe_unused,
- 	return ret;
- }
- 
-+static const char * const uncore_chas[] = {
-+	"uncore_cha_0",
-+	"uncore_cha_1",
-+	"uncore_cha_2",
-+	"uncore_cha_3",
-+	"uncore_cha_4",
-+	"uncore_cha_5",
-+	"uncore_cha_6",
-+	"uncore_cha_7",
-+	"uncore_cha_8",
-+	"uncore_cha_9",
-+	"uncore_cha_10",
-+	"uncore_cha_11",
-+	"uncore_cha_12",
-+	"uncore_cha_13",
-+	"uncore_cha_14",
-+	"uncore_cha_15",
-+	"uncore_cha_16",
-+	"uncore_cha_17",
-+	"uncore_cha_18",
-+	"uncore_cha_19",
-+	"uncore_cha_20",
-+	"uncore_cha_21",
-+	"uncore_cha_22",
-+	"uncore_cha_23",
-+	"uncore_cha_24",
-+	"uncore_cha_25",
-+	"uncore_cha_26",
-+	"uncore_cha_27",
-+	"uncore_cha_28",
-+	"uncore_cha_29",
-+	"uncore_cha_30",
-+	"uncore_cha_31",
-+};
-+
-+static const char * const mrvl_ddrs[] = {
-+	"mrvl_ddr_pmu_87e1b0000000",
-+	"mrvl_ddr_pmu_87e1b1000000",
-+	"mrvl_ddr_pmu_87e1b2000000",
-+	"mrvl_ddr_pmu_87e1b3000000",
-+	"mrvl_ddr_pmu_87e1b4000000",
-+	"mrvl_ddr_pmu_87e1b5000000",
-+	"mrvl_ddr_pmu_87e1b6000000",
-+	"mrvl_ddr_pmu_87e1b7000000",
-+	"mrvl_ddr_pmu_87e1b8000000",
-+	"mrvl_ddr_pmu_87e1b9000000",
-+	"mrvl_ddr_pmu_87e1ba000000",
-+	"mrvl_ddr_pmu_87e1bb000000",
-+	"mrvl_ddr_pmu_87e1bc000000",
-+	"mrvl_ddr_pmu_87e1bd000000",
-+	"mrvl_ddr_pmu_87e1be000000",
-+	"mrvl_ddr_pmu_87e1bf000000",
-+};
-+
-+static int test__name_len(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	TEST_ASSERT_VAL("cpu", pmu_name_len_no_suffix("cpu") == strlen("cpu"));
-+	TEST_ASSERT_VAL("i915", pmu_name_len_no_suffix("i915") == strlen("i915"));
-+	TEST_ASSERT_VAL("cpum_cf", pmu_name_len_no_suffix("cpum_cf") == strlen("cpum_cf"));
-+	for (size_t i = 0; i < ARRAY_SIZE(uncore_chas); i++) {
-+		TEST_ASSERT_VAL("Strips uncore_cha suffix",
-+				pmu_name_len_no_suffix(uncore_chas[i]) ==
-+				strlen("uncore_cha"));
-+	}
-+	for (size_t i = 0; i < ARRAY_SIZE(mrvl_ddrs); i++) {
-+		TEST_ASSERT_VAL("Strips mrvl_ddr_pmu suffix",
-+				pmu_name_len_no_suffix(mrvl_ddrs[i]) ==
-+				strlen("mrvl_ddr_pmu"));
-+	}
-+	return TEST_OK;
-+}
-+
-+static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	TEST_ASSERT_EQUAL("cpu", pmu_name_cmp("cpu", "cpu"), 0);
-+	TEST_ASSERT_EQUAL("i915", pmu_name_cmp("i915", "i915"), 0);
-+	TEST_ASSERT_EQUAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_cf"), 0);
-+	TEST_ASSERT_VAL("i915", pmu_name_cmp("cpu", "i915") < 0);
-+	TEST_ASSERT_VAL("i915", pmu_name_cmp("i915", "cpu") > 0);
-+	TEST_ASSERT_VAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_ce") > 0);
-+	TEST_ASSERT_VAL("cpum_cf", pmu_name_cmp("cpum_cf", "cpum_d0") < 0);
-+	for (size_t i = 1; i < ARRAY_SIZE(uncore_chas); i++) {
-+		TEST_ASSERT_VAL("uncore_cha suffixes ordered lt",
-+				pmu_name_cmp(uncore_chas[i-1], uncore_chas[i]) < 0);
-+		TEST_ASSERT_VAL("uncore_cha suffixes ordered gt",
-+				pmu_name_cmp(uncore_chas[i], uncore_chas[i-1]) > 0);
-+	}
-+	for (size_t i = 1; i < ARRAY_SIZE(mrvl_ddrs); i++) {
-+		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered lt",
-+				pmu_name_cmp(mrvl_ddrs[i-1], mrvl_ddrs[i]) < 0);
-+		TEST_ASSERT_VAL("mrvl_ddr_pmu suffixes ordered gt",
-+				pmu_name_cmp(mrvl_ddrs[i], mrvl_ddrs[i-1]) > 0);
-+	}
-+	return TEST_OK;
-+}
-+
- static struct test_case tests__pmu[] = {
- 	TEST_CASE("Parsing with PMU format directory", pmu_format),
- 	TEST_CASE("Parsing with PMU event", pmu_events),
- 	TEST_CASE("PMU event names", pmu_event_names),
-+	TEST_CASE("PMU name combining", name_len),
-+	TEST_CASE("PMU name comparison", name_cmp),
- 	{	.name = NULL, }
- };
- 
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+It is something of a pain bringing things here over to the
+NO_JEVENTS=3D1 (ie no python) empty-pmu-events.c file. I agree on not
+wanting to pollute real metrics with test metrics, we currently just
+use the test metrics to fake up some expression parsing tests:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/pmu-events.c#n811
 
+Thanks,
+Ian
+
+> Thanks,
+> Weilin
+>
+> >
+> > Thanks,
+> > Namhyung
