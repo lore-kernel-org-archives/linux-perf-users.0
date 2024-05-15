@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D13BBD2;
-	Wed, 15 May 2024 05:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8903A3C47C;
+	Wed, 15 May 2024 05:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715751896; cv=none; b=GJVZeaIShk3iCr1WQ92MzEEmSwS0pxBcHMN9KTpXixwigLsER0YLKqfTNJStWpQrhHEJCR6jXI/2vLP83AuGo3SjMDF0SPLO3aC2dvPRg1xz+FeqNveGGPHdLyWJcJafrOeoNfTOjRNrL3TGSOG87jtXjoKejgnEXxVFDNCF5iY=
+	t=1715751897; cv=none; b=JvwUNz6kN1Uzv4dUt2LWjWge6y9sc0lR+vIomSRn0pRRhYBZd7PLGzdaje4Q+IgymG1R+QMc0h3++NZizNbFESFfG9+OXAZPDWvW8bPEwZw2IuXgdwk3FVyjObJ6YEMfCp5cRVv+mOUvO2CernfJypmvYmO7zCT/F398lUqVDhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715751896; c=relaxed/simple;
-	bh=J3EPEai9JG51kmaSvvkxK+v6koUxBtqhC0FlZhp4o2Y=;
+	s=arc-20240116; t=1715751897; c=relaxed/simple;
+	bh=uBLumifDriseoh4xe0DvJei5EAwfabS8LAawzprkI1w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SluMnYYr108MoYwLXT01naQL4ITL8IxrodmLw1K0mehyoXGX+GqkAeJkPWQyYL1OB5eHCcpIVFEgOpJJNZRHtBhmhE3cWsh/8oamA70rj02J2lSZ8EWlPizEuHIkkh1Ri/8t6+QpoFnUH686zsPvpwg687q4JDFFeGlq32mibTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MdAc2Qbn; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=aroJAL/+YusxtlpWxQtIGakxAJqsdsmzxkrVBLFre9GxnT7M+vMlcNqWUJzcI1K4OhKcYh+Gu/lY3Rd1sJqrnAFWfJjn0ai9r8Fx5DhvGeeJ6muRWXOuN1eU8RNzPehLCcbHVygz+xgWaf25pxnDvi8aj12cKgYsrfPWnCIPjaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/hFxV0V; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MdAc2Qbn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/hFxV0V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715751894; x=1747287894;
+  t=1715751895; x=1747287895;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=J3EPEai9JG51kmaSvvkxK+v6koUxBtqhC0FlZhp4o2Y=;
-  b=MdAc2QbnHU6UAYxOYk0rPTpbLAp1HkSe/iGGaut+egcSnP8lJ8y6rCql
-   fulXYw+8M6P+yLb6NGU30+kJu6w3nCMfsmJUyW5oO+nxnQT5cyFukMQGV
-   bp7J//V8lPn6BGH3Wrr1azBo8KdEUVySR8/pZCKKLwkmuwS8dSowZxvno
-   Hqsf789Hei8ZZ+LtVSt5oWV2/KAmT17WijAdEEmlSJngYKLa4MGRUHqrS
-   rfmblTdtkU++bmoELrpysZ+5LeHs+eb8kIIHRGqXb2fjglkawKpzUVFbv
-   FRMMl0zGDgYVJdJ7bdsrsXYx9qI2Lk5rbWKuiAMF30EKuOjY2zvB0GQCn
-   A==;
-X-CSE-ConnectionGUID: WtN77l9XQy6IIfHfsV+1HA==
-X-CSE-MsgGUID: HDGfK/eMTUiz4iOAtoZsyA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="29298040"
+  bh=uBLumifDriseoh4xe0DvJei5EAwfabS8LAawzprkI1w=;
+  b=h/hFxV0Vzwny4F4SJicHGP3g1BzZh6GhQmQ/NZGULuMgExb8PPgQkkNu
+   WFhEzTEyY6ieIR8EyfuLbIR88Nbp7xkmuNErpP2XgHlgPvanRg5HRHFwf
+   WFJIvHj4JMpkflMN2sIr5cXZaOCzy4Zcd8MExhAOmrtd9oc+rYdkw+c4J
+   1GjdePiI312XRS2iCOWXQJCc+Mqd6GsqYlEXzm7GEcWFWB/byUp8ycxCe
+   X0PxsdR5jA46vOTUm/+LEIoN5JFc42HIPaF476D7eO0i3LPEdkMGEc45t
+   cg6FSsAmu0jHSfV2fb7RIeCHDyLVSebBtAxhhSMfZck4/0n65gNMDIdIz
+   w==;
+X-CSE-ConnectionGUID: f7oHBITJSMGGro0942bUYw==
+X-CSE-MsgGUID: OG7rPTEwSVu1RIz7FeCQfQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="29298050"
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="29298040"
+   d="scan'208";a="29298050"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 22:44:52 -0700
-X-CSE-ConnectionGUID: w3IXnKMOSYuAZUxMFX5EKw==
-X-CSE-MsgGUID: v58UMcY3SNCuOjp9p06ZUw==
+X-CSE-ConnectionGUID: /lrm9gq1TeSFjXKTPiMy7A==
+X-CSE-MsgGUID: egOcnlqBTn+ofJC0gd8vUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="35469212"
+   d="scan'208";a="35469219"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by fmviesa003.fm.intel.com with ESMTP; 14 May 2024 22:44:51 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 14 May 2024 22:44:52 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v8 5/7] perf stat: Add retire latency print functions to print out at the very end of print out
-Date: Wed, 15 May 2024 01:44:27 -0400
-Message-ID: <20240515054443.2824147-6-weilin.wang@intel.com>
+Subject: [RFC PATCH v8 7/7] perf stat: Skip read retire_lat counters and plugin retire_lat data from sampled data
+Date: Wed, 15 May 2024 01:44:29 -0400
+Message-ID: <20240515054443.2824147-8-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240515054443.2824147-1-weilin.wang@intel.com>
 References: <20240515054443.2824147-1-weilin.wang@intel.com>
@@ -75,128 +75,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Add print out functions so that users could read retire latency values.
+In current :R parsing implementation, the parser would recognize events with
+retire_latency modifier and insert them into the evlist like a normal event.
+Ideally, we need to avoid counting these events.
 
-Example output:
-
- Performance counter stats for 'system wide':
-
-            25,717      MEM_INST_RETIRED.SPLIT_STORES    #      2.2 %  tma_split_stores
-        28,365,080      CPU_CLK_UNHALTED.THREAD
-             24.00      MEM_INST_RETIRED.SPLIT_STORES:R  #       96        4
-
-       2.054365083 seconds time elapsed
-
-This output of retire latency data is in format:
- <val> <event-name:R> # <sum> <count>.
+In this commit, at the stage of metric calculation, the code uses sampled
+retire latency value instead of counted event value.
 
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 69 ++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ tools/perf/arch/x86/util/evlist.c | 6 ++++++
+ tools/perf/util/evsel.h           | 5 +++++
+ tools/perf/util/stat-display.c    | 5 +++++
+ tools/perf/util/stat-shadow.c     | 2 +-
+ 4 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bfc1d705f437..b9c3978cc99c 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -21,6 +21,7 @@
- #include "iostat.h"
- #include "pmu.h"
- #include "pmus.h"
-+#include "intel-tpebs.h"
- 
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -34,6 +35,7 @@
- #define COMM_LEN     16
- #define PID_LEN       7
- #define CPUS_LEN      4
-+#define RETIRE_LEN    8
- 
- static int aggr_header_lens[] = {
- 	[AGGR_CORE] 	= 18,
-@@ -426,6 +428,71 @@ static void print_metric_std(struct perf_stat_config *config,
- 	fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
- }
- 
-+static void print_retire_lat_std(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	bool newline = os->newline;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	list_for_each_entry(t, retire_lats, nd) {
-+		if (newline)
-+			do_new_line_std(config, os);
-+		fprintf(out, "%'*.2f ", COUNTS_LEN, t->val);
-+		/* For print alignment */
-+		fprintf(out, "%-*s ", config->unit_width, "");
-+		fprintf(out, "%-*s", EVNAME_LEN, t->tpebs_name);
-+		fprintf(out, " # ");
-+		fprintf(out, "%*d %*ld\n", RETIRE_LEN, t->sum,
-+			 RETIRE_LEN, t->count);
-+	}
-+}
-+
-+static void print_retire_lat_csv(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+	const char *sep = config->csv_sep;
-+
-+	list_for_each_entry(t, retire_lats, nd) {
-+		fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->tpebs_name, sep,
-+			t->count, sep, t->sum);
-+	}
-+}
-+
-+static void print_retire_lat_json(struct perf_stat_config *config,
-+				  struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	fprintf(out, "{");
-+	list_for_each_entry(t, retire_lats, nd) {
-+		fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->val);
-+		fprintf(out, "\"name\" : \"%s\"", t->tpebs_name);
-+		fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
-+		fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
-+	}
-+	fprintf(out, "}");
-+}
-+
-+static void print_retire_lat(struct perf_stat_config *config,
-+			     struct outstate *os)
-+{
-+	if (!&config->tpebs_results)
-+		return;
-+	if (config->json_output)
-+		print_retire_lat_json(config, os);
-+	else if (config->csv_output)
-+		print_retire_lat_csv(config, os);
-+	else
-+		print_retire_lat_std(config, os);
-+}
-+
- static void new_line_csv(struct perf_stat_config *config, void *ctx)
- {
- 	struct outstate *os = ctx;
-@@ -1609,6 +1676,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		break;
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index b1ce0c52d88d..cebdd483149e 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -89,6 +89,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+ 			return 1;
  	}
  
-+	print_retire_lat(config, &os);
++	/* Retire latency event should not be group leader*/
++	if (lhs->retire_lat && !rhs->retire_lat)
++		return 1;
++	if (!lhs->retire_lat && rhs->retire_lat)
++		return -1;
 +
- 	print_footer(config);
+ 	/* Default ordering by insertion index. */
+ 	return lhs->core.idx - rhs->core.idx;
+ }
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index bd8e84954e34..aaf572317e92 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -303,6 +303,11 @@ static inline bool evsel__is_tool(const struct evsel *evsel)
+ 	return evsel->tool_event != PERF_TOOL_NONE;
+ }
  
- 	fflush(config->output);
++static inline bool evsel__is_retire_lat(const struct evsel *evsel)
++{
++	return evsel->retire_lat;
++}
++
+ const char *evsel__group_name(struct evsel *evsel);
+ int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
+ 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index b9c3978cc99c..499fe0ddca93 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1013,6 +1013,9 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 	/* Tool events have the software PMU but are only gathered on 1. */
+ 	if (evsel__is_tool(counter))
+ 		return true;
++	/* Retire latency events are read from sampling data. */
++	if (evsel__is_retire_lat(counter))
++		return true;
+ 
+ 	/*
+ 	 * Skip value 0 when it's an uncore event and the given aggr id
+@@ -1653,6 +1656,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		} else {
+ 			print_metric_begin(config, evlist, &os, /*aggr_idx=*/0);
+ 			evlist__for_each_entry(evlist, counter) {
++				if (evsel__is_retire_lat(counter))
++					continue;
+ 				print_counter(config, counter, &os);
+ 			}
+ 			print_metric_end(config, &os);
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index b97d23bfeac1..45e0b21a4724 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -384,7 +384,7 @@ static int prepare_metric(const struct metric_expr *mexp,
+ 		double val;
+ 		int source_count = 0;
+ 
+-		if (metric_events[i]->retire_lat)
++		if (evsel__is_retire_lat(metric_events[i]))
+ 			continue;
+ 
+ 		if (evsel__is_tool(metric_events[i])) {
 -- 
 2.43.0
 
