@@ -1,53 +1,54 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3884F1E2;
-	Wed, 15 May 2024 08:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6451A57CB5;
+	Wed, 15 May 2024 08:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715762297; cv=none; b=TgZXhDPhB/gYtMTylpsNxoObW/TmiNLgqamujSMO9ZVaXvOHhMx8Z3E6uDISMBmCb1vQ5PQz6g9PxI6BrEiNMWsznfK7xo/T8h6mwZFrz1MvriZlno49pdOqh8B3hdR4uYmcOXSE6V89xFgGPpTrPrInlvp110puZDGB0D5pcCI=
+	t=1715763491; cv=none; b=n5N0eqXbM/UHpsr5QnF/f6M3p9SsFKDqf70esQkSiwx0lq4QXkVPaVhAGm0uk9B3NT+XLkF9qoVaGnyKMi/UXA7fsRL55b4Sq2AfFXcuQ3wMZa4agSZ5UzYsDvU4VwXfB1X9WbH2oiksKmzBr32gXm4tqU4fTsZ6FlBJ7K0eooM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715762297; c=relaxed/simple;
-	bh=Tpla7BbjcnmioeU0TB5vZhZhEFVFx+ygWRQ+4ZTjSs8=;
+	s=arc-20240116; t=1715763491; c=relaxed/simple;
+	bh=WxhNVJglXJ6bifS2+W6QqNp4SxMw1w+StWa+9MJ2u70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+5uQmP7zj4SD2v9/0Sh2FfmsWVoeUfrRB//UB02K1sblLBLI1l+JkwSN9W6CMdNCtW9duOu3ROpbc3ka+HF14XU1L/68BmgTKoLcaH0D23q/0pOLs4vtkBJP4jMAp9excrbJhUR7smCs3+9ty7AwQBkO6HHqFiTYcb7IihhJ/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VC8ZzEVW; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7m0DlJybF+13Mkik/nvrFCwf1k0kHQ1bj8xtnlTSSO3tKNkcifU1VH37c74E/Ri4tjQEjNVWB/VwSCTM/0jINsen5qzfbV44I7xNdU8ya+vBxvD1glC+XAPNZX/WAR/i+AUe0jHAWfDGjZOcC3J+R4YooXm0VfR1SHLEVpNiwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kheFWwti; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VC8ZzEVW"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kheFWwti"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Keg0jiSN81Wa3nYaggknvxCwoJj5PEJrMVbonyZKJTw=; b=VC8ZzEVW7pcHbnf3lULvD3cxgN
-	VffP1SHapl/sAgpWcQPzagL8HPWl2CZaISZnehAXQ82tXyFpY9sc3b7/p6VKALiN+/LrwnIMP4RkC
-	MZNzovUkZBgJdk+tj32EjQunWtvsQpMZn/S6qt9NTfLDZh8S2Q4/I9iZbOpBEhQygIA5gkYnOFmom
-	fWyIRpAsJswXfRvuBRYyAcvAn25N7coAP4UyLnzrrKBihNTz7Bodow3MJJurHVN1p6InDTWCmTsdJ
-	I8Nlpkh9Psb98XRsZH1B30ZAlWsgZdlny3xaRngSLGIaid5sNAirBkKujgo3Hg7JTPrXxTv+mAb0K
-	r6d/nqZg==;
+	bh=LN7R/89hFiNKE7ZDOsR+E6btUpw/DgQgLlnRJEQx8kQ=; b=kheFWwtiLwToB5Ja8OlBP3jaYi
+	SxjYf45I3t5MbVXsSY+sz/7hLX9h2KLp6ECp9lF8CYolkN4XWvsTR6cAbTdRZUpJS1Ul9BpH8u+YH
+	WR6Y9QZrSal5bja3nzexsfK/KnHnhkaJZbYfbAxrSsR/V9Bps1TvjMcXWYT8Ttqq8gUbYFKwLCNzD
+	7aNOlg0i9qUOpFyfJ/aZVuUGfaZfe/tx3EYZREXNwV7W1kfxgyRcdhsQXj0f0Rb2gxEQ7aCR+JBg4
+	pKNc8bzj6i6hPoASUbsJ2Wph9rqz8jgtv9c4czJiyRfm8wSAeFjoVMQ4k8wsdIiV4IPCh0Ks6UU74
+	9H2Wt0dg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s7A96-000000052j7-1pIs;
-	Wed, 15 May 2024 08:38:00 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7ASR-0000000A8iI-3U4k;
+	Wed, 15 May 2024 08:57:59 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 629AA30068B; Wed, 15 May 2024 10:37:55 +0200 (CEST)
-Date: Wed, 15 May 2024 10:37:55 +0200
+	id 62178301105; Wed, 15 May 2024 10:57:55 +0200 (CEST)
+Date: Wed, 15 May 2024 10:57:55 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, bagasdotme@gmail.com,
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 11/16] lib min_heap: Update min_heap_push() and
- min_heap_pop() to return bool values
-Message-ID: <20240515083755.GB40213@noisy.programming.kicks-ass.net>
-References: <20240514084724.557100-1-visitorckw@gmail.com>
- <20240514084724.557100-12-visitorckw@gmail.com>
+To: Yabin Cui <yabinc@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] perf/core: Save raw sample data conditionally
+ based on sample type
+Message-ID: <20240515085755.GC40213@noisy.programming.kicks-ass.net>
+References: <20240510191423.2297538-1-yabinc@google.com>
+ <20240510191423.2297538-2-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,75 +57,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240514084724.557100-12-visitorckw@gmail.com>
+In-Reply-To: <20240510191423.2297538-2-yabinc@google.com>
 
-On Tue, May 14, 2024 at 04:47:19PM +0800, Kuan-Wei Chiu wrote:
-> Modify the min_heap_push() and min_heap_pop() to return a boolean
-> value. They now return false when the operation fails and true when it
-> succeeds.
+On Fri, May 10, 2024 at 12:14:21PM -0700, Yabin Cui wrote:
 
-But why ?!
-
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> ---
->  include/linux/min_heap.h | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
-> index c94f9d303205..2d080f85ad0d 100644
-> --- a/include/linux/min_heap.h
-> +++ b/include/linux/min_heap.h
-> @@ -147,18 +147,20 @@ void __min_heapify_all(min_heap_char *heap, size_t elem_size,
->  
->  /* Remove minimum element from the heap, O(log2(nr)). */
->  static __always_inline
-> -void __min_heap_pop(min_heap_char *heap, size_t elem_size,
-> +bool __min_heap_pop(min_heap_char *heap, size_t elem_size,
->  		const struct min_heap_callbacks *func, void *args)
->  {
->  	void *data = heap->data;
->  
->  	if (WARN_ONCE(heap->nr <= 0, "Popping an empty heap"))
-> -		return;
-> +		return false;
->  
->  	/* Place last element at the root (position 0) and then sift down. */
->  	heap->nr--;
->  	memcpy(data, data + (heap->nr * elem_size), elem_size);
->  	__min_heapify(heap, 0, elem_size, func, args);
-> +
-> +	return true;
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index d2a15c0c6f8a..9fc55193ff99 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1240,12 +1240,16 @@ static inline void perf_sample_save_callchain(struct perf_sample_data *data,
 >  }
 >  
->  #define min_heap_pop(_heap, _func, _args)	\
-> @@ -184,7 +186,7 @@ void __min_heap_pop_push(min_heap_char *heap,
->  
->  /* Push an element on to the heap, O(log2(nr)). */
->  static __always_inline
-> -void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
-> +bool __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
->  		const struct min_heap_callbacks *func, void *args)
+>  static inline void perf_sample_save_raw_data(struct perf_sample_data *data,
+> +					     struct perf_event *event,
+>  					     struct perf_raw_record *raw)
 >  {
->  	void *data = heap->data;
-> @@ -192,7 +194,7 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
->  	int pos;
+>  	struct perf_raw_frag *frag = &raw->frag;
+>  	u32 sum = 0;
+>  	int size;
 >  
->  	if (WARN_ONCE(heap->nr >= heap->size, "Pushing on a full heap"))
-> -		return;
-> +		return false;
->  
->  	/* Place at the end of data. */
->  	pos = heap->nr;
-> @@ -207,6 +209,8 @@ void __min_heap_push(min_heap_char *heap, const void *element, size_t elem_size,
->  			break;
->  		func->swp(parent, child, args);
->  	}
+> +	if (!(event->attr.sample_type & PERF_SAMPLE_RAW))
+> +		return;
 > +
-> +	return true;
->  }
->  
->  #define min_heap_push(_heap, _element, _func, _args)	\
-> -- 
-> 2.34.1
-> 
+
+Should we add something like:
+
+	if (WARN_ON_ONCE(data->sample_flags & PERF_SAMPLE_RAW))
+		return;
+
+? And I suppose the same for all these other patches.
+
+>  	do {
+>  		sum += frag->size;
+>  		if (perf_raw_frag_last(frag))
+
+
