@@ -1,266 +1,123 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF4D10A23
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 04:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA44211721
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 05:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715835393; cv=none; b=SylgqgVcIoJvpuxcYOT/qoCrepQaxuolWeA1SPzh4P0du6Sj3PRBAmgwU7kdyZZGmDnuWkgjpXtk8d6RvrB4L9ZRycp7dLl98rdDefKL5mn/qWgcgE25ngL4k6/+lUex+tTkGLF6LEM4VMF2g/cfrucHrrJ8vDzIPeCjDiuiZ2g=
+	t=1715835898; cv=none; b=Q7yjkK/exHjrhqCtnAInW+0jEnNtNJZyn5JHfk0R7RenPxHxg4NfxY3ifTkRDqd6+hClfDXV8qPq3CKGB/Jtw75h3Zj5XSoQDnlRjvGm3II6I1qp18571bpL7iIkyH+zV651cIrHEQlPnatw2U1EGu44BNzOa5PX2NHLNam2Qko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715835393; c=relaxed/simple;
-	bh=JwWyISgIkyh7dn8oHMIGe/EQKAVjws5uA5+GPSEkhw0=;
+	s=arc-20240116; t=1715835898; c=relaxed/simple;
+	bh=KsZqB9Nc++1f2JW88Ah8LooOEDUxTd/rxuTVQxTapyI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JrkKlbccuiqpPBLBDkM99wjFdiTya0EVffvXw7cY1unwvqugQ+dFvZioldhL86ckoAjHBIkjc6I0BTnSnOUUWb4YhNVlVZY2WXWYknbd271ewl4lygQl/rhL+bJXFWbrU71hTKaZK9ae563ajaNRuJguKsnRPAIORR2kqKM1494=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s/g+XreN; arc=none smtp.client-ip=209.85.160.176
+	 To:Content-Type; b=UQGlEbmpJ8CETWVptiQZrhGsitr8WE+yJgQMNwrdb/azHzz81tUQiSCzQzMY9IMBiv6PnWg1s1Y7TQnUt1E9oSPRtqo1lnMGJeIj5kc5sAhGFPC5OqnZoBOSPVue7D4t+dnqq9du/dYAOYaCAhSVQoCorIvqdQQFu56GJaN7qlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0xJuJhfh; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s/g+XreN"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43dfe020675so2501521cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 21:56:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0xJuJhfh"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-43df9ac3ebcso2405161cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 22:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715835390; x=1716440190; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1715835895; x=1716440695; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4xCvPhj2snwk9qo0oBLZupJijw2DEcTcDH7Djs/ftR4=;
-        b=s/g+XreNK9x8SAYRDKG2L5jNMkxv8nplS79A9uGyahjQosSXVJXxe24gUN6qM3QRSY
-         R4gkt22TeT62w0kdGZ0RYy0QGeeiG1oksG+jkmDFxyOql4mCkUcZShcUaq/aS94ZIXro
-         1CsthdbZ9Klp8/JxxhSXIoGHmxoO1cyA7eLzq48jej2TOQpTxlVqKYk16KS4s5hvyJRB
-         1pJCvF7MSUBJUh9F7mtfHukQYFBi/l6EamqDvuawOa8ozCKFaSTJMGpJxeOvcH4V9FpN
-         Wj+9UunCJNwhP7ii3DRZiU3jztm//jZhncdH188+0ollw6zv8wFZXyrZYWlfx9bearro
-         WB3A==
+        bh=TQ2BUrI4nA4aMqiJQpw6TRcFQ7FyURr1y+deeKNa2KE=;
+        b=0xJuJhfhO10M8YW1sfgMSZe9zjaPoYMLSCr0kyavNp9OxDnH55jRV8gq4OwVDTtzVV
+         S7v5QKMTNqJetuu3g7WAFO459906V/VJ+6VTJQvtbH8GtJ1DstCu2voPddvpBk8iSA82
+         xRt/zIIVFL3QHF3fRzovud6m+OUiravriNRCswoAI/9JcphQC4PrMKjbmouBagUeBhoE
+         yMKovw5KXj8iM+3tw6jTy83lx/wKbiRNhg5qs2T0zxYsRIvz11LLEwA3n8V7Rod8btZE
+         g3IhAz7uo+WwBZaZ5eUi6kVnSCKX7N/Ed/sPAyx9qBhVhbFrQDK9kBxGFCJWiO8T/x7G
+         z4Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715835390; x=1716440190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1715835895; x=1716440695;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4xCvPhj2snwk9qo0oBLZupJijw2DEcTcDH7Djs/ftR4=;
-        b=mSuAXQMmxnaLuvC0OCnOyKIauv/36iGpg/Xq9YWJM7ebXSxLnVkH/X3AlJyriG0ZiK
-         T9tj1JiMpTJBSaTnLXBdGa4mAlJ/zAttofyf5apaKFyVZyX+sDZMDtG+Jtk7YtMu9flV
-         ujhK+yj2GGjtMZtjICtlZmlJ7rEOqPTrRJqPv5+CUVbJ696Ln/nWxrdqFyNOBrS6Yfq1
-         DjhkUnluqbfOm+sliRwRr9s09hOvSH8PF4X1FFMW5x7zvB/zMtyrrOWCh39tpbaTZmc8
-         isV93U/OMO/sc/bq+DCsV0tNb5zTFUys+js35Y5VR8d+e9CrWDMHgPUqVpohmL3cp2/j
-         DSSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAe5nNxDlWi3Pvn5oLz8puEM0+bas1vklY1upX0XikNtPYjBQhbVNjleaduLqgFDaKjaTBuQvgR7djyZyzOYVYIY60A537wqrdRxMJNssqjg==
-X-Gm-Message-State: AOJu0Yym9eavgyYRncxqlWZjY1cuSpLVBbJXgvRCr9uThDcZIuOrLX9v
-	hbR6NB5kTV5KDiCtjg0aTsMB5r6ACEsJ0yD1GEeLJM2OBCFKSfukWMO2VRjB/mnCaBCtp6trbW4
-	WCVR/0JIrnKrwWTIAAuc1mJ6dgbuC7nieOvvy
-X-Google-Smtp-Source: AGHT+IEph7lOyHwSpuS97PiF2Kgsuziv3mAEnQgsw5vlTz4FLKn9yiFHzBFAY1EL0le1rxOcJ/o/Djv3+QDp2jEXEM8=
-X-Received: by 2002:a05:622a:4286:b0:439:ef72:75fb with SMTP id
- d75a77b69052e-43e0a21e3c8mr11449831cf.1.1715835389800; Wed, 15 May 2024
- 21:56:29 -0700 (PDT)
+        bh=TQ2BUrI4nA4aMqiJQpw6TRcFQ7FyURr1y+deeKNa2KE=;
+        b=h9P4T/jQA+WqtQq3GnqWnhsVx8rt2MgnSBAgAuWW7wGcbHPzvaqlMe8vZ6xM9UOsZx
+         OlhXj0zl+FBgMqUUpfQnkARa3rBUHHuevAcLszsmohGE5QbKO19qzEOCfYWx+MzWUvQP
+         aAsVamwzJJHmEEdauBJ8AHbCxFrQKb5Jh6sW1RroU2mbSNEKe8uevydRS8p17lzTcQG2
+         97yzC2c0kYHxXmyEXFJATSjU7vFkAdBvBojKs1pkK3H0Lja5vjqgO9v4310Ajge+v2+Z
+         tra0odO0h4CR6BaEEEQcW/aHioXn4HWFN0fxP9mZPBNj1CqW9ZI9J8tRs7uuVUB8sglU
+         3T/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWKo57mnZSz083gTSMFY6Xt2c7e2C6EQiGoX2NDfOhF0slnn+Uu5zoecJCcGwOdnaPUHDkSntLs9DTqs7G+emFsQq/G9wjsQIJHzTB5tLm6HQ==
+X-Gm-Message-State: AOJu0YyF/vZp6yu9p2NVdKe63eOkUXzCRpTxOllJYT2BLp6cLCnNGqkk
+	EaX3c8hpp36Atoh9adwsrNnqg6TA12df9r/O6yD11SNwfpifg800IcRAEVWtmzH2qEw3krkVWGI
+	eynByjydhK/zPKjfn3Bf7Znb9G+R1lmcBIkCO
+X-Google-Smtp-Source: AGHT+IFdCOpo9CTmEBe6R3dl72AtUqLUZ+386ogOqBR9a8yxYG3hJ321sFlDlm2ZYE/FIMcMokrMttTHp1aGLlB7EwA=
+X-Received: by 2002:a05:622a:7e0a:b0:43e:a94:c1c9 with SMTP id
+ d75a77b69052e-43e0a94c28dmr12178511cf.20.1715835895129; Wed, 15 May 2024
+ 22:04:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424024805.144759-1-howardchu95@gmail.com>
- <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
- <Zil1ZKc7mibs6ONQ@x1> <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
- <CAM9d7cggak7qZcX7tFZvJ69H3cwEnWvNOnBsQrkFQkQVf+bUjQ@mail.gmail.com> <CAH0uvohPg7LtSOLDNaPwnC5ePwjwg0NtKzLZ_oJcAz7zOwdwdw@mail.gmail.com>
-In-Reply-To: <CAH0uvohPg7LtSOLDNaPwnC5ePwjwg0NtKzLZ_oJcAz7zOwdwdw@mail.gmail.com>
+References: <20240516041948.3546553-1-irogers@google.com>
+In-Reply-To: <20240516041948.3546553-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 May 2024 21:56:18 -0700
-Message-ID: <CAP-5=fUzD8VZRnsxEBNPK_7PAGzdFjzmBAupA-eh=7VCDHBkbA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
+Date: Wed, 15 May 2024 22:04:43 -0700
+Message-ID: <CAP-5=fW8TA0KQOepQRuC_0mhyp6kHbPodh+6-uoVxsmC=09tTw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2024 at 9:24=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
+On Wed, May 15, 2024 at 9:20=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Hello,
+> Allow uid and gid to be terms in BPF filters by first breaking the
+> connection between filter terms and PERF_SAMPLE_xx values. Calculate
+> the uid and gid using the bpf_get_current_uid_gid helper, rather than
+> from a value in the sample. Allow filters to be passed to perf top, this =
+allows:
 >
-> Here is a little update on --off-cpu.
+> $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
 >
-> > > It would be nice to start landing this work so I'm wondering what the
-> > > minimal way to do that is. It seems putting behavior behind a flag is
-> > > a first step.
->
-> The flag to determine output threshold of off-cpu has been implemented.
-> If the accumulated off-cpu time exceeds this threshold, output the sample
-> directly; otherwise, save it later for off_cpu_write.
->
-> But adding an extra pass to handle off-cpu samples introduces performance
-> issues, here's the processing rate of --off-cpu sampling(with the
-> extra pass to extract raw
-> sample data) and without. The --off-cpu-threshold is in nanoseconds.
->
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
-> | comm                                                | type
->                        | process rate         |
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
-> | -F 4999 -a                                          | regular
-> samples (w/o extra pass)      | 13128.675 samples/ms |
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
-> | -F 1 -a --off-cpu --off-cpu-threshold 100           | offcpu samples
-> (extra pass)           |  2843.247 samples/ms |
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
-> | -F 4999 -a --off-cpu --off-cpu-threshold 100        | offcpu &
-> regular samples (extra pass) |  3910.686 samples/ms |
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
-> | -F 4999 -a --off-cpu --off-cpu-threshold 1000000000 | few offcpu &
-> regular (extra pass)     |  4661.229 samples/ms |
-> +-----------------------------------------------------+------------------=
----------------------+----------------------+
->
-> It's not ideal. I will find a way to reduce overhead. For example
-> process them samples
-> at save time as Ian mentioned.
->
-> > > To turn the bpf-output samples into off-cpu events there is a pass
-> > > added to the saving. I wonder if that can be more generic, like a sav=
-e
-> > > time perf inject.
->
-> And I will find a default value for such a threshold based on performance
-> and common use cases.
->
-> > Sounds good.  We might add an option to specify the threshold to
-> > determine whether to dump the data or to save it for later.  But ideall=
-y
-> > it should be able to find a good default.
->
-> These will be done before the GSoC kick-off on May 27.
+> to work as a "perf top -u" workaround, as "perf top -u" usually fails
+> due to processes/threads terminating between the /proc scan and the
+> perf_event_open.
 
-This all sounds good. 100ns seems like quite a low threshold and 1s
-extremely high, shame such a high threshold is marginal for the
-context switch performance change. I wonder 100 microseconds may be a
-more sensible threshold. It's 100 times larger than the cost of 1
-context switch but considerably less than a frame redraw at 60FPS (16
-milliseconds).
+Fwiw, something I noticed playing around with this (my workload was
+`perf test -w noploop 100000` as different users) is that old samples
+appeared to linger around making terminated processes still appear in
+the top list. My guess is that there aren't other samples showing up
+and pushing the old sample events out of the ring buffers due to the
+filter. This can look quite odd and I don't know if we have a way to
+improve upon it, flush the ring buffers, histograms, etc. It appears
+to be a latent `perf top` issue that you could encounter on other low
+frequency events, but I thought I'd mention it anyway.
 
 Thanks,
 Ian
 
-> Thanks,
-> Howard
+> Ian Rogers (3):
+>   perf bpf filter: Give terms their own enum
+>   perf bpf filter: Add uid and gid terms
+>   perf top: Allow filters on events
 >
-> On Thu, Apr 25, 2024 at 6:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > On Wed, Apr 24, 2024 at 3:19=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Wed, Apr 24, 2024 at 2:11=E2=80=AFPM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Wed, Apr 24, 2024 at 12:12:26PM -0700, Namhyung Kim wrote:
-> > > > > Hello,
-> > > > >
-> > > > > On Tue, Apr 23, 2024 at 7:46=E2=80=AFPM Howard Chu <howardchu95@g=
-mail.com> wrote:
-> > > > > >
-> > > > > > As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D=
-207323
-> > > > > >
-> > > > > > Currently, off-cpu samples are dumped when perf record is exiti=
-ng. This
-> > > > > > results in off-cpu samples being after the regular samples. Als=
-o, samples
-> > > > > > are stored in large BPF maps which contain all the stack traces=
- and
-> > > > > > accumulated off-cpu time, but they are eventually going to fill=
- up after
-> > > > > > running for an extensive period. This patch fixes those problem=
-s by dumping
-> > > > > > samples directly into perf ring buffer, and dispatching those s=
-amples to the
-> > > > > > correct format.
-> > > > >
-> > > > > Thanks for working on this.
-> > > > >
-> > > > > But the problem of dumping all sched-switch events is that it can=
- be
-> > > > > too frequent on loaded machines.  Copying many events to the buff=
-er
-> > > > > can result in losing other records.  As perf report doesn't care =
-about
-> > > > > timing much, I decided to aggregate the result in a BPF map and d=
-ump
-> > > > > them at the end of the profiling session.
-> > > >
-> > > > Should we try to adapt when there are too many context switches, i.=
-e.
-> > > > the BPF program can notice that the interval from the last context
-> > > > switch is too small and then avoid adding samples, while if the int=
-erval
-> > > > is a long one then indeed this is a problem where the workload is
-> > > > waiting for a long time for something and we want to know what is t=
-hat,
-> > > > and in that case capturing callchains is both desirable and not cos=
-tly,
-> > > > no?
-> >
-> > Sounds interesting.  Yeah we could make it adaptive based on the
-> > off-cpu time at the moment.
-> >
-> > > >
-> > > > The tool could then at the end produce one of two outputs: the most
-> > > > common reasons for being off cpu, or some sort of counter stating t=
-hat
-> > > > there are way too many context switches?
-> > > >
-> > > > And perhaps we should think about what is best to have as a default=
-, not
-> > > > to present just plain old cycles, but point out that the workload i=
-s
-> > > > most of the time waiting for IO, etc, i.e. the default should give
-> > > > interesting clues instead of expecting that the tool user knows all=
- the
-> > > > possible knobs and try them in all sorts of combinations to then re=
-ach
-> > > > some conclusion.
-> > > >
-> > > > The default should use stuff that isn't that costly, thus not getti=
-ng in
-> > > > the way of what is being observed, but at the same time look for co=
-mmon
-> > > > patterns, etc.
-> > > >
-> > > > - Arnaldo
-> > >
-> > > I really appreciate Howard doing this work!
-> > >
-> > > I wonder there are other cases where we want to synthesize events in
-> > > BPF, for example, we may have fast and slow memory on a system, we
-> > > could turn memory events on a system into either fast or slow ones in
-> > > BPF based on the memory accessed, so that fast/slow memory systems ca=
-n
-> > > be simulated without access to hardware. This also feels like a perf
-> > > script type problem. Perhaps we can add something to the bpf-output
-> > > event so it can have multiple uses and not just off-cpu.
-> > >
-> > >
-> > > I worry about dropping short samples we can create a property that
-> > > off-cpu time + on-cpu time !=3D wall clock time. Perhaps such short
-> > > things can get pushed into Namhyung's "at the end" approach while
-> > > longer things get samples. Perhaps we only do that when the frequency
-> > > is too great.
-> >
-> > Sounds good.  We might add an option to specify the threshold to
-> > determine whether to dump the data or to save it for later.  But ideall=
-y
-> > it should be able to find a good default.
-> >
-> > >
+>  tools/perf/Documentation/perf-record.txt     |  2 +-
+>  tools/perf/Documentation/perf-top.txt        |  4 ++
+>  tools/perf/builtin-top.c                     |  9 +++
+>  tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
+>  tools/perf/util/bpf-filter.h                 |  5 +-
+>  tools/perf/util/bpf-filter.l                 | 66 +++++++++----------
+>  tools/perf/util/bpf-filter.y                 |  7 +-
+>  tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++-----
+>  9 files changed, 172 insertions(+), 70 deletions(-)
 >
-> >
-> > Agreed!
-> >
-> > Thanks,
-> > Namhyung
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
