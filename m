@@ -1,143 +1,140 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07EA3219F;
-	Thu, 16 May 2024 21:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43E21581EE
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 21:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715895867; cv=none; b=bP9R3NZwUv9NpI8Yb8c9bKqgnc1XHtY4bJ3MftzNpSJguC+KX3VOmqbi9xNEPXzo3qC4HpwhoGYUIWr7u7i0vibY/jdhkvTUtYzeBH90T02tafZtIMyLLsAut1D9FFk5wln55PjEM6R86bwtG3YjT5REF4OQL11kvZm0xIKUe14=
+	t=1715896067; cv=none; b=K/wNeJoEETu+m4iCo3BDNqDL69kib3MKbc4cMqebR8FklXVCR5SVh12wVxILfGhyt8X/tz+W6r19f1GE+ihbHAtOdxsFszRctr8jxjoTJbaAJfEngbDkycLTAL1Iq4zHhJGlTmuPmjW0PzSr13l2QjXeINKZPsLnnRT6dYpoCcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715895867; c=relaxed/simple;
-	bh=DunYNQ3uCp9VGArF9QXWHvnL04RMfkZhAcgrfvD6Pas=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fzDfg0qshjHs6TysXz/TB6xevPhjmc/8d4q9UFf/TnyGoOW9v+aTtMNVjBw816O8+ANWy6mCu38QCw9IPrHqjYK0c3Y1EaS0X4DKDVumyLcSjXY/wFpQ5V/OAVzd6bqnyZ5h2t9DMRjhqthV7DqQx2dyGi4mqP5iMfevIQ6hQFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nL9qpey7; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715896067; c=relaxed/simple;
+	bh=Ik3s0QLEXOEOiIZxz0puFyUkL4LHRBNiHbWr/YLRhRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=NCXCbgHD/U7rOW6SEj+9+pXfvvue2O0W33YL+OOVCkhUDu4EVXa0qcW3gcqcSD1/YPuLNzPP0UHOJFu+aMNCLkbTGoXCVQZ55ojMTDZk0g+ZNPKb9SCXWg7lH9w02WXQl7kulnG/xyDnR+Dn8PS+tjx1dTgM3uBkv8uT3iXRwaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cNi+44bU; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL9qpey7"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59b097b202so302338366b.0;
-        Thu, 16 May 2024 14:44:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cNi+44bU"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43df9ac3ebcso12631cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 14:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715895864; x=1716500664; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5vVuaWcV/VJCXyOs1sAVhMBKMj/zAAIhBRyu2C5mMPE=;
-        b=nL9qpey7rHlZ9H9kZUQ6vXOdTl2I3zBU+GBjTFWJ5i1Em8gNyWDsQIin+LWQ6QWmm1
-         wW111QVP/uLJWqreOATt/pq7PiGRZFUi1EVc58oAUwupJ6F9Je1przTipzBmeeDSd14/
-         ohlt+CAus9qYgIuTb36fEqc+mro0SlbuiNPeInCKJevLUsfR1a3q1APZwvsLSW+Bsnid
-         9FLbUN4RjBK2+q2WD7qM7quPlpjpHKqmNlLTjvZcAT3WtbfWAjcxUWfOt2ROLeCZpipX
-         B8ybi5CaaiGLWwRwG2iaUxztqnU+TH1RIoZhFIlkKccu1X6iRFHi3842mZD1rHoUT0Qn
-         Vz1w==
+        d=google.com; s=20230601; t=1715896065; x=1716500865; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J+LTJasaamsJYF6JqhtXSMHdgg8g7mtflmrbwlVkiUs=;
+        b=cNi+44bU6T5Ut5O4/zLtmHuA37wYQRHWmrgMLPuNSZypiQJurkeS2mtHbqWmfxIyii
+         +ZSC0iI00P2wmsZK44bdkkyfcYbJakFu+j0G5Qa5Tiqmiw43Qm9S/Hvd40/BU/8HvHM+
+         jlNQWAsky05s0qYKHbqVJn/5jQHPQHQMT/KJopLYj0WymbmkHdFZuivxGjJyx2ZdUopJ
+         mM5IDM63KvqCVMEO+KQBw+ijqkJJYuf/x1InLtVJsCZUZ2lWUPDhQ3Lti3zZR+l+1Qxj
+         WcsqeM0Wt6rDnVb8w6Ho4E90hGQcmE7qnxNAbcDwPI+iXislGNSqqyNz7n4eNCt7h8N0
+         ZD6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715895864; x=1716500664;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5vVuaWcV/VJCXyOs1sAVhMBKMj/zAAIhBRyu2C5mMPE=;
-        b=I0x9lEKv/RqghM74crasbsZk7VHQswuTlH9dp+stoRAWcB9wpWmU8g6pQT7pO+HfFC
-         Wqb+Fj2N9/lynSt8M+NDbGGvYutqqt8dA26y8rq4v/nlqevDD43nLeQ2MVZ97o0I83P8
-         CUQ1/meAnAco1hZRePnBn9ZHWFbtKml4PcxRyzQLbbcs8lTBRnn1xBAAu2JH5EWDNu9W
-         sS3rmEk6k0C6zG0IhqRYOFEyr81maMARk3wNK8D6w1/oZ81kg+OcPqmqamw9S9MeyRkJ
-         fNBttQ1HwP7dzpeijXL0QwQHdnsgUqvdULlRN9T8vOKp4Pbf3FnOztkLXRX5Dbn5g2mT
-         mQ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJmvzqNBgnrbxiYXsFMspI1MfzhClO6QMeSk+VkDs/c1SJ5Oy3HMaLkmgT44nRWUJJZJnJ4fYmLw2w2bXh9pTlFQz9wHt3Est0ZmLpozLkIAuq7h0Yg6EceWEs1GX0aZ6BFE8Wm1sb1lZvFfhQxg==
-X-Gm-Message-State: AOJu0YxrIVfElNixG+TEiqPh0Q7SbD7gSzqMdMlQHLh5sVmdIn4FPHck
-	5MGGmImH3WmzLGYhCJUf/6+NuwPs7HCDSR/Rf/D/Ai+/So6FSSBpnjyw7vBdanw=
-X-Google-Smtp-Source: AGHT+IG8W0Glz3a4MDh/hzyT7d0yWL+cDX4f6H26o5FhLnYKPGhdhMPl8+3THNcDp5z4bEdyuB7f6Q==
-X-Received: by 2002:a17:906:34c7:b0:a5a:4683:e961 with SMTP id a640c23a62f3a-a5a4683eaf3mr1047825566b.52.1715895863923;
-        Thu, 16 May 2024 14:44:23 -0700 (PDT)
-Received: from localhost.localdomain ([93.51.30.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7d2bsm1016688566b.120.2024.05.16.14.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 14:44:23 -0700 (PDT)
-From: Marco Cavenati <cavenati.marco@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org
-Cc: vincenzo.mezzela@gmail.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marco Cavenati <cavenati.marco@gmail.com>
-Subject: [PATCH] perf/x86/intel/pt: Fix outdated and add docs
-Date: Thu, 16 May 2024 23:42:36 +0200
-Message-Id: <20240516214235.14770-1-cavenati.marco@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1715896065; x=1716500865;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J+LTJasaamsJYF6JqhtXSMHdgg8g7mtflmrbwlVkiUs=;
+        b=GVQFPRZMSH8tox2Ht6EKv4ob8cWBzglNlw0sNo31GDYC8ZgySxO2WDqJKFtTBrkuIY
+         KUEFWYGz80Lm6T76XcImPAQjYvNvdic1Um6HTsuYVmdEDOrxqJ0fGcWOnjt/bwQibQk2
+         Xb6A3pF43sORO6FO3jO1SqPkvzBTBos4ZCklVs4h0WxwWmZV6tpZP4aJGcL+jMUXWX7f
+         TwJfpBYAlh3s7QnHoKCTBXDsj4idRBXBRyFxt6lcKkDK5TD/ho3G1iSgxuk5wMjRVE71
+         aVB7f8d9MXHtOTgQeseSHEzVmGhNdZUfU57Bq668xuMBCc4O2shp4vzpQAMKovUnDvUC
+         atVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqnkHBiAZP62cGx9E9HCnZ0wBU6Gw0yb9EkW8gjH4SLedA183LC9DV/ksT6OyYkUP7jGL6rblWjCpNx/th2+tfbsKRbSjt8H29vtLhmQfHfQ==
+X-Gm-Message-State: AOJu0YzACeYVDQEd9rWgSHO1ue1XJ1IiYISGHU1/wGZ8wBIOS/+G8P5f
+	Puk4GgmWqYy7CZDTE0XQULn+ta0folraIU8KuKNwZhnUGUpfJcm5Ttbz7w0Xx2WC8zfvUfDhVew
+	MsGAThaqy+IrYlsrzKWRA+7ZgNskvE9a/MbweGrdxt59WotLpZkei
+X-Google-Smtp-Source: AGHT+IEpoh5SflmwhsKZRGb3uWj2PRx5Ka0tqoJkAt6PPLPWsRA8EGE0KrjbIGmbq+C71K3g+J62d+JbvN7hamNw4tg=
+X-Received: by 2002:a05:622a:7e4e:b0:43e:473e:fcf7 with SMTP id
+ d75a77b69052e-43e473efd46mr122311cf.6.1715896064428; Thu, 16 May 2024
+ 14:47:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240516041948.3546553-1-irogers@google.com> <CAP-5=fW8TA0KQOepQRuC_0mhyp6kHbPodh+6-uoVxsmC=09tTw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW8TA0KQOepQRuC_0mhyp6kHbPodh+6-uoVxsmC=09tTw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 16 May 2024 14:47:32 -0700
+Message-ID: <CAP-5=fVzxAMrFFC9bsgUV73WLcywYgNW_1A+x47-N68FaBFrKA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds docs for the TOPA_SHIFT constatnt and for the sizes
-function, removes two outdated parameters from the documentation of the
-struct pt_buffer and renames the constant PT_FILTERS_NUM to
-PT_FILTERS_MAX_NUM making clearer that the number of filters can be lower
-since it depends on the CPU as specified in Intel's SDM.
+On Wed, May 15, 2024 at 10:04=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Wed, May 15, 2024 at 9:20=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Allow uid and gid to be terms in BPF filters by first breaking the
+> > connection between filter terms and PERF_SAMPLE_xx values. Calculate
+> > the uid and gid using the bpf_get_current_uid_gid helper, rather than
+> > from a value in the sample. Allow filters to be passed to perf top, thi=
+s allows:
+> >
+> > $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
+> >
+> > to work as a "perf top -u" workaround, as "perf top -u" usually fails
+> > due to processes/threads terminating between the /proc scan and the
+> > perf_event_open.
+>
+> Fwiw, something I noticed playing around with this (my workload was
+> `perf test -w noploop 100000` as different users) is that old samples
+> appeared to linger around making terminated processes still appear in
+> the top list. My guess is that there aren't other samples showing up
+> and pushing the old sample events out of the ring buffers due to the
+> filter. This can look quite odd and I don't know if we have a way to
+> improve upon it, flush the ring buffers, histograms, etc. It appears
+> to be a latent `perf top` issue that you could encounter on other low
+> frequency events, but I thought I'd mention it anyway.
 
-Signed-off-by: Marco Cavenati <cavenati.marco@gmail.com>
----
- arch/x86/events/intel/pt.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Oh, this is expected "perf top" behavior and "-z" fixes it:
+```
+$ man perf-top
+...
+       -z, --zero
+          Zero history across display updates.
+....
+```
+Why isn't "-z" the default? It would more naturally align with the
+behavior of "top". I'll send a patch.
 
-diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
-index 96906a62aacd..fd5d9095997b 100644
---- a/arch/x86/events/intel/pt.h
-+++ b/arch/x86/events/intel/pt.h
-@@ -17,8 +17,18 @@
-  */
- #define TOPA_PMI_MARGIN 512
- 
-+/*
-+ * Shift for 4K-aligned values
-+ */
- #define TOPA_SHIFT 12
- 
-+/**
-+ * sizes() - compute output buffer size in bytes from ToPA entry encoded size
-+ *
-+ * @tsz:	encoded ToPA entry size
-+ *
-+ * Return:	size in bytes
-+ */
- static inline unsigned int sizes(unsigned int tsz)
- {
- 	return 1 << (tsz + TOPA_SHIFT);
-@@ -61,7 +71,6 @@ struct pt_pmu {
-  * @cur_idx:	current output region's index within @cur table
-  * @output_off:	offset within the current output region
-  * @data_size:	running total of the amount of data in this buffer
-- * @lost:	if data was lost/truncated
-  * @head:	logical write offset inside the buffer
-  * @snapshot:	if this is for a snapshot/overwrite counter
-  * @single:	use Single Range Output instead of ToPA
-@@ -70,7 +79,6 @@ struct pt_pmu {
-  * @stop_te:	STOP topa entry pointer
-  * @intr_te:	INT topa entry pointer
-  * @data_pages:	array of pages from perf
-- * @topa_index:	table of topa entries indexed by page offset
-  */
- struct pt_buffer {
- 	struct list_head	tables;
-@@ -87,7 +95,7 @@ struct pt_buffer {
- 	void			**data_pages;
- };
- 
--#define PT_FILTERS_NUM	4
-+#define PT_FILTERS_MAX_NUM	4
- 
- /**
-  * struct pt_filter - IP range filter configuration
-@@ -107,7 +115,7 @@ struct pt_filter {
-  * @nr_filters:	number of defined filters in the @filter array
-  */
- struct pt_filters {
--	struct pt_filter	filter[PT_FILTERS_NUM];
-+	struct pt_filter	filter[PT_FILTERS_MAX_NUM];
- 	unsigned int		nr_filters;
- };
- 
--- 
-2.39.2
+Thanks,
+Ian
 
+> Thanks,
+> Ian
+>
+> > Ian Rogers (3):
+> >   perf bpf filter: Give terms their own enum
+> >   perf bpf filter: Add uid and gid terms
+> >   perf top: Allow filters on events
+> >
+> >  tools/perf/Documentation/perf-record.txt     |  2 +-
+> >  tools/perf/Documentation/perf-top.txt        |  4 ++
+> >  tools/perf/builtin-top.c                     |  9 +++
+> >  tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
+> >  tools/perf/util/bpf-filter.h                 |  5 +-
+> >  tools/perf/util/bpf-filter.l                 | 66 +++++++++----------
+> >  tools/perf/util/bpf-filter.y                 |  7 +-
+> >  tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
+> >  tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++-----
+> >  9 files changed, 172 insertions(+), 70 deletions(-)
+> >
+> > --
+> > 2.45.0.rc1.225.g2a3ae87e7f-goog
+> >
