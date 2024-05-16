@@ -1,123 +1,116 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA44211721
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 05:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D638142E9D;
+	Thu, 16 May 2024 08:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715835898; cv=none; b=Q7yjkK/exHjrhqCtnAInW+0jEnNtNJZyn5JHfk0R7RenPxHxg4NfxY3ifTkRDqd6+hClfDXV8qPq3CKGB/Jtw75h3Zj5XSoQDnlRjvGm3II6I1qp18571bpL7iIkyH+zV651cIrHEQlPnatw2U1EGu44BNzOa5PX2NHLNam2Qko=
+	t=1715849478; cv=none; b=eGS0Up21lyVvv6m78e3YIz3Kv7s1gVbEIsMAh1e5+YUuHww1eH9O3rxN6bJzaxlFgoQz6E/1dcs+UYuKaDig4GhGLpL92INGmstvCwwPtLiPJFlr57z8Qjjd5Wvzv8cqdofLN+Zo3pB2T+uEF+YYwVoAi9styqIPePN0BOrKKhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715835898; c=relaxed/simple;
-	bh=KsZqB9Nc++1f2JW88Ah8LooOEDUxTd/rxuTVQxTapyI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=UQGlEbmpJ8CETWVptiQZrhGsitr8WE+yJgQMNwrdb/azHzz81tUQiSCzQzMY9IMBiv6PnWg1s1Y7TQnUt1E9oSPRtqo1lnMGJeIj5kc5sAhGFPC5OqnZoBOSPVue7D4t+dnqq9du/dYAOYaCAhSVQoCorIvqdQQFu56GJaN7qlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0xJuJhfh; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715849478; c=relaxed/simple;
+	bh=l1HSI/cEg1zk4pGAEgwOlSvrH8Xb5jx7Ymowp4v8X0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhA4BZMC6DtUoWJZc3XVLYQBrmHRP69KxbRNNjR1aTrMEqhvwe+uwB2h1X1LdEn3KGlVcuBx0UJA7h+o44CfwmE4w3lGWbIoh3L6Co/4QhUJ4FawRBIr1vA62uR9ynbfrgn/nnUU1X/UubeluUNU2UuSSHzNUTv2Xy1gCstp76c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GD0s952g; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0xJuJhfh"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-43df9ac3ebcso2405161cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 22:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715835895; x=1716440695; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TQ2BUrI4nA4aMqiJQpw6TRcFQ7FyURr1y+deeKNa2KE=;
-        b=0xJuJhfhO10M8YW1sfgMSZe9zjaPoYMLSCr0kyavNp9OxDnH55jRV8gq4OwVDTtzVV
-         S7v5QKMTNqJetuu3g7WAFO459906V/VJ+6VTJQvtbH8GtJ1DstCu2voPddvpBk8iSA82
-         xRt/zIIVFL3QHF3fRzovud6m+OUiravriNRCswoAI/9JcphQC4PrMKjbmouBagUeBhoE
-         yMKovw5KXj8iM+3tw6jTy83lx/wKbiRNhg5qs2T0zxYsRIvz11LLEwA3n8V7Rod8btZE
-         g3IhAz7uo+WwBZaZ5eUi6kVnSCKX7N/Ed/sPAyx9qBhVhbFrQDK9kBxGFCJWiO8T/x7G
-         z4Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715835895; x=1716440695;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TQ2BUrI4nA4aMqiJQpw6TRcFQ7FyURr1y+deeKNa2KE=;
-        b=h9P4T/jQA+WqtQq3GnqWnhsVx8rt2MgnSBAgAuWW7wGcbHPzvaqlMe8vZ6xM9UOsZx
-         OlhXj0zl+FBgMqUUpfQnkARa3rBUHHuevAcLszsmohGE5QbKO19qzEOCfYWx+MzWUvQP
-         aAsVamwzJJHmEEdauBJ8AHbCxFrQKb5Jh6sW1RroU2mbSNEKe8uevydRS8p17lzTcQG2
-         97yzC2c0kYHxXmyEXFJATSjU7vFkAdBvBojKs1pkK3H0Lja5vjqgO9v4310Ajge+v2+Z
-         tra0odO0h4CR6BaEEEQcW/aHioXn4HWFN0fxP9mZPBNj1CqW9ZI9J8tRs7uuVUB8sglU
-         3T/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWKo57mnZSz083gTSMFY6Xt2c7e2C6EQiGoX2NDfOhF0slnn+Uu5zoecJCcGwOdnaPUHDkSntLs9DTqs7G+emFsQq/G9wjsQIJHzTB5tLm6HQ==
-X-Gm-Message-State: AOJu0YyF/vZp6yu9p2NVdKe63eOkUXzCRpTxOllJYT2BLp6cLCnNGqkk
-	EaX3c8hpp36Atoh9adwsrNnqg6TA12df9r/O6yD11SNwfpifg800IcRAEVWtmzH2qEw3krkVWGI
-	eynByjydhK/zPKjfn3Bf7Znb9G+R1lmcBIkCO
-X-Google-Smtp-Source: AGHT+IFdCOpo9CTmEBe6R3dl72AtUqLUZ+386ogOqBR9a8yxYG3hJ321sFlDlm2ZYE/FIMcMokrMttTHp1aGLlB7EwA=
-X-Received: by 2002:a05:622a:7e0a:b0:43e:a94:c1c9 with SMTP id
- d75a77b69052e-43e0a94c28dmr12178511cf.20.1715835895129; Wed, 15 May 2024
- 22:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GD0s952g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qn1ebukywtbJVzdHqjkWWRPx6suZJNVTQGM79yBPLw4=; b=GD0s952guXP8F9CsAEKYSjANzE
+	yRSvQScIDP976RNyxy0nPjBIAyc3ix3Q+BI85QQa0VSSs8DRTppTd8k6L7ZTiDp5+Y4R/1F2jNKdw
+	A+FzUgMHt+TCXPvp0yd8Sf4qcdNBZb0i0Wi/YFgyRtzewRuj9MVhQpUOWAAF3DHV6+HRISws8wpNr
+	54uZ6LEsdWEQYft0rbIrGkBiUPEO65kjSmpR2idItDrdf3ukS8DanzOYPNzORuI4Iw/FBJIAWrIwI
+	g4LYNkeARWhHgI9OuI5tuM8Xp/tKJDjSlR6f7ij3ii6SpuMgf4hkxoIUYUdlPZg17S/pROOTfHBRm
+	ErzuZLag==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7WpP-00000005NvS-0r7b;
+	Thu, 16 May 2024 08:51:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D1A9630144C; Thu, 16 May 2024 10:51:06 +0200 (CEST)
+Date: Thu, 16 May 2024 10:51:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Haifeng Xu <haifeng.xu@shopee.com>
+Cc: mingo@redhat.com, frederic@kernel.org, mark.rutland@arm.com,
+	acme@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4] perf/core: Fix missing wakeup when waiting for
+ context reference
+Message-ID: <20240516085106.GG22557@noisy.programming.kicks-ass.net>
+References: <20240513103948.33570-1-haifeng.xu@shopee.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516041948.3546553-1-irogers@google.com>
-In-Reply-To: <20240516041948.3546553-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 May 2024 22:04:43 -0700
-Message-ID: <CAP-5=fW8TA0KQOepQRuC_0mhyp6kHbPodh+6-uoVxsmC=09tTw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513103948.33570-1-haifeng.xu@shopee.com>
 
-On Wed, May 15, 2024 at 9:20=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Allow uid and gid to be terms in BPF filters by first breaking the
-> connection between filter terms and PERF_SAMPLE_xx values. Calculate
-> the uid and gid using the bpf_get_current_uid_gid helper, rather than
-> from a value in the sample. Allow filters to be passed to perf top, this =
-allows:
->
-> $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
->
-> to work as a "perf top -u" workaround, as "perf top -u" usually fails
-> due to processes/threads terminating between the /proc scan and the
-> perf_event_open.
+On Mon, May 13, 2024 at 10:39:48AM +0000, Haifeng Xu wrote:
+> In our production environment, we found many hung tasks which are
+> blocked for more than 18 hours. Their call traces are like this:
+> 
+> [346278.191038] __schedule+0x2d8/0x890
+> [346278.191046] schedule+0x4e/0xb0
+> [346278.191049] perf_event_free_task+0x220/0x270
+> [346278.191056] ? init_wait_var_entry+0x50/0x50
+> [346278.191060] copy_process+0x663/0x18d0
+> [346278.191068] kernel_clone+0x9d/0x3d0
+> [346278.191072] __do_sys_clone+0x5d/0x80
+> [346278.191076] __x64_sys_clone+0x25/0x30
+> [346278.191079] do_syscall_64+0x5c/0xc0
+> [346278.191083] ? syscall_exit_to_user_mode+0x27/0x50
+> [346278.191086] ? do_syscall_64+0x69/0xc0
+> [346278.191088] ? irqentry_exit_to_user_mode+0x9/0x20
+> [346278.191092] ? irqentry_exit+0x19/0x30
+> [346278.191095] ? exc_page_fault+0x89/0x160
+> [346278.191097] ? asm_exc_page_fault+0x8/0x30
+> [346278.191102] entry_SYSCALL_64_after_hwframe+0x44/0xae
+> 
+> The task was waiting for the refcount become to 1, but from the vmcore,
+> we found the refcount has already been 1. It seems that the task didn't
+> get woken up by perf_event_release_kernel() and got stuck forever. The
+> below scenario may cause the problem.
+> 
+> Thread A					Thread B
+> ...						...
+> perf_event_free_task				perf_event_release_kernel
+> 						   ...
+> 						   acquire event->child_mutex
+> 						   ...
+> 						   get_ctx
+>    ...						   release event->child_mutex
+>    acquire ctx->mutex
+>    ...
+>    perf_free_event (acquire/release event->child_mutex)
+>    ...
+>    release ctx->mutex
+>    wait_var_event
+> 						   acquire ctx->mutex
+> 						   acquire event->child_mutex
+> 						   # move existing events to free_list
+> 						   release event->child_mutex
+> 						   release ctx->mutex
+> 						   put_ctx
+> ...						...
+> 
+> In this case, all events of the ctx have been freed, so we couldn't
+> find the ctx in free_list and Thread A will miss the wakeup. It's thus
+> necessary to add a wakeup after dropping the reference.
+> 
+> Fixes: 1cf8dfe8a661 ("perf/core: Fix race between close() and fork()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Fwiw, something I noticed playing around with this (my workload was
-`perf test -w noploop 100000` as different users) is that old samples
-appeared to linger around making terminated processes still appear in
-the top list. My guess is that there aren't other samples showing up
-and pushing the old sample events out of the ring buffers due to the
-filter. This can look quite odd and I don't know if we have a way to
-improve upon it, flush the ring buffers, histograms, etc. It appears
-to be a latent `perf top` issue that you could encounter on other low
-frequency events, but I thought I'd mention it anyway.
-
-Thanks,
-Ian
-
-> Ian Rogers (3):
->   perf bpf filter: Give terms their own enum
->   perf bpf filter: Add uid and gid terms
->   perf top: Allow filters on events
->
->  tools/perf/Documentation/perf-record.txt     |  2 +-
->  tools/perf/Documentation/perf-top.txt        |  4 ++
->  tools/perf/builtin-top.c                     |  9 +++
->  tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
->  tools/perf/util/bpf-filter.h                 |  5 +-
->  tools/perf/util/bpf-filter.l                 | 66 +++++++++----------
->  tools/perf/util/bpf-filter.y                 |  7 +-
->  tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++-----
->  9 files changed, 172 insertions(+), 70 deletions(-)
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
+Thanks!, I'll hang onto this until after the merge window and then stick
+it in tip/perf/urgent or somesuch.
