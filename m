@@ -1,183 +1,168 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366B5143862;
-	Thu, 16 May 2024 13:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3B5143874
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 16:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865527; cv=none; b=iI0oQT4ucw19HB+h0VETRBAcJt0A48Gsr0HYCfOYdDRz7S94NZoHa4reECKt2zGDAIIBVcZo2z28fY0RyHlGIkUDr+zf1NOYNv4XAO23MjJ5uV8I9Ij+aixK+0pHf+9EOSzBpO0j2vpl8zDPu8YNyoDlDv/KTl2K1uaq1Mnj/sI=
+	t=1715875856; cv=none; b=STc1eSMZdIHPZpQipYG8hJn0XESUAjgVK78gvTM//07JolgCtTj1a+RQvsjawsA213vi4w350m/7X97RrfCfsDA2GwEULhiJkVO8qTzVAoT/gX0LpM5jwgKjKMRa4XeUTDKdzC+zGM1moHwQRJDJwbx5tomMNKhZ8MNOBWoH+QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865527; c=relaxed/simple;
-	bh=IwDcXBrM7FxrzumjpWEBXxVI/Sjr7Q8mo1aSkT0G6Uk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P7NffrFNLaPphIILmjjOSq/aQpRQoU9svECn/59jNh1csX/RffDwtF1P/+sVR3bM9NaIkAocXZLDBT0ZWw2F/7kG3tB/GTrWO/UUHK1Z+gQIFv2J3njiqgBRf3qVNprM/F4KPo7tb9l+BgWHMaf4r1rBI6wnZhgItvRCe4RPAj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5ce2f0deffso105140366b.3;
-        Thu, 16 May 2024 06:18:44 -0700 (PDT)
+	s=arc-20240116; t=1715875856; c=relaxed/simple;
+	bh=riGo2bNvIkmqF3bNt1u4SZ23kWVRfhNb6lvtp2o9/WY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=reN1wAG4miwCYcEEiPhKdWQDkhc/M7C7yN5+rwvfRPsbmMrn/udP/z9sbnRxO4kJW0JPdowhRiYrV+3mlId2q5n5PngE4Ab77ZupGve/VUFYrage37D174C4B7NPr12N4mEcpYlIoJgNO9XtuCd3Coq9VpeN7OaPiQCFoWsLJJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T+j/Xi7l; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T+j/Xi7l"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36c6056f7bdso45545ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 09:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715875854; x=1716480654; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eh9JXAGNMN/0z68DknuGCigjQIyZqXfKROEQRYbok9g=;
+        b=T+j/Xi7l9NE/UwDcGQ8Ti68dY0Xyu4Y7Dto+oiOjxUxU/6UmHGoCKYTF68eumos6Df
+         6WyfsLpp/dtKJtAph60TKHExrddZaYj0xodUsp9Nf4cj1pirjPbUN6FXrGokPEXjblGH
+         67ItGxseiXz8CDfoLGBfATrpXBEZuEJtodCQJvxDFt014cO8EmwA/GmuAWfcH9KYQY6a
+         +nYAOxUc82Ru8hkoeTuvVVDRw4C8BsoIJ0NNda7wBAXoCflNtG5ln+E67FZabm7RYAYD
+         I9opmvfX5nlGhTI/uNl5mpShUzPSzFBRcCtAI8b5Y0n1nIaeEufgn3/5wZR3yjRywWyL
+         U7uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715865523; x=1716470323;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KdGWxoXF3gHnPOdYFh5gyCjeUx8D+oDKEyOSzHQOiAA=;
-        b=HPodG0Dx5rerUOwXaeKOwUywuAVuf5sQnLIOEo1jMZpSgpVoD+xilhx3NQKwsTUYCK
-         kwjgejwxjX8AF2QS9K2h++x1mstGPaQSR3KsHy7kbXOxKtwyfM9AmqT/L/hJPJ/5ux/o
-         5qppnrbnXdUXLNZH6Nf0LrF/C48wIS57f8P3GvXSGav7tbH7H5Y01unZIjtUFqxsPh2+
-         jb5z4Y1mBCN7Vp1WGjJCLi/swemP7JKNitQ/cVm1c7cvyJ84z1gE07Z3ZIALzBh+0ZDZ
-         P6QXy29EgBpZq5Hv2YX7c8Q7PNioMUQd4BDAvWcJADXKjTclSWb+hzvhQKMu4gTS/NNZ
-         MRog==
-X-Forwarded-Encrypted: i=1; AJvYcCVkprhqgFWgktACURSFEFLgEo3y7PP6JbXsJ4kOWzwWQ6qZprW5Zw55+i2aDFKOLBUf61EQQIBQyT6J+ZT/E9HjVRlkWw8kVfSaft4NJ11YW1op2wMzrnJdr+nRwheni2l4aCudVu11mpWsQNk1sQ==
-X-Gm-Message-State: AOJu0Yw1SrZ/0hRRok25b/FXe6q/tSN0pC6VDAC+GvwR9KZ/GqxyGlP6
-	g6YRn2Uf7VK09QsXBWp2/XG3ToAd/4zEs30cCXRSlyTcRPrfcIEa
-X-Google-Smtp-Source: AGHT+IE2d8F0VoqvvpDcSpf30NsfMeCjcYrMF4Tuu+HjVBfDa1U+6aaHYWXjrnML45ynkiykx7Dkrw==
-X-Received: by 2002:a17:906:aa4d:b0:a59:c23d:85d8 with SMTP id a640c23a62f3a-a5a2d6653f4mr1274823266b.51.1715865523323;
-        Thu, 16 May 2024 06:18:43 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-009.fbsv.net. [2a03:2880:30ff:9::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17870sm976435666b.216.2024.05.16.06.18.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 06:18:42 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: irogers@google.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: leit@meta.com,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH v3] perf list: Fix the --no-desc option
-Date: Thu, 16 May 2024 06:15:43 -0700
-Message-ID: <20240516131544.2885917-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1715875854; x=1716480654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Eh9JXAGNMN/0z68DknuGCigjQIyZqXfKROEQRYbok9g=;
+        b=N3S0ivICCCoJQtoW4bnxR/hCcMlMm7pufiSYTHB47m0Hd+adjQbWdRO7TtPWO5BkiJ
+         z58aARcZB9JwKI787q1AMhHnMEbezOk+QqUylFfLvWKnncjUQPZ6kFPrjpSq+/R6jsGp
+         oqFaepZY4YDRE4TnFbZLRX/2bnSyWC07TKM6OocsjiZU858SoWg73MlmNNseUFjxNvVC
+         fytjbrGBOB3/fWfxFCedmZ8Hl+j2e1Ymc7bZxx+lm181Z8Gogq670FT277HXtJbpQ1/5
+         yHeAGRzFG7deCKtu5ibw5GFuhtIgC0khaDqQ8alCuBkOHaSPmlosbAyQVX991GbfSmMF
+         2+gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYWk2XOM8ZLnfHLNQiFUd/33+b2CiTJDFUIlfkCR7HAW63wuS5UsFJOHd2yieEq1PxVZwV/YfYU2nuUlnqPMp2UxlmvUWMrCf8suxnklvrAg==
+X-Gm-Message-State: AOJu0Yw5y9UyOWsl697KbhvxiXoqwLTZt4ctYr7vyv2Wqgm/AgT7MUfa
+	+ka2FLtUmiE9anT+1vRzK0qziCptxHUKF//wkHnLF/7aeC/rlJArUXce7l8EEFqR2NlLRpRFYQn
+	bugBE5lR2dN82reDQTZZuPwb8gZkdEc7rNEco
+X-Google-Smtp-Source: AGHT+IH+ZoiqTvEd2yFP85WOiWgnLAh9kWUCfjs5Qah2sxJ7a8/GgFvYV/yhPeSnRHlAVR7Dxx2kmTxoi7JNOMu5G0c=
+X-Received: by 2002:a05:6e02:190c:b0:36c:7f13:e4a1 with SMTP id
+ e9e14a558f8ab-36cccb4f6a6mr17620175ab.21.1715875854150; Thu, 16 May 2024
+ 09:10:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240515054443.2824147-1-weilin.wang@intel.com> <20240515054443.2824147-2-weilin.wang@intel.com>
+In-Reply-To: <20240515054443.2824147-2-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 16 May 2024 09:10:42 -0700
+Message-ID: <CAP-5=fVJmJ0MapzadOcBfQj69FKhaFA9YtonMy4W7kUfDSXS9Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v8 1/7] perf Document: Add TPEBS to Documents
+To: weilin.wang@intel.com
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the --no-desc option in perf list isn't functioning as
-intended.
+On Tue, May 14, 2024 at 10:44=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> TPEBS is a new feature in next generation of Intel PMU. It will be used i=
+n new
+> TMA releases. Adding related introduction to documents while adding new c=
+ode to
+> support it in perf stat.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/Documentation/perf-list.txt |  1 +
+>  tools/perf/Documentation/topdown.txt   | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Document=
+ation/perf-list.txt
+> index 6bf2468f59d3..dea005410ec0 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -72,6 +72,7 @@ counted. The following modifiers exist:
+>   W - group is weak and will fallback to non-group if not schedulable,
+>   e - group or event are exclusive and do not share the PMU
+>   b - use BPF aggregration (see perf stat --bpf-counters)
+> + R - retire latency value of the event
+>
+>  The 'p' modifier can be used for specifying how precise the instruction
+>  address should be. The 'p' modifier can be specified multiple times:
+> diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentat=
+ion/topdown.txt
+> index ae0aee86844f..e6c4424e8bf2 100644
+> --- a/tools/perf/Documentation/topdown.txt
+> +++ b/tools/perf/Documentation/topdown.txt
+> @@ -325,6 +325,24 @@ other four level 2 metrics by subtracting correspond=
+ing metrics as below.
+>      Fetch_Bandwidth =3D Frontend_Bound - Fetch_Latency
+>      Core_Bound =3D Backend_Bound - Memory_Bound
+>
+> +TPEBS in TopDown
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +TPEBS is one of the features provided by the next generation of Intel PM=
+U. The
 
-This issue arises from the overwriting of struct option->desc with the
-opposite value of struct option->long_desc. Consequently, whatever
-parse_options() returns at struct option->desc gets overridden later,
-rendering the --desc or --no-desc arguments ineffective.
+As this documentation will live a while "next generation" could become
+ambiguous. I think it would be better to mention core ultra or some
+other term to more specifically describe which PMUs have TPEBS.
 
-To resolve this, set ->desc as true by default and allow parse_options()
-to adjust it accordingly. This adjustment will fix the --no-desc
-option while preserving the functionality of the other parameters.
+> +TPEBS feature adds a 16 bit retire latency field in the Basic Info group=
+ of the
+> +PEBS record. It records the Core cycles since the retirement of the prev=
+ious
+> +instruction to the retirement of current instruction. Please refer to Se=
+ction
+> +8.4.1 of "Intel=C2=AE Architecture Instruction Set Extensions Programmin=
+g Reference"
+> +for more details about this feature.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changelog:
+Perhaps capture that this is placed in the perf event sample in the
+weights section as TPEBS isn't exposed except within the kernel PMU
+driver.
 
-v3:
-	* Applied the same logic to default_print_metric() and
-	  json_print_event() functions, as identified by Ian Rogers. 
-v2:
-        * Do not print desc if long_desc is being printed, as identified
-          by Ian Rogers.
+> +
+> +In the most recent release of TMA, the metrics begin to use event retire=
+_latency
+> +values in some of the metrics=E2=80=99 formulas on processors that suppo=
+rt TPEBS feature.
+> +For previous generations that do not support TPEBS, the values are stati=
+c and
+> +predefined per processor family by the hardware architects. Due to the d=
+iversity
+> +of workloads in execution environments, retire latency values measured a=
+t real
+> +time are more accurate. Therefore, new TMA metrics that use TPEBS will p=
+rovide
+> +more accurate performance analysis results.
 
----
- tools/perf/builtin-list.c | 34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+Do you want to capture what the value will be when there hasn't been a
+sample? This corner case could be considered broken in the new
+approach.
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 02bf608d585e..8a0e123587f3 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -149,7 +149,11 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 	} else
- 		fputc('\n', fp);
- 
--	if (desc && print_state->desc) {
-+	if (long_desc && print_state->long_desc) {
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
-+	} else if (desc && print_state->desc) {
- 		char *desc_with_unit = NULL;
- 		int desc_len = -1;
- 
-@@ -165,12 +169,6 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 		fprintf(fp, "]\n");
- 		free(desc_with_unit);
- 	}
--	long_desc = long_desc ?: desc;
--	if (long_desc && print_state->long_desc) {
--		fprintf(fp, "%*s", 8, "[");
--		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
--		fprintf(fp, "]\n");
--	}
- 
- 	if (print_state->detailed && encoding_desc) {
- 		fprintf(fp, "%*s", 8, "");
-@@ -243,15 +241,14 @@ static void default_print_metric(void *ps,
- 	}
- 	fprintf(fp, "  %s\n", name);
- 
--	if (desc && print_state->desc) {
--		fprintf(fp, "%*s", 8, "[");
--		wordwrap(fp, desc, 8, pager_get_columns(), 0);
--		fprintf(fp, "]\n");
--	}
- 	if (long_desc && print_state->long_desc) {
- 		fprintf(fp, "%*s", 8, "[");
- 		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
- 		fprintf(fp, "]\n");
-+	} else if (desc && print_state->desc) {
-+		fprintf(fp, "%*s", 8, "[");
-+		wordwrap(fp, desc, 8, pager_get_columns(), 0);
-+		fprintf(fp, "]\n");
- 	}
- 	if (expr && print_state->detailed) {
- 		fprintf(fp, "%*s", 8, "[");
-@@ -395,17 +392,16 @@ static void json_print_event(void *ps, const char *pmu_name, const char *topic,
- 				   deprecated ? "1" : "0");
- 		need_sep = true;
- 	}
--	if (desc) {
--		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
--				   need_sep ? ",\n" : "",
--				   desc);
--		need_sep = true;
--	}
- 	if (long_desc) {
- 		fix_escape_fprintf(fp, &buf, "%s\t\"PublicDescription\": \"%S\"",
- 				   need_sep ? ",\n" : "",
- 				   long_desc);
- 		need_sep = true;
-+	} else if (desc) {
-+		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   desc);
-+		need_sep = true;
- 	}
- 	if (encoding_desc) {
- 		fix_escape_fprintf(fp, &buf, "%s\t\"Encoding\": \"%S\"",
-@@ -491,6 +487,7 @@ int cmd_list(int argc, const char **argv)
- 	int i, ret = 0;
- 	struct print_state default_ps = {
- 		.fp = stdout,
-+		.desc = true,
- 	};
- 	struct print_state json_ps = {
- 		.fp = stdout,
-@@ -563,7 +560,6 @@ int cmd_list(int argc, const char **argv)
- 		};
- 		ps = &json_ps;
- 	} else {
--		default_ps.desc = !default_ps.long_desc;
- 		default_ps.last_topic = strdup("");
- 		assert(default_ps.last_topic);
- 		default_ps.visited_metrics = strlist__new(NULL, NULL);
--- 
-2.43.0
+Thanks,
+Ian
 
+> +
+>
+>  [1] https://software.intel.com/en-us/top-down-microarchitecture-analysis=
+-method-win
+>  [2] https://sites.google.com/site/analysismethods/yasin-pubs
+> --
+> 2.43.0
+>
