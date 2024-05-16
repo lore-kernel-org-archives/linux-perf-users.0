@@ -1,136 +1,102 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C647C15B159
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 21:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E481642B
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 May 2024 04:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715809212; cv=none; b=FjAVzKhcbq1iRZS6LEgiX0gviH9z+FIK9fmIZMntiKEKdRvpaLFoLZuoefWSvHa2bnZ+MEsb8CvJ3LXZHCeLENPKdHqyxipY75FgborT7YhNEjCgnQDqRVNZ4XpiZSn3d42s0OXiBIa7xbA29iZW424dclXGWL4iESCgsppbTOc=
+	t=1715833203; cv=none; b=bwqpS0pB5pcGuMAOafxoaNBtGBLoUe1FM4BZYjEHvefDaLgaXPY/YFOlEY/IPYXmbK6n35JYuON1+QdEphFbF9hlWcfE7Hwp1wBvKwG/iVTiJjvEA5evC0csBdKwSmOwxVGHpTvRk3+mB1xk1eJiTj+9SzFYnH02u3mxb9mjLs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715809212; c=relaxed/simple;
-	bh=Z+XgYM30VQnHp7z+uSPBDIaP8spUZThYi3RbwOOKqL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AIqWQCpLd857443SO4+olkQPpQcpJfUlQ2bTtzlOc3ZLzeEynlY20yVvNhxM6oZC5TvQAbL6bpqbTdru6SVNOgZ0K/qhYDUmD36oTW0gylHOuZDzvu9h4aXc8mhxe4nXjVDZyToPNUmZenRqRY+xsaFohT7OYlM3iu0qEM6Md5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2GVWIDGy; arc=none smtp.client-ip=209.85.166.182
+	s=arc-20240116; t=1715833203; c=relaxed/simple;
+	bh=lHHwkYfHA8wjarLgp5Pin3R8Kdwmiap6eamnf3fEAj8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=JZqIv7Yq6fUWC9ZPwEP1FiBEqBHWqxGJTFmc/MUkBwkPnxs0C5OF1kO9Wv90R9pDwHEhkzk4Ska/tAj+qGS2AoFv6Lo4I1QL5T20vI0fxN9qgu3EG6iCf6qXk6hEalHOPg2OMBCDrjUWrXVxYX+96h4ZCRn98GfidReLMwrQoaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PN9Pakz4; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2GVWIDGy"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36c6056f7bdso107815ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 14:40:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PN9Pakz4"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62079696c58so132857667b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 May 2024 21:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715809210; x=1716414010; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6d83dhT+S2lh1yIex2/6qztxlK0GAg9WvVm+H2kk0ds=;
-        b=2GVWIDGyQW7rtdLvLBUG/T7AgFUFCST9wQnNV2EsE4GeNiRx6uWSwREJmnhR4w01Va
-         w6sTc6/zddzMX1EC4vXQH6apQyLxyfEoBNDAhoF8B+2v5ijUuuHAKgSExVrPY+MES8IO
-         SlN7/GflvqhV2z25L4Wx9BlO9gBYYE18jrEqQ4T9wrUwmnq+/fREETJtEAaJcO8EJG4b
-         NCB9HvecTXSRVj1MEluTBb/VoJE+YsftHcFKM9Kx6od91TvcWiqe2CJJ00TlYK/Fk7H8
-         UILvDe7pOSZx4mZTXVEKKa4NRr7Q3ro0Hx26gulfzECGnft/Dub/Dej0EoSvnoLhXGwX
-         u3+A==
+        d=google.com; s=20230601; t=1715833201; x=1716438001; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NhvrEJQEtg7mfpXP1eaEk1iTrmpUehU3kjsviXcKots=;
+        b=PN9Pakz4SXgiav6BxBSqXt+qB/OAbcUzUB281zKhngB03cLS+oQ0j8QxbK9i91dprF
+         Mhs9LRH/zwdrijMPsG0FLAd4jCFZozqyGYPOKUjgA9YfSj6h+NbGv7xqDMIoRP4HxqUa
+         jJr37v6Kny0s5HSznqjAlThPODBrF+vJhBCx6xz+oarmpLucmADCVxkzp1+Sub4NuBlw
+         0xyV7+aNHDAF21dNo8r/PQFfq+jdTy5enYplpA5c5qhey6dr8OWCi8zAhfbIdsz31h+y
+         je1GdNI1aQRpRatMc8GzpAYLn9oBABRN2KBfz262BD+nx4NVIngsV+S9DKdq9tqT6OsP
+         P3Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715809210; x=1716414010;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6d83dhT+S2lh1yIex2/6qztxlK0GAg9WvVm+H2kk0ds=;
-        b=IL9OC2YkhCN844MeLDJmVyptVnRXGk9j80uQAwPsUqkDjWagx9Z2M/puSEhafuAmFw
-         QpDGp9Ek5741BUWQAenxjJQ4cFPyEPRre1NXMvsJNE94YN3N6JhT9BuztSChQbXbi1sM
-         JjpSg+gVVFCuvaLYmK3+hXVkEdfarlGbpcnF+htOlpe+2OM5O63gGi5hLYKr7C0rkgiI
-         benhGw2z/0u5H2cG1zenewaIUlvOxvJN6XYUlsBT7Zh2vAIHmPpzbsKW8pyKXgvVrj8o
-         /6V7lBSoV9F9/GKPti3363xnJOv4STlInjEBVdYtIk4RHcRa9boCzWBfZL2FFdf9U1Uv
-         OWQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZl2trl+9RjHnZapMkj8rARUaw+4aLSrMmN5al4X+SdxEb4pjGkCpyW8HW88JiGWyDPNFLHsb8i4U4RQub5jHr57kAOK4w96hWCwUtLxw1Fg==
-X-Gm-Message-State: AOJu0Yx4J9hhbSRGG+K2KJxnyL1QRr11LSnQ9pyDeohjryoMQsOYZm2o
-	8CXe5P1Kjyct+fE/RxDhHjEauy+Lq7nIVIk6RHe5B3Dn4iyBns8pmWCxSSBy3uK+6eF3MQwI2gf
-	bGyQMf67x8Odm0kwuem4w93jVRk2Y8WDQ5pkW
-X-Google-Smtp-Source: AGHT+IEePRaQH68ZHbSj+Ympv+TQCUiCPrMZ8748+iyv/Bh0uQTh1RJELLvOOnVp8tL/LP0Z/Hqgkb85Pgy0Pk2o3v8=
-X-Received: by 2002:a05:6e02:681:b0:36a:3d4d:7149 with SMTP id
- e9e14a558f8ab-36ccb88f31fmr12244885ab.8.1715809209884; Wed, 15 May 2024
- 14:40:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715833201; x=1716438001;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NhvrEJQEtg7mfpXP1eaEk1iTrmpUehU3kjsviXcKots=;
+        b=IRFsoNiNqA6zd93maBDzt5SwFBVZAJ+mwHo746uhZnb1S5vBYHtTgxfsNUQAm9MteB
+         RVWvJup33RQIcOBzBa3QitbvY6ztZ6mGanxnROyUwGGPGB3D2nDrp/NrmJzELtqvFQIu
+         vTi4mDZN17LfU9zQD7+9nwHUnUBbDEnHVZj98D83kXYCHcIvQc2SvnEsnV/5NOYU+wm9
+         x4Qa4oNzloqV1YkkF8/o8jAoyzGzAo7jOVefY7ybQw2LOdjMD3QEXCn/EHHg/+sS7UxA
+         zo5eBlziKk2B68RYJFtvn0YP9drm4xjZ2otEZpdKYUzJfeshIRak1ccMYWAYvY14V02i
+         A1Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRSKqnD1Xkgx0Nz0VKuqbT0LJ+iIqDau4gYwBp9pc74fjtS538+H5xVVUlPqZDCLL3tHde/47wOdwY4kehoFtQzvZSkRG9BUIY74QSJRejBg==
+X-Gm-Message-State: AOJu0Ywy8w3IhdC7XQOZ/DvL2RKFy9UpyvJ704FGgAJCXMPrzOwMinEZ
+	f4PWO15QfojsKzxpBjoRGyW3yUtagJVoZ9e3liT2GE8Oy20Ep48hBCD+TeiICT2su4bAd0NaxfV
+	vHw1mSw==
+X-Google-Smtp-Source: AGHT+IG7tjaXXbXKUovZxPYRnXIcz16bs4tMWPRVs26fsA8k2+yRtiUieQLjMyGUvC+JI76UlHP2+h+y5haK
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bac3:cca1:c362:572])
+ (user=irogers job=sendgmr) by 2002:a05:690c:668f:b0:61a:bda3:a78c with SMTP
+ id 00721157ae682-622afd81d04mr45306547b3.0.1715833201091; Wed, 15 May 2024
+ 21:20:01 -0700 (PDT)
+Date: Wed, 15 May 2024 21:19:45 -0700
+Message-Id: <20240516041948.3546553-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240515211045.377080-1-leo.yan@arm.com>
-In-Reply-To: <20240515211045.377080-1-leo.yan@arm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 May 2024 14:39:58 -0700
-Message-ID: <CAP-5=fVh-i5cCdW9MJ5AeN2k5Os2W6fifSCMi3gi6qMt_cdDPw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] perf maps: Improve the kcore maps merging
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2024 at 2:11=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
->
-> This patch series follows up on the patch [1] to improve the sorting and
-> merging of kcore maps.
->
-> Since the kcore maps are not sorted, merging them into the kernel maps
-> causes difficulty, e.g. some kcore maps might be ignored. This is why
-> the dso__load_kcore() function handles the kernel text section
-> particularly for replacement a complete kernel section.
->
-> This patch sorts the kcore maps and ensures the subset region is placed
-> ahead of the superset region in the list. With this change, merging
-> these maps becomes easier - no need the special handling for the kernel
-> text section.
->
-> This patch series is based on the latest acme's perf-tool-next branch
-> and tested on Arm64 Hikey960 board.
->
-> [1] https://lore.kernel.org/linux-perf-users/438f8725-ef3f-462f-90e2-840c=
-ab478ee5@arm.com/T/#m7c86a69d43103cd0cb446b0993e47c36df0f40f2
+Allow uid and gid to be terms in BPF filters by first breaking the
+connection between filter terms and PERF_SAMPLE_xx values. Calculate
+the uid and gid using the bpf_get_current_uid_gid helper, rather than
+from a value in the sample. Allow filters to be passed to perf top, this allows:
 
-Thanks Leo, testing this change on perf-tools-next with an x86 debian
-laptop I see:
-```
-$ perf test 24 -v
-24: Object code reading:
---- start ---
-test child forked, pid 3407499
-Looking at the vmlinux_path (8 entries long)
-symsrc__init: build id mismatch for vmlinux.
-symsrc__init: cannot get elf header.
-overlapping maps in [kernel.kallsyms] (disable tui for more info)
-Using /proc/kcore for kernel data
-Using /proc/kallsyms for symbols
-Parsing event 'cycles'
-Using CPUID GenuineIntel-6-8D-1
-mmap size 528384B
-Reading object code for memory address: 0xfffffffface8d64a
-File is: /proc/kcore
-On file address is: 0xfffffffface8d64a
-dso__data_read_offset failed
----- end(-1) ----
-24: Object code reading                                             : FAILE=
-D!
-```
-The test passes without the changes. Let me know if you need me to dig deep=
-er.
+$ perf top -e cycles:P --filter "uid == $(id -u)"
 
-Thanks,
-Ian
+to work as a "perf top -u" workaround, as "perf top -u" usually fails
+due to processes/threads terminating between the /proc scan and the
+perf_event_open.
 
-> Leo Yan (2):
->   perf maps: Sort kcore maps
->   perf maps: Remove the replacement of kernel map
->
->  tools/perf/util/symbol.c | 117 +++++++++++++++++++--------------------
->  1 file changed, 57 insertions(+), 60 deletions(-)
->
-> --
-> 2.34.1
->
+Ian Rogers (3):
+  perf bpf filter: Give terms their own enum
+  perf bpf filter: Add uid and gid terms
+  perf top: Allow filters on events
+
+ tools/perf/Documentation/perf-record.txt     |  2 +-
+ tools/perf/Documentation/perf-top.txt        |  4 ++
+ tools/perf/builtin-top.c                     |  9 +++
+ tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
+ tools/perf/util/bpf-filter.h                 |  5 +-
+ tools/perf/util/bpf-filter.l                 | 66 +++++++++----------
+ tools/perf/util/bpf-filter.y                 |  7 +-
+ tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++-----
+ 9 files changed, 172 insertions(+), 70 deletions(-)
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
