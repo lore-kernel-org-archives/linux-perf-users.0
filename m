@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D787323770;
-	Fri, 17 May 2024 10:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B311D2C69C;
+	Fri, 17 May 2024 10:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715940077; cv=none; b=alSFO4hipDNtNre7NTQ3bLlWNSUGwZiU9PIq+MEq4S0Gou4Y6cIAFFipIuXUdvXgkceAtCaR0iANc+YrfU72jRHcX8yXrC3IihpMJvPjCENC4zubpvz2asb0SjiLd8pSpt8jJHaVnZ0a4owwx0ATZtUYHdFGUvhizN9TbNeyBl8=
+	t=1715940437; cv=none; b=Y8UYxLZCUiFfjJ65UiKJF4ZfU6HS3TQ2CQg/E1C5S2P0I17XurRZNDstJQQCuiGpS/s4Hr89cExelH4mrixn0puBxDUoA9sw+BijzPe2F0u4HodA/jzvipxhnprFHNb6KYVmE2bf9WQWDwbI3BGAuQp2a/TH4V24zgCQnlEX9Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715940077; c=relaxed/simple;
-	bh=DIGYKbma4xgmMvhulhhTVRwTtUsbtMcm/O0rYLgnZSc=;
+	s=arc-20240116; t=1715940437; c=relaxed/simple;
+	bh=BJqMsVB43bEaeQTzv6ayAG8SZ7MmQLOamms5y4MGl+0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e/cjGQY5OGyKG28CEO63r59oJGDLgOIIwhs2+fsyoN6QQXc8IIqhEkQum5gTzmoBPPZPQ3j3WMg22m1gFglql3/u/29b2QSKx7KPYOA4yP30hgSDbASs7GswV2KPCrlvQ9gZIS0tNFE695zWJAvyovaT/SZxtGzvd/lh7zgI9j0=
+	 In-Reply-To:Content-Type; b=f2cr5FAc061yxzxgF/Ln1sew6RHwZ4D8SHrruVPdKSPnw9oeyYoQsuEoqAbhVgFBJmlg1WndkBBi2zDZBNrMKvF9oLDA47aimrcYpXbXc60ETQqILX3MWsoHNXpW86gg/WFpm7OIYnht/AJp4Ol8WecSQwlnw4TPkxx9YGqDwi4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA9C21424;
-	Fri, 17 May 2024 03:01:31 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB4251424;
+	Fri, 17 May 2024 03:07:38 -0700 (PDT)
 Received: from [10.91.2.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D98DF3F762;
-	Fri, 17 May 2024 03:01:04 -0700 (PDT)
-Message-ID: <02bec885-5fd7-42dd-b85c-9547be7d3211@arm.com>
-Date: Fri, 17 May 2024 12:01:02 +0200
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 286F83F762;
+	Fri, 17 May 2024 03:07:12 -0700 (PDT)
+Message-ID: <97c57424-6242-4ba1-8b46-6405c084645c@arm.com>
+Date: Fri, 17 May 2024 12:07:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,8 +27,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/17] coresight: Re-emit trace IDs when the sink changes
- in per-thread mode
+Subject: Re: [PATCH 14/17] coresight: Use per-sink trace ID maps for Perf
+ sessions
 To: Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -45,73 +45,119 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
  mike.leach@linaro.org
 References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-18-james.clark@arm.com>
- <0d433917-f638-4ca6-ba6a-1d5e85895024@arm.com>
+ <20240429152207.479221-16-james.clark@arm.com>
+ <3923dc07-c037-452a-9e77-d407703876cd@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <0d433917-f638-4ca6-ba6a-1d5e85895024@arm.com>
+In-Reply-To: <3923dc07-c037-452a-9e77-d407703876cd@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 07/05/2024 13:05, Suzuki K Poulose wrote:
+On 07/05/2024 12:52, Suzuki K Poulose wrote:
 > On 29/04/2024 16:22, James Clark wrote:
->> In per-cpu mode there are multiple aux buffers and each one has a
->> fixed sink, so the hw ID mappings which only need to be emitted once
->> for each buffer, even with the new per-sink trace ID pools.
+>> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+>> as long as there are fewer than that many ETMs connected to each sink.
 >>
->> But in per-thread mode there is only a single buffer which can be
->> written to from any sink with now potentially overlapping trace IDs, so
->> hw ID mappings need to be re-emitted every time the sink changes.
->>
->> This will require a change in Perf to track this so it knows which
->> decode tree to use for each segment of the buffer. In theory it's also
->> possible to look at the CPU ID on the AUX records, but this is more
->> consistent with the existing system, and allows for correct decode using
->> either mechanism.
+>> Each sink owns its own trace ID map, and any Perf session connecting to
+>> that sink will allocate from it, even if the sink is currently in use by
+>> other users. This is similar to the existing behavior where the dynamic
+>> trace IDs are constant as long as there is any concurrent Perf session
+>> active. It's not completely optimal because slightly more IDs will be
+>> used than necessary, but the optimal solution involves tracking the PIDs
+>> of each session and allocating ID maps based on the session owner. This
+>> is difficult to do with the combination of per-thread and per-cpu modes
+>> and some scheduling issues. The complexity of this isn't likely to worth
+>> it because even with multiple users they'd just see a difference in the
+>> ordering of ID allocations rather than hitting any limits (unless the
+>> hardware does have too many ETMs connected to one sink).
 >>
 >> Signed-off-by: James Clark <james.clark@arm.com>
 >> ---
->>   drivers/hwtracing/coresight/coresight-etm-perf.c | 14 ++++++++++++++
->>   drivers/hwtracing/coresight/coresight-etm-perf.h |  2 ++
->>   2 files changed, 16 insertions(+)
+>>   drivers/hwtracing/coresight/coresight-core.c     | 10 ++++++++++
+>>   drivers/hwtracing/coresight/coresight-etm-perf.c | 15 ++++++++-------
+>>   include/linux/coresight.h                        |  1 +
+>>   3 files changed, 19 insertions(+), 7 deletions(-)
 >>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c
+>> b/drivers/hwtracing/coresight/coresight-core.c
+>> index 9fc6f6b863e0..d1adff467670 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -902,6 +902,7 @@ static void coresight_device_release(struct device
+>> *dev)
+>>       struct coresight_device *csdev = to_coresight_device(dev);
+>>         fwnode_handle_put(csdev->dev.fwnode);
+>> +    free_percpu(csdev->perf_id_map.cpu_map);
+>>       kfree(csdev);
+>>   }
+>>   @@ -1159,6 +1160,14 @@ struct coresight_device
+>> *coresight_register(struct coresight_desc *desc)
+>>       csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
+>>       dev_set_name(&csdev->dev, "%s", desc->name);
+>>   +    if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+>> +        csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+>> +        csdev->perf_id_map.cpu_map = alloc_percpu(atomic_t);
+>> +        if (!csdev->perf_id_map.cpu_map) {
+>> +            ret = -ENOMEM;
+>> +            goto err_out;
+>> +        }
+>> +    }
+>>       /*
+>>        * Make sure the device registration and the connection fixup
+>>        * are synchronised, so that we don't see uninitialised devices
+>> @@ -1216,6 +1225,7 @@ struct coresight_device
+>> *coresight_register(struct coresight_desc *desc)
+>>   err_out:
+>>       /* Cleanup the connection information */
+>>       coresight_release_platform_data(NULL, desc->dev, desc->pdata);
+>> +    kfree(csdev);
+>>       return ERR_PTR(ret);
+>>   }
+>>   EXPORT_SYMBOL_GPL(coresight_register);
 >> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c
 >> b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> index f07173aa4d66..08f3958f9367 100644
+>> index 177cecae38d9..86ca1a9d09a7 100644
 >> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
 >> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> @@ -499,6 +499,20 @@ static void etm_event_start(struct perf_event
->> *event, int flags)
->>                         &sink->perf_id_map))
->>           goto fail_disable_path;
->>   +    /*
->> +     * In per-cpu mode there are multiple aux buffers and each one has a
->> +     * fixed sink, so the hw ID mappings which only need to be
->> emitted once
->> +     * for each buffer.
->> +     *
->> +     * But in per-thread mode there is only a single buffer which can be
->> +     * written to from any sink with potentially overlapping trace
->> IDs, so
->> +     * hw ID mappings need to be re-emitted every time the sink changes.
->> +     */
->> +    if (event->cpu == -1 && event_data->last_sink_hwid != sink) {
->> +        cpumask_clear(&event_data->aux_hwid_done);
->> +        event_data->last_sink_hwid = sink;
->> +    }
+>> @@ -229,10 +229,13 @@ static void free_event_data(struct work_struct
+>> *work)
+>>           struct list_head **ppath;
+>>             ppath = etm_event_cpu_path_ptr(event_data, cpu);
+>> -        if (!(IS_ERR_OR_NULL(*ppath)))
+>> +        if (!(IS_ERR_OR_NULL(*ppath))) {
+>> +            struct coresight_device *sink = coresight_get_sink(*ppath);
 >> +
+>> +            coresight_trace_id_put_cpu_id(cpu, &sink->perf_id_map);
+>>               coresight_release_path(*ppath);
+>> +        }
+>>           *ppath = NULL;
+>> -        coresight_trace_id_put_cpu_id(cpu,
+>> coresight_trace_id_map_default());
+>>       }
+>>         /* mark perf event as done for trace id allocator */
+>> @@ -401,8 +404,7 @@ static void *etm_setup_aux(struct perf_event
+>> *event, void **pages,
+>>           }
+>>             /* ensure we can allocate a trace ID for this CPU */
+>> -        trace_id = coresight_trace_id_get_cpu_id(cpu,
+>> -                             coresight_trace_id_map_default());
+>> +        trace_id = coresight_trace_id_get_cpu_id(cpu,
+>> &sink->perf_id_map);
 > 
-> With the traceid caching in the event_data per-cpu , we could avoid this
-> step ?
+> We could either store the perf_id_map or the traceid itself in the
+> event_data isn't it ? Rather than passing the idmap to enable_source ?
 > 
 > Suzuki
 > 
-> 
 
-I don't think so, this is to inform the tool that the mappings have
-changed if the tool doesn't want to follow switch events.
+Yes the end result would be the same. By doing it this way I was keeping
+in mind the potential change for sysfs mode in the future. This way
+there is common path between the two modes.
 
-Unless I'm missing something, moving where the trace ids are stored
-doesn't mean that they will be re-sent when the mappings change?
+IMO an argument is easier to understand, rather than having to know
+where/how/at what point the ID is initialised before calling
+enable_source().
+
+James
