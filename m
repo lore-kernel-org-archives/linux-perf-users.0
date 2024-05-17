@@ -1,202 +1,189 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0CF1411C5;
-	Fri, 17 May 2024 21:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B76F141981;
+	Fri, 17 May 2024 21:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715981303; cv=none; b=CCeI+WSx6HZkkr33OPgwG11Fd0lsI8Q26TXezakvNDcTtCGiBwfZgj/IQ9YAm6uRnX0q2JpO+L/n2fowepxMo6ofIhNBq8xELJI/15i7zDP3ItbTWRN5O3a5Jy+u7glRAxJJv4by8McAi1r4pTTNWMiinGyzYLfcwnftVv9yWhM=
+	t=1715982202; cv=none; b=A+bmXojuvDdj+jimSiQjYgzETBUY5Z1XkqcBMEkEeeeAmmkgFRyIndbeX6aZ3Uu7xkt/L2NpbJ0RvV4n0JZjFRIqBsQt2WZkwUuMnwV0sqjFY/O/3Nlu9KAo8yy4Uv2c/EPePd5krMTB5dw7Qi52HHkXu3IN/aBGSjUcKWy+nDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715981303; c=relaxed/simple;
-	bh=2/1Z6La3GNXkf3zPRo98vJce5KtxCGxzXJSBIYIU8to=;
+	s=arc-20240116; t=1715982202; c=relaxed/simple;
+	bh=TOQR4C7aJOSef0guoBb210jKTjOGMJ9RgirLaoUIQwc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=teojMCZlWOH+nr+Tey2Dx9ITqhraf4f333Rkzp8toAMQ3oA9+uQY8asTYu4+BMWH/EkJr7BTG4+AwPlqsJHeTVroaAaFyfUxXXj4kPmrtkqTVqhFHbxpv2zR/m+TGdw3CCjIfC+4LYGaNfOF9gEgmdV4v8XfFW155tWcuX5gdew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
+	 To:Cc:Content-Type; b=czATfmRl9a/pCEr3VfUbNxA+LxKoM5dtIKbuNX/hLdZ/PHJ7TdFyygy4c1xtoYyJ4C76vEKX4LWydoereW261vcF92QWTcjMzdWapAAIWA1G6rMt5G39Zx/W7FDLAia0+/7XyMAGmMxSpOo9NaB2cm/A4bzoWbq39N5buObfJps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-65be7c29cb1so475796a12.0;
-        Fri, 17 May 2024 14:28:21 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ec4dc64c6cso21410845ad.0;
+        Fri, 17 May 2024 14:43:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715981300; x=1716586100;
+        d=1e100.net; s=20230601; t=1715982200; x=1716587000;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mRzy4hL4fyShMQGv5CBrSOTOZvBLaIJhDWW4SFAhiug=;
-        b=e1EOijwCLMuNeq4pyA3gRlpXBufX5fMn71FTl+PH2Ch7Tz1aj7cT5x9jb85MZmzDt2
-         lf8L9SV0n5et2vx7mPB26JPwX7EfAX7YE5Ds5Vco8pZDI/ndv112GIqK0TjQIVVN+GKf
-         xlMFcq2PYzeJ7ES7Qu8pWkVvCORi2B62xRxVjLsa/C5WVxG6dPq31qPLRP4l7C+PEK+V
-         AowyiAwzZ0l7UnfwE8CVFWjjjRr/UxjKtkfVPs1hjnQZLZEYZxnzptCxaKtyrdQdTL01
-         FZ3xRcABahgPqD4vb2wHocbQLePWVAvqpBDudU1MaJT1TeVr1Z9+jhLOFnA6FcTgf69U
-         EKZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW980GRx9yDyzIxS3SacaM8FMBVhRAPlhB2FvMJMARtJTdLGkxP/BFazChsQ0GpQr7XTAWSTMg7EXznr/CyFRXAb8Uqorj7GkevB6c1Jj5Jt8tjx80pLkK2ZiHMfXQRRto504Sfa7H/6opYmSszLQ==
-X-Gm-Message-State: AOJu0YzvSibVgwNbjw9utd65h9UX72iJxIKU9h8BbR5YR4G7h9llCwbm
-	tBPVCHWMhD+/B7+y8FCfPQrHkV7fptI9ZgRDVWs1RhA0pTNbAaDT6XL6tW9IP0uJbevrINcuRYv
-	MECLo1qCtKVr5CJFiYBEaRmyGSHI=
-X-Google-Smtp-Source: AGHT+IEah9LeDDgNXL7VUOsZL8Rq1J0nZ6ecDOuiJAgKzrzpDRqWSsAKf3MWXfjRY/OuLICbWQmaa5eb1vZdRsvyIe0=
-X-Received: by 2002:a17:90a:b388:b0:2b9:fc72:547e with SMTP id
- 98e67ed59e1d1-2bd603e3232mr392834a91.18.1715981300510; Fri, 17 May 2024
- 14:28:20 -0700 (PDT)
+        bh=IDCtfy/Bp0EaDflNWvcEH2uJMngajJPoBsVPh87Br9Q=;
+        b=HzQvNswhF1bv6klLwyhfaLWgirrAMQiQauH3egU3WLlj3DfNLYd4x01k6zihV6rekp
+         24dDhKbF9TmPxOH0K0wEC316cHeXNd9FKtyqTGpa3m4/8MVAQWNVyDVwxxluBrOzWDkS
+         +RwQs2FFOeSrpJ1Lcu4eIi3VoOJynknfr5QGIubrjnbG62/cpARdMcted1HghMn8jXvr
+         p//YoYbzuSGVn9paVXrnv46JvbHZePglb9O6Djb9h2k+7RzdYKFz1NgVRHC2yb7XKeMD
+         68aNAUf9gT1H9cPvlm1M+GK4gU5g1irOiOLZRd0/8hs/EHtwq4MZnHofKNwcjU6E7F4P
+         nxzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeAejqh+zZaGa0y3ObhKt/69Xsg5VMEZLF8AgX2J8Y8A/+oMsTaTf57ahCuocNMxnvPlUyIFq0Yw03dmVycJvA/94eGkClCd8l5x5HatoYxoCtVuRqRzFedROqIJMM/ueYdWe6PIPOGUpKnUKq7Q==
+X-Gm-Message-State: AOJu0YyQl1dVmsyfuwbpzOcSmvMcl/C+VfTvKMv7N3zN/XrsPBnPfN+F
+	Ky+s12jJFEU1O25vuyWM8yTv7M60wguJgOyxpri2PAKCH3K3v1aAEnVmcP//wBWbTHhNwWUBoCt
+	iCMTtBBxfZwdPAAHXZb3dM53NVSk=
+X-Google-Smtp-Source: AGHT+IFQzzj4MbTJHZyEjTtikdclQUIr7f3DIllHHceH0poyK3GrBfzAJAsMWeu441s5luETSgaxE9psrCVaiUTHS2U=
+X-Received: by 2002:a17:903:1d2:b0:1eb:2ee2:43bd with SMTP id
+ d9443c01a7336-1ef43d0acc1mr286452235ad.7.1715982200271; Fri, 17 May 2024
+ 14:43:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515054443.2824147-1-weilin.wang@intel.com>
- <20240515054443.2824147-2-weilin.wang@intel.com> <CAP-5=fVJmJ0MapzadOcBfQj69FKhaFA9YtonMy4W7kUfDSXS9Q@mail.gmail.com>
- <CO6PR11MB5635F7C3C6928C2F3E5D732FEEED2@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB5635F7C3C6928C2F3E5D732FEEED2@CO6PR11MB5635.namprd11.prod.outlook.com>
+References: <20240515054443.2824147-1-weilin.wang@intel.com> <20240515054443.2824147-4-weilin.wang@intel.com>
+In-Reply-To: <20240515054443.2824147-4-weilin.wang@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 17 May 2024 14:28:09 -0700
-Message-ID: <CAM9d7cj5kc3RVpn9uffojkHuBb6Ui4HeRWB9WC6CKPSJhJtf0A@mail.gmail.com>
-Subject: Re: [RFC PATCH v8 1/7] perf Document: Add TPEBS to Documents
-To: "Wang, Weilin" <weilin.wang@intel.com>
+Date: Fri, 17 May 2024 14:43:08 -0700
+Message-ID: <CAM9d7cghtG-9rwy5Yg-oJDETO-J5OUzPt6=xMCwacKqfwo+sZA@mail.gmail.com>
+Subject: Re: [RFC PATCH v8 3/7] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: weilin.wang@intel.com
 Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, May 14, 2024 at 10:44=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
+>
+> Another thread is required to synchronize between perf stat and perf reco=
+rd
+> when we pass data through pipe.
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+[SNIP]
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.=
+c
+> new file mode 100644
+> index 000000000000..4b7a98794fae
+> --- /dev/null
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -0,0 +1,285 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * intel_pt.c: Intel Processor Trace support
+> + * Copyright (c) 2013-2015, Intel Corporation.
 
-On Thu, May 16, 2024 at 10:37=E2=80=AFAM Wang, Weilin <weilin.wang@intel.co=
-m> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Ian Rogers <irogers@google.com>
-> > Sent: Thursday, May 16, 2024 9:11 AM
-> > To: Wang, Weilin <weilin.wang@intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>; Arnaldo Carvalho de Melo
-> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
-> > <mingo@redhat.com>; Alexander Shishkin
-> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
-ter,
-> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
-;
-> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
- Perry
-> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
-rs,
-> > Caleb <caleb.biggers@intel.com>
-> > Subject: Re: [RFC PATCH v8 1/7] perf Document: Add TPEBS to Documents
-> >
-> > On Tue, May 14, 2024 at 10:44=E2=80=AFPM <weilin.wang@intel.com> wrote:
-> > >
-> > > From: Weilin Wang <weilin.wang@intel.com>
-> > >
-> > > TPEBS is a new feature in next generation of Intel PMU. It will be us=
-ed in new
-> > > TMA releases. Adding related introduction to documents while adding n=
-ew
-> > code to
-> > > support it in perf stat.
-> > >
-> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> > > ---
-> > >  tools/perf/Documentation/perf-list.txt |  1 +
-> > >  tools/perf/Documentation/topdown.txt   | 18 ++++++++++++++++++
-> > >  2 files changed, 19 insertions(+)
-> > >
-> > > diff --git a/tools/perf/Documentation/perf-list.txt
-> > b/tools/perf/Documentation/perf-list.txt
-> > > index 6bf2468f59d3..dea005410ec0 100644
-> > > --- a/tools/perf/Documentation/perf-list.txt
-> > > +++ b/tools/perf/Documentation/perf-list.txt
-> > > @@ -72,6 +72,7 @@ counted. The following modifiers exist:
-> > >   W - group is weak and will fallback to non-group if not schedulable=
-,
-> > >   e - group or event are exclusive and do not share the PMU
-> > >   b - use BPF aggregration (see perf stat --bpf-counters)
-> > > + R - retire latency value of the event
-> > >
-> > >  The 'p' modifier can be used for specifying how precise the instruct=
-ion
-> > >  address should be. The 'p' modifier can be specified multiple times:
-> > > diff --git a/tools/perf/Documentation/topdown.txt
-> > b/tools/perf/Documentation/topdown.txt
-> > > index ae0aee86844f..e6c4424e8bf2 100644
-> > > --- a/tools/perf/Documentation/topdown.txt
-> > > +++ b/tools/perf/Documentation/topdown.txt
-> > > @@ -325,6 +325,24 @@ other four level 2 metrics by subtracting
-> > corresponding metrics as below.
-> > >      Fetch_Bandwidth =3D Frontend_Bound - Fetch_Latency
-> > >      Core_Bound =3D Backend_Bound - Memory_Bound
-> > >
-> > > +TPEBS in TopDown
-> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > +
-> > > +TPEBS is one of the features provided by the next generation of Inte=
-l PMU.
-> > The
-> >
-> > As this documentation will live a while "next generation" could become
-> > ambiguous. I think it would be better to mention core ultra or some
-> > other term to more specifically describe which PMUs have TPEBS.
->
-> Hi Ian,
->
-> Yes, you are right, I will update it.
+This needs some updates. :)
 
-Also I'd be nice if you can tell what 'T' means in TPEBS. :)
 
-> >
-> > > +TPEBS feature adds a 16 bit retire latency field in the Basic Info g=
-roup of the
-> > > +PEBS record. It records the Core cycles since the retirement of the =
-previous
-> > > +instruction to the retirement of current instruction. Please refer t=
-o Section
-> > > +8.4.1 of "Intel=C2=AE Architecture Instruction Set Extensions Progra=
-mming
-> > Reference"
-> > > +for more details about this feature.
-> >
-> > Perhaps capture that this is placed in the perf event sample in the
-> > weights section as TPEBS isn't exposed except within the kernel PMU
-> > driver.
-> >
-> > > +
-> > > +In the most recent release of TMA, the metrics begin to use event
-> > retire_latency
-> > > +values in some of the metrics=E2=80=99 formulas on processors that s=
-upport TPEBS
-> > feature.
-> > > +For previous generations that do not support TPEBS, the values are s=
-tatic
-> > and
-> > > +predefined per processor family by the hardware architects. Due to t=
-he
-> > diversity
-> > > +of workloads in execution environments, retire latency values measur=
-ed at
-> > real
-> > > +time are more accurate. Therefore, new TMA metrics that use TPEBS wi=
-ll
-> > provide
-> > > +more accurate performance analysis results.
-> >
-> > Do you want to capture what the value will be when there hasn't been a
-> > sample? This corner case could be considered broken in the new
-> > approach.
->
->
-> When there is no sample, we should expect it to be 0 or use default value=
-. I will
-> add this information here. I don=E2=80=99t think this is broken from the =
-approach's perspective.
-> We do need to add code to return this value when there is no sample.
+> + */
+> +
+> +
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +#include <thread.h>
+> +#include "intel-tpebs.h"
+> +#include <linux/list.h>
+> +#include <linux/zalloc.h>
+> +#include <linux/err.h>
+> +#include "sample.h"
+> +#include "debug.h"
+> +#include "evlist.h"
+> +#include "evsel.h"
+> +#include "session.h"
+> +#include "tool.h"
+> +#include "metricgroup.h"
+> +#include <sys/stat.h>
+> +#include <sys/file.h>
+> +
+> +
+> +
+> +#define PERF_DATA              "-"
+> +#define CONTROL                        "/tmp/control"
+> +#define ACK                    "/tmp/ack"
+> +pthread_t reader_thread;
+> +struct child_process *cmd;
+> +struct perf_stat_config *stat_config;
 
-More importantly, I think the documentation should say that the
-retire_latency is in PEBS which means it needs samples in the
-precise events.  So it would run perf record in the background
-for events with retire_latency even if users just want to see the
-value of counters or metric in perf stat.
+static ?
+
+> +
+> +static int get_perf_record_args(const char **record_argv)
+> +{
+> +       int i =3D 0;
+> +       struct tpebs_retire_lat *e;
+> +
+> +       pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +       record_argv[i++] =3D "--synth=3Dno";
+
+Unfortunately this still synthesizes MMAP records for the kernel
+and modules.  As we don't care about them and just want to
+minimize the overhead at the beginning, we can add
+"--tail-synthesize" too.
+
+
+> +       record_argv[i++] =3D "--control=3Dfifo:/tmp/control,/tmp/ack";
+
+This hard-coded path won't work well when more than one users
+want to run the perf command at the same time.
 
 Thanks,
 Namhyung
+
+> +
+> +       if (stat_config->user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config->user_requested_cpu_list=
+;
+> +       }
+> +
+> +       if (stat_config->system_wide)
+> +               record_argv[i++] =3D "-a";
+> +
+> +       if (!stat_config->system_wide && !stat_config->user_requested_cpu=
+_list) {
+> +               pr_err("Require -a or -C option to run sampling.\n");
+> +               return -ECANCELED;
+> +       }
+> +
+> +       list_for_each_entry(e, &stat_config->tpebs_results, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+> +
+> +       return 0;
+> +}
+> +
+>
