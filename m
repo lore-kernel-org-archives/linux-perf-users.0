@@ -1,280 +1,156 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417AE4A2D
-	for <linux-perf-users@vger.kernel.org>; Sat, 18 May 2024 03:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCEE8F44;
+	Sat, 18 May 2024 06:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716003020; cv=none; b=E6DCMGpzQGPmFI1mKwAHNYdG+JWFX+Cc+2lccJKnu0yn125tZI9aH8HrMCG/Sa1ygGt5M0fICVxgLEocELhWG9A8G087w0mC7mDvfgyyJvJplV07ZgpgisAHzt9J6YoXVWRUJt4TYgz65nvSIo1gcBxxsKGkSZF0xRd0+LwH9J4=
+	t=1716012875; cv=none; b=WHB/1//n9zEylrwF6g09M699KYxoGYmcH4T24LIAvQtCYqpVIbawn7v49c0/C0XTU1lcpq1M6BNxGoEjLg1Gj9PnmTLf3nazDeP5n12uDOEdJljnQtNKoeVQGmpIzmwWOETc37kqU6wsjdBLbMDk8aWRHtbqIDREcmj3Y/jb7nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716003020; c=relaxed/simple;
-	bh=i2aLlf3CCtikkEtAK0ntXxBrsOx2ayXvknDbt5qFetw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZbKOGTcYOACDERXyDjViUMZXf10mbREPoLrf/FNjDTd/mPnGNshA2F5Or9O+TbVbEljyBkERqjyJGAkQSt5BkCfXS7MZsDSLw26/0ACx4TqGIvcBNGBehRSxwixjEiCLkD/Wvft1qqvTwVlI64oUChM3WTrMBdYTZpY5wijTIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MnfKwSv3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MnfKwSv3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1eed90a926fso28655ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 May 2024 20:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716003018; x=1716607818; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1nWYYKjaR/jDGFeRF8uaCxl0MPSOP0KopiQrG5iiGtI=;
-        b=MnfKwSv3agOSvJqwuxCwLKPkUOuTka2RxjV5dJZAzjDKNni2b2U4X2WkAay/0Hwg9c
-         aMbBHeTDY9dYj8JePiYNYiZkv7gn2OO1uCA29eT9cIvo+VCRiJrfMg9WRMBrz/iIt+lB
-         AMgXpzrbZIysQMZqEl+gS6u3xYRNx+1y1Z3IEwN7J+ufQvHUGz7ucI6NFkIG/M4DeYDN
-         NHnuRTgRZr4jNoInD3rWI/AeHUo85AW1/h+g66Ie33D9O7QxvMkQZAtlhKdMpG17j5Ao
-         z4zFCDPzRToVpFLj2r9asZmxIUwy9p+hyor8HGakspvY74oTB6UZnWU8gwEJItD6fTcl
-         hbsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716003018; x=1716607818;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1nWYYKjaR/jDGFeRF8uaCxl0MPSOP0KopiQrG5iiGtI=;
-        b=OO9VH+5YCGqMi69xcfKcXHYj4szf4Jg+haKnqpClcZSzzXCRgwR2Or7VZKVTI/sJtI
-         nmBq4mgtpLkKU+21O3M0NUwNxRZPgzVWxH/8JLu9V7ukMUD+maKDLO4VDcWazvromJh2
-         09JeQyj6qvQmYUkB37L4Q78DKaFb+eWiSzvSoeAgRMYYCUFDWpUGyyDjhBlmLW/bXGSn
-         ySKPc3Bkxe/XpGysnMU2zaErJNEpw5P/SAdhH91QIzyBSVRE7ifZPpUAc9wu6LkqEY7G
-         5gYu5ngqss3c+8SCvLFuRUtPmqHzkKmLHbHsWj7mg+IRjKktEoh0ysVb1nMcXXtntN2l
-         5dbA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+tAMzu8xC87z5IRJticVYxGlbAhVkmax2JDoIUzTHzzxeJXRU+sFEx7qxln5oAY8GzzPWynDrnPIvZrPpV+zdwvQ0KMOZ4D1FeMJe1UJ3JA==
-X-Gm-Message-State: AOJu0YzQp0HSkyyfbocfiFTki9CxzSuesguAb58yL+E6Zu5X237EFqOc
-	fN5OraBoqcoAZ4aN746ucAczdYSn8mcaA7YP3dtFNyL7fjR1MhSWEyUfrU383ZHdlERwjUOALaN
-	nnNLMsfMq456SmOpoK6Uk3uGQ6W6urOzrWN/b
-X-Google-Smtp-Source: AGHT+IFbyZwc0QMJvH/mRE3Qe4iX1MKPVAPecQCzhgLJIWXVM52u3qQbDZRuGEmLd6AR4KRYL8Rm3IcTwTGe7DwBkg4=
-X-Received: by 2002:a17:902:6549:b0:1e5:62:7a89 with SMTP id
- d9443c01a7336-1f2ecbc4160mr1086035ad.18.1716003018134; Fri, 17 May 2024
- 20:30:18 -0700 (PDT)
+	s=arc-20240116; t=1716012875; c=relaxed/simple;
+	bh=7AWQZ0E7xEqFD3ZduGzUbfk7ddpl4dqsvVPkuMElqg8=;
+	h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=J0ybsolKnuAG9D+ieEOP5sxjspyng/D7AzerwIqXuDgRjFRTVp/Y4zPgbBv4BwngPpEcHIvA9PrNPXrVaO+dzmaSxfBlePFENkFpXyNjJYiyMI/R4fphfHd7iW8N2ydg5HQgAJtuMSQ4aHSwOZrViHqsNzGJWw8DoBla7C97gXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxherfRkhmgUkAAA--.1408S3;
+	Sat, 18 May 2024 14:12:49 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxTt7eRkhmj_QAAA--.5908S3;
+	Sat, 18 May 2024 14:12:47 +0800 (CST)
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Question about "perf list"
+Message-ID: <4b101d3d-e216-0a43-30f3-19ef20c0522a@loongson.cn>
+Date: Sat, 18 May 2024 14:12:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516041948.3546553-1-irogers@google.com> <20240516041948.3546553-2-irogers@google.com>
- <CAM9d7ch51JK8Xu+kOYUdxgM10_gS2=vjfW5sqFwrRS2eC8cYXA@mail.gmail.com>
-In-Reply-To: <CAM9d7ch51JK8Xu+kOYUdxgM10_gS2=vjfW5sqFwrRS2eC8cYXA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 17 May 2024 20:29:59 -0700
-Message-ID: <CAP-5=fXNQ0=8mKKkBrmA9JpNLZEoQxb=AEYjBT-_brFt3Qom-A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] perf bpf filter: Give terms their own enum
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Changbin Du <changbin.du@huawei.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxTt7eRkhmj_QAAA--.5908S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr45JFWkGF4kKF47Ww47ZFc_yoW5AF45pF
+	4rArn3tw4xXw4UJ34fAFn5ury3CryxCr1fK3WDAw4akFyFqFs0qFs2gr15Z3W5Kry5G3ya
+	qa1j9r4ktrW8XFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUU
+	UUU==
 
-On Fri, May 17, 2024 at 6:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, May 15, 2024 at 9:20=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > Give the term types their own enum so that additional terms can be
-> > added that don't correspond to a PERF_SAMPLE_xx flag. The term values
-> > are numerically ascending rather than bit field positions, this means
-> > they need translating to a PERF_SAMPLE_xx bit field in certain places
-> > and they are more densely encoded.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> [SNIP]
-> > diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util=
-/bpf_skel/sample-filter.h
-> > index 2e96e1ab084a..161d5ff49cb6 100644
-> > --- a/tools/perf/util/bpf_skel/sample-filter.h
-> > +++ b/tools/perf/util/bpf_skel/sample-filter.h
-> > @@ -16,12 +16,32 @@ enum perf_bpf_filter_op {
-> >         PBF_OP_GROUP_END,
-> >  };
-> >
-> > +enum perf_bpf_filter_term {
-> > +       /* No term is in use. */
-> > +       PBF_TERM_NONE,
-> > +       /* Terms that correspond to PERF_SAMPLE_xx values. */
-> > +       PBF_TERM_IP,
-> > +       PBF_TERM_ID,
-> > +       PBF_TERM_TID,
-> > +       PBF_TERM_CPU,
-> > +       PBF_TERM_TIME,
-> > +       PBF_TERM_ADDR,
-> > +       PBF_TERM_PERIOD,
-> > +       PBF_TERM_TRANSACTION,
-> > +       PBF_TERM_WEIGHT,
-> > +       PBF_TERM_PHYS_ADDR,
-> > +       PBF_TERM_CODE_PAGE_SIZE,
-> > +       PBF_TERM_DATA_PAGE_SIZE,
-> > +       PBF_TERM_WEIGHT_STRUCT,
-> > +       PBF_TERM_DATA_SRC,
-> > +};
-> > +
-> >  /* BPF map entry for filtering */
-> >  struct perf_bpf_filter_entry {
-> >         enum perf_bpf_filter_op op;
-> >         __u32 part; /* sub-sample type info when it has multiple values=
- */
-> > -       __u64 flags; /* perf sample type flags */
-> > +       enum perf_bpf_filter_term term;
-> >         __u64 value;
-> >  };
-> >
-> > -#endif /* PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H */
-> > \ No newline at end of file
-> > +#endif /* PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H */
-> > diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/=
-util/bpf_skel/sample_filter.bpf.c
-> > index fb94f5280626..8666c85e9333 100644
-> > --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> > @@ -48,31 +48,50 @@ static inline __u64 perf_get_sample(struct bpf_perf=
-_event_data_kern *kctx,
-> >  {
-> >         struct perf_sample_data___new *data =3D (void *)kctx->data;
-> >
-> > -       if (!bpf_core_field_exists(data->sample_flags) ||
-> > -           (data->sample_flags & entry->flags) =3D=3D 0)
-> > +       if (!bpf_core_field_exists(data->sample_flags))
-> >                 return 0;
-> >
-> > -       switch (entry->flags) {
-> > -       case PERF_SAMPLE_IP:
-> > +       switch (entry->term) {
-> > +       case PBF_TERM_NONE:
-> > +               return 0;
-> > +       case PBF_TERM_IP:
-> > +               if ((data->sample_flags & PERF_SAMPLE_IP) =3D=3D 0)
-> > +                       return 0;
->
-> Can we check this in a single place like in the original code
-> instead of doing it in every case?  I think we can keep the
-> entry->flags and check it only if it's non zero.  Then uid and
-> gid will have 0 to skip.
+Hi all,
 
-I found the old way confusing. As the flags are a bitmap it looks like
-more than one can be set, if that were the case then the switch
-statement would be broken as the case wouldn't exist. Using an enum
-like this allows warnings to occur when a term is missing in the
-switch statement - which is good when you are adding new terms. I
-think it more obviously matches the man page. We could arrange for the
-enum values to encode the shift position of the flag. Something like:
+Please let me know whether it makes sense to do the following change,
+if yes, I will post a formal patch after the merge window, thank you.
 
-if ((entry->term > PBF_TERM_NONE && entry->term <=3D PBF_TERM_DATA_SRC) &&
-    (data->sample_flags & (1 << entry->term)) =3D=3D 0)
-   return 0;
+-- >8 --
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 7b54e9385442..9fa15b32280f 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -67,11 +67,12 @@ void print_tracepoint_events(const struct 
+print_callbacks *print_cb __maybe_unus
+         struct dirent **sys_namelist = NULL;
+         int sys_items;
 
-But the problem there is that not every sample type has an enum value,
-and I'm not sure it makes sense for things like STREAM_ID. We could do
-some macro magic to reduce the verbosity like:
+-       put_tracing_file(events_path);
+         if (events_fd < 0) {
+                 pr_err("Error: failed to open tracing events directory\n");
++               pr_err("%s: %s\n", events_path, strerror(errno));
+                 return;
+         }
++       put_tracing_file(events_path);
 
-#define SAMPLE_CASE(x) \
-    case PBF_TERM_##x: \
-        if ((data->sample_flags & PERF_SAMPLE_x) =3D=3D 0) \
-            return 0
+         sys_items = tracing_events__scandir_alphasort(&sys_namelist);
 
-But I thought that made the code harder to read given the relatively
-small number of sample cases.
+Here are the motivations:
+
+I met "Error: failed to open tracing events directory" twice when execute
+"perf list", the first reason is there is no "/sys/kernel/tracing/events"
+directory due to it does not enable the kernel tracing infrastructure
+with CONFIG_FTRACE, the second reason is there is no root privileges, so
+add the error string to tell the users what should to do, and also call
+put_tracing_file() to free events_path a little later to avoid messy code
+in the error message.
+
+(1) Without CONFIG_FTRACE
+
+   $ file /sys/kernel/tracing/events
+   /sys/kernel/tracing/events: cannot open `/sys/kernel/tracing/events' 
+(No such file or directory)
+   # file /sys/kernel/tracing/events
+   /sys/kernel/tracing/events: cannot open `/sys/kernel/tracing/events' 
+(No such file or directory)
+
+
+(2) With CONFIG_FTRACE but no root privileges
+
+   $ file /sys/kernel/tracing/events
+   /sys/kernel/tracing/events: cannot open `/sys/kernel/tracing/events' 
+(Permission denied)
+   # file /sys/kernel/tracing/events
+   /sys/kernel/tracing/events: directory
+
+Before:
+
+   $ ./perf list
+   Error: failed to open tracing events directory
+
+After:
+
+(1) Without CONFIG_FTRACE
+
+   $ ./perf list
+   Error: failed to open tracing events directory
+   /sys/kernel/tracing//events: No such file or directory
+
+(2) With CONFIG_FTRACE but no root privileges
+
+   $ ./perf list
+   Error: failed to open tracing events directory
+   /sys/kernel/tracing//events: Permission denied
+
+At the same time, maybe it needs to do the following tiny change
+to avoid duplicate "/" in the file path.
+
+-- >8 --
+diff --git a/tools/lib/api/fs/tracing_path.c 
+b/tools/lib/api/fs/tracing_path.c
+index 30745f35d0d2..834fd64c7130 100644
+--- a/tools/lib/api/fs/tracing_path.c
++++ b/tools/lib/api/fs/tracing_path.c
+@@ -69,7 +69,7 @@ char *get_tracing_file(const char *name)
+  {
+         char *file;
+
+-       if (asprintf(&file, "%s/%s", tracing_path_mount(), name) < 0)
++       if (asprintf(&file, "%s%s", tracing_path_mount(), name) < 0)
+                 return NULL;
+
+         return file;
+
+Before:
+
+   /sys/kernel/tracing//events
+
+After:
+
+   /sys/kernel/tracing/events
 
 Thanks,
-Ian
+Tiezhu
 
-> Thanks,
-> Namhyung
->
->
-> >                 return kctx->data->ip;
-> > -       case PERF_SAMPLE_ID:
-> > +       case PBF_TERM_ID:
-> > +               if ((data->sample_flags & PERF_SAMPLE_ID) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->id;
-> > -       case PERF_SAMPLE_TID:
-> > +       case PBF_TERM_TID:
-> > +               if ((data->sample_flags & PERF_SAMPLE_TID) =3D=3D 0)
-> > +                       return 0;
-> >                 if (entry->part)
-> >                         return kctx->data->tid_entry.pid;
-> >                 else
-> >                         return kctx->data->tid_entry.tid;
-> > -       case PERF_SAMPLE_CPU:
-> > +       case PBF_TERM_CPU:
-> > +               if ((data->sample_flags & PERF_SAMPLE_CPU) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->cpu_entry.cpu;
-> > -       case PERF_SAMPLE_TIME:
-> > +       case PBF_TERM_TIME:
-> > +               if ((data->sample_flags & PERF_SAMPLE_TIME) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->time;
-> > -       case PERF_SAMPLE_ADDR:
-> > +       case PBF_TERM_ADDR:
-> > +               if ((data->sample_flags & PERF_SAMPLE_ADDR) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->addr;
-> > -       case PERF_SAMPLE_PERIOD:
-> > +       case PBF_TERM_PERIOD:
-> > +               if ((data->sample_flags & PERF_SAMPLE_PERIOD) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->period;
-> > -       case PERF_SAMPLE_TRANSACTION:
-> > +       case PBF_TERM_TRANSACTION:
-> > +               if ((data->sample_flags & PERF_SAMPLE_TRANSACTION) =3D=
-=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->txn;
-> > -       case PERF_SAMPLE_WEIGHT_STRUCT:
-> > +       case PBF_TERM_WEIGHT_STRUCT:
-> > +               if ((data->sample_flags & PERF_SAMPLE_WEIGHT_STRUCT) =
-=3D=3D 0)
-> > +                       return 0;
-> >                 if (entry->part =3D=3D 1)
-> >                         return kctx->data->weight.var1_dw;
-> >                 if (entry->part =3D=3D 2)
-> > @@ -80,15 +99,25 @@ static inline __u64 perf_get_sample(struct bpf_perf=
-_event_data_kern *kctx,
-> >                 if (entry->part =3D=3D 3)
-> >                         return kctx->data->weight.var3_w;
-> >                 /* fall through */
-> > -       case PERF_SAMPLE_WEIGHT:
-> > +       case PBF_TERM_WEIGHT:
-> > +               if ((data->sample_flags & PERF_SAMPLE_WEIGHT) =3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->weight.full;
-> > -       case PERF_SAMPLE_PHYS_ADDR:
-> > +       case PBF_TERM_PHYS_ADDR:
-> > +               if ((data->sample_flags & PERF_SAMPLE_PHYS_ADDR) =3D=3D=
- 0)
-> > +                       return 0;
-> >                 return kctx->data->phys_addr;
-> > -       case PERF_SAMPLE_CODE_PAGE_SIZE:
-> > +       case PBF_TERM_CODE_PAGE_SIZE:
-> > +               if ((data->sample_flags & PERF_SAMPLE_CODE_PAGE_SIZE) =
-=3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->code_page_size;
-> > -       case PERF_SAMPLE_DATA_PAGE_SIZE:
-> > +       case PBF_TERM_DATA_PAGE_SIZE:
-> > +               if ((data->sample_flags & PERF_SAMPLE_DATA_PAGE_SIZE) =
-=3D=3D 0)
-> > +                       return 0;
-> >                 return kctx->data->data_page_size;
-> > -       case PERF_SAMPLE_DATA_SRC:
-> > +       case PBF_TERM_DATA_SRC:
-> > +               if ((data->sample_flags & PERF_SAMPLE_DATA_SRC) =3D=3D =
-0)
-> > +                       return 0;
-> >                 if (entry->part =3D=3D 1)
-> >                         return kctx->data->data_src.mem_op;
-> >                 if (entry->part =3D=3D 2)
-> > --
-> > 2.45.0.rc1.225.g2a3ae87e7f-goog
-> >
