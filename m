@@ -1,54 +1,53 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B46E637;
-	Sat, 18 May 2024 01:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE017BD8;
+	Sat, 18 May 2024 01:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715995323; cv=none; b=EF6jDzkyZ65d6VOyupsBqDc7DltoyHqRzb/VOu3v5isqgrq/BMB4xIkfCO4FL0r3YoVaGwqlYxtldq1RXmhxateOTwRKmq/ogbdiwzm5AI4syHFnV5PYGDiHlkHBFkijvp0yOLydSFZo40uLx4pjZpoz2uJdvZ53/v5snzH7gU0=
+	t=1715995530; cv=none; b=rze+DYYa4F+VyxzE89PMuVwWvcf680BixtuqhgR8C74LgMVY3Zew1qPYdfRewy/1AjRI/3gFqDl1OzH1qUfPN/2MqhOwHk81a/aBClYlmi5wRv0+aK4c9Oi7IRCbT0ZOC4mA8YyYc6AcbkTB5iZIEv2sSJ6W9vgHbpJ3n6zNzMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715995323; c=relaxed/simple;
-	bh=ElhXaKsS1+9DXmfAIxHjuyBWoUf40Xp5dX2TRm/4xnA=;
+	s=arc-20240116; t=1715995530; c=relaxed/simple;
+	bh=gGNCAEgaGSxKyK0M3Wz3dzLTm+3bFkC1PBZmGZGNEuQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rn+6k4aVI/dYkj9d3lCActjttFv78sCsdfgoHX6XdQ91vNR8KpZ1iJ+p6MTH2+kofyW0BpZlp2raKwp3dw8kUhsZ64HR+DKXZ8a1q/voRoOn+PwsvFws72+6+PeVJkO3U1mD7k7qchpPX69eMhsYMdOI0FSX+EriiybfVWWbgBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=FW1UIdRH7YU9qqORUZGT+msWlh+bp3YTBiwsCdsO2EHyP7loQy0HSnbHJHupR4ZDINNBF84oZzLfXMFzj95Shc/YkS5Z9FAJlo9SPTR9N/V1Z4Hc7bUIal+Ln4aWvMopzoKpGxKr2xa7QJpovBwfrQhFfmjOhA2CkMYJN0FfHPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ee954e0aa6so27076885ad.3;
-        Fri, 17 May 2024 18:22:01 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ee5235f5c9so26365325ad.2;
+        Fri, 17 May 2024 18:25:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715995321; x=1716600121;
+        d=1e100.net; s=20230601; t=1715995528; x=1716600328;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2hc0SNlsLadEAwSJsJkJ0F+sA68E81mxz5OGr/0vCeI=;
-        b=FV01LO2ToJpau07BPXN4t284mogm69zM5sqvk4dynWByOKOEg+8gQlnmNb0gbraeBM
-         HYkTua+429ozIrV4dJcZ4IZSmmnVgeSgvVeKlauVtVWmkar00voVCW8RUmZaVzr/tgUa
-         uJUxfiNQmbaARtu9Q5yuvGrZungYW/73HphjqZypkpr+6m2B8AvVGEpOvEu5qH67+KV7
-         eXkP+t6OpjU0nwsYSaL7erXPihnIgtjCIic4U6BoM+PlvxbFGkPiCJjZmi6mrxxqqLSn
-         r3X66iJZmI5va86zkNdFaloquyKdrdLoDp04gFhfndbk/wc/Fj4jBa0u+O1Fy7oKCFIR
-         aVbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJeIRgrVblGgPuHXroxqXCLu2Rf0FKyMIX2w0JzJCcHMEODlE7SH8nPfntSoxON0dZg1iBDdbKCCA4wu64XoKMKWEDVXZtgbDGOKxuzUAdqhcjmgezfgdyCVBRFHYOsbJD/YyTwVCJu5XczCcNJd3C6Da8hOHMs4igAI6lwCBUpC7enw==
-X-Gm-Message-State: AOJu0YxKJq8kddk0OCGtBOU/0MRQJPIigx6Ob5p+970n2/mZ6e+PmQ7p
-	G3S3KC+7OAXV8JzO3gUT6eQqLJ9M45iDvDWnfPREDzesy9PV8t/ursk2WqGDSOd+8KwLDmii8ey
-	N6yeQ3iJoaJsgm9uMrtmx9SNruCI=
-X-Google-Smtp-Source: AGHT+IE0d41KlXtAOA3EnUT5tFEzESh1XTS/75pcgKnYzszaKX7EC6DEt/owS960AUGa6kFY7l2W6eyQ5y1LDiIsH90=
-X-Received: by 2002:a17:902:d2c4:b0:1e6:40f1:9357 with SMTP id
- d9443c01a7336-1ef43d2e3acmr276615955ad.8.1715995321085; Fri, 17 May 2024
- 18:22:01 -0700 (PDT)
+        bh=wDQUikeYfqwULYL/qwCY+3xaT+gF8SPJCPZumyWDdUk=;
+        b=FCAiDC5hgfp3+eS6Kb5ODRkvwFOCmYOdyneAe3CiGWUh3e/vC7QGP+m3blZg+BAQnO
+         ksiYVZr/Fh4OxjlQ/5cOCYcR+eiikhDiCgZswvjSie83OV7ThZ7n8zfp1jIQZG31ft7F
+         oAc6w+W9M4QuEDQwTLVqqN1Q+cFK9pbLNKR1lvwZkNTUieHQePTWkDUz9oXH3jjVThRl
+         hEGqL3pzaDrMzEiVDYGoQUn61gxjs6QZ++jmxU8hvPFpfuDxKfiuNMd3CtIRp0AbQ82X
+         Szga1dhxbp9wCxzmydvcoKm/8bgtv+Y5/ROjmZnhP6s91QRF4BQ0Gse0BeXjTC9FHzki
+         WWgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkVBUpOku+RVuqwYNMah7hVQZAjgDmt8grMu2TaMu8MHWavpG5YxeGfqDP5saN4G5wVUT4pwn4SJ8bImGoVhkXEhswjhtmJErgGYq6FB/K5v9eD9WsosFZWv57fVQ12wpJHWwg76f8TDx3YeswIA==
+X-Gm-Message-State: AOJu0YxV46NglVEhprIojIqmYHxl7XZIob2wJ9bn6I17m3Ih3Sqh58oP
+	bpaDNu7YXaVj14ttB4fNeG2ktzcvnXxPKgtgOpOaEc5VClwnpnf2rcmI1zgzHQaPzs9ugp34I3W
+	cQNCL4Y9PE0hOQUN9nDdUrs//DG4=
+X-Google-Smtp-Source: AGHT+IFwOVd1uEMDUiybxFimYcY2r3+FQ7f1CvTi3jQ9aJ4dJZpzWLBu91Wi32U5zPg1qEEqYE7ple4CezomiKO17bc=
+X-Received: by 2002:a05:6a21:18c:b0:1af:8a3a:35d7 with SMTP id
+ adf61e73a8af0-1afde1b6ec5mr22884415637.39.1715995527739; Fri, 17 May 2024
+ 18:25:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516041948.3546553-1-irogers@google.com> <CAP-5=fW8TA0KQOepQRuC_0mhyp6kHbPodh+6-uoVxsmC=09tTw@mail.gmail.com>
- <CAP-5=fUBJOaE3Tp1NP4Urdt-r_kHEaR00aTKxMrvfe_0fyPxYA@mail.gmail.com>
-In-Reply-To: <CAP-5=fUBJOaE3Tp1NP4Urdt-r_kHEaR00aTKxMrvfe_0fyPxYA@mail.gmail.com>
+References: <20240516222159.3710131-1-irogers@google.com>
+In-Reply-To: <20240516222159.3710131-1-irogers@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 17 May 2024 18:21:50 -0700
-Message-ID: <CAM9d7cjYcOuZOU_vFf8oFJjbTb62pGqTWSVopNAus6waXqSS+A@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
+Date: Fri, 17 May 2024 18:25:16 -0700
+Message-ID: <CAM9d7chsZ3EDRYW=YEJBd7wCYRLWNqMOFt33C=ghaY_UqZvGKA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf top: Make zeroing histogram on refresh the default
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -56,117 +55,191 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	Changbin Du <changbin.du@huawei.com>, John Fastabend <john.fastabend@gmail.com>, 
 	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-On Thu, May 16, 2024 at 10:34=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Thu, May 16, 2024 at 3:22=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Wed, May 15, 2024 at 10:04=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > On Wed, May 15, 2024 at 9:20=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > Allow uid and gid to be terms in BPF filters by first breaking the
-> > > connection between filter terms and PERF_SAMPLE_xx values. Calculate
-> > > the uid and gid using the bpf_get_current_uid_gid helper, rather than
-> > > from a value in the sample. Allow filters to be passed to perf top, t=
-his allows:
-> > >
-> > > $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
-> > >
-> > > to work as a "perf top -u" workaround, as "perf top -u" usually fails
-> > > due to processes/threads terminating between the /proc scan and the
-> > > perf_event_open.
-> >
-> > Fwiw, something I noticed playing around with this (my workload was
-> > `perf test -w noploop 100000` as different users) is that old samples
-> > appeared to linger around making terminated processes still appear in
-> > the top list. My guess is that there aren't other samples showing up
-> > and pushing the old sample events out of the ring buffers due to the
-> > filter. This can look quite odd and I don't know if we have a way to
-> > improve upon it, flush the ring buffers, histograms, etc. It appears
-> > to be a latent `perf top` issue that you could encounter on other low
-> > frequency events, but I thought I'd mention it anyway.
->
-> Some other thoughts:
->
->  - It is kind of annoying with the --filter option (either on top or
-> record) that there first needs to be an event to filter on. It'd be
-> nice if we could just filter the default event.
+> Instead of decaying histograms over time change it so that they are
+> zero-ed on each perf top refresh. Previously the option '-z', or
+> pressing 'z' in tui mode, would enable this behavior. Decaying samples
+> is non-intuitive as it isn't how "top" works. Make zeroing on refresh
+> the default and rename the command line options from 'z' to 'Z' and
+> 'zero' to 'decay'.
 
-Hmm.. right.  It should work with the default event when
-no -e option is given.
+While it may make more sense, I'm afraid of changing the default
+behavior.  I think we can add a config option for this.
 
->
->  - Should "perf top --uid=3D1234" be removed or turned into  an alias
-> for '--filter "uid =3D=3D $(id -u)"' given the --uid option generally
-> doesn't work?
-
-I think --uid should not fail if it cannot find the task.
-I had a similar situation for perf stat --for-each-cgroup
-and made it ignore the failures.
-
->
->  - What should happen to the perf top --pid and --tid options, should
-> they be filters? Should they fallback on /proc scanning if there
-> aren't sufficient BPF permissions? The plumbing for that is going to
-> be messy.
-
-I'm not inclined to do such things.
-
->
->  - There should probably be a way to filter on cgroups.
-
-+1
-
->
->  - Does the user care that there are 3 kinds of filter that will work
-> differently? Could we break them apart to make it more explicit, I may
-> want tracepoint events with a BPF filter. How can we ensure 1 syntax
-> for the 3 kinds of filter.
->
->  - Filtering on register values could be potentially interesting, for
-> example, sampling on memcpy-s where the length is over a threshold. We
-> have a register capture test:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/tests/shell/record.sh#n81
-> Perhaps the filter could look something like 'perf record -g -e
-> mem:$ADDRESS_OF_MEMCPY:x --filter "reg:rdx > 1024"' -  this makes me
-> think we need to make a more convenient way to specify memory
-> addresses as symbols.
-
-I've been thinking about a similar idea on uftrace.
-It would filter the function based on the value of an
-argument or a global variable.
+Also instead of adding a new option, it should be able to use the
+existing --no-zero option.
 
 Thanks,
 Namhyung
 
-
-> >
-> > > Ian Rogers (3):
-> > >   perf bpf filter: Give terms their own enum
-> > >   perf bpf filter: Add uid and gid terms
-> > >   perf top: Allow filters on events
-> > >
-> > >  tools/perf/Documentation/perf-record.txt     |  2 +-
-> > >  tools/perf/Documentation/perf-top.txt        |  4 ++
-> > >  tools/perf/builtin-top.c                     |  9 +++
-> > >  tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
-> > >  tools/perf/util/bpf-filter.h                 |  5 +-
-> > >  tools/perf/util/bpf-filter.l                 | 66 +++++++++---------=
--
-> > >  tools/perf/util/bpf-filter.y                 |  7 +-
-> > >  tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
-> > >  tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++---=
---
-> > >  9 files changed, 172 insertions(+), 70 deletions(-)
-> > >
-> > > --
-> > > 2.45.0.rc1.225.g2a3ae87e7f-goog
-> > >
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/perf-top.txt |  6 +++---
+>  tools/perf/builtin-top.c              | 23 +++++++++++++----------
+>  tools/perf/ui/browsers/hists.c        |  7 ++++---
+>  tools/perf/util/top.h                 |  2 +-
+>  4 files changed, 21 insertions(+), 17 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documenta=
+tion/perf-top.txt
+> index 667e5102075e..f1524cc0d409 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -124,9 +124,9 @@ Default is to monitor all CPUS.
+>  --verbose::
+>         Be more verbose (show counter open errors, etc).
+>
+> --z::
+> ---zero::
+> -       Zero history across display updates.
+> +-Z::
+> +--decay::
+> +       Decay rather than zero history across display updates.
+>
+>  -s::
+>  --sort::
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index e8cbbf10d361..8f06635cb7cd 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -266,10 +266,10 @@ static void perf_top__show_details(struct perf_top =
+*top)
+>         more =3D symbol__annotate_printf(&he->ms, top->sym_evsel);
+>
+>         if (top->evlist->enabled) {
+> -               if (top->zero)
+> -                       symbol__annotate_zero_histogram(symbol, top->sym_=
+evsel->core.idx);
+> -               else
+> +               if (top->decay_samples)
+>                         symbol__annotate_decay_histogram(symbol, top->sym=
+_evsel->core.idx);
+> +               else
+> +                       symbol__annotate_zero_histogram(symbol, top->sym_=
+evsel->core.idx);
+>         }
+>         if (more !=3D 0)
+>                 printf("%d lines not displayed, maybe increase display en=
+tries [e]\n", more);
+> @@ -292,11 +292,11 @@ static void perf_top__resort_hists(struct perf_top =
+*t)
+>                 hists__unlink(hists);
+>
+>                 if (evlist->enabled) {
+> -                       if (t->zero) {
+> -                               hists__delete_entries(hists);
+> -                       } else {
+> +                       if (t->decay_samples) {
+>                                 hists__decay_entries(hists, t->hide_user_=
+symbols,
+>                                                      t->hide_kernel_symbo=
+ls);
+> +                       } else {
+> +                               hists__delete_entries(hists);
+>                         }
+>                 }
+>
+> @@ -460,7 +460,9 @@ static void perf_top__print_mapped_keys(struct perf_t=
+op *top)
+>         fprintf(stdout,
+>                 "\t[U]     hide user symbols.               \t(%s)\n",
+>                 top->hide_user_symbols ? "yes" : "no");
+> -       fprintf(stdout, "\t[z]     toggle sample zeroing.             \t(=
+%d)\n", top->zero ? 1 : 0);
+> +       fprintf(stdout,
+> +               "\t[z]     toggle sample zeroing/decaying.  \t(%s)\n",
+> +               top->decay_samples ? "decay" : "zero");
+>         fprintf(stdout, "\t[qQ]    quit.\n");
+>  }
+>
+> @@ -583,7 +585,7 @@ static bool perf_top__handle_keypress(struct perf_top=
+ *top, int c)
+>                         top->hide_user_symbols =3D !top->hide_user_symbol=
+s;
+>                         break;
+>                 case 'z':
+> -                       top->zero =3D !top->zero;
+> +                       top->decay_samples =3D !top->decay_samples;
+>                         break;
+>                 default:
+>                         break;
+> @@ -648,7 +650,7 @@ static void *display_thread_tui(void *arg)
+>         ret =3D evlist__tui_browse_hists(top->evlist, help, &hbt, top->mi=
+n_percent,
+>                                        &top->session->header.env, !top->r=
+ecord_opts.overwrite);
+>         if (ret =3D=3D K_RELOAD) {
+> -               top->zero =3D true;
+> +               top->decay_samples =3D false;
+>                 goto repeat;
+>         } else
+>                 stop_top();
+> @@ -1502,7 +1504,8 @@ int cmd_top(int argc, const char **argv)
+>                     "child tasks do not inherit counters"),
+>         OPT_STRING(0, "sym-annotate", &top.sym_filter, "symbol name",
+>                     "symbol to annotate"),
+> -       OPT_BOOLEAN('z', "zero", &top.zero, "zero history across updates"=
+),
+> +       OPT_BOOLEAN('Z', "decay", &top.decay_samples,
+> +                   "decay rather than zero history across updates"),
+>         OPT_CALLBACK('F', "freq", &top.record_opts, "freq or 'max'",
+>                      "profile at this frequency",
+>                       record__parse_freq),
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
+s.c
+> index b7219df51236..bcc4720f8198 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -2305,8 +2305,8 @@ static int hists_browser__scnprintf_title(struct hi=
+st_browser *browser, char *bf
+>                                      " drop: %" PRIu64 "/%" PRIu64,
+>                                      top->drop, top->drop_total);
+>
+> -               if (top->zero)
+> -                       printed +=3D scnprintf(bf + printed, size - print=
+ed, " [z]");
+> +               if (top->decay_samples)
+> +                       printed +=3D scnprintf(bf + printed, size - print=
+ed, " [decay]");
+>
+>                 perf_top__reset_sample_counters(top);
+>         }
+> @@ -3209,9 +3209,10 @@ static int evsel__hists_browse(struct evsel *evsel=
+, int nr_events, const char *h
+>                         continue;
+>                 case 'z':
+>                         if (!is_report_browser(hbt)) {
+> +                               /* Toggle between zeroing and decaying sa=
+mples. */
+>                                 struct perf_top *top =3D hbt->arg;
+>
+> -                               top->zero =3D !top->zero;
+> +                               top->decay_samples =3D !top->decay_sample=
+s;
+>                         }
+>                         continue;
+>                 case 'L':
+> diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+> index 4c5588dbb131..b2c199925b36 100644
+> --- a/tools/perf/util/top.h
+> +++ b/tools/perf/util/top.h
+> @@ -32,7 +32,7 @@ struct perf_top {
+>         u64                guest_us_samples, guest_kernel_samples;
+>         int                print_entries, count_filter, delay_secs;
+>         int                max_stack;
+> -       bool               hide_kernel_symbols, hide_user_symbols, zero;
+> +       bool               hide_kernel_symbols, hide_user_symbols, decay_=
+samples;
+>  #ifdef HAVE_SLANG_SUPPORT
+>         bool               use_tui;
+>  #endif
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
