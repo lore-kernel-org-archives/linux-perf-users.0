@@ -1,54 +1,54 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DAC4597F
-	for <linux-perf-users@vger.kernel.org>; Sat, 18 May 2024 16:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C17D5380F
+	for <linux-perf-users@vger.kernel.org>; Sat, 18 May 2024 16:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716051227; cv=none; b=aP/gb1mCrLZnuYgeS1lGu+f/TgMzl2Dcg3QyeZPoIt/TbLwu3mmAeVpnpBVIzGEmc5XPg13UkARA5t9h3mXfBpVD9nd3Mx/7Iv/w1Hs3HQpj9Ucst7GUShGgbcfJJbNCyc8HvmGYlaV4PrtjVibelXLfMoEiZe7A6qeywFAJFmM=
+	t=1716051240; cv=none; b=ike+4WQQTgsUO5I4YbJwh5s9s3imQ7lyiVduDrEWabXlLKn+AA6kHBbM3qYkMXxge84o5an1R3I6ZyGXov/I8zgTr++SmMg3Gd3/yBkVdyOQjdp9okXc7N7Mp+HxRuChBL+AoDq565j/sBBy4Hmahhjb4MqkIJFqQ8JuIPACmGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716051227; c=relaxed/simple;
-	bh=eu6ojl58i6PaNBkZTsBa65l6mv2Xh7vqwl4uDCER8f0=;
+	s=arc-20240116; t=1716051240; c=relaxed/simple;
+	bh=Q7AeBTIc3Kph+sdRMxLHAWbNXOv+EoCcxfmZ2rigwAo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=He9UXGZeWtIM0ywE/caZvlcpMqrSPd2XKOQtS21PO9Z1dhGzAAg5anDlHMYwcjaXRwxuXH1hQfz3Q9+ANPsNBivTHXuaWATBwYM2UG/8gu3Dbd+4jPmE1ZxkTaf3r78HVnRucAveua/TB149kfVsFe49Zq5ODchczXFdiSuNZtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcHrBW4r; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=Co5cFmey8YdQJ14qQ5/0R2jrRWc3l+yS+vcnbbvBZeT4PWSDatqDSltTotgo3s6o5MKKFEG4qYAbv63owkbqj3dIxVl1U0LkzFdH6G4n+4AOaCBJeyxkeiQF+esf5Z+YH4HUlygO+0l7AVBuF2pRaBWepYC5rcVqdxvfO+KfBxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J5nmeltu; arc=none smtp.client-ip=209.85.208.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcHrBW4r"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b269686aso15819193276.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 18 May 2024 09:53:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J5nmeltu"
+Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-2e7185089daso4209511fa.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 18 May 2024 09:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716051224; x=1716656024; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1716051236; x=1716656036; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t3v7Wla8eK6FwuQ+NrrrAEqVqGJsnfekL6/dutIVE2c=;
-        b=XcHrBW4r9fJG5mnWlQpMLwsrM/NAkf8YWOj/41FYgC3mHwCmgwP+d978PDGgyey+Ue
-         YFIyfiN9Tk+NGhqNUuKvUarwifMjFTI+55PYWoWZo9ahBjfyE9vAe6D7jZ9UiNb7pnmx
-         OZ1gtqYrh5NSQFVUmv8Qa2J8bpoPLMQSY0s9oGyVylXAvHpK9c4TlyTopJUNiDNK0cug
-         G8qIc9jCQEolgl8ElaiPw02tB/q0sDyuLqm4lyb89CrTzDo4Zfofhq1dgfksX1TBsdG9
-         xM4sBZsphXnobOjHjoAVbofkLcGzlNMOOhlfoXUfWvVHg9sNZhfTX5eR4OJhtcqRNVw0
-         0zUg==
+        bh=wDUCU2IZuVVfbSzWBNAUbbWtH9RP6Wrnqfm90Qebwss=;
+        b=J5nmeltutCZu1DFMJlZf316PiHGFOdP8j/ZrV4i+xCxGdC4LxG5GfFGhACMlZHNcgn
+         ImNOwGQmYB17kFiyN1CZ/TDuCA+koP9N75AuoL8U0Wj6a/JbzIaHBCB228V+klbsWwfS
+         Lo4ycrzqCCGzivcmzf1eWRMoz/r9HPOC8oLC5XjByKp3w08tPQdB9z5T1JE3MlLwVhmt
+         gHSJaHPccD6Kgy1haOjBddBn4OKWf/96HmdWCpuptIkjUz2v+zu3LSQ4iFV+WLLT3BQw
+         teAnrMs340ARDrr9YSh+j2U6VsmO3V9si2nEJDNv0bwCHgZ94z3e/Aq8PiDXffdZrrT4
+         k59A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716051224; x=1716656024;
+        d=1e100.net; s=20230601; t=1716051236; x=1716656036;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t3v7Wla8eK6FwuQ+NrrrAEqVqGJsnfekL6/dutIVE2c=;
-        b=DS3kJ0WIoQ3YCQUZtomoTUnPTaF8B1mTuXkwysuhaU3eTt6zLK+yKcC73nkzOtH5jk
-         FcPh2FbqtMlDRbT3klxXun+kivewcuhGZLNnAs01tagj9pIUnqMtPRMvXzAw/w5T1gfY
-         uwmKuCAC/Kcj8hayyWXxt3pmHQh61ham03x4Yxh2dLfO5YqbrsqxOfFkUPLZxvxSzdPQ
-         l/O7YvQ2ebEoEscIbERtYReo9+EsocWWq3ckcIpYClPnmAIGWIpWOwh2FPDzeMK+vVaQ
-         we09kD1n6A6UroTR9bFntyGpmGv31iez7lvxILTU1yoE6BuGQq2RALkpTvmLM4kfGO8R
-         6G4w==
-X-Gm-Message-State: AOJu0YxlJtp9S6u4zj/UYCOI1GOdR1DRPT4WRRoVn5Ngss07OqvHbqEW
-	51UrsOCkiupjm4WdbLbU2l8erOv9LlLT0HA/Qt91Rx9rykmr6PkBKpCEUFSsmv6ORlcNe0dBcQ=
+        bh=wDUCU2IZuVVfbSzWBNAUbbWtH9RP6Wrnqfm90Qebwss=;
+        b=WIfrot9GOfkmnVIWaEdue8rdjdu8T2bWJUE7uBUNd67qFFURqcikydEIsYhEUgUG6B
+         1bMUGhRV/ywHx37UdBnRkRyHKAo/C8D69xKS3SuI2cSEOyFJosQ1CiyuBx+UUM13Ne8n
+         HXeXdktK7SEa5PG+361Cw45kkgZIEj7v1na4kjrZfvTfQcjr1WisYWSjFPNzKj+ftwkB
+         QTo024Fl66YgB4i5I2Fzrex0OL+NPFUncwlsK8UIzOIZAmB/ZfGgGOuhyxHrKJodGWEW
+         jCJJX9v0wjFjwnqI7GoRTiIDp3DdJygFRxLYJrtMt6hvS9v2PxhRU56y1EDpL+27WCeh
+         mUOw==
+X-Gm-Message-State: AOJu0YxCVcgsGHLemlu3zhCVN2MHO0uhrI2vFvkZe1l2VHRk3LtEMvk4
+	Klz8t9eOcIb3uSXIIB5Ed+VLZvdYPry7DHrzVO/rERYP0f+hN2GoiyNewjTyedlFsGlcT9vEIA=
 	=
-X-Google-Smtp-Source: AGHT+IEEIPCNIscfY8ZfqwDY04Qp+V/cf3hGM6nbAO2vqNbQ9+4crpfyNW7EO56ldGp7kPx1QkCoa0wpSg==
+X-Google-Smtp-Source: AGHT+IFhESDNYhXl1PFya79Rb8TocnMFXfTPnmDntyz54piO9TwVYJE3hRaclBxZCdY7gRonI8iFCZJBJQ==
 X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:8b68:8208:4316:d53b])
- (user=sesse job=sendgmr) by 2002:a05:6902:1002:b0:df4:8cef:8c54 with SMTP id
- 3f1490d57ef6-df48cef8eb9mr406915276.8.1716051224603; Sat, 18 May 2024
- 09:53:44 -0700 (PDT)
-Date: Sat, 18 May 2024 18:53:34 +0200
+ (user=sesse job=sendgmr) by 2002:a05:651c:19ac:b0:2e0:f463:3e1b with SMTP id
+ 38308e7fff4ca-2e51f262c5amr293761fa.0.1716051236139; Sat, 18 May 2024
+ 09:53:56 -0700 (PDT)
+Date: Sat, 18 May 2024 18:53:35 +0200
 In-Reply-To: <20240518165335.3963530-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,159 +58,385 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240518165335.3963530-1-sesse@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240518165335.3963530-2-sesse@google.com>
-Subject: [PATCH v2 2/3] perf annotate: split out read_symbol()
+Message-ID: <20240518165335.3963530-3-sesse@google.com>
+Subject: [PATCH v2 3/3] perf annotate: LLVM-based disassembler
 From: "Steinar H. Gunderson" <sesse@google.com>
 To: acme@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The Capstone disassembler code has a useful code snippet to read
-the bytes for a given code symbol into memory. Split it out into
-its own function, so that the LLVM disassembler can use it in
-the next patch.
+Support using LLVM as a disassembler method, allowing helperless
+annotation in non-distro builds. (It is also much faster than
+using libbfd or bfd objdump on binaries with a lot of debug
+information.)
+
+This is nearly identical to the output of llvm-objdump; there are
+some very rare whitespace differences, some minor changes to demangling
+(since we use perf's regular demangling and not LLVM's own) and
+the occasional case where llvm-objdump makes a different choice
+when multiple symbols share the same address. It should work across
+all of LLVM's supported architectures, although I've only tested 64-bit
+x86, and finding the right triple from perf's idea of machine
+architecture can sometimes be a bit tricky. Ideally, we should have
+some way of finding the triplet just from the file itself.
 
 Signed-off-by: Steinar H. Gunderson <sesse@google.com>
 ---
- tools/perf/util/disasm.c | 90 +++++++++++++++++++++++++---------------
- 1 file changed, 56 insertions(+), 34 deletions(-)
+ tools/perf/util/disasm.c           | 195 +++++++++++++++++++++++++++++
+ tools/perf/util/llvm-c-helpers.cpp |  62 +++++++++
+ tools/perf/util/llvm-c-helpers.h   |  11 ++
+ 3 files changed, 268 insertions(+)
 
 diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 72aec8f61b94..c0dbb955e61a 100644
+index c0dbb955e61a..9c07d2a8c8a8 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -1396,6 +1396,53 @@ static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
+@@ -43,6 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+ 
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
++static char *expand_tabs(char *line, char **storage, size_t *storage_len);
+ 
+ static __attribute__((constructor)) void symbol__init_regexpr(void)
+ {
+@@ -1378,7 +1379,9 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
+ 
  	return 0;
  }
++#endif
  
-+static u8 *
-+read_symbol(const char *filename, struct map *map, struct symbol *sym,
-+	    u64 *len, bool *is_64bit)
-+{
-+	struct dso *dso = map__dso(map);
-+	struct nscookie nsc;
-+	u64 start = map__rip_2objdump(map, sym->start);
-+	u64 end = map__rip_2objdump(map, sym->end);
-+	int fd, count;
-+	u8 *buf = NULL;
-+	struct find_file_offset_data data = {
-+		.ip = start,
-+	};
-+
-+	*is_64bit = false;
-+
-+	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-+	fd = open(filename, O_RDONLY);
-+	nsinfo__mountns_exit(&nsc);
-+	if (fd < 0)
-+		return NULL;
-+
-+	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
-+			    is_64bit) == 0)
-+		goto err;
-+
-+	*len = end - start;
-+	buf = malloc(*len);
-+	if (buf == NULL)
-+		goto err;
-+
-+	count = pread(fd, buf, *len, data.offset);
-+	close(fd);
-+	fd = -1;
-+
-+	if ((u64)count != *len)
-+		goto err;
-+
-+	return buf;
-+
-+err:
-+	if (fd >= 0)
-+		close(fd);
-+	free(buf);
-+	return NULL;
-+}
-+
++#if defined(HAVE_LIBCAPSTONE_SUPPORT) || defined(HAVE_LLVM_SUPPORT)
+ struct find_file_offset_data {
+ 	u64 ip;
+ 	u64 offset;
+@@ -1442,7 +1445,9 @@ read_symbol(const char *filename, struct map *map, struct symbol *sym,
+ 	free(buf);
+ 	return NULL;
+ }
++#endif
+ 
++#ifdef HAVE_LIBCAPSTONE_SUPPORT
  static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
  				  struct annotate_args *args, u64 addr)
  {
-@@ -1458,19 +1505,13 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- {
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct map *map = args->ms.map;
--	struct dso *dso = map__dso(map);
--	struct nscookie nsc;
- 	u64 start = map__rip_2objdump(map, sym->start);
--	u64 end = map__rip_2objdump(map, sym->end);
--	u64 len = end - start;
+@@ -1606,6 +1611,191 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ }
+ #endif
+ 
++#ifdef HAVE_LLVM_SUPPORT
++#include <llvm-c/Disassembler.h>
++#include <llvm-c/Target.h>
++#include "util/llvm-c-helpers.h"
++
++struct symbol_lookup_storage {
++	u64 branch_addr;
++	u64 pcrel_load_addr;
++};
++
++/*
++ * Whenever LLVM wants to resolve an address into a symbol, it calls this
++ * callback. We don't ever actually _return_ anything (in particular, because
++ * it puts quotation marks around what we return), but we use this as a hint
++ * that there is a branch or PC-relative address in the expression that we
++ * should add some textual annotation for after the instruction. The caller
++ * will use this information to add the actual annotation.
++ */
++static const char *
++symbol_lookup_callback(void *disinfo, uint64_t value,
++		       uint64_t *ref_type,
++		       uint64_t address __maybe_unused,
++		       const char **ref __maybe_unused)
++{
++	struct symbol_lookup_storage *storage =
++		(struct symbol_lookup_storage *)disinfo;
++	if (*ref_type == LLVMDisassembler_ReferenceType_In_Branch)
++		storage->branch_addr = value;
++	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
++		storage->pcrel_load_addr = value;
++	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
++	return NULL;
++}
++
++static int symbol__disassemble_llvm(char *filename, struct symbol *sym,
++				    struct annotate_args *args)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	struct map *map = args->ms.map;
++	struct dso *dso = map__dso(map);
++	u64 start = map__rip_2objdump(map, sym->start);
++	u8 *buf;
 +	u64 len;
- 	u64 offset;
--	int i, fd, count;
-+	int i, count;
- 	bool is_64bit = false;
- 	bool needs_cs_close = false;
- 	u8 *buf = NULL;
--	struct find_file_offset_data data = {
--		.ip = start,
--	};
- 	csh handle;
- 	cs_insn *insn;
- 	char disasm_buf[512];
-@@ -1479,31 +1520,9 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- 	if (args->options->objdump_path)
- 		return -1;
- 
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	fd = open(filename, O_RDONLY);
--	nsinfo__mountns_exit(&nsc);
--	if (fd < 0)
--		return -1;
--
--	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
--			    &is_64bit) == 0)
--		goto err;
--
--	if (open_capstone_handle(args, is_64bit, &handle) < 0)
--		goto err;
--
--	needs_cs_close = true;
--
--	buf = malloc(len);
-+	buf = read_symbol(filename, map, sym, &len, &is_64bit);
- 	if (buf == NULL)
--		goto err;
--
--	count = pread(fd, buf, len, data.offset);
--	close(fd);
--	fd = -1;
--
--	if ((u64)count != len)
--		goto err;
++	u64 pc;
++	bool is_64bit;
++	char triplet[64];
++	char disasm_buf[2048];
++	size_t disasm_len;
++	struct disasm_line *dl;
++	LLVMDisasmContextRef disasm = NULL;
++	struct symbol_lookup_storage storage;
++	char *line_storage = NULL;
++	size_t line_storage_len = 0;
++
++	if (args->options->objdump_path)
 +		return -1;
- 
- 	/* add the function address and name */
- 	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-@@ -1521,6 +1540,11 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- 
- 	annotation_line__add(&dl->al, &notes->src->source);
- 
-+	if (open_capstone_handle(args, is_64bit, &handle) < 0)
++
++	LLVMInitializeAllTargetInfos();
++	LLVMInitializeAllTargetMCs();
++	LLVMInitializeAllDisassemblers();
++
++	buf = read_symbol(filename, map, sym, &len, &is_64bit);
++	if (buf == NULL)
++		return -1;
++
++	if (arch__is(args->arch, "x86")) {
++		if (is_64bit)
++			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
++		else
++			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
++	} else {
++		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
++			  args->arch->name);
++	}
++
++	disasm = LLVMCreateDisasm(
++		triplet, &storage, 0, NULL, symbol_lookup_callback);
++	if (disasm == NULL)
 +		goto err;
 +
-+	needs_cs_close = true;
++	if (args->options->disassembler_style &&
++	    !strcmp(args->options->disassembler_style, "intel"))
++		LLVMSetDisasmOptions(
++			disasm, LLVMDisassembler_Option_AsmPrinterVariant);
 +
- 	count = cs_disasm(handle, buf, len, start, len, &insn);
- 	for (i = 0, offset = 0; i < count; i++) {
- 		int printed;
-@@ -1565,8 +1589,6 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- 	return count < 0 ? count : 0;
++	/*
++	 * This needs to be set after AsmPrinterVariant, due to a bug in LLVM;
++	 * setting AsmPrinterVariant makes a new instruction printer, making it
++	 * forget about the PrintImmHex flag (which is applied before if both
++	 * are given to the same call).
++	 */
++	LLVMSetDisasmOptions(disasm, LLVMDisassembler_Option_PrintImmHex);
++
++	/* add the function address and name */
++	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
++		  start, sym->name);
++
++	args->offset = -1;
++	args->line = disasm_buf;
++	args->line_nr = 0;
++	args->fileloc = NULL;
++	args->ms.sym = sym;
++
++	dl = disasm_line__new(args);
++	if (dl == NULL)
++		goto err;
++
++	annotation_line__add(&dl->al, &notes->src->source);
++
++	pc = start;
++	for (u64 offset = 0; offset < len; ) {
++		unsigned int ins_len;
++
++		storage.branch_addr = 0;
++		storage.pcrel_load_addr = 0;
++
++		ins_len = LLVMDisasmInstruction(
++			disasm, buf + offset, len - offset, pc,
++			disasm_buf, sizeof(disasm_buf));
++		if (ins_len == 0)
++			goto err;
++		disasm_len = strlen(disasm_buf);
++
++		if (storage.branch_addr != 0) {
++			char *name = llvm_name_for_code(
++				dso, filename, storage.branch_addr);
++			if (name != NULL) {
++				disasm_len += scnprintf(
++					disasm_buf + disasm_len,
++					sizeof(disasm_buf) - disasm_len,
++					" <%s>", name);
++				free(name);
++			}
++		}
++		if (storage.pcrel_load_addr != 0) {
++			char *name = llvm_name_for_data(
++				dso, filename, storage.pcrel_load_addr);
++			disasm_len += scnprintf(disasm_buf + disasm_len,
++						sizeof(disasm_buf) - disasm_len,
++						"  # %#"PRIx64,
++						storage.pcrel_load_addr);
++			if (name) {
++				disasm_len += scnprintf(
++					disasm_buf + disasm_len,
++					sizeof(disasm_buf) - disasm_len,
++					" <%s>", name);
++				free(name);
++			}
++		}
++
++		args->offset = offset;
++		args->line = expand_tabs(
++			disasm_buf, &line_storage, &line_storage_len);
++		args->line_nr = 0;
++		args->fileloc = NULL;
++		args->ms.sym = sym;
++
++		llvm_addr2line(filename, pc, &args->fileloc,
++			       (unsigned int *)&args->line_nr, false, NULL);
++
++		dl = disasm_line__new(args);
++		if (dl == NULL)
++			goto err;
++
++		annotation_line__add(&dl->al, &notes->src->source);
++
++		free(args->fileloc);
++		pc += ins_len;
++		offset += ins_len;
++	}
++
++	LLVMDisasmDispose(disasm);
++	free(buf);
++	free(line_storage);
++	return 0;
++
++err:
++	LLVMDisasmDispose(disasm);
++	free(buf);
++	free(line_storage);
++	return -1;
++}
++#endif
++
++
+ /*
+  * Possibly create a new version of line with tabs expanded. Returns the
+  * existing or new line, storage is updated if a new line is allocated. If
+@@ -1730,6 +1920,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		strcpy(symfs_filename, tmp);
+ 	}
  
- err:
--	if (fd >= 0)
--		close(fd);
- 	if (needs_cs_close) {
- 		struct disasm_line *tmp;
++#ifdef HAVE_LLVM_SUPPORT
++	err = symbol__disassemble_llvm(symfs_filename, sym, args);
++	if (err == 0)
++		goto out_remove_tmp;
++#endif
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
+ 	if (err == 0)
+diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
+index 2dafaaa86234..76374b81d75a 100644
+--- a/tools/perf/util/llvm-c-helpers.cpp
++++ b/tools/perf/util/llvm-c-helpers.cpp
+@@ -7,6 +7,7 @@
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM 14. */
+ #include <llvm/DebugInfo/Symbolize/Symbolize.h>
++#include <llvm/Support/TargetSelect.h>
+ #pragma GCC diagnostic pop
  
+ #include <stdio.h>
+@@ -15,6 +16,9 @@
+ #include "symbol_conf.h"
+ #include "llvm-c-helpers.h"
+ 
++extern "C"
++char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
++
+ using namespace llvm;
+ using llvm::symbolize::LLVMSymbolizer;
+ 
+@@ -127,3 +131,61 @@ int llvm_addr2line(const char *dso_name, u64 addr,
+ 		return extract_file_and_line(*res_or_err, file, line);
+ 	}
+ }
++
++static char *
++make_symbol_relative_string(struct dso *dso, const char *sym_name,
++			    u64 addr, u64 base_addr)
++{
++	if (!strcmp(sym_name, "<invalid>"))
++		return NULL;
++
++	char *demangled = dso__demangle_sym(dso, 0, sym_name);
++	if (base_addr && base_addr != addr) {
++		char buf[256];
++		snprintf(buf, sizeof(buf), "%s+0x%lx",
++			 demangled ? demangled : sym_name, addr - base_addr);
++		free(demangled);
++		return strdup(buf);
++	} else {
++		if (demangled)
++			return demangled;
++		else
++			return strdup(sym_name);
++	}
++}
++
++extern "C"
++char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr)
++{
++	LLVMSymbolizer *symbolizer = get_symbolizer();
++	object::SectionedAddress sectioned_addr = {
++		addr,
++		object::SectionedAddress::UndefSection
++	};
++	Expected<DILineInfo> res_or_err =
++		symbolizer->symbolizeCode(dso_name, sectioned_addr);
++	if (!res_or_err) {
++		return NULL;
++	}
++	return make_symbol_relative_string(
++		dso, res_or_err->FunctionName.c_str(),
++		addr, res_or_err->StartAddress.value_or(0));
++}
++
++extern "C"
++char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
++{
++	LLVMSymbolizer *symbolizer = get_symbolizer();
++	object::SectionedAddress sectioned_addr = {
++		addr,
++		object::SectionedAddress::UndefSection
++	};
++	Expected<DIGlobal> res_or_err =
++		symbolizer->symbolizeData(dso_name, sectioned_addr);
++	if (!res_or_err) {
++		return NULL;
++	}
++	return make_symbol_relative_string(
++		dso, res_or_err->Name.c_str(),
++		addr, res_or_err->Start);
++}
+diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
+index f295aa2bcf2d..1098012293e3 100644
+--- a/tools/perf/util/llvm-c-helpers.h
++++ b/tools/perf/util/llvm-c-helpers.h
+@@ -11,6 +11,8 @@
+ extern "C" {
+ #endif
+ 
++struct dso;
++
+ struct llvm_a2l_frame {
+ 	char *filename;
+ 	char *funcname;
+@@ -40,6 +42,15 @@ int llvm_addr2line(const char *dso_name,
+ 		   bool unwind_inlines,
+ 		   struct llvm_a2l_frame **inline_frames);
+ 
++/*
++ * Simple symbolizers for addresses; will convert something like
++ * 0x12345 to "func+0x123". Will return NULL if no symbol was found.
++ *
++ * The returned value must be freed by the caller, with free().
++ */
++char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
++char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
++
+ #ifdef __cplusplus
+ }
+ #endif
 -- 
 2.43.0
 
