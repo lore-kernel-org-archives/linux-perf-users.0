@@ -1,81 +1,104 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CBB6E605
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 May 2024 20:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DCE6DD0D
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 May 2024 21:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716152300; cv=none; b=JoA9rKuIj9OnBZdM9GPEl/Z5hxfwULyiyc1UQbLx6GtkHzJzhcVQ43MJYmtdvAbV5zUeNAYsc237t7VPwYdwBTcJsRveWBa1t26/43JbUidsPfiYXL6pVCA2lySaHmERwYdVlnS2zK5AhKoR55A2oC8fhMDqb82PjodbC8T2GPE=
+	t=1716152473; cv=none; b=fc5OXDLomnEQSoi+vQrVn1zlxBxJ3e/4Jbophtq8ANFXWMNxF2aWM5vCsxyKgguR7I9ephdnyC/RoK/+pDhwPp7e4wTFoP0/umwsB9In84jon3U6fBEMXKcojlYiGhMT2+pklPFS7SiYF5tju4NHZrNzHCtgDokZBSNkiFUbW00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716152300; c=relaxed/simple;
-	bh=5yRNOhU5A7657bzYs1PfC58Wr0uPu28IMtEfJJ3cC4I=;
+	s=arc-20240116; t=1716152473; c=relaxed/simple;
+	bh=/Bph7+K9Jkj+NTdSMK7OBzJ0wyGXSdYBZ9WleWfjtmQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owbx5pq3AMOdWiuq3ZtF8BZN2Mg4OFYqmhMqxesW+6NgySuWjsL7v/bPFDaiVn6f012x2lLz/xUJ6hFn0V9tKafw0eGV5IbJa2653e/ZPIgyWIMzzTSmQ+is6ffxzgh9/mV2Q9Fet4XsghzGHCCFDOUhNp/DwSEw9sx2MP99Q3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J2X2hqGL; arc=none smtp.client-ip=209.85.167.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpnhfEFCqalFlgapS5ipGX78Kz30EyQM38E876jumukJWmVUVTa3tY0j9KU/dzGMDxERIUpm0gIgeglYP87GBv8N/2R/Z0k4EGNKbbQcxmYHJiWUWCO6pnys38SMBLPZVUgF+Y+KN5qIF5uDf6RvrcoKhLt2lWQyq4LHwgrVXtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rHg9kvrd; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J2X2hqGL"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51ffff16400so5911618e87.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 May 2024 13:58:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rHg9kvrd"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5238fe0cfc9so2011643e87.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 May 2024 14:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716152297; x=1716757097; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5yRNOhU5A7657bzYs1PfC58Wr0uPu28IMtEfJJ3cC4I=;
-        b=J2X2hqGL5SP8DofWLezjG+MVeYq/drtjASTXTJQlONEoOhZqJJQFx75YG/18j889TN
-         /TetvukejHprk49b9Lzt94n8y1LC6MdMiVp7XC71v41TRdg/AclbC74hFf8EfJE2ZZ9h
-         kgJpcIL/FcgxO5qjSgNar94k5dTAmvDtkYfLkXJWCt7ZVjnfYx/Zn6geeNrtGag2lNfw
-         2//EFDIWYJNUCa8gO7+KB1YdAUocZ/ooXS8PXEj9Y1mmEwltBoRvB18i+njDsH4DI/sO
-         hFnKlpkdm/MS0GZptNixttiQeBBzm1PfBY4gvwe2npHkCK2kUIBBZ7Yn3O1i/0HNVprh
-         lM/Q==
+        d=google.com; s=20230601; t=1716152470; x=1716757270; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yHS+308itLVHd7M3dYFbOfs9US5TMAl7Ail4GLcbRQY=;
+        b=rHg9kvrd8doUAiD6pghd894FCoM95U/J0jxnqacOpm6MRuuiNoc/hQh+W0EZBi636t
+         MG1LCK4lTPWs05FnEmfWZQIFofFGGiZnoRebeFFqLUyzX4zyJ9DnN7ZcQnflR7c0cFqU
+         Q7sUCR49MDc8vFAcbLvWBoJ/d+wroocp0VGJG9C4ZWHjWsSt9kqpHi67yMCf7vEDDGhl
+         6jwnHaE0V6FMkV2ds0aTAV+KP6oNKgTMnDPFHtnNbaoXnlibP2N3+FX0aqCU+wdsj2DR
+         tEyNZxPBVdzNkyXoESHBLoNQ1yRUiTr617e8cJ6PrcFXs5z6Ofp+Zb7uHUTY7L/AKsKW
+         XY9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716152297; x=1716757097;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5yRNOhU5A7657bzYs1PfC58Wr0uPu28IMtEfJJ3cC4I=;
-        b=PsdnkfpywBmeatn6rSWv/dsgUBlb12VxCX5gs43MBCAfZUptMTXFHRvA2QvtD6ZTvw
-         /1GXoquxM2Bdq81eNLXdTvs+JKtmuchkUubruVnr61AOsLT9PRntBr1ow7fqxi+++L+c
-         2lbELO1FmoaSnhKhYgIxWO7QaqUXKiwWXy89hIg3qT1WXhknGKeKL0kh3p/ZVvFJydXg
-         gn0+DZn77BZiS58dNfYmRNK8a2kRxRvJRHIhazeisCloBrWGzmtZnSArcvzFKb2giJNt
-         ttVJOU28Z4yv5BZsUpyBhafSPgiMfYlzLIel2j28bcQ2/oGQ5fA57mrG2wyhzt9qFcPe
-         XgAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiWZIC5nXU+TUui1oPQbKEP7qJJWpThrUPRbbiKTttJwCKXtBOVyUhiF0bGIqMMG5yoMVHHR4i85hAI40ryC2PTuuANb9viPzdBqoJC8HMjw==
-X-Gm-Message-State: AOJu0YzV4aibv5/49UB5h4OJoRrC+FhhjN+ms55/YvTJt+LzASfmN3OS
-	8R3+Ne4Tqi4dWDTeIVTmC7xYJHGTSGxosPbFe0UqEV7SZVoN2ahBOQeot1LZgw==
-X-Google-Smtp-Source: AGHT+IG43adAH5oGa2Y5aasAJK7+4mqBNIlRGabXhfce6DxGG1+Qzgoq/DRDpH65dHqkN/tDUGVokg==
-X-Received: by 2002:a05:6512:149:b0:51d:4c8a:bbdb with SMTP id 2adb3069b0e04-5220fc7d133mr21143293e87.3.1716152296909;
-        Sun, 19 May 2024 13:58:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716152470; x=1716757270;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yHS+308itLVHd7M3dYFbOfs9US5TMAl7Ail4GLcbRQY=;
+        b=ING2kNMuDnojZ9brvj3LJqWQ2HBhjA3bj8ey8i8Ze5QxYV2Ekk8NNC0QOUkdf+Eyip
+         wBFpK541q9Y9CKtAm3II+WU6ynWpipiYeSXA9+aPa+Je+PWS+15UTsHV3RYGuchFIEDv
+         1Rvi4bvecHsq5ELnLsgQ4y4nv8unNbIAZTvWLeSRGnsBNHlPlU2LnTXqHGyUKJg88sx1
+         U9vb+3E+go5JHOxK3+am1gMWbqdZ4MrZF6I5UouBCWBsfeMOzm8U3Js5MqkEAk4yWPhT
+         hx22PO6lMvFYpCBYrfJYSwQKOdN7X+3Ox5FdIIOHqws5i4jhJl/BRundhgeNxRaA5AZd
+         0t1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXM34ok/KBioIzJRw0zq0wU7tpPoE2cSjW3natx5TUMBK0godXQ6u/GCT0oj2iBB4XjNBKffSfFNNojTlGOgGsFY3tz2N3Riiktw3ns7U0Acg==
+X-Gm-Message-State: AOJu0YxVFMPJhLlLZ/4ZHNOoGWEH4xay9GWjXtzlZi93hm0sZBDliXJl
+	I8ABIT59eIF7fv9vYaHIJOCGiJtUx7hROzzmbQRIBeoOg2irLqQ96QfJaJd7U2KlXWddJWDPHDE
+	LDQ==
+X-Google-Smtp-Source: AGHT+IFzuf0OobYCCdKZZSJ9VsFix5Zsea7N4HzK7XLf1RNV2+5n9LskFwgvoInAbQpnu51OUAkyMQ==
+X-Received: by 2002:a05:6512:1310:b0:51f:3f6c:f7d5 with SMTP id 2adb3069b0e04-524079b1f5bmr1431406e87.8.1716152470068;
+        Sun, 19 May 2024 14:01:10 -0700 (PDT)
 Received: from google.com ([2a00:79e0:18:10:9677:a1ea:4905:181b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d7ca0sm4059536e87.304.2024.05.19.13.58.15
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52426a16831sm448711e87.191.2024.05.19.14.01.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 13:58:16 -0700 (PDT)
-Date: Sun, 19 May 2024 22:58:12 +0200
+        Sun, 19 May 2024 14:01:09 -0700 (PDT)
+Date: Sun, 19 May 2024 23:01:05 +0200
 From: "Steinar H. Gunderson" <sesse@google.com>
 To: Ian Rogers <irogers@google.com>
 Cc: acme@kernel.org, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Add a trie to map quickly from address range to
- compilation unit.
-Message-ID: <Zkpn5Dtva31rjsEg@google.com>
-References: <20240518165315.3963142-1-sesse@google.com>
- <ZkjdQqN1dPsZDDRA@google.com>
- <CAP-5=fXPFtS-aufdZE1_haEo6EpYYDw9JhG_4EjHi2AAzzf5RA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <ZkpokaHRfQYCo3uG@google.com>
+References: <20240518165335.3963530-1-sesse@google.com>
+ <CAP-5=fW5YtzYz0R-9ZkgfdAFjkUDHu_Z1Sexs+2SmN0RwhrADw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXPFtS-aufdZE1_haEo6EpYYDw9JhG_4EjHi2AAzzf5RA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW5YtzYz0R-9ZkgfdAFjkUDHu_Z1Sexs+2SmN0RwhrADw@mail.gmail.com>
 
-On Sun, May 19, 2024 at 08:50:37AM -0700, Ian Rogers wrote:
->> I accidentally sent out an ancient patch anew; sorry, please ignore.
-> Presumably v1 should be reviewed?
+On Sun, May 19, 2024 at 11:23:26AM -0700, Ian Rogers wrote:
+> I think we might want to display this in the feature list during the build:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/build/Makefile.feature?h=perf-tools-next#n123
 
-v3 was merged into binutils two years ago. :-)
+Ack.
+
+> s/HAVE_LIBLLVM_SUPPORT/HAVE_LLVM_SUPPORT/
+
+Ack.
+
+>> +#pragma GCC diagnostic push
+>> +#pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM 14. */
+> nit: pehaps disabling this should be conditional:
+> #if LLVM_VERSION_MAJOR == 14
+
+It doesn't seem LLVM_VERSION_MAJOR is defined yet at this point, so I
+don't think that would work. (I just checked; 15 has the same issue.)
+In any case, I think it would be just more clutter for dubious gain.
+
+>> +       if (file) {
+>> +               if (line_info.FileName == "<invalid>") {
+>> +                       /* Match the convention of libbfd. */
+>> +                       *file = nullptr;
+> Should "*file" be cleared if "!file" so the caller can reliably free it?
+
+I don't understand. If “!file”, then file == NULL and surely accessing
+*file would mean a crash?
 
 /* Steinar */
