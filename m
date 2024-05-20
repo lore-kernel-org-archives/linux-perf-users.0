@@ -1,99 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF3E62D7A8;
-	Mon, 20 May 2024 09:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F89B53815;
+	Mon, 20 May 2024 13:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716198126; cv=none; b=t8cFF+A3e+RW/jisv0ZX97tTIGryudsQs2yDo3kIC9xn4OUZR8FeaHv95q/uZNY6/3KWGX16MVprvtgl3qlt7G6E/MEp/cmLnTil8q8suMtODH2KQE01GonmcgXGA3g1FpXBxhjoQYjO6G9ijvk2dcCQEzK44Nbg2bd3QmL6hcE=
+	t=1716213032; cv=none; b=cJJyGUtlp/UWwdNdvZnkqXo3zpfYpmVXmL02MEjEt30u6Quq0w1fpBch647DZM2Rw2Jyisrtdtmruohvvw0ncxhwB+Opv2HTLZ03Yws72Sgc5+kZq1vHX5m+ojEaIsCPLaU81D1HBRkNopp5iPaR2Q2OW4UDHjmJZbV3akS/PgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716198126; c=relaxed/simple;
-	bh=tqJq6X3A7QqdtDBvorzQ9Ec8VgEK4mqpyfp7HfySsTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Slu7cc/jLGPzrx0se1BifF9vxoegxyEwi5GyeloefYI3SVnlooqjwg1hqwAIrYLJmZb+YcLxOjUTOKcgX0gJP13yzDl7Znrm3/i0U9evEnHIz2VrmRN3/9rewk+WobXyXSKUkFwhQHPJDgqJdj8ww1i0b+xul6ToKiiXNH2+sFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=foss.arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=foss.arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39B06FEC;
-	Mon, 20 May 2024 02:42:28 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFB703F766;
-	Mon, 20 May 2024 02:42:02 -0700 (PDT)
-Message-ID: <6c910206-2409-4a7e-9d5e-8ffc1c269c08@foss.arm.com>
-Date: Mon, 20 May 2024 10:42:01 +0100
+	s=arc-20240116; t=1716213032; c=relaxed/simple;
+	bh=Lx0tA9PUl4u6rsl64pdQUuI6eKpXJDiV5Zbxo3wsfbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fKw2rrFBpaqE5YeaBy6zJbjQuYR1JwhC1MNlgzbIothxTCxqIoA195vPHRgm2c8yGGMKwLt1PO/URyFp7SPqcylBBo0a3lLqJ2CA+wJJc85rlaHwno7kKhjHT3jerWyloZ6WJdm22h7HThZaL2J0HkqQj0rEtPiUdlXGg57dScs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GnN9zUkx; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GnN9zUkx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=C+780rlDaKNA/H8vHY/36D+6Z05m+PymlHPYx7PH0iw=; b=GnN9zUkxwPFpBVPs
+	6dZgf3nZdak+FspBPIv1ffgPd8Y7OFaS+TRTvA90+n9Xt3CndHWOmd7+hlEa5Gw/O/6IZ81KN58uf
+	JMvtMD7xRS1W8fQjnqH9M8KzBeCpEYNwjCHnHL+BQr9kHfPnYw3P7RWWU2JJSCfIfT3NcGRY20hEU
+	Xp5fTVTVboXIX9qOVIv4X8q8AN4DzeyOC2ZWoNNHSYQaQVdQfVEyjTmlgYZ3kySNBP+/pvnZw9jlu
+	V+dtVc9SPPgi5iVzDq+vNIyzryhUCnoiwkLLyY+uAslEjwTDcWWaRlVTQAZCnIoS+Ui3dSYIXY03c
+	okr4MoBImIKALYSnIw==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1s93P6-001gmf-1X;
+	Mon, 20 May 2024 13:50:16 +0000
+Date: Mon, 20 May 2024 13:50:16 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	irogers@google.com, adrian.hunter@intel.com
+Cc: linux-perf-users@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/cstate: Remove unused struct 'perf_cstate_msr'
+Message-ID: <ZktVGHl5PVd2hAqF@gallifrey>
+References: <20240506004009.770451-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] perf maps: Improve the kcore maps merging
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240515211045.377080-1-leo.yan@arm.com>
- <CAP-5=fVh-i5cCdW9MJ5AeN2k5Os2W6fifSCMi3gi6qMt_cdDPw@mail.gmail.com>
-Content-Language: en-US
-From: Leo Yan <niayan01@foss.arm.com>
-In-Reply-To: <CAP-5=fVh-i5cCdW9MJ5AeN2k5Os2W6fifSCMi3gi6qMt_cdDPw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20240506004009.770451-1-linux@treblig.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 13:49:15 up 12 days,  1:03,  1 user,  load average: 0.04, 0.01, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On 5/15/24 22:39, Ian Rogers wrote:
+* linux@treblig.org (linux@treblig.org) wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> This looks like it's unused since
+> Commit 8f2a28c5859b ("perf/x86/cstate: Use new probe function")
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-[...]
+Ping
 
-> Thanks Leo, testing this change on perf-tools-next with an x86 debian
-> laptop I see:
-> ```
-> $ perf test 24 -v
-> 24: Object code reading:
-> --- start ---
-> test child forked, pid 3407499
-> Looking at the vmlinux_path (8 entries long)
-> symsrc__init: build id mismatch for vmlinux.
-> symsrc__init: cannot get elf header.
-> overlapping maps in [kernel.kallsyms] (disable tui for more info)
-> Using /proc/kcore for kernel data
-> Using /proc/kallsyms for symbols
-> Parsing event 'cycles'
-> Using CPUID GenuineIntel-6-8D-1
-> mmap size 528384B
-> Reading object code for memory address: 0xfffffffface8d64a
-> File is: /proc/kcore
-> On file address is: 0xfffffffface8d64a
-> dso__data_read_offset failed
-> ---- end(-1) ----
-> 24: Object code reading                                             : FAILED!
-> ```
-> The test passes without the changes. Let me know if you need me to dig deeper.
-
-Just update for the test failure.
-
-The failure is caused by the memory map's attribute is not updated after 
-I removed the map replacement related code in patch 02. This means the 
-old (identical) kernel map (generated by '/proc/kallsyms') still keeps 
-some stale info for 'pgoff', 'mapping_type', etc.
-
-To fix this issue, in the new patch, it removes the old kernel map (to 
-avoid any stale info) and update 'machine->vmlinux_map'.
-
-Just one concern. I saw the kcore exposes kernel text section which is 
-dependent on the CONFIG_ARCH_PROC_KCORE_TEXT config, but some arches 
-(e.g. PowerPC, etc) are absent for this config. But you can see even the 
-current code doesn't handle this case, if the replacement map is not 
-found, it is arbitrarily assigned to the first map in kcore [1]. An 
-option is to rollback to use the old identical kernel map, this is not 
-addressed in my latest patch, which is simply report failure in this 
-case. Please review it and let me know how you think.
-
-Thanks,
-Leo
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/symbol.c?h=v6.9#n1366
+> ---
+>  arch/x86/events/intel/cstate.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+> index 326c8cd5aa2d2..dcf3f152a2a64 100644
+> --- a/arch/x86/events/intel/cstate.c
+> +++ b/arch/x86/events/intel/cstate.c
+> @@ -143,12 +143,6 @@ struct cstate_model {
+>  #define SLM_PKG_C6_USE_C7_MSR	(1UL << 0)
+>  #define KNL_CORE_C6_MSR		(1UL << 1)
+>  
+> -struct perf_cstate_msr {
+> -	u64	msr;
+> -	struct	perf_pmu_events_attr *attr;
+> -};
+> -
+> -
+>  /* cstate_core PMU */
+>  static struct pmu cstate_core_pmu;
+>  static bool has_cstate_core;
+> -- 
+> 2.45.0
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
