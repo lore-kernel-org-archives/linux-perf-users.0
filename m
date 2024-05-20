@@ -1,178 +1,99 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF3722EF0;
-	Mon, 20 May 2024 09:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF3E62D7A8;
+	Mon, 20 May 2024 09:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196026; cv=none; b=i5PkztlW2kpqb5pcUHe1tf52slJnwRLxhMXyRjVFFoagIxzz1s1EH5OgJsQgsCgeC6tiXRpE2GVFH8SAGFmUsQVQck3W3hwwFEm/rI3cSvKmD4bIOdZRLetFh1s9FA6KL1IQZj8+Aj2ZbRdMT0t8pS4WruTkjii924qyrxjvEis=
+	t=1716198126; cv=none; b=t8cFF+A3e+RW/jisv0ZX97tTIGryudsQs2yDo3kIC9xn4OUZR8FeaHv95q/uZNY6/3KWGX16MVprvtgl3qlt7G6E/MEp/cmLnTil8q8suMtODH2KQE01GonmcgXGA3g1FpXBxhjoQYjO6G9ijvk2dcCQEzK44Nbg2bd3QmL6hcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196026; c=relaxed/simple;
-	bh=eSfP27lDKsXBvxkbyHXFa4R7oLkedFcDJYbv4hCgpxA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rwq+SnYZnvpeZKIkKJyETzmlvRf298XbzGMtvnUGMbq1lF+2f08hJm8DXDQsFBG1qJYf67Kuwq1Ngw7zluMEz4LOB8MW8wSBG/SDMSEtjBVU796NkhcVI/FM1NHZMZvqR9U4vIIITIPySRXhGOVNrMtBrBw8rbGF8vDCvxD0Ov8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1716198126; c=relaxed/simple;
+	bh=tqJq6X3A7QqdtDBvorzQ9Ec8VgEK4mqpyfp7HfySsTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Slu7cc/jLGPzrx0se1BifF9vxoegxyEwi5GyeloefYI3SVnlooqjwg1hqwAIrYLJmZb+YcLxOjUTOKcgX0gJP13yzDl7Znrm3/i0U9evEnHIz2VrmRN3/9rewk+WobXyXSKUkFwhQHPJDgqJdj8ww1i0b+xul6ToKiiXNH2+sFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=foss.arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=foss.arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10713FEC;
-	Mon, 20 May 2024 02:07:28 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C8123F766;
-	Mon, 20 May 2024 02:07:02 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 3/3] perf maps: Remove the replacement of kernel map
-Date: Mon, 20 May 2024 10:06:47 +0100
-Message-Id: <20240520090647.949371-4-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240520090647.949371-1-leo.yan@arm.com>
-References: <20240520090647.949371-1-leo.yan@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39B06FEC;
+	Mon, 20 May 2024 02:42:28 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFB703F766;
+	Mon, 20 May 2024 02:42:02 -0700 (PDT)
+Message-ID: <6c910206-2409-4a7e-9d5e-8ffc1c269c08@foss.arm.com>
+Date: Mon, 20 May 2024 10:42:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] perf maps: Improve the kcore maps merging
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240515211045.377080-1-leo.yan@arm.com>
+ <CAP-5=fVh-i5cCdW9MJ5AeN2k5Os2W6fifSCMi3gi6qMt_cdDPw@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <niayan01@foss.arm.com>
+In-Reply-To: <CAP-5=fVh-i5cCdW9MJ5AeN2k5Os2W6fifSCMi3gi6qMt_cdDPw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The kernel text map has been removed from the kernel maps by
-maps__remove_maps(), and the kcore maps are organized in order, allowing
-us to achieve neat kernel maps.
+On 5/15/24 22:39, Ian Rogers wrote:
 
-As a result, it is not necessary to replace the old kernel text map.
-Instead, the commit finds the latest text map, assigns it to
-'machine->vmlinux_map', and releases the old map.
+[...]
 
-One concern is if a platform fails to find a kernel text map after
-updating maps list with kcore, in this case, it should not happen and
-reports the failure.
+> Thanks Leo, testing this change on perf-tools-next with an x86 debian
+> laptop I see:
+> ```
+> $ perf test 24 -v
+> 24: Object code reading:
+> --- start ---
+> test child forked, pid 3407499
+> Looking at the vmlinux_path (8 entries long)
+> symsrc__init: build id mismatch for vmlinux.
+> symsrc__init: cannot get elf header.
+> overlapping maps in [kernel.kallsyms] (disable tui for more info)
+> Using /proc/kcore for kernel data
+> Using /proc/kallsyms for symbols
+> Parsing event 'cycles'
+> Using CPUID GenuineIntel-6-8D-1
+> mmap size 528384B
+> Reading object code for memory address: 0xfffffffface8d64a
+> File is: /proc/kcore
+> On file address is: 0xfffffffface8d64a
+> dso__data_read_offset failed
+> ---- end(-1) ----
+> 24: Object code reading                                             : FAILED!
+> ```
+> The test passes without the changes. Let me know if you need me to dig deeper.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/symbol.c | 77 ++++++++++------------------------------
- 1 file changed, 19 insertions(+), 58 deletions(-)
+Just update for the test failure.
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 915435d55498..a4b65d868fc9 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1335,13 +1335,12 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 			   const char *kallsyms_filename)
- {
- 	struct maps *kmaps = map__kmaps(map);
-+	struct map *vmlinux_map;
- 	struct kcore_mapfn_data md;
--	struct map *map_ref, *replacement_map = NULL;
- 	struct machine *machine;
- 	bool is_64_bit;
- 	int err, fd;
- 	char kcore_filename[PATH_MAX];
--	u64 stext;
- 
- 	if (!kmaps)
- 		return -EINVAL;
-@@ -1386,51 +1385,6 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 	maps__remove_maps(kmaps, remove_old_maps);
- 	machine->trampolines_mapped = false;
- 
--	/* Find the kernel map using the '_stext' symbol */
--	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
--		u64 replacement_size = 0;
--		struct map_list_node *new_node;
--
--		list_for_each_entry(new_node, &md.maps, node) {
--			struct map *new_map = new_node->map;
--			u64 new_size = map__size(new_map);
--
--			if (!(stext >= map__start(new_map) && stext < map__end(new_map)))
--				continue;
--
--			/*
--			 * On some architectures, ARM64 for example, the kernel
--			 * text can get allocated inside of the vmalloc segment.
--			 * Select the smallest matching segment, in case stext
--			 * falls within more than one in the list.
--			 */
--			if (!replacement_map || new_size < replacement_size) {
--				replacement_map = new_map;
--				replacement_size = new_size;
--			}
--		}
--	}
--
--	if (!replacement_map)
--		replacement_map = list_entry(md.maps.next, struct map_list_node, node)->map;
--
--	/*
--	 * Update addresses of vmlinux map. Re-insert it to ensure maps are
--	 * correctly ordered. Do this before using maps__merge_in() for the
--	 * remaining maps so vmlinux gets split if necessary.
--	 */
--	map_ref = map__get(map);
--
--	map__set_start(map_ref, map__start(replacement_map));
--	map__set_end(map_ref, map__end(replacement_map));
--	map__set_pgoff(map_ref, map__pgoff(replacement_map));
--	map__set_mapping_type(map_ref, map__mapping_type(replacement_map));
--
--	err = maps__insert(kmaps, map_ref);
--	map__put(map_ref);
--	if (err)
--		goto out_err;
--
- 	/* Add new maps */
- 	while (!list_empty(&md.maps)) {
- 		struct map_list_node *new_node = list_entry(md.maps.next, struct map_list_node, node);
-@@ -1438,21 +1392,28 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 
- 		list_del_init(&new_node->node);
- 
--		/* skip if replacement_map, already inserted above */
--		if (!RC_CHK_EQUAL(new_map, replacement_map)) {
--			/*
--			 * Merge kcore map into existing maps,
--			 * and ensure that current maps (eBPF)
--			 * stay intact.
--			 */
--			if (maps__merge_in(kmaps, new_map)) {
--				err = -EINVAL;
--				goto out_err;
--			}
-+		/*
-+		 * Merge kcore map into existing maps,
-+		 * and ensure that current maps (eBPF)
-+		 * stay intact.
-+		 */
-+		if (maps__merge_in(kmaps, new_map)) {
-+			err = -EINVAL;
-+			goto out_err;
- 		}
- 		free(new_node);
- 	}
- 
-+	/* Update vmlinux_map */
-+	vmlinux_map = maps__find(kmaps, map__start(map));
-+	if (vmlinux_map) {
-+		free(machine->vmlinux_map);
-+		machine->vmlinux_map = vmlinux_map;
-+	} else {
-+		pr_err("Failed to find vmlinux map from kcore\n");
-+		goto out_err;
-+	}
-+
- 	if (machine__is(machine, "x86_64")) {
- 		u64 addr;
- 
--- 
-2.34.1
+The failure is caused by the memory map's attribute is not updated after 
+I removed the map replacement related code in patch 02. This means the 
+old (identical) kernel map (generated by '/proc/kallsyms') still keeps 
+some stale info for 'pgoff', 'mapping_type', etc.
 
+To fix this issue, in the new patch, it removes the old kernel map (to 
+avoid any stale info) and update 'machine->vmlinux_map'.
+
+Just one concern. I saw the kcore exposes kernel text section which is 
+dependent on the CONFIG_ARCH_PROC_KCORE_TEXT config, but some arches 
+(e.g. PowerPC, etc) are absent for this config. But you can see even the 
+current code doesn't handle this case, if the replacement map is not 
+found, it is arbitrarily assigned to the first map in kcore [1]. An 
+option is to rollback to use the old identical kernel map, this is not 
+addressed in my latest patch, which is simply report failure in this 
+case. Please review it and let me know how you think.
+
+Thanks,
+Leo
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/symbol.c?h=v6.9#n1366
