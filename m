@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F8FE17582;
-	Mon, 20 May 2024 09:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA77224F2;
+	Mon, 20 May 2024 09:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196022; cv=none; b=Qzfk1QepbOndRGkggKfNUIoRqeXQAaiDsOFN/EwTeVUjvDGdzx3b3Ua8Fw4oxrXK/0mRp6Csu5qd+BevzWbJiJC0et7K1+8eq3GuOF/5/JASEW2rrM+EP0gJLc4dVd0RVpd0Nu764/tb7xzrjOwnP1nxF5q9nMPfwAWpmZqLVhg=
+	t=1716196025; cv=none; b=BLhLf+tioIFLiM+yLCFPjNACjm+Oz2bh9Z5jlf2Kl/AY/A2HoeWtY+EC/v7YCoorGRlp9R9ZKhlUJO6gefnEQd3R3nhGSkY8iqgepdcAsQx7Z2Klr1ZgSVjWAhQsfAChEs+atkgVXOCKZFg530BVFTrw21CGRy08vg1K//EH+gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196022; c=relaxed/simple;
-	bh=WyFMRDi/bs5IDpAIMfC56d+PwBTs80Y/L12c4A53rFA=;
+	s=arc-20240116; t=1716196025; c=relaxed/simple;
+	bh=r6vs6WErprHBEORgYPyY9YEewKPOmyeTkEiYvvWNVDQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nDGPGu2BRnqG7RuWj5sbscl0NPMSbBI8kWgMhF7tGrH+i+w9QUSJ4ERUxHjVGh/9U6Vp+0Hn2lG2k8BKFPCZvD5RyaV4mtVMoxdcH2bTJ7DqxoTnKrPgOlGvzDj1wanPqwrIJQ4sRcozwVsp+tnRr6qHNwXNXM6FTT6byrd1lXo=
+	 MIME-Version; b=bn+cfoi/8sF2Q21mb60tBZ1d5McWq0xJW+LhD3UYTTeoQRzvcA5wBAhdCV+ISgj4+V1ZoSwPnkMhys1TlhkEGtfsIb2NsofHRKo7eruEk03jj6H6OAnfgiG2xUyxN3mUbyATz6Bjw+QpO0LwXWG3uC06kZAGBufEF/6mBfJ0PtE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98EB31063;
-	Mon, 20 May 2024 02:07:24 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55A2912FC;
+	Mon, 20 May 2024 02:07:26 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2057E3F766;
-	Mon, 20 May 2024 02:06:59 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0D1B3F766;
+	Mon, 20 May 2024 02:07:00 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -31,9 +31,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 1/3] perf maps: Sort kcore maps
-Date: Mon, 20 May 2024 10:06:45 +0100
-Message-Id: <20240520090647.949371-2-leo.yan@arm.com>
+Subject: [PATCH v3 2/3] perf maps: Remove the kernel text map with maps__remove_maps()
+Date: Mon, 20 May 2024 10:06:46 +0100
+Message-Id: <20240520090647.949371-3-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240520090647.949371-1-leo.yan@arm.com>
 References: <20240520090647.949371-1-leo.yan@arm.com>
@@ -45,110 +45,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When merging kcore maps into the kernel maps, it has an implicit
-requirement for the kcore maps ordering, otherwise, some sections
-delivered by the kcore maps will be ignored.
+maps__remove_maps() removes all kernel maps except the text map and eBPF
+maps. Afterwards, the kernel text map is removed from the list and
+added again with updated information to the maps list.
 
-Let's see below example:
-
-  Ordering 1:
-  Kcore maps       | Start address      | End address
-  -----------------+--------------------+--------------------
-  kcore_text       | 0xffff800080000000 | 0xffff8000822f0000
-  vmalloc          | 0xffff800080000000 | 0xfffffdffbf800000
-
-  Ordering 2:
-  Kcore maps       | Start address      | End address
-  -----------------+--------------------+--------------------
-  vmalloc          | 0xffff800080000000 | 0xfffffdffbf800000
-  kcore_text       | 0xffff800080000000 | 0xffff8000822f0000
-
-The 'kcore_text' map is a subset of the 'vmalloc' map. When merging
-these two maps into the kernal maps with the maps__merge_in() function,
-the ordering 1 inserts the 'kcore_text' map prior to the 'vmalloc' map,
-thus the 'kcore_text' map will be respected. On the other hand, if maps
-are inserted with the ordering 2, the 'vmalloc' is inserted ahead, as a
-result, its subset map will be ignored afterwards.
-
-To merge the maps in a reliable way, this commit sorts the kcore maps
-before merging them. Besides sorting the maps based on the end address,
-it also gives the priority to a subset map to insert it before its
-superset map in the list.
+This commit refactors maps__remove_maps() for deleting the 'map'
+parameter, resulting in the removal of all kernel maps from the list.
+Thus, the dso__load_kcore() function no longer needs to remove the kernel
+text map.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/symbol.c | 50 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+ tools/perf/util/maps.c   | 4 ++--
+ tools/perf/util/maps.h   | 2 +-
+ tools/perf/util/symbol.c | 9 +++------
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 16b39db594f4..4ddd0d50ac2c 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -589,7 +589,7 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ 	return ret;
+ }
+ 
+-void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data)
++void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map))
+ {
+ 	struct map **maps_by_address;
+ 
+@@ -597,7 +597,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ 
+ 	maps_by_address = maps__maps_by_address(maps);
+ 	for (unsigned int i = 0; i < maps__nr_maps(maps);) {
+-		if (cb(maps_by_address[i], data))
++		if (cb(maps_by_address[i]))
+ 			__maps__remove(maps, maps_by_address[i]);
+ 		else
+ 			i++;
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index d9aa62ed968a..90a1ff8b39c5 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -40,7 +40,7 @@ bool maps__equal(struct maps *a, struct maps *b);
+ /* Iterate over map calling cb for each entry. */
+ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data);
+ /* Iterate over map removing an entry if cb returns true. */
+-void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
++void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map));
+ 
+ struct machine *maps__machine(const struct maps *maps);
+ unsigned int maps__nr_maps(const struct maps *maps); /* Test only. */
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 9e5940b5bc59..c1513976ab6e 100644
+index c1513976ab6e..915435d55498 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -1256,6 +1256,7 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- {
- 	struct kcore_mapfn_data *md = data;
- 	struct map_list_node *list_node = map_list_node__new();
-+	struct map_list_node *node;
- 
- 	if (!list_node)
- 		return -ENOMEM;
-@@ -1269,8 +1270,55 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- 	map__set_end(list_node->map, map__start(list_node->map) + len);
- 	map__set_pgoff(list_node->map, pgoff);
- 
--	list_add(&list_node->node, &md->maps);
-+	list_for_each_entry(node, &md->maps, node) {
-+		/*
-+		 * When the new map (list_node)'s end address is less than
-+		 * current node, it can be divided into three cases.
-+		 *
-+		 * Case 1: the new map does not overlap with the current node,
-+		 * as the new map's end address is less than the current node's
-+		 * start address.
-+		 *                      [*******node********]
-+		 *    [***list_node***] `start              `end
-+		 *    `start          `end
-+		 *
-+		 * Case 2: the new map overlaps with the current node.
-+		 *
-+		 *        ,start              ,end
-+		 *        [*******node********]
-+		 *    [***list_node***]
-+		 *    `start          `end
-+		 *
-+		 * Case 3: the new map is subset of the current node.
-+		 *
-+		 *        ,start              ,end
-+		 *        [*******node********]
-+		 *         [***list_node***]
-+		 *         `start          `end
-+		 *
-+		 * For above three cases, insert the new map node before the
-+		 * current node.
-+		 */
-+		if (map__end(node->map) > map__end(list_node->map))
-+			break;
-+
-+		/*
-+		 * When the new map is subset of the current node and both nodes
-+		 * have the same end address, insert the new map node before the
-+		 * current node.
-+		 *
-+		 *        ,start              ,end
-+		 *        [*******node********]
-+		 *            [***list_node***]
-+		 *            `start          `end
-+		 */
-+		if ((map__end(node->map) == map__end(list_node->map)) &&
-+		    (map__start(node->map) <= map__start(list_node->map)))
-+			break;
-+	}
- 
-+	/* Insert the new node (list_node) ahead */
-+	list_add_tail(&list_node->node, &node->node);
+@@ -1322,15 +1322,13 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
  	return 0;
  }
  
+-static bool remove_old_maps(struct map *map, void *data)
++static bool remove_old_maps(struct map *map)
+ {
+-	const struct map *map_to_save = data;
+-
+ 	/*
+ 	 * We need to preserve eBPF maps even if they are covered by kcore,
+ 	 * because we need to access eBPF dso for source data.
+ 	 */
+-	return !RC_CHK_EQUAL(map, map_to_save) && !__map__is_bpf_prog(map);
++	return !__map__is_bpf_prog(map);
+ }
+ 
+ static int dso__load_kcore(struct dso *dso, struct map *map,
+@@ -1385,7 +1383,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	}
+ 
+ 	/* Remove old maps */
+-	maps__remove_maps(kmaps, remove_old_maps, map);
++	maps__remove_maps(kmaps, remove_old_maps);
+ 	machine->trampolines_mapped = false;
+ 
+ 	/* Find the kernel map using the '_stext' symbol */
+@@ -1422,7 +1420,6 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	 * remaining maps so vmlinux gets split if necessary.
+ 	 */
+ 	map_ref = map__get(map);
+-	maps__remove(kmaps, map_ref);
+ 
+ 	map__set_start(map_ref, map__start(replacement_map));
+ 	map__set_end(map_ref, map__end(replacement_map));
 -- 
 2.34.1
 
