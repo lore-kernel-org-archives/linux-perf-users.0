@@ -1,153 +1,127 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A93763F1
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 20:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC2614A08D
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 22:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716324533; cv=none; b=XNQV/Aidi3EA0n1JXtwDzbhcgv5QqIp+S6N2PjjWz1xTwoHqYF0JzTEJPWM555JkH2QzXdxNpBE4/MQXvU8CpWAQFYrztqiLtPyxguNfIF+VPIn5G1mvrZZmiPvDRnArVw7HWjawWfVInytlER/ptVH5LKRg9NbW66jZKSuNur4=
+	t=1716330973; cv=none; b=dsTZVWNHJ6UpFRo05R00VaWeS4oqoALFyPSSSTeDNW33K4Nhccyu1mFdveBlGk1Hl12lZysOMHVy8WZEX4xClqxGswqCyzO8G0EWi28c6HQMwTTqICpUdTFXWs9Cs5nI4bnyDSkl9FsSGknzT7nM5tHdNR8620nDtCr+V8PgzD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716324533; c=relaxed/simple;
-	bh=zoeQCvO1cRJzL/0Yu+xIM/DGcmlB3cnncHRAUkEZY6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=LzcwNErCy/DOWZ5FQuBZB1KUmSyUfBh5Wn+HLt+ksCm9zaQR0GYIt8KH1wIlV/I+9dOPSROg68FUEAhue2IpJyP+EueogdxvEXMK1Cbyy8VObzX8/fMjgdc2LrqSzwpeQreBCathpfkhcPNkQYNeFWPrqk696oBpRrD7OMzNbl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jTXXRmiI; arc=none smtp.client-ip=209.85.166.175
+	s=arc-20240116; t=1716330973; c=relaxed/simple;
+	bh=QGxpTjj48GaRZSK2/CFDsNhCOvq+ZWj3YumGS/8jXG4=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=MAo2faSkuroveAlfxqdSeZdyjgPgPDBESirSaAyxN1yYmqNyUMiumtynEcJdUYTJueUFPPWXMIjyTpke8BigENn2YHzjO3eWeGx9vOl8Yp6H3TmFovOysGm6PUFozubzEnQyBhccjCMwiTb7BWj2SUNJMnCE67lwgxjXbswyUiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3kqZ0cTw; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jTXXRmiI"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36db863679bso30865ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 13:48:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3kqZ0cTw"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61beaa137acso223509697b3.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 15:36:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716324531; x=1716929331; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=czb7Rq/i1FIT5qiIInLs95ShTM5SmEfdEJP+bwh5pxs=;
-        b=jTXXRmiIraaVewM3Bsg65ySWQE6Rsmf6beP+W2PFzkaD2j5yUtM2ZBKqS11YfZneQN
-         YEf8VFmyZXXKjDpae88EuJz85TjJCaRPf3C8qBU2E6m2kZm+qfEA7LO4jeasQOjNr5Qi
-         ncfAHXMBOLFqlR6ZRMzXYI6MdXEly1Ml0cCMogBrRx4lOBjv/qYffND0n4gdL6ieZOW2
-         SRRBf7ciiBbaAxWYkzI5Vkl2nxJjDO/+ejt0SahjTg/IwCVyFMS2qONpbNdZhwkOEcNr
-         lNx1lznqTgkI/luTtzjhjhJtGlswZWCnovDuZhbarm4cbQB33EWoe8y47Hc2rnPg0GPY
-         0AmQ==
+        d=google.com; s=20230601; t=1716330970; x=1716935770; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y9zyIB32Gej4Re6et8G9BG0IxjoKckxZsG/WVrAIAd0=;
+        b=3kqZ0cTwUbRa8xe09xpufrt+jkmksHq6ZaAaz3hHuGTx1h/MfwzqjBVOe53aykf0Xg
+         701SKr4YGcveVwy7Lzl9Li3vGyY35Gs9kfigAhXvB9c8n0qTpfsgl6kU9H2Kf0Mo3rsw
+         NF3uv9zf3PnqDZc/c5khXrzsIrHZ6PacHAKDg2jFIduio2OfPno//PjZ7o+emJoQCYtk
+         uJbZqw9KQAg94eC1ICxZMjtarf85KT/eN8Rtlzhqz/u9XcplNhjgirmphb2eLURsjFsG
+         33debaEk1wstCu/ZS5U5IAsf+h9lSZWdVvxhHcS0navEgeVQGi+qhZerf8samge2ci2m
+         fdxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716324531; x=1716929331;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=czb7Rq/i1FIT5qiIInLs95ShTM5SmEfdEJP+bwh5pxs=;
-        b=N8scXtzIOwcYPnJILTHobt8ZDUn06Ue2yU2RfDmGH6GPJ15KqVSTxv+RRWDLeZaQGH
-         IkUltxyNh9/EJQRNgntsAgRCzPADmnL5GnTnXQYjbDK1Nd9pyKoTmEriQDqsq7dcUd5f
-         lId6id3yds64A40WVZBpn7ieSNBt8/QmX977opeNH1BW/ag9kwlUxr6ghsG3qz3Hzn+6
-         1P0QwBvXo0kGQeXcSsEunN2dg5HzfIuM8EPD06bygC2IuRgOTPuUUmyUzXFeEM8n1xQ8
-         XbpKzTHUUAVk0WtMVtRRwfwVGCLMzGXQDkIBSAJtoZzjHldsjr8eBlucyF3MlR9w/Yi3
-         U7FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtGH2+Ae6nNpy8Wl6CiN+x6rZw3oT1lOgX6OwmVKlBkGpt6JUO9aMoKqvVPSPi5bb2q4CJ8LiXcmi8trl0NK6giU30HlzZGCu0zos3bYoVlQ==
-X-Gm-Message-State: AOJu0YwhrciP8utOor3mpCCMYRy9b45zQxmU7r6J0PjJDVSM8yc6DN8j
-	biK7vE3DICp4v5NcT3upUOa6v/sdVnzmveyt/dc/pOQ4LD6yrdRx3SYmRCZdv5VGmJbxiqPdD+E
-	Diy0WxTpgvgL7M/W70fBgKT7oKDOboq5VWjdr
-X-Google-Smtp-Source: AGHT+IHFs+YEyZTQ1wDxhhN1iMih67PzsakBzeF9WW5YMyLTbdJsOKUCKWr8AmBmZYMLilSKqeIi5t5RtLPeQ2fkQDE=
-X-Received: by 2002:a05:6e02:1fc1:b0:36b:ca1:239b with SMTP id
- e9e14a558f8ab-371d8aaf329mr751495ab.28.1716324531096; Tue, 21 May 2024
- 13:48:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716330970; x=1716935770;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y9zyIB32Gej4Re6et8G9BG0IxjoKckxZsG/WVrAIAd0=;
+        b=Uhtnodpu+PqP27E21ANJrF/b703eU3rWSWkJe5rB0ke4Fg3iIocHKtf+0vjVjaq6ZR
+         ZsBnwCNNpQR+7X3rfn9re1EcNjKRP5uVQGNWohLXGa34zL7qYIFSErxQVRTu5nvKAa8j
+         Lp81YTSNMjy7ZGvR+PaHTnNb3IFJ3UIUJBvXqo5XY3D3RW/Q+SrK4JhukkrsLpXfl4D3
+         cctY52UpSZ1Dj1JggfFRVRlFJRNy4pS1cke4RkxQJYqnqk9NwwTL1CAgiMRKNvvnVWry
+         bri05LZ0knKgD9R9QiaR9j6WoWwQJjfubEzXzjK9lDw5SCuN3BfSXRNmVdOtAKJFKK7w
+         kRZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXM7bYmahzRQRKaPAT1K/qCp2zAFE5ZnhuObkoaFNC88jeCeTqMgDSRE2HDXR2pRJPzsxWpWe9AXStlKtwog9Fn2JNUk9aHXRKKEWEklf0TbA==
+X-Gm-Message-State: AOJu0YxnaEGDrcS2j5Z2HwiMOI5GAsem0gsiZH+7ab1a6Ohr6b3KnBNV
+	KYYH3ZJRJe/E37ndbeLH757peKclVX59EqagFsoe9OtYHz7Epo9rWTASDzAXow9qNeWXlxoqrMA
+	pfsfAaA==
+X-Google-Smtp-Source: AGHT+IFr46OKHqb1Gmau3FlOjnj7rKv/zTGU6S/NYdxkSQ+SlZLP0lYKMlzndTrTXDAiGfJd5nYQz59RGoWn
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6953:f69e:7357:3598])
+ (user=irogers job=sendgmr) by 2002:a05:690c:fd0:b0:61a:b2d4:a3fb with SMTP id
+ 00721157ae682-627e48a51d6mr988177b3.8.1716330970640; Tue, 21 May 2024
+ 15:36:10 -0700 (PDT)
+Date: Tue, 21 May 2024 15:35:55 -0700
+Message-Id: <20240521223555.858859-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240510053705.2462258-1-irogers@google.com> <CAP-5=fW_Ri1yOfq2QS1_NOV0+kNm+n+Vv03v3FjfbRet4Ztn7Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fW_Ri1yOfq2QS1_NOV0+kNm+n+Vv03v3FjfbRet4Ztn7Q@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Subject: [PATCH v1] perf docs: Fix typos
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 21 May 2024 13:48:39 -0700
-Message-ID: <CAP-5=fVc+hvww9YAX2-UfQTJyFn7qM_7aoSwZ6SvgZoveMBAdw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Event parsing fixes
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	James Clark <james.clark@arm.com>, Yang Jihong <yangjihong@bytedance.com>, 
-	Ze Gao <zegao2021@gmail.com>, Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Kaige Ye <ye@kaige.org>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 9:48=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, May 9, 2024 at 10:38=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > For the default events, parse from strings rather than use pre-cooked
-> > perf_event_attr. This fixes non-x86 heterogeneous CPUs where legacy
-> > hardware events wouldn't be opened for all PMUs. v2 was previously
-> > just patch 3 but it is extended in v3 to incorporate related fixes.
-> >
-> > When a sysfs/json event is used in preference to a legacy event, allow
-> > evsel__match to still function using a saved hardware config
-> > number. This fixes hard coded metrics in stat-shadow for events like
-> > "instructions" on Intel that have a sysfs file.
-> >
-> > Fix/improve uniquifying event names fixing the test "102: perf stat
-> > metrics (shadow stat) test:" that was broken by a formatting issue
-> > when the sysfs instructions event was used.
-> >
-> > Having evsel->pmu_name and evsel->pmu->name is confusing, get rid of
-> > the former. Fix/improve evsel__sys_has_perf_metrics in the process.
-> >
-> > Ian Rogers (5):
-> >   perf evsel: Add alternate_hw_config and use in evsel__match
-> >   perf stat: Uniquify event name improvements
-> >   perf stat: Remove evlist__add_default_attrs use strings
-> >   perf evsel x86: Make evsel__has_perf_metrics work for legacy events
-> >   perf evsel: Remove pmu_name
->
-> Hopefully the first 3 patches here can be a priority given the fixes.
+Assorted typo fixes.
 
-Testing:
-https://lore.kernel.org/lkml/20240521192614.3937942-1-acme@kernel.org/
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git
-tags/perf-tools-for-v6.10-1-2024-05-21
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-kwork.txt  | 4 ++--
+ tools/perf/Documentation/perf-mem.txt    | 2 +-
+ tools/perf/Documentation/perf-record.txt | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-I see this failure:
-```
-102: perf stat metrics (shadow stat) test:
---- start ---
-test child forked, pid 785992
-IPC is different: 1.31 !=3D   (2725291544 / 2085879817)
----- end(-1) ----
-```
-Which is addressed in the first 3 patches here.
+diff --git a/tools/perf/Documentation/perf-kwork.txt b/tools/perf/Documentation/perf-kwork.txt
+index 109ace1d5e90..21e607669d78 100644
+--- a/tools/perf/Documentation/perf-kwork.txt
++++ b/tools/perf/Documentation/perf-kwork.txt
+@@ -1,4 +1,4 @@
+-perf-kowrk(1)
++perf-kwork(1)
+ =============
+ 
+ NAME
+@@ -35,7 +35,7 @@ There are several variants of 'perf kwork':
+         perf kwork top
+         perf kwork top -b
+ 
+-   By default it shows the individual work events such as irq, workqeueu,
++   By default it shows the individual work events such as irq, workqueue,
+    including the run time and delay (time between raise and actually entry):
+ 
+       Runtime start      Runtime end        Cpu     Kwork name                 Runtime     Delaytime
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 19862572e3f2..47456b212e99 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -21,7 +21,7 @@ and stores are sampled. Use the -t option to limit to loads or stores.
+ 
+ Note that on Intel systems the memory latency reported is the use-latency,
+ not the pure load (or store latency). Use latency includes any pipeline
+-queueing delays in addition to the memory subsystem latency.
++queuing delays in addition to the memory subsystem latency.
+ 
+ On Arm64 this uses SPE to sample load and store operations, therefore hardware
+ and kernel support is required. See linkperf:perf-arm-spe[1] for a setup guide.
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 6015fdd08fb6..77578c0a142a 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -311,7 +311,7 @@ OPTIONS
+ 	User can change the size by passing the size after comma like
+ 	"--call-graph dwarf,4096".
+ 
+-	When "fp" recording is used, perf tries to save stack enties
++	When "fp" recording is used, perf tries to save stack entries
+ 	up to the number specified in sysctl.kernel.perf_event_max_stack
+ 	by default.  User can change the number by passing it after comma
+ 	like "--call-graph fp,32".
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-Thanks,
-Ian
-
-> Thanks,
-> Ian
->
-> >  tools/perf/arch/x86/util/evlist.c |  74 +-------
-> >  tools/perf/arch/x86/util/evsel.c  |  35 +++-
-> >  tools/perf/builtin-diff.c         |   6 +-
-> >  tools/perf/builtin-stat.c         | 291 ++++++++++++------------------
-> >  tools/perf/tests/parse-events.c   |   2 +-
-> >  tools/perf/util/evlist.c          |  46 +----
-> >  tools/perf/util/evlist.h          |  12 --
-> >  tools/perf/util/evsel.c           |  28 ++-
-> >  tools/perf/util/evsel.h           |  22 +--
-> >  tools/perf/util/metricgroup.c     |   4 +-
-> >  tools/perf/util/parse-events.c    |  52 ++++--
-> >  tools/perf/util/parse-events.h    |   6 +
-> >  tools/perf/util/pmu.c             |   6 +-
-> >  tools/perf/util/pmu.h             |   2 +-
-> >  tools/perf/util/stat-display.c    | 101 ++++++++---
-> >  tools/perf/util/stat-shadow.c     |  14 +-
-> >  tools/perf/util/stat.c            |   2 +-
-> >  17 files changed, 305 insertions(+), 398 deletions(-)
-> >
-> > --
-> > 2.45.0.118.g7fe29c98d7-goog
-> >
