@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA4148FFC;
-	Tue, 21 May 2024 17:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B751494BE;
+	Tue, 21 May 2024 17:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716313203; cv=none; b=Dv7BW7Na/I98mnfH5NYpkofBa/cbNi0gRHAUOYxqs6l9l0AWXeW7QkWtc6+vkt5JFdRGh6ODTF5vSYPQVihB0wf33t7KWfy4x9M3oHAV94h8B1oZoqHUeNgD5t6xmuqDyndkSYh/rL7CgSuxp39Xzz3qLPBJnJ3t+x1tdwmVkJk=
+	t=1716313205; cv=none; b=hCnTNJu489cPfRx8KBDdn7a4JhnBNz/UtUWmQFuLnH0JnpB/2OXTmtsVR4zWmoqVTMFUuJxmAphRTiVFqYrxG5xIiK0GXVbv0TbEty3XYZsdnz06alwxr9uOPizG91X3N7JHA+u9FS6pFa5AC5cJZNUm8q0/k2x8KjVroihoH3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716313203; c=relaxed/simple;
-	bh=JFZfvPynPzZ2TE0Vt2lqzId/TgulfeakQxZrwtr+l44=;
+	s=arc-20240116; t=1716313205; c=relaxed/simple;
+	bh=PiFk/rDzdb0k9fXo1Z/4A46tpxk4GHQ+W7cQvXeUXoE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=piNm4p8Z0qQuCgv2IxD8lCJ9rJsz9UmCNu2EXe8GzmjzP3k+XmRpuY/AXUPbuKpZri2r9JqFCNXVHcYMrem6OXiTF4iqEhaOk8mkx1X7vNih1Or2LuVMYj4noEy7LGawdsCYhux7uIJ4JUO4YdgVcRAjJ93nL0+GuecxHG17oF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cGzzCN+s; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=i4frittgsRUgtkwpwLKtI8Yjp3kpeF7zAGhaOyhOf//imsIPx+78cICvUy2nkLaXVGvE8ic84pO1oaDGsUCKtjqv4S4SNBTaSrCjcbECrxAyTTFM+vO23N6e74ggL6AXXMQ1WF9/h0Zg+RyGVXxTWRxCSz+YXKyapfswjKugUz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gK3/DEUl; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cGzzCN+s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gK3/DEUl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716313202; x=1747849202;
+  t=1716313204; x=1747849204;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JFZfvPynPzZ2TE0Vt2lqzId/TgulfeakQxZrwtr+l44=;
-  b=cGzzCN+s9t1KzasUMKH7FmmN+NcQ5EGUdFrFRNfEKZZ4cPQzZcwWkHus
-   TqC1J5GcgwfLQEe+mQj2jfCf7BeOTZmbgic2GbRuMfjojPkENgmrkJgIM
-   iMTR8iN8rCF3Ua5hgiLTUEg1H6n8UAuchXteSJT9SngCuGnLz5G1fVVhl
-   GDHk98nvVXMp6OGhMQGlxK4oKbk2eWP3yN4z6fywWsmriwlt34iTZseag
-   KnWe5Jp24vQK9rdlhalUgcpkFYiIaTB3U+WHIRLpyHThc8c5PqCA0GF7g
-   JmvgPtPuhZwxbsQgUEIblijiUB7AYq0/drPBk1wDAqfzcmRZoTxdCbA49
-   Q==;
-X-CSE-ConnectionGUID: ZWUs1rgBTE+/Oxlo4pveig==
-X-CSE-MsgGUID: WpZSK/PQT/O6ij5X6bEYNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12317685"
+  bh=PiFk/rDzdb0k9fXo1Z/4A46tpxk4GHQ+W7cQvXeUXoE=;
+  b=gK3/DEUlJxt6n2obSkrUdC3iAxAIhvdWxrikKpP/L/XEBZ0M0uP0sAOJ
+   Xl6mLYDNruRyOPWygtAVc4J2yB3ljVuP7Zkp/kuk0NLNERZBpvaCs2xN7
+   5eOKS7R5vxsTtSuXruEbV7m0AEdwECRXGHFGI/EQlyLhgwr6hf1bHlKWE
+   dmyGLmeyT7zmvesB34RXWZFC92Dh0PyUSY5SYiq37unRL3u2Lm0f+wAJ3
+   ClcD4yu30XnNZB3Et5roazmVGRrwUPS4qi7mpPSvfYYtzaij2QKpw/7wf
+   WlC1MDDKYjtA4Zp0kk2dZyhTzbxEGa7/0gY3M2kfvejVS/6XzM8tUuKb0
+   w==;
+X-CSE-ConnectionGUID: ENQiNvWXTHC8AqA3J27QQg==
+X-CSE-MsgGUID: lOuyWQ//TTSIkgaTCCZ0HQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12317692"
 X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="12317685"
+   d="scan'208";a="12317692"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 10:39:59 -0700
-X-CSE-ConnectionGUID: O5os54H3R8upe/ItjnjJ0w==
-X-CSE-MsgGUID: RlJ3f5guTn6iFhvmhgGZuw==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 10:40:00 -0700
+X-CSE-ConnectionGUID: dGowoYrIQSO46GNnnfXyag==
+X-CSE-MsgGUID: gbfxm/k0SEq6AJfmRnLO1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="32924977"
+   d="scan'208";a="32924981"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
   by fmviesa007.fm.intel.com with ESMTP; 21 May 2024 10:39:59 -0700
 From: weilin.wang@intel.com
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v9 6/7] perf Document: Add TPEBS to Documents
-Date: Tue, 21 May 2024 13:39:34 -0400
-Message-ID: <20240521173952.3397644-7-weilin.wang@intel.com>
+Subject: [RFC PATCH v9 7/7] perf test: Add test for Intel TPEBS counting mode
+Date: Tue, 21 May 2024 13:39:35 -0400
+Message-ID: <20240521173952.3397644-8-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240521173952.3397644-1-weilin.wang@intel.com>
 References: <20240521173952.3397644-1-weilin.wang@intel.com>
@@ -71,74 +71,53 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-TPEBS is a new feature Intel PMU from Granite Rapids microarchitecture. It will
-be used in new TMA releases. Adding related introduction to documents while
-adding new code to support it in perf stat.
+Intel TPEBS sampling mode is supported through perf record. The counting mode
+code uses perf record to capture retire_latency value and use it in metric
+calculation. This test checks the counting mode code.
 
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 ---
- tools/perf/Documentation/perf-list.txt |  1 +
- tools/perf/Documentation/topdown.txt   | 30 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ .../perf/tests/shell/test_stat_intel_tpebs.sh | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 6bf2468f59d3..dea005410ec0 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -72,6 +72,7 @@ counted. The following modifiers exist:
-  W - group is weak and will fallback to non-group if not schedulable,
-  e - group or event are exclusive and do not share the PMU
-  b - use BPF aggregration (see perf stat --bpf-counters)
-+ R - retire latency value of the event
- 
- The 'p' modifier can be used for specifying how precise the instruction
- address should be. The 'p' modifier can be specified multiple times:
-diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
-index ae0aee86844f..98e5503552f5 100644
---- a/tools/perf/Documentation/topdown.txt
-+++ b/tools/perf/Documentation/topdown.txt
-@@ -325,6 +325,36 @@ other four level 2 metrics by subtracting corresponding metrics as below.
-     Fetch_Bandwidth = Frontend_Bound - Fetch_Latency
-     Core_Bound = Backend_Bound - Memory_Bound
- 
-+TPEBS in TopDown
-+================
+diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+new file mode 100755
+index 000000000000..4cb749d84367
+--- /dev/null
++++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+@@ -0,0 +1,27 @@
++#!/bin/sh
++# test Intel TPEBS counting mode
++# SPDX-License-Identifier: GPL-2.0
 +
-+TPEBS (Timed PEBS) is one of the new Intel PMU features provided since Granite
-+Rapids microarchitecture. The TPEBS feature adds a 16 bit retire_latency field
-+in the Basic Info group of the PEBS record. It records the Core cycles since the
-+retirement of the previous instruction to the retirement of current instruction.
-+Please refer to Section 8.4.1 of "Intel® Architecture Instruction Set Extensions
-+Programming Reference" for more details about this feature. Because this feature
-+extends PEBS record, sampling with weight option is required to get the
-+retire_latency value.
++set e
++err=0
 +
-+	perf record -e event_name -W ...
++# Use this event for testing because it should exist in all platforms
++e=cache-misses:R
 +
-+In the most recent release of TMA, the metrics begin to use event retire_latency
-+values in some of the metrics’ formulas on processors that support TPEBS feature.
-+For previous generations that do not support TPEBS, the values are static and
-+predefined per processor family by the hardware architects. Due to the diversity
-+of workloads in execution environments, retire_latency values measured at real
-+time are more accurate. Therefore, new TMA metrics that use TPEBS will provide
-+more accurate performance analysis results.
++# Without this cmd option, default value or zero is returned
++echo "Testing without --enable-tpebs-recording"
++result=$(perf stat -e "$e" true 2>&1)
++[[ "$result" =~ "$e" ]] && err=0 || err=1
 +
-+To support TPEBS in TMA metrics, a new modifier :R on event is added. Perf would
-+capture retire_latency value of required events(event with :R in metric formula)
-+with perf record. The retire_latency value would be used in metric calculation.
-+Currently, this feature is supported through perf stat
++if [[ "$err" == 1 ]]
++then
++	exit "$err"
++fi
 +
-+	perf stat -M metric_name --enable-tpebs-recording ...
++# In platforms that do not support TPEBS, it should execute without error.
++echo "Testing with --enable-tpebs-recording"
++result=$(perf stat -e "$e" --enable-tpebs-recording -a sleep 0.01 2>&1)
++[[ "$result" =~ "perf record" && "$result" =~ "$e" ]] && err=0 || err=1
 +
 +
- 
- [1] https://software.intel.com/en-us/top-down-microarchitecture-analysis-method-win
- [2] https://sites.google.com/site/analysismethods/yasin-pubs
++exit "$err"
 -- 
 2.43.0
 
