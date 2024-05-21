@@ -1,217 +1,127 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB7C148843
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 16:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8DC28DA0
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 16:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716310287; cv=none; b=fIrGp5NVMRqHazhCIjm9JgczqoYZyhivjFw+fCiwUc1Ywv4sBU/RmKeiQ20VZgKLI6SXDWL7/S0VvN8RtUbukVDRFOjGcpx43FWlDr9IsYJSPUv18N/2AUN1J1yOc4/RpaXB/5nMwgzubQvCNkJTN7QIPSZtJ8A1cCkrEXlP1sI=
+	t=1716310487; cv=none; b=nA1feGG3gCzHoijVfVJXLTL/0xOD17yhGZzqYwKIj5e3xWvxpG/wRlfGWCeZ1z6YrO7YCbpGfR1q+erAtoX1W0IuZq+x39riV862ZsLEZxEdqjFaj69sEnzhO6oU1W/UVONZRYxbV4qM43HlrgQfljNFqdu9UH+hHPkSwqrh1A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716310287; c=relaxed/simple;
-	bh=Dhw2Jh5mBReYK2KdFz4zu0dZX2l7oWPnI/weHg4qPJE=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=kcFD3q8AH4XDDqfEZ4lrcCV4pHuFUkYY05JfFekUKNPPZeRc9YgxnicPQUlI1XzWur/cXLpR43J3MyOFSVNIusTpbVxIi6wSpHJNsJ9ujV11HJxDKDzFOSGvleL38zTlXItgRQGK1jhegiYmqJEGMFd3IsdNyOp/6iWojUIOj3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=138cH15V; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1716310487; c=relaxed/simple;
+	bh=u+E6REgtt4LmBWcn1J39wz0rLp+zw/Txu+ik6PwwCrU=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=JiRTy+ZnN7+35kS6QIQqYjCRJJM97a10wyuUAJj40UgIh543SBNnc9pe2psd7fO/Mx11TldY/JhNnsfYAxAD4Jk6olqAUS5VdiaQL3UIB1ZkK5f7nx1dGNf6BR2OFQK4MqSJe3++WfjuyZHYasBz+lT8OhwbcbXxZx7E+jX3mzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DKcVsnil; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="138cH15V"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df4dc93d0d3so134899276.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 09:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716310285; x=1716915085; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PrE0BOJf8HvNnLMD4w6E9MqTE92sz3IiyAicOOYr1ws=;
-        b=138cH15VD/8CfPyZRGzj205b1CZkhWJo/BVITisHEogHXPDXUwZyrUbE6I7nabJKnE
-         wZkyzU0DVRg+CuHrbDS4z/31LNE8G4/z7AFrwdkH2pUMdGLG+HCoVAArW04dowGgx5gG
-         2ua4d+lFjjiS9h3nnYtlN4sDr/erlZU4NAHt8t1SCWIJkq47CiFcTB0/5b2u5+Is5tSw
-         CeDAW/xXGO7Kd+ckefinTVCrrtJOzQeC/D/mvH7wqsssGXMF8cUPnRAUkzVt5+BMyC4L
-         dr4OZAZI5a32gDvTDv1cQyXGr2V0jIVKxjEsPoKQxlgYbmaVMkCVOF91JTZFFfuUu/LW
-         YgTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716310285; x=1716915085;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrE0BOJf8HvNnLMD4w6E9MqTE92sz3IiyAicOOYr1ws=;
-        b=sur/nrTq/EhtJ3uXnnC+qapEiIUG1bXGr90WY04LOniTIcIXEA3rVwdY7N2UOtXjbJ
-         DzSO5s3VnzLgCpzH+UnfXMX5+F/oNqPf5prYJxhWKapnOBkik1J4BU0O0fa1lX57Xixr
-         V0ZTo+uRgSoBlSukakMR3PACI+HgnlpG851hzUy5UPSVwDT4g6Gy2LRgZlvQBtqbgBHl
-         iT2obal9fTfJz3ef9KdSghQrZZouH0843zPWBBpYdVdmBNlmpmwaDeqp60J8Y/NN4zjP
-         4egoPe/kA0KdHLYW8mdho5al6QqSlJDg0GdL4eLIqzhmgyf1+0H3ukRji6PFdG7T/W6I
-         o8CA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+8qzxQNXnXpkupARhLKfP+yIFpwKm1V/ums4j+7x9Gnm2UXUqBu8URcDggIjQ4+GlvXCb34l36OiB59Rqg2c2//vwzvgPRIVwIXOUxMIqrw==
-X-Gm-Message-State: AOJu0YxJ1QcQJfj3HcASSEPy5vV2XX0F+f6LUiQh5mf19VO8qV1wqv3+
-	X1KuOBj8J1xj0cLFvCiMN0uXTVyzNceADmanLTGyDD+FE8Xkdz7m1rWe0xOeOjhmNQxj5D5CktC
-	wPL4RQw==
-X-Google-Smtp-Source: AGHT+IHTBwsqs2wQ8TlnvMpoDM7P28140rp8Mfd1Iad6gC/LK63BwUOu/9UX9LlDgAfvx3yzOt1h8kHrBWwS
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8533:b29a:936d:651a])
- (user=irogers job=sendgmr) by 2002:a05:6902:100b:b0:df4:9b3d:66a9 with SMTP
- id 3f1490d57ef6-df49b3d9b15mr2457254276.10.1716310284725; Tue, 21 May 2024
- 09:51:24 -0700 (PDT)
-Date: Tue, 21 May 2024 09:51:09 -0700
-In-Reply-To: <20240521165109.708593-1-irogers@google.com>
-Message-Id: <20240521165109.708593-4-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DKcVsnil"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716310484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=RwKKN24ApkrMKnad1o3adB3dZNyuUNkwimjIpYmbzMg=;
+	b=DKcVsnilvi3uhOE/o48U5XaAYXtyC8MZ+9IvVKpJnZ1tm+nTv97BvLm4OTXXpzKTpWpuEx
+	mcaQTH4BueVPn1MRJ3iAcsbxIRz7pl9aNm6HkUbROaO9pTh+V4veoPepztCiCLld6m4BsK
+	ZtbzgNICyanjf1qAfTbCL6K9ECW/+xo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-ESlZfNLiOE-IlOotURCzwg-1; Tue,
+ 21 May 2024 12:54:41 -0400
+X-MC-Unique: ESlZfNLiOE-IlOotURCzwg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F18DB380673B;
+	Tue, 21 May 2024 16:54:40 +0000 (UTC)
+Received: from Diego (unknown [10.39.208.27])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AEF25C15BB1;
+	Tue, 21 May 2024 16:54:38 +0000 (UTC)
+Date: Tue, 21 May 2024 18:54:35 +0200 (CEST)
+From: Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To: linux-perf-users@vger.kernel.org
+cc: vmolnaro@redhat.com, kan.liang@linux.intel.com, irogers@google.com, 
+    acme@redhat.com, ak@linux.intel.com, alexander.shishkin@linux.intel.com
+Subject: perf stat VERSUS perf stat report :: TopDown Metrics
+Message-ID: <alpine.LRH.2.20.2405211842450.4040@Diego>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240521165109.708593-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 3/3] perf maps: Add/use a sorted insert for fixup overlap
- and insert
-From: Ian Rogers <irogers@google.com>
-To: "Steinar H . Gunderson" <sesse@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Data may have lots of overlapping mmaps. The regular insert adds at
-the end and relies on a later sort. For data with overlapping mappings
-the sort will happen during a subsequent maps__find or
-__maps__fixup_overlap_and_insert, there's never a period where the
-inserted maps buffer up and a single sort happens. To avoid back to
-back sorts, maintain the sort order when fixing up and
-inserting. Previously the first_ending_after search was O(log n) where
-n is the size of maps, and the insert was O(1) but because of the
-continuous sorting was becoming O(n*log(n)). With maintaining sort
-order, the insert now becomes O(n) for a memmove.
+Hello!
 
-For a perf report on a perf.data file containing overlapping mappings
-the time numbers are:
+I have a test for perf-stat record/report functionality, which compares the outputs,
+basically whether `perf stat report` is able to reconstruct the same results as
+printed by `perf stat`. In the Intel environments with TopDown events/metrics, the
+test started failing on the fact that perf-stat-report has a different approach to
+handle the metrics:
 
-Before:
-real    0m5.894s
-user    0m5.650s
-sys     0m0.231s
+================================ perf stat ================================
+ Performance counter stats for 'ls':
 
-After:
-real    0m0.675s
-user    0m0.454s
-sys     0m0.196s
+              0.69 msec task-clock                   #    0.477 CPUs utilized
+                 0      context-switches             #    0.000 /sec
+                 0      cpu-migrations               #    0.000 /sec
+                97      page-faults                  #  139.648 K/sec
+         1,776,212      cycles                       #    2.557 GHz
+         1,970,435      instructions                 #    1.11  insn per cycle
+           403,140      branches                     #  580.389 M/sec
+            11,837      branch-misses                #    2.94% of all branches
+                        TopdownL1             #     30.0 %  tma_backend_bound
+                                              #     13.0 %  tma_bad_speculation
+                                              #     37.5 %  tma_frontend_bound
+                                              #     19.5 %  tma_retiring
+                        TopdownL2             #     12.1 %  tma_branch_mispredicts
+                                              #     11.7 %  tma_core_bound
+                                              #     13.2 %  tma_fetch_bandwidth
+                                              #     24.3 %  tma_fetch_latency
+                                              #      3.1 %  tma_heavy_operations
+                                              #     16.3 %  tma_light_operations
+                                              #      1.0 %  tma_machine_clears
+                                              #     18.3 %  tma_memory_bound
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/maps.c | 65 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 59 insertions(+), 6 deletions(-)
+       0.001456908 seconds time elapsed
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index f6b6df82f4cf..432399cbe5dd 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -735,6 +735,60 @@ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
- 	return first;
- }
- 
-+static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_index,
-+				 struct map *new1, struct map *new2)
-+{
-+	struct map **maps_by_address = maps__maps_by_address(maps);
-+	struct map **maps_by_name = maps__maps_by_name(maps);
-+	unsigned int nr_maps = maps__nr_maps(maps);
-+	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
-+	unsigned int to_add = new2 ? 2 : 1;
-+
-+	assert(maps__maps_by_address_sorted(maps));
-+	assert(first_after_index == nr_maps ||
-+	       map__end(new1) <= map__start(maps_by_address[first_after_index]));
-+	assert(!new2 || map__end(new1) <= map__start(new2));
-+	assert(first_after_index == nr_maps || !new2 ||
-+	       map__end(new2) <= map__start(maps_by_address[first_after_index]));
-+
-+	if (nr_maps + to_add > nr_allocate) {
-+		nr_allocate = !nr_allocate ? 32 : nr_allocate * 2;
-+
-+		maps_by_address = realloc(maps_by_address, nr_allocate * sizeof(new1));
-+		if (!maps_by_address)
-+			return -ENOMEM;
-+
-+		maps__set_maps_by_address(maps, maps_by_address);
-+		if (maps_by_name) {
-+			maps_by_name = realloc(maps_by_name, nr_allocate * sizeof(new1));
-+			if (!maps_by_name) {
-+				/*
-+				 * If by name fails, just disable by name and it will
-+				 * recompute next time it is required.
-+				 */
-+				__maps__free_maps_by_name(maps);
-+			}
-+			maps__set_maps_by_name(maps, maps_by_name);
-+		}
-+		RC_CHK_ACCESS(maps)->nr_maps_allocated = nr_allocate;
-+	}
-+	memmove(&maps_by_address[first_after_index+to_add],
-+		&maps_by_address[first_after_index],
-+		(nr_maps - first_after_index) * sizeof(new1));
-+	maps_by_address[first_after_index] = map__get(new1);
-+	if (maps_by_name)
-+		maps_by_name[nr_maps] = map__get(new1);
-+	if (new2) {
-+		maps_by_address[first_after_index + 1] = map__get(new2);
-+		if (maps_by_name)
-+			maps_by_name[nr_maps + 1] = map__get(new2);
-+	}
-+	RC_CHK_ACCESS(maps)->nr_maps = nr_maps + to_add;
-+	maps__set_maps_by_name_sorted(maps, false);
-+	check_invariants(maps);
-+	return 0;
-+}
-+
- /*
-  * Adds new to maps, if new overlaps existing entries then the existing maps are
-  * adjusted or removed so that new fits without overlapping any entries.
-@@ -743,6 +797,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- {
- 	int err = 0;
- 	FILE *fp = debug_file();
-+	unsigned int i;
- 
- 	if (!maps__maps_by_address_sorted(maps))
- 		__maps__sort_by_address(maps);
-@@ -751,7 +806,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 	 * Iterate through entries where the end of the existing entry is
- 	 * greater-than the new map's start.
- 	 */
--	for (unsigned int i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
-+	for (i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
- 		struct map **maps_by_address = maps__maps_by_address(maps);
- 		struct map *pos = maps_by_address[i];
- 		struct map *before = NULL, *after = NULL;
-@@ -824,9 +879,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 				 * 'pos' mapping and therefore there are no
- 				 * later mappings.
- 				 */
--				err = __maps__insert(maps, new);
--				if (!err)
--					err = __maps__insert(maps, after);
-+				err = __maps__insert_sorted(maps, i, new, after);
- 				map__put(after);
- 				check_invariants(maps);
- 				return err;
-@@ -839,7 +892,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 			 */
- 			map__put(maps_by_address[i]);
- 			maps_by_address[i] = map__get(new);
--			err = __maps__insert(maps, after);
-+			err = __maps__insert_sorted(maps, i + 1, after, NULL);
- 			map__put(after);
- 			check_invariants(maps);
- 			return err;
-@@ -869,7 +922,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
- 		}
- 	}
- 	/* Add the map. */
--	err = __maps__insert(maps, new);
-+	err = __maps__insert_sorted(maps, i, new, NULL);
- out_err:
- 	return err;
- }
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+       0.000000000 seconds user
+       0.001647000 seconds sys
+
+================================ perf stat report ================================
+ Performance counter stats for '/usr/bin/perf stat record ls':
+
+              0.69 msec task-clock                   #    0.477 CPUs utilized
+                 0      context-switches             #    0.000 /sec
+                 0      cpu-migrations               #    0.000 /sec
+                97      page-faults                  #  139.648 K/sec
+         1,776,212      cycles                       #    2.557 GHz
+         1,970,435      instructions                 #    1.11  insn per cycle
+           403,140      branches                     #  580.389 M/sec
+            11,837      branch-misses                #    2.94% of all branches
+        10,657,272      TOPDOWN.SLOTS
+         2,089,661      topdown-retiring
+         4,053,942      topdown-fe-bound
+         1,964,281      topdown-mem-bound
+         3,218,078      topdown-be-bound
+           334,345      topdown-heavy-ops
+         1,295,589      topdown-br-mispredict
+         2,632,973      topdown-fetch-lat
+         1,379,176      topdown-bad-spec
+            21,248      INT_MISC.UOP_DROPPING        #   30.590 M/sec
+
+       0.001456908 seconds time elapsed
+
+While perf-stat (and perf-stat-record) calculates the percentages, perf-stat-report
+just prints the raw numbers. Thinking about it, it might be useful to know the raw
+numbers too, but rather via an option, while by default, both should behave the same,
+shouldn't they? Is perf-stat-report missing some metric postprocessing?
+
+Thanks!
+
+Michael
 
