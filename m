@@ -1,127 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8DC28DA0
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 16:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB9722F11;
+	Tue, 21 May 2024 17:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716310487; cv=none; b=nA1feGG3gCzHoijVfVJXLTL/0xOD17yhGZzqYwKIj5e3xWvxpG/wRlfGWCeZ1z6YrO7YCbpGfR1q+erAtoX1W0IuZq+x39riV862ZsLEZxEdqjFaj69sEnzhO6oU1W/UVONZRYxbV4qM43HlrgQfljNFqdu9UH+hHPkSwqrh1A8=
+	t=1716311274; cv=none; b=bglJvZ5laAuiVXs7hys5rJFtb7zOQqRVXWUslAAjS60WKzaqWBSrZx3dcKZyL2ibdXwfWismC3UkyvXbU9L7NnoDw15GLIPOQcWCXFt0s+K6csu5QrLl3k9tMQWK6HyCrNu/cFBmjnuSni/3xnb1FiFU9nsiIjQ9nQspq5OGooc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716310487; c=relaxed/simple;
-	bh=u+E6REgtt4LmBWcn1J39wz0rLp+zw/Txu+ik6PwwCrU=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=JiRTy+ZnN7+35kS6QIQqYjCRJJM97a10wyuUAJj40UgIh543SBNnc9pe2psd7fO/Mx11TldY/JhNnsfYAxAD4Jk6olqAUS5VdiaQL3UIB1ZkK5f7nx1dGNf6BR2OFQK4MqSJe3++WfjuyZHYasBz+lT8OhwbcbXxZx7E+jX3mzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DKcVsnil; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DKcVsnil"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716310484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=RwKKN24ApkrMKnad1o3adB3dZNyuUNkwimjIpYmbzMg=;
-	b=DKcVsnilvi3uhOE/o48U5XaAYXtyC8MZ+9IvVKpJnZ1tm+nTv97BvLm4OTXXpzKTpWpuEx
-	mcaQTH4BueVPn1MRJ3iAcsbxIRz7pl9aNm6HkUbROaO9pTh+V4veoPepztCiCLld6m4BsK
-	ZtbzgNICyanjf1qAfTbCL6K9ECW/+xo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-ESlZfNLiOE-IlOotURCzwg-1; Tue,
- 21 May 2024 12:54:41 -0400
-X-MC-Unique: ESlZfNLiOE-IlOotURCzwg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F18DB380673B;
-	Tue, 21 May 2024 16:54:40 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AEF25C15BB1;
-	Tue, 21 May 2024 16:54:38 +0000 (UTC)
-Date: Tue, 21 May 2024 18:54:35 +0200 (CEST)
-From: Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To: linux-perf-users@vger.kernel.org
-cc: vmolnaro@redhat.com, kan.liang@linux.intel.com, irogers@google.com, 
-    acme@redhat.com, ak@linux.intel.com, alexander.shishkin@linux.intel.com
-Subject: perf stat VERSUS perf stat report :: TopDown Metrics
-Message-ID: <alpine.LRH.2.20.2405211842450.4040@Diego>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+	s=arc-20240116; t=1716311274; c=relaxed/simple;
+	bh=4f/C9c7ipxOsSvQmsAVBs2332WEtJ7P3HVXcExUQcgE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kogstMHotsCLJDEzZc4J0Onik1zjK7LHO/DPa0JHBJFabK/bytkezLVhwpdbGE6GhcsDEUkAg0Lsk9LIC2OKsVhxTjvWl+lDZcfbqHo1YabHygCMsLsESUYj/u4CJXz5zcwKc/CLqCK3XsASHgcrx8kkkG5oWVS5z4dwfLEM0HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so487657a12.0;
+        Tue, 21 May 2024 10:07:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716311273; x=1716916073;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xg+oV7v8UxI/sVUAL8gF5mbiN42OB/uM83jie5ZyfWc=;
+        b=Kakh+U5AjjFLVXOtRQLyCWyhyWahO5jVL7KTszYs8tgCvqrmEYq/Th9xDIjTQT4dIf
+         uCbfp6knpQARvE/SpyBnv/Ud3+oBc0xNh67fyZHIoiG7MBD5G8TSC7wX/swZJexxTnd7
+         ThlUsgOcv5KqQYdcuLFsyVn6Om/3Xx5TiGqqwqMM3jwz/3J0V4vpfqdqOOJebubFkeRC
+         gW3/WyPFIniLjog2hezn/TStVvcPB4Cs8tO5h9F3y0pf15QWVWDuRBoSsxTir23S2XE6
+         j8/+o3c6Lcq1sB9NCvTQaLX+9gx5Oml/goT8a7hLrS2JZ9Xs47ebV/vuXZt50jWobDXy
+         WflA==
+X-Forwarded-Encrypted: i=1; AJvYcCUA74g2RowsL/lytv9c4aBzDm66Q5Bn0syY785zplX1WgTidOf07/DkRceW6QdtQp3h8xA1mWL4FQYechuqjt4MsOKSUrY8DbjJYuvmQg7Gz3wZ5k7Jcae/QvbECUMR1X33hBYCNCf3jtyIfov6KA==
+X-Gm-Message-State: AOJu0YxmKC338jGtDgyjFrx1Jpm67l4Npo3nKnFbP14nLIG14F3Tn5Z7
+	JLx7or1AMwrJHodt4C5udKC/Acfd3iXjepifTyPDNrhW9mwNhpg1J40yyrNYiGakR4BbrNiqckd
+	J9KyI5ZjAidQkPzCiQU/UWj8zvcA=
+X-Google-Smtp-Source: AGHT+IFvFYzo6dlUwfBLl6Qah/52Q9PZ92l8yj2n5Wpl/LRcNcQOQbhJZ6imF7X8p/pV71lwH0gTuIYtCiB22x04gpQ=
+X-Received: by 2002:a17:90b:683:b0:2bd:768b:6df8 with SMTP id
+ 98e67ed59e1d1-2bd768b6f5emr5439960a91.19.1716311272794; Tue, 21 May 2024
+ 10:07:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+References: <ZjssGrj+abyC6mYP@gmail.com> <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
+ <ZkG4LWr7w11wQ/PR@gmail.com> <CAP-5=fVHrKcqwczoU1uMD4tP5DTVhfQ1T_hXnm_y5Ji3M6K_ag@mail.gmail.com>
+ <ZkJK3x3zQ9a4wp8E@gmail.com> <CAP-5=fUh+GoqERAF-qf8zx4kwq2uzwR2Ugop5XOkPexYGAqF3A@mail.gmail.com>
+ <CAP-5=fWXDPfNqLz6DHYe9+dev_e6X5TcTe_xzOOz27yDkT7o7A@mail.gmail.com>
+In-Reply-To: <CAP-5=fWXDPfNqLz6DHYe9+dev_e6X5TcTe_xzOOz27yDkT7o7A@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 21 May 2024 10:07:40 -0700
+Message-ID: <CAM9d7ch5HTr+k+_GpbMrX0HUo5BZ11byh1xq0Two7B7RQACuNw@mail.gmail.com>
+Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
+ vmlinux.h. Stop.
+To: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello!
+Hi Ian and Ingo,
 
-I have a test for perf-stat record/report functionality, which compares the outputs,
-basically whether `perf stat report` is able to reconstruct the same results as
-printed by `perf stat`. In the Intel environments with TopDown events/metrics, the
-test started failing on the fact that perf-stat-report has a different approach to
-handle the metrics:
+The failure happens when you don't have vmlinux.h or vmlinux with BTF.
 
-================================ perf stat ================================
- Performance counter stats for 'ls':
+ifeq ($(VMLINUX_H),)
+  ifeq ($(VMLINUX_BTF),)
+    $(error Missing bpftool input for generating vmlinux.h)
+  endif
+endif
 
-              0.69 msec task-clock                   #    0.477 CPUs utilized
-                 0      context-switches             #    0.000 /sec
-                 0      cpu-migrations               #    0.000 /sec
-                97      page-faults                  #  139.648 K/sec
-         1,776,212      cycles                       #    2.557 GHz
-         1,970,435      instructions                 #    1.11  insn per cycle
-           403,140      branches                     #  580.389 M/sec
-            11,837      branch-misses                #    2.94% of all branches
-                        TopdownL1             #     30.0 %  tma_backend_bound
-                                              #     13.0 %  tma_bad_speculation
-                                              #     37.5 %  tma_frontend_bound
-                                              #     19.5 %  tma_retiring
-                        TopdownL2             #     12.1 %  tma_branch_mispredicts
-                                              #     11.7 %  tma_core_bound
-                                              #     13.2 %  tma_fetch_bandwidth
-                                              #     24.3 %  tma_fetch_latency
-                                              #      3.1 %  tma_heavy_operations
-                                              #     16.3 %  tma_light_operations
-                                              #      1.0 %  tma_machine_clears
-                                              #     18.3 %  tma_memory_bound
+VMLINUX_BTF can be empty if you didn't build a kernel or
+it doesn't have a BTF section and the current kernel also
+has no BTF.  This is totally ok.
 
-       0.001456908 seconds time elapsed
+But VMLINUX_H should be set to the minimal version in
+the source tree (unless you overwrite it manually) when you
+don't pass GEN_VMLINUX_H=1 (which requires VMLINUX_BTF
+should not be empty).  The problem is that it's defined in
+Makefile.config which is not included for `make clean`.
 
-       0.000000000 seconds user
-       0.001647000 seconds sys
+Can you please verify if the below patch fixes it?
 
-================================ perf stat report ================================
- Performance counter stats for '/usr/bin/perf stat record ls':
+Thanks,
+Namhyung
 
-              0.69 msec task-clock                   #    0.477 CPUs utilized
-                 0      context-switches             #    0.000 /sec
-                 0      cpu-migrations               #    0.000 /sec
-                97      page-faults                  #  139.648 K/sec
-         1,776,212      cycles                       #    2.557 GHz
-         1,970,435      instructions                 #    1.11  insn per cycle
-           403,140      branches                     #  580.389 M/sec
-            11,837      branch-misses                #    2.94% of all branches
-        10,657,272      TOPDOWN.SLOTS
-         2,089,661      topdown-retiring
-         4,053,942      topdown-fe-bound
-         1,964,281      topdown-mem-bound
-         3,218,078      topdown-be-bound
-           334,345      topdown-heavy-ops
-         1,295,589      topdown-br-mispredict
-         2,632,973      topdown-fetch-lat
-         1,379,176      topdown-bad-spec
-            21,248      INT_MISC.UOP_DROPPING        #   30.590 M/sec
+---8<---
 
-       0.001456908 seconds time elapsed
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 5c35c0d89306..e6d56b555369 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -214,6 +214,7 @@ NON_CONFIG_TARGETS := clean python-clean TAGS tags
+cscope help
 
-While perf-stat (and perf-stat-record) calculates the percentages, perf-stat-report
-just prints the raw numbers. Thinking about it, it might be useful to know the raw
-numbers too, but rather via an option, while by default, both should behave the same,
-shouldn't they? Is perf-stat-report missing some metric postprocessing?
-
-Thanks!
-
-Michael
-
+ ifdef MAKECMDGOALS
+ ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
++  VMLINUX_H=$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
+   config := 0
+ endif
+ endif
