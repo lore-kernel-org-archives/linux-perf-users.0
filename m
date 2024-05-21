@@ -1,339 +1,112 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3291B7F7FC;
-	Tue, 21 May 2024 13:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CF3471B48;
+	Tue, 21 May 2024 13:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716298246; cv=none; b=tek6jurWsLGq12pOb62eEDVrSRZtKSpCPa8lUfUfF88R0gHKGfhOZdihsCl8A16I3ZpMK9Y0Y/Y/wOWn0i4aT9WCBcNe0al8uZ067sMD6cAXOUxTnJj585TNOrOn8ClPGOxIsMqWqVOWst4wVX+qRoWrJVh72amZVJtxmgSwMiE=
+	t=1716299096; cv=none; b=hkAH603DTHaZSg3PVACUvYIMWUIxDDF8rZE2c6D+3SQ4K3f/9c3arUOBaPNuElyeu/t9y7WfQh7SEWV+1POlUOe5ZzovMDuNlxDA3ySp2H2RTHc39HJpgtE3vSrYpfmEoRjHmzsaKGRataHZToewoSLpI6WJllZ0A7M/CxCaQNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716298246; c=relaxed/simple;
-	bh=v13Dt602tJnaqyKpadsMo9w6iuh3ZNfEnTiEaz+kZIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H6s6xlrL7n9F4cS+ARJ4kX5dxV0Qz0eqSexhZ3mMeSY8PvjZovHClJ25WprQgcboC9Wwvzmjza2vvrUidr+aJzmDnCYmjz/sh4rJgDwhdYIEd0BskV5uOr11GBXbUnH93FTihuV8ONx15FwQU6DPCS4OnRwnSYo63xJBGkeMSJU=
+	s=arc-20240116; t=1716299096; c=relaxed/simple;
+	bh=H48cizhNNLDxjU+31xIZUJnQnKmSiED2ZFACjcWGzz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L9oQofuP5h3u8Q9so1K7nIJ2RsmE4+AmNFr+19SF9OHBGcNPMD06vt8IpWbywDvUVINBpABtyoC/F4whbfUkQ42jZqARMVbl12stc+bx1PZ0E5kPqPdKLvcwY+Vj6i1hb65vShQb/5LK6nD8F23Hg3JubkpVgAVeImQsyIb15so=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE0D6FEC;
-	Tue, 21 May 2024 06:31:08 -0700 (PDT)
-Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2C2AF3F641;
-	Tue, 21 May 2024 06:30:43 -0700 (PDT)
-From: Ben Gainey <ben.gainey@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH v6 4/4] tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
-Date: Tue, 21 May 2024 14:30:29 +0100
-Message-ID: <20240521133029.83654-5-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240521133029.83654-1-ben.gainey@arm.com>
-References: <20240521133029.83654-1-ben.gainey@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2DACDA7;
+	Tue, 21 May 2024 06:45:17 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB4663F641;
+	Tue, 21 May 2024 06:44:51 -0700 (PDT)
+Date: Tue, 21 May 2024 14:44:49 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V17 3/9] drivers: perf: arm_pmu: Add infrastructure for
+ branch stack sampling
+Message-ID: <ZkylUT0R9lwseF4a@J2N7QTR9R3>
+References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+ <20240405024639.1179064-4-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405024639.1179064-4-anshuman.khandual@arm.com>
 
-The tool will now default to this new mode if the user specifies a
-sampling group when not in system-wide mode, and when --no-inherit
-is not specified.
+On Fri, Apr 05, 2024 at 08:16:33AM +0530, Anshuman Khandual wrote:
+> In order to support the Branch Record Buffer Extension (BRBE), we need to
+> extend the arm_pmu framework with some basic infrastructure for the branch
+> stack sampling which arm_pmu drivers can opt-in using a new feature flag
+> called 'has_branch_stack'. Subsequent patches will use this to add support
+> for BRBE in the PMUv3 driver.
 
-This change updates evsel to allow the combination of inherit
-and PERF_SAMPLE_READ.
+Please, just use ther *exact* wording I asked for last time:
 
-A fallback is implemented for kernel versions where this feature is not
-supported.
+| In order to support the Branch Record Buffer Extension (BRBE), we need to
+| extend the arm_pmu framework with some basic infrastructure for branch stack
+| sampling which arm_pmu drivers can opt-in to using. Subsequent patches will
+| use this to add support for BRBE in the PMUv3 driver.
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- tools/perf/tests/attr/README                  |  2 +
- .../tests/attr/test-record-group-sampling     | 39 ------------
- .../tests/attr/test-record-group-sampling1    | 50 ++++++++++++++++
- .../tests/attr/test-record-group-sampling2    | 60 +++++++++++++++++++
- tools/perf/tests/attr/test-record-group2      |  9 +--
- tools/perf/util/evsel.c                       | 19 +++++-
- tools/perf/util/evsel.h                       |  1 +
- 7 files changed, 135 insertions(+), 45 deletions(-)
- delete mode 100644 tools/perf/tests/attr/test-record-group-sampling
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
+At this point in the commit message, the 'has_branch_stack' flag doesn't
+matter, and dropping the 'to' after 'opt-in' makes this painful to read.
 
-diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-index 4066fec7180a8..67c4ca76b85d5 100644
---- a/tools/perf/tests/attr/README
-+++ b/tools/perf/tests/attr/README
-@@ -51,6 +51,8 @@ Following tests are defined (with perf commands):
-   perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
-   perf record -e '{cycles,instructions}' kill   (test-record-group1)
-   perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
-+  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
-+  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
-   perf record -D kill                           (test-record-no-delay)
-   perf record -i kill                           (test-record-no-inherit)
-   perf record -n kill                           (test-record-no-samples)
-diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
-deleted file mode 100644
-index 97e7e64a38f07..0000000000000
---- a/tools/perf/tests/attr/test-record-group-sampling
-+++ /dev/null
-@@ -1,39 +0,0 @@
--[config]
--command = record
--args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
--ret     = 1
--
--[event-1:base-record]
--fd=1
--group_fd=-1
--sample_type=343
--read_format=12|28
--inherit=0
--
--[event-2:base-record]
--fd=2
--group_fd=1
--
--# cache-misses
--type=0
--config=3
--
--# default | PERF_SAMPLE_READ
--sample_type=343
--
--# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
--read_format=12|28
--task=0
--mmap=0
--comm=0
--enable_on_exec=0
--disabled=0
--
--# inherit is disabled for group sampling
--inherit=0
--
--# sampling disabled
--sample_freq=0
--sample_period=0
--freq=0
--write_backward=0
-diff --git a/tools/perf/tests/attr/test-record-group-sampling1 b/tools/perf/tests/attr/test-record-group-sampling1
-new file mode 100644
-index 0000000000000..9b87306266329
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-group-sampling1
-@@ -0,0 +1,50 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-1:base-record]
-+fd=1
-+group_fd=-1
-+
-+# cycles
-+type=0
-+config=0
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=343
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=28|31
-+task=1
-+mmap=1
-+comm=1
-+enable_on_exec=1
-+disabled=1
-+
-+# inherit is enabled for group sampling
-+inherit=1
-+
-+[event-2:base-record]
-+fd=2
-+group_fd=1
-+
-+# cache-misses
-+type=0
-+config=3
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=343
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=28|31
-+task=0
-+mmap=0
-+comm=0
-+enable_on_exec=0
-+disabled=0
-+freq=0
-+
-+# inherit is enabled for group sampling
-+inherit=1
-+
-diff --git a/tools/perf/tests/attr/test-record-group-sampling2 b/tools/perf/tests/attr/test-record-group-sampling2
-new file mode 100644
-index 0000000000000..8e29fc13f6668
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-group-sampling2
-@@ -0,0 +1,60 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-1:base-record]
-+fd=1
-+group_fd=-1
-+
-+# cycles
-+type=0
-+config=0
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=87
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=28|31
-+task=1
-+mmap=1
-+comm=1
-+enable_on_exec=1
-+disabled=1
-+
-+# inherit is enabled for group sampling
-+inherit=1
-+
-+# sampling disabled
-+sample_freq=0
-+sample_period=10000
-+freq=0
-+write_backward=0
-+
-+[event-2:base-record]
-+fd=2
-+group_fd=1
-+
-+# cache-misses
-+type=0
-+config=3
-+
-+# default | PERF_SAMPLE_READ
-+sample_type=87
-+
-+# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-+read_format=28|31
-+task=0
-+mmap=0
-+comm=0
-+enable_on_exec=0
-+disabled=0
-+
-+# inherit is enabled for group sampling
-+inherit=1
-+
-+# sampling disabled
-+sample_freq=0
-+sample_period=0
-+freq=0
-+write_backward=0
-diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-index cebdaa8e64e47..785892a54d9e1 100644
---- a/tools/perf/tests/attr/test-record-group2
-+++ b/tools/perf/tests/attr/test-record-group2
-@@ -9,8 +9,9 @@ group_fd=-1
- config=0|1
- sample_period=1234000
- sample_type=87
--read_format=12|28
--inherit=0
-+read_format=28|31
-+disabled=1
-+inherit=1
- freq=0
- 
- [event-2:base-record]
-@@ -19,9 +20,9 @@ group_fd=1
- config=0|1
- sample_period=6789000
- sample_type=87
--read_format=12|28
-+read_format=28|31
- disabled=0
--inherit=0
-+inherit=1
- mmap=0
- comm=0
- freq=0
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3536404e9447b..557d409c53d6c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1156,7 +1156,15 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		 */
- 		if (leader->core.nr_members > 1) {
- 			attr->read_format |= PERF_FORMAT_GROUP;
--			attr->inherit = 0;
-+		}
-+
-+		/*
-+		 * Inherit + SAMPLE_READ requires SAMPLE_TID in the read_format
-+		 */
-+		if (attr->inherit) {
-+			evsel__set_sample_bit(evsel, TID);
-+			evsel->core.attr.read_format |=
-+				PERF_FORMAT_ID;
- 		}
- 	}
- 
-@@ -1832,6 +1840,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- static void evsel__disable_missing_features(struct evsel *evsel)
- {
-+	if (perf_missing_features.inherit_sample_read)
-+		evsel->core.attr.inherit = 0;
- 	if (perf_missing_features.branch_counters)
- 		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_COUNTERS;
- 	if (perf_missing_features.read_lost)
-@@ -1887,7 +1897,12 @@ bool evsel__detect_missing_features(struct evsel *evsel)
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.branch_counters &&
-+	if (!perf_missing_features.inherit_sample_read &&
-+	    evsel->core.attr.inherit && (evsel->core.attr.sample_type & PERF_SAMPLE_READ)) {
-+		perf_missing_features.inherit_sample_read = true;
-+		pr_debug2("Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.\n");
-+		return true;
-+	} else if (!perf_missing_features.branch_counters &&
- 	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
- 		perf_missing_features.branch_counters = true;
- 		pr_debug2("switching off branch counters support\n");
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 517cff431de20..21b8b7e70e75e 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -192,6 +192,7 @@ struct perf_missing_features {
- 	bool weight_struct;
- 	bool read_lost;
- 	bool branch_counters;
-+	bool inherit_sample_read;
- };
- 
- extern struct perf_missing_features perf_missing_features;
--- 
-2.45.1
+> Branch stack sampling support i.e capturing branch records during execution
+> in core perf, rides along with normal HW events being scheduled on the PMU.
+> This prepares ARMV8 PMU framework for branch stack support on relevant PMUs
+> with required HW implementation.
 
+Please delete this paragraph.
+
+> With BRBE, the hardware records branches into a hardware FIFO, which will
+> be sampled by software when perf events overflow. A task may be context-
+> switched an arbitrary number of times between overflows, and to avoid
+> losing samples we need to save the current records when a task is context-
+> switched out. To do these we'll need to use the pmu::sched_task() callback,
+> and we'll also need to allocate some per-task storage space via event flag
+> PERF_ATTACH_TASK_DATA.
+
+[...]
+
+>  /* The events for a given PMU register set. */
+>  struct pmu_hw_events {
+>  	/*
+> @@ -66,6 +78,17 @@ struct pmu_hw_events {
+>  	struct arm_pmu		*percpu_pmu;
+>  
+>  	int irq;
+> +
+> +	struct branch_records	*branches;
+> +
+> +	/* Active context for task events */
+> +	void			*branch_context;
+> +
+> +	/* Active events requesting branch records */
+> +	unsigned int		branch_users;
+> +
+> +	/* Active branch sample type filters */
+> +	unsigned long		branch_sample_type;
+>  };
+
+At this point in the series I understand why we have the 'branches' and
+'branch_users' fields, but the 'branch_context' and 'branch_sample_type'
+fields haven't been introduced and are not obvious.
+
+What exactly is branch_context, and why is that a 'void *' ?
+
+I can understand if that's a PMU-specific structure to track the active
+branch records, but if so I don't understand why 'branch_sample_type'
+isn't folded into that.
+
+Mark.
