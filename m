@@ -1,145 +1,204 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E2712E71
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 May 2024 01:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F803D963;
+	Tue, 21 May 2024 05:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716253500; cv=none; b=satIyXW5bLcrTKO9dI507ziKVuHMJhj4xfpFrCLFxZ7GChsBPcclhGc8EBbykTkcFEv/nZlKhyN0k6C07aAm5uovTj85AfWDddJQePzrhrv13OuG9plugAdGlbJ+AlTqk8+B/cEHsmR/3RRmWpw+3QM7rX//4CP8k0U1Yi3i0Y0=
+	t=1716270179; cv=none; b=rEE53T2L4viQ+m/XuJ2P3LTcO+h8u4LlEhjGYtb3BM3QpDb7u9jk47NuL9hIeRp6QsXWkKFzq1hCY2WX6UWbEAKZVnHVDeJYtIQrm/RsNitPR2VUDdiMvBW5OyQrQGJjBtq9RnoJt+FCerhE7TOZ/HIENpntYbhhBClozGr9FRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716253500; c=relaxed/simple;
-	bh=tm50rM0/vPAY35AZcNIkh9G+ITQ1yOK+pmrR/wf9O70=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=sfWX3dopatvUDCP6hs3J0fvJjmH0AKDM43AubDyf4ONTErZAiAxU0fT9T+zIxJINHQ7+6AgqWhb+58QxlJdJKss8DWTFj4pfZoM52fRvshLp5ewVbGPxxfrb+vMogifV91w60M1x0yy+nkiQn+np1Oo6K6Iu30AZWlfwCsEAIJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PhsY+cCA; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhsY+cCA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-622d157d9fbso149795747b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 May 2024 18:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716253498; x=1716858298; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e6nxXyVAqYg+7CILkdLqmh6c58xAPU1gAIUJoi7JwDM=;
-        b=PhsY+cCAr7XDZ0WBjBUvM+QZ1IKYUQ15/t1EjguMDmRjuXzK8Fxb0JYaYTb6jy4asc
-         1viy8m+Po4C+PbtWlDezEqkLC64x0rjoU4tZgDQOqXWejNfm3JU20EfLm6DrYBx0s7zo
-         H4zK2d+T1C3UOwjzhGNBrVU0JFzgU52dGg02xzxsp6pOLmuAL3gYfaed4C71pi7eBONM
-         V5ttykovbuDrw0aTLBDebOOy5yoqQ7e9tQP1NBFa9p8Jdc6nC2pY8j7KCJHo1kKteWg2
-         bE7v2+N/KoWBE+gxPNRUHZ03bAPTZJqlvfT0734z7M7KAP+Ag0d1BUQA/a417IEMOVZ4
-         NIng==
+	s=arc-20240116; t=1716270179; c=relaxed/simple;
+	bh=mLkKr0679cTjZUyHonnkd8nfg1EagC/Cj6HzW9J2yag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DluTI1MMeICFdCdGCg/K7HzjSCcHbKgT9us5KTti26xJydRyZA3CyEqZTuAEvyECFaxzp3X+XnvLxl9A5SPEShR5X5TSu8IPuMDpmVdmLdTCUr/bbF135NyMYMB0MdmtTE6uVPnxTno+Pq3v0ZBlymtHYt6bO1HPJ3i1GTf/pE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ee5235f5c9so94832675ad.2;
+        Mon, 20 May 2024 22:42:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716253498; x=1716858298;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e6nxXyVAqYg+7CILkdLqmh6c58xAPU1gAIUJoi7JwDM=;
-        b=XL5nmuxyNQ3ev2mmclobz/zE/FT2WdEi75h3Ldan1TEASsowWm2+BLytTMmSEizDo4
-         d/EFWwk1nyUa0BigZJKqwYikywCdfLupxHoJzG1l47Hj6AGwd7RevK4WUYu/zjhInaYO
-         pluiJ1xus/N8fCbhtGaOw4ja8zYIMKMST+x8Cd617nhONVO/xJBEp+LMIDf7bhRT6iB4
-         FIbRKhhkm4G/JHrfzP6ZbphZyrTsSph76JGm0tHu8gwTQAfp93QSGXBPenGL3YxY/V+J
-         mOvjm1J3muon1oxAeUDQAvZNhdOzfjJzK1XEiroSqiJ8Vmw510/EROABQmk4NFc0XGbA
-         qh/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWc338AflnmaVuFZ6ZZdYrdfWVcQhhol4CDGPZekr0mHGbdjO2ktm5o8RkKtQoLEVSAWfpVCElHGR1kShFH1gquMJBbct7nb6U/dNwg/EXINg==
-X-Gm-Message-State: AOJu0Yymqtfild5GEN9R1xSscoDV5yuhAnx4EM5qJDMvXyE/fH9gNtfc
-	Xz6PBrpbI1rqQc92ge9YY6aUFkjqOnBCxPKzCAXSxVPxaCvbP1Et3Qc6F04h9JE9b3WQHNi9+bQ
-	ubrh7sQ==
-X-Google-Smtp-Source: AGHT+IGGMNUxsCZXvQZJgIKjKb/6lz7R/hhsrwhgtgMFa+nJq21QIRiNY4KUgkjCzuVFVt4vQyYXYY0cZyvL
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8533:b29a:936d:651a])
- (user=irogers job=sendgmr) by 2002:a05:690c:6c83:b0:61a:d016:60ff with SMTP
- id 00721157ae682-622affabebdmr62868757b3.2.1716253497942; Mon, 20 May 2024
- 18:04:57 -0700 (PDT)
-Date: Mon, 20 May 2024 18:04:39 -0700
-In-Reply-To: <20240521010439.321264-1-irogers@google.com>
-Message-Id: <20240521010439.321264-4-irogers@google.com>
+        d=1e100.net; s=20230601; t=1716270177; x=1716874977;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bVAOkaAw+vGaYyHaagd8ofwfGPoFhRjOlI0G+tehJLA=;
+        b=QO1sldbPvNPNriv1tsHriAv2nI9vb2YgPAto8rkRGoIx+HzLkHGBigHoveCIYijWgu
+         mMubs8UiyCL0HRiAuoR2d5KMDBxnq/yJ9NOnsuAIAB14oxlR9WVnAS0P/R9BGBuNaisG
+         g1ZTORnl90hJu172VX6MeqP5eMrENpMnhT4jxtt/0U7x7idXmJHw7aj21Qy0fM8QLrn0
+         taiXftsJWoep5IhxImFRFtrYhIOkKVa/4fs0bZ31PwMZtavSmMN+jTL0CR0z8owmJWNH
+         JSoNgiMtAc7gpM3PqhLoci2SoGShrD1mdh28hSfCrkBBlgRV4T8uvpUoQPu57qugZjRh
+         1leg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKmesyqsTV95SStihc8m56g0F2MGbV8FqcfVEiZ6WZGEhChQXbW9+i7G9+31fOqEgDMMTgrrkTRVaGL2GlvhzxAsQRT3/lypE7gwwyEz/uSxtRBqQW9RUrYCLssb/gg5JC/s6zIMCPP91praOQ9A==
+X-Gm-Message-State: AOJu0YzVQkzeO1fUYsZlJN0gyO/hrCKmk9S0fJCaJNg9YYLD6LkNjILW
+	GW3VRQqBTcAtV76MPJqqZVM+381Ce9EcQgRBxu6CBM90AoBVU6fkD89oAMAMBumdQEAAbJby+yP
+	2Gb1LLH74/3f4IkefTPnFmitc01g=
+X-Google-Smtp-Source: AGHT+IGwfAoRk9fOi6nTtoKw9Gr80FbYKLsYQ88JI/KsXxzaO+JiXB8YYJr7c3FFPHUH5G0tppidF+fSYlEFMMABzwQ=
+X-Received: by 2002:a17:90a:296:b0:2b3:463d:992b with SMTP id
+ 98e67ed59e1d1-2b6ccef6431mr27661939a91.42.1716270176705; Mon, 20 May 2024
+ 22:42:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240521010439.321264-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v2 3/3] perf top: Allow filters on events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20240515054443.2824147-1-weilin.wang@intel.com>
+ <20240515054443.2824147-4-weilin.wang@intel.com> <CAM9d7cghtG-9rwy5Yg-oJDETO-J5OUzPt6=xMCwacKqfwo+sZA@mail.gmail.com>
+ <CO6PR11MB563574C9C284744CD079C0D3EEEA2@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB563574C9C284744CD079C0D3EEEA2@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 20 May 2024 22:42:44 -0700
+Message-ID: <CAM9d7ciOyp4AjTxR=-kq=B8b3-ium3wiG+_j6s3wfoH+DOLp8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v8 3/7] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Allow filters to be added to perf top events. One use is to workaround
-issues with:
-```
-$ perf top --uid="$(id -u)"
-```
-which tries to scan /proc find processes belonging to the uid and can
-fail in such a pid terminates between the scan and the
-perf_event_open reporting:
-```
-Error:
-The sys_perf_event_open() syscall returned with 3 (No such process) for event (cycles:P).
-/bin/dmesg | grep -i perf may provide additional information.
-```
-A similar filter:
-```
-$ perf top -e cycles:P --filter "uid == $(id -u)"
-```
-doesn't fail this way.
+Hello,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-top.txt | 4 ++++
- tools/perf/builtin-top.c              | 9 +++++++++
- 2 files changed, 13 insertions(+)
+On Mon, May 20, 2024 at 5:10=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com=
+> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Friday, May 17, 2024 2:43 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v8 3/7] perf stat: Fork and launch perf record =
+when
+> > perf stat needs to get retire latency value for a metric.
+> >
+> > On Tue, May 14, 2024 at 10:44=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> > >
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > When retire_latency value is used in a metric formula, perf stat woul=
+d fork a
+> > > perf record process with "-e" and "-W" options. Perf record will coll=
+ect
+> > > required retire_latency values in parallel while perf stat is collect=
+ing
+> > > counting values.
+> > >
+> > > At the point of time that perf stat stops counting, it would send sig=
+term
+> > signal
+> > > to perf record process and receiving sampling data back from perf rec=
+ord
+> > from a
+> > > pipe. Perf stat will then process the received data to get retire lat=
+ency data
+> > > and calculate metric result.
+> > >
+> > > Another thread is required to synchronize between perf stat and perf =
+record
+> > > when we pass data through pipe.
+> > >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > [SNIP]
+> > > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tp=
+ebs.c
+> > > new file mode 100644
+> > > index 000000000000..4b7a98794fae
+> > > --- /dev/null
+> > > +++ b/tools/perf/util/intel-tpebs.c
+> > > @@ -0,0 +1,285 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * intel_pt.c: Intel Processor Trace support
+> > > + * Copyright (c) 2013-2015, Intel Corporation.
+> >
+> > This needs some updates. :)
+> >
+> >
+> > > + */
+> > > +
+> > > +
+> > > +#include <sys/param.h>
+> > > +#include <subcmd/run-command.h>
+> > > +#include <thread.h>
+> > > +#include "intel-tpebs.h"
+> > > +#include <linux/list.h>
+> > > +#include <linux/zalloc.h>
+> > > +#include <linux/err.h>
+> > > +#include "sample.h"
+> > > +#include "debug.h"
+> > > +#include "evlist.h"
+> > > +#include "evsel.h"
+> > > +#include "session.h"
+> > > +#include "tool.h"
+> > > +#include "metricgroup.h"
+> > > +#include <sys/stat.h>
+> > > +#include <sys/file.h>
+> > > +
+> > > +
+> > > +
+> > > +#define PERF_DATA              "-"
+> > > +#define CONTROL                        "/tmp/control"
+> > > +#define ACK                    "/tmp/ack"
+> > > +pthread_t reader_thread;
+> > > +struct child_process *cmd;
+> > > +struct perf_stat_config *stat_config;
+> >
+> > static ?
+> >
+> > > +
+> > > +static int get_perf_record_args(const char **record_argv)
+> > > +{
+> > > +       int i =3D 0;
+> > > +       struct tpebs_retire_lat *e;
+> > > +
+> > > +       pr_debug("Prepare perf record for retire_latency\n");
+> > > +
+> > > +       record_argv[i++] =3D "perf";
+> > > +       record_argv[i++] =3D "record";
+> > > +       record_argv[i++] =3D "-W";
+> > > +       record_argv[i++] =3D "--synth=3Dno";
+> >
+> > Unfortunately this still synthesizes MMAP records for the kernel
+> > and modules.  As we don't care about them and just want to
+> > minimize the overhead at the beginning, we can add
+> > "--tail-synthesize" too.
+>
+> Hi Namhyung,
+>
+> I'm trying out the "--tail-synthesize" option but failed to get it work
+> correctly. Could you please take a look at this command and let me
+> know what's the problem?
+>
+> "perf record -e cycles:p --synth=3Dno --tail-synthesize -W -a -o - sleep =
+1 | perf script -F retire_lat -i -".
+>
+> I got an error "0x40 [0x40]: failed to process type: 9" when run this com=
+mand.
+>
+> If I run the command in two steps without pipe, they work fine.
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index a754875fa5bb..667e5102075e 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -43,6 +43,10 @@ Default is to monitor all CPUS.
- 	encoding with the layout of the event control registers as described
- 	by entries in /sys/bus/event_source/devices/cpu/format/*.
- 
-+--filter=<filter>::
-+	Event filter.  This option should follow an event selector (-e). For
-+	syntax see linkperf:perf-record[1].
-+
- -E <entries>::
- --entries=<entries>::
- 	Display this many functions.
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1d6aef51c122..e8cbbf10d361 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1055,6 +1055,13 @@ static int perf_top__start_counters(struct perf_top *top)
- 		}
- 	}
- 
-+	if (evlist__apply_filters(evlist, &counter)) {
-+		pr_err("failed to set filter \"%s\" on event %s with %d (%s)\n",
-+			counter->filter ?: "BPF", evsel__name(counter), errno,
-+			str_error_r(errno, msg, sizeof(msg)));
-+		goto out_err;
-+	}
-+
- 	if (evlist__mmap(evlist, opts->mmap_pages) < 0) {
- 		ui__error("Failed to mmap with %d (%s)\n",
- 			    errno, str_error_r(errno, msg, sizeof(msg)));
-@@ -1462,6 +1469,8 @@ int cmd_top(int argc, const char **argv)
- 	OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
- 		     "event selector. use 'perf list' to list available events",
- 		     parse_events_option),
-+	OPT_CALLBACK(0, "filter", &top.evlist, "filter",
-+		     "event filter", parse_filter),
- 	OPT_U64('c', "count", &opts->user_interval, "event period to sample"),
- 	OPT_STRING('p', "pid", &target->pid, "pid",
- 		    "profile events on existing process id"),
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+Hmm... it may not work with pipes.  Let's go without the
+tail-synthesize then.  Sorry for the noise.
 
+Thanks,
+Namhyung
