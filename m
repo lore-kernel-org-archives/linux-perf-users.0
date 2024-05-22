@@ -1,63 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B6AA2D;
-	Tue, 21 May 2024 23:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0F2DF5B;
+	Wed, 22 May 2024 01:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716332557; cv=none; b=QbxyFq+ecgB5IUnDhKx/H+3YLRSJkinpZ6HTQ5f74LzQ+39Z2bDddtsPb2hu5Y5mXJor9+QZ5AklXFIXhPNydJpl0JPJjtFHzrBNRGTy6EbCRCFIUtyblMXpcUl9E/YTuvdcDSad0U4Kgndk9QTy0N0UHEOW96NuSX3HFzpYMT8=
+	t=1716341928; cv=none; b=DKOgBi1OFrhZGxMAJPUnoymnTXl1+pnF15GZHu93Ce3Gcf3myYQvGOca/z7NguQOMQPa3eJCLcRYfHwE5JVpeOOLzB2qM3sBR3cPwgnmeLqDXx820GQtpmIyq4odcKADiJTAvmKE99MqQi+VNlMXl3tQFT5RMUI/DBXccMRFL4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716332557; c=relaxed/simple;
-	bh=ifQyzic2NNtFqbnYPsEyP/mg7BBSJGDsjj6YuGS4WH0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aMZ6lw3S+gGwLtXHZpNk52876lIgW+y2o2/nXN8K18hbM1JW6zqbxen/GfEeozriGrdSZf4xevsEAN2Cm80ZO7ZD9y6WjXneIo7/POIzX0CN2kPkTUwYtqyLRX/CJesndGdN2ELfdplIWGaPULn2OE52vvj7j76LeN+iIR1AGGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW1usw0D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716341928; c=relaxed/simple;
+	bh=D2SjqfOGPe5xouIRl6RPiNZsyBIkS56bzwVN0xMp4jc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rlbuMoLf1V3stpza+CvNPuY0jHo1XqUttDdXw9FU8JWTiBTSbpP1yJyk87KuajISrmSL6JcS59MSORC8f4pyTT/DYIpWSimkaR7qwYniY904kYdJ+wFORHDzcie53cYKrMocUrY9FY5EgOltniOFnZHM4b/w/spcQeVWLgNj9E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCeo3ylA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW1usw0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DF291C2BD11;
-	Tue, 21 May 2024 23:02:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCeo3ylA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0059FC2BD11;
+	Wed, 22 May 2024 01:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716332557;
-	bh=ifQyzic2NNtFqbnYPsEyP/mg7BBSJGDsjj6YuGS4WH0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=LW1usw0DahmmzJz2mWNJ1ntF65/ebxnhz2MiYljevD5ccL/eGaVPic1YgCM3dYKSV
-	 asRLfvOp7jCeU9qB9jZyX73LqCpPWlP7uYYWksxUvXf/vgwMiEzMB0Nmv4R2mf9MwL
-	 93O4eoWJLshwGNGijuBx1nnxDiVoVKOd46nV/cPpl1NjBn2179f2BGPbhtkGy+uVLU
-	 lZrj1tK2xoeY2XDqq1JWEwAOm9hUR4S4MMwFG3PPqK8OmY9oTVLqCLlliUR5NYMa3Z
-	 F6YL9CERUbD8+FDEWYqZqHc5GhW1JPrn9HW6hQWS50hC/CIwgoZP0ONIOYcClibuZA
-	 3J2IMqm+JFsGg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CE5BDC4936D;
-	Tue, 21 May 2024 23:02:36 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240521192614.3937942-1-acme@kernel.org>
-References: <20240521192614.3937942-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240521192614.3937942-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.10-1-2024-05-21
-X-PR-Tracked-Commit-Id: ea558c86248b4955e5c5f3c0c921df450880605e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 29c73fc794c83505066ee6db893b2a83ac5fac63
-Message-Id: <171633255683.31098.16627302013499975744.pr-tracker-bot@kernel.org>
-Date: Tue, 21 May 2024 23:02:36 +0000
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Anne Macedo <retpolanne@posteo.net>, Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, Yang Jihong <yangjihong@bytedance.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+	s=k20201202; t=1716341928;
+	bh=D2SjqfOGPe5xouIRl6RPiNZsyBIkS56bzwVN0xMp4jc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jCeo3ylAH4qbXibrOW/lqDe1CEdwx6TtGht1HYRm3pbCmObmFymIBP4bJm2+ai2k7
+	 JbY4jAVS3WwQ30X507X8OPy+2cC5lf5NsOTUH14vHJEZKRtmC45tpsfHXdtxw+ANU8
+	 7BKCzvlY56W7EI+XPXvg0Fx5qOm7kEfrIcU/0aIe8p12jxfJ191agkCln/8+WA3s+U
+	 JU1cWLptuQAfNL1VhYWIGJjSrl3dDcoFKy+WK2vGIu/YR+hQQxiST+WZ0NBO4pdkov
+	 WBGLiQ8pb6FWu68hu0Y+jJLqvuD6Dx50HjF2YMbbaV3FyzizUqG944/UdmSvouUZK0
+	 PO7ZBfdUV0Opg==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v2 0/4] Fix user stack traces captured from uprobes
+Date: Tue, 21 May 2024 18:38:41 -0700
+Message-ID: <20240522013845.1631305-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Tue, 21 May 2024 16:26:14 -0300:
+This patch set reports two issues with captured stack traces.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.10-1-2024-05-21
+First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+addresses in captured stack trace. This issue happens when there are pending
+return probes, for which kernel hijacks some of the return addresses on user
+stacks. The code is matching those special uretprobe trampoline addresses with
+the list of pending return probe instances and replaces them with actual
+return addresses. This is the same fixup logic that fprobe/kretprobe has for
+kernel stack traces.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/29c73fc794c83505066ee6db893b2a83ac5fac63
+Second issue, which patch #3 is fixing with the help of heuristic, is having
+to do with capturing user stack traces in entry uprobes. At the very entrance
+to user function, frame pointer in rbp register is not yet setup, so actual
+caller return address is still pointed to by rsp. Patch is using a simple
+heuristic, looking for `push %rbp` instruction, to fetch this extra direct
+caller return address, before proceeding to unwind the stack using rbp.
 
-Thank you!
+Patch #4 adds tests into BPF selftests, that validate that captured stack
+traces at various points is what we expect to get. This patch, while being BPF
+selftests, is isolated from any other BPF selftests changes and can go in
+through non-BPF tree without the risk of merge conflicts.
+
+Patches are based on latest linux-trace/probes/for-next.
+
+v1->v2:
+  - fixed GCC aggressively inlining test_uretprobe_stack() function (BPF CI);
+  - fixed comments (Peter).
+
+Andrii Nakryiko (4):
+  uprobes: rename get_trampoline_vaddr() and make it global
+  perf,uprobes: fix user stack traces in the presence of pending
+    uretprobes
+  perf,x86: avoid missing caller address in stack traces captured in
+    uprobe
+  selftests/bpf: add test validating uprobe/uretprobe stack traces
+
+ arch/x86/events/core.c                        |  20 ++
+ include/linux/uprobes.h                       |   3 +
+ kernel/events/callchain.c                     |  43 +++-
+ kernel/events/uprobes.c                       |  17 +-
+ .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
+ .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+ 6 files changed, 361 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
