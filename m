@@ -1,274 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D540213FD69;
-	Wed, 22 May 2024 14:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F6C13D8AA;
+	Wed, 22 May 2024 16:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386838; cv=none; b=k4hJ3/iCldKrVCF1SuPZOYUZVNYSDog6ouKGIrDcpZM9W7O/Y4P5Xee8exvpXX9msh46IV5qVs68y286zZPHrcO8YO+BAXn7wPME8wu3GFnECcMbm2+aZsVGiign/jmai53X0K4ev9cKqINyuG4syzgmG3wvoQx/4nqLGtUXeO0=
+	t=1716395227; cv=none; b=qrdZ1PFQ3M7lO9aoSbMSnIVqFKwQ7mG9CPKtGeZ4tt9OWZzTO9iHdCgAfkiP5VVG8bxgsnn3fdVYTRqfqPCa1rnGKUqgbeR7kmX9mQ1Z0Q01bASYlL+HwU5go5wtsCS0sVqYBIJ+8XjMp9keUssxyB+cpniIAzufV5VfVOYEoNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386838; c=relaxed/simple;
-	bh=zdznR4GDntz9Boow5AKp26edYx1Zv9s+J7ZrKHi74D4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=F4LoL5swmF2c3K1e3LcjXxEToyJ6DKEibZtXKlUFkZploJCJjHOQHTaJBFaIDSTLgOwOt/QuEsyZPJq3wqBV49ByfoWm3gh3NtTw3G/LozTyfEEfyqvmHveSgkjN/5B+N7Q/NGSCDAdj3lLbLOaB3hsXkI6vGidRHsUp2exRiyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lMuU4M4R; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lMuU4M4R"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MDoYoR007819;
-	Wed, 22 May 2024 14:07:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=5L0tNJXrkwy2gT5t3Wi4jHX60IZkSkV5acnPBF1ahQs=;
- b=lMuU4M4RczDde1LYaDz4wOGMlUSO9l3qMPbQLU1p4tQQTX867C0L++N4WvCU94Pln1/h
- t8l/ad6ySZCN1dPuEX0BnJRdnwSaLNtnskZheIbxRjQdmTirEi2Xgv4is/pRgUK7cUi5
- xwpwfI738FwxhnOfzNyw2W6rhyaPRosBtE3yinzJY+PouoYHHsCg+RMLr+IszyqMwGc1
- pXXo3FU+VBuOoNeiUZ9MS4Gc6hVBv+DUrVTuiD1GH3Icr4VCrQYSgr9mTWvimNsEHGTV
- YOw4ZtMpglMr382xXSN52JOSJI4qrkOtyvCCgnL8BBt3fN1Ic0nY20WW2boI+jP481t9 hQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hxm01ut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 14:07:00 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44ME70A3002069;
-	Wed, 22 May 2024 14:07:00 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hxm01um-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 14:07:00 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44MC7JJY008226;
-	Wed, 22 May 2024 14:06:59 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y78vm3x91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 14:06:59 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44ME6r8V30212792
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 14:06:55 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9919320043;
-	Wed, 22 May 2024 14:06:53 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1EA5320040;
-	Wed, 22 May 2024 14:06:51 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.69.167])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 22 May 2024 14:06:50 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1716395227; c=relaxed/simple;
+	bh=RxdI4F1CKShHGVqWnvdKwtmWY+Plt0lPfkZWLBQ25so=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=arUfP7RbJFE71uqq6sX8AT3s+UbFdnS7zr+KFU8FgleKr1fPR1JwpwrlBRHaZz+R275z5A2UsGYrpE1i0nxq/tmmLb9Mu/vHic9r8GxdglTY+wAbd4ZtC0sKppFT+KgrgTC+bHa4LzNuOuJrIX6ME6F+alryhkkJDIWdla10APY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2b9dcc745a4so2223307a91.2;
+        Wed, 22 May 2024 09:27:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716395225; x=1717000025;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=71bEdcCFAmtnhRQcl2H8cfdDF/yHlhWYnXTomnqsrKc=;
+        b=BbuiukBl18V40IhHFesoyvib/8QCFGHOmwgVS9I0I6H0BSbQh2DiRdHKJWGD7+W9JV
+         AQny2iPc+GqMtawPM6uYvlndly4BGLsVN2cja9aIjO4sK9oR7nR5Dr6HegusUNheD3on
+         REK0djE1vNqHGB1/wcPDeY7SQEHhJCi3/+N4qwBzKm5YqlkOaDAGB2D9/cwv8/Uo0P2W
+         voibaTlNtDNQpX/eZguamyWYhV4n+LeYTRo+wvwI08GX3JGYxaD+4x90PDUNzPitEFL6
+         eSZ+U2a0s4sAfw0zhWFPPs0HYANtyob+7vXDgcPICu/lQhSMoW/YCnUadcHP67ZVQ0SO
+         Jvyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqou7TjMHrHb1qX9kClg/F+Xhedvdi4sqA1aqcMiH3UVFOrVOAM4FVUs5sGiNEljc5V3QLG133nQJcZNQtg29jdajATMZnaXKfCVnfFbtvVzi8kph2Zc4jEU44cq/eeuIMn/F0WHraAQ8ookACJs3QgjzGPahQilXAqn+STDt8+X+2aw==
+X-Gm-Message-State: AOJu0YyQ3qUjvKAqi8Q0sbC/bKfwGrRKHOOuIRZcwnX2lDgcL36Cqfnk
+	lyS8xC2r3LlfVHqPDg75wZx7tGCL9HeMqy34fHKJh3ksVrBzETOlisyhmt2Z8aaNP1MUbmFbnKo
+	dJNX/gloNAJio5xsFTcJ4WOdhisg=
+X-Google-Smtp-Source: AGHT+IGWE9gpTA5nNjGHhEjGrcBHdnlVHlvBKEjJN9nhqa6bh9ue7l3uNmtMY/c0FUQvqszCGGc+MVbAoNoqkYdYNn8=
+X-Received: by 2002:a17:90a:17a5:b0:2ad:c098:ebca with SMTP id
+ 98e67ed59e1d1-2bd9f4895a1mr2492001a91.20.1716395225061; Wed, 22 May 2024
+ 09:27:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH V2 5/9] tools/perf: Update parameters for reg extract
- functions to use raw instruction on powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <dd7ea638-8a97-4ad1-9e56-5e444bad9252@csgroup.eu>
-Date: Wed, 22 May 2024 19:36:38 +0530
-Cc: "acme@kernel.org" <acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "irogers@google.com" <irogers@google.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "segher@kernel.crashing.org" <segher@kernel.crashing.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
-        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
-        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+MIME-Version: 1.0
+References: <20240515193610.2350456-1-yabinc@google.com>
+In-Reply-To: <20240515193610.2350456-1-yabinc@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 22 May 2024 09:26:52 -0700
+Message-ID: <CAM9d7cjmJHC91Q-_V7trfW-LtQVbraSHzm--iDiBi7LgNwD2DA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] perf/core: Check sample_type in sample data saving
+ helper functions
+To: Yabin Cui <yabinc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B0117C35-9599-4C86-AC03-5D6B4CCAC1F6@linux.vnet.ibm.com>
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
- <20240506121906.76639-6-atrajeev@linux.vnet.ibm.com>
- <dd7ea638-8a97-4ad1-9e56-5e444bad9252@csgroup.eu>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pxPfNU_L5_ulcuL4UQvKZoCSzc05XEzC
-X-Proofpoint-ORIG-GUID: ujt3SqiMH9AucnqY7P2pA9e5VgKNorvw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_07,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2405010000 definitions=main-2405220094
+
+Hello,
+
+On Wed, May 15, 2024 at 12:36=E2=80=AFPM Yabin Cui <yabinc@google.com> wrot=
+e:
+>
+> Hello,
+>
+> We use helper functions to save raw data, callchain and branch stack in
+> perf_sample_data. These functions update perf_sample_data->dyn_size witho=
+ut
+> checking event->attr.sample_type, which may result in unused space
+> allocated in sample records. To prevent this from happening, this patchse=
+t
+> enforces checking sample_type of an event in these helper functions.
+>
+> Thanks,
+> Yabin
+>
+>
+> Changes since v1:
+>  - Check event->attr.sample_type & PERF_SAMPLE_RAW before
+>    calling perf_sample_save_raw_data().
+>  - Subject has been changed to reflect the change of solution.
+>
+> Changes since v2:
+>  - Move sample_type check into perf_sample_save_raw_data().
+>  - (New patch) Move sample_type check into perf_sample_save_callchain().
+>  - (New patch) Move sample_type check into perf_sample_save_brstack().
+>
+> Changes since v3:
+>  - Fix -Werror=3Dimplicit-function-declaration by moving has_branch_stack=
+().
+>
+> Changes since v4:
+>  - Give a warning if data->sample_flags is already set when calling the
+>    helper functions.
+>
+> Original commit message from v1:
+>   perf/core: Trim dyn_size if raw data is absent
+>
+> Original commit message from v2/v3:
+>   perf/core: Save raw sample data conditionally based on sample type
+>
+>
+> Yabin Cui (3):
+>   perf/core: Save raw sample data conditionally based on sample type
+>   perf/core: Check sample_type in perf_sample_save_callchain
+>   perf/core: Check sample_type in perf_sample_save_brstack
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
 
 
-
-> On 7 May 2024, at 3:18=E2=80=AFPM, Christophe Leroy =
-<christophe.leroy@csgroup.eu> wrote:
->=20
->=20
->=20
-> Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
->> Use the raw instruction code and macros to identify memory =
-instructions,
->> extract register fields and also offset. The implementation addresses
->> the D-form, X-form, DS-form instructions. Two main functions are =
-added.
->> New parse function "load_store__parse" as instruction ops parser for
->> memory instructions. Unlink other parser (like mov__parse), this =
-parser
->> fills in only the "raw" field for source/target and new added =
-"mem_ref"
->> field. This is because, here there is no need to parse the =
-disassembled
->> code and arch specific macros will take care of extracting offset and
->> regs which is easier and will be precise.
->>=20
->> In powerpc, all instructions with a primary opcode from 32 to 63
->> are memory instructions. Update "ins__find" function to have "opcode"
->> also as a parameter. Don't use the "extract_reg_offset", instead use
->> newly added function "get_arch_regs" which will set these fields: =
-reg1,
->> reg2, offset depending of where it is source or target ops.
->=20
-> Yes all instructions with a primary opcode from 32 to 63 are memory=20
-> instructions, but not all memory instructions have opcode 32 to 63.
->=20
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->>  tools/perf/arch/powerpc/util/dwarf-regs.c | 33 +++++++++++++
->>  tools/perf/util/annotate.c                | 22 ++++++++-
->>  tools/perf/util/disasm.c                  | 59 =
-+++++++++++++++++++++--
->>  tools/perf/util/disasm.h                  |  4 +-
->>  tools/perf/util/include/dwarf-regs.h      |  4 +-
->>  5 files changed, 114 insertions(+), 8 deletions(-)
->>=20
->> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c =
-b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> index e60a71fd846e..3121c70dc0d3 100644
->> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
->> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> @@ -102,6 +102,9 @@ int regs_query_register_offset(const char *name)
->>  #define PPC_OP(op) (((op) >> 26) & 0x3F)
->>  #define PPC_RA(a) (((a) >> 16) & 0x1f)
->>  #define PPC_RT(t) (((t) >> 21) & 0x1f)
->> +#define PPC_RB(b) (((b) >> 11) & 0x1f)
->> +#define PPC_D(D) ((D) & 0xfffe)
->> +#define PPC_DS(DS) ((DS) & 0xfffc)
->>=20
->>  int get_opcode_insn(unsigned int raw_insn)
->>  {
->> @@ -117,3 +120,33 @@ int get_target_reg(unsigned int raw_insn)
->>  {
->>   return PPC_RT(raw_insn);
->>  }
->> +
->> +int get_offset_opcode(int raw_insn __maybe_unused)
->> +{
->> + int opcode =3D PPC_OP(raw_insn);
->> +
->> + /* DS- form */
->> + if ((opcode =3D=3D 58) || (opcode =3D=3D 62))
->=20
-> Can you re-use macros from arch/powerpc/include/asm/ppc-opcode.h ?
->=20
-> #define OP_LD 58
-> #define OP_STD 62
-
-Hi Christophe
-
-Sure, I will make these changes
-
->=20
->=20
->> + return PPC_DS(raw_insn);
->> + else
->> + return PPC_D(raw_insn);
->> +}
->> +
->> +/*
->> + * Fills the required fields for op_loc depending on if it
->> + * is a source of target.
->> + * D form: ins RT,D(RA) -> src_reg1 =3D RA, offset =3D D, dst_reg1 =3D=
- RT
->> + * DS form: ins RT,DS(RA) -> src_reg1 =3D RA, offset =3D DS, =
-dst_reg1 =3D RT
->> + * X form: ins RT,RA,RB -> src_reg1 =3D RA, src_reg2 =3D RB, =
-dst_reg1 =3D RT
->> + */
->> +void get_arch_regs(int raw_insn __maybe_unused, int is_source =
-__maybe_unused, struct annotated_op_loc *op_loc __maybe_unused)
->> +{
->> + if (is_source)
->> + op_loc->reg1 =3D get_source_reg(raw_insn);
->> + else
->> + op_loc->reg1 =3D get_target_reg(raw_insn);
->> + if (op_loc->multi_regs)
->> + op_loc->reg2 =3D PPC_RB(raw_insn);
->> + if (op_loc->mem_ref)
->> + op_loc->offset =3D get_offset_opcode(raw_insn);
->> +}
->=20
->> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->> index 85692f73e78f..f41a0fadeab4 100644
->> --- a/tools/perf/util/disasm.c
->> +++ b/tools/perf/util/disasm.c
->> @@ -760,11 +800,20 @@ static void ins__sort(struct arch *arch)
->>   qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
->>  }
->>=20
->> -static struct ins_ops *__ins__find(struct arch *arch, const char =
-*name)
->> +static struct ins_ops *__ins__find(struct arch *arch, const char =
-*name, int opcode)
->>  {
->>   struct ins *ins;
->>   const int nmemb =3D arch->nr_instructions;
->>=20
->> + if (arch__is(arch, "powerpc")) {
->> + /*
->> +  * Instructions with a primary opcode from 32 to 63
->> +  * are memory instructions in powerpc.
->> +  */
->> + if ((opcode >=3D 31) && (opcode <=3D 63))
->=20
-> Could just be if ((opcode & 0x20)) I guess.
-Ok,,=20
->=20
-> By the way your test is wrong because opcode 31 is not only memory=20
-> instructions, see example below (not exhaustive):
->=20
-> #define OP_31_XOP_TRAP      4 =3D=3D> No
-> #define OP_31_XOP_LDX       21 =3D=3D> Yes
-> #define OP_31_XOP_LWZX      23 =3D=3D> Yes
-> #define OP_31_XOP_LDUX      53 =3D=3D> Yes
-> #define OP_31_XOP_DCBST     54 =3D=3D> No
-> #define OP_31_XOP_LWZUX     55 =3D=3D> Yes
-> #define OP_31_XOP_TRAP_64   68 =3D=3D> No
-> #define OP_31_XOP_DCBF      86 =3D=3D> No
-> #define OP_31_XOP_LBZX      87 =3D=3D> Yes
-> #define OP_31_XOP_STDX      149 =3D=3D> Yes
-> #define OP_31_XOP_STWX      151 =3D=3D> Yes
-
-Thanks for pointing this. I checked through others in this list in =
-arch/powerpc/include/asm/ppc-opcode.h=20
-I will have these filtered in V3
-
-Thanks
-Athira
->=20
->=20
->=20
->=20
->> + return &load_store_ops;
->> + }
->> +
->>   if (!arch->sorted_instructions) {
->>   ins__sort(arch);
->>   arch->sorted_instructions =3D true;
-
-
+>
+>  arch/s390/kernel/perf_cpum_cf.c    |  2 +-
+>  arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>  arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>  arch/x86/events/amd/core.c         |  3 +--
+>  arch/x86/events/amd/ibs.c          |  5 ++---
+>  arch/x86/events/core.c             |  3 +--
+>  arch/x86/events/intel/ds.c         |  9 +++-----
+>  include/linux/perf_event.h         | 26 +++++++++++++++++-----
+>  kernel/events/core.c               | 35 +++++++++++++++---------------
+>  kernel/trace/bpf_trace.c           | 11 +++++-----
+>  10 files changed, 55 insertions(+), 43 deletions(-)
+>
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
