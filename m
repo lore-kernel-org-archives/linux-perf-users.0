@@ -1,132 +1,117 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F6C13D8AA;
-	Wed, 22 May 2024 16:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6182B9C3;
+	Wed, 22 May 2024 17:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716395227; cv=none; b=qrdZ1PFQ3M7lO9aoSbMSnIVqFKwQ7mG9CPKtGeZ4tt9OWZzTO9iHdCgAfkiP5VVG8bxgsnn3fdVYTRqfqPCa1rnGKUqgbeR7kmX9mQ1Z0Q01bASYlL+HwU5go5wtsCS0sVqYBIJ+8XjMp9keUssxyB+cpniIAzufV5VfVOYEoNk=
+	t=1716398840; cv=none; b=CgmdfmxnsV42fmXUTCwthQ7aAQYfxGmxtbPGZTulSsM2A76kAVJfQgHRjrrYD7q0JSJfL8GefvDTgfXDN4m0YBg9VNYG3/0JjQggFwZc7F2/kQ3yleZcBGQPsIHYB+4YDqNqAULIdiI8AeSdaUZD8tYDU/R3IYnjwMrnB662TA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716395227; c=relaxed/simple;
-	bh=RxdI4F1CKShHGVqWnvdKwtmWY+Plt0lPfkZWLBQ25so=;
+	s=arc-20240116; t=1716398840; c=relaxed/simple;
+	bh=isyLFE4nn9JkPj3yuYJLcuNMQfnvsjEH3eMkyQFFqJk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=arUfP7RbJFE71uqq6sX8AT3s+UbFdnS7zr+KFU8FgleKr1fPR1JwpwrlBRHaZz+R275z5A2UsGYrpE1i0nxq/tmmLb9Mu/vHic9r8GxdglTY+wAbd4ZtC0sKppFT+KgrgTC+bHa4LzNuOuJrIX6ME6F+alryhkkJDIWdla10APY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
+	 To:Cc:Content-Type; b=DDPH0wZYEiHzjnzCmsNL/JE32HBq/59Ra0XaTXnbVuQejw7lXD/ucyq7vHQiaA3HOE4JQAy2LlxwvZxxG2YtrB2buWKYbdyLdJve0Mh4ZGMpVe3SoER3zK/mn3pJnMcEwh3oAEZxJ6kEG3ZUl37Cl786jZ39RWHuqzgmzUt/6jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2b9dcc745a4so2223307a91.2;
-        Wed, 22 May 2024 09:27:05 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f6bddf57f6so1865449b3a.0;
+        Wed, 22 May 2024 10:27:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716395225; x=1717000025;
+        d=1e100.net; s=20230601; t=1716398838; x=1717003638;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=71bEdcCFAmtnhRQcl2H8cfdDF/yHlhWYnXTomnqsrKc=;
-        b=BbuiukBl18V40IhHFesoyvib/8QCFGHOmwgVS9I0I6H0BSbQh2DiRdHKJWGD7+W9JV
-         AQny2iPc+GqMtawPM6uYvlndly4BGLsVN2cja9aIjO4sK9oR7nR5Dr6HegusUNheD3on
-         REK0djE1vNqHGB1/wcPDeY7SQEHhJCi3/+N4qwBzKm5YqlkOaDAGB2D9/cwv8/Uo0P2W
-         voibaTlNtDNQpX/eZguamyWYhV4n+LeYTRo+wvwI08GX3JGYxaD+4x90PDUNzPitEFL6
-         eSZ+U2a0s4sAfw0zhWFPPs0HYANtyob+7vXDgcPICu/lQhSMoW/YCnUadcHP67ZVQ0SO
-         Jvyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqou7TjMHrHb1qX9kClg/F+Xhedvdi4sqA1aqcMiH3UVFOrVOAM4FVUs5sGiNEljc5V3QLG133nQJcZNQtg29jdajATMZnaXKfCVnfFbtvVzi8kph2Zc4jEU44cq/eeuIMn/F0WHraAQ8ookACJs3QgjzGPahQilXAqn+STDt8+X+2aw==
-X-Gm-Message-State: AOJu0YyQ3qUjvKAqi8Q0sbC/bKfwGrRKHOOuIRZcwnX2lDgcL36Cqfnk
-	lyS8xC2r3LlfVHqPDg75wZx7tGCL9HeMqy34fHKJh3ksVrBzETOlisyhmt2Z8aaNP1MUbmFbnKo
-	dJNX/gloNAJio5xsFTcJ4WOdhisg=
-X-Google-Smtp-Source: AGHT+IGWE9gpTA5nNjGHhEjGrcBHdnlVHlvBKEjJN9nhqa6bh9ue7l3uNmtMY/c0FUQvqszCGGc+MVbAoNoqkYdYNn8=
-X-Received: by 2002:a17:90a:17a5:b0:2ad:c098:ebca with SMTP id
- 98e67ed59e1d1-2bd9f4895a1mr2492001a91.20.1716395225061; Wed, 22 May 2024
- 09:27:05 -0700 (PDT)
+        bh=F6RZqGC/IieWl5jEMbER/7byAZJN8EBKfaX/pw1gzjI=;
+        b=I7ytUdy7XtBHVAeRNEHcPDcrSXQG7gIWDYxva+XB0qqpXv6wDi6SmyqItIIKJzSs4P
+         a7RhOwr2U9Don2NyldSA+qG/rG33/HpATEHshcpUhnQjpW67STabglsnJS2l25Xyn0IC
+         wZDH6HecZvtNkFMRxAAZ4d4lW2u4WPKNanBhH8/XNP6l+dYgNpQCNYcdnpVg5ID2bQRc
+         RgftFha9NvUKa25iva1dWIkffatKTuQmXd1tSAZyhaGapJUvDqZfJq+JeqALW5aVhH4r
+         PT7zePdLR48qJ0YPg/Xl/euD80PMY5AeRhVsTa1xqXm5g0AGfG7WJyZrUNoAj9y/O/Hy
+         NFVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXT41XD81lBWYxbgCYemG/wGT7DoDSzgcpqPRvnwXYrxoWTcSU8eDLaOk35vrWv/LTfLgmPnEVgGOvj5s5mpPRPMQStYmxFhWHDoXux5lVAIxgH31zKh9oUzl69wd+buT4Rb8GsphO+g8shksSIfg==
+X-Gm-Message-State: AOJu0Yz7QTDaqo8bhBw2YjsrLis/C99KAIy+vX+OnqTPNEVAAi3u58A4
+	hsdcooXrQNmCjhRfewAA71JGfN1wc8jaQb3ZrRcw39fQAUi7yB97YKmqCav3mY7Q7gO54w+QSbc
+	yIPxn6NtQNr75QAv+lqc+MorbUg8=
+X-Google-Smtp-Source: AGHT+IH388lysTpiWY9ZpiHOtOthmG/5+kBxu8TK1z21CE5unFX2giv7x8Pxm6u55KapP2L9XGL01sjIoWN23mXp7OI=
+X-Received: by 2002:a17:90a:df10:b0:2ad:e004:76e6 with SMTP id
+ 98e67ed59e1d1-2bd9f456db5mr2800809a91.7.1716398838039; Wed, 22 May 2024
+ 10:27:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515193610.2350456-1-yabinc@google.com>
-In-Reply-To: <20240515193610.2350456-1-yabinc@google.com>
+References: <20240520083048.322863-1-sesse@google.com>
+In-Reply-To: <20240520083048.322863-1-sesse@google.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 May 2024 09:26:52 -0700
-Message-ID: <CAM9d7cjmJHC91Q-_V7trfW-LtQVbraSHzm--iDiBi7LgNwD2DA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] perf/core: Check sample_type in sample data saving
- helper functions
-To: Yabin Cui <yabinc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+Date: Wed, 22 May 2024 10:27:06 -0700
+Message-ID: <CAM9d7cgBZVfur8S3QC2woUA2C6O3Dme0YHP8PbFcwc_o0k-dWg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] perf report: Support LLVM for addr2line()
+To: "Steinar H. Gunderson" <sesse@google.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, irogers@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Wed, May 15, 2024 at 12:36=E2=80=AFPM Yabin Cui <yabinc@google.com> wrot=
-e:
->
-> Hello,
->
-> We use helper functions to save raw data, callchain and branch stack in
-> perf_sample_data. These functions update perf_sample_data->dyn_size witho=
-ut
-> checking event->attr.sample_type, which may result in unused space
-> allocated in sample records. To prevent this from happening, this patchse=
-t
-> enforces checking sample_type of an event in these helper functions.
->
-> Thanks,
-> Yabin
->
->
-> Changes since v1:
->  - Check event->attr.sample_type & PERF_SAMPLE_RAW before
->    calling perf_sample_save_raw_data().
->  - Subject has been changed to reflect the change of solution.
->
-> Changes since v2:
->  - Move sample_type check into perf_sample_save_raw_data().
->  - (New patch) Move sample_type check into perf_sample_save_callchain().
->  - (New patch) Move sample_type check into perf_sample_save_brstack().
->
-> Changes since v3:
->  - Fix -Werror=3Dimplicit-function-declaration by moving has_branch_stack=
-().
->
-> Changes since v4:
->  - Give a warning if data->sample_flags is already set when calling the
->    helper functions.
->
-> Original commit message from v1:
->   perf/core: Trim dyn_size if raw data is absent
->
-> Original commit message from v2/v3:
->   perf/core: Save raw sample data conditionally based on sample type
->
->
-> Yabin Cui (3):
->   perf/core: Save raw sample data conditionally based on sample type
->   perf/core: Check sample_type in perf_sample_save_callchain
->   perf/core: Check sample_type in perf_sample_save_brstack
+Thanks a lot for the patches!
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Mon, May 20, 2024 at 1:31=E2=80=AFAM Steinar H. Gunderson <sesse@google.=
+com> wrote:
+>
+> In addition to the existing support for libbfd and calling out to
+> an external addr2line command, add support for using libllvm directly.
+> This is both faster than libbfd, and can be enabled in distro builds
+> (the LLVM license has an explicit provision for GPLv2 compatibility).
+> Thus, it is set as the primary choice if available.
+>
+> As an example, running perf report on a medium-size profile with
+> DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
+> libbfd, 153 seconds with external llvm-addr2line, and I got tired
+> and aborted the test after waiting for 55 minutes with external
+> bfd addr2line (which is the default for perf as compiled by distributions
+> today). Evidently, for this case, the bfd addr2line process needs
+> 18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
+> hits the 1-second timeout and gets killed during initialization,
+> getting restarted anew every time. Having an in-process addr2line
+> makes this much more robust.
+>
+> As future extensions, libllvm can be used in many other places where
+> we currently use libbfd or other libraries:
+>
+>  - Symbol enumeration (in particular, for PE binaries).
+>  - Demangling (including non-Itanium demangling, e.g. Microsoft
+>    or Rust).
+>  - Disassembling (perf annotate).
+
+I think it should support other DWARF use cases like
+unwinding and type info?
+
+>
+> However, these are much less pressing; most people don't profile
+> PE binaries, and perf has non-bfd paths for ELF. The same with
+> demangling; the default _cxa_demangle path works fine for most
+> users. Disassembling is coming in a later patch in the series;
+> however do note that while bfd objdump can be slow on large binaries,
+> it is possible to use --objdump=3Dllvm-objdump to get the speed benefits.
+
+I remember bfd objdump is sometimes faster than llvm-objdump
+especially when no line numbers are requested IIRC.
+
+
+> (It appears LLVM-based demangling is very simple, should we want
+> that.)
+>
+> Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
+> correctly detected using feature_check, and thus was not tested.
+
+Anyway, nice work.  Maybe we can implement other use cases
+using LLVM and reduce the dependencies.
 
 Thanks,
 Namhyung
 
-
 >
->  arch/s390/kernel/perf_cpum_cf.c    |  2 +-
->  arch/s390/kernel/perf_pai_crypto.c |  2 +-
->  arch/s390/kernel/perf_pai_ext.c    |  2 +-
->  arch/x86/events/amd/core.c         |  3 +--
->  arch/x86/events/amd/ibs.c          |  5 ++---
->  arch/x86/events/core.c             |  3 +--
->  arch/x86/events/intel/ds.c         |  9 +++-----
->  include/linux/perf_event.h         | 26 +++++++++++++++++-----
->  kernel/events/core.c               | 35 +++++++++++++++---------------
->  kernel/trace/bpf_trace.c           | 11 +++++-----
->  10 files changed, 55 insertions(+), 43 deletions(-)
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
+> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
