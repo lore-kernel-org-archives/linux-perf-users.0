@@ -1,170 +1,291 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C56824AF;
-	Wed, 22 May 2024 11:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3570413DBBD;
+	Wed, 22 May 2024 13:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716377277; cv=none; b=qB7LV2ZALPFdHv/hTVdkHTkr+XClSYXDYa17k0DcY+ybxKo8nHHsu6MnKKVcwyHlWhmamMXA39EnTXdg9B6WJcZXXikqhPhnmywvro7p4Qk0r56NqiFqlZRdKj2GL+mwhAdMIgURcNxQ6UW2f+22ZtiwQHPbPd21asgic5A4WTk=
+	t=1716386342; cv=none; b=qhZNTTpubamiV8cdfPUeSHgNPabQdq8TY0gDt81AbqMhuInqclhpZtaqtAhc4w/iEvTtMULcuDoyKT5l/XUZZJQq1sNIY/CwzkCh8VmrLYwWIXoaV82cVWQBXEeBAL1eEB/gq1fDNJMUZW/yzWUVeqfWL5HktSzfyPPbQk4cf7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716377277; c=relaxed/simple;
-	bh=XVkbth8lj3MXtZAYK/gPt/sMHggpj26IMReKmcdvLtM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ESBRRcTd7HPPz/47UaAv9tXuTI85WvvscF+rCkGU46jLwS60M/QOjuzsUPbqgkg190YPceRAMDrBDbQDQAxSfkjxS0UdQaax4xPaK9c1Phv+cMglQhslmsuqVdDsMtMvN///xzOThS6+Hn48nJiw5hIu6agYhZLVqtFuSPlbVVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZM4jHVE3; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716386342; c=relaxed/simple;
+	bh=RAF+fDJD2gJKn9LhD0AWd6OtY8lyYdzDCeVqZEqxhcA=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=Im81mBPNcD2BLcbx2jP6zdZowIYD+lKHd6CU1fOzT81DtU/CT3uI54NGCsH+msuvFloquffcSHduGBF3bYtZ3naB3wtLr7NdPNKxs4aBK0FIpFrdm66g1Mb0KK/Zs0IFqEdoj/LWer+aiY7qGONRe73+xsg15BOenHXroLtAF+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iVCIMDAn; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZM4jHVE3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716377275; x=1747913275;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=XVkbth8lj3MXtZAYK/gPt/sMHggpj26IMReKmcdvLtM=;
-  b=ZM4jHVE3wpfLZuwejD/nriisbqEmoTWSq1fr0P62HsjZh973OoAjP6g0
-   0K5B+JNM14ysk+p92Swy7oqX4K/EycTJnaneviigYSIZMeaYpLjK4RHGw
-   rp+Om+yLIjDckQsBbeTOf6uBCttA9zo7cnN8zAcIyA/BzjmwHNcgTXLWB
-   OShAC8CZvhycwMUVAZg5+3QhlStJiRmY/KmXCMamGGRdW3rw5r4B7cNSt
-   9Mtew4vTpvpF8dwHIbxRU0r0P2sIfgJwcXuei/IADxYJdfkbbmz/lzNtZ
-   8btwSPfD7Cl1+7gyahheBFvJbazqpeSoM/v66E774X9YOvAR8X8Xu/3Lg
-   Q==;
-X-CSE-ConnectionGUID: 1QzzKPR1TU68d1+AGqvF5Q==
-X-CSE-MsgGUID: TGb2kuduTjuSjb17Yibr5Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12494460"
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="12494460"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:27:54 -0700
-X-CSE-ConnectionGUID: HWw8LQtqSySf4hkNs4jB/w==
-X-CSE-MsgGUID: 6Pbqhv/wS8O0DboTImI+Fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="33253526"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.48.38])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:27:51 -0700
-Message-ID: <8e5ab323-f893-4186-813b-e87394e0a9fd@intel.com>
-Date: Wed, 22 May 2024 14:27:46 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iVCIMDAn"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MDpU1R003290;
+	Wed, 22 May 2024 13:58:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=NlHpFkO2XzyQYTgQjwRf1r6z1Yjofq48OQhaKBG4X9E=;
+ b=iVCIMDAnRghT3ya5Qa8lZZyyEYKhYZgqVasVevYFl42l/RSqi8/TZR8RwZAgO/lCvE2R
+ j3tpl1X2WYTdO4DMhbSs06Lja5dVpjSdl1JFmXuM9BsgwjVpZUAFQcCAnbTTjMjwVDPc
+ Fa/wWk77E8b++xDbI7lq8BWBXTmo4tO40AZIyO7+hl77DO17Vo4mlQr5EZL/owJoxkUY
+ ybCi3J7Lot0lXZdSGfDImYuU+oG6u0ukIZmtmm1QldHNmViIbhpq0JF49fp1kWkKN8wb
+ /ZHt7u/FukEhKDN8wO6RUQYziYW33kxXJTYSIQUWS6Ub0soVrUSgT5ywWgKsP/csknyn OQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hrm82de-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:43 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44MDwhNq015403;
+	Wed, 22 May 2024 13:58:43 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9hrm82da-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:43 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44MCAGMt008090;
+	Wed, 22 May 2024 13:58:42 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y79c33un5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 13:58:42 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44MDwaH727656788
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 13:58:38 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7EF2420043;
+	Wed, 22 May 2024 13:58:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9605220040;
+	Wed, 22 May 2024 13:58:33 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.69.167])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 22 May 2024 13:58:33 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
+ instruction in objdump
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Zj4ujanupo0eKyby@x1>
+Date: Wed, 22 May 2024 19:28:21 +0530
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Ian Rogers <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "segher@kernel.crashing.org" <segher@kernel.crashing.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+Message-Id: <476EE92D-D9B6-466F-A827-5BB8A1276D3A@linux.vnet.ibm.com>
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+ <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
+ <f2efdb9d-e636-4678-b492-83d3a28d8134@csgroup.eu>
+ <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
+ <Zj4ujanupo0eKyby@x1>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TsX9NSCmu8Ggaz0XVdQBGN6J6VyNI3tF
+X-Proofpoint-GUID: zOeTV4_tiX1rJjrHub1teADWsZmC57Mh
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] perf maps: Remove the kernel text map with
- maps__remove_maps()
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- James Clark <james.clark@arm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240520090647.949371-1-leo.yan@arm.com>
- <20240520090647.949371-3-leo.yan@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240520090647.949371-3-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_07,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ adultscore=0 clxscore=1011 spamscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 phishscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405220093
 
-On 20/05/24 12:06, Leo Yan wrote:
-> maps__remove_maps() removes all kernel maps except the text map and eBPF
-> maps. Afterwards, the kernel text map is removed from the list and
-> added again with updated information to the maps list.
-> 
-> This commit refactors maps__remove_maps() for deleting the 'map'
-> parameter, resulting in the removal of all kernel maps from the list.
-> Thus, the dso__load_kcore() function no longer needs to remove the kernel
-> text map.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/util/maps.c   | 4 ++--
->  tools/perf/util/maps.h   | 2 +-
->  tools/perf/util/symbol.c | 9 +++------
->  3 files changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 16b39db594f4..4ddd0d50ac2c 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -589,7 +589,7 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
->  	return ret;
->  }
->  
-> -void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data)
-> +void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map))
->  {
->  	struct map **maps_by_address;
->  
-> @@ -597,7 +597,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
->  
->  	maps_by_address = maps__maps_by_address(maps);
->  	for (unsigned int i = 0; i < maps__nr_maps(maps);) {
-> -		if (cb(maps_by_address[i], data))
-> +		if (cb(maps_by_address[i]))
->  			__maps__remove(maps, maps_by_address[i]);
->  		else
->  			i++;
-> diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-> index d9aa62ed968a..90a1ff8b39c5 100644
-> --- a/tools/perf/util/maps.h
-> +++ b/tools/perf/util/maps.h
-> @@ -40,7 +40,7 @@ bool maps__equal(struct maps *a, struct maps *b);
->  /* Iterate over map calling cb for each entry. */
->  int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data), void *data);
->  /* Iterate over map removing an entry if cb returns true. */
-> -void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data);
-> +void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map));
->  
->  struct machine *maps__machine(const struct maps *maps);
->  unsigned int maps__nr_maps(const struct maps *maps); /* Test only. */
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index c1513976ab6e..915435d55498 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1322,15 +1322,13 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
->  	return 0;
->  }
->  
-> -static bool remove_old_maps(struct map *map, void *data)
-> +static bool remove_old_maps(struct map *map)
->  {
-> -	const struct map *map_to_save = data;
-> -
->  	/*
->  	 * We need to preserve eBPF maps even if they are covered by kcore,
->  	 * because we need to access eBPF dso for source data.
->  	 */
-> -	return !RC_CHK_EQUAL(map, map_to_save) && !__map__is_bpf_prog(map);
-> +	return !__map__is_bpf_prog(map);
->  }
->  
->  static int dso__load_kcore(struct dso *dso, struct map *map,
-> @@ -1385,7 +1383,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  	}
->  
->  	/* Remove old maps */
-> -	maps__remove_maps(kmaps, remove_old_maps, map);
-> +	maps__remove_maps(kmaps, remove_old_maps);
->  	machine->trampolines_mapped = false;
->  
->  	/* Find the kernel map using the '_stext' symbol */
-> @@ -1422,7 +1420,6 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  	 * remaining maps so vmlinux gets split if necessary.
->  	 */
->  	map_ref = map__get(map);
 
-If the ref is needed, then it should be taken before
-the call to maps__remove_maps().
 
-> -	maps__remove(kmaps, map_ref);
->  
->  	map__set_start(map_ref, map__start(replacement_map));
->  	map__set_end(map_ref, map__end(replacement_map));
+> On 10 May 2024, at 7:56=E2=80=AFPM, Arnaldo Carvalho de Melo <acme@kernel=
+.org> wrote:
+>=20
+> On Thu, May 09, 2024 at 10:56:23PM +0530, Athira Rajeev wrote:
+>>=20
+>>=20
+>>> On 7 May 2024, at 3:05=E2=80=AFPM, Christophe Leroy <christophe.leroy@c=
+sgroup.eu> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>> Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
+>>>> Add support to capture and parse raw instruction in objdump.
+>>>=20
+>>> What's the purpose of using 'objdump' for reading raw instructions ?=20
+>>> Can't they be read directly without invoking 'objdump' ? It looks odd t=
+o=20
+>>> me to use objdump to provide readable text and then parse it back.
+>>=20
+>> Hi Christophe,
+>>=20
+>> Thanks for your review comments.
+>>=20
+>> Current implementation for data type profiling on X86 uses "objdump" too=
+l to get the disassembled code.
+>=20
+> commit 6d17edc113de1e21fc66afa76be475a4f7c91826
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Fri Mar 29 14:58:11 2024 -0700
+>=20
+>    perf annotate: Use libcapstone to disassemble
+>=20
+>    Now it can use the capstone library to disassemble the instructions.
+>    Let's use that (if available) for perf annotate to speed up.  Currently
+>    it only supports x86 architecture.  With this change I can see ~3x spe=
+ed
+>    up in data type profiling.
+>=20
+>    But note that capstone cannot give the source file and line number inf=
+o.
+>    For now, users should use the external objdump for that by specifying
+>    the --objdump option explicitly.
+>=20
+>    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>    Tested-by: Ian Rogers <irogers@google.com>
+>    Cc: Adrian Hunter <adrian.hunter@intel.com>
+>    Cc: Changbin Du <changbin.du@huawei.com>
+>    Cc: Ingo Molnar <mingo@kernel.org>
+>    Cc: Jiri Olsa <jolsa@kernel.org>
+>    Cc: Kan Liang <kan.liang@linux.intel.com>
+>    Cc: Peter Zijlstra <peterz@infradead.org>
+>    Link: https://lore.kernel.org/r/20240329215812.537846-5-namhyung@kerne=
+l.org
+>    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> From a quick look at http://www.capstone-engine.org/compile.html it
+> seems PowerPC is supported.
+>=20
+> But since we did it first with objdump output parsing, its good to have
+> it as an alternative and sometimes a fallback:
+
+Hi Arnaldo, Namhyung
+
+Thanks for the suggestions. libcapstone is a good option and it is faster t=
+oo.
+I will address these changes in V3.
+
+Thanks
+Athira
+>=20
+> commit f35847de2a65137e011e559f38a3de5902a5463f
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Wed Apr 24 17:51:56 2024 -0700
+>=20
+>    perf annotate: Fallback disassemble to objdump when capstone fails
+>=20
+>    I found some cases that capstone failed to disassemble.  Probably my
+>    capstone is an old version but anyway there's a chance it can fail.  A=
+nd
+>    then it silently stopped in the middle.  In my case, it didn't
+>    understand "RDPKRU" instruction.
+>=20
+>    Let's check if the capstone disassemble reached the end of the function
+>    and fallback to objdump if not
+>=20
+> ---------------
+>=20
+> - Arnaldo
+>=20
+>> And then the objdump result lines are parsed to get the instruction
+>> name and register fields. The initial patchset I posted to enable the
+>> data type profiling feature in powerpc was using the same way by
+>> getting disassembled code from objdump and parsing the disassembled
+>> lines. But in V2, we are introducing change for powerpc to use "raw
+>> instruction" and fetch opcode, reg fields from the raw instruction.
+>=20
+>> I tried to explain below that current objdump uses option
+>> "--no-show-raw-insn" which doesn't capture raw instruction.  So to
+>> capture raw instruction, V2 patchset has changes to use default option
+>> "--show-raw-insn" and get the raw instruction [ for powerpc ] along
+>> with human readable annotation [ which is used by other archs ]. Since
+>> perf tool already has objdump implementation in place, I went in the
+>> direction to enhance it to use "--show-raw-insn" for powerpc purpose.
+>=20
+>> But as you mentioned, we can directly read raw instruction without
+>> using "objdump" tool.  perf has support to read object code. The dso
+>> open/read utilities and helper functions are already present in
+>> "util/dso.c" And "dso__data_read_offset" function reads data from dso
+>> file offset. We can use these functions and I can make changes to
+>> directly read binary instruction without using objdump.
+>=20
+>> Namhyung, Arnaldo, Christophe
+>> Looking for your valuable feedback on this approach. Please suggest if t=
+his approach looks fine
+>>=20
+>>=20
+>> Thanks
+>> Athira
+>>>=20
+>>>> Currently, the perf tool infrastructure uses "--no-show-raw-insn" opti=
+on
+>>>> with "objdump" while disassemble. Example from powerpc with this option
+>>>> for an instruction address is:
+>>>=20
+>>> Yes and that makes sense because the purpose of objdump is to provide=20
+>>> human readable annotations, not to perform automated analysis. Am I=20
+>>> missing something ?
+>>>=20
+>>>>=20
+>>>> Snippet from:
+>>>> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --=
+no-show-raw-insn -C <vmlinux>
+>>>>=20
+>>>> c0000000010224b4: lwz     r10,0(r9)
+>>>>=20
+>>>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+>>>> registers names and offset. Also to find whether there is a memory
+>>>> reference in the operands, "memory_ref_char" field of objdump is used.
+>>>> For x86, "(" is used as memory_ref_char to tackle instructions of the
+>>>> form "mov  (%rax), %rcx".
+>>>>=20
+>>>> In case of powerpc, not all instructions using "(" are the only memory
+>>>> instructions. Example, above instruction can also be of extended form =
+(X
+>>>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction categ=
+ory
+>>>> and extract the source/target registers, patch adds support to use raw
+>>>> instruction. With raw instruction, macros are added to extract opcode
+>>>> and register fields.
+>>>>=20
+>>>> "struct ins_operands" and "struct ins" is updated to carry opcode and
+>>>> raw instruction binary code (raw_insn). Function "disasm_line__parse"
+>>>> is updated to fill the raw instruction hex value and opcode in newly
+>>>> added fields. There is no changes in existing code paths, which parses
+>>>> the disassembled code. The architecture using the instruction name and
+>>>> present approach is not altered. Since this approach targets powerpc,
+>>>> the macro implementation is added for powerpc as of now.
+>>>>=20
+>>>> Example:
+>>>> representation using --show-raw-insn in objdump gives result:
+>>>>=20
+>>>> 38 01 81 e8     ld      r4,312(r1)
+>>>>=20
+>>>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+>>>> this translates to instruction form: "ld RT,DS(RA)" and binary code
+>>>> as:
+>>>> _____________________________________
+>>>> | 58 |  RT  |  RA |      DS       | |
+>>>> -------------------------------------
+>>>> 0    6     11    16              30 31
+>>>>=20
+>>>> Function "disasm_line__parse" is updated to capture:
+>>>>=20
+>>>> line:    38 01 81 e8     ld      r4,312(r1)
+>>>> opcode and raw instruction "38 01 81 e8"
+>>>> Raw instruction is used later to extract the reg/offset fields.
+>>>>=20
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>>> ---
+
 
