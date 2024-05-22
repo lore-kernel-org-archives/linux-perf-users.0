@@ -1,28 +1,29 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A1859164;
-	Wed, 22 May 2024 03:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5765B1E8;
+	Wed, 22 May 2024 03:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716348964; cv=none; b=LSSvbLQrV7MKNTZ9BKlZh+2cWdkEAHkWERJEI53Y1Rbc72y92EkbA0FenhZS46VxU8Vyt+uXMiBjrVdkAIBq9jOfdxQaz+m5Vx7iUMuVk+orEAYc+WOtDeptE+i60WyXIa2wFtlNPUcw2L0dhMze4hJc4Qib8jxFbk9fc56ySKo=
+	t=1716348965; cv=none; b=DbhaQJG7nHFQBUKUnDDUCFlS6r/trevkaATH7z7NeNPT4fwQP+9DYCBu8Fy3ho3iHv3TpwmnvGTL903yYMaUKyHzvYsoGLTeSSvh3XgbhRl3+GE6EC1dmwD/Cg0ryK9c79VpB6E0prX6hV9Wj+N28gqXcxapNoRo7uj/4CNWN0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716348964; c=relaxed/simple;
-	bh=sjpKKp9DX4G/NY3q5VzNPZB2bVHY8cy8J+6ci3Tf/JA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RcxlR3G8qmwk7KzX0bqey31CTOH5VfxWbfXbhSYpk/Bq16AoFNm7AfNsJrKscc5NMzUNAMFwY8Mc/A4jGqbwS4mNQZT5J+bUC0HcBLuLLvDnamktY9rGlE14JKJ/ak991GVdpWP0NAYPtB+inx+oatGkA66wZadMUoM8foeZB10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1716348965; c=relaxed/simple;
+	bh=zRjS4HniSyauajIjylYLbXjWxv2s24OoOrQ1SnYwpBE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ggu4YtWpU88/oYD9F2M8lMM8C2YNSvHieSS7G4540qlFNKJ36t02CzOWMHWDXMYEJ5LkgzHDlk/tCUn8Bo2bhjo12jHBa2iahSCSuhujJB3rgh+WIiMQpYxmRAI58DFpW6cFa/9FICATn+b9cB6ob8t1xVPyw25ddtncf9uJ8Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VkcLV44GRzxPfR;
-	Wed, 22 May 2024 11:32:18 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VkcKx2d1BzXnRy;
+	Wed, 22 May 2024 11:31:49 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id A783F140382;
-	Wed, 22 May 2024 11:35:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D2ACB1800CB;
+	Wed, 22 May 2024 11:36:00 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 22 May 2024 11:35:58 +0800
+ 15.2.1258.34; Wed, 22 May 2024 11:35:59 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
@@ -32,10 +33,12 @@ CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
  Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
  Kan" <kan.liang@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [RESEND PATCH v3 0/2] Always show mmap prot even though PROT_NONE
-Date: Wed, 22 May 2024 11:35:40 +0800
-Message-ID: <20240522033542.1359421-1-changbin.du@huawei.com>
+Subject: [RESEND PATCH v3 1/2] perf trace beauty: Always show param if show_zero is set
+Date: Wed, 22 May 2024 11:35:41 +0800
+Message-ID: <20240522033542.1359421-2-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240522033542.1359421-1-changbin.du@huawei.com>
+References: <20240522033542.1359421-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,21 +50,64 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemd100011.china.huawei.com (7.221.188.204)
 
-Before: PROT_NONE is not shown for prot 0.
-$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot==0  -- ls
-     0.000 ls/2979231 syscalls:sys_enter_mmap(len: 4220888, flags: PRIVATE|ANONYMOUS)
+For some parameters, it is best to also display them when they are 0,
+e.g. flags.
 
-After: PROT_NONE is displayed.
-$ sudo perf trace -e syscalls:sys_enter_mmap --filter prot==0  -- ls
-     0.000 ls/2975708 syscalls:sys_enter_mmap(len: 4220888, prot: NONE, flags: PRIVATE|ANONYMOUS)
+Here we only check the show_zero property and let arg printer handle
+special cases.
 
-Changbin Du (2):
-  perf trace beauty: Always show param if show_zero is set
-  perf trace beauty: Always show mmap prot even though PROT_NONE
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/builtin-trace.c | 29 +++++++----------------------
+ 1 file changed, 7 insertions(+), 22 deletions(-)
 
- tools/perf/builtin-trace.c | 35 ++++++++++-------------------------
- 1 file changed, 10 insertions(+), 25 deletions(-)
-
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e5fef39c34bf..915dcd258002 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2091,17 +2091,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			val = syscall_arg_fmt__mask_val(&sc->arg_fmt[arg.idx], &arg, val);
+ 
+ 			/*
+- 			 * Suppress this argument if its value is zero and
+- 			 * and we don't have a string associated in an
+- 			 * strarray for it.
+- 			 */
+-			if (val == 0 &&
+-			    !trace->show_zeros &&
+-			    !(sc->arg_fmt &&
+-			      (sc->arg_fmt[arg.idx].show_zero ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAY ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAYS) &&
+-			      sc->arg_fmt[arg.idx].parm))
++			 * Suppress this argument if its value is zero and show_zero
++			 * property isn't set.
++			 */
++			if (val == 0 && !trace->show_zeros &&
++			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
+ 				continue;
+ 
+ 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+@@ -2796,17 +2790,8 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		 */
+ 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
+ 
+-		/*
+-		 * Suppress this argument if its value is zero and
+-		 * we don't have a string associated in an
+-		 * strarray for it.
+-		 */
+-		if (val == 0 &&
+-		    !trace->show_zeros &&
+-		    !((arg->show_zero ||
+-		       arg->scnprintf == SCA_STRARRAY ||
+-		       arg->scnprintf == SCA_STRARRAYS) &&
+-		      arg->parm))
++		/* Suppress this argument if its value is zero and show_zero property isn't set. */
++		if (val == 0 && !trace->show_zeros && !arg->show_zero)
+ 			continue;
+ 
+ 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
 -- 
 2.34.1
 
