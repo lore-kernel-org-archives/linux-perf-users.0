@@ -1,104 +1,119 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F63846AF;
-	Wed, 22 May 2024 20:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694551BF2A;
+	Wed, 22 May 2024 21:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716410808; cv=none; b=TDvBgJGhd4JrgbTy/7lne2XDiTEVRY5M4wTFxY4pOrprudXp6gnhAH2quOq1cVAJkL7s+OQgxVqGNgBAd5rmrieeVv/ORyYAYc5pnn7gcxyBXR9g82OcPAIoCplfReDZDTrQu5u0SmoG2eBbu+BLvwfVCpg7/HDLLB0wVpfuohA=
+	t=1716414978; cv=none; b=j1JbZ3g8MHLk2qcMLtpiCFUo8kPUr4bSc556w6tgB+LdNuuvnk+CSq5abBVBYqbgugmlpGN+R7ZiQ5MpjG5RvbwsKX2aMz/yPR+dyKafxoMDK9Q3r1lWQk/OIbKt3IRAGTSA/l91HN7xScaDx+cWN4QVFZHcduVV2bzyFrYcSqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716410808; c=relaxed/simple;
-	bh=BCjxQzbn20nyPwhzAgkTQNH8QQzf2kk/km4bFVtfCLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jC8Xa+nCTTF/RmlHIow2zHQIjfT0pN/IJLORzUyRtvPUEOgx0Q6u8TX3C405HS7ARuHaYBJ9HE8HqQ/c+YhO7zt+/rODo3S7w/FABHNydKUL+7e6PrsviTJ08UHvJ/PDVk232fKBwZVJQ554n+3S1kPqIyXubq69O5NDVPhyZOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-67af6c66159so172266a12.1;
-        Wed, 22 May 2024 13:46:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716410806; x=1717015606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eCDpp4dfVi1mi3RI+GYsmKmEatc2rnWyzxqydBcc32M=;
-        b=ka9014O14YTlrR0H2QDUvb9kdHBZB/NdqKoFYxyRLXFaLxZm3lNK9QWsNAmqZ84Vvs
-         GMGkXkpZhg7hRgWCJ+LEvoRti1fuWXxsHMGjoxmSnlqXa/7z59aEQri+MlohnTTZO0XJ
-         iO1GYX+szqRgPWnqYKSkmdy/yybXWSD5LTsmwzYsXyY9yP2r684KuwXJUVWh1Z5G64UY
-         8LqpnvYCOnjYsbvBq4WKmpf3XyTQrjLBIBMN8sOrjOcsDdAENgA2eJcN1YowFz0Fz/oa
-         /qTXL8Q81MZiSGHrdSC1U5xz1ZO1tIYC5glTo34Antmh+LC2Ug+6+NXP7pMtVs3ibVfH
-         bupw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrhjoor9hGrvBsdBW/qnZbJIM8A5+IlneKTjQawaQ/483b4psJwAnJC0Fz5+U31AnHordsYknCE8SyjTsdLsuAfVdszid3XKLFrElEOCdotOWPk/ytZoOZ5ovjdr6WSn9R+XuBoPtk+RiAUY4p8Q==
-X-Gm-Message-State: AOJu0YzSHNceXN+vs5QJLlmWvesd5vqFBOwcXzzhGCSqdoSw0MKbwMlL
-	xyGTEEsW3Dk5QFQWqKE9tmjHaG4Iy07ANh1ISo9kcVKO8WrMij+q22zrPAfxp0nitfSJiJ6A6Kp
-	eqXRXNH+gSOC3IVmDl8kdAGfRs2U=
-X-Google-Smtp-Source: AGHT+IHkZj8HgZHS6FLzOZApxr1xOvklngZG43iL5plwOL72BUQNONA4qQmDE5zE7QjH8cnn8DMXBT19P54h/SBjSqI=
-X-Received: by 2002:a17:90a:f109:b0:2bd:d67b:6bf3 with SMTP id
- 98e67ed59e1d1-2bddcf226famr498303a91.20.1716410806477; Wed, 22 May 2024
- 13:46:46 -0700 (PDT)
+	s=arc-20240116; t=1716414978; c=relaxed/simple;
+	bh=1vIOH6m5r66YlxdDfT/tB9LNZ0Lyw5wBqQXHVST2wCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MB8qf5YMxaQj7dEu4oqqR17Cf8Bf6MlloaVCtf3M6JePB5y60w4FFzJRkJLeZt26ZfiKv2a81MclF9oPjclv6oMkPklm7GZmraPbktf1e2BukdB5zZf6yWmmwBYBnCCwsLLO+trl38tjFKDGmpCpkpEPNi+jJA3VSwZ1s/4wWAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7/kSKMT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7/kSKMT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9EDC2BBFC;
+	Wed, 22 May 2024 21:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716414977;
+	bh=1vIOH6m5r66YlxdDfT/tB9LNZ0Lyw5wBqQXHVST2wCE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=b7/kSKMTKaLJ79zb0GDtrhYJiH5qxIKxWy0FQP0FlJtPgt7AZZlHWvaJdWxjIzoS8
+	 zAfIRxExSSVcjPSwrMzJHR+YapZkmwQe3usN2JzAh1ms5E+zbmfuVcDIS3DoBzQHxD
+	 WQSUM31I2cmn6mS77XUvrQmbZp8BS42PhrQk2SfpDRlbw/lBGA0035xXf3d2d4G7HE
+	 pljJ6df7fspy9jxTYUYrvX4AxBboiYar1hI23beXg75V79ImzogBzpQR6vdpnZ+2dL
+	 4jsjEQnVAw6pVm31FrLrGxOFktWVT1WXQPqdX7yskWagiQyciYyqCZhULdsc2T+xak
+	 dO45PQ3Sq2tXA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	KP Singh <kpsingh@kernel.org>,
+	Stephane Eranian <eranian@google.com>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [RFC 0/6] perf record: Use pinned BPF program for filter (v1)
+Date: Wed, 22 May 2024 14:56:10 -0700
+Message-ID: <20240522215616.762195-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520083048.322863-1-sesse@google.com> <CAM9d7cgBZVfur8S3QC2woUA2C6O3Dme0YHP8PbFcwc_o0k-dWg@mail.gmail.com>
- <Zk5Mi7SliDOd8uO4@google.com>
-In-Reply-To: <Zk5Mi7SliDOd8uO4@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 May 2024 13:46:35 -0700
-Message-ID: <CAM9d7cjjH63CC8r-z33P4SCWw3x4NMxuSC1CovVHqpp-zXSf6g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] perf report: Support LLVM for addr2line()
-To: "Steinar H. Gunderson" <sesse@google.com>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, irogers@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 12:50=E2=80=AFPM Steinar H. Gunderson <sesse@google=
-.com> wrote:
->
-> On Wed, May 22, 2024 at 10:27:06AM -0700, Namhyung Kim wrote:
-> > I think it should support other DWARF use cases like
-> > unwinding and type info?
->
-> I don't actually know. I had a look, but could really only find
-> documentation for _writing_ DWARF info. However, I've hardly used LLVM
-> before, so it's entirely possible that I missed something.
+Hello,
 
-Oh ok.  I guess it should be able to read when it knows how to write. :)
-But anyway they are separate, nice-to-have issues.  I think we can
-add them later.
+This is to support the unprivileged BPF filter for profiling per-task events.
+Until now only root (or any user with CAP_BPF) can use the filter and we
+cannot add a new unprivileged BPF program types.  After talking with the BPF
+folks at LSF/MM/BPF 2024, I was told that this is the way to go.  Finally I
+managed to make it working with pinned BPF objects. :)
 
->
-> > I remember bfd objdump is sometimes faster than llvm-objdump
-> > especially when no line numbers are requested IIRC.
->
-> Hm, I've never seen that. But it's impossible to say for sure
-> that no such case exists, of course.
->
-> > Anyway, nice work.  Maybe we can implement other use cases
-> > using LLVM and reduce the dependencies.
->
-> It's possible to remove the libbfd dependency entirely if that's a goal,
-> at least, but I don't know what the current thinking is. I'll be happy
-> to take a stab at it (I guess it's possible to test the PE support with
-> WINE fairly easily?).
+But it requires the one-time setup (by root) before using it like below.
 
-Great!  Personally I found libbfd is hard to read (and use).  Hope
-that libllvm is better in that pov.  I'm not sure if we all want to
-remove the libbfd dependency but at least we can select one of
-them at build time.  Maybe the same for libelf and libdw(fl) too.
+  # perf record --setup-filter pin
 
->
-> I found out that if compiling with an older compiler, LLVM changes to
-> llvm::Optional and doesn't have .value_or(), so I need to fix that
-> (the patch is trivial, but it means I need to post a v5, I guess).
-> Is there anything else I need to do after that to get this merged?
+This will load the BPF program and maps and pin them in the BPF-fs.  Then
+normal users can use the filter.
 
-Having symbol enumeration and demangling with LLVM would
-be nice but not required to merge this work.  I'll take a deeper
-look next week.  Please post v5.
+  $ perf record -o- -e cycles:u --filter 'period < 10000' perf test -w noploop | perf script -i-
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.011 MB - ]
+        perf  759982 448227.214189:          1 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214195:          1 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214196:          7 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214196:        223 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214198:       9475 cycles:u:  ffffffff8ee012a0 [unknown] ([unknown])
+        perf  759982 448227.548608:          1 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548611:          1 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548612:         12 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548613:        466 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+
+It's also possible to unload (and unpin, of course) using this command:
+
+  # perf record --setup-filter unpin
+
+The code is avaiable in 'perf/pinned-filter-v1' branch at
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
+
+
+Namhyung Kim (6):
+  perf bpf-filter: Make filters map a single entry hashmap
+  perf bpf-filter: Pass 'target' to perf_bpf_filter__prepare()
+  perf bpf-filter: Split per-task filter use case
+  perf bpf-filter: Support pin/unpin BPF object
+  perf record: Fix a potential error handling issue
+  perf record: Add --setup-filter option
+
+ tools/perf/Documentation/perf-record.txt     |   5 +
+ tools/perf/builtin-record.c                  |  23 +-
+ tools/perf/builtin-stat.c                    |   2 +-
+ tools/perf/builtin-trace.c                   |   2 +-
+ tools/perf/util/bpf-filter.c                 | 369 +++++++++++++++++--
+ tools/perf/util/bpf-filter.h                 |  19 +-
+ tools/perf/util/bpf_skel/sample-filter.h     |   4 +-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c |  58 ++-
+ tools/perf/util/evlist.c                     |   5 +-
+ tools/perf/util/evlist.h                     |   4 +-
+ tools/perf/util/python.c                     |   3 +-
+ 11 files changed, 428 insertions(+), 66 deletions(-)
+
+
+base-commit: ea558c86248b4955e5c5f3c0c921df450880605e
+-- 
+2.45.1.288.g0e0cd299f1-goog
+
