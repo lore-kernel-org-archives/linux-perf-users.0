@@ -1,122 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AF041A80;
-	Wed, 22 May 2024 20:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F63846AF;
+	Wed, 22 May 2024 20:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716410588; cv=none; b=aD7+7FsBEoD7ptS9LpO4npxx0+Gau49T7IpfjxqPksMNSfFvC+h/CX0stsJXVKBcENTu2/oVBjbTh/8xscmrWOSS4NPIQjKwAazwBX1d/mykfmBXgqdNZFSUm4ituYx9XupVNnsc0tsBmNw3q0LEaWOFqUJtxiDtlww6cQYI2rI=
+	t=1716410808; cv=none; b=TDvBgJGhd4JrgbTy/7lne2XDiTEVRY5M4wTFxY4pOrprudXp6gnhAH2quOq1cVAJkL7s+OQgxVqGNgBAd5rmrieeVv/ORyYAYc5pnn7gcxyBXR9g82OcPAIoCplfReDZDTrQu5u0SmoG2eBbu+BLvwfVCpg7/HDLLB0wVpfuohA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716410588; c=relaxed/simple;
-	bh=vSToaAWtI+UPNyxsJqewuE9SnVckwS20wFWAi6Bsrn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubvDmpXamTSuJmEEqP6sRpGAidHJ05Rw6Xrj+cxrjhr4Yc0zx5mIpMoh18tGkcHwzjJ5XyDmzxabxzTR4oCjdoqg8AlPxXwZn3IPLlTjZ10FPBrCPleLVFsaHES2dL+YGMWFdzbLAUFSsmKgLeV8S4+8DqVBFTdPeC3uBdPxv7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y7YoX9Sq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y7YoX9Sq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716410587; x=1747946587;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vSToaAWtI+UPNyxsJqewuE9SnVckwS20wFWAi6Bsrn0=;
-  b=Y7YoX9SquuxnEzTJIE4kph/tNWsfNO54gwOfTzLJN4r63YbADxcIMne/
-   rCVv1bJvf0nPr8RY0W+k/MFm7ZMZrftTe4IJuER7pzlQ1LPRKiQApJo1B
-   TVVAfBefsxY3Fb/BEthFthcPDFcmxQaYUWRqxsDqecaCG6pyKVr4oQPlw
-   7pgXBdMfZVk6gsmhieK2KjJ7y6ldI8/0Y6XTFsaFHIUFK+YrRBi7pZR6A
-   ROD8R26UNL7OVKl0RlAQMJiUxxoWYpQGnzgthMOStlbNf9QKB4+WdDmoz
-   BwJzzymlJWTD9DLC+Su5pCh+av9JbFsWKgiLY6/l6zmgBMPu2pvsVvaT8
-   Q==;
-X-CSE-ConnectionGUID: QtVu16vtTHu1gJX0LtrQww==
-X-CSE-MsgGUID: CLG+wj07QMK8N1py2bWDHg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="23827657"
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="23827657"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 13:43:06 -0700
-X-CSE-ConnectionGUID: xFsTQ040Qf2GV9etUehbUg==
-X-CSE-MsgGUID: NtZGR2rcSoOELGV7oq9UDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="64648569"
-Received: from b49691a74b80.jf.intel.com ([10.165.54.183])
-  by fmviesa001.fm.intel.com with ESMTP; 22 May 2024 13:43:05 -0700
-From: weilin.wang@intel.com
-To: weilin.wang@intel.com,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [PATCH v1 1/1] perf test: make metric validation test return early when there is no metric supported on the test system
-Date: Wed, 22 May 2024 13:42:54 -0700
-Message-ID: <20240522204254.1841420-1-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1716410808; c=relaxed/simple;
+	bh=BCjxQzbn20nyPwhzAgkTQNH8QQzf2kk/km4bFVtfCLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jC8Xa+nCTTF/RmlHIow2zHQIjfT0pN/IJLORzUyRtvPUEOgx0Q6u8TX3C405HS7ARuHaYBJ9HE8HqQ/c+YhO7zt+/rODo3S7w/FABHNydKUL+7e6PrsviTJ08UHvJ/PDVk232fKBwZVJQ554n+3S1kPqIyXubq69O5NDVPhyZOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-67af6c66159so172266a12.1;
+        Wed, 22 May 2024 13:46:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716410806; x=1717015606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eCDpp4dfVi1mi3RI+GYsmKmEatc2rnWyzxqydBcc32M=;
+        b=ka9014O14YTlrR0H2QDUvb9kdHBZB/NdqKoFYxyRLXFaLxZm3lNK9QWsNAmqZ84Vvs
+         GMGkXkpZhg7hRgWCJ+LEvoRti1fuWXxsHMGjoxmSnlqXa/7z59aEQri+MlohnTTZO0XJ
+         iO1GYX+szqRgPWnqYKSkmdy/yybXWSD5LTsmwzYsXyY9yP2r684KuwXJUVWh1Z5G64UY
+         8LqpnvYCOnjYsbvBq4WKmpf3XyTQrjLBIBMN8sOrjOcsDdAENgA2eJcN1YowFz0Fz/oa
+         /qTXL8Q81MZiSGHrdSC1U5xz1ZO1tIYC5glTo34Antmh+LC2Ug+6+NXP7pMtVs3ibVfH
+         bupw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrhjoor9hGrvBsdBW/qnZbJIM8A5+IlneKTjQawaQ/483b4psJwAnJC0Fz5+U31AnHordsYknCE8SyjTsdLsuAfVdszid3XKLFrElEOCdotOWPk/ytZoOZ5ovjdr6WSn9R+XuBoPtk+RiAUY4p8Q==
+X-Gm-Message-State: AOJu0YzSHNceXN+vs5QJLlmWvesd5vqFBOwcXzzhGCSqdoSw0MKbwMlL
+	xyGTEEsW3Dk5QFQWqKE9tmjHaG4Iy07ANh1ISo9kcVKO8WrMij+q22zrPAfxp0nitfSJiJ6A6Kp
+	eqXRXNH+gSOC3IVmDl8kdAGfRs2U=
+X-Google-Smtp-Source: AGHT+IHkZj8HgZHS6FLzOZApxr1xOvklngZG43iL5plwOL72BUQNONA4qQmDE5zE7QjH8cnn8DMXBT19P54h/SBjSqI=
+X-Received: by 2002:a17:90a:f109:b0:2bd:d67b:6bf3 with SMTP id
+ 98e67ed59e1d1-2bddcf226famr498303a91.20.1716410806477; Wed, 22 May 2024
+ 13:46:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240520083048.322863-1-sesse@google.com> <CAM9d7cgBZVfur8S3QC2woUA2C6O3Dme0YHP8PbFcwc_o0k-dWg@mail.gmail.com>
+ <Zk5Mi7SliDOd8uO4@google.com>
+In-Reply-To: <Zk5Mi7SliDOd8uO4@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 22 May 2024 13:46:35 -0700
+Message-ID: <CAM9d7cjjH63CC8r-z33P4SCWw3x4NMxuSC1CovVHqpp-zXSf6g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] perf report: Support LLVM for addr2line()
+To: "Steinar H. Gunderson" <sesse@google.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, irogers@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Weilin Wang <weilin.wang@intel.com>
+On Wed, May 22, 2024 at 12:50=E2=80=AFPM Steinar H. Gunderson <sesse@google=
+.com> wrote:
+>
+> On Wed, May 22, 2024 at 10:27:06AM -0700, Namhyung Kim wrote:
+> > I think it should support other DWARF use cases like
+> > unwinding and type info?
+>
+> I don't actually know. I had a look, but could really only find
+> documentation for _writing_ DWARF info. However, I've hardly used LLVM
+> before, so it's entirely possible that I missed something.
 
-Add a check to return the metric validation test early when perf list metric
-does not output any metric. This would happen when NO_JEVENTS=1 is set or in a
-system that there is no metric supported.
+Oh ok.  I guess it should be able to read when it knows how to write. :)
+But anyway they are separate, nice-to-have issues.  I think we can
+add them later.
 
+>
+> > I remember bfd objdump is sometimes faster than llvm-objdump
+> > especially when no line numbers are requested IIRC.
+>
+> Hm, I've never seen that. But it's impossible to say for sure
+> that no such case exists, of course.
+>
+> > Anyway, nice work.  Maybe we can implement other use cases
+> > using LLVM and reduce the dependencies.
+>
+> It's possible to remove the libbfd dependency entirely if that's a goal,
+> at least, but I don't know what the current thinking is. I'll be happy
+> to take a stab at it (I guess it's possible to test the PE support with
+> WINE fairly easily?).
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- tools/perf/tests/shell/lib/perf_metric_validation.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Great!  Personally I found libbfd is hard to read (and use).  Hope
+that libllvm is better in that pov.  I'm not sure if we all want to
+remove the libbfd dependency but at least we can select one of
+them at build time.  Maybe the same for libelf and libdw(fl) too.
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index a2d235252183..0b94216c9c46 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -95,7 +95,7 @@ class Validator:
-                       indent=4)
+>
+> I found out that if compiling with an older compiler, LLVM changes to
+> llvm::Optional and doesn't have .value_or(), so I need to fix that
+> (the patch is trivial, but it means I need to post a v5, I guess).
+> Is there anything else I need to do after that to get this merged?
 
-     def get_results(self, idx: int = 0):
--        return self.results[idx]
-+        return self.results.get(idx)
+Having symbol enumeration and demangling with LLVM would
+be nice but not required to merge this work.  I'll take a deeper
+look next week.  Please post v5.
 
-     def get_bounds(self, lb, ub, error, alias={}, ridx: int = 0) -> list:
-         """
-@@ -173,7 +173,10 @@ class Validator:
-         pcnt = 0
-         tcnt = 0
-         rerun = list()
--        for name, val in self.get_results().items():
-+        results = self.get_results()
-+        if not results:
-+            return
-+        for name, val in results.items():
-             if val < 0:
-                 negmetric[name] = val
-                 rerun.append(name)
-@@ -532,6 +535,9 @@ class Validator:
-         '''
-         if not self.collectlist:
-             self.parse_perf_metrics()
-+        if not self.metrics:
-+            print("No metric found for testing")
-+            return 0
-         self.create_rules()
-         for i in range(0, len(self.workloads)):
-             self.wlidx = i
---
-2.42.0
-
+Thanks,
+Namhyung
