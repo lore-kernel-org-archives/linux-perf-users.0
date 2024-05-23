@@ -1,131 +1,92 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66841446AE
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 09:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8989C823B0
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 09:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716456700; cv=none; b=Vme6eTWQITGuHCy92KUVMIPww/U6tDnCsLVFoVRbhkRHR2eD+gdWXNo1FRHmc2GrztdG5MwiaUEeNqaIKwZPgb2R/Ax2xtI7MpUjamguJcyijflFnewiD4o4GEXiVVU0FItOmGUXpJz2k9DRozY0OszgvQxndJVBB2mBcw1CqD8=
+	t=1716456740; cv=none; b=NDAE9gCrfaCea2dg9lWHfzcPlMw33fppq+yUENtieCU+b8BLfGCX28ReUsI/2jQnMHFnKxSSSJFr3fZ1a4QhFQtgYPlN8qsR+czHUFKGmt0SrQklVWLwnw8zoVVbZJppqKAgV4KN0b+JaPPNEPtAyaSWqD1DNvNeXdBiGyHv4Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716456700; c=relaxed/simple;
-	bh=o+RAWYICtXRzmeLIsPu+n5xyyzxrGhZlfuOMpdIgj8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OxgTa3W605W2CUDo8prg6VMTuDkVK/BHcJfpRqZV7WX4dS8Rg+XwO0pT8FhUce5g55ivoBwSbdXQxSDiIsOVCOmHlObrU/YngW0uEZwjlxFR5aOpnhb8I2ZGY+z3wInSF2VMEfeIaNJ6K4Z0Lv1OPnOUTnhdEFCOgbjVRs4zKm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1sA4nP-0003wo-2G; Thu, 23 May 2024 11:31:35 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1sA4nO-002dqo-KN; Thu, 23 May 2024 11:31:34 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1sA4nO-00AeAc-1m;
-	Thu, 23 May 2024 11:31:34 +0200
-Date: Thu, 23 May 2024 11:31:34 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-perf-users@vger.kernel.org
-Cc: kernel@pengutronix.de
-Subject: perf script -i ... -k ... report flamegraph
-Message-ID: <u3pton5jobtjoaym2zahds6r6xtewry75asyiebwyeqdp5ivee@a5ffx2g2r2ib>
+	s=arc-20240116; t=1716456740; c=relaxed/simple;
+	bh=Lj98U6JsOomLPuUxYnAamRHx6i8QFetonnyK1CfOu6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBMdRpGjqu3wAyUoyKQAPPeREmlMTVmnZBB/uN9MAm9rEFCrH+XkuK/AFZOB5M68g1roOsmFsMTVCgAY1eYDwarBZcqeNqbpjVNeRxNYChP1NavlbtZZFti7t6LQBhDYWo4/P4u7pILo2ngLE1qi/y9K5G1CAOwpYHkZaT5U4Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oRsgBB/q; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oRsgBB/q"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-528878c258dso227329e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 02:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716456737; x=1717061537; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5mQDu8PodgpyJeYqrI53Wq+jk69QtdU/8gr3jtIgfVw=;
+        b=oRsgBB/qYGMLA5lBkUSEco8P+2cF/JERyGB8CjU1O1jDwraU/RYjPON/xRns70qqSt
+         ThVhFGW3baEKZCNFPe1a563yGL3zKZFZq6V8RaXRGFKBsxsqyQvlcD1VPG/kQEZj16zv
+         wbW/I1vrmRZAi48ALara9bJSYpfJelByUj8EA0/VNHUg09L2HGzOguZC3kTEV+6WtiWB
+         wxZuSLc01ET7wn3QnUJSG/vPuvkSX3jkQVot4A34pJVB90DGw3TVlxf+K9f8OKysPneV
+         EQko0a4kIIDmMTi1dYo0mi9dPjYteOU9f+2UlKmilZxRcfWAxyBQaIXBQJ5TpUSIvaSU
+         9XqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716456737; x=1717061537;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mQDu8PodgpyJeYqrI53Wq+jk69QtdU/8gr3jtIgfVw=;
+        b=AnUEWFgl9r2IN64b0fzKkT8Te1X7wVTrM3ntQRZv1aiFtdR85wc50dCUbYQpaZbadQ
+         jDUEBTqKz5zYNsI5otXoj72OYRd6ApXjbjKZ1RMKR0CgS1zpHQhIElzjGEjVtkWTutmk
+         +cqO3PsyTGCXGylfjx4nzCnNazVcwNp+VlokbgveodpIMhTM8RR3tDqW8wJKm1NqhYBR
+         TwxXdCOQZW+uI0EIR8UBLDMndagRGvq1FQcR3GaTDFrUEP/uFPA/lOjVxSoK9y9+F0cS
+         FIpHx/9pUmNm2JPPzUGVp6aw2fjv2z7ZW3LP/axtfklA2gL/iIQiuguNmn7XtbTLM0/N
+         u14w==
+X-Forwarded-Encrypted: i=1; AJvYcCXLwdC9fONtw/GA0zRoKVEPlGwVWcJmnv3fRtLL/EKx13eQfCV/zzJFPp9KsKuhQqZjtpH3IMnDhTLT2Y3Dk/yWKsv8LdyMcZmlnBxw6qRW4Q==
+X-Gm-Message-State: AOJu0YyBa0XgmNhuurnH+FWXHgpXbnCr8+NnMC8m4p2V4qQVvP1PQkAa
+	bwyZJZAN1bZLfBXUPPuN/ky/Olcw99C7M48dKUiTunydikBwss7qu3YxjefNtg==
+X-Google-Smtp-Source: AGHT+IEk9OvR9KACg8HHVRm631KJZ77bnL1wnmhw4pprthIUd9aI9YxgnMHNvd3Rv4SBsaB2zLbhiQ==
+X-Received: by 2002:a05:6512:3b11:b0:516:be0a:58b with SMTP id 2adb3069b0e04-527eed419ffmr775222e87.6.1716456736468;
+        Thu, 23 May 2024 02:32:16 -0700 (PDT)
+Received: from google.com ([2a00:79e0:18:10:4571:1ce:5c15:9ee])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e6f5cada08sm22900441fa.140.2024.05.23.02.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 02:32:16 -0700 (PDT)
+Date: Thu, 23 May 2024 11:32:11 +0200
+From: "Steinar H. Gunderson" <sesse@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, irogers@google.com
+Subject: Re: [PATCH v4 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <Zk8NG10oHcQ0T6EQ@google.com>
+References: <20240520083048.322863-1-sesse@google.com>
+ <CAM9d7cgBZVfur8S3QC2woUA2C6O3Dme0YHP8PbFcwc_o0k-dWg@mail.gmail.com>
+ <Zk5Mi7SliDOd8uO4@google.com>
+ <CAM9d7cjjH63CC8r-z33P4SCWw3x4NMxuSC1CovVHqpp-zXSf6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cjxmbhhusczu5q7l"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+In-Reply-To: <CAM9d7cjjH63CC8r-z33P4SCWw3x4NMxuSC1CovVHqpp-zXSf6g@mail.gmail.com>
 
+On Wed, May 22, 2024 at 01:46:35PM -0700, Namhyung Kim wrote:
+> Great!  Personally I found libbfd is hard to read (and use).  Hope
+> that libllvm is better in that pov.  I'm not sure if we all want to
+> remove the libbfd dependency but at least we can select one of
+> them at build time.  Maybe the same for libelf and libdw(fl) too.
 
---cjxmbhhusczu5q7l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've never used either before, but I found libllvm pretty
+straightforward. The C/C++ interop is a bit painful, though.
+(The disassembler has a C interface, but addr2line does not,
+from what I could see.)
 
-Hello,
+> Having symbol enumeration and demangling with LLVM would
+> be nice but not required to merge this work.  I'll take a deeper
+> look next week.  Please post v5.
 
-I'm trying to generate a flamegraph for a perf.data/kernel from an arm
-machine on x86_64.
+Posted.
 
-$ perf version
-perf version 6.9.gc760b3725e52
-
-For that I do:
-
-	$ perf script -i $rootdir/root/perf.data -k $rootdir/../build-target/linux=
--6.9-build/vmlinux report flamegraph
-
-however that reports
-
-	failed to open perf.data: No such file or directory  (try 'perf record' fi=
-rst)
-
-which is unexpected to me given that I pass a perf.data using -i and a
-plain
-
-	$ perf script -i $rootdir/root/perf.data -k $rootdir/../build-target/linux=
--6.9-build/vmlinux
-
-works fine using the specified perf.data.
-
-If I do
-
-	$ ln -s $rootdir/root/perf.data .
-	$ perf script -k $rootdir/../build-target/linux-6.9-build/vmlinux report f=
-lamegraph
-
-to workaround that issue, I get:
-
-	No kallsyms or vmlinux with build-id d1f71a2e9aec6ff7ef1d5dc544d5a76033496=
-b70 was found
-
-despite
-
-	$ file $rootdir/../build-target/linux-6.9-build/vmlinux
-	$rootdir/../build-target/linux-6.9-build/vmlinux: ELF 32-bit LSB executabl=
-e, ARM, EABI5 version 1 (SYSV), statically linked, BuildID[sha1]=3Dd1f71a2e=
-9aec6ff7ef1d5dc544d5a76033496b70, with debug_info, not stripped
-
-(so the right build-id) and again
-
-	$ perf script -k $rootdir/../build-target/linux-6.9-build/vmlinux
-
-is happy resolving the symbols.
-
-Is this a bug or do I hold perf just wrong?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---cjxmbhhusczu5q7l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZPDPUACgkQj4D7WH0S
-/k7z0ggAgkzdUU7mVGnFrhUimCe7F7FIBCLZcKWtk/tubTGb6q3D89Bd2g5id8+g
-6nwLKh2OGNn1+TteMPp/pj9tUQlJaRylnkpWoADU50mzVu67YNtvZ5bcXt09rRxb
-aIBKG2/TAPaSRkbuG3XKaQZuRxiAu0Z+ivdij2fNqSEwwVK/n+Calgv5LMZAJLNx
-Nz/a7BrypN7t3JjkEE1Mf0mo1OAWGvYPMLA14CH/H3exwwFpECtywvWtS2pIwkm7
-SueJ7qCbkeUHcn0K6Sus95VprBIxaDHJuNCfUQIEUDiMNYNSdqkSk/+UOC4DiZ/l
-svNIN3XgbpHg/POHxudk+YwuxVXeYg==
-=7iwx
------END PGP SIGNATURE-----
-
---cjxmbhhusczu5q7l--
+/* Steinar */
