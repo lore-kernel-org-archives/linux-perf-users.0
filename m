@@ -1,154 +1,153 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678A8249A;
-	Thu, 23 May 2024 04:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1203C0B;
+	Thu, 23 May 2024 04:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716438224; cv=none; b=qru4aL7FhkkE3JSFqJF8CwjFBGgXPlwE5XaEQgy9CxDKdLQUQK5lSrJKl5KG7tiBPXXBF1gZpyZgRRnJ74pQbrMrJmixDU9qgx5js8PEu5mcDdFGwJcro5K1PLxuUllLR0n3eTqrTSnb9uSsU0S3RNGPueAbXAn8EjOkf2DCcaQ=
+	t=1716438874; cv=none; b=uK2VnbGhQU5S+UNXhaicS0/QcfSQxPvpFEuuh9dQfYgNBPleX46PpPx+usSjfqvjX/XBLyMYhBR6wKI5rY5iVS243xneWl9RxRu4jrAQrA1iZjutjAnTA4NFSpvEr3O9ePn+ZNipvoYRUh8LeGiu4E4Xim2MkldeuPICW0E9HL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716438224; c=relaxed/simple;
-	bh=G+Qbunxj/8AnnJWdmaF3UXDeltlfHoJSxjwp7hvWXp4=;
+	s=arc-20240116; t=1716438874; c=relaxed/simple;
+	bh=hS9Acnxk7Hffa/ZSk/2BXr9V4kB09rgT1BDZLI6R4ME=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TmoDJFJaU7j+q0vK1cthcSRK86giLBBWpJRsvnioXx+XiSsibdkTxyRI5xcDv86Xk+okgx8+vRZ6Q66LRm/CkfEu+l/tqvIyL0he6kxkRuwIga70NpsTgRrB41/b40t9mi7sOXegE6fiaky2FFcmT97oAhzd48rYkS09KN8hwUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
+	 To:Cc:Content-Type; b=PoGo+NE6bRJ7EEHejqKtJzmpAxCgr6X+Gp1baIHWYeNkYWOsT5magpQYAvLRktIOVEMrVJUT2wJg/S9Fuge242PoRav0TbRKe+mYVZ1CCQpLHbN9BT2MDRcS79QLkCqzfwn/Lo19mwtJAVQR8+xxORKSyFdfOH8xrOtECdrIgCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f467fb2e66so3133829b3a.1;
-        Wed, 22 May 2024 21:23:42 -0700 (PDT)
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2bdb61c5fdbso629685a91.2;
+        Wed, 22 May 2024 21:34:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716438222; x=1717043022;
+        d=1e100.net; s=20230601; t=1716438873; x=1717043673;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2nbTyY0YiKMIFTBvGT1E/XGxZ2k7LnuzSV4xdZ3Jw7c=;
-        b=tUZWfJfHZQfGJCOxbtr955et9E/F64wOEOow4joWTjC678tzT0xF9LR1tuhT6kQD2e
-         qG+IzwNHEYw/nNb0EUXvLjwLMKXFS04RscEe+MUiR0GWPGt2nlHemP/oND73Xg1IWgGb
-         41qCMUWkQFFi+0QCeZf1QMhfP1X6otyjGPGPB+ZV3P9DgncqPCNFiMd1ZoVDy57P6wbD
-         boLQxfco0nfDTLEVfrS62q+Kap0KLEgZVX4OwxLzxQiJ0WKPm0+8VxNPA3Vs/SWFxPp2
-         ekcRKpDYoNbDvnC0WRlo+OgkzGoPJVF7S9igvwyhZrHvxK5VGLHqhKdDLY32zr/k1FZA
-         674g==
-X-Forwarded-Encrypted: i=1; AJvYcCUVuRZ+U7dxNlYsjf90FJgI8ms99cQZAOJJieiPcaiXiuC/O7T9OjgFaTVlEqVImb6S9bOvxCSUGW5iJZu6mUp0poOkYjGRWdhNrMT17Y57vPKmWXL8uLSXW72pzvnuc+r4Bp2kKfP5AQ0X9Sq5UA==
-X-Gm-Message-State: AOJu0YyCMZ1dbQ/iOirGr6dlQN3hSJXTHVprda7cN0ZFGv5nS1+lUx0q
-	ugXcdTPWJp83Dw3opyGBuRyrD44mTT40xMYBnmiqjqcBW2WY21pw1B75ljb67aOO0MATTsSdT9h
-	CVUnSQglbs8rmJsiJt+tpVQdzqRQ=
-X-Google-Smtp-Source: AGHT+IGTRfQdIN7S23gX65Bq9HRt9VhqaDXWq/aYg25eV88Aqz9EEvuPB5pw8CBE6A8dowQ34jiDTbaTfIj4WkYrj7s=
-X-Received: by 2002:a05:6a20:2586:b0:1b0:1bae:6a8c with SMTP id
- adf61e73a8af0-1b1f87923admr4529877637.21.1716438221948; Wed, 22 May 2024
- 21:23:41 -0700 (PDT)
+        bh=at5UxiV48avlyrvXoXbH6Ae16IV46P5/O03jUQ7gmcY=;
+        b=mfH/33s4XmpjTPJCM+5n0XWZ+RdnhxdgbI4tNQtKHILlb4atvvJ1nRiFzkY1iQcA9u
+         WhM3rXW0RwpEjwBU/OcuVenw+AWHmsCMv22qNQpiUHwabzDlNM00dsp73HKqTuvcEMCb
+         XgZ0e1JmHphW8rx6DY8m+in3KEvkZxSW+5EueLJ9GbJiRtYExZvEqMcFdUA3c2WZlX8b
+         XoSx2X0pl7/V9nVELs3Yf9RddbI55roUJohirjIOfyk/OtYsIpDX9lXhZZ07rHZlU4iT
+         EfV5iGWilTbjZzjGPWhu5jkG8T1SC5R5QDvVKG2BS3Q3Q6oSfti+wlgnjyjd0EQoZGiA
+         9oOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWo66UuDemO2kCT3RaSkLfFBHCaBMu3viKV1eQJl52seBX6kaDC0OypoSJsa/y1aEk8+pNmw6uNonfzkHxUw565qdvWuqv9Dn/p3jCQAym8DsgT5pvQEkBxaISd9Fe/4LPLgI6n4rU+D+T7+KwD0M/FFGAqpcaTQSgUtl6aReotCBM7Rw==
+X-Gm-Message-State: AOJu0YwqEgV0Q6BFPzyUGo+7+1ECdKjrzVvsY778hh2N2QaJwcs3m0+2
+	woaQ8p/SQbpYs5OeRI1xPWsNitApMvxifPTtdaoQbCvNlBOX/DfO9WDuEaNmyJRgUospwUpCQBa
+	Dw/8J9c1p5S51Zz+zWcZ02VgEcGA=
+X-Google-Smtp-Source: AGHT+IHkf+5HXomKRdze2Asxnjd6NaHwZaOrdmoVGhjrrDECKs/zdQMnjvBeyee4WFzt3qvhBWsRa+zq4W+CEx+jN2U=
+X-Received: by 2002:a17:90a:ff15:b0:2b9:dd9c:34cb with SMTP id
+ 98e67ed59e1d1-2bd9f477f2amr3803344a91.27.1716438872775; Wed, 22 May 2024
+ 21:34:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515195252.75909-1-yskelg@gmail.com>
-In-Reply-To: <20240515195252.75909-1-yskelg@gmail.com>
+References: <20240424024805.144759-1-howardchu95@gmail.com>
+ <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
+ <Zil1ZKc7mibs6ONQ@x1> <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
+ <CAM9d7cggak7qZcX7tFZvJ69H3cwEnWvNOnBsQrkFQkQVf+bUjQ@mail.gmail.com>
+ <CAH0uvohPg7LtSOLDNaPwnC5ePwjwg0NtKzLZ_oJcAz7zOwdwdw@mail.gmail.com> <CAP-5=fUzD8VZRnsxEBNPK_7PAGzdFjzmBAupA-eh=7VCDHBkbA@mail.gmail.com>
+In-Reply-To: <CAP-5=fUzD8VZRnsxEBNPK_7PAGzdFjzmBAupA-eh=7VCDHBkbA@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 22 May 2024 21:23:30 -0700
-Message-ID: <CAM9d7ciFpGhQat3esWLBUDNc1pzAqVw+8d+oX-WJeN+KJfW8Ew@mail.gmail.com>
-Subject: Re: [PATCH] buitin-kvm: Update cmd_kvm() to check perf_host value
-To: yskelg@gmail.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Austin Kim <austindh.kim@gmail.com>, shjy180909@gmail.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 22 May 2024 21:34:21 -0700
+Message-ID: <CAM9d7cgqr0Op5UuTcV2q8-Ju3yB7cYPvG7=Nrb4K=oW4Lt4Lcg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
+To: Ian Rogers <irogers@google.com>
+Cc: Howard Chu <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Wed, May 15, 2024 at 12:54=E2=80=AFPM <yskelg@gmail.com> wrote:
+On Wed, May 15, 2024 at 9:56=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> From: Yunseong Kim <yskelg@gmail.com>
+> On Wed, May 15, 2024 at 9:24=E2=80=AFPM Howard Chu <howardchu95@gmail.com=
+> wrote:
+> >
+> > Hello,
+> >
+> > Here is a little update on --off-cpu.
+> >
+> > > > It would be nice to start landing this work so I'm wondering what t=
+he
+> > > > minimal way to do that is. It seems putting behavior behind a flag =
+is
+> > > > a first step.
+> >
+> > The flag to determine output threshold of off-cpu has been implemented.
+> > If the accumulated off-cpu time exceeds this threshold, output the samp=
+le
+> > directly; otherwise, save it later for off_cpu_write.
+> >
+> > But adding an extra pass to handle off-cpu samples introduces performan=
+ce
+> > issues, here's the processing rate of --off-cpu sampling(with the
+> > extra pass to extract raw
+> > sample data) and without. The --off-cpu-threshold is in nanoseconds.
+> >
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+> > | comm                                                | type
+> >                        | process rate         |
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+> > | -F 4999 -a                                          | regular
+> > samples (w/o extra pass)      | 13128.675 samples/ms |
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+> > | -F 1 -a --off-cpu --off-cpu-threshold 100           | offcpu samples
+> > (extra pass)           |  2843.247 samples/ms |
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+> > | -F 4999 -a --off-cpu --off-cpu-threshold 100        | offcpu &
+> > regular samples (extra pass) |  3910.686 samples/ms |
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+> > | -F 4999 -a --off-cpu --off-cpu-threshold 1000000000 | few offcpu &
+> > regular (extra pass)     |  4661.229 samples/ms |
+> > +-----------------------------------------------------+----------------=
+-----------------------+----------------------+
+
+What does the process rate mean?  Is the sample for the
+off-cpu event or other (cpu-cycles)?  Is it from a single CPU
+or system-wide or per-task?
+
+> >
+> > It's not ideal. I will find a way to reduce overhead. For example
+> > process them samples
+> > at save time as Ian mentioned.
+> >
+> > > > To turn the bpf-output samples into off-cpu events there is a pass
+> > > > added to the saving. I wonder if that can be more generic, like a s=
+ave
+> > > > time perf inject.
+> >
+> > And I will find a default value for such a threshold based on performan=
+ce
+> > and common use cases.
+> >
+> > > Sounds good.  We might add an option to specify the threshold to
+> > > determine whether to dump the data or to save it for later.  But idea=
+lly
+> > > it should be able to find a good default.
+> >
+> > These will be done before the GSoC kick-off on May 27.
 >
-> According to perf-kvm.txt, the default operation is --guest, meaning
-> perf_host should be set to false and perf_guest to true. Currently,
-> the incorrect usage of --no-host and --no-guest still results in
-> the default --guest operation.
+> This all sounds good. 100ns seems like quite a low threshold and 1s
+> extremely high, shame such a high threshold is marginal for the
+> context switch performance change. I wonder 100 microseconds may be a
+> more sensible threshold. It's 100 times larger than the cost of 1
+> context switch but considerably less than a frame redraw at 60FPS (16
+> milliseconds).
 
-Hmm, right.. This is not good.
-
->
-> This patch updates the usage messages to include the --no-guest option
-> for those who only want host data, as well as the --no-host and
-> --no-guest case.
-
-I'm not sure if it's worth mentioning the host-only use case which is
-not expected for this command.  I think it's enough to warn the
-no-host and no-guest use cases.
-
->
-> Signed-off-by: Yunseong Kim <yskelg@gmail.com>
-> ---
->  tools/perf/builtin-kvm.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 71165036e4ca..654a07658cdd 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -2129,7 +2129,7 @@ int cmd_kvm(int argc, const char **argv)
->                 OPT_BOOLEAN(0, "guest", &perf_guest,
->                             "Collect guest os data"),
->                 OPT_BOOLEAN(0, "host", &perf_host,
-> -                           "Collect host os data"),
-> +                          "Collect host os data. Host only with --host -=
--no-guest"),
->                 OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "dir=
-ectory",
->                            "guest mount directory under which every guest=
- os"
->                            " instance has a subdir"),
-> @@ -2150,16 +2150,23 @@ int cmd_kvm(int argc, const char **argv)
->                                                 "buildid-list", "stat", N=
-ULL };
->         const char *kvm_usage[] =3D { NULL, NULL };
->
-> -       perf_host  =3D 0;
-> -       perf_guest =3D 1;
-> +       /*
-> +        * tools/perf/Documentation/perf-kvm.txt
-> +        *
-> +        *    Default('')         ->  perf.data.guest
-> +        *    --host              ->  perf.data.kvm
-> +        *    --guest             ->  perf.data.guest
-> +        *    --host --guest      ->  perf.data.kvm
-> +        *    --host --no-guest   ->  perf.data.host
-> +        */
-> +       perf_host =3D false;
-> +       perf_guest =3D true;
-
-Probably not needed.
-
->
->         argc =3D parse_options_subcommand(argc, argv, kvm_options, kvm_su=
-bcommands, kvm_usage,
->                                         PARSE_OPT_STOP_AT_NON_OPTION);
-> -       if (!argc)
-> +       if (!argc || (!perf_host && !perf_guest))
->                 usage_with_options(kvm_usage, kvm_options);
->
-> -       if (!perf_host)
-> -               perf_guest =3D 1;
-
-Instead of showing the whole usage, I think it's better to
-print a specific message for this case.
-
-Oh, I've realized that we have 'h' modifier for hypervisors
-(on ARM64?)  Then maybe no-host + no-guest is a valid
-combination.  Probably we need to add --hypervisor option
-then.
+I don't know what's the sensible default.  But 1 msec could be
+another candidate for the similar reason. :)
 
 Thanks,
 Namhyung
-
-
->
->         if (!file_name) {
->                 file_name =3D get_filename_for_perf_kvm();
-> --
-> 2.34.1
->
