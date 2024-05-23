@@ -1,141 +1,236 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A82414A82;
-	Thu, 23 May 2024 15:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997411720;
+	Thu, 23 May 2024 16:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716478514; cv=none; b=ZqBreL+lR9kquaCH7ZEzV5fswhC+/75+KTvg3Cm6ZbBaq6ipOSMEB7AVtf4x1BXVFah/R6cguc9mFtBDTpyvONmCdvm1PNflkrdsdxCxS6YepbBDkOtwjRV/ayTO7t6MafE9iOnlIAySxoEEdMTjlT65nncORJ5KO2QAO8PqDx8=
+	t=1716482080; cv=none; b=Adqyu749NtI8j4tos49KBFTrctfMK0zDhLRc50Qio4SLvzl8tf9LJlXklIMFUjamIcgwBZKRyDCB2WKYJXlXXg+kdlhWFMOcJN6KmL6vgy427MEb8tdJJc4rw++cgoS/fVxyyXh9khQMqcz8unFz9QMLf/FpvF2kkHB6YU8/XhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716478514; c=relaxed/simple;
-	bh=wdxKfjjLUk84a/tGuQYvrmqaFy9ZW/mj1pQCdE0YSj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HCgDoHLD2fwlwl2802X3HgYauzgH0+Ms3DrsVV9VazdfveLdlPn6pfdPKrvimC1rFKKOYi47C+U2+UxDXVzTMMSH282nI2eGQ5stGsch4/oJg6Tc8jhEwat5StryCg+scC+gC78gWZqCZLC6UuBamgnxY9kLwAe1s5I0HqlfLjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fz1fx/uY; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1716482080; c=relaxed/simple;
+	bh=L78QcW1WN+AWEud7mRm7LZni1MC/yOU7IM66UMmp1TQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tS+xsTX1wyoQowveLXdLHqgOkSVsjkPnTwbgwPp+SrGkh3regIzjBBaKapnhtuQAQmyfm5s+w6riQTlj4g0aYlut0uMYmf1T2mZWwupqpjUc3If/1VzhuFKDLuAxyZF71ffqBSShGDfGGCkVHs18oBMPf1i+SaPgjP36maAkZv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MblfHEwQ; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz1fx/uY"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f34d742ff8so417895ad.2;
-        Thu, 23 May 2024 08:35:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MblfHEwQ"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df4ea041bd7so1918408276.2;
+        Thu, 23 May 2024 09:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716478511; x=1717083311; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C2MfGbJLhBeGeMBRL5E+PaOkpQOo7Wuw1ls15958h4U=;
-        b=fz1fx/uYAT0SwqgncFiaqJSzHZvBn6gRkoTEsVfj1zH3KMcwq9rrEimtLgt8gID4/Z
-         AaXGXeQ+n9d98T5QYG0duSrUC9W47d0gsQHTKaZuKEIBMwN5UfpfZzKpEmP8rMz4rHTs
-         PtxZmo5okn6GuK/Vr0OYLX9hNVv8y/tO9nnYNlcHE1WFwCZdIgKRyhVD0GCIa4xoaec3
-         88xKudIloBIa6PUAJzm9HeGaOp+477/PD3gKIuZ4dg6U28BBwfrob/fQr5HEDEdLZvBc
-         nqBMmGu6VceLFx0AAJO61kyY/uWzOAjmpo6NApTLy0rCz34FvKpruGXUWC1Sy9KskEsO
-         Jhxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716478511; x=1717083311;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716482078; x=1717086878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C2MfGbJLhBeGeMBRL5E+PaOkpQOo7Wuw1ls15958h4U=;
-        b=oiK11xppNWxk+FKfgbaHcgiciLDFszXwVrcmkLDuXHBQCuRl0RW3b7lmmBk6n1+HAT
-         4wheODgNWe1+a1opv9ZKXJhNJw6chuMy8vKfX6qgfHSVyAlnRHla4zmQRMn4CjwoZtrF
-         kHZy7vPKrv6DEpap9T88+x1JZ7Q9j/pqoZOqj0uadOR0TauZzno87S1vDigZx4N3ltw2
-         csb5FDdAswNLig4j4Bk31S4M2UyN+rf6IRrRHH74aSeLSOg1eefyxQ6qxAfzFOyux8YV
-         +s3lPBMPGYVyNrI6W0+sWVg1x+B7mlBqm6YiO3+krmU4vJRRji3KcgmiPzJ9AyDpiysT
-         +JHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUb6y1h8Icg2viG00BrFdVS34ovF07rFrK2EZl1pPzL0h5C9BupQXbe1V1ZDXyx4Ypg0vCcXbhaZVOk2zucbs0m3n+Zr6KOTM4eSEoAhDROSG00iYMzyF+bolrMW6J0UBa9jewUR2L2oiyvAQD9Iza0CxyAcJyTLvXygFd1GG7V96423cRjviL3a2jyROlanip/2yOiVJdTfKXD+Py50yjb4Ubpoio17SBqjMcL
-X-Gm-Message-State: AOJu0YxAgiD4MsP0PuA9bEBHzRcHmsIBivLxR5asakwwPnGxrhAVEPqi
-	fJqRh5/UDXhkGFEtL9tj1SKyYGTzuW8vDkb6f02LVZvq+c+FVAKU
-X-Google-Smtp-Source: AGHT+IHkI5Ag6ABIYhzsCAV6jWiQywV28rXKTT8C0iDOse037T9i6PohK5hkxxdwVCFRk3QopDFa2Q==
-X-Received: by 2002:a17:902:c94d:b0:1f3:453:2c82 with SMTP id d9443c01a7336-1f31ca5f2afmr56496085ad.4.1716478511499;
-        Thu, 23 May 2024 08:35:11 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f3044a81c9sm69555845ad.43.2024.05.23.08.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 08:35:10 -0700 (PDT)
-Date: Thu, 23 May 2024 23:35:05 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, bagasdotme@gmail.com,
-	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 04/16] lib min_heap: Add type safe interface
-Message-ID: <Zk9iKUhv7Oew6Lsh@visitorckw-System-Product-Name>
-References: <20240514084724.557100-1-visitorckw@gmail.com>
- <20240514084724.557100-5-visitorckw@gmail.com>
- <20240522161048.8d8bbc7b153b4ecd92c50666@linux-foundation.org>
+        bh=RF564b7ceuJtJUxskBv60/ls7oKCNIrLuMPsIluNfCk=;
+        b=MblfHEwQ76SIJUIQ7PVoLN/BWIYKOPutHZVSe8i1M5+S8TbOmsh4t0eph6ECzKWijW
+         fy3boPxPv3+/whLoeWXZxkB82SMs9vPi9YxmUMAtSwjI7Ca8RGVhzMjClQnIGOy35RDQ
+         R/wIBxs1nhREJ+3BVNWMi55lHBK/semTRBXWReEfdWuJ3CXrQzb0m14RiTq5+Egq6ZPP
+         bP5chayeBV+FvW7eKQTba22JMAOAuNNnKTHoZZr+rKzhFG7GkGaKH2UBWxuOduekw8HO
+         WPTt89QndswvlNTXYgax4+o+WG0NCvjFX/KqBzQZS8qe/WXloLyW5Axd/iilnC5bAct6
+         /j/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716482078; x=1717086878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RF564b7ceuJtJUxskBv60/ls7oKCNIrLuMPsIluNfCk=;
+        b=AAwlUxkOTjVvtId8cnWdC33Js0yDAhBT3HsMBwy79ZCcDFDohcapZcYksDTwPP9k8f
+         ATmvqmdRBsl1MLtkLlzYVkmqeS6sxJ/XTh5ixjdCW8O4Fn+aQ9ueQxG0zbxRA63CyX9h
+         hBHQZCTNNEAeXgjvuTdGeeBWujBWWxrX3i5sbVrmIa9XVU/uJUyBA4H7UQHm7eiuQGwe
+         Md0r7xrdOPwCuOBOssrOMA+cs1C2HV8DIpDlzs9q3Q8fIS+3xtk9CzqMwYxCtt0ZGQA8
+         VIUzj5a9YkJyKigM9BLfiPdmuTMvkQBDbT2+fijbJMiw76TKfHvXZqqCGPq2Z/vQlcMk
+         bokA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0UI26IKG/Yaps6YAp+XvZvxZsQXTmtNXqe6zEQt7udy7oYTQQKwdNkaT6wsp307nKJtk5AEi7AYLzAqYSZ3kvwK7nbPvQUzadFrt8p/VctKVpffFKQ5WwEaV2YaBkVHRozSPZ0+14Z0SBOMVqu/kO3+Keg5wyxVMqOvQlSVIbMT2PtQ==
+X-Gm-Message-State: AOJu0Yy6XL6fyPMRu2yoXzNCVxdxGoeUr48neyETGADxRjKlzBumSJGc
+	N6MUZBljm53bmXqUcPOkcan+DbH2i0IlxxwVNR/dxbM5gTIHtafSVgpbYn9UcWlSY29WqjZgFG+
+	eu45fAeUgYzOlU7Dp+MLAOqHscNY=
+X-Google-Smtp-Source: AGHT+IGHMycQCXAXdn9GPA0HqIe63sdLvbaqaA8StclYtMKe9+LaaPGxeDpnBD2iYljhDYWbHNS1PnIpcZzKN/PQrdU=
+X-Received: by 2002:a25:2c3:0:b0:df4:978c:3794 with SMTP id
+ 3f1490d57ef6-df4e0bcb476mr7516169276.1.1716482077767; Thu, 23 May 2024
+ 09:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522161048.8d8bbc7b153b4ecd92c50666@linux-foundation.org>
+References: <20240424024805.144759-1-howardchu95@gmail.com>
+ <CAM9d7chOdrPyeGk=O+7Hxzdm5ziBXLES8PLbpNJvA7_DMrrGHA@mail.gmail.com>
+ <Zil1ZKc7mibs6ONQ@x1> <CAP-5=fVYHjUk8OyidXbutBvZMPxf48LW7v-N3zvHBe5QME1vVQ@mail.gmail.com>
+ <CAM9d7cggak7qZcX7tFZvJ69H3cwEnWvNOnBsQrkFQkQVf+bUjQ@mail.gmail.com>
+ <CAH0uvohPg7LtSOLDNaPwnC5ePwjwg0NtKzLZ_oJcAz7zOwdwdw@mail.gmail.com>
+ <CAP-5=fUzD8VZRnsxEBNPK_7PAGzdFjzmBAupA-eh=7VCDHBkbA@mail.gmail.com> <CAM9d7cgqr0Op5UuTcV2q8-Ju3yB7cYPvG7=Nrb4K=oW4Lt4Lcg@mail.gmail.com>
+In-Reply-To: <CAM9d7cgqr0Op5UuTcV2q8-Ju3yB7cYPvG7=Nrb4K=oW4Lt4Lcg@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 24 May 2024 00:34:27 +0800
+Message-ID: <CAH0uvojme5j0scQTztiCWxSichhPdAokWy1Lw_D9cFx-SWfHFA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Dump off-cpu samples directly
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	zegao2021@gmail.com, leo.yan@linux.dev, ravi.bangoria@amd.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 04:10:48PM -0700, Andrew Morton wrote:
-> On Tue, 14 May 2024 16:47:12 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-> 
-> > Implement a type-safe interface for min_heap using strong type
-> > pointers instead of void * in the data field. This change includes
-> > adding small macro wrappers around functions, enabling the use of
-> > __minheap_cast and __minheap_obj_size macros for type casting and
-> > obtaining element size. This implementation removes the necessity of
-> > passing element size in min_heap_callbacks. Additionally, introduce the
-> > MIN_HEAP_PREALLOCATED macro for preallocating some elements.
-> 
-> I guess it's a nice change, although it's unclear how valuable all this
-> is.  Being able to remove the local implementations in bcache and
-> bcachefs is good.
-> 
-> > --- a/drivers/md/dm-vdo/repair.c
-> > +++ b/drivers/md/dm-vdo/repair.c
-> > @@ -51,6 +51,8 @@ struct recovery_point {
-> >  	bool increment_applied;
-> >  };
-> >  
-> > +MIN_HEAP(struct numbered_block_mapping, replay_heap);
-> >
-> > ...
-> >
-> > -struct min_heap {
-> > -	void *data;
-> > -	int nr;
-> > -	int size;
-> > -};
-> > +#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
-> > +struct _name {	\
-> > +	int nr;	\
-> > +	int size;	\
-> > +	_type *data;	\
-> > +	_type preallocated[_nr];	\
-> > +}
-> 
-> I think that the MIN_HEAP() macro would be better named
-> DEFINE_MIN_HEAP().  There's a lot of precedent for this and it's
-> unclear whether "MIN_HEAP" actually implements storage.  I looked at
-> the repair.c addition and thought "hm, shouldn't that be static"!
+Hello,
+
+On Thu, May 23, 2024 at 12:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-I will update this in the next version.
+> Hello,
+>
+> On Wed, May 15, 2024 at 9:56=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Wed, May 15, 2024 at 9:24=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
+om> wrote:
+> > >
+> > > Hello,
+> > >
+> > > Here is a little update on --off-cpu.
+> > >
+> > > > > It would be nice to start landing this work so I'm wondering what=
+ the
+> > > > > minimal way to do that is. It seems putting behavior behind a fla=
+g is
+> > > > > a first step.
+> > >
+> > > The flag to determine output threshold of off-cpu has been implemente=
+d.
+> > > If the accumulated off-cpu time exceeds this threshold, output the sa=
+mple
+> > > directly; otherwise, save it later for off_cpu_write.
+> > >
+> > > But adding an extra pass to handle off-cpu samples introduces perform=
+ance
+> > > issues, here's the processing rate of --off-cpu sampling(with the
+> > > extra pass to extract raw
+> > > sample data) and without. The --off-cpu-threshold is in nanoseconds.
+> > >
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+> > > | comm                                                | type
+> > >                        | process rate         |
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+> > > | -F 4999 -a                                          | regular
+> > > samples (w/o extra pass)      | 13128.675 samples/ms |
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+> > > | -F 1 -a --off-cpu --off-cpu-threshold 100           | offcpu sample=
+s
+> > > (extra pass)           |  2843.247 samples/ms |
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+> > > | -F 4999 -a --off-cpu --off-cpu-threshold 100        | offcpu &
+> > > regular samples (extra pass) |  3910.686 samples/ms |
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+> > > | -F 4999 -a --off-cpu --off-cpu-threshold 1000000000 | few offcpu &
+> > > regular (extra pass)     |  4661.229 samples/ms |
+> > > +-----------------------------------------------------+--------------=
+-------------------------+----------------------+
+>
+> What does the process rate mean?  Is the sample for the
+> off-cpu event or other (cpu-cycles)?  Is it from a single CPU
+> or system-wide or per-task?
 
-> >  /* Sift the element at pos down the heap. */
-> >  static __always_inline
-> > -void min_heapify(struct min_heap *heap, int pos,
-> > +void __min_heapify(min_heap_char *heap, int pos, size_t elem_size,
-> >  		const struct min_heap_callbacks *func)
-> >  {
-> 
-> It's a separate project, but min_heap.h has some crazily huge inlined
-> functions.  I expect we'd have a smaller and faster kernel if those
-> were moved into a new lib/min_heap.c.
-> 
-Moving these inline functions to lib/min_heap.c to reduce kernel size
-seems reasonable. However, I saw Ian mention that perf event's min_heap
-is used during context switches. Since I'm unsure about the performance
-impact of making these functions non-inline, I'd like to discuss this
-further before actually moving them to lib/min_heap.c.
+Process rate is just a silly name for the time record__pushfn() takes
+to write data from the ring buffer.
+record__pushfn() is where I added the extra pass to strip the off-cpu
+samples from the original raw
+samples that eBPF's perf_output collected.
 
+With -a option it runs on all cpu, system-wide. Sorry that I only
+tested on extreme cases.
+
+I ran perf record on `-F 4999 -a `, `-F 1 -a --off-cpu
+--off-cpu-threshold 100`, `-F 4999 -a --off-cpu
+--off-cpu-threshold 100`, and `-F 4999 -a --off-cpu
+--off-cpu-threshold 1000000000`.
+`-F 4999 -a` is only cpu-cycles samples which is the fastest(13128.675
+samples/ms)
+when it comes to writing samples to perf.data, because there's no
+extra pass for stripping
+extra data from BPF's raw samples.
+
+`-F 1 -a --off-cpu --off-cpu-threshold 100` is mostly off-cpu samples,
+which requires considerably
+more time to strip the data, being the slowest(2843.247 samples/ms).
+
+ `-F 4999 -a --off-cpu --off-cpu-threshold 100` is half and half, lots
+of cpu-cycle samples so
+a little faster than the former one(3910.686 samples/ms). Because for cpu-c=
+ycles
+samples, there's no extra handling(but there's still cost on copying
+memory back and forth).
+
+`-F 4999 -a --off-cpu --off-cpu-threshold 1000000000` is a blend of a
+large amount of cpu-cycles
+samples and only a couple of off-cpu samples. It is the
+fastest(4661.229 samples/ms) but still
+nowhere near the original one, which doesn't have the extra pass of
+off_cpu_strip().
+
+What I'm trying to say is just, stripping/handling off-cpu samples at
+runtime is a bad idea, the extra
+pass of off_cpu_strip() should be reconsidered. Reading events one by
+one, put together samples,
+and checking sample_id and stuff introduces lots of overhead. It
+should be done at save time.
+
+By the way, the default off_cpu_write() is perfectly fine.
+
+Sorry about the horrible data table and explanation; they will be more
+readable next time.
+
+>
+> > >
+> > > It's not ideal. I will find a way to reduce overhead. For example
+> > > process them samples
+> > > at save time as Ian mentioned.
+> > >
+> > > > > To turn the bpf-output samples into off-cpu events there is a pas=
+s
+> > > > > added to the saving. I wonder if that can be more generic, like a=
+ save
+> > > > > time perf inject.
+> > >
+> > > And I will find a default value for such a threshold based on perform=
+ance
+> > > and common use cases.
+> > >
+> > > > Sounds good.  We might add an option to specify the threshold to
+> > > > determine whether to dump the data or to save it for later.  But id=
+eally
+> > > > it should be able to find a good default.
+> > >
+> > > These will be done before the GSoC kick-off on May 27.
+> >
+> > This all sounds good. 100ns seems like quite a low threshold and 1s
+> > extremely high, shame such a high threshold is marginal for the
+
+> > context switch performance change. I wonder 100 microseconds may be a
+> > more sensible threshold. It's 100 times larger than the cost of 1
+> > context switch but considerably less than a frame redraw at 60FPS (16
+> > milliseconds).
+>
+> I don't know what's the sensible default.  But 1 msec could be
+> another candidate for the similar reason. :)
+
+Sure, I'll give them all a test and see the overhead they cause.
+
+I understand that all I'm talking about is optimization, and that premature
+optimization is the root of all evil. However, being almost three times
+slower for only a few dozen direct off-CPU samples sounds weird to me.
+
+Thanks,
+Howard
+>
+> Thanks,
+> Namhyung
