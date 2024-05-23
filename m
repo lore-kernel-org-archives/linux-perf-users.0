@@ -1,444 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685161E495;
-	Thu, 23 May 2024 13:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DC61E495;
+	Thu, 23 May 2024 13:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716471509; cv=none; b=FNepPIFFectNRxgOBMWaYSei6tFbXKJ9epw+A3OXPKMEQ7QIHSWq0GAFqPa9D6jiLArlP5Pr+Z5W1zYG0VXymkxXkdqTxP+RL+mIArYOK42JISym1B++01tyMpSQnc596yW0lFsR3Qb3xDXKYJXBVTwm4Rf5GAuR+X/m0ZpLbZ0=
+	t=1716472595; cv=none; b=CYgviUl9tZ+CErjho2AiUp0c0mao5WlrW871/VlDdX3DicEo9OOBjcki8ubCUp62F4Hqpf31xFE66SnsiHUqSknS8r3DOO/E+l+eTkdcx8nmwH89HgDbJZCnwG1JDKmrAye+23wxstj/yVct8bBhRfAdolZNkHDJuoQorp81Iqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716471509; c=relaxed/simple;
-	bh=KbXQ31lc1mylRNtdrQTHFpPG+b44YpsJde68YblUsrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=us+Tcfw2/kfJbEpyr6vwna0ExwjgeJN62knypQei6bFO/0U84EXdyyf3EfaVy7I2uTtJtPaDjPtBfmZt9TbInzHVDm8Ur+rX3HKkIUzNYwBl/yi2vKJ7yOHsl8Dr19RyqOvjhbM9Lrf+pan2AWR/uX36SvxTcm4WiOJEPP8bUKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJSGHC2B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716472595; c=relaxed/simple;
+	bh=Xb8qO2I41gJcHZg83FegyaOw4Ohk0PqglR2+mgaZJ74=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=oBSMvn5/elbSevzGuaDEaTXI63y+y78iePgvQ9QLMcyLrmbJcfnnWMzHbKwHPVhJFblKY8VGsUwLFT9PVCtgoszuG9oIgw7DkdOrbb76bQn9cFBPPa//X5jTHhyM7C4msrOo9KQAkFerGsx8JR/ppCVnDlhgk7SQFVQQPhMsfXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Jo9GUH+p; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJSGHC2B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6805FC3277B;
-	Thu, 23 May 2024 13:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716471509;
-	bh=KbXQ31lc1mylRNtdrQTHFpPG+b44YpsJde68YblUsrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJSGHC2BUw/VMuwrCvBV1ToLSorxc69/789aCOwWyGC0k6OZUnUu82ncSxNIkYQIL
-	 YzLED3p0cILu0zjBI4rGmomqI98uOX2cw2FJsr81Kn6VZp69FFaN/VNQLmitr8kGhW
-	 knHQWrJnutAl99JwX8xCgyhOHb2Q10uCzPekXd5V7q2hpCsWgmfGU9ShgPsNWad76b
-	 324gqTFyb/dnIcVVFeMJM8wsujOmE3XaerrpIaEXDCNFf5/OfJ6VmokufUozpeR2Qi
-	 UGMfxdlL70Hsc2+Ci+pN1TxnshnNz+3kjvZZoTNeEoeV9ByxBAa+QBIk3VcbVEgDA9
-	 c6fIWm5Fr0Phg==
-Date: Thu, 23 May 2024 10:38:19 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Steinar H. Gunderson" <sesse@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	irogers@google.com
-Subject: Re: [PATCH v4 1/3] perf report: Support LLVM for addr2line()
-Message-ID: <Zk9Gy7WRKchD0KWE@x1>
-References: <20240520083048.322863-1-sesse@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Jo9GUH+p"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44NDs9Cu009986;
+	Thu, 23 May 2024 13:56:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=IiDcpBAtwCTauEs5A24TvczuaU3DEm7tWLmbfvMJP44=;
+ b=Jo9GUH+pzRvzG41lqiBKWP4a2mXZ1n7xpfqm7DOFY+2CTH/Jbz5U1X9YfIa7G9Ni5FTl
+ /PBxWRidk7Q+HNyxrn0IAFst+ZhZJNCLqQUgcuoX3BBnMBeBUuDtNlxPcOPguwVKkExx
+ t4ncVrg3NLqu49zkXFBwi/WRLX1ylQMNLwA0JaP7s2vAuqd7FbG5wpV+bfPw3ghUk1lf
+ 3jKpo2+klEU7YQyVr1BTIYROJujdUstDxhxXTvkLZMyQRJWjtuV78lJlEVGg60O/DJ9x
+ r4gcFAzvCO5xrxg/pJXVyAkO2koNie91eLjrVQzdobNA0/HY+xKbttVbbYdQe4kYr7pO sA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya73700cr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:56:17 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44NDuHac013471;
+	Thu, 23 May 2024 13:56:17 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ya73700ck-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:56:17 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44NDpvd0022240;
+	Thu, 23 May 2024 13:56:16 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y76nu2jgj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 13:56:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44NDuAsC13107528
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 May 2024 13:56:13 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CC2442004B;
+	Thu, 23 May 2024 13:56:10 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 275AC20049;
+	Thu, 23 May 2024 13:56:08 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.97.166])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 23 May 2024 13:56:07 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520083048.322863-1-sesse@google.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH V2 7/9] tools/perf: Update instruction tracking with add
+ instruction
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <7c8af115-56fb-4b1f-818c-f2a7d532166b@csgroup.eu>
+Date: Thu, 23 May 2024 19:25:55 +0530
+Cc: "acme@kernel.org" <acme@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "irogers@google.com" <irogers@google.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "segher@kernel.crashing.org" <segher@kernel.crashing.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <07BB6C89-D014-44EF-87A7-42A15C43EDD6@linux.vnet.ibm.com>
+References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+ <20240506121906.76639-8-atrajeev@linux.vnet.ibm.com>
+ <7c8af115-56fb-4b1f-818c-f2a7d532166b@csgroup.eu>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: gRgaGV3KD953S74j9LgzaKHKTLDSHr2L
+X-Proofpoint-GUID: 6dP_0A09OfUJccs6J35rocteLegzsgBW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_08,2024-05-23_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405230096
 
-On Mon, May 20, 2024 at 10:30:46AM +0200, Steinar H. Gunderson wrote:
-> In addition to the existing support for libbfd and calling out to
-> an external addr2line command, add support for using libllvm directly.
-> This is both faster than libbfd, and can be enabled in distro builds
-> (the LLVM license has an explicit provision for GPLv2 compatibility).
-> Thus, it is set as the primary choice if available.
 
-That is great news! Thanks for contributing this.
- 
-> As an example, running perf report on a medium-size profile with
-> DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
-> libbfd, 153 seconds with external llvm-addr2line, and I got tired
-> and aborted the test after waiting for 55 minutes with external
-> bfd addr2line (which is the default for perf as compiled by distributions
-> today). Evidently, for this case, the bfd addr2line process needs
-> 18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
-> hits the 1-second timeout and gets killed during initialization,
-> getting restarted anew every time. Having an in-process addr2line
-> makes this much more robust.
-> 
-> As future extensions, libllvm can be used in many other places where
-> we currently use libbfd or other libraries:
-> 
->  - Symbol enumeration (in particular, for PE binaries).
->  - Demangling (including non-Itanium demangling, e.g. Microsoft
->    or Rust).
->  - Disassembling (perf annotate).
 
-All great news.
- 
-> However, these are much less pressing; most people don't profile
-> PE binaries, and perf has non-bfd paths for ELF. The same with
-> demangling; the default _cxa_demangle path works fine for most
-> users. Disassembling is coming in a later patch in the series;
-> however do note that while bfd objdump can be slow on large binaries,
-> it is possible to use --objdump=llvm-objdump to get the speed benefits.
-> (It appears LLVM-based demangling is very simple, should we want
-> that.)
-> 
-> Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
-> correctly detected using feature_check, and thus was not tested.
+> On 7 May 2024, at 3:28=E2=80=AFPM, Christophe Leroy =
+<christophe.leroy@csgroup.eu> wrote:
+>=20
+>=20
+>=20
+> Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
+>> Update instruction tracking with add instruction. Apart from "mr"
+>> instruction, the register state is carried on by other insns, ie,
+>> "add, addi, addis". Since these are not memory instructions and =
+doesn't
+>> fall in the range of (32 to 63), add these as part of nmemonic table.
+>> For now, add* instructions are added. There is possibility of getting
+>> more added here. But to extract regs, still the binary code will be
+>> used. So associate this with "load_store_ops" itself and no other
+>> changes required.
+>=20
+> Looks fragile.
+>=20
+> How do you handle addc, adde, addic ?
+> And also addme, addze, which only have two operands instead of 3 ?
 
-And here is an area that we need to have in mind when adding code like
-this, that uses infrastructure that evolves over compiler versions and
-in combination with the usage perf makes of it: We need to have 'perf
-test' entries to compare the output of existing methods with the ones
-from these new ones.
+Hi Christophe,
 
-Its great having something we can enable by default so that distros pick
-it, having the BFD one, we can keep it while it doesn't become too much
-of a maintainance burden for us developers to test it against the
-(new) default methods.
+Thanks for pointing these cases. Will address these cases in next =
+version
 
-I'll try and test your patchkit, thanks again!
+Thanks
+Athira
+>=20
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>>  .../perf/arch/powerpc/annotate/instructions.c | 21 =
++++++++++++++++++++
+>>  tools/perf/util/disasm.c                      |  1 +
+>>  2 files changed, 22 insertions(+)
+>>=20
+>> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c =
+b/tools/perf/arch/powerpc/annotate/instructions.c
+>> index cce7023951fe..1f35d8a65bb4 100644
+>> --- a/tools/perf/arch/powerpc/annotate/instructions.c
+>> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
+>> @@ -1,6 +1,17 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  #include <linux/compiler.h>
+>>=20
+>> +/*
+>> + * powerpc instruction nmemonic table to associate load/store =
+instructions with
+>> + * move_ops. mov_ops is used to identify add/mr to do instruction =
+tracking.
+>> + */
+>> +static struct ins powerpc__instructions[] =3D {
+>> + { .name =3D "mr",         .ops =3D &load_store_ops,  },
+>> + { .name =3D "addi",       .ops =3D &load_store_ops,   },
+>> + { .name =3D "addis",      .ops =3D &load_store_ops,  },
+>> + { .name =3D "add",        .ops =3D &load_store_ops,  },
+>> +};
+>> +
+>>  static struct ins_ops *powerpc__associate_instruction_ops(struct =
+arch *arch, const char *name)
+>>  {
+>>   int i;
+>> @@ -75,6 +86,9 @@ static void update_insn_state_powerpc(struct =
+type_state *state,
+>>   if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+>>   return;
+>>=20
+>> + if (!strncmp(dl->ins.name, "add", 3))
+>> + goto regs_check;
+>> +
+>>   if (strncmp(dl->ins.name, "mr", 2))
+>>   return;
+>>=20
+>> @@ -85,6 +99,7 @@ static void update_insn_state_powerpc(struct =
+type_state *state,
+>>   dst->reg1 =3D src_reg;
+>>   }
+>>=20
+>> +regs_check:
+>>   if (!has_reg_type(state, dst->reg1))
+>>   return;
+>>=20
+>> @@ -115,6 +130,12 @@ static void update_insn_state_powerpc(struct =
+type_state *state __maybe_unused, s
+>>  static int powerpc__annotate_init(struct arch *arch, char *cpuid =
+__maybe_unused)
+>>  {
+>>   if (!arch->initialized) {
+>> + arch->nr_instructions =3D ARRAY_SIZE(powerpc__instructions);
+>> + arch->instructions =3D calloc(arch->nr_instructions, sizeof(struct =
+ins));
+>> + if (!arch->instructions)
+>> + return -ENOMEM;
+>> + memcpy(arch->instructions, powerpc__instructions, sizeof(struct =
+ins) * arch->nr_instructions);
+>> + arch->nr_instructions_allocated =3D arch->nr_instructions;
+>>   arch->initialized =3D true;
+>>   arch->associate_instruction_ops =3D =
+powerpc__associate_instruction_ops;
+>>   arch->objdump.comment_char      =3D '#';
+>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+>> index ac6b8b8da38a..32cf506a9010 100644
+>> --- a/tools/perf/util/disasm.c
+>> +++ b/tools/perf/util/disasm.c
+>> @@ -36,6 +36,7 @@ static struct ins_ops mov_ops;
+>>  static struct ins_ops nop_ops;
+>>  static struct ins_ops lock_ops;
+>>  static struct ins_ops ret_ops;
+>> +static struct ins_ops load_store_ops;
+>>=20
+>>  static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+>>     struct ins_operands *ops, int max_ins_name);
 
-- Arnaldo
- 
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-> ---
->  tools/build/Makefile.feature       |   1 +
->  tools/perf/Makefile.config         |  15 ++++
->  tools/perf/builtin-version.c       |   1 +
->  tools/perf/util/Build              |   1 +
->  tools/perf/util/llvm-c-helpers.cpp | 130 +++++++++++++++++++++++++++++
->  tools/perf/util/llvm-c-helpers.h   |  47 +++++++++++
->  tools/perf/util/srcline.c          |  57 ++++++++++++-
->  7 files changed, 251 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/util/llvm-c-helpers.cpp
->  create mode 100644 tools/perf/util/llvm-c-helpers.h
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 1e2ab148d5db..278b26216254 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -136,6 +136,7 @@ FEATURE_DISPLAY ?=              \
->           libunwind              \
->           libdw-dwarf-unwind     \
->           libcapstone            \
-> +         llvm                   \
->           zlib                   \
->           lzma                   \
->           get_cpuid              \
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 7f1e016a9253..414a37f712bd 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -969,6 +969,21 @@ ifdef BUILD_NONDISTRO
->    endif
->  endif
->  
-> +ifndef NO_LLVM
-> +  $(call feature_check,llvm)
-> +  ifeq ($(feature-llvm), 1)
-> +    CFLAGS += -DHAVE_LLVM_SUPPORT
-> +    CXXFLAGS += -DHAVE_LLVM_SUPPORT
-> +    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
-> +    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
-> +    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
-> +    $(call detected,CONFIG_LLVM)
-> +  else
-> +    $(warning No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev)
-> +    NO_LLVM := 1
-> +  endif
-> +endif
-> +
->  ifndef NO_DEMANGLE
->    $(call feature_check,cxa-demangle)
->    ifeq ($(feature-cxa-demangle), 1)
-> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-> index 398aa53e9e2e..94d8e13a688f 100644
-> --- a/tools/perf/builtin-version.c
-> +++ b/tools/perf/builtin-version.c
-> @@ -65,6 +65,7 @@ static void library_status(void)
->  	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
->  	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
->  	STATUS(HAVE_LIBELF_SUPPORT, libelf);
-> +	STATUS(HAVE_LLVM_SUPPORT, libllvm);
->  	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
->  	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
->  	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index da64efd8718f..32c4e5e634ed 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -226,6 +226,7 @@ perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
->  perf-y += demangle-ocaml.o
->  perf-y += demangle-java.o
->  perf-y += demangle-rust.o
-> +perf-$(CONFIG_LLVM) += llvm-c-helpers.o
->  
->  ifdef CONFIG_JITDUMP
->  perf-$(CONFIG_LIBELF) += jitdump.o
-> diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-> new file mode 100644
-> index 000000000000..cde3f1f03af0
-> --- /dev/null
-> +++ b/tools/perf/util/llvm-c-helpers.cpp
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Must come before the linux/compiler.h include, which defines several
-> + * macros (e.g. noinline) that conflict with compiler builtins used
-> + * by LLVM.
-> + */
-> +#pragma GCC diagnostic push
-> +#pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
-> +#include <llvm/DebugInfo/Symbolize/Symbolize.h>
-> +#pragma GCC diagnostic pop
-> +
-> +#include <stdio.h>
-> +#include <sys/types.h>
-> +#include <linux/compiler.h>
-> +#include "symbol_conf.h"
-> +#include "llvm-c-helpers.h"
-> +
-> +using namespace llvm;
-> +using llvm::symbolize::LLVMSymbolizer;
-> +
-> +/*
-> + * Allocate a static LLVMSymbolizer, which will live to the end of the program.
-> + * Unlike the bfd paths, LLVMSymbolizer has its own cache, so we do not need
-> + * to store anything in the dso struct.
-> + */
-> +static LLVMSymbolizer *get_symbolizer()
-> +{
-> +	static LLVMSymbolizer *instance = nullptr;
-> +	if (instance == nullptr) {
-> +		LLVMSymbolizer::Options opts;
-> +		/*
-> +		 * LLVM sometimes demangles slightly different from the rest
-> +		 * of the code, and this mismatch can cause new_inline_sym()
-> +		 * to get confused and mark non-inline symbol as inlined
-> +		 * (since the name does not properly match up with base_sym).
-> +		 * Thus, disable the demangling and let the rest of the code
-> +		 * handle it.
-> +		 */
-> +		opts.Demangle = false;
-> +		instance = new LLVMSymbolizer(opts);
-> +	}
-> +	return instance;
-> +}
-> +
-> +/* Returns 0 on error, 1 on success. */
-> +static int extract_file_and_line(const DILineInfo& line_info, char **file,
-> +				 unsigned int *line)
-> +{
-> +	if (file) {
-> +		if (line_info.FileName == "<invalid>") {
-> +			/* Match the convention of libbfd. */
-> +			*file = nullptr;
-> +		} else {
-> +			/* The caller expects to get something it can free(). */
-> +			*file = strdup(line_info.FileName.c_str());
-> +			if (*file == nullptr)
-> +				return 0;
-> +		}
-> +	}
-> +	if (line)
-> +		*line = line_info.Line;
-> +	return 1;
-> +}
-> +
-> +extern "C"
-> +int llvm_addr2line(const char *dso_name, u64 addr,
-> +		   char **file, unsigned int *line,
-> +		   bool unwind_inlines,
-> +		   llvm_a2l_frame** inline_frames)
-> +{
-> +	LLVMSymbolizer *symbolizer = get_symbolizer();
-> +	object::SectionedAddress sectioned_addr = {
-> +		addr,
-> +		object::SectionedAddress::UndefSection
-> +	};
-> +
-> +	if (unwind_inlines) {
-> +		Expected<DIInliningInfo> res_or_err =
-> +			symbolizer->symbolizeInlinedCode(dso_name,
-> +							 sectioned_addr);
-> +		if (!res_or_err)
-> +			return 0;
-> +		unsigned num_frames = res_or_err->getNumberOfFrames();
-> +		if (num_frames == 0)
-> +			return 0;
-> +
-> +		if (extract_file_and_line(
-> +			res_or_err->getFrame(0), file, line) == 0)
-> +			return 0;
-> +
-> +		*inline_frames = (llvm_a2l_frame*)malloc(
-> +			sizeof(**inline_frames) * num_frames);
-> +		if (*inline_frames == nullptr)
-> +			return 0;
-> +
-> +		for (unsigned i = 0; i < num_frames; ++i) {
-> +			const DILineInfo& src = res_or_err->getFrame(i);
-> +			llvm_a2l_frame& dst = (*inline_frames)[i];
-> +			if (src.FileName == "<invalid>")
-> +				/* Match the convention of libbfd. */
-> +				dst.filename = nullptr;
-> +			else
-> +				dst.filename = strdup(src.FileName.c_str());
-> +			dst.funcname = strdup(src.FunctionName.c_str());
-> +			dst.line = src.Line;
-> +
-> +			if (dst.filename == nullptr ||
-> +			    dst.funcname == nullptr) {
-> +				for (unsigned j = 0; j <= i; ++j) {
-> +					free((*inline_frames)[j].filename);
-> +					free((*inline_frames)[j].funcname);
-> +				}
-> +				free(*inline_frames);
-> +				return 0;
-> +			}
-> +		}
-> +
-> +		return num_frames;
-> +	} else {
-> +		if (inline_frames)
-> +			*inline_frames = nullptr;
-> +
-> +		Expected<DILineInfo> res_or_err =
-> +			symbolizer->symbolizeCode(dso_name, sectioned_addr);
-> +		if (!res_or_err)
-> +			return 0;
-> +		return extract_file_and_line(*res_or_err, file, line);
-> +	}
-> +}
-> diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-> new file mode 100644
-> index 000000000000..1b28cdc9f9b7
-> --- /dev/null
-> +++ b/tools/perf/util/llvm-c-helpers.h
-> @@ -0,0 +1,47 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_LLVM_C_HELPERS
-> +#define __PERF_LLVM_C_HELPERS 1
-> +
-> +/*
-> + * Helpers to call into LLVM C++ code from C, for the parts that do not have
-> + * C APIs.
-> + */
-> +
-> +#ifdef __cplusplus
-> +extern "C" {
-> +#endif
-> +
-> +struct llvm_a2l_frame {
-> +	char *filename;
-> +	char *funcname;
-> +	unsigned int line;
-> +};
-> +
-> +/*
-> + * Implement addr2line() using libLLVM. LLVM is a C++ API, and
-> + * many of the linux/ headers cannot be included in a C++ compile unit,
-> + * so we need to make a little bridge code here. llvm_addr2line() will
-> + * convert the inline frame information from LLVM's internal structures
-> + * and put them into a flat array given in inline_frames. The caller
-> + * is then responsible for taking that array and convert it into perf's
-> + * regular inline frame structures (which depend on e.g. struct list_head).
-> + *
-> + * If the address could not be resolved, or an error occurred (e.g. OOM),
-> + * returns 0. Otherwise, returns the number of inline frames (which means 1
-> + * if the address was not part of an inlined function). If unwind_inlines
-> + * is set and the return code is nonzero, inline_frames will be set to
-> + * a newly allocated array with that length. The caller is then responsible
-> + * for freeing both the strings and the array itself.
-> + */
-> +int llvm_addr2line(const char *dso_name,
-> +		   u64 addr,
-> +		   char **file,
-> +		   unsigned int *line,
-> +		   bool unwind_inlines,
-> +		   struct llvm_a2l_frame **inline_frames);
-> +
-> +#ifdef __cplusplus
-> +}
-> +#endif
-> +
-> +#endif /* __PERF_LLVM_C_HELPERS */
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index 9d670d8c1c08..0505b4c16608 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -16,6 +16,9 @@
->  #include "util/debug.h"
->  #include "util/callchain.h"
->  #include "util/symbol_conf.h"
-> +#ifdef HAVE_LLVM_SUPPORT
-> +#include "util/llvm-c-helpers.h"
-> +#endif
->  #include "srcline.h"
->  #include "string2.h"
->  #include "symbol.h"
-> @@ -130,7 +133,59 @@ static struct symbol *new_inline_sym(struct dso *dso,
->  
->  #define MAX_INLINE_NEST 1024
->  
-> -#ifdef HAVE_LIBBFD_SUPPORT
-> +#ifdef HAVE_LLVM_SUPPORT
-> +
-> +static void free_llvm_inline_frames(struct llvm_a2l_frame *inline_frames,
-> +				    int num_frames)
-> +{
-> +	if (inline_frames != NULL) {
-> +		for (int i = 0; i < num_frames; ++i) {
-> +			free(inline_frames[i].filename);
-> +			free(inline_frames[i].funcname);
-> +		}
-> +		free(inline_frames);
-> +	}
-> +}
-> +
-> +static int addr2line(const char *dso_name, u64 addr,
-> +		     char **file, unsigned int *line, struct dso *dso,
-> +		     bool unwind_inlines, struct inline_node *node,
-> +		     struct symbol *sym)
-> +{
-> +	struct llvm_a2l_frame *inline_frames = NULL;
-> +	int num_frames = llvm_addr2line(dso_name, addr, file, line,
-> +					node && unwind_inlines, &inline_frames);
-> +
-> +	if (num_frames == 0 || !inline_frames) {
-> +		/* Error, or we didn't want inlines. */
-> +		return num_frames;
-> +	}
-> +
-> +	for (int i = 0; i < num_frames; ++i) {
-> +		struct symbol *inline_sym =
-> +			new_inline_sym(dso, sym, inline_frames[i].funcname);
-> +		char *srcline = NULL;
-> +
-> +		if (inline_frames[i].filename)
-> +			srcline = srcline_from_fileline(
-> +				inline_frames[i].filename,
-> +				inline_frames[i].line);
-> +		if (inline_list__append(inline_sym, srcline, node) != 0) {
-> +			free_llvm_inline_frames(inline_frames, num_frames);
-> +			return 0;
-> +		}
-> +	}
-> +	free_llvm_inline_frames(inline_frames, num_frames);
-> +
-> +	return num_frames;
-> +}
-> +
-> +void dso__free_a2l(struct dso *)
-> +{
-> +	/* Nothing to free. */
-> +}
-> +
-> +#elif defined(HAVE_LIBBFD_SUPPORT)
->  
->  /*
->   * Implement addr2line using libbfd.
-> -- 
-> 2.43.0
