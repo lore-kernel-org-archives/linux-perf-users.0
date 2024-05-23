@@ -1,172 +1,141 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E146A6FB6
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 14:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A82414A82;
+	Thu, 23 May 2024 15:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716476273; cv=none; b=Kszg9r7IBQGx8LJEJpbG8orL/CkekzGr6EvYXvxszkvxyNv89TURGcY/PO8B1LdRCRm4NeRk8cNU1WuQc1bH/bGP+xxloSx56h9mAD/kM7xRa0xgkXQmMsN3e4gCxOQAjC/ETWROuPHsj/LYXAGzXf7fuqPe8rlFwK2Za4AP59I=
+	t=1716478514; cv=none; b=ZqBreL+lR9kquaCH7ZEzV5fswhC+/75+KTvg3Cm6ZbBaq6ipOSMEB7AVtf4x1BXVFah/R6cguc9mFtBDTpyvONmCdvm1PNflkrdsdxCxS6YepbBDkOtwjRV/ayTO7t6MafE9iOnlIAySxoEEdMTjlT65nncORJ5KO2QAO8PqDx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716476273; c=relaxed/simple;
-	bh=6Dei1V8D5Yb33LOSasM4iRgudjF+kcW7OT5HoSApcHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UiUEe1CRBdYE8SBShoXAz6VWW4TM02/wJQI/6F/ej16nhquQIJKBe0cAk480qp1tNcbNuw2t39aR5Z1ILeN56fElg+R8tm79aN9jpcmJjsZ8RMQDH8cZps+stg6eND9e7MdqE/jTwRrgDXNjL1b2KeRFzkqWhsA36tI+TCU1jNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0xefdoz; arc=none smtp.client-ip=209.85.219.176
+	s=arc-20240116; t=1716478514; c=relaxed/simple;
+	bh=wdxKfjjLUk84a/tGuQYvrmqaFy9ZW/mj1pQCdE0YSj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCgDoHLD2fwlwl2802X3HgYauzgH0+Ms3DrsVV9VazdfveLdlPn6pfdPKrvimC1rFKKOYi47C+U2+UxDXVzTMMSH282nI2eGQ5stGsch4/oJg6Tc8jhEwat5StryCg+scC+gC78gWZqCZLC6UuBamgnxY9kLwAe1s5I0HqlfLjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fz1fx/uY; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0xefdoz"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-df4df150f29so1984085276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 07:57:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz1fx/uY"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f34d742ff8so417895ad.2;
+        Thu, 23 May 2024 08:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716476271; x=1717081071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=68oizoRonaSH9DwwD0pjskztzrNV7Q/9PfajjCfL+FI=;
-        b=A0xefdoz2XoOZWZn8jyL52BumGoe1eQcPoSwOcAEW1TZB/Wipqmhi/BMpooDw9zk2Z
-         AscT8EgVLtBjriopARAoiJpXzwWg6QYGJy9gCMwco8gi2zKwOAmDgsKr9+NJV8+wBBca
-         CYZ2pQq6+/s86eV4A63wFU/ot6903C24Fl6tvxF+SQeRgQQQyJ28is6QyeldDinY+2Zz
-         DkkK+TGxpnsccj+PoqR49lTiVYRM+T3pL3iPs01zHmp0ukKLy+dmN8r4I7dw/zXuN377
-         Lo9a2sqlmhv+mq4tJZ9mOXMXLxhRBAKZyvqjwgeTEZEWF/KdMwTnWSZFwbu6FrWCmfA0
-         +13Q==
+        d=gmail.com; s=20230601; t=1716478511; x=1717083311; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2MfGbJLhBeGeMBRL5E+PaOkpQOo7Wuw1ls15958h4U=;
+        b=fz1fx/uYAT0SwqgncFiaqJSzHZvBn6gRkoTEsVfj1zH3KMcwq9rrEimtLgt8gID4/Z
+         AaXGXeQ+n9d98T5QYG0duSrUC9W47d0gsQHTKaZuKEIBMwN5UfpfZzKpEmP8rMz4rHTs
+         PtxZmo5okn6GuK/Vr0OYLX9hNVv8y/tO9nnYNlcHE1WFwCZdIgKRyhVD0GCIa4xoaec3
+         88xKudIloBIa6PUAJzm9HeGaOp+477/PD3gKIuZ4dg6U28BBwfrob/fQr5HEDEdLZvBc
+         nqBMmGu6VceLFx0AAJO61kyY/uWzOAjmpo6NApTLy0rCz34FvKpruGXUWC1Sy9KskEsO
+         Jhxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716476271; x=1717081071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=68oizoRonaSH9DwwD0pjskztzrNV7Q/9PfajjCfL+FI=;
-        b=Zur7PYc+FCI41bBbhuDoVwCbdsQL9j25+v8kZq4tK1ZLWa/SvHm7u9ZbPhERlA6lRw
-         XG8Nevu/MQDJK43aFYQfpAqGjszfhdZNJ6k4ZaxRD1lvzYViUXzbmWnl/WZcuSx+OZ+9
-         /xDByUnab15h72iEd/8XfbfnlKe4dIQoKHu3ROyxmcQJhwif0T+H4a6Y5M3E8B5y/0Dh
-         Lu2Eng5mCPWPaYGvwyIhQ/zN0+oqH2M4IaGDL9MU8mbjqYaPE7AwwpBxY4TwAQAyefKu
-         tqD2r50zFAOxIA9hCEDC/X91hjifrKhiJv3/uip0irgJ7x2s0JgMH2VVIwYz+eC33ngI
-         y13A==
-X-Gm-Message-State: AOJu0YywiRzd0kUtnsEErcN60hBdIZG7CiERuCIyzj4whcf1Jhyck2oP
-	CzuaqeZ1DIuRQSsyQ3YEGUl5L/uen8P8DcXVp3NcmeiZh5cypGEHxbKOkRJn0Z6DPwD6n2yBJMU
-	nCKbIZHd2dcmfvVV5teghAiEc5/WYYfHi
-X-Google-Smtp-Source: AGHT+IEjuPEhh9NnODDmXy3q3UAN9GJ4N3UkIOt66mfLabbWT0AgctSop8QL4gxXcPEhH0+4A8B+sGOmo4uj7dkI9gs=
-X-Received: by 2002:a25:aa46:0:b0:deb:3cce:b158 with SMTP id
- 3f1490d57ef6-df4e0df1e50mr5361292276.59.1716476270676; Thu, 23 May 2024
- 07:57:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716478511; x=1717083311;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C2MfGbJLhBeGeMBRL5E+PaOkpQOo7Wuw1ls15958h4U=;
+        b=oiK11xppNWxk+FKfgbaHcgiciLDFszXwVrcmkLDuXHBQCuRl0RW3b7lmmBk6n1+HAT
+         4wheODgNWe1+a1opv9ZKXJhNJw6chuMy8vKfX6qgfHSVyAlnRHla4zmQRMn4CjwoZtrF
+         kHZy7vPKrv6DEpap9T88+x1JZ7Q9j/pqoZOqj0uadOR0TauZzno87S1vDigZx4N3ltw2
+         csb5FDdAswNLig4j4Bk31S4M2UyN+rf6IRrRHH74aSeLSOg1eefyxQ6qxAfzFOyux8YV
+         +s3lPBMPGYVyNrI6W0+sWVg1x+B7mlBqm6YiO3+krmU4vJRRji3KcgmiPzJ9AyDpiysT
+         +JHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUb6y1h8Icg2viG00BrFdVS34ovF07rFrK2EZl1pPzL0h5C9BupQXbe1V1ZDXyx4Ypg0vCcXbhaZVOk2zucbs0m3n+Zr6KOTM4eSEoAhDROSG00iYMzyF+bolrMW6J0UBa9jewUR2L2oiyvAQD9Iza0CxyAcJyTLvXygFd1GG7V96423cRjviL3a2jyROlanip/2yOiVJdTfKXD+Py50yjb4Ubpoio17SBqjMcL
+X-Gm-Message-State: AOJu0YxAgiD4MsP0PuA9bEBHzRcHmsIBivLxR5asakwwPnGxrhAVEPqi
+	fJqRh5/UDXhkGFEtL9tj1SKyYGTzuW8vDkb6f02LVZvq+c+FVAKU
+X-Google-Smtp-Source: AGHT+IHkI5Ag6ABIYhzsCAV6jWiQywV28rXKTT8C0iDOse037T9i6PohK5hkxxdwVCFRk3QopDFa2Q==
+X-Received: by 2002:a17:902:c94d:b0:1f3:453:2c82 with SMTP id d9443c01a7336-1f31ca5f2afmr56496085ad.4.1716478511499;
+        Thu, 23 May 2024 08:35:11 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f3044a81c9sm69555845ad.43.2024.05.23.08.35.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 08:35:10 -0700 (PDT)
+Date: Thu, 23 May 2024 23:35:05 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, bfoster@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, bagasdotme@gmail.com,
+	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 04/16] lib min_heap: Add type safe interface
+Message-ID: <Zk9iKUhv7Oew6Lsh@visitorckw-System-Product-Name>
+References: <20240514084724.557100-1-visitorckw@gmail.com>
+ <20240514084724.557100-5-visitorckw@gmail.com>
+ <20240522161048.8d8bbc7b153b4ecd92c50666@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <u3pton5jobtjoaym2zahds6r6xtewry75asyiebwyeqdp5ivee@a5ffx2g2r2ib>
-In-Reply-To: <u3pton5jobtjoaym2zahds6r6xtewry75asyiebwyeqdp5ivee@a5ffx2g2r2ib>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 23 May 2024 22:57:39 +0800
-Message-ID: <CAH0uvoieGyrhFLq1qrt6ppP+OyQS1jg5nfZRuBSuXcT9pcNmzg@mail.gmail.com>
-Subject: Re: perf script -i ... -k ... report flamegraph
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-perf-users@vger.kernel.org, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522161048.8d8bbc7b153b4ecd92c50666@linux-foundation.org>
 
-Hello,
+On Wed, May 22, 2024 at 04:10:48PM -0700, Andrew Morton wrote:
+> On Tue, 14 May 2024 16:47:12 +0800 Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
+> 
+> > Implement a type-safe interface for min_heap using strong type
+> > pointers instead of void * in the data field. This change includes
+> > adding small macro wrappers around functions, enabling the use of
+> > __minheap_cast and __minheap_obj_size macros for type casting and
+> > obtaining element size. This implementation removes the necessity of
+> > passing element size in min_heap_callbacks. Additionally, introduce the
+> > MIN_HEAP_PREALLOCATED macro for preallocating some elements.
+> 
+> I guess it's a nice change, although it's unclear how valuable all this
+> is.  Being able to remove the local implementations in bcache and
+> bcachefs is good.
+> 
+> > --- a/drivers/md/dm-vdo/repair.c
+> > +++ b/drivers/md/dm-vdo/repair.c
+> > @@ -51,6 +51,8 @@ struct recovery_point {
+> >  	bool increment_applied;
+> >  };
+> >  
+> > +MIN_HEAP(struct numbered_block_mapping, replay_heap);
+> >
+> > ...
+> >
+> > -struct min_heap {
+> > -	void *data;
+> > -	int nr;
+> > -	int size;
+> > -};
+> > +#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
+> > +struct _name {	\
+> > +	int nr;	\
+> > +	int size;	\
+> > +	_type *data;	\
+> > +	_type preallocated[_nr];	\
+> > +}
+> 
+> I think that the MIN_HEAP() macro would be better named
+> DEFINE_MIN_HEAP().  There's a lot of precedent for this and it's
+> unclear whether "MIN_HEAP" actually implements storage.  I looked at
+> the repair.c addition and thought "hm, shouldn't that be static"!
+>
+I will update this in the next version.
 
-So the `perf script -i $rootdir/root/perf.data -k
-$rootdir/../build-target/linux-6.9-build/vmlinux report flamegraph`
-actually runs a shell script called `flamegraph-report`. On my
-machine, this script is located at
-`/root/libexec/perf-core/scripts/python/bin/flamegraph-report`. And
-this shell script has the following code:
-```
-#!/bin/bash
-# description: create flame graphs
-perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-```
-This shellscript is calling perf script to run the `flamegraph.py`
-script. Unfortunately in this run, perf script doesn't have the -i
-argument to specify the path of `perf.data`, so it tries to read from
-the default path `./perf.data` which doesn't exist, therefore the
-error. Besides, it doesn't know the path to the vmlinux.
+> >  /* Sift the element at pos down the heap. */
+> >  static __always_inline
+> > -void min_heapify(struct min_heap *heap, int pos,
+> > +void __min_heapify(min_heap_char *heap, int pos, size_t elem_size,
+> >  		const struct min_heap_callbacks *func)
+> >  {
+> 
+> It's a separate project, but min_heap.h has some crazily huge inlined
+> functions.  I expect we'd have a smaller and faster kernel if those
+> were moved into a new lib/min_heap.c.
+> 
+Moving these inline functions to lib/min_heap.c to reduce kernel size
+seems reasonable. However, I saw Ian mention that perf event's min_heap
+is used during context switches. Since I'm unsure about the performance
+impact of making these functions non-inline, I'd like to discuss this
+further before actually moving them to lib/min_heap.c.
 
-This command works for me, but I'm not sure if -k is working here
-since there's no sign of perf script communicating with flamegraph.py
-to tell it the path of the vmlinux file:
-`perf script -i ~/hw/cabin/perf.data -k
-/usr/lib/modules/6.8.4-arch1-1/build/vmlinux -s
-/root/libexec/perf-core/scripts/python/flamegraph.py`
-In your case it might be:
-`perf script -i $rootdir/root/perf.data -k
-$rootdir/../build-target/linux-6.9-build/vmlinux -s
-/root/libexec/perf-core/scripts/python/flamegraph.py `
-
-If you couldn't find your flamegraph.py file I suggest just do a brute
-force search `find / -name flamegraph.py`. Because I also find it at
-`/usr/lib/perf/scripts/python/flamegraph.py
-`.
-
-So yeah, `perf script report flamegraph` definitely needs some more touches=
-.
-
-Thanks for reporting this bug,
-Howard
-
-On Thu, May 23, 2024 at 5:33=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> I'm trying to generate a flamegraph for a perf.data/kernel from an arm
-> machine on x86_64.
->
-> $ perf version
-> perf version 6.9.gc760b3725e52
->
-> For that I do:
->
->         $ perf script -i $rootdir/root/perf.data -k $rootdir/../build-tar=
-get/linux-6.9-build/vmlinux report flamegraph
->
-> however that reports
->
->         failed to open perf.data: No such file or directory  (try 'perf r=
-ecord' first)
->
-> which is unexpected to me given that I pass a perf.data using -i and a
-> plain
->
->         $ perf script -i $rootdir/root/perf.data -k $rootdir/../build-tar=
-get/linux-6.9-build/vmlinux
->
-> works fine using the specified perf.data.
->
-> If I do
->
->         $ ln -s $rootdir/root/perf.data .
->         $ perf script -k $rootdir/../build-target/linux-6.9-build/vmlinux=
- report flamegraph
->
-> to workaround that issue, I get:
->
->         No kallsyms or vmlinux with build-id d1f71a2e9aec6ff7ef1d5dc544d5=
-a76033496b70 was found
->
-> despite
->
->         $ file $rootdir/../build-target/linux-6.9-build/vmlinux
->         $rootdir/../build-target/linux-6.9-build/vmlinux: ELF 32-bit LSB =
-executable, ARM, EABI5 version 1 (SYSV), statically linked, BuildID[sha1]=
-=3Dd1f71a2e9aec6ff7ef1d5dc544d5a76033496b70, with debug_info, not stripped
->
-> (so the right build-id) and again
->
->         $ perf script -k $rootdir/../build-target/linux-6.9-build/vmlinux
->
-> is happy resolving the symbols.
->
-> Is this a bug or do I hold perf just wrong?
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
