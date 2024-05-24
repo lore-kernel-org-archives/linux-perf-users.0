@@ -1,244 +1,136 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C03B28F
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 04:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D3281AA7
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 08:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716526037; cv=none; b=U6j0TVhMEqv1CN/2kNP3Nnvx4o2OYomdZJOhiM/CVmrYe69hve0u/RYgt8N9AV+RJCYbn5xpt0avQz51uxD+zp+kcvTa2z1mbaW+eIT0/GclRn16TKKyNF4b6LOeqajvF9Wjbaiz5xvND2XbQZuQLIEroxZNoZm44xEfLFPcZWg=
+	t=1716538188; cv=none; b=SBuBrrEvz7ll2MYBxAMTdq66Lhn2eTzKzqgTmr3lVbDW2FFA7F82yqofTzd4ykLQF8JxMSIpiqtpfwNsR1Z7phmK8UyYlvqlNbmOg8InKQADnKz+N2IsPC0dG+iTRK+D3p8/7MJHrF67jCZjw+j9rCaJOOgHaOPxm7Dh9+d4Zqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716526037; c=relaxed/simple;
-	bh=I2/x+KnmvFX3d9VHFjWihBA46JsKDMU7fWgzkkSQye4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elZgWIbPAbGMH10gRgdOQRN4YypIVQjyzo9oAQ3Z3U6vkElnX9MPInaeA4kUp3Bo4ceRWumbCgdmRqEddzATikvTt1bkv6116O9t65vIRlCHvCuRwhHXlhn9Fv5S3/v10LjV0PRZLD3zl7rDyw6UD5XKRzkz+4JlYRLHCWlUNAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=me6BO6t3; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1716538188; c=relaxed/simple;
+	bh=M9VBoq6dREqgaOs5ZCoiH/xJnCr8Qi/PvPkkfAnMqT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuNDqXBR1ya8PlCrvERDN0dYuxdpJZZVeqIBBTmwObFZ92ShLGcj6pRHahLvX/yTzeVkVfiAZAm5fAAbsaCjKJ++Xrd5N8QVonPV2HkwRD0jDLQA+v44fo7u0/n1kKRf0Ew5x07C1DLSPhyQG5hiFAodIrvSgnGDAEwVvSAmeT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkNSMJbO; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="me6BO6t3"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f3310a2f0dso66595ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 May 2024 21:47:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkNSMJbO"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e6f51f9de4so97884991fa.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 01:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716526035; x=1717130835; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e3ETX8R5dt64Y8KD9VavcrPaoSjT+tQS13gpCD8a92c=;
-        b=me6BO6t3AzqJ+piBJ9FS/t3aJZtQt6g6UYlriXmnf1zVUlwvPtOBT/JRSru/KesE2D
-         kV2oUIxq/3XOamSOY/fnLQZ3t+9azFuXp6C2alvdFhl4PovoHiRp6Dd2nGa3E4FBYVim
-         w4iZqD0TfnDK0xz/Yt4vUy5yfNZK6+EnZs2VNI76D1fYGXSMPpieUAC5+MiXmuxDPgBE
-         PEmOmMrK1kkTkIb+bf6zjxUr+Aw1dmSh6KsJp7SiZRuTrTOp88SerwZ3PE30g8DNiTHw
-         v0T1Z041U3ZQGMzIVmW0L5UllUA8cgYGf5G3oFQ+Lavj383QlCBYxxl5SAVzLWtYiwdf
-         Ym+w==
+        d=google.com; s=20230601; t=1716538184; x=1717142984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2lSidCsB9ehXoWQ8boWr3QTXV4fjcTGdt04EwooGBA=;
+        b=vkNSMJbO7R2aGdYyZ8SCmG6zzEE6aDMrcgZAeCx3fGDh+Pz5olsDQNpoAjCbOq2xwI
+         ABgQI3+SYZwBg2EM+2JlI3CTexuAWKJ3UORTDdDoHpuY3/SmEgOwJVStmWfq+HN++ZGS
+         QZL1yOpATt81sV/zm/QmsUA7tmOaNcVU+JlQ+hMJf5AuJwcB3U5ymR1NfpnZLTohFjJk
+         xm6O0GNlRO35TStBNwNMmljAwy2XmPAF8i7rdyfscal19BhCzzkOEk5h7QHfa3R0p/48
+         H9eM6xTnXgSwjd8U5Q/xw4ybeyaiBPmHS2C4sz4W+/TwG1/A8x1SahzNvcPP4uFh2Lag
+         /b5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716526035; x=1717130835;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e3ETX8R5dt64Y8KD9VavcrPaoSjT+tQS13gpCD8a92c=;
-        b=D3ncrjy5K6Aa95zfLL86CKhqRaCbFGIASLWGiMchCbapoHjoT6i6amaP23cPsHdhid
-         cUjhjFUTSoSd8AzG1mdy2YQsCOCyQb4d6lo6Q5skqhNRjmQxsGKVgx6Z5B10AWVnjzxG
-         YN1BwkwPVcQ14ynSmQQCrwI42OXXMx2gd/5SM1cZgimrHiMGi1vpQq1KoHOiozwldoAR
-         iGQk8u1x+o7LXDXo++34WWvgcxmG9cUTTTFtwmuR0+Y0LEeelmEOprCAnbVjJ4rl6H2f
-         srSH8Rsc4Pa1LVm6fzm1hFsfgVFVYF5D1zSCE0cwnsaka9LUBd87gokUMv6YlAT8vdwA
-         JdQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUg2uOUkRZuaFYThKSeSMvuCAxYss8U1+FsIZfMyWPP+b+RSEzfUhNBYdBPslWhBMLOalNtd378g0OfDQxeJcwhAOx/sW5V12mx+NwHAip0vQ==
-X-Gm-Message-State: AOJu0YwqEsrqBmCDzEdMn3S8qNiufR9FlCIWuqLQCeOy9RO7BfklTD7s
-	2zb50B9oUQ1AFHX613PgUpS2DI9JVkWInIopk/ZdIq688v3II84WxQGHggo14+NQpsOGScXi/lx
-	alK+0D75JF7yCMKE5oyxd/N2B3wFxKOfXJHw8
-X-Google-Smtp-Source: AGHT+IEnDxHqN9Qskzl7NBvX9dcVe3SETwJUrzLmIQeE3VFqa5PtLSaOtC9LAT8c3VNNJvZdHpcLw8SyH2GPt4Uz0ss=
-X-Received: by 2002:a17:902:e9d5:b0:1e0:a7ee:18b2 with SMTP id
- d9443c01a7336-1f44c4cbd03mr979415ad.15.1716526034931; Thu, 23 May 2024
- 21:47:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716538184; x=1717142984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W2lSidCsB9ehXoWQ8boWr3QTXV4fjcTGdt04EwooGBA=;
+        b=d9KkrxSPTuyPOg0f4C7GAbFtyv92G8Byrm9+73yGrQ3xaylqZS6N2XzGMY9c4JoVDK
+         rNJA0+WCeLY+2iqO/gR26xnUAh0GN4K08SuT5ZA1hLfQRcOhQqu31ONDJNto+AH7LW+T
+         hT9ysW1uTxZN5TXmFrovhgq9/t193lohdAo1b573yyjvN8oaKludlLMZ1+2z5JKMnupR
+         nyYVeiOLsdcKABpYYG3qYLkw54QZBinE1BTKbU5FJWAsnpakTKHrkF8vCK07+zzRFs+x
+         D6nDHfnNv8sEbW4vKNpE/DSO0SzdQbR0nhqRLf+f+pNn0pHQckxTI46Jp6m1uy9YJldA
+         NkmQ==
+X-Gm-Message-State: AOJu0YzHsxNbcj5aELqRR0cFbpNTcR+StzCnAN87F7eHJUUKNTlfnVhO
+	RnVFIsIBwBA0O3qGl/Y0j8XxRP4qHA0SMGgsN7Pca80QcxuS0rgt9h81EEdNJJe+r8w4l8Brk8H
+	OAA==
+X-Google-Smtp-Source: AGHT+IGzgQlRJ5ug3LTivhVUY93cMPG5I4SOe6hVc5ZOXCHlEHuiL4z22/IDhTQdsTn2j4oV9P3KDA==
+X-Received: by 2002:a2e:a1d0:0:b0:2e2:a99a:4c4 with SMTP id 38308e7fff4ca-2e95b27b113mr11582591fa.47.1716538184250;
+        Fri, 24 May 2024 01:09:44 -0700 (PDT)
+Received: from google.com ([2a00:79e0:18:10:7092:8288:69bc:29e5])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bcc487fsm963351fa.24.2024.05.24.01.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 01:09:43 -0700 (PDT)
+Date: Fri, 24 May 2024 10:09:39 +0200
+From: "Steinar H. Gunderson" <sesse@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	irogers@google.com, Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v5 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <ZlBLQ87edfIHiGRt@google.com>
+References: <20240523092920.3355004-1-sesse@google.com>
+ <Zk-MpqzRlAecrWA6@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240519181716.4088459-1-irogers@google.com> <CAM9d7chxsyZ+vnPXj0gc-mbADzwzQYi3qUwUohW-7He5KwMvHg@mail.gmail.com>
-In-Reply-To: <CAM9d7chxsyZ+vnPXj0gc-mbADzwzQYi3qUwUohW-7He5KwMvHg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 May 2024 21:47:02 -0700
-Message-ID: <CAP-5=fXME3cjNK-P9qk+kY0dA1Xkwvz6Su=99nY7CgcKrQTb2w@mail.gmail.com>
-Subject: Re: [PATCH v1] tools api io: Move filling the io buffer to its own function
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zk-MpqzRlAecrWA6@x1>
 
-On Thu, May 23, 2024 at 4:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Sun, May 19, 2024 at 11:17=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > In general a read fills 4kb so filling the buffer is a 1 in 4096
-> > operation, move it out of the io__get_char function to avoid some
-> > checking overhead and to better hint the function is good to inline.
-> >
-> > For perf's IO intensive internal (non-rigorous) benchmarks there's a
-> > near 8% improvement to kallsyms-parsing with a default build.
->
-> Oh, is it just from removing the io->eof check?  Otherwise I don't
-> see any difference.
+On Thu, May 23, 2024 at 03:36:22PM -0300, Arnaldo Carvalho de Melo wrote:
+> Makefile.config:982: No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev
+> 
+> ...                                    llvm: [ OFF ]
+> 
+> But maybe use "libllvm"?
 
-I was hoping that by moving the code out-of-line then the hot part of
-the function could be inlined into things like reading the hex
-character. I didn't see that, presumably there are too many callers
-and so that made the inliner think sharing would be best even though
-the hot code is a compare, pointer dereference and an increment. I
-tried forcing inlining but it didn't seem to win over just having the
-code out-of-line. The eof check should be very well predicted. The
-out-of-line code was branched over forward, which should be 1
-mispredict but again not a huge deal. I didn't do a more thorough
-analysis as I still prefer to have the cold code out-of-line.
+I think I was trying to be consistent with the previous patch using LLVM
+(something with Clang and eBPF, I think?), which used llvm and not
+libllvm for the name here :-) And I don't think upstream actually uses
+the libllvm name much (e.g. as you can see, it's llvm-devel, not
+libllvm-devel). But I can change it if you think it's a better name;
+I don't mind much either way.
 
-Thanks,
-Ian
+> So mostly the above, and:
+> 
+> root@x1:~# perf probe -x /usr/bin/find -L find | grep fts_read
+>      44        while ( (errno=0, ent=fts_read (p)) != NULL )
+>                /* fts_read returned NULL; distinguish between "finished" and "error". */
+> root@x1:~#
 
-> Thanks,
-> Namhyung
->
-> >
-> > Before:
-> > ```
-> > $ perf bench internals all
-> > Computing performance of single threaded perf event synthesis by
-> > synthesizing events on the perf process itself:
-> >   Average synthesis took: 146.322 usec (+- 0.305 usec)
-> >   Average num. events: 61.000 (+- 0.000)
-> >   Average time per event 2.399 usec
-> >   Average data synthesis took: 145.056 usec (+- 0.155 usec)
-> >   Average num. events: 329.000 (+- 0.000)
-> >   Average time per event 0.441 usec
-> >
-> >   Average kallsyms__parse took: 162.313 ms (+- 0.599 ms)
-> > ...
-> > Computing performance of sysfs PMU event scan for 100 times
-> >   Average core PMU scanning took: 53.720 usec (+- 7.823 usec)
-> >   Average PMU scanning took: 375.145 usec (+- 23.974 usec)
-> > ```
-> > After:
-> > ```
-> > $ perf bench internals all
-> > Computing performance of single threaded perf event synthesis by
-> > synthesizing events on the perf process itself:
-> >   Average synthesis took: 127.829 usec (+- 0.079 usec)
-> >   Average num. events: 61.000 (+- 0.000)
-> >   Average time per event 2.096 usec
-> >   Average data synthesis took: 133.652 usec (+- 0.101 usec)
-> >   Average num. events: 327.000 (+- 0.000)
-> >   Average time per event 0.409 usec
-> >
-> >   Average kallsyms__parse took: 150.415 ms (+- 0.313 ms)
-> > ...
-> > Computing performance of sysfs PMU event scan for 100 times
-> >   Average core PMU scanning took: 47.790 usec (+- 1.178 usec)
-> >   Average PMU scanning took: 376.945 usec (+- 23.683 usec)
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/api/io.h | 69 +++++++++++++++++++++++++---------------------
-> >  1 file changed, 38 insertions(+), 31 deletions(-)
-> >
-> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> > index 84adf8102018..d3eb04d1bc89 100644
-> > --- a/tools/lib/api/io.h
-> > +++ b/tools/lib/api/io.h
-> > @@ -43,48 +43,55 @@ static inline void io__init(struct io *io, int fd,
-> >         io->eof =3D false;
-> >  }
-> >
-> > -/* Reads one character from the "io" file with similar semantics to fg=
-etc. */
-> > -static inline int io__get_char(struct io *io)
-> > +/* Read from fd filling the buffer. Called when io->data =3D=3D io->en=
-d. */
-> > +static inline int io__fill_buffer(struct io *io)
-> >  {
-> > -       char *ptr =3D io->data;
-> > +       ssize_t n;
-> >
-> >         if (io->eof)
-> >                 return -1;
-> >
-> > -       if (ptr =3D=3D io->end) {
-> > -               ssize_t n;
-> > -
-> > -               if (io->timeout_ms !=3D 0) {
-> > -                       struct pollfd pfds[] =3D {
-> > -                               {
-> > -                                       .fd =3D io->fd,
-> > -                                       .events =3D POLLIN,
-> > -                               },
-> > -                       };
-> > -
-> > -                       n =3D poll(pfds, 1, io->timeout_ms);
-> > -                       if (n =3D=3D 0)
-> > -                               errno =3D ETIMEDOUT;
-> > -                       if (n > 0 && !(pfds[0].revents & POLLIN)) {
-> > -                               errno =3D EIO;
-> > -                               n =3D -1;
-> > -                       }
-> > -                       if (n <=3D 0) {
-> > -                               io->eof =3D true;
-> > -                               return -1;
-> > -                       }
-> > +       if (io->timeout_ms !=3D 0) {
-> > +               struct pollfd pfds[] =3D {
-> > +                       {
-> > +                               .fd =3D io->fd,
-> > +                               .events =3D POLLIN,
-> > +                       },
-> > +               };
-> > +
-> > +               n =3D poll(pfds, 1, io->timeout_ms);
-> > +               if (n =3D=3D 0)
-> > +                       errno =3D ETIMEDOUT;
-> > +               if (n > 0 && !(pfds[0].revents & POLLIN)) {
-> > +                       errno =3D EIO;
-> > +                       n =3D -1;
-> >                 }
-> > -               n =3D read(io->fd, io->buf, io->buf_len);
-> > -
-> >                 if (n <=3D 0) {
-> >                         io->eof =3D true;
-> >                         return -1;
-> >                 }
-> > -               ptr =3D &io->buf[0];
-> > -               io->end =3D &io->buf[n];
-> >         }
-> > -       io->data =3D ptr + 1;
-> > -       return *ptr;
-> > +       n =3D read(io->fd, io->buf, io->buf_len);
-> > +
-> > +       if (n <=3D 0) {
-> > +               io->eof =3D true;
-> > +               return -1;
-> > +       }
-> > +       io->data =3D &io->buf[0];
-> > +       io->end =3D &io->buf[n];
-> > +       return 0;
-> > +}
-> > +
-> > +/* Reads one character from the "io" file with similar semantics to fg=
-etc. */
-> > +static inline int io__get_char(struct io *io)
-> > +{
-> > +       if (io->data =3D=3D io->end) {
-> > +               int ret =3D io__fill_buffer(io);
-> > +
-> > +               if (ret)
-> > +                       return ret;
-> > +       }
-> > +       return *io->data++;
-> >  }
-> >
-> >  /* Read a hexadecimal value with no 0x prefix into the out argument he=
-x. If the
-> > --
-> > 2.45.0.rc1.225.g2a3ae87e7f-goog
-> >
+This part went a bit over my head, I'll just assume it's good. :-)
+
+> So the libllvm is even producing a better result, showing those inlines
+> not seen in the BFD based output.
+
+I think maybe you need to give --inlines to BFD objdump to get it to
+show inlines. (It can be useful in perf annotate sometimes.)
+But annoyingly enough, LLVM objdump does not understand the flag.
+
+> 100x speedup, looks like a win! 8-)
+
+Great, thanks for testing. :-)
+
+> Thanks a lot, the comments I made on the patch are mostly coding style,
+> please consider them, but I wouldn't get in the way for this patch to
+> get merged because of that albeit would be nice to try to fit in more
+> nicely with the existing source code base.
+
+Sure, I'll make a v6 with the requested changes. Just some
+questions/comments below.
+
+>> +		*inline_frames = (llvm_a2l_frame*)malloc(
+>> +			sizeof(**inline_frames) * num_frames);
+> Do we really need to cast here (my C++ is super rusty), and why not
+> calloc()?
+
+Yes, C++ does not have implicit cast-from-void*. The C++ way would be
+new[] or use std::vector, but, that would make it impossible for the
+caller to free(). I can use calloc, it won't change much either way.
+
+> > +			dst.funcname = strdup(src.FunctionName.c_str());
+> If strdup fails, users will cope?
+
+Yes, same as dst.filename. new_inline_sym() (which is where we give this
+data to) has an explicit check for if (!funcname).
+
+> > +		Expected<DILineInfo> res_or_err =
+> > +			symbolizer->symbolizeCode(dso_name, sectioned_addr);
+> same line?
+
+That takes it way over 80 characters, is that OK?
+
+/* Steinar */
