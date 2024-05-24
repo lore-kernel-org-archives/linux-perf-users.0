@@ -1,54 +1,54 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CE0157A41;
-	Fri, 24 May 2024 23:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DAE136E1A;
+	Fri, 24 May 2024 23:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716592641; cv=none; b=VsIO3DdjTssVcHX4dN427PzEXmZgPaW0TLeHm1dAfX1I4mWg1fvXh2FP3873oqI0xaywnH0Yx073g0G13hiEqyl2290BYf3kWO7bX3RyzCJMQxd/ust+QhnJwY5+R5/mnlJFWHBdKWzfOFKBHoqQKuQyMbUQwKsziA/5rcnw49s=
+	t=1716592860; cv=none; b=tsZCScqFgBnvLv5jIglHxduWLuO3PPmp8sNL7ASOspcVjnEyhRJGdoSiNmbddh8BuMJ76oAaIBLntBtZSFkkqpidQbCdub4EnMWaoS6twg9CBFpPKzcCnDCApdOfkSQORMh/aG2U1LWCUdXuVdg9Ho3ombqeE3ejeaX7iJCXCgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716592641; c=relaxed/simple;
-	bh=8ZpglXReu9jsHqF0GVWA7NWwntfDlNZkHd6/fLaVNcA=;
+	s=arc-20240116; t=1716592860; c=relaxed/simple;
+	bh=HcG0HZCe2TOEI9UXK18wxFCx1e145Ro2fmdBDCLuAEs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nmG4dawsFqcq62O++kZ35F/W56PiRx5UA8qgCOWDwmN0mevngMynMym03T5cNxZCwMrYb+YiHNLAtYWqJaK6QYAJsCdFHFnrH9Q6sSM+/h9vzv7OPtYQamnmMWONVsT+rZxW9z+e8Rf1bTMuOgWsEPbChtTyjf3wL4VZhBgELFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.173
+	 To:Cc:Content-Type; b=cXwlBFi7Fu6Vq/SJOQVVhjEKW3nKdsSL+QK3VM+i1alfbLlbqQTHjA43cTyXWo4xDhuN4nrQbLV3o5959P0Dr43sxpgFRkhPk9RxEj0JfQWFyXNidIGCcmumM9aoh2+US1qACSlywR4itTrqx2TYt3LhJLP2wh6qbsH6SaANf+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-68197de7400so1185217a12.3;
-        Fri, 24 May 2024 16:17:19 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-681919f89f2so1125523a12.1;
+        Fri, 24 May 2024 16:20:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716592639; x=1717197439;
+        d=1e100.net; s=20230601; t=1716592858; x=1717197658;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SzNlQGYnHC7S2+oFoHwAexbz5wrG29AB2zc9B41IWoc=;
-        b=Z2RczcZiUQRHh4zLWidJoJOYFppLDhbi4hk1sqSjMKRU0BtVz1kgpmdzU6AR6e9mfb
-         9nYcQf2QZTY3GbdS620CsTmBw/QjqLyaEk9FC+vsFDoxJkNSsZ3EC5fjXUzlDfv6Lj18
-         GUc2TbAk7Bnpm15ScWKURFTVabl9lpEsDQFeiVw3nRhTNotgGRk1qbTRJuo3/TQzHsox
-         W0uGTzv+IT/I5ah4GanKIx1ZfSz0yYPNMt1YbEGnYe4KaZeQHhkKx7rGEI4ksLdJ7p/R
-         bbiQZSwoeKAu4YXwPMCrp4R0QP2fGCPWBPEonJuyfJeuCiXtTsy73ZMssqVaWptrdXUx
-         nSgA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/hRRlcQzyKEbI4MBlVbf+HdWsFqjcHVMpF8r+kbYulEBsL/cOo5i+D8FgAGi4kNy4EmndVvZ6XuG765hKIzO9HytQmkMYnnReyJ8IooU4gg9G1EbKAHSaB53dqP4FQBl891R7aEOJKy72f0v6UA==
-X-Gm-Message-State: AOJu0YxEmpKKXJL2rZaG11wZUTwhIlmgplKEMlPh4xnHZnouU5Z4AJv0
-	jwavMisE23OPhY+SHOUqz/T3pQb7qed0QhZzkCHjzihF5D9pFYbrmksweUyQ3dfCjTmt7AgHP3k
-	37jlYjJA5AF1kZzS+R8l+kKzqxp8=
-X-Google-Smtp-Source: AGHT+IHhUOMqAS7k8dhN0V6qVsZ8JkLU0zsvXWs5vfw0GEWWqbjL6f5N3Z3pGBQ1imTuUbQIEaPeDpP2Ale4CK3b1rA=
-X-Received: by 2002:a17:90b:14d:b0:2ad:af1c:4fc with SMTP id
- 98e67ed59e1d1-2bf5e18665fmr3563672a91.25.1716592638698; Fri, 24 May 2024
- 16:17:18 -0700 (PDT)
+        bh=/E6h9cLW82Sir29AqENWdj6pESrygYaxB12ff2cWCUk=;
+        b=f6NyHfJbv4lBAJFX921+uoMq0VSyVfDHGy3uZrZ0K5zE1M4wXsa8pAYcXCUw8HLUeh
+         3Ah40YlWOOwWu8xFJOmNJ7kk8Mi391S6h9hiMRHGEGbmgMYhMIqeT1YULWwXqMM4dVDk
+         BPiiGAj0QKU3wKOA/5A2j7rnnVPJdSH0XmIdejNwJS5/UcA/LjGVdhDGHaZlcQgrK4Am
+         gt0mzK7iY0u1kfBVXytQZ76VTbFXVAjTIG8GE20sMsPis+KwL1SZugkwSRjn/U4dUEXP
+         PWovA5/20CT0rTWVJ7XM/w4ySX776JoRP5lhBe5FmzNY6SKzjyzkR3C5Jw9YQGG3X27B
+         3auA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3S1RjHBpe+B+z+A/0bIpj96GLCFqcSqL6sBQN1hYT+3V4BqyRNfviydG2DeQk6ofB9PBSmbTLbNnBX0vOGe5/aCxCBWnqSz0lXWuk9X76gdE1j183R29b/ZX7gRu+I/rwH72iPlPt4tJtXT5Jwg==
+X-Gm-Message-State: AOJu0YzT4Tf6jNMm26chHaVBRVJ9fJ+GDvaR9wszkVQdtyI6qkv+PcFv
+	0yxEnZOHfe+YmttX9xj2zxfZSRhtq3edAedvFfmRsp9jck5yybvhrgfJLTib7W4ErSiEmS6PIp0
+	K7g6eWsgIu3VLVmU7ElvWNVt8ZY4=
+X-Google-Smtp-Source: AGHT+IE7NcTT15412fctFD9VGsJ3QSLwbXGS9xyrXiED8TenFsgyMY4AzJH1PkoIGhMQxlWXMK4YFYPNZD2IKLDIb4E=
+X-Received: by 2002:a17:902:db0d:b0:1ec:53de:a51d with SMTP id
+ d9443c01a7336-1f449902d74mr46679745ad.69.1716592858473; Fri, 24 May 2024
+ 16:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521173952.3397644-1-weilin.wang@intel.com> <20240521173952.3397644-5-weilin.wang@intel.com>
-In-Reply-To: <20240521173952.3397644-5-weilin.wang@intel.com>
+References: <20240521173952.3397644-1-weilin.wang@intel.com> <20240521173952.3397644-6-weilin.wang@intel.com>
+In-Reply-To: <20240521173952.3397644-6-weilin.wang@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 24 May 2024 16:17:07 -0700
-Message-ID: <CAM9d7cjob_tfgN+rMRrh=0SV56+z32CmP34BRY1eoFv48RVocg@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 4/7] perf stat: Plugin retire_lat value from
- sampled data to evsel
+Date: Fri, 24 May 2024 16:20:47 -0700
+Message-ID: <CAM9d7cg7Xg=pxc5sxfGo7Om2qh3zoj2nbtyAyu6D5MOedfJ6SQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 5/7] perf stat: Add command line option for
+ enabling tpebs recording
 To: weilin.wang@intel.com
 Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -64,176 +64,134 @@ On Tue, May 21, 2024 at 10:40=E2=80=AFAM <weilin.wang@intel.com> wrote:
 >
 > From: Weilin Wang <weilin.wang@intel.com>
 >
-> In current :R parsing implementation, the parser would recognize events w=
-ith
-> retire_latency modifier and insert them into the evlist like a normal eve=
-nt.
-> Ideally, we need to avoid counting these events.
->
-> In this commit, at the time when a retire_latency evsel is read, set the =
-retire
-> latency value processed from the sampled data to count value. This sample=
-d
-> retire latency value will be used for metric calculation and final event =
-count
-> print out.
-
-I'm confused.  Do you mean you don't count the event with 'R' modifier
-(w/ perf stat) and just print the (average) retire latency (from perf recor=
-d)?
-
+> With this command line option, tpebs recording is turned off in perf stat=
+ on
+> default. It will only be turned on when this option is given in perf stat
+> command.
 >
 > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > ---
->  tools/perf/arch/x86/util/evlist.c |  6 +++++
->  tools/perf/util/evsel.c           | 44 +++++++++++++++++++++++++++++++
->  tools/perf/util/evsel.h           |  5 ++++
->  3 files changed, 55 insertions(+)
+>  tools/perf/builtin-stat.c | 19 +++++++++++++------
+>  tools/perf/util/evsel.c   | 19 ++++++++++++++-----
+>  2 files changed, 27 insertions(+), 11 deletions(-)
 >
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util=
-/evlist.c
-> index b1ce0c52d88d..cebdd483149e 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -89,6 +89,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const st=
-ruct evsel *rhs)
->                         return 1;
->         }
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index c0e9dfa3b3c2..c27521fb1aee 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -117,6 +117,7 @@ static volatile sig_atomic_t        child_pid        =
+               =3D -1;
+>  static int                     detailed_run                    =3D  0;
+>  static bool                    transaction_run;
+>  static bool                    topdown_run                     =3D false=
+;
+> +static bool                    tpebs_recording                 =3D false=
+;
+>  static bool                    smi_cost                        =3D false=
+;
+>  static bool                    smi_reset                       =3D false=
+;
+>  static int                     big_num_opt                     =3D  -1;
+> @@ -677,9 +678,11 @@ static int __run_perf_stat(int argc, const char **ar=
+gv, int run_idx)
+>         int err;
+>         bool second_pass =3D false;
 >
-> +       /* Retire latency event should not be group leader*/
+> -       err =3D start_tpebs(&stat_config, evsel_list);
+> -       if (err < 0)
+> -               return err;
+> +       if (tpebs_recording) {
+> +               err =3D start_tpebs(&stat_config, evsel_list);
+> +               if (err < 0)
+> +                       return err;
+> +       }
+>
+>         if (forks) {
+>                 if (evlist__prepare_workload(evsel_list, &target, argv, i=
+s_pipe, workload_exec_failed_signal) < 0) {
+> @@ -886,9 +889,11 @@ static int __run_perf_stat(int argc, const char **ar=
+gv, int run_idx)
+>
+>         t1 =3D rdclock();
+>
+> -       err =3D stop_tpebs();
+> -       if (err < 0)
+> -               return err;
+> +       if (tpebs_recording) {
+> +               err =3D stop_tpebs();
+> +               if (err < 0)
+> +                       return err;
+> +       }
+>
+>         if (stat_config.walltime_run_table)
+>                 stat_config.walltime_run[run_idx] =3D t1 - t0;
+> @@ -1246,6 +1251,8 @@ static struct option stat_options[] =3D {
+>                        "disable adding events for the metric threshold ca=
+lculation"),
+>         OPT_BOOLEAN(0, "topdown", &topdown_run,
+>                         "measure top-down statistics"),
+> +       OPT_BOOLEAN(0, "enable-tpebs-recording", &tpebs_recording,
 
-Hmm.. why?
+Just --tpebs or --tpebs-record?  I just prefer short names. :)
 
-> +       if (lhs->retire_lat && !rhs->retire_lat)
-> +               return 1;
-> +       if (!lhs->retire_lat && rhs->retire_lat)
-> +               return -1;
-> +
->         /* Default ordering by insertion index. */
->         return lhs->core.idx - rhs->core.idx;
->  }
+
+> +                       "enable recording for tpebs when retire_latency r=
+equired"),
+>         OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
+>                         "Set the metrics level for the top-down statistic=
+s (0: max level)"),
+>         OPT_BOOLEAN(0, "smi-cost", &smi_cost,
 > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a0a8aee7d6b9..4d700338fc99 100644
+> index 4d700338fc99..e1f3f63dfb54 100644
 > --- a/tools/perf/util/evsel.c
 > +++ b/tools/perf/util/evsel.c
-> @@ -58,6 +58,7 @@
->  #include <internal/xyarray.h>
->  #include <internal/lib.h>
->  #include <internal/threadmap.h>
-> +#include "util/intel-tpebs.h"
+> @@ -1540,21 +1540,30 @@ static int evsel__set_retire_lat(struct evsel *ev=
+sel, int cpu_map_idx, int threa
+>                 }
+>         }
 >
->  #include <linux/ctype.h>
->
-> @@ -1523,6 +1524,40 @@ static int evsel__read_one(struct evsel *evsel, in=
-t cpu_map_idx, int thread)
->         return perf_evsel__read(&evsel->core, cpu_map_idx, thread, count)=
-;
->  }
->
-> +static int evsel__set_retire_lat(struct evsel *evsel, int cpu_map_idx, i=
-nt thread)
-> +{
-> +       struct perf_counts_values *count;
-> +       struct tpebs_retire_lat *t;
-> +       bool found =3D false;
-> +       __u64 val;
-> +
-> +       count =3D perf_counts(evsel->counts, cpu_map_idx, thread);
-> +
-> +       list_for_each_entry(t, &tpebs_results, nd) {
-> +               if (!strcmp(t->tpebs_name, evsel->name)) {
-> +                       found =3D true;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       if (!found)
-> +               return -1;
-> +
-> +       /*
-> +        * Only set retire_latency value to the first CPU and thread.
-> +        */
-> +       if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0)
-> +               val =3D t->val;
-> +       else
-> +               val =3D 0;
-> +
-> +       count->val =3D val;
+> -       if (!found)
+> -               return -1;
 > +       /* Set ena and run to non-zero */
 > +       count->ena =3D count->run =3D 1;
 > +       count->lost =3D 0;
-
-So here it seems you discard the actual count of the events
-and replace it with the retire latency.  That means you don't
-need to open the event in perf stat, and probably just have a
-placeholder, right?
-
-Btw, I think it's better to move this logic to intel-tpebs.c file and
-rename to tpebs_set_retire_lat().
-
-
-> +       return 0;
-> +}
 > +
->  static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int=
- thread,
->                              u64 val, u64 ena, u64 run, u64 lost)
->  {
-> @@ -1530,6 +1565,12 @@ static void evsel__set_count(struct evsel *counter=
-, int cpu_map_idx, int thread,
->
->         count =3D perf_counts(counter->counts, cpu_map_idx, thread);
->
-> +       if (counter->retire_lat) {
-
-if (evsel__is_retire_lat(counter)) ?
-
-
-> +               evsel__set_retire_lat(counter, cpu_map_idx, thread);
-> +               perf_counts__set_loaded(counter->counts, cpu_map_idx, thr=
-ead, true);
-> +               return;
+> +       if (!found) {
+> +               /*
+> +                * Set default value or 0 when retire_latency for this ev=
+ent is
+> +                * not found from sampling data (enable_tpebs_recording n=
+ot set
+> +                * or 0 sample recorded).
+> +                */
+> +               val =3D 0;
+> +               return 0;
 > +       }
-> +
->         count->val    =3D val;
->         count->ena    =3D ena;
->         count->run    =3D run;
-> @@ -1778,6 +1819,9 @@ int evsel__read_counter(struct evsel *evsel, int cp=
-u_map_idx, int thread)
->         if (evsel__is_tool(evsel))
->                 return evsel__read_tool(evsel, cpu_map_idx, thread);
 >
-> +       if (evsel__is_retire_lat(evsel))
-> +               return evsel__set_retire_lat(evsel, cpu_map_idx, thread);
-> +
+>         /*
+>          * Only set retire_latency value to the first CPU and thread.
+>          */
+>         if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0)
+> +       /* Lost precision when casting from double to __u64. Any improvem=
+ent? */
 
-I'm not sure if it works well with group event.  Probably that's
-why you wanted to prevent group leaders.  But I guess you
-can just check this after the PERF_FORMAT_GROUP, no?
+Maybe you can save val * 1000 and then later
+convert back to double and divide by 1000?
 
 Thanks,
 Namhyung
 
 
->         if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
->                 return evsel__read_group(evsel, cpu_map_idx, thread);
+>                 val =3D t->val;
+>         else
+>                 val =3D 0;
 >
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index bd8e84954e34..aaf572317e92 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -303,6 +303,11 @@ static inline bool evsel__is_tool(const struct evsel=
- *evsel)
->         return evsel->tool_event !=3D PERF_TOOL_NONE;
+>         count->val =3D val;
+> -       /* Set ena and run to non-zero */
+> -       count->ena =3D count->run =3D 1;
+> -       count->lost =3D 0;
+>         return 0;
 >  }
->
-> +static inline bool evsel__is_retire_lat(const struct evsel *evsel)
-> +{
-> +       return evsel->retire_lat;
-> +}
-> +
->  const char *evsel__group_name(struct evsel *evsel);
->  int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
 >
 > --
 > 2.43.0
