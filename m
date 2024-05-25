@@ -1,450 +1,216 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28953AD5F
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 10:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4FC3A1C7
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 10:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716634084; cv=none; b=sq8j6CSy6dKv9d+Gt8UepqFxRXf/oaEHZ4KFTFewG/0WalmD27nXRspT16QeMCuuosYQ0QlW4cfYv0Uk7dU293habd1J6/QUuyJ2WJxQWW0xV4oc/7s1nu9E13y8YdX4r4PLXP1hG6c2CGHjBt0dLI7u8549jdxPZhcW+5SxOCE=
+	t=1716634093; cv=none; b=HdEhdUxoNM2gLvsFY3uUt8VSim2zS9IhDcfSpWU68aB577nGNe7t0QcD3vRx0dLW9UJYVIjjApYW3YpQZ6Nv6B/ySjZMSWjhllVjyqYgsANYm8+b9nb7Vkg7frRlWL8e98HYfzNGpioddg3g1/koacJ90oYLaD5J9COtsfpO0Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716634084; c=relaxed/simple;
-	bh=453us0v7/PG5mYKmjp0bD2i6YyQIBAhZQcSS6kRkQJc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YcflzgqK0WDUV+2RqehZXtdyqGcXH832nPML2jDYt3bcCAk6uECS6VUOx6H8DJOGcY42xL5A8jYBaxI332t4ldfJKwbj7RBESSjwI0QZSZF+o7P4DhRL5uvtpMOOMN9doE/VN+daPcP3HZqzjJH7mgC+nc7c5CG9EYuXktLYmGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KALeqecB; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1716634093; c=relaxed/simple;
+	bh=2lqPOceltLwRczEmThPV0eUtcRU8lZHDrOgk/+NdHEA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LOnyE5m5JiBldh+ak1cmKIqPzRoNIgFZ/BEfBmgLdvCNm8vwH75VoFTWYfk7mExfiok97krILOmeJys3XttAMSjjFHQnRqDQR/mmE6TQX1DlKlqN6NU1ZDvKnC/It2flAoUaD71p51TWZPIW6GIAdPBPlYRLAIcXNOK8uxghQB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vngge9AZ; arc=none smtp.client-ip=209.85.167.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KALeqecB"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a08273919so15962247b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 03:48:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vngge9AZ"
+Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-529663e467fso1133804e87.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 03:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716634082; x=1717238882; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9HPpoKP2EfznO0vgFKg9PdNvX/1gZFb+OChgSD84qho=;
-        b=KALeqecBEew8yrF4LnUH26WrR7Btb5XgysEQ3Il4d66qBjhB9etDrqlepyJDctWoC0
-         PsuJNMwI9tF37e/KYf72zPQSnKJmDRiDT77/347tSb8PFxOJq/ytSrvInxgUEjW9E2s0
-         O6JbKSvTiA9n9jVMlC/Tj9/HbSlFaOXL5pPpRXu3grh3RCT8VjFSMqITY0Qq/yrNbv3d
-         ScapU+1/RPeQOA+3tcsxlGRk3/Bne4zQhyCeSY9X59UlkBx16Ax8wlfxPDZdoEZ5rMev
-         VcYpwqpdxMdbyz5eN2YRY/fygDA4P0cOImc7PEXKJlT7RHEA248xKaw8svb7ca88S3Ot
-         2fLA==
+        d=google.com; s=20230601; t=1716634088; x=1717238888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x33LW9A7dVK5EVTAPgwg05LtwyjW2o2CH4TqOgwA89I=;
+        b=Vngge9AZKQmQnjLG5WUU459h6cwkTPxN4rt+W4JWJRb4y0qoCVx2/K3Fs8Ozw0yrdU
+         Ecgy3XFhDS7nKs29pATcoYrT6fE1fahIVMpNPO1QoAWYx09Vh2DUxTRKPocHp1vEe3QZ
+         u2Hl0/zThA7C2dzTkDlj+ybwqHGp6aylLWCtVn/9bRvrHJixc7V+4vg7qnM0LZFSWRqF
+         D3CHHYmX7kISjM0jEIAL4rjiE5yLNchfXZmcVWinzCYncgjq5gsIPfnGXKbmiBUHKa5D
+         3GOtfg1+ssdvblpqNOkkQ3vOPOs18q+oOA80YBecJ0e64BMUADO35hhpXGAGRg9zdEJb
+         Buhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716634082; x=1717238882;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9HPpoKP2EfznO0vgFKg9PdNvX/1gZFb+OChgSD84qho=;
-        b=XTfJ50jsk76rBwkB2i+ZML9sH9Gfp0AdwJuI6hnoJNz93hYPyEjtjK9bl3pg1CXCtQ
-         kEoE87r+wKFXMjQffSBRWEkrzl00FRIOwOSjuLDgeF4YpHuwlwGUl4jpkS9bnKFWQi7S
-         fynj2RzIuq9J3ZyYQ5wuzstXbJEO2Hc3ANmrowQrGDdvzpGTvd7h7vs958zt6vaSMKpl
-         qZO8oDhO1U5K3+nRCLPNkk2TOTjevY3S/gNh9oX0k+DNR7w0+tY0MwDibrhmU2h/kaMl
-         ZM22TAI61zGtesiCRDY07VQZd+b180/RnNCtnHZY9Qtaz12OXBnP6AainzaBof/oy0eh
-         Kudw==
-X-Gm-Message-State: AOJu0YxeZw1xPj541ej+YmyFRuHEBJfzOWNUKDtdVAvS8MZ1OU6naWpT
-	EBS9apHccYdLMoZNpxI/ZTjl8ZXdDUgkYVHJDY7fXdPna1OVaIuBAyEP2SNz9loTCsnW9XCxOg=
+        d=1e100.net; s=20230601; t=1716634088; x=1717238888;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x33LW9A7dVK5EVTAPgwg05LtwyjW2o2CH4TqOgwA89I=;
+        b=VoW1xs3SS6EIQBc3lcugKAuGunGrc9aVzzMhvJK/Nxg8Or3Iw7B8rxbiertshaBUjH
+         2bKBmT8PhUddoSXIz4Ja3G+wrrVj4SUEtvGwe4C9zmSKZFAGozrtXY0snrGndUUgr9O0
+         MgQ3VwUfoSUPL6RF67RyCu7C6xzs5y9P7P56lITp/Q++vDoGx9JapvbL2rblHeLvkUZd
+         kL2jY6voty+D1iYj6AnmNDzwVGgBfl7MaSVeVuW2LU4v7oi175hKei/NQu45hyM7f5Gg
+         lwFITo0Bj0wcTfmhTXOMpgvYyLVwy4NcyX2pUMON2Qc8ljO80MZ8GUPWbzoI+AMdDvFS
+         kcBA==
+X-Gm-Message-State: AOJu0YzjwIgjBKxgURMrtV/a0T76aAzprFAyfgnCdXMPZFhUo6jpAMQD
+	XrBX0wgqYDlUdIUXTqPT5nCTJt8Imdp6zmezY9jFIdlyM4DRk4dxkKURDBfcILVIb9lixKoN9g=
 	=
-X-Google-Smtp-Source: AGHT+IE3uAusjhlb5QfvAfrR/6Swpb9p++1Vpegd+VybwqYKgQBHpBFjN7VOqZEzYBuAO68cp0vzQp9y4Q==
+X-Google-Smtp-Source: AGHT+IGN6xVdZAkSrm56Sh9UHyxZz/GpA8d9fzFyHMmnzeWi8Ie7DGT0rYA4SiFems0Hx2Nk/ziYNi4Fkw==
 X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:8cba:1aee:d3cd:626f])
- (user=sesse job=sendgmr) by 2002:a05:690c:4a02:b0:61b:e253:31ad with SMTP id
- 00721157ae682-62a08fa9d1dmr10694227b3.8.1716634082087; Sat, 25 May 2024
- 03:48:02 -0700 (PDT)
-Date: Sat, 25 May 2024 12:47:53 +0200
+ (user=sesse job=sendgmr) by 2002:a05:651c:10b1:b0:2e9:570e:1d5 with SMTP id
+ 38308e7fff4ca-2e95b273f56mr41271fa.5.1716634088029; Sat, 25 May 2024 03:48:08
+ -0700 (PDT)
+Date: Sat, 25 May 2024 12:47:54 +0200
+In-Reply-To: <20240525104755.324014-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240525104755.324014-1-sesse@google.com>
 X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240525104755.324014-1-sesse@google.com>
-Subject: [PATCH v6 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <20240525104755.324014-2-sesse@google.com>
+Subject: [PATCH v6 2/3] perf annotate: split out read_symbol()
 From: "Steinar H. Gunderson" <sesse@google.com>
 To: acme@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
+	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In addition to the existing support for libbfd and calling out to
-an external addr2line command, add support for using libllvm directly.
-This is both faster than libbfd, and can be enabled in distro builds
-(the LLVM license has an explicit provision for GPLv2 compatibility).
-Thus, it is set as the primary choice if available.
-
-As an example, running perf report on a medium-size profile with
-DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
-libbfd, 153 seconds with external llvm-addr2line, and I got tired
-and aborted the test after waiting for 55 minutes with external
-bfd addr2line (which is the default for perf as compiled by distributions
-today). Evidently, for this case, the bfd addr2line process needs
-18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
-hits the 1-second timeout and gets killed during initialization,
-getting restarted anew every time. Having an in-process addr2line
-makes this much more robust.
-
-As future extensions, libllvm can be used in many other places where
-we currently use libbfd or other libraries:
-
- - Symbol enumeration (in particular, for PE binaries).
- - Demangling (including non-Itanium demangling, e.g. Microsoft
-   or Rust).
- - Disassembling (perf annotate).
-
-However, these are much less pressing; most people don't profile
-PE binaries, and perf has non-bfd paths for ELF. The same with
-demangling; the default _cxa_demangle path works fine for most
-users. Disassembling is coming in a later patch in the series;
-however do note that while bfd objdump can be slow on large binaries,
-it is possible to use --objdump=llvm-objdump to get the speed benefits.
-(It appears LLVM-based demangling is very simple, should we want
-that.)
-
-Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
-correctly detected using feature_check, and thus was not tested.
+The Capstone disassembler code has a useful code snippet to read
+the bytes for a given code symbol into memory. Split it out into
+its own function, so that the LLVM disassembler can use it in
+the next patch.
 
 Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature       |   1 +
- tools/perf/Makefile.config         |  15 ++++
- tools/perf/builtin-version.c       |   1 +
- tools/perf/util/Build              |   1 +
- tools/perf/util/llvm-c-helpers.cpp | 134 +++++++++++++++++++++++++++++
- tools/perf/util/llvm-c-helpers.h   |  47 ++++++++++
- tools/perf/util/srcline.c          |  57 +++++++++++-
- 7 files changed, 255 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/util/llvm-c-helpers.cpp
- create mode 100644 tools/perf/util/llvm-c-helpers.h
+ tools/perf/util/disasm.c | 90 +++++++++++++++++++++++++---------------
+ 1 file changed, 56 insertions(+), 34 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 1e2ab148d5db..278b26216254 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -136,6 +136,7 @@ FEATURE_DISPLAY ?=              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-          libcapstone            \
-+         llvm                   \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7f1e016a9253..42f5ad89c0ca 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -969,6 +969,21 @@ ifdef BUILD_NONDISTRO
-   endif
- endif
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 72aec8f61b94..c0dbb955e61a 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1396,6 +1396,53 @@ static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
+ 	return 0;
+ }
  
-+ifndef NO_LIBLLVM
-+  $(call feature_check,llvm)
-+  ifeq ($(feature-llvm), 1)
-+    CFLAGS += -DHAVE_LIBLLVM_SUPPORT
-+    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
-+    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
-+    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
-+    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
-+    $(call detected,CONFIG_LIBLLVM)
-+  else
-+    $(warning No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev)
-+    NO_LIBLLVM := 1
-+  endif
-+endif
-+
- ifndef NO_DEMANGLE
-   $(call feature_check,cxa-demangle)
-   ifeq ($(feature-cxa-demangle), 1)
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index 398aa53e9e2e..4b252196de12 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -65,6 +65,7 @@ static void library_status(void)
- 	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
- 	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
- 	STATUS(HAVE_LIBELF_SUPPORT, libelf);
-+	STATUS(HAVE_LIBLLVM_SUPPORT, libllvm);
- 	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
- 	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
- 	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index da64efd8718f..6a1fd8f1a488 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -226,6 +226,7 @@ perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
- perf-y += demangle-ocaml.o
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
-+perf-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
- 
- ifdef CONFIG_JITDUMP
- perf-$(CONFIG_LIBELF) += jitdump.o
-diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-new file mode 100644
-index 000000000000..3cc967ec6f28
---- /dev/null
-+++ b/tools/perf/util/llvm-c-helpers.cpp
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Must come before the linux/compiler.h include, which defines several
-+ * macros (e.g. noinline) that conflict with compiler builtins used
-+ * by LLVM.
-+ */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
-+#include <llvm/DebugInfo/Symbolize/Symbolize.h>
-+#pragma GCC diagnostic pop
-+
-+#include <stdio.h>
-+#include <sys/types.h>
-+#include <linux/compiler.h>
-+extern "C" {
-+#include <linux/zalloc.h>
-+}
-+#include "symbol_conf.h"
-+#include "llvm-c-helpers.h"
-+
-+using namespace llvm;
-+using llvm::symbolize::LLVMSymbolizer;
-+
-+/*
-+ * Allocate a static LLVMSymbolizer, which will live to the end of the program.
-+ * Unlike the bfd paths, LLVMSymbolizer has its own cache, so we do not need
-+ * to store anything in the dso struct.
-+ */
-+static LLVMSymbolizer *get_symbolizer()
++static u8 *
++read_symbol(const char *filename, struct map *map, struct symbol *sym,
++	    u64 *len, bool *is_64bit)
 +{
-+	static LLVMSymbolizer *instance = nullptr;
-+	if (instance == nullptr) {
-+		LLVMSymbolizer::Options opts;
-+		/*
-+		 * LLVM sometimes demangles slightly different from the rest
-+		 * of the code, and this mismatch can cause new_inline_sym()
-+		 * to get confused and mark non-inline symbol as inlined
-+		 * (since the name does not properly match up with base_sym).
-+		 * Thus, disable the demangling and let the rest of the code
-+		 * handle it.
-+		 */
-+		opts.Demangle = false;
-+		instance = new LLVMSymbolizer(opts);
-+	}
-+	return instance;
-+}
-+
-+/* Returns 0 on error, 1 on success. */
-+static int extract_file_and_line(const DILineInfo &line_info, char **file,
-+				 unsigned int *line)
-+{
-+	if (file) {
-+		if (line_info.FileName == "<invalid>") {
-+			/* Match the convention of libbfd. */
-+			*file = nullptr;
-+		} else {
-+			/* The caller expects to get something it can free(). */
-+			*file = strdup(line_info.FileName.c_str());
-+			if (*file == nullptr)
-+				return 0;
-+		}
-+	}
-+	if (line)
-+		*line = line_info.Line;
-+	return 1;
-+}
-+
-+extern "C"
-+int llvm_addr2line(const char *dso_name, u64 addr,
-+		   char **file, unsigned int *line,
-+		   bool unwind_inlines,
-+		   llvm_a2l_frame **inline_frames)
-+{
-+	LLVMSymbolizer *symbolizer = get_symbolizer();
-+	object::SectionedAddress sectioned_addr = {
-+		addr,
-+		object::SectionedAddress::UndefSection
++	struct dso *dso = map__dso(map);
++	struct nscookie nsc;
++	u64 start = map__rip_2objdump(map, sym->start);
++	u64 end = map__rip_2objdump(map, sym->end);
++	int fd, count;
++	u8 *buf = NULL;
++	struct find_file_offset_data data = {
++		.ip = start,
 +	};
 +
-+	if (unwind_inlines) {
-+		Expected<DIInliningInfo> res_or_err =
-+			symbolizer->symbolizeInlinedCode(dso_name,
-+							 sectioned_addr);
-+		if (!res_or_err)
-+			return 0;
-+		unsigned num_frames = res_or_err->getNumberOfFrames();
-+		if (num_frames == 0)
-+			return 0;
++	*is_64bit = false;
 +
-+		if (extract_file_and_line(res_or_err->getFrame(0),
-+					  file, line) == 0)
-+			return 0;
++	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++	fd = open(filename, O_RDONLY);
++	nsinfo__mountns_exit(&nsc);
++	if (fd < 0)
++		return NULL;
 +
-+		*inline_frames = (llvm_a2l_frame *)calloc(
-+			num_frames, sizeof(**inline_frames));
-+		if (*inline_frames == nullptr)
-+			return 0;
++	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
++			    is_64bit) == 0)
++		goto err;
 +
-+		for (unsigned i = 0; i < num_frames; ++i) {
-+			const DILineInfo &src = res_or_err->getFrame(i);
++	*len = end - start;
++	buf = malloc(*len);
++	if (buf == NULL)
++		goto err;
 +
-+			llvm_a2l_frame &dst = (*inline_frames)[i];
-+			if (src.FileName == "<invalid>")
-+				/* Match the convention of libbfd. */
-+				dst.filename = nullptr;
-+			else
-+				dst.filename = strdup(src.FileName.c_str());
-+			dst.funcname = strdup(src.FunctionName.c_str());
-+			dst.line = src.Line;
++	count = pread(fd, buf, *len, data.offset);
++	close(fd);
++	fd = -1;
 +
-+			if (dst.filename == nullptr ||
-+			    dst.funcname == nullptr) {
-+				for (unsigned j = 0; j <= i; ++j) {
-+					zfree(&(*inline_frames)[j].filename);
-+					zfree(&(*inline_frames)[j].funcname);
-+				}
-+				zfree(inline_frames);
-+				return 0;
-+			}
-+		}
++	if ((u64)count != *len)
++		goto err;
 +
-+		return num_frames;
-+	} else {
-+		if (inline_frames)
-+			*inline_frames = nullptr;
++	return buf;
 +
-+		Expected<DILineInfo> res_or_err =
-+			symbolizer->symbolizeCode(dso_name, sectioned_addr);
-+		if (!res_or_err)
-+			return 0;
-+		return extract_file_and_line(*res_or_err, file, line);
-+	}
++err:
++	if (fd >= 0)
++		close(fd);
++	free(buf);
++	return NULL;
 +}
-diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-new file mode 100644
-index 000000000000..1b28cdc9f9b7
---- /dev/null
-+++ b/tools/perf/util/llvm-c-helpers.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_LLVM_C_HELPERS
-+#define __PERF_LLVM_C_HELPERS 1
 +
-+/*
-+ * Helpers to call into LLVM C++ code from C, for the parts that do not have
-+ * C APIs.
-+ */
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+struct llvm_a2l_frame {
-+	char *filename;
-+	char *funcname;
-+	unsigned int line;
-+};
-+
-+/*
-+ * Implement addr2line() using libLLVM. LLVM is a C++ API, and
-+ * many of the linux/ headers cannot be included in a C++ compile unit,
-+ * so we need to make a little bridge code here. llvm_addr2line() will
-+ * convert the inline frame information from LLVM's internal structures
-+ * and put them into a flat array given in inline_frames. The caller
-+ * is then responsible for taking that array and convert it into perf's
-+ * regular inline frame structures (which depend on e.g. struct list_head).
-+ *
-+ * If the address could not be resolved, or an error occurred (e.g. OOM),
-+ * returns 0. Otherwise, returns the number of inline frames (which means 1
-+ * if the address was not part of an inlined function). If unwind_inlines
-+ * is set and the return code is nonzero, inline_frames will be set to
-+ * a newly allocated array with that length. The caller is then responsible
-+ * for freeing both the strings and the array itself.
-+ */
-+int llvm_addr2line(const char *dso_name,
-+		   u64 addr,
-+		   char **file,
-+		   unsigned int *line,
-+		   bool unwind_inlines,
-+		   struct llvm_a2l_frame **inline_frames);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif /* __PERF_LLVM_C_HELPERS */
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 9d670d8c1c08..71d7decc08fd 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -16,6 +16,9 @@
- #include "util/debug.h"
- #include "util/callchain.h"
- #include "util/symbol_conf.h"
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+#include "util/llvm-c-helpers.h"
-+#endif
- #include "srcline.h"
- #include "string2.h"
- #include "symbol.h"
-@@ -130,7 +133,59 @@ static struct symbol *new_inline_sym(struct dso *dso,
+ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+ 				  struct annotate_args *args, u64 addr)
+ {
+@@ -1458,19 +1505,13 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct map *map = args->ms.map;
+-	struct dso *dso = map__dso(map);
+-	struct nscookie nsc;
+ 	u64 start = map__rip_2objdump(map, sym->start);
+-	u64 end = map__rip_2objdump(map, sym->end);
+-	u64 len = end - start;
++	u64 len;
+ 	u64 offset;
+-	int i, fd, count;
++	int i, count;
+ 	bool is_64bit = false;
+ 	bool needs_cs_close = false;
+ 	u8 *buf = NULL;
+-	struct find_file_offset_data data = {
+-		.ip = start,
+-	};
+ 	csh handle;
+ 	cs_insn *insn;
+ 	char disasm_buf[512];
+@@ -1479,31 +1520,9 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ 	if (args->options->objdump_path)
+ 		return -1;
  
- #define MAX_INLINE_NEST 1024
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+-	fd = open(filename, O_RDONLY);
+-	nsinfo__mountns_exit(&nsc);
+-	if (fd < 0)
+-		return -1;
+-
+-	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
+-			    &is_64bit) == 0)
+-		goto err;
+-
+-	if (open_capstone_handle(args, is_64bit, &handle) < 0)
+-		goto err;
+-
+-	needs_cs_close = true;
+-
+-	buf = malloc(len);
++	buf = read_symbol(filename, map, sym, &len, &is_64bit);
+ 	if (buf == NULL)
+-		goto err;
+-
+-	count = pread(fd, buf, len, data.offset);
+-	close(fd);
+-	fd = -1;
+-
+-	if ((u64)count != len)
+-		goto err;
++		return -1;
  
--#ifdef HAVE_LIBBFD_SUPPORT
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+
-+static void free_llvm_inline_frames(struct llvm_a2l_frame *inline_frames,
-+				    int num_frames)
-+{
-+	if (inline_frames != NULL) {
-+		for (int i = 0; i < num_frames; ++i) {
-+			zfree(inline_frames[i].filename);
-+			zfree(inline_frames[i].funcname);
-+		}
-+		zfree(inline_frames);
-+	}
-+}
-+
-+static int addr2line(const char *dso_name, u64 addr,
-+		     char **file, unsigned int *line, struct dso *dso,
-+		     bool unwind_inlines, struct inline_node *node,
-+		     struct symbol *sym)
-+{
-+	struct llvm_a2l_frame *inline_frames = NULL;
-+	int num_frames = llvm_addr2line(dso_name, addr, file, line,
-+					node && unwind_inlines, &inline_frames);
-+
-+	if (num_frames == 0 || !inline_frames) {
-+		/* Error, or we didn't want inlines. */
-+		return num_frames;
-+	}
-+
-+	for (int i = 0; i < num_frames; ++i) {
-+		struct symbol *inline_sym =
-+			new_inline_sym(dso, sym, inline_frames[i].funcname);
-+		char *srcline = NULL;
-+
-+		if (inline_frames[i].filename)
-+			srcline = srcline_from_fileline(
-+				inline_frames[i].filename,
-+				inline_frames[i].line);
-+		if (inline_list__append(inline_sym, srcline, node) != 0) {
-+			free_llvm_inline_frames(inline_frames, num_frames);
-+			return 0;
-+		}
-+	}
-+	free_llvm_inline_frames(inline_frames, num_frames);
-+
-+	return num_frames;
-+}
-+
-+void dso__free_a2l(struct dso *)
-+{
-+	/* Nothing to free. */
-+}
-+
-+#elif defined(HAVE_LIBBFD_SUPPORT)
+ 	/* add the function address and name */
+ 	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+@@ -1521,6 +1540,11 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
  
- /*
-  * Implement addr2line using libbfd.
+ 	annotation_line__add(&dl->al, &notes->src->source);
+ 
++	if (open_capstone_handle(args, is_64bit, &handle) < 0)
++		goto err;
++
++	needs_cs_close = true;
++
+ 	count = cs_disasm(handle, buf, len, start, len, &insn);
+ 	for (i = 0, offset = 0; i < count; i++) {
+ 		int printed;
+@@ -1565,8 +1589,6 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ 	return count < 0 ? count : 0;
+ 
+ err:
+-	if (fd >= 0)
+-		close(fd);
+ 	if (needs_cs_close) {
+ 		struct disasm_line *tmp;
+ 
 -- 
 2.45.1
 
