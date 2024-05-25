@@ -1,134 +1,286 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E124200BF;
-	Sat, 25 May 2024 23:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A309224FB
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 23:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716678135; cv=none; b=e3sDLO0KmzI1+TYby685KWEQyiHDMBjopX1fi4qsmSVG4/YxEHcpAeOKHIVlRAiTiBp17v8623yVTLfuThRi9Q8ICQVPv+RsaGg4LkiYvfD6hoB3ykamnrlGBnvI6yd3eBxhbszFc1ksP5Kx9yuvv04zaoPR3P56NcqpPuf6JU8=
+	t=1716680070; cv=none; b=Jl4HQou5DIARQ0HBcnRNXU4VSmbDYjw2/uGZ8DLZjKjMXBLNp7WIGbsefce8+dP5tOB7UfvMzz/psSrDu3T/slFT2LkH831E4PhNvJ/eC15Qq8WPcZ/QRIsTEhQ0dDAHGKJ+HanWFYK3mcPhGXo2KuEPHy4Ra/evi8Og6hQfdd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716678135; c=relaxed/simple;
-	bh=32TpEg7mbtsP22pyXmQOaEALFdcn0NvGD121juI2+lY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=luim2H/fZR519J2syv76CuWncA+3+hnEdkQNTxUPGkWszswWPsVnumc6oFqlX+Kc2Pp7PA0OVWwJiwwPdmigCDAygLCu3f39PbMoyJa1DstJ/mHsaPtbt5p/AZEtCA5duj6BtNU5i3XX6Y1BtOtuOG3qfyu4i3PjqR8AQ9CTjpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxObI9HO; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716680070; c=relaxed/simple;
+	bh=uUzfAIJAN8UOtttIYoZiBPiN+mS3jw1s66mcLXazIvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K0Pq9czGtOBfEaykh+PX+MVfELDLWHcuNSYnb+cFFi6wLKAUt78cG7GR2Qy48nEpH8qZjlhMrvuDCCwCoiGXBcPBwAr3Tn9x7a/M0WkYskP7GWZFcPo0tjR5nKV+861cIE1AsVDP3kWF7f+raMHZUZNbP+GyMa7CXtNz/iK8bxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hVTkRfwf; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxObI9HO"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f47dbc4b36so87845ad.3;
-        Sat, 25 May 2024 16:02:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hVTkRfwf"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-373807d3bebso144345ab.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 16:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716678134; x=1717282934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3PCNm2PrVqSXiwVAkw4KJLtfDypumGImUuknWeBpCc=;
-        b=ZxObI9HOF/GiSzmwL/9f2nPmQ9UUOtDkfy9Fivxh3c22p4qTObopJ1R14+gY3Euxhw
-         99mmybeGgZPZzb5JwD/Vp5gum3WSWPuAjZLQFb7AzcV8kLqQQ3GHKk1Elit7UKodcEv7
-         gcNUZ12AQyJLu7cL5KpjPfRMsQAXpEQUa/8rxm8ovWWF+kGmM390zyIGGCp8u7QlOI5g
-         TSvRCXwzfiHxaAA5GaYLnxrB6bd+w/PDyK8CMde3f31ZfsZvT9lUhAoTWP6aEwGbUR1+
-         l9raUq0wcwBqWFuG/MaO9QclPIsJ1OTsNm68E12prAYNGr3NNadYap+1C8TuwMNZPxPf
-         VuKw==
+        d=google.com; s=20230601; t=1716680066; x=1717284866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VyDDv123oM7gFPBqZNEnU0l4e5csQD/v1tgVMBREQS8=;
+        b=hVTkRfwfauw92SOS29Dqr0TUajj4TaI9BKrmERxWzvOT9Q9kiVwB/yLUjmDq/vLb0m
+         MOoulP6dc5+D3kdZYEe8zUJ0sYxTu/dDYtKX32Kf//ifBOSjnWY8bWnkqXPXDURFdc8p
+         doG5vZh+wslMAIyd3jQSBL4g1+jbKlnKThjq3ptXtxHNfdYqxhKpGlOHgac6dOvpEpAW
+         woCM1BISCO82obdBZaAdg+6qVPJudwv5Fp/xbvjVexQU1sYK7FVSAa9K9MBxaVVA+Jw0
+         k7WEMuCH6X4bRt14NAlL1itab0yDiegqLMjnp21lzNlFhs0Mnrmhv2XgLEt6cTMx/MVE
+         QsqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716678134; x=1717282934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q3PCNm2PrVqSXiwVAkw4KJLtfDypumGImUuknWeBpCc=;
-        b=cva7UJRagl2NgA7H38TYsstYzEnjOpv3Brfq+CzL9zBSG4OPmmfa8fmDcuf/WJv5DA
-         r/2HBNSUWwhpP+rS4dNvpwZ6ZVpwKoEyWZbW4gMm6qHVSuSGY8v7N81kIVrxR4YE5Ciz
-         vWpsgquKTXEhIreExLjrA3Yaq9bm/KIupR11pktO8P13g5Pn3FBLV16uiFkQUOVbmFuE
-         ZCbsX4P4uFonw6HddGZ8SE6/jJM1dAh1w59GTdQpPoKH1BbLXkpG1ThY2v76703ePELW
-         ACyH6qD1aSuvVPTnwNSilZ3fei51obgZPwLMZ5mNfK+5jmvEB34HobdRTDHFCjHADlUD
-         iqQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLYgZkM8TiD08Rbj6JPQ6HjkM2Y6E+Oy0m/ZbmfUDT8ytf7fuE7a4m4wLHHRPRbWh7xzSc4KhOtnKCpTpHbp4YNdgS6XCPrw4dWRC21MtWBKGaZAKBq48pWtXyAoArcnY1D3p2/HhCj9kZVQOrqw==
-X-Gm-Message-State: AOJu0YzaYt9rBmDVPOS24OJHcwwJczM07gNajYvTfmTaLzp/ekuS78Bl
-	OIu2FZSPI1z1KQAWbmf/zRwB4sAw78WHMBaqn05jg0z0mZIegTrw
-X-Google-Smtp-Source: AGHT+IES9C0LpZKNFRzpaeAwHmQYCfeHCSkheSxdZpzmjRumDi6kIVTkffhg2CshSGHqC4TnndOQOw==
-X-Received: by 2002:a17:902:d503:b0:1f4:81ab:7574 with SMTP id d9443c01a7336-1f481ab85b9mr9250355ad.5.1716678133658;
-        Sat, 25 May 2024 16:02:13 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9e43c2sm34717035ad.308.2024.05.25.16.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 May 2024 16:02:13 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: akpm@linux-foundation.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	jserv@ccns.ncku.edu.tw,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH] tools/lib/list_sort: Remove redundant code for cond_resched handling
-Date: Sun, 26 May 2024 07:02:06 +0800
-Message-Id: <20240525230206.1077536-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1716680066; x=1717284866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VyDDv123oM7gFPBqZNEnU0l4e5csQD/v1tgVMBREQS8=;
+        b=V5ODZunxvSXm6vXYMw6xMV5OF7Qa7ZG7dFvILyLadiho7m+jrCzOiPM9HJPQSpSB/b
+         gr6gX9fAYdKJLOuUEKA1YpKFesoUKn53Uj76ch1Qbr55+9m0z5XnA3LEnGjtZm1GOka0
+         tsesuBCBrKLpX3CWZ5ZICCWzmob8poXBNYuUwme+C1Is7pL86FoTHjiWrZ0J8Af8kFME
+         JMeyjYIZkyVQHqvwT8heXtNO+2i6VRgRedHFE096/v1+JvvZXJIZ9xwJrnVUySNtCamd
+         26kUquG2KG8A9PfNrEGkubJ9+GWhDDhEXze48uq+Qwb0VPCDjK0T31ZpzGP5PXLE48Z4
+         s7Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCW4zLrsp2m8UEfnQiyVsGDj9O2ajLsTG1QEZzCBTY9YBlIHdfMIHHzGhiJZ1rknSto7j02ObL6Dq2Y1L0JBPPcjNyyYFZIf3Qx44w5VUb6NLw==
+X-Gm-Message-State: AOJu0YxnTc0dCFUl7LIPqBNzABfQ7s94x71pBuFiQBjDXkB2/2G10lao
+	8cDkPTwsMmJ5/gIEtI3U+oxcXpeA42U8ubXLEaEWgAeKfBrr25YHPLY0pd16PIbXhjuWlQ489/7
+	HAUq2gn8feLGwFPPTfx3Yx5haZkv2iqY+jv+4
+X-Google-Smtp-Source: AGHT+IEFPou839IYn52nxYvnLuzElIpziWWNUre//vAxOnb6alTAcRjMhiwI1g9ND3ujWy0WXgIQXHtHnH7qWJI7MMo=
+X-Received: by 2002:a92:d38a:0:b0:36c:3046:a6ef with SMTP id
+ e9e14a558f8ab-3738a706885mr2292555ab.12.1716680066259; Sat, 25 May 2024
+ 16:34:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240521192614.3937942-1-acme@kernel.org> <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
+ <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1> <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+ <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
+ <CAM9d7chXVsoNP6uYMCqy2MZOiWkt4GrFn+giYLHQjaJRsap1Cw@mail.gmail.com> <CAHk-=wjY7CG5WRZQ3E1gdEO9YtUQstMe7a=ciShY0wz0hKXyuQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjY7CG5WRZQ3E1gdEO9YtUQstMe7a=ciShY0wz0hKXyuQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 25 May 2024 16:34:14 -0700
+Message-ID: <CAP-5=fUvT+O0iyXxst3WKqnWdpimqD8+aX8GJU7_7zYieniYxQ@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.10
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
+	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Anne Macedo <retpolanne@posteo.net>, 
+	Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
+	Yang Jihong <yangjihong@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since cond_resched() is not called in userspace, remove the redundant
-code in userspace's list_sort() implementation. This change eliminates
-the unused 'count' variable and the associated logic for invoking cmp()
-periodically, which was intended to trigger cond_resched() in kernel
-space.
+On Sat, May 25, 2024 at 10:22=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sat, 25 May 2024 at 00:38, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Yep, so I'm curious what makes it fail.  IIUC the commit in question
+> > would convert "cycles" event to "${whatever_pmu}/cycles/" if the pmu
+> > has "events/cycles" alias in sysfs or in JSON.  But it should work afte=
+r
+> > that too. :(
+>
+> Well, having looked at it some more, I have the main CPU PMU:
+>
+>     /sys/bus/event_source/devices/armv8_pmuv3_0/
+>
+> which has a 'cpu_cycles' event, and the cpumask covers all the 128
+> cores in this thing.
+>
+> That's the thing the regular profiling *should* use:
+>
+>     $ ls events/
+>     br_mis_pred          l1d_cache_wb        l3d_cache_allocate
+>     br_mis_pred_retired  l1d_tlb             l3d_cache_refill
+>     br_pred              l1d_tlb_refill      l3d_cache_wb
+>     br_retired           l1i_cache           mem_access
+>     bus_access           l1i_cache_refill    memory_error
+>     bus_cycles           l1i_tlb             sample_collision
+>     cid_write_retired    l1i_tlb_refill      sample_feed
+>     cpu_cycles           l2d_cache           sample_filtrate
+>     exc_return           l2d_cache_allocate  sample_pop
+>     exc_taken            l2d_cache_refill    stall_backend
+>     inst_retired         l2d_cache_wb        stall_frontend
+>     inst_spec            l2d_tlb             ttbr_write_retired
+>     l1d_cache            l2d_tlb_refill
+>     l1d_cache_refill     l3d_cache
+>
+> But the thing that seems to have confused the new parsing is that this
+> machine _also_ has
+>
+>     /sys/bus/event_source/devices/arm_dsu_{0..63}/
+>
+> which all have a 'cycles' event:
+>
+>     $ ls events/
+>     bus_access  cycles     l3d_cache_allocate  l3d_cache_wb
+>     bus_cycles  l3d_cache  l3d_cache_refill    memory_error
+>
+> but these things are basically some "each pair of cpus has some bridge
+> to the L3", which is why this 128-core machine has 64 of them. So each
+> of those have something like this:
+>
+>     $ cat cpumask
+>     40
+>     $ cat associated_cpus
+>     40-41
+>
+> I did not look any closer at what the 'cycles' there can actually
+> count, but clearly they can't be used for recording. And even if they
+> can, they shouldn't for the default "cycles".
 
-The removed code includes:
-- Declaration and increment of the 'count' variable.
-- Conditional invocation of cmp() based on 'count'.
+So this is now the behavior with the patch I sent.
 
-This cleanup simplifies the merge_final function, avoids unnecessary
-overhead, and has no impact on the functionality of list_sort() in
-userspace.
+> > It seems my system doesn't have the alias (both in x86_64 and arm64)
+> > at least in sysfs.  I think that's why I don't see the failure and mayb=
+e
+> > there's a specific hardware issue - like a M1 macbook issue?  IIRC it
+> > required the exclude_guest bit to be set, but I think we handled it alr=
+eady
+> > so this must be a different issue.
+>
+> This is my new Ampere system, which has basically replaced the M2
+> Macbook Air as my arm64 test platform, since it builds the kernel a
+> whole lot faster. That's what 128 cores will do...
+>
+> Ian's patch at
+>
+>     https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.c=
+om/
+>
+> makes things work for me again, but I get the feeling that the JSON
+> parsing is too fragile. It should have noticed that the 'cycles' event
+> it found wasn't useful for profiling, and gone on to the next one,
+> instead of just giving an incomprehensible error message.
+>
+> I think the real problem was that the JSON parsing code blindly just
+> looked for "cycles".
 
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
-I've also Cc'd the maintainers and reviewers of the performance events
-subsystem because the perf tool is the only user of userspace
-list_sort().
+I don't think JSON really means anything here. We use JSON as a way to
+import tables of events. We want to map an event name to a config
+value, we could do it in lots of different ways. There is a difference
+between:
+ - legacy events: hard coded event numbers for certain typically CPU
+events, although there are L3 cache events in there,
+ - sysfs: events advertised by the PMU driver in sysfs,
+ - events built into the tool, imported from json files.
 
- tools/lib/list_sort.c | 10 ----------
- 1 file changed, 10 deletions(-)
+The first problem that happened was BIG.little. ARM did nothing to fix
+the perf APIs for BIG.little and Intel fixed things up when they did
+hybrid. What does it mean to open a legacy event on a process in a
+BIG.little CPU when the process may be scheduled onto either BIG or
+little cores? ARM's non-solution was that you'd profile based on which
+PMU driver registered first and not profile on the other - you would
+be profiling on some fraction of your CPUs but not all.
 
-diff --git a/tools/lib/list_sort.c b/tools/lib/list_sort.c
-index 10c067e3a8d2..69affa251fa7 100644
---- a/tools/lib/list_sort.c
-+++ b/tools/lib/list_sort.c
-@@ -52,7 +52,6 @@ static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
- 			struct list_head *a, struct list_head *b)
- {
- 	struct list_head *tail = head;
--	u8 count = 0;
- 
- 	for (;;) {
- 		/* if equal, take 'a' -- important for sort stability */
-@@ -78,15 +77,6 @@ static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
- 	/* Finish linking remainder of list b on to tail */
- 	tail->next = b;
- 	do {
--		/*
--		 * If the merge is highly unbalanced (e.g. the input is
--		 * already sorted), this loop may run many iterations.
--		 * Continue callbacks to the client even though no
--		 * element comparison is needed, so the client's cmp()
--		 * routine can invoke cond_resched() periodically.
--		 */
--		if (unlikely(!++count))
--			cmp(priv, b, b);
- 		b->prev = tail;
- 		tail = b;
- 		b = b->next;
--- 
-2.34.1
+While Intel added proper hybrid/BIG.little support they did so by
+essentially forking every aspect of the perf tool to have a "hybrid"
+version. I put a stop to this in the metrics code and by doing so
+ended up taking on responsibility for cleaning up the mess Intel had
+been creating. This led to the event parser being able to parse "<PMU
+name>/<legacy event name>/" for example in "cpu_core/cycles/" and
+"cpu_atom/cycles/" and encode the legacy event.
 
+This caused issues on ARM, especially Apple ones - maybe Apple should
+be asked to support their PMU? Previously their PMU would advertise
+events like cycles and the sysfs encoding would be used as there was
+no notion of using the legacy encoding. Now the legacy encoding was
+used and for some reason we don't maintain legacy mappings of events
+for PMUs on Apple CPUs. After being politely shouted at, and to my
+surprise Intel agreeing, we made it so sysfs or events built into the
+tool take priority over legacy events if the PMU is specified. This
+wasn't a small change as every test expectation needed updating for
+this. We still have some broken test expectations.
+
+So we had a case where legacy events weren't the priority if the PMU
+was specified but when no PMU was specified they had priority. This
+was frankly weird and so the patch you bisected to fixed this and was
+also a behavior RISC-V had asked for. There was even some discussion
+on this subject at LPC 2023.
+
+Is everything fixed? Nope. It is still the case on ARM that we don't
+profile on all CPUs for perf stat. This is because when no event is
+specified hand crafted perf_event_attr are passed to perf_event_open
+and these perf_event_attr need to open multiple for a
+BIG.little/hybrid system:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/perf/builtin-stat.c#n1942
+I wrote a fix for this:
+https://lore.kernel.org/lkml/20240510053705.2462258-4-irogers@google.com/
+Unreviewed/unmerged and frankly I think ARM should be in the driving
+seat for reviewing it as it is trying to fix their CPUs.
+
+> The only thing that seems to make Ian's new
+> evlist__add_default_events() special is that it uses
+> "perf_pmus__scan_core()" for that cycles finding, which in turn then
+> uses only the *core* PMU's.
+>
+> It feels to me like the "parse the JSON info" is just too fragile,
+> picks the wrong events, and Ian's "add defaults" just works around the
+> weakness.
+
+So I think the parsing is now robust/consistent but that doesn't mean
+the behavior matches your expectations.
+
+I say robust as when any event, regardless of whether it happens to
+alias the few hundred legacy names, will parse. Previous parsing meant
+events advertised by AMD's PMU, like branch-brs, would return parse
+errors as "branch" and "brs" looked like components of a legacy event
+name.
+
+Consistent in that, regardless of event name, we will try the same
+process to find the event.
+
+I don't understand why you think JSON comes into this. Is it because
+I've sent patches with JSON encoding events and metrics in? In the
+case of AMD's "branch-brs" and the "cycles" event, the event has been
+advertised via sysfs and not from data in JSON tables.
+
+> But whatever. With his patch, at least it works for me.
+
+You followed up in:
+https://lore.kernel.org/lkml/CAHk-=3Dwi5Ri=3DyR2jBVk-4HzTzpoAWOgstr1LEvg_-O=
+XtJvXXJOA@mail.gmail.com/
+with:
+
+> So no. That still needs to be fixed, or the whole "prefer sysfs/JSON
+> by default" needs to be reverted.
+
+So I think we still need to figure out what:
+
+$ perf <command> -e <event> ...
+
+where <event> doesn't specify a PMU means. I'll try to enumerate the option=
+s:
+
+1) the 6.9 behavior where <event> will be searched for on every PMU
+and each PMU that has that event will have it opened. This can lead to
+failures depending on what <command> is going to do. If <event> is a
+legacy event name then it will be opened only on core PMUs.
+2) the current perf-tools branch behavior where <event> is searched
+for on every PMU regardless of it being a legacy or non-legacy event
+name.
+3) (2) but we change drivers to not advertise events where the name
+conflicts with a legacy event name.
+4) if the PMU isn't specified with <event> then we only search core
+PMUs (e.g. armv8_pmuv3_0, cpu, cpu_core, cpu_atom)
+5) we parse all events as with (2) but depending on <command> can
+choose to ignore perf_event_open failing.
+
+I'll try to rustle up a patch for (5), I have no way to test it. I
+expect it will make somebody somewhere unhappy, apologies in advance.
+
+Thanks,
+Ian
+
+>                  Linus
