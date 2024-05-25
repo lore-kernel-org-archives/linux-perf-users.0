@@ -1,131 +1,147 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF9ABE6F;
-	Sat, 25 May 2024 07:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7023C138E;
+	Sat, 25 May 2024 09:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716622691; cv=none; b=RjpNEOnBPrK9llNxp7i+gn9KK5RKstmtgLbF6cL2DerCrSZpdhqyMvIJlC3r8VHVlboOwlBlwj4VeNLzL3sp0nkxdc9TD9KS/asevhKuQbEbKS7CUXy0JXGRronGp/hvQX93y3N82RkOjCC4nuyrEwDqhSzwRKrAktEhyW9Waxg=
+	t=1716629401; cv=none; b=UyYX9lldZKcZxBJRuuNenrZJX/SnVwD4KkcplaGj8cG5MTJLirJ1noLnSCVl6iG+gab2Jzkg7Je7qJwsjVKAMaE0x9S5VKeqBQKzK945sZwLktEIRVI1nnkponoEChmu7N94b+MW2KF72S7qp9ATWTI2J+ZBeq6sb2vAOflfR1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716622691; c=relaxed/simple;
-	bh=hjnFQGsTJPR8cRFI+tzxhz1tkZh4lBxpR3/xX+fvjJY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W48pQZumYGfPJV0Hlh5X5uU769l2W63u6NZR2T08nGKkh/A5QBr2wXrFcErZY2ygOm2XnoYwXIa7WPdhDDJeVpQOPzBaS8r4RreDEKl/c+OXLLKZthk/jzwU1QIxmYXMziQ0P5ijjvQlVKFqigWktIWM4eiPUbpmoDmYbhCJNdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-656d8b346d2so4131609a12.2;
-        Sat, 25 May 2024 00:38:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716622689; x=1717227489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VjSDPJ3ndkcl6uhv0oiHbgYv63rSd+FyYBnXbtqOYhg=;
-        b=manLXTVNhGBqJV3TNl4vkqHosGzzf3H9fmYpKpk8sBJiS9mYZofQ8Lh0iaP7mZhXRF
-         0c/R3DQdmM9it0pjDpVrbuFpuImUNQtNtIz6ARfArxdq0mzYNqZDLTAImgPsZshqzpa1
-         /LgKcYYgR4cFfdnQXxZT1UfRVLItnQjwPMc16OHRwhGkIPjthEZlUfckUGf1BS51CpD1
-         ygOgPlZKoSTSgO4AR7gbDY0s0EawPO8dA5xK42MZNMAFVIKkzzRRPaH12XZAC7h7159b
-         divceGNCiumoYVs3KlIykPhdXXDlVRQhS46MbYmNONaicVSu/rQz0zSlq1CO0w/Z6dWQ
-         Ne/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXgiUDUykQcBCr0GMviewfNHz/HoX2jukHYO9LaAfNtJve1eDqu2qFbLD9YbWcjTe+x1Lev9gW7wEmntDNZ1MNxaxXRMigC0PRT1ICbzWv3Lk1DM1o76o7sL/LeY6vb5N3ENzz+ei4hq4pvBHaZmA==
-X-Gm-Message-State: AOJu0YzFNnwFuRtuXAvqVymnKQL97Wko6U2l87Q6LcEL9HkoJcrxozrL
-	UNmHH3O3W2T+So86pBGI/Q36zBI7N7LWgTajCKd7azud8DO2tdC3CwlFZsuRqsjO0ElwnHfwvI7
-	N4z2RjmF/NFeFdL2ZnJIeva2NeN4=
-X-Google-Smtp-Source: AGHT+IHye6O0IdalgUS2IBMSDJiqTD6MjEHp+CyiIXyHMvmWb3eLtGiSu5COu7sJMX/b2rFNmcx7d6BsqIVlCA1j2tY=
-X-Received: by 2002:a05:6a20:3cac:b0:1af:d1b2:4c21 with SMTP id
- adf61e73a8af0-1b212dee2dcmr5320981637.41.1716622689230; Sat, 25 May 2024
- 00:38:09 -0700 (PDT)
+	s=arc-20240116; t=1716629401; c=relaxed/simple;
+	bh=b1OJCXMUNGZ5CqkObxi4L1NfyClQcLFRQhFPOz4S2xU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sOhK/RV6X8pDB2jJZWCK72vl7VBDCubVidsLFiERLWabrcKDq13nawdHqIjy2wa7C779ainHkTZ/lU5XoPKcJaX3/C6uwc+dfe9CJFnCj7adA+OvCCAo5OD94FhbrYuXVyaFnAR0rk2uxMklcribX1Ajc90NVO540HWWNtG++DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B58A339;
+	Sat, 25 May 2024 02:30:21 -0700 (PDT)
+Received: from [10.57.68.224] (unknown [10.57.68.224])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBD3D3F641;
+	Sat, 25 May 2024 02:29:55 -0700 (PDT)
+Message-ID: <02fbb30f-19cf-4822-9676-35d3e51d99b1@arm.com>
+Date: Sat, 25 May 2024 10:29:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521192614.3937942-1-acme@kernel.org> <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
- <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1> <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
- <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sat, 25 May 2024 00:37:57 -0700
-Message-ID: <CAM9d7chXVsoNP6uYMCqy2MZOiWkt4GrFn+giYLHQjaJRsap1Cw@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.10
-To: Ian Rogers <irogers@google.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Anne Macedo <retpolanne@posteo.net>, 
-	Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, 
-	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
-	Yang Jihong <yangjihong@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] perf maps: Sort kcore maps
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>, James Clark <james.clark@arm.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240520090647.949371-1-leo.yan@arm.com>
+ <20240520090647.949371-2-leo.yan@arm.com>
+ <2f4fce9f-6283-40ad-8adc-c370e98627da@intel.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <2f4fce9f-6283-40ad-8adc-c370e98627da@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi guys,
+Hi Adrian,
 
-On Fri, May 24, 2024 at 9:20=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, 24 May 2024 at 20:48, Ian Rogers <irogers@google.com> wrote:
-> >
-> > Thanks for the report. TL;DR try putting the PMU name with the event
-> > name, so "cycles:pp" becomes "armv8_pmuv3_0/cycles/pp", where
-> > armv8_pmuv3_0 is the name of the PMU from /sys/devices.
->
-> What? No.
->
-> If that is the new rule, then I'm just going to revert. I'm not going
-> to use some random different PMU names across architectures when all I
-> want is just "cycles".
->
-> In fact, the "cycles:pp" is a complete red herring. Just doing a simple
->
->  $ perf record sleep 1
->
-> with no explicit expression at all, results in that same
->
->   Error:
->   cycles:P: PMU Hardware doesn't support sampling/overflow-interrupts.
-> Try 'perf stat'
->
-> because perf *ITSELF* uses the sane format by default.
+On 5/22/2024 11:31 AM, Adrian Hunter wrote:
+> On 20/05/24 12:06, Leo Yan wrote:
+>> When merging kcore maps into the kernel maps, it has an implicit
+>> requirement for the kcore maps ordering, otherwise, some sections
+>> delivered by the kcore maps will be ignored.
+> 
+> perf treats the kernel text map as a special case.  The problem
+> is that the kcore loading logic did not cater for there being 2
+> maps that covered the kernel mapping.
+> 
+> The workaround was to choose the smaller mapping, but then that
+> still only worked if that was the first.
 
-Yep, so I'm curious what makes it fail.  IIUC the commit in question
-would convert "cycles" event to "${whatever_pmu}/cycles/" if the pmu
-has "events/cycles" alias in sysfs or in JSON.  But it should work after
-that too. :(
+You could see below are Kcore maps dumped on Arm64:
 
-It seems my system doesn't have the alias (both in x86_64 and arm64)
-at least in sysfs.  I think that's why I don't see the failure and maybe
-there's a specific hardware issue - like a M1 macbook issue?  IIRC it
-required the exclude_guest bit to be set, but I think we handled it already
-so this must be a different issue.
+kore map start: ffff000000000000 end: ffff00001ac00000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff00001ad88000 end: ffff000032000000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff000032101000 end: ffff00003e000000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff000040000000 end: ffff000089b80000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff000089cc0000 end: ffff0000b9ab0000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff0000b9ad0000 end: ffff0000b9bb0000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff0000b9c50000 end: ffff0000b9d50000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff0000ba114000 end: ffff0000bf130000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff0000bf180000 end: ffff0000e0000000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff000200000000 end: ffff000220000000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff800000000000 end: ffff800080000000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff800080000000 end: ffff8000822f0000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: ffff800080000000 end: fffffdffbf800000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc0000000 end: fffffdffc06b0000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc06b6000 end: fffffdffc0c80000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc0c84000 end: fffffdffc0f80000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc1000000 end: fffffdffc226e000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc2273000 end: fffffdffc2e6b000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc2e6b000 end: fffffdffc2e6f000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc2e71000 end: fffffdffc2e76000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc2e84000 end: fffffdffc2fc5000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc2fc6000 end: fffffdffc3800000 name: [kernel.kallsyms]
+refcnt: 1
+kore map start: fffffdffc8000000 end: fffffdffc8800000 name: [kernel.kallsyms]
+refcnt: 1
 
-The error message is for EOPNOTSUPP, and I don't think it will set any
-special attributes for the default event.  So I have no clue yet..
+You could see it's much more complex rather than only for kernel text section
+and vmalloc region. We cannot only handle the case for the overlapping between
+the text section and vmalloc region, it is possible for other maps to be
+overlapping with each other.
+
+And different arches have their own definition for the Kcore maps. This is why
+I want to sort maps in this patch, it can allow us to find a reliable way to
+append the kcore maps.
+
+> James essentially fixed that by ensuring the kernel "replacement"
+> map is inserted first.
+
+Yeah, I agreed James' patch has fixed the kernel "replacement" map. But as I
+elaborated above, there still have other maps might overlap with each other,
+my understanding is we don't handle all cases.
+> In other respects, the ordering of the maps does not matter, so
+> I am not sure it is worth this extra processing.
+
+To sell my patch, I have another point for why we need sorting Kcore maps.
+
+Now Perf verifies the map in the function check_invariants(), this function
+reports the broken issue, but we still have no clue how the broken issue happens.
+
+If we can sort the Kcore maps in kcore_mapfn(), then we have chance to detect
+the overlapping within maps, and then it can reports the overlapping in the
+first place and this would be helpful for debugging and locating the failures.
+
+So I have another patch for printing overlapping maps in kcore_mapfn(). I did
+not send out the patch, as I found there have other logs in maps.c and
+symbol.c should be improved a bit. So I am planning to send out a separate
+patch series.
+
+Please let me know if you still think this patch is not useful or not.
 
 Thanks,
-Namhyung
-
->
-> So ABSOLUTELY NO. We're not changing the rules to "You have to know
-> some idiotic per-architecture JSON magic".
->
-> I don't want any excuses like this. No "You are holding it wrong".
-> This is a BUG. Treat it as such.
->
-> And yes, "perf record -vv" shows that it apparently picked some insane
-> arm_dsu_0 event. Which just shows that trying to parse the JSON rules
-> instead of just having sane defaults is clearly not working.
->
-> So here's the deal: I will revert your commit tomorrow unless you show
-> that you are taking it seriously and have a sane fix.
->
-> Because no, "You are holding it wrong" is not the answer. Never was,
-> never will be. Things used to work, they don't work any more. That
-> shit is not acceptable.
->
->                    Linus
+Leo
