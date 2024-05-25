@@ -1,137 +1,139 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11A764A
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 01:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0777E1
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 01:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716600402; cv=none; b=pbfAUY0hYY04rEi/QZSE73ovyTLtGclBv9DjswgVWCjVihXGwwCHkyc4MXnoQsTfELQ/r+J1Q7SkbLQ7ffj5zAqaCVuMfP9fJIMIpkLrohS+8LAf8gSfgzX5bkubxAcBM9qvsDAJcnDTwColIIYEQW6IReVFLcEC+9CQ4riI/2k=
+	t=1716600639; cv=none; b=GcjjX+KPLtM6FxeLmeYTO7LmVoUFrB5irIO00na9YqKahA6L7cWp+tKc9g3vv6MolyrQnkle8lURuH8CJffKj4i7q2DZh3pAtKTLOU0O/XCLDUMk6E2YoHkaiSebku6vFEE2Fsq5VJV1G+akZyLxFSWZNauVn8n1yP1WLLyFRLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716600402; c=relaxed/simple;
-	bh=ekWtQiuFC9hRTRqzLYUPI8tvqm3UzOZX4/nHMuyW4Xg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TYC8iSNbtUYL7I1VL5OiFNZ9Ha1+0ovmiyYOB7L/cbDsL0FOX2mtnkyQGsMqC2WM01fXp8qlbpybRVadBMFCjdMm604zrUhB5ICRgSkNfGaYTc6v/iVBCAuQf8aQxRdSJNwJyBQtAlZ7FULIG+TvP+i20V918Mu9IESDMZRxBHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PtPF/wfq; arc=none smtp.client-ip=209.85.160.178
+	s=arc-20240116; t=1716600639; c=relaxed/simple;
+	bh=Ts0dqe6K6uKFuGxzf0I0eXV77lX2kybuRrr/f6Fr+ws=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=cksSEQEY1aUvNJIryjXLpR7hYYeQYOa+xx/sEidVTCRW/U7tsYymU8byVw3ZpWL+Y1F3wGXSmIRI0pKvUm8dLOlGsU2G2Lt67U72rbPBQR0FNpJYzpX87G5qpskrsySoG90xICC/4xcY3pmAyXBBZwQd608FjaL5ET43WuveG78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uy402Tw5; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PtPF/wfq"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-43dfe020675so207781cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 18:26:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uy402Tw5"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62a052ffe31so8782507b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 18:30:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716600399; x=1717205199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pyskWn7gAK4GatlSK3paUJEmvNBp3h8+7kuW84hMmtg=;
-        b=PtPF/wfqPGgXSHwHecfDvlEI/Ch4BZJBapB3wJz6eT/Ivij1jAGYACVJtTg6O7NiKZ
-         nrB6kJZeYzDxDqSAp4o2yJR0TfQNYpcqFXX/gVVuUF1Tt0jVgQtTjVnuxJJKjesan3EO
-         QHtrLUUT7RrSrZhCAfHzZlTwDYds1AsOPRP49mSL74dSjTqTJrbDIJGdN6HFxK5BmHMh
-         QoZn2fEywv4ljoAm/XHTi0NJ0cDzjJ0rHj1dPf3EuT08oSVmiNT4FjU3bhqzI6BuR/kf
-         uid82beCo/O31muPc+JRJzkWUMXutsxCpjfdu8PF4lURSMnBNS3Dju5fqqafAKR/m2QI
-         Srkw==
+        d=google.com; s=20230601; t=1716600636; x=1717205436; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QPb6Q+KRqvfktX5EPKrvPHvH0PQLcGsMH8/fhQZA9+w=;
+        b=Uy402Tw5gMQqz+wVu8Oa1n8rR9zS1JoNzGqJVKgg8ZguZPR1zoI7+qzAO3fOS6Pkvn
+         ta5/QmQZ+ZixmIXhSgzpOedAM6zgHLKz4eWgnhbrC1GAz4tK7f6JzMTssPgrP3gV71fr
+         DnGmvszc+9j2NMgHoXYBv4Babbh56uOKQF1eS2m5DUSdbRRgQ6wYK/b9RYSNwP4KonmY
+         99XtnQBpP7BFVHWcNkqZpzHd1BB7Mwpwwpu/YxV5mYGmLBhsPfX/NM4YztECW59H9giP
+         a1pf2cBT1QJ4hzj4XzMSar7dNtuN9xZViBlhR6E7DIqtrcS4h14cqECX4DZK0qB4F4Cs
+         YZ7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716600399; x=1717205199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pyskWn7gAK4GatlSK3paUJEmvNBp3h8+7kuW84hMmtg=;
-        b=uF7Gjc3VUs+X+6pEfDazvzB51qGU4WsCDQElSVAQTO98Bskp7TjRv6+SLUjeDHz6Pj
-         jQC/nG+SmEn/P+zJCQ1Bsodz2hf87+l1RODgCJOZmtPNWqzmIs6tauJWqAKOGwlfQD5i
-         oyXY/aCeb+hFg9V6/oCUtriLmmwu2xgU2UR5z5nJqkkE2Z1k2tNxipk4RQbUoE2wawat
-         biRERXFu5sKzvEJUOIipGd5zaxPclcgQkt7RWdmsRKflW6o4JHEwFH9FZcrpCpweqwyD
-         xb5ilHlEHQFdpxBtEAMyqcac1bWw18NnxxdthECFy9y/x+itoS16wXy17a90I12hUpQK
-         SPKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIHOKj8QPAAs3dOaRs1+/1JgOt8Vj+otynamBn3lPEFujVKQZmm5r+BTHlBrHwh0XL+MXZLE4A+8VQDZ82oO73LEC9xned3WdG9FLixQOyXg==
-X-Gm-Message-State: AOJu0Yx8xXUrZTikd6iOWxgkBW7TiLcB+jmYwTHTwDOgmcjxprKMDE+a
-	ff3Jhcbnj/8TpMeO6AXoVv0AJJrNfsz5rgxARDv24IYlfoBoN5oUrq91VLUh1ooG4txklU+cYxk
-	CLqEmerkN8ZZlMMpLLGlY5/MPz1VDE2LP+1YO14p/kwKXg/e+RaWo
-X-Google-Smtp-Source: AGHT+IE0+qpSMG1Nj1Ou0YsvA+xYJ1ZLiqofkBmsWLfKf34amWFXg6qqms2k5cTej7Za/5Dfw7xalvOK5IhtKkG2sbQ=
-X-Received: by 2002:ac8:6f08:0:b0:43e:ec2:4bb8 with SMTP id
- d75a77b69052e-43fb9f9b9a5mr1296071cf.26.1716600399486; Fri, 24 May 2024
- 18:26:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716600636; x=1717205436;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QPb6Q+KRqvfktX5EPKrvPHvH0PQLcGsMH8/fhQZA9+w=;
+        b=aARxwtw6KHqQZk3oS++gUL9z3QiHTr6OIONgxy8U/0ZpN4YmswlTEP2zUCRAbSZcTg
+         gxk1BI2QdN9ANK6Rlhp7/EZX5rC8FfUMT9gwLwoVJicnfFUCX7ObmQ+9eqOJt+1zrr4f
+         RU9kt5Jq3dwrEBshMEMLu4SNOFIkbN2Q5dcIq26gDT/xUHVzwxHAcgQNoYNyHh5/YPe6
+         15NWFtZ1uhA1IoZ0TF5UErageUSe9Fi4VhsXwkTtmzKeqKk0EBwmmmLouIsSp0jGRZqW
+         I0kbLlPnA47WJ5+jvtfwkV7iaJpUXiOqLDG2SWbMBSlaWVEaVsef9ODMG7n7EPNi+o++
+         TkaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUTEf8qeBdZ8GKGokGg5EC74wMttyYXUTy8h0Esy7SMhTTJ+j7/rjAm3GkebjXOKV95IuuRhXwpkJAObaj9xs9DmysXBuaw35GAYAxWsRlVw==
+X-Gm-Message-State: AOJu0YwpzLK6gjzBEBy/RRXz82V+xpEKHGcuAMjM9RD3bYSyfcKrFUzq
+	bAxW6r6suRH3jIkbx/i71vr0VzAyLdtvxJOfERBw49/IiUYZaRLLsUAN1qn06ynufByyyTs7mZw
+	auD2omg==
+X-Google-Smtp-Source: AGHT+IGmkF3+V0Ozuy5EbuioYBt68G7Q+xND22wXwzK3iViocRlXZg7Tm+LKiaDwSTzMv31osrsbToh9E09B
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b0b5:95af:a29:375e])
+ (user=irogers job=sendgmr) by 2002:a05:690c:600b:b0:611:5a9d:bb0e with SMTP
+ id 00721157ae682-62a076284d6mr9246757b3.4.1716600636541; Fri, 24 May 2024
+ 18:30:36 -0700 (PDT)
+Date: Fri, 24 May 2024 18:30:20 -0700
+Message-Id: <20240525013021.436430-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240522204254.1841420-1-weilin.wang@intel.com>
-In-Reply-To: <20240522204254.1841420-1-weilin.wang@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Subject: [PATCH v2 1/2] perf jevents: Use name for special find value
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 24 May 2024 18:26:27 -0700
-Message-ID: <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] perf test: make metric validation test return
- early when there is no metric supported on the test system
-To: weilin.wang@intel.com
-Cc: Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+To: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
+	John Garry <john.g.garry@oracle.com>, Sandipan Das <sandipan.das@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 1:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Add a check to return the metric validation test early when perf list met=
-ric
-> does not output any metric. This would happen when NO_JEVENTS=3D1 is set =
-or in a
-> system that there is no metric supported.
->
->
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+-1000 was used as a special value added in Commit 3d5045492ab2 ("perf
+pmu-events: Add pmu_events_table__find_event()") to show that 1 table
+lacked a PMU/event but that didn't terminate the search in other
+tables. Add a new constant PMU_EVENTS__NOT_FOUND for this value and
+use it.
 
-Tested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.py   | 6 +++---
+ tools/perf/pmu-events/pmu-events.h | 9 +++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index e42efc16723e..7cc16ff96dc8 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -905,7 +905,7 @@ static int pmu_events_table__find_event_pmu(const struct pmu_events_table *table
+   do_call:
+                 return fn ? fn(&pe, table, data) : 0;
+         }
+-        return -1000;
++        return PMU_EVENTS__NOT_FOUND;
+ }
+ 
+ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+@@ -943,10 +943,10 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                         continue;
+ 
+                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
+-                if (ret != -1000)
++                if (ret != PMU_EVENTS__NOT_FOUND)
+                         return ret;
+         }
+-        return -1000;
++        return PMU_EVENTS__NOT_FOUND;
+ }
+ 
+ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index f5aa96f1685c..5435ad92180c 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -70,6 +70,8 @@ struct pmu_metric {
+ struct pmu_events_table;
+ struct pmu_metrics_table;
+ 
++#define PMU_EVENTS__NOT_FOUND -1000
++
+ typedef int (*pmu_event_iter_fn)(const struct pmu_event *pe,
+ 				 const struct pmu_events_table *table,
+ 				 void *data);
+@@ -82,6 +84,13 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+ 				    struct perf_pmu *pmu,
+ 				    pmu_event_iter_fn fn,
+ 				    void *data);
++/*
++ * Search for table and entry matching with pmu__name_match. Each matching event
++ * has fn called on it. 0 implies to success/continue the search while non-zero
++ * means to terminate. The special value PMU_EVENTS__NOT_FOUND is used to
++ * indicate no event was found in one of the tables which doesn't terminate the
++ * search of all tables.
++ */
+ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                                  struct perf_pmu *pmu,
+                                  const char *name,
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-> ---
->  tools/perf/tests/shell/lib/perf_metric_validation.py | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools=
-/perf/tests/shell/lib/perf_metric_validation.py
-> index a2d235252183..0b94216c9c46 100644
-> --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-> +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-> @@ -95,7 +95,7 @@ class Validator:
->                        indent=3D4)
->
->      def get_results(self, idx: int =3D 0):
-> -        return self.results[idx]
-> +        return self.results.get(idx)
->
->      def get_bounds(self, lb, ub, error, alias=3D{}, ridx: int =3D 0) -> =
-list:
->          """
-> @@ -173,7 +173,10 @@ class Validator:
->          pcnt =3D 0
->          tcnt =3D 0
->          rerun =3D list()
-> -        for name, val in self.get_results().items():
-> +        results =3D self.get_results()
-> +        if not results:
-> +            return
-> +        for name, val in results.items():
->              if val < 0:
->                  negmetric[name] =3D val
->                  rerun.append(name)
-> @@ -532,6 +535,9 @@ class Validator:
->          '''
->          if not self.collectlist:
->              self.parse_perf_metrics()
-> +        if not self.metrics:
-> +            print("No metric found for testing")
-> +            return 0
->          self.create_rules()
->          for i in range(0, len(self.workloads)):
->              self.wlidx =3D i
-> --
-> 2.42.0
->
