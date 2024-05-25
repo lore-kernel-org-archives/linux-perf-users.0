@@ -1,442 +1,185 @@
-Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2674342072
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 10:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABF355C08
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 14:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716634097; cv=none; b=RszpljiVsZugKOyrIte9lq4kGqk7ZCxGL6iIcpo6wgSYMCUtUPr78k/klSbyLrRK2Tq/Vg6ulrOWuZRQLTGNCsM3nv2At4Ob6OoPGtsrmDUsMTurbnoZhmkn1aBHpej2R/woB4Dw0g0w1fmrkGmzj29PxWMyBL1W6GYi1lbYTBI=
+	t=1716646172; cv=none; b=BNVoZrp4vXejUznShMo6Onud5JqP/IUGXghp9LEzS3eQcHQsKwdmPKgVN4iBI56BpLWZNFC+gHHYIDuXwWkp3YVljk6RzIMPwdotNVfEHJyPQyb91W7bk/jU2oBhthgpTEUtCqypv2jYhGUCi5yQOkgLFkG7lz/5+mQ56qLaMdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716634097; c=relaxed/simple;
-	bh=Z77+HSWvlqJabrnuOO8/MBRymYEHpIley5nzd5KMILM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aNMd+mG1rh62axXr5rZO9Or7KJaKq6nCB4aB4Yi7se8n6MPiMaAlQgmekKVDbPu3DuhxgH/Z/lkuZvpkDhm+gRtx3M1uV68xeuaTsMCFkpS9eyeNOo4vpGZ0TC/5fViUaVsqph+1I5pvQwWJ+9EkKBxyelBBUhcKEoPq41B6ut8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zKdfvEvf; arc=none smtp.client-ip=209.85.167.74
+	s=arc-20240116; t=1716646172; c=relaxed/simple;
+	bh=9AB3F+ERpeNgpHuSA/LmQ68qrAHdgCH0rbQPc3A19C4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=inhR7YGal5J/xkG1LwcKhX3cZFPFEx3W5vHNqkwfbSY/JHLqiOig6pwOFScjzbSTJf6ii9R/AdrmQNLTZuaha6FFG7qooy8BH1PFVYjwWGTI8RwII+/wSo3gCUwIvxjLDp0s1ZjxgmTvW+Tk0SoRKgudvu5VcLOa1JqpKIV07oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JfeJQdVa; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zKdfvEvf"
-Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-5236c5cec7dso3251885e87.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 03:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JfeJQdVa"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36db330403fso129945ab.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 07:09:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716634093; x=1717238893; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=68mtJBq09Z6U4+kiICp8oV7LVeNEMo3w2MvxbeTmUX0=;
-        b=zKdfvEvfkMc+H7Viwge35TkSgpsmxC9Q5XP/NXgfzh2j0j3PIEGujNLRsZDvzWwszy
-         QoxpoIdlujpmm3OSuhJdZReo75RcklQdI//vy2m70Px/1bnjAzK6gLqUbnKinHDjsybq
-         RfzPutHHHWzWeICt4PwyqadqvYMgbAO/8Z30u00Cs7MLur4cr8DkBEjkJxWmyEfdVAaM
-         zO8COruetZhZm44nYnbnmnpaSBMjfmJATCBR18sUa+G2Fc5U0UWFB9jG7AXYprmuVL65
-         0j59CbhkUZeIgIfoFypNqqkQ1EDkoxA9UvnCI7c1lKYLJesqs2CkWmaZRv839UyZKSEj
-         i22A==
+        d=google.com; s=20230601; t=1716646170; x=1717250970; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZhqZJUOejfkCvi+8WQ97T+9L3dgb+ZhC9CuNx3x7Y5k=;
+        b=JfeJQdVaPDDRqaDFp3aHqgbnq8m99oxcwMxmHy7tJCmDS4DlQfrDwoxZkmoHed/qFs
+         EW+R/yKEAQc6TarD+FlhY27iNnMVccZiFzb3blO2N1CWKa3/0tyhR6MrfflNIKM0bVkj
+         FVTZm+ArCySxiOoZ6MAl93adqkfJv7ItSNaqjnT3zDR0tQsH28fJZc/++oSEdeX3C5PF
+         Htc5MSpzflpPjX9opP5sYWS1EhjRBNfatQM8myrCcRU20CQK1wZDOQAdd+VbuEyADlLc
+         fTTQc97IUrdsb//wuqECF60Os9GI3d9SHp5NRN27gULOzvVT4wS9rONhYg3Wvo8+xh1c
+         qDqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716634093; x=1717238893;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=68mtJBq09Z6U4+kiICp8oV7LVeNEMo3w2MvxbeTmUX0=;
-        b=naynzTG9pTBmOF4re6+livylOAAYoPaZAqUvM7Q1C+/rq3OT+9kS4fXLsiEQ6KWrNw
-         ZPT1N65WOUlNXr7y+0QAAX3RA/xgGXOv6hxs9URFqq5Q5GOwR+BKNlO1Lh6ux5bXAhJZ
-         cruRB73uHNQ/6TPXFR7AWSfHrjtzBEh0PojQfUkpFqniVhwswOjSCAa8QORWPzlFq3O8
-         V7jx7skOuaQPWmTFU+C7YgyZk/+Nm1uz8gTrTEGSAao2ji9hhJd1BajGHbqFG7uwKqJL
-         FWzcB/NV5O/qpcr18iAheOw7wkYsmxW9aHHg8efWc5pywoI7vLd+Hd2vk6GMwj/6LLJB
-         +Kdw==
-X-Gm-Message-State: AOJu0YzuSyVZuCcQ+jNDJQy/pIkYfmpoqhXfV73dbsrJApSgMq687uj8
-	jHJxU/iM4X2FWI1cRgeRtGuv9WvShrSxwGkbnopqsDd04m8T4mRFza1Cydo28PaNzRuUo2cV4A=
-	=
-X-Google-Smtp-Source: AGHT+IH6iD6SoE6z37HhKdv/02+FB49C33ZLCUE1UyTlQI9fIieMARQNc1Zqnqyf2bDrQ6vZiT8vvYOJBw==
-X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:8cba:1aee:d3cd:626f])
- (user=sesse job=sendgmr) by 2002:ac2:51a8:0:b0:51d:7976:6d1c with SMTP id
- 2adb3069b0e04-529667cf991mr3833e87.9.1716634093102; Sat, 25 May 2024 03:48:13
- -0700 (PDT)
-Date: Sat, 25 May 2024 12:47:55 +0200
-In-Reply-To: <20240525104755.324014-1-sesse@google.com>
+        d=1e100.net; s=20230601; t=1716646170; x=1717250970;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZhqZJUOejfkCvi+8WQ97T+9L3dgb+ZhC9CuNx3x7Y5k=;
+        b=m5TtMgpEZgI50CncZWbMrDlq1RnXWwm+56rKdLZ6sNfbED3QHQ7lyTCeJrHrqd4Is6
+         mQJg2UEXjbwstABy+K6Wbbu9ZmRf/XvaYY/dzAkNd9BsSDW+XM+n2SD5gcBD4W57vn3P
+         KnC1mGEZ7t3Ha8cdS4wAGOKmcOYmZih8gUJsZDjvOPgRHWFS+I202N+ZzEo2g2cvxfXT
+         vhoZHFeoEJnyoI/AoMTZTQZgi1fK8Bw6QNhtIKU08BBLtIlYq2Bk74/Mb11oFsI56HG9
+         Ijwi3zxpFZVuxp6vi8643tMntBzkOKDckQElM+pmJHOsv3LUWmUnizKWJ1B/ac0wGhcw
+         2lgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5wCj05xsVPCHPa1ahP531N6OiumuWO9ymAvpriwMP2LHZdfgB/W4TlEwcsm6c3/HyCnl4YVDm4rUlgg2iNdjSgCJCu3OJhBZ7t4MiqP/ebw==
+X-Gm-Message-State: AOJu0Yw/EjHFgQ+/Q4dFg3BAirOD2JpTz6Mo3ZkoQubSkGv/ZeLktTFr
+	yB2r1ej9EvUdeoH9I4tOPhk1Kp6jBxqm1G0r17g0TG8AEuwLnIjCnMRRMN8rhplrUQ7qcqcLgg6
+	z1CXgqTRSwJGeZVOApNPFPFOWcu+i8k0Z6Aw8
+X-Google-Smtp-Source: AGHT+IHF3UOqk63Ap5kc83idT/QbuIH4w9EjhqgctPC+S356f6TJ3LRsJ5FLjAdwUyQtn+68L2808l5lIeQhsirgkGk=
+X-Received: by 2002:a92:c991:0:b0:36c:7fe9:333f with SMTP id
+ e9e14a558f8ab-3738a749048mr1820085ab.14.1716646170263; Sat, 25 May 2024
+ 07:09:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240525104755.324014-1-sesse@google.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240525104755.324014-3-sesse@google.com>
-Subject: [PATCH v6 3/3] perf annotate: LLVM-based disassembler
-From: "Steinar H. Gunderson" <sesse@google.com>
-To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
+MIME-Version: 1.0
+References: <20240521192614.3937942-1-acme@kernel.org> <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
+ <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1> <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+ <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 25 May 2024 07:09:18 -0700
+Message-ID: <CAP-5=fVFJNqYaQNekrWNVRg8=_2K0T-WKZ=8-iafU4CCfUCXSA@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.10
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Anne Macedo <retpolanne@posteo.net>, 
+	Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
+	Yang Jihong <yangjihong@bytedance.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Support using LLVM as a disassembler method, allowing helperless
-annotation in non-distro builds. (It is also much faster than
-using libbfd or bfd objdump on binaries with a lot of debug
-information.)
+On Fri, May 24, 2024 at 9:20=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, 24 May 2024 at 20:48, Ian Rogers <irogers@google.com> wrote:
+> >
+> > Thanks for the report. TL;DR try putting the PMU name with the event
+> > name, so "cycles:pp" becomes "armv8_pmuv3_0/cycles/pp", where
+> > armv8_pmuv3_0 is the name of the PMU from /sys/devices.
+>
+> What? No.
+>
+> If that is the new rule, then I'm just going to revert. I'm not going
+> to use some random different PMU names across architectures when all I
+> want is just "cycles".
 
-This is nearly identical to the output of llvm-objdump; there are
-some very rare whitespace differences, some minor changes to demangling
-(since we use perf's regular demangling and not LLVM's own) and
-the occasional case where llvm-objdump makes a different choice
-when multiple symbols share the same address. It should work across
-all of LLVM's supported architectures, although I've only tested 64-bit
-x86, and finding the right triple from perf's idea of machine
-architecture can sometimes be a bit tricky. Ideally, we should have
-some way of finding the triplet just from the file itself.
+The issue is that perf previously would do two things, if you asked
+for a 'cycles' event then as the name was a legacy one it would encode
+the type in the perf_event_attr as PERF_TYPE_HARDWARE and the config
+as PERF_COUNT_HW_CPU_CYCLES job done. With BIG.little/hybrid/.. those
+events now need opening on multiple PMUs otherwise you end up only
+sampling on either the big or the little core. On Intel with hybrid,
+cycles had to become cpu_core/cycles/ and cpu_atom/cycles/.
 
-Signed-off-by: Steinar H. Gunderson <sesse@google.com>
----
- tools/perf/util/disasm.c           | 195 +++++++++++++++++++++++++++++
- tools/perf/util/llvm-c-helpers.cpp |  62 +++++++++
- tools/perf/util/llvm-c-helpers.h   |  11 ++
- 3 files changed, 268 insertions(+)
+If we look at an event name that isn't a legacy one, like
+inst_retired.any, then when no PMU is specified perf's behavior is to
+try to open this event on every PMU it can. On Intel this event will
+be found on the 'cpu' PMU, or on a hybrid Intel on cpu_core and
+cpu_atom. Were the event 'data_read' then it could be found on the
+uncore_imc_free_running_0 and uncore_imc_free_running_1 PMUs. My point
+here is that wildcarding an event to every PMU that supports it is
+arguably a feature as it avoids users needing to remember a specific
+PMU name. PMU names are often duplicated and it would be laborious to
+name them all.
 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index c0dbb955e61a..ee7c2365d066 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -43,6 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 
- static void ins__sort(struct arch *arch);
- static int disasm_line__parse(char *line, const char **namep, char **rawp);
-+static char *expand_tabs(char *line, char **storage, size_t *storage_len);
- 
- static __attribute__((constructor)) void symbol__init_regexpr(void)
- {
-@@ -1378,7 +1379,9 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
- 
- 	return 0;
- }
-+#endif
- 
-+#if defined(HAVE_LIBCAPSTONE_SUPPORT) || defined(HAVE_LIBLLVM_SUPPORT)
- struct find_file_offset_data {
- 	u64 ip;
- 	u64 offset;
-@@ -1442,7 +1445,9 @@ read_symbol(const char *filename, struct map *map, struct symbol *sym,
- 	free(buf);
- 	return NULL;
- }
-+#endif
- 
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
- static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
- 				  struct annotate_args *args, u64 addr)
- {
-@@ -1606,6 +1611,191 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- }
- #endif
- 
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+#include <llvm-c/Disassembler.h>
-+#include <llvm-c/Target.h>
-+#include "util/llvm-c-helpers.h"
-+
-+struct symbol_lookup_storage {
-+	u64 branch_addr;
-+	u64 pcrel_load_addr;
-+};
-+
-+/*
-+ * Whenever LLVM wants to resolve an address into a symbol, it calls this
-+ * callback. We don't ever actually _return_ anything (in particular, because
-+ * it puts quotation marks around what we return), but we use this as a hint
-+ * that there is a branch or PC-relative address in the expression that we
-+ * should add some textual annotation for after the instruction. The caller
-+ * will use this information to add the actual annotation.
-+ */
-+static const char *
-+symbol_lookup_callback(void *disinfo, uint64_t value,
-+		       uint64_t *ref_type,
-+		       uint64_t address __maybe_unused,
-+		       const char **ref __maybe_unused)
-+{
-+	struct symbol_lookup_storage *storage =
-+		(struct symbol_lookup_storage *)disinfo;
-+	if (*ref_type == LLVMDisassembler_ReferenceType_In_Branch)
-+		storage->branch_addr = value;
-+	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
-+		storage->pcrel_load_addr = value;
-+	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
-+	return NULL;
-+}
-+
-+static int symbol__disassemble_llvm(char *filename, struct symbol *sym,
-+				    struct annotate_args *args)
-+{
-+	struct annotation *notes = symbol__annotation(sym);
-+	struct map *map = args->ms.map;
-+	struct dso *dso = map__dso(map);
-+	u64 start = map__rip_2objdump(map, sym->start);
-+	u8 *buf;
-+	u64 len;
-+	u64 pc;
-+	bool is_64bit;
-+	char triplet[64];
-+	char disasm_buf[2048];
-+	size_t disasm_len;
-+	struct disasm_line *dl;
-+	LLVMDisasmContextRef disasm = NULL;
-+	struct symbol_lookup_storage storage;
-+	char *line_storage = NULL;
-+	size_t line_storage_len = 0;
-+
-+	if (args->options->objdump_path)
-+		return -1;
-+
-+	LLVMInitializeAllTargetInfos();
-+	LLVMInitializeAllTargetMCs();
-+	LLVMInitializeAllDisassemblers();
-+
-+	buf = read_symbol(filename, map, sym, &len, &is_64bit);
-+	if (buf == NULL)
-+		return -1;
-+
-+	if (arch__is(args->arch, "x86")) {
-+		if (is_64bit)
-+			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
-+		else
-+			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
-+	} else {
-+		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
-+			  args->arch->name);
-+	}
-+
-+	disasm = LLVMCreateDisasm(
-+		triplet, &storage, 0, NULL, symbol_lookup_callback);
-+	if (disasm == NULL)
-+		goto err;
-+
-+	if (args->options->disassembler_style &&
-+	    !strcmp(args->options->disassembler_style, "intel"))
-+		LLVMSetDisasmOptions(
-+			disasm, LLVMDisassembler_Option_AsmPrinterVariant);
-+
-+	/*
-+	 * This needs to be set after AsmPrinterVariant, due to a bug in LLVM;
-+	 * setting AsmPrinterVariant makes a new instruction printer, making it
-+	 * forget about the PrintImmHex flag (which is applied before if both
-+	 * are given to the same call).
-+	 */
-+	LLVMSetDisasmOptions(disasm, LLVMDisassembler_Option_PrintImmHex);
-+
-+	/* add the function address and name */
-+	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-+		  start, sym->name);
-+
-+	args->offset = -1;
-+	args->line = disasm_buf;
-+	args->line_nr = 0;
-+	args->fileloc = NULL;
-+	args->ms.sym = sym;
-+
-+	dl = disasm_line__new(args);
-+	if (dl == NULL)
-+		goto err;
-+
-+	annotation_line__add(&dl->al, &notes->src->source);
-+
-+	pc = start;
-+	for (u64 offset = 0; offset < len; ) {
-+		unsigned int ins_len;
-+
-+		storage.branch_addr = 0;
-+		storage.pcrel_load_addr = 0;
-+
-+		ins_len = LLVMDisasmInstruction(
-+			disasm, buf + offset, len - offset, pc,
-+			disasm_buf, sizeof(disasm_buf));
-+		if (ins_len == 0)
-+			goto err;
-+		disasm_len = strlen(disasm_buf);
-+
-+		if (storage.branch_addr != 0) {
-+			char *name = llvm_name_for_code(
-+				dso, filename, storage.branch_addr);
-+			if (name != NULL) {
-+				disasm_len += scnprintf(
-+					disasm_buf + disasm_len,
-+					sizeof(disasm_buf) - disasm_len,
-+					" <%s>", name);
-+				free(name);
-+			}
-+		}
-+		if (storage.pcrel_load_addr != 0) {
-+			char *name = llvm_name_for_data(
-+				dso, filename, storage.pcrel_load_addr);
-+			disasm_len += scnprintf(disasm_buf + disasm_len,
-+						sizeof(disasm_buf) - disasm_len,
-+						"  # %#"PRIx64,
-+						storage.pcrel_load_addr);
-+			if (name) {
-+				disasm_len += scnprintf(
-+					disasm_buf + disasm_len,
-+					sizeof(disasm_buf) - disasm_len,
-+					" <%s>", name);
-+				free(name);
-+			}
-+		}
-+
-+		args->offset = offset;
-+		args->line = expand_tabs(
-+			disasm_buf, &line_storage, &line_storage_len);
-+		args->line_nr = 0;
-+		args->fileloc = NULL;
-+		args->ms.sym = sym;
-+
-+		llvm_addr2line(filename, pc, &args->fileloc,
-+			       (unsigned int *)&args->line_nr, false, NULL);
-+
-+		dl = disasm_line__new(args);
-+		if (dl == NULL)
-+			goto err;
-+
-+		annotation_line__add(&dl->al, &notes->src->source);
-+
-+		free(args->fileloc);
-+		pc += ins_len;
-+		offset += ins_len;
-+	}
-+
-+	LLVMDisasmDispose(disasm);
-+	free(buf);
-+	free(line_storage);
-+	return 0;
-+
-+err:
-+	LLVMDisasmDispose(disasm);
-+	free(buf);
-+	free(line_storage);
-+	return -1;
-+}
-+#endif
-+
-+
- /*
-  * Possibly create a new version of line with tabs expanded. Returns the
-  * existing or new line, storage is updated if a new line is allocated. If
-@@ -1730,6 +1920,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		strcpy(symfs_filename, tmp);
- 	}
- 
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+	err = symbol__disassemble_llvm(symfs_filename, sym, args);
-+	if (err == 0)
-+		goto out_remove_tmp;
-+#endif
- #ifdef HAVE_LIBCAPSTONE_SUPPORT
- 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
- 	if (err == 0)
-diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-index 3cc967ec6f28..4070e2d5682f 100644
---- a/tools/perf/util/llvm-c-helpers.cpp
-+++ b/tools/perf/util/llvm-c-helpers.cpp
-@@ -8,6 +8,7 @@
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
- #include <llvm/DebugInfo/Symbolize/Symbolize.h>
-+#include <llvm/Support/TargetSelect.h>
- #pragma GCC diagnostic pop
- 
- #include <stdio.h>
-@@ -19,6 +20,9 @@ extern "C" {
- #include "symbol_conf.h"
- #include "llvm-c-helpers.h"
- 
-+extern "C"
-+char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
-+
- using namespace llvm;
- using llvm::symbolize::LLVMSymbolizer;
- 
-@@ -132,3 +136,61 @@ int llvm_addr2line(const char *dso_name, u64 addr,
- 		return extract_file_and_line(*res_or_err, file, line);
- 	}
- }
-+
-+static char *
-+make_symbol_relative_string(struct dso *dso, const char *sym_name,
-+			    u64 addr, u64 base_addr)
-+{
-+	if (!strcmp(sym_name, "<invalid>"))
-+		return NULL;
-+
-+	char *demangled = dso__demangle_sym(dso, 0, sym_name);
-+	if (base_addr && base_addr != addr) {
-+		char buf[256];
-+		snprintf(buf, sizeof(buf), "%s+0x%lx",
-+			 demangled ? demangled : sym_name, addr - base_addr);
-+		free(demangled);
-+		return strdup(buf);
-+	} else {
-+		if (demangled)
-+			return demangled;
-+		else
-+			return strdup(sym_name);
-+	}
-+}
-+
-+extern "C"
-+char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr)
-+{
-+	LLVMSymbolizer *symbolizer = get_symbolizer();
-+	object::SectionedAddress sectioned_addr = {
-+		addr,
-+		object::SectionedAddress::UndefSection
-+	};
-+	Expected<DILineInfo> res_or_err =
-+		symbolizer->symbolizeCode(dso_name, sectioned_addr);
-+	if (!res_or_err) {
-+		return NULL;
-+	}
-+	return make_symbol_relative_string(
-+		dso, res_or_err->FunctionName.c_str(),
-+		addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
-+}
-+
-+extern "C"
-+char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
-+{
-+	LLVMSymbolizer *symbolizer = get_symbolizer();
-+	object::SectionedAddress sectioned_addr = {
-+		addr,
-+		object::SectionedAddress::UndefSection
-+	};
-+	Expected<DIGlobal> res_or_err =
-+		symbolizer->symbolizeData(dso_name, sectioned_addr);
-+	if (!res_or_err) {
-+		return NULL;
-+	}
-+	return make_symbol_relative_string(
-+		dso, res_or_err->Name.c_str(),
-+		addr, res_or_err->Start);
-+}
-diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-index 1b28cdc9f9b7..e00e3f73a906 100644
---- a/tools/perf/util/llvm-c-helpers.h
-+++ b/tools/perf/util/llvm-c-helpers.h
-@@ -11,6 +11,8 @@
- extern "C" {
- #endif
- 
-+struct dso;
-+
- struct llvm_a2l_frame {
- 	char *filename;
- 	char *funcname;
-@@ -40,6 +42,15 @@ int llvm_addr2line(const char *dso_name,
- 		   bool unwind_inlines,
- 		   struct llvm_a2l_frame **inline_frames);
- 
-+/*
-+ * Simple symbolizers for addresses; will convert something like
-+ * 0x12345 to "func+0x123". Will return NULL if no symbol was found.
-+ *
-+ * The returned value must be freed by the caller, with free().
-+ */
-+char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
-+char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
-+
- #ifdef __cplusplus
- }
- #endif
--- 
-2.45.1
+> In fact, the "cycles:pp" is a complete red herring. Just doing a simple
+>
+>  $ perf record sleep 1
+>
+> with no explicit expression at all, results in that same
+>
+>   Error:
+>   cycles:P: PMU Hardware doesn't support sampling/overflow-interrupts.
+> Try 'perf stat'
+>
+> because perf *ITSELF* uses the sane format by default.
+>
+> So ABSOLUTELY NO. We're not changing the rules to "You have to know
+> some idiotic per-architecture JSON magic".
+>
+> I don't want any excuses like this. No "You are holding it wrong".
+> This is a BUG. Treat it as such.
+>
+> And yes, "perf record -vv" shows that it apparently picked some insane
+> arm_dsu_0 event. Which just shows that trying to parse the JSON rules
+> instead of just having sane defaults is clearly not working.
+>
+> So here's the deal: I will revert your commit tomorrow unless you show
+> that you are taking it seriously and have a sane fix.
+>
+> Because no, "You are holding it wrong" is not the answer. Never was,
+> never will be. Things used to work, they don't work any more. That
+> shit is not acceptable.
 
+I wasn't trying to say you were holding it wrong, I was trying to give
+you practical advice that would solve your problem whilst we determine
+what the right fix is.
+
+The question is what to do about events when no PMU is specified, here
+are the alternatives I see:
+
+1) make legacy event names special and only open them on core PMUs,
+2) make sure PMUs, like arm_dsu_0 in your case, don't advertise events
+matching legacy names like cycles,
+3) make perf record only scan PMUs that support sampling,
+4) in the case that we're using cycles:P as a default event, only open
+that on core PMUs (on Intel make cycles:P ->
+cpu_core/cycles/P,cpu_atom/cycles/P).
+
+A revert achieves (1) and I consider it a regression as now the
+behavior of 'cycles' doesn't match 'inst_retired.any' and the user
+somehow needs to know that certain event names are special.
+Changing the driver (2) is a workaround, but it feels like a burden on
+the driver writers.
+In order to determine whether a PMU supports sampling (3) we'd need to
+try probe using perf_event_open. The perf_event_open may fail due to
+things like host/guest permissions, etc. so we need fallbacks. We do
+something similar here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/perf/util/print-events.c#n242
+(4) is the simplest change and I think it lowers the surprise from the
+behavior change in the patch. It means that were you to do "perf
+record -e cycles ..." you would still need to specify a PMU on Linus'
+special ARM box. We may lack permissions to read sysfs and so then it
+is hard to determine the PMU name, but the code was likely to fail
+then anyway.
+
+I'll write a patch to do (4), hopefully this qualifies as being
+serious, but it would be useful if the interested parties could work
+out what they think the behavior should be.
+
+Thanks,
+Ian
+
+>                    Linus
+>
