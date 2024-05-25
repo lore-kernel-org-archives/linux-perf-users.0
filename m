@@ -1,55 +1,61 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5225D1862
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 03:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC2E10F2
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 May 2024 04:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716608893; cv=none; b=mTzAEoEKPk+xTJCqcV3y98nRok6bZwWKWtirX59JIafp4n/ul/cacaOlOy5KE2WPwgfn788nlpUHnI1V7LB8hWvogk7C7F9MzXXamggX+vhP7g17aenMB5FWRqKpWI+8oSJ+GsiTatGG4Qd9kZetdedZ7B04gANJPUasRckDbys=
+	t=1716610827; cv=none; b=qeG9dSfF+mUuOackYHZQikWVVHrHMQ/zl9YjycNFnmBk0Q+TheTHAwcDtQQOt7MNIbLCHNJ+CUZERvykLf/9T6s+vaRr0BMfmZrfN3tp7OCbF0/K5xfncsoOyzEXtBusXssNNkx+hz26yQacSHjSxJksZsQzjVBdEw0uCeVl9Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716608893; c=relaxed/simple;
-	bh=9h+hPTeUfQOcpsBAA9XgOVwljDzYnUuEJMBxx2V+Zi4=;
+	s=arc-20240116; t=1716610827; c=relaxed/simple;
+	bh=yUTpSxbNH6db5FAa1/hdQT3OaPurqyv2ctC1i45QKag=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VTjKlZ/ohKZE/9JlbDR7wH351tzHmxbaaeaTCfcGjG+7NqZ7xfrzP21WUvzoPK6dRWNzkZEDLmR9bplcyTFXGRUdn+onTgz4sJVQfhDtQBD4TBrAXRRaJrc4Wi8s3cza1tFBLW8LwBLMxA+V2925zQfzs+oC/7nQbTskcfiS5Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVN9dcEE; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=sQJWt42SqG9rSj8CFSIoEmRS/SzJP3dBSquEjHT+dOQekh3IDwj+b5gFbb3RQlPhkQvt/RFyLPC1NXc95LK030m8PabrVXKgivRKassO9s4IHCvOco0UmyPhpntgutJpeHKbN8vfbM/juA/qqC+soqElvd5UvZvpiSQVgmHF8ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Y9NZ57qE; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVN9dcEE"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36db863679bso40015ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 20:48:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Y9NZ57qE"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5785c1e7448so1279434a12.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 21:20:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716608891; x=1717213691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ae90xQD1JSfJyYVhaJGFBnlHi96JVOZGp7BSWxGOUA=;
-        b=VVN9dcEE+Y/vTHZfXRCfWplD0Eb1BGvZgYBkBCOYBtmefvEdCXGAXAaemz+x+wDoYR
-         YXmhVOIv/L9fuIi0KMqcVPtyCwJlzAWew9TipjTVo3G0z0aX9bpfInQ8/8Oc9imIWgVJ
-         U4Q3rEhgUTghW6kCh05mhQplNZK9b2O7/zuf3+cRFPhUdwFp83RYgOoNP5Krohr/VRHm
-         M0xKqjBfJYyzZt9LQNcRvj0Mm/1x+zJXbm+BLF8gj8j6WSB61ClDFsrl2u52WaM31i0U
-         gLNCMXoo5zsaD1oLuC7A4IZbr0hawV3JutHkFky1MUHLkYJiCniZOZcq3aDSbe7kmWcp
-         fqFw==
+        d=linux-foundation.org; s=google; t=1716610823; x=1717215623; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LLJmGwspiHr/isf1p7f95VagjPipkZ0Pc2JPelvy7/Y=;
+        b=Y9NZ57qEiyjbpuvWkTdJN6kEB/+gqZAqJ+txnoDTseu0WmgmNYanX6/OWCZolfxMQa
+         U4KLGMVQWgH1CTtoDSyoBm0DNGrfudbQF7IQ29T8nVD7Z6oxkwrX+XvkRn2xmOuiHXIK
+         JMMhO6xwCJ4nfOLwiMW6p/R9ivYmQdzjmiN6Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716608891; x=1717213691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ae90xQD1JSfJyYVhaJGFBnlHi96JVOZGp7BSWxGOUA=;
-        b=whAmqK+14wTZXfXJ+UEWxx1KRVhG5KKUkFrtsgVH++W8r6yAguvxz1EhV/iRnQCy95
-         +tZoWxTPlsz0yPLMJCkfZDAmaPOS63n0bRYzWavCsRkfvoCPNYI7L8hv1qiSvIOVW1DP
-         9l9k3ByGb8OSNdMIgKzt57OvA/2rlzPFmu/WuVX7UeQcNn0zVhHgZBpY3PCdA2NO/2U9
-         qHd81ir4xRgQX4ym0V6IoIkpUmnNmXLk+ymlXu4fcZbZHcOVKdWDYN7wQ9ZPqywmHovu
-         oDSV5gOp/YYUajepLLfw/FEa58DQyJN/XhhjNUchVjzQqfoe3GPOfiOV5o9UjYivHEEz
-         fHww==
-X-Forwarded-Encrypted: i=1; AJvYcCXsEXpGsenmt9fFTCKGZ4L4fotO/lCF0SxTSbgzyTi1B16CpvR3Rr0/5xAWOx72741Kycy5qopJhGa9HLPjfeFpm+7ClGU4zcsm1UaA8vBcAw==
-X-Gm-Message-State: AOJu0YyP3NHMCIiI3/BEH9kpKvNlwrcvmdXYA0+q0/TMbMLhFUVfjavE
-	UDebdTtMsNb/mIZCLevHWRdhLFxyW47jwFTzD95RaauAmE+Nzb+KeGokPKnn452UYb9/yaHalTJ
-	1tRwRAFvCMonateKM8iR/FPX1A+ALS7BIhWgq
-X-Google-Smtp-Source: AGHT+IH9AudXBRg06HeJ2lMfXh7iaMoDr8xto6pnVvEb6aUWVkk5wmCn5cRqO9PYpm8emOvieo6JJpoPBYDzbnlv0oM=
-X-Received: by 2002:a92:cc08:0:b0:36d:cb9e:a0da with SMTP id
- e9e14a558f8ab-3738b350a12mr590685ab.25.1716608891228; Fri, 24 May 2024
- 20:48:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716610823; x=1717215623;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LLJmGwspiHr/isf1p7f95VagjPipkZ0Pc2JPelvy7/Y=;
+        b=aAKzPOy0QeNWXo7olsKnlgxd+q/TZLB6Y3WfBTFutay5OTOEH4gof+GC3fF4jT4R3k
+         NtIWTMxl8gakv/kNtUn/Ar0GuNafoC3NAxDB6J9nXGrx+5mcgJ2zk71JIcwD5WjkrKcf
+         9FswCtOU1dqOcsLGiO2uyo7RDYSe7gdJd32OlSkNuE09PYGqjX5FFK5TVOBC6BYPQb6Y
+         znMAX4ynO5BvUmKgrRKTFe28L9y23CitTEmJ5sUPQSr5Nq/dQRPz1m1ALGgd/YZhU+IA
+         tRzSA4OzaBpBA/k2onxmBwjnT5v5k1YL8K55HmjvTIvM8vpGzrrttQboQxyUhuQQt3fu
+         8dJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX1GLgeZra2z0m11NWgyCE9KfEK+CPTu8+kd0O7fbuN9ASyI8zM8G6q2TIUv79mSJEqwLz8W0FDGFVZMocoLTAJEg0Va9w3ixrE2jR2gCX9g==
+X-Gm-Message-State: AOJu0YwCiIEFjR0mT3ns0nQPz38ldXungwCmaY48K6yzh6wVHay2ebOO
+	PKkp2Dyd1tt+JHBl4vHOt6sZdzGOWDTY3jwRCVVK4aPc0RBGpkuq/+T7pFyJvqyYoo4B5x93zYh
+	dxrKFag==
+X-Google-Smtp-Source: AGHT+IFfQuJlPpMLDThlZnVgQAq5w4zkWI2K2Baq0wgYno+LzMsBxcEg/gc832MKLaTx0yFD+w5JwQ==
+X-Received: by 2002:a50:f605:0:b0:578:5d83:baf1 with SMTP id 4fb4d7f45d1cf-5785d83bfc2mr1785734a12.2.1716610823382;
+        Fri, 24 May 2024 21:20:23 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-578524ba262sm2689280a12.87.2024.05.24.21.20.22
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 May 2024 21:20:22 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso141407366b.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 May 2024 21:20:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMOGASyJZru97RV1lnMsL9MwNxqp6OTi/MB8mPiOsf9Hp6IuZ89kE/6GsOnhSmaO3EfqCweMjjbKZ/FI3LOTf7TPrVrlCiSG7voWpwijdfOA==
+X-Received: by 2002:a17:906:28ce:b0:a52:6fcb:564a with SMTP id
+ a640c23a62f3a-a62641a8d45mr253718866b.9.1716610821954; Fri, 24 May 2024
+ 21:20:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,14 +63,15 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240521192614.3937942-1-acme@kernel.org> <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
- <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1>
-In-Reply-To: <ZlFGpxWGQskCTjeK@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 24 May 2024 20:47:59 -0700
-Message-ID: <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+ <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1> <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+In-Reply-To: <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 24 May 2024 21:20:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
+Message-ID: <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
 Subject: Re: [GIT PULL] perf tools changes for v6.10
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Leo Yan <leo.yan@linux.dev>, 
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
 	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -75,146 +82,46 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>, Leo Yan <leo.yan@linux.dev>,
 	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
 	Yang Jihong <yangjihong@bytedance.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 7:02=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, 24 May 2024 at 20:48, Ian Rogers <irogers@google.com> wrote:
 >
-> On Fri, May 24, 2024 at 10:55:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, May 24, 2024 at 06:31:52PM -0700, Linus Torvalds wrote:
-> > > On Tue, 21 May 2024 at 12:26, Arnaldo Carvalho de Melo <acme@kernel.o=
-rg> wrote:
-> > > >
-> > > > perf tools fixes and improvements for v6.10:
-> > >
-> > > This actually broke 'perf' completely for me on arm64.
-> > >
-> > > With a 6.9 version of 'perf', I can do this:
-> > >
-> > >     perf record -e cycles:pp make -j199
-> > >
-> > > and it all works fine.
-> > >
-> > > With the current -git version, when I do the same, I instead get
-> > >
-> > >   Error:
-> > >   cycles:pp: PMU Hardware doesn't support
-> > > sampling/overflow-interrupts. Try 'perf stat'
-> > >
-> > > and after trying desperately to chase down what went wrong on the
-> > > kernel side, I finally figured out that it wasn't a kernel change at
-> > > all, it was the tooling that had changed.
-> > >
-> > > I did a 'git bisect', and it says
-> > >
-> > >   617824a7f0f73e4de325cf8add58e55b28c12493 is the first bad commit
-> > >   commit 617824a7f0f73e4de325cf8add58e55b28c12493
-> > >   Author: Ian Rogers <irogers@google.com>
-> > >   Date:   Mon Apr 15 23:15:25 2024 -0700
-> > >
-> > >       perf parse-events: Prefer sysfs/JSON hardware events over legac=
-y
-> > >
-> > > and very clearly this does *NOT* work at all for me.
-> > >
-> > > I didn't notice until now, simply because I had been busy with the
-> > > merge window, so I hadn't been doing any profiles, but the merge
-> > > window is calming down and the end is nigh, and I just wasted more
-> > > time than I care to admit trying to figure out what went wrong in the
-> > > kernel.
-> > >
-> > > And no, I don't speak JSON, and I have *no* idea what the legacy
-> > > events are. Plus I'm not very familiar with the arm64 profiling etc
-> > > anyway, so I'm just a clueless user here.
-> > >
-> > > I *can* confirm that just reverting that commit makes that trivial
-> > > "perf record" work for me. So the bisect was good, and it reverts
-> > > cleanly, but I don't know _why_ my arm64 setup hates it so much.
+> Thanks for the report. TL;DR try putting the PMU name with the event
+> name, so "cycles:pp" becomes "armv8_pmuv3_0/cycles/pp", where
+> armv8_pmuv3_0 is the name of the PMU from /sys/devices.
 
-Thanks for the report. TL;DR try putting the PMU name with the event
-name, so "cycles:pp" becomes "armv8_pmuv3_0/cycles/pp", where
-armv8_pmuv3_0 is the name of the PMU from /sys/devices.
+What? No.
 
-The perf tool has a number of inbuilt "legacy" event names, cycles is
-one. Most events these days are either found in sysfs (this is on a
-Raspberry Pi 5):
-```
-$ ls /sys/devices/armv8_cortex_a76/events/
-br_mis_pred          exc_return        l1d_tlb_refill      l2d_tlb
-        remote_access
-br_mis_pred_retired  exc_taken         l1i_cache
-l2d_tlb_refill      stall_backend
-br_pred              inst_retired      l1i_cache_refill    l3d_cache
-        stall_frontend
-br_retired           inst_spec         l1i_tlb
-l3d_cache_allocate  sw_incr
-bus_access           itlb_walk         l1i_tlb_refill
-l3d_cache_refill    ttbr_write_retired
-bus_cycles           l1d_cache         l2d_cache           ll_cache_miss_rd
-cid_write_retired    l1d_cache_refill  l2d_cache_allocate  ll_cache_rd
-cpu_cycles           l1d_cache_wb      l2d_cache_refill    mem_access
-dtlb_walk            l1d_tlb           l2d_cache_wb        memory_error
-```
- or json that is turned into tables built into the perf tool.
+If that is the new rule, then I'm just going to revert. I'm not going
+to use some random different PMU names across architectures when all I
+want is just "cycles".
 
-ARM requested that sysfs and json events take priority over legacy
-events. So 'armv8_cortex_a76/cycles/' should first try to open an
-event in either sysfs or json, and if not present fallback on using
-the legacy constants. Note that the event name has the PMU name first.
-What should the behavior of the 'cycles' event with no PMU be? In
-Linux 6.9 the behavior was that cycles without a PMU would be a legacy
-encoding and only try to be on the core's PMU (generally cpu on Intel
-or armv8... on ARM), but with a PMU it would prefer sysfs and json
-tables.
+In fact, the "cycles:pp" is a complete red herring. Just doing a simple
 
-RISC-V had asked that in the no PMU case they'd also like sysfs/json
-to have priority so the driver could be more ignorant of event
-encodings. It was also inconsistent that in Linux 6.9:
+ $ perf record sleep 1
 
-$ perf stat -e inst_retired.any true
+with no explicit expression at all, results in that same
 
-was a sysfs/json event that we'd try to open on every PMU but:
+  Error:
+  cycles:P: PMU Hardware doesn't support sampling/overflow-interrupts.
+Try 'perf stat'
 
-$ perf stat -e instructions true
+because perf *ITSELF* uses the sane format by default.
 
-was a legacy event that would only be opened on the core PMU. (I'm
-ignoring the complexity that BIG.little/hybrid adds).
+So ABSOLUTELY NO. We're not changing the rules to "You have to know
+some idiotic per-architecture JSON magic".
 
-The blamed patch does away with the inconsistency and makes it so that
-legacy events are always the 2nd choice and we try to open every event
-on every PMU. It is the 2nd point that I think is breaking you. I
-think you have a PMU on your system with a cycles event, maybe an
-uncore PMU with memory controller data or CXL, and the perf record is
-trying to open the cycles event on that and the error message
-correctly reports that sampling wouldn't be possible on that PMU.
+I don't want any excuses like this. No "You are holding it wrong".
+This is a BUG. Treat it as such.
 
-Putting verbose flags on perf record:
+And yes, "perf record -vv" shows that it apparently picked some insane
+arm_dsu_0 event. Which just shows that trying to parse the JSON rules
+instead of just having sane defaults is clearly not working.
 
-$ perf record -vv ...
+So here's the deal: I will revert your commit tomorrow unless you show
+that you are taking it seriously and have a sane fix.
 
-should hopefully give more breadcrumbs and confirm this. You could also do:
+Because no, "You are holding it wrong" is not the answer. Never was,
+never will be. Things used to work, they don't work any more. That
+shit is not acceptable.
 
-$ ls /sys/devices/*/events/cycles
-
-If there are more than 1 sysfs cycles event then probably one of them
-is the problem. Adding the PMU name removes the trying every PMU
-behavior and so should be a fix. We could also change it so that when
-we open multiple events for perf record we don't fail in a case like
-this. Maybe it is a feature to fail.
-
-Thanks,
-Ian
-
-> > That is a good data point, we probably could go with the revert, but I
-> > think Ian submitted a few patches fixing this issue that came up close
-> > to LSFMM/BPF and the merge window, so didn't have time to sit on
-> > linux-next for a while, I'm looking those up now.
->
-> Couldn't find it quickly, its late here, perhaps Ian can chime in and
-> point those fixes here. I'll try and continue tomorrow.
->
-> - Arnaldo
->
-> > ARM64 eyes on this would also be good. Adding Mark Rutland and Leo Yan
-> > to the CC list, maybe they can help us here with the best course of
-> > action.
+                   Linus
