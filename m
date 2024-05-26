@@ -1,158 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FE479F0;
-	Sun, 26 May 2024 11:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BE9DDCB
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 15:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716724727; cv=none; b=GoIHXJFV3+JYyX0nlEvSVHq8w7JwJKryQGDqqR+YaVonZ53o/d5sY051z0A/N0lLkYKVJGMf2zguOiKvE5qZc9oNHU2f2ZT7rkr8K3qYUUzE+DocbDRBs3vSJAZW5tZy3kDZu5sAtSSVsAl/TWCfis2wlOdhIOR/tTIRnouz82w=
+	t=1716736843; cv=none; b=CvoRjWZHuaqczguaCESRmsioRHj46uP9+HXPqe5JE94w3Q2GOKFK9M1iXDBFSLy8A0IFER6METfYPj8SwUiZfwg1HIVAraWlAepH6mdYPksVJm+Bla0IoJgG1kpfLepLeRSE22yVpCCOMir/SJneyTqfdsjDFPUCC/GZSYTgruU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716724727; c=relaxed/simple;
-	bh=EWcBBtyN6+y2nkXr64hj8Ucg0fbw9yI7WdQnUzStA1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j0PDqB5yhpsRouubI41vDNbkN/Io1LEIUoapUC46da96wCyELyVrzkemeYhV1bVg+XoRJc/rxBLTQMrbONoMkD3BTVoVFxA8y3fm+L2SAr+VtoGsUTIV0+qHxIRn9JWkRBLYcRYXGcim1xde/Ic5bagn0Cyw7qt0dEwTlXCVZTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oF+5wyAb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716736843; c=relaxed/simple;
+	bh=ndDTKi0BuiM4YEc0vTuUivGd6+HmdGMrevsaAPbOoP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NPxQVsSfzXIvgQ6KrOHTJnXUb46luh6CewtosoH1bhc0QDPbkBawbrDFa6ZzlWyjpSAPTXOt4BKRZ7iwj3Pdi0KSbHSlt4pkdtau4dnN8EtAUSjTXcfBx/FE9ZdIOlKXzAG6uBTG/A5M5OoiVph0w4GHqJi2IFJHhOoLAc/+8Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O+GSksZ1; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oF+5wyAb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031FFC2BD10;
-	Sun, 26 May 2024 11:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716724727;
-	bh=EWcBBtyN6+y2nkXr64hj8Ucg0fbw9yI7WdQnUzStA1o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oF+5wyAbskOHXquGT9HktcZKJaiHignQKnd0rwofNHsksrLKpDL6szU8U/NO0lNRX
-	 W3l2O95h2SQqou1ppjLJ8UlRYkXnOoxrpPYhMoVotGI94Rdss/2s8JhBKmjQs/JfOr
-	 /zPMJzXIvd6ZE77wF9LDwbB7WSc8Qv31NEjKHzktvfk0tTX1qOVC0P1kFmSaKwO1vS
-	 X6IKLNcpuMHVbf0RvZsT2+MmCH/3paoP78S0XWtUcDFvPMOwRGyHawydvxJj4fmvPd
-	 NIX0KIk1EYfMTiC+voo7a5o8X33FM5m15oYhxVa+SdOFX6Cm32u0NcRk2FTmmHIHGr
-	 yUm1F4RCJTB3A==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Kate Carcia <kcarcia@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-	Ethan Adams <j.ethan.adams@gmail.com>,
-	James Clark <james.clark@arm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Tycho Andersen <tycho@tycho.pizza>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fix for v6.10
-Date: Sun, 26 May 2024 08:58:34 -0300
-Message-ID: <20240526115834.4080389-1-acme@kernel.org>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O+GSksZ1"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36db863679bso205965ab.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 08:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716736841; x=1717341641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ndDTKi0BuiM4YEc0vTuUivGd6+HmdGMrevsaAPbOoP0=;
+        b=O+GSksZ1hV9NjmD0XhyNaFK98+c+sFjVYm18YL2kOz5x0zZ/WkOOiaZR1jTOU5VdqD
+         /F0mVNgkGFSWPvuU781mEmM62gm75pq9zZIQaI6oNzOtTQeJPVh3kZToVPzzHoaBOfCS
+         6mQGJxuaITzOi2SHSf327A+oa4ConGP/kKFyMRaPQQRvem0Bv3aAYY5DB+zW8IMYaUqS
+         uIZUNk93t/Dp+8yX1JYa69HB/M9p5PuoDL3TRpka+sMoFvLZeT6akoF34p+myBHO7gDU
+         olQr2EuPDfRB/8iFrC0mEAuuI1IT7pdHHMJXnWGyVJnkGyKZYiTI824gVkOAKyWextX2
+         THLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716736841; x=1717341641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ndDTKi0BuiM4YEc0vTuUivGd6+HmdGMrevsaAPbOoP0=;
+        b=vNjBjrGDWjqnQp0kR3Cp5wGQAk381MYkutyatbzo68fmnTaqW1fQAt0AEZqf6a4jqZ
+         lNmBWsWS0pzzaIpk4A6tzxAb3PMSlj6fR67NehlyX5hwHTo2X9iOp5TsQS683vPa9/wA
+         2NBstBaxq3nqGXYDaEkFu1QdrPDLO7Rg59hr4AFDPlIUfGEjD19M8PcX8QOMlhKzHKQm
+         GFqkxpFdEE8tigwQQb9XuRfxW71rhYMHa1nS2LJVoJVa56MpAy3+NMZz4rclxFHpJQaR
+         QfPC7qulAG5Xvy+ROgaXXF+C2mtDxiEpSlrPtMWx4e0ocUkMltU87F/J/LO9Wf+pKfm3
+         XCVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQAAFTkDg83qflfS7Dqn7Le1pPhNihFSDpQdyJT001Wbu8th54r9GaLJCObgYoofl7+u/0h7J77OlPoDQsCdK6XMnHm9834igd31N6FFTT4g==
+X-Gm-Message-State: AOJu0YzZQ7vJtZD4/Swyv3oGs53K3jZHCgiJjGSyMMotN75Wm82oHGI1
+	smWiZ1CHxxPrufhXQVewdDpynlw6m+veKbefBZPqpw3JU9cEmzN0ZRpxnyNRQ5VooNyLMTnkFwb
+	ONo3NLD+z+6QsJ/xVSYfnrOqcJsorqjLZw97C
+X-Google-Smtp-Source: AGHT+IECpFQ/Hw5GvOmZu3NUBRlQ9iJ9jwo5vv/Y+KQH+JX7LqHU8RzhnWWoyc79Uf5ulrDAGR6uKTFBcOANuju6+EA=
+X-Received: by 2002:a92:da81:0:b0:36c:1276:69e1 with SMTP id
+ e9e14a558f8ab-3738b306f28mr2429135ab.13.1716736840685; Sun, 26 May 2024
+ 08:20:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ZlFE-wbwStOqt8Ra@x1> <ZlFGpxWGQskCTjeK@x1> <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
+ <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
+ <CAM9d7chXVsoNP6uYMCqy2MZOiWkt4GrFn+giYLHQjaJRsap1Cw@mail.gmail.com>
+ <CAHk-=wjY7CG5WRZQ3E1gdEO9YtUQstMe7a=ciShY0wz0hKXyuQ@mail.gmail.com>
+ <CAP-5=fUvT+O0iyXxst3WKqnWdpimqD8+aX8GJU7_7zYieniYxQ@mail.gmail.com>
+ <CAHk-=wjMvgsBu5n9ifs5d8Qfu8x23=XmXgp6gXYNEN2y-g5UMA@mail.gmail.com>
+ <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
+ <20240526095838.GA33806@debian-dev> <ZlMYjHdX-d0ODqyj@x1>
+In-Reply-To: <ZlMYjHdX-d0ODqyj@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 26 May 2024 08:20:28 -0700
+Message-ID: <CAP-5=fX1XwUrnzrxGgQLK2J46jjsCUq8egbV_9p0eNiVD7-EbQ@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.10
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Leo Yan <leo.yan@linux.dev>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
+	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Anne Macedo <retpolanne@posteo.net>, 
+	Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, 
+	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
+	Yang Jihong <yangjihong@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Sun, May 26, 2024 at 4:10=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+> Ian's has been working on this for long time, testing all this takes a
+> lot of time and requires access to lots of hardware not easily available
+> for all of us, so its bound to break here and there, what we do when
+> this happens depends on when the problem is detected, and today Linus is
+> expected to close the merge window, so a revert is the technical, if not
+> pleasant thing to do now.
 
-	Please consider pulling, with the revert no 'perf test'
-regressions were noticed on this Intel hybrid system:
+Agreed. I think the only other option is:
+https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
+and then when specifying the CPU cycles event on these Ampere systems
+you have to do:
 
-  root@x1:~# grep -m1 'model name' /proc/cpuinfo 
-  model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-  root@x1:~# perf stat -a sleep 1
-  
-   Performance counter stats for 'system wide':
-  
-           12,054.90 msec cpu-clock                        #   11.998 CPUs utilized             
-               1,865      context-switches                 #  154.709 /sec                      
-                 108      cpu-migrations                   #    8.959 /sec                      
-                 111      page-faults                      #    9.208 /sec                      
-         418,070,471      cpu_atom/cycles/                 #    0.035 GHz                         (74.91%)
-          55,680,862      cpu_core/cycles/                 #    0.005 GHz                       
-          95,014,672      cpu_atom/instructions/           #    0.23  insn per cycle              (87.46%)
-          33,161,707      cpu_core/instructions/           #    0.08  insn per cycle            
-          18,525,790      cpu_atom/branches/               #    1.537 M/sec                       (87.49%)
-           5,792,527      cpu_core/branches/               #  480.512 K/sec                     
-           1,939,067      cpu_atom/branch-misses/          #   10.47% of all branches             (87.43%)
-             238,479      cpu_core/branch-misses/          #    1.29% of all branches           
-               TopdownL1 (cpu_core)                 #     33.3 %  tma_backend_bound      
-                                                    #      6.5 %  tma_bad_speculation    
-                                                    #     49.0 %  tma_frontend_bound     
-                                                    #     11.2 %  tma_retiring           
-               TopdownL1 (cpu_atom)                 #     16.5 %  tma_bad_speculation    
-                                                    #      6.5 %  tma_retiring             (87.56%)
-                                                    #     41.1 %  tma_backend_bound      
-                                                    #     41.1 %  tma_backend_bound_aux  
-                                                    #     35.8 %  tma_frontend_bound       (87.56%)
-  
-         1.004776564 seconds time elapsed
-  
-  root@x1:~#
-  root@x1:~# perf stat -a -e cycles:P sleep 1
-  
-   Performance counter stats for 'system wide':
-  
-         273,063,480      cpu_atom/cycles:P/                                                    
-         156,166,111      cpu_core/cycles:P/                                                    
-  
-         1.005749149 seconds time elapsed
-  
-  root@x1:~#
-  
-Best regards,
+$ perf record -e 'armv8_pmuv3_0/cycles/P' ...
 
-- Arnaldo
+but Linus isn't happy with having to specify a PMU like that. As that
+is an ARM/Ampere only problem I'm not sure it is so bad.
 
-Arnaldo Carvalho de Melo (1):
-  Revert "perf parse-events: Prefer sysfs/JSON hardware events over legacy"
+Thanks,
+Ian
 
- tools/perf/util/parse-events.c | 31 ++++----------
- tools/perf/util/parse-events.h |  2 +-
- tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
- tools/perf/util/parse-events.y | 62 ++++++++++-----------------
- 4 files changed, 68 insertions(+), 103 deletions(-)
-
--- 
-2.45.1
-
-The following changes since commit 29c73fc794c83505066ee6db893b2a83ac5fac63:
-
-  Merge tag 'perf-tools-for-v6.10-1-2024-05-21' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools (2024-05-21 15:45:14 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.10-1-2024-05-26
-
-for you to fetch changes up to 4f1b067359ac8364cdb7f9fda41085fa85789d0f:
-
-  Revert "perf parse-events: Prefer sysfs/JSON hardware events over legacy" (2024-05-26 08:41:34 -0300)
-
-----------------------------------------------------------------
-Revert a patch causing a regression as described in the cset:
-
-    "This made a simple 'perf record -e cycles:pp make -j199' stop working on
-    the Ampere ARM64 system Linus uses to test ARM64 kernels, as discussed
-    at length in the threads in the Link tags below.
-
-    The fix provided by Ian wasn't acceptable and work to fix this will take
-    time we don't have at this point, so lets revert this and work on it on
-    the next devel cycle."
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      Revert "perf parse-events: Prefer sysfs/JSON hardware events over legacy"
-
- tools/perf/util/parse-events.c | 31 +++++------------
- tools/perf/util/parse-events.h |  2 +-
- tools/perf/util/parse-events.l | 76 +++++++++++++++++++++---------------------
- tools/perf/util/parse-events.y | 62 ++++++++++++----------------------
- 4 files changed, 68 insertions(+), 103 deletions(-)
+> - Arnaldo
