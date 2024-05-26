@@ -1,59 +1,38 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498FD8F4E
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 09:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F928F6A;
+	Sun, 26 May 2024 11:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716717526; cv=none; b=aIYxiVxODR5VnsZmUl7HFFC/TT32rIEdzs5wycTr0bmx/DbMn1fLhdqiyrsdZT0bGdbWS3tsgs61dRFi8jQm4+J5D9MkVtJWJr+r+W1VcE40ZWeeFk/y/rHFUgOwkT2k7M5MQx2n+1AEQ08P72AL5x/6ZbMU7PHoBQ2i3Gfc2t4=
+	t=1716721808; cv=none; b=Axt9ty9A9ISR06EEPJosfh0qR0+WZdeSfz1Aqd2oiweFoksc87shibbBpbDitQYshoanRKxBCv+fTbIQRgOmU2MqnXP2nzFRnMnJH2bv+6pttpkrBnDjd0C2MlAvxao5Wm9iYh7szIsWcQBUTEnzualDdPajFQMakdvFosqW0o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716717526; c=relaxed/simple;
-	bh=hRnXOL3/JG4PcBU2yqlNxZ96e+xvO+9TwGHHI2I5pnI=;
+	s=arc-20240116; t=1716721808; c=relaxed/simple;
+	bh=Vj982JLrWOcJw9DCj7R+f8VzhJL6EXf6MOZT4Q46SH8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RVwacCdrKnRsr7xwStzqAQsnUcjdvFpemqQNQqndmwkPoqH6FmVY9yYB29WzUPdiWp9RI9fJMz3tSwNd24LRQbubVOXLz7uPVdN6RWGQDTaoaDyL8jj3hGksgp0OPnJK6bWqgvUXyO63lElDgbD/+Fwf2NUwqCbiveOOjTS5QVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kks7iPe5; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnfFZW9kGFZkkzK9qhirO5GYIOuyta/WDZdM0HzPhr3gBa2EnCkREFVlkw5apPEwIO5doNO+nouYQKqbpMiTJ4eLOzdK7lVBVpHW64jrBnlV8ZsGoqVapECL9cO4J4KLFJg6ttEkJavoOf9E5a5eqOPvpxm3ySKyZye3Ulk9Sm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ5vhup4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kks7iPe5"
-X-Envelope-To: irogers@google.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716717521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J4epl//+/WLyc/JhDbO+OjPKpdtrbovVIa7El3gIFMA=;
-	b=kks7iPe55jwgWSkp0t9Ue7pLpfBbn+3u4R/aXez1d4hvQEvRYnCw1SV4fU5JAqUVdwSt+5
-	6mxomxnsYPGlM7SZdU81kaUReKuTLk07u4H9uoU3Uu9O3PABBt6Vp2pwDRBHdggQcqJ6ER
-	5uD47PXKH5HxHCiMdKqgYR0WlEhDnWQ=
-X-Envelope-To: torvalds@linux-foundation.org
-X-Envelope-To: namhyung@kernel.org
-X-Envelope-To: acme@kernel.org
-X-Envelope-To: mark.rutland@arm.com
-X-Envelope-To: mingo@kernel.org
-X-Envelope-To: tglx@linutronix.de
-X-Envelope-To: jolsa@kernel.org
-X-Envelope-To: adrian.hunter@intel.com
-X-Envelope-To: williams@redhat.com
-X-Envelope-To: kcarcia@redhat.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-perf-users@vger.kernel.org
-X-Envelope-To: retpolanne@posteo.net
-X-Envelope-To: unixbhaskar@gmail.com
-X-Envelope-To: j.ethan.adams@gmail.com
-X-Envelope-To: james.clark@arm.com
-X-Envelope-To: kan.liang@linux.intel.com
-X-Envelope-To: tmricht@linux.ibm.com
-X-Envelope-To: tycho@tycho.pizza
-X-Envelope-To: yangjihong@bytedance.com
-Date: Sun, 26 May 2024 17:58:38 +0800
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leo Yan <leo.yan@linux.dev>
-To: Ian Rogers <irogers@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ5vhup4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FB3C32782;
+	Sun, 26 May 2024 11:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716721808;
+	bh=Vj982JLrWOcJw9DCj7R+f8VzhJL6EXf6MOZT4Q46SH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KQ5vhup4Eb33IscmYcxWA/Xtl22VHrd+QOijfdvNFxWfO08blSeST9KAfETZJYglR
+	 34UqGt4pp76uZwEcpYfKJ7wZPYu4ox6u9FhsAmJP7pmZaH12O8wRG1sCn9GT67sOXm
+	 GSRJruaMtkycx8rFvJU1BlgtJWkqV4EoVLyi7N9Yz1CzdS1ACzMq1AxATVZEZs8lX7
+	 y0yuSkDMdxqLKEOCyeH/ptNwG2BLiVgtdF1W3CXrRpx7EecDAnVBubvRn82SwqiZ7o
+	 hXGofpdMiPEp+A5pf/f6MUdntVDkkqZQlS8m1BHJKPggBw1g3DiY+/WSlRlwUdm969
+	 0+v5sk7kdnkUw==
+Date: Sun, 26 May 2024 08:10:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Leo Yan <leo.yan@linux.dev>
+Cc: Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Ingo Molnar <mingo@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Clark Williams <williams@redhat.com>,
@@ -68,9 +47,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Tycho Andersen <tycho@tycho.pizza>,
 	Yang Jihong <yangjihong@bytedance.com>
 Subject: Re: [GIT PULL] perf tools changes for v6.10
-Message-ID: <20240526095838.GA33806@debian-dev>
-References: <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
- <ZlFE-wbwStOqt8Ra@x1>
+Message-ID: <ZlMYjHdX-d0ODqyj@x1>
+References: <ZlFE-wbwStOqt8Ra@x1>
  <ZlFGpxWGQskCTjeK@x1>
  <CAP-5=fXDdcjMmn8iBenjPmZZQdB=AX+gc4TYDsHXuwH9TYq4Ng@mail.gmail.com>
  <CAHk-=wheZptGieaObmQEsz6bocUjhQXNpWXFDmCK-TOKbOvO+Q@mail.gmail.com>
@@ -79,6 +57,7 @@ References: <CAHk-=wiWvtFyedDNpoV7a8Fq_FpbB+F5KmWK2xPY3QoYseOf_A@mail.gmail.com>
  <CAP-5=fUvT+O0iyXxst3WKqnWdpimqD8+aX8GJU7_7zYieniYxQ@mail.gmail.com>
  <CAHk-=wjMvgsBu5n9ifs5d8Qfu8x23=XmXgp6gXYNEN2y-g5UMA@mail.gmail.com>
  <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
+ <20240526095838.GA33806@debian-dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -87,43 +66,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240526095838.GA33806@debian-dev>
 
-Hi Ian,
+On Sun, May 26, 2024 at 05:58:38PM +0800, Leo Yan wrote:
+> On Sat, May 25, 2024 at 11:22:08PM -0700, Ian Rogers wrote:
+> > In doing that work the code was tested by IBM for S390 and by Intel,
+> > but it was fixing an ARM created problem. ARM were the first to have
+> > BIG.little systems but contributed nothing to the perf tool to handle
+> > it, even though each core type has a different PMU. ARM BIG.little
+> > remains broken with the perf tool and when I fix it for them they
+> > don't review or test the code. ARM changed and left unworking uncore
+> > PMU naming conventions. ARM don't fix tests for their platform. ARM
+> > don't help make perf's tests cover their different way of naming PMUs.
+> > No one is trying to break ARM machines, but when ARM fails to do
+> > anything other than review their own changes in the perf tree it is
+> > something of an inevitability.
 
-On Sat, May 25, 2024 at 11:22:08PM -0700, Ian Rogers wrote:
+> > Fwiw, I am working on making perf record, perf top, etc. skip events
+> > on non-core PMUs when they fail to open. It is a rather large and ugly
+> > change. It is also a holiday weekend and I'm spending a lot of my time
+> > in it addressing latent ARM problems.
 
-[...]
+> James is in holiday, so I should cover this in time. Sorry that I did
+> not respond the issue quickly - mainly as I am not familiar with JSON
+> and perf event part.
 
-> In doing that work the code was tested by IBM for S390 and by Intel,
-> but it was fixing an ARM created problem. ARM were the first to have
-> BIG.little systems but contributed nothing to the perf tool to handle
-> it, even though each core type has a different PMU. ARM BIG.little
-> remains broken with the perf tool and when I fix it for them they
-> don't review or test the code. ARM changed and left unworking uncore
-> PMU naming conventions. ARM don't fix tests for their platform. ARM
-> don't help make perf's tests cover their different way of naming PMUs.
-> No one is trying to break ARM machines, but when ARM fails to do
-> anything other than review their own changes in the perf tree it is
-> something of an inevitability.
-> 
-> Fwiw, I am working on making perf record, perf top, etc. skip events
-> on non-core PMUs when they fail to open. It is a rather large and ugly
-> change. It is also a holiday weekend and I'm spending a lot of my time
-> in it addressing latent ARM problems.
+> I tried to reproduce the issue reported by Linus on my Arm big.LITTLE
+> system but cannot reproduce it. As I saw Linus mentioned the issue is
+> related with Arm DSU event, which is absent on my test board.
 
-James is in holiday, so I should cover this in time. Sorry that I did
-not respond the issue quickly - mainly as I am not familiar with JSON
-and perf event part.
+Yeah, I couldn't either with ARM boards I have, I think we should revert
+the change, as per Linus bisect and test that it makes thing work the
+way they were before that patch for him and get this work restarted as
+the first thing in the next devel cycle.
 
-I tried to reproduce the issue reported by Linus on my Arm big.LITTLE
-system but cannot reproduce it. As I saw Linus mentioned the issue is
-related with Arm DSU event, which is absent on my test board.
+It has to be widely tested, Ian tried, Linus tried his patch and it is
+still not acceptable, its a holiday, kids are home, we should be with
+family.
+ 
+> But your complaint is received well and I am very appreciate your work
+> (especially in the weekend). I will continue to look into the details
+> in this thread, and monitor incoming patches and I will verify them.
 
-But your complaint is received well and I am very appreciate your work
-(especially in the weekend). I will continue to look into the details
-in this thread, and monitor incoming patches and I will verify them.
+Indeed, the situation was detailed to a wider audience, hybrid is a
+reality and we should properly support it, taming perf's tech debit on
+this matter.
 
-Thanks,
-Leo
+Ian's has been working on this for long time, testing all this takes a
+lot of time and requires access to lots of hardware not easily available
+for all of us, so its bound to break here and there, what we do when
+this happens depends on when the problem is detected, and today Linus is
+expected to close the merge window, so a revert is the technical, if not
+pleasant thing to do now.
+
+- Arnaldo
