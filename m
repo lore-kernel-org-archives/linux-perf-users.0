@@ -1,315 +1,452 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740BA9449;
-	Sun, 26 May 2024 18:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B951DA58
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716746513; cv=none; b=VajcjtFKtWamjqQ9seXbeXGe2R6MWELhqjCqvi/q3nzTOQzlsm1lfzyTM29+gZH4XAEMFSvwwBrFlbHKf9Sgm4Gk1IbJXfILr+EZSP8gKNCFPROHnXpMZSCi2n2Nj5yJHzMFfaR7qutITnsqWQ2wpAdavBF3mV71GcRjQNfqDgA=
+	t=1716747740; cv=none; b=KebqWjL+IUixlgcIrf3RcM9/CCggsn36E3hf+PUfIMLwQVwh85rDAWQzVwVw3shXYgCijRTxCnY85nMKQQw/DKfRzVafzOc3/6L4dPvnVgdHbK4pd/BU0bsl6Vj17MLiEEgwQyVNu6AM7lAyMvSduowo7VYFxFTqWcroC/uEWLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716746513; c=relaxed/simple;
-	bh=GeM7l3n9b7yfTNpVAlxn4n6ZhpD0CYVFaOUjUxaGrJM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q2xXnH1JrTVqg1z+jPexQdHexWO8T3FeDydC+EZROr6fapAmHiKOg0I40spq34tsQH7wqkoSj31qmQ0VnUJ28dZ3xW0yujpjLtXrcIZTS4jX3ikYzqpV/BOWkTQQdXWfMubjiQmVn7Bk+w6VgjeVS1gyyN1RGEORHrSW3/0JH54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-6570bd6c3d7so3419360a12.0;
-        Sun, 26 May 2024 11:01:51 -0700 (PDT)
+	s=arc-20240116; t=1716747740; c=relaxed/simple;
+	bh=VTlFRcnx+Lg4+oIZqZKs3xHWublrvwOdE+PBBUj5fCs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=klA7/PY5CfAujXvdXdmkiMenDhEsNEwEPKbe9gteV6BaGbNTxJwf9iLgTSHMayD0/wtDs2xHylZ2y3LlVSEvPE50b13xbwQlneFMek0KAOmJ7DsMZP0qzujOxLe5+lgkhryFT8IlvOTkJVvbEsPPOAT4gZmo4Nufzn+o4Lzk2Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fxo7iwRY; arc=none smtp.client-ip=209.85.208.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fxo7iwRY"
+Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-2e95b03a1ebso9292561fa.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 11:22:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716747736; x=1717352536; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZQTG6i1Te1AqiYPDuwbl7LlMYzKHb8m5RjcLBI0WPCQ=;
+        b=fxo7iwRY2LMHEuFsBZk0Q89v9FImfjffa87MVadXMtvetJm8DwfQz83J1SoGVP92B4
+         3dya48Jt1XXUzmz3ztT/FS3ctLTyOBK0U6hCnW6+yW9s8Qv+ckEQqvVmCHBeF6XOMzUw
+         1LjT4YXPmra7ww/MksOp9fjQoG5CJiKRjcrd3j0j2pFFF0TCzYi1I3EhZpCgwqblJSOF
+         cnX51+a2uVwxechH6zdjG5wrRuPWd7gsGywKbG1nHbc5pvqPm6hf0yO5dPh1rpNulxqj
+         sG8Er3RY9d0I3jr9Hqe/g42LRXzm1M5PE8b0JxdFjplMrRe7xxBgcZdJQo4MXohrxkRE
+         imuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716746511; x=1717351311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nXPh7TFYjYz1hkCYmis26EZXSF/Y7T5SQc05dmlFt2E=;
-        b=bvLe2lFZX9zKBWPh3ULirdsPQKbkVpoaz959JEm/AH+GGlE5qfrG7jLNQ6aROh3VM1
-         xExQfn29N71KQN3MioGGnbWCkG5o8mCGUu/6JWXZ/tpHXMq/HDlAYU5qU7h9+Yy2iYNb
-         xzrqQrWLVYmoLGUEsWxgVAxhVC708zkUt7WvWKd8VtHh5oP7ItMOzDTi2k4KYV2FvOGm
-         uNRKnbA/qN9hixnWk9xzlvrOKilMIB/Te+Sswsorg/DzUou/pDO6hijVMDYZuStBNsU4
-         eqPzE/ie5txeeqbq3EuHewJnM86VhI7v0xZhE7Nn7i83X2IBt1lKF4BEz2btTm/gUy3K
-         dMXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCZfilaFBcOXWAZXvZUaFfjP/xoxNycRhmuH9vRGU04s5XOq6WGj/FOYFwjneRTSsD57cCTPAnIAL4UE5nBKQLPwl9CKSyvppILGJiwj9SKeCJlF5HBz/jT+BJC9kOtDUhJmmapoDh2Ns/wSAj5Q==
-X-Gm-Message-State: AOJu0YxSYZLoWsKSVxQKiAbkAdbKWO5i/+S/EuWn20R2SwBYuKG1OiJ7
-	Ig3EPpac62AsCeTMzvkuxmmTfq+VM1YFRZQz2HK44B7R/40PkCjyNYbdpbjfWuz//3cIGig+dMm
-	3hmTcNr4hLDsm7vVRfOpW2b9JOMY8Tw==
-X-Google-Smtp-Source: AGHT+IEj2oZe5cMbp27MPB0KaRgspifEGudks6L1xi03Ab2aItxW/y/uLIU7z4xfCkyp6uL/PF34xSBXGXiy+UIDaeI=
-X-Received: by 2002:a17:90b:fd3:b0:2b5:4ee8:e5e8 with SMTP id
- 98e67ed59e1d1-2bf5e189092mr6262469a91.16.1716746510638; Sun, 26 May 2024
- 11:01:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716747736; x=1717352536;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQTG6i1Te1AqiYPDuwbl7LlMYzKHb8m5RjcLBI0WPCQ=;
+        b=NDPsCx2ZoPsCbmB2PgZFGbyM25dPyClVYoMz54k1A346LqZvVXAcJ0hiLIfnbiaYN3
+         odQY1MyBbF9p+ytrO4UNUcy0iD3cvxqFUeelDsWXfvoA4yqZvhGlHbYnHRwV75Mj4l+g
+         AZwat/7Ero4u7St5BSqjEuTFmlph45Gq0rQtCNhqD4968lLpZ7p99bwJque+UQTE9xXU
+         8s7Ht4yBqwfB2CcrpaEv0+SIvufIQ8KKyLUOLHG4qyOM4edxod2ciKZzmYonFP5JF5p3
+         r93VLlpE7J+f/G06tGKBfPbTrFdfCnBWrinEnqMQub7c3sZoJycmkISzzeW/S56SqCc+
+         E0UA==
+X-Gm-Message-State: AOJu0Yy4Wz/T68CC22YSmSuHyWiFsUbmoCB5g69Jr1Tp/ct4ZXBxAAst
+	p1DtApWBU5mTEYGaXs4VzlMoVYyRqif0Ob1aciRnoKTiqjFrYfoqLpVwuEWmrRn/GAooKvchxQ=
+	=
+X-Google-Smtp-Source: AGHT+IHk7cEoRivEiR8yi3xC9G6kyCOtQlaOwrVxtEQiFjWKdsUwChGj2iPpKKoT7R+m7bxj3g/q+Ph0/A==
+X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:1a92:9649:8b20:5054])
+ (user=sesse job=sendgmr) by 2002:a2e:a164:0:b0:2e2:12b1:4971 with SMTP id
+ 38308e7fff4ca-2e951c22768mr131821fa.3.1716747736250; Sun, 26 May 2024
+ 11:22:16 -0700 (PDT)
+Date: Sun, 26 May 2024 20:22:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240521173952.3397644-1-weilin.wang@intel.com>
- <20240521173952.3397644-5-weilin.wang@intel.com> <CAM9d7cjob_tfgN+rMRrh=0SV56+z32CmP34BRY1eoFv48RVocg@mail.gmail.com>
- <CO6PR11MB563589ED3FC7126A6B27EB22EEF52@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB563589ED3FC7126A6B27EB22EEF52@CO6PR11MB5635.namprd11.prod.outlook.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sun, 26 May 2024 11:01:39 -0700
-Message-ID: <CAM9d7cjz0P=vrSr8yU=xMYhQ5XFT9A+K-WG9E+LyNzYWC-JhwA@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 4/7] perf stat: Plugin retire_lat value from
- sampled data to evsel
-To: "Wang, Weilin" <weilin.wang@intel.com>
-Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240526182212.544525-1-sesse@google.com>
+Subject: [PATCH v7 1/4] perf report: Support LLVM for addr2line()
+From: "Steinar H. Gunderson" <sesse@google.com>
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 4:52=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com=
-> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Namhyung Kim <namhyung@kernel.org>
-> > Sent: Friday, May 24, 2024 4:17 PM
-> > To: Wang, Weilin <weilin.wang@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
-> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
-> > <mingo@redhat.com>; Alexander Shishkin
-> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
-ter,
-> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
-;
-> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
- Perry
-> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
-rs,
-> > Caleb <caleb.biggers@intel.com>
-> > Subject: Re: [RFC PATCH v9 4/7] perf stat: Plugin retire_lat value from=
- sampled
-> > data to evsel
-> >
-> > On Tue, May 21, 2024 at 10:40=E2=80=AFAM <weilin.wang@intel.com> wrote:
-> > >
-> > > From: Weilin Wang <weilin.wang@intel.com>
-> > >
-> > > In current :R parsing implementation, the parser would recognize even=
-ts
-> > with
-> > > retire_latency modifier and insert them into the evlist like a normal=
- event.
-> > > Ideally, we need to avoid counting these events.
-> > >
-> > > In this commit, at the time when a retire_latency evsel is read, set =
-the retire
-> > > latency value processed from the sampled data to count value. This sa=
-mpled
-> > > retire latency value will be used for metric calculation and final ev=
-ent count
-> > > print out.
-> >
-> > I'm confused.  Do you mean you don't count the event with 'R' modifier
-> > (w/ perf stat) and just print the (average) retire latency (from perf r=
-ecord)?
->
-> In metric formulas, event without 'R' modifier is included as a normal ev=
-ent already.
-> So we don't need to count the event that with 'R' modifier. They only nee=
-d to be
-> sampled.
+In addition to the existing support for libbfd and calling out to
+an external addr2line command, add support for using libllvm directly.
+This is both faster than libbfd, and can be enabled in distro builds
+(the LLVM license has an explicit provision for GPLv2 compatibility).
+Thus, it is set as the primary choice if available.
 
-Oh, you have the event in the metric expression twice.  I thought of one.
-Then IIUC the metric looks something like this.
+As an example, running perf report on a medium-size profile with
+DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
+libbfd, 153 seconds with external llvm-addr2line, and I got tired
+and aborted the test after waiting for 55 minutes with external
+bfd addr2line (which is the default for perf as compiled by distributions
+today). Evidently, for this case, the bfd addr2line process needs
+18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
+hits the 1-second timeout and gets killed during initialization,
+getting restarted anew every time. Having an in-process addr2line
+makes this much more robust.
 
-  myevent1 + (myevent2 * myevent1:R)
+As future extensions, libllvm can be used in many other places where
+we currently use libbfd or other libraries:
 
-I think you'll have 2 myevent1 in perf stat and 1 in perf record, right?
-But the second one in perf stat is never used and the value is updated
-from perf record.
+ - Symbol enumeration (in particular, for PE binaries).
+ - Demangling (including non-Itanium demangling, e.g. Microsoft
+   or Rust).
+ - Disassembling (perf annotate).
 
-Then we can simply remove the event from the evlist (or replace it with
-a dummy) to reduce the overheads (of open and read).
+However, these are much less pressing; most people don't profile
+PE binaries, and perf has non-bfd paths for ELF. The same with
+demangling; the default _cxa_demangle path works fine for most
+users. Disassembling is coming in a later patch in the series;
+however do note that while bfd objdump can be slow on large binaries,
+it is possible to use --objdump=llvm-objdump to get the speed benefits.
+(It appears LLVM-based demangling is very simple, should we want
+that.)
 
->
-> >
-> > >
-> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> > > ---
-> > >  tools/perf/arch/x86/util/evlist.c |  6 +++++
-> > >  tools/perf/util/evsel.c           | 44 +++++++++++++++++++++++++++++=
-++
-> > >  tools/perf/util/evsel.h           |  5 ++++
-> > >  3 files changed, 55 insertions(+)
-> > >
-> > > diff --git a/tools/perf/arch/x86/util/evlist.c
-> > b/tools/perf/arch/x86/util/evlist.c
-> > > index b1ce0c52d88d..cebdd483149e 100644
-> > > --- a/tools/perf/arch/x86/util/evlist.c
-> > > +++ b/tools/perf/arch/x86/util/evlist.c
-> > > @@ -89,6 +89,12 @@ int arch_evlist__cmp(const struct evsel *lhs, cons=
-t
-> > struct evsel *rhs)
-> > >                         return 1;
-> > >         }
-> > >
-> > > +       /* Retire latency event should not be group leader*/
-> >
-> > Hmm.. why?
-> Because we don't want to count them. Make them the group leader would not=
- work.
+Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
+correctly detected using feature_check, and thus was not tested.
 
-I don't understand.  You'll read the event regardless of being a
-leader or not.
+Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/build/Makefile.feature       |   1 +
+ tools/perf/Makefile.config         |  15 ++++
+ tools/perf/builtin-version.c       |   1 +
+ tools/perf/util/Build              |   1 +
+ tools/perf/util/llvm-c-helpers.cpp | 134 +++++++++++++++++++++++++++++
+ tools/perf/util/llvm-c-helpers.h   |  49 +++++++++++
+ tools/perf/util/srcline.c          |  57 +++++++++++-
+ 7 files changed, 257 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/util/llvm-c-helpers.cpp
+ create mode 100644 tools/perf/util/llvm-c-helpers.h
 
->
-> >
-> > > +       if (lhs->retire_lat && !rhs->retire_lat)
-> > > +               return 1;
-> > > +       if (!lhs->retire_lat && rhs->retire_lat)
-> > > +               return -1;
-> > > +
-> > >         /* Default ordering by insertion index. */
-> > >         return lhs->core.idx - rhs->core.idx;
-> > >  }
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index a0a8aee7d6b9..4d700338fc99 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -58,6 +58,7 @@
-> > >  #include <internal/xyarray.h>
-> > >  #include <internal/lib.h>
-> > >  #include <internal/threadmap.h>
-> > > +#include "util/intel-tpebs.h"
-> > >
-> > >  #include <linux/ctype.h>
-> > >
-> > > @@ -1523,6 +1524,40 @@ static int evsel__read_one(struct evsel *evsel=
-,
-> > int cpu_map_idx, int thread)
-> > >         return perf_evsel__read(&evsel->core, cpu_map_idx, thread, co=
-unt);
-> > >  }
-> > >
-> > > +static int evsel__set_retire_lat(struct evsel *evsel, int cpu_map_id=
-x, int
-> > thread)
-> > > +{
-> > > +       struct perf_counts_values *count;
-> > > +       struct tpebs_retire_lat *t;
-> > > +       bool found =3D false;
-> > > +       __u64 val;
-> > > +
-> > > +       count =3D perf_counts(evsel->counts, cpu_map_idx, thread);
-> > > +
-> > > +       list_for_each_entry(t, &tpebs_results, nd) {
-> > > +               if (!strcmp(t->tpebs_name, evsel->name)) {
-> > > +                       found =3D true;
-> > > +                       break;
-> > > +               }
-> > > +       }
-> > > +
-> > > +       if (!found)
-> > > +               return -1;
-> > > +
-> > > +       /*
-> > > +        * Only set retire_latency value to the first CPU and thread.
-> > > +        */
-> > > +       if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0)
-> > > +               val =3D t->val;
-> > > +       else
-> > > +               val =3D 0;
-> > > +
-> > > +       count->val =3D val;
-> > > +       /* Set ena and run to non-zero */
-> > > +       count->ena =3D count->run =3D 1;
-> > > +       count->lost =3D 0;
-> >
-> > So here it seems you discard the actual count of the events
-> > and replace it with the retire latency.  That means you don't
-> > need to open the event in perf stat, and probably just have a
-> > placeholder, right?
-> >
-> > Btw, I think it's better to move this logic to intel-tpebs.c file and
-> > rename to tpebs_set_retire_lat().
->
-> Ian wants this to be here and also suggested me to rename this function t=
-o
-> evsel__read_retire_lat(). I'm ok with either way.
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 1e2ab148d5db..278b26216254 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -136,6 +136,7 @@ FEATURE_DISPLAY ?=              \
+          libunwind              \
+          libdw-dwarf-unwind     \
+          libcapstone            \
++         llvm                   \
+          zlib                   \
+          lzma                   \
+          get_cpuid              \
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 7f1e016a9253..42f5ad89c0ca 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -969,6 +969,21 @@ ifdef BUILD_NONDISTRO
+   endif
+ endif
+ 
++ifndef NO_LIBLLVM
++  $(call feature_check,llvm)
++  ifeq ($(feature-llvm), 1)
++    CFLAGS += -DHAVE_LIBLLVM_SUPPORT
++    CXXFLAGS += -DHAVE_LIBLLVM_SUPPORT
++    CXXFLAGS += $(shell $(LLVM_CONFIG) --cxxflags)
++    LIBLLVM = $(shell $(LLVM_CONFIG) --libs all) $(shell $(LLVM_CONFIG) --system-libs)
++    EXTLIBS += -L$(shell $(LLVM_CONFIG) --libdir) $(LIBLLVM)
++    $(call detected,CONFIG_LIBLLVM)
++  else
++    $(warning No libllvm found, slower source file resolution, please install llvm-devel/llvm-dev)
++    NO_LIBLLVM := 1
++  endif
++endif
++
+ ifndef NO_DEMANGLE
+   $(call feature_check,cxa-demangle)
+   ifeq ($(feature-cxa-demangle), 1)
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 398aa53e9e2e..4b252196de12 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -65,6 +65,7 @@ static void library_status(void)
+ 	STATUS(HAVE_LIBBFD_SUPPORT, libbfd);
+ 	STATUS(HAVE_DEBUGINFOD_SUPPORT, debuginfod);
+ 	STATUS(HAVE_LIBELF_SUPPORT, libelf);
++	STATUS(HAVE_LIBLLVM_SUPPORT, libllvm);
+ 	STATUS(HAVE_LIBNUMA_SUPPORT, libnuma);
+ 	STATUS(HAVE_LIBNUMA_SUPPORT, numa_num_possible_cpus);
+ 	STATUS(HAVE_LIBPERL_SUPPORT, libperl);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index da64efd8718f..6a1fd8f1a488 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -226,6 +226,7 @@ perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
+ perf-y += demangle-ocaml.o
+ perf-y += demangle-java.o
+ perf-y += demangle-rust.o
++perf-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
+ 
+ ifdef CONFIG_JITDUMP
+ perf-$(CONFIG_LIBELF) += jitdump.o
+diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
+new file mode 100644
+index 000000000000..3cc967ec6f28
+--- /dev/null
++++ b/tools/perf/util/llvm-c-helpers.cpp
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Must come before the linux/compiler.h include, which defines several
++ * macros (e.g. noinline) that conflict with compiler builtins used
++ * by LLVM.
++ */
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
++#include <llvm/DebugInfo/Symbolize/Symbolize.h>
++#pragma GCC diagnostic pop
++
++#include <stdio.h>
++#include <sys/types.h>
++#include <linux/compiler.h>
++extern "C" {
++#include <linux/zalloc.h>
++}
++#include "symbol_conf.h"
++#include "llvm-c-helpers.h"
++
++using namespace llvm;
++using llvm::symbolize::LLVMSymbolizer;
++
++/*
++ * Allocate a static LLVMSymbolizer, which will live to the end of the program.
++ * Unlike the bfd paths, LLVMSymbolizer has its own cache, so we do not need
++ * to store anything in the dso struct.
++ */
++static LLVMSymbolizer *get_symbolizer()
++{
++	static LLVMSymbolizer *instance = nullptr;
++	if (instance == nullptr) {
++		LLVMSymbolizer::Options opts;
++		/*
++		 * LLVM sometimes demangles slightly different from the rest
++		 * of the code, and this mismatch can cause new_inline_sym()
++		 * to get confused and mark non-inline symbol as inlined
++		 * (since the name does not properly match up with base_sym).
++		 * Thus, disable the demangling and let the rest of the code
++		 * handle it.
++		 */
++		opts.Demangle = false;
++		instance = new LLVMSymbolizer(opts);
++	}
++	return instance;
++}
++
++/* Returns 0 on error, 1 on success. */
++static int extract_file_and_line(const DILineInfo &line_info, char **file,
++				 unsigned int *line)
++{
++	if (file) {
++		if (line_info.FileName == "<invalid>") {
++			/* Match the convention of libbfd. */
++			*file = nullptr;
++		} else {
++			/* The caller expects to get something it can free(). */
++			*file = strdup(line_info.FileName.c_str());
++			if (*file == nullptr)
++				return 0;
++		}
++	}
++	if (line)
++		*line = line_info.Line;
++	return 1;
++}
++
++extern "C"
++int llvm_addr2line(const char *dso_name, u64 addr,
++		   char **file, unsigned int *line,
++		   bool unwind_inlines,
++		   llvm_a2l_frame **inline_frames)
++{
++	LLVMSymbolizer *symbolizer = get_symbolizer();
++	object::SectionedAddress sectioned_addr = {
++		addr,
++		object::SectionedAddress::UndefSection
++	};
++
++	if (unwind_inlines) {
++		Expected<DIInliningInfo> res_or_err =
++			symbolizer->symbolizeInlinedCode(dso_name,
++							 sectioned_addr);
++		if (!res_or_err)
++			return 0;
++		unsigned num_frames = res_or_err->getNumberOfFrames();
++		if (num_frames == 0)
++			return 0;
++
++		if (extract_file_and_line(res_or_err->getFrame(0),
++					  file, line) == 0)
++			return 0;
++
++		*inline_frames = (llvm_a2l_frame *)calloc(
++			num_frames, sizeof(**inline_frames));
++		if (*inline_frames == nullptr)
++			return 0;
++
++		for (unsigned i = 0; i < num_frames; ++i) {
++			const DILineInfo &src = res_or_err->getFrame(i);
++
++			llvm_a2l_frame &dst = (*inline_frames)[i];
++			if (src.FileName == "<invalid>")
++				/* Match the convention of libbfd. */
++				dst.filename = nullptr;
++			else
++				dst.filename = strdup(src.FileName.c_str());
++			dst.funcname = strdup(src.FunctionName.c_str());
++			dst.line = src.Line;
++
++			if (dst.filename == nullptr ||
++			    dst.funcname == nullptr) {
++				for (unsigned j = 0; j <= i; ++j) {
++					zfree(&(*inline_frames)[j].filename);
++					zfree(&(*inline_frames)[j].funcname);
++				}
++				zfree(inline_frames);
++				return 0;
++			}
++		}
++
++		return num_frames;
++	} else {
++		if (inline_frames)
++			*inline_frames = nullptr;
++
++		Expected<DILineInfo> res_or_err =
++			symbolizer->symbolizeCode(dso_name, sectioned_addr);
++		if (!res_or_err)
++			return 0;
++		return extract_file_and_line(*res_or_err, file, line);
++	}
++}
+diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
+new file mode 100644
+index 000000000000..19332dd98e14
+--- /dev/null
++++ b/tools/perf/util/llvm-c-helpers.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_LLVM_C_HELPERS
++#define __PERF_LLVM_C_HELPERS 1
++
++/*
++ * Helpers to call into LLVM C++ code from C, for the parts that do not have
++ * C APIs.
++ */
++
++#include <linux/compiler.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++struct llvm_a2l_frame {
++  char* filename;
++  char* funcname;
++  unsigned int line;
++};
++
++/*
++ * Implement addr2line() using libLLVM. LLVM is a C++ API, and
++ * many of the linux/ headers cannot be included in a C++ compile unit,
++ * so we need to make a little bridge code here. llvm_addr2line() will
++ * convert the inline frame information from LLVM's internal structures
++ * and put them into a flat array given in inline_frames. The caller
++ * is then responsible for taking that array and convert it into perf's
++ * regular inline frame structures (which depend on e.g. struct list_head).
++ *
++ * If the address could not be resolved, or an error occurred (e.g. OOM),
++ * returns 0. Otherwise, returns the number of inline frames (which means 1
++ * if the address was not part of an inlined function). If unwind_inlines
++ * is set and the return code is nonzero, inline_frames will be set to
++ * a newly allocated array with that length. The caller is then responsible
++ * for freeing both the strings and the array itself.
++ */
++int llvm_addr2line(const char* dso_name,
++                   u64 addr,
++                   char** file,
++                   unsigned int* line,
++                   bool unwind_inlines,
++                   struct llvm_a2l_frame** inline_frames);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* __PERF_LLVM_C_HELPERS */
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 9d670d8c1c08..74091ecc21df 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -16,6 +16,9 @@
+ #include "util/debug.h"
+ #include "util/callchain.h"
+ #include "util/symbol_conf.h"
++#ifdef HAVE_LIBLLVM_SUPPORT
++#include "util/llvm-c-helpers.h"
++#endif
+ #include "srcline.h"
+ #include "string2.h"
+ #include "symbol.h"
+@@ -130,7 +133,59 @@ static struct symbol *new_inline_sym(struct dso *dso,
+ 
+ #define MAX_INLINE_NEST 1024
+ 
+-#ifdef HAVE_LIBBFD_SUPPORT
++#ifdef HAVE_LIBLLVM_SUPPORT
++
++static void free_llvm_inline_frames(struct llvm_a2l_frame *inline_frames,
++				    int num_frames)
++{
++	if (inline_frames != NULL) {
++		for (int i = 0; i < num_frames; ++i) {
++			zfree(&inline_frames[i].filename);
++			zfree(&inline_frames[i].funcname);
++		}
++		zfree(&inline_frames);
++	}
++}
++
++static int addr2line(const char *dso_name, u64 addr,
++		     char **file, unsigned int *line, struct dso *dso,
++		     bool unwind_inlines, struct inline_node *node,
++		     struct symbol *sym)
++{
++	struct llvm_a2l_frame *inline_frames = NULL;
++	int num_frames = llvm_addr2line(dso_name, addr, file, line,
++					node && unwind_inlines, &inline_frames);
++
++	if (num_frames == 0 || !inline_frames) {
++		/* Error, or we didn't want inlines. */
++		return num_frames;
++	}
++
++	for (int i = 0; i < num_frames; ++i) {
++		struct symbol *inline_sym =
++			new_inline_sym(dso, sym, inline_frames[i].funcname);
++		char *srcline = NULL;
++
++		if (inline_frames[i].filename)
++			srcline = srcline_from_fileline(
++				inline_frames[i].filename,
++				inline_frames[i].line);
++		if (inline_list__append(inline_sym, srcline, node) != 0) {
++			free_llvm_inline_frames(inline_frames, num_frames);
++			return 0;
++		}
++	}
++	free_llvm_inline_frames(inline_frames, num_frames);
++
++	return num_frames;
++}
++
++void dso__free_a2l(struct dso *)
++{
++	/* Nothing to free. */
++}
++
++#elif defined(HAVE_LIBBFD_SUPPORT)
+ 
+ /*
+  * Implement addr2line using libbfd.
+-- 
+2.45.1
 
-I think it's better to have the tpebs logic together.
-
-Thanks,
-Namhyung
-
->
-> >
-> >
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  static void evsel__set_count(struct evsel *counter, int cpu_map_idx,=
- int
-> > thread,
-> > >                              u64 val, u64 ena, u64 run, u64 lost)
-> > >  {
-> > > @@ -1530,6 +1565,12 @@ static void evsel__set_count(struct evsel
-> > *counter, int cpu_map_idx, int thread,
-> > >
-> > >         count =3D perf_counts(counter->counts, cpu_map_idx, thread);
-> > >
-> > > +       if (counter->retire_lat) {
-> >
-> > if (evsel__is_retire_lat(counter)) ?
-> >
-> >
-> > > +               evsel__set_retire_lat(counter, cpu_map_idx, thread);
-> > > +               perf_counts__set_loaded(counter->counts, cpu_map_idx,=
- thread,
-> > true);
-> > > +               return;
-> > > +       }
-> > > +
-> > >         count->val    =3D val;
-> > >         count->ena    =3D ena;
-> > >         count->run    =3D run;
-> > > @@ -1778,6 +1819,9 @@ int evsel__read_counter(struct evsel *evsel, in=
-t
-> > cpu_map_idx, int thread)
-> > >         if (evsel__is_tool(evsel))
-> > >                 return evsel__read_tool(evsel, cpu_map_idx, thread);
-> > >
-> > > +       if (evsel__is_retire_lat(evsel))
-> > > +               return evsel__set_retire_lat(evsel, cpu_map_idx, thre=
-ad);
-> > > +
-> >
-> > I'm not sure if it works well with group event.  Probably that's
-> > why you wanted to prevent group leaders.  But I guess you
-> > can just check this after the PERF_FORMAT_GROUP, no?
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > >         if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
-> > >                 return evsel__read_group(evsel, cpu_map_idx, thread);
-> > >
-> > > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > > index bd8e84954e34..aaf572317e92 100644
-> > > --- a/tools/perf/util/evsel.h
-> > > +++ b/tools/perf/util/evsel.h
-> > > @@ -303,6 +303,11 @@ static inline bool evsel__is_tool(const struct e=
-vsel
-> > *evsel)
-> > >         return evsel->tool_event !=3D PERF_TOOL_NONE;
-> > >  }
-> > >
-> > > +static inline bool evsel__is_retire_lat(const struct evsel *evsel)
-> > > +{
-> > > +       return evsel->retire_lat;
-> > > +}
-> > > +
-> > >  const char *evsel__group_name(struct evsel *evsel);
-> > >  int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
-> > >
-> > > --
-> > > 2.43.0
-> > >
