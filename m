@@ -1,61 +1,61 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2233817BCB
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 16:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873F4225CF
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 16:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716739924; cv=none; b=tSYD35Myd7+jb7152EWIYG3KZ1KOTVoeGDDUUTNOgkL4fPqhqCkmXLIc1CnUnamE7J125oJV/Zucpibm5Tiy3EY8D9bsP0WfqxVAlHkr9WWV2A1zCGXzGg5r3r7mWZNxcZT9l4LHmxng/rA9ila41i9LoDlYs81RVm+WGZO+IMs=
+	t=1716742423; cv=none; b=AFz9PjsQ0Z/4U4FaXr26l9Gee5DqiBJyZOt8moNLbbKAH++CMmpVftyTsEMFebIGfX0ARX72U2zCQk4lOotQa4mY4K0IrYxpuGOdHLDRrQKbO5j1Qs6/8Nzmiz7quKOxVW6WSD1/rYns5iO/aXErl9UhUIskGRTMxPcP5VLkiTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716739924; c=relaxed/simple;
-	bh=1qTOg0i4AJav707D3NLC+pqPicBkYgVxlo3Ac7E7+Zc=;
+	s=arc-20240116; t=1716742423; c=relaxed/simple;
+	bh=/BKmWWBDfRlEDj7KIrCUITVqOvPtb4QcBiN5AA/liTY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SL9nNaLzNM0pfac2EuAE/98Hf5rhM6iE0ksNPRwTSzZU7KT3NBuT53eWCumydi9xdbPui9SFRyU582B0nkkeam/gKWZmIrsH1/aVNYuJ9nGsZx/LWQ5NVcHYdwFLfd6Kerh1ksHyA8jXqbqxgrpDJJyOa812I8399AtZK00q+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C6A6dTaJ; arc=none smtp.client-ip=209.85.218.51
+	 To:Cc:Content-Type; b=q6co9MlNvKa3j/qOg6ukssjQMXI1VbhcCbdFgjsu6bH6XYTTY3RyfOd5sLxoxfqsKxEdD99HH1YEPKL8Ci/yx70gErFO6R36VohpM2aAmqENZGpvjXGtLpzdjHM4TKsPTYxXt12B2dbjetGNBwNXJrz3W+UJ91Ejjoc1eKC4cqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RP8A/YVM; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C6A6dTaJ"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a626919d19dso378466266b.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 09:12:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RP8A/YVM"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e6f2534e41so92536061fa.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 09:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1716739920; x=1717344720; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1716742419; x=1717347219; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3spg7Ji2j77u3EczWS+0jELUOh8+Gf0gXFP+GN0JHI=;
-        b=C6A6dTaJyPsMUHQNltHZZYhNgdxdnzWxDI26t6iOhV9AxTcGLUxYI0jFiUj8U9R7eA
-         mbHkqkTux+2JxzgSN88BGd2yg3HFtepr4/EfvBJ4PEhA9p08uMzJStaaOlxR+2mfYpFc
-         ITsSBxh8qUZDCIV5qic7M9VBSzaZS0ZaAMvW4=
+        bh=2KPz8fd987dNAatsylOyQp1D2cGtvz2jm5uP1CPuYGQ=;
+        b=RP8A/YVMxPxYCMdO3sc5oQNejfyAG3TAmozX8fQOCZkdzKLPWzjQYMahI+UztVc5xk
+         73yViex6GDlCsLjEWgIs0gwkD5X8JKh/DaO2VQ0Rv9Jysn/MJFKEErbLJBvtjuFbtO6A
+         oLYyV1Cnhvt9EF7zsNq0ehfZyLblPJxE/6DEw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716739920; x=1717344720;
+        d=1e100.net; s=20230601; t=1716742419; x=1717347219;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=o3spg7Ji2j77u3EczWS+0jELUOh8+Gf0gXFP+GN0JHI=;
-        b=YrrKmXMYjbFGq2VMMgrXJhZ5rNzirRgJiEImka8f4v4TPSpnyZd1sPjn54NgnDG/Ot
-         Y0yB4hfAMnI2MXa3cTzXh9Q0G45IragiFNRSJp7DafgRliIllJ9EdaTQx0/b9ia4OKIF
-         Hho14j7EZLoH2YUjmcxkexS7qwmAVF1zd6+BmBhWtclCzFidLSKNTKaJqOz3Riqgz/M5
-         hWOzRPGiArJ0yXRil6sWG+twnixM33PUWHIUZdnBtTtmmqTRppQ17wg1Rtha4bNrGtD0
-         R+9NClG4AzV4xZMLyfbW71XlpXmzOxfdyhgCgu9m/3qJbTovh6MDo4vAuT250BfjyPFu
-         Flhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcZE54iB6dXf9sERubAxU2Xnga9dQIf/RGOp5Qcjb1r8Efb3ym1eufEnblG00xbCLFMgqK3IODkPG42LcoVnoXM2SmbEN4CJFgJ9uso3tWRg==
-X-Gm-Message-State: AOJu0YyHh3gF03swZmb1D/2s8MONF78kpgbjg98rzisBnCGbhhSaPSDW
-	bz12kCYV3/eXmUKIs7XxvQgbpX2tQTcZe+dmrpER4FDB3k2v/Tap0GANpJnEoNg/zg6ZVMETz3Q
-	JrA/oGQ==
-X-Google-Smtp-Source: AGHT+IEqYEeV2+6dftjFkdxJXdsiUHW4YPylZPNPwbK2MC+f1ciQ2HRobAtSJSjjt0df8BcHb3uIGw==
-X-Received: by 2002:a17:906:4a50:b0:a59:c807:72d3 with SMTP id a640c23a62f3a-a62620a72fbmr641713566b.17.1716739920448;
-        Sun, 26 May 2024 09:12:00 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc8c2a8sm396608966b.165.2024.05.26.09.11.59
+        bh=2KPz8fd987dNAatsylOyQp1D2cGtvz2jm5uP1CPuYGQ=;
+        b=OheNI7dyzm64cbwifxw/ouM6SZTIPRO9zRfiZSyEdGCopd15dbgdG2DsE6PO39c9Uz
+         DprgIFb95kqiH8dzbjoiDa7gVGpYM2hO7F1rOr6iGahvOD5PWubTz8Vofu6fOT1bxRch
+         8QjdfjgVmyCeLXbpZzAEq204pFhIxyh4k+OiiFOShbLXbVZr/mQYpc7rfSqp5nl9glFy
+         W384WRLwSVuz3RCU8ekHGDV7qEDsKVRtWdeixNlcHQigDFri96RALCJmzVDiu7tgELkz
+         /ELuolwez99XHQZ1efnxtvlNnVCTzxIrjzkl8oQmehu91FThJrR1n08Uu200vwDxC9WZ
+         RqVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVADUeWydeVdlDxPvbW1yMmh0Qy+7+bN95EM7lX8vU6loWmcpwqhwKi0UjV2RTjQk5vwRY7SrMcRSrhkFtAGzna50tLa4IecWCEmgTvpT+fjg==
+X-Gm-Message-State: AOJu0YwXH6ViGmJFJiuUMIDX2+dWWXj5bo+sPhLiuamPE7USJz+NTrrp
+	p5snHUN/zvUQnvdjIv2qwiP91/zl0TXmwKR6opNu0lBVy1ka6bNfgYGVQA0A997iUwelzDz3WWl
+	xBAVH6w==
+X-Google-Smtp-Source: AGHT+IFeUcaaTnlSBYWFPV2r1+dgbY3FDlyaKkgl98avWurN0HXDjzAsy49SraQCfDqV5fNLgA1Vuw==
+X-Received: by 2002:a2e:7e10:0:b0:2e6:a7c3:775a with SMTP id 38308e7fff4ca-2e95b277c07mr39972031fa.52.1716742419562;
+        Sun, 26 May 2024 09:53:39 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579c6c72ed3sm1506258a12.87.2024.05.26.09.53.37
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 May 2024 09:11:59 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a626919d19dso378464566b.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 09:11:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUmYWNkN6t6ROQE21YTY0mKWjaK8b78siyD6q/XYJT5qTMGnfWjO9NO702kzsUW32K9Y/9ECwUo1zwP9+lgo+ZU10KnuB8+xxWMJzqefSnh9w==
-X-Received: by 2002:a17:906:275a:b0:a5a:3e00:6317 with SMTP id
- a640c23a62f3a-a623ea0380bmr807493566b.31.1716739918672; Sun, 26 May 2024
- 09:11:58 -0700 (PDT)
+        Sun, 26 May 2024 09:53:37 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6266fff501so285497866b.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 09:53:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV430q5dnUKTxG244NMGFN8kMTz9J9rvMDu2Shnc1/L055hERTA8/Pi+dGDyN0osiNcK+pwhvEBpMak/jWwwAwd3oZ5Gkjt4OSdzKTp96WZ1g==
+X-Received: by 2002:a17:907:928c:b0:a59:fca5:ccaa with SMTP id
+ a640c23a62f3a-a62641a3160mr583334366b.13.1716742417393; Sun, 26 May 2024
+ 09:53:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,56 +68,38 @@ References: <20240521192614.3937942-1-acme@kernel.org> <CAHk-=wiWvtFyedDNpoV7a8F
  <CAM9d7chXVsoNP6uYMCqy2MZOiWkt4GrFn+giYLHQjaJRsap1Cw@mail.gmail.com>
  <CAHk-=wjY7CG5WRZQ3E1gdEO9YtUQstMe7a=ciShY0wz0hKXyuQ@mail.gmail.com>
  <CAP-5=fUvT+O0iyXxst3WKqnWdpimqD8+aX8GJU7_7zYieniYxQ@mail.gmail.com>
- <CAHk-=wjMvgsBu5n9ifs5d8Qfu8x23=XmXgp6gXYNEN2y-g5UMA@mail.gmail.com> <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
+ <CAHk-=wjMvgsBu5n9ifs5d8Qfu8x23=XmXgp6gXYNEN2y-g5UMA@mail.gmail.com>
+ <CAP-5=fWk-eDfuRH-tL5TWU8dXumOnCTKby5VKonOfjGad4TG=Q@mail.gmail.com>
+ <CAHk-=wjZ2JoyBNFnR-TUc7P8sBL2ZvR0W1fCjcK2R2w7137wfQ@mail.gmail.com> <CAP-5=fXwv0Ec4_wEG2m1X73cpFvEWs2b5GdNnMw7OY7fP6V1tw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXwv0Ec4_wEG2m1X73cpFvEWs2b5GdNnMw7OY7fP6V1tw@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 26 May 2024 09:11:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjZ2JoyBNFnR-TUc7P8sBL2ZvR0W1fCjcK2R2w7137wfQ@mail.gmail.com>
-Message-ID: <CAHk-=wjZ2JoyBNFnR-TUc7P8sBL2ZvR0W1fCjcK2R2w7137wfQ@mail.gmail.com>
+Date: Sun, 26 May 2024 09:53:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg0OtULpNxk3_vKgmQnMqfOkJ2+_Gx+79hC=bBP=AT1RQ@mail.gmail.com>
+Message-ID: <CAHk-=wg0OtULpNxk3_vKgmQnMqfOkJ2+_Gx+79hC=bBP=AT1RQ@mail.gmail.com>
 Subject: Re: [GIT PULL] perf tools changes for v6.10
 To: Ian Rogers <irogers@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
 	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>, 
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Anne Macedo <retpolanne@posteo.net>, 
+	Kate Carcia <kcarcia@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, Anne Macedo <retpolanne@posteo.net>, 
 	Bhaskar Chowdhury <unixbhaskar@gmail.com>, Ethan Adams <j.ethan.adams@gmail.com>, 
 	James Clark <james.clark@arm.com>, Kan Liang <kan.liang@linux.intel.com>, 
 	Thomas Richter <tmricht@linux.ibm.com>, Tycho Andersen <tycho@tycho.pizza>, 
 	Yang Jihong <yangjihong@bytedance.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 25 May 2024 at 23:22, Ian Rogers <irogers@google.com> wrote:
+On Sun, 26 May 2024 at 09:50, Ian Rogers <irogers@google.com> wrote:
 >
-> What to do with events with no PMU like data_read?
+> If you think what you are asking perf with no pmu for a cycles event, is it unreasonable it gives you every cycles event for event PMU?
 
-Are they actually ambiguous?
+But that's not what it gave me. At all. All it gave me was NO
+PROFILING AT ALL and a useless error message.
 
-> The rule for looking up an event with no PMU specified is to try it on
-> every PMU - the rule is about as old as perf itself.
+You're trying to change the goal-posts here and keep bringing up
+irrelevant things that didn't actually happen.
 
-Well, clearly you then violated that rule with your change. Or you
-ended up changing the rule to look them up in the wrong order.
+I have a revert in the pull request from Arnaldo, and the revert is happening.
 
-I'm not interested in theoretical breakages. I'm interested in actual
-_real_ and _clear_ breakages, and that commit of yours introduced
-them.
-
-Maybe the fix is to make sure the events are always looked up in the
-right order, with core events always getting priority.
-
-That said, in the *particular* case that I hit, it's even worse than
-that. It's not just that the wrong event was looked up - it looked up
-an event that DIDN'T EVEN WORK for the workload.
-
-So it's doubly broken.
-
-I don't understand why you then bring up a "what about" issue that is
-entirely irrelevant and would presumably never have shown the issue in
-the first place because it wasn't probably wasn't ambiguous, and that
-actually did work as an event source.
-
-Reality matters. What-about-isms don't.
-
-              Linus
+                Linus
