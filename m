@@ -1,71 +1,68 @@
-Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
+Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5710E4
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 May 2024 00:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A5664D
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 May 2024 00:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716770374; cv=none; b=GLgC78zs1KWrVOaeWjZGWRTp9/6XVKUHwFj5VPZ/eG1hqL7wufn+7VudQleEQ8/oFvxmaM9oElhjHtP8t1xd6L8w+2h02fkpDtrVtgUA2uqaebsFZ+X7nv4exoNvti5kmWw12muepUFd6IYIMej53tAXa4kwZz4YJgloNw/Z8PI=
+	t=1716771383; cv=none; b=RMUVnZwrd5VTPVjhhHhrnM3xoQPaK0LqZN7Xq/0jMFfcl7kdGxzFHn827S3vReFgNiIX5Nlwyw55zavA15icVywih90ZIP/AIPIT+DefdW95ARHPf9fmWmSjsWXfZwmhwDRLlHrhLjTfWm4IReTIsu2Il9KEP2tAHtpuTJgVi+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716770374; c=relaxed/simple;
-	bh=juU0uVtYHmnPMkzk2FN2Yu9Te3n2UxhruPKevY1oQhw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
-	 Subject:Content-Type; b=mH1U0ALGMYiRnw8WeWYCcQWrcPcVXofAGnGZp8iztUJgHwJCezvb/zMUwS5I8T66vb4OYxCSS5Z0sRxhn8RWfI18fDJSD1psQxGFQKH81hHfDwHj4LjwsygxgfdApLDzwtmJ1iOdnhEGj/ScLDgqFS/k+xxLmM7xpytHpvkGfZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk; spf=pass smtp.mailfrom=fuuzetsu.co.uk; dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b=FRByIRDV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H9LXrJ7u; arc=none smtp.client-ip=64.147.123.149
+	s=arc-20240116; t=1716771383; c=relaxed/simple;
+	bh=k1OktcaHh9YBzhdTXmOI60dcUYQhSEEv3IlU4wQEZ0U=;
+	h=MIME-Version:Message-Id:Date:From:To:Subject:Content-Type; b=L3MRoJmai/2wIG7NPEO8DdGfFfH2QVZb3gyhPdQWtCJmA1P3j8+ZFvJoctJO9UTiBA59Ae059AjLNdt/8sWHYt969WvHmtM+6oHwjHolvyUd1lzkxFHrYUuGSYPCSPp1MGn0nqBIcw9Fr2GohU4VPTFoauOedim/svpHExzH7sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk; spf=pass smtp.mailfrom=fuuzetsu.co.uk; dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b=SIYKYAi0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hWOv+nuO; arc=none smtp.client-ip=64.147.123.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fuuzetsu.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b="FRByIRDV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H9LXrJ7u"
+	dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b="SIYKYAi0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hWOv+nuO"
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.west.internal (Postfix) with ESMTP id AC4C91C000BF;
-	Sun, 26 May 2024 20:39:30 -0400 (EDT)
+	by mailfhigh.west.internal (Postfix) with ESMTP id 1CB591800097
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 May 2024 20:56:21 -0400 (EDT)
 Received: from imap45 ([10.202.2.95])
-  by compute3.internal (MEProxy); Sun, 26 May 2024 20:39:30 -0400
+  by compute3.internal (MEProxy); Sun, 26 May 2024 20:56:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fuuzetsu.co.uk;
 	 h=cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716770370;
-	 x=1716856770; bh=afLz81STAnPd9sOE3+16DDHs2e64CFBnlPrNJfX03AY=; b=
-	FRByIRDVseZKw4UIfnANeNSFHfVmtWNTZlyosILf5zd8VqfbTxHx3bWskJSn1d39
-	EP7gI7KwS668w1Y+ClE5fMSfFxyPThR+I055/wpIBRIEzRQ5n32KzJ6tUAFczLQ0
-	AUze0hO/A0xHWMV0+HPhkSySRAniMlGmiz+y3mgF3t+mVaevXSR7VAlfxZiOKLlB
-	FrsFsZJQyxqafgRnJ3BxmLedMrGN4zXRkqFcQaHG8BA1Y2QjbBcheEyYqOdEm7Rq
-	J4CTZwwF+0B4P+XA5Gs93OdPrBxdNHfL+0JU7d9NGId+pI8yxsTZ4eA8VjCrwZj8
-	EAEA++I2dcOTP9kv/UKs6A==
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1716771380; x=1716857780; bh=Bp
+	sMNMX7N6IE+gOPbdrFjki3S5LLg7EtHQxIqJhhEpg=; b=SIYKYAi03rBbmAl0E/
+	m8NMAb/LvDbcuxfoC97Mj93axSf7FyhR795IhN/xfC3bmVIdCeW5BhX32j7PGnQi
+	TsFuV7g9h0uIPNvxYb3FXw1oUrrQDwU6hjn3wL2QXcWZoTBYZHSg+2KgMjerul50
+	xCU9EQikB8MP1HCJhRck/RbLeoXaOITMgK2vB1yRDANrO+dfkxE8SyQX0VD0Gh96
+	Kd+Fr5QVjSKiGaSkCAS/7hZC4891fpXVOuRfTESIe1Rg/iizYnnKwCW4ijJ++c0a
+	pnuNDs/PYoyYeJ1QKlaBTf3tGEqRvrQNBJySXCp2BnuCTZFCzfuYJWZBUr+KxFJl
+	2zDg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-transfer-encoding:content-type
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716770370; x=
-	1716856770; bh=afLz81STAnPd9sOE3+16DDHs2e64CFBnlPrNJfX03AY=; b=H
-	9LXrJ7u7WMOZ2D/blYSr/keF4yh2qRyV52eLFm2GEzA5lxiLZ27UKi+DuzUf2qj3
-	liPtkIlR4JeUEERM4rqgdolUC+aZFA4UR/+P1db9eJG9KToeo7H1oWGKwW/L47k2
-	xfHDfq+gLunVfTM0EqfVHgOwwQgILyB2Ar2sPnQRd6BllvvOk67nASuhc3rD8cKF
-	I3qDjzdYgDVML5qGJR8HZCHdNoaeunEjhw4xj4n+UODp72bjkmUD+WxcxYoaYtMI
-	CLd/LvEk3BxnGNw/L9RI9JoM0oNW9qAY/n95WVL2FhcvSDemLoaPxkTqxsBOlr3G
-	VR6k5mY0cAr4MoHwzLfYQ==
-X-ME-Sender: <xms:QdZTZrH3KIfdXD3SHlKuNMe__XO74HQkUJMVjD2BQ8DYxSS2-CVb2w>
-    <xme:QdZTZoWYHHilt8uEhUvYnCLOf6liea_TCJMHx4CC-2OyNbY8ATk1h25Bcmq1z5fVt
-    UihgFCicX9lqiVptQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejfedgfeejucetufdoteggodetrfdotf
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716771380; x=1716857780; bh=BpsMNMX7N6IE+gOPbdrFjki3S5LL
+	g7EtHQxIqJhhEpg=; b=hWOv+nuObNly6p683eIXPb8X4YIjlMcKbnlJGzgC85Q7
+	qVpbXFLDWNAN1whLHruCmZA0sWcMkC12Iot5LQreRoUYyV+BGBlh8ZWBJYVTF/DD
+	CjIRob16508kBa/5IT5SNTjBY1fPzHynwFpBwx6LDUcBcvGnuWOFmeJTZEsXbBlv
+	oYXESLq5xL3c4PmRupFi0jS4Bgmi+G9WFnw39BggaPGieo/0KJXk641mJ3cupCN4
+	FtTymJvRI4WWDOc7VcGWVcn8G0CDfidYSakBrkn9yFSbqr/zVKRjVgocpBGQB3Z8
+	Eh9hiXxoBR5AmuIcSO/LtRW3AS3m7sAg1NXpzRpx9Q==
+X-ME-Sender: <xms:NNpTZo0wHw3i_Z70vJWpHUtUqeP7lQ554ZqhSqIVezKE6BPCkTZyJQ>
+    <xme:NNpTZjF22OudWukxOTmpAwCAjLFTllC6Eaima1tFfnCE5BY4AZZR8Z4Eb3xnJNIno
+    ob3tQlkhyUfVJfc1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejfedgfeelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedfofgr
-    thgvuhhsiicumfhofigrlhgtiiihkhdfuceofhhuuhiivghtshhusehfuhhuiigvthhsuh
-    drtghordhukheqnecuggftrfgrthhtvghrnhepfffhvdefieeiudduvdeufedtuddvkeet
-    gfetiedvjeejtddufeetjeevhfekfeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    dpmhgrphhsrdhmrghpnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepfhhuuhiivghtshhusehfuhhuiigvthhsuhdrtghordhukh
-X-ME-Proxy: <xmx:QtZTZtLGML2vNwdqm6hy7b3ZwE3pQRHzvZ5P4lMTsyAqRj07W5k5pA>
-    <xmx:QtZTZpG_4ApChA8l4tXi4i63tXe9LXczkANY79bF42vReWJfzUlhpw>
-    <xmx:QtZTZhWbvSHk_7fBkZwvo6tjQvCSyEjw-HbR_D2tJuvVaPCnC50Z2w>
-    <xmx:QtZTZkOCUmW8l4A4sifWMIH7IplTqr0KVXGjPwTJlsbYDVi2mZ9KHQ>
-    <xmx:QtZTZgfMP9jtzXqkybnzsds6c-oO3y2XnZ1YpeHwb_QDUVISnrGdVPwt>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfffhffvufgtgfesthhqre
+    dtreerjeenucfhrhhomhepfdforghtvghushiiucfmohifrghltgiihihkfdcuoehfuhhu
+    iigvthhsuhesfhhuuhiivghtshhurdgtohdruhhkqeenucggtffrrghtthgvrhhnpeeihf
+    efleekveelleeiheelheehveeiffeiveetheefvefhgfdvueffieffjeejgeenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfuhhuiigvthhsuh
+    esfhhuuhiivghtshhurdgtohdruhhk
+X-ME-Proxy: <xmx:NNpTZg6x5k_JNUp5dZ4NtS4HCH4GTAK9KVeJck0PYEA1WQbgOiIxqg>
+    <xmx:NNpTZh1jF-oEGZkG-tXSAiMtIUPIZt9LdfIrEnX-qBMpqdC9vmPcLQ>
+    <xmx:NNpTZrEFAXB-76x6sbqe9LacZU6j-f__09I0iBGKeObJckkWGhrOAg>
+    <xmx:NNpTZq8On9kt0QcY8HjFpbIvpdK7Qry1RFRRzt-hfdxJaI4rrhJvtA>
+    <xmx:NNpTZuOhBwbgQ6ZFOdIqT0dMADc9diCzGw4KS0Iosqw4CgOCVUgFDdCN>
 Feedback-ID: ia5d440cb:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E198D272007C; Sun, 26 May 2024 20:39:29 -0400 (EDT)
+	id 6DF25272007C; Sun, 26 May 2024 20:56:20 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.11.0-alpha0-480-g515a2f54a-fm-20240515.001-g515a2f54
 Precedence: bulk
@@ -74,187 +71,188 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a8ea965e-1a88-4297-8ef7-8a8e80ae6a4a@app.fastmail.com>
-In-Reply-To: 
- <CAP-5=fVpgRgx839qaeEbnOPSeMD5xXUwNv7Jeqe1PQj8yqV9_g@mail.gmail.com>
-References: <fd2b28b4-8fc5-45c1-824b-4de4422e8837@app.fastmail.com>
- <CAP-5=fVpgRgx839qaeEbnOPSeMD5xXUwNv7Jeqe1PQj8yqV9_g@mail.gmail.com>
-Date: Mon, 27 May 2024 09:37:41 +0900
+Message-Id: <cfcaf804-d7b1-4d55-8465-12e1d238aca1@app.fastmail.com>
+Date: Mon, 27 May 2024 09:56:00 +0900
 From: "Mateusz Kowalczyk" <fuuzetsu@fuuzetsu.co.uk>
-To: "Ian Rogers" <irogers@google.com>,
- linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: Linux `perf report` regression
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Why does libtracevent pkg-config detection wipe PKG_CONFIG_PATH?
 Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 25 May 2024, at 5:17 AM, Ian Rogers wrote:
-> On Fri, May 24, 2024 at 1:00=E2=80=AFAM Mateusz Kowalczyk
-> <fuuzetsu@fuuzetsu.co.uk> wrote:
->>
->> Hi Ian,
->>
->> I have recently upgraded my system and I have found that `perf report=
-` no longer gives nice traces.
->>
->> For the same `perf record` capture, I used to get traces like this, w=
-ith `perf report --hierarchy -M intel --no-inline`.
->>
->> ```
->> -   98.33%        sim
->>    -   42.66%        sim
->>       -    3.40%        [.] <serde_json::read::StrRead as serde_json:=
-:read::Read>::parse_str
->>            ordercache::Reader::open
->>            serde_json::de::from_str
->>            <&mut serde_json::de::Deserializer<R> as serde::de::Deseri=
-alizer>::deserialize_struct
->>          + <&mut serde_json::de::Deserializer<R> as serde::de::Deseri=
-alizer>::deserialize_map
->> ```
->>
->> However after upgrading, I get the following report on the very same =
-file:
->>
->> ```
->> -   98.33%        sim
->>    -   42.66%        sim
->>       -    3.40%        [.] <serde_json::read::StrRead as serde_json:=
-:read::Read>::parse_str
->>            0x55e840085c78
->>            0x55e84008fb0d
->>            0x55e8400986d6
->>          + 0x55e840096122
->> ```
->>
->>
->> I have bisected the issue to this commit: https://lore.kernel.org/all=
-/20230608232823.4027869-21-irogers@google.com/ a.k.a. `bffb5b0c0976aa46a=
-aa961dd19a47c9d6301cfe1`. The working `perf report` is from the commit r=
-ight before that, `1981da1fe2499823f626c86c5ba3be6b89844384`.
->>
->> I'm not sure if there's some mailing list I should be trying to repor=
-t it at. I can not share the perf capture as-is but I can try to come up=
- with something on Monday that should hopefully reproduce the problem, i=
-f necessary.
->
-> Thanks Mateusz,
->
-> The mailing list to use is linux-perf-users, added. Thanks for the
-> bisect, looking at the patch in question it looks like prior to the
-> fix there was probably a use after a value had been put. We probably
-> need to increase the lifetime of the get/put to avoid the issue you
-> are seeing. The reference count checking has some documentation here:
-> https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
->
-> Looking at the patch, and adding some annotations:
-> ```
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -590,6 +590,7 @@ fill_node(struct callchain_node *node, struct
-> callchain_cursor *cursor)
->   call->ip =3D cursor_node->ip;
->   call->ms =3D cursor_node->ms;
->   call->ms.map =3D map__get(call->ms.map);
-> + call->ms.maps =3D maps__get(call->ms.maps); <---- adding a get should
-> be safe, it increases a reference count and shouldn't make the thing
-> go away
->   call->srcline =3D cursor_node->srcline;
->
->   if (cursor_node->branch) {
-> @@ -649,6 +650,7 @@ add_child(struct callchain_node *parent,
->   list_for_each_entry_safe(call, tmp, &new->val, list) {
->   list_del_init(&call->list);
->   map__zput(call->ms.map);
-> + maps__zput(call->ms.maps); <----- a put could be the source of the
-> problem, especially a zput that makes the value NULL. However, the
-> next line here frees "call" and so we're unlikely to have been using
-> it later in the code.
->   free(call);
->   }
->   free(new);
-> @@ -1010,10 +1012,16 @@ merge_chain_branch(struct callchain_cursor *cu=
-rsor,
->   int err =3D 0;
->
->   list_for_each_entry_safe(list, next_list, &src->val, list) {
-> - callchain_cursor_append(cursor, list->ip, &list->ms,
-> - false, NULL, 0, 0, 0, list->srcline);
-> + struct map_symbol ms =3D {
-> + .maps =3D maps__get(list->ms.maps),
-> + .map =3D map__get(list->ms.map), <--- gets should be safe
-> + };
-> + callchain_cursor_append(cursor, list->ip, &ms, false, NULL, 0, 0, 0,
-> list->srcline);
->   list_del_init(&list->list);
-> + map__zput(ms.map);
-> + maps__zput(ms.maps); <--- these puts should match the gets above, so
-> should be sound
->   map__zput(list->ms.map);
-> + maps__zput(list->ms.maps); <--- these puts are on a value in "list"
-> which is freed below, so we should be good.
->   free(list);
->   }
-> ```
-> Nothing was particularly jumping out from the changes but given the
-> reproduction you have you should be able to revert the change in each
-> file and narrow down which change is causing the issue.
->
-> Thanks,
-> Ian
->
->
->
->
->> I thought I'd fire an e-mail in case this is something obvious to you=
- and the fix is simple. I tried to search on the web but I was unable to=
- find anything useful. Maybe most people are using some old version or i=
-t's something to do with my setup.
->>
->> Please let me know if I should send this to some mailing list instead=
- -- presumably with a reproduction example.
->>
->> Thank you!
->>
->> --
->> Mateusz K.
+Hi,
 
-Hi again,
-
-I was first able to revert `util/callchain.c` and confirmed that fixed t=
-he issue. To narrow it down, I tried commenting out every `maps__zput` t=
-hat was added and later even every `map__zput` that already existed but =
-nothing fixed the problem.
-
-The only thing that did help was this change:
+To build recent perf, I'm having to apply the below patch.
 
 ```diff
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 909f62b3b266..77215cedf35d 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1016,7 +1016,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
-                        .maps =3D maps__get(list->ms.maps),
-                        .map =3D map__get(list->ms.map),
-                };
--               callchain_cursor_append(cursor, list->ip, &ms, false, NU=
-LL, 0, 0, 0, list->srcline);
-+               callchain_cursor_append(cursor, list->ip, &list->ms, fal=
-se, NULL, 0, 0, 0, list->srcline);
-                list_del_init(&list->list);
-                map__zput(ms.map);
-                maps__zput(ms.maps);
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 7f1e016a9253..b70fef12a977 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1181,7 +1181,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+     CFLAGS +=3D -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
+     LDFLAGS +=3D $(LIBTRACEEVENT_LDFLAGS)
+     EXTLIBS +=3D ${TRACEEVENTLIBS}
+-    LIBTRACEEVENT_VERSION :=3D $(shell PKG_CONFIG_PATH=3D$(LIBTRACEEVEN=
+T_DIR) $(PKG_CONFIG) --modversion libtraceevent)
++    LIBTRACEEVENT_VERSION :=3D $(shell $(PKG_CONFIG) --modversion libtr=
+aceevent)
+     LIBTRACEEVENT_VERSION_1 :=3D $(word 1, $(subst ., ,$(LIBTRACEEVENT_=
+VERSION)))
+     LIBTRACEEVENT_VERSION_2 :=3D $(word 2, $(subst ., ,$(LIBTRACEEVENT_=
+VERSION)))
+     LIBTRACEEVENT_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEEVENT_=
+VERSION)))
 ```
 
-I don't know _why_ this fixes it unless something weird is happening wit=
-h the maps__get or map__get above...?
+I don't understand why `PKG_CONFIG_PATH` is overwritten this way. `grep`=
+ing for PKG_CONFIG_PATH reveals that this isn't done anywhere else in th=
+e kernel tree. All other uses of `$(PKG_CONFIG)` in the file simply invo=
+ke the tool.
 
-I was able to confirm on the most recent kernel tree checkout that the s=
-ame patch still makes the problem go away. Of course, this is probably n=
-ot the right fix but I don't really know what I'm doing...
+Of course, I do actually have `libtraceevent.pc` available, it's just th=
+at `LIBTRACEVENT_DIR` is empty which stops it from finding it.
 
-Maybe this gives some hint about what may be wrong.
+```
+[shana@aya:~/programming/linux/tools/perf]$ pkg-config --modversion libt=
+raceevent
+1.8.2
+```
 
-Thanks
+If I do not apply the patch, I'm getting the below errors during build.
+
+I'm not sure how others are getting it to build, maybe I'm doing somethi=
+ng wrong? Please let me know. If the diff is fine, it'd be great if anyo=
+ne could apply it.
+
+Thanks!
+
+```
+Perhaps you should add the directory containing `libtraceevent.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libtraceevent' found
+expr: syntax error: unexpected argument =E2=80=98255=E2=80=99
+
+Auto-detecting system features:
+...                                   dwarf: [ on  ]
+...                      dwarf_getlocations: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libcap: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ on  ]
+...                      libdw-dwarf-unwind: [ on  ]
+...                             libcapstone: [ OFF ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  INSTALL libsubcmd_headers
+  PERF_VERSION =3D 6.10.rc1.g1613e604df0c
+  GEN     perf-archive
+  GEN     perf-iostat
+  INSTALL libsymbol_headers
+  INSTALL libapi_headers
+  INSTALL libperf_headers
+  INSTALL libbpf_headers
+  TEST    pmu-events/metric_test.log
+  CC      builtin-bench.o
+  CC      builtin-annotate.o
+  CC      builtin-config.o
+  CC      builtin-diff.o
+  CC      builtin-evlist.o
+  CC      builtin-ftrace.o
+  CC      builtin-help.o
+  CC      builtin-buildid-list.o
+  CC      builtin-buildid-cache.o
+  CC      builtin-kallsyms.o
+  CC      builtin-list.o
+  GEN     pmu-events/pmu-events.c
+In file included from util/session.h:5,
+                 from builtin-buildid-list.c:17:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+In file included from util/session.h:5,
+                 from builtin-evlist.c:15:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+In file included from util/session.h:5,
+                 from builtin-buildid-cache.c:24:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+  CC      builtin-record.o
+In file included from util/session.h:5,
+                 from builtin-diff.c:15:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+  CC      builtin-report.o
+  CC      builtin-stat.o
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-buildid-list.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-evlist.o] Error 1
+In file included from util/session.h:5,
+                 from builtin-annotate.c:32:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-buildid-cache.o] Error 1
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-annotate.o] Error 1
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-diff.o] Error 1
+In file included from util/session.h:5,
+                 from builtin-record.c:27:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+In file included from util/session.h:5,
+                 from builtin-stat.c:60:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+In file included from util/session.h:5,
+                 from builtin-report.c:35:
+util/trace-event.h:152:62: error: operator '&&' has no right operand
+  152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D=
+ MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+      |                                                              ^~
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-record.o] Error 1
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-report.o] Error 1
+make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.build:1=
+05: builtin-stat.o] Error 1
+make[2]: *** [Makefile.perf:727: perf-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  CC      pmu-events/pmu-events.o
+  LD      pmu-events/pmu-events-in.o
+make[1]: *** [Makefile.perf:264: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
+perf version 6.10.rc1.g5f00d82dec63
+
+```
 
 --
 Mateusz K.
