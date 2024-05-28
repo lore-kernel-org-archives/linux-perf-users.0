@@ -1,70 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00FA16F85A;
-	Tue, 28 May 2024 13:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B7617C7F;
+	Tue, 28 May 2024 14:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902206; cv=none; b=MM4TJ69y1HzjyQFmyzLkM/1/VjUtF/y/T0KrBPHKITLQxk9dQYRHRJ5NXEV3txTMoWXzUh8uG8JxmwJxPnPWQOgunxKqu7CPHL+yuZoJvpMzgnzp6+a9t/kEqvAOE0bop6wpKG7Q/st8loC8XiQlaAhM2EjfwVfhmLv7GWqTBRk=
+	t=1716907640; cv=none; b=HbzlP4tHa9o0YJbFOpK5ti6Fz0LtCkc0QLOKkzmGrPcb/MXaiArf9Sq01hjqdCQuaHlhWgO+1zjAjNAx6t5iKx8AMAoCfeMBaNfj/ssQ328OFG+7zdmhIrPOU3W72VsTsGeNnZRJQfzpL4gTlrf64z/SOYmoNPg6KeOBVYcnKHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902206; c=relaxed/simple;
-	bh=tP9LNLHcHcid8pBq2Y+wDHSSdjrKRVd8ZjilPzbswnE=;
+	s=arc-20240116; t=1716907640; c=relaxed/simple;
+	bh=QO+rILPMmUh4nu8/ho57QXHNcGepvNHxpBMpLTzTy5M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kj50jT4HXBqABrZxSTjrcmLLxH3+eUSjGKOw2nGkCqhuJxQNTR341tLp48a869St/nmofMkuOpiB1SmWUa8WrfRWNMEhU7FHT26sEW4KdvOT8tPYJ9k+eNlNZRfiJg4CqV3VWbNlfz4mFjQYqmkPPk/UHLHuXvdrTRrdZEXTh6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/veF8lm; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWKGcaQ6Zr4fkInwDRTLwffHWLf/2Ha0ZXxkxanCYTypHNIKOFVQGOmjj+0nfufrTvyg/HiuHWWAULvlIviphjTxiAbglxoV4NWW4wXa57m65vHw/Ah1RKyP8ZkKjWMHCLng3EhPOADRUWhyGW0lvSBVlVFunaxLeMhOYJ0Ms/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wp/uaVtR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/veF8lm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716902203; x=1748438203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tP9LNLHcHcid8pBq2Y+wDHSSdjrKRVd8ZjilPzbswnE=;
-  b=E/veF8lmT2isMI3c41OtZd3JJGq8ELtktbCnkrCG2xR23+Jp7/MsMa+E
-   jCHfVBSedJ/nXLg52A2yMzoNV8cgZolExgk+PQ3ioMJs8f1tzcHMZ2d3q
-   JXzM8YI43sO30nUi+F4YQA8/IKQJR3RhZOwak2cj76+QY2gmqrKFSAI7g
-   jHL3TyCZ2NjE1jbmAUFFw7m10vQNfeUJ/TXUCBGrysgXwi4xd7PY7PWlo
-   P5+z8CaSGvbZB+3SgbtqLFvqdbTp2E51Egq37tbt2xvTWftPwpa6LjUTw
-   tpuBaNFfQJRhbZgbt37HVCrmWb+JEMbMYAPgwHrcpKXKHZxJZ6xn37ITZ
-   Q==;
-X-CSE-ConnectionGUID: 0zPHsvAvTeyFsDbihGJ/UQ==
-X-CSE-MsgGUID: 9fIe6PZLQ2K8fwmrTtGExA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13016928"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13016928"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 06:16:40 -0700
-X-CSE-ConnectionGUID: oAOqOddLRqGQgH5dTxqg+w==
-X-CSE-MsgGUID: 5MmUvP+QSB2ns0Y4VCSVvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="34983502"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 28 May 2024 06:16:35 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sBwgr-000CDP-1B;
-	Tue, 28 May 2024 13:16:33 +0000
-Date: Tue, 28 May 2024 21:15:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xu Yang <xu.yang_2@nxp.com>, frank.li@nxp.com, will@kernel.org,
-	mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v11 2/8] perf: imx_perf: add macro definitions for
- parsing config attr
-Message-ID: <202405282055.sHBcNC4i-lkp@intel.com>
-References: <20240528160523.1695953-2-xu.yang_2@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wp/uaVtR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0C9C3277B;
+	Tue, 28 May 2024 14:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716907640;
+	bh=QO+rILPMmUh4nu8/ho57QXHNcGepvNHxpBMpLTzTy5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wp/uaVtRPQN3JEQRoKAgOcLxTTcYrC3WQOyBB5P6gbtJor6dJSUAZFH3W1+Vvo+V/
+	 PUSErp18ZBXRhbJeZAOyDyKgMIEWba7nBc+cR4yFeG5iGBrNc33vzzTCRdOdZLJmpX
+	 psxXdIlzGT4tcKNv6Od3k/Y5JewG/lIHwt+Zy3j5p+O9ITGiGx+IQAWprK6chN8Mhf
+	 gyNsg09aSI/Nw1LH9XHSlRa9BuDagvOEdkSvaQJv2xNA5qObAa27Ubh+dZs+/WGIay
+	 hrKzeuOjUeuTi0KYsn5y8YQO9QQyFQMiOO0sKZxzU8htywBrPulCmNUN1aN29UPKil
+	 gFQyCa1s3bEGw==
+Date: Tue, 28 May 2024 11:47:16 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Artem Savkov <asavkov@redhat.com>
+Cc: Guilherme Amadio <amadio@gentoo.org>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf record: add a shortcut for metrics
+Message-ID: <ZlXudNOs9YLBnLXu@x1>
+References: <20240527101519.356342-1-asavkov@redhat.com>
+ <ZlS8pc39t2c1WFye@x1>
+ <ZlS9M1vcxZ3Qsx_B@x1>
+ <ZlTCvelaGVb6lCia@x1>
+ <20240528114525.GA449511@alecto.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,60 +54,108 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528160523.1695953-2-xu.yang_2@nxp.com>
+In-Reply-To: <20240528114525.GA449511@alecto.usersys.redhat.com>
 
-Hi Xu,
+On Tue, May 28, 2024 at 01:45:25PM +0200, Artem Savkov wrote:
+> On Mon, May 27, 2024 at 02:28:29PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, May 27, 2024 at 02:04:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, May 27, 2024 at 02:02:33PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Mon, May 27, 2024 at 12:15:19PM +0200, Artem Savkov wrote:
+> > > > > Add -M/--metrics option to perf-record providing a shortcut to record
+> > > > > metrics and metricgroups. This option mirrors the one in perf-stat.
+> >
+> > > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > > Signed-off-by: Artem Savkov <asavkov@redhat.com>
 
-kernel test robot noticed the following build warnings:
+<SNIP>
 
-[auto build test WARNING on perf-tools-next/perf-tools-next]
-[also build test WARNING on tip/perf/core perf-tools/perf-tools linus/master v6.10-rc1 next-20240528]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > How did you test this?
+> >
+> > I'm trying:
+> >
+> > perf list metric
+> >
+> > pick a metric then:
+> >
+> > perf record -M tma_core_bound
+> >
+> > And it gets in a long loop doing perf_event_open() calls...
+> 
+> [snip]
+> 
+> > (gdb) bt
+> > #0  0x00007ffff6f21804 in close () from /lib64/libc.so.6
+> > #1  0x000000000061fbd2 in perf_evsel__close_fd_cpu (evsel=0xdab470, cpu_map_idx=6) at evsel.c:188
+> > #2  0x000000000061fc22 in perf_evsel__close_fd (evsel=0xdab470) at evsel.c:197
+> > #3  0x000000000061fc9b in perf_evsel__close (evsel=0xdab470) at evsel.c:211
+> > #4  0x00000000004e0b5f in evlist.reset_weak_group ()
+> > #5  0x0000000000423bb9 in __cmd_record.constprop.0 ()
+> > #6  0x00000000004276c5 in cmd_record ()
+> > #7  0x00000000004c4579 in run_builtin ()
+> > #8  0x00000000004c4889 in handle_internal_command ()
+> > #9  0x0000000000410e57 in main ()
+> > (gdb) c
+> > Continuing.
+> > ^C
+> > Program received signal SIGINT, Interrupt.
+> > 0x00007ffff6f21804 in close () from /lib64/libc.so.6
+> > (gdb)
+> >
+> > So you should investigate this further.
+> 
+> I tried a bunch of random metrics from perf list but didn't hit this.
+> 
+> It spins forever in evlist__for_each_entry() loop in record__open() with
+> the same error:
+> 
+>         Weak group for TOPDOWN.SLOTS/5 failed
+> 
+> Looks like the culprit is one of those unsupported metrics, will
+> investigate.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xu-Yang/perf-imx_perf-add-macro-definitions-for-parsing-config-attr/20240528-160104
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20240528160523.1695953-2-xu.yang_2%40nxp.com
-patch subject: [PATCH v11 2/8] perf: imx_perf: add macro definitions for parsing config attr
-config: arm-randconfig-003-20240528 (https://download.01.org/0day-ci/archive/20240528/202405282055.sHBcNC4i-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240528/202405282055.sHBcNC4i-lkp@intel.com/reproduce)
+Right, when trying something new, in a different way than the
+pre-existing codebase was envisioned to be used we may uncover latent
+problems, that endless loop seems like something we want fixed :-)
+ 
+> > The idea, from my notes, was to be able to have extra columns in 'perf
+> > report' with things like IPC and other metrics, probably not all metrics
+> > will apply. We need to find a way to find out which ones are OK for that
+> > purpose, for instance:
+> >
+> > Opening: cpu_core/topdown-bad-spec/
+> > ------------------------------------------------------------
+> > perf_event_attr:
+> >   type                             4 (cpu_core)
+> >   size                             136
+> >   config                           0x8100 (topdown-bad-spec)
+> >   { sample_period, sample_freq }   4000
+> >   sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+> >   read_format                      ID|LOST
+> >   disabled                         1
+> >   inherit                          1
+> >   freq                             1
+> >   sample_id_all                    1
+> >   exclude_guest                    1
+> > ------------------------------------------------------------
+> > sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
+> > sys_perf_event_open failed, error -22
+> > switching off PERF_FORMAT_LOST support
+> > Opening: cpu_core/topdown-bad-spec/
+> 
+> Is it just metrics containing unsupported events that need to be skipped
+> or there are other cases that wouldn't make much sense? If the latter
+> maybe it will be easier to just tag the ones that are supported (or not) in
+> pmu-events?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405282055.sHBcNC4i-lkp@intel.com/
+Maybe we can use some criteria to look at the metric and filter out
+things that are not working right now? As you go on studying the
+codebase you will figure out the reasons, sometimes its a bug (the
+forever loop above), sometimes it plain don't make sense and we just
+skip it, leaving things like IPC, i.e. we have instructions, we have
+cycles, that is what needed for IPC, ok, that makes sense and we should
+have an IPC column when collecting both cycles and instructions, just
+like is done in a ad hoc way for IPC in perf stat since forever.
 
-All warnings (new ones prefixed by >>):
+People want to have those columns in 'perf report' and 'perf top'.
 
-   In file included from drivers/perf/fsl_imx9_ddr_perf.c:11:
-   In file included from include/linux/perf_event.h:18:
-   In file included from include/uapi/linux/bpf_perf_event.h:11:
-   In file included from ./arch/arm/include/generated/uapi/asm/bpf_perf_event.h:1:
-   In file included from include/uapi/asm-generic/bpf_perf_event.h:4:
-   In file included from include/linux/ptrace.h:10:
-   In file included from include/linux/pid_namespace.h:7:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/perf/fsl_imx9_ddr_perf.c:46:9: warning: 'CONFIG_COUNTER' macro redefined [-Wmacro-redefined]
-      46 | #define CONFIG_COUNTER          GENMASK(15, 8)
-         |         ^
-   ./include/generated/autoconf.h:377:9: note: previous definition is here
-     377 | #define CONFIG_COUNTER 1
-         |         ^
-   2 warnings generated.
-
-
-vim +/CONFIG_COUNTER +46 drivers/perf/fsl_imx9_ddr_perf.c
-
-    44	
-    45	#define CONFIG_EVENT		GENMASK(7, 0)
-  > 46	#define CONFIG_COUNTER		GENMASK(15, 8)
-    47	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Arnaldo
