@@ -1,184 +1,205 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2083.outbound.protection.outlook.com [40.107.15.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412CC17E8FF
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 05:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716874619; cv=none; b=URjGvlAVuiOiUObhi7pp7RFvIImnEt0XY73iD22MxtkiVl85BXp7pzqknYyyPfPYYN0+FhEZ8vKt3qriGW2LQUjZiT8J+gQkmsEe2WFYb2EDOOkkA+okLDrgzQCENhucXVIEKqVTQ9i68HWwWO02e/n6C9Tnd9NqWtONdyiHuss=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716874619; c=relaxed/simple;
-	bh=eQo7fpXSH2/VBl3tOIUEZ8+BdOR5XuNBrOxdR4BPeTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LcqbKXNNOUmrtomlB2AkOjOjH79vV+6jfxCuwWFPXM3bVCs++TOPaaNH/L8q6bnuayiUmoa8nfj3wzKsaSG+s+EBeGWzDxnXOw0vTBWqXdc8lCVYMznoOwX4y7glBXm9GF6txVHk/1BYBsnv34vTDqO5TM/7EItsMjFywc7zYuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qIVps9VB; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF28773501;
+	Tue, 28 May 2024 07:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716883049; cv=fail; b=XcSfw8igO8cKW33iEgqhaJ5oOCg95vmh4F9w4NGI3vQbimwQOSPJRwl65lEAQmpxYxXXvJzr0BcgpnPW6Uuj+2lRHd93KRhYLXzqtqkmx+/Z291tsvhxQkLgp/oBxeAhK3N+pQEVUyzypnIfQCdK8zk3wIsXZgNgC6766WwukAI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716883049; c=relaxed/simple;
+	bh=igIMTu4ay+VDLqpOqBsAkvBWBG2qQgyFMEWBLXlxWHg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=J2wFzpxl6f4YMcvAB/NNuYhcHHIvA6+OM5fjAm4kfOqrA8VmOpEn7KGVSvoTLf6So2g7JV1imUQVm9pL6MHnbkrPi/sIfE3UaqMwpar5q/tSPuxgiT0KIGzxYVSeJkQPQNSBvYsEnxHeD8iaV6SXpl7Q6ebVztXYLavM8EwdLjU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=R30Wotmy; arc=fail smtp.client-ip=40.107.15.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIVps9VB"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ee5f3123d8so316945ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 May 2024 22:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716874617; x=1717479417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75+rGi0emkeGBR6hYhmPEgxqM1gN8v0U5aBBRBUhk5g=;
-        b=qIVps9VBLd/vduzdQ3RbOR9UPRKyBRscMCDwE8L5F9WVQsr8+pXFoRsRIBe39T1U4V
-         JRDhvOI/KnDX7Sk8f/zBJOlLqB8E7451r2yeezpmcW+hhn3+Tj+WvQO7k4qrQwIKl/23
-         SxuSBVXuy5xQKenN/mYlvoamkxtdi0NbXOIpL601foRN02bqsrbdn9ZmKO3r0n+QuFGx
-         fFVxf38Mz+D3M0XriyxqJQv+hbzWhrfq6TfzGKCEbp7KhgN6fTVOW/lh+JwvLaR7LLlZ
-         nXjrAOP/hG1tKyFwApDJ3ux4i63mt5nqcOlji6zLT5vt6araiJAWSe0cm7KYzC4+DgIs
-         pE7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716874617; x=1717479417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=75+rGi0emkeGBR6hYhmPEgxqM1gN8v0U5aBBRBUhk5g=;
-        b=UhgpHHU2JvhQDUS7H+QtokcR2RZC3fcQSu/ZCGC0xvg08CAdNJqv2WOt8Am1uY5pT/
-         pjMrtcV60i8Y1hP6TRbQ1SiRzYcZwizbVhqflb4ife7fnECPmVzpAwms1XD+dRS0MfdG
-         uvrRT/AUqLKyJIbRN7U3KYAcvEede811A1qD5UwKibHP3RkFvMuhTivQqVULbOMPtU6h
-         kUI5qVI6ArgbctVs+31Xk5dnwNY3KCu1p/7dY9B0hYmEN4XsZqXi37H0cWFPv/L7/j0/
-         f8t8RHh4OQNsyYM0ytjpk2i28obhirGbiUYaTnaov1XfrGAyXzhvrj8UOgebbv2imMeC
-         d8JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9781X090fKozCcVjCRNSre6hEsvNGBRQuMMa2JR1UAYHKqRANp/aC7+Uznm0mIT1L0+9VgQWWtPYA8wMIaO9F0m5+MdsKtUVW/asOo4jF/A==
-X-Gm-Message-State: AOJu0YwAhZlDIrmuTUDxoCN+SLHZXgsuEqeLlau0x8b4nDurqosmtxcJ
-	eN+lwSCIBrfXP3FmkluSe4X44SLf7HxIUOlFzchr+crOuK66QnnU1onTIxCY6yHgXdKCAWOxdeJ
-	FxA8LZStVSCxCEbusNk5sIoJ4o874kRF1JqR2
-X-Google-Smtp-Source: AGHT+IHX/t9arYlqMjK6W2gmxkPqPjC17Br5DPL8qK96kwXGF/dijCqCM6aAyNdW07u5PbUS/gLdVfk4lseV1plwUeQ=
-X-Received: by 2002:a17:902:a515:b0:1f4:97f5:d9d6 with SMTP id
- d9443c01a7336-1f497f5db8dmr2472715ad.3.1716874617141; Mon, 27 May 2024
- 22:36:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R30Wotmy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G4PwH/N3M224YLHzgr3WhBpO+tv1mFNcem8y1qjuB3Ru/PEhn1Zsv5rgYwkx64OllEqnSXNUlR4YGirW73mBr44Gu1kjkc6pczkWoE7LrxebbWWFxwjeb6lT+y/KUaMx4A7LtzN6pneyrZHv9e2jx+baKFjvevlrxCZ0Yg/1A3LzFhD/gmcpQQ69o0t1raW/ZsthStXK3uFkG0+SZf5mA4a7KyYG7tOBkmPmLFeebVpNesWON9okrohZpqdPrZbRiQq8UkzxQKpFjU7rm4p5Twx3IunFyxSUJCgCU1gYYXViWmQ5VY+BeRSce3TnnPIP47CTh37lE1z2v3s+uVrGWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZyC1VDFKR4qUiWGvH5MWjaPd4aXsYihuuy/K0qVlVnU=;
+ b=m8tKgBtfBDLfpMkToCl9OzxuNdmoFGShTbEdmVpu9L8QyeNy6Pqh7GnVs2AkwyJzFtVCi4CxThQeo2fMfTD+avFCVclbPghTiJgzg8UT6UxrkaUDkoqzMCi3c0NRw4hFd66A7m0HF5k1XKEudM4voGnEyUa6NAVn5038aRGn6jwBW2K53Shm858CYAD+iBYlvBslyAlQBNzOfpyJV8GKYRUnOsuENdHT/M1N7cHqTCpGoC89Quf/CHPOtc1zhCVePLNj5Ml35wkIZO68TgzGrNlBgnLFLBo5CRU/0q8/FVzjCjQpOBbCc1DqZrFki+ew9RFZOidfw3WCErsFAwN5hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZyC1VDFKR4qUiWGvH5MWjaPd4aXsYihuuy/K0qVlVnU=;
+ b=R30Wotmy0e2rFXTuN5CLLsC+c4nrpF2UFdkEvTjNM+FBHMk3qJ4YL+zK4bMAR9pqQAkIsBvNObQR1b3uGsfEVWqRShdKZODM9SInlwbSsbP+m36nUUEUVEsH6pozsyMZVwp1ZcaaXSQwSRjgma8DDPSaWzqlVH00a0o3a7rIqsY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by VE1PR04MB7229.eurprd04.prod.outlook.com (2603:10a6:800:1a3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Tue, 28 May
+ 2024 07:57:23 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7%4]) with mapi id 15.20.7611.025; Tue, 28 May 2024
+ 07:57:23 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: frank.li@nxp.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	john.g.garry@oracle.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com
+Cc: mike.leach@linaro.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v11 1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
+Date: Wed, 29 May 2024 00:05:16 +0800
+Message-Id: <20240528160523.1695953-1-xu.yang_2@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0027.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::18) To DU2PR04MB8822.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com> <20240527105842.GB33806@debian-dev>
-In-Reply-To: <20240527105842.GB33806@debian-dev>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 27 May 2024 22:36:45 -0700
-Message-ID: <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Leo Yan <leo.yan@linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|VE1PR04MB7229:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab356b0c-c2cc-4c51-7bb2-08dc7eebced1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|366007|7416005|1800799015|52116005|376005|921011|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YsFIEDHV/icbxLjSJmAxVI2DBl5FaHmjgvgmgT+8OHREMnGJDevpAdD9E3IH?=
+ =?us-ascii?Q?ApSmGiNQR1oC7fala6lBQn4ZUk0gDVkpRKqk5bhzjZh5bhOhtCswKBZvgBMN?=
+ =?us-ascii?Q?z4T9hdSI2N+1VAb1zOsaw/z8GTPvc329DdLsBdSDeNZ6qPDgqWpyTgQy9ahF?=
+ =?us-ascii?Q?NFmVco2241zhjfM/UNXf5WWgvjMso/nMgK+K3Lg19A8jV2jTqkMJdm/wCg10?=
+ =?us-ascii?Q?OkQF0q7GhL3Xle6i4+nzf/kjzuQoDdJtXuOQIAUnMUoG2Vd+7q97twFD8+MD?=
+ =?us-ascii?Q?Y7tTUnivDTp8bpvNIBM8fb0by5sU/KgAyzRSXkDK5wAiS+yaDZTzaX0b1PnT?=
+ =?us-ascii?Q?ThPyaYwI+UkQHHG8VXwKWUSxGgoabzY3UsTiT4zwnxPexfA5oi6jz3cKrEez?=
+ =?us-ascii?Q?rE1+iPf0n4Jz0F6nYn7yrop7bvpg4OFWY8KnmmRir+dTeq7cQkk5BIp0UUFC?=
+ =?us-ascii?Q?6fuuZM4/e2IfDRp0uadjg+wqrwTjUvwA1OJt3sADBGv2SpDPTLAuvp4KvO6I?=
+ =?us-ascii?Q?SLfrUld0pKUjeOZHROcIH1i2r8R2sOvJEePE981YH23XGdu14VjplQZ89Nke?=
+ =?us-ascii?Q?amCP7xvaDpvsbTOv3Jow20Yimn1kEbNdwongDC6sD0vh870KLfrwLbQkqE7C?=
+ =?us-ascii?Q?nngaJENJqYZPTg3uc4A5K9PyLLNKRsnjuZiHTuA2tjvf9zWpFm3U3GBdblvG?=
+ =?us-ascii?Q?Diy2M27ODo0ok6cKiK+bv0iftNype57upae9u48B/UIytipuDlfRGPvN/Cbg?=
+ =?us-ascii?Q?BTW+0tMDriVu7ORf2H7Ot9yIYjbVxS7f8b5fbz+CFZZp7X3zVHOEl2biKWJd?=
+ =?us-ascii?Q?Y4kybVdvBpy/av0nuYp6A76f0vIhsNuln0F0WxJBoWmryGM6bcY/iSrgqLrI?=
+ =?us-ascii?Q?+wt//ip0G3bjMu4Sg4iFXxTid9v61uqMsgVK9sRlq4IjviNPjZ8algRtjGs5?=
+ =?us-ascii?Q?XcaDq/vpO9KNqYUrdRP4ew4CKk8lmQwGtlM+U0dnXuCYEm2kiXJP4hcQ7wVM?=
+ =?us-ascii?Q?YcSyguf4LrqdVzcdZjj/ZDlkw4aJ8RXjEUCZrI+li0RTfURCgF97YSs6kj1T?=
+ =?us-ascii?Q?nI7Yu8uzYjGrpUtssU5ihgDAcnU7Hsjy3nCanlmqLwdeBDnJSjEmwJI8fwJ2?=
+ =?us-ascii?Q?g0yE47rIGE6X4ZzNkN6h0gVTcxAJDZBsbZPLwWzOH1mUuaUNZ3Y26ynRNb1T?=
+ =?us-ascii?Q?+2oDC6KBeck8CvLTR0Hac7EEe6QtPqNbdeB8KC21FzUABOPIGhYmDVIqMfYK?=
+ =?us-ascii?Q?MC5U8UJ0y+0V3sdloUhVjcZT61CIPaSf7vniUj24Z9IrPcPN4bVpwtDVxcm/?=
+ =?us-ascii?Q?4PDsbQihgUM7+JYS9xpsBcY/Rum8iOHX3d/xFBpUZye/yWt+TmsGLPWH2IZ2?=
+ =?us-ascii?Q?67rcVMg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(52116005)(376005)(921011)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?PDXZzlzEK+D4/93HFKdR4x9DaX8wBNraaiO6g0a2bmb28G65bdL8Y1iqMVvS?=
+ =?us-ascii?Q?2KiqTyJxvSmmbgJg/W78M1EohH3d+Dhq/rSSZ5hToXUnYa8bg0+zVrEozEc5?=
+ =?us-ascii?Q?zhI0OXdpVpKETa58SRUAHsan2mpgSLg+SyMTJaZfYZvXrA7SO9LQRVFOvLVd?=
+ =?us-ascii?Q?X/5c7vZZH3nx6uDZEPs4poXR8Rqz6s4GffRPz2kxfnTvjx4sDSPSx1Jp4EHT?=
+ =?us-ascii?Q?0D3tth6Lo0nx0OIos1SDzvAg5qoeP8hvBztTpD+DqEbM9AZFBGe5/AHTc1US?=
+ =?us-ascii?Q?cBNPEUAOB/tAvZQygjrn+qfJBl2dzjCvVRwJqW4q4Jp1C0Wxw3pRkqfJNYEa?=
+ =?us-ascii?Q?dp+em6f7x0O6O9wcsAHDjUUp691WBGzvEj+WSJB1+kepGYxuvNcOaj1G9/eF?=
+ =?us-ascii?Q?RKh0ftzJ5LjeDbRwSGdvCY9oHhT4UCkP/leXyg7WPx3PyUJSWeskWOoJzkIv?=
+ =?us-ascii?Q?MvoNl4/63BTOfEQ8RIcvZQxH/gQtl9zxRvE6OB2T/ssT0DZcnKMB2Rruqg7k?=
+ =?us-ascii?Q?T1Depqbu5DCdJPak+ElTQ3QWqnvI7abv/99Idrz2VynEyFM1JmNcuknrURR0?=
+ =?us-ascii?Q?2LSrJ882LPHwoKN4/7AL8y1/v4kslllpSbg+PssjWzruKjnMu53Y/FeIAQV6?=
+ =?us-ascii?Q?0SQ81nSn/ux7kvrdXu5hXMlPGW6CF4mLpVtwa5FkuHO0dp2oaD2HXxdwgR+R?=
+ =?us-ascii?Q?8M2HG16Rr12t2mRMWDm0Vy5SI6hu+AadwdmfzB1TbLbW7j/IE3dv9fhsqAMP?=
+ =?us-ascii?Q?l4aMg3EJUalCnrnIjfyaBkWQGsDpWxgXnKD8ahRMgo67/TeEXoHQSUq/eLTG?=
+ =?us-ascii?Q?j19OIqcLjgUuZxkZhcA+zVvpc6HCaKXjKqFTLiOcShmci99YSGotIlEkrOgZ?=
+ =?us-ascii?Q?OgV30kqMdz042DGgahLguNqev3q8GtkmSHAstTQTW8JmwLxIo01D60E6iHof?=
+ =?us-ascii?Q?HWW1pt6GqJOdELTfiRKrU0iibqaU68bHb2VofW6MXaIcVLA9EIBZu+ivjaYz?=
+ =?us-ascii?Q?Q1YERYsPq439Edy3GDxVZls40i3awahhc6cuAEGk3dXHp4IBdJY8rapBIgF1?=
+ =?us-ascii?Q?oxBQYnor5qrzJGGwEGou1Dyk8uhy5McSb6YTMXJqVE+12CijAUVisWcUUzU9?=
+ =?us-ascii?Q?+uPcNE6aDximcb3DnVuxgSOAhgzCF5gUBfV70Kk970WP8nLm4yikArZZVQzr?=
+ =?us-ascii?Q?9pJMu8yhqxsH+utT7iqbvrjM//S2Q6jBAeYlZAge98dEQxTMKm/GdTz47ENg?=
+ =?us-ascii?Q?TV/xNKCSg4hycV/J8THQBWrdy9nxXhiwS1McIhzOCfoRYCZNLmEE75sPX7ro?=
+ =?us-ascii?Q?aNlCBiBocffIcIK1XEbH/BSfSB05RtWOQ6hpWUoFslS6y8uyXzToRPprcwea?=
+ =?us-ascii?Q?2cvGTk4M3/4LMNeujjohpfQE3nLB8dDxbwhQglcflKnScXL+QiXa0/fjVI7W?=
+ =?us-ascii?Q?HPnPD1C0jR6iTPaZdmhH2UrlONlF0JQRzah1l/8s2aAhuLYZ6ln72RWvB6M2?=
+ =?us-ascii?Q?k7M/KyuVE1ZRDEqk8iK1MNAKqVbc9hrh/DXg/l80A+hk3/uWgOQ84dTf61Z2?=
+ =?us-ascii?Q?7PbCMrZ68TRasUwh5KjEvBfYkEHVBcgHRy5IcGYX?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab356b0c-c2cc-4c51-7bb2-08dc7eebced1
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 07:57:23.5971
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y/ewKQ0/7WsfVQtlwwLiYTmfLj5i9IN9EFb7K2oFVof7PDWHdRBBzCBtCw4EoXMsOQgpvcQNvKnx6oLkdGXAgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7229
 
-On Mon, May 27, 2024 at 3:58=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
->
-> On Sat, May 25, 2024 at 02:14:26PM -0700, Linus Torvalds wrote:
-> > On Sat, 25 May 2024 at 09:43, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > This makes 'perf record' work for me again.
-> >
-> > Oh, wait, no it doesn't.
-> >
-> > It makes just the plain "perf record" without any arguments work,
-> > which was what I was testing because I was lazy.
-> >
-> > So now
-> >
-> >     $ perf record sleep 1
-> >
-> > works fine. But
-> >
-> >     $ perf record -e cycles:pp sleep 1
-> >
-> > is still completely broken (with or without ":p" and ":pp").
->
-> Seems to me that this patch fails to check if a PMU is a core-attached
-> PMU that can support common hardware events. Therefore, we should
-> consider adding the following check.
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 30f958069076..bc1822c2f3e3 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1594,6 +1594,9 @@ int parse_events_multi_pmu_add(struct parse_events_=
-state *parse_state,
->         while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
->                 bool auto_merge_stats;
->
-> +               if (hw_config !=3D PERF_COUNT_HW_MAX && !pmu->is_core)
-> +                       continue;
-> +
->                 if (parse_events__filter_pmu(parse_state, pmu))
->                         continue;
->
-> To be clear, I only compiled this change but I have no chance to test
-> it. @Ian, could you confirm this?
+i.MX95 has a DDR pmu. This will add a compatible for it.
 
-Hi Leo,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 
-so the code is working as intended. I believe it also agrees with what
-Arnaldo thinks.
+---
+Changes in v2:
+ - no changes
+Changes in v3:
+ - let imx95 compatilbe with imx93
+Changes in v4:
+ - add Acked-by tag
+Changes in v5:
+ - no changes
+Changes in v6:
+ - no changes
+Changes in v7:
+ - no changes
+Changes in v8:
+ - no changes
+Changes in v9:
+ - no changes
+Changes in v10:
+ - no changes
+Changes in v11:
+ - no changes
+---
+ Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If you do:
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+index 6c96a4204e5d..37e8b98f2cdc 100644
+--- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+@@ -30,6 +30,9 @@ properties:
+       - items:
+           - const: fsl,imx8dxl-ddr-pmu
+           - const: fsl,imx8-ddr-pmu
++      - items:
++          - const: fsl,imx95-ddr-pmu
++          - const: fsl,imx93-ddr-pmu
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
 
-$ perf stat -e cycles ...
-
-and you have
-
-/sys/devices/pmu1/events/cycles
-/sys/devices/pmu2/events/cycles
-
-The output of perf stat should contain counts for pmu1 and pmu2. Were
-the event 'data_read' or 'inst_retired.any' we wouldn't be having the
-question as this has always been perf's behavior - changing that
-behavior would be a regression and why we can't just limit wildcard
-searches to core PMUs.
-
-The issue is about legacy events. There are more potential legacy
-names than those in 'enum perf_hw_id' as there are all the hardware
-cache events. So ignoring "hw_config !=3D PERF_COUNT_HW_MAX" when adding
-an event to >1 PMU is only a partial solution, but I (and I think
-others agree) don't think legacy names should be special in this way.
-If you ask for an event and multiple PMUs advertise it then the
-behavior should be to count the event.
-
-Linus' trouble stems from cycles being used as a default value without
-restricting it to core PMUs. This patch solves that. There is then the
-issue that if an event that doesn't support sampling is wild card
-matched by `perf record` then it should be ignored. I'm in less
-agreement here, such events failing could be regarded as a feature.
-The workaround is to add the PMU name when specifying the event. If we
-do allow such events to be skipped, should the skipping be accompanied
-by a warning? Presumably if no events can be opened then things should
-terminate. Restricting everything to the core PMU I think is
-short-sighted as knowing what's happening on accelerators is
-increasingly important.
-
-For the sake of fixing TMA metrics and things like default attributes
-for ARM I added a notion that evsels in perf stat can be skippable.
-The plumbing for this with perf record is more tricky as the logic has
-half migrated into libperf - parsing and skippable are in perf, the
-event opening and mmap logic is all in libperf, and we need to add
-ignoring skipped evsels when adding the events to the mmap-ed ring
-buffer. I have a patch that's WIP for this, but I also think we could
-also agree that when >1 PMU advertises an event, perf's behavior when
-matching should be to open all such events. You avoid this by
-specifying a PMU name.
-
-Thanks,
-Ian
-
-> Thanks,
-> Leo
->
->
-> > So no. That still needs to be fixed, or the whole "prefer sysfs/JSON
-> > by default" needs to be reverted.
->
->
