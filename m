@@ -1,186 +1,115 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ADC487BE
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 18:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13647F60
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 18:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716919952; cv=none; b=dAcPVJjaozOEi3vOhkU/X+czS8wfcccDDFS8An302em5WP+hDo7vlVxZ3aTlEwtPu4Kgi0EY95J4BSsdMvzwY8aMuPB50R/Ytb94OZvSou5ra+BqT9VbphfcWXIn0bbRTVlbK0vq5BBVnSlCg96P/MNfA9B/xyjz1KtwiCQdRco=
+	t=1716920082; cv=none; b=M9Gi1AG6KcMGkzLrdCKCPYcrPprODlNjdup0l8/Vsk5yMCXaAvWtO0QzOhiBX604GJYAmUCdSqtTH0xhkCq6Yso4zjer+t5zP/mB9kWRP9KEeLL3CVe8KlyuBgxT7nXXbLxG+YTRNPEYzG7tz7jZ1Vr7vcX1QxYWDL2QVAsvXro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716919952; c=relaxed/simple;
-	bh=uBFofHxY79sXdXXq73E6gE3Zjpo2XLY4SFJJWjwUqS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EajdM2rWYg21hNw1GIVJciUSZbI236YPSi6slDOKbZW9CWeD/9sUty7adnu9umnEpXH+e2TgEuJxkQb0vab7KmkvvpueaIK+zPAbh7qM9P/mmD2WeTRz5PUXS3jOqqFH2Qxu/CmFakSq0UtnBmBvdBHbY+iZ39mjqJDOQkbUb9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EARHVhWq; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1716920082; c=relaxed/simple;
+	bh=K3iCFz/v9WjrF9qKA4yUfwwSjKz74d9lCEw05TqLfcw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Hu2ZPC73WeqB5EqfG6+fCmd9WNZRmXp0GrpEKIY+nupGnuBtgP3/VAQGwvy3mtoSsiAsdZtfTU1tMMKcV+0SiiJq0ECKNExcfI7NCJO93FSgZiGeFuMdpbRCjhcfTLXvzJa6z1sa7KcmaApCQk+TT3oFk8yugb/E3MtXe2sueD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnI/eFJ6; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EARHVhWq"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a62614b9ae1so141477566b.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 11:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1716919948; x=1717524748; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HWWwKaisjyRPFI3vZm/ptH496eo+7DY2MiI53H9w4ls=;
-        b=EARHVhWq1Q4YvaLt6Tzxy/pgGBiVbplorBwK3/ygFEE5JGc3w/HTZQU1pV4SWnN1WC
-         nulmHQibGiXD49SAob+TsJ3xLqYUz0ohixfQwk9sjiAiZdtr7FBQgU8LeZZiTnlTqWD6
-         9O231ltWPP8ODtlUqKqxIjckhwuf5nNxEpXbo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716919948; x=1717524748;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HWWwKaisjyRPFI3vZm/ptH496eo+7DY2MiI53H9w4ls=;
-        b=QjaoPtFKJDm9BeCTLfXn+GmFt0ZKqQ4vwzRNOc3nbunz8vUFFzAzJSXs+Z3vVJuxjm
-         M50t/9tzSLK9FvdsNve6ANOnxQ2/eUjejKEhd3voIdv/yZsqtPXbFjV5yKiEcHVfa/FC
-         F+v/Hul+2mhQFBSGvztFBhtqh2brhtuiLGsVPkJ6pCfSMoaTp0QXKk7w9IiCMcHI3Dg8
-         ATQ5sAHrPNOUSzDQBQSUX/J8ahUFd/ixxDIga7aYqUAz7L03DSlAkxK1VtrIw/eZXyBo
-         wIuD1G1dx4l/stQ6/oh1EYVbAwvgcW3Jryojgzuo8Ua1FaJKhPiawab6igk6yOHCPl1R
-         CS4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkCezhaXfAea/5XFy2aF4mQgy0VEoaogYMAT0rpimFmT2HOjHPvZqUjvzAjnwbL5PjzYuWz3H/gqqwNg3v2PmtNU++3Nu7ICocxMd9/L1n0w==
-X-Gm-Message-State: AOJu0Yx/FkYMbE6ZdAiHS1GbkixS7rjg4l0wdYlfOposL+GlIMJVuwco
-	iWmN+Hy5MOfwDkUaCCtmzffM4QOiaOdo8qRQkvvVExCXCL8HwrBGpR4bqcSSSJ67hE9YsB6B7Aa
-	FtZN94A==
-X-Google-Smtp-Source: AGHT+IEUJ4Cd+k8UpbZT3dxcHr8SEfI4ddYsYUrONAjk5cCR3TTIpHiJ96OBBAsynPofgMQOE4QYUQ==
-X-Received: by 2002:a17:906:5801:b0:a59:aa68:99a0 with SMTP id a640c23a62f3a-a62642e92a0mr779204666b.18.1716919948353;
-        Tue, 28 May 2024 11:12:28 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc8b980sm634509766b.154.2024.05.28.11.12.27
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 May 2024 11:12:27 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a62614b9ae1so141475366b.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 11:12:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXbq9h2Qbp+Xop1WTENe4GmPjjPA2Z2lzTZS/PF9FjiYfjit8LwLcFrNoVZH928PXh91nlBegn+qtBtX8DLn2X/pIzdvh5Cozsz7qKoxbEdUA==
-X-Received: by 2002:a17:906:9b1:b0:a63:3170:14ae with SMTP id
- a640c23a62f3a-a6331701592mr183130366b.9.1716919947490; Tue, 28 May 2024
- 11:12:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnI/eFJ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716920080; x=1748456080;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=K3iCFz/v9WjrF9qKA4yUfwwSjKz74d9lCEw05TqLfcw=;
+  b=fnI/eFJ6OtxEAEycO9igunPd4/JiCVl+lyecPe6dDUVmPbk8XcHqPHYY
+   srEPbYbz9pBSeySfwqTqXSvjWkDCnVzLhzYNs/oA8wMyAxBlo2bND6zng
+   YGQsH0jZ1EET6sr7UTpxkP1NGC9IkNxY4wWKAzpqRHmnU7c543ZYAFPJk
+   xepZTFNeCfDw00crw5UFPp7he2rBvRnrpl+Fam+067Ff7gmDDY98dZbGp
+   RVV88VZuh42N1UPwICr7vz9ov4kPWLMEGqE3Q07I3N8w4XzNRZpqPBcKu
+   5haFvmVgslLO9wVQCOftegJOgWR7bDGGxToxyLIrQO7SzNrkVRrjaHnFL
+   Q==;
+X-CSE-ConnectionGUID: BRF26u9MS1uaCFO/FwaCsQ==
+X-CSE-MsgGUID: 19IzDI0GRs2mr/OahzDHFw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13510587"
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="13510587"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 11:14:39 -0700
+X-CSE-ConnectionGUID: efSPYIXnSAiRTuRJuuBjlQ==
+X-CSE-MsgGUID: 36miuOqsSTm6gADMl50Ieg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
+   d="scan'208";a="72598703"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.48.38])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 11:14:37 -0700
+Message-ID: <cb1bdaab-d324-44d8-a14e-dc48e19503fa@intel.com>
+Date: Tue, 28 May 2024 21:14:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <CAHk-=wgcoODsCbba423uZwQqOjJ8r29GZyCd472K6L6Dt-NbPg@mail.gmail.com> <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com>
-In-Reply-To: <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 28 May 2024 11:12:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-Message-ID: <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/10] perf intel pt: Add new JMPABS instruction to the
+ Intel PT instruction decoder
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
+References: <20240502105853.5338-1-adrian.hunter@intel.com>
+ <20240502105853.5338-10-adrian.hunter@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240502105853.5338-10-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 28 May 2024 at 10:40, Ian Rogers <irogers@google.com> wrote:
->
-> I agree it picked the wrong PMU for default events. This was a problem
-> on no systems that anybody was bothering to test with. Having been
-> made aware of the issue I fixed it in this patch, you're welcome.
+On 2/05/24 13:58, Adrian Hunter wrote:
+> JMPABS is 64-bit absolute direct jump instruction, encoded with a mandatory
+> REX2 prefix. JMPABS is designed to be used in the procedure linkage table
+> (PLT) to replace indirect jumps, because it has better performance. In that
+> case the jump target will be amended at run time. To enable Intel PT to
+> follow the code, a TIP packet is always emitted when JMPABS is traced under
+> Intel PT.
+> 
+> Refer to the Intel Advanced Performance Extensions (Intel APX) Architecture
+> Specification for details.
+> 
+> Decode JMPABS as an indirect jump, because it has an associated TIP packet
+> the same as an indirect jump and the control flow should follow the TIP
+> packet payload, and not assume it is the same as the on-file object code
+> JMPABS target address.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-You didn't just pick it for default events. You also picked it for
-when the user explicitly asks for "profile for cycles"
+Patches 1-8 are in perf-tools-next now, so this and patch 10
+could be applied.
 
-> What is still not clear from this is what should the behavior be of:
->
-> $ perf record -e cycles ...
+> ---
+>  tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+> index c5d57027ec23..4407130d91f8 100644
+> --- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+> @@ -92,6 +92,15 @@ static void intel_pt_insn_decoder(struct insn *insn,
+>  		op = INTEL_PT_OP_JCC;
+>  		branch = INTEL_PT_BR_CONDITIONAL;
+>  		break;
+> +	case 0xa1:
+> +		if (insn_is_rex2(insn)) { /* jmpabs */
+> +			intel_pt_insn->op = INTEL_PT_OP_JMP;
+> +			/* jmpabs causes a TIP packet like an indirect branch */
+> +			intel_pt_insn->branch = INTEL_PT_BR_INDIRECT;
+> +			intel_pt_insn->length = insn->length;
+> +			return;
+> +		}
+> +		break;
+>  	case 0xc2: /* near ret */
+>  	case 0xc3: /* near ret */
+>  	case 0xca: /* far ret */
 
-Why do you claim that?
-
-I've already told you that CLEARLY it's wrong to pick a cycles event
-that doesn't support 'record'.
-
-I've also suggested that you might look at core only PMUs.
-
-But more importantly, you should look at documented and historical behavior.
-
-So what is your argument? Because from where I'm sitting, you keep
-making irrelevant arguments about *other* events, not about "cycles".
-
-It used to work. It doesn't any more.
-
-> Should it wildcard all events and open them on all PMUs potentially
-> failing? Well this has always been perf's behavior were the event:
->
-> $ perf record -e inst_retired.any ...
-
-You keep making up irrelevant arguments.
-
-Lookie here: I do "perf list" to just see the events, and what do I
-get? Let me quote that for you:
-
-    List of pre-defined events (to be used in -e or -M):
-    ...
-      cpu-cycles OR cycles                               [Hardware event]
-
-and then later on in the list I get
-
-    general:
-      cpu_cycles
-           [Cycle. Unit: armv8_pmuv3_0]
-
-and dammit, your patch broke the DOCUMENTED way to get  the most
-obvious profiling data: cycles.
-
-So stop making shit up. All your arguments have been bogus garbage
-that have been talking about entirely different things than the one
-thing I reported was broken.
-
-And you *keep* doing that. Days into this, you keep making shit up
-that isn't about this very simple thing.
-
-Every single time I tell you what the problem is, you try to twist to
-be about something entirely different. Either a different 'perf'
-command entirely, or about a different event that is ENTIRELY
-IRRELEVANT.
-
-What the hell is your problem? Why can't you just admit that you
-f*cked up, and fix the thing I told you was broken, and that is very
-clearly broken and there is no "what about" issues AT ALL.
-
-So stop the idiocy already. Face the actual issue. Don't make up other things.
-
-Dammit, if I wanted "arm_dsu_58/cycles/", I would SAY so. I didn't. I
-said "cycles", which is the thing that has always worked across
-architectures, that is DOCUMENTED to be the same as "cpu-cycles", and
-that used to work just fine.
-
-It's literally RIGHT THERE in "perf list". Using "-e cycles" is
-literally also what the man-pages say. This is not me doing something
-odd.
-
-And yes, I use an explicit "-e cycles:pp" because the default is not
-that. and "cycles:pp" does better than the default.
-
-Again, this is all documented, with "man perf-record" literally
-talking about "-e cycles" and then pointing to "man perf-list" for the
-modifier details, which detail that 'pp' as meaning "use maximum
-detected precise level". Which is exactly what I want (even if on this
-machine, it turns out that "p" and "pp" are the same because the armv8
-pmuv3  doesn't have that "correct for instruction drift" that Intel
-does on x86).
-
-Why is this simple thing so hard for you to understand?
-
-The fact is, if you make "cycles" mean ANYTHING ELSE than the
-long-documented actual obvious thing, you have broken perf. It's that
-simple.
-
-So stop the excuses already. Stop making up other stuff that isn't
-relevant. Stop bringing up events or PMU's that are simply not the
-issue.
-
-Face your bug head on, instead of making me have to tell you the same
-thing over and over and over again.
-
-                   Linus
