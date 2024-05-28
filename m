@@ -1,240 +1,184 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5C917E8E6
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 05:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412CC17E8FF
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 05:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716872512; cv=none; b=k5dk3jqKu2cXCvOsa+njAPelfd0i90jNf6ZdzgfUAwBQ+k/jfYhrg2K70CCsHscNA8f43sYD0PFK77AE/0KEkbjv8fVKp/kNxZ9vvhjyGBXWYVVhpPiY0WmF2tpCsGoCJWtCSngEzg9OPd8w2ya+rxRIVIxWOU/eoZL3LOMJ/is=
+	t=1716874619; cv=none; b=URjGvlAVuiOiUObhi7pp7RFvIImnEt0XY73iD22MxtkiVl85BXp7pzqknYyyPfPYYN0+FhEZ8vKt3qriGW2LQUjZiT8J+gQkmsEe2WFYb2EDOOkkA+okLDrgzQCENhucXVIEKqVTQ9i68HWwWO02e/n6C9Tnd9NqWtONdyiHuss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716872512; c=relaxed/simple;
-	bh=M6E5Gfsb5W6qgTh8DwJyYW2wa3IYFd66YShPAJVtGQc=;
+	s=arc-20240116; t=1716874619; c=relaxed/simple;
+	bh=eQo7fpXSH2/VBl3tOIUEZ8+BdOR5XuNBrOxdR4BPeTU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tL+pU+5w3K9uYvEPHtWaELKbwhUojjswjwg2LaeQyl+fXPtvPB1f2YYDH7e1pIHNB6R3CzUCeLEVHL5zbgVIiO9vWXtC3lcC4Kk2p1hPZEfVG31xOH+A7mLXfrPxHq6s5dvM12maER+k428jmbjg0pcfohWJRaNNGDtFIUaV6vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gzL2S6QB; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=LcqbKXNNOUmrtomlB2AkOjOjH79vV+6jfxCuwWFPXM3bVCs++TOPaaNH/L8q6bnuayiUmoa8nfj3wzKsaSG+s+EBeGWzDxnXOw0vTBWqXdc8lCVYMznoOwX4y7glBXm9GF6txVHk/1BYBsnv34vTDqO5TM/7EItsMjFywc7zYuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qIVps9VB; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzL2S6QB"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36db330403fso464245ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 May 2024 22:01:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIVps9VB"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ee5f3123d8so316945ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 May 2024 22:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716872510; x=1717477310; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1716874617; x=1717479417; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ShUs+ArefrGrwEvSZVGkTEEWh8oL8EkyheQUHFcH+8E=;
-        b=gzL2S6QB+PTemENrctSSnv8HaPgP6HCnQcI+vMhrVbp/X54kS0ia/OqCLwn6d69Fam
-         JIxhGNDv64YvCRlF9D75aPd8mZOhGHvZ8T9XmQ8dilczUnI1yjzknK2DI4ZCD4eD9Nt5
-         8A83xZG3+D3CrcDTYYEn6VW/oMgTsDxZOnH+LHLuxEaMnjIeETrRjFMjo9hvukNSL+Tn
-         ASuZpZ31gsRzNYJDid/LBIi6wY4b63C8eWL+X3s7DEmYbg7cRvOTmkr3Vunra7C9LsIQ
-         0L9P1s0G8DxC/CV4WdGTveWGlkydrvN798353CrXfcXf0u5lxVGnM3fUx10D/bDp3Aer
-         RWUA==
+        bh=75+rGi0emkeGBR6hYhmPEgxqM1gN8v0U5aBBRBUhk5g=;
+        b=qIVps9VBLd/vduzdQ3RbOR9UPRKyBRscMCDwE8L5F9WVQsr8+pXFoRsRIBe39T1U4V
+         JRDhvOI/KnDX7Sk8f/zBJOlLqB8E7451r2yeezpmcW+hhn3+Tj+WvQO7k4qrQwIKl/23
+         SxuSBVXuy5xQKenN/mYlvoamkxtdi0NbXOIpL601foRN02bqsrbdn9ZmKO3r0n+QuFGx
+         fFVxf38Mz+D3M0XriyxqJQv+hbzWhrfq6TfzGKCEbp7KhgN6fTVOW/lh+JwvLaR7LLlZ
+         nXjrAOP/hG1tKyFwApDJ3ux4i63mt5nqcOlji6zLT5vt6araiJAWSe0cm7KYzC4+DgIs
+         pE7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716872510; x=1717477310;
+        d=1e100.net; s=20230601; t=1716874617; x=1717479417;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ShUs+ArefrGrwEvSZVGkTEEWh8oL8EkyheQUHFcH+8E=;
-        b=nL8MU3YmZIdon0q2ZGl9EEAANVlwl8NtWT9c/gd+3B42bdus5VLMGfMeWxZKEtm6zH
-         vAvv01OrMJ2uIKzmswOkJArWZqRxcllD6oGkfoXAvMO3H+gcQNl5UVGAg8DIIevQ+pTv
-         7nDwOYQmKGsZT4pvdB1DwsD5GUfqZOeTjTX90mx2KA21L34vtN03VTQrz6xyvxggw1uC
-         OpYtVXVYb9k2+Ggs2ym0WZsnP2TO1Xm6GmZLzs31SpXEUjBSsrS6kmvIpqXKL3pitlaS
-         FBt6G5ChJP3KIU9OeNthA2CUMme+1VLVr8a7foyLdCJh/Cj8K+RrR9OkBW7/fOvHZEWN
-         SrRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWS4yHxI9DwZLfy13gT9CYs54It73v0ZV4++YUTyUFC/RGN9jTFU5t+ObzeVDhe6evmiXZ4CNmxXwokhOT2Dhe3ZNbJHKP/Uq1GVSkOU4US6A==
-X-Gm-Message-State: AOJu0YycD9sUbsYfO9C+W4Q1TG1xtEJdZjqJD7ukbCkkOGT6pEDdAHE3
-	j8DBbSie1WOnXZ6uPhhYq5IkZ/L75idarIuv5aQgwD+Oix2kbdwnTyvb5h2WkfY9k0cm2ctDrcJ
-	uXhX9b58V/+2zlMem85z35GAil/B8XoxZwOYq
-X-Google-Smtp-Source: AGHT+IHzuK0DpTm+IHMW/fXweRop4RIIBFY7ksq2++/ACr/WM36rftETw5LPH8Fv4zSFX8Fvr4VCxBjBV2xADJf++JM=
-X-Received: by 2002:a05:6e02:552:b0:36d:c1a1:b586 with SMTP id
- e9e14a558f8ab-3738a7331demr5378095ab.10.1716872510129; Mon, 27 May 2024
- 22:01:50 -0700 (PDT)
+        bh=75+rGi0emkeGBR6hYhmPEgxqM1gN8v0U5aBBRBUhk5g=;
+        b=UhgpHHU2JvhQDUS7H+QtokcR2RZC3fcQSu/ZCGC0xvg08CAdNJqv2WOt8Am1uY5pT/
+         pjMrtcV60i8Y1hP6TRbQ1SiRzYcZwizbVhqflb4ife7fnECPmVzpAwms1XD+dRS0MfdG
+         uvrRT/AUqLKyJIbRN7U3KYAcvEede811A1qD5UwKibHP3RkFvMuhTivQqVULbOMPtU6h
+         kUI5qVI6ArgbctVs+31Xk5dnwNY3KCu1p/7dY9B0hYmEN4XsZqXi37H0cWFPv/L7/j0/
+         f8t8RHh4OQNsyYM0ytjpk2i28obhirGbiUYaTnaov1XfrGAyXzhvrj8UOgebbv2imMeC
+         d8JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9781X090fKozCcVjCRNSre6hEsvNGBRQuMMa2JR1UAYHKqRANp/aC7+Uznm0mIT1L0+9VgQWWtPYA8wMIaO9F0m5+MdsKtUVW/asOo4jF/A==
+X-Gm-Message-State: AOJu0YwAhZlDIrmuTUDxoCN+SLHZXgsuEqeLlau0x8b4nDurqosmtxcJ
+	eN+lwSCIBrfXP3FmkluSe4X44SLf7HxIUOlFzchr+crOuK66QnnU1onTIxCY6yHgXdKCAWOxdeJ
+	FxA8LZStVSCxCEbusNk5sIoJ4o874kRF1JqR2
+X-Google-Smtp-Source: AGHT+IHX/t9arYlqMjK6W2gmxkPqPjC17Br5DPL8qK96kwXGF/dijCqCM6aAyNdW07u5PbUS/gLdVfk4lseV1plwUeQ=
+X-Received: by 2002:a17:902:a515:b0:1f4:97f5:d9d6 with SMTP id
+ d9443c01a7336-1f497f5db8dmr2472715ad.3.1716874617141; Mon, 27 May 2024
+ 22:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527101519.356342-1-asavkov@redhat.com> <ZlS8pc39t2c1WFye@x1>
- <ZlS9M1vcxZ3Qsx_B@x1> <ZlTCvelaGVb6lCia@x1> <ZlTG-kPuYUyHLQZ2@x1>
-In-Reply-To: <ZlTG-kPuYUyHLQZ2@x1>
+References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
+ <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com> <20240527105842.GB33806@debian-dev>
+In-Reply-To: <20240527105842.GB33806@debian-dev>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 27 May 2024 22:01:37 -0700
-Message-ID: <CAP-5=fWmmtagTVfacFZgdhughvU--Dz0=jkoqFB8CP1Qd3o3Yw@mail.gmail.com>
-Subject: Re: [PATCH] perf record: add a shortcut for metrics
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Artem Savkov <asavkov@redhat.com>, linux-perf-users@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Mon, 27 May 2024 22:36:45 -0700
+Message-ID: <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
+To: Leo Yan <leo.yan@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 27, 2024 at 10:46=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon, May 27, 2024 at 3:58=E2=80=AFAM Leo Yan <leo.yan@linux.dev> wrote:
 >
-> On Mon, May 27, 2024 at 02:28:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, May 27, 2024 at 02:04:54PM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > On Mon, May 27, 2024 at 02:02:33PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > On Mon, May 27, 2024 at 12:15:19PM +0200, Artem Savkov wrote:
-> > > > > Add -M/--metrics option to perf-record providing a shortcut to re=
-cord
-> > > > > metrics and metricgroups. This option mirrors the one in perf-sta=
-t.
+> On Sat, May 25, 2024 at 02:14:26PM -0700, Linus Torvalds wrote:
+> > On Sat, 25 May 2024 at 09:43, Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > >
+> > > This makes 'perf record' work for me again.
 > >
-> > > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > > Signed-off-by: Artem Savkov <asavkov@redhat.com>
+> > Oh, wait, no it doesn't.
+> >
+> > It makes just the plain "perf record" without any arguments work,
+> > which was what I was testing because I was lazy.
+> >
+> > So now
+> >
+> >     $ perf record sleep 1
+> >
+> > works fine. But
+> >
+> >     $ perf record -e cycles:pp sleep 1
+> >
+> > is still completely broken (with or without ":p" and ":pp").
 >
-> > How did you test this?
+> Seems to me that this patch fails to check if a PMU is a core-attached
+> PMU that can support common hardware events. Therefore, we should
+> consider adding the following check.
 >
-> > The idea, from my notes, was to be able to have extra columns in 'perf
-> > report' with things like IPC and other metrics, probably not all metric=
-s
-> > will apply. We need to find a way to find out which ones are OK for tha=
-t
-> > purpose, for instance:
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index 30f958069076..bc1822c2f3e3 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1594,6 +1594,9 @@ int parse_events_multi_pmu_add(struct parse_events_=
+state *parse_state,
+>         while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
+>                 bool auto_merge_stats;
 >
-> One that may make sense:
+> +               if (hw_config !=3D PERF_COUNT_HW_MAX && !pmu->is_core)
+> +                       continue;
+> +
+>                 if (parse_events__filter_pmu(parse_state, pmu))
+>                         continue;
 >
-> root@number:~# perf record -M tma_fb_full
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 3.846 MB perf.data (21745 samples) ]
->
-> root@number:~# perf evlist
-> cpu_core/CPU_CLK_UNHALTED.THREAD/
-> cpu_core/L1D_PEND_MISS.FB_FULL/
-> dummy:u
-> root@number:~#
->
-> But then we need to read both to do the math, maybe something like:
->
-> root@number:~# perf record -e '{cpu_core/CPU_CLK_UNHALTED.THREAD/,cpu_cor=
-e/L1D_PEND_MISS.FB_FULL/}:S'
-> ^C[ perf record: Woken up 40 times to write data ]
-> [ perf record: Captured and wrote 14.640 MB perf.data (219990 samples) ]
->
-> root@number:~# perf script | head
->     cc1plus 1339704 [000] 36028.995981:  2011389 cpu_core/CPU_CLK_UNHALTE=
-D.THREAD/:           1097303 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->     cc1plus 1339704 [000] 36028.995981:    26231   cpu_core/L1D_PEND_MISS=
-.FB_FULL/:           1097303 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->     cc1plus 1340011 [001] 36028.996008:  2004568 cpu_core/CPU_CLK_UNHALTE=
-D.THREAD/:            8c23b4 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->     cc1plus 1340011 [001] 36028.996008:    20113   cpu_core/L1D_PEND_MISS=
-.FB_FULL/:            8c23b4 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->       clang 1340462 [002] 36028.996043:  2007356 cpu_core/CPU_CLK_UNHALTE=
-D.THREAD/:  ffffffffb43b045d release_pages+0x3dd ([kernel.kallsyms])
->       clang 1340462 [002] 36028.996043:    23481   cpu_core/L1D_PEND_MISS=
-.FB_FULL/:  ffffffffb43b045d release_pages+0x3dd ([kernel.kallsyms])
->     cc1plus 1339622 [003] 36028.996066:  2004148 cpu_core/CPU_CLK_UNHALTE=
-D.THREAD/:            760874 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->     cc1plus 1339622 [003] 36028.996066:    31935   cpu_core/L1D_PEND_MISS=
-.FB_FULL/:            760874 [unknown] (/usr/libexec/gcc/x86_64-pc-linux-gn=
-u/13/cc1plus)
->          as 1340513 [004] 36028.996097:  2005052 cpu_core/CPU_CLK_UNHALTE=
-D.THREAD/:  ffffffffb4491d65 __count_memcg_events+0x55 ([kernel.kallsyms])
->          as 1340513 [004] 36028.996097:    45084   cpu_core/L1D_PEND_MISS=
-.FB_FULL/:  ffffffffb4491d65 __count_memcg_events+0x55 ([kernel.kallsyms])
-> root@number:~#
->
-> root@number:~# perf report --stdio -F +period | head -20
-> # To display the perf.data header info, please use --header/--header-only=
- options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 219K of events 'anon group { cpu_core/CPU_CLK_UNHALTED.THREAD/=
-, cpu_core/L1D_PEND_MISS.FB_FULL/ }'
-> # Event count (approx.): 216528524863
-> #
-> #         Overhead                Period  Command    Shared Object      S=
-ymbol
-> # ................  ....................  .........  .................  .=
-...................................
-> #
->      4.01%   1.09%  8538169256  39826572  podman     [kernel.kallsyms]  [=
-k] native_queued_spin_lock_slowpath
->      1.35%   1.17%  2863376078  42829266  cc1plus    cc1plus            [=
-.] 0x00000000003f6bcc
->      0.94%   0.78%  1990639149  28408591  cc1plus    cc1plus            [=
-.] 0x00000000003f6be4
->      0.65%   0.17%  1375916283   6109515  podman     [kernel.kallsyms]  [=
-k] _raw_spin_lock_irqsave
->      0.61%   0.99%  1304418325  36198834  cc1plus    [kernel.kallsyms]  [=
-k] get_mem_cgroup_from_mm
->      0.52%   0.42%  1103054030  15427418  cc1plus    cc1plus            [=
-.] 0x0000000000ca6c69
->      0.51%   0.17%  1094200572   6299289  podman     [kernel.kallsyms]  [=
-k] psi_group_change
->      0.42%   0.41%   893633315  14778675  cc1plus    cc1plus            [=
-.] 0x00000000018afafe
->      0.42%   1.29%   887664793  47046952  cc1plus    [kernel.kallsyms]  [=
-k] asm_exc_page_fault
-> root@number:~#
->
-> That 'tma_fb_full' metric then would be another column, calculated from
-> the sampled components of its metric equation:
->
-> root@number:~# perf list tma_fb_full | head
->
-> Metric Groups:
->
-> MemoryBW: [Grouping from Top-down Microarchitecture Analysis Metrics spre=
-adsheet]
->   tma_fb_full
->        [This metric does a *rough estimation* of how often L1D Fill Buffe=
-r
->         unavailability limited additional L1D miss memory access requests=
- to
->         proceed]
->
-> TopdownL4: [Metrics for top-down breakdown at level 4]
-> root@number:~#
->
-> This is roughly what we brainstormed, to support metrics in other tools
-> than 'perf stat' but we need to check the possibilities and limitations
-> of such an idea, hopefully this discussion will help with that,
+> To be clear, I only compiled this change but I have no chance to test
+> it. @Ian, could you confirm this?
 
-Putting metrics next to code in perf report/annotate sounds good to
-me, opening all events from a metric as if we want to sample on them
-less so. We don't have metrics working with `perf stat record`, I
-think Kan may have volunteered for that, but it seems like something
-more urgent than expanding `perf record`. Presumably the way the
-metric would be recorded for that could also benefit this effort.
+Hi Leo,
 
-If you look at the tma metrics a number of them have a "Sample with".
-For example:
-```
-$ perf list -v
-...
-  tma_branch_mispredicts
-       [This metric represents fraction of slots the CPU has wasted
-due to Branch Misprediction.
-        These slots are either wasted by uops fetched from an
-incorrectly speculated program path;
-        or stalls when the out-of-order part of the machine needs to
-recover its state from a
-        speculative path. Sample with: BR_MISP_RETIRED.ALL_BRANCHES.
-Related metrics:
-        tma_info_bad_spec_branch_misprediction_cost,tma_info_bottleneck_mis=
-predictions,
-        tma_mispredicts_resteers]
-...
-```
-It could be logical for `perf record -M tma_branch_mispredicts ...` to
-be translated to `perf record -e BR_MISP_RETIRED.ALL_BRANCHES ...`
-rather than to do any form of counting.
+so the code is working as intended. I believe it also agrees with what
+Arnaldo thinks.
+
+If you do:
+
+$ perf stat -e cycles ...
+
+and you have
+
+/sys/devices/pmu1/events/cycles
+/sys/devices/pmu2/events/cycles
+
+The output of perf stat should contain counts for pmu1 and pmu2. Were
+the event 'data_read' or 'inst_retired.any' we wouldn't be having the
+question as this has always been perf's behavior - changing that
+behavior would be a regression and why we can't just limit wildcard
+searches to core PMUs.
+
+The issue is about legacy events. There are more potential legacy
+names than those in 'enum perf_hw_id' as there are all the hardware
+cache events. So ignoring "hw_config !=3D PERF_COUNT_HW_MAX" when adding
+an event to >1 PMU is only a partial solution, but I (and I think
+others agree) don't think legacy names should be special in this way.
+If you ask for an event and multiple PMUs advertise it then the
+behavior should be to count the event.
+
+Linus' trouble stems from cycles being used as a default value without
+restricting it to core PMUs. This patch solves that. There is then the
+issue that if an event that doesn't support sampling is wild card
+matched by `perf record` then it should be ignored. I'm in less
+agreement here, such events failing could be regarded as a feature.
+The workaround is to add the PMU name when specifying the event. If we
+do allow such events to be skipped, should the skipping be accompanied
+by a warning? Presumably if no events can be opened then things should
+terminate. Restricting everything to the core PMU I think is
+short-sighted as knowing what's happening on accelerators is
+increasingly important.
+
+For the sake of fixing TMA metrics and things like default attributes
+for ARM I added a notion that evsels in perf stat can be skippable.
+The plumbing for this with perf record is more tricky as the logic has
+half migrated into libperf - parsing and skippable are in perf, the
+event opening and mmap logic is all in libperf, and we need to add
+ignoring skipped evsels when adding the events to the mmap-ed ring
+buffer. I have a patch that's WIP for this, but I also think we could
+also agree that when >1 PMU advertises an event, perf's behavior when
+matching should be to open all such events. You avoid this by
+specifying a PMU name.
 
 Thanks,
 Ian
+
+> Thanks,
+> Leo
+>
+>
+> > So no. That still needs to be fixed, or the whole "prefer sysfs/JSON
+> > by default" needs to be reverted.
+>
+>
