@@ -1,55 +1,61 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ECE16FF4F
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 18:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2FB178395
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 19:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716922754; cv=none; b=W0sDRY/eNwndy+pBmr0He0Dx7kKZp4YPOHTuRm1W1cfOXmn5D1smO+YjPOJggtOJOED+Hitp2XnszsnkKQip0/OY4Qxt77dqBhbZn1dRQa6tixNiwGEwNAidNgUxPNxupkPXNZH7kV6nNJ45Yvi4g1+4hlB8/DtaaMDaAuViFc8=
+	t=1716925362; cv=none; b=Q4tUG+uzf+WxshIh45XPPvpzR7OoreJNawubMlKKQ9cvAYZWBBH5jiHstRO5iekd8zKOzB7hpfdWmW9i+kMXaWRao05E/4FXtJ5IAJ9wmRxsXMrS2HpLU4uYh+pVpECzD3PQL2NcihjP+72MQfnSJ5awIh5akrYjRZ5KgVoXyHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716922754; c=relaxed/simple;
-	bh=JugizINjHqR9cpFF0CnjW8t70zU3RksmSvm7HZuLe+M=;
+	s=arc-20240116; t=1716925362; c=relaxed/simple;
+	bh=k581Cx2OkQB8gaY0y6bcYlk/ITECUZ+zQX57Yhe7gKA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kqX4POZOemWrWCjpC0rXJkcR/Q2Be9R2faGvylO01KX9RIeBDR7IhbOwHaQnzlWNuaxhOdUqYz1aaUkD/N0wUGyrnPPdW+2Ji+Q96OWVfkTjSb1kzAO++F8txT56UBmSnGokguhp81FdQN82WCdNTR+sMxIJPltEMdYjyF4jddw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VnlRwlYn; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=X67W250l6DcMlZjMCvPVu3tDVmbx+H/lZq+NmJoY0kjOT7AifP2MN1sxi5pwdx1+fYJLgvXa4LvoE8tq9gDoC356SzahtfBWVShQpaEioiyJt9fQje0e2md7UO9rUmyRP4rKXhPm+oD5PbK4DgEtlGB/N3SLhk1cuOnYD+cO9Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EAETErDe; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VnlRwlYn"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43dfe020675so97241cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 11:59:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EAETErDe"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-529614b8c29so2101685e87.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 12:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716922752; x=1717527552; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ELD/2chU87F21aDYaAH3EcQFIS5J1igS3MiO/QHUtns=;
-        b=VnlRwlYngljvmFF/6OmFFb9TNFCmIbL/c8gCfKzGqTS25EnMoocjHx/Wy2XirzRCDn
-         QtxFqve5IjRl/xX8bJXsFuMxRgsCMWS9mt4k22uYU7o2btVp9rrarSlPIXO20L6mPYuV
-         MISvB0dbXS3jvu0mWCgUCH9NsN33bfO56XvCPKSBfwr+devMWLY6vvWSjwvhAL8aIOPm
-         EdRcyROt8BH5CpmVvmL80nb/0JZHd6PhuwI6D8YI+Ar/bA+V+l8qAoKvR88u5jbyVJHV
-         kxfW8JV9cTKZWcOJ7hdBLjqblnPP0WAmzCHQ0eA8AqoDXzO5yH7WtDvo9Ya9TBCIFMQk
-         v+rg==
+        d=linux-foundation.org; s=google; t=1716925358; x=1717530158; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tnSiUD2gH9HDmHjSHl2kkucSe6ethci8IQ5VxoD7g98=;
+        b=EAETErDeIiu0AwukksuwSmvvM7DVwA4v654m0eNwhfYsMrLQHpIL++T39SxQOVNCrU
+         FIp/aNVPHQhiegArwuKpuJykF9evu9wVZQk6v9dtM53DIBJnuV2ZZfswP1hnaC+zk0/D
+         fMIZt6wLb5HVZscMT5UX2WIKp1/VJSsj9bWzY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716922752; x=1717527552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ELD/2chU87F21aDYaAH3EcQFIS5J1igS3MiO/QHUtns=;
-        b=qsX2GjsENjl4sMRJbT7lzF0FvAVvXs7Er1YYJhfAPuNIBc8++Rtlh10cLT7BFElY8b
-         T8snGAe3ujHyeNDHgVERA1hlZVms8WbwCeZQN5EQYdLo5ikfCKmoKd6sKN9MisqA413C
-         cuefwbZx/9PlhZNg0m29gOS2ypJn3y5738xvBkSEWjGyx0HyIqzmoU3MMCaAC8GPupzi
-         jvGJTELm1LyTnJ580LIUblICn93iCOExO7nkc9tls+Xbowot91NeFxr0HusWF9mnfV9F
-         9KQuKL0pdWhkrrL4oLJdhX7JKxVm/BEXg+k3RbwnqrB4Q0eLJo/9UnYTbt5mFnuUyfLr
-         aM2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXXTLOR3ToOTaspzDMVKSw3w2gt/kRvfmRDy0OmE7o1+/p7cGSYRTeC1MHF0ANLE8/2EFBqkwf52Jnl5f7RTCbrXn7kZQC2j/OQG2XN+tTn7w==
-X-Gm-Message-State: AOJu0YwaKwRZkYb0OHCjWj2OXZ1fwd95DugLx4pYZZEMEdoxp9AFBrIT
-	kxA0M1+R7Vmya/fX6eZ7D6RB6cll5ij+vYFDzO1JtRGgpZNIX8B93nmYOCF3veFbliBoOXrGLOy
-	D3QjdF5k88fJ5CPCfkiWDiSwse0rcFY0cqO22
-X-Google-Smtp-Source: AGHT+IGnNIRgwwM8j0F+3ahcPSXWF53AQe7JkGqjY5dz35qv2JbOIoODEI7twGYMBh4iLOF1jVuRR7Pdc56bxdiA80U=
-X-Received: by 2002:a05:622a:5106:b0:43e:e09:d346 with SMTP id
- d75a77b69052e-43fe0d85cdemr201621cf.5.1716922751982; Tue, 28 May 2024
- 11:59:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716925358; x=1717530158;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tnSiUD2gH9HDmHjSHl2kkucSe6ethci8IQ5VxoD7g98=;
+        b=BluejmNf7ev78TDxgTl8Oaox7ngaRJDxqiI9s43cfcNrv/ZkGL58od7+OcfCn6Fjcu
+         pbndBvFaqpAcMSQvgP9K+ie7cBe+ArwHy2tRPWmtPp8f+xYd1aF62tHgUv94KfI1AUCI
+         xqGzquSwxLRJ/gDjkz+OHrbaR8X2fzW4RV9MsTAM+91s5OKfOwJ7tw+BDMX8pNm8W98L
+         LcZoumEAKQfOo8y/MiGPs7wojS1o4wNsa9o4iOi4VqnjJFxMpEhKuai9EELSYgIsjjse
+         5Lh7H4g6cj/NTqaeDTNBcPaaq/5w2Q/DMWah1iTSoBdrJ9C2W2qYpj8EjhPWx7KYtiKy
+         Epxw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6D6FhcU+atK2K5dFdaXFDzAIu8av2XB81OyR7dimbxeGS2gE7OPsK4HtZHbF5LkECzmFNl3cifh+19RXFUQRGv+pd9uMjIho8oqLmixWJhg==
+X-Gm-Message-State: AOJu0Yza826HEAPXrr9WVpnZpqe1d9oJYkmXJr4uEOl1HULndi+GgdVl
+	cdknkorPtP84hO3AaMIkOy59BdW8DwEvhNUfQq5m8W4j0jfpHbW8DYxOXUVJeNxfp92lKn4nTZa
+	Z2A+zMA==
+X-Google-Smtp-Source: AGHT+IFc2oMIbOs41Dam54EY2xdL1gNVJDdyVmfZXwxxnM3B6duqe5bvFQmFVgyP6tF7P9oTmncR1g==
+X-Received: by 2002:a05:6512:2521:b0:52a:39aa:7767 with SMTP id 2adb3069b0e04-52a39aa7a66mr139803e87.3.1716925358361;
+        Tue, 28 May 2024 12:42:38 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5297066bb25sm1025265e87.154.2024.05.28.12.42.37
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 12:42:38 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-529644ec0ebso2034524e87.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 12:42:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOQ75g5omsIkZJe1//xeGmkTGjYmIzOQxWyPcnc2qRyoxQfHzGvPEtI1Gx7a7DKGe/ZLIaKGK6wrFolmEGF0uKEXHd75M0ZVoBIylTwevgAw==
+X-Received: by 2002:a19:6a05:0:b0:52a:7d01:84cd with SMTP id
+ 2adb3069b0e04-52a7d0185c6mr39607e87.30.1716925357626; Tue, 28 May 2024
+ 12:42:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,13 +66,15 @@ References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F
  <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
  <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
  <CAHk-=wgcoODsCbba423uZwQqOjJ8r29GZyCd472K6L6Dt-NbPg@mail.gmail.com>
- <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com> <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 May 2024 11:58:57 -0700
-Message-ID: <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
+ <CAP-5=fUp+gSoLC90vT50X7So_SyAC9OprAMvh_Jj_8NTuO6j_w@mail.gmail.com>
+ <CAHk-=wiDheOd3pdZ4vdLwrMbbVs3LUcSD=afASEWbND-HZhuPA@mail.gmail.com> <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
+In-Reply-To: <CAP-5=fVGF6A7fwZyF8o0Sz5nNhtXb0007JoCxaiL2XHCKS3=0A@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 28 May 2024 12:42:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh2yboV-UtCO_NFV2TsbbMeHTw0Fqn4rnovbGQzkZLCJg@mail.gmail.com>
+Message-ID: <CAHk-=wh2yboV-UtCO_NFV2TsbbMeHTw0Fqn4rnovbGQzkZLCJg@mail.gmail.com>
 Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Linus Torvalds <torvalds@linux-foundation.org>
+To: Ian Rogers <irogers@google.com>
 Cc: Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
@@ -75,169 +83,51 @@ Cc: Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
 	James Clark <james.clark@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2024 at 11:13=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, 28 May 2024 at 11:59, Ian Rogers <irogers@google.com> wrote:
 >
-> On Tue, 28 May 2024 at 10:40, Ian Rogers <irogers@google.com> wrote:
-> >
-> > I agree it picked the wrong PMU for default events. This was a problem
-> > on no systems that anybody was bothering to test with. Having been
-> > made aware of the issue I fixed it in this patch, you're welcome.
->
-> You didn't just pick it for default events. You also picked it for
-> when the user explicitly asks for "profile for cycles"
->
-> > What is still not clear from this is what should the behavior be of:
-> >
-> > $ perf record -e cycles ...
->
-> Why do you claim that?
->
-> I've already told you that CLEARLY it's wrong to pick a cycles event
-> that doesn't support 'record'.
->
-> I've also suggested that you might look at core only PMUs.
->
-> But more importantly, you should look at documented and historical behavi=
-or.
->
-> So what is your argument? Because from where I'm sitting, you keep
-> making irrelevant arguments about *other* events, not about "cycles".
->
-> It used to work. It doesn't any more.
->
-> > Should it wildcard all events and open them on all PMUs potentially
-> > failing? Well this has always been perf's behavior were the event:
-> >
-> > $ perf record -e inst_retired.any ...
->
-> You keep making up irrelevant arguments.
->
-> Lookie here: I do "perf list" to just see the events, and what do I
-> get? Let me quote that for you:
->
->     List of pre-defined events (to be used in -e or -M):
->     ...
->       cpu-cycles OR cycles                               [Hardware event]
->
-> and then later on in the list I get
->
->     general:
->       cpu_cycles
->            [Cycle. Unit: armv8_pmuv3_0]
->
-> and dammit, your patch broke the DOCUMENTED way to get  the most
-> obvious profiling data: cycles.
->
-> So stop making shit up. All your arguments have been bogus garbage
-> that have been talking about entirely different things than the one
-> thing I reported was broken.
->
-> And you *keep* doing that. Days into this, you keep making shit up
-> that isn't about this very simple thing.
->
-> Every single time I tell you what the problem is, you try to twist to
-> be about something entirely different. Either a different 'perf'
-> command entirely, or about a different event that is ENTIRELY
-> IRRELEVANT.
->
-> What the hell is your problem? Why can't you just admit that you
-> f*cked up, and fix the thing I told you was broken, and that is very
-> clearly broken and there is no "what about" issues AT ALL.
->
-> So stop the idiocy already. Face the actual issue. Don't make up other th=
-ings.
->
-> Dammit, if I wanted "arm_dsu_58/cycles/", I would SAY so. I didn't. I
-> said "cycles", which is the thing that has always worked across
-> architectures, that is DOCUMENTED to be the same as "cpu-cycles", and
-> that used to work just fine.
->
-> It's literally RIGHT THERE in "perf list". Using "-e cycles" is
-> literally also what the man-pages say. This is not me doing something
-> odd.
+> But nobody else ever reported the issue, even ARM who maintain the PMU
+> driver whose event name conflicts. This hasn't been a problem for
+> anybody else.
 
-But nobody else ever reported the issue, even ARM who maintain the PMU
-driver whose event name conflicts. This hasn't been a problem for
-anybody else.
+I'm not blaming you for having had a bug.
 
-> And yes, I use an explicit "-e cycles:pp" because the default is not
-> that. and "cycles:pp" does better than the default.
+I'm blaming you for NOT DEALING WITH THE BUG APPROPRIATELY.
 
-This is wrong. cycles:P means use the maximum precision, so if the PMU
-supports it it will use cycles:ppp and on x86 this is often the case.
-The number of 'p's used after the event with :P is read from sysfs:
-```
-$ cat /sys/devices/cpu/caps/max_precise
-3
-```
-The default using cycles:P is intentional and better than cycles:pp.
-If `/sys/devices/cpu/caps/max_precise` is wrong for your PMU driver
-then that should get fixed.
+I reported the bug and bisected it four days ago.
 
-> Again, this is all documented, with "man perf-record" literally
-> talking about "-e cycles" and then pointing to "man perf-list" for the
-> modifier details, which detail that 'pp' as meaning "use maximum
-> detected precise level". Which is exactly what I want (even if on this
-> machine, it turns out that "p" and "pp" are the same because the armv8
-> pmuv3  doesn't have that "correct for instruction drift" that Intel
-> does on x86).
->
-> Why is this simple thing so hard for you to understand?
->
-> The fact is, if you make "cycles" mean ANYTHING ELSE than the
-> long-documented actual obvious thing, you have broken perf. It's that
-> simple.
->
-> So stop the excuses already. Stop making up other stuff that isn't
-> relevant. Stop bringing up events or PMU's that are simply not the
-> issue.
->
-> Face your bug head on, instead of making me have to tell you the same
-> thing over and over and over again.
+Taking some time to fix the bug is fine.
 
-I keep saying the same thing as I don't agree with you, you have
-broken perf in 6.10 and are presumably looking to me to pick up the
-pieces. To work around the naming conflict on systems with
-arm_dsu_*/events/cycles/ I don't think it is unreasonable to specify
-armv8_pmuv3_0/cycles/, the blame for this lies with ARM's event name
-within the arm_dsu_* PMU driver, admittedly they didn't know this
-would be an issue given perf's non-uniform handling of legacy events.
-When ARM requested that legacy events be a lower priority than
-sysfs/json then the ball was set in motion for this problem. This was
-done to work around an ARM PMU problem on Apple ARM CPUs.
+But that's not what you've been doing.
 
-Let's say an Apple CPU has a PMU called armv8_pmuv3_0. If you try to
-program a legacy event on it then it will be broken - I lack a system
-to test this but I'm reliably informed (user bugs and by ARM) and heck
-it was a bunch of work to get this working if it was for nobody. To
-fix this perf must read event data for armv8_pmuv3_0/cycles/ from
-sysfs. If you don't specify a PMU then perf will try to program a
-legacy event. This is the behavior in Linux 6.9. Oh, but legacy events
-are broken on my Apple ARM CPU. The change made it so when you don't
-specify a PMU you will use the sysfs/json one first instead of the
-legacy one. Viola, your favorite `perf record -e cycles:pp ..` should
-be fixed on Apple ARM CPUs.
+Since then, pretty much ALL you have done is argue about irrelevant
+thingas that weren't about the regression in question.
 
-So I think the revert is a real regression for a larger user base.
-There is a testing issue here, not least I don't possess an Apple ARM
-machine. All of these issues revolve around ARM and yet they do
-minimal to try to fix them, beside complain that I should fix the
-legacy/sysfs/json issue which is how we got here.
+The fact that you still don't agree, having broken documented
+behavior, and still argue against just having it fixed, I can't do
+anything about.
 
-There's of course the alternate universe view that I need to admit I'm
-wrong and I should stop going out of my way to break people. Hello
-alternate universe, I admit it, I'm wrong and a terrible person please
-accept my most sincere apologies. Please alternate universe, can you
-tell me how to wild card event names and make them work across PMUs
-without the behavior being specific to certain perf comands or event
-names (which I think is worse than having to specify which PMU you
-think the event should apply)?
+> So I think the revert is a real regression for a larger user base.
 
-Thanks,
-Ian
+I didn't have much choice, did I? You refuse to even acknowledge the
+bug I hit. I'd have been happy if you had just fixed the bug. You
+didn't.  You just argued.
 
->                    Linus
->
+> There is a testing issue here, not least I don't possess an Apple ARM
+> machine.
+
+This is not an Apple ARM machine. I have one of those too, but this
+isn't it. It's an Ampere Computing system, based on an ARM Neoverse N1
+(and the ARM PMU's both for the core and for the interconnect).
+
+But that is pretty much irrelevant by now.
+
+The issue is that you don't fix bugs you leave behind, forcing the revert.
+
+I'm happy to test any patches. But I'm done arguing. The "cycles"
+thing needs to work. This is not a "pretty please".
+
+This is a "if you can't understand that and acknowledge that without
+arguing, just work on something else, ok?"
+
+                  Linus
