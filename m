@@ -1,359 +1,348 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B061050A63
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 22:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611B07E9
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 00:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716934633; cv=none; b=mm7ZXsm04y4Li3j0SDQ5gaWIGVs71+ff4+4BrZskFCLuIMXJPoy1UFrDmL9Vof1M30V1+EpE8jrCZcfu/puzw77V0fBkjbFLb/1LbN5XBPZnWmMWX0HaZiNbJVWEujzqvdMPC5bzO8kMo4rc1rIzZaZf2OuPf9sympyoKTU4Pfs=
+	t=1716941175; cv=none; b=NayyobK1C4U6gV10CaFRWc/r2G6VNbdVrNGC/nqiHgpvPZO094+AgspDsSoAhQw+WIJwsjHPX2El3QAgc6OGWd3Lq2rL3rH2qDVyfmeOxx75ACkl27B47EdKy9rdP2AnMguJ98GlFQ8qPL61zBa1CLoxtXQ97xjcbZxO+YtlhSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716934633; c=relaxed/simple;
-	bh=KgxKy3B9/bvHCk1XIcrOxAdTViZHUFvaiD1OLQpr4sE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vD4dMs1W9wY4X45RuJBbGuxY565f5AWpytRUnbfqilNyApIT2Dydt6ZKWp2itNf/GyFIDQz3Pdx56LJZaDkbnhYt2yVhjo76R1MDuLauRclfY6HVgZvz386B5q3w/4f/cN3elYekMpK9BCkOdCl1+npuwvPCVn7z+OZcP92rEDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uhrsXZxN; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716941175; c=relaxed/simple;
+	bh=GMt4BF/VcxrhnQ26QoYLyYrabMMDo70CMX5/79p/HKs=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
+	 Subject:Content-Type; b=Swz3g0aXEcokUwVMy2YoNT2QLP0GeHP/8N4aVswUXAZrRiHz2aQARCHr3VOkYznbgDzDmh6OsdXiPGwqEs6nz3vbkgCJWkJV21gwGK/hlN1o3cGYd+XCLhM0t57z3WeLno1W0e2abU2uPXqFDXO3f9pxcVIfk4VFsQeqNdNyPfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk; spf=pass smtp.mailfrom=fuuzetsu.co.uk; dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b=vjKE/FJQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fpEuADax; arc=none smtp.client-ip=64.147.123.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fuuzetsu.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uhrsXZxN"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-43dfe020675so193651cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 May 2024 15:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716934630; x=1717539430; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KKsx1Wjb37gHKeRHMU40MydeR/ELp98IEnmlde48+So=;
-        b=uhrsXZxNa3RFXafIfe+U2Ltq6bS7DneRc5jPRc37O1O6XONs2lgWFsmXVbBVcs7nBY
-         6KHhcxVxXuy3I/1T3dyC/xBPnI/HO0m/4/a8/D6hTRsIScprEPKYxeAqqMzgPm6B1Xge
-         jMak/ihiTv0r1wooaj8+tY4XaVUG2umuTGuVtPXDVqBAn4J8g9gGz9AYRNXGzDMTjIqV
-         XX+T0kJ0euoLcy+n5GuOPYrw4UM263StVinX0ot4LwxcDK6Ji6fw6UCf7NTh0Lm8/25S
-         Uh2wYXocCrXpSFT5PoEtTb2K0BBr+EOfPKFU37wgUdjhUt2TeWf3eajjqB4xGz1Gcqdq
-         oGEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716934630; x=1717539430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KKsx1Wjb37gHKeRHMU40MydeR/ELp98IEnmlde48+So=;
-        b=M2b7bRjhLRwixyKB4yrBo1cVmQGJlDtHB4C+ojFBgBcOfen5fmEEVYg8fN15ezAuCW
-         Ax0FATl3fFWSEo47eiwhUEyyoGPrRE1ZLfsc/0JGHEN/UhpVpT3nL0v9uz4Mj0qtQT4U
-         HOvPE9HimVmD00mxpCfq1+Pk9pn5aP/m/Ee25+jKqPiZBuzks4vXrMzZSbyFWfYRoQYJ
-         VwG8MRfdK1ogLQphb3II4O/vw4kQNEVweawcZQVrXljFacAN9FahfThafBiHIrn42scP
-         CJJvLc2CicaYKwD1B2h4SvVkKUk1271MDsckj8kQcLKE9mDVgPiCbOzn8UbJCj7FeWOt
-         Vbeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWe9rVw8GDdKf6Gcs0CaDVOFSQpChLAhTxZ/2Fr3OQVJon1pEsugNM2JvdDCgdibwMYtSlmHR+oCL1j+VGL3AeSimcKPq2WzUM3oQHiqVBfiA==
-X-Gm-Message-State: AOJu0YwoTsPk06uMdUR73RRJddd1RKz6UNqREYl9wDFKqRNAjMoAkJxv
-	eQZ4e3P5VQnAEZZpxT5rAsStnns+QYP5TROmGN2rwsaAwqCmDeGL9h55EhQcjjU97akeBDJnmKd
-	RUDFCnCqyigx1OnL5jhVNe++3r3cNQUK3K1k/
-X-Google-Smtp-Source: AGHT+IETo0a4r5DWLWDwEytiMN9zQ17SSn1T3aVosvBNctOg0AmLMUGYAh9Ft4CGHNsTPvElc6EcRlu9Gn2L3/Z3Xr8=
-X-Received: by 2002:a05:622a:4819:b0:43f:bb44:bbb7 with SMTP id
- d75a77b69052e-43fe0f4cefamr851191cf.8.1716934630467; Tue, 28 May 2024
- 15:17:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b="vjKE/FJQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fpEuADax"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 5CDB618000E8;
+	Tue, 28 May 2024 20:06:12 -0400 (EDT)
+Received: from imap45 ([10.202.2.95])
+  by compute3.internal (MEProxy); Tue, 28 May 2024 20:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fuuzetsu.co.uk;
+	 h=cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1716941172;
+	 x=1717027572; bh=tbfA+5uedgNeH5uCrKI+0HcMGQuXqEm0VrIH0LFpxYo=; b=
+	vjKE/FJQbRMGO++HvCCQVgcOkEgqCyvpr3C8Lhi+i21lvYl7j4rsbiO7YRKWr8W5
+	IC9alV4qFH/ZlnCZYjMdJRI7EPVIDf7yKKVDuSxJWok1TPK3XhwFL4iciyrdte16
+	uP7ZTwhGcx929uZW8gV7whzeXJazeFoIkuCZlGSvfLQpBgZOHEwZdKmu7TtVDO8z
+	wAfXkHTgJA5BFpWHs9/d/E5NXld86YLIc3EaOejinxQKNNTNxayPkJ8ipRawleUL
+	zAuXPnihZ21YjHxrcyDXm6K4QjRb99gQpOCgKFFIH1nCotBqUgWS4mvO38av+XSF
+	OWr/jTpvYKbCi0GemA8Dcg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716941172; x=
+	1717027572; bh=tbfA+5uedgNeH5uCrKI+0HcMGQuXqEm0VrIH0LFpxYo=; b=f
+	pEuADaxeWKvpo/uq2hdp7aTWLEslserUm0fXnq+V8l1YR0LlluCL7tfzRCcyQHkH
+	9bUSoVSH2l+oI6IuDWfwR8DByG7AIKaq76DDJRKSqoDbU4HbyvsiHtdUOahwFQdV
+	uwLiM7zHfSvvQTlJ0AF8S2KGBfteIpyKHY7nJCIVmxRUkrvdoB2YQKM/HfGHJaOu
+	PvBAfKXny9CrUkgmvCfuK+TfApfoeZ3vBVkio/E8+Y2pla6nP89Cbt9/9b7tz56I
+	/wD1NEwd27YZ011is4OHUoJvTJ+KfExIJ1sRxmXGWdp2bU0GrJP7paIjiE/lANRv
+	CHQL0mzU8Z/Qki8HeU8lA==
+X-ME-Sender: <xms:c3FWZi70ftqXdltR7yQVCUMGcFbqZe5BfGLcOi-hjShQi0uFZ7rvpA>
+    <xme:c3FWZr5nzV2le4G4FBskBkERG3JaYNKsmLeogjG-gmWQKeHppEz3bOgjVbG280MyH
+    cz8Wl_LoaFFUjodmg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejledgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedfofgr
+    thgvuhhsiicumfhofigrlhgtiiihkhdfuceofhhuuhiivghtshhusehfuhhuiigvthhsuh
+    drtghordhukheqnecuggftrfgrthhtvghrnhepfffgffeiieeiffduudehuddutddvkedu
+    keevhfevjefgudehgeetiedtffffkeeunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepfhhuuhiivghtshhusehfuhhuiigvthhsuhdrtghordhu
+    kh
+X-ME-Proxy: <xmx:c3FWZhc4MtoGRrD2E1WkOghG80mxTUVAf-zMkiFROTdEk-Nayki3YA>
+    <xmx:c3FWZvL33fF3zJ0F0mRYPce5RPiCl2qGJL39mEf4hiLAtek6daH1dw>
+    <xmx:c3FWZmLCoROP1_rizmIXb2y4qt7bu_JbHyfmASuP9j-kY2_3maZgfQ>
+    <xmx:c3FWZgxswl8f3cAqgp53WT8Q77qo_NAAlTMwrmHDGsAuywfpE_NwGw>
+    <xmx:c3FWZohP7UmpjdNYTug8ftk12bOpRs04a2r6DYqG85C_GOLaF2xwEH4l>
+Feedback-ID: ia5d440cb:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 9460D272007D; Tue, 28 May 2024 20:06:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521173952.3397644-1-weilin.wang@intel.com>
- <20240521173952.3397644-5-weilin.wang@intel.com> <CAM9d7cjob_tfgN+rMRrh=0SV56+z32CmP34BRY1eoFv48RVocg@mail.gmail.com>
- <CO6PR11MB563589ED3FC7126A6B27EB22EEF52@CO6PR11MB5635.namprd11.prod.outlook.com>
- <CAM9d7cjz0P=vrSr8yU=xMYhQ5XFT9A+K-WG9E+LyNzYWC-JhwA@mail.gmail.com>
-In-Reply-To: <CAM9d7cjz0P=vrSr8yU=xMYhQ5XFT9A+K-WG9E+LyNzYWC-JhwA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 28 May 2024 15:16:58 -0700
-Message-ID: <CAP-5=fV0Xoe9HAcpvSFBF=vGhTaHAJdDCPEmwZSRk3VXL9S+1A@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 4/7] perf stat: Plugin retire_lat value from
- sampled data to evsel
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: "Wang, Weilin" <weilin.wang@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <198bd01f-ffa5-4f9e-9c03-a1193eec25e4@app.fastmail.com>
+In-Reply-To: <0e2d8cc4-420b-4387-9b26-2f00cbbc1a83@arm.com>
+References: <cfcaf804-d7b1-4d55-8465-12e1d238aca1@app.fastmail.com>
+ <0e2d8cc4-420b-4387-9b26-2f00cbbc1a83@arm.com>
+Date: Wed, 29 May 2024 09:05:45 +0900
+From: "Mateusz Kowalczyk" <fuuzetsu@fuuzetsu.co.uk>
+To: "James Clark" <james.clark@arm.com>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: Why does libtracevent pkg-config detection wipe PKG_CONFIG_PATH?
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 26, 2024 at 11:01=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Wed, 29 May 2024, at 1:09 AM, James Clark wrote:
+> On 27/05/2024 01:56, Mateusz Kowalczyk wrote:
+>> Hi,
+>>=20
+>> To build recent perf, I'm having to apply the below patch.
+>>=20
+>> ```diff
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index 7f1e016a9253..b70fef12a977 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -1181,7 +1181,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+>>      CFLAGS +=3D -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
+>>      LDFLAGS +=3D $(LIBTRACEEVENT_LDFLAGS)
+>>      EXTLIBS +=3D ${TRACEEVENTLIBS}
+>> -    LIBTRACEEVENT_VERSION :=3D $(shell PKG_CONFIG_PATH=3D$(LIBTRACEE=
+VENT_DIR) $(PKG_CONFIG) --modversion libtraceevent)
+>> +    LIBTRACEEVENT_VERSION :=3D $(shell $(PKG_CONFIG) --modversion li=
+btraceevent)
+>>      LIBTRACEEVENT_VERSION_1 :=3D $(word 1, $(subst ., ,$(LIBTRACEEVE=
+NT_VERSION)))
+>>      LIBTRACEEVENT_VERSION_2 :=3D $(word 2, $(subst ., ,$(LIBTRACEEVE=
+NT_VERSION)))
+>>      LIBTRACEEVENT_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEEVE=
+NT_VERSION)))
+>> ```
+>>=20
+>> I don't understand why `PKG_CONFIG_PATH` is overwritten this way. `gr=
+ep`ing for PKG_CONFIG_PATH reveals that this isn't done anywhere else in=
+ the kernel tree. All other uses of `$(PKG_CONFIG)` in the file simply i=
+nvoke the tool.
+>>=20
 >
-> On Fri, May 24, 2024 at 4:52=E2=80=AFPM Wang, Weilin <weilin.wang@intel.c=
-om> wrote:
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Namhyung Kim <namhyung@kernel.org>
-> > > Sent: Friday, May 24, 2024 4:17 PM
-> > > To: Wang, Weilin <weilin.wang@intel.com>
-> > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
-> > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
-> > > <mingo@redhat.com>; Alexander Shishkin
-> > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; H=
-unter,
-> > > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.co=
-m>;
-> > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylo=
-r, Perry
-> > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Big=
-gers,
-> > > Caleb <caleb.biggers@intel.com>
-> > > Subject: Re: [RFC PATCH v9 4/7] perf stat: Plugin retire_lat value fr=
-om sampled
-> > > data to evsel
-> > >
-> > > On Tue, May 21, 2024 at 10:40=E2=80=AFAM <weilin.wang@intel.com> wrot=
-e:
-> > > >
-> > > > From: Weilin Wang <weilin.wang@intel.com>
-> > > >
-> > > > In current :R parsing implementation, the parser would recognize ev=
-ents
-> > > with
-> > > > retire_latency modifier and insert them into the evlist like a norm=
-al event.
-> > > > Ideally, we need to avoid counting these events.
-> > > >
-> > > > In this commit, at the time when a retire_latency evsel is read, se=
-t the retire
-> > > > latency value processed from the sampled data to count value. This =
-sampled
-> > > > retire latency value will be used for metric calculation and final =
-event count
-> > > > print out.
-> > >
-> > > I'm confused.  Do you mean you don't count the event with 'R' modifie=
-r
-> > > (w/ perf stat) and just print the (average) retire latency (from perf=
- record)?
-> >
-> > In metric formulas, event without 'R' modifier is included as a normal =
-event already.
-> > So we don't need to count the event that with 'R' modifier. They only n=
-eed to be
-> > sampled.
+> Hi Mateusz,
 >
-> Oh, you have the event in the metric expression twice.  I thought of one.
-> Then IIUC the metric looks something like this.
->
->   myevent1 + (myevent2 * myevent1:R)
->
-> I think you'll have 2 myevent1 in perf stat and 1 in perf record, right?
-> But the second one in perf stat is never used and the value is updated
-> from perf record.
->
-> Then we can simply remove the event from the evlist (or replace it with
-> a dummy) to reduce the overheads (of open and read).
->
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> > > > ---
-> > > >  tools/perf/arch/x86/util/evlist.c |  6 +++++
-> > > >  tools/perf/util/evsel.c           | 44 +++++++++++++++++++++++++++=
-++++
-> > > >  tools/perf/util/evsel.h           |  5 ++++
-> > > >  3 files changed, 55 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/arch/x86/util/evlist.c
-> > > b/tools/perf/arch/x86/util/evlist.c
-> > > > index b1ce0c52d88d..cebdd483149e 100644
-> > > > --- a/tools/perf/arch/x86/util/evlist.c
-> > > > +++ b/tools/perf/arch/x86/util/evlist.c
-> > > > @@ -89,6 +89,12 @@ int arch_evlist__cmp(const struct evsel *lhs, co=
-nst
-> > > struct evsel *rhs)
-> > > >                         return 1;
-> > > >         }
-> > > >
-> > > > +       /* Retire latency event should not be group leader*/
-> > >
-> > > Hmm.. why?
-> > Because we don't want to count them. Make them the group leader would n=
-ot work.
->
-> I don't understand.  You'll read the event regardless of being a
-> leader or not.
->
-> >
-> > >
-> > > > +       if (lhs->retire_lat && !rhs->retire_lat)
-> > > > +               return 1;
-> > > > +       if (!lhs->retire_lat && rhs->retire_lat)
-> > > > +               return -1;
-> > > > +
-> > > >         /* Default ordering by insertion index. */
-> > > >         return lhs->core.idx - rhs->core.idx;
-> > > >  }
-> > > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > > index a0a8aee7d6b9..4d700338fc99 100644
-> > > > --- a/tools/perf/util/evsel.c
-> > > > +++ b/tools/perf/util/evsel.c
-> > > > @@ -58,6 +58,7 @@
-> > > >  #include <internal/xyarray.h>
-> > > >  #include <internal/lib.h>
-> > > >  #include <internal/threadmap.h>
-> > > > +#include "util/intel-tpebs.h"
-> > > >
-> > > >  #include <linux/ctype.h>
-> > > >
-> > > > @@ -1523,6 +1524,40 @@ static int evsel__read_one(struct evsel *evs=
-el,
-> > > int cpu_map_idx, int thread)
-> > > >         return perf_evsel__read(&evsel->core, cpu_map_idx, thread, =
-count);
-> > > >  }
-> > > >
-> > > > +static int evsel__set_retire_lat(struct evsel *evsel, int cpu_map_=
-idx, int
-> > > thread)
-> > > > +{
-> > > > +       struct perf_counts_values *count;
-> > > > +       struct tpebs_retire_lat *t;
-> > > > +       bool found =3D false;
-> > > > +       __u64 val;
-> > > > +
-> > > > +       count =3D perf_counts(evsel->counts, cpu_map_idx, thread);
-> > > > +
-> > > > +       list_for_each_entry(t, &tpebs_results, nd) {
-> > > > +               if (!strcmp(t->tpebs_name, evsel->name)) {
-> > > > +                       found =3D true;
-> > > > +                       break;
-> > > > +               }
-> > > > +       }
-> > > > +
-> > > > +       if (!found)
-> > > > +               return -1;
-> > > > +
-> > > > +       /*
-> > > > +        * Only set retire_latency value to the first CPU and threa=
+> If PKG_CONFIG_PATH being overwritten is an issue, I'm assuming that you
+> have it set in your shell already? Is there a reason you aren't using
+> the default? Or is it that your version of pkg-config doesn't like that
+> var being set to an empty value?
+
+I have PKG_CONFIG_PATH set in my shell already. I don't have LIBTRACEEVE=
+NT_DIR set.
+
+I'm not sure if pkg-config version is relevant, presumably if PKG_CONFIG=
+_PATH is empty then no matter the version, it'll fail to resolve anythin=
+g? Maybe not. Either way, on my setup, PKG_CONFIG_PATH is set explicitly=
+ and libtraceevent.pc is on it.
+
+```
+[shana@aya:~/programming/linux/tools/perf]$ echo $PKG_CONFIG_PATH=20
+/nix/store/k3701zl6gmx3la7y4dnflcvf3xfy88kh-python3-3.11.9/lib/pkgconfig=
+:/nix/store/azfzvr6qa3680a8prh3xrpjfr26zmm59-libxslt-1.1.39-dev/lib/pkgc=
+onfig:/nix/store/z91sa53zd8iscw7bsjphdk8s5b84hwpg-audit-3.1.2-dev/lib/pk=
+gconfig:/nix/store/zk3sjrzfyjw14yy8jq9yn9nk41clf84q-elfutils-0.191-dev/l=
+ib/pkgconfig:/nix/store/hf0v7fphfvxrz8dvgv2fxh12vslwh9hs-newt-0.52.24/li=
+b/pkgconfig:/nix/store/gms9ygkqyhw74nrhxqcm0xf2gpnqbpss-slang-2.3.3-dev/=
+lib/pkgconfig:/nix/store/2nj2qa56cnq6shqskd9ixipc01s302wb-ncurses-6.4-de=
+v/lib/pkgconfig:/nix/store/i4w2yc2np0lw8plxri2s2n244ywm1wfy-libtraceeven=
+t-1.8.2-dev/lib/pkgconfig:/nix/store/m35h4lw1sslg0vdqw0bjkcx5nqlv4pl2-li=
+bunwind-1.8.1-dev/lib/pkgconfig:/nix/store/j93y8jkrqjy18njpnszvsk792hn1v=
+d89-xz-5.4.6-dev/lib/pkgconfig:/nix/store/wz1lmhhmvjxj2ipp2z5mvkydchhljg=
+gm-zlib-1.3.1-dev/lib/pkgconfig:/nix/store/0bp9inq3wd4car25n60idlfics6fa=
+jjv-openssl-3.0.13-dev/lib/pkgconfig:/nix/store/6a5ryz1dbq8n79qkgcvikgm3=
+c4fmkp05-numactl-2.0.18-dev/lib/pkgconfig:/nix/store/wwg6376ymkhpjxy6c3w=
+9gkbhv6l2gmqy-libxcrypt-4.4.36/lib/pkgconfig:/nix/store/ijj4lm5k5vg7fzf3=
+w3cbpgfc98d1b01a-babeltrace-1.5.8/lib/pkgconfig:/nix/store/z2jqrpg85lkh7=
+v9bpz24nsmac1lhs5bs-zstd-1.5.6-dev/lib/pkgconfig:/nix/store/j3hdndafs2ix=
+bh1bhv95g6pj4bankd1i-libcap-2.69-dev/lib/pkgconfig:/nix/store/srmzd01br3=
+9m4w52v9zb66v4ghlxsxfg-attr-2.5.2-dev/lib/pkgconfig
+
+[shana@aya:~/programming/linux/tools/perf]$ pkg-config --version
+0.29.2
+```
+
+>> Of course, I do actually have `libtraceevent.pc` available, it's just=
+ that `LIBTRACEVENT_DIR` is empty which stops it from finding it.
+>>=20
+>> ```
+>> [shana@aya:~/programming/linux/tools/perf]$ pkg-config --modversion l=
+ibtraceevent
+>> 1.8.2
+>> ```
+>>=20
+>> If I do not apply the patch, I'm getting the below errors during buil=
 d.
-> > > > +        */
-> > > > +       if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0)
-> > > > +               val =3D t->val;
-> > > > +       else
-> > > > +               val =3D 0;
-> > > > +
-> > > > +       count->val =3D val;
-> > > > +       /* Set ena and run to non-zero */
-> > > > +       count->ena =3D count->run =3D 1;
-> > > > +       count->lost =3D 0;
-> > >
-> > > So here it seems you discard the actual count of the events
-> > > and replace it with the retire latency.  That means you don't
-> > > need to open the event in perf stat, and probably just have a
-> > > placeholder, right?
-> > >
-> > > Btw, I think it's better to move this logic to intel-tpebs.c file and
-> > > rename to tpebs_set_retire_lat().
-> >
-> > Ian wants this to be here and also suggested me to rename this function=
- to
-> > evsel__read_retire_lat(). I'm ok with either way.
+>>=20
+>> I'm not sure how others are getting it to build, maybe I'm doing some=
+thing wrong? Please let me know. If the diff is fine, it'd be great if a=
+nyone could apply it.
+>>=20
 >
-> I think it's better to have the tpebs logic together.
-
-I think the tpebs functions can be in a tpebs file. I'd rather have
-the retirement latency events (from the metric) be evsels for a few
-reasons:
-
-1) I'd rather everything in a metric be evsels, so things like
-"num_cpus_online" should really be a tool event rather than a special
-literal kind of thing. I'd like to reduce special cases over time, in
-part as it should help with portability. For example, if only Intel
-x86 can parse :R then someone trying to parse an Intel x86 metric on
-ARM may get parser errors.
-
-2) When we change from forking perf record to directly opening a
-sampling ring buffer then it makes sense that we use/update the
-evsel/evlist logic.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
+> I think your diff needs a small change. I'm assuming it was done this
+> way to allow the custom libtraceevent path to be specified with
+> LIBTRACEEVENT_DIR. If you remove that then it can't be done anymore.
 >
-> >
-> > >
-> > >
-> > > > +       return 0;
-> > > > +}
-> > > > +
-> > > >  static void evsel__set_count(struct evsel *counter, int cpu_map_id=
-x, int
-> > > thread,
-> > > >                              u64 val, u64 ena, u64 run, u64 lost)
-> > > >  {
-> > > > @@ -1530,6 +1565,12 @@ static void evsel__set_count(struct evsel
-> > > *counter, int cpu_map_idx, int thread,
-> > > >
-> > > >         count =3D perf_counts(counter->counts, cpu_map_idx, thread)=
-;
-> > > >
-> > > > +       if (counter->retire_lat) {
-> > >
-> > > if (evsel__is_retire_lat(counter)) ?
-> > >
-> > >
-> > > > +               evsel__set_retire_lat(counter, cpu_map_idx, thread)=
-;
-> > > > +               perf_counts__set_loaded(counter->counts, cpu_map_id=
-x, thread,
-> > > true);
-> > > > +               return;
-> > > > +       }
-> > > > +
-> > > >         count->val    =3D val;
-> > > >         count->ena    =3D ena;
-> > > >         count->run    =3D run;
-> > > > @@ -1778,6 +1819,9 @@ int evsel__read_counter(struct evsel *evsel, =
-int
-> > > cpu_map_idx, int thread)
-> > > >         if (evsel__is_tool(evsel))
-> > > >                 return evsel__read_tool(evsel, cpu_map_idx, thread)=
-;
-> > > >
-> > > > +       if (evsel__is_retire_lat(evsel))
-> > > > +               return evsel__set_retire_lat(evsel, cpu_map_idx, th=
-read);
-> > > > +
-> > >
-> > > I'm not sure if it works well with group event.  Probably that's
-> > > why you wanted to prevent group leaders.  But I guess you
-> > > can just check this after the PERF_FORMAT_GROUP, no?
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > >
-> > > >         if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
-> > > >                 return evsel__read_group(evsel, cpu_map_idx, thread=
-);
-> > > >
-> > > > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > > > index bd8e84954e34..aaf572317e92 100644
-> > > > --- a/tools/perf/util/evsel.h
-> > > > +++ b/tools/perf/util/evsel.h
-> > > > @@ -303,6 +303,11 @@ static inline bool evsel__is_tool(const struct=
- evsel
-> > > *evsel)
-> > > >         return evsel->tool_event !=3D PERF_TOOL_NONE;
-> > > >  }
-> > > >
-> > > > +static inline bool evsel__is_retire_lat(const struct evsel *evsel)
-> > > > +{
-> > > > +       return evsel->retire_lat;
-> > > > +}
-> > > > +
-> > > >  const char *evsel__group_name(struct evsel *evsel);
-> > > >  int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)=
-;
-> > > >
-> > > > --
-> > > > 2.43.0
-> > > >
+> Isn't the right change to set PKG_CONFIG_PATH if LIBTRACEEVENT_DIR is
+> set, but otherwise leave it unset?
+
+I think that sounds right. I'm not sure what that looks like in `Make` b=
+ut if no-one is up to making the change, I can attempt it at least...
+
+> But yes the build is working fine for me.
+
+How does it work? Presumably you either must have LIBTRACEEVENT_DIR set =
+or your pkg-config is able to find libraries even with empty PKG_CONFIG_=
+PATH. The latter would explain some things. On my setup at least, there =
+are no "global" default search locations and PKG_CONFIG_PATH basically d=
+etermines all the library locations. Maybe that's the difference. I gues=
+s it's easy to verify, if you run `PKG_CONFIG_PATH=3D pkg-config --modve=
+rsion libtraceevent` then I must assume that it returns something on you=
+r setup.
+
+> James
+>
+>
+>> Thanks!
+>>=20
+>> ```
+>> Perhaps you should add the directory containing `libtraceevent.pc'
+>> to the PKG_CONFIG_PATH environment variable
+>> No package 'libtraceevent' found
+>> expr: syntax error: unexpected argument =E2=80=98255=E2=80=99
+>>=20
+>> Auto-detecting system features:
+>> ...                                   dwarf: [ on  ]
+>> ...                      dwarf_getlocations: [ on  ]
+>> ...                                   glibc: [ on  ]
+>> ...                                  libbfd: [ on  ]
+>> ...                          libbfd-buildid: [ on  ]
+>> ...                                  libcap: [ on  ]
+>> ...                                  libelf: [ on  ]
+>> ...                                 libnuma: [ on  ]
+>> ...                  numa_num_possible_cpus: [ on  ]
+>> ...                                 libperl: [ on  ]
+>> ...                               libpython: [ on  ]
+>> ...                               libcrypto: [ on  ]
+>> ...                               libunwind: [ on  ]
+>> ...                      libdw-dwarf-unwind: [ on  ]
+>> ...                             libcapstone: [ OFF ]
+>> ...                                    zlib: [ on  ]
+>> ...                                    lzma: [ on  ]
+>> ...                               get_cpuid: [ on  ]
+>> ...                                     bpf: [ on  ]
+>> ...                                  libaio: [ on  ]
+>> ...                                 libzstd: [ on  ]
+>>=20
+>>   INSTALL libsubcmd_headers
+>>   PERF_VERSION =3D 6.10.rc1.g1613e604df0c
+>>   GEN     perf-archive
+>>   GEN     perf-iostat
+>>   INSTALL libsymbol_headers
+>>   INSTALL libapi_headers
+>>   INSTALL libperf_headers
+>>   INSTALL libbpf_headers
+>>   TEST    pmu-events/metric_test.log
+>>   CC      builtin-bench.o
+>>   CC      builtin-annotate.o
+>>   CC      builtin-config.o
+>>   CC      builtin-diff.o
+>>   CC      builtin-evlist.o
+>>   CC      builtin-ftrace.o
+>>   CC      builtin-help.o
+>>   CC      builtin-buildid-list.o
+>>   CC      builtin-buildid-cache.o
+>>   CC      builtin-kallsyms.o
+>>   CC      builtin-list.o
+>>   GEN     pmu-events/pmu-events.c
+>> In file included from util/session.h:5,
+>>                  from builtin-buildid-list.c:17:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> In file included from util/session.h:5,
+>>                  from builtin-evlist.c:15:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> In file included from util/session.h:5,
+>>                  from builtin-buildid-cache.c:24:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>>   CC      builtin-record.o
+>> In file included from util/session.h:5,
+>>                  from builtin-diff.c:15:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>>   CC      builtin-report.o
+>>   CC      builtin-stat.o
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-buildid-list.o] Error 1
+>> make[3]: *** Waiting for unfinished jobs....
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-evlist.o] Error 1
+>> In file included from util/session.h:5,
+>>                  from builtin-annotate.c:32:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-buildid-cache.o] Error 1
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-annotate.o] Error 1
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-diff.o] Error 1
+>> In file included from util/session.h:5,
+>>                  from builtin-record.c:27:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> In file included from util/session.h:5,
+>>                  from builtin-stat.c:60:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> In file included from util/session.h:5,
+>>                  from builtin-report.c:35:
+>> util/trace-event.h:152:62: error: operator '&&' has no right operand
+>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
+>=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+>>       |                                                              =
+^~
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-record.o] Error 1
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-report.o] Error 1
+>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
+d:105: builtin-stat.o] Error 1
+>> make[2]: *** [Makefile.perf:727: perf-in.o] Error 2
+>> make[2]: *** Waiting for unfinished jobs....
+>>   CC      pmu-events/pmu-events.o
+>>   LD      pmu-events/pmu-events-in.o
+>> make[1]: *** [Makefile.perf:264: sub-make] Error 2
+>> make: *** [Makefile:70: all] Error 2
+>> perf version 6.10.rc1.g5f00d82dec63
+>>=20
+>> ```
+>>=20
+>> --
+>> Mateusz K.
+
+Thanks!
+
+--
+Mateusz K
