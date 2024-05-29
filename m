@@ -1,124 +1,200 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E8B1BC3F;
-	Wed, 29 May 2024 13:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1231516EC07;
+	Wed, 29 May 2024 14:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990934; cv=none; b=maViRtqBbS3H2WrQwBn/3VI2iEX2aYtdG68ZqhWlBLOsSvW8zUug2TjgP+Il6eNMveVsf9P8NLFitEeP05UdyCwZ0lJZ3f4oD5LReBafXdRJFZIuR6nFY3B7jgzK4m2AOmcBRArKzIkk3zqcwUJNn6DfdW7aVGOJv4HzMtfF1r4=
+	t=1716994257; cv=none; b=iOK84W34ED2Dh3aGpEjj8CSzeHhmo3qpTkaDd0sprZerQlr53318qBCU+PmEXwxtyEXMiDT7p1QAE97MMmm+uq7IEcDEBhmnTKyapqQOQCMlf9fKKlTIL4c9CMdrSdGjudNSSNtJPlnlnrvkfoFbsk4Paw1kHAii6rKXQ0h/pmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990934; c=relaxed/simple;
-	bh=6jcQNsCvY+JpvW9FVjrFNk/SKoKnw/YncD30kThmSWA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=a9v8MB1Ibu/5AZyqjXjZDDJ+7tAuFjrtKLOuYmFxr1V/0b5egvPrH8/0O5PzUmKW9rXYiB0qY2tUbKKe/7CNSyzmDuAkMpKB4RG99LAOcdZpGaxP1tr5Yy4WTdigugi4Xyc7ewuaS08XJrIJRzbDyy4qwJhRLUTt5iGTxF955D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lCKDd6q+; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lCKDd6q+"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44T6IE8V011830;
-	Wed, 29 May 2024 13:54:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
- h=cc:date:from:message-id:subject:to; s=corp-2023-11-20;
- bh=vTFAiKTF41qcxLLU9YlRgqd6sEZTYzENFGNRbzhew58=;
- b=lCKDd6q+h1yU5xXiw0rRGezFigyNyYTIFWezAJbAVuCKCUDjo47H9c+oIW+fhTyN0BQ3
- ReoBCMdv9OETbAbjmfYq5ZWMcmweiH7P/E1jD6y21BGsyBz630SaHHvEGWw+855jgGeE
- eVVYILo6W3dHjmArYKO3uwvbnXMwv/qRoj1cyJoA34ZTTMsJiintLuYeSKa8/005zYRs
- AQFiq9o7ZiXBlm/w99zlMGzIlSlKJqFyO6SLcN4j/c7ycFBqH/eJJOP9C/CCZO0cg+yc
- wIIpZUAwrnNJnMO1tBYBGml0PN4NeR6lGNKmomk88tHm5uY3vA8Y8qAbCSPlau6y6kwx Ng== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8fcer4h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 13:54:57 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44TDRE4U014920;
-	Wed, 29 May 2024 13:54:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yc536sx6m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 May 2024 13:54:56 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44TDq573016635;
-	Wed, 29 May 2024 13:54:52 GMT
-Received: from gkennedy-linux.us.oracle.com (gkennedy-linux.us.oracle.com [10.152.170.45])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3yc536swjj-1;
-	Wed, 29 May 2024 13:54:52 +0000
-From: George Kennedy <george.kennedy@oracle.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: george.kennedy@oracle.com, harshit.m.mogalapalli@oracle.com
-Subject: [PATCH] perf/x86/amd: check event before enable to avoid GPF
-Date: Wed, 29 May 2024 08:50:59 -0500
-Message-Id: <1716990659-2427-1-git-send-email-george.kennedy@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_10,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 malwarescore=0 adultscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405290095
-X-Proofpoint-GUID: nMcBeBaGM9W4L_m2-VslMQ1wen67bpr4
-X-Proofpoint-ORIG-GUID: nMcBeBaGM9W4L_m2-VslMQ1wen67bpr4
+	s=arc-20240116; t=1716994257; c=relaxed/simple;
+	bh=LZaXZ+xxvmullqXtZhX9G/679yX+VtdAB8/kH3qPkiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nGKsIFwDyd4Snv6m5pcdbJhmYyxt0nHt817rhVfC0SPpjRMUAmAzU8moCuTf7MHG21SZUt3DbLEtJP0UptkIU9f4b2W8RvX/Lgs1MIiwRYwKJMSQ86OOTZFEKHfzy1Bsjyd9uYjr2+58NnCq9yMR6lWUYrm2f2Y4D3ehuBNMbQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42D11339;
+	Wed, 29 May 2024 07:51:18 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A42F3F762;
+	Wed, 29 May 2024 07:50:51 -0700 (PDT)
+Message-ID: <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com>
+Date: Wed, 29 May 2024 15:50:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
+ PMUs
+To: Ian Rogers <irogers@google.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Leo Yan <leo.yan@linux.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240525152927.665498-1-irogers@google.com>
+ <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
+ <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
+ <20240527105842.GB33806@debian-dev>
+ <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
+ <ZlY0F_lmB37g10OK@x1>
+ <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Events can be deleted and the entry can be NULL.
-Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
-This appears to be an AMD only issue.
 
-Syzkaller reported a GPF in amd_pmu_enable_all.
 
-INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.170
-    msecs
-perf: interrupt took too long (191950 > 156435), lowering
-    kernel.perf_event_max_sample_rate to 1000
-Oops: general protection fault, probably for non-canonical address
-    0xdffffc0000000034: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
+On 28/05/2024 20:51, Ian Rogers wrote:
+> On Tue, May 28, 2024 at 12:44 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>>
+>> On Mon, May 27, 2024 at 10:36:45PM -0700, Ian Rogers wrote:
+>>> On Mon, May 27, 2024 at 3:58 AM Leo Yan <leo.yan@linux.dev> wrote:
+>>>> On Sat, May 25, 2024 at 02:14:26PM -0700, Linus Torvalds wrote:
+>>>>> On Sat, 25 May 2024 at 09:43, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>>
+>>>>>> This makes 'perf record' work for me again.
+>>
+>>>>> Oh, wait, no it doesn't.
+>>
+>>>>> It makes just the plain "perf record" without any arguments work,
+>>>>> which was what I was testing because I was lazy.
+>>
+>>>>> So now
+>>
+>>>>>     $ perf record sleep 1
+>>
+>>>>> works fine. But
+>>
+>>>>>     $ perf record -e cycles:pp sleep 1
+>>
+>>>>> is still completely broken (with or without ":p" and ":pp").
+>>
+>>>> Seems to me that this patch fails to check if a PMU is a core-attached
+>>>> PMU that can support common hardware events. Therefore, we should
+>>>> consider adding the following check.
+>>
+>>>> +++ b/tools/perf/util/parse-events.c
+>>>> @@ -1594,6 +1594,9 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+>>>>         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+>>>>                 bool auto_merge_stats;
+>>>>
+>>>> +               if (hw_config != PERF_COUNT_HW_MAX && !pmu->is_core)
+>>>> +                       continue;
+>>>> +
+>>>>                 if (parse_events__filter_pmu(parse_state, pmu))
+>>>>                         continue;
+>>
+>>>> To be clear, I only compiled this change but I have no chance to test
+>>>> it. @Ian, could you confirm this?
+>>
+>>> Hi Leo,
+>>
+>>> so the code is working as intended. I believe it also agrees with what
+>>> Arnaldo thinks.
+>>
+>>> If you do:
+>>
+>>> $ perf stat -e cycles ...
+>>
+>>> and you have
+>>
+>>> /sys/devices/pmu1/events/cycles
+>>> /sys/devices/pmu2/events/cycles
+>>
+>>> The output of perf stat should contain counts for pmu1 and pmu2. Were
+>>> the event 'data_read' or 'inst_retired.any' we wouldn't be having the
+>>
+>> Sure, what is being asked is to count events and if those two events in
+>> those two PMUs can count, then do what the user asked.
+>>
+>> For 'perf record' we're asking for sampling, if the event has the name
+>> specified and can't be sampled, skip it, warn the user and even so
+>> only if verbose mode is asked, something like:
+>>
+>>   root@x1:~# perf record -e cycles -a sleep 1
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples) ]
+>>   root@x1:~# perf evlist
+>>   cpu_atom/cycles/
+>>   cpu_core/cycles/
+>>   dummy:u
+>>   root@x1:~#
+>>
+>> Cool, there are two 'cycles' events, one in a PMU named 'cpu_atom',
+>> another in a 'cpu_core' one, both can be sampled, my workload may
+>> run/use resources on then, I'm interested, sample both.
+>>
+>> But if we had some other PMU, to use a name Jiri uses in tests/fake
+>> PMUs, the 'krava' PMU and it has a 'cycles' event, so 'krava/cycles/'
+>> and for some reason it doesn't support sampling, skip it, then the
+>> result should be the same as above.
+>>
+>> If the user finds it strange after looking at sysfs that 'krava/cycles/'
+>> isn't being sampled, the usual workflow is to ask perf for more
+>> verbosity, using -v (or multiple 'v' letters to get increasing levels of
+>> verbosity), in which case the user would see:
+>>
+>>   root@x1:~# perf record -v -e cycles -a sleep 1
+>>   WARNING: skipping 'krava/cycles/' event, it doesn't support sampling.
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples) ]
+>>   root@x1:~# perf evlist
 
-Call Trace:
- <IRQ>
-amd_pmu_enable_all (arch/x86/events/amd/core.c:1341)
-x86_pmu_enable (arch/x86/events/core.c:1276 arch/x86/events/core.c:1335)
-__pmu_ctx_sched_out (kernel/events/core.c:8314 (discriminator 1))
-ctx_sched_out (kernel/events/core.c:8328)
-__perf_install_in_context (kernel/events/core.c:6235)
-remote_function (./arch/x86/include/asm/atomic64_64.h:20)
-__flush_smp_call_function_queue (kernel/smp.c:189 (discriminator 20)
-    kernel/smp.c:197 (discriminator 20) kernel/smp.c:540 (discriminator 20))
-__sysvec_call_function_single (arch/x86/kernel/smp.c:193 (discriminator 1))
-sysvec_call_function_single (lib/maple_tree.c:3155 (discriminator 2))
-asm_sysvec_call_function_single (./arch/x86/include/asm/idtentry.h:709)
+This makes sense to me. I like keeping the old apparent behavior unless
+-v is used and it will feel like the tool "just works".
 
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
----
- arch/x86/events/amd/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+In the context of the commit summary "perf parse-events: Prefer
+sysfs/JSON hardware events over legacy":
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 1fc4ce44e743..0ead72d3e206 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -760,7 +760,8 @@ static void amd_pmu_enable_all(int added)
- 		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
- 
--		amd_pmu_enable_event(cpuc->events[idx]);
-+		if (cpuc->events[idx])
-+			amd_pmu_enable_event(cpuc->events[idx]);
- 	}
- }
- 
--- 
-2.39.3
+I don't follow why that should be "Prefer, even if it's an event that
+can't be opened, sysfs/JSON...".
 
+Surely it should be "Prefer sysfs/JSON, unless it can't be opened, then
+use legacy". If all events can be opened, sure go and open them all. If
+only core events can be opened, do that too. If only uncore events can
+be opened... etc.
+
+I'm happy to help with the implementation or testing of that on my
+big.LITTLE system.
+
+FWIW the hybrid stuff with Perf stat is already working well for me on
+Arm since we added PERF_PMU_CAP_EXTENDED_HW_TYPE which Ian suggested.
+
+> 
+> The problem here is that we're hiding a problem rather than reporting
+> it. Typically we report the issue and more than that we ask the user
+> to work around the issue. That would be analogous to wanting the user
+> to specify what PMU they want the event to apply to, which has always
+> been perf's behavior.
+> 
+
+Is the problem you are referring to that there are multiple PMUs with
+'cycles' events? Surely that's only a problem in the context of the new
+proposed behavior, otherwise it's not really a problem. It's just
+something that happens to exist.
+
+Because the user could always use the defaults (no argument) or -e
+cycles and historically Perf correctly picked the one that could be
+opened. Or if they want the DSU one they could specify it. That can all
+still work _and_ we can support "prefer sysfs/JSON" as long as we don't
+prefer it when opening the event doesn't work.
+
+Thanks
+James
+
+> Thanks,
+> Ian
+> 
+>> - Arnaldo
