@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B06167DB3
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 08:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C08168C1A;
+	Wed, 29 May 2024 08:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716972228; cv=none; b=EuCYTZVitEs9MC0xnFxq9ZRf4fYqIRD8pAwkmzLrSugMJCR4yuXNMsAhgjub+nAvCXs0+N/Xr23l5YzXJkjpZ8BM9gaZt9QVpfvVCcxE9OGdOEGO3Xd9fMwi66BrYRMNN9YWMm7ivxISF8OFBT5W1vILsBBjtJojup/gHdV8oRw=
+	t=1716972350; cv=none; b=lXIfax1+J5dJWGFlLfaWKkHSTVBnZyWP6HK9X3E8eqTvkt/O2tPAUq+bkJFU6ni/Y4nIPWpDgN0nXDCBUzxXcWHyHuYIOuTrT6Q15KK5nx8N7KkA9MMLIE0Wotrrf2jZuJH9Z2DY36v7fmh5n+RkThXunFy4cQFMNgvkNW3iWE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716972228; c=relaxed/simple;
-	bh=+D60/67Z3oSYOwoY1r8yrLb+a4d8fM/uvJ73OwOpaBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oBI4GDKBQuMbHeWNDaeGeNr3xPb7MdYiBHaeBLQvVa26V6xmzDUB5OijILsI8D5yG4L6HPOlIcfHOwNnAGCQRVgk5HyQEBwTxK0vqaVD/OjZ+v0VC6KanmM8Ud4n9ZCV32hgHEtK5WtQE5w5TBKHML5J3kpgnj2pC3XcThofDaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2493E2F4;
-	Wed, 29 May 2024 01:34:26 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92F9C3F762;
-	Wed, 29 May 2024 01:34:01 -0700 (PDT)
-Message-ID: <71e641b5-6b58-40fd-8d6e-eefcad049380@arm.com>
-Date: Wed, 29 May 2024 09:34:03 +0100
+	s=arc-20240116; t=1716972350; c=relaxed/simple;
+	bh=4k93cKDWyHTm7hIIZKu0U1D1pK2kVFiyj4VsKeMkNbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FHQcF4yJAHEqH2IK8ONlaADwphTSYoVDKNc7Jg30cDtMblu3yVOxkLtyN9xytKBrgZ/LyYz8nz6e/LKzB7kErNerC3lDd1CPvSr8DdBOQneILfET0/7QHHlsYnna7ewgc0n8X4bh2TxeNecrOwt8OWAugGPnwd4FaptWVA7iucI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hWwridfM; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hWwridfM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716972348; x=1748508348;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4k93cKDWyHTm7hIIZKu0U1D1pK2kVFiyj4VsKeMkNbc=;
+  b=hWwridfMgI/zqVuFFJcAnZ+nBbRFv1eZl/iDQ4NBrCgWRTgDsuKEy/BT
+   dKn+KZ3gV/LjwxMHDmq4mlDQckNYBpsCb8Vv1WEJiDTZznEuvqvGToGgO
+   z6BLF3+q/kBpB5iy4nTElzrFxRR5TRCbVD6Zje12qMJ9wLs4olNoiKThF
+   Bja/BwWXG0Y7pZqdHZVXCZUPchxbmIBHJvJ1PNJOCJzEM2kNZit1vXEz+
+   tpiKBNN+lWBj316ljg/8gQ9mXdcZizV7QNa4AsuKANvxAg+Ukoqwk990M
+   9zhkw4wep8bqfX/WnzK5EO9MnBAelAzufzNBZ1vK4EzmYCbxlDsLYEFkk
+   g==;
+X-CSE-ConnectionGUID: JLZG+Hb0Q9u2aBhqNzHYng==
+X-CSE-MsgGUID: urtr5MSnSTiJ7/k/dCoSxg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24494142"
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="24494142"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 01:45:30 -0700
+X-CSE-ConnectionGUID: y84rBaqMSrmaLSggfYGnyw==
+X-CSE-MsgGUID: IPPBN0tNQU2HObCI2sA71w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="40360935"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.248.18])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 01:45:26 -0700
+Message-ID: <286413cc-6257-49f0-8e8d-e65443494d16@intel.com>
+Date: Wed, 29 May 2024 11:45:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,295 +52,149 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Why does libtracevent pkg-config detection wipe PKG_CONFIG_PATH?
-To: Mateusz Kowalczyk <fuuzetsu@fuuzetsu.co.uk>,
- linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <cfcaf804-d7b1-4d55-8465-12e1d238aca1@app.fastmail.com>
- <0e2d8cc4-420b-4387-9b26-2f00cbbc1a83@arm.com>
- <198bd01f-ffa5-4f9e-9c03-a1193eec25e4@app.fastmail.com>
+Subject: Re: [PATCH v3 1/3] perf maps: Sort kcore maps
+To: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240520090647.949371-1-leo.yan@arm.com>
+ <20240520090647.949371-2-leo.yan@arm.com>
+ <2f4fce9f-6283-40ad-8adc-c370e98627da@intel.com>
+ <02fbb30f-19cf-4822-9676-35d3e51d99b1@arm.com>
+ <1f5f1eed-1feb-4a51-92b7-12c1fd195708@arm.com>
 Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <198bd01f-ffa5-4f9e-9c03-a1193eec25e4@app.fastmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <1f5f1eed-1feb-4a51-92b7-12c1fd195708@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-
-
-On 29/05/2024 01:05, Mateusz Kowalczyk wrote:
-> On Wed, 29 May 2024, at 1:09 AM, James Clark wrote:
->> On 27/05/2024 01:56, Mateusz Kowalczyk wrote:
->>> Hi,
->>>
->>> To build recent perf, I'm having to apply the below patch.
->>>
->>> ```diff
->>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->>> index 7f1e016a9253..b70fef12a977 100644
->>> --- a/tools/perf/Makefile.config
->>> +++ b/tools/perf/Makefile.config
->>> @@ -1181,7 +1181,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->>>      CFLAGS +=3D -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
->>>      LDFLAGS +=3D $(LIBTRACEEVENT_LDFLAGS)
->>>      EXTLIBS +=3D ${TRACEEVENTLIBS}
->>> -    LIBTRACEEVENT_VERSION :=3D $(shell PKG_CONFIG_PATH=3D$(LIBTRACEE=
-VENT_DIR) $(PKG_CONFIG) --modversion libtraceevent)
->>> +    LIBTRACEEVENT_VERSION :=3D $(shell $(PKG_CONFIG) --modversion li=
-btraceevent)
->>>      LIBTRACEEVENT_VERSION_1 :=3D $(word 1, $(subst ., ,$(LIBTRACEEVE=
-NT_VERSION)))
->>>      LIBTRACEEVENT_VERSION_2 :=3D $(word 2, $(subst ., ,$(LIBTRACEEVE=
-NT_VERSION)))
->>>      LIBTRACEEVENT_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEEVE=
-NT_VERSION)))
->>> ```
->>>
->>> I don't understand why `PKG_CONFIG_PATH` is overwritten this way. `gr=
-ep`ing for PKG_CONFIG_PATH reveals that this isn't done anywhere else in =
-the kernel tree. All other uses of `$(PKG_CONFIG)` in the file simply inv=
-oke the tool.
->>>
+On 28/05/24 18:00, James Clark wrote:
+> 
+> 
+> On 25/05/2024 10:29, Leo Yan wrote:
+>> Hi Adrian,
 >>
->> Hi Mateusz,
+>> On 5/22/2024 11:31 AM, Adrian Hunter wrote:
+>>> On 20/05/24 12:06, Leo Yan wrote:
+>>>> When merging kcore maps into the kernel maps, it has an implicit
+>>>> requirement for the kcore maps ordering, otherwise, some sections
+>>>> delivered by the kcore maps will be ignored.
+>>>
+>>> perf treats the kernel text map as a special case.  The problem
+>>> is that the kcore loading logic did not cater for there being 2
+>>> maps that covered the kernel mapping.
+>>>
+>>> The workaround was to choose the smaller mapping, but then that
+>>> still only worked if that was the first.
 >>
->> If PKG_CONFIG_PATH being overwritten is an issue, I'm assuming that yo=
-u
->> have it set in your shell already? Is there a reason you aren't using
->> the default? Or is it that your version of pkg-config doesn't like tha=
-t
->> var being set to an empty value?
->=20
-> I have PKG_CONFIG_PATH set in my shell already. I don't have LIBTRACEEV=
-ENT_DIR set.
->=20
-> I'm not sure if pkg-config version is relevant, presumably if PKG_CONFI=
-G_PATH is empty then no matter the version, it'll fail to resolve anythin=
-g? Maybe not. Either way, on my setup, PKG_CONFIG_PATH is set explicitly =
-and libtraceevent.pc is on it.
->=20
-> ```
-> [shana@aya:~/programming/linux/tools/perf]$ echo $PKG_CONFIG_PATH=20
-> /nix/store/k3701zl6gmx3la7y4dnflcvf3xfy88kh-python3-3.11.9/lib/pkgconfi=
-g:/nix/store/azfzvr6qa3680a8prh3xrpjfr26zmm59-libxslt-1.1.39-dev/lib/pkgc=
-onfig:/nix/store/z91sa53zd8iscw7bsjphdk8s5b84hwpg-audit-3.1.2-dev/lib/pkg=
-config:/nix/store/zk3sjrzfyjw14yy8jq9yn9nk41clf84q-elfutils-0.191-dev/lib=
-/pkgconfig:/nix/store/hf0v7fphfvxrz8dvgv2fxh12vslwh9hs-newt-0.52.24/lib/p=
-kgconfig:/nix/store/gms9ygkqyhw74nrhxqcm0xf2gpnqbpss-slang-2.3.3-dev/lib/=
-pkgconfig:/nix/store/2nj2qa56cnq6shqskd9ixipc01s302wb-ncurses-6.4-dev/lib=
-/pkgconfig:/nix/store/i4w2yc2np0lw8plxri2s2n244ywm1wfy-libtraceevent-1.8.=
-2-dev/lib/pkgconfig:/nix/store/m35h4lw1sslg0vdqw0bjkcx5nqlv4pl2-libunwind=
--1.8.1-dev/lib/pkgconfig:/nix/store/j93y8jkrqjy18njpnszvsk792hn1vd89-xz-5=
-=2E4.6-dev/lib/pkgconfig:/nix/store/wz1lmhhmvjxj2ipp2z5mvkydchhljggm-zlib=
--1.3.1-dev/lib/pkgconfig:/nix/store/0bp9inq3wd4car25n60idlfics6fajjv-open=
-ssl-3.0.13-dev/lib/pkgconfig:/nix/store/6a5ryz1dbq8n79qkgcvikgm3c4fmkp05-=
-numactl-2.0.18-dev/lib/pkgconfig:/nix/store/wwg6376ymkhpjxy6c3w9gkbhv6l2g=
-mqy-libxcrypt-4.4.36/lib/pkgconfig:/nix/store/ijj4lm5k5vg7fzf3w3cbpgfc98d=
-1b01a-babeltrace-1.5.8/lib/pkgconfig:/nix/store/z2jqrpg85lkh7v9bpz24nsmac=
-1lhs5bs-zstd-1.5.6-dev/lib/pkgconfig:/nix/store/j3hdndafs2ixbh1bhv95g6pj4=
-bankd1i-libcap-2.69-dev/lib/pkgconfig:/nix/store/srmzd01br39m4w52v9zb66v4=
-ghlxsxfg-attr-2.5.2-dev/lib/pkgconfig
->=20
-> [shana@aya:~/programming/linux/tools/perf]$ pkg-config --version
-> 0.29.2
-> ```
->=20
->>> Of course, I do actually have `libtraceevent.pc` available, it's just=
- that `LIBTRACEVENT_DIR` is empty which stops it from finding it.
->>>
->>> ```
->>> [shana@aya:~/programming/linux/tools/perf]$ pkg-config --modversion l=
-ibtraceevent
->>> 1.8.2
->>> ```
->>>
->>> If I do not apply the patch, I'm getting the below errors during buil=
-d.
->>>
->>> I'm not sure how others are getting it to build, maybe I'm doing some=
-thing wrong? Please let me know. If the diff is fine, it'd be great if an=
-yone could apply it.
->>>
+>> You could see below are Kcore maps dumped on Arm64:
 >>
->> I think your diff needs a small change. I'm assuming it was done this
->> way to allow the custom libtraceevent path to be specified with
->> LIBTRACEEVENT_DIR. If you remove that then it can't be done anymore.
+>> kore map start: ffff000000000000 end: ffff00001ac00000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff00001ad88000 end: ffff000032000000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff000032101000 end: ffff00003e000000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff000040000000 end: ffff000089b80000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff000089cc0000 end: ffff0000b9ab0000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff0000b9ad0000 end: ffff0000b9bb0000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff0000b9c50000 end: ffff0000b9d50000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff0000ba114000 end: ffff0000bf130000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff0000bf180000 end: ffff0000e0000000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff000200000000 end: ffff000220000000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff800000000000 end: ffff800080000000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff800080000000 end: ffff8000822f0000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: ffff800080000000 end: fffffdffbf800000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc0000000 end: fffffdffc06b0000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc06b6000 end: fffffdffc0c80000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc0c84000 end: fffffdffc0f80000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc1000000 end: fffffdffc226e000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc2273000 end: fffffdffc2e6b000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc2e6b000 end: fffffdffc2e6f000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc2e71000 end: fffffdffc2e76000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc2e84000 end: fffffdffc2fc5000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc2fc6000 end: fffffdffc3800000 name: [kernel.kallsyms]
+>> refcnt: 1
+>> kore map start: fffffdffc8000000 end: fffffdffc8800000 name: [kernel.kallsyms]
+>> refcnt: 1
 >>
->> Isn't the right change to set PKG_CONFIG_PATH if LIBTRACEEVENT_DIR is
->> set, but otherwise leave it unset?
->=20
-> I think that sounds right. I'm not sure what that looks like in `Make` =
-but if no-one is up to making the change, I can attempt it at least...
->=20
+>> You could see it's much more complex rather than only for kernel text section
+>> and vmalloc region. We cannot only handle the case for the overlapping between
+>> the text section and vmalloc region, it is possible for other maps to be
+>> overlapping with each other.
 
-Give it a go. It's probably something like this:
+That should not matter because maps__merge_in() deals with overlaps. Just
+need the replacement map to cover the kernel text.
 
-  trace_cfg_path :=3D $(if
-    $(LIBTRACEEVENT_DIR),$(LIBTRACEEVENT_DIR),$(PKG_CONFIG_PATH))
-  $(shell PKG_CONFIG_PATH=3D$(trace_cfg_path) $(PKG_CONFIG) ...
+There would be a problem if the mappings were inconsistent i.e. the overlapped
+part pointed to a different part of the file.  Not sure how much sense there is
+in general in overlapping program headers in an ELF file, but if they exist,
+they *must* have:
 
-Don't forget to check the patch guide:
-https://docs.kernel.org/process/submitting-patches.html
+	vaddr_1 - offset_1 == vaddr_2 - offset_2
 
->> But yes the build is working fine for me.
->=20
-> How does it work? Presumably you either must have LIBTRACEEVENT_DIR set=
- or your pkg-config is able to find libraries even with empty PKG_CONFIG_=
-PATH. The latter would explain some things. On my setup at least, there a=
-re no "global" default search locations and PKG_CONFIG_PATH basically det=
-ermines all the library locations. Maybe that's the difference. I guess i=
-t's easy to verify, if you run `PKG_CONFIG_PATH=3D pkg-config --modversio=
-n libtraceevent` then I must assume that it returns something on your set=
-up.
->=20
+We could add a check for that, but that would be fatal i.e. fail to load kcore
+at all.
 
-Yes I'm using the default paths so I don't need to set anything, and I
-assume most people are. It all makes sense that you are seeing the issue
-if you are setting it.
-
->> James
 >>
+>> And different arches have their own definition for the Kcore maps. This is why
+>> I want to sort maps in this patch, it can allow us to find a reliable way to
+>> append the kcore maps.
 >>
->>> Thanks!
->>>
->>> ```
->>> Perhaps you should add the directory containing `libtraceevent.pc'
->>> to the PKG_CONFIG_PATH environment variable
->>> No package 'libtraceevent' found
->>> expr: syntax error: unexpected argument =E2=80=98255=E2=80=99
->>>
->>> Auto-detecting system features:
->>> ...                                   dwarf: [ on  ]
->>> ...                      dwarf_getlocations: [ on  ]
->>> ...                                   glibc: [ on  ]
->>> ...                                  libbfd: [ on  ]
->>> ...                          libbfd-buildid: [ on  ]
->>> ...                                  libcap: [ on  ]
->>> ...                                  libelf: [ on  ]
->>> ...                                 libnuma: [ on  ]
->>> ...                  numa_num_possible_cpus: [ on  ]
->>> ...                                 libperl: [ on  ]
->>> ...                               libpython: [ on  ]
->>> ...                               libcrypto: [ on  ]
->>> ...                               libunwind: [ on  ]
->>> ...                      libdw-dwarf-unwind: [ on  ]
->>> ...                             libcapstone: [ OFF ]
->>> ...                                    zlib: [ on  ]
->>> ...                                    lzma: [ on  ]
->>> ...                               get_cpuid: [ on  ]
->>> ...                                     bpf: [ on  ]
->>> ...                                  libaio: [ on  ]
->>> ...                                 libzstd: [ on  ]
->>>
->>>   INSTALL libsubcmd_headers
->>>   PERF_VERSION =3D 6.10.rc1.g1613e604df0c
->>>   GEN     perf-archive
->>>   GEN     perf-iostat
->>>   INSTALL libsymbol_headers
->>>   INSTALL libapi_headers
->>>   INSTALL libperf_headers
->>>   INSTALL libbpf_headers
->>>   TEST    pmu-events/metric_test.log
->>>   CC      builtin-bench.o
->>>   CC      builtin-annotate.o
->>>   CC      builtin-config.o
->>>   CC      builtin-diff.o
->>>   CC      builtin-evlist.o
->>>   CC      builtin-ftrace.o
->>>   CC      builtin-help.o
->>>   CC      builtin-buildid-list.o
->>>   CC      builtin-buildid-cache.o
->>>   CC      builtin-kallsyms.o
->>>   CC      builtin-list.o
->>>   GEN     pmu-events/pmu-events.c
->>> In file included from util/session.h:5,
->>>                  from builtin-buildid-list.c:17:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> In file included from util/session.h:5,
->>>                  from builtin-evlist.c:15:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> In file included from util/session.h:5,
->>>                  from builtin-buildid-cache.c:24:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>>   CC      builtin-record.o
->>> In file included from util/session.h:5,
->>>                  from builtin-diff.c:15:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>>   CC      builtin-report.o
->>>   CC      builtin-stat.o
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-buildid-list.o] Error 1
->>> make[3]: *** Waiting for unfinished jobs....
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-evlist.o] Error 1
->>> In file included from util/session.h:5,
->>>                  from builtin-annotate.c:32:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-buildid-cache.o] Error 1
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-annotate.o] Error 1
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-diff.o] Error 1
->>> In file included from util/session.h:5,
->>>                  from builtin-record.c:27:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> In file included from util/session.h:5,
->>>                  from builtin-stat.c:60:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> In file included from util/session.h:5,
->>>                  from builtin-report.c:35:
->>> util/trace-event.h:152:62: error: operator '&&' has no right operand
->>>   152 | #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION =
->=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->>>       |                                                              =
-^~
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-record.o] Error 1
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-report.o] Error 1
->>> make[3]: *** [/home/shana/programming/linux/tools/build/Makefile.buil=
-d:105: builtin-stat.o] Error 1
->>> make[2]: *** [Makefile.perf:727: perf-in.o] Error 2
->>> make[2]: *** Waiting for unfinished jobs....
->>>   CC      pmu-events/pmu-events.o
->>>   LD      pmu-events/pmu-events-in.o
->>> make[1]: *** [Makefile.perf:264: sub-make] Error 2
->>> make: *** [Makefile:70: all] Error 2
->>> perf version 6.10.rc1.g5f00d82dec63
->>>
->>> ```
->>>
->>> --
->>> Mateusz K.
->=20
-> Thanks!
->=20
-> --
-> Mateusz K
+>>> James essentially fixed that by ensuring the kernel "replacement"
+>>> map is inserted first.
+>>
+>> Yeah, I agreed James' patch has fixed the kernel "replacement" map. But as I
+>> elaborated above, there still have other maps might overlap with each other,
+>> my understanding is we don't handle all cases.
+>>> In other respects, the ordering of the maps does not matter, so
+>>> I am not sure it is worth this extra processing.
+>>
+>> To sell my patch, I have another point for why we need sorting Kcore maps.
+>>
+>> Now Perf verifies the map in the function check_invariants(), this function
+>> reports the broken issue, but we still have no clue how the broken issue happens.
+>>
+>> If we can sort the Kcore maps in kcore_mapfn(), then we have chance to detect
+>> the overlapping within maps, and then it can reports the overlapping in the
+>> first place and this would be helpful for debugging and locating the failures.
+>>
+> 
+> +1 for this point. If check_invariants() insists on sorted maps, then
+> keeping them sorted as early as possible is better.
+> 
+> Debugging future issues will be easier if the assert is closer to the
+> source of the problem.
+
+The issue there is with using maps__insert().  It should be
+maps__fixup_overlap_and_insert() instead.  Probably most callers
+of maps__insert() should be using maps__fixup_overlap_and_insert().
+Probably they should be renamed:
+
+  maps__insert			  -> maps__insert_unsafe
+  maps__fixup_overlap_and_insert  -> maps__insert
+
