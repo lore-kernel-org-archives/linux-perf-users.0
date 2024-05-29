@@ -1,448 +1,239 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465A56AB8;
-	Wed, 29 May 2024 04:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0F238DE8;
+	Wed, 29 May 2024 06:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716955912; cv=none; b=GIZqoK/2aNI9S2pHhWaQoF5RiHpHoE/MN5p30bCA0FJlVRkdbdP+TREZWyNTU+VwD/GZcE6y8ILaQAkdiDauI+SthpYWxJLVkIpZOkh7+/XLNBuhQaQqFzL+XDjEsXdCwoy5tTjVLYobtjLcQ6ehDNB4AxBlSZeC7wxvB99U794=
+	t=1716965016; cv=none; b=M2t4WiN5wmxHq7TuJBxN+hbxrys0TpdrifZONojSnMj5rd1Fa01MgxV13fkcpfLv+TZw+44fpz4XK7QVnYPNornwCWy/sL0IL2fqfsNf5hxCUAVqEfFq1O1YMe3yg6dKkUCXrrP+BKr8hVrtre9pN4sJuBXnDDnAZoY7M01qV74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716955912; c=relaxed/simple;
-	bh=iSc8+vk1DU7CPhWjzAlHmVqHknKMgB6CZ9SbfPIwQSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KpKNBnmCYxMGwe14Lk1IXZSbk98nsvJkH7ifWqsRuAdlSbdQVax0OnfNAUTh3T7R02m9xfzvs9r7CCU8hjhBciv4dzMzZYbCKiWHTwf5Kc77ycHHSNltrJ8vne8ywjVC9P6NrsiUytauwY5EM/gttBvf86nYpkYtYLSB0REH5os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6fcbd812b33so1418318b3a.3;
-        Tue, 28 May 2024 21:11:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716955909; x=1717560709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lLmGxhXpkiks8NJ9+hFXWHSsOCY0zKQLp/YEenzXNX4=;
-        b=m+yRdbKsE6fpxJ5Fl0PgPQ4xo4h7Xc5mWjV9bmBPMfZtxfmj4ER087piWdCNdFmJCt
-         onsReWiMmSaLYSkTU0zEMfeN0cTQ8LRvCmEyKPKgLiJflRGURZ6nW3q8v9t6Pv4Q75zb
-         WYhqnt4MUBsesY1M7popWQWm7KM1Nsj08aAoZr+51rKB9HiJCF40W+OlBWVJ+LCxpq5S
-         CCpcjwpafKuvcEsuntDpmiQh/ybx9E38LhMkt+6JX3+vagMxV5v+68+U44PMlxIo5lNk
-         Z3rszd5oe+daEXJNlAqBOJ6F+l9kt2dSjS6XMlc9KNLBgwKMznSKbai8XWzfV8d0Ge7d
-         4x0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXf6k+0ytAlKs3ddQYI+QrRav+7gdfeUAHVYkUmxzjeJ8sYPtaL+y7x15883zf+yyWA4AFc43CaRCVnBd+bDSedtpr9AeAw/zjKB8X0dIUv6CUxsUcRQrfPKPrBoDEcfxXeKLCaRAKVLh6yhHK+Ig==
-X-Gm-Message-State: AOJu0Yz/b6BhIxEKUs8OBdxUb+4HUMS4xi+gEztDq4IfZ9CkYAjsBaOk
-	ux8Fi7M/P3eiYdJ67A1WLEo/aAmJ15SQxLyYfqpKmETRiccT6w8zGGtSFoheqYZc0IwqIR6LpCX
-	s4gTnYpwqRUSG4kGtZ5n2L1hFwPI=
-X-Google-Smtp-Source: AGHT+IGcSzpcTcf2054LOzasnz8JT41tf4CoL7KXt/oG0dkk785ZH/9m+wRlS+oatMjZvBo9Bc3QdSeqSMQsU6OpQWA=
-X-Received: by 2002:a05:6a21:9207:b0:1af:952f:f6fb with SMTP id
- adf61e73a8af0-1b212cc507emr16966789637.3.1716955909302; Tue, 28 May 2024
- 21:11:49 -0700 (PDT)
+	s=arc-20240116; t=1716965016; c=relaxed/simple;
+	bh=9bMOYC/3TXNfLMxzK4TbkcsOU/3B9utGKd1/mu8n6Fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eZMdIx19dnv7HJZrl98dD43uFGLnWF28N0fl0JU85MWssD27kVaL34aRIicz0rEdqaptIiYYaE1A0QVBcB/G6SOO9Va5+wb9NyQB4Jo+dzg1Jpr0t433ipysSvofO6IO3xgX8buCblqtpANlj+xdecS8jjB4iuH7lqZzCSA24Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OV31kIFV; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OV31kIFV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716965015; x=1748501015;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9bMOYC/3TXNfLMxzK4TbkcsOU/3B9utGKd1/mu8n6Fo=;
+  b=OV31kIFVzTgNM60g1qcUaQP8nK5hVF3MN+uKAO18CJ7OYOI+n1WSJIct
+   ZHGNaTzvlnP0+KQWjQ5mRF0zcC2wjRs3L3Dbd/6Kf3+uRLdf5CZlKkUyi
+   cchnVXePV9EKOzj6rQFzdT78v+Cpp118iyjbyoA93OEyhsUem0fvpHN8O
+   mj1HoSXO8cRUJEzN75R/d4HL2ehg+p92t/CdXK53uFrj2GpOToXDGSx2z
+   JvFB+uvM1hte9VEPOHfJr1fB/hjv2go99NyIhsK41GmOjsJP/SwYw51OZ
+   P3LaFLmrD6sHql7c6W55yxkhd99EEqCHKaUT+HspEca9PQ1Sq2x3kxlIH
+   g==;
+X-CSE-ConnectionGUID: jWy2PBFlRGqEMXazorE11Q==
+X-CSE-MsgGUID: Z75Bc+i1T9OHh9RDro3x9A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="16297976"
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="16297976"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 23:43:34 -0700
+X-CSE-ConnectionGUID: Cmy0Gz79QaG+EQ9Vy6uIXw==
+X-CSE-MsgGUID: kGlj2FVvSVq5mU4AAnH87Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,197,1712646000"; 
+   d="scan'208";a="39759246"
+Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
+  by fmviesa005.fm.intel.com with ESMTP; 28 May 2024 23:43:33 -0700
+From: weilin.wang@intel.com
+To: weilin.wang@intel.com,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: [RFC PATCH v10 0/8] TPEBS counting mode support
+Date: Wed, 29 May 2024 02:43:16 -0400
+Message-ID: <20240529064327.4080674-1-weilin.wang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240526182212.544525-1-sesse@google.com> <20240526182212.544525-4-sesse@google.com>
-In-Reply-To: <20240526182212.544525-4-sesse@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 28 May 2024 21:11:38 -0700
-Message-ID: <CAM9d7ciYykAsZVdMXACPu8mynCKcCRpVHzGC4rZUBrgi6BDfEA@mail.gmail.com>
-Subject: Re: [PATCH v7 4/4] perf report: LLVM-based symbol listing
-To: "Steinar H. Gunderson" <sesse@google.com>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, irogers@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 26, 2024 at 11:23=E2=80=AFAM Steinar H. Gunderson <sesse@google=
-.com> wrote:
->
-> Similar to the previous LLVM patches, this allows symbol enumeration
-> using LLVM instead of libbfd or libelf. This allows distro builds to
-> reliably enumerate symbols in e.g. PE binaries as profiled with WINE.
->
-> A lot of the logic for e.g. length detection has been carried over
-> from the libbfd code.
->
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-> ---
->  tools/perf/util/llvm-c-helpers.cpp | 124 +++++++++++++++++++++++++++++
->  tools/perf/util/llvm-c-helpers.h   |  49 ++++++++++++
->  tools/perf/util/symbol.c           |  54 ++++++++++++-
->  tools/perf/util/symbol.h           |   3 +
->  4 files changed, 228 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-=
-helpers.cpp
-> index 4070e2d5682f..87caf98cc8f6 100644
-> --- a/tools/perf/util/llvm-c-helpers.cpp
-> +++ b/tools/perf/util/llvm-c-helpers.cpp
-> @@ -9,6 +9,7 @@
->  #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM =
-<=3D 15 */
->  #include <llvm/DebugInfo/Symbolize/Symbolize.h>
->  #include <llvm/Support/TargetSelect.h>
-> +#include <llvm/Object/Binary.h>
->  #pragma GCC diagnostic pop
->
->  #include <stdio.h>
-> @@ -17,6 +18,8 @@
->  extern "C" {
->  #include <linux/zalloc.h>
->  }
-> +#include <vector>
-> +#include <algorithm>
->  #include "symbol_conf.h"
->  #include "llvm-c-helpers.h"
->
-> @@ -24,6 +27,7 @@ extern "C"
->  char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_na=
-me);
->
->  using namespace llvm;
-> +using namespace llvm::object;
->  using llvm::symbolize::LLVMSymbolizer;
->
->  /*
-> @@ -194,3 +198,123 @@ char *llvm_name_for_data(struct dso *dso, const cha=
-r *dso_name, u64 addr)
->                 dso, res_or_err->Name.c_str(),
->                 addr, res_or_err->Start);
->  }
-> +
-> +int llvm_load_symbols(const char *debugfile, struct llvm_symbol_list *sy=
-mbols)
-> +{
-> +       /* NOTE: This nominally does an mmap, despite the scary name. */
-> +       ErrorOr<std::unique_ptr<MemoryBuffer>> mem_buf_or_err =3D
-> +               MemoryBuffer::getFile(debugfile);
-> +       if (mem_buf_or_err.getError())
-> +               return -1;
-> +
-> +       Expected<std::unique_ptr<Binary>> binary_or_err(
-> +               createBinary(mem_buf_or_err.get()->getMemBufferRef(), nul=
-lptr));
-> +       if (!binary_or_err)
-> +               return -1;
-> +
-> +       /* Find the .text section. */
-> +       SectionRef text_section;
-> +       uint64_t text_filepos, image_base;
-> +       for (SectionRef section :
-> +            cast<ObjectFile>(*binary_or_err.get()).sections()) {
-> +               Expected<StringRef> name =3D section.getName();
-> +               if (name && *name =3D=3D ".text") {
-> +                       text_section =3D section;
-> +
-> +                       /*
-> +                        * If we don't find an image base below, we infer=
- the
-> +                        * image base * from the address and file offset =
-of the
-> +                        * .text section.
-> +                        */
-> +                       text_filepos =3D reinterpret_cast<const char *>(
-> +                               text_section.getContents()->bytes_begin()=
-) -
-> +                               mem_buf_or_err.get()->getBufferStart();
-> +                       image_base =3D text_section.getAddress() - text_f=
-ilepos;
-> +                       break;
-> +               }
-> +       }
-> +       if (text_section =3D=3D SectionRef())
-> +               /* No .text section, so no symbols (but also not a failur=
-e). */
-> +               return 0;
-> +
-> +       /*
-> +        * See if we can find an explicit image base pseudosymbol. If so,=
- get
-> +        * the image base directly from it, then infer the file position =
-of
-> +        * .text from that (i.e., the opposite inference of the fallback =
-above).
-> +        */
+From: Weilin Wang <weilin.wang@intel.com>
 
-If it's PE-specific, can we skip this based on the target type or
-something?
+I have tried not to count retire_latency events but did not succeed.
+In particular, I tried the following methods:
+ - Convert retire_latency event to dummy event in event parser.
+ - Early bail out in evsel__open_cpu() and store_evsel_ids().
+
+The first method fails and causes non-retire_latency events with the same event
+name return 0 count.
+
+The second method fails and causes all the events in the same group returning
+"<not counted>" results.
+
+Because of above, the retire_latency event will still run in counting mode.
+
+Other changes in v10:
+ - Change perf record fork from perf stat to evsel. All the major operations
+ like tpebs start, stop, read_evsel should directly work through evsel.
+ - Make intel-tpebs x86_64 only. This change is cross-compiled to arm64.
+ - Put tpebs code to intel-tepbs and simplify intel-tpebs APIs to minimum number
+of functions and variables. Update funtion name and variable names to use
+consistent prefix. Also improve error handling.
+ - Integrate code patch from Ian for the :R parser.
+ - Update MTL metrics to TMA 4.8.
+
+V9: https://lore.kernel.org/all/20240521173952.3397644-1-weilin.wang@intel.com/
+
+Changes in v9:
+ - Update the retire_latency result print and metric calculation method. Plugin
+the value to evsel so that no special code is required.
+ - Update --control:fifo to use pipe instead of named pipe.
+ - Add test for TPEBS counting mode.
+ - Update Document with more details.
+
+Changes in v8:
+- In this revision, the code is updated to base on Ian's patch on R modifier
+parser https://lore.kernel.org/lkml/20240428053616.1125891-3-irogers@google.com/
+After this change, there is no special code required for R modifier in
+metricgroup.c and metricgroup.h files.
+
+Caveat of this change:
+  Ideally, we will need to add special handling to skip counting events with R
+modifier in evsel. Currently, this is not implemented so the event with :R will
+be both counted and sampled. Usually, in a metric formula that uses retire_latency,
+it would already require to count the event. As a result, we will endup count the
+same event twice. This should be able to be handled properly when we finalize our
+design on evsel R modifier support.
+
+- Move TPEBS specific code out from main perf stat code to separate files in
+util/intel-tpebs.c and util/intel-tpebs.h. [Namhyung]
+- Use --control:fifo to ack perf stat from forked perf record instead of sleep(2) [Namhyung]
+- Add introductions about TPEBS and R modifier in Documents. [Namhyung]
 
 
-> +       for (SymbolRef symbol :
-> +            cast<ObjectFile>(*binary_or_err.get()).symbols())
-> +               if (symbol.getName() &&
-> +                   symbol.getAddress() &&
-> +                   (*symbol.getName() =3D=3D "__ImageBase" ||
-> +                    *symbol.getName() =3D=3D "__image_base__")) {
-> +                       image_base =3D *symbol.getAddress();
-> +                       if (image_base < 0x100000000ULL)
-> +                               /*
-> +                                * PE symbols can only have 4 bytes, so u=
-se
-> +                                * .text high bits (if any).
-> +                                */
-> +                               image_base |=3D text_section.getAddress()=
- &
-> +                                       ~0xFFFFFFFFULL;
-> +                       text_filepos =3D text_section.getAddress() - imag=
-e_base;
-> +                       break;
-> +               }
-> +
-> +       symbols->image_base =3D image_base;
-> +       symbols->text_end =3D text_filepos + text_section.getSize();
-> +
-> +       /* Collect all valid symbols. */
-> +       std::vector<SymbolRef> all_symbols;
-> +       for (SymbolRef symbol :
-> +            cast<ObjectFile>(*binary_or_err.get()).symbols())
-> +               if (symbol.getName() && symbol.getFlags() &&
-> +                   symbol.getAddress() && symbol.getSection())
-> +                       all_symbols.push_back(symbol);
-> +       symbols->num_symbols =3D all_symbols.size();
-> +       symbols->symbols =3D (struct llvm_symbol *)calloc(
-> +               all_symbols.size(), sizeof(struct llvm_symbol));
-> +       if (symbols->symbols =3D=3D nullptr)
-> +               return -1;
+Changes in v7:
+- Update code and comments for better code quality [Namhyung]
+- Add a separate commit for perf data [Namhyung]
+- Update retire latency print function to improve alignment [Namhyung]
 
-I'm not sure if it's compatible with what we do in the
-dso__load_sym_internal().  Probably ARM and PPC folks
-should check if it works well.
+Changes in v6:
+- Update code and add comments for better code quality [Namhyung]
+- Remove the added fd var and directly pass the opened fd to data.file.fd [Namhyung]
+- Add kill() to stop perf record when perf stat exists early [Namhyung]
+- Add command opt check to ensure only start perf record when -a/-C given [Namhyung]
+- Squash commits [Namhyung]
 
-Thanks,
-Namhyung
+Changes in v5:
+- Update code and add comments for better code quality [Ian]
+
+Changes in v4:
+- Remove uncessary debug print and update code and comments for better
+readability and quality [Namhyung]
+- Update mtl metric json file with consistent TmaL1 and TopdownL1 metricgroup
+
+Changes in v3:
+- Remove ':' when event name has '@' [Ian]
+- Use 'R' as the modifier instead of "retire_latency" [Ian]
+
+Changes in v2:
+- Add MTL metric file
+- Add more descriptions and example to the patch [Arnaldo]
+
+Here is an example of running perf stat to collect a metric that uses
+retire_latency value of event MEM_INST_RETIRED.STLB_HIT_STORES on a MTL system.
+
+In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES sample.
+Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p count and retire_latency value
+are all 0.
+
+./perf stat -M tma_dtlb_store -a -- sleep 1
+
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.000 MB - ]
+
+ Performance counter stats for 'system wide':
+
+       181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tma_dtlb_store
+         3,195,608      cpu_core/topdown-retiring/
+        40,156,649      cpu_core/topdown-mem-bound/
+         3,550,925      cpu_core/topdown-bad-spec/
+       117,571,818      cpu_core/topdown-fe-bound/
+        57,118,087      cpu_core/topdown-be-bound/
+            69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
+             4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
+        30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
+        30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
+           168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
+              0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
+
+       1.003105924 seconds time elapsed
+
+v1:
+TPEBS is one of the features provided by the next generation of Intel PMU.
+Please refer to Section 8.4.1 of "Intel® Architecture Instruction Set Extensions
+Programming Reference" [1] for more details about this feature.
+
+This set of patches supports TPEBS in counting mode. The code works in the
+following way: it forks a perf record process from perf stat when retire_latency
+of one or more events are used in a metric formula. Perf stat would send a
+SIGTERM signal to perf record before it needs the retire latency value for
+metric calculation. Perf stat will then process sample data to extract the
+retire latency data for metric calculations. Currently, the code uses the
+arithmetic average of retire latency values.
+
+[1] https://www.intel.com/content/www/us/en/content-details/812218/intel-architecture-instruction-set-extensions-programming-reference.html?wapkw=future%20features
 
 
-> +
-> +       /*
-> +        * Symbols don't normally come with lengths, so we'll infer them
-> +        * from what comes after the symbol address-wise. There is some
-> +        * extra logic around zero-length symbols and deduplication,
-> +        * which the caller will do for us (it's shared with other backen=
-ds).
-> +        */
-> +       std::sort(all_symbols.begin(), all_symbols.end(),
-> +                 [](const SymbolRef &a, const SymbolRef &b) {
-> +                         if (*a.getAddress() !=3D *b.getAddress())
-> +                                 return *a.getAddress() < *b.getAddress(=
-);
-> +                         return *a.getName() < *b.getName();
-> +                 });
-> +       for (size_t i =3D 0; i < all_symbols.size(); ++i) {
-> +               const SymbolRef &sym =3D all_symbols[i];
-> +               llvm_symbol &out_sym =3D symbols->symbols[i];
-> +               out_sym.start =3D *sym.getAddress() - image_base;
-> +               out_sym.name =3D (char *)calloc(1, sym.getName()->size() =
-+ 1);
-> +               if (out_sym.name =3D=3D nullptr) {
-> +                       for (size_t i =3D 0; i < all_symbols.size(); ++i)=
- {
-> +                               zfree(&symbols->symbols[i].name);
-> +                       }
-> +                       zfree(&symbols->symbols);
-> +                       return -1;
-> +               }
-> +               memcpy(out_sym.name, sym.getName()->bytes_begin(),
-> +                      sym.getName()->size());
-> +               out_sym.global =3D *sym.getFlags() & SymbolRef::SF_Global=
-;
-> +               out_sym.weak =3D *sym.getFlags() & SymbolRef::SF_Weak;
-> +
-> +               SectionRef section =3D **sym.getSection();
-> +               uint64_t next_addr;
-> +               if (i + 1 < all_symbols.size() &&
-> +                   section =3D=3D **all_symbols[i + 1].getSection())
-> +                       next_addr =3D *all_symbols[i + 1].getAddress();
-> +               else
-> +                       next_addr =3D section.getAddress() + section.getS=
-ize();
-> +
-> +               out_sym.len =3D next_addr - *sym.getAddress();
-> +       }
-> +
-> +       return 1;
-> +}
-> diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-he=
-lpers.h
-> index d2b99637a28a..1abbc9ef3dab 100644
-> --- a/tools/perf/util/llvm-c-helpers.h
-> +++ b/tools/perf/util/llvm-c-helpers.h
-> @@ -8,6 +8,7 @@
->   */
->
->  #include <linux/compiler.h>
-> +#include <stddef.h>
->
->  #ifdef __cplusplus
->  extern "C" {
-> @@ -53,6 +54,54 @@ int llvm_addr2line(const char* dso_name,
->  char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr=
-);
->  char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr=
-);
->
-> +struct llvm_symbol {
-> +       u64 start, len;
-> +       bool weak, global;
-> +
-> +       /* Must be freed by the caller. */
-> +       char *name;
-> +};
-> +
-> +struct llvm_symbol_list {
-> +       /*
-> +        * The address this dso is loaded at in memory; adding this to
-> +        * the file position of any symbol will give the address that
-> +        * symbol is loaded at.
-> +        */
-> +       u64 image_base;
-> +
-> +       /*
-> +        * The byte offset of the end of the .text segment (one-past-the-=
-end)
-> +        * in the file.
-> +        */
-> +       u64 text_end;
-> +
-> +       /*
-> +        * The actual symbols. Must be freed by the caller, with free().
-> +        * The string inside each llvm_symbol must also be freed.
-> +        */
-> +       size_t num_symbols;
-> +       struct llvm_symbol *symbols;
-> +};
-> +
-> +/*
-> + * Get a list of all symbols in the given file using LLVM. Similarly to
-> + * addr2line(), we need to implement this using a helper structure;
-> + * LLVM actually has a C API for this, but we can't use it (it doesn't
-> + * have an equivalent of getFlags()). So we do the meat of the LLVM-faci=
-ng
-> + * logic here and let the caller make perf symbols out of it.
-> + *
-> + * Possible return values and their meaning:
-> + *
-> + * -1: An error occurred.
-> + *  0: The file loaded fine, but there were no .text section.
-> + *  1: The file loaded successfully.
-> + *
-> + * For -1 and 0, "symbols" does not contain any meaningful information,
-> + * and nothing needs to be freed.
-> + */
-> +int llvm_load_symbols(const char *debugfile, struct llvm_symbol_list *sy=
-mbols);
-> +
->  #ifdef __cplusplus
->  }
->  #endif
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9e5940b5bc59..69b8c0a280c7 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -22,6 +22,7 @@
->  #include "util.h" // lsdir()
->  #include "debug.h"
->  #include "event.h"
-> +#include "llvm-c-helpers.h"
->  #include "machine.h"
->  #include "map.h"
->  #include "symbol.h"
-> @@ -1566,6 +1567,50 @@ static int dso__load_perf_map(const char *map_path=
-, struct dso *dso)
->         return -1;
->  }
->
-> +#ifdef HAVE_LIBLLVM_SUPPORT
-> +int dso__load_llvm_symbols(struct dso *dso, const char *debugfile)
-> +{
-> +       struct llvm_symbol_list symbols;
-> +       struct symbol *symbol;
-> +       int err =3D llvm_load_symbols(debugfile, &symbols);
-> +       int ret =3D -1;
-> +
-> +       if (err =3D=3D -1)
-> +               return -1;
-> +       else if (err =3D=3D 0)
-> +               return 0;
-> +
-> +       for (size_t i =3D 0; i < symbols.num_symbols; ++i) {
-> +               const struct llvm_symbol *sym =3D &symbols.symbols[i];
-> +               int elf_binding;
-> +
-> +               if (sym->weak)
-> +                       elf_binding =3D STB_WEAK;
-> +               else if (sym->global)
-> +                       elf_binding =3D STB_GLOBAL;
-> +               else
-> +                       elf_binding =3D STB_LOCAL;
-> +               symbol =3D symbol__new(sym->start, sym->len, elf_binding,=
- STT_FUNC,
-> +                                    sym->name);
-> +               if (!symbol)
-> +                       goto out_free;
-> +
-> +               symbols__insert(dso__symbols(dso), symbol);
-> +       }
-> +
-> +       symbols__fixup_end(dso__symbols(dso), false);
-> +       symbols__fixup_duplicate(dso__symbols(dso));
-> +       dso__set_adjust_symbols(dso, true);
-> +       ret =3D 0;
-> +
-> +out_free:
-> +       for (size_t i =3D 0; i < symbols.num_symbols; ++i)
-> +               zfree(&symbols.symbols[i].name);
-> +       zfree(&symbols.symbols);
-> +       return ret;
-> +}
-> +#endif
-> +
->  #ifdef HAVE_LIBBFD_SUPPORT
->  #define PACKAGE 'perf'
->  #include <bfd.h>
-> @@ -1871,6 +1916,7 @@ int dso__load(struct dso *dso, struct map *map)
->                 bool next_slot =3D false;
->                 bool is_reg;
->                 bool nsexit;
-> +               int llvmrc =3D -1;
->                 int bfdrc =3D -1;
->                 int sirc =3D -1;
->
-> @@ -1899,11 +1945,15 @@ int dso__load(struct dso *dso, struct map *map)
->                         }
->                 }
->
-> -#ifdef HAVE_LIBBFD_SUPPORT
-> +#ifdef HAVE_LIBLLVM_SUPPORT
->                 if (is_reg)
-> +                       llvmrc =3D dso__load_llvm_symbols(dso, name);
-> +#endif
-> +#ifdef HAVE_LIBBFD_SUPPORT
-> +               if (is_reg && llvmrc < 0)
->                         bfdrc =3D dso__load_bfd_symbols(dso, name);
->  #endif
-> -               if (is_reg && bfdrc < 0)
-> +               if (is_reg && llvmrc < 0 && bfdrc < 0)
->                         sirc =3D symsrc__init(ss, dso, name, symtab_type)=
-;
->
->                 if (nsexit)
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index 3fb5d146d9b1..01256c41467a 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -174,6 +174,9 @@ int symbol__config_symfs(const struct option *opt __m=
-aybe_unused,
->
->  struct symsrc;
->
-> +#ifdef HAVE_LIBLLVM_SUPPORT
-> +int dso__load_llvm_symbols(struct dso *dso, const char *debugfile);
-> +#endif
->  #ifdef HAVE_LIBBFD_SUPPORT
->  int dso__load_bfd_symbols(struct dso *dso, const char *debugfile);
->  #endif
-> --
-> 2.45.1
->
->
+Ian Rogers (1):
+  perf parse-events: Add a retirement latency modifier
+
+Weilin Wang (7):
+  perf data: Allow to use given fd in data->file.fd
+  perf stat: Fork and launch perf record when perf stat needs to get
+    retire latency value for a metric.
+  perf stat: Plugin retire_lat value from sampled data to evsel
+  perf vendor events intel: Add MTL metric json files
+  perf stat: Add command line option for enabling tpebs recording
+  perf Document: Add TPEBS to Documents
+  perf test: Add test for Intel TPEBS counting mode
+
+ tools/perf/Documentation/perf-list.txt        |    1 +
+ tools/perf/Documentation/topdown.txt          |   30 +
+ tools/perf/arch/x86/util/evlist.c             |    6 +
+ tools/perf/builtin-stat.c                     |    8 +
+ .../arch/x86/meteorlake/metricgroups.json     |  140 +
+ .../arch/x86/meteorlake/mtl-metrics.json      | 2595 +++++++++++++++++
+ .../perf/tests/shell/test_stat_intel_tpebs.sh |   19 +
+ tools/perf/util/Build                         |    1 +
+ tools/perf/util/data.c                        |    7 +-
+ tools/perf/util/evsel.c                       |   26 +
+ tools/perf/util/evsel.h                       |    6 +
+ tools/perf/util/intel-tpebs.c                 |  397 +++
+ tools/perf/util/intel-tpebs.h                 |   48 +
+ tools/perf/util/parse-events.c                |    2 +
+ tools/perf/util/parse-events.h                |    1 +
+ tools/perf/util/parse-events.l                |    3 +-
+ 16 files changed, 3288 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
+ create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
+ create mode 100644 tools/perf/util/intel-tpebs.c
+ create mode 100644 tools/perf/util/intel-tpebs.h
+
+--
+2.43.0
+
