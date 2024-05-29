@@ -1,289 +1,207 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E845F1C68A5
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 18:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F101522A;
+	Wed, 29 May 2024 19:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717008879; cv=none; b=Ab2bNcdfJnLDEHTxiaY87LbUAfLiu8bw72vWY1YSxdiHJ0qFcQoZRN5OQs5mO22ui1Wbn1uJiLB5y5vgtr0nNRKPYJ59ZphoqHY3TDDlecKoSJbGnZiPeeQriiaqvJpBiD88zap/Req0WbqHYi1rURyV86rslt735pgMML9JDwU=
+	t=1717010352; cv=none; b=p8FN40PKXlaRmbD+Z61ZCNJqtCDg1VXFccBWsPeI15IR1+vk7aBMY6Ctp22HlzCPW3XZBGg1Q47aaNCeMGkdmqVxIrMnKxo+IRD19hLXvZIVCV6tdfLn/WfEuRig+BKEddUL8GIoMci+ck/VEpY4+FAVZ2cGBjL7WQEXuHLZM+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717008879; c=relaxed/simple;
-	bh=fhyOW32KF7x1nOg5NvGrhHnYTYAqHGUN810iLS+POK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Br1y4J8a9PwvpXiS5ptflKi3p1ihSkYEGkbc3c1DxD3WyfKpwdXR1Y76b4CIybQyeCQQbECeGsyBPMUG5bNYWvTYqsDag8QAZ94lImjEZH8UcmSEkMwZRT+f5nKG9/hKAgntc5YpgQHAwNeLP4kKsV/HVShVo3bhoEbSOZDAD9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Q8dA1usY; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Q8dA1usY"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42120fc8cbfso358215e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 11:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717008876; x=1717613676; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U+2U8h+2rvtM/KDIv8ZmxGGBqHz1DJ98r4cPzpRskE8=;
-        b=Q8dA1usY15b8WQ+g36JDmCaqZrRlLcNcwX+fkhSDvbQ4jMTMiZOfZZTYuLpRGTm3kE
-         8p2jfSzp3bm5nk6yzXQyB/zk8gbTi8M8c3x/oE8Lmm6+Qhws8kd5+qSKkVR56WWDaF7a
-         D751SZznnFXI21jvW5Or8VJ+bgmCD2JaO2y+aSnIvznWM3RINVvkd7q+Mqmj9rmXXD9s
-         rXj/GqrsjZAOG6HIuTcz0iCi5O8isXLQ1bHSjkTQ7RVfD66sKp+mYvnKwvBipPcw4Z61
-         aJobQE+UWSFfqkojekkPMO/nC1o+t/ZlkqjGPxOHuv72GwCUw8tqYyk73bVYF7EA8z1F
-         h5DA==
+	s=arc-20240116; t=1717010352; c=relaxed/simple;
+	bh=xb1JN1y1CMO2f8a0qx3FZtOhvXUAeWKxP5purARNaI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HMxGnHiLRW8gqNyWYCtxAsAYgnfApS6YpjZnyoInKpw8R+vgKZWWvwOET8d5q5R36DyNmmdNzXB5lhr1CjuJt35zY1aTAJLWjxnLXIE2og3iEXtLJ2+mGto3FaqcBMkHAE73irkkA4l5t4LckC165/Z2SNvuD2HukLYirCcRPlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2bfffa3c748so43941a91.3;
+        Wed, 29 May 2024 12:19:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717008876; x=1717613676;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717010350; x=1717615150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U+2U8h+2rvtM/KDIv8ZmxGGBqHz1DJ98r4cPzpRskE8=;
-        b=G2e2UpSAAlYTMmYggrwYiYnwK7tEkvGDy87Yo1Ww/nhOe8Vw0h7UUfh4hUs4AImgGk
-         QfnO6dOaVc5t1emm2pQf+OIdhqpykQLBfq65y3qthfv1PoxlPNOJN9YVMLG9C+hHwk+m
-         ifSaS07JillOfb3yTUcZJqf7ANV6sJDRHOedoFD66KRFKzP+mE/Rr4+PgRPCdB06QrMq
-         B4nO81AJkwXDcEC/iSPiAOdd59j/m0nhTkOsiXpSK7winqZ1pP4RC5gasHSb0S9z7JX5
-         xq+xdy/4Raww3lIxNMllbnX5FOyfU86OXh1MV+Gj1r0FE+PWI1mdtiL4ebev2A2UO/SM
-         58Zg==
-X-Gm-Message-State: AOJu0YyhBct8213s9kjCTREycPNmHjI3/msNYZQ+pb6EKDESoi6hYQU5
-	6imMoAMduWFq4jzx6qn+vpQ//7JJePBZHEpS8nbWgr7hB6iZaYoC92bwAB+xaCs=
-X-Google-Smtp-Source: AGHT+IHyilA5pn7bTk5wG0if56ayFdi//JSBq/3E0JiJr67lveFf/JA8ZYRTkFP5SiaOqO8femclbQ==
-X-Received: by 2002:a7b:c391:0:b0:420:1db0:53c1 with SMTP id 5b1f17b1804b1-421279375bamr150315e9.41.1717008876402;
-        Wed, 29 May 2024 11:54:36 -0700 (PDT)
-Received: from rkanwal-XPS-15-9520.Home ([2a02:c7c:7527:ee00:7446:71c1:a41a:da9b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706a23csm2787885e9.27.2024.05.29.11.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 11:54:35 -0700 (PDT)
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	ajones@ventanamicro.com,
-	anup@brainfault.org,
-	acme@kernel.org,
-	atishp@rivosinc.com,
-	beeman@rivosinc.com,
-	brauner@kernel.org,
-	conor@kernel.org,
-	heiko@sntech.de,
-	irogers@google.com,
-	mingo@redhat.com,
-	james.clark@arm.com,
-	renyu.zj@linux.alibaba.com,
-	jolsa@kernel.org,
-	jisheng.teoh@starfivetech.com,
-	palmer@dabbelt.com,
-	tech-control-transfer-records@lists.riscv.org,
-	will@kernel.org,
-	kaiwenxue1@gmail.com,
-	Rajnesh Kanwal <rkanwal@rivosinc.com>
-Subject: [PATCH RFC 6/6] riscv: perf: Integrate CTR Ext support in riscv_pmu_dev driver
-Date: Wed, 29 May 2024 19:53:37 +0100
-Message-Id: <20240529185337.182722-7-rkanwal@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240529185337.182722-1-rkanwal@rivosinc.com>
-References: <20240529185337.182722-1-rkanwal@rivosinc.com>
+        bh=MB+hEeQGtAuqaIgp6KRG4K6CzFSG34l9ai+1CFQ5EHw=;
+        b=mI2+IonlyqCqYZx9991pYwl+Ad6FXRAnDWOFwUP5O572sCkWhG5V13ailvV8dOjUR2
+         9DcKGqHsCiEEJzTTbHdZf14VZtNfpCZ92XmOMjHKt1BvoMC2Uy1CVFRJazn8qM/z7g4i
+         DvwkidnM5Ys71pzxpKv/EyQlYr3KgTeV6LPTuXxGkBh6DkbillqlMQ/saj3Z/+scyo8g
+         a6mIyTYY+ObQ9Ic7KXITDD1FDbtoAs7vl9C4q9lI8hD/QHiBOb6y8Y1O4ikvf8K0NUc9
+         1qsdwYxzW32hyt8+R1oie9ICELPDilM8nXz49XEzQOaAuhmS/OC3Y9cHBYBZc7+EGXYZ
+         RhfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGenu3EIom06sCdDcDvUgKHIMr2J8pLZtqktYG0+58gwJx0k5TyAjKNxAABn3vVv5UmdHtMxG/0EyLG2vOqVs7W/wExiSWtGWMmf5LNhPX8YrQUkfwQrc+EBEzRnnYP1Iq2vpCVig4mBlqCGwZsw==
+X-Gm-Message-State: AOJu0Yw618pUmH098z4NxeN0OeszYcEcvOtmKbJDqD8/KOCVJSV3QIpn
+	a/P17d8P0r46QHiVHDfgoUzHe8BjfqDJVY2IpGxGKBM0eJhMVilAIMdnGDxl11GQjiyy3HrwIzE
+	kbNYDxeyjIjQ5n9Iso4enGvSKYvY=
+X-Google-Smtp-Source: AGHT+IFm1+tDYSwKd/p+X6+OnZVWDrWbRmfDMQGhEmk4TvTFihvAL+QZ4+OTGKp438p6gjJLMZI+ciewCLbvgaS2BN8=
+X-Received: by 2002:a17:90a:4592:b0:2b2:7e94:c5e0 with SMTP id
+ 98e67ed59e1d1-2c1ab9f933cmr38112a91.20.1717010350217; Wed, 29 May 2024
+ 12:19:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240521133029.83654-1-ben.gainey@arm.com> <20240521133029.83654-5-ben.gainey@arm.com>
+ <CAM9d7chssov_fW3ZbpYqGRyhS=xuHLyJ7=rkxTNnJ6fkgEdGJQ@mail.gmail.com>
+ <a12573d18f7c8bf73c24c572e43965e3f250acea.camel@arm.com> <e114bf8d2e7b6c0874fffdf8867c954a08772da3.camel@arm.com>
+In-Reply-To: <e114bf8d2e7b6c0874fffdf8867c954a08772da3.camel@arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 29 May 2024 12:18:58 -0700
+Message-ID: <CAM9d7cjmH=nkEt-z_XpZ1J0oL-EY2d52oz70-KpN+uzM5SEk6A@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] tools/perf: Allow inherit + PERF_SAMPLE_READ when
+ opening events
+To: Ben Gainey <Ben.Gainey@arm.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, James Clark <James.Clark@arm.com>, 
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "irogers@google.com" <irogers@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This integrates recently added CTR ext support in riscv_pmu_dev driver
-to enable branch stack sampling using PMU events.
+Hello,
 
-This mainly adds CTR enable/disable callbacks in rvpmu_ctr_stop()
-and rvpmu_ctr_start() function to start/stop branch recording along
-with the event.
+On Wed, May 29, 2024 at 10:48=E2=80=AFAM Ben Gainey <Ben.Gainey@arm.com> wr=
+ote:
+>
+> On Mon, 2024-05-27 at 18:47 +0100, Ben Gainey wrote:
+> > On Thu, 2024-05-23 at 18:41 -0700, Namhyung Kim wrote:
+> > > On Tue, May 21, 2024 at 6:30=E2=80=AFAM Ben Gainey <ben.gainey@arm.co=
+m>
+> > > wrote:
+> > > >
+> > > > The tool will now default to this new mode if the user specifies
+> > > > a
+> > > > sampling group when not in system-wide mode, and when --no-
+> > > > inherit
+> > > > is not specified.
+> > > >
+> > > > This change updates evsel to allow the combination of inherit
+> > > > and PERF_SAMPLE_READ.
+> > > >
+> > > > A fallback is implemented for kernel versions where this feature
+> > > > is
+> > > > not
+> > > > supported.
+> > >
+> > > But I'm afraid the test would fail on old kernels.  Maybe we need
+> > > to
+> > > put it in the selftests.
+> > >
+> >
+> > Sorry, not clear what you mean?
+> >
+> > Is the issue that the fallback on older kernels fails, or that the
+> > "perf test" tests fail?
+> >
+> > Thanks
+> > Ben
+>
+> Just to follow up, I've rechecked the fallback on an unmodified 6.9.1
+> kernel with the following:
+>
+>     perf record -vv -e '{cycles,instructions}:S' ls
+>
+> With an unpatched version of perf running on an unpatched kernel, the
+> cycles event is opened as:
+>
+>     ------------------------------------------------------------
+>     perf_event_attr:
+>       type                             0 (PERF_TYPE_HARDWARE)
+>       size                             136
+>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>       { sample_period, sample_freq }   4000
+>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>       read_format                      ID|GROUP|LOST
+>       disabled                         1
+>       exclude_kernel                   1
+>       exclude_hv                       1
+>       mmap                             1
+>       comm                             1
+>       freq                             1
+>       enable_on_exec                   1
+>       task                             1
+>       sample_id_all                    1
+>       exclude_guest                    1
+>       mmap2                            1
+>       comm_exec                        1
+>       ksymbol                          1
+>       bpf_event                        1
+>     ------------------------------------------------------------
+>
+> whereas with these patches applied to perf, on an unpatched kernel, the
+> output is as follows
+>
+>     ------------------------------------------------------------
+>     perf_event_attr:
+>       type                             0 (PERF_TYPE_HARDWARE)
+>       size                             136
+>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>       { sample_period, sample_freq }   4000
+>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>       read_format                      ID|GROUP|LOST
+>       disabled                         1
+>       inherit                          1
+>       exclude_kernel                   1
+>       exclude_hv                       1
+>       mmap                             1
+>       comm                             1
+>       freq                             1
+>       enable_on_exec                   1
+>       task                             1
+>       sample_id_all                    1
+>       exclude_guest                    1
+>       mmap2                            1
+>       comm_exec                        1
+>       ksymbol                          1
+>       bpf_event                        1
+>     ------------------------------------------------------------
+>     sys_perf_event_open: pid 3442954  cpu 0  group_fd -1  flags 0x8
+>     sys_perf_event_open failed, error -22
+>     Using PERF_SAMPLE_READ / :S modifier is not compatible with
+> inherit, falling back to no-inherit.
+>     ------------------------------------------------------------
+>     perf_event_attr:
+>       type                             0 (PERF_TYPE_HARDWARE)
+>       size                             136
+>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>       { sample_period, sample_freq }   4000
+>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>       read_format                      ID|GROUP|LOST
+>       disabled                         1
+>       exclude_kernel                   1
+>       exclude_hv                       1
+>       mmap                             1
+>       comm                             1
+>       freq                             1
+>       enable_on_exec                   1
+>       task                             1
+>       sample_id_all                    1
+>       exclude_guest                    1
+>       mmap2                            1
+>       comm_exec                        1
+>       ksymbol                          1
+>       bpf_event                        1
+>     ------------------------------------------------------------
+>
+> The command falls back to the same configuration as was previously
+> used. The same is true for the instructions event.
+>
+> `perf test` fails on an unpatched kernel in "15: Setup struct
+> perf_event_attr" for the test "test-record-group-sampling1" but that is
+> surely expected for unpatched kernels?
+>
+> Is there some very-old kernel version where this would be expected to
+> succeed by accident?
 
-PMU overflow handler rvpmu_ovf_handler() is also updated to sample
-CTR entries in case of the overflow for the particular event programmed
-to records branches. The recorded entries are fed to core perf for
-further processing.
+I don't think so but I don't want the test to fail depending on the
+kernel version.  Maybe we can check the allowed combination
+first and skip the test if perf_event_open() fails.  And then it can
+verify if the kernel rejects the unsupported combinations.  Not
+sure if it's easy to do that in the current attr test framework.
 
-Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
----
- drivers/perf/riscv_pmu_common.c |  3 +-
- drivers/perf/riscv_pmu_dev.c    | 77 +++++++++++++++++++++++++++------
- 2 files changed, 65 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/perf/riscv_pmu_common.c b/drivers/perf/riscv_pmu_common.c
-index e794675e4944..e1f3a33b479f 100644
---- a/drivers/perf/riscv_pmu_common.c
-+++ b/drivers/perf/riscv_pmu_common.c
-@@ -326,8 +326,7 @@ static int riscv_pmu_event_init(struct perf_event *event)
- 	u64 event_config = 0;
- 	uint64_t cmask;
- 
--	/* driver does not support branch stack sampling */
--	if (has_branch_stack(event))
-+	if (has_branch_stack(event) && !riscv_pmu_ctr_supported(rvpmu))
- 		return -EOPNOTSUPP;
- 
- 	hwc->flags = 0;
-diff --git a/drivers/perf/riscv_pmu_dev.c b/drivers/perf/riscv_pmu_dev.c
-index 40ae5fc897a3..1b2c04c35bed 100644
---- a/drivers/perf/riscv_pmu_dev.c
-+++ b/drivers/perf/riscv_pmu_dev.c
-@@ -675,7 +675,7 @@ static void pmu_sched_task(struct perf_event_pmu_context *pmu_ctx,
- {
- 	struct riscv_pmu *pmu = to_riscv_pmu(pmu_ctx->pmu);
- 
--	/* Call CTR specific Sched hook. */
-+	riscv_pmu_ctr_sched_task(pmu_ctx, sched_in);
- }
- 
- static int rvpmu_sbi_find_num_ctrs(void)
-@@ -935,17 +935,25 @@ static irqreturn_t rvpmu_ovf_handler(int irq, void *dev)
- 		hw_evt = &event->hw;
- 		riscv_pmu_event_update(event);
- 		perf_sample_data_init(&data, 0, hw_evt->last_period);
--		if (riscv_pmu_event_set_period(event)) {
--			/*
--			 * Unlike other ISAs, RISC-V don't have to disable interrupts
--			 * to avoid throttling here. As per the specification, the
--			 * interrupt remains disabled until the OF bit is set.
--			 * Interrupts are enabled again only during the start.
--			 * TODO: We will need to stop the guest counters once
--			 * virtualization support is added.
--			 */
--			perf_event_overflow(event, &data, regs);
-+		if (!riscv_pmu_event_set_period(event))
-+			continue;
-+
-+		if (needs_branch_stack(event)) {
-+			riscv_pmu_ctr_consume(cpu_hw_evt, event);
-+			perf_sample_save_brstack(
-+				&data, event,
-+				&cpu_hw_evt->branches->branch_stack, NULL);
- 		}
-+
-+		/*
-+		 * Unlike other ISAs, RISC-V don't have to disable interrupts
-+		 * to avoid throttling here. As per the specification, the
-+		 * interrupt remains disabled until the OF bit is set.
-+		 * Interrupts are enabled again only during the start.
-+		 * TODO: We will need to stop the guest counters once
-+		 * virtualization support is added.
-+		 */
-+		perf_event_overflow(event, &data, regs);
- 	}
- 
- 	rvpmu_start_overflow_mask(pmu, overflowed_ctrs);
-@@ -1103,10 +1111,12 @@ static void rvpmu_ctr_start(struct perf_event *event, u64 ival)
- 	else
- 		rvpmu_sbi_ctr_start(event, ival);
- 
--
- 	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
- 	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
- 		rvpmu_set_scounteren((void *)event);
-+
-+	if (needs_branch_stack(event))
-+		riscv_pmu_ctr_enable(event);
- }
- 
- static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
-@@ -1128,6 +1138,9 @@ static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
- 	} else {
- 		rvpmu_sbi_ctr_stop(event, flag);
- 	}
-+
-+	if (needs_branch_stack(event))
-+		riscv_pmu_ctr_disable(event);
- }
- 
- static int rvpmu_find_ctrs(void)
-@@ -1161,6 +1174,9 @@ static int rvpmu_find_ctrs(void)
- 
- static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
- {
-+	if (needs_branch_stack(event) && !riscv_pmu_ctr_valid(event))
-+		return -EOPNOTSUPP;
-+
- 	if (static_branch_likely(&riscv_pmu_cdeleg_available) && !pmu_sbi_is_fw_event(event))
- 		return rvpmu_deleg_event_map(event, econfig);
- 	else
-@@ -1207,6 +1223,8 @@ static int rvpmu_starting_cpu(unsigned int cpu, struct hlist_node *node)
- 		enable_percpu_irq(riscv_pmu_irq, IRQ_TYPE_NONE);
- 	}
- 
-+	riscv_pmu_ctr_starting_cpu();
-+
- 	return 0;
- }
- 
-@@ -1218,6 +1236,7 @@ static int rvpmu_dying_cpu(unsigned int cpu, struct hlist_node *node)
- 
- 	/* Disable all counters access for user mode now */
- 	csr_write(CSR_SCOUNTEREN, 0x0);
-+	riscv_pmu_ctr_dying_cpu();
- 
- 	return 0;
- }
-@@ -1331,6 +1350,29 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
- 	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
- }
- 
-+static int branch_records_alloc(struct riscv_pmu *pmu)
-+{
-+	struct branch_records __percpu *tmp_alloc_ptr;
-+	struct branch_records *records;
-+	struct cpu_hw_events *events;
-+	int cpu;
-+
-+	if (!riscv_pmu_ctr_supported(pmu))
-+		return 0;
-+
-+	tmp_alloc_ptr = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
-+	if (!tmp_alloc_ptr)
-+		return -ENOMEM;
-+
-+	for_each_possible_cpu(cpu) {
-+		events = per_cpu_ptr(pmu->hw_events, cpu);
-+		records = per_cpu_ptr(tmp_alloc_ptr, cpu);
-+		events->branches = records;
-+	}
-+
-+	return 0;
-+}
-+
- static void rvpmu_event_init(struct perf_event *event)
- {
- 	/*
-@@ -1490,6 +1532,12 @@ static int rvpmu_device_probe(struct platform_device *pdev)
- 		pmu->pmu.attr_groups = riscv_cdeleg_pmu_attr_groups;
- 	else
- 		pmu->pmu.attr_groups = riscv_sbi_pmu_attr_groups;
-+
-+	riscv_pmu_ctr_init(pmu);
-+	ret = branch_records_alloc(pmu);
-+	if (ret)
-+		goto out_ctr_finish;
-+
- 	pmu->cmask = cmask;
- 	pmu->ctr_start = rvpmu_ctr_start;
- 	pmu->ctr_stop = rvpmu_ctr_stop;
-@@ -1506,7 +1554,7 @@ static int rvpmu_device_probe(struct platform_device *pdev)
- 
- 	ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
- 	if (ret)
--		return ret;
-+		goto out_ctr_finish;
- 
- 	ret = riscv_pm_pmu_register(pmu);
- 	if (ret)
-@@ -1523,6 +1571,9 @@ static int rvpmu_device_probe(struct platform_device *pdev)
- out_unregister:
- 	riscv_pmu_destroy(pmu);
- 
-+out_ctr_finish:
-+	riscv_pmu_ctr_finish(pmu);
-+
- out_free:
- 	kfree(pmu);
- 	return ret;
--- 
-2.34.1
-
+Thanks,
+Namhyung
