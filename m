@@ -1,116 +1,192 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCCF3B1A1;
-	Thu, 30 May 2024 16:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56499335A7
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 May 2024 17:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088302; cv=none; b=KMiRTqZaRR23yLcg2bHlj6vltr9lDcUH8N+UUfgg08Q0/ZFurbrst3aS2NqsZl5KGwA2AMmu7/bCpUQM0dQVSvm3QW3DJ9PYy9qASPhNRDH8dg/OaKJsb2BaZKomnV23OJ3sUqzbvf0KjbHbICpJD3bZI+3/3Yl0Pss6O7Dtu2Q=
+	t=1717088522; cv=none; b=TMA9/ySNaeiizE3KqGmyOm9GcpAetfQKRVCMNmJ1kZsNsPMXpxiTwSb6AiY8Cw0IIdrgsVaQSveuINdhtgxAjxbHHbdatgUGEaQ62hQEtCr3tEDalrn624r4Yn+17kHsXklXHuP3NKPQY5x9hDoYaRFq743ynFQzteWLETZHctI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088302; c=relaxed/simple;
-	bh=nGniF+ZxbkeA08p1wBi3GKXVXWHnzS5tHPO2sdTapbc=;
+	s=arc-20240116; t=1717088522; c=relaxed/simple;
+	bh=Gqy/sZ3D2l/jo2B+eHz+uLxuyS7+sy8fk7hAzmAFXHk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLAuid2RoRUFtf5NUMHG1L+A/Z9+Yp1dMcjq0WU/qDsYMffRpgCMKdDkwcdtGfVnIJDR2WgM6IRtK4m4TIUyleyCiTdgSKyxJWNCbnPQ7z/AJNWsPPzEp8pNaCrah3tBp9dwbvsyBiZazzBbQ58T2s98tgOnCKrEQqGmbQWlh4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c1b542ae9eso149477a91.1;
-        Thu, 30 May 2024 09:58:20 -0700 (PDT)
+	 To:Cc:Content-Type; b=nYIdjFmsqZq26eEvokGKJwrv/SY1zDg04IYlqvEVXFa5DI9e/oJdJMnQWFWTlWI+AdF+ueMpDYWS/pqH3BufrgWTxKIF8TcZo07jgcrapvvsEhlSXaSxafpDlilCnlwnC6tWUc36kT0Rp7dF1rIx0MICNqi6b4mfnk8c0F+GWdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jQNbUlNO; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jQNbUlNO"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-43dfe020675so11161cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 May 2024 10:02:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717088520; x=1717693320; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r+MrYC3M359zN++AcvPSJthoFBLMWtCnEv2B4iFCbx8=;
+        b=jQNbUlNOGp1VIeOwe7XhrQrUkKwf/mvh0G8YLfAgi38OG9+evDVUvXrYta7rIUS1Oa
+         8sJn66T4Hv70e/EvatABRO6xqMshj9HqZi/CScf6mVLwCWdQJcVqbAXl6ROu9gNHsEDv
+         iJk0B2E7HMSkGDGs+5dOitBGqGoZJvgEp3XrsW0AjsRiU73YLjpaekJ0+Bcp7IOcMpkS
+         D2ou+sYKlSa4MH2qEIZo6uhMkKb0jkMjSYvwyqQC1xX6+SkBvvnDIvWMGHezSWESl8pp
+         h+ZFC5DQb74LCv9BEUEqkNh05KHJK8v7yHZD1UABZsyROK+G6155rsyjrfUNyTSloYYy
+         8eBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717088300; x=1717693100;
+        d=1e100.net; s=20230601; t=1717088520; x=1717693320;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZzdgKKffBNXcGsHhjOs/htIADO3pk29gIqnhuYRO1xs=;
-        b=wxiHlNy5xruarDAjCq20aOB+YurgQPyisi91pPF5F8mNdXUOPAFqyQNH5iQqNSsQhV
-         /JL/pPjmCTWkxWNzjojRx54h9V4JZz2KXdOxpYKpAeIMQuFrKpafsWlprSYsI2tsjYwK
-         JMC6Pu51Udu5SRYtcEqZcDrEIGi4p/ynC7U5NuC+5Iq0nK9o9PoDZu2YsBKtNLOeCpSF
-         5o54mXZP8dt39D1dlNe5lXlBQeREGZGUWEFtF5I9J/UAcfemPBG99P2ZUZ3O0Bbs7SK9
-         Sa3S3S2cryWf7rDOhDVvU+sAa4VGa3RfxhX88AqgqHTrYE8xVWxR57gwop8Aa1aZWPtp
-         nm6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWofBUyYBrz2aZwydF7ag6wFyhQqoNKF24nf/ri0XX7YX05puywF/O+gltLVZqm4I5EO6Qw+vLqz1Mrc6wxv780B87341HrBETmv9s7M+fgNo0QcN+NQE+s6Znpfx5hd1lohN5GpjQIlfuotv5TBQ==
-X-Gm-Message-State: AOJu0YxRGzb1MlYJsNtOqk4kj58qUsEcjw48CnTUKDmAL3Eu1NoStytr
-	sMWYl8O0Y4HlKcX6Bqchik+dJaFvzyTjVDWYx70Ma4n07ivQjN/cDHbs4BAHax8JMpeRNePrmuE
-	8ft1PGWtjz/tGu4iz11BeaCOkkAA=
-X-Google-Smtp-Source: AGHT+IFLxUN6AkOo66qINgFittTKX7kE6K3ovcfTueTJljdRLHbXHPNvnlruIkuSPzVkbkyT+Vg0T4Cvldg9ydck7oQ=
-X-Received: by 2002:a17:90a:c798:b0:2ae:7f27:82cd with SMTP id
- 98e67ed59e1d1-2c1ab9e39a3mr2595189a91.7.1717088300306; Thu, 30 May 2024
- 09:58:20 -0700 (PDT)
+        bh=r+MrYC3M359zN++AcvPSJthoFBLMWtCnEv2B4iFCbx8=;
+        b=VfHeCFsc5/g3oUcY+Bp+Khhfj4iMzxqhUmruex56ZwV1EeWmbwi5teWvQYRHuLgRf3
+         YenM3we0I/lXgvpiu4uTLYQRFW/Mh86oRT3w2WGW5LTKSz9sDWpDklRnr94Sve04f2wJ
+         k4L+5zP0t2JnA74z+WJ+igNbQZocPbvcDhADUY1c05YeZW1KWGx1uTmfRxU2Dk6uTHbJ
+         lWfnyFWa4PT3fuPBZfvMaodalhSwwN6I83yBl4lRo5waF5MUUTlBw7CUKl2HKiC+z0Go
+         qKoYpYb6D2qhUWCgJJ8K/AaqHbL53Ub7CUQc8TT/cvOIqJmNJJ/fJ6JyV0LSpa/oAUi5
+         r8zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSAXkrO+QAahWm86Dnc0k/6g0qUkyBmfg66wxItnxUYAkQFHR/ZhQXzRD6c/4CUDhd83UjkdOwC6D/YMqE+SzKC07/XWc5zzhWjezegz9Ffg==
+X-Gm-Message-State: AOJu0YxhsvtHFzEbBzv5HozeS3zkme/wBki1NLUw9lAk9Jsrn+T3cOl/
+	hXE3Qs+XxbDYjawxxC9tsXzJQhIcPnlReYQ0nGqbjrPxkAN7m95osvWmwghy8HQANDTQ6E8ncY/
+	ANr674EfuckZjF2LrSqdD/x2VmqmXLaodEbaM
+X-Google-Smtp-Source: AGHT+IESwOyb8Fu+cuoP33CBCWGRmvM3tUIbJvUHi9lhnICwbUxtHAj53g8OQ+2W4m2QjcMyfdvUNrVNWUg3UJstZNY=
+X-Received: by 2002:a05:622a:544e:b0:43a:b51c:46ca with SMTP id
+ d75a77b69052e-43feb5182fdmr3288611cf.29.1717088519844; Thu, 30 May 2024
+ 10:01:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240526182212.544525-1-sesse@google.com>
-In-Reply-To: <20240526182212.544525-1-sesse@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 30 May 2024 09:58:09 -0700
-Message-ID: <CAM9d7cgf1ZqGGCHU=g8ksfigWhL-XPL4qJiHzz+EQ6vo5c8DyQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] perf report: Support LLVM for addr2line()
-To: "Steinar H. Gunderson" <sesse@google.com>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, irogers@google.com, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <20240519181716.4088459-1-irogers@google.com> <CAM9d7chxsyZ+vnPXj0gc-mbADzwzQYi3qUwUohW-7He5KwMvHg@mail.gmail.com>
+ <CAP-5=fXME3cjNK-P9qk+kY0dA1Xkwvz6Su=99nY7CgcKrQTb2w@mail.gmail.com> <CAM9d7ch7GidVscUxQh+CZRuo1U1KiDiFiuOZN3FnqbrPDbaVNw@mail.gmail.com>
+In-Reply-To: <CAM9d7ch7GidVscUxQh+CZRuo1U1KiDiFiuOZN3FnqbrPDbaVNw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 30 May 2024 10:01:47 -0700
+Message-ID: <CAP-5=fV9a2CrM0suQ7_VgG=6DoAAi+A6JyTK=kVivNmSZmg7aQ@mail.gmail.com>
+Subject: Re: [PATCH v1] tools api io: Move filling the io buffer to its own function
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 26, 2024 at 11:22=E2=80=AFAM Steinar H. Gunderson <sesse@google=
-.com> wrote:
+On Thu, May 30, 2024 at 9:44=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> In addition to the existing support for libbfd and calling out to
-> an external addr2line command, add support for using libllvm directly.
-> This is both faster than libbfd, and can be enabled in distro builds
-> (the LLVM license has an explicit provision for GPLv2 compatibility).
-> Thus, it is set as the primary choice if available.
+> On Thu, May 23, 2024 at 9:47=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Thu, May 23, 2024 at 4:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Sun, May 19, 2024 at 11:17=E2=80=AFAM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > >
+> > > > In general a read fills 4kb so filling the buffer is a 1 in 4096
+> > > > operation, move it out of the io__get_char function to avoid some
+> > > > checking overhead and to better hint the function is good to inline=
+.
+> > > >
+> > > > For perf's IO intensive internal (non-rigorous) benchmarks there's =
+a
+> > > > near 8% improvement to kallsyms-parsing with a default build.
+> > >
+> > > Oh, is it just from removing the io->eof check?  Otherwise I don't
+> > > see any difference.
+> >
+> > I was hoping that by moving the code out-of-line then the hot part of
+> > the function could be inlined into things like reading the hex
+> > character. I didn't see that, presumably there are too many callers
+> > and so that made the inliner think sharing would be best even though
+> > the hot code is a compare, pointer dereference and an increment. I
+> > tried forcing inlining but it didn't seem to win over just having the
+> > code out-of-line. The eof check should be very well predicted. The
+> > out-of-line code was branched over forward, which should be 1
+> > mispredict but again not a huge deal. I didn't do a more thorough
+> > analysis as I still prefer to have the cold code out-of-line.
 >
-> As an example, running perf report on a medium-size profile with
-> DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
-> libbfd, 153 seconds with external llvm-addr2line, and I got tired
-> and aborted the test after waiting for 55 minutes with external
-> bfd addr2line (which is the default for perf as compiled by distributions
-> today). Evidently, for this case, the bfd addr2line process needs
-> 18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
-> hits the 1-second timeout and gets killed during initialization,
-> getting restarted anew every time. Having an in-process addr2line
-> makes this much more robust.
+> Ok, I don't see much difference with this change.  But the change itself
+> looks fine.
 >
-> As future extensions, libllvm can be used in many other places where
-> we currently use libbfd or other libraries:
+> Thanks,
+> Namhyung
 >
->  - Symbol enumeration (in particular, for PE binaries).
->  - Demangling (including non-Itanium demangling, e.g. Microsoft
->    or Rust).
->  - Disassembling (perf annotate).
 >
-> However, these are much less pressing; most people don't profile
-> PE binaries, and perf has non-bfd paths for ELF. The same with
-> demangling; the default _cxa_demangle path works fine for most
-> users. Disassembling is coming in a later patch in the series;
-> however do note that while bfd objdump can be slow on large binaries,
-> it is possible to use --objdump=3Dllvm-objdump to get the speed benefits.
-> (It appears LLVM-based demangling is very simple, should we want
-> that.)
+> Before:
 >
-> Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
-> correctly detected using feature_check, and thus was not tested.
+> # Running internals/synthesize benchmark...
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 237.274 usec (+- 0.066 usec)
+>   Average num. events: 24.000 (+- 0.000)
+>   Average time per event 9.886 usec
+>   Average data synthesis took: 241.126 usec (+- 0.087 usec)
+>   Average num. events: 128.000 (+- 0.000)
+>   Average time per event 1.884 usec
 >
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/build/Makefile.feature       |   1 +
->  tools/perf/Makefile.config         |  15 ++++
->  tools/perf/builtin-version.c       |   1 +
->  tools/perf/util/Build              |   1 +
->  tools/perf/util/llvm-c-helpers.cpp | 134 +++++++++++++++++++++++++++++
->  tools/perf/util/llvm-c-helpers.h   |  49 +++++++++++
->  tools/perf/util/srcline.c          |  57 +++++++++++-
->  7 files changed, 257 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/util/llvm-c-helpers.cpp
->  create mode 100644 tools/perf/util/llvm-c-helpers.h
+> # Running internals/kallsyms-parse benchmark...
+>   Average kallsyms__parse took: 184.374 ms (+- 0.022 ms)
+>
+> # Running internals/inject-build-id benchmark...
+>   Average build-id injection took: 20.096 msec (+- 0.115 msec)
+>   Average time per event: 1.970 usec (+- 0.011 usec)
+>   Average memory usage: 11574 KB (+- 29 KB)
+>   Average build-id-all injection took: 13.477 msec (+- 0.100 msec)
+>   Average time per event: 1.321 usec (+- 0.010 usec)
+>   Average memory usage: 11160 KB (+- 0 KB)
+>
+> # Running internals/evlist-open-close benchmark...
+>   Number of cpus:    64
+>   Number of threads:    1
+>   Number of events:    1 (64 fds)
+>   Number of iterations:    100
+> evlist__open: Permission denied
+>
+> # Running internals/pmu-scan benchmark...
+> Computing performance of sysfs PMU event scan for 100 times
+>   Average core PMU scanning took: 135.880 usec (+- 0.249 usec)
+>   Average PMU scanning took: 816.745 usec (+- 48.293 usec)
+>
+>
+> After:
+>
+> # Running internals/synthesize benchmark...
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 235.711 usec (+- 0.067 usec)
+>   Average num. events: 24.000 (+- 0.000)
+>   Average time per event 9.821 usec
+>   Average data synthesis took: 240.992 usec (+- 0.058 usec)
+>   Average num. events: 128.000 (+- 0.000)
+>   Average time per event 1.883 usec
+>
+> # Running internals/kallsyms-parse benchmark...
+>   Average kallsyms__parse took: 179.664 ms (+- 0.043 ms)
 
-Can you please add something to tests/mask so that
-we can test the build with and without libllvm easily?
+So this is still 2%. I was building without options like DEBUG=3D1
+enabled, so perhaps that'd explain the difference. Anyway, if you're
+more comfortable with a commit message saying a 2% performance win I
+don't mind it being updated or I can upload a v2. It's likely this is
+being over-thought given the change :-)
 
 Thanks,
-Namhyung
+Ian
+
+> # Running internals/inject-build-id benchmark...
+>   Average build-id injection took: 19.901 msec (+- 0.117 msec)
+>   Average time per event: 1.951 usec (+- 0.011 usec)
+>   Average memory usage: 12163 KB (+- 10 KB)
+>   Average build-id-all injection took: 13.627 msec (+- 0.086 msec)
+>   Average time per event: 1.336 usec (+- 0.008 usec)
+>   Average memory usage: 11160 KB (+- 0 KB)
+>
+> # Running internals/evlist-open-close benchmark...
+>   Number of cpus:    64
+>   Number of threads:    1
+>   Number of events:    1 (64 fds)
+>   Number of iterations:    100
+> evlist__open: Permission denied
+>
+> # Running internals/pmu-scan benchmark...
+> Computing performance of sysfs PMU event scan for 100 times
+>   Average core PMU scanning took: 136.540 usec (+- 0.294 usec)
+>   Average PMU scanning took: 819.415 usec (+- 48.437 usec)
