@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF8B17F4E0;
-	Thu, 30 May 2024 12:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA5D17CA06;
+	Thu, 30 May 2024 12:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717073320; cv=none; b=Rus7Bsop/+rNaP40GfyTbEX8gkvzysANlcc/h+Y6bgWM+TQw2rpgCsYviGUuGKhMNfnEPgWDIeEgikPDQ5r7PmlqQiJGgU+ElSVDsFCpxHHm+Um06cFWjE62GBqXlKW22TN3EgDWpZc6ObhtIhm7P333mSA5sbjHAhYbtzCCToI=
+	t=1717073685; cv=none; b=QLOhCR4ML4o+7IdfqvZVGpHZrMY4ntSxqhLeQ9kzuwkk8RZzghO3FZiat9n41agxbMgfRx4bO65qD6d+A+ZjXH4V8S/5+IRwvD+qeYshfzN6vUQloMkmVhby+AQy9pYYPJs5K0FnCx8ciyHc1zxGJ+8lnTW1bsrI9X5XoPNCVq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717073320; c=relaxed/simple;
-	bh=0rQl/cKLRRzbfB91lX5MRST7yhxeLasHy+xqZ8/GUBg=;
+	s=arc-20240116; t=1717073685; c=relaxed/simple;
+	bh=bIrMEs5NYdtb9T9UOCr6ZAsNT8glRmdAXyGs2MUvXok=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WAIFhGOIHfkq7f/evysA1u7AUuE/lMVD4zA6BoR51oyGcgrLeYQXtUpcubppDeLnzjs/luKthxuCaJ4p21ZgUO27Cw/Fj7DQkcp3+JkvKkRu9NtQfKL/Lz0ggo7V2gMjM4KWvx+UyPPieOSBQMea6dSeoCMZw4Yk1CQhzfS62zw=
+	 In-Reply-To:Content-Type; b=Yn7zUG00PG7OtiHv0D2vKhWJXKp7Ave/KHcX0agnET7SXG46fOe6iEmOJntD8W31JcMZy6+W+nCocagrB+8Ucf/cSvH21fasfJOnVuHJyVZMYbWB2TItZGWNUWdLQFYGhnSURi54ZFxpFpAQbAzKjn2klh/a/88bIBrJ//nwnPQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E643B339;
-	Thu, 30 May 2024 05:49:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BD35339;
+	Thu, 30 May 2024 05:55:06 -0700 (PDT)
 Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D93613F792;
-	Thu, 30 May 2024 05:48:35 -0700 (PDT)
-Message-ID: <aee9254e-81c1-464a-8a28-f971615baffc@arm.com>
-Date: Thu, 30 May 2024 13:48:38 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 628EF3F792;
+	Thu, 30 May 2024 05:54:40 -0700 (PDT)
+Message-ID: <193884e6-0911-4a5f-9676-74e1630f9a28@arm.com>
+Date: Thu, 30 May 2024 13:54:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,69 +27,177 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
- PMUs
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240525152927.665498-1-irogers@google.com>
- <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev>
- <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <ZlY0F_lmB37g10OK@x1>
- <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com> <Zld3dlJHjFMFG02v@x1>
- <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
- <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] tools/perf: Allow inherit + PERF_SAMPLE_READ when
+ opening events
+To: Namhyung Kim <namhyung@kernel.org>, Ben Gainey <Ben.Gainey@arm.com>
+Cc: "alexander.shishkin@linux.intel.com"
+ <alexander.shishkin@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+ "irogers@google.com" <irogers@google.com>,
+ "jolsa@kernel.org" <jolsa@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ Mark Rutland <Mark.Rutland@arm.com>
+References: <20240521133029.83654-1-ben.gainey@arm.com>
+ <20240521133029.83654-5-ben.gainey@arm.com>
+ <CAM9d7chssov_fW3ZbpYqGRyhS=xuHLyJ7=rkxTNnJ6fkgEdGJQ@mail.gmail.com>
+ <a12573d18f7c8bf73c24c572e43965e3f250acea.camel@arm.com>
+ <e114bf8d2e7b6c0874fffdf8867c954a08772da3.camel@arm.com>
+ <CAM9d7cjmH=nkEt-z_XpZ1J0oL-EY2d52oz70-KpN+uzM5SEk6A@mail.gmail.com>
 Content-Language: en-US
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
+In-Reply-To: <CAM9d7cjmH=nkEt-z_XpZ1J0oL-EY2d52oz70-KpN+uzM5SEk6A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 30/05/2024 06:35, Namhyung Kim wrote:
-> On Wed, May 29, 2024 at 12:25 PM Ian Rogers <irogers@google.com> wrote:
->> We can fix the arm_dsu bug by renaming cycles there. If that's too
->> hard to land, clearing up ambiguity by adding a PMU name has always
->> been the way to do this. My preference for v6.10 is revert the revert,
->> then add either a rename of the arm_dsu event and/or the change here.
+On 29/05/2024 20:18, Namhyung Kim wrote:
+> Hello,
+> 
+> On Wed, May 29, 2024 at 10:48 AM Ben Gainey <Ben.Gainey@arm.com> wrote:
 >>
->> We can make perf record tolerant and ignore opening events on PMUs
->> that don't support sampling, but I think it is too big a thing to do
->> for v6.10.
+>> On Mon, 2024-05-27 at 18:47 +0100, Ben Gainey wrote:
+>>> On Thu, 2024-05-23 at 18:41 -0700, Namhyung Kim wrote:
+>>>> On Tue, May 21, 2024 at 6:30 AM Ben Gainey <ben.gainey@arm.com>
+>>>> wrote:
+>>>>>
+>>>>> The tool will now default to this new mode if the user specifies
+>>>>> a
+>>>>> sampling group when not in system-wide mode, and when --no-
+>>>>> inherit
+>>>>> is not specified.
+>>>>>
+>>>>> This change updates evsel to allow the combination of inherit
+>>>>> and PERF_SAMPLE_READ.
+>>>>>
+>>>>> A fallback is implemented for kernel versions where this feature
+>>>>> is
+>>>>> not
+>>>>> supported.
+>>>>
+>>>> But I'm afraid the test would fail on old kernels.  Maybe we need
+>>>> to
+>>>> put it in the selftests.
+>>>>
+>>>
+>>> Sorry, not clear what you mean?
+>>>
+>>> Is the issue that the fallback on older kernels fails, or that the
+>>> "perf test" tests fail?
+>>>
+>>> Thanks
+>>> Ben
+>>
+>> Just to follow up, I've rechecked the fallback on an unmodified 6.9.1
+>> kernel with the following:
+>>
+>>     perf record -vv -e '{cycles,instructions}:S' ls
+>>
+>> With an unpatched version of perf running on an unpatched kernel, the
+>> cycles event is opened as:
+>>
+>>     ------------------------------------------------------------
+>>     perf_event_attr:
+>>       type                             0 (PERF_TYPE_HARDWARE)
+>>       size                             136
+>>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>>       { sample_period, sample_freq }   4000
+>>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>>       read_format                      ID|GROUP|LOST
+>>       disabled                         1
+>>       exclude_kernel                   1
+>>       exclude_hv                       1
+>>       mmap                             1
+>>       comm                             1
+>>       freq                             1
+>>       enable_on_exec                   1
+>>       task                             1
+>>       sample_id_all                    1
+>>       exclude_guest                    1
+>>       mmap2                            1
+>>       comm_exec                        1
+>>       ksymbol                          1
+>>       bpf_event                        1
+>>     ------------------------------------------------------------
+>>
+>> whereas with these patches applied to perf, on an unpatched kernel, the
+>> output is as follows
+>>
+>>     ------------------------------------------------------------
+>>     perf_event_attr:
+>>       type                             0 (PERF_TYPE_HARDWARE)
+>>       size                             136
+>>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>>       { sample_period, sample_freq }   4000
+>>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>>       read_format                      ID|GROUP|LOST
+>>       disabled                         1
+>>       inherit                          1
+>>       exclude_kernel                   1
+>>       exclude_hv                       1
+>>       mmap                             1
+>>       comm                             1
+>>       freq                             1
+>>       enable_on_exec                   1
+>>       task                             1
+>>       sample_id_all                    1
+>>       exclude_guest                    1
+>>       mmap2                            1
+>>       comm_exec                        1
+>>       ksymbol                          1
+>>       bpf_event                        1
+>>     ------------------------------------------------------------
+>>     sys_perf_event_open: pid 3442954  cpu 0  group_fd -1  flags 0x8
+>>     sys_perf_event_open failed, error -22
+>>     Using PERF_SAMPLE_READ / :S modifier is not compatible with
+>> inherit, falling back to no-inherit.
+>>     ------------------------------------------------------------
+>>     perf_event_attr:
+>>       type                             0 (PERF_TYPE_HARDWARE)
+>>       size                             136
+>>       config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>>       { sample_period, sample_freq }   4000
+>>       sample_type                      IP|TID|TIME|READ|ID|PERIOD
+>>       read_format                      ID|GROUP|LOST
+>>       disabled                         1
+>>       exclude_kernel                   1
+>>       exclude_hv                       1
+>>       mmap                             1
+>>       comm                             1
+>>       freq                             1
+>>       enable_on_exec                   1
+>>       task                             1
+>>       sample_id_all                    1
+>>       exclude_guest                    1
+>>       mmap2                            1
+>>       comm_exec                        1
+>>       ksymbol                          1
+>>       bpf_event                        1
+>>     ------------------------------------------------------------
+>>
+>> The command falls back to the same configuration as was previously
+>> used. The same is true for the instructions event.
+>>
+>> `perf test` fails on an unpatched kernel in "15: Setup struct
+>> perf_event_attr" for the test "test-record-group-sampling1" but that is
+>> surely expected for unpatched kernels?
+>>
+>> Is there some very-old kernel version where this would be expected to
+>> succeed by accident?
 > 
-> How about adding a flag to parse_event_option_args so that we
-> can check if it's for sampling events.  And then we might skip
-> uncore PMUs easily (assuming arm_dsu PMU is uncore).
-
-It's uncore yes.
-
-Couldn't we theoretically have a core PMU that still doesn't support
-sampling though? And then we'd end up in the same situation. Attempting
-to open the event is the only sure way of knowing, rather than trying to
-guess with some heuristic in userspace?
-
-Maybe a bit too hypothetical but still worth considering.
-
+> I don't think so but I don't want the test to fail depending on the
+> kernel version.  Maybe we can check the allowed combination
+> first and skip the test if perf_event_open() fails.  And then it can
+> verify if the kernel rejects the unsupported combinations.  Not
+> sure if it's easy to do that in the current attr test framework.
 > 
-> It might not be a perfect solution but it could be a simple one.
-> Ideally I think it'd be nice if the kernel exports more information
-> about the PMUs like sampling and exclude capabilities.
-> > Thanks,
+> Thanks,
 > Namhyung
 
-That seems like a much better suggestion. Especially with the ever
-expanding retry/fallback mechanism that can never really take into
-account every combination of event attributes that can fail.
+I added the kernel version feature to the attr tests. Seems like you can
+add two tests, one for before and one for after.
 
-James
+Search "kernel_until" in tests/attr
