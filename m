@@ -1,134 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3D025634;
-	Thu, 30 May 2024 20:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D082925634;
+	Thu, 30 May 2024 20:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717101304; cv=none; b=B/2CGkBNgIVGb1eG32Rl7URoaTkNG5IrTE5Pw4LtzBK/uPtF55f0et3CpxdSTlaojiXBvH7Zt5nxXYXz51cHEXWKwDcwGM9zwtfW3xIsNp/U6oIAAqTTr+JyZ/zrW8wWtRZsPc1wsEp1+vaUCeQfgaQKbUf2eWVlCuTKySqmXlU=
+	t=1717101798; cv=none; b=WlEsPRWMUKNgLlga7qbBTuhwQYIzLb0ryBqq4CxO/fyFtgHnqTKf2bpMWgi6JABWqZMOLIo5tDUuXsY47kHr2OL6bjZnYm/b88U68KsaGhj0CaIHiTOrvAJiFLpAa6PRb49aUG7s9mMyYpHPksxTVX3P/8c+li3CEna7UNnvhb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717101304; c=relaxed/simple;
-	bh=kAKen4NyriQ88zKA+tglPnCd/Pr0Xbljz36Nbgay9Qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hZafJWQvSSG77GcdI4QAjSTXYw70UOGgDIhtTu0hX1g9ZPazaa6QeO6CyvQN5FezcJNrUhQAcdvCyZ2+qu/n4KhWfjG61WzhHG1xUTIMWLZlOxw6qxiSriELq9HHLVZuVlSZQHJLvCxpKSfBpnts4b7kg13bwRNwneCIG9y8mZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdXkL8O4; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717101798; c=relaxed/simple;
+	bh=b6+9QcaqPR6eKd7vhRCL3IX8thga/VHY8xqdaoMG6a8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=IauSOvwdVNCYoaSt/B8fG+pbuWZx7gt8m2c77d0jm6PxR3/mvsxr/g0mdXYecI54dXGAwZfo+APgUNYKL7oMV/HCGAa3+nDuJCajHeln8VFumACUqUjN77BetRiKmDqc+kj8WrYgFT6KUB28xC7ymqsoSVMoVbuSvD6Ypy47eU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JkHVRxM8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdXkL8O4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717101303; x=1748637303;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kAKen4NyriQ88zKA+tglPnCd/Pr0Xbljz36Nbgay9Qo=;
-  b=EdXkL8O4rLGjVsPTioHQqVMZ2z/f1NLjtMAPvw6+Na1iyaoPUUa8KSit
-   R8gstQM9NzQx99F0R4Kv6Sk08idCsLr5XoTLf8DWSPd7v7lu6xPatCt7I
-   HnCPNBsTUiiJpsvaCImfkIsv+rxZ7Pm9bQSQK3DMMToVGN/ESXgOC4bfE
-   5h9w7loWD5lGAoeoKL7P/kTi1NveHmG11+tu2MxHA5wW08/y3KiJfqH+6
-   NfhPpMStoXYtZ4M9e4lICLwpReJQskObLjmaDS3+ePPFKnUYQabjV2odM
-   lgqfFBRus2qjYS0ytH3zFKjDNrFV8umX81HWT1oEnay6wT/GUSRhT6e/B
-   Q==;
-X-CSE-ConnectionGUID: NQqhdIpSRvSOrq/B2vdaLA==
-X-CSE-MsgGUID: Q0wEa24ARpqRrLBokVqjVQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13816728"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="13816728"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 13:35:02 -0700
-X-CSE-ConnectionGUID: ZC/1h9rtQlaQZtkVvz9Niw==
-X-CSE-MsgGUID: CT6c8GOnSymlhdPdSxMcbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="40855571"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 13:35:02 -0700
-Date: Thu, 30 May 2024 13:39:58 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 1/6] x86/irq: Add enumeration of NMI source reporting
- CPU feature
-Message-ID: <20240530133958.229975d1@jacob-builder>
-In-Reply-To: <20240530091916.54056820@jacob-builder>
-References: <20240529203325.3039243-1-jacob.jun.pan@linux.intel.com>
-	<20240529203325.3039243-2-jacob.jun.pan@linux.intel.com>
-	<9dabe435-7208-4aa8-886c-a3351ee11e80@zytor.com>
-	<20240530091916.54056820@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JkHVRxM8"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44UJPcrp015856;
+	Thu, 30 May 2024 20:42:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=jA5uTw0t5SGe/0e2eS5aqq
+	8ToPbks7henFGLd7/wDGE=; b=JkHVRxM8fyYtzNCZUKgw1g4gDCicSOAbzodrRF
+	XYG5GNPsuywp8Q6gn64Ma4EBGfSQueKpStmLKMDFcnRUBKPdvLWz1e7N5RNqVjZn
+	gaX2XDc9WP+MX2KtVIYObtWcnFHTb7dN6osBbhyBDWqHALT7Hr8DoxSs9v4sqrKq
+	R6D/Qleo8h2h6PnhNaT9eTiYMolqRUFIyXYZS93YpO1QkLieKv286mtO3P3Vo0yr
+	Y6n171px//wsQV8UQbZwSDxMeN1Sl0k2WfOQ7c76cG8De/CFCZuQBG8Ke5hY5TA5
+	dMTjn6IJnZPwYyWze9QEDLQ8IvnulYnp6UG8u90lhKuGsgZA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2pw6dy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 20:42:54 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44UKgrvH012330
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 20:42:53 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 30 May
+ 2024 13:42:51 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Thu, 30 May 2024 13:42:51 -0700
+Subject: [PATCH] perf/x86/intel: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240530-md-arch-x86-events-intel-v1-1-8252194ed20a@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMrkWGYC/x3MQQqDMBBA0avIrDuQxFZCr1K6iHFsBjQtM1EC4
+ t2bdvkW/x+gJEwK9+4AoZ2V37nBXjqIKeQXIU/N4Iy7mltvcJ0wSExY/YC0Uy6KnAstOA/eRW9
+ N76yFln+EZq7/9ePZPAYlHCXkmH7DhfNWcQ1aSOA8v5d7FQKJAAAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim
+	<namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+        "Dave
+ Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        "H. Peter Anvin"
+	<hpa@zytor.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PoUOubvu90PmO8mGUpyGGHTz7Prt8fhJ
+X-Proofpoint-ORIG-GUID: PoUOubvu90PmO8mGUpyGGHTz7Prt8fhJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-30_17,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 spamscore=0 adultscore=0 clxscore=1015 bulkscore=0
+ mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405300154
 
-Hi Jacob,
+Fix the 'make W=1 C=1' warnings:
 
-On Thu, 30 May 2024 09:19:16 -0700, Jacob Pan
-<jacob.jun.pan@linux.intel.com> wrote:
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/events/intel/intel-uncore.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/events/intel/intel-cstate.o
 
-> Hi Peter,
-> 
-> On Wed, 29 May 2024 13:49:40 -0700, "H. Peter Anvin" <hpa@zytor.com>
-> wrote:
-> 
-> > On 5/29/24 13:33, Jacob Pan wrote:  
-> > > diff --git a/arch/x86/kernel/cpu/cpuid-deps.c
-> > > b/arch/x86/kernel/cpu/cpuid-deps.c index b7d9f530ae16..3f1a1a1961fa
-> > > 100644 --- a/arch/x86/kernel/cpu/cpuid-deps.c
-> > > +++ b/arch/x86/kernel/cpu/cpuid-deps.c
-> > > @@ -84,6 +84,7 @@ static const struct cpuid_dep cpuid_deps[] = {
-> > >   	{ X86_FEATURE_SHSTK,
-> > > X86_FEATURE_XSAVES    }, { X86_FEATURE_FRED,
-> > > X86_FEATURE_LKGS      }, { X86_FEATURE_FRED,
-> > > X86_FEATURE_WRMSRNS   },
-> > > +	{ X86_FEATURE_FRED,
-> > > X86_FEATURE_NMI_SOURCE}, {}
-> > >   };
-> > >       
-> > 
-> > This is incorrect. FRED does *not* inherently depend on NMI_SOURCE; the 
-> > dependency is the reverse, but since it *also* depends on FRED being 
-> > dynamically enabled, there is no need to add it to the static table;
-> > the dynamic test:
-> >   
-> My misunderstanding of the dependency table, thanks for pointing it out.
-> Will remove.
-> 
-> > > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > > index 4fa0b17e5043..465f04e4a79f 100644
-> > > --- a/arch/x86/kernel/traps.c
-> > > +++ b/arch/x86/kernel/traps.c
-> > > @@ -1427,8 +1427,10 @@ early_param("fred", fred_setup);
-> > >  
-> > >  void __init trap_init(void)
-> > >  {
-> > > -	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred)
-> > > +	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred) {
-> > >  		setup_clear_cpu_cap(X86_FEATURE_FRED);
-> > > +		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
-> > > +	}
-> > >  
-> > >  	/* Init cpu_entry_area before IST entries are set up */
-> > >  	setup_cpu_entry_areas();    
-> > 
-> > ... suffices just fine on its own.  
-> I am not following, do you mean checking for FRED is sufficient for NMI
-> source? I think it works since NMI source cannot be disabled if FRED is
-> on. Just want to use the architectural CPUID bits to the fullest.
-> 
-Nevermind, I got it now, will keep the dynamic test.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ arch/x86/events/intel/cstate.c | 1 +
+ arch/x86/events/intel/uncore.c | 1 +
+ 2 files changed, 2 insertions(+)
 
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e64eaa8dda5a..9d6e8f13d13a 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -114,6 +114,7 @@
+ #include "../perf_event.h"
+ #include "../probe.h"
+ 
++MODULE_DESCRIPTION("Support for Intel cstate performance events");
+ MODULE_LICENSE("GPL");
+ 
+ #define DEFINE_CSTATE_FORMAT_ATTR(_var, _name, _format)		\
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 419c517b8594..c68f5b39952b 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -34,6 +34,7 @@ static struct event_constraint uncore_constraint_fixed =
+ struct event_constraint uncore_constraint_empty =
+ 	EVENT_CONSTRAINT(0, 0, 0);
+ 
++MODULE_DESCRIPTION("Support for Intel uncore performance events");
+ MODULE_LICENSE("GPL");
+ 
+ int uncore_pcibus_to_dieid(struct pci_bus *bus)
 
-Thanks,
+---
+base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+change-id: 20240530-md-arch-x86-events-intel-f682c8103211
 
-Jacob
