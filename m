@@ -1,108 +1,140 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8A7F;
-	Thu, 30 May 2024 06:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFBF18396D;
+	Thu, 30 May 2024 09:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717049050; cv=none; b=SKluSDmg4M2I6xJqfmlIW5IgqxQyF0mS0+hENK/5KZxlamwNWQB8JlrG1GnDWp/SKCoTLqczFoAZgpL6lSjZ6sEMsmxPahBzHEzGxCa4VTbGe7Um1tHaVlDEkhwzq3ihzJqgnkhpESFucYTf112b55hyNfBIzS/b3wNlUNFUyyk=
+	t=1717062463; cv=none; b=A8TLRE4TJt1N0kL5rpfjy6sn6hKpYsP5Qa9yXG3iaO91gwdGTVYNeP/M+wnnO4M21KAU8g8xdTyW+2wvliy8WvXfJUA34CXUINuMi1QfCmtILqrWs/HJfu7rGlF54Lc6rY2/MyaLHzbIdvWA2pZtkJK+eSxp7jxZgPjWF+waYKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717049050; c=relaxed/simple;
-	bh=URxu/tsa8bKNnf2t3ZCrJR7OioSdMvg9SOTtIE8dyKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GQzvHlh9Qh6txY2B+Qk+CnE0B/6UQ9ODbGBDLIxuHGIWZz0hv/lm9cS060Qc94/FVvs1P9q9VaO6VsAU/gbAlzJ2pR4a9e4D71K9vnYp052fVauFsdfNr8KocPUEemvz4PKS8oYXAWe+iBWLWnmBZn3H/dqtnMfhd4oafL4r7Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-681ad26f277so437357a12.3;
-        Wed, 29 May 2024 23:04:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717049048; x=1717653848;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ThHnNR/9j74Rarkk9nUgCXBgAgDJGiDv+klBudZG31w=;
-        b=mCJrrsk51ik5y17Ul+z8hx7iE0O2cOH8rlDonYfHwSUa7N7P3RdE6bc/VV4r2qOOba
-         G/lo+JyMV7xhwvXOIX22LtXe5SzqGKGzeiHjCRsFHbBzRTFWRAUPjM80JafDgrkTBmnP
-         HGGTcrwPhTiw2dqle/S7Pg1iF9MaOFPerOzXqSP3ZS9VOYCCnB55Jtted/G3bayqVA7K
-         FF8VBXVCfHxCDb8fupTjnN33jJUdzVeNklf9JsH3+GrRJzQbb6RyAYRGd1aQ04J80MEn
-         VEIcyr+Oo2PNk9BZ4ma/IFITv4QFWDAoqwNQE5kjfp1UjRsfs/XpjPISgPopdvX7QAFR
-         qRnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV03O3NztfQFoaOGWkqcntZATCnR13XNg9Tyqp51GlnAo9nUtMNx9BgxOVnSVPnDfk0Hkd9izEYm3mGyc4YkejXZxIJnS8JO3NOhsTjRLzEHIkyzB/Xx6aYqTwvjKJ4t/a3M8pJ/CUUqdJ/P0wmIX1025k9IcZirLk0kteiT5YGX60VkA==
-X-Gm-Message-State: AOJu0YwtZm3ms3f7pDdoPVBOkxVim6S6SXM3FO2VALTNfCTVqTEsGLr9
-	Jw7YZEEqxCD/CWDjUl6dPy9OEHTYm3PCkURAi+2z4sNOeAraag+uE5PwQu8bJSJEuWhgkgcmhzH
-	CfyLgMtVrruUzlCowjdzJ22SC3ph/jA==
-X-Google-Smtp-Source: AGHT+IFEIKu+ZoHL9gVO5CzC3c4Exr/ziXJi6rz2+DV0/AXVi19jEH2BUtVzDKswl0ykBodshY7JVpUaOP4dLYeb9G0=
-X-Received: by 2002:a17:90a:f490:b0:2b1:782:8827 with SMTP id
- 98e67ed59e1d1-2c1ab9f6d69mr1272467a91.20.1717049047939; Wed, 29 May 2024
- 23:04:07 -0700 (PDT)
+	s=arc-20240116; t=1717062463; c=relaxed/simple;
+	bh=oJceATgDva1QgjQ+6MSy7M5QY7VdjFO8E11FvM9DfH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KLMgoVhyBtQ2T7E3/dtog0mWMICP7epfPCwSVyOwuuRnmVlGlynw5ZmJ4q+tvmpDVErJTKxS2rt3IQQCTZRfh5VTG+NchFOeUHdU6HO8q32AeJ+08eBxOi4KZC/433QXa4dIQ0zHeK4sQJ4in08BlkxvAmc2zz52/o+FgBygMp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1B9339;
+	Thu, 30 May 2024 02:47:58 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A4AD3F641;
+	Thu, 30 May 2024 02:47:32 -0700 (PDT)
+Message-ID: <80d33844-bdd2-4fee-81dd-9cd37c63d42c@arm.com>
+Date: Thu, 30 May 2024 10:47:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524205227.244375-1-irogers@google.com>
-In-Reply-To: <20240524205227.244375-1-irogers@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 May 2024 23:03:56 -0700
-Message-ID: <CAM9d7ciL7G7YR4bFVO18sC4CRCm30G0WUdgp+txRnsG7CAYPHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Use BPF filters for a "perf top -u" workaround
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Changbin Du <changbin.du@huawei.com>, Yang Jihong <yangjihong1@huawei.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V17 0/9] arm64/perf: Enable branch stack sampling
+To: Anshuman Khandual <anshuman.khandual@arm.com>, mark.rutland@arm.com
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com
+References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 24, 2024 at 1:52=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Allow uid and gid to be terms in BPF filters by first breaking the
-> connection between filter terms and PERF_SAMPLE_xx values. Calculate
-> the uid and gid using the bpf_get_current_uid_gid helper, rather than
-> from a value in the sample. Allow filters to be passed to perf top, this =
-allows:
->
-> $ perf top -e cycles:P --filter "uid =3D=3D $(id -u)"
->
-> to work as a "perf top -u" workaround, as "perf top -u" usually fails
-> due to processes/threads terminating between the /proc scan and the
-> perf_event_open.
->
-> v3. Move PERF_SAMPLE_xx asserts to sample_filter.bpf.c to avoid
->     conflicting definitions between vmlinux.h and perf_event.h as
->     reported by Namhyung.
-> v2. Allow PERF_SAMPLE_xx to be computed from the PBF_TERM_xx value
->     using a shift as requested by Namhyung.
->
-> Ian Rogers (3):
->   perf bpf filter: Give terms their own enum
->   perf bpf filter: Add uid and gid terms
->   perf top: Allow filters on events
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks,
-Namhyung
+On 05/04/2024 03:46, Anshuman Khandual wrote:
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> the relevant register definitions could be accessed here.
+> 
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+> 
+> This series applies on 6.9-rc2.
+> 
+> Also this series is being hosted below for quick access, review and test.
+> 
+> https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (brbe_v17)
+> 
+> There are still some open questions regarding handling multiple perf events
+> with different privilege branch filters getting on the same PMU, supporting
+> guest branch stack tracing from the host etc. Finally also looking for some
+> suggestions regarding supporting BRBE inside the guest. The series has been
+> re-organized completely as suggested earlier.
+> 
+> - Anshuman
+> 
+[...]
+> 
+> ------------------ Possible 'branch_sample_type' Mismatch -----------------
+> 
+> Branch stack sampling attributes 'event->attr.branch_sample_type' generally
+> remain the same for all the events during a perf record session.
+> 
+> $perf record -e <event_1> -e <event_2> -j <branch_filters> [workload]
+> 
+> event_1->attr.branch_sample_type == event_2->attr.branch_sample_type
+> 
+> This 'branch_sample_type' is used to configure the BRBE hardware, when both
+> events i.e <event_1> and <event_2> get scheduled on a given PMU. But during
+> PMU HW event's privilege filter inheritance, 'branch_sample_type' does not
+> remain the same for all events. Let's consider the following example
+> 
+> $perf record -e cycles:u -e instructions:k -j any,save_type ls
+> 
+> cycles->attr.branch_sample_type != instructions->attr.branch_sample_type
+> 
+> Because cycles event inherits PERF_SAMPLE_BRANCH_USER and instruction event
+> inherits PERF_SAMPLE_BRANCH_KERNEL. The proposed solution here configures
+> BRBE hardware with 'branch_sample_type' from last event to be added in the
+> PMU and hence captured branch records only get passed on to matching events
+> during a PMU interrupt.
+> 
 
->
->  tools/perf/Documentation/perf-record.txt     |  2 +-
->  tools/perf/Documentation/perf-top.txt        |  4 ++
->  tools/perf/builtin-top.c                     |  9 +++
->  tools/perf/util/bpf-filter.c                 | 33 +++++----
->  tools/perf/util/bpf-filter.h                 |  5 +-
->  tools/perf/util/bpf-filter.l                 | 66 +++++++++---------
->  tools/perf/util/bpf-filter.y                 |  7 +-
->  tools/perf/util/bpf_skel/sample-filter.h     | 40 ++++++++++-
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 73 +++++++++++++++-----
->  9 files changed, 169 insertions(+), 70 deletions(-)
->
-> --
-> 2.45.1.288.g0e0cd299f1-goog
->
+Hi Anshuman,
+
+Surely because of this example we should merge? At least we have to try
+to make the most common basic command lines work. Unless we expect all
+tools to know whether the branch buffer is shared between PMUs on each
+architecture or not. The driver knows though, so can merge the settings
+because it all has to go into one BRBE.
+
+Merging the settings in tools would be a much harder problem.
+
+Any user that doesn't have permission for anything in the merged result
+can continue to get nothing.
+
+And we can always add filtering in the kernel later on if we want to to
+make it appear to behave even more normally.
+
+> static int
+> armpmu_add(struct perf_event *event, int flags)
+> {
+> 	........
+> 	if (has_branch_stack(event)) {
+> 		/*
+> 		 * Reset branch records buffer if a new task event gets
+> 		 * scheduled on a PMU which might have existing records.
+> 		 * Otherwise older branch records present in the buffer
+> 		 * might leak into the new task event.
+> 		 */
+> 		if (event->ctx->task && hw_events->brbe_context != event->ctx) {
+> 			hw_events->brbe_context = event->ctx;
+> 			if (armpmu->branch_reset)
+> 				armpmu->branch_reset();
+> 		}
+> 		hw_events->brbe_users++;
+> Here ------->	hw_events->brbe_sample_type = event->attr.branch_sample_type;
+> 	}
+> 	........
+> }
+> 
+> Instead of overriding existing 'branch_sample_type', both could be merged.
+> 
+
+I can't see any use case where anyone would want the override behavior.
+Especially if you imagine multiple users not even aware of each other.
+Either the current "no records for mismatches" or the merged one make sense.
+
+James
