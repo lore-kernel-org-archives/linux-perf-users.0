@@ -1,59 +1,59 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D3B25763
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 May 2024 04:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57335143724
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 May 2024 05:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717043703; cv=none; b=hI8z7nMFB0RUdbqSg1jcY4pGAmQYhtPWDYkBP1raC1LNKuIj3iEkgdcGg7647Ch++A5/BR4ifxPXvr4B4SM0gUq2GxgQ5CPrP7jCBsa4Xrkrk4swWObCWq2pJVlz/aYoI+rfnpQwIa3VsKbosDAjosMg1SAMcs4Ec6OPbhKjMWI=
+	t=1717045963; cv=none; b=fcS5vT2xuAcJmKxvXf6XipX/BJfj/VFve2DMgZqLjAWAYJD8Ryd7omOigZskqmy5WvYY/Qc89htmN8w3I16Fx2OQD4Dtr0I02J9iMN62BlVOxbRIGd7SE5jLDuHvewBzqiOT2elMHJ7nslaTU0IoDMEOathZcllF6w0l9l/pHK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717043703; c=relaxed/simple;
-	bh=ijlLsRtZZHnYoJ3yPB7419sfe/EZuo0NMSQNtDHtzfs=;
+	s=arc-20240116; t=1717045963; c=relaxed/simple;
+	bh=VL7H8fQqd8nIHUwam6QTyMO5mDtMq5T7rwyxfbnRY40=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLgXutcbgj8IIScCPSql8KdhqPUkHbfvAQ18Gj/gK1mmNOekN41mcrXx20hhIrS5Jg1B92Wox4N9OqF/SE+wS4fd140MxRN/RgFbWLMWhoCqHuEvBgoLBMGOgi8s1NlEEl8xEpFJzqkSGMItdZsyfCTPKRA1mSZz0kFT3K/O3IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q+YkU0KA; arc=none smtp.client-ip=209.85.210.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=qk25OU9Dlsj5fdXBrtQZyTELfOKuZJbfW2PKyXeXSrs20gejbkSg2+qT4nXwcrLvHqdYJ4rh/aIP51DUCZhXuLEQfQ7SZpCFrr9THfa9N9Qr+GcyX45LcHvQCbXEo6/B13NmHFgqSZr4BnM/Kf/xzAdJA9Nvo020mb/iHo2jtx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GCpAjKSn; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q+YkU0KA"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f8ec7e054dso397534b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 21:35:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GCpAjKSn"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f44b594deeso3700145ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 May 2024 22:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717043702; x=1717648502; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717045961; x=1717650761; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gHXFGF3VHEvVXRDqzcqAshyg/fjTm7rBwWkt3TNwjyA=;
-        b=Q+YkU0KAJ3MLcQpMwu0aYBq6HV2+V+M9XH2G/DyW5AUnzQ6nftHyhyO/exN/M/NcAq
-         IETYCnXLyieLSHnR6du7oGFUSW3B/c/k2Ac0drC7RcdDAot3gwdc+vizBdbQrDeyWtfs
-         wWOLE2ZvkBBUzZOjvUwmUsnLRu4wMtOM06wEnbkHHEk3CrPxsybE74wqwQjOVnMekSOO
-         3DJGFrhFGj04UFWH5Xe/JVTd6Y205e/5hLhDjgnbEE2YB4+UMPvOrslxb+er04H4GzJa
-         6U7TCETHFXUjaI1eONFNom66BlMQ3OeQjnrvYUAwiUuPa4N1cPNaQqtyQEds65HcF0A5
-         +IYA==
+        bh=lsuBDYq9BDHnrjQ91CodaxuYJofbd1MSvq6lCNBpu6Q=;
+        b=GCpAjKSnYVJwdce3TEjzXFLxGr83pO4CosKsaJtDqflEV74y4MHvrj29GqzUGD9SvE
+         hkPS90100jJ5j1bF/irLBYznABFbwNozWyOf95LjJm8pHvXKp/F5+uZA/xeRqoPrpkUL
+         t+uduyxGiIhPOdgt7N6DZnH4NPnYzRof+kGtsede8kiv1uxW4bq6JZX1/reowJ45YJpC
+         dxOKyitGeryHF+KLPsgScfpm0gw7MBtHahLjumN9bGSilmPjIXenRQi3a1lS3JeJuy7Y
+         TSjYnh1vf1vRwNG+5mPBRomV9H7SjV1hwQZKwKtdouE3JxLjzDDKVCF5c8d2nhK2162m
+         sduA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717043702; x=1717648502;
+        d=1e100.net; s=20230601; t=1717045961; x=1717650761;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gHXFGF3VHEvVXRDqzcqAshyg/fjTm7rBwWkt3TNwjyA=;
-        b=BohMczGrgsT9FMaeIL1X69M60i6rie9O+LJ4/tW8a0CGluKCdSp9MNdMpdlgWatKNN
-         XUNMy+4U827YEadR8Wk5Swmxu/oa2j4FePR/Nv7sOuW+4Xi9Otw29T1Im/ExE0xH0zn2
-         RavMIIVq58J6YTIf/8R0mibI6Z6ejIA1QAwnxJ442/Aoswl6ZfIIw1UKB+6O/2/0cNT2
-         urQcoNkP84Cans8wgOIY5OHgkqfIPM9C8fWUigEpvq1zPsDeY/LzpV/b+86IRk+6ouF0
-         kKogDSNjCzRRonbPOK/Zup9YLFBXocBxrgZarAf12fGXvxdO3eD0TLKDjg0VIivXrCP9
-         0IBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwjekp1faG6S+SImYxQ5zdhaxV4of8rzr/or+ujdLUwkTwyDJT72tJ8uq/9dWVAsqZT/RQPuFSgyf8hfmU55E5PIxnX5w5f2ebpSjhXWZCAg==
-X-Gm-Message-State: AOJu0YzUpnowbwWIVjuC6ByEHhYVqLjhBFHHF8ofK/vmWT1Y1w+7Z8F1
-	pgYfGRakqXf1aXjnY5Liy1aJRnB94BuKnoFS2GjApZ6xQlVCcOXHGd7bjQAvdw==
-X-Google-Smtp-Source: AGHT+IGgw+5vD7RhYJxJHZ93dg/f+8YAuzix2FsRP4g0ggs4yticRBrzHezxJ/1L56xtHkllUq/glw==
-X-Received: by 2002:a05:6a20:7f94:b0:1b2:1bf1:2b03 with SMTP id adf61e73a8af0-1b264564d37mr1706923637.26.1717043701693;
-        Wed, 29 May 2024 21:35:01 -0700 (PDT)
+        bh=lsuBDYq9BDHnrjQ91CodaxuYJofbd1MSvq6lCNBpu6Q=;
+        b=w8WCsWPvxCwlKNGYGRieL0XtKsRLrnSByaaKb7dLgvUR4QUgZzcrM3HYBO/Ono3PfO
+         Va80W6AAQGRDY1ht4yKWdPoitEn59El8/FH1J7mDcRoCURQl9sxZUDyWYaBKkowh1L7a
+         khhh8PGufbAjnJqhSyCdTl3xCj1jaN/GTP+VtSlcWGGRZVIA8g2TtqWtV8zYaaIq4LWc
+         jBwGNAR5YRXf3yHJJ/RdttDu/wjqloDEq/hjPwctcN8FymSIq3Po42Xr5jcaxPopN/9f
+         oX9OAtwA09t+JzQKndDoOUbwb5mdbvw6rPphq9xCENkd2CeNFohfAEjQpwGfk95GQG5T
+         5p+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXzH8II4y1Ci9hM9gvl6GAclqKdFNa/uSVGQyCkOc77kE4zs3nJ81Zf3qkLMtuf1Fvjrm72hbTWhAbE4sYLjEtXgoTlomdh9uJGzu/yEgicSw==
+X-Gm-Message-State: AOJu0YxHF7B1jO2EyrZlyu53v8h7DtzIkBtS4mVvVbm+zCi7wk3eeRZc
+	D+hvSHIDbCfco/UnJzue2IQh2aD9HRxkOHKMOqOGBOLnFrI1H/krfORGOY0J0g==
+X-Google-Smtp-Source: AGHT+IE8SaVeF/ixvsvfsb7cY1TEvKFZg63GHo6DzI1+1r7OKM5WXqYQ1YDSRkePpYz9kTBkgwKlBA==
+X-Received: by 2002:a17:902:e5d0:b0:1f4:92d4:d126 with SMTP id d9443c01a7336-1f61962124fmr12878015ad.28.1717045961292;
+        Wed, 29 May 2024 22:12:41 -0700 (PDT)
 Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f60a5aa7ecsm11991535ad.213.2024.05.29.21.35.00
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c75e79fsm108939435ad.40.2024.05.29.22.12.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 21:35:01 -0700 (PDT)
-Date: Thu, 30 May 2024 04:34:57 +0000
+        Wed, 29 May 2024 22:12:40 -0700 (PDT)
+Date: Thu, 30 May 2024 05:12:36 +0000
 From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
+To: "Chen, Zide" <zide.chen@intel.com>
 Cc: Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Xiong Zhang <xiong.y.zhang@intel.com>,
@@ -69,13 +69,14 @@ Cc: Sean Christopherson <seanjc@google.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
 	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 38/54] KVM: x86/pmu: Call perf_guest_enter() at PMU
- context switch
-Message-ID: <ZlgB8Y08bU3yUI2S@google.com>
+	Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 12/54] perf: x86: Add x86 function to switch PMI
+ handler
+Message-ID: <ZlgKxGmJWr8tUHsv@google.com>
 References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-39-mizhang@google.com>
- <20240507093923.GX40213@noisy.programming.kicks-ass.net>
+ <20240506053020.3911940-13-mizhang@google.com>
+ <f49ebe98-c190-4767-bb0d-471776484fc8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -84,57 +85,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240507093923.GX40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <f49ebe98-c190-4767-bb0d-471776484fc8@intel.com>
 
-On Tue, May 07, 2024, Peter Zijlstra wrote:
-> On Mon, May 06, 2024 at 05:30:03AM +0000, Mingwei Zhang wrote:
+On Tue, May 07, 2024, Chen, Zide wrote:
+> 
+> 
+> On 5/5/2024 10:29 PM, Mingwei Zhang wrote:
 > > From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 > > 
-> > perf subsystem should stop and restart all the perf events at the host
-> > level when entering and leaving passthrough PMU respectively. So invoke
-> > the perf API at PMU context switch functions.
+> > Add x86 specific function to switch PMI handler since passthrough PMU and host
+> > PMU use different interrupt vectors.
+> > 
+> > x86_perf_guest_enter() switch PMU vector from NMI to KVM_GUEST_PMI_VECTOR,
+> > and guest LVTPC_MASK value should be reflected onto HW to indicate whether
+> > guest has cleared LVTPC_MASK or not, so guest lvt_pc is passed as parameter.
+> > 
+> > x86_perf_guest_exit() switch PMU vector from KVM_GUEST_PMI_VECTOR to NMI.
 > > 
 > > Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 > > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > > ---
-> >  arch/x86/events/core.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> >  arch/x86/events/core.c            | 17 +++++++++++++++++
+> >  arch/x86/include/asm/perf_event.h |  3 +++
+> >  2 files changed, 20 insertions(+)
 > > 
 > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index f5a043410614..6fe467bca809 100644
+> > index 09050641ce5d..8167f2230d3a 100644
 > > --- a/arch/x86/events/core.c
 > > +++ b/arch/x86/events/core.c
-> > @@ -705,6 +705,8 @@ void x86_perf_guest_enter(u32 guest_lvtpc)
-> >  {
-> >  	lockdep_assert_irqs_disabled();
-> >  
-> > +	perf_guest_enter();
-> > +
-> >  	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
-> >  			       (guest_lvtpc & APIC_LVT_MASKED));
+> > @@ -701,6 +701,23 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
 > >  }
-> > @@ -715,6 +717,8 @@ void x86_perf_guest_exit(void)
-> >  	lockdep_assert_irqs_disabled();
+> >  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
 > >  
-> >  	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +void x86_perf_guest_enter(u32 guest_lvtpc)
+> > +{
+> > +	lockdep_assert_irqs_disabled();
 > > +
-> > +	perf_guest_exit();
-> >  }
-> >  EXPORT_SYMBOL_GPL(x86_perf_guest_exit);
+> > +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_GUEST_PMI_VECTOR |
+> > +			       (guest_lvtpc & APIC_LVT_MASKED));
 > 
-> *sigh*.. why does this patch exist? Please merge with the one that
-> introduces these functions.
-> 
-> This is making review really hard.
+> If CONFIG_KVM is not defined, KVM_GUEST_PMI_VECTOR is not available and
+> it causes compiling error.
 
-Ah, right. This function should be added immediately after commit "perf:
-x86: Add x86 function to switch PMI handler". It was just mind set of
-development: "how can we call perf_guest_{enter,exit}() if KVM has not
-implemented anything?" So we defer the invocation until this moment :)
-
-Will fix that in next version.
+That is a good discovery, thanks. hmm, we could put the whole function
+under IS_ENABLED(CONFIG_KVM) to avoid that.
 
 Thanks.
 -Mingwei
-
-
