@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87E17C082;
-	Fri, 31 May 2024 05:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CD07D06E;
+	Fri, 31 May 2024 05:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717135101; cv=none; b=jMcDTUsrHTHTzuTRAJmKLyWyyKB8Sy0m5grgItbjlkSUv6N7dnLSuh0IErLoVa5s0UV7p7mTIMKvKqQyzcS4O7YEZQ2INN9U/xWa40eRfrZX2YAaHOiGXAyFFyElXhygRMoUyNDYoSBSguZWSNzcChuG4+5K0n2+adMKGrJvl8w=
+	t=1717135103; cv=none; b=Ra5Ov4kXXTwXhJfbVCzMl7/KDq84gDSeATYOq+VuLbwE6S71T2EcdD2nW8egZMGHd3IoqD5rE/V6d3d2djUrk9YhqXiAufGsnj1B6ABDVpUVTWU5SrabV2I2Pd90CoELV+hnz22CMI0c9FgJsjxJFFNPbtzkDZk69w2advWZLqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717135101; c=relaxed/simple;
-	bh=F9h0RszHO5yWHDMqvx0EnB0TOAidG4NUutQweuY+fEg=;
+	s=arc-20240116; t=1717135103; c=relaxed/simple;
+	bh=+hq3P0AGBGCKyL0Jx2ImBjyEI0MYBUh9fT5KNpqUMVE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Nuwz1jG1Xs/Q4Ah8rdC5GW03jRdX7z6hB5/kalgx85/JxTA3V73Cuj5IZwX1TrQD8y3GAl7a/DrQiWrbZ142xQeu86r3j/sns7T6p6Pw7yu4Sk5hijssoErH4P3cet+Bungw0iWFvz0ndfnMArtL+0jQKzaCbDX5MjgG4cOULec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghyrwMfR; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=F8yqX+0YQQQ8J0agSlmewqJPzpFs/zxQAioh///LoVX27pqcp3+paxoBj/cA64t4U3YXSWCNHdMtKYe+21pt/+IMkhZcRHSHVCK1U+4THfZM4I8rb2TMgOJmSW3UShcVePQtmzJsNDf78tMP5ljmdvJw/kNYtFAXk6L8VI+4U1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z/SODS54; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghyrwMfR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z/SODS54"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717135100; x=1748671100;
+  t=1717135102; x=1748671102;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=F9h0RszHO5yWHDMqvx0EnB0TOAidG4NUutQweuY+fEg=;
-  b=ghyrwMfRDk448kTGZ0TEChTiDt2VeattB8XoKlOCH54Y5AhRCrzizz9O
-   vNa6AaHRjFtrWwj17OfutyNtdZ/N/Ac1dNoPN9wHCRLEwbwFdJoJCbkUM
-   Rd0kdje4m4CFwWXS/sm/kABB1L5lGENPQPbMaU06pHsoqy2lYCGiY88gb
-   Jz+Tw9wiV9nvMOv1h5ypU+uuLyp/0gnKfTpVK/J7ywVqk1UpvRZbFPKs7
-   ITZcR4xhEIVMtgi3gTS3MTeJ7YkQYSt3tl06QXzTmShM0lmzpZC0pSGkA
-   RW+r8Pt0AQe4It6zAVBZjMdFow8Nj1oLOQqja/t4L6sMebZz2bU5QhlJx
-   Q==;
-X-CSE-ConnectionGUID: LApYe1qtQmWAaV5YQlvt/w==
-X-CSE-MsgGUID: w3c3NUe5TQ+ujXLcn+7igA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="25068115"
+  bh=+hq3P0AGBGCKyL0Jx2ImBjyEI0MYBUh9fT5KNpqUMVE=;
+  b=Z/SODS5421F7Aj98wAV73ZVfHvv5kGlsawM55/MQ8IWtlM3qXl4Ljao6
+   vkcdzfctf0qnfDtVFaa7lMU+9K91i/ALfuDq7CH7QkUY652ESsx37Obmn
+   D+9P2YX10HQbwOO/EREuV4R9rCNf+BvaodWQj8uV/pC1b2phKm+YLqU9+
+   6BeKbL+jwh8HWJ3WHvIHuy2qEnrzN4XcgHVgiQj20DHO4sSu6pG0cbWER
+   xS1h2JxYqkb3HyXV6xUuCdJ+183ioHvsWXNuSxGNfZCKrBG53N7J/7rJc
+   IC7+QcKP2ZV70Vhk06Azmg2DNWBlD652/j5UDleOXMgFcZyN0vFmzBmkQ
+   A==;
+X-CSE-ConnectionGUID: Oj9uxnfVQHCaO7hEDwPVCA==
+X-CSE-MsgGUID: El1s5jIITLiw8sLWBoZ7Mg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="25068146"
 X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="25068115"
+   d="scan'208";a="25068146"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:58:01 -0700
-X-CSE-ConnectionGUID: gbZZeDbbS+Svo9JQePXZEg==
-X-CSE-MsgGUID: Pm+FNUnrSM+gNdWEEzOigA==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:58:07 -0700
+X-CSE-ConnectionGUID: HpAEITS6Q+eAz+LgRHOezQ==
+X-CSE-MsgGUID: 26SdUhHATC6C79VVubQv/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="40510829"
+   d="scan'208";a="40510868"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.41.28])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:57:57 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:58:03 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V7 02/12] perf/x86/intel/pt: Add support for pause / resume
-Date: Fri, 31 May 2024 08:57:21 +0300
-Message-Id: <20240531055731.12541-3-adrian.hunter@intel.com>
+Subject: [PATCH V7 03/12] perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+Date: Fri, 31 May 2024 08:57:22 +0300
+Message-Id: <20240531055731.12541-4-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240531055731.12541-1-adrian.hunter@intel.com>
 References: <20240531055731.12541-1-adrian.hunter@intel.com>
@@ -81,174 +81,44 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Prevent tracing to start if aux_paused.
-
-Implement support for PERF_EF_PAUSE / PERF_EF_RESUME. When aux_paused, stop
-tracing. When not aux_paused, only start tracing if it isn't currently
-meant to be stopped.
+Events with aux actions or aux sampling expect the PMI to coincide with the
+event, which does not happen for large PEBS, so do not enable large PEBS in
+that case.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/events/intel/pt.c | 63 ++++++++++++++++++++++++++++++++++++--
- arch/x86/events/intel/pt.h |  4 +++
- 2 files changed, 64 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 14db6d9d318b..fab54d7f7f7f 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -418,6 +418,9 @@ static void pt_config_start(struct perf_event *event)
- 	struct pt *pt = this_cpu_ptr(&pt_ctx);
- 	u64 ctl = event->hw.config;
- 
-+	if (READ_ONCE(event->aux_paused))
-+		return;
-+
- 	ctl |= RTIT_CTL_TRACEEN;
- 	if (READ_ONCE(pt->vmx_on))
- 		perf_aux_output_flag(&pt->handle, PERF_AUX_FLAG_PARTIAL);
-@@ -534,7 +537,20 @@ static void pt_config(struct perf_event *event)
- 	reg |= (event->attr.config & PT_CONFIG_MASK);
- 
- 	event->hw.config = reg;
-+
-+	/*
-+	 * Allow resume before starting so as not to overwrite a value set by a
-+	 * PMI.
-+	 */
-+	WRITE_ONCE(pt->resume_allowed, 1);
-+
- 	pt_config_start(event);
-+
-+	/*
-+	 * Allow pause after starting so its pt_config_stop() doesn't race with
-+	 * pt_config_start().
-+	 */
-+	WRITE_ONCE(pt->pause_allowed, 1);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 38c1b1f1deaa..3de40cb823c9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3886,6 +3886,12 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
+ 	return test_bit(idx, (unsigned long *)&intel_cap->capabilities);
  }
  
- static void pt_config_stop(struct perf_event *event)
-@@ -1511,6 +1527,7 @@ void intel_pt_interrupt(void)
- 		buf = perf_aux_output_begin(&pt->handle, event);
- 		if (!buf) {
- 			event->hw.state = PERF_HES_STOPPED;
-+			pt->resume_allowed = 0;
- 			return;
- 		}
- 
-@@ -1519,6 +1536,7 @@ void intel_pt_interrupt(void)
- 		ret = pt_buffer_reset_markers(buf, &pt->handle);
- 		if (ret) {
- 			perf_aux_output_end(&pt->handle, 0);
-+			pt->resume_allowed = 0;
- 			return;
- 		}
- 
-@@ -1573,6 +1591,26 @@ static void pt_event_start(struct perf_event *event, int mode)
- 	struct pt *pt = this_cpu_ptr(&pt_ctx);
- 	struct pt_buffer *buf;
- 
-+	if (mode & PERF_EF_RESUME) {
-+		if (READ_ONCE(pt->resume_allowed)) {
-+			u64 status;
++static inline bool has_aux_action(struct perf_event *event)
++{
++	return event->attr.aux_pause || event->attr.aux_resume ||
++	       event->attr.aux_sample_size;
++}
 +
-+			/*
-+			 * Only if the trace is not active and the error and
-+			 * stopped bits are clear, is it safe to start, but a
-+			 * PMI might have just cleared these, so resume_allowed
-+			 * must be checked again also.
-+			 */
-+			rdmsrl(MSR_IA32_RTIT_STATUS, status);
-+			if (!(status & (RTIT_STATUS_TRIGGEREN |
-+					RTIT_STATUS_ERROR |
-+					RTIT_STATUS_STOPPED)) &&
-+			   READ_ONCE(pt->resume_allowed))
-+				pt_config_start(event);
-+		}
-+		return;
-+	}
-+
- 	buf = perf_aux_output_begin(&pt->handle, event);
- 	if (!buf)
- 		goto fail_stop;
-@@ -1601,6 +1639,16 @@ static void pt_event_stop(struct perf_event *event, int mode)
+ static int intel_pmu_hw_config(struct perf_event *event)
  {
- 	struct pt *pt = this_cpu_ptr(&pt_ctx);
+ 	int ret = x86_pmu_hw_config(event);
+@@ -3903,8 +3909,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
  
-+	if (mode & PERF_EF_PAUSE) {
-+		if (READ_ONCE(pt->pause_allowed))
-+			pt_config_stop(event);
-+		return;
-+	}
-+
-+	/* Protect against racing */
-+	WRITE_ONCE(pt->pause_allowed, 0);
-+	WRITE_ONCE(pt->resume_allowed, 0);
-+
- 	/*
- 	 * Protect against the PMI racing with disabling wrmsr,
- 	 * see comment in intel_pt_interrupt().
-@@ -1659,8 +1707,12 @@ static long pt_event_snapshot_aux(struct perf_event *event,
- 	/*
- 	 * Here, handle_nmi tells us if the tracing is on
- 	 */
--	if (READ_ONCE(pt->handle_nmi))
-+	if (READ_ONCE(pt->handle_nmi)) {
-+		/* Protect against racing */
-+		WRITE_ONCE(pt->pause_allowed, 0);
-+		WRITE_ONCE(pt->resume_allowed, 0);
- 		pt_config_stop(event);
-+	}
- 
- 	pt_read_offset(buf);
- 	pt_update_head(pt);
-@@ -1677,8 +1729,11 @@ static long pt_event_snapshot_aux(struct perf_event *event,
- 	 * Compiler barrier not needed as we couldn't have been
- 	 * preempted by anything that touches pt->handle_nmi.
- 	 */
--	if (pt->handle_nmi)
-+	if (pt->handle_nmi) {
-+		WRITE_ONCE(pt->resume_allowed, 1);
- 		pt_config_start(event);
-+		WRITE_ONCE(pt->pause_allowed, 1);
-+	}
- 
- 	return ret;
- }
-@@ -1794,7 +1849,9 @@ static __init int pt_init(void)
- 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
- 		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_NO_SG;
- 
--	pt_pmu.pmu.capabilities	|= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE;
-+	pt_pmu.pmu.capabilities		|= PERF_PMU_CAP_EXCLUSIVE |
-+					   PERF_PMU_CAP_ITRACE |
-+					   PERF_PMU_CAP_AUX_PAUSE;
- 	pt_pmu.pmu.attr_groups		 = pt_attr_groups;
- 	pt_pmu.pmu.task_ctx_nr		 = perf_sw_context;
- 	pt_pmu.pmu.event_init		 = pt_event_init;
-diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
-index 96906a62aacd..b9527205e028 100644
---- a/arch/x86/events/intel/pt.h
-+++ b/arch/x86/events/intel/pt.h
-@@ -117,6 +117,8 @@ struct pt_filters {
-  * @filters:		last configured filters
-  * @handle_nmi:		do handle PT PMI on this cpu, there's an active event
-  * @vmx_on:		1 if VMX is ON on this cpu
-+ * @pause_allowed:	PERF_EF_PAUSE is allowed to stop tracing
-+ * @resume_allowed:	PERF_EF_RESUME is allowed to start tracing
-  * @output_base:	cached RTIT_OUTPUT_BASE MSR value
-  * @output_mask:	cached RTIT_OUTPUT_MASK MSR value
-  */
-@@ -125,6 +127,8 @@ struct pt {
- 	struct pt_filters	filters;
- 	int			handle_nmi;
- 	int			vmx_on;
-+	int			pause_allowed;
-+	int			resume_allowed;
- 	u64			output_base;
- 	u64			output_mask;
- };
+ 		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+-			if (!(event->attr.sample_type &
+-			      ~intel_pmu_large_pebs_flags(event))) {
++			if (!(event->attr.sample_type & ~intel_pmu_large_pebs_flags(event)) &&
++			    !has_aux_action(event)) {
+ 				event->hw.flags |= PERF_X86_EVENT_LARGE_PEBS;
+ 				event->attach_state |= PERF_ATTACH_SCHED_CB;
+ 			}
 -- 
 2.34.1
 
