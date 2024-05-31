@@ -1,236 +1,265 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A2D28FD
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 May 2024 05:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EEF17753;
+	Fri, 31 May 2024 05:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717134453; cv=none; b=J/T3nhQCWKmW825aRzSb0yEdqhYtaxa1sgSpyjxUZJEJGHZPb+8yHgielxlA572b0qTq3wxxgyEJko2OFcrNuhboVUjTbU8cA4jyHdEmIHumpRjqKn8grJIFq+xCsSXm54RzL0V5EVRbmUecLmIilFYBrDR88SmcSZQEZhBtTL0=
+	t=1717135073; cv=none; b=s95NevC4ygQseZzYbmh3ypw1+5UULh5Mb5d+5b4TvIxMySVdSHd7NCWDFsnKgqi8sHmts5vW7QfEXmp3z4WZHYRcRNHumKTrcQBN3HhvgBNeaSjlWDuzgHf0GJw5zQbBmSZkT3OHlxlhlZS2aysYKXPIVZcK7zwgOg+WIdQwUYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717134453; c=relaxed/simple;
-	bh=lkXTM1LqOWAxF1rYzYUvntWi+U/KXLIgPzaKn1c30TY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=awPw5icof7EKBxknn9oOzUG0bJgVQit39CkCMXa32TcudYr/ne6qLVdf9AGiiJP6xHGQ5THPIqOmkFwjJ9bSiqf6lmrXLhK0PcH3MFd2VkIB1t0QrIWKWJ5X9NGb4r40Kg8aXuJiLNuHTp3UuQqsF3YEA0dYNHWKR0uTjoAkNZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2c1a16805f9so1353450a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 May 2024 22:47:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717134450; x=1717739250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n5Y8fS9OSiYQSpas0jXUggJoQtN3En7LGg+d/agSyRg=;
-        b=YaQJS3D8Iccq0vmtb7yO3qGzgxt0lX4l3ZqUQ7uRWTOfstVsd9rlRrZfFdIbErAfz/
-         RDCEqpozqS6A/b7zSDaL3hSV43G5WeTgqeU5WtdggluJTnMGdOhdowdTOnvd5U2LxLiD
-         OFuJrCGJVjwKZJfA4sPIG6cpOJjgvd4FrszpTAkK61RLcLcxYTZ1JmPMwXJvtxrCWmkm
-         hEhtLTQ/G3cjwT+TlW2HWTmbZThk/hcgL5aJL0BJmEh9DkcRoAdt9lMV1rmz+wm3ZiyC
-         5Ly7ZminzZUg4hb561rqzHsXrWapMn6oKCUV5rxEHW8e9Up5JqryinQH1J+pWZ1bnomh
-         TvHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJWpK3+NZHi9Td17aY6SiuHTgcUmHbu/OpFpP02OBXfHx540F+KZ0ebJnIIgmtoz1aJtSd014pfjEk9IcGD6iQaIv1gaNFBopr8nRialfM8Q==
-X-Gm-Message-State: AOJu0YxJo8CPqQZobofFa0GR9dDr44TKYMtpHs2TjxjMyOiZHU2/YyMQ
-	lh/AP2lgdqL+DfNKl7NNdsh/rvwiIhUvGE4NsVusxcPFuIMDerZGd425WYB/mcSu74TtC919kRS
-	iu6BONjXnhhhL0FDqoNo4Nm1L0n4=
-X-Google-Smtp-Source: AGHT+IGHB8H5MH9J8G5yja5vygsg62ZiUq9EZzivQTFFWeiB4O0mSdef6Gx61UNEasUNI2WbffUG0dn6614yB8+QEq0=
-X-Received: by 2002:a17:90a:f198:b0:2c1:a546:350d with SMTP id
- 98e67ed59e1d1-2c1c43df043mr1681005a91.4.1717134449983; Thu, 30 May 2024
- 22:47:29 -0700 (PDT)
+	s=arc-20240116; t=1717135073; c=relaxed/simple;
+	bh=5XfAUig+zcsmlnqoi/kdhANMSvNB9r2MCzHdRChVzDU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=h7IuufPdYv+VttLMULJpNyFk30zhpWnaDAz006d/NNYU1yTHKMZtC6saXSBpwnxplCg2QWzfRiW05Q7mpF1Jq+RnurMKnruyDa5svaFCeab9Y8d0NA0RpKTeBNqdzzm85NHp5RsEcSbfMEMpJc+tylrX/4E1LhKWqwGdRt1kDyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MGQiMJPL; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MGQiMJPL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717135071; x=1748671071;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5XfAUig+zcsmlnqoi/kdhANMSvNB9r2MCzHdRChVzDU=;
+  b=MGQiMJPL29ynksYxQhJ1DRNWUW2/1e9RMAKc43DpnlV92C+zjdA/6HxS
+   tLTI7a9ajJBUHxqGrlvOD0JB3ykPIGR14eyz++/rrFzT91Ei6Y3AdjbEy
+   aQ4TdMG5uik7kmkJM427x2nhNJMu7wDUz2bEkoegD2Tg51ldBi2as2cRI
+   1UTtPNhRmcHgM163qt5yyf1vESL+yWAe4cC/xbLf6ukxBa6uq5lbhBIE2
+   j5DosgQymJhJ1ESMRykwi0iloZ92vJ+0wdvNAt5OsJl0fcropAJ3WTPf7
+   FJvpOdpU9NgmgU27yE8bNOqY36TsRO99w8WxE4a/zrkZi8im8d2PdBdeu
+   Q==;
+X-CSE-ConnectionGUID: 9fI0VAWCSV2HhS6F4VKuiQ==
+X-CSE-MsgGUID: lQN90oVCSBauJ4UOpBypZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="25068055"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="25068055"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:57:50 -0700
+X-CSE-ConnectionGUID: oda4gKBQRvShs8EPl9tASQ==
+X-CSE-MsgGUID: wM09tP6/QHi79h9c4nv/og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="40510791"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.41.28])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 22:57:46 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V7 00/12] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Fri, 31 May 2024 08:57:19 +0300
+Message-Id: <20240531055731.12541-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fd2b28b4-8fc5-45c1-824b-4de4422e8837@app.fastmail.com>
- <CAP-5=fVpgRgx839qaeEbnOPSeMD5xXUwNv7Jeqe1PQj8yqV9_g@mail.gmail.com> <a8ea965e-1a88-4297-8ef7-8a8e80ae6a4a@app.fastmail.com>
-In-Reply-To: <a8ea965e-1a88-4297-8ef7-8a8e80ae6a4a@app.fastmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 30 May 2024 22:47:18 -0700
-Message-ID: <CAM9d7cjCL2=h6jwQ_cM24JqT2Um=zfWtJYdQbiy6BAcktyudnQ@mail.gmail.com>
-Subject: Re: Linux `perf report` regression
-To: Mateusz Kowalczyk <fuuzetsu@fuuzetsu.co.uk>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi
 
-On Sun, May 26, 2024 at 5:39=E2=80=AFPM Mateusz Kowalczyk
-<fuuzetsu@fuuzetsu.co.uk> wrote:
->
-> On Sat, 25 May 2024, at 5:17 AM, Ian Rogers wrote:
-> > On Fri, May 24, 2024 at 1:00=E2=80=AFAM Mateusz Kowalczyk
-> > <fuuzetsu@fuuzetsu.co.uk> wrote:
-> >>
-> >> Hi Ian,
-> >>
-> >> I have recently upgraded my system and I have found that `perf report`=
- no longer gives nice traces.
-> >>
-> >> For the same `perf record` capture, I used to get traces like this, wi=
-th `perf report --hierarchy -M intel --no-inline`.
-> >>
-> >> ```
-> >> -   98.33%        sim
-> >>    -   42.66%        sim
-> >>       -    3.40%        [.] <serde_json::read::StrRead as serde_json::=
-read::Read>::parse_str
-> >>            ordercache::Reader::open
-> >>            serde_json::de::from_str
-> >>            <&mut serde_json::de::Deserializer<R> as serde::de::Deseria=
-lizer>::deserialize_struct
-> >>          + <&mut serde_json::de::Deserializer<R> as serde::de::Deseria=
-lizer>::deserialize_map
-> >> ```
-> >>
-> >> However after upgrading, I get the following report on the very same f=
-ile:
-> >>
-> >> ```
-> >> -   98.33%        sim
-> >>    -   42.66%        sim
-> >>       -    3.40%        [.] <serde_json::read::StrRead as serde_json::=
-read::Read>::parse_str
-> >>            0x55e840085c78
-> >>            0x55e84008fb0d
-> >>            0x55e8400986d6
-> >>          + 0x55e840096122
-> >> ```
-> >>
-> >>
-> >> I have bisected the issue to this commit: https://lore.kernel.org/all/=
-20230608232823.4027869-21-irogers@google.com/ a.k.a. `bffb5b0c0976aa46aaa96=
-1dd19a47c9d6301cfe1`. The working `perf report` is from the commit right be=
-fore that, `1981da1fe2499823f626c86c5ba3be6b89844384`.
-> >>
-> >> I'm not sure if there's some mailing list I should be trying to report=
- it at. I can not share the perf capture as-is but I can try to come up wit=
-h something on Monday that should hopefully reproduce the problem, if neces=
-sary.
-> >
-> > Thanks Mateusz,
-> >
-> > The mailing list to use is linux-perf-users, added. Thanks for the
-> > bisect, looking at the patch in question it looks like prior to the
-> > fix there was probably a use after a value had been put. We probably
-> > need to increase the lifetime of the get/put to avoid the issue you
-> > are seeing. The reference count checking has some documentation here:
-> > https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
-> >
-> > Looking at the patch, and adding some annotations:
-> > ```
-> > --- a/tools/perf/util/callchain.c
-> > +++ b/tools/perf/util/callchain.c
-> > @@ -590,6 +590,7 @@ fill_node(struct callchain_node *node, struct
-> > callchain_cursor *cursor)
-> >   call->ip =3D cursor_node->ip;
-> >   call->ms =3D cursor_node->ms;
-> >   call->ms.map =3D map__get(call->ms.map);
-> > + call->ms.maps =3D maps__get(call->ms.maps); <---- adding a get should
-> > be safe, it increases a reference count and shouldn't make the thing
-> > go away
-> >   call->srcline =3D cursor_node->srcline;
-> >
-> >   if (cursor_node->branch) {
-> > @@ -649,6 +650,7 @@ add_child(struct callchain_node *parent,
-> >   list_for_each_entry_safe(call, tmp, &new->val, list) {
-> >   list_del_init(&call->list);
-> >   map__zput(call->ms.map);
-> > + maps__zput(call->ms.maps); <----- a put could be the source of the
-> > problem, especially a zput that makes the value NULL. However, the
-> > next line here frees "call" and so we're unlikely to have been using
-> > it later in the code.
-> >   free(call);
-> >   }
-> >   free(new);
-> > @@ -1010,10 +1012,16 @@ merge_chain_branch(struct callchain_cursor *cur=
-sor,
-> >   int err =3D 0;
-> >
-> >   list_for_each_entry_safe(list, next_list, &src->val, list) {
-> > - callchain_cursor_append(cursor, list->ip, &list->ms,
-> > - false, NULL, 0, 0, 0, list->srcline);
-> > + struct map_symbol ms =3D {
-> > + .maps =3D maps__get(list->ms.maps),
-> > + .map =3D map__get(list->ms.map), <--- gets should be safe
-> > + };
-> > + callchain_cursor_append(cursor, list->ip, &ms, false, NULL, 0, 0, 0,
-> > list->srcline);
-> >   list_del_init(&list->list);
-> > + map__zput(ms.map);
-> > + maps__zput(ms.maps); <--- these puts should match the gets above, so
-> > should be sound
-> >   map__zput(list->ms.map);
-> > + maps__zput(list->ms.maps); <--- these puts are on a value in "list"
-> > which is freed below, so we should be good.
-> >   free(list);
-> >   }
-> > ```
-> > Nothing was particularly jumping out from the changes but given the
-> > reproduction you have you should be able to revert the change in each
-> > file and narrow down which change is causing the issue.
-> >
-> > Thanks,
-> > Ian
-> >
-> >
-> >
-> >
-> >> I thought I'd fire an e-mail in case this is something obvious to you =
-and the fix is simple. I tried to search on the web but I was unable to fin=
-d anything useful. Maybe most people are using some old version or it's som=
-ething to do with my setup.
-> >>
-> >> Please let me know if I should send this to some mailing list instead =
--- presumably with a reproduction example.
-> >>
-> >> Thank you!
-> >>
-> >> --
-> >> Mateusz K.
->
-> Hi again,
->
-> I was first able to revert `util/callchain.c` and confirmed that fixed th=
-e issue. To narrow it down, I tried commenting out every `maps__zput` that =
-was added and later even every `map__zput` that already existed but nothing=
- fixed the problem.
->
-> The only thing that did help was this change:
->
-> ```diff
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 909f62b3b266..77215cedf35d 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1016,7 +1016,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
->                         .maps =3D maps__get(list->ms.maps),
->                         .map =3D map__get(list->ms.map),
->                 };
-> -               callchain_cursor_append(cursor, list->ip, &ms, false, NUL=
-L, 0, 0, 0, list->srcline);
-> +               callchain_cursor_append(cursor, list->ip, &list->ms, fals=
-e, NULL, 0, 0, 0, list->srcline);
->                 list_del_init(&list->list);
->                 map__zput(ms.map);
->                 maps__zput(ms.maps);
-> ```
->
-> I don't know _why_ this fixes it unless something weird is happening with=
- the maps__get or map__get above...?
->
-> I was able to confirm on the most recent kernel tree checkout that the sa=
-me patch still makes the problem go away. Of course, this is probably not t=
-he right fix but I don't really know what I'm doing...
->
-> Maybe this gives some hint about what may be wrong.
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
-Yeah, it looks like the right fix.  The callchain_cursor_append()
-assumes ms.sym is set and list->ms would have it.  But the new
-ms didn't copy the symbol so the output just prints the ip.
+The ability to pause or resume tracing when another event happens, can do
+that.
 
-Can you send a formal patch?  I think we can remove the 'ms'.
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
 
-Thanks,
-Namhyung
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.  Note, thank you to James Clark (ARM) for
+evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
+positively to the RFC.
+
+Changes to perf tools are now (since V4) fleshed out.
+
+Please note, Intel® Architecture Instruction Set Extensions and Future
+Features Programming Reference March 2024 319433-052, currently:
+
+	https://cdrdv2.intel.com/v1/dl/getContent/671368
+
+introduces hardware pause / resume for Intel PT in a feature named
+Intel PT Trigger Tracing.
+
+For that more fields in perf_event_attr will be necessary.  The main
+differences are:
+	- it can be applied not just to overflows, but optionally to
+	every event
+	- a packet is emitted into the trace, optionally with IP
+	information
+	- no PMI
+	- works with PMC and DR (breakpoint) events only
+
+Here are the proposed additions to perf_event_attr, please comment:
+
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 0c557f0a17b3..05dcc43f11bb 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -369,6 +369,22 @@ enum perf_event_read_format {
+ 	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
+ };
+ 
++enum {
++	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
++	PERF_AUX_ACTION_PAUSE			=   1U << 1,
++	PERF_AUX_ACTION_RESUME			=   1U << 2,
++	PERF_AUX_ACTION_EMIT			=   1U << 3,
++	PERF_AUX_ACTION_NR			= 0x1f << 4,
++	PERF_AUX_ACTION_NO_IP			=   1U << 9,
++	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
++	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
++	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
++	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
++	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
++	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
++	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
++};
++
+ #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
+ #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
+ #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
+@@ -515,10 +531,19 @@ struct perf_event_attr {
+ 	union {
+ 		__u32	aux_action;
+ 		struct {
+-			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
+-				aux_pause        :  1, /* on overflow, pause AUX area tracing */
+-				aux_resume       :  1, /* on overflow, resume AUX area tracing */
+-				__reserved_3     : 29;
++			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
++				aux_pause         :  1, /* on overflow, pause AUX area tracing */
++				aux_resume        :  1, /* on overflow, resume AUX area tracing */
++				aux_emit          :  1, /* generate AUX records instead of events */
++				aux_nr            :  5, /* AUX area tracing reference number */
++				aux_no_ip         :  1, /* suppress IP in AUX records */
++				/* Following apply to event occurrence not overflows */
++				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
++				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
++				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
++				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
++				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
++				__reserved_3      : 13;
+ 		};
+ 	};
+
+
+Changes in V7:
+
+	Add Andi's Reviewed-by for patches 2-12
+	Re-base
+
+Changes in V6:
+
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
+	Expanded comment about guarding against NMI
+
+Changes in V5:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Added James' Ack
+
+    perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+	New patch
+
+    perf tools
+	Added Ian's Ack
+
+Changes in V4:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+    coresight: Have a stab at support for pause / resume
+	Dropped
+
+    perf tools
+	All new patches
+
+Changes in RFC V3:
+
+    coresight: Have a stab at support for pause / resume
+	'mode' -> 'flags' so it at least compiles
+
+Changes in RFC V2:
+
+	Use ->stop() / ->start() instead of ->pause_resume()
+	Move aux_start_paused bit into aux_output_cfg
+	Tighten up when Intel PT pause / resume is allowed
+	Add an example of how it might work for CoreSight
+
+
+Adrian Hunter (12):
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+      perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+      perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+      perf tools: Add aux_start_paused, aux_pause and aux_resume
+      perf tools: Add aux-action config term
+      perf tools: Parse aux-action
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+      perf intel-pt: Improve man page format
+      perf intel-pt: Add documentation for pause / resume
+      perf intel-pt: Add a test for pause / resume
+
+ arch/x86/events/intel/core.c               |  10 +-
+ arch/x86/events/intel/pt.c                 |  63 ++-
+ arch/x86/events/intel/pt.h                 |   4 +
+ include/linux/perf_event.h                 |  15 +
+ include/uapi/linux/perf_event.h            |  11 +-
+ kernel/events/core.c                       |  76 +++-
+ kernel/events/internal.h                   |   1 +
+ tools/include/uapi/linux/perf_event.h      |  11 +-
+ tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
+ tools/perf/Documentation/perf-record.txt   |   4 +
+ tools/perf/arch/arm/util/pmu.c             |   3 +
+ tools/perf/builtin-record.c                |   4 +-
+ tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
+ tools/perf/util/auxtrace.c                 |  67 +++-
+ tools/perf/util/auxtrace.h                 |   6 +-
+ tools/perf/util/evsel.c                    |  13 +-
+ tools/perf/util/evsel.h                    |   1 +
+ tools/perf/util/evsel_config.h             |   1 +
+ tools/perf/util/parse-events.c             |  10 +
+ tools/perf/util/parse-events.h             |   1 +
+ tools/perf/util/parse-events.l             |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c  |   3 +
+ tools/perf/util/pmu.c                      |   7 +-
+ 23 files changed, 696 insertions(+), 240 deletions(-)
+
+
+Regards
+Adrian
