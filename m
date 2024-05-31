@@ -1,42 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FBD12F5B7;
-	Fri, 31 May 2024 21:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE6F7B3F3;
+	Fri, 31 May 2024 21:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717190046; cv=none; b=SWiJ56uJdk27UE2wrvdtZAgZGQV93F2Cczxp0/MTVNjCFIoHWEMDNCf29Hsw+iexNgmy22bq5DQrquBDP2/6+iLi4j9GPp6MVOrYbfjnR+eanNUlfufmkBdtCi+Uu7TjyYHsyKgIKsWUXuyvFa1FrkMUCJ772FzumQSVV1pOKCU=
+	t=1717190102; cv=none; b=CEw6nf7qpUXaPvibDU858NX4CnAZIh0wJNyBLShqPCG/rWu3XifFgu5CJltUs0Kj14s9ZMGmRmOj1eNLnVWzSWHoFASzlFxVCSwuH1VuHJmBuxaOCkfafZ+iuuCMdSGnfa4c/1+KgmnBCT5IA0C/dTsP7vG8FhzPdBZfHbyusTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717190046; c=relaxed/simple;
-	bh=g4xGftAItbPB9/XxDsfBwBbndVWd87MNeTmFhogkhE4=;
+	s=arc-20240116; t=1717190102; c=relaxed/simple;
+	bh=KEb6+OV/fl9i1+HKLnG1O/1KspKfwLiTTNvwjl6wlBQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DM1O4xBb+ffgnRA0jUaZ01vaQ5EQtzY67bTTj/tyoOezYsH1wHdhTFGtc66f1wF0DuX4h+KXRoAAmXipGCGHFt9oqpa97TkCZenVwUAhSAalKlY9azlQwwtGlWBYb7NJK3FowdwhM/jLLbYvjBb5o7c7rTGbwdC9DTehNjMQkSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9eQAr0c; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bVxJkEAiUMUTrgjHuqS54lHtqHxPNKNr7LIGajOcvkKK1LPBVd5q1KzZs+gC3lLCTU9EbUFGw4ua8S2BM40tk99n97hi7EJxj60rjXUFF5JhugAdmTfFqpO5KCRXe4cV+k7QnuEYE1TaLdJ8giO97VRo1UZX9QInAYG16ASF3Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTDtW2XL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9eQAr0c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0F0C116B1;
-	Fri, 31 May 2024 21:14:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTDtW2XL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923ADC116B1;
+	Fri, 31 May 2024 21:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717190045;
-	bh=g4xGftAItbPB9/XxDsfBwBbndVWd87MNeTmFhogkhE4=;
+	s=k20201202; t=1717190102;
+	bh=KEb6+OV/fl9i1+HKLnG1O/1KspKfwLiTTNvwjl6wlBQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=q9eQAr0cmZto6gpP+2HJ1tgAKR9hzD+P9Yx0I+7h3WffpKxyQny84HXuFZcA18tm6
-	 +1cd/Zurjeb9aRuEvKekL6EYsLcgAqF9Z+IsFVxcecXTbiZZBCfiOf52kWEt1BS//y
-	 AQSVa8+Y34ZgO2LPifHhLKsP63HnmIJTw5BTKpdI9AruvHdci43Amew9GO/tm+x4Zg
-	 HA0XWkBlHu3tcxNS5gkSxcYsxHcRXuk16Up5XhHIfWm3eTiZ0Q+eL00ro3hO9tmqxF
-	 /1wEvpZHjR9uROFbuF3jY6J3sKJb5Ei6fuLRvK12F2GygKdW9Uf32uLAKakH9ktxxO
-	 GQntCGWGA0WBA==
+	b=lTDtW2XLiIQzfratrse5mUxeOLKlIGksktt8IbiYp2MV3k3sh+IDAF4U/AXo5RSG8
+	 pg7X4SwPrQihyyVB/K2Zj2RH2/EXVSyTvLlgwJllyLvO3bkt+SuNo9axrsv1DsEuS/
+	 e8daXEs2lKf0X/2a0brK8/kHGeGxNryMXFqMnsxe6qx5Z1QEFtwKUtUMmUV8gNKsQL
+	 iJecWeX2vwcI3aNpeySxmTSVfLJb83X2LwxVcW4YRBXBrCmNTA5ihlnHf4gpT+vywh
+	 NIuvDt2Gp4ZNxmBxCvdbsSpnxboDTqlxFekms4AwoHFpVCBmsB2anpbB7kS4u+37c4
+	 1g9neM2Olezcg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] tools api io: Move filling the io buffer to its own function
-Date: Fri, 31 May 2024 14:14:03 -0700
-Message-ID: <171718991317.2179562.7793120859292708141.b4-ty@kernel.org>
+	Ingo Molnar <mingo@redhat.com>,
+	bpf@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Changbin Du <changbin.du@huawei.com>
+Subject: Re: [PATCH v3 0/3] Use BPF filters for a "perf top -u" workaround
+Date: Fri, 31 May 2024 14:14:59 -0700
+Message-ID: <171718991319.2179562.4988746622967425681.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-In-Reply-To: <20240519181716.4088459-1-irogers@google.com>
-References: <20240519181716.4088459-1-irogers@google.com>
+In-Reply-To: <20240524205227.244375-1-irogers@google.com>
+References: <20240524205227.244375-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,17 +58,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Sun, 19 May 2024 11:17:16 -0700, Ian Rogers wrote:
-> In general a read fills 4kb so filling the buffer is a 1 in 4096
-> operation, move it out of the io__get_char function to avoid some
-> checking overhead and to better hint the function is good to inline.
+On Fri, 24 May 2024 13:52:24 -0700, Ian Rogers wrote:
+> Allow uid and gid to be terms in BPF filters by first breaking the
+> connection between filter terms and PERF_SAMPLE_xx values. Calculate
+> the uid and gid using the bpf_get_current_uid_gid helper, rather than
+> from a value in the sample. Allow filters to be passed to perf top, this allows:
 > 
-> For perf's IO intensive internal (non-rigorous) benchmarks there's a
-> near 8% improvement to kallsyms-parsing with a default build.
+> $ perf top -e cycles:P --filter "uid == $(id -u)"
 > 
 > [...]
 
 Applied to perf-tools-next, thanks!
+
+[1/3] perf bpf filter: Give terms their own enum
+      commit: 63b9cbd7941aa9ec5cb61567042176c4ce04b020
+[2/3] perf bpf filter: Add uid and gid terms
+      commit: d92aa899fe0a66350303a1986d6dc7ec4b3a1ea7
+[3/3] perf top: Allow filters on events
+      commit: af752016340021d433a962063067e819dba889b1
 
 Best regards,
 -- 
