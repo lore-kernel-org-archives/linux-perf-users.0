@@ -1,391 +1,1023 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB98117FE;
-	Fri, 31 May 2024 07:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9102B6FB8;
+	Fri, 31 May 2024 08:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717138853; cv=fail; b=r8zYBgyrotnGAq6TsHrnisS2lwC+dqzaycH9sRU9VDLXZn1i6enIDvCMWBeQStq/E/2V5iury2lS2TVgZrx0SHtMr1LdlNp6mts+Fl9iJwo0NzNMgaWryUg4IXz2G3gN3GqNZXqE9zUK3VhQcnoO/aZZNmompiGPEeg5w4Usv+o=
+	t=1717143414; cv=fail; b=nzUwMk2r4LpIfnXc5cPbY+TtnhghMsVdZX4imz8Joc+KP/71XeuirnVmUAh4YBsXOq+b5P9EdRE58+iDgdnHzjCK1V/tJ/p2qCy3E9Y/AjWTuqyVJe4kggG6oPb814zBsgclDSsK8Y5KHOwUJAxrpdhvQbO4QfK2qfA7zQShI90=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717138853; c=relaxed/simple;
-	bh=TlOkyEawS+83v27CdbGT5FX9KJdHyKgIN+J7diVpxEM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NPMKI1ISi4K47b9OgIYyEPoBDvhn21o9dNDBIeFpJUjk0fO8JUiYV9oIIMTxeYySSYPqEoBfY9VTjX4qahGAKgshydebpcbiVQQDwr1cJuDJr7VwBfPEs2//PNHd+/hJTmh4yJt1nh5LRExMlgcJ5fpj3YB829Lf5lDWS1Qz9x0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XXRDy6i6; arc=fail smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1717143414; c=relaxed/simple;
+	bh=meV4TXD0pEYuXssjw1CvNS+RxMu0BXSzTshvzHySO5w=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WL1RE6pB94qwfDW/cp55+OsmkmIaxdH7kd1j+dxLZpKJnnjVVbVDwdCbcHtHON8lhyMnrkwl+IDnwW8qcuV+Na02nsSzRu5wDth9FAJfrkFqOiOWtctK8Flj+aWUBtbsrA5Ny00rwSFXx5p/zRp38f6Gy3Wqj4wKEETpH9mdqzg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLEt9cQa; arc=fail smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XXRDy6i6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLEt9cQa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717138851; x=1748674851;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=TlOkyEawS+83v27CdbGT5FX9KJdHyKgIN+J7diVpxEM=;
-  b=XXRDy6i6TH7tMjiQlqQIePtoJJ5jPYR2d2HMFbgA6AcK0aQvQaQBEC3o
-   6jfFZd5FET9SSTj5JJs5jsjWqtSNdKZGaTG+9yAckElPqjOLJG6fufYtj
-   Mrplnw24VPvHw7FDt4XV55R5nL2KNkH7tZLjm5OgyXv4r3A/FyIizwQB4
-   KASwGIk7BF2JnL8u+1sUKz0/VwDCooh6C2L1tICNxLG7A0IG78vs7+JBL
-   0v+ixnOOejP4CFvflWnZxeeNdYbcbE2uu0UNFuE9QtucH0mwY4F/lXJxG
-   IB2wAfQyNgx65zwN2GZQdaggrhY4nNp0FfsTx71SUqJEOHmF7tHzeNIvO
+  t=1717143411; x=1748679411;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=meV4TXD0pEYuXssjw1CvNS+RxMu0BXSzTshvzHySO5w=;
+  b=CLEt9cQaNwZ2kkwHny1nqiiR8iD7alfnllHF6LdUMnEBmRafNZtulMp8
+   hhDdEJR0pE2Z2WCFbqE1paMFgBLYu+OtjbwxJ/sCbRe4njUZNUn0RJYAL
+   P23W+tMYfUV4hoxXGTnuJaoM9VmPP9c4SqSrj/zUMuW5vhrB8rvmypiXG
+   xTzKKmO71evR+o0XgHR8WIz8iza8KSTqmOHsHW2syZ15DFoGJ44B0gn+c
+   e+yf7UMfDzZ9pH0TdPprJKe7aZRM/hFvfTM1pepb2kCL0JSd4M1MR2HeX
+   F0nqFPFv3lyc6FjsAxM9mQrmA16V4hdd0JbIAaFiL6tIY4xe7tVYewLqU
    w==;
-X-CSE-ConnectionGUID: YDHdlKV4SPiDnTUbBeZ4JQ==
-X-CSE-MsgGUID: aKAh6W73SGqPhhpQG+f25w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13488628"
+X-CSE-ConnectionGUID: IB+hQH39QRydq10rqgT60A==
+X-CSE-MsgGUID: Txzosv6IRtOvQWqITijZuw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="11836264"
 X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="13488628"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 00:00:47 -0700
-X-CSE-ConnectionGUID: 3e3p4XECQ+eBCpavAFQa7A==
-X-CSE-MsgGUID: IgM+UlLfTTCbnbwM2J/5Fg==
+   d="scan'208";a="11836264"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:16:50 -0700
+X-CSE-ConnectionGUID: xn1MEqVqTlGgay4zyxTzSA==
+X-CSE-MsgGUID: QzAVdX1TT7eo4zlwMZdatA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="40526603"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 May 2024 00:00:46 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="36575100"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 May 2024 01:16:50 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 31 May 2024 00:00:46 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.39; Fri, 31 May 2024 01:16:50 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 31 May 2024 00:00:45 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 31 May 2024 00:00:44 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Fri, 31 May 2024 01:16:50 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 31 May 2024 00:00:44 -0700
+ 15.1.2507.39; Fri, 31 May 2024 01:16:49 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B3h5uwn3PtTm7xpgRQFB3pMDkvV+i9UDvNgpYgoV+vTJvK6OSz+C5z8yxInJftVR/pVxoV5rhUb7aFXQFIfFluwL9PpSTgdXlmGf0dlxZo7yk3SGKTf71AWFpZbd1CYquswP39FfIiifesJJjresMsnwCZEotugZVd/Lt77TCK1cxkeQvHQskF0t7SwsDlqnQHkUJ3vkkEiBxw0qTBS1Qcl/Hn+jnnbpDilmX48DRCahQM2M9cs1l0zzSREiZ6tdoWOX59/bIFxRC9TBq40nIWUE8JXw56nMSLbAk4fIyCz6HlEbHJzm2z91hQbueERjl0vBt50HK/US82b9kvtmTA==
+ b=ZFu0kpStnx9rEIM7h49ShqXhpXXN5ja3AG9sEEPgOI7eszdMMiYljXTckErJPrYNdabV7XErtDkPVrRTAXBpk0Hot6fAV/e0tOT7NleHVtxE9ZK10HWdDlVOq835s1H75eHJwsaX/+3uNhx4WlYu2pXuuSg2AfWZGy5HELVv4o2k0iTcGkk5JZaORRxY7bQCYl25hwnXEIR7O7K7WP7xzVxgAY1iphw7V5lehbcERA5uJNgekkjfqBtY+AP43HVlaHpU5dU5DGi5eUjGJvE2XyOaBIEI2+WCbvsXV63ujiFvbBX1Xdyrd9tKHoE8NOBgRDrPbdHq4sdWVgXdDB8JRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TlOkyEawS+83v27CdbGT5FX9KJdHyKgIN+J7diVpxEM=;
- b=ZJ7++oe43tykby/LBiINJNJMAvRkC5f0Yo5bwXPKlmpCGlJs7d9S4inthHfd8eqx4MPhuZsX99KtiDvC8fO6gDM4Udi/QwowkEzC9EemrRqJ/iqFe39b8pwI1n+jw0owFYPu06ExuNbBbwk4kiCAA/xTYmKgtN+miS3SB+Y9AhImPMyfwsj/W9bmPyB9mltOk4tTYpXpjNm/ME5ooaoaPkiYDtu2sQ+Xp2wyD3R2lOO9+aIJ6pLQLkvgL0c89SlonXUQBzreqLY+lbRE0wMhXa8l8Yis4rlYDv/Xyk+/Cio9BUlXGhX5kc5/DTeufmrkxsmeR8qD0qGvlIYYvYlc1Q==
+ bh=W4XrQ4bUZ43Eg/Ae1ytgH4zYhlDgGnB/GXNlhzLJBek=;
+ b=RUTeFdEKFbd90w/PqqPkKO+WJJ6cLo4ToQwVl0CYRuih2oAVcm6pkhusLFHK7yMDPYeou4Xp+ObKuhomdlz0u9EOV2uLYfRj2ff9+bR+bM/JXszst7upwdsnB02rSlnQu4wCtYcBcDx8wqf5znef/JSaV9yQN/9SyFaFy42Wo8IjrQOw9D3hLMgUudxYkyqNV+R249feZLvNX8Fgt99939usNwomisMgUbBg5Smt5XhEcvALJEG0PVM9bFYEJ4r33SBTkcf0m17Ns4T5N8iacQ+uiFtzS1Kd4e/PeEbdq51eTC1BNJOrSyn3WT+yxl4bmnac3z6lIn3Uxwk9KV2gAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
- by MN2PR11MB4533.namprd11.prod.outlook.com (2603:10b6:208:264::19) with
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by IA1PR11MB6194.namprd11.prod.outlook.com (2603:10b6:208:3ea::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Fri, 31 May
- 2024 07:00:42 +0000
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::8cfa:1a7f:d9ee:42cf]) by CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::8cfa:1a7f:d9ee:42cf%4]) with mapi id 15.20.7633.021; Fri, 31 May 2024
- 07:00:41 +0000
-From: "Wang, Weilin" <weilin.wang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>,
-	"Kan Liang" <kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb"
-	<caleb.biggers@intel.com>
-Subject: RE: [RFC PATCH v10 0/8] TPEBS counting mode support
-Thread-Topic: [RFC PATCH v10 0/8] TPEBS counting mode support
-Thread-Index: AQHasZORguWsh0HBOE2nG0SK0bqPIbGw5tCAgAACpYA=
-Date: Fri, 31 May 2024 07:00:41 +0000
-Message-ID: <CO6PR11MB5635D7581425EF0F089EA781EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
-References: <20240529064327.4080674-1-weilin.wang@intel.com>
- <CAM9d7cj676sty01zqJVyk9DVesVYNFgVTZ329X=UP3xgV2aDfA@mail.gmail.com>
-In-Reply-To: <CAM9d7cj676sty01zqJVyk9DVesVYNFgVTZ329X=UP3xgV2aDfA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|MN2PR11MB4533:EE_
-x-ms-office365-filtering-correlation-id: 31342b6a-12b3-47dd-4e5c-08dc813f6251
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info: =?utf-8?B?QlB6Zm5VcHpxY1ljQW02aVIya3RSN1M0SEpQc2xEK1NYZ0kvb2lRSWJKMTkr?=
- =?utf-8?B?UmhlYmxucEdQd0RHMGVqVUQ0SGFEUExFY3FWN3U1WUpiRFdmRFpYeW1sVlF1?=
- =?utf-8?B?WXNFd2s3Qmx6RytNeTFjUnBGTnFJMnNXK1Z6NzZSSHJ5bGpzTTVoZ2h5Unc0?=
- =?utf-8?B?S0VZWW5FKzkxRDRTbzE3TnJVNzVoWHE2SUdvclBCbDMxb0FiaW50MVVzZHFD?=
- =?utf-8?B?Y0ZIaWVGR1ljbTNaaHVPT2FPM3Ntem04MDIzT29kZlp5cEpnTjMrVHVQOG5R?=
- =?utf-8?B?REdLci9tTWhXWHdlaWNNbFYrQW5ubzRYcm9CNGFhSGlvcmc4V3ZydFpFYmZY?=
- =?utf-8?B?YmwySVZGYUVyNUN3R1pNeEV2UklTZVhWbE1rQ0V5c0FmOEc0OE1FaCtQaWNC?=
- =?utf-8?B?eUdRUnczVlpCeTdZY25aY3ZINERISEVvZmduSzAzVmNSK1JJbm5tc3VmbWpF?=
- =?utf-8?B?eno4VmtXdXVRUWs3MEpiNU5JQk5nYzlUdWFwdklqVWlma2ZNVFAzc0JFUHpE?=
- =?utf-8?B?MlpkZjVNc1FGMlhyOHV4N1AvdWxSOW1VN2FzaDEyaERlS1dnSGNGaitkaFdp?=
- =?utf-8?B?RnRHaTJobWJCM0RnTkJGbUJtdGd1L0NadUxFajJZSld0Zzkxa2Z3QzlxblU1?=
- =?utf-8?B?OUFaNEtvQnRPZ1lWMm03Q3Nwd0w3SHI4b3l1YzQwSnlaMUhWZjJrN1VRZS90?=
- =?utf-8?B?NGw4M1p0aHVUVXhOVHBTb0tpd0hoU3BpbmNrU0pjbUNzSyswTzAydU45TUFC?=
- =?utf-8?B?RXhHS0tvS0YrbksvZDJYdFYvUWxueWdNZkJzUTlSTFlhSHpIUyszVnl1dTI1?=
- =?utf-8?B?cjB0QkJpMzZSVE1kT0I2d2oxYk5Cc3Zvbyt0NXVieHFLbEhGT2hkUXpHb2pj?=
- =?utf-8?B?c21nYlZESjBYc25VU2IwVmhSSTIyQ3IydUcvWmRxUlliL0l6K2F2bTluSGRT?=
- =?utf-8?B?UnBpZXp5UTc0dlFBUmNpc0lkbG9sYTh6RUlTT3ZLUGY3bnVjSlpZUDY2MzFh?=
- =?utf-8?B?K3pMQXRqV3k5dkVYcG5hNURVZG9HSjlnVG5JMGd4QXAyN0xUMlhCclBmanNG?=
- =?utf-8?B?L3hSV0o1Zk9rL05EaStLbW1HeU5TQ2FHWG9zYlZLUlQrK3Z0NUpOTmwvRlI0?=
- =?utf-8?B?OS9WR2o1VDgyMFJqSGh5clVSSHF6L1dXbzBuVUhqMVBSL0lTOHJOS1hkMmdX?=
- =?utf-8?B?aUxPa0hsMklEb1FyRkpPdmR0ME12NjdCQ1pYaFc4NjBQOWNUOW9QaVRoTWdr?=
- =?utf-8?B?WlUxSUYyd01JdmpQVXpZaFRRdzUwOFhDdVNYeEc1aWZMNGtrV292OEZaQkhX?=
- =?utf-8?B?NnNVNUgyZVdEMjRXdXlmUWFVVkpaMzRQbTlXOFpiZVlsenJyZlZwYTZMa3Zh?=
- =?utf-8?B?N2JSVmJzWHNncER6T1dqQ0VzUlFRYk5KekI4Q3FyTmQ0Slloczd0ZWVIbnQv?=
- =?utf-8?B?am1IQWlDYm80aFBQd2hjTlB3ckRDRHpCTENEQU9FVE05aHNkemZqOERmUXZY?=
- =?utf-8?B?cHRUVWFjTlU4TW5IVzNFcm5WM3p5eFRtUDVIV015cStFRy9pZ25rM1N3WTVY?=
- =?utf-8?B?dUlySWVKdXNkMGRKL3RXbU5PR1FLTktKa1pLOCs0MnJUWW4rcW9mL1h6M1da?=
- =?utf-8?B?MEErQ0IzYjljT1l4WWV1ZHVuWkFBY3A5ckUzUXNJamNtTXptMHJ1akdvTXNq?=
- =?utf-8?B?dDdaK1VsMnIzQTYzSXZvcjM2empxMWU4dFFkV05HMHMvbjFDS2YrSWZIUVdI?=
- =?utf-8?Q?Ul4Fd86yVA34eUtvXM=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VnhiMFVGdTZUVjQ1SElHbkJTb2ZhaHFNb1VENzZINi9wemFSOGxiSHQ3SlBw?=
- =?utf-8?B?VXl3RVI2cmpZOGllZmVWdHVZcWNEUXVaZmlhNVJPYzZaK1FBcnc0anVqREF6?=
- =?utf-8?B?MUpJRGk0dHhrTWhBSlR0QVV1eTVoaXM1T0lQRXFtK0p3MFJ6SUFGT3hVZzk1?=
- =?utf-8?B?TW5TRU5KenE1UmdYRk9WbmV6cVBpbzRPMlVDUE9TOFpNZXNXUGR5NWdxQ0lT?=
- =?utf-8?B?dlJrR0JHKyt3Wkc3ZTM2NWNWUW9POTR2OWN5aEVQcFAvRG52OEFWTzR1WHV3?=
- =?utf-8?B?cmhORzZhVm9VM1BORVZOMWEzUU42WW1VOVE0bkFFRzVBbmVNdkNBblkyMEw1?=
- =?utf-8?B?UDlRTVc5MHlsc0VQSGVXSjZVbTVoNmlaMC96bmxSY1I4dTZOTEpFeDNhM3hN?=
- =?utf-8?B?Y2lRV3Eybm94b3kvQ0F4aG1xVUVQYkpVS2tIQmJ2TXhGU2FVamFPNWlVeFhX?=
- =?utf-8?B?SXNXSkxEOGVDb1M2YUlzVm5SZ1pyTnk5VjBCTElsaTk5bTliK2dTbUZhRmZW?=
- =?utf-8?B?U1YwQWJoMmJ2WHZaZks4Z0wyNC9kVE1sMmlKbURGYjRCWXFYNVB3Z3dyOVUr?=
- =?utf-8?B?Y001NG02cnU4eXdIMjJEUGtHWVJPSVdxMklNdDJmM2pNUUc1Tk9haEZVa3BB?=
- =?utf-8?B?NWxYWHpzc1IzZlBZQVozRVVOOVY1eHJlVEl6dkNybm56dWY3Z0hYUXBSLzhu?=
- =?utf-8?B?U2lpVlk5SzNwMWV3WmlQWlpPc0RrT0hNdkdaOVp6U2VOZXlHZ1p6K0Nncm9P?=
- =?utf-8?B?NkdNb3BUeGg4OVJ0Z2R1bm9Fc08yS2dTVVRFMHR6bXIyZDhZV2gzTEROc1Yr?=
- =?utf-8?B?NU1PeEZtbDdWS3h6eXlmQUEwZnV5TWVMa3pBd2FsYTBRL2lPRkp0MlJCWVdS?=
- =?utf-8?B?cHh5cE9CSXVkUWZnM2k4QzVWT2VXNEZOUUIzdDJRMEw4Z29DelBFNmR2UCta?=
- =?utf-8?B?ZVdGTUpWMy8rTHFQc0h5RTA2U2V1QlNVYytHVVd1Q3JXZVUyTmZUbFBGajRr?=
- =?utf-8?B?ZjhHYnBSZDJQTG42b3pKMEFwN0FwOHIyOVV2QUlXR3ZLWVZFK2svcVBLalFH?=
- =?utf-8?B?UFloakNmK2oxSS9uUlRYRGQxR1NqY0lXSFJoMk9Ydks5Z29PQzZUNlhSQ1BV?=
- =?utf-8?B?VmpodE9PUUdsaG9nalYwZzdUdjczOFFaWXRjcEdpVzlEMXdRMFUwRWNjNkxt?=
- =?utf-8?B?elNUUUx1MHgvREE1YlY0ZGQxZGQzYWwwcysxcG8rUVcyV09wcnFmSUxoSVcz?=
- =?utf-8?B?OTBzWTBRR2UyYW1IK3BWUGdSQXY5RkRKL3pPSWtwN0dxanBndG55Zkl1QitZ?=
- =?utf-8?B?SkxEVllzUCtKSHBWMFRoL09lMHJhR2pJaDdjQzdVSnFDOUF1bnQzREpTNFhu?=
- =?utf-8?B?WWdGTWNYYURFUTRZb0NjK3NOTmZNMUlyNkNqMEVORlJEN2ZQanVBOW9NZThi?=
- =?utf-8?B?ZzZwMUdidGppTXgydGFFNjMwTTQ5WmpQWlBKa1ZkM0JZN3hmMThWK25rVHFD?=
- =?utf-8?B?Z1VveE9QNU9ubEhKQUpVOW51eTNSR1FURG1Xc01pa3h0L0pVcG45ZlE4cklZ?=
- =?utf-8?B?ZGVOREE1SXEwenJnZThMMmRPSFg0YzY4Y3ZReGg2TEY0V1JXTGF6WHVxcm1K?=
- =?utf-8?B?dnRXcWRFMWlCOXV0Z2dSWExXd3NFN2lkVnowWitSNXhVVkdRaXJrbHFqY0hq?=
- =?utf-8?B?S05ZekpqRDRxT3dLd25sdGRrdXJtS0pBT2ZxcDBDbm9scjN2Q3R1T2o5RGJW?=
- =?utf-8?B?eENkclE1cU9mKzRNdXZQL2pDZE96RHZTNi9jOTdyakxwUTdCOHoxNkNLS1ls?=
- =?utf-8?B?di94c1I1VjI5STFhUzI4SGRpR3YrZUFPNG9nUFJrYWF3TWZ6bU8zUnE1cWNx?=
- =?utf-8?B?cmNwQk5NdndPN3B1ZGpqbDUxRHdBdUZ2c3JxWkhSUE5ReWZxYW80N2x1Nmdx?=
- =?utf-8?B?R0NWaDdDcWZZa0xHMW0vV0l6UDc0enpZc1p4ZVlBUmVyTjRPOFkxalFNNUJC?=
- =?utf-8?B?UjhEVXBBL2t4REJya21kTzk1TnFHL3Q3L1J0bDBtYjd0QlA3MExWOVZodWtU?=
- =?utf-8?B?clN4YlRaamZsYm50c21kejgwcWIzZGpTdUpPVWtzc0EzOUFyc0VzTjlESEtu?=
- =?utf-8?Q?5g/6D7sOxgNhvI+aZ/TMNb5gt?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 2024 08:16:47 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%2]) with mapi id 15.20.7611.025; Fri, 31 May 2024
+ 08:16:47 +0000
+Date: Fri, 31 May 2024 16:16:35 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Ian Rogers <irogers@google.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Weilin
+ Wang" <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Jing Zhang
+	<renyu.zj@linux.alibaba.com>, John Garry <john.g.garry@oracle.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, <oliver.sang@intel.com>
+Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
+Message-ID: <202405311548.1e881dea-oliver.sang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240525013021.436430-2-irogers@google.com>
+X-ClientProxiedBy: SI2PR02CA0020.apcprd02.prod.outlook.com
+ (2603:1096:4:195::7) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|IA1PR11MB6194:EE_
+X-MS-Office365-Filtering-Correlation-Id: 125bd4e0-6eff-47b6-3856-08dc814a03d1
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|376005|366007|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Z5yPl4c9vt8D96uQLh5d7Xcb2FhYeA2R9iNzaHZgDeL+UqTAOtIRe6wqCtX+?=
+ =?us-ascii?Q?q48OIS0yDl08YhOdYOWOXr6zOXHbLZahIcMjjXfXCROVCANKws5kTbCduZM4?=
+ =?us-ascii?Q?VayqrJOG+K2iB3qXX9euElKfNtD4ciDxE8Z7jWxMLUWeyrMNZBcnqqc8tYoh?=
+ =?us-ascii?Q?qx06oQpd2KWJ3wKEm7Q+5eXY/MTh1qcCNz39aTXkXm1Fqf3cgT57YZNNdqqY?=
+ =?us-ascii?Q?cDmG7/STvY9vh3bQNsdVZH8hk4e/Rur+tqy46Zt8QRI3bnnNrnH6VeSD5yyS?=
+ =?us-ascii?Q?kNARyIgeqX0iqouAoJN5V6RaLnKxsuI+EIKwy6YcU8z2BcSCPm1WlgzWUHwT?=
+ =?us-ascii?Q?oc+spXCFyatM8P+Jz6TcjKmuhNxZgwD8GVkYpbaBs+/ccBEO7d3mo2trVeS9?=
+ =?us-ascii?Q?73iY3zfD/1GwsdLP4UyXRs7qAZWURpMi7MC5hXM5Vfpe/6/ct12AsKV8oSFl?=
+ =?us-ascii?Q?kGMO9/f6VaX8rtFHqDOrhQXJuMx3P4y+p2OB9SS2ZPqBNEUHCXSWwXeFkY3+?=
+ =?us-ascii?Q?azXkqi+tMNZSdvhbpC2HVPpzyJxHJpmbGVHRyUnNViGn/H3iafXtfeqAoiam?=
+ =?us-ascii?Q?cuJ+nJFCXe6M2Lv8Pvaq0Id2FA/aIY3SCwkv9eslld5Fm3ecm6BGNdIsWYEB?=
+ =?us-ascii?Q?dS4Z7cXa6ai9M4Mec4z26YnSmYMZEAMgn3TJgswjgyzAJrh9wBcEf1QRD9P7?=
+ =?us-ascii?Q?cOtTZtn42eqLK4E87JeqmN8r7lKOmuaIUT3O+yi1AKxYlv/dP3JmzqPWZ7yK?=
+ =?us-ascii?Q?KSBjMBbSo5to3fA7/ijvtkq8IC/mE0MbAmbpoeic6f7Buj7j6BwM9/s2HK1T?=
+ =?us-ascii?Q?u98MJe6uHTNA1+Xcz8hg6n24/OQBhgjeugoOmTXdbSXxFYXBGqfX6YS7P5rt?=
+ =?us-ascii?Q?pgpnMj8iunRPvGEiDbCJHglshXYbuFcMNm6ZzBP7eYvEJ6trgpwOscEVgZEs?=
+ =?us-ascii?Q?yPzn5gnmsQoyP75Z4UUR7fa0FmnzsN264A0nxLPeKCkbAkg0ou1R3hoYZBs1?=
+ =?us-ascii?Q?a3cLiurLVXQ4ImDNiB4ARXwmyYXVmmP7n1eRJ9vbHriX42JnS93VUNlM2mqT?=
+ =?us-ascii?Q?yTJWl6qpdgvoHHb76cZS0qGBSBNae3YdY/DjoCwyoGv14TRxvDX0xCZf8vdD?=
+ =?us-ascii?Q?jUNeOsKN2LSdf9pTuCGHn9hNkweQEQLloLn7JYORl3ufFfH8NlKhDzU9NG/B?=
+ =?us-ascii?Q?r3gOxkoeQV0HLr3gs5SdSDPqAHXFk0cAh5rzsj9naEM85mB7nbaeZBREzpU?=
+ =?us-ascii?Q?=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XJoc31wtgEzASvEWD0X/9tAg5Kybm7Lolhu6lxqtjMyWKVUk2wDsX3mGg7jL?=
+ =?us-ascii?Q?tYT+Uolga9DftMmeeBr8oFEyH0mBjIFNIhJwUmfvWhVW3aYQFPH+058nvNgX?=
+ =?us-ascii?Q?DtKkeR/VTXIaLGwEMnFm/Z2fs3SkPIdfrfyB3CgDMgZkVEAUnipXE8IrrLQ4?=
+ =?us-ascii?Q?wwHvX8UrwJD5PQGFLuRIiVSpYikrO2WvGeaKb4ZuQ++vzNr/aj8W+mdFCkfC?=
+ =?us-ascii?Q?dqLUidZamFmOFfUTmjldm4YXC9e2+UVYAbOmdjI/kJ/SpQ+HrauAgRYfkrQP?=
+ =?us-ascii?Q?+huLYcVxkQtupm0K4dlrZm3U2KjlvO1wrOvZGIN0gQn5g0KRuldlXB3jNZzX?=
+ =?us-ascii?Q?yEfnurU4A48NKG6QbOLT8FP8oX99la3cZY10hWOFVPKMzqRaaQ+nl3vNXyRN?=
+ =?us-ascii?Q?OV9wvgMXjcZ8d2jIo/sdct9Mlf6soFUYNfCZD7+zQcojw3AkATUd5CfYJNdB?=
+ =?us-ascii?Q?fD759m7kILtnwsQ/kItPOtN116DY28XTSpu3n2/VTyZeuqeKwytxhIpJ0u6M?=
+ =?us-ascii?Q?aTH3ZOrZXNRBqsuXuyZKmXVsiIod6ckL5guuX6lJoRzRQ6B9r/Hs0txBCzos?=
+ =?us-ascii?Q?T3BfAE8NikOOlSZ43IpY8O1CDCSpoRch0y692ouZkSTs/nwZoreI1MTC8SO3?=
+ =?us-ascii?Q?ZbElqbaOSBtEIuNVHWkjTv72Vf/HRQxM/aCkUB2/cbCTXBbGZvO5P2r5gzwx?=
+ =?us-ascii?Q?63Z2kZv0YmWnpsvy3p4OY2encE4jYORWUeQqqEi4pykCVum7scn2PWsmzf9v?=
+ =?us-ascii?Q?PhbQJEn6OGKb5B4Ea9SnfJZjhOlkVRhaVjw3EmvgTmwvdZfXO94wJBjper28?=
+ =?us-ascii?Q?PgILW+ZfKhrYSDrlGiOJiXxaBbM6tzeomuGorFIy9IZVUyDOUH+qrNZJnn+q?=
+ =?us-ascii?Q?iK6wmZkA31hs+i7fGyhTR/FTzN/d+l7U20vouRJN+nZpzKTR3wwqsP1Cj7+8?=
+ =?us-ascii?Q?ZZEzjzoXNuKDoir/+agWQ1/G2+tddqWPElgP7M3Jqdx2KCE3l9bU2sVYGl0q?=
+ =?us-ascii?Q?9cpl4C6Det7EcrdGsl264gGtaa7Q/U5lY4M8GioLEsm3Y23A6Gg4s9SW4Gov?=
+ =?us-ascii?Q?z0FvLQl9eBhKVF/nnLCL31VipMnTraDGFooI/u3GolBDl5c+tcnqyQe50pOY?=
+ =?us-ascii?Q?ixYrPDQ0rVa+Gw+0WqU6jdKNISM/idB5+fAuHr55kUFjRi87Qt2OOaxuiZP1?=
+ =?us-ascii?Q?gJUC45em2zvpOCxCc6mIKt3fqc7luFmWxRtGdRfTgJ3vMJne2qkCxh+C5opK?=
+ =?us-ascii?Q?MY1pYFLLG3MtI1qy3DXGiBKGUeIRdTXCKzk8FTrbH5Eqji2YXBbrVr4KnQeL?=
+ =?us-ascii?Q?B8b2lXs7RWuEt3IMufkSlE4kbYK+BwgjkR0GuRvl280WemTM3XXxlKikQKnW?=
+ =?us-ascii?Q?XJQj4t1oDol20yiw92IBXMgNQrgXPCNiRn81HlKcIgzk8tIizAmJYBCT/UEJ?=
+ =?us-ascii?Q?3jtppyBzSw9foRBGBIu9DTUYTsJi2x/kL+MSKkeJbapKRUStZLzzKHOkQA/j?=
+ =?us-ascii?Q?k1EYq/xfsl5DZga3XxLNEjKSVYtihbNBOa2ZI1Q78G+8VNWLUPeQKwB1nbo+?=
+ =?us-ascii?Q?EOV+A9vXqAXr3O+aXYoCZxHT8i4XcdNW5BNA4x3pygGK4kNxr1BZrWmOZXQy?=
+ =?us-ascii?Q?Mw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 125bd4e0-6eff-47b6-3856-08dc814a03d1
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31342b6a-12b3-47dd-4e5c-08dc813f6251
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2024 07:00:41.1758
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 08:16:47.4581
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LXT0YIl7D9WruRAz/999OkBphPCn11shuMgd3/lR22SCuyf/CZ1AYsQXNSBSFQH+K8hjjBggnSJImQWizWLDcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4533
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wSh8EMivCDkX0yDlrJEnKUIGOrbcr+o5QswAAOSxUrC2aNZZ2mGZL1t5lin2WBv1Ok4cQy1SdL+foeJHmG/VZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6194
 X-OriginatorOrg: intel.com
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTmFtaHl1bmcgS2ltIDxu
-YW1oeXVuZ0BrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgTWF5IDMwLCAyMDI0IDExOjM3
-IFBNDQo+IFRvOiBXYW5nLCBXZWlsaW4gPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gQ2M6IElh
-biBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT47IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbw0K
-PiA8YWNtZUBrZXJuZWwub3JnPjsgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3Jn
-PjsgSW5nbyBNb2xuYXINCj4gPG1pbmdvQHJlZGhhdC5jb20+OyBBbGV4YW5kZXIgU2hpc2hraW4N
-Cj4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+OyBKaXJpIE9sc2EgPGpvbHNh
-QGtlcm5lbC5vcmc+OyBIdW50ZXIsDQo+IEFkcmlhbiA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+
-OyBLYW4gTGlhbmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Ow0KPiBsaW51eC1wZXJmLXVz
-ZXJzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgVGF5bG9y
-LCBQZXJyeQ0KPiA8cGVycnkudGF5bG9yQGludGVsLmNvbT47IEFsdCwgU2FtYW50aGEgPHNhbWFu
-dGhhLmFsdEBpbnRlbC5jb20+OyBCaWdnZXJzLA0KPiBDYWxlYiA8Y2FsZWIuYmlnZ2Vyc0BpbnRl
-bC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYxMCAwLzhdIFRQRUJTIGNvdW50aW5n
-IG1vZGUgc3VwcG9ydA0KPiANCj4gSGVsbG8sDQo+IA0KPiBPbiBUdWUsIE1heSAyOCwgMjAyNCBh
-dCAxMTo0M+KAr1BNIDx3ZWlsaW4ud2FuZ0BpbnRlbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJv
-bTogV2VpbGluIFdhbmcgPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gPg0KPiA+IEkgaGF2ZSB0
-cmllZCBub3QgdG8gY291bnQgcmV0aXJlX2xhdGVuY3kgZXZlbnRzIGJ1dCBkaWQgbm90IHN1Y2Nl
-ZWQuDQo+ID4gSW4gcGFydGljdWxhciwgSSB0cmllZCB0aGUgZm9sbG93aW5nIG1ldGhvZHM6DQo+
-ID4gIC0gQ29udmVydCByZXRpcmVfbGF0ZW5jeSBldmVudCB0byBkdW1teSBldmVudCBpbiBldmVu
-dCBwYXJzZXIuDQo+ID4gIC0gRWFybHkgYmFpbCBvdXQgaW4gZXZzZWxfX29wZW5fY3B1KCkgYW5k
-IHN0b3JlX2V2c2VsX2lkcygpLg0KPiA+DQo+ID4gVGhlIGZpcnN0IG1ldGhvZCBmYWlscyBhbmQg
-Y2F1c2VzIG5vbi1yZXRpcmVfbGF0ZW5jeSBldmVudHMgd2l0aCB0aGUgc2FtZQ0KPiBldmVudA0K
-PiA+IG5hbWUgcmV0dXJuIDAgY291bnQuDQo+ID4NCj4gPiBUaGUgc2Vjb25kIG1ldGhvZCBmYWls
-cyBhbmQgY2F1c2VzIGFsbCB0aGUgZXZlbnRzIGluIHRoZSBzYW1lIGdyb3VwDQo+IHJldHVybmlu
-Zw0KPiA+ICI8bm90IGNvdW50ZWQ+IiByZXN1bHRzLg0KPiANCj4gQ2FuIHlvdSBwbGVhc2UgZGVz
-Y3JpYmUgd2hlcmUgaXQgZmFpbHM/ICBJcyBpdCBmYWlsaW5nIG9uIG90aGVyIGV2ZW50cw0KPiBi
-ZWNhdXNlIHRoZSB0cGVicyBldmVudCBpcyBhIGxlYWRlciBvZiB0aGUgZ3JvdXA/ICBJIHRoaW5r
-IHlvdSB3YW50ZWQNCj4gdG8gYXZvaWQgaGF2aW5nIGl0IGluIHRoZSBsZWFkZXIgcG9zaXRpb24u
-ICBJZiB3ZSBjYW4gc2tpcCBhbnkgYWN0dWFsDQo+IG9wZXJhdGlvbnMgKG9wZW4vY2xvc2UvZW5h
-YmxlL2Rpc2FibGUvcmVhZCkgZm9yIHRoZSB0cGVicyBldmVudHMsIHRoZW4NCj4gaXQgY291bGQg
-YmUgZmluZS4uDQoNCkl0IGRvZXMgbm90IGZhaWwgd2l0aCB0aGUgY29kZSBpbiB0aGlzIHBhdGNo
-IHNldC4gQnV0IGlmIEkgbWFrZSBpdCByZXR1cm4gZGlyZWN0bHkgDQpmcm9tIHRwZWJzX3N0YXJ0
-KCkgaW4gZXZzZWxfX29wZW5fY3B1KCksIGl0IHdpbGwgY2F1c2Ugc2VnZmF1bHQuIFRoZSBzZWdm
-YXVsdCBpcw0KY2F1c2VkIGJ5IHN0b3JlX2V2c2VsX2lkKCkuIEkgY291bGQgYWRkIGFub3RoZXIg
-ZWFybHkgcmV0dXJuIGZyb20gc3RvcmVfZXZzZWxfaWQoKQ0KaWYgdGhlIGV2c2VsLT5yZXRpcmVf
-bGF0IGlzIHRydWUuIA0KDQpBZnRlciB0aGlzIGNoYW5nZSwgaXQgd2lsbCBldmVudHVhbGx5IHJ1
-biBhbmQgZ2l2ZSBtZSA8bm90IGNvdW50ZWQ+IHJlc3VsdHMgDQpsaWtlIGJlbG93Og0KDQoJPG5v
-dCBjb3VudGVkPiBldmVudDENCgk8bm90IGNvdW50ZWQ+IGV2ZW50Mg0KCXh4IGV2ZW50MTpSDQoN
-CkluIGEgZGlmZmVyZW50IGNhc2UsIGl0IG1heSBzZWVtIHRvIHdvcmsgKHh4eHh4eCBzdGFuZHMg
-Zm9yIHNvbWUgdmFsaWQgdmFsdWUpOg0KDQoJeHh4eHh4eCBldmVudDENCgl4eHh4eHh4IGV2ZW50
-Mg0KCXh4eHh4eHggZXZlbnQzDQoJeHggZXZlbnQxOlINCg0KSW4gdGhlIGZpcnN0IGNhc2UsIHRo
-ZSBldmVudDEsIGV2ZW50MiBhbmQgZXZlbnQxOlIgYXJlIHNjaGVkdWxlZCBpbiB0aGUgc2FtZSAN
-Cmdyb3VwLiBPbiB0aGUgb3RoZXIgaGFuZCwgaW4gdGhlIHNlY29uZCBjYXNlLCBldmVudDEsIGV2
-ZW50MiBhbmQgZXZlbnQzIGFyZQ0KaW4gb25lIGdyb3VwLCB3aGlsZSBldmVudDE6UiBpcyBpbiBh
-IGRpZmZlcmVudCBncm91cC4gDQoNCkJhc2VkIG9uIHRoZXNlIHR3byBkaWZmZXJlbnQgdHlwZSBv
-ZiByZXN1bHRzLCBJIGJlbGlldmUgdGhlIGZhaWx1cmUgaGFwcGVucyBpbg0KdGhlIGdyb3VwIHRo
-YXQgaW5jbHVkZSBhIDpSIGV2ZW50LiBJJ3ZlIGFkZGVkIHRoZSBjaGFuZ2UgdG8gYXJjaF9ldmxp
-c3RfX2NtcCgpDQpzbyB0aGF0IGEgOlIgZXZlbnQgd291bGQgbm90IGJlIGEgbGVhZGVyIG9mIHRo
-ZSBncm91cC4gDQoNCkkgdGhpbmsgSSd2ZSBtYWRlIGV2c2VsX19vcGVuX2NwdSgpIHJldHVybiBi
-ZWZvcmUgaXQgY3JlYXRlIGZkIGFuZCBtYWtlDQpzdG9yZV9ldnNlbF9pZCgpIG5vdCB0byByZWFk
-IGFuZCBzdG9yZSBmZC4gSSdtIG5vdCBzdXJlIHdoZXJlIEknbSBtaXNzaW5nLiBQbGVhc2UgDQps
-ZXQgbWUga25vdyBpZiB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlvbnMuDQoNClRoYW5rcywNCldlaWxp
-bg0KDQo+IA0KPiBUaGFua3MsDQo+IE5hbWh5dW5nDQo+IA0KPiA+DQo+ID4gQmVjYXVzZSBvZiBh
-Ym92ZSwgdGhlIHJldGlyZV9sYXRlbmN5IGV2ZW50IHdpbGwgc3RpbGwgcnVuIGluIGNvdW50aW5n
-IG1vZGUuDQo+ID4NCj4gPiBPdGhlciBjaGFuZ2VzIGluIHYxMDoNCj4gPiAgLSBDaGFuZ2UgcGVy
-ZiByZWNvcmQgZm9yayBmcm9tIHBlcmYgc3RhdCB0byBldnNlbC4gQWxsIHRoZSBtYWpvciBvcGVy
-YXRpb25zDQo+ID4gIGxpa2UgdHBlYnMgc3RhcnQsIHN0b3AsIHJlYWRfZXZzZWwgc2hvdWxkIGRp
-cmVjdGx5IHdvcmsgdGhyb3VnaCBldnNlbC4NCj4gPiAgLSBNYWtlIGludGVsLXRwZWJzIHg4Nl82
-NCBvbmx5LiBUaGlzIGNoYW5nZSBpcyBjcm9zcy1jb21waWxlZCB0byBhcm02NC4NCj4gPiAgLSBQ
-dXQgdHBlYnMgY29kZSB0byBpbnRlbC10ZXBicyBhbmQgc2ltcGxpZnkgaW50ZWwtdHBlYnMgQVBJ
-cyB0byBtaW5pbXVtDQo+IG51bWJlcg0KPiA+IG9mIGZ1bmN0aW9ucyBhbmQgdmFyaWFibGVzLiBV
-cGRhdGUgZnVudGlvbiBuYW1lIGFuZCB2YXJpYWJsZSBuYW1lcyB0byB1c2UNCj4gPiBjb25zaXN0
-ZW50IHByZWZpeC4gQWxzbyBpbXByb3ZlIGVycm9yIGhhbmRsaW5nLg0KPiA+ICAtIEludGVncmF0
-ZSBjb2RlIHBhdGNoIGZyb20gSWFuIGZvciB0aGUgOlIgcGFyc2VyLg0KPiA+ICAtIFVwZGF0ZSBN
-VEwgbWV0cmljcyB0byBUTUEgNC44Lg0KPiA+DQo+ID4gVjk6IGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2FsbC8yMDI0MDUyMTE3Mzk1Mi4zMzk3NjQ0LTEtDQo+IHdlaWxpbi53YW5nQGludGVsLmNv
-bS8NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjk6DQo+ID4gIC0gVXBkYXRlIHRoZSByZXRpcmVfbGF0
-ZW5jeSByZXN1bHQgcHJpbnQgYW5kIG1ldHJpYyBjYWxjdWxhdGlvbiBtZXRob2QuDQo+IFBsdWdp
-bg0KPiA+IHRoZSB2YWx1ZSB0byBldnNlbCBzbyB0aGF0IG5vIHNwZWNpYWwgY29kZSBpcyByZXF1
-aXJlZC4NCj4gPiAgLSBVcGRhdGUgLS1jb250cm9sOmZpZm8gdG8gdXNlIHBpcGUgaW5zdGVhZCBv
-ZiBuYW1lZCBwaXBlLg0KPiA+ICAtIEFkZCB0ZXN0IGZvciBUUEVCUyBjb3VudGluZyBtb2RlLg0K
-PiA+ICAtIFVwZGF0ZSBEb2N1bWVudCB3aXRoIG1vcmUgZGV0YWlscy4NCj4gPg0KPiA+IENoYW5n
-ZXMgaW4gdjg6DQo+ID4gLSBJbiB0aGlzIHJldmlzaW9uLCB0aGUgY29kZSBpcyB1cGRhdGVkIHRv
-IGJhc2Ugb24gSWFuJ3MgcGF0Y2ggb24gUiBtb2RpZmllcg0KPiA+IHBhcnNlciBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9sa21sLzIwMjQwNDI4MDUzNjE2LjExMjU4OTEtMy0NCj4gaXJvZ2Vyc0Bn
-b29nbGUuY29tLw0KPiA+IEFmdGVyIHRoaXMgY2hhbmdlLCB0aGVyZSBpcyBubyBzcGVjaWFsIGNv
-ZGUgcmVxdWlyZWQgZm9yIFIgbW9kaWZpZXIgaW4NCj4gPiBtZXRyaWNncm91cC5jIGFuZCBtZXRy
-aWNncm91cC5oIGZpbGVzLg0KPiA+DQo+ID4gQ2F2ZWF0IG9mIHRoaXMgY2hhbmdlOg0KPiA+ICAg
-SWRlYWxseSwgd2Ugd2lsbCBuZWVkIHRvIGFkZCBzcGVjaWFsIGhhbmRsaW5nIHRvIHNraXAgY291
-bnRpbmcgZXZlbnRzIHdpdGggUg0KPiA+IG1vZGlmaWVyIGluIGV2c2VsLiBDdXJyZW50bHksIHRo
-aXMgaXMgbm90IGltcGxlbWVudGVkIHNvIHRoZSBldmVudCB3aXRoIDpSIHdpbGwNCj4gPiBiZSBi
-b3RoIGNvdW50ZWQgYW5kIHNhbXBsZWQuIFVzdWFsbHksIGluIGEgbWV0cmljIGZvcm11bGEgdGhh
-dCB1c2VzDQo+IHJldGlyZV9sYXRlbmN5LA0KPiA+IGl0IHdvdWxkIGFscmVhZHkgcmVxdWlyZSB0
-byBjb3VudCB0aGUgZXZlbnQuIEFzIGEgcmVzdWx0LCB3ZSB3aWxsIGVuZHVwIGNvdW50DQo+IHRo
-ZQ0KPiA+IHNhbWUgZXZlbnQgdHdpY2UuIFRoaXMgc2hvdWxkIGJlIGFibGUgdG8gYmUgaGFuZGxl
-ZCBwcm9wZXJseSB3aGVuIHdlDQo+IGZpbmFsaXplIG91cg0KPiA+IGRlc2lnbiBvbiBldnNlbCBS
-IG1vZGlmaWVyIHN1cHBvcnQuDQo+ID4NCj4gPiAtIE1vdmUgVFBFQlMgc3BlY2lmaWMgY29kZSBv
-dXQgZnJvbSBtYWluIHBlcmYgc3RhdCBjb2RlIHRvIHNlcGFyYXRlIGZpbGVzIGluDQo+ID4gdXRp
-bC9pbnRlbC10cGVicy5jIGFuZCB1dGlsL2ludGVsLXRwZWJzLmguIFtOYW1oeXVuZ10NCj4gPiAt
-IFVzZSAtLWNvbnRyb2w6ZmlmbyB0byBhY2sgcGVyZiBzdGF0IGZyb20gZm9ya2VkIHBlcmYgcmVj
-b3JkIGluc3RlYWQgb2YNCj4gc2xlZXAoMikgW05hbWh5dW5nXQ0KPiA+IC0gQWRkIGludHJvZHVj
-dGlvbnMgYWJvdXQgVFBFQlMgYW5kIFIgbW9kaWZpZXIgaW4gRG9jdW1lbnRzLiBbTmFtaHl1bmdd
-DQo+ID4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjc6DQo+ID4gLSBVcGRhdGUgY29kZSBhbmQgY29t
-bWVudHMgZm9yIGJldHRlciBjb2RlIHF1YWxpdHkgW05hbWh5dW5nXQ0KPiA+IC0gQWRkIGEgc2Vw
-YXJhdGUgY29tbWl0IGZvciBwZXJmIGRhdGEgW05hbWh5dW5nXQ0KPiA+IC0gVXBkYXRlIHJldGly
-ZSBsYXRlbmN5IHByaW50IGZ1bmN0aW9uIHRvIGltcHJvdmUgYWxpZ25tZW50IFtOYW1oeXVuZ10N
-Cj4gPg0KPiA+IENoYW5nZXMgaW4gdjY6DQo+ID4gLSBVcGRhdGUgY29kZSBhbmQgYWRkIGNvbW1l
-bnRzIGZvciBiZXR0ZXIgY29kZSBxdWFsaXR5IFtOYW1oeXVuZ10NCj4gPiAtIFJlbW92ZSB0aGUg
-YWRkZWQgZmQgdmFyIGFuZCBkaXJlY3RseSBwYXNzIHRoZSBvcGVuZWQgZmQgdG8gZGF0YS5maWxl
-LmZkDQo+IFtOYW1oeXVuZ10NCj4gPiAtIEFkZCBraWxsKCkgdG8gc3RvcCBwZXJmIHJlY29yZCB3
-aGVuIHBlcmYgc3RhdCBleGlzdHMgZWFybHkgW05hbWh5dW5nXQ0KPiA+IC0gQWRkIGNvbW1hbmQg
-b3B0IGNoZWNrIHRvIGVuc3VyZSBvbmx5IHN0YXJ0IHBlcmYgcmVjb3JkIHdoZW4gLWEvLUMgZ2l2
-ZW4NCj4gW05hbWh5dW5nXQ0KPiA+IC0gU3F1YXNoIGNvbW1pdHMgW05hbWh5dW5nXQ0KPiA+DQo+
-ID4gQ2hhbmdlcyBpbiB2NToNCj4gPiAtIFVwZGF0ZSBjb2RlIGFuZCBhZGQgY29tbWVudHMgZm9y
-IGJldHRlciBjb2RlIHF1YWxpdHkgW0lhbl0NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4g
-LSBSZW1vdmUgdW5jZXNzYXJ5IGRlYnVnIHByaW50IGFuZCB1cGRhdGUgY29kZSBhbmQgY29tbWVu
-dHMgZm9yIGJldHRlcg0KPiA+IHJlYWRhYmlsaXR5IGFuZCBxdWFsaXR5IFtOYW1oeXVuZ10NCj4g
-PiAtIFVwZGF0ZSBtdGwgbWV0cmljIGpzb24gZmlsZSB3aXRoIGNvbnNpc3RlbnQgVG1hTDEgYW5k
-IFRvcGRvd25MMQ0KPiBtZXRyaWNncm91cA0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiAt
-IFJlbW92ZSAnOicgd2hlbiBldmVudCBuYW1lIGhhcyAnQCcgW0lhbl0NCj4gPiAtIFVzZSAnUicg
-YXMgdGhlIG1vZGlmaWVyIGluc3RlYWQgb2YgInJldGlyZV9sYXRlbmN5IiBbSWFuXQ0KPiA+DQo+
-ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAtIEFkZCBNVEwgbWV0cmljIGZpbGUNCj4gPiAtIEFkZCBt
-b3JlIGRlc2NyaXB0aW9ucyBhbmQgZXhhbXBsZSB0byB0aGUgcGF0Y2ggW0FybmFsZG9dDQo+ID4N
-Cj4gPiBIZXJlIGlzIGFuIGV4YW1wbGUgb2YgcnVubmluZyBwZXJmIHN0YXQgdG8gY29sbGVjdCBh
-IG1ldHJpYyB0aGF0IHVzZXMNCj4gPiByZXRpcmVfbGF0ZW5jeSB2YWx1ZSBvZiBldmVudCBNRU1f
-SU5TVF9SRVRJUkVELlNUTEJfSElUX1NUT1JFUyBvbiBhDQo+IE1UTCBzeXN0ZW0uDQo+ID4NCj4g
-PiBJbiB0aGlzIHNpbXBsZSBleGFtcGxlLCB0aGVyZSBpcyBubyBNRU1fSU5TVF9SRVRJUkVELlNU
-TEJfSElUX1NUT1JFUw0KPiBzYW1wbGUuDQo+ID4gVGhlcmVmb3JlLCB0aGUgTUVNX0lOU1RfUkVU
-SVJFRC5TVExCX0hJVF9TVE9SRVM6cCBjb3VudCBhbmQNCj4gcmV0aXJlX2xhdGVuY3kgdmFsdWUN
-Cj4gPiBhcmUgYWxsIDAuDQo+ID4NCj4gPiAuL3BlcmYgc3RhdCAtTSB0bWFfZHRsYl9zdG9yZSAt
-YSAtLSBzbGVlcCAxDQo+ID4NCj4gPiBbIHBlcmYgcmVjb3JkOiBXb2tlbiB1cCAxIHRpbWVzIHRv
-IHdyaXRlIGRhdGEgXQ0KPiA+IFsgcGVyZiByZWNvcmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAwLjAw
-MCBNQiAtIF0NCj4gPg0KPiA+ICBQZXJmb3JtYW5jZSBjb3VudGVyIHN0YXRzIGZvciAnc3lzdGVt
-IHdpZGUnOg0KPiA+DQo+ID4gICAgICAgIDE4MSwwNDcsMTY4ICAgICAgY3B1X2NvcmUvVE9QRE9X
-Ti5TTE9UUy8gICAgICAgICAgIyAgICAgIDAuNiAlDQo+IHRtYV9kdGxiX3N0b3JlDQo+ID4gICAg
-ICAgICAgMywxOTUsNjA4ICAgICAgY3B1X2NvcmUvdG9wZG93bi1yZXRpcmluZy8NCj4gPiAgICAg
-ICAgIDQwLDE1Niw2NDkgICAgICBjcHVfY29yZS90b3Bkb3duLW1lbS1ib3VuZC8NCj4gPiAgICAg
-ICAgICAzLDU1MCw5MjUgICAgICBjcHVfY29yZS90b3Bkb3duLWJhZC1zcGVjLw0KPiA+ICAgICAg
-ICAxMTcsNTcxLDgxOCAgICAgIGNwdV9jb3JlL3RvcGRvd24tZmUtYm91bmQvDQo+ID4gICAgICAg
-ICA1NywxMTgsMDg3ICAgICAgY3B1X2NvcmUvdG9wZG93bi1iZS1ib3VuZC8NCj4gPiAgICAgICAg
-ICAgICA2OSwxNzkgICAgICBjcHVfY29yZS9FWEVfQUNUSVZJVFkuQk9VTkRfT05fU1RPUkVTLw0K
-PiA+ICAgICAgICAgICAgICA0LDU4MiAgICAgIGNwdV9jb3JlL01FTV9JTlNUX1JFVElSRUQuU1RM
-Ql9ISVRfU1RPUkVTLw0KPiA+ICAgICAgICAgMzAsMTgzLDEwNCAgICAgIGNwdV9jb3JlL0NQVV9D
-TEtfVU5IQUxURUQuRElTVFJJQlVURUQvDQo+ID4gICAgICAgICAzMCw1NTYsNzkwICAgICAgY3B1
-X2NvcmUvQ1BVX0NMS19VTkhBTFRFRC5USFJFQUQvDQo+ID4gICAgICAgICAgICAxNjgsNDg2ICAg
-ICAgY3B1X2NvcmUvRFRMQl9TVE9SRV9NSVNTRVMuV0FMS19BQ1RJVkUvDQo+ID4gICAgICAgICAg
-ICAgICAwLjAwIE1FTV9JTlNUX1JFVElSRUQuU1RMQl9ISVRfU1RPUkVTOnAgICAgICAgMCAgICAg
-ICAgMA0KPiA+DQo+ID4gICAgICAgIDEuMDAzMTA1OTI0IHNlY29uZHMgdGltZSBlbGFwc2VkDQo+
-ID4NCj4gPiB2MToNCj4gPiBUUEVCUyBpcyBvbmUgb2YgdGhlIGZlYXR1cmVzIHByb3ZpZGVkIGJ5
-IHRoZSBuZXh0IGdlbmVyYXRpb24gb2YgSW50ZWwgUE1VLg0KPiA+IFBsZWFzZSByZWZlciB0byBT
-ZWN0aW9uIDguNC4xIG9mICJJbnRlbMKuIEFyY2hpdGVjdHVyZSBJbnN0cnVjdGlvbiBTZXQNCj4g
-RXh0ZW5zaW9ucw0KPiA+IFByb2dyYW1taW5nIFJlZmVyZW5jZSIgWzFdIGZvciBtb3JlIGRldGFp
-bHMgYWJvdXQgdGhpcyBmZWF0dXJlLg0KPiA+DQo+ID4gVGhpcyBzZXQgb2YgcGF0Y2hlcyBzdXBw
-b3J0cyBUUEVCUyBpbiBjb3VudGluZyBtb2RlLiBUaGUgY29kZSB3b3JrcyBpbiB0aGUNCj4gPiBm
-b2xsb3dpbmcgd2F5OiBpdCBmb3JrcyBhIHBlcmYgcmVjb3JkIHByb2Nlc3MgZnJvbSBwZXJmIHN0
-YXQgd2hlbg0KPiByZXRpcmVfbGF0ZW5jeQ0KPiA+IG9mIG9uZSBvciBtb3JlIGV2ZW50cyBhcmUg
-dXNlZCBpbiBhIG1ldHJpYyBmb3JtdWxhLiBQZXJmIHN0YXQgd291bGQgc2VuZCBhDQo+ID4gU0lH
-VEVSTSBzaWduYWwgdG8gcGVyZiByZWNvcmQgYmVmb3JlIGl0IG5lZWRzIHRoZSByZXRpcmUgbGF0
-ZW5jeSB2YWx1ZSBmb3INCj4gPiBtZXRyaWMgY2FsY3VsYXRpb24uIFBlcmYgc3RhdCB3aWxsIHRo
-ZW4gcHJvY2VzcyBzYW1wbGUgZGF0YSB0byBleHRyYWN0IHRoZQ0KPiA+IHJldGlyZSBsYXRlbmN5
-IGRhdGEgZm9yIG1ldHJpYyBjYWxjdWxhdGlvbnMuIEN1cnJlbnRseSwgdGhlIGNvZGUgdXNlcyB0
-aGUNCj4gPiBhcml0aG1ldGljIGF2ZXJhZ2Ugb2YgcmV0aXJlIGxhdGVuY3kgdmFsdWVzLg0KPiA+
-DQo+ID4gWzFdIGh0dHBzOi8vd3d3LmludGVsLmNvbS9jb250ZW50L3d3dy91cy9lbi9jb250ZW50
-LQ0KPiBkZXRhaWxzLzgxMjIxOC9pbnRlbC1hcmNoaXRlY3R1cmUtaW5zdHJ1Y3Rpb24tc2V0LWV4
-dGVuc2lvbnMtcHJvZ3JhbW1pbmctDQo+IHJlZmVyZW5jZS5odG1sP3dhcGt3PWZ1dHVyZSUyMGZl
-YXR1cmVzDQo+ID4NCj4gPg0KPiA+IElhbiBSb2dlcnMgKDEpOg0KPiA+ICAgcGVyZiBwYXJzZS1l
-dmVudHM6IEFkZCBhIHJldGlyZW1lbnQgbGF0ZW5jeSBtb2RpZmllcg0KPiA+DQo+ID4gV2VpbGlu
-IFdhbmcgKDcpOg0KPiA+ICAgcGVyZiBkYXRhOiBBbGxvdyB0byB1c2UgZ2l2ZW4gZmQgaW4gZGF0
-YS0+ZmlsZS5mZA0KPiA+ICAgcGVyZiBzdGF0OiBGb3JrIGFuZCBsYXVuY2ggcGVyZiByZWNvcmQg
-d2hlbiBwZXJmIHN0YXQgbmVlZHMgdG8gZ2V0DQo+ID4gICAgIHJldGlyZSBsYXRlbmN5IHZhbHVl
-IGZvciBhIG1ldHJpYy4NCj4gPiAgIHBlcmYgc3RhdDogUGx1Z2luIHJldGlyZV9sYXQgdmFsdWUg
-ZnJvbSBzYW1wbGVkIGRhdGEgdG8gZXZzZWwNCj4gPiAgIHBlcmYgdmVuZG9yIGV2ZW50cyBpbnRl
-bDogQWRkIE1UTCBtZXRyaWMganNvbiBmaWxlcw0KPiA+ICAgcGVyZiBzdGF0OiBBZGQgY29tbWFu
-ZCBsaW5lIG9wdGlvbiBmb3IgZW5hYmxpbmcgdHBlYnMgcmVjb3JkaW5nDQo+ID4gICBwZXJmIERv
-Y3VtZW50OiBBZGQgVFBFQlMgdG8gRG9jdW1lbnRzDQo+ID4gICBwZXJmIHRlc3Q6IEFkZCB0ZXN0
-IGZvciBJbnRlbCBUUEVCUyBjb3VudGluZyBtb2RlDQo+ID4NCj4gPiAgdG9vbHMvcGVyZi9Eb2N1
-bWVudGF0aW9uL3BlcmYtbGlzdC50eHQgICAgICAgIHwgICAgMSArDQo+ID4gIHRvb2xzL3BlcmYv
-RG9jdW1lbnRhdGlvbi90b3Bkb3duLnR4dCAgICAgICAgICB8ICAgMzAgKw0KPiA+ICB0b29scy9w
-ZXJmL2FyY2gveDg2L3V0aWwvZXZsaXN0LmMgICAgICAgICAgICAgfCAgICA2ICsNCj4gPiAgdG9v
-bHMvcGVyZi9idWlsdGluLXN0YXQuYyAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArDQo+ID4g
-IC4uLi9hcmNoL3g4Ni9tZXRlb3JsYWtlL21ldHJpY2dyb3Vwcy5qc29uICAgICB8ICAxNDAgKw0K
-PiA+ICAuLi4vYXJjaC94ODYvbWV0ZW9ybGFrZS9tdGwtbWV0cmljcy5qc29uICAgICAgfCAyNTk1
-ICsrKysrKysrKysrKysrKysrDQo+ID4gIC4uLi9wZXJmL3Rlc3RzL3NoZWxsL3Rlc3Rfc3RhdF9p
-bnRlbF90cGVicy5zaCB8ICAgMTkgKw0KPiA+ICB0b29scy9wZXJmL3V0aWwvQnVpbGQgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gPiAgdG9vbHMvcGVyZi91dGlsL2RhdGEuYyAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArLQ0KPiA+ICB0b29scy9wZXJmL3V0aWwvZXZz
-ZWwuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDI2ICsNCj4gPiAgdG9vbHMvcGVyZi91dGls
-L2V2c2VsLmggICAgICAgICAgICAgICAgICAgICAgIHwgICAgNiArDQo+ID4gIHRvb2xzL3BlcmYv
-dXRpbC9pbnRlbC10cGVicy5jICAgICAgICAgICAgICAgICB8ICAzOTcgKysrDQo+ID4gIHRvb2xz
-L3BlcmYvdXRpbC9pbnRlbC10cGVicy5oICAgICAgICAgICAgICAgICB8ICAgNDggKw0KPiA+ICB0
-b29scy9wZXJmL3V0aWwvcGFyc2UtZXZlbnRzLmMgICAgICAgICAgICAgICAgfCAgICAyICsNCj4g
-PiAgdG9vbHMvcGVyZi91dGlsL3BhcnNlLWV2ZW50cy5oICAgICAgICAgICAgICAgIHwgICAgMSAr
-DQo+ID4gIHRvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVudHMubCAgICAgICAgICAgICAgICB8ICAg
-IDMgKy0NCj4gPiAgMTYgZmlsZXMgY2hhbmdlZCwgMzI4OCBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9wbXUtDQo+IGV2ZW50
-cy9hcmNoL3g4Ni9tZXRlb3JsYWtlL21ldHJpY2dyb3Vwcy5qc29uDQo+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC94ODYvbWV0ZW9ybGFrZS9tdGwtDQo+
-IG1ldHJpY3MuanNvbg0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUgdG9vbHMvcGVyZi90ZXN0cy9z
-aGVsbC90ZXN0X3N0YXRfaW50ZWxfdHBlYnMuc2gNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRv
-b2xzL3BlcmYvdXRpbC9pbnRlbC10cGVicy5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29s
-cy9wZXJmL3V0aWwvaW50ZWwtdHBlYnMuaA0KPiA+DQo+ID4gLS0NCj4gPiAyLjQzLjANCj4gPg0K
+
+hi, Ian Rogers,
+
+we actually want to seek your advice. in our env, there is no problem to bu=
+ild
+parent.
+
+* 3249f8b84526d (linux-review/Ian-Rogers/perf-jevents-Autogenerate-empty-pm=
+u-events-c/20240525-093240) perf jevents: Autogenerate empty-pmu-events.c
+* 7d88bd0d22746 perf jevents: Use name for special find value   <--- parent
+
+however, failed to build perf upon 3249f8b84526d. but there is not many use=
+ful
+information in below detail log.
+
+is there any dependency or env setting for us to build this commit? Thanks!
+
+
+
+Hello,
+
+kernel test robot noticed "perf-sanity-tests.perf.make.fail" on:
+
+commit: 3249f8b84526d3b69162812908c257ee9816a237 ("[PATCH v2 2/2] perf jeve=
+nts: Autogenerate empty-pmu-events.c")
+url: https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-jevents=
+-Autogenerate-empty-pmu-events-c/20240525-093240
+base: https://git.kernel.org/cgit/linux/kernel/git/perf/perf-tools-next.git=
+ perf-tools-next
+patch link: https://lore.kernel.org/all/20240525013021.436430-2-irogers@goo=
+gle.com/
+patch subject: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
+
+in testcase: perf-sanity-tests
+version:=20
+with following parameters:
+
+	perf_compiler: gcc
+
+
+
+compiler: gcc-13
+test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphi=
+re Rapids) with 256G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new versio=
+n of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202405311548.1e881dea-oliver.sang@=
+intel.com
+
+gcc march setting is sapphirerapids
+valid
+2024-05-30 15:55:30 make -j224 WERROR=3D0 BUILD_BPF_SKEL=3D0 ARCH=3D DEBUG=
+=3D1 EXTRA_CFLAGS=3D-fno-omit-frame-pointer -fsanitize=3Dundefined -fsaniti=
+ze=3Daddress -C /usr/src/linux-perf-x86_64-rhel-8.3-bpf-3249f8b84526d3b6916=
+2812908c257ee9816a237/tools/perf
+make: Entering directory '/usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f=
+8b84526d3b69162812908c257ee9816a237/tools/perf'
+  BUILD:   Doing 'make =1B[33m-j224=1B[m' parallel build
+  HOSTCC  fixdep.o
+  HOSTLD  fixdep-in.o
+  LINK    fixdep
+=1B[0;33mWarning=1B[0m: Kernel ABI header differences:
+
+Auto-detecting system features:
+...                                   dwarf: [ =1B[32mon=1B[m  ]
+...                      dwarf_getlocations: [ =1B[32mon=1B[m  ]
+...                                   glibc: [ =1B[32mon=1B[m  ]
+...                                  libbfd: [ =1B[32mon=1B[m  ]
+...                          libbfd-buildid: [ =1B[32mon=1B[m  ]
+...                                  libcap: [ =1B[32mon=1B[m  ]
+...                                  libelf: [ =1B[32mon=1B[m  ]
+...                                 libnuma: [ =1B[32mon=1B[m  ]
+...                  numa_num_possible_cpus: [ =1B[32mon=1B[m  ]
+...                                 libperl: [ =1B[32mon=1B[m  ]
+...                               libpython: [ =1B[32mon=1B[m  ]
+...                               libcrypto: [ =1B[32mon=1B[m  ]
+...                               libunwind: [ =1B[32mon=1B[m  ]
+...                      libdw-dwarf-unwind: [ =1B[32mon=1B[m  ]
+...                             libcapstone: [ =1B[31mOFF=1B[m ]
+...                                    zlib: [ =1B[32mon=1B[m  ]
+...                                    lzma: [ =1B[32mon=1B[m  ]
+...                               get_cpuid: [ =1B[32mon=1B[m  ]
+...                                     bpf: [ =1B[32mon=1B[m  ]
+...                                  libaio: [ =1B[32mon=1B[m  ]
+...                                 libzstd: [ =1B[32mon=1B[m  ]
+
+  GEN     common-cmds.h
+  GEN     /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/arch/arm64/include/generated/asm/sysreg-defs=
+.h
+  CC      jvmti/libjvmti.o
+  CC      jvmti/jvmti_agent.o
+  CC      jvmti/libstring.o
+  CC      dlfilters/dlfilter-test-api-v0.o
+  CC      jvmti/libctype.o
+  CC      dlfilters/dlfilter-test-api-v2.o
+  CC      dlfilters/dlfilter-show-cycles.o
+  GEN     perf-archive
+  GEN     perf-iostat
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/include/subcmd/exec-cmd.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/include/subcmd/help.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/include/subcmd/pager.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/include/subcmd/parse-options.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/include/subcmd/run-command.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/exec-cmd.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/help.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/pager.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/parse-options.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/run-command.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/sigchain.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/subcmd-config.o
+  INSTALL libsubcmd_headers
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/cpu.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/debug.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/io.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/fd/array.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsymbol/include/symbol/kallsyms.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/bpf_perf.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/fs/fs.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/core.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/include/api/fs/tracing_path.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsymbol/kallsyms.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/cpu.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/cpumap.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/debug.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/threadmap.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/core.o
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fd/
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/evlist.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/str_error_r.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/evsel.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/cpumap.o
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/event.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/threadmap.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/perf/mmap.h
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/cpumap.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/evlist.h
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/evsel.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/evsel.h
+  INSTALL libsymbol_headers
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/evlist.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/lib.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/mmap.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/mmap.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/rc_check.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/zalloc.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fd/array.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/threadmap.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/fs.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/xyarray.o
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/include/internal/xyarray.h
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/tracing_path.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/lib.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/cgroup.o
+  INSTALL libapi_headers
+  GEN     /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/bpf_helper_defs.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/libbpf.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/btf.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/libbpf_common.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/libbpf_legacy.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf_helpers.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf_tracing.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf_endian.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf_core_read.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/skel_internal.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/libbpf_version.h
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/usdt.bpf.h
+  INSTALL libperf_headers
+  LINK    dlfilters/dlfilter-show-cycles.so
+  LINK    dlfilters/dlfilter-test-api-v0.so
+  LINK    dlfilters/dlfilter-test-api-v2.so
+  INSTALL /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/include/bpf/bpf_helper_defs.h
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/
+  INSTALL libbpf_headers
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/
+  MKDIR   /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/libbpf.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/libbpf_errno.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/bpf.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/str_error.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/nlattr.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/btf.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/netlink.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/bpf_prog_linfo.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/libbpf_probes.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/hashmap.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/btf_dump.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/ringbuf.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/strset.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/linker.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/gen_loader.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/relo_core.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/usdt.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/zip.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/elf.o
+  CC      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/features.o
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsymbol/libsymbol-in.o
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fd/libapi-in.o
+  AR      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsymbol/libsymbol.a
+  LD      jvmti/jvmti-in.o
+  LINK    libperf-jvmti.so
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/fs/libapi-in.o
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/libapi-in.o
+  AR      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libapi/libapi.a
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/libperf-in.o
+  AR      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libperf/libperf.a
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/libsubcmd-in.o
+  AR      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libsubcmd/libsubcmd.a
+  GEN     python/perf.cpython-311-x86_64-linux-gnu.so
+  LD      /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/staticobjs/libbpf-in.o
+  LINK    /usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8b84526d3b691628=
+12908c257ee9816a237/tools/perf/libbpf/libbpf.a
+  CC      builtin-bench.o
+  CC      builtin-annotate.o
+  CC      builtin-config.o
+  CC      builtin-diff.o
+  CC      builtin-evlist.o
+  CC      builtin-ftrace.o
+  CC      builtin-help.o
+  CC      builtin-buildid-list.o
+  CC      builtin-buildid-cache.o
+  CC      builtin-kallsyms.o
+  CC      builtin-list.o
+  CC      builtin-record.o
+  CC      builtin-report.o
+  CC      builtin-stat.o
+  CC      builtin-top.o
+  CC      builtin-script.o
+  CC      builtin-kvm.o
+  CC      builtin-inject.o
+  CC      builtin-mem.o
+  CC      builtin-data.o
+  CC      builtin-version.o
+  CC      builtin-c2c.o
+  CC      builtin-daemon.o
+  TEST    pmu-events/metric_test.log
+  CC      builtin-kmem.o
+  CC      builtin-kwork.o
+  CC      builtin-lock.o
+  CC      builtin-sched.o
+  CC      builtin-timechart.o
+  CC      builtin-trace.o
+  CC      trace/beauty/clone.o
+  CC      builtin-probe.o
+  CC      perf.o
+  CC      trace/beauty/fcntl.o
+  CC      bench/sched-messaging.o
+  CC      trace/beauty/flock.o
+  CC      bench/sched-pipe.o
+  CC      tests/builtin-test.o
+  CC      trace/beauty/fs_at_flags.o
+  CC      arch/common.o
+  CC      tests/tests-scripts.o
+  CC      bench/sched-seccomp-notify.o
+  CC      bench/syscall.o
+  CC      ui/setup.o
+  CC      trace/beauty/fsmount.o
+  CC      ui/helpline.o
+  CC      tests/parse-events.o
+  CC      trace/beauty/fspick.o
+  CC      tests/dso-data.o
+  CC      bench/mem-functions.o
+  CC      bench/futex-hash.o
+  CC      tests/attr.o
+  CC      trace/beauty/ioctl.o
+  CC      ui/util.o
+  CC      ui/progress.o
+  CC      tests/vmlinux-kallsyms.o
+  CC      ui/hist.o
+  CC      trace/beauty/kcmp.o
+  CC      trace/beauty/mount_flags.o
+  CC      tests/openat-syscall.o
+  CC      trace/beauty/move_mount.o
+  CC      bench/futex-wake.o
+  CC      ui/stdio/hist.o
+  CC      bench/futex-wake-parallel.o
+  CC      tests/openat-syscall-all-cpus.o
+  CC      scripts/perl/Perf-Trace-Util/Context.o
+  CC      bench/futex-lock-pi.o
+  CC      trace/beauty/arch_prctl.o
+  CC      scripts/python/Perf-Trace-Util/Context.o
+  CC      trace/beauty/pkey_alloc.o
+  CC      ui/browser.o
+  CC      bench/futex-requeue.o
+  CC      tests/openat-syscall-tp-fields.o
+  CC      tests/mmap-basic.o
+  CC      tests/perf-record.o
+  CC      trace/beauty/prctl.o
+  CC      bench/epoll-wait.o
+  CC      trace/beauty/renameat.o
+  CC      bench/epoll-ctl.o
+  CC      tests/evsel-roundtrip-name.o
+  CC      trace/beauty/sockaddr.o
+  CC      arch/x86/util/header.o
+  CC      bench/synthesize.o
+  CC      tests/evsel-tp-sched.o
+  CC      trace/beauty/socket.o
+  CC      trace/beauty/statx.o
+  CC      bench/kallsyms-parse.o
+  CC      tests/fdarray.o
+  CC      arch/x86/util/tsc.o
+  CC      arch/x86/tests/regs_load.o
+  CC      bench/inject-buildid.o
+  CC      bench/find-bit-bench.o
+  CC      trace/beauty/timespec.o
+  CC      tests/pmu.o
+  CC      trace/beauty/sync_file_range.o
+  CC      arch/x86/util/kvm-stat.o
+  CC      arch/x86/tests/dwarf-unwind.o
+  CC      arch/x86/util/pmu.o
+  CC      arch/x86/tests/arch-tests.o
+  CC      arch/x86/util/perf_regs.o
+  CC      tests/pmu-events.o
+  CC      ui/browsers/annotate-data.o
+  CC      arch/x86/tests/sample-parsing.o
+  CC      arch/x86/util/topdown.o
+  CC      ui/browsers/annotate.o
+  CC      tests/hists_common.o
+  CC      bench/breakpoint.o
+  CC      ui/tui/setup.o
+  CC      bench/evlist-open-close.o
+  CC      arch/x86/tests/hybrid.o
+  CC      tests/hists_link.o
+  CC      ui/browsers/hists.o
+  CC      ui/tui/util.o
+  CC      ui/tui/helpline.o
+  CC      bench/uprobe.o
+  CC      tests/hists_filter.o
+  CC      ui/browsers/map.o
+  CC      bench/pmu-scan.o
+  CC      tests/hists_output.o
+  CC      ui/tui/progress.o
+  CC      arch/x86/tests/intel-pt-test.o
+  CC      arch/x86/tests/amd-ibs-via-core-pmu.o
+  CC      arch/x86/util/event.o
+  CC      arch/x86/util/machine.o
+  CC      arch/x86/tests/bp-modify.o
+  CC      arch/x86/util/evlist.o
+  CC      bench/mem-memcpy-x86-64-asm.o
+  CC      tests/hists_cumulate.o
+  CC      tests/python-use.o
+  CC      ui/browsers/scripts.o
+  CC      ui/browsers/header.o
+  CC      ui/browsers/res_sample.o
+  CC      bench/mem-memset-x86-64-asm.o
+  CC      arch/x86/util/mem-events.o
+  CC      bench/numa.o
+  CC      tests/bp_signal_overflow.o
+  CC      tests/bp_signal.o
+  CC      arch/x86/util/evsel.o
+  CC      tests/bp_account.o
+  CC      arch/x86/util/iostat.o
+  CC      tests/wp.o
+  CC      trace/beauty/tracepoints/x86_msr.o
+  CC      trace/beauty/tracepoints/x86_irq_vectors.o
+  CC      arch/x86/util/env.o
+  CC      arch/x86/util/dwarf-regs.o
+  CC      tests/task-exit.o
+  CC      arch/x86/util/unwind-libunwind.o
+  CC      tests/sw-clock.o
+  CC      tests/mmap-thread-lookup.o
+  CC      arch/x86/util/archinsn.o
+  CC      arch/x86/util/auxtrace.o
+  CC      tests/thread-maps-share.o
+  CC      tests/switch-tracking.o
+  CC      arch/x86/util/intel-pt.o
+  CC      tests/keep-tracking.o
+  CC      arch/x86/util/intel-bts.o
+  CC      tests/code-reading.o
+  CC      tests/sample-parsing.o
+  CC      tests/parse-no-sample-id-all.o
+  CC      tests/kmod-path.o
+  CC      tests/thread-map.o
+  CC      tests/topology.o
+  CC      tests/mem.o
+  CC      tests/cpumap.o
+  CC      tests/stat.o
+  CC      tests/event_update.o
+  CC      tests/event-times.o
+  CC      tests/expr.o
+  CC      tests/backward-ring-buffer.o
+  CC      tests/sdt.o
+  CC      tests/is_printable_array.o
+  CC      tests/perf-hooks.o
+  CC      tests/bitmap.o
+  CC      tests/mem2node.o
+  CC      tests/unit_number__scnprintf.o
+  CC      tests/maps.o
+  CC      tests/time-utils-test.o
+  CC      tests/genelf.o
+  CC      tests/api-io.o
+  CC      tests/demangle-java-test.o
+  CC      tests/demangle-ocaml-test.o
+  CC      tests/pfm.o
+  CC      tests/parse-metric.o
+  CC      tests/pe-file-parsing.o
+  CC      tests/expand-cgroup.o
+  CC      tests/perf-time-to-tsc.o
+  CC      tests/dlfilter-test.o
+  CC      tests/sigtrap.o
+  CC      tests/event_groups.o
+  CC      tests/symbols.o
+  CC      tests/util.o
+  CC      tests/dwarf-unwind.o
+  CC      tests/workloads/noploop.o
+  CC      tests/workloads/thloop.o
+  CC      tests/workloads/leafloop.o
+  CC      tests/workloads/sqrtloop.o
+  CC      tests/workloads/brstack.o
+  CC      tests/workloads/datasym.o
+  GEN     pmu-events/test-empty-pmu-events.c
+  CC      util/arm64-frame-pointer-unwind-support.o
+  CC      util/addr_location.o
+  CC      util/annotate.o
+  CC      util/block-info.o
+  CC      util/build-id.o
+  CC      util/block-range.o
+  CC      util/cacheline.o
+  CC      util/config.o
+  CC      util/copyfile.o
+  CC      util/ctype.o
+  CC      util/db-export.o
+  CC      util/disasm.o
+  CC      util/event.o
+  CC      util/env.o
+  CC      util/evlist.o
+  CC      util/sideband_evlist.o
+  CC      util/evsel.o
+  CC      util/evsel_fprintf.o
+  CC      util/perf_event_attr_fprintf.o
+  CC      util/evswitch.o
+  CC      util/find_bit.o
+  CC      util/get_current_dir_name.o
+  CC      util/levenshtein.o
+  CC      util/mmap.o
+  CC      util/memswap.o
+  BISON   util/parse-events-bison.c
+  CC      util/print-events.o
+  CC      util/tracepoint.o
+  TEST    pmu-events/empty-pmu-events.log
+  CC      util/perf_regs.o
+--- pmu-events/empty-pmu-events.c	2024-05-30 08:20:10.000000000 +0000
++++ pmu-events/test-empty-pmu-events.c	2024-05-30 15:55:37.332495538 +0000
+@@ -136,7 +136,7 @@
+ { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
+ { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_=
+cycles\000\000\000\000\000\000\000\00000 */
+ { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.an=
+y\000\000\000\000\000\000\000\00000 */
+-{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired=
+any\000\000\000\000\000\000\000\00000 */
++{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired=
+.any\000\000\000\000\000\000\000\00000 */
+=20
+ };
+=20
+@@ -373,7 +373,7 @@
+ {
+         for (size_t i =3D 0; i < table->num_pmus; i++) {
+                 const struct pmu_table_entry *table_pmu =3D &table->pmus[i=
+];
+-                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+offset];
++                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+.offset];
+                 int ret;
+=20
+                 if (pmu && !pmu__name_match(pmu, pmu_name))
+@@ -394,7 +394,7 @@
+ {
+         for (size_t i =3D 0; i < table->num_pmus; i++) {
+                 const struct pmu_table_entry *table_pmu =3D &table->pmus[i=
+];
+-                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+offset];
++                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+.offset];
+                 int ret;
+=20
+                 if (!pmu__name_match(pmu, pmu_name))
+@@ -414,7 +414,7 @@
+=20
+         for (size_t i =3D 0; i < table->num_pmus; i++) {
+                 const struct pmu_table_entry *table_pmu =3D &table->pmus[i=
+];
+-                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+offset];
++                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+.offset];
+=20
+                 if (pmu__name_match(pmu, pmu_name))
+                         count +=3D table_pmu->num_entries;
+@@ -524,7 +524,7 @@
+=20
+         for (size_t i =3D 0; i < map->event_table.num_pmus; i++) {
+                 const struct pmu_table_entry *table_pmu =3D &map->event_ta=
+ble.pmus[i];
+-                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+offset];
++                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+.offset];
+=20
+                 if (pmu__name_match(pmu, pmu_name))
+                          return &map->event_table;
+@@ -544,7 +544,7 @@
+=20
+         for (size_t i =3D 0; i < map->metric_table.num_pmus; i++) {
+                 const struct pmu_table_entry *table_pmu =3D &map->metric_t=
+able.pmus[i];
+-                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+offset];
++                const char *pmu_name =3D &big_c_string[table_pmu->pmu_name=
+.offset];
+=20
+                 if (pmu__name_match(pmu, pmu_name))
+                            return &map->metric_table;
+  CC      util/perf-regs-arch/perf_regs_aarch64.o
+  CC      util/intel-pt-decoder/intel-pt-pkt-decoder.o
+  CC      util/arm-spe-decoder/arm-spe-pkt-decoder.o
+  CC      util/perf-regs-arch/perf_regs_arm.o
+  GEN     util/intel-pt-decoder/inat-tables.c
+  CC      util/arm-spe-decoder/arm-spe-decoder.o
+  CC      util/intel-pt-decoder/intel-pt-log.o
+  CC      util/perf-regs-arch/perf_regs_csky.o
+  CC      util/intel-pt-decoder/intel-pt-decoder.o
+  CC      util/perf-regs-arch/perf_regs_loongarch.o
+  CC      util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.o
+  CC      util/perf-regs-arch/perf_regs_mips.o
+  CC      util/perf-regs-arch/perf_regs_powerpc.o
+  CC      util/path.o
+  CC      util/perf-regs-arch/perf_regs_riscv.o
+  CC      util/perf-regs-arch/perf_regs_s390.o
+  CC      util/scripting-engines/trace-event-perl.o
+  CC      util/perf-regs-arch/perf_regs_x86.o
+  CC      util/scripting-engines/trace-event-python.o
+  CC      util/print_binary.o
+  CC      util/print_insn.o
+  CC      util/rlimit.o
+  CC      util/argv_split.o
+  CC      util/bitmap.o
+  CC      util/rbtree.o
+  CC      util/libstring.o
+  CC      util/hweight.o
+  CC      util/smt.o
+  CC      util/strbuf.o
+  CC      util/string.o
+  LD      trace/beauty/tracepoints/perf-in.o
+  CC      util/strlist.o
+  CC      util/top.o
+  CC      util/strfilter.o
+  CC      util/usage.o
+  CC      util/dsos.o
+  CC      util/symbol.o
+  CC      util/symbol_fprintf.o
+  CC      util/dso.o
+  CC      util/map_symbol.o
+  CC      util/color.o
+  CC      util/color_config.o
+  CC      util/metricgroup.o
+  CC      util/header.o
+  CC      util/callchain.o
+  CC      util/debug.o
+  CC      util/values.o
+  CC      util/fncache.o
+  CC      util/machine.o
+  CC      util/map.o
+  CC      util/maps.o
+  CC      util/pstack.o
+  CC      util/session.o
+  CC      util/sample-raw.o
+  CC      util/s390-sample-raw.o
+  LD      trace/beauty/perf-in.o
+  CC      util/amd-sample-raw.o
+  CC      util/syscalltbl.o
+  CC      util/ordered-events.o
+  CC      util/namespaces.o
+  CC      util/comm.o
+  CC      util/thread.o
+  CC      util/threads.o
+  CC      util/thread_map.o
+  CC      util/parse-events-bison.o
+  BISON   util/pmu-bison.c
+  CC      util/pmus.o
+  CC      util/svghelper.o
+  CC      util/trace-event-info.o
+  CC      util/trace-event-scripting.o
+  CC      util/trace-event.o
+  CC      util/trace-event-parse.o
+  CC      util/trace-event-read.o
+  CC      util/sort.o
+  CC      util/hist.o
+  CC      util/util.o
+  CC      util/cpumap.o
+  CC      util/affinity.o
+  CC      util/cputopo.o
+  CC      util/cgroup.o
+  CC      util/target.o
+  CC      util/rblist.o
+  CC      util/intlist.o
+  CC      util/vdso.o
+  CC      util/counts.o
+  CC      util/stat.o
+  CC      util/stat-shadow.o
+  CC      util/stat-display.o
+  CC      util/perf_api_probe.o
+  CC      util/record.o
+  CC      util/srcline.o
+  CC      util/srccode.o
+  CC      util/synthetic-events.o
+  CC      util/data.o
+  CC      util/tsc.o
+  CC      util/cloexec.o
+  CC      util/call-path.o
+  CC      util/rwsem.o
+  CC      util/thread-stack.o
+  CC      util/spark.o
+  CC      util/topdown.o
+  CC      util/iostat.o
+  LD      tests/workloads/perf-in.o
+  CC      util/stream.o
+  CC      util/auxtrace.o
+  LD      util/perf-regs-arch/perf-in.o
+  CC      util/intel-pt.o
+  CC      util/intel-bts.o
+  CC      util/arm-spe.o
+  CC      util/hisi-ptt.o
+  CC      util/s390-cpumsf.o
+  CC      util/cs-etm-base.o
+  CC      util/parse-branch-options.o
+  CC      util/dump-insn.o
+  CC      util/parse-regs-options.o
+  CC      util/help-unknown-cmd.o
+  CC      util/term.o
+  CC      util/parse-sublevel-options.o
+  CC      util/dlfilter.o
+  CC      util/mem-info.o
+  CC      util/mem-events.o
+  CC      util/vsprintf.o
+  CC      util/units.o
+  CC      util/time-utils.o
+  BISON   util/expr-bison.c
+  CC      util/mem2node.o
+  CC      util/clockid.o
+  LD      ui/tui/perf-in.o
+  CC      util/branch.o
+  CC      util/list_sort.o
+  CC      util/mutex.o
+  CC      util/sharded_mutex.o
+  CC      util/bpf_map.o
+  CC      util/symbol-elf.o
+  CC      util/probe-file.o
+  CC      util/probe-event.o
+  CC      util/probe-finder.o
+  CC      util/dwarf-aux.o
+  CC      util/dwarf-regs.o
+  CC      util/debuginfo.o
+  CC      util/annotate-data.o
+  CC      util/unwind-libunwind-local.o
+  CC      util/unwind-libunwind.o
+  CC      util/data-convert-bt.o
+  CC      util/lzma.o
+  CC      util/zlib.o
+  CC      util/data-convert-json.o
+  CC      util/zstd.o
+  CC      util/cap.o
+  CXX     util/demangle-cxx.o
+  CC      util/demangle-java.o
+  CC      util/demangle-ocaml.o
+  CC      util/demangle-rust.o
+  CC      util/jitdump.o
+  CC      util/genelf.o
+  CC      util/genelf_debug.o
+  CC      util/perf-hooks.o
+  CC      util/bpf-event.o
+  CC      util/bpf-utils.o
+  CC      util/pfm.o
+  FLEX    util/parse-events-flex.c
+  FLEX    util/pmu-flex.c
+  CC      util/pmu-bison.o
+  FLEX    util/expr-flex.c
+  CC      util/intel-pt-decoder/intel-pt-insn-decoder.o
+  CC      util/expr-bison.o
+  LD      util/hisi-ptt-decoder/perf-in.o
+  LD      arch/x86/tests/perf-in.o
+  CC      util/pmu.o
+  CC      util/pmu-flex.o
+  CC      util/expr-flex.o
+  CC      util/expr.o
+  CC      util/parse-events.o
+  CC      util/parse-events-flex.o
+  LD      scripts/python/Perf-Trace-Util/perf-in.o
+  LD      util/arm-spe-decoder/perf-in.o
+  LD      arch/x86/util/perf-in.o
+  LD      arch/x86/perf-in.o
+  LD      arch/perf-in.o
+  LD      scripts/perl/Perf-Trace-Util/perf-in.o
+  LD      scripts/perf-in.o
+  LD      bench/perf-in.o
+  LD      tests/perf-in.o
+  LD      util/scripting-engines/perf-in.o
+  LD      ui/browsers/perf-in.o
+  LD      ui/perf-in.o
+  LD      util/intel-pt-decoder/perf-in.o
+  LD      util/perf-in.o
+  LD      perf-in.o
+make: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-8.3-bpf-3249f8=
+b84526d3b69162812908c257ee9816a237/tools/perf'
+make perf failed
+
+make[3]: *** [pmu-events/Build:42: pmu-events/empty-pmu-events.log] Error 1
+make[3]: *** Deleting file 'pmu-events/empty-pmu-events.log'
+make[2]: *** [Makefile.perf:730: pmu-events/pmu-events-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile.perf:264: sub-make] Error 2
+make: *** [Makefile:70: all] Error 2
+
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240531/202405311548.1e881dea-oliv=
+er.sang@intel.com
+
+
+
+--=20
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
