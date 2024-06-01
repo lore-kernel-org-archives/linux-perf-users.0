@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D281509B8
-	for <linux-perf-users@vger.kernel.org>; Sat,  1 Jun 2024 13:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A2E81514DC
+	for <linux-perf-users@vger.kernel.org>; Sat,  1 Jun 2024 13:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717246815; cv=none; b=bj2zg8RiiaxznNx5NA3jRgHQLWO8xD+ZxEG1tNn1URJ3lMpGbsZBDXNOXPc8Hw92F3ddTI9sQXhC1lRrEGYLbuOwEAivfXOYpdnxVgAUcEKS71wCkfQ0axeTXvihA5DG6Cb5q03fkIcWFF5BYrFEXdqgpBbRT9hRqbT1ChdWwWA=
+	t=1717246817; cv=none; b=RmbOLUEYqPHsOJYswY8DmxWQvptsB6S/69o/ypKtY8DacZP8TCIxKvu4t+MwYjRHLpv19qoTFNduppJFL/3u06+RENMJ8eQCl3hEw8c0+RFJ4zJ9/is7EhCGgiM8i9dDvLdizHKd1Bj3Ld7Ieh0gD76q4xTaZcn0DbLJK5UoRHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717246815; c=relaxed/simple;
-	bh=+NjiC/m42PX6z+f8azT6IT0aEdn/8wVJp90AiPgTejM=;
+	s=arc-20240116; t=1717246817; c=relaxed/simple;
+	bh=/TqMwuB1+zcy7mGpNuVeilWEYV9vQCViFdYalzT4ZX4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uKbch4yV3JP8RMsBy17ozEDgaV/jAWAZKg7ihXJcxW2M6WiZMaWEIPpkIf1kz+JzGFd/H2nf1N5kciwsuXfiL0i1oqBQ6vrDtBfZ7hm5ZZC4hQRPszo/SsAN00HWQ2LID8Vre+BMgvG0uF7Ezpc5JCfHLeTfijsT+QzCBNqTEPk=
+	 MIME-Version; b=fr9vgOCBQr0lKYPG4m6qCCLIU1N3yTPmi4LxE32px/MfQgarULpzxHxkNHke4XjNkjej7q+FzDEptLWPkOWuZnh6K5egOqSLl+x9NIj7o0n+AMBHo7uWsrxnSZIb5iRIfRFcxvqPG2nUywIrYFSzWMwVn3hdnZY+bDf94+FQy08=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CA60153B;
-	Sat,  1 Jun 2024 06:00:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F0AB13D5;
+	Sat,  1 Jun 2024 06:00:39 -0700 (PDT)
 Received: from a079740.arm.com (unknown [10.163.70.164])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B899D3F792;
-	Sat,  1 Jun 2024 06:00:06 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 365B03F792;
+	Sat,  1 Jun 2024 06:00:12 -0700 (PDT)
 From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
 To: linux-perf-users@vger.kernel.org
 Cc: anshuman.khandual@arm.com,
 	james.clark@arm.com,
 	Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-Subject: [PATCH V3 02/10] perf util: Delete ends_with() and replace its use with str_has_suffix()
-Date: Sat,  1 Jun 2024 18:29:38 +0530
-Message-Id: <20240601125946.1741414-3-ChaitanyaS.Prakash@arm.com>
+Subject: [PATCH V3 05/10] libsubcmd: Replace strstarts() usage with str_has_prefix()
+Date: Sat,  1 Jun 2024 18:29:41 +0530
+Message-Id: <20240601125946.1741414-6-ChaitanyaS.Prakash@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240601125946.1741414-1-ChaitanyaS.Prakash@arm.com>
 References: <20240601125946.1741414-1-ChaitanyaS.Prakash@arm.com>
@@ -39,80 +39,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 
-As str_has_suffix() has been introduced in tools/lib/string.c having
-another locally defined function ends_with() to check if a string has a
-given suffix is redundant. Delete ends_with() and replace its use with
-str_has_suffix(), and update the error checks accordingly.
-
-The return type of ends_with() is const char*, whereas that of
-str_has_suffix() is size_t. get_script_root() has been modified
-accordingly to accommodate this change.
+Calls to strstarts() are replaced with str_has_prefix() to unify the
+string comparison functions between tools/ and the kernel.
 
 Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 ---
- tools/perf/builtin-script.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ tools/lib/subcmd/help.c          |  2 +-
+ tools/lib/subcmd/parse-options.c | 18 +++++++++---------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c16224b1fef3..ef622d71195f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3301,20 +3301,6 @@ static struct script_desc *script_desc__findnew(const char *name)
- 	return s;
- }
+diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
+index 8561b0f01a24..589ecdab9318 100644
+--- a/tools/lib/subcmd/help.c
++++ b/tools/lib/subcmd/help.c
+@@ -196,7 +196,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
+ 	while ((de = readdir(dir)) != NULL) {
+ 		int entlen;
  
--static const char *ends_with(const char *str, const char *suffix)
--{
--	size_t suffix_len = strlen(suffix);
--	const char *p = str;
--
--	if (strlen(str) > suffix_len) {
--		p = str + strlen(str) - suffix_len;
--		if (!strncmp(p, suffix, suffix_len))
--			return p;
--	}
--
--	return NULL;
--}
--
- static int read_script_info(struct script_desc *desc, const char *filename)
- {
- 	char line[BUFSIZ], *p;
-@@ -3358,19 +3344,21 @@ static int read_script_info(struct script_desc *desc, const char *filename)
+-		if (!strstarts(de->d_name, prefix))
++		if (!str_has_prefix(de->d_name, prefix))
+ 			continue;
  
- static char *get_script_root(struct dirent *script_dirent, const char *suffix)
- {
--	char *script_root, *str;
-+	char *script_root;
-+	size_t script_len, suffix_len;
+ 		astrcat(&buf, de->d_name);
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 4b60ec03b0bb..b3206d46e2b7 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -390,7 +390,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 			return 0;
+ 		}
+ 		if (!rest) {
+-			if (strstarts(options->long_name, "no-")) {
++			if (str_has_prefix(options->long_name, "no-")) {
+ 				/*
+ 				 * The long name itself starts with "no-", so
+ 				 * accept the option without "no-" so that users
+@@ -403,7 +403,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 					goto match;
+ 				}
+ 				/* Abbreviated case */
+-				if (strstarts(options->long_name + 3, arg)) {
++				if (str_has_prefix(options->long_name + 3, arg)) {
+ 					flags |= OPT_UNSET;
+ 					goto is_abbreviated;
+ 				}
+@@ -428,7 +428,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 				continue;
+ 			}
+ 			/* negated and abbreviated very much? */
+-			if (strstarts("no-", arg)) {
++			if (str_has_prefix("no-", arg)) {
+ 				flags |= OPT_UNSET;
+ 				goto is_abbreviated;
+ 			}
+@@ -438,7 +438,7 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 			flags |= OPT_UNSET;
+ 			rest = skip_prefix(arg + 3, options->long_name);
+ 			/* abbreviated and negated? */
+-			if (!rest && strstarts(options->long_name, arg + 3))
++			if (!rest && str_has_prefix(options->long_name, arg + 3))
+ 				goto is_abbreviated;
+ 			if (!rest)
+ 				continue;
+@@ -478,7 +478,7 @@ static void check_typos(const char *arg, const struct option *options)
+ 	if (strlen(arg) < 3)
+ 		return;
  
- 	script_root = strdup(script_dirent->d_name);
- 	if (!script_root)
- 		return NULL;
+-	if (strstarts(arg, "no-")) {
++	if (str_has_prefix(arg, "no-")) {
+ 		fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)\n", arg);
+ 		exit(129);
+ 	}
+@@ -486,7 +486,7 @@ static void check_typos(const char *arg, const struct option *options)
+ 	for (; options->type != OPTION_END; options++) {
+ 		if (!options->long_name)
+ 			continue;
+-		if (strstarts(options->long_name, arg)) {
++		if (str_has_prefix(options->long_name, arg)) {
+ 			fprintf(stderr, " Error: did you mean `--%s` (with two dashes ?)\n", arg);
+ 			exit(129);
+ 		}
+@@ -981,10 +981,10 @@ int parse_options_usage(const char * const *usagestr,
+ 		if (opts->long_name == NULL)
+ 			continue;
  
--	str = (char *)ends_with(script_root, suffix);
--	if (!str) {
-+	suffix_len = str_has_suffix(script_root, suffix);
-+	if (!suffix_len) {
- 		free(script_root);
- 		return NULL;
+-		if (strstarts(opts->long_name, optstr))
++		if (str_has_prefix(opts->long_name, optstr))
+ 			print_option_help(opts, 0);
+-		if (strstarts("no-", optstr) &&
+-		    strstarts(opts->long_name, optstr + 3))
++		if (str_has_prefix("no-", optstr) &&
++		    str_has_prefix(opts->long_name, optstr + 3))
+ 			print_option_help(opts, 0);
  	}
  
--	*str = '\0';
-+	script_len = strlen(script_root);
-+	script_root[script_len - suffix_len] = '\0';
- 	return script_root;
- }
- 
-@@ -3646,7 +3634,7 @@ static char *get_script_path(const char *script_root, const char *suffix)
- 
- static bool is_top_script(const char *script_path)
- {
--	return ends_with(script_path, "top") != NULL;
-+	return str_has_suffix(script_path, "top");
- }
- 
- static int has_required_arg(char *script_path)
 -- 
 2.34.1
 
