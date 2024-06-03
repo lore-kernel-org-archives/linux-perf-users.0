@@ -1,210 +1,188 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EBD320D
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Jun 2024 15:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C70132134
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Jun 2024 16:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717429624; cv=none; b=dzq5tmxymjtNddMEEFRNA8uK+th7SW4kqg6WWQ+4abSHBrToxJdA9E0IwBmGTMsZlrVCK65sKbgD8d8555LFXXDeuyvywrCtfUKvhUadMhC4XJf77NdLtwHuAuEgT5Zo+/2JB/5mp14qP4L3GKvylI7SUb9PPrvsziNNcDtiaes=
+	t=1717431654; cv=none; b=BY7nJdOvdgKubG+g+4g+MmN2aizD8fj/91G0f+Xq45VqaSnA9Js23oMLMyb59FNg6Aq5o9H+7Q6lcsuWkP9ccEtkyaNCkyChSoRuTh8gYCPkiUFtpWa2YWPmhJzgBFpmQVuizYqTCUmTmgmYhW+0TIJTDaoJZ3zgRQoc21qD+BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717429624; c=relaxed/simple;
-	bh=Mg80o7H5UIDnH0+H3rB9+Jub8DUPORLjLI+9sQNkiek=;
+	s=arc-20240116; t=1717431654; c=relaxed/simple;
+	bh=T2gNsKce5V5Lv2N/ccwwI2fXXc+DZkZApRpy0OskDH0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KsJdAzK97ifn2kXdA4pIiRXqxBZA1hHwbyRhuL8q06JO3ZKKlc6Aj8rze4bP+W/STFxzKNRhK4W+qc7W/ajrJIJhfYLmqYk2NtRGrJRWCCYUfK6tVgzK/pLmnBPYGEuSq9PvkjYbki/TkZRG2XyuY+QInDjrHedn/dnfCKx9Sq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vVzTm802; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=pE1phJ7EDpsgGYNU8WJSLhd9p1oNwhVg4rirfRr8oWQuU9D7qWX66R90KcKBzBITXinQ2rgYZjrhUZtSfBibAEb+eA5d7BxrQdhTcRlZKPe5YmP7xKokkx3vFPOCHue2qBPYu8GWWrpX0XEhJAWKEcKdv3u7tdgp0KHG2YjTzI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0chrc6Nv; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vVzTm802"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f61bbb1dfcso372065ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jun 2024 08:47:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0chrc6Nv"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-374991c4aa1so231785ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jun 2024 09:20:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717429623; x=1718034423; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717431652; x=1718036452; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VzGMCbAEFz7sST5Tw3h9EtKJ91Jm/r9MvFW6MwnVD2I=;
-        b=vVzTm802sCGYA6gcZHO68UhSPIwosbadIYFom3u4ILFP47Ltpf3jWp5WHqB/TsPe4C
-         mY18wt6f3JrmV4T73zwI1HDDEUiCy86C6hj0XPiO8dX7rsNRYr4e3Q+1Ns5iCWQ2AW/W
-         9jHMsJg35+AWA3r3NL37DbkSkrFfCATnUDPMS+bEjUlJvJZAvErnEoBAcdUMGe3KP4kr
-         LesPMtbHyjYgNYW4yZyJJOYZkHvgWlmIPbfGL+nUMW1UusbwISexCoRy+ifCEGvF4sih
-         3FGetF1H3d7V5VCug/Gm9Y9/COvYhz7n2n9USwGom1/VsdHo2Mt3E5YHf+UYKB80UhTD
-         yXQg==
+        bh=MixTtELLiJH8L+d2LmDPMTf5TZnTl8TAimQ8PPeUMRo=;
+        b=0chrc6NvO3c1/96ZButz9uSCEwmFy1ArkRHOOHM/vf/tC3C0oqUvtKQNAaoKFcTDw+
+         K1P0egJWSUsiIimzmcoLQNRL9V89SDDJMcQz5pqBP6nfBXkuYw7GLrEeeuaXb/mZQtcO
+         DH7UykEe96Lv/CmDSRpIhTD1YZ68z6xXgVtmYf+D5BzEfUOa3wi/lGPaqzM5ti/aWaSh
+         VuS2UM6sM0vQMPIJ8vIWnUip5s59A+icIzmwPQX8oVsWM9A/Zgk+yhHd8QDiRYEXEgBt
+         FrJ8tu7fi3w/OFzZha4m8ka/Xy+icAZQEyJDdGJ1H64v9ukQAQ05fi6XMoyribg+2n+6
+         i3xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717429623; x=1718034423;
+        d=1e100.net; s=20230601; t=1717431652; x=1718036452;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VzGMCbAEFz7sST5Tw3h9EtKJ91Jm/r9MvFW6MwnVD2I=;
-        b=tRD9VdXNITGijoIP2VUw50nokYjy9tbId/v6s7W0UD11okluTQmPzjfKt0uxnZSsiF
-         WTXLo14229ZFIsTmwJRCaWj9Y8Iox1jH8Tmh/fWKO9gOKafxw2Us719xZZTEBmI+I95u
-         L2farP+MwuflC6gxWp8CwstAy9S9SGUjcefdUuwaW6HXaf3ycs0ku9kbxLRXMsgeW2rr
-         ZSOHmLszw+vjrccmGQMsFhEBe1i3ZEgn4N8MaJ2hb7RLbZfmJPGuQkRO/evNJt4lMF3p
-         tjYH/oLwGPM0/kayKUKM3KE7eUTLZf9D/kQi7DuH0UQCmuCVuehuG5TcNVW/Fwexudz3
-         ccHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7tL4eX1NgDEpYDHYFZvCi3EauWg4B1YZ6pOBlMTWc8awjthgPbBEtrqMPUkCbv1lTVOEAH3MGgK2HYHDymQJsZLlbCBz9lqlnr3Zm3lTtlQ==
-X-Gm-Message-State: AOJu0YzdBMD86zLbwfJ8AqySnSDJcjd0rPGHSnviT7idG/+zMkRdtyCx
-	UIez1jiFpNtYplPvWDuWfcdkgXtfXsR5l/3/qpjorm8spdlks5+q3RokAb+61ijIeE2C5vfO0Fk
-	RL56GaY6Nb4flTsfekMdYOs0V6AEdf4yTXk/n
-X-Google-Smtp-Source: AGHT+IGiaIqxFOuAXfvlbUeMJ3aKV5pmlWuVLlqoe9vC8Z08hp5YfriujSTu0Z3xC8eUVOOrEjdr4z5zKMjLC//6ixs=
-X-Received: by 2002:a17:903:24a:b0:1f4:95dc:bc61 with SMTP id
- d9443c01a7336-1f64f3a6e94mr3735205ad.15.1717429622232; Mon, 03 Jun 2024
- 08:47:02 -0700 (PDT)
+        bh=MixTtELLiJH8L+d2LmDPMTf5TZnTl8TAimQ8PPeUMRo=;
+        b=jUhgcWCvLz2bohdJf0+wiwgxM7Wiglnx8zZbSPJNnRHfjQyMCvF5RP9XpubfDiDR4I
+         s46mW8xNDHXUl+fRJmbjqpYenzNL2K0ACGnLafs86yfRyRSAGSUeYQKLwLVMAq+7HnjI
+         z71ZmosSB0vzzTcx4Sb/x9g5QxnCwND9cntqNR7QPNgHKqibkkKw3jrBiDpJIOXLVs9i
+         LF9xZN3JX7OZM8RQWUAfOJsv2yhGjPgdSshdHo22XxZ+wCyPSjVxU5uXf7xrNpCNAOGL
+         BWoffgCfjcysjTOrPaH/c/2ApVGLfyTreUp/wKDJwMMP0EVxUZ2mYW1Se6yRyWPIXBO5
+         /6ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUjrRhfZaPt6El/LKGzMMVgY+8V/yMuilBnUO6uKQLMkijLRgPCX+sW1KFkrs2Eh55py0uXnF0f79tfBwvCOAXBQDBkp62YHnlOkYa4v4PUyA==
+X-Gm-Message-State: AOJu0YxOTUN6nF9HF6hUrbTStRhx1k4FSx0xz8uS2OSRZuP1TotJjQya
+	iSSCuDxsg+PGF5aV3BgFOfHXPcBOYKrAm9CxBWJvIs9FhPwvYyw6GUpTjeUAeL1Ndf+IOFGU/zr
+	HGHvYb1FyOzrm/IzoM/aiIQ6fXXCLf4MRNC2F
+X-Google-Smtp-Source: AGHT+IFjSaIwObKyMMLujEN+lZ6Fx2EjPMX8NbkZ3LpQRkc6mjv+m00ZkIgsew9FvkrzvqOj0ZWOO37Q/gb3dyTp9QA=
+X-Received: by 2002:a05:6e02:5d1:b0:374:930f:e49b with SMTP id
+ e9e14a558f8ab-374930fe61amr4218035ab.24.1717431651802; Mon, 03 Jun 2024
+ 09:20:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525013021.436430-2-irogers@google.com> <202405311548.1e881dea-oliver.sang@intel.com>
- <CAP-5=fX7ZyT82=W8uSZbT7c76E5+1JaoR5-y_gcj7A_=Js1YfA@mail.gmail.com> <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020>
-In-Reply-To: <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020>
+References: <20240603092812.46616-1-yangyicong@huawei.com> <20240603092812.46616-3-yangyicong@huawei.com>
+In-Reply-To: <20240603092812.46616-3-yangyicong@huawei.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Jun 2024 08:46:49 -0700
-Message-ID: <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Weilin Wang <weilin.wang@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, John Garry <john.g.garry@oracle.com>, 
-	Sandipan Das <sandipan.das@amd.com>
+Date: Mon, 3 Jun 2024 09:20:40 -0700
+Message-ID: <CAP-5=fXDPor-WsO-TGB3z6QpSWZOFJC31GJpuwZUA3qz_3WsYQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf: arm_pmu: Only show online CPUs in device's
+ "cpus" attribute
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: will@kernel.org, mark.rutland@arm.com, acme@kernel.org, 
+	namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
+	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com, 
+	yangyicong@hisilicon.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 3, 2024 at 7:19=E2=80=AFAM Oliver Sang <oliver.sang@intel.com> =
+On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
 wrote:
 >
-> hi, Ian,
+> From: Yicong Yang <yangyicong@hisilicon.com>
 >
-> On Fri, May 31, 2024 at 09:38:01AM -0700, Ian Rogers wrote:
-> > On Fri, May 31, 2024 at 1:16=E2=80=AFAM kernel test robot <oliver.sang@=
-intel.com> wrote:
-> > >
-> > >
-> > > hi, Ian Rogers,
-> > >
-> > > we actually want to seek your advice. in our env, there is no problem=
- to build
-> > > parent.
-> > >
-> > > * 3249f8b84526d (linux-review/Ian-Rogers/perf-jevents-Autogenerate-em=
-pty-pmu-events-c/20240525-093240) perf jevents: Autogenerate empty-pmu-even=
-ts.c
-> > > * 7d88bd0d22746 perf jevents: Use name for special find value   <--- =
-parent
-> > >
-> > > however, failed to build perf upon 3249f8b84526d. but there is not ma=
-ny useful
-> > > information in below detail log.
-> > >
-> > > is there any dependency or env setting for us to build this commit? T=
-hanks!
-> >
-> > Hi Oliver,
-> >
-> > Thanks for the report and the work testing! Seeing the output:
-> >
-> > [..snip..]
-> > > --- pmu-events/empty-pmu-events.c       2024-05-30 08:20:10.000000000=
- +0000
-> > > +++ pmu-events/test-empty-pmu-events.c  2024-05-30 15:55:37.332495538=
- +0000
-> > > @@ -136,7 +136,7 @@
-> > >  { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
-> > >  { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache=
-_miss_cycles\000\000\000\000\000\000\000\00000 */
-> > >  { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_reti=
-red.any\000\000\000\000\000\000\000\00000 */
-> > > -{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_r=
-etiredany\000\000\000\000\000\000\000\00000 */
-> > > +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_r=
-etired.any\000\000\000\000\000\000\000\00000 */
-> > >
-> > >  };
-> > >
-> > > @@ -373,7 +373,7 @@
-> > [..snip..]
-> >
-> > It appears the version of empty-pmu-events.c the patch adds and the
-> > version generated in your test configuration are differing because of
-> > whitespace. Perhaps a hex editor will show what the exact difference
-> > is, it must relate to locales or something. Like you mention this
-> > could be resolved by an env change.
-> >
-> > > The kernel config and materials to reproduce are available at:
-> > > https://download.01.org/0day-ci/archive/20240531/202405311548.1e881de=
-a-oliver.sang@intel.com
-> >
-> > I didn't see the generated test-empty-pmu-events.c there and so
-> > couldn't follow up on the locale/env exploration. I wonder that a
-> > suitable workaround is to change from the patch:
-> >
-> > +$(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_E=
-VENTS_C)
-> > +       $(call rule_mkdir)
-> > +       $(Q)$(call echo-cmd,test)diff -u $? 2> $@ || (cat $@ && false)
-> >
-> > to instead of invoking "diff -u" to invoke "diff -w -u", that is to
-> > ignore whitespace. I can send a v3 with this.
->
-> I tried below patch
->
-> commit a79a41133a41adc2d69c8f603c7d880b3796cbf7
-> Author: 0day robot <lkp@intel.com>
-> Date:   Mon Jun 3 16:35:45 2024 +0800
->
->     fix from Ian Rogers: invoke "diff -w -u" instead of "diff -u"
->
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index c3fa43c497069..54d19b492db5c 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -39,7 +39,7 @@ $(TEST_EMPTY_PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVE=
-NTS_PY) $(METRIC_PY) $(ME
->
->  $(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_EVE=
-NTS_C)
->         $(call rule_mkdir)
-> -       $(Q)$(call echo-cmd,test)diff -u $? 2> $@ || (cat $@ && false)
-> +       $(Q)$(call echo-cmd,test)diff -w -u $? 2> $@ || (cat $@ && false)
->
->  $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRI=
-C_TEST_LOG) $(EMPTY_PMU_EVENTS_TEST_LOG)
->         $(call rule_mkdir)
->
->
-> but make still failed. I still saw below in our build log
->
-> --- pmu-events/empty-pmu-events.c       2024-06-03 08:41:16.000000000 +00=
-00
-> +++ pmu-events/test-empty-pmu-events.c  2024-06-03 13:47:19.522463482 +00=
-00
-> @@ -136,7 +136,7 @@
->  { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
->  { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_mis=
-s_cycles\000\000\000\000\000\000\000\00000 */
->  { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.=
-any\000\000\000\000\000\000\000\00000 */
-> -{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-edany\000\000\000\000\000\000\000\00000 */
-> +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-ed.any\000\000\000\000\000\000\000\00000 */
->
->  };
->
->
-> I will try to get generated test-empty-pmu-events.c tomorrow.
+> When there're CPUs offline after system booting, perf will failed:
+> [root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
+> Error:
+> The sys_perf_event_open() syscall returned with 19 (No such device) for e=
+vent (cpu-clock).
+> /bin/dmesg | grep -i perf may provide additional information.
 
-Thanks Oliver, if you could get the environment variables that would
-probably also be useful.
+Thanks for debugging this Yicong! The fact cycles is falling back on
+cpu-clock I'm confused by, on ARM the PMU type generally isn't
+PERF_TYPE_HARDWARE and so this fallback shouldn't happen:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/evsel.c?h=3Dperf-tools-next#n2900
+I note your command line is for system wide event opening rather than
+for a process. It is more strange the fallback is giving "No such
+device".
 
+> This is due to PMU's "cpus" is not updated and still contains offline
+> CPUs and perf will try to open perf event on the offlined CPUs.
+
+The perf tool will try to only open online CPUs. Unfortunately the
+naming around this is confusing:
+
+- any - an event may follow a task and schedule on "any" CPU. We
+encode this with -1.
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n24
+- online - the set of online CPU.
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n33
+- all - I try to avoid this but it may still be in the code, "all"
+usually is another name for online. Hopefully when we use this name it
+is clearly defined:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/include/internal/evlist.h?h=3Dperf-tools-next#n23
+
+> Make "cpus" attribute only shows online CPUs and introduced a new
+> "supported_cpus" where users can get the range of the CPUs this
+> PMU supported monitoring.
+
+I don't think this should be necessary as by default the CPUs the perf
+tool will use will be the "online" CPUs:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/evlist.c?h=3Dperf-tools-next#n40
+
+Could you create a reproduction of the problem you are encountering?
+My expectation is for a core PMU to advertise the online and offline
+CPUs it is valid for, and for perf to intersect:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n44
+those CPUs with the online CPUs so the perf_event_open doesn't fail.
+
+Thanks,
 Ian
 
-> >
-> > Thanks,
-> > Ian
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/perf/arm_pmu.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 8458fe2cebb4..acbb0e1d0414 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -558,13 +558,35 @@ static ssize_t cpus_show(struct device *dev,
+>                          struct device_attribute *attr, char *buf)
+>  {
+>         struct arm_pmu *armpmu =3D to_arm_pmu(dev_get_drvdata(dev));
+> -       return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus=
+);
+> +       cpumask_var_t mask;
+> +       ssize_t n;
+> +
+> +       /* If allocation failed then show the supported_cpus */
+> +       if (!alloc_cpumask_var(&mask, GFP_KERNEL))
+> +               return cpumap_print_to_pagebuf(true, buf, &armpmu->suppor=
+ted_cpus);
+> +
+> +       cpumask_and(mask, &armpmu->supported_cpus, cpu_online_mask);
+> +       n =3D cpumap_print_to_pagebuf(true, buf, mask);
+> +       free_cpumask_var(mask);
+> +
+> +       return n;
+>  }
+>
+>  static DEVICE_ATTR_RO(cpus);
+>
+> +static ssize_t supported_cpus_show(struct device *dev,
+> +                                  struct device_attribute *attr, char *b=
+uf)
+> +{
+> +       struct arm_pmu *armpmu =3D to_arm_pmu(dev_get_drvdata(dev));
+> +
+> +       return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus=
+);
+> +}
+> +
+> +static DEVICE_ATTR_RO(supported_cpus);
+> +
+>  static struct attribute *armpmu_common_attrs[] =3D {
+>         &dev_attr_cpus.attr,
+> +       &dev_attr_supported_cpus.attr,
+>         NULL,
+>  };
+>
+> --
+> 2.24.0
+>
