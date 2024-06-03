@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053BC12E1C6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68E713CF97;
 	Mon,  3 Jun 2024 22:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717454654; cv=none; b=aTQk3pTyYr5buzggrqT7XYPp5xLRDBh8Hpr0mLGkC0ogpJiBOeBcD5Y1GrnQZutM7sYS6TMMnDpRAuCRLf30fJKJDlGXv8nGlbB3/PsekbKk5NCTX1wkx/2sERRRHqf+ywX3V0iKAwQZRS7bs7ub1xCinC1txs5ZNG1bo8Sfp7g=
+	t=1717454654; cv=none; b=cwypVuqoxaMerZ2ZtHZvPDTbvpSQ4QP6VvbOQjLgSHRcnzGW3EfXMkKpR0mohcYGudbCTc20HEQ++Kt1HzkJ3zI30hVpmTkEYv4rA+DdpVg3vPN0E5c1NLu6APrYNZI1UDHZnJIM8O+NNQUeYkO9SpG6SyWXBqhBr8KopGejfnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717454654; c=relaxed/simple;
-	bh=KeNKRmnEsHEhyQWOaULWi+zFVlIJi8zh3IOu+6a/p8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EsgXtgDJimDoE+SFz16g/d9VskzN7azq8RqPTsSzd6YxL8XrxHy5nUvj076BHbKOcqjOZqBUMPWEfKAFXO++bTEmK2htk5xoEXC0/Xpac7c+jl+7BCkaB/SDVhvcQO37MSe7xJ6HbyYr6/Q5WCM57bJTezy0SUNhhm4AqTysEdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjzF5cWC; arc=none smtp.client-ip=10.30.226.201
+	bh=TdJfb4b0EK7Er1ltY544EIHAZOToWommLg0CWKrIXRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pcFJgSAYXTMviru9A/bDagK6glHervOWUt8aR6+TCzUC5VWLxNbuQ1tBrBPG3i4BLE7wulrieMZXvRIwmKhxTp1COPaVm6WkawtlKdmqIFbWouFbRFEkNZCLlbDCnhLMBLXUkudHplS7T6CHY3ogWJryGz9RpcM6Y48ivViLBDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaUcSg8h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjzF5cWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825AEC2BD10;
-	Mon,  3 Jun 2024 22:44:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaUcSg8h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B475C32782;
+	Mon,  3 Jun 2024 22:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717454653;
-	bh=KeNKRmnEsHEhyQWOaULWi+zFVlIJi8zh3IOu+6a/p8w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QjzF5cWCgpAdqR0oHO1vV1gEvKijtRc4DZli7o0/fd3FfRFYTMBCoBkeTdpL2dMj/
-	 J6TOOFVDap/qLTxAhmyDW2GPv4T0OJc2+il1ptIXrpYYIASG0H+LkJJ1S7JXU1qtkP
-	 X+Z46gX+n4FFobbzpNBBlm2y9zd88oCrgibJI2UB/U63TI31ezOETLJ5kpvrCltaEY
-	 rwQqRWvx94VcIElSwrdSvrBBhXY7fNq/clyNPTDaBgMRijJCJxCXSgjNhCnV+NczGL
-	 ieD4oC4aI+1a5XTvM2ctMCmZBabNrywxAbt/Sul3r1Ag/wuIc1CUQIMg6JnMTW+AsP
-	 +UbLCW7rV+uBw==
+	s=k20201202; t=1717454654;
+	bh=TdJfb4b0EK7Er1ltY544EIHAZOToWommLg0CWKrIXRE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UaUcSg8htavfY3pUGIgBMBi7dgY+GqzZOKLr0qz7IQu3MB+ZU9At1vvdEcnvNVj4E
+	 tWJopEz+ZRc0xL/JyieuLGFGYCSS33XJCYVIksflKM7BJ77NOFjJGcYcWTdClXJR6X
+	 OpWO4sVwIt9YrizsR1ltW5mofhn62XTp1WigrdTXqAGXl5/Q/Pp56XOSnhxQY+G2uq
+	 sLt++gPesjV4QZN1QHELdPDyESWpL8Zf6eTwlQk7Q9vSYojYxvSBJ8WnUkgW13jutC
+	 hOmzDKYQ7I/tUrZ8a8yoeMfGdzRd/fmkval5+4AUPDE6Bp5KIAqkUTfxl1ufaxLHL0
+	 e8L2dtnSj2YKA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,10 +36,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 0/4] perf report: Omit dummy events in the output (v2)
-Date: Mon,  3 Jun 2024 15:44:08 -0700
-Message-ID: <20240603224412.1910049-1-namhyung@kernel.org>
+Subject: [PATCH 1/4] perf hist: Factor out __hpp__fmt_print()
+Date: Mon,  3 Jun 2024 15:44:09 -0700
+Message-ID: <20240603224412.1910049-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+In-Reply-To: <20240603224412.1910049-1-namhyung@kernel.org>
+References: <20240603224412.1910049-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,92 +50,138 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Split the logic to print the histogram values according to the format
+string.  This was used in 3 different places so it's better to move out
+the logic into a function.
 
-This work is to make the output compact by removing dummy events in
-the output.  The dummy events are used to save side-band information
-like task creation or memory address space change using mmap(2).  But
-after collecting these, it's not used because it won't have any
-samples.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/ui/hist.c | 83 +++++++++++++++++++-------------------------
+ 1 file changed, 36 insertions(+), 47 deletions(-)
 
- v2 changes)
- * just hide the (dummy) event instead of removing it from evlist
-
-Sometimes users want to run perf report --group to show all recorded
-events together but they are not interested in those dummy events.
-This just wastes the precious screen space so we want to get rid of
-them after use.
-
-perf report already has --skip-empty option to skip 0 result in the
-stat output.  I think we can extend it to skip empty events that have
-no samples.
-
-Example output:
-
-Before)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u'
-  # Event count (approx.): 3089861
-  #
-  #                 Overhead  Command      Shared Object      Symbol                               
-  # ........................  ...........  .................  .....................................
-  #
-       9.29%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%   0.00%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%   0.00%  swapper      [kernel.kallsyms]  [k] psi_group_change
-
-After)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
-  # Event count (approx.): 3089861
-  #
-  #         Overhead  Command      Shared Object      Symbol                               
-  # ................  ...........  .................  .....................................
-  #
-       9.29%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%  swapper      [kernel.kallsyms]  [k] psi_group_change
-
-Now 'Overhead' column only has two values for mem-loads and mem-stores.
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (4):
-  perf hist: Factor out __hpp__fmt_print()
-  perf hist: Simplify __hpp_fmt() using hpp_fmt_data
-  perf hist: Add symbol_conf.skip_empty
-  perf hist: Honor symbol_conf.skip_empty
-
- tools/perf/builtin-annotate.c  |   4 +-
- tools/perf/builtin-report.c    |  12 +--
- tools/perf/ui/hist.c           | 144 ++++++++++++++++-----------------
- tools/perf/ui/stdio/hist.c     |   5 +-
- tools/perf/util/events_stats.h |   3 +-
- tools/perf/util/evsel.c        |  13 ++-
- tools/perf/util/hist.c         |   6 +-
- tools/perf/util/hist.h         |   3 +-
- tools/perf/util/python.c       |   3 +
- tools/perf/util/session.c      |   5 +-
- tools/perf/util/session.h      |   3 +-
- tools/perf/util/symbol_conf.h  |   3 +-
- 12 files changed, 105 insertions(+), 99 deletions(-)
-
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index 685ba2a54fd8..e30fcb1e87e7 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -23,35 +23,42 @@
+ 	__ret;							\
+ })
+ 
+-static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+-		      hpp_field_fn get_field, const char *fmt, int len,
+-		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
++static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
++			    int nr_samples, const char *fmt, int len,
++			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
+ {
+-	int ret;
+-	struct hists *hists = he->hists;
+-	struct evsel *evsel = hists_to_evsel(hists);
+-	char *buf = hpp->buf;
+-	size_t size = hpp->size;
+-
+ 	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
+ 		double percent = 0.0;
+ 		u64 total = hists__total_period(hists);
+ 
+ 		if (total)
+-			percent = 100.0 * get_field(he) / total;
++			percent = 100.0 * val / total;
+ 
+-		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
+-	} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
+-		double average = 0;
++		return hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
++	}
+ 
+-		if (he->stat.nr_events)
+-			average = 1.0 * get_field(he) / he->stat.nr_events;
++	if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
++		double avg = nr_samples ? (1.0 * val / nr_samples) : 0;
+ 
+-		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, average);
+-	} else {
+-		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, get_field(he));
++		return hpp__call_print_fn(hpp, print_fn, fmt, len, avg);
+ 	}
+ 
++	return hpp__call_print_fn(hpp, print_fn, fmt, len, val);
++}
++
++static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
++		      hpp_field_fn get_field, const char *fmt, int len,
++		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
++{
++	int ret;
++	struct hists *hists = he->hists;
++	struct evsel *evsel = hists_to_evsel(hists);
++	char *buf = hpp->buf;
++	size_t size = hpp->size;
++
++	ret = __hpp__fmt_print(hpp, hists, get_field(he), he->stat.nr_events,
++			       fmt, len, print_fn, fmtype);
++
+ 	if (evsel__is_group_event(evsel)) {
+ 		int prev_idx, idx_delta;
+ 		struct hist_entry *pair;
+@@ -72,30 +79,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 
+ 			while (idx_delta--) {
+ 				/*
+-				 * zero-fill group members in the middle which
+-				 * have no sample
++				 * zero-fill group members in the middle which have
++				 * no samples, pair->hists is not correct but it's
++				 * fine since the value is 0.
+ 				 */
+-				if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
+-					ret += hpp__call_print_fn(hpp, print_fn,
+-								  fmt, len, 0.0);
+-				} else {
+-					ret += hpp__call_print_fn(hpp, print_fn,
+-								  fmt, len, 0ULL);
+-				}
++				ret += __hpp__fmt_print(hpp, pair->hists, 0, 0,
++							fmt, len, print_fn, fmtype);
+ 			}
+ 
+-			if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
+-				ret += hpp__call_print_fn(hpp, print_fn, fmt, len,
+-							  100.0 * period / total);
+-			} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
+-				double avg = nr_samples ? (period / nr_samples) : 0;
+-
+-				ret += hpp__call_print_fn(hpp, print_fn, fmt,
+-							  len, avg);
+-			} else {
+-				ret += hpp__call_print_fn(hpp, print_fn, fmt,
+-							  len, period);
+-			}
++			ret += __hpp__fmt_print(hpp, pair->hists, period, nr_samples,
++						fmt, len, print_fn, fmtype);
+ 
+ 			prev_idx = evsel__group_idx(evsel);
+ 		}
+@@ -104,15 +97,11 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 
+ 		while (idx_delta--) {
+ 			/*
+-			 * zero-fill group members at last which have no sample
++			 * zero-fill group members at last which have no sample.
++			 * the hists is not correct but it's fine like above.
+ 			 */
+-			if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
+-				ret += hpp__call_print_fn(hpp, print_fn,
+-							  fmt, len, 0.0);
+-			} else {
+-				ret += hpp__call_print_fn(hpp, print_fn,
+-							  fmt, len, 0ULL);
+-			}
++			ret += __hpp__fmt_print(hpp, evsel__hists(evsel), 0, 0,
++						fmt, len, print_fn, fmtype);
+ 		}
+ 	}
+ 
 -- 
 2.45.1.288.g0e0cd299f1-goog
 
