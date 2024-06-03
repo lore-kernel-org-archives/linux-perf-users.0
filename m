@@ -1,119 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A0B137C2E;
-	Mon,  3 Jun 2024 18:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D66B12DD9B;
+	Mon,  3 Jun 2024 21:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717439594; cv=none; b=T7zw0DSB8WkCLFdJD67dl+YfhbSBwieNLcl0s0Y1G5zsOcdGGzfvREQ/GKaIL7FBanGR4lYwLIclKVcvlj81JCYD5thax3v6IRM4zmu4GA9gjiS7pWmgeXWQSpFRIrwkxwjtFEHkKTk+O02fkEkdk49YWD51u38dP2MPIN1HC4g=
+	t=1717448956; cv=none; b=aq+kKELmj1kr9V0DV9BD4yrwKPv5KWzOQYQCk4A7CrVH8BTPwSH/Q1HTyZuUsBUQEa+Uwe4RsXW2xL67p3M1b/P/rLGqL3xBM8WkCh0l3JFZe+lNLCgGSO/LU/QgT1eHEwiphy9T2M6A/vFaKc2ucVfOQ/8AV8LQJwvQOjJsJ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717439594; c=relaxed/simple;
-	bh=jj98CjPyME4Voy2QNWkrK/fLGNfW8hYiYos9sHUioDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VaHQk0yCgziYBx/QTX0FkXVINr0xAe2TOvAibv/a0HnUIr8GS0TaFoN1S+19YdiarKQyE/YxYTgOCSfOXndat1NLW3BOas8sOdYTkYVULQvsw+NC7r1qP0iJehucwC5TB6gKelhkNJDmQMIbl8irbpC80cb5mU6BxrUFyJLso+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNr2KKPE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717448956; c=relaxed/simple;
+	bh=FYMKuCZBNDGCJKtAN5IjD+OzRu9w9AkloL6NPNOIgJA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=luxcCxi+fYBEvmvu/RBFk+xGAszf+/URfG9FWscW+NIr0JSLOfLHjFLdWpnqwoACXAxw/1FZ7sHWzdYdjAdctwO6iRg2av7Yx9xRG9wV7vREaFf8im+cYl46bsm7YreAkEgb7L0AuCtCjfrO+Tj0xrx2Q07qcepe5pMLhGpLUI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3QYqkXz; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNr2KKPE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA85C2BD10;
-	Mon,  3 Jun 2024 18:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717439594;
-	bh=jj98CjPyME4Voy2QNWkrK/fLGNfW8hYiYos9sHUioDc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pNr2KKPEQNBb/rj38zjXqkpqE3syPrUUNJlgXH3iN7pcww+ss2jTI4OwsRpTIxMwO
-	 mcsqEjXQezj6xsSIFTVAENtYDLC8D8rP9sCMDvLR2SgALjbvD+ROSKsiU+37AI1TQd
-	 /W7K9W+75HMBuUUL0qdJ1/GvFYb7p1ksoahjV1RQEpMiB6cap2uw6t1KFth1oC6yUZ
-	 N0XbyxXrDM83mI0OJyCv7mB0cBaXeX9SqxqC/plAvxi72Iy8K/UEOwB13i13yVyQB2
-	 Pxi8jT+XaqiHxSYtUNblXZeMw9dhEhZy1svXt/OxPsy34KFbmNr96Ts9fMDZjjfPEg
-	 rEODhx7z9Q7hA==
-Date: Mon, 3 Jun 2024 15:33:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	Will Deacon <will@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [RFC/PATCH 1/1] tools headers arm64: Sync arm64's cputype.h with the
- kernel sources
-Message-ID: <Zl4MYzhP0NB-Z1DW@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3QYqkXz"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-6c7bf648207so2011443a12.0;
+        Mon, 03 Jun 2024 14:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717448954; x=1718053754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8FuhmBlBhWpMWq8F+ZJQOzO498/a/MW4e39UXkeSyY=;
+        b=Z3QYqkXzy0lgIZvm1lZKQOq719pMXP9dtAd458tBGct+dkKB/oG2BfyvJ79HSn+g+7
+         Tuf/ttHoO4o6mLOdzph34DCqLhdGWW14d/0wcC4NDIylf6oMubqhl7df3RVo0CkPawjP
+         bj1w/LP5GihqoLya4XJ6Sz9T5IU/Ky83l5mYsb8NXd1Wr5F6WRnHngffmn12nbp5ICqb
+         ezsqpjIcyD+FWZAI8zHWx/7xlm8zZR9bg9mQqXpWVW1wpRWYSK6jJyQSgRrDQpAh+gRc
+         n9pYoRmuZzC3D888yghH47gcf/uYyEAZS5+EkCFJ9EOXLFhV2vKRhdAp1Ucd2JXWtq5T
+         133w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717448954; x=1718053754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S8FuhmBlBhWpMWq8F+ZJQOzO498/a/MW4e39UXkeSyY=;
+        b=kHzhWVtPQvbC5Dx+ZhOUfWQ7OJ5tzBFaCdjeLdespBhNxkAfuRFxRLJ2kn/qNuDQQo
+         EKLuyRG3R++7FiAA43+nW+32FTIKSV3/Ix575ffz/Il74WgDp0PKGr9XMYCh+ukyvGro
+         f9N5qzh0GGh0Wk+HXA51CF7CoJFtRs/FfIuhmXZVUDBfC8Fju8tQ70WRKsEUN95wGk++
+         fdQrBjxNM3o4SxjZwabfHxx6A7wW1bBw3OC3jO6DGJt0UtZdZWUf8SeNzTeRtq+JK6H+
+         +iV0jDKvnog70h/ZUbNQNrDoB5ZUU24mRE4DtOJPCPdr2IQ4Pp/mHBzbQk0Ebn5fI/rU
+         PDCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVD6QcrhqlksowvHeu2iFqqD2ELq//6LUVqSYe2luXvE0R/MNeHh4tagcp0en4ANlv6zysuTZnO/sc8stTcBSqxuh6hAhAbvY5vfa1aO3ESVGwwoOY+JvBoWHzBlDZw0LINO/iOjw==
+X-Gm-Message-State: AOJu0YxwPgtmhwd2J9g3sReFPp7DUNxKia3yMp6Dy56KsaJB1eMbnJy0
+	FrH6eS8Nyt19q9crjFMYYmc9+EXk60Q7kHJwpyMXQ+b6FWlDAmyfntqOuPx1raWqrU88Oeph7Nl
+	wZMEPO5/SHbVIY7NmTt4k2wCFkio=
+X-Google-Smtp-Source: AGHT+IFuhoFUoqSTzvg6xQH0NPagQC4ex8JcR5NVISkIk+0LbYt4WFhHfjLE9pCgQaE483MWlyAy+ZeHAd9EYSQudxs=
+X-Received: by 2002:a17:90b:a4d:b0:2c1:a77c:6673 with SMTP id
+ 98e67ed59e1d1-2c1dc5c0e68mr9908568a91.38.1717448954505; Mon, 03 Jun 2024
+ 14:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240522013845.1631305-1-andrii@kernel.org>
+In-Reply-To: <20240522013845.1631305-1-andrii@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 3 Jun 2024 14:09:02 -0700
+Message-ID: <CAEf4BzZLG43F_phpTFJB7CHZkxJt8es1R_vXT6vpVpyaZnz9gw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Fix user stack traces captured from uprobes
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, x86@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To get the changes in:
+On Tue, May 21, 2024 at 6:38=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
+ wrote:
+>
+> This patch set reports two issues with captured stack traces.
+>
+> First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+> addresses in captured stack trace. This issue happens when there are pend=
+ing
+> return probes, for which kernel hijacks some of the return addresses on u=
+ser
+> stacks. The code is matching those special uretprobe trampoline addresses=
+ with
+> the list of pending return probe instances and replaces them with actual
+> return addresses. This is the same fixup logic that fprobe/kretprobe has =
+for
+> kernel stack traces.
+>
+> Second issue, which patch #3 is fixing with the help of heuristic, is hav=
+ing
+> to do with capturing user stack traces in entry uprobes. At the very entr=
+ance
+> to user function, frame pointer in rbp register is not yet setup, so actu=
+al
+> caller return address is still pointed to by rsp. Patch is using a simple
+> heuristic, looking for `push %rbp` instruction, to fetch this extra direc=
+t
+> caller return address, before proceeding to unwind the stack using rbp.
+>
+> Patch #4 adds tests into BPF selftests, that validate that captured stack
+> traces at various points is what we expect to get. This patch, while bein=
+g BPF
+> selftests, is isolated from any other BPF selftests changes and can go in
+> through non-BPF tree without the risk of merge conflicts.
+>
+> Patches are based on latest linux-trace/probes/for-next.
+>
+> v1->v2:
+>   - fixed GCC aggressively inlining test_uretprobe_stack() function (BPF =
+CI);
+>   - fixed comments (Peter).
+>
+> Andrii Nakryiko (4):
+>   uprobes: rename get_trampoline_vaddr() and make it global
+>   perf,uprobes: fix user stack traces in the presence of pending
+>     uretprobes
+>   perf,x86: avoid missing caller address in stack traces captured in
+>     uprobe
+>   selftests/bpf: add test validating uprobe/uretprobe stack traces
+>
+>  arch/x86/events/core.c                        |  20 ++
+>  include/linux/uprobes.h                       |   3 +
+>  kernel/events/callchain.c                     |  43 +++-
+>  kernel/events/uprobes.c                       |  17 +-
+>  .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
+>  .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+>  6 files changed, 361 insertions(+), 4 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stac=
+k.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
+>
+> --
+> 2.43.0
+>
 
-  0ce85db6c2141b7f ("arm64: cputype: Add Neoverse-V3 definitions")
-  02a0a04676fa7796 ("arm64: cputype: Add Cortex-X4 definitions")
-  f4d9d9dcc70b96b5 ("arm64: Add Neoverse-V2 part")
-
-That makes this perf source code to be rebuilt:
-
-  CC      /tmp/build/perf-tools/util/arm-spe.o
-
-The changes in the above patch add MIDR_NEOVERSE_V[23] and
-MIDR_NEOVERSE_V1 is used in arm-spe.c, so probably we need to add those
-and perhaps MIDR_CORTEX_X4 to that array? Or maybe we need to leave this
-for later when this is all tested on those machines?
-
-  static const struct midr_range neoverse_spe[] = {
-          MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-          MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
-          MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
-          {},
-  };
-
-That addresses this perf build warning:
-
-  Warning: Kernel ABI header differences:
-    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Besar Wicaksono <bwicaksono@nvidia.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/lkml/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/arch/arm64/include/asm/cputype.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-index 52f076afeb96006c..7b32b99023a21d3a 100644
---- a/tools/arch/arm64/include/asm/cputype.h
-+++ b/tools/arch/arm64/include/asm/cputype.h
-@@ -86,6 +86,9 @@
- #define ARM_CPU_PART_CORTEX_X2		0xD48
- #define ARM_CPU_PART_NEOVERSE_N2	0xD49
- #define ARM_CPU_PART_CORTEX_A78C	0xD4B
-+#define ARM_CPU_PART_NEOVERSE_V2	0xD4F
-+#define ARM_CPU_PART_CORTEX_X4		0xD82
-+#define ARM_CPU_PART_NEOVERSE_V3	0xD84
- 
- #define APM_CPU_PART_XGENE		0x000
- #define APM_CPU_VAR_POTENZA		0x00
-@@ -159,6 +162,9 @@
- #define MIDR_CORTEX_X2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_X2)
- #define MIDR_NEOVERSE_N2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_N2)
- #define MIDR_CORTEX_A78C	MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A78C)
-+#define MIDR_NEOVERSE_V2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_V2)
-+#define MIDR_CORTEX_X4 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_X4)
-+#define MIDR_NEOVERSE_V3 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_V3)
- #define MIDR_THUNDERX	MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX)
- #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
- #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
--- 
-2.44.0
-
+Friendly ping. This is a real issue in practice that our production
+users are eager to be fixed, please help to get it upstream. Thanks!
