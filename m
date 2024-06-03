@@ -1,28 +1,29 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5632282D86;
-	Mon,  3 Jun 2024 09:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0D784039;
+	Mon,  3 Jun 2024 09:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407226; cv=none; b=Kl22NDWBopGYRobKNYO3A5VlgQlUZfH/95JWgpkSilluJ7vkWouwLBHK1+oSuoDX3vtqIZl1kFDh3i0MjP8CoEyC5yywL3IPpWhn36MGtIeaIPjIoKJ0+l0PhYXX+BsgqNBs7iRjgAcQ1zfyvBFS9Tq3N8dUFXKHLed0IPbJAbM=
+	t=1717407226; cv=none; b=S8q9jfCWr8F7028UCgCT3/AbWXgN+PMFaJSDVlAnfbXLAAiYQh/Xrzsa2UcDtmj+ATtZK8qURa4i4NPBN/tc/rhQJ5T1mqNVIM4nIN3KWI2Kry+Y3HfAsacTNhe1DSAtYXCMdGKE79i73XjQHQq6QofaxRDx2Zo2nbfDWaSyYgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717407226; c=relaxed/simple;
-	bh=irUYFkAM4ysrKF+H1+xbc54MGs1P7MFJrAkGBeKcA2s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cZKNNN+zXCEJUKJWyTeITjb01SEoza8H5a5V6lf/A/Ud3pyVMUL5MHIZ6zYSeBeF1MkpGdkfVzSJvUPzUhZolBIbTR8SigMO0Kw+RtW2UQuG5ymUnjVJZHgsv4W7g4ew+y/qKC83yz4Zyw9azJnV9QQ4sHOs4d/Bl6Ui2c7xfwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	bh=ElFxRXFnLreP2B/j6C2YdLwoMXQn2kE494QqHuqzJBY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hgU0JQgdh77ZJTV8/JYLQhLKH/OPcUbiIkj0PxdtrTUFAnl+G3ISJJQFwzjx1d2yKBeL+WHjn45d2cWkS5F78uoVfhkdIcueXZc/DdIgfegLJ+R1tNLJmuIanniY9rzfSJuyiCM2ucYwV0XrC6W2e8ptqdyS8+dqFTdyWR7XxDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Vt7jQ2TGNzwRJy;
-	Mon,  3 Jun 2024 17:29:46 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Vt7kB55pNz1yspx;
+	Mon,  3 Jun 2024 17:30:26 +0800 (CST)
 Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4866118006E;
-	Mon,  3 Jun 2024 17:33:40 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6AA4F180063;
+	Mon,  3 Jun 2024 17:33:41 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 3 Jun 2024 17:33:39 +0800
+ 15.2.1258.34; Mon, 3 Jun 2024 17:33:40 +0800
 From: Yicong Yang <yangyicong@huawei.com>
 To: <will@kernel.org>, <mark.rutland@arm.com>, <acme@kernel.org>,
 	<namhyung@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
@@ -32,10 +33,12 @@ CC: <peterz@infradead.org>, <mingo@redhat.com>,
 	<irogers@google.com>, <james.clark@arm.com>, <dongli.zhang@oracle.com>,
 	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
 	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH 0/3] Perf avoid opening events on offline CPUs
-Date: Mon, 3 Jun 2024 17:28:09 +0800
-Message-ID: <20240603092812.46616-1-yangyicong@huawei.com>
+Subject: [PATCH 2/3] perf: arm_pmu: Only show online CPUs in device's "cpus" attribute
+Date: Mon, 3 Jun 2024 17:28:11 +0800
+Message-ID: <20240603092812.46616-3-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20240603092812.46616-1-yangyicong@huawei.com>
+References: <20240603092812.46616-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,39 +52,65 @@ X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
 
 From: Yicong Yang <yangyicong@hisilicon.com>
 
-If user doesn't specify the CPUs, perf will try to open events on CPUs
-of the PMU which is initialized from the PMU's "cpumask" or "cpus" sysfs
-attributes if provided. But we doesn't check whether the CPUs provided
-by the PMU are all online. So we may open events on offline CPUs if PMU
-driver provide offline CPUs and then we'll be rejected by the kernel:
-
-[root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
-[root@localhost yang]# ./perf_static stat -e armv8_pmuv3_0/cycles/ --timeout 100
+When there're CPUs offline after system booting, perf will failed:
+[root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
 Error:
 The sys_perf_event_open() syscall returned with 19 (No such device) for event (cpu-clock).
 /bin/dmesg | grep -i perf may provide additional information.
 
-This patchset tries to avoid this case by:
-- Double check the PMU's cpumask in the perf tool and only include online CPUs
-- Trying to make the PMU drivers only export online CPUs in its "cpus" or "cpumask"
-  attributes
+This is due to PMU's "cpus" is not updated and still contains offline
+CPUs and perf will try to open perf event on the offlined CPUs.
 
-Previously discussion can be found at [1]. Will suggested to do it in userspace.
-I think it makes sense to do a double check in the perf tool in case the driver
-doesn't do this. So PATCH 1/3 is added in this version.
+Make "cpus" attribute only shows online CPUs and introduced a new
+"supported_cpus" where users can get the range of the CPUs this
+PMU supported monitoring.
 
-[1] https://lore.kernel.org/linux-arm-kernel/20240410095833.63934-1-yangyicong@huawei.com/
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/perf/arm_pmu.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-Yicong Yang (3):
-  perf pmu: Limit PMU cpumask to online CPUs
-  perf: arm_pmu: Only show online CPUs in device's "cpus" attribute
-  perf: arm_spe: Only show online CPUs in device's "cpumask" attribute
-
- drivers/perf/arm_pmu.c     | 24 +++++++++++++++++++++++-
- drivers/perf/arm_spe_pmu.c | 22 +++++++++++++++++++++-
- tools/perf/util/pmu.c      | 13 +++++++++++--
- 3 files changed, 55 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 8458fe2cebb4..acbb0e1d0414 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -558,13 +558,35 @@ static ssize_t cpus_show(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+ 	struct arm_pmu *armpmu = to_arm_pmu(dev_get_drvdata(dev));
+-	return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++	cpumask_var_t mask;
++	ssize_t n;
++
++	/* If allocation failed then show the supported_cpus */
++	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
++		return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++
++	cpumask_and(mask, &armpmu->supported_cpus, cpu_online_mask);
++	n = cpumap_print_to_pagebuf(true, buf, mask);
++	free_cpumask_var(mask);
++
++	return n;
+ }
+ 
+ static DEVICE_ATTR_RO(cpus);
+ 
++static ssize_t supported_cpus_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct arm_pmu *armpmu = to_arm_pmu(dev_get_drvdata(dev));
++
++	return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++}
++
++static DEVICE_ATTR_RO(supported_cpus);
++
+ static struct attribute *armpmu_common_attrs[] = {
+ 	&dev_attr_cpus.attr,
++	&dev_attr_supported_cpus.attr,
+ 	NULL,
+ };
+ 
 -- 
 2.24.0
 
