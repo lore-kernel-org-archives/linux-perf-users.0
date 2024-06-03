@@ -1,209 +1,294 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DAC4A0A
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Jun 2024 16:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC64D1369A0;
+	Mon,  3 Jun 2024 16:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717433549; cv=none; b=emD3JsHSZDCT3scQ7Q2DnfCU9SFt/I9rNplj5KVrlkF3rdBTl2HkGCrZ8Q5MChF4lSAqm9S1OA1F2l+8/Ftif052VmSw0Mqal1Mx4d0m9Gop1dATThCwAQOJdUwhvuHcFUhPBoB6gyRo509/qFh+me4TlDzJHCeZ3JpFIkPMJl0=
+	t=1717433902; cv=none; b=Wxzlcu+06p6D28xWWVvW0fTxHamPyFNVSizGzYhikgr4652X2ZgJUnUPgID2r1o/8LFFxYligXBg6sY7UkOv29nRdtFjbLF+AGVi82TJbAH1PBxjoS2P7/4Og8z0dZJ+2t4kJGQNSTKF6fOVnNmfT7uftsaBUcuLtl3wV3WOPKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717433549; c=relaxed/simple;
-	bh=7bbMMx35Lkzpu2sIpK2fSOilM52beTXlFemB8pNEi7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ddesJw4fgncw0Nc042xLNYZtOgZKDOebGAdVQBqrpvnfKPesIveX2X48P7FgftHXnsLTG6uX/ALxxUT43MZMBntZehqiZFOpIxBRs+1gSOFcGBnq3i9o4Nvzdds6EtVbIpp+8Gmbm76PHU6pJQVFJCR71MaFNdljgXMSuNsS1DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nm7PsrVv; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717433902; c=relaxed/simple;
+	bh=ojs+BBl2wRyth1o2ZiKYXRCu771Apw2r+/u830cNuhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dg1DuPOHK6m6rjcu7yi7iNTCYMa+wJmoGUbji2MHejWaesJRKRd+8EGpKvLdZkChgw/0W3FnU2SoO30Daj6RLjA+ih/CWzzlhtnNOw2BILu8LztI1VkT95g8VWWL7hRkHbsWDA83uZ3n6E+ayKkeWke7eYOXOQc+WArhhK8bq1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqsiot7F; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nm7PsrVv"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3748a185da1so2805ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Jun 2024 09:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717433547; x=1718038347; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rJcLm5ZpSkzvbycg4N/ncJTb6gnjJ0KZfkcYCAHjp+4=;
-        b=nm7PsrVvgvl7nuW3kPwH7oCYnVVVcRKZ4O4l5ob8DM2HtaQ1Tq2LJ7765kzVF8t0CN
-         ZYaHm1LU+IOL9AcrAOMgRi8Yy2KyzWFD8SuN2voGKSqJkodKV6I0dSNn575DJuJTgOqm
-         YG1yS2FlEkNVe5ZBwYprpMNYBA4H8hQnDskZo5CSKstTy3TZqCL1AGN4jQAMvBBRnxwg
-         DSoBN0rs/RJVrvHSe6xlHRmtzg/QkZdDQDwmeSx0KmndhvSPnGsU1KmVbZsfcJYEGpmT
-         5dRTWYr9VEanCH3bYWZq27aOkPxgSpYLuQzeO2dDOwhCh3QQd/VrRIAF9JRPLgMI5jH9
-         lUPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717433547; x=1718038347;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rJcLm5ZpSkzvbycg4N/ncJTb6gnjJ0KZfkcYCAHjp+4=;
-        b=SZlryWnHQZib7TVcy8Dn9R+7uKvo/fLZ0xJBeR0jRrGsyL07wT/n2RrPfruerVss45
-         EkdrxWpIGODtZknEtfVCmsXT0YHY+Tcj1K9E1cElPkvv9KAzKdkDFCCUURyutR+QSbOU
-         x6N1/NLhb/OuMzI1H1dsrb3O6kDkYvQ8fowfQfmxzixhcjLRNn+ZoAZMed+TIXyJOBaW
-         RrvpIp38pyxGEZ//LIEsNdHWx1ejmbGMv1wJoVZfAKTh4x1TOGdDEEHtkVODHEGVo6G+
-         kHmmXG2lBCmv3a61E76MEPEOQj5oKOnYkWwaRcA0Coji2KM1fnNZ+ApnCt+nlgXoj2eS
-         6xgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRatq78s1Yl8ibpd+Synk3WrJ2urwbx4FhUb/B1CEEKR6yH/r3nsTvezszDFk7oE6yRzcYJ8xWrOtzDeuOTKAdVs64M/ZiYVQoXZOXM8Du9g==
-X-Gm-Message-State: AOJu0Yy4giQiZqHA15zQYePZOA5W6uqbHk1Mm62ysObbtKIOmKH7qhdZ
-	FomBC9LDtA1HGbaeB71u3f4y6Ur8kGlfoE0T+ELRVA/XKy2fqYtuYeUsbyNKBFQOsj7YMxn3A8d
-	h9QD+PKNJpovilMLOT6oSy0HLqFCog7Lt9z8m
-X-Google-Smtp-Source: AGHT+IEsp6V45TBw2JP7tZOMI7fzyinIOWiPjdrnPxAAGdXewgE+WOZ4b0+9mdZyeN9H9AIThrhCqlA1vYPrFURxTSM=
-X-Received: by 2002:a92:c00c:0:b0:373:8081:23d0 with SMTP id
- e9e14a558f8ab-37490ecd770mr4635645ab.18.1717433546712; Mon, 03 Jun 2024
- 09:52:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqsiot7F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717433901; x=1748969901;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ojs+BBl2wRyth1o2ZiKYXRCu771Apw2r+/u830cNuhg=;
+  b=bqsiot7FH5IcIeorC6+gGNHyAmyffDCbfJUGvmFM0uBknqqc7JKgqgdQ
+   1vwWIyGb8FiY6GHAk5TJ+M9BPhmYOMUVVjjq5jK2lHdLQ2VyB1LzJYaxJ
+   NS4Tu9oo+Yl2LssEJuI13rqvIhmh9sTkxyY3xQiZSlsM0Ni+sOJDfH6hh
+   YLhk6PPplNSYgd0UAnPGe9ZmxUMnDnM2oAUgbPQe09xE1E4MtDKwbvJpP
+   i54SB72TyU1seOfXLwe52HexMQighhRmBg2HSKVrWT8Qo3BmPqloHPA0g
+   eiwyNrPwcoiatrAafUOPCDdZymeYQHR+OdPsfA9Mbdo9PJ9n256x33z/Y
+   Q==;
+X-CSE-ConnectionGUID: keV536WxRyuwa6TkNmzOWQ==
+X-CSE-MsgGUID: rvSv6e7/RUi1/21vMLvJwA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13748171"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="13748171"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 09:58:19 -0700
+X-CSE-ConnectionGUID: smcFJOSgQqWWsoHaoyB43g==
+X-CSE-MsgGUID: kVdT+ElDSQ2YskJCGdLL+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37005745"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.248.18])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 09:58:15 -0700
+Message-ID: <c383b404-727c-4564-a66e-0906348891b3@intel.com>
+Date: Mon, 3 Jun 2024 19:58:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603092812.46616-1-yangyicong@huawei.com> <20240603092812.46616-2-yangyicong@huawei.com>
-In-Reply-To: <20240603092812.46616-2-yangyicong@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Jun 2024 09:52:15 -0700
-Message-ID: <CAP-5=fXNumMLL=_+qXdnQPqgLSwo7Z1BFmPww63NkX5EcDRDsQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf pmu: Limit PMU cpumask to online CPUs
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: will@kernel.org, mark.rutland@arm.com, acme@kernel.org, 
-	namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com, 
-	yangyicong@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
+ powerpc
+To: Ian Rogers <irogers@google.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
+Cc: acme@kernel.org, jolsa@kernel.org, segher@kernel.crashing.org,
+ christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+ disgoel@linux.vnet.ibm.com
+References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
+ <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
-wrote:
->
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> We'll initialize the PMU's cpumask from "cpumask" or "cpus" sysfs
-> attributes if provided by the driver without checking the CPUs
-> are online or not. In such case that CPUs provided by the driver
-> contains the offline CPUs, we'll try to open event on the offline
-> CPUs and then rejected by the kernel:
->
-> [root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
-> [root@localhost yang]# ./perf_static stat -e armv8_pmuv3_0/cycles/ --time=
-out 100
-> Error:
-> The sys_perf_event_open() syscall returned with 19 (No such device) for e=
-vent (cpu-clock).
-> /bin/dmesg | grep -i perf may provide additional information.
->
-> So it's better to do a double check in the userspace and only include
-> the online CPUs from "cpumask" or "cpus" to avoid opening events on
-> offline CPUs.
+On 3/06/24 19:30, Ian Rogers wrote:
+> On Fri, May 31, 2024 at 11:10 PM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>
+>> Now perf uses the capstone library to disassemble the instructions in
+>> x86. capstone is used (if available) for perf annotate to speed up.
+>> Currently it only supports x86 architecture. Patch includes changes to
+>> enable this in powerpc. For now, only for data type sort keys, this
+>> method is used and only binary code (raw instruction) is read. This is
+>> because powerpc approach to understand instructions and reg fields uses
+>> raw instruction. The "cs_disasm" is currently not enabled. While
+>> attempting to do cs_disasm, observation is that some of the instructions
+>> were not identified (ex: extswsli, maddld) and it had to fallback to use
+>> objdump. Hence enabling "cs_disasm" is added in comment section as a
+>> TODO for powerpc.
+>>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>>  tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 146 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+>> index d8b357055302..915508d2e197 100644
+>> --- a/tools/perf/util/disasm.c
+>> +++ b/tools/perf/util/disasm.c
+>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
+>>  {
+>>         struct annotation_options *opt = args->options;
+>>         cs_mode mode = is_64bit ? CS_MODE_64 : CS_MODE_32;
+>> +       int ret;
+>>
+>>         /* TODO: support more architectures */
+>> -       if (!arch__is(args->arch, "x86"))
+>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "powerpc")))
+>>                 return -1;
+>>
+>> -       if (cs_open(CS_ARCH_X86, mode, handle) != CS_ERR_OK)
+>> +       if (arch__is(args->arch, "x86"))
+>> +               ret = cs_open(CS_ARCH_X86, mode, handle);
+>> +       else
+>> +               ret = cs_open(CS_ARCH_PPC, mode, handle);
+>> +
+>> +       if (ret != CS_ERR_OK)
+>>                 return -1;
+> 
+> There looks to be a pretty/more robust capstone_init function in
+> print_insn.c, should we factor this code out and recycle:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print_insn.c?h=perf-tools-next#n40
 
-I see where you are coming from with this but I think it is wrong. The
-cpus for an uncore PMU are a hint of the CPU to open on rather than
-the set of valid CPUs. For example:
-```
-$ cat /sys/devices/uncore_imc_free_running_0/cpumask
-0
-$ perf stat -vv -e uncore_imc_free_running_0/data_read/ -C 1 -a sleep 0.1
-Using CPUID GenuineIntel-6-8D-1
-Attempt to add: uncore_imc_free_running_0/data_read/
-..after resolving event: uncore_imc_free_running_0/event=3D0xff,umask=3D0x2=
-0/
-Control descriptor is not initialized
-------------------------------------------------------------
-perf_event_attr:
-  type                             24 (uncore_imc_free_running_0)
-  size                             136
-  config                           0x20ff (data_read)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8
-sys_perf_event_open failed, error -22
-switching off cloexec flag
-------------------------------------------------------------
-perf_event_attr:
-  type                             24 (uncore_imc_free_running_0)
-  size                             136
-  config                           0x20ff (data_read)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0
-sys_perf_event_open failed, error -22
-switching off exclude_guest, exclude_host
-------------------------------------------------------------
-perf_event_attr:
-  type                             24 (uncore_imc_free_running_0)
-  size                             136
-  config                           0x20ff (data_read)
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0 =3D 3
-uncore_imc_free_running_0/data_read/: 1: 4005984 102338957 102338957
-uncore_imc_free_running_0/data_read/: 4005984 102338957 102338957
+On a slightly related note, there is a compile error
+been around for a while in util/disasm.c on Ubuntu 22.04
 
- Performance counter stats for 'system wide':
+In file included from /usr/include/capstone/capstone.h:279,
+                 from util/disasm.c:1354:
+/usr/include/capstone/bpf.h:94:14: error: ‘bpf_insn’ defined as wrong
+kind of tag
+   94 | typedef enum bpf_insn {
+      |              ^~~~~~~~
 
-            244.51 MiB  uncore_imc_free_running_0/data_read/
+> 
+> Thanks,
+> Ian
+> 
+>>         if (!opt->disassembler_style ||
+>> @@ -1635,6 +1641,139 @@ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+>>         }
+>>  }
+>>
+>> +static int symbol__disassemble_capstone_powerpc(char *filename, struct symbol *sym,
+>> +                                       struct annotate_args *args)
+>> +{
+>> +       struct annotation *notes = symbol__annotation(sym);
+>> +       struct map *map = args->ms.map;
+>> +       struct dso *dso = map__dso(map);
+>> +       struct nscookie nsc;
+>> +       u64 start = map__rip_2objdump(map, sym->start);
+>> +       u64 end = map__rip_2objdump(map, sym->end);
+>> +       u64 len = end - start;
+>> +       u64 offset;
+>> +       int i, fd, count;
+>> +       bool is_64bit = false;
+>> +       bool needs_cs_close = false;
+>> +       u8 *buf = NULL;
+>> +       struct find_file_offset_data data = {
+>> +               .ip = start,
+>> +       };
+>> +       csh handle;
+>> +       char disasm_buf[512];
+>> +       struct disasm_line *dl;
+>> +       u32 *line;
+>> +
+>> +       if (args->options->objdump_path)
+>> +               return -1;
+>> +
+>> +       nsinfo__mountns_enter(dso->nsinfo, &nsc);
+>> +       fd = open(filename, O_RDONLY);
+>> +       nsinfo__mountns_exit(&nsc);
+>> +       if (fd < 0)
+>> +               return -1;
+>> +
+>> +       if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
+>> +                           &is_64bit) == 0)
+>> +               goto err;
+>> +
+>> +       if (open_capstone_handle(args, is_64bit, &handle) < 0)
+>> +               goto err;
+>> +
+>> +       needs_cs_close = true;
+>> +
+>> +       buf = malloc(len);
+>> +       if (buf == NULL)
+>> +               goto err;
+>> +
+>> +       count = pread(fd, buf, len, data.offset);
+>> +       close(fd);
+>> +       fd = -1;
+>> +
+>> +       if ((u64)count != len)
+>> +               goto err;
+>> +
+>> +       line = (u32 *)buf;
+>> +
+>> +       /* add the function address and name */
+>> +       scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+>> +                 start, sym->name);
+>> +
+>> +       args->offset = -1;
+>> +       args->line = disasm_buf;
+>> +       args->line_nr = 0;
+>> +       args->fileloc = NULL;
+>> +       args->ms.sym = sym;
+>> +
+>> +       dl = disasm_line__new(args);
+>> +       if (dl == NULL)
+>> +               goto err;
+>> +
+>> +       annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +       /*
+>> +        * TODO: enable disassm for powerpc
+>> +        * count = cs_disasm(handle, buf, len, start, len, &insn);
+>> +        *
+>> +        * For now, only binary code is saved in disassembled line
+>> +        * to be used in "type" and "typeoff" sort keys. Each raw code
+>> +        * is 32 bit instruction. So use "len/4" to get the number of
+>> +        * entries.
+>> +        */
+>> +       count = len/4;
+>> +
+>> +       for (i = 0, offset = 0; i < count; i++) {
+>> +               args->offset = offset;
+>> +               sprintf(args->line, "%x", line[i]);
+>> +
+>> +               dl = disasm_line__new(args);
+>> +               if (dl == NULL)
+>> +                       goto err;
+>> +
+>> +               annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +               offset += 4;
+>> +       }
+>> +
+>> +       /* It failed in the middle */
+>> +       if (offset != len) {
+>> +               struct list_head *list = &notes->src->source;
+>> +
+>> +               /* Discard all lines and fallback to objdump */
+>> +               while (!list_empty(list)) {
+>> +                       dl = list_first_entry(list, struct disasm_line, al.node);
+>> +
+>> +                       list_del_init(&dl->al.node);
+>> +                       disasm_line__free(dl);
+>> +               }
+>> +               count = -1;
+>> +       }
+>> +
+>> +out:
+>> +       if (needs_cs_close)
+>> +               cs_close(&handle);
+>> +       free(buf);
+>> +       return count < 0 ? count : 0;
+>> +
+>> +err:
+>> +       if (fd >= 0)
+>> +               close(fd);
+>> +       if (needs_cs_close) {
+>> +               struct disasm_line *tmp;
+>> +
+>> +               /*
+>> +                * It probably failed in the middle of the above loop.
+>> +                * Release any resources it might add.
+>> +                */
+>> +               list_for_each_entry_safe(dl, tmp, &notes->src->source, al.node) {
+>> +                       list_del(&dl->al.node);
+>> +                       free(dl);
+>> +               }
+>> +       }
+>> +       count = -1;
+>> +       goto out;
+>> +}
+>> +
+>>  static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+>>                                         struct annotate_args *args)
+>>  {
+>> @@ -1987,6 +2126,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+>>                         err = symbol__disassemble_dso(symfs_filename, sym, args);
+>>                         if (err == 0)
+>>                                 goto out_remove_tmp;
+>> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+>> +                       err = symbol__disassemble_capstone_powerpc(symfs_filename, sym, args);
+>> +                       if (err == 0)
+>> +                               goto out_remove_tmp;
+>> +#endif
+>>                 }
+>>         }
+>>
+>> --
+>> 2.43.0
+>>
 
-       0.102320376 seconds time elapsed
-```
-So the CPU mask of the PMU says to open on CPU 0, but on the command
-line when I passed "-C 1" it opened it on CPU 1. If the cpumask file
-contained an offline CPU then this change would make it so the CPU map
-in the tool were empty, however, a different CPU may be programmable
-and online.
-
-Fwiw, the tool will determine whether the mask is for all valid or a
-hint by using the notion of a PMU being "core" or not. That notion
-considers whether the mask was loading from a "cpumask" or "cpus"
-file:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n810
-
-Thanks,
-Ian
-
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  tools/perf/util/pmu.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 888ce9912275..51e8d10ee28b 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -771,8 +771,17 @@ static struct perf_cpu_map *pmu_cpumask(int dirfd, c=
-onst char *name, bool is_cor
->                         continue;
->                 cpus =3D perf_cpu_map__read(file);
->                 fclose(file);
-> -               if (cpus)
-> -                       return cpus;
-> +               if (cpus) {
-> +                       struct perf_cpu_map *intersect __maybe_unused;
-> +
-> +                       if (perf_cpu_map__is_subset(cpu_map__online(), cp=
-us))
-> +                               return cpus;
-> +
-> +                       intersect =3D perf_cpu_map__intersect(cpus, cpu_m=
-ap__online());
-> +                       perf_cpu_map__put(cpus);
-> +                       if (intersect)
-> +                               return intersect;
-> +               }
->         }
->
->         /* Nothing found, for core PMUs assume this means all CPUs. */
-> --
-> 2.24.0
->
