@@ -1,124 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1044A11;
-	Tue,  4 Jun 2024 18:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EFB1482E7;
+	Tue,  4 Jun 2024 19:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717527356; cv=none; b=lGlT25ZHHdMKfcuhvMDbp3BdyG+xluJ35UsqAUIo0yUzurtBo/k9SUQ19s2gNkX5GZEGQdlKqWivkxi5Vw8Aimae9FCDcVlfARaFSwm4xJlNDUfHAcc+oTXYKRv1yFK42Ki1P/zVBcibU3hwj4SufOXXe/Fb5Ke0vq0Q8HK9NWo=
+	t=1717527735; cv=none; b=RVGix98LnrgOfr4us5Q/VhN2zIwv5VNrrodxQLI8INWrMYyLbW5E4ojbuiZB+a1108FrcG492HC6zbnOf+gv/J+N8mJGlPeCL4Ps3F5M2Z1m+xKiztD0UhvuAP/vY5V68HpFxhFue1PHkyC7tS7CblKmBKUe2SbdGNXxmuNWDxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717527356; c=relaxed/simple;
-	bh=1TWqoFGoKTn0dtjSPtBYckJ6bli5M+9XeQksJwerQ64=;
+	s=arc-20240116; t=1717527735; c=relaxed/simple;
+	bh=RkN5Y3HmGlKLDqvR91ATdvyLyqquL2+fSb4Vj+4qCXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQKIbqACerCgVKUKr+mm6mO1ZSOTVSBAnX3s3gvSSkp/AqKxrVVLiroHkBGmRDTCj1xFd3QiiXXYrf1BAp5xhJSqVsJUlIS0d5BFE6TIPXvLxSypRoe1AyqQrSk194592132R9R2oNuWCYISAsculjvundhDOp1KabgITBWMwx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62C75FEC;
-	Tue,  4 Jun 2024 11:56:17 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF87E3F64C;
-	Tue,  4 Jun 2024 11:55:50 -0700 (PDT)
-Date: Tue, 4 Jun 2024 19:55:42 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	Will Deacon <will@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=McWI99pYjd1UsuEDwouSuNjqHmLiwr3pZdjYeb6ngVVDqQC3BnMe1SOnjQpJELQkno7bK/auUgaM8aAvRwjAvVdzzG9ZvEFPllXgdY7EbvJx9S2iwbE2HdJ681A0BwZfBvKRCYG3Dwsu6sS9KcxBhpeKq4rLacV8bmbeZNHVHTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrTiIcOC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrTiIcOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90958C2BBFC;
+	Tue,  4 Jun 2024 19:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717527735;
+	bh=RkN5Y3HmGlKLDqvR91ATdvyLyqquL2+fSb4Vj+4qCXg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JrTiIcOCw5JPVRMul/mUQjyu+td7oOtApNUepXHrPNp47lp8/lbdZHAwUOj1JamyH
+	 IG+rhfcbtIb5Jn/I7SQEBvUbcs1WhAORSiQ9FqiANc0cbnNKy2AvXwl3QELlb39ute
+	 Qswr2DlBIct3ErRXEPtYM7cEKC/R0bbogwbPNPDfyRBCkgwo5lN6v+YHD8KV9K0B0Y
+	 GYmtX0mGXSrJDsOZgRnbJiALdfQQKRo8miov9b7X8BbrTd8Qy26Q92HfIJCzVJjLoT
+	 ivCBjOZDmAEQa/w5baIJkwwl6WbpgZJ0rZlmYurSNl7mCX9kcMaCVjs+WQLpcaZeVb
+	 zTQUbnXDScCaw==
+Date: Tue, 4 Jun 2024 16:02:08 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org,
 	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, James Clark <james.clark@arm.com>
-Subject: Re: [RFC/PATCH 1/1] tools headers arm64: Sync arm64's cputype.h with
- the kernel sources
-Message-ID: <Zl9jLtiFagBcH7oH@J2N7QTR9R3>
-References: <Zl4MYzhP0NB-Z1DW@x1>
- <Zl7aOk2h4_73JmUu@J2N7QTR9R3>
- <a1990b2e-2c10-42b6-93e9-fef324cb91b2@arm.com>
+	Arnaldo Carvalho de Melo <acme@kenel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles +
+ raw_syscalls
+Message-ID: <Zl9ksOlHJHnKM70p@x1>
+References: <23879991.0LEYPuXRzz@milian-workstation>
+ <Zl8bhWfHSXxs35r2@x1>
+ <Zl8g1LxRCYgTSxhy@x1>
+ <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a1990b2e-2c10-42b6-93e9-fef324cb91b2@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
 
-On Tue, Jun 04, 2024 at 06:14:22PM +0100, Leo Yan wrote:
-> On 6/4/24 10:11, Mark Rutland wrote:
-> > Hi Arnaldo,
-> > 
-> > On Mon, Jun 03, 2024 at 03:33:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > To get the changes in:
-> > > 
-> > >    0ce85db6c2141b7f ("arm64: cputype: Add Neoverse-V3 definitions")
-> > >    02a0a04676fa7796 ("arm64: cputype: Add Cortex-X4 definitions")
-> > >    f4d9d9dcc70b96b5 ("arm64: Add Neoverse-V2 part")
-> > 
-> > As a heads-up, there are likely to be a couple more updates here
-> > shortly:
-> > 
-> >    https://lore.kernel.org/linux-arm-kernel/20240603111812.1514101-1-mark.rutland@arm.com/
-> > 
-> > > That makes this perf source code to be rebuilt:
-> > > 
-> > >    CC      /tmp/build/perf-tools/util/arm-spe.o
-> > > 
-> > > The changes in the above patch add MIDR_NEOVERSE_V[23] and
-> > > MIDR_NEOVERSE_V1 is used in arm-spe.c, so probably we need to add those
-> > > and perhaps MIDR_CORTEX_X4 to that array? Or maybe we need to leave this
-> > > for later when this is all tested on those machines?
-> > 
-> > Hmm... looking at where that was added this is somewhat misnamed, this
-> > is really saying that these cores use the same IMPLEMENTATION DEFINED
-> > encoding of the source field. That's not really a property of Neoverse
-> > specifically, and I'm not sure what Arm's policy is here going forwards.
-> > 
-> > We should probably rename that to something like
-> > common_data_source_encoding, with a big comment about exactly what it
-> > implies.
-> 
-> Agreed.
-> 
-> I went through Neoverse-V2/V3/V4, Cortex-X4, Cortex-X4, Cortex-A720, and
-> Cortex-X925, all of them have the same definition for data source packet
-> format. It makes sense to change name to Neoverse specific to a more general
-> name.
+On Tue, Jun 04, 2024 at 11:48:09AM -0700, Ian Rogers wrote:
+> On Tue, Jun 4, 2024 at 7:12 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Can you please try with the attached and perhaps provide your Tested-by?
 
-Cool.
+> > From ab355e2c6b4cf641a9fff7af38059cf69ac712d5 Mon Sep 17 00:00:00 2001
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date: Tue, 4 Jun 2024 11:00:22 -0300
+> > Subject: [PATCH 1/1] Revert "perf record: Reduce memory for recording
+> >  PERF_RECORD_LOST_SAMPLES event"
 
-> > I would not touch this for now -- someone would have to go audit the
-> > TRMs to check that those other cores have the same encoding, and I think
-> > it'd be better to do that as a follow-up.
-> 
-> So far, it's fine to not change the file util/arm-spe.c.
-> 
-> Now more and more Arm CPUs support the data source in SPE and share the same
-> data source format. It's not scalable for us to adding every CPU variant
-> into the file util/arm-spe.c.
-> 
-> I would like to expose the PMSIDR_EL1.LDS bit (Data source indicator for
-> sampled load instructions) via the 'cap' folder, and then we can save this
-> info into the perf meta data during record phase.
+> > This reverts commit 7d1405c71df21f6c394b8a885aa8a133f749fa22.
+ 
+> I think we should try to fight back reverts when possible. Reverts are
+> removing something somebody poured time and attention into. When a
 
-I'd be happy to expose fields from PMSIDR_EL1.
+While in the development phase, yeah, but when we find a regression and
+the revert makes it go away, that is the way to go.
 
-> In the perf report, we can parse the meta data and if the
-> PMSIDR_EL1.LDS bit is set, the tool will parse the data source packet
-> based on the common format.
+The person who poured time on the development gets notified and can
+decide if/when to try again.
 
-I don't believe that's right.
+Millian had to pour time to figure out why something stopped working,
+was kind enough to provide the output from multiple tools to help in
+fixing the problem and I had to do the bisect to figure out when the
+problem happened and to check if reverting it we would have the tool
+working again.
 
-PMSIDR_EL1.LDS indicates that the loaded data source field is
-implemented, but even when it is implemented, the format is
-IMPLEMENTATION DEFINED.
+If we try to fix this for v6.10 we may end up adding yet another bug, so
+the safe thing to do at this point is to do the revert.
 
-Today, Arm Ltd implementations happen to share a format, but that isn't
-implied by PMSIDR_EL1.LDS, and there's no guarantee that future CPUs
-will all use the same format.
+We can try improving this once again for v6.11.
 
-For the moment we'll have to keep adding to this list.
+> regression has occurred then I think we should add the regression case
+> as a test.
 
-Mark.
+Sure, I thought about that as well, will try and have one shell test
+with that, referring to this case, for v6.11.
+
+- Arnaldo
