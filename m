@@ -1,126 +1,276 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1F97E2;
-	Tue,  4 Jun 2024 17:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DC318028
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 18:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717521389; cv=none; b=fKTITyOShOewvPZcom6zceVZT3u14zzfkC9Hm5U1/tbEzR8gY+NmK4uuHBxG7rZqm4NxK/7AhCx69KaWL4F6rII009QpCJz/ucR5DbAPPq7V2PDZfL+gZ6//jAq+sID3tdc1TjAv6Fnv1VXrYq3v3PakC2wVtSZj/lbBbfOMttA=
+	t=1717526903; cv=none; b=bb1QIn7nC0gMFc0xCBUU94EFGNOcYlC7yg5Ei2jAfJRVbr2Cv32NUkQ5wE6Dt1YN2mg1ZLGWm62xBVoTEcxj44Dymjbr6k1c8eYSuNclY9Vxsp8OvSGD6NFTIRf5lIa8ptSJC9eMjQ9gSB+kOTUlyCLisXevTZH+F1k93np8dDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717521389; c=relaxed/simple;
-	bh=RkQhcCUGvhc68yqedqJ3dY1m/xst2V0cFQC1POPV47g=;
+	s=arc-20240116; t=1717526903; c=relaxed/simple;
+	bh=jX8UMTejDZxOWy2xvRQrFYx9FLkD8PRvvmu286qo3B8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=andcqoXal0Wh5+FD75vjl041/86APmhbG+GhXYhR0JL9cZYUqxA2gfBhZfWF6zc4YWRRZP3kG0zZIDQY3eMRbaauk59FS8Sqf0nk+5D2ozWnW4HPwat1baiJvYS/gYWmNXzFk4bSmNLyZ1S05/omuB2NFWR5jr+71xhvsoiz5FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRrv4NXD; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=qAcmG5NKiKYjDDwrFyHqIAWmuXr/DX6UUOlqetkA7v+YZPUxkbHmbbGfK1QecPxbnzM1Xor0bCezk6tfDDX10wBYbsgvtcUTRPUgm/1Ices1J+MrvzFDSx0z3itNKWPTBZpfSEU6rnYIYkaVfVmNFLH24Ch2xE/ZuVSHAKolpjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y4xYIfv4; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRrv4NXD"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6cc3e134f88so1067208a12.0;
-        Tue, 04 Jun 2024 10:16:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y4xYIfv4"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f66ad03847so28975ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jun 2024 11:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717521387; x=1718126187; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717526901; x=1718131701; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7SPFGeZYux1GhJ/hsA6QEhYw/FILAzVW/x5wsmvaavg=;
-        b=XRrv4NXDKitlXFYtfgRkdwuqSYx/0sjjUALBXow8X4qDnNDXMpPTwEvSDpWS1sQxsp
-         vZdMC6vAWYNrZqxdHIrssTKmOogfM46FO4Je6EsWdlIdHdzT1DRoZeLFLc12YHlXAEzt
-         e/kAvpNLG9EJyKh0CVUTcj4p9e7+EzYGhvs80Enf4MJvhdBBxRnKODwh+k4YOyh7brcF
-         1A0XiJvAjWPxYZCM+nZFu4B6jANWuasQZwy7BIQyLcAD384IpA8X83zgU5mZ3aAHyPyI
-         IO1vc+6E/1M8+sbqArYfLVSYnLM4bMmyJ+GO04WLOF9ERlFS6k5lwHYlSARNVij10+/1
-         N9aQ==
+        bh=GW87wwCX8r5pSoAmwipgb8TBgyr5V1aGTvd+vaaORGA=;
+        b=y4xYIfv4vyvXS0ob6OglaQSyePcU6H4yj4gWdc68Cp3w9wEdasebeKwlixtX0rx7k6
+         LXMlRKc7jLoD5UgDZKDfu6TnL66Hbw+G8YsKhjrBRSFqM0ert5U+mafG3WvA0K/ukRY9
+         P15rOIc1nHDcfPy3Re3wuuZO1m+/tzeoR+2r605wniQhC88tvHi0rW4z13YxL7MLLfZc
+         AvyTM+muDGbR771u6w0Pj1uJu1bislbI7tIaA5yOYc7KB5BhKFaIb60apMhaymZfL/I4
+         n42hBtOUHuDOM8USDn03EuoT31YiM71+eIViry1zJICdxTWqE3uB6aPQ+mVxhQ0YpVmP
+         sLOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717521387; x=1718126187;
+        d=1e100.net; s=20230601; t=1717526901; x=1718131701;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7SPFGeZYux1GhJ/hsA6QEhYw/FILAzVW/x5wsmvaavg=;
-        b=Q5M63cSLPOvoCA3viqGlEbCcuC7r3kl6aM/oZtnBNTFAibp8rEF+ixC9D13tDsvuzT
-         V6Sm76fZTMa7GkcCNfod1PHZ3c5XJmN3kNYpV89SlceMjvdQuGd5AuoU1waa7bTSO2BM
-         f6JDSqigLXr+rjeXl6UXMp9q/XEF/1sUkNm6JQDWV2lOTWblNWXiXR05v/YSg85k3IIy
-         8R2toseoTpFw4RxK86Zn46HTN+ETHT6nOi4shziHDtKxZPSX8SWjgRbLa7QTXlEnsrR/
-         4Ath5/8Etsn7X5C9tiGtdB4bIRoo2QringhKn/FBvoFKWHJDsuMYBAK649dH7mjPGvZ0
-         EYXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVag9sLTXpA+Ntxs1J1zE6ZG6reptkQn3sq/8FB61Nrv+47TjfIiSOCw+LvFTi51oTYpJyzT/zq6e0HpVP7akq7u2P8tCIYLz+sfseJN5bwfZxNNS8SAdW2HAqME5wfUS7Xt0dsS9G2Cx997oE04eKuu9vyX5vpGhFSw2MSk41z6Ct7Gb3sOuIViA==
-X-Gm-Message-State: AOJu0YwyIaAtL3FYmicwFLCwPW21FD4IDnT+0oYqe/9m99+iHrB2isUs
-	iMe9CaRNGGt8My+CQkk0BI307mRkuBL7pTWnIxfZxUSvrBCuZol+hW5NXAoD8KNstLIf6nD7INY
-	/9dJjb+rdstJyLO/CMAkFzubeKwc=
-X-Google-Smtp-Source: AGHT+IEDcxzeo4/WotXZhMAU6LLCoOLnWMX1xTVG0+hjNA7Kn3/H4VVWxd7oXR24cOO+MbPXXAaePesnFXNJym1JpFI=
-X-Received: by 2002:a17:90a:db81:b0:2b6:7e55:2aad with SMTP id
- 98e67ed59e1d1-2c27daf65c1mr99644a91.7.1717521387418; Tue, 04 Jun 2024
- 10:16:27 -0700 (PDT)
+        bh=GW87wwCX8r5pSoAmwipgb8TBgyr5V1aGTvd+vaaORGA=;
+        b=waHjctilkb5KEhwHB/SxrvRyb+116Wvpp8bl91yg9eNflxWOMkUeFeyseLa35MWRCR
+         8ms6fMpHznqck3DPoC6x57MmARdKwheh04/nc+FlbiBwcl+ZCFGKXMzBnJhT8KGEJoaO
+         YkV5xSpo6RupCzlGKwhlMcBPCCNMRa/NsMSeAcdwJsIa7Bjua4OCy/+gXV1FATl3qkN0
+         hdGpY/NrP9Hm6ASHc1pDafZ3rak7VyqTMlbWe/4WAqdPILlUvFB4JbfGxiFZzlf7iIk+
+         jLQE7aDUS7u74wHcB8Crpf11W6FlUo4AmG0JZOxUW22lpd/lfll19UHooBFWUd15KNyP
+         nbLg==
+X-Forwarded-Encrypted: i=1; AJvYcCX72XZ3vucRxocQ6RDWUDsHmT4w3aKA7x2Z5z6JNy+MqS01YDUGad/iZCJWSVMGw5t53sk2281i13m8gL04TPh5rnR4S5ByXY6BDNujVxZ0VA==
+X-Gm-Message-State: AOJu0YwShsqTFWJMoO1kE73mM80YvIn88AmvwjFxiQVc1ciWpXjghMLY
+	zsxixG31XXHPL71TVORa/GhsBK8RtWAAUdhZvzdoV6/Cl746NzyOKpAuJMdJA1D6utPwYdesawD
+	hWnES9a5Mk2GGpRvReZVEW5/mthfI3eZGaaUm
+X-Google-Smtp-Source: AGHT+IHUVUunvHlUcY83hu7GlpidYQUM4eo6IlyvzCk7xmtTg7hH7ekLcv/5Om/sMvyhqe1VhxNDnvG9iTXn6sBiS40=
+X-Received: by 2002:a17:902:da89:b0:1f3:aff:8318 with SMTP id
+ d9443c01a7336-1f6a66e4cbbmr289735ad.5.1717526900793; Tue, 04 Jun 2024
+ 11:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522013845.1631305-1-andrii@kernel.org> <20240522013845.1631305-3-andrii@kernel.org>
- <20240604231314.e924c51f7b9a18428a8a7f0f@kernel.org>
-In-Reply-To: <20240604231314.e924c51f7b9a18428a8a7f0f@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 4 Jun 2024 10:16:14 -0700
-Message-ID: <CAEf4BzbneP7Zoo5q54eh4=DVgcwPSiZh3=bZk6T2to88613dnw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf,uprobes: fix user stack traces in the
- presence of pending uretprobes
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, x86@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org, Riham Selim <rihams@meta.com>
+References: <23879991.0LEYPuXRzz@milian-workstation> <Zl8bhWfHSXxs35r2@x1> <Zl8g1LxRCYgTSxhy@x1>
+In-Reply-To: <Zl8g1LxRCYgTSxhy@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Jun 2024 11:48:09 -0700
+Message-ID: <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
+Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles + raw_syscalls
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kenel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 4, 2024 at 7:13=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
+On Tue, Jun 4, 2024 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
 >
-> On Tue, 21 May 2024 18:38:43 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
+> On Tue, Jun 04, 2024 at 10:50:00AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Jun 04, 2024 at 01:44:18PM +0200, Milian Wolff wrote:
+> > > the following command crashes perf for me, is this still an issue ups=
+tream and
+> > > should I report it to arch for backporting? I cannot build the offici=
+al perf/
+> > > core branch, so I am afraid I cannot test it myself there:
 >
-> > When kernel has pending uretprobes installed, it hijacks original user
-> > function return address on the stack with a uretprobe trampoline
-> > address. There could be multiple such pending uretprobes (either on
-> > different user functions or on the same recursive one) at any given
-> > time within the same task.
-> >
-> > This approach interferes with the user stack trace capture logic, which
-> > would report suprising addresses (like 0x7fffffffe000) that correspond
-> > to a special "[uprobes]" section that kernel installs in the target
-> > process address space for uretprobe trampoline code, while logically it
-> > should be an address somewhere within the calling function of another
-> > traced user function.
-> >
-> > This is easy to correct for, though. Uprobes subsystem keeps track of
-> > pending uretprobes and records original return addresses. This patch is
-> > using this to do a post-processing step and restore each trampoline
-> > address entries with correct original return address. This is done only
-> > if there are pending uretprobes for current task.
-> >
-> > This is a similar approach to what fprobe/kretprobe infrastructure is
-> > doing when capturing kernel stack traces in the presence of pending
-> > return probes.
-> >
+> > > ```
+> > > sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e
+> > > raw_syscalls:sys_enter ls
+> > > ...
+> > > [ perf record: Woken up 3 times to write data ]
+> > > malloc(): invalid next size (unsorted)
+> > > Aborted
+> > > ```
+> > > Backtrace with GDB + debuginfod:
+> > > ```
+> > > malloc(): invalid next size (unsorted)
 >
-> This looks good to me because this trampoline information is only
-> managed in uprobes. And it should be provided when unwinding user
-> stack.
+> > I reproduced this all the way back to 6.8, trying to bisect now, thanks
+> > for the report,
 >
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Can you please try with the attached and perhaps provide your Tested-by?
 >
-> Thank you!
+> Thanks,
+>
+> - Arnaldo
+>
+> From ab355e2c6b4cf641a9fff7af38059cf69ac712d5 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Tue, 4 Jun 2024 11:00:22 -0300
+> Subject: [PATCH 1/1] Revert "perf record: Reduce memory for recording
+>  PERF_RECORD_LOST_SAMPLES event"
+>
+> This reverts commit 7d1405c71df21f6c394b8a885aa8a133f749fa22.
 
-Great, thanks for reviewing, Masami!
+I think we should try to fight back reverts when possible. Reverts are
+removing something somebody poured time and attention into. When a
+regression has occurred then I think we should add the regression case
+as a test.
 
-Would you take this fix through your tree, or where should it be routed to?
-
+> This causes segfaults in some cases, as reported by Milian:
 >
-> > Reported-by: Riham Selim <rihams@meta.com>
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  kernel/events/callchain.c | 43 ++++++++++++++++++++++++++++++++++++++-
-> >  kernel/events/uprobes.c   |  9 ++++++++
-> >  2 files changed, 51 insertions(+), 1 deletion(-)
-> >
+>   ```
+>   sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e
+>   raw_syscalls:sys_enter ls
+>   ...
+>   [ perf record: Woken up 3 times to write data ]
+>   malloc(): invalid next size (unsorted)
+>   Aborted
+>   ```
+>
+>   Backtrace with GDB + debuginfod:
+>
+>   ```
+>   malloc(): invalid next size (unsorted)
+>
+>   Thread 1 "perf" received signal SIGABRT, Aborted.
+>   __pthread_kill_implementation (threadid=3D<optimized out>, signo=3Dsign=
+o@entry=3D6,
+>   no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:44
+>   Downloading source file /usr/src/debug/glibc/glibc/nptl/pthread_kill.c
+>   44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_=
+ERRNO
+>   (ret) : 0;
+>   (gdb) bt
+>   #0  __pthread_kill_implementation (threadid=3D<optimized out>,
+>   signo=3Dsigno@entry=3D6, no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:4=
+4
+>   #1  0x00007ffff6ea8eb3 in __pthread_kill_internal (threadid=3D<optimize=
+d out>,
+>   signo=3D6) at pthread_kill.c:78
+>   #2  0x00007ffff6e50a30 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdep=
+s/posix/
+>   raise.c:26
+>   #3  0x00007ffff6e384c3 in __GI_abort () at abort.c:79
+>   #4  0x00007ffff6e39354 in __libc_message_impl (fmt=3Dfmt@entry=3D0x7fff=
+f6fc22ea
+>   "%s\n") at ../sysdeps/posix/libc_fatal.c:132
+>   #5  0x00007ffff6eb3085 in malloc_printerr (str=3Dstr@entry=3D0x7ffff6fc=
+5850
+>   "malloc(): invalid next size (unsorted)") at malloc.c:5772
+>   #6  0x00007ffff6eb657c in _int_malloc (av=3Dav@entry=3D0x7ffff6ff6ac0
+>   <main_arena>, bytes=3Dbytes@entry=3D368) at malloc.c:4081
+>   #7  0x00007ffff6eb877e in __libc_calloc (n=3D<optimized out>,
+>   elem_size=3D<optimized out>) at malloc.c:3754
+>   #8  0x000055555569bdb6 in perf_session.do_write_header ()
+>   #9  0x00005555555a373a in __cmd_record.constprop.0 ()
+>   #10 0x00005555555a6846 in cmd_record ()
+>   #11 0x000055555564db7f in run_builtin ()
+>   #12 0x000055555558ed77 in main ()
+>   ```
+>
+>   Valgrind memcheck:
+>   ```
+>   =3D=3D45136=3D=3D Invalid write of size 8
+>   =3D=3D45136=3D=3D    at 0x2B38A5: perf_event__synthesize_id_sample (in =
+/usr/bin/perf)
 
-[...]
+The write that is happening here is because an empty sample except for
+the id value is written out:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/synthetic-events.c?h=3Dperf-tools-next#n1805
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/builtin-record.c?h=3Dperf-tools-next#n1910
+It'd been missed that the sample wasn't quite empty and needed space.
+
+Rather than making the space 64kb again, can we not use
+perf_event__sample_event_size or some max constant?
+
+Thanks,
+Ian
+
+>   =3D=3D45136=3D=3D    by 0x157069: __cmd_record.constprop.0 (in /usr/bin=
+/perf)
+>   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D  Address 0x6a866a8 is 0 bytes after a block of size 4=
+0 alloc'd
+>   =3D=3D45136=3D=3D    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
+>   =3D=3D45136=3D=3D    by 0x3574AB: zalloc (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin=
+/perf)
+>   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D
+>   =3D=3D45136=3D=3D Syscall param write(buf) points to unaddressable byte=
+(s)
+>   =3D=3D45136=3D=3D    at 0x575953D: __libc_write (write.c:26)
+>   =3D=3D45136=3D=3D    by 0x575953D: write (write.c:24)
+>   =3D=3D45136=3D=3D    by 0x35761F: ion (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x357778: writen (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x1548F7: record__write (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x15708A: __cmd_record.constprop.0 (in /usr/bin=
+/perf)
+>   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D  Address 0x6a866a8 is 0 bytes after a block of size 4=
+0 alloc'd
+>   =3D=3D45136=3D=3D    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
+>   =3D=3D45136=3D=3D    by 0x3574AB: zalloc (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin=
+/perf)
+>   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
+>   =3D=3D45136=3D=3D
+>  -----
+>
+> Closes: https://lore.kernel.org/linux-perf-users/23879991.0LEYPuXRzz@mili=
+an-workstation/
+> Reported-by: Milian Wolff <milian.wolff@kdab.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: stable@kernel.org # 6.8+
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/builtin-record.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 66a3de8ac66186b0..0a8ba1323d64be6b 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1956,8 +1956,7 @@ static void record__read_lost_samples(struct record=
+ *rec)
+>
+>                                 if (count.lost) {
+>                                         if (!lost) {
+> -                                               lost =3D zalloc(sizeof(*l=
+ost) +
+> -                                                             session->ma=
+chines.host.id_hdr_size);
+> +                                               lost =3D zalloc(PERF_SAMP=
+LE_MAX_SIZE);
+>                                                 if (!lost) {
+>                                                         pr_debug("Memory =
+allocation failed\n");
+>                                                         return;
+> @@ -1973,8 +1972,7 @@ static void record__read_lost_samples(struct record=
+ *rec)
+>                 lost_count =3D perf_bpf_filter__lost_count(evsel);
+>                 if (lost_count) {
+>                         if (!lost) {
+> -                               lost =3D zalloc(sizeof(*lost) +
+> -                                             session->machines.host.id_h=
+dr_size);
+> +                               lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
+>                                 if (!lost) {
+>                                         pr_debug("Memory allocation faile=
+d\n");
+>                                         return;
+> --
+> 2.45.1
+>
