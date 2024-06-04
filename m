@@ -1,145 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88672143C7B
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 15:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390D9146D6E;
+	Tue,  4 Jun 2024 17:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717515084; cv=none; b=dhNaLE8cWX9Q88NeJH+PehLQcu2voWGn/UMF0nvBE/ke6KuuCSZbpAf+FqjPbaWD7mOxDCb5tArzLOFxMi49IwmUPupZFNrw8SfA4cs7djuBnegxU57FCK8N/EgDM13uJrg1VFY3qB58NiK5Dli7aE3CX/O8i/cLYoEgSVAYSUU=
+	t=1717521194; cv=none; b=K2YZMsZGXlDK9vUYtgmQpSVIfq/0Qh0lo/IzLS5CXjaaBSH8+os/fOzeWe/ndqaxLQZWwArNWi5DGbr9lHzNhXh6nM4vKTLEW+IHRDv4geipeoOSYYCMQFrm196cil5bLet8upj6cQqDi76H+xthu5g/H0WSAZlJvPtFpHg00yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717515084; c=relaxed/simple;
-	bh=OOhEYWvjKelT48bWd65Yeoowh+Uo6MBJux7g4Tv4Ic0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wh+caA30WW224/JsWQ9o/9bodI7Xi0PHxNaEDXOZbXwytNehBzG2R21Sp/GR2sJ5Bg+X2xdZd03sBsTJB+dOmmPt9oejJVYDwng3JCslesJOCJwOukpIiEOWz0TUSJLKcODatCDqJ9YnpBeMxWlNEDPzdeIYR/Bp+MVM+61flJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R8yu3tUS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717521194; c=relaxed/simple;
+	bh=kXdijRIJocHii0MTon8pAqxmyNLyse1s5VvwstOAHvU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DxCp0OJeV6Hc6JNWIOBjrUZS/NZ5I9v9qNqnZ1Q8cQARQeJsmZBGanZ7ZKnqMo65MNm2QEMTWdYZB8/s2HV7N+3jfnzm7SHu625nMdnsarN/m5mg2oNlajCqSr53hS5bbaTn2zo8f0cN65mUm91wT19Fj6MlKjRRToCNMXnJlFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gL0OWe+P; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8yu3tUS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717515081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=D+zDHxsxzg/IAazMi/3ZPhfBHUTEv9jBPPUq11pfpgw=;
-	b=R8yu3tUS3gUCQp94KqXhv+94cIHTQa4D68AeO/xDuUVtKeSAd5fi0OAOhB41G+dFHX9AY/
-	yoSNmgLtzdWgLnV4MCF6NtZKaspJBoEdXrFHDYW+PW+3sO8OeRLbhxaCmZ6fMKg61d3Y6o
-	SGGpBHK8nTTxzgMFvwfKIE034KSxCQg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-jNkQxFJwPhGGb1rz5dcRvw-1; Tue, 04 Jun 2024 11:31:18 -0400
-X-MC-Unique: jNkQxFJwPhGGb1rz5dcRvw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AE8188007A1;
-	Tue,  4 Jun 2024 15:31:17 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.23])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F40D02166AE6;
-	Tue,  4 Jun 2024 15:31:16 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com
-Subject: [PATCH] perf test stat_bpf_counter.sh: Remove comparison of separate runs
-Date: Tue,  4 Jun 2024 17:31:11 +0200
-Message-ID: <20240604153111.105548-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gL0OWe+P"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c19e6dc3dcso4716609a91.3;
+        Tue, 04 Jun 2024 10:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717521192; x=1718125992; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OadnoCUmoudPOWNUZp+jb3lQDm1poOGWS7Y8+PUxug0=;
+        b=gL0OWe+PH6gezRsfe9nKBTqAA9dJ8imrzTSirxQv1mNg819kd0FkuMOExIikFSWjTC
+         EW+fpOzUqovwlnolVBXHkoNUTqSb8xGqIK2d6pZP8D+YS41S6FP96T6h99LMLN+lA0Qt
+         4VhHMhleZiQEn4XzozB89JfVAru6vxkpxz7Bm1F2vGmavoO/9LAA3teM5x+ywjOAT44Q
+         lmGsKNGJwcwMaHZ4NAdp66eZ3bSSi9tRGqXJvob3YGMhJVzGZ+dz8eIkfoQUVmXxi5WT
+         NlkC2N+CWnNe17X+t1MVjVxCHupI84Io49YF65gNu5D8sQZMhhdI57SirEHhZ9sNRMAx
+         s2SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717521192; x=1718125992;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OadnoCUmoudPOWNUZp+jb3lQDm1poOGWS7Y8+PUxug0=;
+        b=cHCmLBRwgxmAY9CwAz5ybwG2cXA8lRxaovLqB4JRZmIQ1zsqkGBO01LFOMZ1ritc1i
+         H/E0sZAbUCCNFrsdTFggeQ+qMlD6Lxq3Sdlcw0YfJK2avP+5+8x+P1JvJfvtigvnU1O6
+         Q3G6+STgA7gtKd/EOi07siBnLoWvSut8723p6ULmpYu1LVPm0tjGNCycK6yAkP28hr/d
+         Ts8x0zh/fNAAcGRjO5abqkfuCsetTJkCkYQjmYVeYIEO7IsaykwdqA2Ls1PgaK5nKRDB
+         CbkMldlB6CSRKQSlbwwknuBk5L/8yjsyC2qrc9HG/rMDbDFakQFxg7oqEaJXmhnqXIMG
+         b/4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbwt9Dt9AsgjZTXsrydvcUdYCP73PceSTQvFuI5+erdcPdceI0r+JRNxjJMKbvgjoqqTvREc3esnfCT/7KaWrIqK3PimbyUAIWbECbzlZbzJY6vd8qWmOzHmhOQI8ej5DKOO8G4PNIpMinuxU2DSORJRixhUDiBcv5tW5a9nVBiXWxGIHaDwmwOA==
+X-Gm-Message-State: AOJu0YwtlqOTjst4kSlWecR4mOwltJ3kl8IyxFziergZ0srmG2dfn24C
+	nbTJT9hkDJ6oU6IcpQkPkBlCMw0OBVgLSNjlMbZtNGfMmg7QR1SnbYfhfzlQJK+Ikg3G9Oa/5y/
+	u6sc3OKCq7t0EZeSmeF3taI3+EXhsCw==
+X-Google-Smtp-Source: AGHT+IE0RXAScO87dOsPMaiKHHDRMCITo/LWphNopqp5bczfX0qp/mDUvA1Lm9yX3RXdl8+eL0TGlM52D2/VimUZL68=
+X-Received: by 2002:a17:90b:17c1:b0:2bd:edbe:4e1 with SMTP id
+ 98e67ed59e1d1-2c27db61056mr66947a91.31.1717521192465; Tue, 04 Jun 2024
+ 10:13:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240522013845.1631305-1-andrii@kernel.org> <20240522013845.1631305-4-andrii@kernel.org>
+ <20240604230603.16e5fedaf3d9a4981e619259@kernel.org>
+In-Reply-To: <20240604230603.16e5fedaf3d9a4981e619259@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 4 Jun 2024 10:13:00 -0700
+Message-ID: <CAEf4BzYEXf0GuiV0P17mjmtJ7hj5tHaYN33A1B3C9YcroGwk0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, x86@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Tue, Jun 4, 2024 at 7:06=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+>
+> On Tue, 21 May 2024 18:38:44 -0700
+> Andrii Nakryiko <andrii@kernel.org> wrote:
+>
+> > When tracing user functions with uprobe functionality, it's common to
+> > install the probe (e.g., a BPF program) at the first instruction of the
+> > function. This is often going to be `push %rbp` instruction in function
+> > preamble, which means that within that function frame pointer hasn't
+> > been established yet. This leads to consistently missing an actual
+> > caller of the traced function, because perf_callchain_user() only
+> > records current IP (capturing traced function) and then following frame
+> > pointer chain (which would be caller's frame, containing the address of
+> > caller's caller).
+>
+> I thought this problem might be solved by sframe.
 
-The test has been failing for some time when two separate runs of
-perf benchmarks are recorded and the counts of the samples are compared,
-while once the recording was done with option --bpf-counters and once
-without it. It is expected that the count of the samples should within
-a certain range, firstly the difference should have been within 10%,
-which was then later raised to 20%. However, the test case keeps failing
-on certain architectures as recording the same benchmark can provide
-completely different counts samples based on the current load of the
-system.
+Eventually, yes, when real-world applications switch to sframe and we
+get proper support for it in the kernel. But right now there are tons
+of applications relying on kernel capturing stack traces based on
+frame pointers, so it would be good to improve that as well.
 
-Sampling two separate runs on intel-eaglestream-spr-13 of "perf stat
---no-big-num -e cycles -- perf bench sched messaging -g 1 -l 100 -t":
+>
+> >
+> > So when we have target_1 -> target_2 -> target_3 call chain and we are
+> > tracing an entry to target_3, captured stack trace will report
+> > target_1 -> target_3 call chain, which is wrong and confusing.
+> >
+> > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+> > instruction being traced.
+>
+> I like this kind of idea :) But I think this should be done in
+> the user-space, not in the kernel because it is not always sure
+> that the user program uses stack frames.
 
- Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+Existing kernel code that captures user space stack trace already
+assumes that code was compiled with a frame pointer (unconditionally),
+because that's the best kernel can do. So under that assumption this
+heuristic is valid and not harmful, IMO.
 
-         396782898      cycles
+User space can do nothing about this, because it is the kernel that
+captures stack trace (e.g., from BPF program), and we will lose the
+calling frame if we don't do it here.
 
-       0.010051983 seconds time elapsed
+>
+> > If that's the case, with the assumption that
+> > applicatoin is compiled with frame pointers, this instruction would be
+> > a strong indicator that this is the entry to the function. In that case=
+,
+> > return address is still pointed to by %rsp, so we fetch it and add to
+> > stack trace before proceeding to unwind the rest using frame
+> > pointer-based logic.
+>
+> Why don't we make it in the userspace BPF program? If it is done
+> in the user space, like perf-probe, I'm OK. But I doubt to do this in
+> kernel. That means it is not flexible.
+>
 
-       0.008664000 seconds user
-       0.097058000 seconds sys
+You mean for the BPF program to capture the entire stack trace by
+itself, without asking the kernel for help? It's doable, but:
 
- Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+  a) it's inconvenient for all users to have to reimplement this
+low-level "primitive" operation, that we already promise is provided
+by kernel (through bpf_get_stack() API, and kernel has internal
+perf_callchain API for this)
+  b) it's faster for kernel to do this, as kernel code disables page
+faults once and unwinds the stack, while BPF program would have to do
+multiple bpf_probe_read_user() calls, each individually disabling page
+faults.
 
-        1431133032      cycles
+But really, there is an already existing API, which in some cases
+returns partially invalid stack traces (skipping function caller's
+frame), so this is an attempt to fix this issue.
 
-       0.021803714 seconds time elapsed
 
-       0.023377000 seconds user
-       0.349918000 seconds sys
+> More than anything, without user-space helper to find function
+> symbols, uprobe does not know the function entry. Then I'm curious
+> why don't you do this in the user space.
 
-, which is ranging from 400mil to 1400mil samples.
+You are mixing stack *capture* (in which we get memory addresses
+representing where a function call or currently running instruction
+pointer is) with stack *symbolization* (where user space needs ELF
+symbols and/or DWARF information to translate those addresses into
+something human-readable).
 
-From the testing point of view, it does not make sense to compare two
-separate runs against each other when the conditions may change
-significantly. Remove the comparison of two separate runs and check only
-whether the stating works as expected for the --bpf-counters option. Compare
-the samples count only when the samples are recorded simultaneously
-ensuring the same conditions.
+This heuristic improves the former as performed by the kernel. Stack
+symbolization is completely orthogonal to all of this.
 
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- tools/perf/tests/shell/stat_bpf_counters.sh | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> At least, this should be done in the user of uprobes, like trace_uprobe
+> or bpf.
+>
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 61f8149d854e..873b576836c6 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -6,19 +6,19 @@ set -e
- 
- workload="perf bench sched messaging -g 1 -l 100 -t"
- 
--# check whether $2 is within +/- 20% of $1
-+# check whether $2 is within +/- 10% of $1
- compare_number()
- {
- 	first_num=$1
- 	second_num=$2
- 
--	# upper bound is first_num * 120%
--	upper=$(expr $first_num + $first_num / 5 )
--	# lower bound is first_num * 80%
--	lower=$(expr $first_num - $first_num / 5 )
-+	# upper bound is first_num * 110%
-+	upper=$(expr $first_num + $first_num / 10 )
-+	# lower bound is first_num * 90%
-+	lower=$(expr $first_num - $first_num / 10 )
- 
- 	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
--		echo "The difference between $first_num and $second_num are greater than 20%."
-+		echo "The difference between $first_num and $second_num are greater than 10%."
- 		exit 1
- 	fi
- }
-@@ -44,7 +44,6 @@ test_bpf_counters()
- 	base_cycles=$(perf stat --no-big-num -e cycles -- $workload 2>&1 | awk '/cycles/ {print $1}')
- 	bpf_cycles=$(perf stat --no-big-num --bpf-counters -e cycles -- $workload  2>&1 | awk '/cycles/ {print $1}')
- 	check_counts $base_cycles $bpf_cycles
--	compare_number $base_cycles $bpf_cycles
- 	echo "[Success]"
- }
- 
--- 
-2.43.0
+This is a really miserable user experience, if they have to implement
+their own stack trace capture for uprobes, but use built-in
+bpf_get_stack() API for any other type of program.
 
+>
+> Thank you,
+>
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  arch/x86/events/core.c  | 20 ++++++++++++++++++++
+> >  include/linux/uprobes.h |  2 ++
+> >  kernel/events/uprobes.c |  2 ++
+> >  3 files changed, 24 insertions(+)
+> >
+
+[...]
