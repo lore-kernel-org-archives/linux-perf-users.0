@@ -1,136 +1,112 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23E514D6FC
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 23:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC69A14D2A5
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 23:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717545235; cv=none; b=OwNuZ/B09A5/sRti6a5WFQ0OeV7k9ali5SLo2+sfl2pM/U73w7lxOrHkGLqPiiCt/pQC8Efk3/BouBEafiXCCAZ/GUS5nCDiEQ8wNRMK5YCE5cfF5s36m7SWx+DDGn7QdYpkFeKdDSdJYOnVa6ds4+slGy2cjV7kFnd/I/cXq6U=
+	t=1717545385; cv=none; b=ERqr0b6TfCZ1ZA+nbZTOc2ZLo1Jf13W64z29/qHX8mgBDzpZINJJtLj9N5lsLY3BgvOYJtxuPVm+/jIUVWAEsl04to4DYPDGaGTfg00t38pWj19RIfyTTWzecdJPhhHD4j5+0btrL2QebiC018VnroLeZttMmwVJ7nmLMb6I9mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717545235; c=relaxed/simple;
-	bh=TH50K4AVLCRJ9x0JcUUjkWd6fXDZInRnvzDvUjlNb4k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
-	 Subject:Content-Type; b=auxkHRpJhdggvJOP3AZ+M1Bn9wG7mpCtpjqpUIigjjuP7YgUnzU5qtNSGMMoJPP/O+hSB8v8pZGP6vlzQGUMWxClnxh0DaXnOcN8CjlRqUBOPrnrFsUt/TTqq1GrmGH8/HZRcC9YUvQBYJRyQtOvnCbtPVAeyiRz9oX2ogBlPaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk; spf=pass smtp.mailfrom=fuuzetsu.co.uk; dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b=5Qh7Neci; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e4BEa4CS; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fuuzetsu.co.uk
+	s=arc-20240116; t=1717545385; c=relaxed/simple;
+	bh=TQDBpazXtL7P7vfaFUKrnxPRdMREw43QjkUoNFPN8Q0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GyKzx8JYazZST73VNeRnetw0WDErAErAOKmn6YSKa3wS8qhvR/YB81VsiOBVcQdcxwp1MCbAou5sqpbaBGYKdaMC+34hwFpiw8FJlG32E+ZUPvYECv9pfbWA5roplgtuK5XwUelQ9Olov6gw1kDrKYNZnQ/lwunidoj3gcO4n1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eajNF/Lw; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b="5Qh7Neci";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e4BEa4CS"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id BE0831800130;
-	Tue,  4 Jun 2024 19:53:51 -0400 (EDT)
-Received: from imap45 ([10.202.2.95])
-  by compute3.internal (MEProxy); Tue, 04 Jun 2024 19:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fuuzetsu.co.uk;
-	 h=cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1717545231; x=1717631631; bh=WVAyALYuHF
-	ZBcXEEZrkUaYN1CbYlFlJRgzW9qN3mzic=; b=5Qh7NecimpMglJAKvWa/rlCNE/
-	HgIcq3Qleoo/fJQftMyWcBEzszs6rfnPhzm5+ibkslGYeJAe4JIdxtJmwvjSslER
-	sXejtRIVquBofcJxAbhaavByeA7GSmC7yPAu1QpuJQk7GHcStHe833b+FRZDkvYZ
-	hzninTpC05WfkfEN3Yp+8ZWLGXhXvZyvx9a2Yy70i84jmdZb8xzehFVq3CnjouJI
-	HMx8DQX1/HX69nOwSxT+gvaIB+NDlSxcdbPjvHQssM+Oh0RZPqjm+0rS8NGndcXS
-	gOqvC2QHKsijHCtXC6L7pXqVMQ6+bB1qpbunnCrENG3h4QTCFsesE8fMmn9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1717545231; x=1717631631; bh=WVAyALYuHFZBcXEEZrkUaYN1CbYl
-	FlJRgzW9qN3mzic=; b=e4BEa4CS6AuyOzESnwrg2hJcub0+anU3nXR767sICrvG
-	KetAdd+jCq38cvLLa9KG/SbaKmbhLYsVsRsRFT68A6pBDS+m6cILeIyvcFO2G7YW
-	QKM2gF3gJ5Jvlx6pKWl/VDZC5EPDlL1a92fzm/DJX3WFQLRO+GBbjQklOXeI8RY+
-	G+eOPYILoLR1QTNQxcrZzVTubQQ+uMQjasiHaNBwACk1RuFgUsPw8NhfHuwYNJdh
-	sMSpPs/1KNjUmJfNLbjhsItm2Vw7Tstp+S5IhXw2G72QTIzGhlzenLuylWzuY7mi
-	qR1SYIPvCtnv0Hww1hY0YzUr4GCqlxPzm3xHLBrpjw==
-X-ME-Sender: <xms:DqlfZrgpOGukuImfeTeRviocSsndLjjKPdPhyABViptf7MeOHfQE1A>
-    <xme:DqlfZoAv-2l_Q5ZKMQmjR-aABozh-vI6fyJ3R5HMWRkBK0KnYlbOuLP2faNipKHgC
-    EPV1Qb-fudLvM3dUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelhedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
-    ertderredtnecuhfhrohhmpedfofgrthgvuhhsiicumfhofigrlhgtiiihkhdfuceofhhu
-    uhiivghtshhusehfuhhuiigvthhsuhdrtghordhukheqnecuggftrfgrthhtvghrnhepve
-    egvdduffehtdeuvdefhfefkeefkeeuhfeuheefjeeileefvdeuffejtdeludehnecuffho
-    mhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehfuhhuiigvthhsuhesfhhuuhiivghtshhurdgtohdruhhk
-X-ME-Proxy: <xmx:DqlfZrGRAI6RZTotYsKMlYWVk8dQ4ZFFerhaOdHtz4hNM1FcxsIeTQ>
-    <xmx:DqlfZoR6Mgtcu2oyGJI7fDFcqnRN5wu0sL9VJQl8DDNBxu_FXgqEDg>
-    <xmx:DqlfZoyGhMRIXwfecM8t4A401BuCpzFawfo0qYf2Jt7owTTfLg1Eqg>
-    <xmx:DqlfZu6tRa9ToS5cGM-jXYXMRRxCENegv07bCb3WOHRzB0ET_cfcog>
-    <xmx:D6lfZlrSBJiLoEO0Iq4VY6Y-qJXg-ovz7xQojZzdFdtb4F6x2lI0m2iG>
-Feedback-ID: ia5d440cb:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id CF061272007C; Tue,  4 Jun 2024 19:53:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-497-g97f96844c-fm-20240526.001-g97f96844
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eajNF/Lw"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4400cc0dad1so206341cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jun 2024 16:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717545382; x=1718150182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TQDBpazXtL7P7vfaFUKrnxPRdMREw43QjkUoNFPN8Q0=;
+        b=eajNF/Lw4fPk00VEMJrhOJqiZ534jWfVCRTCtmeKZcIR2OdHpeXLJBwM9wNosONp1V
+         Z8l9jwq3S/GQSJ0sFwHli0Y2iuFJZHAECO7BNbMWt6uNNLZHMQzoI1mrZldI7qE9eGEc
+         miLa/tX6BaanUuEY2RRGKwsIKwC0IP0WUgqq92GW8RTSaDdbyXiVlUuXD8DEDP9a/Frn
+         S5m7dnkotlg7h38DbWOV8n4iwpWZPKEBv9967Khb9ABb9MfiCmHAk6dOGdrc94Bp0ZOY
+         8ZQq+hFu6vL6E9BwAgxAeVYVTRd7xpgtmqml316xoSJ3iBx3V6ls149d9pSHzoinSv+2
+         NkdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717545382; x=1718150182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TQDBpazXtL7P7vfaFUKrnxPRdMREw43QjkUoNFPN8Q0=;
+        b=ibGi2n592B8MbauwToe72IVj7MESt23f3l+T4kQ9gu21DxiDy7xr+8vfAxnIeDCCLC
+         QsECXksru2YytaY5OvSgi0MT8wo8S/dv/G0JigHZheKKdEpAVoekbnBbuFi06hzOKK5E
+         1339R2sdX9VtCQj8Dl/6Nk4BDgXgelbjfGRKFt4Dd/qKC6TQ+h+dpgHECXV74w/8Q5Uq
+         ajP//ZVX1BEarA/NXgTx4NLTuf6OEYgfQ24jFeQE3Ir+aLz+4L+RmwaSXMl8tJNTi61b
+         DFh8MSDpGAyeqxaj1RmthkJbn+3GiZ68zIS459bC25Z48qQKZAcOdYS1q3HFiobOCz7u
+         SD6g==
+X-Forwarded-Encrypted: i=1; AJvYcCW3RIBgM/izCBsB8+ol789x0pEK651FlqVW94S+kr3cqplIyNX+ULuO8uHObYwugJLgUtgF0MSsQY6nl/Af7Oe+ZAPHJdlOtOo+Ha/xbA1EEg==
+X-Gm-Message-State: AOJu0YxgH5HZ2msiJ6kNEfOohdfi/nNiGBemox/t77df358Mfc7UzNBR
+	WTKIgKaDj8mAgF+/yHX64R2fNFFvvCB7iCjkZLkQHPZpOsa7+fwVUIxWyb4uPzVsOGBL5Tu3BLa
+	FEhAzwCsB1njk9zZYrDry+HJaWNXNQ0xGSNVu
+X-Google-Smtp-Source: AGHT+IE7jVrq+XPHLOmdbV911cJ7yqYS46OpFpLOzmxK/XDmyVz6lMYhO+C3jlfog4c7DjT1BrzvmlTw38+e2WrgbEg=
+X-Received: by 2002:ac8:6907:0:b0:43f:ec8f:71f4 with SMTP id
+ d75a77b69052e-4402cdd5845mr378781cf.5.1717545382324; Tue, 04 Jun 2024
+ 16:56:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1d63aa77-4809-45f1-8827-cb1ed6613f23@app.fastmail.com>
-In-Reply-To: <f34d5d79-5d44-4a54-8e36-2720f4b25d4e@foss.arm.com>
-References: <cfcaf804-d7b1-4d55-8465-12e1d238aca1@app.fastmail.com>
- <f34d5d79-5d44-4a54-8e36-2720f4b25d4e@foss.arm.com>
-Date: Wed, 05 Jun 2024 08:53:30 +0900
-From: "Mateusz Kowalczyk" <fuuzetsu@fuuzetsu.co.uk>
-To: "Leo Yan" <niayan01@foss.arm.com>,
- linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] Why does libtracevent pkg-config detection wipe PKG_CONFIG_PATH?
-Content-Type: text/plain
+References: <20240529064327.4080674-1-weilin.wang@intel.com>
+ <20240529064327.4080674-4-weilin.wang@intel.com> <CAM9d7cgSwZ3PU3H9VNvxQakocEZ_CQEqB9M1o3xTMdJ7F1sufQ@mail.gmail.com>
+ <CO6PR11MB56357F58D99B17CD08671A26EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjbHzgfW2fKQkZ2=gtEMD9N5wG4xaWgPU+N-YvmfhXviQ@mail.gmail.com>
+ <CO6PR11MB563511F1A6165F0F4B30C4DFEEF82@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <Zl-WCEhhxBtiGGhn@google.com> <CAP-5=fW41UxUDO-FSymMX_R5nEJDnV7FOjfhW5=XGCVj=TSYKQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fW41UxUDO-FSymMX_R5nEJDnV7FOjfhW5=XGCVj=TSYKQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Jun 2024 16:56:10 -0700
+Message-ID: <CAP-5=fXtGcoXebwqMOqadK6Hkgx6Wa06UaNa3Ji9jrcW+9BWrQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v10 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: "Wang, Weilin" <weilin.wang@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 4 Jun 2024, at 10:26 PM, Leo Yan wrote:
-> Hi Mateusz,
+On Tue, Jun 4, 2024 at 3:41=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> On 5/27/24 01:56, Mateusz Kowalczyk wrote:
->> Hi,
->> 
->> To build recent perf, I'm having to apply the below patch.
->> 
->> ```diff
->> ---
->> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->> index 7f1e016a9253..b70fef12a977 100644
->> --- a/tools/perf/Makefile.config
->> +++ b/tools/perf/Makefile.config
->> @@ -1181,7 +1181,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->>       CFLAGS += -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
->>       LDFLAGS += $(LIBTRACEEVENT_LDFLAGS)
->>       EXTLIBS += ${TRACEEVENTLIBS}
->> -    LIBTRACEEVENT_VERSION := $(shell PKG_CONFIG_PATH=$(LIBTRACEEVENT_DIR) $(PKG_CONFIG) --modversion libtraceevent)
->> +    LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent)
->>       LIBTRACEEVENT_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
->>       LIBTRACEEVENT_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
->>       LIBTRACEEVENT_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
->> ```
->> 
->> I don't understand why `PKG_CONFIG_PATH` is overwritten this way. `grep`ing for PKG_CONFIG_PATH reveals that this isn't done anywhere else in the kernel tree. All other uses of `$(PKG_CONFIG)` in the file simply invoke the tool.
->> 
->> Of course, I do actually have `libtraceevent.pc` available, it's just that `LIBTRACEVENT_DIR` is empty which stops it from finding it.
+> On Tue, Jun 4, 2024 at 3:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> > Hmm.. I don't know if other metric already dealt with the scale like wi=
+th
+> > RAPL events.. If not, I think it's reasonable to add that to the metric
+> > calculation.
+> >
+> > Ian, what do you think?
 >
-> When I was fixing the cross compilation issue for perf, I also 
-> encountered the similar issue with you. I have sent a patch series to 
-> resolve the compilation issue.
->
-> It will be appreciated if you could check if the patch [1] can fix your 
-> reported issue or not.
+> Tbh, I don't understand the conversation and it looks like we're in
+> the weeds. In metrics the scale/unit from the event aren't used - that
+> is all events in a metric are the unscaled quantities unless something
+> is broken.
 
-Hi Leo,
+As I understand the problem is that the retirement latencies are an
+average and so fractional, assigning these to a u64 count loses the
+fractional part. In the future we hope that the retirement latencies
+will be directly read from an evsel. Should we scale up and then scale
+down the retirement latency to avoid losing say 3 decimal places of
+precision by multiplying and dividing by 1000? As the metrics read
+unscaled values we'd need to change the formula. I'd prefer we didn't
+do that and generally avoid making the retirement latency evsels
+further special. So I think for now that means losing precision. We
+can at least avoid some of the worst rounding by using "rint" when we
+read the latency.
 
-I applied the linked patch on top of latest kernel tree checkout and I can confirm that it fixes the issue for me, thank you!
-
-> Also thanks for James' reminding.
->
-> Thanks,
-> Leo
->
-> [1] 
-> https://lore.kernel.org/linux-perf-users/20240604093223.1934236-3-leo.yan@arm.com/T/#u
-
-
-
---
-Mateusz K.
+Thanks,
+Ian
