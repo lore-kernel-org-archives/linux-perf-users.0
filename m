@@ -1,177 +1,106 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17B114E2CB;
-	Tue,  4 Jun 2024 22:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5BC28DC7;
+	Tue,  4 Jun 2024 22:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717539461; cv=none; b=gXGPZpSNsqURc2/3p0laQ9clZL9XsfT6+HHN/pE5p6ITF2dg27sCeG1+o8ngLaujM58Yb7piPfxcLu6a0Se3fOeGuzHZT3Pdj91FF4mzqzkO9L7fHL2aJ+XYLC4u0f3Pr0wo6WW1TdjtIL0POqldUuemsC0XqNo95qS0ChS2aFI=
+	t=1717540363; cv=none; b=Xw4WMQyeyg+k8r8j99/5x22ijiT/oyu6pQ6/B/HNWkQYTMuuinZgxwQ0kJfzXszqkY56c/4IEFQ5AMohIEMCmuNGInizAOJqFOnALy3Z+joO25GS6ABj7WTdpxS1EiPDaoA3MhKUxc7fOxodwa8CON5TcZsxszvKF8I1c/4ykCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717539461; c=relaxed/simple;
-	bh=x/EPc1071ZMLypXuG2I4l+JIj9vQRudO7rwHkhsyVb4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NuwjBJVeImCEtoB83YRNZuulONVX3aNJzJ1Ll65qCS3PVvNcL/yF5PebkQGJLKT4pm0aK1iMRCDoMw0qp9f7MmAGqF1w9VIdhZks9dyCDUwXca+Wkaw5FQYjz9A7eZvoVgK+dp1tQXij3XCecG2kM8mGpuB2hijweog0rqx5VVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-702621d8725so3464649b3a.0;
-        Tue, 04 Jun 2024 15:17:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717539459; x=1718144259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=We0+yqK0dafq6iaaR0xGOotuOP5a9th3+PZjS7QbEAc=;
-        b=WjSTz4gczr/25AOfN2WpfZ+AA2zpv+ek3kT/JRng6gQpj+eTwMwBg7ieQI28Ic8xpg
-         +ZMGgYoDWuzcsxNJYsMYQlKBmUDkR4Blq1LuxWIwQo75BPekM1NtA88sQ2o41IQrKQi0
-         JVxkyW40v2fs1ZW48uwpQhtiVTc4VJwFHd8sYrM3KSL5jZZJTNKTPSa3xiN/dkqm2Skq
-         R3A4ewxF7aJPDX8DI5v6On0q6IJwPpIgFErFTzevtEsR6GR0pfVfnTJrEI1CT/4IS3vo
-         qq1PosapAIpMAzLSBTDY7vGBXZqrASIkiGPY+W4cODuCc5dtYNQ3gcpIUsB0afl1F5D2
-         Pp7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXZHXZiKGCyHtOnzBYELgTHtWHhrW45r7nqKi4QUxuKWNl6ZVYEXD4QpRDPNpVGmMnxFt71K/Vk9ZyjCSO6JSBdfkGkjdCZrLe4M3BUt1CAQg==
-X-Gm-Message-State: AOJu0Yyn2L+VOzaXeWROR8+JRHXAaoZjyqT3OSYefQFes1pgdL+nGS3r
-	iUgwawmkdIfKt2vJUGGGtKScsbaReegwrzjAgvggfS+lpkuaIPR++FtXQQ81Gvu26I4WbgOnr0a
-	GFJXWqMVR6TNbcQwbfxqvywcUFyo=
-X-Google-Smtp-Source: AGHT+IGnw53Jh6+2Bw7hebEUz6+jcHb6FcdmD4FMpElK7QDx9CMNLda3raDdi2dACalBJJBA6vymSLyiubJLwPFuzBs=
-X-Received: by 2002:a05:6a20:9693:b0:1b2:b5af:ce67 with SMTP id
- adf61e73a8af0-1b2b71c20edmr869900637.59.1717539458861; Tue, 04 Jun 2024
- 15:17:38 -0700 (PDT)
+	s=arc-20240116; t=1717540363; c=relaxed/simple;
+	bh=XawMJtdC0qHgow9/zyc4Nni1uO2svRHYtADfu3hnoWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFIscfxCO4MzctH/fdmjDrQyaT7wcSsH9jjZ89bizZ52SbhMUOZUPKkuVtY1SwivgmyMG8rczFK5h6J2Ix0Twdt99+n+MSyc5iuETOmSnWmH6OwN3IvOe0O5JehFARReqV340gx5uQCO7fmxRWwhDi6jECvWMYR/TA1RcLEkm4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRaLms9k; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRaLms9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E12C2BBFC;
+	Tue,  4 Jun 2024 22:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717540362;
+	bh=XawMJtdC0qHgow9/zyc4Nni1uO2svRHYtADfu3hnoWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QRaLms9k6A4CkEPEk2PU+qCVJ52xV1IF278xkHuy+0o9CVRnMFrM3CH/6oYEE/qGw
+	 OiLmpPGBmtuFJZPuw44WE6u7DUFvLKLYJcRAQT4zrnR3o3BDqT375VCopEGSfWKFmm
+	 lTrLXF0J3ifQ8XNEC06u8tFkLDoWcROBTeHNul0Kl95cYsGDuEMLiVpaCCJ7riJ6sn
+	 OsX8PU93nAlGXcO0JXtny9U2dCpmVZtGNiY97HgHY4YuwYMhr7gRb86eSF3rQ0x/kc
+	 1WCYaZolZixoot8BftAN06Ff2y3BBW3w7PAXSw7e79eQ7rMYpgkngllYzHe7WKy7/L
+	 o6oRPy+UpOUkA==
+Date: Tue, 4 Jun 2024 15:32:40 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Wang, Weilin" <weilin.wang@intel.com>, Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Taylor, Perry" <perry.taylor@intel.com>,
+	"Alt, Samantha" <samantha.alt@intel.com>,
+	"Biggers, Caleb" <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v10 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+Message-ID: <Zl-WCEhhxBtiGGhn@google.com>
+References: <20240529064327.4080674-1-weilin.wang@intel.com>
+ <20240529064327.4080674-4-weilin.wang@intel.com>
+ <CAM9d7cgSwZ3PU3H9VNvxQakocEZ_CQEqB9M1o3xTMdJ7F1sufQ@mail.gmail.com>
+ <CO6PR11MB56357F58D99B17CD08671A26EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjbHzgfW2fKQkZ2=gtEMD9N5wG4xaWgPU+N-YvmfhXviQ@mail.gmail.com>
+ <CO6PR11MB563511F1A6165F0F4B30C4DFEEF82@CO6PR11MB5635.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240513091413.738537-1-nick.forrington@arm.com>
- <20240513091413.738537-2-nick.forrington@arm.com> <cf08f5ee-ccd5-4c37-90a6-c88fb3ab2a49@arm.com>
-In-Reply-To: <cf08f5ee-ccd5-4c37-90a6-c88fb3ab2a49@arm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 4 Jun 2024 15:17:27 -0700
-Message-ID: <CAM9d7cirU1K34=DOYSW4wfGRqXraV9WnQw3cf9pxnpf+tXYJhA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf lock info: Display both map and thread by default
-To: Nick Forrington <nick.forrington@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CO6PR11MB563511F1A6165F0F4B30C4DFEEF82@CO6PR11MB5635.namprd11.prod.outlook.com>
 
-Hello,
+On Tue, Jun 04, 2024 at 08:00:26PM +0000, Wang, Weilin wrote:
 
-On Mon, Jun 3, 2024 at 2:38=E2=80=AFAM Nick Forrington <nick.forrington@arm=
-.com> wrote:
->
-> Is this ok to be applied now?
+> > On Thu, May 30, 2024 at 11:46 PM Wang, Weilin <weilin.wang@intel.com>
+> > > > > +       /*
+> > > > > +        * Only set retire_latency value to the first CPU and thread.
+> > > > > +        */
+> > > > > +       if (cpu_map_idx == 0 && thread == 0) {
+> > > > > +       /* Lost precision when casting from double to __u64. Any
+> > > > improvement? */
+> > > >
+> > > > As I said before I think you can set t->val * 1000 and then
+> > > > set the evsel->scale to 1e3 or 1e-3.
+> > >
+> > > Hi Namhyung,
+> > >
+> > > Sorry if this is a repeated message. I thought I replied to your suggestion
+> > > on this last time. I'm thinking we should keep it like this for now and make
+> > > this change unless we find the precision loss is critical. Because I thought
+> > > we don't want to add special code to handle the calculation and final print
+> > > to keep code simple.
+> > >
+> > > I kept this comment here so that we don't forget about it. Please let me
+> > > know if you'd like me to remove it.
+> > 
+> > Please see print_counter_aggrdata().  It's the generic code to print
+> > the event value and it'll display the value multiplied by the scale
+> > (default to 1.0).  So you can keep precision as long as you set the
+> > scale properly (1e-3).
+> 
+> I could see the retire_latency is printed correctly after set the evsel->scale to 1e-3
+> and multiply the t->val * 1000. However, this scale is not used in metric calculations. 
+> We need to add code in metric calculation or display part to scale it as well. Is that 
+> acceptable or do you have other suggestions? 
 
-Sorry for the delay.  Yep, it's now applied to perf-tools-next.
+Hmm.. I don't know if other metric already dealt with the scale like with
+RAPL events.. If not, I think it's reasonable to add that to the metric
+calculation.
+
+Ian, what do you think?
 
 Thanks,
 Namhyung
 
->
-> On 13/05/2024 10:14, Nick Forrington wrote:
-> > Change "perf lock info" argument handling to:
-> >
-> > Display both map and thread info (rather than an error) when neither ar=
-e
-> > specified.
-> >
-> > Display both map and thread info (rather than just thread info) when
-> > both are requested.
-> >
-> > Signed-off-by: Nick Forrington <nick.forrington@arm.com>
-> > ---
-> >   tools/perf/Documentation/perf-lock.txt |  4 ++--
-> >   tools/perf/builtin-lock.c              | 27 ++++++++++++++-----------=
--
-> >   2 files changed, 17 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Docume=
-ntation/perf-lock.txt
-> > index f5938d616d75..57a940399de0 100644
-> > --- a/tools/perf/Documentation/perf-lock.txt
-> > +++ b/tools/perf/Documentation/perf-lock.txt
-> > @@ -111,11 +111,11 @@ INFO OPTIONS
-> >
-> >   -t::
-> >   --threads::
-> > -     dump thread list in perf.data
-> > +     dump only the thread list in perf.data
-> >
-> >   -m::
-> >   --map::
-> > -     dump map of lock instances (address:name table)
-> > +     dump only the map of lock instances (address:name table)
-> >
-> >
-> >   CONTENTION OPTIONS
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index 230461280e45..7eb115aeb927 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -1477,20 +1477,16 @@ static void dump_map(void)
-> >               fprintf(lock_output, " %#llx: %s\n", (unsigned long long)=
-st->addr, st->name);
-> >   }
-> >
-> > -static int dump_info(void)
-> > +static void dump_info(void)
-> >   {
-> > -     int rc =3D 0;
-> > -
-> >       if (info_threads)
-> >               dump_threads();
-> > -     else if (info_map)
-> > +
-> > +     if (info_map) {
-> > +             if (info_threads)
-> > +                     fputc('\n', lock_output);
-> >               dump_map();
-> > -     else {
-> > -             rc =3D -1;
-> > -             pr_err("Unknown type of information\n");
-> >       }
-> > -
-> > -     return rc;
-> >   }
-> >
-> >   static const struct evsel_str_handler lock_tracepoints[] =3D {
-> > @@ -1992,7 +1988,7 @@ static int __cmd_report(bool display_info)
-> >
-> >       setup_pager();
-> >       if (display_info) /* used for info subcommand */
-> > -             err =3D dump_info();
-> > +             dump_info();
-> >       else {
-> >               combine_result();
-> >               sort_result();
-> > @@ -2578,9 +2574,9 @@ int cmd_lock(int argc, const char **argv)
-> >
-> >       const struct option info_options[] =3D {
-> >       OPT_BOOLEAN('t', "threads", &info_threads,
-> > -                 "dump thread list in perf.data"),
-> > +                 "dump the thread list in perf.data"),
-> >       OPT_BOOLEAN('m', "map", &info_map,
-> > -                 "map of lock instances (address:name table)"),
-> > +                 "dump the map of lock instances (address:name table)"=
-),
-> >       OPT_PARENT(lock_options)
-> >       };
-> >
-> > @@ -2694,6 +2690,13 @@ int cmd_lock(int argc, const char **argv)
-> >                       if (argc)
-> >                               usage_with_options(info_usage, info_optio=
-ns);
-> >               }
-> > +
-> > +             /* If neither threads nor map requested, display both */
-> > +             if (!info_threads && !info_map) {
-> > +                     info_threads =3D true;
-> > +                     info_map =3D true;
-> > +             }
-> > +
-> >               /* recycling report_lock_ops */
-> >               trace_handler =3D &report_lock_ops;
-> >               rc =3D __cmd_report(true);
