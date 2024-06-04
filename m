@@ -1,87 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49D414D435
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 22:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23E514D6FC
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 23:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717541024; cv=none; b=kEzIduNggm5DMDy2hNS6yq/+csCAEo+Dzz1lCfqK1RYe8l5s9Y8/m0AufLybO1YbnxjJzE+vUCes5vGht7B+lRy2mYgQiCtHfPP3m491QQUrawbGKaO0smngOvQ2XgynxwEseVxxHO/3AdOmRQ8bNeV6OQmjfVbXHQvTqoJO75s=
+	t=1717545235; cv=none; b=OwNuZ/B09A5/sRti6a5WFQ0OeV7k9ali5SLo2+sfl2pM/U73w7lxOrHkGLqPiiCt/pQC8Efk3/BouBEafiXCCAZ/GUS5nCDiEQ8wNRMK5YCE5cfF5s36m7SWx+DDGn7QdYpkFeKdDSdJYOnVa6ds4+slGy2cjV7kFnd/I/cXq6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717541024; c=relaxed/simple;
-	bh=7R+oJZ1QwpWam0oyPvl07XLWiT2XA4Ke7/fE/PCabxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvRRDOIoPyMrQTvckPKFIxNewGZ5fYwSxId+xI4JD5u0TWeB2NNDTTOXSio/XvNeWjMOwyg/sVWyNWXd4RHU/+50tbOB9tFE/6lrRk6M08RAOwvF3A4FmvPlMSA5Xrvl9CHNPOCbXLNyEZTWyuylUPjxlwMpirqeUTrBYqwxZU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxcsKbnV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717545235; c=relaxed/simple;
+	bh=TH50K4AVLCRJ9x0JcUUjkWd6fXDZInRnvzDvUjlNb4k=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
+	 Subject:Content-Type; b=auxkHRpJhdggvJOP3AZ+M1Bn9wG7mpCtpjqpUIigjjuP7YgUnzU5qtNSGMMoJPP/O+hSB8v8pZGP6vlzQGUMWxClnxh0DaXnOcN8CjlRqUBOPrnrFsUt/TTqq1GrmGH8/HZRcC9YUvQBYJRyQtOvnCbtPVAeyiRz9oX2ogBlPaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk; spf=pass smtp.mailfrom=fuuzetsu.co.uk; dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b=5Qh7Neci; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e4BEa4CS; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fuuzetsu.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fuuzetsu.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxcsKbnV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 385B6C3277B;
-	Tue,  4 Jun 2024 22:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717541024;
-	bh=7R+oJZ1QwpWam0oyPvl07XLWiT2XA4Ke7/fE/PCabxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rxcsKbnVEvcvqUKhhGCW9T0ifCX/ix3aYfUCy78w7HgyVehsVT5JH05KWs8JiFj0E
-	 spunf6+FA7rQu9UNckmABOpbxkXYfFtaHLEjwvuVhSaE2PdCZ8HQRBTyBogtOfikc4
-	 6RH2rWojAAROlj2EzMVkld4CgwbXnbWKiO0AB1DC5gICpheFz+WB8tRT8tfVK1BnOm
-	 kq5mXaPG0q91fAew7hiFS1CnLeJb9PyJ2vTwcX1y18RH/qptI7qVLrOYobF8+h1hf8
-	 53T/f93kR86pQLDdok3BMXaz5mV8QKEWCp+L4fK04tzEuD8eFtdYOwdMkJ4RdJPtDp
-	 rvP5YxcXbXi0A==
-Date: Tue, 4 Jun 2024 15:43:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: perf FTBFS due to -Werror with gcc 14.1.1
-Message-ID: <Zl-YnpW2BUcr-M8c@google.com>
-References: <11178410.LHx4AX4RY1@milian-workstation>
- <Zl8akMdx92DdF7C_@x1>
- <4396113.DFci0H2nWq@milian-workstation>
+	dkim=pass (2048-bit key) header.d=fuuzetsu.co.uk header.i=@fuuzetsu.co.uk header.b="5Qh7Neci";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e4BEa4CS"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.west.internal (Postfix) with ESMTP id BE0831800130;
+	Tue,  4 Jun 2024 19:53:51 -0400 (EDT)
+Received: from imap45 ([10.202.2.95])
+  by compute3.internal (MEProxy); Tue, 04 Jun 2024 19:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fuuzetsu.co.uk;
+	 h=cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1717545231; x=1717631631; bh=WVAyALYuHF
+	ZBcXEEZrkUaYN1CbYlFlJRgzW9qN3mzic=; b=5Qh7NecimpMglJAKvWa/rlCNE/
+	HgIcq3Qleoo/fJQftMyWcBEzszs6rfnPhzm5+ibkslGYeJAe4JIdxtJmwvjSslER
+	sXejtRIVquBofcJxAbhaavByeA7GSmC7yPAu1QpuJQk7GHcStHe833b+FRZDkvYZ
+	hzninTpC05WfkfEN3Yp+8ZWLGXhXvZyvx9a2Yy70i84jmdZb8xzehFVq3CnjouJI
+	HMx8DQX1/HX69nOwSxT+gvaIB+NDlSxcdbPjvHQssM+Oh0RZPqjm+0rS8NGndcXS
+	gOqvC2QHKsijHCtXC6L7pXqVMQ6+bB1qpbunnCrENG3h4QTCFsesE8fMmn9A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1717545231; x=1717631631; bh=WVAyALYuHFZBcXEEZrkUaYN1CbYl
+	FlJRgzW9qN3mzic=; b=e4BEa4CS6AuyOzESnwrg2hJcub0+anU3nXR767sICrvG
+	KetAdd+jCq38cvLLa9KG/SbaKmbhLYsVsRsRFT68A6pBDS+m6cILeIyvcFO2G7YW
+	QKM2gF3gJ5Jvlx6pKWl/VDZC5EPDlL1a92fzm/DJX3WFQLRO+GBbjQklOXeI8RY+
+	G+eOPYILoLR1QTNQxcrZzVTubQQ+uMQjasiHaNBwACk1RuFgUsPw8NhfHuwYNJdh
+	sMSpPs/1KNjUmJfNLbjhsItm2Vw7Tstp+S5IhXw2G72QTIzGhlzenLuylWzuY7mi
+	qR1SYIPvCtnv0Hww1hY0YzUr4GCqlxPzm3xHLBrpjw==
+X-ME-Sender: <xms:DqlfZrgpOGukuImfeTeRviocSsndLjjKPdPhyABViptf7MeOHfQE1A>
+    <xme:DqlfZoAv-2l_Q5ZKMQmjR-aABozh-vI6fyJ3R5HMWRkBK0KnYlbOuLP2faNipKHgC
+    EPV1Qb-fudLvM3dUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelhedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
+    ertderredtnecuhfhrohhmpedfofgrthgvuhhsiicumfhofigrlhgtiiihkhdfuceofhhu
+    uhiivghtshhusehfuhhuiigvthhsuhdrtghordhukheqnecuggftrfgrthhtvghrnhepve
+    egvdduffehtdeuvdefhfefkeefkeeuhfeuheefjeeileefvdeuffejtdeludehnecuffho
+    mhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehfuhhuiigvthhsuhesfhhuuhiivghtshhurdgtohdruhhk
+X-ME-Proxy: <xmx:DqlfZrGRAI6RZTotYsKMlYWVk8dQ4ZFFerhaOdHtz4hNM1FcxsIeTQ>
+    <xmx:DqlfZoR6Mgtcu2oyGJI7fDFcqnRN5wu0sL9VJQl8DDNBxu_FXgqEDg>
+    <xmx:DqlfZoyGhMRIXwfecM8t4A401BuCpzFawfo0qYf2Jt7owTTfLg1Eqg>
+    <xmx:DqlfZu6tRa9ToS5cGM-jXYXMRRxCENegv07bCb3WOHRzB0ET_cfcog>
+    <xmx:D6lfZlrSBJiLoEO0Iq4VY6Y-qJXg-ovz7xQojZzdFdtb4F6x2lI0m2iG>
+Feedback-ID: ia5d440cb:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id CF061272007C; Tue,  4 Jun 2024 19:53:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-497-g97f96844c-fm-20240526.001-g97f96844
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4396113.DFci0H2nWq@milian-workstation>
+Message-Id: <1d63aa77-4809-45f1-8827-cb1ed6613f23@app.fastmail.com>
+In-Reply-To: <f34d5d79-5d44-4a54-8e36-2720f4b25d4e@foss.arm.com>
+References: <cfcaf804-d7b1-4d55-8465-12e1d238aca1@app.fastmail.com>
+ <f34d5d79-5d44-4a54-8e36-2720f4b25d4e@foss.arm.com>
+Date: Wed, 05 Jun 2024 08:53:30 +0900
+From: "Mateusz Kowalczyk" <fuuzetsu@fuuzetsu.co.uk>
+To: "Leo Yan" <niayan01@foss.arm.com>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] Why does libtracevent pkg-config detection wipe PKG_CONFIG_PATH?
+Content-Type: text/plain
 
-Hello,
+On Tue, 4 Jun 2024, at 10:26 PM, Leo Yan wrote:
+> Hi Mateusz,
+>
+> On 5/27/24 01:56, Mateusz Kowalczyk wrote:
+>> Hi,
+>> 
+>> To build recent perf, I'm having to apply the below patch.
+>> 
+>> ```diff
+>> ---
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index 7f1e016a9253..b70fef12a977 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -1181,7 +1181,7 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+>>       CFLAGS += -DHAVE_LIBTRACEEVENT $(LIBTRACEEVENT_CFLAGS)
+>>       LDFLAGS += $(LIBTRACEEVENT_LDFLAGS)
+>>       EXTLIBS += ${TRACEEVENTLIBS}
+>> -    LIBTRACEEVENT_VERSION := $(shell PKG_CONFIG_PATH=$(LIBTRACEEVENT_DIR) $(PKG_CONFIG) --modversion libtraceevent)
+>> +    LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent)
+>>       LIBTRACEEVENT_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+>>       LIBTRACEEVENT_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+>>       LIBTRACEEVENT_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+>> ```
+>> 
+>> I don't understand why `PKG_CONFIG_PATH` is overwritten this way. `grep`ing for PKG_CONFIG_PATH reveals that this isn't done anywhere else in the kernel tree. All other uses of `$(PKG_CONFIG)` in the file simply invoke the tool.
+>> 
+>> Of course, I do actually have `libtraceevent.pc` available, it's just that `LIBTRACEVENT_DIR` is empty which stops it from finding it.
+>
+> When I was fixing the cross compilation issue for perf, I also 
+> encountered the similar issue with you. I have sent a patch series to 
+> resolve the compilation issue.
+>
+> It will be appreciated if you could check if the patch [1] can fix your 
+> reported issue or not.
 
-On Tue, Jun 04, 2024 at 09:58:20PM +0200, Milian Wolff wrote:
-> On Dienstag, 4. Juni 2024 15:45:52 MESZ Arnaldo Carvalho de Melo wrote:
-> > On Tue, Jun 04, 2024 at 01:40:19PM +0200, Milian Wolff wrote:
-> > > Hey all,
-> > > 
-> > > I cannot build the acme perf/core branch on Arch anymore with gcc 14.1.1
-> > > and
-> > perf/core isn't being updated for quite a while, we nowadays update just
-> > the perf-tools (current merge window) and perf-tools-next (next merge
-> > window/devel).
-> > 
-> > Also I still keep my tree uptodate when I'm updating those branches, but
-> > nowadays the trees/branches to be used are:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git
-> > perf-tools
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-> > perf-tools-next
-> > 
-> > As Namhyung Kim is a perf tools co-maintainer and keeps one of these
-> > trees+branch while I keep the other.
-> > 
-> > Right now I'm taking care of perf-tools while Namhyung is managing
-> > perf-tools.next.
-> 
-> Ah indeed that's it, thank you!
-> 
-> Which one of the two would you recommend for interested parties that want to 
-> keep track of perf tools development, i.e. what was perf/core?
+Hi Leo,
 
-The perf-tools-next is for new development (previously perf/core) and the
-perf-tools is for fixes in the current cycles (previously perf/urgent).
+I applied the linked patch on top of latest kernel tree checkout and I can confirm that it fixes the issue for me, thank you!
 
-Thanks,
-Namhyung
+> Also thanks for James' reminding.
+>
+> Thanks,
+> Leo
+>
+> [1] 
+> https://lore.kernel.org/linux-perf-users/20240604093223.1934236-3-leo.yan@arm.com/T/#u
 
+
+
+--
+Mateusz K.
