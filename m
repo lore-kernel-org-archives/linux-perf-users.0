@@ -1,35 +1,34 @@
 Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBE538B
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 11:44:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20418131182
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 11:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.126.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717501464; cv=none; b=LX2YEqMjKfCDw6MaNQzwGaz3EyFefZHTtitYWlTQuWAFXbksJBYfEWXOTlMtaocQTMh+1oHfbkLgQE2mOPR/9hFRo2PZYgFN09ijb8Ut/WonFqsfj7Slc08Oae3U+Aw0LM2eCpNAsJMqX6uoCFCkLEag7px14Myto72W9HVu0p0=
+	t=1717501768; cv=none; b=k+u5MYNyxBRLb4F660YamH2sL/30mdlPUaORbpo74pXzvlr1agXYH4d0eRa01K+lNazLR+WefzxD8saVIZMH7xchdKoNNF/cxNQfNMkKdJ43fYdPGSexh1WaGSXtI2Uw3vLEWPHH8N3RpBp+2z++JYniTBzk7PvyjRUw/wJrakU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717501464; c=relaxed/simple;
-	bh=J3wtDl0ljxVRJN9JMslBmlKOHOJLf3yOGVMpAT30bfY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gCzd1mn6PC6uzgpn2O6vJjPeo/cDhW2SEApgrohPFdCrguGptVhJt3jjJubQ4I0ed+VGwCltvf/KthGhJBMlApnfZ7JZ1mws01nKQP+dYhOUvHyuHAkCUobYS5XuzQcYIRLKUMDiBSrnKDNqkMDWJg6s05w5D6guywSW5UNhjE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com; spf=pass smtp.mailfrom=kdab.com; dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b=jV1BTKqW; arc=none smtp.client-ip=176.9.126.58
+	s=arc-20240116; t=1717501768; c=relaxed/simple;
+	bh=7H8mNYTC3+mfiuZ53ogV6WWWr9ylhfXeMyB/iqLtqLA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGirH1pzYfPH/ckqV3N0jEBT4QJotb/guAb0PLe14mcU4IbDjrbWtN+VT2yhQmnekETOXqwTCE+2xGD0Er6QE/QS1H/Ah4gg0p3ofh4p/IXw9ocY3k6qZq1S6+aAqOXtB4LWkCr13hSf31tbHi13eO1b+Uo/4EeG8n7SWLpCm1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com; spf=pass smtp.mailfrom=kdab.com; dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b=B3yryFP+; arc=none smtp.client-ip=176.9.126.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kdab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b="jV1BTKqW"
+	dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b="B3yryFP+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
  content-type:content-type:content-transfer-encoding:mime-version
  :organization:message-id:date:date:subject:subject:from:from; s=
- dkim; t=1717501458; x=1718365459; bh=SUlvBaIggpkqTRJcDSes4YlPFAc
- pK2wc8DinyxG/DV8=; b=jV1BTKqWrY/wQs8WcAOJL5E40Xl8sR8UzJe8fbxiD39
- iAE7nw1BJlKcHcAZ2/5khd1PeWVtkhTtU2JsVB6U45Fiv4yKaYfnPpSi7KxatGo8
- sIwySQCiyaWq6ZQBj6CTTwTdMbOtvjlUVjLMGHGydXTu+suxiVmPiXofd85ZMqc0
+ dkim; t=1717501220; x=1718365221; bh=kfv6UI3vJYFS2EFMU0/m6LRXman
+ jBnAsXmZr3iFfG54=; b=B3yryFP+kShhJq7qP+Hs/MLkC2l4H7xM/hRZhWV3nvY
+ S5WU52xsahveiZ4TkrG1W8jDHDZvwgnMOO8EBirpzZ0a3+VVTslX9jSS6lM+aUR2
+ B4+IsUkxEsB3ecsLVroYDqeO+/p2QlWU+psmODkStR/G1UxbLaVLBvJ+DrTst9qo
  =
 X-Virus-Scanned: amavisd-new at kdab.com
 From: Milian Wolff <milian.wolff@kdab.com>
 To: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: perf 6.9-1 (archlinux) crashes during recording of cycles +
- raw_syscalls
-Date: Tue, 04 Jun 2024 13:44:18 +0200
-Message-ID: <23879991.0LEYPuXRzz@milian-workstation>
+Subject: perf FTBFS due to -Werror with gcc 14.1.1
+Date: Tue, 04 Jun 2024 13:40:19 +0200
+Message-ID: <11178410.LHx4AX4RY1@milian-workstation>
 Organization: KDAB
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -37,95 +36,135 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
 Hey all,
 
-the following command crashes perf for me, is this still an issue upstream and 
-should I report it to arch for backporting? I cannot build the official perf/
-core branch, so I am afraid I cannot test it myself there:
+I cannot build the acme perf/core branch on Arch anymore with gcc 14.1.1 an=
+d=20
+Linux 6.9.3 due to multiple -Werror issues. Is this known and if so is anyo=
+ne=20
+working on it? Otherwise we can try to get this fixed ourselves and upstrea=
+m=20
+the patches then:
 
 ```
-sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e 
-raw_syscalls:sys_enter ls
-...
-[ perf record: Woken up 3 times to write data ]
-malloc(): invalid next size (unsorted)
-Aborted
-```
-
-Backtrace with GDB + debuginfod:
-```
-malloc(): invalid next size (unsorted)
-
-Thread 1 "perf" received signal SIGABRT, Aborted.
-__pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, 
-no_tid=no_tid@entry=0) at pthread_kill.c:44
-Downloading source file /usr/src/debug/glibc/glibc/nptl/pthread_kill.c
-44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO 
-(ret) : 0;                                                                                                                                                                     
-(gdb) bt
-#0  __pthread_kill_implementation (threadid=<optimized out>, 
-signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-#1  0x00007ffff6ea8eb3 in __pthread_kill_internal (threadid=<optimized out>, 
-signo=6) at pthread_kill.c:78
-#2  0x00007ffff6e50a30 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/
-raise.c:26
-#3  0x00007ffff6e384c3 in __GI_abort () at abort.c:79
-#4  0x00007ffff6e39354 in __libc_message_impl (fmt=fmt@entry=0x7ffff6fc22ea 
-"%s\n") at ../sysdeps/posix/libc_fatal.c:132
-#5  0x00007ffff6eb3085 in malloc_printerr (str=str@entry=0x7ffff6fc5850 
-"malloc(): invalid next size (unsorted)") at malloc.c:5772
-#6  0x00007ffff6eb657c in _int_malloc (av=av@entry=0x7ffff6ff6ac0 
-<main_arena>, bytes=bytes@entry=368) at malloc.c:4081
-#7  0x00007ffff6eb877e in __libc_calloc (n=<optimized out>, 
-elem_size=<optimized out>) at malloc.c:3754
-#8  0x000055555569bdb6 in perf_session.do_write_header ()
-#9  0x00005555555a373a in __cmd_record.constprop.0 ()
-#10 0x00005555555a6846 in cmd_record ()
-#11 0x000055555564db7f in run_builtin ()
-#12 0x000055555558ed77 in main ()
-```
-
-Valgrind memcheck:
-```
-==45136== Invalid write of size 8
-==45136==    at 0x2B38A5: perf_event__synthesize_id_sample (in /usr/bin/perf)
-==45136==    by 0x157069: __cmd_record.constprop.0 (in /usr/bin/perf)
-==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
-==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
-==45136==    by 0x142D76: main (in /usr/bin/perf)
-==45136==  Address 0x6a866a8 is 0 bytes after a block of size 40 alloc'd
-==45136==    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
-==45136==    by 0x3574AB: zalloc (in /usr/bin/perf)
-==45136==    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin/perf)
-==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
-==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
-==45136==    by 0x142D76: main (in /usr/bin/perf)
-==45136== 
-==45136== Syscall param write(buf) points to unaddressable byte(s)
-==45136==    at 0x575953D: __libc_write (write.c:26)
-==45136==    by 0x575953D: write (write.c:24)
-==45136==    by 0x35761F: ion (in /usr/bin/perf)
-==45136==    by 0x357778: writen (in /usr/bin/perf)
-==45136==    by 0x1548F7: record__write (in /usr/bin/perf)
-==45136==    by 0x15708A: __cmd_record.constprop.0 (in /usr/bin/perf)
-==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
-==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
-==45136==    by 0x142D76: main (in /usr/bin/perf)
-==45136==  Address 0x6a866a8 is 0 bytes after a block of size 40 alloc'd
-==45136==    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
-==45136==    by 0x3574AB: zalloc (in /usr/bin/perf)
-==45136==    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin/perf)
-==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
-==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
-==45136==    by 0x142D76: main (in /usr/bin/perf)
-==45136==
+  CC      builtin-record.o
+  CC      builtin-top.o
+  CC      util/metricgroup.o
+  CC      util/hist.o
+  CC      util/synthetic-events.o
+  CC      util/bpf-loader.o
+tests/bpf.c: In function =E2=80=98epoll_pwait_loop=E2=80=99:
+tests/bpf.c:36:17: error: argument 2 null where non-null expected [-
+Werror=3Dnonnull]
+   36 |                 epoll_pwait(-(i + 1), NULL, 0, 0, NULL);
+      |                 ^~~~~~~~~~~
+In file included from tests/bpf.c:5:
+/usr/include/sys/epoll.h:134:12: note: in a call to function =E2=80=98epoll=
+_pwait=E2=80=99=20
+declared =E2=80=98nonnull=E2=80=99
+  134 | extern int epoll_pwait (int __epfd, struct epoll_event *__events,
+      |            ^~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+tests/bpf.o] Error 1
+make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:14=
+0:=20
+tests] Error 2
+make[3]: *** Waiting for unfinished jobs....
+util/metricgroup.c: In function =E2=80=98setup_metric_events=E2=80=99:
+util/metricgroup.c:289:39: error: =E2=80=98calloc=E2=80=99 sizes specified =
+with =E2=80=98sizeof=E2=80=99 in=20
+the earlier argument and not in the later argument [-Werror=3Dcalloc-transp=
+osed-
+args]
+  289 |         metric_events =3D calloc(sizeof(void *), ids_size + 1);
+      |                                       ^~~~
+util/metricgroup.c:289:39: note: earlier argument should specify number of=
+=20
+elements, later size of each element
+cc1: all warnings being treated as errors
+make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+util/metricgroup.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+builtin-top.c: In function =E2=80=98prompt_integer=E2=80=99:
+builtin-top.c:360:21: error: allocation of insufficient size =E2=80=980=E2=
+=80=99 for type=20
+=E2=80=98char=E2=80=99 with size =E2=80=981=E2=80=99 [-Werror=3Dalloc-size]
+  360 |         char *buf =3D malloc(0), *p;
+      |                     ^~~~~~
+cc1: all warnings being treated as errors
+make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+builtin-top.o] Error 1
+util/bpf-loader.c: In function =E2=80=98config_bpf_program=E2=80=99:
+util/bpf-loader.c:551:29: error: =E2=80=98calloc=E2=80=99 sizes specified w=
+ith =E2=80=98sizeof=E2=80=99 in the=20
+earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
+args]
+  551 |         priv =3D calloc(sizeof(*priv), 1);
+      |                             ^
+util/bpf-loader.c:551:29: note: earlier argument should specify number of=20
+elements, later size of each element
+cc1: all warnings being treated as errors
+make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+util/bpf-loader.o] Error 1
+util/synthetic-events.c: In function =E2=80=98perf_event__synthesize_thread=
+s=E2=80=99:
+util/synthetic-events.c:1042:44: error: =E2=80=98calloc=E2=80=99 sizes spec=
+ified with =E2=80=98sizeof=E2=80=99=20
+in the earlier argument and not in the later argument [-Werror=3Dcalloc-
+transposed-args]
+ 1042 |         synthesize_threads =3D calloc(sizeof(pthread_t), thread_nr);
+      |                                            ^~~~~~~~~
+util/synthetic-events.c:1042:44: note: earlier argument should specify numb=
+er=20
+of elements, later size of each element
+util/synthetic-events.c:1046:29: error: =E2=80=98calloc=E2=80=99 sizes spec=
+ified with =E2=80=98sizeof=E2=80=99=20
+in the earlier argument and not in the later argument [-Werror=3Dcalloc-
+transposed-args]
+ 1046 |         args =3D calloc(sizeof(*args), thread_nr);
+      |                             ^
+util/synthetic-events.c:1046:29: note: earlier argument should specify numb=
+er=20
+of elements, later size of each element
+cc1: all warnings being treated as errors
+make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+util/synthetic-events.o] Error 1
+builtin-record.c: In function =E2=80=98cmd_record=E2=80=99:
+builtin-record.c:4091:62: error: =E2=80=98calloc=E2=80=99 sizes specified w=
+ith =E2=80=98sizeof=E2=80=99 in the=20
+earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
+args]
+ 4091 |                 rec->switch_output.filenames =3D calloc(sizeof(char=
+ *),
+      |                                                              ^~~~
+builtin-record.c:4091:62: note: earlier argument should specify number of=20
+elements, later size of each element
+cc1: all warnings being treated as errors
+make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
+:=20
+builtin-record.o] Error 1
+util/hist.c: In function =E2=80=98hist_entry__init=E2=80=99:
+util/hist.c:494:49: error: =E2=80=98calloc=E2=80=99 sizes specified with =
+=E2=80=98sizeof=E2=80=99 in the=20
+earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
+args]
+  494 |                 he->res_samples =3D calloc(sizeof(struct res_sample=
+),
+      |                                                 ^~~~~~
 ```
 
 Thanks
--- 
+
+=2D-=20
 Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 KDAB (Deutschland) GmbH, a KDAB Group company
 Tel: +49-30-521325470
