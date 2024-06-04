@@ -1,174 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FAC8F45
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 13:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4AE8F45
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 13:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508755; cv=none; b=nRIPzAre+X/65g8q+Jpr+KyNRi7Hv1PIOLfv+w6wZBIeGGMm9yd8jpm2eh4nkafgdR6wU8AJRPvln6107J9DuOH/rzcsCl7+nHtlXVEb9oWvrZp6SqFgh70LApbHNw95yFrN/rwBcK4PmTzZs3xSIf0fO63hmxX8qR0V4wTI3Xc=
+	t=1717509000; cv=none; b=lG4BCJFRmduGE58M9vwNrtbaVEhKjPGqgyygd0u+3D9WSs+YbEoUpZHAWp1sA1cVwf0nsuv7zTw8yH1BRn9Ad2+5hXlPeo+woXxgz9jpHVFvFVCiaWT3CzZ16jQnl5kmAz+7OVYRf2XVyetX1KnGGOQsIUfkoswVyJ+RQLVnQGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508755; c=relaxed/simple;
-	bh=WewsGCTb6OuR8cIKCvGfvFyAG4DnQbqQ6RFozhuidE0=;
+	s=arc-20240116; t=1717509000; c=relaxed/simple;
+	bh=1tNsqaplAjXG/MnhrbHeGCpFNy3KebnjUiGnDiFF/eI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOPzljAgnKcm6dQXxChcEgktfrlLTnHhC7fD7LR/ZZKan2ULneWR4ISOqdWH7WChVSIIXByxwCx2pKLIVLtGzLoO9ot6aQtfJSMikk8gzd0W4TOdgv6KHlDxK6ilz7g7eRd7nE7L1Los10UN54uweAgBtIZAESumRGUUboFjYMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HG8OmPPe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBfDhqAJ2Td4Vg5EERSYvNjQRknqknQSZLOSRZ6ALqR7mHN45/0iPqBCg+W/1CVZuPd7XqR3iJ+5Nxxx8FFR4EWYVjeBtX2gdc+3RGUzBVNPkgDB4DQRMw2ncPxFZmVC+JNLYHzoWn2YOz1RQ1dx2puhl6s0mIoNeheO+HvfbBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DETe/sLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HG8OmPPe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED56C2BBFC;
-	Tue,  4 Jun 2024 13:45:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DETe/sLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B94C2BBFC;
+	Tue,  4 Jun 2024 13:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717508755;
-	bh=WewsGCTb6OuR8cIKCvGfvFyAG4DnQbqQ6RFozhuidE0=;
+	s=k20201202; t=1717509000;
+	bh=1tNsqaplAjXG/MnhrbHeGCpFNy3KebnjUiGnDiFF/eI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HG8OmPPeyVN0BqwbgOsnO6kE3Nw6nJ7MWrikBsH8ak2L6VQCIJWXk9xBjx052et/2
-	 7i9aMKxDxZlz5IcM51wnwG3eFzczXvN28rXQ47s/8LzUm1/47keRrust0iAG5kRZK1
-	 v/2VxzECdamWZuvKD7djGaP5LXgW2ZjkwnxZuMaimDYRUAJW2NkC/IytLF3+AJ9cIm
-	 nJJv2emWo6YgKOYFc4sLpyt2YFZiyPVFq6W3Db6JAPYeekCfWLRwrZohPRshf9Nmab
-	 /Jro6XtpgnJjE5otXkD+29KHObuCu2beWLYwAEhlX1kRnlBk5kMUkl/vTnR9hCkG5V
-	 t46bi3rSTYKOw==
-Date: Tue, 4 Jun 2024 10:45:52 -0300
+	b=DETe/sLKPXJ4OcDLgmlJvwnYbCT8l+Zlg07s0viMm2XhwPdToMMh8tvwwTNGKZI6Q
+	 1U9BMAz9TVDGmHEsFEt7an+IPcZ9JlAkG3QiQgKtsaeSvG7zucKzJWr/3jy80dsdFH
+	 hDvxEDfefWk/Vt6yhGwsHyZGLwmoXhF+utu9Qq6TUyZGU3dmASSMT2/3N2yndvvabJ
+	 9k576/miSXkk7MhXCD/YWn02lbp7rw4bx0PIC8VjTbnI64ZCqfmdY91hhQsoJu0zDl
+	 wmJSQ61FGWEBWBMznCGzP0ILXrIiFh0eg7S5d12wo69l+1ulOaDsnGhyypqvZAqwo3
+	 GRt4xyUL3BYtA==
+Date: Tue, 4 Jun 2024 10:49:57 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Milian Wolff <milian.wolff@kdab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
+Cc: linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: Re: perf FTBFS due to -Werror with gcc 14.1.1
-Message-ID: <Zl8akMdx92DdF7C_@x1>
-References: <11178410.LHx4AX4RY1@milian-workstation>
+Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles +
+ raw_syscalls
+Message-ID: <Zl8bhWfHSXxs35r2@x1>
+References: <23879991.0LEYPuXRzz@milian-workstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <11178410.LHx4AX4RY1@milian-workstation>
+In-Reply-To: <23879991.0LEYPuXRzz@milian-workstation>
 
-On Tue, Jun 04, 2024 at 01:40:19PM +0200, Milian Wolff wrote:
+On Tue, Jun 04, 2024 at 01:44:18PM +0200, Milian Wolff wrote:
 > Hey all,
 > 
-> I cannot build the acme perf/core branch on Arch anymore with gcc 14.1.1 and 
+> the following command crashes perf for me, is this still an issue upstream and 
+> should I report it to arch for backporting? I cannot build the official perf/
+> core branch, so I am afraid I cannot test it myself there:
+> 
+> ```
+> sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e 
+> raw_syscalls:sys_enter ls
+> ...
+> [ perf record: Woken up 3 times to write data ]
+> malloc(): invalid next size (unsorted)
+> Aborted
+> ```
+> 
+> Backtrace with GDB + debuginfod:
+> ```
+> malloc(): invalid next size (unsorted)
 
-perf/core isn't being updated for quite a while, we nowadays update just
-the perf-tools (current merge window) and perf-tools-next (next merge
-window/devel).
-
-Also I still keep my tree uptodate when I'm updating those branches, but
-nowadays the trees/branches to be used are:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools
-
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-
-As Namhyung Kim is a perf tools co-maintainer and keeps one of these
-trees+branch while I keep the other.
-
-Right now I'm taking care of perf-tools while Namhyung is managing
-perf-tools.next.
-
-> Linux 6.9.3 due to multiple -Werror issues. Is this known and if so is anyone 
-> working on it? Otherwise we can try to get this fixed ourselves and upstream 
-> the patches then:
-
-Can you please check if the problems are present in the above
-trees+branches?
+I reproduced this all the way back to 6.8, trying to bisect now, thanks
+for the report,
 
 - Arnaldo
  
+> Thread 1 "perf" received signal SIGABRT, Aborted.
+> __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, 
+> no_tid=no_tid@entry=0) at pthread_kill.c:44
+> Downloading source file /usr/src/debug/glibc/glibc/nptl/pthread_kill.c
+> 44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO 
+> (ret) : 0;                                                                                                                                                                     
+> (gdb) bt
+> #0  __pthread_kill_implementation (threadid=<optimized out>, 
+> signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
+> #1  0x00007ffff6ea8eb3 in __pthread_kill_internal (threadid=<optimized out>, 
+> signo=6) at pthread_kill.c:78
+> #2  0x00007ffff6e50a30 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/
+> raise.c:26
+> #3  0x00007ffff6e384c3 in __GI_abort () at abort.c:79
+> #4  0x00007ffff6e39354 in __libc_message_impl (fmt=fmt@entry=0x7ffff6fc22ea 
+> "%s\n") at ../sysdeps/posix/libc_fatal.c:132
+> #5  0x00007ffff6eb3085 in malloc_printerr (str=str@entry=0x7ffff6fc5850 
+> "malloc(): invalid next size (unsorted)") at malloc.c:5772
+> #6  0x00007ffff6eb657c in _int_malloc (av=av@entry=0x7ffff6ff6ac0 
+> <main_arena>, bytes=bytes@entry=368) at malloc.c:4081
+> #7  0x00007ffff6eb877e in __libc_calloc (n=<optimized out>, 
+> elem_size=<optimized out>) at malloc.c:3754
+> #8  0x000055555569bdb6 in perf_session.do_write_header ()
+> #9  0x00005555555a373a in __cmd_record.constprop.0 ()
+> #10 0x00005555555a6846 in cmd_record ()
+> #11 0x000055555564db7f in run_builtin ()
+> #12 0x000055555558ed77 in main ()
 > ```
->   CC      builtin-record.o
->   CC      builtin-top.o
->   CC      util/metricgroup.o
->   CC      util/hist.o
->   CC      util/synthetic-events.o
->   CC      util/bpf-loader.o
-> tests/bpf.c: In function ‘epoll_pwait_loop’:
-> tests/bpf.c:36:17: error: argument 2 null where non-null expected [-
-> Werror=nonnull]
->    36 |                 epoll_pwait(-(i + 1), NULL, 0, 0, NULL);
->       |                 ^~~~~~~~~~~
-> In file included from tests/bpf.c:5:
-> /usr/include/sys/epoll.h:134:12: note: in a call to function ‘epoll_pwait’ 
-> declared ‘nonnull’
->   134 | extern int epoll_pwait (int __epfd, struct epoll_event *__events,
->       |            ^~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> tests/bpf.o] Error 1
-> make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:140: 
-> tests] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> util/metricgroup.c: In function ‘setup_metric_events’:
-> util/metricgroup.c:289:39: error: ‘calloc’ sizes specified with ‘sizeof’ in 
-> the earlier argument and not in the later argument [-Werror=calloc-transposed-
-> args]
->   289 |         metric_events = calloc(sizeof(void *), ids_size + 1);
->       |                                       ^~~~
-> util/metricgroup.c:289:39: note: earlier argument should specify number of 
-> elements, later size of each element
-> cc1: all warnings being treated as errors
-> make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> util/metricgroup.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
-> builtin-top.c: In function ‘prompt_integer’:
-> builtin-top.c:360:21: error: allocation of insufficient size ‘0’ for type 
-> ‘char’ with size ‘1’ [-Werror=alloc-size]
->   360 |         char *buf = malloc(0), *p;
->       |                     ^~~~~~
-> cc1: all warnings being treated as errors
-> make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> builtin-top.o] Error 1
-> util/bpf-loader.c: In function ‘config_bpf_program’:
-> util/bpf-loader.c:551:29: error: ‘calloc’ sizes specified with ‘sizeof’ in the 
-> earlier argument and not in the later argument [-Werror=calloc-transposed-
-> args]
->   551 |         priv = calloc(sizeof(*priv), 1);
->       |                             ^
-> util/bpf-loader.c:551:29: note: earlier argument should specify number of 
-> elements, later size of each element
-> cc1: all warnings being treated as errors
-> make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> util/bpf-loader.o] Error 1
-> util/synthetic-events.c: In function ‘perf_event__synthesize_threads’:
-> util/synthetic-events.c:1042:44: error: ‘calloc’ sizes specified with ‘sizeof’ 
-> in the earlier argument and not in the later argument [-Werror=calloc-
-> transposed-args]
->  1042 |         synthesize_threads = calloc(sizeof(pthread_t), thread_nr);
->       |                                            ^~~~~~~~~
-> util/synthetic-events.c:1042:44: note: earlier argument should specify number 
-> of elements, later size of each element
-> util/synthetic-events.c:1046:29: error: ‘calloc’ sizes specified with ‘sizeof’ 
-> in the earlier argument and not in the later argument [-Werror=calloc-
-> transposed-args]
->  1046 |         args = calloc(sizeof(*args), thread_nr);
->       |                             ^
-> util/synthetic-events.c:1046:29: note: earlier argument should specify number 
-> of elements, later size of each element
-> cc1: all warnings being treated as errors
-> make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> util/synthetic-events.o] Error 1
-> builtin-record.c: In function ‘cmd_record’:
-> builtin-record.c:4091:62: error: ‘calloc’ sizes specified with ‘sizeof’ in the 
-> earlier argument and not in the later argument [-Werror=calloc-transposed-
-> args]
->  4091 |                 rec->switch_output.filenames = calloc(sizeof(char *),
->       |                                                              ^~~~
-> builtin-record.c:4091:62: note: earlier argument should specify number of 
-> elements, later size of each element
-> cc1: all warnings being treated as errors
-> make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97: 
-> builtin-record.o] Error 1
-> util/hist.c: In function ‘hist_entry__init’:
-> util/hist.c:494:49: error: ‘calloc’ sizes specified with ‘sizeof’ in the 
-> earlier argument and not in the later argument [-Werror=calloc-transposed-
-> args]
->   494 |                 he->res_samples = calloc(sizeof(struct res_sample),
->       |                                                 ^~~~~~
+> 
+> Valgrind memcheck:
+> ```
+> ==45136== Invalid write of size 8
+> ==45136==    at 0x2B38A5: perf_event__synthesize_id_sample (in /usr/bin/perf)
+> ==45136==    by 0x157069: __cmd_record.constprop.0 (in /usr/bin/perf)
+> ==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
+> ==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
+> ==45136==    by 0x142D76: main (in /usr/bin/perf)
+> ==45136==  Address 0x6a866a8 is 0 bytes after a block of size 40 alloc'd
+> ==45136==    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
+> ==45136==    by 0x3574AB: zalloc (in /usr/bin/perf)
+> ==45136==    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin/perf)
+> ==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
+> ==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
+> ==45136==    by 0x142D76: main (in /usr/bin/perf)
+> ==45136== 
+> ==45136== Syscall param write(buf) points to unaddressable byte(s)
+> ==45136==    at 0x575953D: __libc_write (write.c:26)
+> ==45136==    by 0x575953D: write (write.c:24)
+> ==45136==    by 0x35761F: ion (in /usr/bin/perf)
+> ==45136==    by 0x357778: writen (in /usr/bin/perf)
+> ==45136==    by 0x1548F7: record__write (in /usr/bin/perf)
+> ==45136==    by 0x15708A: __cmd_record.constprop.0 (in /usr/bin/perf)
+> ==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
+> ==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
+> ==45136==    by 0x142D76: main (in /usr/bin/perf)
+> ==45136==  Address 0x6a866a8 is 0 bytes after a block of size 40 alloc'd
+> ==45136==    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
+> ==45136==    by 0x3574AB: zalloc (in /usr/bin/perf)
+> ==45136==    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin/perf)
+> ==45136==    by 0x15A845: cmd_record (in /usr/bin/perf)
+> ==45136==    by 0x201B7E: run_builtin (in /usr/bin/perf)
+> ==45136==    by 0x142D76: main (in /usr/bin/perf)
+> ==45136==
 > ```
 > 
 > Thanks
-> 
 > -- 
 > Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
 > KDAB (Deutschland) GmbH, a KDAB Group company
