@@ -1,92 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EFB1482E7;
-	Tue,  4 Jun 2024 19:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7552513FD92
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 19:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.126.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717527735; cv=none; b=RVGix98LnrgOfr4us5Q/VhN2zIwv5VNrrodxQLI8INWrMYyLbW5E4ojbuiZB+a1108FrcG492HC6zbnOf+gv/J+N8mJGlPeCL4Ps3F5M2Z1m+xKiztD0UhvuAP/vY5V68HpFxhFue1PHkyC7tS7CblKmBKUe2SbdGNXxmuNWDxg=
+	t=1717531107; cv=none; b=nbEkxf9RG2AUyJyjpSQdTN+h57zGYho2aIXYa8jy8LNkwiT5BZYtSiGXx3z7dvzLMDwxwu5rcoWz6mChOp41rHDZvkH0A42e1DskP5p9jWIIS9fjx7zGfHkHTHvHHiELRGYT3yTMyMbUuCNIjCwkbh5+Zr5Gq4rFM+dQfFMdnwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717527735; c=relaxed/simple;
-	bh=RkN5Y3HmGlKLDqvR91ATdvyLyqquL2+fSb4Vj+4qCXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=McWI99pYjd1UsuEDwouSuNjqHmLiwr3pZdjYeb6ngVVDqQC3BnMe1SOnjQpJELQkno7bK/auUgaM8aAvRwjAvVdzzG9ZvEFPllXgdY7EbvJx9S2iwbE2HdJ681A0BwZfBvKRCYG3Dwsu6sS9KcxBhpeKq4rLacV8bmbeZNHVHTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrTiIcOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717531107; c=relaxed/simple;
+	bh=izz/e1HtS4XBiKb/LQBzieVLigBslpw/UhTUE5p93Uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r1H+lh850IftGW91q2aiMw2FQW1EIHXd+Jw7c/HnT9jBS3RiCLZf6q8VpJDA2JnoqWZaRmEZEpSm6Sc1gyxijKp8GMkC+/BqyW4QyyTr5ffO7ocDecTEXlIY85VTgTMWperMwh/VrwYwTPipN6H2eXePohchCYwsw1HHBvJFOzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com; spf=pass smtp.mailfrom=kdab.com; dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b=rlt3bfey; arc=none smtp.client-ip=176.9.126.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kdab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrTiIcOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90958C2BBFC;
-	Tue,  4 Jun 2024 19:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717527735;
-	bh=RkN5Y3HmGlKLDqvR91ATdvyLyqquL2+fSb4Vj+4qCXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JrTiIcOCw5JPVRMul/mUQjyu+td7oOtApNUepXHrPNp47lp8/lbdZHAwUOj1JamyH
-	 IG+rhfcbtIb5Jn/I7SQEBvUbcs1WhAORSiQ9FqiANc0cbnNKy2AvXwl3QELlb39ute
-	 Qswr2DlBIct3ErRXEPtYM7cEKC/R0bbogwbPNPDfyRBCkgwo5lN6v+YHD8KV9K0B0Y
-	 GYmtX0mGXSrJDsOZgRnbJiALdfQQKRo8miov9b7X8BbrTd8Qy26Q92HfIJCzVJjLoT
-	 ivCBjOZDmAEQa/w5baIJkwwl6WbpgZJ0rZlmYurSNl7mCX9kcMaCVjs+WQLpcaZeVb
-	 zTQUbnXDScCaw==
-Date: Tue, 4 Jun 2024 16:02:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kenel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles +
- raw_syscalls
-Message-ID: <Zl9ksOlHJHnKM70p@x1>
-References: <23879991.0LEYPuXRzz@milian-workstation>
- <Zl8bhWfHSXxs35r2@x1>
- <Zl8g1LxRCYgTSxhy@x1>
- <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b="rlt3bfey"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-type:content-type:content-transfer-encoding:mime-version
+ :references:in-reply-to:organization:message-id:date:date
+ :subject:subject:from:from; s=dkim; t=1717531101; x=1718395102;
+ bh=DwaB6P8mAb6qzlSstFdg1iOoaMbkYDPt/LLRH+5ikdM=; b=rlt3bfeyuBgu
+ nqEbQ7FOjRF8kXGTigKOjrycFMrH/Yj1sK2/j7x+kFYi/xSX86Nf4wUm39BREMlS
+ tjGBuyAQmZgSAJM4abu0SfduSs1FdhUQSXZfsgobgDCXKhk8v8Rv805nagTGSLlH
+ bK+DR0l0l0uRWBKw4NU2j4+IQ5vbcZk=
+X-Virus-Scanned: amavisd-new at kdab.com
+From: Milian Wolff <milian.wolff@kdab.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Subject: Re: perf FTBFS due to -Werror with gcc 14.1.1
+Date: Tue, 04 Jun 2024 21:58:20 +0200
+Message-ID: <4396113.DFci0H2nWq@milian-workstation>
+Organization: KDAB
+In-Reply-To: <Zl8akMdx92DdF7C_@x1>
+References: <11178410.LHx4AX4RY1@milian-workstation> <Zl8akMdx92DdF7C_@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jun 04, 2024 at 11:48:09AM -0700, Ian Rogers wrote:
-> On Tue, Jun 4, 2024 at 7:12 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Can you please try with the attached and perhaps provide your Tested-by?
+On Dienstag, 4. Juni 2024 15:45:52 MESZ Arnaldo Carvalho de Melo wrote:
+> On Tue, Jun 04, 2024 at 01:40:19PM +0200, Milian Wolff wrote:
+> > Hey all,
+> > 
+> > I cannot build the acme perf/core branch on Arch anymore with gcc 14.1.1
+> > and
+> perf/core isn't being updated for quite a while, we nowadays update just
+> the perf-tools (current merge window) and perf-tools-next (next merge
+> window/devel).
+> 
+> Also I still keep my tree uptodate when I'm updating those branches, but
+> nowadays the trees/branches to be used are:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git
+> perf-tools
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+> perf-tools-next
+> 
+> As Namhyung Kim is a perf tools co-maintainer and keeps one of these
+> trees+branch while I keep the other.
+> 
+> Right now I'm taking care of perf-tools while Namhyung is managing
+> perf-tools.next.
 
-> > From ab355e2c6b4cf641a9fff7af38059cf69ac712d5 Mon Sep 17 00:00:00 2001
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date: Tue, 4 Jun 2024 11:00:22 -0300
-> > Subject: [PATCH 1/1] Revert "perf record: Reduce memory for recording
-> >  PERF_RECORD_LOST_SAMPLES event"
+Ah indeed that's it, thank you!
 
-> > This reverts commit 7d1405c71df21f6c394b8a885aa8a133f749fa22.
- 
-> I think we should try to fight back reverts when possible. Reverts are
-> removing something somebody poured time and attention into. When a
+Which one of the two would you recommend for interested parties that want to 
+keep track of perf tools development, i.e. what was perf/core?
 
-While in the development phase, yeah, but when we find a regression and
-the revert makes it go away, that is the way to go.
+Thanks
 
-The person who poured time on the development gets notified and can
-decide if/when to try again.
+-- 
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
 
-Millian had to pour time to figure out why something stopped working,
-was kind enough to provide the output from multiple tools to help in
-fixing the problem and I had to do the bisect to figure out when the
-problem happened and to check if reverting it we would have the tool
-working again.
-
-If we try to fix this for v6.10 we may end up adding yet another bug, so
-the safe thing to do at this point is to do the revert.
-
-We can try improving this once again for v6.11.
-
-> regression has occurred then I think we should add the regression case
-> as a test.
-
-Sure, I thought about that as well, will try and have one shell test
-with that, referring to this case, for v6.11.
-
-- Arnaldo
