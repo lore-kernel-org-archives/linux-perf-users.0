@@ -1,172 +1,79 @@
-Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20418131182
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Jun 2024 11:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.126.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50857266A7;
+	Tue,  4 Jun 2024 12:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717501768; cv=none; b=k+u5MYNyxBRLb4F660YamH2sL/30mdlPUaORbpo74pXzvlr1agXYH4d0eRa01K+lNazLR+WefzxD8saVIZMH7xchdKoNNF/cxNQfNMkKdJ43fYdPGSexh1WaGSXtI2Uw3vLEWPHH8N3RpBp+2z++JYniTBzk7PvyjRUw/wJrakU=
+	t=1717503752; cv=none; b=EB9MtHGBQKkuXpGEdERN+QubVlnJbh6c6K+rMgTtZqLuDhHSESfBw0uQjdcMZF2M/Blf2Y+XBwu3g2c+JCyoOs8yFPvF/+uha9c86kJ+U17CimcL85A8XeD2/kXnkHqAQ9eyOm3sb9e7qBJPHS/Ts2WISHC4dY5wVSgcGsQS4MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717501768; c=relaxed/simple;
-	bh=7H8mNYTC3+mfiuZ53ogV6WWWr9ylhfXeMyB/iqLtqLA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGirH1pzYfPH/ckqV3N0jEBT4QJotb/guAb0PLe14mcU4IbDjrbWtN+VT2yhQmnekETOXqwTCE+2xGD0Er6QE/QS1H/Ah4gg0p3ofh4p/IXw9ocY3k6qZq1S6+aAqOXtB4LWkCr13hSf31tbHi13eO1b+Uo/4EeG8n7SWLpCm1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com; spf=pass smtp.mailfrom=kdab.com; dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b=B3yryFP+; arc=none smtp.client-ip=176.9.126.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kdab.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b="B3yryFP+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
- content-type:content-type:content-transfer-encoding:mime-version
- :organization:message-id:date:date:subject:subject:from:from; s=
- dkim; t=1717501220; x=1718365221; bh=kfv6UI3vJYFS2EFMU0/m6LRXman
- jBnAsXmZr3iFfG54=; b=B3yryFP+kShhJq7qP+Hs/MLkC2l4H7xM/hRZhWV3nvY
- S5WU52xsahveiZ4TkrG1W8jDHDZvwgnMOO8EBirpzZ0a3+VVTslX9jSS6lM+aUR2
- B4+IsUkxEsB3ecsLVroYDqeO+/p2QlWU+psmODkStR/G1UxbLaVLBvJ+DrTst9qo
- =
-X-Virus-Scanned: amavisd-new at kdab.com
-From: Milian Wolff <milian.wolff@kdab.com>
-To: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: perf FTBFS due to -Werror with gcc 14.1.1
-Date: Tue, 04 Jun 2024 13:40:19 +0200
-Message-ID: <11178410.LHx4AX4RY1@milian-workstation>
-Organization: KDAB
+	s=arc-20240116; t=1717503752; c=relaxed/simple;
+	bh=AnsQkg7zBLWIzDE3kmS0kW3H/V95QaJyCkrnfA8oOEg=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ismv3XMf+JuA1fqmi1k7YG6s58RMX/suQv15xDn+Ol4Xy4DoOinfjhyvtqOICO5lUm5XBR0k+sK8SGG7pndbOIoqfJjwZkrjYSKimFgO3xnUhXGUb/1l0MQeMQ2WgJGjdHpSENL1x7jFLE2Egr0JhIxn/P82pK4PXfbjy531TQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VtqSb6RV8zckwS;
+	Tue,  4 Jun 2024 20:21:03 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8BD1E180060;
+	Tue,  4 Jun 2024 20:22:27 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 4 Jun 2024 20:22:26 +0800
+CC: <yangyicong@hisilicon.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<james.clark@arm.com>, <dongli.zhang@oracle.com>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>
+Subject: Re: [PATCH 2/3] perf: arm_pmu: Only show online CPUs in device's
+ "cpus" attribute
+To: Ian Rogers <irogers@google.com>
+References: <20240603092812.46616-1-yangyicong@huawei.com>
+ <20240603092812.46616-3-yangyicong@huawei.com>
+ <CAP-5=fXDPor-WsO-TGB3z6QpSWZOFJC31GJpuwZUA3qz_3WsYQ@mail.gmail.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <ed04add4-e9b1-2723-b9f5-e6cd53e6ffb4@huawei.com>
+Date: Tue, 4 Jun 2024 20:22:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAP-5=fXDPor-WsO-TGB3z6QpSWZOFJC31GJpuwZUA3qz_3WsYQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-Hey all,
+On 2024/6/4 0:20, Ian Rogers wrote:
+> On Mon, Jun 3, 2024 at 2:33 AM Yicong Yang <yangyicong@huawei.com> wrote:
+>>
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> When there're CPUs offline after system booting, perf will failed:
+>> [root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
+>> Error:
+>> The sys_perf_event_open() syscall returned with 19 (No such device) for event (cpu-clock).
+>> /bin/dmesg | grep -i perf may provide additional information.
+> 
+> Thanks for debugging this Yicong! The fact cycles is falling back on
+> cpu-clock I'm confused by, on ARM the PMU type generally isn't
+> PERF_TYPE_HARDWARE and so this fallback shouldn't happen:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evsel.c?h=perf-tools-next#n2900
 
-I cannot build the acme perf/core branch on Arch anymore with gcc 14.1.1 an=
-d=20
-Linux 6.9.3 due to multiple -Werror issues. Is this known and if so is anyo=
-ne=20
-working on it? Otherwise we can try to get this fixed ourselves and upstrea=
-m=20
-the patches then:
+It should be brought by config_term_pmu() in [1]. If it's a hardware event term
+and not found in the PMU's sysfs, we'll make attr->type to PERF_TYPE_HARDWARE.
 
-```
-  CC      builtin-record.o
-  CC      builtin-top.o
-  CC      util/metricgroup.o
-  CC      util/hist.o
-  CC      util/synthetic-events.o
-  CC      util/bpf-loader.o
-tests/bpf.c: In function =E2=80=98epoll_pwait_loop=E2=80=99:
-tests/bpf.c:36:17: error: argument 2 null where non-null expected [-
-Werror=3Dnonnull]
-   36 |                 epoll_pwait(-(i + 1), NULL, 0, 0, NULL);
-      |                 ^~~~~~~~~~~
-In file included from tests/bpf.c:5:
-/usr/include/sys/epoll.h:134:12: note: in a call to function =E2=80=98epoll=
-_pwait=E2=80=99=20
-declared =E2=80=98nonnull=E2=80=99
-  134 | extern int epoll_pwait (int __epfd, struct epoll_event *__events,
-      |            ^~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-tests/bpf.o] Error 1
-make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:14=
-0:=20
-tests] Error 2
-make[3]: *** Waiting for unfinished jobs....
-util/metricgroup.c: In function =E2=80=98setup_metric_events=E2=80=99:
-util/metricgroup.c:289:39: error: =E2=80=98calloc=E2=80=99 sizes specified =
-with =E2=80=98sizeof=E2=80=99 in=20
-the earlier argument and not in the later argument [-Werror=3Dcalloc-transp=
-osed-
-args]
-  289 |         metric_events =3D calloc(sizeof(void *), ids_size + 1);
-      |                                       ^~~~
-util/metricgroup.c:289:39: note: earlier argument should specify number of=
-=20
-elements, later size of each element
-cc1: all warnings being treated as errors
-make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-util/metricgroup.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-builtin-top.c: In function =E2=80=98prompt_integer=E2=80=99:
-builtin-top.c:360:21: error: allocation of insufficient size =E2=80=980=E2=
-=80=99 for type=20
-=E2=80=98char=E2=80=99 with size =E2=80=981=E2=80=99 [-Werror=3Dalloc-size]
-  360 |         char *buf =3D malloc(0), *p;
-      |                     ^~~~~~
-cc1: all warnings being treated as errors
-make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-builtin-top.o] Error 1
-util/bpf-loader.c: In function =E2=80=98config_bpf_program=E2=80=99:
-util/bpf-loader.c:551:29: error: =E2=80=98calloc=E2=80=99 sizes specified w=
-ith =E2=80=98sizeof=E2=80=99 in the=20
-earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
-args]
-  551 |         priv =3D calloc(sizeof(*priv), 1);
-      |                             ^
-util/bpf-loader.c:551:29: note: earlier argument should specify number of=20
-elements, later size of each element
-cc1: all warnings being treated as errors
-make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-util/bpf-loader.o] Error 1
-util/synthetic-events.c: In function =E2=80=98perf_event__synthesize_thread=
-s=E2=80=99:
-util/synthetic-events.c:1042:44: error: =E2=80=98calloc=E2=80=99 sizes spec=
-ified with =E2=80=98sizeof=E2=80=99=20
-in the earlier argument and not in the later argument [-Werror=3Dcalloc-
-transposed-args]
- 1042 |         synthesize_threads =3D calloc(sizeof(pthread_t), thread_nr);
-      |                                            ^~~~~~~~~
-util/synthetic-events.c:1042:44: note: earlier argument should specify numb=
-er=20
-of elements, later size of each element
-util/synthetic-events.c:1046:29: error: =E2=80=98calloc=E2=80=99 sizes spec=
-ified with =E2=80=98sizeof=E2=80=99=20
-in the earlier argument and not in the later argument [-Werror=3Dcalloc-
-transposed-args]
- 1046 |         args =3D calloc(sizeof(*args), thread_nr);
-      |                             ^
-util/synthetic-events.c:1046:29: note: earlier argument should specify numb=
-er=20
-of elements, later size of each element
-cc1: all warnings being treated as errors
-make[4]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-util/synthetic-events.o] Error 1
-builtin-record.c: In function =E2=80=98cmd_record=E2=80=99:
-builtin-record.c:4091:62: error: =E2=80=98calloc=E2=80=99 sizes specified w=
-ith =E2=80=98sizeof=E2=80=99 in the=20
-earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
-args]
- 4091 |                 rec->switch_output.filenames =3D calloc(sizeof(char=
- *),
-      |                                                              ^~~~
-builtin-record.c:4091:62: note: earlier argument should specify number of=20
-elements, later size of each element
-cc1: all warnings being treated as errors
-make[3]: *** [/home/milian/projects/src/linux/tools/build/Makefile.build:97=
-:=20
-builtin-record.o] Error 1
-util/hist.c: In function =E2=80=98hist_entry__init=E2=80=99:
-util/hist.c:494:49: error: =E2=80=98calloc=E2=80=99 sizes specified with =
-=E2=80=98sizeof=E2=80=99 in the=20
-earlier argument and not in the later argument [-Werror=3Dcalloc-transposed-
-args]
-  494 |                 he->res_samples =3D calloc(sizeof(struct res_sample=
-),
-      |                                                 ^~~~~~
-```
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1052
 
-Thanks
-
-=2D-=20
-Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
-
+Thanks.
