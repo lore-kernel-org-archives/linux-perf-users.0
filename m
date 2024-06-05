@@ -1,144 +1,127 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1912018F2CE;
-	Wed,  5 Jun 2024 07:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B0F1946BA;
+	Wed,  5 Jun 2024 08:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571919; cv=none; b=qzBsT2bHQDRkA7nUwIpn3MYEMKDSdZJq1NWJGS/ouVTa80K0CxBTFf5j7SsGCp5+vKYR4KTAVmChhKLALr/d1drx7jOoTXn13CdERIrGBzPMwWu1MKfImjspD4u4SG0QLBOYJo7qAPP97kATl4zvZVfJxvNYW8fGgtjhoqNbcTQ=
+	t=1717575574; cv=none; b=gnw7OV0IXW7z/TmV3uO7iXe2ALoZBZZwgWdvhhQPSnDyrra06JA60QQu3zhtqEVTMOC6Z3BIg0ZiPn6xGvPHWorjLQSpAYIoVuTKLN64abXdSTuoMUaXcW5IK5LgifAvvoLqk2OigltbInOLnBpeod3wlnYtu/vX7wk6hpLp9VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571919; c=relaxed/simple;
-	bh=m+UuNv/WLkgRzQQ99MoqMzHOaOLAkbVmyBLCmcQ8WCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d29oK/YXN+8sTm6ptX/RLBDOeMpoViQi6G6+4aotQJ27NB+huHgrPLReHCkOZlfc6xd/K06LyNnt7tC4/KimYwloNUMAj2ZKwiVNTZTk3lskq7wETyljfbKG1LQgl9RDXmU0ZTEvy/2HBCLAUhvGE33+AgYFEBKOF2lMLmisoPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4jGj/6i; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4jGj/6i"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso963005a12.1;
-        Wed, 05 Jun 2024 00:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717571916; x=1718176716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QJkV49/e3kmyn+mnJ4dZBH7P5g4cBR8xr3PBj28hycs=;
-        b=h4jGj/6ifVgo2KKW1Jw+HMoculC++ffKWBT2m3nreJFR9xKIF7Mxcs6vMP2M164Of4
-         w08aWhXkhHifBJnrhsb0NuAd9vnT2bKe+kChvjAN1L+S14a6yyDe0YpiplZiaVUxK+7z
-         xPl52UXrIMIC1Fk7tTn7XM7HimI7L8GuTT7oAqSOFyzDhaqcq4KIn56IK1f0fbZPqauv
-         kefQjsA9QJcZ1b0qPfDceySA9fIpRM5bTxwHdumqzt1i5rx83eEscVGn46jgYl7Wwqzl
-         cUrV8aoZ9/0ayLb1OZsz6Ekcki/iK+8MkM2m0Cra91L9zxZn7qsuPIBidTkrC/76MnJH
-         D6PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717571916; x=1718176716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QJkV49/e3kmyn+mnJ4dZBH7P5g4cBR8xr3PBj28hycs=;
-        b=gSmGumXqyNfrIE0M4VuKFYcDl4tRtZDU5+VhIuZt6fIYvIjcESf4fT88hUaAVPXMNt
-         X/QHNsSPmu8CS363DRxjV+7J9oyHqgUoTImwjXbSEbUHEssRJ/aseIPha5b5E2U7+bgx
-         bnu3mzxGb+AbZx8i4eaktBLqGNtjPgs08JMDp5wI+CDckJFURGTufgaCPDICknxkKFaB
-         PZR7m9jrwP/Lc3Wcw+Bl0b3+zHulzf0N0D2y8r82U3bR41XOJ4SaDR1o7FditnV9ePAy
-         jE+0L4ImE2X15JnMYg2TO85iCMlR10hbeRQ9gY+V+XuOWGkGk9ewZyDq0fw1fTlSB+mP
-         ypyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXK59qH6/Yrdqv8zrUPChB+xeBtcQCpZsnq6HxmzBvvOrfhVD/eReU0c5m5XpfN7E/lmj4KbtIA+dsRAkG6AyHTqYtUhz5bfqOotJbMGejUpFsyP8+LeSpZs1DrdFE4e2N24EpkrkQWXAMkNTalHg==
-X-Gm-Message-State: AOJu0YzEKswws4Hz2LEY0NzRrQpX9qWoD1luQU8dsp9ZlVBZVdv32tVP
-	puN1Exi60NGDX4KFEbN35axO//hF4wsIWGd2A8sxU3ALKThois7J
-X-Google-Smtp-Source: AGHT+IGOFcO+w/4SaxPdpsa5MvQWd+I4ouHSyUWNUhrQ4Ip+e0D+UR5X93+Gt0Pgs4rJaQ/x3K41HQ==
-X-Received: by 2002:a50:99c9:0:b0:579:cd1c:8d69 with SMTP id 4fb4d7f45d1cf-57a8b676eb6mr1422889a12.2.1717571916153;
-        Wed, 05 Jun 2024 00:18:36 -0700 (PDT)
-Received: from gmail.com (1F2EF2F4.nat.pool.telekom.hu. [31.46.242.244])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31bb8230sm8802547a12.26.2024.06.05.00.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 00:18:35 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 5 Jun 2024 09:18:33 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
- vmlinux.h. Stop.
-Message-ID: <ZmARSXB0Wqp6wMpr@gmail.com>
-References: <ZjssGrj+abyC6mYP@gmail.com>
- <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
- <ZkG4LWr7w11wQ/PR@gmail.com>
- <CAP-5=fVHrKcqwczoU1uMD4tP5DTVhfQ1T_hXnm_y5Ji3M6K_ag@mail.gmail.com>
- <ZkJK3x3zQ9a4wp8E@gmail.com>
- <CAP-5=fUh+GoqERAF-qf8zx4kwq2uzwR2Ugop5XOkPexYGAqF3A@mail.gmail.com>
- <CAP-5=fWXDPfNqLz6DHYe9+dev_e6X5TcTe_xzOOz27yDkT7o7A@mail.gmail.com>
- <CAM9d7ch5HTr+k+_GpbMrX0HUo5BZ11byh1xq0Two7B7RQACuNw@mail.gmail.com>
- <ZmAQfJ9C5fFQdjQM@gmail.com>
+	s=arc-20240116; t=1717575574; c=relaxed/simple;
+	bh=J11oghjLd2OL4EAzmLeais99j3IPznPLv+/4AFGSym4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6+jb6bnzmr8amvd1eN8QuLxyg+Xdle7xbkVqQelMwORLL5d3GHKGzLgfPRg9sILEX+YhLToRHPMyfQ4spl5SsSNwi2pgOUQkitOWk3inpRBjg9uLwWlpq0yllR7nrBTnx2FDS8+krd/SLVec5l3pjhKSGHblASkdSFnu2IAQH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81375DA7;
+	Wed,  5 Jun 2024 01:19:55 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF1BF3F762;
+	Wed,  5 Jun 2024 01:19:26 -0700 (PDT)
+Message-ID: <e0434947-4fe9-43f8-87dd-91e6eb491341@arm.com>
+Date: Wed, 5 Jun 2024 09:19:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmAQfJ9C5fFQdjQM@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/16] perf auxtrace: Allow number of queues to be
+ specified
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org,
+ coresight@lists.linaro.org, suzuki.poulose@arm.com,
+ gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
+ leo.yan@linux.dev, anshuman.khandual@arm.com
+References: <20240604143030.519906-1-james.clark@arm.com>
+ <20240604143030.519906-3-james.clark@arm.com>
+ <12c09d40-788d-4af1-9eb6-0f5699875d70@intel.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <12c09d40-788d-4af1-9eb6-0f5699875d70@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-* Ingo Molnar <mingo@kernel.org> wrote:
 
+On 05/06/2024 06:26, Adrian Hunter wrote:
+> On 4/06/24 17:30, James Clark wrote:
+>> Currently it's only possible to initialize with the default number of
+>> queues and then use auxtrace_queues__add_event() to grow the array. But
+>> that's problematic if you don't have a real event to pass into that
+>> function yet.
+>>
+>> The queues hold a void *priv member to store custom state, and for
+>> Coresight we want to create decoders upfront before receiving data, so
+>> add a new function that allows pre-allocating queues. One reason to do
+>> this is because we might need to store metadata (HW_ID events) that
+>> effects other queues, but never actually receive auxtrace data on that
+>> queue.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
 > 
-> * Namhyung Kim <namhyung@kernel.org> wrote:
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> > Hi Ian and Ingo,
-> > 
-> > The failure happens when you don't have vmlinux.h or vmlinux with BTF.
-> > 
-> > ifeq ($(VMLINUX_H),)
-> >   ifeq ($(VMLINUX_BTF),)
-> >     $(error Missing bpftool input for generating vmlinux.h)
-> >   endif
-> > endif
-> > 
-> > VMLINUX_BTF can be empty if you didn't build a kernel or
-> > it doesn't have a BTF section and the current kernel also
-> > has no BTF.  This is totally ok.
-> > 
-> > But VMLINUX_H should be set to the minimal version in
-> > the source tree (unless you overwrite it manually) when you
-> > don't pass GEN_VMLINUX_H=1 (which requires VMLINUX_BTF
-> > should not be empty).  The problem is that it's defined in
-> > Makefile.config which is not included for `make clean`.
-> > 
-> > Can you please verify if the below patch fixes it?
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > ---8<---
-> > 
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 5c35c0d89306..e6d56b555369 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -214,6 +214,7 @@ NON_CONFIG_TARGETS := clean python-clean TAGS tags
-> > cscope help
-> > 
-> >  ifdef MAKECMDGOALS
-> >  ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
-> > +  VMLINUX_H=$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
-> >    config := 0
-> >  endif
-> >  endif
+> Again ;-)
 > 
-> Yeah, this appears to be doing the trick here - judging by a couple of 
-> tries of interrupted builds:
+
+Oops yeah I should have picked that up. This one was already applied to
+perf-tools-next as well.
+
+Thanks
+
+>> ---
+>>  tools/perf/util/auxtrace.c | 9 +++++++--
+>>  tools/perf/util/auxtrace.h | 1 +
+>>  2 files changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+>> index 3684e6009b63..563b6c4fca31 100644
+>> --- a/tools/perf/util/auxtrace.c
+>> +++ b/tools/perf/util/auxtrace.c
+>> @@ -218,15 +218,20 @@ static struct auxtrace_queue *auxtrace_alloc_queue_array(unsigned int nr_queues)
+>>  	return queue_array;
+>>  }
+>>  
+>> -int auxtrace_queues__init(struct auxtrace_queues *queues)
+>> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues)
+>>  {
+>> -	queues->nr_queues = AUXTRACE_INIT_NR_QUEUES;
+>> +	queues->nr_queues = nr_queues;
+>>  	queues->queue_array = auxtrace_alloc_queue_array(queues->nr_queues);
+>>  	if (!queues->queue_array)
+>>  		return -ENOMEM;
+>>  	return 0;
+>>  }
+>>  
+>> +int auxtrace_queues__init(struct auxtrace_queues *queues)
+>> +{
+>> +	return auxtrace_queues__init_nr(queues, AUXTRACE_INIT_NR_QUEUES);
+>> +}
+>> +
+>>  static int auxtrace_queues__grow(struct auxtrace_queues *queues,
+>>  				 unsigned int new_nr_queues)
+>>  {
+>> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+>> index 55702215a82d..8a6ec9565835 100644
+>> --- a/tools/perf/util/auxtrace.h
+>> +++ b/tools/perf/util/auxtrace.h
+>> @@ -521,6 +521,7 @@ int auxtrace_mmap__read_snapshot(struct mmap *map,
+>>  				 struct perf_tool *tool, process_auxtrace_t fn,
+>>  				 size_t snapshot_size);
+>>  
+>> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues);
+>>  int auxtrace_queues__init(struct auxtrace_queues *queues);
+>>  int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+>>  			       struct perf_session *session,
 > 
->    Tested-by: Ingo Molnar <mingo@kernel.org>
-
-Specifically I also tested it on a failed tree, by merging in your fix the 
-build now progresses as expected. So this is fixed for good.
-
-Thanks,
-
-	Ingo
