@@ -1,85 +1,145 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384E036C
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Jun 2024 00:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB1B1C27
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Jun 2024 00:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717546306; cv=none; b=pavItqZlDiMC5GrgD3o8X0NNfuHBN2F5kjfMqz73BfQJpYozwOr27G0yN3JBXV33Re61KY8H4voNkMVEBPe5cI8mBUlE9t3xVseKk2I43A3+C0bME8JLYrJxJEWt+/NfbKV7l7pjA/6ZOfNCPjqEa5BzAGAP7jEKdVHUKr5rabo=
+	t=1717547509; cv=none; b=qRmBAecp9XXhVs5gHq2Xu2KYAlgICWYSUBdKWYTC4RErfq8wttn0f3PqFW8+70hKyfET6ktps6oooVDRtJ4qRVdaVTto551Dch6JjLPmXjOcgmd/tekzRjpFxnHsh7coBynpM/q/iQ4Mfx7LVfAsJx7JFcA2i2KL33VLUME4fis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717546306; c=relaxed/simple;
-	bh=LvpIvl4r98SqFjzuMelyzF8LS3WNvqbNMFkJNsuQDKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=kQsFWBqXYI7I+BSX7ReLz2SAtbWMps8Bz5hoiiD1TSYcI+FX0i88mUmmbWYCrNeO6dvyrJ9GTD6Zy5UdMUA/37nnjILbdKBufaesmDF7FttGuDNbUkS/0M+wimN6QuH2W0GLgQ/XHNzFO7aS6iTVk6YpGG5Ek4ZtyJjzP3DYNfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1eDu1aCH; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717547509; c=relaxed/simple;
+	bh=Gsr/bnTcp1ZQFE15Sl1IbRcVTqIuOXHvpSA70xrH90Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBG0zMdkaCpBTrip33Korbr7zC6gzkVb3ymeEiAWMfZIj/r/xX1yuXvPDB6u1ZA0joR4yuaZeYVYmA4HbGkI+ADhXDdONdljKWlXPr15Nm9FxiHAKED0bPob55rKAJQ+/ih7Vzz5PvoAvI9NeRsRpIAldKSdYeo3e54NmxfYAUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3Wpl14H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1eDu1aCH"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ee5f3123d8so54935ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Jun 2024 17:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717546304; x=1718151104; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LvpIvl4r98SqFjzuMelyzF8LS3WNvqbNMFkJNsuQDKM=;
-        b=1eDu1aCH36VN82sJkqulzdsmBEsfAZhI9hM8vqGeI8sN62YcyKLxX5kZhwCKJWHg4V
-         g+1QWhUHoYcURD93K5ZPXKtE7yjX1I/ZxV2LIsoNZrcXvI2k0u8bTVqi0a14KghaIKvv
-         NpevHbZEtzfLd2Htg0TMw2LbXwYZNkwnKqAjpWTec/lkEc8yZtAWdUE56i43iq+Gr6jq
-         uuq9irBdsT90pWhomq/Mi8H3BU2AgqA5bnrmf+RGC8pye3E3LWohVxn1MnBixJoeeRmV
-         Tq2jyxoLqo+uNNhTrC/f8zDfBimeWBK+U/KaWhO0o+wDHBVCYIx3BgBIiCU8LVyyEhyp
-         1kNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717546304; x=1718151104;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LvpIvl4r98SqFjzuMelyzF8LS3WNvqbNMFkJNsuQDKM=;
-        b=jqXmFzzTFeW+HGLZbul37XaONc0Iu2yjtwoiSOJnOSLsxR7mcj3+bL5gVXs6XU/sdd
-         GPcqw8cKk76HvBY8qA6rr4ri0uWTHV1OG9j4BzK2GFST2elYB2kvKelfhg+MwxcnA/ez
-         KsdIm16/PGLlfyRv+qi7Z1lceiXOhUxz6i78YIsnT9I+fyLQhGcTO+iterLqDsduok7x
-         kCyp0uPN9pe51sR+9rCUCXIWdxZlvZJXyPKc2jeN3qbokMWHEcenASRwBo5lPA6ufHmF
-         jegZ4WTuZh3xyQf9fYAkuEJ1tW3W9ON8U5qzQKEnrFUBtD5zyIqZXHBUWbMlE3SzTzQ0
-         LsJQ==
-X-Gm-Message-State: AOJu0YzYIKNxc1mBQVVwJhgMtDx47tM9Q4ay9y4XHyZXQfaqeiDuA7a+
-	HI1xjijJ2i3lMuZeSzPUPDBi5KnlLyFV6Cm/glo/WF+6fE5dwzwWXMoYk77TsUhItJUr1kLODOx
-	jJzcCMR5m6wSAS2Yky1WGB6Hre8VyDWsGsIZYjw6Vs2bd5Z1zb6+/jkE=
-X-Google-Smtp-Source: AGHT+IHgIRvZGm7kb1NqcasxsLhjouBYCyNeBR4fLwzWJ8z+SoRel4/vf4Za4H4m6yaGgEvJar4txS5mH9NQYSHRu3E=
-X-Received: by 2002:a17:902:b714:b0:1f6:858e:1688 with SMTP id
- d9443c01a7336-1f6a77fc51amr609535ad.11.1717546303927; Tue, 04 Jun 2024
- 17:11:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3Wpl14H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62ADC2BBFC;
+	Wed,  5 Jun 2024 00:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717547509;
+	bh=Gsr/bnTcp1ZQFE15Sl1IbRcVTqIuOXHvpSA70xrH90Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y3Wpl14HmhYsRwivXc+xE6TOj1Em3yFsJIx+sJmIVkNZNfQjFvupQeC2/vY++WL4/
+	 HCAvIDU9PLCANsY5Cotj13rAOQEIAAf5Qh6P2kuNL848qdFZtaDGRCEdF0mDBapOyF
+	 VcPK1gsGE1EZFFHVDVAXK5Atfe32q8ovfyuQGqSTHh3GtBQ/gT3L4fUSo3LyX9H7kT
+	 XEeL0QsAFTYnhXBasr6d89CPZY5Pyop4Yf0jorpAbyyASQk1Xruvuumqbhxeihv8c7
+	 rR19/Jd9V/cdRxFKYVFeBcKxuHrQDwp/DAhaAfv/bjtARaIcGCV5LDPJPgld8uzC35
+	 wK2gkiptc4syw==
+Date: Tue, 4 Jun 2024 17:31:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+	mpetlan@redhat.com
+Subject: Re: [PATCH] perf test stat_bpf_counter.sh: Remove comparison of
+ separate runs
+Message-ID: <Zl-x8uob6NT3HlfT@google.com>
+References: <20240604153111.105548-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Jun 2024 17:11:32 -0700
-Message-ID: <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To: linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	chu howard <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240604153111.105548-1-vmolnaro@redhat.com>
 
-Hi,
+On Tue, Jun 04, 2024 at 05:31:11PM +0200, vmolnaro@redhat.com wrote:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
+> 
+> The test has been failing for some time when two separate runs of
+> perf benchmarks are recorded and the counts of the samples are compared,
+> while once the recording was done with option --bpf-counters and once
+> without it. It is expected that the count of the samples should within
+> a certain range, firstly the difference should have been within 10%,
+> which was then later raised to 20%. However, the test case keeps failing
+> on certain architectures as recording the same benchmark can provide
+> completely different counts samples based on the current load of the
+> system.
+> 
+> Sampling two separate runs on intel-eaglestream-spr-13 of "perf stat
+> --no-big-num -e cycles -- perf bench sched messaging -g 1 -l 100 -t":
+> 
+>  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+> 
+>          396782898      cycles
+> 
+>        0.010051983 seconds time elapsed
+> 
+>        0.008664000 seconds user
+>        0.097058000 seconds sys
+> 
+>  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+> 
+>         1431133032      cycles
+> 
+>        0.021803714 seconds time elapsed
+> 
+>        0.023377000 seconds user
+>        0.349918000 seconds sys
+> 
+> , which is ranging from 400mil to 1400mil samples.
+> 
+> From the testing point of view, it does not make sense to compare two
+> separate runs against each other when the conditions may change
+> significantly. Remove the comparison of two separate runs and check only
+> whether the stating works as expected for the --bpf-counters option. Compare
+> the samples count only when the samples are recorded simultaneously
+> ensuring the same conditions.
 
-2nd week of Google Summer-of-Code. Office hours this week are changed
-from Wednesday to Friday:
-
-Linux perf tool office hours
-Friday, June 7 =C2=B7 8:00 =E2=80=93 9:00am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/tif-efem-uiq
-Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+Hmm.. but having a test which checks if the output is sane can be
+useful.  If it's a problem of dynamic changes in cpu cycles, maybe
+we can use 'instructions' event instead (probably with :u) to get
+more stable values?
 
 Thanks,
-Ian
+Namhyung
+
+> 
+> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> ---
+>  tools/perf/tests/shell/stat_bpf_counters.sh | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+> index 61f8149d854e..873b576836c6 100755
+> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
+> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+> @@ -6,19 +6,19 @@ set -e
+>  
+>  workload="perf bench sched messaging -g 1 -l 100 -t"
+>  
+> -# check whether $2 is within +/- 20% of $1
+> +# check whether $2 is within +/- 10% of $1
+>  compare_number()
+>  {
+>  	first_num=$1
+>  	second_num=$2
+>  
+> -	# upper bound is first_num * 120%
+> -	upper=$(expr $first_num + $first_num / 5 )
+> -	# lower bound is first_num * 80%
+> -	lower=$(expr $first_num - $first_num / 5 )
+> +	# upper bound is first_num * 110%
+> +	upper=$(expr $first_num + $first_num / 10 )
+> +	# lower bound is first_num * 90%
+> +	lower=$(expr $first_num - $first_num / 10 )
+>  
+>  	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
+> -		echo "The difference between $first_num and $second_num are greater than 20%."
+> +		echo "The difference between $first_num and $second_num are greater than 10%."
+>  		exit 1
+>  	fi
+>  }
+> @@ -44,7 +44,6 @@ test_bpf_counters()
+>  	base_cycles=$(perf stat --no-big-num -e cycles -- $workload 2>&1 | awk '/cycles/ {print $1}')
+>  	bpf_cycles=$(perf stat --no-big-num --bpf-counters -e cycles -- $workload  2>&1 | awk '/cycles/ {print $1}')
+>  	check_counts $base_cycles $bpf_cycles
+> -	compare_number $base_cycles $bpf_cycles
+>  	echo "[Success]"
+>  }
+>  
+> -- 
+> 2.43.0
+> 
