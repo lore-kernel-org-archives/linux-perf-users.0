@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7815F184E;
-	Wed,  5 Jun 2024 00:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BD4B661;
+	Wed,  5 Jun 2024 00:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717548172; cv=none; b=eMe61sfmp7LPj/qmjCF4ckv/P78CLfHFRUKEwz4NDc0mpkHdDzrq8E3knw3XHMXe73WTTgixmjnWMQq4Ysr4Xvopsfwak3Rnm/mAM2uPtQOTE7/iwgVmGbPO/76e0RKdaX0jX8A8jH3HAprpUnAzh6DjN2HqGg6eUds3mINa4uc=
+	t=1717548474; cv=none; b=vAHwtzt4AWab+HNCeWg6LTQ39SpX4wcyWvsyDnp4XJBFWZ7wMsvzYlxf8cqWk6gtj1ZaBfh4NSSlu+PzGUqwzUG2A+nYn/rkBA6vtATxxYWSAqrQ82KMdqkFh7vVCn7UbvJDdoNV0a6AWG889r44dLh7pv9eNO/dcMY2AbRI4IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717548172; c=relaxed/simple;
-	bh=o/9XA293ztzQotVbWDuq6SEmoKfFMzc7jf77BFoaTdQ=;
+	s=arc-20240116; t=1717548474; c=relaxed/simple;
+	bh=Rb9fRs1fRY7PqLEr1a5tc51LjHlXxZPxJzCWtBE+cjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aluhuzm+gfTAfMwWvrp6LobbTzPzzRfasY09/r0ajP48IAeYbi/63sJBJok4eqOHx05210WQsv9J6701C1tJIzhSD7BBNbKd8sI2Cb2G1e3TklDTd4jug9Z4w+jzWLhr1AEWyN65zcfgQFGkjFmb7Fgme9ksQtQKpLx9+FtHRw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4FKaKEA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4cLj5E7tWwpOW7nVEbm6lk6IafyB0+v4x08DKO8XaP+jV8pcjBwbhr4B4PA+u0WoAfoHvgGr3dmCqwuIsvKIjNRdDS0a+4C2GSRa1KTObtZ1u9RyPQxoE8eSXrLxBcS5RVPVSOuskVnJxJnArOOKlQ5euNojkc5AdxDc8+u1Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+V603xb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4FKaKEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 984A1C2BBFC;
-	Wed,  5 Jun 2024 00:42:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+V603xb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63AD1C2BBFC;
+	Wed,  5 Jun 2024 00:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717548171;
-	bh=o/9XA293ztzQotVbWDuq6SEmoKfFMzc7jf77BFoaTdQ=;
+	s=k20201202; t=1717548473;
+	bh=Rb9fRs1fRY7PqLEr1a5tc51LjHlXxZPxJzCWtBE+cjQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4FKaKEAK9jHS1pp+wRVnlGZ9SuZA24j/+tIvrhulO+YhDlHuceOhw+4wPiSenAJS
-	 x6L4TCuXFHeA33qBGMmuiIC6ULqQp3Kj7wTyyxNHQw/CWWtAh6NmtI1NGK9uNND1M4
-	 aFzTizTCvaAzelYADYQJ+NBDYPl6jkFVQvF0xZCBJj/J452dmYkmxcd/ykrNNSBBDv
-	 2qRRjKlZ1M9kZIAAC7zm0ycFg0E7XgS9WXySvJd+z1D2bYhx1yhRm80AGa7RgMaZ32
-	 CjzdQJjlGsY0UUHAaWh9JgkxiRi59Uj3qEsoYSppmNqiATJp2xu74ml05QnCIK24GO
-	 w2jY8CIgfgm9w==
-Date: Tue, 4 Jun 2024 17:42:50 -0700
+	b=k+V603xbXy+ddD5x4x1akuQF+GoMV3wdY0TZxFtoA5yCcnv5hqmFmuhXzT6ChlyZq
+	 BIgpe3obArTAsWIswIcFbRgbLYjR5Ca6kSJ82dXyeb7KsJHgqNks45t3/aIp4kpSHp
+	 ENLZPm+c7KIRgrkERQW8ViF06uDJyRvchbomkNS2A1SSNdskEm/eISpYNxlDcSd/E6
+	 DEZSrb03VWTfcPYPysej2db2BecBpZFWE2ni7yIsT4IVNyMDYqPpmU5etcqDvdBjj9
+	 TvTqP4FS0XZnGgRvehEFv777yWJYWK+BYhdbLHx11c0Rh6KKAFb28f/QVJfsmbeMy5
+	 gpzQd7tVW17PA==
+Date: Tue, 4 Jun 2024 17:47:51 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -35,11 +35,11 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf hist: Factor out __hpp__fmt_print()
-Message-ID: <Zl-0igwvs8EuzOMs@google.com>
+Subject: Re: [PATCH 2/4] perf hist: Simplify __hpp_fmt() using hpp_fmt_data
+Message-ID: <Zl-1t3t-3eUwDcdI@google.com>
 References: <20240603224412.1910049-1-namhyung@kernel.org>
- <20240603224412.1910049-2-namhyung@kernel.org>
- <Zl8tvVPEfLM8_T_z@x1>
+ <20240603224412.1910049-3-namhyung@kernel.org>
+ <Zl8wVwNaKDXLTWbq@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,186 +48,144 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zl8tvVPEfLM8_T_z@x1>
+In-Reply-To: <Zl8wVwNaKDXLTWbq@x1>
 
-On Tue, Jun 04, 2024 at 12:07:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Jun 03, 2024 at 03:44:09PM -0700, Namhyung Kim wrote:
-> > Split the logic to print the histogram values according to the format
-> > string.  This was used in 3 different places so it's better to move out
-> > the logic into a function.
+On Tue, Jun 04, 2024 at 12:18:47PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Jun 03, 2024 at 03:44:10PM -0700, Namhyung Kim wrote:
+> > The struct hpp_fmt_data is to keep the values for each group members so
+> > it doesn't need to check the event index in the group.
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/ui/hist.c | 75 +++++++++++++++++++++-----------------------
+> >  1 file changed, 36 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> > index e30fcb1e87e7..539978c95cfd 100644
+> > --- a/tools/perf/ui/hist.c
+> > +++ b/tools/perf/ui/hist.c
+> > @@ -46,65 +46,62 @@ static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
+> >  	return hpp__call_print_fn(hpp, print_fn, fmt, len, val);
+> >  }
+> >  
+> > +struct hpp_fmt_data {
+> > +	struct hists *hists;
+> > +	u64 val;
+> > +	int samples;
+> > +};
 > 
-> But are all really equivalent? I had difficulty following it, perhaps it
-> would be better to introduce the function and then go on making one by
-> one use it instead of doing it all at once?
+> Can we try to avoid vague terms like 'data' and use a hopefully more
+> clear 'hpp_fmt_value' instead?
 
-Sorry, I agree the code looks confusing.  But they are equivalent and
-just to print the value in a different way.
+Sure, I can do that.  I thought 'data' was better since it contains more
+than a value like a pointer to hist and number of samples.  But it's not
+a big deal, and I can make the change.
 
 > 
-> So in the end we have:
+> >  static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+> >  		      hpp_field_fn get_field, const char *fmt, int len,
+> >  		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
+> >  {
+> > -	int ret;
+> > +	int ret = 0;
+> >  	struct hists *hists = he->hists;
+> >  	struct evsel *evsel = hists_to_evsel(hists);
+> > +	struct evsel *pos;
+> >  	char *buf = hpp->buf;
+> >  	size_t size = hpp->size;
+> > +	int i, nr_members = 1;
+> > +	struct hpp_fmt_data *data;
 > 
-> static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
-> 			    int nr_samples, const char *fmt, int len,
-> 			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> {
-> 	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-> 		double percent = 0.0;
-> 		u64 total = hists__total_period(hists);
+> Here we then use:
 > 
-> 		if (total)
-> 			percent = 100.0 * val / total;
-> 
-> 		return hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
-> 	}
-> 	if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
-> 		double avg = nr_samples ? (1.0 * val / nr_samples) : 0;
-> 
-> 		return hpp__call_print_fn(hpp, print_fn, fmt, len, avg);
-> 	}
-> 
-> 	return hpp__call_print_fn(hpp, print_fn, fmt, len, val);
-> }
-> 
-> I.e. we do something with the last arg for hpp__call_print_fn() for the
-> PERF_HPP_FMT_TYPE__PERCENT and PERF_HPP_FMT_TYPE__AVERAGE fmtype's, but
-> we don't check for those fmtypes on each of the places that we now call
-> __hpp__fmt_print(), right?
-> 
-> That while (idx_delta--) cases is only interested in !=PERF_HPP_FMT_TYPE__RAW...
-> 
-> Nah, after trying to describe the confusion I think I clarified it,
-> probably leave it as you did :-\
+> 	struct hpp_fmt_value *values;
 
-:)
-
-The 'while (idx_delta--)' part is just to fill the gap for entries
-without samples.  The value is always 0, so it only cares the data type
-(double or u64) in the format string.  RAW needs u64 while PERCENT and
-AVERAGE need double.
+Yep, will change in v3.
 
 Thanks,
 Namhyung
 
-  
-> > +++ b/tools/perf/ui/hist.c
-> > @@ -23,35 +23,42 @@
-> >  	__ret;							\
-> >  })
+> 
+> > +
+> > +	if (evsel__is_group_event(evsel))
+> > +		nr_members = evsel->core.nr_members;
+> > +
+> > +	data = calloc(nr_members, sizeof(*data));
+> > +	if (data == NULL)
+> > +		return 0;
+> 
+> 
+> > +
+> > +	i = 0;
+> > +	for_each_group_evsel(pos, evsel)
+> > +		data[i++].hists = evsel__hists(pos);
 > >  
-> > -static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
-> > -		      hpp_field_fn get_field, const char *fmt, int len,
-> > -		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> > +static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
-> > +			    int nr_samples, const char *fmt, int len,
-> > +			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> >  {
-> > -	int ret;
-> > -	struct hists *hists = he->hists;
-> > -	struct evsel *evsel = hists_to_evsel(hists);
-> > -	char *buf = hpp->buf;
-> > -	size_t size = hpp->size;
+> > -	ret = __hpp__fmt_print(hpp, hists, get_field(he), he->stat.nr_events,
+> > -			       fmt, len, print_fn, fmtype);
+> > +	data[0].val = get_field(he);
+> > +	data[0].samples = he->stat.nr_events;
+> >  
+> >  	if (evsel__is_group_event(evsel)) {
+> > -		int prev_idx, idx_delta;
+> >  		struct hist_entry *pair;
+> > -		int nr_members = evsel->core.nr_members;
 > > -
-> >  	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-> >  		double percent = 0.0;
-> >  		u64 total = hists__total_period(hists);
+> > -		prev_idx = evsel__group_idx(evsel);
 > >  
-> >  		if (total)
-> > -			percent = 100.0 * get_field(he) / total;
-> > +			percent = 100.0 * val / total;
+> >  		list_for_each_entry(pair, &he->pairs.head, pairs.node) {
+> > -			u64 period = get_field(pair);
+> > -			u64 total = hists__total_period(pair->hists);
+> > -			int nr_samples = pair->stat.nr_events;
+> > -
+> > -			if (!total)
+> > -				continue;
+> > +			for (i = 0; i < nr_members; i++) {
+> > +				if (data[i].hists != pair->hists)
+> > +					continue;
 > >  
-> > -		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
-> > -	} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
-> > -		double average = 0;
-> > +		return hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
+> > -			evsel = hists_to_evsel(pair->hists);
+> > -			idx_delta = evsel__group_idx(evsel) - prev_idx - 1;
+> > -
+> > -			while (idx_delta--) {
+> > -				/*
+> > -				 * zero-fill group members in the middle which have
+> > -				 * no samples, pair->hists is not correct but it's
+> > -				 * fine since the value is 0.
+> > -				 */
+> > -				ret += __hpp__fmt_print(hpp, pair->hists, 0, 0,
+> > -							fmt, len, print_fn, fmtype);
+> > +				data[i].val = get_field(pair);
+> > +				data[i].samples = pair->stat.nr_events;
+> > +				break;
+> >  			}
+> > -
+> > -			ret += __hpp__fmt_print(hpp, pair->hists, period, nr_samples,
+> > -						fmt, len, print_fn, fmtype);
+> > -
+> > -			prev_idx = evsel__group_idx(evsel);
+> >  		}
 > > +	}
 > >  
-> > -		if (he->stat.nr_events)
-> > -			average = 1.0 * get_field(he) / he->stat.nr_events;
-> > +	if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
-> > +		double avg = nr_samples ? (1.0 * val / nr_samples) : 0;
-> >  
-> > -		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, average);
-> > -	} else {
-> > -		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, get_field(he));
-> > +		return hpp__call_print_fn(hpp, print_fn, fmt, len, avg);
-> >  	}
-> >  
-> > +	return hpp__call_print_fn(hpp, print_fn, fmt, len, val);
-> > +}
-> > +
-> > +static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
-> > +		      hpp_field_fn get_field, const char *fmt, int len,
-> > +		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-> > +{
-> > +	int ret;
-> > +	struct hists *hists = he->hists;
-> > +	struct evsel *evsel = hists_to_evsel(hists);
-> > +	char *buf = hpp->buf;
-> > +	size_t size = hpp->size;
-> > +
-> > +	ret = __hpp__fmt_print(hpp, hists, get_field(he), he->stat.nr_events,
-> > +			       fmt, len, print_fn, fmtype);
-> > +
-> >  	if (evsel__is_group_event(evsel)) {
-> >  		int prev_idx, idx_delta;
-> >  		struct hist_entry *pair;
-> > @@ -72,30 +79,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
-> >  
-> >  			while (idx_delta--) {
-> >  				/*
-> > -				 * zero-fill group members in the middle which
-> > -				 * have no sample
-> > +				 * zero-fill group members in the middle which have
-> > +				 * no samples, pair->hists is not correct but it's
-> > +				 * fine since the value is 0.
-> >  				 */
-> > -				if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
-> > -					ret += hpp__call_print_fn(hpp, print_fn,
-> > -								  fmt, len, 0.0);
-> > -				} else {
-> > -					ret += hpp__call_print_fn(hpp, print_fn,
-> > -								  fmt, len, 0ULL);
-> > -				}
-> > +				ret += __hpp__fmt_print(hpp, pair->hists, 0, 0,
-> > +							fmt, len, print_fn, fmtype);
-> >  			}
-> >  
-> > -			if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
-> > -				ret += hpp__call_print_fn(hpp, print_fn, fmt, len,
-> > -							  100.0 * period / total);
-> > -			} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
-> > -				double avg = nr_samples ? (period / nr_samples) : 0;
+> > -		idx_delta = nr_members - prev_idx - 1;
 > > -
-> > -				ret += hpp__call_print_fn(hpp, print_fn, fmt,
-> > -							  len, avg);
-> > -			} else {
-> > -				ret += hpp__call_print_fn(hpp, print_fn, fmt,
-> > -							  len, period);
-> > -			}
-> > +			ret += __hpp__fmt_print(hpp, pair->hists, period, nr_samples,
-> > +						fmt, len, print_fn, fmtype);
-> >  
-> >  			prev_idx = evsel__group_idx(evsel);
-> >  		}
-> > @@ -104,15 +97,11 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
-> >  
-> >  		while (idx_delta--) {
-> >  			/*
-> > -			 * zero-fill group members at last which have no sample
-> > +			 * zero-fill group members at last which have no sample.
-> > +			 * the hists is not correct but it's fine like above.
-> >  			 */
-> > -			if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
-> > -				ret += hpp__call_print_fn(hpp, print_fn,
-> > -							  fmt, len, 0.0);
-> > -			} else {
-> > -				ret += hpp__call_print_fn(hpp, print_fn,
-> > -							  fmt, len, 0ULL);
-> > -			}
-> > +			ret += __hpp__fmt_print(hpp, evsel__hists(evsel), 0, 0,
-> > +						fmt, len, print_fn, fmtype);
-> >  		}
+> > -		while (idx_delta--) {
+> > -			/*
+> > -			 * zero-fill group members at last which have no sample.
+> > -			 * the hists is not correct but it's fine like above.
+> > -			 */
+> > -			ret += __hpp__fmt_print(hpp, evsel__hists(evsel), 0, 0,
+> > -						fmt, len, print_fn, fmtype);
+> > -		}
+> > +	for (i = 0; i < nr_members; i++) {
+> > +		ret += __hpp__fmt_print(hpp, data[i].hists, data[i].val,
+> > +					data[i].samples, fmt, len,
+> > +					print_fn, fmtype);
 > >  	}
 > >  
+> > +	free(data);
+> > +
+> >  	/*
+> >  	 * Restore original buf and size as it's where caller expects
+> >  	 * the result will be saved.
 > > -- 
 > > 2.45.1.288.g0e0cd299f1-goog
