@@ -1,129 +1,141 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59C38396
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Jun 2024 17:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3684013A27D;
+	Wed,  5 Jun 2024 17:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717608085; cv=none; b=jY8bC4JDvsnPUKUxiRDx6rth3U6uhK39KPvN8XibYXa+ere1DZk48SUlp/dEvo+vUP1zLxjX8e7dcOOpV7adE6jMItJ0mVrsVPVDCTXrg+57q1mBy/yg8T7LEwjXB0t4PEPdXnM61jWsnqiNjdMc9OyJZFcoSsH/ZQ6pUG/HD2I=
+	t=1717609184; cv=none; b=sgYVvvOXUbe4bUQTuUUbLg/wjmUqVlC0zQClVFhOcwfV3TTweNoWt5GlWaHHVyeiUvGOFKedlzJ3iNRLilcDDjnKwoeg2tlezG8cSJZcS4vUvVh6Flc7Z5NUAhpr18FK5yXMLaFC7Yp8km5EXhZ1q01K85fTRMs4vH2I0UJCH2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717608085; c=relaxed/simple;
-	bh=Tcwq5dn9T53VXyu2UVdw5TjGv2V1CJsT9RFq6hlk9QE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hNKtZGOHy4No89z+cWxlp7hdZ1d74e2RBSvB9XnsH/ClLuLw4aV/UX4P0+eL/A3Iwd2OHCv3u4oUmlmxmnOcf0kXZeymRTWFI1RQ9kHxqBBebseHq7Kk+u8DixljTkjI6HvlsczgXGR5hNWdGfnEWLozwLn6avbokcSbUAaQcpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nBhdOLxt; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717609184; c=relaxed/simple;
+	bh=fuBA1Y0rsKEgp27r29OV1H/+ChmvQlgNMqku0b2LcDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOpF3ZaRVLJk4Sv3JYkysbgnHmJWXXpKHgVrm6hKc0t9Sl3Ta8IsP1NMhmXPW6jD6N7WmVCd+Yse1rDQQf/Y+7Kit58bfjLkeTc8tnZyJAyKZ0pfig47uNT2hTK6bRYBE+l57kFGC96bygUHucO8DBS8VmL2OmcTOYnGSw4bcnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xdnf64pj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nBhdOLxt"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ee5f3123d8so5955ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jun 2024 10:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717608083; x=1718212883; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kYCo0S4v9XF6m0fRGRV3IsBGozW86ded8JzpR7EngjU=;
-        b=nBhdOLxtqLb/6IDbSQ7cbc5oFvALnCWkUFIjJpsMkQMjQOE7dXBUGCuCe0F70vOJTp
-         zhzuMjL9el0GaUd0i1WJEHri3+EanWtrRKxyHidjzQ/6xr2O0L2TViyOyN0qBsugfwTj
-         s7BOzVznQsc5gt6LIzggVG1PffrMGNOJQJA7unbUKbvQDovJqfLwcqst9FQsGz+3PSfe
-         TLQYIoltUHGQjUYDr/ayFtWklpnSuTK6pSXJNMna13LdoLTI7TJ2Yw72OMKZym5NiaFL
-         lh0TjaY3qEEj8VMMdZZwvnfvJTPGh3hKLdiDydhLBno8R8tW+5J4LyVpNlx4xBPGKOOW
-         /YPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717608083; x=1718212883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kYCo0S4v9XF6m0fRGRV3IsBGozW86ded8JzpR7EngjU=;
-        b=ZXBh72xfnhac3/0oB0mSmf/hiluP1WSqHv9Te83Q1goObBlWi0BIME5JgETQGdiyos
-         Kmes52R5VvjtGkXcE8K4EHA/el2O1pd/86pzOpsL6/D4d+P8lPum3uOHtH7AOY1U0cBW
-         T8ZmdmOgKBveSWs4pIOD+nHDx/K44j8jLewn0PUcOvERIuwDk1VG5hKtT3tBwCIHVUbW
-         P+JJ9HihkVAPVKuCtbLRWWziSXP8FtPkqP44KBhoR0qEB8X1Cl2N8/TSYQ3z8JxOvGjF
-         oFwp6Fl6JLfkQA7/PxHWb0ttLpolrHE9kKL0v7JW1sUyXz1THacRqJXkkdQ9ZhfUaI6A
-         KIoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/yrYRnj5Wn6n7kiz0iXMYbIn+Q7dDu6NEIAltRN6juS8yfF2X7gVFfoeDfC/zMdAtSGT9wGvvYHhn3gQHRTNpD5eKXxKbyGY89zNt8DiZ4w==
-X-Gm-Message-State: AOJu0Ywk0yaaPwywxVLMPMcwMjNc92T6LBl7oHd/TDhjh2cZphb7WPY6
-	ByQ+6ZWWjkLwFrbGQvWMLtd8b5phKGRl5L5BAXjim+y/4b3/w1qh4Dlheh7Sw6fKDw+Tvbv7Gzy
-	NsygneLherHE8L4uf8+ACX+avMDMObAxqetDy
-X-Google-Smtp-Source: AGHT+IE2SZkPszq0YruXeZgdwMZcRiyinGSYCRMCQ+02rAZyYrQw99myRkawq4RdPGWs6JBjFpE5FIBN0Whl5kn7mus=
-X-Received: by 2002:a17:902:ee8a:b0:1f6:5bba:8ea3 with SMTP id
- d9443c01a7336-1f6a7b01893mr3570835ad.25.1717608083107; Wed, 05 Jun 2024
- 10:21:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xdnf64pj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CB1C2BD11;
+	Wed,  5 Jun 2024 17:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717609183;
+	bh=fuBA1Y0rsKEgp27r29OV1H/+ChmvQlgNMqku0b2LcDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xdnf64pjhxtSWNkb/vJK/QYT6Br0BKxQMIHffq53vbZ6mUpZ6fAP9O7+ofjSy3reT
+	 QY+0xr5D2SZTPWGy+10Myb9aMRzyQIwschEbybjv2BRIF0M4DSv4yL+0LRvTNhACPg
+	 32k2FgKzDRDJM1l+NFzwffEeZhvxEofopeHZzATSXw4nKmAiiSjYfYegBDj7VIDuRQ
+	 EHcmjVChCQtuU7FIEvowvdt5NuIEag9rF42QJCshuTw07rFkL/c3uYzmGxux+a9/YM
+	 ZXxWiJllmRu8hUfyhUiGFzlQogF3b/ANXe7wHWkB8rnNfGiSbcL6+Ad/BmvpfGdQik
+	 GtXVjrsgtLICw==
+Date: Wed, 5 Jun 2024 10:39:41 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Steinar H. Gunderson" <sesse@google.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, irogers@google.com,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v8 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <ZmCi3Z940zDxF487@google.com>
+References: <20240602204208.735793-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605160848.4116061-1-kan.liang@linux.intel.com>
-In-Reply-To: <20240605160848.4116061-1-kan.liang@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Jun 2024 10:21:10 -0700
-Message-ID: <CAP-5=fV+-ytA2st17Ar-jQ5xYqrWtxnF2TcADKrC5WoPyKz4wQ@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Fix the hard-coded metrics calculation on the hybrid
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Khalil, Amiri" <amiri.khalil@intel.com>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240602204208.735793-1-sesse@google.com>
 
-On Wed, Jun 5, 2024 at 9:10=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The hard-coded metrics is wrongly calculated on the hybrid machine.
->
-> $ perf stat -e cycles,instructions -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->         18,205,487      cpu_atom/cycles/
->          9,733,603      cpu_core/cycles/
->          9,423,111      cpu_atom/instructions/     #  0.52  insn per cycl=
-e
->          4,268,965      cpu_core/instructions/     #  0.23  insn per cycl=
-e
->
-> The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 =3D 0.44.
->
-> When finding the metric events, the find_stat() doesn't take the PMU
-> type into account. The cpu_atom/cycles/ is wrongly used to calculate
-> the IPC of the cpu_core.
->
-> Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
-> Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+On Sun, Jun 02, 2024 at 10:42:06PM +0200, Steinar H. Gunderson wrote:
+> In addition to the existing support for libbfd and calling out to
+> an external addr2line command, add support for using libllvm directly.
+> This is both faster than libbfd, and can be enabled in distro builds
+> (the LLVM license has an explicit provision for GPLv2 compatibility).
+> Thus, it is set as the primary choice if available.
+> 
+> As an example, running perf report on a medium-size profile with
+> DWARF-based backtraces took 58 seconds with LLVM, 78 seconds with
+> libbfd, 153 seconds with external llvm-addr2line, and I got tired
+> and aborted the test after waiting for 55 minutes with external
+> bfd addr2line (which is the default for perf as compiled by distributions
+> today). Evidently, for this case, the bfd addr2line process needs
+> 18 seconds (on a 5.2 GHz Zen 3) to load the .debug ELF in question,
+> hits the 1-second timeout and gets killed during initialization,
+> getting restarted anew every time. Having an in-process addr2line
+> makes this much more robust.
+> 
+> As future extensions, libllvm can be used in many other places where
+> we currently use libbfd or other libraries:
+> 
+>  - Symbol enumeration (in particular, for PE binaries).
+>  - Demangling (including non-Itanium demangling, e.g. Microsoft
+>    or Rust).
+>  - Disassembling (perf annotate).
+> 
+> However, these are much less pressing; most people don't profile
+> PE binaries, and perf has non-bfd paths for ELF. The same with
+> demangling; the default _cxa_demangle path works fine for most
+> users, and while bfd objdump can be slow on large binaries,
+> it is possible to use --objdump=llvm-objdump to get the speed benefits.
+> (It appears LLVM-based demangling is very simple, should we want
+> that.)
+> 
+> Tested with LLVM 14, 15, 16, 18 and 19. For some reason, LLVM 12 was not
+> correctly detected using feature_check, and thus was not tested.
+> 
+> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+[SNIP]
+> +static int addr2line(const char *dso_name, u64 addr,
+> +		     char **file, unsigned int *line, struct dso *dso,
+> +		     bool unwind_inlines, struct inline_node *node,
+> +		     struct symbol *sym)
+> +{
+> +	struct llvm_a2l_frame *inline_frames = NULL;
+> +	int num_frames = llvm_addr2line(dso_name, addr, file, line,
+> +					node && unwind_inlines, &inline_frames);
+> +
+> +	if (num_frames == 0 || !inline_frames) {
+> +		/* Error, or we didn't want inlines. */
+> +		return num_frames;
+> +	}
+> +
+> +	for (int i = 0; i < num_frames; ++i) {
+> +		struct symbol *inline_sym =
+> +			new_inline_sym(dso, sym, inline_frames[i].funcname);
+> +		char *srcline = NULL;
+> +
+> +		if (inline_frames[i].filename)
+> +			srcline = srcline_from_fileline(
+> +				inline_frames[i].filename,
+> +				inline_frames[i].line);
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Please fix the coding style.  Also you may add a pair of brackets to
+multi-line code even if it's a single statement.
 
 Thanks,
-Ian
+Namhyung
 
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/util/stat-shadow.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
-c
-> index 3466aa952442..4d0edc061f1a 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -176,6 +176,10 @@ static double find_stat(const struct evsel *evsel, i=
-nt aggr_idx, enum stat_type
->                 if (type !=3D evsel__stat_type(cur))
->                         continue;
->
-> +               /* Ignore if not the PMU we're looking for. */
-> +               if (evsel->pmu !=3D cur->pmu)
-> +                       continue;
+
+> +		if (inline_list__append(inline_sym, srcline, node) != 0) {
+> +			free_llvm_inline_frames(inline_frames, num_frames);
+> +			return 0;
+> +		}
+> +	}
+> +	free_llvm_inline_frames(inline_frames, num_frames);
 > +
->                 aggr =3D &cur->stats->aggr[aggr_idx];
->                 if (type =3D=3D STAT_NSECS)
->                         return aggr->counts.val;
-> --
-> 2.35.1
->
+> +	return num_frames;
+> +}
+> +
+> +void dso__free_a2l(struct dso *)
+> +{
+> +	/* Nothing to free. */
+> +}
+> +
+> +#elif defined(HAVE_LIBBFD_SUPPORT)
+>  
+>  /*
+>   * Implement addr2line using libbfd.
+> -- 
+> 2.45.1
+> 
