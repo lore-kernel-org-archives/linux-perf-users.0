@@ -1,106 +1,115 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9019513CFAC
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Jun 2024 23:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC52169386
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Jun 2024 23:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717631492; cv=none; b=JXumzxtqQtNu3vWPMu0ua2tPfMe0PdUP3myUIFuIdwKcWH/7t07dTXQ3jjj9Sgdq5IYiv49xYOIYsnUrTd5hLhe65Iwm5hxEyPUEemUv/yh2U0CpdIGLJIUd79O3AewAVgBzknbOxXe+/bYqWJY77wZtYj+7KG+W5i1Y5D+Xoi8=
+	t=1717631695; cv=none; b=kfTbGldC4yIi7yAzYFPw2dpSHZIskFCsKS41nDIi/xoPpbCwhIeuPJxovWM9V3nc/uDPkDbV9neF4M2gKEzIwZw3M13/LPQPUNaApuLuIWtsded11LUsDBmSWXHLsrfdnQDY8+jNfzDmVhTdYdl591ySduOZ64cVFZZSC0nccso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717631492; c=relaxed/simple;
-	bh=U7InVmmSrK25YNhLJNh+yqPRqcrfe70EpSFFDHgH6LY=;
+	s=arc-20240116; t=1717631695; c=relaxed/simple;
+	bh=Tk/gg4Z7m8cPwkqUMSj9bxnEXvLbAVNGUl3GAZ8QhMI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Prcz09bKBRhQ4EAvQGHM+2m07VdsJnbLmMYuos4GwNcWuwQBaBcZe6yzgghm1EFPy6GadX7KlHi1psC+jBu2Z8OTjUTTI7pkhMGkl1M8O6hoI/v/pGAN0IoBK/ue29CtK1Ztou1kDLCqnxBk2z/KFXxOQp1DEphGS+2Qzd3ccYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IAW8G04f; arc=none smtp.client-ip=209.85.214.177
+	 To:Content-Type; b=VHm2mg49AtPIK7PbP+YXGsYzbwD50WgmPXMABiAU5P5BCUb388N9DuTy1gQQBwIEvSv+T/tYWFA5Of3vbIsNUSQG4Qz4RYcPTNaYgrx856F/3zTrw9mjvEmSr2lkVcjGNS0tt2A6jwdHrVtKKLA7NcnNGgNtCIImH/WonJmKDVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EP8zK+Dr; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IAW8G04f"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f6a270d1b8so63855ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jun 2024 16:51:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EP8zK+Dr"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f61742a024so71655ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jun 2024 16:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717631491; x=1718236291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1717631693; x=1718236493; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=79M0nO+KIcgbUto8NrR4+Y4jdk/93YVdZriJZH/jQN4=;
-        b=IAW8G04ftjJc30nt4pxYlhyYSpARPANh2YuyLI+rDtfxY01Lp1+tODrDUcDjJGxt24
-         h+mHzLniuhaBdBEnBFhvGuT6ncdzzgxuXaNy5ALCpSpwnYF6d330YxT3N6nC4UMjgvRj
-         LAfyPy5y6Liemmgiore2z78ptc93iB2CyKn03uXXlvznPaHhXPopVhw9/rEyzn6eALWi
-         ZQEDzoZ/Y0c4hUQcKkrQ/nkv/5Rctc8erCkcy77hNu8L5L2MIoCVwVVfm+PArFlKBBDN
-         cJettcqIA5VvOroKjd97grw5F1AenqHdxFKMD/x3liiPdfrDaGPlBJLJLZO/gFm/GwOR
-         pR8A==
+        bh=SOoM7UFhwQ7QR/s5c6/iMqUtz+xzNojBCRoqDAeYHPk=;
+        b=EP8zK+DriFdNMatQenNp34Ulk+MxOi01IKpL95Jqh9c2Q63NBrPkFcwR4D5oy0MDIZ
+         AjWCSLzzMxUYB/qSRIJ6Yl07cogcN140pppAtq65uReCuEDsqr9rcAJmt822MI4eKI2F
+         lNtwwbRXMQ2Dap3MVwuRuYwsUmIP6WwbYyW47p4Nghfkcp5l9jPwcYW5hwyBBDxgohXn
+         TeMLvRR46CnMk7/WzjS/Qbm6+tUsJ4N005SUFnBE6WP8lF7JM0xYEt18I20eix/18CPm
+         LBr7HStQFRI4L+ONGYP0XCKbwv7p7mzDweQItz/y1A6LzqPldN4pJi7ALFFR9WxnBKKb
+         zj/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717631491; x=1718236291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1717631693; x=1718236493;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=79M0nO+KIcgbUto8NrR4+Y4jdk/93YVdZriJZH/jQN4=;
-        b=JHhkpT28k8CXr0Cs6dGFLtgaFcClwVT4DBh2oWDsrWmfsjWbT8sUTfy4Pqe6sss+ul
-         xDTgx//4hJpYyZmHMHXsTCZiWyPjFkJCH+c3qdc/pEC1tPn2/bI9YXtKeMPKP6hBuqNv
-         nSr5UrzEJ6y2raYOQoHdQ5+q57IDD8QCgOMu97MadycEcqkLPfBQzUVeAuIFwWm02YMS
-         gKDLnIEe41SldvVGbMQWaujRunvM55TJ92BBaPi8yMoNQILC8Wj66ACtLdXA4bDwDm4y
-         Jq2pyPX4UtTG611mxIWpXDqrOeH4OI8ZAJSw6Cek8K92RqBZNijbCfC0imSIFb1AdXiL
-         Zuig==
-X-Forwarded-Encrypted: i=1; AJvYcCXxvSsfyoirfbLgkjhn227RR7ohRksJ3IZg9a3Vb76diGloSB8vYjuXwHftbiP+az0gVQc/a+/e3xxMnMPGyErluIUqxCQr9fVV2jAQ+VJgLw==
-X-Gm-Message-State: AOJu0YyxxCc8zrLP2JYGP/XySa9gqlOwqVt2amDmF0ep0RF610PrE03k
-	nFiUqz2MTQHlWL+A49Vs2RvCsNUOMhLSEvdT+oOiq4xjMiVACSMuhWBoAuw23WbmJxBmcCtYmc+
-	XJhpge8f6ip1bshlPGvi8KdH/FWiFvXwyrS+d
-X-Google-Smtp-Source: AGHT+IH3Qywl45jnbOG5HG1JqeRU2wWUBItqqeJXUS2GCpxt7nsAPbyI4+OOzH1xONrf51Gi7h0M5xyHPdEOiMolD48=
-X-Received: by 2002:a17:902:b587:b0:1f6:8836:e43f with SMTP id
- d9443c01a7336-1f6bd3b4960mr593435ad.17.1717631490266; Wed, 05 Jun 2024
- 16:51:30 -0700 (PDT)
+        bh=SOoM7UFhwQ7QR/s5c6/iMqUtz+xzNojBCRoqDAeYHPk=;
+        b=VS+epk/Ci9aXtEXEz6MwNCi7Ogxzt8Lq75ccyl5SsLSGOG60llTG6Ne97pNDXUZyrn
+         +SQUsRqJXbudb+JvdqpjciPP4vCu0NmsrwjchwHMLPzVv4PmYiDJRRj/st99SqME75Vx
+         aNUqU9iyStY5Sne/0M7fL+hUiJApijVTa/AbX8cs+Gwdg+Znp32dlvJJUrNqLAbBY6wE
+         +HTD1YVnZfvj3DADeN/JjIoL4IKLpU1fr3lS/NOsG6fqir/7zdcFHQVjLXSrk8wmJ7Cs
+         gHpbxapNG2VcjtSEOJJV/YrN4H6QlyzF92FFIR+fBc0BAj2IDpTYlaOLU8jTkkgTzibM
+         29VA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/qlD3h2zKAvRCOKKKvLqbRNTkDMtjd7vF7EbUEn9FBD3LYlysGTVfvWQrt90sEuf5AKkIChX3syRyhELbsu76gfYPSp4Oem/GYfp6aR6DMA==
+X-Gm-Message-State: AOJu0Yz/06yfPeanvqqE0JD95NWhGB+cD2/++bNDnawyHCFVsnRVNqZT
+	1cnMbPC6kfdAakOF+ktoOjZdEDXd0zeEh08snpFN5XCw6jsAJU9NxFK0tyE8Kr/Q8PzK4pLndgF
+	d7oKPCYU+wHtWSeU7AON6Q5TBzfO2HDbSwy5S
+X-Google-Smtp-Source: AGHT+IFKAkvdqg8Y4XtZJrq2ocqJwSXi5rXoy4qvsNne+rSk5pV5EMUpWTijA52FMFgSlCuU6iCOUgRoIxtqZfaFju0=
+X-Received: by 2002:a17:902:8b87:b0:1f3:2b46:47ce with SMTP id
+ d9443c01a7336-1f6bd3a4268mr711265ad.15.1717631692204; Wed, 05 Jun 2024
+ 16:54:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516222159.3710131-1-irogers@google.com> <CAM9d7chsZ3EDRYW=YEJBd7wCYRLWNqMOFt33C=ghaY_UqZvGKA@mail.gmail.com>
- <Zkz585EIxBwoP4OZ@x1>
-In-Reply-To: <Zkz585EIxBwoP4OZ@x1>
+References: <20240521165109.708593-1-irogers@google.com>
+In-Reply-To: <20240521165109.708593-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Jun 2024 16:51:17 -0700
-Message-ID: <CAP-5=fUzbaBCKEVxYTyzv1K3s+BcGCAjJcv-g9SrZFO+EBX3oA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf top: Make zeroing histogram on refresh the default
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
+Date: Wed, 5 Jun 2024 16:54:40 -0700
+Message-ID: <CAP-5=fXJrGWpOo9B9V-T9K2fkQBhgL6edo-c039nCn=Y7FxSEg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Fix and improve __maps__fixup_overlap_and_insert
+To: "Steinar H . Gunderson" <sesse@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Changbin Du <changbin.du@huawei.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 12:46=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, May 21, 2024 at 9:51=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Fri, May 17, 2024 at 06:25:16PM -0700, Namhyung Kim wrote:
-> > On Thu, May 16, 2024 at 3:22=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > > Instead of decaying histograms over time change it so that they are
-> > > zero-ed on each perf top refresh. Previously the option '-z', or
-> > > pressing 'z' in tui mode, would enable this behavior. Decaying sample=
-s
-> > > is non-intuitive as it isn't how "top" works. Make zeroing on refresh
-> > > the default and rename the command line options from 'z' to 'Z' and
-> > > 'zero' to 'decay'.
+> Fix latent unlikely bugs in __maps__fixup_overlap_and_insert.
 >
-> > While it may make more sense, I'm afraid of changing the default
-> > behavior.  I think we can add a config option for this.
+> Improve __maps__fixup_overlap_and_insert's performance 21x in the case
+> of overlapping mmaps. sesse@google.com reported slowness opening
+> perf.data files from chromium where the files contained a large number
+> of overlapping mappings. Improve this case primarily by avoiding
+> unnecessary sorting.
 >
-> > Also instead of adding a new option, it should be able to use the
-> > existing --no-zero option.
+> Unscientific timing data processing a perf.data file with overlapping
+> mmap events from chromium:
 >
-> Hi Ingo,
+> Before:
+> real    0m9.856s
+> user    0m9.637s
+> sys     0m0.204s
 >
->         What do you think? -z and the default to decaying is in 'perf
-> top' since the very beginning, when it was called kerneltop:
+> After:
+> real    0m0.675s
+> user    0m0.454s
+> sys     0m0.196s
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3De0143bad9dbf2a8fad4c5430562bceba196b66ea
+> Tested with address/leak sanitizer, invariant checks and validating
+> the before and after output are identical.
+>
+> Ian Rogers (3):
+>   perf maps: Fix use after free in __maps__fixup_overlap_and_insert
+>   perf maps: Reduce sorting for overlapping mappings
+>   perf maps: Add/use a sorted insert for fixup overlap and insert
 
-Ping, thanks,
+Ping. Thanks,
 Ian
+
+>  tools/perf/util/maps.c | 113 +++++++++++++++++++++++++++++++++--------
+>  1 file changed, 92 insertions(+), 21 deletions(-)
+>
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
