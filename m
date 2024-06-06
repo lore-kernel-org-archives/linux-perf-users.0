@@ -1,202 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FF96F068;
-	Thu,  6 Jun 2024 06:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681436F068
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2024 07:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656812; cv=none; b=fEJ6kuFKvjIXh70O6GmE/M8hJODpH9yJ4293+xVbbqdZE2mESQbpzwI1K073ZwOx9yaZoFDsxlWXafdFogPkdYIHXBLpsfzLzrK46mLbfe5olD6acawexSVyWSKxw47JHmtSQr6n6YpX+yv6EpKJwNKMCrajqjJUUKuNgvOr2o8=
+	t=1717657506; cv=none; b=rjBq0gSn9BrFG/65/CRTQWfSMtgQcnK8QMabZmJbSrkEPnDIpr0q/IrCVBR4jvJreajbL3DT6wykfsumBpDN7TqUtHS/bQlG3bHVg9ejjfrZ4T45ULRAbrfIFPgRsN1Ya5fSIBLdhpanV9CRaObmmo5CIgQu8NCCOijH88cy7oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656812; c=relaxed/simple;
-	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQTERqg1wu4+fR1AxOiqywzc4vMnKKgt4duZE4Q7WO9zb5sMTkFS8XaBjpxTMYpqqKh7NA0cg7S/de0mAesbJAWqwa4XagFuWf3ZSsQaUOZlGo9nisEX/nQYAuycJE+eHvkqIuUIaj78u/1H0QPv40zFFBiB57d8rghLnoe3e6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilU3ez+S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717657506; c=relaxed/simple;
+	bh=lLbPi6PEtx7mcrA74H59gkeJ2Vj+bCUKyXS/pK0obXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bPZfdn6WNYiWJiFTBRT6TDO7w+FTwjQUjdpP91bav6Um9rB7ItwwKylPhdFWGlPOP0qrnujIXTzNHoWc4PYePbiewnEo3lL0Gy/7/Nw41EfcCiaGzNUTwXpEHjDMKqceVtBAqpS2EB+UwJHcRhi914uw0g0leuRr+5g972tKxMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0SE8UQjt; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilU3ez+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86633C4AF08;
-	Thu,  6 Jun 2024 06:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717656812;
-	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilU3ez+Sh2XfeQBILe8JRGQCLnC0ghKF6UuH7S5xS7LUc3l6SC5WHPqAFhVpuM48c
-	 UECg8zkcemdw1eBNAIjRZ/NZWujmFxOgSPn2UL9xZi5NQLBZQ/ef+8I39VSs7UN04U
-	 wkFp1ypqPfeFRFh1I5BlyWBysjO7DS9d2V4CePghEko5dFcaph6FPk4VLiMqkIzEM8
-	 76XRTmS6pzm8GnxikRS52HlQrOtfSg7hmx1gtGM+TwkIXaIImPaFkacPCT7T5uNSOQ
-	 Ngjr8RT737ynyCqqwVmGcV7Hptn6Oh7BKdWg3BvsMl3daitgXE+1H5Q0O75jivs6WI
-	 ETUIi3yq6f9ig==
-Date: Wed, 5 Jun 2024 23:53:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH V3 10/14] tools/perf: Update instruction tracking for
- powerpc
-Message-ID: <ZmFc6kPnh-zIrIG1@google.com>
-References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
- <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0SE8UQjt"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3748a185da1so74225ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2024 00:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717657504; x=1718262304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FbGdl+80JsgZCzp3psor20iOdoziZwxzCaIswtJY5jk=;
+        b=0SE8UQjtcdLXSac2dOqqHjopUll3AWsouvM6ijlWsMd4HZ3w2D83gxwQx5afQX7+xp
+         8ON5PpNqLhxzPrI0zedeFsZSsQY79tJ3xdaqdo4LyK0HuhQrkfS45XgwgUGtAIHqEQUG
+         2wR3yKZnpOIUADP9ZZQ0TelqR11Eeg0Y5xhnsd7ICTZPimbzwJwZmZlBl/I6Q9AxCIdq
+         vOsMXgrttOXqHdDamnINgP/tWjLJ1fZx5ba6JFHs7wDePy3xQ21yus4BB14rXKTPVD8S
+         SMVFxcgkdYin1r+dAzSN+lduTgviUPhau2SYaFrIYQZ59AYQtnwH8DBXekLWgP6wlszg
+         hOaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717657504; x=1718262304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FbGdl+80JsgZCzp3psor20iOdoziZwxzCaIswtJY5jk=;
+        b=VNW6grV4opiT1Z8R08aJ4YUyET3kdhvfuBbJ8dE3c5aE0mr8DFgCVpFu7HrEN1ZxZe
+         zCI8TGPFHlVvoEP1Chtp5tzAtsZ/ytnWuiClXNI65QsIRoCkJemLCCxto+JmZZpvHM/h
+         YpWgc0wsBpvuf5g3kZbWsD4kLt1OqPIB64g7AgZW1eiQL+051SUSWLvrd+KqcjH2oPD7
+         7XRDq9F9CAJ5oXbKzxITnNZSGr/r/PY3jkVBfU/7iSSe4/WY6GY4iRkFw1DdfAPOuhQU
+         MSb3SMWuCslErj1eLLlya7LgDMOs3nYUDApYLs+4QOlf19C+Yx8YN+DnxtyjbW22K6MZ
+         Fhww==
+X-Forwarded-Encrypted: i=1; AJvYcCVfMOBnES+r9SG6Hjbau8c05MaD7cJy62E/rV3MvnwuGX2H+jWGHkVm/VodglU9eHYGkW/T5vvDfbfbv0XGp8q0Ei9HZUBWux67HeX2ZmlEMw==
+X-Gm-Message-State: AOJu0YwSjrpg5Q1I3bNpbN7IrpRoqjUPxVRe+8Qs5BU4a7bxgpgRilLj
+	DH6XfN/jvwmdN34uhNyVA8NIIPqrQNUjzTIIUVBxEkchAeB8piNgJ4/ikSxPrVOsdzIISF5SrRB
+	Vdn7K2j/DPxTmsP13lsy+xJU3d70ctjfrI4/Q
+X-Google-Smtp-Source: AGHT+IHq+uj/5GSwZtHD9DsLDpdeqv/Osc7fiQ3uXZR8SK9wgzoiJMMqTITEcXpxCbgTKoPzuvi+2CNpKDTqVM1bDDw=
+X-Received: by 2002:a92:50b:0:b0:374:930f:e49b with SMTP id
+ e9e14a558f8ab-374ba8c21f1mr2074375ab.24.1717657504452; Thu, 06 Jun 2024
+ 00:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
+References: <20240603092812.46616-1-yangyicong@huawei.com> <CAP-5=fXw0=dHORC-kObYFiAco64PGP4_uFr__f9YmVctWtGSfA@mail.gmail.com>
+ <3f43ecf1-ae3c-3418-9798-9f1aa0dcc3d2@huawei.com>
+In-Reply-To: <3f43ecf1-ae3c-3418-9798-9f1aa0dcc3d2@huawei.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 6 Jun 2024 00:04:51 -0700
+Message-ID: <CAP-5=fXw60RL=FBP4znRCCwvjmajcf2QpY_70Uf1J-ozutWVng@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Perf avoid opening events on offline CPUs
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: yangyicong@hisilicon.com, will@kernel.org, mark.rutland@arm.com, 
+	acme@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
+	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 01, 2024 at 11:39:37AM +0530, Athira Rajeev wrote:
-> Add instruction tracking function "update_insn_state_powerpc" for
-> powerpc. Example sequence in powerpc:
-> 
-> ld      r10,264(r3)
-> mr      r31,r3
-> <<after some sequence>
-> ld      r9,312(r31)
-> 
-> Consider ithe sample is pointing to: "ld r9,312(r31)".
-> Here the memory reference is hit at "312(r31)" where 312 is the offset
-> and r31 is the source register. Previous instruction sequence shows that
-> register state of r3 is moved to r31. So to identify the data type for r31
-> access, the previous instruction ("mr") needs to be tracked and the
-> state type entry has to be updated. Current instruction tracking support
-> in perf tools infrastructure is specific to x86. Patch adds this support
-> for powerpc as well.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  .../perf/arch/powerpc/annotate/instructions.c | 65 +++++++++++++++++++
->  tools/perf/util/annotate-data.c               |  9 ++-
->  tools/perf/util/disasm.c                      |  1 +
->  3 files changed, 74 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-> index db72148eb857..3ecf5a986037 100644
-> --- a/tools/perf/arch/powerpc/annotate/instructions.c
-> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
-> @@ -231,6 +231,71 @@ static struct ins_ops *check_ppc_insn(int raw_insn)
->  	return NULL;
->  }
->  
-> +/*
-> + * Instruction tracking function to track register state moves.
-> + * Example sequence:
-> + *    ld      r10,264(r3)
-> + *    mr      r31,r3
-> + *    <<after some sequence>
-> + *    ld      r9,312(r31)
-> + *
-> + * Previous instruction sequence shows that register state of r3
-> + * is moved to r31. update_insn_state_powerpc tracks these state
-> + * changes
-> + */
-> +#ifdef HAVE_DWARF_SUPPORT
-> +static void update_insn_state_powerpc(struct type_state *state,
-> +		struct data_loc_info *dloc, Dwarf_Die * cu_die __maybe_unused,
-> +		struct disasm_line *dl)
-> +{
-> +	struct annotated_insn_loc loc;
-> +	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
-> +	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
-> +	struct type_state_reg *tsr;
-> +	u32 insn_offset = dl->al.offset;
-> +
-> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-> +		return;
-> +
-> +	/*
-> +	 * Value 444 for bits 21:30 is for "mr"
-> +	 * instruction. "mr" is extended OR. So set the
-> +	 * source and destination reg correctly
-> +	 */
-> +	if (PPC_21_30(dl->ops.raw_insn) == 444) {
-> +		int src_reg = src->reg1;
-> +
-> +		src->reg1 = dst->reg1;
-> +		dst->reg1 = src_reg;
-> +	}
-> +
-> +	if (!has_reg_type(state, dst->reg1))
-> +		return;
-> +
-> +	tsr = &state->regs[dst->reg1];
-> +
-> +	if (!has_reg_type(state, src->reg1) ||
-> +			!state->regs[src->reg1].ok) {
-> +		tsr->ok = false;
-> +		return;
-> +	}
-> +
-> +	tsr->type = state->regs[src->reg1].type;
-> +	tsr->kind = state->regs[src->reg1].kind;
-> +	tsr->ok = true;
-> +
-> +	pr_debug("mov [%x] reg%d -> reg%d",
+On Tue, Jun 4, 2024 at 1:04=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
+wrote:
+>
+> On 2024/6/4 0:42, Ian Rogers wrote:
+> > On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei.c=
+om> wrote:
+> >>
+> >> From: Yicong Yang <yangyicong@hisilicon.com>
+> >>
+> >> If user doesn't specify the CPUs, perf will try to open events on CPUs
+> >> of the PMU which is initialized from the PMU's "cpumask" or "cpus" sys=
+fs
+> >> attributes if provided. But we doesn't check whether the CPUs provided
+> >> by the PMU are all online. So we may open events on offline CPUs if PM=
+U
+> >> driver provide offline CPUs and then we'll be rejected by the kernel:
+> >>
+> >> [root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
+> >
+> > Generally Linux won't let you take CPU0 off line, I'm not able to
+> > follow this step on x86 Linux. Fwiw, I routinely run perf with the
+> > core hyperthread siblings offline.
+> >
+>
+> It doesn't matter if it's the CPU0 offline or other CPUs. There's no rest=
+riction
+> for CPU0 can go offline or not on arm64 and I just use this for example.
+>
+> I cannot reproduce it on x86. I think it may because we're initializing t=
+he
+> pmu->cpus in different routines in pmu_cpumask(). There's no "cpus"
+> for x86's core pmu on my x86 machine:
+> root@ubuntu204:~# ls /sys/bus/event_source/devices/cpu/
+> allow_tsx_force_abort  caps  events  format  freeze_on_smi  perf_event_mu=
+x_interval_ms  power  rdpmc  subsystem  type  uevent
+>
+> So pmu_cpumask() will infer it as an core pmu and initialize the cpus
+> with online CPUs [1]. For arm64 there lies a "cpus" sysfs attributes
+> so pmu->cpus are initialized from the "cpus" without checking each
+> CPUs is online or not. That's what proposed in Patch 1/3.
+>
+> There's a "cpus" sysfs for x86's hybrid machine, reading from the code [2=
+].
+> And it seems always reflect the online CPUs supported by that PMU.
 
-pr_debug_dtp() ?
+Thanks Yicong, looking on a hybrid machine and taking cpu1 offline I
+see the PMU's "cpus" not containing the offline CPU. I think this
+supports that the PMU driver should be fixed for ARM, but we'll also
+need a workaround in the perf tool for older kernels.
 
 Thanks,
-Namhyung
+Ian
 
-
-> +			insn_offset, src->reg1, dst->reg1);
-> +	pr_debug_type_name(&tsr->type, tsr->kind);
-> +}
-> +#else /* HAVE_DWARF_SUPPORT */
-> +static void update_insn_state_powerpc(struct type_state *state __maybe_unused, struct data_loc_info *dloc __maybe_unused,
-> +		Dwarf_Die * cu_die __maybe_unused, struct disasm_line *dl __maybe_unused)
-> +{
-> +	return;
-> +}
-> +#endif /* HAVE_DWARF_SUPPORT */
-> +
->  static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
->  {
->  	if (!arch->initialized) {
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 7a48c3d72b89..734acdd8c4b7 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1080,6 +1080,13 @@ static int find_data_type_insn(struct data_loc_info *dloc,
->  	return ret;
->  }
->  
-> +static int arch_supports_insn_tracking(struct data_loc_info *dloc)
-> +{
-> +	if ((arch__is(dloc->arch, "x86")) || (arch__is(dloc->arch, "powerpc")))
-> +		return 1;
-> +	return 0;
-> +}
-> +
->  /*
->   * Construct a list of basic blocks for each scope with variables and try to find
->   * the data type by updating a type state table through instructions.
-> @@ -1094,7 +1101,7 @@ static int find_data_type_block(struct data_loc_info *dloc,
->  	int ret = -1;
->  
->  	/* TODO: other architecture support */
-> -	if (!arch__is(dloc->arch, "x86"))
-> +	if (!arch_supports_insn_tracking(dloc))
->  		return -1;
->  
->  	prev_dst_ip = dst_ip = dloc->ip;
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 57af4dc42a58..d8b357055302 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -155,6 +155,7 @@ static struct arch architectures[] = {
->  	{
->  		.name = "powerpc",
->  		.init = powerpc__annotate_init,
-> +		.update_insn_state = update_insn_state_powerpc,
->  	},
->  	{
->  		.name = "riscv64",
-> -- 
-> 2.43.0
-> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n779
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree//arch/x86/events/intel/core.c#n5736
+>
+> Thanks.
