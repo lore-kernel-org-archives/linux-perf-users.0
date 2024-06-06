@@ -1,64 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A323195B3F
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2024 13:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C5419642D;
+	Thu,  6 Jun 2024 13:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679391; cv=none; b=UzzkdlsFY76iAjhJkj6IXCXrl9Ay90G4h2qBO5ne2JJKRVCr+wyaINkYcmqNYK6tfNd8JbI2GfHYWw2tKh6RtV69A668J+VJA2wxgqxXFhFJAdZ1L03eFGXP5ayVg1dufJ6my2TGmhvChKMgulK+oFq7Vl6O96c+hztLBprEkVc=
+	t=1717681482; cv=none; b=QexpgPx3vB0iOHA4oZZfv7dwZn+aFLbqv7+XJP6WSCkvSn0vI2PMlX6UGlQn7zfIn0ZV3lirzTbU6sAVazp7zj8A61yMjyYcS+TvY+5ZMnmPO0yMSPuB9opJchTGztrt6dxKw3jOr5pYwgZJB6zHCy3ss2xy8XyKMxIG/0/z+zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679391; c=relaxed/simple;
-	bh=JLXrlUYX6pNa7+TkLZdnopmAVo/3lgIEulD0pUjnTOU=;
+	s=arc-20240116; t=1717681482; c=relaxed/simple;
+	bh=lq7yE7QHdLhqmzRBDqpM7MNtwj4dP5zB26YYW2zA/rQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PyqICyqMwofbrcbztVilg8EiJec8eghfM7vJ9HnJaafnzs423kZOS5zcwfE0XvXrGP+TvrJdrGff6MLg6WqnT09KyBqawYbjTIqM2YmwPZHmF1/Z1AKzfvGG+3w/sLaTR6Mndy1QZxWHn5lyuK3YY9k/p/r4DS8acDR1YHfIRJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDOWHnv5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=M7uU4wXHwRt2xFBMX5vmux1tjpj3fVh0vfTQFdDeC3bk5GRvvEbq7KHj882IOGFgjx7xZ4o7fEjrrL5ol3/huEf25lCEWmdkOMs5zbl3956+lPJc/hNua2u6/HfFdSymyoMMy5hOIYyPyYiQJLGPoO9GzpRUYpxhEf/y0VbkJxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFAnytJw; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDOWHnv5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717679389;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NAHYIkXmWpAgqLjxdgi533Q2LTwoBpYrQt6BJq/kmN4=;
-	b=HDOWHnv5q1khjrYHRhuMGdFzBkqTSSnTiHiMXflaZvwNrEJrIpfmIZNln1ykAxRfbx/XRt
-	jHBsQsp51Ler4FyT7Evmi8zohCUK/uKe0wfgLkL3rCoTUoCOPQ9ZVpJDI0E6EkKpyJj0Gc
-	2Jy6ntgbAVid90tie6RW8dAr0g63TTw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-cW2KgqnMNze4-wQeK1ycGA-1; Thu, 06 Jun 2024 09:09:46 -0400
-X-MC-Unique: cW2KgqnMNze4-wQeK1ycGA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4210d151c5bso8401675e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2024 06:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679385; x=1718284185;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NAHYIkXmWpAgqLjxdgi533Q2LTwoBpYrQt6BJq/kmN4=;
-        b=ET1p4DMblBveuTv9nuBZ4+VS0XrZrQAsU/wUiC52HUNSpNnZHI7fkidXn6MIx/ER3t
-         ztNwph6FVfMwdzWHCKgXvqa9iDPXUWpsVgi9NyidbjfmlJiykR+9XWMd6nFsgrdPifc8
-         w8gGEQheCWYuV001WYrDrmlIWMKznGxeWuecAU72X2QcxctoPOgxhbrV18LKsl+0eAkz
-         cKjxW/0H3gHotHMNxJRrlss2I/kIRGAMs0s1vrMYM/xLY2kqJpzNEvpvV0p118m96Qsj
-         2oYpUS6TdMUrw08uDOZMy+Xc4iKCVs4wEtHfDW+7Xbt18VDIFco+jwcghi81ROyfWZBT
-         EWgQ==
-X-Gm-Message-State: AOJu0Yzm6/E+d1A0fXLH+e1/8d+FAdy7UuabqkmhdIctuI0SrdxSBv4J
-	oPwGae4OeTnjGCntAInQN6yItBkUDgPfeODYgnaXtUHubetsnBwsze4/ZwHefyZY+F0/XRxtJO2
-	1a4Qfi2gU4S/L6G1dJX8girYud0JGxkLoHFsTt42UpmxitTFcFsowrs4JSS5vvMUQYLE=
-X-Received: by 2002:a05:600c:1d0f:b0:421:5329:227 with SMTP id 5b1f17b1804b1-42156351adfmr44045115e9.26.1717679385193;
-        Thu, 06 Jun 2024 06:09:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIC0g+AMba8tEuog+JiMkiIVEJ0Hjy//crwXpAtGVqRtW87KSdcDqC3zcZ0OC1c3CR3MqLNQ==
-X-Received: by 2002:a05:600c:1d0f:b0:421:5329:227 with SMTP id 5b1f17b1804b1-42156351adfmr44044905e9.26.1717679384771;
-        Thu, 06 Jun 2024 06:09:44 -0700 (PDT)
-Received: from [10.43.17.23] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fc31adsm1533049f8f.92.2024.06.06.06.09.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 06:09:44 -0700 (PDT)
-Message-ID: <6a33f2f6-fd69-4e90-8cd5-a73d393c20a1@redhat.com>
-Date: Thu, 6 Jun 2024 15:09:43 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFAnytJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717681480; x=1749217480;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lq7yE7QHdLhqmzRBDqpM7MNtwj4dP5zB26YYW2zA/rQ=;
+  b=eFAnytJwViFYBS6xqugBZZ4NW7ce1E3xJSkT2nAEH/Pv58fSQspngDAy
+   ek1DnWXbCGv8T9xtciJD2uQUlNuA6WFtZ03u03Br18BX0GXAvP/eJETT/
+   Spa4soie6t57+Pg0F5LslA5WQ9gPkiyKtig2+FHfTi8XqQvFyW6IXJ0N0
+   U31MlIAHxW9m86mqdyEJXNDG+EH0mPcrMOGjY8/mDxiu14ebla5y0L6v/
+   jeHwXlXan/ZQo9AUWbxY4WoWgMRJ7aZpueAvKu7+3PEC38KtyrgAld/zD
+   NC9B4/10iRxszpB7JIAI490nUEl1zDS7wWYu071624ErYt9z+5Z6IdvXc
+   A==;
+X-CSE-ConnectionGUID: coc32HTHQqKI2I1e4Zq/ww==
+X-CSE-MsgGUID: UHgnPOujRTWlHPQ8+OPt2Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25004528"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="25004528"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:44:39 -0700
+X-CSE-ConnectionGUID: GLottgdCSheTmgjT8VIBnA==
+X-CSE-MsgGUID: AtEl53KdR3WXtdiwM29u/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="37977429"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:44:39 -0700
+Received: from [10.212.72.92] (kliang2-mobl1.ccr.corp.intel.com [10.212.72.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AEF5F20B5703;
+	Thu,  6 Jun 2024 06:44:37 -0700 (PDT)
+Message-ID: <31ec235a-70f6-435b-b99b-5d59f4989ba6@linux.intel.com>
+Date: Thu, 6 Jun 2024 09:44:36 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,134 +58,113 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test stat_bpf_counter.sh: Remove comparison of
- separate runs
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
- mpetlan@redhat.com
-References: <20240604153111.105548-1-vmolnaro@redhat.com>
- <Zl-x8uob6NT3HlfT@google.com>
+Subject: Re: [PATCH] perf stat: Fix the hard-coded metrics calculation on the
+ hybrid
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Khalil, Amiri" <amiri.khalil@intel.com>, stable@vger.kernel.org
+References: <20240605160848.4116061-1-kan.liang@linux.intel.com>
+ <CAP-5=fV+-ytA2st17Ar-jQ5xYqrWtxnF2TcADKrC5WoPyKz4wQ@mail.gmail.com>
+ <CAM9d7cjuHYDMvcq10ZD=3LSmia4WcvAzsme89B-odHYBAZzWYg@mail.gmail.com>
 Content-Language: en-US
-From: Veronika Molnarova <vmolnaro@redhat.com>
-In-Reply-To: <Zl-x8uob6NT3HlfT@google.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAM9d7cjuHYDMvcq10ZD=3LSmia4WcvAzsme89B-odHYBAZzWYg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 6/5/24 02:31, Namhyung Kim wrote:
-> On Tue, Jun 04, 2024 at 05:31:11PM +0200, vmolnaro@redhat.com wrote:
->> From: Veronika Molnarova <vmolnaro@redhat.com>
+On 2024-06-06 3:34 a.m., Namhyung Kim wrote:
+> On Wed, Jun 5, 2024 at 10:21 AM Ian Rogers <irogers@google.com> wrote:
 >>
->> The test has been failing for some time when two separate runs of
->> perf benchmarks are recorded and the counts of the samples are compared,
->> while once the recording was done with option --bpf-counters and once
->> without it. It is expected that the count of the samples should within
->> a certain range, firstly the difference should have been within 10%,
->> which was then later raised to 20%. However, the test case keeps failing
->> on certain architectures as recording the same benchmark can provide
->> completely different counts samples based on the current load of the
->> system.
+>> On Wed, Jun 5, 2024 at 9:10 AM <kan.liang@linux.intel.com> wrote:
+>>>
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> The hard-coded metrics is wrongly calculated on the hybrid machine.
+>>>
+>>> $ perf stat -e cycles,instructions -a sleep 1
+>>>
+>>>  Performance counter stats for 'system wide':
+>>>
+>>>         18,205,487      cpu_atom/cycles/
+>>>          9,733,603      cpu_core/cycles/
+>>>          9,423,111      cpu_atom/instructions/     #  0.52  insn per cycle
+>>>          4,268,965      cpu_core/instructions/     #  0.23  insn per cycle
+>>>
+>>> The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 = 0.44.
+>>>
+>>> When finding the metric events, the find_stat() doesn't take the PMU
+>>> type into account. The cpu_atom/cycles/ is wrongly used to calculate
+>>> the IPC of the cpu_core.
+>>>
+>>> Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
+>>> Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 >>
->> Sampling two separate runs on intel-eaglestream-spr-13 of "perf stat
->> --no-big-num -e cycles -- perf bench sched messaging -g 1 -l 100 -t":
+>> Reviewed-by: Ian Rogers <irogers@google.com>
 >>
->>  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+>> Thanks,
+>> Ian
 >>
->>          396782898      cycles
->>
->>        0.010051983 seconds time elapsed
->>
->>        0.008664000 seconds user
->>        0.097058000 seconds sys
->>
->>  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
->>
->>         1431133032      cycles
->>
->>        0.021803714 seconds time elapsed
->>
->>        0.023377000 seconds user
->>        0.349918000 seconds sys
->>
->> , which is ranging from 400mil to 1400mil samples.
->>
->> From the testing point of view, it does not make sense to compare two
->> separate runs against each other when the conditions may change
->> significantly. Remove the comparison of two separate runs and check only
->> whether the stating works as expected for the --bpf-counters option. Compare
->> the samples count only when the samples are recorded simultaneously
->> ensuring the same conditions.
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>>  tools/perf/util/stat-shadow.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>>> index 3466aa952442..4d0edc061f1a 100644
+>>> --- a/tools/perf/util/stat-shadow.c
+>>> +++ b/tools/perf/util/stat-shadow.c
+>>> @@ -176,6 +176,10 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
+>>>                 if (type != evsel__stat_type(cur))
+>>>                         continue;
+>>>
+>>> +               /* Ignore if not the PMU we're looking for. */
+>>> +               if (evsel->pmu != cur->pmu)
+>>> +                       continue;
 > 
-> Hmm.. but having a test which checks if the output is sane can be
-> useful.  If it's a problem of dynamic changes in cpu cycles, maybe
-> we can use 'instructions' event instead (probably with :u) to get
-> more stable values?
-> 
+> Hmm.. Don't some metrics need events from different PMU?
+> Like cycles per sec or branch instructions per sec..
+>
+
+Right.
+
+In the hard-coded metrics, the events from a different PMU are
+SW_CPU_CLOCK and SW_TASK_CLOCK. They both have the stat type,
+STAT_NSECS. Perf should ignore the PMU checking for the type as below.
+I will send a V2 to fix it.
+
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 3466aa952442..d01335f18808 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -176,6 +176,9 @@ static double find_stat(const struct evsel *evsel,
+int aggr_idx, enum stat_type
+		if (type != evsel__stat_type(cur))
+			continue;
+
++		if ((type != STAT_NSECS) && (evsel->pmu != cur->pmu))
++			continue;
++
+		aggr = &cur->stats->aggr[aggr_idx];
+		if (type == STAT_NSECS)
+			return aggr->counts.val;
+
+
+Thanks,
+Kan
+
 > Thanks,
 > Namhyung
 > 
-
-Well but isn't it better to check the sanity of the output if the counters are recorded
-for a load with the same conditions as has been added in patch d9bd1d4
-"perf test bpf-counters: Add test for BPF event modifier" utilizing the event modifiers: 
-perf stat --no-big-num -e cycles/name=base_cycles/,cycles/name=bpf_cycles/b -- $workload?
-Comparing two separate runs is more based on the stability of the workload than the
-bpf-counters option, which then causes the issue of defining the threshold of what values
-are still within the sane range.
-
-But you are right that another possible fix for this issue is to change the workload or the
-event to get some more stable values, which could be comparable.
-
-Thanks,
-Veronika
-
->>
->> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
->> ---
->>  tools/perf/tests/shell/stat_bpf_counters.sh | 13 ++++++-------
->>  1 file changed, 6 insertions(+), 7 deletions(-)
->>
->> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
->> index 61f8149d854e..873b576836c6 100755
->> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
->> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
->> @@ -6,19 +6,19 @@ set -e
->>  
->>  workload="perf bench sched messaging -g 1 -l 100 -t"
->>  
->> -# check whether $2 is within +/- 20% of $1
->> +# check whether $2 is within +/- 10% of $1
->>  compare_number()
->>  {
->>  	first_num=$1
->>  	second_num=$2
->>  
->> -	# upper bound is first_num * 120%
->> -	upper=$(expr $first_num + $first_num / 5 )
->> -	# lower bound is first_num * 80%
->> -	lower=$(expr $first_num - $first_num / 5 )
->> +	# upper bound is first_num * 110%
->> +	upper=$(expr $first_num + $first_num / 10 )
->> +	# lower bound is first_num * 90%
->> +	lower=$(expr $first_num - $first_num / 10 )
->>  
->>  	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
->> -		echo "The difference between $first_num and $second_num are greater than 20%."
->> +		echo "The difference between $first_num and $second_num are greater than 10%."
->>  		exit 1
->>  	fi
->>  }
->> @@ -44,7 +44,6 @@ test_bpf_counters()
->>  	base_cycles=$(perf stat --no-big-num -e cycles -- $workload 2>&1 | awk '/cycles/ {print $1}')
->>  	bpf_cycles=$(perf stat --no-big-num --bpf-counters -e cycles -- $workload  2>&1 | awk '/cycles/ {print $1}')
->>  	check_counts $base_cycles $bpf_cycles
->> -	compare_number $base_cycles $bpf_cycles
->>  	echo "[Success]"
->>  }
->>  
->> -- 
->> 2.43.0
->>
 > 
-
+>>> +
+>>>                 aggr = &cur->stats->aggr[aggr_idx];
+>>>                 if (type == STAT_NSECS)
+>>>                         return aggr->counts.val;
+>>> --
+>>> 2.35.1
+>>>
+> 
