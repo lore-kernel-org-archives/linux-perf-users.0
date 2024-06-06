@@ -1,129 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E5738DC7;
-	Thu,  6 Jun 2024 17:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14F5199246;
+	Thu,  6 Jun 2024 18:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695646; cv=none; b=CxTBL615D+/H3Z8PLg25TkQaVC0kXdb2T/c+6yHvMRQWWyv+zqtzBFrZN/V8fHqhq+TDf4cLvWGAVBQu6FtMFNcUyJ7EeW7PKWFf2/f0TZak693kFIVntuZ3Ip8wvclpz+5gl7SJvD2wohIWAZIwwYNg59hf8dleazfaBObzimU=
+	t=1717697074; cv=none; b=s1xuDjB5HIxbDN1EyiE1rG0uOYUz0cb6MudJmFNw1X3cjw7fgrz/Wh05l/eK03w8STofF+F3cz4RhX0UYJpJlbLhcrnJN+L9t8btM9vilRH5b6m4CzbQKYsim81q5PBcESr1NYfrG9CE4k1BgkSxaOUpR4Bi6Ph1J0hR7rkO95M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695646; c=relaxed/simple;
-	bh=ennOQnPWn4O/h2UKcahZrRnfi5DrhPQG7mP3BEFvYoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zw2lde7UwE1d/oFfXTVtj/tRhTmlaucP8z7sI1Gx6BxVsNltHI+k1MpGxmhYuguZXcnMuPihq/yFcIvS9WQ36oE+OQcA5XX1uQFWjWrKrVUVHyAuH+JviVGKkVE5f1DqnnU9DbrTCHe4jKM5+DCuUDYwFrbs4A3VJqvgjKDIFqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9w96H6a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717697074; c=relaxed/simple;
+	bh=N7urc3PGrVRVyhlP4ECO2cQhX6mwjAHqaA+2X4Nkxno=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cUud3b8UpAzB7VmB+jFF0kRQt2sroz2hs9RvpqyHEVcTG6TncUR2cYTPm4jCMqIf8LUjLM7toTvJpZ1uwYrPqGEJuZRS7Lpju/LKry+EFejf22ajLPY1bBMpWSiNnwdvBRDbmkLpNI+TaiXH+YMW1rhHtnHEQy41avnPF81kVNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZzKpqVD; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9w96H6a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DACC2BD10;
-	Thu,  6 Jun 2024 17:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717695646;
-	bh=ennOQnPWn4O/h2UKcahZrRnfi5DrhPQG7mP3BEFvYoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q9w96H6amaJtFPZRtoMvWtv9V2P+7T+xz8vSeDYhcThG6iBvfKSnYKbx1FapfXbbx
-	 L7WXP1V9Xqn4G/kRoEymgc644/3yDxp66jVKWu0tbC2a5z88iNGC2DQvaCVK+2H9w6
-	 8bNJvC+xAZdTXLkGrH2g15zeNulWC9+Gvz3HasziskEOq/s7/jSkutyrFt9NsRRkMp
-	 mdSxp9y9rWXQ72ni1Yv33PzHPqxz5o7dzIQpZfcvFqQqhpPM6IlimwG0Ntj2gUdwsF
-	 2fq8xNhHpbgbUI9smSIonl3vjyUq8s7DnJNVOeTpq2XWwBIj61SU7ch9vXBOybYkST
-	 sISiIsvxon+xg==
-Date: Thu, 6 Jun 2024 10:40:44 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Fangrui Song <maskray@google.com>,
-	Mateusz Kowalczyk <fuuzetsu@fuuzetsu.co.uk>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 4/6] perf: build: Only link libebl.a for old libdw
-Message-ID: <ZmH0nCxLm5_Xl3Yo@google.com>
-References: <20240604093223.1934236-1-leo.yan@arm.com>
- <20240604093223.1934236-5-leo.yan@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZzKpqVD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717697073; x=1749233073;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N7urc3PGrVRVyhlP4ECO2cQhX6mwjAHqaA+2X4Nkxno=;
+  b=mZzKpqVDKEietPZXO0iIp42rsdp1TSRgTuAlzSeG9CQYlv9NyM0S3Ag0
+   ywCQ92CS3D6TJkP8a3897Ec72D1af3VUDw3Kf29KEvr8jrC8OucHRbD4X
+   KjN0gK68QGqW9iGEI/5X/dt88wDEnqr1N2imPzo6erBMy9INMLnaktW6Z
+   g2JTLQvVAQeMXrvLZzdTv66hMgbs786OSaiaPU5vIdpIqYo9+prBRp3XZ
+   1gYFWnKyJU+vhqV6Mn4C6g+C8iDgZhwHOhYUMH2/TZD4433D6eGJ4wV+P
+   3FnA3KqmFaofTeWVMJ+q3Fc50vNEGBmpOb21k4fcBi6HdzDM+Mf8Sjah0
+   w==;
+X-CSE-ConnectionGUID: xf/xh1ygRbSJ4DanRJfXXw==
+X-CSE-MsgGUID: nJT56psGSaOIP6QEeT/t1Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="31883375"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="31883375"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:04:32 -0700
+X-CSE-ConnectionGUID: 7+a/ImkFSuKYq4D81JiMGA==
+X-CSE-MsgGUID: fLEw+7VUQS+oeVZ2UqNCIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="38170025"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa009.fm.intel.com with ESMTP; 06 Jun 2024 11:04:31 -0700
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+	"Khalil, Amiri" <amiri.khalil@intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH V2] perf stat: Fix the hard-coded metrics calculation on the hybrid
+Date: Thu,  6 Jun 2024 11:03:16 -0700
+Message-Id: <20240606180316.4122904-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240604093223.1934236-5-leo.yan@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2024 at 10:32:21AM +0100, Leo Yan wrote:
-> Since libdw version 0.177, elfutils has merged libebl.a into libdw (see
-> the commit "libebl: Don't install libebl.a, libebl.h and remove backends
-> from spec." in the elfutils repository).
-> 
-> As a result, libebl.a does not exist on Debian Bullseye and newer
-> releases, causing static perf builds to fail on these distributions.
-> 
-> This commit checks the libdw version and only links libebl.a if it
-> detects that the libdw version is older than 0.177.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/build/feature/Makefile | 12 +++++++++++-
->  tools/perf/Makefile.config   | 12 +++++++++++-
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 6f52f892f9a3..2f4cfb7b8c14 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -159,7 +159,17 @@ $(OUTPUT)test-libopencsd.bin:
->  
->  DWARFLIBS := -ldw
->  ifeq ($(findstring -static,${LDFLAGS}),-static)
-> -DWARFLIBS += -lelf -lebl -lz -llzma -lbz2
-> +  DWARFLIBS += -lelf -lz -llzma -lbz2
-> +
-> +  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
-> +  LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
-> +  LIBDW_VERSION_2 := $(word 2, $(subst ., ,$(LIBDW_VERSION)))
-> +
-> +  # Elfutils merged libebl.a into libdw.a starting from version 0.177,
-> +  # Link libebl.a only if libdw is older than this version.
-> +  ifeq ($(shell test $(LIBDW_VERSION_2) -lt 177; echo $$?),0)
-> +    DWARFLIBS += -lebl
-> +  endif
->  endif
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Is there a better way to collect required libraries using pkg-config?
-I guess that's what we want to with the pkg-config in the first place.
-Maybe `pkg-config --print-requires-private libdw` ?
+The hard-coded metrics is wrongly calculated on the hybrid machine.
 
-Thanks,
-Namhyung
+$ perf stat -e cycles,instructions -a sleep 1
 
->  
->  $(OUTPUT)test-dwarf.bin:
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 646e5af0ed51..e8d3713b081c 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -152,7 +152,17 @@ ifdef LIBDW_DIR
->  endif
->  DWARFLIBS := -ldw
->  ifeq ($(findstring -static,${LDFLAGS}),-static)
-> -  DWARFLIBS += -lelf -lebl -ldl -lz -llzma -lbz2
-> +  DWARFLIBS += -lelf -ldl -lz -llzma -lbz2
-> +
-> +  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
-> +  LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
-> +  LIBDW_VERSION_2 := $(word 2, $(subst ., ,$(LIBDW_VERSION)))
-> +
-> +  # Elfutils merged libebl.a into libdw.a starting from version 0.177,
-> +  # Link libebl.a only if libdw is older than this version.
-> +  ifeq ($(shell test $(LIBDW_VERSION_2) -lt 177; echo $$?),0)
-> +    DWARFLIBS += -lebl
-> +  endif
->  endif
->  FEATURE_CHECK_CFLAGS-libdw-dwarf-unwind := $(LIBDW_CFLAGS)
->  FEATURE_CHECK_LDFLAGS-libdw-dwarf-unwind := $(LIBDW_LDFLAGS) $(DWARFLIBS)
-> -- 
-> 2.34.1
-> 
+ Performance counter stats for 'system wide':
+
+        18,205,487      cpu_atom/cycles/
+         9,733,603      cpu_core/cycles/
+         9,423,111      cpu_atom/instructions/     #  0.52  insn per cycle
+         4,268,965      cpu_core/instructions/     #  0.23  insn per cycle
+
+The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 = 0.44.
+
+When finding the metric events, the find_stat() doesn't take the PMU
+type into account. The cpu_atom/cycles/ is wrongly used to calculate
+the IPC of the cpu_core.
+
+In the hard-coded metrics, the events from a different PMU are only
+SW_CPU_CLOCK and SW_TASK_CLOCK. They both have the stat type,
+STAT_NSECS. Except the SW CLOCK events, check the PMU type as well.
+
+Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
+Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+
+Changes since V1:
+- Don't check the PMU of the SW CLOCK events 
+
+ tools/perf/util/stat-shadow.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 3466aa952442..6bb975e46de3 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -176,6 +176,13 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
+ 		if (type != evsel__stat_type(cur))
+ 			continue;
+ 
++		/*
++		 * Except the SW CLOCK events,
++		 * ignore if not the PMU we're looking for.
++		 */
++		if ((type != STAT_NSECS) && (evsel->pmu != cur->pmu))
++			continue;
++
+ 		aggr = &cur->stats->aggr[aggr_idx];
+ 		if (type == STAT_NSECS)
+ 			return aggr->counts.val;
+-- 
+2.35.1
+
