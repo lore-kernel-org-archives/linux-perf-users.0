@@ -1,124 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14F5199246;
-	Thu,  6 Jun 2024 18:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8031199E9A;
+	Thu,  6 Jun 2024 18:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717697074; cv=none; b=s1xuDjB5HIxbDN1EyiE1rG0uOYUz0cb6MudJmFNw1X3cjw7fgrz/Wh05l/eK03w8STofF+F3cz4RhX0UYJpJlbLhcrnJN+L9t8btM9vilRH5b6m4CzbQKYsim81q5PBcESr1NYfrG9CE4k1BgkSxaOUpR4Bi6Ph1J0hR7rkO95M=
+	t=1717697705; cv=none; b=FEyN4OmEc2YHMY1RhjoYRUDk/7wz/ae8SFRSJT+Plie7NILxffbTZXRxLtGdzkEseOTvcclng6otDRVVbE+m1ywMh51ocXBxa5pjvW4+BeTpsjB/QzjYI7wp4AsG/7argxuNh9R3/51Z8Th1JYoenysOjCWKF2XCePe+QQykZxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717697074; c=relaxed/simple;
-	bh=N7urc3PGrVRVyhlP4ECO2cQhX6mwjAHqaA+2X4Nkxno=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cUud3b8UpAzB7VmB+jFF0kRQt2sroz2hs9RvpqyHEVcTG6TncUR2cYTPm4jCMqIf8LUjLM7toTvJpZ1uwYrPqGEJuZRS7Lpju/LKry+EFejf22ajLPY1bBMpWSiNnwdvBRDbmkLpNI+TaiXH+YMW1rhHtnHEQy41avnPF81kVNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZzKpqVD; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1717697705; c=relaxed/simple;
+	bh=egWboMGOoCOOUrz/f57Ri2iKR67Rqvxoy2IOaJTVpvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Hjwb12C6x1ZLbj6f1aod9JGRoCj47G04YuKq+p2Kqyac5X/QEojTbTLjyFMCiaDav4HCPcoKHAa9ZhJZxKAnWPntoqFQWBbMKGVjxQEgi+ScfK2a6ToYm64sxT14OzW1/eLASaHnCUAjDRlXpJ/6DdxabyYJplL8JQX+nGWhKVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MUPxSoSc; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZzKpqVD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MUPxSoSc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717697073; x=1749233073;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=N7urc3PGrVRVyhlP4ECO2cQhX6mwjAHqaA+2X4Nkxno=;
-  b=mZzKpqVDKEietPZXO0iIp42rsdp1TSRgTuAlzSeG9CQYlv9NyM0S3Ag0
-   ywCQ92CS3D6TJkP8a3897Ec72D1af3VUDw3Kf29KEvr8jrC8OucHRbD4X
-   KjN0gK68QGqW9iGEI/5X/dt88wDEnqr1N2imPzo6erBMy9INMLnaktW6Z
-   g2JTLQvVAQeMXrvLZzdTv66hMgbs786OSaiaPU5vIdpIqYo9+prBRp3XZ
-   1gYFWnKyJU+vhqV6Mn4C6g+C8iDgZhwHOhYUMH2/TZD4433D6eGJ4wV+P
-   3FnA3KqmFaofTeWVMJ+q3Fc50vNEGBmpOb21k4fcBi6HdzDM+Mf8Sjah0
-   w==;
-X-CSE-ConnectionGUID: xf/xh1ygRbSJ4DanRJfXXw==
-X-CSE-MsgGUID: nJT56psGSaOIP6QEeT/t1Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="31883375"
+  t=1717697704; x=1749233704;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=egWboMGOoCOOUrz/f57Ri2iKR67Rqvxoy2IOaJTVpvk=;
+  b=MUPxSoSckSYaIpJkZsH8GAIuRvdmIiRbZiktThf7dDryN6u0/xsjxTYL
+   bi6tc4R+UsEu2Nr/KAgLXP6c0aJtbGtFF5Nq5gMrL7vubUgXNfwxYZTlU
+   v5epRwEy2DYd94/IBqM8eMDw0mmUkvFNSNqsJEl+0+F/bSzPTXGbDZkMB
+   HQjRgdIaqIhHbzU6LIg8BjBos2P9PSGYQovvSrWtoqqCR/236YbWP8hNz
+   cGSWtywHmuCNvIkC83SQPbpggN4gE5QxFtiamWgH5vQUGNupHcU2iWVBH
+   Wbil1WgkzV+jiapM1ZHy+IgDAId2vTjwvxba78G0Ng8EnxdHtu5mtsCmH
+   A==;
+X-CSE-ConnectionGUID: PHpZ7/iwQ1+ZpTLC9gItRg==
+X-CSE-MsgGUID: QDJvq7n7QtCBc0WvFcQGjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25788597"
 X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="31883375"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:04:32 -0700
-X-CSE-ConnectionGUID: 7+a/ImkFSuKYq4D81JiMGA==
-X-CSE-MsgGUID: fLEw+7VUQS+oeVZ2UqNCIw==
+   d="scan'208";a="25788597"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:15:03 -0700
+X-CSE-ConnectionGUID: DBIHofN/TLK3Lj2QHtHp0g==
+X-CSE-MsgGUID: FtCukTPlSLqRoPn9CsJerw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="38170025"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa009.fm.intel.com with ESMTP; 06 Jun 2024 11:04:31 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	"Khalil, Amiri" <amiri.khalil@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH V2] perf stat: Fix the hard-coded metrics calculation on the hybrid
-Date: Thu,  6 Jun 2024 11:03:16 -0700
-Message-Id: <20240606180316.4122904-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+   d="scan'208";a="37978935"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:15:02 -0700
+Received: from [10.212.72.92] (kliang2-mobl1.ccr.corp.intel.com [10.212.72.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6EA6E20B5703;
+	Thu,  6 Jun 2024 11:15:00 -0700 (PDT)
+Message-ID: <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
+Date: Thu, 6 Jun 2024 14:14:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming
+ convention
+To: Ian Rogers <irogers@google.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Tuan Phan <tuanphan@os.amperecomputing.com>,
+ Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Bhaskara Budiredla <bbudiredla@marvell.com>,
+ Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Will Deacon <will@kernel.org>, Stephane Eranian <eranian@google.com>
+References: <20240606044959.335715-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240606044959.335715-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The hard-coded metrics is wrongly calculated on the hybrid machine.
 
-$ perf stat -e cycles,instructions -a sleep 1
+On 2024-06-06 12:49 a.m., Ian Rogers wrote:
+> It is an existing convention to use suffixes with PMU names. Try to
+> capture that convention so that future PMU devices may adhere to it.
+> 
+> The name of the file and date within the file try to follow existing
+> conventions, particularly sysfs-bus-event_source-devices-events.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> ---
+>  .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
+>
 
- Performance counter stats for 'system wide':
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-        18,205,487      cpu_atom/cycles/
-         9,733,603      cpu_core/cycles/
-         9,423,111      cpu_atom/instructions/     #  0.52  insn per cycle
-         4,268,965      cpu_core/instructions/     #  0.23  insn per cycle
+Thanks,
+Kan
 
-The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 = 0.44.
-
-When finding the metric events, the find_stat() doesn't take the PMU
-type into account. The cpu_atom/cycles/ is wrongly used to calculate
-the IPC of the cpu_core.
-
-In the hard-coded metrics, the events from a different PMU are only
-SW_CPU_CLOCK and SW_TASK_CLOCK. They both have the stat type,
-STAT_NSECS. Except the SW CLOCK events, check the PMU type as well.
-
-Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
-Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
-
-Changes since V1:
-- Don't check the PMU of the SW CLOCK events 
-
- tools/perf/util/stat-shadow.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 3466aa952442..6bb975e46de3 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -176,6 +176,13 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
- 		if (type != evsel__stat_type(cur))
- 			continue;
- 
-+		/*
-+		 * Except the SW CLOCK events,
-+		 * ignore if not the PMU we're looking for.
-+		 */
-+		if ((type != STAT_NSECS) && (evsel->pmu != cur->pmu))
-+			continue;
-+
- 		aggr = &cur->stats->aggr[aggr_idx];
- 		if (type == STAT_NSECS)
- 			return aggr->counts.val;
--- 
-2.35.1
-
+> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b/Documentation/ABI/testing/sysfs-bus-event_source-devices
+> new file mode 100644
+> index 000000000000..79b268319df1
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
+> @@ -0,0 +1,24 @@
+> +What: /sys/bus/event_source/devices/<pmu>
+> +Date: 2014/02/24
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> +Description:	Performance Monitoring Unit (<pmu>)
+> +
+> +		Each <pmu> directory, for a PMU device, is a name
+> +		optionally followed by an underscore and then either a
+> +		decimal or hexadecimal number. For example, cpu is a
+> +		PMU name without a suffix as is intel_bts,
+> +		uncore_imc_0 is a PMU name with a 0 numeric suffix,
+> +		ddr_pmu_87e1b0000000 is a PMU name with a hex
+> +		suffix. The hex suffix must be more than two
+> +		characters long to avoid ambiguity with PMUs like the
+> +		S390 cpum_cf.
+> +
+> +		Tools can treat PMUs with the same name that differ by
+> +		suffix as instances of the same PMU for the sake of,
+> +		for example, opening an event. For example, the PMUs
+> +		uncore_imc_free_running_0 and
+> +		uncore_imc_free_running_1 have an event data_read;
+> +		opening the data_read event on a PMU specified as
+> +		uncore_imc_free_running should be treated as opening
+> +		the data_read event on PMU uncore_imc_free_running_0
+> +		and PMU uncore_imc_free_running_1.
