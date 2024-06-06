@@ -1,264 +1,743 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6A26292
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2024 23:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0C0481A3;
+	Thu,  6 Jun 2024 23:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717715882; cv=none; b=tia0rS0XNTxJya4d77T/uhoAOM711pnFASl9ZiGVNTFhcDOQom4uaH2vCaEV/i8Z2x0AjkI0IHPy1fWzqnlN4uoP1GLNKgUjxbosPrWQ4SWZZJHWIi9rIxOyrTwihU6/8rsiYKmdgwS38ns3h8d4mkv1Udh91s2F/IPn4vsUqX0=
+	t=1717716034; cv=none; b=d2nhonSxHC0eswAa2z0po/D30pxbQlktt0yPSH8DxJSKwiDJTOofKF0HsBbxeGKUmHBUOeIrroPwGlCmA5mt1+Ef3SEHZPcqdxsWaBoecR51jLj2/B6UimfE7Oi+B9jVBkI0cLqk9ZyZhT63sEKy77aUX7SOmCwJJsLsc+JNosg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717715882; c=relaxed/simple;
-	bh=19XaacNp8Kcu5Ti2DS4m8MBq16yvs29OoTKcO5yHFZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iuCxbN7HS+OrzgVVoDFGfPVz3NGk17GF+mrXD4rDrNk51Vt9r/tLiQoPfanzpqq98sxKoV16ZCw8Qhm7Chcp2wUjBtvsQhA6FxdkBL2sxQdoy+t1H65IL3cmNXeDJHxcnjR9pnMlCysWVnFjBsmrZNiQdbJ3qoRG/5cNG7dwGTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fkKj34xj; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717716034; c=relaxed/simple;
+	bh=UmXqZrB5V8Pc1Q07LuWBKGIG3zoko76E5i90vPdmy/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYdn+yB5VQgryz6eHHoWfm8FGDxPhyylWaRAk7Y59MB+Wbi1LpQZ2P2yO7K9jW2zW3Yikkl4t8LS5JdFh8i7yU6SnDefZi55T0YNA98Wl8OqZcWmXfWoLRX93Qq/bDI2GASGK+GNoQyu5dMA08K+Mg4Uu8hn6+68SEtxk1sQwmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmFuNhTC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fkKj34xj"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f61742a024so72325ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2024 16:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717715880; x=1718320680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/l8SdZWscT50XIJXXqQu2Ls5LcDQtk8S/Jn0vt/xS74=;
-        b=fkKj34xjV9BWbH0TkcoOid8vVLH1XEVLg1jbH+vC9BYDXfZNGHk/PTZgtsz+x4GPyX
-         V2BUHD+qvyw86hEbYr/7ojPSM8bc4Fnj05M5bQEYdQNoaA1If0/ZGavFLqR4VkxJ5YNn
-         VlOdqL5FcTuzHHd2ic4k0L+XtQL2dPfVxxc10I0OOksF0tonpF8nx1Vl7nlw82butn9f
-         dFItW+nufFjZiLnhUk+xGIsEFHpNqkNQqOMaJ7gwboM/eVMrTZWAHfdNTdthAsjm/uOR
-         bw+wSVNNa7lPi5XJ7QZ5LQIjYKQGHjB9PDKR6ESwHthTtB84iul9rcVwL+gaecZ7JXWO
-         TnkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717715880; x=1718320680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/l8SdZWscT50XIJXXqQu2Ls5LcDQtk8S/Jn0vt/xS74=;
-        b=PazHBwZXTOcmCLjbETiM5QuNwa0RR6Lp1iZRQ+nJGDRUzZgK7ivAP4PMWWzX7k6uwz
-         lbZabic69gEAE0phToqGlAxwGgefCmNLdwSFsicHjpglwJxooYxKaqxsflAfiOa4dH5I
-         Lc101BNU/GXM9Ey4fmLoD1dxJG8CgcrawoiZ8iRQcOBdu2hdrljRmBFt1tW0cJcniNZ6
-         aw4jzL4YTFB6vmbnO1DGkpAecJtcKHC62sHPT/4ms98Y1u6czH7vsk63jMl7qwqzpe7B
-         WdOygBWcIQJdHS5xBVQ3HKraSWDY0NOTn/Cxg8gfkahLnRwCtnl8BA3RIOspfTBzNNcR
-         sPgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxHDoNCow1VWWhvfByV1trxlAShBobzrEJB3bNXl1+0mZEO4kr1O4vuHjsM9Nf/24MqgSV+YATopFl3OX0tclxsGamRveRNjvAx6rTFkBoWA==
-X-Gm-Message-State: AOJu0YwY/kk78IYXJi2WuSDmh/VVfdBgV6jWSy65xQF31fPto13i6xV0
-	KTBnaM5F/7Ma4CAAhOhX/F8UBYZo1MgMLfujxKIoS/4w+k0b4DXnti1pv6iEmiWzI3dmRJEHlCN
-	A/ZwvWP7f5JjBqp4ZNqOiEYw5JiA5veyibXG9
-X-Google-Smtp-Source: AGHT+IH/xutXin8rqxWXABdip1JdHkR2hPTycF2hrEcY74OusUk2w+OhuEuyNKB3wiyM50A4wOlHuBU9pnXbR9oSs0U=
-X-Received: by 2002:a17:902:dac2:b0:1f6:7fce:5684 with SMTP id
- d9443c01a7336-1f6bd339c13mr4741225ad.3.1717715875849; Thu, 06 Jun 2024
- 16:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmFuNhTC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BFFFC2BD10;
+	Thu,  6 Jun 2024 23:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717716033;
+	bh=UmXqZrB5V8Pc1Q07LuWBKGIG3zoko76E5i90vPdmy/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QmFuNhTCMKpjHfbVooR0OCKhFluoFQqXolycb+Lj6Elq+YUyuJC867vN5sy9orUYH
+	 BnU9IwE6GCVsh7AAXrOgfTOrLQj1C53AISA+MxutGZMhGcLQjX2C2IIMWkB52hoF33
+	 gJ5BJ4KnjkAJWLJNqgJiYfBxE5/p4nlCaWXRBiqzR+WgaOf9C4kTkForQ42jWvFGtm
+	 +qHb8JqrUlSa5whCHM3bU/0aX4SBlJXVpVkZ1E27itn5WrlsMP4aN8Hm43xuRZJDIa
+	 wYN4vZiDSwzwGgADxdNr9wZjYICB0lfIRdapgAzf0l/EWntVD3XAdntQS7G3A08D/e
+	 HvSJc7J6sRY1g==
+Date: Thu, 6 Jun 2024 16:20:31 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: weilin.wang@intel.com
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v11 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+Message-ID: <ZmJEP_42Ehlt-c-6@google.com>
+References: <20240605052200.4143205-1-weilin.wang@intel.com>
+ <20240605052200.4143205-4-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <23879991.0LEYPuXRzz@milian-workstation> <Zl8bhWfHSXxs35r2@x1>
- <Zl8g1LxRCYgTSxhy@x1> <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
- <Zl9ksOlHJHnKM70p@x1> <ZmI2Gumx5yUwyFsT@google.com>
-In-Reply-To: <ZmI2Gumx5yUwyFsT@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Jun 2024 16:17:43 -0700
-Message-ID: <CAP-5=fWD+PPCVCvyBFfd3vZzUajM0HAEWzJe8XmB9p_bfT4ATQ@mail.gmail.com>
-Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles + raw_syscalls
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, 
-	linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kenel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240605052200.4143205-4-weilin.wang@intel.com>
 
-On Thu, Jun 6, 2024 at 3:20=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Tue, Jun 04, 2024 at 04:02:08PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Jun 04, 2024 at 11:48:09AM -0700, Ian Rogers wrote:
-> > > On Tue, Jun 4, 2024 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme=
-@kernel.org> wrote:
-> > > > Can you please try with the attached and perhaps provide your Teste=
-d-by?
-> >
-> > > > From ab355e2c6b4cf641a9fff7af38059cf69ac712d5 Mon Sep 17 00:00:00 2=
-001
-> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > Date: Tue, 4 Jun 2024 11:00:22 -0300
-> > > > Subject: [PATCH 1/1] Revert "perf record: Reduce memory for recordi=
-ng
-> > > >  PERF_RECORD_LOST_SAMPLES event"
-> >
-> > > > This reverts commit 7d1405c71df21f6c394b8a885aa8a133f749fa22.
-> >
-> > > I think we should try to fight back reverts when possible. Reverts ar=
-e
-> > > removing something somebody poured time and attention into. When a
-> >
-> > While in the development phase, yeah, but when we find a regression and
-> > the revert makes it go away, that is the way to go.
-> >
-> > The person who poured time on the development gets notified and can
-> > decide if/when to try again.
-> >
-> > Millian had to pour time to figure out why something stopped working,
-> > was kind enough to provide the output from multiple tools to help in
-> > fixing the problem and I had to do the bisect to figure out when the
-> > problem happened and to check if reverting it we would have the tool
-> > working again.
-> >
-> > If we try to fix this for v6.10 we may end up adding yet another bug, s=
-o
-> > the safe thing to do at this point is to do the revert.
-> >
-> > We can try improving this once again for v6.11.
->
-> I think I found a couple of problems with this issue. :(
->
->  1. perf_session__set_id_hdr_size() uses the first evsel in the session
->     But I think it should pick the tracking event.  I guess we assume
->     all events have the same set of sample_type wrt the sample_id_all
->     but I'm not sure if it's correct.
->
->  2. With --call-graph dwarf, it seems to set unrelated sample type bits
->     in the attr like ADDR and DATA_SRC.
->
->  3. For tracepoint events, evsel__newtp_idx() sets a couple of sample
->     type regardless of the configuration.  This includes RAW, TIME and
->     CPU.  This one changes the format of the id headers.
->
->  4. PERF_RECORD_LOST_SAMPLES is for the sampling event, so it should
->     use the event's sample_type.  But the event parsing looks up the
->     event using evlist->is_pos which is set for the first event.
->
->  5. I think we can remove some sample type (i.e. TID and CPU) from the
->     tracking event in most cases.  ID(ENTIFIER) will be used for LOST_
->     SAMPLES and TIME is needed anyway.  TID is might be used for SWITCH
->     but others already contain necessary information in the type.  I
->     wish we could add id field to PERF_RECORD_LOST_SAMPLES and tid/pid
->     to PERF_RECORD_SWITCH.
+Hello,
 
-Right, this is good. To clear up the immediate error we just need to
-increase the memory allocation size by 48 bytes to account for the
-sample ID being written. Here is a change doing that and removing the
-memory allocation altogether:
-```
-diff --git a/tools/lib/perf/include/perf/event.h
-b/tools/lib/perf/include/perf/event.h
-index ae64090184d3..a2dfaff26fb7 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -77,6 +77,8 @@ struct perf_record_lost_samples {
-       __u64                    lost;
-};
+On Wed, Jun 05, 2024 at 01:21:44AM -0400, weilin.wang@intel.com wrote:
+> From: Weilin Wang <weilin.wang@intel.com>
+> 
+> When retire_latency value is used in a metric formula, evsel would fork a perf
+> record process with "-e" and "-W" options. Perf record will collect required
+> retire_latency values in parallel while perf stat is collecting counting values.
+> 
+> At the point of time that perf stat stops counting, evsel would stop perf record
+> by sending sigterm signal to perf record process. Sampled data will be process
+> to get retire latency value. Another thread is required to synchronize between
+> perf stat and perf record when we pass data through pipe.
+> 
+> Retire_latency evsel is not opened for perf stat so that there is no counter
+> wasted on it. This commit includes code suggested by Namhyung to adjust reading
+> size for groups that include retire_latency evsels.
+> 
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> ---
+>  tools/perf/builtin-stat.c     |   6 +
+>  tools/perf/util/Build         |   1 +
+>  tools/perf/util/evsel.c       |  66 +++++-
+>  tools/perf/util/intel-tpebs.c | 397 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/intel-tpebs.h |  48 ++++
+>  5 files changed, 516 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/perf/util/intel-tpebs.c
+>  create mode 100644 tools/perf/util/intel-tpebs.h
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 428e9721b908..b09cb2c6e9c2 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -70,6 +70,7 @@
+>  #include "util/bpf_counter.h"
+>  #include "util/iostat.h"
+>  #include "util/util.h"
+> +#include "util/intel-tpebs.h"
+>  #include "asm/bug.h"
+>  
+>  #include <linux/time64.h>
+> @@ -653,6 +654,9 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>  
+>  	if (child_pid != -1)
+>  		kill(child_pid, SIGTERM);
+> +
+> +	tpebs_stop_delete();
+> +
+>  	return COUNTER_FATAL;
+>  }
+>  
+> @@ -985,6 +989,8 @@ static void sig_atexit(void)
+>  	if (child_pid != -1)
+>  		kill(child_pid, SIGTERM);
+>  
+> +	tpebs_stop();
+> +
+>  	sigprocmask(SIG_SETMASK, &oset, NULL);
+>  
+>  	if (signr == -1)
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 292170a99ab6..79adf39e0d8f 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -153,6 +153,7 @@ perf-y += clockid.o
+>  perf-y += list_sort.o
+>  perf-y += mutex.o
+>  perf-y += sharded_mutex.o
+> +perf-$(CONFIG_X86_64) += intel-tpebs.o
+>  
+>  perf-$(CONFIG_LIBBPF) += bpf_map.o
+>  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a0a8aee7d6b9..bd3627819afe 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1538,6 +1538,60 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+>  	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
+>  }
+>  
+> +static bool evsel__group_has_tpebs(struct evsel *leader)
+> +{
+> +	struct evsel *evsel;
+> +
+> +	for_each_group_evsel(evsel, leader) {
+> +		if (evsel__is_retire_lat(evsel))
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +
+> +static u64 evsel__group_read_nr_members(struct evsel *leader)
+> +{
+> +	u64 nr = leader->core.nr_members;
+> +	struct evsel *evsel;
+> +
+> +	for_each_group_evsel(evsel, leader) {
+> +		if (evsel__is_retire_lat(evsel))
+> +			nr--;
+> +	}
+> +	return nr;
+> +}
+> +
+> +static u64 evsel__group_read_size(struct evsel *leader)
+> +{
+> +	u64 read_format = leader->core.attr.read_format;
+> +	int entry = sizeof(u64); /* value */
+> +	int size = 0;
+> +	int nr = 1;
+> +
+> +	if (!evsel__group_has_tpebs(leader))
+> +		return perf_evsel__read_size(&leader->core);
+> +
+> +	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> +		size += sizeof(u64);
+> +
+> +	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+> +		size += sizeof(u64);
+> +
+> +	if (read_format & PERF_FORMAT_ID)
+> +		entry += sizeof(u64);
+> +
+> +	if (read_format & PERF_FORMAT_LOST)
+> +		entry += sizeof(u64);
+> +
+> +	if (read_format & PERF_FORMAT_GROUP) {
+> +		nr = evsel__group_read_nr_members(leader);
+> +		size += sizeof(u64);
+> +	}
+> +
+> +	size += entry * nr;
+> +	return size;
+> +}
+> +
+>  static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int thread, u64 *data)
+>  {
+>  	u64 read_format = leader->core.attr.read_format;
+> @@ -1546,7 +1600,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
+>  
+>  	nr = *data++;
+>  
+> -	if (nr != (u64) leader->core.nr_members)
+> +	if (nr != evsel__group_read_nr_members(leader))
+>  		return -EINVAL;
+>  
+>  	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> @@ -1576,7 +1630,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+>  {
+>  	struct perf_stat_evsel *ps = leader->stats;
+>  	u64 read_format = leader->core.attr.read_format;
+> -	int size = perf_evsel__read_size(&leader->core);
+> +	int size = evsel__group_read_size(leader);
+>  	u64 *data = ps->group_data;
+>  
+>  	if (!(read_format & PERF_FORMAT_ID))
+> @@ -2186,6 +2240,9 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		return 0;
+>  	}
+>  
+> +	if (evsel__is_retire_lat(evsel))
+> +		return tpebs_start(evsel->evlist, cpus);
 
-+#define PERF_RECORD_MAX_LOST_SAMPLE_AND_ID_SIZE \
-+       (sizeof(struct perf_record_lost_samples) + 6 * sizeof(__u64))
-/*
- * PERF_FORMAT_ENABLED | PERF_FORMAT_RUNNING | PERF_FORMAT_ID | PERF_FORMAT=
-_LOST
- */
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 66a3de8ac661..1615a1723fb9 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1926,7 +1926,10 @@ static void __record__save_lost_samples(struct
-record *rec, struct evsel *evs
-el,
-static void record__read_lost_samples(struct record *rec)
-{
-       struct perf_session *session =3D rec->session;
--       struct perf_record_lost_samples *lost =3D NULL;
-+       union {
-+               struct perf_record_lost_samples lost;
-+               char
-lost_and_sample_id[PERF_RECORD_MAX_LOST_SAMPLE_AND_ID_SIZE];
-+       } lost;
-       struct evsel *evsel;
+As it works with evlist, I think it's better to put this code there.
+But it seems perf stat doesn't call the evlist API for open, then we
+can add this to somewhere in __run_perf_stat() directly.
 
-       /* there was an error during record__open */
-@@ -1951,20 +1954,13 @@ static void record__read_lost_samples(struct
-record *rec)
+> +
+>  	err = __evsel__prepare_open(evsel, cpus, threads);
+>  	if (err)
+>  		return err;
+> @@ -2376,6 +2433,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  void evsel__close(struct evsel *evsel)
+>  {
+> +	if (evsel__is_retire_lat(evsel))
+> +		tpebs_delete();
 
-                               if (perf_evsel__read(&evsel->core, x,
-y, &count) < 0) {
-                                       pr_debug("read LOST count failed\n")=
-;
--                                       goto out;
-+                                       return;
-                               }
+Ditto.
 
-                               if (count.lost) {
--                                       if (!lost) {
--                                               lost =3D zalloc(sizeof(*los=
-t) +
--
-session->machines.host.id_hdr_size);
--                                               if (!lost) {
--
-pr_debug("Memory allocation failed\n");
--                                                       return;
--                                               }
--                                               lost->header.type =3D
-PERF_RECORD_LOST_SAMPLES;
--                                       }
--
-__record__save_lost_samples(rec, evsel, lost,
-+                                       memset(&lost, 0, sizeof(lost));
-+                                       lost.lost.header.type =3D
-PERF_RECORD_LOST_SAMPLES;
-+
-__record__save_lost_samples(rec, evsel, &lost.lost,
-                                                                   x,
-y, count.lost, 0);
-                               }
-                       }
-@@ -1972,21 +1968,12 @@ static void record__read_lost_samples(struct
-record *rec)
+>  	perf_evsel__close(&evsel->core);
+>  	perf_evsel__free_id(&evsel->core);
+>  }
+> @@ -3341,6 +3400,9 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+>  {
+>  	int cpu_map_idx, thread;
+>  
+> +	if (evsel__is_retire_lat(evsel))
+> +		return 0;
+> +
+>  	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
+>  		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
+>  		     thread++) {
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> new file mode 100644
+> index 000000000000..37b7a4f92dd9
+> --- /dev/null
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -0,0 +1,397 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * intel_tpebs.c: Intel TPEBS support
+> + */
+> +
+> +
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +#include <thread.h>
+> +#include "intel-tpebs.h"
+> +#include <linux/list.h>
+> +#include <linux/zalloc.h>
+> +#include <linux/err.h>
+> +#include "sample.h"
+> +#include "debug.h"
+> +#include "evlist.h"
+> +#include "evsel.h"
+> +#include "session.h"
+> +#include "tool.h"
+> +#include "cpumap.h"
+> +#include "metricgroup.h"
+> +#include <sys/stat.h>
+> +#include <sys/file.h>
+> +#include <poll.h>
+> +#include <math.h>
+> +
+> +#define PERF_DATA		"-"
+> +
+> +bool tpebs_recording;
+> +static pid_t tpebs_pid = -1;
+> +static size_t tpebs_event_size;
+> +static pthread_t tpebs_reader_thread;
+> +static struct child_process *tpebs_cmd;
+> +static struct list_head tpebs_results = LIST_HEAD_INIT(tpebs_results);
 
-               lost_count =3D perf_bpf_filter__lost_count(evsel);
-               if (lost_count) {
--                       if (!lost) {
--                               lost =3D zalloc(sizeof(*lost) +
--
-session->machines.host.id_hdr_size);
--                               if (!lost) {
--                                       pr_debug("Memory allocation failed\=
-n");
--                                       return;
--                               }
--                               lost->header.type =3D PERF_RECORD_LOST_SAMP=
-LES;
--                       }
--                       __record__save_lost_samples(rec, evsel, lost,
-0, 0, lost_count,
-+                       memset(&lost, 0, sizeof(lost));
-+                       lost.lost.header.type =3D PERF_RECORD_LOST_SAMPLES;
-+                       __record__save_lost_samples(rec, evsel,
-&lost.lost, 0, 0, lost_count,
+It can be 'static LIST_HEAD(tpebs_results);'
 
-PERF_RECORD_MISC_LOST_SAMPLES_BPF);
-               }
-       }
--out:
--       free(lost);
-}
+> +
+> +struct tpebs_retire_lat {
+> +	struct list_head nd;
+> +	/* Event name */
+> +	const char *name;
+> +	/* Event name with the TPEBS modifier R */
+> +	const char *tpebs_name;
+> +	/* Count of retire_latency values found in sample data */
+> +	size_t count;
+> +	/* Sum of all the retire_latency values in sample data */
+> +	int sum;
+> +	/* Average of retire_latency, val = sum / count */
+> +	double val;
+> +};
+> +
+> +static int get_perf_record_args(const char **record_argv, char buf[],
+> +				const char *cpumap_buf)
+> +{
+> +	struct tpebs_retire_lat *e;
+> +	int i = 0;
+> +
+> +	pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +	record_argv[i++] = "perf";
+> +	record_argv[i++] = "record";
+> +	record_argv[i++] = "-W";
+> +	record_argv[i++] = "--synth=no";
+> +	record_argv[i++] = buf;
+> +
+> +	if (cpumap_buf) {
+> +		record_argv[i++] = "-C";
+> +		record_argv[i++] = cpumap_buf;
+> +	}
+> +
+> +	record_argv[i++] = "-a";
+> +
+> +	if (!cpumap_buf) {
+> +		pr_err("Require cpumap list to run sampling.\n");
+> +		return -ECANCELED;
+> +	}
 
-static volatile sig_atomic_t workload_exec_errno;
-```
+Hmm.. I thought you supported system wide collection, not sure if it has
+a cpumap.  Anyway this check makes the earlier one meaningless - you
+need the cpumap always, right?
+
+> +
+> +	list_for_each_entry(e, &tpebs_results, nd) {
+> +		record_argv[i++] = "-e";
+> +		record_argv[i++] = e->name;
+> +	}
+> +
+> +	record_argv[i++] = "-o";
+> +	record_argv[i++] = PERF_DATA;
+> +
+> +	return 0;
+> +}
+> +
+> +static int prepare_run_command(const char **argv)
+> +{
+> +	tpebs_cmd = zalloc(sizeof(struct child_process));
+> +	if (!tpebs_cmd)
+> +		return -ENOMEM;
+> +	tpebs_cmd->argv = argv;
+> +	tpebs_cmd->out = -1;
+> +	return 0;
+> +}
+> +
+> +static int start_perf_record(int control_fd[], int ack_fd[],
+> +				const char *cpumap_buf)
+> +{
+> +	const char **record_argv;
+> +	int ret;
+> +	char buf[32];
+> +
+> +	scnprintf(buf, sizeof(buf), "--control=fd:%d,%d", control_fd[0], ack_fd[1]);
+> +
+> +	record_argv = calloc(12 + 2 * tpebs_event_size, sizeof(char *));
+> +	if (!record_argv)
+> +		return -ENOMEM;
+> +
+> +	ret = get_perf_record_args(record_argv, buf, cpumap_buf);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = prepare_run_command(record_argv);
+> +	if (ret)
+> +		goto out;
+> +	ret = start_command(tpebs_cmd);
+> +out:
+> +	free(record_argv);
+> +	return ret;
+> +}
+> +
+> +static int process_sample_event(struct perf_tool *tool __maybe_unused,
+> +				union perf_event *event __maybe_unused,
+> +				struct perf_sample *sample,
+> +				struct evsel *evsel,
+> +				struct machine *machine __maybe_unused)
+> +{
+> +	int ret = 0;
+> +	const char *evname;
+> +	struct tpebs_retire_lat *t;
+> +
+> +	evname = evsel__name(evsel);
+> +
+> +	/*
+> +	 * Need to handle per core results? We are assuming average retire
+> +	 * latency value will be used. Save the number of samples and the sum of
+> +	 * retire latency value for each event.
+> +	 */
+> +	list_for_each_entry(t, &tpebs_results, nd) {
+> +		if (!strcmp(evname, t->name)) {
+> +			t->count += 1;
+> +			t->sum += sample->retire_lat;
+> +			t->val = (double) t->sum / t->count;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int process_feature_event(struct perf_session *session,
+> +				 union perf_event *event)
+> +{
+> +	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> +		return perf_event__process_feature(session, event);
+> +	return 0;
+> +}
+> +
+> +static void *__sample_reader(void *arg)
+> +{
+> +	struct child_process *child = arg;
+> +	struct perf_session *session;
+> +	struct perf_data data = {
+> +		.mode = PERF_DATA_MODE_READ,
+> +		.path = PERF_DATA,
+> +		.file.fd = child->out,
+> +	};
+> +	struct perf_tool tool = {
+> +		.sample = process_sample_event,
+> +		.feature = process_feature_event,
+> +		.attr = perf_event__process_attr,
+> +	};
+> +
+> +	session = perf_session__new(&data, &tool);
+> +	if (IS_ERR(session))
+> +		return NULL;
+> +	perf_session__process_events(session);
+> +	perf_session__delete(session);
+> +
+> +	return NULL;
+> +}
+> +
+> +int tpebs_start(struct evlist *evsel_list, struct perf_cpu_map *cpus)
+> +{
+> +	int ret = 0;
+> +	struct evsel *evsel;
+> +	char cpumap_buf[50];
+> +
+> +	/*
+> +	 * We should only run tpebs_start when tpebs_recording is enabled.
+> +	 * And we should only run it once with all the required events.
+> +	 */
+> +	if (tpebs_pid != -1 || !tpebs_recording)
+> +		return 0;
+> +
+> +	cpu_map__snprint(cpus, cpumap_buf, sizeof(cpumap_buf));
+> +	pr_debug("cpu map: %s\n", cpumap_buf);
+
+Can you please remove unnecessary debug prints?  If you really want it,
+then make it more meaningful like with more context.
+
+> +
+> +	/*
+> +	 * Prepare perf record for sampling event retire_latency before fork and
+> +	 * prepare workload
+> +	 */
+> +	evlist__for_each_entry(evsel_list, evsel) {
+> +		struct tpebs_retire_lat *new = zalloc(sizeof(*new));
+> +		char *name;
+> +		int i;
+> +
+> +		if (!evsel->retire_lat)
+> +			continue;
+
+Please move the allocation after this.
+
+> +
+> +		pr_debug("perf stat retire latency of event %s required\n", evsel->name);
+> +		if (!new) {
+> +			ret = -1;
+> +			goto err;
+> +		}
+> +		for (i = strlen(evsel->name) - 1; i > 0; i--) {
+> +			if (evsel->name[i] == 'R')
+> +				break;
+
+I think you also need to check ':' or '/'..
+
+> +		}
+> +		if (i <= 0 || evsel->name[i] != 'R') {
+> +			ret = -1;
+> +			goto err;
+> +		}
+> +
+> +		name = strdup(evsel->name);
+> +		if (!name) {
+> +			ret = -ENOMEM;
+> +			goto err;
+> +		}
+> +		name[i] = 'p';
+> +		new->name = name;
+> +		new->tpebs_name = strdup(evsel->name);
+> +		if (!new->tpebs_name) {
+> +			ret = -ENOMEM;
+> +			goto err;
+
+This error handling (including above) will leak 'new' because it's not
+linked to the list yet.
+
+> +		}
+> +		list_add_tail(&new->nd, &tpebs_results);
+> +		tpebs_event_size += 1;
+> +	}
+> +
+> +	if (tpebs_event_size > 0) {
+> +		int control_fd[2], ack_fd[2], len;
+> +		char ack_buf[8];
+> +
+> +		/*Create control and ack fd for --control*/
+> +		if (pipe(control_fd) < 0) {
+> +			pr_err("Failed to create control fifo");
+> +			ret = -1;
+> +			goto out;
+> +		}
+> +		if (pipe(ack_fd) < 0) {
+> +			pr_err("Failed to create control fifo");
+> +			ret = -1;
+> +			goto out;
+> +		}
+> +
+> +		ret = start_perf_record(control_fd, ack_fd, cpumap_buf);
+> +		if (ret)
+> +			goto out;
+> +		tpebs_pid = tpebs_cmd->pid;
+> +		if (pthread_create(&tpebs_reader_thread, NULL, __sample_reader, tpebs_cmd)) {
+> +			kill(tpebs_cmd->pid, SIGTERM);
+> +			close(tpebs_cmd->out);
+> +			pr_err("Could not create thread to process sample data.\n");
+> +			ret = -1;
+> +			goto out;
+> +		}
+> +		/* Wait for perf record initialization.*/
+> +		len = strlen("enable");
+> +		ret = write(control_fd[1], "enable", len);
+> +		if (ret != len) {
+> +			pr_err("perf record control write control message failed\n");
+> +			goto out;
+> +		}
+> +
+> +		ret = read(ack_fd[0], ack_buf, sizeof(ack_buf));
+> +		if (ret > 0)
+> +			ret = strcmp(ack_buf, "ack\n");
+> +		else {
+> +			pr_err("perf record control ack failed\n");
+> +			goto out;
+> +		}
+> +		pr_debug("Received ack from perf record\n");
+> +out:
+> +		close(control_fd[0]);
+> +		close(control_fd[1]);
+> +		close(ack_fd[0]);
+> +		close(ack_fd[1]);
+> +	}
+> +err:
+> +	if (ret)
+> +		tpebs_delete();
+> +	return ret;
+> +}
+> +
+> +int tpebs_stop(void)
+> +{
+> +	int ret = 0;
+> +
+> +	/* Like tpebs_start, we should only run tpebs_end once. */
+> +	if (tpebs_pid != -1) {
+> +		kill(tpebs_cmd->pid, SIGTERM);
+> +		tpebs_pid = -1;
+> +		pthread_join(tpebs_reader_thread, NULL);
+> +		close(tpebs_cmd->out);
+> +		ret = finish_command(tpebs_cmd);
+> +		if (ret == -ERR_RUN_COMMAND_WAITPID_SIGNAL)
+> +			ret = 0;
+> +	}
+> +	return ret;
+> +}
+> +
+> +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
+> +{
+> +	struct perf_counts_values *count;
+> +	struct tpebs_retire_lat *t;
+> +	bool found = false;
+> +	__u64 val;
+> +	int ret;
+> +
+> +	/* Non reitre_latency evsel should never enter this function. */
+> +	if (!evsel__is_retire_lat(evsel))
+> +		return -1;
+> +
+> +	ret = tpebs_stop();
+
+I think it's better to call this in the upper layer.
+
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	count = perf_counts(evsel->counts, cpu_map_idx, thread);
+> +
+> +	list_for_each_entry(t, &tpebs_results, nd) {
+> +		if (!strcmp(t->tpebs_name, evsel->name) || !strcmp(t->tpebs_name, evsel->metric_id)) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	/* Set ena and run to non-zero */
+> +	count->ena = count->run = 1;
+> +	count->lost = 0;
+> +
+> +	if (!found) {
+> +		/*
+> +		 * Set default value or 0 when retire_latency for this event is
+> +		 * not found from sampling data (enable_tpebs_recording not set
+> +		 * or 0 sample recorded).
+> +		 */
+> +		val = 0;
+
+Shouldn't it set count->val to 0?
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Namhyung
->
-> >
-> > > regression has occurred then I think we should add the regression cas=
-e
-> > > as a test.
-> >
-> > Sure, I thought about that as well, will try and have one shell test
-> > with that, referring to this case, for v6.11.
-> >
-> > - Arnaldo
+
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Only set retire_latency value to the first CPU and thread.
+> +	 */
+> +	if (cpu_map_idx == 0 && thread == 0)
+> +		val = rint(t->val);
+> +	else
+> +		val = 0;
+> +
+> +	count->val = val;
+> +	return 0;
+> +}
+> +
+> +static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+> +{
+> +	zfree(&r->name);
+> +	zfree(&r->tpebs_name);
+> +	free(r);
+> +}
+> +
+> +void tpebs_delete(void)
+> +{
+> +	struct tpebs_retire_lat *r, *rtmp;
+> +
+> +	list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
+> +		list_del_init(&r->nd);
+> +		tpebs_retire_lat__delete(r);
+> +	}
+> +
+> +	if (tpebs_cmd) {
+> +		free(tpebs_cmd);
+> +		tpebs_cmd = NULL;
+> +	}
+> +}
+> +
+> +int tpebs_stop_delete(void)
+> +{
+> +	int ret;
+> +
+> +	if (tpebs_pid == -1)
+> +		return 0;
+> +
+> +	ret = tpebs_stop();
+> +	tpebs_delete();
+> +	return ret;
+> +}
+> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+> new file mode 100644
+> index 000000000000..73c1e5219522
+> --- /dev/null
+> +++ b/tools/perf/util/intel-tpebs.h
+> @@ -0,0 +1,48 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * intel_tpebs.h: Intel TEPBS support
+> + */
+> +#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
+> +#define INCLUDE__PERF_INTEL_TPEBS_H__
+> +
+> +#include "stat.h"
+> +#include "evsel.h"
+> +
+> +#ifdef HAVE_ARCH_X86_64_SUPPORT
+> +
+> +extern bool tpebs_recording;
+> +int tpebs_start(struct evlist *evsel_list, struct perf_cpu_map *cpus);
+> +int tpebs_stop(void);
+> +void tpebs_delete(void);
+> +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+> +int tpebs_stop_delete(void);
+> +
+> +#else
+> +
+> +static inline int tpebs_start(struct evlist *evsel_list __maybe_unused,
+> +				struct perf_cpu_map *cpus  __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int tpebs_stop(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void tpebs_delete(void) {};
+> +
+> +static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
+> +				int cpu_map_idx  __maybe_unused,
+> +				int thread  __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int tpebs_stop_delete(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif
+> +#endif
+> -- 
+> 2.43.0
+> 
