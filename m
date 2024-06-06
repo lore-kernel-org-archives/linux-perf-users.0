@@ -1,57 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B801A198845
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2024 16:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EDA196DA2;
+	Thu,  6 Jun 2024 17:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717691863; cv=none; b=gihE49UvGVKdUwnD9fwwj7T8xPdH63tWYXn0jlY++d76lcqHlW15nUbkafzHZjTJyxBNbAKXTUVMBW6UoRpSo45SbppK6t+tQDA6HiXQ/GspODz5g3Q7luVD+X5+243/xyWV734iw2ZzvIqRLHyIfIBDn9pqxh58mpmrkvh4F9M=
+	t=1717693910; cv=none; b=jFF7BPu3GOrJW1M1DC44wu7e2XU5xHrR+CM6rTY5T/3pJmqISF0t/TF5Dru82/TMVliUlN55G5znljU8F8vdd/H74Tut9lHPg+J0qRdyNmQkfvSFQGyOG51nMdpE/e6Qv4wwICyADGoYU8yXrdr04t/YJcb1DrYOZCbXeaHDhDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717691863; c=relaxed/simple;
-	bh=b2FvQmAJ8/IEWHsWjhKFRknU1PgjVP/BwJoI+mtyIow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NzB71sb/uFcAHcgy1KXcAYnWa+fPuCR+CYLMQtCQmCUNg1U9Vda7pUxeLO8/c/uw2+otU0ytsAf08RtYeoRjPrHH+Zl7RAOAkudzSgvBow6HwY3etnSHJZ//QS6BSbz9oDpcbeaUjeVXinp67oXLPa4Yce0SAIWXKaavotqCtDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 322C82F4;
-	Thu,  6 Jun 2024 09:38:01 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 269303F881;
-	Thu,  6 Jun 2024 09:37:36 -0700 (PDT)
-Message-ID: <aade02cc-9ccb-42c5-a2ff-f8d9e6d740fe@arm.com>
-Date: Thu, 6 Jun 2024 17:37:34 +0100
+	s=arc-20240116; t=1717693910; c=relaxed/simple;
+	bh=O41E5mYK1HCbNo7OTdY8PzyG7mLhcJjX2LBf+/qZIEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sffEcrovt3KwkmlN/pfSHxRSW3zh7cx0DRt5/c6xRk27IhgcwxJBUDML0urYHz3K0OBdtW69+4WEzhRoo+nAVFIhB9klNRmJO4yMcrZSuPdBNBd0V7ns7/z4WzTN/ivINGQrDBwYaEeJIzmPhcSuBLsY7025bHTD5vWBB0RXN98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9prq4Ei; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9prq4Ei"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B06CC2BD10;
+	Thu,  6 Jun 2024 17:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717693909;
+	bh=O41E5mYK1HCbNo7OTdY8PzyG7mLhcJjX2LBf+/qZIEc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=m9prq4EiC93Qtc7WfK4xLw5bUZsFqWhCOzxQGfujGItZY/vshvG8NcfEzkh0EDWUx
+	 NvG+9HuAT9Twkea1GkUA4GuSWXDIgVgIxCYhjv+Ui2qixtp0A9feB1su6Xp+cHlQjA
+	 tVCLYmGVrcu4Q6kveO0vmCw43IkyYRs7aRIAH8R+r0dp4o4w7EkmHLazhOxltm+6wz
+	 QzDYLrnfa3uP3eSHI6fxpY2diJ1FA5JesWSwRwRvamw5hUcSq35LXa+DIT7Mf/Dbbw
+	 +Zv0928HvVDW7EnM2W2iSHhzqGRCFC25lvCQdLXN5IPWeiqQDqXcIk/Qo+HnQ6idTc
+	 TaW76Q0ZulgEA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: yangyicong@hisilicon.com,
+	jonathan.cameron@huawei.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	linux@treblig.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf hisi-ptt: remove unused struct 'hisi_ptt_queue'
+Date: Thu,  6 Jun 2024 10:11:42 -0700
+Message-ID: <171769384225.2339517.15362661960178701693.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+In-Reply-To: <20240602000709.213116-1-linux@treblig.org>
+References: <20240602000709.213116-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf build: Ensure libtraceevent and libtracefs
- versions have 3 components
-To: amadio@gentoo.org, acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, Peter Volkov <peter.volkov@gmail.com>,
- Ian Rogers <irogers@google.com>
-References: <20240606153625.2255470-1-amadio@gentoo.org>
- <20240606153625.2255470-3-amadio@gentoo.org>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20240606153625.2255470-3-amadio@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 6/6/24 16:33, amadio@gentoo.org wrote:
-> From: Guilherme Amadio <amadio@gentoo.org>
-> 
-> When either of these have a shorter version, like 1.8, the expression
-> that computes the version has a syntax error that can be seen in the
-> output of make:
-> 
-> expr: syntax error: missing argument after +
-> 
-> Link: https://bugs.gentoo.org/917559
-> Reported-by: Peter Volkov <peter.volkov@gmail.com>
-> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
-> Cc: Ian Rogers <irogers@google.com>
+On Sun, 02 Jun 2024 01:07:09 +0100, linux@treblig.org wrote:
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Applied to perf-tools-next, thanks!
+
+Best regards,
+Namhyung
