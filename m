@@ -1,178 +1,121 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2072.outbound.protection.outlook.com [40.107.100.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3001EEF7;
-	Thu,  6 Jun 2024 04:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717649119; cv=fail; b=NUy64GVR96paoO9ZTAHbsL7bAh4O0v6n5H1T1RHx4jB5Df/ONB2KdaUFhO4j65yxonByPhJRNhQcCv+PI+Et016gf+9Myiyxq4RI/G6U5EQ2yLx0DCWgyjsDu873gqKrQhOjHrhCtPKrt6l0mlbI1mZn11rDUzoobnXG2JvcY4Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717649119; c=relaxed/simple;
-	bh=+FHjpg1ZgGsVhmOuLJqkgFi0TO3KuOoAfPsHVuMjnXU=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WUncUeeDGrbYjMy74Kl/HTznkJ1chiTOgamQxOgdYbfXdXs8lTQDvbRVzL17sUBqHeyDV0tqEsyrhA1oAS5RdFcck/KTRW2TjLZ1cOuYillUGf+AWHr9PdFdq8fFhu5RYdc+k9HopdqjLtccCakO0TUA5X5MmBpcRdTgVzmqHtw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RxnzQd8Q; arc=fail smtp.client-ip=40.107.100.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557491F954
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Jun 2024 04:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717649432; cv=none; b=hWhVzzClu8DJQRO8oyMT8ztt9b/nSqW1N1OfwXU0f6q0vo4habQxp1pwbFPFT2QMxXdI12sjr99eTnl838jLNorpr+7YCUNc8abX44j4vUuF79Lt6+6Q2MohtWTwiQ1yES2NI5mLCxniYLt8molya+IIZ4WYGFbdmefvKZPqfI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717649432; c=relaxed/simple;
+	bh=US+QMTUc3wd/lRECrzRRq/Jrw2igRhAZggK2xtNfDeY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=P+1D0CGRQAcr7eQbB7i4/wcguAc25zKTF6IE67IIknc7pbufCYKv7COPYn8P7uuLesQj5H36UxMfijccXabawQ2TBtQ6Y85I5HITeLQtGd5E5zcokUZpjiUiuegZ6CO4ZBFhylOWtAz+9ulHpvPHkkh9hIg9ZlLKz5DIRiqQYtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wmimBJ7f; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RxnzQd8Q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HH1LtYimrRVWWT/wdwpeCNNp8dbKpUu4z5xMbIGTw46YznSPP9Ne6guTHuEQThe42sswRIhR5af1qinfueiMWW9A7+/yLqNKXYeqE685IXacN8xEEmKwzrOLq/nrsFU2Q/q35/OMslCs52xG0mLs5aZLPgUhhi9+rKyRpfk6Nkxij9XfQg19v9xrbLb6rjf3WO/rz5xacE+dOG9r1toXi6gmgCR3OPvbOXx7/WmJXxbuyyxUZqjchA1D96uYGqEL6tfSCS9XFNAQZnBXgK0pQBzdi7m1UuObRxnDROg6VnlFIJ5Cmxta0QN+e9lX2zOepy+7kt+aXIY6cakgJMrvwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+FHjpg1ZgGsVhmOuLJqkgFi0TO3KuOoAfPsHVuMjnXU=;
- b=arvOZQV4zuOampgpm2QuucPbkXLW+CUWB9GdBU8TP9I7QbpXj0HY3SK8EAuvXOZwv8qr4EDxUxRW/rLAvXVgiVvEHOGCA0w/xhIrIp6JLc9PVbu50hpy4KYeIQzp0KsR4BUcB/zTOHaIinXjAzJDbwPd7xi8MkkkjMoPWzxl3Np8p/JQ0DdcrsTSPQP5Pv+IEkeEhK1ofi6ScmYOIgf0CfwGMrZYgFHJsUJEfII5v6dqtfR1xxoWZfxMjz42iEbcnur+oLvrkkvDg8cWcvU4sWT6x9kSLgn1RbZuw5/oRCR1sI1MACPxPzDMXqV5uaXgAu8Bi1lYARKh3oG+Fk5rjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+FHjpg1ZgGsVhmOuLJqkgFi0TO3KuOoAfPsHVuMjnXU=;
- b=RxnzQd8Q3+Ec9rgd2Jc6jTAf840SgoibZLoR5TYPONVmKkrZLWQvTGpAmZRaElE9icWDovaDO+oSiJXNFDD9yOzQ8E/808ZXrqneJRYG6wGpgwYH9iLafz7P8HGyFcNUGTkpw/DMbe7d3mIMl7iN58Rk8TORYj29EDF7nVrEPI0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by DM4PR12MB8475.namprd12.prod.outlook.com (2603:10b6:8:190::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.31; Thu, 6 Jun
- 2024 04:45:12 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.7633.018; Thu, 6 Jun 2024
- 04:45:12 +0000
-Message-ID: <86136e0d-45e9-4bf4-826b-359e4993488f@amd.com>
-Date: Thu, 6 Jun 2024 10:15:00 +0530
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH v1] perf top: Make zeroing histogram on refresh the
- default
-To: Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mark Rutland
- <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>,
- ravi.bangoria@amd.com
-References: <20240516222159.3710131-1-irogers@google.com>
-Content-Language: en-US
-In-Reply-To: <20240516222159.3710131-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0029.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::34) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wmimBJ7f"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-627eb3fb46cso8576377b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Jun 2024 21:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717649429; x=1718254229; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sU/hwIG64bV5IWEExdmUt3ZFDG1ToaRtz2uIVfkz1z8=;
+        b=wmimBJ7fLk5+f1TRLT+Lo+L18enf0LdIMzDnAOu0l0KOdsIYGFD7Ri4TTe+HMD1gGp
+         IRDrtzp4m+77BczAgZg5Cl9EM7EfIankbNEdQBmDHnbJ1maCM1dk8klE2XJiRWsaFa8E
+         mSynZjTse3NBZ+5+MCjekBed/yDMpbxN8ifpa57u8uZKWZG7CPvBdW08xbjuB5hKTR6k
+         dVGcILF3nEgFc1HeffEFpKyB7rxvJ87e2M2o3nFn4froxee2VeMrMMJq+HNpMwdtP/9c
+         abgthRPK1dCvFD3iitDEAU1jNJXL6BREya58PUtDjBEAggXgbDJ41qYBJ7P58L0k12iN
+         1y7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717649429; x=1718254229;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sU/hwIG64bV5IWEExdmUt3ZFDG1ToaRtz2uIVfkz1z8=;
+        b=PeIcJtLsXRVJu2fcuZOvnyN8eOKo7HdWixTi0dX3FISKRmnNYZe6NTOTw1A1zgpdnK
+         ZVVd3IQJvzjYqd2y3UkKgxvCbi717mkJ8QELgDECy/UHqqZ8I4F1aNNTihnTqfMnDPpW
+         JGXm6EyTKBKBQQ/x+wxQiMOOCQ3ZpcNYacLvuJfRlbpxy6XvH/dVL7/QIPX77L2aT4yY
+         mn5gufDcyczfW81+p0WCwLvKXafS+yZKf6owVzfhb/VJMennjzKuP7amsSFdprA9aN54
+         ERfB5kDwXXmhbk2ac3fyFvC3ZSp/2LkHQ5fnegYciM/Ps0YtzPGuBpCMwJjdUQmgltja
+         sObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUowlHwaW0ziue9sqY7RR6V7EVHhInxA91T84y6UfXi3A8VdVgS10qrJlbsq4LG5twD0mGrESmL7olxSeO8Xg0xqI7xl3PhawZ4NfwcKSI6YQ==
+X-Gm-Message-State: AOJu0YxZbn31Ki/obYvzUgn6s+3C0ZgXbobza9aYrdkInloyrqfcgEDK
+	noKWTbEdWesEKVtti0rsbvycxy1+UCYgbFZhYDkGGGvFJlj02t4Uz0nIAoSt44eTx6VTvKahJPw
+	7yecD5g==
+X-Google-Smtp-Source: AGHT+IFIdAmSjHSPbLuhpCiNynPVxG4bwwIVKPhcB5sVsgFMEOnEMx0c8t1g9bC4Cq84jxLbBT6+FwEIvit+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:86ae:b6a7:27de:e7df])
+ (user=irogers job=sendgmr) by 2002:a05:690c:6604:b0:61b:ec22:8666 with SMTP
+ id 00721157ae682-62cbb309e50mr12877617b3.0.1717649429253; Wed, 05 Jun 2024
+ 21:50:29 -0700 (PDT)
+Date: Wed,  5 Jun 2024 21:49:59 -0700
+Message-Id: <20240606044959.335715-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM4PR12MB8475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7791368f-0add-434e-eb4f-08dc85e37386
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VXJHWWEyU1hnTEw3a2VYdmswam5NNFF3bjR0Y2c5STV2VUcyV0xDQU41cWFG?=
- =?utf-8?B?bVphcmxlbmUxMEM0aUhZZ1lOVEdTbzFka3U4NFRURjFYcm5tYkwrV0RxUzR6?=
- =?utf-8?B?M3d4YVEvZW95R1VDVkpBNTJ2UnFLSlZ1d1g4QjZ5N3l4bk0vM01mclJ0Y3lp?=
- =?utf-8?B?VDhVVEQveU9nK0JlVUFpbjZCS1l3cUtMcUdGaHZhSS9IR0RtQjVaV3pnYk95?=
- =?utf-8?B?T1VIOGxDYUdHWmhydVpCVnA3RVQwWGpuK0NsTmZxSHZ0bGNqNE42Ri9zWDRo?=
- =?utf-8?B?cG12UklSMExuRitEdFd1dDduM3I1ZlFXelltK1VpS0I4YmJiUCtzUFduR3ZL?=
- =?utf-8?B?RFVpajdPZitmT2dwemR1ejhkdUp5eWNTMWVNM0diSjBhcEZaYXdSS3Rabkt6?=
- =?utf-8?B?NXNWK29PUnpWRmtXeEMxZ2xHa3JjRG5KK3NCQ1FTK2F2aGpYT2xma1NTZWRz?=
- =?utf-8?B?eERzLzJGL0JHUHhmM005SjJ1Y0FFNlI2MVo2Q21SQTVDV2t2aWJ3T0hKRmd0?=
- =?utf-8?B?Nk5Wa3JzREZrdVkxZ05KSDhJbFl2Und2VGQyajZQZSt0bCsvazJneW5XMEVF?=
- =?utf-8?B?aVJmUEc1SmxKV1YrRXk4TzNGcWowRnl4YkNHSVp4c3ZpQmtHajdoQlJ5Ymg5?=
- =?utf-8?B?TEFhZFF5UTVtUGoveU9XV2NIbDhiWXZYT1NjL3dxOU9FUzU4UHorN2ZRQ1pj?=
- =?utf-8?B?S0lJc09hWkEwU0Vmb0J4b0lvNjNqOSswWnh0bjFjeEZwSTI1K0dncldpaU5P?=
- =?utf-8?B?b3p3VW82MDB6bE1GcENHRU0xbG4wYkZCdThnckJoM3pQZmpsVjIyZFF1ZWRa?=
- =?utf-8?B?QmZkMzBuOUJCQytUakRPWHhaTDR2S0t2WGFvbExpZ2crQWZpVnQvTjhYTGp5?=
- =?utf-8?B?YUZ4WjkvTUs1Y1dPaEYyZ3lyQWV2QitjMUQyWkdvTWR2YXdoQm1kVGhtN2xU?=
- =?utf-8?B?QnJCaDdSSWY1TXFkdHVLZDZoSWlKcU9lc3FwLy8zU0VMdGs4bDl4KzB4UUEr?=
- =?utf-8?B?MnB6aDZhQVZYaE9XU1I3dUxlR0Z6YTVpMFFnNEhtdUVENGhWUTZHVWVCRkpp?=
- =?utf-8?B?dHhGZThhcm5IVTBwR01xMDk5ZzdDVHJRYXR4SXV0aCt4NTliSmRPd3VGekV3?=
- =?utf-8?B?cGl6d2ZnMTBjVy9rSW1mRnpvdk1abStha2ttblZTQ3djNnRTZzVycGpqYmhV?=
- =?utf-8?B?a0tRV2M0RXRCU25HWWdKSmJUaEQwcU1tVE5ZMFZoTVIxQktyUnVFMTFndlB4?=
- =?utf-8?B?Snk5ODJoaGptcEpUZ3ZwWnFpTDk2YTdtdHRCMjl2QUtOYjBSZ1BPVGx6OFZT?=
- =?utf-8?B?cEl1L0FFeVV4S3NOaW5yZ2haQ0ZTbG80ejlyNFZCbmxjWEVpb3JsbEVFVHBX?=
- =?utf-8?B?OTA0b1R2eVVaNGk4ZEVaV0lVQTRwcG1BTGp4K1hEdjNoVWpNN0ZKSFB3Znha?=
- =?utf-8?B?S1NtZUxGU2ZySXdxSy9aS1R4cnJhL0JlZ05raHpBcW1qY0lob0F1QkdibUhV?=
- =?utf-8?B?MmhYaTdWbHBSa3o1TE0xaDIzOEl6UWE2M2NTU1VEV05UNjZQaWk2OHhoRUwz?=
- =?utf-8?B?SjF1bEs0OTNmeGE3V2o3VG5Ub3cwOTA3QmVLQ29XVG40bWUrSFRnSUJKS0N4?=
- =?utf-8?B?K0crWUVhbXR2SHVPZHlkME1lZmhKaEJWRkRSVWNxZklzb2JGVU93OCsyVE9K?=
- =?utf-8?B?NGxTektzUTN2Y0RHWEFuMVlKTWhpN3JwSndRaCszVTQ4b2ZhbUxuMDZqVnV3?=
- =?utf-8?Q?H938QVAhw2kpNZYUXIP9ePBxqGeepOZfiy+m1Zn?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V3hKWVRWdTRjUlZucjFqS0Y5TVNLNTlXbDZxVGRCNkNPOTVrMU44QmJHS2JQ?=
- =?utf-8?B?eGxkQk0zVktscXRjYjR2ZCtpQzcxZGFGTUpNRFl4Q3g2Vm8vb1ZGeFNra2FU?=
- =?utf-8?B?Tno5NjZLb00raDJxZS9xbDJuckZJR0NzS0lzNnRVa1QrKzA2WEFhT284WTBn?=
- =?utf-8?B?OXE0SFErLzZtdDlYN1FOQ2lEbW1BZFl3WmQrLzhYYldVZk5WeHRjTGE5L21C?=
- =?utf-8?B?L3lIVDF0UUFGSFFhK0NaanJ2clVTajRrY3RHZVZURElqMU5VdmN0bzkzL1lB?=
- =?utf-8?B?bXVtUHBJTmhVdFlIVWJyTlpMVmZQM0QzZmVUTTRsWE1tT1JETFYvZm96RmpP?=
- =?utf-8?B?U24rcXFROW1lYUFaODVXTk9JNVJDaCtvaFNMYk1CSXpSNUFENmdtVFVqUU0z?=
- =?utf-8?B?bVJOUHZTb1NlRlhYTFFJME9VcE5ENVBQYisyVDBUVmIrdGI4UzB4a3ZUYndh?=
- =?utf-8?B?SGEyZGZsWnhNRjlzRHJYNmRrMExUVFNsNDNlbllvRmpuNkZLK1ZteE1yTmky?=
- =?utf-8?B?TnFrUDVqYXowN1VvVWdIL0ZRS2x6MDM4ejV2dUdwdmNqVHM5N2NGeUFUTGlx?=
- =?utf-8?B?Z0c3NkFlUERzTHMwbHAyTjVvVHdnZTlxZUsvMWc1Z1NDZThGOGEwUHpNNDY1?=
- =?utf-8?B?QjQ2dHA3cXhqODV4d3ZXUnhic0VubFJscU1HOFlQWU9RWmZMWU83WjcwWkVK?=
- =?utf-8?B?U1kvUHVWMloyeFg2ME92WHJZODVZYmFKK2lYd2NXTkMybWgxNHpLZXBzMG1M?=
- =?utf-8?B?LzBDUi9YTG54NnFFSzBKN1VKVEJXUmFKTWxyVmlTcmlyZkxFMm9NNktEcU9l?=
- =?utf-8?B?OGNQRFpCR1hlSFp1ZE9wZHp3NjJQNkNCdHBEZGJRUWcwYUNvSmVlNy9kZTVR?=
- =?utf-8?B?eURyUU9iSGNBSnVveGJkZ0dweXdMREJwVHVIczRZeW4wVEFvMTVLb0ZUaEVF?=
- =?utf-8?B?TFBtMzdia1o4M0YxdUw0eS9xamJuTVBqbU5YUU4wTHhqaVBKQ1h1bUpOYVBt?=
- =?utf-8?B?QjhuT3pYS01mREJtVkc1dmZqZW54L0tYRk5HMTNoM1JYK1AxTEVkN1Fadnp2?=
- =?utf-8?B?TDNHeGMvQUZJT2NQTnJnYUV1bXVxVnQrTWgyRXgvVkQyd1NMMWxDQ1duZHo1?=
- =?utf-8?B?RzlyeGN2RlVyMXBEM3JhcE1zc1hBOUdJVjZ3VytkWmFhWnlROXlmUklFNElh?=
- =?utf-8?B?dm1HSis5Qnd5R2VKdWF1UU9IcDN1K0lhT003U1NYTGNPQUEzbGltR1lNT0tq?=
- =?utf-8?B?NE9GZVMrcEVGMzU3ZlFhMEJMdGh0QTJrUnh4eHIvYUw3SjlNTmZud1JDajlh?=
- =?utf-8?B?L3Foa2t1eHkxcDdhU0g3a3YwYTdXWjAyWk5iZW1maWNBQUxMdkZKdEUzVFdt?=
- =?utf-8?B?Q2pVRGNLSEZnMWs4VEdkWHUrVGhqWFZGL250TUs0M1FHdzNOS0FyTjVRaXUy?=
- =?utf-8?B?YStEdWRRdGsraExaVnRucEt6VkNjMzdWcWV3T29rbzFXcTZ2YnNDMVU0S0tw?=
- =?utf-8?B?ZXQ4QUNCQ2thcWtDWFhMbUcwOFl4aHNVTHRMTEdiaVNlYjhBNVR6TnBoK3lo?=
- =?utf-8?B?L1BLS1B0WUx3dmw4NGI4Y2JtWGFXZmZRVEhpeWZDMHBLV2RObkhZMklqUVlS?=
- =?utf-8?B?OW82MWFlNWphQTR2cVNPQTBsZHhWOVY5TkdvRU1HMkVXK1ltT2ZNM3Y0Vjlw?=
- =?utf-8?B?OE0vNEVxNngvczVoZTRXdmVwdWxvU2tsVmE2RDlrK1FHbGxIbmg0VzZ1ZHhj?=
- =?utf-8?B?QW5oK1dseVRZTjFoclpEUUdZRmhXMFVCOVZVK0txdTNXYXVIUDlDam9LUk5E?=
- =?utf-8?B?M0l5ckd1YkNNdHFRSStJbE9pWldIMjN1dXVFYjJRdk12Q2JmWDA4SXM4UXF6?=
- =?utf-8?B?UWx4S2JKMEZtQm5zRVoyUjliRmtLcU53M2xKVFJha0IvYmNudUxvbVp2NUd5?=
- =?utf-8?B?cVJ3Ym9nbGJsb3NhRktPVUNGSkw4aHN6b1BIa2lkZFVYVWJzazlzbVZTSlg4?=
- =?utf-8?B?THJ2NjJ6SEhwcWtIODlpQ2F3bHBWcGUzUC9ZT3gwVWZCeHB1Nk1qRHNPa2Vz?=
- =?utf-8?B?N0ZGd1pQL2ZEeFhSQXNLNG5tWHoxVG16UFo3aml6cmp5c2IvVER1emNUVVkr?=
- =?utf-8?Q?zLVNd11SRF66WtdIysPRCc0PN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7791368f-0add-434e-eb4f-08dc85e37386
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 04:45:12.5217
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: etYKol6WGFC6e0cAV+gCk9WT8OaanL/Z4xIQZeUr4rd+xH/f8Cvi4XOn8cpCbITUZYEwAo9axYKfQUCjgbOCug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8475
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
+Subject: [RFC PATCH v2] perf Documentation: Describe the PMU naming convention
+From: Ian Rogers <irogers@google.com>
+To: Randy Dunlap <rdunlap@infradead.org>, Tuan Phan <tuanphan@os.amperecomputing.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Bhaskara Budiredla <bbudiredla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/17/2024 3:51 AM, Ian Rogers wrote:
-> Instead of decaying histograms over time change it so that they are
-> zero-ed on each perf top refresh. Previously the option '-z', or
-> pressing 'z' in tui mode, would enable this behavior. Decaying samples
-> is non-intuitive as it isn't how "top" works. Make zeroing on refresh
-> the default and rename the command line options from 'z' to 'Z' and
-> 'zero' to 'decay'.
-I've also felt `perf top` decay as non-intuitive. Esp. when system becomes
-idle after some heavy workload, even decayed samples are far more compared
-to samples from currently running processes and thus `perf top` keeps
-showing already finished processes at the top, which is kind of confusing.
-fwiw:
+It is an existing convention to use suffixes with PMU names. Try to
+capture that convention so that future PMU devices may adhere to it.
 
-Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
+The name of the file and date within the file try to follow existing
+conventions, particularly sysfs-bus-event_source-devices-events.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+---
+ .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices b/Documentation/ABI/testing/sysfs-bus-event_source-devices
+new file mode 100644
+index 000000000000..79b268319df1
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices
+@@ -0,0 +1,24 @@
++What: /sys/bus/event_source/devices/<pmu>
++Date: 2014/02/24
++Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
++Description:	Performance Monitoring Unit (<pmu>)
++
++		Each <pmu> directory, for a PMU device, is a name
++		optionally followed by an underscore and then either a
++		decimal or hexadecimal number. For example, cpu is a
++		PMU name without a suffix as is intel_bts,
++		uncore_imc_0 is a PMU name with a 0 numeric suffix,
++		ddr_pmu_87e1b0000000 is a PMU name with a hex
++		suffix. The hex suffix must be more than two
++		characters long to avoid ambiguity with PMUs like the
++		S390 cpum_cf.
++
++		Tools can treat PMUs with the same name that differ by
++		suffix as instances of the same PMU for the sake of,
++		for example, opening an event. For example, the PMUs
++		uncore_imc_free_running_0 and
++		uncore_imc_free_running_1 have an event data_read;
++		opening the data_read event on a PMU specified as
++		uncore_imc_free_running should be treated as opening
++		the data_read event on PMU uncore_imc_free_running_0
++		and PMU uncore_imc_free_running_1.
+-- 
+2.45.1.467.gbab1589fc0-goog
+
