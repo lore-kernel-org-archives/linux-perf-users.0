@@ -1,160 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19F013E048;
-	Thu,  6 Jun 2024 13:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB12EEC5;
+	Thu,  6 Jun 2024 13:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717681626; cv=none; b=RPgoEn/wH+kyfenrMFkF4hAK0Zw5i2MYUvU98W9uZCBO/zYKC8mnAwAR/MJnb0WBB7RAddXJpwnUOoqPX5bOYJ3EdaB5xGsHdlTz/CnJYpA8BGYfEratlBDcVqFdCp8kU2UQoOu5eEz6UsiRo3lC+Av+7MlOOc3HbCq1jJdrHUg=
+	t=1717681820; cv=none; b=S3bQ2aCSe3cDjN+1qGFJ9EhxDdroDiuOJk13zA6Rm1a8IPyh4ulUgO3H5sTVXYhac/OKlRGuCN0xkqAjyUVKJFH3mqd9ECiURcirNJglxVKLZLn/ro+C4DWRU3/arNk+3eo4EwJsh64mHOhnH4FwJHfp6qH5OQNm25HBa5Ex6Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717681626; c=relaxed/simple;
-	bh=HKbs6KEJJv7rnYC3V1+3YTC08XWD0qNNBYHnC3DJ9pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubi0kMF5M9sPNkPLLkrqbyZ92JbarCePa+XzE4+y1cB38yyqZTjXRqMIhKn3N/DBnIhN0OtnXUQC+ZqlRo6f4TtF1SenK75dV6tqF4EAueOUadh9mTSxN4LeXCyQNAoDUIXkyvu4Kvk63oiV2SuwmjdIsBE/XfbllUHTKBM8MqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfGgTXTt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfGgTXTt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54F9C2BD10;
-	Thu,  6 Jun 2024 13:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717681625;
-	bh=HKbs6KEJJv7rnYC3V1+3YTC08XWD0qNNBYHnC3DJ9pI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SfGgTXTtPV8T7/S3RnEiAb8n2+b7IZ+cceY2/+q8O5Et6XzQBkTH0fKkVBug1lLzv
-	 /DlpWZ0ircGd2Q7nAD5SUyGSaafIXXFH5fCUWiubXNsbtHC2bDNo9clXgRX7Zt5Ky4
-	 DD2Lt5seTBlepcQkreZ42GPIS7OKhO4q+xNEyCGDoEKCDAOn6hVBy/ZHBEeqLbL2p7
-	 3G2kCyDHFOdh8/UGZNyZL3SfG2k375yMaZNTR6+Ch1+uk1AWoQ/m1hqLqJN6yenS7y
-	 ulkXFz2P7ncO+ppY4jJfivcYzoBri5Fn0AOFd4/slmcmRPgj1OnwuX5kK2OaOCacd/
-	 qqMNEDnIx4QHg==
-Date: Thu, 6 Jun 2024 10:47:02 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
-	Leo Yan <leo.yan@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
- PMUs
-Message-ID: <ZmG91mG32AKViIbh@x1>
-References: <ZlY0F_lmB37g10OK@x1>
- <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com>
- <Zld3dlJHjFMFG02v@x1>
- <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
- <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
- <aee9254e-81c1-464a-8a28-f971615baffc@arm.com>
- <CAP-5=fVynt-8cH6Jc5VyfBLBOqkF+v_7kknHdUPZBM1r3WwhTQ@mail.gmail.com>
- <ZlkC_Tm6kKIL3Phc@google.com>
- <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
+	s=arc-20240116; t=1717681820; c=relaxed/simple;
+	bh=3LuX/QV3TpK7qr9XiAHZUziseAcl7DjB5NEfhSz4sGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CPPWA2TUaAiwRsj3tVZrSjatvxJN8KlJzP+wbVp7dw/DZgB0QyvbQlFL5jJQ6/ZWRxWQv2xW09yqrjBAk6ngG1+i0StRyMcUVRd3AVOjMpItPn0bGmlSiKeH/dJM/CLyzh8/VBaoDVnkxVWr+dWSOTMydT2sU7g1WB2T+ky8KCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CB5C2F4;
+	Thu,  6 Jun 2024 06:50:41 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1272C3F64C;
+	Thu,  6 Jun 2024 06:50:12 -0700 (PDT)
+Message-ID: <d8b016dc-2ab0-442b-97b9-00ae352553c6@arm.com>
+Date: Thu, 6 Jun 2024 14:50:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/16] coresight: Expose map arguments in trace ID API
+To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+ gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
+ leo.yan@linux.dev, anshuman.khandual@arm.com
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
+References: <20240604143030.519906-1-james.clark@arm.com>
+ <20240604143030.519906-12-james.clark@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240604143030.519906-12-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 05, 2024 at 01:29:02PM -0700, Namhyung Kim wrote:
-> On Thu, May 30, 2024 at 3:52 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > On Thu, May 30, 2024 at 06:46:08AM -0700, Ian Rogers wrote:
-> > > On Thu, May 30, 2024 at 5:48 AM James Clark <james.clark@arm.com> wrote:
-> > > > On 30/05/2024 06:35, Namhyung Kim wrote:
-> > > > > It might not be a perfect solution but it could be a simple one.
-> > > > > Ideally I think it'd be nice if the kernel exports more information
-> > > > > about the PMUs like sampling and exclude capabilities.
+On 04/06/2024 15:30, James Clark wrote:
+> The trace ID API is currently hard coded to always use the global map.
+> Add public versions that allow the map to be passed in so that Perf
+> mode can use per-sink maps. Keep the non-map versions so that sysfs
+> mode can continue to use the default global map.
+> 
+> System ID functions are unchanged because they will always use the
+> default map.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   .../hwtracing/coresight/coresight-trace-id.c  | 36 ++++++++++++++-----
+>   .../hwtracing/coresight/coresight-trace-id.h  | 20 +++++++++--
+>   2 files changed, 45 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> index 19005b5b4dc4..5561989a03fa 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -12,7 +12,7 @@
+>   
+>   #include "coresight-trace-id.h"
+>   
+> -/* Default trace ID map. Used on systems that don't require per sink mappings */
+> +/* Default trace ID map. Used in sysfs mode and for system sources */
+>   static struct coresight_trace_id_map id_map_default;
+>   
+>   /* maintain a record of the mapping of IDs and pending releases per cpu */
+> @@ -47,7 +47,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
+>   #endif
+>   
+>   /* unlocked read of current trace ID value for given CPU */
+> -static int _coresight_trace_id_read_cpu_id(int cpu)
+> +static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+>   {
+>   	return atomic_read(&per_cpu(cpu_id, cpu));
+>   }
+> @@ -152,7 +152,7 @@ static void coresight_trace_id_release_all_pending(void)
+>   	DUMP_ID_MAP(id_map);
+>   }
+>   
+> -static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+>   {
+>   	unsigned long flags;
+>   	int id;
+> @@ -160,7 +160,7 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
+>   	spin_lock_irqsave(&id_map_lock, flags);
 
-> > > > That seems like a much better suggestion. Especially with the ever
-> > > > expanding retry/fallback mechanism that can never really take into
-> > > > account every combination of event attributes that can fail.
+Could we also reduce the contention on the id_map_lock, by moving the 
+spinlock per map ? It can be a separate patch.
 
-> > > I think this approach can work but we may break PMUs.
+This patch as such looks good to me.
 
-> > > Rather than use `is_core` on `struct pmu` we could have say a
-> > > `supports_sampling` and we pass to parse_events an option to exclude
-> > > any PMU that doesn't have that flag. Now obviously more than just core
-> > > PMUs support sampling. All software PMUs, tracepoints, probes. We have
-> > > an imprecise list of these in perf_pmu__is_software. So we can set
-> > > supports_sampling for perf_pmu__is_software and is_core.
+Suzuki
 
-> > Yep, we can do that if the kernel provides the info.  But before that
-> > I think it's practical to skip uncore PMUs and hope other PMUs don't
-> > have event aliases clashing with the legacy names. :)
 
-> > > I think the problem comes for things like the AMD IBS PMUs, intel_bts
-> > > and intel_pt. Often these only support sampling but aren't core. There
-> > > may be IBM S390 PMUs or other vendor PMUs that are similar. If we can
-> > > make a list of all these PMU names then we can use that to set
-> > > supports_sampling and not break event parsing for these PMUs.
+>   
+>   	/* check for existing allocation for this CPU */
+> -	id = _coresight_trace_id_read_cpu_id(cpu);
+> +	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+>   	if (id)
+>   		goto get_cpu_id_clr_pend;
+>   
+> @@ -196,13 +196,13 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
+>   	return id;
+>   }
+>   
+> -static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> +static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+>   {
+>   	unsigned long flags;
+>   	int id;
+>   
+>   	/* check for existing allocation for this CPU */
+> -	id = _coresight_trace_id_read_cpu_id(cpu);
+> +	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+>   	if (!id)
+>   		return;
+>   
+> @@ -254,22 +254,40 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+>   
+>   int coresight_trace_id_get_cpu_id(int cpu)
+>   {
+> -	return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
+> +	return _coresight_trace_id_get_cpu_id(cpu, &id_map_default);
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+>   
+> +int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
+> +{
+> +	return _coresight_trace_id_get_cpu_id(cpu, id_map);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id_map);
+> +
+>   void coresight_trace_id_put_cpu_id(int cpu)
+>   {
+> -	coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
+> +	_coresight_trace_id_put_cpu_id(cpu, &id_map_default);
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+>   
+> +void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
+> +{
+> +	_coresight_trace_id_put_cpu_id(cpu, id_map);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id_map);
+> +
+>   int coresight_trace_id_read_cpu_id(int cpu)
+>   {
+> -	return _coresight_trace_id_read_cpu_id(cpu);
+> +	return _coresight_trace_id_read_cpu_id(cpu, &id_map_default);
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
+>   
+> +int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
+> +{
+> +	return _coresight_trace_id_read_cpu_id(cpu, id_map);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id_map);
+> +
+>   int coresight_trace_id_get_system_id(void)
+>   {
+>   	return coresight_trace_id_map_get_system_id(&id_map_default);
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> index 49438a96fcc6..840babdd0794 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -42,8 +42,6 @@
+>   #define IS_VALID_CS_TRACE_ID(id)	\
+>   	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
+>   
+> -/* Allocate and release IDs for a single default trace ID map */
+> -
+>   /**
+>    * Read and optionally allocate a CoreSight trace ID and associate with a CPU.
+>    *
+> @@ -59,6 +57,12 @@
+>    */
+>   int coresight_trace_id_get_cpu_id(int cpu);
+>   
+> +/**
+> + * Version of coresight_trace_id_get_cpu_id() that allows the ID map to operate
+> + * on to be provided.
+> + */
+> +int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
+> +
+>   /**
+>    * Release an allocated trace ID associated with the CPU.
+>    *
+> @@ -72,6 +76,12 @@ int coresight_trace_id_get_cpu_id(int cpu);
+>    */
+>   void coresight_trace_id_put_cpu_id(int cpu);
+>   
+> +/**
+> + * Version of coresight_trace_id_put_cpu_id() that allows the ID map to operate
+> + * on to be provided.
+> + */
+> +void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
+> +
+>   /**
+>    * Read the current allocated CoreSight Trace ID value for the CPU.
+>    *
+> @@ -92,6 +102,12 @@ void coresight_trace_id_put_cpu_id(int cpu);
+>    */
+>   int coresight_trace_id_read_cpu_id(int cpu);
+>   
+> +/**
+> + * Version of coresight_trace_id_read_cpu_id() that allows the ID map to operate
+> + * on to be provided.
+> + */
+> +int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
+> +
+>   /**
+>    * Allocate a CoreSight trace ID for a system component.
+>    *
 
-> > > The name list sounds somewhat impractical, let's say we lazily compute
-> > > the supports_sampling on a PMU. We need the sampling equivalent of
-> > > is_event_supported:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print-events.c?h=perf-tools-next#n242
-> > > is_event_supported has had bugs, look at the exclude_guest workaround
-> > > for Apple PMUs. It also isn't clear to me how we choose the event
-> > > config that we're going to probe to determine whether sampling works.
-> > > The perf_event_open may reject the test because of a bad config and
-> > > not because sampling isn't supported.
-
-> > > So I think we can make the approach work if we had either:
-> > > 1) a list of PMUs that support sampling,
-> > > 2) a reliable "is_sampling_supported" test.
-
-> > > I'm not sure of the advantages of doing (2) rather than just creating
-> > > the set of evsels and ignoring those that fail to open. Ignoring
-> > > evsels that fail to open seems more unlikely to break anything as the
-> > > user is giving the events/config values for the PMUs they care about.
-
-> > Yep, that's also possible.  I'm ok if you want to go that direction.
- 
-> Hmm.. I thought about this again.  But it can be a problem if we ignore
-> any failures as it can be a real error due to other reason - e.g. not
-> supported configuration or other user mistakes.
-
-Well, we should not ignore any failures, just look at
-evsel__open_strerror(), we get some error from the kernel, we know we're
-doing something, we put it into context, and then we try to provide the
-most helpful message to the user.
-
-The question here is how to figure out if what we want to do (sample)
-makes sense for this event that has the name we used, since we're using
-a "wildcard", a "well known event name" that should be translated to
-events in all PMUs where it "matches", if those actual per-PMU events
-can provide what the user is asking.
-
-My suggestion about using pr_debug() is a compromise, one that will not
-show warnings all the time for such a common case (cycles) while
-allowing the use to follow a common, in tools/perf, way of diagnosing
-when things don't look sane, which is to ask for verbose mode.
-
-The best thing would be for us to be able to query, using existing
-facilities, if what we want is possible, i.e. interpret the error coming
-from the kernel in the context of what we are asking.
-
-If this is not possible because the error is too generic (EINVAL) and
-can map to multiple other things, then we can try to have a new kernel
-facility for us to get this info in a authoritative way and use a
-pr_warning() knowing that that warning will go away as the kernel is
-updated.
-
-Or we could use a big hammer, special handling some PMUs/events we know
-can't sample and avoiding those when they fail, ugly, but should work,
-and this is just for this "well known event names" people have been
-using since forever. Those wanting specific events to be used should
-know better and specify it precisely in the command line.
-
-Does this sum up all the discussion so far?
-
-Cheers,
-
-- Arnaldo
