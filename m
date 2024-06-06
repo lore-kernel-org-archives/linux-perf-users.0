@@ -1,89 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F271E495;
-	Thu,  6 Jun 2024 17:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3E21990CE;
+	Thu,  6 Jun 2024 17:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693976; cv=none; b=CSeGYZmn8zD7mS0vex3u7BTAgxZ6MqHVj9XE9zOa38QAFa0mg/Z0Py1uaAOSPclBRXwqRF2YVNwI7VWpHif60OdnxmL54g/Di7yzyj/glI6dSRiu4DZB6WaWNCAj0+0n6cnwUbO/mhss6rpKKrnz55bfxAmcXIY9n0DwKF8r0+U=
+	t=1717694938; cv=none; b=AC7K6X2WmDK7WIx1wbiG4MzqfHcupcQAQwKKWifbFcd18NXa/2lcY2coGSrwvFrK+7d6PC7XSIThjhdveXKVqNX6549/EVF1ri4XZj0Mjk2AAHInjOsGNHCRcYELXX+yDON5G+wKb66XI7vR0WbOYGaRinLSKAsa0u5r3mBB5rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693976; c=relaxed/simple;
-	bh=yNzSGMzBPpeJxQaqXhbDJgrlYAct+LNjRn53sZZoCBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RJ3wdhj7wmUWOM3ur81hwhTF4qfF+qLuJirZ8DYxqaaIMwugmeYaG7/pRqWZ+b9DxklPhHJ7TO2YxPwTfQiKsICr6mKXHbe8gPmRam0bIV17d4/OTxXx7tuSrm7OGlUQwMh0Xw5zDxkS0P2A+X+V5cpp89Q2DcjHoBlKu/SvZXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW99UE9o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717694938; c=relaxed/simple;
+	bh=0VOTymSltSm46M0tWgnYW1sxiIawEOkUL0FrWY5YCPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZ3BSYpVTwZ7y82ZT30BaPoZZqcEQy3pwpN9p2eIIBwH8mAaaMbyMSglYPHAr6Pg1kULvPkRX3Bc+UPTRqi7BhZRTiFecZH8HIQZPhbbDOxfWXbZEjGPHwXMrtnvWg4VNaxWpGrI0xRcs+B6sqRePCJFPml377jBjrZY0qHENAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dP3yt6rB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW99UE9o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CA3C2BD10;
-	Thu,  6 Jun 2024 17:12:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dP3yt6rB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C49D7C2BD10;
+	Thu,  6 Jun 2024 17:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717693975;
-	bh=yNzSGMzBPpeJxQaqXhbDJgrlYAct+LNjRn53sZZoCBc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NW99UE9ol72yWu8MgmnC9Dt3kKTxzcj+FrIvKXR4YzpclPRCy/uHN2SVJXrIzkYev
-	 qBtSG4wO1IUhq/QkvjFSXanhWQ14Vm3kKDwubQxW1f3sWGmouPl/dasGn1k76DkgKR
-	 C5KN8DAfDX9aqEoy3eAtfDTN/SWewyp/fKJyl3fb6v3LwdKOerDrm5BWwnBbQewKlP
-	 Ye2BtsBrlShxUR7CpASU3eZMR3cjQZflGtPWXo6k4iHRlIjRHWgcigMVrFhRZlYi3v
-	 7/mEuH0ZCTamuIHNJgr7UD9qXWjqSJgPHQ3LN37+wmTMgADzBgJkrTEZG4oKcFPyfx
-	 HmOwQsry8p/ow==
+	s=k20201202; t=1717694938;
+	bh=0VOTymSltSm46M0tWgnYW1sxiIawEOkUL0FrWY5YCPI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dP3yt6rBauKLyUXSmvUQlKMv9b+IZxxP5U5a9chY/5DoATvlBY+jPRJfZjGzufEzK
+	 I4cFzo9XU1/Q6vPMcVBsrP45WiA8bmK3xJx6wk300XvvAzrp0DJZSaWW1tztjieZJ5
+	 +81x+uZjb7UWRhCXjEOEQqz1nQzx9n58qg5f9tRuecRkM4znRbyTMNPwZTwMIlaGZS
+	 ztwbh33zNyncdklSDwYeXSmdxnkW9FBBwvHN6IQX0dNLHKHvHY/KVcxqLGQbhpU5XY
+	 TvaJ+VAbB45PxsYntGZ8TM2+JeEGQk3P5rcdHlgG2a4NhpuDMVmHnX7FVi1QK75u7s
+	 HxwLBGk97+R+Q==
+Date: Thu, 6 Jun 2024 10:28:56 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@arm.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?= <clement.legoffic@foss.st.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] perf: parse-events: Fix compilation error while defining DEBUG_PARSER
-Date: Thu,  6 Jun 2024 10:12:52 -0700
-Message-ID: <171769393997.2340193.15187370089504659355.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-In-Reply-To: <20240605140453.614862-1-clement.legoffic@foss.st.com>
-References: <20240605140453.614862-1-clement.legoffic@foss.st.com>
+	Nick Terrell <terrelln@fb.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Fangrui Song <maskray@google.com>,
+	Mateusz Kowalczyk <fuuzetsu@fuuzetsu.co.uk>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] perf: build: Setup PKG_CONFIG_LIBDIR for cross
+ compilation
+Message-ID: <ZmHx2EFK9cSWgUIK@google.com>
+References: <20240604093223.1934236-1-leo.yan@arm.com>
+ <20240604093223.1934236-2-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240604093223.1934236-2-leo.yan@arm.com>
 
-On Wed, 05 Jun 2024 16:04:53 +0200, Clément Le Goffic wrote:
+Hi Leo,
 
-> Compiling perf tool with 'DEBUG_PARSER=1' leads to errors:
+On Tue, Jun 04, 2024 at 10:32:18AM +0100, Leo Yan wrote:
+> On recent Linux distros like Ubuntu Noble and Debian Bookworm, the
+> 'pkg-config-aarch64-linux-gnu' package is missing. As a result, the
+> aarch64-linux-gnu-pkg-config command is not available, which causes
+> build failures.
 > 
-> $> make -C tools/perf PARSER_DEBUG=1 NO_LIBTRACEEVENT=1
-> ...
->   CC      util/expr-flex.o
->   CC      util/expr.o
-> util/parse-events.c:33:12: error: redundant redeclaration of ‘parse_events_debug’ [-Werror=redundant-decls]
->    33 | extern int parse_events_debug;
->       |            ^~~~~~~~~~~~~~~~~~
-> In file included from util/parse-events.c:18:
-> util/parse-events-bison.h:43:12: note: previous declaration of ‘parse_events_debug’ with type ‘int’
->    43 | extern int parse_events_debug;
->       |            ^~~~~~~~~~~~~~~~~~
-> util/expr.c:27:12: error: redundant redeclaration of ‘expr_debug’ [-Werror=redundant-decls]
->    27 | extern int expr_debug;
->       |            ^~~~~~~~~~
-> In file included from util/expr.c:11:
-> util/expr-bison.h:43:12: note: previous declaration of ‘expr_debug’ with type ‘int’
->    43 | extern int expr_debug;
->       |            ^~~~~~~~~~
-> cc-1: all warnings being treated as errors
+> Alternatively, this commit sets the PKG_CONFIG_LIBDIR environment
+> variable dynamically based on the cross compiler to ensure the correct
+> package configurations.
 > 
-> [...]
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/build/feature/Makefile | 14 +++++++++++++-
+>  tools/perf/Makefile.perf     | 15 ++++++++++++++-
+>  2 files changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index ed54cef450f5..6f52f892f9a3 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -82,7 +82,19 @@ FILES=                                          \
+>  
+>  FILES := $(addprefix $(OUTPUT),$(FILES))
+>  
+> -PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+> +PKG_CONFIG ?= pkg-config
+> +
+> +ifdef CROSS_COMPILE
+> +  ifndef PKG_CONFIG_LIBDIR
 
-Applied to perf-tools-next, thanks!
+Can we do that only if the cross-compile-pkg-config is not available?
 
-
-Best regards,
+Thanks,
 Namhyung
+
+
+> +    CROSS_ARCH = $(shell $(CC) -dumpmachine)
+> +    PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
+> +    export PKG_CONFIG_LIBDIR
+> +  endif
+> +endif
+>  
+>  all: $(FILES)
+>  
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 5c35c0d89306..c1553a546a4f 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -193,7 +193,20 @@ HOSTLD  ?= ld
+>  HOSTAR  ?= ar
+>  CLANG   ?= clang
+>  
+> -PKG_CONFIG = $(CROSS_COMPILE)pkg-config
+> +PKG_CONFIG ?= pkg-config
+> +
+> +# Set the PKG_CONFIG_LIBDIR for cross compilation.
+> +ifdef CROSS_COMPILE
+> +  ifndef PKG_CONFIG_LIBDIR
+> +    CROSS_ARCH = $(shell $(CC) -dumpmachine)
+> +    PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+> +    PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
+> +    export PKG_CONFIG_LIBDIR
+> +  endif
+> +endif
+>  
+>  RM      = rm -f
+>  LN      = ln -f
+> -- 
+> 2.34.1
+> 
