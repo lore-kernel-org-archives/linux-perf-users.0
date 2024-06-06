@@ -1,106 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E5E195F10;
-	Thu,  6 Jun 2024 13:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9044D19938F;
+	Thu,  6 Jun 2024 14:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717681887; cv=none; b=GuG6zmAjCaG4Ns2uiFdiVyxzEl0XfRhwiirrHI6ndkPlzgzjkOOO+5krkGBK/6tfHGcZKC94r2oC7Qqm6Q7v6/biLAxJd2pvD+aesbZWWmpMQokPqitB61+Gw05r3SNYv5ZTW5m6dGejIk3xS7blYYw/lqaCO0wK6QrIPnpmuWU=
+	t=1717683014; cv=none; b=j+o/BAPa7Ox61Yzy3q4jLtxGSLq2GsJYxx/YHpTevh7dBuKumpQFoTo1Cdxk3xg/j+yzssvOeNqKnYcB9SZDjANIwjNAUef7N/xFLep3FpDGNcn/A/sLycVZbEbSFue/+xWBX6pyQ8ljTkm2RYeT5kcx7kWPRQi68EBNxtOHsJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717681887; c=relaxed/simple;
-	bh=gNK3dp5fn/H795o5UEgHg6VeYr3fgd5BNg14ucmQgQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzLP1GK8weH6+g28rhi9FrCJ5iAlZ3VmqchO6ZDliwTvxIBw4o8SoP41eR0oEOexot4SLvO3SSIqsfn/n8HBK/ucHFLIB4y4rsx9OwjOEMCFtpTsN19ZHGt6g8sw7HuDY2p/OAfIZ67w8pq+6y5+S9e3QpUimZ/FShRPY5H+yEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1AU+LTI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1AU+LTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03FCFC2BD10;
-	Thu,  6 Jun 2024 13:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717681886;
-	bh=gNK3dp5fn/H795o5UEgHg6VeYr3fgd5BNg14ucmQgQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d1AU+LTIBH/0dAG7ND7cckGhpsoCV34pPi3eW6gnxERxWaCKYcGH6rWkgPDgUeHgA
-	 pkRxHLfKUin8/eVQWLWcsMixNuhT3RaZ7L8I395lHN+AcWQSH2hZKIcEqAHnbo9K3T
-	 kqpNgN4lKlCv/VEwxTcckkOEYZCMq6TLWccgFAiQUA16bLW00g24j9rWoCA3Tc2hlm
-	 gFeQGEV9CxHRvKDSNTU8o/RNXtaBgAUyuKWbWyI6KjpXz4UX7KCwASwqsBHpPYrcrO
-	 MY7PwGJJAn8FvyUjm+lc+cUes6XoAfeTJY68tK84R75EytaflgrtZGJ9mUz0cZiWsO
-	 QhzeR3uYiwX5g==
-Date: Thu, 6 Jun 2024 10:51:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Leo Yan <leo.yan@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
- PMUs
-Message-ID: <ZmG-28go-qqOVsyM@x1>
-References: <Zld3dlJHjFMFG02v@x1>
- <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
- <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
- <aee9254e-81c1-464a-8a28-f971615baffc@arm.com>
- <CAP-5=fVynt-8cH6Jc5VyfBLBOqkF+v_7kknHdUPZBM1r3WwhTQ@mail.gmail.com>
- <ZlkC_Tm6kKIL3Phc@google.com>
- <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
- <CAP-5=fUq6jLCtjPNb0gngtR0cXopG+-mJ-+CnEOAXeG7VShh8A@mail.gmail.com>
- <CAM9d7cjPe68PMb1hnbypMOQUQOybpisdqH3eTH1B9G-KG5rKXw@mail.gmail.com>
- <f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com>
+	s=arc-20240116; t=1717683014; c=relaxed/simple;
+	bh=Tr00E08R+1a3U59ibWItlfEiKh/3LAEHOtQNKYwyTWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XeMT7zbMaBxj50brNL9O/qxMOpu90wXjDZO4Zt49p1GlbL8ThzU1pu41X8RNNZZ4awL1Nqeq2s71WNcEtNFRg2fV0QlsPGyvdunKvOxpqSnM6P0J16AAj9pfx5/eZyM+hISwxbOVIxVaEFet5xd+7mhl0mcvT5IEiC0uia6nBjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43DA52F4;
+	Thu,  6 Jun 2024 07:10:36 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 327693F64C;
+	Thu,  6 Jun 2024 07:10:09 -0700 (PDT)
+Message-ID: <e6b436f0-3d1b-47c4-836f-5d5a2a0a0a31@arm.com>
+Date: Thu, 6 Jun 2024 15:10:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/16] coresight: Expose map arguments in trace ID API
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org,
+ coresight@lists.linaro.org, gankulkarni@os.amperecomputing.com,
+ mike.leach@linaro.org, leo.yan@linux.dev, anshuman.khandual@arm.com
+References: <20240604143030.519906-1-james.clark@arm.com>
+ <20240604143030.519906-12-james.clark@arm.com>
+ <d8b016dc-2ab0-442b-97b9-00ae352553c6@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <d8b016dc-2ab0-442b-97b9-00ae352553c6@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com>
 
-On Thu, Jun 06, 2024 at 10:42:33AM +0100, James Clark wrote:
-> On 06/06/2024 08:09, Namhyung Kim wrote:
-> > On Wed, Jun 5, 2024 at 4:02 PM Ian Rogers <irogers@google.com> wrote:
-> >> 2) Ignore failures, possibly hiding user errors.
 
-> >> I would prefer for (2) the errors were pr_err rather than pr_debug,
-> >> something the user can clean up by getting rid of warned about PMUs.
-> >> This will avoid hiding the error, but then on Neoverse cycles will
-> >> warn about the arm_dsu PMU's cycles event for exactly Linus' test
-> >> case. My understanding is that this is deemed a regression, hence
-> >> Arnaldo proposing pr_debug to hide it.
 
-> > Right, if we use pr_err() then users will complain.  If we use
-> > pr_debug() then errors will be hidden silently.
- 
-> I'm not sure if anyone would really complain about warnings for
-> attempting to open but not succeeding, as long as the event that they
-> really wanted is there. I'm imagining output like this:
- 
->   $ perf record -e cycles -- ls
- 
->   Warning: skipped arm_dsu/cycles/ event(s), recording on
->     armv8_pmuv3_0/cycles/, armv8_pmuv3_1/cycles/
- 
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.008 MB perf.data (30 samples) ]
- 
-> You only really need to worry when no events can be opened, but
-> presumably that was a warning anyway.
+On 06/06/2024 14:50, Suzuki K Poulose wrote:
+> On 04/06/2024 15:30, James Clark wrote:
+>> The trace ID API is currently hard coded to always use the global map.
+>> Add public versions that allow the map to be passed in so that Perf
+>> mode can use per-sink maps. Keep the non-map versions so that sysfs
+>> mode can continue to use the default global map.
+>>
+>> System ID functions are unchanged because they will always use the
+>> default map.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>   .../hwtracing/coresight/coresight-trace-id.c  | 36 ++++++++++++++-----
+>>   .../hwtracing/coresight/coresight-trace-id.h  | 20 +++++++++--
+>>   2 files changed, 45 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c
+>> b/drivers/hwtracing/coresight/coresight-trace-id.c
+>> index 19005b5b4dc4..5561989a03fa 100644
+>> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+>> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+>> @@ -12,7 +12,7 @@
+>>     #include "coresight-trace-id.h"
+>>   -/* Default trace ID map. Used on systems that don't require per
+>> sink mappings */
+>> +/* Default trace ID map. Used in sysfs mode and for system sources */
+>>   static struct coresight_trace_id_map id_map_default;
+>>     /* maintain a record of the mapping of IDs and pending releases
+>> per cpu */
+>> @@ -47,7 +47,7 @@ static void coresight_trace_id_dump_table(struct
+>> coresight_trace_id_map *id_map,
+>>   #endif
+>>     /* unlocked read of current trace ID value for given CPU */
+>> -static int _coresight_trace_id_read_cpu_id(int cpu)
+>> +static int _coresight_trace_id_read_cpu_id(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>>   {
+>>       return atomic_read(&per_cpu(cpu_id, cpu));
+>>   }
+>> @@ -152,7 +152,7 @@ static void
+>> coresight_trace_id_release_all_pending(void)
+>>       DUMP_ID_MAP(id_map);
+>>   }
+>>   -static int coresight_trace_id_map_get_cpu_id(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>> +static int _coresight_trace_id_get_cpu_id(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>>   {
+>>       unsigned long flags;
+>>       int id;
+>> @@ -160,7 +160,7 @@ static int coresight_trace_id_map_get_cpu_id(int
+>> cpu, struct coresight_trace_id_
+>>       spin_lock_irqsave(&id_map_lock, flags);
+> 
+> Could we also reduce the contention on the id_map_lock, by moving the
+> spinlock per map ? It can be a separate patch.
+> 
+> This patch as such looks good to me.
+> 
+> Suzuki
+> 
+> 
 
-Agreed, while we don't find a way, old or new to autoritatively skip the
-event, when that pr_warning() gets turned into a pr_debug() so that
-people expecting that those skipped events were included get a message
-telling why they were not.
- 
-> And in stat mode I wouldn't expect any warnings.
+Good point yes we can do that.
 
-Right.
-
-- Arnaldo
+>>         /* check for existing allocation for this CPU */
+>> -    id = _coresight_trace_id_read_cpu_id(cpu);
+>> +    id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+>>       if (id)
+>>           goto get_cpu_id_clr_pend;
+>>   @@ -196,13 +196,13 @@ static int
+>> coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
+>>       return id;
+>>   }
+>>   -static void coresight_trace_id_map_put_cpu_id(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>> +static void _coresight_trace_id_put_cpu_id(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>>   {
+>>       unsigned long flags;
+>>       int id;
+>>         /* check for existing allocation for this CPU */
+>> -    id = _coresight_trace_id_read_cpu_id(cpu);
+>> +    id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+>>       if (!id)
+>>           return;
+>>   @@ -254,22 +254,40 @@ static void
+>> coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+>>     int coresight_trace_id_get_cpu_id(int cpu)
+>>   {
+>> -    return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
+>> +    return _coresight_trace_id_get_cpu_id(cpu, &id_map_default);
+>>   }
+>>   EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+>>   +int coresight_trace_id_get_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>> +{
+>> +    return _coresight_trace_id_get_cpu_id(cpu, id_map);
+>> +}
+>> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id_map);
+>> +
+>>   void coresight_trace_id_put_cpu_id(int cpu)
+>>   {
+>> -    coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
+>> +    _coresight_trace_id_put_cpu_id(cpu, &id_map_default);
+>>   }
+>>   EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+>>   +void coresight_trace_id_put_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>> +{
+>> +    _coresight_trace_id_put_cpu_id(cpu, id_map);
+>> +}
+>> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id_map);
+>> +
+>>   int coresight_trace_id_read_cpu_id(int cpu)
+>>   {
+>> -    return _coresight_trace_id_read_cpu_id(cpu);
+>> +    return _coresight_trace_id_read_cpu_id(cpu, &id_map_default);
+>>   }
+>>   EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
+>>   +int coresight_trace_id_read_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map)
+>> +{
+>> +    return _coresight_trace_id_read_cpu_id(cpu, id_map);
+>> +}
+>> +EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id_map);
+>> +
+>>   int coresight_trace_id_get_system_id(void)
+>>   {
+>>       return coresight_trace_id_map_get_system_id(&id_map_default);
+>> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h
+>> b/drivers/hwtracing/coresight/coresight-trace-id.h
+>> index 49438a96fcc6..840babdd0794 100644
+>> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+>> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+>> @@ -42,8 +42,6 @@
+>>   #define IS_VALID_CS_TRACE_ID(id)    \
+>>       ((id > CORESIGHT_TRACE_ID_RES_0) && (id <
+>> CORESIGHT_TRACE_ID_RES_TOP))
+>>   -/* Allocate and release IDs for a single default trace ID map */
+>> -
+>>   /**
+>>    * Read and optionally allocate a CoreSight trace ID and associate
+>> with a CPU.
+>>    *
+>> @@ -59,6 +57,12 @@
+>>    */
+>>   int coresight_trace_id_get_cpu_id(int cpu);
+>>   +/**
+>> + * Version of coresight_trace_id_get_cpu_id() that allows the ID map
+>> to operate
+>> + * on to be provided.
+>> + */
+>> +int coresight_trace_id_get_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map);
+>> +
+>>   /**
+>>    * Release an allocated trace ID associated with the CPU.
+>>    *
+>> @@ -72,6 +76,12 @@ int coresight_trace_id_get_cpu_id(int cpu);
+>>    */
+>>   void coresight_trace_id_put_cpu_id(int cpu);
+>>   +/**
+>> + * Version of coresight_trace_id_put_cpu_id() that allows the ID map
+>> to operate
+>> + * on to be provided.
+>> + */
+>> +void coresight_trace_id_put_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map);
+>> +
+>>   /**
+>>    * Read the current allocated CoreSight Trace ID value for the CPU.
+>>    *
+>> @@ -92,6 +102,12 @@ void coresight_trace_id_put_cpu_id(int cpu);
+>>    */
+>>   int coresight_trace_id_read_cpu_id(int cpu);
+>>   +/**
+>> + * Version of coresight_trace_id_read_cpu_id() that allows the ID map
+>> to operate
+>> + * on to be provided.
+>> + */
+>> +int coresight_trace_id_read_cpu_id_map(int cpu, struct
+>> coresight_trace_id_map *id_map);
+>> +
+>>   /**
+>>    * Allocate a CoreSight trace ID for a system component.
+>>    *
+> 
