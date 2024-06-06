@@ -1,170 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C5419642D;
-	Thu,  6 Jun 2024 13:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19F013E048;
+	Thu,  6 Jun 2024 13:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717681482; cv=none; b=QexpgPx3vB0iOHA4oZZfv7dwZn+aFLbqv7+XJP6WSCkvSn0vI2PMlX6UGlQn7zfIn0ZV3lirzTbU6sAVazp7zj8A61yMjyYcS+TvY+5ZMnmPO0yMSPuB9opJchTGztrt6dxKw3jOr5pYwgZJB6zHCy3ss2xy8XyKMxIG/0/z+zM=
+	t=1717681626; cv=none; b=RPgoEn/wH+kyfenrMFkF4hAK0Zw5i2MYUvU98W9uZCBO/zYKC8mnAwAR/MJnb0WBB7RAddXJpwnUOoqPX5bOYJ3EdaB5xGsHdlTz/CnJYpA8BGYfEratlBDcVqFdCp8kU2UQoOu5eEz6UsiRo3lC+Av+7MlOOc3HbCq1jJdrHUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717681482; c=relaxed/simple;
-	bh=lq7yE7QHdLhqmzRBDqpM7MNtwj4dP5zB26YYW2zA/rQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M7uU4wXHwRt2xFBMX5vmux1tjpj3fVh0vfTQFdDeC3bk5GRvvEbq7KHj882IOGFgjx7xZ4o7fEjrrL5ol3/huEf25lCEWmdkOMs5zbl3956+lPJc/hNua2u6/HfFdSymyoMMy5hOIYyPyYiQJLGPoO9GzpRUYpxhEf/y0VbkJxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eFAnytJw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717681626; c=relaxed/simple;
+	bh=HKbs6KEJJv7rnYC3V1+3YTC08XWD0qNNBYHnC3DJ9pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubi0kMF5M9sPNkPLLkrqbyZ92JbarCePa+XzE4+y1cB38yyqZTjXRqMIhKn3N/DBnIhN0OtnXUQC+ZqlRo6f4TtF1SenK75dV6tqF4EAueOUadh9mTSxN4LeXCyQNAoDUIXkyvu4Kvk63oiV2SuwmjdIsBE/XfbllUHTKBM8MqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfGgTXTt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eFAnytJw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717681480; x=1749217480;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lq7yE7QHdLhqmzRBDqpM7MNtwj4dP5zB26YYW2zA/rQ=;
-  b=eFAnytJwViFYBS6xqugBZZ4NW7ce1E3xJSkT2nAEH/Pv58fSQspngDAy
-   ek1DnWXbCGv8T9xtciJD2uQUlNuA6WFtZ03u03Br18BX0GXAvP/eJETT/
-   Spa4soie6t57+Pg0F5LslA5WQ9gPkiyKtig2+FHfTi8XqQvFyW6IXJ0N0
-   U31MlIAHxW9m86mqdyEJXNDG+EH0mPcrMOGjY8/mDxiu14ebla5y0L6v/
-   jeHwXlXan/ZQo9AUWbxY4WoWgMRJ7aZpueAvKu7+3PEC38KtyrgAld/zD
-   NC9B4/10iRxszpB7JIAI490nUEl1zDS7wWYu071624ErYt9z+5Z6IdvXc
-   A==;
-X-CSE-ConnectionGUID: coc32HTHQqKI2I1e4Zq/ww==
-X-CSE-MsgGUID: UHgnPOujRTWlHPQ8+OPt2Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25004528"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="25004528"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:44:39 -0700
-X-CSE-ConnectionGUID: GLottgdCSheTmgjT8VIBnA==
-X-CSE-MsgGUID: AtEl53KdR3WXtdiwM29u/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="37977429"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:44:39 -0700
-Received: from [10.212.72.92] (kliang2-mobl1.ccr.corp.intel.com [10.212.72.92])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id AEF5F20B5703;
-	Thu,  6 Jun 2024 06:44:37 -0700 (PDT)
-Message-ID: <31ec235a-70f6-435b-b99b-5d59f4989ba6@linux.intel.com>
-Date: Thu, 6 Jun 2024 09:44:36 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfGgTXTt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54F9C2BD10;
+	Thu,  6 Jun 2024 13:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717681625;
+	bh=HKbs6KEJJv7rnYC3V1+3YTC08XWD0qNNBYHnC3DJ9pI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SfGgTXTtPV8T7/S3RnEiAb8n2+b7IZ+cceY2/+q8O5Et6XzQBkTH0fKkVBug1lLzv
+	 /DlpWZ0ircGd2Q7nAD5SUyGSaafIXXFH5fCUWiubXNsbtHC2bDNo9clXgRX7Zt5Ky4
+	 DD2Lt5seTBlepcQkreZ42GPIS7OKhO4q+xNEyCGDoEKCDAOn6hVBy/ZHBEeqLbL2p7
+	 3G2kCyDHFOdh8/UGZNyZL3SfG2k375yMaZNTR6+Ch1+uk1AWoQ/m1hqLqJN6yenS7y
+	 ulkXFz2P7ncO+ppY4jJfivcYzoBri5Fn0AOFd4/slmcmRPgj1OnwuX5kK2OaOCacd/
+	 qqMNEDnIx4QHg==
+Date: Thu, 6 Jun 2024 10:47:02 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
+ PMUs
+Message-ID: <ZmG91mG32AKViIbh@x1>
+References: <ZlY0F_lmB37g10OK@x1>
+ <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
+ <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com>
+ <Zld3dlJHjFMFG02v@x1>
+ <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
+ <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
+ <aee9254e-81c1-464a-8a28-f971615baffc@arm.com>
+ <CAP-5=fVynt-8cH6Jc5VyfBLBOqkF+v_7kknHdUPZBM1r3WwhTQ@mail.gmail.com>
+ <ZlkC_Tm6kKIL3Phc@google.com>
+ <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf stat: Fix the hard-coded metrics calculation on the
- hybrid
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Khalil, Amiri" <amiri.khalil@intel.com>, stable@vger.kernel.org
-References: <20240605160848.4116061-1-kan.liang@linux.intel.com>
- <CAP-5=fV+-ytA2st17Ar-jQ5xYqrWtxnF2TcADKrC5WoPyKz4wQ@mail.gmail.com>
- <CAM9d7cjuHYDMvcq10ZD=3LSmia4WcvAzsme89B-odHYBAZzWYg@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAM9d7cjuHYDMvcq10ZD=3LSmia4WcvAzsme89B-odHYBAZzWYg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
 
+On Wed, Jun 05, 2024 at 01:29:02PM -0700, Namhyung Kim wrote:
+> On Thu, May 30, 2024 at 3:52 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Thu, May 30, 2024 at 06:46:08AM -0700, Ian Rogers wrote:
+> > > On Thu, May 30, 2024 at 5:48 AM James Clark <james.clark@arm.com> wrote:
+> > > > On 30/05/2024 06:35, Namhyung Kim wrote:
+> > > > > It might not be a perfect solution but it could be a simple one.
+> > > > > Ideally I think it'd be nice if the kernel exports more information
+> > > > > about the PMUs like sampling and exclude capabilities.
 
+> > > > That seems like a much better suggestion. Especially with the ever
+> > > > expanding retry/fallback mechanism that can never really take into
+> > > > account every combination of event attributes that can fail.
 
-On 2024-06-06 3:34 a.m., Namhyung Kim wrote:
-> On Wed, Jun 5, 2024 at 10:21 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Wed, Jun 5, 2024 at 9:10 AM <kan.liang@linux.intel.com> wrote:
->>>
->>> From: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> The hard-coded metrics is wrongly calculated on the hybrid machine.
->>>
->>> $ perf stat -e cycles,instructions -a sleep 1
->>>
->>>  Performance counter stats for 'system wide':
->>>
->>>         18,205,487      cpu_atom/cycles/
->>>          9,733,603      cpu_core/cycles/
->>>          9,423,111      cpu_atom/instructions/     #  0.52  insn per cycle
->>>          4,268,965      cpu_core/instructions/     #  0.23  insn per cycle
->>>
->>> The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 = 0.44.
->>>
->>> When finding the metric events, the find_stat() doesn't take the PMU
->>> type into account. The cpu_atom/cycles/ is wrongly used to calculate
->>> the IPC of the cpu_core.
->>>
->>> Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
->>> Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
->>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>
->> Reviewed-by: Ian Rogers <irogers@google.com>
->>
->> Thanks,
->> Ian
->>
->>> Cc: stable@vger.kernel.org
->>> ---
->>>  tools/perf/util/stat-shadow.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
->>> index 3466aa952442..4d0edc061f1a 100644
->>> --- a/tools/perf/util/stat-shadow.c
->>> +++ b/tools/perf/util/stat-shadow.c
->>> @@ -176,6 +176,10 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
->>>                 if (type != evsel__stat_type(cur))
->>>                         continue;
->>>
->>> +               /* Ignore if not the PMU we're looking for. */
->>> +               if (evsel->pmu != cur->pmu)
->>> +                       continue;
-> 
-> Hmm.. Don't some metrics need events from different PMU?
-> Like cycles per sec or branch instructions per sec..
->
+> > > I think this approach can work but we may break PMUs.
 
-Right.
+> > > Rather than use `is_core` on `struct pmu` we could have say a
+> > > `supports_sampling` and we pass to parse_events an option to exclude
+> > > any PMU that doesn't have that flag. Now obviously more than just core
+> > > PMUs support sampling. All software PMUs, tracepoints, probes. We have
+> > > an imprecise list of these in perf_pmu__is_software. So we can set
+> > > supports_sampling for perf_pmu__is_software and is_core.
 
-In the hard-coded metrics, the events from a different PMU are
-SW_CPU_CLOCK and SW_TASK_CLOCK. They both have the stat type,
-STAT_NSECS. Perf should ignore the PMU checking for the type as below.
-I will send a V2 to fix it.
+> > Yep, we can do that if the kernel provides the info.  But before that
+> > I think it's practical to skip uncore PMUs and hope other PMUs don't
+> > have event aliases clashing with the legacy names. :)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 3466aa952442..d01335f18808 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -176,6 +176,9 @@ static double find_stat(const struct evsel *evsel,
-int aggr_idx, enum stat_type
-		if (type != evsel__stat_type(cur))
-			continue;
+> > > I think the problem comes for things like the AMD IBS PMUs, intel_bts
+> > > and intel_pt. Often these only support sampling but aren't core. There
+> > > may be IBM S390 PMUs or other vendor PMUs that are similar. If we can
+> > > make a list of all these PMU names then we can use that to set
+> > > supports_sampling and not break event parsing for these PMUs.
 
-+		if ((type != STAT_NSECS) && (evsel->pmu != cur->pmu))
-+			continue;
-+
-		aggr = &cur->stats->aggr[aggr_idx];
-		if (type == STAT_NSECS)
-			return aggr->counts.val;
+> > > The name list sounds somewhat impractical, let's say we lazily compute
+> > > the supports_sampling on a PMU. We need the sampling equivalent of
+> > > is_event_supported:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print-events.c?h=perf-tools-next#n242
+> > > is_event_supported has had bugs, look at the exclude_guest workaround
+> > > for Apple PMUs. It also isn't clear to me how we choose the event
+> > > config that we're going to probe to determine whether sampling works.
+> > > The perf_event_open may reject the test because of a bad config and
+> > > not because sampling isn't supported.
 
+> > > So I think we can make the approach work if we had either:
+> > > 1) a list of PMUs that support sampling,
+> > > 2) a reliable "is_sampling_supported" test.
 
-Thanks,
-Kan
+> > > I'm not sure of the advantages of doing (2) rather than just creating
+> > > the set of evsels and ignoring those that fail to open. Ignoring
+> > > evsels that fail to open seems more unlikely to break anything as the
+> > > user is giving the events/config values for the PMUs they care about.
 
-> Thanks,
-> Namhyung
-> 
-> 
->>> +
->>>                 aggr = &cur->stats->aggr[aggr_idx];
->>>                 if (type == STAT_NSECS)
->>>                         return aggr->counts.val;
->>> --
->>> 2.35.1
->>>
-> 
+> > Yep, that's also possible.  I'm ok if you want to go that direction.
+ 
+> Hmm.. I thought about this again.  But it can be a problem if we ignore
+> any failures as it can be a real error due to other reason - e.g. not
+> supported configuration or other user mistakes.
+
+Well, we should not ignore any failures, just look at
+evsel__open_strerror(), we get some error from the kernel, we know we're
+doing something, we put it into context, and then we try to provide the
+most helpful message to the user.
+
+The question here is how to figure out if what we want to do (sample)
+makes sense for this event that has the name we used, since we're using
+a "wildcard", a "well known event name" that should be translated to
+events in all PMUs where it "matches", if those actual per-PMU events
+can provide what the user is asking.
+
+My suggestion about using pr_debug() is a compromise, one that will not
+show warnings all the time for such a common case (cycles) while
+allowing the use to follow a common, in tools/perf, way of diagnosing
+when things don't look sane, which is to ask for verbose mode.
+
+The best thing would be for us to be able to query, using existing
+facilities, if what we want is possible, i.e. interpret the error coming
+from the kernel in the context of what we are asking.
+
+If this is not possible because the error is too generic (EINVAL) and
+can map to multiple other things, then we can try to have a new kernel
+facility for us to get this info in a authoritative way and use a
+pr_warning() knowing that that warning will go away as the kernel is
+updated.
+
+Or we could use a big hammer, special handling some PMUs/events we know
+can't sample and avoiding those when they fail, ugly, but should work,
+and this is just for this "well known event names" people have been
+using since forever. Those wanting specific events to be used should
+know better and specify it precisely in the command line.
+
+Does this sum up all the discussion so far?
+
+Cheers,
+
+- Arnaldo
