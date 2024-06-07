@@ -1,147 +1,148 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBBC14F127
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Jun 2024 04:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0259B154429;
+	Fri,  7 Jun 2024 04:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734703; cv=none; b=jbQHNKfDUfBqUT2Vwnd8IesmG5yI+w4IRezlo7SApzkSanQewgJ9dJksEdrrX9xjmTkCFnGAnf025BhB5A4mRMySNJtsQBIiJi+8kyOYcPe0zF2nKkOj/+b05siIFyuso7YYfbTvZbh3gd1x33z/h7cEgHQv7/S3rmI2DZy7Wno=
+	t=1717735460; cv=none; b=QRHCS+EzJ2JdWAOdHxCGXxkIcRT31QnVBSJlMFsTrX+1g4yScSPMlsb5nqI2h/gSS7UduxqHi5SNtz+JawR85G314i5vAZur5BwJW5rXeNuqYwyKluIiQjA1oTvzAvVm9nSHeCK6l8J/zGfb4sWeQSTax+Uft98ELr82bBZxxH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734703; c=relaxed/simple;
-	bh=m+FO5prOuAQRG/TGAPSbvyZvd0BG/DyRE8f9rNYUEZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m+w22QBcXszpL5tMvR1ayOsvy2hfn3yvqZIGufqoli7Uy6pddjH3gZKDXnf0Bnru6bqNeiq5HtI7x/H2xGQAv2Qr8wf7ZkL+La7qdDqvTff+VFmr9pbu/cpoMozqCjDN6zv37c1FBhNvz5SEpSlmuZbIKTmiRSwe5cynMvthTqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ue60vCKl; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717735460; c=relaxed/simple;
+	bh=hRucXZWqk7DSeAInu1qmotAqAwaPW9qwK1JmNh1WSck=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ev1gJnns+0lbbRdKAXu2QyZOGV/+Py5jygEvmeTaRziyfGjC8YJgJaa+I4rxdepYE4HM8wiXQjCH+/am7RAA5CuKe23fK4SUO3fNTd4dGxoyMAjUK9dqe91aiB78eHW8HP3A/ahvAs0EtNwJpSn1DYsGVRNtH/vDBTDoM6Nhr6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tu4qdWoV; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ue60vCKl"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f61742a024so108255ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Jun 2024 21:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717734701; x=1718339501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vUQKwpPhBYleEuurbsht3zzd+kMQUMmu39PgM4r1UfU=;
-        b=Ue60vCKlT8fsHBn+sSbaPvUPdAqJX/CUvqdRxg77iQy6f/bmNqQ7rF7zqplgGfsbGw
-         ehMorhMI1q5YRGCJnG7HD/EwTRoqwmi+cv9tL36HB3Y8Say8kPWkVnlwdYj9dGmVbMFh
-         p80LaL8zQRIQZd7m94vOC0nuw7uIZ9idZzNxq6G+HrmAA4s5tIiliWO7yOZRiO6ydwTw
-         32HfvOWJbIliqjEkd1EmasU2SrUjak3Otg2Ob4PSRClO0w7t2CHw2bWIUJA4ZEkPku8Z
-         WM2EsZaiNEZj6jI9RBOxv5aXe5xUt7mqhsCliU4Zf6xoXJ5zNLiJAInXxcEGMJJvRihS
-         QlMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717734701; x=1718339501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vUQKwpPhBYleEuurbsht3zzd+kMQUMmu39PgM4r1UfU=;
-        b=bWxys8FpuYurVK114zzzKZMJIz14W9V+wNeAxw8iZuFM1EGdEUETVLConRHwCKxu2K
-         BrpeQ9IrfbwkI7VLENP67cagxS+7URQ/w4ZEhp8m9SlgyW9SucowJsOWUHjRWm6/zmuC
-         i406RR4SGZ0Ny2nFJsGVly8dSQSpjHdq20zZ8EdqKOpWFikjDca7qpMb64SWOxPmjbvm
-         qwmWsxz/SkzkaEbI/e/XfIHaKEQprxEaln/+hVvSYXHj5YDFosznB9PwXN/bPpsGlKzZ
-         KlpY87TbvxtXyPOJd6ILfOnvje/+aV8oSUf6hXOpljBxJBXXes5K0Ow/TgR5/7zuaP6Q
-         xs+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXbwEuwxHfEc3MYA9SwleESCqYxgso5nHPvmguFxVnyso8sRH5q5GkyIxjdWxmwrZ9H8Fdds44OLLGN++UHe7+P1x/qJXeY/bZsYMZS9yvk5w==
-X-Gm-Message-State: AOJu0Yzl4R7Fy/ZTTLAPznbyXHcgAfLjcnVScFQEiNJkhIZA2r05Mtl7
-	xotZgbNxssmnbBrzSMQwe9FdKL4qzX/7z3trG8ujmAyzgS65u8+dly7a3sn2waOznDgm8qUEBZQ
-	Q0xzRSYPgFD7H7pSHjuBYVawEv9Gr1ce8qz2T
-X-Google-Smtp-Source: AGHT+IFzwCEykDbP9Ly/X0rAzdo3MijeJyLnEmlXxvlnXTUjKsWnSOQQMAZ/rXzHLOb7tK4G2rMvLoMlMMrBBc+yXz0=
-X-Received: by 2002:a17:902:c402:b0:1e5:62:7a89 with SMTP id
- d9443c01a7336-1f6ba64b814mr6213245ad.18.1717734700474; Thu, 06 Jun 2024
- 21:31:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tu4qdWoV"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4573quVY013539;
+	Fri, 7 Jun 2024 04:44:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : date : from : in-reply-to : message-id :
+ mime-version : references : subject : to; s=pp1;
+ bh=G+QQJDYeHEx4C6ppUgzSueeu7Er0q1bXtMD8X42znYI=;
+ b=Tu4qdWoVojE21v3ibwpAKd0x6k8O5A2mYrI4wPJUQti+zNMkugQYicmYB70nR2+m6jFD
+ nW5hUVh5bQDjLcVnsSynlyg33POyKMo5CDpTtWXn7CBndwODluqBES0szrCZDUN2kOI8
+ 83A9AyANByYnvPJyJT2z70hQEZZeQFAlqXKRo1LghfpgaqnF2g1SpzF/RnPDpX/jUOTc
+ h6GvXzb1QjCkdXEleFM5qTMj8d06/Qr5XcVyD4WQYPKNuXvS1Rlf4P1kB3fBiiBM1X7e
+ 1hoZ9F+UQi1oOg/FgpPLG9zy6vYBkgl5Qka/oliMXH0J/4FXvzrt0o1g3HycCUUjQFPr gQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yktpe8488-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 04:44:11 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4574dt5e019967;
+	Fri, 7 Jun 2024 04:44:10 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yktpe8487-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 04:44:10 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4571gxgr000781;
+	Fri, 7 Jun 2024 04:44:10 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ygdyuevtt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 04:44:09 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4574i4hj12910874
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 04:44:06 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 493D620040;
+	Fri,  7 Jun 2024 04:44:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8931B2004B;
+	Fri,  7 Jun 2024 04:44:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.45.47])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jun 2024 04:44:01 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH 2/3] tools/perf: Fix the nrcpus in perf bench futex to enable  the run when all CPU's are not online
+Date: Fri,  7 Jun 2024 10:13:53 +0530
+Message-Id: <20240607044354.82225-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+References: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521165109.708593-1-irogers@google.com> <bc34d0aa-7152-4f0b-a3c4-11b1a63fba9b@arm.com>
-In-Reply-To: <bc34d0aa-7152-4f0b-a3c4-11b1a63fba9b@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Jun 2024 21:31:28 -0700
-Message-ID: <CAP-5=fXnRWUat1uzQxyJUMp2LF_i3uYuB22HMD7O3b2UpwPRBg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Fix and improve __maps__fixup_overlap_and_insert
-To: James Clark <james.clark@arm.com>
-Cc: "Steinar H . Gunderson" <sesse@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: cJkhylPnuYTH2ybGdJaAGSjRhxVSC2Qz
+X-Proofpoint-GUID: IhGF6qDB75rPGIJ45iERlKMb0bCXr3Lf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-06_20,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406070032
 
-On Thu, Jun 6, 2024 at 3:56=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
->
->
->
-> On 21/05/2024 17:51, Ian Rogers wrote:
-> > Fix latent unlikely bugs in __maps__fixup_overlap_and_insert.
-> >
-> > Improve __maps__fixup_overlap_and_insert's performance 21x in the case
-> > of overlapping mmaps. sesse@google.com reported slowness opening
-> > perf.data files from chromium where the files contained a large number
-> > of overlapping mappings. Improve this case primarily by avoiding
-> > unnecessary sorting.
-> >
-> > Unscientific timing data processing a perf.data file with overlapping
-> > mmap events from chromium:
-> >
-> > Before:
-> > real    0m9.856s
-> > user    0m9.637s
-> > sys     0m0.204s
-> >
-> > After:
-> > real    0m0.675s
-> > user    0m0.454s
-> > sys     0m0.196s
-> >
-> > Tested with address/leak sanitizer, invariant checks and validating
-> > the before and after output are identical.
-> >
-> > Ian Rogers (3):
-> >   perf maps: Fix use after free in __maps__fixup_overlap_and_insert
-> >   perf maps: Reduce sorting for overlapping mappings
-> >   perf maps: Add/use a sorted insert for fixup overlap and insert
-> >
-> >  tools/perf/util/maps.c | 113 +++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 92 insertions(+), 21 deletions(-)
-> >
->
-> Reviewed-by: James Clark <james.clark@arm.com>
->
-> I'm wondering if there is any point in the non sorted insert any more?
->
-> Maps could be always either sorted by name or sorted by address and
-> insert() is always a sorted/fixup-overlaps insert depending on the sort
-> style of the list.
+Perf bench epoll fails as below when attempted to run on
+on a powerpc system:
 
-One of the motivations for the sorted array, instead of an rbtree, was
-to simplify reference count checking. We're in much better shape with
-that these days, I think the worst "memory leak" is the dsos holding
-onto a dso and its symbols indefinitely, instead of removing older
-unused dsos. It'd be hard to go back to an rb tree with reference
-counting.
+   ./perf bench epoll wait
+   Running 'epoll/wait' benchmark:
+   Run summary [PID 627653]: 79 threads monitoring on 64 file-descriptors for 8 secs.
 
-For the rbtree insert it was O(log N), the sorted insert these changes
-add is O(N) and the regular insert without sorting is O(1). A common
-case from scanning /proc/pid/maps is that when map entries are
-inserted they are inserted in order. The O(1) insert checks that and
-maintains that the maps are sorted.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/maps.c?h=3Dperf-tools-next#n469
-For the synthesized maps we should be able to insert N map entries in
-O(N). The sorted insert would be similar as the memmoves would always
-copy 0 elements. So I can see an argument for keeping the array always
-sorted. For the perf.data files we commonly process synthesized mmaps
-dominate. In the case for this patch, JIT data dominated, with
-frequent overlapping mapping changes. I guess the biggest hurdle to
-just always keeping things sorted is the mental hurdle of ignoring the
-worst insert complexity, which should never apply given how the maps
-are commonly built.
+   perf: pthread_create: No such file or directory
 
-Thanks,
-Ian
+In the setup where this perf bench was ran, difference was that
+partition had 640 CPU's, but not all CPUs were online. 80 CPUs
+were online. While creating threads and using epoll_wait , code
+sets the affinity using cpumask. The cpumask size used is 80
+which is picked from "nrcpus = perf_cpu_map__nr(cpu)". Here the
+benchmark reports fail while setting affinity for cpu number which
+is greater than 80 or higher, because it attempts to set a bit
+position which is not allocated on the cpumask. Fix this by changing
+the size of cpumask to number of possible cpus and not the number
+of online cpus.
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/bench/epoll-ctl.c  | 2 +-
+ tools/perf/bench/epoll-wait.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index d3db73dac66a..d66d852b90e4 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -232,7 +232,7 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+ 
+-	nrcpus = perf_cpu_map__nr(cpu);
++	nrcpus = cpu__max_cpu().cpu;
+ 	cpuset = CPU_ALLOC(nrcpus);
+ 	BUG_ON(!cpuset);
+ 	size = CPU_ALLOC_SIZE(nrcpus);
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 06bb3187660a..ef5c4257844d 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -309,7 +309,7 @@ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+ 
+-	nrcpus = perf_cpu_map__nr(cpu);
++	nrcpus = cpu__max_cpu().cpu;
+ 	cpuset = CPU_ALLOC(nrcpus);
+ 	BUG_ON(!cpuset);
+ 	size = CPU_ALLOC_SIZE(nrcpus);
+-- 
+2.43.0
+
