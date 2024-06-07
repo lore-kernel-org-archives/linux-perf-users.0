@@ -1,242 +1,859 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0909771748;
-	Fri,  7 Jun 2024 19:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717787689; cv=fail; b=tnOK8KwdE/3yplIrsB0oD/8rsRQJm6zLkI3Tsi4P2gsQNk5/12bDjBu9TfRCU1IB2IUJZgphljdRS0ps2gbMqjganZkHSKEQcZsK2W7toMlLBHWxf34wGBU+cft2gxxEDdqKuQ6USH43mrMF0VjGMHU3aWHFY4Aai322RQElauc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717787689; c=relaxed/simple;
-	bh=PiGsvuCW3ylS+UZPK6bkc7A+qFolxE2spGQ8M4Dwn4k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aSpr/dP1I/vPr1q15o6ZzwaqE5ov3upRrC+W7l/InD6Ks4ZwNAzyleQF/2AT3HXXzbjfWhzkT5vtTsdRm1eP1p4CWQAund5qCktoJoR84RJU+yEQEb8DdQUa31f/WXpAYPuO9kDgDinCYS83f6hQfm96Qk9jMKpm+XaxtPf4ahU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=auDsPlQ4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=SEQCHmDD; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAD1D2EE;
+	Fri,  7 Jun 2024 19:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717788005; cv=none; b=tcC0nCT4XT0CiNe9O1IJ78FU9bfA486RMfecrJwZG4Nq9jTEh4TMN1FvkKXZMoPadPVq0UX1ikD+NgQjYgSO1SUpyjPCkPr9qkuAsXMYs0IJZ/miZwsnuAUoMXJ7LEsfwW96FO1egPj7Hv48Fkus/vXlEcM3cKWQ7INVK/egq/o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717788005; c=relaxed/simple;
+	bh=DLrkNCgv//BAkZ9NoCP+2PoKnkLHx9MCHqRLvafKp+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f1JOfpWnz8iuZ0E8x9Oy9qW5QQCXv6el/2t4a+qFJKq7fECumUCyuPrFKCcwm5WaQ7+dr6BZfF2LSobZRKNO6oZWccjT2j8nlZOyxvvD0ttoy4xPQJF4uVxYY8J7+2PErYYN3H8gLL6iI/X2zC+C360/I3/ZQtl0SUVVrplTLhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFAILQqG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="auDsPlQ4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="SEQCHmDD"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 457CuhVJ016017;
-	Fri, 7 Jun 2024 19:14:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=corp-2023-11-20;
- bh=rGUotTlvJquIIhRGgDwXt7gKOGzdF3vPBjb0yYK9kuA=;
- b=auDsPlQ4ZvZDQ6E/UexaC+9kFGRxpF2ft38spQG97oxbdZB7GxuisRY0Oqn4kbLegI89
- Y9tSrxPWEj9tZz6EWFJQkx28NZPPOZHuhz8V5PayG7gXEjyNWfEgjzIB4pYxv9BLYGSb
- H01GZmPCmIY8QUUMkxGaidcGxVtU7Olwy13+hMtjjIRGgg1srCkeg5ok9zpAN1P3EdCM
- Ev1IYk+6ubkAS+5TvBKdaM05/tZ3rdm1R0cvsK/TyKsWX1DGZ4eG/3P7TSUj9sktmEa1
- Ye80fi/0ofktI+GVYzlokE2gUYmplM0JEJrlvFV0kyQZFZFRgBzOEIMXcL6h1JnyLeDj BA== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yjbqn6ag3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 07 Jun 2024 19:14:03 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 457HsQbm025130;
-	Fri, 7 Jun 2024 19:14:02 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrtdcnny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 07 Jun 2024 19:14:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Il8KOoTxBi1MgAfTX3HuWHjZExb/ZSFuGhBkGvFBsNk6UriNlSqzV9XJz7KwIOuF1nlhylWYAeUJQZzdO8wHDP0xI7YYrdqDDdqyQEv6ALISA4ZOd4p7qp+cYlb8dg2F3uX7krBb1kcspg+kOEuvXvK0jS3R/mVF7Isn5NfhxzuolbhHdrFuWSvu6UJxTT1WY69seytvAo4lPYaXPINWgD2lmnm3FyohyTxFiQ3UoXAfMTgI1Ni6BqsEK68ozzLuXcRwHmQiew9p5s1z86E1q1v+ra5XsK4Uu5SyT1wDwmABXkw/nb5FNZr295TCZKTgP9JGBcwoeWTxjyz124IM4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rGUotTlvJquIIhRGgDwXt7gKOGzdF3vPBjb0yYK9kuA=;
- b=ahxZkFQRh+wCQYUyY6DQytx0e7EA+QnYINwDUxFw1DDAmVOemUgXQoFXF1nLUNlBs+PmaPkn3mxQrakc71IaUF55FQswHMDZuavTQRcNG7vl9ItpnOtLEo8w75kvRAiRxd9zGJGWmdOg30RsCZVSDKUWRsY20X2Ss1XxIOGf0GKyrWWCqFogvqqWFFI7RlzPQVZuJCuRw7t3l9DRzvx1pMIDfEVEoNEpt/B8ZDdwkbglMmQXzM0mi9lEUyRnl+yocg3WcnQnpHxU6XuOS8aOYxHokToBdu/MSoCWT/I3m2nrUrwTbHDloZ67hrVrjTXqx1yTob8BBT0cDDYI6udj/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rGUotTlvJquIIhRGgDwXt7gKOGzdF3vPBjb0yYK9kuA=;
- b=SEQCHmDDpSK3DFZQ4z/HVDOJM8kCvs56VcTT8Lqzg2rinvQpeqcOm2uEuRtSRoAClED6+ktovnJfl9VBF8ysOIEUx4qIoKqGKkiVa7PmladPVutHLWxoMdln8YGLO7X2q6ZtkGOvSWFyr5LsjhzYAvwKeqXFEUtPA+CBQRCTDGg=
-Received: from PH0PR10MB5895.namprd10.prod.outlook.com (2603:10b6:510:14c::22)
- by MW4PR10MB5751.namprd10.prod.outlook.com (2603:10b6:303:18f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Fri, 7 Jun
- 2024 19:13:57 +0000
-Received: from PH0PR10MB5895.namprd10.prod.outlook.com
- ([fe80::521f:4913:ea29:ef83]) by PH0PR10MB5895.namprd10.prod.outlook.com
- ([fe80::521f:4913:ea29:ef83%5]) with mapi id 15.20.7633.021; Fri, 7 Jun 2024
- 19:13:57 +0000
-Message-ID: <36e86320-1a43-45d4-b25e-a5d60857f4b2@oracle.com>
-Date: Fri, 7 Jun 2024 15:13:53 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd: check event before enable to avoid GPF
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: harshit.m.mogalapalli@oracle.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1716990659-2427-1-git-send-email-george.kennedy@oracle.com>
- <75f6aba1-8ed6-4ef8-8811-de40ae40be90@amd.com>
- <1e14ca4b-6e3e-4d57-acec-bc3ee2bed6ed@oracle.com>
- <0494aedf-9759-4427-a7f3-39a91bd5771d@oracle.com>
- <3ec1cb26-c889-45ab-b8cc-92f933a2b5d1@amd.com>
- <7b27a039-ddb9-4beb-a1b4-ba2b74a3043e@oracle.com>
- <17bfa7c1-43b7-4b25-a8cf-eb6d3797df5a@amd.com>
-Content-Language: en-US
-From: George Kennedy <george.kennedy@oracle.com>
-In-Reply-To: <17bfa7c1-43b7-4b25-a8cf-eb6d3797df5a@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR06CA0002.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::15) To PH0PR10MB5895.namprd10.prod.outlook.com
- (2603:10b6:510:14c::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFAILQqG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF9FC2BBFC;
+	Fri,  7 Jun 2024 19:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717788005;
+	bh=DLrkNCgv//BAkZ9NoCP+2PoKnkLHx9MCHqRLvafKp+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pFAILQqGcfTmJtX9IoZg6duD+Ek7OmCrH3W5m5OYyeZ3WvVDJ+nw/y/tvH0VrJT9Z
+	 kgGhRGKgWNZw1E8GOYY9aP6wuZmFCZycy+pYpFHBnna1A5VrUY1q4EC/PnyQ2UeGSj
+	 7gkZu+6KoD8BAg4ls7Q4aGk+QDGQqMGPRszpDwP3EQYWnv1Vn9fmtXSimeEL2ADzG1
+	 IFNG7lurqQTmG2nejNZGi4Bw3xnan7+LtqV47l0CA6SLq+GZbz4JQeAkmYQ9ppNU0c
+	 PMUN6HUtNm5/BgjqWCty2WinFqdGLTLXxzDNomdf4RLPdSmILYBOS8d5KgXOoTivVF
+	 1AFJ/EeyGNlZQ==
+Date: Fri, 7 Jun 2024 12:20:03 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Taylor, Perry" <perry.taylor@intel.com>,
+	"Alt, Samantha" <samantha.alt@intel.com>,
+	"Biggers, Caleb" <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v11 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+Message-ID: <ZmNdYwAxlXkQ8WJt@google.com>
+References: <20240605052200.4143205-1-weilin.wang@intel.com>
+ <20240605052200.4143205-4-weilin.wang@intel.com>
+ <ZmJEP_42Ehlt-c-6@google.com>
+ <CO6PR11MB56350EA26F8AD92B222C528DEEFB2@CO6PR11MB5635.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5895:EE_|MW4PR10MB5751:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a4ba7b0-2138-4ab2-a866-08dc8725fa9c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?RHd2RnhiWVVjeHBYWGNSRGgyakFvdjhPaVR4SlN1SVJsbjR3eUhQSlBwNEhH?=
- =?utf-8?B?cmswZDAwTFkwcXk2a0NQZ3JUZ3Y1ZnhuOG44bndSS2Z1VzQ1WHhFYkxYOFBk?=
- =?utf-8?B?aXpTNFBmWlVUeVdyeGtpKzZiOFZKUUpOaXNDeitsYmdoTkc0a3U2ZHJ5TDFY?=
- =?utf-8?B?czJRQ21NaFZqNHlZdGJ6cGpXRlNEZ2ZZYnF0Q3hZbWsxY3Z0THZFOHJXOWVD?=
- =?utf-8?B?VnJkQWFnV3FMZXdmSVJibm5PaXd5N0dSTWhVR2xrV041QndQVVJxa0JCYU9O?=
- =?utf-8?B?aVo3a3VrVWRHcVAvV29QQkUxQW5weGFCNWZGOEUwdUJ5NkIzenB0REJqVmx3?=
- =?utf-8?B?NnNFUm16eDVlajV6UWplVWlGME5tNkVDU2dacThUWFRBVUI3MjBLYmpNK0xm?=
- =?utf-8?B?cVkxY3p2UVRaZWJIUFMyODVwaXNxY0RQaVJZQjNEYlkvRlJQelY5Q2UxK1RK?=
- =?utf-8?B?c2lueHkrVzNRellna3JqdXhXdFZxb3VqK1JiY2FlRkVHdDZGYnVxSHVHWllp?=
- =?utf-8?B?dzZLUU1DRURYNHkwTE95NE11ajBxM3AvcU5JNGxBS2pXZEp5c0s1ZjQrVUt1?=
- =?utf-8?B?QTdDc0p6K1M4dkxHeGUvd3BTQmEzd2ZiWndPTTBYWXZ2ZUtDNnFmWHdlZTVD?=
- =?utf-8?B?Mk1TTHdvTlJ6eHBaQTV0Y1NJdks0WGszYVhtYkY5bVNrcXdwMHVKKzlxSUNa?=
- =?utf-8?B?MUlaQ01odENmYXQzdTA3OHEzZDNtYmNBS04wblR5UVNFaEF2YVJsVXdkMnJu?=
- =?utf-8?B?VUZ0SWZHeWt2TGM2eTFpcThJUWhGNzFIT3JLRk5uUGdXRC9Ycmx6L0p5VmI2?=
- =?utf-8?B?ODFkOXdFdGpOemdCNWtickpNaGlLTm9XMEF0bnRCVjloWnFEeHpkNjhzbEZU?=
- =?utf-8?B?V3J3TzVsNitVdzZQUU13eTB3Y2FlcmprR3R3SVFXbGJnK1p5YjRsNjRVamFR?=
- =?utf-8?B?WXpQd0JTVGViTTZCdUdTWStFV2JiZkFJRG9tbzFYTE1qaWNLRVhMMU1na2pw?=
- =?utf-8?B?RkJUK2Zic0gwcndoM3lmcVlscFpuM1diR3dXaEhmKzNqMlZTZnpZak1Qdkpz?=
- =?utf-8?B?VGFhUEY0blFhQ0phL1FmR0VPeUNKbzlCSFVxZG11djdMcGJTbDhvWW1YTXFN?=
- =?utf-8?B?MittMjB1TkFLQVVoWEVoTEY1amVONHVFeHBQdEcxcEZ3b25rZlNDMUNsMFR4?=
- =?utf-8?B?UUJGeXlQeWJhSmJqWklMUk5EMHFFVUFsTm1NK1NXOTIxTmc2c3cvY3dRcG4x?=
- =?utf-8?B?dmY1U2VJUjl4R2dyb3BFU0NPYmsxQ21HOEF0UTI2YlJiOGNGQXNyU0ZJL3Jl?=
- =?utf-8?B?andPaTRkMG41d01JQk9OQ0s2emU3cTY2VG5Lb3dXNGhwa1FkdUhwWC9tQ2F1?=
- =?utf-8?B?QmF2eUh4ZWNTSmJsbUJOQ1puS296YjFEOEVxTVA2UG13RWZGVUJDa21jWk5P?=
- =?utf-8?B?ZC8ydVJEaGZ6VHA4dE05cHJhTDFqUWt2NHV4aHdJcFpodGhIditGYWxBRlpq?=
- =?utf-8?B?ck1aVm4zdVNzUUVxWW9GZ09MazF0b0JYMHFCSytQaWJpSFQrN3BpOFpOOEE1?=
- =?utf-8?B?VS9GZ1Q3NFh2cSthTEZIUWN1Znp5QzhYTlZ6djRMZzV3YVFGRXBLTkZxTlhX?=
- =?utf-8?B?cTdlVi95ZnVGMytJUGRpUVBYY3p6c0hSak1HQ1lRd1VWTlduRGJkSVEvYURW?=
- =?utf-8?Q?nMarnzH2g871wUxX4OIr?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5895.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?RkNYd29DVm9xQkNMVUhIWHZwNEkzZ1l1RFNyOWd5VFE2UVFpSWlOdC8xVUJy?=
- =?utf-8?B?R2hTaXhIWlZZNXZBbzFoWG91SWFmSko3bkswL20yd052NDRaN2ZlZWNicUVB?=
- =?utf-8?B?K0NEQjdvc3hFRFY2VXVOV0EwdmZwK2Y5U3NlY1lJZzRaWW1hTU1NVWNqL3dM?=
- =?utf-8?B?N1orc0dnQ3dyS2xHb1VWMUlDNjBvQ3N0U1J5YUhpOE8yZW85djJwK3JVaTZU?=
- =?utf-8?B?VVkxYWhsbHE5REk3LzFMd0UyTXFHNVFJMXhpbld2Um82ay95TUhaSXVWZ2s0?=
- =?utf-8?B?cUt3WjVvdUJqSHZpbWo3UzBXREVIMXlBeHlVd0duYVpvSE9yU29BZlRxY0x4?=
- =?utf-8?B?eWJoZjNoSVByR08wd3FuS2JaME1ocHRmbmVTZjVVcDkvbHNESGZQQ1BkeE4w?=
- =?utf-8?B?T2Q5VjNJOTlzMlg2LzJYT2JKWnRCQS9zRGkvdW5lTnJSNWh2dkpEb3FTYmxY?=
- =?utf-8?B?UVZyT3kySFdrRXJGQTM3TnAzQkVXNksrTGxGVkM3NTlUSHNSMEVqVmx2cUd0?=
- =?utf-8?B?TWNKMDlJYUFCbFZqOFloM0NUZTZHVGh4OEtQbDBHQmxFUUJwK29KaXBHVERm?=
- =?utf-8?B?Q2ovVU1KYjNLVzRrZVlQeFJUVkQva3RrK2FFTFFnVTZYRVlzWU9ZWm9XdGEr?=
- =?utf-8?B?enNUUEVqNTNXZVZVdWlGZ1ZEQ3ZoU2k0MlJ6N2pTRk8xbGwvOXlCNU5rRmQ2?=
- =?utf-8?B?SkhRSHpvbWlIemNXWURWYkRjTkoyL1Q4cWFUZm1zOU5mdDRDNU0rVHp1alNH?=
- =?utf-8?B?Q21Qd1h1WUNIRkg1RlU5Q01GdVBpTWYzaHEyeWs4d2x2SnNmZEhHcnpkdVY0?=
- =?utf-8?B?SVVPOFVzRFNPaFVDdXo2VXF6Y0ZYREdnREtVMGx3eVFmMUtuYmZXK3V5ZjE2?=
- =?utf-8?B?alk2SncvRFRkZGxHTGNSbC9XdE1PQVJxNUdjalU0ZW84a3dZQVl6VjQycTlm?=
- =?utf-8?B?dXByWDRLOVRNYUVOd2xFN0Y1KzBqRHloMjRubDVmMTFoKzBwUzFNVCtCdVNj?=
- =?utf-8?B?ek9NZFZCUTE3emFpMWxSVDhka0FaS0VQL0lhVWtyTnpLWjhnYzVJNUNmQmRo?=
- =?utf-8?B?ampjMVRqZzNDNFhTOWNsZVd6VGRHRFhCVmJRbzJtTWJ4Tk9TaG8zdlJJcDcr?=
- =?utf-8?B?RGFmbE9nbVNIc3cwNmZ1RTJVK1VWdWcveFpOa1Rna2c0cEJTaVdURWlnVkNo?=
- =?utf-8?B?c0tYT2VkUERibENTQTRkc1R0dUZFK1NlaEZMQ3NWazE3R1ZvOVRTOVQyTWJN?=
- =?utf-8?B?NUR4WGYwSFM5cnY3M3JFc3I1bnNrQ2thVG5CcGtGSW1nZEQ3Mkc0TCtzK1Rl?=
- =?utf-8?B?djNjc2N3K1VQcGl3YmVMT1k0bGRHbDRjK3VKZXF5SXJVSzNrZ3Nlek8rbHdB?=
- =?utf-8?B?V25id2VSNUQ1ejFuWUFhNkszNXE4WEFDZUYwQmNaN0w2YlFzQysxc0FueXlV?=
- =?utf-8?B?UUYreXlhd3BIRURnbjN1UHN2dTkzeWlCS2sxSDZkZHUvMjZsbkIxMTRsdGVm?=
- =?utf-8?B?YzR1TUoybzdKWldCVEMxVm9qR2dzQVlSNiszTGV5WTNOMGM2MDJUOGNPejJW?=
- =?utf-8?B?Zzl6a05ZYVorR1Yrd3c0VE15cmlsY0JxMnZSN09OTEtvS2FDSmVoblA5T0lk?=
- =?utf-8?B?TnVHeDFNbGgwWXd2cWNCbkdwL2xnMndoSE5PZUtRUHRIY1VVZm5FZmxsbEFj?=
- =?utf-8?B?QnI4aVdpTEdVcUxUdFVITWRiNU5GcXArM05xcXBtOENJYmtxbnM3ajR2Zmda?=
- =?utf-8?B?a1pjZXQyRUlSNElFTE5sRzJvQzJiTEJmUlQxV2FFK2VyZWhHRUFRMnFNQmU5?=
- =?utf-8?B?Q2VKamtWNVVBVlI1VUFqVm1JdDdRUG1JWXJFa2FTTUFHVWU3MHlEYVRNK2Fp?=
- =?utf-8?B?bERRMFJqTHNmMTNaZjh1MzNZMXhwVTluTXdaejYrd2Q1bmgwSU1IL2lvQzhX?=
- =?utf-8?B?WFBGRDBveWVNdHlLUUQyZ3NnWndWNmpzMUU4RjVMajJsTU9SSHhaeVN3S0Nr?=
- =?utf-8?B?bDVNS2kvV2pQcVowSDE0WkpvQjJERDdmWmh3MzlWK1kvR3RJU2gwcVZCZjA4?=
- =?utf-8?B?dW1nb0pzL2xrcGtySU9jMEw3QVh6U3dwS1YxSXVvQi9IRC9tcXo0YUJRSmFZ?=
- =?utf-8?B?U2hDdXY3NHl5SW1scmRsd1o3SjlOeVNrbmNEVjBMWVpnMkl5d2hXS21wSThh?=
- =?utf-8?B?WVE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	Xhxrqa1n9VLeiFJD/QhbXdFwxWGlchE9H57+OORHCNyaB2On8RsD2mCFgZJm+FJa31bPkdjWaydBg+wp5EtTO5xW+sAtFDXnfqXO0/oQriIJQlOsOGoN1Y7sMptMPMOUNUU8k16Yt63HmvdVxtKLVs3ek9HJuNNPw2jTPuzsyTi0O2mlMLCwn8BRW5nx33XUmJZRXTrfSAYNRT0j+89bgwhqLRlappofNv8LsIQZvwxBF8H1bCFklrD2SpxxdGwig8DWRjztCLbHjref5o+tY3c1H+cYkZiX2DeoaP/te5+bR5brRFpf3ZpDvNZceCbkJ3XgY2MZNWioj1DgAtGhwOUclflHbXSacLqmMM/fFy8LPybAKN6Vei3499NDJBCd2Bt5VZnkcOBVwjOZPmgVccIQ/Wztj7Ji3iV2qOYDHB8uPkKwMg4zO7KxVF5tZuHVUzEvvgEmmxMV4CkNKENPbqO2eI9GP/cWN1MoieGdKPA3LCisX+nuUcqQXZQYK2qrzZsvA4wAoqc3d1pxS1UlSVJuTvZdN0LiZS/LTN0d2D0SZN1fEorVtM1wAt9gBDrky/w7e1DycAxQDcMgAXFXray2Bicp2jsELg/lH6NxeZ8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a4ba7b0-2138-4ab2-a866-08dc8725fa9c
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5895.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 19:13:56.9245
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bsNrzQy9/ht8hGYdH3PT60JhWG1sB/ezhbSjOoU+ivlh2bw808JxAn0xASSjsLyOhmFzdGmZTkuxW7dr/DVm+5rsNV3HQJMlel5D8ydIU9I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5751
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_12,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 malwarescore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2406070141
-X-Proofpoint-ORIG-GUID: lQhCvj_yJrYS5kvRiMakn63qXIzA4LFa
-X-Proofpoint-GUID: lQhCvj_yJrYS5kvRiMakn63qXIzA4LFa
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CO6PR11MB56350EA26F8AD92B222C528DEEFB2@CO6PR11MB5635.namprd11.prod.outlook.com>
 
-Hi Ravi,
+On Fri, Jun 07, 2024 at 01:07:12AM +0000, Wang, Weilin wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Thursday, June 6, 2024 4:21 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hunter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor, Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Biggers,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v11 3/8] perf stat: Fork and launch perf record when
+> > perf stat needs to get retire latency value for a metric.
+> > 
+> > Hello,
+> > 
+> > On Wed, Jun 05, 2024 at 01:21:44AM -0400, weilin.wang@intel.com wrote:
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > When retire_latency value is used in a metric formula, evsel would fork a perf
+> > > record process with "-e" and "-W" options. Perf record will collect required
+> > > retire_latency values in parallel while perf stat is collecting counting values.
+> > >
+> > > At the point of time that perf stat stops counting, evsel would stop perf
+> > record
+> > > by sending sigterm signal to perf record process. Sampled data will be
+> > process
+> > > to get retire latency value. Another thread is required to synchronize
+> > between
+> > > perf stat and perf record when we pass data through pipe.
+> > >
+> > > Retire_latency evsel is not opened for perf stat so that there is no counter
+> > > wasted on it. This commit includes code suggested by Namhyung to adjust
+> > reading
+> > > size for groups that include retire_latency evsels.
+> > >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > ---
+> > >  tools/perf/builtin-stat.c     |   6 +
+> > >  tools/perf/util/Build         |   1 +
+> > >  tools/perf/util/evsel.c       |  66 +++++-
+> > >  tools/perf/util/intel-tpebs.c | 397
+> > ++++++++++++++++++++++++++++++++++
+> > >  tools/perf/util/intel-tpebs.h |  48 ++++
+> > >  5 files changed, 516 insertions(+), 2 deletions(-)
+> > >  create mode 100644 tools/perf/util/intel-tpebs.c
+> > >  create mode 100644 tools/perf/util/intel-tpebs.h
+> > >
+> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > > index 428e9721b908..b09cb2c6e9c2 100644
+> > > --- a/tools/perf/builtin-stat.c
+> > > +++ b/tools/perf/builtin-stat.c
+> > > @@ -70,6 +70,7 @@
+> > >  #include "util/bpf_counter.h"
+> > >  #include "util/iostat.h"
+> > >  #include "util/util.h"
+> > > +#include "util/intel-tpebs.h"
+> > >  #include "asm/bug.h"
+> > >
+> > >  #include <linux/time64.h>
+> > > @@ -653,6 +654,9 @@ static enum counter_recovery
+> > stat_handle_error(struct evsel *counter)
+> > >
+> > >  	if (child_pid != -1)
+> > >  		kill(child_pid, SIGTERM);
+> > > +
+> > > +	tpebs_stop_delete();
+> > > +
+> > >  	return COUNTER_FATAL;
+> > >  }
+> > >
+> > > @@ -985,6 +989,8 @@ static void sig_atexit(void)
+> > >  	if (child_pid != -1)
+> > >  		kill(child_pid, SIGTERM);
+> > >
+> > > +	tpebs_stop();
+> > > +
+> > >  	sigprocmask(SIG_SETMASK, &oset, NULL);
+> > >
+> > >  	if (signr == -1)
+> > > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > > index 292170a99ab6..79adf39e0d8f 100644
+> > > --- a/tools/perf/util/Build
+> > > +++ b/tools/perf/util/Build
+> > > @@ -153,6 +153,7 @@ perf-y += clockid.o
+> > >  perf-y += list_sort.o
+> > >  perf-y += mutex.o
+> > >  perf-y += sharded_mutex.o
+> > > +perf-$(CONFIG_X86_64) += intel-tpebs.o
+> > >
+> > >  perf-$(CONFIG_LIBBPF) += bpf_map.o
+> > >  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > index a0a8aee7d6b9..bd3627819afe 100644
+> > > --- a/tools/perf/util/evsel.c
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -1538,6 +1538,60 @@ static void evsel__set_count(struct evsel
+> > *counter, int cpu_map_idx, int thread,
+> > >  	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread,
+> > true);
+> > >  }
+> > >
+> > > +static bool evsel__group_has_tpebs(struct evsel *leader)
+> > > +{
+> > > +	struct evsel *evsel;
+> > > +
+> > > +	for_each_group_evsel(evsel, leader) {
+> > > +		if (evsel__is_retire_lat(evsel))
+> > > +			return true;
+> > > +	}
+> > > +	return false;
+> > > +}
+> > > +
+> > > +static u64 evsel__group_read_nr_members(struct evsel *leader)
+> > > +{
+> > > +	u64 nr = leader->core.nr_members;
+> > > +	struct evsel *evsel;
+> > > +
+> > > +	for_each_group_evsel(evsel, leader) {
+> > > +		if (evsel__is_retire_lat(evsel))
+> > > +			nr--;
+> > > +	}
+> > > +	return nr;
+> > > +}
+> > > +
+> > > +static u64 evsel__group_read_size(struct evsel *leader)
+> > > +{
+> > > +	u64 read_format = leader->core.attr.read_format;
+> > > +	int entry = sizeof(u64); /* value */
+> > > +	int size = 0;
+> > > +	int nr = 1;
+> > > +
+> > > +	if (!evsel__group_has_tpebs(leader))
+> > > +		return perf_evsel__read_size(&leader->core);
+> > > +
+> > > +	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> > > +		size += sizeof(u64);
+> > > +
+> > > +	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+> > > +		size += sizeof(u64);
+> > > +
+> > > +	if (read_format & PERF_FORMAT_ID)
+> > > +		entry += sizeof(u64);
+> > > +
+> > > +	if (read_format & PERF_FORMAT_LOST)
+> > > +		entry += sizeof(u64);
+> > > +
+> > > +	if (read_format & PERF_FORMAT_GROUP) {
+> > > +		nr = evsel__group_read_nr_members(leader);
+> > > +		size += sizeof(u64);
+> > > +	}
+> > > +
+> > > +	size += entry * nr;
+> > > +	return size;
+> > > +}
+> > > +
+> > >  static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx,
+> > int thread, u64 *data)
+> > >  {
+> > >  	u64 read_format = leader->core.attr.read_format;
+> > > @@ -1546,7 +1600,7 @@ static int evsel__process_group_data(struct evsel
+> > *leader, int cpu_map_idx, int
+> > >
+> > >  	nr = *data++;
+> > >
+> > > -	if (nr != (u64) leader->core.nr_members)
+> > > +	if (nr != evsel__group_read_nr_members(leader))
+> > >  		return -EINVAL;
+> > >
+> > >  	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> > > @@ -1576,7 +1630,7 @@ static int evsel__read_group(struct evsel *leader,
+> > int cpu_map_idx, int thread)
+> > >  {
+> > >  	struct perf_stat_evsel *ps = leader->stats;
+> > >  	u64 read_format = leader->core.attr.read_format;
+> > > -	int size = perf_evsel__read_size(&leader->core);
+> > > +	int size = evsel__group_read_size(leader);
+> > >  	u64 *data = ps->group_data;
+> > >
+> > >  	if (!(read_format & PERF_FORMAT_ID))
+> > > @@ -2186,6 +2240,9 @@ static int evsel__open_cpu(struct evsel *evsel,
+> > struct perf_cpu_map *cpus,
+> > >  		return 0;
+> > >  	}
+> > >
+> > > +	if (evsel__is_retire_lat(evsel))
+> > > +		return tpebs_start(evsel->evlist, cpus);
+> > 
+> > As it works with evlist, I think it's better to put this code there.
+> > But it seems perf stat doesn't call the evlist API for open, then we
+> > can add this to somewhere in __run_perf_stat() directly.
+> > 
+> > > +
+> > >  	err = __evsel__prepare_open(evsel, cpus, threads);
+> > >  	if (err)
+> > >  		return err;
+> > > @@ -2376,6 +2433,8 @@ int evsel__open(struct evsel *evsel, struct
+> > perf_cpu_map *cpus,
+> > >
+> > >  void evsel__close(struct evsel *evsel)
+> > >  {
+> > > +	if (evsel__is_retire_lat(evsel))
+> > > +		tpebs_delete();
+> > 
+> > Ditto.
+> 
+> Hi Namhyung,
+> 
+> I hope both this and the one above on open could stay in evsel level because
+> these are operations on retire_latency evsel.
 
-On 6/4/2024 9:40 AM, Ravi Bangoria wrote:
->> On 6/4/2024 9:16 AM, Ravi Bangoria wrote:
->>>>>>> Events can be deleted and the entry can be NULL.
->>>>>> Can you please also explain "how".
->>>>> It looks like x86_pmu_stop() is clearing the bit in active_mask and setting the events entry to NULL (and doing it in the correct order) for the same events index that amd_pmu_enable_all() is trying to enable.
->>>>>>> Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
->>>>>>> This appears to be an AMD only issue.
->>>>>>>
->>>>>>> Syzkaller reported a GPF in amd_pmu_enable_all.
->>>>>> Can you please provide a bug report link? Also, any reproducer?
->>>>> The Syzkaller reproducer can be found in this link:
->>>>> https://lore.kernel.org/netdev/CAMt6jhyec7-TSFpr3F+_ikjpu39WV3jnCBBGwpzpBrPx55w20g@mail.gmail.com/T/#u
->>>>>>> @@ -760,7 +760,8 @@ static void amd_pmu_enable_all(int added)
->>>>>>>             if (!test_bit(idx, cpuc->active_mask))
->>>>>>>                 continue;
->>>>>>>     -        amd_pmu_enable_event(cpuc->events[idx]);
->>>>>>> +        if (cpuc->events[idx])
->>>>>>> +            amd_pmu_enable_event(cpuc->events[idx]);
->>>>>> What if cpuc->events[idx] becomes NULL after if (cpuc->events[idx]) but
->>>>>> before amd_pmu_enable_event(cpuc->events[idx])?
->>>>> Good question, but the crash has not reproduced with the proposed fix in hours of testing. It usually reproduces within minutes without the fix.
->>>> Also, a similar fix is done in __intel_pmu_enable_all() in arch/x86/events/intel/core.c except that a WARN_ON_ONCE is done as well.
->>>> See: https://elixir.bootlin.com/linux/v6.10-rc1/source/arch/x86/events/intel/core.c#L2256
->>> There are subtle differences between Intel and AMD pmu implementation.
->>> __intel_pmu_enable_all() enables all event with single WRMSR whereas
->>> amd_pmu_enable_all() loops over each PMC and enables it individually.
->>>
->>> The WARN_ON_ONCE() is important because it will warn about potential
->>> sw bug somewhere else.
->> We could add a similar WARN_ON_ONCE() to the proposed patch.
-> Sure, that would help in future. But for current splat, can you please
-> try to rootcause the underlying race condition?
+Then I think you need to remove the specific evsel not the all tpebs
+events.
 
-Were you able to reproduce the crash on the AMD machine?
+> At the same time, a lot of the 
+> previous several versions of work was to move TPEBS code out from perf stat to 
+> evsel to make it more generic. I think move these back to __run_perf_stat() are 
+> opposite to that goal. 
+
+Oh, I meant you can have the logic in utils/intel-tpebs.c but add a call
+to tpebs_delete() in __run_perf_stat().  I think it'd better to keep it
+in evlist__close() but we don't use evlist__open() for perf stat so it's
+not symmetric. :(
+
+Anyway, all I want to say is that tpebs APIs work on evlist level.  So I
+think it's natural that they are called for the whole list, not for an
+event/evsel.
+
+> 
+> 
+> > 
+> > >  	perf_evsel__close(&evsel->core);
+> > >  	perf_evsel__free_id(&evsel->core);
+> > >  }
+> > > @@ -3341,6 +3400,9 @@ static int store_evsel_ids(struct evsel *evsel,
+> > struct evlist *evlist)
+> > >  {
+> > >  	int cpu_map_idx, thread;
+> > >
+> > > +	if (evsel__is_retire_lat(evsel))
+> > > +		return 0;
+> > > +
+> > >  	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd);
+> > cpu_map_idx++) {
+> > >  		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
+> > >  		     thread++) {
+> > > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> > > new file mode 100644
+> > > index 000000000000..37b7a4f92dd9
+> > > --- /dev/null
+> > > +++ b/tools/perf/util/intel-tpebs.c
+> > > @@ -0,0 +1,397 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * intel_tpebs.c: Intel TPEBS support
+> > > + */
+> > > +
+> > > +
+> > > +#include <sys/param.h>
+> > > +#include <subcmd/run-command.h>
+> > > +#include <thread.h>
+> > > +#include "intel-tpebs.h"
+> > > +#include <linux/list.h>
+> > > +#include <linux/zalloc.h>
+> > > +#include <linux/err.h>
+> > > +#include "sample.h"
+> > > +#include "debug.h"
+> > > +#include "evlist.h"
+> > > +#include "evsel.h"
+> > > +#include "session.h"
+> > > +#include "tool.h"
+> > > +#include "cpumap.h"
+> > > +#include "metricgroup.h"
+> > > +#include <sys/stat.h>
+> > > +#include <sys/file.h>
+> > > +#include <poll.h>
+> > > +#include <math.h>
+> > > +
+> > > +#define PERF_DATA		"-"
+> > > +
+> > > +bool tpebs_recording;
+> > > +static pid_t tpebs_pid = -1;
+> > > +static size_t tpebs_event_size;
+> > > +static pthread_t tpebs_reader_thread;
+> > > +static struct child_process *tpebs_cmd;
+> > > +static struct list_head tpebs_results = LIST_HEAD_INIT(tpebs_results);
+> > 
+> > It can be 'static LIST_HEAD(tpebs_results);'
+> > 
+> > > +
+> > > +struct tpebs_retire_lat {
+> > > +	struct list_head nd;
+> > > +	/* Event name */
+> > > +	const char *name;
+> > > +	/* Event name with the TPEBS modifier R */
+> > > +	const char *tpebs_name;
+> > > +	/* Count of retire_latency values found in sample data */
+> > > +	size_t count;
+> > > +	/* Sum of all the retire_latency values in sample data */
+> > > +	int sum;
+> > > +	/* Average of retire_latency, val = sum / count */
+> > > +	double val;
+> > > +};
+> > > +
+> > > +static int get_perf_record_args(const char **record_argv, char buf[],
+> > > +				const char *cpumap_buf)
+> > > +{
+> > > +	struct tpebs_retire_lat *e;
+> > > +	int i = 0;
+> > > +
+> > > +	pr_debug("Prepare perf record for retire_latency\n");
+> > > +
+> > > +	record_argv[i++] = "perf";
+> > > +	record_argv[i++] = "record";
+> > > +	record_argv[i++] = "-W";
+> > > +	record_argv[i++] = "--synth=no";
+> > > +	record_argv[i++] = buf;
+> > > +
+> > > +	if (cpumap_buf) {
+> > > +		record_argv[i++] = "-C";
+> > > +		record_argv[i++] = cpumap_buf;
+> > > +	}
+> > > +
+> > > +	record_argv[i++] = "-a";
+> > > +
+> > > +	if (!cpumap_buf) {
+> > > +		pr_err("Require cpumap list to run sampling.\n");
+> > > +		return -ECANCELED;
+> > > +	}
+> > 
+> > Hmm.. I thought you supported system wide collection, not sure if it has
+> > a cpumap.  Anyway this check makes the earlier one meaningless - you
+> > need the cpumap always, right?
+> 
+> TPEBS should be work with "-a" or "-C". I'm not sure what the cpumap would be 
+> for "-a". Would it make sense to add "-a" only when cpumap_buf is NULL?
+
+I think the best way is to check target__has_cpu().
+
+> 
+> > 
+> > > +
+> > > +	list_for_each_entry(e, &tpebs_results, nd) {
+> > > +		record_argv[i++] = "-e";
+> > > +		record_argv[i++] = e->name;
+> > > +	}
+> > > +
+> > > +	record_argv[i++] = "-o";
+> > > +	record_argv[i++] = PERF_DATA;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int prepare_run_command(const char **argv)
+> > > +{
+> > > +	tpebs_cmd = zalloc(sizeof(struct child_process));
+> > > +	if (!tpebs_cmd)
+> > > +		return -ENOMEM;
+> > > +	tpebs_cmd->argv = argv;
+> > > +	tpebs_cmd->out = -1;
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int start_perf_record(int control_fd[], int ack_fd[],
+> > > +				const char *cpumap_buf)
+> > > +{
+> > > +	const char **record_argv;
+> > > +	int ret;
+> > > +	char buf[32];
+> > > +
+> > > +	scnprintf(buf, sizeof(buf), "--control=fd:%d,%d", control_fd[0],
+> > ack_fd[1]);
+> > > +
+> > > +	record_argv = calloc(12 + 2 * tpebs_event_size, sizeof(char *));
+> > > +	if (!record_argv)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ret = get_perf_record_args(record_argv, buf, cpumap_buf);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +
+> > > +	ret = prepare_run_command(record_argv);
+> > > +	if (ret)
+> > > +		goto out;
+> > > +	ret = start_command(tpebs_cmd);
+> > > +out:
+> > > +	free(record_argv);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int process_sample_event(struct perf_tool *tool __maybe_unused,
+> > > +				union perf_event *event __maybe_unused,
+> > > +				struct perf_sample *sample,
+> > > +				struct evsel *evsel,
+> > > +				struct machine *machine __maybe_unused)
+> > > +{
+> > > +	int ret = 0;
+> > > +	const char *evname;
+> > > +	struct tpebs_retire_lat *t;
+> > > +
+> > > +	evname = evsel__name(evsel);
+> > > +
+> > > +	/*
+> > > +	 * Need to handle per core results? We are assuming average retire
+> > > +	 * latency value will be used. Save the number of samples and the sum
+> > of
+> > > +	 * retire latency value for each event.
+> > > +	 */
+> > > +	list_for_each_entry(t, &tpebs_results, nd) {
+> > > +		if (!strcmp(evname, t->name)) {
+> > > +			t->count += 1;
+> > > +			t->sum += sample->retire_lat;
+> > > +			t->val = (double) t->sum / t->count;
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int process_feature_event(struct perf_session *session,
+> > > +				 union perf_event *event)
+> > > +{
+> > > +	if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> > > +		return perf_event__process_feature(session, event);
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void *__sample_reader(void *arg)
+> > > +{
+> > > +	struct child_process *child = arg;
+> > > +	struct perf_session *session;
+> > > +	struct perf_data data = {
+> > > +		.mode = PERF_DATA_MODE_READ,
+> > > +		.path = PERF_DATA,
+> > > +		.file.fd = child->out,
+> > > +	};
+> > > +	struct perf_tool tool = {
+> > > +		.sample = process_sample_event,
+> > > +		.feature = process_feature_event,
+> > > +		.attr = perf_event__process_attr,
+> > > +	};
+> > > +
+> > > +	session = perf_session__new(&data, &tool);
+> > > +	if (IS_ERR(session))
+> > > +		return NULL;
+> > > +	perf_session__process_events(session);
+> > > +	perf_session__delete(session);
+> > > +
+> > > +	return NULL;
+> > > +}
+> > > +
+> > > +int tpebs_start(struct evlist *evsel_list, struct perf_cpu_map *cpus)
+> > > +{
+> > > +	int ret = 0;
+> > > +	struct evsel *evsel;
+> > > +	char cpumap_buf[50];
+> > > +
+> > > +	/*
+> > > +	 * We should only run tpebs_start when tpebs_recording is enabled.
+> > > +	 * And we should only run it once with all the required events.
+> > > +	 */
+> > > +	if (tpebs_pid != -1 || !tpebs_recording)
+> > > +		return 0;
+> > > +
+> > > +	cpu_map__snprint(cpus, cpumap_buf, sizeof(cpumap_buf));
+> > > +	pr_debug("cpu map: %s\n", cpumap_buf);
+> > 
+> > Can you please remove unnecessary debug prints?  If you really want it,
+> > then make it more meaningful like with more context.
+> > 
+> > > +
+> > > +	/*
+> > > +	 * Prepare perf record for sampling event retire_latency before fork
+> > and
+> > > +	 * prepare workload
+> > > +	 */
+> > > +	evlist__for_each_entry(evsel_list, evsel) {
+> > > +		struct tpebs_retire_lat *new = zalloc(sizeof(*new));
+> > > +		char *name;
+> > > +		int i;
+> > > +
+> > > +		if (!evsel->retire_lat)
+> > > +			continue;
+> > 
+> > Please move the allocation after this.
+> > 
+> > > +
+> > > +		pr_debug("perf stat retire latency of event %s required\n",
+> > evsel->name);
+> > > +		if (!new) {
+> > > +			ret = -1;
+> > > +			goto err;
+> > > +		}
+> > > +		for (i = strlen(evsel->name) - 1; i > 0; i--) {
+> > > +			if (evsel->name[i] == 'R')
+> > > +				break;
+> > 
+> > I think you also need to check ':' or '/'..
+> 
+> I think the ':' and '/' have already been checked by the evsel parser to make 
+> this evsel a retire_latency evsel. Do we need to check them again here?
+
+Ok, it's fine if it's checked already.  Then I thought you could just
+use strrchr() but it seems you want the index of 'R' to modify the
+copied string.
+
+> 
+> > 
+> > > +		}
+> > > +		if (i <= 0 || evsel->name[i] != 'R') {
+> > > +			ret = -1;
+> > > +			goto err;
+> > > +		}
+> > > +
+> > > +		name = strdup(evsel->name);
+> > > +		if (!name) {
+> > > +			ret = -ENOMEM;
+> > > +			goto err;
+> > > +		}
+> > > +		name[i] = 'p';
+> > > +		new->name = name;
+> > > +		new->tpebs_name = strdup(evsel->name);
+
+Is this just to find the original evsel later?  Then I think you can
+compare the pointer directly instead of name.
+
+
+> > > +		if (!new->tpebs_name) {
+> > > +			ret = -ENOMEM;
+> > > +			goto err;
+> > 
+> > This error handling (including above) will leak 'new' because it's not
+> > linked to the list yet.
+> 
+> Yes, you are right. I will fix this. 
+> 
+> > 
+> > > +		}
+> > > +		list_add_tail(&new->nd, &tpebs_results);
+> > > +		tpebs_event_size += 1;
+> > > +	}
+> > > +
+> > > +	if (tpebs_event_size > 0) {
+> > > +		int control_fd[2], ack_fd[2], len;
+> > > +		char ack_buf[8];
+> > > +
+> > > +		/*Create control and ack fd for --control*/
+> > > +		if (pipe(control_fd) < 0) {
+> > > +			pr_err("Failed to create control fifo");
+> > > +			ret = -1;
+> > > +			goto out;
+> > > +		}
+> > > +		if (pipe(ack_fd) < 0) {
+> > > +			pr_err("Failed to create control fifo");
+> > > +			ret = -1;
+> > > +			goto out;
+> > > +		}
+> > > +
+> > > +		ret = start_perf_record(control_fd, ack_fd, cpumap_buf);
+> > > +		if (ret)
+> > > +			goto out;
+> > > +		tpebs_pid = tpebs_cmd->pid;
+> > > +		if (pthread_create(&tpebs_reader_thread, NULL,
+> > __sample_reader, tpebs_cmd)) {
+> > > +			kill(tpebs_cmd->pid, SIGTERM);
+> > > +			close(tpebs_cmd->out);
+> > > +			pr_err("Could not create thread to process sample
+> > data.\n");
+> > > +			ret = -1;
+> > > +			goto out;
+> > > +		}
+> > > +		/* Wait for perf record initialization.*/
+> > > +		len = strlen("enable");
+> > > +		ret = write(control_fd[1], "enable", len);
+> > > +		if (ret != len) {
+> > > +			pr_err("perf record control write control message
+> > failed\n");
+> > > +			goto out;
+> > > +		}
+> > > +
+> > > +		ret = read(ack_fd[0], ack_buf, sizeof(ack_buf));
+> > > +		if (ret > 0)
+> > > +			ret = strcmp(ack_buf, "ack\n");
+> > > +		else {
+> > > +			pr_err("perf record control ack failed\n");
+> > > +			goto out;
+> > > +		}
+> > > +		pr_debug("Received ack from perf record\n");
+> > > +out:
+> > > +		close(control_fd[0]);
+> > > +		close(control_fd[1]);
+> > > +		close(ack_fd[0]);
+> > > +		close(ack_fd[1]);
+> > > +	}
+> > > +err:
+> > > +	if (ret)
+> > > +		tpebs_delete();
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +int tpebs_stop(void)
+> > > +{
+> > > +	int ret = 0;
+> > > +
+> > > +	/* Like tpebs_start, we should only run tpebs_end once. */
+> > > +	if (tpebs_pid != -1) {
+> > > +		kill(tpebs_cmd->pid, SIGTERM);
+> > > +		tpebs_pid = -1;
+> > > +		pthread_join(tpebs_reader_thread, NULL);
+> > > +		close(tpebs_cmd->out);
+> > > +		ret = finish_command(tpebs_cmd);
+> > > +		if (ret == -ERR_RUN_COMMAND_WAITPID_SIGNAL)
+> > > +			ret = 0;
+> > > +	}
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
+> > > +{
+> > > +	struct perf_counts_values *count;
+> > > +	struct tpebs_retire_lat *t;
+> > > +	bool found = false;
+> > > +	__u64 val;
+> > > +	int ret;
+> > > +
+> > > +	/* Non reitre_latency evsel should never enter this function. */
+> > > +	if (!evsel__is_retire_lat(evsel))
+> > > +		return -1;
+> > > +
+> > > +	ret = tpebs_stop();
+> > 
+> > I think it's better to call this in the upper layer.
+> 
+> The tpebs_stop() is also called in sig_atexit() in perf stat. I want to make this function 
+> safe to be called multiple times and add one tpebs_stop() here in case tpebs_set_evsel()
+> is invoked before tpebs_stop(). I hope this makes sense.
+
+I guess it's ok to call tpebs_set_evsel() even if it's not stopped.  It
+seems you use tpebs_retire_lat->val only and it's an average so it won't
+change much if you read either before or after concurrent changes.
+
+It can be useful to the interval mode if you keep the tpebs background
+process after read. 
 
 Thanks,
-George
-> Thanks,
-> Ravi
+Namhyung
 
+> 
+> > 
+> > 
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	count = perf_counts(evsel->counts, cpu_map_idx, thread);
+> > > +
+> > > +	list_for_each_entry(t, &tpebs_results, nd) {
+> > > +		if (!strcmp(t->tpebs_name, evsel->name) || !strcmp(t-
+> > >tpebs_name, evsel->metric_id)) {
+> > > +			found = true;
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/* Set ena and run to non-zero */
+> > > +	count->ena = count->run = 1;
+> > > +	count->lost = 0;
+> > > +
+> > > +	if (!found) {
+> > > +		/*
+> > > +		 * Set default value or 0 when retire_latency for this event is
+> > > +		 * not found from sampling data (enable_tpebs_recording not
+> > set
+> > > +		 * or 0 sample recorded).
+> > > +		 */
+> > > +		val = 0;
+> > 
+> > Shouldn't it set count->val to 0?
+> 
+> Yes, I will fix this one.
+> 
+> Thanks,
+> Weilin
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > 
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * Only set retire_latency value to the first CPU and thread.
+> > > +	 */
+> > > +	if (cpu_map_idx == 0 && thread == 0)
+> > > +		val = rint(t->val);
+> > > +	else
+> > > +		val = 0;
+> > > +
+> > > +	count->val = val;
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+> > > +{
+> > > +	zfree(&r->name);
+> > > +	zfree(&r->tpebs_name);
+> > > +	free(r);
+> > > +}
+> > > +
+> > > +void tpebs_delete(void)
+> > > +{
+> > > +	struct tpebs_retire_lat *r, *rtmp;
+> > > +
+> > > +	list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
+> > > +		list_del_init(&r->nd);
+> > > +		tpebs_retire_lat__delete(r);
+> > > +	}
+> > > +
+> > > +	if (tpebs_cmd) {
+> > > +		free(tpebs_cmd);
+> > > +		tpebs_cmd = NULL;
+> > > +	}
+> > > +}
+> > > +
+> > > +int tpebs_stop_delete(void)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (tpebs_pid == -1)
+> > > +		return 0;
+> > > +
+> > > +	ret = tpebs_stop();
+> > > +	tpebs_delete();
+> > > +	return ret;
+> > > +}
+> > > diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+> > > new file mode 100644
+> > > index 000000000000..73c1e5219522
+> > > --- /dev/null
+> > > +++ b/tools/perf/util/intel-tpebs.h
+> > > @@ -0,0 +1,48 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/*
+> > > + * intel_tpebs.h: Intel TEPBS support
+> > > + */
+> > > +#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
+> > > +#define INCLUDE__PERF_INTEL_TPEBS_H__
+> > > +
+> > > +#include "stat.h"
+> > > +#include "evsel.h"
+> > > +
+> > > +#ifdef HAVE_ARCH_X86_64_SUPPORT
+> > > +
+> > > +extern bool tpebs_recording;
+> > > +int tpebs_start(struct evlist *evsel_list, struct perf_cpu_map *cpus);
+> > > +int tpebs_stop(void);
+> > > +void tpebs_delete(void);
+> > > +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+> > > +int tpebs_stop_delete(void);
+> > > +
+> > > +#else
+> > > +
+> > > +static inline int tpebs_start(struct evlist *evsel_list __maybe_unused,
+> > > +				struct perf_cpu_map *cpus
+> > __maybe_unused)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static inline int tpebs_stop(void)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static inline void tpebs_delete(void) {};
+> > > +
+> > > +static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
+> > > +				int cpu_map_idx  __maybe_unused,
+> > > +				int thread  __maybe_unused)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static inline int tpebs_stop_delete(void)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +#endif
+> > > +#endif
+> > > --
+> > > 2.43.0
+> > >
