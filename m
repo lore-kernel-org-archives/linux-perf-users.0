@@ -1,132 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E29033EE;
-	Fri,  7 Jun 2024 20:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA214EC4F;
+	Fri,  7 Jun 2024 20:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717790753; cv=none; b=SQVD6/o/tvc9xR8HrfPQQ3/o4Lbv010TOM5/8hxwzTtcjzCkMp4Zjps0KPEaeQRxadvDtFanFAqDAv82G/0D+PlfRSURlbEUqsuu5yiZ5TecbyXpYp1iuFiWFGp44V5uVPmpSAIcn8UHvAdw34dFnkEhuln76EqrbJ5qCAV/scU=
+	t=1717792160; cv=none; b=k0ndH9Q5syS4MBVTN/qssNzBKzHiw//PE7fBonbQAAXYaG3xRZZ9Q3mqJKv8SxsYbFT3jRx3762aS25IGQhvzv3DS9XCoRy9Ic6zrLWJM5UkZFSh+UxqUPw2lqdcKsIaBe9ZPi/aagakLZiC8/+hXwuZ9bJgxAaDD4q8+Dwxq+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717790753; c=relaxed/simple;
-	bh=HYe1s44uoKtDjU2ht8FvQtcve8B+M4pKuiV3mHZO+dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0hfE2vdqKRzyc5stUNg5I+iNY8zEQT/O2ldFtiXAxvqM2ObKp0VXYjvOoNLwN6A5TTQQjWIzcu0rPsc+Il6NjKFa4RUJhiN8ZDkZXeXy9ojexHTUZWee7Bk9u2Q/KSQSfqikZtt0P1MRiE7xQe/SejQM/XgyqlZ9BGH+w3+FGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdTI4eBi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717792160; c=relaxed/simple;
+	bh=ROVFhE9e2h9zg6NaTFLlUVIUVyZWJX/ywoBMGJGZp9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l5Wg/i0XR4pIJcndjvoGyx6wYBefVGdw5xjNQ3Gi+cbis/MvNTLxtN9i7JbGG5+EdGfvGo6XHs7J+H/xPYaK6LxCRn77i8crXaBHGqo0iSkPnQPXA5NgFQytgQ7mIApty3nfTx/mb7gyG7I4frM3CaTixb0UzTUB3W3eaBfORBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwYJYGw5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdTI4eBi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881F1C2BBFC;
-	Fri,  7 Jun 2024 20:05:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwYJYGw5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5958DC2BBFC;
+	Fri,  7 Jun 2024 20:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717790752;
-	bh=HYe1s44uoKtDjU2ht8FvQtcve8B+M4pKuiV3mHZO+dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CdTI4eBi5NppaDAceI9lRHsdRe9lyWjV8NlepVU5OqQAJSSdB3cRH4UuovZC0IEwJ
-	 hDJgmo+BlAXjZNdk+ntPE722bvcGYpWwpBiz4iWIja4F72sNeBv0zB/cxGkM/v9k1q
-	 ujH0bLTs3CDT5Nf15u2GkBzHTv8Z03P1c9t2GvRkQyAQOBxzOsMxV5AONA9gvYHChF
-	 /+oR8kYjgtBdZSGdhWuHLBnlJjpX8nWSmmGuyXgbSWu3sG2R03C2TqZCNArfjgCnB2
-	 017lSfFU5POLdTrvYUb8KTAE7U7Gc7qOI352otd+kpKIVFdgl7VMcBQH4laZoG9jm1
-	 2OjAIM04Ts3Mw==
-Date: Fri, 7 Jun 2024 13:05:51 -0700
+	s=k20201202; t=1717792159;
+	bh=ROVFhE9e2h9zg6NaTFLlUVIUVyZWJX/ywoBMGJGZp9c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OwYJYGw5Bvbr+ajOjl2yEy62cdHOedHa5C6nXI/kAMlxtbbaWZQKA6/zfo/VWxJHY
+	 VD4X0erVMZqwjSBxQssnVkswbkVszEYcxnrKdmfP1pz8iv5NoJOfwLkpuZvJGAu72z
+	 feEOeZponk2TzxzWxMTVFdA5wFt0d6lcqsbBG9ANsF59NQWlmTShtTciyilW95JzrJ
+	 H4QDjMAWX0e0uaQ5vBUgPpI1gkQ9oMVHdI7CRIXbe5jNVMmfGFGGu1eKz0LcmVT5WG
+	 +CNRtIzuR2JREigglszD939iBXtvNEV9n60toYqUX38CvipJVuFe5NsqBfaJxDM0SX
+	 dNIRzahLg+pww==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf test: Speed up test case 70 annotate basic tests
-Message-ID: <ZmNoH-RoIXwVPJt5@google.com>
-References: <20240607054352.2774936-1-tmricht@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/4] perf report: Omit dummy events in the output (v3)
+Date: Fri,  7 Jun 2024 13:29:14 -0700
+Message-ID: <20240607202918.2357459-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240607054352.2774936-1-tmricht@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 07, 2024 at 07:43:52AM +0200, Thomas Richter wrote:
-> On some s390 linux machine (mostly older models) and with debug
-> packages installed, the test case 'perf annotate basic tests' runs
-> for some longer time.
-> Speed up the test and save the output of command perf annotate
-> in a temporary file. This is used to perform pattern matching via
-> grep command. This saves on invocation of perf annotate which
-> runs for some time.
-> 
-> Output before:
->  # time bash -x tests/shell/annotate.sh >/dev/null 2>&1; echo EXIT CODE $?
-> 
->  real   4m35.543s
->  user   3m19.442s
->  sys    1m14.322s
->  EXIT CODE 0
->  #
-> Output after:
->  # time bash -x tests/shell/annotate.sh >/dev/null 2>&1; echo EXIT CODE $?
-> 
->  real   2m2.881s
->  user   1m30.980s
->  sys    0m30.684s
->  EXIT CODE 0
->  #
 
-Oh.. it takes too long.  I think we should limit the output from
-perf annotate in some way.  Anyway, the patch looks ok.
+Hello,
 
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+This work is to make the output compact by removing dummy events in
+the output.  The dummy events are used to save side-band information
+like task creation or memory address space change using mmap(2).  But
+after collecting these, it's not used because it won't have any
+samples.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+ v2 changes)
+ * just hide the (dummy) event instead of removing it from evlist
+
+ v3 changes)
+ * rename to struct hpp_fmt_value  (Arnaldo)
+ * add Tested-by from Arnaldo
+ 
+Sometimes users want to run perf report --group to show all recorded
+events together but they are not interested in those dummy events.
+This just wastes the precious screen space so we want to get rid of
+them in the output.
+
+perf report already has --skip-empty option to skip 0 result in the
+stat output.  I think we can extend it to skip empty events that have
+no samples.
+
+Example output:
+
+  $ sudo perf mem record -a sleep 1
+  $ sudo perf report --group
+
+Before)
+  #
+  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u'
+  # Event count (approx.): 3089861
+  #
+  #                 Overhead  Command      Shared Object      Symbol                               
+  # ........................  ...........  .................  .....................................
+  #
+       9.29%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
+       5.26%   0.15%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
+       4.15%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
+       3.87%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
+       3.79%   0.17%   0.00%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
+       3.63%   0.00%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
+       2.86%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
+       2.78%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
+       2.34%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
+       2.32%   0.97%   0.00%  swapper      [kernel.kallsyms]  [k] psi_group_change
+
+After)
+  #
+  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
+  # Event count (approx.): 3089861
+  #
+  #         Overhead  Command      Shared Object      Symbol                               
+  # ................  ...........  .................  .....................................
+  #
+       9.29%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
+       5.26%   0.15%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
+       4.15%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
+       3.87%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
+       3.79%   0.17%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
+       3.63%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
+       2.86%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
+       2.78%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
+       2.34%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
+       2.32%   0.97%  swapper      [kernel.kallsyms]  [k] psi_group_change
+
+Now 'Overhead' column only has two values for mem-loads and mem-stores.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/tests/shell/annotate.sh | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
-> index 1db1e8113d99..b072d9b97387 100755
-> --- a/tools/perf/tests/shell/annotate.sh
-> +++ b/tools/perf/tests/shell/annotate.sh
-> @@ -15,12 +15,13 @@ skip_test_missing_symbol ${testsym}
->  
->  err=0
->  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
->  testprog="perf test -w noploop"
->  # disassembly format: "percent : offset: instruction (operands ...)"
->  disasm_regex="[0-9]*\.[0-9]* *: *\w*: *\w*"
->  
->  cleanup() {
-> -  rm -rf "${perfdata}"
-> +  rm -rf "${perfdata}" "${perfout}"
->    rm -rf "${perfdata}".old
->  
->    trap - EXIT TERM INT
-> @@ -41,8 +42,11 @@ test_basic() {
->      return
->    fi
->  
-> +  # Generate the annotated output file
-> +  perf annotate -i "${perfdata}" --stdio 2> /dev/null > "${perfout}"
-> +
->    # check if it has the target symbol
-> -  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${testsym}"
-> +  if ! grep "${testsym}" "${perfout}"
->    then
->      echo "Basic annotate [Failed: missing target symbol]"
->      err=1
-> @@ -50,7 +54,7 @@ test_basic() {
->    fi
->  
->    # check if it has the disassembly lines
-> -  if ! perf annotate -i "${perfdata}" 2> /dev/null | grep "${disasm_regex}"
-> +  if ! grep "${disasm_regex}" "${perfout}"
->    then
->      echo "Basic annotate [Failed: missing disasm output from default disassembler]"
->      err=1
-> -- 
-> 2.45.1
-> 
+
+Namhyung Kim (4):
+  perf hist: Factor out __hpp__fmt_print()
+  perf hist: Simplify __hpp_fmt() using hpp_fmt_data
+  perf hist: Add symbol_conf.skip_empty
+  perf hist: Honor symbol_conf.skip_empty
+
+ tools/perf/builtin-annotate.c  |   4 +-
+ tools/perf/builtin-report.c    |  12 +--
+ tools/perf/ui/hist.c           | 144 ++++++++++++++++-----------------
+ tools/perf/ui/stdio/hist.c     |   5 +-
+ tools/perf/util/events_stats.h |   3 +-
+ tools/perf/util/evsel.c        |  13 ++-
+ tools/perf/util/hist.c         |   6 +-
+ tools/perf/util/hist.h         |   3 +-
+ tools/perf/util/python.c       |   3 +
+ tools/perf/util/session.c      |   5 +-
+ tools/perf/util/session.h      |   3 +-
+ tools/perf/util/symbol_conf.h  |   3 +-
+ 12 files changed, 105 insertions(+), 99 deletions(-)
+
+-- 
+2.45.2.505.gda0bf45e8d-goog
+
