@@ -1,302 +1,208 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0C315443A
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Jun 2024 07:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC355153BF6;
+	Fri,  7 Jun 2024 07:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717743899; cv=none; b=SKRmKTwn3YP0xdWkSSNq0ExuoybbOqSAvz8AKnEW6vxFyswN0qsGoC+Kwd3EPPWzTLnWeD3biqICoL+FvdlPYCjgwgZohJ+NpV7EjGnnYQDCYGYcKX3g1q+iHIVAqtygY9CLDktAAyVYGjL66AvV5VQRzBgzKD01qiol03r2cjY=
+	t=1717744953; cv=none; b=ABJITls0Jz8ir24IPnGFXLWXjcVadHuAHpjnBQjfGGCQ1TZKgGB6yX1MZEktXMVsmfGys/0BnPHQyhEakp6ZykSCg6e8NjN0tgFP6cpiF3AHQ6+GhQfQUyASQKkn3QLP2BfwCuXaGnLkunTaAe5d1FsI0g+vbniyV3ALzX/g6/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717743899; c=relaxed/simple;
-	bh=ExmAffy92q5lCCHYU0DLDrpNvN/NVU0TVxBDQKH6ckc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jodlCUeRneZuRJIxcp2633LwthkYXMvcXCNWa5YfskRFHRWxTqibzKkb4oOVQGMRMnuk5QQY21wulWWCkZggFQvrhvWrOBvcETNE065EJAxXdNJj9mmYEjo8BE4g2xT+J3Czm3qxE9A+Dat6vnaEhAokPo06HTdsesKovn18etE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XeeHNDyO; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717744953; c=relaxed/simple;
+	bh=8FgdtkmI6xFEuhnErHtI49QG7efrDkPTcNTO2g4FoXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JFgIN53B/V1bYvY/sVDBj8Lf3r/Rgq42PI6y28aD3fM3dWT+6lghULbgfXW3ttSHQyLmX/FfGlAHnuZYkwaPcN1BbWCH2G8i3gEz1yHIJqI/dfA7bp321TfEoJ/LOvAWJyTBZcfLmgZ32pNyrL2DFApGZ2r2OX+4tdiF+tcr6Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R7RHFVQ7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XeeHNDyO"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ee5f3123d8so80565ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jun 2024 00:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717743897; x=1718348697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U2U6k0mvjnJXDsBrJv6XiaCwi3+ss8Cn/7fpH/m1zTA=;
-        b=XeeHNDyO5w0lfCsOopbVifYt/BPiGjOjTI629uD5OIqxaLqidu30DJar0J0IA7zWMD
-         CkJ23cAVyy5uq3dsF2htA4Pkq+SaK9JmJ50SK+91n9d6lc0z2rc6nx+fs4eaTXC/Yzvx
-         +3DyeNY33ETOfEc9JDDmu9+wPWWp0r53UAEN99mnYFktCZXaxZCZRPh41pDF282SHAn1
-         lV4jvgvHQHNFX28txwN4CHW/+6/Cl7JJsqMJxxYXvgMZwYqiusUyWodvcX0JSlIvjzee
-         uHtR0aHIBEHE0IQl1IXUiQadb4zVX4Lx36bDKpFyyHmj2kPvFVI3eS+9QwUFvqwUFKzR
-         peew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717743897; x=1718348697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U2U6k0mvjnJXDsBrJv6XiaCwi3+ss8Cn/7fpH/m1zTA=;
-        b=tMyREjxn68kOyy+Dvu3jDN8oL90wgaljSDzwjgSyN6Mb7GVlZMdBV4zxeeHkKwQfcP
-         mz7KPTG0GHCdwwOlnPrV5TTPQr4xqxLqbpdP8aVysTryqdvmVe+rVDenfVhk58jgNUcU
-         0nY8r6RUiqF7rU6uC9lhJInuzNEYz6tTWdndfMLZI/uD2JtpOut2fP2W5thp3imb2IL5
-         pXG9gEF8VhupJOSqFFRgEzt6PxpS0sfNZLixNCWz6YD7hS12Y2R32LiegW9MKTLtvfWz
-         j3jGbpdiPZdWohuLsMRqb1YXLPwUC/au2TjBdxEtVpeBgTROp/V+9u30dsLvQCaww5rx
-         +3eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbPJxvjZVK+Syon4jg4PxJuvD9jxyTSnr+EZ7HTkezFfFjKPH3WNxRDLKKF9ruYlUMfxhgZ75uBspJcYj9/5QFFMMBo3Uw7Uq/6Mb/O2hQaw==
-X-Gm-Message-State: AOJu0Yy2AQkaxWBtds6M3dGOH9oYym2jZ+7X5F2bp+LaTpMXnv1nLxGR
-	cgzi+Z4+LCIRMAQjHjXnKQIFcmwWj3JYIxCAkR51r54Z+mYilZwE/wbBRS6JT+ZmAxZCpnWvI59
-	CcrnOwRuBTwRRw5VhpS0a66oefXzOntLDYu+S
-X-Google-Smtp-Source: AGHT+IHwFRbTGvbN02EoS5YOHkz3ztWTsKXuk9ylfWPnj0rt4QdZrX2TvD0Xw/jkYCsfd2sez4sm4N+OUrFQt6nQ1VU=
-X-Received: by 2002:a17:902:778f:b0:1f2:fcc3:59a with SMTP id
- d9443c01a7336-1f6bd3c65f8mr5793335ad.19.1717743896666; Fri, 07 Jun 2024
- 00:04:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R7RHFVQ7"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4576wO5u014427;
+	Fri, 7 Jun 2024 07:22:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=fFJS4yh38VY53xVb/V9wThVVeVXDCBlv8lVrbQejh/0=;
+ b=R7RHFVQ7DhZXg896d6/VmA1daPHUDRKapTYQ2I/xkISHbf3eEjicmZjAo2SB6cmkvUiG
+ RCwtsICPdrYHgdCvGBSdz2ZlEV6QfKax61OCgYwLhzWJAdkDSJH+xbv0spuV0Kvh7nC4
+ yBqglBXkmeOxtjuFjeMsnAH0pSTwVUalCmMayDP6QLNIYOpGlXBuUL11rUp8WxJBVluK
+ IvENIZOf0C+aILvpt+EzbQMtXyzDX2Q5gntODQrS/ETyD97AkGu6jmAF2g5Ne6a7JUni
+ p4vAt24F+dGoqqxqJATLahfySXmJ6sTk5mxeOMqN+T9199jOCM0aeGGzqp8asOCAqStg Ig== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ykwdb023w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:22:16 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4577MGha019157;
+	Fri, 7 Jun 2024 07:22:16 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ykwdb023s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:22:15 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4576iS0h022786;
+	Fri, 7 Jun 2024 07:22:15 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ygg6mq2um-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:22:15 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4577MB7N9962238
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 07:22:13 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 63BDD58059;
+	Fri,  7 Jun 2024 07:22:11 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 747DC58043;
+	Fri,  7 Jun 2024 07:22:02 +0000 (GMT)
+Received: from [9.43.49.13] (unknown [9.43.49.13])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jun 2024 07:22:02 +0000 (GMT)
+Message-ID: <54073c0c-62b1-433a-85cc-06e412af44bf@linux.ibm.com>
+Date: Fri, 7 Jun 2024 12:52:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603092812.46616-1-yangyicong@huawei.com> <20240603092812.46616-2-yangyicong@huawei.com>
- <CAP-5=fXNumMLL=_+qXdnQPqgLSwo7Z1BFmPww63NkX5EcDRDsQ@mail.gmail.com>
- <ZmJPtZvWr3kgx4xF@google.com> <CAP-5=fUrgdNvwL-ZDMoTdvXEJBJOc_aMtAc66tgQ34Dd5K=4+g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUrgdNvwL-ZDMoTdvXEJBJOc_aMtAc66tgQ34Dd5K=4+g@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 7 Jun 2024 00:04:44 -0700
-Message-ID: <CAP-5=fW=7dKExCfs0h=2xUPskbmOpv6v1AUngW7vWibHbS97dg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf pmu: Limit PMU cpumask to online CPUs
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Yicong Yang <yangyicong@huawei.com>, will@kernel.org, mark.rutland@arm.com, 
-	acme@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com, 
-	yangyicong@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf sched map: Add command-name option to filter the
+ output map
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        acme@redhat.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20240417152521.80340-1-vineethr@linux.ibm.com>
+ <ZmKtlQdwk5uwha06@chenyu5-mobl2>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <ZmKtlQdwk5uwha06@chenyu5-mobl2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BDHmvPaXKfg8XF2TqWwANnMnCMhxMX0g
+X-Proofpoint-ORIG-GUID: nz61hUFU2PvCFxgGYpciql2kCzpq5rqA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_02,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
+ bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406070050
 
-On Thu, Jun 6, 2024 at 5:36=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Thu, Jun 6, 2024 at 5:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> >
-> > Hello,
-> >
-> > On Mon, Jun 03, 2024 at 09:52:15AM -0700, Ian Rogers wrote:
-> > > On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei=
-.com> wrote:
-> > > >
-> > > > From: Yicong Yang <yangyicong@hisilicon.com>
-> > > >
-> > > > We'll initialize the PMU's cpumask from "cpumask" or "cpus" sysfs
-> > > > attributes if provided by the driver without checking the CPUs
-> > > > are online or not. In such case that CPUs provided by the driver
-> > > > contains the offline CPUs, we'll try to open event on the offline
-> > > > CPUs and then rejected by the kernel:
-> > > >
-> > > > [root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
-> > > > [root@localhost yang]# ./perf_static stat -e armv8_pmuv3_0/cycles/ =
---timeout 100
-> > > > Error:
-> > > > The sys_perf_event_open() syscall returned with 19 (No such device)=
- for event (cpu-clock).
-> > > > /bin/dmesg | grep -i perf may provide additional information.
-> > > >
-> > > > So it's better to do a double check in the userspace and only inclu=
-de
-> > > > the online CPUs from "cpumask" or "cpus" to avoid opening events on
-> > > > offline CPUs.
-> > >
-> > > I see where you are coming from with this but I think it is wrong. Th=
-e
-> > > cpus for an uncore PMU are a hint of the CPU to open on rather than
-> > > the set of valid CPUs. For example:
-> > > ```
-> > > $ cat /sys/devices/uncore_imc_free_running_0/cpumask
-> > > 0
-> > > $ perf stat -vv -e uncore_imc_free_running_0/data_read/ -C 1 -a sleep=
- 0.1
-> > > Using CPUID GenuineIntel-6-8D-1
-> > > Attempt to add: uncore_imc_free_running_0/data_read/
-> > > ..after resolving event: uncore_imc_free_running_0/event=3D0xff,umask=
-=3D0x20/
-> > > Control descriptor is not initialized
-> > > ------------------------------------------------------------
-> > > perf_event_attr:
-> > >   type                             24 (uncore_imc_free_running_0)
-> > >   size                             136
-> > >   config                           0x20ff (data_read)
-> > >   sample_type                      IDENTIFIER
-> > >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNN=
-ING
-> > >   disabled                         1
-> > >   inherit                          1
-> > >   exclude_guest                    1
-> > > ------------------------------------------------------------
-> > > sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8
-> > > sys_perf_event_open failed, error -22
-> > > switching off cloexec flag
-> > > ------------------------------------------------------------
-> > > perf_event_attr:
-> > >   type                             24 (uncore_imc_free_running_0)
-> > >   size                             136
-> > >   config                           0x20ff (data_read)
-> > >   sample_type                      IDENTIFIER
-> > >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNN=
-ING
-> > >   disabled                         1
-> > >   inherit                          1
-> > >   exclude_guest                    1
-> > > ------------------------------------------------------------
-> > > sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0
-> > > sys_perf_event_open failed, error -22
-> > > switching off exclude_guest, exclude_host
-> > > ------------------------------------------------------------
-> > > perf_event_attr:
-> > >   type                             24 (uncore_imc_free_running_0)
-> > >   size                             136
-> > >   config                           0x20ff (data_read)
-> > >   sample_type                      IDENTIFIER
-> > >   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNN=
-ING
-> > >   disabled                         1
-> > >   inherit                          1
-> > > ------------------------------------------------------------
-> > > sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0 =3D 3
-> > > uncore_imc_free_running_0/data_read/: 1: 4005984 102338957 102338957
-> > > uncore_imc_free_running_0/data_read/: 4005984 102338957 102338957
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >             244.51 MiB  uncore_imc_free_running_0/data_read/
-> > >
-> > >        0.102320376 seconds time elapsed
-> > > ```
-> > > So the CPU mask of the PMU says to open on CPU 0, but on the command
-> > > line when I passed "-C 1" it opened it on CPU 1. If the cpumask file
-> > > contained an offline CPU then this change would make it so the CPU ma=
-p
-> > > in the tool were empty, however, a different CPU may be programmable
-> > > and online.
-> >
-> > I think Intel uncore PMU driver ignores the CPU parameter and set it to
-> > CPU 0 in this case internally.  See uncore_pmu_event_init() at
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/arch/x86/events/intel/uncore.c#n761
->
-> Hmm.. maybe that's just the option if not set. Wrt hot plugging, on a
-> 2 socket skylake:
-> ```
-> $ cat /sys/devices/uncore_imc_0/cpumask
-> 0,18
-> $ echo 0 > /sys/devices/system/cpu/cpu18/online
-> $ cat /sys/devices/uncore_imc_0/cpumask
-> 0,19
-> ```
-> So the cpumask should be reflecting the online/offline nature of CPUs.
->
-> > >
-> > > Fwiw, the tool will determine whether the mask is for all valid or a
-> > > hint by using the notion of a PMU being "core" or not. That notion
-> > > considers whether the mask was loading from a "cpumask" or "cpus"
-> > > file:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n810
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> > > > ---
-> > > >  tools/perf/util/pmu.c | 13 +++++++++++--
-> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > > > index 888ce9912275..51e8d10ee28b 100644
-> > > > --- a/tools/perf/util/pmu.c
-> > > > +++ b/tools/perf/util/pmu.c
-> > > > @@ -771,8 +771,17 @@ static struct perf_cpu_map *pmu_cpumask(int di=
-rfd, const char *name, bool is_cor
-> > > >                         continue;
-> > > >                 cpus =3D perf_cpu_map__read(file);
-> > > >                 fclose(file);
-> > > > -               if (cpus)
-> > > > -                       return cpus;
-> > > > +               if (cpus) {
-> > > > +                       struct perf_cpu_map *intersect __maybe_unus=
-ed;
-> > > > +
-> > > > +                       if (perf_cpu_map__is_subset(cpu_map__online=
-(), cpus))
-> > > > +                               return cpus;
-> > > > +
-> > > > +                       intersect =3D perf_cpu_map__intersect(cpus,=
- cpu_map__online());
-> >
-> > So IIUC this is for core PMUs with "cpus" file, right?  I guess uncore
-> > drivers already handles "cpumask" properly..
->
-> So I think this is an ARM specific bug:
->
-> Core PMUs:
-> x86 uses /sys/devices/cpu, s390 uses cpum_cf, these lack a cpus or
-> cpumask and so we default to opening events on all online processors.
-> The fact these are core PMUs is hardcoded in the tool:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
-tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1747
-> x86 hybrid /sys/devices/cpu_(core|atom)/cpus - the set of CPUs is
-> updated to reflect online and offline
-> ARM the /sys/devices/armv8_pmuv3_0 isn't a hardcoded core PMU and so
-> we expect the cpus to contain online CPUs, but it currently also
-> erroneously contains offline ones.
->
-> Uncore PMUs:
-> x86 has /sys/devices/<uncore...>/cpumask where the cpumask reflects
-> online and offline CPUs
-> ARM has things like the dmc620 PMU, it appears to be missing cpumask
-> in certain cases leading to the perf tool treating it like the x86
-> core PMU and opening events for it on every CPU:
-> ```
-> # ls /sys/devices/arm_dmc620_10008c000/
-> events  format  perf_event_mux_interval_ms  power  subsystem  type  ueven=
-t
-> ```
->
-> I think we need a PMU test so that bugs like this can be reported, but
-> we may also need to add tool workarounds for PMUs that are broken. I
-> can imagine it will be tricky to test uncore PMUs that default to CPU0
-> as often we can't offline that.
+Hi Chen Yu,
 
-I think we should make this an ARM specific fix up like:
-https://lore.kernel.org/lkml/20240607065343.695369-1-irogers@google.com/
-The PMU needs fixing up like in the rest of the change, but as perf
-can be run on older kernels I think this workaround will remain
-necessary. The arm_cmn PMU appears to handle CPU hot plugging, the
-arm_dmc620 lacks a cpumask altogether on the test machine I can
-access. I suspect we may want a better uncore fix as we may change a
-CPU map of 1 CPU into an empty CPU map, for example, if the cpumask is
-"0" and CPU0 is offline, then "1" would be a better alternative than
-the empty CPU map. I couldn't find a PMU to test this with.
+On 07/06/24 12:19, Chen Yu wrote:
+> On 2024-04-17 at 20:55:21 +0530, Madadi Vineeth Reddy wrote:
+>> By default, perf sched map prints sched-in events for all the tasks
+>> which may not be required all the time as it prints lot of symbols
+>> and rows to the terminal.
+>>
+>> With --command-name option, one could specify the specific command
+>> for which the map has to be shown. This would help in analyzing the
+>> CPU usage patterns easier for that specific command. Since multiple
+>> PID's might have the same command name, using command-name filter
+>> would be more useful for debugging.
+>>
+>> For other tasks, instead of printing the symbol, ** is printed and
+>> the same . is used to represent idle. ** is used instead of symbol
+>> for other tasks because it helps in clear visualization of command
+>> of interest and secondly the symbol itself doesn't mean anything
+>> because the sched-in of that symbol will not be printed(first sched-in
+>> contains pid and the corresponding symbol).
+>>
+>> 6.8.0
+>> ======
+>>   *A0                   213864.670142 secs A0 => migration/0:18
+>>   *.                    213864.670148 secs .  => swapper:0
+>>    .  *B0               213864.670217 secs B0 => migration/1:21
+>>    .  *.                213864.670223 secs
+>>    .   .  *C0           213864.670247 secs C0 => migration/2:26
+>>    .   .  *.            213864.670252 secs
+>>
+>> 6.8.0 + patch (--command-name = schbench)
+>> =============
+>>    **  .   ** *A0       213864.671055 secs A0 => schbench:104834
+>>   *B0  .   .   A0       213864.671156 secs B0 => schbench:104835
+>>   *C0  .   .   A0       213864.671187 secs C0 => schbench:104836
+>>   *D0  .   .   A0       213864.671219 secs D0 => schbench:104837
+>>   *E0  .   .   A0       213864.671250 secs E0 => schbench:104838
+>>    E0  .  *D0  A0
+>>
+>> This helps in visualizing how a benchmark like schbench is spread over
+>> the available cpus while also knowing which cpus are idle(.) and which
+>> are not(**). This will be more useful as number of CPUs increase.
+>>
+>> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+>> ---
+>>  tools/perf/Documentation/perf-sched.txt |  4 ++++
+>>  tools/perf/builtin-sched.c              | 17 ++++++++++++++---
+>>  2 files changed, 18 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+>> index 5fbe42bd599b..b04a37560935 100644
+>> --- a/tools/perf/Documentation/perf-sched.txt
+>> +++ b/tools/perf/Documentation/perf-sched.txt
+>> @@ -94,6 +94,10 @@ OPTIONS for 'perf sched map'
+>>  --color-pids::
+>>  	Highlight the given pids.
+>>  
+>> +--command-name::
+>> +	Map output only for the given command name.
+>> +	(** indicates other tasks while . is idle).
+>> +
+>>  OPTIONS for 'perf sched timehist'
+>>  ---------------------------------
+>>  -k::
+>> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+>> index 0fce7d8986c0..e60836da53e5 100644
+>> --- a/tools/perf/builtin-sched.c
+>> +++ b/tools/perf/builtin-sched.c
+>> @@ -156,6 +156,7 @@ struct perf_sched_map {
+>>  	const char		*color_pids_str;
+>>  	struct perf_cpu_map	*color_cpus;
+>>  	const char		*color_cpus_str;
+>> +	const char		*command;
+>>  	struct perf_cpu_map	*cpus;
+>>  	const char		*cpus_str;
+>>  };
+>> @@ -1594,8 +1595,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  
+>>  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+>>  
+>> -	printf("  ");
+>> -
+>>  	new_shortname = 0;
+>>  	if (!tr->shortname[0]) {
+>>  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+>> @@ -1605,7 +1604,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  			 */
+>>  			tr->shortname[0] = '.';
+>>  			tr->shortname[1] = ' ';
+>> -		} else {
+>> +		} else if (!sched->map.command || !strcmp(thread__comm_str(sched_in),
+>> +								sched->map.command)) {
+>>
+> 
+> I've tested on my machine and it looks good. One minor question, can we do
+> fuzzy name matching? Say, there are many tasks 'a-taskname-b',
+> and we can filter them via
+> perf sched map --command-name=taskname
 
-Thanks,
-Ian
+Yes, maybe I will try to find a way to do both fuzzy name matching and exact name matching.
+Thanks for taking a look. I will implement it in v2.
 
-> Thanks,
-> Ian
->
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > > > +                       perf_cpu_map__put(cpus);
-> > > > +                       if (intersect)
-> > > > +                               return intersect;
-> > > > +               }
-> > > >         }
-> > > >
-> > > >         /* Nothing found, for core PMUs assume this means all CPUs.=
- */
-> > > > --
-> > > > 2.24.0
-> > > >
+Thanks and Regards
+Madadi Vineeth Reddy
+
+> 
+> thanks,
+> Chenyu
+
