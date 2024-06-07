@@ -1,207 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAA21552EF;
-	Fri,  7 Jun 2024 20:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B026819;
+	Fri,  7 Jun 2024 20:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717792162; cv=none; b=A3D7mIjjpzBX785rYPBZslvvtWSGdpZEwNkY4REZVmsoxDyQyFUZx51wYhJ+bwLPLMpUfSp7kfBQr5ylhxYdZyp2qYChAOoYCTvPJC+zLLtNuBMjJ9t8FI6kmgwhnWNhoCgWuVwNZSC++J20nHUwJFNEAJArPMBlxT0HEQLO1Wo=
+	t=1717792323; cv=none; b=KnsleeFEiVjW72vZHRFg3V2yiLkkpkSL4AAEP8PsB8FwC4zqSMtgDwKix7z8D/MCDcYa3jY1OjpdpYCj05yhpVH+pFsRBr16opqjdruiuK7saeL/4TkFui7BHUiexnN8DHOVG/xONoLsb7pRxgLQ2MptquHvUVytIX4/EXFcjM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717792162; c=relaxed/simple;
-	bh=Bdv1T3V+QVoamQb/wjWYwDu3U6qdpHhyUU9S4KSBk3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TDf61lMMVPsDBIHRuXBE+KC9g4uedh+76QV+2ndnJqzKdnG1Q458ooxMc7E07/nlRUtYbvlzLEU81HBYqfzFscEKA+m8K6Sg0HCx1KrZXqvHr82egLTlj0Qm8BrvX5hnoo3clXw0px1I30RpiSddtTQLOy9EfZQRHrcrPMbj3OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ky9ue0y+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717792323; c=relaxed/simple;
+	bh=X4B1La1z1pxjkZPYe8MXZt4HnbUKOeGUnGDR7svXFnY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZdONmihoFc7Q/Tt3kJNlhhG6UFLXwsK+a/naKSC9TALg1ipGNUL4dmrZOuklxptNsPdrlOxS6DNJsAK7E0rEtkosEO6hqa8ZFy+aXbWM2v/ROfGw7f89eN+Ak6oZS0T1/qPLAgTU5A0gCsOEgMguVFQuoUSCK7Q5UVQFWRTYeWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0S21Kci; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ky9ue0y+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60982C4AF0F;
-	Fri,  7 Jun 2024 20:29:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0S21Kci"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9ACFC2BBFC;
+	Fri,  7 Jun 2024 20:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717792161;
-	bh=Bdv1T3V+QVoamQb/wjWYwDu3U6qdpHhyUU9S4KSBk3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ky9ue0y+/xNybgFOEj5pGu0kOmr7vYGQrZQBMDpDR5oWSotHdAojnDD9Nfu1TzIUa
-	 WLbq0nlyvnSpZY7NXuwXiMtNnAg926Dm7Ge3wgd1/cB/Ie8885mkgVPrhA3HmZrT6s
-	 4NS4tAIlzCepbJtzqLhpczQwr3kEreT8R6wM+/YsDQ5QF8gdMT+hMBx5/dYykDOErZ
-	 3MMpO7Vaw0uM3/g4n9egvEEHkf9JOj2ZLpU58uCp461qsvEx4kOeuHuNgzxy/7aIKp
-	 nK4yR5Nl+BXMJog7sY6NFEO3Qr3I6jyucwbNHFQfD3mPExW8ClVSlWmEM9HReuuZHP
-	 sbz9Hml6g18og==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4/4] perf hist: Honor symbol_conf.skip_empty
-Date: Fri,  7 Jun 2024 13:29:18 -0700
-Message-ID: <20240607202918.2357459-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-In-Reply-To: <20240607202918.2357459-1-namhyung@kernel.org>
-References: <20240607202918.2357459-1-namhyung@kernel.org>
+	s=k20201202; t=1717792323;
+	bh=X4B1La1z1pxjkZPYe8MXZt4HnbUKOeGUnGDR7svXFnY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=i0S21KciwE9FHfuVZmGF6pWg2iaggajBlMr1gDX7jHhHbqi61mw6qJcRclL5w3U4K
+	 tAiWVDL9hgNZ8/Wz9/M7BJq4rZimfXFUYF48bC33grP4XEjUeOf/E2VIEa4YjaP3Zi
+	 gj7bVQE/F6uiqdYJ0MqatakrSQODbpxtMty4PPvaFh8CpGqvBC2DHuNK1NR4dSEQvc
+	 ynm6cSIbdI72F3E3o7C4sO6eoFXPyKAda9GbbsMYc6NLdVCW3B0uO+PM8cqD4lnrXf
+	 iTSqGMr9a8wNwaHCrb563J57HcqWeRTx5dGe2SdWOqZVh04HPnbDLlJxDgmgf1aW6h
+	 gW4RfM6XmkDng==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH 0/9] arm64: Add support for Armv9.4 PMU fixed instruction
+ counter
+Date: Fri, 07 Jun 2024 14:31:25 -0600
+Message-Id: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB1uY2YC/x3MPQqAMAxA4atIZgOx9f8q4iA2agarpCqCeHeL4
+ ze890BgFQ7QJg8oXxJk8xFZmsC4DH5mFBcNhkxOJVU46Ir7eqLFBmX0hyLltiqcc0S1gdjtypP
+ c/7Pr3/cDRyd5VGMAAAA=
+To: Russell King <linux@armlinux.org.uk>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+X-Mailer: b4 0.14-dev
 
-So that it can skip events with no sample according to the config value.
-This can omit the dummy event in the output of perf report --group.
+This series adds support for the optional fixed instruction counter 
+added in Armv9.4 PMU. Most of the series is a refactoring to remove the 
+index to counter number conversion which dates back to the Armv7 PMU 
+driver. Removing it is necessary in order to support more than 32 
+counters without a bunch of conditional code further complicating the 
+conversion.
 
-An example output:
+Patches 1-2 move the 32-bit Arm PMU drivers into drivers/perf/ and drop 
+non-DT probe support. These can be taken first if there's no comments on 
+them.
 
-  $ sudo perf mem record -a sleep 1
-  $ sudo perf report --group
+Patch 3 changes struct arm_pmu.num_events to a bitmap of events, and 
+updates all the users. This removes the index to counter conversion 
+on the PMUv3 and Armv7 drivers.
 
-Before)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u'
-  # Event count (approx.): 3089861
-  #
-  #                 Overhead  Command      Shared Object      Symbol
-  # ........................  ...........  .................  .....................................
-  #
-       9.29%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%   0.00%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%   0.00%  swapper      [kernel.kallsyms]  [k] psi_group_change
+Patch 4 updates various register accessors to use 64-bit values matching 
+the register size.
 
-After)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
-  # Event count (approx.): 3089861
-  #
-  #         Overhead  Command      Shared Object      Symbol
-  # ................  ...........  .................  .....................................
-  #
-       9.29%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%  swapper      [kernel.kallsyms]  [k] psi_group_change
+Patches 5-6 update KVM PMU register accesses to use shared accessors 
+from asm/arm_pmuv3.h.
 
-Now it doesn't have a column for the dummy event.
+Patches 7-8 rework KVM and perf PMU defines for counter indexes and 
+number of counters.
 
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Patch 9 finally adds support for the fixed instruction counter.
+
+I tested this on FVP with VHE host and a guest. I tested the Armv7 PMU 
+changes with QEMU.
+
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- tools/perf/ui/hist.c     | 18 ++++++++++++++++--
- tools/perf/util/evsel.c  | 13 ++++++++++---
- tools/perf/util/python.c |  3 +++
- 3 files changed, 29 insertions(+), 5 deletions(-)
+Rob Herring (Arm) (9):
+      perf/arm: Move 32-bit PMU drivers to drivers/perf/
+      perf: arm_v6/7_pmu: Drop non-DT probe support
+      perf: arm_pmu: Remove event index to counter remapping
+      perf: arm_pmuv3: Prepare for more than 32 counters
+      KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+      KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+      arm64: perf/kvm: Use a common PMU cycle counter define
+      KVM: arm64: Refine PMU defines for number of counters
+      perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 7e863cd92781..5d1f04f66a5a 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -95,6 +95,10 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 	}
- 
- 	for (i = 0; i < nr_members; i++) {
-+		if (symbol_conf.skip_empty &&
-+		    values[i].hists->stats.nr_samples == 0)
-+			continue;
-+
- 		ret += __hpp__fmt_print(hpp, values[i].hists, values[i].val,
- 					values[i].samples, fmt, len,
- 					print_fn, fmtype);
-@@ -296,8 +300,18 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
- 	int len = fmt->user_len ?: fmt->len;
- 	struct evsel *evsel = hists_to_evsel(hists);
- 
--	if (symbol_conf.event_group)
--		len = max(len, evsel->core.nr_members * fmt->len);
-+	if (symbol_conf.event_group) {
-+		int nr = 0;
-+		struct evsel *pos;
-+
-+		for_each_group_evsel(pos, evsel) {
-+			if (!symbol_conf.skip_empty ||
-+			    evsel__hists(pos)->stats.nr_samples)
-+				nr++;
-+		}
-+
-+		len = max(len, nr * fmt->len);
-+	}
- 
- 	if (len < (int)strlen(fmt->name))
- 		len = strlen(fmt->name);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4f818ab6b662..befb80c272d2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -53,6 +53,7 @@
- #include "../perf-sys.h"
- #include "util/parse-branch-options.h"
- #include "util/bpf-filter.h"
-+#include "util/hist.h"
- #include <internal/xyarray.h>
- #include <internal/lib.h>
- #include <internal/threadmap.h>
-@@ -830,16 +831,22 @@ const char *evsel__group_name(struct evsel *evsel)
- int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
- {
- 	int ret = 0;
-+	bool first = true;
- 	struct evsel *pos;
- 	const char *group_name = evsel__group_name(evsel);
- 
- 	if (!evsel->forced_leader)
- 		ret = scnprintf(buf, size, "%s { ", group_name);
- 
--	ret += scnprintf(buf + ret, size - ret, "%s", evsel__name(evsel));
-+	for_each_group_evsel(pos, evsel) {
-+		if (symbol_conf.skip_empty &&
-+		    evsel__hists(pos)->stats.nr_samples == 0)
-+			continue;
- 
--	for_each_group_member(pos, evsel)
--		ret += scnprintf(buf + ret, size - ret, ", %s", evsel__name(pos));
-+		ret += scnprintf(buf + ret, size - ret, "%s%s",
-+				 first ? "" : ", ", evsel__name(pos));
-+		first = false;
-+	}
- 
- 	if (!evsel->forced_leader)
- 		ret += scnprintf(buf + ret, size - ret, " }");
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 0aeb97c11c03..88f98f2772fb 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -23,6 +23,7 @@
- #include "util/env.h"
- #include "util/pmu.h"
- #include "util/pmus.h"
-+#include "util/symbol_conf.h"
- #include <internal/lib.h>
- #include "util.h"
- 
-@@ -50,6 +51,8 @@
- #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
- #endif
- 
-+struct symbol_conf symbol_conf;
-+
- /*
-  * Avoid bringing in event parsing.
-  */
+ arch/arm/include/asm/arm_pmuv3.h                   |  23 ++++
+ arch/arm/kernel/Makefile                           |   2 -
+ arch/arm64/include/asm/arm_pmuv3.h                 |  56 ++++++++-
+ arch/arm64/include/asm/kvm_host.h                  |   8 +-
+ arch/arm64/include/asm/sysreg.h                    |   1 -
+ arch/arm64/kvm/pmu-emul.c                          |  14 +--
+ arch/arm64/kvm/pmu.c                               |  88 ++++---------
+ arch/arm64/kvm/sys_regs.c                          |  11 +-
+ arch/arm64/tools/sysreg                            |  30 +++++
+ drivers/perf/Kconfig                               |  12 ++
+ drivers/perf/Makefile                              |   3 +
+ drivers/perf/arm_pmu.c                             |  11 +-
+ drivers/perf/arm_pmuv3.c                           | 138 ++++++++++-----------
+ .../perf_event_v6.c => drivers/perf/arm_v6_pmu.c   |  26 +---
+ .../perf_event_v7.c => drivers/perf/arm_v7_pmu.c   |  90 +++++---------
+ .../perf/arm_xscale_pmu.c                          |  15 +--
+ include/kvm/arm_pmu.h                              |   8 +-
+ include/linux/perf/arm_pmu.h                       |  10 +-
+ include/linux/perf/arm_pmuv3.h                     |   7 +-
+ 19 files changed, 289 insertions(+), 264 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240607-arm-pmu-3-9-icntr-04375ddd0082
+
+Best regards,
 -- 
-2.45.2.505.gda0bf45e8d-goog
+Rob Herring (Arm) <robh@kernel.org>
 
