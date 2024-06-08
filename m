@@ -1,174 +1,339 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB1F13E04F
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Jun 2024 20:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112B137171;
+	Sat,  8 Jun 2024 07:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717793267; cv=none; b=aKwOFubKrBzk7V8PXexJJ70CHlP+GuM2ls/XWwxC7dThmf0jzsf3B/QL3WHn+Dc6wehVganfvwkPy5eYpFBrFq+ZWsyFCwG/XkYPHtx+o3KjrT21QiyoJhxLhqdaIRlZUtRu9CcyfoOIwOrEqu2b9e36Q+EgYupbRK7IEQ8s4cQ=
+	t=1717830353; cv=none; b=qgH8s4Ylo5aYLibGSLDMSq0Z29tmz9fVprvrQuCeJ5zIci2u0wnmpmgSm0TEj5Czl/xiiJH0M4cAFYPN4840LV/XeKocy6PktBMi8v4aEfqY1SycXr+1W1K2Q3fc3coer0K/zxkFDb7oP9cox0TfDTB0j65C6YyYuO0FYRGhrOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717793267; c=relaxed/simple;
-	bh=rll9k0tB7NHEIjBp2+3dI4iswXfAKzJ6/WWKFna/ZK4=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=KK5pk4eFulWyPIQOaZEwoGrzM+TR2fN3bRShEuvPAnnSmH+WDxpgVFvPxokm0Nb3iSTqqqV61SzIqll6up6Z+jiQOsQr4CIQljDqfADGxuQT/KQ+XBtFA95AFyYkEamDq+gkJaxfizM9dk1p/fK05tSd1zwktVe413OxqIyyw8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C/M/sFvv; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1717830353; c=relaxed/simple;
+	bh=lCqy1BWHXXIYXYNG77xyIbNbZmCen12nkLqrep79IuU=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=mbMc5SgrUeAxVLjURSBZDNNeabXurQg4zbfz5AwHuOhSVzJtY1LT8NHhoteUoQysF56r4YcyGWdbekVCSGBELz4bQ1sP1L3HtUPTsjICDa2s3TvZ0Xdunlonofptdv8MSrkEVbd6T585FoVSZ760xWFUyybVPlD4Q3Ph3qU/JbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=peR56DVO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/M/sFvv"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfb0e59ac7cso111463276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Jun 2024 13:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717793264; x=1718398064; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9fYtvobquZVKvp1QHiSBNzMAcMNlZnXn1wwJ7y/l2IU=;
-        b=C/M/sFvvKcYH8aMSzHE2adwBFRrZDtQNzV+tVLi5Tv6lttm7LtV6nGtgzqywFh1k4q
-         q8NHUtov3NS7UWH5sW0XdvdvVWfIgCDuCUgrUXnSsND50QwYG7hsVMndX9DqM8xuoELA
-         dWD9aZliYT+TKoDhTvSDOooZ3it3YUawkr0s34j6EGJ+XFeBuRRoNYQYMzFb35R+1D3S
-         nCdSrI0k/ghAcbaxBGd63AEF1DRYC0hM5UqszWVrdomGGSszb0HgTEUBo0vO3Yga+lcY
-         GbnLiXjwhLR9yesbQEy5AQnc/kcyhyhxwwG8tJimmYZuGAC5I84hqii0FGrODQGI4wPa
-         TN4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717793264; x=1718398064;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9fYtvobquZVKvp1QHiSBNzMAcMNlZnXn1wwJ7y/l2IU=;
-        b=CLLDjKZdRhUqnz5hXrBOjnOnkqVxQZjnF3DwDdrhISgc6xvn+NdT3L6U4qYCaurE9H
-         6njZD4BS3uDBbkl4wdBLo4rYBxge/0kOni1JbCw7eBENSpLaHwqsVevB5jpfdFtwb5Da
-         W4zoj8QJRrolMa1rrMDAqOJH022Gou6nu9++PopDedez+bSoPqlhowpqeqmBfIxzp7bS
-         HgwtR7s5yJUvgFR/mbNyWGHRwbPSWEi3rimhKAODCpPJxHs+sOMVS+uyXIYi3xkFeGox
-         u9+wv7GgzoZgfeNi/5rly5p0PJECyhQyZlgGMLDTPssaHdTmSuS8dXvq9DLMqAFEwXpv
-         wrzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUL4wvc+THDwLqsrQMmWhedvZrWg1+1rjCoXBtjKWaMUVXjAYVD9W/NWIT1rF8WrqUB+ZyLNqw4bSzIn2jYZs6yM+zWcsCjK/T35NUKwjikCQ==
-X-Gm-Message-State: AOJu0Yxs7MdPGoeqIsNyX7E5y+jwqXchkTIWTE9sEefpN/KzuktnYK89
-	C6lDgyjvvh0sIBrZR86COG9wPsYvnnO6leZtjrbld6KF4cgaeZzoE9YiDQ3PIcMVD491YIuIXU0
-	9Bx1afQ==
-X-Google-Smtp-Source: AGHT+IHZSdHOzA3rR55KrquWkQlvr81kHdqwOwsqdbbLZkkcSIQXNLLe15qynRNB5SsDXtDh+pVt2HHTEgv+
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:5f56:330e:c132:da6b])
- (user=irogers job=sendgmr) by 2002:a05:6902:1145:b0:df4:e7aa:590b with SMTP
- id 3f1490d57ef6-dfaf66c8998mr966135276.13.1717793264537; Fri, 07 Jun 2024
- 13:47:44 -0700 (PDT)
-Date: Fri,  7 Jun 2024 13:47:27 -0700
-Message-Id: <20240607204727.849174-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="peR56DVO"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4586dvGm030438;
+	Sat, 8 Jun 2024 07:05:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=yMWUxJUlF6L2NEhkNDtt9fr8oZ+k7a7+drOhLKklDmg=; b=peR56DVOyQoy
+	xf9DtMCjyLHrDI2owu9KGpzbhoto/HOLU7VZgwsVxmw5QZVrFbnABt3XzOxGsnib
+	tgOIaXIBmLAbsGKC0fwIiOkko7qViDYZtzfdRr8H62yQIMR+xogyybXfGJQdV/HA
+	Ev6fy9IZW4diQOSocuBAFF44bn5Kq9CSs1vxRUxQ8vA8MPSQQuOONYJzcosOhL4g
+	ImSBLWdT8jO8Pph3V5lqchSm87ozxUl+BT3ncTG7tRiaUkP/Z+CV6Ppn35XeZUAp
+	QRxhBKb3Z0M7GF2ktgK+sE4mxER+YP93ti2TYsWD+UFq1PZ3b8sCGLodQHlGRnP4
+	iSiBff35nw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ymhj303n8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Jun 2024 07:05:33 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45875XFq016793;
+	Sat, 8 Jun 2024 07:05:33 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ymhj303n6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Jun 2024 07:05:33 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4583YFnK025382;
+	Sat, 8 Jun 2024 07:05:31 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ymfgv0sfy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Jun 2024 07:05:31 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45875QJo56557974
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Jun 2024 07:05:28 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9D9920043;
+	Sat,  8 Jun 2024 07:05:25 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 11B6C2004B;
+	Sat,  8 Jun 2024 07:05:23 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.125.209])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat,  8 Jun 2024 07:05:22 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
+ powerpc
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+Date: Sat, 8 Jun 2024 12:35:10 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Message-Id: <C6F8CEEC-88B1-46D9-8A51-EC479FF2886D@linux.vnet.ibm.com>
+References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
+ <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+To: Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: DuqlHtLle4oWRzq8aXRE0UxFEZldybSt
+X-Proofpoint-GUID: iUr_mQSFaUnPVr4ehY3HGAB6aWcxk-or
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Subject: [PATCH v1] perf record: Ensure space for lost samples
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Milian Wolff <milian.wolff@kdab.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-08_01,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=964
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406080049
 
-Previous allocation didn't account for sample ID written after the
-lost samples event. Switch from malloc/free to a stack allocation.
 
-Reported-by: Milian Wolff <milian.wolff@kdab.com>
-Closes: https://lore.kernel.org/linux-perf-users/23879991.0LEYPuXRzz@milian-workstation/
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/include/perf/event.h |  3 +++
- tools/perf/builtin-record.c         | 37 ++++++++++-------------------
- 2 files changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index ae64090184d3..8f3cefef9069 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -77,6 +77,9 @@ struct perf_record_lost_samples {
- 	__u64			 lost;
- };
- 
-+#define MAX_ID_HDR_ENTRIES  6
-+#define PERF_RECORD_MAX_LOST_SAMPLE_AND_ID_SIZE \
-+	(sizeof(struct perf_record_lost_samples) + MAX_ID_HDR_ENTRIES * sizeof(__u64))
- /*
-  * PERF_FORMAT_ENABLED | PERF_FORMAT_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_LOST
-  */
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 66a3de8ac661..1615a1723fb9 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1926,7 +1926,10 @@ static void __record__save_lost_samples(struct record *rec, struct evsel *evsel,
- static void record__read_lost_samples(struct record *rec)
- {
- 	struct perf_session *session = rec->session;
--	struct perf_record_lost_samples *lost = NULL;
-+	union {
-+		struct perf_record_lost_samples lost;
-+		char lost_and_sample_id[PERF_RECORD_MAX_LOST_SAMPLE_AND_ID_SIZE];
-+	} lost;
- 	struct evsel *evsel;
- 
- 	/* there was an error during record__open */
-@@ -1951,20 +1954,13 @@ static void record__read_lost_samples(struct record *rec)
- 
- 				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
- 					pr_debug("read LOST count failed\n");
--					goto out;
-+					return;
- 				}
- 
- 				if (count.lost) {
--					if (!lost) {
--						lost = zalloc(sizeof(*lost) +
--							      session->machines.host.id_hdr_size);
--						if (!lost) {
--							pr_debug("Memory allocation failed\n");
--							return;
--						}
--						lost->header.type = PERF_RECORD_LOST_SAMPLES;
--					}
--					__record__save_lost_samples(rec, evsel, lost,
-+					memset(&lost, 0, sizeof(lost));
-+					lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
-+					__record__save_lost_samples(rec, evsel, &lost.lost,
- 								    x, y, count.lost, 0);
- 				}
- 			}
-@@ -1972,21 +1968,12 @@ static void record__read_lost_samples(struct record *rec)
- 
- 		lost_count = perf_bpf_filter__lost_count(evsel);
- 		if (lost_count) {
--			if (!lost) {
--				lost = zalloc(sizeof(*lost) +
--					      session->machines.host.id_hdr_size);
--				if (!lost) {
--					pr_debug("Memory allocation failed\n");
--					return;
--				}
--				lost->header.type = PERF_RECORD_LOST_SAMPLES;
--			}
--			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
-+			memset(&lost, 0, sizeof(lost));
-+			lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
-+			__record__save_lost_samples(rec, evsel, &lost.lost, 0, 0, lost_count,
- 						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
- 		}
- 	}
--out:
--	free(lost);
- }
- 
- static volatile sig_atomic_t workload_exec_errno;
-@@ -3198,7 +3185,7 @@ static int switch_output_setup(struct record *rec)
- 	unsigned long val;
- 
- 	/*
--	 * If we're using --switch-output-events, then we imply its 
-+	 * If we're using --switch-output-events, then we imply its
- 	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
- 	 *  thread to its parent.
- 	 */
--- 
-2.45.2.505.gda0bf45e8d-goog
+> On 3 Jun 2024, at 10:00=E2=80=AFPM, Ian Rogers <irogers@google.com> wrote:
+>=20
+> On Fri, May 31, 2024 at 11:10=E2=80=AFPM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>> Now perf uses the capstone library to disassemble the instructions in
+>> x86. capstone is used (if available) for perf annotate to speed up.
+>> Currently it only supports x86 architecture. Patch includes changes to
+>> enable this in powerpc. For now, only for data type sort keys, this
+>> method is used and only binary code (raw instruction) is read. This is
+>> because powerpc approach to understand instructions and reg fields uses
+>> raw instruction. The "cs_disasm" is currently not enabled. While
+>> attempting to do cs_disasm, observation is that some of the instructions
+>> were not identified (ex: extswsli, maddld) and it had to fallback to use
+>> objdump. Hence enabling "cs_disasm" is added in comment section as a
+>> TODO for powerpc.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
+>> 1 file changed, 146 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+>> index d8b357055302..915508d2e197 100644
+>> --- a/tools/perf/util/disasm.c
+>> +++ b/tools/perf/util/disasm.c
+>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate_=
+args *args, bool is_64bit,
+>> {
+>>        struct annotation_options *opt =3D args->options;
+>>        cs_mode mode =3D is_64bit ? CS_MODE_64 : CS_MODE_32;
+>> +       int ret;
+>>=20
+>>        /* TODO: support more architectures */
+>> -       if (!arch__is(args->arch, "x86"))
+>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "po=
+werpc")))
+>>                return -1;
+>>=20
+>> -       if (cs_open(CS_ARCH_X86, mode, handle) !=3D CS_ERR_OK)
+>> +       if (arch__is(args->arch, "x86"))
+>> +               ret =3D cs_open(CS_ARCH_X86, mode, handle);
+>> +       else
+>> +               ret =3D cs_open(CS_ARCH_PPC, mode, handle);
+>> +
+>> +       if (ret !=3D CS_ERR_OK)
+>>                return -1;
+>=20
+> There looks to be a pretty/more robust capstone_init function in
+> print_insn.c, should we factor this code out and recycle:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/print_insn.c?h=3Dperf-tools-next#n40
+>=20
+> Thanks,
+> Ian
+
+Hi Ian,
+
+Thanks for checking the patch.
+
+Yes, that=E2=80=99s good change to have. I will have this change in V4
+
+Thanks
+Athira
+
+>=20
+>>        if (!opt->disassembler_style ||
+>> @@ -1635,6 +1641,139 @@ static void print_capstone_detail(cs_insn *insn,=
+ char *buf, size_t len,
+>>        }
+>> }
+>>=20
+>> +static int symbol__disassemble_capstone_powerpc(char *filename, struct =
+symbol *sym,
+>> +                                       struct annotate_args *args)
+>> +{
+>> +       struct annotation *notes =3D symbol__annotation(sym);
+>> +       struct map *map =3D args->ms.map;
+>> +       struct dso *dso =3D map__dso(map);
+>> +       struct nscookie nsc;
+>> +       u64 start =3D map__rip_2objdump(map, sym->start);
+>> +       u64 end =3D map__rip_2objdump(map, sym->end);
+>> +       u64 len =3D end - start;
+>> +       u64 offset;
+>> +       int i, fd, count;
+>> +       bool is_64bit =3D false;
+>> +       bool needs_cs_close =3D false;
+>> +       u8 *buf =3D NULL;
+>> +       struct find_file_offset_data data =3D {
+>> +               .ip =3D start,
+>> +       };
+>> +       csh handle;
+>> +       char disasm_buf[512];
+>> +       struct disasm_line *dl;
+>> +       u32 *line;
+>> +
+>> +       if (args->options->objdump_path)
+>> +               return -1;
+>> +
+>> +       nsinfo__mountns_enter(dso->nsinfo, &nsc);
+>> +       fd =3D open(filename, O_RDONLY);
+>> +       nsinfo__mountns_exit(&nsc);
+>> +       if (fd < 0)
+>> +               return -1;
+>> +
+>> +       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data,
+>> +                           &is_64bit) =3D=3D 0)
+>> +               goto err;
+>> +
+>> +       if (open_capstone_handle(args, is_64bit, &handle) < 0)
+>> +               goto err;
+>> +
+>> +       needs_cs_close =3D true;
+>> +
+>> +       buf =3D malloc(len);
+>> +       if (buf =3D=3D NULL)
+>> +               goto err;
+>> +
+>> +       count =3D pread(fd, buf, len, data.offset);
+>> +       close(fd);
+>> +       fd =3D -1;
+>> +
+>> +       if ((u64)count !=3D len)
+>> +               goto err;
+>> +
+>> +       line =3D (u32 *)buf;
+>> +
+>> +       /* add the function address and name */
+>> +       scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+>> +                 start, sym->name);
+>> +
+>> +       args->offset =3D -1;
+>> +       args->line =3D disasm_buf;
+>> +       args->line_nr =3D 0;
+>> +       args->fileloc =3D NULL;
+>> +       args->ms.sym =3D sym;
+>> +
+>> +       dl =3D disasm_line__new(args);
+>> +       if (dl =3D=3D NULL)
+>> +               goto err;
+>> +
+>> +       annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +       /*
+>> +        * TODO: enable disassm for powerpc
+>> +        * count =3D cs_disasm(handle, buf, len, start, len, &insn);
+>> +        *
+>> +        * For now, only binary code is saved in disassembled line
+>> +        * to be used in "type" and "typeoff" sort keys. Each raw code
+>> +        * is 32 bit instruction. So use "len/4" to get the number of
+>> +        * entries.
+>> +        */
+>> +       count =3D len/4;
+>> +
+>> +       for (i =3D 0, offset =3D 0; i < count; i++) {
+>> +               args->offset =3D offset;
+>> +               sprintf(args->line, "%x", line[i]);
+>> +
+>> +               dl =3D disasm_line__new(args);
+>> +               if (dl =3D=3D NULL)
+>> +                       goto err;
+>> +
+>> +               annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +               offset +=3D 4;
+>> +       }
+>> +
+>> +       /* It failed in the middle */
+>> +       if (offset !=3D len) {
+>> +               struct list_head *list =3D &notes->src->source;
+>> +
+>> +               /* Discard all lines and fallback to objdump */
+>> +               while (!list_empty(list)) {
+>> +                       dl =3D list_first_entry(list, struct disasm_line=
+, al.node);
+>> +
+>> +                       list_del_init(&dl->al.node);
+>> +                       disasm_line__free(dl);
+>> +               }
+>> +               count =3D -1;
+>> +       }
+>> +
+>> +out:
+>> +       if (needs_cs_close)
+>> +               cs_close(&handle);
+>> +       free(buf);
+>> +       return count < 0 ? count : 0;
+>> +
+>> +err:
+>> +       if (fd >=3D 0)
+>> +               close(fd);
+>> +       if (needs_cs_close) {
+>> +               struct disasm_line *tmp;
+>> +
+>> +               /*
+>> +                * It probably failed in the middle of the above loop.
+>> +                * Release any resources it might add.
+>> +                */
+>> +               list_for_each_entry_safe(dl, tmp, &notes->src->source, a=
+l.node) {
+>> +                       list_del(&dl->al.node);
+>> +                       free(dl);
+>> +               }
+>> +       }
+>> +       count =3D -1;
+>> +       goto out;
+>> +}
+>> +
+>> static int symbol__disassemble_capstone(char *filename, struct symbol *s=
+ym,
+>>                                        struct annotate_args *args)
+>> {
+>> @@ -1987,6 +2126,11 @@ int symbol__disassemble(struct symbol *sym, struc=
+t annotate_args *args)
+>>                        err =3D symbol__disassemble_dso(symfs_filename, s=
+ym, args);
+>>                        if (err =3D=3D 0)
+>>                                goto out_remove_tmp;
+>> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+>> +                       err =3D symbol__disassemble_capstone_powerpc(sym=
+fs_filename, sym, args);
+>> +                       if (err =3D=3D 0)
+>> +                               goto out_remove_tmp;
+>> +#endif
+>>                }
+>>        }
+>>=20
+>> --
+>> 2.43.0
+
 
