@@ -1,496 +1,271 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4019C125D5;
-	Sat,  8 Jun 2024 17:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E781CA9C;
+	Sat,  8 Jun 2024 19:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717867293; cv=none; b=hkNimqDVSUXtnaV9wThK/9rR9PJZ1qX0VgbAiWWFv4+2Oj7eQ3GxlOwTJMY+fm9RmqjcM+bt0bbt5gzyIGRbA9bwNWlwdZMdV/K9Enb+0+iz1w4Pj+x3PHo1pQWqi+sF8H2oAHgsu0ASyv0FZsxGrPY28bPivHn3vTQU3vFHg64=
+	t=1717875506; cv=none; b=LkgWUfLyF1aA8Vf6IbL1G+3M2QT5GL9X2dcbE36ipJBHzHMWo4PBX1VIlmCIOcENYuUz13lFtzOnA9JxonVzkOjXjH4k7D0Agptow4gjQrhCds2OGAy8L97McIvJJNWC11prV6LkUauqmllyKro97DUawhkUXw6usg+CBYaUzuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717867293; c=relaxed/simple;
-	bh=IrdI5sjPl5asL5nWXJNR+jzbTys2w3mwkdk7TJZKmmc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h+uBRtMifL+45O+bgK2H3/S0hyjnDC+2cLJ/rEfh1IH1kjVKdk+6iPxuDKpVio5y93V76aqdbh6JCeHhchUFttc6RzX4GkySZzCC7wg/xS6U44Z8BiFidy3GtqkFHTuZiESag/Y4FZ2FPXkJMSofQBhmVDt3Dg+afLqBvP+ox98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0sKb6Zh; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717875506; c=relaxed/simple;
+	bh=6+5M3l+iYX0rwNLIVbsCYHIKns4BG4FRt49KUQknk+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BDZzY7Y16S7+b+7wYmMlqF+M7/ktsDhdBylqpL6RrEE8ZgMsuYmoW9FplUdzLqiDY41pPWeqEgK+D3T7u+WYzu8BXb/KXcwEdJ0WXaOIh8vOnVXkM5y90fmv22ozX65v3OUf+pMtCIX9nYVZOa0QSvFVf0azFVyRJ5kEj1kNioI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBza7czS; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0sKb6Zh"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2c254d9bdd6so2725756a91.3;
-        Sat, 08 Jun 2024 10:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717867290; x=1718472090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nMy58J3QA7OYuNsqpVYU1rzQFW3lTrPyfWwmiRLgh2I=;
-        b=i0sKb6Zh4UIOIvhz2pIyGvdDzUVAzz1alb6xWhZRxkSd2Pw3cK082+Zr7fdfmHc3N5
-         suQW7hFfhcDbxf53B2ndzGVxnPjQwSuIPexL0enquQrlPlZRT9iNorG9f2/ffliiwTnA
-         auSUIBu12XrKOQWB+qBeQbn/jSzoNp8RAN8oevPAG+mEUtvbUbpJlD9bmnDeK4G7iN9G
-         R4M5hvLKH6XtfnngNiAMyCpfcX+hrCEUncYPTQt52yMZnOAzWbfR2+6kyIuv/6Pw3myA
-         wQPrmeOdwhO1pF0EOmDVrYNbGQO35geJKGQ8G8N4tEAJ75G8DM1ohAqjAiZdjdB78V3s
-         ggsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717867290; x=1718472090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nMy58J3QA7OYuNsqpVYU1rzQFW3lTrPyfWwmiRLgh2I=;
-        b=Or84dXbOTSfesmVI1MEoIYaCgmv/vHv9CC70UBS7r0caJqilXtxvHu94q6pFeZEf7Q
-         WA/vzEUw3XSKCQmQGAeYm2N+yt83sEkG9n/dAf8qoNDT+NXR3HgAncRfjwSkQrq+vYR7
-         FxHla9KrqunA0XCNFwP36VtiulknhSChkuwUMAbxGG9+kmsPunajmA5SMNEpqCx8zj5D
-         1ZBaeUDhl7BfCGs8UdYsNytmq+u9MMlUEhj4x9j0Pvmolgt/JHVVvZgnv4UTttOrAkWV
-         yXLuGfepPnSy9VcMEkLXUspaKA39ShJlFS48a/QvF2Qbs5d9S9CW4DFzsLyjGGztD9Zy
-         qdhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3HtZTFpEZ/AsCNpkm3ZQMYCIsidmQeCySlfz1VvCoGAhzeLivKdfCO2g8xM+hBIKY7uwastPMkjKqHrT+3O/5RwIAWH//q3jI7vO/mc5h/4bLkjY9MGPz5q21BzuOedxqD399Rz2QqkpgUv8H6MEn7nqMg3zq71jkZE87qtH0hB+I4kxtOR5nprwbeSH5VDbBEd9EzrGbpZA+SGUXZJz0NTOyb1cxNZ+twA==
-X-Gm-Message-State: AOJu0YzrsVZepE2e/IPLosJRsKYKUUhldVPZ2n6ot0APL7RWkBQwTtPd
-	DxKCu7+/4pGHq2DIeE/7mJS7fCwqMvcPAEEWT/3A6+o3cT8ZFF+L
-X-Google-Smtp-Source: AGHT+IGc7lLd9geb8g0L1MRS9I3j9ymtsBD2HMyCZh6CZPb1b1RadJ7IIki74P8G+mW7SLIFjj+dQQ==
-X-Received: by 2002:a17:90b:4b46:b0:2c2:d136:b0fb with SMTP id 98e67ed59e1d1-2c2d136b355mr3753386a91.34.1717867290398;
-        Sat, 08 Jun 2024 10:21:30 -0700 (PDT)
-Received: from localhost.localdomain ([2409:8955:2e84:1464:5333:31d6:6ba3:d747])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2f8e2fbfesm32346a91.34.2024.06.08.10.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jun 2024 10:21:30 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	mic@digikod.net,
-	gnoack@google.com,
-	brauner@kernel.org,
-	howardchu95@gmail.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH] perf trace: Fix syscall untraceable bug
-Date: Sun,  9 Jun 2024 01:21:46 +0800
-Message-ID: <20240608172147.2779890-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBza7czS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717875505; x=1749411505;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6+5M3l+iYX0rwNLIVbsCYHIKns4BG4FRt49KUQknk+A=;
+  b=XBza7czSjzm8EcOhS4oAkjTUfzqQOjWQHHWqOOE9AguehRDLBrPotZdu
+   YYKd7T6+pUvDlB8fbAkC7WA+njSLwK35FOfJRocnCBWEpO9bvs9vltH0/
+   1gqyYXHthTsmdxU9LvvilwyxCm1WHws7/s7dSrSYd7+0oTeNuREMCjZgD
+   TxHi1FyM7O05X0fiw2pP3XnJ+5sT7pIxY9x8MgSlRpF3NGwPOxYjW9evR
+   PHuCdM5V8X+sDo/XhNy+909UnShEyVkk49DhXoTQjycMmf6vF0jhqgLFd
+   Ord5Ec3Jp2VobScTgL0jzAVJOMenx8ALdnLE8bigg5KQUWyO/Xpqc4DYI
+   g==;
+X-CSE-ConnectionGUID: G6pQRYflR3aYWvCCqmuL7g==
+X-CSE-MsgGUID: QXb1Vd0qRDuvAmEN4Tjhnw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="14736010"
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="14736010"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 12:38:24 -0700
+X-CSE-ConnectionGUID: Lo5lv0UQSBecDo1Ex9t5bQ==
+X-CSE-MsgGUID: NpAjYTifTHWNdtdM+slsQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="43582555"
+Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 08 Jun 2024 12:38:18 -0700
+Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sG1tI-0000OI-0C;
+	Sat, 08 Jun 2024 19:38:16 +0000
+Date: Sun, 9 Jun 2024 03:37:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH 3/9] perf: arm_pmu: Remove event index to counter
+ remapping
+Message-ID: <202406090349.DaD1utFD-lkp@intel.com>
+References: <20240607-arm-pmu-3-9-icntr-v1-3-c7bd2dceff3b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607-arm-pmu-3-9-icntr-v1-3-c7bd2dceff3b@kernel.org>
 
-This is a bug found when implementing pretty-printing for the
-landlock_add_rule system call, I decided to send this patch separately
-because this is a serious bug that should be fixed fast.
+Hi Rob,
 
-I wrote a test program to do landlock_add_rule syscall in a loop,
-yet perf trace -e landlock_add_rule freezes, giving no output.
+kernel test robot noticed the following build errors:
 
-This bug is introduced by the false understanding of the variable "key"
-below:
-```
-for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
-	struct syscall *sc = trace__syscall_info(trace, NULL, key);
-	...
-}
-```
-The code above seems right at the beginning, but when looking at
-syscalltbl.c, I found these lines:
+[auto build test ERROR on 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0]
 
-```
-for (i = 0; i <= syscalltbl_native_max_id; ++i)
-	if (syscalltbl_native[i])
-		++nr_entries;
+url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/perf-arm-Move-32-bit-PMU-drivers-to-drivers-perf/20240608-043509
+base:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+patch link:    https://lore.kernel.org/r/20240607-arm-pmu-3-9-icntr-v1-3-c7bd2dceff3b%40kernel.org
+patch subject: [PATCH 3/9] perf: arm_pmu: Remove event index to counter remapping
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20240609/202406090349.DaD1utFD-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240609/202406090349.DaD1utFD-lkp@intel.com/reproduce)
 
-entries = tbl->syscalls.entries = malloc(sizeof(struct syscall) * nr_entries);
-...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406090349.DaD1utFD-lkp@intel.com/
 
-for (i = 0, j = 0; i <= syscalltbl_native_max_id; ++i) {
-	if (syscalltbl_native[i]) {
-		entries[j].name = syscalltbl_native[i];
-		entries[j].id = i;
-		++j;
-	}
-}
-```
+All errors (new ones prefixed by >>):
 
-meaning the key is merely an index to traverse the syscall table,
-instead of the actual syscall id for this particular syscall.
+         |                                           ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:99:32: note: previous initialization is here
+      99 |         [0 ... M1_PMU_PERFCTR_LAST]     = ANY_BUT_0_1,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:128:32: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     128 |         [M1_PMU_PERFCTR_UNKNOWN_f6]     = ONLY_2_4_6,
+         |                                           ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:99:32: note: previous initialization is here
+      99 |         [0 ... M1_PMU_PERFCTR_LAST]     = ANY_BUT_0_1,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:129:32: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     129 |         [M1_PMU_PERFCTR_UNKNOWN_f7]     = ONLY_2_4_6,
+         |                                           ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:99:32: note: previous initialization is here
+      99 |         [0 ... M1_PMU_PERFCTR_LAST]     = ANY_BUT_0_1,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:130:32: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     130 |         [M1_PMU_PERFCTR_UNKNOWN_f8]     = ONLY_2_TO_7,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:26:23: note: expanded from macro 'ONLY_2_TO_7'
+      26 | #define ONLY_2_TO_7                     GENMASK(7, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:99:32: note: previous initialization is here
+      99 |         [0 ... M1_PMU_PERFCTR_LAST]     = ANY_BUT_0_1,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:131:32: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     131 |         [M1_PMU_PERFCTR_UNKNOWN_fd]     = ONLY_2_4_6,
+         |                                           ^~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:27:22: note: expanded from macro 'ONLY_2_4_6'
+      27 | #define ONLY_2_4_6                      (BIT(2) | BIT(4) | BIT(6))
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:99:32: note: previous initialization is here
+      99 |         [0 ... M1_PMU_PERFCTR_LAST]     = ANY_BUT_0_1,
+         |                                           ^~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:25:23: note: expanded from macro 'ANY_BUT_0_1'
+      25 | #define ANY_BUT_0_1                     GENMASK(9, 2)
+         |                                         ^~~~~~~~~~~~~
+   include/linux/bits.h:35:2: note: expanded from macro 'GENMASK'
+      35 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:136:31: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     136 |         [PERF_COUNT_HW_CPU_CYCLES]      = M1_PMU_PERFCTR_CPU_CYCLES,
+         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:135:2: note: previous initialization is here
+     135 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:40:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      40 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      35 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:137:33: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     137 |         [PERF_COUNT_HW_INSTRUCTIONS]    = M1_PMU_PERFCTR_INSTRUCTIONS,
+         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/apple_m1_cpu_pmu.c:135:2: note: previous initialization is here
+     135 |         PERF_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:40:34: note: expanded from macro 'PERF_MAP_ALL_UNSUPPORTED'
+      40 |         [0 ... PERF_COUNT_HW_MAX - 1] = HW_OP_UNSUPPORTED
+         |                                         ^~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:28: note: expanded from macro 'HW_OP_UNSUPPORTED'
+      35 | #define HW_OP_UNSUPPORTED               0xFFFF
+         |                                         ^~~~~~
+>> drivers/perf/apple_m1_cpu_pmu.c:403:31: error: no member named 'num_events' in 'struct arm_pmu'; did you mean 'hw_events'?
+     403 |         for (idx = 0; idx < cpu_pmu->num_events; idx++) {
+         |                                      ^~~~~~~~~~
+         |                                      hw_events
+   include/linux/perf/arm_pmu.h:106:33: note: 'hw_events' declared here
+     106 |         struct pmu_hw_events    __percpu *hw_events;
+         |                                           ^
+   drivers/perf/apple_m1_cpu_pmu.c:563:11: error: no member named 'num_events' in 'struct arm_pmu'; did you mean 'hw_events'?
+     563 |         cpu_pmu->num_events       = M1_PMU_NR_COUNTERS;
+         |                  ^~~~~~~~~~
+         |                  hw_events
+   include/linux/perf/arm_pmu.h:106:33: note: 'hw_events' declared here
+     106 |         struct pmu_hw_events    __percpu *hw_events;
+         |                                           ^
+   39 warnings and 2 errors generated.
 
-So if one uses key to do trace__syscall_info(trace, NULL, key), because
-key only goes up to trace->sctbl->syscalls.nr_entries, for example, on
-my X86_64 machine, this number is 373, it will end up neglecting all
-the rest of the syscall, in my case, everything after `rseq`, because
-the traversal will stop at 373, and `rseq` is the last syscall whose id
-is lower than 373
 
-in tools/perf/arch/x86/include/generated/asm/syscalls_64.c:
-```
-	...
-	[334] = "rseq",
-	[424] = "pidfd_send_signal",
-	...
-```
+vim +403 drivers/perf/apple_m1_cpu_pmu.c
 
-The reason why the key is scrambled but perf trace works well is that
-key is used in trace__syscall_info(trace, NULL, key) to do
-trace->syscalls.table[id], this makes sure that the struct syscall returned
-actually has an id the same value as key, making the later bpf_prog
-matching all correct.
+a639027a1be1d6 Marc Zyngier 2022-02-08  381  
+a639027a1be1d6 Marc Zyngier 2022-02-08  382  static irqreturn_t m1_pmu_handle_irq(struct arm_pmu *cpu_pmu)
+a639027a1be1d6 Marc Zyngier 2022-02-08  383  {
+a639027a1be1d6 Marc Zyngier 2022-02-08  384  	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+a639027a1be1d6 Marc Zyngier 2022-02-08  385  	struct pt_regs *regs;
+a639027a1be1d6 Marc Zyngier 2022-02-08  386  	u64 overflow, state;
+a639027a1be1d6 Marc Zyngier 2022-02-08  387  	int idx;
+a639027a1be1d6 Marc Zyngier 2022-02-08  388  
+a639027a1be1d6 Marc Zyngier 2022-02-08  389  	overflow = read_sysreg_s(SYS_IMP_APL_PMSR_EL1);
+a639027a1be1d6 Marc Zyngier 2022-02-08  390  	if (!overflow) {
+a639027a1be1d6 Marc Zyngier 2022-02-08  391  		/* Spurious interrupt? */
+a639027a1be1d6 Marc Zyngier 2022-02-08  392  		state = read_sysreg_s(SYS_IMP_APL_PMCR0_EL1);
+a639027a1be1d6 Marc Zyngier 2022-02-08  393  		state &= ~PMCR0_IACT;
+a639027a1be1d6 Marc Zyngier 2022-02-08  394  		write_sysreg_s(state, SYS_IMP_APL_PMCR0_EL1);
+a639027a1be1d6 Marc Zyngier 2022-02-08  395  		isb();
+a639027a1be1d6 Marc Zyngier 2022-02-08  396  		return IRQ_NONE;
+a639027a1be1d6 Marc Zyngier 2022-02-08  397  	}
+a639027a1be1d6 Marc Zyngier 2022-02-08  398  
+a639027a1be1d6 Marc Zyngier 2022-02-08  399  	cpu_pmu->stop(cpu_pmu);
+a639027a1be1d6 Marc Zyngier 2022-02-08  400  
+a639027a1be1d6 Marc Zyngier 2022-02-08  401  	regs = get_irq_regs();
+a639027a1be1d6 Marc Zyngier 2022-02-08  402  
+a639027a1be1d6 Marc Zyngier 2022-02-08 @403  	for (idx = 0; idx < cpu_pmu->num_events; idx++) {
+a639027a1be1d6 Marc Zyngier 2022-02-08  404  		struct perf_event *event = cpuc->events[idx];
+a639027a1be1d6 Marc Zyngier 2022-02-08  405  		struct perf_sample_data data;
+a639027a1be1d6 Marc Zyngier 2022-02-08  406  
+a639027a1be1d6 Marc Zyngier 2022-02-08  407  		if (!event)
+a639027a1be1d6 Marc Zyngier 2022-02-08  408  			continue;
+a639027a1be1d6 Marc Zyngier 2022-02-08  409  
+a639027a1be1d6 Marc Zyngier 2022-02-08  410  		armpmu_event_update(event);
+a639027a1be1d6 Marc Zyngier 2022-02-08  411  		perf_sample_data_init(&data, 0, event->hw.last_period);
+a639027a1be1d6 Marc Zyngier 2022-02-08  412  		if (!armpmu_event_set_period(event))
+a639027a1be1d6 Marc Zyngier 2022-02-08  413  			continue;
+a639027a1be1d6 Marc Zyngier 2022-02-08  414  
+a639027a1be1d6 Marc Zyngier 2022-02-08  415  		if (perf_event_overflow(event, &data, regs))
+a639027a1be1d6 Marc Zyngier 2022-02-08  416  			m1_pmu_disable_event(event);
+a639027a1be1d6 Marc Zyngier 2022-02-08  417  	}
+a639027a1be1d6 Marc Zyngier 2022-02-08  418  
+a639027a1be1d6 Marc Zyngier 2022-02-08  419  	cpu_pmu->start(cpu_pmu);
+a639027a1be1d6 Marc Zyngier 2022-02-08  420  
+a639027a1be1d6 Marc Zyngier 2022-02-08  421  	return IRQ_HANDLED;
+a639027a1be1d6 Marc Zyngier 2022-02-08  422  }
+a639027a1be1d6 Marc Zyngier 2022-02-08  423  
 
-After fixing this bug, I can do perf trace on 38 more syscalls, and
-because more syscalls are visible, we get 8 more syscalls that can be
-augmented.
-
-before:
-
-perf $ perf trace -vv --max-events=1 |& grep Reusing
-Reusing "open" BPF sys_enter augmenter for "stat"
-Reusing "open" BPF sys_enter augmenter for "lstat"
-Reusing "open" BPF sys_enter augmenter for "access"
-Reusing "connect" BPF sys_enter augmenter for "accept"
-Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-Reusing "connect" BPF sys_enter augmenter for "bind"
-Reusing "connect" BPF sys_enter augmenter for "getsockname"
-Reusing "connect" BPF sys_enter augmenter for "getpeername"
-Reusing "open" BPF sys_enter augmenter for "execve"
-Reusing "open" BPF sys_enter augmenter for "truncate"
-Reusing "open" BPF sys_enter augmenter for "chdir"
-Reusing "open" BPF sys_enter augmenter for "mkdir"
-Reusing "open" BPF sys_enter augmenter for "rmdir"
-Reusing "open" BPF sys_enter augmenter for "creat"
-Reusing "open" BPF sys_enter augmenter for "link"
-Reusing "open" BPF sys_enter augmenter for "unlink"
-Reusing "open" BPF sys_enter augmenter for "symlink"
-Reusing "open" BPF sys_enter augmenter for "readlink"
-Reusing "open" BPF sys_enter augmenter for "chmod"
-Reusing "open" BPF sys_enter augmenter for "chown"
-Reusing "open" BPF sys_enter augmenter for "lchown"
-Reusing "open" BPF sys_enter augmenter for "mknod"
-Reusing "open" BPF sys_enter augmenter for "statfs"
-Reusing "open" BPF sys_enter augmenter for "pivot_root"
-Reusing "open" BPF sys_enter augmenter for "chroot"
-Reusing "open" BPF sys_enter augmenter for "acct"
-Reusing "open" BPF sys_enter augmenter for "swapon"
-Reusing "open" BPF sys_enter augmenter for "swapoff"
-Reusing "open" BPF sys_enter augmenter for "delete_module"
-Reusing "open" BPF sys_enter augmenter for "setxattr"
-Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-Reusing "open" BPF sys_enter augmenter for "getxattr"
-Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-Reusing "open" BPF sys_enter augmenter for "listxattr"
-Reusing "open" BPF sys_enter augmenter for "llistxattr"
-Reusing "open" BPF sys_enter augmenter for "removexattr"
-Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-Reusing "open" BPF sys_enter augmenter for "mq_open"
-Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-Reusing "open" BPF sys_enter augmenter for "symlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-Reusing "connect" BPF sys_enter augmenter for "accept4"
-Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-Reusing "open" BPF sys_enter augmenter for "memfd_create"
-Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
-
-after
-
-perf $ perf trace -vv --max-events=1 |& grep Reusing
-Reusing "open" BPF sys_enter augmenter for "stat"
-Reusing "open" BPF sys_enter augmenter for "lstat"
-Reusing "open" BPF sys_enter augmenter for "access"
-Reusing "connect" BPF sys_enter augmenter for "accept"
-Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-Reusing "connect" BPF sys_enter augmenter for "bind"
-Reusing "connect" BPF sys_enter augmenter for "getsockname"
-Reusing "connect" BPF sys_enter augmenter for "getpeername"
-Reusing "open" BPF sys_enter augmenter for "execve"
-Reusing "open" BPF sys_enter augmenter for "truncate"
-Reusing "open" BPF sys_enter augmenter for "chdir"
-Reusing "open" BPF sys_enter augmenter for "mkdir"
-Reusing "open" BPF sys_enter augmenter for "rmdir"
-Reusing "open" BPF sys_enter augmenter for "creat"
-Reusing "open" BPF sys_enter augmenter for "link"
-Reusing "open" BPF sys_enter augmenter for "unlink"
-Reusing "open" BPF sys_enter augmenter for "symlink"
-Reusing "open" BPF sys_enter augmenter for "readlink"
-Reusing "open" BPF sys_enter augmenter for "chmod"
-Reusing "open" BPF sys_enter augmenter for "chown"
-Reusing "open" BPF sys_enter augmenter for "lchown"
-Reusing "open" BPF sys_enter augmenter for "mknod"
-Reusing "open" BPF sys_enter augmenter for "statfs"
-Reusing "open" BPF sys_enter augmenter for "pivot_root"
-Reusing "open" BPF sys_enter augmenter for "chroot"
-Reusing "open" BPF sys_enter augmenter for "acct"
-Reusing "open" BPF sys_enter augmenter for "swapon"
-Reusing "open" BPF sys_enter augmenter for "swapoff"
-Reusing "open" BPF sys_enter augmenter for "delete_module"
-Reusing "open" BPF sys_enter augmenter for "setxattr"
-Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-Reusing "open" BPF sys_enter augmenter for "getxattr"
-Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-Reusing "open" BPF sys_enter augmenter for "listxattr"
-Reusing "open" BPF sys_enter augmenter for "llistxattr"
-Reusing "open" BPF sys_enter augmenter for "removexattr"
-Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-Reusing "open" BPF sys_enter augmenter for "mq_open"
-Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-Reusing "open" BPF sys_enter augmenter for "symlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-Reusing "connect" BPF sys_enter augmenter for "accept4"
-Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-Reusing "open" BPF sys_enter augmenter for "memfd_create"
-Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
-
-TL;DR:
-
-These are the new syscalls that can be augmented
-Reusing "openat" BPF sys_enter augmenter for "open_tree"
-Reusing "openat" BPF sys_enter augmenter for "openat2"
-Reusing "openat" BPF sys_enter augmenter for "mount_setattr"
-Reusing "openat" BPF sys_enter augmenter for "move_mount"
-Reusing "open" BPF sys_enter augmenter for "fsopen"
-Reusing "openat" BPF sys_enter augmenter for "fspick"
-Reusing "openat" BPF sys_enter augmenter for "faccessat2"
-Reusing "openat" BPF sys_enter augmenter for "fchmodat2"
-
-as for the perf trace output:
-
-before
-
-perf $ perf trace -e faccessat2 --max-events=1
-[no output]
-
-after
-
-perf $ ./perf trace -e faccessat2 --max-events=1
-     0.000 ( 0.037 ms): waybar/958 faccessat2(dfd: 40, filename: "uevent")                               = 0
-
-P.S. The reason why this bug was not found in the past five years is
-probably because it only happens to the newer syscalls whose id is
-greater, for instance, faccessat2 of id 439, which not a lot of people
-care about when using perf trace.
-
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/builtin-trace.c   | 32 +++++++++++++++++++++-----------
- tools/perf/util/syscalltbl.c | 21 +++++++++------------
- tools/perf/util/syscalltbl.h |  5 +++++
- 3 files changed, 35 insertions(+), 23 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c42bc608954e..5cbe1748911d 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3354,7 +3354,8 @@ static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
- static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace, struct syscall *sc)
- {
- 	struct tep_format_field *field, *candidate_field;
--	int id;
-+	struct __syscall *scs = trace->sctbl->syscalls.entries;
-+	int id, _id;
- 
- 	/*
- 	 * We're only interested in syscalls that have a pointer:
-@@ -3368,10 +3369,13 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
- 
- try_to_find_pair:
- 	for (id = 0; id < trace->sctbl->syscalls.nr_entries; ++id) {
--		struct syscall *pair = trace__syscall_info(trace, NULL, id);
-+		struct syscall *pair;
- 		struct bpf_program *pair_prog;
- 		bool is_candidate = false;
- 
-+		_id = scs[id].id;
-+		pair = trace__syscall_info(trace, NULL, _id);
-+
- 		if (pair == NULL || pair == sc ||
- 		    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
- 			continue;
-@@ -3456,23 +3460,26 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
- {
- 	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
- 	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
--	int err = 0, key;
-+	int err = 0, key, id;
-+	struct __syscall *scs = trace->sctbl->syscalls.entries;
- 
- 	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
- 		int prog_fd;
- 
--		if (!trace__syscall_enabled(trace, key))
-+		id = scs[key].id;
-+
-+		if (!trace__syscall_enabled(trace, id))
- 			continue;
- 
--		trace__init_syscall_bpf_progs(trace, key);
-+		trace__init_syscall_bpf_progs(trace, id);
- 
- 		// It'll get at least the "!raw_syscalls:unaugmented"
--		prog_fd = trace__bpf_prog_sys_enter_fd(trace, key);
--		err = bpf_map_update_elem(map_enter_fd, &key, &prog_fd, BPF_ANY);
-+		prog_fd = trace__bpf_prog_sys_enter_fd(trace, id);
-+		err = bpf_map_update_elem(map_enter_fd, &id, &prog_fd, BPF_ANY);
- 		if (err)
- 			break;
--		prog_fd = trace__bpf_prog_sys_exit_fd(trace, key);
--		err = bpf_map_update_elem(map_exit_fd, &key, &prog_fd, BPF_ANY);
-+		prog_fd = trace__bpf_prog_sys_exit_fd(trace, id);
-+		err = bpf_map_update_elem(map_exit_fd, &id, &prog_fd, BPF_ANY);
- 		if (err)
- 			break;
- 	}
-@@ -3506,10 +3513,13 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
- 	 * array tail call, then that one will be used.
- 	 */
- 	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
--		struct syscall *sc = trace__syscall_info(trace, NULL, key);
-+		struct syscall *sc;
- 		struct bpf_program *pair_prog;
- 		int prog_fd;
- 
-+		id = scs[key].id;
-+		sc = trace__syscall_info(trace, NULL, id);
-+
- 		if (sc == NULL || sc->bpf_prog.sys_enter == NULL)
- 			continue;
- 
-@@ -3535,7 +3545,7 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
- 		 * with the fd for the program we're reusing:
- 		 */
- 		prog_fd = bpf_program__fd(sc->bpf_prog.sys_enter);
--		err = bpf_map_update_elem(map_enter_fd, &key, &prog_fd, BPF_ANY);
-+		err = bpf_map_update_elem(map_enter_fd, &id, &prog_fd, BPF_ANY);
- 		if (err)
- 			break;
- 	}
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 63be7b58761d..16aa886c40f0 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -44,22 +44,17 @@ const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
- static const char *const *syscalltbl_native = syscalltbl_loongarch;
- #endif
- 
--struct syscall {
--	int id;
--	const char *name;
--};
--
- static int syscallcmpname(const void *vkey, const void *ventry)
- {
- 	const char *key = vkey;
--	const struct syscall *entry = ventry;
-+	const struct __syscall *entry = ventry;
- 
- 	return strcmp(key, entry->name);
- }
- 
- static int syscallcmp(const void *va, const void *vb)
- {
--	const struct syscall *a = va, *b = vb;
-+	const struct __syscall *a = va, *b = vb;
- 
- 	return strcmp(a->name, b->name);
- }
-@@ -67,13 +62,14 @@ static int syscallcmp(const void *va, const void *vb)
- static int syscalltbl__init_native(struct syscalltbl *tbl)
- {
- 	int nr_entries = 0, i, j;
--	struct syscall *entries;
-+	struct __syscall *entries;
- 
- 	for (i = 0; i <= syscalltbl_native_max_id; ++i)
- 		if (syscalltbl_native[i])
- 			++nr_entries;
- 
--	entries = tbl->syscalls.entries = malloc(sizeof(struct syscall) * nr_entries);
-+	entries = tbl->syscalls.entries = malloc(sizeof(struct __syscall) *
-+						 nr_entries);
- 	if (tbl->syscalls.entries == NULL)
- 		return -1;
- 
-@@ -85,7 +81,8 @@ static int syscalltbl__init_native(struct syscalltbl *tbl)
- 		}
- 	}
- 
--	qsort(tbl->syscalls.entries, nr_entries, sizeof(struct syscall), syscallcmp);
-+	qsort(tbl->syscalls.entries, nr_entries, sizeof(struct __syscall),
-+	      syscallcmp);
- 	tbl->syscalls.nr_entries = nr_entries;
- 	tbl->syscalls.max_id	 = syscalltbl_native_max_id;
- 	return 0;
-@@ -116,7 +113,7 @@ const char *syscalltbl__name(const struct syscalltbl *tbl __maybe_unused, int id
- 
- int syscalltbl__id(struct syscalltbl *tbl, const char *name)
- {
--	struct syscall *sc = bsearch(name, tbl->syscalls.entries,
-+	struct __syscall *sc = bsearch(name, tbl->syscalls.entries,
- 				     tbl->syscalls.nr_entries, sizeof(*sc),
- 				     syscallcmpname);
- 
-@@ -126,7 +123,7 @@ int syscalltbl__id(struct syscalltbl *tbl, const char *name)
- int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx)
- {
- 	int i;
--	struct syscall *syscalls = tbl->syscalls.entries;
-+	struct __syscall *syscalls = tbl->syscalls.entries;
- 
- 	for (i = *idx + 1; i < tbl->syscalls.nr_entries; ++i) {
- 		if (strglobmatch(syscalls[i].name, syscall_glob)) {
-diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
-index a41d2ca9e4ae..6e93a0874c40 100644
---- a/tools/perf/util/syscalltbl.h
-+++ b/tools/perf/util/syscalltbl.h
-@@ -2,6 +2,11 @@
- #ifndef __PERF_SYSCALLTBL_H
- #define __PERF_SYSCALLTBL_H
- 
-+struct __syscall {
-+	int id;
-+	const char *name;
-+};
-+
- struct syscalltbl {
- 	int audit_machine;
- 	struct {
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
