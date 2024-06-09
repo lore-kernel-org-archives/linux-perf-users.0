@@ -1,63 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8BD14265;
-	Sun,  9 Jun 2024 16:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A11DA23;
+	Sun,  9 Jun 2024 19:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717949520; cv=none; b=NW+1gWTL7l9ebxyOgSGRZ+fml1st6919ZOTvAN7bFuNG6QnRZngU6f0hxTEmMrXoTFyk3lH6aO2eB/u9ePLIsp6c9Yo0YOkDkX3310WKyiikTflPHn3l1F7bVUqdgBTPw0w4CVqasvuVBFYGzpkXAAG+ZQLgnXfkMdMQGzL64so=
+	t=1717960267; cv=none; b=gj3Ek+4LaFSp+GL1gDCbtT0973stWHQh3Kuf2hYRPmFhx8CJ7oz76rDniqQAfWypS+tdpKVcP3uYpXOX3kdwyQ0PQdbohGTH/I0D4FApk0+aGPkkTBGVnLHhmNG+z2y27SW1DxWoTak9ztrwYVytabW00DS2Gne44tfDEP47l5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717949520; c=relaxed/simple;
-	bh=+BFK1gjPAhIhXwtNYYf7X03MYKy79RgjpwYWJ5T6lic=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dCfPkUeAJIZ5eh9fS99n2BCa8YkWmhTMS3uyVtPLaG+UwEN66qfti0JvDmg+sOpsbfcy/xrSpbBoXcNuOcVfHCpOQkk1VIFBHt3Z6XxU308h1vkdvPnZbkdmhlUUc8cmmRobx/pVVBuKWtg7gNkkHxbk8JzxLemER10GCCQRL4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m204KGdb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717960267; c=relaxed/simple;
+	bh=YnJ6yY0kxkf1yXvMuHok1nLzJNsY6Nscx/FJTwHLG/w=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=BGMdy7vox1+/M6G4RqIWVgjZE4h1/YHOQ8OGwipDUOlcKnZ7KQBuYpPVQrU2Jjgg9POZdx+QQuLEucu5Mw2jutLKJ22QfIBwCA1+xtrooDcLLwLGh/dzg+jMR4IMjZhLY5NfW27VC2r0+FOoRshnWN+uoa7lg6QgC48BqwKV1g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wtNdwUqv; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m204KGdb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3703DC3277B;
-	Sun,  9 Jun 2024 16:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717949520;
-	bh=+BFK1gjPAhIhXwtNYYf7X03MYKy79RgjpwYWJ5T6lic=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=m204KGdb5p9jcYqMuOdUZtoxsz0JhCuwkWav6fFs/zJSJ5PPPlNnBUsb6XhylM++p
-	 7YS/Bgisjfr+N5LcCyHbMUpiOv7O103pXsq3Dn3kehXtGoKNVi9zvZgR6HzEpx37eB
-	 Xo2k3KmmiafPdPPOPW5ukcQu3RkGE2t8aK7aFqr2npZZADULi2ebO9B7zrG08HoLAh
-	 o4hSlMlUhSwD4NLt1Zp8M/d+FlLzeDPkwxTWVh+e+2NT5h/SeBxlwx6kY6I+X8K4K5
-	 5xwmpowti1JUYPWC5rckuv0pmmuxYi0bS8mtmRo9KNWcqgDaO7xTMWKBUWLrhKj07E
-	 C1jc9d8IJsJjg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2A734CF3BA4;
-	Sun,  9 Jun 2024 16:12:00 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.10: 2nd batch
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240609134732.172580-1-acme@kernel.org>
-References: <20240609134732.172580-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240609134732.172580-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.10-2-2024-06-09
-X-PR-Tracked-Commit-Id: ca9680821dfec73c9100860bda4fab1f1309722e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b8481381d4e2549f06812eb6069198144696340c
-Message-Id: <171794952016.28618.6402777334904014785.pr-tracker-bot@kernel.org>
-Date: Sun, 09 Jun 2024 16:12:00 +0000
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wtNdwUqv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717960233; x=1718565033; i=markus.elfring@web.de;
+	bh=YnJ6yY0kxkf1yXvMuHok1nLzJNsY6Nscx/FJTwHLG/w=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=wtNdwUqvGO7vuU1E3AgUWCHdAoLpEYY7SUz0KUO5yyBkqbiXPPTU7H1HuONe6Mll
+	 1JEcKggM9gnlLXGcqFEvzpu50Xv7AY2UYijFmN8p9L1enXgrZTHVdsI2bXOjoMfzC
+	 3PUoXJd6PoemlG8B8GCeH/ZIE1Tz6KAQRo4sKjVSQhn8U/GggGPSCn+mBAVmV6uvE
+	 XkyZz/GUkX8+MullBkjRJY23BHxnP3FDLLoH2Qdn9E7x6OGdZ7aGWAczvFDEUBD9R
+	 EJVLopDTrQRTHZMpfOG4ShngZNcXPAcyrtXVDzOaWEtSpj5pcZ25iZA8aC1SpPli5
+	 HCsl9wCnUhJ1kjm61w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MTfol-1rqhGf3udp-00NdWW; Sun, 09
+ Jun 2024 21:10:33 +0200
+Message-ID: <d18a9606-ac9f-4ca7-afaf-fcf4c951cb90@web.de>
+Date: Sun, 9 Jun 2024 21:10:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Howard Chu <howardchu95@gmail.com>, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Christian Brauner <brauner@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?=
+ <gnoack@google.com>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20240608172147.2779890-1-howardchu95@gmail.com>
+Subject: Re: [PATCH] perf trace: Fix syscall untraceable bug
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240608172147.2779890-1-howardchu95@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:loiKlUeVG/cvD/6mt7zFwk7DiMngcfkEpvsa9j5Cn8qj94nZXB5
+ FEBticdnDFBidkOYQiIs0t5ArX9n6wQ8E/dK7g4xsNGQ2PIix6ZxzBoai3pVBjoYa/gYUJY
+ qdjBgV2RBPM/lDkVBH6UixCtaFAZRfT1oXUM4hxsz2oC9Swls+zlhUCadXJYlrPWqD6JCiW
+ LlNLGVydHqj0AHgMMVdXA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:fyQ3HizanSg=;BaqCYqzTT646PfgdVySuUOhIlHj
+ qTNb4j59hNxbLFXHPHBAL4asH3TInev08YLW90ZKo9b+mmTjqSPZ1wMFMSFPlT2vTlozZiYfU
+ SmX0FDztLbEZSuIR3dswbEJDSJ/scO13Lqd3OXUpu5fpJZN3FkqbetaE3+tPNX6LnOzJaTM+i
+ 086ds2yM2K7sQsaM1p5nFALvlK7mNRSjgmSOky05b7JkrOmgsTW66fB72t5anMYdmnBn2WRIz
+ TksYt54asCPCiF9tPXyT/W8RmYClZ36FFUjvQecPcyLd/03eZqNyL8HezsTa06Z15DyT1pVVZ
+ GVQSPUgoTIG3e4DVCK8QZdxMDESEerWi+I6qtvCi5RpK7svH1ToD2kXYW6prQKNpZ8NUgIrnw
+ YVAJu9cTV75DA7A3Jkvaf62Uf2PrhWkJnnjQ/kM+TWY3A/tM2AZOwO/c+YuDlOzTkprRsj8Lo
+ zUDHCzf6VyBqjVwg3XDL3VmCAv1T++cX6or8KZMDJVZnP5MCdSU0PAoje8IUZ1k4ThmnFwGEM
+ HvUED3A5+q5CeNfVk/9xx6b8eFsk2yZk2DerpJpswuGGd0b2EIyqvSlr73CdJ9VEJyyxslENo
+ XlRCV3BaGKXZF0GLR4wjmSv2sLeMPl4XMvlqMv7TaGVuOntx0ari6qlKnT8zI/JQJGi7Dpsyx
+ Fy3zAwRYugFbRjxtvcjXXCggLgQLYPk1GYV1RrS06fxi4eCNOB9SsP5YkJZaAVLIOX7BTMbHz
+ zhkKS5IEi6R/i1Itw18ZYn3ZJ1FWMFC38ITW67pHWCNyuU5DkmYGJHKMXPeA4Zm5sQB8Afchl
+ y+3uIVynZB0ZQELsfp2PvG5dLyJJkCahX1iQkjO1/bbfQ=
 
-The pull request you sent on Sun,  9 Jun 2024 10:47:32 -0300:
+> This is a bug found when implementing pretty-printing for the
+> landlock_add_rule system call, I decided to send this patch separately
+> because this is a serious bug that should be fixed fast.
+=E2=80=A6
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.10-2-2024-06-09
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b8481381d4e2549f06812eb6069198144696340c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards,
+Markus
