@@ -1,40 +1,24 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A11DA23;
-	Sun,  9 Jun 2024 19:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E4C218C31
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Jun 2024 09:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717960267; cv=none; b=gj3Ek+4LaFSp+GL1gDCbtT0973stWHQh3Kuf2hYRPmFhx8CJ7oz76rDniqQAfWypS+tdpKVcP3uYpXOX3kdwyQ0PQdbohGTH/I0D4FApk0+aGPkkTBGVnLHhmNG+z2y27SW1DxWoTak9ztrwYVytabW00DS2Gne44tfDEP47l5E=
+	t=1718011166; cv=none; b=SM5TwbIvl4IrTVmEZCKR7kdlTVlpeFbbCnOfdnyHpWpMwzAE0Vg+4zAgSPzYR6sc9mZBYh3vqhriiuXOMg1jfN+lQGYv0cwwMG1BTQ4/KxEj9xiUHmwT1UFXj9ITr8d3k9t4y3QKLSKOQZDSmUr8d02ZTrbZ5OEBkLJop89MH+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717960267; c=relaxed/simple;
-	bh=YnJ6yY0kxkf1yXvMuHok1nLzJNsY6Nscx/FJTwHLG/w=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=BGMdy7vox1+/M6G4RqIWVgjZE4h1/YHOQ8OGwipDUOlcKnZ7KQBuYpPVQrU2Jjgg9POZdx+QQuLEucu5Mw2jutLKJ22QfIBwCA1+xtrooDcLLwLGh/dzg+jMR4IMjZhLY5NfW27VC2r0+FOoRshnWN+uoa7lg6QgC48BqwKV1g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wtNdwUqv; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wtNdwUqv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717960233; x=1718565033; i=markus.elfring@web.de;
-	bh=YnJ6yY0kxkf1yXvMuHok1nLzJNsY6Nscx/FJTwHLG/w=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=wtNdwUqvGO7vuU1E3AgUWCHdAoLpEYY7SUz0KUO5yyBkqbiXPPTU7H1HuONe6Mll
-	 1JEcKggM9gnlLXGcqFEvzpu50Xv7AY2UYijFmN8p9L1enXgrZTHVdsI2bXOjoMfzC
-	 3PUoXJd6PoemlG8B8GCeH/ZIE1Tz6KAQRo4sKjVSQhn8U/GggGPSCn+mBAVmV6uvE
-	 XkyZz/GUkX8+MullBkjRJY23BHxnP3FDLLoH2Qdn9E7x6OGdZ7aGWAczvFDEUBD9R
-	 EJVLopDTrQRTHZMpfOG4ShngZNcXPAcyrtXVDzOaWEtSpj5pcZ25iZA8aC1SpPli5
-	 HCsl9wCnUhJ1kjm61w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MTfol-1rqhGf3udp-00NdWW; Sun, 09
- Jun 2024 21:10:33 +0200
-Message-ID: <d18a9606-ac9f-4ca7-afaf-fcf4c951cb90@web.de>
-Date: Sun, 9 Jun 2024 21:10:25 +0200
+	s=arc-20240116; t=1718011166; c=relaxed/simple;
+	bh=XOdb3pwwC5hSDITihHOra5FpsEm7D5YzaKclNQhE7Do=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=RIqpmkHL3Bz3u1G84ODGGqR/RAdk/aI+m6WTmsH/UTFjw4MAyhIoQPulkSkeWZKKQBDkszxcTUkmyRy0g6ZmoCQPVOg9OQcjpY4lo/qjQkvsrVaRIeh/LGkUCpJjCi1DlU/ZgVmgf8ypifN9zy3HNo2h7ZBvOXQDEFYdz6uTG7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23E1712FC;
+	Mon, 10 Jun 2024 02:19:48 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31EC93F73B;
+	Mon, 10 Jun 2024 02:19:23 -0700 (PDT)
+Message-ID: <87365604-bfa5-4153-b41a-84bf87fb4cfd@arm.com>
+Date: Mon, 10 Jun 2024 10:19:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,51 +26,29 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Howard Chu <howardchu95@gmail.com>, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Christian Brauner <brauner@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?=
- <gnoack@google.com>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- Namhyung Kim <namhyung@kernel.org>
-References: <20240608172147.2779890-1-howardchu95@gmail.com>
-Subject: Re: [PATCH] perf trace: Fix syscall untraceable bug
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240608172147.2779890-1-howardchu95@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Content-Language: en-US
+Cc: Leo Yan <leo.yan@linaro.org>
+From: James Clark <james.clark@arm.com>
+Subject: Perf Wiki Appears Broken
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:loiKlUeVG/cvD/6mt7zFwk7DiMngcfkEpvsa9j5Cn8qj94nZXB5
- FEBticdnDFBidkOYQiIs0t5ArX9n6wQ8E/dK7g4xsNGQ2PIix6ZxzBoai3pVBjoYa/gYUJY
- qdjBgV2RBPM/lDkVBH6UixCtaFAZRfT1oXUM4hxsz2oC9Swls+zlhUCadXJYlrPWqD6JCiW
- LlNLGVydHqj0AHgMMVdXA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fyQ3HizanSg=;BaqCYqzTT646PfgdVySuUOhIlHj
- qTNb4j59hNxbLFXHPHBAL4asH3TInev08YLW90ZKo9b+mmTjqSPZ1wMFMSFPlT2vTlozZiYfU
- SmX0FDztLbEZSuIR3dswbEJDSJ/scO13Lqd3OXUpu5fpJZN3FkqbetaE3+tPNX6LnOzJaTM+i
- 086ds2yM2K7sQsaM1p5nFALvlK7mNRSjgmSOky05b7JkrOmgsTW66fB72t5anMYdmnBn2WRIz
- TksYt54asCPCiF9tPXyT/W8RmYClZ36FFUjvQecPcyLd/03eZqNyL8HezsTa06Z15DyT1pVVZ
- GVQSPUgoTIG3e4DVCK8QZdxMDESEerWi+I6qtvCi5RpK7svH1ToD2kXYW6prQKNpZ8NUgIrnw
- YVAJu9cTV75DA7A3Jkvaf62Uf2PrhWkJnnjQ/kM+TWY3A/tM2AZOwO/c+YuDlOzTkprRsj8Lo
- zUDHCzf6VyBqjVwg3XDL3VmCAv1T++cX6or8KZMDJVZnP5MCdSU0PAoje8IUZ1k4ThmnFwGEM
- HvUED3A5+q5CeNfVk/9xx6b8eFsk2yZk2DerpJpswuGGd0b2EIyqvSlr73CdJ9VEJyyxslENo
- XlRCV3BaGKXZF0GLR4wjmSv2sLeMPl4XMvlqMv7TaGVuOntx0ari6qlKnT8zI/JQJGi7Dpsyx
- Fy3zAwRYugFbRjxtvcjXXCggLgQLYPk1GYV1RrS06fxi4eCNOB9SsP5YkJZaAVLIOX7BTMbHz
- zhkKS5IEi6R/i1Itw18ZYn3ZJ1FWMFC38ITW67pHWCNyuU5DkmYGJHKMXPeA4Zm5sQB8Afchl
- y+3uIVynZB0ZQELsfp2PvG5dLyJJkCahX1iQkjO1/bbfQ=
+Content-Transfer-Encoding: 7bit
 
-> This is a bug found when implementing pretty-printing for the
-> landlock_add_rule system call, I decided to send this patch separately
-> because this is a serious bug that should be fixed fast.
-=E2=80=A6
+Hi Arnaldo,
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
+I'm not sure if you're still the admin of the Perf wiki, but I'm getting
+a login error:
 
-Regards,
-Markus
+ Wiki uses cookies to log in users. You have cookies disabled. Please
+ enable them and try again.
+
+From a quick Google I think this might be a disk space or configuration
+issue.
+
+I was planning to add a dockerfile for cross compiling an Arm Perf on
+x86. I suppose we can also discuss here if anyone thinks that's useful
+or the right place for it.
+
+Thanks
+James
