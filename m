@@ -1,354 +1,285 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2A3C30;
-	Mon, 10 Jun 2024 12:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2D381AA3;
+	Mon, 10 Jun 2024 13:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718022086; cv=none; b=a37MefOJzyFH+6pKjPBrr2dSaO4NjPnRnQ0Y4KqWkdOegqvNUy7T5G81grEfKkJPMwVJ/LYpddGPKw9zPFlhaQIYZFDA6YHtNXShGfswkvdQzS8kzyY2DSUL92IjHY167w3imqd14qaD9b1z1LY+dUvVNS3B5zJqoby+WJAgDlk=
+	t=1718025019; cv=none; b=WHxEekg5nn+4klm41+v4QNRJYtPLnNDpmqbmr5d2qZRqxk6hREA0EY6eiouJFJ87sQY3echscNLN10MSB89gl2zzDZoBqeMYxtMyd89YW8w3Sd4GkPgwO4CTuOZIsak9kAVpzQMMylr4WxQMePSZs5M4IN1ieXs5SgnoXoXhNaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718022086; c=relaxed/simple;
-	bh=UeYcawfFgU82qeIVHYvgY7T+CqZAGA2E6VBgb0Y7Yuc=;
-	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
-	 References:To:MIME-Version; b=UeB4nxWDcrp0hMmbHKh6KbgB/pP5E2YPuSnUSb4QHcESyyJzFdQ5xEZ5U4rpHfHwSwKmUxt1T5pLJMWo4eEau4lEUekFU9MlZU4lOcPNiwSgl3AY7HqAYQpgqQ9dwJrXaGX9bb5Hoebol+y604DZL3rl1/GhqA4FlqoPnLcLzdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C3N8isd5; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1718025019; c=relaxed/simple;
+	bh=rpnzjkzZRJoH5xNjY/jyUr59J9J55liY1k0khb0kVqo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ASA74I5sPPHTOgTA38Ys3+PdXnDOnc2WtEY+G/5aacRa5tENvcoLUKYmw2m9FyDXMrs+At69jZxD8Dm7LvpaXRl1NxxcCYr3ckpYaD3d0zJQbrKhmnZVsVX73pgC+0c6Ckir0ynmwVa/0w2r+YWe/VPnv9SV3zQ4B6rnfYoLQaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6M0HsFM; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C3N8isd5"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AARpbM025838;
-	Mon, 10 Jun 2024 12:21:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:subject:from:in-reply-to:date:cc:message-id
-	:references:to:content-transfer-encoding:mime-version; s=pp1;
-	 bh=1FPNSqkZ3jNtmraPgUbOXw7UJahn6qcwJXgKR4TOWOM=; b=C3N8isd52HjG
-	ovPcynQk5jHHOSXmG/ohunSkTtyKMDCTUth2gNxIUllJTksWngkga9F2HkxGbY5J
-	a3SARdLzCH4I2oop4TbMHmQzsBPsUeM40uotsEjTfxrcraSWEeNliL4z4n8E+BhN
-	ww4pJPFpIvcynWhaUj4Pc6nv/nvmWTYmBVfEOC6S11JOszVOcBvoxCcwvRUcGBHb
-	+cObyww0nahykqrREtVQW9QXFGHztK6HZ7cE1H65HUNGB/GtF27HvsNb1Zq5uLNT
-	5Rvd6ZTF7jHF0XIY2C0Mon3qA8Jd5eWjOcD/U0zOQ4mmyii3mjAwDh96h4OoBwQ5
-	E+FjoipBuQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynyr7r932-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 12:21:01 +0000 (GMT)
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45ACL13Q001156;
-	Mon, 10 Jun 2024 12:21:01 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynyr7r92y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 12:21:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45AAlesC003881;
-	Mon, 10 Jun 2024 12:21:00 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mpfesu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 12:21:00 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45ACKsiX32702856
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Jun 2024 12:20:56 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 72ACC2004D;
-	Mon, 10 Jun 2024 12:20:54 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C9F5F20043;
-	Mon, 10 Jun 2024 12:20:51 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.90.99])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 10 Jun 2024 12:20:51 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
- powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <c383b404-727c-4564-a66e-0906348891b3@intel.com>
-Date: Mon, 10 Jun 2024 17:50:39 +0530
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
-Message-Id: <81ED04E0-23B5-44AE-B84D-5766346F1D32@linux.vnet.ibm.com>
-References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
- <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
- <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
- <c383b404-727c-4564-a66e-0906348891b3@intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: jGhmPXuBwGKYyj4Pj4WkyqWj4PrkJcqL
-X-Proofpoint-GUID: 1Kdu1aH1j3OFuOv9nsX_mu8SamwhxEnk
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6M0HsFM"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f47f07acd3so40441465ad.0;
+        Mon, 10 Jun 2024 06:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718025017; x=1718629817; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JqQv+T68Z77ieKbOSSWpRumFodMN2xfZwuCPpy+rybg=;
+        b=Z6M0HsFMFHLOMdYhqo2/HQNk1sOLLwKSHCN1sMJXb9gzrAT00VS4oYi1UBB8PXZIJA
+         Of07mZwbuCk5ggSB5rcjjuNm3wVyvbGQK6YmWR5thP9Cd1FirDa961uO6bnXhugFKZOz
+         E0+Qgdecj3drFfDxpXRnjYcZiLFPwh4RlmRb9P1u4hK2pKz5PQcWTP9OwyddxKLxE7ed
+         9VfB68EHFSzKcwR2EY2koQb+IaWZAucu1ujqufdUko1lNgqp2tQ9oAkEaUiJ7u04G27i
+         kvVVsJnL9EPix0crXH5ssdZ1ULSBve2qPy3cPcHi1CcbEGR6YAmVpNE+u8qu2cu9rraS
+         wh9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718025017; x=1718629817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JqQv+T68Z77ieKbOSSWpRumFodMN2xfZwuCPpy+rybg=;
+        b=rgyB1ObmcpM15qxjg1ut8M4fVExLOai97oF5HBi+y5EQmIpQUhkbCA+6PsPTTlWq0p
+         IRqqN02Uu3Zx5sIPaNfj3t7ncQKGpQ+Qgk9qFDu+6Aeu44yAxVNl3uis9H3eJ6DPpV2l
+         pUaXUqx2Z6KRTdKltxpOMIsWu8CC1ecxuTBnzTHFnyQjen4uJtj+UcPqbxg08DQZtPbY
+         2SEdrZOIu3G2UVKnW+5OY/o8G3VmY0BSVEaydzbNcGKnO9dczbhV6gA1vpONQFNVnIGM
+         kgOG4IeGMBUBuXBzy73EWdgrCVhUwC6dYcVdQh/Yo0IBtudj2STHHYqEq8vvICpDF359
+         qXCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX13MI6lTxr3ypRWpqljhuTN9fke5ztDjkDgN4NsFqzqMxUDUh1rkMoMfRjq9Jd6twfH3Mb7VVHzc1AwjhA5aZAtBaoc/bnm9wgyMc5VqtElegOKnJfYR1oXZZASUKpE2FLZHCxEZtfUOc/YWoOXhNwzhRnZncHtl5x/ub57a/VyeYNNBaiyl7v/801cPbXVOn8pPXb7XQ3hbh3rXRxesLUAQGoTpa1j3kK+A==
+X-Gm-Message-State: AOJu0Yw4rMZQ31Il8oKE9WM1YpRtmrOW9gFg3YLIXfH6joJYilZwpg2h
+	kMqG5bePrwwOrW94K28RBdX2POOkhhbElrWZr/Av9fpsHSUj9Lxe
+X-Google-Smtp-Source: AGHT+IFEw7OtWfkzx2pwUoIKN7qZKIAsOjNAjB8U7pQ6n7MIYx7TDtVWcRYxQ55Lvb2r/mqRzscouw==
+X-Received: by 2002:a17:903:183:b0:1f6:6426:8da4 with SMTP id d9443c01a7336-1f6d03c14demr118275555ad.66.1718025016816;
+        Mon, 10 Jun 2024 06:10:16 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.105])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7e3e66sm81938285ad.182.2024.06.10.06.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 06:10:16 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	mic@digikod.net,
+	gnoack@google.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v1] perf trace: BTF-based enum pretty printing
+Date: Mon, 10 Jun 2024 21:10:32 +0800
+Message-ID: <20240610131032.516323-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- mlxscore=0 priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100090
+Content-Transfer-Encoding: 8bit
 
+This is a feature implemented on the basis of the previous bug fix
+https://lore.kernel.org/linux-perf-users/d18a9606-ac9f-4ca7-afaf-fcf4c951cb90@web.de/T/#t
 
+In this patch, I use BTF to turn enum value to the corresponding name.
+There is only one system call that uses enum value as its argument,
+that is `landlock_add_rule`.
 
-> On 3 Jun 2024, at 10:28=E2=80=AFPM, Adrian Hunter <adrian.hunter@intel.co=
-m> wrote:
->=20
-> On 3/06/24 19:30, Ian Rogers wrote:
->> On Fri, May 31, 2024 at 11:10=E2=80=AFPM Athira Rajeev
->> <atrajeev@linux.vnet.ibm.com> wrote:
->>>=20
->>> Now perf uses the capstone library to disassemble the instructions in
->>> x86. capstone is used (if available) for perf annotate to speed up.
->>> Currently it only supports x86 architecture. Patch includes changes to
->>> enable this in powerpc. For now, only for data type sort keys, this
->>> method is used and only binary code (raw instruction) is read. This is
->>> because powerpc approach to understand instructions and reg fields uses
->>> raw instruction. The "cs_disasm" is currently not enabled. While
->>> attempting to do cs_disasm, observation is that some of the instructions
->>> were not identified (ex: extswsli, maddld) and it had to fallback to use
->>> objdump. Hence enabling "cs_disasm" is added in comment section as a
->>> TODO for powerpc.
->>>=20
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>> ---
->>> tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
->>> 1 file changed, 146 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->>> index d8b357055302..915508d2e197 100644
->>> --- a/tools/perf/util/disasm.c
->>> +++ b/tools/perf/util/disasm.c
->>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate=
-_args *args, bool is_64bit,
->>> {
->>>        struct annotation_options *opt =3D args->options;
->>>        cs_mode mode =3D is_64bit ? CS_MODE_64 : CS_MODE_32;
->>> +       int ret;
->>>=20
->>>        /* TODO: support more architectures */
->>> -       if (!arch__is(args->arch, "x86"))
->>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "p=
-owerpc")))
->>>                return -1;
->>>=20
->>> -       if (cs_open(CS_ARCH_X86, mode, handle) !=3D CS_ERR_OK)
->>> +       if (arch__is(args->arch, "x86"))
->>> +               ret =3D cs_open(CS_ARCH_X86, mode, handle);
->>> +       else
->>> +               ret =3D cs_open(CS_ARCH_PPC, mode, handle);
->>> +
->>> +       if (ret !=3D CS_ERR_OK)
->>>                return -1;
->>=20
->> There looks to be a pretty/more robust capstone_init function in
->> print_insn.c, should we factor this code out and recycle:
->> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git=
-/tree/tools/perf/util/print_insn.c?h=3Dperf-tools-next#n40
->=20
-> On a slightly related note, there is a compile error
-> been around for a while in util/disasm.c on Ubuntu 22.04
->=20
-> In file included from /usr/include/capstone/capstone.h:279,
->                 from util/disasm.c:1354:
-> /usr/include/capstone/bpf.h:94:14: error: =E2=80=98bpf_insn=E2=80=99 defi=
-ned as wrong
-> kind of tag
->   94 | typedef enum bpf_insn {
->      |              ^~~~~~~~
->=20
+The vmlinux btf is loaded lazily, when user decided to trace the
+`landlock_add_rule` syscall. But if one decide to run `perf trace`
+without any arguments, the behaviour is to trace `landlock_add_rule`,
+so vmlinux btf will be loaded by default.
 
-Hi Adrian
+The laziest behaviour is to load vmlinux btf when a
+`landlock_add_rule` syscall hits. But I think you could lose some
+samples when loading vmlinux btf at run time, for it can delay the
+handling of other samples. I might need your precious opinions on
+this...
 
-I tried compilation on Ubuntu 22.04, but didn=E2=80=99t face this issue.
-The libcapstone version I have is libcapstone4 which doesn=E2=80=99t have t=
-he include for =E2=80=9Cbpf.h=E2=80=9D
-What is the version of libcapstone in the setup where you are seeing this i=
-ssue ?
+before:
 
-Thanks
-Athira
->>=20
->> Thanks,
->> Ian
->>=20
->>>        if (!opt->disassembler_style ||
->>> @@ -1635,6 +1641,139 @@ static void print_capstone_detail(cs_insn *insn=
-, char *buf, size_t len,
->>>        }
->>> }
->>>=20
->>> +static int symbol__disassemble_capstone_powerpc(char *filename, struct=
- symbol *sym,
->>> +                                       struct annotate_args *args)
->>> +{
->>> +       struct annotation *notes =3D symbol__annotation(sym);
->>> +       struct map *map =3D args->ms.map;
->>> +       struct dso *dso =3D map__dso(map);
->>> +       struct nscookie nsc;
->>> +       u64 start =3D map__rip_2objdump(map, sym->start);
->>> +       u64 end =3D map__rip_2objdump(map, sym->end);
->>> +       u64 len =3D end - start;
->>> +       u64 offset;
->>> +       int i, fd, count;
->>> +       bool is_64bit =3D false;
->>> +       bool needs_cs_close =3D false;
->>> +       u8 *buf =3D NULL;
->>> +       struct find_file_offset_data data =3D {
->>> +               .ip =3D start,
->>> +       };
->>> +       csh handle;
->>> +       char disasm_buf[512];
->>> +       struct disasm_line *dl;
->>> +       u32 *line;
->>> +
->>> +       if (args->options->objdump_path)
->>> +               return -1;
->>> +
->>> +       nsinfo__mountns_enter(dso->nsinfo, &nsc);
->>> +       fd =3D open(filename, O_RDONLY);
->>> +       nsinfo__mountns_exit(&nsc);
->>> +       if (fd < 0)
->>> +               return -1;
->>> +
->>> +       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data,
->>> +                           &is_64bit) =3D=3D 0)
->>> +               goto err;
->>> +
->>> +       if (open_capstone_handle(args, is_64bit, &handle) < 0)
->>> +               goto err;
->>> +
->>> +       needs_cs_close =3D true;
->>> +
->>> +       buf =3D malloc(len);
->>> +       if (buf =3D=3D NULL)
->>> +               goto err;
->>> +
->>> +       count =3D pread(fd, buf, len, data.offset);
->>> +       close(fd);
->>> +       fd =3D -1;
->>> +
->>> +       if ((u64)count !=3D len)
->>> +               goto err;
->>> +
->>> +       line =3D (u32 *)buf;
->>> +
->>> +       /* add the function address and name */
->>> +       scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
->>> +                 start, sym->name);
->>> +
->>> +       args->offset =3D -1;
->>> +       args->line =3D disasm_buf;
->>> +       args->line_nr =3D 0;
->>> +       args->fileloc =3D NULL;
->>> +       args->ms.sym =3D sym;
->>> +
->>> +       dl =3D disasm_line__new(args);
->>> +       if (dl =3D=3D NULL)
->>> +               goto err;
->>> +
->>> +       annotation_line__add(&dl->al, &notes->src->source);
->>> +
->>> +       /*
->>> +        * TODO: enable disassm for powerpc
->>> +        * count =3D cs_disasm(handle, buf, len, start, len, &insn);
->>> +        *
->>> +        * For now, only binary code is saved in disassembled line
->>> +        * to be used in "type" and "typeoff" sort keys. Each raw code
->>> +        * is 32 bit instruction. So use "len/4" to get the number of
->>> +        * entries.
->>> +        */
->>> +       count =3D len/4;
->>> +
->>> +       for (i =3D 0, offset =3D 0; i < count; i++) {
->>> +               args->offset =3D offset;
->>> +               sprintf(args->line, "%x", line[i]);
->>> +
->>> +               dl =3D disasm_line__new(args);
->>> +               if (dl =3D=3D NULL)
->>> +                       goto err;
->>> +
->>> +               annotation_line__add(&dl->al, &notes->src->source);
->>> +
->>> +               offset +=3D 4;
->>> +       }
->>> +
->>> +       /* It failed in the middle */
->>> +       if (offset !=3D len) {
->>> +               struct list_head *list =3D &notes->src->source;
->>> +
->>> +               /* Discard all lines and fallback to objdump */
->>> +               while (!list_empty(list)) {
->>> +                       dl =3D list_first_entry(list, struct disasm_lin=
-e, al.node);
->>> +
->>> +                       list_del_init(&dl->al.node);
->>> +                       disasm_line__free(dl);
->>> +               }
->>> +               count =3D -1;
->>> +       }
->>> +
->>> +out:
->>> +       if (needs_cs_close)
->>> +               cs_close(&handle);
->>> +       free(buf);
->>> +       return count < 0 ? count : 0;
->>> +
->>> +err:
->>> +       if (fd >=3D 0)
->>> +               close(fd);
->>> +       if (needs_cs_close) {
->>> +               struct disasm_line *tmp;
->>> +
->>> +               /*
->>> +                * It probably failed in the middle of the above loop.
->>> +                * Release any resources it might add.
->>> +                */
->>> +               list_for_each_entry_safe(dl, tmp, &notes->src->source, =
-al.node) {
->>> +                       list_del(&dl->al.node);
->>> +                       free(dl);
->>> +               }
->>> +       }
->>> +       count =3D -1;
->>> +       goto out;
->>> +}
->>> +
->>> static int symbol__disassemble_capstone(char *filename, struct symbol *=
-sym,
->>>                                        struct annotate_args *args)
->>> {
->>> @@ -1987,6 +2126,11 @@ int symbol__disassemble(struct symbol *sym, stru=
-ct annotate_args *args)
->>>                        err =3D symbol__disassemble_dso(symfs_filename, =
-sym, args);
->>>                        if (err =3D=3D 0)
->>>                                goto out_remove_tmp;
->>> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
->>> +                       err =3D symbol__disassemble_capstone_powerpc(sy=
-mfs_filename, sym, args);
->>> +                       if (err =3D=3D 0)
->>> +                               goto out_remove_tmp;
->>> +#endif
->>>                }
->>>        }
->>>=20
->>> --
->>> 2.43.0
+```
+perf $ ./perf trace -e landlock_add_rule
+     0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: 2)                                       = -1 EBADFD (File descriptor in bad state)
+     0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: 1)                                       = -1 EBADFD (File descriptor in bad state)
+```
 
+after:
+
+```
+perf $ ./perf trace -e landlock_add_rule
+     0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)                  = -1 EBADFD (File descriptor in bad state)
+     0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH)              = -1 EBADFD (File descriptor in bad state)
+```
+
+P.S.
+If you don't apply the patch "perf trace: Fix syscall untraceable
+bug", there will be no output whatsoever when running
+`perf trace -e landlock_add_rule`
+
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
+ tools/perf/builtin-trace.c | 69 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 66 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 5cbe1748911d..5acb9a910ea1 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -19,6 +19,7 @@
+ #ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
+ #include <bpf/libbpf.h>
++#include <bpf/btf.h>
+ #ifdef HAVE_BPF_SKEL
+ #include "bpf_skel/augmented_raw_syscalls.skel.h"
+ #endif
+@@ -110,6 +111,7 @@ struct syscall_arg_fmt {
+ 	const char *name;
+ 	u16	   nr_entries; // for arrays
+ 	bool	   show_zero;
++	bool	   is_enum;
+ };
+ 
+ struct syscall_fmt {
+@@ -140,6 +142,7 @@ struct trace {
+ #ifdef HAVE_BPF_SKEL
+ 	struct augmented_raw_syscalls_bpf *skel;
+ #endif
++	struct btf		*btf;
+ 	struct record_opts	opts;
+ 	struct evlist	*evlist;
+ 	struct machine		*host;
+@@ -887,6 +890,36 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+ 
+ #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
+ 
++static size_t btf_enum_scnprintf(char *bf, size_t size, int val,
++			  struct btf *btf, const char *type)
++{
++	const struct btf_type *bt;
++	struct btf_enum *e;
++	char enum_prefix[][16] = {"enum", "const enum"}, *ep;
++	int id;
++
++	for (size_t i = 0; i < ARRAY_SIZE(enum_prefix); i++) {
++		ep = enum_prefix[i];
++		if (strlen(type) > strlen(ep) + 1 && strstr(type, ep) == type)
++			type += strlen(ep) + 1;
++	}
++
++	id = btf__find_by_name(btf, type);
++	if (id < 0)
++		return 0;
++
++	bt = btf__type_by_id(btf, id);
++	e = btf_enum(bt);
++
++	for (int i = 0; i < btf_vlen(bt); i++, e++) {
++		if (e->val == val)
++			return scnprintf(bf, size, "%s",
++					 btf__name_by_offset(btf, e->name_off));
++	}
++
++	return 0;
++}
++
+ #define STRARRAY(name, array) \
+ 	  { .scnprintf	= SCA_STRARRAY, \
+ 	    .strtoul	= STUL_STRARRAY, \
+@@ -1238,6 +1271,7 @@ struct syscall {
+ 	bool		    is_exit;
+ 	bool		    is_open;
+ 	bool		    nonexistent;
++	bool		    use_btf;
+ 	struct tep_format_field *args;
+ 	const char	    *name;
+ 	const struct syscall_fmt  *fmt;
+@@ -1756,6 +1790,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			continue;
+ 
+ 		len = strlen(field->name);
++		arg->is_enum = false;
+ 
+ 		if (strcmp(field->type, "const char *") == 0 &&
+ 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+@@ -1782,6 +1817,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			 * 7 unsigned long
+ 			 */
+ 			arg->scnprintf = SCA_FD;
++		} else if (strstr(field->type, "enum")) {
++			arg->is_enum = true;
+ 		} else {
+ 			const struct syscall_arg_fmt *fmt =
+ 				syscall_arg_fmt__find_by_name(field->name);
+@@ -1798,7 +1835,13 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 
+ static int syscall__set_arg_fmts(struct syscall *sc)
+ {
+-	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
++	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args),
++				*field = sc->args;
++	struct syscall_arg_fmt *arg = sc->arg_fmt;
++
++	for (; field; field = field->next, ++arg)
++		if (arg->is_enum)
++			sc->use_btf = true;
+ 
+ 	if (last_field)
+ 		sc->args_size = last_field->offset + last_field->size;
+@@ -1811,6 +1854,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	char tp_name[128];
+ 	struct syscall *sc;
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
++	int err;
+ 
+ #ifdef HAVE_SYSCALL_TABLE_SUPPORT
+ 	if (trace->syscalls.table == NULL) {
+@@ -1883,7 +1927,17 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-	return syscall__set_arg_fmts(sc);
++	err = syscall__set_arg_fmts(sc);
++
++	/* after calling syscall__set_arg_fmts() we'll know whether use_btf is true */
++	if (sc->use_btf && trace->btf == NULL) {
++		trace->btf = btf__load_vmlinux_btf();
++		if (verbose > 0)
++			fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
++							    "Failed to load vmlinux BTF\n");
++	}
++
++	return err;
+ }
+ 
+ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+@@ -2050,7 +2104,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 				      unsigned char *args, void *augmented_args, int augmented_args_size,
+ 				      struct trace *trace, struct thread *thread)
+ {
+-	size_t printed = 0;
++	size_t printed = 0, p;
+ 	unsigned long val;
+ 	u8 bit = 1;
+ 	struct syscall_arg arg = {
+@@ -2103,6 +2157,15 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			if (trace->show_arg_names)
+ 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+ 
++			if (sc->arg_fmt[arg.idx].is_enum == true && trace->btf) {
++				p = btf_enum_scnprintf(bf + printed, size - printed, val,
++						       trace->btf, field->type);
++				if (p) {
++					printed += p;
++					continue;
++				}
++			}
++
+ 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+ 								  bf + printed, size - printed, &arg, val);
+ 		}
+-- 
+2.45.2
 
