@@ -1,181 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA178289;
-	Mon, 10 Jun 2024 14:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8998F824BC;
+	Mon, 10 Jun 2024 14:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718028959; cv=none; b=A4lqZHMJ+XnRzazEpWCQNEhkolO88Oz/ILCIkS5YlCLKfvNeFW47tF6Jf+4ME777xaCz3JTn2J2NrIqbTyBWKImcyMg7UMOxVvRPnWJkaEuLgDQ03MxdU3AvbqT3dtAMPDwZZkAWLyih2VCRzeZjMVlWlgWBeTtMvJkG1jKyNMs=
+	t=1718029561; cv=none; b=sNBL3C3NAYWmfDks54Nyj37EcQzV2wbzlwxNGXvg6qhLwFy/b2IwZyyFP5VtGlTifKklMUp2caWJaXKiPvGne1ZG9Gr3K6wv+8fmQp7I6ID5JjJQ5pKDAMqN00+uBJmAiyDUjQuiBchpiY0yre/nPG9fqjAG6t0GQbeSV4zvbQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718028959; c=relaxed/simple;
-	bh=21Kh5EHajTVsMBV+QWXnVBo4LdTC4GC6f73loIWkRhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D5fv9rtHb0IekeNl4TT866hN7H8bsN8svn0Wzg75wyADTV71aZ476Rf5I23I2LoKKjyoEG6Q2+9wmjO+UMUFhIP0ACIg09c5myGL0SI6EIxEBBm9JS9/HanAvwOWd9OlepbqZr5yi4Qr8K8/0BMgli6zHpu+H7zYJ/i8/cWvXeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSYtOfJg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718029561; c=relaxed/simple;
+	bh=1MALhVTCXvaaSPsLKS6EA4XQxIwuQjsSEcf83lfWSVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CvTDuDoCYVtH2QMA6zVorB+sOaHvf5VcKG02Xy3Ew59vF6zkoniMBnWBzvuRbjeXCm9vSRGslXDNe/EEG11OAg6YCsSAAuRkJhTcv5wWvLrsvwU+eN9/4Z7//Xfx+IhoCasN4r0BEXo8x3ae1P0a7Q61cqPiDXM6YY1SMWJJHGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D0QsAhn6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSYtOfJg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC025C4AF50;
-	Mon, 10 Jun 2024 14:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718028958;
-	bh=21Kh5EHajTVsMBV+QWXnVBo4LdTC4GC6f73loIWkRhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VSYtOfJgIR+mp6SoVN7TVDw31txrKLi2G1oJdEkkhMNW7eGibqpECprnS2xNheycl
-	 37ZlaojtvB4Tzp73AW2EqganzVYZ/VQHgxaHcb1oUhS/KtjDiPT7j+eXlkuUTpie4d
-	 TtKnCreIS8E08enLENF6y1DgEWAS+jWmvAFyowlysJ8/HDToiv88xFWG0R4prHf9Yv
-	 8dg5EbWcR7+IK8IYzKKjv78icwlT5wuADPwC5wgr0a40xCdUa71fmCnK3DJwrSGn6F
-	 19Qyk8GWmsXc9oAC07AhS04SAh62nZoJ8DG1GhqmJuGS21WAbK5Jip6HXnFvrdTwj/
-	 ucOnHbIhy1ZNw==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52c819f6146so2425365e87.1;
-        Mon, 10 Jun 2024 07:15:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVo8xt+lXwtzC+HgcPc9ylqPLXLckCF8OBUJ8polDGHgUicOeFYfAHdcWhiW0R8fnOC2wnUcoDiyfecUecw322x7z83yEsseUv/BlF/lqcHQZUTsuBVsp7XWRLxFHNDCY0+DF6nwXODu3s0+PiIPQ==
-X-Gm-Message-State: AOJu0YzSIjoFthgHtf4Sk5iPxkl1FJkjCAKD68fudaaPdJlqO7s+xOny
-	gmYUzi5nNjwWGFus1M6sbpG2bsHSEyeAUDBQ7xxuh6XT2awzve5fPTLkbpG5oaiBNMYCEHNNxfT
-	Mch7eKzkaz/2DL3F7Z630WvEZGQ==
-X-Google-Smtp-Source: AGHT+IF1FqhNgnMilwBpUYwKFCS7SjNBHaPMgfRaSiWiRwC1GxxkGk257Dm2RFGaXs90YLlwwvs7LrWA/frcv8Qksfw=
-X-Received: by 2002:a05:6512:1386:b0:52c:890e:e8e7 with SMTP id
- 2adb3069b0e04-52c890ee93emr2598213e87.50.1718028957128; Mon, 10 Jun 2024
- 07:15:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D0QsAhn6"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ADvAEo029547;
+	Mon, 10 Jun 2024 14:25:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=9
+	A1fnRaAIAcs+I/+xS5/n4SQRErLpAGc0NlZwmylIis=; b=D0QsAhn6REYN+fay+
+	+OO1bpl4LVfs9ntfPkLSHqjU+w2hfUnm2vJPx3jONjvfFNjSfrhjmRlkNtvEkcHA
+	AewNK55brvhVho5rNbutXJBuSanRwYC2fGU7XAkrWVQDHKEnmVXZ6xIWkHTFukj9
+	xT2Fcv6waLclTcpqelOUbgE6f0xAzmZeYQyaegje4rz09gos/duySwqOScOKehC1
+	b8UxbekNaoXOf8vdaX5B/L+vxTj71qp0gMpkXfLD3fVtNx11XmrRAfqZCavQwiRg
+	dnirHulAoLU0ok0hvqMKd2O8SydktJLt1QuSXs/mYelPo8CqttPrO7wiY+/WkYcv
+	KAzzg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr50e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:25:51 +0000 (GMT)
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45AEPoNb009931;
+	Mon, 10 Jun 2024 14:25:50 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr4wq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:25:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45ABxWOj023597;
+	Mon, 10 Jun 2024 14:22:45 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3um7pw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:22:45 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45AEMenM31195834
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Jun 2024 14:22:42 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2085120043;
+	Mon, 10 Jun 2024 14:22:40 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BC0AB20040;
+	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
+Received: from [9.43.26.142] (unknown [9.43.26.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
+Message-ID: <92752ed4-0091-4a98-8af7-dd58bc5432bc@linux.ibm.com>
+Date: Mon, 10 Jun 2024 19:52:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
- <20240607-arm-pmu-3-9-icntr-v1-9-c7bd2dceff3b@kernel.org> <ZmbpnHU3YM0q6YeA@J2N7QTR9R3>
-In-Reply-To: <ZmbpnHU3YM0q6YeA@J2N7QTR9R3>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 10 Jun 2024 08:15:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKt7sGU3HVMQow7AoWrbU7uvXJY3So4LyZM2Q-sWdd1=w@mail.gmail.com>
-Message-ID: <CAL_JsqKt7sGU3HVMQow7AoWrbU7uvXJY3So4LyZM2Q-sWdd1=w@mail.gmail.com>
-Subject: Re: [PATCH 9/9] perf: arm_pmuv3: Add support for Armv9.4 PMU
- instruction counter
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, 
-	James Clark <james.clark@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] tools/perf: Fix the nrcpus in perf bench futex to
+ enable the run when all CPU's are not online
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+Content-Language: en-GB
+From: Disha Goel <disgoel@linux.ibm.com>
+In-Reply-To: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: V2sqOEVqikLkB1I9rixbBRJHFTgczB4i
+X-Proofpoint-ORIG-GUID: pLw8LKytb_MEOT5m2C01hvqqU2knd3E_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 suspectscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100109
 
-On Mon, Jun 10, 2024 at 5:55=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+On 07/06/24 10:13 am, Athira Rajeev wrote:
+
+> Perf bench futex fails as below when attempted to run on
+> on a powerpc system:
 >
-> On Fri, Jun 07, 2024 at 02:31:34PM -0600, Rob Herring (Arm) wrote:
-> > Armv9.4/8.9 PMU adds optional support for a fixed instruction counter
-> > similar to the fixed cycle counter. Support for the feature is indicate=
-d
-> > in the ID_AA64DFR1_EL1 register PMICNTR field. The counter is not
-> > accessible in AArch32.
-> >
-> > Existing userspace using direct counter access won't know how to handle
-> > the fixed instruction counter, so we have to avoid using the counter
-> > when user access is requested.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  arch/arm/include/asm/arm_pmuv3.h   | 21 +++++++++++++++++++++
-> >  arch/arm64/include/asm/arm_pmuv3.h | 29 +++++++++++++++++++++++++++++
-> >  arch/arm64/kvm/pmu.c               |  8 ++++++--
-> >  arch/arm64/tools/sysreg            | 25 +++++++++++++++++++++++++
-> >  drivers/perf/arm_pmuv3.c           | 28 ++++++++++++++++++++++++++--
-> >  include/linux/perf/arm_pmu.h       |  8 ++++++--
-> >  include/linux/perf/arm_pmuv3.h     |  4 +++-
-> >  7 files changed, 116 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/ar=
-m_pmuv3.h
-> > index ac2cf37b57e3..b836537ddfbf 100644
-> > --- a/arch/arm/include/asm/arm_pmuv3.h
-> > +++ b/arch/arm/include/asm/arm_pmuv3.h
-> > @@ -10,6 +10,7 @@
-> >  #include <asm/cputype.h>
-> >
-> >  #define ARMV8_PMU_CYCLE_IDX          31
-> > +#define ARMV8_PMU_INSTR_IDX          32 /* Not accessible from AArch32=
- */
+>   ./perf bench futex all
+>   Running futex/hash benchmark...
+> Run summary [PID 626307]: 80 threads, each operating on 1024 [private] futexes for 10 secs.
 >
-> As with ARMV8_PMU_CYCLE_IDX, I reckon this should live in
-> <linux/perf/arm_pmuv3.h> (with the comment above) so that we don't need
-> separate definitions for arm & arm64.
-
-Sure. My only reasoning was to not pull in everything defined in
-<linux/perf/arm_pmuv3.h> where it is not needed (KVM).
-
-Of course, the normal pattern here is that linux/foo.h includes
-asm/foo.h. We should probably do that here because the arm64 version
-of arm_pmuv3.h depends on defines (e.g. PMEVN_SWITCH) in
-perf/arm_pmuv3.h, but there is no explicit include. I'll add doing
-that into the series.
-
-> [...]
+> perf: pthread_create: No such file or directory
 >
-> > diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> > index 231817a379b5..8ab6e09871de 100644
-> > --- a/arch/arm64/tools/sysreg
-> > +++ b/arch/arm64/tools/sysreg
-> > @@ -2029,6 +2029,31 @@ Sysreg FAR_EL1 3       0       6       0       0
-> >  Field        63:0    ADDR
-> >  EndSysreg
-> >
-> > +Sysreg       PMICNTR_EL0     3       3       9       4       0
-> > +Field        63:0    ICNT
-> > +EndSysreg
+> In the setup where this perf bench was ran, difference was that
+> partition had 640 CPU's, but not all CPUs were online. 80 CPUs
+> were online. While blocking the threads with futex_wait, code
+> sets the affinity using cpumask. The cpumask size used is 80
+> which is picked from "nrcpus = perf_cpu_map__nr(cpu)". Here the
+> benchmark reports fail while setting affinity for cpu number which
+> is greater than 80 or higher, because it attempts to set a bit
+> position which is not allocated on the cpumask. Fix this by changing
+> the size of cpumask to number of possible cpus and not the number
+> of online cpus.
 >
-> LGTM per ARM DDI 0487K.a, section D23.5.15, pages 8989 to 8992.
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+
+Thanks for the fix patches, Athira.
+I have tested all three patches on a power machine (both small and max config),
+and the perf bench futex and epoll tests run fine.
+
+For the series:
+Tested-by: Disha Goel <disgoel@linux.ibm.com>
+
+> ---
+>   tools/perf/bench/futex-hash.c          | 2 +-
+>   tools/perf/bench/futex-lock-pi.c       | 2 +-
+>   tools/perf/bench/futex-requeue.c       | 2 +-
+>   tools/perf/bench/futex-wake-parallel.c | 2 +-
+>   tools/perf/bench/futex-wake.c          | 2 +-
+>   5 files changed, 5 insertions(+), 5 deletions(-)
 >
-> > +
-> > +Sysreg       PMICFILTR_EL0   3       3       9       6       0
-> > +Res0 63:59
-> > +Field        58      SYNC
-> > +Field        57:56   VS
->
-> The 'VS' field doesn't seem to be in the ARM ARM (ARM DDI 0487K.a); is
-> that defined in a supplement?
-
-It is in the A-profile Arch Registers doc:
-https://developer.arm.com/documentation/ddi0601/2024-03/AArch64-Registers/P=
-MICFILTR-EL0--Performance-Monitors-Instruction-Counter-Filter-Register?lang=
-=3Den
-
-> > +Res0 55:32
-> > +Field        31      P
-> > +Field        30      U
-> > +Field        29      NSK
-> > +Field        28      NSU
-> > +Field        27      NSH
-> > +Field        26      M
-> > +Res0 25
-> > +Field        24      SH
-> > +Field        23      T
-> > +Field        22      RLK
-> > +Field        21      RLU
-> > +Field        20      RLH
-> > +Res0 19:16
-> > +Field        15:0    evtCount
-> > +EndSysreg
->
-> Aside from 'VS', this LGTM per ARM DDI 0487K.a, section D23.5.14, pages
-> 8981 to 8988.
->
-> One important thing to note is that this doesn't have the threshold
-> controls (TC, TE, TH); so if threshold events make sense for instruction
-> events, we cannot place those in the dedicated isntruction counter.
-
-Talking to James C, he thinks there could be. Counting cycles which
-retired more than 1 instruction was what he came up with.
-
-Also, looks like we need to handle thresholds for the cycle counter as
-well. Either reject thresholds for cycles events or don't place cycles
-on the fixed cycle counter if thresholds are used. While thresholds
-with cycles doesn't make much sense, James prefers the latter as he
-did do that for testing.
-
-Rob
+> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+> index 0c69d20efa32..b472eded521b 100644
+> --- a/tools/perf/bench/futex-hash.c
+> +++ b/tools/perf/bench/futex-hash.c
+> @@ -174,7 +174,7 @@ int bench_futex_hash(int argc, const char **argv)
+>   	pthread_attr_init(&thread_attr);
+>   	gettimeofday(&bench__start, NULL);
+>   
+> -	nrcpus = perf_cpu_map__nr(cpu);
+> +	nrcpus = cpu__max_cpu().cpu;
+>   	cpuset = CPU_ALLOC(nrcpus);
+>   	BUG_ON(!cpuset);
+>   	size = CPU_ALLOC_SIZE(nrcpus);
+> diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+> index 7a4973346180..0416120c091b 100644
+> --- a/tools/perf/bench/futex-lock-pi.c
+> +++ b/tools/perf/bench/futex-lock-pi.c
+> @@ -122,7 +122,7 @@ static void create_threads(struct worker *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus =  perf_cpu_map__nr(cpu);
+> +	int nrcpus =  cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
+> index d9ad736c1a3e..aad5bfc4fe18 100644
+> --- a/tools/perf/bench/futex-requeue.c
+> +++ b/tools/perf/bench/futex-requeue.c
+> @@ -125,7 +125,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
+> index b66df553e561..90a5b91bf139 100644
+> --- a/tools/perf/bench/futex-wake-parallel.c
+> +++ b/tools/perf/bench/futex-wake-parallel.c
+> @@ -149,7 +149,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
+> index 690fd6d3da13..49b3c89b0b35 100644
+> --- a/tools/perf/bench/futex-wake.c
+> +++ b/tools/perf/bench/futex-wake.c
+> @@ -100,7 +100,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+>   	size_t size;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	threads_starting = params.nthreads;
+>   
+>   	cpuset = CPU_ALLOC(nrcpus);
