@@ -1,201 +1,210 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8998F824BC;
-	Mon, 10 Jun 2024 14:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC679823DF;
+	Mon, 10 Jun 2024 14:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029561; cv=none; b=sNBL3C3NAYWmfDks54Nyj37EcQzV2wbzlwxNGXvg6qhLwFy/b2IwZyyFP5VtGlTifKklMUp2caWJaXKiPvGne1ZG9Gr3K6wv+8fmQp7I6ID5JjJQ5pKDAMqN00+uBJmAiyDUjQuiBchpiY0yre/nPG9fqjAG6t0GQbeSV4zvbQc=
+	t=1718030124; cv=none; b=gWzH+qkHW+m4zR8WN2vn53W71wUzFeYezgdLlCUEYBLq52dQJvCjOe9LiOYOKPeRZyEnkjuLyyGNJXizUCOa2EjnCjKdjezs6Ev8Wo/kdEftP+oAnT9gOxpUjTNrhKDfjD6zi39NaV6SRHUHGucPHfGcDD89D9uQfludgZKoCMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029561; c=relaxed/simple;
-	bh=1MALhVTCXvaaSPsLKS6EA4XQxIwuQjsSEcf83lfWSVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CvTDuDoCYVtH2QMA6zVorB+sOaHvf5VcKG02Xy3Ew59vF6zkoniMBnWBzvuRbjeXCm9vSRGslXDNe/EEG11OAg6YCsSAAuRkJhTcv5wWvLrsvwU+eN9/4Z7//Xfx+IhoCasN4r0BEXo8x3ae1P0a7Q61cqPiDXM6YY1SMWJJHGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D0QsAhn6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718030124; c=relaxed/simple;
+	bh=91sBIoOFuPu9SFY+tLlcUuwCHDWSFm5niB4kvRVeoCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GpiAJOyxhqINB9K9dCxlYUdqmUgWsAG8csDWS8qlu4YLiQkAxwXkXmCfOJy5QCIQvo1O4ZT+xP5kWe1A/GfsuF5t0BQXPEe9lV4ePuYQSyZF1tH22/Oay5Cb1WUgYNyQGJJnkDL5mQFZV+0ZJopmohJRzN6JNN6uVjzgL8ztur0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=a6VOxOiS; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D0QsAhn6"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ADvAEo029547;
-	Mon, 10 Jun 2024 14:25:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=9
-	A1fnRaAIAcs+I/+xS5/n4SQRErLpAGc0NlZwmylIis=; b=D0QsAhn6REYN+fay+
-	+OO1bpl4LVfs9ntfPkLSHqjU+w2hfUnm2vJPx3jONjvfFNjSfrhjmRlkNtvEkcHA
-	AewNK55brvhVho5rNbutXJBuSanRwYC2fGU7XAkrWVQDHKEnmVXZ6xIWkHTFukj9
-	xT2Fcv6waLclTcpqelOUbgE6f0xAzmZeYQyaegje4rz09gos/duySwqOScOKehC1
-	b8UxbekNaoXOf8vdaX5B/L+vxTj71qp0gMpkXfLD3fVtNx11XmrRAfqZCavQwiRg
-	dnirHulAoLU0ok0hvqMKd2O8SydktJLt1QuSXs/mYelPo8CqttPrO7wiY+/WkYcv
-	KAzzg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr50e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 14:25:51 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45AEPoNb009931;
-	Mon, 10 Jun 2024 14:25:50 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr4wq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 14:25:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45ABxWOj023597;
-	Mon, 10 Jun 2024 14:22:45 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3um7pw6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 14:22:45 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45AEMenM31195834
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Jun 2024 14:22:42 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2085120043;
-	Mon, 10 Jun 2024 14:22:40 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC0AB20040;
-	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
-Received: from [9.43.26.142] (unknown [9.43.26.142])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
-Message-ID: <92752ed4-0091-4a98-8af7-dd58bc5432bc@linux.ibm.com>
-Date: Mon, 10 Jun 2024 19:52:35 +0530
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="a6VOxOiS"
+Received: from spock.localnet (unknown [212.20.115.26])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 4D1B9635B043;
+	Mon, 10 Jun 2024 16:28:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1718029705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l0SMNTkYAuc5O8ZdDG31qtzlnMEbWZ7EjPgqLUUlf1k=;
+	b=a6VOxOiS62O9xhjfaIQGv9ESrXEmBAqJ2SObD/XeVfvJa62ZDU/hYV+pxYdW40hd4pH/sS
+	TV1n8s1AmmRBPAdZ5gC7qGR3L/9uKSSh/ss3Ot8H9G3f8XubQ+5kkEkgUsd4c4ZgtCbOvB
+	GmfwSOLHwdGH1NIN7hyNUy0F941/dto=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
+ gustavoars@kernel.org, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com,
+ sandipan.das@amd.com, linux-pm@vger.kernel.org,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Subject: Re: [PATCH 0/6] Add per-core RAPL energy counter support for AMD CPUs
+Date: Mon, 10 Jun 2024 16:28:11 +0200
+Message-ID: <2733323.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+References: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] tools/perf: Fix the nrcpus in perf bench futex to
- enable the run when all CPU's are not online
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-GB
-From: Disha Goel <disgoel@linux.ibm.com>
-In-Reply-To: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: V2sqOEVqikLkB1I9rixbBRJHFTgczB4i
-X-Proofpoint-ORIG-GUID: pLw8LKytb_MEOT5m2C01hvqqU2knd3E_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1011 suspectscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100109
+Content-Type: multipart/signed; boundary="nextPart12451447.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On 07/06/24 10:13 am, Athira Rajeev wrote:
+--nextPart12451447.O9o76ZdvQC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Date: Mon, 10 Jun 2024 16:28:11 +0200
+Message-ID: <2733323.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+References: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+MIME-Version: 1.0
 
-> Perf bench futex fails as below when attempted to run on
-> on a powerpc system:
->
->   ./perf bench futex all
->   Running futex/hash benchmark...
-> Run summary [PID 626307]: 80 threads, each operating on 1024 [private] futexes for 10 secs.
->
-> perf: pthread_create: No such file or directory
->
-> In the setup where this perf bench was ran, difference was that
-> partition had 640 CPU's, but not all CPUs were online. 80 CPUs
-> were online. While blocking the threads with futex_wait, code
-> sets the affinity using cpumask. The cpumask size used is 80
-> which is picked from "nrcpus = perf_cpu_map__nr(cpu)". Here the
-> benchmark reports fail while setting affinity for cpu number which
-> is greater than 80 or higher, because it attempts to set a bit
-> position which is not allocated on the cpumask. Fix this by changing
-> the size of cpumask to number of possible cpus and not the number
-> of online cpus.
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Hello.
 
-Thanks for the fix patches, Athira.
-I have tested all three patches on a power machine (both small and max config),
-and the perf bench futex and epoll tests run fine.
+On pond=C4=9Bl=C3=AD 10. =C4=8Dervna 2024 12:07:45, SEL=C4=8C Dhananjay Ugw=
+ekar wrote:
+> Currently the energy-cores event in the power PMU aggregates energy
+> consumption data at a package level. On the other hand the core energy
+> RAPL counter in AMD CPUs has a core scope (which means the energy=20
+> consumption is recorded separately for each core). Earlier efforts to add
+> the core event in the power PMU had failed [1], due to the difference in=
+=20
+> the scope of these two events. Hence, there is a need for a new core scope
+> PMU.
+>=20
+> This patchset adds a new "power_per_core" PMU alongside the existing
+> "power" PMU, which will be responsible for collecting the new
+> "energy-per-core" event.
+>=20
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+>=20
+> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa=20
+> machine:
+>=20
+> $ perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 1
+>=20
+>  Performance counter stats for 'system wide':
+>=20
+> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+>=20
+> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@li=
+nux.intel.com/
+>=20
+> This patchset applies cleanly on top of v6.10-rc3 as well as latest=20
+> tip/master.
+>=20
+> Dhananjay Ugwekar (6):
+>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+>   perf/x86/rapl: Rename rapl_pmu variables
+>   perf/x86/rapl: Make rapl_model struct global
+>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+>   perf/x86/rapl: Add wrapper for online/offline functions
+>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+>=20
+>  arch/x86/events/rapl.c | 311 ++++++++++++++++++++++++++++++-----------
+>  1 file changed, 233 insertions(+), 78 deletions(-)
+>=20
+>=20
 
-For the series:
-Tested-by: Disha Goel <disgoel@linux.ibm.com>
+With my CPU:
 
-> ---
->   tools/perf/bench/futex-hash.c          | 2 +-
->   tools/perf/bench/futex-lock-pi.c       | 2 +-
->   tools/perf/bench/futex-requeue.c       | 2 +-
->   tools/perf/bench/futex-wake-parallel.c | 2 +-
->   tools/perf/bench/futex-wake.c          | 2 +-
->   5 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> index 0c69d20efa32..b472eded521b 100644
-> --- a/tools/perf/bench/futex-hash.c
-> +++ b/tools/perf/bench/futex-hash.c
-> @@ -174,7 +174,7 @@ int bench_futex_hash(int argc, const char **argv)
->   	pthread_attr_init(&thread_attr);
->   	gettimeofday(&bench__start, NULL);
->   
-> -	nrcpus = perf_cpu_map__nr(cpu);
-> +	nrcpus = cpu__max_cpu().cpu;
->   	cpuset = CPU_ALLOC(nrcpus);
->   	BUG_ON(!cpuset);
->   	size = CPU_ALLOC_SIZE(nrcpus);
-> diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-> index 7a4973346180..0416120c091b 100644
-> --- a/tools/perf/bench/futex-lock-pi.c
-> +++ b/tools/perf/bench/futex-lock-pi.c
-> @@ -122,7 +122,7 @@ static void create_threads(struct worker *w, struct perf_cpu_map *cpu)
->   {
->   	cpu_set_t *cpuset;
->   	unsigned int i;
-> -	int nrcpus =  perf_cpu_map__nr(cpu);
-> +	int nrcpus =  cpu__max_cpu().cpu;
->   	size_t size;
->   
->   	threads_starting = params.nthreads;
-> diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-> index d9ad736c1a3e..aad5bfc4fe18 100644
-> --- a/tools/perf/bench/futex-requeue.c
-> +++ b/tools/perf/bench/futex-requeue.c
-> @@ -125,7 +125,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
->   {
->   	cpu_set_t *cpuset;
->   	unsigned int i;
-> -	int nrcpus = perf_cpu_map__nr(cpu);
-> +	int nrcpus = cpu__max_cpu().cpu;
->   	size_t size;
->   
->   	threads_starting = params.nthreads;
-> diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-> index b66df553e561..90a5b91bf139 100644
-> --- a/tools/perf/bench/futex-wake-parallel.c
-> +++ b/tools/perf/bench/futex-wake-parallel.c
-> @@ -149,7 +149,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
->   {
->   	cpu_set_t *cpuset;
->   	unsigned int i;
-> -	int nrcpus = perf_cpu_map__nr(cpu);
-> +	int nrcpus = cpu__max_cpu().cpu;
->   	size_t size;
->   
->   	threads_starting = params.nthreads;
-> diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-> index 690fd6d3da13..49b3c89b0b35 100644
-> --- a/tools/perf/bench/futex-wake.c
-> +++ b/tools/perf/bench/futex-wake.c
-> @@ -100,7 +100,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
->   	cpu_set_t *cpuset;
->   	unsigned int i;
->   	size_t size;
-> -	int nrcpus = perf_cpu_map__nr(cpu);
-> +	int nrcpus = cpu__max_cpu().cpu;
->   	threads_starting = params.nthreads;
->   
->   	cpuset = CPU_ALLOC(nrcpus);
+  Model name:             AMD Ryzen 9 5950X 16-Core Processor
+
+and this workload:
+
+$ taskset -c 1 dd if=3D/dev/zero of=3D/dev/null
+
+the following result is got:
+
+$ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 1
+
+ Performance counter stats for 'system wide':
+
+S0-D0-C0              1               1,70 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C1              1               8,83 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C2              1               0,17 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C3              1               0,33 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C4              1               0,14 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C5              1               0,33 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C6              1               0,25 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C7              1               0,19 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C8              1               0,66 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C9              1               1,71 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C10             1               0,38 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C11             1               1,69 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C12             1               0,22 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C13             1               0,11 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C14             1               0,49 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C15             1               0,37 Joules power_per_core/energy-per=
+=2Dcore/
+
+       1,002409590 seconds time elapsed
+
+If it is as expected, please add my:
+
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+
+Thank you.
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart12451447.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZnDXsACgkQil/iNcg8
+M0t6fQ/9Fdruv7/wOgfWfxsmq12Z1F7j5jUZ3jwi5SWc8eM7xrP9k0xHc9MUuiAz
+Wa6Q+GHzOASCcjGfyHbfJMwUj9fjjbDClvtVM+IV+F3jM+HDqYJs3xfHLxZYi5Yq
+aZb6R8fmXv+O43R3N/T/fRuAjWod/+1KYnvP0ktPD7GCw/5bSWelLdmYAeEOyF8+
+wbOZY4Vpa4mMIB6aywrmtDLWBfb3b1x3bKTCZiIxxgnjf/Kn6JZUKm/cqdJ7j12d
+ZBmgC8MQEtbd1gGX3yF53kCUOnMJ5Pl/oKNC8upLlej+ktwGzIEqWrV3MDAFChmK
+q8OukQvozY3VZinqRDJ5xsB1o1sSyGmnaNiWUTXV3TXr8Is+urKeGG9Vrcr81KTe
+QPDGesLe09hh/DH051o34XbOj1fA680DP21gVlC7jMyfanxPCvyCnnQ9O6pL81MK
+H7aueueox41UXHoIFRIZ5znWwewei8ny+4gAPam5/XVVX4E2rnBjl88OHWgMUXvU
+biSFXskJU58wakoFWQd9iaCriGy1Ke+vKadeO8DpM89hLQSA+y08J2YXbBmQa7dT
+pg4aNkKOeWwsMgzzJ0SbBJdPy66mhMLshln45oqTFYFyLTEKF1rfsFWZrKKn7wsg
+uhjXr+TwTTA8dqewzCYxFq9drb/6bO1Dmn8UJDjMFAGWcBlRgaI=
+=SsIp
+-----END PGP SIGNATURE-----
+
+--nextPart12451447.O9o76ZdvQC--
+
+
+
