@@ -1,176 +1,354 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35DB7F7F5;
-	Mon, 10 Jun 2024 11:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2A3C30;
+	Mon, 10 Jun 2024 12:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020516; cv=none; b=MZW/LyMIpt5GrBIqcBM/z8MIhNjxSgVj27Ezhw/kT9lZvlPeQxiAxGYzAg4zpW8o32kfTgdQRFRCQiUoOg716BKPuSioVVyh4/duAWADxQOBWkU5tm2JLMgRBt4bpZOSC5QiFgmJ+AZUBB2fEfPd7i0KYWKDb5W8T3kbBRoUWZA=
+	t=1718022086; cv=none; b=a37MefOJzyFH+6pKjPBrr2dSaO4NjPnRnQ0Y4KqWkdOegqvNUy7T5G81grEfKkJPMwVJ/LYpddGPKw9zPFlhaQIYZFDA6YHtNXShGfswkvdQzS8kzyY2DSUL92IjHY167w3imqd14qaD9b1z1LY+dUvVNS3B5zJqoby+WJAgDlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020516; c=relaxed/simple;
-	bh=lHU2JJLgCKo26fwvGAKkI/5vfcLyhRaN2Ta0zIemFAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=peFYEI6abi5dFe8ytIMj0UfEDVVsfNZvywAvbiPGlwv6up9Zxjesvxh8qeT+DQAOZpDZ29/sMowxKU44ZtqlPRNPVshcP1wDvVcemJ4RrTYzRlOEuPLCOWK7ruLJmJu8WHJr6QYKc9Zi2PYp6U5tZpPE59s1k6xbDLzDiBRs8do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3BD112FC;
-	Mon, 10 Jun 2024 04:55:38 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8F903F58B;
-	Mon, 10 Jun 2024 04:55:10 -0700 (PDT)
-Date: Mon, 10 Jun 2024 12:55:08 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH 9/9] perf: arm_pmuv3: Add support for Armv9.4 PMU
- instruction counter
-Message-ID: <ZmbpnHU3YM0q6YeA@J2N7QTR9R3>
-References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
- <20240607-arm-pmu-3-9-icntr-v1-9-c7bd2dceff3b@kernel.org>
+	s=arc-20240116; t=1718022086; c=relaxed/simple;
+	bh=UeYcawfFgU82qeIVHYvgY7T+CqZAGA2E6VBgb0Y7Yuc=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=UeB4nxWDcrp0hMmbHKh6KbgB/pP5E2YPuSnUSb4QHcESyyJzFdQ5xEZ5U4rpHfHwSwKmUxt1T5pLJMWo4eEau4lEUekFU9MlZU4lOcPNiwSgl3AY7HqAYQpgqQ9dwJrXaGX9bb5Hoebol+y604DZL3rl1/GhqA4FlqoPnLcLzdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C3N8isd5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C3N8isd5"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AARpbM025838;
+	Mon, 10 Jun 2024 12:21:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=1FPNSqkZ3jNtmraPgUbOXw7UJahn6qcwJXgKR4TOWOM=; b=C3N8isd52HjG
+	ovPcynQk5jHHOSXmG/ohunSkTtyKMDCTUth2gNxIUllJTksWngkga9F2HkxGbY5J
+	a3SARdLzCH4I2oop4TbMHmQzsBPsUeM40uotsEjTfxrcraSWEeNliL4z4n8E+BhN
+	ww4pJPFpIvcynWhaUj4Pc6nv/nvmWTYmBVfEOC6S11JOszVOcBvoxCcwvRUcGBHb
+	+cObyww0nahykqrREtVQW9QXFGHztK6HZ7cE1H65HUNGB/GtF27HvsNb1Zq5uLNT
+	5Rvd6ZTF7jHF0XIY2C0Mon3qA8Jd5eWjOcD/U0zOQ4mmyii3mjAwDh96h4OoBwQ5
+	E+FjoipBuQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynyr7r932-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 12:21:01 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45ACL13Q001156;
+	Mon, 10 Jun 2024 12:21:01 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynyr7r92y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 12:21:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45AAlesC003881;
+	Mon, 10 Jun 2024 12:21:00 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mpfesu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 12:21:00 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45ACKsiX32702856
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Jun 2024 12:20:56 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72ACC2004D;
+	Mon, 10 Jun 2024 12:20:54 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9F5F20043;
+	Mon, 10 Jun 2024 12:20:51 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.90.99])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 10 Jun 2024 12:20:51 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
+ powerpc
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <c383b404-727c-4564-a66e-0906348891b3@intel.com>
+Date: Mon, 10 Jun 2024 17:50:39 +0530
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.vnet.ibm.com
+Message-Id: <81ED04E0-23B5-44AE-B84D-5766346F1D32@linux.vnet.ibm.com>
+References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
+ <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+ <c383b404-727c-4564-a66e-0906348891b3@intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jGhmPXuBwGKYyj4Pj4WkyqWj4PrkJcqL
+X-Proofpoint-GUID: 1Kdu1aH1j3OFuOv9nsX_mu8SamwhxEnk
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607-arm-pmu-3-9-icntr-v1-9-c7bd2dceff3b@kernel.org>
-
-On Fri, Jun 07, 2024 at 02:31:34PM -0600, Rob Herring (Arm) wrote:
-> Armv9.4/8.9 PMU adds optional support for a fixed instruction counter
-> similar to the fixed cycle counter. Support for the feature is indicated
-> in the ID_AA64DFR1_EL1 register PMICNTR field. The counter is not
-> accessible in AArch32.
-> 
-> Existing userspace using direct counter access won't know how to handle
-> the fixed instruction counter, so we have to avoid using the counter
-> when user access is requested.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  arch/arm/include/asm/arm_pmuv3.h   | 21 +++++++++++++++++++++
->  arch/arm64/include/asm/arm_pmuv3.h | 29 +++++++++++++++++++++++++++++
->  arch/arm64/kvm/pmu.c               |  8 ++++++--
->  arch/arm64/tools/sysreg            | 25 +++++++++++++++++++++++++
->  drivers/perf/arm_pmuv3.c           | 28 ++++++++++++++++++++++++++--
->  include/linux/perf/arm_pmu.h       |  8 ++++++--
->  include/linux/perf/arm_pmuv3.h     |  4 +++-
->  7 files changed, 116 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-> index ac2cf37b57e3..b836537ddfbf 100644
-> --- a/arch/arm/include/asm/arm_pmuv3.h
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -10,6 +10,7 @@
->  #include <asm/cputype.h>
->  
->  #define ARMV8_PMU_CYCLE_IDX		31
-> +#define ARMV8_PMU_INSTR_IDX		32 /* Not accessible from AArch32 */
-
-As with ARMV8_PMU_CYCLE_IDX, I reckon this should live in
-<linux/perf/arm_pmuv3.h> (with the comment above) so that we don't need
-separate definitions for arm & arm64.
-
-[...]
-
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index 231817a379b5..8ab6e09871de 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -2029,6 +2029,31 @@ Sysreg	FAR_EL1	3	0	6	0	0
->  Field	63:0	ADDR
->  EndSysreg
->  
-> +Sysreg	PMICNTR_EL0	3	3	9	4	0
-> +Field	63:0	ICNT
-> +EndSysreg
-
-LGTM per ARM DDI 0487K.a, section D23.5.15, pages 8989 to 8992.
-
-> +
-> +Sysreg	PMICFILTR_EL0	3	3	9	6	0
-> +Res0	63:59
-> +Field	58	SYNC
-> +Field	57:56	VS
-
-The 'VS' field doesn't seem to be in the ARM ARM (ARM DDI 0487K.a); is
-that defined in a supplement?
-
-> +Res0	55:32
-> +Field	31	P
-> +Field	30	U
-> +Field	29	NSK
-> +Field	28	NSU
-> +Field	27	NSH
-> +Field	26	M
-> +Res0	25
-> +Field	24	SH
-> +Field	23	T
-> +Field	22	RLK
-> +Field	21	RLU
-> +Field	20	RLH
-> +Res0	19:16
-> +Field	15:0	evtCount
-> +EndSysreg
-
-Aside from 'VS', this LGTM per ARM DDI 0487K.a, section D23.5.14, pages
-8981 to 8988.
-
-One important thing to note is that this doesn't have the threshold
-controls (TC, TE, TH); so if threshold events make sense for instruction
-events, we cannot place those in the dedicated isntruction counter.
-
-[...]
-
-> @@ -931,6 +939,18 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  				return -EAGAIN;
->  	}
->  
-> +	/*
-> +	 * Always prefer to place a instruction counter into the instruction counter,
-> +	 * but don't expose the instruction counter to userspace access as userspace
-> +	 * may not know how to handle it.
-> +	 */
-> +	if (test_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask) &&
-> +	    (evtype == ARMV8_PMUV3_PERFCTR_INST_RETIRED) &&
-> +	    !armv8pmu_event_want_user_access(event)) {
-> +		if (!test_and_set_bit(ARMV8_PMU_INSTR_IDX, cpuc->used_mask))
-> +			return ARMV8_PMU_INSTR_IDX;
-> +	}
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ mlxscore=0 priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100090
 
 
-I reckon this'd be a bit clearer if we check the evtype first, as with
-cycles, e.g.
 
-	/*
-	 * Always prefer to place a instruction counter into the instruction counter,
-	 * but don't expose the instruction counter to userspace access as userspace
-	 * may not know how to handle it.
-	 */
-	if (evtype == ARMV8_PMUV3_PERFCTR_INST_RETIRED) {
-		if (test_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask) &&
-		    !armv8pmu_event_want_user_access(event) &&
-		    !test_and_set_bit(ARMV8_PMU_INSTR_IDX, cpuc->used_mask))
-			return ARMV8_PMU_INSTR_IDX;
-	}
+> On 3 Jun 2024, at 10:28=E2=80=AFPM, Adrian Hunter <adrian.hunter@intel.co=
+m> wrote:
+>=20
+> On 3/06/24 19:30, Ian Rogers wrote:
+>> On Fri, May 31, 2024 at 11:10=E2=80=AFPM Athira Rajeev
+>> <atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>> Now perf uses the capstone library to disassemble the instructions in
+>>> x86. capstone is used (if available) for perf annotate to speed up.
+>>> Currently it only supports x86 architecture. Patch includes changes to
+>>> enable this in powerpc. For now, only for data type sort keys, this
+>>> method is used and only binary code (raw instruction) is read. This is
+>>> because powerpc approach to understand instructions and reg fields uses
+>>> raw instruction. The "cs_disasm" is currently not enabled. While
+>>> attempting to do cs_disasm, observation is that some of the instructions
+>>> were not identified (ex: extswsli, maddld) and it had to fallback to use
+>>> objdump. Hence enabling "cs_disasm" is added in comment section as a
+>>> TODO for powerpc.
+>>>=20
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>> ---
+>>> tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
+>>> 1 file changed, 146 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+>>> index d8b357055302..915508d2e197 100644
+>>> --- a/tools/perf/util/disasm.c
+>>> +++ b/tools/perf/util/disasm.c
+>>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate=
+_args *args, bool is_64bit,
+>>> {
+>>>        struct annotation_options *opt =3D args->options;
+>>>        cs_mode mode =3D is_64bit ? CS_MODE_64 : CS_MODE_32;
+>>> +       int ret;
+>>>=20
+>>>        /* TODO: support more architectures */
+>>> -       if (!arch__is(args->arch, "x86"))
+>>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "p=
+owerpc")))
+>>>                return -1;
+>>>=20
+>>> -       if (cs_open(CS_ARCH_X86, mode, handle) !=3D CS_ERR_OK)
+>>> +       if (arch__is(args->arch, "x86"))
+>>> +               ret =3D cs_open(CS_ARCH_X86, mode, handle);
+>>> +       else
+>>> +               ret =3D cs_open(CS_ARCH_PPC, mode, handle);
+>>> +
+>>> +       if (ret !=3D CS_ERR_OK)
+>>>                return -1;
+>>=20
+>> There looks to be a pretty/more robust capstone_init function in
+>> print_insn.c, should we factor this code out and recycle:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git=
+/tree/tools/perf/util/print_insn.c?h=3Dperf-tools-next#n40
+>=20
+> On a slightly related note, there is a compile error
+> been around for a while in util/disasm.c on Ubuntu 22.04
+>=20
+> In file included from /usr/include/capstone/capstone.h:279,
+>                 from util/disasm.c:1354:
+> /usr/include/capstone/bpf.h:94:14: error: =E2=80=98bpf_insn=E2=80=99 defi=
+ned as wrong
+> kind of tag
+>   94 | typedef enum bpf_insn {
+>      |              ^~~~~~~~
+>=20
 
-As above, we might need to check for threshold controls, but I'll need
-to go page that in.
+Hi Adrian
 
-Mark.
+I tried compilation on Ubuntu 22.04, but didn=E2=80=99t face this issue.
+The libcapstone version I have is libcapstone4 which doesn=E2=80=99t have t=
+he include for =E2=80=9Cbpf.h=E2=80=9D
+What is the version of libcapstone in the setup where you are seeing this i=
+ssue ?
+
+Thanks
+Athira
+>>=20
+>> Thanks,
+>> Ian
+>>=20
+>>>        if (!opt->disassembler_style ||
+>>> @@ -1635,6 +1641,139 @@ static void print_capstone_detail(cs_insn *insn=
+, char *buf, size_t len,
+>>>        }
+>>> }
+>>>=20
+>>> +static int symbol__disassemble_capstone_powerpc(char *filename, struct=
+ symbol *sym,
+>>> +                                       struct annotate_args *args)
+>>> +{
+>>> +       struct annotation *notes =3D symbol__annotation(sym);
+>>> +       struct map *map =3D args->ms.map;
+>>> +       struct dso *dso =3D map__dso(map);
+>>> +       struct nscookie nsc;
+>>> +       u64 start =3D map__rip_2objdump(map, sym->start);
+>>> +       u64 end =3D map__rip_2objdump(map, sym->end);
+>>> +       u64 len =3D end - start;
+>>> +       u64 offset;
+>>> +       int i, fd, count;
+>>> +       bool is_64bit =3D false;
+>>> +       bool needs_cs_close =3D false;
+>>> +       u8 *buf =3D NULL;
+>>> +       struct find_file_offset_data data =3D {
+>>> +               .ip =3D start,
+>>> +       };
+>>> +       csh handle;
+>>> +       char disasm_buf[512];
+>>> +       struct disasm_line *dl;
+>>> +       u32 *line;
+>>> +
+>>> +       if (args->options->objdump_path)
+>>> +               return -1;
+>>> +
+>>> +       nsinfo__mountns_enter(dso->nsinfo, &nsc);
+>>> +       fd =3D open(filename, O_RDONLY);
+>>> +       nsinfo__mountns_exit(&nsc);
+>>> +       if (fd < 0)
+>>> +               return -1;
+>>> +
+>>> +       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data,
+>>> +                           &is_64bit) =3D=3D 0)
+>>> +               goto err;
+>>> +
+>>> +       if (open_capstone_handle(args, is_64bit, &handle) < 0)
+>>> +               goto err;
+>>> +
+>>> +       needs_cs_close =3D true;
+>>> +
+>>> +       buf =3D malloc(len);
+>>> +       if (buf =3D=3D NULL)
+>>> +               goto err;
+>>> +
+>>> +       count =3D pread(fd, buf, len, data.offset);
+>>> +       close(fd);
+>>> +       fd =3D -1;
+>>> +
+>>> +       if ((u64)count !=3D len)
+>>> +               goto err;
+>>> +
+>>> +       line =3D (u32 *)buf;
+>>> +
+>>> +       /* add the function address and name */
+>>> +       scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+>>> +                 start, sym->name);
+>>> +
+>>> +       args->offset =3D -1;
+>>> +       args->line =3D disasm_buf;
+>>> +       args->line_nr =3D 0;
+>>> +       args->fileloc =3D NULL;
+>>> +       args->ms.sym =3D sym;
+>>> +
+>>> +       dl =3D disasm_line__new(args);
+>>> +       if (dl =3D=3D NULL)
+>>> +               goto err;
+>>> +
+>>> +       annotation_line__add(&dl->al, &notes->src->source);
+>>> +
+>>> +       /*
+>>> +        * TODO: enable disassm for powerpc
+>>> +        * count =3D cs_disasm(handle, buf, len, start, len, &insn);
+>>> +        *
+>>> +        * For now, only binary code is saved in disassembled line
+>>> +        * to be used in "type" and "typeoff" sort keys. Each raw code
+>>> +        * is 32 bit instruction. So use "len/4" to get the number of
+>>> +        * entries.
+>>> +        */
+>>> +       count =3D len/4;
+>>> +
+>>> +       for (i =3D 0, offset =3D 0; i < count; i++) {
+>>> +               args->offset =3D offset;
+>>> +               sprintf(args->line, "%x", line[i]);
+>>> +
+>>> +               dl =3D disasm_line__new(args);
+>>> +               if (dl =3D=3D NULL)
+>>> +                       goto err;
+>>> +
+>>> +               annotation_line__add(&dl->al, &notes->src->source);
+>>> +
+>>> +               offset +=3D 4;
+>>> +       }
+>>> +
+>>> +       /* It failed in the middle */
+>>> +       if (offset !=3D len) {
+>>> +               struct list_head *list =3D &notes->src->source;
+>>> +
+>>> +               /* Discard all lines and fallback to objdump */
+>>> +               while (!list_empty(list)) {
+>>> +                       dl =3D list_first_entry(list, struct disasm_lin=
+e, al.node);
+>>> +
+>>> +                       list_del_init(&dl->al.node);
+>>> +                       disasm_line__free(dl);
+>>> +               }
+>>> +               count =3D -1;
+>>> +       }
+>>> +
+>>> +out:
+>>> +       if (needs_cs_close)
+>>> +               cs_close(&handle);
+>>> +       free(buf);
+>>> +       return count < 0 ? count : 0;
+>>> +
+>>> +err:
+>>> +       if (fd >=3D 0)
+>>> +               close(fd);
+>>> +       if (needs_cs_close) {
+>>> +               struct disasm_line *tmp;
+>>> +
+>>> +               /*
+>>> +                * It probably failed in the middle of the above loop.
+>>> +                * Release any resources it might add.
+>>> +                */
+>>> +               list_for_each_entry_safe(dl, tmp, &notes->src->source, =
+al.node) {
+>>> +                       list_del(&dl->al.node);
+>>> +                       free(dl);
+>>> +               }
+>>> +       }
+>>> +       count =3D -1;
+>>> +       goto out;
+>>> +}
+>>> +
+>>> static int symbol__disassemble_capstone(char *filename, struct symbol *=
+sym,
+>>>                                        struct annotate_args *args)
+>>> {
+>>> @@ -1987,6 +2126,11 @@ int symbol__disassemble(struct symbol *sym, stru=
+ct annotate_args *args)
+>>>                        err =3D symbol__disassemble_dso(symfs_filename, =
+sym, args);
+>>>                        if (err =3D=3D 0)
+>>>                                goto out_remove_tmp;
+>>> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+>>> +                       err =3D symbol__disassemble_capstone_powerpc(sy=
+mfs_filename, sym, args);
+>>> +                       if (err =3D=3D 0)
+>>> +                               goto out_remove_tmp;
+>>> +#endif
+>>>                }
+>>>        }
+>>>=20
+>>> --
+>>> 2.43.0
+
+
