@@ -1,59 +1,65 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEA72E620;
-	Mon, 10 Jun 2024 19:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BE214F9CA;
+	Mon, 10 Jun 2024 20:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718046138; cv=none; b=mb0zUikBtsWAoR+R/tyld4hu5FR1s34E5deyLKrjfOpOKqC4uvErl1FgNZfdjd05k8f2AlMjiTxshKAEFLS+ZEFb/HIq3ocvKNuZ+MaTIRo7vNel93xdigMZEzcrUOnrRA2lfH2mUu0vjznZCog85vXjeRCgrBPxCfVkMm1BRGU=
+	t=1718049969; cv=none; b=rmXfymatjVuwwqTb/kYJW78uYdoP424QOZ0NOsNNjt+VHVgkC+X97YIsYbu7aR2okrP4IbPJJssDVVz6byVY60NWyejRivH9XGfH9/0+OeM5vYoMYlblYgdSq1uwyS9WxlY8p6zsY7KtGgGTSlg43+RQN/38YQ659zAnFKwwjjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718046138; c=relaxed/simple;
-	bh=HIxZJDBw8lvC6AgonODjlRnJnG+poyxOoaYJhz1KzqI=;
+	s=arc-20240116; t=1718049969; c=relaxed/simple;
+	bh=zbr0m3jaUR9OElayeL3+Puu8aP5BQ6bEGe0ASP77bQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O90EwdyMub7L1HGCLW3PxYHEY+evx/FDc3Aa1FOAW2qNglOKkjyPjjxAkv0+NBMQbw6FOpc3gnjlSSkGm60wp14ikTd+QU1ZH8aSVGMBUMcJnel3F4nbsRoOjXrE9awI+mcBokDKsm14GpYNNS0TuHxDLy92v9GJLa/BomKTE4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KBx0Ic5e; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=tqknMBg5lMy5z9G7c5WIMkgSLzoFrreqdoRoDCjfghHDECqq76VuWf9oFQiA8t+VeJwNSHELOj57VyDOXHJGPvQ+sw2ntTWkQaykXiHjJfqgG2IvSBBcdO7AleaVcCCKTAqvTb3lOc19wSy9O/SG1ileBxKoSTGkhDEAkVadaho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOmHeJ0J; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KBx0Ic5e"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOmHeJ0J"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=s7Gyb9953r9ixu7af9wBM8hywUzKBl8Kmb/xfyNTRSg=; b=KBx0Ic5eGRnV/iKzQO1aiPoOB2
-	BVinSNWUG8COIh+VgcALGirLNWYTUUJ4SBSUSgbdnL7X9BNTRmt2tIjFFiLAjHViVYHY866EjogIr
-	fucVRg1upRTcTHZAkCXEtviW3XaPQR1Wu0cdtQOM4dRNv8fPSBZ3PxsDOieH4/YUigloV+reuxXP6
-	bFisFazK7KSbFczNQkeI/c1Q0eCQp3OoKWrN3enEcVmTTozm5wWFeFSOEI/MgFzPtHHgO2jfMUOxQ
-	ywgOf0A9/7Fs3VAGr/P2EvcM2Og8F24rtaK3plNMMun2YyWhRI36qLSl7Zj/iN0sbmt94e33KtB4E
-	ArWrRwTQ==;
+	bh=fYZ++efrlLdLgl5+5kduErcCwGNkwJxHYJIyw8lDqdM=; b=iOmHeJ0Jsu8Eo6JoXABlbGd0I0
+	bJe+wGiDRyomn+cVqKpgC3q8gDZQQub9Loev8/dZ/XdSZ+MBoea7mS17HbhdVpAlBZE84aGr2xXHw
+	zUvtSHQrQOuBekbu1pUQ743nu1a/ALB8evE0HROV8wKgT2CQleyGaXzXwH6znHymn/CI6yriPHJXW
+	NAuK3OSAKk9PV2kgr1QR6xuuN3pg71/ZDghzKeRvrOb3msh7K+Dm2jYth7NwdfaksTpGj6nq7hbvA
+	4z0ebh713bwfrGtq1LrUWVF3tox2dTC2r25lq4knpgIehmS4xdVoo6fWbRKH5ffXgHhmdURj3I85d
+	0fyzIu6A==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGkGa-00000001cAp-2O4d;
-	Mon, 10 Jun 2024 19:01:23 +0000
+	id 1sGlGw-00000001dwA-2wkK;
+	Mon, 10 Jun 2024 20:05:52 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1B245300439; Mon, 10 Jun 2024 21:01:19 +0200 (CEST)
-Date: Mon, 10 Jun 2024 21:01:18 +0200
+	id F156A300439; Mon, 10 Jun 2024 22:05:44 +0200 (CEST)
+Date: Mon, 10 Jun 2024 22:05:44 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Ben Gainey <Ben.Gainey@arm.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	Mark Rutland <Mark.Rutland@arm.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	James Clark <James.Clark@arm.com>,
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 1/4] perf: Support PERF_SAMPLE_READ with inherit
-Message-ID: <20240610190118.GV8774@noisy.programming.kicks-ass.net>
-References: <20240606144059.365633-1-ben.gainey@arm.com>
- <20240606144059.365633-2-ben.gainey@arm.com>
- <20240607093254.GN8774@noisy.programming.kicks-ass.net>
- <451afb8eb03f1519c482a84a6c1cbd1e62222988.camel@arm.com>
- <20240607110214.GQ8774@noisy.programming.kicks-ass.net>
- <60ed550e8cb5e5aa4004fb2d3857a605ba1da23e.camel@arm.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202406101010.E1C77AE9D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,46 +68,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <60ed550e8cb5e5aa4004fb2d3857a605ba1da23e.camel@arm.com>
+In-Reply-To: <202406101010.E1C77AE9D@keescook>
 
-On Fri, Jun 07, 2024 at 02:04:49PM +0000, Ben Gainey wrote:
-
-> > IIRC they all originate in a single location around
-> > perf_output_read(),
-> > that already has the event and could easily 'correct' the semantic
-> > meaning by doing the above once or so.
+On Mon, Jun 10, 2024 at 10:28:52AM -0700, Kees Cook wrote:
+> On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> > Hi everyone,
 > > 
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1][2].
 > 
-> As far as I can tell, you can mix events in a group with inconsistent
-> values of PERF_SAMPLE_READ which means that doing it at the top level
-> introduces an inconsistency/confusing behaviour since it makes the
-> "thread-local-ness" of the read_format values a property of the event
-> that caused the sample, rather than of the specific event to which the
-> value belongs. The current implementation makes it a property of the
-> specific event not the sample event. Specifically, when
-> perf_output_read_group reads a child event that does not have
-> PERF_SAMPLE_READ, the sample event must have PERF_SAMPLE_READ, meaning
-> the child event will give the thread-local value even though it was not
-> created as inherit+PERF_SAMPLE_READ
+> I didn't actually see these 3 patches in this thread nor via lore.
+
+He managed to break threading between 0/n and the rest.
+
+> > In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> > use a flex array for the "events" member. This way, the allocation/
+> > freeing of the memory can be simplified. Then, the struct_size()
+> > helper can be used to do the arithmetic calculation for the memory
+> > to be allocated.
 > 
-> I can either:
+> I like this patch because it reduces the allocation from 2 to 1. This
+> isn't what Peter might see as "churn": this is an improvement in resource
+> utilization.
+
+But then he went and used that struct_size() abomination :/
+
+> I prefer this style, as it makes things unambiguous ("this will never
+> wrap around") without having to check the associated types and doesn't make
+> the resulting binary code different in the "can never overflow" case.
 > 
->  * Keep it so that the perf_output_read_group uses per-event value for
-> self
+> In this particular case:
+> 
+> int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+> 
+> "int numshared" comes from struct intel_uncore_type::num_shared_regs,
+> which is:
+> 
+>         unsigned num_shared_regs:8;
+> 
+> And the struct sizes are:
+> 
+> $ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
+>         /* size: 488, cachelines: 8, members: 19 */
+> $ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
+>         /* size: 96, cachelines: 2, members: 5 */
+> 
+> So we have:
+> 
+> s32 size = 488 + u8 * 96
+> 
+> Max size here is 24968 so it can never overflow an s32, so I can see
+> why Peter views this as "churn".
+> 
+> I still think the patch is a coding style improvement, but okay.
 
-Having the lot be inconsistent seems bad.
+I really detest this thing because it makes what was trivially readable
+into something opaque. Get me that type qualifier that traps on overflow
+and write plain C. All this __builtin_overflow garbage is just that,
+unreadable nonsense.
 
->  * Rework the deliver_sample_value in session.c to base its decision on
-> the sample event rather than the specific event
+> This provides __counted_by coverage, and I think this is important to
+> gain in ever place we can. Given that this is part of a ring buffer
+> implementation that is arbitrarily sized, this is exactly the kind of
+> place I'd like to see __counted_by used. This is a runtime robustness
+> improvement, so I don't see this a "churn" at all.
 
-The code as it exists seems to use the read_format from the event that
-actually triggers the sample -- which makes sense. I would expect this
-new thing to follow that.
+Again, mixed in with that other crap. Anyway, remind me wth this
+__counted_by thing actually does?
 
-Mixing inherit between events in a group gets you crap, but that's what
-you asked for I suppose :-) But otherwise let the sampling event set the
-format.
+> Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
+> put them in the hardening tree to keep them out of your way. It seems
+> clear you don't want patch 2 at all.
 
->  * Forbid inconsistent PERF_SAMPLE_READ for events in a group
+I prefer to not have struct_size() anywhere at all. Please just write
+readable code.
 
-Not possible I think, you can have non-sampling events in a group.
+Again, if you really care about that overflow muck, get a useable C type
+qualifier or something so we can write readable code.
