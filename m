@@ -1,333 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BE4145B09;
-	Mon, 10 Jun 2024 17:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7271145FEF;
+	Mon, 10 Jun 2024 17:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718040192; cv=none; b=rmKDmvCv3dHUGVPs7zBT+2HoUdv+pg/I7QqbVzsoWRU+g18DGSlWAf+uCFYlEr+gwgj4cmkoeKxMmJbrzyreGSfbhB8cspO6LA8Qwd00pbtcNFJRozK7ef0OULTQTl9St8mGpFymogN7l08llPJLNsmtblwDcdsuaP+4axZ6MFE=
+	t=1718040533; cv=none; b=aohNyqK1Xy37WfTp00oCeRsml1JLSme8FiGO5XBDBjfOYcAsUQZStPJIrPDhL2T02zJtN5d+ED8EXyxGPPq2QDk2d6QjUpO9a4Zt09ehNEK0EC7hRoyadSFANzixoBtY/A1pi/cc/blfiZwMjyHvPtOI5V9ql1idTJazEBwWBik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718040192; c=relaxed/simple;
-	bh=xICCe+ukBvtwKOZY0xKMoj4LsItlafubP1FcEzkhyaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=At98AjnIka8P6IZARxVSU4EdimAhhYpfnNmGlll/h1P5EG0cdBtua3SyWk3w7w4xrxAGtCn8UoZH4O/CtBhyV0q9wQwbeLBdOz01HEwwbDpO3StHYX8oN5LJTEggho8Z8fSO041GRmCaztvOb6BaP5J2oLBlcMXYtDldwIFpGdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TA6M5pRt; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718040533; c=relaxed/simple;
+	bh=hsXdp2QwbthzBhOSFd6YbbgLNTqyXSDvwcDh62NNNiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uNpc9Vhw66yefjY3JIvi0ZZ5Q3xqfmTSvDagfbYrAFQVXC/utjgbhH54e0Jckhg1qa0Ev7uqIzK9lSBxmwMZk/1pAsosZJl6w4tMC52WivIwr8LxU/2hY6RBMnTmBJQCrP5TTPNFDxpfaIOG4y8owxz46XQWeiCz/TmADJSZPKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNpdFrgy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TA6M5pRt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718040191; x=1749576191;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xICCe+ukBvtwKOZY0xKMoj4LsItlafubP1FcEzkhyaY=;
-  b=TA6M5pRthFEbKpKq7Sa87L5fehr8eWMFtST9pmhUSrN5zUeYSHUK2x/4
-   uVuSMpeSBoHlFj0MjcsTBT87WmqmKJR+z8rULkdG9G9kpGI1u1vmK1Ji0
-   FnIZ/ZAnkojG+WmVWUuE6Ix6QSPGypGgTA+ksyEuFWdyYgeW1UKMWnnBQ
-   LtGeMTnGb9/p2wpwKY3y+665O/GVvA6hSkMHgjcmeCYpVgtvmBHS9wH1P
-   C+EGzVf22wsmnnn+4XVBEjOi0Myleax4bjtJ7bsdO3C+GwzwgcxOkN4SU
-   pfFOGNR3fuDJD3+rmxKOQJWHb2fvGMgzBPDojDbbdE4DtzCF7Jq0IfOuS
-   g==;
-X-CSE-ConnectionGUID: uAQDDSVIRG+MK56EVNQJaQ==
-X-CSE-MsgGUID: CM7t3zZ+SHy7L7ETw/TgGQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18567857"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="18567857"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 10:23:09 -0700
-X-CSE-ConnectionGUID: MrVk/wGkSzCuHkFpXeInxQ==
-X-CSE-MsgGUID: SAy+V+F9Q22ekCMiaRBONQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="39129703"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 10:23:08 -0700
-Received: from [10.213.169.239] (kliang2-mobl1.ccr.corp.intel.com [10.213.169.239])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D6DF320B5703;
-	Mon, 10 Jun 2024 10:23:05 -0700 (PDT)
-Message-ID: <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
-Date: Mon, 10 Jun 2024 13:23:04 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNpdFrgy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D87C2BBFC;
+	Mon, 10 Jun 2024 17:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718040533;
+	bh=hsXdp2QwbthzBhOSFd6YbbgLNTqyXSDvwcDh62NNNiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aNpdFrgy5Zza1DDVY23kZJNbw/0JA56+1KNloDqPZnNNfPbTnlj+hn4pOK4Czyakl
+	 /mOUHYorQi9awPhEnKK70KmfiZViAMbYcH7p/uuDpVqq+RsHyylTJp1EIZDPGb4n7M
+	 L2UZeq/Vv0BDdJwq9PsThFKWQX7c9U0hzvbtX8AoIMUEMKXqHuyfx82Ltmhb2ql5Qw
+	 rwP7azFkzipdwQanc/NhpRb7JaqUFsQhRjsVZiYPXxzQoRmJZFC732CmFuKeuubuI5
+	 zdBKP4p1y+1aWACQ75TI5Ta2ITCt4yWds0rtsqyvm+HYlZedAG8K5ODb1zqGI6Z5hy
+	 MY6Yi5AEWDmng==
+Date: Mon, 10 Jun 2024 10:28:52 -0700
+From: Kees Cook <kees@kernel.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <202406101010.E1C77AE9D@keescook>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
-To: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-8-mizhang@google.com>
- <20240507085807.GS40213@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240507085807.GS40213@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-
-
-On 2024-05-07 4:58 a.m., Peter Zijlstra wrote:
-> On Mon, May 06, 2024 at 05:29:32AM +0000, Mingwei Zhang wrote:
+On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> Hi everyone,
 > 
->> @@ -5791,6 +5801,100 @@ void perf_put_mediated_pmu(void)
->>  }
->>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->>  
->> +static void perf_sched_out_exclude_guest(struct perf_event_context *ctx)
->> +{
->> +	struct perf_event_pmu_context *pmu_ctx;
->> +
->> +	update_context_time(ctx);
->> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
->> +		struct perf_event *event, *tmp;
->> +		struct pmu *pmu = pmu_ctx->pmu;
->> +
->> +		if (!(pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU))
->> +			continue;
->> +
->> +		perf_pmu_disable(pmu);
->> +
->> +		/*
->> +		 * All active events must be exclude_guest events.
->> +		 * See perf_get_mediated_pmu().
->> +		 * Unconditionally remove all active events.
->> +		 */
->> +		list_for_each_entry_safe(event, tmp, &pmu_ctx->pinned_active, active_list)
->> +			group_sched_out(event, pmu_ctx->ctx);
->> +
->> +		list_for_each_entry_safe(event, tmp, &pmu_ctx->flexible_active, active_list)
->> +			group_sched_out(event, pmu_ctx->ctx);
->> +
->> +		pmu_ctx->rotate_necessary = 0;
->> +
->> +		perf_pmu_enable(pmu);
->> +	}
->> +}
->> +
->> +/* When entering a guest, schedule out all exclude_guest events. */
->> +void perf_guest_enter(void)
->> +{
->> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->> +
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->> +
->> +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest))) {
->> +		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +		return;
->> +	}
->> +
->> +	perf_sched_out_exclude_guest(&cpuctx->ctx);
->> +	if (cpuctx->task_ctx)
->> +		perf_sched_out_exclude_guest(cpuctx->task_ctx);
->> +
->> +	__this_cpu_write(perf_in_guest, true);
->> +
->> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +}
->> +
->> +static void perf_sched_in_exclude_guest(struct perf_event_context *ctx)
->> +{
->> +	struct perf_event_pmu_context *pmu_ctx;
->> +
->> +	update_context_time(ctx);
->> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
->> +		struct pmu *pmu = pmu_ctx->pmu;
->> +
->> +		if (!(pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU))
->> +			continue;
->> +
->> +		perf_pmu_disable(pmu);
->> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
->> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
->> +		perf_pmu_enable(pmu);
->> +	}
->> +}
->> +
->> +void perf_guest_exit(void)
->> +{
->> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->> +
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->> +
->> +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest))) {
->> +		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +		return;
->> +	}
->> +
->> +	__this_cpu_write(perf_in_guest, false);
->> +
->> +	perf_sched_in_exclude_guest(&cpuctx->ctx);
->> +	if (cpuctx->task_ctx)
->> +		perf_sched_in_exclude_guest(cpuctx->task_ctx);
->> +
->> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +}
-> 
-> Bah, this is a ton of copy-paste from the normal scheduling code with
-> random changes. Why ?
-> 
-> Why can't this use ctx_sched_{in,out}() ? Surely the whole
-> CAP_PASSTHROUGHT thing is but a flag away.
->
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
 
-Not just a flag. The time has to be updated as well, since the ctx->time
-is shared among PMUs. Perf shouldn't stop it while other PMUs is still
-running.
+I didn't actually see these 3 patches in this thread nor via lore.
 
-A timeguest will be introduced to track the start time of a guest.
-The event->tstamp of an exclude_guest event should always keep
-ctx->timeguest while a guest is running.
-When a guest is leaving, update the event->tstamp to now, so the guest
-time can be deducted.
+> In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> use a flex array for the "events" member. This way, the allocation/
+> freeing of the memory can be simplified. Then, the struct_size()
+> helper can be used to do the arithmetic calculation for the memory
+> to be allocated.
 
-The below patch demonstrate how the timeguest works.
-(It's an incomplete patch. Just to show the idea.)
+I like this patch because it reduces the allocation from 2 to 1. This
+isn't what Peter might see as "churn": this is an improvement in resource
+utilization.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 22d3e56682c9..2134e6886e22 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -953,6 +953,7 @@ struct perf_event_context {
- 	u64				time;
- 	u64				timestamp;
- 	u64				timeoffset;
-+	u64				timeguest;
+I think it's here:
+https://lore.kernel.org/linux-hardening/AS8PR02MB7237E4848B44A5226BD3551C8BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
 
- 	/*
- 	 * These fields let us detect when two contexts have both
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 14fd881e3e1d..2aed56671a24 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -690,12 +690,31 @@ __perf_update_times(struct perf_event *event, u64
-now, u64 *enabled, u64 *runnin
- 		*running += delta;
- }
+> In the second patch, as the "struct intel_uncore_box" ends in a
+> flexible array, the preferred way in the kernel is to use the
+> struct_size() helper to do the arithmetic instead of the calculation
+> "size + count * size" in the kzalloc_node() function.
 
-+static void perf_event_update_time_guest(struct perf_event *event)
-+{
-+	/*
-+	 * If a guest is running, use the timestamp while entering the guest.
-+	 * If the guest is leaving, reset the event timestamp.
-+	 */
-+	if (!__this_cpu_read(perf_in_guest))
-+		event->tstamp = event->ctx->time;
-+	else
-+		event->tstamp = event->ctx->timeguest;
-+}
-+
- static void perf_event_update_time(struct perf_event *event)
- {
--	u64 now = perf_event_time(event);
-+	u64 now;
-+
-+	/* Never count the time of an active guest into an exclude_guest event. */
-+	if (event->ctx->timeguest &&
-+	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU)
-+		return perf_event_update_time_guest(event);
+This is
+https://lore.kernel.org/linux-hardening/AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com/
 
-+	now = perf_event_time(event);
- 	__perf_update_times(event, now, &event->total_time_enabled,
- 					&event->total_time_running);
-+
- 	event->tstamp = now;
- }
+I prefer this style, as it makes things unambiguous ("this will never
+wrap around") without having to check the associated types and doesn't make
+the resulting binary code different in the "can never overflow" case.
 
-@@ -3398,7 +3417,14 @@ ctx_sched_out(struct perf_event_context *ctx,
-enum event_type_t event_type)
- 			cpuctx->task_ctx = NULL;
- 	}
+In this particular case:
 
--	is_active ^= ctx->is_active; /* changed bits */
-+	if (event_type & EVENT_GUEST) {
-+		/*
-+		 * Schedule out all !exclude_guest events of PMU
-+		 * with PERF_PMU_CAP_PASSTHROUGH_VPMU.
-+		 */
-+		is_active = EVENT_ALL;
-+	} else
-+		is_active ^= ctx->is_active; /* changed bits */
+int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
 
- 	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
- 		if (perf_skip_pmu_ctx(pmu_ctx, event_type))
-@@ -3998,7 +4024,20 @@ ctx_sched_in(struct perf_event_context *ctx, enum
-event_type_t event_type)
- 			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
- 	}
+"int numshared" comes from struct intel_uncore_type::num_shared_regs,
+which is:
 
--	is_active ^= ctx->is_active; /* changed bits */
-+	if (event_type & EVENT_GUEST) {
-+		/*
-+		 * Schedule in all !exclude_guest events of PMU
-+		 * with PERF_PMU_CAP_PASSTHROUGH_VPMU.
-+		 */
-+		is_active = EVENT_ALL;
-+
-+		/*
-+		 * Update ctx time to set the new start time for
-+		 * the exclude_guest events.
-+		 */
-+		update_context_time(ctx);
-+	} else
-+		is_active ^= ctx->is_active; /* changed bits */
+        unsigned num_shared_regs:8;
 
- 	/*
- 	 * First go through the list and put on any pinned groups
+And the struct sizes are:
 
-@@ -5894,14 +5933,18 @@ void perf_guest_enter(u32 guest_lvtpc)
- 	}
+$ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
+        /* size: 488, cachelines: 8, members: 19 */
+$ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
+        /* size: 96, cachelines: 2, members: 5 */
 
- 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
--	ctx_sched_out(&cpuctx->ctx, EVENT_ALL | EVENT_GUEST);
-+	ctx_sched_out(&cpuctx->ctx, EVENT_GUEST);
-+	/* Set the guest start time */
-+	cpuctx->ctx.timeguest = cpuctx->ctx.time;
- 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
- 	if (cpuctx->task_ctx) {
- 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
--		task_ctx_sched_out(cpuctx->task_ctx, EVENT_ALL | EVENT_GUEST);
-+		task_ctx_sched_out(cpuctx->task_ctx, EVENT_GUEST);
-+		cpuctx->task_ctx->timeguest = cpuctx->task_ctx->time;
- 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
- 	}
+So we have:
 
- 	__this_cpu_write(perf_in_guest, true);
-@@ -5925,14 +5968,17 @@ void perf_guest_exit(void)
+s32 size = 488 + u8 * 96
 
- 	__this_cpu_write(perf_in_guest, false);
+Max size here is 24968 so it can never overflow an s32, so I can see
+why Peter views this as "churn".
 
- 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
--	ctx_sched_in(&cpuctx->ctx, EVENT_ALL | EVENT_GUEST);
-+	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
-+	cpuctx->ctx.timeguest = 0;
- 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
- 	if (cpuctx->task_ctx) {
- 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
--		ctx_sched_in(cpuctx->task_ctx, EVENT_ALL | EVENT_GUEST);
-+		ctx_sched_in(cpuctx->task_ctx, EVENT_GUEST);
-+		cpuctx->task_ctx->timeguest = 0;
- 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
- 	}
+I still think the patch is a coding style improvement, but okay.
 
-Thanks
-Kan
+> In the third patch, as the "struct perf_buffer" also ends in a
+> flexible array, the preferred way in the kernel is to use the
+> struct_size() helper to do the arithmetic instead of the calculation
+> "size + count * size" in the kzalloc_node() functions. At the same
+> time, prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute.
+
+This is
+https://lore.kernel.org/linux-hardening/AS8PR02MB72379B4807F3951A1B926BA58BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
+
+This provides __counted_by coverage, and I think this is important to
+gain in ever place we can. Given that this is part of a ring buffer
+implementation that is arbitrarily sized, this is exactly the kind of
+place I'd like to see __counted_by used. This is a runtime robustness
+improvement, so I don't see this a "churn" at all.
+
+
+Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
+put them in the hardening tree to keep them out of your way. It seems
+clear you don't want patch 2 at all.
+
+-Kees
+
+-- 
+Kees Cook
