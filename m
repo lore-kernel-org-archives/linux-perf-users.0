@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BFB178C71;
-	Mon, 10 Jun 2024 09:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A421379DDB;
+	Mon, 10 Jun 2024 09:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718013316; cv=none; b=Iaqn9DtF4VFlkR5wnR8y28k19R1yVqDjN10nntaBcgbCiJIUOJr4dQYrJtSZlgjKGe/6z0SVOOOAIesY+PByiN+h+xWAjE7AoKPCaJVZAt4G8K0pj22DlVMnpvIpUfaNFdlmpe6YPjRdaxKO3Z/QvHO1gpxkNcxc9hWS+6/h6M0=
+	t=1718013318; cv=none; b=Mx6EWotU1a3cX7CmauiMvI/MuV1GtCpoo06HrTBvkwrNP+Zx0OwXYwDro3Vjev+4Zck0Y5Qj5pOK2/JMpwXNi8/sZDgNcBzTJaGvuyLotjYxbG3c9RG9B5XgJcDfiOr9k4UU+YsOvYJFjwH7lX3Re/XUhbgfl4EFK0Qd+OtPVnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718013316; c=relaxed/simple;
-	bh=66m4mWoqQDyTgo08cySdR6zX8px99PeFOWizcje8QwQ=;
+	s=arc-20240116; t=1718013318; c=relaxed/simple;
+	bh=TAI5MVvJ3quT5ll1LWwaXnbXGxwg9ZEetfoGD6HWeHs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A5pea64j3ZleezdDb/+0grRf9SA7tYs0NzVgBBBDja8L68udMmElH8QoIxtb6LR5nfML7QWPs75dBYqmSuXA7TFiCLiwLIg4sEYjtDL9WIHjA+8uzVFZ39aVh4XFHKufmQ/RH6bRd6cdPAMI5wCYMBqzPwUt5HQk9VRwyZHyWdk=
+	 MIME-Version; b=Gxj1HoamVuMsxXwt9iTuyi5jj2rHQ6HZEVLq1IxRBY5pOLS7Ozs0N5qwM4uHlR+RB/GC6FJlyaZM7XwXmX1dwk8qypMh+/v44AmH2zKw+19u56vvCrnadr0+sOHcSDnQFRb3zi6lR76mcYGuaq85EgIrEX8DkMlK2oQ8kYT4O0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 359FB12FC;
-	Mon, 10 Jun 2024 02:55:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D4E1688;
+	Mon, 10 Jun 2024 02:55:41 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E7353F73B;
-	Mon, 10 Jun 2024 02:55:12 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E9EEC3F73B;
+	Mon, 10 Jun 2024 02:55:14 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -39,9 +39,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Guilherme Amadio <amadio@gentoo.org>
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 4/6] perf: build: Link lib 'lzma' for static build
-Date: Mon, 10 Jun 2024 10:54:31 +0100
-Message-Id: <20240610095433.336295-5-leo.yan@arm.com>
+Subject: [PATCH v2 5/6] perf: build: Link lib 'zstd' for static build
+Date: Mon, 10 Jun 2024 10:54:32 +0100
+Message-Id: <20240610095433.336295-6-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240610095433.336295-1-leo.yan@arm.com>
 References: <20240610095433.336295-1-leo.yan@arm.com>
@@ -53,54 +53,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The libunwind feature test failed with the static linkage. This is due
-to the 'lzma' lib is missed, so link it to dismiss building failure.
+When build static perf, Makefile reports the error:
+
+  Makefile.config:480: No libdw DWARF unwind found, Please install
+  elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR
+
+The libdw has been installed on the system, but the build system fails
+to build the feature detecting binary 'test-libdw-dwarf-unwind'. The
+failure is caused by missing to link the lib 'zstd'.
+
+Link lib 'zstd' for the static build, in the end, the dwarf feature can
+be enabled in the static perf.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/build/feature/Makefile | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/build/feature/Makefile | 2 +-
+ tools/perf/Makefile.config   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index b23b3e8ad5e4..9e5663eefc01 100644
+index 9e5663eefc01..991bb4fed774 100644
 --- a/tools/build/feature/Makefile
 +++ b/tools/build/feature/Makefile
-@@ -212,27 +212,27 @@ $(OUTPUT)test-numa_num_possible_cpus.bin:
- 	$(BUILD) -lnuma
+@@ -171,7 +171,7 @@ $(OUTPUT)test-libopencsd.bin:
  
- $(OUTPUT)test-libunwind.bin:
--	$(BUILD) -lelf
-+	$(BUILD) -lelf -llzma
+ DWARFLIBS := -ldw
+ ifeq ($(findstring -static,${LDFLAGS}),-static)
+-  DWARFLIBS += -lelf -lz -llzma -lbz2
++  DWARFLIBS += -lelf -lz -llzma -lbz2 -lzstd
  
- $(OUTPUT)test-libunwind-debug-frame.bin:
--	$(BUILD) -lelf
-+	$(BUILD) -lelf -llzma
- $(OUTPUT)test-libunwind-x86.bin:
--	$(BUILD) -lelf -lunwind-x86
-+	$(BUILD) -lelf -llzma -lunwind-x86
+   LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
+   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index db3bc460d4c2..0f918475d7b6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -152,7 +152,7 @@ ifdef LIBDW_DIR
+ endif
+ DWARFLIBS := -ldw
+ ifeq ($(findstring -static,${LDFLAGS}),-static)
+-  DWARFLIBS += -lelf -ldl -lz -llzma -lbz2
++  DWARFLIBS += -lelf -ldl -lz -llzma -lbz2 -lzstd
  
- $(OUTPUT)test-libunwind-x86_64.bin:
--	$(BUILD) -lelf -lunwind-x86_64
-+	$(BUILD) -lelf -llzma -lunwind-x86_64
- 
- $(OUTPUT)test-libunwind-arm.bin:
--	$(BUILD) -lelf -lunwind-arm
-+	$(BUILD) -lelf -llzma -lunwind-arm
- 
- $(OUTPUT)test-libunwind-aarch64.bin:
--	$(BUILD) -lelf -lunwind-aarch64
-+	$(BUILD) -lelf -llzma -lunwind-aarch64
- 
- $(OUTPUT)test-libunwind-debug-frame-arm.bin:
--	$(BUILD) -lelf -lunwind-arm
-+	$(BUILD) -lelf -llzma -lunwind-arm
- 
- $(OUTPUT)test-libunwind-debug-frame-aarch64.bin:
--	$(BUILD) -lelf -lunwind-aarch64
-+	$(BUILD) -lelf -llzma -lunwind-aarch64
- 
- $(OUTPUT)test-libaudit.bin:
- 	$(BUILD) -laudit
+   LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
+   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
 -- 
 2.34.1
 
