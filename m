@@ -1,410 +1,179 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485F1139580;
-	Mon, 10 Jun 2024 15:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969F415A84D;
+	Mon, 10 Jun 2024 16:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718033269; cv=none; b=c8ihT0hFCWIxdVT9BEcHS4OanFRZDWbN8MRVrCqJSoy1Kmh/1i1chLqMt/0xEprnsZ6Sp1jDBPxgCIkJdgXkjULmhVrVOt2AbVbuOPYFXCoQkInHb4VAVsyQ4iGTSR518arDgezHbuUPdDSgByoI3SujsN83I3FVNr7AVi0s5bw=
+	t=1718037790; cv=none; b=tPPEDPCWi3PBJ6CFC5bJvFEWac89RB/h6WqvVkHfdIxDEWt3f49VeWCWZQKdYnIoxlGQTiRfSW1lT/0x14qI0gmJEYVVys2Bhs7Rh2zY6o/33xXI94bHnkMclyolTDeygeotQ8rJ1pKbdPfaSRW2Z4OCijJTQtCl0Ako7CrkeGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718033269; c=relaxed/simple;
-	bh=h8hMUgKb5MjoZLOZI4M6SkmcgfbPjGOkBzTRSqRzFvA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bO/qF2t/COtlQauMeXY8K/L6ufqVG6DQPwNp+w06vBr0ui7ruKnXd8hk2knQonvnWAaVId9ElObWQSpdibgnn+zoOcv+uahKomQFrVB2Qpwr0KDmlFsSrTmDI1QFgfSNOIZ0N08ddipxsUZJCyOPPSC/sWsn8a9H+8t+Z3GBpnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E136111FB;
-	Mon, 10 Jun 2024 08:28:09 -0700 (PDT)
-Received: from [10.57.42.97] (unknown [10.57.42.97])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D0673F64C;
-	Mon, 10 Jun 2024 08:27:40 -0700 (PDT)
-Message-ID: <78a67d94-a649-4a4c-bb48-80b81d7eeb2a@arm.com>
-Date: Mon, 10 Jun 2024 16:27:38 +0100
+	s=arc-20240116; t=1718037790; c=relaxed/simple;
+	bh=usayfudDL15Ak+7O16vBuNWB2nVZsclVG4R2lRWLypI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hB6M1rxZpSBuaoMZOFsFqp5Yq2i7qQepN/Q3r5skWtofMXNuu2wklzX5Svj7n9pt5Rh1ZRjbcKVmDLlkKOogn4+Ttu4+lNth/YHNrZaG4yIo1sc21pqPPgLojN41PcWsMa+e+padpz9nSovJuXy1TAQkW+A0aChxoNhW42Jn2Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnl9aG4z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnl9aG4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D81CC2BBFC;
+	Mon, 10 Jun 2024 16:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718037790;
+	bh=usayfudDL15Ak+7O16vBuNWB2nVZsclVG4R2lRWLypI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tnl9aG4zS3SZQKIX7jsA3xVVvt/+KXo2r4y8CARZk8ZnXuNRvnCIYrqE1kpBBcVJQ
+	 wJF1Mmb5ljFUHrQlPKNlBIPmfvtIQLlnkzUuIrlJHjIr3pNz8Mn4F34Gd83RsOK7WT
+	 ScNHdKu4iK9kkDD9uDhIhU0p8Ndsirr+HB7TmrOWfXhYX48yXY5KiNbD5gAFoDVDLB
+	 SErcM052ykP6CmKGt1puMHJ4hJME6yVYQvE8Us9mYbufiuX1DYvK1QysWp+rKF+5US
+	 gHFXDFEzfDahY43b5xqiutZM2zGCk4p4ETgGOp8MlcqZyHCe9BPBIiH71mn3JhfW70
+	 IUbccCkZBfvGg==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52bc1acb9f0so142230e87.2;
+        Mon, 10 Jun 2024 09:43:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU48N3SB9DQXznRVJKimQRFVcjBVHtYHFwiO8UnqUFrOegRSNDbY8y7shkyAGHhy4yJNk2nEr0GE8ncp2kJ1HmE9+TM524Uxf1zYChl3z7Z+XrL8upZJD9a+bGNjW/Ap5JRFKJYP61em8YMpkk3tg==
+X-Gm-Message-State: AOJu0Yy468B3uRIR3RppsuPlUYx2vVW6nQBKnIzac42gjWj46UBmCAAM
+	Ke25WR7Q9CSguq4IQSK8sWNw79PfTtVw19XgLG8tLhNWqZNZmhxM7sv1hiMARZ27S5u7+7X2zLP
+	/FTfbvdvo6G7QGZ4emy6HNkh1zQ==
+X-Google-Smtp-Source: AGHT+IFbSJGXfUAWn3yeFEE6Vt8lJf4yOwgaLpwSa7ZjrDzQesdqm4cl//megHluZarInI+M0d+bC18lY/X2TjLaXtE=
+X-Received: by 2002:ac2:53a6:0:b0:52b:c0a5:eae8 with SMTP id
+ 2adb3069b0e04-52bc0a5eb76mr5189629e87.14.1718037788484; Mon, 10 Jun 2024
+ 09:43:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/16] coresight: Remove pending trace ID release
- mechanism
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, coresight@lists.linaro.org,
- gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
- leo.yan@linux.dev, anshuman.khandual@arm.com
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
-References: <20240604143030.519906-1-james.clark@arm.com>
- <20240604143030.519906-15-james.clark@arm.com>
- <4165a188-8c78-4675-8557-844b5d270f3d@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <4165a188-8c78-4675-8557-844b5d270f3d@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
+ <20240607-arm-pmu-3-9-icntr-v1-3-c7bd2dceff3b@kernel.org> <ZmbZG-eaqE4NPcE3@J2N7QTR9R3>
+In-Reply-To: <ZmbZG-eaqE4NPcE3@J2N7QTR9R3>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 10 Jun 2024 10:42:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK5TT1usMUY1Eaxy6qyGoWLj5R8XRNG-L6h-1S3WQfkRg@mail.gmail.com>
+Message-ID: <CAL_JsqK5TT1usMUY1Eaxy6qyGoWLj5R8XRNG-L6h-1S3WQfkRg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] perf: arm_pmu: Remove event index to counter remapping
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 10, 2024 at 4:44=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Fri, Jun 07, 2024 at 02:31:28PM -0600, Rob Herring (Arm) wrote:
+> > Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
+> > starting at 1 and had 1:1 event index to counter numbering. On Armv7 an=
+d
+> > later, this changed the cycle counter to 31 and event counters start at
+> > 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
+> > and introduced an event index to counter conversion. The conversion use=
+s
+> > masking to convert from event index to a counter number. This operation
+> > relies on having at most 32 counters so that the cycle counter index 0
+> > can be transformed to counter number 31.
 
+[...]
 
-On 07/06/2024 14:43, Suzuki K Poulose wrote:
-> On 04/06/2024 15:30, James Clark wrote:
->> Pending the release of IDs was a way of managing concurrent sysfs and
->> Perf sessions in a single global ID map. Perf may have finished while
->> sysfs hadn't, and Perf shouldn't release the IDs in use by sysfs and
->> vice versa.
->>
->> Now that Perf uses its own exclusive ID maps, pending release doesn't
->> result in any different behavior than just releasing all IDs when the
->> last Perf session finishes. As part of the per-sink trace ID change, we
->> would have still had to make the pending mechanism work on a per-sink
->> basis, due to the overlapping ID allocations, so instead of making that
->> more complicated, just remove it.
-> 
-> minor nit: Given that we drastically changed the meaing of the
-> perf_session_start/stop calls to, grab a refcount on idmap, drop
-> refcount, should we rename those helpers as such :
-> 
-> coresight_trace_id_map_get() / _put() ?
-> 
-> 
+> > @@ -783,7 +767,7 @@ static void armv8pmu_enable_user_access(struct arm_=
+pmu *cpu_pmu)
+> >       struct pmu_hw_events *cpuc =3D this_cpu_ptr(cpu_pmu->hw_events);
+> >
+> >       /* Clear any unused counters to avoid leaking their contents */
+> > -     for_each_clear_bit(i, cpuc->used_mask, cpu_pmu->num_events) {
+> > +     for_each_clear_bit(i, cpuc->used_mask, ARMPMU_MAX_HWEVENTS) {
+> >               if (i =3D=3D ARMV8_IDX_CYCLE_COUNTER)
+> >                       write_pmccntr(0);
+> >               else
+>
+> IIUC this will now hit all unimplemented counters; e.g. for N counters th=
+e body
+> will run for counters N..31, and the else case has:
+>
+>         armv8pmu_write_evcntr(i, 0);
+>
+> ... where the resulting write to PMEVCNTR<n>_EL0 for unimplemented
+> counters is CONSTRAINED UNPREDICTABLE and might be UNDEFINED.
+>
+> We can fix that with for_each_andnot_bit(), e.g.
 
-I don't mind keeping it as coresight_trace_id_perf_start() because it's
-not used in the global map and I can't see it being used for sysfs in
-the future either. It's something quite specific to Perf so it's more
-self documenting this way.
+Good catch. Fixed.
 
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>   .../hwtracing/coresight/coresight-etm-perf.c  | 11 ++--
->>   .../hwtracing/coresight/coresight-trace-id.c  | 62 +++++--------------
->>   .../hwtracing/coresight/coresight-trace-id.h  | 31 +++++-----
->>   include/linux/coresight.h                     |  6 +-
->>   4 files changed, 34 insertions(+), 76 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c
->> b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> index 7fb55dafb639..17cafa1a7f18 100644
->> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
->> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> @@ -232,15 +232,14 @@ static void free_event_data(struct work_struct
->> *work)
->>           if (!(IS_ERR_OR_NULL(*ppath))) {
->>               struct coresight_device *sink = coresight_get_sink(*ppath);
->>   -            coresight_trace_id_put_cpu_id_map(cpu,
->> &sink->perf_sink_id_map);
->> +            /* mark perf event as done for trace id allocator */
->> +            coresight_trace_id_perf_stop(&sink->perf_sink_id_map);
->> +
->>               coresight_release_path(*ppath);
->>           }
->>           *ppath = NULL;
->>       }
->>   -    /* mark perf event as done for trace id allocator */
->> -    coresight_trace_id_perf_stop();
->> -
->>       free_percpu(event_data->path);
->>       kfree(event_data);
->>   }
->> @@ -328,9 +327,6 @@ static void *etm_setup_aux(struct perf_event
->> *event, void **pages,
->>           sink = user_sink = coresight_get_sink_by_id(id);
->>       }
->>   -    /* tell the trace ID allocator that a perf event is starting up */
->> -    coresight_trace_id_perf_start();
->> -
->>       /* check if user wants a coresight configuration selected */
->>       cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >>
->> 32);
->>       if (cfg_hash) {
->> @@ -404,6 +400,7 @@ static void *etm_setup_aux(struct perf_event
->> *event, void **pages,
->>           }
->>             /* ensure we can allocate a trace ID for this CPU */
->> +        coresight_trace_id_perf_start(&sink->perf_sink_id_map);
->>           trace_id = coresight_trace_id_get_cpu_id_map(cpu,
->> &sink->perf_sink_id_map);
->>           if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->>               cpumask_clear_cpu(cpu, mask);
-> 
-> I think we are leaking a reference above, if the allocation of trace id
-> fails. i.e., we don't drop the refcount here, nor we do that in
-> free_event_dat() since the ppath is set to NULL in case of failure ?
-> 
-> 
+>
+>         for_each_andnot_bit(i, cpu_pmu->cntr_mask, cpuc->used_mask,
+>                             ARMPMU_MAX_HWEVENTS) {
+>                 if (i =3D=3D ARMV8_IDX_CYCLE_COUNTER)
+>                         write_pmccntr(0);
+>                 else
+>                          armv8pmu_write_evcntr(i, 0);
+>         }
+>
+> [...]
+>
+> > @@ -905,7 +889,7 @@ static int armv8pmu_get_single_idx(struct pmu_hw_ev=
+ents *cpuc,
+> >  {
+> >       int idx;
+> >
+> > -     for (idx =3D ARMV8_IDX_COUNTER0; idx < cpu_pmu->num_events; idx++=
+) {
+> > +     for_each_set_bit(idx, cpu_pmu->cntr_mask, 31) {
+> >               if (!test_and_set_bit(idx, cpuc->used_mask))
+> >                       return idx;
+> >       }
+> > @@ -921,7 +905,9 @@ static int armv8pmu_get_chain_idx(struct pmu_hw_eve=
+nts *cpuc,
+> >        * Chaining requires two consecutive event counters, where
+> >        * the lower idx must be even.
+> >        */
+> > -     for (idx =3D ARMV8_IDX_COUNTER0 + 1; idx < cpu_pmu->num_events; i=
+dx +=3D 2) {
+> > +     for_each_set_bit(idx, cpu_pmu->cntr_mask, 31) {
+> > +             if (!(idx & 0x1))
+> > +                     continue;
+> >               if (!test_and_set_bit(idx, cpuc->used_mask)) {
+> >                       /* Check if the preceding even counter is availab=
+le */
+> >                       if (!test_and_set_bit(idx - 1, cpuc->used_mask))
+>
+> It would be nice to replace those instances of '31' with something
+> indicating that this was only covering the generic/programmable
+> counters, but I wasn't able to come up with a nice mnemonic for that.
+> The best I could think of was:
+>
+> #define ARMV8_MAX_NR_GENERIC_COUNTERS 31
+>
+> Maybe it makes sense to define that along with ARMV8_IDX_CYCLE_COUNTER.
 
-Nice catch. I'll move the perf_start() call to where path is assigned
-because that's what guards the perf_stop() call in free_event_data().
-Rather than add an extra perf_stop() call.
+I've got nothing better. :) I think there's a few other spots that can use =
+this.
 
-> 
->> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c
->> b/drivers/hwtracing/coresight/coresight-trace-id.c
->> index 8a777c0af6ea..acb99ccf96b5 100644
->> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
->> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
->> @@ -18,12 +18,6 @@ static struct coresight_trace_id_map id_map_default
->> = {
->>       .cpu_map = &id_map_default_cpu_ids
->>   };
->>   -/* maintain a record of the pending releases per cpu */
->> -static cpumask_t cpu_id_release_pending;
->> -
->> -/* perf session active counter */
->> -static atomic_t perf_cs_etm_session_active = ATOMIC_INIT(0);
->> -
->>   /* lock to protect id_map and cpu data  */
->>   static DEFINE_SPINLOCK(id_map_lock);
->>   @@ -122,34 +116,18 @@ static void coresight_trace_id_free(int id,
->> struct coresight_trace_id_map *id_ma
->>       clear_bit(id, id_map->used_ids);
->>   }
->>   -static void coresight_trace_id_set_pend_rel(int id, struct
->> coresight_trace_id_map *id_map)
->> -{
->> -    if (WARN(!IS_VALID_CS_TRACE_ID(id), "Invalid Trace ID %d\n", id))
->> -        return;
->> -    set_bit(id, id_map->pend_rel_ids);
->> -}
->> -
->>   /*
->> - * release all pending IDs for all current maps & clear CPU associations
->> - *
->> - * This currently operates on the default id map, but may be extended to
->> - * operate on all registered id maps if per sink id maps are used.
->> + * release all IDs and clear CPU associations
-> 
-> minor nit:
-> 
->     * Release all IDs and clear CPU associations.
-> 
+[...]
 
-Done
+> >       /* Read the nb of CNTx counters supported from PMNC */
+> > -     *nb_cnt =3D (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMN=
+C_N_MASK;
+> > +     nb_cnt =3D (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMNC=
+_N_MASK;
+> > +     bitmap_set(cpu_pmu->cntr_mask, 0, nb_cnt);
+> >
+> >       /* Add the CPU cycles counter */
+> > -     *nb_cnt +=3D 1;
+> > +     bitmap_set(cpu_pmu->cntr_mask, ARMV7_IDX_CYCLE_COUNTER, 1);
+>
+> This can be:
+>
+>         set_bit(cpu_pmu->cntr_mask, ARMV7_IDX_CYCLE_COUNTER);
+>
+> ... and likewise for the PMUv3 version.
 
->>    */
->> -static void coresight_trace_id_release_all_pending(void)
->> +static void coresight_trace_id_release_all(struct
->> coresight_trace_id_map *id_map)
->>   {
->> -    struct coresight_trace_id_map *id_map = &id_map_default;
->>       unsigned long flags;
->> -    int cpu, bit;
->> +    int cpu;
->>         spin_lock_irqsave(&id_map_lock, flags);
->> -    for_each_set_bit(bit, id_map->pend_rel_ids,
->> CORESIGHT_TRACE_ID_RES_TOP) {
->> -        clear_bit(bit, id_map->used_ids);
->> -        clear_bit(bit, id_map->pend_rel_ids);
->> -    }
->> -    for_each_cpu(cpu, &cpu_id_release_pending) {
->> -        atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
->> -        cpumask_clear_cpu(cpu, &cpu_id_release_pending);
->> -    }
->> +    bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
->> +    for_each_possible_cpu(cpu)
->> +        atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
-> 
-> Do we ever read these values without spinlock ? Do they need to be atomic ?
-> 
+Indeed. The documentation in bitmap.h is not clear that greater than 1
+unsigned long # of bits works given it says there set_bit() is just
+"*addr |=3D bit". I guess I don't use bitops enough...
 
-Yeah they're still read in a few places without taking the lock.
-Specifically because reading and checking if it's valid is so easy to do
-without locking.
-
->>       spin_unlock_irqrestore(&id_map_lock, flags);
->>       DUMP_ID_MAP(id_map);
->>   }
->> @@ -164,7 +142,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu,
->> struct coresight_trace_id_map
->>       /* check for existing allocation for this CPU */
->>       id = _coresight_trace_id_read_cpu_id(cpu, id_map);
->>       if (id)
->> -        goto get_cpu_id_clr_pend;
->> +        goto get_cpu_id_out_unlock;
->>         /*
->>        * Find a new ID.
->> @@ -185,11 +163,6 @@ static int _coresight_trace_id_get_cpu_id(int
->> cpu, struct coresight_trace_id_map
->>       /* allocate the new id to the cpu */
->>       atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
->>   -get_cpu_id_clr_pend:
->> -    /* we are (re)using this ID - so ensure it is not marked for
->> release */
->> -    cpumask_clear_cpu(cpu, &cpu_id_release_pending);
->> -    clear_bit(id, id_map->pend_rel_ids);
->> -
->>   get_cpu_id_out_unlock:
->>       spin_unlock_irqrestore(&id_map_lock, flags);
->>   @@ -210,15 +183,8 @@ static void _coresight_trace_id_put_cpu_id(int
->> cpu, struct coresight_trace_id_ma
->>         spin_lock_irqsave(&id_map_lock, flags);
->>   -    if (atomic_read(&perf_cs_etm_session_active)) {
->> -        /* set release at pending if perf still active */
->> -        coresight_trace_id_set_pend_rel(id, id_map);
->> -        cpumask_set_cpu(cpu, &cpu_id_release_pending);
->> -    } else {
->> -        /* otherwise clear id */
->> -        coresight_trace_id_free(id, id_map);
->> -        atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
->> -    }
->> +    coresight_trace_id_free(id, id_map);
->> +    atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
-> 
-> Can we do this unconditionally now ? What is another session has
-> reserved this id for the same CPU and that gets scheduled later ?
-> We should simply stop doing the "put_cpu_id()" and instead rely
-> on the perf_session_stop()/(or the suggested trace_id_map_put())
-> to free the ids and clear everything.
-> 
-
-We do do it unconditionally, the Perf code doesn't call put() anymore.
-Only sysfs does but it still needs to because it uses the global map so
-this function can't be dropped completely.
-
->>         spin_unlock_irqrestore(&id_map_lock, flags);
->>       DUMP_ID_CPU(cpu, id);
->> @@ -302,17 +268,17 @@ void coresight_trace_id_put_system_id(int id)
->>   }
->>   EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
->>   -void coresight_trace_id_perf_start(void)
->> +void coresight_trace_id_perf_start(struct coresight_trace_id_map
->> *id_map)
->>   {
->> -    atomic_inc(&perf_cs_etm_session_active);
->> +    atomic_inc(&id_map->perf_cs_etm_session_active);
->>       PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
->>   }
->>   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
->>   -void coresight_trace_id_perf_stop(void)
->> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map)
->>   {
->> -    if (!atomic_dec_return(&perf_cs_etm_session_active))
->> -        coresight_trace_id_release_all_pending();
->> +    if (!atomic_dec_return(&id_map->perf_cs_etm_session_active))
->> +        coresight_trace_id_release_all(id_map);
->>       PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
->>   }
->>   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
->> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h
->> b/drivers/hwtracing/coresight/coresight-trace-id.h
->> index 840babdd0794..9aae50a553ca 100644
->> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
->> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
->> @@ -17,9 +17,10 @@
->>    * released when done.
->>    *
->>    * In order to ensure that a consistent cpu / ID matching is maintained
->> - * throughout a perf cs_etm event session - a session in progress
->> flag will
->> - * be maintained, and released IDs not cleared until the perf session is
->> - * complete. This allows the same CPU to be re-allocated its prior ID.
->> + * throughout a perf cs_etm event session - a session in progress
->> flag will be
->> + * maintained for each sink, and IDs are cleared when all the perf
->> sessions
->> + * complete. This allows the same CPU to be re-allocated its prior ID
->> when
->> + * events are scheduled in and out.
->>    *
->>    *
->>    * Trace ID maps will be created and initialised to prevent
->> architecturally
->> @@ -66,11 +67,7 @@ int coresight_trace_id_get_cpu_id_map(int cpu,
->> struct coresight_trace_id_map *id
->>   /**
->>    * Release an allocated trace ID associated with the CPU.
->>    *
->> - * This will release the CoreSight trace ID associated with the CPU,
->> - * unless a perf session is in operation.
->> - *
->> - * If a perf session is in operation then the ID will be marked as
->> pending
->> - * release.
->> + * This will release the CoreSight trace ID associated with the CPU.
->>    *
->>    * @cpu: The CPU index to release the associated trace ID.
->>    */
->> @@ -133,21 +130,21 @@ void coresight_trace_id_put_system_id(int id);
->>   /**
->>    * Notify the Trace ID allocator that a perf session is starting.
->>    *
->> - * Increase the perf session reference count - called by perf when
->> setting up
->> - * a trace event.
->> + * Increase the perf session reference count - called by perf when
->> setting up a
->> + * trace event.
->>    *
->> - * This reference count is used by the ID allocator to ensure that
->> trace IDs
->> - * associated with a CPU cannot change or be released during a perf
->> session.
->> + * Perf sessions never free trace IDs to ensure that the ID
->> associated with a
->> + * CPU cannot change during their and other's concurrent sessions.
->> Instead,
->> + * this refcount is used so that the last event to finish always
->> frees all IDs.
->>    */
->> -void coresight_trace_id_perf_start(void);
->> +void coresight_trace_id_perf_start(struct coresight_trace_id_map
->> *id_map);
->>     /**
->>    * Notify the ID allocator that a perf session is stopping.
->>    *
->> - * Decrease the perf session reference count.
->> - * if this causes the count to go to zero, then all Trace IDs marked
->> as pending
->> - * release, will be released.
->> + * Decrease the perf session reference count. If this causes the
->> count to go to
->> + * zero, then all Trace IDs will be released.
->>    */
->> -void coresight_trace_id_perf_stop(void);
->> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map
->> *id_map);
->>     #endif /* _CORESIGHT_TRACE_ID_H */
->> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
->> index 9c3067e2e38b..197949fd2c35 100644
->> --- a/include/linux/coresight.h
->> +++ b/include/linux/coresight.h
->> @@ -227,14 +227,12 @@ struct coresight_sysfs_link {
->>    * @used_ids:    Bitmap to register available (bit = 0) and in use
->> (bit = 1) IDs.
->>    *        Initialised so that the reserved IDs are permanently
->> marked as
->>    *        in use.
->> - * @pend_rel_ids: CPU IDs that have been released by the trace source
->> but not
->> - *          yet marked as available, to allow re-allocation to the same
->> - *          CPU during a perf session.
->> + * @perf_cs_etm_session_active: Number of Perf sessions using this ID
->> map.
->>    */
->>   struct coresight_trace_id_map {
->>       DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
->> -    DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
->>       atomic_t __percpu *cpu_map;
->> +    atomic_t perf_cs_etm_session_active;
-> 
-> minor nit: this could simply be :
->     atomic_t map_refcnt;
-> 
-> i.e., number of references to the trace_id map ?
-> 
-> Suzuki
-
-As I mentioned above I think it's clearer to keep this labelled with
-Perf as long is it's still only used for Perf. I'd agree to rename it at
-the point when it is a more generic refcnt though. Not sure what you think?
-
-James
-
+Rob
