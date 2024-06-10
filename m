@@ -1,240 +1,107 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E67814EC43;
-	Mon, 10 Jun 2024 18:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEA72E620;
+	Mon, 10 Jun 2024 19:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718042942; cv=none; b=mEFnB5DyLV5kh5hQ1za3Q+UmBTf24alUSlHkQCJB1vZk2AYslqklWe+sik+JhXH2RxlIdc2csbRdmyRWkHDvyY7PyI1Y6kjjAtokUlz/3lPee07BvveY8ZbMn3td2/MfSPzqLt33jc+xLS7wEORKi+UNc69R4JEVqH6mGcpt05I=
+	t=1718046138; cv=none; b=mb0zUikBtsWAoR+R/tyld4hu5FR1s34E5deyLKrjfOpOKqC4uvErl1FgNZfdjd05k8f2AlMjiTxshKAEFLS+ZEFb/HIq3ocvKNuZ+MaTIRo7vNel93xdigMZEzcrUOnrRA2lfH2mUu0vjznZCog85vXjeRCgrBPxCfVkMm1BRGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718042942; c=relaxed/simple;
-	bh=jIe9JeocBr7G6WT23O2lxLj34KMlvE4LnyGCyZrVp2I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XCVGMEnpRh/I2xhCAjyNGRAgbhktQ1ijUzN/wQCvl3pWXbMq8Ogv6+uAYuS8g2cprBKc8eHlo+sTDwoJ7944XMuA90+SQvIMJB6QpP3Jv2E+umSJY4C2nDk5KEZGzwCxEkwTdkw8EYMbUFzvIOjCEYMMnOUu4twgqQ0iNg1fV9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=HzBsRp0p; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1718046138; c=relaxed/simple;
+	bh=HIxZJDBw8lvC6AgonODjlRnJnG+poyxOoaYJhz1KzqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O90EwdyMub7L1HGCLW3PxYHEY+evx/FDc3Aa1FOAW2qNglOKkjyPjjxAkv0+NBMQbw6FOpc3gnjlSSkGm60wp14ikTd+QU1ZH8aSVGMBUMcJnel3F4nbsRoOjXrE9awI+mcBokDKsm14GpYNNS0TuHxDLy92v9GJLa/BomKTE4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KBx0Ic5e; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="HzBsRp0p"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id 2873F635B055;
-	Mon, 10 Jun 2024 20:08:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1718042934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VHBmuPzeQk6RrXH74wFJcj/vN52Uy+kCPKcbBOPsTrU=;
-	b=HzBsRp0p2xJRqImMu3onkIhg6CjljW8VZToRrXgpaQXBLvbdPuvPGBWdZbTWmczSPegHfF
-	BFEKKTFgQ2S5OC0aiWVpspiJKkRqCfqJMnKLnnASxjP8qCYhS9lZd3aOZE39Cl2ypmcQpW
-	wn78Rz/9Z/WRzRfCADQXJuudsuSj7ak=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
- gustavoars@kernel.org, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, ananth.narayan@amd.com,
- gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com,
- sandipan.das@amd.com, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 0/6] Add per-core RAPL energy counter support for AMD CPUs
-Date: Mon, 10 Jun 2024 20:08:43 +0200
-Message-ID: <1887843.tdWV9SEqCh@natalenko.name>
-In-Reply-To: <cfd0a622-89bc-4303-a972-4b5c8380eb76@amd.com>
-References:
- <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
- <2733323.mvXUDI8C0e@natalenko.name>
- <cfd0a622-89bc-4303-a972-4b5c8380eb76@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KBx0Ic5e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=s7Gyb9953r9ixu7af9wBM8hywUzKBl8Kmb/xfyNTRSg=; b=KBx0Ic5eGRnV/iKzQO1aiPoOB2
+	BVinSNWUG8COIh+VgcALGirLNWYTUUJ4SBSUSgbdnL7X9BNTRmt2tIjFFiLAjHViVYHY866EjogIr
+	fucVRg1upRTcTHZAkCXEtviW3XaPQR1Wu0cdtQOM4dRNv8fPSBZ3PxsDOieH4/YUigloV+reuxXP6
+	bFisFazK7KSbFczNQkeI/c1Q0eCQp3OoKWrN3enEcVmTTozm5wWFeFSOEI/MgFzPtHHgO2jfMUOxQ
+	ywgOf0A9/7Fs3VAGr/P2EvcM2Og8F24rtaK3plNMMun2YyWhRI36qLSl7Zj/iN0sbmt94e33KtB4E
+	ArWrRwTQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGkGa-00000001cAp-2O4d;
+	Mon, 10 Jun 2024 19:01:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1B245300439; Mon, 10 Jun 2024 21:01:19 +0200 (CEST)
+Date: Mon, 10 Jun 2024 21:01:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ben Gainey <Ben.Gainey@arm.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	Mark Rutland <Mark.Rutland@arm.com>,
+	"acme@kernel.org" <acme@kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	James Clark <James.Clark@arm.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/4] perf: Support PERF_SAMPLE_READ with inherit
+Message-ID: <20240610190118.GV8774@noisy.programming.kicks-ass.net>
+References: <20240606144059.365633-1-ben.gainey@arm.com>
+ <20240606144059.365633-2-ben.gainey@arm.com>
+ <20240607093254.GN8774@noisy.programming.kicks-ass.net>
+ <451afb8eb03f1519c482a84a6c1cbd1e62222988.camel@arm.com>
+ <20240607110214.GQ8774@noisy.programming.kicks-ass.net>
+ <60ed550e8cb5e5aa4004fb2d3857a605ba1da23e.camel@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2184984.irdbgypaU6";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60ed550e8cb5e5aa4004fb2d3857a605ba1da23e.camel@arm.com>
 
---nextPart2184984.irdbgypaU6
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Mon, 10 Jun 2024 20:08:43 +0200
-Message-ID: <1887843.tdWV9SEqCh@natalenko.name>
-In-Reply-To: <cfd0a622-89bc-4303-a972-4b5c8380eb76@amd.com>
-MIME-Version: 1.0
+On Fri, Jun 07, 2024 at 02:04:49PM +0000, Ben Gainey wrote:
 
-On pond=C4=9Bl=C3=AD 10. =C4=8Dervna 2024 17:17:42, SEL=C4=8C Dhananjay Ugw=
-ekar wrote:
-> Hello Oleksandr,
->=20
-> On 6/10/2024 7:58 PM, Oleksandr Natalenko wrote:
-> > Hello.
-> >=20
-> > On pond=C4=9Bl=C3=AD 10. =C4=8Dervna 2024 12:07:45, SEL=C4=8C Dhananjay=
- Ugwekar wrote:
-> >> Currently the energy-cores event in the power PMU aggregates energy
-> >> consumption data at a package level. On the other hand the core energy
-> >> RAPL counter in AMD CPUs has a core scope (which means the energy=20
-> >> consumption is recorded separately for each core). Earlier efforts to =
-add
-> >> the core event in the power PMU had failed [1], due to the difference =
-in=20
-> >> the scope of these two events. Hence, there is a need for a new core s=
-cope
-> >> PMU.
-> >>
-> >> This patchset adds a new "power_per_core" PMU alongside the existing
-> >> "power" PMU, which will be responsible for collecting the new
-> >> "energy-per-core" event.
-> >>
-> >> Tested the package level and core level PMU counters with workloads
-> >> pinned to different CPUs.
-> >>
-> >> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa=20
-> >> machine:
-> >>
-> >> $ perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 1
-> >>
-> >>  Performance counter stats for 'system wide':
-> >>
-> >> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
-> >> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
-> >> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
-> >>
-> >> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d=
-@linux.intel.com/
-> >>
-> >> This patchset applies cleanly on top of v6.10-rc3 as well as latest=20
-> >> tip/master.
-> >>
-> >> Dhananjay Ugwekar (6):
-> >>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-> >>   perf/x86/rapl: Rename rapl_pmu variables
-> >>   perf/x86/rapl: Make rapl_model struct global
-> >>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
-> >>   perf/x86/rapl: Add wrapper for online/offline functions
-> >>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
-> >>
-> >>  arch/x86/events/rapl.c | 311 ++++++++++++++++++++++++++++++-----------
-> >>  1 file changed, 233 insertions(+), 78 deletions(-)
-> >>
-> >>
-> >=20
-> > With my CPU:
-> >=20
-> >   Model name:             AMD Ryzen 9 5950X 16-Core Processor
-> >=20
-> > and this workload:
-> >=20
-> > $ taskset -c 1 dd if=3D/dev/zero of=3D/dev/null
-> >=20
-> > the following result is got:
-> >=20
-> > $ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ sleep=
- 1
-> >=20
-> >  Performance counter stats for 'system wide':
-> >=20
-> > S0-D0-C0              1               1,70 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C1              1               8,83 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C2              1               0,17 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C3              1               0,33 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C4              1               0,14 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C5              1               0,33 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C6              1               0,25 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C7              1               0,19 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C8              1               0,66 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C9              1               1,71 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C10             1               0,38 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C11             1               1,69 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C12             1               0,22 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C13             1               0,11 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C14             1               0,49 Joules power_per_core/energy=
-=2Dper-core/
-> > S0-D0-C15             1               0,37 Joules power_per_core/energy=
-=2Dper-core/
-> >=20
-> >        1,002409590 seconds time elapsed
-> >=20
-> > If it is as expected, please add my:
-> >=20
-> > Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
->=20
-> We can see that after you affined the workload to cpu 1, energy=20
-> consumption of core 1 is considerably higher than the other cores,=20
-> which is as expected, will add your tested-by in next version.
->=20
-> P.S: I'm assuming here that cpu 1 is part of core 1 in your system,=20
-> please let me know if that assumption is wrong.
+> > IIRC they all originate in a single location around
+> > perf_output_read(),
+> > that already has the event and could easily 'correct' the semantic
+> > meaning by doing the above once or so.
+> > 
+> 
+> As far as I can tell, you can mix events in a group with inconsistent
+> values of PERF_SAMPLE_READ which means that doing it at the top level
+> introduces an inconsistency/confusing behaviour since it makes the
+> "thread-local-ness" of the read_format values a property of the event
+> that caused the sample, rather than of the specific event to which the
+> value belongs. The current implementation makes it a property of the
+> specific event not the sample event. Specifically, when
+> perf_output_read_group reads a child event that does not have
+> PERF_SAMPLE_READ, the sample event must have PERF_SAMPLE_READ, meaning
+> the child event will give the thread-local value even though it was not
+> created as inherit+PERF_SAMPLE_READ
+> 
+> I can either:
+> 
+>  * Keep it so that the perf_output_read_group uses per-event value for
+> self
 
-You assumption should be correct:
+Having the lot be inconsistent seems bad.
 
-$ cat /sys/devices/system/cpu/cpu1/topology/core_id
-1
+>  * Rework the deliver_sample_value in session.c to base its decision on
+> the sample event rather than the specific event
 
-> Thanks for testing the patch!
->=20
-> Regards,
-> Dhananjay
->=20
-> >=20
-> > Thank you.
-> >=20
->=20
+The code as it exists seems to use the read_format from the event that
+actually triggers the sample -- which makes sense. I would expect this
+new thing to follow that.
 
+Mixing inherit between events in a group gets you crap, but that's what
+you asked for I suppose :-) But otherwise let the sampling event set the
+format.
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart2184984.irdbgypaU6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+>  * Forbid inconsistent PERF_SAMPLE_READ for events in a group
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZnQSsACgkQil/iNcg8
-M0t+SQ//cFOUD42pQ87oXU+DNh8dOLRaZgt5OVPnx9wVRuH5xs6JMksQQ0cCl4Mn
-sa2VdK5pMMUsd8e39+Sf3Y9qAi+y6hN9DJAy6D2PM3eIgVLrfyBx8cu8wwYPJYLj
-5hM6EYFI9pntlnfj+solUrTdA5gfuAzzHpBmq1aRsRjVyCVEQwVKaArBrHXbHR+J
-6mPxs2bcLoZGal+4rYNxUBwztUjJvJ4NLMaWumyZlRfBuXAwiUSPFRu8TaI2kxZN
-lDWnzlViyx0qPh86cD/QaD7j85QaPOFNfeou7g1vUhJ34oywko5UfqNjW8AcgDxD
-QQ3tTeja0+aQL1yLL1buOFL073fdtfICyjRhFsozEWDkvIBAel1P5LOFAPPfUHQD
-X736qZG7BSvERo62nlZz59XMh9W/8gGSXA8fXEvusK2jx9hhqW8NC1QSBGOZgFp1
-3vI/z/zPn3236s/oEd++tJa1drUBDPMc59zxIzU+CW8xGc22dyWe3bj7Rn0LZRBV
-NPdRpgrJyv60rWj07w1NR9KTkSWYWR47xoNIv6JlN7bpaJSlo9hwhg0SVF4ihL/N
-Z5rLGFmxqrpBHwMbehSQM1kr8faF8BvdLbskbqPFuhePnHPir8IjPpDA7+My5Sp6
-hNjQ0nAYSpmMiEwI9Grre1uhInW+CpVnsuw5zTjC0uW2A4ebI0g=
-=eAZx
------END PGP SIGNATURE-----
-
---nextPart2184984.irdbgypaU6--
-
-
-
+Not possible I think, you can have non-sampling events in a group.
