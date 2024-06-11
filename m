@@ -1,188 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478862C6BD;
-	Tue, 11 Jun 2024 15:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A3436AEC;
+	Tue, 11 Jun 2024 15:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118278; cv=none; b=Icsuz8O68fN0trTRntJEYP25aJhGAofHSkv/7VZOYwCuNNl23dmOgH1L1LRnDypepsgPkUO4hA7kR9ExJibf9IaxpzHUKspUBTDF9JG04+h+6+GXVJgCZqEEDB8hq1C1+SVVdVK4St08N0q70S/jY10DaHKYP0SF44pZPVK1U2Q=
+	t=1718119502; cv=none; b=pi5jPxWNLsuZhn++QnHIug37zorpg3Z8WQw9kNHCJPL9FbXAJ+y/dUAiYR31ij0Vnk6ozH4lfJ1+YewctpiKe12WLhEsbyigDgCE3ayPAU+xisbJ5SIlofEalM6gPsrS9yE37+Q4mgHZvEcTv5orXeFisj1bZT3Bgkl0brD/3OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118278; c=relaxed/simple;
-	bh=+CPbZPwm6idt1BjhNLaLWLEAeeaJnKpKlDcqDQnTcn4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=awgq3pDBwUH/V6rCMA6JMK9itYndMiQ9hd6vL2JoKQgW5VZohtokPwHW1jtNpsv5nQccFl3AXYJ6wQlTX6BDOY3IA6ELSKJ/1IEr5uQBhiN2CETpDhF5CJws1ds/eKhFE/rfsbMlIgFsBJXx82sysvB4MOxUEMY4vJLBahyRbKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CBD3106F;
-	Tue, 11 Jun 2024 08:05:01 -0700 (PDT)
-Received: from e127643.arm.com (unknown [10.57.41.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B2FD3F64C;
-	Tue, 11 Jun 2024 08:04:32 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 14/14] coresight: Make trace ID map spinlock local to the map
-Date: Tue, 11 Jun 2024 16:02:25 +0100
-Message-Id: <20240611150228.1802828-15-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
-References: <20240611150228.1802828-1-james.clark@arm.com>
+	s=arc-20240116; t=1718119502; c=relaxed/simple;
+	bh=O1A6EIbresg0Qi18kGElLIKYlhKkknqVsrmv/n129vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MC5kzpLZxOZrd8pJ1TNK3KdAlnmEWCDeLtk9LSqOyOpkPfnTg69uJzm7VN3n7PbsF7rw7aUTvLyh9R0uMJ6eULKpheQNrVenX7QKcaRCy6WZE2/prxE4/zhuJjZMFNsD+bqXsp5/gfgFJOrfg+Ixh9iA++WqprrD3+UwyB0zFzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfERPvMJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfERPvMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C08C2BD10;
+	Tue, 11 Jun 2024 15:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718119501;
+	bh=O1A6EIbresg0Qi18kGElLIKYlhKkknqVsrmv/n129vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MfERPvMJ8YDbE0SPMQEY3mlvN+wv2WEoxPEoZgqCr8ICh8iBc0j6EUdVRqudBTHHR
+	 QAi+3maKaru/CHJyCt0XIEN+p4PDUYI++BceEQbBDyT3wHrOS3FRY0gwW5Fer0X1eU
+	 14+mK1bgsGzGuLuUW7KzkBB8NYLfHipwgU9LhtMenDDUCgOxaFjBtCHTL+UQU0JCEV
+	 objpifsD7AiW6YB3dFbd78UaQf1vJx/XmMeZz1AA2nqewSwJMrsM/cHORRNWxmLTn5
+	 h0fG0yrQVysLunPygE4w7w4QUpmbNgNK3Cq7/v/8WzMPKcc0vFJOr7Y2+iZQME9N6Q
+	 fHeXdXJ/2YHNw==
+Date: Tue, 11 Jun 2024 12:24:56 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, mic@digikod.net, gnoack@google.com,
+	brauner@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Fix syscall untraceable bug
+Message-ID: <ZmhsSF1UPcNZX8E_@x1>
+References: <20240608172147.2779890-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240608172147.2779890-1-howardchu95@gmail.com>
 
-Reduce contention on the lock by replacing the global lock with one for
-each map.
+On Sun, Jun 09, 2024 at 01:21:46AM +0800, Howard Chu wrote:
+> as for the perf trace output:
+> 
+> before
+> 
+> perf $ perf trace -e faccessat2 --max-events=1
+> [no output]
+> 
+> after
+> 
+> perf $ ./perf trace -e faccessat2 --max-events=1
+>      0.000 ( 0.037 ms): waybar/958 faccessat2(dfd: 40, filename: "uevent")                               = 0
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- drivers/hwtracing/coresight/coresight-core.c  |  1 +
- .../hwtracing/coresight/coresight-trace-id.c  | 26 +++++++++----------
- include/linux/coresight.h                     |  1 +
- 3 files changed, 14 insertions(+), 14 deletions(-)
+Yeah, before there is no output, after, with the following test case:
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index c427e9344a84..ea38ecf26fcb 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1164,6 +1164,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 
- 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
- 	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
-+		spin_lock_init(&csdev->perf_sink_id_map.lock);
- 		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
- 		if (!csdev->perf_sink_id_map.cpu_map) {
- 			kfree(csdev);
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index 1e70892f5beb..82bb70c1ad73 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -15,12 +15,10 @@
- /* Default trace ID map. Used in sysfs mode and for system sources */
- static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
- static struct coresight_trace_id_map id_map_default = {
--	.cpu_map = &id_map_default_cpu_ids
-+	.cpu_map = &id_map_default_cpu_ids,
-+	.lock = __SPIN_LOCK_UNLOCKED(id_map_default.lock)
- };
- 
--/* lock to protect id_map and cpu data  */
--static DEFINE_SPINLOCK(id_map_lock);
--
- /* #define TRACE_ID_DEBUG 1 */
- #if defined(TRACE_ID_DEBUG) || defined(CONFIG_COMPILE_TEST)
- 
-@@ -124,11 +122,11 @@ static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map
- 	unsigned long flags;
- 	int cpu;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	for_each_possible_cpu(cpu)
- 		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_MAP(id_map);
- }
- 
-@@ -137,7 +135,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	unsigned long flags;
- 	int id;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 
- 	/* check for existing allocation for this CPU */
- 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
-@@ -164,7 +162,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
- 
- get_cpu_id_out_unlock:
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
-@@ -181,12 +179,12 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
- 	if (!id)
- 		return;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 
- 	coresight_trace_id_free(id, id_map);
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
- 
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
- }
-@@ -196,10 +194,10 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
- 	unsigned long flags;
- 	int id;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	/* prefer odd IDs for system components to avoid legacy CPU IDS */
- 	id = coresight_trace_id_alloc_new_id(id_map, 0, true);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-@@ -210,9 +208,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	coresight_trace_id_free(id, id_map);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 197949fd2c35..c13342594278 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -233,6 +233,7 @@ struct coresight_trace_id_map {
- 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	atomic_t __percpu *cpu_map;
- 	atomic_t perf_cs_etm_session_active;
-+	spinlock_t lock;
- };
- 
- /**
--- 
-2.34.1
+⬢[acme@toolbox c]$ cat faccessat2.c
+#include <fcntl.h>            /* Definition of AT_* constants */
+#include <sys/syscall.h>      /* Definition of SYS_* constants */
+#include <unistd.h>
+#include <stdio.h>
 
+/* Provide own perf_event_open stub because glibc doesn't */
+__attribute__((weak))
+int faccessat2(int dirfd, const char *pathname, int mode, int flags)
+{
+	return syscall(SYS_faccessat2, dirfd, pathname, mode, flags);
+}
+
+int main(int argc, char *argv[])
+{
+	int err = faccessat2(123, argv[1], X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW);
+
+	printf("faccessat2(123, %s, X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = %d\n", argv[1], err);
+	return err;
+}
+⬢[acme@toolbox c]$ make faccessat2
+cc     faccessat2.c   -o faccessat2
+⬢[acme@toolbox c]$ ./faccessat2 bla
+faccessat2(123, bla, X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = -1
+⬢[acme@toolbox c]$
+
+In the other terminal, as root:
+
+root@number:~# perf trace --call-graph dwarf -e faccessat2 --max-events=1
+     0.000 ( 0.034 ms): bash/62004 faccessat2(dfd: 123, filename: "bla", mode: X, flags: EACCESS|SYMLINK_NOFOLLOW) = -1 EBADF (Bad file descriptor)
+                                       syscall (/usr/lib64/libc.so.6)
+                                       faccessat2 (/home/acme/c/faccessat2)
+                                       main (/home/acme/c/faccessat2)
+                                       __libc_start_call_main (/usr/lib64/libc.so.6)
+                                       __libc_start_main@@GLIBC_2.34 (/usr/lib64/libc.so.6)
+                                       _start (/home/acme/c/faccessat2)
+root@number:~#
+
+Now to write another test case, this time for the landlock syscall, to
+test your btf_enum patch.
+
+In the future please add the test case so that one can quickly reproduce
+your testing steps.
+
+- Arnaldo
