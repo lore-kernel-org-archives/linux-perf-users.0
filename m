@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ACD4F215;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E352C55880;
 	Tue, 11 Jun 2024 16:49:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124600; cv=none; b=AWVAoh1GxuC42YCZPkE6+TnSzJMwpt0wM7rrxynMYbiJZt17T7ugh39ZItVuzO0HVjEYmttt3NrhRjw4m1Kd9Tep03im/jSvlrJN4rntlJFewjts7N24vMld0kel/OeLCYK3Zi5OJ/Z+dRZY3gXwN34g40YsHdaZSCn60C2kDOM=
+	t=1718124601; cv=none; b=TCWiW7J/hqDW7Uzbc8vFNC9L/+fUbX1qWgUzXziIE8pDfVoE1ldq90RRkd18smkx5IFvKBOxEFe6FX7LgAT7oeUKIBWWqnUD4bnpcrDbwWxkdgw7UwrPb9j6ceQc6ilTupJ8oPu4eyIlAhVcDVMdT70Zozg/LF3RTRoBCLFZlLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718124600; c=relaxed/simple;
-	bh=g9KRIIibi6flSjPiJqsarRgmVLMT8q7i2OOXiR3xIJw=;
+	s=arc-20240116; t=1718124601; c=relaxed/simple;
+	bh=k75EWiLGbT8v5X6AJvmrIwUxotvioqipvuQ9n/eL580=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LaYWRmDV9JNPxaWK7LANSZpnnDbbMfZ7bzgc3emAHH+iJD/ZkQHrU8bnHN1SRIABDyLaB6EJpre02d7cEiJrU5upi4mJRaAQ/p5AWf8zUuQu12quWlZM5PWaLTJt+fAdd3IFFILA5yxPnKPQyspWu/GZv9pQl2nz/kY89O/XnPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ACStpkba; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=RKM541ahtRKEkfrUPpL+hbbQRQIlKD3vkw78Y3SttehPQuyYVz2PZiA3GtZrie3vJ3JVfgBRyg7lYoUwB8f+nZ4cel2WY6czD5raUVejEzQmQy+H1k3qk9X8ADYivIjSxxJMjfEITMZXT4p5UaHOvKcURcjRFMCRugCG72q4sR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ho9qZ2nR; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ACStpkba"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ho9qZ2nR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718124599; x=1749660599;
+  t=1718124600; x=1749660600;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=g9KRIIibi6flSjPiJqsarRgmVLMT8q7i2OOXiR3xIJw=;
-  b=ACStpkbanr0T1B4Js3Dav+tPu8HcrBz8ySUChqi3E0d6SAIKsDCAHeZL
-   1uq//tREoQFN7jX3jRr83Zws5GEtq/MMuz1dqhHIN0M7cLZ9IVj0fVdQw
-   eO4fBDmXdsi9Dz2N773yfoWnFv5WamkvEFjIXoBygJ3U9VC11DlHkO+0v
-   K+LO9Uk6Vbq2ByU6OrxxXCnDrMJvGl2Y5Z5U1mQfltX0M8SAw3Tu/sW4g
-   OaMxJhjN1fFS+c0thbBCBiba3MKyvMSMwshLD7EmfeusUy+FOhcdFJGZ7
-   WLXqUVotie2b2WzpJpg/JM8K+Q7HgNz2C2SeOu9+6O/npnQVj8prjuUba
-   Q==;
-X-CSE-ConnectionGUID: JZS8Gem1Qb2+am+CoCgFXg==
-X-CSE-MsgGUID: CgEgTbiUQ52YagVBCDcn/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249655"
+  bh=k75EWiLGbT8v5X6AJvmrIwUxotvioqipvuQ9n/eL580=;
+  b=Ho9qZ2nRU7Y6On8MG9u4TrGQG3vZyD3HgDKuE0BtIaSWolkkeT6CVzKT
+   w3fyYsQcYyU2ulC++3Lh656CIV8Uu4wXiMH9aSanyZSfjOEetoc1+pd3D
+   7FvG9cmHh5MCzT2GwddbInK0FykeLn3gFIdYltGryEtyZPi3VV6ElHIPQ
+   eztCGjwFhQ10ue82ZcOO0ZzhTs7yJEumlYODGy4RgNrarA3oeDyCWN3ng
+   vdmnsVcO9kh9PQPcq5qzYT1aeNq6tLPBJpAig7e2y3lNU4fMOeJiU1oWm
+   dylCRdKPSRq4YncBHugiyDKtCrhWyi4U5lh13ZJ458N2EVLwRplbC9oqE
+   A==;
+X-CSE-ConnectionGUID: coijBmh+RE2Qw3Z8VI0VmQ==
+X-CSE-MsgGUID: mnRNCBiSTP2rLQfVl4ieXg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249667"
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40249655"
+   d="scan'208";a="40249667"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:58 -0700
-X-CSE-ConnectionGUID: lWU/h40YSp2KdtLwhmY1Ow==
-X-CSE-MsgGUID: HFKdOEOYRei4vaPRyp1z2Q==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:59 -0700
+X-CSE-ConnectionGUID: prw5tJPDTMChoJPIe/LuxQ==
+X-CSE-MsgGUID: g3xvhN0eTX6960PvsJSbsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40103309"
+   d="scan'208";a="40103312"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
   by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:58 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -55,10 +55,11 @@ To: X86 Kernel <x86@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: Andi Kleen <andi.kleen@intel.com>,
 	"Xin Li" <xin3.li@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 4/6] x86/irq: Process nmi sources in NMI handler
-Date: Tue, 11 Jun 2024 09:54:55 -0700
-Message-Id: <20240611165457.156364-5-jacob.jun.pan@linux.intel.com>
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Zeng Guang <guang.zeng@intel.com>
+Subject: [PATCH v2 5/6] perf/x86: Enable NMI source reporting for perfmon
+Date: Tue, 11 Jun 2024 09:54:56 -0700
+Message-Id: <20240611165457.156364-6-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
 References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
@@ -70,86 +71,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With NMI source reporting enabled, NMI handler can prioritize the
-handling of sources reported explicitly. If the source is unknown, then
-resume the existing processing flow. i.e. invoke all NMI handlers.
+Program the designated NMI source vector into the performance monitoring
+interrupt (PMI) of the local vector table. PMI handler will be directly
+invoked when its NMI is generated. This avoids the latency of calling all
+NMI handlers blindly.
 
+Co-developed-by: Zeng Guang <guang.zeng@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
 ---
-v2:
-   - Disable NMI source reporting once garbage data is given in FRED
-return stack. (HPA)
+v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
 ---
- arch/x86/kernel/nmi.c | 49 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ arch/x86/events/core.c       | 8 ++++++--
+ arch/x86/events/intel/core.c | 6 +++---
+ arch/x86/include/asm/apic.h  | 1 +
+ 3 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 639a34e78bc9..2c391fd59c34 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -149,12 +149,61 @@ static inline int do_handle_nmi(struct nmiaction *a, struct pt_regs *regs, unsig
- 	return thishandled;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 1ef2201e48ac..db8c30881f5c 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -46,6 +46,7 @@
+ 
+ struct x86_pmu x86_pmu __read_mostly;
+ static struct pmu pmu;
++u32 apic_perfmon_ctr = APIC_DM_NMI;
+ 
+ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+ 	.enabled = 1,
+@@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	 * This generic handler doesn't seem to have any issues where the
+ 	 * unmasking occurs so it was left at the top.
+ 	 */
+-	apic_write(APIC_LVTPC, APIC_DM_NMI);
++	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+ 
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+ 		if (!test_bit(idx, cpuc->active_mask))
+@@ -1723,7 +1724,10 @@ void perf_events_lapic_init(void)
+ 	/*
+ 	 * Always use NMI for PMU
+ 	 */
+-	apic_write(APIC_LVTPC, APIC_DM_NMI);
++	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
++		apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
++
++	apic_write(APIC_LVTPC, apic_perfmon_ctr);
  }
  
-+static inline int nmi_handle_src(unsigned int type, struct pt_regs *regs)
-+{
-+	unsigned long source_bitmask;
-+	struct nmiaction *a;
-+	int handled = 0;
-+	int vec = 1;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL)
-+		return 0;
-+
-+	source_bitmask = fred_event_data(regs);
-+	if (!source_bitmask) {
-+		pr_warn_ratelimited("NMI without source information! Disable source reporting.\n");
-+		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
-+		return 0;
-+	}
-+
-+	/*
-+	 * Per NMI source specification, there is no guarantee that a valid
-+	 * NMI vector is always delivered, even when the source specified
-+	 * one. It is software's responsibility to check all available NMI
-+	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
-+	 * to call every handler as if we have no NMI source.
-+	 * On the other hand, if we do get non-zero vectors, we know exactly
-+	 * what the sources are. So we only call the handlers with the bit set.
-+	 */
-+	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-+		pr_warn_ratelimited("NMI received with unknown source\n");
-+		return 0;
-+	}
-+
-+	rcu_read_lock();
-+	/* Bit 0 is for unknown NMI sources, skip it. */
-+	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
-+		a = rcu_dereference(nmiaction_src_table[vec]);
-+		if (!a) {
-+			pr_warn_ratelimited("NMI received %d no handler", vec);
-+			continue;
-+		}
-+		handled += do_handle_nmi(a, regs, type);
-+	}
-+	rcu_read_unlock();
-+	return handled;
-+}
-+
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
- {
- 	struct nmi_desc *desc = nmi_to_desc(type);
- 	struct nmiaction *a;
- 	int handled=0;
+ static int
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 38c1b1f1deaa..b4a70457c678 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3093,7 +3093,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 	 * NMI handler.
+ 	 */
+ 	if (!late_ack && !mid_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+ 	intel_bts_disable_local();
+ 	cpuc->enabled = 0;
+ 	__intel_pmu_disable_all(true);
+@@ -3130,7 +3130,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
  
-+	handled = nmi_handle_src(type, regs);
-+	if (handled)
-+		return handled;
-+
- 	rcu_read_lock();
+ done:
+ 	if (mid_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+ 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
+ 	cpuc->enabled = pmu_enabled;
+ 	if (pmu_enabled)
+@@ -3143,7 +3143,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 	 * Haswell CPUs.
+ 	 */
+ 	if (late_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+ 	return handled;
+ }
  
- 	/*
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 9327eb00e96d..bcf8d17240c8 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -49,6 +49,7 @@ static inline void x86_32_probe_apic(void) { }
+ #endif
+ 
+ extern u32 cpuid_to_apicid[];
++extern u32 apic_perfmon_ctr;
+ 
+ #define CPU_ACPIID_INVALID	U32_MAX
+ 
 -- 
 2.25.1
 
