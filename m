@@ -1,154 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9B040862;
-	Tue, 11 Jun 2024 16:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE763A1BF;
+	Tue, 11 Jun 2024 16:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718123400; cv=none; b=MZbJPB3k33t3Mr+5CmbbjECJ2T56xQveZQblkdtnfbKISXN/8NvRNliNrajNtdV9eKQRfPpH8xDF4I4N2wOgLEVKMbeyJLSEqUAdp/eg6TVd/gqA2FHJKtzNW8vnzYx991JRDQpKyBbt/NJN3zElOlBm3B86cyp18OJ/r4TxaSQ=
+	t=1718124597; cv=none; b=PW5i9MopJuCw027HJpJPrUvtRDCyVI0kFkvJ5g6AD8WLrv/k6fwY28QfHkXCZ7QWtQkUuXyrumbxMcZ5AGbDqy/7ZAEsOdrkMamje5T6o8hlixGVmgsZZkV5TbbPJKVRCylRMFmwKYgls2BGJ2bpK+ZXvgA41G1ONE0cM2TgOAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718123400; c=relaxed/simple;
-	bh=x88vPd67F51bwNIvdn5aIPG/KAt9yYbLHZCemaaxtC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RMmJ+/5rubiJu6Pn5KQwYwbOdwHqDXTfL/scLnFqrqF2pUn+owWbsPFrYTvYJ6cZJjS7KhqjEdm4BgadjE2S77i9vPbolvmAX0/VBVZtpdVMIODw00ftp18GDnMYyYH1/myXrL+pgCf1CEU6kW2rPhEEFTsRECLgZA1Rqs7sqUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B4EdXyOx; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718124597; c=relaxed/simple;
+	bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JtS3AyaE6UemIpggn537lVN16oWvpBEXXz4dov0NxnMH6R3aOY/EuB5taSX7NRpkRN7igl5XKHB83f6TlpPieoI1eEO4YEX5YbA0oKhXIivtqI3Ycx2oVV19R6HKP3s6f2i9QuBh0gZe/xExTYdedfrb8jl9lGVO+3ZlaYC3rtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbcGSzo4; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B4EdXyOx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbcGSzo4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718123398; x=1749659398;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x88vPd67F51bwNIvdn5aIPG/KAt9yYbLHZCemaaxtC8=;
-  b=B4EdXyOxXUO14hMQIRPCURkZyzyOxxoo3Utl+tiWmNNgimDe+HPqXzgP
-   5mVmkENePu9P0k2ipTQiv4G3WJYxsWStodn9W/3EDPsQXvH3kJQBpKyc5
-   D5tzT6TH5gOB2FqKyakQQ4VwM74BWW6SMZn+/V7/yv0CclKDbTTDx1pGV
-   /vYU9UH9FSW4GHgRBBYf8BW3NbLM1kGQTtu3u43juWe24lUEir9MU67mv
-   I0vFAFPsIj4Eb+edf386n2erGNQket0jGhCEEw+cXIG9qKBOXRjnjmLgz
-   gnt0O92MX9t6uC23vGnSHvYQjmIB6kWuPaKnO1ELyTkDa/GRpjmYkENlx
+  t=1718124596; x=1749660596;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
+  b=mbcGSzo4cV4+wq7m7KuNrg3seQcU7NIDzNy9QqHVHiTWV4zTpkehljy7
+   GJaPWoiYSQaQIkac/Qtxy35WjrGZuBXc/8RQrRjSmlDw81/ig137hwVyJ
+   hJ6Am5bef/kf3h1wzs992cSi17941Xur3MvvmElu4Z6JLodCbZVdpWJO8
+   Zjpq+LDwJTaYYTCMYLPlKl8QyHKwT8AY64ZiTy8BSnrQWnt6r9EsZS10Q
+   q1g7HdbDbaZuG8Q4pq3X/rokMCNRSL/p+XD0BdS1GO4aSk9eNeVS92WA+
+   ZZ9bFKn+wew10R2ajftsdBBtrJ0Y3/eYpGt3yDt66NOTw43Yb8OPKDT86
    w==;
-X-CSE-ConnectionGUID: XEHyzu6XShuEjS96yVZ3cg==
-X-CSE-MsgGUID: HLnwBWRWSHCKx2JHlARiyw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15018212"
+X-CSE-ConnectionGUID: wnav3QOqSLeqVPatec6WWg==
+X-CSE-MsgGUID: 2FUcv2OCQWSQLvQOATVvQw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249616"
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="15018212"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:29:58 -0700
-X-CSE-ConnectionGUID: aW9cfQpQSjqJjDLJ6LBtXA==
-X-CSE-MsgGUID: 0uVim8UwQsCsM1J9UsyyeQ==
+   d="scan'208,223";a="40249616"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:55 -0700
+X-CSE-ConnectionGUID: L0C88JV3TXihXBARem94nw==
+X-CSE-MsgGUID: GJTOORIvQP248Oej/VAciA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40204656"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:29:54 -0700
-Message-ID: <9dedd378-ce85-4329-b770-de47548bf380@intel.com>
-Date: Tue, 11 Jun 2024 19:29:49 +0300
+   d="scan'208,223";a="40103295"
+Received: from jacob-builder.jf.intel.com ([10.54.39.125])
+  by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:55 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: X86 Kernel <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Ingo Molnar" <mingo@redhat.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <andi.kleen@intel.com>,
+	"Xin Li" <xin3.li@intel.com>
+Subject: 
+Date: Tue, 11 Jun 2024 09:54:51 -0700
+Message-Id: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
- powerpc
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Segher Boessenkool <segher@kernel.crashing.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
- disgoel@linux.vnet.ibm.com
-References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
- <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
- <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
- <c383b404-727c-4564-a66e-0906348891b3@intel.com>
- <81ED04E0-23B5-44AE-B84D-5766346F1D32@linux.vnet.ibm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <81ED04E0-23B5-44AE-B84D-5766346F1D32@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 10/06/24 15:20, Athira Rajeev wrote:
-> 
-> 
->> On 3 Jun 2024, at 10:28 PM, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 3/06/24 19:30, Ian Rogers wrote:
->>> On Fri, May 31, 2024 at 11:10 PM Athira Rajeev
->>> <atrajeev@linux.vnet.ibm.com> wrote:
->>>>
->>>> Now perf uses the capstone library to disassemble the instructions in
->>>> x86. capstone is used (if available) for perf annotate to speed up.
->>>> Currently it only supports x86 architecture. Patch includes changes to
->>>> enable this in powerpc. For now, only for data type sort keys, this
->>>> method is used and only binary code (raw instruction) is read. This is
->>>> because powerpc approach to understand instructions and reg fields uses
->>>> raw instruction. The "cs_disasm" is currently not enabled. While
->>>> attempting to do cs_disasm, observation is that some of the instructions
->>>> were not identified (ex: extswsli, maddld) and it had to fallback to use
->>>> objdump. Hence enabling "cs_disasm" is added in comment section as a
->>>> TODO for powerpc.
->>>>
->>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>> ---
->>>> tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
->>>> 1 file changed, 146 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->>>> index d8b357055302..915508d2e197 100644
->>>> --- a/tools/perf/util/disasm.c
->>>> +++ b/tools/perf/util/disasm.c
->>>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
->>>> {
->>>>        struct annotation_options *opt = args->options;
->>>>        cs_mode mode = is_64bit ? CS_MODE_64 : CS_MODE_32;
->>>> +       int ret;
->>>>
->>>>        /* TODO: support more architectures */
->>>> -       if (!arch__is(args->arch, "x86"))
->>>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "powerpc")))
->>>>                return -1;
->>>>
->>>> -       if (cs_open(CS_ARCH_X86, mode, handle) != CS_ERR_OK)
->>>> +       if (arch__is(args->arch, "x86"))
->>>> +               ret = cs_open(CS_ARCH_X86, mode, handle);
->>>> +       else
->>>> +               ret = cs_open(CS_ARCH_PPC, mode, handle);
->>>> +
->>>> +       if (ret != CS_ERR_OK)
->>>>                return -1;
->>>
->>> There looks to be a pretty/more robust capstone_init function in
->>> print_insn.c, should we factor this code out and recycle:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print_insn.c?h=perf-tools-next#n40
->>
->> On a slightly related note, there is a compile error
->> been around for a while in util/disasm.c on Ubuntu 22.04
->>
->> In file included from /usr/include/capstone/capstone.h:279,
->>                 from util/disasm.c:1354:
->> /usr/include/capstone/bpf.h:94:14: error: ‘bpf_insn’ defined as wrong
->> kind of tag
->>   94 | typedef enum bpf_insn {
->>      |              ^~~~~~~~
->>
-> 
-> Hi Adrian
-> 
-> I tried compilation on Ubuntu 22.04, but didn’t face this issue.
-> The libcapstone version I have is libcapstone4 which doesn’t have the include for “bpf.h”
-> What is the version of libcapstone in the setup where you are seeing this issue ?
+From e52010df700cde894633c45c0b364847e63a9819 Mon Sep 17 00:00:00 2001
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Date: Tue, 11 Jun 2024 09:49:17 -0700
+Subject: Subject: [PATCH v2 0/6] Add support for NMI source reporting
 
-Yes, sorry. I got confused.  Ubuntu was OK.  The original issue
-was with Fedora 40, but even then it requires binutils-devel
-and BUILD_NONDISTRO=1
+Hi Thomas and all,
+
+Non-Maskable Interrupts (NMIs) are routed to the local Advanced Programmable
+Interrupt Controller (APIC) using vector #2. Before the advent of the
+Flexible Return and Event Delivery (FRED)[1], the vector information set by
+the NMI initiator was disregarded or lost within the hardware, compelling
+system software to poll every registered NMI handler to pinpoint the source
+of the NMI[2]. This approach led to several issues:
+
+1.	Inefficiency due to the CPU's time spent polling all handlers.
+2.	Increased latency from the additional time taken to poll all handlers.
+3.	The occurrence of unnecessary NMIs if they are triggered shortly
+	after being processed by a different source.
+
+To tackle these challenges, Intel introduced NMI source reporting as a part
+of the FRED specification (detailed in Chapter 9). This CPU feature ensures
+that while all NMI sources are still aggregated into NMI vector (#2) for
+delivery, the source of the NMI is now conveyed through FRED event data
+(a 16-bit bitmap on the stack). This allows for the selective dispatch
+of the NMI source handler based on the bitmap, eliminating the need to
+invoke all NMI source handlers indiscriminately.
+
+In line with the hardware architecture, various interrupt sources can
+generate NMIs by encoding an NMI delivery mode. However, this patchset
+activates only the local NMI sources that are currently utilized by the
+Linux kernel, which includes:
+
+1.	Performance monitoring.
+2.	Inter-Processor Interrupts (IPIs) for functions like CPU backtrace,
+	machine check, Kernel GNU Debugger (KGDB), reboot, panic stop, and
+	self-test.
+
+Other NMI sources will continue to be handled as previously when the NMI
+source is not utilized or remains unidentified.
+
+Next steps:
+1. KVM support
+2. Optimization to reuse IDT NMI vector 2 as NMI source for "known" source.
+Link:https://lore.kernel.org/lkml/746fecd5-4c79-42f9-919e-912ec415e73f@zytor.com/
+
+
+[1] https://www.intel.com/content/www/us/en/content-details/779982/flexible-return-and-event-delivery-fred-specification.html
+[2] https://lore.kernel.org/lkml/171011362209.2468526.15187874627966416701.tglx@xen13/
+
+
+Thanks,
+
+Jacob
+
+---
+Change logs are in individual patches.
+
+Jacob Pan (6):
+  x86/irq: Add enumeration of NMI source reporting CPU feature
+  x86/irq: Extend NMI handler registration interface to include source
+  x86/irq: Factor out common NMI handling code
+  x86/irq: Process nmi sources in NMI handler
+  perf/x86: Enable NMI source reporting for perfmon
+  x86/irq: Enable NMI source on IPIs delivered as NMI
+
+ arch/x86/Kconfig                         |  9 +++
+ arch/x86/events/amd/ibs.c                |  2 +-
+ arch/x86/events/core.c                   | 11 ++-
+ arch/x86/events/intel/core.c             |  6 +-
+ arch/x86/include/asm/apic.h              |  1 +
+ arch/x86/include/asm/cpufeatures.h       |  1 +
+ arch/x86/include/asm/disabled-features.h |  8 +-
+ arch/x86/include/asm/irq_vectors.h       | 38 +++++++++
+ arch/x86/include/asm/nmi.h               |  4 +-
+ arch/x86/kernel/apic/hw_nmi.c            |  5 +-
+ arch/x86/kernel/apic/ipi.c               |  4 +-
+ arch/x86/kernel/apic/local.h             | 18 +++--
+ arch/x86/kernel/cpu/mce/inject.c         |  4 +-
+ arch/x86/kernel/cpu/mshyperv.c           |  2 +-
+ arch/x86/kernel/kgdb.c                   |  6 +-
+ arch/x86/kernel/nmi.c                    | 99 +++++++++++++++++++++---
+ arch/x86/kernel/nmi_selftest.c           |  7 +-
+ arch/x86/kernel/reboot.c                 |  4 +-
+ arch/x86/kernel/smp.c                    |  4 +-
+ arch/x86/kernel/traps.c                  |  4 +-
+ arch/x86/platform/uv/uv_nmi.c            |  4 +-
+ drivers/acpi/apei/ghes.c                 |  2 +-
+ drivers/char/ipmi/ipmi_watchdog.c        |  2 +-
+ drivers/edac/igen6_edac.c                |  2 +-
+ drivers/watchdog/hpwdt.c                 |  6 +-
+ 25 files changed, 200 insertions(+), 53 deletions(-)
+
+-- 
+2.25.1
 
