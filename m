@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0717423767;
-	Tue, 11 Jun 2024 15:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2B721CD16;
+	Tue, 11 Jun 2024 15:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118192; cv=none; b=dRhOmgIT64u5qQ+askX1XQ7o76L9tdFJPIlG32r4eeMh2xp1fPjK9yFA+4C3d5e/t1jlG8RV157a6NQUbNQnB/pYuOzZBpm1Qfvz5PnzIwcKwOsWMGi0CNxMjbtOx+hlRGP2ipCwc6S8XrJGOWG/L9K/qNXENP1++ec4TvD8644=
+	t=1718118199; cv=none; b=dbPB+K7N0lKGQBnVXVrLOrt1MmWHGDOBccbewIZ9Fu1fRS2WDyBHgqVTA+iNt0rcr1Ft+aOLuL99G3q+P1o5DXYpp8ycadhtNT1I8ZpyhzY/qVvGnisrqa+kvtRVAcDDSBfypburjbgVb+0T4zb4rX7hQAT0NczolWJIt1iFT98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118192; c=relaxed/simple;
-	bh=B4nm6nLK51aoQsLttd3Ekb+C8feSvY1WbvdomQFg9hE=;
+	s=arc-20240116; t=1718118199; c=relaxed/simple;
+	bh=yBlcn6BXurZRccvnJWJmgySkDIJVpZxXOd6GWH4ksxw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kqXEAt49oiMOAAmZB99VtX+zrctBNAFiWl609WVp/aow+9c9XHIAeRK19g66HbSlRnDqhhgbkU/BGXU4nquTWhsoJbg+HT6xJX8+M2HWZqqgc3wJvqTZRtnnPfhOgxXNVMDTahUBSS/4beQpxXORUEOyhUP4zduARWDc4fMIxbg=
+	 MIME-Version; b=EmXoHen7l9L4dGLZ3nuhnEbObGSk8PzftXGXGB7/AUZ4eQyVqzlx0y6N55oRvvol/OpYjh2RWh3ir3PG4cRZlkPPHRfS75KspsMWgwAU3HMWKw7AwSPC2JWmTBJfreqO3oGCysw5CEOEYh9iNIGImRdBt4Cd8OUE+foEg41xsSc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02027152B;
-	Tue, 11 Jun 2024 08:03:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A7D3152B;
+	Tue, 11 Jun 2024 08:03:41 -0700 (PDT)
 Received: from e127643.arm.com (unknown [10.57.41.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E5E33F64C;
-	Tue, 11 Jun 2024 08:03:05 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08F263F64C;
+	Tue, 11 Jun 2024 08:03:12 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: coresight@lists.linaro.org,
 	suzuki.poulose@arm.com,
@@ -44,9 +44,9 @@ Cc: James Clark <james.clark@arm.com>,
 	linux-kernel@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 04/14] perf: cs-etm: Create decoders based on the trace ID mappings
-Date: Tue, 11 Jun 2024 16:02:15 +0100
-Message-Id: <20240611150228.1802828-5-james.clark@arm.com>
+Subject: [PATCH v3 05/14] perf: cs-etm: Support version 0.1 of HW_ID packets
+Date: Tue, 11 Jun 2024 16:02:16 +0100
+Message-Id: <20240611150228.1802828-6-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
 References: <20240611150228.1802828-1-james.clark@arm.com>
@@ -58,232 +58,231 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that each queue has a unique set of trace ID mappings, use this
-list to create the decoders. This also works the same way for
-unformatted where a single dummy entry is added into the trace ID list.
+v0.1 HW_ID packets have a new field that describes which sink each CPU
+writes to. Use the sink ID to link trace ID maps to each other so that
+mappings are shared wherever the sink is shared.
 
-Previously each queue would have a decoder created for each traced CPU
-on the system but this won't work anymore because CPUs can have
-overlapping trace IDs.
+Also update the error message to show that overlapping IDs aren't an
+error in per-thread mode, just not supported. In the future we can
+use the CPU ID from the AUX records, or watch for changing sink IDs on
+HW_ID packets to use the correct decoders.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/util/cs-etm.c | 143 +++++++++++++++++++++++----------------
- 1 file changed, 85 insertions(+), 58 deletions(-)
+ tools/include/linux/coresight-pmu.h |  17 ++++-
+ tools/perf/util/cs-etm.c            | 110 +++++++++++++++++++++++++---
+ 2 files changed, 113 insertions(+), 14 deletions(-)
 
+diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
+index 51ac441a37c3..89b0ac0014b0 100644
+--- a/tools/include/linux/coresight-pmu.h
++++ b/tools/include/linux/coresight-pmu.h
+@@ -49,12 +49,21 @@
+  * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+  * Used to associate a CPU with the CoreSight Trace ID.
+  * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
+- * [59:08] - Unused (SBZ)
+- * [63:60] - Version
++ * [39:08] - Sink ID - as reported in /sys/bus/event_source/devices/cs_etm/sinks/
++ *	      Added in minor version 1.
++ * [55:40] - Unused (SBZ)
++ * [59:56] - Minor Version - previously existing fields are compatible with
++ *	      all minor versions.
++ * [63:60] - Major Version - previously existing fields mean different things
++ *	      in new major versions.
+  */
+ #define CS_AUX_HW_ID_TRACE_ID_MASK	GENMASK_ULL(7, 0)
+-#define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(63, 60)
++#define CS_AUX_HW_ID_SINK_ID_MASK	GENMASK_ULL(39, 8)
+ 
+-#define CS_AUX_HW_ID_CURR_VERSION 0
++#define CS_AUX_HW_ID_MINOR_VERSION_MASK	GENMASK_ULL(59, 56)
++#define CS_AUX_HW_ID_MAJOR_VERSION_MASK	GENMASK_ULL(63, 60)
++
++#define CS_AUX_HW_ID_MAJOR_VERSION 0
++#define CS_AUX_HW_ID_MINOR_VERSION 1
+ 
+ #endif
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index be858aed26c4..73fc0ab2fb09 100644
+index 73fc0ab2fb09..b0f9a3933b03 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -268,6 +268,10 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
- 		int ret;
- 		struct cs_etm_queue *etmq = etm->queues.queue_array[i].priv;
+@@ -113,6 +113,12 @@ struct cs_etm_queue {
+ 	struct cs_etm_traceid_queue **traceid_queues;
+ 	/* Conversion between traceID and metadata pointers */
+ 	struct intlist *traceid_list;
++	/*
++	 * Same as traceid_list, but traceid_list may be a reference to another
++	 * queue's which has a matching sink ID.
++	 */
++	struct intlist *own_traceid_list;
++	u32 sink_id;
+ };
  
-+		/* Ignore HW_IDs on unformatted queues */
-+		if (etmq->formatted_set && !etmq->formatted)
-+			continue;
+ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
+@@ -137,6 +143,7 @@ static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata);
+ 		      (queue_nr << 16 | trace_chan_id)
+ #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
+ #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
++#define SINK_UNSET ((u32) -1)
+ 
+ static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
+ {
+@@ -236,7 +243,16 @@ static int cs_etm__insert_trace_id_node(struct cs_etm_queue *etmq,
+ 		int err;
+ 
+ 		if (curr_cpu_data[CS_ETM_CPU] != cpu_metadata[CS_ETM_CPU]) {
+-			pr_err("CS_ETM: map mismatch between HW_ID packet CPU and Trace ID\n");
++			/*
++			 * With > CORESIGHT_TRACE_IDS_MAX ETMs, overlapping IDs
++			 * are expected (but not supported) in per-thread mode,
++			 * rather than signifying an error.
++			 */
++			if (etmq->etm->per_thread_decoding)
++				pr_err("CS_ETM: overlapping Trace IDs aren't currently supported in per-thread mode\n");
++			else
++				pr_err("CS_ETM: map mismatch between HW_ID packet CPU and Trace ID\n");
 +
- 		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id,
- 						   cpu_metadata);
- 		if (ret)
-@@ -673,80 +677,58 @@ static void cs_etm__packet_dump(const char *pkt_string)
- }
- 
- static void cs_etm__set_trace_param_etmv3(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx, u32 etmidr)
-+					  u64 *metadata, u32 etmidr)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = cs_etm__get_v7_protocol_version(etmidr);
--	t_params[t_idx].etmv3.reg_ctrl = metadata[m_idx][CS_ETM_ETMCR];
--	t_params[t_idx].etmv3.reg_trc_id = metadata[m_idx][CS_ETM_ETMTRACEIDR];
-+	t_params->protocol = cs_etm__get_v7_protocol_version(etmidr);
-+	t_params->etmv3.reg_ctrl = metadata[CS_ETM_ETMCR];
-+	t_params->etmv3.reg_trc_id = metadata[CS_ETM_ETMTRACEIDR];
- }
- 
- static void cs_etm__set_trace_param_etmv4(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx)
-+					  u64 *metadata)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = CS_ETM_PROTO_ETMV4i;
--	t_params[t_idx].etmv4.reg_idr0 = metadata[m_idx][CS_ETMV4_TRCIDR0];
--	t_params[t_idx].etmv4.reg_idr1 = metadata[m_idx][CS_ETMV4_TRCIDR1];
--	t_params[t_idx].etmv4.reg_idr2 = metadata[m_idx][CS_ETMV4_TRCIDR2];
--	t_params[t_idx].etmv4.reg_idr8 = metadata[m_idx][CS_ETMV4_TRCIDR8];
--	t_params[t_idx].etmv4.reg_configr = metadata[m_idx][CS_ETMV4_TRCCONFIGR];
--	t_params[t_idx].etmv4.reg_traceidr = metadata[m_idx][CS_ETMV4_TRCTRACEIDR];
-+	t_params->protocol = CS_ETM_PROTO_ETMV4i;
-+	t_params->etmv4.reg_idr0 = metadata[CS_ETMV4_TRCIDR0];
-+	t_params->etmv4.reg_idr1 = metadata[CS_ETMV4_TRCIDR1];
-+	t_params->etmv4.reg_idr2 = metadata[CS_ETMV4_TRCIDR2];
-+	t_params->etmv4.reg_idr8 = metadata[CS_ETMV4_TRCIDR8];
-+	t_params->etmv4.reg_configr = metadata[CS_ETMV4_TRCCONFIGR];
-+	t_params->etmv4.reg_traceidr = metadata[CS_ETMV4_TRCTRACEIDR];
- }
- 
- static void cs_etm__set_trace_param_ete(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx)
-+					u64 *metadata)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = CS_ETM_PROTO_ETE;
--	t_params[t_idx].ete.reg_idr0 = metadata[m_idx][CS_ETE_TRCIDR0];
--	t_params[t_idx].ete.reg_idr1 = metadata[m_idx][CS_ETE_TRCIDR1];
--	t_params[t_idx].ete.reg_idr2 = metadata[m_idx][CS_ETE_TRCIDR2];
--	t_params[t_idx].ete.reg_idr8 = metadata[m_idx][CS_ETE_TRCIDR8];
--	t_params[t_idx].ete.reg_configr = metadata[m_idx][CS_ETE_TRCCONFIGR];
--	t_params[t_idx].ete.reg_traceidr = metadata[m_idx][CS_ETE_TRCTRACEIDR];
--	t_params[t_idx].ete.reg_devarch = metadata[m_idx][CS_ETE_TRCDEVARCH];
-+	t_params->protocol = CS_ETM_PROTO_ETE;
-+	t_params->ete.reg_idr0 = metadata[CS_ETE_TRCIDR0];
-+	t_params->ete.reg_idr1 = metadata[CS_ETE_TRCIDR1];
-+	t_params->ete.reg_idr2 = metadata[CS_ETE_TRCIDR2];
-+	t_params->ete.reg_idr8 = metadata[CS_ETE_TRCIDR8];
-+	t_params->ete.reg_configr = metadata[CS_ETE_TRCCONFIGR];
-+	t_params->ete.reg_traceidr = metadata[CS_ETE_TRCTRACEIDR];
-+	t_params->ete.reg_devarch = metadata[CS_ETE_TRCDEVARCH];
- }
- 
- static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
--				     struct cs_etm_auxtrace *etm,
--				     bool formatted,
--				     int sample_cpu,
--				     int decoders)
--{
--	int t_idx, m_idx;
--	u32 etmidr;
--	u64 architecture;
--
--	for (t_idx = 0; t_idx < decoders; t_idx++) {
--		if (formatted)
--			m_idx = t_idx;
--		else {
--			m_idx = get_cpu_data_idx(etm, sample_cpu);
--			if (m_idx == -1) {
--				pr_warning("CS_ETM: unknown CPU, falling back to first metadata\n");
--				m_idx = 0;
--			}
--		}
-+				     struct cs_etm_queue *etmq)
-+{
-+	struct int_node *inode;
- 
--		architecture = etm->metadata[m_idx][CS_ETM_MAGIC];
-+	intlist__for_each_entry(inode, etmq->traceid_list) {
-+		u64 *metadata = inode->priv;
-+		u64 architecture = metadata[CS_ETM_MAGIC];
-+		u32 etmidr;
- 
- 		switch (architecture) {
- 		case __perf_cs_etmv3_magic:
--			etmidr = etm->metadata[m_idx][CS_ETM_ETMIDR];
--			cs_etm__set_trace_param_etmv3(t_params, etm, t_idx, m_idx, etmidr);
-+			etmidr = metadata[CS_ETM_ETMIDR];
-+			cs_etm__set_trace_param_etmv3(t_params++, metadata, etmidr);
- 			break;
- 		case __perf_cs_etmv4_magic:
--			cs_etm__set_trace_param_etmv4(t_params, etm, t_idx, m_idx);
-+			cs_etm__set_trace_param_etmv4(t_params++, metadata);
- 			break;
- 		case __perf_cs_ete_magic:
--			cs_etm__set_trace_param_ete(t_params, etm, t_idx, m_idx);
-+			cs_etm__set_trace_param_ete(t_params++, metadata);
- 			break;
- 		default:
  			return -EINVAL;
-@@ -2918,6 +2900,42 @@ static u64 *cs_etm__create_meta_blk(u64 *buff_in, int *buff_in_offset,
- 	return metadata;
+ 		}
+ 
+@@ -303,6 +319,74 @@ static int cs_etm__process_trace_id_v0(struct cs_etm_auxtrace *etm, int cpu,
+ 	return cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
  }
  
-+/*
-+ * traceid_list is used to create decoders and give them the trace ID
-+ * mappings. In unformatted mode just insert one entry for the sample
-+ * CPU so the decoder knows which settings to use.
-+ */
-+static int cs_etm__map_trace_ids_unformatted(struct cs_etm_auxtrace *etm)
++static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
++					 u64 hw_id)
 +{
-+	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
-+		int ret;
-+		struct cs_etm_queue *etmq;
-+		u8 trace_chan_id;
-+		u64 *cpu_data;
++	struct cs_etm_queue *etmq;
++	int ret;
++	u64 *cpu_data;
++	u32 sink_id = FIELD_GET(CS_AUX_HW_ID_SINK_ID_MASK, hw_id);
++	u8 trace_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
 +
-+		etmq = etm->queues.queue_array[i].priv;
-+		if (!etmq->formatted_set || etmq->formatted)
++	/* In per thread mode there is only one queue and it's index 0 */
++	if (etm->per_thread_decoding)
++		etmq = etm->queues.queue_array[0].priv;
++	else
++		etmq = etm->queues.queue_array[cpu].priv;
++
++	/* Ignore HW_IDs on unformatted queues */
++	if (etmq->formatted_set && !etmq->formatted)
++		return 0;
++
++	/*
++	 * Check sink id hasn't changed in per-cpu mode. In per-thread mode,
++	 * let it pass for now until an actual overlapping trace ID is hit. In
++	 * most cases IDs won't overlap even if the sink changes.
++	 */
++	if (!etmq->etm->per_thread_decoding && etmq->sink_id != SINK_UNSET &&
++	    etmq->sink_id != sink_id) {
++		pr_err("CS_ETM: mismatch between sink IDs\n");
++		return -EINVAL;
++	}
++
++	etmq->sink_id = sink_id;
++
++	/* Find which other queues use this sink and link their ID maps */
++	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
++		struct cs_etm_queue *other_etmq = etm->queues.queue_array[i].priv;
++
++		/* Different sinks, skip */
++		if (other_etmq->sink_id != etmq->sink_id)
 +			continue;
 +
-+		/* Giving it a real ID doesn't do much but can help with debugging */
-+		trace_chan_id = CORESIGHT_LEGACY_CPU_TRACE_ID(i);
-+		cpu_data = get_cpu_data(etm, i);
-+		if (cpu_data == NULL) {
-+			pr_warning("CS_ETM: unknown CPU, falling back to first metadata\n");
-+			cpu_data = etm->metadata[0];
++		/* Already linked, skip */
++		if (other_etmq->traceid_list == etmq->traceid_list)
++			continue;
++
++		/* At the point of first linking, this one should be empty */
++		if (!intlist__empty(etmq->traceid_list)) {
++			pr_err("CS_ETM: Can't link populated trace ID lists\n");
++			return -EINVAL;
 +		}
 +
-+		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id, cpu_data);
-+		if (ret)
-+			return ret;
-+
-+		ret = cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
-+		if (ret)
-+			return ret;
++		etmq->own_traceid_list = NULL;
++		intlist__delete(etmq->traceid_list);
++		etmq->traceid_list = other_etmq->traceid_list;
++		break;
 +	}
++
++	cpu_data = get_cpu_data(etm, cpu);
++	ret = cs_etm__insert_trace_id_node(etmq, trace_id, cpu_data);
++	if (ret)
++		return ret;
++
++	ret = cs_etm__metadata_set_trace_id(trace_id, cpu_data);
++	if (ret)
++		return ret;
++
 +	return 0;
 +}
 +
- /**
-  * Puts a fragment of an auxtrace buffer into the auxtrace queues based
-  * on the bounds of aux_event, if it matches with the buffer that's at
-@@ -3220,21 +3238,26 @@ static int cs_etm__clear_unused_trace_ids_metadata(int num_cpu, u64 **metadata)
- static int cs_etm__create_queue_decoders(struct cs_etm_queue *etmq)
+ static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64 *cpu_metadata)
  {
- 	struct cs_etm_decoder_params d_params;
-+	struct cs_etm_trace_params  *t_params;
-+	int decoders = intlist__nr_entries(etmq->traceid_list);
+ 	u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
+@@ -392,10 +476,10 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
  
- 	/*
- 	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
- 	 * needed.
+ 	/* extract and parse the HW ID */
+ 	hw_id = event->aux_output_hw_id.hw_id;
+-	version = FIELD_GET(CS_AUX_HW_ID_VERSION_MASK, hw_id);
++	version = FIELD_GET(CS_AUX_HW_ID_MAJOR_VERSION_MASK, hw_id);
+ 
+ 	/* check that we can handle this version */
+-	if (version > CS_AUX_HW_ID_CURR_VERSION) {
++	if (version > CS_AUX_HW_ID_MAJOR_VERSION) {
+ 		pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID version %d not supported. Please update Perf.\n",
+ 		       version);
+ 		return -EINVAL;
+@@ -420,7 +504,10 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+ 		return -EINVAL;
+ 	}
+ 
+-	return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
++	if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 0)
++		return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
++	else
++		return cs_etm__process_trace_id_v0_1(etm, cpu, hw_id);
+ }
+ 
+ void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
+@@ -860,12 +947,14 @@ static void cs_etm__free_queue(void *priv)
+ 	cs_etm_decoder__free(etmq->decoder);
+ 	cs_etm__free_traceid_queues(etmq);
+ 
+-	/* First remove all traceID/metadata nodes for the RB tree */
+-	intlist__for_each_entry_safe(inode, tmp, etmq->traceid_list)
+-		intlist__remove(etmq->traceid_list, inode);
++	if (etmq->own_traceid_list) {
++		/* First remove all traceID/metadata nodes for the RB tree */
++		intlist__for_each_entry_safe(inode, tmp, etmq->own_traceid_list)
++			intlist__remove(etmq->own_traceid_list, inode);
+ 
+-	/* Then the RB tree itself */
+-	intlist__delete(etmq->traceid_list);
++		/* Then the RB tree itself */
++		intlist__delete(etmq->own_traceid_list);
++	}
+ 
+ 	free(etmq);
+ }
+@@ -1059,7 +1148,7 @@ static struct cs_etm_queue *cs_etm__alloc_queue(void)
+ 	 * has to be made for each packet that gets decoded, optimizing access
+ 	 * in anything other than a sequential array is worth doing.
  	 */
--	int decoders = etmq->formatted ? etmq->etm->num_cpu : 1;
-+	if (etmq->formatted_set && !etmq->formatted)
-+		assert(decoders == 1);
-+
-+	if (decoders == 0)
-+		return 0;
- 
- 	/* Use metadata to fill in trace parameters for trace decoder */
--	struct cs_etm_trace_params  *t_params = zalloc(sizeof(*t_params) * decoders);
-+	t_params = zalloc(sizeof(*t_params) * decoders);
- 
- 	if (!t_params)
+-	etmq->traceid_list = intlist__new(NULL);
++	etmq->traceid_list = etmq->own_traceid_list = intlist__new(NULL);
+ 	if (!etmq->traceid_list)
  		goto out_free;
  
--	if (cs_etm__init_trace_params(t_params, etmq->etm, etmq->formatted,
--				      etmq->queue_nr, decoders))
-+	if (cs_etm__init_trace_params(t_params, etmq))
- 		goto out_free;
+@@ -1091,6 +1180,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+ 	etmq->queue_nr = queue_nr;
+ 	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
+ 	etmq->offset = 0;
++	etmq->sink_id = SINK_UNSET;
  
- 	/* Set decoder parameters to decode trace packets */
-@@ -3497,6 +3520,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	if (err)
- 		goto err_free_queues;
- 
-+	err = cs_etm__map_trace_ids_unformatted(etm);
-+	if (err)
-+		goto err_free_queues;
-+
- 	err = cs_etm__create_decoders(etm);
- 	if (err)
- 		goto err_free_queues;
+ 	return 0;
+ }
 -- 
 2.34.1
 
