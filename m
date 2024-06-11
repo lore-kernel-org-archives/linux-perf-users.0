@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C89A2BD0F;
-	Tue, 11 Jun 2024 15:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 595173D38E;
+	Tue, 11 Jun 2024 15:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118207; cv=none; b=hktrAgqDT0hJ6sVzPEdqFuXlrbq5/UQuyEEf3AEr1UmPOjfQmP/Yk3jbUnHqKvT4FRloURlRqALml00ZJtvfyBK7PQaf0Bhx7J6n8yTib3ou5Mqwg5Xy7nQWFrzadxreA8UPpaAOOnaPMLuzyT9txjtz7KE/Ig0FQF7POJWsujo=
+	t=1718118214; cv=none; b=GRnkuNAz6T3onSTYKkk+Zq44UTDgBtUF/l12/BIU9+7kGhizOL4smKFOiPpHoDMuYJTBmgZImzJIZT5y9j5dMxK7oYIo9e6/z5O93EagJ7/407BCXGAwvDqIbuzLlIjoA54dX2PP+cPfYj0RrgIK5OUgVFb9eHDoR1vvz487ueI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118207; c=relaxed/simple;
-	bh=6nj9MSKICn8rw0/teN5JEls/J6Alp3u6VNBhggwcorQ=;
+	s=arc-20240116; t=1718118214; c=relaxed/simple;
+	bh=wFlpTBjQ7b6ixH+wxY/aRCo3v9tll5/p+Sl/xnV6xpw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HZNymyMME8QVudw4syoURXSS67qQJzr0KLxSdd2yzmcvL4kzbJM3iVHYn+hIp1MxRPuQtsKh4oJDnZR5e6qG/yRyuqbht0L1hF6q9BO7JO+E29p7Gv+/mQdbhVG+UrNTNqDV7OJrKdd2XJvH2BdABe4jDFCfPQAjtZSYatBdjv4=
+	 MIME-Version; b=bqKi6FNZ91L2st62xZF7WVBAY2JeJCSBE8iUkVH/1KASRPzUDxiSyM330mmVpm19qx0BUaOHKhAZ1umgBx/20sjT2JVy0ir3hjNr+/KtMBsB3Vzk2y5CF5wXb34qL5Ob9dmBXVuOE48PXDFVsHnmjZ+HxecmQE4YTIuLlqDB/FA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F386152B;
-	Tue, 11 Jun 2024 08:03:49 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FFD7152B;
+	Tue, 11 Jun 2024 08:03:57 -0700 (PDT)
 Received: from e127643.arm.com (unknown [10.57.41.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1CA953F64C;
-	Tue, 11 Jun 2024 08:03:20 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B13AA3F64C;
+	Tue, 11 Jun 2024 08:03:28 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: coresight@lists.linaro.org,
 	suzuki.poulose@arm.com,
@@ -44,9 +44,9 @@ Cc: James Clark <james.clark@arm.com>,
 	linux-kernel@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 06/14] coresight: Remove unused ETM Perf stubs
-Date: Tue, 11 Jun 2024 16:02:17 +0100
-Message-Id: <20240611150228.1802828-7-james.clark@arm.com>
+Subject: [PATCH v3 07/14] coresight: Clarify comments around the PID of the sink owner
+Date: Tue, 11 Jun 2024 16:02:18 +0100
+Message-Id: <20240611150228.1802828-8-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
 References: <20240611150228.1802828-1-james.clark@arm.com>
@@ -58,53 +58,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This file is never included anywhere if CONFIG_CORESIGHT is not set so
-they are unused and aren't currently compile tested with any config so
-remove them.
+"Process being monitored" and "pid of the process to monitor" imply that
+this would be the same PID if there were two sessions targeting the same
+process. But this is actually the PID of the process that did the Perf
+event open call, rather than the target of the session. So update the
+comments to make this clearer.
 
 Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- .../hwtracing/coresight/coresight-etm-perf.h   | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ drivers/hwtracing/coresight/coresight-tmc.h     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
-index bebbadee2ceb..744531158d6b 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.h
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
-@@ -62,7 +62,6 @@ struct etm_event_data {
- 	struct list_head * __percpu *path;
- };
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index e75428fa1592..8962fc27d04f 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -36,7 +36,8 @@ struct etr_buf_hw {
+  * etr_perf_buffer - Perf buffer used for ETR
+  * @drvdata		- The ETR drvdaga this buffer has been allocated for.
+  * @etr_buf		- Actual buffer used by the ETR
+- * @pid			- The PID this etr_perf_buffer belongs to.
++ * @pid			- The PID of the session owner that etr_perf_buffer
++ *			  belongs to.
+  * @snaphost		- Perf session mode
+  * @nr_pages		- Number of pages in the ring buffer.
+  * @pages		- Array of Pages in the ring buffer.
+@@ -1662,7 +1663,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 		goto unlock_out;
+ 	}
  
--#if IS_ENABLED(CONFIG_CORESIGHT)
- int etm_perf_symlink(struct coresight_device *csdev, bool link);
- int etm_perf_add_symlink_sink(struct coresight_device *csdev);
- void etm_perf_del_symlink_sink(struct coresight_device *csdev);
-@@ -77,23 +76,6 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
- int etm_perf_add_symlink_cscfg(struct device *dev,
- 			       struct cscfg_config_desc *config_desc);
- void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc);
--#else
--static inline int etm_perf_symlink(struct coresight_device *csdev, bool link)
--{ return -EINVAL; }
--int etm_perf_add_symlink_sink(struct coresight_device *csdev)
--{ return -EINVAL; }
--void etm_perf_del_symlink_sink(struct coresight_device *csdev) {}
--static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
--{
--	return NULL;
--}
--int etm_perf_add_symlink_cscfg(struct device *dev,
--			       struct cscfg_config_desc *config_desc)
--{ return -EINVAL; }
--void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc) {}
--
--#endif /* CONFIG_CORESIGHT */
--
- int __init etm_perf_init(void);
- void etm_perf_exit(void);
+-	/* Get a handle on the pid of the process to monitor */
++	/* Get a handle on the pid of the session owner */
+ 	pid = etr_perf->pid;
  
+ 	/* Do not proceed if this device is associated with another session */
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index c77763b49de0..2671926be62a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -171,8 +171,9 @@ struct etr_buf {
+  * @csdev:	component vitals needed by the framework.
+  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
+  * @spinlock:	only one at a time pls.
+- * @pid:	Process ID of the process being monitored by the session
+- *		that is using this component.
++ * @pid:	Process ID of the process that owns the session that is using
++ *		this component. For example this would be the pid of the Perf
++ *		process.
+  * @buf:	Snapshot of the trace data for ETF/ETB.
+  * @etr_buf:	details of buffer used in TMC-ETR
+  * @len:	size of the available trace for ETF/ETB.
 -- 
 2.34.1
 
