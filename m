@@ -1,363 +1,357 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2060.outbound.protection.outlook.com [40.107.101.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5168DAD2C;
-	Tue, 11 Jun 2024 14:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115449; cv=fail; b=ibedHpFQJP5s6zQixOhGVstaYuKkbVq/1Yn5mlc54pNrwBur5nN+Y8Y+Msx43SEHoII51T5ef8O6r01Z44EpX15fTquvQHEw0s5MpXE2ggO9B2S45SfvtvYkt88R1pseF/Q/Q6mKnp5u8K4RF9eJfOPj8w7EGrGZLczGNBcZPxw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115449; c=relaxed/simple;
-	bh=JOgC7J5GnAww0oesY37DRzpCuRC3CVaarX0gB/AFOps=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iB9zoEPptY52iOICXoqv3TMrAOuZA5V0vN8/2s03s9XIAxvr0y2kf7QgB3uweCfBO3fmKfQjZujGHTz1bQ85/dr8r4fJJBIrA19V7/gh2BGFsfA36Sy72yDH1Pta2kjmObUaPeEh6k+oQpVXo0m6C5xieIoxwSyvrHssQLsPmYs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=q06QeoQs; arc=fail smtp.client-ip=40.107.101.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168EA11712;
+	Tue, 11 Jun 2024 14:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718117639; cv=none; b=VBB7sBrrFfsBZq9X1I9xEBLtvb617S9yV6DtOKLB/Liosrr8ARzERDctXEiOfefWxNLNi4GmLWhDQSGP2wSsCP11UnKa2NRLgjKIceXPem4Mf7qJzyYXdyokguVTN2kFasFTn7OAKQwM7mTub/KzyJErCN7FkhHtfmKMUyrccew=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718117639; c=relaxed/simple;
+	bh=ZzSZpf/GI/3KLyUrgN1e5daeegCfTTeMo9Fq+wptzdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rG66vcH/RJBa/b+H5txIJl38l4BKpWzQ97X/NDW1s/1YcoGmouP90iemOqILLzOMFMENSI34tTHLAokokcz8qlgvT//E57olaqm+lk3UNN4rad6vnEAW9y93jcipQtcogKhgpSH5Ae8finH/wSTcd/pITgfOHuj57b7oObeChFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ic/BOeqV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="q06QeoQs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EG6ZzmisjY0+VP9DDXVOAjLI2c9A2v6O5D4UU6AMYF2tSGKXU3Y5qJksYB5NBmZrPtuhic18T8kyS63rVyl2nZJlT8f417qyq4rr+1G11FVXSSuoXFbbe9ksmyTxVBk/Q2ElkDwf5umicmz9J77utrWC21U4JJmK/OlJuRo+395GTC395zihgt1pigoBMSTRiaRk4B1ukCyLtwfb3TUeOHIMfZR5uq5WYv01dGBQ6qMnEnuOtRZHyLzZF6vI5mh4x/Coy8afKdYe/TJu+Y38VeLor9YXU+t9NNvKJ5ztaSOQ4DqhsCJIE5ZsWY8hGbOcM6BzOGDABCg9leoV4Jp6cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XaZsXanyBt6U4ehOdaROFA8jR7dnf4W8bgVPD6oYIJo=;
- b=GrVwRgl0VbpBp7CrE8Ze+v7iOyTc/ppD6wY7QnMiaFs84MKmmHwsgPnP6v5GnzcAt0d80KH3MNQFmD5ZKg8jrPsnXsSU+2mCqwl1VZinoWcEKzgKrxIFsh9bnVosQUfF7w5GDFUb+LTlAz2qZaUzbARK4PwvYJdFNvm4A4N9jfdLQlIQpMmGVA/g9UviTAdC7Q9U8y4N8ENH9p8MNYgaJywgO9UIYpj+dkL/UMR16DkY1m8yhazKEozNrS2AViZnx3QGlWy4XN3ddlp9JurkmTSbBd53BKTPeXBKqvJUo6k24fEJ9oYuE1k3QOYVdrOYTdx/qUo47GNfSquNcEwXgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XaZsXanyBt6U4ehOdaROFA8jR7dnf4W8bgVPD6oYIJo=;
- b=q06QeoQsZviagd3LIGUfm7RvgirKoC2wCVe3JXxNRMiEUhcathjBlQ/jzcBJV0nDAd9Z39Wl12f/w2KMlQTSKP9ael645q7bRedL1zVCE4CFUnLh0JdaHvFm56XbXx8zc3+N6/k0+DUFWTAwF9VUkKut+MeuwULTREBf6CDi33k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by PH8PR12MB7422.namprd12.prod.outlook.com (2603:10b6:510:22a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Tue, 11 Jun
- 2024 14:17:22 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%6]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
- 14:17:22 +0000
-Message-ID: <cfd06af3-a950-400a-a858-1dd67b968e69@amd.com>
-Date: Tue, 11 Jun 2024 19:47:09 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "irogers@google.com" <irogers@google.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "gustavoars@kernel.org" <gustavoars@kernel.org>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "kees@kernel.org" <kees@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "peterz@infradead.org" <peterz@infradead.org>, "bp@alien8.de"
- <bp@alien8.de>, "acme@kernel.org" <acme@kernel.org>,
- "jolsa@kernel.org" <jolsa@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>
-Cc: "ravi.bangoria@amd.com" <ravi.bangoria@amd.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- "sandipan.das@amd.com" <sandipan.das@amd.com>,
- "ananth.narayan@amd.com" <ananth.narayan@amd.com>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-References: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
- <20240610100751.4855-2-Dhananjay.Ugwekar@amd.com>
- <e1f70a09f85dbd0ee3f32dffea37993e141269d0.camel@intel.com>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <e1f70a09f85dbd0ee3f32dffea37993e141269d0.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0042.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::13) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ic/BOeqV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 622F2C2BD10;
+	Tue, 11 Jun 2024 14:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718117638;
+	bh=ZzSZpf/GI/3KLyUrgN1e5daeegCfTTeMo9Fq+wptzdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ic/BOeqVSiWVkhSkUeWwoH2eQXR66XJ00/cm8HgjdorHAjZ7JeXFJUmixkZN49V0x
+	 oUA3tjCvfD0ygsyFAA76N8+s8TcYPvVOdaGBsgT1xdG9g1vUwH1sJyfH/t0iFgd1cR
+	 3Hszxe/bQko0+df5uMVnSrvft2MwbAbsQnqZP4wEkKYfn65f42/49OaN5Wj8qrugNf
+	 dzp9GMZku3xxii599qFSAMrJm6yu0JDpLawCjsIPw26OxDiuhrI3+rPw6lx341HTlq
+	 cE12/Fe4R/+r0s2e7aPOvhbttk1mjukZVvm9/kY7w+Yh2udjlIvH8ieM5Lrbrx/ZTK
+	 uSLDLEvrp1E1g==
+Date: Tue, 11 Jun 2024 11:53:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, mic@digikod.net, gnoack@google.com,
+	brauner@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Fix syscall untraceable bug
+Message-ID: <ZmhlAxbVcAKoPTg8@x1>
+References: <20240608172147.2779890-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|PH8PR12MB7422:EE_
-X-MS-Office365-Filtering-Correlation-Id: 904bc36f-358a-4239-06fc-08dc8a2135ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|7416005|376005|366007|921011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TlNDdkcrbm40UVcvYU9rRjk1Ym8vaEhjZEI3WjFEREViWFRyaDQyTVJYd0k5?=
- =?utf-8?B?Zi9uSEwraDgvMmcwaCtLMCtWdTBnOW1oUGZnWlpjSDhSMDNxeFpmR3liT09T?=
- =?utf-8?B?aHd5WjkxN0xGQTR0ZzZUdkVhYjNaYTBleDNsZDdBRjlXUU9ydE1LM1J6eXgv?=
- =?utf-8?B?Z2todHJTdjhNN1IrWFRoM2doRzFIaElKa2xoVTE3YXNkZUN3OWZWOW5uTGkw?=
- =?utf-8?B?TnJOcm5MSXdkak1qV3Y0V1VPRkMxWmhRL1o2UkJnVEd4R3FSUXk0TWJEWWMv?=
- =?utf-8?B?Njh4WHU1WUpwTnN5ZGtaWUZwMFRDQmZkNHVBVmYwUmF0ZE1pYUZ6cU8wR1ZN?=
- =?utf-8?B?aVA3UXhzRnVTZzNudDdwbEhIdFpHR2s1M3IybGxvQkk0aURNWkZkanRvWllr?=
- =?utf-8?B?anVuQUh4M3lEa05aaXZ0RjBKTWZyYXk3ZHU0RHpzL01PUzZzbHJ1aE9udWI4?=
- =?utf-8?B?UEI0UlhlOHBRdHhiK3lyYTZCYUVkWFVtc1RlbjhkYmJ1QjNnc3oyTEVNYklv?=
- =?utf-8?B?MW1ZdlpYMml5bkMxTDcxemR3NllJbHZaL09UcUhINGtuNmpHVTN5d3J2Nzhi?=
- =?utf-8?B?Qk9BZHhidHI3ejZkVUpaT3hidEF1bjZSQjM4Uzh6ZEtzdkZaalRqNWdlZlM5?=
- =?utf-8?B?dXV2R2FtaTFKeGV2V0l3VXl4Y2N0L3B0L01CT2llNXlZdGlySlA1bi9ZSFA4?=
- =?utf-8?B?aVBsZmhZSW1pWG5UN1NkRWZ0aDU1enJ4SFI4ZUhMQzVQS0tiMVc2K2VkV21I?=
- =?utf-8?B?VGJjZkZPck9wTUx5TEFzWklPTEZTMmI4SmJaZjl5THJIWXlxN2Q0SWMzU1pC?=
- =?utf-8?B?NnRFUWYreDZlUlljNytGZlNQeTJXRUlsaEdNTStESEhyZGFPVVNsczJicGw4?=
- =?utf-8?B?UzU4cG5rMHhyUDFDU3RXdHkrSzJzSHVBMjY3a2htN0h0dGxtZC9jelFEVGlX?=
- =?utf-8?B?cWVTdHc5NUV5ZnU4eExhU0ZuR2JNdmRuR3F1b3U2ODNFcmQ4b1VjQ3B2SytT?=
- =?utf-8?B?NVVXYU1jNEFXT1FqRTZiQmx0aXNCUG5wbGQ5Z2w0Tis5b1ZPekFMOHA3Lzho?=
- =?utf-8?B?emlBR240ZWRBR3FoNEZtb3VHcmJRcSs0MTIzMGRyQm91SVp2eFZteFJ0aGo5?=
- =?utf-8?B?NGlHa3B4ZEpVRUQzc3d6OXBwVmJmQnNaSTZXeExDY1BYUi9WRUVsbGE2aGwx?=
- =?utf-8?B?L0NBRWszcUdZVkdrM2JzUklCWG8vOXZVR25saDJueVRzWmZiNmNFSGdMYTBt?=
- =?utf-8?B?OGVOVmdRMGVUbmt4ODBUM3p3RXNvcE5ab3RNV1UvRnBKWHdhaHNISUFkUVUz?=
- =?utf-8?B?NlI0UDJrNFdDY3l2Y0ppazd5bTQ0eGlxQWNYQjJLSGl5TERXRHdzdEtILzNk?=
- =?utf-8?B?My9zVFNQeUF2YUFQbzRSQW1lVmtMRVAzTWhkekIyQ0F5cmt1ZVpMU0Znb29l?=
- =?utf-8?B?bVFQdUNWa09hdk9BbHZsaVVhSmlYQVZVWXcyMWR2aDVjRnI5ZzhCWkg2Y2Vn?=
- =?utf-8?B?bU5DQVhqcjQ2elF5d0kwRnAvQ1U0T1NXaTZ5OERuS05LQU10bFBLbGhEQlJj?=
- =?utf-8?B?NHJneTVEVU9pV1hvRGM5WlZDOVBhVUFqK1hxK1lHMENqSmdnSzd3UW1nUklt?=
- =?utf-8?B?NmkyUWpTZHllVGhvZUtqQTR0RnVHRjQ4akRZYXZwKzVDTFJVMlpJTm4yNStl?=
- =?utf-8?B?d0l5cW50d3ZLcTYyU2Q4TjUvd3FYTHE1b3NvZ1oyMng1MHdnMXZFKzFwWVpI?=
- =?utf-8?B?V25LbVY0WWoyUDZZT1U1VHRTaFREcFpoRjNualRPNzZvMzRLVW02ZmpNbmxP?=
- =?utf-8?Q?rQfwFhc3mqBO/HlSRKCaG5qtBKg4KSU+ZGtEM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NVROWElaUk5qYWpjQW1CZThYSTBGM28wUUY2dmJDS01jcEY0Smlyb3NBejc2?=
- =?utf-8?B?aXNwOGQyTld5TVJyQWtid3ZKd3gybHAvekprU2hiOGU2bVV6NVQ5bWZDbnV5?=
- =?utf-8?B?MjhheHVVNkZHZjJnd2J5Z3lJeStpYy84V0g4azVwVXcrSU5COXUzSGVLMUd1?=
- =?utf-8?B?WDRDb2IvQmxVUW1xSEZHUDZpSkg2cVFrUGdJWWRFOWNlblN4Tmh3SGdpMkYv?=
- =?utf-8?B?ZlRDZEgraXpiSGE3UVBEZ09WNjltUDZEWC83TVoxVlJHU1B5am1yV1dXN2FT?=
- =?utf-8?B?Zjg0Ym9KcFBHcXppVVJ2WFQ3c2FDNFl1YXVERVdocSt0M0FmR0wrMDQ3R05y?=
- =?utf-8?B?WXQwdm0wNXdkaXVuQi94akdkWWRqQys4MFBQWldlMngzWERoR2FyNVJuc2hh?=
- =?utf-8?B?enN4VHJxSXVvYWY4QVlhOW1XNmdNZ1R0Q2FaM29JMFFOTWtqeGJlM3VTMnNF?=
- =?utf-8?B?OUwrT1FQZHN3WVNMcGpLUnhqNjFtUElnT2xVSUJmUmlyem5jYTBDalBMZFRF?=
- =?utf-8?B?dENjL3Fib0orMFduTHI3RkRHL1FubS9LWjNrelI1SWZ2THNmZmpzZ2YrUkI3?=
- =?utf-8?B?aDJIR0dhRllBK2JsK2dlUXpKZFBJdjNVbUtPaFVsdnBwc0FlalhsWG1pcy9W?=
- =?utf-8?B?S3BneEVpclA0YTUvaWVwQVR0VjJnZS9Ec1J2NmFHM3lXOU5NcnplemRQbG1U?=
- =?utf-8?B?TDZDTCtyMjNVcGl2QWxrbjFiR25xbGFtUHpEd0dtV0hhNlZoT0U3WnByQS92?=
- =?utf-8?B?R0JmUC9MRVY1WHlhM01KSUdhN01PMHJnd3BxeC9jUjMzMWhHZ2ExdEVkQnFT?=
- =?utf-8?B?S29RQ0RDVUpSK3J3bWo2QkV4MVVlYytYQ0VyRkZHTjA5Mzk4U21QdEhnQWRn?=
- =?utf-8?B?MzFMRkFWZHRxR2VQZjlmVDRhK1BNenhEK0wvQjJpa3Z6Ykhua2ZPMVhxQnc2?=
- =?utf-8?B?ZUFKZzhXcWVWYk44SEJhZlUwWlNGaW9DNkdWMzNDTDFya01jWlNVallBODZX?=
- =?utf-8?B?dVVNUkpnYnRLbTBlcnp4ZlpwemlaeklDcWF4QTRkY25veldpRGhtQ1BaL3B5?=
- =?utf-8?B?ek9nK2tiYTFZOXZEaUNGN3VINE1HUU43cG9DMVJ6UUhGUFNEdzVvWWlPRG5N?=
- =?utf-8?B?b21rYi83VzFUb01aam1SR2dwcHl5d3ZqSkc2UGNBS0pBNEcxVHA3Vi81Z3N2?=
- =?utf-8?B?OExpNERrbldrbUdibmY3ekFPZW9NVXZKd2Jjb2QxcVU0aGZZdzY5aUpGKzZR?=
- =?utf-8?B?TlhCVUYwTE5PMGViTXZyLzB4c2xYN2EwV0FuSkZTREdsVlc2Nk1Ed2lTNit2?=
- =?utf-8?B?SW9tSzZLOTJzendJRlFJSkE0NGpBSmcraU9ZYWE1UVVuWXpQclJHZFBZbHov?=
- =?utf-8?B?dlM0c3JrR1FUMWxGdFFwR3NSdHVsUCtLUGo1MWNXajVMR204cDl0UnEzQzNL?=
- =?utf-8?B?dDlJdUdkSHNFNDJheXNBOFFxeXdPVEt5ZUtlZzBucG00QXJQZURTa3RJSmFz?=
- =?utf-8?B?MDlNSy91SjZTRUZZbVU2QVJPYWxOdjdzaWFJYVBoczJYTWFSREhjV0FKUS8v?=
- =?utf-8?B?RDZqZktKRml6bWU2M1ZkaFBlcHdhMXpmbXpXWnVKU2dHM0dtOGhBN3ZFOENE?=
- =?utf-8?B?NmJtTjVzRVZNOCsvT21BNlVrRTE2UzJBT3Z2R0FBcFRDZFM2aXhsSmFtcHIz?=
- =?utf-8?B?V2poNFMxZUFQUGZFTTJtQUhVZmVNb1lET25aaTI4OXhNMkRqeXhBT2lTRjZZ?=
- =?utf-8?B?Y2JPUEg3NUh6MlhCNGE2K2g4MjB5d1E5VWZic1RlaXEyNXErVFFielNPRHEx?=
- =?utf-8?B?RXNGSm93bzJIKzQ2bDB3U1ZwMThGeUg4OEk4NzB4NEpHcTAyYmNWQi9ldzF2?=
- =?utf-8?B?UmNsVUR5ZFVtOWRrZzRicDBJOTZqSElKZGVsSHpJRERiN2pUS2RnTElYdnls?=
- =?utf-8?B?ZUcyUDUrSytwb21mZEY5c1U3dnQ3cnp5bWxPZkRTV3g2eFJtVVJLd2psMENj?=
- =?utf-8?B?ZWJtYllqNyt6S1lReWhVeVVOKzZpR1UwS0Y1YU5jQnBJaXVhdHFRZUJHQVVl?=
- =?utf-8?B?cmpPRTJrWEEyeWJONGhvZDVGaEQ3bHVQd09zeVZnaDJlUVNvSXBwclY1RlFN?=
- =?utf-8?Q?wdYqiIdvfQsRwiQ09fKZYGZkn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 904bc36f-358a-4239-06fc-08dc8a2135ee
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 14:17:22.6737
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OsEaVOTjMY8Ej0WbTklghXVP26wr56+80iuEIpeQ2x5mXpz+QcvN7IyX9K0OaT2UqHEgbJmgHBs5iebtPKVKjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7422
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240608172147.2779890-1-howardchu95@gmail.com>
 
-Hello Rui,
-
-On 6/11/2024 11:05 AM, Zhang, Rui wrote:
-> On Mon, 2024-06-10 at 10:07 +0000, Dhananjay Ugwekar wrote:
->> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026
->> leaf"),
->> on AMD processors that support extended CPUID leaf 0x80000026, the
->> topology_die_cpumask() and topology_logical_die_id() macros, no
->> longer
->> return the package cpumask and package id, instead they return the
->> CCD
->> (Core Complex Die) mask and id respectively. This leads to the
->> energy-pkg
->> event scope to be modified to CCD instead of package.
->>
->> Replacing these macros with their package counterparts fixes the
->> energy-pkg event for AMD CPUs.
->>
->> However due to the difference between the scope of energy-pkg event
->> for
->> Intel and AMD CPUs,
+On Sun, Jun 09, 2024 at 01:21:46AM +0800, Howard Chu wrote:
+> This is a bug found when implementing pretty-printing for the
+> landlock_add_rule system call, I decided to send this patch separately
+> because this is a serious bug that should be fixed fast.
+ 
+> I wrote a test program to do landlock_add_rule syscall in a loop,
+> yet perf trace -e landlock_add_rule freezes, giving no output.
+ 
+> This bug is introduced by the false understanding of the variable "key"
+> below:
+> ```
+> for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
+> 	struct syscall *sc = trace__syscall_info(trace, NULL, key);
+> 	...
+> }
+> ```
+> The code above seems right at the beginning, but when looking at
+> syscalltbl.c, I found these lines:
 > 
-> Actually, on Intel platforms, the energy-pkg event is also package
-> scope except one platform, and that one is the only multi-die system
-> with RAPL MSRs available.
-> So that is why the die/pkg logic was introduced in the first place.
+> ```
+> for (i = 0; i <= syscalltbl_native_max_id; ++i)
+> 	if (syscalltbl_native[i])
+> 		++nr_entries;
 > 
-> I like the macro/helpers in this patch. The logic inside them may need
-> to be optimized for Intel platforms, but that is a separate task.
-
-Yes that is correct, however anyway the die macros return the package 
-values on a single die system, so I preferred to use them for all Intel 
-systems (single or multi-die). 
-
-We can surely update the macro name or logic in future to make it more 
-semantically correct.
-
-Thanks for the review!
-
-Regards,
-Dhananjay
-
+> entries = tbl->syscalls.entries = malloc(sizeof(struct syscall) * nr_entries);
+> ...
 > 
->>  we have to replace these macros conditionally only for
->> AMD CPUs.
->>
->> On a 12 CCD 1 Package AMD Zen4 Genoa machine:
->>
->> Before:
->> $ cat /sys/devices/power/cpumask
->> 0,8,16,24,32,40,48,56,64,72,80,88.
->>
->> The expected cpumask here is supposed to be just "0", as it is a
->> package
->> scope event, only one CPU will be collecting the event for all the
->> CPUs in
->> the package.
->>
->> After:
->> $ cat /sys/devices/power/cpumask
->> 0
->>
->> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
->> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD
->> 0x80000026 leaf")
+> for (i = 0, j = 0; i <= syscalltbl_native_max_id; ++i) {
+> 	if (syscalltbl_native[i]) {
+> 		entries[j].name = syscalltbl_native[i];
+> 		entries[j].id = i;
+> 		++j;
+> 	}
+> }
+> ```
 > 
-> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
+> meaning the key is merely an index to traverse the syscall table,
+> instead of the actual syscall id for this particular syscall.
+
+> So if one uses key to do trace__syscall_info(trace, NULL, key), because
+> key only goes up to trace->sctbl->syscalls.nr_entries, for example, on
+> my X86_64 machine, this number is 373, it will end up neglecting all
+> the rest of the syscall, in my case, everything after `rseq`, because
+> the traversal will stop at 373, and `rseq` is the last syscall whose id
+> is lower than 373
+ 
+> in tools/perf/arch/x86/include/generated/asm/syscalls_64.c:
+> ```
+> 	...
+> 	[334] = "rseq",
+> 	[424] = "pidfd_send_signal",
+> 	...
+> ```
 > 
-> thanks,
-> rui
->> ---
->> PS: This patch was earlier sent separately(link below), it has not
->> been 
->> merged yet, it is necessary for this patchset to work properly, also
->> it 
->> fixes the pre-existing energy-pkg event.
->> https://lore.kernel.org/linux-perf-users/20240502095115.177713-1-Dhananjay.Ugwekar@amd.com/
->> ---
->>  arch/x86/events/rapl.c | 30 ++++++++++++++++++++++++++----
->>  1 file changed, 26 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
->> index b985ca79cf97..73be25e1f4b4 100644
->> --- a/arch/x86/events/rapl.c
->> +++ b/arch/x86/events/rapl.c
->> @@ -103,6 +103,10 @@ static struct perf_pmu_events_attr
->> event_attr_##v = {                              \
->>         .event_str      =
->> str,                                                  \
->>  };
->>  
->> +#define rapl_pmu_is_pkg_scope()                                \
->> +       (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||  \
->> +        boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
->> +
->>  struct rapl_pmu {
->>         raw_spinlock_t          lock;
->>         int                     n_active;
->> @@ -140,9 +144,21 @@ static unsigned int rapl_cntr_mask;
->>  static u64 rapl_timer_ms;
->>  static struct perf_msr *rapl_msrs;
->>  
->> +static inline unsigned int get_rapl_pmu_idx(int cpu)
->> +{
->> +       return rapl_pmu_is_pkg_scope() ?
->> topology_logical_package_id(cpu) :
->> +                                       
->> topology_logical_die_id(cpu);
->> +}
->> +
->> +static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
->> +{
->> +       return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
->> +                                        topology_die_cpumask(cpu);
->> +}
->> +
->>  static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
->>  {
->> -       unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
->> +       unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
->>  
->>         /*
->>          * The unsigned check also catches the '-1' return value for
->> non
->> @@ -543,6 +559,7 @@ static struct perf_msr amd_rapl_msrs[] = {
->>  
->>  static int rapl_cpu_offline(unsigned int cpu)
->>  {
->> +       const struct cpumask *rapl_pmu_cpumask =
->> get_rapl_pmu_cpumask(cpu);
->>         struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
->>         int target;
->>  
->> @@ -552,7 +569,7 @@ static int rapl_cpu_offline(unsigned int cpu)
->>  
->>         pmu->cpu = -1;
->>         /* Find a new cpu to collect rapl events */
->> -       target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
->> +       target = cpumask_any_but(rapl_pmu_cpumask, cpu);
->>  
->>         /* Migrate rapl events to the new target */
->>         if (target < nr_cpu_ids) {
->> @@ -565,6 +582,8 @@ static int rapl_cpu_offline(unsigned int cpu)
->>  
->>  static int rapl_cpu_online(unsigned int cpu)
->>  {
->> +       unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
->> +       const struct cpumask *rapl_pmu_cpumask =
->> get_rapl_pmu_cpumask(cpu);
->>         struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
->>         int target;
->>  
->> @@ -579,14 +598,14 @@ static int rapl_cpu_online(unsigned int cpu)
->>                 pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
->>                 rapl_hrtimer_init(pmu);
->>  
->> -               rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
->> +               rapl_pmus->pmus[rapl_pmu_idx] = pmu;
->>         }
->>  
->>         /*
->>          * Check if there is an online cpu in the package which
->> collects rapl
->>          * events already.
->>          */
->> -       target = cpumask_any_and(&rapl_cpu_mask,
->> topology_die_cpumask(cpu));
->> +       target = cpumask_any_and(&rapl_cpu_mask, rapl_pmu_cpumask);
->>         if (target < nr_cpu_ids)
->>                 return 0;
->>  
->> @@ -677,6 +696,9 @@ static int __init init_rapl_pmus(void)
->>  {
->>         int nr_rapl_pmu = topology_max_packages() *
->> topology_max_dies_per_package();
->>  
->> +       if (rapl_pmu_is_pkg_scope())
->> +               nr_rapl_pmu = topology_max_packages();
->> +
->>         rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus,
->> nr_rapl_pmu), GFP_KERNEL);
->>         if (!rapl_pmus)
->>                 return -ENOMEM;
+> The reason why the key is scrambled but perf trace works well is that
+> key is used in trace__syscall_info(trace, NULL, key) to do
+> trace->syscalls.table[id], this makes sure that the struct syscall returned
+> actually has an id the same value as key, making the later bpf_prog
+> matching all correct.
+
+Right, trace->syscalls.table holds info read from tracefs, while
+trace->sctbl holds info created from per-arch syscall tables, usually
+from:
+
+⬢[acme@toolbox perf-tools-next]$ find arch -name "*.tbl"
+arch/alpha/kernel/syscalls/syscall.tbl
+arch/arm/tools/syscall.tbl
+arch/m68k/kernel/syscalls/syscall.tbl
+arch/microblaze/kernel/syscalls/syscall.tbl
+arch/mips/kernel/syscalls/syscall_n32.tbl
+arch/mips/kernel/syscalls/syscall_n64.tbl
+arch/mips/kernel/syscalls/syscall_o32.tbl
+arch/parisc/kernel/syscalls/syscall.tbl
+arch/powerpc/kernel/syscalls/syscall.tbl
+arch/s390/kernel/syscalls/syscall.tbl
+arch/sh/kernel/syscalls/syscall.tbl
+arch/sparc/kernel/syscalls/syscall.tbl
+arch/x86/entry/syscalls/syscall_32.tbl
+arch/x86/entry/syscalls/syscall_64.tbl
+arch/xtensa/kernel/syscalls/syscall.tbl
+⬢[acme@toolbox perf-tools-next]$
+
+trace->sctbl->syscalls.entries is sorted by name and has { syscall_id,
+name } as contents.
+
+But it is loaded at the time the reuse of BPF programs is attempted,
+because initially we were using libaudit for getting id, that we get
+from the tracepoint payload:
+
+root@number:~# cat /sys/kernel/tracing/events/raw_syscalls/sys_enter/format 
+name: sys_enter
+ID: 361
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
+
+	field:long id;	offset:8;	size:8;	signed:1;
+                   ^^
+                   ^^
+                   ^^
+                   ^^
+	field:unsigned long args[6];	offset:16;	size:48;	signed:0;
+
+print fmt: "NR %ld (%lx, %lx, %lx, %lx, %lx, %lx)", REC->id, REC->args[0], REC->args[1], REC->args[2], REC->args[3], REC->args[4], REC->args[5]
+root@number:~#
+
+To syscall name.
+
+Your analysis is perfect, great! Please take a look at the attached
+patch, that I'm testing now that is a simplification of your patch, that
+avoids exposing that __syscall struct, reducing patch size by
+introducing this instead:
+
++++ b/tools/perf/util/syscalltbl.c
+@@ -123,6 +123,13 @@ int syscalltbl__id(struct syscalltbl *tbl, const char *name)
+        return sc ? sc->id : -1;
+ }
+ 
++int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx)
++{
++       struct syscall *syscalls = tbl->syscalls.entries;
++
++       return idx < tbl->syscalls.nr_entries ? syscalls[idx].id : -1;
++}
+
+And then using it to go from the index to the syscall id in the loops
+traversing the sorted trace->sctbl->
+
+> After fixing this bug, I can do perf trace on 38 more syscalls, and
+> because more syscalls are visible, we get 8 more syscalls that can be
+> augmented.
 > 
+> before:
+> 
+> perf $ perf trace -vv --max-events=1 |& grep Reusing
+> Reusing "open" BPF sys_enter augmenter for "stat"
+> Reusing "open" BPF sys_enter augmenter for "lstat"
+> Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
+> Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
+> 
+> TL;DR:
+
+I did the above and got:
+
+root@number:~# wc -l before after
+  63 before
+  71 after
+ 134 total
+root@number:~#
+
+> These are the new syscalls that can be augmented
+
+Which matches the 8 more reused bpf programs.
+
+> Reusing "openat" BPF sys_enter augmenter for "open_tree"
+> Reusing "openat" BPF sys_enter augmenter for "openat2"
+> Reusing "openat" BPF sys_enter augmenter for "mount_setattr"
+> Reusing "openat" BPF sys_enter augmenter for "move_mount"
+> Reusing "open" BPF sys_enter augmenter for "fsopen"
+> Reusing "openat" BPF sys_enter augmenter for "fspick"
+> Reusing "openat" BPF sys_enter augmenter for "faccessat2"
+> Reusing "openat" BPF sys_enter augmenter for "fchmodat2"
+
+But interestingly I get this:
+
+root@number:~# grep -E 'for "(open_tree|openat2|mount_setattr|move_mount|fsopen|fspick|faccessat2|fchmodat2)' after
+Reusing "faccessat" BPF sys_enter augmenter for "faccessat2"
+Reusing "faccessat" BPF sys_enter augmenter for "fchmodat2"
+Reusing "access" BPF sys_enter augmenter for "fsopen"
+Reusing "faccessat" BPF sys_enter augmenter for "fspick"
+Reusing "faccessat" BPF sys_enter augmenter for "mount_setattr"
+Reusing "faccessat" BPF sys_enter augmenter for "move_mount"
+Reusing "faccessat" BPF sys_enter augmenter for "open_tree"
+Reusing "faccessat" BPF sys_enter augmenter for "openat2"
+root@number:~#
+
+Which matches my expectations as the array we're traversing,
+trace->sctbl->syscalls->entries is sorted by name.
+ 
+> as for the perf trace output:
+
+> before
+> 
+> perf $ perf trace -e faccessat2 --max-events=1
+> [no output]
+> 
+> after
+> 
+> perf $ ./perf trace -e faccessat2 --max-events=1
+>      0.000 ( 0.037 ms): waybar/958 faccessat2(dfd: 40, filename: "uevent")                               = 0
+> 
+> P.S. The reason why this bug was not found in the past five years is
+> probably because it only happens to the newer syscalls whose id is
+> greater, for instance, faccessat2 of id 439, which not a lot of people
+> care about when using perf trace.
+
+That and the fact that the BPF code was hidden before having to use -e,
+that got changed kinda recently when we switched to using BPF skels for
+augmenting syscalls in 'perf trace':
+
+⬢[acme@toolbox perf-tools-next]$ git log --oneline tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+a9f4c6c999008c92 perf trace: Collect sys_nanosleep first argument
+29d16de26df17e94 perf augmented_raw_syscalls.bpf: Move 'struct timespec64' to vmlinux.h
+5069211e2f0b47e7 perf trace: Use the right bpf_probe_read(_str) variant for reading user data
+33b725ce7b988756 perf trace: Avoid compile error wrt redefining bool
+7d9642311b6d9d31 perf bpf augmented_raw_syscalls: Add an assert to make sure sizeof(augmented_arg->value) is a power of two.
+262b54b6c9396823 perf bpf augmented_raw_syscalls: Add an assert to make sure sizeof(saddr) is a power of two.
+1836480429d173c0 perf bpf_skel augmented_raw_syscalls: Cap the socklen parameter using &= sizeof(saddr)
+cd2cece61ac5f900 perf trace: Tidy comments related to BPF + syscall augmentation
+5e6da6be3082f77b perf trace: Migrate BPF augmentation to use a skeleton
+⬢[acme@toolbox perf-tools-next]$ 
+
+⬢[acme@toolbox perf-tools-next]$ git show --oneline --pretty=reference 5e6da6be3082f77b | head -1
+5e6da6be3082f77b (perf trace: Migrate BPF augmentation to use a skeleton, 2023-08-10)
+⬢[acme@toolbox perf-tools-next]$ 
+
+I.e. from August, 2023.
+
+One had as well to ask for BUILD_BPF_SKEL=1, which now is default if all
+it needs is available on the system.
+
+I'll test it together with your btf_enum work.
+
+- Arnaldo
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index c42bc608954ee08d..c4fa8191253d4880 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3354,8 +3354,6 @@ static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
+ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace, struct syscall *sc)
+ {
+ 	struct tep_format_field *field, *candidate_field;
+-	int id;
+-
+ 	/*
+ 	 * We're only interested in syscalls that have a pointer:
+ 	 */
+@@ -3367,7 +3365,8 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 	return NULL;
+ 
+ try_to_find_pair:
+-	for (id = 0; id < trace->sctbl->syscalls.nr_entries; ++id) {
++	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
++		int id = syscalltbl__id_at_idx(trace->sctbl, i);
+ 		struct syscall *pair = trace__syscall_info(trace, NULL, id);
+ 		struct bpf_program *pair_prog;
+ 		bool is_candidate = false;
+@@ -3456,10 +3455,10 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+ {
+ 	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
+ 	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
+-	int err = 0, key;
++	int err = 0;
+ 
+-	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
+-		int prog_fd;
++	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
++		int prog_fd, key = syscalltbl__id_at_idx(trace->sctbl, i);
+ 
+ 		if (!trace__syscall_enabled(trace, key))
+ 			continue;
+@@ -3505,7 +3504,8 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+ 	 * first and second arg (this one on the raw_syscalls:sys_exit prog
+ 	 * array tail call, then that one will be used.
+ 	 */
+-	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
++	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
++		int key = syscalltbl__id_at_idx(trace->sctbl, i);
+ 		struct syscall *sc = trace__syscall_info(trace, NULL, key);
+ 		struct bpf_program *pair_prog;
+ 		int prog_fd;
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index 63be7b58761d2f33..0dd26b991b3fb513 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -123,6 +123,13 @@ int syscalltbl__id(struct syscalltbl *tbl, const char *name)
+ 	return sc ? sc->id : -1;
+ }
+ 
++int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx)
++{
++	struct syscall *syscalls = tbl->syscalls.entries;
++
++	return idx < tbl->syscalls.nr_entries ? syscalls[idx].id : -1;
++}
++
+ int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx)
+ {
+ 	int i;
+diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
+index a41d2ca9e4aebad5..2b53b7ed25a6affe 100644
+--- a/tools/perf/util/syscalltbl.h
++++ b/tools/perf/util/syscalltbl.h
+@@ -16,6 +16,7 @@ void syscalltbl__delete(struct syscalltbl *tbl);
+ 
+ const char *syscalltbl__name(const struct syscalltbl *tbl, int id);
+ int syscalltbl__id(struct syscalltbl *tbl, const char *name);
++int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx);
+ 
+ int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
+ int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
+ 
