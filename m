@@ -1,78 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687B3B791;
-	Tue, 11 Jun 2024 15:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967F22B9DD;
+	Tue, 11 Jun 2024 16:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718121065; cv=none; b=XHiqDf+jcan3Lk+8JjJlIlQYWA1sheFeR1jejQ8xS5ut/YSHOXZtvPPf8AOwhRDISZVGANSoQYw/YBjl+iAiT7dCfQ1dc4DqLXITS+WjHQK62bqU062W6Wcd30F4Q3sCy1TOsZj8JGuF3KUfLEPX9W1WC9HqzYnS9UdAHC11VD8=
+	t=1718121819; cv=none; b=GNlJcteGcHkYqTbqIlVETeiU3/IpauvyS8+JAN8cYeMvcuz7H+f8i/6nLsV0/noySZS29soakQ4HEbxOlxeeL63t53N+uH6qitLxJActyI0drlBA9a9vjTh8488UffMUN5sNpfeAnxIeackr1A8ceBicZxsAHCg7iZVmwLBRMwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718121065; c=relaxed/simple;
-	bh=EZQe5/HnTww6x2nEO1a/sr9nJZxv9d+5ZjS74clg2LY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qHdIkr5PRhs5TfNxc3nIG9pg3yPwdVeTHm0KW06H+j4dP8xLKRspwzNLVOcOuuMBGMpU/r+t04PCLRfSW98sQGH94PX6TJ+GjGRK/8iYPN7eqncDELA1Js5D3pYg4BAZCYG6faPicki7fh6vwvYKAZb2XE/ik1jTpdCdQEw2Lgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/teeE0D; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/teeE0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0DA0C2BD10;
-	Tue, 11 Jun 2024 15:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718121064;
-	bh=EZQe5/HnTww6x2nEO1a/sr9nJZxv9d+5ZjS74clg2LY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=W/teeE0Dmia180ZRLOzNknOOT8F3PQ3R7sM1Y6pEMJOXc3b7PEQDsFe9wX989b47+
-	 1GgAPNTFpfgnn480HxRYEDrqaPresY0mt9klkEyjRk2CaL42vXC9ewb+0+trt3SNDp
-	 VnSxqHj9itgXa2CXSig18SBuRNAh/WJWZKfHszSUSdp5g561EkIN3vNj69bcL3GW1v
-	 GTp2LK92t1mxHuvgXe/TNiOnyZ8VBhQRtUwO7mo8/FHbBfFLJSRbBHxdO4yInrfXE9
-	 EmYRdZKraOwez2nZB69FjmE0NgYPDxfWeyjz4/PDqV8kEHdxA6Q8GBljGRqzF2nMv7
-	 0loVbALKvaAIQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: weilin.wang@intel.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ze Gao <zegao2021@gmail.com>,
-	Leo Yan <leo.yan@linux.dev>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Song Liu <song@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v3] perf evsel: Refactor tool events
-Date: Tue, 11 Jun 2024 08:51:00 -0700
-Message-ID: <171812103921.884988.5218086373127987409.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-In-Reply-To: <20240503232849.17752-1-irogers@google.com>
-References: <20240503232849.17752-1-irogers@google.com>
+	s=arc-20240116; t=1718121819; c=relaxed/simple;
+	bh=QOmpk5JLZ6uslcuqiWbyefS2HUNhd02h+M9Gsm9Qv0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g/bbZCxs5epY1JxDRnMebCsFPG0pzMIF0is16Wzk7jNCpTYXF0OyQ7/Skeq5t0AGa3/SdN583QKdAaRMXBgYoAEcwxDo/GkKxpHpR4iK6fJ6Jg90Hdc3fAXtSVRJ8JeRU+YXvIoUM7q4tKBAtcumspP549mQffemYAaeCsd+jIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7041053c0fdso3078824b3a.3;
+        Tue, 11 Jun 2024 09:03:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718121817; x=1718726617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QOmpk5JLZ6uslcuqiWbyefS2HUNhd02h+M9Gsm9Qv0s=;
+        b=VQZddW3G+auGb5ODXXXvfmnmM1xVszRHQ8Dr3+rsiWubmfMReAd8rfV+shzv7DQ38w
+         7Sm2QZeCjxxG4bZ/jYYW/qmRMmuufxWiQpNdmXM+zBNxhSYUSnXJV+c54NZiUxlxc3Rt
+         HVfrldPsqLai48kLBphJ7axe8UIgLovpissO7CGLPKed/QOiDdQmoIB58Oi+2h5evg2l
+         RYW/BlxaNSGnUqeBZnffAqMonmaIH0D6HTeOQB+pWkSpeKp6VTLlmUfAR/ibTL4SeIsJ
+         3ObDRAuMERiGnzX//zx0C+uWKFt14Y2fIeXOSYWAO6VzGTWQ9TX1eDdV06AmqdaykhSc
+         XpMw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzOcKBKVXNTvInjFmuX5goZpsYUK5NvKiYD0Edo0wBzRG5PSkSHopFaqssy1IjHUgZ8i/T1ReDm+fWTzNFuA2aRWSox0TQ6bN69PnIg4f7mLmowCvf/84KwdTsQkSptJ8csZkRKaFqGxTeGxqb4w==
+X-Gm-Message-State: AOJu0Yz486b4ZW/iXNIXW99SqQTkZi/ZrH08PxXllklXlSORgm2BD1G+
+	J0Wzb9mHU7XVrB1/ktdaQHBw1J8voaNeBCKgclW+ErCRkhnny9DEqC/YHywrXJFUgG7eE8ePf1f
+	aBHzQ5FJPCK9WZDcMPnJa6z2rln8=
+X-Google-Smtp-Source: AGHT+IGXDv1FPSpMzUHJGlIVNMuTkPreMewvl2JFTAd/3QehAidEF3D40lSOViix9U8zZ0p5AIWnrqUx+N3ukkl2nTM=
+X-Received: by 2002:a17:90a:6b43:b0:2bd:dce4:8f90 with SMTP id
+ 98e67ed59e1d1-2c2bcadfcb5mr11942400a91.6.1718121816689; Tue, 11 Jun 2024
+ 09:03:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240611050626.1223155-1-irogers@google.com>
+In-Reply-To: <20240611050626.1223155-1-irogers@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 11 Jun 2024 09:03:25 -0700
+Message-ID: <CAM9d7chyxF5LMz+-RQevD5N-vtg-VwaRq3+0kugeN8-vwLzHuA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf record: Ensure space for lost samples
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Milian Wolff <milian.wolff@kdab.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 03 May 2024 16:28:49 -0700, Ian Rogers wrote:
+Hi Ian,
 
-> Tool events unnecessarily open a dummy perf event which is useless
-> even with `perf record` which will still open a dummy event. Change
-> the behavior of tool events so:
-> 
->  - duration_time - call `rdclock` on open and then report the count as
->    a delta since the start in evsel__read_counter. This moves code out
->    of builtin-stat making it more general purpose.
-> 
-> [...]
+On Mon, Jun 10, 2024 at 10:06=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Previous allocation didn't account for sample ID written after the
+> lost samples event. Switch from malloc/free to a stack allocation.
+>
+> Reported-by: Milian Wolff <milian.wolff@kdab.com>
+> Closes: https://lore.kernel.org/linux-perf-users/23879991.0LEYPuXRzz@mili=
+an-workstation/
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Applied to perf-tools-next, thanks!
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Best regards,
+Thanks,
 Namhyung
