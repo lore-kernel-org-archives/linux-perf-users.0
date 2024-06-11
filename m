@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE763A1BF;
-	Tue, 11 Jun 2024 16:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7719944366;
+	Tue, 11 Jun 2024 16:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124597; cv=none; b=PW5i9MopJuCw027HJpJPrUvtRDCyVI0kFkvJ5g6AD8WLrv/k6fwY28QfHkXCZ7QWtQkUuXyrumbxMcZ5AGbDqy/7ZAEsOdrkMamje5T6o8hlixGVmgsZZkV5TbbPJKVRCylRMFmwKYgls2BGJ2bpK+ZXvgA41G1ONE0cM2TgOAE=
+	t=1718124599; cv=none; b=GgKhU2+vLlnF6IoTcpFxvBQKLJdfa/GKd3QorCKOdbMPruxUhQHaajqou/zUaBneelbrVOWWJkHnfqFXH5Ugz6C3bTDkGdfYXJo7dz/6Ii1eIVgh3kPz/elGpdK0wvOgPGgc09MTwaDxtnLMRKKCp/mfM/rhaY9vYY8RW54x968=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718124597; c=relaxed/simple;
-	bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JtS3AyaE6UemIpggn537lVN16oWvpBEXXz4dov0NxnMH6R3aOY/EuB5taSX7NRpkRN7igl5XKHB83f6TlpPieoI1eEO4YEX5YbA0oKhXIivtqI3Ycx2oVV19R6HKP3s6f2i9QuBh0gZe/xExTYdedfrb8jl9lGVO+3ZlaYC3rtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbcGSzo4; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1718124599; c=relaxed/simple;
+	bh=HNox1emeC2Q0I7wPCD9sdTztt+r5s8hf6WB0DNGMFy0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OQ9BilrjPWCo87hKynghVhgyKwQkCSwMMKuyWUrNBQoSWAnOwhU2kK7DznkUivQsNDCwXxCnI6bb2LzjX9AX0fUJv2ff8z1iL+CN/MM2uV6vfN6tt90rmS5iYlbKrCJ/uldk6zNaz2NAsOch5H7eUyrDr7n0NoAmUamsKAUAzPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfmHAZDl; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbcGSzo4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfmHAZDl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718124596; x=1749660596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
-  b=mbcGSzo4cV4+wq7m7KuNrg3seQcU7NIDzNy9QqHVHiTWV4zTpkehljy7
-   GJaPWoiYSQaQIkac/Qtxy35WjrGZuBXc/8RQrRjSmlDw81/ig137hwVyJ
-   hJ6Am5bef/kf3h1wzs992cSi17941Xur3MvvmElu4Z6JLodCbZVdpWJO8
-   Zjpq+LDwJTaYYTCMYLPlKl8QyHKwT8AY64ZiTy8BSnrQWnt6r9EsZS10Q
-   q1g7HdbDbaZuG8Q4pq3X/rokMCNRSL/p+XD0BdS1GO4aSk9eNeVS92WA+
-   ZZ9bFKn+wew10R2ajftsdBBtrJ0Y3/eYpGt3yDt66NOTw43Yb8OPKDT86
-   w==;
-X-CSE-ConnectionGUID: wnav3QOqSLeqVPatec6WWg==
-X-CSE-MsgGUID: 2FUcv2OCQWSQLvQOATVvQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249616"
+  t=1718124598; x=1749660598;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HNox1emeC2Q0I7wPCD9sdTztt+r5s8hf6WB0DNGMFy0=;
+  b=BfmHAZDlxI6qmVr6PtY/dcEY5g84bABIJfu5e5wnxpfCUWOExWvhoR1h
+   EJFykaRd3mdgYaVWps8mwbLP85hTOmb75yrMysfdal8suMyx9Vqwl5BrR
+   4lx/hY2my3DDRSwNJiV0dTAAycd+9PYLpedPwDeuT6m9FfQ0d1umO5O41
+   Z3ESILXlhHHMAWL8VJxn82pZ3Y25u8Sgwtgu/jtNf1MT4qlrxfe5QInNp
+   /je6m4YcRUNLXb9TjO8aS/7CEqZGO3i8RiynFUnGj5g7KXmjBP7MMt1A+
+   2W7dNVr+Bj+d4rKo5V3fMoqLTwIVWisEsy22vgs7vHfgHI6lO2kOx2Im2
+   g==;
+X-CSE-ConnectionGUID: Jc9fWml3ScGxiQbRcmF8BA==
+X-CSE-MsgGUID: wLo35MSPR5S3Ra/r68gK5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249625"
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208,223";a="40249616"
+   d="scan'208";a="40249625"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:55 -0700
-X-CSE-ConnectionGUID: L0C88JV3TXihXBARem94nw==
-X-CSE-MsgGUID: GJTOORIvQP248Oej/VAciA==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:57 -0700
+X-CSE-ConnectionGUID: YnCDOfRNS4208s3OZZjK6g==
+X-CSE-MsgGUID: Ve1/eBHCTzCU9E41uxp6Vw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208,223";a="40103295"
+   d="scan'208";a="40103299"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:55 -0700
+  by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:57 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: X86 Kernel <x86@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
@@ -53,11 +54,14 @@ To: X86 Kernel <x86@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>
 Cc: Andi Kleen <andi.kleen@intel.com>,
-	"Xin Li" <xin3.li@intel.com>
-Subject: 
-Date: Tue, 11 Jun 2024 09:54:51 -0700
-Message-Id: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+	"Xin Li" <xin3.li@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting CPU feature
+Date: Tue, 11 Jun 2024 09:54:52 -0700
+Message-Id: <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,98 +70,111 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From e52010df700cde894633c45c0b364847e63a9819 Mon Sep 17 00:00:00 2001
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Date: Tue, 11 Jun 2024 09:49:17 -0700
-Subject: Subject: [PATCH v2 0/6] Add support for NMI source reporting
+The lack of a mechanism to pinpoint the origins of Non-Maskable Interrupts
+(NMIs) necessitates that the NMI vector 2 handler consults each NMI source
+handler individually. This approach leads to inefficiencies, delays, and
+the occurrence of unnecessary NMIs, thereby also constraining the potential
+applications of NMIs.
 
-Hi Thomas and all,
+A new CPU feature, known as NMI source reporting, has been introduced as
+part of the Flexible Return and Event Delivery (FRED) spec. This feature
+enables the NMI vector 2 handler to directly obtain information about the
+NMI source from the FRED event data.
 
-Non-Maskable Interrupts (NMIs) are routed to the local Advanced Programmable
-Interrupt Controller (APIC) using vector #2. Before the advent of the
-Flexible Return and Event Delivery (FRED)[1], the vector information set by
-the NMI initiator was disregarded or lost within the hardware, compelling
-system software to poll every registered NMI handler to pinpoint the source
-of the NMI[2]. This approach led to several issues:
+The functionality of NMI source reporting is tied to the FRED. Although it
+is enumerated by a unique CPUID feature bit, it cannot be turned off
+independently once FRED is activated.
 
-1.	Inefficiency due to the CPU's time spent polling all handlers.
-2.	Increased latency from the additional time taken to poll all handlers.
-3.	The occurrence of unnecessary NMIs if they are triggered shortly
-	after being processed by a different source.
-
-To tackle these challenges, Intel introduced NMI source reporting as a part
-of the FRED specification (detailed in Chapter 9). This CPU feature ensures
-that while all NMI sources are still aggregated into NMI vector (#2) for
-delivery, the source of the NMI is now conveyed through FRED event data
-(a 16-bit bitmap on the stack). This allows for the selective dispatch
-of the NMI source handler based on the bitmap, eliminating the need to
-invoke all NMI source handlers indiscriminately.
-
-In line with the hardware architecture, various interrupt sources can
-generate NMIs by encoding an NMI delivery mode. However, this patchset
-activates only the local NMI sources that are currently utilized by the
-Linux kernel, which includes:
-
-1.	Performance monitoring.
-2.	Inter-Processor Interrupts (IPIs) for functions like CPU backtrace,
-	machine check, Kernel GNU Debugger (KGDB), reboot, panic stop, and
-	self-test.
-
-Other NMI sources will continue to be handled as previously when the NMI
-source is not utilized or remains unidentified.
-
-Next steps:
-1. KVM support
-2. Optimization to reuse IDT NMI vector 2 as NMI source for "known" source.
-Link:https://lore.kernel.org/lkml/746fecd5-4c79-42f9-919e-912ec415e73f@zytor.com/
-
-
-[1] https://www.intel.com/content/www/us/en/content-details/779982/flexible-return-and-event-delivery-fred-specification.html
-[2] https://lore.kernel.org/lkml/171011362209.2468526.15187874627966416701.tglx@xen13/
-
-
-Thanks,
-
-Jacob
-
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
-Change logs are in individual patches.
+v2: Removed NMI source from static CPU ID dependency table (HPA)
+---
+ arch/x86/Kconfig                         | 9 +++++++++
+ arch/x86/include/asm/cpufeatures.h       | 1 +
+ arch/x86/include/asm/disabled-features.h | 8 +++++++-
+ arch/x86/kernel/traps.c                  | 4 +++-
+ 4 files changed, 20 insertions(+), 2 deletions(-)
 
-Jacob Pan (6):
-  x86/irq: Add enumeration of NMI source reporting CPU feature
-  x86/irq: Extend NMI handler registration interface to include source
-  x86/irq: Factor out common NMI handling code
-  x86/irq: Process nmi sources in NMI handler
-  perf/x86: Enable NMI source reporting for perfmon
-  x86/irq: Enable NMI source on IPIs delivered as NMI
-
- arch/x86/Kconfig                         |  9 +++
- arch/x86/events/amd/ibs.c                |  2 +-
- arch/x86/events/core.c                   | 11 ++-
- arch/x86/events/intel/core.c             |  6 +-
- arch/x86/include/asm/apic.h              |  1 +
- arch/x86/include/asm/cpufeatures.h       |  1 +
- arch/x86/include/asm/disabled-features.h |  8 +-
- arch/x86/include/asm/irq_vectors.h       | 38 +++++++++
- arch/x86/include/asm/nmi.h               |  4 +-
- arch/x86/kernel/apic/hw_nmi.c            |  5 +-
- arch/x86/kernel/apic/ipi.c               |  4 +-
- arch/x86/kernel/apic/local.h             | 18 +++--
- arch/x86/kernel/cpu/mce/inject.c         |  4 +-
- arch/x86/kernel/cpu/mshyperv.c           |  2 +-
- arch/x86/kernel/kgdb.c                   |  6 +-
- arch/x86/kernel/nmi.c                    | 99 +++++++++++++++++++++---
- arch/x86/kernel/nmi_selftest.c           |  7 +-
- arch/x86/kernel/reboot.c                 |  4 +-
- arch/x86/kernel/smp.c                    |  4 +-
- arch/x86/kernel/traps.c                  |  4 +-
- arch/x86/platform/uv/uv_nmi.c            |  4 +-
- drivers/acpi/apei/ghes.c                 |  2 +-
- drivers/char/ipmi/ipmi_watchdog.c        |  2 +-
- drivers/edac/igen6_edac.c                |  2 +-
- drivers/watchdog/hpwdt.c                 |  6 +-
- 25 files changed, 200 insertions(+), 53 deletions(-)
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1d7122a1883e..b8b15f20b94e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -511,12 +511,21 @@ config X86_CPU_RESCTRL
+ config X86_FRED
+ 	bool "Flexible Return and Event Delivery"
+ 	depends on X86_64
++	select X86_NMI_SOURCE
+ 	help
+ 	  When enabled, try to use Flexible Return and Event Delivery
+ 	  instead of the legacy SYSCALL/SYSENTER/IDT architecture for
+ 	  ring transitions and exception/interrupt handling if the
+ 	  system supports it.
+ 
++config X86_NMI_SOURCE
++	def_bool n
++	help
++	  Once enabled, information on NMI originator/source can be provided
++	  via FRED event data. This makes NMI processing more efficient in that
++	  NMI handler does not need to check for every possible source at
++	  runtime when NMI is delivered.
++
+ config X86_BIGSMP
+ 	bool "Support for big SMP systems with more than 8 CPUs"
+ 	depends on SMP && X86_32
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 3c7434329661..ec78d361e685 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -327,6 +327,7 @@
+ #define X86_FEATURE_FRED		(12*32+17) /* Flexible Return and Event Delivery */
+ #define X86_FEATURE_LKGS		(12*32+18) /* "" Load "kernel" (userspace) GS */
+ #define X86_FEATURE_WRMSRNS		(12*32+19) /* "" Non-serializing WRMSR */
++#define X86_FEATURE_NMI_SOURCE		(12*32+20) /* NMI source reporting */
+ #define X86_FEATURE_AMX_FP16		(12*32+21) /* "" AMX fp16 Support */
+ #define X86_FEATURE_AVX_IFMA            (12*32+23) /* "" Support for VPMADD52[H,L]UQ */
+ #define X86_FEATURE_LAM			(12*32+26) /* Linear Address Masking */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..3856c4737d65 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -123,6 +123,12 @@
+ # define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
+ #endif
+ 
++#ifdef CONFIG_X86_NMI_SOURCE
++# define DISABLE_NMI_SOURCE	0
++#else
++# define DISABLE_NMI_SOURCE	(1 << (X86_FEATURE_NMI_SOURCE & 31))
++#endif
++
+ #ifdef CONFIG_KVM_AMD_SEV
+ #define DISABLE_SEV_SNP		0
+ #else
+@@ -145,7 +151,7 @@
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+-#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
++#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM|DISABLE_NMI_SOURCE)
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4fa0b17e5043..465f04e4a79f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1427,8 +1427,10 @@ early_param("fred", fred_setup);
+ 
+ void __init trap_init(void)
+ {
+-	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred)
++	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred) {
+ 		setup_clear_cpu_cap(X86_FEATURE_FRED);
++		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
++	}
+ 
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
 -- 
 2.25.1
 
