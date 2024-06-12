@@ -1,120 +1,128 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6026155A52;
-	Wed, 12 Jun 2024 11:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A6C146017;
+	Wed, 12 Jun 2024 11:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718191073; cv=none; b=OcBPTP8Z8y3Ms95TFyd6Q4+hvI1KK+AtmiYmPMFR28jWZ0uvijSW7frBSU4xd5bvVKjB02z2PjxW1pKBKoQ1wX8xY6dRBM/qIzpg8XKoa4TEHJDXBcQ+D5/6I2BnqDsJwdfYKiniIWM+Au/RLnhV95inFcvKT2/6bhKx8okxfxk=
+	t=1718191190; cv=none; b=LQannDJ4wWMRhlizYf5mmtcgnfgfdN+21RZonDv94E4kYnM20YIu6tWxVr626GQHLLnl97MumPvDhZeIDH+IYqpwldgzqrpk9YwkLk5CdmY4Uj5QiNWMPS75P+YTxK8UXRlMFdipz+iwgWLaS4IBSWklD4RFymHtsT80eIb9t1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718191073; c=relaxed/simple;
-	bh=atWMfvcTWLZ5DtT0n7itvM6WQJ3OO9YxzL1XB1BRvu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGDNloj5hcts3EWVPz7xNhMNDETsZBkdNXAaChgH6od90TGd3vxoHJEgj/T53MTLAqfZbPZGqkR8H5LDyhIbcUBvYyY89ehugLiDexVQwP1HSPa08X+RyCS/Njz0lI1j8c1MdZh6PKTqOzUtjRe9gnDnf4onWFWKuUO9OCjIh5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YhY9+kli; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YhY9+kli"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UXqLhIdJHPKijVnOw4uOjchsFVWzb1RJKvU3WypYVrw=; b=YhY9+kliR4OXUwB13S795nh+p6
-	FwyDgD5vebvwGqOeFF8zjuaEiK1xuL3nd90iCg45OGyid4Zm3R8+dG5RbFeqjyH3QVRyFww3ffaeY
-	NtqeNsNd05lLB6gu4qQ5fQWOWgnqPmGsz0hNbBoWgG+0ESNCcoK8KKAPASe/X1gGEW2UEjVnu4Y8T
-	OCym8b+SwJqF1g32O0dcSBHzk9jI/A9ZcFNZH6pTAULKYO/nEEmd7dBuUlpKdK8/o0Qd7zXP9ex1Y
-	IlLeDG8tJJdAzLqpuHsCOMNqy7GuP8FfHipDQeOxWrjb0YwzZUTbGuTLno9Cq824S+aJddfqUtlPo
-	pXgjp8Tg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHLys-00000002q6s-0gGw;
-	Wed, 12 Jun 2024 11:17:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BA257300592; Wed, 12 Jun 2024 13:17:32 +0200 (CEST)
-Date: Wed, 12 Jun 2024 13:17:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
-Message-ID: <20240612111732.GW40213@noisy.programming.kicks-ass.net>
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-8-mizhang@google.com>
- <20240507085807.GS40213@noisy.programming.kicks-ass.net>
- <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
- <20240611120641.GF8774@noisy.programming.kicks-ass.net>
- <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+	s=arc-20240116; t=1718191190; c=relaxed/simple;
+	bh=Ke+gHbevqiDiYBwn5rd9Bha6Ujph6NUBUgSVjAAi3LU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=nV+kMhgi9X5bOEsLcK5yS7gyx9PT6Xlb6Hb25cgwQVVHerCLrKb740A63mThAsYI7mxWXMycNJTlXHnztGLoJ7gajvztFiS28Ax0GracxuOSWwCqfm29tKiU410kJ3Lhu6hdkdPLW9uYvpEGQ/obazUCAzmUOvBNEu/uDhLbYOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A95361595;
+	Wed, 12 Jun 2024 04:20:11 -0700 (PDT)
+Received: from [10.57.4.35] (unknown [10.57.4.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1D13F73B;
+	Wed, 12 Jun 2024 04:19:42 -0700 (PDT)
+Message-ID: <ce31a50b-53db-4c6f-9cb1-242280b0951c@arm.com>
+Date: Wed, 12 Jun 2024 12:19:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] perf pmus: Sort/merge/aggregate PMUs like
+ mrvl_ddr_pmu
+To: Ian Rogers <irogers@google.com>
+References: <20240515060114.3268149-1-irogers@google.com>
+ <20240515060114.3268149-2-irogers@google.com>
+Content-Language: en-US
+Cc: Tuan Phan <tuanphan@os.amperecomputing.com>,
+ Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Bhaskara Budiredla <bbudiredla@marvell.com>,
+ Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+ Stephane Eranian <eranian@google.com>, Mark Brown <broonie@kernel.org>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>
+From: Aishwarya TCV <aishwarya.tcv@arm.com>
+In-Reply-To: <20240515060114.3268149-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 09:27:46AM -0400, Liang, Kan wrote:
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index dd4920bf3d1b..68c8b93c4e5c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -945,6 +945,7 @@ struct perf_event_context {
->  	u64				time;
->  	u64				timestamp;
->  	u64				timeoffset;
-> +	u64				timeguest;
+
+
+On 15/05/2024 07:01, Ian Rogers wrote:
+> The mrvl_ddr_pmu is uncore and has a hexadecimal address suffix while
+> the previous PMU sorting/merging code assumes uncore PMU names start
+> with uncore_ and have a decimal suffix. Because of the previous
+> assumption it isn't possible to wildcard the mrvl_ddr_pmu.
 > 
->  	/*
->  	 * These fields let us detect when two contexts have both
-
-> @@ -651,10 +653,26 @@ __perf_update_times(struct perf_event *event, u64
-> now, u64 *enabled, u64 *runnin
+> Modify pmu_name_len_no_suffix but also remove the suffix number out
+> argument, this is because we don't know if a suffix number of say 100
+> is in hexadecimal or decimal. As the only use of the suffix number is
+> in comparisons, it is safe there to compare the values as hexadecimal.
+> Modify perf_pmu__match_ignoring_suffix so that hexadecimal suffixes
+> are ignored.
 > 
->  static void perf_event_update_time(struct perf_event *event)
->  {
-> -	u64 now = perf_event_time(event);
-> +	u64 now;
-> +
-> +	/* Never count the time of an active guest into an exclude_guest event. */
-> +	if (event->ctx->timeguest &&
-> +	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
-> +		/*
-> +		 * If a guest is running, use the timestamp while entering the guest.
-> +		 * If the guest is leaving, reset the event timestamp.
-> +		 */
-> +		if (__this_cpu_read(perf_in_guest))
-> +			event->tstamp = event->ctx->timeguest;
-> +		else
-> +			event->tstamp = event->ctx->time;
-> +		return;
-> +	}
+> Only allow hexadecimal suffixes to be greater than length 2 (ie 3 or
+> more) so that S390's cpum_cf PMU doesn't lose its suffix.
 > 
-> +	now = perf_event_time(event);
->  	__perf_update_times(event, now, &event->total_time_enabled,
->  					&event->total_time_running);
-> +
->  	event->tstamp = now;
->  }
+> Change the return type of pmu_name_len_no_suffix to size_t to
+> workaround GCC incorrectly determining the result could be negative.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c  | 33 +++++++++++++--------
+>  tools/perf/util/pmus.c | 67 ++++++++++++++++++++++++------------------
+>  tools/perf/util/pmus.h |  7 ++++-
+>  3 files changed, 65 insertions(+), 42 deletions(-)
+> 
 
-So I really don't like this much, and AFAICT this is broken. At the very
-least this doesn't work right for cgroup events, because they have their
-own timeline.
+Hi Ian,
 
-Let me have a poke...
+Perf test "perf_all_PMU_test" is failing when run against
+next-master(next-20240612) kernel with Arm64 on JUNO in our CI. It looks
+like it is failing when run on JUNO alone. Verified by running on other
+boards like RB5 and Ampere_altra and confirming that it does not fail on
+these boards. Suspecting that the suffixed 'armv8_pmuv3_0' naming could
+be the reason of test failure.
+
+Reverting the change (3241d46f5f54) seems to fix it.
+
+This works fine on Linux version v6.10-rc3
+
+Failure log
+------------
+110: perf all PMU test:
+--- start ---
+test child forked, pid 8279
+Testing armv8_pmuv3/br_immed_retired/
+Event 'armv8_pmuv3/br_immed_retired/' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 1169.431 usec (+- 0.144 usec)
+  Average num. events: 35.000 (+- 0.000)
+  Average time per event 33.412 usec
+  Average data synthesis took: 1225.698 usec (+- 0.102 usec)
+  Average num. events: 119.000 (+- 0.000)
+  Average time per event 10.300 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+        3263664785      armv8_pmuv3_0/br_immed_retired/
+
+
+      25.472854464 seconds time elapsed
+
+       8.004791000 seconds user
+      17.060209000 seconds sys
+---- end(-1) ----
+110: perf all PMU test                                               :
+FAILED!
+
+Thanks,
+Aishwarya
