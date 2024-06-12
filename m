@@ -1,199 +1,116 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D071D54B;
-	Wed, 12 Jun 2024 13:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193311EF1A;
+	Wed, 12 Jun 2024 13:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718197974; cv=none; b=l88rF2rvGnTxMfWtFdx7sEh8+TfOLNQpip7dB4n6npjgqsz1D8QeJSd0kCwxLQIRQskcd4Kn2W1todUo8vyDr7x5W1Bu2wdes4671jYPAmGeEUAcnvdp+u4TzQfXMhqzMGFAVGSLBpfG6ZyTsAari0wPKgjABYxghHiFNKCKOQI=
+	t=1718199254; cv=none; b=qLNWhIKrEzNKXhjpSe7HVrb+TEbM7TTtEfGWCmHS1jfUwFenXP17UBkXDlJj9QGfHtULKrTzu9gD9kI0fhi/rtvUPGc6tkwxPthhjcX9kA0zYSyRo7H+YpVJTw35whdQmJoI82RMW0LvrjOTCD+DIVr2gXnkB6Q/3Hy0clXUUeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718197974; c=relaxed/simple;
-	bh=ekNK4exzHp7lebJSpQMmW+/s1FCkhYSD5M/Z+yOzaW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oxGXbUmz0ljMqA6hRHZrNJ+mKX5/r10tFFMrLyfxQXirVqbn+3LyNsEevdgCtv4Rlm87Lpd9ua0NH+t6Vl5YeUrW+N3MYw4W2SzGD+aScjhZO9avYyM5sm/O5doNs409br0tSbZVIGovCFPLinpov0OB+nIhnwLWn5FJQGAEBPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B88771595;
-	Wed, 12 Jun 2024 06:13:16 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69C143F64C;
-	Wed, 12 Jun 2024 06:12:49 -0700 (PDT)
-Message-ID: <27bd8527-4dfb-4078-8027-211dec1bc007@arm.com>
-Date: Wed, 12 Jun 2024 14:12:37 +0100
+	s=arc-20240116; t=1718199254; c=relaxed/simple;
+	bh=Au1llInZEepgsoZGLTYtmExSMQ5QuJqm+PY9oVjCw+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u95dUEd/l7UCk6W4LaGi5KJTrX3Qp7DirWHY2XDijyyFRVzCuHZCZiTVDFgRe0bZqhPAS0kaljALlAvuAborUBeYH97vH9jPPsZBhy2Oj6bixzTryMpxr6MpTZsun2KcqdoTt/RwmgTreo+8uUcuVcAeQMU/a9Gis+qqP7KgbEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H5aPaIHr; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H5aPaIHr"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BBC1140E016C;
+	Wed, 12 Jun 2024 13:34:03 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Xl_z8xHFyKYs; Wed, 12 Jun 2024 13:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718199240; bh=eZyz57k7uXkPLYoNDXQ8VYUt/BHQFaQ55nFSMPTlOKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H5aPaIHrEs/h1N/W9HuKXunwlA8nftqhlS9pE7BeeYgvKWZIC1ERtsbPfpYmkxKJk
+	 hntYNF7sGBh4JIO33lut5KX2ZJhA8xNm9SfUzoY7f3gTCbuaGamF8AlGlROVMXlrnT
+	 N/mGsCLozt7uFuJxl0YPSzpWY4IkfnjZbBjw75M5gB7utSK/Tc7bo8zN0xFSLLy2Bu
+	 L0N46CPQPq3agsmw24N6PaqK1wFSIXQjIInIkpctMegS6F0dKzg0pxmQM6MKQhOQLX
+	 5VLxd9Us/YmzkNFBH1MO1GaCRUZh3eCzZgzLKciZDVNHOyeyVrwpFDEGl7xgcoI1CX
+	 NdMT/6cqngYCNCCvq8/dd3kv1Ay4OCXaMPAsBtYbLuwF3Z18iDaQ/7ugJkD1mgkR6n
+	 6W9/SDV+I2P+4/Yld6p8/hg2fN61g/TVhLsXbJX70UsJTgLk3g3faymyLvCSgWhu+S
+	 G5OYMz0y9cuj71ZFdn5+1RwoXk82QclBnY80rfbb6c7Lfb6nE4y1F82F/ivDoL0p9V
+	 uu5w6mCHxknEm0DpHgOjqH8TA4+08R/C9oRodD1LSkT97TwIK3pWu4Hkj1PxzmdUAW
+	 bcFdZqQkvwANszCIOZpt+3y2vV/r5rGQNCbl8VZ3hQx6E4FJQNTZucm35leZia5wUT
+	 2kxYEsyATkKtl7k9RMzunPxo=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25EBC40E0031;
+	Wed, 12 Jun 2024 13:33:47 +0000 (UTC)
+Date: Wed, 12 Jun 2024 15:33:40 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, will@kernel.org,
+	peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
+	namhyung@kernel.org
+Subject: Re: [RESEND v1 1/3] x86/cpufeatures: Add {required,disabled} feature
+ configs
+Message-ID: <20240612133340.GBZmmjtD40dzhsWVyg@fat_crate.local>
+References: <20240509205340.275568-1-xin@zytor.com>
+ <20240509205340.275568-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] perf pmus: Sort/merge/aggregate PMUs like
- mrvl_ddr_pmu
-To: Ian Rogers <irogers@google.com>, Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Tuan Phan <tuanphan@os.amperecomputing.com>,
- Robin Murphy <robin.murphy@arm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Bhaskara Budiredla <bbudiredla@marvell.com>,
- Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria
- <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
- Stephane Eranian <eranian@google.com>, Mark Brown <broonie@kernel.org>,
- Naresh Kamboju <naresh.kamboju@linaro.org>
-References: <20240515060114.3268149-1-irogers@google.com>
- <20240515060114.3268149-2-irogers@google.com>
- <ce31a50b-53db-4c6f-9cb1-242280b0951c@arm.com>
- <CAP-5=fWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9nDsrQQw@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9nDsrQQw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240509205340.275568-2-xin@zytor.com>
 
+On Thu, May 09, 2024 at 01:53:38PM -0700, Xin Li (Intel) wrote:
+> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+> index 2a7279d80460..719302d37053 100644
+> --- a/arch/x86/Kconfig.cpu
+> +++ b/arch/x86/Kconfig.cpu
+> @@ -358,6 +358,10 @@ config X86_P6_NOP
+>  	depends on X86_64
+>  	depends on (MCORE2 || MPENTIUM4 || MPSC)
+>  
+> +config X86_REQUIRED_FEATURE_NOPL
 
+Can we keep the X86_{REQUIRED,DISABLED}_ prefixes solely in
+arch/x86/Kconfig.cpufeatures and not spill them out into the rest of the tree?
 
-On 12/06/2024 13:32, Ian Rogers wrote:
-> On Wed, Jun 12, 2024 at 4:19 AM Aishwarya TCV <aishwarya.tcv@arm.com> wrote:
->>
->>
->>
->> On 15/05/2024 07:01, Ian Rogers wrote:
->>> The mrvl_ddr_pmu is uncore and has a hexadecimal address suffix while
->>> the previous PMU sorting/merging code assumes uncore PMU names start
->>> with uncore_ and have a decimal suffix. Because of the previous
->>> assumption it isn't possible to wildcard the mrvl_ddr_pmu.
->>>
->>> Modify pmu_name_len_no_suffix but also remove the suffix number out
->>> argument, this is because we don't know if a suffix number of say 100
->>> is in hexadecimal or decimal. As the only use of the suffix number is
->>> in comparisons, it is safe there to compare the values as hexadecimal.
->>> Modify perf_pmu__match_ignoring_suffix so that hexadecimal suffixes
->>> are ignored.
->>>
->>> Only allow hexadecimal suffixes to be greater than length 2 (ie 3 or
->>> more) so that S390's cpum_cf PMU doesn't lose its suffix.
->>>
->>> Change the return type of pmu_name_len_no_suffix to size_t to
->>> workaround GCC incorrectly determining the result could be negative.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/pmu.c  | 33 +++++++++++++--------
->>>  tools/perf/util/pmus.c | 67 ++++++++++++++++++++++++------------------
->>>  tools/perf/util/pmus.h |  7 ++++-
->>>  3 files changed, 65 insertions(+), 42 deletions(-)
->>>
->>
->> Hi Ian,
->>
->> Perf test "perf_all_PMU_test" is failing when run against
->> next-master(next-20240612) kernel with Arm64 on JUNO in our CI. It looks
->> like it is failing when run on JUNO alone. Verified by running on other
->> boards like RB5 and Ampere_altra and confirming that it does not fail on
->> these boards. Suspecting that the suffixed 'armv8_pmuv3_0' naming could
->> be the reason of test failure.
->>
->> Reverting the change (3241d46f5f54) seems to fix it.
->>
->> This works fine on Linux version v6.10-rc3
->>
->> Failure log
->> ------------
->> 110: perf all PMU test:
->> --- start ---
->> test child forked, pid 8279
->> Testing armv8_pmuv3/br_immed_retired/
->> Event 'armv8_pmuv3/br_immed_retired/' not printed in:
->> # Running 'internals/synthesize' benchmark:
->> Computing performance of single threaded perf event synthesis by
->> synthesizing events on the perf process itself:
->>   Average synthesis took: 1169.431 usec (+- 0.144 usec)
->>   Average num. events: 35.000 (+- 0.000)
->>   Average time per event 33.412 usec
->>   Average data synthesis took: 1225.698 usec (+- 0.102 usec)
->>   Average num. events: 119.000 (+- 0.000)
->>   Average time per event 10.300 usec
->>
->>  Performance counter stats for 'perf bench internals synthesize':
->>
->>         3263664785      armv8_pmuv3_0/br_immed_retired/
->>
->>
->>       25.472854464 seconds time elapsed
->>
->>        8.004791000 seconds user
->>       17.060209000 seconds sys
->> ---- end(-1) ----
->> 110: perf all PMU test                                               :
->> FAILED!
-> 
-> Hi Aishwarya,
-> 
-> Thanks for reporting an issue. The test should be pretty self
-> explanatory: it is doing a `perf stat -e
-> armv8_pmuv3/br_immed_retired/` and then looking for that in the
-> output. The event armv8_pmuv3/br_immed_retired/ comes from running
-> perf list. As you can see in the output the event did work, so perf
-> stat is working so nothing is actually broken here. What isn't working
-> is the perf stat output matching the command line event and this is
-> because of the unnecessary suffix on ARM's PMU name.
-> 
-> We have a problem that ARM have buggy PMU drivers, either from
-> introducing new naming conventions or by just being broken:
-> https://lore.kernel.org/lkml/CAP-5=fWNDkOpnYF=5v1aQkVDrDWsmw+zYX1pjS8hoiYVgZsRGA@mail.gmail.com/
-> I've also asked that ARM step up their testing, for example in the
-> event parsing testing the PMU is hardcoded to the x86 PMU name of
-> 'cpu':
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/parse-events.c?h=perf-tools-next#n2317
-> On a cortex A53, then PMU is named 'armv8_cortex_a53':
-> ```
-> $ ls /sys/devices/armv8_cortex_a53/
-> caps  cpus  events  format  perf_event_mux_interval_ms  power
-> subsystem  type  uevent
-> ```
-> This name appears better, so what's up with ARM's core PMU name?
-> Anyway, I'm tempted to fix this by just skipping the test on ARM given
-> ARM's overall broken state.
-> 
+This way there will be no confusion between X86_FEATURE_, X86_REQUIRED_FEATURE_,
+X86_DISABLED_FEATURE_ and so on, and which one I am supposed to use where...
 
-No need to skip the test, I'll take this one [1]. I think we're on the
-same page that it's probably a test or cosmetic issue rather than
-anything being broken in Perf.
+> diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+> new file mode 100644
+> index 000000000000..326a8410ff06
+> --- /dev/null
+> +++ b/arch/x86/Kconfig.cpufeatures
+> @@ -0,0 +1,153 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# x86 feature bits (see arch/x86/include/asm/cpufeatures.h) that are
+> +# either REQUIRED to be enabled, or DISABLED (always ignored) for this
+> +# particular compile-time configuration.  The tests for these features
+> +# are turned into compile-time constants via the generated
+> +# <asm/featuremasks.h>.
+> +#
+> +# The naming of these variables *must* match asm/cpufeatures.h.
 
-[1]:
-https://lore.kernel.org/linux-perf-users/8112b2bf-3950-4889-96bf-2317fbfb4bee@arm.com/
+I presume they must match X86_FEATURE_<name>?
 
-> Further, can we escalate matters? It isn't right that these ARM issues
-> are coming back to me. ARM aren't stepping up to fix not just the 2
+And REQUIRED and DISABLED is manipulated in by the script?
 
-I wouldn't read into it too much, I think this is just a courtesy email
-pointing out that we're aware of an issue and tracked it back to a
-particular commit. I don't think there is any expectation that it has to
-be you that makes the fix and I'm happy to look into it.
+I guess I'll see later.
 
-> issues above but:
-> 1) the broken Apple M? issue (ARM asked I fix this as it regressed due
-> to my fixes for the Intel hybrid code):
-> https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
-> 2) opening events on BIG.little doesn't open the event on all core PMU types:
-> https://lore.kernel.org/lkml/20240510053705.2462258-4-irogers@google.com/
+Thx.
 
-As I mentioned in that thread I'll fix that one too at some point, I'm
-just finishing off some other stuff first.
+-- 
+Regards/Gruss,
+    Boris.
 
-> 3) the broken 'cycles' event name in the arm_dsu PMU:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_dsu_pmu.c#n177
-> 4) the ARM memory controller PMUs lacking cpumask causing events
-> opened on them to be opened on every CPU and thereby induce
-> multiplexing..
-> and so on..
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Aishwarya
+https://people.kernel.org/tglx/notes-about-netiquette
