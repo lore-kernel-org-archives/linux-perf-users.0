@@ -1,244 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86BE31A67;
-	Wed, 12 Jun 2024 21:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1093391;
+	Wed, 12 Jun 2024 22:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718228964; cv=none; b=dSqzj61dEjiPW7QTde3HUWaItkXSJMwU80CiPm5wWbnPJzKy1e0rSa+dfZ1SYyypiDaXgTpJI5HoXeTf8KAdg4QAMEWVLKk8eoQ4STQd1sLcZzRBKjLsMtZmImv8xu7v8qdnzlaUCOVHyptOjbnsGlOQXYSgEc2kNOR5hD13hGU=
+	t=1718230231; cv=none; b=pbCmbZs619+22K4Y71sb7sS/0HDQGUllM7WUqhamFt3yBsyl7hmKyD48jrFdMlNDBW6HX4oOve4eW0AcPfWW5cD8hIzPeG7GQEq/ZeEVkbUKx9JGX04LwWOlLyLn1zNP3VJaHxwcs42PKFNNePtl5F7bWc2PNCZmlUgC0FIcsVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718228964; c=relaxed/simple;
-	bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N54Hxqoe49bJHz8b92wgbkrEHeDvP+n8cEPhUnQHq9ZbO+1h0l5di4RXMzfYFuDYIwwKYOPg1DV+lBOvQe718/1vW3ezycVgYJNNteuagA2SvmSY7ozpUrzQwM0KaDL72LYX1qc9mVY8HGLA1iHP+qYi14uMzqGumedbisP9Mkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGAmVynx; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718230231; c=relaxed/simple;
+	bh=bt3bBjmTxibuENDeAjA9wUy5gOZzKPk6baZegf+NdyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyvYeFT1S05wUuvF/yMXds+1B4YLMojZHa+V8wis7DIKDAo1Ez7hdtqBVtnkuOLOZrlc2cf6mx0XLViRYzWaiTP5wlm6ndma/Zy+297Lbvq5B8zOHDeS1xwdjFFp4uoo4PHeZFAjQ1TqhIcuCnO+IdcM05n6SNjJZ9kRsNxlDDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jgrN9W1Q; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGAmVynx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718228963; x=1749764963;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
-  b=bGAmVynxv63nhKUFeefO0sbDwoOu6FN899ZEgBMx/3O4blfWvsW/dCWf
-   uknWlL0fOwIhhzSy8h8rxY+JpqowOxny13yoSOqXhZv4sE2bv4VbDEEEb
-   5WE6prCJy+wByoL3YS8M99fiQmlS/wCYm4zuVuAZ+hYIU+23MAiJI5SRn
-   4xZrmTVW2pBbllmWSaeMrMfxM54CbXd80g8MN2lc3ec5QUFKyj27lwNE2
-   /4iF5JSzeufoezrSgC7KWlO+hFWjNmaRnAsv4LBXglUO7rP3ytnSrGBDu
-   TW+CJVabCVPzuDDm9aO05eyRluEAKAPrNxqH62TMPkDUlHTJM6F59xM41
-   Q==;
-X-CSE-ConnectionGUID: AMydol0ORUeyUqMNLfy/3w==
-X-CSE-MsgGUID: OVjCr/hhTGKb26esavOq9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="37538063"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="37538063"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
-X-CSE-ConnectionGUID: dCcAC2uKQDK2uEhxGOO+SA==
-X-CSE-MsgGUID: r/u0rVcsT7GNOnZdviVPeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="39813691"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
-Date: Wed, 12 Jun 2024 14:54:24 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 4/6] x86/irq: Process nmi sources in NMI handler
-Message-ID: <20240612145424.61890aa3@jacob-builder>
-In-Reply-To: <b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
-References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
-	<20240611165457.156364-5-jacob.jun.pan@linux.intel.com>
-	<b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jgrN9W1Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AFaVBKZW4nApoB1IbTkcTuuDnuMN7hTpew8VlBI1fH8=; b=jgrN9W1QQsKRfHkAcQPZP4HPh6
+	nAwtS1F7uTHlvAUy/NvEJWLOlFwnjQU3TxkFJnMsf85PjKZSjKSp4DLSLryi+DiAe8arrQMB+XIFt
+	/+aVFF3nC16ci5dCVbIm8KIZcwe+Zu+QGKwy4Uelh0BBEpJWQv2TTuIEiuamqc7cIQBcje1ksQcmV
+	byDRyLMqXMoMT1g7N1e3RmOedTr+mnwalafQDuh0n+0nJGl0LcuJTQ9iG22Vch6nlMpFTm/J3SXpO
+	RUm/t4CwRoEbn4LKM7rK7qEQzC117Z49EScE6DVmzNR1+KmOwrgilC5FTgbcLXQ2yQQWNNIdjmbJu
+	pH2zHPWA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHW8s-00000003A4E-17sI;
+	Wed, 12 Jun 2024 22:09:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 416D7300592; Thu, 13 Jun 2024 00:08:21 +0200 (CEST)
+Date: Thu, 13 Jun 2024 00:08:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202406101010.E1C77AE9D@keescook>
+ <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+ <202406101438.BC43514F@keescook>
+ <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+ <202406121148.688240B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202406121148.688240B@keescook>
 
-Hi H.,
-
-On Tue, 11 Jun 2024 11:41:07 -0700, "H. Peter Anvin" <hpa@zytor.com> wrote:
-
-> On 6/11/24 09:54, Jacob Pan wrote:
-> > +
-> > +	source_bitmask = fred_event_data(regs);
-> > +	if (!source_bitmask) {
-> > +		pr_warn_ratelimited("NMI without source information!
-> > Disable source reporting.\n");
-> > +		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
-> > +		return 0;
-> > +	}  
+On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
+> On Tue, Jun 11, 2024 at 09:55:42AM +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 10, 2024 at 02:46:09PM -0700, Kees Cook wrote:
+> > 
+> > > > I really detest this thing because it makes what was trivially readable
+> > > > into something opaque. Get me that type qualifier that traps on overflow
+> > > > and write plain C. All this __builtin_overflow garbage is just that,
+> > > > unreadable nonsense.
+> > > 
+> > > It's more readable than container_of(), 
+> > 
+> > Yeah, no. container_of() is absolutely trivial and very readable.
+> > container_of_const() a lot less so.
 > 
-> Is setup_clear_cpu_cap() even meaningful here?
-Right, alternative patching doesn't work here. Let me use a separate flag.
+> I mean, we have complex macros in the kernel. This isn't uncommon. Look
+> at cleanup.h. ;)
 
+Yeah, but in those cases the macro actually saves a lot of typing. A
+mult and add is something you shouldn't be needing a macro for.
+	
+> But that's why we write kern-doc:
+
+Right, but reading comments is asking for trouble. That is, I really
+don't even see comments -- I have a built-in pre-processor that filters
+them out. I've been burned too many times by misleading or flat out
+wrong comments.
+
+> > #define struct_size(p, member, num) \
+> > 	mult_add_no_overflow(num, sizeof(p->member), sizeof(*p))
+> > 
+> > would be *FAR* more readable. And then I still think struct_size() is
+> > less readable than its expansion. ]]
 > 
-> > +
-> > +	/*
-> > +	 * Per NMI source specification, there is no guarantee that a
-> > valid
-> > +	 * NMI vector is always delivered, even when the source
-> > specified
-> > +	 * one. It is software's responsibility to check all available
-> > NMI
-> > +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we
-> > have
-> > +	 * to call every handler as if we have no NMI source.
-> > +	 * On the other hand, if we do get non-zero vectors, we know
-> > exactly
-> > +	 * what the sources are. So we only call the handlers with the
-> > bit set.
-> > +	 */
-> > +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-> > +		pr_warn_ratelimited("NMI received with unknown
-> > source\n");
-> > +		return 0;
-> > +	}
-> > +  
+> I'm happy to take patches. And for this bikeshed, this would be better
+> named under the size_*() helpers which are trying to keep size_t
+> calculations from overflowing (by saturating). i.e.:
 > 
-> You can still dispatch the known NMI handlers early before doing the 
-> polling.
+> 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
 
-True, my thinking was based on two conditions:
-1. unknown NMI source is a rare/unlikely case
-2. when unknown source does get set, it is due to deep CPU idle where
-performance optimization is not productive.
+Fine I suppose, but what if we want something not size_t? Are we waiting
+for the type system extension?
 
-So I think any optimization to the unlikely case should not add cost to the
-common case. Tracking early/direct dispatched handler adds cost to the
-common case. Below is my attempt, there must be a better way.
+Anyway, I'll take the patch with the above. That at least is readable.
 
-static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *handled_mask)
-{
-	static bool nmi_source_disabled = false;
-	bool has_unknown_src = false;
-	unsigned long source_bitmask;
-	struct nmiaction *a;
-	int handled = 0;
-	int vec = 1;
+The saturating thing is relying in the allocators never granting INT_MAX
+(or whatever size_t actually is) bytes?
 
-	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
-	    type != NMI_LOCAL || nmi_source_disabled)
-		return 0;
+> Generalized overflow handing (check_add/sub/mul_overflow()) helpers
+> already exist and requires a destination variable to determine type
+> sizes. It is not safe to allow C semantics to perform
+> promotion/truncation, so we have to be explicit.
 
-	source_bitmask = fred_event_data(regs);
-	if (!source_bitmask) {
-		pr_warn("NMI received without source information! Disable source reporting.\n");
-		nmi_source_disabled = true;
-		return 0;
-	}
+Yeah, those are a sodding trainwreck, much like the
+__builtin_*_overflow() garbage. Can't we simply have them trap on
+overflow and do away with that most terrible calling convention?
 
-	/*
-	 * Per NMI source specification, there is no guarantee that a valid
-	 * NMI vector is always delivered, even when the source specified
-	 * one. It is software's responsibility to check all available NMI
-	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
-	 * to call every handler as if we have no NMI source.
-	 * On the other hand, if we do get non-zero vectors, we know exactly
-	 * what the sources are. So we only call the handlers with the bit set.
-	 */
-	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-		pr_warn_ratelimited("NMI received with unknown source\n");
-		has_unknown_src = true;
-	}
+If we want to be really fancy we can have a #UD instruction that encodes
+a destination register to clear/saturate/whatever.
 
-	rcu_read_lock();
-	/* Bit 0 is for unknown NMI sources, skip it. */
-	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
-		a = rcu_dereference(nmiaction_src_table[vec]);
-		if (!a) {
-			pr_warn_ratelimited("NMI received %d no handler", vec);
-			continue;
-		}
-		handled += do_handle_nmi(a, regs, type);
-		/*
-		 * Needs polling if unknown source bit is set, handled_mask is
-		 * used to tell the polling code which NMIs can be skipped.
-		 */
-		if (has_unknown_src)
-			*handled_mask |= BIT(vec);
-	}
-	rcu_read_unlock();
-
-	return handled;
-}
-
-static int nmi_handle(unsigned int type, struct pt_regs *regs)
-{
-	struct nmi_desc *desc = nmi_to_desc(type);
-	unsigned long handled_mask = 0;
-	struct nmiaction *a;
-	int handled=0;
-
-	/*
-	 * Check if the NMI source handling is complete, otherwise polling is
-	 * still required. handled_mask is non-zero if NMI source handling is
-	 * partial due to unknown NMI sources.
-	 */
-	handled = nmi_handle_src(type, regs, &handled_mask);
-	if (handled && !handled_mask)
-		return handled;
-
-	rcu_read_lock();
-	/*
-	 * NMIs are edge-triggered, which means if you have enough
-	 * of them concurrently, you can lose some because only one
-	 * can be latched at any given time.  Walk the whole list
-	 * to handle those situations.
-	 */
-	list_for_each_entry_rcu(a, &desc->head, list) {
-		/* Skip NMIs handled earlier with source info */
-		if (BIT(a->source_vec) & handled_mask)
-			continue;
-		handled += do_handle_nmi(a, regs, type);
-	}
-	rcu_read_unlock();
-
-	/* return total number of NMI events handled */
-	return handled;
-}
-NOKPROBE_SYMBOL(nmi_handle);
-
-
-> > +	rcu_read_lock();
-> > +	/* Bit 0 is for unknown NMI sources, skip it. */
-> > +	for_each_set_bit_from(vec, &source_bitmask,
-> > NR_NMI_SOURCE_VECTORS) {
-> > +		a = rcu_dereference(nmiaction_src_table[vec]);
-> > +		if (!a) {
-> > +			pr_warn_ratelimited("NMI received %d no
-> > handler", vec);
-> > +			continue;
-> > +		}
-> > +		handled += do_handle_nmi(a, regs, type);
-> > +	}
-> > +	rcu_read_unlock();
-> > +	return handled;
-> > +}
-> > +  
+> > Some day I'll have to look at this FORTIFY_SOURCE and see what it
+> > actually does I suppose :/
 > 
-> That would mean that you would also need to return a bitmask of which 
-> source vectors need to be handled with polling.
+> LOL. It's basically doing compile-time (__builtin_object_size) and
+> run-time (__builtin_dynamic_object_size) bounds checking on destination
+> (and source) object sizes, mainly driven by the mentioned builtins:
+> https://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
 
-Should it be the bitmask to be skipped by polling? see handled_mask in
-the code above.
+Right, I got that far. I also read most of:
 
+  https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/70854
 
+But none of that is showing me generated asm for the various cases. As
+such, I don't consider myself informed enough.
 
-Thanks,
+> Anyway! What about the patch that takes the 2 allocations down to 1?
+> That seems like an obvious improvement.
 
-Jacob
+Separate it from the struct_size() nonsense and Cc the author of that
+code (Sandipan IIRC) and I might just apply it.
