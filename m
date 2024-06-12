@@ -1,120 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC9484A56;
-	Wed, 12 Jun 2024 20:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EDB84D04;
+	Wed, 12 Jun 2024 20:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718223760; cv=none; b=B7YbD/n0hli7TB/0P78b7IFKGtrElT5bZoF/ts+Fncve4lES73zWKnQxBcqSxmBzozNDne0ZRFHUABXmFdhPpPXDAGJ+6kIAf+Dz+IutxBWLmeV4HMw3FknD/LrhYJ6AxtrvTaOO7lOFb28IZ5SNE4bPBYdhccVv8FKN/6nXNpE=
+	t=1718224380; cv=none; b=WK3jQYl1bL8mefoChpwRfEB+9z55twzojZHNxrjODj9fjaqRd2uwELZs/tR1zH7eaiQIhRRwI+PPm1WOTZZd/BHMO2QUz55nicIx56jtpg0MzUvGMzJAs5nTow8siuLROjoK4ZQ/sOBQCssYTViB9i11bsH3hIqoDupy5l55Wpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718223760; c=relaxed/simple;
-	bh=8WTD6sYve58aB6+RW7KFovQtTgqjvA9DP8iUKon4+mA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n6Pb7TU0m1AECL8gfRkcz2bnFWf+YCKUs/V9ZvAP05DYdNSUNl7H/OhPk8m3xhVQctO3UIH2hGphLeklxlSM6fo0f4IRCfVUkLOCn2TRs/WW8efuCc4Kq/4KEb9PNPLmtE3bhVQzhctGZEI17xfLGFtTV/JpVXQFyhyvjxP+MbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=igmSRE9K; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="igmSRE9K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718223759; x=1749759759;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8WTD6sYve58aB6+RW7KFovQtTgqjvA9DP8iUKon4+mA=;
-  b=igmSRE9KuZZI71SEX5gbREGV1TbLt8b8RtjA8YHhISKjaHYK3qQ1ZCpa
-   EuU0YsVbYfZmzmHimSPsS3iRyL40Srf/fK+70FmHZdh+T5rliZYVufBdb
-   3EkHnL8f/OTvoaaG8VXdJW4PfD3mU+3qp9eyeP6FfwKvNQPJ8ZJ4QZFwv
-   RMcZfGxwCmGMZfNnAs12NEOHI6RnkzHI200Z5AEHLhdrvmp6O6Ph4Au1E
-   GTU6n8WwzBvxDSZJsReAbbhFiuJ8FFDdd6sbmS4WieZcNPo0r4zyhwuhs
-   82KzRbdgD7M3MzNT42psrIZHN3On1kMHXYR6nsyR/iIlXVLK2uumqNw2V
-   w==;
-X-CSE-ConnectionGUID: zDlTbO8GRSyfkSDqhJBpvw==
-X-CSE-MsgGUID: 8gIT4jzSTWSsXES11It+5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14974327"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="14974327"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 13:22:39 -0700
-X-CSE-ConnectionGUID: iGF4IHCHRwOQDfhlcK79FA==
-X-CSE-MsgGUID: 0lpd7zF+RReLIylyivdOTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="45028858"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 13:22:39 -0700
-Date: Wed, 12 Jun 2024 13:27:41 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>, Zeng Guang
- <guang.zeng@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 5/6] perf/x86: Enable NMI source reporting for
- perfmon
-Message-ID: <20240612132741.10f58458@jacob-builder>
-In-Reply-To: <8afef909-974e-40fe-a39c-3c1e4e6d6938@zytor.com>
-References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
-	<20240611165457.156364-6-jacob.jun.pan@linux.intel.com>
-	<8afef909-974e-40fe-a39c-3c1e4e6d6938@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718224380; c=relaxed/simple;
+	bh=2nCR64Zc31pzpiWEW5Gs2Jv/fYZlIieQTBon12415e0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pZEyCpeynwtrdgHgNYZb4vpjwbQ9NvNrRndI3iBmLelhehEGJLTn9XfIOtZWH90tLG+i+x7c3VdWmHBCu1k2wenSVcLrKy0NHWHHqArU5nKXBqvwzyLnEdcHid6ytpY68TGwfRVLcKEWLaWOv0f7sNt43szyLYGxElang0NI9rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA8B1042;
+	Wed, 12 Jun 2024 13:33:21 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9108F3F5A1;
+	Wed, 12 Jun 2024 13:32:54 -0700 (PDT)
+Message-ID: <cc1b0673-13b3-439f-afdf-c9cb450f8fed@arm.com>
+Date: Wed, 12 Jun 2024 21:32:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf arm: Workaround ARM PMUs cpu maps having offline
+ cpus
+To: Ian Rogers <irogers@google.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yicong Yang <yangyicong@huawei.com>
+References: <20240607065343.695369-1-irogers@google.com>
+ <23ee1734-7e65-4f11-aede-fea44ada3cc4@arm.com>
+ <CAP-5=fUP69NJ+j6+9rUnp+UPBxcopJ=BOY-LeOjs8vYdt4soMA@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAP-5=fUP69NJ+j6+9rUnp+UPBxcopJ=BOY-LeOjs8vYdt4soMA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi H.,
 
-On Tue, 11 Jun 2024 12:10:52 -0700, "H. Peter Anvin" <hpa@zytor.com> wrote:
+Hi Ian,
 
-> On 6/11/24 09:54, Jacob Pan wrote:
-> > 
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 1ef2201e48ac..db8c30881f5c 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -46,6 +46,7 @@
-> >   
-> >   struct x86_pmu x86_pmu __read_mostly;
-> >   static struct pmu pmu;
-> > +u32 apic_perfmon_ctr = APIC_DM_NMI;
-> >   
-> >   DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
-> >   	.enabled = 1,
-> > @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
-> >   	 * This generic handler doesn't seem to have any issues where
-> > the
-> >   	 * unmasking occurs so it was left at the top.
-> >   	 */
-> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
-> >   
-> >   	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
-> >   		if (!test_bit(idx, cpuc->active_mask))
-> > @@ -1723,7 +1724,10 @@ void perf_events_lapic_init(void)
-> >   	/*
-> >   	 * Always use NMI for PMU
-> >   	 */
-> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> > +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-> > +		apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
-> > +
-> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
-> >   }
-> >  
-> There really is no reason to not do this unconditinoally. If NMI source 
-> is not supported it is simply a noop.
-Yes, will do.
+On 6/10/24 18:33, Ian Rogers wrote:
 
-I was being paranoid in case some old CPUs don't ignore the vector field.
+[...]
+
+>> Just a nitpick and I think it is not an issue caused by this patch.
+>> After hotplug off one CPU and then if specify the CPU with option '-C',
+>> the 'perf stat' command still continues to run. This is inconsistent
+>> with the 'perf record' which exits with failures immediately.
+>>
+>> Maybe consider to send an extra patch to address this issue?
+> 
+> As you say, this doesn't relate to the problem fixed here. I don't
+> have a problem with the command line behavior change but I think my
+> getting shouted at budget is fairly well exhausted.
+
+I understand you put much efforts on fixing issues, on Arm platforms and
+other platforms. This is also why I want to contribute a bit for testing
+the patches.
+
+> How about we trade issues, if the following get fixed:
+> 
+> Renaming of the cycles event in arm_dsu_pmu.c - I'd say this is a top
+> priority issue right now.
+
+I cannot promise this. The main reason is that I still believe the
+'cycles' event (or, generally speaking, all events) should be managed by
+the tool rather than by the uncore PMU drivers. Additionally, the perf
+tool currently has handled these symbolic events effectively.
+
+> Fixing ARM hybrid default perf stat (it is crazy we can accept this
+> being broken), opening events on both BIG.little PMUs as done here.
+
+Yeah, James is working on this.
+
+> I'll address this.
+
+Anyway, I appreciate your work.
 
 Thanks,
-
-Jacob
+Leo
