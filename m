@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ECEA53365;
-	Wed, 12 Jun 2024 13:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C73631791F2;
+	Wed, 12 Jun 2024 13:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199562; cv=none; b=seVggywxgBDF/bfbL2FDNWyObkvH2gdCFwIUB3dqwdkq3FbC+3YhqtK08tqF+y2uvKKQwouvyTaoBzn9fkgy7mNl63RvMNy1+RP5ihemERTr/xOeGJpWFhAY3icUo2YCYzxeNEr29axVrWZ3v1u146zKrT6BGayLm5U93TQwT0k=
+	t=1718199563; cv=none; b=bUPgywd2tDVw8WdY7EgcI/MO31WN0qVXTvB+zz1kxkrCzA7+0bZqQUAF+8J4IZt/eOG17z0OzGRdjb7n16qvMPdEa2GI1NqSBK0m8IKIjcmECheV7C8OAvr0Zl+eXEkxOOajz2MFYr4gfzutO0RKXDxGvmUF8rO02wMzq46BDBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199562; c=relaxed/simple;
-	bh=IZ3Bk3DFn392ICorfb5WtfkcYQ+oznwIKgpY71fQ5Wg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FnMUMO7Ub21e78JnvU6/gHRUgSsAmeP0w6qDFQEdLZ+DRciHYVPMHe4sG3G6GADRipBeg7rmlsfSD77TIKHvEgqYnyQXHjnxjXDcvpwu6JY5QGom2ryiyFsApPR9XePMmKl+RoHWaYsp5hfyDN0AOQeVr1lugvx/iMESr1fzPxo=
+	s=arc-20240116; t=1718199563; c=relaxed/simple;
+	bh=9KRHK76G7WN2RzGj0D9xCxYn1xUiBRPUAVotFckFqv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jRmgTFKGBX5uSTXtDYjngC2gWRs333aQUjnnhqSVtdqeZv1qGALe3wS/l7ETyP3PruYykwrj4M0BEET6mfVXG7uTHisoqKlNo/YvKp9M2Y4PC/ZH/VjJ90KvZFW7zUZ8megSLxeezyFfCEEhgw2ytQ8RngcaCgenvW8iMhdp+kQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6136367;
-	Wed, 12 Jun 2024 06:39:43 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BB0DA7;
+	Wed, 12 Jun 2024 06:39:45 -0700 (PDT)
 Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AD6C3F64C;
-	Wed, 12 Jun 2024 06:39:17 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 69B733F64C;
+	Wed, 12 Jun 2024 06:39:19 -0700 (PDT)
 From: Ben Gainey <ben.gainey@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -31,10 +32,12 @@ Cc: james.clark@arm.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH v8 0/4] perf: Support PERF_SAMPLE_READ with inherit
-Date: Wed, 12 Jun 2024 14:39:07 +0100
-Message-ID: <20240612133911.3447625-1-ben.gainey@arm.com>
+Subject: [PATCH v8 1/4] perf: Rename perf_event_context.nr_pending to nr_no_switch_fast.
+Date: Wed, 12 Jun 2024 14:39:08 +0100
+Message-ID: <20240612133911.3447625-2-ben.gainey@arm.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240612133911.3447625-1-ben.gainey@arm.com>
+References: <20240612133911.3447625-1-ben.gainey@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,115 +46,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change allows events to use PERF_SAMPLE READ with inherit so long
-as PERF_SAMPLE_TID is also set.
+nr_pending counts the number of events in the context that
+either pending_sigtrap or pending_work, but it is used
+to prevent taking the fast path in perf_event_context_sched_out.
 
-Currently it is not possible to use PERF_SAMPLE_READ with inherit. This
-restriction assumes the user is interested in collecting aggregate
-statistics as per `perf stat`. It prevents a user from collecting
-per-thread samples using counter groups from a multi-threaded or
-multi-process application, as with `perf record -e '{....}:S'`. Instead
-users must use system-wide mode, or forgo the ability to sample counter
-groups, or profile a single thread. System-wide mode is often
-problematic as it requires specific permissions (no CAP_PERFMON / root
-access), or may lead to capture of significant amounts of extra data
-from other processes running on the system.
+Renamed to reflect what it is used for, rather than what it
+counts. This change allows using the field to track other
+event properties that also require skipping the fast path
+without possible confusion over the name.
 
-This patch changes `perf_event_alloc` relaxing the restriction against
-combining `inherit` with `PERF_SAMPLE_READ` so that the combination
-will be allowed so long as `PERF_SAMPLE_TID` is enabled. It modifies
-sampling so that only the count associated with the active thread is
-recorded into the buffer. It modifies the context switch handling so
-that perf contexts are always switched out if they have this kind of
-event so that the correct per-thread state is maintained. Finally, the
-tools are updated to allow perf record to specify this combination and
-to correctly decode the sample data.
+Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+---
+ include/linux/perf_event.h |  5 ++++-
+ kernel/events/core.c       | 14 +++++++-------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-In this configuration sample values, as may appear in the read_format
-field of a PERF_RECORD_SAMPLE, are no longer global counters. Instead
-the value reports the per-thread value for the active thread.
-Tools that expect the global total, for example when calculate a delta
-between samples, would need updating to take this into account when
-opting into this new behaviour. Previously valid event configurations
-(system-wide, no-inherit and so on) are unaffected.
-
-
-Changes since v7:
- - Rebase on v6.10-rc3
- - Respond to Peter Zijlstra's feedback:
- - Renamed nr_pending to nr_no_switch_fast and merged in nr_inherit_read
-   which otherwise had overlapping use
- - Updated some of the commit messages to provide better justifications
-   of usecase, behavioural changes and so on
- - Cleanup perf_event_count/_cumulative
- - Make it explicit that the sampling event decides whether or not the
-   per-thread value is given in read_format for PERF_RECORD_SAMPLE and
-   PERF_RECORD_READ; updated tools to account for this.
-
-Changes since v6:
- - Rebase on v6.10-rc2
- - Make additional "perf test" tests succeed / skip based on kernel
-   version as per feedback from Namhyung.
-
-Changes since v5:
- - Rebase on v6.9
- - Cleanup feedback from Namhyung Kim
-
-Changes since v4:
- - Rebase on v6.9-rc1
- - Removed the dependency on inherit_stat that was previously assumed
-   necessary as per feedback from Namhyung Kim.
- - Fixed an incorrect use of zfree instead of free in the tools leading
-   to an abort on tool shutdown.
- - Additional test coverage improvements added to perf test.
- - Cleaned up the remaining bit of irrelevant change missed between v3
-   and v4.
-
-Changes since v3:
- - Cleaned up perf test data changes incorrectly included into this
-   series from elsewhere.
-
-Changes since v2:
- - Rebase on v6.8
- - Respond to James Clarke's feedback; fixup some typos and move some
-   repeated checks into a helper macro.
- - Cleaned up checkpatch lints.
- - Updated perf test; fixed evsel handling so that existing tests pass
-   and added new tests to cover the new behaviour.
-
-Changes since v1:
- - Rebase on v6.8-rc1
- - Fixed value written into sample after child exists.
- - Modified handling of switch-out so that context with these events
-   take the slow path, so that the per-event/per-thread PMU state is
-   correctly switched.
- - Modified perf tools to support this mode of operation.
-
-Ben Gainey (4):
-  perf: Rename perf_event_context.nr_pending to nr_no_switch_fast.
-  perf: Support PERF_SAMPLE_READ with inherit
-  tools/perf: Correctly calculate sample period for inherited
-    SAMPLE_READ values
-  tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
-
- include/linux/perf_event.h                    |  8 ++-
- kernel/events/core.c                          | 69 +++++++++++++------
- tools/lib/perf/evsel.c                        | 48 +++++++++++++
- tools/lib/perf/include/internal/evsel.h       | 63 ++++++++++++++++-
- tools/perf/tests/attr/README                  |  2 +
- .../tests/attr/test-record-group-sampling     |  3 +-
- .../tests/attr/test-record-group-sampling1    | 51 ++++++++++++++
- .../tests/attr/test-record-group-sampling2    | 61 ++++++++++++++++
- tools/perf/tests/attr/test-record-group2      |  1 +
- ...{test-record-group2 => test-record-group3} | 10 +--
- tools/perf/util/evsel.c                       | 19 ++++-
- tools/perf/util/evsel.h                       |  1 +
- tools/perf/util/session.c                     | 25 ++++---
- 13 files changed, 321 insertions(+), 40 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
- copy tools/perf/tests/attr/{test-record-group2 => test-record-group3} (81%)
-
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index a5304ae8c654..c0c6c70bb9f1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -962,12 +962,15 @@ struct perf_event_context {
+ 	struct rcu_head			rcu_head;
+ 
+ 	/*
++	 * The count of events for which using the switch-out fast path
++	 * should be avoided.
++	 *
+ 	 * Sum (event->pending_sigtrap + event->pending_work)
+ 	 *
+ 	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
+ 	 * that until the signal is delivered.
+ 	 */
+-	local_t				nr_pending;
++	local_t				nr_no_switch_fast;
+ };
+ 
+ /*
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8f908f077935..c9cb22304d11 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2295,7 +2295,7 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
+ 			task_work_add(current, &event->pending_task, TWA_RESUME);
+ 		}
+ 		if (dec)
+-			local_dec(&event->ctx->nr_pending);
++			local_dec(&event->ctx->nr_no_switch_fast);
+ 	}
+ 
+ 	perf_event_set_state(event, state);
+@@ -3531,9 +3531,9 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
+ 
+ 			perf_ctx_disable(ctx, false);
+ 
+-			/* PMIs are disabled; ctx->nr_pending is stable. */
+-			if (local_read(&ctx->nr_pending) ||
+-			    local_read(&next_ctx->nr_pending)) {
++			/* PMIs are disabled; ctx->nr_no_switch_fast is stable. */
++			if (local_read(&ctx->nr_no_switch_fast) ||
++			    local_read(&next_ctx->nr_no_switch_fast)) {
+ 				/*
+ 				 * Must not swap out ctx when there's pending
+ 				 * events that rely on the ctx->task relation.
+@@ -6768,7 +6768,7 @@ static void __perf_pending_irq(struct perf_event *event)
+ 		if (event->pending_sigtrap) {
+ 			event->pending_sigtrap = 0;
+ 			perf_sigtrap(event);
+-			local_dec(&event->ctx->nr_pending);
++			local_dec(&event->ctx->nr_no_switch_fast);
+ 		}
+ 		if (event->pending_disable) {
+ 			event->pending_disable = 0;
+@@ -6841,7 +6841,7 @@ static void perf_pending_task(struct callback_head *head)
+ 	if (event->pending_work) {
+ 		event->pending_work = 0;
+ 		perf_sigtrap(event);
+-		local_dec(&event->ctx->nr_pending);
++		local_dec(&event->ctx->nr_no_switch_fast);
+ 	}
+ 
+ 	if (rctx >= 0)
+@@ -9711,7 +9711,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 			pending_id = hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
+ 		if (!event->pending_sigtrap) {
+ 			event->pending_sigtrap = pending_id;
+-			local_inc(&event->ctx->nr_pending);
++			local_inc(&event->ctx->nr_no_switch_fast);
+ 		} else if (event->attr.exclude_kernel && valid_sample) {
+ 			/*
+ 			 * Should not be able to return to user space without
 -- 
 2.45.2
 
