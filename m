@@ -1,39 +1,39 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F051CABD;
-	Wed, 12 Jun 2024 02:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAA23214;
+	Wed, 12 Jun 2024 03:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718160963; cv=none; b=HzR+0T1nZySV3EnK0nDY6VYSChWfsEWaY/pRopeYWI4VK0/FSTG/CLBs6XWYHKcqZxzLDuUV1XXpTrRPBOJYZMKxa6IgXULK+NgXsddBwG7WXxQONVQPwu9KUmmpuYRTLl2urT4O7MPtJK1Wrb9/J9Q82C2x09+IaQcjcVXJahI=
+	t=1718161493; cv=none; b=j3+xy3CwuLcllAu15sMo8TF0rd88dqo0AzbA3Sh2zV3Ta9XqFsE7RCv+LzbJ9fzZVrbKIYYiY9b/qvPaH8v2Uvq3kMFcwkKibp6g0ep1uAuXf+22Do9AO9YWJT6OMKSIi1FH0dm1GlBPe5JarJGCMEg7n8TH+r2M8IAfOVrBuTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718160963; c=relaxed/simple;
-	bh=Pypyq75ZCtmTZMnYwPw+81sinC2N+SOxDTQi3DsFga4=;
+	s=arc-20240116; t=1718161493; c=relaxed/simple;
+	bh=AoulektFXDLQ9/pJbAPrcVrJPfngF/cjslcJtCvy3Us=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tXiBlkNyL24q6x+4J8vTzdgxSbz6i2dCSLCG0ie+HOV5QG8xN2t1UAGBrjQf2gu6SmlKlTfi8i9e+tc7qd3qry4CeN3JgNcXkoTKZr5h22tXYp8SNI713+cXTsoqvjMdR3PxNclf2aGu+U7wzJs0+5nIq6/1o6GC18v+4Vf6N7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AyZOx08C; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=rRT3BeKsCVrx+m/v+cZgmZrXqGl1X7X+4y2WFEWOOZX7yyMQYGHDn0SoNq0l4RQZuZwAJ/k+YEopCJ6/51qbdJDoJlarjkv5Wy/58B1HVN591nQObhkc5Ia7thimWMFB4krtQME5iBSnMVLZ8/a+bWCGYKcBVSBLwEvqzwG8JGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=VWhxPaur; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AyZOx08C"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VWhxPaur"
 Received: from [192.168.7.205] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45C2tURR3581319
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45C34NPU3584446
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 11 Jun 2024 19:55:31 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45C2tURR3581319
+	Tue, 11 Jun 2024 20:04:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45C34NPU3584446
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1718160932;
-	bh=omP5I4jCHHygGqfmsnQTzeRs9EExzMgObol55T/+PXw=;
+	s=2024051501; t=1718161465;
+	bh=jB1N2BWEhGdB47Ne04YM51CEeX4dLjKxuD2f4GC+EWw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AyZOx08C8GxGkYauH7CnWui6WCfuIsLKpyNOVqbrC94kv0u0Gz9uJMM5n0JG9Kp02
-	 CICrf8IlCkm6A/D7MLZ+8f1k1l2SctJB8mOs8HRUpGsxzuydRtvfp6tCdwz/jE+8v3
-	 uqmU6Vdk7ZBdh6nnJOBftOyepbYGBmD12Y2quVmcgdcHX8P72eAtOwef/33gQVDnvB
-	 EPYLpGwJdMh3Ga5NQedRlm1trcijh/wSI/n43/gLFQPC3pzVk4VeIyL0pZlaLIxYUR
-	 BT5gQIlK+0GIXh25SaVVM5T7uxp+eQtkAolMx1bkX8lSTHYAEizaU8gwOZWDBG8Lqj
-	 5JowIAz3WPRSA==
-Message-ID: <41287f0c-4c1c-472b-a6ef-5669c68aad76@zytor.com>
-Date: Tue, 11 Jun 2024 19:55:30 -0700
+	b=VWhxPaurms/Up2n5+kCHzbtIRpFwVI4635Zgj3+/nl0ZLbvq78nZYKk0Z0c9OQT0A
+	 Z43wybYmI/8+A/YLDz01QLjusiXRcjufpiZNU/ci3h0zqbBW0/jsmy/nzerF0+GEDp
+	 HIZ/4z42EFZNrxWMiGCEZLsm/edfMmNFpYIjBz+/OKTAPJ1IaUjPC5zM1PY8gRvgSi
+	 OgVMHIce+vqfUnzlBpa0WiWCyWlkxt6fDIbZ4bs62F9PIz6PG+JyGXiXaBhOE1Eu5C
+	 Iy+aXPsc+kZHJmpxVNG/YVk8D6pOyNRDQVrjfnHiSinA+dIjbef3QObu1g+vBxObBB
+	 MvCCc2d7KbHlw==
+Message-ID: <573ebc0d-cc2b-46ea-80d9-c92207933f14@zytor.com>
+Date: Tue, 11 Jun 2024 20:04:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,18 +41,20 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re:
-To: Sean Christopherson <seanjc@google.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+Subject: Re: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting
+ CPU feature
+To: "H. Peter Anvin" <hpa@zytor.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>
+        Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>
 References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
- <ZmkCFyOXDC5KfC-5@google.com>
+ <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
+ <de99f490-8b8d-4ae9-9f87-e0336e563aba@zytor.com>
+ <34E0974A-45E0-4E98-9384-3A19D01ECF1E@zytor.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -89,42 +91,49 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <ZmkCFyOXDC5KfC-5@google.com>
+In-Reply-To: <34E0974A-45E0-4E98-9384-3A19D01ECF1E@zytor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/11/2024 7:04 PM, Sean Christopherson wrote:
-> On Tue, Jun 11, 2024, Jacob Pan wrote:
->> To tackle these challenges, Intel introduced NMI source reporting as a part
->> of the FRED specification (detailed in Chapter 9).
-> 
-> Chapter 9 of the linked spec is "VMX Interactions with FRED Transitions".  I
-> spent a minute or so poking around the spec and didn't find anything that describes
-> how "NMI source reporting" works.
-
-I did the same thing when I saw NMI source was added to the spec :)
-
-> 
->> 1.	Performance monitoring.
->> 2.	Inter-Processor Interrupts (IPIs) for functions like CPU backtrace,
->> 	machine check, Kernel GNU Debugger (KGDB), reboot, panic stop, and
->> 	self-test.
+On 6/11/2024 7:50 PM, H. Peter Anvin wrote:
+> On June 11, 2024 7:32:54 PM PDT, Xin Li <xin@zytor.com> wrote:
+>> On 6/11/2024 9:54 AM, Jacob Pan wrote:
+>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>> index 1d7122a1883e..b8b15f20b94e 100644
+>>> --- a/arch/x86/Kconfig
+>>> +++ b/arch/x86/Kconfig
+>>> @@ -511,12 +511,21 @@ config X86_CPU_RESCTRL
+>>>    config X86_FRED
+>>>    	bool "Flexible Return and Event Delivery"
+>>>    	depends on X86_64
+>>> +	select X86_NMI_SOURCE
+>>>    	help
+>>>    	  When enabled, try to use Flexible Return and Event Delivery
+>>>    	  instead of the legacy SYSCALL/SYSENTER/IDT architecture for
+>>>    	  ring transitions and exception/interrupt handling if the
+>>>    	  system supports it.
+>>>    +config X86_NMI_SOURCE
 >>
->> Other NMI sources will continue to be handled as previously when the NMI
->> source is not utilized or remains unidentified.
+>> Lets reuse X86_FRED instead of adding another hard config option. See
+>> below.
+
+<snip>
+
 >>
->> Next steps:
->> 1. KVM support
+>> With this, no need to add DISABLE_NMI_SOURCE to disabled-features.h:
+>>
+>> 1) If FRED is not available, NMI source won't be too.
+>> 2) If FRED is available but not enabled, all features relying on FRED
+>> should be cleared. We probably should move the feature bits clearing
+>> code into a static function when more such features are added in future.
+>>
+>>>      	/* Init cpu_entry_area before IST entries are set up */
+>>>    	setup_cpu_entry_areas();
+>>
+>> Thanks!
+>>     Xin
 > 
-> I can't tell for sure since I can't find the relevant spec info, but doesn't KVM
-> support need to land before this gets enabled?  Otherwise the source would get
-> lost if the NMI arrived while the CPU was in non-root mode, no?  E.g. I don't
-> see any changes to fred_entry_from_kvm() in this series.
+> And even if we did, FRED should not *select* NMI_SOURCE; the dependency goes the other way.
 
-You're absolutely right!
+Right, I was a bit of confused but was focusing on why do we need this.
 
-There is a patch in NMI source KVM patches for this, but as you
-mentioned it has to be in this NMI source native patches instead.
-
-Thanks!
-     Xin
