@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9C4AEEA
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 18:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F2C5FB8A
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 18:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217209; cv=none; b=L1gxwjI6V8UlJuL0XF+XWFGeYtsDsKHOBqGHLcG0UVRBBc8DX01fdgCi6rFgYB6+SEMDPReja2WygKR69/0+XwUjFfWlBCOnLBievoyVx5066rbCLfIgP/zbqap8LV3CPj5uBphHspU1nhaNwg2zwOAgC1zHiFaUQ66pWt3EBf0=
+	t=1718217213; cv=none; b=ZmjT+EF2YTe4SzHVdvcLD41N+E+5ro8F7sP41S4L6S2pAK9hrD7dOS/Ku7j+5xoSppFWDkE3A+pWA73VZ6iEaaLvvkNlx4bhBQjyQwzORxRr41FPvCkQnDStUA6R95gouagtQBzeoLldY+qwIESbWqV+bpKGJJjLE2CY4/DqwMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217209; c=relaxed/simple;
-	bh=xgg4zHwGeqMcxWJL7P+K/9CH+X7F2jIwkiY5qfhp9HU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=jrgNqxDrFOnC+1FwKGrUtliLVlybsUIIuXpMZkdCr/1E/A82VGFeFOBruqljNfYgae2roigJAFSAD5JBfaRR3FFxr2LqYdZsQV7u6Y/6LUY4rbqRSI0O4mkIERirp3i6hGIO8HRhjwXQUqEvHTYdJf/Lotp24nX/k0ewk+dOSAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=amjkUyZu; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1718217213; c=relaxed/simple;
+	bh=xM2OraEzCHPYA1XYxDOu/vQ1lb7fq6Wfuu93T3xy8mk=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=k+rUjU8oSdAXtkCYK1nmdCZGIYNRyj5UP4CBn6qpPDEk2xIMuYRIDzxIZE7JcbUTX0dJAmw+NINwdXB0mKTiYArfdv0UvfjkgSYModrvqKx1GKUmlhSsqRJkmRaJ/p5+D4z4n0fmE8lAmw5GCu+dKt0ryqM+A80q9on6iwVXuFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xl43Op6X; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="amjkUyZu"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfec7058deeso282499276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 11:33:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xl43Op6X"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6302067d548so3314527b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 11:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718217207; x=1718822007; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Rm0EtUlY7qVzQZI97HOfdq0hSIaq1mUCwGuA2+Hn2yY=;
-        b=amjkUyZueUzii7OyKrNUzMPmfhEbZvq+6fSgCL+qh7hkibin4ZSX5GezZGSGil2N48
-         geDhXQlkOWd0b25uGnZPTA58CMSOJ+f4Eydz/8fBwOsAnD4b5Kt5VEgFu/oiCwJQc7HE
-         xrbmOzjC5ZPru7j07AclvJvPelxw5SNdksO4ne1eyIBH0vD1CBlbUdFOcRH2Ku0dF1Q4
-         1GgBb3WYw9gkHtDPWBqRX/mQnQ3WCRG4sBcGY/4ZLHYN1zeBTBTkSfu3hR2VBSCIbn/W
-         ND1/bXfe+2llFtu5bCP/wwT+9P9ZdV6d3hWmJ0kEACzmQpV1g0yPZBqGuPGXCUXOFaDG
-         a0vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718217207; x=1718822007;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1718217209; x=1718822009; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rm0EtUlY7qVzQZI97HOfdq0hSIaq1mUCwGuA2+Hn2yY=;
-        b=cL1t4dDnY9Ahq98IJMhsx+KEloqdGnexVvLEDHKV92ChTHHxWfsy6dsZuiUaG7T2WR
-         nmGG+iHGJ3+OuLi+zUA3t7kf7h/RHYIeqZIe3GnDlrfR99MUFjA81EtAnRq9Pd/ATYbJ
-         uaIYS7iOBVWJIM0Sw3fVrmrDSlrX7z9WrklwbUjrVbY0ATfj1dGo4761cNY8khdS5N28
-         0ewKXOf2PtvuO8PprA9I8tpp1zw9DOJAt7CzN3S/i4MMtBjwOJvz3w2wMoB8ycLLc4dh
-         f259pY4dBEWADV9kDmzqXKAYjYxHAjZa6mZ/UDkR99LPWqJqmxhQggimmNw3UybzldNb
-         SRgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQPOmp/wbF/+/Cje/LKS8p2b5b89e5e5WbNcDC3p5hih1xG3Ox9M9I0s+ZbskgvrOKhyVLj37OZP31imQErlMDEWvZuaA+x490hLyOMhFoDw==
-X-Gm-Message-State: AOJu0YwHB4TJPDvtoaK7LM/7aMc4HU4PwYwDgG7vdWKeE6grFH+ePsFZ
-	e7NCPlwVVTWkvVOhbCzqjkNAXJgpq4R3mGQ/aWYb8yfZR/3UWQeLpWtljzIDIlfry//ubDSPvDg
-	m8maWzA==
-X-Google-Smtp-Source: AGHT+IH1yI9i/s+26+jM/E/uI8+fPG/zWe9dsO6CmMohvLKaJEU2deKggpKC2BICy6YM6dj4+CXqvZYdg/vu
+        bh=VGJvGIe1CwvnPYERWz1EPbS43EUUz4nerE4PJ3wm8uk=;
+        b=xl43Op6XK7zi980STBylFDTWGj0pMAX95odZBVnQI/iaf8cWbuaZHXRg/jAJMLv+hs
+         UFariMYZ/EMdrxRXTtc1Kgrmlj0kJnSgkMGix72plsRAj9et8187Jva3ZnCuIXMKFkcA
+         /biBSI6T06Ht6ImUr7O3yhHBf4ij1yQuOP9FELPJJ+ltCmUBRYS0A/To5fZlRvhkRnu9
+         wdJG7YB7iIx9FAzfmi2oH0glHP/VPE6XTB0aM8tkrCXpQe0t+Ve3/SzcDLG/EVIFzokC
+         Yq+hTUM+zn/YLc9zt9zpwuNXulBdWIF++zhR2pgrcMz3i+LnWGVBVVp1H51YFT8zjXlk
+         B96g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718217209; x=1718822009;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VGJvGIe1CwvnPYERWz1EPbS43EUUz4nerE4PJ3wm8uk=;
+        b=uxtqFwzqe8Cvi+0wkEZxh921UZ2N49xx9tBqCc8NmUrLVzUSSphYcMvsdVlX+Yu89G
+         BqHvSUjeqaqk/FZ7Ng+5APhxkEdEVfeaFQk1Ax8BIOxsfRSmb9YmxmBHebfTHE62w1/8
+         FiR1JkCbIWmJ7cTVFqfJxRGUFEIl03vI6TAQQrFUEGFQRF5S8KAQhU7PvSmQ+Mu/Rx5Z
+         hZQP1AT936z0kTFZ2DCRs7ys1p0y8rJSaAExK0ko2KtYNFmZ33HKfZRgzaaAIvA6rLjm
+         KyelIfq6PhJ6M0nhKoPjNheKS4JPSJ7nUqEfKQwf0/zUCeC79SgjDwWbUpT8KcAfez/M
+         84IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9x6g0LmhHjzbX+3MB/oVcYPCCNlbFt0Mi1MPHjDYUcyEIYNOnetVc3s70k1tk/R+RZvVRR6UDQI9NfnLvSm8qBrum4CuLsliIAx9XW77UGA==
+X-Gm-Message-State: AOJu0YxIkb/NsNnPXHFhDgezbrg6nt/lUUsRjhhLJaI3+a3I7XziTLys
+	eD+rNuWQzlkV8n8VEXHNG+MZJWj7B9X/Kewz93UvQdB62KvDcfpBxf0iPJbkIa6+te9mHWkiAAw
+	CBtBSRg==
+X-Google-Smtp-Source: AGHT+IGXEDI7uql6mJLDFjO1+Fqeh1AyLA9O3UleyCaiFC6kUY86MVaz89Z/OC+PlyfjDDJprAmYcNiyixd1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:959d:4302:db0e:d12a])
- (user=irogers job=sendgmr) by 2002:a25:c841:0:b0:dfb:197c:8caf with SMTP id
- 3f1490d57ef6-dfe66b6704fmr445067276.6.1718217207099; Wed, 12 Jun 2024
- 11:33:27 -0700 (PDT)
-Date: Wed, 12 Jun 2024 11:31:58 -0700
-Message-Id: <20240612183205.3120248-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:6605:b0:62c:ea0b:a44e with SMTP
+ id 00721157ae682-62fb97e690dmr7848007b3.2.1718217209459; Wed, 12 Jun 2024
+ 11:33:29 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:31:59 -0700
+In-Reply-To: <20240612183205.3120248-1-irogers@google.com>
+Message-Id: <20240612183205.3120248-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240612183205.3120248-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Subject: [PATCH v1 0/7] Refactor perf python module build
+Subject: [PATCH v1 1/7] perf ui: Make ui its own library
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -84,82 +87,121 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Refactor the perf python module build to instead of building C files
-it links libraries. To support this make static libraries for tests,
-ui, util and pmu-events. Doing this allows fewer functions to be
-stubbed out, importantly parse_events is no longer stubbed out which
-will improve the ability to work with heterogeneous cores.
+Make the ui code its own library. This is done to avoid compiling code
+twice, once for the perf tool and once for the perf python module.
 
-Patches 1 to 5 add static libraries for existing parts of the perf
-build.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Build             |  2 +-
+ tools/perf/Makefile.perf     | 10 ++++++++++
+ tools/perf/ui/Build          | 18 +++++++++---------
+ tools/perf/ui/browsers/Build | 14 +++++++-------
+ tools/perf/ui/tui/Build      |  8 ++++----
+ 5 files changed, 31 insertions(+), 21 deletions(-)
 
-Patch 6 adds the python build using libraries rather than C source
-files.
-
-Patch 7 cleans up the python dependencies and removes the no longer
-needed python-ext-sources.
-
-Ian Rogers (7):
-  perf ui: Make ui its own library
-  perf pmu-events: Make pmu-events a library
-  perf test: Make tests its own library
-  perf bench: Make bench its own library
-  perf util: Make util its own library
-  perf python: Switch module to linking libraries from building source
-  perf python: Clean up build dependencies
-
- tools/perf/Build                              |  14 +-
- tools/perf/Makefile.config                    |   5 +
- tools/perf/Makefile.perf                      |  66 ++-
- tools/perf/arch/Build                         |   4 +-
- tools/perf/arch/arm/Build                     |   4 +-
- tools/perf/arch/arm/tests/Build               |   8 +-
- tools/perf/arch/arm/util/Build                |  10 +-
- tools/perf/arch/arm64/Build                   |   4 +-
- tools/perf/arch/arm64/tests/Build             |   8 +-
- tools/perf/arch/arm64/util/Build              |  20 +-
- tools/perf/arch/csky/Build                    |   2 +-
- tools/perf/arch/csky/util/Build               |   6 +-
- tools/perf/arch/loongarch/Build               |   2 +-
- tools/perf/arch/loongarch/util/Build          |   8 +-
- tools/perf/arch/mips/Build                    |   2 +-
- tools/perf/arch/mips/util/Build               |   6 +-
- tools/perf/arch/powerpc/Build                 |   4 +-
- tools/perf/arch/powerpc/tests/Build           |   6 +-
- tools/perf/arch/powerpc/util/Build            |  24 +-
- tools/perf/arch/riscv/Build                   |   2 +-
- tools/perf/arch/riscv/util/Build              |   8 +-
- tools/perf/arch/s390/Build                    |   2 +-
- tools/perf/arch/s390/util/Build               |  16 +-
- tools/perf/arch/sh/Build                      |   2 +-
- tools/perf/arch/sh/util/Build                 |   2 +-
- tools/perf/arch/sparc/Build                   |   2 +-
- tools/perf/arch/sparc/util/Build              |   2 +-
- tools/perf/arch/x86/Build                     |   6 +-
- tools/perf/arch/x86/tests/Build               |  20 +-
- tools/perf/arch/x86/util/Build                |  42 +-
- tools/perf/bench/Build                        |  46 +-
- tools/perf/scripts/Build                      |   4 +-
- tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
- .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
- tools/perf/tests/Build                        | 140 +++----
- tools/perf/tests/workloads/Build              |  12 +-
- tools/perf/ui/Build                           |  18 +-
- tools/perf/ui/browsers/Build                  |  14 +-
- tools/perf/ui/tui/Build                       |   8 +-
- tools/perf/util/Build                         | 394 +++++++++---------
- tools/perf/util/arm-spe-decoder/Build         |   2 +-
- tools/perf/util/cs-etm-decoder/Build          |   2 +-
- tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
- tools/perf/util/intel-pt-decoder/Build        |   2 +-
- tools/perf/util/perf-regs-arch/Build          |  18 +-
- tools/perf/util/python-ext-sources            |  53 ---
- tools/perf/util/python.c                      | 271 +++++-------
- tools/perf/util/scripting-engines/Build       |   4 +-
- tools/perf/util/setup.py                      |  33 +-
- 49 files changed, 612 insertions(+), 722 deletions(-)
- delete mode 100644 tools/perf/util/python-ext-sources
-
+diff --git a/tools/perf/Build b/tools/perf/Build
+index b0cb7ad8e6ac..16ed1357202b 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -55,7 +55,7 @@ CFLAGS_builtin-report.o	   += -DDOCDIR="BUILD_STR($(srcdir_SQ)/Documentation)"
+ 
+ perf-y += util/
+ perf-y += arch/
+-perf-y += ui/
++perf-ui-y += ui/
+ perf-y += scripts/
+ 
+ gtk-y += ui/gtk/
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 5c35c0d89306..350b65088fc1 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -425,10 +425,14 @@ endif
+ 
+ export PERL_PATH
+ 
++LIBPERF_UI_IN := $(OUTPUT)perf-ui-in.o
++LIBPERF_UI := $(OUTPUT)libperf-ui.a
++
+ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
+ ifdef LIBBPF_STATIC
+   PERFLIBS += $(LIBBPF)
+ endif
++PERFLIBS += $(LIBPERF_UI)
+ 
+ # We choose to avoid "if .. else if .. else .. endif endif"
+ # because maintaining the nesting to match is a pain.  If
+@@ -729,6 +733,12 @@ $(PERF_IN): prepare FORCE
+ $(PMU_EVENTS_IN): FORCE prepare
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+ 
++$(LIBPERF_UI_IN): FORCE prepare
++	$(Q)$(MAKE) $(build)=perf-ui
++
++$(LIBPERF_UI): $(LIBPERF_UI_IN)
++	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
++
+ $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
+ 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
+ 		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
+index 6b6d7143a37b..d2ecd9290600 100644
+--- a/tools/perf/ui/Build
++++ b/tools/perf/ui/Build
+@@ -1,12 +1,12 @@
+-perf-y += setup.o
+-perf-y += helpline.o
+-perf-y += progress.o
+-perf-y += util.o
+-perf-y += hist.o
+-perf-y += stdio/hist.o
++perf-ui-y += setup.o
++perf-ui-y += helpline.o
++perf-ui-y += progress.o
++perf-ui-y += util.o
++perf-ui-y += hist.o
++perf-ui-y += stdio/hist.o
+ 
+ CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
+ 
+-perf-$(CONFIG_SLANG) += browser.o
+-perf-$(CONFIG_SLANG) += browsers/
+-perf-$(CONFIG_SLANG) += tui/
++perf-ui-$(CONFIG_SLANG) += browser.o
++perf-ui-$(CONFIG_SLANG) += browsers/
++perf-ui-$(CONFIG_SLANG) += tui/
+diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
+index 2608b5da3167..a07489e44765 100644
+--- a/tools/perf/ui/browsers/Build
++++ b/tools/perf/ui/browsers/Build
+@@ -1,7 +1,7 @@
+-perf-y += annotate.o
+-perf-y += annotate-data.o
+-perf-y += hists.o
+-perf-y += map.o
+-perf-y += scripts.o
+-perf-y += header.o
+-perf-y += res_sample.o
++perf-ui-y += annotate.o
++perf-ui-y += annotate-data.o
++perf-ui-y += hists.o
++perf-ui-y += map.o
++perf-ui-y += scripts.o
++perf-ui-y += header.o
++perf-ui-y += res_sample.o
+diff --git a/tools/perf/ui/tui/Build b/tools/perf/ui/tui/Build
+index f916df33a1a7..2ac058ad1a61 100644
+--- a/tools/perf/ui/tui/Build
++++ b/tools/perf/ui/tui/Build
+@@ -1,4 +1,4 @@
+-perf-y += setup.o
+-perf-y += util.o
+-perf-y += helpline.o
+-perf-y += progress.o
++perf-ui-y += setup.o
++perf-ui-y += util.o
++perf-ui-y += helpline.o
++perf-ui-y += progress.o
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
