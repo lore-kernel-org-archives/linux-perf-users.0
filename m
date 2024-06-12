@@ -1,171 +1,240 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442D41411ED
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Jun 2024 20:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0344623A6;
+	Wed, 12 Jun 2024 01:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718138011; cv=none; b=mJFktmxOZPd+xquJomTdF73fykjQuUcPrvBdQJCw9TapKToqI1bu9bcDjahkSsSuAOVYoIsbYD311afsNLIchF4Y1APnE0HXJyHlKxitVpslqcuqJnkdxZZ1e4KXliy+z1k2h9Vw+xkejHLfqC/jqKIJ200lqUVEYaX5tRw9sGE=
+	t=1718157117; cv=none; b=S2hOqstsUELCpFppNLxKa5gxoA9CAoLZGwjGS9sPWXB4z+EubZtDulBOsbK/6cIkXSuERL5/P8PpFXmX8OtbjlQzl3MguCKEtaHAxpQlGegdkoin+Oj1JTtCiQDi25sZprM604NnwMagoVA5srQ3HzS/lVgJsp65/ugxQPjBXF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718138011; c=relaxed/simple;
-	bh=XC4w7FqUQ2wQZKdU5omXsL3G30oQ0DhgQCJ4Jv1zZ0E=;
+	s=arc-20240116; t=1718157117; c=relaxed/simple;
+	bh=1lKjKHgZXxpzKEQ4D77NUPkcv/NqaWGJUPk357x+XNM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fuQsB139FgR6w5pfPzQd4X72sb4UPmLIjhC8+otX36VXb7l9749bN/clshvYGcnIIYf3Cs3qtpeT7rW0++k/1ig64z4tdlpcOufdNcZ/0mpZysFlviTk4RMOAWCi4+BXrHxYsGASoMduhp691wXhcs1lZPbIRrNaSpiUOewH+YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C3XQxoy0; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Xb5qJ0vOebIXxFIohL6TA2FM8QO9HP+pmLK1Qgx0kPKkV9QapKVgjbw9R6ZnIXC2W1yKSXzmlxhtSh0JukLq86WGK86v5w9mRLQYW+df0+tlHR0CPFVcENMd7Yv2cxZcVkcQd54wUlh2H5kC7Jpu7slDEbCktFUOhpSP6V95dpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZvKsVxH; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C3XQxoy0"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c5ec83886so734a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Jun 2024 13:33:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZvKsVxH"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dfac121b6a6so370970276.0;
+        Tue, 11 Jun 2024 18:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718138008; x=1718742808; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y1oMY5Ka+Igm5IVLZ0jHXnRZ7u2UNpiSxg2NGEZJXKY=;
-        b=C3XQxoy0X3wzvzMtLynriEWutEal5Ejs5qOIs/UNKdTUtMWAtt0qvfTF36hx+DWBVS
-         DmfMdjB3mlP8LAf35YMQm6MMhsXTSYyynwMOMmpB9JWyPsux+KG8Td+/ddehDnq9GLyP
-         +5I+Dz5z7PFQTY1EkicLZiBPBQfwya6ENmIYqJzoEa7HLeKk5qToa6SSLI6UMgrNK63v
-         oxi5HH0HcebF/8/3SzF9qRn3GcBktSBpi1aCgoL4up6loBpt6Je8bLP1i9roTxmQzRmk
-         ztboi13Zpx+qSGkR6m27/BfIiGP0JfsJMAqRpVojSR8aFbLXXnQmbR9u4uUID7z2E07p
-         b7DQ==
+        d=gmail.com; s=20230601; t=1718157115; x=1718761915; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+LnnyAhOCYXQLVabOMqh38kfH9Iz+v6Vt2+PY+nihaA=;
+        b=OZvKsVxHW+Ccdhh6diGpqRdQob6qDpwmdKQk0aKujR6BoTJZ+BpUTcpbGcVdYvZ0pb
+         JeL2P89Dh6rEAGSRdNKi8BTyvq3I45TG/43RhAHX2pQMNL7nkSQ4E1D4BZYF+Xz0UeDl
+         z3VbQLYg+tV2D6wSAMD6K8nQtfQeQnd1BNLVwTLy9PHEZSL3jHDfG7QpJCM8oshJ1dTV
+         EY/97rP+JuyawSrzfUNrTcgUCI+XEIDwEtsDenYGrntlBdysN/WeCgvcRPHEaTtubJ1v
+         tG5IrXdlg709TfCB6Z1Wu/Dm8toUCGg26WVe3XMzg/ND+WEOqzW4UxjeibqTcixJtidw
+         2EFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718138008; x=1718742808;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y1oMY5Ka+Igm5IVLZ0jHXnRZ7u2UNpiSxg2NGEZJXKY=;
-        b=LSTp3QX3GY+efcjJ2Qy9d1JfnceDuHEPMBtrwV7LiwnzaLcHX7GB1K/W5uROlDi+xY
-         aoTMnotgtSYalIuQigwP/ncm5noWAiahtolncKPoY6/6NZXZH/FHDWL04Uhdq868cX6T
-         h3STTBouEub6JKqCF5gKNUlCoInnUb7Tw7ibR+SDIYvc7KgxdlPkYcNVNMlV500C840t
-         wJI1QboHONO4lGx6B9reOXquFmR443uTLMMwdNqwCymhkaHLROqrR6AIc1G0dJ8SmaMU
-         UT6NZ3SUz3xKVr9rEsBPtKxcnO27jFdRNDtqLuk13e22b4lN9vaXUdJ2VjzxhU0Zj4lU
-         JqmA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7nZ0yiUDCDbV+4M5jkPnN2LR3ntsgOQm0ggWUNvpnoUwiXus91yuNkTpFkznmBn069TTRh+PQMyFfZGahhS0gjxsTM1bRbSSqkfDQTbYmOQ==
-X-Gm-Message-State: AOJu0YzSd8cedoZpv+GauIzPz4vAyur1GlsYgVOBiJfi90oiVfmJxfD3
-	GOkdIQmUYbBTcpdGh3x0J3GGJBjYTOeNaVmWkwbvyQoCOhKZRtsfPUcVH6LkHHRcNooN5ro8c45
-	asip1AYbONv0ikzmqG08W+vhtVezv1fJeL4U=
-X-Google-Smtp-Source: AGHT+IEJZSZPp5uDEJF66yku2G52k7zoY/A/fEWKARj7DqwB4Q9rt6zOLddjPGDLpteJ63WCdIVY0NriCA360ZVJwkE=
-X-Received: by 2002:aa7:cd17:0:b0:572:988f:2f38 with SMTP id
- 4fb4d7f45d1cf-57ca7fd71e8mr38069a12.6.1718138008253; Tue, 11 Jun 2024
- 13:33:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718157115; x=1718761915;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+LnnyAhOCYXQLVabOMqh38kfH9Iz+v6Vt2+PY+nihaA=;
+        b=KFil4Gb6Hk8rzBHyhQrzHG1wtZPhDzQWDU6y1P7z+hDBymIhxpP0yhpz0sTHBvYvJC
+         nHB24PHLcphjg99JDZ6LLXyfb7aRqdoirjFz5NbpZgfN82RvIFXXmQSfQ4COt+76kGtC
+         8+ZGJN2NN5Yaku+CBoXU3ETBvsa1lO0tIvhZxM+Wpe3KHawPuzDW+e0ttXbfkNTLlXph
+         my71lHnK8bvAZ2EEzIdBPaC796yThDw0wp9VJ5DXzU9kVTpm1Dc1y3P4GXb81uxZTQcL
+         2c89fWef0ktdFlenVV8+qo+IpQWE9bBrI4xeUxCcKqUJsuw3hNVkfLKzRwkLs48la8kN
+         IVsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx5shOezrXDw2dG+haZa6wMzfs6xO1jUNQqsIFsiaZQEOEdIbyxZaY0aNI6Tgvs7cyAHM4r2HzeQc40OCTZsQqjjkMSKPJum72/scue+8YG7Lp4imBBroMOj7YQO27SOvtHS1DHBXvqOaAQZFgbw3X+gv7lxhmhPie4Yn+juNNiNtFjMU+wLc9NaclWPtiJ6BksXqwgQs/tji3g9/z+mWl0ON+MZlpGePM4g==
+X-Gm-Message-State: AOJu0YyWVKNao80yWGOEln9TLwu5ULvG0oe6cvZmPXO9zKicJpoWtgqL
+	zEXcCIZL06XVbqyhej7q2wsPhsV/uXWYf1jNp4L3iFaa65bPuFGBbfFoWN5Pkr/W+BQwnGJBYjY
+	ae3N70bufGPgMxWbAnXXR5VGxZRM=
+X-Google-Smtp-Source: AGHT+IFuPc14bIak76YCYivfOYSFKOKYpp1NO+8Np7OS9qj8Cg7q6QEHqa70qRg5t2uLkrA5Iztwio+7HKipTjQ0SBY=
+X-Received: by 2002:a5b:b02:0:b0:dfa:de92:19e6 with SMTP id
+ 3f1490d57ef6-dfe4c57964fmr324443276.28.1718157114767; Tue, 11 Jun 2024
+ 18:51:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515193610.2350456-1-yabinc@google.com> <CAM9d7cjmJHC91Q-_V7trfW-LtQVbraSHzm--iDiBi7LgNwD2DA@mail.gmail.com>
- <CALJ9ZPML-QNcsJfo6tBMfmJzb=wF1qQsMFTbNvtRwH-++J1a2g@mail.gmail.com>
-In-Reply-To: <CALJ9ZPML-QNcsJfo6tBMfmJzb=wF1qQsMFTbNvtRwH-++J1a2g@mail.gmail.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Tue, 11 Jun 2024 13:33:15 -0700
-Message-ID: <CALJ9ZPNkO=_OKPDwdSY9tJw+AETaAVC2m-1UcWScZ0TaFmHRkw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] perf/core: Check sample_type in sample data saving
- helper functions
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+References: <20240610131032.516323-1-howardchu95@gmail.com> <ZmiftHw-66m3WymK@x1>
+In-Reply-To: <ZmiftHw-66m3WymK@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 12 Jun 2024 09:51:45 +0800
+Message-ID: <CAH0uvoigeXvLPXKz4Yp=jHHm637bkEvDdSUKW7MYOj5Pu7WNbw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf trace: BTF-based enum pretty printing
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	mic@digikod.net, gnoack@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2024 at 10:59=E2=80=AFAM Yabin Cui <yabinc@google.com> wrot=
-e:
+[Resend because of the HTML error]
+
+Hello Arnaldo,
+Thanks a lot for the review, I guess you call it v1 for a reason. :)
+> > +
+> > +     id = btf__find_by_name(btf, type);
 >
-> On Wed, May 22, 2024 at 9:27=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > Hello,
-> >
-> > On Wed, May 15, 2024 at 12:36=E2=80=AFPM Yabin Cui <yabinc@google.com> =
-wrote:
-> > >
-> > > Hello,
-> > >
-> > > We use helper functions to save raw data, callchain and branch stack =
-in
-> > > perf_sample_data. These functions update perf_sample_data->dyn_size w=
-ithout
-> > > checking event->attr.sample_type, which may result in unused space
-> > > allocated in sample records. To prevent this from happening, this pat=
-chset
-> > > enforces checking sample_type of an event in these helper functions.
-> > >
-> > > Thanks,
-> > > Yabin
-> > >
-> > >
-> > > Changes since v1:
-> > >  - Check event->attr.sample_type & PERF_SAMPLE_RAW before
-> > >    calling perf_sample_save_raw_data().
-> > >  - Subject has been changed to reflect the change of solution.
-> > >
-> > > Changes since v2:
-> > >  - Move sample_type check into perf_sample_save_raw_data().
-> > >  - (New patch) Move sample_type check into perf_sample_save_callchain=
-().
-> > >  - (New patch) Move sample_type check into perf_sample_save_brstack()=
-.
-> > >
-> > > Changes since v3:
-> > >  - Fix -Werror=3Dimplicit-function-declaration by moving has_branch_s=
-tack().
-> > >
-> > > Changes since v4:
-> > >  - Give a warning if data->sample_flags is already set when calling t=
-he
-> > >    helper functions.
-> > >
-> > > Original commit message from v1:
-> > >   perf/core: Trim dyn_size if raw data is absent
-> > >
-> > > Original commit message from v2/v3:
-> > >   perf/core: Save raw sample data conditionally based on sample type
-> > >
-> > >
-> > > Yabin Cui (3):
-> > >   perf/core: Save raw sample data conditionally based on sample type
-> > >   perf/core: Check sample_type in perf_sample_save_callchain
-> > >   perf/core: Check sample_type in perf_sample_save_brstack
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Thanks,
-> > Namhyung
-> >
+>         int id = ...
+
+Do you want me to do the initialization in the middle of the function
+body sir? A little reminder, char* pointer 'type' has to be shifted to
+the first non-enum-prefix location to do the btf__find_by_name().
+
 >
-> Hi performance events subsystem maintainers,
+> > +     if (id < 0)
 >
-> The v5 patches were modified based on Peter's comments on the v4
-> patches. I'd be grateful if you could take a look when you have a
-> moment.
-> Thank you for your time and consideration.
+> Shouldn't we have some warning here? ok, I see you do it later, in
+> trace__read_syscall_info().
+
+I'm sorry, could you be more specific please? To my understanding, it
+is syscall__scnprintf_args() who called btf_enum_scnprintf(), and I
+did the error handling(or fallback) by calling
+syscall_arg_fmt__scnprintf_val(). It's like:
+
+if btf_enum_scnprintf() returns non-0 // success
+        continue;
+else // error
+        syscall_arg_fmt__scnprintf_val()
+
+So we fall back to just printing the long value.
+
+>
+> Also I looked at the btf_enum_scnprintf() caller and if this isn't found
+> nothing is printed, it is better to fallback to printing the integer
+> value, as done in other parts, see:
+
+Do you think the code below could be seen as a sort of fallback
+mechanism? If nothing is printed, btf_enum_scnprintf() returns a 0, we
+continue to do a syscall_arg_fmt__scnprintf_val() as the fallback. I
+tested it by putting return 0 at the top of btf_enum_scnprintf(), and
+it works, although not so straightforward... Maybe I should put the
+fallback straight in btf_enum_scnprintf().
+
+> > +                     if (sc->arg_fmt[arg.idx].is_enum == true && trace->btf) {
+> > +                             p = btf_enum_scnprintf(bf + printed, size - printed, val,
+> > +                                                    trace->btf, field->type);
+> > +                             if (p) {
+> > +                                     printed += p;
+> > +                                     continue;
+> > +                             }
+> > +                     }
+> > +
+> >                       printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+> >                                                                 bf + printed, size - printed, &arg, val);
+
+>
+> size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_prefix, int val)
+>
+> That intfmt is configurable to show hex or decimal and is used when the
+> 'val' isn't found in the strarray, so we should use the same approach
+> with BTF.
+>
+> > +             return 0;
+> > +
+> > +     bt = btf__type_by_id(btf, id);
+> > +     e = btf_enum(bt);
+>
+> Declare 'bt' and 'e' here
+>
+> > +
+> > +     for (int i = 0; i < btf_vlen(bt); i++, e++) {
+> > +             if (e->val == val)
+> > +                     return scnprintf(bf, size, "%s",
+> > +                                      btf__name_by_offset(btf, e->name_off));
+
+you mean doing it like this?
+```
+for (bt = btf__type_by_id(btf, id), e = btf_enum(bt), i = 0;
+     i < btf_vlen(bt); i++, e++) {
+        if (e->val == val) {
+                return scnprintf(bf, size, "%s",
+                btf__name_by_offset(btf, e->name_off));
+        }
+}
+```
+
+> This is shaping up super nicely, great!
+
+:) Thank you so much sir.
+
+>
+> I'm pushing the simplified first patch to my tmp.perf-tools-next branch
+> in my tree at:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf-tools-next
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf-tools-next
+
+Sure, I'll pull from it and build the enum support on top of that.
+
+>
+> Some more comments below.
+>
+> >       if (last_field)
+> >               sc->args_size = last_field->offset + last_field->size;
+> > @@ -1811,6 +1854,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+> >       char tp_name[128];
+> >       struct syscall *sc;
+> >       const char *name = syscalltbl__name(trace->sctbl, id);
+> > +     int err;
+> >
+> >  #ifdef HAVE_SYSCALL_TABLE_SUPPORT
+> >       if (trace->syscalls.table == NULL) {
+> > @@ -1883,7 +1927,17 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+> >       sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+> >       sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+> >
+> > -     return syscall__set_arg_fmts(sc);
+> > +     err = syscall__set_arg_fmts(sc);
+>
+> > +     /* after calling syscall__set_arg_fmts() we'll know whether use_btf is true */
+> > +     if (sc->use_btf && trace->btf == NULL) {
+> > +             trace->btf = btf__load_vmlinux_btf();
+> > +             if (verbose > 0)
+> > +                     fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
+> > +                                                         "Failed to load vmlinux BTF\n");
+> > +     }
+>
+> One suggestion here is to get the body of the above if and have it in a
+> trace__load_vmlinux_btf(), as that call and the test under verbose will
+> be used in other places, for instance, when supporting using BTF to
+> pretty print non-syscall tracepoints.
+>
+> This function probably will grow to support detached BTF, possibly that
+> idea about generating BTF from the scrape scripts, etc.
+
+Sure.
+
+Thank you very much for reviewing this patch, v2 is coming up.
+
+Thanks,
+Howard
+
 >
 > Thanks,
-> Yabin
 >
-
-Hi, friendly ping again for review?
-
-> > >
-> > >  arch/s390/kernel/perf_cpum_cf.c    |  2 +-
-> > >  arch/s390/kernel/perf_pai_crypto.c |  2 +-
-> > >  arch/s390/kernel/perf_pai_ext.c    |  2 +-
-> > >  arch/x86/events/amd/core.c         |  3 +--
-> > >  arch/x86/events/amd/ibs.c          |  5 ++---
-> > >  arch/x86/events/core.c             |  3 +--
-> > >  arch/x86/events/intel/ds.c         |  9 +++-----
-> > >  include/linux/perf_event.h         | 26 +++++++++++++++++-----
-> > >  kernel/events/core.c               | 35 +++++++++++++++-------------=
---
-> > >  kernel/trace/bpf_trace.c           | 11 +++++-----
-> > >  10 files changed, 55 insertions(+), 43 deletions(-)
-> > >
-> > > --
-> > > 2.45.0.rc1.225.g2a3ae87e7f-goog
-> > >
+> - Arnaldo
+>
+> > +     return err;
+> >  }
+> >
+> >  static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+> > @@ -2050,7 +2104,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+> >                                     unsigned char *args, void *augmented_args, int augmented_args_size,
+> >                                     struct trace *trace, struct thread *thread)
+> >  {
+> > -     size_t printed = 0;
+> > +     size_t printed = 0, p;
+> >       unsigned long val;
+> >       u8 bit = 1;
+> >       struct syscall_arg arg = {
+> > @@ -2103,6 +2157,15 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+> >                       if (trace->show_arg_names)
+> >                               printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+> >
+> >               }
+> > --
+> > 2.45.2
