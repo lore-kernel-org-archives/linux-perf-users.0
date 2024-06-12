@@ -1,116 +1,168 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193311EF1A;
-	Wed, 12 Jun 2024 13:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596FA178398;
+	Wed, 12 Jun 2024 13:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199254; cv=none; b=qLNWhIKrEzNKXhjpSe7HVrb+TEbM7TTtEfGWCmHS1jfUwFenXP17UBkXDlJj9QGfHtULKrTzu9gD9kI0fhi/rtvUPGc6tkwxPthhjcX9kA0zYSyRo7H+YpVJTw35whdQmJoI82RMW0LvrjOTCD+DIVr2gXnkB6Q/3Hy0clXUUeQ=
+	t=1718199492; cv=none; b=J3qq+/T7aRiLCqa+OAUEvGJqmu9lkIx0sbl9uC+WUfR8K+Q4s/ybV/5pOAF2bRdEbyVdTj7EAStlnzqdAyc3oDRNdsrA0NA2bev+WY8fTvbch1tCckRl3Pfyf6EU2XHX8x+swij7cDNg/F6RjJUGykzmFmhnHu9mxO59cfdedTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199254; c=relaxed/simple;
-	bh=Au1llInZEepgsoZGLTYtmExSMQ5QuJqm+PY9oVjCw+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u95dUEd/l7UCk6W4LaGi5KJTrX3Qp7DirWHY2XDijyyFRVzCuHZCZiTVDFgRe0bZqhPAS0kaljALlAvuAborUBeYH97vH9jPPsZBhy2Oj6bixzTryMpxr6MpTZsun2KcqdoTt/RwmgTreo+8uUcuVcAeQMU/a9Gis+qqP7KgbEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H5aPaIHr; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718199492; c=relaxed/simple;
+	bh=GAIDHXecjjeCcaH4nBavfTaUc1opIy56ggHhblmAVmg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xirekp/mSYZUvHD0Zb5Lvhy90FJUD4hNT98qV5U3efnfaT3bfB2PyTa/kijh1hK0AdeU3wBtbaRTP8lVV/at6MsyRtnt0duBKsy/OptcE+d/C5uFvAtoE6WL27ZMOKCLmmRUkg0uRhT9Dt19SM+KTVrxrvP6SNaMmdciJBBXQPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDZJ9c9r; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H5aPaIHr"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BBC1140E016C;
-	Wed, 12 Jun 2024 13:34:03 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Xl_z8xHFyKYs; Wed, 12 Jun 2024 13:34:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718199240; bh=eZyz57k7uXkPLYoNDXQ8VYUt/BHQFaQ55nFSMPTlOKQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H5aPaIHrEs/h1N/W9HuKXunwlA8nftqhlS9pE7BeeYgvKWZIC1ERtsbPfpYmkxKJk
-	 hntYNF7sGBh4JIO33lut5KX2ZJhA8xNm9SfUzoY7f3gTCbuaGamF8AlGlROVMXlrnT
-	 N/mGsCLozt7uFuJxl0YPSzpWY4IkfnjZbBjw75M5gB7utSK/Tc7bo8zN0xFSLLy2Bu
-	 L0N46CPQPq3agsmw24N6PaqK1wFSIXQjIInIkpctMegS6F0dKzg0pxmQM6MKQhOQLX
-	 5VLxd9Us/YmzkNFBH1MO1GaCRUZh3eCzZgzLKciZDVNHOyeyVrwpFDEGl7xgcoI1CX
-	 NdMT/6cqngYCNCCvq8/dd3kv1Ay4OCXaMPAsBtYbLuwF3Z18iDaQ/7ugJkD1mgkR6n
-	 6W9/SDV+I2P+4/Yld6p8/hg2fN61g/TVhLsXbJX70UsJTgLk3g3faymyLvCSgWhu+S
-	 G5OYMz0y9cuj71ZFdn5+1RwoXk82QclBnY80rfbb6c7Lfb6nE4y1F82F/ivDoL0p9V
-	 uu5w6mCHxknEm0DpHgOjqH8TA4+08R/C9oRodD1LSkT97TwIK3pWu4Hkj1PxzmdUAW
-	 bcFdZqQkvwANszCIOZpt+3y2vV/r5rGQNCbl8VZ3hQx6E4FJQNTZucm35leZia5wUT
-	 2kxYEsyATkKtl7k9RMzunPxo=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDZJ9c9r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718199491; x=1749735491;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GAIDHXecjjeCcaH4nBavfTaUc1opIy56ggHhblmAVmg=;
+  b=eDZJ9c9rivjeQ1oDPyMZznrUDrjZPEoxxe0B8Uo+sCUQvrC3OLXt653g
+   P4cJZ0kXUdOipGEfyGJLlwhMogDr1Gk1WNruoldficO12QHX4DA3BI5LJ
+   vmQNy2sr1by1ykjZGi4RcWYwOYyWrg7xB7CYfmwihqkhw1qevz14Nn8hp
+   CRLq7TNuu+jjxIsH/OJTKnBSxVC7Q81Vod8hEdY9u05SW3UJzuQFgYWjb
+   /MLXssnpJDDFUNjgKFvkwUFr/OccNxTxcMF2ZdnlzmJ1EQNSXjOvUIgk4
+   31FBYrTYlIYzm4UHiTQ3GOyQiUdWKfhkFUd3+gnWNjGK6DHzLqtoP29hW
+   A==;
+X-CSE-ConnectionGUID: Eryf/IheTGOtwVSMSO02LQ==
+X-CSE-MsgGUID: /ZMp4jSNQXW9Y2WeEblWbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14764586"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="14764586"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 06:38:10 -0700
+X-CSE-ConnectionGUID: zf8r4UJYRBu/ogolF/JApw==
+X-CSE-MsgGUID: jnNGnMJsRAm7j+bosk4lzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="39856133"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 06:38:10 -0700
+Received: from [10.212.10.32] (kliang2-mobl1.ccr.corp.intel.com [10.212.10.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25EBC40E0031;
-	Wed, 12 Jun 2024 13:33:47 +0000 (UTC)
-Date: Wed, 12 Jun 2024 15:33:40 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, will@kernel.org,
-	peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
-	namhyung@kernel.org
-Subject: Re: [RESEND v1 1/3] x86/cpufeatures: Add {required,disabled} feature
- configs
-Message-ID: <20240612133340.GBZmmjtD40dzhsWVyg@fat_crate.local>
-References: <20240509205340.275568-1-xin@zytor.com>
- <20240509205340.275568-2-xin@zytor.com>
+	by linux.intel.com (Postfix) with ESMTPS id 6718920B5703;
+	Wed, 12 Jun 2024 06:38:07 -0700 (PDT)
+Message-ID: <e72c847f-a069-43e4-9e49-37c0bf9f0a8b@linux.intel.com>
+Date: Wed, 12 Jun 2024 09:38:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240509205340.275568-2-xin@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-8-mizhang@google.com>
+ <20240507085807.GS40213@noisy.programming.kicks-ass.net>
+ <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
+ <20240611120641.GF8774@noisy.programming.kicks-ass.net>
+ <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+ <20240612111732.GW40213@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240612111732.GW40213@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 09, 2024 at 01:53:38PM -0700, Xin Li (Intel) wrote:
-> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-> index 2a7279d80460..719302d37053 100644
-> --- a/arch/x86/Kconfig.cpu
-> +++ b/arch/x86/Kconfig.cpu
-> @@ -358,6 +358,10 @@ config X86_P6_NOP
->  	depends on X86_64
->  	depends on (MCORE2 || MPENTIUM4 || MPSC)
->  
-> +config X86_REQUIRED_FEATURE_NOPL
 
-Can we keep the X86_{REQUIRED,DISABLED}_ prefixes solely in
-arch/x86/Kconfig.cpufeatures and not spill them out into the rest of the tree?
 
-This way there will be no confusion between X86_FEATURE_, X86_REQUIRED_FEATURE_,
-X86_DISABLED_FEATURE_ and so on, and which one I am supposed to use where...
+On 2024-06-12 7:17 a.m., Peter Zijlstra wrote:
+> On Tue, Jun 11, 2024 at 09:27:46AM -0400, Liang, Kan wrote:
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index dd4920bf3d1b..68c8b93c4e5c 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -945,6 +945,7 @@ struct perf_event_context {
+>>  	u64				time;
+>>  	u64				timestamp;
+>>  	u64				timeoffset;
+>> +	u64				timeguest;
+>>
+>>  	/*
+>>  	 * These fields let us detect when two contexts have both
+> 
+>> @@ -651,10 +653,26 @@ __perf_update_times(struct perf_event *event, u64
+>> now, u64 *enabled, u64 *runnin
+>>
+>>  static void perf_event_update_time(struct perf_event *event)
+>>  {
+>> -	u64 now = perf_event_time(event);
+>> +	u64 now;
+>> +
+>> +	/* Never count the time of an active guest into an exclude_guest event. */
+>> +	if (event->ctx->timeguest &&
+>> +	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+>> +		/*
+>> +		 * If a guest is running, use the timestamp while entering the guest.
+>> +		 * If the guest is leaving, reset the event timestamp.
+>> +		 */
+>> +		if (__this_cpu_read(perf_in_guest))
+>> +			event->tstamp = event->ctx->timeguest;
+>> +		else
+>> +			event->tstamp = event->ctx->time;
+>> +		return;
+>> +	}
+>>
+>> +	now = perf_event_time(event);
+>>  	__perf_update_times(event, now, &event->total_time_enabled,
+>>  					&event->total_time_running);
+>> +
+>>  	event->tstamp = now;
+>>  }
+> 
+> So I really don't like this much, 
 
-> diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
-> new file mode 100644
-> index 000000000000..326a8410ff06
-> --- /dev/null
-> +++ b/arch/x86/Kconfig.cpufeatures
-> @@ -0,0 +1,153 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# x86 feature bits (see arch/x86/include/asm/cpufeatures.h) that are
-> +# either REQUIRED to be enabled, or DISABLED (always ignored) for this
-> +# particular compile-time configuration.  The tests for these features
-> +# are turned into compile-time constants via the generated
-> +# <asm/featuremasks.h>.
-> +#
-> +# The naming of these variables *must* match asm/cpufeatures.h.
+An alternative way I can imagine may maintain a dedicated timeline for
+the PASSTHROUGH PMUs. For that, we probably need two new timelines for
+the normal events and the cgroup events. That sounds too complex.
 
-I presume they must match X86_FEATURE_<name>?
+> and AFAICT this is broken. At the very
+> least this doesn't work right for cgroup events, because they have their
+> own timeline.
 
-And REQUIRED and DISABLED is manipulated in by the script?
+I think we just need a new start time for an event. So we may use
+perf_event_time() to replace the ctx->time for the cgroup events.
 
-I guess I'll see later.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 019c237dd456..6c46699c6752 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -665,7 +665,7 @@ static void perf_event_update_time(struct perf_event
+*event)
+ 		if (__this_cpu_read(perf_in_guest))
+ 			event->tstamp = event->ctx->timeguest;
+ 		else
+-			event->tstamp = event->ctx->time;
++			event->tstamp = perf_event_time(event);
+ 		return;
+ 	}
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> Let me have a poke...
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Sure.
+
+Thanks,
+Kan
