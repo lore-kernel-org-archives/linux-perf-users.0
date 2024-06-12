@@ -1,187 +1,223 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258D716D4D3
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 11:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97067168C3A;
+	Wed, 12 Jun 2024 12:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718193135; cv=none; b=en/VaHmkCukElfPglC9AIzBoenIVhLiLVxN8ZDyuYWF45Btb9DhPSg4IwyAygf1EXflYS9qzGWlmb+sWWLK3fQo+AkdWs1VMtuDFhggosvBJvMw4bmCEBsx8BYP/yM9rh6zQjW0O7XJxOlCjIAww7e6bgM9gk0Z+AVXkufl5djE=
+	t=1718194324; cv=none; b=ZkoeyTFK8nKVQpLCWceyQ31AWK/B1S9PZeLzuto1/CpG1sGGDSpl95c04fgsZa45R0KRSqoaQGpWTNSvFZGULicd8Nl13ns64KjAhyhx1w0szObsfi0vSVlMBklzDpA6u3W1LtYpghIfyLuPoB+/Eh0Z0QkAOS5BfL/KbpsaYOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718193135; c=relaxed/simple;
-	bh=7LD66xSINsodhZwvGnWbhgzSoyQkiGmOvbl8gmj8k74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dV8Q7DxfhYlQoxfJRuF90xcNR910da2qLqhLP1sgXf9+D/gYRt1xhIQJi6N++5yH1ZMgs7lUAZN+8N+1ntkCM5I5qFLWIOxH6WWsNn+FaGaZbB/wPmPMXlkI4ZwpYUVN4ngjTSAOSrtCr8A/6NGUmqf7oS53lhPTi2bctG/wzGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ePrY1PSU; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718194324; c=relaxed/simple;
+	bh=5xIJayE7WFn8kfeEr2u0ucL1DNg9iKRbejBxMqcNH18=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YHkF6ft4xWHdqb1YUm5oewK+URopoP3o15RYo+wHyC4XDgxBrQN6vkHvzXxoqyjC9entRB6LJkwW+qDbqUhXhDK1ef01FSkPDQTXAjiEUVAbtIBOrIjdPDAoh74fApyQ4S0UhZNcAP9Y6Oem59t6qXLYuehO7KZRppNii8pBafw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WptwwWGz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ePrY1PSU"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3748a9fa84fso127865ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 04:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718193132; x=1718797932; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wDVeyfDKY20hrMZkPuumvahLgkbZ8XPx+xCcPCGoUlg=;
-        b=ePrY1PSULnehCzJdymZiHOBvcxokV7audVCkbGWr43nPF2gU8yNI0se7qGOzyEOjhF
-         g5n6YykUyrdBHXE1uCALmuff+3DtgSORUmC/SGZq6yTA77xT2LVnBW/6MuALdgzwnoGV
-         PTzXdBnTyvJ8pT50fnz3MXdzmvWhcOw1Js6V45mUC2aLaYBHCYQJwfc3MsJhqa+RQeaN
-         x82AA3KALYSRcqBPxPojF+xaNFOc8NNlct+jIJ20L0DS0tmj9pfrZUECLmSjWmBgUtFc
-         6PlMoJ/kRFrcT2sGbK72o3ZbnHIPPyyhiEYzhL1SEq8f9fE5uAvfqtecwbfufjcePKCw
-         I1mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718193132; x=1718797932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wDVeyfDKY20hrMZkPuumvahLgkbZ8XPx+xCcPCGoUlg=;
-        b=q+PMr8CtNyH1n6y1FmFJD1rGeC4QUyeZe99GAAilmZ5vkiw5SXiB+Ny2wfYUz5u+mc
-         lVD6qX8je5OG3NX2C8YlUTO17cUrR2a/DS/p/+oq5hhvE67JXOYVVziKtYr00pyQUfuz
-         FSxPrIC+xeSCyBWEvd+Xbf11TdAyK73UQVM2vLY/2Ch9DC3HeLcpA21z8Fat4NT4P/FY
-         hEm0NSPXH6h+GU7/r8xxKON8R8pWBtG8UKx5L6BhBHfzE9rD8GFQFFbqPphr/piEcsC/
-         3MtCUdlemoSzmlHCCf2L8LK9YKGvriSq/EPUb3R50+K6oElom5wn92hvrMsJM3YicWPN
-         0uSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPzPpQeAkZq5Bb7o9lT7chI1JSmCfrnahST5jWXhllHtpcaei5s4sctQfmPVDPdAjHD/9Sodqi+ciGOGD77+DV4DTafMDH6iN5RpwsVNA2uw==
-X-Gm-Message-State: AOJu0YzZrveKSNiacmh1sJxh6laG/Z01SyCNgwonxiJIlTDMQvU3Rntv
-	7wDcf/uXEUanyTTyV2I4R6v/wYka9cQjlKUNxeQvgDdCFZU5ZahxpKxL15QUCDWnnrBX9ORHxBe
-	/ILPmwZmQ+EqR67JUn4PHgyFUkSmRVKNLiaws
-X-Google-Smtp-Source: AGHT+IE89xTmZD7j7eQRxBBnlT8TqLZ55txucZmJnqJJq5kOu47qog8PEr5hK2uyKYXe4HWIQ8krODHQ97o4tQ4XXuM=
-X-Received: by 2002:a05:6e02:3f82:b0:374:984c:5c8d with SMTP id
- e9e14a558f8ab-375cb51be3amr3078965ab.16.1718193131991; Wed, 12 Jun 2024
- 04:52:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WptwwWGz"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CARKIn024705;
+	Wed, 12 Jun 2024 12:11:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=pp1; bh=d
+	uwgHpuZSRCZ08T/lg1u/jzzAlv83N82f5GZE395lqg=; b=WptwwWGzi/puG0tgt
+	cZ7PflEvcL0F3p7KewwfRNhGN5f9r26p50D0zaxlAEmrN7ejNprvpYPU4h9zeS78
+	If7mN74HTKMF1JeFUpdoKng8dYgJWuTMfekbL+51wfwaCtmrIlGcPyHyxvRUrfrN
+	cNwsLFnR95N+Kp7j6xiQMOuzfe4FqaFBP68mBvG+QaZ0+ZAKskG3d0VxxZdtFeo0
+	DJSnYxA9v3cRxnLJUh9BybH1JQxP08kjchCWesD4O5UpxpvIljHoXNwSyXqSkXWE
+	naxyA59oPwXUmxdqiDCT/BON2lYUnDJaFtnf8aj0uhN0bUX35Z/CI8y+ZIXZBzBr
+	SY12A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yq7rm0m7t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 12:11:49 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45CCBmHa020091;
+	Wed, 12 Jun 2024 12:11:48 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yq7rm0m7s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 12:11:48 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45CBBNMa027220;
+	Wed, 12 Jun 2024 12:11:48 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn210wmc0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 12:11:48 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45CCBgVR52887976
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Jun 2024 12:11:44 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 61B2920043;
+	Wed, 12 Jun 2024 12:11:42 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E51020040;
+	Wed, 12 Jun 2024 12:11:36 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.60.185])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 12 Jun 2024 12:11:35 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240607065343.695369-1-irogers@google.com> <cc4ac58b-6a0b-1d72-f881-a60b43d5c229@huawei.com>
-In-Reply-To: <cc4ac58b-6a0b-1d72-f881-a60b43d5c229@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Jun 2024 04:52:00 -0700
-Message-ID: <CAP-5=fWNDkOpnYF=5v1aQkVDrDWsmw+zYX1pjS8hoiYVgZsRGA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf arm: Workaround ARM PMUs cpu maps having offline cpus
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yangyicong@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH 1/3] tools/perf: Fix the nrcpus in perf bench futex to
+ enable the run when all CPU's are not online
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <92752ed4-0091-4a98-8af7-dd58bc5432bc@linux.ibm.com>
+Date: Wed, 12 Jun 2024 17:41:22 +0530
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <8AA105EF-A7DD-4890-9878-46E473743EAE@linux.vnet.ibm.com>
+References: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+ <92752ed4-0091-4a98-8af7-dd58bc5432bc@linux.ibm.com>
+To: Disha Goel <disgoel@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 61axmAq69ncWZRNkvjn6JEOXZpiDrrCq
+X-Proofpoint-ORIG-GUID: vZmJ5SOiax5HkuDse_ounAEaSIdNQL-u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_06,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120087
 
-On Wed, Jun 12, 2024 at 3:16=E2=80=AFAM Yicong Yang <yangyicong@huawei.com>=
- wrote:
->
-> Hi Ian,
->
-> On 2024/6/7 14:53, Ian Rogers wrote:
-> > When PMUs have a cpu map in the 'cpus' or 'cpumask' file, perf will
-> > try to open events on those CPUs. ARM doesn't remove offline CPUs
-> > meaning taking a CPU offline will cause perf commands to fail unless a
-> > CPU map is passed on the command line.
-> >
-> > More context in:
-> > https://lore.kernel.org/lkml/20240603092812.46616-1-yangyicong@huawei.c=
-om/
-> >
-> > Reported-by: Yicong Yang <yangyicong@huawei.com>
-> > Closes: https://lore.kernel.org/lkml/20240603092812.46616-2-yangyicong@=
-huawei.com/
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Tested worked for this case:
->
-> [root@localhost tmp]# echo 0 > /sys/devices/system/cpu/cpu1/online
-> [root@localhost tmp]# /home/yang/perf_static stat -e armv8_pmuv3_0/cpu_cy=
-cles/ --timeout 100
-> Error:
-> The sys_perf_event_open() syscall returned with 19 (No such device) for e=
-vent (armv8_pmuv3_0/cpu_cycles/).
-> /bin/dmesg | grep -i perf may provide additional information.
->
-> [root@localhost tmp]# /tmp/perf_Ian stat -e armv8_pmuv3_0/cpu_cycles/ --t=
-imeout 100
->
->  Performance counter stats for 'system wide':
->
->           54994604      armv8_pmuv3_0/cpu_cycles/
->
->        0.176079800 seconds time elapsed
->
-> So:
-> Tested-by: Yicong Yang <yangyicong@hisilicon.com>
->
-> But still wondering why isn't it better to move this into pmu_cpumask() a=
-s does in
-> the previous patch? Yes currently this is a arm specific issue, but we ca=
-nnot handle
-> the case if later PMU doesn't update the cpus/cpumask either :)
 
-Thanks Yicong. To the greatest extent possible I'm trying to avoid
-unnecessary code during event parsing. On x86 there isn't a PMU that
-has the buggy behavior of showing offline CPUs in the cpumask, so
-computing the online CPUs and doing the intersection there is pure
-overhead. The online CPUs calculation is either going to read a file
-or probe via sysconf. The fallback sysconf probing may fail and can't
-handle arbitrary holes in the CPU map (like in your example). So I'm
-concerned about the overhead of doing this in pmu_cpumask and the
-ability for it to break non-ARM platforms. I think the right
-conservative thing to do is to just have the buggy cpumask fix for ARM
-and work toward fixing the PMU drivers so potentially in the future we
-can remove the fix there. Something I'd like to see is greater PMU
-driver testing and detecting bugs, like:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/pmu.c?h=3Dperf-tools-next#n285
 
-Thanks,
-Ian
+> On 10 Jun 2024, at 7:52=E2=80=AFPM, Disha Goel <disgoel@linux.ibm.com> =
+wrote:
+>=20
+> On 07/06/24 10:13 am, Athira Rajeev wrote:
+>=20
+>> Perf bench futex fails as below when attempted to run on
+>> on a powerpc system:
+>>=20
+>>  ./perf bench futex all
+>>  Running futex/hash benchmark...
+>> Run summary [PID 626307]: 80 threads, each operating on 1024 =
+[private] futexes for 10 secs.
+>>=20
+>> perf: pthread_create: No such file or directory
+>>=20
+>> In the setup where this perf bench was ran, difference was that
+>> partition had 640 CPU's, but not all CPUs were online. 80 CPUs
+>> were online. While blocking the threads with futex_wait, code
+>> sets the affinity using cpumask. The cpumask size used is 80
+>> which is picked from "nrcpus =3D perf_cpu_map__nr(cpu)". Here the
+>> benchmark reports fail while setting affinity for cpu number which
+>> is greater than 80 or higher, because it attempts to set a bit
+>> position which is not allocated on the cpumask. Fix this by changing
+>> the size of cpumask to number of possible cpus and not the number
+>> of online cpus.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>=20
+> Thanks for the fix patches, Athira.
+> I have tested all three patches on a power machine (both small and max =
+config),
+> and the perf bench futex and epoll tests run fine.
+>=20
+> For the series:
+> Tested-by: Disha Goel <disgoel@linux.ibm.com>
 
-> > ---
-> >  tools/perf/arch/arm/util/pmu.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/=
-pmu.c
-> > index 8b7cb68ba1a8..6b544edbd3f6 100644
-> > --- a/tools/perf/arch/arm/util/pmu.c
-> > +++ b/tools/perf/arch/arm/util/pmu.c
-> > @@ -11,12 +11,15 @@
-> >
-> >  #include "arm-spe.h"
-> >  #include "hisi-ptt.h"
-> > +#include "../../../util/cpumap.h"
-> >  #include "../../../util/pmu.h"
-> >  #include "../../../util/cs-etm.h"
-> >  #include "../../arm64/util/mem-events.h"
-> >
-> > -void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
-> > +void perf_pmu__arch_init(struct perf_pmu *pmu)
-> >  {
-> > +     struct perf_cpu_map *intersect;
-> > +
-> >  #ifdef HAVE_AUXTRACE_SUPPORT
-> >       if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
-> >               /* add ETM default config here */
-> > @@ -33,6 +36,9 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe=
-_unused)
-> >               pmu->selectable =3D true;
-> >  #endif
-> >       }
-> > -
-> >  #endif
-> > +     /* Workaround some ARM PMU's failing to correctly set CPU maps fo=
-r online processors. */
-> > +     intersect =3D perf_cpu_map__intersect(cpu_map__online(), pmu->cpu=
-s);
-> > +     perf_cpu_map__put(pmu->cpus);
-> > +     pmu->cpus =3D intersect;
-> >  }
-> >
+Thanks Disha for testing the patchset.=20
+
+Athira
+>=20
+>> ---
+>>  tools/perf/bench/futex-hash.c          | 2 +-
+>>  tools/perf/bench/futex-lock-pi.c       | 2 +-
+>>  tools/perf/bench/futex-requeue.c       | 2 +-
+>>  tools/perf/bench/futex-wake-parallel.c | 2 +-
+>>  tools/perf/bench/futex-wake.c          | 2 +-
+>>  5 files changed, 5 insertions(+), 5 deletions(-)
+>>=20
+>> diff --git a/tools/perf/bench/futex-hash.c =
+b/tools/perf/bench/futex-hash.c
+>> index 0c69d20efa32..b472eded521b 100644
+>> --- a/tools/perf/bench/futex-hash.c
+>> +++ b/tools/perf/bench/futex-hash.c
+>> @@ -174,7 +174,7 @@ int bench_futex_hash(int argc, const char **argv)
+>>   pthread_attr_init(&thread_attr);
+>>   gettimeofday(&bench__start, NULL);
+>>  - nrcpus =3D perf_cpu_map__nr(cpu);
+>> + nrcpus =3D cpu__max_cpu().cpu;
+>>   cpuset =3D CPU_ALLOC(nrcpus);
+>>   BUG_ON(!cpuset);
+>>   size =3D CPU_ALLOC_SIZE(nrcpus);
+>> diff --git a/tools/perf/bench/futex-lock-pi.c =
+b/tools/perf/bench/futex-lock-pi.c
+>> index 7a4973346180..0416120c091b 100644
+>> --- a/tools/perf/bench/futex-lock-pi.c
+>> +++ b/tools/perf/bench/futex-lock-pi.c
+>> @@ -122,7 +122,7 @@ static void create_threads(struct worker *w, =
+struct perf_cpu_map *cpu)
+>>  {
+>>   cpu_set_t *cpuset;
+>>   unsigned int i;
+>> - int nrcpus =3D  perf_cpu_map__nr(cpu);
+>> + int nrcpus =3D  cpu__max_cpu().cpu;
+>>   size_t size;
+>>     threads_starting =3D params.nthreads;
+>> diff --git a/tools/perf/bench/futex-requeue.c =
+b/tools/perf/bench/futex-requeue.c
+>> index d9ad736c1a3e..aad5bfc4fe18 100644
+>> --- a/tools/perf/bench/futex-requeue.c
+>> +++ b/tools/perf/bench/futex-requeue.c
+>> @@ -125,7 +125,7 @@ static void block_threads(pthread_t *w, struct =
+perf_cpu_map *cpu)
+>>  {
+>>   cpu_set_t *cpuset;
+>>   unsigned int i;
+>> - int nrcpus =3D perf_cpu_map__nr(cpu);
+>> + int nrcpus =3D cpu__max_cpu().cpu;
+>>   size_t size;
+>>     threads_starting =3D params.nthreads;
+>> diff --git a/tools/perf/bench/futex-wake-parallel.c =
+b/tools/perf/bench/futex-wake-parallel.c
+>> index b66df553e561..90a5b91bf139 100644
+>> --- a/tools/perf/bench/futex-wake-parallel.c
+>> +++ b/tools/perf/bench/futex-wake-parallel.c
+>> @@ -149,7 +149,7 @@ static void block_threads(pthread_t *w, struct =
+perf_cpu_map *cpu)
+>>  {
+>>   cpu_set_t *cpuset;
+>>   unsigned int i;
+>> - int nrcpus =3D perf_cpu_map__nr(cpu);
+>> + int nrcpus =3D cpu__max_cpu().cpu;
+>>   size_t size;
+>>     threads_starting =3D params.nthreads;
+>> diff --git a/tools/perf/bench/futex-wake.c =
+b/tools/perf/bench/futex-wake.c
+>> index 690fd6d3da13..49b3c89b0b35 100644
+>> --- a/tools/perf/bench/futex-wake.c
+>> +++ b/tools/perf/bench/futex-wake.c
+>> @@ -100,7 +100,7 @@ static void block_threads(pthread_t *w, struct =
+perf_cpu_map *cpu)
+>>   cpu_set_t *cpuset;
+>>   unsigned int i;
+>>   size_t size;
+>> - int nrcpus =3D perf_cpu_map__nr(cpu);
+>> + int nrcpus =3D cpu__max_cpu().cpu;
+>>   threads_starting =3D params.nthreads;
+>>     cpuset =3D CPU_ALLOC(nrcpus);
+
+
