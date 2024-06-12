@@ -1,141 +1,244 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3276B84FCC
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 21:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86BE31A67;
+	Wed, 12 Jun 2024 21:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718228817; cv=none; b=PbyQkNEl6lNFgUXmtQIpB0swMAqxEKCzmkRRgjVxmpmv8TDKWupVv32KNT9LHuCu6gZ4sLTwp7k9bsK/tJz32PLvEUvrS9YvobTPtYP1z2fmydFKJE+fSEs7Q/fSmv5RKG0HKzF2Mt0PlxmgnopRzzpQE/USdpMMEyRvWyKdY/g=
+	t=1718228964; cv=none; b=dSqzj61dEjiPW7QTde3HUWaItkXSJMwU80CiPm5wWbnPJzKy1e0rSa+dfZ1SYyypiDaXgTpJI5HoXeTf8KAdg4QAMEWVLKk8eoQ4STQd1sLcZzRBKjLsMtZmImv8xu7v8qdnzlaUCOVHyptOjbnsGlOQXYSgEc2kNOR5hD13hGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718228817; c=relaxed/simple;
-	bh=+InWqwc59WaX46vE5AxcsSfl1jFryAeQ5J5u3z8pMrY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YqRfA8GZzllZuDE6AtF9UMcIuZiMXUXK3eVFrPZFLhQ5LTVJ56TlZiremVRVY4giYRNBLiGX7zpYCRYteQMw6LBP9WHQRa76d5oLhATQZIvE8ZNI7akdpKscGTisGk27oNwSy/DBlG/+xla4BDlP/2TqF1kA+NFHQxRhOANoAPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvGJgy3f; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718228964; c=relaxed/simple;
+	bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N54Hxqoe49bJHz8b92wgbkrEHeDvP+n8cEPhUnQHq9ZbO+1h0l5di4RXMzfYFuDYIwwKYOPg1DV+lBOvQe718/1vW3ezycVgYJNNteuagA2SvmSY7ozpUrzQwM0KaDL72LYX1qc9mVY8HGLA1iHP+qYi14uMzqGumedbisP9Mkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGAmVynx; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvGJgy3f"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-44056f72257so106451cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Jun 2024 14:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718228815; x=1718833615; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XGFO/gWpjWxRc6zdNFKUtA+WWgn2yoVFVUtmjvc0LMM=;
-        b=tvGJgy3fw1wjv83IS6iWRyxq+V76Z471ZFGQD1m/yrydchGf+5EG5EDf9yGr4ivrw/
-         vg1szCuPNLu+woaO2eW+tjX6MQn8106h9wFyORHWJN/+7lh4nNojjrjbC0x9/loSPOs/
-         eQFETMITZHkmJ3gnSLTIms7qMHB8Ky5SRn7yWgfp4gEclZnyoIAq6lTiV5pHFjyVktXU
-         xJ7YQSVR8wdT2+E65LKV7mcK012En0KgwZkuAMp+j3H8ISIkMH2Rb09jFMcZx4vlDdKx
-         bjl/sBtS2EY2WRiwM9V4KP602Yw1hcnJO5YmjaN5hjpwYRlzkMT1Z64EGxfG6GKnDgLz
-         zHPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718228815; x=1718833615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XGFO/gWpjWxRc6zdNFKUtA+WWgn2yoVFVUtmjvc0LMM=;
-        b=vosov1UXtyqjLQBiTr9YRSQTIiRkb80Oc99w+w3ARJJW2XiwW3t5csAqhEBSkuq2qD
-         zvlNQLW29LGuOzKNAj0IDKQlSvIsKjjb7A53y6/wyEe5WSUfQDp107wY/dg9kcT/wfJg
-         7/31i740MY5Pf/hMRNR4vFEgnCElnXqpiHWnYcquniaknhoif+LOr4280ISqdyP3U3cz
-         c+jtaCHr7BBqFjHmCRbafwfA0dM80AkncBQwTLy2HHYDWa6MRdLTx56PYKXVLr60b+Xd
-         jGdeCaMO9Mwr2RMuf0iWI3AuDNMp5SvqdT/Lx+E69/2Hn0M/xE9ZMm2xpRqJiGbUE0N5
-         xCnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa6ky31Z/ClIY8u2gYl620LbzVnV3r2wVIlMBLj7lP3x1pA7NIWHk0bd2emfpY3V0PXHIuw9akaJLWWHL5u+mD/Eb5pnsH6xjz9lkjngfzfg==
-X-Gm-Message-State: AOJu0Yxa8v6H3snjdmBqOFpQuuQ+ib8LK0j0booeUMkunpQ5C1kWjgVc
-	w0OCsAXhqY3tTbaR/Uh93GVQHxf6UaI2fEoR4SPFulj2zYnr5XWLlgkChhYo/hMzpp9HfoewRQ2
-	QypvY+qbBl/KsAITx+NS1XLmM8MEOWyqwixLw
-X-Google-Smtp-Source: AGHT+IF7kA7jzJbe/avrLLkOmazBUAeVUG1MPaJsw0sfB3QphtF3xLPAgEAF+B2A3ZPJawxP8BglPYnijgmcaHbwINE=
-X-Received: by 2002:a05:622a:1b17:b0:43e:cb4:1d10 with SMTP id
- d75a77b69052e-441a1272b40mr740741cf.14.1718228814988; Wed, 12 Jun 2024
- 14:46:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGAmVynx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718228963; x=1749764963;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jt6vDOr2cS4RfuRvhJ7VhhFB890iPHTlYUOYQcsW/CQ=;
+  b=bGAmVynxv63nhKUFeefO0sbDwoOu6FN899ZEgBMx/3O4blfWvsW/dCWf
+   uknWlL0fOwIhhzSy8h8rxY+JpqowOxny13yoSOqXhZv4sE2bv4VbDEEEb
+   5WE6prCJy+wByoL3YS8M99fiQmlS/wCYm4zuVuAZ+hYIU+23MAiJI5SRn
+   4xZrmTVW2pBbllmWSaeMrMfxM54CbXd80g8MN2lc3ec5QUFKyj27lwNE2
+   /4iF5JSzeufoezrSgC7KWlO+hFWjNmaRnAsv4LBXglUO7rP3ytnSrGBDu
+   TW+CJVabCVPzuDDm9aO05eyRluEAKAPrNxqH62TMPkDUlHTJM6F59xM41
+   Q==;
+X-CSE-ConnectionGUID: AMydol0ORUeyUqMNLfy/3w==
+X-CSE-MsgGUID: OVjCr/hhTGKb26esavOq9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="37538063"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="37538063"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
+X-CSE-ConnectionGUID: dCcAC2uKQDK2uEhxGOO+SA==
+X-CSE-MsgGUID: r/u0rVcsT7GNOnZdviVPeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="39813691"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 14:49:22 -0700
+Date: Wed, 12 Jun 2024 14:54:24 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 4/6] x86/irq: Process nmi sources in NMI handler
+Message-ID: <20240612145424.61890aa3@jacob-builder>
+In-Reply-To: <b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+	<20240611165457.156364-5-jacob.jun.pan@linux.intel.com>
+	<b2a230b0-3f00-49b3-87fb-63622f697395@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525013021.436430-2-irogers@google.com> <202405311548.1e881dea-oliver.sang@intel.com>
- <CAP-5=fX7ZyT82=W8uSZbT7c76E5+1JaoR5-y_gcj7A_=Js1YfA@mail.gmail.com>
- <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020> <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
-In-Reply-To: <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Jun 2024 14:46:43 -0700
-Message-ID: <CAP-5=fV5Qdu5iH_DKeAXQfEmQN9SmxCViSgbOCvAmN529WoeOw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Weilin Wang <weilin.wang@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, John Garry <john.g.garry@oracle.com>, 
-	Sandipan Das <sandipan.das@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 3, 2024 at 8:46=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Mon, Jun 3, 2024 at 7:19=E2=80=AFAM Oliver Sang <oliver.sang@intel.com=
-> wrote:
-[...]
-> > I tried below patch
-> >
-> > commit a79a41133a41adc2d69c8f603c7d880b3796cbf7
-> > Author: 0day robot <lkp@intel.com>
-> > Date:   Mon Jun 3 16:35:45 2024 +0800
-> >
-> >     fix from Ian Rogers: invoke "diff -w -u" instead of "diff -u"
-> >
-> > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> > index c3fa43c497069..54d19b492db5c 100644
-> > --- a/tools/perf/pmu-events/Build
-> > +++ b/tools/perf/pmu-events/Build
-> > @@ -39,7 +39,7 @@ $(TEST_EMPTY_PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JE=
-VENTS_PY) $(METRIC_PY) $(ME
-> >
-> >  $(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_E=
-VENTS_C)
-> >         $(call rule_mkdir)
-> > -       $(Q)$(call echo-cmd,test)diff -u $? 2> $@ || (cat $@ && false)
-> > +       $(Q)$(call echo-cmd,test)diff -w -u $? 2> $@ || (cat $@ && fals=
-e)
-> >
-> >  $(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(MET=
-RIC_TEST_LOG) $(EMPTY_PMU_EVENTS_TEST_LOG)
-> >         $(call rule_mkdir)
-> >
-> >
-> > but make still failed. I still saw below in our build log
-> >
-> > --- pmu-events/empty-pmu-events.c       2024-06-03 08:41:16.000000000 +=
-0000
-> > +++ pmu-events/test-empty-pmu-events.c  2024-06-03 13:47:19.522463482 +=
-0000
-> > @@ -136,7 +136,7 @@
-> >  { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
-> >  { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_m=
-iss_cycles\000\000\000\000\000\000\000\00000 */
-> >  { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retire=
-d.any\000\000\000\000\000\000\000\00000 */
-> > -{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_ret=
-iredany\000\000\000\000\000\000\000\00000 */
-> > +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_ret=
-ired.any\000\000\000\000\000\000\000\00000 */
-> >
-> >  };
-> >
-> >
-> > I will try to get generated test-empty-pmu-events.c tomorrow.
->
-> Thanks Oliver, if you could get the environment variables that would
-> probably also be useful.
+Hi H.,
 
-Hi Oliver, any update on this?
+On Tue, 11 Jun 2024 11:41:07 -0700, "H. Peter Anvin" <hpa@zytor.com> wrote:
+
+> On 6/11/24 09:54, Jacob Pan wrote:
+> > +
+> > +	source_bitmask = fred_event_data(regs);
+> > +	if (!source_bitmask) {
+> > +		pr_warn_ratelimited("NMI without source information!
+> > Disable source reporting.\n");
+> > +		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
+> > +		return 0;
+> > +	}  
+> 
+> Is setup_clear_cpu_cap() even meaningful here?
+Right, alternative patching doesn't work here. Let me use a separate flag.
+
+> 
+> > +
+> > +	/*
+> > +	 * Per NMI source specification, there is no guarantee that a
+> > valid
+> > +	 * NMI vector is always delivered, even when the source
+> > specified
+> > +	 * one. It is software's responsibility to check all available
+> > NMI
+> > +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we
+> > have
+> > +	 * to call every handler as if we have no NMI source.
+> > +	 * On the other hand, if we do get non-zero vectors, we know
+> > exactly
+> > +	 * what the sources are. So we only call the handlers with the
+> > bit set.
+> > +	 */
+> > +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
+> > +		pr_warn_ratelimited("NMI received with unknown
+> > source\n");
+> > +		return 0;
+> > +	}
+> > +  
+> 
+> You can still dispatch the known NMI handlers early before doing the 
+> polling.
+
+True, my thinking was based on two conditions:
+1. unknown NMI source is a rare/unlikely case
+2. when unknown source does get set, it is due to deep CPU idle where
+performance optimization is not productive.
+
+So I think any optimization to the unlikely case should not add cost to the
+common case. Tracking early/direct dispatched handler adds cost to the
+common case. Below is my attempt, there must be a better way.
+
+static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *handled_mask)
+{
+	static bool nmi_source_disabled = false;
+	bool has_unknown_src = false;
+	unsigned long source_bitmask;
+	struct nmiaction *a;
+	int handled = 0;
+	int vec = 1;
+
+	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
+	    type != NMI_LOCAL || nmi_source_disabled)
+		return 0;
+
+	source_bitmask = fred_event_data(regs);
+	if (!source_bitmask) {
+		pr_warn("NMI received without source information! Disable source reporting.\n");
+		nmi_source_disabled = true;
+		return 0;
+	}
+
+	/*
+	 * Per NMI source specification, there is no guarantee that a valid
+	 * NMI vector is always delivered, even when the source specified
+	 * one. It is software's responsibility to check all available NMI
+	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
+	 * to call every handler as if we have no NMI source.
+	 * On the other hand, if we do get non-zero vectors, we know exactly
+	 * what the sources are. So we only call the handlers with the bit set.
+	 */
+	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
+		pr_warn_ratelimited("NMI received with unknown source\n");
+		has_unknown_src = true;
+	}
+
+	rcu_read_lock();
+	/* Bit 0 is for unknown NMI sources, skip it. */
+	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
+		a = rcu_dereference(nmiaction_src_table[vec]);
+		if (!a) {
+			pr_warn_ratelimited("NMI received %d no handler", vec);
+			continue;
+		}
+		handled += do_handle_nmi(a, regs, type);
+		/*
+		 * Needs polling if unknown source bit is set, handled_mask is
+		 * used to tell the polling code which NMIs can be skipped.
+		 */
+		if (has_unknown_src)
+			*handled_mask |= BIT(vec);
+	}
+	rcu_read_unlock();
+
+	return handled;
+}
+
+static int nmi_handle(unsigned int type, struct pt_regs *regs)
+{
+	struct nmi_desc *desc = nmi_to_desc(type);
+	unsigned long handled_mask = 0;
+	struct nmiaction *a;
+	int handled=0;
+
+	/*
+	 * Check if the NMI source handling is complete, otherwise polling is
+	 * still required. handled_mask is non-zero if NMI source handling is
+	 * partial due to unknown NMI sources.
+	 */
+	handled = nmi_handle_src(type, regs, &handled_mask);
+	if (handled && !handled_mask)
+		return handled;
+
+	rcu_read_lock();
+	/*
+	 * NMIs are edge-triggered, which means if you have enough
+	 * of them concurrently, you can lose some because only one
+	 * can be latched at any given time.  Walk the whole list
+	 * to handle those situations.
+	 */
+	list_for_each_entry_rcu(a, &desc->head, list) {
+		/* Skip NMIs handled earlier with source info */
+		if (BIT(a->source_vec) & handled_mask)
+			continue;
+		handled += do_handle_nmi(a, regs, type);
+	}
+	rcu_read_unlock();
+
+	/* return total number of NMI events handled */
+	return handled;
+}
+NOKPROBE_SYMBOL(nmi_handle);
+
+
+> > +	rcu_read_lock();
+> > +	/* Bit 0 is for unknown NMI sources, skip it. */
+> > +	for_each_set_bit_from(vec, &source_bitmask,
+> > NR_NMI_SOURCE_VECTORS) {
+> > +		a = rcu_dereference(nmiaction_src_table[vec]);
+> > +		if (!a) {
+> > +			pr_warn_ratelimited("NMI received %d no
+> > handler", vec);
+> > +			continue;
+> > +		}
+> > +		handled += do_handle_nmi(a, regs, type);
+> > +	}
+> > +	rcu_read_unlock();
+> > +	return handled;
+> > +}
+> > +  
+> 
+> That would mean that you would also need to return a bitmask of which 
+> source vectors need to be handled with polling.
+
+Should it be the bitmask to be skipped by polling? see handled_mask in
+the code above.
+
+
 
 Thanks,
-Ian
+
+Jacob
