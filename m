@@ -1,229 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564171369BC;
-	Thu, 13 Jun 2024 06:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78101137762;
+	Thu, 13 Jun 2024 06:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718259527; cv=none; b=LkmJacvdtagHT35UVYqhrSiMP2YEhlOi2yIJVhdBmQlOcDNS9zKz2G5PUiYwafGb3o0zRwxMyxg5VzrtXEi5bax6TXKkY5N95ioMun5/c2HnfNoePo7/6nO1L7GxJ9fGHm2C+2HrSOIZppJyMKw7jtRSOs6UiHGeDsWKMgZckD0=
+	t=1718260531; cv=none; b=FgCeaLWISAU/cbDWHtnREZK14yyeGKNdVaIczSuzlNMJt+TlTrNblkX7bU5dcxAnQBsE0+Mbq3u+1432FItFO+3rLic+jm/kNe+N+N74mz8Spek+u1PkNnGwQvF9S/hD1O39V8y99DTJUh6hr+MzADEvDI76u0VrKJS8z9d3b/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718259527; c=relaxed/simple;
-	bh=DNuObmMKqQS9aqRAMHeasOjybYOXIns+22jOwxxituo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eXkSZxfM2haLGPna1Eu42NuIyQVmkIDic+rYyNWZBC26DuAxTVNZur/K2FhwiqufXs3FP4rAh6x62SqOF992czbgxEjNvhlGJBYD4bpf8gYg5+vSM8wUj9L0jFZDitCHj/200RGLt4oICX3j8ob40fq1UhD6uBZpoIxzYf0Gjd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CFE51063;
-	Wed, 12 Jun 2024 23:19:10 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.44.128])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 750643F5A1;
-	Wed, 12 Jun 2024 23:18:38 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	German Gomez <german.gomez@arm.com>
-Subject: [PATCH V18 9/9] perf: test: Extend branch stack sampling test for Arm64 BRBE
-Date: Thu, 13 Jun 2024 11:47:31 +0530
-Message-Id: <20240613061731.3109448-10-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240613061731.3109448-1-anshuman.khandual@arm.com>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1718260531; c=relaxed/simple;
+	bh=OWo4rrebCjJM7qWQjGzNFquIUysjDOnaqUlR2C+r7Xg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=meoMaAnPSjwmpLxnZASdtYrcrO7G3VLwOeSvmdxTUkfNWc8gA7THQBmUXXW1h5WppWTxaJb3TO8+lWMCCVyNA2SiuXWiPfPVTBpw6Pj2SdLFFe2BzV+gHmxAqJ2x5hZXrel2SxtyeXEDXc9/OxaWb0bFFpYTL5FKOTZJP7x98AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W0CHg4SmyzPpN3;
+	Thu, 13 Jun 2024 14:31:59 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id 93662140382;
+	Thu, 13 Jun 2024 14:35:25 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 13 Jun 2024 14:35:24 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH 0/2] perf: support specify vdso path in cmdline
+Date: Thu, 13 Jun 2024 14:35:08 +0800
+Message-ID: <20240613063510.348692-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-From: James Clark <james.clark@arm.com>
+The vdso dumped from process memory (in buildid-cache) lacks debugging
+info. To annotate vdso symbols with source lines we need specify a
+debugging version.
 
-Add Arm64 BRBE-specific testing to the existing branch stack sampling test.
-The test currently passes on the Arm FVP RevC model, but no hardware has
-been tested yet.
+For x86, we can find them from your local build as
+arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may resides in
+/lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that the
+builid has to match.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Co-developed-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- tools/perf/tests/builtin-test.c        |  1 +
- tools/perf/tests/shell/test_brstack.sh | 42 ++++++++++++++++++++++++--
- tools/perf/tests/tests.h               |  1 +
- tools/perf/tests/workloads/Build       |  2 ++
- tools/perf/tests/workloads/traploop.c  | 39 ++++++++++++++++++++++++
- 5 files changed, 82 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/tests/workloads/traploop.c
+$ sudo perf record -a
+$ sudo perf report --objdump=llvm-objdump \
+      --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c3d84b67ca8e..471adbf5fa26 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -152,6 +152,7 @@ static struct test_workload *workloads[] = {
- 	&workload__sqrtloop,
- 	&workload__brstack,
- 	&workload__datasym,
-+	&workload__traploop
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 928790f35747..6a4069c930e8 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -53,12 +53,43 @@ test_user_branches() {
- 	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
- 	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
-+
-+	if is_arm64; then
-+		# in arm64 with BRBE, we get IRQ entries that correspond
-+		# to any point in the process
-+		grep -m1 "/IRQ/"					$TMPDIR/perf.script
-+	fi
- 	set +x
- 
- 	# some branch types are still not being tested:
- 	# IND COND_CALL COND_RET SYSCALL SYSRET IRQ SERROR NO_TX
- }
- 
-+test_arm64_trap_eret_branches() {
-+	echo "Testing trap & eret branches (arm64 brbe)"
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- \
-+		perf test -w traploop 250
-+	perf script -i $TMPDIR/perf.data --fields brstacksym | tr ' ' '\n' > $TMPDIR/perf.script
-+	set -x
-+	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_SYSCALL by the BRBE driver
-+	grep -E -m1 "^trap_bench\+[^ ]*/\[unknown\][^ ]*/SYSCALL/" $TMPDIR/perf.script
-+	grep -E -m1 "^\[unknown\][^ ]*/trap_bench\+[^ ]*/ERET/"	$TMPDIR/perf.script
-+	set +x
-+}
-+
-+test_arm64_kernel_branches() {
-+	echo "Testing kernel branches (arm64 brbe)"
-+	# skip if perf doesn't have enough privileges
-+	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
-+		echo "[skipped: not enough privileges]"
-+		return 0
-+	fi
-+	perf record -o $TMPDIR/perf.data --branch-filter any,k -- uname -a
-+	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' > $TMPDIR/perf.script
-+	grep -E -m1 "0xffff[0-9a-f]{12}" $TMPDIR/perf.script
-+	! egrep -E -m1 "0x0000[0-9a-f]{12}" $TMPDIR/perf.script
-+}
-+
- # first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
- # second argument are the expected branch types for the given filter
- test_filter() {
-@@ -81,11 +112,16 @@ set -e
- 
- test_user_branches
- 
--test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ"
-+if is_arm64; then
-+	test_arm64_trap_eret_branches
-+	test_arm64_kernel_branches
-+fi
-+
-+test_filter "any_call"	"CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|FAULT_DATA|FAULT_INST"
- test_filter "call"	"CALL|SYSCALL"
- test_filter "cond"	"COND"
- test_filter "any_ret"	"RET|COND_RET|SYSRET|ERET"
- 
- test_filter "call,cond"		"CALL|SYSCALL|COND"
--test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND"
--test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET"
-+test_filter "any_call,cond"		"CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND|FAULT_DATA|FAULT_INST"
-+test_filter "cond,any_call,any_ret"	"COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET|FAULT_DATA|FAULT_INST"
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 3aa7701ee0e9..e4c677adccb6 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
-+DECLARE_WORKLOAD(traploop);
- 
- extern const char *dso_to_test;
- extern const char *test_objdump_path;
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index a1f34d5861e3..a9dc93d8468b 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -6,8 +6,10 @@ perf-y += leafloop.o
- perf-y += sqrtloop.o
- perf-y += brstack.o
- perf-y += datasym.o
-+perf-y += traploop.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
- CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/traploop.c b/tools/perf/tests/workloads/traploop.c
-new file mode 100644
-index 000000000000..7dac94897e49
---- /dev/null
-+++ b/tools/perf/tests/workloads/traploop.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include "../tests.h"
-+
-+#define BENCH_RUNS 999999
-+
-+static volatile int cnt;
-+
-+#ifdef __aarch64__
-+static void trap_bench(void)
-+{
-+	unsigned long val;
-+
-+	asm("mrs %0, ID_AA64ISAR0_EL1" : "=r" (val));   /* TRAP + ERET */
-+}
-+#else
-+static void trap_bench(void)
-+{
-+
-+}
-+#endif
-+
-+static int traploop(int argc, const char **argv)
-+{
-+	int num_loops = BENCH_RUNS;
-+
-+	if (argc > 0)
-+		num_loops = atoi(argv[0]);
-+
-+	while (1) {
-+		if ((cnt++) > num_loops)
-+			break;
-+
-+		trap_bench();
-+	}
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(traploop);
+Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+__vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+Percent│       movq    -48(%rbp),%rsi                                ▒
+       │       testq   %rax,%rax                                     ▒
+       │     ;               return vread_hvclock();                 ▒
+       │       movq    %rax,%rdx                                     ▒
+       │     ;               if (unlikely(!vdso_cycles_ok(cycles)))  ▒
+       │     ↑ js      eb                                            ▒
+       │     ↑ jmp     74                                            ▒
+       │     ;               ts->tv_sec = vdso_ts->sec;              ▒
+  0.02 │147:   leaq    2(%rbx),%rax                                  ▒
+       │       shlq    $4, %rax                                      ▒
+       │       addq    %r10,%rax                                     ▒
+       │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {▒
+  9.38 │152:   movl    (%r10),%ecx                                   ▒
+
+
+When doing cross platform analysis, we also need specify the vdso path if
+we are interested in its symbols.
+
+Changbin Du (2):
+  perf: support specify vdso path in cmdline
+  perf: disasm: prefer symsrc_filename for filename
+
+ tools/perf/builtin-annotate.c |  2 +
+ tools/perf/builtin-c2c.c      |  2 +
+ tools/perf/builtin-inject.c   |  2 +
+ tools/perf/builtin-report.c   |  2 +
+ tools/perf/builtin-script.c   |  2 +
+ tools/perf/builtin-top.c      |  2 +
+ tools/perf/util/disasm.c      |  5 +++
+ tools/perf/util/symbol.c      | 82 ++++++++++++++++++++++++++++++++++-
+ tools/perf/util/symbol_conf.h |  5 +++
+ 9 files changed, 102 insertions(+), 2 deletions(-)
+
 -- 
-2.25.1
+2.34.1
 
