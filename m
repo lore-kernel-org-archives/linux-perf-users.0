@@ -1,326 +1,544 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984D813D893;
-	Thu, 13 Jun 2024 08:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DC713698F;
+	Thu, 13 Jun 2024 09:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718267026; cv=none; b=alSq0V89VI6DMNPO991Q9WR4Xm5nmW4niOSftljxET3YX99022KJPg2AA540OpCqjqhjSWd9DIp1F0xDaVpnF5JgdHBV95awVJqjdrsB3A31wIAII/aApXQRFZ9/QiGU2veE7aZdDimXNoOHLHowS0sHiHsrRL1Hk8dSmk888yg=
+	t=1718270125; cv=none; b=jJsr3qpGVB9m1O2DtecnMfCEvZY3tQVxBda+B+0fG/W8iSLbG4fKJUVIdtY+naQBUcm63zbI8Dib44QStbxAcGFqL0xOpzrQO/9xYJLTiBhLeUTAAVJa4Hy53IhgX5YjDk3xOkZma/SYXE+T1w0UXOZt6HSbnZU1e80lCQR432U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718267026; c=relaxed/simple;
-	bh=a7tFv5qKIYEAeCjVvQkAhaHm2De4s+Yd38pdIlWK41E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FYWV3a+8MzCyctFu7cEiGonllOlrxjw79+Y1Pu5pSTUjaqrx6g0PQ9Kob+g1YTpk1AGhb5VaknP0jx2wVqsLEU2pOrbSr2ESizASOa8xJ3V7t3vVf1ApPQIxcB4ZBROlG5GOfO2XoZIttg13oAdGK9W9uD6cTdr7Xvsokel1XYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KJsdXneB; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718270125; c=relaxed/simple;
+	bh=TVE8INeugaQe72v3GhOFkLFtRsSvv4AWQfrUOWovAYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JXHooiW3q1UxIKTBcNiIFiquek4Ng7uKAvmZRdpJI3g7avcAFDy0fkVAfJ/q7tF1ApuKibU0hWyA01JzvPrDf50dGtBs2g/vKiVPa9PWxHaDIuIbYv6jA3fsEdyZWuCoGjT/jJJX5wQLsX1XH1zmh3EHb5V1qCG5WeSy717rk3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ICU05R/5; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KJsdXneB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718267025; x=1749803025;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=a7tFv5qKIYEAeCjVvQkAhaHm2De4s+Yd38pdIlWK41E=;
-  b=KJsdXneBE7un9TSb9gn9bUnIJdcXS9p58f2h9R1NBHHFV7UL2ZUjtDTE
-   sU1whOPMjkHXpvXBWP8LLV0nDITcAgLuqdpzzbcmJsFwA0YMb0ROUkpUy
-   ZdTDlbBsW8riazFxCnXEIJQwJg6RZokvqnESRGcDaLSvodVcDlZ1Auze3
-   n+F5VQXK5vQToU/h7kYB8+Ep+lz2OwqgITLz/IcfdEs9wqVN+AsY9Elk/
-   hLNwbs1p7xz3SIEs8TOfkAJtIVkLeYNaESXn70n4P3q+1UTfwYdMJEz8i
-   QoO0kgY4MmXjbrvd8uetGPALDgNZhJW18ZFZpo1oEMFYL9jhkvQoeXraz
-   w==;
-X-CSE-ConnectionGUID: i152s77lS1eeDFpoMKwdzg==
-X-CSE-MsgGUID: y70vgEzqRWeZbZf57fjx2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26474263"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="26474263"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:23:44 -0700
-X-CSE-ConnectionGUID: JChdK87NStSOarCBp9+5QQ==
-X-CSE-MsgGUID: 4zU4oS32SKGbk7IhfcpBPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40183376"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 01:23:31 -0700
-Message-ID: <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
-Date: Thu, 13 Jun 2024 11:23:26 +0300
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ICU05R/5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=F5hhLnuI3k9OXvi6P+MH5atvnRPndfpnU1ipGTMdJhw=; b=ICU05R/55IqCsxUNFUwxUId3xS
+	6UaeGfUC7GQ5e0o0Psnwz11jknKTR8vIboAYxVXMrdq5LELIDdk03pTbsHn6JxRVjcxkpPZaMcRtx
+	RLKPBOD0MdygpTCQCKw7Ie745PsDsE8QwoiA6zxn5o+9Ppuq7aE0ivZipnsUT1iHJX5vhUcFszEr3
+	1l3n3QQ8YuT2Q8L7pPKs4rzFkpu8sDl2tBcb52MojTDh0Meu20BVsimGLiJpmHoACiVx2QlPCiohK
+	BDOjX1AgN9oSyfdOguuo3Kax5U38k65RdshqluFe4JTFKoEuAQOwVHYLZmUoN6Fr35hEgvJN+4Yog
+	kN9xbTVg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHgY0-0000000FbKp-0f5L;
+	Thu, 13 Jun 2024 09:15:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 82E1C300B40; Thu, 13 Jun 2024 11:15:07 +0200 (CEST)
+Date: Thu, 13 Jun 2024 11:15:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
+Message-ID: <20240613091507.GA17707@noisy.programming.kicks-ass.net>
+References: <20240506053020.3911940-1-mizhang@google.com>
+ <20240506053020.3911940-8-mizhang@google.com>
+ <20240507085807.GS40213@noisy.programming.kicks-ass.net>
+ <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
+ <20240611120641.GF8774@noisy.programming.kicks-ass.net>
+ <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+ <20240612111732.GW40213@noisy.programming.kicks-ass.net>
+ <e72c847f-a069-43e4-9e49-37c0bf9f0a8b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf: support specify vdso path in cmdline
-To: Changbin Du <changbin.du@huawei.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20240613063510.348692-1-changbin.du@huawei.com>
- <20240613063510.348692-2-changbin.du@huawei.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240613063510.348692-2-changbin.du@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e72c847f-a069-43e4-9e49-37c0bf9f0a8b@linux.intel.com>
 
-On 13/06/24 09:35, Changbin Du wrote:
-> The vdso dumped from process memory (in buildid-cache) lacks debugging
-> info. To annotate vdso symbols with source lines we need specify a
-> debugging version.
+On Wed, Jun 12, 2024 at 09:38:06AM -0400, Liang, Kan wrote:
+> On 2024-06-12 7:17 a.m., Peter Zijlstra wrote:
+> > On Tue, Jun 11, 2024 at 09:27:46AM -0400, Liang, Kan wrote:
+> >> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> >> index dd4920bf3d1b..68c8b93c4e5c 100644
+> >> --- a/include/linux/perf_event.h
+> >> +++ b/include/linux/perf_event.h
+> >> @@ -945,6 +945,7 @@ struct perf_event_context {
+> >>  	u64				time;
+> >>  	u64				timestamp;
+> >>  	u64				timeoffset;
+> >> +	u64				timeguest;
+> >>
+> >>  	/*
+> >>  	 * These fields let us detect when two contexts have both
+> > 
+> >> @@ -651,10 +653,26 @@ __perf_update_times(struct perf_event *event, u64
+> >> now, u64 *enabled, u64 *runnin
+> >>
+> >>  static void perf_event_update_time(struct perf_event *event)
+> >>  {
+> >> -	u64 now = perf_event_time(event);
+> >> +	u64 now;
+> >> +
+> >> +	/* Never count the time of an active guest into an exclude_guest event. */
+> >> +	if (event->ctx->timeguest &&
+> >> +	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+> >> +		/*
+> >> +		 * If a guest is running, use the timestamp while entering the guest.
+> >> +		 * If the guest is leaving, reset the event timestamp.
+> >> +		 */
+> >> +		if (__this_cpu_read(perf_in_guest))
+> >> +			event->tstamp = event->ctx->timeguest;
+> >> +		else
+> >> +			event->tstamp = event->ctx->time;
+> >> +		return;
+> >> +	}
+> >>
+> >> +	now = perf_event_time(event);
+> >>  	__perf_update_times(event, now, &event->total_time_enabled,
+> >>  					&event->total_time_running);
+> >> +
+> >>  	event->tstamp = now;
+> >>  }
+> > 
+> > So I really don't like this much, 
 > 
-> For x86, we can find them from your local build as
-> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
-> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
-> the buildid has to match.
-> 
-> $ sudo perf record -a
-> $ sudo perf report --objdump=llvm-objdump \
->   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
-> 
-> When doing cross platform analysis, we also need specify the vdso path if
-> we are interested in its symbols.
+> An alternative way I can imagine may maintain a dedicated timeline for
+> the PASSTHROUGH PMUs. For that, we probably need two new timelines for
+> the normal events and the cgroup events. That sounds too complex.
 
-We already have logic to find debug files, and to deal with a symbol source
-(syms_ss) and runtime symbol source (runtime_ss).
+I'm afraid we might have to. Specifically, the below:
 
-Can't we make that work transparently for vdso so that the user does
-not have to.
-
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  tools/perf/builtin-annotate.c |  2 +
->  tools/perf/builtin-c2c.c      |  2 +
->  tools/perf/builtin-inject.c   |  2 +
->  tools/perf/builtin-report.c   |  2 +
->  tools/perf/builtin-script.c   |  2 +
->  tools/perf/builtin-top.c      |  2 +
->  tools/perf/util/symbol.c      | 74 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/symbol_conf.h |  5 +++
->  8 files changed, 91 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 50d2fb222d48..ff466882065d 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -742,6 +742,8 @@ int cmd_annotate(int argc, const char **argv)
->  		   "file", "vmlinux pathname"),
->  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
->  		    "load module symbols - WARNING: use only with -k and LIVE kernel"),
-> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  	OPT_BOOLEAN('l', "print-line", &annotate_opts.print_lines,
->  		    "print matching source lines (may be slow)"),
->  	OPT_BOOLEAN('P', "full-paths", &annotate_opts.full_path,
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index c157bd31f2e5..4764f9139661 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3018,6 +3018,8 @@ static int perf_c2c__report(int argc, const char **argv)
->  	const struct option options[] = {
->  	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
->  		   "file", "vmlinux pathname"),
-> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  	OPT_STRING('i', "input", &input_name, "file",
->  		   "the input file to process"),
->  	OPT_INCR('N', "node-info", &c2c.node_info,
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a212678d47be..e774e83d0a0f 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2247,6 +2247,8 @@ int cmd_inject(int argc, const char **argv)
->  			    "don't load vmlinux even if found"),
->  		OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name, "file",
->  			   "kallsyms pathname"),
-> +		OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  		OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
->  		OPT_CALLBACK_OPTARG(0, "itrace", &inject.itrace_synth_opts,
->  				    NULL, "opts", "Instruction Tracing options\n"
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 69618fb0110b..a64b48460dce 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1324,6 +1324,8 @@ int cmd_report(int argc, const char **argv)
->                      "don't load vmlinux even if found"),
->  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
->  		   "file", "kallsyms pathname"),
-> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
->  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
->  		    "load module symbols - WARNING: use only with -k and LIVE kernel"),
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c16224b1fef3..2e358922a8d1 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -3965,6 +3965,8 @@ int cmd_script(int argc, const char **argv)
->  		   "file", "vmlinux pathname"),
->  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
->  		   "file", "kallsyms pathname"),
-> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
->  		    "When printing symbols do not display call chain"),
->  	OPT_CALLBACK(0, "symfs", NULL, "directory",
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 1d6aef51c122..a3cce4e76eb9 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1479,6 +1479,8 @@ int cmd_top(int argc, const char **argv)
->  		   "file", "kallsyms pathname"),
->  	OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
->  		    "hide kernel symbols"),
-> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
-> +		     parse_vdso_pathnames),
->  	OPT_CALLBACK('m', "mmap-pages", &opts->mmap_pages, "pages",
->  		     "number of mmap data pages", evlist__parse_mmap_pages),
->  	OPT_INTEGER('r', "realtime", &top.realtime_prio,
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9e5940b5bc59..8d040039a7ce 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -19,6 +19,7 @@
->  #include "build-id.h"
->  #include "cap.h"
->  #include "dso.h"
-> +#include "vdso.h"
->  #include "util.h" // lsdir()
->  #include "debug.h"
->  #include "event.h"
-> @@ -44,6 +45,7 @@
->  
->  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
->  static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
-> +static int dso__load_vdso_sym(struct dso *dso, struct map *map);
->  static bool symbol__is_idle(const char *name);
->  
->  int vmlinux_path__nr_entries;
-> @@ -1833,6 +1835,12 @@ int dso__load(struct dso *dso, struct map *map)
->  		goto out;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 019c237dd456..6c46699c6752 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -665,7 +665,7 @@ static void perf_event_update_time(struct perf_event
+> *event)
+>  		if (__this_cpu_read(perf_in_guest))
+>  			event->tstamp = event->ctx->timeguest;
+>  		else
+> -			event->tstamp = event->ctx->time;
+> +			event->tstamp = perf_event_time(event);
+>  		return;
 >  	}
->  
-> +	if (dso__is_vdso(dso)) {
-> +		ret = dso__load_vdso_sym(dso, map);
-> +		if (ret > 0)
-> +			goto out;
-> +	}
-> +
->  	dso__set_adjust_symbols(dso, false);
->  
->  	if (perfmap) {
-> @@ -2349,6 +2357,72 @@ static int vmlinux_path__init(struct perf_env *env)
->  	return -1;
->  }
->  
-> +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
-> +			 const char *arg, int unset __maybe_unused)
-> +{
-> +	char *tmp, *tok, *str = strdup(arg);
-> +	unsigned int i = 0;
-> +
-> +	for (tok = strtok_r(str, ",", &tmp); tok && i < ARRAY_SIZE(symbol_conf.vdso_name);
-> +	     tok = strtok_r(NULL, ",", &tmp)) {
-> +		symbol_conf.vdso_name[i++] = strdup(tok);
-> +	}
-> +
-> +	free(str);
-> +	return 0;
-> +}
-> +
-> +static int dso__load_vdso(struct dso *dso, struct map *map,
-> +			  const char *vdso)
-> +{
-> +	int err = -1;
-> +	struct symsrc ss;
-> +	char symfs_vdso[PATH_MAX];
-> +
-> +	if (vdso[0] == '/')
-> +		snprintf(symfs_vdso, sizeof(symfs_vdso), "%s", vdso);
-> +	else
-> +		symbol__join_symfs(symfs_vdso, vdso);
-> +
-> +	if (symsrc__init(&ss, dso, symfs_vdso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO))
-> +		return -1;
-> +
-> +	/*
-> +	 * dso__load_sym() may copy 'dso' which will result in the copies having
-> +	 * an incorrect long name unless we set it here first.
-> +	 */
-> +	dso__set_long_name(dso, vdso, false);
-> +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> +
-> +	err = dso__load_sym(dso, map, &ss, &ss, 0);
-> +	symsrc__destroy(&ss);
-> +
-> +	if (err > 0) {
-> +		dso__set_loaded(dso);
-> +		pr_debug("Using %s for %s symbols\n", symfs_vdso, dso__short_name(dso));
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static int dso__load_vdso_sym(struct dso *dso, struct map *map)
-> +{
-> +	int ret;
-> +
-> +	if (!dso__is_vdso(dso))
-> +		return -1;
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(symbol_conf.vdso_name); i++) {
-> +		if (symbol_conf.vdso_name[i] != NULL) {
-> +			ret = dso__load_vdso(dso, map, symbol_conf.vdso_name[i]);
-> +			if (ret > 0)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return -1;
-> +}
-> +
->  int setup_list(struct strlist **list, const char *list_str,
->  		      const char *list_name)
->  {
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index c114bbceef40..108356e3c981 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -3,6 +3,7 @@
->  #define __PERF_SYMBOL_CONF 1
->  
->  #include <stdbool.h>
-> +#include <subcmd/parse-options.h>
->  
->  struct strlist;
->  struct intlist;
-> @@ -55,6 +56,7 @@ struct symbol_conf {
->  	const char	*default_guest_vmlinux_name,
->  			*default_guest_kallsyms,
->  			*default_guest_modules;
-> +	const char	*vdso_name[2];
->  	const char	*guestmount;
->  	const char	*dso_list_str,
->  			*comm_list_str,
-> @@ -85,4 +87,7 @@ struct symbol_conf {
->  
->  extern struct symbol_conf symbol_conf;
->  
-> +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
-> +			 const char *arg, int unset __maybe_unused);
-> +
->  #endif // __PERF_SYMBOL_CONF
 
+is still broken in that it (ab)uses event state to track time, and this
+goes sideways in case of event overcommit, because then
+ctx_sched_{out,in}() will not visit all events.
+
+We've ran into that before. Time-keeping really should be per context or
+we'll get a ton of pain.
+
+I've ended up with the (uncompiled) below. Yes, it is unfortunate, but
+aside from a few cleanups (we could introduce a struct time_ctx { u64
+time, stamp, offset }; and fold a bunch of code, this is more or less
+the best we can do I'm afraid.
+
+---
+
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -947,7 +947,9 @@ struct perf_event_context {
+ 	u64				time;
+ 	u64				timestamp;
+ 	u64				timeoffset;
+-	u64				timeguest;
++	u64				guest_time;
++	u64				guest_timestamp;
++	u64				guest_timeoffset;
+ 
+ 	/*
+ 	 * These fields let us detect when two contexts have both
+@@ -1043,6 +1045,9 @@ struct perf_cgroup_info {
+ 	u64				time;
+ 	u64				timestamp;
+ 	u64				timeoffset;
++	u64				guest_time;
++	u64				guest_timestamp;
++	u64				guest_timeoffset;
+ 	int				active;
+ };
+ 
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -638,26 +638,9 @@ __perf_update_times(struct perf_event *e
+ 
+ static void perf_event_update_time(struct perf_event *event)
+ {
+-	u64 now;
+-
+-	/* Never count the time of an active guest into an exclude_guest event. */
+-	if (event->ctx->timeguest &&
+-	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) {
+-		/*
+-		 * If a guest is running, use the timestamp while entering the guest.
+-		 * If the guest is leaving, reset the event timestamp.
+-		 */
+-		if (__this_cpu_read(perf_in_guest))
+-			event->tstamp = event->ctx->timeguest;
+-		else
+-			event->tstamp = event->ctx->time;
+-		return;
+-	}
+-
+-	now = perf_event_time(event);
++	u64 now = perf_event_time(event);
+ 	__perf_update_times(event, now, &event->total_time_enabled,
+ 					&event->total_time_running);
+-
+ 	event->tstamp = now;
+ }
+ 
+@@ -780,19 +763,33 @@ static inline int is_cgroup_event(struct
+ static inline u64 perf_cgroup_event_time(struct perf_event *event)
+ {
+ 	struct perf_cgroup_info *t;
++	u64 time;
+ 
+ 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+-	return t->time;
++	time = t->time;
++	if (event->attr.exclude_guest)
++		time -= t->guest_time;
++	return time;
+ }
+ 
+ static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
+ {
+ 	struct perf_cgroup_info *t;
++	u64 time, guest_time;
+ 
+ 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+-	if (!__load_acquire(&t->active))
+-		return t->time;
+-	now += READ_ONCE(t->timeoffset);
++	if (!__load_acquire(&t->active)) {
++		time = t->time;
++		if (event->attr.exclude_guest)
++			time -= t->guest_time;
++		return time;
++	}
++
++	time = now + READ_ONCE(t->timeoffset);
++	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest)) {
++		guest_time = now + READ_ONCE(t->guest_offset);
++		time -= guest_time;
++	}
+ 	return now;
+ }
+ 
+@@ -807,6 +804,17 @@ static inline void __update_cgrp_time(st
+ 	WRITE_ONCE(info->timeoffset, info->time - info->timestamp);
+ }
+ 
++static inline void __update_cgrp_guest_time(struct perf_cgroup_info *info, u64 now, bool adv)
++{
++	if (adv)
++		info->guest_time += now - info->guest_timestamp;
++	info->guest_timestamp = now;
++	/*
++	 * see update_context_time()
++	 */
++	WRITE_ONCE(info->guest_timeoffset, info->guest_time - info->guest_timestamp);
++}
++
+ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx, bool final)
+ {
+ 	struct perf_cgroup *cgrp = cpuctx->cgrp;
+@@ -821,6 +829,8 @@ static inline void update_cgrp_time_from
+ 			info = this_cpu_ptr(cgrp->info);
+ 
+ 			__update_cgrp_time(info, now, true);
++			if (__this_cpu_read(perf_in_guest))
++				__update_cgrp_guest_time(info, now, true);
+ 			if (final)
+ 				__store_release(&info->active, 0);
+ 		}
+@@ -1501,14 +1511,39 @@ static void __update_context_time(struct
+ 	WRITE_ONCE(ctx->timeoffset, ctx->time - ctx->timestamp);
+ }
+ 
++static void __update_context_guest_time(struct perf_event_context *ctx, bool adv)
++{
++	u64 now = ctx->timestamp; /* must be called after __update_context_time(); */
++
++	lockdep_assert_held(&ctx->lock);
++
++	if (adv)
++		ctx->guest_time += now - ctx->guest_timestamp;
++	ctx->guest_timestamp = now;
++
++	/*
++	 * The above: time' = time + (now - timestamp), can be re-arranged
++	 * into: time` = now + (time - timestamp), which gives a single value
++	 * offset to compute future time without locks on.
++	 *
++	 * See perf_event_time_now(), which can be used from NMI context where
++	 * it's (obviously) not possible to acquire ctx->lock in order to read
++	 * both the above values in a consistent manner.
++	 */
++	WRITE_ONCE(ctx->guest_timeoffset, ctx->guest_time - ctx->guest_timestamp);
++}
++
+ static void update_context_time(struct perf_event_context *ctx)
+ {
+ 	__update_context_time(ctx, true);
++	if (__this_cpu_read(perf_in_guest))
++		__update_context_guest_time(ctx, true);
+ }
+ 
+ static u64 perf_event_time(struct perf_event *event)
+ {
+ 	struct perf_event_context *ctx = event->ctx;
++	u64 time;
+ 
+ 	if (unlikely(!ctx))
+ 		return 0;
+@@ -1516,12 +1551,17 @@ static u64 perf_event_time(struct perf_e
+ 	if (is_cgroup_event(event))
+ 		return perf_cgroup_event_time(event);
+ 
+-	return ctx->time;
++	time = ctx->time;
++	if (event->attr.exclude_guest)
++		time -= ctx->guest_time;
++
++	return time;
+ }
+ 
+ static u64 perf_event_time_now(struct perf_event *event, u64 now)
+ {
+ 	struct perf_event_context *ctx = event->ctx;
++	u64 time, guest_time;
+ 
+ 	if (unlikely(!ctx))
+ 		return 0;
+@@ -1529,11 +1569,19 @@ static u64 perf_event_time_now(struct pe
+ 	if (is_cgroup_event(event))
+ 		return perf_cgroup_event_time_now(event, now);
+ 
+-	if (!(__load_acquire(&ctx->is_active) & EVENT_TIME))
+-		return ctx->time;
++	if (!(__load_acquire(&ctx->is_active) & EVENT_TIME)) {
++		time = ctx->time;
++		if (event->attr.exclude_guest)
++			time -= ctx->guest_time;
++		return time;
++	}
+ 
+-	now += READ_ONCE(ctx->timeoffset);
+-	return now;
++	time = now + READ_ONCE(ctx->timeoffset);
++	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest)) {
++		guest_time = now + READ_ONCE(ctx->guest_timeoffset);
++		time -= guest_time;
++	}
++	return time;
+ }
+ 
+ static enum event_type_t get_event_type(struct perf_event *event)
+@@ -3340,9 +3388,14 @@ ctx_sched_out(struct perf_event_context
+ 	 * would only update time for the pinned events.
+ 	 */
+ 	if (is_active & EVENT_TIME) {
++		bool stop;
++
++		stop = !((ctx->is_active & event_type) & EVENT_ALL) &&
++		       ctx == &cpuctx->ctx;
++			
+ 		/* update (and stop) ctx time */
+ 		update_context_time(ctx);
+-		update_cgrp_time_from_cpuctx(cpuctx, ctx == &cpuctx->ctx);
++		update_cgrp_time_from_cpuctx(cpuctx, stop);
+ 		/*
+ 		 * CPU-release for the below ->is_active store,
+ 		 * see __load_acquire() in perf_event_time_now()
+@@ -3366,8 +3419,12 @@ ctx_sched_out(struct perf_event_context
+ 		 * with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+ 		 */
+ 		is_active = EVENT_ALL;
+-	} else
++		__update_context_guest_time(ctx, false);
++		perf_cgroup_set_guest_timestamp(cpuctx);
++		barrier();
++	} else {
+ 		is_active ^= ctx->is_active; /* changed bits */
++	}
+ 
+ 	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+ 		if (perf_skip_pmu_ctx(pmu_ctx, event_type))
+@@ -3866,10 +3923,15 @@ static inline void group_update_userpage
+ 		event_update_userpage(event);
+ }
+ 
++struct merge_sched_data {
++	int can_add_hw;
++	enum event_type_t event_type;
++};
++
+ static int merge_sched_in(struct perf_event *event, void *data)
+ {
+ 	struct perf_event_context *ctx = event->ctx;
+-	int *can_add_hw = data;
++	struct merge_sched_data *msd = data;
+ 
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+@@ -3881,18 +3943,18 @@ static int merge_sched_in(struct perf_ev
+ 	 * Don't schedule in any exclude_guest events of PMU with
+ 	 * PERF_PMU_CAP_PASSTHROUGH_VPMU, while a guest is running.
+ 	 */
+-	if (__this_cpu_read(perf_in_guest) &&
+-	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU &&
+-	    event->attr.exclude_guest)
++	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest) &&
++	    (event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) &&
++	    !(msd->event_type & EVENT_GUEST))
+ 		return 0;
+ 
+-	if (group_can_go_on(event, *can_add_hw)) {
++	if (group_can_go_on(event, msd->can_add_hw)) {
+ 		if (!group_sched_in(event, ctx))
+ 			list_add_tail(&event->active_list, get_event_list(event));
+ 	}
+ 
+ 	if (event->state == PERF_EVENT_STATE_INACTIVE) {
+-		*can_add_hw = 0;
++		msd->can_add_hw = 0;
+ 		if (event->attr.pinned) {
+ 			perf_cgroup_event_disable(event, ctx);
+ 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+@@ -3911,11 +3973,15 @@ static int merge_sched_in(struct perf_ev
+ 
+ static void pmu_groups_sched_in(struct perf_event_context *ctx,
+ 				struct perf_event_groups *groups,
+-				struct pmu *pmu)
++				struct pmu *pmu,
++				enum even_type_t event_type)
+ {
+-	int can_add_hw = 1;
++	struct merge_sched_data msd = {
++		.can_add_hw = 1,
++		.event_type = event_type,
++	};
+ 	visit_groups_merge(ctx, groups, smp_processor_id(), pmu,
+-			   merge_sched_in, &can_add_hw);
++			   merge_sched_in, &msd);
+ }
+ 
+ static void ctx_groups_sched_in(struct perf_event_context *ctx,
+@@ -3927,14 +3993,14 @@ static void ctx_groups_sched_in(struct p
+ 	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+ 		if (perf_skip_pmu_ctx(pmu_ctx, event_type))
+ 			continue;
+-		pmu_groups_sched_in(ctx, groups, pmu_ctx->pmu);
++		pmu_groups_sched_in(ctx, groups, pmu_ctx->pmu, event_type);
+ 	}
+ }
+ 
+ static void __pmu_ctx_sched_in(struct perf_event_context *ctx,
+ 			       struct pmu *pmu)
+ {
+-	pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
++	pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu, 0);
+ }
+ 
+ static void
+@@ -3949,6 +4015,8 @@ ctx_sched_in(struct perf_event_context *
+ 		return;
+ 
+ 	if (!(is_active & EVENT_TIME)) {
++		/* EVENT_TIME should be active while the guest runs */
++		WARN_ON_ONCE(event_type & EVENT_GUEST);
+ 		/* start ctx time */
+ 		__update_context_time(ctx, false);
+ 		perf_cgroup_set_timestamp(cpuctx);
+@@ -3979,8 +4047,11 @@ ctx_sched_in(struct perf_event_context *
+ 		 * the exclude_guest events.
+ 		 */
+ 		update_context_time(ctx);
+-	} else
++		update_cgrp_time_from_cpuctx(cpuctx, false);
++		barrier();
++	} else {
+ 		is_active ^= ctx->is_active; /* changed bits */
++	}
+ 
+ 	/*
+ 	 * First go through the list and put on any pinned groups
+@@ -5832,25 +5903,20 @@ void perf_guest_enter(void)
+ 
+ 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 
+-	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest))) {
+-		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+-		return;
+-	}
++	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest)))
++		goto unlock;
+ 
+ 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+ 	ctx_sched_out(&cpuctx->ctx, EVENT_GUEST);
+-	/* Set the guest start time */
+-	cpuctx->ctx.timeguest = cpuctx->ctx.time;
+ 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+ 	if (cpuctx->task_ctx) {
+ 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+ 		task_ctx_sched_out(cpuctx->task_ctx, EVENT_GUEST);
+-		cpuctx->task_ctx->timeguest = cpuctx->task_ctx->time;
+ 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+ 	}
+ 
+ 	__this_cpu_write(perf_in_guest, true);
+-
++unlock:
+ 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ }
+ 
+@@ -5862,24 +5928,21 @@ void perf_guest_exit(void)
+ 
+ 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 
+-	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest))) {
+-		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+-		return;
+-	}
+-
+-	__this_cpu_write(perf_in_guest, false);
++	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
++		goto unlock;
+ 
+ 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+ 	ctx_sched_in(&cpuctx->ctx, EVENT_GUEST);
+-	cpuctx->ctx.timeguest = 0;
+ 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+ 	if (cpuctx->task_ctx) {
+ 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+ 		ctx_sched_in(cpuctx->task_ctx, EVENT_GUEST);
+-		cpuctx->task_ctx->timeguest = 0;
+ 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+ 	}
+ 
++	__this_cpu_write(perf_in_guest, false);
++
++unlock:
+ 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ }
+ 
