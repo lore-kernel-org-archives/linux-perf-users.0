@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF4144D0C
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 18:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786EB152503
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 18:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718303559; cv=none; b=MOB7pVM/cA8YZguH1xhMmTVDZq2ieSWtTfypE+gCdVZB8VBrI5RVZhkXITEvKqlEwDQtHJDFAxr6RULja9J6vSsHnonZcz/qXepDzkuAcfTZX1nzMY6AdQ4X3/r7unS5Vb/pfRGmDURN3lzU9lDm/y5GbjZFca84fccsj044nW4=
+	t=1718303564; cv=none; b=hLRfcD0ca2iF7blXOSWljXVk2TvUX5UeN/UfGwgiG2g/jt7ajYEePWEjcLhbY9jqiTA81Oqs7iwvyJpf1TeNnlVUFaKoC059Btsh7b5xU3iBSztCaASbtQG8LE/rcTwCUISuqkAzf1VSv5LaTJvh7jLAbH+cjGAAm/H0zsyhKa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718303559; c=relaxed/simple;
-	bh=rFcy+S2+2TKAedCtBmi8koJqecDAqvQ96WMKLQwJCVE=;
+	s=arc-20240116; t=1718303564; c=relaxed/simple;
+	bh=oK3irJmCSFE7ua5CecZ8HCoDb46JjAuJtZy2yQu0bDE=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=U18bmvOEf9UK/NdVSAPes4aqMHhFjd+pc9TPabHOn2IS0+tj7ivfT6mlAibYwEPM9YpK/DgvuRzJSEUNRXzyFtDiJSRusSss43NO8kbT4DKNFIp+VxC6h+iqoKn/EV9Dnrb5a+rn9Ym7LITV9qhMA8liQG5y493sMBAghab7ApM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bvZnD5Pt; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=JOSsg6U5XQ+s42q7oGX/aqEuIPjrdiyxeblAfQ0UvwMCZe70FM1UVzprwSan8CFDZwhk9XyXboJppairkRJAeRJ9UIgPsvRsl9zwaIaXxkUEILBOD+CTQfmk3lAZ/5FHAyK3MfTaBkOPyGjp+B7GF2fVJHWPGJBcpq9lTIyhLAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uzq5wmI/; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bvZnD5Pt"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62a1e9807c0so14498937b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 11:32:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uzq5wmI/"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-df771b5e942so2060646276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 11:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718303557; x=1718908357; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718303561; x=1718908361; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=r+7hNL7GU/EnUYuEiQpshzYvHRCk9RdYS1NEyctZDl4=;
-        b=bvZnD5Pt/gSg44y+hvvnuX8kWE5vzzpTWKnjtFcicJdborEWoD2Scvp7fNjN0CSO97
-         RiNGlYh3bRKR6O5dSRHFCeRrKHI/0cl2yAIw2YHEui2utLBAbtRWDH1ZFPU/XXUnJL0D
-         H8Us0uKMxAQJ7vY5vpBdCNCKNzHGbZlKOGT0M7t2/uymcoZK48Ox04cnQQU6OAPE9Gzk
-         xigha8RlZGGOtwB5426/GrK81ozIAHfWyV69io4vaeEUIIfnLAB4kq4GBqKGBpGA6BpN
-         HV87DRVCWr64KuRq3qZ4hU4sXMrS7z+IRTmLD6l3WrB2Hqk5JbDff81Ykr7YgOE+uTKr
-         R0yQ==
+        bh=tZz9GimlctQ26ar42jVbROZvfuJkuQBTvjgjDoz9ZEU=;
+        b=Uzq5wmI/4SBfA0cnIO7mmtr4O+AjD5/FOqGQhDvP8izOojlC/g6Ry3nUlBmWmLTVkH
+         LtOblmzAv0WtXgwn8iRxXoX+oQuwwq53vyUKQ3j+I0+dinNvcQ8OCbRBl6VlwROqs/Gf
+         lBijYtgVuciYztzCS+IioLMs3E7bNBun4CZD0GfGifZiZ4JbL944YOcoZAn9SfYymNuy
+         895oTM2eGKQG9aWrfbUvV3AaXSha3FUJY40T3Ql6VnpFnTD8D0ccVYSPvBvODTU1+LMS
+         rTm5JrOYZKUBEbtC5AScIvWFH4RqcOgVoHVK46rOlBB5Hfb4rWZ0G9oh9M4DwONloxYE
+         zUIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718303557; x=1718908357;
+        d=1e100.net; s=20230601; t=1718303561; x=1718908361;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+7hNL7GU/EnUYuEiQpshzYvHRCk9RdYS1NEyctZDl4=;
-        b=mMxS9iNlJv5KM2NwLhNh0XAfJ5+pZp+UxCHouxrbAR3VEejr9JZnmv8e+t3bQuW/R1
-         1BoON2ni6BwQgiBdI4xb0xdIZ5H9/pUCJYifh5vD5G+5Gi2GDcQUOvZ/u6/jGfndhBKV
-         G773VP8sN5fA/51LueieTbhlpzx8q2r8seVD9piUtFMuQFojUSoPaQzf2JVuaFaKgTgP
-         2vozhrYW9lsbA2jhqM7stNbwdnLgvQJvCy6Y7FgLHjkstVxCuSwiCiB5BQo7Q1CnH855
-         whvn5YSQjHKvFpFkgnM9Qg7XLy/m4nzK3Q/8zlB9bciYybH7GRH/h+uZfZqpx7douTj+
-         yjNA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3Z3V8fBYfqUX26vMiiCE8N++z0Gzbi+atgtSNPMYjN/SFqkqmxaCu4hb1G+tTTALe/Lj/+fsEHkgRMOaigxiPMWk64jSr+bzv0cvqL0+kDw==
-X-Gm-Message-State: AOJu0YzTsdplnULmpSYpvAmWk+Db/oTCAZ2OPF/L1lDpAa+y5JgH6sR+
-	2e3dXCQi3li4PKbR4Ce30TFXNz4N2q097X9g4NxMXiKFR4uh1uil86h9ZSmQg2ihNbcVq938wPh
-	XC2NkLg==
-X-Google-Smtp-Source: AGHT+IFCwGZJ+MHw847shQCnxjAbFvUrO2l5A8duAsKiZMntbbdsMkpz9t0sclkdJolpJxOeRJ4x/wM7S3qu
+        bh=tZz9GimlctQ26ar42jVbROZvfuJkuQBTvjgjDoz9ZEU=;
+        b=tR6JzHuWBCvE1eSUPHY/cZYjy/WkErQuhvBd7z1HuqLi+jQF0X2EDREHCJghUgrQom
+         Mw1HxL/+g70KFBsvmwFqGrGIkbvhKCf1xt0H6bO/SXKheuJKfioAAGFtFtXeYW86zPgK
+         TxHnkSYO8TsLnCnB1HFIcJNnBaEKgA1YDdRkr11DL042LzHjI/N2clC+BB9Pq8CdCjw0
+         0LSmeFDgl+bfTl6mfb8Y2XrfJKBUkNRY3IVEQOyHhMIo83HvEl5HNi5HMwze/mW25y/R
+         y038UJl2Ll/8n1TyAL+oc49s3yNhCNx+PNXYITmcQfFUVYPsH3zgkXw79llKWI4MJnTt
+         /msQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ+PEUMVm/BUpin4hwvhYM6k6UCAkBncFyn7CfTq9Ajjn/lmNOyyb22YS6BQFuakCuhbh0EJZDSMG/OO+yKv23Y5NxuFsIlxve+L5mv4HDkQ==
+X-Gm-Message-State: AOJu0Ywbi4HfMff51ui2zU+dNIY+tI9GceRJIlXzxWTS/pe1uTA1KIaH
+	/UBOIEW5DNSz4Ot2+9DUDQYAJ30IwPQmO9cfdO7UQT1G8BiKqaEx81dYdp3428WhlzUQmLIl+U9
+	vPmRrSA==
+X-Google-Smtp-Source: AGHT+IH7+oDRiDCGkBHQjZw4T8wV5aoh3otWrQx/wva0y0NN7X4C1eaRXKWV8UyYzeSM+fx9EuOEkQwjtHMG
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:96dd:26a6:1493:53c8])
- (user=irogers job=sendgmr) by 2002:a0d:ea92:0:b0:630:47e8:f406 with SMTP id
- 00721157ae682-630be505814mr6038677b3.1.1718303556929; Thu, 13 Jun 2024
- 11:32:36 -0700 (PDT)
-Date: Thu, 13 Jun 2024 11:32:18 -0700
+ (user=irogers job=sendgmr) by 2002:a25:aaa6:0:b0:dfe:fdde:a583 with SMTP id
+ 3f1490d57ef6-dff1540839dmr13774276.7.1718303561394; Thu, 13 Jun 2024 11:32:41
+ -0700 (PDT)
+Date: Thu, 13 Jun 2024 11:32:20 -0700
 In-Reply-To: <20240613183224.3399628-1-irogers@google.com>
-Message-Id: <20240613183224.3399628-3-irogers@google.com>
+Message-Id: <20240613183224.3399628-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240613183224.3399628-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Subject: [PATCH v2 2/8] perf ui: Make ui its own library
+Subject: [PATCH v2 4/8] perf test: Make tests its own library
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -87,122 +87,393 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make the ui code its own library. This is done to avoid compiling code
-twice, once for the perf tool and once for the perf python module.
+Make the tests code its own library. This is done to avoid compiling
+code twice, once for the perf tool and once for the perf python
+module.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/Build             |  2 +-
- tools/perf/Makefile.perf     | 10 ++++++++++
- tools/perf/ui/Build          | 18 +++++++++---------
- tools/perf/ui/browsers/Build | 14 +++++++-------
- tools/perf/ui/tui/Build      |  8 ++++----
- 5 files changed, 31 insertions(+), 21 deletions(-)
+ tools/perf/Build                    |   3 +-
+ tools/perf/Makefile.perf            |  11 ++-
+ tools/perf/arch/Build               |   1 +
+ tools/perf/arch/arm/Build           |   2 +-
+ tools/perf/arch/arm/tests/Build     |   8 +-
+ tools/perf/arch/arm64/Build         |   2 +-
+ tools/perf/arch/arm64/tests/Build   |   8 +-
+ tools/perf/arch/powerpc/Build       |   2 +-
+ tools/perf/arch/powerpc/tests/Build |   6 +-
+ tools/perf/arch/x86/Build           |   4 +-
+ tools/perf/arch/x86/tests/Build     |  20 ++--
+ tools/perf/tests/Build              | 140 ++++++++++++++--------------
+ tools/perf/tests/workloads/Build    |  12 +--
+ 13 files changed, 115 insertions(+), 104 deletions(-)
 
 diff --git a/tools/perf/Build b/tools/perf/Build
-index b0cb7ad8e6ac..16ed1357202b 100644
+index 16ed1357202b..fddd45ab35b4 100644
 --- a/tools/perf/Build
 +++ b/tools/perf/Build
-@@ -55,7 +55,7 @@ CFLAGS_builtin-report.o	   += -DDOCDIR="BUILD_STR($(srcdir_SQ)/Documentation)"
+@@ -36,7 +36,7 @@ endif
+ perf-$(CONFIG_LIBELF) += builtin-probe.o
+ 
+ perf-y += bench/
+-perf-y += tests/
++perf-test-y += tests/
+ 
+ perf-y += perf.o
+ 
+@@ -55,6 +55,7 @@ CFLAGS_builtin-report.o	   += -DDOCDIR="BUILD_STR($(srcdir_SQ)/Documentation)"
  
  perf-y += util/
  perf-y += arch/
--perf-y += ui/
-+perf-ui-y += ui/
++perf-test-y += arch/
+ perf-ui-y += ui/
  perf-y += scripts/
  
- gtk-y += ui/gtk/
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index acc41a6717db..c5a027381c55 100644
+index 9640c6ae1837..9fa69dd0b472 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -425,10 +425,14 @@ endif
+@@ -425,6 +425,9 @@ endif
  
  export PERL_PATH
  
-+LIBPERF_UI_IN := $(OUTPUT)perf-ui-in.o
-+LIBPERF_UI := $(OUTPUT)libperf-ui.a
++LIBPERF_TEST_IN := $(OUTPUT)perf-test-in.o
++LIBPERF_TEST := $(OUTPUT)libperf-test.a
 +
- PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
+ LIBPERF_UI_IN := $(OUTPUT)perf-ui-in.o
+ LIBPERF_UI := $(OUTPUT)libperf-ui.a
+ 
+@@ -435,7 +438,7 @@ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
  ifdef LIBBPF_STATIC
    PERFLIBS += $(LIBBPF)
  endif
-+PERFLIBS += $(LIBPERF_UI)
+-PERFLIBS += $(LIBPERF_UI) $(LIBPMU_EVENTS)
++PERFLIBS += $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
  
  # We choose to avoid "if .. else if .. else .. endif endif"
  # because maintaining the nesting to match is a pain.  If
-@@ -729,6 +733,12 @@ $(PERF_IN): prepare FORCE
- $(PMU_EVENTS_IN): FORCE prepare
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+@@ -737,6 +740,12 @@ $(LIBPMU_EVENTS_IN): FORCE prepare
+ $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
  
-+$(LIBPERF_UI_IN): FORCE prepare
-+	$(Q)$(MAKE) $(build)=perf-ui
++$(LIBPERF_TEST_IN): FORCE prepare
++	$(Q)$(MAKE) $(build)=perf-test
 +
-+$(LIBPERF_UI): $(LIBPERF_UI_IN)
++$(LIBPERF_TEST): $(LIBPERF_TEST_IN)
 +	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
 +
- $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
- 		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
-diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
-index 6b6d7143a37b..d2ecd9290600 100644
---- a/tools/perf/ui/Build
-+++ b/tools/perf/ui/Build
-@@ -1,12 +1,12 @@
--perf-y += setup.o
--perf-y += helpline.o
--perf-y += progress.o
--perf-y += util.o
--perf-y += hist.o
--perf-y += stdio/hist.o
-+perf-ui-y += setup.o
-+perf-ui-y += helpline.o
-+perf-ui-y += progress.o
-+perf-ui-y += util.o
-+perf-ui-y += hist.o
-+perf-ui-y += stdio/hist.o
+ $(LIBPERF_UI_IN): FORCE prepare
+ 	$(Q)$(MAKE) $(build)=perf-ui
  
- CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
+diff --git a/tools/perf/arch/Build b/tools/perf/arch/Build
+index 688818844c11..6dd68c17924c 100644
+--- a/tools/perf/arch/Build
++++ b/tools/perf/arch/Build
+@@ -1,2 +1,3 @@
+ perf-y += common.o
+ perf-y += $(SRCARCH)/
++perf-test-y += $(SRCARCH)/
+diff --git a/tools/perf/arch/arm/Build b/tools/perf/arch/arm/Build
+index 36222e64bbf7..6b4fdec52122 100644
+--- a/tools/perf/arch/arm/Build
++++ b/tools/perf/arch/arm/Build
+@@ -1,2 +1,2 @@
+ perf-y += util/
+-perf-$(CONFIG_DWARF_UNWIND) += tests/
++perf-test-$(CONFIG_DWARF_UNWIND) += tests/
+diff --git a/tools/perf/arch/arm/tests/Build b/tools/perf/arch/arm/tests/Build
+index bc8e97380c82..599efa545727 100644
+--- a/tools/perf/arch/arm/tests/Build
++++ b/tools/perf/arch/arm/tests/Build
+@@ -1,5 +1,5 @@
+-perf-y += regs_load.o
+-perf-y += dwarf-unwind.o
+-perf-y += vectors-page.o
++perf-test-y += regs_load.o
++perf-test-y += dwarf-unwind.o
++perf-test-y += vectors-page.o
  
--perf-$(CONFIG_SLANG) += browser.o
--perf-$(CONFIG_SLANG) += browsers/
--perf-$(CONFIG_SLANG) += tui/
-+perf-ui-$(CONFIG_SLANG) += browser.o
-+perf-ui-$(CONFIG_SLANG) += browsers/
-+perf-ui-$(CONFIG_SLANG) += tui/
-diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
-index 2608b5da3167..a07489e44765 100644
---- a/tools/perf/ui/browsers/Build
-+++ b/tools/perf/ui/browsers/Build
-@@ -1,7 +1,7 @@
--perf-y += annotate.o
--perf-y += annotate-data.o
--perf-y += hists.o
--perf-y += map.o
--perf-y += scripts.o
--perf-y += header.o
--perf-y += res_sample.o
-+perf-ui-y += annotate.o
-+perf-ui-y += annotate-data.o
-+perf-ui-y += hists.o
-+perf-ui-y += map.o
-+perf-ui-y += scripts.o
-+perf-ui-y += header.o
-+perf-ui-y += res_sample.o
-diff --git a/tools/perf/ui/tui/Build b/tools/perf/ui/tui/Build
-index f916df33a1a7..2ac058ad1a61 100644
---- a/tools/perf/ui/tui/Build
-+++ b/tools/perf/ui/tui/Build
+-perf-y += arch-tests.o
++perf-test-y += arch-tests.o
+diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
+index a7dd46a5b678..58b2d965ed86 100644
+--- a/tools/perf/arch/arm64/Build
++++ b/tools/perf/arch/arm64/Build
+@@ -1,2 +1,2 @@
+ perf-y += util/
+-perf-y += tests/
++perf-test-y += tests/
+diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
+index e337c09e7f56..d44c9de92d42 100644
+--- a/tools/perf/arch/arm64/tests/Build
++++ b/tools/perf/arch/arm64/tests/Build
+@@ -1,5 +1,5 @@
+-perf-y += regs_load.o
+-perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++perf-test-y += regs_load.o
++perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+-perf-y += arch-tests.o
+-perf-y += cpuid-match.o
++perf-test-y += arch-tests.o
++perf-test-y += cpuid-match.o
+diff --git a/tools/perf/arch/powerpc/Build b/tools/perf/arch/powerpc/Build
+index a7dd46a5b678..58b2d965ed86 100644
+--- a/tools/perf/arch/powerpc/Build
++++ b/tools/perf/arch/powerpc/Build
+@@ -1,2 +1,2 @@
+ perf-y += util/
+-perf-y += tests/
++perf-test-y += tests/
+diff --git a/tools/perf/arch/powerpc/tests/Build b/tools/perf/arch/powerpc/tests/Build
+index 3526ab0af9f9..275026950645 100644
+--- a/tools/perf/arch/powerpc/tests/Build
++++ b/tools/perf/arch/powerpc/tests/Build
 @@ -1,4 +1,4 @@
--perf-y += setup.o
+-perf-$(CONFIG_DWARF_UNWIND) += regs_load.o
+-perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++perf-test-$(CONFIG_DWARF_UNWIND) += regs_load.o
++perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+-perf-y += arch-tests.o
++perf-test-y += arch-tests.o
+diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
+index ed37013b4289..132cf8beaca2 100644
+--- a/tools/perf/arch/x86/Build
++++ b/tools/perf/arch/x86/Build
+@@ -1,5 +1,5 @@
+ perf-y += util/
+-perf-y += tests/
++perf-test-y += tests/
+ 
+ ifdef SHELLCHECK
+   SHELL_TESTS := entry/syscalls/syscalltbl.sh
+@@ -13,4 +13,4 @@ $(OUTPUT)%.shellcheck_log: %
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+ 
+-perf-y += $(TEST_LOGS)
++perf-test-y += $(TEST_LOGS)
+diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
+index c1e3b7d39554..3227053f3355 100644
+--- a/tools/perf/arch/x86/tests/Build
++++ b/tools/perf/arch/x86/tests/Build
+@@ -1,15 +1,15 @@
+-perf-$(CONFIG_DWARF_UNWIND) += regs_load.o
+-perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++perf-test-$(CONFIG_DWARF_UNWIND) += regs_load.o
++perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+-perf-y += arch-tests.o
+-perf-y += sample-parsing.o
+-perf-y += hybrid.o
+-perf-$(CONFIG_AUXTRACE) += intel-pt-test.o
++perf-test-y += arch-tests.o
++perf-test-y += sample-parsing.o
++perf-test-y += hybrid.o
++perf-test-$(CONFIG_AUXTRACE) += intel-pt-test.o
+ ifeq ($(CONFIG_EXTRA_TESTS),y)
+-perf-$(CONFIG_AUXTRACE) += insn-x86.o
++perf-test-$(CONFIG_AUXTRACE) += insn-x86.o
+ endif
+-perf-$(CONFIG_X86_64) += bp-modify.o
+-perf-y += amd-ibs-via-core-pmu.o
++perf-test-$(CONFIG_X86_64) += bp-modify.o
++perf-test-y += amd-ibs-via-core-pmu.o
+ 
+ ifdef SHELLCHECK
+   SHELL_TESTS := gen-insn-x86-dat.sh
+@@ -23,4 +23,4 @@ $(OUTPUT)%.shellcheck_log: %
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+ 
+-perf-y += $(TEST_LOGS)
++perf-test-y += $(TEST_LOGS)
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index c7f9d9676095..5671ee530019 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -1,82 +1,82 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-perf-y += builtin-test.o
+-perf-y += tests-scripts.o
+-perf-y += parse-events.o
+-perf-y += dso-data.o
+-perf-y += attr.o
+-perf-y += vmlinux-kallsyms.o
+-perf-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
+-perf-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
+-perf-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
+-perf-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
+-perf-y += perf-record.o
+-perf-y += evsel-roundtrip-name.o
+-perf-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
+-perf-y += fdarray.o
+-perf-y += pmu.o
+-perf-y += pmu-events.o
+-perf-y += hists_common.o
+-perf-y += hists_link.o
+-perf-y += hists_filter.o
+-perf-y += hists_output.o
+-perf-y += hists_cumulate.o
+-perf-y += python-use.o
+-perf-y += bp_signal.o
+-perf-y += bp_signal_overflow.o
+-perf-y += bp_account.o
+-perf-y += wp.o
+-perf-y += task-exit.o
+-perf-y += sw-clock.o
+-perf-y += mmap-thread-lookup.o
+-perf-y += thread-maps-share.o
+-perf-$(CONFIG_LIBTRACEEVENT) += switch-tracking.o
+-perf-y += keep-tracking.o
+-perf-y += code-reading.o
+-perf-y += sample-parsing.o
+-perf-y += parse-no-sample-id-all.o
+-perf-y += kmod-path.o
+-perf-y += thread-map.o
+-perf-y += topology.o
+-perf-y += mem.o
+-perf-y += cpumap.o
+-perf-y += stat.o
+-perf-y += event_update.o
+-perf-y += event-times.o
+-perf-y += expr.o
+-perf-y += backward-ring-buffer.o
+-perf-y += sdt.o
+-perf-y += is_printable_array.o
+-perf-y += bitmap.o
+-perf-y += perf-hooks.o
+-perf-y += unit_number__scnprintf.o
+-perf-y += mem2node.o
+-perf-y += maps.o
+-perf-y += time-utils-test.o
+-perf-y += genelf.o
+-perf-y += api-io.o
+-perf-y += demangle-java-test.o
+-perf-y += demangle-ocaml-test.o
+-perf-y += pfm.o
+-perf-y += parse-metric.o
+-perf-y += pe-file-parsing.o
+-perf-y += expand-cgroup.o
+-perf-y += perf-time-to-tsc.o
+-perf-y += dlfilter-test.o
+-perf-y += sigtrap.o
+-perf-y += event_groups.o
+-perf-y += symbols.o
 -perf-y += util.o
--perf-y += helpline.o
--perf-y += progress.o
-+perf-ui-y += setup.o
-+perf-ui-y += util.o
-+perf-ui-y += helpline.o
-+perf-ui-y += progress.o
++perf-test-y += builtin-test.o
++perf-test-y += tests-scripts.o
++perf-test-y += parse-events.o
++perf-test-y += dso-data.o
++perf-test-y += attr.o
++perf-test-y += vmlinux-kallsyms.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-all-cpus.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += openat-syscall-tp-fields.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += mmap-basic.o
++perf-test-y += perf-record.o
++perf-test-y += evsel-roundtrip-name.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += evsel-tp-sched.o
++perf-test-y += fdarray.o
++perf-test-y += pmu.o
++perf-test-y += pmu-events.o
++perf-test-y += hists_common.o
++perf-test-y += hists_link.o
++perf-test-y += hists_filter.o
++perf-test-y += hists_output.o
++perf-test-y += hists_cumulate.o
++perf-test-y += python-use.o
++perf-test-y += bp_signal.o
++perf-test-y += bp_signal_overflow.o
++perf-test-y += bp_account.o
++perf-test-y += wp.o
++perf-test-y += task-exit.o
++perf-test-y += sw-clock.o
++perf-test-y += mmap-thread-lookup.o
++perf-test-y += thread-maps-share.o
++perf-test-$(CONFIG_LIBTRACEEVENT) += switch-tracking.o
++perf-test-y += keep-tracking.o
++perf-test-y += code-reading.o
++perf-test-y += sample-parsing.o
++perf-test-y += parse-no-sample-id-all.o
++perf-test-y += kmod-path.o
++perf-test-y += thread-map.o
++perf-test-y += topology.o
++perf-test-y += mem.o
++perf-test-y += cpumap.o
++perf-test-y += stat.o
++perf-test-y += event_update.o
++perf-test-y += event-times.o
++perf-test-y += expr.o
++perf-test-y += backward-ring-buffer.o
++perf-test-y += sdt.o
++perf-test-y += is_printable_array.o
++perf-test-y += bitmap.o
++perf-test-y += perf-hooks.o
++perf-test-y += unit_number__scnprintf.o
++perf-test-y += mem2node.o
++perf-test-y += maps.o
++perf-test-y += time-utils-test.o
++perf-test-y += genelf.o
++perf-test-y += api-io.o
++perf-test-y += demangle-java-test.o
++perf-test-y += demangle-ocaml-test.o
++perf-test-y += pfm.o
++perf-test-y += parse-metric.o
++perf-test-y += pe-file-parsing.o
++perf-test-y += expand-cgroup.o
++perf-test-y += perf-time-to-tsc.o
++perf-test-y += dlfilter-test.o
++perf-test-y += sigtrap.o
++perf-test-y += event_groups.o
++perf-test-y += symbols.o
++perf-test-y += util.o
+ 
+ ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
+-perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ endif
+ 
+ CFLAGS_attr.o         += -DBINDIR="BUILD_STR($(bindir_SQ))" -DPYTHON="BUILD_STR($(PYTHON_WORD))"
+ CFLAGS_python-use.o   += -DPYTHONPATH="BUILD_STR($(OUTPUT)python)" -DPYTHON="BUILD_STR($(PYTHON_WORD))"
+ CFLAGS_dwarf-unwind.o += -fno-optimize-sibling-calls
+ 
+-perf-y += workloads/
++perf-test-y += workloads/
+ 
+ ifdef SHELLCHECK
+   SHELL_TESTS := $(shell find tests/shell -executable -type f -name '*.sh')
+@@ -90,4 +90,4 @@ $(OUTPUT)%.shellcheck_log: %
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+ 
+-perf-y += $(TEST_LOGS)
++perf-test-y += $(TEST_LOGS)
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index a1f34d5861e3..48bf0d3b0f3d 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -1,11 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-perf-y += noploop.o
+-perf-y += thloop.o
+-perf-y += leafloop.o
+-perf-y += sqrtloop.o
+-perf-y += brstack.o
+-perf-y += datasym.o
++perf-test-y += noploop.o
++perf-test-y += thloop.o
++perf-test-y += leafloop.o
++perf-test-y += sqrtloop.o
++perf-test-y += brstack.o
++perf-test-y += datasym.o
+ 
+ CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
 -- 
 2.45.2.627.g7a2c4fd464-goog
 
