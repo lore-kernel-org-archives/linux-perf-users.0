@@ -1,198 +1,343 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D0613D276;
-	Thu, 13 Jun 2024 10:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5396C14036F;
+	Thu, 13 Jun 2024 10:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718273676; cv=none; b=otPRHSr79sQtMrNIxX9FkG7omdPRBSkirsSwJpHuiOvCBYjsQb1wLXDPiDpvbCl4lzJVOYVmWzo9I3dh1ZPMBMfnbyyJz/Dfr5Tbft5le4xle2EIPnjo5NLrrHCIhtqZ6cC4Qk30cBztGcX08F+d7UJiiNLCHgycBPxw5NrAeLM=
+	t=1718273972; cv=none; b=D59hgSqgrC8DXjzGjTu/qWUS5jfBozj7Wbg/mLTmWRObSdWyK6fVI6kP+SY2y6jKe/zJ4de0hNx080FCE8Dadm0MP26SVZySQ7+m76999OxmNBRS4o9cj1NNhrDVnPmWJheAxaWS4slmYmGh2VU+IcGWAQu2wM+brL2Qtsid1EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718273676; c=relaxed/simple;
-	bh=CyQWMPToyExjoNN6qnJYA/rimhYaa+vuwjXWKSRN3v0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h0jYFd4Z55bCuCpP3FjbQ5yQigsVt4dDmveSUgfyT8tOQ0jXPF8BuykWaUleHr3Q94YrL2EWF6riv43zqoFroj80YGZrhV7RJ8rvuXTFsRduaxGyYXJiw5iKP9mC1poNR7XitKrbEvJIwXeLk9kOVtvfEgkIro0P+OswLcQh0ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 739A01063;
-	Thu, 13 Jun 2024 03:14:57 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2517E3F5A1;
-	Thu, 13 Jun 2024 03:14:30 -0700 (PDT)
-Date: Thu, 13 Jun 2024 11:14:27 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com,
-	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-Subject: Re: [PATCH V18 2/9] KVM: arm64: Explicitly handle BRBE traps as
- UNDEFINED
-Message-ID: <ZmrGg_-NaSODhmN2@J2N7QTR9R3>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
- <20240613061731.3109448-3-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1718273972; c=relaxed/simple;
+	bh=uIMfPsGUZsV3J1yOZyI8w+8ZpQq+WF7reRhIrErMR70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MdVbyGjEUOUmKyFBke1RAobZ/R30Qfa9kseMdGLiVzcCH25pymX+SGIoQM9aNjNwmnxUP2ps4wzoKICaWxcRGU1XOkso59XzWobVETUpgN6kmqP4YrcO1Dr2P6XBH5mMzYaLoQEy/srEkIoKcTqS2a46/WbhYL6NopkYXdw1vQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TY5OkMBM; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TY5OkMBM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718273970; x=1749809970;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uIMfPsGUZsV3J1yOZyI8w+8ZpQq+WF7reRhIrErMR70=;
+  b=TY5OkMBMtA/toGHWgbso8hF8fsXVJaaJDG88eFMohyaOUciOB6orEG48
+   rx7uO/hrZI9w3GekfOqdydBycNE2qdaWZ0Vh+e8muEuM75bub8k23Iseb
+   fUxpB36pr1OaY3yjL7tx0iOVyCZS57jmY+qib2Bk/F1PvisydvUnZvIa6
+   fc5dKTH1RxzJDQsWWbAsLT5E8BCiTRYnI56zA+bluS/D2n82IAis3X60r
+   upp/uDFD4twqNDqeSP6Ed1egUsvDxRX45cm9Vg2eSsBQlf1udvJ5y20PZ
+   srmGmuLLZP5Voo2Eh7vX/t/xTh0FjwbJGUfesJN8mcA+O0c46008ApsVZ
+   g==;
+X-CSE-ConnectionGUID: Ow/Sc0UQRjq7GycSmooOjQ==
+X-CSE-MsgGUID: Wj1GvVqLQSOu6V/My179Dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26505904"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="26505904"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 03:19:29 -0700
+X-CSE-ConnectionGUID: r93nnX5uRliATHK9YgCLPQ==
+X-CSE-MsgGUID: Yjgz7gYiRTOvLteup72QpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40575727"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 03:19:24 -0700
+Message-ID: <dfc9a604-6857-46af-a778-5c354fe199be@intel.com>
+Date: Thu, 13 Jun 2024 13:19:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613061731.3109448-3-anshuman.khandual@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf: support specify vdso path in cmdline
+To: duchangbin <changbin.du@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+References: <20240613063510.348692-1-changbin.du@huawei.com>
+ <20240613063510.348692-2-changbin.du@huawei.com>
+ <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
+ <1e17854b16fe46a4b384b6ddec05029a@huawei.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <1e17854b16fe46a4b384b6ddec05029a@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 11:47:24AM +0530, Anshuman Khandual wrote:
-> The Branch Record Buffer Extension (BRBE) adds a number of system registers
-> and instructions, which we don't currently intend to expose to guests. Our
-> existing logic handles this safely, but this could be improved with some
-> explicit handling of BRBE.
+On 13/06/24 12:49, duchangbin wrote:
+> On Thu, Jun 13, 2024 at 11:23:26AM +0300, Adrian Hunter wrote:
+>> On 13/06/24 09:35, Changbin Du wrote:
+>>> The vdso dumped from process memory (in buildid-cache) lacks debugging
+>>> info. To annotate vdso symbols with source lines we need specify a
+>>> debugging version.
+>>>
+>>> For x86, we can find them from your local build as
+>>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
+>>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
+>>> the buildid has to match.
+>>>
+>>> $ sudo perf record -a
+>>> $ sudo perf report --objdump=llvm-objdump \
+>>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
+>>>
+>>> When doing cross platform analysis, we also need specify the vdso path if
+>>> we are interested in its symbols.
+>>
+>> We already have logic to find debug files, and to deal with a symbol source
+>> (syms_ss) and runtime symbol source (runtime_ss).
+>>
+>> Can't we make that work transparently for vdso so that the user does
+>> not have to.
+>>
+> For Ubuntu, we can find the debug files of vdso in
+> /lib/modules/<version>/vdso/vdso{32,64}.so. These two are debug version.
 > 
-> The presence of BRBE is currently hidden from guests as the cpufeature
-> code's ftr_id_aa64dfr0[] table doesn't have an entry for the BRBE field,
-> and so this will be zero in the sanitised value of ID_AA64DFR0 exposed to
-> guests via read_sanitised_id_aa64dfr0_el1(). As the ftr_id_aa64dfr0[] table
-> may gain an entry for the BRBE field in future, for robustness we should
-> explicitly mask out the BRBE field in read_sanitised_id_aa64dfr0_el1().
-> 
-> The BRBE system registers and instructions are currently trapped by the
-> existing configuration of the fine-grained traps. As neither the registers
-> nor the instructions are described in the sys_reg_descs[] table,
-> emulate_sys_reg() will warn that these are unknown before injecting an
-> UNDEFINED exception into the guest.
-> 
-> Well-behaved guests shouldn't try to use the registers or instructions, but
-> badly-behaved guests could use these, resulting in unnecessary warnings. To
-> avoid those warnings, we should explicitly handle the BRBE registers and
-> instructions as UNDEFINED.
-> 
-> Address the above by having read_sanitised_id_aa64dfr0_el1() mask out the
-> ID_AA64DFR0.BRBE field, and explicitly handling all of the BRBE system
-> registers and instructions as UNDEFINED.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> For local build, seems vdso{32,64}.so.dbg are not installed in /lib/modules/ nor
+> other locations.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-> ----
-> Changes in V18:
-> 
-> - Updated the commit message
-> 
->  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
-
-Something has gone wrong here, but that doesn't affect the patch itself.
-
-Mark.
+Isn't there /lib/modules/<version>/build symbolic link to follow?
 
 > 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 22b45a15d068..3d4686abe5ee 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
->  	return 0;
->  }
->  
-> +#define BRB_INF_SRC_TGT_EL1(n)				\
-> +	{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
-> +	{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
-> +	{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
-> +
->  /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
->  #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
->  	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
-> @@ -1722,6 +1727,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
->  	/* Hide SPE from guests */
->  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
->  
-> +	/* Hide BRBE from guests */
-> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
-> +
->  	return val;
->  }
->  
-> @@ -2240,6 +2248,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
->  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
->  
-> +	/*
-> +	 * BRBE branch record sysreg address space is interleaved between
-> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
-> +	 */
-> +	BRB_INF_SRC_TGT_EL1(0),
-> +	BRB_INF_SRC_TGT_EL1(16),
-> +	BRB_INF_SRC_TGT_EL1(1),
-> +	BRB_INF_SRC_TGT_EL1(17),
-> +	BRB_INF_SRC_TGT_EL1(2),
-> +	BRB_INF_SRC_TGT_EL1(18),
-> +	BRB_INF_SRC_TGT_EL1(3),
-> +	BRB_INF_SRC_TGT_EL1(19),
-> +	BRB_INF_SRC_TGT_EL1(4),
-> +	BRB_INF_SRC_TGT_EL1(20),
-> +	BRB_INF_SRC_TGT_EL1(5),
-> +	BRB_INF_SRC_TGT_EL1(21),
-> +	BRB_INF_SRC_TGT_EL1(6),
-> +	BRB_INF_SRC_TGT_EL1(22),
-> +	BRB_INF_SRC_TGT_EL1(7),
-> +	BRB_INF_SRC_TGT_EL1(23),
-> +	BRB_INF_SRC_TGT_EL1(8),
-> +	BRB_INF_SRC_TGT_EL1(24),
-> +	BRB_INF_SRC_TGT_EL1(9),
-> +	BRB_INF_SRC_TGT_EL1(25),
-> +	BRB_INF_SRC_TGT_EL1(10),
-> +	BRB_INF_SRC_TGT_EL1(26),
-> +	BRB_INF_SRC_TGT_EL1(11),
-> +	BRB_INF_SRC_TGT_EL1(27),
-> +	BRB_INF_SRC_TGT_EL1(12),
-> +	BRB_INF_SRC_TGT_EL1(28),
-> +	BRB_INF_SRC_TGT_EL1(13),
-> +	BRB_INF_SRC_TGT_EL1(29),
-> +	BRB_INF_SRC_TGT_EL1(14),
-> +	BRB_INF_SRC_TGT_EL1(30),
-> +	BRB_INF_SRC_TGT_EL1(15),
-> +	BRB_INF_SRC_TGT_EL1(31),
-> +
-> +	/* Remaining BRBE sysreg addresses space */
-> +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
-> +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
-> +
->  	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
->  	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
->  	// DBGDTR[TR]X_EL0 share the same encoding
-> @@ -2751,6 +2805,8 @@ static struct sys_reg_desc sys_insn_descs[] = {
->  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
->  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
->  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
-> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
-> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
->  };
->  
->  static const struct sys_reg_desc *first_idreg;
-> -- 
-> 2.25.1
+>>>
+>>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+>>> ---
+>>>  tools/perf/builtin-annotate.c |  2 +
+>>>  tools/perf/builtin-c2c.c      |  2 +
+>>>  tools/perf/builtin-inject.c   |  2 +
+>>>  tools/perf/builtin-report.c   |  2 +
+>>>  tools/perf/builtin-script.c   |  2 +
+>>>  tools/perf/builtin-top.c      |  2 +
+>>>  tools/perf/util/symbol.c      | 74 +++++++++++++++++++++++++++++++++++
+>>>  tools/perf/util/symbol_conf.h |  5 +++
+>>>  8 files changed, 91 insertions(+)
+>>>
+>>> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+>>> index 50d2fb222d48..ff466882065d 100644
+>>> --- a/tools/perf/builtin-annotate.c
+>>> +++ b/tools/perf/builtin-annotate.c
+>>> @@ -742,6 +742,8 @@ int cmd_annotate(int argc, const char **argv)
+>>>  		   "file", "vmlinux pathname"),
+>>>  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
+>>>  		    "load module symbols - WARNING: use only with -k and LIVE kernel"),
+>>> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  	OPT_BOOLEAN('l', "print-line", &annotate_opts.print_lines,
+>>>  		    "print matching source lines (may be slow)"),
+>>>  	OPT_BOOLEAN('P', "full-paths", &annotate_opts.full_path,
+>>> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+>>> index c157bd31f2e5..4764f9139661 100644
+>>> --- a/tools/perf/builtin-c2c.c
+>>> +++ b/tools/perf/builtin-c2c.c
+>>> @@ -3018,6 +3018,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>>>  	const struct option options[] = {
+>>>  	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+>>>  		   "file", "vmlinux pathname"),
+>>> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  	OPT_STRING('i', "input", &input_name, "file",
+>>>  		   "the input file to process"),
+>>>  	OPT_INCR('N', "node-info", &c2c.node_info,
+>>> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+>>> index a212678d47be..e774e83d0a0f 100644
+>>> --- a/tools/perf/builtin-inject.c
+>>> +++ b/tools/perf/builtin-inject.c
+>>> @@ -2247,6 +2247,8 @@ int cmd_inject(int argc, const char **argv)
+>>>  			    "don't load vmlinux even if found"),
+>>>  		OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name, "file",
+>>>  			   "kallsyms pathname"),
+>>> +		OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  		OPT_BOOLEAN('f', "force", &data.force, "don't complain, do it"),
+>>>  		OPT_CALLBACK_OPTARG(0, "itrace", &inject.itrace_synth_opts,
+>>>  				    NULL, "opts", "Instruction Tracing options\n"
+>>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>>> index 69618fb0110b..a64b48460dce 100644
+>>> --- a/tools/perf/builtin-report.c
+>>> +++ b/tools/perf/builtin-report.c
+>>> @@ -1324,6 +1324,8 @@ int cmd_report(int argc, const char **argv)
+>>>                      "don't load vmlinux even if found"),
+>>>  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
+>>>  		   "file", "kallsyms pathname"),
+>>> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>>>  	OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
+>>>  		    "load module symbols - WARNING: use only with -k and LIVE kernel"),
+>>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>>> index c16224b1fef3..2e358922a8d1 100644
+>>> --- a/tools/perf/builtin-script.c
+>>> +++ b/tools/perf/builtin-script.c
+>>> @@ -3965,6 +3965,8 @@ int cmd_script(int argc, const char **argv)
+>>>  		   "file", "vmlinux pathname"),
+>>>  	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
+>>>  		   "file", "kallsyms pathname"),
+>>> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  	OPT_BOOLEAN('G', "hide-call-graph", &no_callchain,
+>>>  		    "When printing symbols do not display call chain"),
+>>>  	OPT_CALLBACK(0, "symfs", NULL, "directory",
+>>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>>> index 1d6aef51c122..a3cce4e76eb9 100644
+>>> --- a/tools/perf/builtin-top.c
+>>> +++ b/tools/perf/builtin-top.c
+>>> @@ -1479,6 +1479,8 @@ int cmd_top(int argc, const char **argv)
+>>>  		   "file", "kallsyms pathname"),
+>>>  	OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
+>>>  		    "hide kernel symbols"),
+>>> +	OPT_CALLBACK(0, "vdso", NULL, "vdso1[,vdso2]", "vdso pathnames",
+>>> +		     parse_vdso_pathnames),
+>>>  	OPT_CALLBACK('m', "mmap-pages", &opts->mmap_pages, "pages",
+>>>  		     "number of mmap data pages", evlist__parse_mmap_pages),
+>>>  	OPT_INTEGER('r', "realtime", &top.realtime_prio,
+>>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>>> index 9e5940b5bc59..8d040039a7ce 100644
+>>> --- a/tools/perf/util/symbol.c
+>>> +++ b/tools/perf/util/symbol.c
+>>> @@ -19,6 +19,7 @@
+>>>  #include "build-id.h"
+>>>  #include "cap.h"
+>>>  #include "dso.h"
+>>> +#include "vdso.h"
+>>>  #include "util.h" // lsdir()
+>>>  #include "debug.h"
+>>>  #include "event.h"
+>>> @@ -44,6 +45,7 @@
+>>>  
+>>>  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
+>>>  static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
+>>> +static int dso__load_vdso_sym(struct dso *dso, struct map *map);
+>>>  static bool symbol__is_idle(const char *name);
+>>>  
+>>>  int vmlinux_path__nr_entries;
+>>> @@ -1833,6 +1835,12 @@ int dso__load(struct dso *dso, struct map *map)
+>>>  		goto out;
+>>>  	}
+>>>  
+>>> +	if (dso__is_vdso(dso)) {
+>>> +		ret = dso__load_vdso_sym(dso, map);
+>>> +		if (ret > 0)
+>>> +			goto out;
+>>> +	}
+>>> +
+>>>  	dso__set_adjust_symbols(dso, false);
+>>>  
+>>>  	if (perfmap) {
+>>> @@ -2349,6 +2357,72 @@ static int vmlinux_path__init(struct perf_env *env)
+>>>  	return -1;
+>>>  }
+>>>  
+>>> +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
+>>> +			 const char *arg, int unset __maybe_unused)
+>>> +{
+>>> +	char *tmp, *tok, *str = strdup(arg);
+>>> +	unsigned int i = 0;
+>>> +
+>>> +	for (tok = strtok_r(str, ",", &tmp); tok && i < ARRAY_SIZE(symbol_conf.vdso_name);
+>>> +	     tok = strtok_r(NULL, ",", &tmp)) {
+>>> +		symbol_conf.vdso_name[i++] = strdup(tok);
+>>> +	}
+>>> +
+>>> +	free(str);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int dso__load_vdso(struct dso *dso, struct map *map,
+>>> +			  const char *vdso)
+>>> +{
+>>> +	int err = -1;
+>>> +	struct symsrc ss;
+>>> +	char symfs_vdso[PATH_MAX];
+>>> +
+>>> +	if (vdso[0] == '/')
+>>> +		snprintf(symfs_vdso, sizeof(symfs_vdso), "%s", vdso);
+>>> +	else
+>>> +		symbol__join_symfs(symfs_vdso, vdso);
+>>> +
+>>> +	if (symsrc__init(&ss, dso, symfs_vdso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO))
+>>> +		return -1;
+>>> +
+>>> +	/*
+>>> +	 * dso__load_sym() may copy 'dso' which will result in the copies having
+>>> +	 * an incorrect long name unless we set it here first.
+>>> +	 */
+>>> +	dso__set_long_name(dso, vdso, false);
+>>> +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
+>>> +
+>>> +	err = dso__load_sym(dso, map, &ss, &ss, 0);
+>>> +	symsrc__destroy(&ss);
+>>> +
+>>> +	if (err > 0) {
+>>> +		dso__set_loaded(dso);
+>>> +		pr_debug("Using %s for %s symbols\n", symfs_vdso, dso__short_name(dso));
+>>> +	}
+>>> +
+>>> +	return err;
+>>> +}
+>>> +
+>>> +static int dso__load_vdso_sym(struct dso *dso, struct map *map)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	if (!dso__is_vdso(dso))
+>>> +		return -1;
+>>> +
+>>> +	for (unsigned int i = 0; i < ARRAY_SIZE(symbol_conf.vdso_name); i++) {
+>>> +		if (symbol_conf.vdso_name[i] != NULL) {
+>>> +			ret = dso__load_vdso(dso, map, symbol_conf.vdso_name[i]);
+>>> +			if (ret > 0)
+>>> +				return ret;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return -1;
+>>> +}
+>>> +
+>>>  int setup_list(struct strlist **list, const char *list_str,
+>>>  		      const char *list_name)
+>>>  {
+>>> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+>>> index c114bbceef40..108356e3c981 100644
+>>> --- a/tools/perf/util/symbol_conf.h
+>>> +++ b/tools/perf/util/symbol_conf.h
+>>> @@ -3,6 +3,7 @@
+>>>  #define __PERF_SYMBOL_CONF 1
+>>>  
+>>>  #include <stdbool.h>
+>>> +#include <subcmd/parse-options.h>
+>>>  
+>>>  struct strlist;
+>>>  struct intlist;
+>>> @@ -55,6 +56,7 @@ struct symbol_conf {
+>>>  	const char	*default_guest_vmlinux_name,
+>>>  			*default_guest_kallsyms,
+>>>  			*default_guest_modules;
+>>> +	const char	*vdso_name[2];
+>>>  	const char	*guestmount;
+>>>  	const char	*dso_list_str,
+>>>  			*comm_list_str,
+>>> @@ -85,4 +87,7 @@ struct symbol_conf {
+>>>  
+>>>  extern struct symbol_conf symbol_conf;
+>>>  
+>>> +int parse_vdso_pathnames(const struct option *opt __maybe_unused,
+>>> +			 const char *arg, int unset __maybe_unused);
+>>> +
+>>>  #endif // __PERF_SYMBOL_CONF
+>>
+>>
 > 
+
